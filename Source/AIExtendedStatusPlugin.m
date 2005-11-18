@@ -20,6 +20,7 @@
 #import "AIPreferenceController.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIMutableStringAdditions.h>
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListContact.h>
@@ -114,31 +115,9 @@
 																   [statusMessage length] - STATUS_MAX_LENGTH)];
 			}
 			
-			/* Linebreaks in the status message cause vertical alignment issues.
-			 * We will replace line breaks with '/' as is done with multiple lines of a poem displayed on a single line.
-			 * 
-			 * First, we remove duplicate linebreaks. */
-			while ([statusMessage replaceOccurrencesOfString:@"\r\r"
-												 withString:@"\r"
-													options:NSLiteralSearch
-													  range:NSMakeRange(0,[statusMessage length])]);
-			while ([statusMessage replaceOccurrencesOfString:@"\n\n"
-												 withString:@"\n"
-													options:NSLiteralSearch
-													  range:NSMakeRange(0,[statusMessage length])]);
-			while ([statusMessage replaceOccurrencesOfString:@"\r\n"
-												 withString:@"\n"
-													options:NSLiteralSearch
-													  range:NSMakeRange(0,[statusMessage length])]);
-			
-			[statusMessage replaceOccurrencesOfString:@"\r"
-										   withString:@" / "
-											  options:NSLiteralSearch
-												range:NSMakeRange(0,[statusMessage length])];
-			[statusMessage replaceOccurrencesOfString:@"\n"
-										   withString:@" / "
-											  options:NSLiteralSearch
-												range:NSMakeRange(0,[statusMessage length])];
+	
+			/* Linebreaks in the status message cause vertical alignment issues. */
+			[statusMessage convertNewlinesToSlashes];	
 		}
 
 		idle = (showIdle ? [inObject integerStatusObjectForKey:@"Idle"] : 0);
