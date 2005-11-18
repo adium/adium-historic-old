@@ -25,16 +25,22 @@
 
 #import "gaimOTRCommon.h"
 
+@interface ESGaimOTRUnknownFingerprintController (PRIVATE)
++ (void)showFingerprintPromptWithMessageString:(NSString *)messageString 
+								  acceptButton:(NSString *)acceptButton
+									denyButton:(NSString *)denyButton
+								  responseInfo:(NSDictionary *)responseInfo;
+@end
+
 @implementation ESGaimOTRUnknownFingerprintController
 
 + (void)showUnknownFingerprintPromptWithResponseInfo:(NSDictionary *)responseInfo
 {
-	NSString							*messageString;
-	NSString							*accountname = [responseInfo objectForKey:@"accountname"];
-	NSString							*who = [responseInfo objectForKey:@"who"];
-	NSString							*ourHash = [responseInfo objectForKey:@"Outgoing SessionID"];
-	NSString							*theirHash = [responseInfo objectForKey:@"Incoming SessionID"];
-	ESTextAndButtonsWindowController	*windowController;
+	NSString	*messageString;
+	NSString	*accountname = [responseInfo objectForKey:@"accountname"];
+	NSString	*who = [responseInfo objectForKey:@"who"];
+	NSString	*ourHash = [responseInfo objectForKey:@"Outgoing SessionID"];
+	NSString	*theirHash = [responseInfo objectForKey:@"Incoming SessionID"];
 	
 	messageString = [NSString stringWithFormat:
 		AILocalizedString(@"%@ has sent you (%@) an unknown encryption fingerprint.\n\n"
@@ -47,7 +53,45 @@
 		who,
 		theirHash];
 	
-	GaimAccount *account = gaim_accounts_find([accountname UTF8String], [[responseInfo objectForKey:@"protocol"] UTF8String]);
+	[self showFingerprintPromptWithMessageString:messageString 
+									acceptButton:AILocalizedString(@"Accept",nil)
+									  denyButton:AILocalizedString(@"Verify Later",nil)
+									responseInfo:responseInfo];
+}
+
++ (void)showVerifyFingerprintPromptWithResponseInfo:(NSDictionary *)responseInfo
+{
+	NSString	*messageString;
+	NSString	*accountname = [responseInfo objectForKey:@"accountname"];
+	NSString	*who = [responseInfo objectForKey:@"who"];
+	NSString	*ourHash = [responseInfo objectForKey:@"Outgoing SessionID"];
+	NSString	*theirHash = [responseInfo objectForKey:@"Incoming SessionID"];
+
+	messageString = [NSString stringWithFormat:
+		AILocalizedString(@"Fingerprint for you (%@): %@\n\n"
+						  "Purported fingerprint for %@: %@\n\n"
+						  "Is this the verifiably correct fingerprint for %@?",nil),
+		accountname,
+		ourHash,
+		who,
+		theirHash,
+		who];
+
+	[self showFingerprintPromptWithMessageString:messageString
+									acceptButton:AILocalizedString(@"Yes",nil)
+									  denyButton:AILocalizedString(@"No",nil)
+									responseInfo:responseInfo];
+}
+
++ (void)showFingerprintPromptWithMessageString:(NSString *)messageString 
+								  acceptButton:(NSString *)acceptButton
+									denyButton:(NSString *)denyButton
+								  responseInfo:(NSDictionary *)responseInfo
+{
+	ESTextAndButtonsWindowController	*windowController;
+
+	GaimAccount *account = gaim_accounts_find([[responseInfo objectForKey:@"accountname"] UTF8String],
+											  [[responseInfo objectForKey:@"protocol"] UTF8String]);
 	NSImage		*serviceImage = nil;
 	
 	if (account) {
@@ -57,8 +101,8 @@
 	}
 	
 	windowController = [ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:AILocalizedString(@"OTR Fingerprint Verification",nil)
-																			 defaultButton:AILocalizedString(@"Accept",nil)
-																		   alternateButton:AILocalizedString(@"Verify Later",nil)
+																			 defaultButton:acceptButton
+																		   alternateButton:denyButton
 																			   otherButton:AILocalizedString(@"Help", nil)
 																				  onWindow:nil
 																		 withMessageHeader:nil
@@ -121,10 +165,9 @@
  */
 + (void)gaimThreadUnknownFingerprintResponseInfo:(NSDictionary *)responseInfo wasAccepted:(NSNumber *)fingerprintAcceptedNumber
 {
-	NSString			*protocol = [responseInfo objectForKey:@"protocol"];
-	NSString			*accountname = [responseInfo objectForKey:@"accountname"];
-	NSString			*who = [responseInfo objectForKey:@"who"];
-	NSString			*fingerprint = [responseInfo objectForKey:@"Fingerprint"];
+	NSString	*protocol = [responseInfo objectForKey:@"protocol"];
+	NSString	*accountname = [responseInfo objectForKey:@"accountname"];
+	NSString	*who = [responseInfo objectForKey:@"who"];
 	
 	ConnContext *context = otrl_context_find(otrg_get_userstate(),
 											 [who UTF8String], [accountname UTF8String], [protocol UTF8String],

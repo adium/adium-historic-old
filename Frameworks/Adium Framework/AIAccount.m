@@ -517,6 +517,18 @@
 	
 }
 
+/*!
+ * @brief Allow the user to verify (or unverify) the identity being used for encryption in a chat
+ *
+ * It is an error to call this on a chat which is not current encrypted.
+ *
+ * @param The chat
+ */
+- (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat
+{
+	
+}
+
 #pragma mark Image sending
 - (BOOL)canSendImagesForChat:(AIChat *)inChat
 {
