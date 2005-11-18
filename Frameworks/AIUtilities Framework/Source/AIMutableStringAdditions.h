@@ -15,4 +15,5 @@
 //worrying about what kind of string it's dealing with
 - (NSMutableString*)mutableString;
 
+- (void)convertNewlinesToSlashes;
 @end
