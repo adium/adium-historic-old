@@ -79,6 +79,7 @@
 										 otherButton:inOtherButton
 								   withMessageHeader:inMessageHeader
 										  andMessage:inMessage
+											   image:inImage
 											  target:inTarget
 											userInfo:inUserInfo];
 	
