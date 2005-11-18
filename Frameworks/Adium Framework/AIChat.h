@@ -51,6 +51,13 @@ typedef enum {
 	EncryptedChat_RejectUnencryptedMessages = 2
 } AIEncryptedChatPreference;
 
+typedef enum {
+	EncryptionStatus_None = 0,
+	EncryptionStatus_Unverified,
+	EncryptionStatus_Verified,
+	EncryptionStatus_Finished
+} AIEncryptionStatus;
+
 //Chat errors should be indicated by setting a status object on this key 
 //with an NSNumber of the appropriate error type as its object
 #define	KEY_CHAT_ERROR			@"Chat Error"
@@ -138,6 +145,7 @@ typedef enum {
 - (void)setSecurityDetails:(NSDictionary *)securityDetails;
 - (NSDictionary *)securityDetails;
 - (BOOL)isSecure;
+- (AIEncryptionStatus)encryptionStatus;
 - (BOOL)supportsSecureMessagingToggling;
 
 - (BOOL)canSendImages;

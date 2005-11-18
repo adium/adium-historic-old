@@ -205,7 +205,30 @@ static int nextChatNumber = 0;
 
 - (BOOL)isSecure
 {
-	return [self securityDetails] != nil;
+	AIEncryptionStatus encryptionStatus = [self encryptionStatus];
+	
+	return (encryptionStatus != EncryptionStatus_None);
+}
+
+- (AIEncryptionStatus)encryptionStatus
+{
+	AIEncryptionStatus	encryptionStatus = EncryptionStatus_None;
+
+	NSDictionary		*securityDetails = [self securityDetails];
+	if (securityDetails) {
+		NSNumber *detailsStatus;
+		if ((detailsStatus = [securityDetails objectForKey:@"EncryptionStatus"])) {
+			encryptionStatus = [detailsStatus intValue];
+			
+		} else {
+			/* If we don't have a specific encryption status, but do have security details, assume
+			 * encrypted and verified.
+			 */
+			encryptionStatus = EncryptionStatus_Verified;
+		}
+	}
+
+	return encryptionStatus;
 }
 
 - (BOOL)supportsSecureMessagingToggling

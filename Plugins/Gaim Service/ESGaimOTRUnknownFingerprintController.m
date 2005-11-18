@@ -132,12 +132,17 @@
     Fingerprint *fprint;
     BOOL oldtrust, trust;
 	
-    if (context == NULL) return;
+    if (context == NULL) {
+		AILog(@"Warning: ESGaimOTRUnknownFingerprintController: NULL context for %@",responseInfo);
+		return;
+	}
 	
-    fprint = otrl_context_find_fingerprint(context, (unsigned char *)[fingerprint UTF8String],
-										   0, NULL);
-	
-    if (fprint == NULL) return;
+	fprint = context->active_fingerprint;
+
+    if (fprint == NULL) {
+		AILog(@"Warning: ESGaimOTRUnknownFingerprintController: NULL fprint for %@",responseInfo);
+		return;
+	}
 	
     oldtrust = (fprint->trust && fprint->trust[0]);
     trust = [fingerprintAcceptedNumber boolValue];
