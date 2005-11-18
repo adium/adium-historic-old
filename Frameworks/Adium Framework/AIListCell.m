@@ -293,6 +293,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	NSRect				rect = inRect;
 	
 	if (nameSize.width > rect.size.width) nameSize.width = rect.size.width;
+	if (nameSize.height > rect.size.height) nameSize.height = rect.size.height;
 
 	//Alignment
 	switch ([self textAlignment]) {
