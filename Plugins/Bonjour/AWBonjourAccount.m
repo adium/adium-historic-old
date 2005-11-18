@@ -185,76 +185,33 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	if (![listContact remoteGroupName]) {
 		[listContact setRemoteGroupName:@"Bonjour"];
 	}
-	
+
 	//We only get state change updates on Online contacts
-	if (![listContact online]) {
-		[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
-	}
+	[listContact setOnline:YES notify:NotifyLater silently:silentAndDelayed];
 	
-	switch ([contact status]) {
-		case AWEzvAway:
-			if (![listContact integerStatusObjectForKey:@"Away"]) {
-				[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
-			}
-			break;
-		case AWEzvOnline:
-		case AWEzvIdle:
-		default:
-			if ([listContact integerStatusObjectForKey:@"Away"]) {
-				[listContact setStatusObject:nil forKey:@"Away" notify:NO];
-			}
-	}
+	[listContact setStatusWithName:nil
+					   statusType:(([contact status] == AWEzvAway) ? AIAwayStatusType : AIAvailableStatusType)
+						   notify:NotifyLater];
+	[listContact setStatusMessage:[contact statusMessage]
+						  notify:NotifyLater];
 	
-	if ((idleSinceDate = [contact idleSinceDate])) {
-		//Only set the new date object if the time interval has changed
-		if ([[listContact statusObjectForKey:@"IdleSince"] timeIntervalSinceDate:idleSinceDate] != 0) {
-			[listContact setStatusObject:idleSinceDate forKey:@"IdleSince" notify:NO];
-			[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"IsIdle" notify:NO];
-		}
-	}else{
-		[listContact setStatusObject:nil forKey:@"IdleSince" notify:NO];
-		[listContact setStatusObject:nil forKey:@"IsIdle" notify:NO];
-	}
-	
-    if ((statusMessage = [contact statusMessage])) {
-		NSString	*oldStatusMessage = [listContact stringFromAttributedStringStatusObjectForKey:@"StatusMessage"];
-		
-		if (!oldStatusMessage || ![oldStatusMessage isEqualToString:statusMessage]) {
-			[listContact setStatusObject:[[[NSAttributedString alloc] initWithString:statusMessage] autorelease]
-								  forKey:@"StatusMessage"
-								  notify:NO];
-		}
-	}else{
-		[listContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
-	}
-	
+	idleSinceDate = [contact idleSinceDate];
+	[listContact setIdle:(idleSinceDate != nil)
+			   sinceDate:idleSinceDate
+				  notify:NotifyLater];
+
 	contactImage = [contact contactImage];
 	if (contactImage != [listContact userIcon]) {
-		[listContact setStatusObject:contactImage forKey:KEY_USER_ICON notify:NO];
+		[listContact setStatusObject:contactImage forKey:KEY_USER_ICON notify:NotifyLater];
 	}
 	
     //Use the contact alias as the serverside display name
 	contactName = [contact name];
+		
 	if (![[listContact statusObjectForKey:@"Server Display Name"] isEqualToString:contactName]) {
-		//This is the server display name.  Set it as such.
-		[listContact setStatusObject:contactName
-							  forKey:@"Server Display Name"
-							  notify:NO];
-		
-		[[listContact displayArrayForKey:@"Display Name"] setObject:contactName
-														  withOwner:self
-													  priorityLevel:Low_Priority];
-		
-		//Notify of display name changes
-		[[adium contactController] listObjectAttributesChanged:listContact
-												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
-		
-		//XXX - There must be a cleaner way to do this alias stuff!  This works for now
-		//Request an alias change
-		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-												  object:listContact
-												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-																					 forKey:@"Notify"]];		
+		[listContact setServersideAlias:contactName
+						asStatusMessage:NO
+							   silently:silentAndDelayed];
 	}
 
     //Apply any changes
