@@ -16,9 +16,10 @@
 
 #import "AIContactSettingsPane.h"
 #import "AIContentController.h"
+#import <AIUtilities/AIDelayedTextField.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
-#import <AIUtilities/AIDelayedTextField.h>
+#import <AIUtilities/AIStringFormatter.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListContact.h>
@@ -43,6 +44,15 @@
 	[popUp_encryption setMenu:[[adium contentController] encryptionMenuNotifyingTarget:self
 																		   withDefault:YES]];
 	[[popUp_encryption menu] setAutoenablesItems:NO];
+
+	NSMutableCharacterSet *noNewlinesCharacterSet;
+	noNewlinesCharacterSet = [[[NSCharacterSet characterSetWithCharactersInString:@""] invertedSet] mutableCopy];
+	[noNewlinesCharacterSet removeCharactersInString:@"\n\r"];
+	[textField_alias setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:noNewlinesCharacterSet
+																				length:0 /* No length limit */
+																		 caseSensitive:NO
+																		  errorMessage:nil]];
+	[noNewlinesCharacterSet release];
 
 	[self localizeTitles];
 }
