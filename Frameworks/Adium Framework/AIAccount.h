@@ -165,6 +165,7 @@ typedef enum {
 - (NSString *)aboutEncryption;
 - (void)requestSecureMessaging:(BOOL)inSecureMessaging
 						inChat:(AIChat *)inChat;
+- (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat;
 
 - (BOOL)canSendImagesForChat:(AIChat *)inChat;
 

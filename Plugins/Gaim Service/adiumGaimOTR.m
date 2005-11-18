@@ -75,11 +75,20 @@ static ConnContext* context_for_conv(GaimConversation *conv)
 }
 
 
-/* Return an NSDictionary* describing a ConnContext.
-* @"Fingerprint" : NSString of the fingerprint
-* @"Incoming SessionID" : NSString of the incoming sessionID
-* @"Outgoing SessionID" : NSString of the outgoing sessionID
-*/
+/* 
+ * @brief Return an NSDictionary* describing a ConnContext.
+ *
+ *      Key				 :        Contents
+ * @"Fingerprint"		 : NSString of the fingerprint's human-readable hash
+ * @"Incoming SessionID" : NSString of the incoming sessionID
+ * @"Outgoing SessionID" : NSString of the outgoing sessionID
+ * @"EncryptionStatus"	 : An AIEncryptionStatus
+ * @"accountname"		 : The local account of this context
+ * @"who"				 : The UID of the remote user
+ * @"protocol"			 : The name of the Gaim prpl of this context
+ *
+ * @result The dictinoary
+ */
 static NSDictionary* details_for_context(ConnContext *context)
 {
 	NSDictionary		*securityDetailsDict;
@@ -92,7 +101,6 @@ static NSDictionary* details_for_context(ConnContext *context)
 	
 	unsigned char *fingerprint;
 	char our_hash[45], their_hash[45];
-	char *trust;
 	
     if (fprint == NULL) return nil;
     if (fprint->fingerprint == NULL) return nil;
@@ -229,11 +237,9 @@ static void otrg_adium_dialog_private_key_wait_done(OtrgDialogWaitHandle handle)
 }
 
 /* Show a dialog informing the user that a correspondent (who) has sent
-* us a Key Exchange Message (kem) that contains an unknown fingerprint.
-* Ask the user whether to accept the fingerprint or not.  If yes, call
-* response_cb(ops, opdata, response_data, resp) with resp = 1.  If no,
-* set resp = 0.  If the user destroys the dialog without answering, set
-* resp = -1. */
+ * us a Key Exchange Message (kem) that contains an unknown fingerprint.
+ * Ask the user whether to accept the fingerprint or not.
+ */
 static void otrg_adium_dialog_unknown_fingerprint(OtrlUserState us, const char *accountname,
 												  const char *protocol, const char *who,
 												  unsigned char fingerprint[20])
@@ -251,12 +257,12 @@ static void otrg_adium_dialog_unknown_fingerprint(OtrlUserState us, const char *
 	
 	[otrAdapter performSelector:@selector(verifyUnknownFingerprint:)
 					 withObject:[NSValue valueWithPointer:context]
-					 afterDelay:0];	
+					 afterDelay:0];
 }
 
 static void otrg_adium_dialog_verify_fingerprint(Fingerprint *fprint)
 {
-	AILog(@"Should verify %x",fprint);
+	adium_gaim_verify_fingerprint_for_context(fprint->context);
 }
 
 /* Call this when a context transitions from (a state other than
@@ -450,6 +456,27 @@ void adium_gaim_otr_disconnect_conv(GaimConversation *conv)
 		(context = context_for_conv(conv))) {
 		otrg_ui_disconnect_connection(context);
 	}
+}
+
+void adium_gaim_verify_fingerprint_for_context(ConnContext *context)
+{
+	NSDictionary		*responseInfo;
+	
+	responseInfo = details_for_context(context);
+	
+	[ESGaimOTRUnknownFingerprintController mainPerformSelector:@selector(showVerifyFingerprintPromptWithResponseInfo:)
+													withObject:responseInfo];	
+}
+
+void adium_gaim_verify_fingerprint_for_conv(GaimConversation *conv)
+{
+	ConnContext	*context;
+	
+	/* Do nothing if this isn't an IM conversation */
+	if ((gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_IM) &&
+		(context = context_for_conv(conv))) {
+		adium_gaim_verify_fingerprint_for_context(context);
+	}	
 }
 
 #pragma mark Initial setup

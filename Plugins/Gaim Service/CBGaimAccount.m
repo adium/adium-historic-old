@@ -2211,6 +2211,11 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 								inChat:inChat];
 }
 
+- (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat
+{
+	[gaimThread promptToVerifyEncryptionIdentityInChat:inChat];	
+}
+
 - (BOOL)allowSecureMessagingTogglingForChat:(AIChat *)inChat
 {
 	//Allow secure messaging via OTR for one-on-one chats

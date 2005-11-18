@@ -1505,6 +1505,19 @@ NSMutableDictionary* get_chatDict(void)
 											   inChat:inChat];
 }
 
+- (void)gaimThreaPromptToVerifyEncryptionIdentityInChat:(AIChat *)inChat
+{
+	GaimConversation	*conv;
+	if ((conv = convLookupFromChat(inChat, [inChat account]))) {
+		adium_gaim_verify_fingerprint_for_conv(conv);
+	}
+}
+
+- (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat
+{
+	[gaimThreadProxy gaimThreaPromptToVerifyEncryptionIdentityInChat:inChat];
+}
+
 - (void)gaimConversation:(GaimConversation *)conv setSecurityDetails:(NSDictionary *)securityDetailsDict
 {
 	AIChat	*chat = (conv ? imChatLookupFromConv(conv) : nil);

@@ -33,6 +33,7 @@
 #define	TITLE_MAKE_SECURE		AILocalizedString(@"Initiate Encrypted OTR Chat",nil)
 #define	TITLE_MAKE_INSECURE		AILocalizedString(@"Cancel Encrypted Chat",nil)
 #define TITLE_SHOW_DETAILS		[AILocalizedString(@"Show Details",nil) stringByAppendingEllipsis]
+#define TITLE_VERIFY			[AILocalizedString(@"Verify",nil) stringByAppendingEllipsis]
 #define	TITLE_ENCRYPTION_OPTIONS AILocalizedString(@"Encryption Settings",nil)
 #define TITLE_ABOUT_ENCRYPTION	[AILocalizedString(@"About Encryption",nil) stringByAppendingEllipsis]
 
@@ -91,7 +92,7 @@
 
 	menuItem = [[menuItem copy] autorelease];
 	[[adium menuController] addContextualMenuItem:menuItem
-									   toLocation:Context_Contact_ChatAction];
+									   toLocation:Context_Contact_TabAction];
 }
 
 - (void)registerToolbarItem
@@ -266,6 +267,13 @@
 								 nil);
 }
 
+- (IBAction)verify:(id)sender
+{
+	AIChat	*chat = [[adium interfaceController] activeChat];
+	
+	[[chat account] promptToVerifyEncryptionIdentityInChat:chat];	
+}
+
 - (IBAction)showAbout:(id)sender
 {
 	NSString	*aboutEncryption;
@@ -346,6 +354,7 @@
 				break;
 				
 			case AISecureMessagingMenu_ShowDetails:
+			case AISecureMessagingMenu_Verify:
 				//Only enable show details if the chat is secure
 				return [chat isSecure];
 				break;
@@ -385,6 +394,13 @@
 															  keyEquivalent:@""] autorelease];
 		[item setTag:AISecureMessagingMenu_ShowDetails];
 		[_secureMessagingMenu addItem:item];
+
+		item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:TITLE_VERIFY
+																	 target:self
+																	 action:@selector(verify:)
+															  keyEquivalent:@""] autorelease];
+		[item setTag:AISecureMessagingMenu_Verify];
+		[_secureMessagingMenu addItem:item];
 		
 		item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:TITLE_ENCRYPTION_OPTIONS
 																	 target:nil
@@ -394,8 +410,7 @@
 		[item setSubmenu:[[adium contentController] encryptionMenuNotifyingTarget:self
 																	  withDefault:YES]];
 		[_secureMessagingMenu addItem:item];		
-		
-		
+
 		[_secureMessagingMenu addItem:[NSMenuItem separatorItem]];
 		item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:TITLE_ABOUT_ENCRYPTION
 																	 target:self

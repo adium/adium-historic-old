@@ -16,10 +16,14 @@
 
 #import <Adium/AIObject.h>
 #import "SLGaimCocoaAdapter.h"
+#import "gaimOTRCommon.h"
 
 void otrg_adium_unknown_fingerprint_response(NSDictionary *responseInfo, BOOL accepted);
 void adium_gaim_otr_connect_conv(GaimConversation *conv);
 void adium_gaim_otr_disconnect_conv(GaimConversation *conv);
+void adium_gaim_verify_fingerprint_for_conv(GaimConversation *conv);
+void adium_gaim_verify_fingerprint_for_context(ConnContext *context);
+
 void initGaimOTRSupprt(void);
 
 @class ESGaimOTRPreferences;
