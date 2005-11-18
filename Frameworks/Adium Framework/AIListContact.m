@@ -25,6 +25,7 @@
 #import "AIHTMLDecoder.h"
 
 #import <AIUtilities/AIMutableOwnerArray.h>
+#import <AIUtilities/AIMutableStringAdditions.h>
 
 @implementation AIListContact
 
@@ -182,11 +183,17 @@
 		
 		changes = YES;
 	}
+
+	NSMutableString *cleanedAlias;
 	
+	//Remove any newlines, since we won't want them anywhere below
+	cleanedAlias = [alias mutableCopy];
+	[cleanedAlias convertNewlinesToSlashes];
+
 	//Use it either as the status message or the display name.
 	if (useAsStatusMessage) {
-		if (![[self stringFromAttributedStringStatusObjectForKey:@"ContactListStatusMessage"] isEqualToString:alias]) {
-			[self setStatusObject:[[[NSAttributedString alloc] initWithString:alias] autorelease]
+		if (![[self stringFromAttributedStringStatusObjectForKey:@"ContactListStatusMessage"] isEqualToString:cleanedAlias]) {
+			[self setStatusObject:[[[NSAttributedString alloc] initWithString:cleanedAlias] autorelease]
 						   forKey:@"ContactListStatusMessage" 
 						   notify:NotifyLater];
 			
@@ -196,10 +203,10 @@
 	} else {
 		AIMutableOwnerArray	*displayNameArray = [self displayArrayForKey:@"Display Name"];
 		NSString			*oldDisplayName = [displayNameArray objectValue];
-		
+
 		//If the mutableOwnerArray's current value isn't identical to this alias, we should set it
-		if (![[displayNameArray objectWithOwner:[self account]] isEqualToString:alias]) {
-			[displayNameArray setObject:alias
+		if (![[displayNameArray objectWithOwner:[self account]] isEqualToString:cleanedAlias]) {
+			[displayNameArray setObject:cleanedAlias
 							  withOwner:[self account]
 						  priorityLevel:Low_Priority];
 			
@@ -227,6 +234,8 @@
 												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
 																					 forKey:@"Notify"]];
 	}
+	
+	[cleanedAlias release];
 }
 
 /*!
