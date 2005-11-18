@@ -226,9 +226,7 @@ static NSString	*prefsCategory;
 - (void)handleURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
 {
 	if (!completedApplicationLoad) {
-		NSLog(@"!completedApplicationLoad");
 		if (!queuedURLEvents) {
-			NSLog(@"!queuedURLEvents");
 			queuedURLEvents = [[NSMutableArray alloc] init];
 		}
 		[queuedURLEvents addObject:[[event descriptorAtIndex:1] stringValue]];
@@ -319,7 +317,7 @@ static NSString	*prefsCategory;
 		while ((eventString = [e nextObject])) {
 			[AdiumURLHandling handleURLEvent:eventString];
 		}
-		[queuedURLEvents release];
+		[queuedURLEvents release]; queuedURLEvents = nil;
 	}
 	
 	completedApplicationLoad = YES;
