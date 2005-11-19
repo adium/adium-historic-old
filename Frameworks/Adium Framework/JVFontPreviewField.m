@@ -37,7 +37,7 @@
 	[super dealloc];
 }
 
-- (void) selectFont:(id) sender {
+- (void) changeFont:(id) sender {
 	NSFont *font = [sender convertFont:[self font]];
 
 	if (!font) return;
@@ -96,7 +96,6 @@
 
 - (IBAction) chooseFontWithFontPanel:(id) sender
 {
-	[[NSFontManager sharedFontManager] setAction:@selector( selectFont: )];
 	[[self window] makeFirstResponder:self];
 	
 	[self setKeyboardFocusRingNeedsDisplayInRect:[self frame]];
