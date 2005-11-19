@@ -279,18 +279,42 @@
 - (void)deleteFromArray:(NSArray *)array
 {
 	if (array) {
-		int count = [array count];
-		
-		NSString	*name = ((count == 1) ?
-							 [[array objectAtIndex:0] displayName] : 
-							 [NSString stringWithFormat:AILocalizedString(@"%i contacts",nil),count]);
+		NSString	*message;
+		int			count = [array count];
+
+		if (count == 1) {
+			AIListObject	*listObject = [array objectAtIndex:0];
+			NSString		*name = [listObject displayName];
+			if ([listObject isKindOfClass:[AIListGroup class]]) {
+				message = [NSString stringWithFormat:AILocalizedString(@"This will remove the group \"%@\" from the contact lists of your online accounts. The %i contacts within this group will also be removed.\n\nThis action can not be undone.",nil),
+					name,
+					[(AIListGroup *)listObject containedObjectsCount]];
+				
+			} else {
+				message = [NSString stringWithFormat:AILocalizedString(@"This will remove %@ from the contact lists of your online accounts.",nil), name];
+			}
+		} else {
+			BOOL		containsGroup = NO;
+			NSEnumerator *enumerator = [array objectEnumerator];
+			AIListObject *listObject;
+			
+			while ((listObject = [enumerator nextObject]) && !containsGroup) {
+				containsGroup = [listObject isKindOfClass:[AIListGroup class]];
+			}
+
+			if (containsGroup) {
+				message = [NSString stringWithFormat:AILocalizedString(@"This will remove %i items from the contact lists of your online accounts. Contacts in any deleted groups will also be removed.\n\nThis action can not be undone.",nil), count];
+			} else {
+				message = [NSString stringWithFormat:AILocalizedString(@"This will remove %i contacts from the contact lists of your online accounts.",nil), count];
+			}
+		}
 		
 		//Make sure we're in the front so our prompt is visible
 		[NSApp activateIgnoringOtherApps:YES];
 		
 		//Guard deletion with a warning prompt		
 		int result = NSRunAlertPanel(AILocalizedString(@"Remove from list?",nil),
-									 [NSString stringWithFormat:AILocalizedString(@"This will remove %@ from the contact lists of your online accounts.",nil), name],
+									 message,
 									 AILocalizedString(@"Remove",nil),
 									 AILocalizedString(@"Cancel",nil),
 									 nil);
