@@ -58,6 +58,7 @@
 //Connectivity
 - (BOOL)shouldBeOnline;
 - (void)setShouldBeOnline:(BOOL)inShouldBeOnline;
+- (void)toggleOnline;
 - (void)didConnect;
 - (NSSet *)contactStatusObjectKeys;
 - (void)didDisconnect;

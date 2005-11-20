@@ -894,6 +894,15 @@
 				  group:GROUP_ACCOUNT_STATUS];	
 }
 
+- (void)toggleOnline
+{
+	BOOL    online = [self online];
+	BOOL	connecting = [[self statusObjectForKey:@"Connecting"] boolValue];
+	
+	//If online or connecting set the account offline, otherwise set it to online
+	[self setShouldBeOnline:!(online || connecting)]; 	
+}
+
 /*!
  * @brief The account did connect
  *

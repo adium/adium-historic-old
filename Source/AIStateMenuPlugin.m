@@ -227,11 +227,7 @@
 }
 
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
-	BOOL    online = [inAccount online];
-	BOOL	connecting = [[inAccount statusObjectForKey:@"Connecting"] boolValue];
-	
-	//If online or connecting set the account offline, otherwise set it to online
-	[inAccount setShouldBeOnline:!(online || connecting)]; 
+	[inAccount toggleOnline];
 }
 
 @end

@@ -192,8 +192,9 @@ static	NSImage						*adiumRedHighlightImage = nil;
 	//We need to update next time we're clicked
 	needsUpdate = YES;
 }
+
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
-	[[adium accountController] toggleConnectionOfAccount:inAccount];
+	[inAccount toggleOnline];
 }
 
 
