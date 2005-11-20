@@ -152,7 +152,7 @@
 	[others release];
 	[accounts release];
 	[conversationList release];
-	[pendingMessages release];
+	[pendingMessages release]; pendingMessages = nil;
 }
 
 
