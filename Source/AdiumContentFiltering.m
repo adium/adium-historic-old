@@ -48,6 +48,9 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
  */
 - (void)dealloc
 {	
+	[stringsRequiringPolling release];
+	[delayedFilteringDict release];
+
 	[super dealloc];
 }
 
@@ -316,7 +319,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	NSNumber		*uniqueIDNumber;
 	NSDictionary	*infoDict;
 	BOOL			shouldDelay;
-	
+
 	uniqueIDNumber = [NSNumber numberWithUnsignedLongLong:uniqueID];
 	infoDict = [delayedFilteringDict objectForKey:uniqueIDNumber];
 	
