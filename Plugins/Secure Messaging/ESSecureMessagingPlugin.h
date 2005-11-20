@@ -35,7 +35,8 @@ typedef enum {
 	NSImage *lockImageAnimation[LOCK_IMAGE_ANIMATION_STEPS];
 	
 	NSMutableSet	*toolbarItems;
-	
+	NSMutableSet	*validatedItems;
+
 	NSMenu	*_secureMessagingMenu;
 }
 

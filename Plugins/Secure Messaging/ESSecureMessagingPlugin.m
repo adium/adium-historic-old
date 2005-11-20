@@ -48,6 +48,7 @@
 - (void)registerToolbarItem;
 - (NSMenu *)_secureMessagingMenu;
 - (void)_updateToolbarIconOfChat:(AIChat *)inChat inWindow:(NSWindow *)window;
+- (void)_updateToolbarIcon:(NSToolbarItem *)item forChat:(AIChat *)chat;
 @end
 
 @implementation ESSecureMessagingPlugin
@@ -98,7 +99,7 @@
 - (void)registerToolbarItem
 {	
 	toolbarItems = [[NSMutableSet alloc] init];
-	
+
 	//Toolbar item registration
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(toolbarWillAddItem:)
@@ -127,7 +128,7 @@
 	[toolbarItem setMinSize:NSMakeSize(32,32)];
 	[toolbarItem setMaxSize:NSMakeSize(32,32)];
 	[button setToolbarItem:toolbarItem];
-	
+
 	//Register our toolbar item
 	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"MessageWindow"];
 }
@@ -160,6 +161,32 @@
 		[item setMenuFormRepresentation:mItem];
 
 		[toolbarItems addObject:item];
+		
+		[self performSelector:@selector(toolbarDidAddItem:)
+				   withObject:item
+				   afterDelay:0];
+	}
+}
+
+- (void)toolbarDidAddItem:(NSToolbarItem *)item
+{
+	/* Only need to take action if we haven't already validated the initial state of this item.
+	 * This will only be true when the toolbar is revealed for the first time having been hidden when window opened.
+	 */
+	if (![validatedItems containsObject:item]) {
+		NSEnumerator *enumerator = [[NSApp windows] objectEnumerator];
+		NSWindow	 *window;
+		NSToolbar	 *thisItemsToolbar = [item toolbar];
+		
+		//Look at each window to find the toolbar we are in
+		while ((window = [enumerator nextObject])) {
+			if ([window toolbar] == thisItemsToolbar) break;
+		}
+		
+		if (window) {
+			[self _updateToolbarIcon:item
+							 forChat:[[adium interfaceController] activeChatInWindow:window]];
+		}
 	}
 }
 
@@ -168,7 +195,8 @@
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	if ([toolbarItems containsObject:item]) {
 		[toolbarItems removeObject:item];
-		
+		[validatedItems removeObject:item];
+
 		if ([toolbarItems count] == 0) {
 			[[adium notificationCenter] removeObserver:self
 												  name:@"AIChatDidBecomeVisible"
@@ -227,6 +255,21 @@
 	return nil;
 }
 
+- (void)_updateToolbarIcon:(NSToolbarItem *)item forChat:(AIChat *)chat
+{
+	NSImage			*image;
+	
+	if ([chat isSecure]) {
+		image = lockImage_Locked;
+	} else {
+		image = lockImage_Unlocked;				
+	}
+	
+	[item setEnabled:[chat supportsSecureMessagingToggling]];
+	[(MVMenuButton *)[item view] setImage:image];
+	[validatedItems addObject:item];
+}
+
 - (void)_updateToolbarIconOfChat:(AIChat *)chat inWindow:(NSWindow *)window
 {
 	NSToolbar		*toolbar = [window toolbar];
@@ -235,16 +278,7 @@
 	
 	while ((item = [enumerator nextObject])) {
 		if ([[item itemIdentifier] isEqualToString:@"Encryption"]) {
-			NSImage			*image;
-			
-			if ([chat isSecure]) {
-				image = lockImage_Locked;
-			} else {
-				image = lockImage_Unlocked;				
-			}
-
-			[item setEnabled:[chat supportsSecureMessagingToggling]];
-			[(MVMenuButton *)[item view] setImage:image];
+			[self _updateToolbarIcon:item forChat:chat];
 			break;
 		}
 	}	
