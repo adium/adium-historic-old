@@ -419,37 +419,10 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 }
 
 #pragma mark Status State Descriptions
-/*!
- * @brief Return the localized description for the sate of the passed status
- *
- * This could be stored with the statusState, but that would break if the locale changed.  This way, the nonlocalized
- * string is used to look up the appropriate localized one.
- *
- * @result A localized description such as @"Away" or @"Out to Lunch" of the state used by statusState
- */
-- (NSString *)descriptionForStateOfStatus:(AIStatus *)statusState
-{
-	NSString		*statusName = [statusState statusName];
-	AIStatusType	statusType = [statusState statusType];
-	NSEnumerator	*enumerator = [statusDictsByServiceCodeUniqueID[statusType] objectEnumerator];
-	NSSet			*set;
-	while ((set = [enumerator nextObject])) {
-		NSEnumerator	*statusDictsEnumerator = [set objectEnumerator];
-		NSDictionary	*statusDict;
-		while ((statusDict = [statusDictsEnumerator nextObject])) {
-			if ([[statusDict objectForKey:KEY_STATUS_NAME] isEqualToString:statusName]) {
-				return [statusDict objectForKey:KEY_STATUS_DESCRIPTION];
-			}
-		}
-	}
-
-	return nil;
-}
-
 - (NSString *)localizedDescriptionForCoreStatusName:(NSString *)statusName
 {
 	static NSDictionary	*coreLocalizedStatusDescriptions = nil;
-	if (!coreLocalizedStatusDescriptions) {
+	if(!coreLocalizedStatusDescriptions){
 		coreLocalizedStatusDescriptions = [[NSDictionary dictionaryWithObjectsAndKeys:
 			STATUS_DESCRIPTION_AVAILABLE, STATUS_NAME_AVAILABLE,
 			STATUS_DESCRIPTION_FREE_FOR_CHAT, STATUS_NAME_FREE_FOR_CHAT,
@@ -473,11 +446,46 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 			STATUS_DESCRIPTION_OFFLINE, STATUS_NAME_OFFLINE,
 			nil] retain];
 	}
-
-	return [coreLocalizedStatusDescriptions objectForKey:statusName];
+	
+	return (statusName ? [coreLocalizedStatusDescriptions objectForKey:statusName] : nil);
 }
 
+- (NSString *)localizedDescriptionForStatusName:(NSString *)statusName statusType:(AIStatusType)statusType
+{
+	NSString *description = nil;
 
+	if (statusName &&
+		!(description = [self localizedDescriptionForCoreStatusName:statusName])) {
+		NSEnumerator	*enumerator = [statusDictsByServiceCodeUniqueID[statusType] objectEnumerator];
+		NSSet			*set;
+		
+		while (!description && (set = [enumerator nextObject])) {
+			NSEnumerator	*statusDictsEnumerator = [set objectEnumerator];
+			NSDictionary	*statusDict;
+			while (!description && (statusDict = [statusDictsEnumerator nextObject])) {
+				if ([[statusDict objectForKey:KEY_STATUS_NAME] isEqualToString:statusName]){
+					description = [statusDict objectForKey:KEY_STATUS_DESCRIPTION];
+				}
+			}
+		}		
+	}
+	
+	return description;
+}
+
+/*!
+ * @brief Return the localized description for the sate of the passed status
+ *
+ * This could be stored with the statusState, but that would break if the locale changed.  This way, the nonlocalized
+ * string is used to look up the appropriate localized one.
+ *
+ * @result A localized description such as @"Away" or @"Out to Lunch" of the state used by statusState
+ */
+- (NSString *)descriptionForStateOfStatus:(AIStatus *)statusState
+{
+	return [self localizedDescriptionForStatusName:[statusState statusName]
+										statusType:[statusState statusType]];
+}
 
 /*!
  * @brief The status name to use by default for a passed type
