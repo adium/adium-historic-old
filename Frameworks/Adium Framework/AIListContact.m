@@ -458,16 +458,50 @@
 #pragma mark Status
 
 /*!
- * @brief Determine the status message to be displayed in the contact list
+* @brief Determine the status message to be displayed in the contact list
+ *
+ * Look for a status object "ContactListStatusMessage".  Then look for a statusMessage.
+ * Failing both those, look for a statusName, which might be something like "DND" or "Free for Chat"
+ * and look up the localized description of it.
  */
 - (NSAttributedString *)contactListStatusMessage
 {
-	NSAttributedString	*contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"];
-	if (!contactListStatusMessage) {
+	NSAttributedString	*contactListStatusMessage;
+	
+	if (!(contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"])) {
 		contactListStatusMessage = [self statusMessage];
 	}
+	   
+	   if (!contactListStatusMessage) {
+		   NSString *statusName;
+		   
+		   if ((statusName = [self statusName])) {
+			   NSString *descriptionOfStatus;
+			   
+			   if ((descriptionOfStatus = [[adium statusController] localizedDescriptionForStatusName:statusName
+																						   statusType:[self statusType]])) {
+				   contactListStatusMessage = [[[NSAttributedString alloc] initWithString:descriptionOfStatus] autorelease];			
+			   }
+		   }
+	   }
+	   
+	   return contactListStatusMessage;	
+}
+
+/*
+ * @brief Return just the status message, not looking as deep as a localized status name
+ *
+ * This is used by AIMetaContact to be able to sort out what status to display
+ */
+- (NSAttributedString *)contactListStatusMessageIgnoringStatusName
+{
+	NSAttributedString	*contactListStatusMessage;
 	
-	return contactListStatusMessage;
+	if (!(contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"])) {
+		contactListStatusMessage = [self statusMessage];
+	}
+	   
+	   return contactListStatusMessage;
 }
 
 #pragma mark Parents

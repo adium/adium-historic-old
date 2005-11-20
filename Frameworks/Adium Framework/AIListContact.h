@@ -59,5 +59,6 @@
 				  silently:(BOOL)silent;
 
 - (NSAttributedString *)contactListStatusMessage;
+- (NSAttributedString *)contactListStatusMessageIgnoringStatusName;
 
 @end
