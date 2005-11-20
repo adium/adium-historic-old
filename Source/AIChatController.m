@@ -441,15 +441,18 @@
 		mostRecentChat = nil;
 	}
 	
-	//Notify the account and send out the Chat_WillClose notification
-	[[inChat account] closeChat:inChat];
+	//Send out the Chat_WillClose notification
 	[[adium notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
-	
+
 	//Remove the chat's content (it retains the chat, so this must be done separately)
-	[inChat removeAllContent];
+	//[inChat removeAllContent];
 
 	//Remove the chat
 	if (shouldRemove) {
+		/* If we didn't remove the chat because we're waiting for it to reopen, don't cause the account
+		 * to close down the chat.
+		 */
+		[[inChat account] closeChat:inChat];
 		[openChats removeObject:inChat];
 		AILog(@"closeChat: Removed <<%@>> [%@]",inChat, openChats);
 	}
