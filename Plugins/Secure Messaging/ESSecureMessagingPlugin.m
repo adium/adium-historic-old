@@ -48,7 +48,7 @@
 - (void)registerToolbarItem;
 - (NSMenu *)_secureMessagingMenu;
 - (void)_updateToolbarIconOfChat:(AIChat *)inChat inWindow:(NSWindow *)window;
-- (void)_updateToolbarIcon:(NSToolbarItem *)item forChat:(AIChat *)chat;
+- (void)_updateToolbarItem:(NSToolbarItem *)item forChat:(AIChat *)chat;
 @end
 
 @implementation ESSecureMessagingPlugin
@@ -184,7 +184,7 @@
 		}
 		
 		if (window) {
-			[self _updateToolbarIcon:item
+			[self _updateToolbarItem:item
 							 forChat:[[adium interfaceController] activeChatInWindow:window]];
 		}
 	}
@@ -255,7 +255,7 @@
 	return nil;
 }
 
-- (void)_updateToolbarIcon:(NSToolbarItem *)item forChat:(AIChat *)chat
+- (void)_updateToolbarItem:(NSToolbarItem *)item forChat:(AIChat *)chat
 {
 	NSImage			*image;
 	
@@ -278,7 +278,7 @@
 	
 	while ((item = [enumerator nextObject])) {
 		if ([[item itemIdentifier] isEqualToString:@"Encryption"]) {
-			[self _updateToolbarIcon:item forChat:chat];
+			[self _updateToolbarItem:item forChat:chat];
 			break;
 		}
 	}	
