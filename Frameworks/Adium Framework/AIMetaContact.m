@@ -919,13 +919,12 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	NSEnumerator		*enumerator;
 	NSAttributedString	*contactListStatusMessage = nil;
 	AIListContact		*listContact;
-
+	
 	enumerator = [[self listContacts] objectEnumerator];
 	while (!contactListStatusMessage && (listContact = [enumerator nextObject])) {
-		contactListStatusMessage = [listContact contactListStatusMessage];
-		if (!contactListStatusMessage)
-			contactListStatusMessage = [listContact statusMessage];
+		contactListStatusMessage = [listContact contactListStatusMessageIgnoringStatusName];
 	}
+
 	if (!contactListStatusMessage)
 		contactListStatusMessage = [self statusMessage];
 	
