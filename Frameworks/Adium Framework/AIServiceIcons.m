@@ -56,7 +56,14 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 {
 	NSImage	*serviceIcon = [self serviceIconForServiceID:[service serviceID] type:iconType direction:iconDirection];
 
-	return serviceIcon ? serviceIcon : [service defaultServiceIcon];
+	if (!serviceIcon) {
+		//If the icon pack doesn't supply a service icon, query the service itself
+		serviceIcon = [service defaultServiceIconOfType:iconType];
+		if (iconDirection == AIIconFlipped) [serviceIcon setFlipped:YES];
+		[serviceIcons[iconType][iconDirection] setObject:serviceIcon forKey:[service serviceID]];
+	}
+
+	return serviceIcon;
 }
 
 //Retrieve the correct service icon for a service by ID
