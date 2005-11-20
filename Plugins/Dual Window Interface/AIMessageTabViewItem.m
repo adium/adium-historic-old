@@ -129,7 +129,7 @@
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(listObjectAttributesChanged:)
 										   name:ListObject_AttributesChanged
-										 object:listObject];
+										 object:nil];
 		
 	}
 }
@@ -168,21 +168,25 @@
 //
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
-    NSSet		*keys = [[notification userInfo] objectForKey:@"Keys"];
+	AIListObject *listObject = [notification object];
 
-	//Redraw if the icon has changed
-	if (keys == nil || [keys containsObject:@"Tab Status Icon"]) {
-		[[self container] updateIconForTabViewItem:self];
-		[[[self tabView] delegate] redisplayTabForTabViewItem:self];
-	}
-	
-    //If the list object's display name changed, we resize the tabs
-    if (keys == nil || [keys containsObject:@"Display Name"]) {
-		[[[self tabView] delegate] resizeTabForTabViewItem:self];
-    }
-	
-	if (keys == nil || [keys containsObject:KEY_USER_ICON]) {
-		[self updateTabViewItemImage];
+	if (!listObject || (listObject == [messageViewController listObject])) {
+		NSSet		 *keys = [[notification userInfo] objectForKey:@"Keys"];
+		
+		//Redraw if the icon has changed
+		if (!keys || [keys containsObject:@"Tab Status Icon"]) {
+			[[self container] updateIconForTabViewItem:self];
+			[[[self tabView] delegate] redisplayTabForTabViewItem:self];
+		}
+		
+		//If the list object's display name changed, we resize the tabs
+		if (!keys || [keys containsObject:@"Display Name"]) {
+			[[[self tabView] delegate] resizeTabForTabViewItem:self];
+		}
+		
+		if (!keys || [keys containsObject:KEY_USER_ICON]) {
+			[self updateTabViewItemImage];
+		}
 	}
 }
 
