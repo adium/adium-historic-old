@@ -283,6 +283,7 @@
 	if (extension && [extension length]) {		
 		NSImage		*systemIcon = [[NSWorkspace sharedWorkspace] iconForFileType:extension];
 		NSString	*badgeArrow = nil; 
+		NSFont		*appleGothicFont = [NSFont fontWithName:@"AppleGothic" size:24];
 
 		switch (type) {
 			case Incoming_FileTransfer:
@@ -296,7 +297,7 @@
 				break;
 		}
 		
-		if (!badgeArrow)
+		if (!badgeArrow || !appleGothicFont)
 			return systemIcon;
 		
 		// If type is Incoming (*down*load) or Outgoing (*up*load), overlay an arrow in a circle.
@@ -307,7 +308,7 @@
 
 		NSMutableDictionary *atts = [(NSMutableDictionary *)[[NSDictionary dictionaryWithObjectsAndKeys:
 			[NSColor alternateSelectedControlColor], NSForegroundColorAttributeName,
-			[NSFont fontWithName:@"AppleGothic" size:24], NSFontAttributeName, // AppleGothic has our arrow glyphs
+			appleGothicFont, NSFontAttributeName, // AppleGothic has our arrow glyphs
 			nil] mutableCopy] autorelease];
 		
 		NSSize arrowSize = [badgeArrow sizeWithAttributes:atts];
@@ -347,7 +348,6 @@
 		
 		[iconImage unlockFocus];
 		[iconImage autorelease];
-		
 	}
 
 	return iconImage;
