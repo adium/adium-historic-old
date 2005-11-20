@@ -19,9 +19,9 @@
 #define KEY_GROWL_ALERT_STICKY @"Growl Sticky"
 
 @protocol AIActionHandler;
-@protocol GrowlAppBridgeDelegate;
+@protocol GrowlApplicationBridgeDelegate;
 
-@interface NEHGrowlPlugin : AIPlugin <AIActionHandler, GrowlAppBridgeDelegate> {
+@interface NEHGrowlPlugin : AIPlugin <AIActionHandler, GrowlApplicationBridgeDelegate> {
 	BOOL			 showWhileAway;
 }
 
