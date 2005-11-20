@@ -89,7 +89,7 @@
 	 */
     if (menu != NULL) {
         //We actually need an NSMenuItem here, so we construct one
-        mItem=[[[NSMenuItem alloc] init] autorelease];
+        mItem = [[[NSMenuItem alloc] init] autorelease];
         [mItem setSubmenu: menu];
         [mItem setTitle: [menu title]];
         [item setMenuFormRepresentation:mItem];
