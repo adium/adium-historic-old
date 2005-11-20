@@ -47,4 +47,9 @@
 	[AINewMessagePromptController showPrompt];
 }
 
+- (BOOL)validateMenuItem:(id)menuItem
+{
+	return [[adium accountController] oneOrMoreConnectedAccounts];
+}
+
 @end
