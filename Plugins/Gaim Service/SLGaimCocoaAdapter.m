@@ -1209,10 +1209,29 @@ NSMutableDictionary* get_chatDict(void)
 		
 		enumerator = [arguments keyEnumerator];
 		while ((key = [enumerator nextObject])) {
-			//Append the key
-			attrs = g_list_append(attrs, (char *)[key UTF8String]);
-			//Now append the value
-			attrs = g_list_append(attrs, (char *)[[arguments objectForKey:key] UTF8String]);			
+			char *valueUTF8String = NULL;
+			id	 value;
+
+			value = [arguments objectForKey:key];
+			
+			if ([value isKindOfClass:[NSNumber class]]) {
+				valueUTF8String = g_strdup_printf("%d",[value intValue]);
+				
+			} else if ([value isKindOfClass:[NSString class]]) {
+				valueUTF8String = g_strdup([value UTF8String]);
+			}				
+			
+			if (valueUTF8String) {
+				//Append the key
+				attrs = g_list_append(attrs, (char *)[key UTF8String]);
+				
+				//Now append the value
+				attrs = g_list_append(attrs, valueUTF8String);
+				g_free(valueUTF8String);
+
+			} else {
+				AILog(@"Warning; could not determine value of %@ for key %@, statusID %s",value,key,statusID);
+			}
 		}
 	}
 	
