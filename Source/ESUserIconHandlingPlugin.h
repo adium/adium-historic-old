@@ -20,6 +20,7 @@
 
 @interface ESUserIconHandlingPlugin : AIPlugin <AIListObjectObserver> {
 	NSMutableSet	*toolbarItems;
+	NSMutableSet	*validatedItems;
 }
 
 @end

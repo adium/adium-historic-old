@@ -43,6 +43,8 @@
 - (void)registerToolbarItem;
 
 - (void)_updateToolbarIconOfChat:(AIChat *)inChat inWindow:(NSWindow *)window;
+- (void)_updateToolbarItem:(NSToolbarItem *)item forChat:(AIChat *)chat;
+
 - (void)updateToolbarItemForObject:(AIListObject *)inObject;
 @end
 
@@ -299,6 +301,7 @@
 	NSToolbarItem	*toolbarItem;
 
 	toolbarItems = [[NSMutableSet alloc] init];
+	validatedItems = [[NSMutableSet alloc] init];
 
 	//Toolbar item registration
 	[[NSNotificationCenter defaultCenter] addObserver:self
@@ -373,6 +376,32 @@
 		}
 
 		[toolbarItems addObject:item];
+		
+		[self performSelector:@selector(toolbarDidAddItem:)
+				   withObject:item
+				   afterDelay:0];
+	}
+}
+
+- (void)toolbarDidAddItem:(NSToolbarItem *)item
+{
+	/* Only need to take action if we haven't already validated the initial state of this item.
+	* This will only be true when the toolbar is revealed for the first time having been hidden when window opened.
+	*/
+	if (![validatedItems containsObject:item]) {
+		NSEnumerator *enumerator = [[NSApp windows] objectEnumerator];
+		NSWindow	 *window;
+		NSToolbar	 *thisItemsToolbar = [item toolbar];
+		
+		//Look at each window to find the toolbar we are in
+		while ((window = [enumerator nextObject])) {
+			if ([window toolbar] == thisItemsToolbar) break;
+		}
+		
+		if (window) {
+			[self _updateToolbarItem:item
+							 forChat:[[adium interfaceController] activeChatInWindow:window]];
+		}
 	}
 }
 
@@ -388,6 +417,7 @@
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	if ([toolbarItems containsObject:item]) {
 		[toolbarItems removeObject:item];
+		[validatedItems removeObject:item];
 
 		if ([toolbarItems count] == 0) {
 			[[adium notificationCenter] removeObserver:self
@@ -425,6 +455,31 @@
 	}
 }
 
+- (void)_updateToolbarItem:(NSToolbarItem *)item forChat:(AIChat *)chat
+{
+	AIListContact	*listContact;
+	NSImage			*image;
+	
+	if ((listContact = [[chat listObject] parentContact]) && ![chat isGroupChat]) {
+		image = [listContact userIcon];
+		
+		//Use the serviceIcon if no image can be found
+		if (!image) image = [AIServiceIcons serviceIconForObject:listContact
+															type:AIServiceIconLarge
+													   direction:AIIconNormal];
+	} else {
+		//If we have no listObject or we have a name, we are a group chat and
+		//should use the account's service icon
+		image = [AIServiceIcons serviceIconForObject:[chat account]
+												type:AIServiceIconLarge
+										   direction:AIIconNormal];
+	}
+	
+	[(AIImageButton *)[item view] setImage:image];
+	
+	[validatedItems addObject:item];
+}
+
 /*!
  * @brief Update the user image toolbar icon in a chat
  *
@@ -439,25 +494,7 @@
 
 	while ((item = [enumerator nextObject])) {
 		if ([[item itemIdentifier] isEqualToString:@"UserIcon"]) {
-			AIListContact	*listContact;
-			NSImage			*image;
-
-			if ((listContact = [[chat listObject] parentContact]) && ![chat isGroupChat]) {
-				image = [listContact userIcon];
-
-				//Use the serviceIcon if no image can be found
-				if (!image) image = [AIServiceIcons serviceIconForObject:listContact
-																   type:AIServiceIconLarge
-															  direction:AIIconNormal];
-			} else {
-				//If we have no listObject or we have a name, we are a group chat and
-				//should use the account's service icon
-				image = [AIServiceIcons serviceIconForObject:[chat account]
-														type:AIServiceIconLarge
-												   direction:AIIconNormal];
-			}
-
-			[(AIImageButton *)[item view] setImage:image];
+			[self _updateToolbarItem:item forChat:chat];
 			break;
 		}
 	}
