@@ -18,6 +18,7 @@
 #import "AIAccountMenuAccessPlugin.h"
 #import "AIMenuController.h"
 #import <Adium/AIAccountMenu.h>
+#import <Adium/AIAccount.h>
 
 /*!
  * @class AIAccountMenuAccessPlugin
@@ -70,7 +71,11 @@
 	installedMenuItems = [menuItems retain];
 }
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
-	[[adium accountController] toggleConnectionOfAccount:inAccount];
+	BOOL    online = [inAccount online];
+	BOOL	connecting = [[inAccount statusObjectForKey:@"Connecting"] boolValue];
+	
+	//If online or connecting set the account offline, otherwise set it to online
+	[inAccount setShouldBeOnline:!(online || connecting)]; 
 }
 
 @end
