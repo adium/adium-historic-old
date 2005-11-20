@@ -93,7 +93,9 @@
 	//Idle time
     if ((inModifiedKeys == nil || 
 		 (showIdle && [inModifiedKeys containsObject:@"Idle"]) ||
-		 (showStatus && ([inModifiedKeys containsObject:@"StatusMessage"] || [inModifiedKeys containsObject:@"ContactListStatusMessage"]))) &&
+		 (showStatus && ([inModifiedKeys containsObject:@"StatusMessage"] ||
+						 [inModifiedKeys containsObject:@"ContactListStatusMessage"] ||
+						 [inModifiedKeys containsObject:@"StatusName"]))) &&
 		[inObject isKindOfClass:[AIListContact class]]){
 		NSMutableString	*statusMessage = nil;
 		NSString		*finalMessage = nil;
