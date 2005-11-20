@@ -90,8 +90,6 @@ typedef enum
 - (AIAccount *)firstAccountAvailableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline;
 
 //Connection convenience methods
-- (void)toggleConnectionOfAccount:(AIAccount *)account;
-- (void)connectAllAccounts;
 - (void)disconnectAllAccounts;
 - (BOOL)oneOrMoreConnectedAccounts;
 - (BOOL)oneOrMoreConnectedOrConnectingAccounts;
