@@ -480,6 +480,16 @@
 	return [interfacePlugin windowForChat:inChat];
 }
 
+/*
+ * @brief Find the chat active in a window
+ *
+ * If the window does not have an active chat, nil is returned
+ */
+- (AIChat *)activeChatInWindow:(NSWindow *)window
+{
+	return [interfacePlugin activeChatInWindow:window];
+}
+
 //A chat window did close: rebuild our window menu to remove the chat
 - (void)chatDidClose:(AIChat *)inChat
 {

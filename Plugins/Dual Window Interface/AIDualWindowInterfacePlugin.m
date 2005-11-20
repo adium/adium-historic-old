@@ -229,6 +229,23 @@
 			nil);
 }
 
+/*
+ * @brief Find the chat active in a window
+ *
+ * If the window does not have an active chat, nil is returned
+ */
+- (AIChat *)activeChatInWindow:(NSWindow *)window
+{
+	AIChat				*chat = nil;
+	NSWindowController	*windowController = [window windowController];
+
+	if ([windowController isKindOfClass:[AIMessageWindowController class]]) {
+		chat = [(AIMessageWindowController *)windowController activeChat];
+	}
+	
+	return chat;
+}
+
 //Containers -----------------------------------------------------------------------------------------------------------
 #pragma mark Containers
 //Open a new container
