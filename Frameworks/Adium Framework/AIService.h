@@ -15,6 +15,7 @@
  */
 
 #import "AIObject.h"
+#import "AIServiceIcons.h"
 
 @class AIAccountViewController, DCJoinChatViewController;
 
@@ -43,7 +44,7 @@ typedef enum {
 - (NSString *)longDescription;
 - (NSString *)userNameLabel;
 - (AIServiceImportance)serviceImportance;
-- (NSImage *)defaultServiceIcon;
+- (NSImage *)defaultServiceIconOfType:(AIServiceIconType)iconType;
 
 //Service Properties
 - (NSCharacterSet *)allowedCharacters;

@@ -193,9 +193,13 @@
  * also be useful if new services are added to Adium itself after a significant number of Service Icon packs exist
  * which do not yet have an image for this service.  If the active Service Icon pack provides an image for this service,
  * this method will not be called.
+ *
+ * The service should _not_ cache this icon internally; multiple calls should return unique NSImage objects.
+ *
+ * @param iconType The AIServiceIconType of the icon to return. This specifies the desired size of the icon.
  * @return <tt>NSImage</tt> to use for this service by default
  */
-- (NSImage *)defaultServiceIcon
+- (NSImage *)defaultServiceIconOfType:(AIServiceIconType)iconType
 {
 	return nil;
 }
