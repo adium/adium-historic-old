@@ -113,6 +113,7 @@ static NSDictionary* details_for_context(ConnContext *context)
 	AIEncryptionStatus	encryptionStatus;
 
 	switch (level) {
+		default:
 	    case TRUST_NOT_PRIVATE:
 			encryptionStatus = EncryptionStatus_None;
 			break;

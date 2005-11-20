@@ -24,7 +24,6 @@
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
 #import <Libgaim/yahoo.h>
-#import <Libgaim/yahoo_filexfer.h>
 #import <Libgaim/yahoo_friend.h>
 
 @implementation ESGaimYahooAccount
