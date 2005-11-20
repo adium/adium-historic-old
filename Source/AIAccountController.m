@@ -165,38 +165,6 @@
 	return [adiumPreferredAccounts firstAccountAvailableForSendingContentType:inType toContact:inContact includeOffline:includeOffline];
 }
 
-
-
-
-
-
-//XXX - This will be removed when accounts switch to an Enabled / Disabled system
-- (void)toggleConnectionOfAccount:(AIAccount *)account
-{
-    BOOL    online = [[account statusObjectForKey:@"Online"] boolValue];
-	BOOL	connecting = [[account statusObjectForKey:@"Connecting"] boolValue];
-	
-	//If online or connecting set the account offline, otherwise set it to online
-	[account setPreference:[NSNumber numberWithBool:!(online || connecting)] 
-					forKey:@"Online"
-					 group:GROUP_ACCOUNT_STATUS];
-}
-
-//XXX - This will be removed when accounts switch to an Enabled / Disabled system
-- (void)connectAllAccounts
-{
-    NSEnumerator		*enumerator;
-    AIAccount			*account;
-    
-    enumerator = [[self accounts] objectEnumerator];
-    while ((account = [enumerator nextObject])) {
-        if ([[account supportedPropertyKeys] containsObject:@"Online"]) {
-            [account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-        }
-    }
-}
-
-//XXX - This will be removed when accounts switch to an Enabled / Disabled system
 - (void)disconnectAllAccounts
 {
     NSEnumerator		*enumerator;
@@ -204,10 +172,8 @@
 
     enumerator = [[self accounts] objectEnumerator];
     while ((account = [enumerator nextObject])) {
-        if ([[account supportedPropertyKeys] containsObject:@"Online"] &&
-		   [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
-            [account setPreference:nil forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-        }
+        if ([account online]) 
+			[account disconnect];
     }
 }
 
@@ -222,7 +188,7 @@
         if ([account online]) {
 			return YES;
         }
-    }	
+    }
 	
 	return NO;
 }
