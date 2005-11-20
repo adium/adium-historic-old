@@ -29,7 +29,6 @@ static NSString				*statusIconBasePath = nil;
 static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 
 static NSString *statusNameForListObject(AIListObject *listObject);
-static AIStatusType statusTypeForListObject(AIListObject *listObject);
 
 static NSString *statusNameForChat(AIChat *inChat);
 
@@ -51,7 +50,7 @@ static BOOL					statusIconsReady = NO;
 + (NSImage *)statusIconForListObject:(AIListObject *)listObject type:(AIStatusIconType)iconType direction:(AIIconDirection)iconDirection
 {
 	return [AIStatusIcons statusIconForStatusName:statusNameForListObject(listObject)
-									   statusType:statusTypeForListObject(listObject)
+									   statusType:[listObject statusType]
 										 iconType:iconType
 										direction:iconDirection];
 }
@@ -282,16 +281,6 @@ static NSString *statusNameForListObject(AIListObject *listObject)
 	}
 	
 	return statusName;
-}
-
-static AIStatusType statusTypeForListObject(AIListObject *listObject)
-{
-	AIStatusSummary	statusSummary = [listObject statusSummary];
-
-	if (statusSummary == AIOfflineStatus)
-		return AIOfflineStatusType;
-	else
-		return [listObject statusType];
 }
 
 #pragma mark Preview menu images
