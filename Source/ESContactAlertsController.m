@@ -28,14 +28,13 @@
 
 @implementation ESContactAlertsController
 
-int eventMenuItemSort(id menuItemA, id menuItemB, void *context);
-int actionMenuItemSort(id menuItemA, id menuItemB, void *context);
+int menuItemTitleSort(id menuItemA, id menuItemB, void *context);
 
 static	NSMutableDictionary		*eventHandlersByGroup[EVENT_HANDLER_GROUP_COUNT];
 static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_COUNT];
 
 /*!
- * @brief Initialize
+ * @brief Initialize before the class is used
  */
 + (void)initialize
 {
@@ -51,7 +50,9 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 	}
 }
 
-//init and close
+/*!
+ * @brief Init
+ */
 - (id)init
 {
 	if ((self = [super init])) {
@@ -72,6 +73,9 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 	
 }
 
+/*!
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
 	[globalOnlyEventHandlers release]; globalOnlyEventHandlers = nil;
@@ -84,7 +88,19 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 
 //Events ---------------------------------------------------------------------------------------------------------------
 #pragma mark Events
-//Register a potential event
+
+/*!
+ * @brief Register an event
+ *
+ * An event must have a unique eventID. handler is responsible for providing information
+ * about the event, such as short and long descriptions. The group determines how the event will be displayed in the events
+ * preferences; events in the same group are displayed together.
+ *
+ * @param eventID Unique event ID
+ * @param handler The handler, which must conform to AIEventHandler
+ * @param inGroup The group
+ * @param global If YES, the event will only be displayed in the global Events preferences; if NO, the event is available for contacts and groups via Get Info, as well.
+ */
 - (void)registerEventID:(NSString *)eventID
 			withHandler:(id <AIEventHandler>)handler
 				inGroup:(AIEventHandlerGroupType)inGroup
@@ -173,7 +189,7 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 			}
 			
 			//Sort the array of menuItems alphabetically by title within this group
-			[groupMenuItemArray sortUsingFunction:eventMenuItemSort context:nil];
+			[groupMenuItemArray sortUsingFunction:menuItemTitleSort context:nil];
 			
 			[menuItemArray addObjectsFromArray:groupMenuItemArray];
 		}
@@ -204,12 +220,15 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
     }
 }
 
+/*
+ * @brief Sort event IDs by group and then by global short description
+ */
 int eventIDSort(id objectA, id objectB, void *context) {
 	int					groupA, groupB;
 	id <AIEventHandler> eventHandlerA;
 	id <AIEventHandler> eventHandlerB;
 	
-	//Determine the group of each eventID
+	//Determine the group of the first event ID
 	for (groupA = 0; groupA < EVENT_HANDLER_GROUP_COUNT; groupA++) {
 		eventHandlerA = [eventHandlersByGroup[groupA] objectForKey:objectA];
 		if (!eventHandlerA) {
@@ -219,7 +238,7 @@ int eventIDSort(id objectA, id objectB, void *context) {
 		if (eventHandlerA) break;
 	}
 	
-	//Determine the group of each eventID
+	//Determine the group of the second ID
 	for (groupB = 0; groupB < EVENT_HANDLER_GROUP_COUNT; groupB++) {
 		eventHandlerB = [eventHandlersByGroup[groupB] objectForKey:objectB];
 		if (!eventHandlerB) {
@@ -243,11 +262,20 @@ int eventIDSort(id objectA, id objectB, void *context) {
 	}
 }
 
+/*
+ * @brief Sort an array of event IDs
+ *
+ * @brief inArray The array of eventIDs to sort
+ * @return The array sorted by eventIDSort()
+ */
 - (NSArray *)sortedArrayOfEventIDsFromArray:(NSArray *)inArray
 {
 	return [inArray sortedArrayUsingFunction:eventIDSort context:NULL];
 }
 
+/*!
+ * @brief Return the image associated with an event
+ */
 - (NSImage *)imageForEventID:(NSString *)eventID
 {
 	id <AIEventHandler>	eventHandler;
@@ -258,11 +286,16 @@ int eventIDSort(id objectA, id objectB, void *context) {
 	return [eventHandler imageForEventID:eventID];
 }
 
-/*
- Generate an event, returning a set of the actionIDs which were performed.
- If perviouslyPerformedActionIDs is non-nil, it indicates a set of actionIDs which should be treated as if
-	they had already been performed in this invocation.
-*/
+/*!
+ * @brief Generate an event, returning a set of the actionIDs which were performed.
+ *
+ * @param eventID The event which occurred
+ * @param listObject The object for which the event occurred
+ * @param userInfo Event-specific user info
+ * @param previouslyPerformedActionIDs If non-nil, a set of actionIDs which should be treated as if they had already been performed in this invocation.
+ *
+ * @result The set of actions which were performed, suitable for being passed back in for another event generation via previouslyPerformedActionIDs
+ */
 - (NSSet *)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject userInfo:(id)userInfo previouslyPerformedActionIDs:(NSSet *)previouslyPerformedActionIDs
 {
 	NSArray			*alerts = [self appendEventsForObject:listObject eventID:eventID toArray:nil];
@@ -315,20 +348,20 @@ int eventIDSort(id objectA, id objectB, void *context) {
 	return (performedActionIDs ? performedActionIDs : previouslyPerformedActionIDs);
 }
 
-/*
- Append events for the passed object to the specified array.
-	Create the array if passed nil.
-	Return an array which contains the object's own events followed by its containingObject's events.
-	If the object is nil, we retrieve the global preferences.
- 
- This method is intended to be called recursively; it should generate an array which has alerts from:
-	contact->metaContact->group->global preferences (skipping any which don't exist).
+/*!
+ * @brief Append events for the passed object to the specified array.
+ *
+ * @param events The array of events so far. Create the array if passed nil.
+ * @param The object for which we'ere retrieving events. If nil, we retrieve the global preferences.
+ *
+ * This method is intended to be called recursively; it should generate an array which has alerts from:
+ * contact->metaContact->group->global preferences (skipping any which don't exist).
+ *
+ * @result An array which contains the object's own events followed by its containingObject's events.
  */
 - (NSMutableArray *)appendEventsForObject:(AIListObject *)listObject eventID:(NSString *)eventID toArray:(NSMutableArray *)events
 {
 	NSArray			*newEvents;
-
-	// AILog(@"appendEventsForObject: %@ eventID: %@ toArray: %@",preferenceSource,eventID,events);
 
 	//Add events for this object (replacing any inherited from the containing object so that this object takes precendence)
 	newEvents = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_ALERTS
@@ -351,6 +384,9 @@ int eventIDSort(id objectA, id objectB, void *context) {
 	return events;
 }
 
+/*!
+ * @brief Return the default event ID for a new alert
+ */
 - (NSString *)defaultEventID
 {
 	NSString *defaultEventID = [[adium preferenceController] preferenceForKey:KEY_DEFAULT_EVENT_ID
@@ -362,6 +398,11 @@ int eventIDSort(id objectA, id objectB, void *context) {
 	return defaultEventID;
 }
 
+/*!
+ * @brief Find the eventID associated with an English name
+ *
+ * This exists for compatibility with old AdiumXtras...
+ */
 - (NSString *)eventIDForEnglishDisplayName:(NSString *)displayName
 {
 	NSEnumerator		*enumerator;
@@ -386,6 +427,9 @@ int eventIDSort(id objectA, id objectB, void *context) {
 	return nil;
 }
 
+/*!
+ * @brief Return a short description to describe eventID when considered globally
+ */
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID
 {
 	id <AIEventHandler>	eventHandler;
@@ -400,6 +444,17 @@ int eventIDSort(id objectA, id objectB, void *context) {
 	return @"";
 }
 
+/*!
+ * @brief Return a natural language, localized description for an event
+ *
+ * This will be suitable for display to the user such as in a message window or a Growl notification
+ *
+ * @param eventID The event
+ * @param listObject The object for which the event occurred
+ * @param userInfo Event-specific userInfo
+ * @param includeSubject If YES, the return value is a complete sentence. If NO, the return value is suitable for display after a name or other identifier.
+ * @result The natural language description
+ */
 - (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
 										listObject:(AIListObject *)listObject
 										  userInfo:(id)userInfo
@@ -420,27 +475,41 @@ int eventIDSort(id objectA, id objectB, void *context) {
 	return @"";
 }
 
-int eventMenuItemSort(id menuItemA, id menuItemB, void *context) {
-	return ([[menuItemA title] caseInsensitiveCompare:[menuItemB title]]);
-}
-
 
 //Actions --------------------------------------------------------------------------------------------------------------
 #pragma mark Actions
+/*!
+ * @brief Register an actionID and its handler
+ *
+ * When an event occurs -- that is, when the event is generated via
+ * -[ESContactAlertsController generateEvent:forListObject:userInfo:] -- the handler for each action
+ * associated with that event within the appropriate list object's heirarchy (object -> containing group -> global)
+ * will be called as per the AIActionHandler protocol.
+ *
+ * @param actionID The actionID
+ * @param handler The handler, which must conform to the AIActionHandler protocol
+ */
 - (void)registerActionID:(NSString *)actionID withHandler:(id <AIActionHandler>)handler
 {
 	[actionHandlers setObject:handler forKey:actionID];
 }
 
-//Return all available actions
+/*!
+ * @brief Return all available actions
+ */
 - (NSDictionary *)actionHandlers
 {
 	return actionHandlers;
 }
 
-//Returns a menu of all actions
-//- Selector called on action selection is selectAction:
-//- A menu item's represented object is the dictionary describing the action it represents
+/*!
+ * @brief Returns a menu of all actions
+ *
+ * A menu item's represented object is the dictionary describing the action it represents
+ *
+ * @param target The target on which @selector(selectAction:) will be called on selection
+ * @result The NSMenu, which does not send validateMenuItem: messages
+ */
 - (NSMenu *)menuOfActionsWithTarget:(id)target
 {
     NSEnumerator	*enumerator;
@@ -472,7 +541,7 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context) {
     }
 
 	//Sort the array of menuItems alphabetically by title
-	[menuItemArray sortUsingFunction:actionMenuItemSort context:nil];
+	[menuItemArray sortUsingFunction:menuItemTitleSort context:nil];
 	
 	enumerator = [menuItemArray objectEnumerator];
 	while ((menuItem = [enumerator nextObject])) {
@@ -484,6 +553,9 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context) {
 	return [menu autorelease];
 }	
 
+/*!
+ * @brief Return the default action ID for a new alert
+ */
 - (NSString *)defaultActionID
 {
 	NSString *defaultActionID = [[adium preferenceController] preferenceForKey:KEY_DEFAULT_ACTION_ID
@@ -495,18 +567,25 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context) {
 	return defaultActionID;
 }
 
-int actionMenuItemSort(id menuItemA, id menuItemB, void *context) {
-	return ([[menuItemA title] caseInsensitiveCompare:[menuItemB title]]);
-}
-
 //Alerts ---------------------------------------------------------------------------------------------------------------
 #pragma mark Alerts
-//Returns an array of all the alerts of a given list object
+/*!
+ * @brief Returns an array of all the alerts of a given list object
+ *
+ * @param listObject The object
+ */
 - (NSArray *)alertsForListObject:(AIListObject *)listObject
 {
 	return [self alertsForListObject:listObject withEventID:nil actionID:nil];
 }
 
+/*!
+ * @brief Return an array of all alerts for a list object
+ *
+ * @param listObject The object, or nil for global
+ * @param eventID If specified, only return events matching eventID. If nil, don't filter based on events.
+ * @param actionID If specified, only return actions matching actionID. If nil, don't filter based on actionID.
+ */
 - (NSArray *)alertsForListObject:(AIListObject *)listObject withEventID:(NSString *)eventID actionID:(NSString *)actionID
 {
 	NSDictionary	*contactAlerts = [[adium preferenceController] preferenceForKey:KEY_CONTACT_ALERTS
@@ -552,7 +631,13 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context) {
 	return alertArray;	
 }
 
-//Add an alert (passed as a dictionary) to a list object
+/*!
+ * @brief Add an alert (passed as a dictionary) to a list object
+ *
+ * @param newAlert The alert to add
+ * @param listObject The object to which to add, or nil for global
+ * @param setAsNewDefaults YES to make the type and details of newAlert be the new default for new alerts
+ */
 - (void)addAlert:(NSDictionary *)newAlert toListObject:(AIListObject *)listObject setAsNewDefaults:(BOOL)setAsNewDefaults
 {
 	NSString			*newAlertEventID = [newAlert objectForKey:KEY_EVENT_ID];
@@ -601,12 +686,20 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context) {
 	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
 }
 
+/*!
+ * @brief Add an alert at the global level
+ */
 - (void)addGlobalAlert:(NSDictionary *)newAlert
 {
 	[self addAlert:newAlert toListObject:nil setAsNewDefaults:NO];
 }
 
-//Remove the alert (passed as a dictionary, must be an exact = match) form a list object
+/*!
+ * @brief Remove an alert from a listObject
+ *
+ * @param victimAlert The alert to remove; it will be tested against existing alerts using isEqual: so must be identical
+ * @param listObject The object (or nil, for global) from which to remove victimAlert
+ */
 - (void)removeAlert:(NSDictionary *)victimAlert fromListObject:(AIListObject *)listObject
 {
 	NSMutableDictionary	*contactAlerts = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_ALERTS
@@ -636,6 +729,11 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context) {
 	[contactAlerts release];
 }
 
+/*!
+ * @brief Remove all alerts which are specifically applied to listObject
+ *
+ * This does not affect alerts set at higher (containing object, root) levels 
+ */
 - (void)removeAllAlertsFromListObject:(AIListObject *)listObject
 {
 	[listObject setPreference:nil
@@ -643,6 +741,9 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context) {
 						group:PREF_GROUP_CONTACT_ALERTS];
 }
 
+/*!
+ * @brief Remove all global (root-level) alerts with a given action ID
+ */
 - (void)removeAllGlobalAlertsWithActionID:(NSString *)actionID
 {
 	NSDictionary		*contactAlerts = [[adium preferenceController] preferenceForKey:KEY_CONTACT_ALERTS 
@@ -734,6 +835,15 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context) {
 	
 }
 
+/*!
+ * @brief Move all contact alerts from oldObject to newObject
+ *
+ * This is useful when adding oldObject to the metaContact newObject so that any existing contact alerts for oldObject
+ * are applied at the contact-general level, displayed and handled properly for the new, combined contact.
+ *
+ * @param oldObject The object from which to move contact alerts
+ * @param newObject The object to which to we want to add the moved contact alerts
+ */
 - (void)mergeAndMoveContactAlertsFromListObject:(AIListObject *)oldObject intoListObject:(AIListObject *)newObject
 {
 	NSArray				*oldAlerts = [self alertsForListObject:oldObject];
@@ -754,10 +864,24 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context) {
 }
 
 #pragma mark -
+/*!
+ * @brief Is the passed event a message event?
+ *
+ * Examples of messages events are "message sent" and "message received."
+ *
+ * @result YES if it is a message event
+ */
 - (BOOL)isMessageEvent:(NSString *)eventID
 {
 	return ([eventHandlersByGroup[AIMessageEventHandlerGroup] objectForKey:eventID] != nil ||
 		   ([globalOnlyEventHandlersByGroup[AIMessageEventHandlerGroup] objectForKey:eventID] != nil));
+}
+
+/*!
+ * @brief Sort menu items by title
+ */
+int menuItemTitleSort(id menuItemA, id menuItemB, void *context) {
+	return ([[menuItemA title] caseInsensitiveCompare:[menuItemB title]]);
 }
 
 @end
