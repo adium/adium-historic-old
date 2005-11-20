@@ -184,12 +184,12 @@
 														  object:chat
 														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 			}
-			
-			//Track that we are in the process of receiving this object
-			[objectsBeingReceived addObject:inObject];
-			
+
 			//Run the object through our incoming content filters
 			if ([inObject filterContent]) {
+				//Track that we are in the process of receiving this object
+				[objectsBeingReceived addObject:inObject];
+
 				[self filterAttributedString:[inObject message]
 							 usingFilterType:AIFilterContent
 								   direction:AIFilterIncoming
@@ -234,8 +234,12 @@
 {
 	//Only proceed if the chat allows it; if it doesn't, it will handle calling this method again when it is ready
 	if ([[inObject chat] willBeginSendingContentObject:inObject]) {
+
 		//Run the object through our outgoing content filters
 		if ([inObject filterContent]) {
+			//Track that we are in the process of send this object
+			[objectsBeingReceived addObject:inObject];
+
 			[self filterAttributedString:[inObject message]
 						 usingFilterType:AIFilterContent
 							   direction:AIFilterOutgoing
