@@ -101,6 +101,7 @@
 - (NSArray *)openChatsInContainerWithID:(NSString *)containerID;
 - (NSString *)containerIDForChat:(AIChat *)chat;
 - (NSWindow *)windowForChat:(AIChat *)chat;
+- (AIChat *)activeChatInWindow:(NSWindow *)window;
 @end
 
 @protocol AIContactListController <NSObject>
@@ -204,6 +205,7 @@ typedef enum {
 - (void)chatDidClose:(AIChat *)inChat;
 - (void)chatOrderDidChange;
 - (NSWindow *)windowForChat:(AIChat *)inChat;
+- (AIChat *)activeChatInWindow:(NSWindow *)window;
 
 //Chat close menus
 - (IBAction)closeMenu:(id)sender;
