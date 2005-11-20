@@ -180,6 +180,10 @@
 			[menuItem setKeyEquivalent:@"y"];
 			[menuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
 			
+		} else if ((tag == AIAvailableStatusType) && (representedStatus == nil)) {
+			[menuItem setKeyEquivalent:@"Y"];
+			[menuItem setKeyEquivalentModifierMask:NSCommandKeyMask];
+			
 		} else {
 			[menuItem setKeyEquivalent:@""];
 			
