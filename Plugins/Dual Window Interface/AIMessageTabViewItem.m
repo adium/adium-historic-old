@@ -35,7 +35,6 @@
 - (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor;
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification;
 - (void)chatStatusChanged:(NSNotification *)notification;
-- (void)updateTabViewItemImage;
 @end
 
 @implementation AIMessageTabViewItem
@@ -67,7 +66,6 @@
 									 object:[messageViewController chat]];
     [self chatStatusChanged:nil];
     [self chatParticipatingListObjectsChanged:nil];
-	[self updateTabViewItemImage];
 	
     //Set our contents
     [self setView:[messageViewController view]];
@@ -183,41 +181,7 @@
 		if (!keys || [keys containsObject:@"Display Name"]) {
 			[[[self tabView] delegate] resizeTabForTabViewItem:self];
 		}
-		
-		if (!keys || [keys containsObject:KEY_USER_ICON]) {
-			[self updateTabViewItemImage];
-		}
 	}
-}
-
-- (void)updateTabViewItemImage
-{
-//	AIListObject	*listObject = [messageViewController listObject];
-//
-//	NSImage *image = [self userIconImageOfSize:NSMakeSize(userIconSize, userIconSize)];
-//	
-//	if (!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//
-//	[tabViewItemImage release];
-//	if (listObject) {
-//		NSImage		*userIcon = [listObject userIcon];
-//		if (userIcon) {
-//			tabViewItemImage = [[userIcon imageByScalingToSize:NSMakeSize(16,16)] retain];
-//		} else {
-//			if ([listObject isKindOfClass:[AIListContact class]]) {
-//				tabViewItemImage = [[[[adium accountController] accountWithObjectID:[(AIListContact *)listObject accountID]] menuImage] retain];
-//			}
-//		}
-//	} else {
-//		tabViewItemImage = [[[[messageViewController chat] account] menuImage] retain];
-//	}
 }
 
 //Interface Container ----------------------------------------------------------------------
