@@ -346,18 +346,6 @@ gboolean gaim_init_jabber_plugin(void);
 	[super _beginSendOfFileTransfer:fileTransfer];
 }
 
-- (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
-{
-	if (gaim_account_is_connected(account)) {
-		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
-
-#warning xfer
-//		return jabber_outgoing_xfer_new(account->gc,destsn);
-	}
-	
-	return nil;
-}
-
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
     [super acceptFileTransferRequest:fileTransfer];    

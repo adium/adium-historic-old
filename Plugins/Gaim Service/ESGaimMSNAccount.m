@@ -311,18 +311,6 @@ gboolean gaim_init_msn_plugin(void);
 	[super _beginSendOfFileTransfer:fileTransfer];
 }
 
-- (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
-{
-	if (gaim_account_is_connected(account)) {
-		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
-
-#warning xfer
-//		return msn_xfer_new(account->gc,destsn);
-	}
-	
-	return nil;
-}
-
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
     [super acceptFileTransferRequest:fileTransfer];    
@@ -349,109 +337,33 @@ gboolean gaim_init_msn_plugin(void);
 }
 
 #pragma mark Status messages
-- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
-{
-	NSAttributedString  *statusMessage = nil;
 
-	/*
-	NSString			*statusMessageString = nil;
-	
-	MsnAwayType		gaimMsnAwayType = MSN_AWAY_TYPE(b->uc);
-	
-	switch (gaimMsnAwayType) {
-		case MSN_BRB:
-			statusMessageString = STATUS_DESCRIPTION_BRB;
-			break;
-		case MSN_BUSY:
-			statusMessageString = STATUS_DESCRIPTION_BUSY;
-			break;
-			
-		case MSN_PHONE:
-			statusMessageString = STATUS_DESCRIPTION_PHONE;
-			break;
-			
-		case MSN_LUNCH:
-			statusMessageString = STATUS_DESCRIPTION_LUNCH;
-			break;
+- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)buddy
+{
+	NSString		*statusName = nil;
+	GaimPresence	*presence = gaim_buddy_get_presence(buddy);
+	GaimStatus		*status = gaim_presence_get_active_status(presence);
+	const char		*gaimStatusName = gaim_status_get_name(status);
+
+	if (!gaimStatusName) return nil;
+
+	if (!strcmp(gaimStatusName, "brb")) {
+		statusName = STATUS_NAME_BRB;
 		
-		case MSN_HIDDEN:
-			statusMessageString = STATUS_DESCRIPTION_INVISIBLE;
-			break;
+	} else if (!strcmp(gaimStatusName, "busy")) {
+		statusName = STATUS_NAME_BUSY;
 		
-		case MSN_IDLE:
-		case MSN_AWAY:
-		case MSN_ONLINE:
-		case MSN_OFFLINE:
-			break;
+	} else if (!strcmp(gaimStatusName, "phone")) {
+		statusName = STATUS_NAME_PHONE;
+		
+	} else if (!strcmp(gaimStatusName, "lunch")) {
+		statusName = STATUS_NAME_LUNCH;
+		
+	} else if (!strcmp(gaimStatusName, "invisible")) {
+		statusName = STATUS_NAME_INVISIBLE;		
 	}
 	
-	if (statusMessageString && [statusMessageString length]) {
-		statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
-														 attributes:nil] autorelease];
-	}
-	*/
-	return (statusMessage);
-}
-
-- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b
-{
-	NSString			*statusName = nil;
-	/*
-	
-	MsnAwayType		gaimMsnAwayType = MSN_AWAY_TYPE(b->uc);
-	
-	switch (gaimMsnAwayType) {
-		case MSN_BRB:
-			statusName = STATUS_NAME_BRB;
-			break;
-		case MSN_BUSY:
-			statusName = STATUS_NAME_BUSY;
-			break;
-			
-		case MSN_PHONE:
-			statusName = STATUS_NAME_PHONE;
-			break;
-			
-		case MSN_LUNCH:
-			statusName = STATUS_NAME_LUNCH;
-			break;
-			
-		case MSN_HIDDEN:
-			statusName = STATUS_NAME_INVISIBLE;
-			break;
-			
-		case MSN_IDLE:
-		case MSN_AWAY:
-		case MSN_ONLINE:
-		case MSN_OFFLINE:
-			break;
-	}
-	*/
-	return (statusName);
-}
-
-
-/*!
- * @brief Update the status message and away state of the contact
- */
-- (void)updateStatusForContact:(AIListContact *)theContact toStatusType:(NSNumber *)statusTypeNumber statusName:(NSString *)statusName statusMessage:(NSAttributedString *)statusMessage
-{
-//	const char  *uidUTF8String = [[theContact UID] UTF8String];
-//	GaimBuddy   *buddy;
-	BOOL		shouldUpdateAway = YES;
-
-	/*
-	if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
-		(MSN_AWAY_TYPE(buddy->uc) == MSN_IDLE)) {
-		shouldUpdateAway = NO;
-	}
-	*/
-	if (shouldUpdateAway) {
-		[super updateStatusForContact:theContact
-						 toStatusType:statusTypeNumber
-						   statusName:statusName
-						statusMessage:statusMessage];
-	}	
+	return statusName;
 }
 
 /*!

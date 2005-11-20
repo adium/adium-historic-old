@@ -47,7 +47,7 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		   
 		AIListContact	*theContact = contactLookupFromBuddy(buddy);
 
-		GaimGroup		*g = gaim_find_buddys_group(buddy);
+		GaimGroup		*g = gaim_buddy_get_group(buddy);
 		NSString		*groupName = ((g && g->name) ? [NSString stringWithUTF8String:g->name] : nil);
 		NSString		*oldGroupName;
 		NSValue			*buddyValue = [NSValue valueWithPointer:buddy];

@@ -20,6 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "ft.h"
+
 /**
  * Process ymsg events, particular IMViroments like Doodle
  */
@@ -29,6 +31,14 @@ void yahoo_process_p2pfilexfer( GaimConnection *gc, struct yahoo_packet *pkt );
  * Process ymsg file receive invites.
  */
 void yahoo_process_filetransfer(GaimConnection *gc, struct yahoo_packet *pkt);
+
+/**
+ * Create a new GaimXfer
+ *
+ * @param gc The GaimConnection handle.
+ * @param who Who will we be sending it to?
+ */
+GaimXfer *yahoo_new_xfer(GaimConnection *gc, const char *who);
 
 /**
  * Send a file.
