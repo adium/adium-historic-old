@@ -257,7 +257,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
  *
  * Called by SLGaimCocoaAdapter on the gaim thread
  */
-- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b
+- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)buddy
 {
 	return nil;
 }
@@ -267,7 +267,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
  *
  * Called by SLGaimCocoaAdapter on the gaim thread
  */
-- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
+- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)buddy
 {
 	return nil;
 }
@@ -1156,7 +1156,20 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 //By default, protocols can not create GaimXfer objects
 - (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	return nil;
+	GaimPluginProtocolInfo	*prpl_info;
+	GaimXfer				*newGaimXfer = NULL;
+
+	if (account && gaim_account_get_connection(account)) {
+		GaimConnection *gc = gaim_account_get_connection(account);
+		prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl);
+
+		if (prpl_info && prpl_info->new_xfer) {
+			char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
+			newGaimXfer = (prpl_info->new_xfer)(gc, destsn);
+		}
+	}
+
+	return newGaimXfer;
 }
 
 /* 

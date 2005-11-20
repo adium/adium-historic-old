@@ -124,17 +124,6 @@ gboolean gaim_init_yahoo_plugin(void);
 	[super _beginSendOfFileTransfer:fileTransfer];
 }
 
-- (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
-{
-	if (gaim_account_is_connected(account)) {
-		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
-
-#warning xfer
-//		return yahoo_xfer_new(account->gc,destsn);
-	}
-	
-	return nil;
-}
 
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
@@ -156,70 +145,46 @@ gboolean gaim_init_yahoo_plugin(void);
 /*!
  * @brief Status name to use for a Gaim buddy
  */
-- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b
+- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)buddy
 {
-	char				*normalized = g_strdup(gaim_normalize(b->account, b->name));
-	struct yahoo_data   *od;
-	YahooFriend			*f;
-	NSString			*statusName = nil;
+	NSString		*statusName = nil;
+	GaimPresence	*presence = gaim_buddy_get_presence(buddy);
+	GaimStatus		*status = gaim_presence_get_active_status(presence);
+	const char		*gaimStatusName = gaim_status_get_name(status);
 	
-	if ((gaim_account_is_connected(account)) &&
-		(od = account->gc->proto_data) &&
-		(f = g_hash_table_lookup(od->friends, normalized))) {
-
-		switch (f->status) {
-			case YAHOO_STATUS_BRB:
-				statusName = STATUS_NAME_BRB;
-				break;
-				
-			case YAHOO_STATUS_BUSY:
-				statusName = STATUS_NAME_BUSY;
-				break;
-				
-			case YAHOO_STATUS_NOTATHOME:
-				statusName = STATUS_NAME_NOT_AT_HOME;
-				break;
-				
-			case YAHOO_STATUS_NOTATDESK:
-				statusName = STATUS_NAME_NOT_AT_DESK;
-				break;
-				
-			case YAHOO_STATUS_NOTINOFFICE:
-				statusName = STATUS_NAME_NOT_IN_OFFICE;
-				break;
-				
-			case YAHOO_STATUS_ONPHONE:
-				statusName = STATUS_NAME_PHONE;
-				break;
-				
-			case YAHOO_STATUS_ONVACATION:
-				statusName = STATUS_NAME_VACATION;
-				break;
-				
-			case YAHOO_STATUS_OUTTOLUNCH:
-				statusName = STATUS_NAME_LUNCH;
-				break;
-				
-			case YAHOO_STATUS_STEPPEDOUT:
-				statusName = STATUS_NAME_STEPPED_OUT;
-				break;
-				
-			case YAHOO_STATUS_INVISIBLE:
-				statusName = STATUS_NAME_INVISIBLE;
-				break;
-			
-			case YAHOO_STATUS_AVAILABLE:
-			case YAHOO_STATUS_WEBLOGIN:
-			case YAHOO_STATUS_CUSTOM:
-			case YAHOO_STATUS_IDLE:
-			case YAHOO_STATUS_OFFLINE:
-			case YAHOO_STATUS_TYPING:
-				break;
-		}
+	if (!gaimStatusName) return nil;
+	
+	if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_BRB)) {
+		statusName = STATUS_NAME_BRB;
+		
+	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_BUSY)) {
+		statusName = STATUS_NAME_BUSY;
+		
+	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_NOTATHOME)) {
+		statusName = STATUS_NAME_NOT_AT_HOME;
+		
+	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_NOTATDESK)) {
+		statusName = STATUS_NAME_NOT_AT_DESK;
+		
+	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_NOTINOFFICE)) {
+		statusName = STATUS_NAME_NOT_IN_OFFICE;
+		
+	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_ONPHONE)) {
+		statusName = STATUS_NAME_PHONE;
+		
+	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_ONVACATION)) {
+		statusName = STATUS_NAME_VACATION;
+		
+	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_OUTTOLUNCH)) {
+		statusName = STATUS_NAME_LUNCH;
+		
+	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_STEPPEDOUT)) {
+		statusName = STATUS_NAME_STEPPED_OUT;
+		
+	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_INVISIBLE)) {
+		statusName = STATUS_NAME_INVISIBLE;
 	}
 	
-	g_free(normalized);
-
 	return statusName;
 }
 

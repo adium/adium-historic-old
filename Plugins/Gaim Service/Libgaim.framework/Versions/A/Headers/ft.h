@@ -30,7 +30,11 @@
 /**************************************************************************/
 typedef struct _GaimXfer GaimXfer;
 
+#include <glib.h>
+#include <stdio.h>
+
 #include "account.h"
+#include "internal.h"
 
 /**
  * Types of file transfers.
@@ -115,8 +119,8 @@ struct _GaimXfer
 		void (*end)(GaimXfer *xfer);
 		void (*cancel_send)(GaimXfer *xfer);
 		void (*cancel_recv)(GaimXfer *xfer);
-		ssize_t (*read)(guchar **buffer, GaimXfer *xfer);
-		ssize_t (*write)(const guchar *buffer, size_t size, GaimXfer *xfer);
+		gssize (*read)(guchar **buffer, GaimXfer *xfer);
+		gssize (*write)(const guchar *buffer, size_t size, GaimXfer *xfer);
 		void (*ack)(GaimXfer *xfer, const guchar *buffer, size_t size);
 
 	} ops;
@@ -381,7 +385,7 @@ GaimXferUiOps *gaim_xfer_get_ui_ops(const GaimXfer *xfer);
  * @param fnc  The read function.
  */
 void gaim_xfer_set_read_fnc(GaimXfer *xfer,
-		ssize_t (*fnc)(guchar **, GaimXfer *));
+		gssize (*fnc)(guchar **, GaimXfer *));
 
 /**
  * Sets the write function for the file transfer.
@@ -390,7 +394,7 @@ void gaim_xfer_set_read_fnc(GaimXfer *xfer,
  * @param fnc  The write function.
  */
 void gaim_xfer_set_write_fnc(GaimXfer *xfer,
-		ssize_t (*fnc)(const guchar *, size_t, GaimXfer *));
+		gssize (*fnc)(const guchar *, size_t, GaimXfer *));
 
 /**
  * Sets the acknowledge function for the file transfer.
@@ -461,7 +465,7 @@ void gaim_xfer_set_cancel_recv_fnc(GaimXfer *xfer, void (*fnc)(GaimXfer *));
  *
  * @return The number of bytes read, or -1.
  */
-ssize_t gaim_xfer_read(GaimXfer *xfer, guchar **buffer);
+gssize gaim_xfer_read(GaimXfer *xfer, guchar **buffer);
 
 /**
  * Writes data to a file transfer stream.
@@ -472,7 +476,7 @@ ssize_t gaim_xfer_read(GaimXfer *xfer, guchar **buffer);
  *
  * @return The number of bytes written, or -1.
  */
-ssize_t gaim_xfer_write(GaimXfer *xfer, const guchar *buffer, size_t size);
+gssize gaim_xfer_write(GaimXfer *xfer, const guchar *buffer, gsize size);
 
 /**
  * Starts a file transfer.

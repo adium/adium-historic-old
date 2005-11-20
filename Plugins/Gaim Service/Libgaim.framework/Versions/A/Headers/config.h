@@ -1,3 +1,6 @@
+//Needed to do proper VERSION_MIN_REQUIRED checking
+#include <AvailabilityMacros.h>
+
 /* Version number of package */
 #define VERSION "2.0.0"
 
@@ -5,14 +8,12 @@
 #define PACKAGE_STRING "libgaim 2.0.0"
 
 /* OTR version */
-#define GAIM_OTR_VERSION "2.0.1"
+#define GAIM_OTR_VERSION "3.0.0"
 
 /* MEANWHILE plugin */
 #define MW_PLUGIN_DEFAULT_ACTIVE_MSG ""
 #define MW_PLUGIN_DEFAULT_AWAY_MSG "Away"
 #define MW_PLUGIN_DEFAULT_BUSY_MSG "Busy"
-#define MW_PLUGIN_DEFAULT_HOST ""
-#define MW_PLUGIN_DEFAULT_PORT 1533
 #define MW_CLIENT_TYPE_ID mwLogin_MEANWHILE
 #define DEBUG TRUE
 

@@ -191,7 +191,7 @@ gboolean gaim_init_oscar_plugin(void);
 			char		*comment;
 			OscarData   *od;
 			
-			if ((g = gaim_find_buddys_group(buddy)) &&
+			if ((g = gaim_buddy_get_group(buddy)) &&
 				(od = account->gc->proto_data) &&
 				(comment = aim_ssi_getcomment(od->sess->ssi.local, g->name, buddy->name))) {
 				gchar		*comment_utf8;
@@ -272,18 +272,6 @@ gboolean gaim_init_oscar_plugin(void);
 }
 
 #pragma mark File transfer
-
-- (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
-{
-	if (gaim_account_is_connected(account)) {
-		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
-
-#warning xxx
-//		return oscar_xfer_new(account->gc,destsn);
-	}
-	
-	return nil;
-}
 
 /*!
 * @brief Allow a file transfer with an object?
