@@ -84,6 +84,7 @@
 - (void)dealloc
 {
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 
 	[self _stopSpeaking];
 
