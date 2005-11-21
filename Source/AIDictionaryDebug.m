@@ -3,9 +3,12 @@
  *
  * Created by Evan Schoenberg on 7/26/05.
  *
- * This class is explicitly released under the BSD license; it was created for use in the Adium project, which is released
- * under the GPL.  The release of this specific class (AIDictionaryDebug) under BSD in no way changes the licensing of any
- * other portion of the Adium project.
+ * This class is explicitly released under the BSD license with the following modification:
+ * It may be used without reproduction of its copyright notice within The Adium Project.
+ *
+ * This class was created for use in the Adium project, which is released under the GPL.
+ * The release of this specific class (AIDictionaryDebug) under BSD in no way changes the licensing of any other portion
+ * of the Adium project.
  *
  ****
  Copyright (c) 2005, Evan Schoenberg
