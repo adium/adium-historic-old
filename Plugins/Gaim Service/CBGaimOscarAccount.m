@@ -260,7 +260,12 @@ gboolean gaim_init_oscar_plugin(void);
 
 		//Request ICQ contacts' info to get the nickname
 		if (aim_sn_is_icq([[theContact UID] UTF8String])) {
-			[self delayedUpdateContactStatus:theContact];
+			OscarData			*od;
+
+			if ((gaim_account_is_connected(account)) &&
+				(od = account->gc->proto_data)) {
+				aim_icq_getalias(od->sess, [contactUID UTF8String]);
+			}
 		}
 
 		[arrayOfContactsForDelayedUpdates removeObjectAtIndex:0];
