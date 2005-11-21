@@ -54,7 +54,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 	containedObjects = [[NSMutableArray alloc] init];
 	
-	containsOnlyOneUniqueContact = YES;
+	containsOnlyOneUniqueContact = NO;
 	containsOnlyOneService = YES;
 	expanded = YES;
 	containedObjectsNeedsSort = NO;
@@ -71,7 +71,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 - (void)dealloc
 {
 	[statusCacheDict release];
-	
+	[containedObjects release];
+
 	[super dealloc];
 }
 
@@ -530,12 +531,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 	//If it changed, do stuff
 	if (oldOnlyOne != containsOnlyOneUniqueContact) {
-		if ([containingObject isKindOfClass:[AIMetaContact class]]) {
-			//Shouldn't be needed as of 0.8
-			[(AIMetaContact *)containingObject containedMetaContact:self
-							  didChangeContainsOnlyOneUniqueContact:containsOnlyOneUniqueContact];
-		}
-
 		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
 												  object:self
 												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
