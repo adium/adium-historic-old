@@ -259,12 +259,13 @@ gboolean gaim_init_oscar_plugin(void);
 							 notify:YES];
 
 		//Request ICQ contacts' info to get the nickname
-		if (aim_sn_is_icq([[theContact UID] UTF8String])) {
+		const char *contactUIDUTF8String = [[theContact UID] UTF8String];
+		if (aim_sn_is_icq(contactUIDUTF8String)) {
 			OscarData			*od;
 
 			if ((gaim_account_is_connected(account)) &&
 				(od = account->gc->proto_data)) {
-				aim_icq_getalias(od->sess, [contactUID UTF8String]);
+				aim_icq_getalias(od->sess, contactUIDUTF8String);
 			}
 		}
 
