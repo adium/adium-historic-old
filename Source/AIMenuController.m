@@ -338,7 +338,7 @@
 	[menuItem_cut setTitle:AILocalizedString(@"Cut",nil)];
 	[menuItem_copy setTitle:AILocalizedString(@"Copy",nil)];
 	[menuItem_paste setTitle:AILocalizedString(@"Paste",nil)];
-	[menuItem_pasteFormatted setTitle:AILocalizedString(@"Paste Formatted",nil)];
+	[menuItem_pasteFormatted setTitle:AILocalizedString(@"Paste with Formatting",nil)];
 	[menuItem_clear setTitle:AILocalizedString(@"Clear",nil)];
 	[menuItem_selectAll setTitle:AILocalizedString(@"Select All",nil)];
 
