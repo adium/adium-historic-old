@@ -58,7 +58,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 			case GAIM_BUDDY_ICON: {
 				GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
 				updateSelector = @selector(updateIcon:withData:);
-				
+				AILog(@"Buddy icon update for %s",buddy->name);
 				if (buddyIcon) {
 					const guchar  *iconData;
 					size_t		len;
@@ -68,6 +68,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 					if (iconData && len) {
 						data = [NSData dataWithBytes:iconData
 											  length:len];
+						AILog(@"[buddy icon: %s got data]",buddy->name);
 					}
 				}
 				break;

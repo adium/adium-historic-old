@@ -269,7 +269,22 @@ gboolean gaim_init_ssl_openssl_plugin(void);
  */
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)buddy
 {
-	return nil;
+	GaimPresence	*presence = gaim_buddy_get_presence(buddy);
+	GaimStatus		*status = (presence ? gaim_presence_get_active_status(presence) : NULL);
+	const char		*message = (status ? gaim_status_get_attr_string(status, "message") : NULL);
+	NSString		*messageString = (message ? [NSString stringWithUTF8String:message] : nil);
+
+	NSAttributedString	*statusMessage = nil;
+
+	if (messageString) {
+		// We use our own HTML decoder to avoid conflicting with the shared one, since we are running in a thread
+		static AIHTMLDecoder	*statusMessageHTMLDecoder = nil;
+		if (!statusMessageHTMLDecoder) statusMessageHTMLDecoder = [[AIHTMLDecoder decoder] retain];
+	
+		statusMessage = [statusMessageHTMLDecoder decodeHTML:messageString];
+	}
+	
+	return statusMessage;
 }
 
 /*!

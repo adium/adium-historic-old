@@ -1209,16 +1209,16 @@ NSMutableDictionary* get_chatDict(void)
 		
 		enumerator = [arguments keyEnumerator];
 		while ((key = [enumerator nextObject])) {
-			char *valueUTF8String = NULL;
+			const char *valueUTF8String = NULL;
 			id	 value;
 
 			value = [arguments objectForKey:key];
 			
 			if ([value isKindOfClass:[NSNumber class]]) {
-				valueUTF8String = g_strdup_printf("%d",[value intValue]);
+				valueUTF8String = [[value stringValue] UTF8String];
 				
 			} else if ([value isKindOfClass:[NSString class]]) {
-				valueUTF8String = g_strdup([value UTF8String]);
+				valueUTF8String = [value UTF8String];
 			}				
 			
 			if (valueUTF8String) {
@@ -1226,8 +1226,7 @@ NSMutableDictionary* get_chatDict(void)
 				attrs = g_list_append(attrs, (char *)[key UTF8String]);
 				
 				//Now append the value
-				attrs = g_list_append(attrs, valueUTF8String);
-				g_free(valueUTF8String);
+				attrs = g_list_append(attrs, (char *)valueUTF8String);
 
 			} else {
 				AILog(@"Warning; could not determine value of %@ for key %@, statusID %s",value,key,statusID);
