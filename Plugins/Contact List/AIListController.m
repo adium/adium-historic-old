@@ -526,7 +526,7 @@ typedef enum {
 			} else {
 				promptTitle = [NSString stringWithFormat:AILocalizedString(@"Combine these contacts with %@?","Title of the prompt when combining two or more contacts with another.  %@ will be filled with a contact name."),[item displayName]];
 			}
-		
+			
 			//Metacontact creation, prompt the user
 			NSDictionary	*context = [NSDictionary dictionaryWithObjectsAndKeys:
 				item, @"item",
@@ -543,18 +543,16 @@ typedef enum {
 										   [context retain], //we're responsible for retaining the content object
 										   AILocalizedString(@"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\n\nYou may un-combine these contacts by getting info on the combined contact.","Explanation of metacontact creation"));
 		}
-		//kbotc says dragging and dropping files on the contact list should work.
-	} else if([[[info draggingPasteboard] types] containsObject:NSFilenamesPboardType]){
+		//Drag and Drop for the contact list.
+	} else if([[[info draggingPasteboard] types] containsObject:NSFilenamesPboardType]) {
+		NSString		*file;
+		NSArray			*files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+		NSEnumerator	*enumerator = [files objectEnumerator];
 		
-		NSArray		*files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
-        int			numberOfFiles = [files count];
-		int			i;
-		
-        for(i = 0; i < numberOfFiles; i++)
-		{
+		while ((file = [enumerator nextObject])) {
 			AIListContact	*targetFileTransferContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE forListContact:item];
-			[[adium fileTransferController] sendFile:[files objectAtIndex: i] toListContact:targetFileTransferContact];
-		}		
+			[[adium fileTransferController] sendFile:file toListContact:targetFileTransferContact];
+		}
 	}
 	
 	[super outlineView:outlineView acceptDrop:info item:item childIndex:index];
