@@ -70,7 +70,9 @@
 	[self updateFingerprintsList];
 	
 	[self updatePrivateKeyList];
-	
+
+	[textField_privateKey setSelectable:YES];
+
 	[self tableViewSelectionDidChange:nil];		
 }
 
