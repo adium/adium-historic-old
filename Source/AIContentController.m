@@ -315,17 +315,22 @@
 													  userInfo:[NSDictionary dictionaryWithObjectsAndKeys:chat,@"AIChat",inObject,@"AIContentObject",nil]
 								  previouslyPerformedActionIDs:nil];				
 			}
-			//			sent = YES;
+
 		} else {
 			//We are no longer in the process of receiving this object
-			[objectsBeingReceived removeObject:inObject];	
+			[objectsBeingReceived removeObject:inObject];
+			
+			NSString *message = [NSString stringWithFormat:AILocalizedString(@"Could not send from %@ to %@",nil),
+				[[inObject source] formattedUID],[[inObject destination] formattedUID]];
+
+			[self displayStatusMessage:message
+								ofType:@"chat-error"
+								inChat:chat];			
 		}
 	}
 	
 	//Let the chat know we finished sending
 	[chat finishedSendingContentObject:inObject];
-	
-//    return sent;
 }
 
 //Display a content object
