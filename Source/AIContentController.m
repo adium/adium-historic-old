@@ -302,6 +302,10 @@
 			if ([inObject displayContent]) {
 				//Add the object
 				[self displayContentObject:inObject];
+
+			} else {
+				//We are no longer in the process of receiving this object
+				[objectsBeingReceived removeObject:inObject];
 			}
 			
 			if ([inObject trackContent]) {
@@ -312,6 +316,9 @@
 								  previouslyPerformedActionIDs:nil];				
 			}
 			//			sent = YES;
+		} else {
+			//We are no longer in the process of receiving this object
+			[objectsBeingReceived removeObject:inObject];	
 		}
 	}
 	
