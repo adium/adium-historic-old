@@ -272,7 +272,8 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	
 	if ([[selectedTabViewItem identifier] isEqualToString:@"singlestatus"]) {
 		//Put all accounts in the Available status state
-		[[adium statusController] setActiveStatusState:availableStatusState];
+		[[adium statusController] applyState:availableStatusState
+								  toAccounts:[self awayAccounts]];
 
 	} else {
 		//Multistatus
@@ -286,7 +287,8 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 									  toAccounts:selectedAccounts];
 		} else {
 			//No selection: Put all accounts in the Available status state
-			[[adium statusController] setActiveStatusState:availableStatusState];			
+			[[adium statusController] applyState:availableStatusState
+									  toAccounts:[self awayAccounts]];
 		}
 
 		[selectedAccounts release];
