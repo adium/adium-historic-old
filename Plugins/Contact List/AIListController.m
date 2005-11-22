@@ -18,6 +18,7 @@
 #import "AIInterfaceController.h"
 #import "AIListController.h"
 #import "AIPreferenceController.h"
+#import "ESFileTransfer.h"
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
@@ -469,6 +470,7 @@ typedef enum {
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
 	NSDragOperation retVal = NSDragOperationPrivate;
+	BOOL allowBetweenContactDrop = index==NSOutlineViewDropOnItemIndex;
 	
 	//No dropping into contacts
     if ([avaliableType isEqualToString:@"AIListObject"]) {
@@ -495,9 +497,11 @@ typedef enum {
 		if (index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]) {
 			retVal = NSDragOperationCopy;
 		}
+	} else if(allowBetweenContactDrop == NO) {
+		retVal = NSDragOperationNone;
 	}
 	
-	return NSDragOperationPrivate;
+	return retVal;
 }
 
 //
@@ -539,6 +543,18 @@ typedef enum {
 										   [context retain], //we're responsible for retaining the content object
 										   AILocalizedString(@"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\n\nYou may un-combine these contacts by getting info on the combined contact.","Explanation of metacontact creation"));
 		}
+		//kbotc says dragging and dropping files on the contact list should work.
+	} else if([[[info draggingPasteboard] types] containsObject:NSFilenamesPboardType]){
+		
+		NSArray		*files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+        int			numberOfFiles = [files count];
+		int			i;
+		
+        for(i = 0; i < numberOfFiles; i++)
+		{
+			AIListContact	*targetFileTransferContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE forListContact:item];
+			[[adium fileTransferController] sendFile:[files objectAtIndex: i] toListContact:targetFileTransferContact];
+		}		
 	}
 	
 	[super outlineView:outlineView acceptDrop:info item:item childIndex:index];
