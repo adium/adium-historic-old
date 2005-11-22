@@ -389,53 +389,6 @@ gboolean gaim_init_oscar_plugin(void);
 }
 
 #pragma mark Buddy status
-- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
-{
-	NSString			*statusMessage = nil;
-	OscarData			*od;
-	aim_userinfo_t		*userinfo;
-	struct buddyinfo	*bi;
-	char				*normalized = g_strdup(gaim_normalize(b->account, b->name));
-	
-	if ((gaim_account_is_connected(account)) &&
-		(od = account->gc->proto_data) &&
-		(userinfo = aim_locate_finduserinfo(od->sess, normalized))) {
-		
-		bi = (od->buddyinfo ? g_hash_table_lookup(od->buddyinfo, normalized) : NULL);
-		
-		if ((bi != NULL) && (bi->availmsg != NULL) && !(userinfo->flags & AIM_FLAG_AWAY)) {
-			
-			//Available status message - bi->availmsg has already been converted to UTF8 if needed for us.
-			statusMessage = [NSString stringWithUTF8String:(bi->availmsg)];
-			
-		} else if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away != NULL)) {
-			if ((userinfo->away_len > 0) && 
-				(userinfo->away_encoding != NULL)) {
-				
-				//Away message using specified encoding
-				statusMessage = [self stringWithBytes:userinfo->away
-											   length:userinfo->away_len
-											 encoding:userinfo->away_encoding];
-			} else {
-				//Away message, no encoding provided, assume UTF8
-				statusMessage = [NSString stringWithUTF8String:userinfo->away];
-			}
-		}
-	}
-	
-	g_free(normalized);
-	
-	if (statusMessage) {
-		// We use our own HTML decoder to avoid conflicting with the shared one, since we are running in a thread
-		static AIHTMLDecoder	*statusMessageHTMLDecoder = nil;
-		if (!statusMessageHTMLDecoder) statusMessageHTMLDecoder = [[AIHTMLDecoder decoder] retain];
-		
-		return [statusMessageHTMLDecoder decodeHTML:statusMessage];
-	} else {
-		return nil;
-	}
-}
-
 - (NSString *)statusNameForGaimBuddy:(GaimBuddy *)buddy
 {
 	NSString		*statusName = nil;
