@@ -246,7 +246,7 @@
 	
 	[GrowlApplicationBridge notifyWithTitle:title
 								description:description
-						   notificationName:eventID /* Use the same ID as Adium uses to keep things simple */
+						   notificationName:[[adium contactAlertsController] globalShortDescriptionForEventID:eventID]
 								   iconData:iconData
 								   priority:0
 								   isSticky:[[details objectForKey:KEY_GROWL_ALERT_STICKY] boolValue]
@@ -288,10 +288,17 @@
  */
 - (NSDictionary *)registrationDictionaryForGrowl
 {
-	//Register us with Growl
-	NSArray *allNotes = [[adium contactAlertsController] allEventIDs];
+	ESContactAlertsController	*contactAlertsController = [adium contactAlertsController];
+	NSMutableArray				*allNotes = [NSMutableArray array];
+	NSEnumerator				*enumerator;
+	NSString					*eventID;
 	
-	NSDictionary * growlReg = [NSDictionary dictionaryWithObjectsAndKeys:
+	enumerator = [[contactAlertsController allEventIDs] objectEnumerator];
+	while ((eventID = [enumerator nextObject])) {
+		[allNotes addObject:[contactAlertsController globalShortDescriptionForEventID:eventID]];
+	}
+
+	NSDictionary	*growlReg = [NSDictionary dictionaryWithObjectsAndKeys:
 		allNotes, GROWL_NOTIFICATIONS_ALL,
 		allNotes, GROWL_NOTIFICATIONS_DEFAULT,
 		nil];
