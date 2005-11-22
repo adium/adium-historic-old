@@ -275,8 +275,7 @@ gboolean gaim_init_msn_plugin(void);
 		if (gaim_account_is_connected(account)) {
 			GaimDebug (@"Updating FullNameAttr to %@",friendlyName);
 
-#warning XXX - friendly name setting is broken
-			//msn_set_friendly_name(account->gc, [friendlyName UTF8String]);
+			msn_set_friendly_name(account->gc, [friendlyName UTF8String]);
 
 			if ([friendlyName length] == 0) friendlyName = nil;
 			
