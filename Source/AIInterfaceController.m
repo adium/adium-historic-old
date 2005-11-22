@@ -148,10 +148,6 @@
     //Load the interface
     [interfacePlugin openInterface];
 
-    //Configure our dynamic paste menu item
-    [menuItem_paste setDynamic:YES];
-    [menuItem_pasteFormatted setDynamic:YES];
-
 	//Open the contact list window
     [self showContactList:nil];
 
