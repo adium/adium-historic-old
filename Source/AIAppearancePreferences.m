@@ -310,7 +310,7 @@ typedef enum {
 		}
 		
 	} else if (sender == popUp_emoticons) {
-		if ([sender tag] != AIEmoticonMenuMultiple) {
+		if ([[sender selectedItem] tag] != AIEmoticonMenuMultiple) {
 			//Disable all active emoticons
 			NSArray			*activePacks = [[[[adium emoticonController] activeEmoticonPacks] mutableCopy] autorelease];
 			NSEnumerator	*enumerator = [activePacks objectEnumerator];
