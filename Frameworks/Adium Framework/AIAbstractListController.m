@@ -156,7 +156,7 @@
     [scrollView_contactList setAutoHideScrollBar:YES];
 
 	//Dragging
-	[contactListView registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs",nil]];
+	[contactListView registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs", NSFilenamesPboardType, NSURLPboardType, NSStringPboardType, nil]];
 }
 
 - (void)setContactListRoot:(ESObjectWithStatus<AIContainingObject> *)newContactListRoot
@@ -613,7 +613,7 @@
 	if (dragItems) {
 		[dragItems release]; dragItems = nil;
 	}
-
+	
 	return YES;
 }
 
