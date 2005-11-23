@@ -98,8 +98,9 @@ static	NSImage						*adiumRedHighlightImage = nil;
 		NSEnumerator *accountsEnumerator = [[[adium accountController] accounts] objectEnumerator];
 		AIAccount *account = nil;
 		while (account = [enumerator nextObject]) {
-			if([account statusForKey:@"Online"])
+			if ([account statusForKey:@"Online"]) {
 				[self setIconState:ONLINE];
+			}
 		}
 		
 		//Create and install the menu
