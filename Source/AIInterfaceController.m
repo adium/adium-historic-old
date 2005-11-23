@@ -590,7 +590,6 @@
     NSMenuItem				*item;
     NSEnumerator			*enumerator;
     int						windowKey = 1;
-	BOOL					respondsToSetIndentationLevel = [menuItem_paste respondsToSelector:@selector(setIndentationLevel:)];
 	
     //Remove any existing menus
     enumerator = [windowMenuArray objectEnumerator];
@@ -636,7 +635,7 @@
 																		target:self
 																		action:@selector(showChatWindow:)
 																 keyEquivalent:windowKeyString];
-			if ([contentArray count] > 1 && respondsToSetIndentationLevel) [item setIndentationLevel:1];
+			if ([contentArray count] > 1) [item setIndentationLevel:1];
 			[item setRepresentedObject:chat];
 			[item setImage:[chat chatMenuImage]];
 			[self _addItemToMainMenuAndDock:item];
@@ -1284,7 +1283,7 @@
 		}
 		return NO;
 		
-	} else if (menuItem == menuItem_paste || menuItem == menuItem_pasteFormatted) {
+	} else if (menuItem == menuItem_paste || menuItem == menuItem_pasteAndMatchStyle) {
 		return [[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType, NSPICTPboardType, NSPDFPboardType, nil]] != nil;
 	
 	} else if (menuItem == menuItem_showToolbar) {

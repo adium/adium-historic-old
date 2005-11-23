@@ -52,12 +52,12 @@
                 menuController = AIMenuController; 
                 "menuItem_bold" = NSMenuItem; 
                 "menuItem_close" = NSMenuItem; 
-                "menuItem_closeAllChats" = id; 
+                "menuItem_closeAllChats" = NSMenuItem; 
                 "menuItem_closeChat" = NSMenuItem; 
                 "menuItem_customizeToolbar" = NSMenuItem; 
                 "menuItem_italic" = NSMenuItem; 
                 "menuItem_paste" = NSMenuItem; 
-                "menuItem_pasteFormatted" = NSMenuItem; 
+                "menuItem_pasteAndMatchStyle" = NSMenuItem; 
                 "menuItem_print" = NSMenuItem; 
                 "menuItem_showToolbar" = NSMenuItem; 
             }; 
@@ -77,7 +77,7 @@
                 "menuItem_bringAllToFront" = NSMenuItem; 
                 "menuItem_clear" = NSMenuItem; 
                 "menuItem_close" = NSMenuItem; 
-                "menuItem_closeAllChats" = id; 
+                "menuItem_closeAllChats" = NSMenuItem; 
                 "menuItem_closeChat" = NSMenuItem; 
                 "menuItem_contact" = NSMenuItem; 
                 "menuItem_copy" = NSMenuItem; 
@@ -99,7 +99,7 @@
                 "menuItem_minimize" = NSMenuItem; 
                 "menuItem_pageSetup" = NSMenuItem; 
                 "menuItem_paste" = NSMenuItem; 
-                "menuItem_pasteFormatted" = NSMenuItem; 
+                "menuItem_pasteAndMatchStyle" = NSMenuItem; 
                 "menuItem_preferences" = NSMenuItem; 
                 "menuItem_print" = NSMenuItem; 
                 "menuItem_quitAdium" = NSMenuItem; 
