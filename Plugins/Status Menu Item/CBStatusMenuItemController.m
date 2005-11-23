@@ -97,7 +97,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 		//If any accounts are online, set our state to ONLINE.
 		NSEnumerator *accountsEnumerator = [[[adium accountController] accounts] objectEnumerator];
 		AIAccount *account = nil;
-		while (account = [enumerator nextObject]) {
+		while (account = [accountsEnumerator nextObject]) {
 			if ([account statusForKey:@"Online"]) {
 				[self setIconState:ONLINE];
 			}
