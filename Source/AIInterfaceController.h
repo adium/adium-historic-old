@@ -242,7 +242,7 @@ typedef enum {
 
 //Custom pasting
 - (IBAction)paste:(id)sender;
-- (IBAction)pasteFormatted:(id)sender;
+- (IBAction)pasteAndMatchStyle:(id)sender;
 
 //Custom printing
 - (IBAction)adiumPrint:(id)sender;
