@@ -1141,13 +1141,13 @@
 //Paste, stripping formatting
 - (IBAction)paste:(id)sender
 {
-	[self _pasteWithPreferredSelector:@selector(pasteAsPlainText:) sender:sender];
+	[self _pasteWithPreferredSelector:@selector(pasteAsRichText:) sender:sender];
 }
 
 //Paste with formatting
-- (IBAction)pasteFormatted:(id)sender
+- (IBAction)pasteAndMatchStyle:(id)sender
 {
-	[self _pasteWithPreferredSelector:@selector(pasteAsRichText:) sender:sender];
+	[self _pasteWithPreferredSelector:@selector(pasteAsPlainText:) sender:sender];
 }
 
 /*

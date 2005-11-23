@@ -28,7 +28,7 @@
                 closeMenu = id; 
                 nextMessage = id; 
                 paste = id; 
-                pasteFormatted = id; 
+                pasteAndMatchStyle = id; 
                 previousMessage = id; 
                 runToolbarCustomizationPalette = id; 
                 setFontPanelSettingsAsDefaultFont = id; 
