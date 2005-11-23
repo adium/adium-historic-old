@@ -131,7 +131,7 @@ typedef enum {
 	IBOutlet	NSMenuItem		*menuItem_closeAllChats;
 
     IBOutlet	NSMenuItem		*menuItem_paste;
-    IBOutlet	NSMenuItem		*menuItem_pasteFormatted;
+    IBOutlet	NSMenuItem		*menuItem_pasteAndMatchStyle;
     
     IBOutlet    NSMenuItem      *menuItem_bold;
     IBOutlet    NSMenuItem      *menuItem_italic;
