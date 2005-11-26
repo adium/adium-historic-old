@@ -14,11 +14,12 @@
 	//Status state tableview
 	IBOutlet	NSButton			*button_editState;
 	IBOutlet	NSButton			*button_deleteState;
-	IBOutlet	NSTableView			*tableView_stateList;
+	IBOutlet	NSButton			*button_addGroup;
+
+	IBOutlet	NSOutlineView		*outlineView_stateList;
 	IBOutlet	AIAutoScrollView	*scrollView_stateList;
 	
-	NSArray				*stateArray;
-	AIStatus			*tempDragState;
+	NSArray				*draggingItems;
 	
 	//Other controls
 	IBOutlet	NSButton		*checkBox_idle;
@@ -29,10 +30,12 @@
 	IBOutlet	NSPopUpButton	*popUp_autoAwayStatusState;
 	IBOutlet	NSTextField		*textField_autoAwayMinutes;
 	IBOutlet    NSStepper       *stepper_autoAwayMinutes;
+	BOOL						showingSubmenuItemInAutoAway;
 
 	IBOutlet	NSButton		*checkBox_fastUserSwitching;
 	IBOutlet	NSPopUpButton	*popUp_fastUserSwitchingStatusState;
-	
+	BOOL						showingSubmenuItemInFastUserSwitching;
+
 	IBOutlet	NSButton		*checkBox_showStatusWindow;
 }
 
@@ -41,6 +44,7 @@
 - (IBAction)editState:(id)sender;
 - (IBAction)deleteState:(id)sender;
 - (IBAction)newState:(id)sender;
+- (IBAction)addGroup:(id)sender;
 
 - (void)stateArrayChanged:(NSNotification *)notification;
 

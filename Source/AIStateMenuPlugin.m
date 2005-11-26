@@ -22,6 +22,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <Adium/AIAccountMenu.h>
 #import <Adium/AIAccount.h>
+#import <Adium/AIStatusMenu.h>
 
 @interface AIStateMenuPlugin (PRIVATE)
 - (void)updateKeyEquivalents;
@@ -62,22 +63,22 @@
 																	   keyEquivalent:@""];
 	[[adium menuController] addMenuItem:dockStatusMenuRoot toLocation:LOC_Dock_Status];
 
-	[[adium statusController] registerStateMenuPlugin:self];
-
+	
+	statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
 
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(stateMenuSelectionsChanged:)
-									   name:AIStatusStateMenuSelectionsChangedNotification
+									   name:AIStatusActiveStateChangedNotification
 									 object:nil];
 		
 }
 
 - (void)uninstallPlugin
 {
-	[[adium statusController] unregisterStateMenuPlugin:self];
 	[[adium notificationCenter] removeObserver:self];
 	
 	[accountMenu release]; accountMenu = nil;
+	[statusMenu release]; statusMenu = nil;
 }
 
 /*!
@@ -88,11 +89,11 @@
  *
  * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be added to the menu
  */
-- (void)addStateMenuItems:(NSArray *)menuItemArray
+- (void)statusMenu:(AIStatusMenu *)inStatusMenu didRebuildStatusMenuItems:(NSArray *)menuItemArray
 {
 	NSEnumerator	*enumerator;
 	NSMenuItem		*menuItem;
-	NSMenu			*dockStatusMenu = [[NSMenu alloc] init];
+	NSMenu			*dockStatusMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
 
 	enumerator = [menuItemArray objectEnumerator];
     while ((menuItem = [enumerator nextObject])) {
@@ -108,31 +109,32 @@
 	[dockStatusMenuRoot setSubmenu:dockStatusMenu];
 
 	//Tell the status controller to update these items as necessary
-	[[adium statusController] plugin:self didAddMenuItems:[dockStatusMenu itemArray]];
+	[statusMenu delegateCreatedMenuItems:[dockStatusMenu itemArray]];
 	[dockStatusMenu release];
 	
-	[currentMenuItemArray release]; currentMenuItemArray = [menuItemArray retain];
+	if (currentMenuItemArray != currentMenuItemArray) {
+		[currentMenuItemArray release]; currentMenuItemArray = [menuItemArray retain];
+	}
+
 	[self updateKeyEquivalents];
 }
 
-/*!
- * @brief Remove state menu items from our location
- *
- * Implemented as required by the StateMenuPlugin protocol.
- *
- * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be removed from the menu
- */
-- (void)removeStateMenuItems:(NSArray *)menuItemArray
+- (void)statusMenu:(AIStatusMenu *)inStatusMenu willRemoveStatusMenuItems:(NSArray *)inMenuItems
 {
-	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
-	NSMenuItem		*menuItem;
-	
-    while ((menuItem = [enumerator nextObject])) {    
-        [[adium menuController] removeMenuItem:menuItem];
-    }
-	
-	[dockStatusMenuRoot setSubmenu:nil];
-	[currentMenuItemArray release]; currentMenuItemArray = nil;
+	if ([inMenuItems count]) {
+		NSEnumerator	*enumerator;
+		NSMenuItem		*menuItem;
+		
+		NSMenu			*menubarMenu = [(NSMenuItem *)[inMenuItems objectAtIndex:0] menu];
+		[menubarMenu setMenuChangedMessagesEnabled:NO];
+		
+		enumerator = [inMenuItems objectEnumerator];
+		while ((menuItem = [enumerator nextObject])) {
+			[[adium menuController] removeMenuItem:menuItem];
+		}
+		
+		[menubarMenu setMenuChangedMessagesEnabled:YES];
+	}
 }
 
 - (void)dummyAction:(id)sender {};
@@ -226,8 +228,10 @@
     }
 	
 	//Remember the installed items so we can remove them later
-	[installedMenuItems release]; 
-	installedMenuItems = [menuItems retain];
+	if (installedMenuItems != menuItems) {
+		[installedMenuItems release];
+		installedMenuItems = [menuItems retain];
+	}
 }
 
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {

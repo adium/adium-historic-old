@@ -22,9 +22,11 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatusIcons.h>
+#import <Adium/AIStatusMenu.h>
 #import <Adium/AIAccountMenu.h>
 
 @interface CBStatusMenuItemController (PRIVATE)
@@ -141,7 +143,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 		                         object:nil];
 
 		//Register ourself for the status menu items
-		[[adium statusController] registerStateMenuPlugin:self];
+		statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
 
 		//Account menu
 		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountStatusSubmenu showTitleVerbs:NO] retain];
@@ -153,7 +155,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
 - (void)dealloc
 {
 	//Unregister ourself
-	[[adium statusController] unregisterStateMenuPlugin:self];
 	[[adium chatController] unregisterChatObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 
@@ -164,6 +165,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 	[theMenu release];
 	[unviewedObjectsArray release];
 	[accountMenu release];
+	[statusMenu release];
 
 	//To the superclass, Robin!
 	[super dealloc];
@@ -209,19 +211,13 @@ static	NSImage						*adiumRedHighlightImage = nil;
 
 //StateMenuPlugin --------------------------------------------------------
 #pragma mark StateMenuPlugin
-- (void)addStateMenuItems:(NSArray *)menuItemArray
-{
-	//Stick 'em in!
-	[stateMenuItemsArray addObjectsFromArray:menuItemArray];
-
-	//We need to update next time we're clicked
-	needsUpdate = YES;
-}
-
-- (void)removeStateMenuItems:(NSArray *)menuItemArray
+- (void)statusMenu:(AIStatusMenu *)inStatusMenu didRebuildStatusMenuItems:(NSArray *)menuItemArray
 {
 	//Pull 'em out!
-	[stateMenuItemsArray removeObjectsInArray:menuItemArray];
+	[stateMenuItemsArray removeAllObjects];
+
+	//Stick 'em in!
+	[stateMenuItemsArray addObjectsFromArray:menuItemArray];
 
 	//We need to update next time we're clicked
 	needsUpdate = YES;

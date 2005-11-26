@@ -14,56 +14,26 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIObject.h"
+#import "AIStatusItem.h"
 
 //Keys used for storage and retrieval
 #define	STATUS_STATUS_MESSAGE				@"Status Message NSAttributedString"
 #define	STATUS_HAS_AUTO_REPLY				@"Has AutoReply"
 #define	STATUS_AUTO_REPLY_IS_STATUS_MESSAGE	@"AutoReply is Status Message"
 #define	STATUS_AUTO_REPLY_MESSAGE			@"AutoReply Message NSAttributedString"
-#define	STATUS_TITLE						@"Title"
-#define	STATUS_STATUS_TYPE					@"Status Type"
 #define	STATUS_STATUS_NAME					@"Status Name"
 #define STATUS_SHOULD_FORCE_INITIAL_IDLE_TIME @"Should Force Initial Idle Time"
 #define	STATUS_FORCED_INITIAL_IDLE_TIME		@"Forced Initial Idle Time"
 #define STATUS_INVISIBLE					@"Invisible"
 #define STATUS_MUTABILITY_TYPE				@"Mutability Type"
-#define STATUS_UNIQUE_ID					@"Unique ID"
 
-//Mutability types
-typedef enum {
-	AIEditableStatusState = 0, /* A user created state which can be modified -- the default, should be 0 */
-	AILockedStatusState, /* A state which is built into Adium and can not be modified */
-	AITemporaryEditableStatusState, /* A user created state which is not part of the permanent stored state array */
-	AISecondaryLockedStatusState /* A state which is managed by Adium and grouped separately from other states of the same type */
-} AIStatusMutabilityType;
-
-//General status types
-typedef enum {
-	AIAvailableStatusType = 0, /* Must be first in the enum */
-	AIAwayStatusType,
-	AIInvisibleStatusType,
-	AIOfflineStatusType
-} AIStatusType;
-#define STATUS_TYPES_COUNT 4
-
-typedef enum {
-	AIAvailableStatusTypeAS = 'avaL',
-	AIAwayStatusTypeAS = 'awaY',
-	AIInvisibleStatusTypeAS = 'aSaI',
-	AIOfflineStatusTypeAS = 'offL'
-} AIStatusTypeApplescript;
-
-@interface AIStatus : AIObject<NSCoding> {
+@interface AIStatus : AIStatusItem {
 	NSMutableDictionary	*statusDict;
 }
 
 + (AIStatus *)status;
 + (AIStatus *)statusWithDictionary:(NSDictionary *)inDictionary;
 + (AIStatus *)statusOfType:(AIStatusType)inStatusType;
-
-- (NSImage *)menuIcon;
-- (NSImage *)icon;
 
 - (NSAttributedString *)statusMessage;
 - (void)setStatusMessage:(NSAttributedString *)statusMessage;
@@ -79,12 +49,6 @@ typedef enum {
 - (BOOL)autoReplyIsStatusMessage;
 - (void)setAutoReplyIsStatusMessage:(BOOL)autoReplyIsStatusMessage;
 
-- (NSString *)title;
-- (void)setTitle:(NSString *)inTitle;
-
-- (AIStatusType)statusType;
-- (void)setStatusType:(AIStatusType)statusType;
-
 - (NSString *)statusName;
 - (void)setStatusName:(NSString *)statusName;
 
@@ -93,15 +57,6 @@ typedef enum {
 - (double)forcedInitialIdleTime;
 - (void)setForcedInitialIdleTime:(double)forcedInitialIdleTime;
 
-- (AIStatusMutabilityType)mutabilityType;
 - (void)setMutabilityType:(AIStatusMutabilityType)mutabilityType;
-
-- (NSNumber *)uniqueStatusID;
-- (int)preexistingUniqueStatusID;
-- (void)setUniqueStatusID:(NSNumber *)inUniqueStatusID;
-
-#pragma mark Applescript
-- (AIStatusTypeApplescript)statusTypeApplescript;
-- (void)setStatusTypeApplescript:(AIStatusTypeApplescript)statusTypeApplescript;
 
 @end

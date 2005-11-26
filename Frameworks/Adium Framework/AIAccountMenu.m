@@ -18,6 +18,7 @@
 #import "AIAccountMenu.h"
 #import "AIContactController.h"
 #import "AIStatusController.h"
+#import "AIStatusMenu.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <Adium/AIAccount.h>
 
@@ -82,7 +83,10 @@
 
 		//Observe our accouts and prepare our state menus
 		[[adium contactController] registerListObjectObserver:self];
-		if (submenuType == AIAccountStatusSubmenu) [[adium statusController] registerStateMenuPlugin:self];
+
+		if (submenuType == AIAccountStatusSubmenu) {
+			statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
+		}
 
 		//Rebuild our menu now
 		[self rebuildMenu];
@@ -96,7 +100,10 @@
  */
 - (void)dealloc
 {
-	if (submenuType == AIAccountStatusSubmenu) [[adium statusController] unregisterStateMenuPlugin:self];
+	if (submenuType == AIAccountStatusSubmenu) {
+		[statusMenu release]; statusMenu = nil;
+	}
+	
 	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 
@@ -182,11 +189,11 @@
 		}
 	}
 	
-	//Update our status submenus once this method exists
+	//Update our status submenus once this method returns so thatour menuItemArray is set
 	if (submenuType == AIAccountStatusSubmenu) {
-		[[adium statusController] performSelector:@selector(rebuildAllStateMenusForPlugin:)
-									   withObject:self
-									   afterDelay:0.0001];
+		[statusMenu performSelector:@selector(rebuildMenu)
+						 withObject:nil
+						 afterDelay:0];
 	}
 	
 	return menuItemArray;
@@ -312,7 +319,7 @@
 /*!
  * @brief Add the passed state menu items to each of our account menu items
  */
-- (void)addStateMenuItems:(NSArray *)menuItemArray
+- (void)statusMenu:(AIStatusMenu *)inStatusMenu didRebuildStatusMenuItems:(NSArray *)menuItemArray
 {
 	NSMutableArray		*newMenuItems = [NSMutableArray array];
 	NSArray				*accountMenuItems = [self menuItems];
@@ -325,7 +332,7 @@
 	for (index = 0; index < accountMenuItemsCount; index++) {
 		NSMenuItem			*accountMenuItem  = [accountMenuItems objectAtIndex:index];
 		AIAccount			*account = [accountMenuItem representedObject];
-		NSMenu				*accountSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+		NSMenu				*accountSubmenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
 		NSEnumerator		*menuItemEnumerator = [menuItemArray objectEnumerator];
 		NSMenuItem			*statusMenuItem;
 		BOOL				lastTime = (index == (accountMenuItemsCount - 1));
@@ -349,6 +356,7 @@
 																   forKey:@"AIAccount"];
 			}
 			
+			
 			if (lastTime) {
 				//The last time, we can use the original menu item rather than creating a copy
 				[statusMenuItem setRepresentedObject:newRepresentedObject];
@@ -368,30 +376,16 @@
 		if (!lastTime) {
 			[newMenuItems addObjectsFromArray:[accountSubmenu itemArray]];
 		}
-		
+
 		//Add the status menu to our account menu item
-		[accountMenuItem setSubmenu:accountSubmenu];		
+		[accountMenuItem setSubmenu:accountSubmenu];
+		[accountSubmenu release];
 	}
 	
-	/* Let the status controller know about the menuItems we created based on the menuItemArray
+	/* Let the statusMenu know about the menuItems we created based on the menuItemArray
 	 * we were passed. This will allow the status controller to manage the proper checkboxes.
 	 */
-	 [[adium statusController] plugin:self
-					 didAddMenuItems:newMenuItems];
-}
-
-/*!
- * @brief Remove the state menu items from each of our account menu items
- */
-- (void)removeStateMenuItems:(NSArray *)ignoredMenuItemArray
-{
-	NSEnumerator	*enumerator = [[self menuItems] objectEnumerator];
-	NSMenuItem		*menuItem;
-
-	//We'll need to add these menu items items to each of our accounts
-	while ((menuItem = [enumerator nextObject])) {
-		[menuItem setSubmenu:nil];
-	}
+	 [statusMenu delegateCreatedMenuItems:newMenuItems];
 }
 
 @end
