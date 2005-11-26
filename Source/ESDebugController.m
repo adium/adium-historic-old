@@ -175,6 +175,10 @@ static ESDebugController	*sharedDebugController = nil;
 		NSAssert2(fd > -1, @"could not create %@ nor open it for writing: %s", pathname, strerror(errno));
 		
 		//note: the file handle takes ownership of fd.
+		/*
+		 * From the docs:  "The object creating an NSFileHandle using this method owns fileDescriptor and is responsible for its disposition."
+		 * which seems to indicate that the file handle does not take ownership of fd. Just for the record. -eds
+		 */
 		debugLogFile = [[NSFileHandle alloc] initWithFileDescriptor:fd];
 		if(!debugLogFile) close(fd);
 		NSAssert1(debugLogFile != nil, @"could not create file handle for %@", pathname);
