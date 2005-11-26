@@ -70,6 +70,16 @@
 	return self;    
 }
 
+- (void)sizeToFit
+{		
+	[super sizeToFit];
+	
+	NSRect frame = [self frame];
+	frame.size.width += LABEL_OFFSET_X * 2;
+	
+	[self setFrame:frame];
+}
+
 - (void)drawRect:(NSRect)rect
 {
     NSRect	sourceRect, destRect, frame;
