@@ -12,6 +12,7 @@
 #import "AIStatusController.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIStatus.h>
+#import <Adium/AIStatusGroup.h>
 
 /*!
  * @class ESAutoAwayPlugin
@@ -92,11 +93,15 @@
 		if (duration > autoAwayInterval) {
 			NSEnumerator	*enumerator;
 			AIAccount		*account;
-			AIStatus		*targetStatusState;
+			AIStatusItem	*targetStatusState;
 			
 			if (!previousStatusStateDict) previousStatusStateDict = [[NSMutableDictionary alloc] init];
 			
 			targetStatusState = [[adium statusController] statusStateWithUniqueStatusID:autoAwayID];
+			
+			if ([targetStatusState isKindOfClass:[AIStatusGroup class]]) {
+				targetStatusState = [(AIStatusGroup *)targetStatusState anyContainedStatus];
+			}
 			
 			if (targetStatusState) {
 				enumerator = [[[adium accountController] accounts] objectEnumerator];
@@ -109,7 +114,7 @@
 						
 						if ([account online]) {
 							//If online, set the state
-							[account setStatusState:targetStatusState];
+							[account setStatusState:(AIStatus *)targetStatusState];
 							
 							//If we just brought the account offline, note that it will need to be reconnected later
 							if ([targetStatusState statusType] == AIOfflineStatusType) {
@@ -119,7 +124,7 @@
 							
 						} else {
 							//If offline, set the state without coming online
-							[account setStatusStateAndRemainOffline:targetStatusState];
+							[account setStatusStateAndRemainOffline:(AIStatus *)targetStatusState];
 						}
 					}
 				}

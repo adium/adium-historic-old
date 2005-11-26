@@ -15,7 +15,6 @@
  */
 
 #import "AIAccountController.h"
-//#import "AIContentController.h"
 #import "AIPreferenceController.h"
 #import "AISoundController.h"
 #import "AIStatusController.h"
@@ -23,8 +22,7 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <Adium/AIAccount.h>
-
-#define FAST_USER_SWITCH_AWAY_STRING AILocalizedString(@"I have switched logged in users. Someone else may be using the computer.","Fast user switching away message")
+#import <Adium/AIStatusGroup.h>
 
 @interface ESFastUserSwitchingSupportPlugin (PRIVATE)
 -(void)switchHandler:(NSNotification*) notification;
@@ -120,12 +118,16 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 		//Go away if we aren't already away, noting the current status states for restoration later
 		NSEnumerator	*enumerator;
 		AIAccount		*account;
-		AIStatus		*targetStatusState;
+		AIStatusItem	*targetStatusState;
 
 		if (!previousStatusStateDict) previousStatusStateDict = [[NSMutableDictionary alloc] init];
 
 		targetStatusState = [[adium statusController] statusStateWithUniqueStatusID:fastUserSwitchStatusID];
-
+		
+		if ([targetStatusState isKindOfClass:[AIStatusGroup class]]) {
+			targetStatusState = [(AIStatusGroup *)targetStatusState anyContainedStatus];
+		}
+		
 		if (targetStatusState) {
 			enumerator = [[[adium accountController] accounts] objectEnumerator];
 			while ((account = [enumerator nextObject])) {
@@ -137,7 +139,7 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 
 					if ([account online]) {
 						//If online, set the state
-						[account setStatusState:targetStatusState];
+						[account setStatusState:(AIStatus *)targetStatusState];
 						
 						//If we just brought the account offline, note that it will need to be reconnected later
 						if ([targetStatusState statusType] == AIOfflineStatusType) {
@@ -146,7 +148,7 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 						}
 					} else {
 						//If offline, set the state without coming online
-						[account setStatusStateAndRemainOffline:targetStatusState];
+						[account setStatusStateAndRemainOffline:(AIStatus *)targetStatusState];
 					}
 				}
 			}

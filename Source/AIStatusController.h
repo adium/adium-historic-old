@@ -17,13 +17,12 @@
 #import <Adium/AIObject.h>
 #import <Adium/AIStatus.h>
 
-@class AIService, AdiumIdleManager;
+@class AIService, AdiumIdleManager, AIStatusGroup;
 @protocol AIController, AIListObjectObserver;
 
 //Status State Notifications
 #define AIStatusStateArrayChangedNotification			@"AIStatusStateArrayChangedNotification"
 #define AIStatusActiveStateChangedNotification			@"AIStatusActiveStateChangedNotification"
-#define AIStatusStateMenuSelectionsChangedNotification	@"AIStatusStateMenuSelectionsChangedNotification"
 
 //Idle Notifications
 #define AIMachineIsIdleNotification				@"AIMachineIsIdleNotification"
@@ -96,15 +95,10 @@
 //Current version state ID string
 #define STATE_SAVED_STATE					@"State"
 
-//Protocol for state menu display
-@protocol StateMenuPlugin <NSObject>
-- (void)addStateMenuItems:(NSArray *)menuItemArray;
-- (void)removeStateMenuItems:(NSArray *)menuItemArray;
-@end
-
 @interface AIStatusController : AIObject <AIController, AIListObjectObserver> {
 	//Status states
-	NSMutableArray			*stateArray;
+	AIStatusGroup			*_rootStateGroup;
+	NSMutableArray			*_flatStatusSet;
 	NSMutableArray			*builtInStateArray;
 
 	AIStatus				*offlineStatusState; //Shared state used to symbolize the offline 'status'
@@ -120,9 +114,13 @@
 	//State menu support
 	NSMutableArray			*stateMenuPluginsArray;
 	NSMutableDictionary		*stateMenuItemArraysDict;
-	int						stateMenuUpdateDelays;
+
+	int						activeStatusUpdateDelays;
+	int						statusMenuRebuildDelays;
+
 	NSArray					*_sortedFullStateArray;
-	
+	NSArray					*_flatStateArray;
+
 	NSMutableSet			*stateMenuItemsNeedingUpdating;
 	
 	AdiumIdleManager		*idleManager;
@@ -136,7 +134,7 @@
 			forService:(AIService *)service;
 - (NSMenu *)menuOfStatusesForService:(AIService *)service withTarget:(id)target;
 
-- (NSArray *)stateArray;
+- (NSArray *)flatStatusSet;
 - (NSArray *)sortedFullStateArray;
 - (AIStatus *)offlineStatusState;
 - (AIStatus *)statusStateWithUniqueStatusID:(NSNumber *)uniqueStatusID;
@@ -159,22 +157,14 @@
 //State Editing
 - (void)addStatusState:(AIStatus *)state;
 - (void)removeStatusState:(AIStatus *)state;
-- (void)replaceExistingStatusState:(AIStatus *)oldState withStatusState:(AIStatus *)newState;
-- (int)moveStatusState:(AIStatus *)state toIndex:(int)destIndex;
 - (void)statusStateDidSetUniqueStatusID;
 
 //State menu support
-- (void)registerStateMenuPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
-- (void)unregisterStateMenuPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
-- (void)rebuildAllStateMenus;
-- (void)rebuildAllStateMenusForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
-- (void)updateAllStateMenuSelections;
-- (void)updateStateMenuSelectionForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
-- (void)plugin:(id <StateMenuPlugin>)stateMenuPlugin didAddMenuItems:(NSArray *)addedMenuItems;
-- (void)removeAllMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
-- (void)setDelayStateMenuUpdates:(BOOL)shouldDelay;
+- (void)setDelayActiveStatusUpdates:(BOOL)shouldDelay;
+- (BOOL)removeIfNecessaryTemporaryStatusState:(AIStatus *)originalState;
+- (AIStatusGroup *)rootStateGroup;
 
-- (NSMenu *)statusStatesMenu;
-
+- (void)savedStatusesChanged;
+- (void)statusStateDidSetUniqueStatusID;
 
 @end

@@ -9,11 +9,15 @@
 #import "ESStatusPreferences.h"
 #import "AIStatusController.h"
 #import "AIAccountController.h"
+#import "ESEditStatusGroupWindowController.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIEditStateWindowController.h>
+#import <Adium/AIStatusMenu.h>
+#import <Adium/AIStatusGroup.h>
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
+#import <AIUtilities/AIOutlineViewAdditions.h>
 #import "KFTypeSelectTableView.h"
 
 #define STATE_DRAG_TYPE	@"AIState"
@@ -23,6 +27,8 @@
 - (void)configureAutoAwayStatusStatePopUp;
 - (void)saveTimeValues;
 - (void)_selectStatusWithUniqueID:(NSNumber *)uniqueID inPopUpButton:(NSPopUpButton *)inPopUpButton;
+
+- (BOOL)addItemIfNeeded:(NSMenuItem *)menuItem toPopUpButton:(NSPopUpButton *)popUpButton alreadyShowingAnItem:(BOOL)alreadyShowing;
 @end
 
 @implementation ESStatusPreferences
@@ -54,7 +60,25 @@
 {
 	//Configure the controls
 	[self configureStateList];
-	[button_editState setTitle:AILocalizedString(@"Edit",nil)];
+
+	//Manually size and position our buttons
+	{
+		NSRect	newFrame, oldFrame;
+		
+		//Edit, right justified and far enough away from Remove that it can't conceivably overlap
+		oldFrame = [button_editState frame];
+		[button_editState setTitle:AILocalizedString(@"Edit",nil)];
+		[button_editState sizeToFit];
+		newFrame = [button_editState frame];
+		if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+		newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
+		[button_editState setFrame:newFrame];
+
+		//Add Group
+		[button_addGroup setTitle:AILocalizedString(@"Add Group",nil)];
+		[button_addGroup sizeToFit];
+	}
+	
 	
 	/* Register as an observer of state array changes so we can refresh our list
 	 * in response to changes. */
@@ -81,8 +105,6 @@
  */
 - (void)dealloc
 {
-	[stateArray release];
-
 	[super dealloc];
 }
 
@@ -98,23 +120,23 @@
     AIImageTextCell			*cell;
 
 	//Configure the table view
-	[tableView_stateList setTarget:self];
-	[tableView_stateList setDoubleAction:@selector(editState:)];
-	[tableView_stateList setIntercellSpacing:NSMakeSize(4,4)];
+	[outlineView_stateList setTarget:self];
+	[outlineView_stateList setDoubleAction:@selector(editState:)];
+	[outlineView_stateList setIntercellSpacing:NSMakeSize(4,4)];
     [scrollView_stateList setAutoHideScrollBar:YES];
 	
 	//Enable dragging of states
-	[tableView_stateList registerForDraggedTypes:[NSArray arrayWithObject:STATE_DRAG_TYPE]];
+	[outlineView_stateList registerForDraggedTypes:[NSArray arrayWithObject:STATE_DRAG_TYPE]];
 	
     //Custom vertically-centered text cell for status state names
     cell = [[AIVerticallyCenteredTextCell alloc] init];
     [cell setFont:[NSFont systemFontOfSize:13]];
-    [[tableView_stateList tableColumnWithIdentifier:@"name"] setDataCell:cell];
+    [[outlineView_stateList tableColumnWithIdentifier:@"name"] setDataCell:cell];
 	[cell release];
 }
 
 /*!
-* @brief Update table control availability
+ * @brief Update table control availability
  *
  * Updates table control availability based on the current state selection.  If no states are selected this method dims the
  * edit and delete buttons since they require a selection to function.  The edit and delete buttons are also
@@ -122,28 +144,24 @@
  */
 - (void)updateTableControlAvailability
 {
-	int		selectedRow = [tableView_stateList selectedRow];
-	BOOL	shouldEnable;
-	
-	shouldEnable = ((selectedRow != -1) &&
-					([[stateArray objectAtIndex:selectedRow] mutabilityType] == AIEditableStatusState));
+//	NSArray *selectedItems = [outlineView_stateList arrayOfSelectedItems];
+	NSIndexSet *selectedIndexes = [outlineView_stateList selectedRowIndexes];
+	int			count = [selectedIndexes count];
 
-	[button_editState setEnabled:shouldEnable];
-	[button_deleteState setEnabled:shouldEnable];
+	[button_editState setEnabled:(count && 
+								  ([[outlineView_stateList itemAtRow:[selectedIndexes firstIndex]] mutabilityType] == AIEditableStatusState))];
+	[button_deleteState setEnabled:count];
 }
 
 /*!
-* @brief Invoked when the state array changes
+ * @brief Invoked when the state array changes
  *
  * This method is invoked when the state array changes.  In response, we hold onto the new array and refresh our state
  * list.
  */
 - (void)stateArrayChanged:(NSNotification *)notification
 {
-	[stateArray release];
-	stateArray = [[[adium statusController] stateArray] retain];
-
-	[tableView_stateList reloadData];
+	[outlineView_stateList reloadData];
 	[self updateTableControlAvailability];
 	
 	//Update the auto away status pop up as necessary
@@ -160,16 +178,23 @@
  */
 - (IBAction)editState:(id)sender
 {
-	int		selectedIndex = [tableView_stateList selectedRow];
+	int				selectedRow = [outlineView_stateList selectedRow];
+	AIStatusItem	*statusState = [outlineView_stateList itemAtRow:selectedRow];
 	
-	if (selectedIndex >= 0 && selectedIndex < [stateArray count]) {
-		AIStatus	*statusState = [stateArray objectAtIndex:selectedIndex];
-		[AIEditStateWindowController editCustomState:statusState
-											 forType:[statusState statusType]
-										  andAccount:nil
-									  withSaveOption:NO
-											onWindow:[[self view] window]
-									 notifyingTarget:self];
+	if (statusState) {
+		if ([statusState isKindOfClass:[AIStatus class]]) {
+			[AIEditStateWindowController editCustomState:(AIStatus *)statusState
+												 forType:[statusState statusType]
+											  andAccount:nil
+										  withSaveOption:NO
+												onWindow:[[self view] window]
+										 notifyingTarget:self];
+			
+		} else if ([statusState isKindOfClass:[AIStatusGroup class]]) {
+			[ESEditStatusGroupWindowController editStatusGroup:(AIStatusGroup *)statusState
+													  onWindow:[[self view] window]
+											   notifyingTarget:self];			
+		}
 	}
 }
 
@@ -199,27 +224,83 @@
 			}
 		}
 
-		[[adium statusController] replaceExistingStatusState:originalState withStatusState:newState];
+		[[originalState containingStatusGroup] replaceExistingStatusState:originalState withStatusState:newState];
 
 		[originalState setUniqueStatusID:nil];
 
 	} else {
 		[[adium statusController] addStatusState:newState];
 	}
+	
+	[outlineView_stateList selectItemsInArray:[NSArray arrayWithObject:newState]];
+	[outlineView_stateList scrollRowToVisible:[outlineView_stateList rowForItem:newState]];
+}
+
+- (void)finishedSatusGroupEdit:(AIStatusGroup *)inStatusGroup
+{
+	if (![inStatusGroup containingStatusGroup]) {
+		//Add it if it's not already in a group
+		[[[adium statusController] rootStateGroup] addStatusItem:inStatusGroup atIndex:-1];
+
+	} else {
+		//Otherwise just save
+		[[adium statusController] savedStatusesChanged];
+	}
+
+	[outlineView_stateList selectItemsInArray:[NSArray arrayWithObject:inStatusGroup]];
+	[outlineView_stateList scrollRowToVisible:[outlineView_stateList rowForItem:inStatusGroup]];
 }
 
 /*!
-* @brief Delete the selected state
+ * @brief Delete the selected state
  *
  * Deletes the selected state from Adium's state array.
  */
 - (IBAction)deleteState:(id)sender
 {
-	int		selectedIndex = [tableView_stateList selectedRow];
-	
-	if (selectedIndex >= 0 && selectedIndex < [stateArray count]) {
-		[[adium statusController] removeStatusState:[stateArray objectAtIndex:selectedIndex]];
+	int			 selectedIndex = [outlineView_stateList selectedRow];
+	AIStatusItem *statusItem = [outlineView_stateList itemAtRow:selectedIndex];
+
+	if (statusItem) {
+		//Confirm deletion of a status group with contents
+		if ([statusItem isKindOfClass:[AIStatusGroup class]] &&
+			[[(AIStatusGroup *)statusItem containedStatusItems] count]) {
+			unsigned count = [[(AIStatusGroup *)statusItem containedStatusItems] count];
+			NSString *message;
+			
+			if (count > 1) {
+				message = [NSString stringWithFormat:AILocalizedString(@"Are you sure you want to delete the group \"%@\" containing %i saved status items?",nil),
+					[statusItem title], count];
+				
+			} else {
+				message = [NSString stringWithFormat:AILocalizedString(@"Are you sure you want to delete the group \"%@\" containing 1 saved status item?",nil),
+					[statusItem title], count];				
+			}
+
+			//Warn if deleting a group containing status items
+			NSBeginAlertSheet(AILocalizedString(@"Status Group Deletion Confirmation",nil),
+							  AILocalizedString(@"Delete", nil),
+							  AILocalizedString(@"Cancel", nil), nil,
+							  [[self view] window], self,
+							  @selector(sheetDidEnd:returnCode:contextInfo:), NULL,
+							  statusItem,
+							  message);
+			
+		} else {
+			[[statusItem containingStatusGroup] removeStatusItem:statusItem];
+		}
 	}
+}
+
+/*
+ * @brief Confirmed a status item deletion operation
+ */
+- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	if (returnCode == NSAlertDefaultReturn) {
+		AIStatusItem *statusItem = (AIStatusItem *)contextInfo;
+		[[statusItem containingStatusGroup] removeStatusItem:statusItem];
+	}	
 }
 
 /*!
@@ -239,40 +320,77 @@
 								 notifyingTarget:self];
 }
 
-
-//State List Table Delegate --------------------------------------------------------------------------------------------
-#pragma mark State List (Table Delegate)
-/*!
-* @brief Number of rows
- */
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
+- (IBAction)addGroup:(id)sender
 {
-	return [stateArray count];
+	[ESEditStatusGroupWindowController editStatusGroup:nil
+											  onWindow:[[self view] window]
+									   notifyingTarget:self];
 }
 
-/*!
-* @brief Table values
- */
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
+//State List OutlinView Delegate --------------------------------------------------------------------------------------------
+#pragma mark State List (OutlinView Delegate)
+- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+{
+	AIStatusGroup *statusGroup = (item ? item : [[adium statusController] rootStateGroup]);
+	
+	return [[statusGroup containedStatusItems] objectAtIndex:index];
+}
+
+- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
+	AIStatusGroup *statusGroup = (item ? item : [[adium statusController] rootStateGroup]);
+	
+	return [[statusGroup containedStatusItems] count];	
+}
+
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
 	NSString 		*identifier = [tableColumn identifier];
-	AIStatus		*statusState = [stateArray objectAtIndex:row];
 	
 	if ([identifier isEqualToString:@"icon"]) {
-		return [statusState icon];
+		return ([item respondsToSelector:@selector(icon)] ? [item icon] : nil);
 		
 	} else if ([identifier isEqualToString:@"name"]) {
-		return [statusState title]; 
+		NSImage *icon = ([item respondsToSelector:@selector(icon)] ? [item icon] : nil);
 		
+		if (icon) {
+			NSMutableAttributedString *name;
+
+			NSTextAttachment		*attachment;
+			NSTextAttachmentCell	*cell;
+			
+			cell = [[[NSTextAttachmentCell alloc] init] autorelease];
+			[cell setImage:icon];
+			
+			attachment = [[[NSTextAttachment alloc] init] autorelease];
+			[attachment setAttachmentCell:cell];
+			
+			name = [[NSAttributedString attributedStringWithAttachment:attachment] mutableCopy];
+			[name appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",([item title] ? [item title] : @"")]
+																		  attributes:nil] autorelease]];
+			return [name autorelease];
+		} else {
+			return [item title]; 
+		}
 	}
 	
 	return nil;
 }
 
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+{
+	return [item isKindOfClass:[AIStatusGroup class]];
+}
+
 /*!
 * @brief Delete the selected row
  */
-- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
+- (void)outlineViewDeleteSelectedRows:(NSTableView *)tableView
 {
     [self deleteState:nil];
 }
@@ -280,7 +398,7 @@
 /*!
 * @brief Selection change
  */
-- (void)tableViewSelectionDidChange:(NSNotification *)notification
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
 	[self updateTableControlAvailability];
 }
@@ -288,46 +406,86 @@
 /*!
 * @brief Drag start
  */
-- (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
+- (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
 {
-    tempDragState = [stateArray objectAtIndex:[[rows objectAtIndex:0] intValue]];
+    draggingItems = [items retain];
 	
     [pboard declareTypes:[NSArray arrayWithObject:STATE_DRAG_TYPE] owner:self];
     [pboard setString:@"State" forType:STATE_DRAG_TYPE]; //Arbitrary state
-    
+
     return YES;
 }
 
-/*!
-* @brief Drag validate
- */
-- (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op
+- (NSDragOperation)outlineView:(NSOutlineView *)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
-    if (op == NSTableViewDropAbove && row != -1) {
-        return NSDragOperationPrivate;
-    } else {
-        return NSDragOperationNone;
-    }
+    if (index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIStatusGroup class]]) {
+		AIStatusGroup *dropItem = [item containingStatusGroup];
+		if (dropItem == [[adium statusController] rootStateGroup])
+			dropItem = nil;
+
+		[outlineView setDropItem:dropItem
+				  dropChildIndex:[[[item containingStatusGroup] containedStatusItems] indexOfObjectIdenticalTo:item]];
+	}
+     
+	return NSDragOperationPrivate;
 }
 
 /*!
 * @brief Drag complete
  */
-- (BOOL)tableView:(NSTableView*)tv acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)op
+- (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:STATE_DRAG_TYPE]];
-	
-    if ([avaliableType isEqualToString:STATE_DRAG_TYPE]) {
-        int	newIndex;
+    if ([avaliableType isEqualToString:STATE_DRAG_TYPE]) {		
+		[[adium statusController] setDelayStatusMenuRebuilding:YES];
+
+		if (!item) item = [[adium statusController] rootStateGroup];
+
+		NSEnumerator *enumerator;
+		AIStatusItem *statusItem;
 		
-        //Move the state and select it in the new location
-        newIndex = [[adium statusController] moveStatusState:tempDragState toIndex:row];
-        [tableView_stateList selectRow:newIndex byExtendingSelection:NO];
-		
+		enumerator = [draggingItems objectEnumerator];
+
+		while ((statusItem = [enumerator nextObject])) {
+			if ([statusItem containingStatusGroup] == item) {
+				BOOL shouldIncrement = NO;
+				if ([[[statusItem containingStatusGroup] containedStatusItems] indexOfObject:statusItem] > index) {
+					shouldIncrement = YES;
+				}
+				
+				//Move the state and select it in the new location
+				[item moveStatusItem:statusItem toIndex:index];
+				
+				if (shouldIncrement) index++;
+			} else {
+				[statusItem retain];
+				[[statusItem containingStatusGroup] removeStatusItem:statusItem];
+				[item addStatusItem:statusItem atIndex:index];
+				[statusItem release];
+				
+				index++;
+			}
+		}
+
+		//Notify and reselect outside of the NSOutlineView callback
+		[self performSelector:@selector(reselectDraggedItems:)
+				   withObject:draggingItems
+				   afterDelay:0];
+
+		[draggingItems release]; draggingItems = nil;
+
         return YES;
     } else {
         return NO;
     }
+}
+
+- (void)reselectDraggedItems:(NSArray *)theDraggedItems
+{
+	[[adium statusController] setDelayStatusMenuRebuilding:NO];
+
+	[outlineView_stateList selectItemsInArray:theDraggedItems];
+	[outlineView_stateList scrollRowToVisible:[outlineView_stateList rowForItem:[theDraggedItems objectAtIndex:0]]];
 }
 
 /*!
@@ -373,8 +531,10 @@
 	NSMenu		*statusStatesMenu;
 	NSNumber	*targetUniqueStatusIDNumber;
 
-	statusStatesMenu = [[adium statusController] statusStatesMenu];
+	statusStatesMenu = [AIStatusMenu staticStatusStatesMenuNotifyingTarget:self selector:@selector(changedAutoAwayStatus:)];
 	[popUp_autoAwayStatusState setMenu:statusStatesMenu];
+	
+	statusStatesMenu = [AIStatusMenu staticStatusStatesMenuNotifyingTarget:self selector:@selector(changedFastUserSwitchingStatus:)];	
 	[popUp_fastUserSwitchingStatusState setMenu:[[statusStatesMenu copy] autorelease]];
 
 	//Now select the proper state, or deselect all items if there is no chosen state or the chosen state doesn't exist
@@ -387,32 +547,77 @@
 	[self _selectStatusWithUniqueID:targetUniqueStatusIDNumber inPopUpButton:popUp_fastUserSwitchingStatusState];	
 }
 
+/*!
+ * @brief Add all items in inMenu to an array, returning the resulting array
+ *
+ * This method adds items deeply; that is, submenus and their contents are recursively included
+ *
+ * @param inMenu The menu to start from
+ * @param recursiveArray The array thus far; if nil an array will be created
+ *
+ * @result All the menu items in inMenu
+ */
+- (NSMutableArray *)addItemsFromMenu:(NSMenu *)inMenu toArray:(NSMutableArray *)recursiveArray
+{
+	NSArray			*itemArray = [inMenu itemArray];
+	NSEnumerator	*enumerator;
+	NSMenuItem		*menuItem;
+
+	if (!recursiveArray) recursiveArray = [NSMutableArray array];
+
+	enumerator = [itemArray objectEnumerator];
+	while ((menuItem = [enumerator nextObject])) {
+		[recursiveArray addObject:menuItem];
+
+		if ([menuItem submenu]) {
+			[self addItemsFromMenu:[menuItem submenu] toArray:recursiveArray];
+		}
+	}
+
+	return recursiveArray;
+}
+
+/*!
+ * @brief Select a status with uniqueID in inPopUpButton
+ */
 - (void)_selectStatusWithUniqueID:(NSNumber *)uniqueID inPopUpButton:(NSPopUpButton *)inPopUpButton
 {
-	int			index = -1;
-
+	NSMenuItem	*menuItem = nil;
+	
 	if (uniqueID) {
-		NSArray		*itemArray;
-		int			targetUniqueStatusID;
-		unsigned	itemArrayCount, i;
-		
-		targetUniqueStatusID = [uniqueID intValue];
-		
-		itemArray = [inPopUpButton itemArray];
-		itemArrayCount = [itemArray count];
-		for (i = 0; i < itemArrayCount; i++) {
-			NSMenuItem	*menuItem = [itemArray objectAtIndex:i];
-			AIStatus	*statusState = [[menuItem representedObject] objectForKey:@"AIStatus"];
+		int			 targetUniqueStatusID= [uniqueID intValue];
+		NSEnumerator *enumerator;
+
+		enumerator = [[self addItemsFromMenu:[inPopUpButton menu] toArray:nil] objectEnumerator];
+
+		while ((menuItem = [enumerator nextObject])) {
+			AIStatusItem	*statusState;
 			
+			statusState = [[menuItem representedObject] objectForKey:@"AIStatus"];
+
 			//Found the right status by matching its status ID to our preferred one
 			if ([statusState preexistingUniqueStatusID] == targetUniqueStatusID) {
-				index = i;
 				break;
 			}
 		}
 	}
-	
-	[inPopUpButton selectItemAtIndex:index];
+
+	if (menuItem) {
+		[inPopUpButton selectItem:menuItem];
+
+		//Add it if we weren't able to select it initially
+		if (![inPopUpButton selectedItem]) {
+			[self addItemIfNeeded:menuItem toPopUpButton:inPopUpButton alreadyShowingAnItem:NO];
+			
+			if (inPopUpButton == popUp_autoAwayStatusState) {
+				showingSubmenuItemInAutoAway = YES;
+				
+			} else if (inPopUpButton == popUp_fastUserSwitchingStatusState) {
+				showingSubmenuItemInFastUserSwitching = YES;
+				
+			}
+		}
+	}
 }
 
 /*!
@@ -464,20 +669,69 @@
 											  group:PREF_GROUP_STATUS_PREFERENCES];
 		[self configureControlDimming];
 		
-	} else if (sender == popUp_autoAwayStatusState) {
-		AIStatus	*statusState = [[[sender selectedItem] representedObject] objectForKey:@"AIStatus"];
-
-		[[adium preferenceController] setPreference:[statusState uniqueStatusID]
-											 forKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID
-											  group:PREF_GROUP_STATUS_PREFERENCES];
-		
-	} else if (sender == popUp_fastUserSwitchingStatusState) {
-		AIStatus	*statusState = [[[sender selectedItem] representedObject] objectForKey:@"AIStatus"];
-		
-		[[adium preferenceController] setPreference:[statusState uniqueStatusID]
-											 forKey:KEY_STATUS_FUS_STATUS_STATE_ID
-											  group:PREF_GROUP_STATUS_PREFERENCES];
 	}
+}
+
+/*!
+ * @brief If menuItem is not selectable in popUpButton, add it and select it
+ *
+ * Menu items located within submenus can't be directly selected. This method will add a spearator item and then the item itself
+ * to the bottom of popUpButton if needed.  alreadyShowing should be YES if a similarly set separate + item exists; it will be removed
+ * first.
+ *
+ * @result YES if the item was added to popUpButton.
+ */
+- (BOOL)addItemIfNeeded:(NSMenuItem *)menuItem toPopUpButton:(NSPopUpButton *)popUpButton alreadyShowingAnItem:(BOOL)alreadyShowing
+{
+	BOOL	nowShowing = NO;
+	NSMenu	*menu = [popUpButton menu];
+
+	[menuItem retain];
+	if (alreadyShowing) {
+		int count = [menu numberOfItems];
+		[menu removeItemAtIndex:--count];
+		[menu removeItemAtIndex:--count];			
+	}
+	
+	if ([popUpButton selectedItem] != menuItem) {
+		NSMenuItem  *imitationMenuItem = [menuItem copy];
+		
+		[menu addItem:[NSMenuItem separatorItem]];
+		[menu addItem:imitationMenuItem];
+		
+		[popUpButton selectItem:imitationMenuItem];
+		[imitationMenuItem release];
+		
+		nowShowing = YES;
+	}	
+	[menuItem release];
+	
+	return nowShowing;
+}
+- (void)changedAutoAwayStatus:(id)sender
+{
+	AIStatus	*statusState = [[sender representedObject] objectForKey:@"AIStatus"];
+
+	[[adium preferenceController] setPreference:[statusState uniqueStatusID]
+										 forKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID
+										  group:PREF_GROUP_STATUS_PREFERENCES];
+
+	showingSubmenuItemInAutoAway = [self addItemIfNeeded:sender
+										   toPopUpButton:popUp_autoAwayStatusState
+									alreadyShowingAnItem:showingSubmenuItemInAutoAway];
+}
+
+- (void)changedFastUserSwitchingStatus:(id)sender
+{
+	AIStatus	*statusState = [[sender representedObject] objectForKey:@"AIStatus"];
+
+	[[adium preferenceController] setPreference:[statusState uniqueStatusID]
+										 forKey:KEY_STATUS_FUS_STATUS_STATE_ID
+										  group:PREF_GROUP_STATUS_PREFERENCES];
+	
+	showingSubmenuItemInFastUserSwitching = [self addItemIfNeeded:sender
+													toPopUpButton:popUp_fastUserSwitchingStatusState
+											 alreadyShowingAnItem:showingSubmenuItemInFastUserSwitching];
 }
 
 /*!

@@ -341,6 +341,11 @@
 		348E5ACB06D2A74C004C051C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348E5ACA06D2A74C004C051C /* AddressBook.framework */; };
 		348EE1B4080A57480015E0FC /* WebKitPreferencesView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348EE1B3080A57480015E0FC /* WebKitPreferencesView.nib */; };
 		348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */; };
+		348F50C20935317C00288E41 /* AIStatusItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 348F50C00935317C00288E41 /* AIStatusItem.h */; };
+		348F50C30935317C00288E41 /* AIStatusItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 348F50C10935317C00288E41 /* AIStatusItem.m */; };
+		348F57930936F3CC00288E41 /* ESEditStatusGroupWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 348F57910936F3CC00288E41 /* ESEditStatusGroupWindowController.h */; };
+		348F57940936F3CC00288E41 /* ESEditStatusGroupWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348F57920936F3CC00288E41 /* ESEditStatusGroupWindowController.m */; };
+		348F579E0936FA6D00288E41 /* EditStatusGroup.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348F579D0936FA6D00288E41 /* EditStatusGroup.nib */; };
 		348FF83F09128BEB00A942A8 /* CBGaimAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 348FF83E09128BEB00A942A8 /* CBGaimAccount.m */; };
 		348FF84A09128D6300A942A8 /* AccountDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 348FF84909128D6300A942A8 /* AccountDefaults.plist */; };
 		34943DEF07BAD918000F2A03 /* AccountPrivacy.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34943DEE07BAD918000F2A03 /* AccountPrivacy.nib */; };
@@ -410,6 +415,10 @@
 		34A6FB8107D6FDCC00972830 /* FormattingDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */; };
 		34A6FEBB07D7E2E400972830 /* KFTypeSelectTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A6FE7907D7E06A00972830 /* KFTypeSelectTableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34A6FEBC07D7E2E500972830 /* KFTypeSelectTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A6FE7807D7E06A00972830 /* KFTypeSelectTableView.m */; };
+		34AC2EA10934FAE100393D7A /* AIStatusMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AC2E9F0934FAE100393D7A /* AIStatusMenu.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		34AC2EA20934FAE100393D7A /* AIStatusMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AC2EA00934FAE100393D7A /* AIStatusMenu.m */; };
+		34AC2FA709352C2500393D7A /* AIStatusGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AC2FA509352C2400393D7A /* AIStatusGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		34AC2FA809352C2500393D7A /* AIStatusGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AC2FA609352C2400393D7A /* AIStatusGroup.m */; };
 		34AC36BB07B5C51500145239 /* AIStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AC36B907B5C51400145239 /* AIStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34AC36BC07B5C51500145239 /* AIStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AC36BA07B5C51400145239 /* AIStatus.m */; };
 		34AEE7DE08E3547000AE1C78 /* ESGaimFileReceiveRequestController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AEE7DC08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.h */; };
@@ -2124,6 +2133,11 @@
 		348D8D2706CC07BD00449EBB /* DCGaimZephyrJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCGaimZephyrJoinChatViewController.h; path = "Plugins/Gaim Service/DCGaimZephyrJoinChatViewController.h"; sourceTree = "<group>"; };
 		348D8D2806CC07BD00449EBB /* ESGaimZephyrAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimZephyrAccount.h; path = "Plugins/Gaim Service/ESGaimZephyrAccount.h"; sourceTree = "<group>"; };
 		348E5ACA06D2A74C004C051C /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = /System/Library/Frameworks/AddressBook.framework; sourceTree = "<absolute>"; };
+		348F50C00935317C00288E41 /* AIStatusItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusItem.h; path = "Frameworks/Adium Framework/AIStatusItem.h"; sourceTree = "<group>"; };
+		348F50C10935317C00288E41 /* AIStatusItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStatusItem.m; path = "Frameworks/Adium Framework/AIStatusItem.m"; sourceTree = "<group>"; };
+		348F57910936F3CC00288E41 /* ESEditStatusGroupWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESEditStatusGroupWindowController.h; path = "Frameworks/Adium Framework/ESEditStatusGroupWindowController.h"; sourceTree = "<group>"; };
+		348F57920936F3CC00288E41 /* ESEditStatusGroupWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESEditStatusGroupWindowController.m; path = "Frameworks/Adium Framework/ESEditStatusGroupWindowController.m"; sourceTree = "<group>"; };
+		348F579D0936FA6D00288E41 /* EditStatusGroup.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EditStatusGroup.nib; path = Resources/EditStatusGroup.nib; sourceTree = "<group>"; };
 		348FF83E09128BEB00A942A8 /* CBGaimAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBGaimAccount.m; path = "Plugins/Gaim Service/CBGaimAccount.m"; sourceTree = "<group>"; };
 		348FF84909128D6300A942A8 /* AccountDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = AccountDefaults.plist; path = "Frameworks/Adium Framework/AccountDefaults.plist"; sourceTree = "<group>"; };
 		34943DEE07BAD918000F2A03 /* AccountPrivacy.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountPrivacy.nib; path = "Frameworks/Adium Framework/AccountPrivacy.nib"; sourceTree = "<group>"; };
@@ -2233,6 +2247,10 @@
 		34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = FormattingDefaults.plist; path = Resources/FormattingDefaults.plist; sourceTree = "<group>"; };
 		34A6FE7807D7E06A00972830 /* KFTypeSelectTableView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = KFTypeSelectTableView.m; path = "Frameworks/Adium Framework/KFTypeSelectTableView.m"; sourceTree = "<group>"; };
 		34A6FE7907D7E06A00972830 /* KFTypeSelectTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KFTypeSelectTableView.h; path = "Frameworks/Adium Framework/KFTypeSelectTableView.h"; sourceTree = "<group>"; };
+		34AC2E9F0934FAE100393D7A /* AIStatusMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusMenu.h; path = "Frameworks/Adium Framework/AIStatusMenu.h"; sourceTree = "<group>"; };
+		34AC2EA00934FAE100393D7A /* AIStatusMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStatusMenu.m; path = "Frameworks/Adium Framework/AIStatusMenu.m"; sourceTree = "<group>"; };
+		34AC2FA509352C2400393D7A /* AIStatusGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusGroup.h; path = "Frameworks/Adium Framework/AIStatusGroup.h"; sourceTree = "<group>"; };
+		34AC2FA609352C2400393D7A /* AIStatusGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStatusGroup.m; path = "Frameworks/Adium Framework/AIStatusGroup.m"; sourceTree = "<group>"; };
 		34AC36B907B5C51400145239 /* AIStatus.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStatus.h; path = "Frameworks/Adium Framework/AIStatus.h"; sourceTree = "<group>"; };
 		34AC36BA07B5C51400145239 /* AIStatus.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStatus.m; path = "Frameworks/Adium Framework/AIStatus.m"; sourceTree = "<group>"; };
 		34AEE7DC08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimFileReceiveRequestController.h; path = "Plugins/Gaim Service/ESGaimFileReceiveRequestController.h"; sourceTree = "<group>"; };
@@ -3425,7 +3443,10 @@
 				3428328707D2643F004F01C9 /* ESStatusPreferencesPlugin.m */,
 				3428328607D2643F004F01C9 /* ESStatusPreferences.h */,
 				3428328507D2643F004F01C9 /* ESStatusPreferences.m */,
+				348F57910936F3CC00288E41 /* ESEditStatusGroupWindowController.h */,
+				348F57920936F3CC00288E41 /* ESEditStatusGroupWindowController.m */,
 				34A250B507E0F822009854E1 /* StatusDefaults.plist */,
+				348F579D0936FA6D00288E41 /* EditStatusGroup.nib */,
 				3474E0900825634300BF30F0 /* StatusPreferences.nib */,
 			);
 			name = "Status Preferences";
@@ -4759,8 +4780,12 @@
 		4B587CAB07ABFF18001832A9 /* State & Status */ = {
 			isa = PBXGroup;
 			children = (
+				348F50C00935317C00288E41 /* AIStatusItem.h */,
+				348F50C10935317C00288E41 /* AIStatusItem.m */,
 				34AC36B907B5C51400145239 /* AIStatus.h */,
 				34AC36BA07B5C51400145239 /* AIStatus.m */,
+				34AC2FA509352C2400393D7A /* AIStatusGroup.h */,
+				34AC2FA609352C2400393D7A /* AIStatusGroup.m */,
 				4B588C9B07AC23B2001832A9 /* AIEditStateWindowController.h */,
 				4B588C9C07AC23B2001832A9 /* AIEditStateWindowController.m */,
 				342114B40826D37100A3B0FB /* EditStateSheet.nib */,
@@ -5162,12 +5187,14 @@
 			children = (
 				4B22E15C085CAE2E001864DE /* AIAbstractListObjectMenu.h */,
 				4B22E15D085CAE2F001864DE /* AIAbstractListObjectMenu.m */,
+				3449485B08E9FCD60054FF57 /* AIAccountMenu.h */,
+				3449485A08E9FCD60054FF57 /* AIAccountMenu.m */,
 				3449485608E9FCCD0054FF57 /* AIContactMenu.h */,
 				3449485508E9FCCD0054FF57 /* AIContactMenu.m */,
 				4BAF8CFC083D9A2A0067CF6F /* AIServiceMenu.h */,
 				4BAF8CFD083D9A2A0067CF6F /* AIServiceMenu.m */,
-				3449485B08E9FCD60054FF57 /* AIAccountMenu.h */,
-				3449485A08E9FCD60054FF57 /* AIAccountMenu.m */,
+				34AC2E9F0934FAE100393D7A /* AIStatusMenu.h */,
+				34AC2EA00934FAE100393D7A /* AIStatusMenu.m */,
 				34E00F7107B92AD0000DF265 /* Text and Buttons Window */,
 				4BFC3412058D48A8008F7FA2 /* AIWindowController.h */,
 				4BFC3413058D48A8008F7FA2 /* AIWindowController.m */,
@@ -6326,6 +6353,7 @@
 				9E44248808E11F380015D4DD /* AdiumURLHandling.h in Headers */,
 				633F175A08F905A700C76383 /* AIXtraInfo.h in Headers */,
 				633F175C08F905A700C76383 /* AIXtrasManager.h in Headers */,
+				348F57930936F3CC00288E41 /* ESEditStatusGroupWindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6415,6 +6443,9 @@
 				34D36DBB08E75F7600E15E40 /* AIColorPickerSliders.h in Headers */,
 				3449485808E9FCCD0054FF57 /* AIContactMenu.h in Headers */,
 				3449485D08E9FCD60054FF57 /* AIAccountMenu.h in Headers */,
+				34AC2EA10934FAE100393D7A /* AIStatusMenu.h in Headers */,
+				34AC2FA709352C2500393D7A /* AIStatusGroup.h in Headers */,
+				348F50C20935317C00288E41 /* AIStatusItem.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7411,6 +7442,7 @@
 				632D801708E7E0A40032C187 /* XtrasManager.nib in Resources */,
 				63C120750910A0DD00C9DB57 /* DefaultXtraReadme.rtf in Resources */,
 				34B995DA092A832700E31E91 /* FontPanelAccessoryView.nib in Resources */,
+				348F579E0936FA6D00288E41 /* EditStatusGroup.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7939,6 +7971,7 @@
 				9E44248908E11F380015D4DD /* AdiumURLHandling.m in Sources */,
 				633F175B08F905A700C76383 /* AIXtraInfo.m in Sources */,
 				633F175D08F905A800C76383 /* AIXtrasManager.m in Sources */,
+				348F57940936F3CC00288E41 /* ESEditStatusGroupWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8026,6 +8059,9 @@
 				34D36DBA08E75F7500E15E40 /* AIColorPickerSliders.m in Sources */,
 				3449485708E9FCCD0054FF57 /* AIContactMenu.m in Sources */,
 				3449485C08E9FCD60054FF57 /* AIAccountMenu.m in Sources */,
+				34AC2EA20934FAE100393D7A /* AIStatusMenu.m in Sources */,
+				34AC2FA809352C2500393D7A /* AIStatusGroup.m in Sources */,
+				348F50C30935317C00288E41 /* AIStatusItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9417,10 +9453,12 @@
 		DADE8E0A085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
 				);
+				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -9440,12 +9478,10 @@
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
+				OTHER_CFLAGS = "-DDEBUG_BUILD";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Gaim;
+				STRIP_INSTALLED_PRODUCT = NO;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			name = Development;

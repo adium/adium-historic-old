@@ -15,10 +15,9 @@
  */
 
 #import <Adium/AIAbstractListObjectMenu.h>
-#import "AIStateMenuPlugin.h"
 
 @protocol AIListObjectObserver;
-@class AIAccount;
+@class AIAccount, AIStatusMenu;
 
 typedef enum {
 	AIAccountNoSubmenu = 0,
@@ -26,13 +25,15 @@ typedef enum {
 	AIAccountOptionsSubmenu
 } AIAccountSubmenuType;
 
-@interface AIAccountMenu : AIAbstractListObjectMenu <AIListObjectObserver, StateMenuPlugin> {
+@interface AIAccountMenu : AIAbstractListObjectMenu <AIListObjectObserver> {
 	id				delegate;
 	BOOL			delegateRespondsToDidSelectAccount;
 	BOOL			delegateRespondsToShouldIncludeAccount;	
 
 	BOOL			submenuType;
 	BOOL			showTitleVerbs;
+	
+	AIStatusMenu	*statusMenu;
 }
 
 + (id)accountMenuWithDelegate:(id)inDelegate

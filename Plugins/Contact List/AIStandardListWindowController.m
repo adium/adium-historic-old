@@ -21,6 +21,7 @@
 #import "AIToolbarController.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIStatusMenu.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
@@ -76,7 +77,8 @@
 	[[self window] setTitle:AILocalizedString(@"Contacts","Contact List window title")];
 
 	//Configure the state menu
-	[[adium statusController] registerStateMenuPlugin:self];
+	statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
+	
 	[[popUp_state cell] setUsesItemFromMenu:NO];
 	[[popUp_state cell] setAltersStateOfSelectedItem:NO];
 
@@ -93,7 +95,9 @@
  */
 - (void)windowWillClose:(id)sender
 {
-	[[adium statusController] unregisterStateMenuPlugin:self];
+	[statusMenu release];
+	
+	[super windowWillClose:sender];
 }
 
 /*!
@@ -103,7 +107,7 @@
  *
  * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be added to the menu
  */
-- (void)addStateMenuItems:(NSArray *)menuItemArray
+- (void)statusMenu:(AIStatusMenu *)inStatusMenu didRebuildStatusMenuItems:(NSArray *)menuItemArray
 {
     NSMenu			*menu = [[NSMenu alloc] init];
 	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
@@ -119,18 +123,6 @@
 	
 	[popUp_state setMenu:menu];
 	[menu release];
-}
-
-/*!
- * @brief Remove state menu items from our location
- *
- * Implemented as required by the StateMenuPlugin protocol.
- *
- * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be removed from the menu
- */
-- (void)removeStateMenuItems:(NSArray *)menuItemArray
-{
-	[popUp_state setMenu:nil];
 }
 
 /*

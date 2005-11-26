@@ -16,8 +16,8 @@
 
 #import <Adium/AIObject.h>
 
-@class AIAccountMenu;
-@protocol StateMenuPlugin, AIChatObserver;
+@class AIAccountMenu, AIStatusMenu;
+@protocol AIChatObserver;
 
 typedef enum {
 	OFFLINE	= 0,
@@ -25,11 +25,12 @@ typedef enum {
 	UNVIEWED = 2
 } SMI_Icon_State;
 
-@interface CBStatusMenuItemController : AIObject <StateMenuPlugin, AIChatObserver>
+@interface CBStatusMenuItemController : AIObject <AIChatObserver>
 {
 	NSStatusItem            *statusItem;
 	NSMenu                  *theMenu;
 	AIAccountMenu           *accountMenu;
+	AIStatusMenu			*statusMenu;
 
 	NSMutableArray          *accountMenuItemsArray;
 	NSMutableArray          *stateMenuItemsArray;

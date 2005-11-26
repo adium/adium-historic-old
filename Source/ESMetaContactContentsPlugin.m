@@ -116,6 +116,8 @@
 					
 					[entryString appendString:@" "];
 					[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+/*					AILog(@"Size of %@ is %@",[AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal],
+						  NSStringFromSize([serviceIcon size]));*/
 				}
 			}
 		}

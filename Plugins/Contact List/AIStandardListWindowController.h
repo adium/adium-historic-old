@@ -17,11 +17,13 @@
 #import "AIListWindowController.h"
 
 @protocol AIListObjectObserver, StateMenuPlugin;
+@class AIStatusMenu;
 
-@interface AIStandardListWindowController : AIListWindowController <StateMenuPlugin> {
+@interface AIStandardListWindowController : AIListWindowController {
 	IBOutlet	NSPopUpButton	*popUp_state;
 
-	NSDictionary			*toolbarItems;
+	NSDictionary				*toolbarItems;
+	AIStatusMenu				*statusMenu;
 }
 
 @end

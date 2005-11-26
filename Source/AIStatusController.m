@@ -16,7 +16,6 @@
 
 #import "AIAccountController.h"
 #import "AIContactController.h"
-#import "AIEditStateWindowController.h"
 #import "AIPreferenceController.h"
 #import "AIStatusController.h"
 #import "AdiumIdleManager.h"
@@ -30,10 +29,10 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatusIcons.h>
+#import <Adium/AIStatusGroup.h>
+#import <Adium/AIStatus.h>
 
 //State menu
-#define STATE_TITLE_MENU_LENGTH		30
-#define STATUS_TITLE_CUSTOM			[AILocalizedString(@"Custom",nil) stringByAppendingEllipsis]
 #define STATUS_TITLE_OFFLINE		AILocalizedString(@"Offline",nil)
 
 #define BUILT_IN_STATE_ARRAY		@"BuiltInStatusStates"
@@ -43,11 +42,9 @@
 @interface AIStatusController (PRIVATE)
 - (NSArray *)builtInStateArray;
 
-- (void)_saveStateArrayAndNotifyOfChanges;
 - (void)_upgradeSavedAwaysToSavedStates;
 - (void)_addStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (void)_removeStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
-- (BOOL)removeIfNecessaryTemporaryStatusState:(AIStatus *)originalState;
 - (NSString *)_titleForMenuDisplayOfState:(AIStatus *)statusState;
 
 - (NSArray *)_menuItemsForStatusesOfType:(AIStatusType)type forServiceCodeUniqueID:(NSString *)inServiceCodeUniqueID withTarget:(id)target;
@@ -57,7 +54,7 @@
 							 toArray:(NSMutableArray *)menuItems
 				  alreadyAddedTitles:(NSMutableSet *)alreadyAddedTitles;
 - (void)buildBuiltInStatusTypes;
-
+- (void)notifyOfChangedStatusArray;
 @end
 
 /*!
@@ -79,14 +76,13 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		stateMenuItemArraysDict = [[NSMutableDictionary alloc] init];
 		stateMenuPluginsArray = [[NSMutableArray alloc] init];
 		stateMenuItemsNeedingUpdating = [[NSMutableSet alloc] init];
-		stateMenuUpdateDelays = 0;
+		activeStatusUpdateDelays = 0;
 		_sortedFullStateArray = nil;
 		_activeStatusState = nil;
 		_allActiveStatusStates = nil;
 		temporaryStateArray = [[NSMutableSet alloc] init];
 		
 		accountsToConnect = [[NSMutableSet alloc] init];
-		isProcessingGlobalChange = NO;
 		
 		idleManager = [[AdiumIdleManager alloc] init];
 	}
@@ -101,19 +97,9 @@ static 	NSMutableSet			*temporaryStateArray = nil;
  */
 - (void)controllerDidLoad
 {
-	NSNotificationCenter	*adiumNotificationCenter = [adium notificationCenter];
 	NSEnumerator			*enumerator;
 	AIAccount				*account;
 
-	//Update our state menus when the state array or status icon set changes
-	[adiumNotificationCenter addObserver:self
-								selector:@selector(rebuildAllStateMenus)
-									name:AIStatusStateArrayChangedNotification
-								  object:nil];
-	[adiumNotificationCenter addObserver:self
-								selector:@selector(rebuildAllStateMenus)
-									name:AIStatusIconSetDidChangeNotification
-								  object:nil];
 	[[adium contactController] registerListObjectObserver:self];
 
 	[self buildBuiltInStatusTypes];
@@ -144,8 +130,11 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 				//Add to our temporary status array
 				[temporaryStateArray addObject:lastStatus];
 				
-				//And clear our full array so it will reflect this newly loaded status when next used
-				[_sortedFullStateArray release]; _sortedFullStateArray = nil;
+				/* We could clear out _flatStatusSet for the next iteration, but we _know_ what changed,
+				 * so modify it directly for efficiency.
+				 */
+				[_flatStatusSet addObject:lastStatus];
+
 				needToRebuildMenus = YES;
 			}
 			
@@ -154,11 +143,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	}
 	
 	if (needToRebuildMenus) {
-		//Clear the sorted menu items array since our state array changed.
-		[_sortedFullStateArray release]; _sortedFullStateArray = nil;
-		
-		//Now rebuild our menus to include this temporary item
-		[self rebuildAllStateMenus];
+		[self notifyOfChangedStatusArray];
 	}
 }
 
@@ -191,7 +176,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 						 group:GROUP_ACCOUNT_STATUS];
 	}
 	
-	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self stateArray]]
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self rootStateGroup]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
 
@@ -205,7 +190,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
  */
 - (void)dealloc
 {
-	[stateArray release]; stateArray = nil;
+	[_rootStateGroup release]; _rootStateGroup = nil;
 	[_sortedFullStateArray release]; _sortedFullStateArray = nil;
 	[super dealloc];
 }
@@ -550,7 +535,63 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	[_allActiveStatusStates release]; _allActiveStatusStates = nil;
 
 	//Let observers know the active state has changed
-	[[adium notificationCenter] postNotificationName:AIStatusActiveStateChangedNotification object:nil];
+	if (!activeStatusUpdateDelays) {
+		[[adium notificationCenter] postNotificationName:AIStatusActiveStateChangedNotification object:nil];
+	}
+}
+
+/*!
+ * @brief Account status changed.
+ *
+ * Rebuild all our state menus
+ */
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+{
+	if ([inObject isKindOfClass:[AIAccount class]]) {
+		if ([inModifiedKeys containsObject:@"Online"] ||
+			[inModifiedKeys containsObject:@"IdleSince"] ||
+			[inModifiedKeys containsObject:@"StatusState"]) {
+			
+			[self _resetActiveStatusState];
+		}
+	}
+	
+    return nil;
+}
+
+
+/*!
+ * @brief Delay activee status menu updates
+ *
+ * This should be called to prevent duplicative updates when multiple accounts are changing status simultaneously.
+ */
+- (void)setDelayActiveStatusUpdates:(BOOL)shouldDelay
+{
+	if (shouldDelay)
+		activeStatusUpdateDelays++;
+	else
+		activeStatusUpdateDelays--;
+	
+	if (!activeStatusUpdateDelays) {
+		[[adium notificationCenter] postNotificationName:AIStatusActiveStateChangedNotification object:nil];
+	}
+}
+
+/*!
+ * @brief Delay activee status menu updates
+ *
+ * This should be called to prevent duplicative rebuilds when the status menu will change multple times.
+ */
+- (void)setDelayStatusMenuRebuilding:(BOOL)shouldDelay
+{
+	if (shouldDelay)
+		statusMenuRebuildDelays++;
+	else
+		statusMenuRebuildDelays--;
+	
+	if (!statusMenuRebuildDelays) {
+		[[adium notificationCenter] postNotificationName:AIStatusStateArrayChangedNotification object:nil];	
+	}
 }
 
 /*!
@@ -563,8 +604,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	AIStatus		*aStatusState;
 	BOOL			shouldRebuild = NO;
 
-	isProcessingGlobalChange = YES;
-	[self setDelayStateMenuUpdates:YES];
+	[self setDelayActiveStatusUpdates:YES];
 	
 	enumerator = [accountArray objectEnumerator];
 	while ((account = [enumerator nextObject])) {
@@ -585,42 +625,44 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		}
 	}
 
-	isProcessingGlobalChange = NO;
-
 	if (shouldRebuild) {
-		//Manually decrease the update delays counter as we don't want to call [self updateAllStateMenuSelections]
-		stateMenuUpdateDelays--;
-		[self rebuildAllStateMenus];
-	} else {
-		/* Allow setDelayStateMenuUpdates to decreate the counter and call
-		 * [self updateAllStateMenuSelections] as appropriate.
-		 */
-		[self setDelayStateMenuUpdates:NO];				
+		[self notifyOfChangedStatusArray];
 	}
+
+	[self setDelayActiveStatusUpdates:NO];
 }
 
 #pragma mark Retrieving Status States
 /*!
  * @brief Access to Adium's user-defined states
  *
- * Returns an array of available user-defined states, which are AIStatus objects
+ * Returns the root AIStatusGroup of user-defined states
  */
-- (NSArray *)stateArray
+- (AIStatusGroup *)rootStateGroup
 {
-	if (!stateArray) {
-		NSData	*savedStateArrayData = [[adium preferenceController] preferenceForKey:KEY_SAVED_STATUS
-																				group:PREF_GROUP_SAVED_STATUS];
-		if (savedStateArrayData) {
-			stateArray = [[NSKeyedUnarchiver unarchiveObjectWithData:savedStateArrayData] mutableCopy];
+	if (!_rootStateGroup) {
+		NSData	*savedStateData = [[adium preferenceController] preferenceForKey:KEY_SAVED_STATUS
+																		   group:PREF_GROUP_SAVED_STATUS];
+		if (savedStateData) {
+			id archivedObject = [NSKeyedUnarchiver unarchiveObjectWithData:savedStateData];
+
+			if ([archivedObject isKindOfClass:[AIStatusGroup class]]) {
+				//Adium 1.0 archives an AIStatusGroup
+				_rootStateGroup = [archivedObject retain];
+			
+			} else if  ([archivedObject isKindOfClass:[NSArray class]]) {
+				//Adium 0.8x archived an NSArray
+				_rootStateGroup = [[AIStatusGroup statusGroupWithContainedStatusItems:archivedObject] retain];
+			}
 		}
 
-		if (!stateArray) stateArray = [[NSMutableArray alloc] init];
+		if (!_rootStateGroup) _rootStateGroup = [[AIStatusGroup statusGroup] retain];
 
 		//Upgrade Adium 0.7x away messages
 		[self _upgradeSavedAwaysToSavedStates];
 	}
 
-	return stateArray;
+	return _rootStateGroup;
 }
 
 /*!
@@ -654,6 +696,33 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return builtInStateArray;
 }
 
+/*!
+* @brief Create and add the built-in status types; even if no service explicitly registers these, they are available.
+ *
+ * The built-in status types are basic, generic "Available" and "Away" states.
+ */
+- (void)buildBuiltInStatusTypes
+{
+	NSDictionary	*statusDict;
+	
+	builtInStatusTypes[AIAvailableStatusType] = [[NSMutableSet alloc] init];
+	statusDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		STATUS_NAME_AVAILABLE, KEY_STATUS_NAME,
+		STATUS_DESCRIPTION_AVAILABLE, KEY_STATUS_DESCRIPTION,
+		[NSNumber numberWithInt:AIAvailableStatusType], KEY_STATUS_TYPE,
+		nil];
+	[builtInStatusTypes[AIAvailableStatusType] addObject:statusDict];
+	
+	builtInStatusTypes[AIAwayStatusType] = [[NSMutableSet alloc] init];
+	statusDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		STATUS_NAME_AWAY, KEY_STATUS_NAME,
+		STATUS_DESCRIPTION_AWAY, KEY_STATUS_DESCRIPTION,
+		[NSNumber numberWithInt:AIAwayStatusType], KEY_STATUS_TYPE,
+		nil];
+	[builtInStatusTypes[AIAwayStatusType] addObject:statusDict];
+}
+
+
 - (AIStatus *)offlineStatusState
 {
 	//Ensure the built in states have been loaded
@@ -663,97 +732,52 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return offlineStatusState;
 }
 
-//Sort the status array
-int _statusArraySort(id objectA, id objectB, void *context)
-{
-	AIStatusType statusTypeA = [objectA statusType];
-	AIStatusType statusTypeB = [objectB statusType];
-
-	//We treat Invisible statuses as being the same as Away for purposes of the menu
-	if (statusTypeA == AIInvisibleStatusType) statusTypeA = AIAwayStatusType;
-	if (statusTypeB == AIInvisibleStatusType) statusTypeB = AIAwayStatusType;
-
-	if (statusTypeA > statusTypeB) {
-		return NSOrderedDescending;
-	} else if (statusTypeB > statusTypeA) {
-		return NSOrderedAscending;
-	} else {
-		AIStatusMutabilityType	mutabilityTypeA = [objectA mutabilityType];
-		AIStatusMutabilityType	mutabilityTypeB = [objectB mutabilityType];
-		BOOL					isLockedMutabilityTypeA = (mutabilityTypeA == AILockedStatusState);
-		BOOL					isLockedMutabilityTypeB = (mutabilityTypeB == AILockedStatusState);
-
-		//Put locked (built in) statuses at the top
-		if (isLockedMutabilityTypeA && !isLockedMutabilityTypeB) {
-			return NSOrderedAscending;
-			
-		} else if (!isLockedMutabilityTypeA && isLockedMutabilityTypeB) {
-			return NSOrderedDescending;
-
-		} else {
-			/* Check to see if either is temporary; temporary items go above saved ones and below
-			 * built-in ones.
-			 */
-			BOOL	isTemporaryA = [temporaryStateArray containsObject:objectA];
-			BOOL	isTemporaryB = [temporaryStateArray containsObject:objectB];
-
-			if (isTemporaryA && !isTemporaryB) {
-				return NSOrderedAscending;
-				
-			} else if (isTemporaryB && !isTemporaryA) {
-				return NSOrderedDescending;
-				
-			} else {
-				BOOL	isSecondaryMutabilityTypeA = (mutabilityTypeA == AISecondaryLockedStatusState);
-				BOOL	isSecondaryMutabilityTypeB = (mutabilityTypeB == AISecondaryLockedStatusState);
-
-				//Put secondary locked statuses at the bottom
-				if (isSecondaryMutabilityTypeA && !isSecondaryMutabilityTypeB) {
-					return NSOrderedDescending;
-					
-				} else if (!isSecondaryMutabilityTypeA && isSecondaryMutabilityTypeB) {
-					return NSOrderedAscending;
-
-				} else {
-					NSArray	*originalArray = (NSArray *)context;
-					
-					//Return them in the same relative order as the original array if they are of the same type
-					int indexA = [originalArray indexOfObjectIdenticalTo:objectA];
-					int indexB = [originalArray indexOfObjectIdenticalTo:objectB];
-					
-					if (indexA > indexB) {
-						return NSOrderedDescending;
-					} else {
-						return NSOrderedAscending;
-					}
-				}
-			}
-		}
-	}
-}
-
 /*!
  * @brief Return a sorted state array for use in menu item creation
  *
  * The array is created by adding the built in states to the user states, then sorting using _statusArraySort
+ * The resulting array may contain AIStatus and AIStatusGroup objects.
  *
  * @result A cached NSArray which is sorted by status type (available, away), built-in vs. user-made, and then original ordering.
  */
 - (NSArray *)sortedFullStateArray
 {
 	if (!_sortedFullStateArray) {
-		NSArray			*originalStateArray = [self stateArray];
+		//Start with everything contained by our root group
+		NSArray			*originalStateArray = [[self rootStateGroup] containedStatusItems];
 		NSMutableArray	*tempArray = [originalStateArray mutableCopy];
+
+		//Now add the built-in and temporary statues
 		[tempArray addObjectsFromArray:[self builtInStateArray]];
 		[tempArray addObjectsFromArray:[temporaryStateArray allObjects]];
-		
+
 		//Pass the original array so its indexes can be used for comparison of saved state ordering
-		[tempArray sortUsingFunction:_statusArraySort context:originalStateArray];
+		[AIStatusGroup sortArrayOfStatusItems:tempArray context:originalStateArray];
 
 		_sortedFullStateArray = tempArray;
 	}
 
 	return _sortedFullStateArray;
+}
+
+/*
+ * @brief Generate and return an array of AIStatus objects which are all known saved, temporary, and built-in statuses
+ */
+- (NSArray *)flatStatusSet
+{
+	if (!_flatStatusSet) {
+		NSMutableArray	*tempArray = [[[self rootStateGroup] flatStatusSet] mutableCopy];
+
+		//Add built in states
+		[tempArray addObjectsFromArray:[self builtInStateArray]];
+
+		//Add temporary ones
+		[tempArray addObjectsFromArray:[temporaryStateArray allObjects]];
+
+		_flatStatusSet = tempArray;
+	}
+	
+	return _flatStatusSet;
 }
 
 /*!
@@ -971,7 +995,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	AIStatus		*statusState = nil;
 
 	if (uniqueStatusID) {
-		NSEnumerator	*enumerator = [[self sortedFullStateArray] objectEnumerator];
+		NSEnumerator	*enumerator = [[self flatStatusSet] objectEnumerator];
 
 		while ((statusState = [enumerator nextObject])) {
 			if ([[statusState uniqueStatusID] compare:uniqueStatusID] == NSOrderedSame)
@@ -999,13 +1023,12 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		//If we are adding a locked status, add it to the built-in statuses
 		[(NSMutableArray *)[self builtInStateArray] addObject:statusState];
 
+		[self notifyOfChangedStatusArray];
+
 	} else {
 		//Otherwise, add it to the user-created statuses
-		[stateArray addObject:statusState];
+		[[self rootStateGroup] addStatusItem:statusState atIndex:-1];
 	}
-
-	//Either way, save any changes and notify observers that the status states changed
-	[self _saveStateArrayAndNotifyOfChanges];
 }
 
 /*!
@@ -1016,53 +1039,20 @@ int _statusArraySort(id objectA, id objectB, void *context)
  */
 - (void)removeStatusState:(AIStatus *)statusState
 {
-	[stateArray removeObject:statusState];
-	[self _saveStateArrayAndNotifyOfChanges];
+	NSLog(@"shouldn't be calling this.");
+//	[stateArray removeObject:statusState];
+	[self savedStatusesChanged];
 }
 
-/*!
- * @brief Move a state
- *
- * Move a state that already exists in Adium's state array to another index
- * @param state AIStatus to move
- * @param destIndex Destination index
- */
-- (int)moveStatusState:(AIStatus *)statusState toIndex:(int)destIndex
+- (void)notifyOfChangedStatusArray
 {
-    int sourceIndex = [stateArray indexOfObjectIdenticalTo:statusState];
+	//Clear the sorted menu items array since our state array changed.
+	[_sortedFullStateArray release]; _sortedFullStateArray = nil;
+	[_flatStatusSet release]; _flatStatusSet = nil;
 
-    //Remove the state
-    [statusState retain];
-    [stateArray removeObject:statusState];
-
-    //Re-insert the state
-    if (destIndex > sourceIndex) destIndex -= 1;
-    [stateArray insertObject:statusState atIndex:destIndex];
-    [statusState release];
-
-	[self _saveStateArrayAndNotifyOfChanges];
-
-	return destIndex;
-}
-
-/*!
- * @brief Replace a state
- *
- * Replace a state in Adium's state array with another state.
- * @param oldState AIStatus state that is in Adium's state array
- * @param newState AIStatus state with which to replace oldState
- */
-- (void)replaceExistingStatusState:(AIStatus *)oldStatusState withStatusState:(AIStatus *)newStatusState
-{
-	if (oldStatusState != newStatusState) {
-		int index = [stateArray indexOfObject:oldStatusState];
-
-		if (index >= 0 && index < [stateArray count]) {
-			[stateArray replaceObjectAtIndex:index withObject:newStatusState];
-		}
+	if (!statusMenuRebuildDelays) {
+		[[adium notificationCenter] postNotificationName:AIStatusStateArrayChangedNotification object:nil];	
 	}
-
-	[self _saveStateArrayAndNotifyOfChanges];
 }
 
 /*!
@@ -1074,541 +1064,32 @@ int _statusArraySort(id objectA, id objectB, void *context)
  * After the state array is saved, observers are notified that is has changed.  Call after making any changes to the
  * state array from within the controller.
  */
-- (void)_saveStateArrayAndNotifyOfChanges
+- (void)savedStatusesChanged
 {
-	//Clear the sorted menu items array since our state array changed.
-	[_sortedFullStateArray release]; _sortedFullStateArray = nil;
-
-	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self stateArray]]
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self rootStateGroup]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
-	[[adium notificationCenter] postNotificationName:AIStatusStateArrayChangedNotification object:nil];
+	NSLog(@"savedStatusChanged.");
+	[self notifyOfChangedStatusArray];
 }
 
 - (void)statusStateDidSetUniqueStatusID
 {
-	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self stateArray]]
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self rootStateGroup]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
 }
 
-//Status state menu support ---------------------------------------------------------------------------------------------------
-#pragma mark Status state menu support
 /*!
- * @brief Register a state menu plugin
- *
- * A state menu plugin is the mitigator between our state menu items and a menu.  As states change the plugin
- * is told to add and remove items from the menu.  Everything else is handled by the status controller.
- * @param stateMenuPlugin The state menu plugin to register
- */
-- (void)registerStateMenuPlugin:(id <StateMenuPlugin>)stateMenuPlugin
-{
-	NSNumber	*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
-
-	//Track this plugin
-	[stateMenuItemArraysDict setObject:[NSMutableArray array] forKey:identifier];
-	[stateMenuPluginsArray addObject:[NSValue valueWithNonretainedObject:stateMenuPlugin]];
-
-	//Start it out with a fresh set of menu items
-	[self _addStateMenuItemsForPlugin:stateMenuPlugin];
-}
-
-/*!
- * @brief Unregister a state menu plugin
- *
- * All state menu items will be removed from the plugin when it unregisters
- * @param stateMenuPlugin The state menu plugin to unregister
- */
-- (void)unregisterStateMenuPlugin:(id <StateMenuPlugin>)stateMenuPlugin
-{
-	NSNumber	*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
-
-	//Remove all the plugin's menu items
-	[self _removeStateMenuItemsForPlugin:stateMenuPlugin];
-
-	//Stop tracking the plugin
-	[stateMenuItemArraysDict removeObjectForKey:identifier];
-	[stateMenuPluginsArray removeObject:[NSValue valueWithNonretainedObject:stateMenuPlugin]];
-}
-
-/*!
- * @brief Remove the status controller's tracking for a plugin's menu items
- *
- * This should be called in preparation for one or more plugin:didAddMenuItems: calls to clear out the current
- * tracking for the statusController generated menu items.
- */
-- (void)removeAllMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin
-{
-	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
-	NSMutableArray  *menuItemArray = [stateMenuItemArraysDict objectForKey:identifier];
-
-	//Remove the menu items from needing update
-	[stateMenuItemsNeedingUpdating minusSet:[NSSet setWithArray:menuItemArray]];
-
-	//Clear the array itself
-	[menuItemArray removeAllObjects];
-}
-
-/*!
- * @brief A plugin created its own menu items it wants us to track and update
- */
-- (void)plugin:(id <StateMenuPlugin>)stateMenuPlugin didAddMenuItems:(NSArray *)addedMenuItems
-{
-	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
-	NSMutableArray  *menuItemArray = [stateMenuItemArraysDict objectForKey:identifier];
-
-	[menuItemArray addObjectsFromArray:addedMenuItems];
-	[stateMenuItemsNeedingUpdating addObjectsFromArray:addedMenuItems];
-}
-
-/*
- * @brief Generate the custom menu item for a status type
- */
-- (NSMenuItem *)customMenuItemForStatusType:(AIStatusType)statusType
-{
-	NSMenuItem *menuItem;
-	
-	menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_CUSTOM
-										  target:self
-										  action:@selector(selectCustomState:)
-								   keyEquivalent:@""];
-
-	[menuItem setImage:[AIStatusIcons statusIconForStatusName:nil
-												   statusType:statusType
-													 iconType:AIStatusIconMenu
-													direction:AIIconNormal]];
-	[menuItem setTag:statusType];
-	
-	return [menuItem autorelease];
-				
-}
-
-/*!
- * @brief Add state menu items
- *
- * Adds all the necessary state menu items to a plugin's state menu
- * @param stateMenuPlugin The state menu plugin we're updating
- */
-- (void)_addStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin
-{
-	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
-	NSMutableArray  *menuItemArray = [stateMenuItemArraysDict objectForKey:identifier];
-	NSEnumerator	*enumerator;
-	NSMenuItem		*menuItem;
-	AIStatus		*statusState;
-	AIStatusType			currentStatusType = AIAvailableStatusType;
-	AIStatusMutabilityType	currentStatusMutabilityType = AILockedStatusState;
-
-	/* Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType
-	 * are grouped together.
-	 */
-	enumerator = [[self sortedFullStateArray] objectEnumerator];
-	while ((statusState = [enumerator nextObject])) {
-		AIStatusType thisStatusType = [statusState statusType];
-		AIStatusType thisStatusMutabilityType = [statusState mutabilityType];
-
-		if ((currentStatusMutabilityType != AISecondaryLockedStatusState) &&
-			(thisStatusMutabilityType == AISecondaryLockedStatusState)) {
-			//Add the custom item, as we are ending this group
-			[menuItemArray addObject:[self customMenuItemForStatusType:currentStatusType]];
-
-			//Add a divider when we switch to a secondary locked group
-			[menuItemArray addObject:[NSMenuItem separatorItem]];
-		}
-		
-		//We treat Invisible statuses as being the same as Away for purposes of the menu
-		if (thisStatusType == AIInvisibleStatusType) thisStatusType = AIAwayStatusType;
-
-		/* Add the "Custom..." state option and a separatorItem before beginning to add items for a new statusType
-		 * Sorting the menu items before enumerating means that we know our statuses are sorted first by statusType
-		 */
-		if ((currentStatusType != thisStatusType) &&
-		   (currentStatusType != AIOfflineStatusType)) {
-			
-			//Don't include a Custom item after the secondary locked group, as it was already included
-			if ((currentStatusMutabilityType != AISecondaryLockedStatusState)) {
-				[menuItemArray addObject:[self customMenuItemForStatusType:currentStatusType]];
-			}
-			
-			//Add a divider
-			[menuItemArray addObject:[NSMenuItem separatorItem]];
-
-			currentStatusType = thisStatusType;
-		}
-
-		menuItem = [[NSMenuItem alloc] initWithTitle:[self _titleForMenuDisplayOfState:statusState]
-											  target:self
-											  action:@selector(selectState:)
-									   keyEquivalent:@""];
-
-		[menuItem setImage:[statusState menuIcon]];
-		[menuItem setTag:currentStatusType];
-		[menuItem setToolTip:[statusState statusMessageString]];
-		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObject:statusState
-																   forKey:@"AIStatus"]];
-		[menuItemArray addObject:menuItem];
-		[menuItem release];
-		
-		currentStatusMutabilityType = thisStatusMutabilityType;
-	}
-
-	if (currentStatusType != AIOfflineStatusType) {
-		/* Add the last "Custom..." state optior for the last statusType we handled,
-		 * which didn't get a "Custom..." item yet.  At present, our last status type should always be
-		 * our AIOfflineStatusType, so this will never be executed and just exists for completeness.
-		 */
-		[menuItemArray addObject:[self customMenuItemForStatusType:currentStatusType]];
-	}
-
-	//Now that we are done creating the menu items, tell the plugin about them
-	[stateMenuPlugin addStateMenuItems:menuItemArray];
-
-	//Update the selected menu item after giving the plugin a chance to do with the menu items as it wants
-	[self updateStateMenuSelectionForPlugin:stateMenuPlugin];
-}
-
-/*!
- * @brief Removes state menu items
- *
- * Removes all the state menu items from a plugin's state menu
- * @param stateMenuPlugin The state menu plugin we're updating
- */
-- (void)_removeStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin
-{
-	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
-	NSMutableArray  *menuItemArray = [stateMenuItemArraysDict objectForKey:identifier];
-
-	//Inform the plugin that we are removing the items in this array
-	[stateMenuPlugin removeStateMenuItems:menuItemArray];
-
-	//Remove the menu items from needing update
-	[stateMenuItemsNeedingUpdating minusSet:[NSSet setWithArray:menuItemArray]];
-
-	//Now clear the array
-	[menuItemArray removeAllObjects];
-}
-
-/*!
- * @brief Completely rebuild all state menus
- *
- * Before doing so, clear the activeStatusState, which will be regenerated when next needed
- */
-- (void)rebuildAllStateMenus
-{
-	//Clear the sorted menu items array since our state array changed.
-	[_sortedFullStateArray release]; _sortedFullStateArray = nil;
-
-	[self _resetActiveStatusState];
-
-	NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
-	NSValue					*stateMenuPluginValue;
-
-	while ((stateMenuPluginValue = [enumerator nextObject])) {
-		id <StateMenuPlugin> stateMenuPlugin = [stateMenuPluginValue nonretainedObjectValue];
-
-		[self _removeStateMenuItemsForPlugin:stateMenuPlugin];
-		[self _addStateMenuItemsForPlugin:stateMenuPlugin];
-	}
-}
-
-/*!
- * @brief Completely rebuild all state menus for a single plugin
- */
-- (void)rebuildAllStateMenusForPlugin:(id <StateMenuPlugin>)stateMenuPlugin
-{
-	[self _removeStateMenuItemsForPlugin:stateMenuPlugin];
-	[self _addStateMenuItemsForPlugin:stateMenuPlugin];
-}
-
-/*!
- * @brief Update the selected state in all state menus
- */
-- (void)updateAllStateMenuSelections
-{
-	if (stateMenuUpdateDelays == 0) {
-		NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
-		NSValue					*stateMenuPluginValue;
-
-		[self _resetActiveStatusState];
-
-		while ((stateMenuPluginValue = [enumerator nextObject])) {
-			id <StateMenuPlugin> stateMenuPlugin = [stateMenuPluginValue nonretainedObjectValue];
-			[self updateStateMenuSelectionForPlugin:stateMenuPlugin];
-		}
-
-		/* Let any relevant plugins respond to the to-be-changed state menu selection. Technically we
-		 * haven't changed it yet, since we'll do that in validateMenuItem:, but the fact that we will now
-		 * need to change it is useful if, for example, key equivalents change in a menu alongside selection
-		 * changes, since we need key equivalents set immediately.
-		 */
-		[[adium notificationCenter] postNotificationName:AIStatusStateMenuSelectionsChangedNotification
-												  object:nil];
-	}
-}
-
-/*!
- * @brief Delay state menu updates
- *
- * This should be called to prevent duplicative updates when multiple accounts are changing status simultaneously.
- */
-- (void)setDelayStateMenuUpdates:(BOOL)shouldDelay
-{
-	if (shouldDelay)
-		stateMenuUpdateDelays++;
-	else
-		stateMenuUpdateDelays--;
-
-	if (stateMenuUpdateDelays == 0) {
-		[self updateAllStateMenuSelections];
-	}
-}
-
-/*!
- * @brief Update the selected state in a plugin's state menu
- *
- * Updates the selected state menu item to reflect the currently active state.
- * @param stateMenuPlugin The state menu plugin we're updating
- */
-- (void)updateStateMenuSelectionForPlugin:(id <StateMenuPlugin>)stateMenuPlugin
-{
-	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
-	NSArray			*stateMenuItemArray = [stateMenuItemArraysDict objectForKey:identifier];
-	[stateMenuItemsNeedingUpdating addObjectsFromArray:stateMenuItemArray];
-}
-
-
-/*!
- * @brief Account status changed.
- *
- * Rebuild all our state menus
- */
-- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{
-	if ([inObject isKindOfClass:[AIAccount class]]) {
-		if ([inModifiedKeys containsObject:@"Online"] ||
-		   [inModifiedKeys containsObject:@"IdleSince"] ||
-		   [inModifiedKeys containsObject:@"StatusState"]) {
-
-			[self _resetActiveStatusState];
-
-			//Don't update the state menus if we are currently delaying
-			if (stateMenuUpdateDelays == 0) [self updateAllStateMenuSelections];
-		}
-	}
-
-    return nil;
-}
-
-/*!
- * @brief Menu validation
- *
- * Our state menu items should always be active, so always return YES for validation.
- *
- * Here we lazily set the state of our menu items if our stateMenuItemsNeedingUpdating set indicates it is needed.
- *
- * Random note: stateMenuItemsNeedingUpdating will almost never have a count of 0 because separatorItems
- * get included but never get validated.
- */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
-{
-	if ([stateMenuItemsNeedingUpdating containsObject:menuItem]) {
-		BOOL			noAccountsAreOnline = ![[adium accountController] oneOrMoreConnectedAccounts];
-		NSDictionary	*dict = [menuItem representedObject];
-		AIAccount		*account;
-		AIStatus		*menuItemStatusState;
-		BOOL			shouldSelectOffline;
-
-		/* Search for the account or global status state as appropriate for this menu item.
-		 * Also, determine if we are looking to select the Offline menu item
-		 */
-		if ((account = [dict objectForKey:@"AIAccount"])) {
-			shouldSelectOffline = ![account online];
-		} else {
-			shouldSelectOffline = noAccountsAreOnline;
-		}
-		menuItemStatusState = [dict objectForKey:@"AIStatus"];
-
-		if (shouldSelectOffline) {
-			//If we should select offline, set all menu items which don't have the AIOfflineStatusType tag to be off.
-			if ([menuItem tag] == AIOfflineStatusType) {
-				if ([menuItem state] != NSOnState) [menuItem setState:NSOnState];
-			} else {
-				if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
-			}
-
-		} else {
-			if (account) {
-				/* Account-specific menu items */
-				AIStatus		*appropiateActiveStatusState;
-				appropiateActiveStatusState = [account statusState];
-
-				/* Our "Custom..." menu choice has a nil represented object.  If the appropriate active search state is
-				 * in our array of states from which we made menu items, we'll be searching to match it.  If it isn't,
-				 * we have a custom state and will be searching for the custom item of the right type, switching all other
-				 * menu items to NSOffState.
-				 */
-				if ([[self sortedFullStateArray] containsObjectIdenticalTo:appropiateActiveStatusState]) {
-					//If the search state is in the array so is a saved state, search for the match
-					if (menuItemStatusState == appropiateActiveStatusState) {
-						if ([menuItem state] != NSOnState) [menuItem setState:NSOnState];
-					} else {
-						if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
-					}
-				} else {
-					//If there is not a status state, we are in a Custom state. Search for the correct Custom item.
-					if (menuItemStatusState) {
-						//If the menu item has an associated state, it's always off.
-						if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
-					} else {
-						//If it doesn't, check the tag to see if it should be on or off.
-						if ([menuItem tag] == [appropiateActiveStatusState statusType]) {
-							if ([menuItem state] != NSOnState) [menuItem setState:NSOnState];
-						} else {
-							if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
-						}
-					}
-				}
-			} else {
-				/* General menu items */
-				NSSet	*allActiveStatusStates = [self allActiveStatusStates];
-				int		onState = (([allActiveStatusStates count] == 1) ? NSOnState : NSMixedState);
-
-				if (menuItemStatusState) {
-					//If this menu item has a status state, set it to the right on state if that state is active
-					if ([allActiveStatusStates containsObject:menuItemStatusState]) {
-						if ([menuItem state] != onState) [menuItem setState:onState];
-					} else {
-						if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
-					}
-				} else {
-					//If it doesn't, check the tag to see if it should be on or off by looking for a matching custom state
-					NSEnumerator	*activeStatusStatesEnumerator = [allActiveStatusStates objectEnumerator];
-					NSArray			*sortedFullStateArray = [self sortedFullStateArray];
-					AIStatus		*statusState;
-					BOOL			foundCorrectStatusState = NO;
-
-					while (!foundCorrectStatusState && (statusState = [activeStatusStatesEnumerator nextObject])) {
-						/* We found a custom match if our array of menu item states doesn't contain this state and
-						 * its statusType matches the menuItem's tag.
-						 */
-						foundCorrectStatusState = (![sortedFullStateArray containsObjectIdenticalTo:statusState] &&
-												   ([menuItem tag] == [statusState statusType]));
-					}
-
-					if (foundCorrectStatusState) {
-						if ([menuItem state] != NSOnState) [menuItem setState:onState];
-					} else {
-						if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
-					}
-				}
-			}
-		}
-
-		[stateMenuItemsNeedingUpdating removeObject:menuItem];
-	}
-
-	return YES;
-}
-
-/*!
- * @brief Select a state menu item
- *
- * Invoked by a state menu item, sets the state corresponding to the menu item as the active state.
- *
- * If the representedObject NSDictionary has an @"AIAccount" object, set the state just for the appropriate AIAccount.
- * Otherwise, set the state globally.
- */
-- (void)selectState:(id)sender
-{
-	NSDictionary	*dict = [sender representedObject];
-	AIStatus		*statusState = [dict objectForKey:@"AIStatus"];
-	AIAccount		*account = [dict objectForKey:@"AIAccount"];
-
-	/* Random undocumented feature of the moment... hold option and select a state to bring up the custom status window
-	 * for modifying and then setting it.
-	 */
-	if ([NSEvent optionKey]) {
-		[AIEditStateWindowController editCustomState:statusState
-											 forType:[statusState statusType]
-										  andAccount:account
-									  withSaveOption:YES
-											onWindow:nil
-									 notifyingTarget:self];
-
-	} else {
-		if (account) {
-			BOOL shouldRebuild;
-			
-			shouldRebuild = [self removeIfNecessaryTemporaryStatusState:[account statusState]];
-			[account setStatusState:statusState];
-			
-			if (shouldRebuild) {
-				//Rebuild our menus if there was a change
-				[self rebuildAllStateMenus];
-			}
-			
-		} else {
-			[self setActiveStatusState:statusState];
-		}
-	}
-}
-
-/*!
- * @brief Select the custom state menu item
- *
- * Invoked by the custom state menu item, opens a custom state window.
- * If the representedObject NSDictionary has an @"AIAccount" object, configure just for the appropriate AIAccount.
- * Otherwise, configure globally.
- */
-- (IBAction)selectCustomState:(id)sender
-{
-	NSDictionary	*dict = [sender representedObject];
-	AIAccount		*account = [dict objectForKey:@"AIAccount"];
-	AIStatusType	statusType = [sender tag];
-	AIStatus		*baseStatusState;
-
-	if (account) {
-		baseStatusState = [account statusState];
-	} else {
-		baseStatusState = [self activeStatusState];
-	}
-
-	/* If we are going to a custom state of a different type, we don't want to prefill with baseStatusState as it stands.
-	 * Instead, we load the last used status of that type.
-	 */
-	if (([baseStatusState statusType] != statusType)) {
-		NSDictionary *lastStatusStates = [[adium preferenceController] preferenceForKey:@"LastStatusStates"
-																				  group:PREF_GROUP_STATUS_PREFERENCES];
-
-		NSData		*lastStatusStateData = [lastStatusStates objectForKey:[NSNumber numberWithInt:statusType]];
-		AIStatus	*lastStatusStateOfThisType = (lastStatusStateData ?
-												  [NSKeyedUnarchiver unarchiveObjectWithData:lastStatusStateData] :
-												  nil);
-
-		baseStatusState = [[lastStatusStateOfThisType retain] autorelease];
-	}
-
-	/* Don't use the current status state as a base, and when going from Away to Available, don't autofill the Available
-	 * status message with the old away message.
-	 */
-	if ([baseStatusState statusType] != statusType) {
-		baseStatusState = nil;
-	}
-
-	[AIEditStateWindowController editCustomState:baseStatusState
-										 forType:statusType
-									  andAccount:account
-								  withSaveOption:YES
-										onWindow:nil
-								 notifyingTarget:self];
-}
-
-/*!
- * @brief Called when a state could potentially need to removed from the temporary (non-saved) list
+* @brief Called when a state could potentially need to removed from the temporary (non-saved) list
  *
  * If originalState is in the temporary status array, and it is being used on one or zero accounts, it 
  * is removed from the temporary status array. This method should be used when one or more accounts have stopped
  * using a single status state to determine if that status state is both non-saved and unused.
+ *
+ * Note that while it would seem logical to post AIStatusStateArrayChangedNotification when this method would
+ * return YES, we don't want to force observers of the notification to update immediately since there may be further
+ * processing. We therefore let the calling method take action if it chooses to.
  *
  * @result YES if the state was removed
  */
@@ -1617,8 +1098,8 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	BOOL didRemove = NO;
 	
 	/* If the original (old) status state is in our temporary array and is not being used in more than 1 account, 
-	 * then we should remove it.
-	 */
+	* then we should remove it.
+	*/
 	if ([temporaryStateArray containsObject:originalState]) {
 		NSEnumerator	*enumerator;
 		AIAccount		*account;
@@ -1630,15 +1111,18 @@ int _statusArraySort(id objectA, id objectB, void *context)
 				if (++count > 1) break;
 			}
 		}
-
+		
 		if (count <= 1) {
 			[temporaryStateArray removeObject:originalState];
 			didRemove = YES;
 		}
 	}
-	
+
 	return didRemove;
 }
+
+//Status state menu support ---------------------------------------------------------------------------------------------------
+#pragma mark Status state menu support
 /*!
  * @brief Apply a custom state
  *
@@ -1678,108 +1162,13 @@ int _statusArraySort(id objectA, id objectB, void *context)
 										  group:PREF_GROUP_STATUS_PREFERENCES];
 
 	//Add to our temporary status array if it's not in our state array
-	if (shouldRebuild || (![[self stateArray] containsObjectIdenticalTo:newState])) {
+	if (shouldRebuild || (![[self flatStatusSet] containsObject:newState])) {
 		[temporaryStateArray addObject:newState];
 
-		//Now rebuild our menus to include this temporary item
-		[self rebuildAllStateMenus];
+		[self notifyOfChangedStatusArray];
 	}
 }
 
-/*!
- * @brief Determine a string to use as a menu title
- *
- * This method truncates a state title string for display as a menu item.
- * Wide menus aren't pretty and may cause crashing in certain versions of OS X, so all state
- * titles should be run through this method before being used as menu item titles.
- *
- * @param statusState The state for which we want a title
- *
- * @result An appropriate NSString title
- */
-- (NSString *)_titleForMenuDisplayOfState:(AIStatus *)statusState
-{
-	NSString	*title = [statusState title];
-
-	/* Why plus 3? Say STATE_TITLE_MENU_LENGTH was 7, and the title is @"ABCDEFGHIJ".
-	 * The shortened title will be @"ABCDEFG..." which looks to be just as long - even
-	 * if the ellipsis is an ellipsis character and therefore technically two characters
-	 * shorter. Better to just use the full string, which appears as being the same length.
-	 */
-	if ([title length] > STATE_TITLE_MENU_LENGTH+3) {
-		title = [title stringWithEllipsisByTruncatingToLength:STATE_TITLE_MENU_LENGTH];
-	}
-
-	return title;
-}
-
-/*!
- * @brief Create and add the built-in status types
- *
- * The built-in status types are basic, generic "Available" and "Away" states.
- */
-- (void)buildBuiltInStatusTypes
-{
-	NSDictionary	*statusDict;
-
-	builtInStatusTypes[AIAvailableStatusType] = [[NSMutableSet alloc] init];
-	statusDict = [NSDictionary dictionaryWithObjectsAndKeys:
-			STATUS_NAME_AVAILABLE, KEY_STATUS_NAME,
-			STATUS_DESCRIPTION_AVAILABLE, KEY_STATUS_DESCRIPTION,
-			[NSNumber numberWithInt:AIAvailableStatusType], KEY_STATUS_TYPE,
-			nil];
-	[builtInStatusTypes[AIAvailableStatusType] addObject:statusDict];
-
-	builtInStatusTypes[AIAwayStatusType] = [[NSMutableSet alloc] init];
-	statusDict = [NSDictionary dictionaryWithObjectsAndKeys:
-		STATUS_NAME_AWAY, KEY_STATUS_NAME,
-		STATUS_DESCRIPTION_AWAY, KEY_STATUS_DESCRIPTION,
-		[NSNumber numberWithInt:AIAwayStatusType], KEY_STATUS_TYPE,
-		nil];
-	[builtInStatusTypes[AIAwayStatusType] addObject:statusDict];
-}
-
-- (NSMenu *)statusStatesMenu
-{
-	NSMenu			*statusStatesMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
-	NSEnumerator	*enumerator;
-	AIStatus		*statusState;
-	AIStatusType	currentStatusType = AIAvailableStatusType;
-	NSMenuItem		*menuItem;
-
-	[statusStatesMenu setMenuChangedMessagesEnabled:NO];
-	[statusStatesMenu setAutoenablesItems:NO];
-
-	/* Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType
-	 * are grouped together.
-	 */
-	enumerator = [[self sortedFullStateArray] objectEnumerator];
-	while ((statusState = [enumerator nextObject])) {
-		AIStatusType thisStatusType = [statusState statusType];
-
-		if (currentStatusType != thisStatusType) {
-			//Add a divider between each type of status
-			[statusStatesMenu addItem:[NSMenuItem separatorItem]];
-			currentStatusType = thisStatusType;
-		}
-
-		menuItem = [[NSMenuItem alloc] initWithTitle:[self _titleForMenuDisplayOfState:statusState]
-											  target:nil
-											  action:nil
-									   keyEquivalent:@""];
-
-		[menuItem setImage:[statusState menuIcon]];
-		[menuItem setTag:[statusState statusType]];
-		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObject:statusState
-																   forKey:@"AIStatus"]];
-		[statusStatesMenu addItem:menuItem];
-		[menuItem release];
-	}
-
-	[statusStatesMenu setMenuChangedMessagesEnabled:YES];
-
-	return statusStatesMenu;
-}
 
 #pragma mark Upgrade code
 /*!
@@ -1804,6 +1193,10 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	if (savedAways) {
 		NSEnumerator	*enumerator = [savedAways objectEnumerator];
 		NSDictionary	*state;
+
+		AILog(@"*** Upgrading Adium 0.7x saved aways: %@", savedAways);
+
+		[[self rootStateGroup] setDelayStatusMenuRebuilding:YES];
 
 		//Update all the away messages to states.
 		while ((state = [enumerator nextObject])) {
@@ -1841,12 +1234,15 @@ int _statusArraySort(id objectA, id objectB, void *context)
 				if (title) [statusState setTitle:title];
 
 				//Add the updated state to our state array.
-				[stateArray addObject:statusState];
+				[self addStatusState:statusState];
 			}
 		}
 
+		AILog(@"*** Finished upgrading old saved statuses");
+
 		//Save these changes and delete the old aways so we don't need to do this again.
-		[self _saveStateArrayAndNotifyOfChanges];
+		[[self rootStateGroup] setDelayStatusMenuRebuilding:NO];
+
 		[[adium preferenceController] setPreference:nil
 											 forKey:OLD_KEY_SAVED_AWAYS
 											  group:OLD_GROUP_AWAY_MESSAGES];
