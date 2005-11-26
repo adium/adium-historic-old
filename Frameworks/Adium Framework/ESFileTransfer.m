@@ -304,7 +304,10 @@
 		iconImage = [[NSImage alloc] initWithSize:[systemIcon size]];
 		
 		NSRect	rect = { NSZeroPoint, [iconImage size] };
-		NSRect	bottomRight = NSMakeRect(NSMidX(rect), ([iconImage isFlipped] ? NSMidY(rect) : NSMinY(rect)), (NSWidth(rect)/2.0), (NSHeight(rect)/2.0));		
+		NSRect	bottomRight = NSMakeRect(NSMidX(rect), 
+										 ([iconImage isFlipped] ? NSMidY(rect) : NSMinY(rect)), 
+										 (NSWidth(rect)/2.0),
+										 (NSHeight(rect)/2.0));		
 
 		NSMutableDictionary *atts = [(NSMutableDictionary *)[[NSDictionary dictionaryWithObjectsAndKeys:
 			[NSColor alternateSelectedControlColor], NSForegroundColorAttributeName,
