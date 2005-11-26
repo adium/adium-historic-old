@@ -33,9 +33,10 @@
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	NSFont		*font  = [self font];
-	NSString	*title = [self stringValue];
-	BOOL		highlighted = [self isHighlighted];
+	NSFont				*font  = [self font];
+	NSString			*title = [self stringValue];
+	NSAttributedString	*attributedTitle = [self attributedStringValue];
+	BOOL				highlighted = [self isHighlighted];
 	
 	//Draw the cell's text
 	if (title != nil) {
@@ -69,10 +70,17 @@
 				style, NSParagraphStyleAttributeName,
 				textColor, NSForegroundColorAttributeName,nil];
 		}
+		
+		if (attributedTitle) {
+			attributedTitle = [attributedTitle mutableCopy];
+			[(NSMutableAttributedString *)attributedTitle addAttributes:attributes
+																  range:NSMakeRange(0, [attributedTitle length])];
 
-		NSAttributedString	*attributedTitle = [[NSAttributedString alloc] initWithString:title
-																			   attributes:attributes];
-		//Calculate the centered rect
+		} else {
+			attributedTitle = [[NSAttributedString alloc] initWithString:title
+															  attributes:attributes];
+		}
+			//Calculate the centered rect
 		stringHeight = [attributedTitle heightWithWidth:cellFrame.size.width];
 		if (stringHeight < cellFrame.size.height) {
 			cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;
