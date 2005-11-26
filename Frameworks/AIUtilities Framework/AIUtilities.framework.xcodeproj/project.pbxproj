@@ -11,6 +11,8 @@
 		013F80C508E685B8000F31B2 /* AITextViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 013F80C308E685B8000F31B2 /* AITextViewAdditions.m */; };
 		070959860798F1ED00B140BD /* AITag.h in Headers */ = {isa = PBXBuildFile; fileRef = 070959840798F1ED00B140BD /* AITag.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		070959870798F1ED00B140BD /* AITag.m in Sources */ = {isa = PBXBuildFile; fileRef = 070959850798F1ED00B140BD /* AITag.m */; };
+		073C0D8D0939023200D6AEEA /* AIPlasticButtonCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 073C0D8B0939023200D6AEEA /* AIPlasticButtonCell.h */; };
+		073C0D8E0939023200D6AEEA /* AIPlasticButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 073C0D8C0939023200D6AEEA /* AIPlasticButtonCell.m */; };
 		076CAD6D0785B62900250504 /* AIFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 076CAD6C0785B62900250504 /* AIFunctions.m */; };
 		076CAD6F0785B64000250504 /* AIFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 076CAD6E0785B64000250504 /* AIFunctions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		078DF8B007C2948200831ABF /* AIWiredData.h in Headers */ = {isa = PBXBuildFile; fileRef = 078DF8AE07C2948200831ABF /* AIWiredData.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -295,6 +297,8 @@
 		013F80C308E685B8000F31B2 /* AITextViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITextViewAdditions.m; path = Source/AITextViewAdditions.m; sourceTree = "<group>"; };
 		070959840798F1ED00B140BD /* AITag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AITag.h; path = Source/AITag.h; sourceTree = "<group>"; };
 		070959850798F1ED00B140BD /* AITag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AITag.m; path = Source/AITag.m; sourceTree = "<group>"; };
+		073C0D8B0939023200D6AEEA /* AIPlasticButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPlasticButtonCell.h; path = Source/AIPlasticButtonCell.h; sourceTree = "<group>"; };
+		073C0D8C0939023200D6AEEA /* AIPlasticButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIPlasticButtonCell.m; path = Source/AIPlasticButtonCell.m; sourceTree = "<group>"; };
 		076CAD6C0785B62900250504 /* AIFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFunctions.m; path = Source/AIFunctions.m; sourceTree = "<group>"; };
 		076CAD6E0785B64000250504 /* AIFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFunctions.h; path = Source/AIFunctions.h; sourceTree = "<group>"; };
 		078DF8AE07C2948200831ABF /* AIWiredData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIWiredData.h; path = Source/AIWiredData.h; sourceTree = "<group>"; };
@@ -996,6 +1000,8 @@
 				34486B9F06D1DF0300DA778C /* AIPlasticMinusButton.m */,
 				34486BA006D1DF0300DA778C /* AIPlasticPlusButton.h */,
 				34486BA106D1DF0300DA778C /* AIPlasticPlusButton.m */,
+				073C0D8B0939023200D6AEEA /* AIPlasticButtonCell.h */,
+				073C0D8C0939023200D6AEEA /* AIPlasticButtonCell.m */,
 				4BD1F41F06D2830200B3975E /* Images */,
 			);
 			name = "\"Plastic\" aqua buttons";
@@ -1553,6 +1559,7 @@
 				636D3D6D08D267F500EFFD69 /* AILinkedListObject.h in Headers */,
 				636D3D6F08D267F500EFFD69 /* AIQueue.h in Headers */,
 				013F80C408E685B8000F31B2 /* AITextViewAdditions.h in Headers */,
+				073C0D8D0939023200D6AEEA /* AIPlasticButtonCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1798,6 +1805,7 @@
 				636D3D6E08D267F500EFFD69 /* AILinkedListObject.m in Sources */,
 				636D3D7008D267F500EFFD69 /* AIQueue.m in Sources */,
 				013F80C508E685B8000F31B2 /* AITextViewAdditions.m in Sources */,
+				073C0D8E0939023200D6AEEA /* AIPlasticButtonCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
