@@ -683,10 +683,13 @@
 
 - (void)filterAndInsertString:(NSString *)inString
 {
-	NSTextView *textView = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-	NSAttributedString *attributedResult = [[NSAttributedString alloc] initWithString:inString attributes:[textView typingAttributes]];
-	[self insertAttributedStringIntoMessageEntryView:[self filterAttributedString:attributedResult context:nil]];
-	[attributedResult release];
+	id responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+	if (responder && [responder isKindOfClass:[NSTextView class]]) {
+		NSAttributedString *attributedResult = [[NSAttributedString alloc] initWithString:inString
+																			   attributes:[(NSTextView *)responder typingAttributes]];
+		[self insertAttributedStringIntoMessageEntryView:[self filterAttributedString:attributedResult context:nil]];
+		[attributedResult release];
+	}
 }
 
 /*!
@@ -698,10 +701,13 @@
 
 - (void)insertStringIntoMessageEntryView:(NSString *)inString
 {
-	NSTextView *textView = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-	NSAttributedString *attributedResult = [[NSAttributedString alloc] initWithString:inString attributes:[textView typingAttributes]];
-	[self insertAttributedStringIntoMessageEntryView:attributedResult];
-	[attributedResult release];
+	id responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+	if (responder && [responder isKindOfClass:[NSTextView class]]) {
+		NSAttributedString *attributedResult = [[NSAttributedString alloc] initWithString:inString 
+																			   attributes:[(NSTextView *)responder typingAttributes]];
+		[self insertAttributedStringIntoMessageEntryView:attributedResult];
+		[attributedResult release];
+	}
 }
 
 /*!
