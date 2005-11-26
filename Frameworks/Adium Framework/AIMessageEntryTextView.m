@@ -358,13 +358,13 @@
 - (void)pasteAsRichText:(id)sender
 {
 	NSDictionary	*attributes = [[self typingAttributes] copy];
-	
-	[super pasteAsRichText:sender];
-	
+
+	[super paste:sender];
+
 	if (attributes) {
 		[self setTypingAttributes:attributes];
 	}
-	
+
 	[attributes release];
 }
 
