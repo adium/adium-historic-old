@@ -392,6 +392,8 @@ static void hostResolvedCallback(CFHostRef theHost, CFHostInfoType typeInfo,  co
 #if CONNECTIVITY_DEBUG
 	NSLog(@"Scheduled reachability check for %@",nodename);
 #endif
+	
+	CFRelease(host);
 }
 
 #pragma mark -
