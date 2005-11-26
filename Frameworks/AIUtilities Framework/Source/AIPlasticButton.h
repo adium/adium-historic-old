@@ -8,19 +8,11 @@
 
 /*!
  * @class AIPlasticButton
- * @brief Abstract NSButton subclass for implementing a "plastic" Aqua button with a given image
+ * @brief NSButton subclass for implementing a "plastic" Aqua button
  *
- * <tt>AIPlasticButton</tt> must be subclassed to call -[self setImage:] with the image to be displayed, in initWithFrame: method. It will then display a "plastic" Aqua button within its frame, with the designated image centered within the button.
+ * <tt>AIPlasticButton</tt> uses an <tt>AIPlasticButtonCell</tt> to display a "plastic" Aqua button within its frame.
  */
 @interface AIPlasticButton : NSButton {
-    NSImage			*plasticCaps;
-    NSImage			*plasticMiddle;
-    NSImage			*plasticPressedCaps;
-    NSImage			*plasticPressedMiddle;
-    NSImage			*plasticDefaultCaps;
-    NSImage			*plasticDefaultMiddle;
-
-	NSBezierPath 	*arrowPath;
 }
 
 @end

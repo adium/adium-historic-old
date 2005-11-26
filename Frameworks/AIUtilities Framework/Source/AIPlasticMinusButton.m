@@ -14,6 +14,8 @@
 {
 	if ((self = [super initWithFrame:frameRect])) {
 		[self setImage:[NSImage imageNamed:@"minus" forClass:[self class]]];
+		[self setTitle:NSLocalizedString(@"Delete", /*comment*/ nil)];
+		[self setImagePosition:NSImageOnly];
 	}
 	return self;    
 }
