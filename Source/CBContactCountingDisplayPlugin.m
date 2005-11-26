@@ -142,10 +142,14 @@
 		(([inObject isKindOfClass:[AIListGroup class]] && [inModifiedKeys containsObject:@"ObjectCount"] && ![[inObject UID] isEqualToString:ADIUM_ROOT_GROUP_NAME]) ||
 		 ([inObject isKindOfClass:[AIListContact class]] && [inModifiedKeys containsObject:@"Online"])))) {
 		
-		//Obtain the group we want to work with -- for a contact, use its parent group.
+		/* Obtain the group we want to work with -- for a contact, use its parent group.
+		 *
+		 * Casting note: We already checked that it isn't an AIAccount. If it's an AIListContact, we get the parentGroup. Otherwise,
+		 * it's an AIListGroup and we use the object itself. There is probably a way to set this method up without this convoluted casting interplay.
+		 */
 		AIListGroup		*targetGroup = ([inObject isKindOfClass:[AIListContact class]] ? 
 										[(AIListContact *)inObject parentGroup] :
-										inObject);
+										(AIListGroup *)inObject);
 
 		NSString		*countString = nil;
 		int onlineObjects = 0, totalObjects = 0;
