@@ -259,12 +259,15 @@ gboolean gaim_init_msn_plugin(void);
 	[self updateStatusForKey:@"FullNameAttr"];
 }
 
+extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
+
 /*
  * @brief Set our serverside 'friendly name'
  *
  * There is a rate limit on how quickly we can set our friendly name.
  *
  * @param attributedFriendlyName The new friendly name.  This is used as plaintext; it is an NSAttributedString for generic useage with the autoupdating filtering system.
+ *
  */
 -(void)_setFriendlyNameTo:(NSAttributedString *)attributedFriendlyName
 {
