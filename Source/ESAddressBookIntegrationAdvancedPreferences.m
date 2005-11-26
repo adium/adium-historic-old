@@ -263,9 +263,9 @@
 		} else {
 			NSBeginAlertSheet(nil,
 							  AILocalizedString(@"Unconsolidate all metacontacts",nil),
-							  AILocalizedString(@"Cancel",nil),nil,
-							  [[self view] window],self,
-							  @selector(sheetDidEnd:returnCode:contextInfo:),NULL,
+							  AILocalizedString(@"Cancel",nil), nil,
+							  [[self view] window], self,
+							  @selector(sheetDidEnd:returnCode:contextInfo:), NULL,
 							  NULL,
 							  AILocalizedString(@"Disabling automatic contact conslidation will also unconsolidate all existing metacontacts, including any created manually.  You will need to recreate any manually-created metacontacts if you proceed.",nil));
 		}
