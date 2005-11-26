@@ -28,7 +28,7 @@
 #define STATUS_MUTABILITY_TYPE				@"Mutability Type"
 
 @interface AIStatus : AIStatusItem {
-	NSMutableDictionary	*statusDict;
+
 }
 
 + (AIStatus *)status;
