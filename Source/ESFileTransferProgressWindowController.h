@@ -32,6 +32,7 @@
 }
 
 + (id)showFileTransferProgressWindow;
+
 + (id)showFileTransferProgressWindowIfNotOpen;
 + (void)removeFileTransfer:(ESFileTransfer *)inFileTransfer;
 
