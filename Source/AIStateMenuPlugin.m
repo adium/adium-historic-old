@@ -112,7 +112,7 @@
 	[statusMenu delegateCreatedMenuItems:[dockStatusMenu itemArray]];
 	[dockStatusMenu release];
 	
-	if (currentMenuItemArray != currentMenuItemArray) {
+	if (currentMenuItemArray != menuItemArray) {
 		[currentMenuItemArray release]; currentMenuItemArray = [menuItemArray retain];
 	}
 
