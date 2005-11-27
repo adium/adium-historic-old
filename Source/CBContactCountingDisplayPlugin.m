@@ -173,7 +173,7 @@
 	
 		//Build a string to add to the right of the name which shows any information we just extracted
 		if (countOnlineObjects && countAllObjects) {
-			countString = [NSString stringWithFormat:@" (%i/%i)", onlineObjects, totalObjects];
+			countString = [NSString stringWithFormat:AILocalizedString(@" (%i of %i)", /*comment*/ nil), onlineObjects, totalObjects];
 		} else if (countAllObjects) {
 			countString = [NSString stringWithFormat:@" (%i)", totalObjects];
 		} else if (countOnlineObjects) {
