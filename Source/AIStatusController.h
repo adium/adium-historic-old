@@ -140,6 +140,7 @@
 - (AIStatus *)statusStateWithUniqueStatusID:(NSNumber *)uniqueStatusID;
 
 - (void)setActiveStatusState:(AIStatus *)state;
+- (void)setDelayStatusMenuRebuilding:(BOOL)shouldDelay;
 - (void)applyState:(AIStatus *)statusState toAccounts:(NSArray *)accountArray;
 - (AIStatus *)activeStatusState;
 - (NSSet *)allActiveStatusStates;
