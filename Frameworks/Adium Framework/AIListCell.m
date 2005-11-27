@@ -425,4 +425,41 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	}
 }
 
+#pragma mark Accessibility
+
+- (NSArray *)accessibilityAttributeNames
+{
+	NSMutableArray *names = [[super accessibilityAttributeNames] mutableCopy];
+	[names addObject:NSAccessibilityValueAttribute];
+	[names addObject:NSAccessibilityTitleAttribute];
+	[names addObject:@"ClassName"];
+	[names autorelease];
+	return names;
+}
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	id value;
+
+#define IS_GROUP [listObject conformsToProtocol:@protocol(AIContainingObject)]
+#define IS_CONTACT !IS_GROUP
+
+	if([attribute isEqualToString:NSAccessibilityRoleAttribute])
+		value = IS_CONTACT ? @"AIContactListItem": @"AIContactListGroup";
+	else if([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute])
+		value = IS_CONTACT ? AILocalizedString(@"contact list item", /*comment*/ nil) : AILocalizedString(@"contact list group", /*comment*/ nil);
+	else if([attribute isEqualToString:NSAccessibilityValueAttribute])
+		value = listObject;
+	else if([attribute isEqualToString:NSAccessibilityTitleAttribute])
+		value = [self labelString];
+	else if([attribute isEqualToString:@"ClassName"])
+		value = NSStringFromClass([self class]);
+	else
+		value = [super accessibilityAttributeValue:attribute];
+
+#undef IS_CONTACT
+#undef IS_GROUP
+
+	return value;
+}
+
 @end
