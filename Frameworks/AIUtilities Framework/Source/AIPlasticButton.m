@@ -49,6 +49,12 @@
 	[self setFrame:frame];
 }
 
+//silly NSControl...
+- (void)setMenu:(NSMenu *)menu {
+	[super setMenu:menu];
+	[[self cell] setMenu:menu];
+}
+
 //Mouse Tracking -------------------------------------------------------------------------------------------------------
 #pragma mark Mouse Tracking
 //Custom mouse down tracking to display our menu and highlight
