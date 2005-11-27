@@ -19,7 +19,6 @@
     NSImage			*plasticPressedMiddle;
     NSImage			*plasticDefaultCaps;
     NSImage			*plasticDefaultMiddle;
-	NSImage         *popUpArrow;
 }
 
 @end

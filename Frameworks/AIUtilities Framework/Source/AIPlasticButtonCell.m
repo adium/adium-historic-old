@@ -9,6 +9,8 @@
 #import "AIPlasticButtonCell.h"
 #import "AIImageAdditions.h"
 
+#include <Carbon/Carbon.h>
+
 #define LABEL_OFFSET_X	1
 #define LABEL_OFFSET_Y	-1
 
@@ -20,10 +22,6 @@
 #define PLASTIC_ARROW_XOFFSET	12
 #define PLASTIC_ARROW_YOFFSET	12
 #define PLASTIC_ARROW_PADDING	8
-
-@interface AIPlasticButtonCell (PRIVATE)
-- (NSImage *)popUpArrow;
-@end
 
 @implementation AIPlasticButtonCell
 
@@ -103,8 +101,6 @@
     [plasticDefaultCaps release];
     [plasticDefaultMiddle release];    
 	
-	[popUpArrow release];
-	
     [super dealloc];
 }
 
@@ -182,7 +178,6 @@
 	
     //Draw Label
 #warning XXX handle NSCellImagePosition values other than these two correctly
-	NSLog(@"imagePosition is %u; NSImageOnly is %u", imagePosition, NSImageOnly);
 	if(imagePosition != NSImageOnly) {
 		NSString *title = [self title];
 		if (title) {
@@ -233,17 +228,37 @@
     
 	//Draw the arrow, if needed
 	if ([self menu]) {
-		//first create the arrow image if necessary.
-		[self popUpArrow];
-
-		NSRect srcRect = {
-			NSZeroPoint,
-			[popUpArrow size]
+		struct HIThemePopupArrowDrawInfo drawInfo = {
+			.version = 0,
+			.state = 0,
+			.orientation = kThemeArrowDown,
+			.size = kThemeArrow7pt,
 		};
-		[popUpArrow drawAtPoint:NSMakePoint(NSWidth(frame)-PLASTIC_ARROW_XOFFSET, NSHeight(frame)-PLASTIC_ARROW_YOFFSET)
-					   fromRect:srcRect
-					  operation:NSCompositeSourceOver
-					   fraction:0.7];
+		if([self isEnabled]) {
+			if([self state] != NSOffState) {
+				drawInfo.state = kThemeStatePressed;
+			} else {
+				drawInfo.state = kThemeStateActive;
+			}
+		} else {
+			drawInfo.state = kThemeStateInactive;
+		}
+
+		union {
+			HIRect HIToolbox;
+			NSRect AppKit;
+		} rect;
+
+		frame = [controlView frame];
+		rect.AppKit.origin.x = NSWidth (frame) - PLASTIC_ARROW_XOFFSET;
+		rect.AppKit.origin.y = NSHeight(frame) - PLASTIC_ARROW_YOFFSET;
+		rect.AppKit.size.width  = PLASTIC_ARROW_WIDTH;
+		rect.AppKit.size.height = PLASTIC_ARROW_HEIGHT;
+
+		HIThemeDrawPopupArrow(&rect.HIToolbox,
+							  &drawInfo,
+							  [[NSApp context] graphicsPort],
+							  kHIThemeOrientationNormal);
 	}
 }
 
@@ -252,37 +267,6 @@
 - (BOOL)isOpaque
 {
     return NO;
-}
-
-#pragma mark UndocumentedGoodness (or: Here there be dragons)
-
-//image for the little popup arrow (cached)
-- (NSImage *)popUpArrow
-{
-	if (!popUpArrow) {
-		NSBezierPath *arrowPath = [NSBezierPath bezierPath];
-
-		/*  -----> x
-		 * | 1---2
-		 * |  \ /   1,2,3 = points
-		 * v   3
-		 * y
-		 */
-		[arrowPath moveToPoint:NSMakePoint(0, 1.0)];
-		[arrowPath relativeLineToPoint:NSMakePoint( 1.0, 0)];
-		[arrowPath relativeLineToPoint:NSMakePoint(-0.5, 1.0)];
-		[arrowPath closePath];
-
-		popUpArrow = [[NSImage alloc] initWithSize:NSMakeSize(PLASTIC_ARROW_WIDTH, PLASTIC_ARROW_HEIGHT)];
-		[popUpArrow setFlipped:YES];
-
-		[popUpArrow lockFocus];
-		[[NSColor blackColor] setFill];
-		[arrowPath fill];
-		[popUpArrow unlockFocus];
-	}
-	
-	return popUpArrow;
 }
 
 @end
