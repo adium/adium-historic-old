@@ -33,14 +33,15 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 {
     if ((self = [super init]))
 	{
-		topSpacing = 0;
-		bottomSpacing = 0;
-		topPadding = 0;
-		bottomPadding = 0;
-		leftPadding = 0;
-		rightPadding = 0;
-		leftSpacing = 0;
-		rightSpacing = 0;
+		   topSpacing = 
+		bottomSpacing = 
+		  leftSpacing = 
+		 rightSpacing = 0;
+
+		   topPadding = 
+		bottomPadding = 
+		  leftPadding = 
+		 rightPadding = 0;
 		
 		font = [[NSFont systemFontOfSize:12] retain];
 		textColor = [[NSColor blackColor] retain];
