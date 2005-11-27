@@ -71,12 +71,17 @@
 		[button_editState sizeToFit];
 		newFrame = [button_editState frame];
 		if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+		if (newFrame.size.height < oldFrame.size.height) newFrame.size.height = oldFrame.size.height;
 		newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
 		[button_editState setFrame:newFrame];
 
 		//Add Group
+		oldFrame = [button_addGroup frame];
 		[button_addGroup setTitle:AILocalizedString(@"Add Group",nil)];
 		[button_addGroup sizeToFit];
+		newFrame = [button_addGroup frame];
+		if (newFrame.size.height < oldFrame.size.height) newFrame.size.height = oldFrame.size.height;
+		[button_addGroup setFrame:newFrame];
 	}
 	
 	
@@ -458,12 +463,15 @@
 				
 				if (shouldIncrement) index++;
 			} else {
-				[statusItem retain];
-				[[statusItem containingStatusGroup] removeStatusItem:statusItem];
-				[item addStatusItem:statusItem atIndex:index];
-				[statusItem release];
-				
-				index++;
+				//Don't let an object be moved into itself...
+				if (item != statusItem) {
+					[statusItem retain];
+					[[statusItem containingStatusGroup] removeStatusItem:statusItem];
+					[item addStatusItem:statusItem atIndex:index];
+					[statusItem release];
+					
+					index++;
+				}
 			}
 		}
 
