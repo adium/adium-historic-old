@@ -248,8 +248,8 @@
 			/* Ignore hidden files and the __MACOSX folder which some compression engines stick into the archive but
 			 * /usr/bin/unzip doesn't handle properly.
 			 */
-			if ((![nextFile hasPrefix:@"."]) &&
-				(![[[nextFile stringByDeletingLastPathComponent] lastPathComponent] isEqualToString:@"__MACOSX"])) {
+			if ((![[nextFile lastPathComponent] hasPrefix:@"."]) &&
+				(![[nextFile pathComponents] containsObject:@"__MACOSX"])) {
 				NSString		*fileExtension = [nextFile pathExtension];
 				NSEnumerator	*supportedDocumentExtensionsEnumerator;
 				NSString		*extension;
