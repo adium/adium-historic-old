@@ -225,17 +225,18 @@
 	//If the account doesn't have a name, give it a generic one
 	if (!accountTitle || ![accountTitle length]) accountTitle = NEW_ACCOUNT_DISPLAY_TEXT;
 	
-	//Display connecting or disconnecting status in the title
-	if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
-		titleFormat = ACCOUNT_CONNECTING_MENU_TITLE;
-	} else if ([[account statusObjectForKey:@"Disconnecting"] boolValue]) {
-		titleFormat = ACCOUNT_DISCONNECTING_MENU_TITLE;
-	} else if (showTitleVerbs) {
-		//Display 'connect' or 'disconnect' before the account name if title verbs are enabled
-		titleFormat = ([account online] ? ACCOUNT_DISCONNECT_MENU_TITLE : ACCOUNT_CONNECT_MENU_TITLE);
+	if (showTitleVerbs) {
+		if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
+			titleFormat = ACCOUNT_CONNECTING_MENU_TITLE;
+		} else if ([[account statusObjectForKey:@"Disconnecting"] boolValue]) {
+			titleFormat = ACCOUNT_DISCONNECTING_MENU_TITLE;
+		} else {
+			//Display 'connect' or 'disconnect' before the account name
+			titleFormat = ([account online] ? ACCOUNT_DISCONNECT_MENU_TITLE : ACCOUNT_CONNECT_MENU_TITLE);
+		}
 	}
-	
-	return titleFormat ? [NSString stringWithFormat:titleFormat, accountTitle] : accountTitle;
+
+	return (titleFormat ? [NSString stringWithFormat:titleFormat, accountTitle] : accountTitle);
 }
 
 /*!
