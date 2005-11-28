@@ -392,9 +392,9 @@ static NSSize		rightCapSize;
 - (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView
 {
     trackingClose = YES;
-    hoveringClose = YES;
-    [controlView setNeedsDisplayInRect:[self _closeButtonRect]];
-	
+
+	[self setHoveringClose:YES];
+
     return YES;
 }
 
@@ -403,11 +403,8 @@ static NSSize		rightCapSize;
 {
     BOOL	hovering = NSPointInRect(currentPoint, [self _closeButtonRect]);
 	
-    if (hoveringClose != hovering) {
-        hoveringClose = hovering;
-        [controlView setNeedsDisplayInRect:[self _closeButtonRect]];
-    }
-    
+	[self setHoveringClose:hovering];
+
     return YES;
 }
 
@@ -423,9 +420,8 @@ static NSSize		rightCapSize;
         [(AICustomTabsView *)controlView closeTab:self];
     }
 	
-    hoveringClose = NO;
     trackingClose = NO;
-    [controlView setNeedsDisplayInRect:[self _closeButtonRect]];
+	[self setHoveringClose:NO];
 }
 
 @end
