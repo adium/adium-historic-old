@@ -139,7 +139,8 @@
 		//First available account in our list
 		enumerator = [[[adium accountController] accounts] objectEnumerator];
 		while ((account = [enumerator nextObject])) {
-			if ([account availableForSendingContentType:inType toContact:nil] || includeOffline) {
+			if ([account enabled] && 
+				([account availableForSendingContentType:inType toContact:nil] || includeOffline)) {
 				return account;
 			}
 		}
