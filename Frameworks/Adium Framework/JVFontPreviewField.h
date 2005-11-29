@@ -12,7 +12,6 @@
 	BOOL					shouldDrawFocusRing;
 	NSResponder				*lastResp;
 }
-- (void)selectFont:(id)sender;
 - (IBAction)chooseFontWithFontPanel:(id)sender;
 - (void)setShowPointSize:(BOOL)show;
 - (void)setShowFontFace:(BOOL)show;
