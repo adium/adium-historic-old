@@ -7168,6 +7168,7 @@
 				Russian,
 				en,
 				en_CA,
+				pl,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CocAIMe2 */;
 			projectDirPath = "";
