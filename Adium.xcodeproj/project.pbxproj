@@ -1514,6 +1514,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		071C56320827933000399C0F /* English */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English; path = "Resources/English.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		071C563E0827936500399C0F /* French */ = {isa = PBXFileReference; lastKnownFileType = folder; name = French; path = "Resources/French.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		071C56420827937400399C0F /* German */ = {isa = PBXFileReference; lastKnownFileType = folder; name = German; path = "Resources/German.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		074DDB5C07CB413F0033AFF7 /* CBContactLastSeenPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBContactLastSeenPlugin.m; path = Source/CBContactLastSeenPlugin.m; sourceTree = "<group>"; };
@@ -1530,8 +1531,14 @@
 		11B648DE087C62C5008F528B /* RAFDragArrayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFDragArrayController.m; path = Source/RAFDragArrayController.m; sourceTree = "<group>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Source/AIEmoticonController.h; sourceTree = "<group>"; };
 		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = Source/AIEmoticonController.m; sourceTree = "<group>"; };
+		3402E01807CB0CE40044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
+		3402E01F07CB0D150044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
+		3402E02007CB0D150044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		3402E02D07CB0DBB0044F818 /* AboutBox.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AboutBox.nib; path = Resources/AboutBox.nib; sourceTree = "<group>"; };
 		3402E03607CB0DFB0044F818 /* PreferenceWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = PreferenceWindow.nib; path = Resources/PreferenceWindow.nib; sourceTree = "<group>"; };
+		3402E03F07CB0E400044F818 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3402E04B07CB0EA70044F818 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = "Plugins/Gaim Service/English.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3402E06C07CB0F9D0044F818 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = "Plugins/WebKit Message View/English.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		34048AC50617CB4C004D0B7E /* SLGaimCocoaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SLGaimCocoaAdapter.h; path = "Plugins/Gaim Service/SLGaimCocoaAdapter.h"; sourceTree = "<group>"; };
 		34048AC60617CB4C004D0B7E /* SLGaimCocoaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SLGaimCocoaAdapter.m; path = "Plugins/Gaim Service/SLGaimCocoaAdapter.m"; sourceTree = "<group>"; };
 		34057F0B087E027800664D64 /* ESImageViewWithImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESImageViewWithImagePicker.h; path = "Frameworks/Adium Framework/ESImageViewWithImagePicker.h"; sourceTree = "<group>"; };
@@ -1598,10 +1605,12 @@
 		34111A5E06BE1B370005AF5C /* ESObjectWithStatus.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESObjectWithStatus.m; path = "Frameworks/Adium Framework/ESObjectWithStatus.m"; sourceTree = "<group>"; };
 		3411E1380832E3B9003C8270 /* ESGaimOTRPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimOTRPreferences.h; path = "Plugins/Gaim Service/ESGaimOTRPreferences.h"; sourceTree = "<group>"; };
 		3411E1390832E3B9003C8270 /* ESGaimOTRPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimOTRPreferences.m; path = "Plugins/Gaim Service/ESGaimOTRPreferences.m"; sourceTree = "<group>"; };
+		3411E2470832EB75003C8270 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
 		3411E28F0832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimOTRFingerprintDetailsWindowController.h; path = "Plugins/Gaim Service/ESGaimOTRFingerprintDetailsWindowController.h"; sourceTree = "<group>"; };
 		3411E2900832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimOTRFingerprintDetailsWindowController.m; path = "Plugins/Gaim Service/ESGaimOTRFingerprintDetailsWindowController.m"; sourceTree = "<group>"; };
 		3411E2970832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = GaimOTRFingerprintDetailsWindow.nib; path = "Plugins/Gaim Service/GaimOTRFingerprintDetailsWindow.nib"; sourceTree = "<group>"; };
 		341591E105463DA800291275 /* SQL_Logger_Prefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = SQL_Logger_Prefs.nib; sourceTree = "<group>"; };
+		34167FE5081D700B00E35678 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		341DE02F07FE104700EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		341DE03407FE105600EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		341DE03507FE106400EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -1656,6 +1665,7 @@
 		3428328507D2643F004F01C9 /* ESStatusPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESStatusPreferences.m; path = Source/ESStatusPreferences.m; sourceTree = "<group>"; };
 		3428328607D2643F004F01C9 /* ESStatusPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESStatusPreferences.h; path = Source/ESStatusPreferences.h; sourceTree = "<group>"; };
 		3428328707D2643F004F01C9 /* ESStatusPreferencesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESStatusPreferencesPlugin.m; path = Source/ESStatusPreferencesPlugin.m; sourceTree = "<group>"; };
+		3428328C07D2644F004F01C9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		342838ED07D2D004004F01C9 /* Shared Dock Icon Images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Shared Dock Icon Images"; path = "Resources/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		3428B33E0815E1FB00C0D3DC /* emoticon32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = emoticon32.png; path = Resources/emoticon32.png; sourceTree = "<group>"; };
 		342910CA07AE228600C815F6 /* AIEmoticonPackPreviewTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPackPreviewTableView.h; path = Plugins/Emoticons/AIEmoticonPackPreviewTableView.h; sourceTree = "<group>"; };
@@ -1729,8 +1739,10 @@
 		342DC5BF05783DE7000E1D83 /* ESSendMessageContactAlertPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESSendMessageContactAlertPlugin.m; path = "Plugins/Send Message Contact Alert/ESSendMessageContactAlertPlugin.m"; sourceTree = "<group>"; };
 		342DC5C005783DE7000E1D83 /* ESSendMessageContactAlertPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESSendMessageContactAlertPlugin.h; path = "Plugins/Send Message Contact Alert/ESSendMessageContactAlertPlugin.h"; sourceTree = "<group>"; };
 		342DC7FE05784463000E1D83 /* SendMessageContactAlert.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = SendMessageContactAlert.nib; path = "Plugins/Send Message Contact Alert/SendMessageContactAlert.nib"; sourceTree = "<group>"; };
+		342E2B1A072976060054D77A /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
 		34327BD6060D2FE6003D7AD9 /* GaimServiceDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = GaimServiceDefaults.plist; path = "Plugins/Gaim Service/GaimServiceDefaults.plist"; sourceTree = "<group>"; };
 		3439FD8C05794B4500B2E449 /* AlertMessageContactAlert.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AlertMessageContactAlert.nib; path = "Plugins/Error Message Handler/AlertMessageContactAlert.nib"; sourceTree = "<group>"; };
+		343A7F2606935DB600150CEC /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimMeanwhileAccountView.nib"; sourceTree = "<group>"; };
 		343A7F2A06935DC500150CEC /* ESGaimMeanwhileAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimMeanwhileAccountViewController.m; path = "Plugins/Gaim Service/ESGaimMeanwhileAccountViewController.m"; sourceTree = "<group>"; };
 		343A7F2B06935DC500150CEC /* ESGaimMeanwhileAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimMeanwhileAccountViewController.h; path = "Plugins/Gaim Service/ESGaimMeanwhileAccountViewController.h"; sourceTree = "<group>"; };
 		343A7F2C06935DC500150CEC /* ESGaimMeanwhileAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimMeanwhileAccount.m; path = "Plugins/Gaim Service/ESGaimMeanwhileAccount.m"; sourceTree = "<group>"; };
@@ -1756,6 +1768,8 @@
 		343C461F0816CD0400FF5FA7 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = "Plugins/Gaim Service/Italian.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
 		343C47760816FBDA00FF5FA7 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Plugins/WebKit Message View/German.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		343C47790816FBE500FF5FA7 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = "Plugins/WebKit Message View/German.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		343EB4270808709E00E27095 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
+		343EC68F0809DD2900E27095 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		343EC6A70809DEC700E27095 /* ESContactAlertsPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESContactAlertsPane.m; path = Source/ESContactAlertsPane.m; sourceTree = "<group>"; };
 		343EC6A80809DEC700E27095 /* ESContactAlertsPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESContactAlertsPane.h; path = Source/ESContactAlertsPane.h; sourceTree = "<group>"; };
 		343EC6B20809DEEB00E27095 /* ContactAlerts.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ContactAlerts.nib; path = Resources/ContactAlerts.nib; sourceTree = "<group>"; };
@@ -2012,6 +2026,7 @@
 		3465236508371A64009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Plugins/Gaim Service/cs.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3465236608371A64009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Plugins/WebKit Message View/cs.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3465236808371A65009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = Resources/cs.lproj/Localizable.strings; sourceTree = "<group>"; };
+		346798EA08947F3900F68A98 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/AdiumFramework.strings; sourceTree = "<group>"; };
 		346798F508947FD700F68A98 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Catalan; path = Resources/Catalan.lproj/AdiumFramework.strings; sourceTree = "<group>"; };
 		346798F608947FE500F68A98 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = Resources/cs.lproj/AdiumFramework.strings; sourceTree = "<group>"; };
 		346798F708947FF100F68A98 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Danish; path = Resources/Danish.lproj/AdiumFramework.strings; sourceTree = "<group>"; };
@@ -2080,6 +2095,7 @@
 		347E791207CAA51400350507 /* AIAlphabeticalSort.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAlphabeticalSort.m; path = Source/AIAlphabeticalSort.m; sourceTree = "<group>"; };
 		347E791D07CAA52300350507 /* SortConfiguration.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = SortConfiguration.nib; path = Resources/SortConfiguration.nib; sourceTree = "<group>"; };
 		347E791E07CAA52300350507 /* StatusSortDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = StatusSortDefaults.plist; path = Resources/StatusSortDefaults.plist; sourceTree = "<group>"; };
+		347E791F07CAA52300350507 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		347E792007CAA52300350507 /* AlphabeticalSortConfiguration.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AlphabeticalSortConfiguration.nib; path = Resources/AlphabeticalSortConfiguration.nib; sourceTree = "<group>"; };
 		347E792107CAA52300350507 /* AlphabeticalSortDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = AlphabeticalSortDefaults.plist; path = Resources/AlphabeticalSortDefaults.plist; sourceTree = "<group>"; };
 		347E7A8D07CAF88200350507 /* AIContactAwayPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactAwayPlugin.h; path = Source/AIContactAwayPlugin.h; sourceTree = "<group>"; };
@@ -2105,9 +2121,12 @@
 		3483928505E68B05002BC6C0 /* AIIconState.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIIconState.h; path = "Frameworks/Adium Framework/AIIconState.h"; sourceTree = "<group>"; };
 		348862CD05645E94003C9627 /* ESFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransfer.h; path = "Frameworks/Adium Framework/ESFileTransfer.h"; sourceTree = "<group>"; };
 		348862CE05645E95003C9627 /* ESFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransfer.m; path = "Frameworks/Adium Framework/ESFileTransfer.m"; sourceTree = "<group>"; };
+		348A8A190629A68C00FC6E03 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
+		348A901A062A13AB00FC6E03 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
 		348D8D1A06CC079F00449EBB /* ESZephyrService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESZephyrService.m; path = "Plugins/Gaim Service/ESZephyrService.m"; sourceTree = "<group>"; };
 		348D8D1B06CC079F00449EBB /* ESZephyrService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESZephyrService.h; path = "Plugins/Gaim Service/ESZephyrService.h"; sourceTree = "<group>"; };
 		348D8D2206CC07BC00449EBB /* ESGaimZephyrAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimZephyrAccountViewController.m; path = "Plugins/Gaim Service/ESGaimZephyrAccountViewController.m"; sourceTree = "<group>"; };
+		348D8D2306CC07BC00449EBB /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
 		348D8D2406CC07BD00449EBB /* ESGaimZephyrAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimZephyrAccountViewController.h; path = "Plugins/Gaim Service/ESGaimZephyrAccountViewController.h"; sourceTree = "<group>"; };
 		348D8D2506CC07BD00449EBB /* DCGaimZephyrJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCGaimZephyrJoinChatViewController.m; path = "Plugins/Gaim Service/DCGaimZephyrJoinChatViewController.m"; sourceTree = "<group>"; };
 		348D8D2606CC07BD00449EBB /* ESGaimZephyrAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimZephyrAccount.m; path = "Plugins/Gaim Service/ESGaimZephyrAccount.m"; sourceTree = "<group>"; };
@@ -2122,45 +2141,10 @@
 		348FF83E09128BEB00A942A8 /* CBGaimAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBGaimAccount.m; path = "Plugins/Gaim Service/CBGaimAccount.m"; sourceTree = "<group>"; };
 		348FF84909128D6300A942A8 /* AccountDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = AccountDefaults.plist; path = "Frameworks/Adium Framework/AccountDefaults.plist"; sourceTree = "<group>"; };
 		34943DEE07BAD918000F2A03 /* AccountPrivacy.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountPrivacy.nib; path = "Frameworks/Adium Framework/AccountPrivacy.nib"; sourceTree = "<group>"; };
+		349448C207BB29B2000F2A03 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
+		3496A8BF07CE6B3D0055BBAB /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIHyperlinks.framework.xcodeproj; path = "Frameworks/AIHyperlinks Framework/AIHyperlinks.framework.xcodeproj"; sourceTree = "<group>"; };
 		3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AIHyperlinks.framework; path = "Frameworks/AIHyperlinks Framework/build/AIHyperlinks.framework"; sourceTree = "<group>"; };
-		3497FBA7093C1A620035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/WebKit Message View/en.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
-		3497FBA8093C1A620035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
-		3497FBA9093C1A620035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
-		3497FBAA093C1A620035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en; path = "Resources/en.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
-		3497FBAB093C1A620035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
-		3497FBAC093C1A630035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
-		3497FBAD093C1A630035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
-		3497FBAE093C1A630035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		3497FBAF093C1A630035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Adium Crash Reporter/en.lproj/MainMenu.nib"; sourceTree = "<group>"; };
-		3497FBB0093C1A630035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "Plugins/WebKit Message View/en.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		3497FBB1093C1A630035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "Plugins/Gaim Service/en.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		3497FBB2093C1A630035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		3497FBB3093C1A630035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "Adium Crash Reporter/en.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		3497FBB4093C1A640035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
-		3497FBB5093C1A640035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
-		3497FBB6093C1A640035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		3497FBB7093C1A640035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
-		3497FBB8093C1A640035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
-		3497FBB9093C1A640035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
-		3497FBBA093C1A650035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
-		3497FBBB093C1A650035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/ESGaimNovellAccountView.nib"; sourceTree = "<group>"; };
-		3497FBBC093C1A650035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
-		3497FBBD093C1A650035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/ESGaimMeanwhileAccountView.nib"; sourceTree = "<group>"; };
-		3497FBBE093C1A650035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
-		3497FBBF093C1A650035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
-		3497FBC0093C1A650035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
-		3497FBC1093C1A650035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
-		3497FBC2093C1A660035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Frameworks/Adium Framework/en.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
-		3497FBC3093C1A660035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
-		3497FBC4093C1A660035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
-		3497FBC5093C1A660035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/DCGaimYahooJoinChatView.nib"; sourceTree = "<group>"; };
-		3497FBC6093C1A660035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
-		3497FBC7093C1A660035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/DCGaimMeanwhileJoinChatView.nib"; sourceTree = "<group>"; };
-		3497FBC8093C1A670035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/DCGaimJabberJoinChatView.nib"; sourceTree = "<group>"; };
-		3497FBC9093C1A670035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
-		3497FBCA093C1A670035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/AdiumFramework.strings; sourceTree = "<group>"; };
-		3497FBCB093C1A670035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/AccountProxy.nib; sourceTree = "<group>"; };
 		3498FE9107F488EF0004B79A /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = "Plugins/Gaim Service/Italian.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9707F488FD0004B79A /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = "Plugins/Gaim Service/Dutch.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9807F489020004B79A /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = "Plugins/Gaim Service/French.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2252,6 +2236,7 @@
 		34A6E9AB07D635B100972830 /* French */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = French; path = Resources/French.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34A6E9B807D6365000972830 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		34A6E9BA07D6365A00972830 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
+		34A6F68207D65D5B00972830 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		34A6FAD407D6F3A600972830 /* ESEventSoundAlertDetailPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESEventSoundAlertDetailPane.h; path = Source/ESEventSoundAlertDetailPane.h; sourceTree = "<group>"; };
 		34A6FAD507D6F3A600972830 /* AIEventSoundsPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEventSoundsPlugin.m; path = Source/AIEventSoundsPlugin.m; sourceTree = "<group>"; };
 		34A6FAD607D6F3A600972830 /* AIEventSoundsPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEventSoundsPlugin.h; path = Source/AIEventSoundsPlugin.h; sourceTree = "<group>"; };
@@ -2262,6 +2247,48 @@
 		34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = FormattingDefaults.plist; path = Resources/FormattingDefaults.plist; sourceTree = "<group>"; };
 		34A6FE7807D7E06A00972830 /* KFTypeSelectTableView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = KFTypeSelectTableView.m; path = "Frameworks/Adium Framework/KFTypeSelectTableView.m"; sourceTree = "<group>"; };
 		34A6FE7907D7E06A00972830 /* KFTypeSelectTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KFTypeSelectTableView.h; path = "Frameworks/Adium Framework/KFTypeSelectTableView.h"; sourceTree = "<group>"; };
+		34A81DB2093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/WebKit Message View/pl.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
+		34A81DB3093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
+		34A81DB4093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
+		34A81DB5093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
+		34A81DB6093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		34A81DB7093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
+		34A81DB8093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
+		34A81DB9093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Adium Crash Reporter/pl.lproj/MainMenu.nib"; sourceTree = "<group>"; };
+		34A81DBA093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Adium Crash Reporter/pl.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		34A81DBB093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = Resources/pl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34A81DBC093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Plugins/WebKit Message View/pl.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		34A81DBD093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Plugins/Gaim Service/pl.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		34A81DBE093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
+		34A81DBF093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
+		34A81DC0093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = Resources/pl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		34A81DC1093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		34A81DC2093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
+		34A81DC3093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
+		34A81DC4093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
+		34A81DC5093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/ESGaimNovellAccountView.nib"; sourceTree = "<group>"; };
+		34A81DC6093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
+		34A81DC7093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/ESGaimMeanwhileAccountView.nib"; sourceTree = "<group>"; };
+		34A81DC8093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
+		34A81DC9093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
+		34A81DCA093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
+		34A81DCB093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
+		34A81DCC093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Frameworks/Adium Framework/pl.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
+		34A81DCD093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
+		34A81DCE093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
+		34A81DCF093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/DCGaimYahooJoinChatView.nib"; sourceTree = "<group>"; };
+		34A81DD0093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34A81DD1093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/DCGaimMeanwhileJoinChatView.nib"; sourceTree = "<group>"; };
+		34A81DD2093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/DCGaimJabberJoinChatView.nib"; sourceTree = "<group>"; };
+		34A81DD3093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
+		34A81DD4093CE92400B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = Resources/pl.lproj/AdiumFramework.strings; sourceTree = "<group>"; };
+		34A81DD5093CE92400B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/AccountProxy.nib; sourceTree = "<group>"; };
+		34A81DDE093CE94300B0E93D /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_CA; path = Resources/en_CA.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
+		34A81DE5093CE95100B0E93D /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_CA; path = Resources/en_CA.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		34A81DEA093CE95B00B0E93D /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_CA; path = Resources/en_CA.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
+		34A81DF0093CE96300B0E93D /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_CA; path = Resources/en_CA.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
+		34A81DF5093CE98F00B0E93D /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_CA; path = Resources/en_CA.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34A81DFB093CE99F00B0E93D /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_CA; path = "Plugins/WebKit Message View/en_CA.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		34AC2E9F0934FAE100393D7A /* AIStatusMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusMenu.h; path = "Frameworks/Adium Framework/AIStatusMenu.h"; sourceTree = "<group>"; };
 		34AC2EA00934FAE100393D7A /* AIStatusMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStatusMenu.m; path = "Frameworks/Adium Framework/AIStatusMenu.m"; sourceTree = "<group>"; };
 		34AC2FA509352C2400393D7A /* AIStatusGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusGroup.h; path = "Frameworks/Adium Framework/AIStatusGroup.h"; sourceTree = "<group>"; };
@@ -2320,6 +2347,7 @@
 		34B82C8A085A87B000864531 /* AdiumMessageEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumMessageEvents.m; path = Source/AdiumMessageEvents.m; sourceTree = "<group>"; };
 		34B9194A062DEC29004F1223 /* AIGaimOscarAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGaimOscarAccountViewController.m; path = "Plugins/Gaim Service/AIGaimOscarAccountViewController.m"; sourceTree = "<group>"; };
 		34B9194B062DEC29004F1223 /* AIGaimOscarAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGaimOscarAccountViewController.h; path = "Plugins/Gaim Service/AIGaimOscarAccountViewController.h"; sourceTree = "<group>"; };
+		34B9197F062DEC99004F1223 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		34B919C9062DEF15004F1223 /* CBOscarService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBOscarService.h; path = "Plugins/Gaim Service/CBOscarService.h"; sourceTree = "<group>"; };
 		34B919CA062DEF15004F1223 /* CBOscarService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBOscarService.m; path = "Plugins/Gaim Service/CBOscarService.m"; sourceTree = "<group>"; };
 		34B995D9092A832700E31E91 /* FontPanelAccessoryView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FontPanelAccessoryView.nib; path = Resources/FontPanelAccessoryView.nib; sourceTree = "<group>"; };
@@ -2406,6 +2434,7 @@
 		34C2CF86063340540018E5D2 /* GaimSinglelineRequestWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = GaimSinglelineRequestWindow.nib; path = "Plugins/Gaim Service/GaimSinglelineRequestWindow.nib"; sourceTree = "<group>"; };
 		34C2D70306338E2E0018E5D2 /* ESWebKitMessageViewPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESWebKitMessageViewPreferences.h; path = "Plugins/WebKit Message View/ESWebKitMessageViewPreferences.h"; sourceTree = "<group>"; };
 		34C2D70406338E2E0018E5D2 /* ESWebKitMessageViewPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESWebKitMessageViewPreferences.m; path = "Plugins/WebKit Message View/ESWebKitMessageViewPreferences.m"; sourceTree = "<group>"; };
+		34C2D8C00633BBA80018E5D2 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/WebKit Message View/English.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		34C2DBE5063449AF0018E5D2 /* Preview.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = Preview.plist; path = "Plugins/WebKit Message View/Preview.plist"; sourceTree = "<group>"; };
 		34C2DF00063498ED0018E5D2 /* SoulEdge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SoulEdge.png; path = "Plugins/WebKit Message View/SoulEdge.png"; sourceTree = "<group>"; };
 		34C2DF01063498ED0018E5D2 /* terminator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = terminator.png; path = "Plugins/WebKit Message View/terminator.png"; sourceTree = "<group>"; };
@@ -2487,6 +2516,7 @@
 		34D832AB07CBD62C006466F2 /* AdiumIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumIcon.icns; path = Resources/AdiumIcon.icns; sourceTree = "<group>"; };
 		34D832AC07CBD62C006466F2 /* AdiumPlugin.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumPlugin.icns; path = Resources/AdiumPlugin.icns; sourceTree = "<group>"; };
 		34D832AD07CBD62C006466F2 /* Adium.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Adium.icns; path = Resources/Adium.icns; sourceTree = "<group>"; };
+		34D832BD07CBD641006466F2 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
 		34D8332A07CBD72A006466F2 /* ContactCountingDisplayDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = ContactCountingDisplayDefaults.plist; path = Resources/ContactCountingDisplayDefaults.plist; sourceTree = "<group>"; };
 		34D8333007CBD741006466F2 /* ApplescriptContactAlert.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ApplescriptContactAlert.nib; path = Resources/ApplescriptContactAlert.nib; sourceTree = "<group>"; };
 		34D8333107CBD741006466F2 /* ApplescriptAlert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ApplescriptAlert.png; path = Resources/ApplescriptAlert.png; sourceTree = "<group>"; };
@@ -2528,6 +2558,7 @@
 		34E0103307B956F6000DF265 /* ESGaimNotifyEmailController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimNotifyEmailController.h; path = "Plugins/Gaim Service/ESGaimNotifyEmailController.h"; sourceTree = "<group>"; };
 		34E0110C07B9E30B000DF265 /* ESGaimOTRUnknownFingerprintController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimOTRUnknownFingerprintController.h; path = "Plugins/Gaim Service/ESGaimOTRUnknownFingerprintController.h"; sourceTree = "<group>"; };
 		34E0110D07B9E30B000DF265 /* ESGaimOTRUnknownFingerprintController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimOTRUnknownFingerprintController.m; path = "Plugins/Gaim Service/ESGaimOTRUnknownFingerprintController.m"; sourceTree = "<group>"; };
+		34E0E9B007CC4B1800A82198 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = "Adium Crash Reporter/English.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		34E0EA0707CC53EC00A82198 /* NewMessagePrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = NewMessagePrompt.nib; path = Resources/NewMessagePrompt.nib; sourceTree = "<group>"; };
 		34E0EA0B07CC53FE00A82198 /* AINewMessagePanelPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AINewMessagePanelPlugin.m; path = Source/AINewMessagePanelPlugin.m; sourceTree = "<group>"; };
 		34E0EA0C07CC53FE00A82198 /* AINewMessagePromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AINewMessagePromptController.m; path = Source/AINewMessagePromptController.m; sourceTree = "<group>"; };
@@ -2565,6 +2596,7 @@
 		34F1022D0734499700890D3B /* NSString_UUID.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NSString_UUID.h; path = "Plugins/URL Handling/NSString_UUID.h"; sourceTree = "<group>"; };
 		34F10239073449D500890D3B /* XtrasInstaller.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = XtrasInstaller.m; path = "Plugins/URL Handling/XtrasInstaller.m"; sourceTree = "<group>"; };
 		34F1023A073449D500890D3B /* XtrasInstaller.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = XtrasInstaller.h; path = "Plugins/URL Handling/XtrasInstaller.h"; sourceTree = "<group>"; };
+		34F1529405E9FDDB00B32FD7 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
 		34F2BD24059CF8070005B238 /* c++filt */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "c++filt"; sourceTree = "<group>"; };
 		34F2E80F07C2CD5E007EAAAB /* AIHTMLDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIHTMLDecoder.m; path = "Frameworks/Adium Framework/AIHTMLDecoder.m"; sourceTree = "<group>"; };
 		34F2E81007C2CD5E007EAAAB /* AIHTMLDecoder.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIHTMLDecoder.h; path = "Frameworks/Adium Framework/AIHTMLDecoder.h"; sourceTree = "<group>"; };
@@ -2599,6 +2631,7 @@
 		34F468EB080FA987007800AB /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Plugins/Gaim Service/German.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
 		34F468EC080FA988007800AB /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Plugins/Gaim Service/German.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
 		34F468ED080FA988007800AB /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Plugins/Gaim Service/German.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
+		34F52BCB06E2AFBC00887BE2 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
 		34F52BCF06E2AFF700887BE2 /* ESGaimICQAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimICQAccountViewController.h; path = "Plugins/Gaim Service/ESGaimICQAccountViewController.h"; sourceTree = "<group>"; };
 		34F52BD006E2AFF700887BE2 /* ESGaimICQAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimICQAccountViewController.m; path = "Plugins/Gaim Service/ESGaimICQAccountViewController.m"; sourceTree = "<group>"; };
 		34F52BD806E2B24100887BE2 /* ESGaimICQAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimICQAccount.h; path = "Plugins/Gaim Service/ESGaimICQAccount.h"; sourceTree = "<group>"; };
@@ -2724,6 +2757,7 @@
 		4B54D10605028BC400A8010A /* LoggingDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist; name = LoggingDefaults.plist; path = Plugins/Logger/LoggingDefaults.plist; sourceTree = "<group>"; };
 		4B5827E80613CE9D0004BD25 /* AIMessageEntryTextView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageEntryTextView.h; path = "Frameworks/Adium Framework/AIMessageEntryTextView.h"; sourceTree = "<group>"; };
 		4B5827E90613CE9D0004BD25 /* AIMessageEntryTextView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageEntryTextView.m; path = "Frameworks/Adium Framework/AIMessageEntryTextView.m"; sourceTree = "<group>"; };
+		4B588C9807AC23A9001832A9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Frameworks/Adium Framework/English.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		4B588C9B07AC23B2001832A9 /* AIEditStateWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEditStateWindowController.h; path = "Frameworks/Adium Framework/AIEditStateWindowController.h"; sourceTree = "<group>"; };
 		4B588C9C07AC23B2001832A9 /* AIEditStateWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEditStateWindowController.m; path = "Frameworks/Adium Framework/AIEditStateWindowController.m"; sourceTree = "<group>"; };
 		4B68D3880463330600A8010A /* DockBehaviorDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = DockBehaviorDefaults.plist; path = "Plugins/Global Events Preferences/DockBehaviorDefaults.plist"; sourceTree = "<group>"; };
@@ -2737,6 +2771,7 @@
 		4B76474C07A07B900021CCD7 /* GaimDefaultsSametime.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsSametime.plist; path = "Plugins/Gaim Service/GaimDefaultsSametime.plist"; sourceTree = "<group>"; };
 		4B76476007A07BC90021CCD7 /* GaimDefaultsGroupWise.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsGroupWise.plist; path = "Plugins/Gaim Service/GaimDefaultsGroupWise.plist"; sourceTree = "<group>"; };
 		4B76478507A07C440021CCD7 /* GaimDefaultsYahoo! Japan.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "GaimDefaultsYahoo! Japan.plist"; path = "Plugins/Gaim Service/GaimDefaultsYahoo! Japan.plist"; sourceTree = "<group>"; };
+		4B7A565A07A1742900BDC540 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimNovellAccountView.nib"; sourceTree = "<group>"; };
 		4B7A567707A1754400BDC540 /* AIEditAccountWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEditAccountWindowController.h; path = Source/AIEditAccountWindowController.h; sourceTree = "<group>"; };
 		4B7A567807A1754400BDC540 /* AIEditAccountWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEditAccountWindowController.m; path = Source/AIEditAccountWindowController.m; sourceTree = "<group>"; };
 		4B7F278305440C0800CDFC90 /* Gaim.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Gaim.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2746,6 +2781,7 @@
 		4B7F78B50597F42400162728 /* Adium Crash Reporter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium Crash Reporter.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B7F78BD0597F44D00162728 /* AICrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICrashReporter.h; path = "Adium Crash Reporter/AICrashReporter.h"; sourceTree = "<group>"; };
 		4B7F78BE0597F44D00162728 /* AICrashReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICrashReporter.m; path = "Adium Crash Reporter/AICrashReporter.m"; sourceTree = "<group>"; };
+		4B7F78C10597F5B700162728 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Adium Crash Reporter/English.lproj/MainMenu.nib"; sourceTree = "<group>"; };
 		4B7F78C30597F6F500162728 /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "Adium Crash Reporter/main.m"; sourceTree = "<group>"; };
 		4B82138E049CA6CC00A8010A /* AIChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIChat.h; path = "Frameworks/Adium Framework/AIChat.h"; sourceTree = "<group>"; };
 		4B82138F049CA6CC00A8010A /* AIChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIChat.m; path = "Frameworks/Adium Framework/AIChat.m"; sourceTree = "<group>"; };
@@ -2815,6 +2851,7 @@
 		4BAE6D3B07CFA0BC007E2820 /* AIAppearancePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAppearancePreferences.m; path = Source/AIAppearancePreferences.m; sourceTree = "<group>"; };
 		4BAE6D4007CFA0CB007E2820 /* AIAppearancePreferencesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAppearancePreferencesPlugin.h; path = Source/AIAppearancePreferencesPlugin.h; sourceTree = "<group>"; };
 		4BAE6D4107CFA0CB007E2820 /* AIAppearancePreferencesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAppearancePreferencesPlugin.m; path = Source/AIAppearancePreferencesPlugin.m; sourceTree = "<group>"; };
+		4BAE6D5D07CFA1D7007E2820 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
 		4BAF8CFC083D9A2A0067CF6F /* AIServiceMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIServiceMenu.h; path = Source/AIServiceMenu.h; sourceTree = "<group>"; };
 		4BAF8CFD083D9A2A0067CF6F /* AIServiceMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIServiceMenu.m; path = Source/AIServiceMenu.m; sourceTree = "<group>"; };
 		4BAFD57706E0091100FF7FBC /* AIService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIService.h; path = "Frameworks/Adium Framework/AIService.h"; sourceTree = "<group>"; };
@@ -2856,6 +2893,7 @@
 		4BC5A5D80764F75B0080ECF7 /* AIVideoChatInterfacePlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIVideoChatInterfacePlugin.h; path = "Plugins/Video Chat Interface/AIVideoChatInterfacePlugin.h"; sourceTree = "<group>"; };
 		4BC5A5D90764F75B0080ECF7 /* AIVideoChatInterfacePlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIVideoChatInterfacePlugin.m; path = "Plugins/Video Chat Interface/AIVideoChatInterfacePlugin.m"; sourceTree = "<group>"; };
 		4BC5A5DA0764F75B0080ECF7 /* LocalVideoWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LocalVideoWindow.nib; path = "Plugins/Video Chat Interface/LocalVideoWindow.nib"; sourceTree = "<group>"; };
+		4BCAB5EF07B59967006641B9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/AccountProxy.nib; sourceTree = "<group>"; };
 		4BCAB5F007B59967006641B9 /* EditAccountSheet.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EditAccountSheet.nib; path = Resources/EditAccountSheet.nib; sourceTree = "<group>"; };
 		4BCAC4CE07B59AFE006641B9 /* AddressBookPrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AddressBookPrefs.nib; path = Resources/AddressBookPrefs.nib; sourceTree = "<group>"; };
 		4BCAC4D807B59B2E006641B9 /* AddressBook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddressBook.png; path = Resources/AddressBook.png; sourceTree = "<group>"; };
@@ -2939,13 +2977,16 @@
 		6E4D960A06B7397A005235E9 /* JoinChatWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JoinChatWindow.nib; path = "Frameworks/Adium Framework/JoinChatWindow.nib"; sourceTree = "<group>"; };
 		6E4D961106B739AC005235E9 /* DCJoinChatPanelPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCJoinChatPanelPlugin.h; path = "Plugins/Join Chat Panel/DCJoinChatPanelPlugin.h"; sourceTree = "<group>"; };
 		6E4D961206B739AC005235E9 /* DCJoinChatPanelPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCJoinChatPanelPlugin.m; path = "Plugins/Join Chat Panel/DCJoinChatPanelPlugin.m"; sourceTree = "<group>"; };
+		6E4D961506B73A96005235E9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
 		6E4D961606B73A96005235E9 /* DCGaimOscarJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCGaimOscarJoinChatViewController.h; path = "Plugins/Gaim Service/DCGaimOscarJoinChatViewController.h"; sourceTree = "<group>"; };
 		6E4D961706B73A96005235E9 /* DCGaimOscarJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCGaimOscarJoinChatViewController.m; path = "Plugins/Gaim Service/DCGaimOscarJoinChatViewController.m"; sourceTree = "<group>"; };
 		6E4D961B06B73B38005235E9 /* DCGaimGaduGaduJoinChatView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DCGaimGaduGaduJoinChatView.nib; path = "Plugins/Gaim Service/DCGaimGaduGaduJoinChatView.nib"; sourceTree = "<group>"; };
 		6E4D961C06B73B38005235E9 /* DCGaimGaduGaduJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCGaimGaduGaduJoinChatViewController.h; path = "Plugins/Gaim Service/DCGaimGaduGaduJoinChatViewController.h"; sourceTree = "<group>"; };
 		6E4D961D06B73B38005235E9 /* DCGaimGaduGaduJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCGaimGaduGaduJoinChatViewController.m; path = "Plugins/Gaim Service/DCGaimGaduGaduJoinChatViewController.m"; sourceTree = "<group>"; };
+		6E4D962106B73BDF005235E9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/DCGaimJabberJoinChatView.nib"; sourceTree = "<group>"; };
 		6E4D962206B73BE0005235E9 /* DCGaimJabberJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCGaimJabberJoinChatViewController.h; path = "Plugins/Gaim Service/DCGaimJabberJoinChatViewController.h"; sourceTree = "<group>"; };
 		6E4D962306B73BE0005235E9 /* DCGaimJabberJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCGaimJabberJoinChatViewController.m; path = "Plugins/Gaim Service/DCGaimJabberJoinChatViewController.m"; sourceTree = "<group>"; };
+		6E4D962706B73C18005235E9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/DCGaimMeanwhileJoinChatView.nib"; sourceTree = "<group>"; };
 		6E4D962806B73C18005235E9 /* DCGaimMeanwhileJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCGaimMeanwhileJoinChatViewController.h; path = "Plugins/Gaim Service/DCGaimMeanwhileJoinChatViewController.h"; sourceTree = "<group>"; };
 		6E4D962906B73C18005235E9 /* DCGaimMeanwhileJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCGaimMeanwhileJoinChatViewController.m; path = "Plugins/Gaim Service/DCGaimMeanwhileJoinChatViewController.m"; sourceTree = "<group>"; };
 		6E4D962D06B73C4D005235E9 /* DCGaimMSNJoinChatView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DCGaimMSNJoinChatView.nib; path = "Plugins/Gaim Service/DCGaimMSNJoinChatView.nib"; sourceTree = "<group>"; };
@@ -2958,6 +2999,7 @@
 		6EA3688206B73E7D009CA81A /* DCGaimNovellJoinChatView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DCGaimNovellJoinChatView.nib; path = "Plugins/Gaim Service/DCGaimNovellJoinChatView.nib"; sourceTree = "<group>"; };
 		6EA3688306B73E7D009CA81A /* DCGaimNovellJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCGaimNovellJoinChatViewController.h; path = "Plugins/Gaim Service/DCGaimNovellJoinChatViewController.h"; sourceTree = "<group>"; };
 		6EA3688406B73E7D009CA81A /* DCGaimNovellJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCGaimNovellJoinChatViewController.m; path = "Plugins/Gaim Service/DCGaimNovellJoinChatViewController.m"; sourceTree = "<group>"; };
+		6EA3688E06B73F67009CA81A /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/DCGaimYahooJoinChatView.nib"; sourceTree = "<group>"; };
 		6EA3688F06B73F67009CA81A /* DCGaimYahooJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCGaimYahooJoinChatViewController.h; path = "Plugins/Gaim Service/DCGaimYahooJoinChatViewController.h"; sourceTree = "<group>"; };
 		6EA3689006B73F67009CA81A /* DCGaimYahooJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCGaimYahooJoinChatViewController.m; path = "Plugins/Gaim Service/DCGaimYahooJoinChatViewController.m"; sourceTree = "<group>"; };
 		6EA3689406B73FE5009CA81A /* DCStressTestJoinChatView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DCStressTestJoinChatView.nib; path = "Plugins/Stress Test/DCStressTestJoinChatView.nib"; sourceTree = "<group>"; };
@@ -7166,9 +7208,8 @@
 				Swedish,
 				Catalan,
 				Russian,
-				en,
-				en_CA,
 				pl,
+				en_CA,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CocAIMe2 */;
 			projectDirPath = "";
@@ -7678,7 +7719,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "find \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' ';'\n";
+			shellScript = "find \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' ';'\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name 'en.lproj' ')' -prune -exec rm -rf '{}' ';'\nfind -d \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -type d -name 'English.lproj' -exec mv \"{}\" \"{}/../en.lproj\" \\;\n";
 		};
 		DACF3ED2085574D0006BFB18 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8307,12 +8348,12 @@
 		071C56310827933000399C0F /* Shared Dock Icon Images */ = {
 			isa = PBXVariantGroup;
 			children = (
+				071C56320827933000399C0F /* English */,
 				071C563E0827936500399C0F /* French */,
 				071C56420827937400399C0F /* German */,
 				34C898C2089297B00046AD38 /* Japanese */,
 				347AC44608AAA7C70043FB94 /* Catalan */,
 				34A30EA208D8EE7B00697644 /* Spanish */,
-				3497FBAA093C1A620035E148 /* en */,
 			);
 			name = "Shared Dock Icon Images";
 			sourceTree = "<group>";
@@ -8320,6 +8361,7 @@
 		3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				3402E01807CB0CE40044F818 /* English */,
 				34FD5BB007F1F85B00687C70 /* Italian */,
 				34FD5BBA07F1F87400687C70 /* French */,
 				341DE02F07FE104700EB7B06 /* German */,
@@ -8334,7 +8376,7 @@
 				342CE162085A08C500005C63 /* Catalan */,
 				34058097087EEFA100664D64 /* Russian */,
 				34A30E7F08D8EE7900697644 /* Spanish */,
-				3497FBC1093C1A650035E148 /* en */,
+				34A81DCB093CE92300B0E93D /* pl */,
 			);
 			name = ESFileTransferProgressView.nib;
 			sourceTree = "<group>";
@@ -8342,6 +8384,7 @@
 		3402E02307CB0D1B0044F818 /* ProxyPasswordPrompt.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				3402E01F07CB0D150044F818 /* English */,
 				34A6E9BA07D6365A00972830 /* French */,
 				34FD5BE407F1F91400687C70 /* Italian */,
 				341DE03707FE107300EB7B06 /* Japanese */,
@@ -8356,7 +8399,7 @@
 				342CE175085A08C800005C63 /* Catalan */,
 				340580AA087EEFA200664D64 /* Russian */,
 				34A30EA108D8EE7B00697644 /* Spanish */,
-				3497FBAB093C1A620035E148 /* en */,
+				34A81DB5093CE92200B0E93D /* pl */,
 			);
 			name = ProxyPasswordPrompt.nib;
 			sourceTree = "<group>";
@@ -8364,6 +8407,7 @@
 		3402E02507CB0D1B0044F818 /* PasswordPrompt.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				3402E02007CB0D150044F818 /* English */,
 				34A6E9B807D6365000972830 /* French */,
 				34FD5BE307F1F90400687C70 /* Italian */,
 				341DE03507FE106400EB7B06 /* Japanese */,
@@ -8378,7 +8422,7 @@
 				342CE174085A08C700005C63 /* Catalan */,
 				340580A9087EEFA200664D64 /* Russian */,
 				34A30EA008D8EE7B00697644 /* Spanish */,
-				3497FBAC093C1A630035E148 /* en */,
+				34A81DB6093CE92200B0E93D /* pl */,
 			);
 			name = PasswordPrompt.nib;
 			sourceTree = "<group>";
@@ -8386,6 +8430,7 @@
 		3402E04107CB0E4D0044F818 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
+				3402E03F07CB0E400044F818 /* English */,
 				34A6E9AB07D635B100972830 /* French */,
 				34BFDDB607E7A43D00AD984D /* Japanese */,
 				34FD5BEB07F1F92900687C70 /* Italian */,
@@ -8401,7 +8446,8 @@
 				342CE171085A08C700005C63 /* Catalan */,
 				340580A4087EEFA200664D64 /* Russian */,
 				34A30E9C08D8EE7B00697644 /* Spanish */,
-				3497FBB2093C1A630035E148 /* en */,
+				34A81DBB093CE92200B0E93D /* pl */,
+				34A81DF5093CE98F00B0E93D /* en_CA */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -8409,6 +8455,7 @@
 		3402E04D07CB0EB00044F818 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
+				3402E04B07CB0EA70044F818 /* English */,
 				3498FE9107F488EF0004B79A /* Italian */,
 				3498FE9707F488FD0004B79A /* Dutch */,
 				3498FE9807F489020004B79A /* French */,
@@ -8424,7 +8471,7 @@
 				342CE170085A08C700005C63 /* Catalan */,
 				340580A6087EEFA200664D64 /* Russian */,
 				34A30E9B08D8EE7B00697644 /* Spanish */,
-				3497FBB1093C1A630035E148 /* en */,
+				34A81DBD093CE92200B0E93D /* pl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -8432,6 +8479,7 @@
 		3402E07507CB0FAA0044F818 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
+				3402E06C07CB0F9D0044F818 /* English */,
 				343C45E80816C13D00FF5FA7 /* Dutch */,
 				343C47790816FBE500FF5FA7 /* German */,
 				345F5BAD081AC4F2001F733C /* zh_TW */,
@@ -8447,7 +8495,7 @@
 				342CE16F085A08C700005C63 /* Catalan */,
 				340580A5087EEFA200664D64 /* Russian */,
 				34A30E9D08D8EE7B00697644 /* Spanish */,
-				3497FBB0093C1A630035E148 /* en */,
+				34A81DBC093CE92200B0E93D /* pl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -8455,6 +8503,7 @@
 		34057FAC087EEBE500664D64 /* OTRPrefs.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				3411E2470832EB75003C8270 /* English */,
 				34C898D8089297D30046AD38 /* zh_TW */,
 				34C898E8089297E30046AD38 /* zh_CN */,
 				34C898F8089297F00046AD38 /* is */,
@@ -8465,7 +8514,7 @@
 				34C8995C0892983E0046AD38 /* German */,
 				34C8996E089298470046AD38 /* French */,
 				34A30E9F08D8EE7B00697644 /* Spanish */,
-				3497FBAD093C1A630035E148 /* en */,
+				34A81DB7093CE92200B0E93D /* pl */,
 			);
 			name = OTRPrefs.nib;
 			sourceTree = "<group>";
@@ -8473,6 +8522,7 @@
 		34167FEC081D706200E35678 /* DualWindowMessageAdvanced.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				34167FE5081D700B00E35678 /* English */,
 				3458B882081FF7CA0005BCF6 /* zh_TW */,
 				3458B9960820DAE10005BCF6 /* French */,
 				3458BA99082178430005BCF6 /* Danish */,
@@ -8487,7 +8537,7 @@
 				342CE160085A08C500005C63 /* Catalan */,
 				34058095087EEFA100664D64 /* Russian */,
 				34A30E7D08D8EE7900697644 /* Spanish */,
-				3497FBC3093C1A660035E148 /* en */,
+				34A81DCD093CE92300B0E93D /* pl */,
 			);
 			name = DualWindowMessageAdvanced.nib;
 			sourceTree = "<group>";
@@ -8495,9 +8545,10 @@
 		342113CD08261FB900A3B0FB /* MainMenu.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				4B7F78C10597F5B700162728 /* English */,
 				342113DD08261FC100A3B0FB /* French */,
 				346522D608371999009565FE /* cs */,
-				3497FBAF093C1A630035E148 /* en */,
+				34A81DB9093CE92200B0E93D /* pl */,
 			);
 			name = MainMenu.nib;
 			sourceTree = "<group>";
@@ -8505,6 +8556,7 @@
 		342114B40826D37100A3B0FB /* EditStateSheet.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				4B588C9807AC23A9001832A9 /* English */,
 				342114C40826D37B00A3B0FB /* Italian */,
 				342114D30826D38500A3B0FB /* German */,
 				342114E20826D38E00A3B0FB /* zh_TW */,
@@ -8520,7 +8572,7 @@
 				342CE161085A08C500005C63 /* Catalan */,
 				34058096087EEFA100664D64 /* Russian */,
 				34A30E7E08D8EE7900697644 /* Spanish */,
-				3497FBC2093C1A660035E148 /* en */,
+				34A81DCC093CE92300B0E93D /* pl */,
 			);
 			name = EditStateSheet.nib;
 			sourceTree = "<group>";
@@ -8528,6 +8580,7 @@
 		343EB3FD08086D2F00E27095 /* AccountProxy.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				4BCAB5EF07B59967006641B9 /* English */,
 				345F586308198E7F001F733C /* Dutch */,
 				345F586408198E87001F733C /* German */,
 				345F5B97081AC4F1001F733C /* zh_TW */,
@@ -8543,7 +8596,7 @@
 				342CE159085A08C400005C63 /* Catalan */,
 				3405808E087EEFA000664D64 /* Russian */,
 				34A30E7508D8EE7800697644 /* Spanish */,
-				3497FBCB093C1A670035E148 /* en */,
+				34A81DD5093CE92400B0E93D /* pl */,
 			);
 			name = AccountProxy.nib;
 			sourceTree = "<group>";
@@ -8551,6 +8604,7 @@
 		343EB3FF08086D9000E27095 /* ESGaimNovellAccountView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				4B7A565A07A1742900BDC540 /* English */,
 				34F468E9080FA987007800AB /* German */,
 				343C460C0816CCAE00FF5FA7 /* Italian */,
 				345F5BA4081AC4F1001F733C /* zh_TW */,
@@ -8566,7 +8620,7 @@
 				342CE168085A08C600005C63 /* Catalan */,
 				3405809D087EEFA100664D64 /* Russian */,
 				34A30E8508D8EE7900697644 /* Spanish */,
-				3497FBBB093C1A650035E148 /* en */,
+				34A81DC5093CE92300B0E93D /* pl */,
 			);
 			name = ESGaimNovellAccountView.nib;
 			sourceTree = "<group>";
@@ -8574,6 +8628,7 @@
 		343EB40108086D9000E27095 /* AppearancePrefs.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				4BAE6D5D07CFA1D7007E2820 /* English */,
 				345F589B08198F15001F733C /* German */,
 				345F5B98081AC4F1001F733C /* zh_TW */,
 				3458B503081DD44B0005BCF6 /* Japanese */,
@@ -8588,7 +8643,8 @@
 				342CE15A085A08C500005C63 /* Catalan */,
 				3405808F087EEFA000664D64 /* Russian */,
 				34A30E7708D8EE7800697644 /* Spanish */,
-				3497FBC9093C1A670035E148 /* en */,
+				34A81DD3093CE92300B0E93D /* pl */,
+				34A81DDE093CE94300B0E93D /* en_CA */,
 			);
 			name = AppearancePrefs.nib;
 			sourceTree = "<group>";
@@ -8596,6 +8652,7 @@
 		343EB40308086D9000E27095 /* ESGaimGaduGaduAccountView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				349448C207BB29B2000F2A03 /* English */,
 				34F468E3080FA987007800AB /* German */,
 				343C46180816CCEC00FF5FA7 /* Italian */,
 				345F5B9F081AC4F1001F733C /* zh_TW */,
@@ -8611,7 +8668,7 @@
 				342CE163085A08C600005C63 /* Catalan */,
 				34058098087EEFA100664D64 /* Russian */,
 				34A30E8008D8EE7900697644 /* Spanish */,
-				3497FBC0093C1A650035E148 /* en */,
+				34A81DCA093CE92300B0E93D /* pl */,
 			);
 			name = ESGaimGaduGaduAccountView.nib;
 			sourceTree = "<group>";
@@ -8619,6 +8676,7 @@
 		343EB40508086D9000E27095 /* ESGaimMSNAccountView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				34F1529405E9FDDB00B32FD7 /* English */,
 				34F468E8080FA987007800AB /* German */,
 				343C460D0816CCB600FF5FA7 /* Italian */,
 				345F5BA3081AC4F1001F733C /* zh_TW */,
@@ -8634,7 +8692,7 @@
 				342CE167085A08C600005C63 /* Catalan */,
 				3405809C087EEFA100664D64 /* Russian */,
 				34A30E8408D8EE7900697644 /* Spanish */,
-				3497FBBC093C1A650035E148 /* en */,
+				34A81DC6093CE92300B0E93D /* pl */,
 			);
 			name = ESGaimMSNAccountView.nib;
 			sourceTree = "<group>";
@@ -8642,6 +8700,7 @@
 		343EB40908086D9100E27095 /* DCGaimZephyrJoinChatView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				342E2B1A072976060054D77A /* English */,
 				34F468EC080FA988007800AB /* German */,
 				343C46070816CC8000FF5FA7 /* Italian */,
 				345F5B9D081AC4F1001F733C /* zh_TW */,
@@ -8657,7 +8716,7 @@
 				342CE15F085A08C500005C63 /* Catalan */,
 				34058094087EEFA100664D64 /* Russian */,
 				34A30E7C08D8EE7900697644 /* Spanish */,
-				3497FBC4093C1A660035E148 /* en */,
+				34A81DCE093CE92300B0E93D /* pl */,
 			);
 			name = DCGaimZephyrJoinChatView.nib;
 			sourceTree = "<group>";
@@ -8665,6 +8724,7 @@
 		343EB40C08086D9100E27095 /* DCGaimOscarJoinChatView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				6E4D961506B73A96005235E9 /* English */,
 				34F468E0080FA987007800AB /* German */,
 				343C461F0816CD0400FF5FA7 /* Italian */,
 				345F5B9B081AC4F1001F733C /* zh_TW */,
@@ -8680,7 +8740,7 @@
 				342CE15D085A08C500005C63 /* Catalan */,
 				34058092087EEFA100664D64 /* Russian */,
 				34A30E7A08D8EE7800697644 /* Spanish */,
-				3497FBC6093C1A660035E148 /* en */,
+				34A81DD0093CE92300B0E93D /* pl */,
 			);
 			name = DCGaimOscarJoinChatView.nib;
 			sourceTree = "<group>";
@@ -8688,6 +8748,7 @@
 		343EB40E08086D9100E27095 /* DCGaimYahooJoinChatView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				6EA3688E06B73F67009CA81A /* English */,
 				34F468EA080FA987007800AB /* German */,
 				343C460B0816CC9F00FF5FA7 /* Italian */,
 				345F5B9C081AC4F1001F733C /* zh_TW */,
@@ -8703,7 +8764,7 @@
 				342CE15E085A08C500005C63 /* Catalan */,
 				34058093087EEFA100664D64 /* Russian */,
 				34A30E7B08D8EE7900697644 /* Spanish */,
-				3497FBC5093C1A660035E148 /* en */,
+				34A81DCF093CE92300B0E93D /* pl */,
 			);
 			name = DCGaimYahooJoinChatView.nib;
 			sourceTree = "<group>";
@@ -8711,6 +8772,7 @@
 		343EB41208086D9100E27095 /* ESGaimZephyrAccountView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				348D8D2306CC07BC00449EBB /* English */,
 				34F468ED080FA988007800AB /* German */,
 				343C46040816CC6800FF5FA7 /* Italian */,
 				345F5BA7081AC4F2001F733C /* zh_TW */,
@@ -8726,7 +8788,7 @@
 				342CE16B085A08C600005C63 /* Catalan */,
 				340580A0087EEFA200664D64 /* Russian */,
 				34A30E8E08D8EE7A00697644 /* Spanish */,
-				3497FBB8093C1A640035E148 /* en */,
+				34A81DC2093CE92300B0E93D /* pl */,
 			);
 			name = ESGaimZephyrAccountView.nib;
 			sourceTree = "<group>";
@@ -8734,6 +8796,7 @@
 		343EB41408086D9100E27095 /* DCGaimMeanwhileJoinChatView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				6E4D962706B73C18005235E9 /* English */,
 				34F468E6080FA987007800AB /* German */,
 				343C46130816CCD100FF5FA7 /* Italian */,
 				345F5B9A081AC4F1001F733C /* zh_TW */,
@@ -8749,7 +8812,7 @@
 				342CE15C085A08C500005C63 /* Catalan */,
 				34058091087EEFA100664D64 /* Russian */,
 				34A30E7908D8EE7800697644 /* Spanish */,
-				3497FBC7093C1A660035E148 /* en */,
+				34A81DD1093CE92300B0E93D /* pl */,
 			);
 			name = DCGaimMeanwhileJoinChatView.nib;
 			sourceTree = "<group>";
@@ -8757,6 +8820,7 @@
 		343EB41608086D9100E27095 /* StatusSortConfiguration.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				347E791F07CAA52300350507 /* English */,
 				345F589C08198F15001F733C /* German */,
 				345F5BB3081AC4F3001F733C /* zh_TW */,
 				3458B502081DD44B0005BCF6 /* Japanese */,
@@ -8771,7 +8835,7 @@
 				342CE177085A08C800005C63 /* Catalan */,
 				340580AC087EEFA200664D64 /* Russian */,
 				34A30EA408D8EE7B00697644 /* Spanish */,
-				3497FBA8093C1A620035E148 /* en */,
+				34A81DB3093CE92200B0E93D /* pl */,
 			);
 			name = StatusSortConfiguration.nib;
 			sourceTree = "<group>";
@@ -8779,6 +8843,7 @@
 		343EB41808086D9100E27095 /* DCGaimJabberJoinChatView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				6E4D962106B73BDF005235E9 /* English */,
 				34F468E4080FA987007800AB /* German */,
 				343C46170816CCE300FF5FA7 /* Italian */,
 				345F5B99081AC4F1001F733C /* zh_TW */,
@@ -8794,7 +8859,7 @@
 				342CE15B085A08C500005C63 /* Catalan */,
 				34058090087EEFA100664D64 /* Russian */,
 				34A30E7808D8EE7800697644 /* Spanish */,
-				3497FBC8093C1A670035E148 /* en */,
+				34A81DD2093CE92300B0E93D /* pl */,
 			);
 			name = DCGaimJabberJoinChatView.nib;
 			sourceTree = "<group>";
@@ -8802,6 +8867,7 @@
 		343EB41A08086D9100E27095 /* ESGaimICQAccountView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				34F52BCB06E2AFBC00887BE2 /* English */,
 				34F468E2080FA987007800AB /* German */,
 				343C461B0816CCF300FF5FA7 /* Italian */,
 				345F5BA0081AC4F1001F733C /* zh_TW */,
@@ -8817,7 +8883,7 @@
 				342CE164085A08C600005C63 /* Catalan */,
 				34058099087EEFA100664D64 /* Russian */,
 				34A30E8108D8EE7900697644 /* Spanish */,
-				3497FBBF093C1A650035E148 /* en */,
+				34A81DC9093CE92300B0E93D /* pl */,
 			);
 			name = ESGaimICQAccountView.nib;
 			sourceTree = "<group>";
@@ -8825,6 +8891,7 @@
 		343EB41C08086D9100E27095 /* ESGaimOscarAccountView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				34B9197F062DEC99004F1223 /* English */,
 				34F468E1080FA987007800AB /* German */,
 				343C461E0816CCFD00FF5FA7 /* Italian */,
 				345F5BA5081AC4F2001F733C /* zh_TW */,
@@ -8840,7 +8907,7 @@
 				342CE169085A08C600005C63 /* Catalan */,
 				3405809E087EEFA100664D64 /* Russian */,
 				34A30E8608D8EE7900697644 /* Spanish */,
-				3497FBBA093C1A650035E148 /* en */,
+				34A81DC4093CE92300B0E93D /* pl */,
 			);
 			name = ESGaimOscarAccountView.nib;
 			sourceTree = "<group>";
@@ -8848,6 +8915,7 @@
 		343EB41E08086D9100E27095 /* ESGaimMeanwhileAccountView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				343A7F2606935DB600150CEC /* English */,
 				34F468E7080FA987007800AB /* German */,
 				343C46120816CCC700FF5FA7 /* Italian */,
 				345F5BA2081AC4F1001F733C /* zh_TW */,
@@ -8863,7 +8931,7 @@
 				342CE166085A08C600005C63 /* Catalan */,
 				3405809B087EEFA100664D64 /* Russian */,
 				34A30E8308D8EE7900697644 /* Spanish */,
-				3497FBBD093C1A650035E148 /* en */,
+				34A81DC7093CE92300B0E93D /* pl */,
 			);
 			name = ESGaimMeanwhileAccountView.nib;
 			sourceTree = "<group>";
@@ -8871,6 +8939,7 @@
 		343EB42008086D9200E27095 /* ESGaimYahooAccountView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				348A901A062A13AB00FC6E03 /* English */,
 				34F468EB080FA987007800AB /* German */,
 				343C460A0816CC9500FF5FA7 /* Italian */,
 				345F5BA6081AC4F2001F733C /* zh_TW */,
@@ -8886,7 +8955,7 @@
 				342CE16A085A08C600005C63 /* Catalan */,
 				3405809F087EEFA200664D64 /* Russian */,
 				34A30E8708D8EE7900697644 /* Spanish */,
-				3497FBB9093C1A640035E148 /* en */,
+				34A81DC3093CE92300B0E93D /* pl */,
 			);
 			name = ESGaimYahooAccountView.nib;
 			sourceTree = "<group>";
@@ -8894,6 +8963,7 @@
 		343EB42208086D9200E27095 /* ESGaimJabberAccountView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				348A8A190629A68C00FC6E03 /* English */,
 				34F468E5080FA987007800AB /* German */,
 				343C46140816CCDA00FF5FA7 /* Italian */,
 				345F5BA1081AC4F1001F733C /* zh_TW */,
@@ -8909,7 +8979,7 @@
 				342CE165085A08C600005C63 /* Catalan */,
 				3405809A087EEFA100664D64 /* Russian */,
 				34A30E8208D8EE7900697644 /* Spanish */,
-				3497FBBE093C1A650035E148 /* en */,
+				34A81DC8093CE92300B0E93D /* pl */,
 			);
 			name = ESGaimJabberAccountView.nib;
 			sourceTree = "<group>";
@@ -8917,6 +8987,7 @@
 		343EB42B080870A200E27095 /* ListThemeSheet.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				343EB4270808709E00E27095 /* English */,
 				345F589A08198F15001F733C /* German */,
 				345F5BAA081AC4F2001F733C /* zh_TW */,
 				3458B501081DD44B0005BCF6 /* Japanese */,
@@ -8931,7 +9002,8 @@
 				342CE16E085A08C700005C63 /* Catalan */,
 				340580A3087EEFA200664D64 /* Russian */,
 				34A30E9A08D8EE7B00697644 /* Spanish */,
-				3497FBB4093C1A640035E148 /* en */,
+				34A81DBE093CE92200B0E93D /* pl */,
+				34A81DF0093CE96300B0E93D /* en_CA */,
 			);
 			name = ListThemeSheet.nib;
 			sourceTree = "<group>";
@@ -8939,6 +9011,7 @@
 		343EC6910809DD3400E27095 /* ListLayoutSheet.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				343EC68F0809DD2900E27095 /* English */,
 				345F589908198F15001F733C /* German */,
 				345F5BA9081AC4F2001F733C /* zh_TW */,
 				3458B4FF081DD44B0005BCF6 /* Japanese */,
@@ -8953,7 +9026,8 @@
 				342CE16D085A08C700005C63 /* Catalan */,
 				340580A2087EEFA200664D64 /* Russian */,
 				34A30E9908D8EE7B00697644 /* Spanish */,
-				3497FBB5093C1A640035E148 /* en */,
+				34A81DBF093CE92200B0E93D /* pl */,
+				34A81DEA093CE95B00B0E93D /* en_CA */,
 			);
 			name = ListLayoutSheet.nib;
 			sourceTree = "<group>";
@@ -8961,6 +9035,7 @@
 		3440974207DA06FE00321BB3 /* MessageContextDisplayPrefs.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				34D832BD07CBD641006466F2 /* English */,
 				3440974407DA070700321BB3 /* French */,
 				34FD5BD407F1F8B700687C70 /* Italian */,
 				341DE09A07FE111100EB7B06 /* German */,
@@ -8975,7 +9050,7 @@
 				342CE173085A08C700005C63 /* Catalan */,
 				340580A8087EEFA200664D64 /* Russian */,
 				34A30E9E08D8EE7B00697644 /* Spanish */,
-				3497FBAE093C1A630035E148 /* en */,
+				34A81DB8093CE92200B0E93D /* pl */,
 			);
 			name = MessageContextDisplayPrefs.nib;
 			sourceTree = "<group>";
@@ -8983,6 +9058,7 @@
 		346798EF08947FB800F68A98 /* AdiumFramework.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
+				346798EA08947F3900F68A98 /* English */,
 				346798F508947FD700F68A98 /* Catalan */,
 				346798F608947FE500F68A98 /* cs */,
 				346798F708947FF100F68A98 /* Danish */,
@@ -8998,7 +9074,7 @@
 				34679903089480A700F68A98 /* zh_CN */,
 				34679904089480B700F68A98 /* zh_TW */,
 				34A30E7608D8EE7800697644 /* Spanish */,
-				3497FBCA093C1A670035E148 /* en */,
+				34A81DD4093CE92400B0E93D /* pl */,
 			);
 			name = AdiumFramework.strings;
 			sourceTree = "<group>";
@@ -9006,6 +9082,7 @@
 		3474E0900825634300BF30F0 /* StatusPreferences.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				3428328C07D2644F004F01C9 /* English */,
 				34210FC0082601AE00A3B0FB /* French */,
 				34210FCF082601B900A3B0FB /* zh_TW */,
 				342110720826044E00A3B0FB /* Italian */,
@@ -9021,7 +9098,7 @@
 				342CE176085A08C800005C63 /* Catalan */,
 				340580AB087EEFA200664D64 /* Russian */,
 				34A30EA308D8EE7B00697644 /* Spanish */,
-				3497FBA9093C1A620035E148 /* en */,
+				34A81DB4093CE92200B0E93D /* pl */,
 			);
 			name = StatusPreferences.nib;
 			sourceTree = "<group>";
@@ -9029,6 +9106,7 @@
 		348EE1B3080A57480015E0FC /* WebKitPreferencesView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
+				34C2D8C00633BBA80018E5D2 /* English */,
 				343C45E20816C0FE00FF5FA7 /* Italian */,
 				343C47760816FBDA00FF5FA7 /* German */,
 				345F5BB4081AC4F3001F733C /* zh_TW */,
@@ -9044,7 +9122,8 @@
 				342CE178085A08C800005C63 /* Catalan */,
 				340580AD087EEFA300664D64 /* Russian */,
 				34A30EA508D8EE7B00697644 /* Spanish */,
-				3497FBA7093C1A620035E148 /* en */,
+				34A81DB2093CE92200B0E93D /* pl */,
+				34A81DFB093CE99F00B0E93D /* en_CA */,
 			);
 			name = WebKitPreferencesView.nib;
 			sourceTree = "<group>";
@@ -9052,8 +9131,9 @@
 		3496A8C107CE6B880055BBAB /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
+				3496A8BF07CE6B3D0055BBAB /* English */,
 				34652316083719F0009565FE /* Norwegian */,
-				3497FBB6093C1A640035E148 /* en */,
+				34A81DC0093CE92200B0E93D /* pl */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -9061,7 +9141,9 @@
 		34A6F68407D65D6200972830 /* GeneralPreferences.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3497FBB7093C1A640035E148 /* en */,
+				34A6F68207D65D5B00972830 /* English */,
+				34A81DC1093CE92300B0E93D /* pl */,
+				34A81DE5093CE95100B0E93D /* en_CA */,
 			);
 			name = GeneralPreferences.nib;
 			sourceTree = "<group>";
@@ -9069,7 +9151,8 @@
 		34E0E9B707CC4B3600A82198 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3497FBB3093C1A630035E148 /* en */,
+				34E0E9B007CC4B1800A82198 /* English */,
+				34A81DBA093CE92200B0E93D /* pl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
