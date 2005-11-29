@@ -93,18 +93,19 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		
 		//Ignore various known harmless or unavoidable exceptions (From the system or system hacks)
 		if ((!theReason) || //Harmless
-		   [safeExceptionReasons containsObject:theReason] || 
-		   [theReason rangeOfString:@"NSRunStorage, _NSBlockNumberForIndex()"].location != NSNotFound || //NSLayoutManager throws this for fun in a purely-AppKit stack trace
-		   [theReason rangeOfString:@"Broken pipe"].location != NSNotFound || //libezv throws broken pipes as NSFileHandleOperationException with this in the reason; I'd rather we watched for "broken pipe" than ignore all file handle errors
-		   [theReason rangeOfString:@"incomprehensible archive"].location != NSNotFound || //NSKeyedUnarchiver can get confused and throw this; it's out of our control
-		   [theReason rangeOfString:@"-whiteComponent not defined"].location != NSNotFound || //Random NSColor exception for certain coded color values
-		   [theReason rangeOfString:@"Failed to get fache"].location != NSNotFound || //Thrown by NSFontManager when availableFontFamilies is called if it runs into a corrupt font
-		   [theReason rangeOfString:@"NSWindow: -_newFirstResponderAfterResigining"].location != NSNotFound || //NSAssert within system code, harmless
-		   [theReason rangeOfString:@"-patternImage not defined"].location != NSNotFound || //Painters Color Picker throws an exception during the normal course of operation.  Don't you hate that?
-		   [theReason rangeOfString:@"Failed to set font"].location != NSNotFound || //Corrupt fonts
-		   [theReason rangeOfString:@"Delete invalid attribute range"].location != NSNotFound || //NSAttributedString's initWithCoder can throw this
-		   [theReason rangeOfString:@"NSMutableRLEArray objectAtIndex:effectiveRange:: Out of bounds"].location != NSNotFound || //-[NSLayoutManager textContainerForGlyphAtIndex:effectiveRange:] as of 10.4 can throw this
-		   (!theName) || //Harmless
+			[safeExceptionReasons containsObject:theReason] || 
+			[theReason rangeOfString:@"NSRunStorage, _NSBlockNumberForIndex()"].location != NSNotFound || //NSLayoutManager throws this for fun in a purely-AppKit stack trace
+			[theReason rangeOfString:@"Broken pipe"].location != NSNotFound || //libezv throws broken pipes as NSFileHandleOperationException with this in the reason; I'd rather we watched for "broken pipe" than ignore all file handle errors
+			[theReason rangeOfString:@"incomprehensible archive"].location != NSNotFound || //NSKeyedUnarchiver can get confused and throw this; it's out of our control
+			[theReason rangeOfString:@"-whiteComponent not defined"].location != NSNotFound || //Random NSColor exception for certain coded color values
+			[theReason rangeOfString:@"Failed to get fache"].location != NSNotFound || //Thrown by NSFontManager when availableFontFamilies is called if it runs into a corrupt font
+			[theReason rangeOfString:@"NSWindow: -_newFirstResponderAfterResigining"].location != NSNotFound || //NSAssert within system code, harmless
+			[theReason rangeOfString:@"-patternImage not defined"].location != NSNotFound || //Painters Color Picker throws an exception during the normal course of operation.  Don't you hate that?
+			[theReason rangeOfString:@"Failed to set font"].location != NSNotFound || //Corrupt fonts
+			[theReason rangeOfString:@"Delete invalid attribute range"].location != NSNotFound || //NSAttributedString's initWithCoder can throw this
+			[theReason rangeOfString:@"NSMutableRLEArray objectAtIndex:effectiveRange:: Out of bounds"].location != NSNotFound || //-[NSLayoutManager textContainerForGlyphAtIndex:effectiveRange:] as of 10.4 can throw this
+			[theReason rangeOfString:@"TSMProcessRawKeyCode failed"].location != NSNotFound || //May be raised by -[NSEvent charactersIgnoringModifiers]
+			(!theName) || //Harmless
 		   [safeExceptionNames containsObject:theName])
 		{
 			shouldLaunchCrashReporter = NO;
