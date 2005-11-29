@@ -22,14 +22,14 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AILocalizationTextField.h>
 
-#define ADDRESS_BOOK_FIRST_OPTION					AILocalizedString(@"First","Name display style, e.g. Evan")
-#define ADDRESS_BOOK_FIRST_LAST_OPTION				AILocalizedString(@"First Last","Name display style, e.g. Evan Schoenberg")
-#define ADDRESS_BOOK_LAST_FIRST_OPTION				AILocalizedString(@"Last, First","Name display style, e.g. Schoenberg, Evan")
-#define ADDRESS_BOOK_LAST_FIRST_NO_COMMA_OPTION		AILocalizedString(@"Last First", "Name display style, e.g. Schoenberg Evan")
-#define ADDRESS_BOOK_FIRST_MIDDLE_OPTION			AILocalizedString(@"First Middle", "Name display style, e.g. Evan Dreskin")
-#define ADDRESS_BOOK_FIRST_MIDDLE_LAST_OPTION		AILocalizedString(@"First Middle Last", "Name display style, e.g. Evan Dreskin Schoenberg")
-#define ADDRESS_BOOK_LAST_FIRST_MIDDLE_OPTION		AILocalizedString(@"Last, First Middle", "Name display style, e.g. Schoenberg, Evan Dreskin")
-#define ADDRESS_BOOK_LAST_FIRST_MIDDLE_NO_COMMA_OPTION	AILocalizedString(@"Last First Middle", "Name display style, e.g. Schoenberg Evan Dreskin")
+#define ADDRESS_BOOK_FIRST_OPTION					AILocalizedString(@"First","Address Book Name display style, e.g. Evan")
+#define ADDRESS_BOOK_FIRST_LAST_OPTION				AILocalizedString(@"First Last","Address Book Name display style, e.g. Evan Schoenberg")
+#define ADDRESS_BOOK_LAST_FIRST_OPTION				AILocalizedString(@"Last, First","Address Book Name display style, e.g. Schoenberg, Evan")
+#define ADDRESS_BOOK_LAST_FIRST_NO_COMMA_OPTION		AILocalizedString(@"Last First", "Address Book Name display style, e.g. Schoenberg Evan")
+#define ADDRESS_BOOK_FIRST_MIDDLE_OPTION			AILocalizedString(@"First Middle", "Address Book Name display style, e.g. Evan Dreskin")
+#define ADDRESS_BOOK_FIRST_MIDDLE_LAST_OPTION		AILocalizedString(@"First Middle Last", "Address Book Name display style, e.g. Evan Dreskin Schoenberg")
+#define ADDRESS_BOOK_LAST_FIRST_MIDDLE_OPTION		AILocalizedString(@"Last, First Middle", "Address Book Name display style, e.g. Schoenberg, Evan Dreskin")
+#define ADDRESS_BOOK_LAST_FIRST_MIDDLE_NO_COMMA_OPTION	AILocalizedString(@"Last First Middle", "Address Book Name display style, e.g. Schoenberg Evan Dreskin")
 
 @interface ESAddressBookIntegrationAdvancedPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
