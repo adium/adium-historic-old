@@ -448,6 +448,7 @@
 		3459C58C07E291EC005F284E /* AIGradientImageCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGradientImageCell.m; path = Source/AIGradientImageCell.m; sourceTree = "<group>"; };
 		3459C58D07E291EC005F284E /* AIGradientImageCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGradientImageCell.h; path = Source/AIGradientImageCell.h; sourceTree = "<group>"; };
 		345F5CF4081AFD51001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = Resources/zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3497FBDC093C1ADB0035E148 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3498FEA707F489600004B79A /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Resources/Italian.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3498FEAE07F489730004B79A /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = Resources/Dutch.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3498FEAF07F489770004B79A /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = Resources/French.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1644,6 +1645,7 @@
 				Norwegian,
 				Russian,
 				Spanish,
+				en,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* AIUtilities.framework */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -1831,6 +1833,7 @@
 				34B82A47085A0A2700864531 /* Norwegian */,
 				340580C3087EEFB900664D64 /* Russian */,
 				34A30EC308D8EE9F00697644 /* Spanish */,
+				3497FBDC093C1ADB0035E148 /* en */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
