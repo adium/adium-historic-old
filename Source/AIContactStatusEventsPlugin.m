@@ -217,21 +217,21 @@
 		NSString	*format = nil;
 		
 		if ([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]) {
-			format = AILocalizedString(@"%@ connected",nil);
+			format = AILocalizedString(@"%@ connected", "Event: <A contact's name> connected");
 		} else if ([eventID isEqualToString:CONTACT_STATUS_ONLINE_NO]) {
-			format = AILocalizedString(@"%@ disconnected",nil);
+			format = AILocalizedString(@"%@ disconnected","Event: <A contact's name> disconnected");
 		} else if ([eventID isEqualToString:CONTACT_STATUS_AWAY_YES]) {
-			format = AILocalizedString(@"%@ went away",nil);
+			format = AILocalizedString(@"%@ went away","Event: <A contact's name> went away (is no longer available but is still online)");
 		} else if ([eventID isEqualToString:CONTACT_STATUS_AWAY_NO]) {
-			format = AILocalizedString(@"%@ came back",nil);
+			format = AILocalizedString(@"%@ came back","Event: <A contact's name> came back (is now available)");
 		} else if ([eventID isEqualToString:CONTACT_STATUS_IDLE_YES]) {
-			format = AILocalizedString(@"%@ went idle",nil);
+			format = AILocalizedString(@"%@ went idle",nil"Event: <A contact's name> went idle");
 		} else if ([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]) {
-			format = AILocalizedString(@"%@ became active",nil);
+			format = AILocalizedString(@"%@ became active","Event: <A contact's name> became active (is no longer idle)");
 		} else if ([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]) {
-			format = AILocalizedString(@"%@ is seen",nil);
+			format = AILocalizedString(@"%@ is seen","Event: <A contact's name> is seen (which can be 'came online' or 'was online when you connected')");
 		} else if ([eventID isEqualToString:CONTACT_SEEN_ONLINE_NO]) {
-			format = AILocalizedString(@"%@ is no longer seen",nil);
+			format = AILocalizedString(@"%@ is no longer seen","Event: <A contact's name> is no longer seen (went offline, or you went offline)");
 		}
 		
 		if (format) {
@@ -239,21 +239,21 @@
 		}
 	} else {
 		if ([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]) {
-			description = AILocalizedString(@"connected",nil);
+			description = AILocalizedString(@"connected","Event: connected (follows a contact's name displayed as a header)");
 		} else if ([eventID isEqualToString:CONTACT_STATUS_ONLINE_NO]) {
-			description = AILocalizedString(@"disconnected",nil);
+			description = AILocalizedString(@"disconnected","Event: disconnected (follows a contact's name displayed as a header)");
 		} else if ([eventID isEqualToString:CONTACT_STATUS_AWAY_YES]) {
-			description = AILocalizedString(@"went away",nil);
+			description = AILocalizedString(@"went away","Event: went away (follows a contact's name displayed as a header)");
 		} else if ([eventID isEqualToString:CONTACT_STATUS_AWAY_NO]) {
-			description = AILocalizedString(@"came back",nil);
+			description = AILocalizedString(@"came back","Event: came back (follows a contact's name displayed as a header)");
 		} else if ([eventID isEqualToString:CONTACT_STATUS_IDLE_YES]) {
-			description = AILocalizedString(@"went idle",nil);
+			description = AILocalizedString(@"went idle","Event: went idle (follows a contact's name displayed as a header)");
 		} else if ([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]) {
-			description = AILocalizedString(@"became active",nil);
+			description = AILocalizedString(@"became active","Event: became active (follows a contact's name displayed as a header)");
 		} else if ([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]) {
-			description = AILocalizedString(@"is seen",nil);
+			description = AILocalizedString(@"is seen","Event: is seen (follows a contact's name displayed as a header)");
 		} else if ([eventID isEqualToString:CONTACT_SEEN_ONLINE_NO]) {
-			description = AILocalizedString(@"is no longer seen",nil);
+			description = AILocalizedString(@"is no longer seen","Event: is no longer seen (follows a contact's name displayed as a header)");
 		}
 	}
 	

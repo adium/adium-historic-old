@@ -39,8 +39,8 @@
 	[super viewDidLoad];
 	
 	[textView_textToSpeakLabel setLocalizedString:AILocalizedString(@"Text To Speak:",nil)];
-	[box_substitutions setTitle:AILocalizedString(@"Substitutions:",nil)];
-	[textView_substitutions setStringValue:AILocalizedString(@"\%n - User name\n\%a - User alias\n\%m - Message\n\%t - Time",nil)];
+	[box_substitutions setTitle:AILocalizedString(@"Substitutions:","Title above the box in the Speak Text action's detail pane. The box contains keywords such as \%a and what they will become when spoken such as User Alias.")];
+	[textView_substitutions setStringValue:AILocalizedString(@"\%n - User name\n\%a - User alias\n\%m - Message\n\%t - Time","The keywords in the Speak Text action's detail pane. The first  item will be subsituted by the second when spoken.")];
 }
 
 /*!
