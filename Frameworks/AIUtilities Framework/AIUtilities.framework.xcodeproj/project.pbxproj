@@ -466,7 +466,6 @@
 		34C2A4540821797100F3363F /* Danish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Danish; path = Resources/Danish.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34D18390075FC2390075A380 /* AIRolloverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIRolloverButton.h; path = Source/AIRolloverButton.h; sourceTree = "<group>"; };
 		34D18391075FC2390075A380 /* AIRolloverButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIRolloverButton.m; path = Source/AIRolloverButton.m; sourceTree = "<group>"; };
-		34D833A907CBE34B006466F2 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34D8355407CBEB0E006466F2 /* Aqua_Tab_Divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Aqua_Tab_Divider.png; path = Resources/Aqua_Tab_Divider.png; sourceTree = "<group>"; };
 		34D8355507CBEB0E006466F2 /* aquaTabCloseRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = aquaTabCloseRollover.tif; path = Resources/aquaTabCloseRollover.tif; sourceTree = "<group>"; };
 		34D8355607CBEB0E006466F2 /* aquaTabClosePressed.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = aquaTabClosePressed.tif; path = Resources/aquaTabClosePressed.tif; sourceTree = "<group>"; };
@@ -1646,6 +1645,7 @@
 				Russian,
 				Spanish,
 				en,
+				pl,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* AIUtilities.framework */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -1817,7 +1817,6 @@
 		34D833AB07CBE355006466F2 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				34D833A907CBE34B006466F2 /* English */,
 				3498FEA707F489600004B79A /* Italian */,
 				3498FEAE07F489730004B79A /* Dutch */,
 				3498FEAF07F489770004B79A /* French */,
