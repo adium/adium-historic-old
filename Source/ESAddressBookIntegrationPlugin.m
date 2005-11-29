@@ -33,7 +33,7 @@
 #define EDIT_IN_AB_CONTEXTUAL_MENU_TITLE AILocalizedString(@"Edit In Address Book", "Edit In Address Book Contextual Menu")
 #define ADD_TO_AB_CONTEXTUAL_MENU_TITLE AILocalizedString(@"Add To Address Book", "Add To Address Book Contextual Menu")
 
-#define CONTACT_ADDED_SUCCESS_TITLE		AILocalizedString(@"Success", nil)
+#define CONTACT_ADDED_SUCCESS_TITLE		AILocalizedString(@"Success", "Title of a panel shown after adding successfully adding a contact to the address book.")
 #define CONTACT_ADDED_SUCCESS_Message	AILocalizedString(@"%@ had been successfully added to the Address Book.\nWould you like to edit the card now?", nil)
 #define CONTACT_ADDED_ERROR_TITLE		AILocalizedString(@"Error", nil)
 #define CONTACT_ADDED_ERROR_Message		AILocalizedString(@"An error had occurred while adding %@ to the Address Book.", nil)
