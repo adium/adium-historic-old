@@ -93,7 +93,7 @@
 				while ((containedContact = [enumerator nextObject])) {
 					AIAccount <AIAccount_Privacy> *acct = [containedContact account];
 					if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-						[self _blockContact:contact unblock:unblock];
+						[self _blockContact:containedContact unblock:unblock];
 					} else {
 						NSLog(@"Account %@ does not support blocking (contact %@ not blocked on this account)", acct, containedContact);
 					}
