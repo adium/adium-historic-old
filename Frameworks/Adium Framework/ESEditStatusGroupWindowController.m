@@ -6,7 +6,7 @@
 //
 
 #import "ESEditStatusGroupWindowController.h"
-#import "AIStatusCOntroller.h"
+#import "AIStatusController.h"
 #import <Adium/AIStatusGroup.h>
 #import <Adium/AIStatusIcons.h>
 #import <AIUtilities/AIMenuAdditions.h>
