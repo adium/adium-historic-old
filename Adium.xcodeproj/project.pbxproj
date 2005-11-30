@@ -2254,8 +2254,6 @@
 		34A81DB6093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		34A81DB7093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
 		34A81DB8093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		34A81DB9093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Adium Crash Reporter/pl.lproj/MainMenu.nib"; sourceTree = "<group>"; };
-		34A81DBA093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Adium Crash Reporter/pl.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		34A81DBB093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = Resources/pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34A81DBC093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Plugins/WebKit Message View/pl.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		34A81DBD093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Plugins/Gaim Service/pl.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -7719,7 +7717,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "find \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' ';'\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name 'en.lproj' ')' -prune -exec rm -rf '{}' ';'\nfind -d \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -type d -name 'English.lproj' -exec mv \"{}\" \"{}/../en.lproj\" \\;\n";
+			shellScript = "find \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' ';'\nfind -d \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -type d -name 'English.lproj' -exec mv -f \"{}\" \"{}/../en.lproj\" \\;\n";
 		};
 		DACF3ED2085574D0006BFB18 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8548,7 +8546,6 @@
 				4B7F78C10597F5B700162728 /* English */,
 				342113DD08261FC100A3B0FB /* French */,
 				346522D608371999009565FE /* cs */,
-				34A81DB9093CE92200B0E93D /* pl */,
 			);
 			name = MainMenu.nib;
 			sourceTree = "<group>";
@@ -9152,7 +9149,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				34E0E9B007CC4B1800A82198 /* English */,
-				34A81DBA093CE92200B0E93D /* pl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

@@ -454,7 +454,6 @@
 		3498FEB007F4897A0004B79A /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = Resources/German.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3498FEB107F4897D0004B79A /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Resources/Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34A30EC308D8EE9F00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = Resources/Spanish.lproj/Localizable.strings; sourceTree = "<group>"; };
-		34A81D3F093CE90000B0E93D /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_CA; path = Resources/en_CA.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34A81D42093CE90D00B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = Resources/pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34B82A3D085A09EA00864531 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Catalan; path = Resources/Catalan.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34B82A3F085A09F500864531 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Swedish; path = Resources/Swedish.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1835,7 +1834,6 @@
 				34B82A47085A0A2700864531 /* Norwegian */,
 				340580C3087EEFB900664D64 /* Russian */,
 				34A30EC308D8EE9F00697644 /* Spanish */,
-				34A81D3F093CE90000B0E93D /* en_CA */,
 				34A81D42093CE90D00B0E93D /* pl */,
 			);
 			name = Localizable.strings;
