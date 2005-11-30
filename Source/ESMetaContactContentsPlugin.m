@@ -92,13 +92,15 @@
 					NSTextAttachment		*attachment;
 					NSTextAttachmentCell	*cell;
 						
-					cell = [[[NSTextAttachmentCell alloc] init] autorelease];
+					cell = [[NSTextAttachmentCell alloc] init];
 					[cell setImage:statusIcon];
 					
-					attachment = [[[NSTextAttachment alloc] init] autorelease];
+					attachment = [[NSTextAttachment alloc] init];
 					[attachment setAttachmentCell:cell];
-					
+					[cell release];
+
 					[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+					[attachment release];
 				}
 				
 				[entryString appendString:[contact formattedUID]];
@@ -110,16 +112,16 @@
 						NSTextAttachment		*attachment;
 						NSTextAttachmentCell	*cell;
 						
-						cell = [[[NSTextAttachmentCell alloc] init] autorelease];
+						cell = [[NSTextAttachmentCell alloc] init];
 						[cell setImage:serviceIcon];
 						
-						attachment = [[[NSTextAttachment alloc] init] autorelease];
+						attachment = [[NSTextAttachment alloc] init];
 						[attachment setAttachmentCell:cell];
-						
+						[cell release];
+
 						[entryString appendString:@" "];
 						[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
-						/*					AILog(@"Size of %@ is %@",[AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal],
-							NSStringFromSize([serviceIcon size]));*/
+						[attachment release];
 					}
 				}
 			}
