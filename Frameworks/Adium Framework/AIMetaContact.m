@@ -505,20 +505,16 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 - (BOOL)containsOnlyOneService
 {
-	NSEnumerator	*enumerator = [[self listContacts] objectEnumerator];
-	AIListObject	*listObject;
-	AIService		*listObjectService = nil;
-
 	containsOnlyOneService = YES;
 
+	NSEnumerator	*enumerator = [[self listContacts] objectEnumerator];
+	AIListObject	*listObject = [enumerator nextObject];
+	AIService		*listObjectService = [listObject service];
+
 	while ((listObject = [enumerator nextObject])) {
-		if (listObjectService) {
-			if ([listObject service] != listObjectService) {
-				containsOnlyOneService = NO;
-				break;
-			}
-		} else {
-			listObjectService = [listObject service];
+		if ([listObject service] != listObjectService) {
+			containsOnlyOneService = NO;
+			break;
 		}
 	}
 	
