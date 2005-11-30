@@ -1,4 +1,4 @@
-/* 
+a /* 
  * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
  * 
@@ -509,10 +509,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 	NSEnumerator	*enumerator = [[self listContacts] objectEnumerator];
 	AIListObject	*listObject = [enumerator nextObject];
-	AIService		*listObjectService = [listObject service];
+	AIService		*initialService = [listObject service];
 
+	//If any of the services are different from the initial service, then we have multiple contained services
 	while ((listObject = [enumerator nextObject])) {
-		if ([listObject service] != listObjectService) {
+		if ([listObject service] != initialService) {
 			containsOnlyOneService = NO;
 			break;
 		}
