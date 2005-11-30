@@ -22,7 +22,7 @@
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIServiceIcons.h>
 
-#define META_TOOLTIP_ICON_SIZE NSMakeSize(10,10)
+#define META_TOOLTIP_ICON_SIZE NSMakeSize(11,11)
 
 /*!
  * @class ESMetaContactContentsPlugin
@@ -71,7 +71,8 @@
 			AIListContact	*contact;
 			NSEnumerator	*enumerator;
 			BOOL			shouldAppendString = NO;
-			
+			BOOL			shouldAppendServiceIcon = ![(AIMetaContact *)inObject containsOnlyOneService];
+
 			entry = [[NSMutableAttributedString alloc] init];
 			entryString = [entry mutableString];
 			
@@ -102,22 +103,24 @@
 				
 				[entryString appendString:[contact formattedUID]];
 				
-				serviceIcon = [[AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal]
+				if (shouldAppendServiceIcon) {
+					serviceIcon = [[AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal]
 									imageByScalingToSize:META_TOOLTIP_ICON_SIZE];
-				if (serviceIcon) {
-					NSTextAttachment		*attachment;
-					NSTextAttachmentCell	*cell;
-					
-					cell = [[[NSTextAttachmentCell alloc] init] autorelease];
-					[cell setImage:serviceIcon];
-					
-					attachment = [[[NSTextAttachment alloc] init] autorelease];
-					[attachment setAttachmentCell:cell];
-					
-					[entryString appendString:@" "];
-					[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
-/*					AILog(@"Size of %@ is %@",[AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal],
-						  NSStringFromSize([serviceIcon size]));*/
+					if (serviceIcon) {
+						NSTextAttachment		*attachment;
+						NSTextAttachmentCell	*cell;
+						
+						cell = [[[NSTextAttachmentCell alloc] init] autorelease];
+						[cell setImage:serviceIcon];
+						
+						attachment = [[[NSTextAttachment alloc] init] autorelease];
+						[attachment setAttachmentCell:cell];
+						
+						[entryString appendString:@" "];
+						[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+						/*					AILog(@"Size of %@ is %@",[AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal],
+							NSStringFromSize([serviceIcon size]));*/
+					}
 				}
 			}
 		}
