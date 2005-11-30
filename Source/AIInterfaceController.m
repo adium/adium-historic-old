@@ -957,25 +957,28 @@
 	[displayName release];
     
     if ([object isKindOfClass:[AIListContact class]]) {
-		
-		//Add the serviceID, three spaces away
-		NSString	*displayServiceID;
-		if ([object isKindOfClass:[AIMetaContact class]]) {
-			if ([(AIMetaContact *)object containsOnlyOneUniqueContact]) {
-				displayServiceID = [[[(AIMetaContact *)object preferredContact] service] shortDescription];
-			} else {
-				displayServiceID = META_SERVICE_STRING;
+		if ((![object isKindOfClass:[AIMetaContact class]] || [(AIMetaContact *)object containsOnlyOneService]) &&
+			[object userIcon]) {
+			NSImage *serviceIcon = [[AIServiceIcons serviceIconForObject:object type:AIServiceIconSmall direction:AIIconNormal]
+									imageByScalingToSize:NSMakeSize(14,14)];
+			if (serviceIcon) {
+				NSTextAttachment		*attachment;
+				NSTextAttachmentCell	*cell;
+				
+				cell = [[NSTextAttachmentCell alloc] init];
+				[cell setImage:serviceIcon];
+				
+				attachment = [[NSTextAttachment alloc] init];
+				[attachment setAttachmentCell:cell];
+				[cell release];
+	
+				[titleString appendString:@" " withAttributes:nil];
+				[titleString appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+				[attachment release];
 			}
-		} else {
-			displayServiceID = [[object service] shortDescription];
 		}
+	}
 		
-        [titleString appendString:[NSString stringWithFormat:@"   %@",displayServiceID]
-                   withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-		[fontManager convertFont:[NSFont toolTipsFontOfSize:9] 
-					 toHaveTrait:NSBoldFontMask],NSFontAttributeName, nil]];
-    }
-    
     if ([object isKindOfClass:[AIListGroup class]]) {
         [titleString appendString:[NSString stringWithFormat:@" (%i/%i)",[(AIListGroup *)object visibleCount],[(AIListGroup *)object containedObjectsCount]] 
                    withAttributes:titleDict];
