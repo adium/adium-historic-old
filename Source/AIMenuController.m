@@ -319,7 +319,7 @@
 
 	//Adium menu
 	[menuItem_aboutAdium setTitle:AILocalizedString(@"About Adium",nil)];
-	[menuItem_adiumXtras setTitle:AILocalizedString(@"Adium Xtras",nil)];
+	[menuItem_adiumXtras setTitle:AILocalizedString(@"Xtras Manager",nil)];
 	[menuItem_preferences setTitle:[AILocalizedString(@"Preferences",nil) stringByAppendingEllipsis]];
 	[menuItem_services setTitle:AILocalizedString(@"Services","Services menu item in the Adium menu")];
 	[menuItem_hideAdium setTitle:AILocalizedString(@"Hide Adium",nil)];
