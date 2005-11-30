@@ -39,6 +39,7 @@
 #import "AdiumServices.h"
 #import "AdiumPasswords.h"
 #import "AdiumAccounts.h"
+#import "AdiumPreferredAccounts.h"
 
 #define ACCOUNT_DEFAULT_PREFS			@"AccountPrefs"
 
