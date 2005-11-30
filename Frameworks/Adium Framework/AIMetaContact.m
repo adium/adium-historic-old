@@ -439,11 +439,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	NSMutableArray	*services = [[NSMutableArray alloc] init];
 	NSEnumerator	*enumerator = [containedObjects objectEnumerator];
 	AIListObject	*listObject;
-	
+
 	while ((listObject = [enumerator nextObject])) {
 		if (![services containsObject:[listObject service]]) [services addObject:[listObject service]];
 	}
-	
+
 	return [services autorelease];
 }
 
@@ -505,6 +505,23 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 - (BOOL)containsOnlyOneService
 {
+	NSEnumerator	*enumerator = [[self listContacts] objectEnumerator];
+	AIListObject	*listObject;
+	AIService		*listObjectService = nil;
+
+	containsOnlyOneService = YES;
+
+	while ((listObject = [enumerator nextObject])) {
+		if (listObjectService) {
+			if ([listObject service] != listObjectService) {
+				containsOnlyOneService = NO;
+				break;
+			}
+		} else {
+			listObjectService = [listObject service];
+		}
+	}
+	
 	return containsOnlyOneService;
 }
 
