@@ -6,6 +6,7 @@
 //
 
 #import "AIStatusItem.h"
+#import "AIStatusGroup.h"
 #import "AIStatusIcons.h"
 #import "AIStatusController.h"
 #import <AIUtilities/AIStringAdditions.h>
