@@ -115,7 +115,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 			lastStatus = [NSKeyedUnarchiver unarchiveObjectWithData:lastStatusData];
 		}
 
-		if (lastStatus) {
+		if (lastStatus && [lastStatus isKindOfClass:[AIStatus class]]) {
 			AIStatus	*existingStatus;
 			
 			/* We want to use a loaded status instance if one exists.  This will be the case if the account
