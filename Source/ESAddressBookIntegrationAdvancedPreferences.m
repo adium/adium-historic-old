@@ -267,7 +267,7 @@
 							  [[self view] window], self,
 							  @selector(sheetDidEnd:returnCode:contextInfo:), NULL,
 							  NULL,
-							  AILocalizedString(@"Disabling automatic contact conslidation will also unconsolidate all existing metacontacts, including any created manually.  You will need to recreate any manually-created metacontacts if you proceed.",nil));
+							  AILocalizedString(@"Disabling automatic contact consolidation will also unconsolidate all existing metacontacts, including any created manually.  You will need to recreate any manually-created metacontacts if you proceed.",nil));
 		}
 	}
 
