@@ -18,7 +18,7 @@
 #import "AIListLayoutWindowController.h"
 #import "AISCLViewPlugin.h"
 #import <AIUtilities/AIFontAdditions.h>
-#import <AIUtilities/AIMenuAdditions.h>90
+#import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <Adium/AIAbstractListController.h>
