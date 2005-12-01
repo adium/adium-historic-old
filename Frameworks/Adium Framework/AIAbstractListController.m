@@ -599,8 +599,10 @@
 	[outlineView deselectAll:nil];
 	
 	//Begin the drag
-	if (dragItems) [dragItems release];
-	dragItems = [items retain];
+	if (dragItems != items) {
+		[dragItems release];
+		dragItems = [items retain];
+	}
 	
 	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",@"AIListObjectUniqueIDs",nil] owner:self];
 	[pboard setString:@"Private" forType:@"AIListObject"];
