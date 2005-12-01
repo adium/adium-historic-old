@@ -462,18 +462,17 @@ NSString* serviceIDForJabberUID(NSString *UID);
 + (AIService *)serviceFromProperty:(NSString *)property
 {
 	AIService	*result = nil;
-	AIAdium		*adium = [AIObject sharedAdiumInstance];
 	
 	if ([property isEqualToString:kABAIMInstantProperty])
-		result = [[adium accountController] serviceWithUniqueID:AIMServiceUniqueID];
+		result = [[[AIObject sharedAdiumInstance] accountController] serviceWithUniqueID:AIMServiceUniqueID];
 	else if ([property isEqualToString:kABICQInstantProperty])
-		result = [[adium accountController] serviceWithUniqueID:ICQServiceUniqueID];
+		result = [[[AIObject sharedAdiumInstance] accountController] serviceWithUniqueID:ICQServiceUniqueID];
 	else if ([property isEqualToString:kABMSNInstantProperty])
-		result = [[adium accountController] serviceWithUniqueID:MSNServiceUniqueID];
+		result = [[[AIObject sharedAdiumInstance] accountController] serviceWithUniqueID:MSNServiceUniqueID];
 	else if ([property isEqualToString:kABJabberInstantProperty])
-		result = [[adium accountController] serviceWithUniqueID:JabberServiceUniqueID];
+		result = [[[AIObject sharedAdiumInstance] accountController] serviceWithUniqueID:JabberServiceUniqueID];
 	else if ([property isEqualToString:kABYahooInstantProperty])
-		result = [[adium accountController] serviceWithUniqueID:YahooServiceUniqueID];
+		result = [[[AIObject sharedAdiumInstance] accountController] serviceWithUniqueID:YahooServiceUniqueID];
 
 	return result;
 }
