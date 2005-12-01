@@ -18,10 +18,7 @@
 #import "AIListContact.h"
 #import "ESFileTransfer.h"
 
-
-#define UPLOAD_ARROW		[NSString stringWithFormat:@"%C", 0x2B06]
-#define DOWNLOAD_ARROW		[NSString stringWithFormat:@"%C", 0x2B07]
-
+static NSBezierPath *arrowPath = nil;
 
 @implementation ESFileTransfer
 //Init
@@ -270,6 +267,65 @@
 	[[NSWorkspace sharedWorkspace] openFile:localFilename];
 }
 
+- (NSBezierPath *)arrowPathInSize:(NSSize)arrowSize pointingDown:(BOOL)pointItDown
+{
+	if(!arrowPath) {
+		arrowPath = [[NSBezierPath bezierPath] retain];
+
+		/*   5
+		 *  / \ 
+		 * /   \    1-7 = points
+		 *6-7 3-4   the point of the triangle is 100% from the bottom.
+		 *    |     the back edge of the triangle is 50% from the bottom.
+		 *  1-2
+		 */
+
+#		define ONE_THIRD  (1.0/3.0)
+#		define TWO_THIRDS (2.0/3.0)
+#		define ONE_HALF    0.5
+
+		//start with the bottom vertex.
+		[arrowPath moveToPoint:NSMakePoint(ONE_THIRD,  0.0)]; //1
+		[arrowPath lineToPoint:NSMakePoint(TWO_THIRDS,  0.0)]; //2
+		//up to the inner right corner.
+		[arrowPath relativeLineToPoint:NSMakePoint(0.0, ONE_HALF)]; //3
+		//far right.
+		[arrowPath relativeLineToPoint:NSMakePoint(ONE_THIRD,  0.0)]; //4
+		//top center - the point of the arrow.
+		[arrowPath lineToPoint:NSMakePoint(ONE_HALF,  1.0)]; //5
+		//far left.
+		[arrowPath lineToPoint:NSMakePoint(0.0,  ONE_HALF)]; //6
+		//inner left corner.
+		[arrowPath relativeLineToPoint:NSMakePoint(ONE_THIRD,  0.0)]; //7
+		//to the finish line! yay!
+		[arrowPath closePath];
+	}
+
+	NSBezierPath *path = [arrowPath copy];
+
+	NSAffineTransform *transform = [NSAffineTransform transform];
+
+	if(pointItDown) {
+		//http://developer.apple.com/documentation/Carbon/Conceptual/QuickDrawToQuartz2D/tq_other/chapter_3_section_2.html
+		NSLog(@"arrow bounds (before): %@", NSStringFromRect([path bounds]));
+		[transform translateXBy:0.0 yBy:1.0];
+		[transform     scaleXBy:1.0 yBy:-1.0];
+
+		[path transformUsingAffineTransform:transform];	
+
+		NSLog(@"arrow bounds (after transform): %@", NSStringFromRect([path bounds]));
+
+		transform = [NSAffineTransform transform];
+	}
+
+	NSLog(@"arrowSize: %@", NSStringFromSize(arrowSize));
+	[transform scaleXBy:arrowSize.width yBy:arrowSize.height];
+
+	[path transformUsingAffineTransform:transform];
+
+	return [path autorelease];	
+}
+
 - (NSImage *)iconImage
 {
 	NSImage		*iconImage = nil;
@@ -282,24 +338,10 @@
 	
 	if (extension && [extension length]) {		
 		NSImage		*systemIcon = [[NSWorkspace sharedWorkspace] iconForFileType:extension];
-		NSString	*badgeArrow = nil; 
-		NSFont		*appleGothicFont = [NSFont fontWithName:@"AppleGothic" size:24];
 
-		switch (type) {
-			case Incoming_FileTransfer:
-				badgeArrow = DOWNLOAD_ARROW;
-				break;
-			case Outgoing_FileTransfer:
-				badgeArrow = UPLOAD_ARROW;			
-				break;
-			case Unknown_FileTransfer:
-			default:
-				break;
-		}
-		
-		if (!badgeArrow || !appleGothicFont)
-			return systemIcon;
-		
+		BOOL pointingDown = (type == Incoming_FileTransfer);
+		BOOL drawArrow = pointingDown || (type == Outgoing_FileTransfer);
+
 		// If type is Incoming (*down*load) or Outgoing (*up*load), overlay an arrow in a circle.
 		iconImage = [[NSImage alloc] initWithSize:[systemIcon size]];
 		
@@ -309,21 +351,9 @@
 										 (NSWidth(rect)/2.0),
 										 (NSHeight(rect)/2.0));		
 
-		NSMutableDictionary *atts = [(NSMutableDictionary *)[[NSDictionary dictionaryWithObjectsAndKeys:
-			[NSColor alternateSelectedControlColor], NSForegroundColorAttributeName,
-			appleGothicFont, NSFontAttributeName, // AppleGothic has our arrow glyphs
-			nil] mutableCopy] autorelease];
-		
-		NSSize arrowSize = [badgeArrow sizeWithAttributes:atts];
-		while (arrowSize.height > NSHeight(bottomRight)*0.9) { // shrink arrow to fit
-			NSFont *tempFont = (NSFont *)[atts objectForKey:NSFontAttributeName];
-			[atts setObject:[NSFont fontWithName:[tempFont fontName] size:[tempFont pointSize]*0.99] forKey:NSFontAttributeName];
-			arrowSize = [badgeArrow sizeWithAttributes:atts];
-		}
-		
 		[iconImage lockFocus];
 		
-		[systemIcon compositeToPoint:NSMakePoint(0.0,0.0) operation:NSCompositeSourceOver];
+		[systemIcon compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
 		
 		float line = ((NSWidth(bottomRight) / 15) + ((NSHeight(bottomRight) / 15) / 2));
 		NSRect	circleRect = NSMakeRect(NSMinX(bottomRight),
@@ -331,23 +361,27 @@
 										NSWidth(bottomRight) - (line),
 										NSHeight(bottomRight) - (line));
 
+		//draw our circle background...
 		NSBezierPath *circle = [NSBezierPath bezierPathWithOvalInRect:circleRect];
 		[circle setLineWidth:line];
 		[[[NSColor alternateSelectedControlColor] colorWithAlphaComponent:0.75] setStroke];
 		[[[NSColor alternateSelectedControlTextColor] colorWithAlphaComponent:0.75] setFill];
 		[circle fill];
 		[circle stroke];
-		
-		NSMutableParagraphStyle *mps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-		[mps setAlignment:NSCenterTextAlignment];
-		float lineheight = NSHeight(circleRect) * 0.99;
-		[mps setMaximumLineHeight:lineheight];
-		[mps setMinimumLineHeight:lineheight];
-		[mps setLineHeightMultiple:lineheight];
-		[atts setObject:mps forKey:NSParagraphStyleAttributeName];
-		[mps release];
 
-		[badgeArrow drawInRect:circleRect withAttributes:atts];
+		//and the arrow on top of it.
+		if(drawArrow) {
+			NSBezierPath *arrow = [self arrowPathInSize:bottomRight.size pointingDown:pointingDown];
+
+			//bring it into position.
+			NSAffineTransform *transform = [NSAffineTransform transform];
+			[transform translateXBy:circleRect.origin.x yBy:circleRect.origin.y];
+			[arrow transformUsingAffineTransform:transform];
+
+			NSLog(@"arrow bounds (after): %@", NSStringFromRect([arrow bounds]));
+			[[NSColor alternateSelectedControlColor] setFill];
+			[arrow fill];
+		}
 		
 		[iconImage unlockFocus];
 		[iconImage autorelease];
