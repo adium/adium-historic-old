@@ -45,15 +45,15 @@
 											selector:(SEL)inSelector
 {
 	ESFileTransferRequestPromptController	*promptController;
-	AIWindowController						*windowController = nil;
+	AIWindowController						*aWindowController = nil;
 	
 	if ((promptController = [[self alloc] initForFileTransfer:inFileTransfer
 											  notifyingTarget:inTarget
 													 selector:inSelector])) {
-		windowController = [promptController windowController];
+		aWindowController = [promptController windowController];
 	}
 	
-	return windowController;
+	return aWindowController;
 }
 
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer
