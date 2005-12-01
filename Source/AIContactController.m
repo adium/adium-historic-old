@@ -2098,7 +2098,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 	enumerator = [contactArray objectEnumerator];
 	while ((listObject = [enumerator nextObject])) {
-		[[listObject account] addContacts:[NSArray arrayWithObject:listObject] toGroup:group];
+		if(![group containsObject:listObject]) //don't add it if it's already there.
+			[[listObject account] addContacts:[NSArray arrayWithObject:listObject] toGroup:group];
 	}
 
 	[self endListObjectNotificationsDelay];
