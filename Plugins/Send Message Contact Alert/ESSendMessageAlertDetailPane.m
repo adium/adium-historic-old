@@ -26,6 +26,7 @@
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIUserIcons.h>
 #import <Adium/AIAccountMenu.h>
+#import <Adium/AIService.h>
 
 @interface ESSendMessageAlertDetailPane (PRIVATE)
 - (void)setDestinationContact:(AIListContact *)inContact;

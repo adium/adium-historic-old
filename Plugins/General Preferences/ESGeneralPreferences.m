@@ -24,6 +24,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIFontSelectionPopUpButton.h>
+#import <AIUtilities/AIColorSelectionPopUpButton.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
 
