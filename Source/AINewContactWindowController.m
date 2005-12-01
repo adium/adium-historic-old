@@ -280,7 +280,7 @@
  */
 - (void)ensureValidContactTypeSelection
 {
-	int			serviceIndex;
+	int			serviceIndex = -1;
 	
 	//Force our menu to update.. it needs to be correctly validated for the code below to work
 	[[popUp_contactType menu] update];
