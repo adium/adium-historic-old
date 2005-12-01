@@ -441,11 +441,21 @@ float _v(float m1, float m2, float hue) {
 - (NSString *)stringRepresentation
 {
     NSColor	*tempColor = [self colorUsingColorSpaceName:@"NSCalibratedRGBColorSpace"];
+	float alphaComponent = [tempColor alphaComponent];
 
-    return [NSString stringWithFormat:@"%d,%d,%d",
-				    (int)([tempColor redComponent] * 255.0),
-				    (int)([tempColor greenComponent] * 255.0),
-				    (int)([tempColor blueComponent] * 255.0)];
+	if (alphaComponent == 1.0) {
+		return [NSString stringWithFormat:@"%d,%d,%d",
+			(int)([tempColor redComponent] * 255.0),
+			(int)([tempColor greenComponent] * 255.0),
+			(int)([tempColor blueComponent] * 255.0)];
+
+	} else {
+		return [NSString stringWithFormat:@"%d,%d,%d,%d",
+			(int)([tempColor redComponent] * 255.0),
+			(int)([tempColor greenComponent] * 255.0),
+			(int)([tempColor blueComponent] * 255.0),
+			(int)(alphaComponent * 255.0)];		
+	}
 }
 
 + (id)colorWithHTMLString:(NSString *)str
