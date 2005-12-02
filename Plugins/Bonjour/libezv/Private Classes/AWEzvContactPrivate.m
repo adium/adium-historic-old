@@ -120,7 +120,7 @@
     struct sockaddr_in	socketAddress;	/* socket address structure */
     NSFileHandle	*connection;
 
-    if (_stream != nil)
+    if (_stream != nil || (_ipAddr == nil))
         return;
 
     if((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
