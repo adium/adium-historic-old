@@ -648,20 +648,23 @@ NSData *decode_dns(char* buffer, int len )
     
     AWEzvContact	*contact;
     
+	if (!replyName)
+		return;
+	
     if (resultType == DNSServiceBrowserReplyRemoveInstance) {
-	/* delete the contact */
+		/* delete the contact */
         contact = [contacts objectForKey:[NSString stringWithUTF8String:replyName]];
-	if (!contact)
-	    return;
-
-	[[client client] userLoggedOut:contact];
-    
-	/* remove the contact from our data structures */
-	[contacts removeObjectForKey:[NSString stringWithUTF8String:replyName]];
-	return;
+		if (!contact)
+			return;
+		
+		[[client client] userLoggedOut:contact];
+		
+		/* remove the contact from our data structures */
+		[contacts removeObjectForKey:[NSString stringWithUTF8String:replyName]];
+		return;
     } else if (resultType != DNSServiceBrowserReplyAddInstance) {
-	AWEzvLog(@"Unknown rendezvous browser return type");
-	return;
+		AWEzvLog(@"Unknown rendezvous browser return type");
+		return;
     }
     
     /* at this stage we must be handling adding an instance */
@@ -695,18 +698,18 @@ NSData *decode_dns(char* buffer, int len )
     
     /* if we got a port */
     if (mach_port) {
-	/* Core foundation port */
-	cfMachPort = CFMachPortCreateWithPort (kCFAllocatorDefault, mach_port, (CFMachPortCallBack) handleMachMessage, &context, &shouldFreeInfo);
-	
-	/* setup run loop */
-	rls = CFMachPortCreateRunLoopSource (NULL, cfMachPort, 0);
-	CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
-	CFRelease(rls);
+		/* Core foundation port */
+		cfMachPort = CFMachPortCreateWithPort (kCFAllocatorDefault, mach_port, (CFMachPortCallBack) handleMachMessage, &context, &shouldFreeInfo);
+		
+		/* setup run loop */
+		rls = CFMachPortCreateRunLoopSource (NULL, cfMachPort, 0);
+		CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
+		CFRelease(rls);
     } else {
-	AWEzvLog(@"Could not obtain client port for Mach messaging (resolve)");
-	[[client client] reportError:@"Could not obtain client port for Mach messaging (resolve)"
-		ofLevel:AWEzvError];
-	[self disconnect];
+		AWEzvLog(@"Could not obtain client port for Mach messaging (resolve)");
+		[[client client] reportError:@"Could not obtain client port for Mach messaging (resolve)"
+							 ofLevel:AWEzvError];
+		[self disconnect];
     }
 }
 
