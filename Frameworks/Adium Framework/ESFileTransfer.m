@@ -307,18 +307,14 @@ static NSBezierPath *arrowPath = nil;
 
 	if(pointItDown) {
 		//http://developer.apple.com/documentation/Carbon/Conceptual/QuickDrawToQuartz2D/tq_other/chapter_3_section_2.html
-		NSLog(@"arrow bounds (before): %@", NSStringFromRect([path bounds]));
 		[transform translateXBy:0.0 yBy:1.0];
 		[transform     scaleXBy:1.0 yBy:-1.0];
 
 		[path transformUsingAffineTransform:transform];	
 
-		NSLog(@"arrow bounds (after transform): %@", NSStringFromRect([path bounds]));
-
 		transform = [NSAffineTransform transform];
 	}
 
-	NSLog(@"arrowSize: %@", NSStringFromSize(arrowSize));
 	[transform scaleXBy:arrowSize.width yBy:arrowSize.height];
 
 	[path transformUsingAffineTransform:transform];
