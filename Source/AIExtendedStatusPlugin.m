@@ -77,7 +77,7 @@
 	if (firstTime) {
 		[[adium contactController] registerListObjectObserver:self];
 	} else {
-		if ((oldShowStatus != showStatus) || (oldShowIdle != oldShowIdle)) {
+		if ((oldShowStatus != showStatus) || (oldShowIdle != showIdle)) {
 			[[adium contactController] updateAllListObjectsForObserver:self];
 		}
 	}
