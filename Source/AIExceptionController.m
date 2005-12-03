@@ -113,10 +113,11 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		
 		//Check the stack trace for a third set of known offenders
 		if (!backtrace ||
-		   [backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound || //NSFontPanel likes to create exceptions
-		   [backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound || //Perhaps we aren't implementing an accessibility method properly? No idea what though :(
-		   [backtrace rangeOfString:@"-[WebBridge objectLoadedFromCacheWithURL:response:data:]"].location != NSNotFound || //WebBridge throws this randomly it seems
-		   [backtrace rangeOfString:@"-[NSTextView(NSSharing) _preflightSpellChecker:]"].location != NSNotFound //Systemwide spell checker gets corrupted on some systems; other apps just end up logging to console, and we should do the same.
+			[backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound || //NSFontPanel likes to create exceptions
+			[backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound || //Perhaps we aren't implementing an accessibility method properly? No idea what though :(
+			[backtrace rangeOfString:@"-[WebBridge objectLoadedFromCacheWithURL:response:data:]"].location != NSNotFound || //WebBridge throws this randomly it seems
+			[backtrace rangeOfString:@"-[NSTextView(NSSharing) _preflightSpellChecker:]"].location != NSNotFound || //Systemwide spell checker gets corrupted on some systems; other apps just end up logging to console, and we should do the same.
+			[backtrace rangeOfString:@"-[NSFontManager(NSFontManagerCollectionAdditions) _collectionsChanged:]"].location != NSNotFound //Deleting an empty collection in 10.4.3 (and possibly other versions) throws an NSRangeException with this in the backtrace.
 		   )
 		{
 			   shouldLaunchCrashReporter = NO;
