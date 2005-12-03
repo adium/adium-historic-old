@@ -7708,7 +7708,7 @@
 		};
 		6C15E63106DF3BB600E5A50E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -7717,7 +7717,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "find \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' ';'\nfind -d \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -type d -name 'English.lproj' -exec mv -f \"{}\" \"{}/../en.lproj\" \\;\n";
+			shellScript = "find \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' ';'\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -depth -type d -name 'English.lproj' -exec mv -f \"{}\" \"{}/../en.lproj\" \\;\n";
 		};
 		DACF3ED2085574D0006BFB18 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
