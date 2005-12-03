@@ -1,33 +1,33 @@
 @import url(../styles/fff.css);
 
 body {
-	background: url(../images/dots.png);
+	background: url(../images/snow.png);
 }
 
 .container.message.you {
-	background: rgba(102, 102, 204, .5);
+	background: rgba(153, 204, 238, .5);
 }
 .container.message.you .text a {
-	color: #243048;
+	color: #3d526d;
 }
 
 .container.message.me {
-	background: rgba(102, 204, 102, .5);
+	background: rgba(85, 102, 204, .5);
 }
 .container.message.me .text a {
-	color: #244830;
+	color: #2c3864;
 }
 
 .container.context {
-	background: rgba(102, 102, 102, .5);
+	background: rgba(204, 204, 204, .5);
 }
 .container.context .text a {
-	color: #233d3d;
+	color: #4a5264;
 }
 
 .container.status {
-	background: rgba(102, 153, 153, .5);
+	background: rgba(119, 153, 221, .5);
 }
 .container.status .text a {
-	color: #233030;
+	color: #354569;
 }

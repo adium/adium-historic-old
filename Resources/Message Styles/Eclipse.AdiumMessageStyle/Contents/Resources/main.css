@@ -1,3 +1,6 @@
+/* by Jim Rodovich (aim: dzhim) and Andy Raffensperger (aim: nsraffy) */
+/* http://www.channel8software.com/adium/ */
+
 body {
 	margin: 0;
 	font-family: "Lucida Grande";
@@ -30,9 +33,10 @@ body {
 	position: relative;
 	z-index: 5;
 	margin: -7px 7px 0;
-	font-size: 12px;
+	font-size: 120%;
 	font-weight: bold;
 	overflow: hidden;
+	word-wrap: normal;
 }
 .msgs {
 	clear: both;
@@ -83,13 +87,13 @@ body {
 	float: left;
 	width: 65px;
 	margin-left: -70px;
-	font-size: 10px;
+	font-size: 100%;
 	text-align: center;
 	overflow: hidden;
 }
 .msgs .post .text {
 	display: block;
-	font-size: 10px;
+	font-size: 100%;
 	overflow: hidden;
 }
 .msgs .post .text img {
