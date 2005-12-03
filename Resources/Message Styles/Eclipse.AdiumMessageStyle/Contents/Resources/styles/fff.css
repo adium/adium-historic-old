@@ -15,9 +15,6 @@
 .container .msgs .bot .right {
 	background: url(../images/fff/cbr50.png) no-repeat right;
 }
-.container .msgs .post .text a {
-	color: #666; /* dummy */
-}
 .container .msgs .post .text a:active,
 .container .msgs .post .text a:before, 
 .container .msgs .post .text a:after {

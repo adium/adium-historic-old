@@ -8,26 +8,26 @@ body {
 	background: rgba(102, 102, 204, .5);
 }
 .container.message.me .text a {
-	color: rgba(36, 48, 72, 1);
+	color: #243048;
 }
 
 .container.message.you {
 	background: rgba(102, 204, 102, .5);
 }
 .container.message.you .text a {
-	color: rgba(36, 72, 48, 1);
+	color: #244830;
 }
 
 .container.context {
 	background: rgba(102, 102, 102, .5);
 }
 .container.context .text a {
-	color: rgba(35, 61, 61, 1);
+	color: #233d3d;
 }
 
 .container.status {
 	background: rgba(102, 153, 153, .5);
 }
 .container.status .text a {
-	color: rgba(35, 48, 48, 1);
+	color: #233030;
 }
