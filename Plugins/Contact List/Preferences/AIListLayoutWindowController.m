@@ -475,11 +475,22 @@
 		
 	}
 	
+	/* If we can't select an item in the status icon or service icon menu, that means our previous selection is no longer available;
+	 * set the preference to whichever option we just 'selected' by default.
+	 */
 	[popUp_statusIconPosition setMenu:[self positionMenuWithChoices:statusAndServicePositionChoices]];
-	[popUp_statusIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
-	
+	if (![popUp_statusIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]]) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[popUp_statusIconPosition selectedItem] tag]]
+											 forKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION
+											  group:PREF_GROUP_LIST_LAYOUT];		
+	}
+
 	[popUp_serviceIconPosition setMenu:[self positionMenuWithChoices:statusAndServicePositionChoices]];
-	[popUp_serviceIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];	
+	if (![popUp_serviceIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]]) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[popUp_serviceIconPosition selectedItem] tag]]
+											 forKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION
+											  group:PREF_GROUP_LIST_LAYOUT];
+	}
 }
 
 - (void)updateUserIconMenuFromPrefDict:(NSDictionary *)prefDict
