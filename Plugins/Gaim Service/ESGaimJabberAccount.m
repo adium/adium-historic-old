@@ -61,13 +61,7 @@
 			//Clear the preference and then set the UID so we don't perform this upgrade again
 			[self setPreference:nil forKey:@"Jabber:Host" group:GROUP_ACCOUNT_STATUS];
 			[self setPreference:correctUID forKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS];
-			
-			/* Save the accounts after the setting of the UID is complete, since we destroyed the information needed
-			 * to do it again. */
-			[[adium accountController] performSelector:@selector(saveAccounts)
-											withObject:nil
-											afterDelay:0];
-			
+
 		} else {
 			//Append [self serverSuffix] (e.g. @jabber.org) to a Jabber account with no server
 			correctUID = [proposedUID stringByAppendingString:[self serverSuffix]];
@@ -327,7 +321,9 @@ gboolean gaim_init_jabber_plugin(void);
 					   afterDelay:1];
 			break;
 
-		default:
+		case AITextAndButtonsAlternateReturn:
+		case AITextAndButtonsOtherReturn:
+		case AITextAndButtonsClosedWithoutResponse:
 			[self serverReportedInvalidPassword];
 			break;
 	}
