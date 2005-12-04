@@ -12,6 +12,7 @@
 #import "AIMetaContact.h"
 #import "AIListGroup.h"
 #import "AIContactController.h"
+#import "AIAccount.h"
 
 @implementation RAFDragArrayController
 

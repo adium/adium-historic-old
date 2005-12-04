@@ -17,6 +17,7 @@
 #import "AdiumTyping.h"
 #import "AIInterfaceController.h"
 #import "AIContactController.h"
+#import "AIContentController.h"
 #import <Adium/AIContentTyping.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIAccount.h>
