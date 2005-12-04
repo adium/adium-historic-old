@@ -40,6 +40,7 @@
 #import "AIXtrasManager.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
+#import <Adium/AIPathUtilities.h>
 
 //Path to Adium's application support preferences
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
@@ -421,52 +422,52 @@ static NSString	*prefsCategory;
 	
     //Specify a file extension and a human-readable description of what the files of this type do
     if ([extension caseInsensitiveCompare:@"AdiumPlugin"] == NSOrderedSame) {
-        destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Plugins"];
+        destination = [AISearchPathForDirectoriesInDomains(AIPluginsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
         //Plugins haven't been loaded yet if the application isn't done loading, so only request a restart if it has finished loading already 
         requiresRestart = completedApplicationLoad;
         fileDescription = AILocalizedString(@"Adium plugin",nil);
 
     } else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame) {
-		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Dock Icons"];
+		destination = [AISearchPathForDirectoriesInDomains(AIDockIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
         fileDescription = AILocalizedString(@"dock icon set",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame) {
-		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Sounds"];
+		destination = [AISearchPathForDirectoriesInDomains(AISoundsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"sound set",nil);
 		prefsButton = AILocalizedString(@"Open Event Prefs",nil);
 		prefsCategory = @"events";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumEmoticonset"] == NSOrderedSame) {
-		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Emoticons"];
+		destination = [AISearchPathForDirectoriesInDomains(AIEmoticonsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"emoticon set",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
 		
 	} else if ([extension caseInsensitiveCompare:@"AdiumScripts"] == NSOrderedSame) {
-		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Scripts"];
+		destination = [AISearchPathForDirectoriesInDomains(AIScriptsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"AppleScript set",nil);
 		
 	} else if ([extension caseInsensitiveCompare:@"AdiumMessageStyle"] == NSOrderedSame) {
-		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Message Styles"];
+		destination = [AISearchPathForDirectoriesInDomains(AIMessageStylesDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"message style",nil);
 		prefsButton = AILocalizedString(@"Open Message Prefs",nil);
 		prefsCategory = @"messages";
 	} else if ([extension caseInsensitiveCompare:@"ListLayout"] == NSOrderedSame) {
-		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Contact List"];
+		destination = [AISearchPathForDirectoriesInDomains(AIContactListDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"contact list layout",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
 		
 	} else if ([extension caseInsensitiveCompare:@"ListTheme"] == NSOrderedSame) {
-		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Contact List"];
+		destination = [AISearchPathForDirectoriesInDomains(AIContactListDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"contact list theme",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
 		
 	} else if ([extension caseInsensitiveCompare:@"AdiumServiceIcons"] == NSOrderedSame) {
-		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Service Icons"];
+		destination = [AISearchPathForDirectoriesInDomains(AIServiceIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"service icons",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
@@ -482,7 +483,7 @@ static NSString	*prefsCategory;
 		NSString	*defaultPackName = @"Gems";
 
 		if (![packName isEqualToString:defaultPackName]) {
-			destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Status Icons"];
+			destination = [AISearchPathForDirectoriesInDomains(AIStatusIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 			fileDescription = AILocalizedString(@"status icons",nil);
 			prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 			prefsCategory = @"appearance";
