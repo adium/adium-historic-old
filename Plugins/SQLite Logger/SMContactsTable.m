@@ -18,6 +18,7 @@
 #import "SMSQLiteLogViewerWindowController.h"
 #import "SMSQLiteLoggerPlugin.h"
 #import "SMLoggerContact.h"
+#import <AIUtilities/AIAlternatingRowTableView.h>
 
 @implementation SMContactsTable
 - (void)awakeFromNib {
