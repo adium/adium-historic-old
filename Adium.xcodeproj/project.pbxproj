@@ -1149,73 +1149,6 @@
 		A3C0432408D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C0431E08D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m */; };
 		A3C0432508D74D3100B48CE1 /* AIGTalkService.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C0431F08D74D3100B48CE1 /* AIGTalkService.h */; };
 		A3C0432608D74D3100B48CE1 /* AIGTalkService.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C0432008D74D3100B48CE1 /* AIGTalkService.m */; };
-		B023557108CBE854008CDDDA /* SMContactsTable.h in Headers */ = {isa = PBXBuildFile; fileRef = B023552908CBE84F008CDDDA /* SMContactsTable.h */; };
-		B023557208CBE854008CDDDA /* SMContactsTable.m in Sources */ = {isa = PBXBuildFile; fileRef = B023552A08CBE84F008CDDDA /* SMContactsTable.m */; };
-		B023557308CBE854008CDDDA /* SMLoggerContact.h in Headers */ = {isa = PBXBuildFile; fileRef = B023552B08CBE84F008CDDDA /* SMLoggerContact.h */; };
-		B023557408CBE854008CDDDA /* SMLoggerContact.m in Sources */ = {isa = PBXBuildFile; fileRef = B023552C08CBE84F008CDDDA /* SMLoggerContact.m */; };
-		B023557508CBE854008CDDDA /* SMLoggerConversation.h in Headers */ = {isa = PBXBuildFile; fileRef = B023552D08CBE84F008CDDDA /* SMLoggerConversation.h */; };
-		B023557608CBE854008CDDDA /* SMLoggerConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = B023552E08CBE84F008CDDDA /* SMLoggerConversation.m */; };
-		B023557708CBE854008CDDDA /* SMSQLiteDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = B023552F08CBE84F008CDDDA /* SMSQLiteDatabase.h */; };
-		B023557808CBE854008CDDDA /* SMSQLiteDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = B023553008CBE84F008CDDDA /* SMSQLiteDatabase.m */; };
-		B023557908CBE854008CDDDA /* SMSQLiteLoggerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B023553108CBE850008CDDDA /* SMSQLiteLoggerPlugin.h */; };
-		B023557A08CBE854008CDDDA /* SMSQLiteLoggerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B023553208CBE850008CDDDA /* SMSQLiteLoggerPlugin.m */; };
-		B023557B08CBE854008CDDDA /* SMSQLiteLogViewerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = B023553308CBE850008CDDDA /* SMSQLiteLogViewerWindowController.h */; };
-		B023557C08CBE854008CDDDA /* SMSQLiteLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B023553408CBE850008CDDDA /* SMSQLiteLogViewerWindowController.m */; };
-		B023557D08CBE854008CDDDA /* alter.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553608CBE850008CDDDA /* alter.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023557E08CBE854008CDDDA /* analyze.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553708CBE850008CDDDA /* analyze.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023557F08CBE854008CDDDA /* attach.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553808CBE850008CDDDA /* attach.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558008CBE854008CDDDA /* auth.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553908CBE850008CDDDA /* auth.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558108CBE854008CDDDA /* btree.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553A08CBE850008CDDDA /* btree.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558208CBE854008CDDDA /* btree.h in Headers */ = {isa = PBXBuildFile; fileRef = B023553B08CBE850008CDDDA /* btree.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558308CBE854008CDDDA /* build.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553C08CBE850008CDDDA /* build.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558408CBE854008CDDDA /* callback.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553D08CBE850008CDDDA /* callback.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558508CBE854008CDDDA /* complete.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553E08CBE850008CDDDA /* complete.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558608CBE854008CDDDA /* date.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553F08CBE850008CDDDA /* date.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558708CBE854008CDDDA /* delete.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554008CBE850008CDDDA /* delete.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558808CBE854008CDDDA /* expr.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554108CBE851008CDDDA /* expr.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558908CBE854008CDDDA /* func.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554208CBE851008CDDDA /* func.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558A08CBE854008CDDDA /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554308CBE851008CDDDA /* hash.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558B08CBE854008CDDDA /* hash.h in Headers */ = {isa = PBXBuildFile; fileRef = B023554408CBE851008CDDDA /* hash.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558C08CBE854008CDDDA /* insert.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554508CBE851008CDDDA /* insert.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558D08CBE854008CDDDA /* keywordhash.h in Headers */ = {isa = PBXBuildFile; fileRef = B023554608CBE851008CDDDA /* keywordhash.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558E08CBE854008CDDDA /* legacy.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554708CBE851008CDDDA /* legacy.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023558F08CBE854008CDDDA /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554808CBE851008CDDDA /* main.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559008CBE854008CDDDA /* opcodes.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554908CBE851008CDDDA /* opcodes.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559108CBE854008CDDDA /* opcodes.h in Headers */ = {isa = PBXBuildFile; fileRef = B023554A08CBE851008CDDDA /* opcodes.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559208CBE854008CDDDA /* os.h in Headers */ = {isa = PBXBuildFile; fileRef = B023554B08CBE851008CDDDA /* os.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559308CBE854008CDDDA /* os_common.h in Headers */ = {isa = PBXBuildFile; fileRef = B023554C08CBE851008CDDDA /* os_common.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559408CBE854008CDDDA /* os_unix.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554D08CBE851008CDDDA /* os_unix.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559508CBE854008CDDDA /* os_unix.h in Headers */ = {isa = PBXBuildFile; fileRef = B023554E08CBE851008CDDDA /* os_unix.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559608CBE854008CDDDA /* os_win.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554F08CBE851008CDDDA /* os_win.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559708CBE854008CDDDA /* os_win.h in Headers */ = {isa = PBXBuildFile; fileRef = B023555008CBE851008CDDDA /* os_win.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559808CBE854008CDDDA /* pager.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555108CBE852008CDDDA /* pager.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559908CBE854008CDDDA /* pager.h in Headers */ = {isa = PBXBuildFile; fileRef = B023555208CBE852008CDDDA /* pager.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559A08CBE854008CDDDA /* parse.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555308CBE852008CDDDA /* parse.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559B08CBE854008CDDDA /* parse.h in Headers */ = {isa = PBXBuildFile; fileRef = B023555408CBE852008CDDDA /* parse.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559D08CBE854008CDDDA /* pragma.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555608CBE852008CDDDA /* pragma.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559E08CBE854008CDDDA /* prepare.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555708CBE852008CDDDA /* prepare.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B023559F08CBE854008CDDDA /* printf.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555808CBE852008CDDDA /* printf.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355A008CBE854008CDDDA /* random.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555908CBE852008CDDDA /* random.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355A108CBE854008CDDDA /* select.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555A08CBE852008CDDDA /* select.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355A408CBE854008CDDDA /* sqlite3.h in Headers */ = {isa = PBXBuildFile; fileRef = B023555D08CBE852008CDDDA /* sqlite3.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355A508CBE854008CDDDA /* sqliteInt.h in Headers */ = {isa = PBXBuildFile; fileRef = B023555E08CBE852008CDDDA /* sqliteInt.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355A608CBE854008CDDDA /* table.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555F08CBE852008CDDDA /* table.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355A708CBE854008CDDDA /* tclsqlite.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556008CBE852008CDDDA /* tclsqlite.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355A808CBE854008CDDDA /* tokenize.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556108CBE853008CDDDA /* tokenize.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355A908CBE854008CDDDA /* trigger.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556208CBE853008CDDDA /* trigger.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355AA08CBE854008CDDDA /* update.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556308CBE853008CDDDA /* update.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355AB08CBE854008CDDDA /* utf.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556408CBE853008CDDDA /* utf.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355AC08CBE854008CDDDA /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556508CBE853008CDDDA /* util.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355AD08CBE854008CDDDA /* vacuum.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556608CBE853008CDDDA /* vacuum.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355AE08CBE854008CDDDA /* vdbe.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556708CBE853008CDDDA /* vdbe.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355AF08CBE854008CDDDA /* vdbe.h in Headers */ = {isa = PBXBuildFile; fileRef = B023556808CBE853008CDDDA /* vdbe.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355B008CBE854008CDDDA /* vdbeapi.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556908CBE853008CDDDA /* vdbeapi.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355B108CBE854008CDDDA /* vdbeaux.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556A08CBE853008CDDDA /* vdbeaux.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355B208CBE854008CDDDA /* vdbefifo.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556B08CBE853008CDDDA /* vdbefifo.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355B308CBE854008CDDDA /* vdbeInt.h in Headers */ = {isa = PBXBuildFile; fileRef = B023556C08CBE853008CDDDA /* vdbeInt.h */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355B408CBE854008CDDDA /* vdbemem.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556D08CBE853008CDDDA /* vdbemem.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355B508CBE854008CDDDA /* where.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556E08CBE853008CDDDA /* where.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		B02355B608CBE854008CDDDA /* SQLiteLogViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = B023556F08CBE853008CDDDA /* SQLiteLogViewer.nib */; };
 		B72537C4058C45EF004BA969 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		B73E464307DB5F9200D9129E /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		B747E986058D144C00A9F037 /* AILaTeXPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B747E984058D144C00A9F037 /* AILaTeXPlugin.h */; };
@@ -6369,26 +6302,6 @@
 				11B648DF087C62C5008F528B /* RAFDragArrayController.h in Headers */,
 				636AB7F3087E2B6700A87670 /* AIDockBadger.h in Headers */,
 				EE147A810896B33400A21377 /* OWABSearchWindowController.h in Headers */,
-				B023557108CBE854008CDDDA /* SMContactsTable.h in Headers */,
-				B023557308CBE854008CDDDA /* SMLoggerContact.h in Headers */,
-				B023557508CBE854008CDDDA /* SMLoggerConversation.h in Headers */,
-				B023557708CBE854008CDDDA /* SMSQLiteDatabase.h in Headers */,
-				B023557908CBE854008CDDDA /* SMSQLiteLoggerPlugin.h in Headers */,
-				B023557B08CBE854008CDDDA /* SMSQLiteLogViewerWindowController.h in Headers */,
-				B023558208CBE854008CDDDA /* btree.h in Headers */,
-				B023558B08CBE854008CDDDA /* hash.h in Headers */,
-				B023558D08CBE854008CDDDA /* keywordhash.h in Headers */,
-				B023559108CBE854008CDDDA /* opcodes.h in Headers */,
-				B023559208CBE854008CDDDA /* os.h in Headers */,
-				B023559308CBE854008CDDDA /* os_common.h in Headers */,
-				B023559508CBE854008CDDDA /* os_unix.h in Headers */,
-				B023559708CBE854008CDDDA /* os_win.h in Headers */,
-				B023559908CBE854008CDDDA /* pager.h in Headers */,
-				B023559B08CBE854008CDDDA /* parse.h in Headers */,
-				B02355A408CBE854008CDDDA /* sqlite3.h in Headers */,
-				B02355A508CBE854008CDDDA /* sqliteInt.h in Headers */,
-				B02355AF08CBE854008CDDDA /* vdbe.h in Headers */,
-				B02355B308CBE854008CDDDA /* vdbeInt.h in Headers */,
 				34BD0DB508D31479000BE2C0 /* AdiumChatEvents.h in Headers */,
 				9E44248808E11F380015D4DD /* AdiumURLHandling.h in Headers */,
 				633F175A08F905A700C76383 /* AIXtraInfo.h in Headers */,
@@ -7480,7 +7393,6 @@
 				346798F008947FB800F68A98 /* AdiumFramework.strings in Resources */,
 				EE147A6D0896B18800A21377 /* ABSearch.png in Resources */,
 				EE147A790896B32400A21377 /* ABSearch.nib in Resources */,
-				B02355B608CBE854008CDDDA /* SQLiteLogViewer.nib in Resources */,
 				632D801708E7E0A40032C187 /* XtrasManager.nib in Resources */,
 				63C120750910A0DD00C9DB57 /* DefaultXtraReadme.rtf in Resources */,
 				34B995DA092A832700E31E91 /* FontPanelAccessoryView.nib in Resources */,
@@ -7678,7 +7590,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\necho \"Copying external frameworks into Adium.app\"\n\nPBXCP=\"/System/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks\"\nFRAMEWORKS_DIR=\"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Frameworks\"\n\nif ( ! [ -e \"$FRAMEWORKS_DIR\" ]); then\n\tmkdir \"$FRAMEWORKS_DIR\"\nfi\n\n#Copy AIUtilities.framework\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIHyperlinks.framework\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\" \"$FRAMEWORKS_DIR\"\n";
+			shellScript = "#!/bin/sh\n\necho \"Copying external frameworks into Adium.app\"\n\nPBXCP=\"/System/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks\"\nFRAMEWORKS_DIR=\"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Frameworks\"\n\nif ( ! [ -e \"$FRAMEWORKS_DIR\" ]); then\n\tmkdir \"$FRAMEWORKS_DIR\"\nfi\n\n#Copy AIUtilities.framework\necho $PBXCP \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\" \"$FRAMEWORKS_DIR\"\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIHyperlinks.framework\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\" \"$FRAMEWORKS_DIR\"\n";
 		};
 		34E9DCF2078FC79900662E8E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7963,52 +7875,6 @@
 				11B648E0087C62C5008F528B /* RAFDragArrayController.m in Sources */,
 				63FBAA480887779D00026246 /* AIDockBadger.m in Sources */,
 				EE147A800896B33400A21377 /* OWABSearchWindowController.m in Sources */,
-				B023557208CBE854008CDDDA /* SMContactsTable.m in Sources */,
-				B023557408CBE854008CDDDA /* SMLoggerContact.m in Sources */,
-				B023557608CBE854008CDDDA /* SMLoggerConversation.m in Sources */,
-				B023557808CBE854008CDDDA /* SMSQLiteDatabase.m in Sources */,
-				B023557A08CBE854008CDDDA /* SMSQLiteLoggerPlugin.m in Sources */,
-				B023557C08CBE854008CDDDA /* SMSQLiteLogViewerWindowController.m in Sources */,
-				B023557D08CBE854008CDDDA /* alter.c in Sources */,
-				B023557E08CBE854008CDDDA /* analyze.c in Sources */,
-				B023557F08CBE854008CDDDA /* attach.c in Sources */,
-				B023558008CBE854008CDDDA /* auth.c in Sources */,
-				B023558108CBE854008CDDDA /* btree.c in Sources */,
-				B023558308CBE854008CDDDA /* build.c in Sources */,
-				B023558408CBE854008CDDDA /* callback.c in Sources */,
-				B023558508CBE854008CDDDA /* complete.c in Sources */,
-				B023558608CBE854008CDDDA /* date.c in Sources */,
-				B023558708CBE854008CDDDA /* delete.c in Sources */,
-				B023558808CBE854008CDDDA /* expr.c in Sources */,
-				B023558908CBE854008CDDDA /* func.c in Sources */,
-				B023558A08CBE854008CDDDA /* hash.c in Sources */,
-				B023558C08CBE854008CDDDA /* insert.c in Sources */,
-				B023558E08CBE854008CDDDA /* legacy.c in Sources */,
-				B023558F08CBE854008CDDDA /* main.c in Sources */,
-				B023559008CBE854008CDDDA /* opcodes.c in Sources */,
-				B023559408CBE854008CDDDA /* os_unix.c in Sources */,
-				B023559608CBE854008CDDDA /* os_win.c in Sources */,
-				B023559808CBE854008CDDDA /* pager.c in Sources */,
-				B023559A08CBE854008CDDDA /* parse.c in Sources */,
-				B023559D08CBE854008CDDDA /* pragma.c in Sources */,
-				B023559E08CBE854008CDDDA /* prepare.c in Sources */,
-				B023559F08CBE854008CDDDA /* printf.c in Sources */,
-				B02355A008CBE854008CDDDA /* random.c in Sources */,
-				B02355A108CBE854008CDDDA /* select.c in Sources */,
-				B02355A608CBE854008CDDDA /* table.c in Sources */,
-				B02355A708CBE854008CDDDA /* tclsqlite.c in Sources */,
-				B02355A808CBE854008CDDDA /* tokenize.c in Sources */,
-				B02355A908CBE854008CDDDA /* trigger.c in Sources */,
-				B02355AA08CBE854008CDDDA /* update.c in Sources */,
-				B02355AB08CBE854008CDDDA /* utf.c in Sources */,
-				B02355AC08CBE854008CDDDA /* util.c in Sources */,
-				B02355AD08CBE854008CDDDA /* vacuum.c in Sources */,
-				B02355AE08CBE854008CDDDA /* vdbe.c in Sources */,
-				B02355B008CBE854008CDDDA /* vdbeapi.c in Sources */,
-				B02355B108CBE854008CDDDA /* vdbeaux.c in Sources */,
-				B02355B208CBE854008CDDDA /* vdbefifo.c in Sources */,
-				B02355B408CBE854008CDDDA /* vdbemem.c in Sources */,
-				B02355B508CBE854008CDDDA /* where.c in Sources */,
 				34BD0DB608D31479000BE2C0 /* AdiumChatEvents.m in Sources */,
 				9E44248908E11F380015D4DD /* AdiumURLHandling.m in Sources */,
 				633F175B08F905A700C76383 /* AIXtraInfo.m in Sources */,
@@ -9237,10 +9103,176 @@
 			};
 			name = "Deployment-Debug";
 		};
-		349C2F260867ACA9000BF883 /* Default */ = {
+		34BAF9840942598700689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "External Frameworks";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34BAF9850942598800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = Plists/Adium_Framework.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0x10000000,
+				);
+				PRODUCT_NAME = Adium;
+				SKIP_INSTALL = YES;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wno-long-double",
+				);
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34BAF9860942598800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
+				INSTALL_PATH = "$(USER_APPS_DIR)";
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				PRODUCT_NAME = "Adium Crash Reporter";
+				WARNING_CFLAGS = "-Wall";
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34BAF9870942598800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"Plugins/Gaim Service/Include/glib",
+					"Plugins/Gaim Service/Include/glib/glib",
+					"Plugins/Gaim Service/Include/glib/gmodule",
+					"Plugins/Gaim Service/Include/",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
+				);
+				INFOPLIST_FILE = Plists/Gaim_Service.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Gaim;
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34BAF9880942598800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
+				INFOPLIST_FILE = Plists/Bonjour.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				PRODUCT_NAME = Bonjour;
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34BAF9890942598800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "WebKit Message View";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34BAF98A0942598800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				PRODUCT_NAME = "Latex Plugin";
+				WARNING_CFLAGS = "-Wall";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34BAF98B0942598800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
@@ -9257,14 +9289,135 @@
 				OTHER_REZFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = AdiumApplescriptRunner;
-				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
 					"-Wno-unknown-pragmas",
 				);
 			};
-			name = Default;
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34BAF98C0942598800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_USE_GCC3_PFE_SUPPORT = YES;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = Plists/Adium_2.plist;
+				INSTALL_PATH = /;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+				);
+				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
+				OTHER_LDFLAGS = "-ltcl";
+				PRODUCT_NAME = Adium;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34BAF98D0942598800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = Plists/Adium_1_6_Pref_Importer.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
+				PRODUCT_NAME = "Adium 1.6 Pref Importer";
+				WARNING_CFLAGS = "-Wall";
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34BAF98E0942598800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = /usr/local/pgsql/include;
+				INFOPLIST_FILE = Plists/SQL_Logger.plist;
+				INSTALL_PATH = /Adium.app/Contents/Plugins/;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/pgsql/lib,
+					/sw/lib,
+					/opt/local/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				OTHER_LDFLAGS = (
+					"-lpq",
+					"-lssl",
+					"-lcrypto",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "SQL Logger";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34BAF98F0942598800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = Plists/Stress_Test.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				PRODUCT_NAME = "Stress Test";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34BAF9900942598800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION_i386 = 4.0;
+				GCC_VERSION_ppc = 3.3;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				WARNING_CFLAGS = "-Wall";
+			};
+			name = "Deployment-Debug_PPC-Only";
 		};
 		DACF3EDF085574F6006BFB18 /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -9320,23 +9473,6 @@
 				);
 			};
 			name = "Deployment-Debug";
-		};
-		DACF3EE2085574F6006BFB18 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "External Frameworks";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Default;
 		};
 		DADE8E00085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -9435,30 +9571,6 @@
 			};
 			name = "Deployment-Debug";
 		};
-		DADE8E03085507450062B664 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Adium_Framework.plist;
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x10000000,
-				);
-				PRODUCT_NAME = Adium;
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
-				);
-			};
-			name = Default;
-		};
 		DADE8E05085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -9520,21 +9632,11 @@
 			};
 			name = "Deployment-Debug";
 		};
-		DADE8E08085507450062B664 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
-				INSTALL_PATH = "$(USER_APPS_DIR)";
-				PRODUCT_NAME = "Adium Crash Reporter";
-				WARNING_CFLAGS = "-Wall";
-			};
-			name = Default;
-		};
 		DADE8E0A085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILT_PRODUCTS_DIR)",
@@ -9571,6 +9673,8 @@
 		DADE8E0B085507450062B664 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
@@ -9598,6 +9702,8 @@
 		DADE8E0C085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
@@ -9625,29 +9731,6 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			name = "Deployment-Debug";
-		};
-		DADE8E0D085507450062B664 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = (
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
-				);
-				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = Gaim;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = Default;
 		};
 		DADE8E0F085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -9712,19 +9795,6 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			name = "Deployment-Debug";
-		};
-		DADE8E12085507450062B664 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
-				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
-				INFOPLIST_FILE = Plists/Bonjour.plist;
-				PRODUCT_NAME = Bonjour;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = Default;
 		};
 		DADE8E14085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -9796,22 +9866,6 @@
 			};
 			name = "Deployment-Debug";
 		};
-		DADE8E17085507450062B664 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-				);
-				PRODUCT_NAME = "WebKit Message View";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = Default;
-		};
 		DADE8E1E085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -9875,19 +9929,6 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			name = "Deployment-Debug";
-		};
-		DADE8E21085507450062B664 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				PRODUCT_NAME = "Latex Plugin";
-				WARNING_CFLAGS = "-Wall";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = Default;
 		};
 		DADE8E23085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -9964,27 +10005,6 @@
 			};
 			name = "Deployment-Debug";
 		};
-		DADE8E26085507450062B664 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_USE_GCC3_PFE_SUPPORT = YES;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INFOPLIST_FILE = Plists/Adium_2.plist;
-				INSTALL_PATH = /;
-				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
-				OTHER_LDFLAGS = "-ltcl";
-				PRODUCT_NAME = Adium;
-				SECTORDER_FLAGS = "";
-				ZERO_LINK = YES;
-			};
-			name = Default;
-		};
 		DADE8E28085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -10051,20 +10071,6 @@
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Deployment-Debug";
-		};
-		DADE8E2B085507450062B664 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Adium_1_6_Pref_Importer.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "Adium 1.6 Pref Importer";
-				WARNING_CFLAGS = "-Wall";
-				WRAPPER_EXTENSION = app;
-			};
-			name = Default;
 		};
 		DADE8E2D085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -10172,35 +10178,6 @@
 			};
 			name = "Deployment-Debug";
 		};
-		DADE8E30085507450062B664 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = /usr/local/pgsql/include;
-				INFOPLIST_FILE = Plists/SQL_Logger.plist;
-				INSTALL_PATH = /Adium.app/Contents/Plugins/;
-				LIBRARY_SEARCH_PATHS = (
-					/usr/local/pgsql/lib,
-					/sw/lib,
-					/opt/local/lib,
-				);
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-lpq",
-					"-lssl",
-					"-lcrypto",
-				);
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "SQL Logger";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = Default;
-		};
 		DADE8E32085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -10259,22 +10236,17 @@
 			};
 			name = "Deployment-Debug";
 		};
-		DADE8E35085507450062B664 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Stress_Test.plist;
-				PRODUCT_NAME = "Stress Test";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = Default;
-		};
 		DADE8E3B085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				WARNING_CFLAGS = "-Wall";
@@ -10285,11 +10257,25 @@
 		DADE8E3C085507450062B664 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
 				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				GCC_VERSION_i386 = 4.0;
+				GCC_VERSION_ppc = 3.3;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Deployment;
@@ -10297,24 +10283,27 @@
 		DADE8E3D085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				GCC_VERSION_i386 = 4.0;
+				GCC_VERSION_ppc = 3.3;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = "Deployment-Debug";
-		};
-		DADE8E3E085507450062B664 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
-				WARNING_CFLAGS = "-Wall";
-			};
-			name = Default;
 		};
 /* End XCBuildConfiguration section */
 
@@ -10325,10 +10314,10 @@
 				349C2F230867ACA9000BF883 /* Development */,
 				349C2F240867ACA9000BF883 /* Deployment */,
 				349C2F250867ACA9000BF883 /* Deployment-Debug */,
-				349C2F260867ACA9000BF883 /* Default */,
+				34BAF98B0942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		DACF3EDE085574F6006BFB18 /* Build configuration list for PBXAggregateTarget "External Frameworks" */ = {
 			isa = XCConfigurationList;
@@ -10336,10 +10325,10 @@
 				DACF3EDF085574F6006BFB18 /* Development */,
 				DACF3EE0085574F6006BFB18 /* Deployment */,
 				DACF3EE1085574F6006BFB18 /* Deployment-Debug */,
-				DACF3EE2085574F6006BFB18 /* Default */,
+				34BAF9840942598700689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		DADE8DFF085507450062B664 /* Build configuration list for PBXNativeTarget "Adium.Framework" */ = {
 			isa = XCConfigurationList;
@@ -10347,10 +10336,10 @@
 				DADE8E00085507450062B664 /* Development */,
 				DADE8E01085507450062B664 /* Deployment */,
 				DADE8E02085507450062B664 /* Deployment-Debug */,
-				DADE8E03085507450062B664 /* Default */,
+				34BAF9850942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		DADE8E04085507450062B664 /* Build configuration list for PBXNativeTarget "Adium Crash Reporter" */ = {
 			isa = XCConfigurationList;
@@ -10358,10 +10347,10 @@
 				DADE8E05085507450062B664 /* Development */,
 				DADE8E06085507450062B664 /* Deployment */,
 				DADE8E07085507450062B664 /* Deployment-Debug */,
-				DADE8E08085507450062B664 /* Default */,
+				34BAF9860942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		DADE8E09085507450062B664 /* Build configuration list for PBXNativeTarget "Gaim" */ = {
 			isa = XCConfigurationList;
@@ -10369,10 +10358,10 @@
 				DADE8E0A085507450062B664 /* Development */,
 				DADE8E0B085507450062B664 /* Deployment */,
 				DADE8E0C085507450062B664 /* Deployment-Debug */,
-				DADE8E0D085507450062B664 /* Default */,
+				34BAF9870942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		DADE8E0E085507450062B664 /* Build configuration list for PBXNativeTarget "Bonjour" */ = {
 			isa = XCConfigurationList;
@@ -10380,10 +10369,10 @@
 				DADE8E0F085507450062B664 /* Development */,
 				DADE8E10085507450062B664 /* Deployment */,
 				DADE8E11085507450062B664 /* Deployment-Debug */,
-				DADE8E12085507450062B664 /* Default */,
+				34BAF9880942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		DADE8E13085507450062B664 /* Build configuration list for PBXNativeTarget "WebKit Message View" */ = {
 			isa = XCConfigurationList;
@@ -10391,10 +10380,10 @@
 				DADE8E14085507450062B664 /* Development */,
 				DADE8E15085507450062B664 /* Deployment */,
 				DADE8E16085507450062B664 /* Deployment-Debug */,
-				DADE8E17085507450062B664 /* Default */,
+				34BAF9890942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		DADE8E1D085507450062B664 /* Build configuration list for PBXNativeTarget "Latex Plugin" */ = {
 			isa = XCConfigurationList;
@@ -10402,10 +10391,10 @@
 				DADE8E1E085507450062B664 /* Development */,
 				DADE8E1F085507450062B664 /* Deployment */,
 				DADE8E20085507450062B664 /* Deployment-Debug */,
-				DADE8E21085507450062B664 /* Default */,
+				34BAF98A0942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		DADE8E22085507450062B664 /* Build configuration list for PBXNativeTarget "Adium" */ = {
 			isa = XCConfigurationList;
@@ -10413,10 +10402,10 @@
 				DADE8E23085507450062B664 /* Development */,
 				DADE8E24085507450062B664 /* Deployment */,
 				DADE8E25085507450062B664 /* Deployment-Debug */,
-				DADE8E26085507450062B664 /* Default */,
+				34BAF98C0942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		DADE8E27085507450062B664 /* Build configuration list for PBXNativeTarget "Adium 1.6 Pref Importer" */ = {
 			isa = XCConfigurationList;
@@ -10424,10 +10413,10 @@
 				DADE8E28085507450062B664 /* Development */,
 				DADE8E29085507450062B664 /* Deployment */,
 				DADE8E2A085507450062B664 /* Deployment-Debug */,
-				DADE8E2B085507450062B664 /* Default */,
+				34BAF98D0942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		DADE8E2C085507450062B664 /* Build configuration list for PBXNativeTarget "SQL Logger" */ = {
 			isa = XCConfigurationList;
@@ -10435,10 +10424,10 @@
 				DADE8E2D085507450062B664 /* Development */,
 				DADE8E2E085507450062B664 /* Deployment */,
 				DADE8E2F085507450062B664 /* Deployment-Debug */,
-				DADE8E30085507450062B664 /* Default */,
+				34BAF98E0942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		DADE8E31085507450062B664 /* Build configuration list for PBXNativeTarget "Stress Test" */ = {
 			isa = XCConfigurationList;
@@ -10446,10 +10435,10 @@
 				DADE8E32085507450062B664 /* Development */,
 				DADE8E33085507450062B664 /* Deployment */,
 				DADE8E34085507450062B664 /* Deployment-Debug */,
-				DADE8E35085507450062B664 /* Default */,
+				34BAF98F0942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */ = {
 			isa = XCConfigurationList;
@@ -10457,10 +10446,10 @@
 				DADE8E3B085507450062B664 /* Development */,
 				DADE8E3C085507450062B664 /* Deployment */,
 				DADE8E3D085507450062B664 /* Deployment-Debug */,
-				DADE8E3E085507450062B664 /* Default */,
+				34BAF9900942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
 	};

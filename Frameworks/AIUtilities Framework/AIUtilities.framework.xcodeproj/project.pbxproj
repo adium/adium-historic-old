@@ -1842,6 +1842,107 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		34BAFA1109425E6800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = AIUtilities.framework_Prefix.pch;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = Resources/AIUtilities_Framework.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				LIBRARY_STYLE = DYNAMIC;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0x12000000,
+				);
+				PRODUCT_NAME = AIUtilities;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wno-long-double",
+				);
+				WRAPPER_EXTENSION = framework;
+				ZERO_LINK = NO;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34BAFA1209425E6800689991 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION_i386 = 4.0;
+				GCC_VERSION_ppc = 3.3;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		34C572C5093E552E00829508 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = AIUtilities.framework_Prefix.pch;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = Resources/AIUtilities_Framework.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				LIBRARY_STYLE = DYNAMIC;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0x12000000,
+				);
+				PRODUCT_NAME = AIUtilities;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wno-long-double",
+				);
+				WRAPPER_EXTENSION = framework;
+				ZERO_LINK = NO;
+			};
+			name = "Deployment-Debug";
+		};
+		34C572C6093E552E00829508 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION_i386 = 4.0;
+				GCC_VERSION_ppc = 3.3;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = "Deployment-Debug";
+		};
 		DA8A805908553B3800F24BB3 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1916,39 +2017,6 @@
 			};
 			name = Deployment;
 		};
-		DA8A805B08553B3800F24BB3 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DEAD_CODE_STRIPPING = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DEBUGGING_SYMBOLS = full;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = AIUtilities.framework_Prefix.pch;
-				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = Resources/AIUtilities_Framework.plist;
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				LIBRARY_STYLE = DYNAMIC;
-				MACH_O_TYPE = mh_dylib;
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x12000000,
-				);
-				PRODUCT_NAME = AIUtilities;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
-				);
-				WRAPPER_EXTENSION = framework;
-			};
-			name = Default;
-		};
 		DA8A805D08553B3800F24BB3 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1959,16 +2027,18 @@
 		DA8A805E08553B3800F24BB3 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION_i386 = 4.0;
+				GCC_VERSION_ppc = 3.3;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = Deployment;
-		};
-		DA8A805F08553B3800F24BB3 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-			};
-			name = Default;
 		};
 /* End XCBuildConfiguration section */
 
@@ -1978,20 +2048,22 @@
 			buildConfigurations = (
 				DA8A805908553B3800F24BB3 /* Development */,
 				DA8A805A08553B3800F24BB3 /* Deployment */,
-				DA8A805B08553B3800F24BB3 /* Default */,
+				34C572C5093E552E00829508 /* Deployment-Debug */,
+				34BAFA1109425E6800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		DA8A805C08553B3800F24BB3 /* Build configuration list for PBXProject "AIUtilities.framework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DA8A805D08553B3800F24BB3 /* Development */,
 				DA8A805E08553B3800F24BB3 /* Deployment */,
-				DA8A805F08553B3800F24BB3 /* Default */,
+				34C572C6093E552E00829508 /* Deployment-Debug */,
+				34BAFA1209425E6800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
 	};
