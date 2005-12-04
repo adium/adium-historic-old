@@ -250,7 +250,7 @@
             NSImage	*overlayImage;
 			
             //Get the overlay image
-            if ([iconState animated]) {
+            if ([iconState animated] && animatingStateNumberOfFrames) {
                 if (iconState == animatingState) { //Only one state animates at a time
                     overlayImage = [[iconState imageArray] objectAtIndex:frame];
                 } else {
