@@ -328,6 +328,9 @@ static NSString	*prefsCategory;
 //Give all the controllers a chance to close down
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
+	//Take no action if we didn't complete the application load
+	if (!completedApplicationLoad) return;
+
 	//Close the preference window before we shut down the plugins that compose it
 	[preferenceController closePreferenceWindow:nil];
 
