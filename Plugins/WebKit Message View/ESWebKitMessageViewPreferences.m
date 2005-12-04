@@ -37,6 +37,7 @@
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIContentStatus.h>
+#import <Adium/AIListContact.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIService.h>
 #import <Adium/JVFontPreviewField.h>

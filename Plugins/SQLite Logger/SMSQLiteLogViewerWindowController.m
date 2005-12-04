@@ -20,6 +20,7 @@
 #import "SMLoggerConversation.h"
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIAlternatingRowTableView.h>
 
 #define LOG_VIEWER_NIB					@"SQLiteLogViewer"
 #define KEY_LOG_VIEWER_WINDOW_FRAME		@"SQLite Log Viewer Frame"
