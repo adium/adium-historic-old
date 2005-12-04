@@ -48,6 +48,7 @@
 - (void)stopAutoRefreshingStatusKey:(NSString *)key;
 - (void)_startAttributedRefreshTimer;
 - (void)_stopAttributedRefreshTimer;
+- (void)gotFilteredStatusMessage:(NSAttributedString *)statusMessage forStatusState:(AIStatus *)statusState;
 
 //Contacts
 - (NSArray *)contacts;

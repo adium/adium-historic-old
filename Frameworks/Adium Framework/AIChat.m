@@ -24,6 +24,7 @@
 #import "AIUserIcons.h"
 
 #import "AIContactController.h"
+#import "AIContentController.h"
 #import "AIChatController.h"
 #import "AIPreferenceController.h"
 
