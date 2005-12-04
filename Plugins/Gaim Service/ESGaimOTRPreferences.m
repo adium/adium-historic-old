@@ -28,8 +28,6 @@
 
 @interface ESGaimOTRPreferences (PRIVATE)
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification;
-- (void)updateFingerprintsList;
-- (void)updatePrivateKeyList;
 - (void)configureAccountsMenu;
 @end
 

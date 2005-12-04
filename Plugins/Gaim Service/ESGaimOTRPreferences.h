@@ -35,4 +35,7 @@
 - (IBAction)generate:(id)sender;
 - (IBAction)showFingerprint:(id)sender;
 
+- (void)updateFingerprintsList;
+- (void)updatePrivateKeyList;
+
 @end

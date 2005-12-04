@@ -53,27 +53,17 @@
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 
 @interface CBGaimAccount (PRIVATE)
-- (void)connect;
-- (void)disconnect;
-
-- (void)setBuddyImageFromFilename:(char *)imageFilename;
 - (NSString *)_userIconCachePath;
-- (void)_setInstantMessagesWithContact:(AIListContact *)contact enabled:(BOOL)enable;
 
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
 - (NSString *)_mapOutgoingGroupName:(NSString *)name;
 
-- (NSString *)displayServiceIDForUID:(NSString *)aUID;
-
-//- (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
 - (void)setTypingFlagOfChat:(AIChat *)inChat to:(NSNumber *)typingState;
-- (void)_updateAway:(AIListContact *)theContact toAway:(BOOL)newAway;
 
 - (AIChat*)_openChatWithContact:(AIListContact *)contact andConversation:(GaimConversation*)conv;
 
 - (void)_receivedMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
 - (void)_sentMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat toDestinationListContact:(AIListContact *)destinationContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
-- (NSString *)_processGaimImagesInString:(NSString *)inString;
 - (NSString *)_handleFileSendsWithinMessage:(NSString *)inString toContact:(AIListContact *)listContact contentMessage:(AIContentMessage *)contentMessage;
 - (NSString *)_messageImageCachePathForID:(int)imageID;
 
@@ -85,7 +75,14 @@
 - (void)updateStatusForKey:(NSString *)key immediately:(BOOL)immediately;
 
 - (void)configureGaimAccountNotifyingTarget:(id)target selector:(SEL)selector;
+- (void)continueConnectWithConfiguredGaimAccount;
+- (void)continueConnectWithConfiguredProxy;
+- (void)gotProxyServerPassword:(NSString *)inPassword context:(NSInvocation *)invocation;
+- (void)continueRegisterWithConfiguredGaimAccount;
 
+- (void)setAccountProfileTo:(NSAttributedString *)profile configureGaimAccountContext:(NSInvocation *)inInvocation;
+
+- (void)performAccountMenuAction:(NSMenuItem *)sender;
 @end
 
 @implementation CBGaimAccount
@@ -1200,17 +1197,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	return [[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
 }
 
-//Create an ESFileTransfer object from an xfer
-- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID
-										 size:(unsigned long long)inSize
-							   remoteFilename:(NSString *)remoteFilename
-{
-	return [self mainPerformSelector:@selector(_mainThreadNewFileTransferObjectWith:size:remoteFilename:)
-						  withObject:destinationUID
-						  withObject:[NSNumber numberWithUnsignedLongLong:inSize]
-						  withObject:remoteFilename
-						 returnValue:YES];
-}
 - (ESFileTransfer *)_mainThreadNewFileTransferObjectWith:(NSString *)destinationUID
 													size:(NSNumber *)inSize
 										  remoteFilename:remoteFilename
@@ -1224,6 +1210,17 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	[fileTransfer setRemoteFilename:remoteFilename];
 
     return fileTransfer;
+}
+//Create an ESFileTransfer object from an xfer
+- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID
+										 size:(unsigned long long)inSize
+							   remoteFilename:(NSString *)remoteFilename
+{
+	return [self mainPerformSelector:@selector(_mainThreadNewFileTransferObjectWith:size:remoteFilename:)
+						  withObject:destinationUID
+						  withObject:[NSNumber numberWithUnsignedLongLong:inSize]
+						  withObject:remoteFilename
+						 returnValue:YES];
 }
 
 //Update an ESFileTransfer object progress
@@ -1496,7 +1493,9 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 			case Adium_Proxy_SOCKS5:
 				gaimAccountProxyType = GAIM_PROXY_SOCKS5;
 				break;
-			default:
+			case Adium_Proxy_Default_HTTP:
+			case Adium_Proxy_Default_SOCKS4:
+			case Adium_Proxy_Default_SOCKS5:
 				gaimAccountProxyType = GAIM_PROXY_NONE;
 				break;
 		}
@@ -1714,12 +1713,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	[self configureGaimAccountNotifyingTarget:self selector:@selector(continueRegisterWithConfiguredGaimAccount)];
 }
 
-- (void)continueRegisterWithConfiguredGaimAccount
-{
-	//Configure libgaim's proxy settings; continueConnectWithConfiguredProxy will be called once we are ready
-	[self configureAccountProxyNotifyingTarget:self selector:@selector(continueRegisterWithConfiguredProxy)];
-}
-
 - (void)continueRegisterWithConfiguredProxy
 {
 	//Set password and connect
@@ -1728,6 +1721,12 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	GaimDebug(@"Adium: Register: %@ initiating connection.",[self UID]);
 	
 	[gaimThread registerAccount:self];
+}
+
+- (void)continueRegisterWithConfiguredGaimAccount
+{
+	//Configure libgaim's proxy settings; continueConnectWithConfiguredProxy will be called once we are ready
+	[self configureAccountProxyNotifyingTarget:self selector:@selector(continueRegisterWithConfiguredProxy)];
 }
 
 //Account Status ------------------------------------------------------------------------------------------------------
@@ -2070,6 +2069,14 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 }
 
 #pragma mark Buddy Menu Items
+//Action of a dynamically-generated contact menu item
+- (void)performContactMenuAction:(NSMenuItem *)sender
+{
+	NSDictionary		*dict = [sender representedObject];
+	
+	[gaimThread performContactMenuActionFromDict:dict];
+}
+
 //Returns an array of menuItems specific for this contact based on its account and potentially status
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact
 {
@@ -2121,14 +2128,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	}
 	
 	return menuItemArray;
-}
-
-//Action of a dynamically-generated contact menu item
-- (void)performContactMenuAction:(NSMenuItem *)sender
-{
-	NSDictionary		*dict = [sender representedObject];
-	
-	[gaimThread performContactMenuActionFromDict:dict];
 }
 
 //Subclasses may override to provide a localized label and/or prevent a specified label from being shown

@@ -233,22 +233,6 @@ gboolean gaim_init_oscar_plugin(void);
 
 #pragma mark Delayed updates
 
-- (void)gotGroupForContact:(AIListContact *)theContact
-{
-	if (theContact) {
-		if (!arrayOfContactsForDelayedUpdates) arrayOfContactsForDelayedUpdates = [[NSMutableArray alloc] init];
-		[arrayOfContactsForDelayedUpdates addObject:theContact];
-		
-		if (!delayedSignonUpdateTimer) {
-			delayedSignonUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:DELAYED_UPDATE_INTERVAL 
-																		 target:self
-																	   selector:@selector(_performDelayedUpdates:) 
-																	   userInfo:nil 
-																		repeats:YES] retain];
-		}
-	}
-}
-
 - (void)_performDelayedUpdates:(NSTimer *)timer
 {
 	if ([arrayOfContactsForDelayedUpdates count]) {
@@ -274,6 +258,22 @@ gboolean gaim_init_oscar_plugin(void);
 	} else {
 		[arrayOfContactsForDelayedUpdates release]; arrayOfContactsForDelayedUpdates = nil;
 		[delayedSignonUpdateTimer invalidate]; [delayedSignonUpdateTimer release]; delayedSignonUpdateTimer = nil;
+	}
+}
+
+- (void)gotGroupForContact:(AIListContact *)theContact
+{
+	if (theContact) {
+		if (!arrayOfContactsForDelayedUpdates) arrayOfContactsForDelayedUpdates = [[NSMutableArray alloc] init];
+		[arrayOfContactsForDelayedUpdates addObject:theContact];
+		
+		if (!delayedSignonUpdateTimer) {
+			delayedSignonUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:DELAYED_UPDATE_INTERVAL 
+																		 target:self
+																	   selector:@selector(_performDelayedUpdates:) 
+																	   userInfo:nil 
+																		repeats:YES] retain];
+		}
 	}
 }
 

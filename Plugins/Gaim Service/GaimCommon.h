@@ -42,8 +42,6 @@ typedef enum
 	GAIM_BUDDY_NONE				= 0x00, /**< No events.                    */
 	GAIM_BUDDY_SIGNON			= 0x01, /**< The buddy signed on.          */
 	GAIM_BUDDY_SIGNOFF			= 0x02, /**< The buddy signed off.         */
-	GAIM_BUDDY_IDLE_CHANGED		= 0x04, /**< The buddy's idle status changed.        */
-	GAIM_BUDDY_STATUS_CHANGED   = 0x08, /**< The buddy's status changed.     */
 	GAIM_BUDDY_INFO_UPDATED		= 0x10, /**< The buddy's information (profile) changed.     */
 	GAIM_BUDDY_ICON				= 0x40, /**< The buddy's icon changed.     */
 	GAIM_BUDDY_MISCELLANEOUS	= 0x80, /**< The buddy's service-specific miscalleneous info changed.     */

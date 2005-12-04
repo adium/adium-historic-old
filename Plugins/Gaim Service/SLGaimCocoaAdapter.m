@@ -51,6 +51,7 @@
 @interface SLGaimCocoaAdapter (PRIVATE)
 - (void)initLibGaim;
 - (BOOL)attemptGaimCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat;
+- (void)refreshAutoreleasePool:(NSTimer *)inTimer;
 @end
 
 /*
@@ -179,12 +180,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		sharedInstance = self;
 		
 		[self initLibGaim];
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(gotNewAccount:) 
-													 name:@"AddAccount"
-												   object:nil];
-		
+
 		gaimThreadMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
 		[gaimThreadMessenger setMessageRetryTimeout:0.1];
 		[gaimThreadMessenger setMessageRetry:0.1];

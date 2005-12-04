@@ -19,6 +19,10 @@ struct resolved_id {
 
 @interface ESGaimMeanwhileContactAdditionController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)inInfoDict;
+- (void)doubleClickInTableView:(id)sender;
+- (oneway void)gaimThreadDoRequestFieldsCbValue:(NSValue *)inCallBackValue
+							  withUserDataValue:(NSValue *)inUserDataValue 
+									fieldsValue:(NSValue *)inFieldsValue;	
 @end
 
 @implementation ESGaimMeanwhileContactAdditionController

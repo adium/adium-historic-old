@@ -13,4 +13,6 @@
 	AIWindowController	*requestController;
 }
 
++ (ESGaimFileReceiveRequestController *)showFileReceiveWindowWithDict:(NSDictionary *)inDict;
+
 @end
