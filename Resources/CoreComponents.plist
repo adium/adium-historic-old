@@ -77,6 +77,5 @@
 	<string>SMContactListShowBehaviorPlugin</string>
 	<string>ESiTunesPlugin</string>
 	<string>AIDockBadger</string>
-	<string>SMSQLiteLoggerPlugin</string>
 </array>
 </plist>
