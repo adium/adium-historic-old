@@ -434,14 +434,26 @@ static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type
 			case GAIM_CONV_UPDATE_CHATLEFT:
 				GaimDebug (@"Chat left! %s",gaim_conversation_get_name(conv));
 				break;
-				
+			case GAIM_CONV_UPDATE_ADD:
+			case GAIM_CONV_UPDATE_REMOVE:
+			case GAIM_CONV_UPDATE_ACCOUNT:
+			case GAIM_CONV_UPDATE_TYPING:
+			case GAIM_CONV_UPDATE_UNSEEN:
+			case GAIM_CONV_UPDATE_LOGGING:
+			case GAIM_CONV_ACCOUNT_ONLINE:
+			case GAIM_CONV_ACCOUNT_OFFLINE:
+			case GAIM_CONV_UPDATE_AWAY:
+			case GAIM_CONV_UPDATE_ICON:
+			case GAIM_CONV_UPDATE_FEATURES:
+
+/*				
+				[accountLookup(conv->account) mainPerformSelector:@selector(convUpdateForChat:type:)
+													   withObject:existingChatLookupFromConv(conv)
+													   withObject:[NSNumber numberWithInt:type]];
+*/				
 			default:
 				break;
 		}
-		
-		[accountLookup(conv->account) mainPerformSelector:@selector(convUpdateForChat:type:)
-											   withObject:existingChatLookupFromConv(conv)
-											   withObject:[NSNumber numberWithInt:type]];
 
 	} else if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_IM) {
 		GaimConvIm  *im = gaim_conversation_get_im_data(conv);

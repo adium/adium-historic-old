@@ -163,12 +163,12 @@ void configureAdiumGaimSignals(void)
 	//Idle
 	gaim_signal_connect(blist_handle, "buddy-idle-changed",
 						handle, GAIM_CALLBACK(buddy_idle_changed_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_IDLE_CHANGED));
+						GINT_TO_POINTER(0));
 	
 	//Status
 	gaim_signal_connect(blist_handle, "buddy-status-changed",
 						handle, GAIM_CALLBACK(buddy_status_changed_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_STATUS_CHANGED));
+						GINT_TO_POINTER(0));
 	
 	//Info updated
 	gaim_signal_connect(blist_handle, "buddy-info",

@@ -28,6 +28,10 @@
 - (NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
 - (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString;
 - (void)setFormattedUID;
+
+- (void)updateInfo:(AIListContact *)theContact;
+- (void)updateMiscellaneous:(AIListContact *)theContact;
+
 @end
 
 @implementation ESGaimAIMAccount

@@ -132,6 +132,7 @@
 									 percent:(NSNumber *)percent
 								   bytesSent:(NSNumber *)bytesSent;
 - (void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
+- (void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer;
 - (void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
 - (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID
 										 size:(unsigned long long)inSize
@@ -158,6 +159,26 @@
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label;
 
 - (NSString *)_UIDForAddingObject:(AIListContact *)object;
+
+#pragma mark Contacts
+- (void)renameContact:(AIListContact *)theContact toUID:(NSString *)newUID;
+- (void)updateWentIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate;
+- (void)updateIdleReturn:(AIListContact *)theContact withData:(void *)data;
+
+#pragma mark Chats
+- (void)errorForChat:(AIChat *)chat type:(NSNumber *)type;
+- (void)addUsersArray:(NSArray *)usersArray toChat:(AIChat *)chat;
+- (void)removeUsersArray:(NSArray *)usersArray fromChat:(AIChat *)chat;
+- (void)updateTopic:(NSString *)inTopic forChat:(AIChat *)chat;
+- (void)updateTitle:(NSString *)inTitle forChat:(AIChat *)chat;
+- (void)convUpdateForChat:(AIChat *)chat type:(NSNumber *)type;
+
+
+#pragma mark Privacy
+- (void)privacyPermitListAdded:(NSString *)sourceUID;
+- (void)privacyPermitListRemoved:(NSString *)sourceUID;
+- (void)privacyDenyListAdded:(NSString *)sourceUID;
+- (void)privacyDenyListRemoved:(NSString *)sourceUID;
 
 
 @end

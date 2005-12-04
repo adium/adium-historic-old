@@ -25,6 +25,9 @@
 @interface ESGaimRequestActionController (PRIVATE)
 - (id)initWithDict:(NSDictionary *)infoDict;
 - (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict;
+- (void)gaimThreadDoRequestActionCbValue:(NSValue *)callBackValue
+					   withUserDataValue:(NSValue *)userDataValue 
+						   callBackIndex:(NSNumber *)callBackIndexNumber;
 @end
 
 @implementation ESGaimRequestActionController
@@ -143,9 +146,9 @@
 	return YES;
 }
 
-- (oneway void)gaimThreadDoRequestActionCbValue:(NSValue *)callBackValue
-							  withUserDataValue:(NSValue *)userDataValue 
-								  callBackIndex:(NSNumber *)callBackIndexNumber
+- (void)gaimThreadDoRequestActionCbValue:(NSValue *)callBackValue
+					   withUserDataValue:(NSValue *)userDataValue 
+						   callBackIndex:(NSNumber *)callBackIndexNumber
 {
 	GaimRequestActionCb callBack = [callBackValue pointerValue];
 	if (callBack) {

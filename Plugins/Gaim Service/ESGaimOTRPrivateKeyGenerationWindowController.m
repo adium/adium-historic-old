@@ -17,19 +17,6 @@
 
 static NSMutableDictionary	*keyGenerationControllerDict = nil;
 
-/*!
- * @brief We started generating a private key.
- *
- * Create a window controller for inIdentifier and tell it to display.
- * Has no effect if a window is already open for inIdentifier.
- */
-+ (void)startedGeneratingForIdentifier:(NSString *)inIdentifier
-{
-	[self performSelectorOnMainThread:@selector(mainThreadStartedGeneratingForIdentifier:)
-						   withObject:inIdentifier
-						waitUntilDone:NO];
-}
-
 + (void)mainThreadStartedGeneratingForIdentifier:(NSString *)inIdentifier
 {
 	if (!keyGenerationControllerDict) keyGenerationControllerDict = [[NSMutableDictionary alloc] init];
@@ -46,6 +33,19 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
 											forKey:inIdentifier];
 		}
 	}
+}
+
+/*!
+* @brief We started generating a private key.
+ *
+ * Create a window controller for inIdentifier and tell it to display.
+ * Has no effect if a window is already open for inIdentifier.
+ */
++ (void)startedGeneratingForIdentifier:(NSString *)inIdentifier
+{
+	[self performSelectorOnMainThread:@selector(mainThreadStartedGeneratingForIdentifier:)
+						   withObject:inIdentifier
+						waitUntilDone:NO];
 }
 
 /*!
@@ -86,6 +86,16 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
 	[super dealloc];
 }
 
++ (void)mainThreadFinishedGeneratingForIdentifier:(NSString *)inIdentifier
+{	
+	ESGaimOTRPrivateKeyGenerationWindowController	*controller;
+
+	controller = [keyGenerationControllerDict objectForKey:inIdentifier];
+	[controller closeWindow:nil];
+	
+	[keyGenerationControllerDict removeObjectForKey:inIdentifier];
+}
+
 /*!
  * @brief Finished generating a private key
  *
@@ -96,16 +106,6 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
 	[self performSelectorOnMainThread:@selector(mainThreadFinishedGeneratingForIdentifier:)
 						   withObject:inIdentifier
 						waitUntilDone:NO];
-}
-
-+ (void)mainThreadFinishedGeneratingForIdentifier:(NSString *)inIdentifier
-{	
-	ESGaimOTRPrivateKeyGenerationWindowController	*controller;
-
-	controller = [keyGenerationControllerDict objectForKey:inIdentifier];
-	[controller closeWindow:nil];
-	
-	[keyGenerationControllerDict removeObjectForKey:inIdentifier];
 }
 
 @end

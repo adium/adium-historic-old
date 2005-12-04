@@ -45,6 +45,8 @@ static NSMutableDictionary	*otrPolicyCache = nil;
 - (NSString *)localizedOTRMessage:(NSString *)message withUsername:(const char *)username;
 - (void)prefsShouldUpdatePrivateKeyList;
 - (void)prefsShouldUpdateFingerprintsList;
+- (void)verifyUnknownFingerprint:(NSValue *)contextValue;
+- (NSNumber *)determinePolicyForContact:(AIListContact *)contact;
 @end
 
 #pragma mark Adium convenience functions

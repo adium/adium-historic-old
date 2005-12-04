@@ -24,6 +24,9 @@
 @interface ESGaimRequestWindowController (PRIVATE)
 - (void)showWindowWithDict:(NSDictionary *)infoDict multiline:(BOOL)multiline;
 - (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict;
+- (void)gaimThreadDoRequestInputCbValue:(NSValue *)inCallBackValue
+					  withUserDataValue:(NSValue *)inUserDataValue 
+							inputString:(NSString *)inString;
 @end
 
 @implementation ESGaimRequestWindowController
@@ -183,9 +186,9 @@
 	}
 }
 
-- (oneway void)gaimThreadDoRequestInputCbValue:(NSValue *)inCallBackValue
-							 withUserDataValue:(NSValue *)inUserDataValue 
-								   inputString:(NSString *)inString
+- (void)gaimThreadDoRequestInputCbValue:(NSValue *)inCallBackValue
+					  withUserDataValue:(NSValue *)inUserDataValue 
+							inputString:(NSString *)inString
 {
 	GaimRequestInputCb callBack = [inCallBackValue pointerValue];
 	if (callBack) {
