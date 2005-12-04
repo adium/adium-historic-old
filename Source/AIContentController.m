@@ -22,6 +22,8 @@
 #import "AIInterfaceController.h"
 #import "AIPreferenceController.h"
 #import "AdiumTyping.h"
+#import "AdiumFormatting.h"
+#import "AdiumMessageEvents.h"
 #import "AdiumContentFiltering.h"
 #import "ESContactAlertsController.h"
 #import <AIUtilities/AIArrayAdditions.h>

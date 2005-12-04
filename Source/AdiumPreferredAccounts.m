@@ -21,6 +21,7 @@
 #import <Adium/AIService.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIListContact.h>
 
 #define PREF_GROUP_PREFERRED_ACCOUNTS   @"Preferred Accounts"
 #define KEY_PREFERRED_SOURCE_ACCOUNT	@"Preferred Account"
