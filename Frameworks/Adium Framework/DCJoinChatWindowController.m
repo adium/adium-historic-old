@@ -117,7 +117,6 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 											  submenuType:AIAccountNoSubmenu
 										   showTitleVerbs:NO] retain];
 	
-
     //Center the window
     [[self window] center];
 	[super windowDidLoad];
@@ -183,7 +182,9 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 		AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																							   toContact:nil];
 		NSMenuItem	*menuItem = [inAccountMenu menuItemForAccount:preferredAccount];
-		
+
+		AILog(@"%@: _selectPreferredAccountInAccountMenu: %@: menuItem for %@ is %@",self,inAccountMenu,preferredAccount,menuItem);
+
 		if (menuItem) {
 			[popUp_service selectItem:menuItem];
 			[self configureForAccount:preferredAccount];
