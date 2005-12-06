@@ -28,7 +28,6 @@
 #import "ESGaimOTRPrivateKeyGenerationWindowController.h"
 #import "ESGaimOTRPreferences.h"
 
-static ESGaimOTRAdapter		*otrAdapter = nil;
 static NSMutableDictionary	*otrPolicyCache = nil;
 
 #define CLOSED_CONNECTION_MESSAGE "has closed his private connection to you"
@@ -50,6 +49,21 @@ static NSMutableDictionary	*otrPolicyCache = nil;
 @end
 
 #pragma mark Adium convenience functions
+
+static ESGaimOTRAdapter* getOTRAdapter()
+{
+	static ESGaimOTRAdapter		*otrAdapter = nil;
+
+	if (!otrAdapter) {
+		/* Create the OTR adapter on the main thread, since it registers as a preference observer and 
+		 * creates a preference pane, and the Adium core does not waste cycles thread safing these processes.
+		 */
+		otrAdapter = [[ESGaimOTRAdapter alloc] mainPerformSelector:@selector(init)
+													   returnValue:YES];		
+	}
+	
+	return otrAdapter;
+}
 
 //Return the ConnContext for a GaimConversation, or NULL if none exists
 static ConnContext* context_for_conv(GaimConversation *conv)
@@ -187,8 +201,8 @@ static int otrg_adium_dialog_display_otr_message(const char *accountname, const 
 	chat = existingChatLookupFromConv(conv);
 	message = [NSString stringWithUTF8String:msg];
 	
-	if ((localizedMessage = [otrAdapter localizedOTRMessage:message
-											   withUsername:username])) {
+	if ((localizedMessage = [getOTRAdapter() localizedOTRMessage:message
+													withUsername:username])) {
 		
 		[[[AIObject sharedAdiumInstance] contentController] mainPerformSelector:@selector(displayStatusMessage:ofType:inChat:)
 																	 withObject:localizedMessage
@@ -258,9 +272,9 @@ static void otrg_adium_dialog_unknown_fingerprint(OtrlUserState us, const char *
 		return;
 	}
 	
-	[otrAdapter performSelector:@selector(verifyUnknownFingerprint:)
-					 withObject:[NSValue valueWithPointer:context]
-					 afterDelay:0];
+	[getOTRAdapter() performSelector:@selector(verifyUnknownFingerprint:)
+						  withObject:[NSValue valueWithPointer:context]
+						  afterDelay:0];
 }
 
 static void otrg_adium_dialog_verify_fingerprint(Fingerprint *fprint)
@@ -391,7 +405,7 @@ OtrgDialogUiOps *otrg_adium_dialog_get_ui_ops(void)
 static void otrg_adium_ui_update_fingerprint(void)
 {
 	AILog(@"OTR: Should update fingerprint");
-	[otrAdapter prefsShouldUpdatePrivateKeyList];
+	[getOTRAdapter() prefsShouldUpdatePrivateKeyList];
 }
 
 /*
@@ -401,7 +415,7 @@ static void otrg_adium_ui_update_fingerprint(void)
  */
 static void otrg_adium_ui_update_keylist(void)
 {
-	[otrAdapter prefsShouldUpdateFingerprintsList];
+	[getOTRAdapter() prefsShouldUpdateFingerprintsList];
 }
 
 static void otrg_adium_ui_config_buddy(GaimBuddy *buddy)
@@ -420,9 +434,9 @@ static OtrlPolicy otrg_adium_ui_find_policy(GaimAccount *account, const char *na
 	policyNumber = [otrPolicyCache objectForKey:[contact internalObjectID]];
 	if (!policyNumber) {
 		//If a policy isn't cached, look it up
-		policyNumber = [otrAdapter mainPerformSelector:@selector(determinePolicyForContact:)
-											withObject:contact
-										   returnValue:YES];
+		policyNumber = [getOTRAdapter() mainPerformSelector:@selector(determinePolicyForContact:)
+												 withObject:contact
+												returnValue:YES];
 	}
 	
 	return [policyNumber intValue];
@@ -488,13 +502,7 @@ void initGaimOTRSupprt(void)
 {
 	//Init the plugin
 	gaim_init_otr_plugin();
-	
-	/* Create the OTR adapter on the main thread, since it registers as a preference observer and 
-	* creates a preference pane, and the Adium core does not waste cycles thread safing these processes.
-	*/
-	otrAdapter = [[ESGaimOTRAdapter alloc] mainPerformSelector:@selector(init)
-												   returnValue:YES];
-	
+
 	//Set the UI Ops
 	otrg_ui_set_ui_ops(otrg_adium_ui_get_ui_ops());
 	
