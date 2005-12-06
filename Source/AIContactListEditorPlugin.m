@@ -83,7 +83,7 @@
 																				   target:self 
 																				   action:@selector(addContactFromTab:)
 																			keyEquivalent:@""] autorelease];
-    [[adium menuController] addContextualMenuItem:menuItem_tabAddContact toLocation:Context_Contact_Stranger_TabAction];
+    [[adium menuController] addContextualMenuItem:menuItem_tabAddContact toLocation:Context_Contact_Stranger_ChatAction];
 
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(addContactRequest:) 
