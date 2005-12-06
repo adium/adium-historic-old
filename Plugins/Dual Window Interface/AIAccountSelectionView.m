@@ -211,6 +211,7 @@
 	//Resize our view to fit whichever menus are visible
 	[self setFrameSize:NSMakeSize([self frame].size.width, newHeight)];
 	[[self superview] setNeedsDisplayInRect:NSUnionRect(oldFrame,[self frame])];
+	
 	[[NSNotificationCenter defaultCenter] postNotificationName:AIViewFrameDidChangeNotification object:self];
 }
 
@@ -409,6 +410,11 @@
 	[box setAutoresizingMask:(NSViewWidthSizable)];
 	
 	return [box autorelease];
+}
+
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"%@{%@}",[super description], chat];
 }
 
 @end
