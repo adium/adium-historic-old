@@ -327,10 +327,10 @@
 	[menuItem_showAll setTitle:AILocalizedString(@"Show All",nil)];
 	[menuItem_quitAdium setTitle:AILocalizedString(@"Quit Adium",nil)];
 
-	//File menu
-	[menuItem_close setTitle:AILocalizedString(@"Close",nil)];
-	[menuItem_closeChat setTitle:AILocalizedString(@"Close Chat",nil)];
-	[menuItem_closeAllChats setTitle:AILocalizedString(@"Close All Chats",nil)];
+	//File menu	
+	[menuItem_close setTitle:AILocalizedString(@"Close","Title for the close menu item")];
+	[menuItem_closeChat setTitle:AILocalizedString(@"Close Chat","Title for the close chat menu item")];
+	[menuItem_closeAllChats setTitle:AILocalizedString(@"Close All Chats","Title for the close all chats menu item")];
 	[menuItem_saveAs setTitle:[AILocalizedString(@"Save As",nil) stringByAppendingEllipsis]];
 	[menuItem_pageSetup setTitle:[AILocalizedString(@"Page Setup",nil) stringByAppendingEllipsis]];
 	[menuItem_print setTitle:[AILocalizedString(@"Print",nil) stringByAppendingEllipsis]];
