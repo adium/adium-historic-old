@@ -1,5 +1,41 @@
 				Adium X Version History
 				-----------------------
+Version 0.87 (12/7/2005)
+ * Updated to [http://www.cypherpunks.ca/otr/ Off-the-Record 3.0.0] for OTRv2, implementing multiple usability improvements to encryption in the process [#2068] [#14] [#119] 
+ * Improved the Eclipse message style [#627] [#729] [#999]
+ * Fixed retrieval of ICQ nicknames when connecting [#1859]
+ * Fixed blocking of metaContacts
+ * Fixed an issues in which an old away message was displayed in the message window when a contact went away [#2048]
+ * Fixed setting the font size by manual input in several places [#545]
+ * Fixed a cosmetic issue in the tabs when using large status icons [#2070]
+ * Fixed live updating by the 'show idle times' preference [#2318]
+ * Fixed a Bonjour-related crash
+ * Fixed a GTalk-related crash
+ * Fixed the display of service icons when originally displayed as a badge but user icons are then disabled. [#2317]
+ * Fixed initial display of Alias (Username) and Username (Alias) contact list display [#226]
+ * Fixed issues with the emoticon menu in the Appearance preferences [#1864]
+ * Fixed paste-with-formatting of certain text including links copied from Safari
+ * Fixed initial display of the encryption and user icon toolbar icons if the toolbar was hidden when the window opened [#136]
+ * Fixed issues with updating of tab status icons when accounts sign on or off [#2174]
+ * Fixed the password prompt window for French users
+ * Fixed middle name support when using Address Book names
+ * Fixed issues with messaging Jabber contacts with + or \ in their names [#2206]
+ * Fixed issues with deleting chat logs with !FileVault enabled [#2022]
+ * Fixed a cosmetic issue with the Yahoo service icon [#348]
+ * Fixed a drawing glitch when contacts have a newline in their display names [#2154]
+ * Fixed an issue with changing your messaging font after selecting {{{Set Font...}}} in the Messages preferences
+ * Added cmd-shift-Y as a shortcut for the available Custom... status menu item
+ * Allow selection for copying of the OTR Private Key [#2248]
+ * Improved ability of third-party service plugins to provide appropriate service images [#1170]
+ * Improved presentation of away statuses such as {{{BRB}}} and {{{Do Not Disturb}}} in tooltips
+ * Improved automatic installation from adiumxtras.com
+ * Removed the Sametime "contact list setting" option, defaulting to "Load and Save From/To Server"
+ * Removed dependency on the Apple Gothic font for drawing file transfer window arrows [#2300]
+ * Added Canadian English translation [#2244]
+ * Added Polish translation
+ * Catalan, Czech, Dutch, French, German, Icelandic, Italian, Japanese, Norwegian, Russian, Simplified Chinese, Swedish, and Traditional Chinese translation updates
+
+
 Version 0.86 (10/27/2005)
  * Resolved rate limiting error with the AIM protocol [#1780]
  * Fixed issues when the default download folder does not exist or is not writable [#1823]
