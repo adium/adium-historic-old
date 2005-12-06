@@ -95,7 +95,9 @@
 {
 	Fingerprint	*fingerprint = [fingerprintValue pointerValue];
 	
-	otrg_ui_forget_fingerprint(fingerprint);
+	if (fingerprint) {
+		otrg_ui_forget_fingerprint(fingerprint);
+	}
 }
 
 - (IBAction)forgetFingerprint:(id)sender
