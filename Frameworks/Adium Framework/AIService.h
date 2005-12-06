@@ -43,6 +43,7 @@ typedef enum {
 - (NSString *)shortDescription;
 - (NSString *)longDescription;
 - (NSString *)userNameLabel;
+- (NSString *)UIDPlaceholder;
 - (AIServiceImportance)serviceImportance;
 - (NSImage *)defaultServiceIconOfType:(AIServiceIconType)iconType;
 

@@ -63,12 +63,4 @@
 					forKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS];
 }
 
-/*!
- * @brief Placeholder string for the UID field
- */
-- (NSString *)UIDPlaceholder
-{
-	return AILocalizedString(@"username@jabber.org","Sample name and server for new Jabber accounts");
-}
-
 @end

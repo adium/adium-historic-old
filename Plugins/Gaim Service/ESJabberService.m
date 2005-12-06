@@ -57,6 +57,14 @@
 }
 
 /*!
+ * @brief Placeholder string for the UID field
+ */
+- (NSString *)UIDPlaceholder
+{
+	return AILocalizedString(@"username@jabber.org","Sample name and server for new Jabber accounts");
+}
+
+/*!
  * @brief Allowed characters
  * 
  * Jabber IDs are generally of the form username@server.org

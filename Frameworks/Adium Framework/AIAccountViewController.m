@@ -176,24 +176,24 @@
  */
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-	if (account != inAccount) {		
+	if (account != inAccount) {
+		AIService *service;
+		
 		account = inAccount;
-		
+		service = [account service];
+
 		//UID Label
-		NSString 	*userNameLabel = [[account service] userNameLabel];
-		[textField_accountUIDLabel setStringValue:[(userNameLabel ?
-													userNameLabel :
-													AILocalizedStringFromTable(@"User Name", @"AdiumFramework", nil)) stringByAppendingString:@":"]];
-		
+		[textField_accountUIDLabel setStringValue:[[service userNameLabel] stringByAppendingString:@":"]];
+
 		//UID
 		NSString	*formattedUID = [account formattedUID];
 		[textField_accountUID setStringValue:(formattedUID ? [account formattedUID] : @"")];
 		[textField_accountUID setFormatter:
-			[AIStringFormatter stringFormatterAllowingCharacters:[[account service] allowedCharactersForAccountName]
-														  length:[[account service] allowedLengthForAccountName]
-												   caseSensitive:[[account service] caseSensitive]
+			[AIStringFormatter stringFormatterAllowingCharacters:[service allowedCharactersForAccountName]
+														  length:[service allowedLengthForAccountName]
+												   caseSensitive:[service caseSensitive]
 													errorMessage:AILocalizedStringFromTable(@"The characters you're entering are not valid for an account name on this service.", @"AdiumFramework", nil)]];
-		[[textField_accountUID cell] setPlaceholderString:[self UIDPlaceholder]];
+		[[textField_accountUID cell] setPlaceholderString:[service UIDPlaceholder]];
 
 		//Can't change the UID while the account is online
 		//XXX update this if the account connectivity changes -eds
@@ -301,16 +301,6 @@
 - (IBAction)changedPreference:(id)sender
 {
 	//Empty
-}
-
-#pragma mark Attributes
-
-/*!
- * @brief Placeholder string for the UID field
- */
-- (NSString *)UIDPlaceholder
-{
-	return @"";
 }
 
 #pragma mark Localization
