@@ -348,7 +348,7 @@
         if ([self shouldBeOnline] &&
 			[self enabled]) {
             if (!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]) {
-				if ([self requiresPassword] && !password) {
+				if ([[self service] requiresPassword] && !password) {
 					//Retrieve the user's password and then call connect
 					[[adium accountController] passwordForAccount:self 
 												  notifyingTarget:self

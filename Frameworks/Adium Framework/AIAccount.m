@@ -113,17 +113,6 @@
 //Properties -----------------------------------------------------------------------------------------------------------
 #pragma mark Properties
 /*!
- * @brief Requires Password
- *
- * Subclass to return NO if this account does not require a password.  By default, accounts require a password to
- * connect.  Returning NO from this method will hide all password related fields and prompts.
- */
-- (BOOL)requiresPassword
-{
-	return YES;
-}
-
-/*!
  * @brief Send Autoresponses while away
  *
  * Subclass to alter the behavior of this account with regards to autoresponses.  Certain services expect the client to

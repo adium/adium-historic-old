@@ -72,7 +72,11 @@
 - (BOOL)canCreateGroupChats{
 	return YES;
 }
-
+//No need for a password for Zephyr accounts
+- (BOOL)requiresPassword
+{
+	return NO;
+}
 - (void)registerStatuses{
 	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
 							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AVAILABLE]

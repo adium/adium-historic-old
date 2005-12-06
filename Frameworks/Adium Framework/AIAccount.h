@@ -122,7 +122,6 @@ typedef enum {
 - (void)willBeDeleted;
 
 //Properties
-- (BOOL)requiresPassword;
 - (BOOL)shouldSendAutoresponsesWhileAway;
 - (BOOL)disconnectOnFastUserSwitch;
 - (BOOL)connectivityBasedOnNetworkReachability;
