@@ -38,6 +38,7 @@
 #import "ESFileTransferController.h"
 #import "LNAboutBoxController.h"
 #import "AIXtrasManager.h"
+#import "AdiumSetupWizard.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <Adium/AIPathUtilities.h>
@@ -53,6 +54,8 @@
 
 //Portable Adium prefs key
 #define PORTABLE_ADIUM_KEY					@"Preference Folder Location"
+
+#define ALWAYS_RUN_SETUP_WIZARD FALSE
 
 static NSString	*prefsCategory;
 
@@ -306,9 +309,9 @@ static NSString	*prefsCategory;
 	//Open the preferences if we were unable to because application:openFile: was called before we got here
 	[self openAppropriatePreferencesIfNeeded];
 
-	//If no accounts are setup, open the account prefs
-	if ([[accountController accounts] count] == 0) {
-		[preferenceController openPreferencesToCategoryWithIdentifier:@"accounts"];
+	//If no accounts are setup, run the setup wizard
+	if (([[accountController accounts] count] == 0) || ALWAYS_RUN_SETUP_WIZARD) {
+		[AdiumSetupWizard runWizard];
 	}
 
 	//Process any delayed URL events 
