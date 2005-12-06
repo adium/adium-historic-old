@@ -30,7 +30,7 @@
 @interface AWBonjourAccount : AIAccount <AWEzvClientProtocol> {
     AWEzv				*libezv;
     NSMutableSet		*libezvContacts;
-    NSString *savedAwayMessage;
+    NSString			*savedAwayMessage;
 }
 
 @end
