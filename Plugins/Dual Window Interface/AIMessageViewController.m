@@ -125,10 +125,6 @@
 									   selector:@selector(redisplaySourceAndDestinationSelector:) 
 										   name:Chat_DestinationChanged
 										 object:chat];
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(accountSelectionViewFrameDidChange:)
-													 name:AIViewFrameDidChangeNotification
-												   object:view_accountSelection];
 
 		//
 		[splitView_textEntryHorizontal setDividerThickness:6]; //Default is 9
@@ -478,6 +474,11 @@
 		[view_contents addSubview:view_accountSelection];
 		[view_accountSelection setChat:chat];
 
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(accountSelectionViewFrameDidChange:)
+													 name:AIViewFrameDidChangeNotification
+												   object:view_accountSelection];
+		
 		[self _updateAccountSelectionViewHeight];
 			
 		//Redisplay everything
@@ -491,12 +492,16 @@
 - (void)_destroyAccountSelectionView
 {
 	if (view_accountSelection) {
+		//Remove the observer
+		[[NSNotificationCenter defaultCenter] removeObserver:self
+														name:AIViewFrameDidChangeNotification
+													  object:view_accountSelection];
+
 		//Remove the account selection view from our window, clean it up
 		[view_accountSelection removeFromSuperview];
 		[view_accountSelection release]; view_accountSelection = nil;
-		
+
 		//Redisplay everything
-		//[view_contents setNeedsDisplay:YES];
 		[self _updateAccountSelectionViewHeight];
 	}
 }
@@ -506,7 +511,6 @@
  */
 - (void)_updateAccountSelectionViewHeight
 {
-	NSLog(@"_updateAccountSelectionViewHeight");
 	int		contentsHeight = [view_contents frame].size.height;
 	int 	accountSelectionHeight = [view_accountSelection frame].size.height;
 	
