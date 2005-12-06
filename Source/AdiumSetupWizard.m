@@ -56,6 +56,8 @@
  */
 - (void)windowDidLoad
 {
+	[[self window] setTitle:AILocalizedString(@"Adium Setup Wizard",nil)];
+
 	//Ensure the first tab view item is selected
 	[tabView selectTabViewItemAtIndex:0];
 	[self tabView:tabView willSelectTabViewItem:[tabView selectedTabViewItem]];
@@ -173,6 +175,10 @@
 											   caseSensitive:[service caseSensitive]
 												errorMessage:AILocalizedStringFromTable(@"The characters you're entering are not valid for an account name on this service.", @"AdiumFramework", nil)]];
 	[[textField_username cell] setPlaceholderString:[service UIDPlaceholder]];
+	
+	BOOL showPasswordField = ![service requiresPassword];
+	[textField_passwordLabel setHidden:showPasswordField];
+	[textField_password setHidden:showPasswordField];
 }
 
 - (BOOL)showAlternateButtonForIdentifier:(NSString *)identifier
