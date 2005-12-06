@@ -195,7 +195,13 @@
 		3441615C059FC5340019246B /* ESGaduGaduService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3441615A059FC5340019246B /* ESGaduGaduService.m */; };
 		34416173059FC55A0019246B /* ESJabberService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34416171059FC55A0019246B /* ESJabberService.h */; };
 		34416174059FC55A0019246B /* ESJabberService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34416172059FC55A0019246B /* ESJabberService.m */; };
+		344161BD0943E0D900BC26ED /* AdiumSetupWizard.h in Headers */ = {isa = PBXBuildFile; fileRef = 344161BB0943E0D800BC26ED /* AdiumSetupWizard.h */; };
+		344161BE0943E0D900BC26ED /* AdiumSetupWizard.m in Sources */ = {isa = PBXBuildFile; fileRef = 344161BC0943E0D800BC26ED /* AdiumSetupWizard.m */; };
 		344161C5059FC72E0019246B /* GaimServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 344161C4059FC72E0019246B /* GaimServices.h */; };
+		344161D00943E20D00BC26ED /* AdiumyButler.png in Resources */ = {isa = PBXBuildFile; fileRef = 344161CF0943E20D00BC26ED /* AdiumyButler.png */; };
+		344161D40943E22F00BC26ED /* SetupWizard.nib in Resources */ = {isa = PBXBuildFile; fileRef = 344161D30943E22F00BC26ED /* SetupWizard.nib */; };
+		344162400943E76400BC26ED /* SetupWizardBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3441623E0943E76400BC26ED /* SetupWizardBackgroundView.h */; };
+		344162410943E76400BC26ED /* SetupWizardBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3441623F0943E76400BC26ED /* SetupWizardBackgroundView.m */; };
 		344458EF070B5BEF00D8E932 /* ESDebugWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 344458ED070B5BEF00D8E932 /* ESDebugWindowController.h */; };
 		344458F0070B5BEF00D8E932 /* ESDebugWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344458EE070B5BEF00D8E932 /* ESDebugWindowController.m */; };
 		3448055007AC5151006A7F7B /* ESDebugAILog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3448054E07AC5151006A7F7B /* ESDebugAILog.m */; };
@@ -1736,7 +1742,13 @@
 		3441615A059FC5340019246B /* ESGaduGaduService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaduGaduService.m; path = "Plugins/Gaim Service/ESGaduGaduService.m"; sourceTree = "<group>"; };
 		34416171059FC55A0019246B /* ESJabberService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESJabberService.h; path = "Plugins/Gaim Service/ESJabberService.h"; sourceTree = "<group>"; };
 		34416172059FC55A0019246B /* ESJabberService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESJabberService.m; path = "Plugins/Gaim Service/ESJabberService.m"; sourceTree = "<group>"; };
+		344161BB0943E0D800BC26ED /* AdiumSetupWizard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumSetupWizard.h; path = Source/AdiumSetupWizard.h; sourceTree = "<group>"; };
+		344161BC0943E0D800BC26ED /* AdiumSetupWizard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumSetupWizard.m; path = Source/AdiumSetupWizard.m; sourceTree = "<group>"; };
 		344161C4059FC72E0019246B /* GaimServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GaimServices.h; path = "Plugins/Gaim Service/GaimServices.h"; sourceTree = "<group>"; };
+		344161CF0943E20D00BC26ED /* AdiumyButler.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AdiumyButler.png; path = Resources/AdiumyButler.png; sourceTree = "<group>"; };
+		344161D30943E22F00BC26ED /* SetupWizard.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = SetupWizard.nib; path = Resources/SetupWizard.nib; sourceTree = "<group>"; };
+		3441623E0943E76400BC26ED /* SetupWizardBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetupWizardBackgroundView.h; path = Source/SetupWizardBackgroundView.h; sourceTree = "<group>"; };
+		3441623F0943E76400BC26ED /* SetupWizardBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetupWizardBackgroundView.m; path = Source/SetupWizardBackgroundView.m; sourceTree = "<group>"; };
 		344458ED070B5BEF00D8E932 /* ESDebugWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESDebugWindowController.h; path = Source/ESDebugWindowController.h; sourceTree = "<group>"; };
 		344458EE070B5BEF00D8E932 /* ESDebugWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESDebugWindowController.m; path = Source/ESDebugWindowController.m; sourceTree = "<group>"; };
 		3448054E07AC5151006A7F7B /* ESDebugAILog.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESDebugAILog.m; path = "Frameworks/Adium Framework/ESDebugAILog.m"; sourceTree = "<group>"; };
@@ -3646,6 +3658,19 @@
 			name = "Gadu-Gadu";
 			sourceTree = "<group>";
 		};
+		344161B60943E0AF00BC26ED /* Setup Wizard */ = {
+			isa = PBXGroup;
+			children = (
+				344161BB0943E0D800BC26ED /* AdiumSetupWizard.h */,
+				344161BC0943E0D800BC26ED /* AdiumSetupWizard.m */,
+				344161CF0943E20D00BC26ED /* AdiumyButler.png */,
+				344161D30943E22F00BC26ED /* SetupWizard.nib */,
+				3441623E0943E76400BC26ED /* SetupWizardBackgroundView.h */,
+				3441623F0943E76400BC26ED /* SetupWizardBackgroundView.m */,
+			);
+			name = "Setup Wizard";
+			sourceTree = "<group>";
+		};
 		344458F3070B5BF500D8E932 /* Debugging */ = {
 			isa = PBXGroup;
 			children = (
@@ -3676,6 +3701,8 @@
 				34503C7E058F96C400FB7AD1 /* AIEmoticon.m */,
 				3448054F07AC5151006A7F7B /* ESDebugAILog.h */,
 				3448054E07AC5151006A7F7B /* ESDebugAILog.m */,
+				4BFC33DD058D4430008F7FA2 /* AIObject.h */,
+				4BFC33DE058D4430008F7FA2 /* AIObject.m */,
 				4BD548AE086086B5008DF3CB /* AISoundSet.h */,
 				4BD548AF086086B5008DF3CB /* AISoundSet.m */,
 			);
@@ -4656,8 +4683,6 @@
 				34F2E80F07C2CD5E007EAAAB /* AIHTMLDecoder.m */,
 				3483928505E68B05002BC6C0 /* AIIconState.h */,
 				3483928405E68B05002BC6C0 /* AIIconState.m */,
-				4BFC33DD058D4430008F7FA2 /* AIObject.h */,
-				4BFC33DE058D4430008F7FA2 /* AIObject.m */,
 				F5793924033E74C301A8010A /* AIPlugin.h */,
 				F5793912033E748F01A8010A /* AIPlugin.m */,
 				34F2E81807C2CD6B007EAAAB /* AITextAttachmentExtension.h */,
@@ -4996,6 +5021,7 @@
 				346CFDBC087B77FB009711C8 /* System (Idle, Connectivity, etc.) */,
 				4B873F370840D1FB00738987 /* Account */,
 				4BC4439A08612BD800B10F28 /* Content */,
+				344161B60943E0AF00BC26ED /* Setup Wizard */,
 				4B14CF1E085FBC4400C88949 /* Sound */,
 			);
 			name = Core;
@@ -6307,6 +6333,8 @@
 				633F175A08F905A700C76383 /* AIXtraInfo.h in Headers */,
 				633F175C08F905A700C76383 /* AIXtrasManager.h in Headers */,
 				348F57930936F3CC00288E41 /* ESEditStatusGroupWindowController.h in Headers */,
+				344161BD0943E0D900BC26ED /* AdiumSetupWizard.h in Headers */,
+				344162400943E76400BC26ED /* SetupWizardBackgroundView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7397,6 +7425,8 @@
 				63C120750910A0DD00C9DB57 /* DefaultXtraReadme.rtf in Resources */,
 				34B995DA092A832700E31E91 /* FontPanelAccessoryView.nib in Resources */,
 				348F579E0936FA6D00288E41 /* EditStatusGroup.nib in Resources */,
+				344161D00943E20D00BC26ED /* AdiumyButler.png in Resources */,
+				344161D40943E22F00BC26ED /* SetupWizard.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7880,6 +7910,8 @@
 				633F175B08F905A700C76383 /* AIXtraInfo.m in Sources */,
 				633F175D08F905A800C76383 /* AIXtrasManager.m in Sources */,
 				348F57940936F3CC00288E41 /* ESEditStatusGroupWindowController.m in Sources */,
+				344161BE0943E0D900BC26ED /* AdiumSetupWizard.m in Sources */,
+				344162410943E76400BC26ED /* SetupWizardBackgroundView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
