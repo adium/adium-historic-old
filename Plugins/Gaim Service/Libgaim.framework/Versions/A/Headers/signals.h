@@ -257,12 +257,12 @@ void *gaim_signal_emit_vargs_return_1(void *instance, const char *signal,
 /**
  * Initializes the signals subsystem.
  */
-void gaim_signals_init();
+void gaim_signals_init(void);
 
 /**
  * Uninitializes the signals subsystem.
  */
-void gaim_signals_uninit();
+void gaim_signals_uninit(void);
 
 /*@}*/
 
@@ -322,6 +322,9 @@ void gaim_marshal_BOOLEAN__POINTER_POINTER_POINTER_UINT(
 void gaim_marshal_BOOLEAN__POINTER_POINTER_POINTER_POINTER(
 		GaimCallback cb, va_list args, void *data, void **return_val);
 void gaim_marshal_BOOLEAN__POINTER_POINTER_POINTER_POINTER_POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+
+void gaim_marshal_BOOLEAN__INT_POINTER(
 		GaimCallback cb, va_list args, void *data, void **return_val);
 
 /*@}*/

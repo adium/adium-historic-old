@@ -80,7 +80,7 @@ first (like Motorola and SPARC, unlike Intel and VAX). */
 
 /* Define to 1 if translation of program messages to the user's native
    language is requested. */
-#define ENABLE_NLS 0
+/* #define ENABLE_NLS 0 */
 
 /* Define if plugins are enabled. */
 /* #undef GAIM_PLUGINS */

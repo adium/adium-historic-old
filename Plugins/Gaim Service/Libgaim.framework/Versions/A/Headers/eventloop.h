@@ -71,6 +71,8 @@ struct _GaimEventLoopUiOps
 	 * @see gaim_input_remove, g_source_remove
 	 */
 	guint (*input_remove)(guint handle);
+	
+	gboolean (*context_iteration)(void *context, gboolean may_block);
 };
 
 /**************************************************************************/
@@ -121,6 +123,23 @@ guint gaim_input_add(int fd, GaimInputCondition cond,
  */
 guint gaim_input_remove(guint handle);
 
+/**
+ * Iterates on the run loop
+ *
+ * Runs a single iteration for the run loop. This involves
+ * checking to see if any event sources are ready to be processed,
+ * then if no events sources are ready and @may_block is TRUE, waiting
+ * for a source to become ready, then dispatching the highest priority
+ * events sources that are ready. Note that even when may_block is TRUE,
+ * it is still possible for gaim_context_iteration() to return
+ * FALSE, since the the wait may be interrupted for other
+ * reasons than an event source becoming ready.
+ * 
+ * @param context a context (if %NULL, the default context will be used) 
+ * @param may_block whether the call may block.
+ * @return TRUE if events were dispatched.
+ **/
+gboolean gaim_context_iteration(void *context, gboolean may_block);
 /*@}*/
 
 

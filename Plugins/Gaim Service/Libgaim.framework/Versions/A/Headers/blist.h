@@ -204,7 +204,7 @@ extern "C" {
  *
  * @return The new buddy list.
  */
-GaimBuddyList *gaim_blist_new();
+GaimBuddyList *gaim_blist_new(void);
 
 /**
  * Sets the main buddy list.
@@ -233,13 +233,13 @@ GaimBlistNode *gaim_blist_node_next(GaimBlistNode *node, gboolean offline);
 /**
  * Shows the buddy list, creating a new one if necessary.
  */
-void gaim_blist_show();
+void gaim_blist_show(void);
 
 
 /**
  * Destroys the buddy list window.
  */
-void gaim_blist_destroy();
+void gaim_blist_destroy(void);
 
 /**
  * Hides or unhides the buddy list.
@@ -271,6 +271,13 @@ void gaim_blist_update_buddy_icon(GaimBuddy *buddy);
  */
 void gaim_blist_rename_buddy(GaimBuddy *buddy, const char *name);
 
+/**
+ * Aliases a contact in the buddy list.
+ *
+ * @param contact The contact whose alias will be changed.
+ * @param alias   The contact's alias.
+ */
+void gaim_blist_alias_contact(GaimContact *contact, const char *alias);
 
 /**
  * Aliases a buddy in the buddy list.
@@ -436,7 +443,7 @@ void gaim_blist_add_group(GaimGroup *group, GaimBlistNode *node);
  *
  * @return       A new contact struct
  */
-GaimContact *gaim_contact_new();
+GaimContact *gaim_contact_new(void);
 
 /**
  * Adds a new contact to the buddy list.
@@ -710,7 +717,7 @@ int gaim_blist_get_group_online_count(GaimGroup *group);
 /**
  * Loads the buddy list from ~/.gaim/blist.xml.
  */
-void gaim_blist_load();
+void gaim_blist_load(void);
 
 /**
  * Schedule a save of the blist.xml file.  This is used by the privacy
@@ -719,7 +726,7 @@ void gaim_blist_load();
  * the buddy list is saved automatically, so you should not need to
  * call this.
  */
-void gaim_blist_schedule_save();
+void gaim_blist_schedule_save(void);
 
 /**
  * Requests from the user information needed to add a buddy to the
@@ -841,9 +848,9 @@ GaimBlistNodeFlags gaim_blist_node_get_flags(GaimBlistNode *node);
 
 /**
  * Retrieves the extended menu items for a buddy list node.
- * @param n	The blist node for which to obtain the extended menu items.
- * @return	list of GaimBlistNodeAction items, as harvested by the
- *		blist-node-extended-menu signal.
+ * @param n The blist node for which to obtain the extended menu items.
+ * @return  A list of GaimBlistNodeAction items, as harvested by the
+ *          blist-node-extended-menu signal.
  */
 GList *gaim_blist_node_get_extended_menu(GaimBlistNode *n);
 

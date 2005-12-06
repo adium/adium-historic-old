@@ -835,7 +835,7 @@ NSMutableDictionary* get_chatDict(void)
 							originalMessage:(NSString *)originalMessage
 								fromAccount:(id)sourceAccount
 									 inChat:(AIChat *)chat
-								  withFlags:(int)flags
+								  withFlags:(GaimMessageFlags)flags
 {	
 	const char *encodedMessageUTF8String;
 	
@@ -873,7 +873,7 @@ NSMutableDictionary* get_chatDict(void)
 		   originalMessage:(NSString *)originalMessage 
 			   fromAccount:(id)sourceAccount
 					inChat:(AIChat *)chat
-				 withFlags:(int)flags
+				 withFlags:(GaimMessageFlags)flags
 {
 	BOOL sendMessage = YES;
 	
@@ -1438,32 +1438,6 @@ NSMutableDictionary* get_chatDict(void)
 {
 	[gaimThreadProxy gaimThreadOSCARSetFormatTo:inFormattedUID
 									  onAccount:adiumAccount];
-}
-
-/*!
- * @brief Set the OSCAR available message
- *
- * @param availablePlaintext A plain text available message (not HTML)
- */
-- (void)gaimThreadOSCARSetAvailableMessageTo:(NSString *)availablePlaintext onAccount:(id)adiumAccount
-{
-	GaimAccount		*account;
-	GaimConnection	*gc;
-	OscarData		*od;
-
-	if ((account = accountLookupFromAdiumAccount(adiumAccount)) &&
-	   (gc = gaim_account_get_connection(account)) &&
-	   (od = gc->proto_data)) {
-	 	aim_locate_setprofile(od->sess, NULL, NULL, 0, NULL, "", 0);
-		aim_srv_setavailmsg(od->sess, (char *)[availablePlaintext UTF8String]);
-	}
-}
-
-//Only for OSCAR
-- (void)OSCARSetAvailableMessageTo:(NSString *)availablePlaintext onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadOSCARSetAvailableMessageTo:availablePlaintext
-												onAccount:adiumAccount];	
 }
 
 #pragma mark Request callbacks

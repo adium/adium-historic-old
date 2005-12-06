@@ -101,7 +101,7 @@ struct yahoo_data {
 	GHashTable *friends;
 	int current_status;
 	gboolean logged_in;
-	GString *tmp_serv_blist, *tmp_serv_ilist;
+	GString *tmp_serv_blist, *tmp_serv_ilist, *tmp_serv_plist;
 	GSList *confs;
 	unsigned int conf_id; /* just a counter */
 	gboolean chat_online;
@@ -145,8 +145,8 @@ struct yahoo_data {
 		(((*((buf)+3)    )&0x000000ff)))
 
 /* util.c */
-void yahoo_init_colorht();
-void yahoo_dest_colorht();
+void yahoo_init_colorht(void);
+void yahoo_dest_colorht(void);
 char *yahoo_codes_to_html(const char *x);
 char *yahoo_html_to_codes(const char *src);
 
