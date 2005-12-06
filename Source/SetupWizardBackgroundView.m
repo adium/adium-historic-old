@@ -62,7 +62,7 @@
 			[backgroundImage drawInRect:imageDrawingRect
 								 atSize:imageSize
 							   position:IMAGE_POSITION_LEFT
-							   fraction:.40];
+							   fraction:.30];
 			[NSGraphicsContext restoreGraphicsState];
 		}		
 
