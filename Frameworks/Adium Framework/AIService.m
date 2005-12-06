@@ -348,6 +348,17 @@
 }
 
 /*!
+ * @brief Requires Password
+ *
+ * Subclass to return NO if this account does not require a password.  By default, accounts require a password to
+ * connect.  Returning NO from this method will hide all password related fields and prompts.
+ */
+- (BOOL)requiresPassword
+{
+	return YES;
+}
+
+/*!
  * @brief Register statuses
  *
  * Called automatically.  Services should register any supported status with the statusController.

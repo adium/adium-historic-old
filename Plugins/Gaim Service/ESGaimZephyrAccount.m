@@ -48,12 +48,6 @@ gboolean gaim_init_zephyr_plugin(void);
 	gaim_account_set_string(account, "encoding", [encoding UTF8String]);
 }
 
-//No need for a password for Zephyr accounts
-- (BOOL)requiresPassword
-{
-	return NO;
-}
-
 //Zephyr connects to a local host so need not disconnect/reconnect as the network changes
 - (BOOL)connectivityBasedOnNetworkReachability
 {

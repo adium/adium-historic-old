@@ -61,6 +61,11 @@
 - (BOOL)supportsProxySettings{
 	return NO;
 }
+//No need for a password for Bonjour accounts
+- (BOOL)requiresPassword
+{
+	return NO;
+}
 - (void)registerStatuses{
 	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
 							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AVAILABLE]

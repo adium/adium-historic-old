@@ -63,5 +63,8 @@
 {
 	return AILocalizedString(@"username@gmail.com","Sample name and server for new gmail accounts");
 }
+- (NSString *)userNameLabel{
+    return AILocalizedString(@"GTalk ID",nil); //Jabber ID
+}
 
 @end
