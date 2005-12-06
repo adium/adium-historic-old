@@ -177,6 +177,12 @@ guint adium_input_add(int fd, GaimInputCondition condition,
     return sourceId;
 }
 
+guint adium_context_iteration(void *context, guint may_block)
+{
+	return [[NSRunLoop currentRunLoop] runMode:(NSString *)kCFRunLoopCommonModes 
+									beforeDate:(may_block ? [NSDate distantFuture] : [NSDate dateWithTimeIntervalSinceNow:1])];
+}
+
 #pragma mark Socket Callback
 static void socketCallback(CFSocketRef s,
 						   CFSocketCallBackType callbackType,
@@ -215,7 +221,8 @@ static GaimEventLoopUiOps adiumEventLoopUiOps = {
     adium_timeout_add,
     adium_timeout_remove,
     adium_input_add,
-    adium_source_remove
+    adium_source_remove,
+	adium_context_iteration
 };
 
 GaimEventLoopUiOps *adium_gaim_eventloop_get_ui_ops(void)

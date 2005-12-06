@@ -19,7 +19,7 @@
 #import "SLGaimCocoaAdapter.h"
 #import <AIUtilities/AIObjectAdditions.h>
 
-static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, const char *primary, const char *secondary, GCallback cb,void *userData)
+static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, const char *primary, const char *secondary)
 {
 	GaimDebug (@"adiumGaimNotifyMessage: type: %i\n%s\n%s\n%s ",
 			   type,
@@ -33,7 +33,7 @@ static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, c
 																 secondary:secondary]);
 }
 
-static void *adiumGaimNotifyEmails(size_t count, gboolean detailed, const char **subjects, const char **froms, const char **tos, const char **urls, GCallback cb,void *userData)
+static void *adiumGaimNotifyEmails(size_t count, gboolean detailed, const char **subjects, const char **froms, const char **tos, const char **urls)
 {
     //Values passed can be null
     return [ESGaimNotifyEmailController handleNotifyEmails:count 
@@ -44,18 +44,17 @@ static void *adiumGaimNotifyEmails(size_t count, gboolean detailed, const char *
 													  urls:urls];
 }
 
-static void *adiumGaimNotifyEmail(const char *subject, const char *from, const char *to, const char *url, GCallback cb,void *userData)
+static void *adiumGaimNotifyEmail(const char *subject, const char *from, const char *to, const char *url)
 {
 	return adiumGaimNotifyEmails(1,
 								 TRUE,
 								 (subject ? &subject : NULL),
 								 (from ? &from : NULL),
 								 (to ? &to : NULL),
-								 (url ? &url : NULL),
-								 cb, userData);
+								 (url ? &url : NULL));
 }
 
-static void *adiumGaimNotifyFormatted(const char *title, const char *primary, const char *secondary, const char *text, GCallback cb,void *userData)
+static void *adiumGaimNotifyFormatted(const char *title, const char *primary, const char *secondary, const char *text)
 {
 	GaimDebug (@"adiumGaimNotifyFormatted: %s\n%s\n%s\n%s ",
 			   (title ? title : ""),
@@ -71,8 +70,7 @@ static void *adiumGaimNotifyFormatted(const char *title, const char *primary, co
 
 static void *adiumGaimNotifySearchResults(GaimConnection *gc, const char *title,
 										  const char *primary, const char *secondary,
-										  GaimNotifySearchResults *results, GCallback cb,
-										  void *user_data)
+										  GaimNotifySearchResults *results)
 {
 	return adium_gaim_get_handle();
 }
@@ -85,8 +83,7 @@ static void adiumGaimNotifySearchResultsNewRows(GaimConnection *gc,
 }
 
 static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who,
-									 const char *text,
-									 GCallback cb, void *userData)
+									 const char *text)
 {
 	NSString	*textString = [NSString stringWithUTF8String:text];
 	

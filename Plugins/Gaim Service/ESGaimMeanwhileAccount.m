@@ -21,7 +21,6 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
-#import <Libgaim/mwgaim-adium.h>
 
 @interface ESGaimMeanwhileAccount (PRIVATE)
 - (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact;

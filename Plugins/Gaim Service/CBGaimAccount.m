@@ -737,7 +737,11 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 			AIListContact		*listObject = [chat listObject];
 			
 			//Use GaimConvImFlags for now; multiuser chats will end up ignoring this
-			GaimConvImFlags		flags = ([contentMessage isAutoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
+			GaimMessageFlags		flags = GAIM_MESSAGE_RAW;
+			
+			if ([contentMessage isAutoreply]) {
+				flags |= GAIM_MESSAGE_AUTO_RESP;
+			}
 			
 			//If this connection doesn't support new lines, send all lines before newlines as separate messages
 			if (account->gc->flags & GAIM_CONNECTION_NO_NEWLINES) {

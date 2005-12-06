@@ -41,7 +41,7 @@
 		   originalMessage:(NSString *)originalMessage 
 			   fromAccount:(id)sourceAccount
 					inChat:(AIChat *)chat
-				 withFlags:(int)flags;
+				 withFlags:(GaimMessageFlags)flags;
 
 - (void)sendTyping:(AITypingState)typingState inChat:(AIChat *)chat;
 
