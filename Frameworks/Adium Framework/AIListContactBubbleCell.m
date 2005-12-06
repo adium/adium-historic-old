@@ -131,7 +131,7 @@
 	
 	[NSGraphicsContext saveGraphicsState];
 
-	[lastBackgroundBezierPath setClip];
+	[lastBackgroundBezierPath addClip];
 	
 	returnRect = [super drawUserIconInRect:inRect position:position];
 
