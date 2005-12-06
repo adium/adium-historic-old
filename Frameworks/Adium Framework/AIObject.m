@@ -16,24 +16,41 @@
 
 #import "AIObject.h"
 
+/*
+ * @class AIObject
+ * @brief Superclass for all objects within Adium
+ *
+ * Provides all Adium objects with an 'adium' instance variable through which they can access shared Adium
+ * controllers. The class methods sharedAdiumInstance provides access for C functions and other class methods.
+ */
 @implementation AIObject
 
 //
 static AIAdium *_sharedAdium = nil;
+
+/*
+ * @brief Set the shared AIAdium instance
+ *
+ * Called once, after AIAdium loads
+ */
 + (void)_setSharedAdiumInstance:(AIAdium *)shared
 {
     NSParameterAssert(_sharedAdium == nil);
     _sharedAdium = [shared retain];
 }
 
-//
+/*
+ * @brief Return the shared AIAdium instance
+ */
 + (AIAdium *)sharedAdiumInstance
 {
     NSParameterAssert(_sharedAdium != nil);
     return _sharedAdium;
 }
 
-//
+/*
+ * @brief Initialize
+ */
 - (id)init
 {
     if ((self = [super init]))
