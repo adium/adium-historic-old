@@ -72,7 +72,7 @@
 																		   target:self
 																		   action:@selector(toggleIgnoreOfContact:)
 																	keyEquivalent:@""];
-	[[adium menuController] addContextualMenuItem:menuItem_ignore toLocation:Context_Contact_ChatAction];
+	[[adium menuController] addContextualMenuItem:menuItem_ignore toLocation:Context_Contact_GroupChatAction];
 	
 	[adiumChatEvents controllerDidLoad];	
 }

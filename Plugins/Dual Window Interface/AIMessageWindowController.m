@@ -427,30 +427,34 @@
 //Contextual menu for tabs
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    AIListContact	*selectedObject = [[(AIMessageTabViewItem *)tabViewItem chat] listObject];
-    NSMenu *tmp=nil;
-	
+	AIChat			*chat = [(AIMessageTabViewItem *)tabViewItem chat];
+    AIListContact	*selectedObject = [chat listObject];
+    NSMenu			*tmp = nil;
+
     if (selectedObject) {
 		NSArray *locations;
 		if ([selectedObject isStranger]) {
-			locations = [NSArray arrayWithObjects:
+			locations = [NSMutableArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
 				[NSNumber numberWithInt:Context_Contact_NegativeAction],
-				[NSNumber numberWithInt:Context_Contact_TabAction],
-				[NSNumber numberWithInt:Context_Contact_Stranger_TabAction],
+				[NSNumber numberWithInt:Context_Contact_ChatAction],
+				[NSNumber numberWithInt:Context_Contact_Stranger_ChatAction],
 				[NSNumber numberWithInt:Context_Contact_Additions], nil];
 		} else {
-			locations = [NSArray arrayWithObjects:
+			locations = [NSMutableArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
 				[NSNumber numberWithInt:Context_Contact_NegativeAction],
-				[NSNumber numberWithInt:Context_Contact_TabAction],
+				[NSNumber numberWithInt:Context_Contact_ChatAction],
 				[NSNumber numberWithInt:Context_Contact_Additions], nil];
 		}
 		
+		[locations addObject:[NSNumber numberWithInt:Context_Tab_Action]];
+
 		tmp = [[adium menuController] contextualMenuWithLocations:locations
-													 forListObject:selectedObject];
+													 forListObject:selectedObject
+														   inChat:chat];
         
     }
 	

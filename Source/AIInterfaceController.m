@@ -42,11 +42,6 @@
 #import <Adium/AISortController.h>
 #import <Adium/KFTypeSelectTableView.h>
 
-
-#define CLOSE_CHAT_MENU_TITLE			AILocalizedString(@"Close Chat","Title for the close chat menu item")
-#define CLOSE_MENU_TITLE				AILocalizedString(@"Close","Title for the close menu item")
-#define CLOSE_ALL_TABS_MENU_TITLE		AILocalizedString(@"Close All Chats","Title for the close all chats menu item")
-
 #define ERROR_MESSAGE_WINDOW_TITLE		AILocalizedString(@"Adium : Error","Error message window title")
 #define LABEL_ENTRY_SPACING				4.0
 #define DISPLAY_IMAGE_ON_RIGHT			NO
@@ -161,6 +156,14 @@
 	[menuController addMenuItem:[[menuItem copy] autorelease] toLocation:LOC_Dock_Status];
 	[menuItem release];
 
+	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Close Chat","Title for the close chat menu item")
+																	target:self
+																	action:@selector(closeContextualChat:)
+															 keyEquivalent:@""];
+	[menuController addContextualMenuItem:menuItem toLocation:Context_Tab_Action];
+	[menuItem release];
+	
+		
 	//Observe preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
 
@@ -348,7 +351,9 @@
  */
 - (void)closeChat:(AIChat *)inChat
 {
-    [interfacePlugin closeChat:inChat];
+	if (inChat) {
+		[interfacePlugin closeChat:inChat];
+	}
 }
 
 //Consolidate chats into a single container
@@ -535,6 +540,11 @@
 - (IBAction)closeChatMenu:(id)sender
 {
 	if (activeChat) [self closeChat:activeChat];
+}
+
+- (IBAction)closeContextualChat:(id)sender
+{
+	[self closeChat:[[adium menuController] currentContextMenuChat]];
 }
 
 //Loop through open chats and close them
@@ -1231,7 +1241,7 @@
 	if ([responder isKindOfClass:[NSTextView class]]) {
 		NSDictionary	*typingAttributes = [(NSTextView *)responder typingAttributes];
 		NSColor			*foregroundColor, *backgroundColor;
-		NSLog(@"Typing attributes are %@",typingAttributes);
+
 		if ((foregroundColor = [typingAttributes objectForKey:NSForegroundColorAttributeName])) {
 			[[adium preferenceController] setPreference:[foregroundColor stringRepresentation]
 												 forKey:KEY_FORMATTING_TEXT_COLOR

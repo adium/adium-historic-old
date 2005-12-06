@@ -39,7 +39,7 @@
 - (NSMenu *)contextualMenuForListObject:(AIListObject *)listObject
 {
 	NSArray			*locationsArray = [NSArray arrayWithObjects:
-		[NSNumber numberWithInt:Context_Contact_ChatAction],		
+		[NSNumber numberWithInt:Context_Contact_GroupChatAction],		
 		[NSNumber numberWithInt:Context_Contact_Manage],
 		[NSNumber numberWithInt:Context_Contact_Action],
 		[NSNumber numberWithInt:Context_Contact_ListAction],
