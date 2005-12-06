@@ -19,14 +19,6 @@
 
 @implementation AIGaimGTalkAccountViewController
 
-/*!
- * @brief Placeholder string for the UID field
- */
-- (NSString *)UIDPlaceholder
-{
-	return AILocalizedString(@"username@gmail.com","Sample name and server for new gmail accounts");
-}
-
 - (void)awakeFromNib
 {
 	[super awakeFromNib];

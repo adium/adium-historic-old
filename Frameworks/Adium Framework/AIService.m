@@ -170,7 +170,15 @@
  */
 - (NSString *)userNameLabel
 {
-    return nil;    
+    return AILocalizedStringFromTable(@"User Name", @"AdiumFramework", nil);    
+}
+
+/*!
+ * @brief Placeholder string for the UID field
+ */
+- (NSString *)UIDPlaceholder
+{
+	return @"";
 }
 
 /*!
