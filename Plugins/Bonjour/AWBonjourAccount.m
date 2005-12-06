@@ -42,6 +42,7 @@
 #import <AIUtilities/AIObjectAdditions.h>
 
 static	NSLock				*threadPreparednessLock = nil;
+static	NDRunLoopMessenger	*bonjourThreadMessenger = nil;
 static	AWEzv				*_libezvThreadProxy = nil;
 static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
@@ -67,6 +68,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[libezvContacts release];
 	[libezv release];
 
@@ -365,7 +367,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 		AIChat			*chat = [contentTyping chat];
 		AIListObject    *listObject = [chat listObject];
 		NSString		*to = [listObject UID];
-		
+
 		[[self libezvThreadProxy] sendTypingNotification:(([contentTyping typingState] == AITyping) ? AWEzvIsTyping : AWEzvNotTyping)
 													  to:to];
 		sent = YES;
@@ -509,15 +511,21 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
 #pragma mark Bonjour Thread
 
+- (void)clearBonjourThreadInfo
+{
+   [_libezvThreadProxy release]; _libezvThreadProxy = nil;
+   [bonjourThreadMessenger release]; bonjourThreadMessenger = nil;
+   [currentAutoreleasePool release]; currentAutoreleasePool = nil;
+}
+
 - (void)prepareBonjourThread
 {
-	NDRunLoopMessenger	*BonjourThreadMessenger;
 	NSTimer				*autoreleaseTimer;
 
 	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 
-	BonjourThreadMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
-	_libezvThreadProxy = [[BonjourThreadMessenger target:libezv] retain];
+	bonjourThreadMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
+	_libezvThreadProxy = [[bonjourThreadMessenger target:libezv] retain];
 	
 	//Use a timer to periodically release our autorelease pool so we don't continually grow in memory usage
 	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
@@ -525,16 +533,35 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 													   selector:@selector(refreshAutoreleasePool:)
 													   userInfo:nil
 														repeats:YES] retain];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(threadWillExit:) 
+												 name:NSThreadWillExitNotification
+											   object:[NSThread currentThread]];
+
 	//We're good to go; release that lock
 	[threadPreparednessLock unlock];
 	CFRunLoopRun();
 
-	NSAssert(FALSE, @"prepareBonjourThread: CFRunLoopRun() stopped running.");
-			 
+	[self clearBonjourThreadInfo];
 	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
-	[BonjourThreadMessenger release]; BonjourThreadMessenger = nil;
-	[_libezvThreadProxy release]; _libezvThreadProxy = nil;
-    [currentAutoreleasePool release];
+}
+
+/*
+ * @brief The bonjour thread is about to exit for some reason...
+ *
+ * I have no idea why the thread might exit, but it does.  Messaging the libezvThreadProxy after it exits throws an
+ * NDRunLoopMessengerConnectionNoLongerExistsException exception.  If we clear out our data, perhaps we can recover fairly gracefully.
+ *
+ * It will be recreated when next needed.
+ */
+- (void)threadWillExit:(NSNotification *)inNotification
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+												selector:@selector(threadWillExit:) 
+												  object:[inNotification object]];
+	
+	[self clearBonjourThreadInfo];
 }
 
 /*!
