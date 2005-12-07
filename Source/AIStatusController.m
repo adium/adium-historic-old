@@ -1196,7 +1196,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 
 		AILog(@"*** Upgrading Adium 0.7x saved aways: %@", savedAways);
 
-		[[self rootStateGroup] setDelayStatusMenuRebuilding:YES];
+		[self setDelayStatusMenuRebuilding:YES];
 
 		//Update all the away messages to states.
 		while ((state = [enumerator nextObject])) {
@@ -1241,7 +1241,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		AILog(@"*** Finished upgrading old saved statuses");
 
 		//Save these changes and delete the old aways so we don't need to do this again.
-		[[self rootStateGroup] setDelayStatusMenuRebuilding:NO];
+		[self setDelayStatusMenuRebuilding:NO];
 
 		[[adium preferenceController] setPreference:nil
 											 forKey:OLD_KEY_SAVED_AWAYS
