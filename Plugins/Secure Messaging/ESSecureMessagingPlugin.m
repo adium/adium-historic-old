@@ -93,7 +93,7 @@
 
 	menuItem = [[menuItem copy] autorelease];
 	[[adium menuController] addContextualMenuItem:menuItem
-									   toLocation:Context_Contact_TabAction];
+									   toLocation:Context_Contact_ChatAction];
 }
 
 - (void)registerToolbarItem
