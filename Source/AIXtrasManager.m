@@ -23,6 +23,11 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 
+#import "AIXtraPreviewView.h"
+
+#import "AIEmoticonPreviewView.h"
+#import "AIDockIconPreviewView.h"
+
 #define ADIUM_XTRAS_PAGE					AILocalizedString(@"http://www.adiumxtras.com/","Adium xtras page. Localized only if a translated version exists.")
 
 @implementation AIXtrasManager
@@ -156,6 +161,24 @@ static NSImage * scriptImage;
 	selectedCategory = [categories objectAtIndex:[sidebar selectedRow]];
 	[xtraList selectRow:0 byExtendingSelection:NO];
 	[xtraList reloadData];
+	NSArray * subviews = [previewContainerView subviews];
+	if([subviews count] > 0)
+		[[subviews objectAtIndex:0] removeFromSuperview];
+	AIXtraInfo * xtra = [selectedCategory objectAtIndex:0];
+	NSString * xtraType = [xtra type];
+	NSLog(@"%@", xtraType);
+	NSView<AIXtraPreviewView> * view = nil;
+	NSRect r = [previewContainerView bounds];
+	if([xtraType isEqualToString:@"adiumemoticonset"])
+		view = [[[AIEmoticonPreviewView alloc] initWithFrame:r] autorelease];
+	else if([xtraType isEqualToString:@"adiumicon"])
+		view = [[[AIDockIconPreviewView alloc] initWithFrame:r] autorelease];
+	else
+		return; //this won't be needed once we cover all xtra types
+	
+	[previewContainerView addSubview:view];
+	[view setXtraPath:[xtra path]];
+	[previewContainerView setNeedsDisplay:YES];
 }
 
 - (void)deleteXtrasAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -269,13 +292,12 @@ static NSImage * scriptImage;
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
 	if ([aNotification object] == xtraList) {
-		NSString * 	newPath = [[selectedCategory objectAtIndex:[xtraList selectedRow]] readMePath];
-		if ([[xtraList selectedRowIndexes] count] > 1 || !newPath) //more than one xtra selected or no desc provided
-			newPath = [[NSBundle mainBundle] pathForResource:@"DefaultXtraReadme" ofType:@"rtf"];
-		if (![newPath isEqualToString:infoPath]) {
-			[infoPath autorelease];
-			infoPath = [newPath retain];
-			[infoView readRTFDFromFile:infoPath];
+		NSString * 	newPath = [[selectedCategory objectAtIndex:[xtraList selectedRow]] path];
+		if ([[xtraList selectedRowIndexes] count] == 1)
+		{
+			NSArray * subviews = [previewContainerView subviews];
+			if([subviews count] > 0)
+				[[subviews objectAtIndex:0] setXtraPath:newPath];
 		}
 	}
 	else if ([aNotification object] == sidebar) {

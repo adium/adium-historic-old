@@ -1065,6 +1065,13 @@
 		63093C2F0892143500F118D3 /* newContentThreeDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2D0892143500F118D3 /* newContentThreeDigits.png */; };
 		63093C300892143500F118D3 /* newContentTwoDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2E0892143500F118D3 /* newContentTwoDigits.png */; };
 		632D801708E7E0A40032C187 /* XtrasManager.nib in Resources */ = {isa = PBXBuildFile; fileRef = 632D801608E7E0A40032C187 /* XtrasManager.nib */; };
+		633366E5094840A800970871 /* AIDockIconPreviewView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633366DE094840A800970871 /* AIDockIconPreviewView.h */; };
+		633366E6094840A800970871 /* AIDockIconPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633366DF094840A800970871 /* AIDockIconPreviewView.m */; };
+		633366E7094840A800970871 /* AIEmoticonPreviewView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633366E0094840A800970871 /* AIEmoticonPreviewView.h */; };
+		633366E8094840A800970871 /* AIEmoticonPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633366E1094840A800970871 /* AIEmoticonPreviewView.m */; };
+		633366E9094840A800970871 /* AIImageGridXtraPreviewView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633366E2094840A800970871 /* AIImageGridXtraPreviewView.h */; };
+		633366EA094840A800970871 /* AIImageGridXtraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633366E3094840A800970871 /* AIImageGridXtraPreviewView.m */; };
+		633366EB094840A900970871 /* AIXtraPreviewView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633366E4094840A800970871 /* AIXtraPreviewView.h */; };
 		633F175A08F905A700C76383 /* AIXtraInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 633F175608F905A700C76383 /* AIXtraInfo.h */; };
 		633F175B08F905A700C76383 /* AIXtraInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175708F905A700C76383 /* AIXtraInfo.m */; };
 		633F175C08F905A700C76383 /* AIXtrasManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633F175808F905A700C76383 /* AIXtrasManager.h */; };
@@ -2898,6 +2905,13 @@
 		63093C2D0892143500F118D3 /* newContentThreeDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentThreeDigits.png; sourceTree = "<group>"; };
 		63093C2E0892143500F118D3 /* newContentTwoDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentTwoDigits.png; sourceTree = "<group>"; };
 		632D801608E7E0A40032C187 /* XtrasManager.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtrasManager.nib; path = Resources/XtrasManager.nib; sourceTree = "<group>"; };
+		633366DE094840A800970871 /* AIDockIconPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockIconPreviewView.h; path = Source/AIDockIconPreviewView.h; sourceTree = "<group>"; };
+		633366DF094840A800970871 /* AIDockIconPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDockIconPreviewView.m; path = Source/AIDockIconPreviewView.m; sourceTree = "<group>"; };
+		633366E0094840A800970871 /* AIEmoticonPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPreviewView.h; path = Source/AIEmoticonPreviewView.h; sourceTree = "<group>"; };
+		633366E1094840A800970871 /* AIEmoticonPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPreviewView.m; path = Source/AIEmoticonPreviewView.m; sourceTree = "<group>"; };
+		633366E2094840A800970871 /* AIImageGridXtraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIImageGridXtraPreviewView.h; path = Source/AIImageGridXtraPreviewView.h; sourceTree = "<group>"; };
+		633366E3094840A800970871 /* AIImageGridXtraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIImageGridXtraPreviewView.m; path = Source/AIImageGridXtraPreviewView.m; sourceTree = "<group>"; };
+		633366E4094840A800970871 /* AIXtraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraPreviewView.h; path = Source/AIXtraPreviewView.h; sourceTree = "<group>"; };
 		633F175608F905A700C76383 /* AIXtraInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraInfo.h; path = Source/AIXtraInfo.h; sourceTree = "<group>"; };
 		633F175708F905A700C76383 /* AIXtraInfo.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfo.m; path = Source/AIXtraInfo.m; sourceTree = "<group>"; };
 		633F175808F905A700C76383 /* AIXtrasManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtrasManager.h; path = Source/AIXtrasManager.h; sourceTree = "<group>"; };
@@ -5355,6 +5369,7 @@
 		632D800908E7DE2C0032C187 /* Xtras Management */ = {
 			isa = PBXGroup;
 			children = (
+				635647B2093F64A400563BEE /* Xtras Preview Views */,
 				633F175608F905A700C76383 /* AIXtraInfo.h */,
 				633F175708F905A700C76383 /* AIXtraInfo.m */,
 				633F175808F905A700C76383 /* AIXtrasManager.h */,
@@ -5367,6 +5382,20 @@
 				34F1022A0734499600890D3B /* XtraProgressWindow.nib */,
 			);
 			name = "Xtras Management";
+			sourceTree = "<group>";
+		};
+		635647B2093F64A400563BEE /* Xtras Preview Views */ = {
+			isa = PBXGroup;
+			children = (
+				633366DE094840A800970871 /* AIDockIconPreviewView.h */,
+				633366DF094840A800970871 /* AIDockIconPreviewView.m */,
+				633366E0094840A800970871 /* AIEmoticonPreviewView.h */,
+				633366E1094840A800970871 /* AIEmoticonPreviewView.m */,
+				633366E2094840A800970871 /* AIImageGridXtraPreviewView.h */,
+				633366E3094840A800970871 /* AIImageGridXtraPreviewView.m */,
+				633366E4094840A800970871 /* AIXtraPreviewView.h */,
+			);
+			name = "Xtras Preview Views";
 			sourceTree = "<group>";
 		};
 		636AB7EC087E2A2E00A87670 /* Dock Icon Badging */ = {
@@ -6335,6 +6364,10 @@
 				348F57930936F3CC00288E41 /* ESEditStatusGroupWindowController.h in Headers */,
 				344161BD0943E0D900BC26ED /* AdiumSetupWizard.h in Headers */,
 				344162400943E76400BC26ED /* SetupWizardBackgroundView.h in Headers */,
+				633366E5094840A800970871 /* AIDockIconPreviewView.h in Headers */,
+				633366E7094840A800970871 /* AIEmoticonPreviewView.h in Headers */,
+				633366E9094840A800970871 /* AIImageGridXtraPreviewView.h in Headers */,
+				633366EB094840A900970871 /* AIXtraPreviewView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7912,6 +7945,9 @@
 				348F57940936F3CC00288E41 /* ESEditStatusGroupWindowController.m in Sources */,
 				344161BE0943E0D900BC26ED /* AdiumSetupWizard.m in Sources */,
 				344162410943E76400BC26ED /* SetupWizardBackgroundView.m in Sources */,
+				633366E6094840A800970871 /* AIDockIconPreviewView.m in Sources */,
+				633366E8094840A800970871 /* AIEmoticonPreviewView.m in Sources */,
+				633366EA094840A800970871 /* AIImageGridXtraPreviewView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
