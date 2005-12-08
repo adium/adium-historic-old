@@ -339,11 +339,17 @@ Adium, Copyright 2001-2005, Adam Iser
 		//our superview has changed. change which window we're observing the value of acceptsMouseMovedEvents of.
 		//XXX if you know a more grammatically-correct way to restate that statement, feel free to correct it. --boredzo
 		[[change objectForKey:NSKeyValueChangeOldKey] removeObserver:self forKeyPath:@"acceptsMouseMovedEvents"];
-		[[change objectForKey:NSKeyValueChangeNewKey] addObserver:self
-		                                               forKeyPath:@"acceptsMouseMovedEvents"
-		                                                  options:NSKeyValueObservingOptionNew
-		                                                  context:NULL];
+		NSWindow *window = [change objectForKey:NSKeyValueChangeNewKey];
 
+		if (isTracking) {
+			saved_windowAcceptsMouseMovedEvents = [window acceptsMouseMovedEvents];
+			[window setAcceptsMouseMovedEvents:YES];
+		} else {
+			[window addObserver:self
+			         forKeyPath:@"acceptsMouseMovedEvents"
+			            options:NSKeyValueObservingOptionNew
+			            context:NULL];
+		}
 	} else if (object == [self window]) {
 		//the window's accepts-mouse-moved-events value has changed.
 		saved_windowAcceptsMouseMovedEvents = [(NSWindow *)object acceptsMouseMovedEvents];
@@ -384,7 +390,10 @@ Adium, Copyright 2001-2005, Adam Iser
 //Cursor entered our view, begin tracking its movement
 - (void)mouseEntered:(NSEvent *)theEvent
 {
+	isTracking = YES;
 	NSWindow *window = [self window];
+	//don't need to be notified when we change it ourselves...
+	[window removeObserver:self forKeyPath:@"acceptsMouseMovedEvents"];
 	[window setAcceptsMouseMovedEvents:YES];
 	[window makeFirstResponder:self];
 }
@@ -392,8 +401,16 @@ Adium, Copyright 2001-2005, Adam Iser
 //Cursor left our view, stop tracking its movement
 - (void)mouseExited:(NSEvent *)theEvent
 {
-	[[self window] setAcceptsMouseMovedEvents:saved_windowAcceptsMouseMovedEvents];
+	isTracking = NO;
 	[self _setHoveredIndex:-1];
+
+	NSWindow *window = [self window];
+	[window setAcceptsMouseMovedEvents:saved_windowAcceptsMouseMovedEvents];
+	//sign up to receive notifications again.
+	[window addObserver:self
+         forKeyPath:@"acceptsMouseMovedEvents"
+            options:NSKeyValueObservingOptionNew
+            context:NULL];
 }
 
 //Cursor moved, inform our delegate if a new cell is being hovered
