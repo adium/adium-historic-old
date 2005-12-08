@@ -20,8 +20,6 @@
 
 @interface AIDockIconPreviewView : AIImageGridXtraPreviewView <AIXtraPreviewView>
 {
-	AIImageGridView * gridView;
-	NSMutableArray * images;
 }
 
 @end
