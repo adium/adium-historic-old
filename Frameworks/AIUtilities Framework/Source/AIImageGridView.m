@@ -137,10 +137,8 @@ Adium, Copyright 2001-2005, Adam Iser
 - (int)imageIndexAtPoint:(NSPoint)point
 {
 	int 	numberOfImages = [delegate numberOfImagesInImageGridView:self];
-	int 	i;
-	
 	//Determine which image was clicked
-	for (i = 0; i < numberOfImages; i++) {
+	for (int i = 0; i < numberOfImages; i++) {
 		if (NSPointInRect(point, [self rectForImageAtIndex:i])) {
 			return i;
 		}
@@ -151,7 +149,7 @@ Adium, Copyright 2001-2005, Adam Iser
 
 - (void)setDrawsBackground:(BOOL)flag
 {
-	if(flag != drawsBackground) {
+	if (flag != drawsBackground) {
 		drawsBackground = flag;
 		[self setNeedsDisplay:YES];
 	}
@@ -165,15 +163,14 @@ Adium, Copyright 2001-2005, Adam Iser
 - (void)drawRect:(NSRect)drawRect
 {
 	int numberOfImages = [delegate numberOfImagesInImageGridView:self];
-	int i;
 	
-	if(drawsBackground) {
+	if (drawsBackground) {
 		[[NSColor controlBackgroundColor] set];
 		[NSBezierPath fillRect:drawRect];	
 	}
 	
 	//Draw all images that lie in the dirty rect
-	for (i = 0; i < numberOfImages; i++) {
+	for (int i = 0; i < numberOfImages; i++) {
 		NSRect	imageRect = [self rectForImageAtIndex:i];
 
 		if (NSIntersectsRect(drawRect, imageRect)) {
