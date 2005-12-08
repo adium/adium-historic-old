@@ -274,7 +274,8 @@ Adium, Copyright 2001-2005, Adam Iser
 		}
 	}
 }
-- (int)selectedIndex{
+- (int)selectedIndex
+{
 	return selectedIndex;
 }
 
