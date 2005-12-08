@@ -59,13 +59,13 @@ Adium, Copyright 2001-2005, Adam Iser
 	[super dealloc];
 }
 
-
 //Configuration --------------------------------------------------------------------------------------------------------
 #pragma mark Configuration
+
 //Set our delegate
 - (void)setDelegate:(id)inDelegate
 {
-    delegate = inDelegate;
+	delegate = inDelegate;
 	
 	//Make sure this delegate responds to the required methods
 	NSParameterAssert([delegate respondsToSelector:@selector(numberOfImagesInImageGridView:)]);
@@ -82,8 +82,9 @@ Adium, Copyright 2001-2005, Adam Iser
 	if (_respondsToImageHovered) [[self window] setAcceptsMouseMovedEvents:YES];
 	[self reloadData];
 }
-- (id)delegate{
-    return delegate;
+- (id)delegate
+{
+	return delegate;
 }
 
 //Called when delegate data changes
@@ -98,7 +99,8 @@ Adium, Copyright 2001-2005, Adam Iser
 	imageSize = inSize;
 	[self _updateGrid];
 }
-- (NSSize)imageSize{
+- (NSSize)imageSize
+{
 	return imageSize;
 }
 
@@ -108,9 +110,9 @@ Adium, Copyright 2001-2005, Adam Iser
 	[self _updateGridForNewFrame:frameRect];
 }
 
-
 //Drawing and sizing ---------------------------------------------------------------------------------------------------
 #pragma mark Drawing and sizing
+
 //Redisplay an image in the grid
 - (void)setNeedsDisplayOfImageAtIndex:(int)index
 {
@@ -125,10 +127,10 @@ Adium, Copyright 2001-2005, Adam Iser
 	int row = index / columns;
 	int column = index % columns;
 
-	return NSMakeRect(column * (imageSize.width + padding.width) + padding.width,
-					  row * (imageSize.height + padding.height) + padding.height,
-					  imageSize.width,
-					  imageSize.height);
+	return NSMakeRect(column * (imageSize.width  + padding.width)  + padding.width,
+	                  row    * (imageSize.height + padding.height) + padding.height,
+	                  imageSize.width,
+	                  imageSize.height);
 }
 
 //Returns the image index at the specified point in our grid
@@ -149,13 +151,11 @@ Adium, Copyright 2001-2005, Adam Iser
 
 - (void)setDrawsBackground:(BOOL)flag
 {
-	if(flag != drawsBackground)
-	{
+	if(flag != drawsBackground) {
 		drawsBackground = flag;
 		[self setNeedsDisplay:YES];
 	}
 }
-
 - (BOOL)drawsBackground
 {
 	return drawsBackground;
@@ -167,8 +167,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	int numberOfImages = [delegate numberOfImagesInImageGridView:self];
 	int i;
 	
-	if(drawsBackground)
-	{
+	if(drawsBackground) {
 		[[NSColor controlBackgroundColor] set];
 		[NSBezierPath fillRect:drawRect];	
 	}
@@ -192,7 +191,8 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 //Update our frame height, number of columns, and padding
-- (void)_updateGrid{
+- (void)_updateGrid
+{
 	[self _updateGridForNewFrame:[self frame]];
 }
 - (void)_updateGridForNewFrame:(NSRect)newFrame
@@ -219,10 +219,10 @@ Adium, Copyright 2001-2005, Adam Iser
 	[self setNeedsDisplay:YES];
 }
 
-
 //Behavior  ------------------------------------------------------------------------------------------------------------
 //Methods to handle click selection, keyboard selection, and deletion behavior
 #pragma mark Behavior
+
 //Sets our selected index to the passed value, restricting it to within the allowable bounds if necessary.
 //The delegate will be informed of the new selection and the view will be updated to reflect it.
 - (void)selectIndex:(int)index
@@ -272,43 +272,48 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 //We need to accept first responder to get keyboard input
-- (BOOL)acceptsFirstResponder{
+- (BOOL)acceptsFirstResponder
+{
 	return YES;
 }
 
 //Selection changing via keyboard
-- (void)moveRight:(id)sender{
+- (void)moveRight:(id)sender
+{
 	[self selectIndex:selectedIndex+1];
 }
-- (void)moveLeft:(id)sender{
+- (void)moveLeft:(id)sender
+{
 	[self selectIndex:selectedIndex-1];
 }
-- (void)moveUp:(id)sender{
+- (void)moveUp:(id)sender
+{
 	[self selectIndex:selectedIndex-columns];
 }
-- (void)moveDown:(id)sender{
+- (void)moveDown:(id)sender
+{
 	[self selectIndex:selectedIndex+columns];
 }
 
 //Delete selection
 - (void)keyDown:(NSEvent *)theEvent
 {
-    if (_respondsToDeleteSelection && [[theEvent charactersIgnoringModifiers] length]) {
+	if (_respondsToDeleteSelection && [[theEvent charactersIgnoringModifiers] length]) {
 		unichar	pressedKey = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
 		if (pressedKey == NSDeleteFunctionKey || pressedKey == NSBackspaceCharacter || pressedKey == NSDeleteCharacter) { //Delete
 			[delegate imageGridViewDeleteSelectedImage:self];
 			return;
-        }
+		}
 	}
 
 	[super keyDown:theEvent];
 }
 
-
 //Cursor Tracking  -----------------------------------------------------------------------------------------------------
 //If a delegate chooses it can be notified when the user hovers an image in the grid.  This code handles the cursor
 //tracking and messaging required to make that happen.
 #pragma mark Cursor Tracking
+
 //Reset our cursor tracking
 - (void)resetCursorRects
 {
