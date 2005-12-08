@@ -45,6 +45,11 @@ char intToHex(int digit);
 - (NSColor *)colorWithInvertedLuminance;
 - (NSColor *)adjustHue:(float)dHue saturation:(float)dSat brightness:(float)dBrit;
 
+//these use arc4random() for their random numbers. there is no need to seed anything.
+//+randomColor returns alpha=1.0, whereas +randomColorWithAlpha will use a random alpha value.
++ (NSColor *)randomColor;
++ (NSColor *)randomColorWithAlpha;
+
 /*this accepts HTML/SVG colour names (e.g. 'blue', 'yellow') and
  *	hex colour specifications (e.g. '#00f', '#ffff00').
  *it is the same as [colorWithHTMLString:str defaultColor:nil].
