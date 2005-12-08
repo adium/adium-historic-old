@@ -15,8 +15,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
-
-@class AIImageGridView;
+#import <AIUtilities/AIImageGridView.h>
 
 @interface AIImageGridXtraPreviewView : NSView {
 	AIImageGridView * gridView;

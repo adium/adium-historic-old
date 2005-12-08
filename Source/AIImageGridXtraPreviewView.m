@@ -15,7 +15,6 @@
  */
 
 #import "AIImageGridXtraPreviewView.h"
-#import <AIUtilities/AIImageGridView.h>
 
 @implementation AIImageGridXtraPreviewView
 
