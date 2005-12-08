@@ -46,6 +46,22 @@ Adium, Copyright 2001-2005, Adam Iser
 
 - (void)_initImageGridView
 {
+	NSWindow *window = [self window];
+	if (window) {
+		saved_windowAcceptsMouseMovedEvents = [window acceptsMouseMovedEvents];
+
+		//get notified when it changes.
+		[window addObserver:self
+		         forKeyPath:@"acceptsMouseMovedEvents"
+		            options:NSKeyValueObservingOptionNew
+		            context:NULL];
+	}
+	//when our superview changes, we may have moved to a different window, so we should update our observance of acceptsMouseMovedEvents.
+	[self addObserver:self
+	       forKeyPath:@"superview"
+	          options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
+	          context:NULL];
+
 	cell = [[AIScaledImageCell alloc] init];
 	imageSize = NSMakeSize(64,64);
 	selectedIndex = -1;
@@ -314,6 +330,26 @@ Adium, Copyright 2001-2005, Adam Iser
 	[super keyDown:theEvent];
 }
 
+//KVO --------------------------------------------------------------------------------------------------------
+#pragma mark Key-value observing compliance
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if (object == self) {
+		//our superview has changed. change which window we're observing the value of acceptsMouseMovedEvents of.
+		//XXX if you know a more grammatically-correct way to restate that statement, feel free to correct it. --boredzo
+		[[change objectForKey:NSKeyValueChangeOldKey] removeObserver:self forKeyPath:@"acceptsMouseMovedEvents"];
+		[[change objectForKey:NSKeyValueChangeNewKey] addObserver:self
+		                                               forKeyPath:@"acceptsMouseMovedEvents"
+		                                                  options:NSKeyValueObservingOptionNew
+		                                                  context:NULL];
+
+	} else if (object == [self window]) {
+		//the window's accepts-mouse-moved-events value has changed.
+		saved_windowAcceptsMouseMovedEvents = [(NSWindow *)object acceptsMouseMovedEvents];
+	}
+}
+
 //Cursor Tracking  -----------------------------------------------------------------------------------------------------
 //If a delegate chooses it can be notified when the user hovers an image in the grid.  This code handles the cursor
 //tracking and messaging required to make that happen.
@@ -348,16 +384,15 @@ Adium, Copyright 2001-2005, Adam Iser
 //Cursor entered our view, begin tracking its movement
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-	[[self window] setAcceptsMouseMovedEvents:YES];
-	[[self window] makeFirstResponder:self];
+	NSWindow *window = [self window];
+	[window setAcceptsMouseMovedEvents:YES];
+	[window makeFirstResponder:self];
 }
 
 //Cursor left our view, stop tracking its movement
 - (void)mouseExited:(NSEvent *)theEvent
 {
-	//XXX - What if other views want mouse moved events?
-	//Well thats just too bad then >:) -ai
-	[[self window] setAcceptsMouseMovedEvents:NO];
+	[[self window] setAcceptsMouseMovedEvents:saved_windowAcceptsMouseMovedEvents];
 	[self _setHoveredIndex:-1];
 }
 
