@@ -118,6 +118,14 @@ Adium, Copyright 2001-2005, Adam Iser
 - (void)selectIndex:(int)index;
 
 /*!
+ * @brief Set the selected image, relative to the current one
+ *
+ * Select an image with a position relative to the current selected image.  The delegate is informed of selection changes.
+ * @param delta Amount of positions to relocate the selection (0 = keep current selection; +1 = select next item)
+ */
+- (void)selectRelativeIndex:(signed int)delta;
+
+/*!
  * @brief Retrieve the selected image
  *
  * @return index of the currently selected image

@@ -277,22 +277,30 @@ Adium, Copyright 2001-2005, Adam Iser
 	return YES;
 }
 
+//selects an index relative to the current selectedIndex.
+- (void)selectRelativeIndex:(signed int)delta
+{
+	if (delta) {
+		[self selectIndex:selectedIndex + delta];
+	}
+}
+
 //Selection changing via keyboard
 - (void)moveRight:(id)sender
 {
-	[self selectIndex:selectedIndex+1];
+	[self selectRelativeIndex:+1];
 }
 - (void)moveLeft:(id)sender
 {
-	[self selectIndex:selectedIndex-1];
+	[self selectRelativeIndex:-1];
 }
 - (void)moveUp:(id)sender
 {
-	[self selectIndex:selectedIndex-columns];
+	[self selectRelativeIndex:-columns];
 }
 - (void)moveDown:(id)sender
 {
-	[self selectIndex:selectedIndex+columns];
+	[self selectRelativeIndex: columns];
 }
 
 //Delete selection
