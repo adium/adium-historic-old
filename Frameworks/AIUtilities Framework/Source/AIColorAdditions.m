@@ -458,6 +458,20 @@ float _v(float m1, float m2, float hue) {
 	}
 }
 
++ (NSColor *)randomColor {
+	return [NSColor colorWithCalibratedRed:(arc4random() % 65536) / 65536.0
+	                                 green:(arc4random() % 65536) / 65536.0
+	                                  blue:(arc4random() % 65536) / 65536.0
+	                                 alpha:1.0];
+}
++ (NSColor *)randomColorWithAlpha {
+	return [NSColor colorWithCalibratedRed:(arc4random() % 65536) / 65536.0
+	                                 green:(arc4random() % 65536) / 65536.0
+	                                  blue:(arc4random() % 65536) / 65536.0
+	                                 alpha:(arc4random() % 65536) / 65536.0];
+}
+
+
 + (id)colorWithHTMLString:(NSString *)str
 {
 	return [self colorWithHTMLString:str defaultColor:nil];
