@@ -44,6 +44,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	BOOL		_respondsToDeleteSelection;
 	BOOL		_respondsToImageHovered;
 	BOOL		drawsBackground;
+	BOOL		saved_windowAcceptsMouseMovedEvents;
 }
 
 /*!
