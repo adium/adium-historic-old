@@ -43,6 +43,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	BOOL		_respondsToSelectionIsChanging;
 	BOOL		_respondsToDeleteSelection;
 	BOOL		_respondsToImageHovered;
+	BOOL		drawsBackground;
 }
 
 /*!
@@ -122,6 +123,20 @@ Adium, Copyright 2001-2005, Adam Iser
  * @return index of the currently selected image
  */
 - (int)selectedIndex;
+
+/*!
+ * @brief Check whether the receiver is set to draw its background
+ *
+ * @return a BOOL indicating if the background is drawn
+ */
+- (BOOL)drawsBackground;
+
+/*!
+ * @brief Set whether the receiver draws its background
+ *
+ * @param flag A BOOL indicating whether or not to draw the background
+ */
+- (void)setDrawsBackground:(BOOL)flag;
 
 @end
 
