@@ -530,15 +530,15 @@ float _v(float m1, float m2, float hue) {
 
 	red   = hexToInt(*(hexString++));
 	if (isLong) red    = (red   * 16.0 + hexToInt(*(hexString++))) / 255.0;
-	else       red   /= 15.0;
+	else        red   /= 15.0;
 
 	green = hexToInt(*(hexString++));
 	if (isLong) green  = (green * 16.0 + hexToInt(*(hexString++))) / 255.0;
-	else       green /= 15.0;
+	else        green /= 15.0;
 
 	blue  = hexToInt(*(hexString++));
 	if (isLong) blue   = (blue  * 16.0 + hexToInt(*(hexString++))) / 255.0;
-	else       blue  /= 15.0;
+	else        blue  /= 15.0;
 
 	if (*hexString) {
 		//we still have one more component to go: this is alpha.
