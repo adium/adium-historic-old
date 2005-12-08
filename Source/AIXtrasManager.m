@@ -27,6 +27,7 @@
 
 #import "AIEmoticonPreviewView.h"
 #import "AIDockIconPreviewView.h"
+#import "AIStatusIconPreviewView.h"
 
 #define ADIUM_XTRAS_PAGE					AILocalizedString(@"http://www.adiumxtras.com/","Adium xtras page. Localized only if a translated version exists.")
 
@@ -173,6 +174,8 @@ static NSImage * scriptImage;
 		view = [[[AIEmoticonPreviewView alloc] initWithFrame:r] autorelease];
 	else if([xtraType isEqualToString:@"adiumicon"])
 		view = [[[AIDockIconPreviewView alloc] initWithFrame:r] autorelease];
+	else if([xtraType isEqualToString:@"adiumstatusicons"])
+		view = [[[AIStatusIconPreviewView alloc] initWithFrame:r] autorelease];
 	else
 		return; //this won't be needed once we cover all xtra types
 	

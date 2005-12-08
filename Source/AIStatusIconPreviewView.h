@@ -14,29 +14,13 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIDockIconPreviewView.h"
-#import <Adium/AIIconState.h>
-#import <Adium/AIObject.h>
+#import <Cocoa/Cocoa.h>
+#import "AIImageGridXtraPreviewView.h"
+#import "AIXtraPreviewView.h"
 
-@implementation AIDockIconPreviewView
-
-- (void) setXtraPath:(NSString *)path
+@interface AIStatusIconPreviewView : AIImageGridXtraPreviewView <AIXtraPreviewView> 
 {
-	[images autorelease];
-	images = [[NSMutableArray alloc] init];
-	NSArray * iconStates = [[[[AIObject sharedAdiumInstance] dockController] iconPackAtPath:path] objectForKey:@"State"];
-	NSEnumerator * e = [iconStates objectEnumerator];
-	AIIconState * icon;
-	NSImage * image;
-	while((icon = [e nextObject])) {
-		image = [icon image];
-		if(image) 
-			[images addObject:image];
-	}
-	float size = 64;//[self bounds].size.width / [images count];
-	[gridView setImageSize:NSMakeSize(size, size)];
-#warning this is SUCH a hack
-	[(NSSplitView *)[[self superview] superview] adjustSubviews];
+
 }
 
 @end
