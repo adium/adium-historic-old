@@ -316,12 +316,12 @@ Adium, Copyright 2001-2005, Adam Iser
 	[self selectRelativeIndex: columns];
 }
 
-//Delete selection
 - (void)keyDown:(NSEvent *)theEvent
 {
 	if (_respondsToDeleteSelection && [[theEvent charactersIgnoringModifiers] length]) {
 		unichar	pressedKey = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
 		if (pressedKey == NSDeleteFunctionKey || pressedKey == NSBackspaceCharacter || pressedKey == NSDeleteCharacter) { //Delete
+			//Delete selected image
 			[delegate imageGridViewDeleteSelectedImage:self];
 			return;
 		}
@@ -359,6 +359,7 @@ Adium, Copyright 2001-2005, Adam Iser
 //Cursor Tracking  -----------------------------------------------------------------------------------------------------
 //If a delegate chooses it can be notified when the user hovers an image in the grid.  This code handles the cursor
 //tracking and messaging required to make that happen.
+//Also, while we're tracking (but not otherwise), we accept arrow-key commands.
 #pragma mark Cursor Tracking
 
 //Reset our cursor tracking
