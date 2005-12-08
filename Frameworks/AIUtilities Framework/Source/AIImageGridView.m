@@ -147,14 +147,31 @@ Adium, Copyright 2001-2005, Adam Iser
 	return -1;
 }
 
+- (void)setDrawsBackground:(BOOL)flag
+{
+	if(flag != drawsBackground)
+	{
+		drawsBackground = flag;
+		[self setNeedsDisplay:YES];
+	}
+}
+
+- (BOOL)drawsBackground
+{
+	return drawsBackground;
+}
+
 //Draw
 - (void)drawRect:(NSRect)drawRect
 {
 	int numberOfImages = [delegate numberOfImagesInImageGridView:self];
 	int i;
 	
-	[[NSColor controlBackgroundColor] set];
-	[NSBezierPath fillRect:drawRect];
+	if(drawsBackground)
+	{
+		[[NSColor controlBackgroundColor] set];
+		[NSBezierPath fillRect:drawRect];	
+	}
 	
 	//Draw all images that lie in the dirty rect
 	for (i = 0; i < numberOfImages; i++) {
