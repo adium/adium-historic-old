@@ -171,21 +171,25 @@ static NSImage * scriptImage;
 	NSLog(@"%@", xtraType);
 	NSView<AIXtraPreviewView> * view = nil;
 	NSRect r = [previewContainerView bounds];
+	[previewContainerView removeAllSubviews];
 	#warning magic strings bad! bad programmer! no cookie!
 	if ([xtraType isEqualToString:@"adiumemoticonset"])
-		view = [[[AIEmoticonPreviewView alloc] initWithFrame:r] autorelease];
+		[NSBundle loadNibNamed:@"AdiumEmoticonSetPreview" owner:self];
 	else if ([xtraType isEqualToString:@"adiumicon"])
-		view = [[[AIDockIconPreviewView alloc] initWithFrame:r] autorelease];
+		[NSBundle loadNibNamed:@"AdiumDockIconPreview" owner:self];
 	else if ([xtraType isEqualToString:@"adiumstatusicons"])
-		view = [[[AIStatusIconPreviewView alloc] initWithFrame:r] autorelease];
+		[NSBundle loadNibNamed:@"AdiumStatusIconPreview" owner:self];
 	else if ([xtraType isEqualToString:@"adiumscripts"])
-		view = [[[AIScriptPreviewView alloc] initWithFrame:r] autorelease];
-	else
-		return; //this won't be needed once we cover all xtra types
+		/* special handling, we'll just want to disable the preview and show the readme */
 	
-	[previewContainerView addSubview:view];
-	[view setXtra:xtra];
-	[previewContainerView setNeedsDisplay:YES];
+	if(previewView)
+	{
+		[previewContainerView addSubview:previewView];
+		[previewView release];
+		[view setXtra:xtra];
+		[previewContainerView setNeedsDisplay:YES];
+	}
+	
 }
 
 - (void)deleteXtrasAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo

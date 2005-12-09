@@ -19,17 +19,19 @@
 @class AIXtraInfo;
 
 @interface AIXtrasManager : AIObject {
-	NSMutableDictionary				*disabledXtras;
-	NSMutableArray					*categoryNames;
-	NSMutableArray					*categories;
-	NSMutableArray					*categoryImages;
-	NSMutableArray					*selectedCategory;
-	IBOutlet NSWindow				*window;
-	IBOutlet NSTableView			*sidebar;
-	IBOutlet NSTableView			*xtraList;
-	IBOutlet NSTextView				*infoView;
-	IBOutlet NSView					*previewContainerView;
-	NSString						*infoPath;
+	NSMutableDictionary					*disabledXtras;
+	NSMutableArray						*categoryNames;
+	NSMutableArray						*categories;
+	NSMutableArray						*categoryImages;
+	NSMutableArray						*selectedCategory;
+	IBOutlet NSWindow					*window;
+	IBOutlet NSTableView				*sidebar;
+	IBOutlet NSTableView				*xtraList;
+	IBOutlet NSTextView					*infoView;
+	IBOutlet NSView						*previewContainerView;
+	IBOutlet NSView<AIXtraPreviewView>	*previewView;
+	IBOutlet NSView						*readmeView;
+	NSString							*infoPath;
 }
 
 + (AIXtrasManager *) sharedManager;
