@@ -15,6 +15,7 @@
  */
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIObject.h>
+#import "AIXtraPreviewView.h"
 
 @class AIXtraInfo;
 
