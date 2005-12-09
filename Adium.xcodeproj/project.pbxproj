@@ -1072,6 +1072,8 @@
 		633366E9094840A800970871 /* AIImageGridXtraPreviewView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633366E2094840A800970871 /* AIImageGridXtraPreviewView.h */; };
 		633366EA094840A800970871 /* AIImageGridXtraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633366E3094840A800970871 /* AIImageGridXtraPreviewView.m */; };
 		633366EB094840A900970871 /* AIXtraPreviewView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633366E4094840A800970871 /* AIXtraPreviewView.h */; };
+		633367370948DDDE00970871 /* AIStatusIconPreviewView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633367350948DDDE00970871 /* AIStatusIconPreviewView.h */; };
+		633367380948DDDE00970871 /* AIStatusIconPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633367360948DDDE00970871 /* AIStatusIconPreviewView.m */; };
 		633F175A08F905A700C76383 /* AIXtraInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 633F175608F905A700C76383 /* AIXtraInfo.h */; };
 		633F175B08F905A700C76383 /* AIXtraInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175708F905A700C76383 /* AIXtraInfo.m */; };
 		633F175C08F905A700C76383 /* AIXtrasManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633F175808F905A700C76383 /* AIXtrasManager.h */; };
@@ -2912,6 +2914,8 @@
 		633366E2094840A800970871 /* AIImageGridXtraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIImageGridXtraPreviewView.h; path = Source/AIImageGridXtraPreviewView.h; sourceTree = "<group>"; };
 		633366E3094840A800970871 /* AIImageGridXtraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIImageGridXtraPreviewView.m; path = Source/AIImageGridXtraPreviewView.m; sourceTree = "<group>"; };
 		633366E4094840A800970871 /* AIXtraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraPreviewView.h; path = Source/AIXtraPreviewView.h; sourceTree = "<group>"; };
+		633367350948DDDE00970871 /* AIStatusIconPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusIconPreviewView.h; path = Source/AIStatusIconPreviewView.h; sourceTree = "<group>"; };
+		633367360948DDDE00970871 /* AIStatusIconPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStatusIconPreviewView.m; path = Source/AIStatusIconPreviewView.m; sourceTree = "<group>"; };
 		633F175608F905A700C76383 /* AIXtraInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraInfo.h; path = Source/AIXtraInfo.h; sourceTree = "<group>"; };
 		633F175708F905A700C76383 /* AIXtraInfo.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfo.m; path = Source/AIXtraInfo.m; sourceTree = "<group>"; };
 		633F175808F905A700C76383 /* AIXtrasManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtrasManager.h; path = Source/AIXtrasManager.h; sourceTree = "<group>"; };
@@ -5393,6 +5397,8 @@
 				633366E1094840A800970871 /* AIEmoticonPreviewView.m */,
 				633366E2094840A800970871 /* AIImageGridXtraPreviewView.h */,
 				633366E3094840A800970871 /* AIImageGridXtraPreviewView.m */,
+				633367350948DDDE00970871 /* AIStatusIconPreviewView.h */,
+				633367360948DDDE00970871 /* AIStatusIconPreviewView.m */,
 				633366E4094840A800970871 /* AIXtraPreviewView.h */,
 			);
 			name = "Xtras Preview Views";
@@ -6368,6 +6374,7 @@
 				633366E7094840A800970871 /* AIEmoticonPreviewView.h in Headers */,
 				633366E9094840A800970871 /* AIImageGridXtraPreviewView.h in Headers */,
 				633366EB094840A900970871 /* AIXtraPreviewView.h in Headers */,
+				633367370948DDDE00970871 /* AIStatusIconPreviewView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7948,6 +7955,7 @@
 				633366E6094840A800970871 /* AIDockIconPreviewView.m in Sources */,
 				633366E8094840A800970871 /* AIEmoticonPreviewView.m in Sources */,
 				633366EA094840A800970871 /* AIImageGridXtraPreviewView.m in Sources */,
+				633367380948DDDE00970871 /* AIStatusIconPreviewView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
