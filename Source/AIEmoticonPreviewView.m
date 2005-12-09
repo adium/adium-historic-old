@@ -22,6 +22,7 @@
 
 - (void) awakeFromNib
 {	
+//	[super awakeFromNib];
 	tableView = [[[NSTableView alloc] initWithFrame:[self bounds]]autorelease];
 	[tableView setIntercellSpacing:NSMakeSize(1.0f, 3.0f)];
 	[tableView setDelegate:self];
