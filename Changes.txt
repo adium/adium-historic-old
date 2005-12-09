@@ -31,10 +31,10 @@ Version 0.87 (12/7/2005)
  * Improved automatic installation from adiumxtras.com
  * Removed the Sametime "contact list setting" option, defaulting to "Load and Save From/To Server"
  * Removed dependency on the Apple Gothic font for drawing file transfer window arrows [#2300]
+ * Added Brazilian Portuguese translation [#2284]
  * Added Canadian English translation [#2244]
  * Added Polish translation
  * Catalan, Czech, Dutch, French, German, Icelandic, Italian, Japanese, Norwegian, Russian, Simplified Chinese, Swedish, and Traditional Chinese translation updates
-
 
 Version 0.86 (10/27/2005)
  * Resolved rate limiting error with the AIM protocol [#1780]
