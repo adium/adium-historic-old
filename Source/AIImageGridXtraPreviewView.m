@@ -20,7 +20,7 @@
 
 - (void) awakeFromNib
 {
-]	images = [[NSMutableArray alloc] init];
+	images = [[NSMutableArray alloc] init];
 	gridView = [[[AIImageGridView alloc] initWithFrame:[self bounds]] autorelease];
 	[gridView setDelegate:self];
 	[gridView setDrawsBackground:NO];
