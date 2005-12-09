@@ -65,6 +65,10 @@
 	[[xtraList tableColumnWithIdentifier:@"xtras"] setDataCell:cell];
 	[cell release];
 	
+	[previewContainerView setHasVerticalScroller:YES];
+	[previewContainerView setAutohidesScrollers:YES];
+	[previewContainerView setBorderType:NSBezelBorder];
+	
 	[self setCategory:nil];
 	
 	[window makeKeyAndOrderFront:nil];
@@ -163,30 +167,23 @@ static NSImage * scriptImage;
 	selectedCategory = [categories objectAtIndex:[sidebar selectedRow]];
 	[xtraList selectRow:0 byExtendingSelection:NO];
 	[xtraList reloadData];
-	NSArray * subviews = [previewContainerView subviews];
-	if([subviews count] > 0)
-		[[subviews objectAtIndex:0] removeFromSuperview];
 	AIXtraInfo * xtra = [selectedCategory objectAtIndex:0];
 	NSString * xtraType = [xtra type];
-	NSView<AIXtraPreviewView> * view = nil;
-	[previewView removeFromSuperviewWithoutNeedingDisplay];
 	#warning magic strings bad! bad programmer! no cookie!
-	if ([xtraType isEqualToString:@"adiumemoticonset"]) {
-		if(![NSBundle loadNibNamed:@"EmoticonPreviewView" owner:self]) { NSLog(@"Strongbad"); } 
-	}
+	if ([xtraType isEqualToString:@"adiumemoticonset"])
+		[NSBundle loadNibNamed:@"EmoticonPreviewView" owner:self];
 	else if ([xtraType isEqualToString:@"adiumicon"])
 		[NSBundle loadNibNamed:@"DockIconPreviewView" owner:self];
 	else if ([xtraType isEqualToString:@"adiumstatusicons"])
 		[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self];
-	else if ([xtraType isEqualToString:@"adiumscripts"])
+	else if ([xtraType isEqualToString:@"adiumscripts"]) {
 		/* special handling, we'll just want to disable the preview and show the readme */
-		NSLog(@"preview view is: %@", previewView);
+	}
 	if(previewView)
 	{
-		[previewView setBoundsSize:[previewContainerView bounds].size];
-		[previewContainerView addSubview:previewView];
-		[previewView release];
-		[view setXtra:xtra];
+		[previewView setBoundsSize:[previewContainerView contentSize]];
+		[previewContainerView setDocumentView:previewView];
+		[previewView setXtra:xtra];
 		[previewContainerView setNeedsDisplay:YES];
 	}
 	
@@ -303,9 +300,8 @@ static NSImage * scriptImage;
 	if ([aNotification object] == xtraList) {
 		AIXtraInfo *xtraInfo  = [AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[[selectedCategory objectAtIndex:[xtraList selectedRow]] path]]];
 		if ([[xtraList selectedRowIndexes] count] == 1) {
-			NSArray * subviews = [previewContainerView subviews];
-			if([subviews count] > 0)
-				[[subviews objectAtIndex:0] setXtra:xtraInfo];
+			NSView<AIXtraPreviewView> *view = [previewContainerView documentView];
+			[view setXtra:xtraInfo];
 		}
 	}
 	else if ([aNotification object] == sidebar) {

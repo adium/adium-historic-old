@@ -22,10 +22,10 @@
 
 - (void) awakeFromNib
 {
-	NSScrollView * scrollView = [[[NSScrollView alloc] initWithFrame:[self bounds]] autorelease];
-	[scrollView setAutohidesScrollers:YES];
-	[scrollView setHasVerticalScroller:YES];
-	[scrollView setBorderType:NSBezelBorder];
+	//NSScrollView * scrollView = [[[NSScrollView alloc] initWithFrame:[self bounds]] autorelease];
+//	[scrollView setAutohidesScrollers:YES];
+//	[scrollView setHasVerticalScroller:YES];
+//	[scrollView setBorderType:NSBezelBorder];
 	
 	tableView = [[[NSTableView alloc] initWithFrame:[self bounds]]autorelease];
 	[tableView setIntercellSpacing:NSMakeSize(1.0f, 3.0f)];
@@ -45,9 +45,9 @@
 	[tableView addTableColumn:column];
 	[column release];
 	
-	[scrollView setDocumentView:tableView];
+//	[scrollView setDocumentView:tableView];
 	
-	[self addSubview:scrollView];
+	[self addSubview:/*scrollView*/tableView];
 }
 
 - (BOOL)tableView:(NSTableView *)aTableView shouldSelectRow:(int)rowIndex
