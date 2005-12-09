@@ -320,6 +320,21 @@
 	return _backgroundColorWithOpacity;
 }
 
+- (void)setHighlightColor:(NSColor *)inColor
+{
+	if (highlightColor != inColor) {
+		[self willChangeValueForKey:@"highlightColor"];
+		[highlightColor release];
+		highlightColor = [inColor retain];
+		[self  didChangeValueForKey:@"highlightColor"];
+	}
+	[self setNeedsDisplay:YES];
+}
+- (NSColor *)highlightColor
+{
+	return highlightColor;
+}
+
 //Alternating row color (Opacity is added into the return automatically)
 - (void)setAlternatingRowColor:(NSColor *)color
 {

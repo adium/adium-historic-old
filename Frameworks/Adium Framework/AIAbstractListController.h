@@ -130,6 +130,7 @@ typedef enum {
 #define KEY_LIST_THEME_BACKGROUND_IMAGE_STYLE		@"Background Image Style"
 
 #define KEY_LIST_THEME_BACKGROUND_COLOR				@"Background Color"
+#define KEY_LIST_THEME_HIGHLIGHT_COLOR				@"Highlight Color"
 #define KEY_LIST_THEME_GRID_COLOR					@"Grid Color"
 
 #define KEY_LIST_THEME_GROUP_BACKGROUND				@"Group Background"

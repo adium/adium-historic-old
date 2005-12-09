@@ -39,7 +39,9 @@ typedef enum {
 	NSColor				*backgroundColor;
 	NSColor				*_backgroundColorWithOpacity;
 	float				backgroundOpacity;
-	
+
+	NSColor				*highlightColor;
+
 	NSColor				*rowColor;
 	NSColor				*_rowColorWithOpacity;
 	
@@ -72,6 +74,8 @@ typedef enum {
 - (void)setBackgroundFade:(float)fade;
 - (void)setBackgroundColor:(NSColor *)inColor;
 - (NSColor *)backgroundColor;
+- (void)setHighlightColor:(NSColor *)inColor;
+- (NSColor *)highlightColor;
 - (void)setAlternatingRowColor:(NSColor *)color;
 - (NSColor *)alternatingRowColor;
 
