@@ -23,14 +23,17 @@
 	NSImage			*icon;
 	NSString		*resourcePath;
 	NSString		*type;
+	NSString		*readMePath;
 }
+
++ (AIXtraInfo *) infoWithURL:(NSURL *)url;
+- (id) initWithURL:(NSURL *)url;
 
 - (NSString *)type;
 - (NSString *)path;
 - (NSString *)name;
 - (NSString *)resourcePath;
-- (void) setName:(NSString *)name;
-+ (AIXtraInfo *) infoWithURL:(NSURL *)url;//url to a plist with info
-- (id) initWithURL:(NSURL *)url;//url to a plist with info
-- (NSImage *) icon;
+- (NSString *)readMePath;
+- (NSImage *)icon;
+- (void)setName:(NSString *)name;
 @end

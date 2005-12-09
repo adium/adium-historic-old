@@ -20,11 +20,11 @@
 
 @implementation AIEmoticonPreviewView
 
-- (void) setXtraPath:(NSString *)path
+- (void) setXtra:(AIXtraInfo *)xtraInfo
 {
 	[images autorelease];
 	images = [[NSMutableArray alloc] init];
-	NSArray * emoticons = [[AIEmoticonPack emoticonPackFromPath:path] emoticons];
+	NSArray * emoticons = [[AIEmoticonPack emoticonPackFromPath:[xtraInfo path]] emoticons];
 	NSEnumerator * e = [emoticons objectEnumerator];
 	NSImage * image;
 	NSSize size;

@@ -1132,6 +1132,8 @@
 		7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */; };
 		7E824CEA06387FAF00813072 /* SHLinkManagementPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */; };
 		7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */; };
+		9E0B7032094916FC005A5945 /* AIScriptPreviewView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E0B7030094916FB005A5945 /* AIScriptPreviewView.h */; };
+		9E0B7033094916FC005A5945 /* AIScriptPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0B7031094916FC005A5945 /* AIScriptPreviewView.m */; };
 		9E124DEB07D34C7300AA91C5 /* CBGrowlAlertDetailPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */; };
 		9E124DEC07D34C7300AA91C5 /* CBGrowlAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */; };
 		9E124DED07D34C7400AA91C5 /* NEHGrowlPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E124DE907D34C7300AA91C5 /* NEHGrowlPlugin.h */; };
@@ -2986,6 +2988,8 @@
 		9C103FAE057127A500F3C158 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		9C8C7FA403CBA21B00267226 /* AILoggerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILoggerPlugin.h; path = Plugins/Logger/AILoggerPlugin.h; sourceTree = "<group>"; };
 		9C8C7FA503CBA21B00267226 /* AILoggerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILoggerPlugin.m; path = Plugins/Logger/AILoggerPlugin.m; sourceTree = "<group>"; };
+		9E0B7030094916FB005A5945 /* AIScriptPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIScriptPreviewView.h; path = Source/AIScriptPreviewView.h; sourceTree = "<group>"; };
+		9E0B7031094916FC005A5945 /* AIScriptPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScriptPreviewView.m; path = Source/AIScriptPreviewView.m; sourceTree = "<group>"; };
 		9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBGrowlAlertDetailPane.h; path = Source/CBGrowlAlertDetailPane.h; sourceTree = "<group>"; };
 		9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBGrowlAlertDetailPane.m; path = Source/CBGrowlAlertDetailPane.m; sourceTree = "<group>"; };
 		9E124DE907D34C7300AA91C5 /* NEHGrowlPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NEHGrowlPlugin.h; path = Source/NEHGrowlPlugin.h; sourceTree = "<group>"; };
@@ -5399,6 +5403,8 @@
 				633366E3094840A800970871 /* AIImageGridXtraPreviewView.m */,
 				633367350948DDDE00970871 /* AIStatusIconPreviewView.h */,
 				633367360948DDDE00970871 /* AIStatusIconPreviewView.m */,
+				9E0B7030094916FB005A5945 /* AIScriptPreviewView.h */,
+				9E0B7031094916FC005A5945 /* AIScriptPreviewView.m */,
 				633366E4094840A800970871 /* AIXtraPreviewView.h */,
 			);
 			name = "Xtras Preview Views";
@@ -6375,6 +6381,7 @@
 				633366E9094840A800970871 /* AIImageGridXtraPreviewView.h in Headers */,
 				633366EB094840A900970871 /* AIXtraPreviewView.h in Headers */,
 				633367370948DDDE00970871 /* AIStatusIconPreviewView.h in Headers */,
+				9E0B7032094916FC005A5945 /* AIScriptPreviewView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7956,6 +7963,7 @@
 				633366E8094840A800970871 /* AIEmoticonPreviewView.m in Sources */,
 				633366EA094840A800970871 /* AIImageGridXtraPreviewView.m in Sources */,
 				633367380948DDDE00970871 /* AIStatusIconPreviewView.m in Sources */,
+				9E0B7033094916FC005A5945 /* AIScriptPreviewView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
