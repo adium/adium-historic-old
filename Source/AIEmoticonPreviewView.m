@@ -20,38 +20,34 @@
 
 @implementation AIEmoticonPreviewView
 
-- (id) initWithFrame:(NSRect)frame
+- (void) awakeFromNib
 {
-	if((self = [super initWithFrame:frame]))
-	{
-		NSScrollView * scrollView = [[[NSScrollView alloc] initWithFrame:[self bounds]] autorelease];
-		[scrollView setAutohidesScrollers:YES];
-		[scrollView setHasVerticalScroller:YES];
-		[scrollView setBorderType:NSBezelBorder];
-		
-		tableView = [[[NSTableView alloc] initWithFrame:[self bounds]]autorelease];
-		[tableView setIntercellSpacing:NSMakeSize(1.0f, 3.0f)];
-		[tableView setDelegate:self];
-		[tableView setDataSource:self];
-		[tableView setHeaderView:nil];
-		[tableView sizeToFit];
-		
-		NSTableColumn * column = [[NSTableColumn alloc] initWithIdentifier:@"Emoticon"];
-		[column setMaxWidth:32.0f];
-		[column setMinWidth:32.0f];
-		[column setDataCell:[[[NSImageCell alloc]init]autorelease]];
-		[tableView addTableColumn:column];
-		[column release];
-		
-		column = [[NSTableColumn alloc] initWithIdentifier:@"Text Equivalent"];
-		[tableView addTableColumn:column];
-		[column release];
-		
-		[scrollView setDocumentView:tableView];
-		
-		[self addSubview:scrollView];
-	}
-	return self;
+	NSScrollView * scrollView = [[[NSScrollView alloc] initWithFrame:[self bounds]] autorelease];
+	[scrollView setAutohidesScrollers:YES];
+	[scrollView setHasVerticalScroller:YES];
+	[scrollView setBorderType:NSBezelBorder];
+	
+	tableView = [[[NSTableView alloc] initWithFrame:[self bounds]]autorelease];
+	[tableView setIntercellSpacing:NSMakeSize(1.0f, 3.0f)];
+	[tableView setDelegate:self];
+	[tableView setDataSource:self];
+	[tableView setHeaderView:nil];
+	[tableView sizeToFit];
+	
+	NSTableColumn * column = [[NSTableColumn alloc] initWithIdentifier:@"Emoticon"];
+	[column setMaxWidth:32.0f];
+	[column setMinWidth:32.0f];
+	[column setDataCell:[[[NSImageCell alloc]init]autorelease]];
+	[tableView addTableColumn:column];
+	[column release];
+	
+	column = [[NSTableColumn alloc] initWithIdentifier:@"Text Equivalent"];
+	[tableView addTableColumn:column];
+	[column release];
+	
+	[scrollView setDocumentView:tableView];
+	
+	[self addSubview:scrollView];
 }
 
 - (BOOL)tableView:(NSTableView *)aTableView shouldSelectRow:(int)rowIndex

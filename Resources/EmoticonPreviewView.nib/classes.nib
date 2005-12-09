@@ -1,0 +1,23 @@
+{
+    IBClasses = (
+        {CLASS = AIEmoticonPreviewView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {browseXtras = id; checkForUpdates = id; deleteXtra = id; setCategory = id; }; 
+            CLASS = AIXtrasManager; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                infoView = NSTextView; 
+                previewContainerView = NSView; 
+                previewView = NSView; 
+                readmeView = NSView; 
+                sidebar = NSTableView; 
+                window = NSWindow; 
+                xtraList = NSTableView; 
+            }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
