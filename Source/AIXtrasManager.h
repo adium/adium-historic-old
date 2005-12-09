@@ -29,7 +29,7 @@
 	IBOutlet NSTableView				*sidebar;
 	IBOutlet NSTableView				*xtraList;
 	IBOutlet NSTextView					*infoView;
-	IBOutlet NSView						*previewContainerView;
+	IBOutlet NSScrollView				*previewContainerView;
 	IBOutlet NSView<AIXtraPreviewView>	*previewView;
 	IBOutlet NSView						*readmeView;
 	NSString							*infoPath;
