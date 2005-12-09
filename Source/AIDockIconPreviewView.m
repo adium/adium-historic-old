@@ -35,8 +35,6 @@
 	}
 	float size = 64;//[self bounds].size.width / [images count];
 	[gridView setImageSize:NSMakeSize(size, size)];
-#warning this is SUCH a hack
-	[(NSSplitView *)[[self superview] superview] adjustSubviews];
 }
 
 @end
