@@ -20,11 +20,11 @@
 
 @implementation AIDockIconPreviewView
 
-- (void) setXtraPath:(NSString *)path
+- (void) setXtra:(AIXtraInfo *)xtraInfo
 {
 	[images autorelease];
 	images = [[NSMutableArray alloc] init];
-	NSArray * iconStates = [[[[AIObject sharedAdiumInstance] dockController] iconPackAtPath:path] objectForKey:@"State"];
+	NSArray * iconStates = [[[[AIObject sharedAdiumInstance] dockController] iconPackAtPath:[xtraInfo path]] objectForKey:@"State"];
 	NSEnumerator * e = [iconStates objectEnumerator];
 	AIIconState * icon;
 	NSImage * image;

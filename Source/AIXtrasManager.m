@@ -28,6 +28,7 @@
 #import "AIEmoticonPreviewView.h"
 #import "AIDockIconPreviewView.h"
 #import "AIStatusIconPreviewView.h"
+#import "AIScriptPreviewView.h"
 
 #define ADIUM_XTRAS_PAGE					AILocalizedString(@"http://www.adiumxtras.com/","Adium xtras page. Localized only if a translated version exists.")
 
@@ -170,17 +171,20 @@ static NSImage * scriptImage;
 	NSLog(@"%@", xtraType);
 	NSView<AIXtraPreviewView> * view = nil;
 	NSRect r = [previewContainerView bounds];
-	if([xtraType isEqualToString:@"adiumemoticonset"])
+	#warning magic strings bad! bad programmer! no cookie!
+	if ([xtraType isEqualToString:@"adiumemoticonset"])
 		view = [[[AIEmoticonPreviewView alloc] initWithFrame:r] autorelease];
-	else if([xtraType isEqualToString:@"adiumicon"])
+	else if ([xtraType isEqualToString:@"adiumicon"])
 		view = [[[AIDockIconPreviewView alloc] initWithFrame:r] autorelease];
-	else if([xtraType isEqualToString:@"adiumstatusicons"])
+	else if ([xtraType isEqualToString:@"adiumstatusicons"])
 		view = [[[AIStatusIconPreviewView alloc] initWithFrame:r] autorelease];
+	else if ([xtraType isEqualToString:@"adiumscripts"])
+		view = [[[AIScriptPreviewView alloc] initWithFrame:r] autorelease];
 	else
 		return; //this won't be needed once we cover all xtra types
 	
 	[previewContainerView addSubview:view];
-	[view setXtraPath:[xtra path]];
+	[view setXtra:xtra];
 	[previewContainerView setNeedsDisplay:YES];
 }
 
@@ -191,8 +195,7 @@ static NSImage * scriptImage;
 		NSFileManager * manager = [NSFileManager defaultManager];
 		NSIndexSet * indices = [xtraList selectedRowIndexes];
 		int i;
-		for (i = [indices lastIndex]; i >= 0; i--)
-		{
+		for (i = [indices lastIndex]; i >= 0; i--) {
 			if ([indices containsIndex:i]) {
 				[manager removeFileAtPath:[[selectedCategory objectAtIndex:i] path] handler:nil];
 			}
@@ -234,8 +237,7 @@ static NSImage * scriptImage;
 
 	NSFileManager * manager = [NSFileManager defaultManager];
 	NSString * name = [[path lastPathComponent] stringByDeletingPathExtension];
-	if(![manager fileExistsAtPath:path])
-	{
+	if (![manager fileExistsAtPath:path]) {
 		[manager createDirectoryAtPath:path attributes:nil];
 		[manager createDirectoryAtPath:contentsPath attributes:nil];
 
@@ -295,12 +297,11 @@ static NSImage * scriptImage;
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
 	if ([aNotification object] == xtraList) {
-		NSString * 	newPath = [[selectedCategory objectAtIndex:[xtraList selectedRow]] path];
-		if ([[xtraList selectedRowIndexes] count] == 1)
-		{
+		AIXtraInfo *xtraInfo  = [AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[[selectedCategory objectAtIndex:[xtraList selectedRow]] path]]];
+		if ([[xtraList selectedRowIndexes] count] == 1) {
 			NSArray * subviews = [previewContainerView subviews];
 			if([subviews count] > 0)
-				[[subviews objectAtIndex:0] setXtraPath:newPath];
+				[[subviews objectAtIndex:0] setXtra:xtraInfo];
 		}
 	}
 	else if ([aNotification object] == sidebar) {

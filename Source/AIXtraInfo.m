@@ -49,16 +49,21 @@
 	if((self = [super init]))
 	{
 		path = [[url path] retain];
-		type = [[[[url path] pathExtension] lowercaseString]retain];
+		type = [[[[url path] pathExtension] lowercaseString] retain];
 		NSBundle * xtraBundle = [[NSBundle alloc] initWithPath:path];
 		if (xtraBundle && ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1)) { //This checks for a new-style xtra
 			name = [xtraBundle objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
-			resourcePath = [[xtraBundle resourcePath]retain];
+			resourcePath = [[xtraBundle resourcePath] retain];
 			icon = [[NSImage alloc] initByReferencingFile:[xtraBundle pathForResource:@"Icon" ofType:@"icns"]];
+			readMePath = [[xtraBundle pathForResource:@"ReadMe" ofType:@"rtf"] retain];
+			if (!readMePath)
+				readMePath = [[[NSBundle mainBundle] pathForResource:@"DefaultXtraReadme" ofType:@"rtf"] retain];
+
 		}
 		else {
 			name = [[[path lastPathComponent] stringByDeletingPathExtension]retain];
 			resourcePath = @"";//root of the xtra
+			readMePath = [[[NSBundle mainBundle] pathForResource:@"DefaultXtraReadme" ofType:@"rtf"] retain];
 		}	
 		if(!icon)
 			icon = [[[NSWorkspace sharedWorkspace] iconForFile:path]retain];
@@ -78,6 +83,7 @@
 	[name release];
 	[resourcePath release];
 	[type release];
+	[readMePath release];
 	[super dealloc];
 }
 
@@ -90,4 +96,10 @@
 {
 	return path;
 }
+
+- (NSString *)readMePath
+{
+	return readMePath;
+}
+
 @end

@@ -10,18 +10,14 @@
 
 @implementation AIStatusIconPreviewView
 
-- (void) setXtraPath:(NSString *)path
+- (void) setXtra:(AIXtraInfo *)xtraInfo
 {
 	[images autorelease];
 	images = [[NSMutableArray alloc] init];
-	NSBundle * bundle = [NSBundle bundleWithPath:path];
 	NSEnumerator * paths;
-	NSString * resourcePath = [bundle resourcePath];
+	NSString * resourcePath = [xtraInfo resourcePath];
 	NSFileManager * manager = [NSFileManager defaultManager];
-	if(!bundle)
-		paths =	[[manager directoryContentsAtPath:path] objectEnumerator];
-	else
-		paths = [[manager directoryContentsAtPath:resourcePath] objectEnumerator];
+	paths = [[manager directoryContentsAtPath:resourcePath] objectEnumerator];
 	
 	NSImage * image;
 	NSString * imageName;
