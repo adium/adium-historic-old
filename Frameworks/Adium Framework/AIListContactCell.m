@@ -499,13 +499,13 @@
 				break;
 			}
 			
-			int half, offset;
+			float half, offset;
 			
 			if (drawUnder) {
-				half = ceil((drawRect.size.height - statusFontHeight) / 2.0);
+				half = ceilf((drawRect.size.height - statusFontHeight) / 2.0);
 				offset = 0;
 			} else {
-				half = ceil((drawRect.size.height - labelFontHeight) / 2.0);
+				half = ceilf((drawRect.size.height - labelFontHeight) / 2.0);
 				offset = (labelFontHeight - statusFontHeight) + ([[self font] descender] - [[self statusFont] descender]);
 			}
 
