@@ -1,6 +1,12 @@
 {
     IBClasses = (
+        {
+            CLASS = AIDockIconPreviewView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIImageGridXtraPreviewView; 
+        }, 
         {CLASS = AIEmoticonPreviewView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = AIImageGridXtraPreviewView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {browseXtras = id; checkForUpdates = id; deleteXtra = id; setCategory = id; }; 

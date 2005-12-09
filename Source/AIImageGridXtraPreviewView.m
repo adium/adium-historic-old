@@ -18,17 +18,14 @@
 
 @implementation AIImageGridXtraPreviewView
 
-- (id) initWithFrame:(NSRect)frame
+- (void) awakeFromNib
 {
-	if((self = [super initWithFrame:frame]))
-	{
-		images = [[NSMutableArray alloc] init];
-		gridView = [[[AIImageGridView alloc] initWithFrame:[self bounds]] autorelease];
-		[gridView setDelegate:self];
-		[gridView setDrawsBackground:NO];
-		[self addSubview:gridView];
-	}
-	return self;
+//	[super awakeFromNib];
+	images = [[NSMutableArray alloc] init];
+	gridView = [[[AIImageGridView alloc] initWithFrame:[self bounds]] autorelease];
+	[gridView setDelegate:self];
+	[gridView setDrawsBackground:NO];
+	[self addSubview:gridView];
 }
 
 - (int)numberOfImagesInImageGridView:(AIImageGridView *)imageGridView
