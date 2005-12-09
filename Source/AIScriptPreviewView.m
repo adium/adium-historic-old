@@ -12,9 +12,15 @@
 
 - (id)initWithFrame:(NSRect)frame {
 	if ((self = [super initWithFrame:frame])) {
+		//Create the text view
 		readMeView = [[NSTextView alloc] initWithFrame:frame];
 		[readMeView setEditable:NO];
+				
+		//Add it
 		[self addSubview:readMeView];
+		
+		//Clean up
+		[readMeView release];
     }
     return self;
 }
@@ -27,12 +33,6 @@
 	
 	//Clean up
 	[readMeString release];
-}
-
-- (void)dealloc
-{
-	[readMeView release];
-	[super dealloc];
 }
 
 @end
