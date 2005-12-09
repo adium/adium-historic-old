@@ -31,8 +31,6 @@
 			[images addObject:image];
 	}
 	[gridView setImageSize:NSMakeSize(32, 32)];
-#warning this is SUCH a hack
-	[(NSSplitView *)[[self superview] superview] adjustSubviews];
 }
 
 @end

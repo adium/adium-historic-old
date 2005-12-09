@@ -16,11 +16,11 @@
 
 #import <Cocoa/Cocoa.h>
 #import "AIXtraPreviewView.h"
-#import "AIImageGridXtraPreviewView.h"
 
-@interface AIEmoticonPreviewView : AIImageGridXtraPreviewView <AIXtraPreviewView>
+@interface AIEmoticonPreviewView : NSView <AIXtraPreviewView>
 {
-	
+	NSTableView * tableView;
+	NSArray * emoticons;
 }
 
 @end

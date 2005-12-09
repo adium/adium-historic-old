@@ -20,30 +20,64 @@
 
 @implementation AIEmoticonPreviewView
 
+- (id) initWithFrame:(NSRect)frame
+{
+	if((self = [super initWithFrame:frame]))
+	{
+		NSScrollView * scrollView = [[[NSScrollView alloc] initWithFrame:[self bounds]] autorelease];
+		[scrollView setAutohidesScrollers:YES];
+		[scrollView setHasVerticalScroller:YES];
+		[scrollView setBorderType:NSBezelBorder];
+		
+		tableView = [[[NSTableView alloc] initWithFrame:[self bounds]]autorelease];
+		[tableView setIntercellSpacing:NSMakeSize(1.0f, 3.0f)];
+		[tableView setDelegate:self];
+		[tableView setDataSource:self];
+		[tableView setHeaderView:nil];
+		[tableView sizeToFit];
+		
+		NSTableColumn * column = [[NSTableColumn alloc] initWithIdentifier:@"Emoticon"];
+		[column setMaxWidth:32.0f];
+		[column setMinWidth:32.0f];
+		[column setDataCell:[[[NSImageCell alloc]init]autorelease]];
+		[tableView addTableColumn:column];
+		[column release];
+		
+		column = [[NSTableColumn alloc] initWithIdentifier:@"Text Equivalent"];
+		[tableView addTableColumn:column];
+		[column release];
+		
+		[scrollView setDocumentView:tableView];
+		
+		[self addSubview:scrollView];
+	}
+	return self;
+}
+
+- (BOOL)tableView:(NSTableView *)aTableView shouldSelectRow:(int)rowIndex
+{
+	return NO;
+}
+
 - (void) setXtra:(AIXtraInfo *)xtraInfo
 {
-	[images autorelease];
-	images = [[NSMutableArray alloc] init];
-	NSArray * emoticons = [[AIEmoticonPack emoticonPackFromPath:[xtraInfo path]] emoticons];
-	NSEnumerator * e = [emoticons objectEnumerator];
-	NSImage * image;
-	NSSize size;
-	NSSize maxEmoticonSize = NSZeroSize;
-	AIEmoticon * emote;
-	while((emote = [e nextObject]))
-	{
-		image = [emote image];
-		if(image) {
-			[images addObject:image];
-			size = [image size];
-			maxEmoticonSize.width = (size.width > maxEmoticonSize.width) ? size.width : maxEmoticonSize.width;	
-			maxEmoticonSize.height = (size.height > maxEmoticonSize.height) ? size.height : maxEmoticonSize.height;
+	[emoticons autorelease];
+	emoticons = [[[AIEmoticonPack emoticonPackFromPath:[xtraInfo path]] emoticons] retain];
+	[tableView reloadData];
+}
 
-		}
-	}
-	[gridView setImageSize:maxEmoticonSize];
-#warning this is SUCH a hack
-	[(NSSplitView *)[[self superview] superview] adjustSubviews];
+- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+	return [emoticons count];
+}
+
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+{
+	AIEmoticon * emoticon = [emoticons objectAtIndex:rowIndex];
+	if([[aTableColumn identifier] isEqualToString:@"Emoticon"])
+		return [emoticon image];
+	else
+		return [[emoticon textEquivalents] componentsJoinedByString:@", "];
 }
 
 @end
