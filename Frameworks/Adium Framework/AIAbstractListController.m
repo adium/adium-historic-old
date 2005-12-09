@@ -355,6 +355,7 @@
 	[contactListView setDrawsAlternatingRows:[[themeDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
 	[contactListView setBackgroundFade:[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
 	[contactListView setBackgroundColor:[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor]];
+	[contactListView setHighlightColor:[[themeDict objectForKey:KEY_LIST_THEME_HIGHLIGHT_COLOR] representedColor]];
 	[contactListView setAlternatingRowColor:[[themeDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor]];
 
 	//Disable background image if we're in mockie or pillows
