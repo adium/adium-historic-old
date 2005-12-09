@@ -51,4 +51,10 @@
 	return YES;
 }
 
+- (void) dealloc
+{
+	[images release];
+	[super dealloc]; //gridView is retained by the NSView code
+}
+
 @end
