@@ -168,17 +168,16 @@ static NSImage * scriptImage;
 		[[subviews objectAtIndex:0] removeFromSuperview];
 	AIXtraInfo * xtra = [selectedCategory objectAtIndex:0];
 	NSString * xtraType = [xtra type];
-	NSLog(@"%@", xtraType);
 	NSView<AIXtraPreviewView> * view = nil;
 	NSRect r = [previewContainerView bounds];
 	[previewContainerView removeAllSubviews];
 	#warning magic strings bad! bad programmer! no cookie!
 	if ([xtraType isEqualToString:@"adiumemoticonset"])
-		[NSBundle loadNibNamed:@"AdiumEmoticonSetPreview" owner:self];
+		[NSBundle loadNibNamed:@"EmoticonSetPreview" owner:self];
 	else if ([xtraType isEqualToString:@"adiumicon"])
-		[NSBundle loadNibNamed:@"AdiumDockIconPreview" owner:self];
+		[NSBundle loadNibNamed:@"DockIconPreview" owner:self];
 	else if ([xtraType isEqualToString:@"adiumstatusicons"])
-		[NSBundle loadNibNamed:@"AdiumStatusIconPreview" owner:self];
+		[NSBundle loadNibNamed:@"StatusIconPreview" owner:self];
 	else if ([xtraType isEqualToString:@"adiumscripts"])
 		/* special handling, we'll just want to disable the preview and show the readme */
 	
