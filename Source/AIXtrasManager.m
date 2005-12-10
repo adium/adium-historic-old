@@ -169,16 +169,17 @@ static NSImage * scriptImage;
 	[xtraList reloadData];
 	AIXtraInfo * xtra = [selectedCategory objectAtIndex:0];
 	NSString * xtraType = [xtra type];
-	#warning magic strings bad! bad programmer! no cookie!
-	if ([xtraType isEqualToString:@"adiumemoticonset"])
+
+	if ([xtraType isEqualToString:AIXtraTypeEmoticons])
 		[NSBundle loadNibNamed:@"EmoticonPreviewView" owner:self];
-	else if ([xtraType isEqualToString:@"adiumicon"])
+	else if ([xtraType isEqualToString:AIXtraTypeDockIcon])
 		[NSBundle loadNibNamed:@"DockIconPreviewView" owner:self];
-	else if ([xtraType isEqualToString:@"adiumstatusicons"])
+	else if ([xtraType isEqualToString:AIXtraTypeStatusIcons])
 		[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self];
-	else if ([xtraType isEqualToString:@"adiumscripts"]) {
+	else if ([xtraType isEqualToString:AIXtraTypeScript]) {
 		/* special handling, we'll just want to disable the preview and show the readme */
 	}
+	
 	if(previewView)
 	{
 		[previewView setBoundsSize:[previewContainerView contentSize]];
