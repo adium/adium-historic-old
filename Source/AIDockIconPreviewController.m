@@ -36,11 +36,6 @@
 	[tableView reloadData];
 }
 
-//- (BOOL) isFlipped
-//{
-//	return YES;
-//}
-
 - (void) awakeFromNib
 {	
 	[tableView setHeaderView:nil];
