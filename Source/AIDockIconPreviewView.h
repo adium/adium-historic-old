@@ -18,8 +18,11 @@
 #import "AIXtraPreviewView.h"
 #import "AIImageGridXtraPreviewView.h"
 
-@interface AIDockIconPreviewView : AIImageGridXtraPreviewView <AIXtraPreviewView>
+@interface AIDockIconPreviewView : NSView <AIXtraPreviewView>
 {
+	NSTableView * tableView;
+	NSArray * statusNames;
+	NSArray * images;
 }
 
 @end

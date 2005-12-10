@@ -17,24 +17,64 @@
 #import "AIDockIconPreviewView.h"
 #import <Adium/AIIconState.h>
 #import <Adium/AIObject.h>
+#import <AIUtilities/AIVerticallyCenteredTextCell.h>
 
 @implementation AIDockIconPreviewView
 
 - (void) setXtra:(AIXtraInfo *)xtraInfo
 {
 	[images autorelease];
-	images = [[NSMutableArray alloc] init];
-	NSArray * iconStates = [[[[AIObject sharedAdiumInstance] dockController] iconPackAtPath:[xtraInfo path]] objectForKey:@"State"];
-	NSEnumerator * e = [iconStates objectEnumerator];
-	AIIconState * icon;
-	NSImage * image;
-	while((icon = [e nextObject])) {
-		image = [icon image];
-		if(image) 
-			[images addObject:image];
-	}
-	float size = 64;//[self bounds].size.width / [images count];
-	[gridView setImageSize:NSMakeSize(size, size)];
+	[statusNames autorelease];
+	NSDictionary * pack = [[[[AIObject sharedAdiumInstance] dockController] iconPackAtPath:[xtraInfo path]] objectForKey:@"State"];
+	images = [[pack allValues] retain];
+	statusNames = [[pack allKeys] retain];
+	[tableView reloadData];
+}
+
+- (BOOL) isFlipped
+{
+	return YES;
+}
+
+- (void) awakeFromNib
+{	
+	tableView = [[[NSTableView alloc] initWithFrame:[self bounds]]autorelease];
+	[tableView setDelegate:self];
+	[tableView setDataSource:self];
+	[tableView setHeaderView:nil];
+	[tableView setRowHeight:48.0f];
+	
+	NSTableColumn * column = [[NSTableColumn alloc] initWithIdentifier:@"Dock Icon"];
+	[column setMaxWidth:48.0f];
+	[column setMinWidth:48.0f];
+	[column setDataCell:[[[NSImageCell alloc]init]autorelease]];
+	[tableView addTableColumn:column];
+	[column release];
+	
+	column = [[NSTableColumn alloc] initWithIdentifier:@"Status"];
+	[column setDataCell:[[[AIVerticallyCenteredTextCell alloc] init] autorelease]];
+	[tableView addTableColumn:column];
+	[column release];
+	
+	[self addSubview:tableView];
+}
+
+- (BOOL)tableView:(NSTableView *)aTableView shouldSelectRow:(int)rowIndex
+{
+	return NO;
+}
+
+- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+	return [statusNames count];
+}
+
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+{
+	if([[aTableColumn identifier] isEqualToString:@"Dock Icon"])
+		return [[images objectAtIndex:rowIndex] image];
+	else
+		return [statusNames objectAtIndex:rowIndex];
 }
 
 @end
