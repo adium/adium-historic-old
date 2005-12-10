@@ -9,6 +9,12 @@
         {CLASS = AIImageGridXtraPreviewView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIScriptPreviewView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            CLASS = AIXtraInfoController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {readMeView = NSTextView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
         {CLASS = AIXtraInfoView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
             ACTIONS = {browseXtras = id; checkForUpdates = id; deleteXtra = id; setCategory = id; }; 
@@ -16,8 +22,8 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 infoView = NSTextView; 
-                previewContainerView = NSView; 
-                previewView = NSView; 
+                previewContainerView = NSScrollView; 
+                previewController = id; 
                 readmeView = NSView; 
                 sidebar = NSTableView; 
                 window = NSWindow; 

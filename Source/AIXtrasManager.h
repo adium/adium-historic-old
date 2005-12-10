@@ -15,7 +15,7 @@
  */
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIObject.h>
-#import "AIXtraPreviewView.h"
+#import "AIXtraPreviewController.h"
 
 @class AIXtraInfo;
 
@@ -28,19 +28,19 @@
 #define AIXtraTypeListLayout		@"listlayout"
 
 @interface AIXtrasManager : AIObject {
-	NSMutableDictionary					*disabledXtras;
-	NSMutableArray						*categoryNames;
-	NSMutableArray						*categories;
-	NSMutableArray						*categoryImages;
-	NSMutableArray						*selectedCategory;
-	IBOutlet NSWindow					*window;
-	IBOutlet NSTableView				*sidebar;
-	IBOutlet NSTableView				*xtraList;
-	IBOutlet NSTextView					*infoView;
-	IBOutlet NSScrollView				*previewContainerView;
-	IBOutlet NSView<AIXtraPreviewView>	*previewView;
-	IBOutlet NSView						*readmeView;
-	NSString							*infoPath;
+	NSMutableDictionary						*disabledXtras;
+	NSMutableArray							*categoryNames;
+	NSMutableArray							*categories;
+	NSMutableArray							*categoryImages;
+	NSMutableArray							*selectedCategory;
+	IBOutlet NSWindow						*window;
+	IBOutlet NSTableView					*sidebar;
+	IBOutlet NSTableView					*xtraList;
+	IBOutlet NSTextView						*infoView;
+	IBOutlet NSScrollView					*previewContainerView;
+	IBOutlet id<AIXtraPreviewController>	previewController;
+	IBOutlet NSView							*readmeView;
+	NSString								*infoPath;
 }
 
 + (AIXtrasManager *) sharedManager;

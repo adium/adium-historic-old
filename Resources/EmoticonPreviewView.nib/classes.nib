@@ -5,7 +5,13 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = AIImageGridXtraPreviewView; 
         }, 
-        {CLASS = AIEmoticonPreviewView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            CLASS = AIEmoticonPreviewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {tableView = NSTableView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = AIEmoticonPreviewView; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIImageGridXtraPreviewView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
@@ -14,8 +20,8 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 infoView = NSTextView; 
-                previewContainerView = NSView; 
-                previewView = NSView; 
+                previewContainerView = NSScrollView; 
+                previewController = id; 
                 readmeView = NSView; 
                 sidebar = NSTableView; 
                 window = NSWindow; 

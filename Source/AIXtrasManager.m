@@ -23,12 +23,7 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 
-#import "AIXtraPreviewView.h"
-
-#import "AIEmoticonPreviewView.h"
-#import "AIDockIconPreviewView.h"
-#import "AIStatusIconPreviewView.h"
-#import "AIXtraInfoView.h"
+#import "AIXtraPreviewController.h"
 
 #define ADIUM_XTRAS_PAGE					AILocalizedString(@"http://www.adiumxtras.com/","Adium xtras page. Localized only if a translated version exists.")
 
@@ -169,22 +164,22 @@ static NSImage * scriptImage;
 	[xtraList reloadData];
 	AIXtraInfo * xtra = [selectedCategory objectAtIndex:0];
 	NSString * xtraType = [xtra type];
-
+	
 	if ([xtraType isEqualToString:AIXtraTypeEmoticons])
 		[NSBundle loadNibNamed:@"EmoticonPreviewView" owner:self];
 	else if ([xtraType isEqualToString:AIXtraTypeDockIcon])
 		[NSBundle loadNibNamed:@"DockIconPreviewView" owner:self];
-	else if ([xtraType isEqualToString:AIXtraTypeStatusIcons])
-		[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self];
+	else if ([xtraType isEqualToString:AIXtraTypeStatusIcons]) {
+	}
+//		[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self]; disabled due to sucking
 	else if ([xtraType isEqualToString:AIXtraTypeScript]) {
 		/* special handling, we'll just want to disable the preview and show the readme */
 	}
 	
-	if(previewView)
+	if(previewController)
 	{
-		[previewView setBoundsSize:[previewContainerView contentSize]];
-		[previewContainerView setDocumentView:previewView];
-		[previewView setXtra:xtra];
+		[previewContainerView setDocumentView:[previewController previewView]];
+		[previewController setXtra:xtra];
 		[previewContainerView setNeedsDisplay:YES];
 	}
 	
@@ -301,8 +296,7 @@ static NSImage * scriptImage;
 	if ([aNotification object] == xtraList) {
 		AIXtraInfo *xtraInfo  = [AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[[selectedCategory objectAtIndex:[xtraList selectedRow]] path]]];
 		if ([[xtraList selectedRowIndexes] count] == 1) {
-			NSView<AIXtraPreviewView> *view = [previewContainerView documentView];
-			[view setXtra:xtraInfo];
+			[previewController setXtra:xtraInfo];
 		}
 	}
 	else if ([aNotification object] == sidebar) {
