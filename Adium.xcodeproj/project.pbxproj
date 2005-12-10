@@ -1079,6 +1079,7 @@
 		63336B40094994A800970871 /* StatusIconPreviewView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 63336B3F094994A800970871 /* StatusIconPreviewView.nib */; };
 		63336E0E094AB5B200970871 /* AIXtraInfoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 63336E0A094AB5B200970871 /* AIXtraInfoView.h */; };
 		63336E0F094AB5B200970871 /* AIXtraInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63336E0B094AB5B200970871 /* AIXtraInfoView.m */; };
+		63336E15094AB81300970871 /* XtraInfoView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 63336E14094AB81300970871 /* XtraInfoView.nib */; };
 		633F175A08F905A700C76383 /* AIXtraInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 633F175608F905A700C76383 /* AIXtraInfo.h */; };
 		633F175B08F905A700C76383 /* AIXtraInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175708F905A700C76383 /* AIXtraInfo.m */; };
 		633F175C08F905A700C76383 /* AIXtrasManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633F175808F905A700C76383 /* AIXtrasManager.h */; };
@@ -2926,6 +2927,7 @@
 		63336B3F094994A800970871 /* StatusIconPreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = StatusIconPreviewView.nib; path = Resources/StatusIconPreviewView.nib; sourceTree = "<group>"; };
 		63336E0A094AB5B200970871 /* AIXtraInfoView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraInfoView.h; path = Source/AIXtraInfoView.h; sourceTree = "<group>"; };
 		63336E0B094AB5B200970871 /* AIXtraInfoView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfoView.m; path = Source/AIXtraInfoView.m; sourceTree = "<group>"; };
+		63336E14094AB81300970871 /* XtraInfoView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtraInfoView.nib; path = Resources/XtraInfoView.nib; sourceTree = "<group>"; };
 		633F175608F905A700C76383 /* AIXtraInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraInfo.h; path = Source/AIXtraInfo.h; sourceTree = "<group>"; };
 		633F175708F905A700C76383 /* AIXtraInfo.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfo.m; path = Source/AIXtraInfo.m; sourceTree = "<group>"; };
 		633F175808F905A700C76383 /* AIXtrasManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtrasManager.h; path = Source/AIXtrasManager.h; sourceTree = "<group>"; };
@@ -5407,6 +5409,7 @@
 				633366DF094840A800970871 /* AIDockIconPreviewView.m */,
 				633366E0094840A800970871 /* AIEmoticonPreviewView.h */,
 				633366E1094840A800970871 /* AIEmoticonPreviewView.m */,
+				63336E14094AB81300970871 /* XtraInfoView.nib */,
 				6333699309497DB000970871 /* EmoticonPreviewView.nib */,
 				63336B050949908300970871 /* DockIconPreviewView.nib */,
 				63336B3F094994A800970871 /* StatusIconPreviewView.nib */,
@@ -7486,6 +7489,7 @@
 				6333699409497DB000970871 /* EmoticonPreviewView.nib in Resources */,
 				63336B060949908300970871 /* DockIconPreviewView.nib in Resources */,
 				63336B40094994A800970871 /* StatusIconPreviewView.nib in Resources */,
+				63336E15094AB81300970871 /* XtraInfoView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
