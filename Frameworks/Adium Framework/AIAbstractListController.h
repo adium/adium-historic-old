@@ -144,6 +144,7 @@ typedef enum {
 #define KEY_LIST_THEME_CONTACT_STATUS_COLOR			@"Contact Status Text Color"
 
 #define KEY_LIST_THEME_GRID_ENABLED					@"Grid Enabled"
+#define KEY_LIST_THEME_HIGHLIGHT_ENABLED			@"Custom Highlight Enabled"
 #define KEY_LIST_THEME_BACKGROUND_AS_STATUS			@"Background As Status"
 #define KEY_LIST_THEME_BACKGROUND_AS_EVENTS			@"Background As Events"
 
