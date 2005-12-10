@@ -77,7 +77,12 @@
 - (void)drawSelectionWithFrame:(NSRect)cellFrame
 {
 	if ([self cellIsSelected]) {
-		AIGradient	*gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
+		NSColor *highlightColor = [controlView highlightColor];
+		AIGradient 	*gradient = highlightColor
+			? [AIGradient gradientWithFirstColor:highlightColor
+			                         secondColor:[highlightColor darkenAndAdjustSaturationBy:0.4] 
+			                           direction:AIVertical]
+			: [AIGradient selectedControlGradientWithDirection:AIVertical];
 		[gradient drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:cellFrame]]];
 	}
 }

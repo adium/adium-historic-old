@@ -19,6 +19,7 @@
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
+#import <AIUtilities/AIGradient.h>
 
 #define MINIMUM_HEIGHT				48
 #define MINIMUM_WIDTH				140
@@ -377,6 +378,18 @@
 	 *  XXX - ToDo: Check if this is still a problem in 10.4
 	 */
 	if (updateShadowsWhileDrawing) [[self window] invalidateShadow];
+}
+
+- (void)_drawRowSelectionInRect:(NSRect)rect
+{
+	//Draw the gradient
+	NSColor *highlightColor = [self highlightColor];
+	AIGradient 	*gradient = highlightColor
+		? [AIGradient gradientWithFirstColor:highlightColor
+								 secondColor:[highlightColor darkenAndAdjustSaturationBy:0.4] 
+								   direction:AIVertical]
+		: [AIGradient selectedControlGradientWithDirection:AIVertical];
+	[gradient drawInRect:rect];
 }
 
 - (void)setUpdateShadowsWhileDrawing:(BOOL)update{
