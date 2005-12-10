@@ -1064,21 +1064,12 @@
 		4BFF665C063693FB00308A3B /* ESSendMessageAlertDetailPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 342DC49B05783BE8000E1D83 /* ESSendMessageAlertDetailPane.h */; };
 		63093C2F0892143500F118D3 /* newContentThreeDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2D0892143500F118D3 /* newContentThreeDigits.png */; };
 		63093C300892143500F118D3 /* newContentTwoDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2E0892143500F118D3 /* newContentTwoDigits.png */; };
+		632D608E094B7EEB003A9786 /* AIXtraPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 632D608D094B7EEB003A9786 /* AIXtraPreviewController.h */; };
+		632D60C0094B81AB003A9786 /* AIDockIconPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */; };
+		632D60C1094B81AB003A9786 /* AIDockIconPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */; };
 		632D801708E7E0A40032C187 /* XtrasManager.nib in Resources */ = {isa = PBXBuildFile; fileRef = 632D801608E7E0A40032C187 /* XtrasManager.nib */; };
-		633366E5094840A800970871 /* AIDockIconPreviewView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633366DE094840A800970871 /* AIDockIconPreviewView.h */; };
-		633366E6094840A800970871 /* AIDockIconPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633366DF094840A800970871 /* AIDockIconPreviewView.m */; };
-		633366E7094840A800970871 /* AIEmoticonPreviewView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633366E0094840A800970871 /* AIEmoticonPreviewView.h */; };
-		633366E8094840A800970871 /* AIEmoticonPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633366E1094840A800970871 /* AIEmoticonPreviewView.m */; };
-		633366E9094840A800970871 /* AIImageGridXtraPreviewView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633366E2094840A800970871 /* AIImageGridXtraPreviewView.h */; };
-		633366EA094840A800970871 /* AIImageGridXtraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633366E3094840A800970871 /* AIImageGridXtraPreviewView.m */; };
-		633366EB094840A900970871 /* AIXtraPreviewView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633366E4094840A800970871 /* AIXtraPreviewView.h */; };
-		633367370948DDDE00970871 /* AIStatusIconPreviewView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633367350948DDDE00970871 /* AIStatusIconPreviewView.h */; };
-		633367380948DDDE00970871 /* AIStatusIconPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633367360948DDDE00970871 /* AIStatusIconPreviewView.m */; };
 		6333699409497DB000970871 /* EmoticonPreviewView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6333699309497DB000970871 /* EmoticonPreviewView.nib */; };
 		63336B060949908300970871 /* DockIconPreviewView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 63336B050949908300970871 /* DockIconPreviewView.nib */; };
-		63336B40094994A800970871 /* StatusIconPreviewView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 63336B3F094994A800970871 /* StatusIconPreviewView.nib */; };
-		63336E0E094AB5B200970871 /* AIXtraInfoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 63336E0A094AB5B200970871 /* AIXtraInfoView.h */; };
-		63336E0F094AB5B200970871 /* AIXtraInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63336E0B094AB5B200970871 /* AIXtraInfoView.m */; };
 		63336E15094AB81300970871 /* XtraInfoView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 63336E14094AB81300970871 /* XtraInfoView.nib */; };
 		633F175A08F905A700C76383 /* AIXtraInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 633F175608F905A700C76383 /* AIXtraInfo.h */; };
 		633F175B08F905A700C76383 /* AIXtraInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175708F905A700C76383 /* AIXtraInfo.m */; };
@@ -1086,6 +1077,10 @@
 		633F175D08F905A800C76383 /* AIXtrasManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175908F905A700C76383 /* AIXtrasManager.m */; };
 		636AB7F3087E2B6700A87670 /* AIDockBadger.h in Headers */ = {isa = PBXBuildFile; fileRef = 636AB7F1087E2B6700A87670 /* AIDockBadger.h */; };
 		63C120750910A0DD00C9DB57 /* DefaultXtraReadme.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 63C120740910A0DD00C9DB57 /* DefaultXtraReadme.rtf */; };
+		63EA62C9094B832D009C8453 /* AIEmoticonPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63EA62C7094B832D009C8453 /* AIEmoticonPreviewController.h */; };
+		63EA62CA094B832D009C8453 /* AIEmoticonPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA62C8094B832D009C8453 /* AIEmoticonPreviewController.m */; };
+		63EA62EF094B8705009C8453 /* AIXtraInfoController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63EA62ED094B8705009C8453 /* AIXtraInfoController.h */; };
+		63EA62F0094B8705009C8453 /* AIXtraInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA62EE094B8705009C8453 /* AIXtraInfoController.m */; };
 		63FBAA480887779D00026246 /* AIDockBadger.m in Sources */ = {isa = PBXBuildFile; fileRef = 636AB7F2087E2B6700A87670 /* AIDockBadger.m */; };
 		6C3E0730054471CD00A4AE2E /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		6CF42679057763E200F27FAA /* ESContactAlertsController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6CF42677057763E100F27FAA /* ESContactAlertsController.h */; };
@@ -2912,21 +2907,17 @@
 		4BFE2E9F07E61A4E00C07EBE /* NewAlertNoEvents.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = NewAlertNoEvents.nib; path = "Frameworks/Adium Framework/NewAlertNoEvents.nib"; sourceTree = "<group>"; };
 		63093C2D0892143500F118D3 /* newContentThreeDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentThreeDigits.png; sourceTree = "<group>"; };
 		63093C2E0892143500F118D3 /* newContentTwoDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentTwoDigits.png; sourceTree = "<group>"; };
+		632D608D094B7EEB003A9786 /* AIXtraPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraPreviewController.h; path = Source/AIXtraPreviewController.h; sourceTree = "<group>"; };
+		632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockIconPreviewController.h; path = Source/AIDockIconPreviewController.h; sourceTree = "<group>"; };
+		632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDockIconPreviewController.m; path = Source/AIDockIconPreviewController.m; sourceTree = "<group>"; };
 		632D801608E7E0A40032C187 /* XtrasManager.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtrasManager.nib; path = Resources/XtrasManager.nib; sourceTree = "<group>"; };
-		633366DE094840A800970871 /* AIDockIconPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockIconPreviewView.h; path = Source/AIDockIconPreviewView.h; sourceTree = "<group>"; };
-		633366DF094840A800970871 /* AIDockIconPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDockIconPreviewView.m; path = Source/AIDockIconPreviewView.m; sourceTree = "<group>"; };
-		633366E0094840A800970871 /* AIEmoticonPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPreviewView.h; path = Source/AIEmoticonPreviewView.h; sourceTree = "<group>"; };
-		633366E1094840A800970871 /* AIEmoticonPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPreviewView.m; path = Source/AIEmoticonPreviewView.m; sourceTree = "<group>"; };
 		633366E2094840A800970871 /* AIImageGridXtraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIImageGridXtraPreviewView.h; path = Source/AIImageGridXtraPreviewView.h; sourceTree = "<group>"; };
 		633366E3094840A800970871 /* AIImageGridXtraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIImageGridXtraPreviewView.m; path = Source/AIImageGridXtraPreviewView.m; sourceTree = "<group>"; };
-		633366E4094840A800970871 /* AIXtraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraPreviewView.h; path = Source/AIXtraPreviewView.h; sourceTree = "<group>"; };
 		633367350948DDDE00970871 /* AIStatusIconPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusIconPreviewView.h; path = Source/AIStatusIconPreviewView.h; sourceTree = "<group>"; };
 		633367360948DDDE00970871 /* AIStatusIconPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStatusIconPreviewView.m; path = Source/AIStatusIconPreviewView.m; sourceTree = "<group>"; };
 		6333699309497DB000970871 /* EmoticonPreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EmoticonPreviewView.nib; path = Resources/EmoticonPreviewView.nib; sourceTree = "<group>"; };
 		63336B050949908300970871 /* DockIconPreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DockIconPreviewView.nib; path = Resources/DockIconPreviewView.nib; sourceTree = "<group>"; };
 		63336B3F094994A800970871 /* StatusIconPreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = StatusIconPreviewView.nib; path = Resources/StatusIconPreviewView.nib; sourceTree = "<group>"; };
-		63336E0A094AB5B200970871 /* AIXtraInfoView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraInfoView.h; path = Source/AIXtraInfoView.h; sourceTree = "<group>"; };
-		63336E0B094AB5B200970871 /* AIXtraInfoView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfoView.m; path = Source/AIXtraInfoView.m; sourceTree = "<group>"; };
 		63336E14094AB81300970871 /* XtraInfoView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtraInfoView.nib; path = Resources/XtraInfoView.nib; sourceTree = "<group>"; };
 		633F175608F905A700C76383 /* AIXtraInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraInfo.h; path = Source/AIXtraInfo.h; sourceTree = "<group>"; };
 		633F175708F905A700C76383 /* AIXtraInfo.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfo.m; path = Source/AIXtraInfo.m; sourceTree = "<group>"; };
@@ -2935,6 +2926,10 @@
 		636AB7F1087E2B6700A87670 /* AIDockBadger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIDockBadger.h; sourceTree = "<group>"; };
 		636AB7F2087E2B6700A87670 /* AIDockBadger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIDockBadger.m; sourceTree = "<group>"; };
 		63C120740910A0DD00C9DB57 /* DefaultXtraReadme.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = DefaultXtraReadme.rtf; path = Resources/DefaultXtraReadme.rtf; sourceTree = "<group>"; };
+		63EA62C7094B832D009C8453 /* AIEmoticonPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPreviewController.h; path = Source/AIEmoticonPreviewController.h; sourceTree = "<group>"; };
+		63EA62C8094B832D009C8453 /* AIEmoticonPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPreviewController.m; path = Source/AIEmoticonPreviewController.m; sourceTree = "<group>"; };
+		63EA62ED094B8705009C8453 /* AIXtraInfoController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraInfoController.h; path = Source/AIXtraInfoController.h; sourceTree = "<group>"; };
+		63EA62EE094B8705009C8453 /* AIXtraInfoController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfoController.m; path = Source/AIXtraInfoController.m; sourceTree = "<group>"; };
 		6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumHighlight.png; path = "Plugins/Status Menu Item/adiumHighlight.png"; sourceTree = "<group>"; };
 		6C5C3C2605F6532600490341 /* SQL Logger.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SQL Logger.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C644D3605776BC600D79723 /* AILogFromGroup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILogFromGroup.h; path = Plugins/Logger/AILogFromGroup.h; sourceTree = "<group>"; };
@@ -5403,12 +5398,13 @@
 		635647B2093F64A400563BEE /* Xtras Preview Views */ = {
 			isa = PBXGroup;
 			children = (
-				63336E0A094AB5B200970871 /* AIXtraInfoView.h */,
-				63336E0B094AB5B200970871 /* AIXtraInfoView.m */,
-				633366DE094840A800970871 /* AIDockIconPreviewView.h */,
-				633366DF094840A800970871 /* AIDockIconPreviewView.m */,
-				633366E0094840A800970871 /* AIEmoticonPreviewView.h */,
-				633366E1094840A800970871 /* AIEmoticonPreviewView.m */,
+				632D608D094B7EEB003A9786 /* AIXtraPreviewController.h */,
+				63EA62ED094B8705009C8453 /* AIXtraInfoController.h */,
+				63EA62EE094B8705009C8453 /* AIXtraInfoController.m */,
+				63EA62C7094B832D009C8453 /* AIEmoticonPreviewController.h */,
+				63EA62C8094B832D009C8453 /* AIEmoticonPreviewController.m */,
+				632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */,
+				632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */,
 				63336E14094AB81300970871 /* XtraInfoView.nib */,
 				6333699309497DB000970871 /* EmoticonPreviewView.nib */,
 				63336B050949908300970871 /* DockIconPreviewView.nib */,
@@ -5417,7 +5413,6 @@
 				633366E3094840A800970871 /* AIImageGridXtraPreviewView.m */,
 				633367350948DDDE00970871 /* AIStatusIconPreviewView.h */,
 				633367360948DDDE00970871 /* AIStatusIconPreviewView.m */,
-				633366E4094840A800970871 /* AIXtraPreviewView.h */,
 			);
 			name = "Xtras Preview Views";
 			sourceTree = "<group>";
@@ -6388,12 +6383,10 @@
 				348F57930936F3CC00288E41 /* ESEditStatusGroupWindowController.h in Headers */,
 				344161BD0943E0D900BC26ED /* AdiumSetupWizard.h in Headers */,
 				344162400943E76400BC26ED /* SetupWizardBackgroundView.h in Headers */,
-				633366E5094840A800970871 /* AIDockIconPreviewView.h in Headers */,
-				633366E7094840A800970871 /* AIEmoticonPreviewView.h in Headers */,
-				633366E9094840A800970871 /* AIImageGridXtraPreviewView.h in Headers */,
-				633366EB094840A900970871 /* AIXtraPreviewView.h in Headers */,
-				633367370948DDDE00970871 /* AIStatusIconPreviewView.h in Headers */,
-				63336E0E094AB5B200970871 /* AIXtraInfoView.h in Headers */,
+				632D608E094B7EEB003A9786 /* AIXtraPreviewController.h in Headers */,
+				632D60C0094B81AB003A9786 /* AIDockIconPreviewController.h in Headers */,
+				63EA62C9094B832D009C8453 /* AIEmoticonPreviewController.h in Headers */,
+				63EA62EF094B8705009C8453 /* AIXtraInfoController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7485,6 +7478,8 @@
 				348F579E0936FA6D00288E41 /* EditStatusGroup.nib in Resources */,
 				344161D00943E20D00BC26ED /* AdiumyButler.png in Resources */,
 				344161D40943E22F00BC26ED /* SetupWizard.nib in Resources */,
+				6333699409497DB000970871 /* EmoticonPreviewView.nib in Resources */,
+				63336B060949908300970871 /* DockIconPreviewView.nib in Resources */,
 				07632BF30949E10B00FFABD8 /* ListThemeSheet.nib in Resources */,
 				63336E15094AB81300970871 /* XtraInfoView.nib in Resources */,
 			);
@@ -7972,11 +7967,9 @@
 				348F57940936F3CC00288E41 /* ESEditStatusGroupWindowController.m in Sources */,
 				344161BE0943E0D900BC26ED /* AdiumSetupWizard.m in Sources */,
 				344162410943E76400BC26ED /* SetupWizardBackgroundView.m in Sources */,
-				633366E6094840A800970871 /* AIDockIconPreviewView.m in Sources */,
-				633366E8094840A800970871 /* AIEmoticonPreviewView.m in Sources */,
-				633366EA094840A800970871 /* AIImageGridXtraPreviewView.m in Sources */,
-				633367380948DDDE00970871 /* AIStatusIconPreviewView.m in Sources */,
-				63336E0F094AB5B200970871 /* AIXtraInfoView.m in Sources */,
+				632D60C1094B81AB003A9786 /* AIDockIconPreviewController.m in Sources */,
+				63EA62CA094B832D009C8453 /* AIEmoticonPreviewController.m in Sources */,
+				63EA62F0094B8705009C8453 /* AIXtraInfoController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
