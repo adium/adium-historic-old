@@ -1077,8 +1077,6 @@
 		6333699409497DB000970871 /* EmoticonPreviewView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6333699309497DB000970871 /* EmoticonPreviewView.nib */; };
 		63336B060949908300970871 /* DockIconPreviewView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 63336B050949908300970871 /* DockIconPreviewView.nib */; };
 		63336B40094994A800970871 /* StatusIconPreviewView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 63336B3F094994A800970871 /* StatusIconPreviewView.nib */; };
-		63336E0C094AB5B200970871 /* AIDictionaryDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 63336E08094AB5B200970871 /* AIDictionaryDebug.h */; };
-		63336E0D094AB5B200970871 /* AIDictionaryDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 63336E09094AB5B200970871 /* AIDictionaryDebug.m */; };
 		63336E0E094AB5B200970871 /* AIXtraInfoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 63336E0A094AB5B200970871 /* AIXtraInfoView.h */; };
 		63336E0F094AB5B200970871 /* AIXtraInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63336E0B094AB5B200970871 /* AIXtraInfoView.m */; };
 		633F175A08F905A700C76383 /* AIXtraInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 633F175608F905A700C76383 /* AIXtraInfo.h */; };
@@ -2926,8 +2924,6 @@
 		6333699309497DB000970871 /* EmoticonPreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EmoticonPreviewView.nib; path = Resources/EmoticonPreviewView.nib; sourceTree = "<group>"; };
 		63336B050949908300970871 /* DockIconPreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DockIconPreviewView.nib; path = Resources/DockIconPreviewView.nib; sourceTree = "<group>"; };
 		63336B3F094994A800970871 /* StatusIconPreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = StatusIconPreviewView.nib; path = Resources/StatusIconPreviewView.nib; sourceTree = "<group>"; };
-		63336E08094AB5B200970871 /* AIDictionaryDebug.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDictionaryDebug.h; path = Source/AIDictionaryDebug.h; sourceTree = "<group>"; };
-		63336E09094AB5B200970871 /* AIDictionaryDebug.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDictionaryDebug.m; path = Source/AIDictionaryDebug.m; sourceTree = "<group>"; };
 		63336E0A094AB5B200970871 /* AIXtraInfoView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraInfoView.h; path = Source/AIXtraInfoView.h; sourceTree = "<group>"; };
 		63336E0B094AB5B200970871 /* AIXtraInfoView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfoView.m; path = Source/AIXtraInfoView.m; sourceTree = "<group>"; };
 		633F175608F905A700C76383 /* AIXtraInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraInfo.h; path = Source/AIXtraInfo.h; sourceTree = "<group>"; };
@@ -5405,8 +5401,6 @@
 		635647B2093F64A400563BEE /* Xtras Preview Views */ = {
 			isa = PBXGroup;
 			children = (
-				63336E08094AB5B200970871 /* AIDictionaryDebug.h */,
-				63336E09094AB5B200970871 /* AIDictionaryDebug.m */,
 				63336E0A094AB5B200970871 /* AIXtraInfoView.h */,
 				63336E0B094AB5B200970871 /* AIXtraInfoView.m */,
 				633366DE094840A800970871 /* AIDockIconPreviewView.h */,
@@ -6396,7 +6390,6 @@
 				633366E9094840A800970871 /* AIImageGridXtraPreviewView.h in Headers */,
 				633366EB094840A900970871 /* AIXtraPreviewView.h in Headers */,
 				633367370948DDDE00970871 /* AIStatusIconPreviewView.h in Headers */,
-				63336E0C094AB5B200970871 /* AIDictionaryDebug.h in Headers */,
 				63336E0E094AB5B200970871 /* AIXtraInfoView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7982,7 +7975,6 @@
 				633366E8094840A800970871 /* AIEmoticonPreviewView.m in Sources */,
 				633366EA094840A800970871 /* AIImageGridXtraPreviewView.m in Sources */,
 				633367380948DDDE00970871 /* AIStatusIconPreviewView.m in Sources */,
-				63336E0D094AB5B200970871 /* AIDictionaryDebug.m in Sources */,
 				63336E0F094AB5B200970871 /* AIXtraInfoView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
