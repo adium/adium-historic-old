@@ -1,5 +1,5 @@
 /* 
-* Adium is the legal property of its developers, whose names are listed in the copyright file included
+ * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
  * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
@@ -15,12 +15,14 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "AIImageGridXtraPreviewView.h"
 #import "AIXtraPreviewController.h"
+#import "AIImageGridXtraPreviewView.h"
 
-@interface AIStatusIconPreviewView : AIImageGridXtraPreviewView <AIXtraPreviewController> 
+@interface AIDockIconPreviewController : NSObject <AIXtraPreviewController>
 {
-
+	IBOutlet NSTableView * tableView;
+	NSArray * statusNames;
+	NSArray * images;
 }
 
 @end

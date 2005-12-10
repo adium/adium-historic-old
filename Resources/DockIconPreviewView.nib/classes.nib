@@ -1,9 +1,16 @@
 {
     IBClasses = (
         {
+            CLASS = AIDockIconPreviewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {tableView = NSTableView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
             CLASS = AIDockIconPreviewView; 
             LANGUAGE = ObjC; 
-            SUPERCLASS = AIImageGridXtraPreviewView; 
+            OUTLETS = {tableView = NSTableView; }; 
+            SUPERCLASS = NSObject; 
         }, 
         {CLASS = AIEmoticonPreviewView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AIImageGridXtraPreviewView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
@@ -16,8 +23,8 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 infoView = NSTextView; 
-                previewContainerView = NSView; 
-                previewView = NSView; 
+                previewContainerView = NSScrollView; 
+                previewController = id; 
                 readmeView = NSView; 
                 sidebar = NSTableView; 
                 window = NSWindow; 

@@ -15,12 +15,10 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "AIImageGridXtraPreviewView.h"
 #import "AIXtraPreviewController.h"
 
-@interface AIStatusIconPreviewView : AIImageGridXtraPreviewView <AIXtraPreviewController> 
-{
-
+@interface AIXtraInfoController : NSObject <AIXtraPreviewController> {
+	IBOutlet NSTextView	*readMeView;
 }
 
 @end
