@@ -166,8 +166,14 @@
 	
 	//
     [colorWell_background setColor:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor]];
+    //not all themes have highlight colours
+    NSColor *color = [[prefDict objectForKey:KEY_LIST_THEME_HIGHLIGHT_COLOR] representedColor];
+	if (color) [colorWell_customHighlight setColor:color];
     [colorWell_grid setColor:[[prefDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor]];	
 	[slider_backgroundFade setFloatValue:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
+	//not all themes have the draw-custom-highlight setting
+	NSNumber *number = [prefDict objectForKey:KEY_LIST_THEME_HIGHLIGHT_ENABLED];
+	[checkBox_drawCustomHighlight setState:number ? [number boolValue] : NSOffState];
 	[checkBox_drawGrid setState:[[prefDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
 	[checkBox_backgroundAsStatus setState:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_STATUS] boolValue]];
 	[checkBox_backgroundAsEvents setState:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_EVENTS] boolValue]];
@@ -342,6 +348,11 @@
 											 forKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED
 											  group:PREF_GROUP_LIST_THEME];
 		
+    } else if (sender == checkBox_drawCustomHighlight) {
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LIST_THEME_HIGHLIGHT_ENABLED
+                                              group:PREF_GROUP_LIST_THEME];
+		
     } else if (sender == checkBox_drawGrid) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_THEME_GRID_ENABLED
@@ -353,6 +364,12 @@
                                               group:PREF_GROUP_LIST_THEME];
 		[preview_background setNeedsDisplay:YES];
 		[preview_group setNeedsDisplay:YES];
+		
+    } else if (sender == colorWell_customHighlight) {
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
+                                             forKey:KEY_LIST_THEME_HIGHLIGHT_COLOR
+                                              group:PREF_GROUP_LIST_THEME];
+		[preview_customHighlight setNeedsDisplay:YES];
 		
     } else if (sender == colorWell_grid) {
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]

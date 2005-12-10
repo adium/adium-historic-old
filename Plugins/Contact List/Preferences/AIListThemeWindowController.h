@@ -75,6 +75,9 @@
 	
 	IBOutlet	NSColorWell				*colorWell_background;
 	IBOutlet	AITextColorPreviewView	*preview_background;
+	IBOutlet	NSColorWell				*colorWell_customHighlight;
+	IBOutlet	AITextColorPreviewView	*preview_customHighlight;
+	IBOutlet	NSButton				*checkBox_drawCustomHighlight;
 	IBOutlet	NSColorWell				*colorWell_grid;
 	IBOutlet	AITextColorPreviewView	*preview_grid;
 	IBOutlet	NSButton				*checkBox_drawGrid;

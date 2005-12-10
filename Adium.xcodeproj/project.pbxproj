@@ -39,6 +39,7 @@
 /* Begin PBXBuildFile section */
 		071C56330827933100399C0F /* Shared Dock Icon Images in Resources */ = {isa = PBXBuildFile; fileRef = 071C56310827933000399C0F /* Shared Dock Icon Images */; };
 		074DDB5D07CB413F0033AFF7 /* CBContactLastSeenPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 074DDB5C07CB413F0033AFF7 /* CBContactLastSeenPlugin.m */; };
+		07632BF30949E10B00FFABD8 /* ListThemeSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB42B080870A200E27095 /* ListThemeSheet.nib */; };
 		0779934F08221D9700F698DC /* Service Icons in Resources */ = {isa = PBXBuildFile; fileRef = 4BAFD5E806E00D1700FF7FBC /* Service Icons */; };
 		07836212077B0CA90032D975 /* ESDualWindowMessageAdvancedPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B970BF80535B864002F28F9 /* ESDualWindowMessageAdvancedPreferences.h */; };
 		078C5CD2079EFF88004C75A4 /* AILocalizationButtonCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -160,7 +161,6 @@
 		343EB41F08086D9200E27095 /* ESGaimMeanwhileAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41E08086D9100E27095 /* ESGaimMeanwhileAccountView.nib */; };
 		343EB42108086D9200E27095 /* ESGaimYahooAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB42008086D9200E27095 /* ESGaimYahooAccountView.nib */; };
 		343EB42308086D9200E27095 /* ESGaimJabberAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB42208086D9200E27095 /* ESGaimJabberAccountView.nib */; };
-		343EB42C080870A200E27095 /* ListThemeSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB42B080870A200E27095 /* ListThemeSheet.nib */; };
 		343EC6920809DD3400E27095 /* ListLayoutSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EC6910809DD3400E27095 /* ListLayoutSheet.nib */; };
 		343EC6A90809DEC800E27095 /* ESContactAlertsPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 343EC6A70809DEC700E27095 /* ESContactAlertsPane.m */; };
 		343EC6AA0809DEC800E27095 /* ESContactAlertsPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 343EC6A80809DEC700E27095 /* ESContactAlertsPane.h */; };
@@ -7450,7 +7450,6 @@
 				34BFDF2007E8978900AD984D /* SendingKeyDefaults.plist in Resources */,
 				34BFDF2107E8978900AD984D /* TabDefaults.plist in Resources */,
 				34BFE30107E8FA7900AD984D /* ContactAccounts.nib in Resources */,
-				343EB42C080870A200E27095 /* ListThemeSheet.nib in Resources */,
 				343EC6920809DD3400E27095 /* ListLayoutSheet.nib in Resources */,
 				343EC6B30809DEEB00E27095 /* ContactAlerts.nib in Resources */,
 				3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */,
@@ -7486,9 +7485,7 @@
 				348F579E0936FA6D00288E41 /* EditStatusGroup.nib in Resources */,
 				344161D00943E20D00BC26ED /* AdiumyButler.png in Resources */,
 				344161D40943E22F00BC26ED /* SetupWizard.nib in Resources */,
-				6333699409497DB000970871 /* EmoticonPreviewView.nib in Resources */,
-				63336B060949908300970871 /* DockIconPreviewView.nib in Resources */,
-				63336B40094994A800970871 /* StatusIconPreviewView.nib in Resources */,
+				07632BF30949E10B00FFABD8 /* ListThemeSheet.nib in Resources */,
 				63336E15094AB81300970871 /* XtraInfoView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
