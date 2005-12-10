@@ -33,43 +33,13 @@
     NSParameterAssert(sourcePath != nil && [sourcePath length] != 0);
 	
 	if ([self fileExistsAtPath:sourcePath]) {
-		NSString	*destPath;
-
-		NSString	*fileName = [sourcePath lastPathComponent];
-		NSString	*sourceVolume = [sourcePath volumePath];
-
-		if ([sourceVolume isEqualToString:@"/"]) {
-			//the file is on the startup disk.
-			//use the trash in home.
-			//example: /Users/boredzo/.Trash
-			destPath = [NSHomeDirectory() stringByAppendingPathComponent:@".Trash"];
-		} else {
-			//the file is not on the startup disk.
-			//use the trash on the disk the file is on.
-			//example: /Volumes/Repository/.Trashes/501
-			NSNumber *UIDnum = [NSNumber numberWithUnsignedInt:getuid()];
-			destPath = [[sourceVolume stringByAppendingPathComponent:@".Trashes"] stringByAppendingPathComponent:[UIDnum stringValue]];
-		}
-		destPath = [destPath stringByAppendingPathComponent:fileName];
-
-		//Move it to whichever Trash
-		if (![[NSFileManager defaultManager] movePath:sourcePath toPath:destPath handler:nil]) {
-			//The move operation failed.  A folder with that name probably already exists in the trash.
-			//So let's try appending some random characters to the end of the file name.
-			NSString *destPathWithRandom = [destPath stringByAppendingString:[NSString randomStringOfLength:6]];
-			
-			if (![[NSFileManager defaultManager] movePath:sourcePath toPath:destPathWithRandom handler:nil]) {
-				NSLog(@"Attempt to trash '%@' failed (full path: %@; full Trash path: %@).", fileName, sourcePath, destPath);
-				return NO;
-			}
-			destPath = destPathWithRandom;
-		}
-
-		NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
-		[workspace noteFileSystemChanged:sourcePath];
-		[workspace noteFileSystemChanged:destPath];
-	}		
-
+        [[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
+                                                     source:[sourcePath stringByDeletingLastPathComponent]
+                                                destination:@""
+                                                      files:[NSArray arrayWithObject:[sourcePath lastPathComponent]]
+                                                        tag:NULL];
+	}
+    
 	return YES;
 }
 
