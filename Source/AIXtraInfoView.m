@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIScriptPreviewView.h"
+#import "AIXtraInfoView.h"
 
-@implementation AIScriptPreviewView
+@implementation AIXtraInfoView
 
 - (id)initWithFrame:(NSRect)frame {
 	if ((self = [super initWithFrame:frame])) {

@@ -17,7 +17,7 @@
 #import <Cocoa/Cocoa.h>
 #import "AIXtraPreviewView.h"
 
-@interface AIScriptPreviewView : NSView <AIXtraPreviewView> {
+@interface AIXtraInfoView : NSView <AIXtraPreviewView> {
 	NSTextView	*readMeView;
 }
 
