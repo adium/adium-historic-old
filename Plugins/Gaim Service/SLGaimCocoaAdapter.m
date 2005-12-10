@@ -1286,7 +1286,7 @@ NSMutableDictionary* get_chatDict(void)
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)) {
-		NSTimeInterval idle = (idleSince != nil ? -[idleSince timeIntervalSince1970] : 0);
+		NSTimeInterval idle = (idleSince != nil ? [idleSince timeIntervalSince1970] : 0);
 		GaimPresence *presence;
 
 		presence = gaim_account_get_presence(account);
