@@ -41,6 +41,7 @@
 	IBOutlet id<AIXtraPreviewController>	previewController;
 	IBOutlet NSView							*readmeView;
 	NSString								*infoPath;
+	BOOL									showInfo; //YES = info, NO = preview
 }
 
 + (AIXtrasManager *) sharedManager;
