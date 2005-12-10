@@ -432,7 +432,7 @@
     NSMenu			*tmp = nil;
 
     if (selectedObject) {
-		NSArray *locations;
+		NSMutableArray *locations;
 		if ([selectedObject isStranger]) {
 			locations = [NSMutableArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
