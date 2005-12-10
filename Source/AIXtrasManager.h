@@ -19,6 +19,14 @@
 
 @class AIXtraInfo;
 
+#define AIXtraTypeDockIcon			@"adiumicon"
+#define AIXtraTypeStatusIcons		@"adiumstatusicons"
+#define AIXtraTypeEmoticons			@"emoticonpack"
+#define AIXtraTypeScript			@"adiumscripts"
+#define AIXtraTypeMessageStyle		@"adiummessagestyle"
+#define AIXtraTypeListTheme			@"listtheme"
+#define AIXtraTypeListLayout		@"listlayout"
+
 @interface AIXtrasManager : AIObject {
 	NSMutableDictionary					*disabledXtras;
 	NSMutableArray						*categoryNames;
