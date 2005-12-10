@@ -39,6 +39,7 @@
 
 - (void) showXtras
 {
+	showInfo = NO;
 	[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self
 															selector:@selector(xtrasChanged:)
 																name:Adium_Xtras_Changed
@@ -163,17 +164,22 @@ static NSImage * scriptImage;
 	[xtraList selectRow:0 byExtendingSelection:NO];
 	[xtraList reloadData];
 	AIXtraInfo * xtra = [selectedCategory objectAtIndex:0];
-	NSString * xtraType = [xtra type];
-	
-	if ([xtraType isEqualToString:AIXtraTypeEmoticons])
-		[NSBundle loadNibNamed:@"EmoticonPreviewView" owner:self];
-	else if ([xtraType isEqualToString:AIXtraTypeDockIcon])
-		[NSBundle loadNibNamed:@"DockIconPreviewView" owner:self];
-	else if ([xtraType isEqualToString:AIXtraTypeStatusIcons]) {
-	}
-//		[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self]; disabled due to sucking
-	else if ([xtraType isEqualToString:AIXtraTypeScript]) {
-		/* special handling, we'll just want to disable the preview and show the readme */
+	if(showInfo)
+		[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
+	else {
+		NSString * xtraType = [xtra type];
+		
+		if ([xtraType isEqualToString:AIXtraTypeEmoticons])
+			[NSBundle loadNibNamed:@"EmoticonPreviewView" owner:self];
+		else if ([xtraType isEqualToString:AIXtraTypeDockIcon])
+			[NSBundle loadNibNamed:@"DockIconPreviewView" owner:self];
+		else if ([xtraType isEqualToString:AIXtraTypeStatusIcons]) {
+			//		[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self]; disabled due to sucking
+		}
+		else if ([xtraType isEqualToString:AIXtraTypeScript]) {
+			[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
+			/* special handling, we'll just want to disable the preview and show the readme */
+		}
 	}
 	
 	if(previewController)
