@@ -60,6 +60,11 @@
 	return [emoticons count];
 }
 
+- (BOOL) isFlipped
+{
+	return YES;
+}
+
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
 	AIEmoticon * emoticon = [emoticons objectAtIndex:rowIndex];

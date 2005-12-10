@@ -21,7 +21,7 @@
 
 #define AIXtraTypeDockIcon			@"adiumicon"
 #define AIXtraTypeStatusIcons		@"adiumstatusicons"
-#define AIXtraTypeEmoticons			@"emoticonpack"
+#define AIXtraTypeEmoticons			@"adiumemoticonset"
 #define AIXtraTypeScript			@"adiumscripts"
 #define AIXtraTypeMessageStyle		@"adiummessagestyle"
 #define AIXtraTypeListTheme			@"listtheme"
