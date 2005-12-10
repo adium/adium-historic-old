@@ -18,6 +18,7 @@
 #import "AIListGroupMockieCell.h"
 #import "AIListOutlineView.h"
 #import <AIUtilities/AIBezierPathAdditions.h>
+#import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIGradient.h>
 
 @implementation AIListContactMockieCell
@@ -97,7 +98,12 @@
 - (void)drawSelectionWithFrame:(NSRect)cellFrame
 {
 	if ([self cellIsSelected]) {
-		AIGradient	*gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
+		NSColor *highlightColor = [controlView highlightColor];
+		AIGradient 	*gradient = highlightColor
+			? [AIGradient gradientWithFirstColor:highlightColor
+			                         secondColor:[highlightColor darkenAndAdjustSaturationBy:0.4] 
+			                           direction:AIVertical]
+			: [AIGradient selectedControlGradientWithDirection:AIVertical];
 		int			row = [controlView rowForItem:listObject];
 		unsigned	numberOfRows = [controlView numberOfRows];
 
