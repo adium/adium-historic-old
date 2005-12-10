@@ -28,7 +28,7 @@
 #import "AIEmoticonPreviewView.h"
 #import "AIDockIconPreviewView.h"
 #import "AIStatusIconPreviewView.h"
-#import "AIScriptPreviewView.h"
+#import "AIXtraInfoView.h"
 
 #define ADIUM_XTRAS_PAGE					AILocalizedString(@"http://www.adiumxtras.com/","Adium xtras page. Localized only if a translated version exists.")
 
