@@ -44,10 +44,9 @@
 		image = [[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease];
 		if(image)
 			[images addObject:image];
-		else
-			[images addObject:[[[NSImage alloc] init] autorelease]];//filler image
 	}
 	[tableView reloadData];
+	[tableView sizeToFit];
 }
 
 - (void) awakeFromNib
@@ -62,7 +61,7 @@
 	[tableView addTableColumn:column];
 	[column release];
 	
-	column = [[NSTableColumn alloc] initWithIdentifier:@"Text Equivalent"];
+	column = [[NSTableColumn alloc] initWithIdentifier:@"Status Name"];
 	[tableView addTableColumn:column];
 	[column release];
 }

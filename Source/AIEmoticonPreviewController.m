@@ -52,6 +52,7 @@
 	[emoticons autorelease];
 	emoticons = [[[AIEmoticonPack emoticonPackFromPath:[xtraInfo path]] emoticons] retain];
 	[tableView reloadData];
+	[tableView sizeToFit];
 }
 
 - (int)numberOfRowsInTableView:(NSTableView *)aTableView
