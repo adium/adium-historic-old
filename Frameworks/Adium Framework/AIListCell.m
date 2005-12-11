@@ -440,8 +440,8 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 {
 	id value;
 
-#define IS_GROUP [listObject conformsToProtocol:@protocol(AIContainingObject)]
-#define IS_CONTACT !IS_GROUP
+#define IS_GROUP [listObject isKindOfClass:[AIListGroup class]]
+#define IS_CONTACT (!IS_GROUP)
 
 	if([attribute isEqualToString:NSAccessibilityRoleAttribute])
 		value = IS_CONTACT ? @"AIContactListItem": @"AIContactListGroup";
