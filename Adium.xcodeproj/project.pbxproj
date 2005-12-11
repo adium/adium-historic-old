@@ -2914,8 +2914,6 @@
 		632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockIconPreviewController.h; path = Source/AIDockIconPreviewController.h; sourceTree = "<group>"; };
 		632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDockIconPreviewController.m; path = Source/AIDockIconPreviewController.m; sourceTree = "<group>"; };
 		632D801608E7E0A40032C187 /* XtrasManager.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtrasManager.nib; path = Resources/XtrasManager.nib; sourceTree = "<group>"; };
-		633366E2094840A800970871 /* AIImageGridXtraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIImageGridXtraPreviewView.h; path = Source/AIImageGridXtraPreviewView.h; sourceTree = "<group>"; };
-		633366E3094840A800970871 /* AIImageGridXtraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIImageGridXtraPreviewView.m; path = Source/AIImageGridXtraPreviewView.m; sourceTree = "<group>"; };
 		6333699309497DB000970871 /* EmoticonPreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EmoticonPreviewView.nib; path = Resources/EmoticonPreviewView.nib; sourceTree = "<group>"; };
 		63336B050949908300970871 /* DockIconPreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DockIconPreviewView.nib; path = Resources/DockIconPreviewView.nib; sourceTree = "<group>"; };
 		63336B3F094994A800970871 /* StatusIconPreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = StatusIconPreviewView.nib; path = Resources/StatusIconPreviewView.nib; sourceTree = "<group>"; };
@@ -5412,8 +5410,6 @@
 				6333699309497DB000970871 /* EmoticonPreviewView.nib */,
 				63336B050949908300970871 /* DockIconPreviewView.nib */,
 				63336B3F094994A800970871 /* StatusIconPreviewView.nib */,
-				633366E2094840A800970871 /* AIImageGridXtraPreviewView.h */,
-				633366E3094840A800970871 /* AIImageGridXtraPreviewView.m */,
 				63EA6406094BB9A9009C8453 /* AIStatusIconPreviewController.h */,
 				63EA6407094BB9A9009C8453 /* AIStatusIconPreviewController.m */,
 			);
