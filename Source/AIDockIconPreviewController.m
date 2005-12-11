@@ -35,6 +35,7 @@
 	images = [[pack allValues] retain];
 	statusNames = [[pack allKeys] retain];
 	[tableView reloadData];
+	[tableView sizeToFit];
 }
 
 - (void) awakeFromNib
