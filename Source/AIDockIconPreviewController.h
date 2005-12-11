@@ -16,7 +16,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import "AIXtraPreviewController.h"
-#import "AIImageGridXtraPreviewView.h"
 
 @interface AIDockIconPreviewController : NSObject <AIXtraPreviewController>
 {
