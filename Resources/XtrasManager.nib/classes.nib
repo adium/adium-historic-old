@@ -5,19 +5,29 @@
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIXtraInfo; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {browseXtras = id; checkForUpdates = id; deleteXtra = id; setCategory = id; }; 
+            ACTIONS = {
+                browseXtras = id; 
+                checkForUpdates = id; 
+                deleteXtra = id; 
+                setCategory = id; 
+                setShowsInfo = id; 
+            }; 
             CLASS = AIXtrasManager; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 infoView = NSTextView; 
-                previewContainerView = NSView; 
+                previewContainerView = NSScrollView; 
+                previewController = id; 
+                readmeView = NSView; 
+                showInfoControl = NSSegmentedControl; 
                 sidebar = NSTableView; 
                 window = NSWindow; 
                 xtraList = NSTableView; 
             }; 
             SUPERCLASS = AIObject; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSSegmentedControl; LANGUAGE = ObjC; SUPERCLASS = NSControl; }
     ); 
     IBVersion = 1; 
 }

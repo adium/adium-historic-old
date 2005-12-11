@@ -40,6 +40,7 @@
 	IBOutlet NSScrollView					*previewContainerView;
 	IBOutlet id<AIXtraPreviewController>	previewController;
 	IBOutlet NSView							*readmeView;
+	IBOutlet NSSegmentedControl				*showInfoControl;
 	NSString								*infoPath;
 	BOOL									showInfo; //YES = info, NO = preview
 }
@@ -52,6 +53,9 @@
 - (IBAction) browseXtras:(id)sender;
 - (IBAction) deleteXtra:(id)sender;
 - (IBAction) checkForUpdates:(id)sender;
+- (void) updatePreview;
+
+- (IBAction) setShowsInfo:(id)sender;
 
 + (BOOL) createXtraBundleAtPath:(NSString *)path;
 
