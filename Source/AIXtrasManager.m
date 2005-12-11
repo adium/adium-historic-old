@@ -40,6 +40,7 @@
 - (void) showXtras
 {
 	showInfo = NO;
+	
 	[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self
 															selector:@selector(xtrasChanged:)
 																name:Adium_Xtras_Changed
@@ -163,7 +164,13 @@ static NSImage * scriptImage;
 	selectedCategory = [categories objectAtIndex:[sidebar selectedRow]];
 	[xtraList selectRow:0 byExtendingSelection:NO];
 	[xtraList reloadData];
+	[self updatePreview];
+}
+
+- (void) updatePreview
+{
 	AIXtraInfo * xtra = [selectedCategory objectAtIndex:0];
+	[showInfoControl setHidden:NO];
 	if(showInfo)
 		[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
 	else {
@@ -174,11 +181,11 @@ static NSImage * scriptImage;
 		else if ([xtraType isEqualToString:AIXtraTypeDockIcon])
 			[NSBundle loadNibNamed:@"DockIconPreviewView" owner:self];
 		else if ([xtraType isEqualToString:AIXtraTypeStatusIcons]) {
-			//		[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self]; disabled due to sucking
+			[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self];
 		}
-		else if ([xtraType isEqualToString:AIXtraTypeScript]) {
+		else { //catchall behavior is to just show the readme
 			[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
-			/* special handling, we'll just want to disable the preview and show the readme */
+			[showInfoControl setHidden:YES];
 		}
 	}
 	
@@ -187,8 +194,16 @@ static NSImage * scriptImage;
 		[previewContainerView setDocumentView:[previewController previewView]];
 		[previewController setXtra:xtra];
 		[previewContainerView setNeedsDisplay:YES];
-	}
-	
+	}	
+}
+
+- (IBAction) setShowsInfo:(id)sender
+{
+	if([sender selectedSegment] == 0)
+		showInfo = NO;
+	else
+		showInfo = YES;
+	[self updatePreview];
 }
 
 - (void)deleteXtrasAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo

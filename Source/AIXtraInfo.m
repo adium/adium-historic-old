@@ -62,7 +62,7 @@
 		}
 		else {
 			name = [[[path lastPathComponent] stringByDeletingPathExtension]retain];
-			resourcePath = @"";//root of the xtra
+			resourcePath = [path copy];//root of the xtra
 			readMePath = [[[NSBundle mainBundle] pathForResource:@"DefaultXtraReadme" ofType:@"rtf"] retain];
 		}	
 		if(!icon)
