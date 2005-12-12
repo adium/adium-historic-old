@@ -298,13 +298,13 @@ void returnColorValue(void *refcon, const float *blendPoint, float *output) {
 
 int BlendColors(FloatRGB *result, FloatRGB *a, FloatRGB *b, float scale) {
 	//assure that the scale value is within the range of 0.0f-1.0f.
-	if      (scale > 1.0) scale = 1.0;
-	else if (scale < 0.0) scale = 0.0;
+	if      (scale > 1.0f) scale = 1.0f;
+	else if (scale < 0.0f) scale = 0.0f;
 
-	float scaleComplement = 1.0 - scale;
+	float scaleComplement = 1.0f - scale;
 	result->alpha = scale * b->alpha + scaleComplement * a->alpha;
-	scale		  = scale * a->alpha + scaleComplement * (1.0 - b->alpha);
-	scaleComplement = 1.0 - scale;
+	scale		  = scale * a->alpha + scaleComplement * (1.0f - b->alpha);
+	scaleComplement = 1.0f - scale;
 	result->red   = scale * b->red   + scaleComplement * a->red;
  	result->green = scale * b->green + scaleComplement * a->green;
 	result->blue  = scale * b->blue  + scaleComplement * a->blue;
