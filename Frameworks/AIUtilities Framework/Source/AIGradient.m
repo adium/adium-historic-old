@@ -296,12 +296,12 @@ void returnColorValue(void *refcon, const float *blendPoint, float *output) {
 //components, as is typical of Quartz, are 0.0f-1.0f also.
 //return value is 0 if successful or < 0 if not.
 
-int BlendColors(FloatRGB *result, FloatRGB *a, FloatRGB *b, float scale) {
+int BlendColors(register FloatRGB *result, register FloatRGB *a, register FloatRGB *b, register float scale) {
 	//assure that the scale value is within the range of 0.0f-1.0f.
 	if      (scale > 1.0f) scale = 1.0f;
 	else if (scale < 0.0f) scale = 0.0f;
 
-	float scaleComplement = 1.0f - scale;
+	register float scaleComplement = 1.0f - scale;
 	result->alpha = scale * b->alpha + scaleComplement * a->alpha;
 	scale		  = scale * a->alpha + scaleComplement * (1.0f - b->alpha);
 	scaleComplement = 1.0f - scale;
