@@ -74,7 +74,7 @@
 																	keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:menuItem_ignore toLocation:Context_Contact_GroupChatAction];
 	
-	[adiumChatEvents controllerDidLoad];	
+	[adiumChatEvents controllerDidLoad];
 }
 
 
