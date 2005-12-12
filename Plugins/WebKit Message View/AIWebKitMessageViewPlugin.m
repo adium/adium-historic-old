@@ -27,6 +27,7 @@
 - (void)_scanAvailableWebkitStyles;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_loadPreferencesForWebView:(ESWebView *)webView withStyleNamed:(NSString *)styleName;
+- (void) preloadMessageStyles;
 @end
 
 @implementation AIWebKitMessageViewPlugin
@@ -52,6 +53,10 @@
 
 	//Register ourself as a message view plugin
 	[[adium interfaceController] registerMessageViewPlugin:self];
+	
+	[NSThread detachNewThreadSelector:@selector(preloadMessageStyles)
+							 toTarget:self
+						   withObject:nil];
 }
 
 /*!
@@ -63,35 +68,48 @@
 }
 
 /*!
+ * @brief Runs on a background thread at launch to load message styles
+ */
+- (void) preloadMessageStyles
+{
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc]init];
+	[self availableMessageStyles];
+	[pool release];
+}
+
+/*!
  * @brief Returns a dictionary of the available message styles
  */
 - (NSDictionary *)availableMessageStyles
 {
-	if (!styleDictionary) {
-		NSArray			*stylesArray = [adium allResourcesForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT 
-												   withExtensions:@"AdiumMessageStyle"];
-		NSEnumerator	*stylesEnumerator;
-		NSBundle		*style;
-		NSString		*resourcePath;
-		
-		//Clear the current dictionary of styles and ready a new mutable dictionary
-		styleDictionary = [[NSMutableDictionary alloc] init];
-		
-		//Get all resource paths to search
-		stylesEnumerator = [stylesArray objectEnumerator];
-		while ((resourcePath = [stylesEnumerator nextObject])) {
-			if ((style = [NSBundle bundleWithPath:resourcePath])) {
-				NSString	*styleIdentifier = [style bundleIdentifier];
-				if (styleIdentifier && [styleIdentifier length]) {
-					[styleDictionary setObject:style forKey:styleIdentifier];
+	@synchronized(self) {
+		if (!styleDictionary) {
+			NSArray			*stylesArray = [adium allResourcesForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT 
+													   withExtensions:@"AdiumMessageStyle"];
+			NSEnumerator	*stylesEnumerator;
+			NSBundle		*style;
+			NSString		*resourcePath;
+			
+			//Clear the current dictionary of styles and ready a new mutable dictionary
+			styleDictionary = [[NSMutableDictionary alloc] init];
+			
+			//Get all resource paths to search
+			stylesEnumerator = [stylesArray objectEnumerator];
+			while ((resourcePath = [stylesEnumerator nextObject])) {
+				if ((style = [NSBundle bundleWithPath:resourcePath])) {
+					NSString	*styleIdentifier = [style bundleIdentifier];
+					if (styleIdentifier && [styleIdentifier length]) {
+						[styleDictionary setObject:style forKey:styleIdentifier];
+					}
 				}
 			}
+			
+			NSAssert([styleDictionary count] > 0, @"No message styles available"); //Abort if we have no message styles
 		}
-
-		NSAssert([styleDictionary count] > 0, @"No message styles available"); //Abort if we have no message styles
+		
+		return [NSDictionary dictionaryWithDictionary:styleDictionary]; //returning mutable private variables == nuh uh
 	}
-	
-	return styleDictionary;
+	return nil; //keep the compiler happy
 }
 
 /*!
@@ -104,10 +122,11 @@
 	NSBundle		*bundle = [styles objectForKey:identifier];
 	
 	//If the style isn't available, use our default.  Or, failing that, any available style
-	if (!bundle) bundle = [styles objectForKey:WEBKIT_DEFAULT_STYLE];
 	if (!bundle) {
-		bundle = [[styles allValues] lastObject];
-	}
+		bundle = [styles objectForKey:WEBKIT_DEFAULT_STYLE];
+		if (!bundle)
+			bundle = [[styles allValues] lastObject];
+	} 
 
 	return bundle;
 }
@@ -117,8 +136,10 @@
  */
 - (void)xtrasChanged:(NSNotification *)notification
 {
-	if ([[notification object] caseInsensitiveCompare:@"AdiumMessageStyle"] == 0) {		
-		[styleDictionary release]; styleDictionary = nil;
+	if ([[notification object] caseInsensitiveCompare:@"AdiumMessageStyle"] == 0) {	
+		@synchronized(self) {
+			[styleDictionary release]; styleDictionary = nil;
+		}
 		[preferences messageStyleXtrasDidChange];
 	}
 }
