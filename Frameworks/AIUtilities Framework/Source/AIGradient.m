@@ -142,8 +142,8 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 	CGRect *cgRect = (CGRect *)&inRect;
 
 	//Shifts the CGPath to origin 0,0 and scale it down to an integer width (and height).
-	float wscale = ((int)inRect.size.width)  / inRect.size.width;
-	float hscale = ((int)inRect.size.height) / inRect.size.height;
+	float wscale = (floorf(inRect.size.width))  / inRect.size.width;
+	float hscale = (floorf(inRect.size.height)) / inRect.size.height;
 	struct CGAffineTransform transform = {
 		.a  = wscale, .b = 0.0,
 		.c  = 0.0,    .d = hscale,
@@ -202,12 +202,12 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 			//  context', not 'top of the window'.)
 			if (direction == AIVertical) {
 				//draw the gradient from the top middle to the bottom middle.
-				srcPt.x = dstPt.x = width / 2.0f;
+				srcPt.x = dstPt.x = width * 0.5f;
 				srcPt.y = 0.0f;
 				dstPt.y = height;
 			} else {
 				//draw the gradient from the middle left to the middle right.
-				srcPt.y = dstPt.y = height / 2.0f;
+				srcPt.y = dstPt.y = height * 0.5f;
 				srcPt.x = 0.0f;
 				dstPt.x = width;
 			}
