@@ -287,7 +287,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 		BOOL imageIsTallerThanTitle;
 		
         //if the image isn't going to fit without overlapping the title, expand the window's width
-        float neededWidth = imageSize.width + tooltipTitleRect.size.width + (TOOLTIP_INSET*3);
+        float neededWidth = imageSize.width + tooltipTitleRect.size.width + (TOOLTIP_INSET * 3);
         if (neededWidth > windowWidth) {
             windowWidth = neededWidth;   
         }
@@ -295,10 +295,10 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 		imageIsTallerThanTitle = (imageSize.height > tooltipTitleRect.size.height);
         if (imageIsTallerThanTitle) {
 			//The image should not overlap the body of the tooltip, so increase the window height (the body has an origin at the bottom-left so will move with the window)
-			windowHeight = titleAndBodyMargin + imageSize.height + tooltipBodyRect.size.height + TOOLTIP_INSET*2;
+			windowHeight = titleAndBodyMargin + imageSize.height + tooltipBodyRect.size.height + TOOLTIP_INSET * 2;
 			
 			//If the image is taller than the title, shift the title up 
-			tooltipTitleRect.origin.y = (windowHeight - (imageSize.height)/2 - tooltipTitleRect.size.height/2);
+			tooltipTitleRect.origin.y = (windowHeight - ((imageSize.height) * 0.5) - (tooltipTitleRect.size.height * 0.5));
         }
 
         if (imageOnRight) {
@@ -310,7 +310,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
             //Recenter the title to be between the right of the image and the right of the window
 			tooltipTitleRect.origin.x = (imageSize.width + TOOLTIP_INSET * 2);
 
-            [view_tooltipImage setFrameOrigin:NSMakePoint(TOOLTIP_INSET,windowHeight - imageSize.height - TOOLTIP_INSET)];
+            [view_tooltipImage setFrameOrigin:NSMakePoint(TOOLTIP_INSET, windowHeight - imageSize.height - TOOLTIP_INSET)];
         }
     }
 
@@ -337,8 +337,8 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
         [[tooltipWindow contentView] lockFocus];
         [titleAndBodyMarginLineColor set];
         [NSBezierPath setDefaultLineWidth:0.5];
-        [NSBezierPath strokeLineFromPoint:NSMakePoint(TOOLTIP_INSET,titleAndBodyMargin/2 + tooltipBodyRect.size.height + 4)
-                                  toPoint:NSMakePoint(windowWidth - TOOLTIP_INSET,titleAndBodyMargin/2 + tooltipBodyRect.size.height + 4)];
+        [NSBezierPath strokeLineFromPoint:NSMakePoint(TOOLTIP_INSET, (titleAndBodyMargin * 0.5) + tooltipBodyRect.size.height + 4)
+                                  toPoint:NSMakePoint(windowWidth - TOOLTIP_INSET, (titleAndBodyMargin * 0.5) + tooltipBodyRect.size.height + 4)];
         [[tooltipWindow contentView] unlockFocus];
     }
     
