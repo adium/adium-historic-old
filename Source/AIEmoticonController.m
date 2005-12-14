@@ -15,7 +15,6 @@
  */
 
 #import "AIEmoticonController.h"
-#warning crosslinking, move emoticon stuff to framework i guess
 #import "AIEmoticon.h"
 #import "AIEmoticonPack.h"
 #import "AIEmoticonPreferences.h"
