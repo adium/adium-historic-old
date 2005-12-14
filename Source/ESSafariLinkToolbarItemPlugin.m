@@ -38,15 +38,54 @@
  */
 - (void)installPlugin
 {
-	//SafariLink
+	CFURLRef	urlToDefaultBrowser = NULL;
+	NSString	*browserName = nil;
+	NSImage		*browserImage = nil;
+
+	if (LSGetApplicationForURL((CFURLRef)[NSURL URLWithString:@"http://google.com"],
+							   kLSRolesViewer,
+							   NULL /*outAppRef*/,
+							   &urlToDefaultBrowser) != kLSApplicationNotFoundErr) {
+		NSString	*defaultBrowserName;
+		NSString	*defaultBrowserPath;
+
+		defaultBrowserPath = [(NSURL *)urlToDefaultBrowser path];
+		defaultBrowserName = [[NSFileManager defaultManager] displayNameAtPath:defaultBrowserPath];
+
+		//Is the default browser supported?
+		//XXX FireFox should be supportable, but I can't get the script to work -eds
+		NSEnumerator *enumerator = [[NSArray arrayWithObjects:@"Safari",/*@"Firefox",*/@"Omniweb",@"Camino",@"NetNewsWire",nil] objectEnumerator];
+		NSString	 *aSupportedBrowser;
+
+		while ((aSupportedBrowser = [enumerator nextObject])) {
+			if ([defaultBrowserName rangeOfString:aSupportedBrowser
+										  options:(NSCaseInsensitiveSearch | NSLiteralSearch)].location != NSNotFound) {
+				//Use the name and image provided by the system if possible
+				browserName = defaultBrowserName;
+				browserImage = [[NSWorkspace sharedWorkspace] iconForFile:defaultBrowserPath];
+				break;
+			}
+		}
+	}
+	
+	if (urlToDefaultBrowser) {
+		CFRelease(urlToDefaultBrowser);
+	}
+	
+	if (!browserName || !browserImage) {
+		//Fall back on Safari and the image stored within our bundle if necessary
+		browserName = @"Safari";
+		browserImage = [NSImage imageNamed:@"Safari" forClass:[self class]];
+	}	
+
 	NSToolbarItem	*toolbarItem;
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:SAFARI_LINK_IDENTIFER
-														  label:AILocalizedString(@"Safari Link",nil)
-												   paletteLabel:AILocalizedString(@"Insert Safari Link",nil)
-														toolTip:AILocalizedString(@"Insert link to active page in Safari",nil)
+														  label:[NSString stringWithFormat:AILocalizedString(@"%@ Link",nil), browserName]
+												   paletteLabel:[NSString stringWithFormat:AILocalizedString(@"Insert %@ Link",nil), browserName]
+														toolTip:[NSString stringWithFormat:AILocalizedString(@"Insert link to active page in %@",nil), browserName]
 														 target:self
 												settingSelector:@selector(setImage:)
-													itemContent:[NSImage imageNamed:@"Safari" forClass:[self class]]
+													itemContent:browserImage
 														 action:@selector(insertSafariLink:)
 														   menu:nil];
 	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
