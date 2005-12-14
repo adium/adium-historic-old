@@ -321,28 +321,22 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	} else {
 		NSEnumerator	*enumerator;
 		NSString		*serviceCodeUniqueID;
-//		BOOL			oneOrMoreConnectedAccounts = [[adium accountController] oneOrMoreConnectedAccounts];
+		AIService		*service;
 
-		//Insert a menu item for each available account
-		enumerator = [statusDictsByServiceCodeUniqueID[type] keyEnumerator];
-		while ((serviceCodeUniqueID = [enumerator nextObject])) {
-			/* Obtain the status dicts for this type and service code unique ID if it is online or
-			 * if no accounts are online but an account of this service code is configured
-			 */
-//			if ([[adium accountController] serviceWithUniqueIDIsOnline:serviceCodeUniqueID] ||
-//				(!oneOrMoreConnectedAccounts && [[adium accountController] firstAccountWithService:[[adium accountController] serviceWithUniqueID:serviceCodeUniqueID]])) {
-				NSSet	*statusDicts;
-
-				//Obtain the status dicts for this type and service code unique ID
-				if ((statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:serviceCodeUniqueID])) {
-					//And add them
-					[self _addMenuItemsForStatusOfType:type
-											withTarget:target
-											   fromSet:statusDicts
-											   toArray:menuItems
-									alreadyAddedTitles:alreadyAddedTitles];
-				}
-//			}
+		enumerator = [[[adium accountController] activeServicesIncludingCompatibleServices:NO] objectEnumerator];
+		while ((service = [enumerator nextObject])) {
+			NSSet	*statusDicts;
+			
+			//Obtain the status dicts for this type and service code unique ID
+			if ((statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:[service serviceCodeUniqueID]])) {
+				//And add them
+				[self _addMenuItemsForStatusOfType:type
+										withTarget:target
+										   fromSet:statusDicts
+										   toArray:menuItems
+								alreadyAddedTitles:alreadyAddedTitles];
+			}
+			
 		}
 	}
 
