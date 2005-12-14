@@ -79,12 +79,6 @@
     [self disconnectAllAccounts];
 }
 
-- (void)dealloc
-{	
-	[super dealloc];
-}
-
-
 //Services
 #pragma mark Services
 - (void)registerService:(AIService *)inService {
@@ -93,8 +87,8 @@
 - (NSArray *)services {
 	return [adiumServices services];
 }
-- (NSArray *)activeServices {
-	return [adiumServices activeServices];
+- (NSSet *)activeServicesIncludingCompatibleServices:(BOOL)includeCompatible {
+	return [adiumServices activeServicesIncludingCompatibleServices:includeCompatible];
 }
 - (AIService *)serviceWithUniqueID:(NSString *)uniqueID {
 	return [adiumServices serviceWithUniqueID:uniqueID];

@@ -59,39 +59,47 @@
  */
 - (NSArray *)services
 {
-	return [[services allValues] sortedArrayUsingSelector:@selector(compareLongDescription:)];
+	return [services allValues];
 }
 
 /*!
  * @brief Returns an array of all active services
  *
- * Active services are those for which the user has an account (or compatible account)
+ * Active services are those for which the user has an enabled account (or enabled compatible account)
  * @return NSArray of AIService instances
  */
-- (NSArray *)activeServices
+- (NSSet *)activeServicesIncludingCompatibleServices:(BOOL)includeCompatible
 {
-	//Scan our user's accounts and build a list of service classes that they cover
-	NSMutableArray	*serviceClasses = [NSMutableArray array];
+	NSMutableSet	*activeServices = [NSMutableSet set];
 	NSEnumerator	*accountEnumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount		*account;
-	
-	while ((account = [accountEnumerator nextObject])) {
-		NSString	*serviceClass = [[account service] serviceClass];
+
+	if (includeCompatible) {
+		//Scan our user's accounts and build a list of service classes that they cover
+		NSMutableSet	*serviceClasses = [NSMutableSet set];
 		
-		if (![serviceClasses containsObject:serviceClass]) {
-			[serviceClasses addObject:serviceClass];
+		while ((account = [accountEnumerator nextObject])) {
+			if ([account enabled]) {
+				[serviceClasses addObject:[[account service] serviceClass]];
+			}
 		}
-	}
-
-	//Gather and return all services compatible with these service classes
-	NSMutableArray	*activeServices = [NSMutableArray array];
-	NSEnumerator	*serviceEnumerator = [services objectEnumerator];
-	AIService		*service;
-
-	while ((service = [serviceEnumerator nextObject])) {
-		if ([serviceClasses containsObject:[service serviceClass]]) {
-			[activeServices addObject:service];
+		
+		//Gather and return all services compatible with these service classes
+		NSEnumerator	*serviceEnumerator = [services objectEnumerator];
+		AIService		*service;
+		
+		while ((service = [serviceEnumerator nextObject])) {
+			if ([serviceClasses containsObject:[service serviceClass]]) {
+				[activeServices addObject:service];
+			}
 		}
+		
+	} else {
+		while ((account = [accountEnumerator nextObject])) {
+			if ([account enabled]) {
+				[activeServices addObject:[account service]];
+			}
+		}		
 	}
 
 	return activeServices;

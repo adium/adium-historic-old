@@ -25,7 +25,7 @@
 - (void)registerService:(AIService *)inService;
 
 - (NSArray *)services;
-- (NSArray *)activeServices;
+- (NSSet *)activeServicesIncludingCompatibleServices:(BOOL)includeCompatible;
 - (AIService *)serviceWithUniqueID:(NSString *)uniqueID;
 - (AIService *)firstServiceWithServiceID:(NSString *)serviceID;
 
