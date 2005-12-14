@@ -23,6 +23,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/OWAddressBookAdditions.h>
 #import <AIUtilities/AIExceptionHandlingUtilities.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
@@ -61,6 +62,7 @@
 - (void)editInAddressBook;
 - (void)addToAddressBookDict:(NSArray *)people;
 - (void)removeFromAddressBookDict:(NSArray *)UIDs;
+- (void)installAddressBookActions;
 @end
 
 /*!
@@ -137,6 +139,54 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	[[adium menuController] addContextualMenuItem:showInABContextualMenuItem toLocation:Context_Contact_Action];
 	[[adium menuController] addContextualMenuItem:editInABContextualMenuItem toLocation:Context_Contact_Action];
 	
+	[self installAddressBookActions];
+}
+
+- (void)installAddressBookActions
+{
+	NSNumber		*installedActions = [[NSUserDefaults standardUserDefaults] objectForKey:@"Adium:Installed Adress Book Actions"];
+	
+	if (!installedActions || ![installedActions boolValue]) {
+		NSEnumerator  *enumerator = [[NSArray arrayWithObjects:@"AIM", @"MSN", @"Yahoo", @"ICQ", @"Jabber", @"SMS", nil] objectEnumerator];
+		NSString	  *name;
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		NSArray		  *libraryDirectoryArray;
+		NSString	  *libraryDirectory, *pluginDirectory;
+
+		libraryDirectoryArray = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+		if ([libraryDirectoryArray count]) {
+			libraryDirectory = [libraryDirectoryArray objectAtIndex:0];
+
+		} else {
+			//Ridiculous safety since everyone should have a Library folder...
+			libraryDirectory = [NSHomeDirectory() stringByAppendingPathComponent:@"Library"];
+			[fileManager createDirectoryAtPath:libraryDirectory attributes:nil];
+		}
+
+		pluginDirectory = [[libraryDirectory stringByAppendingPathComponent:@"Address Book Plug-Ins"] stringByAppendingPathComponent:@"/"];
+		[fileManager createDirectoryAtPath:pluginDirectory attributes:nil];
+		
+		while ((name = [enumerator nextObject])) {
+			NSString *fullName = [NSString stringWithFormat:@"AdiumAddressBookAction_%@",name];
+			NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:fullName ofType:@"scpt"];
+
+			if (path) {
+				[fileManager copyPath:path
+							   toPath:[pluginDirectory stringByAppendingPathComponent:[fullName stringByAppendingPathExtension:@"scpt"]]
+							  handler:NULL];
+				
+				//Remove the old xtra if installed
+				[fileManager trashFileAtPath:[pluginDirectory stringByAppendingPathComponent:
+					[NSString stringWithFormat:@"%@-Adium.scpt",name]]];
+			} else {
+				NSLog(@"Could not find %@",fullName);
+			}
+		}
+
+		[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES]
+												  forKey:@"Adium:Installed Adress Book Actions"];
+	}
+
 	//Wait for Adium to finish launching before we build the address book so the contact list will be ready
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
