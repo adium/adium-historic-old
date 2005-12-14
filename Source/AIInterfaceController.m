@@ -894,6 +894,7 @@
             }
             
             //Display the new tooltip
+			AILog(@"Tooltip is %@",tooltipBody);
             [AITooltipUtilities showTooltipWithTitle:tooltipTitle
                                                 body:tooltipBody 
                                                image:tooltipImage

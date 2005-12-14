@@ -444,7 +444,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 	if ([listObject isKindOfClass:[AIMetaContact class]] &&
 		([[(AIMetaContact *)listObject listContacts] count] > 1)) {
-		[contactListController setContactListRoot:listObject];
+		[contactListController setContactListRoot:(AIMetaContact *)listObject];
 		[drawer_metaContact open];
 
 		NSRect	outlineFrame = [contactListView frame];
@@ -497,11 +497,11 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 - (void)contactInfoListControllerSelectionDidChangeToListObject:(AIListObject *)listObject
 {
-	NSLog(@"Configuring for %@",listObject);
+	AILog(@"Configuring Info List for %@",listObject);
 	[self configureForListObject:listObject];
 
 	//Only enable the remove contact button if a contact within the metacontact is selected
-	[button_removeContact setEnabled:(listObject && (listObject != [contactListController contactListRoot]))];
+	[button_removeContact setEnabled:(listObject && (listObject != (AIListObject *)[contactListController contactListRoot]))];
 }
 
 @end

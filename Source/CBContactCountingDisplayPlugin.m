@@ -160,7 +160,7 @@
 			NSEnumerator	*enumerator;
 			
 			onlineObjects = 0;
-			enumerator = [targetGroup objectEnumerator];
+			enumerator = [[targetGroup containedObjects] objectEnumerator];
 			while ((containedObject = [enumerator nextObject])) {
 				if ([containedObject online]) onlineObjects++;
 			}
