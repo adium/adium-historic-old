@@ -16,7 +16,9 @@
 
 @class ESFileTransferProgressRow, ESFileTransfer, AIRolloverButton;
 
-@interface ESFileTransferProgressView : NSView {
+@protocol AIRolloverButtonDelegate;
+
+@interface ESFileTransferProgressView : NSView <AIRolloverButtonDelegate> {
 	IBOutlet ESFileTransferProgressRow	*owner;
 	
 	IBOutlet NSBox					*box_primaryControls;
