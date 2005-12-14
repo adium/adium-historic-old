@@ -166,7 +166,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	[peoplePicker setNameDoubleAction:@selector(select:)];
 	
 	//We show only the active services
-	servicesEnumerator = [[[adium accountController] activeServices] objectEnumerator];
+	servicesEnumerator = [[[adium accountController] activeServicesIncludingCompatibleServices:YES] objectEnumerator];
 	while ((aService = [servicesEnumerator nextObject])) {
 		property = [ESAddressBookIntegrationPlugin propertyFromService:aService];
 		if (property && ![[peoplePicker properties] containsObject:property])
@@ -450,7 +450,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	
 	[popUp_contactType removeAllItems];
 	//We show only the active services
-	NSEnumerator	*servicesEnumerator = [[[adium accountController] activeServices] objectEnumerator];
+	NSEnumerator	*servicesEnumerator = [[[adium accountController] activeServicesIncludingCompatibleServices:YES] objectEnumerator];
 	unsigned int	i = 0;
 	
 	while ((service = [servicesEnumerator nextObject])) {
