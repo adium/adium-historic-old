@@ -70,11 +70,11 @@
 	AIListObject *tmp;
 	NSEnumerator *groupEnum;
 	if ([listObject isMemberOfClass:[AIListGroup class]]) {
-		groupEnum = [(AIListGroup *)listObject listContactsEnumerator];
+		groupEnum = [[(AIListGroup *)listObject listContacts] objectEnumerator];
 		while ((tmp = [groupEnum nextObject]))
 			[self addListObjectToList:tmp];
 	} else if ([listObject isMemberOfClass:[AIMetaContact class]]) {
-		groupEnum = [(AIMetaContact *)listObject listContactsEnumerator];
+		groupEnum = [[(AIMetaContact *)listObject listContacts] objectEnumerator];
 		while ((tmp = [groupEnum nextObject]))
 			[self addListObjectToList:tmp];
 	} else if ([listObject isMemberOfClass:[AIListContact class]]) {

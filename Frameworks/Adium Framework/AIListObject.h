@@ -39,12 +39,8 @@ typedef enum {
 - (int)indexOfObject:(AIListObject *)inObject;
 - (AIListObject *)objectWithService:(AIService *)inService UID:(NSString *)inUID;
 
-//Enumerator of -[containedObjects]
-- (NSEnumerator *)objectEnumerator;
-
 //Should list each list contact only once (for groups, this is the same as the objectEnumerator)
 - (NSArray *)listContacts;
-- (NSEnumerator *)listContactsEnumerator;
 
 - (BOOL)addObject:(AIListObject *)inObject;
 
@@ -59,7 +55,13 @@ typedef enum {
 - (unsigned)visibleCount;
 @end
 
-@interface AIListObject : ESObjectWithStatus{
+@protocol AIListObject
+- (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify;
+- (void)notifyOfChangedStatusSilently:(BOOL)silent;
+- (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(AIListObject *)anObject withOwner:(AIListObject *)inOwner priorityLevel:(float)priority;
+@end
+
+@interface AIListObject : ESObjectWithStatus <AIListObject> {
 	AIService				*service;
 	
     NSString				*UID;
@@ -67,8 +69,8 @@ typedef enum {
 	BOOL					visible;				//Visibility of this object
 
 	//Grouping, Manual ordering
-    AIListObject <AIContainingObject>	*containingObject;		//The group/metacontact this object is in
-	float								orderIndex;				//Placement of this contact within a group
+    id <AIContainingObject, AIListObject>	containingObject;		//The group/metacontact this object is in
+	float									orderIndex;				//Placement of this contact within a group
 }
 
 //

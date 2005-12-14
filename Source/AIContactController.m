@@ -1640,7 +1640,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 	if (inGroup == nil) inGroup = contactList;  //Passing nil scans the entire contact list
 
-	enumerator = [inGroup objectEnumerator];
+	enumerator = [[inGroup containedObjects] objectEnumerator];
     while ((object = [enumerator nextObject])) {
         if ([object isMemberOfClass:[AIMetaContact class]] || [object isMemberOfClass:[AIListGroup class]]) {
             if (subGroups) {
@@ -1683,7 +1683,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	if (group == nil) group = contactList;
 
 	//Enumerate this group and process all groups we find within it
-	enumerator = [group objectEnumerator];
+	enumerator = [[group containedObjects] objectEnumerator];
 	while ((object = [enumerator nextObject])) {
 		if ([object isKindOfClass:[AIListGroup class]]) {
 			NSMenuItem	*menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[object displayName]
@@ -1725,7 +1725,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	if (firstLevel) [menu addItemWithTitle:@"" action:nil keyEquivalent:@""];
 
 	//All menu items for all contained objects
-	enumerator = [inObject listContactsEnumerator];
+	enumerator = [[inObject listContacts] objectEnumerator];
     while ((object = [enumerator nextObject])) {
 		NSImage		*menuServiceImage;
 		NSMenuItem	*menuItem;

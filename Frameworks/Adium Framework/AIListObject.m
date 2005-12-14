@@ -181,9 +181,9 @@
 /*
  * @brief Containing object of this object
  */
-- (AIListObject <AIContainingObject> *)containingObject
+- (AIListObject<AIContainingObject> *)containingObject
 {
-    return containingObject;
+    return (AIListObject<AIContainingObject> *)containingObject;
 }
 
 /*
@@ -648,6 +648,11 @@
 			
 		}
 	}
+}
+
+- (void)notifyOfChangedStatusSilently:(BOOL)silent
+{
+	[super notifyOfChangedStatusSilently:silent];
 }
 
 #pragma mark Debugging
