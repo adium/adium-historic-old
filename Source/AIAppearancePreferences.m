@@ -54,6 +54,10 @@ typedef enum {
 - (void)_addWindowStyleOption:(NSString *)option withTag:(int)tag toMenu:(NSMenu *)menu;
 - (void)_updateSliderValues;
 - (void)xtrasChanged:(NSNotification *)notification;
+
+- (void)configureDockIconMenu;
+- (void)configureStatusIconsMenu;
+- (void)configureServiceIconsMenu;
 @end
 
 @implementation AIAppearancePreferences
@@ -127,18 +131,15 @@ typedef enum {
 	}
 	
 	if (!type || [type isEqualToString:@"adiumicon"]) {
-		[popUp_dockIcon setMenu:[self _dockIconMenu]];
-		[popUp_dockIcon selectItemWithRepresentedObject:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
+		[self configureDockIconMenu];
 	}
 	
 	if (!type || [type isEqualToString:@"adiumserviceicons"]) {
-		[popUp_serviceIcons setMenu:[self _serviceIconsMenu]];
-		[popUp_serviceIcons selectItemWithTitle:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]];
+		[self configureServiceIconsMenu];
 	}
 	
 	if (!type || [type isEqualToString:@"adiumstatusicons"]) {
-		[popUp_statusIcons setMenu:[self _statusIconsMenu]];
-		[popUp_statusIcons selectItemWithTitle:[prefDict objectForKey:KEY_STATUS_ICON_PACK]];		
+		[self configureStatusIconsMenu];
 	}
 	
 	if (!type || [type isEqualToString:@"listtheme"]) {
@@ -852,72 +853,94 @@ typedef enum {
 	[AIDockIconSelectionSheet showDockIconSelectorOnWindow:[[self view] window]];
 }
 
-int _dockMenuItemSort(id objectA, id objectB, void *context)
+int _menuItemTitleSort(id objectA, id objectB, void *context)
 {
 	return ([[(NSMenuItem *)objectA title] caseInsensitiveCompare:[(NSMenuItem *)objectB title]]);
 }
 
-/*!
- * @brief Returns a menu of dock icon packs
+/*
+ * @brief Return the menu item for a dock icon
  */
-- (NSMenu *)_dockIconMenu
+- (NSMenuItem *)meuItemForDockIconPackAtPath:(NSString *)packPath
+{
+	NSMenuItem	*menuItem;
+	NSString	*name = nil;
+	NSString	*packName = [[packPath lastPathComponent] stringByDeletingPathExtension];
+	AIIconState	*preview = nil;
+	
+	[[adium dockController] getName:&name
+					   previewState:&preview
+				  forIconPackAtPath:packPath];
+	
+	if (!name) {
+		name = packName;
+	}
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
+	[menuItem setRepresentedObject:packName];
+	[menuItem setImage:[[preview image] imageByScalingToSize:NSMakeSize(18, 18)]];
+	
+	return menuItem;
+}
+
+/*!
+ * @brief Returns an array of menu items of all dock icon packs
+ */
+- (NSArray *)_dockIconMenuArray
 {
 	NSMutableArray		*menuItemArray = [NSMutableArray array];
-	NSMenu				*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
 	NSEnumerator		*enumerator;
 	NSString			*packPath;
-	NSMenuItem			*menuItem;
 
 	enumerator = [[[adium dockController] availableDockIconPacks] objectEnumerator];
 	while ((packPath = [enumerator nextObject])) {
-		NSString	*name = nil;
-		NSString	*packName = [[packPath lastPathComponent] stringByDeletingPathExtension];
-		AIIconState	*preview = nil;
-		
-		[[adium dockController] getName:&name
-						   previewState:&preview
-					  forIconPackAtPath:packPath];
-
-		if (!name) {
-			name = packName;
-		}
-		
-		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
-																		 target:nil
-																		 action:nil
-																  keyEquivalent:@""] autorelease];
-		[menuItem setRepresentedObject:packName];
-		[menuItem setImage:[[preview image] imageByScalingToSize:NSMakeSize(18, 18)]];
-		[menuItemArray addObject:menuItem];
+		[menuItemArray addObject:[self meuItemForDockIconPackAtPath:packPath]];
 	}
 
-	[menuItemArray sortUsingFunction:_dockMenuItemSort context:NULL];
+	[menuItemArray sortUsingFunction:_menuItemTitleSort context:NULL];
 
-	enumerator = [menuItemArray objectEnumerator];
-	while ((menuItem = [enumerator nextObject])) {
-		[menu addItem:menuItem];
-	}
-
-	return menu;	
+	return menuItemArray;
 }
 
+/*
+ * @brief Configure the dock icon meu initially or after the xtras change
+ *
+ * Initially, the dock icon menu just has the currently selected icon; the others will be generated lazily if the icon is displayed, in menuNeedsUpdate:
+ */
+- (void)configureDockIconMenu
+{
+	NSMenu		*tempMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	NSString	*iconPath;
+	NSString	*activePackName = [[adium preferenceController] preferenceForKey:KEY_ACTIVE_DOCK_ICON
+																		   group:PREF_GROUP_APPEARANCE];
+	iconPath = [adium pathOfPackWithName:activePackName
+							   extension:@"AdiumIcon"
+					  resourceFolderName:FOLDER_DOCK_ICONS];
+	
+	[tempMenu addItem:[self meuItemForDockIconPackAtPath:iconPath]];
+	[tempMenu setDelegate:self];
+	[tempMenu setTitle:@"Temporary Dock Icon Menu"];
+
+	[popUp_dockIcon setMenu:tempMenu];
+	[popUp_dockIcon selectItemWithRepresentedObject:activePackName];
+}
 
 //Status and Service icons ---------------------------------------------------------------------------------------------
 #pragma mark Status and service icons
-/*!
- * @brief Returns a menu of status icon packs
- */
-- (NSMenu *)_statusIconsMenu
+- (NSMenuItem *)meuItemForIconPackAtPath:(NSString *)packPath class:(Class)iconClass
 {
-	return [self _iconPackMenuForPacks:[adium allResourcesForName:@"Status Icons" withExtensions:@"AdiumStatusIcons"] class:[AIStatusIcons class]];
-}
+	NSString	*name = [[packPath lastPathComponent] stringByDeletingPathExtension];
+	NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
+																				  target:nil
+																				  action:nil
+																		   keyEquivalent:@""] autorelease];
+	[menuItem setRepresentedObject:name];
+	[menuItem setImage:[iconClass previewMenuImageForIconPackAtPath:packPath]];	
 
-/*!
- * @brief Returns a menu of service icon packs
- */
-- (NSMenu *)_serviceIconsMenu
-{
-	return [self _iconPackMenuForPacks:[adium allResourcesForName:@"Service Icons" withExtensions:@"AdiumServiceIcons"] class:[AIServiceIcons class]];
+	return menuItem;
 }
 
 /*!
@@ -926,24 +949,103 @@ int _dockMenuItemSort(id objectA, id objectB, void *context)
  * @param packs NSArray of icon pack file paths
  * @param iconClass The controller class (AIStatusIcons, AIServiceIcons) for icon pack previews
  */
-- (NSMenu *)_iconPackMenuForPacks:(NSArray *)packs class:(Class)iconClass
+- (NSArray *)_iconPackMenuArrayForPacks:(NSArray *)packs class:(Class)iconClass
 {
-	NSMenu			*serviceIconsMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	NSMutableArray	*menuItemArray = [NSMutableArray array];
 	NSEnumerator	*enumerator = [packs objectEnumerator];
 	NSString		*packPath;
 
 	while ((packPath = [enumerator nextObject])) {
-		NSString	*name = [[packPath lastPathComponent] stringByDeletingPathExtension];
-		NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
-																					  target:nil
-																					  action:nil
-																			   keyEquivalent:@""] autorelease];
-		[menuItem setRepresentedObject:name];
-		[menuItem setImage:[iconClass previewMenuImageForIconPackAtPath:packPath]];
-		[serviceIconsMenu addItem:menuItem];
+		[menuItemArray addObject:[self meuItemForIconPackAtPath:packPath class:iconClass]];
 	}
 	
-	return serviceIconsMenu;	
+	[menuItemArray sortUsingFunction:_menuItemTitleSort context:NULL];
+
+	return menuItemArray;	
+}
+
+- (void)configureStatusIconsMenu
+{
+	NSMenu		*tempMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	NSString	*iconPath;
+	NSString	*activePackName = [[adium preferenceController] preferenceForKey:KEY_STATUS_ICON_PACK
+																		   group:PREF_GROUP_APPEARANCE];
+	iconPath = [adium pathOfPackWithName:activePackName
+							   extension:@"AdiumStatusIcons"
+					  resourceFolderName:@"Status Icons"];
+	
+	[tempMenu addItem:[self meuItemForIconPackAtPath:iconPath class:[AIStatusIcons class]]];
+	[tempMenu setDelegate:self];
+	[tempMenu setTitle:@"Temporary Status Icons Menu"];
+	
+	[popUp_statusIcons setMenu:tempMenu];
+	[popUp_statusIcons selectItemWithRepresentedObject:activePackName];
+}
+
+- (void)configureServiceIconsMenu
+{
+	NSMenu		*tempMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	NSString	*iconPath;
+	NSString	*activePackName = [[adium preferenceController] preferenceForKey:KEY_SERVICE_ICON_PACK
+																		   group:PREF_GROUP_APPEARANCE];
+	iconPath = [adium pathOfPackWithName:activePackName
+							   extension:@"AdiumServiceIcons"
+					  resourceFolderName:@"Service Icons"];
+	
+	[tempMenu addItem:[self meuItemForIconPackAtPath:iconPath class:[AIServiceIcons class]]];
+	[tempMenu setDelegate:self];
+	[tempMenu setTitle:@"Temporary Service Icons Menu"];
+	
+	[popUp_serviceIcons setMenu:tempMenu];
+	[popUp_serviceIcons selectItemWithRepresentedObject:activePackName];	
+}
+
+#pragma mark Menu delegate
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{
+	NSString		*title =[menu title];
+	NSString		*repObject = nil;
+	NSArray			*menuItemArray = nil;
+	NSPopUpButton	*popUpButton;
+	
+	if ([title isEqualToString:@"Temporary Dock Icon Menu"]) {
+		//If the menu has @"Temporary Dock Icon Menu" as its title, we should update it to have all dock icons, not just our selected one
+		menuItemArray = [self _dockIconMenuArray];
+		repObject = [[adium preferenceController] preferenceForKey:KEY_ACTIVE_DOCK_ICON
+															 group:PREF_GROUP_APPEARANCE];
+		popUpButton = popUp_dockIcon;
+		
+	} else if ([title isEqualToString:@"Temporary Status Icons Menu"]) {		
+		menuItemArray = [self _iconPackMenuArrayForPacks:[adium allResourcesForName:@"Status Icons" 
+																	 withExtensions:@"AdiumStatusIcons"] 
+												   class:[AIStatusIcons class]];
+		repObject = [[adium preferenceController] preferenceForKey:KEY_STATUS_ICON_PACK
+															 group:PREF_GROUP_APPEARANCE];
+		popUpButton = popUp_statusIcons;
+	}
+	
+	if (menuItemArray) {
+		NSEnumerator	*enumerator;
+		NSMenuItem		*menuItem;
+		
+		//Remove existing items
+		[menu removeAllItems];
+		
+		//Clear the title so we know we don't need to do this again
+		[menu setTitle:@""];
+		
+		//Add the items
+		enumerator = [menuItemArray objectEnumerator];
+		while ((menuItem = [enumerator nextObject])) {
+			[menu addItem:menuItem];
+		}
+		
+		//Clear the title so we know we don't need to do this again
+		[menu setTitle:@""];
+		
+		//Put a checkmark by the appropriate menu item
+		[popUpButton selectItemWithRepresentedObject:repObject];
+	}	
 }
 
 @end
