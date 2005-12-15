@@ -94,17 +94,9 @@ static	NSImage						*adiumRedHighlightImage = nil;
 
 		//Initialize our state
 		iconState = -1;
-		[self setIconState:OFFLINE];
-
-		//If any accounts are online, set our state to ONLINE.
-		NSEnumerator *accountsEnumerator = [[[adium accountController] accounts] objectEnumerator];
-		AIAccount *account = nil;
-		while ((account = [accountsEnumerator nextObject])) {
-			if ([account statusForKey:@"Online"]) {
-				[self setIconState:ONLINE];
-			}
-		}
 		
+		[self setIconState:([[adium accountController] oneOrMoreConnectedAccounts] ? ONLINE : OFFLINE)];
+
 		//Create and install the menu
 		theMenu = [[NSMenu alloc] init];
 		[theMenu setAutoenablesItems:YES];
@@ -160,12 +152,14 @@ static	NSImage						*adiumRedHighlightImage = nil;
 
 	//Release our objects
 	[[statusItem statusBar] removeStatusItem:statusItem];
-#warning cant release this because it causes a crash on quit. rdar://4139755, rdar://4160625, and #743. --boredzo
-//	[statusItem release];
+
 	[theMenu release];
 	[unviewedObjectsArray release];
 	[accountMenu release];
 	[statusMenu release];
+
+	// Can't release this because it causes a crash on quit. rdar://4139755, rdar://4160625, and #743. --boredzo
+	// [statusItem release];
 
 	//To the superclass, Robin!
 	[super dealloc];
@@ -297,10 +291,9 @@ static	NSImage						*adiumRedHighlightImage = nil;
 	if ([unviewedObjectsArray count] == 0) {
 		//If there are no more contacts with unviewed content, set our icon to normal.
 		if (iconState == UNVIEWED) {
-			//We're still online (else it would be OFFLINE, in which case it should not change),
-			//	but we no longer have any unviewed messages.
-			[self setIconState:ONLINE];
+			[self setIconState:([[adium accountController] oneOrMoreConnectedAccounts] ? ONLINE : OFFLINE)];
 		}
+
 	} else {
 		//If this is the first contact with unviewed content, set our icon to unviewed content.
 		if (iconState != UNVIEWED) {
