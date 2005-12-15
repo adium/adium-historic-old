@@ -61,10 +61,12 @@ GaimDebugUiOps *adium_gaim_debug_get_ui_ops(void)
 static void adiumGaimPrefsInit(void)
 {
     //Disable gaim away handling - we do it ourselves
-    gaim_prefs_set_bool("/core/conversations/away_back_on_send", FALSE);
-    gaim_prefs_set_bool("/core/away/auto_response/enabled", FALSE);
-    gaim_prefs_set_string("/core/away/auto_reply","never");
-	
+	gaim_prefs_set_bool("/core/away/away_when_idle", FALSE);
+	gaim_prefs_set_string("/core/away/auto_reply","never");
+
+	//Disable gaim idle reporting - we do it ourselves
+	gaim_prefs_set_bool("/core/away/report_idle", FALSE);
+
     //Disable gaim conversation logging
     gaim_prefs_set_bool("/gaim/gtk/logging/log_chats", FALSE);
     gaim_prefs_set_bool("/gaim/gtk/logging/log_ims", FALSE);
@@ -79,6 +81,7 @@ static void adiumGaimPrefsInit(void)
 	gaim_prefs_set_bool("/plugins/prpl/msn/conv_close_notice", TRUE);
 	gaim_prefs_set_bool("/plugins/prpl/msn/conv_timeout_notice", TRUE);
 	
+
 	//Ensure we are using caching
 	gaim_buddy_icons_set_caching(TRUE);
 }
