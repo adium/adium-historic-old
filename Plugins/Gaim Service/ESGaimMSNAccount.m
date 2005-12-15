@@ -453,6 +453,9 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 		
 	} else if (strcmp(label, "Allow/Disallow Mobile Pages") == 0) {
 		return AILocalizedString(@"Allow/Disallow Mobile Pages","Action menu item for MSN accounts to toggle whether Mobile pages [forwarding messages to a mobile device] are enabled");
+
+	} else if (strcmp(label, "Open Hotmail Inbox") == 0) {
+		return AILocalizedString(@"Open Hotmail Inbox", "Action menu item for MSN accounts to open the hotmail inbox");
 	}
 
 	return [super titleForAccountActionMenuLabel:label];
