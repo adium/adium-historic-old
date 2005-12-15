@@ -21,14 +21,6 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 
-#define AGG_STATUS_AVAIL              "Available"
-#define AGG_STATUS_AVAIL_FRIENDS      "Available for friends only"
-#define AGG_STATUS_BUSY               "Away"
-#define AGG_STATUS_BUSY_FRIENDS       "Away for friends only"
-#define AGG_STATUS_INVISIBLE          "Invisible"
-#define AGG_STATUS_INVISIBLE_FRIENDS  "Invisible for friends only"
-#define AGG_STATUS_NOT_AVAIL          "Unavailable"
-
 @interface ESGaimGaduGaduAccount (PRIVATE)
 - (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact;
 @end

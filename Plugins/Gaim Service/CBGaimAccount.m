@@ -38,6 +38,7 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
+#import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIService.h>
 #import <Adium/AIServiceIcons.h>
@@ -937,31 +938,36 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 }
 
 #pragma mark GaimConversation User Lists
-- (void)addUser:(NSString *)contactName toChat:(AIChat *)chat newArrival:(NSNumber *)newArrival
+- (void)addUsersArray:(NSArray *)usersArray
+			withFlags:(NSArray *)flagsArray
+		   andAliases:(NSArray *)aliasesArray 
+		  newArrivals:(NSNumber *)newArrivals
+			   toChat:(AIChat *)chat
 {
-	AIListContact *listContact;
-	
-	if ((chat) &&
-		(listContact = [self contactWithUID:contactName])) {
+	int			i, count;
+	BOOL		isNewArrival = (newArrivals && [newArrivals boolValue]);
 
-		if (!namesAreCaseSensitive) {
-			[listContact setStatusObject:contactName forKey:@"FormattedUID" notify:NotifyNow];
-		}
-
-		[chat addParticipatingListObject:listContact notify:(newArrival && [newArrival boolValue])];
-	}
-}
-
-- (void)addUsersArray:(NSArray *)usersArray toChat:(AIChat *)chat
-{
-	NSEnumerator	*enumerator;
-	NSString		*contactName;
-	
 	GaimDebug(@"*** %@: addUsersArray:%@ toChat:%@",self,usersArray,chat);
 
-	enumerator = [usersArray objectEnumerator];
-	while ((contactName = [enumerator nextObject])) {
-		[self addUser:contactName toChat:chat newArrival:nil];
+	count = [usersArray count];
+	for (i = 0; i < count; i++) {
+		NSString				*contactName;
+		NSString				*alias;
+		AIListContact			*listContact;
+		GaimConvChatBuddyFlags	flags;
+
+		contactName = [usersArray objectAtIndex:i];
+		flags = [[flagsArray objectAtIndex:i] intValue];
+		alias = [aliasesArray objectAtIndex:i];
+
+		listContact = [self contactWithUID:contactName];
+		[listContact setStatusObject:contactName forKey:@"FormattedUID" notify:NotifyNow];
+
+		if (alias && [alias length]) {
+			[listContact setServersideAlias:alias asStatusMessage:NO silently:YES];
+		}
+
+		[chat addParticipatingListObject:listContact notify:isNewArrival];
 	}
 }
 
