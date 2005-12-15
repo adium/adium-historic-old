@@ -72,7 +72,7 @@ struct _GaimEventLoopUiOps
 	 */
 	guint (*input_remove)(guint handle);
 	
-	gboolean (*context_iteration)(void *context, gboolean may_block);
+	guint (*context_iteration)(void *context, guint may_block);
 };
 
 /**************************************************************************/
