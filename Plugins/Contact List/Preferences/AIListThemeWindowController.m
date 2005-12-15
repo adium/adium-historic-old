@@ -161,6 +161,7 @@
 	
 	//Background Image
 	[checkBox_useBackgroundImage setState:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]];
+	[checkBox_useBackgroundImage setToolTip:AILocalizedString(@"Background images are only applicable to normal and borderless window styles", nil)];
 	NSString *backgroundImagePath = [[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH] lastPathComponent];
 	if (backgroundImagePath) [textField_backgroundImagePath setStringValue:backgroundImagePath];
 	
