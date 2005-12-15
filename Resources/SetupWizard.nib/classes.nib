@@ -1,5 +1,6 @@
 {
     IBClasses = (
+        {CLASS = AILinkTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
             CLASS = AILocalizationButton; 
             LANGUAGE = ObjC; 
