@@ -21,6 +21,7 @@
 #import "AILoginController.h"
 #import "CBGaimAccount.h"
 #import "ESGaimAIMAccount.h"
+#import "CBGaimOscarAccount.h"
 #import "CBGaimServicePlugin.h"
 #import "adiumGaimCore.h"
 #import "adiumGaimEventloop.h"
@@ -37,6 +38,7 @@
 #import <CoreFoundation/CFRunLoop.h>
 #import <CoreFoundation/CFSocket.h>
 #include <Libgaim/libgaim.h>
+//#include <Libgaim/oscar-adium.h>
 #include <glib.h>
 #include <stdlib.h>
 
@@ -1229,15 +1231,6 @@ NSMutableDictionary* get_chatDict(void)
 			}
 		}
 	}
-	
-	const GList *l;
-
-	for (l = gaim_account_get_status_types(account); l != NULL; l = l->next)
-	{
-		GaimStatusType *status_type = (GaimStatusType *)l->data;
-		
-		AILog(@"%x: Possible status id: %s",account, gaim_status_type_get_id(status_type));
-	}
 
 	AILog(@"Setting status on %x (%s): ID %s, isActive %i, attributes %@",account, gaim_account_get_username(account),
 		  statusID, [isActive boolValue], arguments);
@@ -1425,13 +1418,11 @@ NSMutableDictionary* get_chatDict(void)
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 
-	//Because we can get here from a delay, it's possible that we are now disconnected. Sanity checks are good.
 	if (account &&
-	   gaim_account_is_connected(account) &&
-	   [inFormattedUID length]) {
+		gaim_account_is_connected(account) &&
+		[inFormattedUID length]) {
 		
-#warning Set format
-//		oscar_set_format_screenname(account->gc, [inFormattedUID UTF8String]);
+		oscar_reformat_screenname(gaim_account_get_connection(account), [inFormattedUID UTF8String]);
 	}
 }
 - (void)OSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount

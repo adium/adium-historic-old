@@ -320,39 +320,32 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 	}
 }
 
-#warning Currently not using flags/aliases
-
-#if 0
-static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user, gboolean new_arrival)
-{
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_CHAT) {
-		GaimDebug (@"adiumGaimConvChatAddUser: CHAT: add %s",user);
-		//We pass the name as given, not normalized, so we can use its formatting as a formattedUID.
-		//The account is responsible for normalization if needed.
-		[accountLookup(conv->account) mainPerformSelector:@selector(addUser:toChat:newArrival:)
-											   withObject:[NSString stringWithUTF8String:user]
-											   withObject:existingChatLookupFromConv(conv)
-											   withObject:[NSNumber numberWithBool:new_arrival]];
-	} else {
-		GaimDebug (@"adiumGaimConvChatAddUser: IM: add %s",user);
-	}
-	
-}
-#endif
-
-static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users, GList *flags, GList *aliases)
+static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users, GList *flags, GList *aliases, gboolean new_arrivals)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_CHAT) {
 		NSMutableArray	*usersArray = [NSMutableArray array];
-
+		NSMutableArray	*flagsArray = [NSMutableArray array];
+		NSMutableArray	*aliasesArray = [NSMutableArray array];
+		
 		GList *l;
 		for (l = users; l != NULL; l = l->next) {
-			[usersArray addObject:[NSString stringWithUTF8String:(char *)l->data]];
+			[usersArray addObject:[NSString stringWithUTF8String:(const char *)l->data]];
+		}
+		
+		for (l = flags; l != NULL; l = l->next) {
+			GaimConvChatBuddyFlags flags = GPOINTER_TO_INT(l->data);
+
+			[flagsArray addObject:[NSNumber numberWithInt:flags]];
 		}
 
-		[accountLookup(conv->account) mainPerformSelector:@selector(addUsersArray:toChat:)
-											   withObject:usersArray
-											   withObject:existingChatLookupFromConv(conv)];
+		for (l = aliases; l != NULL; l = l->next) {
+			[aliasesArray addObject:[NSString stringWithUTF8String:(const char *)l->data]];
+		}
+
+		[accountLookup(conv->account) mainPerformSelector:@selector(addUsersArray:withFlags:andAliases:newArrivals:toChat:)
+											  withObjects:usersArray, flagsArray, 
+														  aliasesArray, [NSNumber numberWithBool:new_arrivals],
+														  existingChatLookupFromConv(conv)];
 
 	} else {
 		GaimDebug (@"adiumGaimConvChatAddUsers: IM");

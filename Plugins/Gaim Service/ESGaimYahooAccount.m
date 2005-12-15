@@ -321,28 +321,6 @@ gboolean gaim_init_yahoo_plugin(void);
 					statusMessage:statusMessage];
 }
 
-/*
-- (void)updateIdleReturn:(AIListContact *)theContact withData:(void *)data
-{
-	struct yahoo_data   *od;
-	YahooFriend *f;
-	
-	const char				*buddyName = [[theContact UID] UTF8String];
-	
-	if ((gaim_account_is_connected(account)) &&
-		(od = account->gc->proto_data) &&
-		(f = g_hash_table_lookup(od->friends, buddyName))) {
-		
-		AIStatusType	statusType = ((f->status != YAHOO_STATUS_AVAILABLE) ? AIAwayStatusType : AIAvailableStatusType);		
-		
-		if (f->status != YAHOO_STATUS_IDLE) {
-			NSLog(@"%@ is %i",theContact,f->status);
-			[super updateIdleReturn:theContact withData:data];
-		}
-	}
-}
-*/
-
 /*!
  * @brief Return the gaim status ID to be used for a status
  *
