@@ -299,25 +299,29 @@ NSString	*endn = @"\x00\x00\x00\x00";
 
     /* loop through fields to be added and add them to data */
     while ((key = [enumerator nextObject])) {	    
-	/* add length of field name, then field name */
-	fieldlen = [key length];
-	[data appendBytes:&fieldlen length:2];
-	[data appendBytes:[key UTF8String] length:[key length]];
-	
-	/* add length of field data, then field data */
-	value = [keys objectForKey:key];
-	if ([value isKindOfClass: [NSData class]]) {
-	    fieldlen = [(NSData *)value length] | ~0x7FFF;
-	} else {
-	    fieldlen = strlen([(NSString *)value UTF8String]);
+        /* add length of field name, then field name */
+		const char *field;
+		field = [key UTF8String];
+		fieldlen = strlen(field);
+        [data appendBytes:&fieldlen length:2];
+		[data appendBytes:field length:fieldlen];
+		
+        /* add length of field data, then field data */
+        value = [keys objectForKey:key];
+        if ([value isKindOfClass: [NSData class]]) {
+			field = [value bytes];
+			fieldlen = [(NSData *)value length];
+            fieldlen = fieldlen | ~0x7FFF;
+		} else {
+			field = [value UTF8String];
+			fieldlen = strlen(field);
+		}
+        [data appendBytes:&fieldlen length:2];
+        if ([value isKindOfClass: [NSData class]]) {
+			fieldlen = [(NSData *)value length];
+		}
+		[data appendBytes:field length:fieldlen];
 	}
-	[data appendBytes:&fieldlen length:2];
-	if ([value isKindOfClass: [NSData class]]) {
-	    [data appendBytes:[value bytes] length:[(NSData *)value length]];
-	} else {
-	    [data appendBytes:[value UTF8String] length:strlen([value UTF8String])];
-	}
-    }
     
     /* we're slumming it in iChat-land */
     key = @"slumming";
@@ -431,6 +435,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
     NSEnumerator    *enumerator;
     id value;
     NSString	    *key;
+    const char *data;
     
     [infoData appendString:@"\x09txtvers=1"];
     [infoData appendString:@"\x09version=1"];
@@ -459,15 +464,18 @@ NSString	*endn = @"\x00\x00\x00\x00";
 	    [infoData appendString:[NSString stringWithCString:hexdata]];
 	    
 	} else {
-	    
-	    [infoData appendFormat:@"%c", [(NSString *)value length] + [key length] + 1];
+	    const char *val = [(NSString *)value UTF8String];
+		int len = strlen(val);
+		[infoData appendFormat:@"%c", len + [key length] + 1];
 	    [infoData appendString:key];
 	    [infoData appendString:@"="];
 	    [infoData appendString:value];
 	}
     }
     
-    return [NSData dataWithBytes:[infoData UTF8String] length:strlen([infoData UTF8String])];
+	data = [infoData UTF8String];
+
+	return [NSData dataWithBytes:data length:strlen(data)];
 }
 
 

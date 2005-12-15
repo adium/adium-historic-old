@@ -188,7 +188,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	[listContact setStatusWithName:nil
 					   statusType:(([contact status] == AWEzvAway) ? AIAwayStatusType : AIAvailableStatusType)
 						   notify:NotifyLater];
-	[listContact setStatusMessage:[contact statusMessage]
+	[listContact setStatusMessage:[[[NSAttributedString alloc] initWithString:[contact statusMessage]] autorelease]
 						  notify:NotifyLater];
 	
 	idleSinceDate = [contact idleSinceDate];
