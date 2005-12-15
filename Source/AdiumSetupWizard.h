@@ -31,7 +31,8 @@
 	IBOutlet NSTextField	*textField_passwordLabel;
 	IBOutlet NSTextField	*textField_password;
 	BOOL					setupAccountTabViewItem;
-	
+	BOOL					addedAnAccount;
+
 	//All Done
 	IBOutlet NSTextField	*textField_done;
 	IBOutlet NSTextView		*textView_doneMessage;

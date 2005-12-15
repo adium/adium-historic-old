@@ -14,6 +14,7 @@
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AITextFieldAdditions.h>
 #import <AIUtilities/AIStringFormatter.h>
+#import <Adium/AIHTMLDecoder.h>
 
 #define ACCOUNT_SETUP_IDENTIFIER	@"account_setup"
 #define WELCOME_IDENTIFIER			@"welcome"
@@ -105,8 +106,11 @@
 			[account setPreference:[NSNumber numberWithBool:YES]
 							forKey:@"Online"
 							 group:GROUP_ACCOUNT_STATUS];
+			
+			addedAnAccount = YES;
 		} else {
-			success = NO;
+			//Successful without having a UID entered if they already added at least one account; unsuccessful otherwise.
+			success = addedAnAccount;
 		}
 	}
 	
@@ -193,6 +197,9 @@
 {
 	NSString *identifier = [tabViewItem identifier];
 
+	//The continue button is only initially enabled if the user has added at least one account
+	[button_continue setEnabled:YES];
+
 	if ([identifier isEqualToString:ACCOUNT_SETUP_IDENTIFIER]) {
 		//Set the services menu if it hasn't already been set
 		if (!setupAccountTabViewItem) {
@@ -204,22 +211,31 @@
 			[textField_addAccount setStringValue:AILocalizedString(@"Add an Instant Messaging Account",nil)];
 			[textView_addAccountMessage setDrawsBackground:NO];
 			[[textView_addAccountMessage enclosingScrollView] setDrawsBackground:NO];
-#warning This text needs improvement...
-			[textView_addAccountMessage setString:@"To chat with your friends and family, you must have an instant messaging account on the same service they do.  Specify a service, name, and password below; if you don't have an account yet, click <<here>> for more information.\n\nAdium supports as many accounts as you want to add; you can always add more in the Accounts pane of the Adium Preferences."];
-
+			
+			NSAttributedString *accountMessage = [AIHTMLDecoder decodeHTML:
+				AILocalizedString(@"<HTML>To chat with your friends, family, and coworkers, you must have an instant messaging account on the same service they do.  Specify a service, name, and password below; if you don't have an account yet, click <A HREF=\"http://trac.adiumx.com/wiki/CreatingAnAccount#Sigingupforanaccount\">here</A> for more information.\n\nAdium supports as many accounts as you want to add; you can always add more in the Accounts pane of the Adium Preferences.</HTML>", nil)
+													 withDefaultAttributes:[[textView_addAccountMessage textStorage] attributesAtIndex:0
+																														effectiveRange:NULL]];
+			[[textView_addAccountMessage textStorage] setAttributedString:accountMessage];
+			
 			setupAccountTabViewItem = YES;
 		}
 
 		AIService *service = [[popUp_services selectedItem] representedObject];
 		[textField_username setStringValue:@""];
 		[textField_password setStringValue:@""];
+
+		//The continue button is only initially enabled if the user has added at least one account
+		[button_continue setEnabled:addedAnAccount];
+		[button_alternate setEnabled:NO];
+
 		[self configureAccountSetupForService:service];
 		
 	} else if ([identifier isEqualToString:WELCOME_IDENTIFIER]) {
-			[textView_welcomeMessage setDrawsBackground:NO];
+		[textView_welcomeMessage setDrawsBackground:NO];
 		[[textView_welcomeMessage enclosingScrollView] setDrawsBackground:NO];
 		[textView_welcomeMessage setString:@"<<<welcome message here>>>"];
-
+		
 		[textField_welcome setStringValue:AILocalizedString(@"Welcome to Adium!",nil)];
 		
 	} else if ([identifier isEqualToString:DONE_IDENTIFIER]) {
@@ -230,6 +246,9 @@
 		[textField_done setStringValue:AILocalizedString(@"Congratulations!","Header line in the last pane of the Adium setup wizard")];
 	}
 
+	//Hide go back on the first tab
+	[button_goBack setHidden:([tabView indexOfTabViewItem:tabViewItem] == 0)];
+	
 	[button_alternate setHidden:![self showAlternateButtonForIdentifier:identifier]];
 
 	//Set the done / continue button properly
@@ -247,6 +266,19 @@
 - (void)selectServiceType:(id)sender
 {
 	[self configureAccountSetupForService:[[popUp_services selectedItem] representedObject]];
+}
+
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+	if ([aNotification object] == textField_username) {
+		BOOL shouldEnable = ([[textField_username stringValue] length] > 0);
+		//Allow continuing if they have typed something or they already added an account
+		[button_continue setEnabled:(shouldEnable || addedAnAccount)];
+
+		//Allow adding another only if they have typed something
+		[button_alternate setEnabled:shouldEnable];
+		
+	}
 }
 
 @end
