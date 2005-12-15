@@ -12,6 +12,7 @@
  *
  * An NSWindow subclass which docks to screen edges.
  */
+#import <Cocoa/Cocoa.h>
 
 @interface AIDockingWindow : NSWindow {
 	NSRect			oldWindowFrame;
