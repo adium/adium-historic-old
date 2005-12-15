@@ -212,6 +212,30 @@
 	[self performSelectorOnMainThread:@selector(handleInvocation:) withObject:invocation waitUntilDone:flag];
 }
 
+- (void)mainPerformSelector:(SEL)aSelector withObjects:(id)argument1, ...
+{	
+	NSInvocation	*invocation;
+	va_list			args;
+	int				index = 2;
+
+	invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+	[invocation setSelector:aSelector];
+	[invocation setArgument:&argument1 atIndex:index++];
+
+	va_start(args, argument1);
+	
+	id anArgument;
+	while ((anArgument = va_arg(args, id)) != NULL) {
+		[invocation setArgument:&anArgument atIndex:index++];
+	}
+
+	va_end(args);
+
+	[invocation retainArguments];
+	
+	[self performSelectorOnMainThread:@selector(handleInvocation:) withObject:invocation waitUntilDone:NO];	
+}
+
 - (void)performSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 afterDelay:(NSTimeInterval)delay
 {
 	NSInvocation *invocation;
