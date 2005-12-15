@@ -121,7 +121,7 @@
 {
 	NSMutableArray	*menuItemArray = [NSMutableArray array];
 	NSEnumerator	*enumerator = ([containingObject conformsToProtocol:@protocol(AIContainingObject)] ?
-								   [(AIListObject<AIContainingObject> *)containingObject listContactsEnumerator] :
+								   [[(AIListObject<AIContainingObject> *)containingObject listContacts] objectEnumerator] :
 								   [[NSArray arrayWithObject:containingObject] objectEnumerator]);
 	AIListObject	*listObject;
 	

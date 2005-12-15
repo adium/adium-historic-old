@@ -130,20 +130,9 @@
     return [containedObjects indexOfObject:inObject];
 }
 
-//Return an enumerator of our content
-- (NSEnumerator *)objectEnumerator
-{
-    return [containedObjects objectEnumerator];
-}
-
 - (NSArray *)listContacts
 {
 	return containedObjects;
-}
-
-- (NSEnumerator *)listContactsEnumerator
-{
-	return [self objectEnumerator];
 }
 
 //Remove all the objects from this group (PRIVATE: For contact controller only)

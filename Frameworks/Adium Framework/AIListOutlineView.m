@@ -19,6 +19,7 @@
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
+#import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIGradient.h>
 
 #define MINIMUM_HEIGHT				48
@@ -383,12 +384,13 @@
 - (void)_drawRowSelectionInRect:(NSRect)rect
 {
 	//Draw the gradient
-	NSColor *highlightColor = [self highlightColor];
-	AIGradient 	*gradient = highlightColor
-		? [AIGradient gradientWithFirstColor:highlightColor
-								 secondColor:[highlightColor darkenAndAdjustSaturationBy:0.4] 
-								   direction:AIVertical]
-		: [AIGradient selectedControlGradientWithDirection:AIVertical];
+	NSColor		*myHighlightColor = [self highlightColor];
+	AIGradient 	*gradient = (myHighlightColor ?
+							 [AIGradient gradientWithFirstColor:myHighlightColor
+													secondColor:[myHighlightColor darkenAndAdjustSaturationBy:0.4] 
+													  direction:AIVertical] :
+							 [AIGradient selectedControlGradientWithDirection:AIVertical]);
+
 	[gradient drawInRect:rect];
 }
 
