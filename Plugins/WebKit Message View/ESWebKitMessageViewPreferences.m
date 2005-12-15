@@ -319,8 +319,9 @@
 {
 	NSString	*style = [[popUp_styles selectedItem] representedObject];
 
-	//Save the new image.  We store the images in a separate preference group since they may get big.
-#warning A nice thought, but the preference controller caches the plist in memory regardless... -ai
+	/* Save the new image.  We store the images in a separate preference group since they may get big. It'll be cached in memory
+	 * in any case, but this will lete loading other groups not be affected by its presence.
+	 */
 	[[adium preferenceController] setPreference:[image PNGRepresentation]
 										 forKey:[plugin styleSpecificKey:@"Background" forStyle:style]
 										  group:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES];
