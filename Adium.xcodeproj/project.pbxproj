@@ -332,6 +332,18 @@
 		347E7AC407CAF96000350507 /* AIContactWarningLevelPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 347E7AC207CAF95F00350507 /* AIContactWarningLevelPlugin.h */; };
 		347E7ACF07CAF98500350507 /* ESMetaContactContentsPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 347E7ACD07CAF98400350507 /* ESMetaContactContentsPlugin.m */; };
 		347E7AD007CAF98500350507 /* ESMetaContactContentsPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 347E7ACE07CAF98500350507 /* ESMetaContactContentsPlugin.h */; };
+		347F50EA094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347F50E4094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt */; };
+		347F50EB094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347F50E5094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt */; };
+		347F50EC094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347F50E6094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt */; };
+		347F50ED094743B100CEF1FF /* AdiumAddressBookAction_MSN.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347F50E7094743B100CEF1FF /* AdiumAddressBookAction_MSN.scpt */; };
+		347F50EE094743B100CEF1FF /* AdiumAddressBookAction_SMS.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347F50E8094743B100CEF1FF /* AdiumAddressBookAction_SMS.scpt */; };
+		347F50EF094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347F50E9094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt */; };
+		347F51810947449000CEF1FF /* AdiumAddressBookAction_Yahoo.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E4094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt */; };
+		347F51820947449000CEF1FF /* AdiumAddressBookAction_AIM.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E5094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt */; };
+		347F51830947449000CEF1FF /* AdiumAddressBookAction_ICQ.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E6094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt */; };
+		347F51840947449000CEF1FF /* AdiumAddressBookAction_MSN.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E7094743B100CEF1FF /* AdiumAddressBookAction_MSN.scpt */; };
+		347F51850947449000CEF1FF /* AdiumAddressBookAction_SMS.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E8094743B100CEF1FF /* AdiumAddressBookAction_SMS.scpt */; };
+		347F51860947449000CEF1FF /* AdiumAddressBookAction_Jabber.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E9094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt */; };
 		3483928605E68B05002BC6C0 /* AIIconState.m in Sources */ = {isa = PBXBuildFile; fileRef = 3483928405E68B05002BC6C0 /* AIIconState.m */; };
 		3483928705E68B05002BC6C0 /* AIIconState.h in Headers */ = {isa = PBXBuildFile; fileRef = 3483928505E68B05002BC6C0 /* AIIconState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		348862D105645EB5003C9627 /* ESFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 348862CE05645E95003C9627 /* ESFileTransfer.m */; };
@@ -1422,6 +1434,12 @@
 				3419FE230531586A00C68BA3 /* Adium.framework in CopyFiles */,
 				9E12765407D38B5000AA91C5 /* Growl-WithInstaller.framework in CopyFiles */,
 				346F5CB508A418FB0055C610 /* CurrentTunes.scpt in CopyFiles */,
+				347F50EA094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt in CopyFiles */,
+				347F50EB094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt in CopyFiles */,
+				347F50EC094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt in CopyFiles */,
+				347F50ED094743B100CEF1FF /* AdiumAddressBookAction_MSN.scpt in CopyFiles */,
+				347F50EE094743B100CEF1FF /* AdiumAddressBookAction_SMS.scpt in CopyFiles */,
+				347F50EF094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2075,6 +2093,12 @@
 		347E7AC207CAF95F00350507 /* AIContactWarningLevelPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactWarningLevelPlugin.h; path = Source/AIContactWarningLevelPlugin.h; sourceTree = "<group>"; };
 		347E7ACD07CAF98400350507 /* ESMetaContactContentsPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESMetaContactContentsPlugin.m; path = Source/ESMetaContactContentsPlugin.m; sourceTree = "<group>"; };
 		347E7ACE07CAF98500350507 /* ESMetaContactContentsPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESMetaContactContentsPlugin.h; path = Source/ESMetaContactContentsPlugin.h; sourceTree = "<group>"; };
+		347F50E4094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_Yahoo.scpt; path = Resources/AdiumAddressBookAction_Yahoo.scpt; sourceTree = "<group>"; };
+		347F50E5094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_AIM.scpt; path = Resources/AdiumAddressBookAction_AIM.scpt; sourceTree = "<group>"; };
+		347F50E6094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_ICQ.scpt; path = Resources/AdiumAddressBookAction_ICQ.scpt; sourceTree = "<group>"; };
+		347F50E7094743B100CEF1FF /* AdiumAddressBookAction_MSN.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_MSN.scpt; path = Resources/AdiumAddressBookAction_MSN.scpt; sourceTree = "<group>"; };
+		347F50E8094743B100CEF1FF /* AdiumAddressBookAction_SMS.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_SMS.scpt; path = Resources/AdiumAddressBookAction_SMS.scpt; sourceTree = "<group>"; };
+		347F50E9094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_Jabber.scpt; path = Resources/AdiumAddressBookAction_Jabber.scpt; sourceTree = "<group>"; };
 		3483928405E68B05002BC6C0 /* AIIconState.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIIconState.m; path = "Frameworks/Adium Framework/AIIconState.m"; sourceTree = "<group>"; };
 		3483928505E68B05002BC6C0 /* AIIconState.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIIconState.h; path = "Frameworks/Adium Framework/AIIconState.h"; sourceTree = "<group>"; };
 		348862CD05645E94003C9627 /* ESFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransfer.h; path = "Frameworks/Adium Framework/ESFileTransfer.h"; sourceTree = "<group>"; };
@@ -3523,6 +3547,12 @@
 				4BCAC4CE07B59AFE006641B9 /* AddressBookPrefs.nib */,
 				4BCAC4D807B59B2E006641B9 /* AddressBook.png */,
 				4BCAC4E207B59B65006641B9 /* AB Display Format Defaults.plist */,
+				347F50E4094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt */,
+				347F50E5094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt */,
+				347F50E6094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt */,
+				347F50E7094743B100CEF1FF /* AdiumAddressBookAction_MSN.scpt */,
+				347F50E8094743B100CEF1FF /* AdiumAddressBookAction_SMS.scpt */,
+				347F50E9094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt */,
 			);
 			name = "Address Book Integration";
 			sourceTree = "<group>";
@@ -7477,6 +7507,12 @@
 				34B995DA092A832700E31E91 /* FontPanelAccessoryView.nib in Resources */,
 				348F579E0936FA6D00288E41 /* EditStatusGroup.nib in Resources */,
 				344161D00943E20D00BC26ED /* AdiumyButler.png in Resources */,
+				347F51810947449000CEF1FF /* AdiumAddressBookAction_Yahoo.scpt in Resources */,
+				347F51820947449000CEF1FF /* AdiumAddressBookAction_AIM.scpt in Resources */,
+				347F51830947449000CEF1FF /* AdiumAddressBookAction_ICQ.scpt in Resources */,
+				347F51840947449000CEF1FF /* AdiumAddressBookAction_MSN.scpt in Resources */,
+				347F51850947449000CEF1FF /* AdiumAddressBookAction_SMS.scpt in Resources */,
+				347F51860947449000CEF1FF /* AdiumAddressBookAction_Jabber.scpt in Resources */,
 				344161D40943E22F00BC26ED /* SetupWizard.nib in Resources */,
 				6333699409497DB000970871 /* EmoticonPreviewView.nib in Resources */,
 				63336B060949908300970871 /* DockIconPreviewView.nib in Resources */,
@@ -9117,21 +9153,15 @@
 		349C2F230867ACA9000BF883 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INSTALL_PATH = /usr/local/bin;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
 					"-framework",
 					AppKit,
 				);
-				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
 				PRODUCT_NAME = AdiumApplescriptRunner;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -9144,21 +9174,15 @@
 		349C2F240867ACA9000BF883 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INSTALL_PATH = /usr/local/bin;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
 					"-framework",
 					AppKit,
 				);
-				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
 				PRODUCT_NAME = AdiumApplescriptRunner;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -9171,21 +9195,15 @@
 		349C2F250867ACA9000BF883 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INSTALL_PATH = /usr/local/bin;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
 					"-framework",
 					AppKit,
 				);
-				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
 				PRODUCT_NAME = AdiumApplescriptRunner;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -9219,18 +9237,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/Adium_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0x10000000,
@@ -9247,18 +9257,8 @@
 		34BAF9860942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
-				INSTALL_PATH = "$(USER_APPS_DIR)";
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -9273,8 +9273,6 @@
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
 				);
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
@@ -9285,12 +9283,6 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -9300,19 +9292,11 @@
 		34BAF9880942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -9321,17 +9305,9 @@
 		34BAF9890942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
@@ -9365,21 +9341,15 @@
 		34BAF98B0942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INSTALL_PATH = /usr/local/bin;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
 					"-framework",
 					AppKit,
 				);
-				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
 				PRODUCT_NAME = AdiumApplescriptRunner;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -9393,22 +9363,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_USE_GCC3_PFE_SUPPORT = YES;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = Plists/Adium_2.plist;
-				INSTALL_PATH = /;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-				);
-				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
-				OTHER_LDFLAGS = "-ltcl";
 				PRODUCT_NAME = Adium;
 			};
 			name = "Deployment-Debug_PPC-Only";
@@ -9505,6 +9462,12 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+					"-fconstant-cfstrings",
+				);
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WARNING_CFLAGS = "-Wall";
@@ -9573,23 +9536,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_MISSING_PARENTHESES = NO;
-				GCC_WARN_SHADOW = NO;
-				GCC_WARN_SIGN_COMPARE = NO;
-				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Plists/Adium_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0x10000000,
@@ -9610,14 +9560,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/Adium_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0x10000000,
@@ -9638,18 +9584,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/Adium_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0x10000000,
@@ -9666,23 +9604,8 @@
 		DADE8E05085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_MISSING_PARENTHESES = NO;
-				GCC_WARN_SHADOW = NO;
-				GCC_WARN_SIGN_COMPARE = NO;
-				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
-				INSTALL_PATH = "$(USER_APPS_DIR)";
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -9691,14 +9614,8 @@
 		DADE8E06085507450062B664 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
-				INSTALL_PATH = "$(USER_APPS_DIR)";
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -9707,18 +9624,8 @@
 		DADE8E07085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
-				INSTALL_PATH = "$(USER_APPS_DIR)";
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -9729,22 +9636,12 @@
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
-				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
 				);
-				GCC_DEBUGGING_SYMBOLS = full;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_MISSING_PARENTHESES = NO;
-				GCC_WARN_SHADOW = NO;
-				GCC_WARN_SIGN_COMPARE = NO;
-				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"Plugins/Gaim Service/Include/glib",
 					"Plugins/Gaim Service/Include/glib/glib",
@@ -9753,11 +9650,8 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-DDEBUG_BUILD";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Gaim;
-				STRIP_INSTALLED_PRODUCT = NO;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			name = Development;
@@ -9771,8 +9665,6 @@
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
 				);
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
@@ -9783,8 +9675,6 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -9800,8 +9690,6 @@
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
 				);
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
@@ -9812,13 +9700,6 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
-				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -9827,24 +9708,11 @@
 		DADE8E0F085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
-				GCC_WARN_MISSING_PARENTHESES = NO;
-				GCC_WARN_SHADOW = NO;
-				GCC_WARN_SIGN_COMPARE = NO;
-				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -9853,15 +9721,11 @@
 		DADE8E10085507450062B664 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -9870,19 +9734,11 @@
 		DADE8E11085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -9891,22 +9747,9 @@
 		DADE8E14085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_MISSING_PARENTHESES = NO;
-				GCC_WARN_SHADOW = NO;
-				GCC_WARN_SIGN_COMPARE = NO;
-				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
@@ -9919,13 +9762,9 @@
 		DADE8E15085507450062B664 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
@@ -9938,17 +9777,9 @@
 		DADE8E16085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
@@ -9990,11 +9821,8 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				PRODUCT_NAME = "Latex Plugin";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -10004,18 +9832,9 @@
 		DADE8E20085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				PRODUCT_NAME = "Latex Plugin";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -10026,28 +9845,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_USE_GCC3_PFE_SUPPORT = YES;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_MISSING_PARENTHESES = NO;
-				GCC_WARN_SHADOW = NO;
-				GCC_WARN_SIGN_COMPARE = NO;
-				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Plists/Adium_2.plist;
-				INSTALL_PATH = /;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
-				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
-				OTHER_LDFLAGS = "-ltcl";
 				PRODUCT_NAME = Adium;
 			};
 			name = Development;
@@ -10056,19 +9856,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_USE_GCC3_PFE_SUPPORT = YES;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = Plists/Adium_2.plist;
-				INSTALL_PATH = /;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-DCRASH_REPORTER";
-				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
-				OTHER_LDFLAGS = "-ltcl";
 				PRODUCT_NAME = Adium;
 			};
 			name = Deployment;
@@ -10077,22 +9867,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_USE_GCC3_PFE_SUPPORT = YES;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = Plists/Adium_2.plist;
-				INSTALL_PATH = /;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-				);
-				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
-				OTHER_LDFLAGS = "-ltcl";
 				PRODUCT_NAME = Adium;
 			};
 			name = "Deployment-Debug";
@@ -10211,8 +9988,6 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				HEADER_SEARCH_PATHS = /usr/local/pgsql/include;
 				INFOPLIST_FILE = Plists/SQL_Logger.plist;
 				INSTALL_PATH = /Adium.app/Contents/Plugins/;
@@ -10221,8 +9996,6 @@
 					/sw/lib,
 					/opt/local/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				OTHER_LDFLAGS = (
 					"-lpq",
 					"-lssl",
@@ -10302,8 +10075,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/Stress_Test.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				PRODUCT_NAME = "Stress Test";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10312,17 +10083,10 @@
 		DADE8E34085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/Stress_Test.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
 				PRODUCT_NAME = "Stress Test";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10340,6 +10104,11 @@
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DDEBUG_BUILD",
+					"-fconstant-cfstrings",
+				);
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = YES;
@@ -10355,7 +10124,9 @@
 				);
 				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				GCC_DEBUGGING_SYMBOLS = used;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_VERSION_i386 = 4.0;
 				GCC_VERSION_ppc = 3.3;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
@@ -10366,8 +10137,14 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-fconstant-cfstrings",
+				);
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SEPARATE_STRIP = YES;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Deployment;
@@ -10391,6 +10168,12 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+					"-fconstant-cfstrings",
+				);
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WARNING_CFLAGS = "-Wall";
