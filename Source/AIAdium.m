@@ -39,6 +39,7 @@
 #import "LNAboutBoxController.h"
 #import "AIXtrasManager.h"
 #import "AdiumSetupWizard.h"
+#import "AdiumUnreadMessagesQuitConfirmation.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <Adium/AIPathUtilities.h>
@@ -397,7 +398,14 @@ static NSString	*prefsCategory;
 //Last call to perform actions before the app shuffles off its mortal coil and joins the bleeding choir invisible
 - (IBAction)confirmQuit:(id)sender
 {
-	[NSApp terminate:nil];
+	if (([chatController unviewedContentCount] > 0) &&
+		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation"
+											group:@"Confirmations"] boolValue])) {
+			[AdiumUnreadMessagesQuitConfirmation showUnreadMessagesQuitConfirmation];
+
+	} else {
+		[NSApp terminate:nil];
+	}
 }
 
 - (IBAction)launchJeeves:(id)sender
