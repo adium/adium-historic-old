@@ -65,6 +65,9 @@
 
 #include <SystemConfiguration/SystemConfiguration.h>
 
+static NSData *decode_rr(char** location, char* buffer, int len);
+static NSData *decode_dns(char* buffer, unsigned int len);
+
 /* DNS parser will want this */
 typedef struct
 {
@@ -505,7 +508,7 @@ NSData *decode_rr(char** location, char* buffer, int len)
 
 
 
-NSData *decode_dns(char* buffer, int len )
+NSData *decode_dns(char* buffer, unsigned int len )
 {
     HEADER * hdr = (HEADER*)buffer;
     char* loc = buffer + sizeof(HEADER);
@@ -720,11 +723,11 @@ NSData *decode_dns(char* buffer, int len )
     NSString		*nick = nil;			/* nickname for contact */
     NSMutableString	*mutableNick = nil;		/* nickname we can modify */
     NSString		*ipAddr;			/* ip address of contact */
-    AWEzvRendezvousData	*oldrendezvous;			/* old rendezvous data for user */
+    AWEzvRendezvousData	*oldrendezvous;			/* old rendezvous data for user */ /* XXX not used */
     char		hbuf[NI_MAXHOST], sbuf[NI_MAXSERV]; /* buffers for hostname/service name */
     NSRange		range;				/* just a range... */
     NSString		*dnsname;			/* DNS name to lookup NULL */
-    int			len;				/* record length */
+    unsigned int	len;				/* record length */
     u_char		buf[PACKETSZ*10];		/* NULL record return */
     NSNumber           *idleTime = nil;			/* idle time */
     
@@ -755,12 +758,12 @@ NSData *decode_dns(char* buffer, int len )
 	return;
     
     if ([contact rendezvous] != nil) {
-	oldrendezvous = [contact rendezvous];
-	/* check serials */
-	if ([contact serial] > [contact serial]) {
-	    /* AWEzvLog(@"Rendezvous update for %@ with lower serial, updating anyway", [contact uniqueID]); */
+		oldrendezvous = [contact rendezvous];
+		/* check serials */
+		if ([contact serial] > [contact serial]) {
+			/* AWEzvLog(@"Rendezvous update for %@ with lower serial, updating anyway", [contact uniqueID]); */
             /* we'll update anyway, and hopefully we'll be back in sync with the network */
-	}
+		}
     }
     [contact setRendezvous:rendezvousData];
 	
@@ -954,7 +957,10 @@ void resolve_reply (struct sockaddr	*interface,
 		    
     AWEzvContact	*contact = context;
     AWEzvContactManager *self = [contact manager];
-    [self updateContact:contact withData:[[AWEzvRendezvousData alloc] initWithPlist:[NSString stringWithUTF8String:txtRecord]] withAddress:address av:NO];
+    [self updateContact:contact
+			   withData:[[[AWEzvRendezvousData alloc] initWithPlist:[NSString stringWithUTF8String:txtRecord]] autorelease]
+			withAddress:address
+					 av:NO];
 }
 
 /* when we receive a reply to an AV resolve request */
@@ -966,5 +972,8 @@ void av_resolve_reply (struct sockaddr	*interface,
     AWEzvContact	*contact = context;
     AWEzvContactManager *self = [contact manager];
     
-    [self updateContact:contact withData:[[AWEzvRendezvousData alloc] initWithAVTxt:[NSString stringWithUTF8String:txtRecord]] withAddress:address av:YES];
+    [self updateContact:contact
+			   withData:[[[AWEzvRendezvousData alloc] initWithAVTxt:[NSString stringWithUTF8String:txtRecord]] autorelease] 
+			withAddress:address
+					 av:YES];
 }

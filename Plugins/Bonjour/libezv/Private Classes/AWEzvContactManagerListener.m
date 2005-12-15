@@ -60,10 +60,10 @@
     /* NSFileHandle's acceptConnectionInBackgroundAndNotify method expects a
        socket that is bound and listening */
     if((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-	AWEzvLog(@"Could not create listening socket for iChat Bonjour");
-	return -1;
+		AWEzvLog(@"Could not create listening socket for iChat Bonjour");
+		return -1;
     }
-
+	
     /* setup server address structure */
     memset(&serverAddress, 0, sizeof(serverAddress));
     serverAddress.sin_family = AF_INET;
@@ -101,9 +101,9 @@
 
 - (void) stopListening {
     if (listenSocket != nil) {
-	[listenSocket closeFile];
-	[listenSocket release];
-	listenSocket = nil;
+		[listenSocket closeFile];
+		[listenSocket release];
+		listenSocket = nil;
     }
 }
 
@@ -121,9 +121,9 @@
     fd = [incomingConnection fileDescriptor];
     size = sizeof(remoteAddress);
     if (getpeername(fd, (struct sockaddr *)&remoteAddress, &size) == -1) {
-	//AWEzvLog(@"Could not get socket name");
-	[incomingConnection closeFile];
-	return;
+		//AWEzvLog(@"Could not get socket name");
+		[incomingConnection closeFile];
+		return;
     }
     
     /* we have to ask it to keep accepting connections now */
@@ -147,14 +147,14 @@
 	
 	while ((contact = [enumerator nextObject])) {
 	    if ([contact rendezvous] != nil && [[contact ipaddr] isEqualToString:contactIdentifier])
-		break;
+			break;
 	}
     }
     
     if (contact == nil) {
-	AWEzvLog(@"Incoming connection from non-existent contact: %@", contactIdentifier);
-	[incomingConnection closeFile];
-	return;
+		AWEzvLog(@"Incoming connection from non-existent contact: %@", contactIdentifier);
+		[incomingConnection closeFile];
+		return;
     }
     
     stream = [[AWEzvXMLStream alloc] initWithFileHandle:incomingConnection initiator:0];

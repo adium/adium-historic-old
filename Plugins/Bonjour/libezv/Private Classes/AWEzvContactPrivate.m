@@ -46,10 +46,23 @@
 @implementation AWEzvContact (Private)
 #pragma mark Various Handling Stuff
 
-- (void) setStream:(AWEzvXMLStream *)stream {
-    if (stream != _stream)
+- (void)dealloc
+{
 	[_stream release];
-    _stream = [stream retain];
+    [_idleSinceDate release];
+	[_name release];
+	[_ipAddr release];
+	[_rendezvous release];
+	[_manager release];
+
+	[super dealloc];
+}
+
+- (void) setStream:(AWEzvXMLStream *)stream {
+    if (stream != _stream) {
+		[_stream release];
+		_stream = [stream retain];
+	}
 
 }
 
@@ -62,19 +75,24 @@
 }
 
 - (void) setIdleSinceDate:(NSDate *) idleSince {
-    if (idleSince != _idleSinceDate)
-       [_idleSinceDate release];
-    _idleSinceDate = [idleSince retain];
+    if (idleSince != _idleSinceDate) {
+		[_idleSinceDate release];
+		_idleSinceDate = [idleSince retain];
+	}
 }
 
 - (void) setName:(NSString *)name {
-     if (name != _name)
-	[_name release];
-    _name = [name retain];
+	if (name != _name) {
+		[_name release];
+		_name = [name retain];
+	}
 }
 
 - (void) setRendezvous:(AWEzvRendezvousData *)rendezvous {
-    _rendezvous = rendezvous;
+	if (rendezvous != _rendezvous) {
+		[_rendezvous release];
+		_rendezvous = [rendezvous retain];
+	}
 }
 
 - (AWEzvRendezvousData *) rendezvous {
@@ -86,9 +104,10 @@
 }
 
 - (void) setIpaddr:(NSString *)myipaddr {
-    if (_ipAddr != nil)
-        [_ipAddr autorelease];
-    _ipAddr = [myipaddr retain];
+    if (_ipAddr != myipaddr) {
+        [_ipAddr release];
+		_ipAddr = [myipaddr retain];
+	}
 }
 
 - (u_int16_t) port {
@@ -104,9 +123,10 @@
 }
 
 - (void) setManager:(AWEzvContactManager *)manager {
-    if (_manager != nil)
-        [_manager autorelease];
-    _manager = [manager retain];
+    if (_manager != manager) {
+        [_manager release];
+		_manager = [manager retain];
+	}
 }
 
 - (AWEzvContactManager *) manager {
