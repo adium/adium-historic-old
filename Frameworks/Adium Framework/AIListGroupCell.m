@@ -41,8 +41,7 @@
 //Init
 - (id)init
 {
-	if ((self = [super init]))
-	{
+	if ((self = [super init])) {
 		shadowColor = nil;
 		backgroundColor = nil;
 		gradientColor = nil;

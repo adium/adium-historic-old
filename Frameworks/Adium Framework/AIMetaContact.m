@@ -978,17 +978,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
     return [[self listContacts] indexOfObject:inObject];
 }
 
-//Return an enumerator of our content
-- (NSEnumerator *)objectEnumerator
-{
-    return [[self containedObjects] objectEnumerator];
-}
-
-- (NSEnumerator *)listContactsEnumerator
-{
-	return [[self listContacts] objectEnumerator];
-}
-
 //Remove all the objects from this group (PRIVATE: For contact controller only)
 - (void)removeAllObjects
 {

@@ -17,6 +17,7 @@
 #import "AIListGroupBubbleCell.h"
 #import <AIUtilities/AIBezierPathAdditions.h>
 #import <AIUtilities/AIGradient.h>
+#import <AIUtilities/AIColorAdditions.h>
 
 #define EDGE_INDENT 			4
 
@@ -32,12 +33,6 @@
 	}
 	
 	return self;
-}
-//Copy
-- (id)copyWithZone:(NSZone *)zone
-{
-	id newCell = [super copyWithZone:zone];
-	return newCell;
 }
 
 //Give ourselves extra padding to compensate for the rounded bubble
@@ -78,11 +73,11 @@
 {
 	if ([self cellIsSelected]) {
 		NSColor *highlightColor = [controlView highlightColor];
-		AIGradient 	*gradient = highlightColor
-			? [AIGradient gradientWithFirstColor:highlightColor
-			                         secondColor:[highlightColor darkenAndAdjustSaturationBy:0.4] 
-			                           direction:AIVertical]
-			: [AIGradient selectedControlGradientWithDirection:AIVertical];
+		AIGradient 	*gradient = (highlightColor ?
+								 [AIGradient gradientWithFirstColor:highlightColor
+														secondColor:[highlightColor darkenAndAdjustSaturationBy:0.4] 
+														  direction:AIVertical] :
+								 [AIGradient selectedControlGradientWithDirection:AIVertical]);
 		[gradient drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:cellFrame]]];
 	}
 }

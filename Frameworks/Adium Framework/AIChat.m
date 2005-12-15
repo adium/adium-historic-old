@@ -520,21 +520,10 @@ static int nextChatNumber = 0;
 	
 	return object;
 }
-//Enumerator of -[containedObjects]
-- (NSEnumerator *)objectEnumerator
-{
-	return [[self containedObjects] objectEnumerator];
-}
 
 - (NSArray *)listContacts
 {
 	return [self containedObjects];
-}
-
-//Should list each list contact only once (for chats, this is the same as the objectEnumerator)
-- (NSEnumerator *)listContactsEnumerator
-{
-	return [self objectEnumerator];
 }
 
 - (BOOL)addObject:(AIListObject *)inObject

@@ -239,19 +239,18 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	if (![stateMenuItemsAlreadyValidated containsObject:menuItem]) {
-		BOOL			noAccountsAreOnline = ![[adium accountController] oneOrMoreConnectedAccounts];
 		NSDictionary	*dict = [menuItem representedObject];
 		AIAccount		*account;
 		AIStatus		*menuItemStatusState;
 		BOOL			shouldSelectOffline;
 		
 		/* Search for the account or global status state as appropriate for this menu item.
-			* Also, determine if we are looking to select the Offline menu item
-			*/
+		 * Also, determine if we are looking to select the Offline menu item
+		 */
 		if ((account = [dict objectForKey:@"AIAccount"])) {
 			shouldSelectOffline = ![account online];
 		} else {
-			shouldSelectOffline = noAccountsAreOnline;
+			shouldSelectOffline = ![[adium accountController] oneOrMoreConnectedAccounts];
 		}
 		menuItemStatusState = [dict objectForKey:@"AIStatus"];
 		

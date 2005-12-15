@@ -18,13 +18,6 @@
 
 @implementation AIListGroupBubbleToFitCell
 
-//Copy
-- (id)copyWithZone:(NSZone *)zone
-{
-	id newCell = [super copyWithZone:zone];
-	return newCell;
-}
-
 //Adjust the bubble rect to tightly fit our label string
 - (NSRect)bubbleRectForFrame:(NSRect)rect
 {
