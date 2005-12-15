@@ -176,7 +176,9 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 						 group:GROUP_ACCOUNT_STATUS];
 	}
 	
-	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self rootStateGroup]]
+	//XXX change this back sometime before 1.0 release
+//	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self rootStateGroup]]
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[[self rootStateGroup] containedStatusItems]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
 
@@ -1060,7 +1062,9 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  */
 - (void)savedStatusesChanged
 {
-	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self rootStateGroup]]
+	//XXX change this back sometime before 1.0 release
+//	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self rootStateGroup]]
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[[self rootStateGroup] containedStatusItems]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
 	NSLog(@"savedStatusChanged.");
@@ -1069,7 +1073,9 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 
 - (void)statusStateDidSetUniqueStatusID
 {
-	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self rootStateGroup]]
+	//XXX change this back sometime before 1.0 release
+//	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self rootStateGroup]]
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[[self rootStateGroup] containedStatusItems]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
 }
