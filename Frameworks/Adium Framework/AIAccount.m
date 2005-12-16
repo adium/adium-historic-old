@@ -100,7 +100,7 @@
  */
 - (void)willBeDeleted
 {
-	[self shouldBeOnline:NO];
+	[self setShouldBeOnline:NO];
 
 	//Remove our contacts immediately.
 	[self removeAllContacts];
