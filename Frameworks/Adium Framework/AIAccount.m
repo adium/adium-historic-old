@@ -100,10 +100,7 @@
  */
 - (void)willBeDeleted
 {
-	//Disconnect
-	[self setPreference:nil
-				 forKey:@"Online"
-				  group:GROUP_ACCOUNT_STATUS];
+	[self shouldBeOnline:NO];
 
 	//Remove our contacts immediately.
 	[self removeAllContacts];
