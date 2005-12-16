@@ -710,6 +710,9 @@
 		34E0EA4007CC55B100A82198 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34E0EB8F07CD349200A82198 /* ESGaimAIMAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E0EB8D07CD349200A82198 /* ESGaimAIMAccount.h */; };
 		34E0EB9007CD349200A82198 /* ESGaimAIMAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0EB8E07CD349200A82198 /* ESGaimAIMAccount.m */; };
+		34E104EC0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E104EA0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h */; };
+		34E104ED0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E104EB0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m */; };
+		34E105040951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34E105030951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib */; };
 		34E2A0BB07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E2A0B907AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h */; };
 		34E2A0BC07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0BA07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m */; };
 		34E2A0C307AF593B006735BC /* AIAccountMenuAccessPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0C107AF593B006735BC /* AIAccountMenuAccessPlugin.m */; };
@@ -2546,6 +2549,9 @@
 		34E0EA0E07CC53FE00A82198 /* AINewMessagePromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AINewMessagePromptController.h; path = Source/AINewMessagePromptController.h; sourceTree = "<group>"; };
 		34E0EB8D07CD349200A82198 /* ESGaimAIMAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimAIMAccount.h; path = "Plugins/Gaim Service/ESGaimAIMAccount.h"; sourceTree = "<group>"; };
 		34E0EB8E07CD349200A82198 /* ESGaimAIMAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimAIMAccount.m; path = "Plugins/Gaim Service/ESGaimAIMAccount.m"; sourceTree = "<group>"; };
+		34E104EA0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumUnreadMessagesQuitConfirmation.h; path = Source/AdiumUnreadMessagesQuitConfirmation.h; sourceTree = "<group>"; };
+		34E104EB0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumUnreadMessagesQuitConfirmation.m; path = Source/AdiumUnreadMessagesQuitConfirmation.m; sourceTree = "<group>"; };
+		34E105030951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = UnreadMessagesQuitConfirmation.nib; path = Resources/UnreadMessagesQuitConfirmation.nib; sourceTree = "<group>"; };
 		34E2A0B907AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAccountNetworkConnectivityPlugin.h; path = Source/ESAccountNetworkConnectivityPlugin.h; sourceTree = "<group>"; };
 		34E2A0BA07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAccountNetworkConnectivityPlugin.m; path = Source/ESAccountNetworkConnectivityPlugin.m; sourceTree = "<group>"; };
 		34E2A0C107AF593B006735BC /* AIAccountMenuAccessPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountMenuAccessPlugin.m; path = Source/AIAccountMenuAccessPlugin.m; sourceTree = "<group>"; };
@@ -4338,6 +4344,16 @@
 			name = Interface;
 			sourceTree = "<group>";
 		};
+		34E104D60951E02300EBE478 /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				34E104EA0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h */,
+				34E104EB0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m */,
+				34E105030951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib */,
+			);
+			name = Interface;
+			sourceTree = "<group>";
+		};
 		34E29FCE07AF091C006735BC /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
@@ -5077,6 +5093,7 @@
 				346CFDBC087B77FB009711C8 /* System (Idle, Connectivity, etc.) */,
 				4B873F370840D1FB00738987 /* Account */,
 				4BC4439A08612BD800B10F28 /* Content */,
+				34E104D60951E02300EBE478 /* Interface */,
 				344161B60943E0AF00BC26ED /* Setup Wizard */,
 				4B14CF1E085FBC4400C88949 /* Sound */,
 			);
@@ -6417,6 +6434,7 @@
 				63EA62C9094B832D009C8453 /* AIEmoticonPreviewController.h in Headers */,
 				63EA62EF094B8705009C8453 /* AIXtraInfoController.h in Headers */,
 				63EA6408094BB9A9009C8453 /* AIStatusIconPreviewController.h in Headers */,
+				34E104EC0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7519,6 +7537,7 @@
 				07632BF30949E10B00FFABD8 /* ListThemeSheet.nib in Resources */,
 				63336E15094AB81300970871 /* XtraInfoView.nib in Resources */,
 				63EA63DD094BB79A009C8453 /* StatusIconPreviewView.nib in Resources */,
+				34E105040951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8008,6 +8027,7 @@
 				63EA62CA094B832D009C8453 /* AIEmoticonPreviewController.m in Sources */,
 				63EA62F0094B8705009C8453 /* AIXtraInfoController.m in Sources */,
 				63EA6409094BB9A9009C8453 /* AIStatusIconPreviewController.m in Sources */,
+				34E104ED0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9535,7 +9555,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/Adium_Framework.plist;
@@ -10096,6 +10115,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
