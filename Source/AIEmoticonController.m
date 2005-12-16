@@ -239,8 +239,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 
 			/* We want to show this emoticon if there is:
 			 *		It begins or ends the string
-			 *		It is bordered by spaces or line breaks on both sides
-			 *		It is bordered by a period on the left and a space or line break the right
+			 *		It is bordered by spaces or line breaks or quotes on both sides
+			 *		It is bordered by a period on the left and a space or line break or quote the right
 			 *		It is bordered by emoticons on both sides or by an emoticon on the left and a period, space, or line break on the right
 			 */
 			BOOL	acceptable = NO;
@@ -249,7 +249,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 				acceptable = YES;
 			}
 			if (!acceptable) {
-				/* Bordered by spaces or line breaks, or by a period on the left and a space or a line break on the right
+				/* Bordered by spaces or line breaks or quotes, or by a period on the left and a space or a line break or quote on the right
 				 * If we're being called recursively, we have a potential emoticon to our left;  we only need to check the right.
 				 * This is also true if we're not being called recursively but there's an NSAttachmentAttribute to our left.
 				 *		That will happen if, for example, the string is ":):) ". The first emoticon is at the start of the line and
@@ -259,11 +259,16 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 				char	previousCharacter = [messageString characterAtIndex:(originalEmoticonLocation - 1)] ;
 				char	nextCharacter = [messageString characterAtIndex:(originalEmoticonLocation + textLength)] ;
 
-				if ((callingRecursively || (previousCharacter == ' ') || (previousCharacter == '\t') || (previousCharacter == '\n') || (previousCharacter == '\r') || (previousCharacter == '.') ||
+				if ((callingRecursively || (previousCharacter == ' ') || (previousCharacter == '\t') ||
+					 (previousCharacter == '\n') || (previousCharacter == '\r') || (previousCharacter == '.') ||
+					 (previousCharacter == '\"') || (previousCharacter == '\'') ||
 					 (*newMessage && [*newMessage attribute:NSAttachmentAttributeName
 													atIndex:(emoticonRangeInNewMessage.location - 1) 
 											 effectiveRange:NULL])) &&
-					((nextCharacter == ' ') || (nextCharacter == '\t') || (nextCharacter == '\n') || (nextCharacter == '\r') || (nextCharacter == '.'))) {
+
+					((nextCharacter == ' ') || (nextCharacter == '\t') || (nextCharacter == '\n') || 
+					 (nextCharacter == '\r') || (nextCharacter == '.') ||
+					 (nextCharacter == '\"') || (nextCharacter == '\''))) {
 					acceptable = YES;
 				}
 			}
