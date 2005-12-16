@@ -74,7 +74,21 @@
 
 	[self localizeItems];
 	
+	[[self window] center];
+
 	[super windowDidLoad];
+}
+
+/*!
+ * @brief Perform behaviors before the window closes
+ *
+ * As our window is closing, we auto-release this window controller instance.
+ */
+- (void)windowWillClose:(id)sender
+{
+	[super windowWillClose:sender];
+	
+	[self autorelease];
 }
 
 /*
