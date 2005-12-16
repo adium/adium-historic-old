@@ -891,7 +891,16 @@
 {
 	[self setPreference:[NSNumber numberWithBool:shouldBeOnline]
 				 forKey:@"Online"
-				  group:GROUP_ACCOUNT_STATUS];	
+				  group:GROUP_ACCOUNT_STATUS];
+	
+	/* If the users says we should no longer be online, clear out any stored password.
+	 * Note that we can de disconnected via -[AIAccount disconnect] without going through this method; this is how we will be disconnected
+	 * in an automatic fashoin, such as if network connectivity drops. This allows us, when reconnected after such a disconnection, to still
+	 * have the password 'on tap' for use at that time.
+	 */
+	if (!shouldBeOnline) {
+		[password release]; password = nil;
+	}
 }
 
 - (void)toggleOnline
