@@ -43,7 +43,7 @@ static AdiumUnreadMessagesQuitConfirmation *unreadMessagesWindowController = nil
 	[[self window] setTitle:AILocalizedString(@"Quit Confirmation","Quit confirmation window title")];
 	[button_quit setLocalizedString:AILocalizedString(@"Quit", nil)];
 	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
-	[checkBox_dontAskAgain setLocalizedString:AILocalizedString(@"Don't ask again", "Button for stopped the quit confirmation from being shown again")];
+	[checkBox_dontAskAgain setLocalizedString:AILocalizedString(@"Don't ask again", "Button for stopping the quit confirmation from being shown again")];
 	[textField_quitConfirmation setStringValue:AILocalizedString(@"You have unread messages.\nAre you sure you want to quit?",nil)];
 	
 	[[self window] center];
