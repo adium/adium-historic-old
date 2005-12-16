@@ -259,15 +259,12 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 				char	previousCharacter = [messageString characterAtIndex:(originalEmoticonLocation - 1)] ;
 				char	nextCharacter = [messageString characterAtIndex:(originalEmoticonLocation + textLength)] ;
 
-				if ((callingRecursively || (previousCharacter == ' ') || (previousCharacter == '\n') || (previousCharacter == '\r') || (previousCharacter == '.') ||
+				if ((callingRecursively || (previousCharacter == ' ') || (previousCharacter == '\t') || (previousCharacter == '\n') || (previousCharacter == '\r') || (previousCharacter == '.') ||
 					 (*newMessage && [*newMessage attribute:NSAttachmentAttributeName
 													atIndex:(emoticonRangeInNewMessage.location - 1) 
 											 effectiveRange:NULL])) &&
-					((nextCharacter == ' ') || (nextCharacter == '\n') || (nextCharacter == '\r') || (nextCharacter == '.'))) {
+					((nextCharacter == ' ') || (nextCharacter == '\t') || (nextCharacter == '\n') || (nextCharacter == '\r') || (nextCharacter == '.'))) {
 					acceptable = YES;
-
-					//We can skip the next character
-					//amountToIncreaseCurrentLocation = 1;
 				}
 			}
 			if (!acceptable) {
