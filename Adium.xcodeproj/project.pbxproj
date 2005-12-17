@@ -713,6 +713,13 @@
 		34E104EC0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E104EA0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h */; };
 		34E104ED0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E104EB0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m */; };
 		34E105040951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34E105030951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib */; };
+		34E1067909536E5300EBE478 /* AIContactListStatusMenuView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E1067709536E5300EBE478 /* AIContactListStatusMenuView.h */; };
+		34E1067A09536E5300EBE478 /* AIContactListStatusMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E1067809536E5300EBE478 /* AIContactListStatusMenuView.m */; };
+		34E1067F09536E8D00EBE478 /* AIConatctListImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E1067D09536E8D00EBE478 /* AIConatctListImagePicker.h */; };
+		34E1068009536E8D00EBE478 /* AIConatctListImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E1067E09536E8D00EBE478 /* AIConatctListImagePicker.m */; };
+		34E106A50953717300EBE478 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		34E106A9095371A100EBE478 /* AIContactListStatusMenuCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E106A7095371A100EBE478 /* AIContactListStatusMenuCell.h */; };
+		34E106AF095371E400EBE478 /* AIContactListStatusMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E106AE095371E400EBE478 /* AIContactListStatusMenuCell.m */; };
 		34E2A0BB07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E2A0B907AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h */; };
 		34E2A0BC07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0BA07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m */; };
 		34E2A0C307AF593B006735BC /* AIAccountMenuAccessPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0C107AF593B006735BC /* AIAccountMenuAccessPlugin.m */; };
@@ -2552,6 +2559,12 @@
 		34E104EA0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumUnreadMessagesQuitConfirmation.h; path = Source/AdiumUnreadMessagesQuitConfirmation.h; sourceTree = "<group>"; };
 		34E104EB0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumUnreadMessagesQuitConfirmation.m; path = Source/AdiumUnreadMessagesQuitConfirmation.m; sourceTree = "<group>"; };
 		34E105030951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = UnreadMessagesQuitConfirmation.nib; path = Resources/UnreadMessagesQuitConfirmation.nib; sourceTree = "<group>"; };
+		34E1067709536E5300EBE478 /* AIContactListStatusMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContactListStatusMenuView.h; path = Source/AIContactListStatusMenuView.h; sourceTree = "<group>"; };
+		34E1067809536E5300EBE478 /* AIContactListStatusMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContactListStatusMenuView.m; path = Source/AIContactListStatusMenuView.m; sourceTree = "<group>"; };
+		34E1067D09536E8D00EBE478 /* AIConatctListImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIConatctListImagePicker.h; path = Source/AIConatctListImagePicker.h; sourceTree = "<group>"; };
+		34E1067E09536E8D00EBE478 /* AIConatctListImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIConatctListImagePicker.m; path = Source/AIConatctListImagePicker.m; sourceTree = "<group>"; };
+		34E106A7095371A100EBE478 /* AIContactListStatusMenuCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactListStatusMenuCell.h; path = Source/AIContactListStatusMenuCell.h; sourceTree = "<group>"; };
+		34E106AE095371E400EBE478 /* AIContactListStatusMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactListStatusMenuCell.m; path = Source/AIContactListStatusMenuCell.m; sourceTree = "<group>"; };
 		34E2A0B907AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAccountNetworkConnectivityPlugin.h; path = Source/ESAccountNetworkConnectivityPlugin.h; sourceTree = "<group>"; };
 		34E2A0BA07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAccountNetworkConnectivityPlugin.m; path = Source/ESAccountNetworkConnectivityPlugin.m; sourceTree = "<group>"; };
 		34E2A0C107AF593B006735BC /* AIAccountMenuAccessPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountMenuAccessPlugin.m; path = Source/AIAccountMenuAccessPlugin.m; sourceTree = "<group>"; };
@@ -4013,6 +4026,7 @@
 			isa = PBXGroup;
 			children = (
 				9E57141405B2168100283CAD /* Contact Counting Display */,
+				4BD388C306B5899E000A346A /* Contact List */,
 				F50CD61C03603BE201A8010A /* Contact List Editor */,
 				4BB5CBB006EDF04D009B4517 /* Extended Status */,
 				F53B9AC502CD12AB01A8010A /* Offline Contact Hiding */,
@@ -4354,6 +4368,18 @@
 			name = Interface;
 			sourceTree = "<group>";
 		};
+		34E1066A09536D7300EBE478 /* Borderless */ = {
+			isa = PBXGroup;
+			children = (
+				34A48B3706F64B27002C7C5F /* AIBorderlessListOutlineView.h */,
+				34A48B3806F64B27002C7C5F /* AIBorderlessListOutlineView.m */,
+				34A48A1606F6438F002C7C5F /* AIBorderlessListWindowController.h */,
+				34A48A1406F6438F002C7C5F /* AIBorderlessListWindowController.m */,
+				34A48A0F06F64381002C7C5F /* ContactListWindowBorderless.nib */,
+			);
+			name = Borderless;
+			sourceTree = "<group>";
+		};
 		34E29FCE07AF091C006735BC /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
@@ -4682,7 +4708,6 @@
 			children = (
 				632D800908E7DE2C0032C187 /* Xtras Management */,
 				34C68B1C0778F9C200EB423C /* General Preferences */,
-				4BD388C306B5899E000A346A /* Contact List */,
 				4B0E342E04C4677700A8010A /* Contact Status Coloring */,
 				40AC0EEA03B5BEDB00A80202 /* Error Message Handler */,
 				6EC1684406C1707800F9FAD3 /* Invite to Chat */,
@@ -5215,8 +5240,12 @@
 			children = (
 				34A489F206F64359002C7C5F /* AISCLViewPlugin.h */,
 				34A489F106F64359002C7C5F /* AISCLViewPlugin.m */,
-				4BF98D2906D147BB00E8781D /* Window */,
-				4BF98D4806D1483100E8781D /* List / Outline View */,
+				34A489FF06F6436D002C7C5F /* AIListWindowController.h */,
+				34A489FE06F6436D002C7C5F /* AIListWindowController.m */,
+				34A48A1306F6438F002C7C5F /* AIListController.h */,
+				34A48A1506F6438F002C7C5F /* AIListController.m */,
+				34E1066A09536D7300EBE478 /* Borderless */,
+				4BF98D2906D147BB00E8781D /* Standard Window */,
 				4BF98DB506D1497D00E8781D /* Preferences */,
 			);
 			name = "Contact List";
@@ -5331,30 +5360,20 @@
 			name = "Auto Linking";
 			sourceTree = "<group>";
 		};
-		4BF98D2906D147BB00E8781D /* Window */ = {
+		4BF98D2906D147BB00E8781D /* Standard Window */ = {
 			isa = PBXGroup;
 			children = (
-				34A489FF06F6436D002C7C5F /* AIListWindowController.h */,
-				34A489FE06F6436D002C7C5F /* AIListWindowController.m */,
 				34A489FC06F6436D002C7C5F /* AIStandardListWindowController.h */,
 				34A489FB06F6436D002C7C5F /* AIStandardListWindowController.m */,
 				34A48A0B06F64376002C7C5F /* ContactListWindow.nib */,
-				34A48A1606F6438F002C7C5F /* AIBorderlessListWindowController.h */,
-				34A48A1406F6438F002C7C5F /* AIBorderlessListWindowController.m */,
-				34A48A0F06F64381002C7C5F /* ContactListWindowBorderless.nib */,
+				34E1067D09536E8D00EBE478 /* AIConatctListImagePicker.h */,
+				34E1067E09536E8D00EBE478 /* AIConatctListImagePicker.m */,
+				34E1067709536E5300EBE478 /* AIContactListStatusMenuView.h */,
+				34E1067809536E5300EBE478 /* AIContactListStatusMenuView.m */,
+				34E106A7095371A100EBE478 /* AIContactListStatusMenuCell.h */,
+				34E106AE095371E400EBE478 /* AIContactListStatusMenuCell.m */,
 			);
-			name = Window;
-			sourceTree = "<group>";
-		};
-		4BF98D4806D1483100E8781D /* List / Outline View */ = {
-			isa = PBXGroup;
-			children = (
-				34A48A1306F6438F002C7C5F /* AIListController.h */,
-				34A48A1506F6438F002C7C5F /* AIListController.m */,
-				34A48B3706F64B27002C7C5F /* AIBorderlessListOutlineView.h */,
-				34A48B3806F64B27002C7C5F /* AIBorderlessListOutlineView.m */,
-			);
-			name = "List / Outline View";
+			name = "Standard Window";
 			sourceTree = "<group>";
 		};
 		4BF98D5506D1485100E8781D /* Cells */ = {
@@ -6435,6 +6454,9 @@
 				63EA62EF094B8705009C8453 /* AIXtraInfoController.h in Headers */,
 				63EA6408094BB9A9009C8453 /* AIStatusIconPreviewController.h in Headers */,
 				34E104EC0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h in Headers */,
+				34E1067909536E5300EBE478 /* AIContactListStatusMenuView.h in Headers */,
+				34E1067F09536E8D00EBE478 /* AIConatctListImagePicker.h in Headers */,
+				34E106A9095371A100EBE478 /* AIContactListStatusMenuCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8028,6 +8050,10 @@
 				63EA62F0094B8705009C8453 /* AIXtraInfoController.m in Sources */,
 				63EA6409094BB9A9009C8453 /* AIStatusIconPreviewController.m in Sources */,
 				34E104ED0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m in Sources */,
+				34E1067A09536E5300EBE478 /* AIContactListStatusMenuView.m in Sources */,
+				34E1068009536E8D00EBE478 /* AIConatctListImagePicker.m in Sources */,
+				34E106A50953717300EBE478 /* (null) in Sources */,
+				34E106AF095371E400EBE478 /* AIContactListStatusMenuCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
