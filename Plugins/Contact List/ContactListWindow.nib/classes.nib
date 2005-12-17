@@ -7,11 +7,6 @@
             SUPERCLASS = AIListWindowController; 
         }, 
         {
-            CLASS = AIConatctListImagePicker; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIImageViewWithImagePicker; 
-        }, 
-        {
             CLASS = AIContactListImagePicker; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AIImageViewWithImagePicker; 
@@ -50,7 +45,10 @@
         {
             CLASS = AIStandardListWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {statusMenuView = AIContactListStatusMenuView; }; 
+            OUTLETS = {
+                imagePicker = AIConatctListImagePicker; 
+                statusMenuView = AIContactListStatusMenuView; 
+            }; 
             SUPERCLASS = AIListWindowController; 
         }, 
         {

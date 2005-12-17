@@ -17,10 +17,11 @@
 #import "AIListWindowController.h"
 
 @protocol AIListObjectObserver, StateMenuPlugin;
-@class AIStatusMenu, AIContactListStatusMenuView;
+@class AIStatusMenu, AIContactListStatusMenuView, AIConatctListImagePicker;
 
 @interface AIStandardListWindowController : AIListWindowController {
 	IBOutlet	AIContactListStatusMenuView	*statusMenuView;
+	IBOutlet	AIConatctListImagePicker	*imagePicker;
 
 	NSDictionary				*toolbarItems;
 	AIStatusMenu				*statusMenu;
