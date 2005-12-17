@@ -158,7 +158,7 @@ gboolean gaim_init_jabber_plugin(void);
 }
 
 /*!
-* @brief Connect Host
+ * @brief Connect Host
  *
  * Convenience method for retrieving the connect host for this account
  *

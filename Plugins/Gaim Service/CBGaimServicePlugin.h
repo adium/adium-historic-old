@@ -25,6 +25,7 @@
     id  JabberService;
 	id  MeanwhileService;
 	id  MSNService;
+	id  SimpleService;
 	id  NovellService;
     id  YahooService;
 	id  YahooJapanService;
