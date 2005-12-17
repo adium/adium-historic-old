@@ -46,7 +46,7 @@
             CLASS = AIStandardListWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                imagePicker = AIConatctListImagePicker; 
+                imagePicker = AIContactListImagePicker; 
                 statusMenuView = AIContactListStatusMenuView; 
             }; 
             SUPERCLASS = AIListWindowController; 
