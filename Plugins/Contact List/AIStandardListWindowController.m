@@ -27,13 +27,14 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 
 #import "AIContactListStatusMenuView.h"
-#import "AIConatctListImagePicker.h"
+#import "AIContactListImagePicker.h"
 
 #define TOOLBAR_CONTACT_LIST				@"ContactList"				//Toolbar identifier
 
 @interface AIStandardListWindowController (PRIVATE)
 - (void)_configureToolbar;
 - (void)activeStateChanged:(NSNotification *)notification;
+- (void)updateImagePicker;
 @end
 
 @implementation AIStandardListWindowController
