@@ -717,7 +717,6 @@
 		34E1067A09536E5300EBE478 /* AIContactListStatusMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E1067809536E5300EBE478 /* AIContactListStatusMenuView.m */; };
 		34E1067F09536E8D00EBE478 /* AIConatctListImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E1067D09536E8D00EBE478 /* AIConatctListImagePicker.h */; };
 		34E1068009536E8D00EBE478 /* AIConatctListImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E1067E09536E8D00EBE478 /* AIConatctListImagePicker.m */; };
-		34E106A50953717300EBE478 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		34E106A9095371A100EBE478 /* AIContactListStatusMenuCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E106A7095371A100EBE478 /* AIContactListStatusMenuCell.h */; };
 		34E106AF095371E400EBE478 /* AIContactListStatusMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E106AE095371E400EBE478 /* AIContactListStatusMenuCell.m */; };
 		34E2A0BB07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E2A0B907AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h */; };
@@ -8052,7 +8051,6 @@
 				34E104ED0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m in Sources */,
 				34E1067A09536E5300EBE478 /* AIContactListStatusMenuView.m in Sources */,
 				34E1068009536E8D00EBE478 /* AIConatctListImagePicker.m in Sources */,
-				34E106A50953717300EBE478 /* (null) in Sources */,
 				34E106AF095371E400EBE478 /* AIContactListStatusMenuCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
