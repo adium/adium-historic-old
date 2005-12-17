@@ -322,7 +322,6 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 
 	} else {
 		NSEnumerator	*enumerator;
-		NSString		*serviceCodeUniqueID;
 		AIService		*service;
 
 		enumerator = [[[adium accountController] activeServicesIncludingCompatibleServices:NO] objectEnumerator];

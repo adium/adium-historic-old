@@ -27,3 +27,10 @@ void gaim_xfer_choose_file_cancel_cb(void *user_data, const char *filename);
  * -RAF
  */
 char * mwServiceAware_getText(void *, void *);
+
+/* this is probably the wrong prototype, but I honestly
+ * don't know where to find the function and the warning
+ * is making me angry.
+ * I checked our libgaim repo and the upstream gaim cvs repo for it.
+ */
+void oscar_reformat_screenname(GaimConnection *gc, const char *formattedUID);

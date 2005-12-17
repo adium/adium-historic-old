@@ -779,7 +779,7 @@ NSMutableDictionary* get_chatDict(void)
 {
 	GaimConversation	*conv = convLookupFromChat(chat, sourceAccount);
 	GaimCmdStatus		status;
-	char				*markup, *error;
+	char				*markup;
 	const char			*cmd;
 	BOOL				sendMessage = YES;
 
