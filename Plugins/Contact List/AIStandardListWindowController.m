@@ -27,6 +27,7 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 
 #import "AIContactListStatusMenuView.h"
+#import "AIConatctListImagePicker.h"
 
 #define TOOLBAR_CONTACT_LIST				@"ContactList"				//Toolbar identifier
 
@@ -87,6 +88,8 @@
 									   name:AIStatusActiveStateChangedNotification
 									 object:nil];
 	[self activeStateChanged:nil];
+	
+	[self updateImagePicker];
 }
 
 /*!
@@ -129,9 +132,44 @@
 	AIStatus	*activeStatus = [[adium statusController] activeStatusState];
 	[statusMenuView setCurrentStatusName:[activeStatus title]];
 
+//XXX Temporary
+	[self updateImagePicker];
 	//[menuItem setImage:[activeStatus icon]];
 }
 
+- (void)updateImagePicker
+{
+	NSArray			*accounts = [[adium accountController] accounts];
+	NSEnumerator	*enumerator = [accounts objectEnumerator];
+	AIAccount		*account = nil;
+
+	while ((account = [enumerator nextObject])) {
+		if ([account online]) break;
+	}
+	
+	if (!account) {
+		enumerator = [accounts objectEnumerator];
+		while ((account = [enumerator nextObject])) {
+			if ([account enabled]) break;
+		}
+	}
+	
+	if (!account) {
+		if ([accounts count]) account = [accounts objectAtIndex:0];
+	}
+
+	if (account) {
+		[imagePicker setImage:[account userIcon]];		
+	}
+}
+
+/*
+ * @brief The image picker changed images
+ */
+- (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)picker didChangeToImageData:(NSData *)imageData
+{
+	
+}
 
 //Toolbar --------------------------------------------------------------------------------------------------------------
 #pragma mark Toolbar
