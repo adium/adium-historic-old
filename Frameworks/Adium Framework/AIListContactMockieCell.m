@@ -20,6 +20,7 @@
 #import <AIUtilities/AIBezierPathAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIGradient.h>
+#import <AIUtilities/AIColorAdditions.h>
 
 @implementation AIListContactMockieCell
 
