@@ -37,3 +37,4 @@
 - (void)automaticCheckForNewVersion:(id)sender;
 
 @end
+

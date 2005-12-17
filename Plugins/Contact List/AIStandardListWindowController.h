@@ -27,4 +27,6 @@
 	AIStatusMenu				*statusMenu;
 }
 
+- (void)updateImagePicker;
+
 @end
