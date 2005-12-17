@@ -11,6 +11,11 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = AIImageViewWithImagePicker; 
         }, 
+        {
+            CLASS = AIContactListImagePicker; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIImageViewWithImagePicker; 
+        }, 
         {CLASS = AIContactListStatusMenuView; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {CLASS = AIDockingWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
         {
