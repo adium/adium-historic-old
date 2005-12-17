@@ -23,6 +23,7 @@
 #import <Adium/AIContentContext.h>
 #import "SMSQLiteLoggerPlugin.h"
 #import "AICoreComponentLoader.h"
+#import <Cocoa/Cocoa.h>
 
 @interface DCMessageContextDisplayPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -96,7 +97,7 @@
 		
 		//Check if the history fits the date restrictions
 		
-		NSCalendarDate *mostRecentMessage = [(AIContentContext *)[context objectAtIndex:0] date];
+		NSCalendarDate *mostRecentMessage = [[(AIContentContext *)[context objectAtIndex:0] date] dateWithCalendarFormat:nil timeZone:nil];
 		
 		if ([self contextShouldBeDisplayed:mostRecentMessage]) {
 			
