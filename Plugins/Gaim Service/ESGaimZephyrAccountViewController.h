@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include "AIAccountViewController.h"
+#import <Adium/AIAccountViewController.h>
 
 @interface ESGaimZephyrAccountViewController : AIAccountViewController {
 	IBOutlet	NSButton	*checkBox_exportAnyone;

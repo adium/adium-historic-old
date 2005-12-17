@@ -23,6 +23,7 @@
 #import "ESMeanwhileService.h"
 #import "ESNovellService.h"
 #import "ESMSNService.h"
+#import "ESSimpleService.h"
 #import "ESYahooService.h"
 #import "ESYahooJapanService.h"
 #import "ESZephyrService.h"

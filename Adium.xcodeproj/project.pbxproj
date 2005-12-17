@@ -236,6 +236,14 @@
 		34575E3507CBA7E0004A4FFF /* LoginSelect.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3407CBA7DF004A4FFF /* LoginSelect.nib */; };
 		34575E3707CBA874004A4FFF /* DebugWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3607CBA874004A4FFF /* DebugWindow.nib */; };
 		34575E3907CBA88E004A4FFF /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3807CBA88E004A4FFF /* MainMenu.nib */; };
+		345A7B5B0954AD1400FF3113 /* ESSimpleService.h in Headers */ = {isa = PBXBuildFile; fileRef = 345A7B590954AD1400FF3113 /* ESSimpleService.h */; };
+		345A7B5C0954AD1400FF3113 /* ESSimpleService.m in Sources */ = {isa = PBXBuildFile; fileRef = 345A7B5A0954AD1400FF3113 /* ESSimpleService.m */; };
+		345A7B670954AD2800FF3113 /* ESGaimSimpleAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 345A7B650954AD2800FF3113 /* ESGaimSimpleAccount.h */; };
+		345A7B680954AD2800FF3113 /* ESGaimSimpleAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 345A7B660954AD2800FF3113 /* ESGaimSimpleAccount.m */; };
+		345A7B6D0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 345A7B6B0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.h */; };
+		345A7B6E0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 345A7B6C0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.m */; };
+		345A7B720954AD4D00FF3113 /* GaimDefaultsSimple.plist in Resources */ = {isa = PBXBuildFile; fileRef = 345A7B710954AD4D00FF3113 /* GaimDefaultsSimple.plist */; };
+		345A7B850954AEF400FF3113 /* ESGaimSimpleAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 345A7B830954AEF400FF3113 /* ESGaimSimpleAccountView.nib */; };
 		345ACC970811C20F008E4D22 /* AwayStatusWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 345ACC960811C20F008E4D22 /* AwayStatusWindow.nib */; };
 		345F566B08178356001F733C /* AdiumServiceIcons.icns in Resources */ = {isa = PBXBuildFile; fileRef = 345F566A08178356001F733C /* AdiumServiceIcons.icns */; };
 		345F57400817FF80001F733C /* pref-contactList.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F573F0817FF80001F733C /* pref-contactList.png */; };
@@ -1870,6 +1878,14 @@
 		3458BA9F082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/DCGaimJabberJoinChatView.nib"; sourceTree = "<group>"; };
 		3458BAA0082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
 		3458BAA1082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
+		345A7B590954AD1400FF3113 /* ESSimpleService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSimpleService.h; path = "Plugins/Gaim Service/ESSimpleService.h"; sourceTree = "<group>"; };
+		345A7B5A0954AD1400FF3113 /* ESSimpleService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSimpleService.m; path = "Plugins/Gaim Service/ESSimpleService.m"; sourceTree = "<group>"; };
+		345A7B650954AD2800FF3113 /* ESGaimSimpleAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimSimpleAccount.h; path = "Plugins/Gaim Service/ESGaimSimpleAccount.h"; sourceTree = "<group>"; };
+		345A7B660954AD2800FF3113 /* ESGaimSimpleAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimSimpleAccount.m; path = "Plugins/Gaim Service/ESGaimSimpleAccount.m"; sourceTree = "<group>"; };
+		345A7B6B0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimSimpleAccountViewController.h; path = "Plugins/Gaim Service/ESGaimSimpleAccountViewController.h"; sourceTree = "<group>"; };
+		345A7B6C0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimSimpleAccountViewController.m; path = "Plugins/Gaim Service/ESGaimSimpleAccountViewController.m"; sourceTree = "<group>"; };
+		345A7B710954AD4D00FF3113 /* GaimDefaultsSimple.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = GaimDefaultsSimple.plist; path = "Plugins/Gaim Service/GaimDefaultsSimple.plist"; sourceTree = "<group>"; };
+		345A7B840954AEF400FF3113 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimSimpleAccountView.nib"; sourceTree = "<group>"; };
 		345ACC960811C20F008E4D22 /* AwayStatusWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AwayStatusWindow.nib; path = Resources/AwayStatusWindow.nib; sourceTree = "<group>"; };
 		345F566A08178356001F733C /* AdiumServiceIcons.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumServiceIcons.icns; path = Resources/AdiumServiceIcons.icns; sourceTree = "<group>"; };
 		345F573F0817FF80001F733C /* pref-contactList.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-contactList.png"; path = "Resources/pref-contactList.png"; sourceTree = "<group>"; };
@@ -3632,6 +3648,7 @@
 				343A7F2206935DAF00150CEC /* Meanwhile */,
 				344159A2059F971C0019246B /* MSN */,
 				34C2E6650634CF010018E5D2 /* Novell GroupWise */,
+				345A7B560954ACD900FF3113 /* SIMPLE */,
 				34415BC3059FA95B0019246B /* Yahoo! */,
 				348D8D3206CC07C400449EBB /* Zephyr */,
 			);
@@ -3811,6 +3828,21 @@
 				34E2A1CB07AF635A006735BC /* ESFastUserSwitchingSupportPlugin.m */,
 			);
 			name = "Fast User Switching Support";
+			sourceTree = "<group>";
+		};
+		345A7B560954ACD900FF3113 /* SIMPLE */ = {
+			isa = PBXGroup;
+			children = (
+				345A7B590954AD1400FF3113 /* ESSimpleService.h */,
+				345A7B5A0954AD1400FF3113 /* ESSimpleService.m */,
+				345A7B650954AD2800FF3113 /* ESGaimSimpleAccount.h */,
+				345A7B660954AD2800FF3113 /* ESGaimSimpleAccount.m */,
+				345A7B6B0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.h */,
+				345A7B6C0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.m */,
+				345A7B830954AEF400FF3113 /* ESGaimSimpleAccountView.nib */,
+				345A7B710954AD4D00FF3113 /* GaimDefaultsSimple.plist */,
+			);
+			name = SIMPLE;
 			sourceTree = "<group>";
 		};
 		346BA3330774C21300628F06 /* Global Events Preferences */ = {
@@ -6696,6 +6728,9 @@
 				34AEE7EA08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h in Headers */,
 				07F1795008EBC5B400A9C392 /* UndeclaredLibgaimFunctions.h in Headers */,
 				349C2DB1092BCF58002998E1 /* gaimOTRCommon.h in Headers */,
+				345A7B5B0954AD1400FF3113 /* ESSimpleService.h in Headers */,
+				345A7B670954AD2800FF3113 /* ESGaimSimpleAccount.h in Headers */,
+				345A7B6D0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7661,6 +7696,8 @@
 				3411E2980832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib in Resources */,
 				34B27416083C0B900092A5A0 /* GaimAuthorizationRequestWindow.nib in Resources */,
 				A3C042D208D7483100B48CE1 /* GaimDefaultsGTalk.plist in Resources */,
+				345A7B720954AD4D00FF3113 /* GaimDefaultsSimple.plist in Resources */,
+				345A7B850954AEF400FF3113 /* ESGaimSimpleAccountView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8275,6 +8312,9 @@
 				34AEE7DF08E3547000AE1C78 /* ESGaimFileReceiveRequestController.m in Sources */,
 				34AEE7EB08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m in Sources */,
 				348FF83F09128BEB00A942A8 /* CBGaimAccount.m in Sources */,
+				345A7B5C0954AD1400FF3113 /* ESSimpleService.m in Sources */,
+				345A7B680954AD2800FF3113 /* ESGaimSimpleAccount.m in Sources */,
+				345A7B6E0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9088,6 +9128,14 @@
 				34A81DB8093CE92200B0E93D /* pl */,
 			);
 			name = MessageContextDisplayPrefs.nib;
+			sourceTree = "<group>";
+		};
+		345A7B830954AEF400FF3113 /* ESGaimSimpleAccountView.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				345A7B840954AEF400FF3113 /* English */,
+			);
+			name = ESGaimSimpleAccountView.nib;
 			sourceTree = "<group>";
 		};
 		346798EF08947FB800F68A98 /* AdiumFramework.strings */ = {

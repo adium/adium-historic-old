@@ -45,6 +45,7 @@
 	GaduGaduService		= [[ESGaduGaduService alloc] init];
 	GTalkService		= [[AIGTalkService alloc] init];
 	MSNService			= [[ESMSNService alloc] init];
+	SimpleService		= [[ESSimpleService alloc] init];
 	NovellService		= [[ESNovellService alloc] init];
 	JabberService		= [[ESJabberService alloc] init];
 	YahooService		= [[ESYahooService alloc] init];
@@ -65,6 +66,7 @@
 	[GTalkService release]; GTalkService = nil;
 	[JabberService release]; JabberService = nil;
 	[MSNService release]; MSNService = nil;
+	[SimpleService release]; SimpleService = nil;
 	[YahooService release]; YahooService = nil;
 	[YahooJapanService release]; YahooJapanService = nil;
 	[NovellService release]; NovellService = nil;
