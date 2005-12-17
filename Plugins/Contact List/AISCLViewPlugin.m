@@ -25,8 +25,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import "AIXtrasManager.h"
 
-#warning crosslink
-#import "AIAppearancePreferencesPlugin.h"
+#define PREF_GROUP_APPEARANCE		@"Appearance"
 
 int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context);
 
@@ -34,6 +33,19 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
+/*!
+ * @class AISCLViewPlugin
+ * @brief This component plugin is responsible for window and view of the contact list
+ *
+ * Either an AIStandardListWindowController or AIBorderlessListWindowController, each of which is a subclass of AIListWindowController,
+ * is instantiated. This window controller, with the help of the plugin, will be responsible for display of an AIListOutlineView.
+ * The borderless window controller uses an AIBorderlessListOutlineView.
+ *
+ * In either case, the outline view itself is controlled by an instance of AIListController.
+ *
+ * AISCLViewPlugin's class methods also manage ListLayout and ListTheme preference sets. ListLayout sets determine the contents and layout
+ * of the contact list; ListTheme sets control the colors used in the contact list.
+ */
 @implementation AISCLViewPlugin
 
 - (void)installPlugin
@@ -72,6 +84,9 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //Contact List Controller ----------------------------------------------------------------------------------------------
 #pragma mark Contact List Controller
 
+/*
+ * @brief Retrieve the AIListWindowController in use
+ */
 - (AIListWindowController *)contactListWindowController {
 	return contactListWindowController;
 }
@@ -165,6 +180,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	[self showContactListAndBringToFront:NO];
 }
 
+#pragma mark ListLayout and ListTheme preference management
 //Apply a set of preferences
 + (void)applySetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder toPreferenceGroup:(NSString *)preferenceGroup
 {
