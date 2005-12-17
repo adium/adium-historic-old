@@ -20,7 +20,6 @@
 @protocol AIListObjectObserver;
 
 @interface AIListController : AIAbstractListController <AIListObjectObserver> {
-	
     NSSize								minWindowSize;
     BOOL								autoResizeVertically;
     BOOL								autoResizeHorizontally;

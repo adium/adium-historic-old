@@ -26,6 +26,8 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 
+#import "AIContactListStatusMenuView.h"
+
 #define TOOLBAR_CONTACT_LIST				@"ContactList"				//Toolbar identifier
 
 @interface AIStandardListWindowController (PRIVATE)
@@ -78,9 +80,6 @@
 
 	//Configure the state menu
 	statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
-	
-	[[popUp_state cell] setUsesItemFromMenu:NO];
-	[[popUp_state cell] setAltersStateOfSelectedItem:NO];
 
 	//Update the selections in our state menu when the active state changes
 	[[adium notificationCenter] addObserver:self
@@ -112,16 +111,13 @@
     NSMenu			*menu = [[NSMenu alloc] init];
 	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
 	NSMenuItem		*menuItem;
-	
-	//Add a dummy menu item for the pulldown to display
-	[menu addItem:[[[NSMenuItem alloc] init] autorelease]];
-	
+
 	//Add a menu item for each state
 	while ((menuItem = [enumerator nextObject])) {
 		[menu addItem:menuItem];
 	}
 	
-	[popUp_state setMenu:menu];
+	[statusMenuView setMenu:menu];
 	[menu release];
 }
 
@@ -131,15 +127,9 @@
 - (void)activeStateChanged:(NSNotification *)notification
 {
 	AIStatus	*activeStatus = [[adium statusController] activeStatusState];
-	NSMenuItem	*menuItem = [[NSMenuItem alloc] initWithTitle:[activeStatus title]
-													   target:self
-													   action:@selector(selectCustomState:)
-												keyEquivalent:@""];
-	
-	[menuItem setImage:[activeStatus icon]];
+	[statusMenuView setCurrentStatusName:[activeStatus title]];
 
-	[[popUp_state cell] setMenuItem:menuItem];
-	[menuItem release];
+	//[menuItem setImage:[activeStatus icon]];
 }
 
 

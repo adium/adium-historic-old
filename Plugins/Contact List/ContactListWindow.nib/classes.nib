@@ -6,7 +6,20 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = AIListWindowController; 
         }, 
+        {
+            CLASS = AIConatctListImagePicker; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIImageViewWithImagePicker; 
+        }, 
+        {CLASS = AIContactListStatusMenuView; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {CLASS = AIDockingWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
+        {
+            ACTIONS = {showImagePicker = id; }; 
+            CLASS = AIImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
         {
             CLASS = AIListOutlineView; 
             LANGUAGE = ObjC; 
@@ -32,7 +45,7 @@
         {
             CLASS = AIStandardListWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_state" = NSPopUpButton; }; 
+            OUTLETS = {statusMenuView = AIContactListStatusMenuView; }; 
             SUPERCLASS = AIListWindowController; 
         }, 
         {
