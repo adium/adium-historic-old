@@ -620,6 +620,8 @@
 		34CEBE6306F117DF00A89DDE /* ESContactInfoListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */; };
 		34CF9DF4085B8B7900D87E37 /* ESiTunesPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */; };
 		34CF9DF5085B8B7900D87E37 /* ESiTunesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CF9DF3085B8B7900D87E37 /* ESiTunesPlugin.m */; };
+		34D0F9CA0954E70100DCB678 /* AIContactListImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D0F9C80954E70100DCB678 /* AIContactListImagePicker.h */; };
+		34D0F9CB0954E70100DCB678 /* AIContactListImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D0F9C90954E70100DCB678 /* AIContactListImagePicker.m */; };
 		34D1897F076114C00075A380 /* AILocalizationButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D1897D076114C00075A380 /* AILocalizationButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34D18980076114C00075A380 /* AILocalizationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D1897E076114C00075A380 /* AILocalizationButton.m */; };
 		34D189B2076131850075A380 /* AILocalizationAssistance.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D189B1076131850075A380 /* AILocalizationAssistance.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -723,8 +725,6 @@
 		34E105040951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34E105030951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib */; };
 		34E1067909536E5300EBE478 /* AIContactListStatusMenuView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E1067709536E5300EBE478 /* AIContactListStatusMenuView.h */; };
 		34E1067A09536E5300EBE478 /* AIContactListStatusMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E1067809536E5300EBE478 /* AIContactListStatusMenuView.m */; };
-		34E1067F09536E8D00EBE478 /* AIConatctListImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E1067D09536E8D00EBE478 /* AIConatctListImagePicker.h */; };
-		34E1068009536E8D00EBE478 /* AIConatctListImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E1067E09536E8D00EBE478 /* AIConatctListImagePicker.m */; };
 		34E106A9095371A100EBE478 /* AIContactListStatusMenuCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E106A7095371A100EBE478 /* AIContactListStatusMenuCell.h */; };
 		34E106AF095371E400EBE478 /* AIContactListStatusMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E106AE095371E400EBE478 /* AIContactListStatusMenuCell.m */; };
 		34E2A0BB07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E2A0B907AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h */; };
@@ -2476,6 +2476,8 @@
 		34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESContactInfoListController.m; path = Source/ESContactInfoListController.m; sourceTree = "<group>"; };
 		34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESiTunesPlugin.h; path = Source/ESiTunesPlugin.h; sourceTree = "<group>"; };
 		34CF9DF3085B8B7900D87E37 /* ESiTunesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESiTunesPlugin.m; path = Source/ESiTunesPlugin.m; sourceTree = "<group>"; };
+		34D0F9C80954E70100DCB678 /* AIContactListImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactListImagePicker.h; path = Source/AIContactListImagePicker.h; sourceTree = "<group>"; };
+		34D0F9C90954E70100DCB678 /* AIContactListImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactListImagePicker.m; path = Source/AIContactListImagePicker.m; sourceTree = "<group>"; };
 		34D188DB0760F0F50075A380 /* AILocalizationControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationControl.m; path = "Frameworks/Adium Framework/AILocalizationControl.m"; sourceTree = "<group>"; };
 		34D1897D076114C00075A380 /* AILocalizationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButton.h; path = "Frameworks/Adium Framework/AILocalizationButton.h"; sourceTree = "<group>"; };
 		34D1897E076114C00075A380 /* AILocalizationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButton.m; path = "Frameworks/Adium Framework/AILocalizationButton.m"; sourceTree = "<group>"; };
@@ -2576,8 +2578,6 @@
 		34E105030951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = UnreadMessagesQuitConfirmation.nib; path = Resources/UnreadMessagesQuitConfirmation.nib; sourceTree = "<group>"; };
 		34E1067709536E5300EBE478 /* AIContactListStatusMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContactListStatusMenuView.h; path = Source/AIContactListStatusMenuView.h; sourceTree = "<group>"; };
 		34E1067809536E5300EBE478 /* AIContactListStatusMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContactListStatusMenuView.m; path = Source/AIContactListStatusMenuView.m; sourceTree = "<group>"; };
-		34E1067D09536E8D00EBE478 /* AIConatctListImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIConatctListImagePicker.h; path = Source/AIConatctListImagePicker.h; sourceTree = "<group>"; };
-		34E1067E09536E8D00EBE478 /* AIConatctListImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIConatctListImagePicker.m; path = Source/AIConatctListImagePicker.m; sourceTree = "<group>"; };
 		34E106A7095371A100EBE478 /* AIContactListStatusMenuCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactListStatusMenuCell.h; path = Source/AIContactListStatusMenuCell.h; sourceTree = "<group>"; };
 		34E106AE095371E400EBE478 /* AIContactListStatusMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactListStatusMenuCell.m; path = Source/AIContactListStatusMenuCell.m; sourceTree = "<group>"; };
 		34E2A0B907AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAccountNetworkConnectivityPlugin.h; path = Source/ESAccountNetworkConnectivityPlugin.h; sourceTree = "<group>"; };
@@ -5396,9 +5396,9 @@
 			children = (
 				34A489FC06F6436D002C7C5F /* AIStandardListWindowController.h */,
 				34A489FB06F6436D002C7C5F /* AIStandardListWindowController.m */,
+				34D0F9C80954E70100DCB678 /* AIContactListImagePicker.h */,
+				34D0F9C90954E70100DCB678 /* AIContactListImagePicker.m */,
 				34A48A0B06F64376002C7C5F /* ContactListWindow.nib */,
-				34E1067D09536E8D00EBE478 /* AIConatctListImagePicker.h */,
-				34E1067E09536E8D00EBE478 /* AIConatctListImagePicker.m */,
 				34E1067709536E5300EBE478 /* AIContactListStatusMenuView.h */,
 				34E1067809536E5300EBE478 /* AIContactListStatusMenuView.m */,
 				34E106A7095371A100EBE478 /* AIContactListStatusMenuCell.h */,
@@ -6486,8 +6486,8 @@
 				63EA6408094BB9A9009C8453 /* AIStatusIconPreviewController.h in Headers */,
 				34E104EC0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h in Headers */,
 				34E1067909536E5300EBE478 /* AIContactListStatusMenuView.h in Headers */,
-				34E1067F09536E8D00EBE478 /* AIConatctListImagePicker.h in Headers */,
 				34E106A9095371A100EBE478 /* AIContactListStatusMenuCell.h in Headers */,
+				34D0F9CA0954E70100DCB678 /* AIContactListImagePicker.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8087,8 +8087,8 @@
 				63EA6409094BB9A9009C8453 /* AIStatusIconPreviewController.m in Sources */,
 				34E104ED0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m in Sources */,
 				34E1067A09536E5300EBE478 /* AIContactListStatusMenuView.m in Sources */,
-				34E1068009536E8D00EBE478 /* AIConatctListImagePicker.m in Sources */,
 				34E106AF095371E400EBE478 /* AIContactListStatusMenuCell.m in Sources */,
+				34D0F9CB0954E70100DCB678 /* AIContactListImagePicker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
