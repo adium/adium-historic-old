@@ -677,30 +677,33 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 - (void)slideWindowOnScreen
 {
-	NSWindow *window = [self window];
-	NSRect newWindowFrame = [window frame];
-	
-	newWindowFrame = AIRectByMovingRect_intoRect_(newWindowFrame, screenSlideBoundaryRect);
-	
-	if([NSApp isActive])
-		[window orderFront:nil]; 
-	else
-		[window makeKeyAndOrderFront:nil];
-	
-	[window setFrame:newWindowFrame display:NO animate:YES];
-	
-	// be lenient; the window is now within the screenSlideBoundaryRect, but it isn't
-	// necessarily on screen
-	if ([window screen] == nil)
-	{
-		[window constrainFrameRect:newWindowFrame toScreen:[[NSScreen screens] objectAtIndex:0]];
-	}
-		
-	windowSlidOffScreenEdgeMask = 0;
+	NSWindow	*window = [self window];
+	NSRect		windowFrame = [window frame];
+	NSRect		newWindowFrame = windowFrame;
 
-	// when the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
-	// it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
-	[contactListController contactListDesiredSizeChanged];
+	newWindowFrame = AIRectByMovingRect_intoRect_(newWindowFrame, screenSlideBoundaryRect);
+
+	if (!NSEqualRects(windowFrame, newWindowFrame)) {
+		if([NSApp isActive])
+			[window orderFront:nil]; 
+		else
+			[window makeKeyAndOrderFront:nil];
+		
+		[window setFrame:newWindowFrame display:NO animate:YES];
+		
+		// be lenient; the window is now within the screenSlideBoundaryRect, but it isn't
+		// necessarily on screen
+		if ([window screen] == nil)
+		{
+			[window constrainFrameRect:newWindowFrame toScreen:[[NSScreen screens] objectAtIndex:0]];
+		}
+		
+		windowSlidOffScreenEdgeMask = 0;
+		
+		// when the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
+		// it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
+		[contactListController contactListDesiredSizeChanged];
+	}
 }
 
 - (void)setPreventHiding:(BOOL)newPreventHiding {
