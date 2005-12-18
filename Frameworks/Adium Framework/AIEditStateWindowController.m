@@ -21,6 +21,7 @@
 #import "AIPreferenceController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AIStringFormatter.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
@@ -215,6 +216,15 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[intFormatter release];
 	*/
 
+	NSMutableCharacterSet *noNewlinesCharacterSet;
+	noNewlinesCharacterSet = [[[NSCharacterSet characterSetWithCharactersInString:@""] invertedSet] mutableCopy];
+	[noNewlinesCharacterSet removeCharactersInString:@"\n\r"];
+	[textField_title setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:noNewlinesCharacterSet
+																				length:0 /* No length limit */
+																		 caseSensitive:NO
+																		  errorMessage:nil]];
+	[noNewlinesCharacterSet release];
+	
 	if (!showSaveCheckbox) {
 		[checkBox_save setHidden:YES];
 	}
