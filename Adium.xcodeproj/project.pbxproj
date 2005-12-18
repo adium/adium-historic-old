@@ -2555,7 +2555,6 @@
 		34D836F307CBF960006466F2 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
 		34D836FF07CBF979006466F2 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = /System/Library/Frameworks/AudioUnit.framework; sourceTree = "<absolute>"; };
 		34D8370007CBF97A006466F2 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
-		34D8379307CC3222006466F2 /* AIUtilities.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AIUtilities.framework; path = "Frameworks/AIUtilities Framework/build/AIUtilities.framework"; sourceTree = "<group>"; };
 		34DFF46007A5EABF00B92233 /* ESSecureMessagingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSecureMessagingPlugin.h; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.h"; sourceTree = "<group>"; };
 		34DFF46107A5EABF00B92233 /* ESSecureMessagingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSecureMessagingPlugin.m; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.m"; sourceTree = "<group>"; };
 		34DFF52607A62EB000B92233 /* Lock_Unlocked State.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Lock_Unlocked State.png"; path = "Plugins/Secure Messaging/Lock_Unlocked State.png"; sourceTree = "<group>"; };
@@ -3457,7 +3456,6 @@
 			children = (
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
 				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
-				34D8379307CC3222006466F2 /* AIUtilities.framework */,
 				3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */,
 				348E5ACA06D2A74C004C051C /* AddressBook.framework */,
 				F5819CE9032124CE01A8010A /* AppKit.framework */,
