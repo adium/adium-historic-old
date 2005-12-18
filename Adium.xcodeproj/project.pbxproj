@@ -622,6 +622,7 @@
 		34CF9DF5085B8B7900D87E37 /* ESiTunesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CF9DF3085B8B7900D87E37 /* ESiTunesPlugin.m */; };
 		34D0F9CA0954E70100DCB678 /* AIContactListImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D0F9C80954E70100DCB678 /* AIContactListImagePicker.h */; };
 		34D0F9CB0954E70100DCB678 /* AIContactListImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D0F9C90954E70100DCB678 /* AIContactListImagePicker.m */; };
+		34D0FA450955662E00DCB678 /* NSIPIconPopUp.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D0FA440955662E00DCB678 /* NSIPIconPopUp.h */; };
 		34D1897F076114C00075A380 /* AILocalizationButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D1897D076114C00075A380 /* AILocalizationButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34D18980076114C00075A380 /* AILocalizationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D1897E076114C00075A380 /* AILocalizationButton.m */; };
 		34D189B2076131850075A380 /* AILocalizationAssistance.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D189B1076131850075A380 /* AILocalizationAssistance.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2478,6 +2479,7 @@
 		34CF9DF3085B8B7900D87E37 /* ESiTunesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESiTunesPlugin.m; path = Source/ESiTunesPlugin.m; sourceTree = "<group>"; };
 		34D0F9C80954E70100DCB678 /* AIContactListImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactListImagePicker.h; path = Source/AIContactListImagePicker.h; sourceTree = "<group>"; };
 		34D0F9C90954E70100DCB678 /* AIContactListImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactListImagePicker.m; path = Source/AIContactListImagePicker.m; sourceTree = "<group>"; };
+		34D0FA440955662E00DCB678 /* NSIPIconPopUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSIPIconPopUp.h; path = Source/NSIPIconPopUp.h; sourceTree = "<group>"; };
 		34D188DB0760F0F50075A380 /* AILocalizationControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationControl.m; path = "Frameworks/Adium Framework/AILocalizationControl.m"; sourceTree = "<group>"; };
 		34D1897D076114C00075A380 /* AILocalizationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButton.h; path = "Frameworks/Adium Framework/AILocalizationButton.h"; sourceTree = "<group>"; };
 		34D1897E076114C00075A380 /* AILocalizationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButton.m; path = "Frameworks/Adium Framework/AILocalizationButton.m"; sourceTree = "<group>"; };
@@ -5403,6 +5405,7 @@
 				34E1067809536E5300EBE478 /* AIContactListStatusMenuView.m */,
 				34E106A7095371A100EBE478 /* AIContactListStatusMenuCell.h */,
 				34E106AE095371E400EBE478 /* AIContactListStatusMenuCell.m */,
+				34D0FA440955662E00DCB678 /* NSIPIconPopUp.h */,
 			);
 			name = "Standard Window";
 			sourceTree = "<group>";
@@ -6488,6 +6491,7 @@
 				34E1067909536E5300EBE478 /* AIContactListStatusMenuView.h in Headers */,
 				34E106A9095371A100EBE478 /* AIContactListStatusMenuCell.h in Headers */,
 				34D0F9CA0954E70100DCB678 /* AIContactListImagePicker.h in Headers */,
+				34D0FA450955662E00DCB678 /* NSIPIconPopUp.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10186,6 +10190,7 @@
 		DADE8E3B085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -10202,6 +10207,8 @@
 				);
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
+				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_STYLE = "non-global";
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = YES;
 			};
