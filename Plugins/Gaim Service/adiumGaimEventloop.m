@@ -58,7 +58,7 @@ guint adium_source_remove(guint tag) {
 			CFRunLoopTimerInvalidate(sourceInfo->timer);
 			CFRelease(sourceInfo->timer);
 			
-		} else {
+		} else if (sourceInfo->rls != NULL) {
 			//Got a file handle; invalidate and release the source and the socket
 			CFRunLoopSourceInvalidate(sourceInfo->rls);
 			CFRelease(sourceInfo->rls);
