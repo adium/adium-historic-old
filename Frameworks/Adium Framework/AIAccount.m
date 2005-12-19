@@ -527,7 +527,7 @@
 - (NSImage *)userIcon
 {
 	NSData	*iconData = [self userIconData];
-	return iconData ? [[[NSImage alloc] initWithData:iconData] autorelease] : nil;
+	return (iconData ? [[[NSImage alloc] initWithData:iconData] autorelease] : nil);
 }
 
 
