@@ -13,7 +13,7 @@
  * An <tt>AIDelayedTextField</tt> is identical to an NSTextField except, instead of sending its target an action only when enter is pressed or the field loses focus, it sends the action after a specified delay without changes.  This allows an intermediate behavior between changing every time the text chagnes (via the textDidChange: notification) and changing only when editing is complete.
  */
 @interface AIDelayedTextField : NSTextField {
-	NSTimer *delayedChangesTimer;
+	BOOL	pendingAction;
 	float   delayInterval;
 }
 
