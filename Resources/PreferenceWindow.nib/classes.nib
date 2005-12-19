@@ -10,11 +10,9 @@
         {CLASS = AIModularPaneCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {restoreDefaults = id; }; 
             CLASS = AIPreferenceWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_restoreDefaults" = NSButton; 
                 "scrollView_advanced" = AIAutoScrollView; 
                 "tabView_category" = NSTabView; 
                 "tableView_advanced" = NSTableView; 
@@ -25,6 +23,7 @@
                 "view_FileTransfer" = AIModularPaneCategoryView; 
                 "view_General" = AIModularPaneCategoryView; 
                 "view_Messages" = AIModularPaneCategoryView; 
+                "view_Personal" = AIModularPaneCategoryView; 
                 "view_Status" = AIModularPaneCategoryView; 
             }; 
             SUPERCLASS = AIWindowController; 
