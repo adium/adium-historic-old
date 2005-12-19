@@ -77,5 +77,6 @@
 	<string>SMContactListShowBehaviorPlugin</string>
 	<string>ESiTunesPlugin</string>
 	<string>AIDockBadger</string>
+	<string>ESPersonalPreferencesPlugin</string>
 </array>
 </plist>
