@@ -183,26 +183,31 @@
  */
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	NSEvent *nextEvent;
+	if ([self isEnabled]) {
+		NSEvent *nextEvent;
+		
+		//Wait for the next event
+		nextEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)
+											   untilDate:[NSDate distantFuture]
+												  inMode:NSEventTrackingRunLoopMode
+												 dequeue:NO];
+		
+		mouseDownPos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+		
+		/* If the user starts dragging, don't call mouse down as we won't receive mouse dragged events, as it seems that
+			* NSImageView does some sort of event loop modification in response to a click. We didn't dequeue the event, so
+			* we don't have to handle it ourselves -- instead, the event loop will handle it after this invocation is complete. 
+			*/
+		if ([nextEvent type] != NSLeftMouseDragged) {
+			[super mouseDown:theEvent];   
+		}
+		
+		if ([theEvent clickCount] == 2) {
+			[self showPickerController];
+		}
 
-	//Wait for the next event
-	nextEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)
-										   untilDate:[NSDate distantFuture]
-											  inMode:NSEventTrackingRunLoopMode
-											 dequeue:NO];
-
-	mouseDownPos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-
-	/* If the user starts dragging, don't call mouse down as we won't receive mouse dragged events, as it seems that
-	 * NSImageView does some sort of event loop modification in response to a click. We didn't dequeue the event, so
-	 * we don't have to handle it ourselves -- instead, the event loop will handle it after this invocation is complete. 
-	 */
-	if ([nextEvent type] != NSLeftMouseDragged) {
+	} else {
 		[super mouseDown:theEvent];   
-	}
-
-	if ([theEvent clickCount] == 2) {
-		[self showPickerController];
 	}
 }
 
