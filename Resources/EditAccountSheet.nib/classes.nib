@@ -25,16 +25,16 @@
             SUPERCLASS = NSView; 
         }, 
         {
-            ACTIONS = {cancel = id; okay = id; }; 
+            ACTIONS = {cancel = id; changedIconSetting = id; okay = id; }; 
             CLASS = AIEditAccountWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_OK" = NSButton; 
                 "button_cancel" = NSButton; 
                 "button_chooseIcon" = NSButton; 
-                "checkBox_autoConnect" = NSButton; 
-                "imageView_userIcon" = ESImageViewWithImagePicker; 
-                "image_serviceIcon" = NSImageView; 
+                "imageView_userIcon" = AIImageViewWithImagePicker; 
+                "matrix_userIcon" = NSMatrix; 
+                notifyTarget = id; 
                 "tabView_auxiliary" = NSTabView; 
                 "textField_accountDescription" = NSTextField; 
                 "textField_serviceName" = NSTextField; 
@@ -70,7 +70,8 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }
+        {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }
