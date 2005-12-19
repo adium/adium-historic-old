@@ -34,7 +34,6 @@
 
 - (id)_init
 {
-	delayedChangesTimer = nil;
 	delayInterval = 0.5;
 	
 	return self;
@@ -51,58 +50,35 @@
 
 - (void)fireImmediately
 {
-    if (delayedChangesTimer) {
-        if ([delayedChangesTimer isValid]) {
-            [delayedChangesTimer invalidate]; 
-        }
-        [delayedChangesTimer release]; delayedChangesTimer = nil;
-		
-		//Perform the timer action immediately
-		[self _delayedAction:nil];
-    }	
+	[NSObject cancelPreviousPerformRequestsWithTarget:[self target]
+											 selector:[self action]
+											   object:self];
+	
+	[[self target] performSelector:[self action] 
+						withObject:self];
 }
 
 - (void)textDidChange:(NSNotification *)notification
 {
 	[super textDidChange:notification];
 	
-    if (delayedChangesTimer) {
-        if ([delayedChangesTimer isValid]) {
-            [delayedChangesTimer invalidate]; 
-        }
-        [delayedChangesTimer release]; delayedChangesTimer = nil;
-    }
-    
-    delayedChangesTimer = [[NSTimer scheduledTimerWithTimeInterval:delayInterval
-                                                            target:self
-                                                          selector:@selector(_delayedAction:) 
-                                                          userInfo:nil 
-														   repeats:NO] retain];
+	[NSObject cancelPreviousPerformRequestsWithTarget:[self target]
+											 selector:[self action]
+											   object:self];
+	
+	[[self target] performSelector:[self action] 
+						withObject:self
+						afterDelay:delayInterval];
 }
 
 - (void)textDidEndEditing:(NSNotification *)notification
 {
 	//Don't trigger our delayed changes timer after the field ends editing.
-	if (delayedChangesTimer) {
-        if ([delayedChangesTimer isValid]) {
-            [delayedChangesTimer invalidate]; 
-        }
-        [delayedChangesTimer release]; delayedChangesTimer = nil;
-    }
+	[NSObject cancelPreviousPerformRequestsWithTarget:[self target]
+											 selector:[self action]
+											   object:self];
 	
 	[super textDidEndEditing:notification];
-}
-
-- (void)_delayedAction:(NSTimer *)timer
-{
-	[[self target] performSelector:[self action] withObject:self];
-
-    if (delayedChangesTimer) {
-        if ([delayedChangesTimer isValid]) {
-            [delayedChangesTimer invalidate]; 
-        }
-        [delayedChangesTimer release]; delayedChangesTimer = nil;
-    }
 }
 
 @end
