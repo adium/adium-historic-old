@@ -46,6 +46,7 @@ Adium, Copyright 2001-2005, Adam Iser
 
 - (void)_initImageGridView
 {
+	/*
 	NSWindow *window = [self window];
 	if (window) {
 		saved_windowAcceptsMouseMovedEvents = [window acceptsMouseMovedEvents];
@@ -61,7 +62,8 @@ Adium, Copyright 2001-2005, Adam Iser
 	       forKeyPath:@"superview"
 	          options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
 	          context:NULL];
-
+*/
+	
 	cell = [[AIScaledImageCell alloc] init];
 	imageSize = NSMakeSize(64,64);
 	selectedIndex = -1;
@@ -394,8 +396,10 @@ Adium, Copyright 2001-2005, Adam Iser
 {
 	isTracking = YES;
 	NSWindow *window = [self window];
+	
 	//don't need to be notified when we change it ourselves...
-	[window removeObserver:self forKeyPath:@"acceptsMouseMovedEvents"];
+	//[window removeObserver:self forKeyPath:@"acceptsMouseMovedEvents"];
+	
 	[window setAcceptsMouseMovedEvents:YES];
 	[window makeFirstResponder:self];
 }
@@ -405,14 +409,18 @@ Adium, Copyright 2001-2005, Adam Iser
 {
 	isTracking = NO;
 	[self _setHoveredIndex:-1];
-
 	NSWindow *window = [self window];
+
+	[window setAcceptsMouseMovedEvents:NO];
+
+	/*
 	[window setAcceptsMouseMovedEvents:saved_windowAcceptsMouseMovedEvents];
 	//sign up to receive notifications again.
 	[window addObserver:self
          forKeyPath:@"acceptsMouseMovedEvents"
             options:NSKeyValueObservingOptionNew
             context:NULL];
+	 */
 }
 
 //Cursor moved, inform our delegate if a new cell is being hovered
