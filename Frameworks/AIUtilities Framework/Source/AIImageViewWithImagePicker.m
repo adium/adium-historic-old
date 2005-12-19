@@ -231,6 +231,8 @@
  */
 - (void)mouseDragged:(NSEvent *)theEvent
 {
+	if (![self image]) return;
+
 	// Work out if the mouse has been dragged far enough - it stops accidental drags
 	NSPoint mousePos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	float dx = mousePos.x-mouseDownPos.x;
