@@ -19,6 +19,32 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSTableView; 
         }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {CLASS = AIDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
+        {
+            ACTIONS = {showImagePicker = id; }; 
+            CLASS = AIImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
+        {
+            CLASS = AILocalizationButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {
+            ACTIONS = {pasteAsRichText = id; scrollPageDown = id; scrollPageUp = id; }; 
+            CLASS = AIMessageEntryTextView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AISendingTextView; 
+        }, 
         {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIModularPane; 
@@ -31,6 +57,26 @@
         {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
+        {
+            ACTIONS = {sendContent = id; }; 
+            CLASS = AISendingTextView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {target = id; }; 
+            SUPERCLASS = NSTextView; 
+        }, 
+        {
+            CLASS = ESPersonalPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_chooseIcon" = NSButton; 
+                "imageView_userIcon" = AIImageViewWithImagePicker; 
+                "matrix_userIcon" = NSMatrix; 
+                "textField_alias" = AIDelayedTextField; 
+                "textField_displayName" = AIDelayedTextField; 
+                "textView_profile" = NSTextView; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
