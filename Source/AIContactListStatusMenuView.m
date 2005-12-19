@@ -21,6 +21,8 @@
 												 name:NSViewFrameDidChangeNotification
 											   object:self];
 	[self setPostsFrameChangedNotifications:YES];
+	
+	trackingTag = -1;
 	[self resetCursorRects];			
 }
 
@@ -81,7 +83,7 @@
 		if ([self isEnabled]) {
 			[self highlight:YES];
 			
-			[self display];
+			[self setNeedsDisplay:YES];
 
 			//2 pt down, 1 pt to the left.
 			NSPoint point = [self convertPoint:[self bounds].origin toView:nil];
@@ -189,7 +191,7 @@
 
 		NSPoint	localPoint = [self convertPoint:[[self window] convertScreenToBase:[NSEvent mouseLocation]]
 									   fromView:[self superview]];
-		BOOL	mouseInside = NSPointInRect(localPoint, myFrame);
+		BOOL	mouseInside = NSPointInRect(localPoint, trackRect);
 
 		trackingTag = [self addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseInside];
 		if (mouseInside) [self mouseEntered:nil];
@@ -200,7 +202,7 @@
 - (void)mouseEntered:(NSEvent *)theEvent
 {
 	[[self cell] setHovered:YES];
-	[self display];
+	[self setNeedsDisplay:YES];
 
 	[super mouseEntered:theEvent];
 }
@@ -210,7 +212,7 @@
 - (void)mouseExited:(NSEvent *)theEvent
 {
 	[[self cell] setHovered:NO];
-	[self display];
+	[self setNeedsDisplay:YES];
 	
 	[super mouseExited:theEvent];
 }
