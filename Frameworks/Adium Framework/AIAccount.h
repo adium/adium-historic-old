@@ -26,6 +26,9 @@
 #define KEY_ACCOUNT_CHECK_MAIL		@"Check Mail"
 #define KEY_ENABLED					@"Enabled"
 
+#define KEY_DEFAULT_USER_ICON		@"Default User Icon"
+#define KEY_USE_USER_ICON			@"Use User Icon"
+
 #define	Adium_RequestImmediateDynamicContentUpdate	@"Adium_RequestImmediateDynamicContentUpdate"
 
 typedef enum {
