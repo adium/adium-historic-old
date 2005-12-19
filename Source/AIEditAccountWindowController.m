@@ -39,6 +39,7 @@
 - (void)_removeCustomViewAndTabs;
 - (void)_localizeTabViewItemLabels;
 - (void)saveConfiguration;
+- (void)configureControlDimming;
 @end
 
 /*!
@@ -114,12 +115,23 @@
 	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 
 	//User icon
+	if ([account preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES]) {
+		//If this account has a icon set directly on it, then it has its own icon
+		[matrix_userIcon selectCellWithTag:1];
+
+	} else {
+		//Otherwise it is using the global icon
+		[matrix_userIcon selectCellWithTag:0];
+	}
+
 	[imageView_userIcon setImage:[account userIcon]];
 
 	//Insert the custom controls for this account
 	[self _removeCustomViewAndTabs];
 	[self _addCustomViewAndTabsForAccount:account];
 	[self _localizeTabViewItemLabels];
+	
+	[self configureControlDimming];
 }
 
 /*!
@@ -137,6 +149,22 @@
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     [sheet orderOut:nil];
+}
+
+- (void)configureControlDimming
+{
+	BOOL enableUserIcon = ([[matrix_userIcon selectedCell] tag] == 1);
+	
+	[imageView_userIcon setEnabled:enableUserIcon];
+	[button_chooseIcon setEnabled:enableUserIcon];
+}
+
+/*!
+ * @brief The user changed the selection in the icon setting matrix which determines availability of the icon controls
+ */
+- (IBAction)changedIconSetting:(id)sender
+{
+	[self configureControlDimming];
 }
 
 /*!
@@ -172,6 +200,13 @@
  */
 - (void)saveConfiguration
 {
+	BOOL enableUserIcon = ([[matrix_userIcon selectedCell] tag] == 1);
+
+	if (!enableUserIcon) {
+		[userIconData release]; userIconData = nil;
+		didDeleteUserIcon = YES;
+	}
+
 	/* User icon - save if we have data or we deleted
 	 * (so if we don't have data that's the desired thing to set as the pref) */
 	if (userIconData || didDeleteUserIcon) {
@@ -314,6 +349,9 @@
 
 	//User icon - restore to the default icon
 	[imageView_userIcon setImage:[account userIcon]];
+	
+	//We're now using the global icon
+	[matrix_userIcon selectCellWithTag:0];
 }
 
 @end

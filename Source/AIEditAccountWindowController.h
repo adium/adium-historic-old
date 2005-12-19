@@ -20,6 +20,7 @@
 
 @interface AIEditAccountWindowController : AIWindowController {
 	//Account preferences
+	IBOutlet	NSMatrix					*matrix_userIcon;
 	IBOutlet	NSButton					*button_chooseIcon;
 	IBOutlet	NSTextField					*textField_accountDescription;
 	IBOutlet	NSTextField					*textField_serviceName;
@@ -49,6 +50,7 @@
 + (void)editAccount:(AIAccount *)account onWindow:(id)parentWindow notifyingTarget:(id)inTarget;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
+- (IBAction)changedIconSetting:(id)sender;
 
 @end
 
