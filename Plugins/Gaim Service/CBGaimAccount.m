@@ -1780,7 +1780,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountProfileTo:)];
 			
 		} else if ([key isEqualToString:KEY_USER_ICON]) {
-			NSData  *data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];			
+			NSData  *data = [self userIconData];
 
 			[self setAccountUserImageData:data];
 
