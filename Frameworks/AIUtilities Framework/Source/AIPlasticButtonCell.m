@@ -31,14 +31,19 @@
 - (id)copyWithZone:(NSZone *)zone
 {
 	AIPlasticButtonCell	*newCell = [[self class] allocWithZone:zone];
-	NSCellType type = [self type];
-	if(type == NSImageCellType)
-		newCell = [newCell initImageCell:[self image]];
-	else if(type == NSTextCellType)
-		newCell = [newCell initTextCell:[self stringValue]];
-	else
-		newCell = [newCell init]; //and hope for the best
 
+	switch ([self type]) {
+		case NSImageCellType:
+			newCell = [newCell initImageCell:[self image]];
+			break;
+		case NSTextCellType:
+			newCell = [newCell initTextCell:[self stringValue]];
+			break;
+		default:
+			newCell = [newCell init]; //and hope for the best
+			break;
+	}
+	
 	[newCell setMenu:[[[self menu] copy] autorelease]];
 	[newCell->plasticCaps retain];
 	[newCell->plasticMiddle retain];
