@@ -39,16 +39,6 @@
 #define CONTACT_ADDED_ERROR_TITLE		AILocalizedString(@"Error", nil)
 #define CONTACT_ADDED_ERROR_Message		AILocalizedString(@"An error had occurred while adding %@ to the Address Book.", nil)
 
-#warning The use of these uniqueServiceIDs will fail if joscar is our OSCAR implementation
-#define AIMServiceUniqueID		@"libgaim-oscar-AIM"
-#define ICQServiceUniqueID		@"libgaim-oscar-ICQ"
-#define DotMacServiceUniqueID	@"libgaim-oscar-Mac"
-
-#define MSNServiceUniqueID		@"libgaim-MSN"
-#define DotMacServiceUniqueID	@"libgaim-oscar-Mac"
-#define JabberServiceUniqueID	@"libgaim-Jabber"
-#define YahooServiceUniqueID	@"libgaim-Yahoo!"
-
 @interface ESAddressBookIntegrationPlugin(PRIVATE)
 - (void)updateAllContacts;
 - (void)updateSelfIncludingIcon:(BOOL)includeIcon;
@@ -512,17 +502,18 @@ NSString* serviceIDForJabberUID(NSString *UID);
 + (AIService *)serviceFromProperty:(NSString *)property
 {
 	AIService	*result = nil;
+	AIAccountController *accountController = [[AIObject sharedAdiumInstance] accountController];
 	
 	if ([property isEqualToString:kABAIMInstantProperty])
-		result = [[[AIObject sharedAdiumInstance] accountController] serviceWithUniqueID:AIMServiceUniqueID];
+		result = [accountController firstServiceWithServiceID:@"AIM"];
 	else if ([property isEqualToString:kABICQInstantProperty])
-		result = [[[AIObject sharedAdiumInstance] accountController] serviceWithUniqueID:ICQServiceUniqueID];
+		result = [accountController firstServiceWithServiceID:@"ICQ"];
 	else if ([property isEqualToString:kABMSNInstantProperty])
-		result = [[[AIObject sharedAdiumInstance] accountController] serviceWithUniqueID:MSNServiceUniqueID];
+		result = [accountController firstServiceWithServiceID:@"MSN"];
 	else if ([property isEqualToString:kABJabberInstantProperty])
-		result = [[[AIObject sharedAdiumInstance] accountController] serviceWithUniqueID:JabberServiceUniqueID];
+		result = [accountController firstServiceWithServiceID:@"Jabber"];
 	else if ([property isEqualToString:kABYahooInstantProperty])
-		result = [[[AIObject sharedAdiumInstance] accountController] serviceWithUniqueID:YahooServiceUniqueID];
+		result = [accountController firstServiceWithServiceID:@"Yahoo!"];
 
 	return result;
 }
@@ -794,7 +785,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 			email = [emails valueAtIndex:i];
 			if ([email hasSuffix:@"@mac.com"]) {
 				//Retrieve all appropriate contacts
-				NSSet	*contacts = [[adium contactController] allContactsWithService:[[adium accountController] serviceWithUniqueID:DotMacServiceUniqueID]
+				NSSet	*contacts = [[adium contactController] allContactsWithService:[[adium accountController] firstServiceWithServiceID:@"Mac"]
 																				  UID:email
 																		 existingOnly:YES];
 
