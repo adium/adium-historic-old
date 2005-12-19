@@ -552,7 +552,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 {
 	if (tag == meTag) {
 		[[adium preferenceController] setPreference:inData
-											 forKey:KEY_USER_ICON 
+											 forKey:KEY_DEFAULT_USER_ICON 
 											  group:GROUP_ACCOUNT_STATUS];
 		meTag = -1;
 		
@@ -969,44 +969,24 @@ NSString* serviceIDForJabberUID(NSString *UID);
 				
 				myDisplayName = [self nameForPerson:me phonetic:&myPhonetic];
 				
-				//Check for each service the address book supports
-				servicesEnumerator = [[serviceDict allKeys] objectEnumerator];				
-				while ((serviceID = [servicesEnumerator nextObject])) {
-					NSString		*addressBookKey = [serviceDict objectForKey:serviceID];
-					ABMultiValue	*names = [me valueForProperty:addressBookKey];
+				NSEnumerator	*accountsArray = [[[adium accountController] accounts] objectEnumerator];
+				AIAccount		*account;
+				
+				while ((account = [accountsArray nextObject])) {
+					[[account displayArrayForKey:@"Display Name"] setObject:myDisplayName
+																  withOwner:self
+															  priorityLevel:Low_Priority];
 					
-					if ([serviceID isEqualToString:@"AIM"] || [serviceID isEqualToString:@"ICQ"]) {
-						serviceID = @"AIM-compatible";
-					}
-					
-					NSEnumerator	*accountsArray = [[[adium accountController] accounts] objectEnumerator];
-					AIAccount		*account;
-					
-					//Look at each account on this service, searching for one a matching UID
-					while ((account = [accountsArray nextObject])) {
-						
-						if ([[[account service] serviceClass] isEqualToString:serviceID]) {
-							//An ABPerson may have multiple names on a given service; iterate through them
-							NSString		*accountUID = [[account UID] compactedString];
-							int				nameCount = [names count];
-							int				i;
-							
-							for (i=0 ; i<nameCount ; i++) {
-								if ([accountUID isEqualToString:[[names valueAtIndex:i] compactedString]]) {
-									[[account displayArrayForKey:@"Display Name"] setObject:myDisplayName
-																				  withOwner:self
-																			  priorityLevel:Low_Priority];
-									
-									if (myPhonetic) {
-										[[account displayArrayForKey:@"Phonetic Name"] setObject:myPhonetic
-																					   withOwner:self
-																				   priorityLevel:Low_Priority];										
-									}									
-								}
-							}
-						}
-					}
+					if (myPhonetic) {
+						[[account displayArrayForKey:@"Phonetic Name"] setObject:myPhonetic
+																	   withOwner:self
+																   priorityLevel:Low_Priority];										
+					}									
 				}
+				
+				[[adium preferenceController] setPreference:myDisplayName
+													 forKey:@"DefaultLocalAccountAlias"
+													  group:GROUP_ACCOUNT_STATUS];
 			}
         }
 	AI_HANDLER
