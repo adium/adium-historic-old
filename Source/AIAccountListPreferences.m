@@ -47,7 +47,7 @@
 @implementation AIAccountListPreferences
 
 /*!
-* @brief Preference pane properties
+ * @brief Preference pane properties
  */
 - (PREFERENCE_CATEGORY)category{
     return AIPref_Accounts;
