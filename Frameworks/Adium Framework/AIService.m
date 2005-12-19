@@ -115,7 +115,7 @@
  *
  * Subclass to return a string which identifies this service.  If multiple service classes are supporting the same
  * service they should have the same serviceID.  Not for user-display.
- * Examples: "aim", "msn", "jabber", "icq", ".mac"
+ * Examples: "AIM", "MSN", "Jabber", "ICQ", "Mac"
  * @return NSString service ID
  */
 - (NSString *)serviceID{
@@ -129,7 +129,7 @@
  * are all part of a common service class.  For instance, AIM, ICQ, and .Mac are all part of the "AIM" service class.
  * For many services, the serviceClass will be identical to the serviceID.  Not for user-display.
  * Service classes may change, do not use them for any permenant storage (logs, preferences, etc).
- * Examples: "aim-compatible", "jabber", "msn", "icq"
+ * Examples: "AIM-compatible", "Jabber", "MSN"
  * @return NSString service class
  */
 - (NSString *)serviceClass{
@@ -154,7 +154,7 @@
  * Human readable, long description of this service
  * If there are multiple classes available for the same service, this description should briefly show the difference
  * between the implementations.  This value is used in the account preferences service menu.
- * Examples: "Jabber", "MSN", "AIM (Oscar)", "AIM (TOC)", ".Mac"
+ * Examples: "Jabber", "MSN", "AOL Instant Messenger", ".Mac"
  * @return NSString long description
  */
 - (NSString *)longDescription{
