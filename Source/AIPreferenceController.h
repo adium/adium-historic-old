@@ -29,6 +29,7 @@
 typedef enum {
 	AIPref_Accounts = 0,
 	AIPref_General,
+	AIPref_Personal,
 	AIPref_Appearance,
     AIPref_Messages,
 	AIPref_Status,
