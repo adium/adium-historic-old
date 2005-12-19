@@ -156,12 +156,21 @@
 /*!
  * @brief User icon
  *
- * Convenience method for accessing the user icon (from the status preferences) for this account.
+ * Method for accessing the user icon data for this account. This should always be used to retrieve the account's image data.
  * @return NSData for this account's user icon
  */
 - (NSData *)userIconData
 {
-	return [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];	
+	NSData	*userIconData = nil;
+
+	if ([[self preferenceForKey:KEY_USE_USER_ICON group:GROUP_ACCOUNT_STATUS] boolValue]) {
+		userIconData = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
+		if (!userIconData) {
+			userIconData = [self preferenceForKey:KEY_DEFAULT_USER_ICON group:GROUP_ACCOUNT_STATUS];
+		}
+	}
+
+	return userIconData;
 }
 
 /*!
@@ -332,6 +341,17 @@
 	delayedUpdateStatusTimer = nil;
 }
 
+- (void)updateLocalDisplayNameTo:(NSString *)displayName
+{
+	if ([displayName length] == 0) displayName = nil;
+	
+	[[self displayArrayForKey:@"Display Name"] setObject:displayName
+											   withOwner:self];
+	//notify
+	[[adium contactController] listObjectAttributesChanged:self
+											  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
+}
+
 /*!
  * @brief Handle common account status updates
  *
@@ -384,17 +404,22 @@
 		}
 		
 	} else if ([key isEqualToString:@"FullNameAttr"]) {
-		//Update the display name for this account
-		NSString	*displayName = [[[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
-		if ([displayName length] == 0) displayName = nil;
-		
-		[[self displayArrayForKey:@"Display Name"] setObject:displayName
-												   withOwner:self];
-		//notify
-		[[adium contactController] listObjectAttributesChanged:self
-												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
+		if (![self preferenceForKey:@"LocalAccountAlias" group:GROUP_ACCOUNT_STATUS]) {
+			//Update the display name for this account if we don't have a local account alias
+			NSString	*displayName = [[[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
+			[self updateLocalDisplayNameTo:displayName];
+		}
 
-    } else if ([key isEqualToString:@"FormattedUID"]) {
+    } else if ([key isEqualToString:@"LocalAccountAlias"]) {
+		NSString	*localAlias = [self preferenceForKey:@"LocalAccountAlias" group:GROUP_ACCOUNT_STATUS];
+		if (localAlias) {
+			[self updateLocalDisplayNameTo:localAlias];
+		} else {
+			//Call with FullNameAttr to use that display name if it is set (or to clear if it is not)
+			[self updateCommonStatusForKey:@"FullNameAttr"];
+		}
+
+	} else if ([key isEqualToString:@"FormattedUID"]) {
 		//Transfer formatted UID to status dictionary
 		[self setStatusObject:[self preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS]
 					   forKey:@"FormattedUID"
