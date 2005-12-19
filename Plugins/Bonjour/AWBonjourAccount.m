@@ -411,7 +411,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
             [self setAccountIdleTo:idleSince];
 			
         }else if ([key isEqualToString:KEY_USER_ICON]) {
-			NSData  *data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
+			NSData  *data = [self userIconData];
 
 			[self setAccountUserImage:(data ? [[[NSImage alloc] initWithData:data] autorelease] : nil)];
 		}
