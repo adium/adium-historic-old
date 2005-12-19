@@ -24,6 +24,7 @@
 
 	IBOutlet	AIModularPaneCategoryView	*view_Accounts;
 	IBOutlet	AIModularPaneCategoryView	*view_General;
+	IBOutlet	AIModularPaneCategoryView	*view_Personal;
 	IBOutlet	AIModularPaneCategoryView	*view_Appearance;
     IBOutlet	AIModularPaneCategoryView	*view_Messages;
     IBOutlet	AIModularPaneCategoryView	*view_Status;

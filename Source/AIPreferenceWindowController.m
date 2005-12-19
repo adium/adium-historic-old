@@ -156,6 +156,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	viewArray = [[NSArray alloc] initWithObjects:
 		view_Accounts,
 		view_General,
+		view_Personal,
 		view_Appearance,
 		view_Messages,
 		view_Status,
@@ -307,6 +308,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		_identifierToLabelDict = [[NSDictionary alloc] initWithObjectsAndKeys:
 			ACCOUNTS_TITLE,@"accounts",
 			AILocalizedString(@"General",nil),@"general",
+			AILocalizedString(@"Personal",nil),@"personal",
 			AILocalizedString(@"Appearance",nil),@"appearance",
 			AILocalizedString(@"Messages",nil),@"messages",
 			AILocalizedString(@"Status",nil),@"status",
