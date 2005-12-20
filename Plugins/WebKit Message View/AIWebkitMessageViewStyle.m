@@ -884,8 +884,10 @@
 	do{
 		range = [inString rangeOfString:@"%sourceName%"];
 		if(range.location != NSNotFound){
+			NSString * sourceName = [[[chat account] displayName] stringByEscapingForHTML];
+			if(!sourceName) sourceName = @" ";
 			[inString replaceCharactersInRange:range
-									withString:[[[chat account] displayName] stringByEscapingForHTML]];
+									withString:sourceName];
 			
 		}
 	} while(range.location != NSNotFound);
