@@ -25,6 +25,10 @@ Adium, Copyright 2001-2005, Adam Iser
 - (void)_setHoveredIndex:(int)index;
 @end
 
+@interface NSView (UndocumentedGoodness)
+- (id)_setWindow:(NSWindow *)newWindow;
+@end
+
 @implementation AIImageGridView
 
 //Init
@@ -46,7 +50,6 @@ Adium, Copyright 2001-2005, Adam Iser
 
 - (void)_initImageGridView
 {
-	/*
 	NSWindow *window = [self window];
 	if (window) {
 		saved_windowAcceptsMouseMovedEvents = [window acceptsMouseMovedEvents];
@@ -59,11 +62,10 @@ Adium, Copyright 2001-2005, Adam Iser
 	}
 	//when our superview changes, we may have moved to a different window, so we should update our observance of acceptsMouseMovedEvents.
 	[self addObserver:self
-	       forKeyPath:@"superview"
+	       forKeyPath:@"window"
 	          options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
 	          context:NULL];
-*/
-	
+
 	cell = [[AIScaledImageCell alloc] init];
 	imageSize = NSMakeSize(64,64);
 	selectedIndex = -1;
@@ -336,22 +338,47 @@ Adium, Copyright 2001-2005, Adam Iser
 //KVO --------------------------------------------------------------------------------------------------------
 #pragma mark Key-value observing compliance
 
+- (id)_setWindow:(NSView *)view
+{
+	[self willChangeValueForKey:@"window"];
+	id result = [super _setWindow:view];
+	[self  didChangeValueForKey:@"window"];
+	return result;
+}
+
+//KVO wants this.
+- (void)setWindow:(NSView *)view
+{
+	[self _setWindow:view];
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
 	if (object == self) {
-		//our superview has changed. change which window we're observing the value of acceptsMouseMovedEvents of.
-		//XXX if you know a more grammatically-correct way to restate that statement, feel free to correct it. --boredzo
-		[[change objectForKey:NSKeyValueChangeOldKey] removeObserver:self forKeyPath:@"acceptsMouseMovedEvents"];
-		NSWindow *window = [change objectForKey:NSKeyValueChangeNewKey];
+		//we've moved to a different window. observe the value of acceptsMouseMovedEvents on the new one, not the old one.
+		NSNull *null = [NSNull null];
 
-		if (isTracking) {
-			saved_windowAcceptsMouseMovedEvents = [window acceptsMouseMovedEvents];
-			[window setAcceptsMouseMovedEvents:YES];
-		} else {
-			[window addObserver:self
-			         forKeyPath:@"acceptsMouseMovedEvents"
-			            options:NSKeyValueObservingOptionNew
-			            context:NULL];
+		//if the old window is NSNull, there was none (we are being embedded into a view for the first time).
+		//so don't try and remove ourselves as an observer on it.
+		id old = [change objectForKey:NSKeyValueChangeOldKey];
+		if(old != null)
+			[(NSWindow *)old removeObserver:self forKeyPath:@"acceptsMouseMovedEvents"];
+
+		NSWindow *window = nil;
+		id new = [change objectForKey:NSKeyValueChangeNewKey];
+		if(new != null) {
+			window = new;
+
+			if (isTracking) {
+				//since we're tracking, restore to the new window's acceptsMouseMovedEvents instead of the old window's.
+				saved_windowAcceptsMouseMovedEvents = [window acceptsMouseMovedEvents];
+				[window setAcceptsMouseMovedEvents:YES];
+			} else {
+				[window addObserver:self
+						 forKeyPath:@"acceptsMouseMovedEvents"
+							options:NSKeyValueObservingOptionNew
+							context:NULL];
+			}
 		}
 	} else if (object == [self window]) {
 		//the window's accepts-mouse-moved-events value has changed.
@@ -398,7 +425,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	NSWindow *window = [self window];
 	
 	//don't need to be notified when we change it ourselves...
-	//[window removeObserver:self forKeyPath:@"acceptsMouseMovedEvents"];
+	[window removeObserver:self forKeyPath:@"acceptsMouseMovedEvents"];
 	
 	[window setAcceptsMouseMovedEvents:YES];
 	[window makeFirstResponder:self];
@@ -409,18 +436,15 @@ Adium, Copyright 2001-2005, Adam Iser
 {
 	isTracking = NO;
 	[self _setHoveredIndex:-1];
+
 	NSWindow *window = [self window];
-
-	[window setAcceptsMouseMovedEvents:NO];
-
-	/*
 	[window setAcceptsMouseMovedEvents:saved_windowAcceptsMouseMovedEvents];
+
 	//sign up to receive notifications again.
 	[window addObserver:self
-         forKeyPath:@"acceptsMouseMovedEvents"
-            options:NSKeyValueObservingOptionNew
-            context:NULL];
-	 */
+	         forKeyPath:@"acceptsMouseMovedEvents"
+	            options:NSKeyValueObservingOptionNew
+	            context:NULL];
 }
 
 //Cursor moved, inform our delegate if a new cell is being hovered
