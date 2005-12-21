@@ -190,7 +190,7 @@
 		}
 
 		NSPoint	localPoint = [self convertPoint:[[self window] convertScreenToBase:[NSEvent mouseLocation]]
-									   fromView:[self superview]];
+									   fromView:nil];
 		BOOL	mouseInside = NSPointInRect(localPoint, trackRect);
 
 		trackingTag = [self addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseInside];
