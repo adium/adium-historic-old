@@ -483,7 +483,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 
     //Get the clicked item
     location = [inOutlineView convertPoint:[inEvent locationInWindow]
-								  fromView:[[inOutlineView window] contentView]];
+								  fromView:nil];
     row = [inOutlineView rowAtPoint:location];
 
 	if (row != -1) {
