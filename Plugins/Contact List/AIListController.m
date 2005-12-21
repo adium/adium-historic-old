@@ -191,13 +191,10 @@ typedef enum {
 	windowFrame = [theWindow frame];
 	newWindowFrame = windowFrame;
 	viewFrame = [scrollView_contactList frame];
-    if (currentScreen != nil)
-    {
+    if (currentScreen != nil) {
         screenFrame = [currentScreen frame]; 
         visibleScreenFrame = [currentScreen visibleFrame];
-    }
-    else
-    {
+    } else {
         visibleScreenFrame = screenFrame = NSMakeRect(0,0,0,0); 
     }
 	toolbarHeight = [theWindow toolbarHeight];
@@ -222,8 +219,8 @@ typedef enum {
 			}
 
 			//Anchor to the appropriate screen edge
-			anchorToRightEdge = (    (currentScreen != nil) 
-                                  && (windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X > (visibleScreenFrame.origin.x + visibleScreenFrame.size.width));
+			anchorToRightEdge = ((currentScreen != nil) &&
+								 (windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X > (visibleScreenFrame.origin.x + visibleScreenFrame.size.width));
 			if (anchorToRightEdge) {
 				newWindowFrame.origin.x = (windowFrame.origin.x + windowFrame.size.width) - newWindowFrame.size.width;
 			} else {
@@ -235,20 +232,17 @@ typedef enum {
 	
 	
     // compute boundingFrame for window
-    if (currentScreen == nil)
-    {
+    if (currentScreen == nil) {
         // no bound
         boundingFrame = NSMakeRect(FLT_MAX*-0.5f, FLT_MAX*-0.5f, FLT_MAX, FLT_MAX);
-    }
-    else
-    {        
+    } else {       
         /*
-         If the window is against the left or right edges of the screen AND the user did not dock to the visibleFrame last,
-            we use the full screenFrame as our bound.
-         The edge check is used since most users' docks will not extend to the edges of the screen.
-         Alternately, if the user docked to the total frame last, we can safely use the full screen even if we aren't
-            on the edge.
-        */
+         * If the window is against the left or right edges of the screen AND the user did not dock to the visibleFrame last,
+		 * we use the full screenFrame as our bound.
+         * The edge check is used since most users' docks will not extend to the edges of the screen.
+         * Alternately, if the user docked to the total frame last, we can safely use the full screen even if we aren't
+		 * on the edge.
+         */
         BOOL windowOnEdge = ((newWindowFrame.origin.x < screenFrame.origin.x + EDGE_CATCH_X) ||
                              ((newWindowFrame.origin.x + newWindowFrame.size.width) > (screenFrame.origin.x + screenFrame.size.width - EDGE_CATCH_X)));
 
@@ -258,7 +252,7 @@ typedef enum {
             
             boundingFrame = screenFrame;
             
-            //We still cannot violate the menuBar, so account for it here if we are on the menuBar screen.
+            //We still should not violate the menuBar, so account for it here if we are on the menuBar screen.
             if ((screens = [NSScreen screens]) &&
                 ([screens count]) &&
                 (currentScreen == [screens objectAtIndex:0])) {
@@ -297,9 +291,10 @@ typedef enum {
 		//We must never request a height of 0 or OS X will completely move us off the screen
 		if (newWindowFrame.size.height == 0) newWindowFrame.size.height = 1;
 		
-		//If we have a toolbar showing and the new window frame would put us into the dock, OS X will change the rect
-		//automatically after we call setFrame:.  However, if it would put us off the screen, OS X allows this. Checking
-		//our size against the size of the screen lets us correct for this problem.
+		/* If we have a toolbar showing and the new window frame would put us into the dock, OS X will change the rect
+		 * automatically after we call setFrame:.  However, if it would put us off the screen, OS X allows this. Checking
+		 * our size against the size of the screen lets us correct for this problem.
+		 */
 		if ((newWindowFrame.size.height + toolbarHeight) > (screenFrame.size.height)) {
 			newWindowFrame.size.height -= toolbarHeight;
 		}
@@ -310,12 +305,14 @@ typedef enum {
 	}
 
 	if (useDesiredWidth) {
-		//We only want to account for the scrollbar if we are dynamically sizing (i.e. autoResizeHorizontally is YES).
-		//useDesiredWidth could be YES because of a forcedWidth; we shouldn't change based on the scrollbar in that case.
+		/* We only want to account for the scrollbar if we are dynamically sizing (i.e. autoResizeHorizontally is YES).
+		 * useDesiredWidth could be YES because of a forcedWidth; we shouldn't change based on the scrollbar in that case.
+		 */
 		if (autoResizeHorizontally) {
-			//If the desired height plus any toolbar height exceeds the height we determined, we will be showing a scroller; 
-			//expand horizontally to take that into account.  The magic number 2 fixes this method for use with our borderless
-			//windows... I'm not sure why it's needed, but it doesn't hurt anything.
+			/* If the desired height plus any toolbar height exceeds the height we determined, we will be showing a scroller; 
+			 * expand horizontally to take that into account.  The magic number 2 fixes this method for use with our borderless
+			 * windows... I'm not sure why it's needed, but it doesn't hurt anything.
+			 */
 			if (desiredHeight + toolbarHeight > newWindowFrame.size.height + 2) {
 				float scrollerWidth = [NSScroller scrollerWidthForControlSize:[[scrollView_contactList verticalScroller] controlSize]];
 				newWindowFrame.size.width += scrollerWidth;
