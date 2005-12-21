@@ -538,7 +538,7 @@
     id		item;
 	
     //Get the clicked item
-    location = [outlineView convertPoint:[theEvent locationInWindow] fromView:[[outlineView window] contentView]];
+    location = [outlineView convertPoint:[theEvent locationInWindow] fromView:nil];
     row = [outlineView rowAtPoint:location];
     item = [outlineView itemAtRow:row];
 	
