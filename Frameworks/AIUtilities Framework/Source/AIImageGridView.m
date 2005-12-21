@@ -25,10 +25,6 @@ Adium, Copyright 2001-2005, Adam Iser
 - (void)_setHoveredIndex:(int)index;
 @end
 
-@interface NSWindow (UndocumentedGoodness)
-- (id)_setWindow:(NSWindow *)newWindow;
-@end
-
 @implementation AIImageGridView
 
 //Init
@@ -60,11 +56,6 @@ Adium, Copyright 2001-2005, Adam Iser
 		            options:NSKeyValueObservingOptionNew
 		            context:NULL];
 	}
-	//when our superview changes, we may have moved to a different window, so we should update our observance of acceptsMouseMovedEvents.
-	[self addObserver:self
-	       forKeyPath:@"window"
-	          options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
-	          context:NULL];
 
 	cell = [[AIScaledImageCell alloc] init];
 	imageSize = NSMakeSize(64,64);
@@ -338,49 +329,9 @@ Adium, Copyright 2001-2005, Adam Iser
 //KVO --------------------------------------------------------------------------------------------------------
 #pragma mark Key-value observing compliance
 
-- (id)_setWindow:(NSWindow *)view
-{
-	[self willChangeValueForKey:@"window"];
-	id result = [super _setWindow:view];
-	[self  didChangeValueForKey:@"window"];
-	return result;
-}
-
-//KVO wants this.
-- (void)setWindow:(NSWindow *)view
-{
-	[self _setWindow:view];
-}
-
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if (object == self) {
-		//we've moved to a different window. observe the value of acceptsMouseMovedEvents on the new one, not the old one.
-		NSNull *null = [NSNull null];
-
-		//if the old window is NSNull, there was none (we are being embedded into a view for the first time).
-		//so don't try and remove ourselves as an observer on it.
-		id old = [change objectForKey:NSKeyValueChangeOldKey];
-		if(old != null)
-			[(NSWindow *)old removeObserver:self forKeyPath:@"acceptsMouseMovedEvents"];
-
-		NSWindow *window = nil;
-		id new = [change objectForKey:NSKeyValueChangeNewKey];
-		if(new != null) {
-			window = new;
-
-			if (isTracking) {
-				//since we're tracking, restore to the new window's acceptsMouseMovedEvents instead of the old window's.
-				saved_windowAcceptsMouseMovedEvents = [window acceptsMouseMovedEvents];
-				[window setAcceptsMouseMovedEvents:YES];
-			} else {
-				[window addObserver:self
-						 forKeyPath:@"acceptsMouseMovedEvents"
-							options:NSKeyValueObservingOptionNew
-							context:NULL];
-			}
-		}
-	} else if (object == [self window]) {
+	if (object == [self window]) {
 		//the window's accepts-mouse-moved-events value has changed.
 		saved_windowAcceptsMouseMovedEvents = [(NSWindow *)object acceptsMouseMovedEvents];
 	}
@@ -451,6 +402,31 @@ Adium, Copyright 2001-2005, Adam Iser
 - (void)mouseMoved:(NSEvent *)theEvent
 {
 	[self _setHoveredIndex:[self imageIndexAtPoint:[self convertPoint:[theEvent locationInWindow] fromView:nil]]];
+}
+
+//if we move to a different window, we want to start observing the value of acceptsMouseMovedEvents on the new one
+//	and stop observing it on the old one.
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow
+{
+	NSWindow *oldWindow = [self window];
+	[oldWindow removeObserver:self forKeyPath:@"acceptsMouseMovedEvents"];
+
+	if (isTracking) {
+		//since we're tracking, just plan to restore to the new window's acceptsMouseMovedEvents instead of the old window's.
+		//the window should have finished being set by the time tracking ends.
+
+		//first, restore the saved value on the old window.
+		[oldWindow setAcceptsMouseMovedEvents:saved_windowAcceptsMouseMovedEvents];
+		//second, save the current value on the new window.
+		saved_windowAcceptsMouseMovedEvents = [newWindow acceptsMouseMovedEvents];
+		//third, set our YES value on the new window.
+		[newWindow setAcceptsMouseMovedEvents:YES];
+	} else {
+		[newWindow addObserver:self
+				 forKeyPath:@"acceptsMouseMovedEvents"
+					options:NSKeyValueObservingOptionNew
+					context:NULL];
+	}
 }
 
 //Set the hovered image index
