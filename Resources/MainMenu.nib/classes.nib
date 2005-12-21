@@ -81,6 +81,7 @@
                 "menuItem_closeChat" = NSMenuItem; 
                 "menuItem_contact" = NSMenuItem; 
                 "menuItem_copy" = NSMenuItem; 
+                "menuItem_copyStyle" = NSMenuItem; 
                 "menuItem_customizeToolbar" = NSMenuItem; 
                 "menuItem_cut" = NSMenuItem; 
                 "menuItem_edit" = NSMenuItem; 
@@ -100,10 +101,12 @@
                 "menuItem_pageSetup" = NSMenuItem; 
                 "menuItem_paste" = NSMenuItem; 
                 "menuItem_pasteAndMatchStyle" = NSMenuItem; 
+                "menuItem_pasteStyle" = NSMenuItem; 
                 "menuItem_preferences" = NSMenuItem; 
                 "menuItem_print" = NSMenuItem; 
                 "menuItem_quitAdium" = NSMenuItem; 
                 "menuItem_reportABug" = NSMenuItem; 
+                "menuItem_rightToLeft" = NSMenuItem; 
                 "menuItem_saveAs" = NSMenuItem; 
                 "menuItem_selectAll" = NSMenuItem; 
                 "menuItem_sendFeedback" = NSMenuItem; 
@@ -122,6 +125,7 @@
                 "menuItem_underline" = NSMenuItem; 
                 "menuItem_view" = NSMenuItem; 
                 "menuItem_window" = NSMenuItem; 
+                "menuItem_writingDirection" = NSMenuItem; 
                 "menu_Adium_About" = id; 
                 "menu_Adium_Preferences" = id; 
                 "menu_Contact_Action" = id; 
@@ -158,7 +162,7 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {runToolbarConfigurationPalette = id; }; 
+            ACTIONS = {runToolbarConfigurationPalette = id; toggleBaseWritingDirection = id; }; 
             CLASS = FirstResponder; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSObject; 
