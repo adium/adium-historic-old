@@ -620,9 +620,20 @@
 		34CEBE6306F117DF00A89DDE /* ESContactInfoListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */; };
 		34CF9DF4085B8B7900D87E37 /* ESiTunesPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */; };
 		34CF9DF5085B8B7900D87E37 /* ESiTunesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CF9DF3085B8B7900D87E37 /* ESiTunesPlugin.m */; };
+		34D000C60957918000DCB678 /* ContactListRecentImages.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34D000C50957918000DCB678 /* ContactListRecentImages.nib */; };
+		34D001E70958868000DCB678 /* AIMenuItemView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D001E50958868000DCB678 /* AIMenuItemView.h */; };
+		34D001E80958868000DCB678 /* AIMenuItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D001E60958868000DCB678 /* AIMenuItemView.m */; };
+		34D007B1095964F000DCB678 /* NSIPRecentPicture.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D007B0095964EF00DCB678 /* NSIPRecentPicture.h */; };
+		34D007DB095966E200DCB678 /* AIContactListRecentImagesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D007D9095966E200DCB678 /* AIContactListRecentImagesWindowController.m */; };
+		34D007DC095966E200DCB678 /* AIContactListRecentImagesWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D007DA095966E200DCB678 /* AIContactListRecentImagesWindowController.h */; };
 		34D0F9CA0954E70100DCB678 /* AIContactListImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D0F9C80954E70100DCB678 /* AIContactListImagePicker.h */; };
 		34D0F9CB0954E70100DCB678 /* AIContactListImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D0F9C90954E70100DCB678 /* AIContactListImagePicker.m */; };
-		34D0FA450955662E00DCB678 /* NSIPIconPopUp.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D0FA440955662E00DCB678 /* NSIPIconPopUp.h */; };
+		34D0FDD10956186200DCB678 /* ESPersonalPreferencesPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D0FDCF0956186200DCB678 /* ESPersonalPreferencesPlugin.h */; };
+		34D0FDD20956186200DCB678 /* ESPersonalPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D0FDD00956186200DCB678 /* ESPersonalPreferencesPlugin.m */; };
+		34D0FDD70956187700DCB678 /* ESPersonalPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D0FDD50956187700DCB678 /* ESPersonalPreferences.h */; };
+		34D0FDD80956187700DCB678 /* ESPersonalPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D0FDD60956187700DCB678 /* ESPersonalPreferences.m */; };
+		34D0FE3D09561E3800DCB678 /* PersonalPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34D0FE3C09561E3800DCB678 /* PersonalPreferences.nib */; };
+		34D0FF8509569FE500DCB678 /* PersonalPreferencesDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D0FF8409569FE500DCB678 /* PersonalPreferencesDefaults.plist */; };
 		34D1897F076114C00075A380 /* AILocalizationButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D1897D076114C00075A380 /* AILocalizationButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34D18980076114C00075A380 /* AILocalizationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D1897E076114C00075A380 /* AILocalizationButton.m */; };
 		34D189B2076131850075A380 /* AILocalizationAssistance.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D189B1076131850075A380 /* AILocalizationAssistance.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2477,9 +2488,20 @@
 		34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESContactInfoListController.m; path = Source/ESContactInfoListController.m; sourceTree = "<group>"; };
 		34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESiTunesPlugin.h; path = Source/ESiTunesPlugin.h; sourceTree = "<group>"; };
 		34CF9DF3085B8B7900D87E37 /* ESiTunesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESiTunesPlugin.m; path = Source/ESiTunesPlugin.m; sourceTree = "<group>"; };
+		34D000C50957918000DCB678 /* ContactListRecentImages.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ContactListRecentImages.nib; path = Resources/ContactListRecentImages.nib; sourceTree = "<group>"; };
+		34D001E50958868000DCB678 /* AIMenuItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIMenuItemView.h; path = Source/AIMenuItemView.h; sourceTree = "<group>"; };
+		34D001E60958868000DCB678 /* AIMenuItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIMenuItemView.m; path = Source/AIMenuItemView.m; sourceTree = "<group>"; };
+		34D007B0095964EF00DCB678 /* NSIPRecentPicture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSIPRecentPicture.h; path = Source/NSIPRecentPicture.h; sourceTree = "<group>"; };
+		34D007D9095966E200DCB678 /* AIContactListRecentImagesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactListRecentImagesWindowController.m; path = Source/AIContactListRecentImagesWindowController.m; sourceTree = "<group>"; };
+		34D007DA095966E200DCB678 /* AIContactListRecentImagesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactListRecentImagesWindowController.h; path = Source/AIContactListRecentImagesWindowController.h; sourceTree = "<group>"; };
 		34D0F9C80954E70100DCB678 /* AIContactListImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactListImagePicker.h; path = Source/AIContactListImagePicker.h; sourceTree = "<group>"; };
 		34D0F9C90954E70100DCB678 /* AIContactListImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactListImagePicker.m; path = Source/AIContactListImagePicker.m; sourceTree = "<group>"; };
-		34D0FA440955662E00DCB678 /* NSIPIconPopUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSIPIconPopUp.h; path = Source/NSIPIconPopUp.h; sourceTree = "<group>"; };
+		34D0FDCF0956186200DCB678 /* ESPersonalPreferencesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESPersonalPreferencesPlugin.h; path = Source/ESPersonalPreferencesPlugin.h; sourceTree = "<group>"; };
+		34D0FDD00956186200DCB678 /* ESPersonalPreferencesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESPersonalPreferencesPlugin.m; path = Source/ESPersonalPreferencesPlugin.m; sourceTree = "<group>"; };
+		34D0FDD50956187700DCB678 /* ESPersonalPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESPersonalPreferences.h; path = Source/ESPersonalPreferences.h; sourceTree = "<group>"; };
+		34D0FDD60956187700DCB678 /* ESPersonalPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESPersonalPreferences.m; path = Source/ESPersonalPreferences.m; sourceTree = "<group>"; };
+		34D0FE3C09561E3800DCB678 /* PersonalPreferences.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = PersonalPreferences.nib; path = Resources/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34D0FF8409569FE500DCB678 /* PersonalPreferencesDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PersonalPreferencesDefaults.plist; path = Resources/PersonalPreferencesDefaults.plist; sourceTree = "<group>"; };
 		34D188DB0760F0F50075A380 /* AILocalizationControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationControl.m; path = "Frameworks/Adium Framework/AILocalizationControl.m"; sourceTree = "<group>"; };
 		34D1897D076114C00075A380 /* AILocalizationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButton.h; path = "Frameworks/Adium Framework/AILocalizationButton.h"; sourceTree = "<group>"; };
 		34D1897E076114C00075A380 /* AILocalizationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButton.m; path = "Frameworks/Adium Framework/AILocalizationButton.m"; sourceTree = "<group>"; };
@@ -4291,6 +4313,19 @@
 			name = "iTunes Now Playing";
 			sourceTree = "<group>";
 		};
+		34D0FDCB095612F800DCB678 /* Personal Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				34D0FDCF0956186200DCB678 /* ESPersonalPreferencesPlugin.h */,
+				34D0FDD00956186200DCB678 /* ESPersonalPreferencesPlugin.m */,
+				34D0FDD50956187700DCB678 /* ESPersonalPreferences.h */,
+				34D0FDD60956187700DCB678 /* ESPersonalPreferences.m */,
+				34D0FF8409569FE500DCB678 /* PersonalPreferencesDefaults.plist */,
+				34D0FE3C09561E3800DCB678 /* PersonalPreferences.nib */,
+			);
+			name = "Personal Preferences";
+			sourceTree = "<group>";
+		};
 		34D18983076114D20075A380 /* Localization Assistance */ = {
 			isa = PBXGroup;
 			children = (
@@ -4414,6 +4449,7 @@
 		34E29FCE07AF091C006735BC /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
+				34D0FDCB095612F800DCB678 /* Personal Preferences */,
 				F5B53FBF0333ABA701A8010A /* Accounts Preferences */,
 				F510B76D03339ED501A8010A /* Account Menu */,
 				34C188A006CAB36400FF5FF9 /* Account Network Connectivity */,
@@ -5396,14 +5432,19 @@
 			children = (
 				34A489FC06F6436D002C7C5F /* AIStandardListWindowController.h */,
 				34A489FB06F6436D002C7C5F /* AIStandardListWindowController.m */,
-				34D0F9C80954E70100DCB678 /* AIContactListImagePicker.h */,
-				34D0F9C90954E70100DCB678 /* AIContactListImagePicker.m */,
 				34A48A0B06F64376002C7C5F /* ContactListWindow.nib */,
 				34E1067709536E5300EBE478 /* AIContactListStatusMenuView.h */,
 				34E1067809536E5300EBE478 /* AIContactListStatusMenuView.m */,
 				34E106A7095371A100EBE478 /* AIContactListStatusMenuCell.h */,
 				34E106AE095371E400EBE478 /* AIContactListStatusMenuCell.m */,
-				34D0FA440955662E00DCB678 /* NSIPIconPopUp.h */,
+				34D0F9C80954E70100DCB678 /* AIContactListImagePicker.h */,
+				34D0F9C90954E70100DCB678 /* AIContactListImagePicker.m */,
+				34D007D9095966E200DCB678 /* AIContactListRecentImagesWindowController.m */,
+				34D007DA095966E200DCB678 /* AIContactListRecentImagesWindowController.h */,
+				34D000C50957918000DCB678 /* ContactListRecentImages.nib */,
+				34D001E50958868000DCB678 /* AIMenuItemView.h */,
+				34D001E60958868000DCB678 /* AIMenuItemView.m */,
+				34D007B0095964EF00DCB678 /* NSIPRecentPicture.h */,
 			);
 			name = "Standard Window";
 			sourceTree = "<group>";
@@ -6489,7 +6530,11 @@
 				34E1067909536E5300EBE478 /* AIContactListStatusMenuView.h in Headers */,
 				34E106A9095371A100EBE478 /* AIContactListStatusMenuCell.h in Headers */,
 				34D0F9CA0954E70100DCB678 /* AIContactListImagePicker.h in Headers */,
-				34D0FA450955662E00DCB678 /* NSIPIconPopUp.h in Headers */,
+				34D0FDD10956186200DCB678 /* ESPersonalPreferencesPlugin.h in Headers */,
+				34D0FDD70956187700DCB678 /* ESPersonalPreferences.h in Headers */,
+				34D001E70958868000DCB678 /* AIMenuItemView.h in Headers */,
+				34D007B1095964F000DCB678 /* NSIPRecentPicture.h in Headers */,
+				34D007DC095966E200DCB678 /* AIContactListRecentImagesWindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7596,6 +7641,9 @@
 				63336E15094AB81300970871 /* XtraInfoView.nib in Resources */,
 				63EA63DD094BB79A009C8453 /* StatusIconPreviewView.nib in Resources */,
 				34E105040951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib in Resources */,
+				34D0FE3D09561E3800DCB678 /* PersonalPreferences.nib in Resources */,
+				34D0FF8509569FE500DCB678 /* PersonalPreferencesDefaults.plist in Resources */,
+				34D000C60957918000DCB678 /* ContactListRecentImages.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8091,6 +8139,10 @@
 				34E1067A09536E5300EBE478 /* AIContactListStatusMenuView.m in Sources */,
 				34E106AF095371E400EBE478 /* AIContactListStatusMenuCell.m in Sources */,
 				34D0F9CB0954E70100DCB678 /* AIContactListImagePicker.m in Sources */,
+				34D0FDD20956186200DCB678 /* ESPersonalPreferencesPlugin.m in Sources */,
+				34D0FDD80956187700DCB678 /* ESPersonalPreferences.m in Sources */,
+				34D001E80958868000DCB678 /* AIMenuItemView.m in Sources */,
+				34D007DB095966E200DCB678 /* AIContactListRecentImagesWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
