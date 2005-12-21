@@ -179,6 +179,7 @@
 	AIAccount	  *account;
 	AIAccount	  *activeAccount = nil;
 	NSEnumerator  *enumerator;
+	BOOL		  atLeastOneOwnIconAccount = NO;
 
 	//Figure out what accounts are online and what of those have their own custom icon so we can display an appropriate set of choices
 	enumerator = [[[adium accountController] accounts] objectEnumerator];
@@ -187,12 +188,13 @@
 			[onlineAccounts addObject:account];
 			if ([account preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES]) {
 				[ownIconAccounts addObject:account];
+				atLeastOneOwnIconAccount = YES;
 			}
 		}
 	}
 	
 	//At least one account is using its own icon rather than the global preference
-	if ([ownIconAccounts count]) {
+	if (atLeastOneOwnIconAccount) {
 		NSString	*accountID = [[adium preferenceController] preferenceForKey:@"Active Icon Selection Account"
 																		  group:GROUP_ACCOUNT_STATUS];
 		
