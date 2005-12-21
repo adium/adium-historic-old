@@ -25,7 +25,7 @@ Adium, Copyright 2001-2005, Adam Iser
 - (void)_setHoveredIndex:(int)index;
 @end
 
-@interface NSView (UndocumentedGoodness)
+@interface NSWindow (UndocumentedGoodness)
 - (id)_setWindow:(NSWindow *)newWindow;
 @end
 
@@ -338,7 +338,7 @@ Adium, Copyright 2001-2005, Adam Iser
 //KVO --------------------------------------------------------------------------------------------------------
 #pragma mark Key-value observing compliance
 
-- (id)_setWindow:(NSView *)view
+- (id)_setWindow:(NSWindow *)view
 {
 	[self willChangeValueForKey:@"window"];
 	id result = [super _setWindow:view];
@@ -347,7 +347,7 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 //KVO wants this.
-- (void)setWindow:(NSView *)view
+- (void)setWindow:(NSWindow *)view
 {
 	[self _setWindow:view];
 }
