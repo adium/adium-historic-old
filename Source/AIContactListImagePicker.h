@@ -8,8 +8,13 @@
 
 #import <AIUtilities/AIImageViewWithImagePicker.h>
 
-@interface AIContactListImagePicker : AIImageViewWithImagePicker {
+@class AIAccount;
 
+@interface AIContactListImagePicker : AIImageViewWithImagePicker {
+	BOOL				hovered;
+	NSTrackingRectTag	trackingTag;
+	
+	NSMenu				*imageMenu;
 }
 
 @end
