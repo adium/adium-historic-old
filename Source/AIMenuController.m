@@ -370,7 +370,11 @@
 	[menuItem_underline setTitle:AILocalizedString(@"Underline",nil)];
 	[menuItem_showFonts setTitle:AILocalizedString(@"Show Fonts",nil)];
 	[menuItem_showColors setTitle:AILocalizedString(@"Show Colors",nil)];
-
+	[menuItem_copyStyle setTitle:AILocalizedString(@"Copy Style",nil)];
+	[menuItem_pasteStyle setTitle:AILocalizedString(@"Paste Style",nil)];
+	[menuItem_writingDirection setTitle:AILocalizedString(@"Writing Direction",nil)];
+	[menuItem_rightToLeft setTitle:AILocalizedString(@"Right to Left",nil)];
+	
 	//Window menu
 	[menuItem_minimize setTitle:AILocalizedString(@"Minimize",nil)];
 	[menuItem_bringAllToFront setTitle:AILocalizedString(@"Bring All to Front",nil)];
