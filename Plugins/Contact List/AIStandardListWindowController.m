@@ -17,6 +17,7 @@
 #import "AIStandardListWindowController.h"
 #import "AIAccountController.h"
 #import "AIContactController.h"
+#import "AIPreferenceController.h"
 #import "AIStatusController.h"
 #import "AIToolbarController.h"
 #import <Adium/AIAccount.h>
@@ -90,7 +91,7 @@
 									 object:nil];
 	[self activeStateChanged:nil];
 	
-	[self updateImagePicker];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
 }
 
 /*!
@@ -133,35 +134,75 @@
 	AIStatus	*activeStatus = [[adium statusController] activeStatusState];
 	[statusMenuView setCurrentStatusName:[activeStatus title]];
 
-//XXX Temporary
 	[self updateImagePicker];
 	//[menuItem setImage:[activeStatus icon]];
 }
 
 - (void)updateImagePicker
 {
-	NSArray			*accounts = [[adium accountController] accounts];
-	NSEnumerator	*enumerator = [accounts objectEnumerator];
-	AIAccount		*account = nil;
+	AIAccount *activeAccount = [[self class] activeAccountGettingOnlineAccounts:nil ownIconAccounts:nil];
+	NSImage	  *image;
 
-	while ((account = [enumerator nextObject])) {
-		if ([account online]) break;
+	if (activeAccount) {
+		image = [activeAccount userIcon];
+	} else {
+		NSData *data = [[adium preferenceController] preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
+		if (!data) data = [[adium preferenceController] preferenceForKey:KEY_DEFAULT_USER_ICON group:GROUP_ACCOUNT_STATUS];
+
+		image = [[[NSImage alloc] initWithData:data] autorelease];
 	}
 	
-	if (!account) {
-		enumerator = [accounts objectEnumerator];
-		while ((account = [enumerator nextObject])) {
-			if ([account enabled]) break;
+	[imagePicker setImage:image];
+}
+
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if ([key isEqualToString:KEY_USER_ICON] ||
+		[key isEqualToString:KEY_DEFAULT_USER_ICON] || 
+		[key isEqualToString:KEY_USE_USER_ICON] ||
+		[key isEqualToString:@"Active Icon Selection Account"] ||
+		firstTime) {
+		[self updateImagePicker];
+	}
+	
+	[super preferencesChangedForGroup:group
+								  key:key
+							   object:object
+					   preferenceDict:prefDict
+							firstTime:firstTime];
+}
+
++ (AIAccount *)activeAccountGettingOnlineAccounts:(NSMutableSet *)onlineAccounts ownIconAccounts:(NSMutableSet *)ownIconAccounts
+{
+	AIAdium		  *adium = [AIObject sharedAdiumInstance];
+	AIAccount	  *account;
+	AIAccount	  *activeAccount = nil;
+	NSEnumerator  *enumerator;
+
+	//Figure out what accounts are online and what of those have their own custom icon so we can display an appropriate set of choices
+	enumerator = [[[adium accountController] accounts] objectEnumerator];
+	while ((account = [enumerator nextObject])) {
+		if ([account online]) {
+			[onlineAccounts addObject:account];
+			if ([account preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES]) {
+				[ownIconAccounts addObject:account];
+			}
 		}
 	}
 	
-	if (!account) {
-		if ([accounts count]) account = [accounts objectAtIndex:0];
+	//At least one account is using its own icon rather than the global preference
+	if ([ownIconAccounts count]) {
+		NSString	*accountID = [[adium preferenceController] preferenceForKey:@"Active Icon Selection Account"
+																		  group:GROUP_ACCOUNT_STATUS];
+		
+		activeAccount = (accountID ? [[adium accountController] accountWithInternalObjectID:accountID] : nil);
+		
+		//If the activeAccount isn't in ownIconAccounts we don't want anything to do with it
+		if (![ownIconAccounts containsObject:activeAccount]) activeAccount = nil;
 	}
-
-	if (account) {
-		[imagePicker setImage:[account userIcon]];		
-	}
+	
+	return activeAccount;
 }
 
 /*
@@ -169,7 +210,18 @@
  */
 - (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)picker didChangeToImageData:(NSData *)imageData
 {
-	
+	AIAccount	*activeAccount = [AIStandardListWindowController activeAccountGettingOnlineAccounts:nil ownIconAccounts:nil];
+
+	if (activeAccount) {
+		[activeAccount setPreference:imageData
+							  forKey:KEY_USER_ICON
+							   group:GROUP_ACCOUNT_STATUS];
+
+	} else {
+		[[adium preferenceController] setPreference:imageData
+											 forKey:KEY_USER_ICON
+											  group:GROUP_ACCOUNT_STATUS];
+	}
 }
 
 //Toolbar --------------------------------------------------------------------------------------------------------------

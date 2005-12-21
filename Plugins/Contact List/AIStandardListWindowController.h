@@ -17,7 +17,7 @@
 #import "AIListWindowController.h"
 
 @protocol AIListObjectObserver, StateMenuPlugin;
-@class AIStatusMenu, AIContactListStatusMenuView, AIContactListImagePicker;
+@class AIAccount, AIStatusMenu, AIContactListStatusMenuView, AIContactListImagePicker;
 
 @interface AIStandardListWindowController : AIListWindowController {
 	IBOutlet	AIContactListStatusMenuView	*statusMenuView;
@@ -28,5 +28,7 @@
 }
 
 - (void)updateImagePicker;
+
++ (AIAccount *)activeAccountGettingOnlineAccounts:(NSMutableSet *)onlineAccounts ownIconAccounts:(NSMutableSet *)ownIconAccounts;
 
 @end
