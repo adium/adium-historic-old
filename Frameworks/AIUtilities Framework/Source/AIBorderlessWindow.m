@@ -1,4 +1,4 @@
-//AIBorderlessWindow.m based largely off sample code in CustomWindow.m from Apple's "RoundTransparentWindow" sample project.
+//AIBorderlessWindow.m based partially off sample code in CustomWindow.m from Apple's "RoundTransparentWindow" sample project.
 
 #import "AIBorderlessWindow.h"
 #import "AIEventAdditions.h"
@@ -11,8 +11,6 @@
 
 @implementation AIBorderlessWindow
 
-static	NSRect	windowFrame;
-//In Interface Builder we set ESInvisibleWindow to be the class for our window, so our own initializer is called here.
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
 
     //Call NSWindow's version of this function, but pass in the all-important value of NSBorderlessWindowMask
@@ -25,8 +23,9 @@ static	NSRect	windowFrame;
 	   //Set the background color to clear so that we can see through the parts
 	   //of the window into which we're not drawing 
 	   [self setBackgroundColor:[NSColor clearColor]];
-	   //[self setOpaque:NO];
 	   inLeftMouseEvent = NO;
+	   
+	   moveable = YES;
    }
 	
     return self;
@@ -42,6 +41,11 @@ static	NSRect	windowFrame;
 - (BOOL)canBecomeMainWindow
 {
     return YES;
+}
+
+- (void)setMoveable:(BOOL)inMoveable
+{
+	moveable = inMoveable;
 }
 
 - (void)performClose:(id)sender
@@ -63,7 +67,7 @@ static	NSRect	windowFrame;
 //We do this because the window has no title bar for the user to drag (so we have to implement dragging ourselves)
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-    if (![theEvent cmdKey]) {
+    if (![theEvent cmdKey] && moveable) {
 		NSScreen	*currentScreen;
         NSPoint		currentLocation, newOrigin;
         NSRect		newWindowFrame;
@@ -124,7 +128,7 @@ static	NSRect	windowFrame;
 //to establish the initial location.
 - (void)mouseDown:(NSEvent *)theEvent
 {    
-    if (![theEvent cmdKey] && ([theEvent type] == NSLeftMouseDown)) {
+    if (![theEvent cmdKey] && ([theEvent type] == NSLeftMouseDown) && moveable) {
         //grab the mouse location in global coordinates
         originalMouseLocation = [self convertBaseToScreen:[theEvent locationInWindow]];
 		windowFrame = [self frame];
@@ -145,31 +149,31 @@ static	NSRect	windowFrame;
 }
 
 //Dock the passed window frame if it's close enough to the screen edges
-- (BOOL)dockWindowFrame:(NSRect *)windowFrame toScreenFrame:(NSRect)screenFrame
+- (BOOL)dockWindowFrame:(NSRect *)inWindowFrame toScreenFrame:(NSRect)inScreenFrame
 {
 	BOOL	changed = NO;
 	
 	//Left
-	if ((abs(NSMinX((*windowFrame)) - NSMinX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)) {
-		(*windowFrame).origin.x = screenFrame.origin.x;
+	if ((abs(NSMinX((*inWindowFrame)) - NSMinX(inScreenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)) {
+		(*inWindowFrame).origin.x = inScreenFrame.origin.x;
 		changed = YES;
 	}
 	
 	//Bottom
-	if ((abs(NSMinY(*windowFrame) - NSMinY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)) {
-		(*windowFrame).origin.y = screenFrame.origin.y;
+	if ((abs(NSMinY(*inWindowFrame) - NSMinY(inScreenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)) {
+		(*inWindowFrame).origin.y = inScreenFrame.origin.y;
 		changed = YES;
 	}
 	
 	//Right
-	if ((abs(NSMaxX(*windowFrame) - NSMaxX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)) {
-		(*windowFrame).origin.x -= NSMaxX(*windowFrame) - NSMaxX(screenFrame);
+	if ((abs(NSMaxX(*inWindowFrame) - NSMaxX(inScreenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)) {
+		(*inWindowFrame).origin.x -= NSMaxX(*inWindowFrame) - NSMaxX(inScreenFrame);
 		changed = YES;
 	}
 	
 	//Top
-	if ((abs(NSMaxY(*windowFrame) - NSMaxY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)) {
-		(*windowFrame).origin.y -= NSMaxY(*windowFrame) - NSMaxY(screenFrame);
+	if ((abs(NSMaxY(*inWindowFrame) - NSMaxY(inScreenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)) {
+		(*inWindowFrame).origin.y -= NSMaxY(*inWindowFrame) - NSMaxY(inScreenFrame);
 		changed = YES;
 	}
 	
