@@ -42,6 +42,38 @@ struct resolved_id {
 	char *name;
 };
 
+/*
+ * @brief Process button text, removing gtk+ accelerator underscores
+ *
+ * Textual underscores are indicated by "__"
+ */
+NSString *processButtonText(NSString *inButtonText)
+{
+	NSMutableString	*processedText = [inButtonText mutableCopy];
+	
+#define UNDERSCORE_PLACEHOLDER @"&&&&&"
+
+	//Replace escaped underscores with our placeholder
+	[processedText replaceOccurrencesOfString:@"__"
+								   withString:UNDERSCORE_PLACEHOLDER
+									  options:NSLiteralSearch
+										range:NSMakeRange(0, [processedText length])];
+	//Remove solitary underscores
+	[processedText replaceOccurrencesOfString:@"_"
+								   withString:@""
+									  options:NSLiteralSearch
+										range:NSMakeRange(0, [processedText length])];
+
+	//Replace the placeholder with an underscore
+	[processedText replaceOccurrencesOfString:UNDERSCORE_PLACEHOLDER
+								   withString:@"_"
+									  options:NSLiteralSearch
+										range:NSMakeRange(0, [processedText length])];
+	
+	return [processedText autorelease];
+	
+}
+
 static void *adiumGaimRequestInput(
 								   const char *title, const char *primary,
 								   const char *secondary, const char *defaultValue,
@@ -61,9 +93,11 @@ static void *adiumGaimRequestInput(
 	//Ignore gaim trying to get an account's password; we'll feed it the password and reconnect if it gets here, somehow.
 	if ([primaryString rangeOfString:@"Enter password for "].location == NSNotFound) {
 		NSMutableDictionary *infoDict;
-		NSString			*okButtonText = [NSString stringWithUTF8String:okText];
-		NSString			*cancelButtonText = [NSString stringWithUTF8String:cancelText];
+		NSString			*okButtonText = processButtonText([NSString stringWithUTF8String:okText]);
+		NSString			*cancelButtonText = processButtonText([NSString stringWithUTF8String:cancelText]);
 
+		
+		
 		infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:okButtonText,@"OK Text",
 			cancelButtonText,@"Cancel Text",
 			[NSValue valueWithPointer:okCb],@"OK Callback",
@@ -256,7 +290,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary,
 			
 			//Get the name
 			buttonName = va_arg(actions, char *);
-			[buttonNamesArray addObject:[NSString stringWithUTF8String:buttonName]];
+			[buttonNamesArray addObject:processButtonText([NSString stringWithUTF8String:buttonName])];
 			
 			//Get the callback for that name
 			callBacks[i] = va_arg(actions, GCallback);
