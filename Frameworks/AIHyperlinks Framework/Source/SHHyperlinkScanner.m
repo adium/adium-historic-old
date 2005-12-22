@@ -18,11 +18,6 @@
 #import "SHLinkLexer.h"
 #import "SHMarkedHyperlink.h"
 
-static NSMutableCharacterSet	*skipSet = nil;
-static NSMutableCharacterSet	*startSet = nil;
-static NSCharacterSet			*endSet = nil;
-static NSCharacterSet			*hostnameComponentSeparatorSet = nil;
-
 #define	DEFAULT_URL_SCHEME	@"http://"
 
 @implementation SHHyperlinkScanner
@@ -112,25 +107,32 @@ static NSCharacterSet			*hostnameComponentSeparatorSet = nil;
 - (SHMarkedHyperlink *)nextURLFromString:(NSString *)inString
 {
     NSString    *scanString = nil;
-    int location = SHStringOffset; //get our location from SHStringOffset, so we can pick up where we left off.
-    if (!skipSet){
+
+	//get our location from SHStringOffset, so we can pick up where we left off
+    int			location = SHStringOffset;
+
+	static NSMutableCharacterSet *skipSet = nil;
+    if (!skipSet) {
         skipSet = [[NSMutableCharacterSet alloc] init];
         [skipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         [skipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
         [skipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
     }
     
-    if(!startSet){
+	static NSMutableCharacterSet *startSet = nil;
+    if (!startSet) {
         startSet = [[NSMutableCharacterSet alloc] init];
         [startSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         [startSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'-,:;<([{.?!"]];
     }
-    
-    if(!endSet){
+
+	static NSCharacterSet *endSet = nil;
+    if (!endSet) {
         endSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"',;>)]}.?!"] retain];
     }
 
-   	if(!hostnameComponentSeparatorSet) {
+	static NSCharacterSet *hostnameComponentSeparatorSet = nil;	
+   	if (!hostnameComponentSeparatorSet) {
    		hostnameComponentSeparatorSet = [[NSCharacterSet characterSetWithCharactersInString:@"./"] retain];
    	}
 	
