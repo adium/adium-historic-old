@@ -172,7 +172,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	sendOnEnter = [[[adium preferenceController] preferenceForKey:SEND_ON_ENTER
 															group:PREF_GROUP_GENERAL] boolValue];
 	
-	[scrollView_statusMessage setAutoHideScrollBar:YES];
+	[scrollView_statusMessage setAutohidesScrollers:YES];
 	[scrollView_statusMessage setAlwaysDrawFocusRingIfFocused:YES];
 	[textView_statusMessage setTarget:self action:@selector(okay:)];
 	
@@ -188,7 +188,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 		[(AIMessageEntryTextView *)textView_statusMessage setHistoryEnabled:NO];
 	}
 	
-	[scrollView_autoReply setAutoHideScrollBar:YES];
+	[scrollView_autoReply setAutohidesScrollers:YES];
 	[scrollView_autoReply setAlwaysDrawFocusRingIfFocused:YES];
 	[textView_autoReply setTarget:self action:@selector(okay:)];
 
