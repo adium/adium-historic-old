@@ -720,15 +720,20 @@
 }
 */
 
+#define SUPPORTED_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
+	NSFilenamesPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil]
+
+#define PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY [NSArray arrayWithObject:NSStringPboardType]
+
 //We don't need to prepare for the types we are handling in performDragOperation: below
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]];
+	NSString 		*type = [pasteboard availableTypeFromArray:SUPPORTED_DRAG_TYPE_ARRAY];
+	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 	BOOL			allowDragOperation;
-	
-	if (type) {
-		
+
+	if (type && !superclassType) {		
 		// XXX - This shouldn't let you insert into a view for which the delegate says NO to some sort of check.
 		allowDragOperation = YES;
 	} else {
@@ -742,9 +747,10 @@
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]];
+	NSString 		*type = [pasteboard availableTypeFromArray:SUPPORTED_DRAG_TYPE_ARRAY];
+	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 	
-	if (!type) {
+	if (!type || superclassType) {
 		[super concludeDragOperation:sender];
 	}
 }
@@ -753,10 +759,11 @@
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]];
-	
+	NSString 		*type = [pasteboard availableTypeFromArray:SUPPORTED_DRAG_TYPE_ARRAY];
+	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
+
 	BOOL	success = NO;
-	if (type) {
+	if (type && !superclassType) {
 		NSAttributedString			*attachString;
 		NSImage						*img = [[[NSImage alloc] initWithPasteboard:pasteboard] autorelease];
 		
