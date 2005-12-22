@@ -175,14 +175,14 @@
 
 + (AIAccount *)activeAccountGettingOnlineAccounts:(NSMutableSet *)onlineAccounts ownIconAccounts:(NSMutableSet *)ownIconAccounts
 {
-	AIAdium		  *adium = [AIObject sharedAdiumInstance];
+	AIAdium		  *sharedAdium = [AIObject sharedAdiumInstance];
 	AIAccount	  *account;
 	AIAccount	  *activeAccount = nil;
 	NSEnumerator  *enumerator;
 	BOOL		  atLeastOneOwnIconAccount = NO;
 
 	//Figure out what accounts are online and what of those have their own custom icon so we can display an appropriate set of choices
-	enumerator = [[[adium accountController] accounts] objectEnumerator];
+	enumerator = [[[sharedAdium accountController] accounts] objectEnumerator];
 	while ((account = [enumerator nextObject])) {
 		if ([account online]) {
 			[onlineAccounts addObject:account];
@@ -195,10 +195,10 @@
 	
 	//At least one account is using its own icon rather than the global preference
 	if (atLeastOneOwnIconAccount) {
-		NSString	*accountID = [[adium preferenceController] preferenceForKey:@"Active Icon Selection Account"
+		NSString	*accountID = [[sharedAdium preferenceController] preferenceForKey:@"Active Icon Selection Account"
 																		  group:GROUP_ACCOUNT_STATUS];
 		
-		activeAccount = (accountID ? [[adium accountController] accountWithInternalObjectID:accountID] : nil);
+		activeAccount = (accountID ? [[sharedAdium accountController] accountWithInternalObjectID:accountID] : nil);
 		
 		//If the activeAccount isn't in ownIconAccounts we don't want anything to do with it
 		if (![ownIconAccounts containsObject:activeAccount]) activeAccount = nil;
