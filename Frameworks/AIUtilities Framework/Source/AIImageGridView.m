@@ -46,17 +46,6 @@ Adium, Copyright 2001-2005, Adam Iser
 
 - (void)_initImageGridView
 {
-	NSWindow *window = [self window];
-	if (window) {
-		saved_windowAcceptsMouseMovedEvents = [window acceptsMouseMovedEvents];
-
-		//get notified when it changes.
-		[window addObserver:self
-		         forKeyPath:@"acceptsMouseMovedEvents"
-		            options:NSKeyValueObservingOptionNew
-		            context:NULL];
-	}
-
 	cell = [[AIScaledImageCell alloc] init];
 	imageSize = NSMakeSize(64,64);
 	selectedIndex = -1;
@@ -326,17 +315,6 @@ Adium, Copyright 2001-2005, Adam Iser
 	[super keyDown:theEvent];
 }
 
-//KVO --------------------------------------------------------------------------------------------------------
-#pragma mark Key-value observing compliance
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-	if (object == [self window]) {
-		//the window's accepts-mouse-moved-events value has changed.
-		saved_windowAcceptsMouseMovedEvents = [(NSWindow *)object acceptsMouseMovedEvents];
-	}
-}
-
 //Cursor Tracking  -----------------------------------------------------------------------------------------------------
 //If a delegate chooses it can be notified when the user hovers an image in the grid.  This code handles the cursor
 //tracking and messaging required to make that happen.
@@ -375,9 +353,6 @@ Adium, Copyright 2001-2005, Adam Iser
 	isTracking = YES;
 	NSWindow *window = [self window];
 	
-	//don't need to be notified when we change it ourselves...
-	[window removeObserver:self forKeyPath:@"acceptsMouseMovedEvents"];
-	
 	[window setAcceptsMouseMovedEvents:YES];
 	[window makeFirstResponder:self];
 }
@@ -387,46 +362,12 @@ Adium, Copyright 2001-2005, Adam Iser
 {
 	isTracking = NO;
 	[self _setHoveredIndex:-1];
-
-	NSWindow *window = [self window];
-	[window setAcceptsMouseMovedEvents:saved_windowAcceptsMouseMovedEvents];
-
-	//sign up to receive notifications again.
-	[window addObserver:self
-	         forKeyPath:@"acceptsMouseMovedEvents"
-	            options:NSKeyValueObservingOptionNew
-	            context:NULL];
 }
 
 //Cursor moved, inform our delegate if a new cell is being hovered
 - (void)mouseMoved:(NSEvent *)theEvent
 {
 	[self _setHoveredIndex:[self imageIndexAtPoint:[self convertPoint:[theEvent locationInWindow] fromView:nil]]];
-}
-
-//if we move to a different window, we want to start observing the value of acceptsMouseMovedEvents on the new one
-//	and stop observing it on the old one.
-- (void)viewWillMoveToWindow:(NSWindow *)newWindow
-{
-	NSWindow *oldWindow = [self window];
-	[oldWindow removeObserver:self forKeyPath:@"acceptsMouseMovedEvents"];
-
-	if (isTracking) {
-		//since we're tracking, just plan to restore to the new window's acceptsMouseMovedEvents instead of the old window's.
-		//the window should have finished being set by the time tracking ends.
-
-		//first, restore the saved value on the old window.
-		[oldWindow setAcceptsMouseMovedEvents:saved_windowAcceptsMouseMovedEvents];
-		//second, save the current value on the new window.
-		saved_windowAcceptsMouseMovedEvents = [newWindow acceptsMouseMovedEvents];
-		//third, set our YES value on the new window.
-		[newWindow setAcceptsMouseMovedEvents:YES];
-	} else {
-		[newWindow addObserver:self
-				 forKeyPath:@"acceptsMouseMovedEvents"
-					options:NSKeyValueObservingOptionNew
-					context:NULL];
-	}
 }
 
 //Set the hovered image index

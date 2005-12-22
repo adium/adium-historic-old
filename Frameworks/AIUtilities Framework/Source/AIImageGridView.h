@@ -45,7 +45,6 @@ Adium, Copyright 2001-2005, Adam Iser
 	BOOL		_respondsToImageHovered;
 	BOOL		drawsBackground;
 	BOOL		isTracking;
-	BOOL		saved_windowAcceptsMouseMovedEvents;
 }
 
 /*!
