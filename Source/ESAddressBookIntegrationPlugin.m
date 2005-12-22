@@ -963,8 +963,6 @@ NSString* serviceIDForJabberUID(NSString *UID);
 			
 			//Set account display names
 			if (enableImport) {
-				NSEnumerator	*servicesEnumerator;
-				NSString		*serviceID;
 				NSString		*myDisplayName, *myPhonetic = nil;
 				
 				myDisplayName = [self nameForPerson:me phonetic:&myPhonetic];
