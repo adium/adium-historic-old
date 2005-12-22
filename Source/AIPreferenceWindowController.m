@@ -455,7 +455,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     [[tableView_advanced tableColumnWithIdentifier:@"description"] setDataCell:cell];
 	[cell release];
 	
-    [scrollView_advanced setAutoHideScrollBar:YES];
+    [scrollView_advanced setAutohidesScrollers:YES];
 	
 	//Select the previously selected row
 	int row = [[[adium preferenceController] preferenceForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW

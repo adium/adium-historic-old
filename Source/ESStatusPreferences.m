@@ -128,7 +128,7 @@
 	[outlineView_stateList setTarget:self];
 	[outlineView_stateList setDoubleAction:@selector(editState:)];
 	[outlineView_stateList setIntercellSpacing:NSMakeSize(4,4)];
-    [scrollView_stateList setAutoHideScrollBar:YES];
+    [scrollView_stateList setAutohidesScrollers:YES];
 	
 	//Enable dragging of states
 	[outlineView_stateList registerForDraggedTypes:[NSArray arrayWithObject:STATE_DRAG_TYPE]];
