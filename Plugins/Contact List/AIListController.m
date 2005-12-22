@@ -28,8 +28,10 @@
 #import <Adium/AIListOutlineView.h>
 #import <AIUtilities/AIObjectAdditions.h>
 
-#define EDGE_CATCH_X				40
-#define EDGE_CATCH_Y				40
+#define CONTACT_LIST_SCROLLER_CONTROL_SIZE NSRegularControlSize
+
+#define EDGE_CATCH_X						40
+#define EDGE_CATCH_Y						40
 
 #define	MENU_BAR_HEIGHT				22
 
@@ -165,12 +167,12 @@ typedef enum {
 	
 	//First, see if they are now within EDGE_CATCH_Y of the total boundingFrame
 	if ((windowFrame.origin.y < boundingFrame.origin.y + EDGE_CATCH_Y) &&
-	   (windowFrame.origin.y + windowFrame.size.height < boundingFrame.origin.y + boundingFrame.size.height - EDGE_CATCH_Y)) {
+	   ((windowFrame.origin.y + windowFrame.size.height) < (boundingFrame.origin.y + boundingFrame.size.height - EDGE_CATCH_Y))) {
 		dockToBottomOfScreen = AIDockToBottom_TotalFrame;
 	} else {
 		//Then, check for the (possibly smaller) visibleBoundingFrame
 		if ((windowFrame.origin.y < visibleBoundingFrame.origin.y + EDGE_CATCH_Y) &&
-		   (windowFrame.origin.y + windowFrame.size.height < visibleBoundingFrame.origin.y + visibleBoundingFrame.size.height - EDGE_CATCH_Y)) {
+		   ((windowFrame.origin.y + windowFrame.size.height) < (visibleBoundingFrame.origin.y + visibleBoundingFrame.size.height - EDGE_CATCH_Y))) {
 			dockToBottomOfScreen = AIDockToBottom_VisibleFrame;
 		} else {
 			dockToBottomOfScreen = AIDockToBottom_No;
@@ -185,7 +187,6 @@ typedef enum {
 	NSWindow	*theWindow = [contactListView window];
 	NSScreen	*currentScreen = [theWindow screen];
 	int			desiredHeight = [contactListView desiredHeight];
-	float		toolbarHeight;
 	BOOL		anchorToRightEdge = NO;
 	
 	windowFrame = [theWindow frame];
@@ -195,9 +196,8 @@ typedef enum {
         screenFrame = [currentScreen frame]; 
         visibleScreenFrame = [currentScreen visibleFrame];
     } else {
-        visibleScreenFrame = screenFrame = NSMakeRect(0,0,0,0); 
+        visibleScreenFrame = screenFrame = NSZeroRect; 
     }
-	toolbarHeight = [theWindow toolbarHeight];
 	
 	//Width
 	if (useDesiredWidth) {
@@ -231,10 +231,11 @@ typedef enum {
 	}
 	
 	
-    // compute boundingFrame for window
+    //Compute boundingFrame for window
     if (currentScreen == nil) {
-        // no bound
+        //No bound
         boundingFrame = NSMakeRect(FLT_MAX*-0.5f, FLT_MAX*-0.5f, FLT_MAX, FLT_MAX);
+
     } else {       
         /*
          * If the window is against the left or right edges of the screen AND the user did not dock to the visibleFrame last,
@@ -249,16 +250,16 @@ typedef enum {
         if ((windowOnEdge && (dockToBottomOfScreen != AIDockToBottom_VisibleFrame)) ||
            (dockToBottomOfScreen == AIDockToBottom_TotalFrame)) {
             NSArray *screens;
-            
+
             boundingFrame = screenFrame;
-            
+
             //We still should not violate the menuBar, so account for it here if we are on the menuBar screen.
             if ((screens = [NSScreen screens]) &&
                 ([screens count]) &&
                 (currentScreen == [screens objectAtIndex:0])) {
                 boundingFrame.size.height -= MENU_BAR_HEIGHT;
             }
-            
+
         } else {
             boundingFrame = visibleScreenFrame;
         }
@@ -268,10 +269,10 @@ typedef enum {
 	if (useDesiredHeight) {
 		//Subtract the current size of the view from our frame
 		newWindowFrame.size.height -= viewFrame.size.height;
-		
+
 		//Now, figure out how big the view wants to be and add that to our frame
 		newWindowFrame.size.height += desiredHeight;
-		
+
 		//Vertical positioning and size if we are placed on a screen
 		if (newWindowFrame.size.height >= boundingFrame.size.height) {
 			//If the window is bigger than the screen, keep it on the screen
@@ -287,39 +288,26 @@ typedef enum {
 				newWindowFrame.origin.y = windowFrame.origin.y;				
 			}
 		}
-		
+
 		//We must never request a height of 0 or OS X will completely move us off the screen
 		if (newWindowFrame.size.height == 0) newWindowFrame.size.height = 1;
-		
-		/* If we have a toolbar showing and the new window frame would put us into the dock, OS X will change the rect
-		 * automatically after we call setFrame:.  However, if it would put us off the screen, OS X allows this. Checking
-		 * our size against the size of the screen lets us correct for this problem.
-		 */
-		if ((newWindowFrame.size.height + toolbarHeight) > (screenFrame.size.height)) {
-			newWindowFrame.size.height -= toolbarHeight;
-		}
-		
+
 		//Keep the window from hanging off any Y screen edge (This is optional and could be removed if this annoys people)
 		if (NSMaxY(newWindowFrame) > NSMaxY(boundingFrame)) newWindowFrame.origin.y = NSMaxY(boundingFrame) - newWindowFrame.size.height;
 		if (NSMinY(newWindowFrame) < NSMinY(boundingFrame)) newWindowFrame.origin.y = NSMinY(boundingFrame);		
 	}
 
 	if (useDesiredWidth) {
-		/* We only want to account for the scrollbar if we are dynamically sizing (i.e. autoResizeHorizontally is YES).
-		 * useDesiredWidth could be YES because of a forcedWidth; we shouldn't change based on the scrollbar in that case.
-		 */
-		if (autoResizeHorizontally) {
-			/* If the desired height plus any toolbar height exceeds the height we determined, we will be showing a scroller; 
-			 * expand horizontally to take that into account.  The magic number 2 fixes this method for use with our borderless
-			 * windows... I'm not sure why it's needed, but it doesn't hurt anything.
-			 */
-			if (desiredHeight + toolbarHeight > newWindowFrame.size.height + 2) {
-				float scrollerWidth = [NSScroller scrollerWidthForControlSize:[[scrollView_contactList verticalScroller] controlSize]];
-				newWindowFrame.size.width += scrollerWidth;
-				
-				if (anchorToRightEdge) {
-					newWindowFrame.origin.x -= scrollerWidth;
-				}
+		/* If the desired height plus any toolbar height exceeds the height we determined, we will be showing a scroller; 
+		* expand horizontally to take that into account.  The magic number 2 fixes this method for use with our borderless
+		* windows... I'm not sure why it's needed, but it doesn't hurt anything.
+		*/
+		if (desiredHeight + (windowFrame.size.height - viewFrame.size.height) > newWindowFrame.size.height + 2) {
+			float scrollerWidth = [NSScroller scrollerWidthForControlSize:CONTACT_LIST_SCROLLER_CONTROL_SIZE];
+			newWindowFrame.size.width += scrollerWidth;
+			
+			if (anchorToRightEdge) {
+				newWindowFrame.origin.x -= scrollerWidth;
 			}
 		}
 		
