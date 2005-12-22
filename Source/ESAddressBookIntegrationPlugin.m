@@ -331,7 +331,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 			//Find the person
 			ABPerson *person = [self personForListObject:inObject];
 			
-			if (person) {
+			if (person && (person != [sharedAddressBook me])) {
 				//Set the person's image to the inObject's serverside User Icon.
 				NSData  *userIconData = [inObject statusObjectForKey:@"UserIconData"];
 				if (!userIconData) {
