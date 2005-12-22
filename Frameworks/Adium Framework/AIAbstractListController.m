@@ -153,7 +153,7 @@
 	
 	[scrollView_contactList setDrawsBackground:NO];
     [scrollView_contactList setAutoScrollToBottom:NO];
-    [scrollView_contactList setAutoHideScrollBar:YES];
+    [scrollView_contactList setAutohidesScrollers:YES];
 
 	//Dragging
 	[contactListView registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs", NSFilenamesPboardType, NSURLPboardType, NSStringPboardType, nil]];
