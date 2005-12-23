@@ -296,6 +296,12 @@
 		serviceID = @"bonjour-libezv";
 	}
 	
+#warning turn this off if we switch to joscar
+	//"upgrade" joscar accounts to libgaim ones. Inserted so
+	//testing joscar doesn't break people's libgaim accounts.
+	if ([serviceID isEqualToString:@"joscar-OSCAR-AIM"])
+		serviceID = @"libgaim-oscar-AIM";
+	
 	return serviceID;
 }
 
