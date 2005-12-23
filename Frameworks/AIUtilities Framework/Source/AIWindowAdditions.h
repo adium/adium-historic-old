@@ -37,8 +37,10 @@ kCGErrorInvalidConnection = 1002,
 */
 
 // Internal CoreGraphics typedefs
-typedef int		CGSConnection;
-typedef int		CGSWindow;
+
+typedef UInt32 WindowTags;
+typedef void  *CGSWindow;
+typedef void  *CGSConnection;
 typedef int		CGSValue;
 
 //// CONSTANTS ////
@@ -120,12 +122,9 @@ extern CGSConnection _CGSDefaultConnection(void);
 // thirtyTwo must = 32 for some reason. tags is pointer to 
 //array ot ints (size 2?). First entry holds window tags.
 // 0x0800 is sticky bit.
-extern OSStatus CGSGetWindowTags(const CGSConnection cid, const CGSWindow wid, 
-				 int *tags, int thirtyTwo);
-extern OSStatus CGSClearWindowTags(const CGSConnection cid, const CGSWindow wid, 
-				   int *tags, int thirtyTwo);
-extern OSStatus CGSSetWindowTags(const CGSConnection cid, const CGSWindow wid, 
-				 int *tags, int thirtyTwo);
+OSStatus      CGSSetWindowTags(  CGSConnection cgsID, CGSWindow theWindow, SInt32 *theTags, SInt32 tagSize);
+OSStatus      CGSGetWindowTags(  CGSConnection cgsID, CGSWindow theWindow, SInt32 *theTags, SInt32 tagSize);
+OSStatus      CGSClearWindowTags(CGSConnection cgsID, CGSWindow theWindow, SInt32 *theTags, SInt32 tagSize);
 
 // Get on-screen window counts and lists.
 extern OSStatus CGSGetOnScreenWindowCount(const CGSConnection cid, CGSConnection targetCID, int* outCount); 

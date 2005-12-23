@@ -122,20 +122,85 @@
 	return responder;	
 }
 
+#pragma mark Expose ignoring
+enum {
+    kWindowNoTags            = 0,
+    kWindowExposeWillMoveTag = (1 <<  0),
+    kWindowExposeWillHideTag = (1 <<  1),
+    kWindowExposeIsStickyTag = (1 << 11)
+};
+
+CGSWindow     GetNativeWindowFromWindowRef(WindowRef window);
+CGSConnection CGSGetDefaultConnection(void);
+
+
+OSStatus GetWindowTags(WindowRef theWindow, WindowTags *theTags)
+{   CGSConnection   cgConnection;
+    SInt32          sysVersion;
+    CGSWindow       cgWindow;
+    OSStatus        theErr;
+
+    // Check the system
+    theErr = Gestalt(gestaltSystemVersion, &sysVersion);
+    if (theErr != noErr || sysVersion < 0x00001013)
+	{
+        *theTags = kWindowNoTags;
+        return(noErr);
+	}
+
+    // Get the window
+    cgWindow = GetNativeWindowFromWindowRef(theWindow);
+    if (cgWindow == NULL)
+        return(unimpErr);
+
+    cgConnection = _CGSDefaultConnection();
+    if (cgConnection == NULL)
+        return(unimpErr);
+
+    // Get the tags
+    theErr = CGSGetWindowTags(cgConnection, cgWindow, (SInt32 *) &theTags, 32);
+
+    return(theErr);
+}
+
+
+OSStatus ChangeWindowTags(WindowRef theWindow, WindowTags setThese, WindowTags clearThese)
+{   CGSConnection   cgConnection;
+    SInt32          sysVersion;
+    CGSWindow       cgWindow;
+    OSStatus        theErr;
+
+    // Check the system
+    theErr = Gestalt(gestaltSystemVersion, &sysVersion);
+    if (theErr != noErr || sysVersion < 0x00001013)
+        return(unimpErr);
+
+    // Get the window
+    cgWindow = GetNativeWindowFromWindowRef(theWindow);
+    if (cgWindow == NULL)
+        return(unimpErr);
+
+    cgConnection = _CGSDefaultConnection();
+    if (cgConnection == NULL)
+        return(unimpErr);
+
+    // Update the tags
+    theErr = noErr;
+
+    if (setThese != kWindowNoTags)
+        theErr |= CGSSetWindowTags(  cgConnection, cgWindow, (SInt32 *)   &setThese, 32);
+
+    if (clearThese != kWindowNoTags)
+        theErr |= CGSClearWindowTags(cgConnection, cgWindow, (SInt32 *) &clearThese, 32);
+
+    return(theErr);
+}
+
 - (void)setIgnoresExpose:(BOOL)flag
 {
-	CGSConnection connectionID = _CGSDefaultConnection();
-	CGSWindow winNumber = [self windowNumber];
-	int allTags[0];
-	int theTags[2] = {0x0800, 0};
-	
-	if(!CGSGetWindowTags(connectionID, winNumber, allTags, 32)) {
-		if (flag) {
-			CGSSetWindowTags(connectionID, winNumber, theTags, 32);
-		} else {
-			CGSClearWindowTags(connectionID, winNumber, theTags, 32);
-		}
-	}
+	ChangeWindowTags([self windowRef],
+					 (flag ? kWindowExposeIsStickyTag : kWindowNoTags),
+					 (!flag ? kWindowExposeIsStickyTag : kWindowNoTags)); 
 }
 
 @end
