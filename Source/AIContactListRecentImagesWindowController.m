@@ -104,35 +104,49 @@
 
 - (int)numberOfImagesInImageGridView:(AIImageGridView *)imageGridView
 {
-	int maxPics = [[NSIPRecentPicture recentPictures] count];
-
-	return (maxPics > 10 ? 10 : maxPics);
+	return 10;
 }
 
 - (NSImage *)imageGridView:(AIImageGridView *)imageGridView imageAtIndex:(int)index
 {
-	NSImage		 *image = [[NSIPRecentPicture recentSmallIcons] objectAtIndex:index];
-	NSBezierPath *fullPath = [NSBezierPath bezierPathWithRect:NSMakeRect(0, 0, [image size].width, [image size].height)];
-	NSImage		 *displayImage = [[image copy] autorelease];;
+	NSImage		 *displayImage;
 
-	[displayImage setFlipped:YES];
-	[displayImage lockFocus];
+	if (index < [[NSIPRecentPicture recentPictures] count]) {
+		NSImage		 *image = [[NSIPRecentPicture recentSmallIcons] objectAtIndex:index];
+		NSSize		size = [image size];
+		NSBezierPath *fullPath = [NSBezierPath bezierPathWithRect:NSMakeRect(0, 0, size.width, size.height)];
+		displayImage = [image copy];
+		
+		[displayImage setFlipped:YES];
+		[displayImage lockFocus];
+		
+		if (index == currentHoveredIndex) {
+			[[[NSColor blueColor] colorWithAlphaComponent:0.30] set];
+			[fullPath fill];
+			
+			[[NSColor blueColor] set];
+			[fullPath stroke];
+			
+		} else {
+			[[NSColor whiteColor] set];
+			[fullPath stroke];
+		}
+		
+		[displayImage unlockFocus];
+	} else {
+		NSSize		 size = NSMakeSize(32, 32);
+		NSBezierPath *fullPath = [NSBezierPath bezierPathWithRect:NSMakeRect(0, 0, size.width, size.height)];
 
-	if (index == currentHoveredIndex) {
-		[[[NSColor blueColor] colorWithAlphaComponent:0.30] set];
+		displayImage = [[NSImage alloc] initWithSize:size];
+		[displayImage lockFocus];
+		
+		[[NSColor lightGrayColor] set];
 		[fullPath fill];
 		
-		[[NSColor blueColor] set];
-		[fullPath stroke];
-
-	} else {
-		[[NSColor whiteColor] set];
-		[fullPath stroke];
+		[displayImage unlockFocus];
 	}
-
-	[displayImage unlockFocus];
-
-	return displayImage;
+	
+	return [displayImage autorelease];
 }
 
 - (void)imageGridView:(AIImageGridView *)inImageGridView cursorIsHoveringImageAtIndex:(int)index
@@ -222,9 +236,11 @@
 
 	activeAccount = [AIStandardListWindowController activeAccountGettingOnlineAccounts:onlineAccounts ownIconAccounts:ownIconAccounts];
 	
-	if ([ownIconAccounts count]) {
+	int ownIconAccountsCount = [ownIconAccounts count];
+	int onlineAccountsCount = [onlineAccounts count];
+	if (ownIconAccountsCount && ((ownIconAccountsCount > 1) || (onlineAccountsCount > 1))) {
 		//There are at least some accounts using the global preference if the counts differ
-		BOOL		 includeGlobal = ([onlineAccounts count] != [ownIconAccounts count]);
+		BOOL		 includeGlobal = (onlineAccountsCount != ownIconAccountsCount);
 		AIAccount	 *account;
 		NSEnumerator *enumerator;
 
