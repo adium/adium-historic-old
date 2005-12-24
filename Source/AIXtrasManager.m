@@ -169,7 +169,7 @@ static NSImage * scriptImage;
 
 - (void) updatePreview
 {
-	AIXtraInfo * xtra = [selectedCategory objectAtIndex:0];
+	AIXtraInfo * xtra = [selectedCategory objectAtIndex:[xtraList selectedRow]];
 	[showInfoControl setHidden:NO];
 	if(showInfo)
 		[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
@@ -180,6 +180,8 @@ static NSImage * scriptImage;
 			[NSBundle loadNibNamed:@"EmoticonPreviewView" owner:self];
 		else if ([xtraType isEqualToString:AIXtraTypeDockIcon])
 			[NSBundle loadNibNamed:@"DockIconPreviewView" owner:self];
+		else if ([xtraType isEqualToString:AIXtraTypeMessageStyle])
+			[NSBundle loadNibNamed:@"WebkitMessageStylePreviewView" owner:self];
 		else if ([xtraType isEqualToString:AIXtraTypeStatusIcons]) {
 			[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self];
 		}
