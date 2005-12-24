@@ -7,6 +7,7 @@
 
 #import "AdiumSetupWizard.h"
 #import "AIAccountController.h"
+#import "AIContentController.h"
 #import "SetupWizardBackgroundView.h"
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIServiceMenu.h>
@@ -57,7 +58,7 @@
  */
 - (void)windowDidLoad
 {
-	[[self window] setTitle:AILocalizedString(@"Adium Setup Wizard",nil)];
+	[[self window] setTitle:AILocalizedString(@"Adium",nil)];
 
 	//Ensure the first tab view item is selected
 	[tabView selectTabViewItemAtIndex:0];
@@ -227,7 +228,7 @@
 			[[textView_addAccountMessage enclosingScrollView] setDrawsBackground:NO];
 			
 			NSAttributedString *accountMessage = [AIHTMLDecoder decodeHTML:
-				AILocalizedString(@"<HTML>To chat with your friends, family, and coworkers, you must have an instant messaging account on the same service they do.  Specify a service, name, and password below; if you don't have an account yet, click <A HREF=\"http://trac.adiumx.com/wiki/CreatingAnAccount#Sigingupforanaccount\">here</A> for more information.\n\nAdium supports as many accounts as you want to add; you can always add more in the Accounts pane of the Adium Preferences.</HTML>", nil)
+				AILocalizedString(@"<HTML>To chat with your friends, family, and coworkers, you must have an instant messaging account on the same service they do. Specify a service, name, and password below; if you don't have an account yet, click <A HREF=\"http://trac.adiumx.com/wiki/CreatingAnAccount#Sigingupforanaccount\">here</A> for more information.\n\nAdium supports as many accounts as you want to add; you can always add more in the Accounts pane of the Adium Preferences.</HTML>", nil)
 													 withDefaultAttributes:[[textView_addAccountMessage textStorage] attributesAtIndex:0
 																														effectiveRange:NULL]];
 			[[textView_addAccountMessage textStorage] setAttributedString:accountMessage];
@@ -248,14 +249,23 @@
 	} else if ([identifier isEqualToString:WELCOME_IDENTIFIER]) {
 		[textView_welcomeMessage setDrawsBackground:NO];
 		[[textView_welcomeMessage enclosingScrollView] setDrawsBackground:NO];
-		[textView_welcomeMessage setString:@"<<<welcome message here>>>"];
-		
+		NSAttributedString *welcomeMessage = [AIHTMLDecoder decodeHTML:
+			AILocalizedString(@"<HTML>Adium is <i>your</i> instant messaging solution.<br><br>Chat with whomever you want, whenever you want, however you want.  Multiple messaging services or accounts? Just one account? Work? Play? Both? No problem; Adium has you covered.<br><br>Adium is fast, free, and fun, with an interface you'll love to use day in and day out. :)<br><br>This assistant will help you set up your instant messaging accounts and get started chatting.<br><br>Click <b>Continue</b> and the duck will take it from here.</HTML>",nil)
+												 withDefaultAttributes:[[textView_addAccountMessage textStorage] attributesAtIndex:0
+																													effectiveRange:NULL]];
+		//Turn that smiley into an emoticon :)
+		welcomeMessage = [[adium contentController] filterAttributedString:welcomeMessage
+														   usingFilterType:AIFilterDisplay
+																 direction:AIFilterIncoming
+																   context:nil];
+		[[textView_welcomeMessage textStorage] setAttributedString:welcomeMessage];
+
 		[textField_welcome setStringValue:AILocalizedString(@"Welcome to Adium!",nil)];
 		
 	} else if ([identifier isEqualToString:DONE_IDENTIFIER]) {
 		[textView_doneMessage setDrawsBackground:NO];
 		[[textView_doneMessage enclosingScrollView] setDrawsBackground:NO];
-		[textView_doneMessage setString:@"<<<you're all done, woohoo, message here>>>"];
+		[textView_doneMessage setString:AILocalizedString(@"Adium is now ready for you. \n\nThe Status indicator at the top of your Contact List and in the Status menu lets you determine whether others see you as Available or Away or, alternately, if you are Offline. Select Custom to specify a status message.\n\nDouble-click a name in your Contact List to open a chat window and beging chatting.  You can add contacts to your Contact List via the Contact menu.\n\nWant to customize your Adium experience? Check out the Adium Preferences and AdiumXtras web site via the Adium menu.\n\nEnjoy! Click Done to begin using Adium.", nil)],
 
 		[textField_done setStringValue:AILocalizedString(@"Congratulations!","Header line in the last pane of the Adium setup wizard")];
 	}
