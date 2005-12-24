@@ -36,6 +36,7 @@
 - (void)_configureToolbar;
 - (void)activeStateChanged:(NSNotification *)notification;
 - (void)updateImagePicker;
+- (void)repositionImagePickerToPosition:(ContactListImagePickerPosition)desiredImagePickerPosition;
 @end
 
 @implementation AIStandardListWindowController
@@ -77,7 +78,11 @@
  */
 - (void)windowDidLoad
 {
+	//Our nib starts with the image picker on the left side
+	imagePickerPosition = ContactListImagePickerOnLeft;
+
 	[super windowDidLoad];
+	
 	[self _configureToolbar];
 	[[self window] setTitle:AILocalizedString(@"Contacts","Contact List window title")];
 
@@ -89,9 +94,7 @@
 								   selector:@selector(activeStateChanged:)
 									   name:AIStatusActiveStateChangedNotification
 									 object:nil];
-	[self activeStateChanged:nil];
-	
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+	[self activeStateChanged:nil];	
 }
 
 /*!
@@ -132,10 +135,11 @@
 - (void)activeStateChanged:(NSNotification *)notification
 {
 	AIStatus	*activeStatus = [[adium statusController] activeStatusState];
-	[statusMenuView setCurrentStatusName:[activeStatus title]];
+	[statusMenuView setTitle:[activeStatus title]];
+	[statusMenuView setImage:[activeStatus iconOfType:AIStatusIconList
+											direction:AIIconFlipped]];
 
 	[self updateImagePicker];
-	//[menuItem setImage:[activeStatus icon]];
 }
 
 - (void)updateImagePicker
@@ -166,6 +170,35 @@
 		[self updateImagePicker];
 	}
 	
+	/*
+	 * We move our image picker to mirror the contact list's own layout
+	 */
+	if ([group isEqualToString:PREF_GROUP_LIST_LAYOUT]) {
+		LIST_POSITION					layoutUserIconPosition = [[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue];
+		ContactListImagePickerPosition  desiredImagePickerPosition;
+
+		//Determine where we want the image picker now
+		switch (layoutUserIconPosition) {
+			case LIST_POSITION_RIGHT:
+			case LIST_POSITION_FAR_RIGHT:
+			case LIST_POSITION_BADGE_RIGHT:
+				desiredImagePickerPosition = ContactListImagePickerOnRight;
+				break;
+			case LIST_POSITION_NA:
+			case LIST_POSITION_FAR_LEFT:
+			case LIST_POSITION_LEFT:
+			case LIST_POSITION_BADGE_LEFT:
+			default:
+				desiredImagePickerPosition = ContactListImagePickerOnLeft;
+				break;				
+		}
+
+		//Only proceed if this new position is different from the old one
+		if (desiredImagePickerPosition != imagePickerPosition) {
+			[self repositionImagePickerToPosition:desiredImagePickerPosition];
+		}
+	}
+	
 	[super preferencesChangedForGroup:group
 								  key:key
 							   object:object
@@ -173,6 +206,66 @@
 							firstTime:firstTime];
 }
 
+/*
+ * @brief Reposition the image picker to a desireed position
+ *
+ * This shifts the status picker view and the name view in the opposite direction, maintaining the same relative spacing relationships
+ */
+- (void)repositionImagePickerToPosition:(ContactListImagePickerPosition)desiredImagePickerPosition
+{
+	NSRect statusMenuViewFrame = [statusMenuView frame];
+	NSRect newStatusMenuViewFrame = statusMenuViewFrame;
+	
+	NSRect nameViewFrame = [nameView frame];
+	NSRect newNameViewFrame = nameViewFrame;
+	
+	NSRect imagePickerFrame = [imagePicker frame];
+	NSRect newImagePickerFrame = imagePickerFrame;
+	
+	if (desiredImagePickerPosition == ContactListImagePickerOnLeft) {
+		//Image picker is on the right but we want it on the left
+		float margin = (NSMinX(imagePickerFrame) - NSMaxX(statusMenuViewFrame));
+		
+		newImagePickerFrame.origin.x = statusMenuViewFrame.origin.x;
+		newStatusMenuViewFrame.origin.x = (NSMaxX(newImagePickerFrame) + margin);
+		newNameViewFrame.origin.x = newStatusMenuViewFrame.origin.x + (statusMenuViewFrame.origin.x - nameViewFrame.origin.x);
+		
+		[imagePicker setAutoresizingMask:(NSViewMaxXMargin | NSViewMinYMargin)];
+
+	} else {
+		//Image picker is on the left but we want it on the right
+		float margin = (NSMinX(statusMenuViewFrame) - NSMaxX(imagePickerFrame));
+		
+		newStatusMenuViewFrame.origin.x = imagePickerFrame.origin.x;
+		newNameViewFrame.origin.x = newStatusMenuViewFrame.origin.x + (statusMenuViewFrame.origin.x - nameViewFrame.origin.x);
+		
+		newImagePickerFrame.origin.x = (NSMaxX(newStatusMenuViewFrame) + margin);
+
+		[imagePicker setAutoresizingMask:(NSViewMinXMargin | NSViewMinYMargin)];
+	}
+	
+	NSView *myContentView = [[self window] contentView];
+	
+	[statusMenuView setFrame:newStatusMenuViewFrame];
+	[myContentView setNeedsDisplayInRect:statusMenuViewFrame];
+	[statusMenuView setNeedsDisplay:YES];
+	
+	[nameView setFrame:newNameViewFrame];
+	[myContentView setNeedsDisplayInRect:nameViewFrame];
+	[nameView setNeedsDisplay:YES];
+	
+	[imagePicker setFrame:newImagePickerFrame];
+	[myContentView setNeedsDisplayInRect:imagePickerFrame];
+	[imagePicker setNeedsDisplay:YES];
+	
+	imagePickerPosition = desiredImagePickerPosition;
+}
+
+/*
+ * @brief Determine the account which will be modified by a change to the image picker
+ *
+ * @result The 'active' accnt for image purposes, or nil if the global icon is active
+ */
 + (AIAccount *)activeAccountGettingOnlineAccounts:(NSMutableSet *)onlineAccounts ownIconAccounts:(NSMutableSet *)ownIconAccounts
 {
 	AIAdium		  *sharedAdium = [AIObject sharedAdiumInstance];

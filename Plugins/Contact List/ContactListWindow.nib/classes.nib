@@ -2,15 +2,11 @@
     IBClasses = (
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            CLASS = AIBorderlessListWindowController; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIListWindowController; 
-        }, 
-        {
             CLASS = AIContactListImagePicker; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AIImageViewWithImagePicker; 
         }, 
+        {CLASS = AIContactListNameView; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {CLASS = AIContactListStatusMenuView; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {CLASS = AIDockingWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
         {
@@ -47,6 +43,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 imagePicker = AIContactListImagePicker; 
+                nameView = AIContactListNameView; 
                 statusMenuView = AIContactListStatusMenuView; 
             }; 
             SUPERCLASS = AIListWindowController; 
