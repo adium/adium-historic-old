@@ -39,7 +39,9 @@
 	[SLGaimCocoaAdapter prepareSharedInstance];
 	
     //Install the services
+#ifndef JOSCAR_SUPERCEDE_LIBGAIM
 	AIMService			= [[ESAIMService alloc] init];
+#endif
 	ICQService			= [[ESICQService alloc] init];
 	DotMacService		= [[ESDotMacService alloc] init];
 	GaduGaduService		= [[ESGaduGaduService alloc] init];
@@ -59,7 +61,9 @@
 
 - (void)uninstallPlugin
 {
+#ifndef JOSCAR_SUPERCEDE_LIBGAIM
 	[AIMService release]; AIMService = nil;
+#endif
 	[ICQService release]; ICQService = nil;
 	[DotMacService release]; DotMacService = nil;
 	[GaduGaduService release]; GaduGaduService = nil;
