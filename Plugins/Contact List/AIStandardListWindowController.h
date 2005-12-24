@@ -17,11 +17,19 @@
 #import "AIListWindowController.h"
 
 @protocol AIListObjectObserver, StateMenuPlugin;
-@class AIAccount, AIStatusMenu, AIContactListStatusMenuView, AIContactListImagePicker;
+@class AIAccount, AIStatusMenu, AIContactListStatusMenuView, AIContactListImagePicker, AIContactListNameView;
+
+typedef enum {
+	ContactListImagePickerOnLeft = 0,
+	ContactListImagePickerOnRight
+} ContactListImagePickerPosition;
 
 @interface AIStandardListWindowController : AIListWindowController {
 	IBOutlet	AIContactListStatusMenuView	*statusMenuView;
+	IBOutlet	AIContactListNameView		*nameView;
+
 	IBOutlet	AIContactListImagePicker	*imagePicker;
+	ContactListImagePickerPosition			imagePickerPosition;
 
 	NSDictionary				*toolbarItems;
 	AIStatusMenu				*statusMenu;
