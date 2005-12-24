@@ -718,7 +718,8 @@ NSString* serviceIDForJabberUID(NSString *UID);
 			
 			person = [self _searchForUID:UID serviceID:serviceID];
 			
-			//If we don't find anything yet and inObject is an AIM account, try again using the ICQ property; ICQ, try again using AIM
+			/* If we don't find anything yet, look at alternative service possibilities, AIM <--> ICQ,
+			 */
 			if (!person) {
 				if ([serviceID isEqualToString:@"AIM"]) {
 					person = [self _searchForUID:UID serviceID:@"ICQ"];
