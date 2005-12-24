@@ -11,6 +11,7 @@
 	NSTrackingRectTag					trackingTag;
 }
 
-- (void)setCurrentStatusName:(NSString *)inStatusName;
+- (void)setTitle:(NSString *)inTitle;
+- (void)setImage:(NSImage *)inImage;
 
 @end

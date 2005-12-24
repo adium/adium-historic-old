@@ -9,10 +9,12 @@
 #import <AIUtilities/AIParagraphStyleAdditions.h>
 #import <AIUtilities/AIBezierPathAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #include <Carbon/Carbon.h>
 
 #define LEFT_MARGIN		5
+#define IMAGE_MARGIN	4
 #define ARROW_WIDTH		8
 #define ARROW_HEIGHT	(ARROW_WIDTH/2.0)
 #define ARROW_XOFFSET	5
@@ -22,8 +24,11 @@
 
 - (void)commonInit
 {
-	currentStatus = nil;
-	
+	title = nil;
+	currentImage = nil;
+	textSize = NSZeroSize;
+	imageSize = NSZeroSize;
+
 	statusParagraphStyle = [[NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 														  lineBreakMode:NSLineBreakByTruncatingTail] retain];
 	
@@ -67,7 +72,8 @@
 	}
 	
 	[newCell setMenu:[[[self menu] copy] autorelease]];
-	[newCell->currentStatus retain];
+	[newCell->title retain];
+	[newCell->currentImage retain];
 	[newCell->statusParagraphStyle retain];
 	[newCell->statusAttributes retain];
 	
@@ -76,22 +82,32 @@
 
 - (void)dealloc
 {
-	[currentStatus release];
+	[title release];
+	[currentImage release];
+
 	[statusParagraphStyle release];
 	[statusAttributes release];
 
 	[super dealloc];
 }
 
-/*
- * @brief Set the name of the current status
- */
-- (void)setCurrentStatusName:(NSString *)inStatusName
+- (void)setTitle:(NSString *)inTitle
 {
-	[currentStatus release];
+	[title release];
 	
-	currentStatus = [[NSMutableAttributedString alloc] initWithString:inStatusName
-														   attributes:statusAttributes];
+	title = [[NSMutableAttributedString alloc] initWithString:inTitle
+												   attributes:statusAttributes];
+	textSize = [title size];
+}
+
+-(void)setImage:(NSImage *)inImage
+{
+	if (inImage != currentImage) {
+		[currentImage release];
+		currentImage = [inImage retain];
+		
+		imageSize = [currentImage size];
+	}	
 }
 
 - (void)setHovered:(BOOL)inHovered
@@ -109,34 +125,53 @@
 
 - (float)trackingWidth
 {
-	return LEFT_MARGIN + [currentStatus size].width + ARROW_XOFFSET + ARROW_WIDTH + RIGHT_MARGIN;
+	float trackingWidth;
+	
+	trackingWidth = LEFT_MARGIN + [title size].width + ARROW_XOFFSET + ARROW_WIDTH + RIGHT_MARGIN;
+	
+	if (currentImage) {
+		trackingWidth += imageSize.width + IMAGE_MARGIN;
+	}
+	
+	return trackingWidth;
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
 	NSRect	textRect;
-	NSSize	textSize;
 	NSColor	*drawingColor;
 
 	[statusParagraphStyle setMaximumLineHeight:cellFrame.size.height];
 
-	textSize = [currentStatus size];
-
-	textRect = NSMakeRect(cellFrame.origin.x + LEFT_MARGIN,
+	textRect = NSMakeRect(cellFrame.origin.x + LEFT_MARGIN + imageSize.width + IMAGE_MARGIN,
 						  cellFrame.origin.y + ((cellFrame.size.height - textSize.height) / 2),
 						  textSize.width,
 						  textSize.height);
 
-	if (textRect.size.width > (cellFrame.size.width - LEFT_MARGIN - ARROW_XOFFSET - ARROW_WIDTH - RIGHT_MARGIN)) {
-		textRect.size.width = (cellFrame.size.width - LEFT_MARGIN - ARROW_XOFFSET - ARROW_WIDTH - RIGHT_MARGIN);
+	float maxTextWidth = (cellFrame.size.width - LEFT_MARGIN - ARROW_XOFFSET - ARROW_WIDTH - RIGHT_MARGIN);
+	if (currentImage) {
+		maxTextWidth -= (imageSize.width + IMAGE_MARGIN);
+	}
+
+	if (textRect.size.width > maxTextWidth) {
+		textRect.size.width = maxTextWidth;
 	}
 
 	if (hovered) {
-		NSBezierPath	*path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(cellFrame.origin.x,
-																				   cellFrame.origin.y,
-																				   LEFT_MARGIN + textRect.size.width + ARROW_XOFFSET + ARROW_WIDTH + RIGHT_MARGIN,
-																				   cellFrame.size.height)
-																 radius:10];
+		//Draw our hovered / highlighted background first
+		NSBezierPath	*path;
+		
+		float backgroundWidth = LEFT_MARGIN + textRect.size.width + ARROW_XOFFSET + ARROW_WIDTH + RIGHT_MARGIN;
+		
+		if (currentImage) {
+			backgroundWidth += imageSize.width + IMAGE_MARGIN;
+		}
+
+		path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(cellFrame.origin.x,
+																  cellFrame.origin.y,
+																  backgroundWidth,
+																  cellFrame.size.height)
+												radius:10];
 		
 		if ([self isHighlighted]) {
 			[[NSColor darkGrayColor] set];
@@ -152,12 +187,21 @@
 		drawingColor = [NSColor blackColor];
 	}
 	
+	if (currentImage) {
+		[currentImage drawInRect:NSMakeRect(cellFrame.origin.x + LEFT_MARGIN,
+											cellFrame.origin.y,
+											imageSize.width + IMAGE_MARGIN,
+											cellFrame.size.height)
+						  atSize:imageSize
+						position:IMAGE_POSITION_LEFT
+						fraction:1.0];
+	}
 
 	[statusAttributes setObject:drawingColor
 						 forKey:NSForegroundColorAttributeName];
-	[currentStatus setAttributes:statusAttributes
-						   range:NSMakeRange(0, [currentStatus  length])];
-	[currentStatus drawInRect:textRect];
+	[title setAttributes:statusAttributes
+						   range:NSMakeRange(0, [title  length])];
+	[title drawInRect:textRect];
 	
 	//Draw the arrow
 	NSBezierPath *arrowPath = [NSBezierPath bezierPath];
