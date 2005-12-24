@@ -152,7 +152,7 @@
  * @param iconType The AIStatusIconType to use
  * @result An <tt>NSImage</tt>
  */
-- (NSImage *)iconOfType:(AIStatusIconType)iconType
+- (NSImage *)iconOfType:(AIStatusIconType)iconType direction:(AIIconDirection)direction
 {
 	AIStatusType	statusType;
 	
@@ -161,7 +161,7 @@
 	return [AIStatusIcons statusIconForStatusName:nil
 									   statusType:statusType
 										 iconType:iconType
-										direction:AIIconNormal];
+										direction:direction];
 }
 
 /*!
@@ -173,12 +173,12 @@
  */ 
 - (NSImage *)icon
 {
-	return [self iconOfType:AIStatusIconList];
+	return [self iconOfType:AIStatusIconList direction:AIIconNormal];
 }
 
 - (NSImage *)menuIcon
 {
-	return [self iconOfType:AIStatusIconMenu];	
+	return [self iconOfType:AIStatusIconMenu direction:AIIconNormal];
 }
 
 #pragma mark Unique status ID

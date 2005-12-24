@@ -15,7 +15,7 @@
  */
 
 #import "AIServiceIcons.h" //For AIIconDirection
-#import "AIStatus.h" //For AIStatusType
+#import "AIStatusDefines.h" //For AIStatusType
 
 //Notifications
 #define AIStatusIconSetDidChangeNotification		@"AIStatusIconSetDidChangeNotification"

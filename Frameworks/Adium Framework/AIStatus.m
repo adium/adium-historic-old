@@ -81,7 +81,7 @@
  * @param iconType The AIStatusIconType to use
  * @result An <tt>NSImage</tt>
  */
-- (NSImage *)iconOfType:(AIStatusIconType)iconType
+- (NSImage *)iconOfType:(AIStatusIconType)iconType direction:(AIIconDirection)direction
 {
 	NSString		*statusName;
 	AIStatusType	statusType;
@@ -97,7 +97,7 @@
 	return [AIStatusIcons statusIconForStatusName:statusName
 									   statusType:statusType
 										 iconType:iconType
-										direction:AIIconNormal];
+										direction:direction];
 }
 
 
