@@ -295,12 +295,19 @@
 	if ([serviceID isEqualToString:@"rvous-libezv"]) {
 		serviceID = @"bonjour-libezv";
 	}
-	
+
+#ifndef JOSCAR_SUPERCEDE_LIBGAIM
 #warning turn this off if we switch to joscar
 	//"upgrade" joscar accounts to libgaim ones. Inserted so
 	//testing joscar doesn't break people's libgaim accounts.
 	if ([serviceID isEqualToString:@"joscar-OSCAR-AIM"])
 		serviceID = @"libgaim-oscar-AIM";
+#endif
+	
+#ifdef JOSCAR_SUPERCEDE_LIBGAIM
+	if ([serviceID isEqualToString:@"libgaim-oscar-AIM"])
+		serviceID = @"joscar-OSCAR-AIM";
+#endif
 	
 	return serviceID;
 }
