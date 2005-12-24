@@ -120,14 +120,22 @@
 }
 
 /*
- * @brief Set the name of the current status
+ * @brief Set the title
  */
-- (void)setCurrentStatusName:(NSString *)inStatusName
+- (void)setTitle:(NSString *)inTitle
 {
-	[[self cell] setCurrentStatusName:inStatusName];
+	[[self cell] setTitle:inTitle];
 	[self setNeedsDisplay:YES];
 
 	[self resetCursorRects];
+}
+
+- (void)setImage:(NSImage *)inImage
+{
+	[[self cell] setImage:inImage];
+	[self setNeedsDisplay:YES];
+	
+	[self resetCursorRects];	
 }
 
 #pragma mark Tracking rects

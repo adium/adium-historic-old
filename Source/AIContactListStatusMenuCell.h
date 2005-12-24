@@ -9,12 +9,20 @@
 
 
 @interface AIContactListStatusMenuCell : NSButtonCell {
-	NSMutableAttributedString		*currentStatus;
+	NSMutableAttributedString		*title;
+	NSSize							textSize;
+
+	NSImage							*currentImage;
+	NSSize							imageSize;
+
 	NSMutableDictionary				*statusAttributes;
 	NSMutableParagraphStyle			*statusParagraphStyle;
 	
 	BOOL					hovered;
 }
+
+- (void)setTitle:(NSString *)inTitle;
+- (void)setImage:(NSImage *)inImage;
 
 - (void)setHovered:(BOOL)inHovered;
 - (float)trackingWidth;
