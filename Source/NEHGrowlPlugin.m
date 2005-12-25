@@ -297,6 +297,9 @@
 	ESContactAlertsController	*contactAlertsController = [adium contactAlertsController];
 	NSArray						*allNotes = [contactAlertsController allEventIDs];
 	NSMutableDictionary			*humanReadableNames = [NSMutableDictionary dictionary];
+#ifdef GROWL_0_8
+	NSMutableDictionary			*descriptions = [NSMutableDictionary dictionary];
+#endif
 	NSEnumerator				*enumerator;
 	NSString					*eventID;
 	
@@ -304,6 +307,13 @@
 	while ((eventID = [enumerator nextObject])) {
 		[humanReadableNames setObject:[contactAlertsController globalShortDescriptionForEventID:eventID]
 							   forKey:eventID];
+		
+#ifdef GROWL_0_8
+		[descriptions setObject:[contactAlertsController longDescriptionForEventID:eventID 
+																	 forListObject:nil]
+						 forKey:eventID];
+#endif
+		
 	}
 
 #ifdef GROWL_0_8
@@ -311,6 +321,7 @@
 		allNotes, GROWL_NOTIFICATIONS_ALL,
 		allNotes, GROWL_NOTIFICATIONS_DEFAULT,
 		humanReadableNames, GROWL_NOTIFICATIONS_HUMAN_READABLE_NAMES,
+		descriptions, GROWL_NOTIFICATIONS_DESCRIPTIONS,
 		nil];
 #else
 	//While we're still in Growl 0.7, use the human readable name as the notification name
