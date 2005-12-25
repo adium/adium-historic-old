@@ -325,7 +325,7 @@
 		nil];
 #else
 	//While we're still in Growl 0.7, use the human readable name as the notification name
-	allNotes = [humanReadableNames allObjects];
+	allNotes = [humanReadableNames allValues];
 	NSDictionary	*growlReg = [NSDictionary dictionaryWithObjectsAndKeys:
 		allNotes, GROWL_NOTIFICATIONS_ALL,
 		allNotes, GROWL_NOTIFICATIONS_DEFAULT,
