@@ -47,6 +47,8 @@
 
 #define GROWL_EVENT_ALERT_IDENTIFIER		@"Growl"
 
+//#define GROWL_0_8
+
 @interface NEHGrowlPlugin (PRIVATE)
 - (NSDictionary *)growlRegistrationDict;
 - (NSAttributedString *)_growlInformationForUpdate:(BOOL)isUpdate;
@@ -246,7 +248,11 @@
 	
 	[GrowlApplicationBridge notifyWithTitle:title
 								description:description
+#ifdef GROWL_0_8
+						   notificationName:eventID
+#else
 						   notificationName:[[adium contactAlertsController] globalShortDescriptionForEventID:eventID]
+#endif
 								   iconData:iconData
 								   priority:0
 								   isSticky:[[details objectForKey:KEY_GROWL_ALERT_STICKY] boolValue]
@@ -289,19 +295,31 @@
 - (NSDictionary *)registrationDictionaryForGrowl
 {
 	ESContactAlertsController	*contactAlertsController = [adium contactAlertsController];
-	NSMutableArray				*allNotes = [NSMutableArray array];
+	NSArray						*allNotes = [contactAlertsController allEventIDs];
+	NSMutableDictionary			*humanReadableNames = [NSMutableDictionary dictionary];
 	NSEnumerator				*enumerator;
 	NSString					*eventID;
 	
-	enumerator = [[contactAlertsController allEventIDs] objectEnumerator];
+	enumerator = [allNotes objectEnumerator];
 	while ((eventID = [enumerator nextObject])) {
-		[allNotes addObject:[contactAlertsController globalShortDescriptionForEventID:eventID]];
+		[humanReadableNames setObject:[contactAlertsController globalShortDescriptionForEventID:eventID]
+							   forKey:eventID];
 	}
 
+#ifdef GROWL_0_8
+	NSDictionary	*growlReg = [NSDictionary dictionaryWithObjectsAndKeys:
+		allNotes, GROWL_NOTIFICATIONS_ALL,
+		allNotes, GROWL_NOTIFICATIONS_DEFAULT,
+		humanReadableNames, GROWL_NOTIFICATIONS_HUMAN_READABLE_NAMES,
+		nil];
+#else
+	//While we're still in Growl 0.7, use the human readable name as the notification name
+	allNotes = [humanReadableNames allObjects];
 	NSDictionary	*growlReg = [NSDictionary dictionaryWithObjectsAndKeys:
 		allNotes, GROWL_NOTIFICATIONS_ALL,
 		allNotes, GROWL_NOTIFICATIONS_DEFAULT,
 		nil];
+#endif
 
 	return growlReg;
 }
