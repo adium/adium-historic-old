@@ -91,11 +91,14 @@
 	[super dealloc];
 }
 
-- (void)setTitle:(NSString *)inTitle
+- (void)setTitle:(NSString *)inTitleString
 {
 	[title release];
-	
-	title = [[NSMutableAttributedString alloc] initWithString:inTitle
+
+	//Strip out all newlines
+	inTitleString = [inTitleString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"]];
+
+	title = [[NSMutableAttributedString alloc] initWithString:inTitleString
 												   attributes:statusAttributes];
 	textSize = [title size];
 }
