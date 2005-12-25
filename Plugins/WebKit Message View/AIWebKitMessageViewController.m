@@ -279,7 +279,7 @@ static NSArray *draggedTypes = nil;
 }
 
 /*!
- * @brief Return our message stlye controller
+ * @brief Return our message style controller
  */
 - (AIWebkitMessageViewStyle *)messageStyle
 {
@@ -955,7 +955,7 @@ static NSArray *draggedTypes = nil;
 }
 
 /*!
- * @brief Generate an updated masked user icon for the past list object
+ * @brief Generate an updated masked user icon for the passed list object
  */
 - (void)_updateUserIconForObject:(AIListObject *)inObject
 {
