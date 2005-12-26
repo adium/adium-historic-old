@@ -39,6 +39,7 @@
 
 - (NSString *)ownDisplayName;
 - (NSString *)ownPhoneticName;
+- (NSString *)serversideDisplayName;
 
 - (void)setIsMobile:(BOOL)isMobile notify:(NotifyTiming)notify;
 - (void)setOnline:(BOOL)online notify:(NotifyTiming)notify silently:(BOOL)silent;
