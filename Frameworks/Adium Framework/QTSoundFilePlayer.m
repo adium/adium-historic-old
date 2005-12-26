@@ -743,27 +743,54 @@ Boolean fillSoundConverterBuffer(SoundComponentDataPtr *data, void *refCon)
     struct AudioUnitInputCallback inputCallbackStruct;
 
     // Note: This is what we call "sophisticated error handling".
+#if 0
+ //Doesn't work.. gets an outputAudioUnit but fails in AudioUnitSetProperty below. Why?
+	ComponentDescription cd;
 
+	cd.componentType = kAudioUnitType_Output;
+    cd.componentSubType = (useSystemAlertDevice ?
+						   kAudioUnitSubType_SystemOutput :
+						   kAudioUnitSubType_DefaultOutput);
+	cd.componentManufacturer = 0;
+	cd.componentFlags = 0;
+	cd.componentFlagsMask = 0;
+
+	Component theComponent = FindNextComponent(/* start at the beginning */ NULL,
+											   &cd);
+	
+	err = OpenAComponent(theComponent, &outputAudioUnit);
+    if (err) {
+		NSLog(@"Failed to open a acomponent");
+        return NO;
+	}
+#else
 	if (useSystemAlertDevice) {
 		err = OpenSystemSoundAudioOutput(&outputAudioUnit);	
 	} else {
 		err = OpenDefaultAudioOutput(&outputAudioUnit);
-	}
-	
-    if (err)
-        return NO;
-
+	}	
+#endif
+											   
     err = AudioUnitInitialize(outputAudioUnit);
-    if (err)
+    if (err) {
+		NSLog(@"Failed to init the audio unit");
         return NO;
+	}
     
     // Set up our callback to feed data to the AU.
     inputCallbackStruct.inputProc = renderCallback;
     inputCallbackStruct.inputProcRefCon = self;
-    err = AudioUnitSetProperty(outputAudioUnit, kAudioUnitProperty_SetInputCallback, kAudioUnitScope_Input, 0, &inputCallbackStruct, sizeof(inputCallbackStruct));
-    if (err)
+    err = AudioUnitSetProperty(outputAudioUnit, 
+							   kAudioUnitProperty_SetInputCallback,
+							   kAudioUnitScope_Input,
+							   0,
+							   &inputCallbackStruct,
+							   sizeof(inputCallbackStruct));
+    if (err) {
+		NSLog(@"Failed to set property");
         return NO;
-
+	}
+		
     return YES;
 }
 
