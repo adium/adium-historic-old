@@ -701,6 +701,21 @@
 			}
 		} while (range.location != NSNotFound);
         
+		do {
+			range = [inString rangeOfString:@"%senderDisplayName%"];
+			if (range.location != NSNotFound) {
+				NSString *serversideDisplayName = ([contentSource isKindOfClass:[AIListContact class]] ?
+												   [(AIListContact *)contentSource serversideDisplayName] :
+												   nil)];
+				if (!serversideDisplayName) {
+					serversideDisplayName = [contentSource displayName];
+				}
+				
+				[inString replaceCharactersInRange:range
+										withString:[serversideDisplayName stringByEscapingForHTML]];
+			}
+		} while (range.location != NSNotFound);
+		
 		do{
 			range = [inString rangeOfString:@"%service%"];
 			if (range.location != NSNotFound) {
@@ -903,7 +918,20 @@
 			
 		}
 	} while(range.location != NSNotFound);	
-
+	
+	do {
+		range = [inString rangeOfString:@"%destinationDisplayName%"];
+		if (range.location != NSNotFound) {
+			NSString *serversideDisplayName = [[chat listObject] serversideDisplayName];
+			if (!serversideDisplayName) {
+				serversideDisplayName = [chat displayName];
+			}
+			
+			[inString replaceCharactersInRange:range
+									withString:[serversideDisplayName stringByEscapingForHTML]];
+		}
+	} while (range.location != NSNotFound);
+		
 	do{
 		range = [inString rangeOfString:@"%incomingIconPath%"];
 		if (range.location != NSNotFound) {
