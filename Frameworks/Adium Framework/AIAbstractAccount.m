@@ -458,9 +458,9 @@
 		[self updateStatusForKey:@"StatusState"];
 		
 		/* Set our IdleSince time if appropriate... this will just be set when the state is selected; the account
-			* is thereafter responsible for updating any serverside settings as needed.  All of our current services will handle
-			* updating idle time as it changes automatically. This is a per-account preference setting; it will override
-			* any global idle setting for this account but won't change it. */	
+		 * is thereafter responsible for updating any serverside settings as needed.  All of our current services will handle
+		 * updating idle time as it changes automatically. This is a per-account preference setting; it will override
+		 * any global idle setting for this account but won't change it. */	
 		if ([[self supportedPropertyKeys] containsObject:@"IdleSince"]) {
 			NSDate	*idleSince;
 			
@@ -953,7 +953,7 @@
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
 
-	//Update our status and idle status
+	//Update our status and idle status to ensure our newly connected account is in the states we want it to be
 	[self updateStatusForKey:@"StatusState"];
 	[self updateStatusForKey:@"IdleSince"];	
 }
