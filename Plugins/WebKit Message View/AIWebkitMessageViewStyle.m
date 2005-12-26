@@ -706,7 +706,7 @@
 			if (range.location != NSNotFound) {
 				NSString *serversideDisplayName = ([contentSource isKindOfClass:[AIListContact class]] ?
 												   [(AIListContact *)contentSource serversideDisplayName] :
-												   nil)];
+												   nil);
 				if (!serversideDisplayName) {
 					serversideDisplayName = [contentSource displayName];
 				}
