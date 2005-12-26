@@ -169,6 +169,16 @@
 	return [super displayName];
 }
 
+/*
+ * @brief This contact's serverside display name, which is generally specificed by the contact remotely
+ *
+ * @result The serverside display name, or nil if none is set
+ */
+- (NSString *)serversideDisplayName
+{
+	return [self statusObjectForKey:@"Server Display Name"];	
+}
+
 - (void)setServersideAlias:(NSString *)alias 
 		   asStatusMessage:(BOOL)useAsStatusMessage
 				  silently:(BOOL)silent
