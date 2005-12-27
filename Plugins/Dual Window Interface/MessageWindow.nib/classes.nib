@@ -13,6 +13,7 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = AISendingTextView; 
         }, 
+        {CLASS = AIMessageWindow; LANGUAGE = ObjC; SUPERCLASS = AIDockingWindow; }, 
         {
             ACTIONS = {closeWindow = id; toggleForceTabBarVisible = id; }; 
             CLASS = AIMessageWindowController; 
