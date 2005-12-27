@@ -325,49 +325,48 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 #pragma mark AIAccount Messaging
 // AIAccount_Messaging ---------------------------------------------------------------------------
 // Send a content object
-- (BOOL)sendContentObject:(AIContentObject *)object
+- (BOOL)sendTypingObject:(AIContentTyping *)inContentTyping
 {
-    BOOL sent = NO;
-    if ([[object type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
-		NSAttributedString  *attributedMessage = [(AIContentMessage *)object message];
-		NSString			*message = [attributedMessage string];
-		NSString			*htmlMessage = [AIHTMLDecoder encodeHTML:attributedMessage
-															 headers:NO
-															fontTags:YES
-												  includingColorTags:YES
-													   closeFontTags:YES
-														   styleTags:YES
-										  closeStyleTagsOnFontChange:YES
-													  encodeNonASCII:YES
-														encodeSpaces:NO
-														  imagesPath:nil
-												   attachmentsAsText:YES
-									  attachmentImagesOnlyForSending:NO
-													  simpleTagsOnly:NO
-													  bodyBackground:NO];
-		
-		AIChat			*chat = [(AIContentMessage *)object chat];
-		AIListObject    *listObject = [chat listObject];
-		NSString		*to = [listObject UID];
-		
-		[[self libezvThreadProxy] sendMessage:message 
-										   to:to 
-									 withHtml:htmlMessage];
-
-		sent = YES;
-
-    } else if ([[object type] isEqualToString:CONTENT_TYPING_TYPE]) {
-		AIContentTyping *contentTyping = (AIContentTyping*)object;
-		AIChat			*chat = [contentTyping chat];
-		AIListObject    *listObject = [chat listObject];
-		NSString		*to = [listObject UID];
-
-		[[self libezvThreadProxy] sendTypingNotification:(([contentTyping typingState] == AITyping) ? AWEzvIsTyping : AWEzvNotTyping)
-													  to:to];
-		sent = YES;
-    }
+	AIChat			*chat = [inContentTyping chat];
+	AIListObject    *listObject = [chat listObject];
+	NSString		*to = [listObject UID];
 	
-    return sent;
+	[[self libezvThreadProxy] sendTypingNotification:(([inContentTyping typingState] == AITyping) ? AWEzvIsTyping : AWEzvNotTyping)
+												  to:to];
+	
+	return YES;
+}
+
+- (BOOL)sendMessageObject:(AIContentMessage *)inContentMessage
+{
+	[[self libezvThreadProxy] sendMessage:[inContentMessage messageString] 
+									   to:[[inContentMessage destination] UID]
+								 withHtml:[inContentMessage encodedMessage]];
+	
+	return YES;
+}
+
+/*
+ * @brief Return the string encoded for sending to a remote contact
+ *
+ * We return nil if the string turns out to have been a / command.
+ */
+- (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
+{
+	return [AIHTMLDecoder encodeHTML:[inContentMessage message]
+							 headers:NO
+							fontTags:YES
+				  includingColorTags:YES
+					   closeFontTags:YES
+						   styleTags:YES
+		  closeStyleTagsOnFontChange:YES
+					  encodeNonASCII:YES
+						encodeSpaces:NO
+						  imagesPath:nil
+				   attachmentsAsText:YES
+	  attachmentImagesOnlyForSending:NO
+					  simpleTagsOnly:NO
+					  bodyBackground:NO];
 }
 
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
@@ -420,18 +419,25 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage
 {
-	if ([self online]) {
-		AIStatusType	statusType = [statusState statusType];
-		switch(statusType) {
-			case AIAvailableStatusType:
-				[self setAccountAwayTo:nil];
-				break;
-			case AIAwayStatusType:
-			case AIInvisibleStatusType:
-				[self setAccountAwayTo:statusMessage];
-				break;
-			default:
-				break;
+	if ([statusState statusType] == AIOfflineStatusType) {
+		[self disconnect];
+
+	} else {
+		if ([self online]) {
+			AIStatusType	statusType = [statusState statusType];
+			switch(statusType) {
+				case AIAvailableStatusType:
+					[self setAccountAwayTo:nil];
+					break;
+				case AIAwayStatusType:
+				case AIInvisibleStatusType:
+					[self setAccountAwayTo:statusMessage];
+					break;
+				default:
+					break;
+			}
+		} else {
+			[self connect];
 		}
 	}
 }
