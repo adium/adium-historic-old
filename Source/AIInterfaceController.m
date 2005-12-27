@@ -23,6 +23,7 @@
 #import "AIMenuController.h"
 #import "AIPreferenceController.h"
 #import "AIStandardListWindowController.h"
+#import "AdiumDisconnectionErrorController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
@@ -449,10 +450,12 @@
 	[self updateCloseMenuKeys];
 	[self updateActiveWindowMenuItem];
 	
-	[mostRecentActiveChat release]; mostRecentActiveChat = nil;
-	if (inChat) {
+	if (inChat && (inChat != mostRecentActiveChat)) {
+		[mostRecentActiveChat release]; mostRecentActiveChat = nil;
 		mostRecentActiveChat = [inChat retain];
+	}
 
+	if (inChat) {
 		/* Clear the unviewed content on the next event loop so other methods have a chance to react to the chat becoming
 		* active. Specifically, this lets the handleReopenWithVisibleWindows: method have a chance to know that this chat
 		* had unviewed content.
@@ -750,6 +753,11 @@
     [[adium notificationCenter] postNotificationName:Interface_ShouldDisplayErrorMessage object:nil userInfo:errorDict];
 }
 
+//Display then clear the last disconnection error
+- (void)account:(AIAccount *)inAccount disconnectedWithError:(NSString *)disconnectionError
+{
+	[AdiumDisconnectionErrorController account:inAccount disconnectedWithError:disconnectionError];
+}
 
 //Synchronized Flashing ------------------------------------------------------------------------------------------------
 #pragma mark Synchronized Flashing
