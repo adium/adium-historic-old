@@ -28,59 +28,66 @@
 //
 - (void)initAccount
 {
+	[super initAccount];
+
     chatDict = [[NSMutableDictionary alloc] init];
 	listObjectArray = [[NSMutableArray alloc] init];
 	commandContact = nil;
-	
-	//Wait for Adium to finish launching before we create our command contact and sign it online
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(adiumFinishedLaunching:)
-									   name:Adium_CompletedApplicationLoad
-									 object:nil];
 }
 
-- (void)adiumFinishedLaunching:(NSNotification *)notification
+- (void)connect
 {
-	commandContact = [[[adium contactController] contactWithService:service 
-															account:self
-																UID:@"Command"] retain];
-    [commandContact setRemoteGroupName:@"Command"];
-    [commandContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
-	
-	[[adium notificationCenter] removeObserver:self
-										  name:Adium_CompletedApplicationLoad
-										object:nil];
+	[super connect];
+	[self didConnect];
+
+	if (!commandContact) {
+		commandContact = [[[adium contactController] contactWithService:service 
+																account:self
+																	UID:@"Command"] retain];
+	}
+
+	[commandContact setRemoteGroupName:@"Command"];
+	[commandContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
+
+}
+
+- (void)disconnect
+{
+	[commandContact setRemoteGroupName:nil];
+	[commandContact setStatusObject:nil forKey:@"Online" notify:YES];
+	[commandContact release]; commandContact = nil;
+
+	[super disconnect];
+
+	[self didDisconnect];
+}
+
+- (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage
+{
+	if ([statusState statusType] == AIOfflineStatusType) {
+		[self disconnect];
+	} else {
+		if ([self online]) {
+			[commandContact setStatusWithName:[statusState statusName]
+								   statusType:[statusState statusType]
+									   notify:NotifyLater];
+			[commandContact setStatusMessage:statusMessage
+									  notify:NotifyLater];
+			[commandContact notifyOfChangedStatusSilently:NO];
+
+		} else {
+			[self connect];
+		}
+	}
 }
 
 - (void)dealloc
 {
 	[groupChat release];
-	[commandChat release];
 	[chatDict release];
 	[listObjectArray release];
 	
 	[super dealloc];
-}
-//Return the default properties for this account
-- (NSDictionary *)defaultProperties
-{
-    return [NSDictionary dictionary];
-}
-
-// Return a unique ID specific to THIS account plugin, and the user's account name
-- (NSString *)accountID{
-    return [self internalObjectID];
-}
-
-//The user's account name
-- (NSString *)UID{
-    return @"TEST";
-}
-
-//The service ID (shared by any account code accessing this service)
-- (NSString *)displayName
-{
-    return @"Stress Test";
 }
 
 //Stress Test certainly doesn't need to receive connect/disconnect requests based on network reachability
@@ -91,14 +98,14 @@
 
 // AIAccount_Messaging ---------------------------------------------------------------------------
 // Send a content object
-- (BOOL)sendContentObject:(AIContentObject *)object
+- (void)sendMessageObject:(AIContentMessage *)inContentMessage
 {
-    if ([[object type] isEqualToString:CONTENT_MESSAGE_TYPE] && ![(AIContentMessage *)object isAutoreply]) {
+    if (![object isAutoreply]) {
         NSString	*message;
         NSArray		*commands;
         NSString	*type = 
         
-		message = [[(AIContentMessage *)object message] string];
+		message = [[object messageString];
 		AILog(@"Stress Test: Sending %@",message);
 
 		commands = [message componentsSeparatedByString:@" "];
@@ -235,13 +242,31 @@
 			
         } else if ([type isEqualToString:@"crash"]) {
             NSMutableArray *help = [[NSMutableArray alloc] init];
-            [help addObject:nil]; 
-        } else if ([object destination] == commandContact) {
+            [help addObject:nil];
+		} else if ([type isEqualToString:@"typing"]) {
+			AITypingState typingState;
+
+			if ([[commands objectAtIndex:1] isEqualToString:@"on"]) {
+				typingState = AITyping;
+				
+			} else if ([[commands objectAtIndex:1] isEqualToString:@"entered"]) {
+				typingState = AIEnteredText;
+				
+			} else {
+				typingState = AINotTyping;
+				
+			}
+
+			[[[adium chatController] chatWithContact:commandContact] setStatusObject:[NSNumber numberWithInt:typingState]
+																			  forKey:KEY_TYPING
+																			  notify:NotifyNow];
+			
+		} else if ([object destination] == commandContact) {
             [self echo:[NSString stringWithFormat:@"Unknown command %@",type]];
         }
     }
-	
-    return YES;
+
+	return YES;
 }
 
 - (void)timer_online:(NSTimer *)inTimer
@@ -399,7 +424,7 @@
 	AIListObject	*listObject = [chat listObject];
 	if (listObject && (listObject == commandContact)) {
 		//
-		[self echo:@"Stress Test\r-------------\rYou must create contacts before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rgroupchat <count> <message>\rcrash"];
+		[self echo:@"Stress Test\r-------------\rYou must create contacts before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rgroupchat <count> <message>\rcrash\rtyping [on|entered|off]"];
 	}
 
 	[chatDict setObject:chat forKey:[chat uniqueChatID]];
@@ -431,12 +456,6 @@
 																					 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
                                           autoreply:NO];
     [[adium contentController] receiveContentObject:messageObject];
-}
-
-// AIAccount_Status --------------------------------------------------------------------------------
-// Respond to account status changes
-- (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
-{
 }
 
 @end

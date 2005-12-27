@@ -25,10 +25,6 @@
 	return [AIStressTestAccount class];
 }
 
-- (AIAccountViewController *)accountViewController{
-    return nil;
-}
-
 - (DCJoinChatViewController *)joinChatView{
 	return [DCStressTestJoinChatViewController joinChatView];
 }
@@ -65,6 +61,10 @@
 	return AIServiceUnsupported;
 }
 - (BOOL)supportsProxySettings{
+	return NO;
+}
+- (BOOL)requiresPassword
+{
 	return NO;
 }
 @end
