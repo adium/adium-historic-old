@@ -65,7 +65,6 @@
 
 - (void)_receivedMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
 - (void)_sentMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat toDestinationListContact:(AIListContact *)destinationContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
-- (NSString *)_handleFileSendsWithinMessage:(NSString *)inString toContact:(AIListContact *)listContact contentMessage:(AIContentMessage *)contentMessage;
 - (NSString *)_messageImageCachePathForID:(int)imageID;
 
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
@@ -723,113 +722,59 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 /* AIAccount_Content */
 /*********************/
 #pragma mark Content
-- (BOOL)sendContentObject:(AIContentObject *)object
+- (BOOL)sendTypingObject:(AIContentTyping *)inContentTyping
 {
-    BOOL            sent = NO;
-	
-	if (gaim_account_is_connected(account)) {
-		if ([[object type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
-			AIContentMessage	*contentMessage = (AIContentMessage*)object;
-			AIChat				*chat = [contentMessage chat];
-			NSAttributedString  *message = [contentMessage message];
-			NSString			*encodedMessage;
-			
-			//Grab the list object (which may be null if this isn't a chat with a particular listObject)
-			AIListContact		*listObject = [chat listObject];
-			
-			//Use GaimConvImFlags for now; multiuser chats will end up ignoring this
-			GaimMessageFlags		flags = GAIM_MESSAGE_RAW;
-			
-			if ([contentMessage isAutoreply]) {
-				flags |= GAIM_MESSAGE_AUTO_RESP;
-			}
-			
-			//If this connection doesn't support new lines, send all lines before newlines as separate messages
-			if (account->gc->flags & GAIM_CONNECTION_NO_NEWLINES) {
-				NSRange		endlineRange;
-				NSRange		returnRange;
+	AIChat *chat = [inContentTyping chat];
 
-				endlineRange = [[message string] rangeOfString:@"\n"];
-				returnRange = [[message string] rangeOfString:@"\r"];
-				
-				while (endlineRange.location != NSNotFound ||
-					   returnRange.location != NSNotFound) {
-					
-					//Use whichever endline character is found first
-					NSRange	operativeRange = ((endlineRange.location < returnRange.location) ? endlineRange : returnRange);
-					
-					if (operativeRange.location > 0) {
-						NSAttributedString  *thisPart;
-						NSString			*thisPartString;
-						
-						thisPart = [message attributedSubstringFromRange:NSMakeRange(0,operativeRange.location-1)];
-						thisPartString = [thisPart string];
-						
-						encodedMessage = [self encodedAttributedString:thisPart
-														 forListObject:listObject
-														contentMessage:contentMessage];
-						if (encodedMessage) {
-							//Check for the AdiumFT tag indicating an embedded file transfer.
-							//Only deal with scanning deeper if it's found.
-							if ([encodedMessage rangeOfString:@"<AdiumFT "
-													  options:NSCaseInsensitiveSearch].location != NSNotFound) {
-								encodedMessage = [self _handleFileSendsWithinMessage:encodedMessage
-																		   toContact:listObject
-																	  contentMessage:contentMessage];
-							}
-							
-							sent = [gaimThread sendEncodedMessage:encodedMessage
-										   originalMessage:thisPartString
-											   fromAccount:self
-													inChat:chat
-												 withFlags:flags];
-						}
-						
-						endlineRange = [[message string] rangeOfString:@"\n"];
-						returnRange = [[message string] rangeOfString:@"\r"];
-					}
-					
-					message = [message attributedSubstringFromRange:NSMakeRange(operativeRange.location+operativeRange.length,[[message string] length]-operativeRange.location)];
-				}
-				
-			}
-			
-			if ([message length]) {
-				encodedMessage = [self encodedAttributedString:message
-												 forListObject:listObject
-												contentMessage:contentMessage];
-				if (encodedMessage) {
-					NSString	*messageString;
-					
-					//Check for the AdiumFT tag indicating an embedded file transfer.
-					//Only deal with scanning deeper if it's found.
-					if ([encodedMessage rangeOfString:@"<AdiumFT "
-											  options:NSCaseInsensitiveSearch].location != NSNotFound) {
-						encodedMessage = [self _handleFileSendsWithinMessage:encodedMessage
-																   toContact:listObject
-															  contentMessage:contentMessage];
-					}
-					
-					messageString = [message string];
-					
-					sent = [gaimThread sendEncodedMessage:encodedMessage
-										  originalMessage:messageString
-											  fromAccount:self
-												   inChat:chat
-												withFlags:flags];
-				}
-			}
-		} else if ([[object type] isEqualToString:CONTENT_TYPING_TYPE]) {
-			AIContentTyping *contentTyping = (AIContentTyping*)object;
-			AIChat *chat = [contentTyping chat];
-			
-			[gaimThread sendTyping:[contentTyping typingState] inChat:chat];
-			
-			sent = YES;
-		}
-	}
+	[gaimThread sendTyping:[inContentTyping typingState] inChat:chat];
 	
-    return sent;
+	return YES;
+}
+
+- (BOOL)sendMessageObject:(AIContentMessage *)inContentMessage
+{
+	GaimMessageFlags		flags = GAIM_MESSAGE_RAW;
+	
+	if ([inContentMessage isAutoreply]) {
+		flags |= GAIM_MESSAGE_AUTO_RESP;
+	}
+
+	[gaimThread sendEncodedMessage:[inContentMessage encodedMessage]
+					   fromAccount:self
+							inChat:[inContentMessage chat]
+						 withFlags:flags];
+	
+	return YES;
+}
+
+/*
+ * @brief Return the string encoded for sending to a remote contact
+ *
+ * We return nil if the string turns out to have been a / command.
+ */
+- (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
+{
+	NSString	*encodedString;
+	BOOL		didCommand = [gaimThread attemptGaimCommandOnMessage:[inContentMessage messageString]
+														 fromAccount:(AIAccount *)[inContentMessage source]
+															  inChat:[inContentMessage chat]];	
+	
+	encodedString = (didCommand ?
+					 nil :
+					 [super encodedAttributedStringForSendingContentMessage:inContentMessage]);
+
+	return encodedString;
+}
+
+/*
+ * @brief Allow newlines in messages
+ *
+ * Only IRC doesn't allow newlines out of the built-in prpls... and we don't even support it yet.
+ * This method is never called at present.
+ */
+- (BOOL)allowsNewlinesInMessages
+{
+	return (account && account->gc && (account->gc->flags & GAIM_CONNECTION_NO_NEWLINES));
 }
 
 //Return YES if we're available for sending the specified content or will be soon (are currently connecting).
@@ -861,70 +806,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
 {
 	return YES;
-}
-
-- (NSString *)_handleFileSendsWithinMessage:(NSString *)inString toContact:(AIListContact *)listContact contentMessage:(AIContentMessage *)contentMessage
-{
-	if (listContact) {
-		NSScanner			*scanner;
-		NSCharacterSet		*tagCharStart, *tagEnd, *absoluteTagEnd;
-		NSString			*chunkString;
-		NSMutableString		*processedString;
-		
-		tagCharStart = [NSCharacterSet characterSetWithCharactersInString:@"<"];
-		tagEnd = [NSCharacterSet characterSetWithCharactersInString:@" >"];
-		absoluteTagEnd = [NSCharacterSet characterSetWithCharactersInString:@">"];
-		
-		scanner = [NSScanner scannerWithString:inString];
-		[scanner setCaseSensitive:NO];
-		[scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
-		
-		processedString = [[NSMutableString alloc] init];
-		
-		//Parse the HTML
-		while (![scanner isAtEnd]) {
-			//Find an HTML IMG tag
-			if ([scanner scanUpToString:@"<AdiumFT" intoString:&chunkString]) {
-				[processedString appendString:chunkString];
-			}
-			
-			//Process the tag
-			if ([scanner scanCharactersFromSet:tagCharStart intoString:nil]) { //If a tag wasn't found, we don't process.
-																			 //            unsigned scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
-				
-				//Get the tag itself
-				if ([scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]) {
-					
-					if ([chunkString caseInsensitiveCompare:@"AdiumFT"] == 0) {
-						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
-							
-							//Extract the file we wish to send
-							NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];
-							NSString		*filePath = [[imgArguments objectForKey:@"src"] stringByUnescapingFromHTML];
-							
-							//Send the file
-							[[adium fileTransferController] sendFile:filePath toListContact:listContact];
-						}
-					}
-					
-					if (![scanner isAtEnd]) {
-						[scanner setScanLocation:[scanner scanLocation]+1];
-					}
-				}
-			}
-		}
-		
-		/* We've removed AdiumFT tags from an arbitrarily encoded HTML string.  This could leave us with no actual
-		 * text to send.  If that's the case, we don't want to return something like <HTML></HTML>. Instead, we want
-		 * to return nil. We therefore decode and reencode our new string. */
-
-		return ([self encodedAttributedString:[AIHTMLDecoder decodeHTML:processedString]
-								forListObject:listContact
-							   contentMessage:contentMessage]);
-	} else {
-		GaimDebug(@"Sending a file to a chat.  Are you insane?");
-		return (inString);
-	}
 }
 
 // **XXX** Not used at present. Do we want to?
@@ -2329,16 +2210,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 }
 
 - (NSDictionary *)defaultProperties { return [NSDictionary dictionary]; }
-
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
-{
-	return [inAttributedString string]; //Default behavior is plain text
-}
-
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage
-{
-	return [self encodedAttributedString:inAttributedString forListObject:inListObject];
-}
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forStatusState:(AIStatus *)statusState
 {

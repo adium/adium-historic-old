@@ -16,6 +16,7 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
+#import <Adium/AIContentMessage.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
@@ -179,10 +180,11 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	return returnString;
 }
 
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString
-						forListObject:(AIListObject *)inListObject
-					   contentMessage:(AIContentMessage *)contentMessage
+- (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
 {		
+	AIListObject *inListObject = [inContentMessage destination];
+	NSAttributedString *inAttributedString = [inContentMessage message];
+
 	if (inListObject) {
 		BOOL		nonHTMLUser = NO;
 		char		firstCharacter = [[inListObject UID] characterAtIndex:0];

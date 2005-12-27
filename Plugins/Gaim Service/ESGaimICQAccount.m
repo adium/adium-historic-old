@@ -18,6 +18,7 @@
 #import "ESGaimICQAccount.h"
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
+#import <Adium/AIContentMessage.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 
 @interface ESGaimICQAccount (PRIVATE)
@@ -45,9 +46,9 @@
 }
 
 //CBGaimOscarAccount does complex things here, but ICQ can just perform a normal encodedAttributedString:forListObject
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage
-{	
-	return [self encodedAttributedString:inAttributedString forListObject:inListObject];
+- (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
+{		
+	return [self encodedAttributedString:[inContentMessage message] forListObject:[inContentMessage destination]];
 }
 
 /*!

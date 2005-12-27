@@ -37,11 +37,13 @@
 
 - (void)addAdiumAccount:(CBGaimAccount *)adiumAccount;
 - (void)removeAdiumAccount:(CBGaimAccount *)adiumAccount;
-- (BOOL)sendEncodedMessage:(NSString *)encodedMessage
-		   originalMessage:(NSString *)originalMessage 
+- (void)sendEncodedMessage:(NSString *)encodedMessage
 			   fromAccount:(id)sourceAccount
 					inChat:(AIChat *)chat
 				 withFlags:(GaimMessageFlags)flags;
+- (BOOL)attemptGaimCommandOnMessage:(NSString *)originalMessage
+						fromAccount:(AIAccount *)sourceAccount 
+							 inChat:(AIChat *)chat;
 
 - (void)sendTyping:(AITypingState)typingState inChat:(AIChat *)chat;
 

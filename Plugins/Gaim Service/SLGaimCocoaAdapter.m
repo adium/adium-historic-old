@@ -772,31 +772,39 @@ NSMutableDictionary* get_chatDict(void)
 	}
 }
 
-//Called with a potential gaimCommand as originalMessage.  Uses gaim_cmd_check_command() [added to libgaim] to determine
-//if the cmd is potentially a valid gaim command.  Returns YES if the message should be sent (it was not a command) or
-//NO if the message should not be sent (it was a command and already executed as such on the proper thread).
+/*
+ * @brief Check a message for gaim / commands=
+ *
+ * @result YES if a command was performed; NO if it was not
+ */
 - (BOOL)attemptGaimCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat
 {
-	GaimConversation	*conv = convLookupFromChat(chat, sourceAccount);
+	GaimConversation	*conv;
 	GaimCmdStatus		status;
 	char				*markup;
 	const char			*cmd;
-	BOOL				sendMessage = YES;
-
+	BOOL				didCommand;
+	
+	if (![originalMessage hasPrefix:@"/"]) {
+		return NO;
+	}
+	
+	didCommand = NO;
 	cmd = [originalMessage UTF8String];
 	
 	//cmd+1 will be the cmd without the leading character, which should be "/"
 	markup = g_markup_escape_text(cmd+1, -1);
 #warning command
-	return sendMessage;
+	return didCommand;
 
+	conv = convLookupFromChat(chat, sourceAccount);
 //	status = gaim_cmd_check_command(conv, cmd+1, markup, &error);
 	AILog(@"Command status is %i",status);
 	g_free(markup);
 	
 	switch (status) {
 		case GAIM_CMD_STATUS_OK:
-			sendMessage = NO;
+			didCommand = YES;
 			//We're good to go (the arguments may be wrong, or it may fail, but it is an account-appropriate command);
 			//perform the command on the gaim thread.
 			[gaimThreadProxy gaimThreadDoCommand:originalMessage
@@ -805,7 +813,7 @@ NSMutableDictionary* get_chatDict(void)
 			break;
 		case GAIM_CMD_STATUS_WRONG_ARGS:			
 		{
-			sendMessage = NO;
+			didCommand = YES;
 			
 			gaim_conv_present_error(conv->name, conv->account, "Wrong number of arguments");
 			
@@ -814,7 +822,7 @@ NSMutableDictionary* get_chatDict(void)
 		case GAIM_CMD_STATUS_WRONG_TYPE:
 		{
 			//XXX Do we want to error on this or pretend there was no command?
-			sendMessage = NO;
+			didCommand = YES;
 			if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_IM) {
 				gaim_notify_error(gaim_account_get_connection(conv->account),"Attempted to use Chat command in IM",cmd,NULL);
 			} else {
@@ -830,14 +838,13 @@ NSMutableDictionary* get_chatDict(void)
 			break;
 	}		
 	
-	return sendMessage;
+	return didCommand;
 }
 	
 - (void)gaimThreadSendEncodedMessage:(NSString *)encodedMessage
-							originalMessage:(NSString *)originalMessage
-								fromAccount:(id)sourceAccount
-									 inChat:(AIChat *)chat
-								  withFlags:(GaimMessageFlags)flags
+						 fromAccount:(id)sourceAccount
+							  inChat:(AIChat *)chat
+						   withFlags:(GaimMessageFlags)flags
 {	
 	const char *encodedMessageUTF8String;
 	
@@ -871,35 +878,16 @@ NSMutableDictionary* get_chatDict(void)
 }
 
 //Returns YES if the message was sent (and should therefore be displayed).  Returns NO if it was not sent or was otherwise used.
-- (BOOL)sendEncodedMessage:(NSString *)encodedMessage
-		   originalMessage:(NSString *)originalMessage 
+- (void)sendEncodedMessage:(NSString *)encodedMessage
 			   fromAccount:(id)sourceAccount
 					inChat:(AIChat *)chat
 				 withFlags:(GaimMessageFlags)flags
 {
-	BOOL sendMessage = YES;
-	
-	if ([originalMessage hasPrefix:@"/"]) {
-		/* If a content object makes it this far and still has a "/", Adium hasn't treated it as a command or
-		substitution.  Send it to Gaim for it to try to handle it.
-		XXX - do we want to not-eat non-commands, checking to see if Gaim handled the command and, if not,
-		sending it anyways? */
-		
-		sendMessage = [self attemptGaimCommandOnMessage:originalMessage
-											fromAccount:sourceAccount
-												 inChat:chat];
-	}
-	
-	if (sendMessage) {
-		AILog(@"Sending %@ from %@ to %@",encodedMessage,sourceAccount,chat);
-		[gaimThreadProxy gaimThreadSendEncodedMessage:encodedMessage
-									  originalMessage:originalMessage
-										  fromAccount:sourceAccount
-											   inChat:chat
-											withFlags:flags];
-	}
-	
-	return sendMessage;
+	AILog(@"Sending %@ from %@ to %@",encodedMessage,sourceAccount,chat);
+	[gaimThreadProxy gaimThreadSendEncodedMessage:encodedMessage
+									  fromAccount:sourceAccount
+										   inChat:chat
+										withFlags:flags];
 }
 
 - (void)gaimThreadSendTyping:(AITypingState)typingState inChat:(AIChat *)chat
