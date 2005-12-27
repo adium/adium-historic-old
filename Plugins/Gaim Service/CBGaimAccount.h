@@ -149,9 +149,6 @@
 - (void)gotGroupForContact:(AIListContact *)contact;
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString 
-						forListObject:(AIListObject *)inListObject
-					   contentMessage:(AIContentMessage *)contentMessage;
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString 
 					   forStatusState:(AIStatus *)statusState;
 - (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 
