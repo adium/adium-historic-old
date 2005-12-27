@@ -16,7 +16,7 @@
 
 	OSType			HFSTypeCode;
 
-	HFSTypeCode = [[[wrapper fileAttributes] fileHFSTypeCode] unsignedLongValue];
+	HFSTypeCode = [[wrapper fileAttributes] fileHFSTypeCode];
 	if(HFSTypeCode) {
 		return [imageFileTypes containsObject:NSFileTypeForHFSTypeCode(HFSTypeCode)];
 	} else {
