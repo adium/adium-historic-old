@@ -167,7 +167,17 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		NSMutableString		*processedStackTrace;
 		NSString			*str;
 		
-		//We use two command line apps to decode our exception
+		/*We use several command line apps to decode our exception:
+		 *	* atos -p PID addresses...: converts addresses (hex numbers) to symbol names that we can read.
+		 *	* tail -n +3: strip the first three lines.
+		 *	* head -n +NUM: reduces to the first NUM lines. we pass NUM as the number of addresses minus 4.
+		 *	* c++filt: de-mangles C++ names.
+		 *		example, before:
+		 *			__ZNK12CApplication23CreateClipboardTextViewERsR12CViewManager (in TextWrangler)
+		 *		example, after:
+		 *			CApplication::CreateClipboardTextView(short&, CViewManager&) const (in TextWrangler)
+		 *	* cat -n: adds line numbers. fairly meaningless, but fun.
+		 */
 		str = [NSString stringWithFormat:@"%s -p %d %@ | tail -n +3 | head -n +%d | %s | cat -n",
 			[[[[NSBundle mainBundle] pathForResource:@"atos" ofType:nil] stringByEscapingForShell] fileSystemRepresentation], //atos arg 0
 			[[NSProcessInfo processInfo] processIdentifier], //atos arg 2 (argument to -p)
