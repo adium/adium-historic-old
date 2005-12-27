@@ -92,7 +92,7 @@
 
 	} else {
 		[controller showWindow:nil];
-		[[controller window] makeKeyAndOrderFront:nil];
+		[[controller window] orderFront:nil];
 	}
 	
 	return controller;
