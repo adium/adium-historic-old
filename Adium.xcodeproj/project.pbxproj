@@ -1130,6 +1130,9 @@
 		63EA63DD094BB79A009C8453 /* StatusIconPreviewView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 63336B3F094994A800970871 /* StatusIconPreviewView.nib */; };
 		63EA6408094BB9A9009C8453 /* AIStatusIconPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63EA6406094BB9A9009C8453 /* AIStatusIconPreviewController.h */; };
 		63EA6409094BB9A9009C8453 /* AIStatusIconPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA6407094BB9A9009C8453 /* AIStatusIconPreviewController.m */; };
+		63F9D10B09568C4500E4AEF8 /* AIWebkitMessageStylePreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63F9D10009568C1900E4AEF8 /* AIWebkitMessageStylePreviewController.h */; };
+		63F9D10C09568C4600E4AEF8 /* AIWebkitMessageStylePreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F9D10109568C1900E4AEF8 /* AIWebkitMessageStylePreviewController.m */; };
+		63F9D10E09568C6B00E4AEF8 /* WebkitMessageStylePreviewView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 63F9D10D09568C6B00E4AEF8 /* WebkitMessageStylePreviewView.nib */; };
 		63FBAA480887779D00026246 /* AIDockBadger.m in Sources */ = {isa = PBXBuildFile; fileRef = 636AB7F2087E2B6700A87670 /* AIDockBadger.m */; };
 		6C3E0730054471CD00A4AE2E /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		6CF42679057763E200F27FAA /* ESContactAlertsController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6CF42677057763E100F27FAA /* ESContactAlertsController.h */; };
@@ -3022,6 +3025,9 @@
 		63EA62EE094B8705009C8453 /* AIXtraInfoController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfoController.m; path = Source/AIXtraInfoController.m; sourceTree = "<group>"; };
 		63EA6406094BB9A9009C8453 /* AIStatusIconPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStatusIconPreviewController.h; path = Source/AIStatusIconPreviewController.h; sourceTree = "<group>"; };
 		63EA6407094BB9A9009C8453 /* AIStatusIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStatusIconPreviewController.m; path = Source/AIStatusIconPreviewController.m; sourceTree = "<group>"; };
+		63F9D10009568C1900E4AEF8 /* AIWebkitMessageStylePreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIWebkitMessageStylePreviewController.h; path = Source/AIWebkitMessageStylePreviewController.h; sourceTree = "<group>"; };
+		63F9D10109568C1900E4AEF8 /* AIWebkitMessageStylePreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIWebkitMessageStylePreviewController.m; path = Source/AIWebkitMessageStylePreviewController.m; sourceTree = "<group>"; };
+		63F9D10D09568C6B00E4AEF8 /* WebkitMessageStylePreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = WebkitMessageStylePreviewView.nib; path = Resources/WebkitMessageStylePreviewView.nib; sourceTree = "<group>"; };
 		6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumHighlight.png; path = "Plugins/Status Menu Item/adiumHighlight.png"; sourceTree = "<group>"; };
 		6C5C3C2605F6532600490341 /* SQL Logger.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SQL Logger.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C644D3605776BC600D79723 /* AILogFromGroup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILogFromGroup.h; path = Plugins/Logger/AILogFromGroup.h; sourceTree = "<group>"; };
@@ -5560,6 +5566,9 @@
 				63EA62C8094B832D009C8453 /* AIEmoticonPreviewController.m */,
 				632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */,
 				632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */,
+				63F9D10009568C1900E4AEF8 /* AIWebkitMessageStylePreviewController.h */,
+				63F9D10109568C1900E4AEF8 /* AIWebkitMessageStylePreviewController.m */,
+				63F9D10D09568C6B00E4AEF8 /* WebkitMessageStylePreviewView.nib */,
 				63336E14094AB81300970871 /* XtraInfoView.nib */,
 				6333699309497DB000970871 /* EmoticonPreviewView.nib */,
 				63336B050949908300970871 /* DockIconPreviewView.nib */,
@@ -6550,6 +6559,7 @@
 				34D001E70958868000DCB678 /* AIMenuItemView.h in Headers */,
 				34D007B1095964F000DCB678 /* NSIPRecentPicture.h in Headers */,
 				34D007DC095966E200DCB678 /* AIContactListRecentImagesWindowController.h in Headers */,
+				63F9D10B09568C4500E4AEF8 /* AIWebkitMessageStylePreviewController.h in Headers */,
 				34AA35DB095CCA4D003B56DB /* AdiumDisconnectionErrorController.h in Headers */,
 				34AA366B095CE124003B56DB /* AIStatusDefines.h in Headers */,
 				34AA369E095CE914003B56DB /* AIContactListNameView.h in Headers */,
@@ -7659,6 +7669,7 @@
 				63336E15094AB81300970871 /* XtraInfoView.nib in Resources */,
 				63EA63DD094BB79A009C8453 /* StatusIconPreviewView.nib in Resources */,
 				34E105040951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib in Resources */,
+				63F9D10E09568C6B00E4AEF8 /* WebkitMessageStylePreviewView.nib in Resources */,
 				34D0FE3D09561E3800DCB678 /* PersonalPreferences.nib in Resources */,
 				34D0FF8509569FE500DCB678 /* PersonalPreferencesDefaults.plist in Resources */,
 				34D000C60957918000DCB678 /* ContactListRecentImages.nib in Resources */,
@@ -8157,6 +8168,7 @@
 				34E1067A09536E5300EBE478 /* AIContactListStatusMenuView.m in Sources */,
 				34E106AF095371E400EBE478 /* AIContactListStatusMenuCell.m in Sources */,
 				34D0F9CB0954E70100DCB678 /* AIContactListImagePicker.m in Sources */,
+				63F9D10C09568C4600E4AEF8 /* AIWebkitMessageStylePreviewController.m in Sources */,
 				34D0FDD20956186200DCB678 /* ESPersonalPreferencesPlugin.m in Sources */,
 				34D0FDD80956187700DCB678 /* ESPersonalPreferences.m in Sources */,
 				34D001E80958868000DCB678 /* AIMenuItemView.m in Sources */,

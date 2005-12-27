@@ -49,6 +49,7 @@
 - (NSView *)messageView;
 - (NSView *)messageScrollView;
 - (AIWebkitMessageViewStyle *)messageStyle;
+- (void) setMessageStyle:(AIWebkitMessageViewStyle *)style;
 
 //Content
 - (void)processQueuedContent;

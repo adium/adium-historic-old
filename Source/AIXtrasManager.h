@@ -15,6 +15,7 @@
  */
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIObject.h>
+#import <Adium/AIPlugin.h>
 #import "AIXtraPreviewController.h"
 
 @class AIXtraInfo;
@@ -27,7 +28,7 @@
 #define AIXtraTypeListTheme			@"listtheme"
 #define AIXtraTypeListLayout		@"listlayout"
 
-@interface AIXtrasManager : AIObject {
+@interface AIXtrasManager : AIPlugin {
 	NSMutableDictionary						*disabledXtras;
 	NSMutableArray							*categoryNames;
 	NSMutableArray							*categories;

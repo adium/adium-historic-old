@@ -115,7 +115,9 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 - (void)closeContactList
 {
     if (contactListWindowController) {
-        [[contactListWindowController window] performClose:nil];
+        [contactListWindowController close];
+		[contactListWindowController release];
+		contactListWindowController = nil;
     }
 }
 
@@ -165,7 +167,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 					//currently doing.  This isn't pretty, but it's the most efficient fix I could come up with.
 					//It has the obnoxious side effect of the contact list changing its view prefs and THEN closing and
 					//reopening with the right windowStyle.
-					[self performSelector:@selector(closeAndReopencontactList)
+					[self performSelector:@selector(closeAndReopenContactList)
 							   withObject:nil
 							   afterDelay:0.00001];
 				}
@@ -174,8 +176,10 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	}
 }
 
-- (void)closeAndReopencontactList
+- (void)closeAndReopenContactList
 {
+	if(![[contactListWindowController window] screen])
+		[contactListWindowController slideWindowOnScreen];
 	[self closeContactList];
 	[self showContactListAndBringToFront:NO];
 }

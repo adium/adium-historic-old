@@ -50,7 +50,7 @@
 	{
 		path = [[url path] retain];
 		type = [[[[url path] pathExtension] lowercaseString] retain];
-		NSBundle * xtraBundle = [[NSBundle alloc] initWithPath:path];
+		xtraBundle = [[NSBundle alloc] initWithPath:path];
 		if (xtraBundle && ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1)) { //This checks for a new-style xtra
 			name = [xtraBundle objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
 			resourcePath = [[xtraBundle resourcePath] retain];
@@ -100,6 +100,11 @@
 - (NSString *)readMePath
 {
 	return readMePath;
+}
+
+- (NSBundle *)bundle
+{
+	return xtraBundle;
 }
 
 @end
