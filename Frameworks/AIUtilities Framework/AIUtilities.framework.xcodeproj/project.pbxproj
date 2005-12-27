@@ -32,6 +32,8 @@
 		34057BD7087DF73F00664D64 /* AIFlexibleToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 34057BD5087DF73F00664D64 /* AIFlexibleToolbarItem.m */; };
 		34057F27087E032400664D64 /* AIFontManagerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 34057F25087E032400664D64 /* AIFontManagerAdditions.m */; };
 		34057F28087E032400664D64 /* AIFontManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34057F26087E032400664D64 /* AIFontManagerAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		341BCFF709615D8600CF83F5 /* AITextAttachmentAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BCFF509615D8600CF83F5 /* AITextAttachmentAdditions.m */; };
+		341BCFF809615D8600CF83F5 /* AITextAttachmentAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BCFF609615D8600CF83F5 /* AITextAttachmentAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3433564D0793699400C84B15 /* AIKeychainOld.m in Sources */ = {isa = PBXBuildFile; fileRef = 3433564B0793699400C84B15 /* AIKeychainOld.m */; };
 		3433564E0793699400C84B15 /* AIKeychainOld.h in Headers */ = {isa = PBXBuildFile; fileRef = 3433564C0793699400C84B15 /* AIKeychainOld.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34486C3806D1DF0400DA778C /* AIAlternatingRowOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B3806D1DF0300DA778C /* AIAlternatingRowOutlineView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -322,6 +324,8 @@
 		34057F25087E032400664D64 /* AIFontManagerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFontManagerAdditions.m; path = Source/AIFontManagerAdditions.m; sourceTree = "<group>"; };
 		34057F26087E032400664D64 /* AIFontManagerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFontManagerAdditions.h; path = Source/AIFontManagerAdditions.h; sourceTree = "<group>"; };
 		340580C3087EEFB900664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Russian; path = Resources/Russian.lproj/Localizable.strings; sourceTree = "<group>"; };
+		341BCFF509615D8600CF83F5 /* AITextAttachmentAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITextAttachmentAdditions.m; path = Source/AITextAttachmentAdditions.m; sourceTree = "<group>"; };
+		341BCFF609615D8600CF83F5 /* AITextAttachmentAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITextAttachmentAdditions.h; path = Source/AITextAttachmentAdditions.h; sourceTree = "<group>"; };
 		3433564B0793699400C84B15 /* AIKeychainOld.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIKeychainOld.m; path = Source/AIKeychainOld.m; sourceTree = "<group>"; };
 		3433564C0793699400C84B15 /* AIKeychainOld.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIKeychainOld.h; path = Source/AIKeychainOld.h; sourceTree = "<group>"; };
 		34486B3806D1DF0300DA778C /* AIAlternatingRowOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAlternatingRowOutlineView.h; path = Source/AIAlternatingRowOutlineView.h; sourceTree = "<group>"; };
@@ -923,6 +927,8 @@
 				34486BB606D1DF0400DA778C /* AITableViewAdditions.m */,
 				34486BB906D1DF0400DA778C /* AITabViewAdditions.h */,
 				34486BBA06D1DF0400DA778C /* AITabViewAdditions.m */,
+				341BCFF509615D8600CF83F5 /* AITextAttachmentAdditions.m */,
+				341BCFF609615D8600CF83F5 /* AITextAttachmentAdditions.h */,
 				34486BC106D1DF0400DA778C /* AITextFieldAdditions.h */,
 				34486BC206D1DF0400DA778C /* AITextFieldAdditions.m */,
 				013F80C208E685B8000F31B2 /* AITextViewAdditions.h */,
@@ -1561,6 +1567,7 @@
 				636D3D6F08D267F500EFFD69 /* AIQueue.h in Headers */,
 				013F80C408E685B8000F31B2 /* AITextViewAdditions.h in Headers */,
 				073C0D8D0939023200D6AEEA /* AIPlasticButtonCell.h in Headers */,
+				341BCFF809615D8600CF83F5 /* AITextAttachmentAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1809,6 +1816,7 @@
 				636D3D7008D267F500EFFD69 /* AIQueue.m in Sources */,
 				013F80C508E685B8000F31B2 /* AITextViewAdditions.m in Sources */,
 				073C0D8E0939023200D6AEEA /* AIPlasticButtonCell.m in Sources */,
+				341BCFF709615D8600CF83F5 /* AITextAttachmentAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
