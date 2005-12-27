@@ -18,6 +18,7 @@
 #import "AIAccount.h"
 #import "AIContactController.h"
 #import "AIListContact.h"
+#import "AIContentMessage.h"
 
 /*!
  * @class AIAccount
@@ -167,6 +168,16 @@
 	return NO;
 }
 
+/*!
+ * @brief Are newlines allowed in messages?
+ *
+ * If NO, messages with newlines will be split into multiple messages before being sent
+ */
+- (BOOL)allowsNewlinesInMessages
+{
+	return YES;
+}
+
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
 /*!
@@ -183,6 +194,7 @@
 	static	NSSet	*supportedPropertyKeys = nil;
 	if (!supportedPropertyKeys) {
 		supportedPropertyKeys = [[NSSet alloc] initWithObjects:
+			@"Online",
 			@"FormattedUID",
 			@"FullNameAttr",
 			@"Display Name",
@@ -333,21 +345,30 @@
 	return NO;
 }
 
-/*!
- * @brief Send a content object
+/*
+ * @brief Send a typing object
  *
- * Send a content object, such as a message.  The content object contains all the necessary information for sending,
+ * The content object contains all the necessary information for sending,
  * including the destination contact.
- * @param object AIContentObject to send
- * @return YES on success
  */
-- (BOOL)sendContentObject:(AIContentObject *)object
+- (BOOL)sendTypingObject:(AIContentTyping *)inTypingObject
+{
+	return NO;
+}
+
+/*
+ * @brief Send a message
+ *
+ * The content object contains all the necessary information for sending,
+ * including the destination contact. [inMessageObject encodedMessage] contains the NSString which should be sent.
+ */
+- (BOOL)sendMessageObject:(AIContentMessage *)inMessageObject
 {
 	return NO;
 }
 
 /*!
- * @brief Encode attributed string
+ * @brief Encode attributed string (generic)
  *
  * Encode an NSAttributedString into a NSString for this account.  Accounts that support formatted text or require
  * special encoding on strings should do that work here.  For example, HTML based accounts should convert the 
@@ -361,6 +382,13 @@
     return [inAttributedString string];
 }
 
+/*!
+ * @brief Encode attributed string to send as a message
+ */
+- (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
+{
+    return [self encodedAttributedString:[inContentMessage message] forListObject:[inContentMessage destination]];
+}
 
 //Presence Tracking ----------------------------------------------------------------------------------------------------
 #pragma mark Presence Tracking
