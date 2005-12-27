@@ -83,14 +83,14 @@
 											  target:inTarget
 											userInfo:inUserInfo];
 	
-	if(parentWindow){
+	if (parentWindow) {
 		[NSApp beginSheet:[controller window]
 		   modalForWindow:parentWindow
 			modalDelegate:controller
 		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
 			  contextInfo:nil];
 
-	}else{
+	} else {
 		[controller showWindow:nil];
 		[[controller window] makeKeyAndOrderFront:nil];
 	}
