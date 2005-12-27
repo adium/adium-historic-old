@@ -33,6 +33,7 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AITextAttachmentAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
