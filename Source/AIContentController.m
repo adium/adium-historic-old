@@ -26,6 +26,7 @@
 #import "AdiumMessageEvents.h"
 #import "AdiumContentFiltering.h"
 #import "ESContactAlertsController.h"
+#import "ESFileTransferController.h"
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
@@ -44,12 +45,16 @@
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
+#import <Adium/ESFileWrapperExtension.h>
 #import <Adium/NDRunLoopMessenger.h>
+#import <Adium/AITextAttachmentExtension.h>
 
 @interface AIContentController (PRIVATE)
 - (void)finishReceiveContentObject:(AIContentObject *)inObject;
 - (void)finishSendContentObject:(AIContentObject *)inObject;
 - (void)finishDisplayContentObject:(AIContentObject *)inObject;
+
+- (BOOL)processAndSendContentObject:(AIContentObject *)inContentObject;
 @end
 
 /*
@@ -300,7 +305,7 @@
 	
     //Send the object
 	if ([inObject sendContent]) {
-		if ([(AIAccount *)[inObject source] sendContentObject:inObject]) {
+		if ([self processAndSendContentObject:inObject]) {
 			if ([inObject displayContent]) {
 				//Add the object
 				[self displayContentObject:inObject];
@@ -495,6 +500,105 @@
 	AILog(@"objectsBeingReceived: %@",([objectsBeingReceived count] ? [objectsBeingReceived description] : @"(empty)"));
 }
 
+#pragma mark -
+
+/*
+ * @brief Send any NSTextAttachments embedded in inContentMessage's message
+ *
+ * This method will remove such attachments after requesting their files being sent.
+ *
+ * If the account supports sending images on this message's chat and a file is an image it will be left in the
+ * attributed string for processing later by AIHTMLDecoder.
+ */
+- (void)handleFileSendsForContentMessage:(AIContentMessage *)inContentMessage
+{
+	NSMutableAttributedString	*newAttributedString = nil;
+	NSAttributedString			*attributedMessage = [inContentMessage message];
+	unsigned					length = [attributedMessage length];
+
+	if (length) {
+		NSRange						searchRange = NSMakeRange(0,0);
+		NSAttributedString			*currentAttributedString = attributedMessage;
+
+		while (searchRange.location < length) {
+			NSTextAttachment *textAttachment = [currentAttributedString attribute:NSAttachmentAttributeName
+																		  atIndex:searchRange.location
+																   effectiveRange:&searchRange];
+			//AITextAttachment is used for our emoticons and so forth... this needs to be a better system one way or another.
+			if (textAttachment &&
+				![textAttachment isKindOfClass:[AITextAttachmentExtension class]]) {
+				//Proceed if this account can't send images or, if it can, if this attachment is not an image
+				if (![(AIAccount *)[inContentMessage source] canSendImagesForChat:[inContentMessage chat]] ||
+					![textAttachment wrapsImage]) {
+					
+					if (!newAttributedString) {
+						newAttributedString = [[attributedMessage mutableCopy] autorelease];
+						currentAttributedString = newAttributedString;
+					}
+					
+					NSFileWrapper *fileWrapper = [textAttachment fileWrapper];
+					if ([fileWrapper isKindOfClass:[ESFileWrapperExtension class]]) {
+						NSString	*path = [(ESFileWrapperExtension *)fileWrapper originalPath];
+
+						[[adium fileTransferController] sendFile:path
+												   toListContact:(AIListContact *)[inContentMessage destination]];
+					}
+
+					//Now remove the attachment
+					[newAttributedString removeAttribute:NSAttachmentAttributeName range:NSMakeRange(searchRange.location, 0)];
+				}
+			}
+			
+			//Onward and upward
+			searchRange.location += searchRange.length;
+		}
+	}
+	
+	//If any  changes were made, update the AIContentMessage
+	if (newAttributedString) {
+		[inContentMessage setMessage:newAttributedString];
+	}
+}
+
+- (BOOL)processAndSendContentObject:(AIContentObject *)inContentObject
+{
+	AIAccount	*sendingAccount = (AIAccount *)[inContentObject source];
+	BOOL		success = NO;
+
+	if ([inContentObject isKindOfClass:[AIContentTyping class]]) {
+		/* Typing */
+		[sendingAccount sendTypingObject:(AIContentTyping *)inContentObject];
+		success = YES;
+	
+	} else if ([inContentObject isKindOfClass:[AIContentMessage class]]) {
+		/* Sending a message */
+		AIContentMessage *contentMessage = (AIContentMessage *)inContentObject;
+		NSString		 *encodedOutgoingMessage;
+
+		//Before we send the message on to the account, we need to look for embedded files which should be sent as file transfers
+		[self handleFileSendsForContentMessage:contentMessage];
+		
+		//Let the account encode it as appropriate for sending
+		if ([[contentMessage message] length]) {
+			encodedOutgoingMessage = [sendingAccount encodedAttributedStringForSendingContentMessage:contentMessage];
+			
+			if (encodedOutgoingMessage && [encodedOutgoingMessage length]) {			
+				[contentMessage setEncodedMessage:encodedOutgoingMessage];
+				//			[AdiumOTREncryption willSendContentMessage:contentMessage];
+				
+				if ([contentMessage encodedMessage]) {
+					[sendingAccount sendMessageObject:contentMessage];
+				}
+				
+				success = YES;
+			}
+		}
+	}
+
+	return success;
+}
+
+#pragma mark -
 /*
  * @brief Is the passed chat currently receiving content?
  *
