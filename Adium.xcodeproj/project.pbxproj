@@ -111,6 +111,10 @@
 		3419F75C05314FED00C68BA3 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		3419F7760531512200C68BA3 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		3419FE230531586A00C68BA3 /* Adium.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
+		341BCF840961354D00CF83F5 /* AIMessageWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BCF800961354D00CF83F5 /* AIMessageWindow.h */; };
+		341BCF850961354D00CF83F5 /* AIMessageWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BCF810961354D00CF83F5 /* AIMessageWindow.m */; };
+		341BCF860961354D00CF83F5 /* AIClickThroughThemeDocumentButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BCF820961354D00CF83F5 /* AIClickThroughThemeDocumentButton.h */; };
+		341BCF870961354D00CF83F5 /* AIClickThroughThemeDocumentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BCF830961354D00CF83F5 /* AIClickThroughThemeDocumentButton.m */; };
 		341E886B0648FF1B00E0C828 /* ESGaimRequestActionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341E88680648FF1B00E0C828 /* ESGaimRequestActionController.h */; };
 		341E886C0648FF1B00E0C828 /* ESGaimRequestActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */; };
 		3420E6600611D80100AE67E3 /* ESAccountPasswordPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3420E65B0611D80000AE67E3 /* ESAccountPasswordPromptController.h */; };
@@ -1615,6 +1619,10 @@
 		3411E2970832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = GaimOTRFingerprintDetailsWindow.nib; path = "Plugins/Gaim Service/GaimOTRFingerprintDetailsWindow.nib"; sourceTree = "<group>"; };
 		341591E105463DA800291275 /* SQL_Logger_Prefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = SQL_Logger_Prefs.nib; sourceTree = "<group>"; };
 		34167FE5081D700B00E35678 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
+		341BCF800961354D00CF83F5 /* AIMessageWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageWindow.h; path = Source/AIMessageWindow.h; sourceTree = "<group>"; };
+		341BCF810961354D00CF83F5 /* AIMessageWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageWindow.m; path = Source/AIMessageWindow.m; sourceTree = "<group>"; };
+		341BCF820961354D00CF83F5 /* AIClickThroughThemeDocumentButton.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIClickThroughThemeDocumentButton.h; path = Source/AIClickThroughThemeDocumentButton.h; sourceTree = "<group>"; };
+		341BCF830961354D00CF83F5 /* AIClickThroughThemeDocumentButton.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIClickThroughThemeDocumentButton.m; path = Source/AIClickThroughThemeDocumentButton.m; sourceTree = "<group>"; };
 		341DE02F07FE104700EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		341DE03407FE105600EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		341DE03507FE106400EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -2406,7 +2414,7 @@
 		34BBE55507A342AF00663CC9 /* adiumGaimOTR.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimOTR.m; path = "Plugins/Gaim Service/adiumGaimOTR.m"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -6152,6 +6160,10 @@
 				F570A5CE03704D3D01A8010A /* AIMessageViewController.m */,
 				3461621106FB482C009181D8 /* ESChatUserListController.h */,
 				3461621206FB482C009181D8 /* ESChatUserListController.m */,
+				341BCF800961354D00CF83F5 /* AIMessageWindow.h */,
+				341BCF810961354D00CF83F5 /* AIMessageWindow.m */,
+				341BCF820961354D00CF83F5 /* AIClickThroughThemeDocumentButton.h */,
+				341BCF830961354D00CF83F5 /* AIClickThroughThemeDocumentButton.m */,
 				F5793984033E756E01A8010A /* MessageView.nib */,
 				F5793981033E756E01A8010A /* AIMessageWindowController.h */,
 				F5793982033E756E01A8010A /* AIMessageWindowController.m */,
@@ -6553,6 +6565,8 @@
 				34AA35DB095CCA4D003B56DB /* AdiumDisconnectionErrorController.h in Headers */,
 				34AA366B095CE124003B56DB /* AIStatusDefines.h in Headers */,
 				34AA369E095CE914003B56DB /* AIContactListNameView.h in Headers */,
+				341BCF840961354D00CF83F5 /* AIMessageWindow.h in Headers */,
+				341BCF860961354D00CF83F5 /* AIClickThroughThemeDocumentButton.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8163,6 +8177,8 @@
 				34D007DB095966E200DCB678 /* AIContactListRecentImagesWindowController.m in Sources */,
 				34AA35DC095CCA4D003B56DB /* AdiumDisconnectionErrorController.m in Sources */,
 				34AA369F095CE914003B56DB /* AIContactListNameView.m in Sources */,
+				341BCF850961354D00CF83F5 /* AIMessageWindow.m in Sources */,
+				341BCF870961354D00CF83F5 /* AIClickThroughThemeDocumentButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
