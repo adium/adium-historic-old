@@ -11,11 +11,20 @@
 
 - (BOOL)wrapsImage
 {
+	NSFileWrapper *wrapper = [self fileWrapper];
+	NSArray *imageFileTypes = [NSImage imageFileTypes];
+
 	OSType			HFSTypeCode;
-				
-	HFSTypeCode = [[[[self fileWrapper] fileAttributes] objectForKey:NSFileHFSTypeCode] unsignedLongValue];
-	
-	return [[NSImage imageFileTypes] containsObject:NSFileTypeForHFSTypeCode(HFSTypeCode)];
+
+	HFSTypeCode = [[[wrapper fileAttributes] fileHFSTypeCode] unsignedLongValue];
+	if(HFSTypeCode) {
+		return [imageFileTypes containsObject:NSFileTypeForHFSTypeCode(HFSTypeCode)];
+	} else {
+		//an NSFileWrapper may not necessarily wrap a file on disk. in this event, its filename is nil.
+		//containsObject:nil is an exception, so we must simply return NO in this case.
+		NSString *ext = [[wrapper filename] pathExtension];
+		return ext ? [imageFileTypes containsObject:ext] : NO;
+	}
 }
 
 @end
