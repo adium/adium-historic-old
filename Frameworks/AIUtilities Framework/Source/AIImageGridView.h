@@ -25,6 +25,9 @@ Adium, Copyright 2001-2005, Adam Iser
  *
  * This view displays images in a grid similiar to iPhoto.  Image size is adjustable and the view handles image layout
  * and spacing automatically.
+ *
+ * Important note: This view MUST be enclosed within an NSScrollView to function properly! Make it borderless, non-background-drawing,
+ * and with neither horizontal nor vertical scrollers if you don't want there to be any scrolling.
  */
 @interface AIImageGridView : NSView {
 	id					delegate;
