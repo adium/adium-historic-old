@@ -29,16 +29,12 @@
 
 @implementation AIXtrasManager
 
-static AIXtrasManager * manager;
-
 + (AIXtrasManager *) sharedManager
 {
+	static AIXtrasManager * manager;
+	if(!manager)
+		manager = [[self alloc] init];
 	return manager;
-}
-
-- (void) installPlugin
-{
-	manager = self;
 }
 
 - (void) showXtras
@@ -184,8 +180,6 @@ static NSImage * scriptImage;
 			[NSBundle loadNibNamed:@"EmoticonPreviewView" owner:self];
 		else if ([xtraType isEqualToString:AIXtraTypeDockIcon])
 			[NSBundle loadNibNamed:@"DockIconPreviewView" owner:self];
-		else if ([xtraType isEqualToString:AIXtraTypeMessageStyle])
-			[NSBundle loadNibNamed:@"WebkitMessageStylePreviewView" owner:self];
 		else if ([xtraType isEqualToString:AIXtraTypeStatusIcons]) {
 			[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self];
 		}
@@ -218,28 +212,15 @@ static NSImage * scriptImage;
 	{
 		NSFileManager * manager = [NSFileManager defaultManager];
 		NSIndexSet * indices = [xtraList selectedRowIndexes];
-		NSMutableSet * pathExtensions = [NSMutableSet set];
-		NSString * path;
 		int i;
 		for (i = [indices lastIndex]; i >= 0; i--) {
 			if ([indices containsIndex:i]) {
-				path = [[selectedCategory objectAtIndex:i] path];
-				[pathExtensions addObject:[path pathExtension]];
-				[manager removeFileAtPath:path handler:nil];
+				[manager removeFileAtPath:[[selectedCategory objectAtIndex:i] path] handler:nil];
 			}
 		}
 		[selectedCategory removeObjectsAtIndexes:indices];
 		[xtraList selectRow:0 byExtendingSelection:NO];
 		[xtraList reloadData];
-		/*
-		 XXX this is ugly. We should use the AIXtraInfo's type instead of the path extension
-		*/
-		NSEnumerator * extEnu = [pathExtensions objectEnumerator];
-		while((path = [extEnu nextObject])) //usually this will only run once
-		{
-			[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed
-													  object:path];
-		}
 	}
 }
 

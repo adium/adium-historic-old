@@ -371,37 +371,14 @@
 
 #pragma mark Dock-like hiding
 
-//- (AIRectEdgeMask)slidableEdgesAdjacentToWindow
-//{
+- (AIRectEdgeMask)slidableEdgesAdjacentToWindow
+{
 	// no edges are slidable if the window has a border.
 	// Attempting to use -[NSWindow setFrame:display:animate:] to slide a bordered window off screen will 
 	// cause the application to crash.  So why is Dock-like hiding implemented in AIListWindowController instead of 
 	// AIBorderlessWindowController?  This is because it would be a good thing (tm) if we could make it work
 	// for bordered windows as well.  We should try implementing -[NSWindow constrainFrameRect:toScreen:].
-	//return 0;
-//}
-
-- (void)slideWindowOffScreenEdges:(AIRectEdgeMask)rectEdgeMask
-{
-	NSWindow *window = [self window];
-	[window setAlphaValue:0.0];
-	[window orderOut:nil]; // otherwise we cast a shadow on the screen
-	windowSlidOffScreenEdgeMask |= rectEdgeMask;
-}
-
-- (void)slideWindowOnScreen
-{
-	NSWindow *window = [self window];
-	if([NSApp isActive])
-		[window orderFront:nil]; 
-	else
-		[window makeKeyAndOrderFront:nil];
-	windowSlidOffScreenEdgeMask = 0;
-	
-	// when the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
-	// it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
-	[contactListController contactListDesiredSizeChanged];
-	[[self window] setAlphaValue:1.0];
+	return 0;
 }
 
 @end

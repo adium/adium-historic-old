@@ -1882,11 +1882,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = ppc;
-				DEAD_CODE_STRIPPING = YES;
-				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_FAST_MATH = YES;
-				GCC_UNROLL_LOOPS = YES;
 				GCC_VERSION_i386 = 4.0;
 				GCC_VERSION_ppc = 3.3;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
@@ -2056,7 +2052,7 @@
 				34BAFA1109425E6800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = "Deployment-Debug_PPC-Only";
+			defaultConfigurationName = Development;
 		};
 		DA8A805C08553B3800F24BB3 /* Build configuration list for PBXProject "AIUtilities.framework" */ = {
 			isa = XCConfigurationList;
@@ -2067,7 +2063,7 @@
 				34BAFA1209425E6800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = "Deployment-Debug_PPC-Only";
+			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
 	};

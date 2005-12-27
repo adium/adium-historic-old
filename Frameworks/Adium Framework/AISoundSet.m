@@ -128,7 +128,6 @@
  */
 - (BOOL)_loadSoundSetFromPath:(NSString *)inPath
 {
-	if (![[NSFileManager defaultManager] fileExistsAtPath:inPath]) return NO;
 	BOOL	success = YES;
 	NSBundle * xtraBundle = [NSBundle bundleWithPath:inPath];
 	if (xtraBundle && ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1)) {
