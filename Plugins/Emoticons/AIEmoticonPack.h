@@ -26,6 +26,7 @@
 + (id)emoticonPackFromPath:(NSString *)inPath;
 - (void)setDisabledEmoticons:(NSArray *)inArray;
 - (NSArray *)emoticons;
+- (NSImage *)menuPreviewImage;
 - (NSString *)name;
 - (NSString *)path;
 - (NSString *)serviceClass;

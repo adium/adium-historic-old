@@ -18,6 +18,7 @@
 #import "AIEmoticonPack.h"
 #import "AIEmoticonController.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #define EMOTICON_PATH_EXTENSION			@"emoticon"
 #define EMOTICON_PACK_TEMP_EXTENSION	@"AdiumEmoticonOld"
@@ -111,6 +112,33 @@
 {
 	if (!emoticonArray) [self loadEmoticons];
 	return emoticonArray;
+}
+
+/*
+ * @brief Return the preview image to use within a menu for this emoticon
+ *
+ * It tries to be the emoticon for text equivalent :) or :-). Failing that, any emoticon will do.
+ */
+- (NSImage *)menuPreviewImage
+{
+	NSArray		 *myEmoticons = [self emoticons];
+	NSEnumerator *enumerator;
+	AIEmoticon	 *emoticon;
+
+	enumerator = [myEmoticons objectEnumerator];
+	while ((emoticon = [enumerator nextObject])) {
+		NSArray *equivalents = [emoticon textEquivalents];
+		if ([equivalents containsObject:@":)"] || [equivalents containsObject:@":-)"]) {
+			break;
+		}
+	}
+
+	//If we didn't find a happy emoticon, use the first one in the array
+	if (!emoticon && [myEmoticons count]) {
+		emoticon = [myEmoticons objectAtIndex:0];
+	}
+
+	return [[emoticon image] imageByScalingToSize:NSMakeSize(16,16)];
 }
 
 //Set the emoticons that are disabled in this pack

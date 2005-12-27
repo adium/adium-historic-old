@@ -385,7 +385,7 @@ typedef enum {
 
 	//Divider
 	[menu addItem:[NSMenuItem separatorItem]];
-	
+
 	//Emoticon Packs
 	while ((pack = [enumerator nextObject])) {
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[pack name]
@@ -393,11 +393,10 @@ typedef enum {
 																		 action:nil
 																  keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:pack];
-		[menuItem setImage:[[[[pack emoticons] objectAtIndex:0] image] imageByScalingToSize:NSMakeSize(16,16)]];
+		[menuItem setImage:[pack menuPreviewImage]];
 		[menu addItem:menuItem];
 	}
-	
-	
+
 	return [menu autorelease];
 }
 
