@@ -446,8 +446,6 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 					//We can work efficiently on an AITextAttachmentExtension
 					if ([textAttachment isKindOfClass:[AITextAttachmentExtension class]]) {
-
-						//Suppress compiler stupidity
 						AITextAttachmentExtension *attachment = (AITextAttachmentExtension *)textAttachment;
 
 						if ((imagesPath) &&
@@ -495,55 +493,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							[chunk release]; chunk = nil;
 						}
 					} else {
-						//Our attachment is just a standard NSTextAttachment, which means we now have to deal with
-						//the fileWrapper.
-						NSFileWrapper   *fileWrapper = [textAttachment fileWrapper];
-						NSDictionary	*fileAttributes = [fileWrapper fileAttributes];
-						OSType			HFSTypeCode;
-
-						HFSTypeCode = [[fileAttributes objectForKey:NSFileHFSTypeCode] unsignedLongValue];
-
-						//Check the HFSTypeCode (encoded to the NSString format [NSImage imageFileTypes] uses)
-						//We also want to ensure that we have a path for writing out images; otherwise a normal
-						//attachment-to-file-transfer tagging is in order.
-						if (imagesPath &&
-							[[NSImage imageFileTypes] containsObject:NSFileTypeForHFSTypeCode(HFSTypeCode)]) {
-
-							NSString	*imageName = [fileWrapper preferredFilename];
-
-							//We've got an image, so the attachment's attachmentCell 
-							//already has the NSImage we want to append
-							if ([self appendImage:[[textAttachment attachmentCell] performSelector:@selector(image)]
-										 toString:string
-										 withName:imageName
-										altString:imageName
-									   imagesPath:imagesPath]) {
-
-								//We were succesful appending the image tag, so release this chunk
-								[chunk release]; chunk = nil;	
-							}
-						} else {
-							//Got a non-image file.  Use a special Adium tag so code elsewhere knows to handle what
-							//was previously the attachment as a file transfer.
-							if ([fileWrapper isKindOfClass:[ESFileWrapperExtension class]]) {
-								if ([fileWrapper isDirectory]) {
-									// XXX got passed a directory.  Porbably want to process it recursively for now
-								} else if ([fileWrapper isSymbolicLink]) {
-									// XXX got passed a symbolic link.  I guess maybe resolve it and use it like a regular file?
-								} else {
-									//Regular file.  It's go time.
-									NSString	*path = [(ESFileWrapperExtension *)fileWrapper originalPath];
-
-									if (path) {
-										[self appendFileTransferReferenceFromPath:path
-																		 toString:string];
-
-										//We were succesful appending the FT tag, so release this chunk
-										[chunk release]; chunk = nil;	
-									}
-								}
-							}
-						}
+						NSLog(@"Shouldn't get here... textAttachment is %@",textAttachment);
 					}
 				}
 			}
@@ -820,7 +770,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						//[textAttributes setUnderline:YES];
 						//[textAttributes setTextColor:[NSColor blueColor]];
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
-							[self processLinkTagArgs:[self parseArguments:chunkString] attributes:textAttributes]; //Process the linktag's contents
+							[self processLinkTagArgs:[self parseArguments:chunkString] 
+										  attributes:textAttributes]; //Process the linktag's contents
 						}
 
 					} else if ([chunkString caseInsensitiveCompare:@"/A"] == NSOrderedSame) {

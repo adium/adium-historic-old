@@ -17,6 +17,7 @@
 #import "AIAccount.h"
 #import "AIService.h"
 #import "AIAccountController.h"
+#import "AIAccountViewController.h"
 
 /*!
  * @class AIService
@@ -80,7 +81,7 @@
  */
 - (AIAccountViewController *)accountViewController
 {
-	return nil;
+	return [AIAccountViewController accountViewController];
 }
 
 /*!

@@ -22,6 +22,7 @@
 
 @interface AIContentMessage : AIContentObject {
     BOOL					isAutoreply;
+	NSString				*encodedMessage;
 }
 
 + (id)messageInChat:(AIChat *)inChat
@@ -33,4 +34,6 @@
 - (void)setIsAutoreply:(BOOL)inAutoreply;
 - (BOOL)isAutoreply;
 
+- (NSString *)encodedMessage;
+- (void)setEncodedMessage:(NSString *)inEncodedMessage;
 @end

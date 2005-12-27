@@ -62,6 +62,7 @@
 - (void)setChat:(AIChat *)inChat;
 - (void)setMessage:(NSAttributedString *)inMessage;
 - (NSAttributedString *)message;
+- (NSString *)messageString;
 
 - (id)userInfo;
 - (void)setUserInfo:(id)inUserInfo;

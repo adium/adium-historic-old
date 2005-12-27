@@ -16,7 +16,7 @@
 
 #import "AIListObject.h"
 
-@class AIListContact, AIChat, AIContentObject, ESFileTransfer, AIStatus;
+@class AIListContact, AIChat, AIContentObject, ESFileTransfer, AIStatus, AIContentMessage, AIContentTyping;
 
 #define GROUP_ACCOUNT_STATUS   @"Account Status"
 
@@ -130,6 +130,7 @@ typedef enum {
 - (BOOL)connectivityBasedOnNetworkReachability;
 - (BOOL)suppressTypingNotificationChangesAfterSend;
 - (BOOL)supportsOfflineMessaging;
+- (BOOL)allowsNewlinesInMessages;
 
 //Status
 - (NSSet *)supportedPropertyKeys;
@@ -145,8 +146,10 @@ typedef enum {
 - (BOOL)closeChat:(AIChat *)chat;
 - (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 - (BOOL)joinGroupChatNamed:(NSString *)name;
-- (BOOL)sendContentObject:(AIContentObject *)object;
+- (BOOL)sendTypingObject:(AIContentTyping *)inTypingObject;
+- (BOOL)sendMessageObject:(AIContentMessage *)inMessageObject;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
+- (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage;
 
 //Presence Tracking
 - (BOOL)contactListEditable;

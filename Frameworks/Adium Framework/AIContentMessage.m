@@ -59,10 +59,11 @@
 		   message:(NSAttributedString *)inMessage
 		 autoreply:(BOOL)inAutoReply
 {
-    [super initWithChat:inChat source:inSource destination:inDest date:inDate message:inMessage];
-    	
-    isAutoreply = inAutoReply;
-	
+    if ((self = [super initWithChat:inChat source:inSource destination:inDest date:inDate message:inMessage])) {
+		isAutoreply = inAutoReply;
+		encodedMessage = nil;
+	}
+
     return self;
 }
 
@@ -74,4 +75,16 @@
     return isAutoreply;
 }
 
+- (NSString *)encodedMessage
+{
+	return encodedMessage;
+}
+
+- (void)setEncodedMessage:(NSString *)inEncodedMessage
+{
+	if (encodedMessage != inEncodedMessage) {
+		[encodedMessage release];
+		encodedMessage = [inEncodedMessage retain];
+	}
+}
 @end
