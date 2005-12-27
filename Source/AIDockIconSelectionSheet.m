@@ -58,6 +58,9 @@
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     [sheet orderOut:nil];
+
+    [self setAnimatedDockIconAtIndex:-1];
+	[self autorelease];
 }
 
 //Setup our preference view
@@ -82,15 +85,21 @@
 	[super windowDidLoad];
 }
 
+- (void)dealloc
+{
+	[[adium notificationCenter] removeObserver:self];
+	[iconArray release]; iconArray = nil;
+
+	[super dealloc];
+}
+
 //Preference view is closing
 - (void)windowWillClose:(id)sender
 {
 	[super windowWillClose:sender];
-
-    [[adium notificationCenter] removeObserver:self];
+	
     [self setAnimatedDockIconAtIndex:-1];
-
-	[iconArray release]; iconArray = nil;
+	[self autorelease];
 }
 
 //When the xtras are changed, update our icons
