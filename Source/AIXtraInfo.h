@@ -24,6 +24,7 @@
 	NSString		*resourcePath;
 	NSString		*type;
 	NSString		*readMePath;
+	NSBundle		*xtraBundle;
 }
 
 + (AIXtraInfo *) infoWithURL:(NSURL *)url;
@@ -36,4 +37,5 @@
 - (NSString *)readMePath;
 - (NSImage *)icon;
 - (void)setName:(NSString *)name;
+- (NSBundle *)bundle; //returns nil if no bundle is available
 @end
