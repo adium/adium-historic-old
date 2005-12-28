@@ -65,6 +65,7 @@
 
 - (float)_destinationFloatValueForScroller:(NSScroller *)inScroller
 {
+#warning Webkit is open source now. We should definitely revisit this.
 	//Wonder if we can figure out what to actually return here.
 	return 0;
 }
