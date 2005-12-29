@@ -36,14 +36,15 @@ static ESDebugController	*sharedDebugController = nil;
 
 - (id)init
 {
-	if (sharedDebugController) return sharedDebugController;
+	if (sharedDebugController)
+		self = sharedDebugController;
+	else {	
+		if ((self = [super init])) {
+			sharedDebugController = self;
 
-	if ((self = [super init])) {
-		sharedDebugController = self;
-
-		debugLogArray = [[NSMutableArray alloc] init];		
+			debugLogArray = [[NSMutableArray alloc] init];		
+		}
 	}
-	
 	return self;
 }
 
