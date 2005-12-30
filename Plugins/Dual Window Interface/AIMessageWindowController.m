@@ -411,9 +411,15 @@
 	
 	button = [[self window] standardWindowButton:NSWindowDocumentIconButton];
 	if (!tabBarIsVisible) {
-		[button setImage:[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] stateIcon]];
+		NSImage *image = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] stateIcon];
+		if (image != [button image]) {
+			[button setImage:image];
+		}
+
 	} else {
-		[button setImage:nil];
+		if ([button image]) {
+			[button setImage:nil];
+		}
 	}
 }
 
