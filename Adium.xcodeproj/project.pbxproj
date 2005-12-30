@@ -66,7 +66,6 @@
 		34048AC80617CB4C004D0B7E /* SLGaimCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34048AC60617CB4C004D0B7E /* SLGaimCocoaAdapter.m */; };
 		34057F0D087E027800664D64 /* ESImageViewWithImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 34057F0B087E027800664D64 /* ESImageViewWithImagePicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34057F0E087E027800664D64 /* ESImageViewWithImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 34057F0C087E027800664D64 /* ESImageViewWithImagePicker.m */; };
-		34057FAD087EEBE500664D64 /* OTRPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34057FAC087EEBE500664D64 /* OTRPrefs.nib */; };
 		34082675075B079800703011 /* Dock Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3408254D075B078B00703011 /* Dock Icons */; };
 		34082690075B5CB900703011 /* Awake.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268E075B5CB900703011 /* Awake.png */; };
 		34082691075B5CB900703011 /* Flap.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268F075B5CB900703011 /* Flap.png */; };
@@ -98,11 +97,6 @@
 		340F488906DA5E450072E2FA /* AIListGroupCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 340F487F06DA5E440072E2FA /* AIListGroupCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34111A5F06BE1B370005AF5C /* ESObjectWithStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 34111A5D06BE1B370005AF5C /* ESObjectWithStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34111A6006BE1B370005AF5C /* ESObjectWithStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 34111A5E06BE1B370005AF5C /* ESObjectWithStatus.m */; };
-		3411E13A0832E3B9003C8270 /* ESGaimOTRPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 3411E1380832E3B9003C8270 /* ESGaimOTRPreferences.h */; };
-		3411E13B0832E3B9003C8270 /* ESGaimOTRPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3411E1390832E3B9003C8270 /* ESGaimOTRPreferences.m */; };
-		3411E2910832FC4A003C8270 /* ESGaimOTRFingerprintDetailsWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3411E28F0832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.h */; };
-		3411E2920832FC4A003C8270 /* ESGaimOTRFingerprintDetailsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3411E2900832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.m */; };
-		3411E2980832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3411E2970832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib */; };
 		341591E405463DA800291275 /* SQL_Logger_Prefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341591E105463DA800291275 /* SQL_Logger_Prefs.nib */; };
 		34167FED081D706300E35678 /* DualWindowMessageAdvanced.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34167FEC081D706200E35678 /* DualWindowMessageAdvanced.nib */; };
 		3419F3A805314BE000C68BA3 /* AISQLLoggerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B7AE664F0465778E0051E914 /* AISQLLoggerPlugin.h */; };
@@ -115,6 +109,20 @@
 		341BCF850961354D00CF83F5 /* AIMessageWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BCF810961354D00CF83F5 /* AIMessageWindow.m */; };
 		341BCF860961354D00CF83F5 /* AIClickThroughThemeDocumentButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BCF820961354D00CF83F5 /* AIClickThroughThemeDocumentButton.h */; };
 		341BCF870961354D00CF83F5 /* AIClickThroughThemeDocumentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BCF830961354D00CF83F5 /* AIClickThroughThemeDocumentButton.m */; };
+		341BD55D0965E97F00CF83F5 /* ESOTRPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BD5550965E97F00CF83F5 /* ESOTRPreferences.m */; };
+		341BD55E0965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BD5560965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.h */; };
+		341BD55F0965E97F00CF83F5 /* ESOTRPrivateKeyGenerationWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BD5570965E97F00CF83F5 /* ESOTRPrivateKeyGenerationWindowController.m */; };
+		341BD5600965E97F00CF83F5 /* ESOTRPrivateKeyGenerationWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BD5580965E97F00CF83F5 /* ESOTRPrivateKeyGenerationWindowController.h */; };
+		341BD5610965E97F00CF83F5 /* ESOTRUnknownFingerprintController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BD5590965E97F00CF83F5 /* ESOTRUnknownFingerprintController.m */; };
+		341BD5620965E97F00CF83F5 /* ESOTRUnknownFingerprintController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BD55A0965E97F00CF83F5 /* ESOTRUnknownFingerprintController.h */; };
+		341BD5630965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BD55B0965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.m */; };
+		341BD5640965E97F00CF83F5 /* ESOTRPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BD55C0965E97F00CF83F5 /* ESOTRPreferences.h */; };
+		341BD5670965E99200CF83F5 /* OTRCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BD5660965E99200CF83F5 /* OTRCommon.h */; };
+		341BD56B0965E9A500CF83F5 /* AdiumOTREncryption.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BD5690965E9A500CF83F5 /* AdiumOTREncryption.h */; };
+		341BD56C0965E9A500CF83F5 /* AdiumOTREncryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BD56A0965E9A500CF83F5 /* AdiumOTREncryption.m */; };
+		341BD5700965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341BD56E0965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib */; };
+		341BD5710965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341BD56F0965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib */; };
+		341BD57B0965EC4700CF83F5 /* OTRPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341BD5790965EC4700CF83F5 /* OTRPrefs.nib */; };
 		341E886B0648FF1B00E0C828 /* ESGaimRequestActionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341E88680648FF1B00E0C828 /* ESGaimRequestActionController.h */; };
 		341E886C0648FF1B00E0C828 /* ESGaimRequestActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */; };
 		3420E6600611D80100AE67E3 /* ESAccountPasswordPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3420E65B0611D80000AE67E3 /* ESAccountPasswordPromptController.h */; };
@@ -169,9 +177,6 @@
 		343EC6A90809DEC800E27095 /* ESContactAlertsPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 343EC6A70809DEC700E27095 /* ESContactAlertsPane.m */; };
 		343EC6AA0809DEC800E27095 /* ESContactAlertsPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 343EC6A80809DEC700E27095 /* ESContactAlertsPane.h */; };
 		343EC6B30809DEEB00E27095 /* ContactAlerts.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EC6B20809DEEB00E27095 /* ContactAlerts.nib */; };
-		344092CE07D8FF8F00321BB3 /* ESGaimOTRPrivateKeyGenerationWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 344092CC07D8FF8F00321BB3 /* ESGaimOTRPrivateKeyGenerationWindowController.h */; };
-		344092CF07D8FF8F00321BB3 /* ESGaimOTRPrivateKeyGenerationWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344092CD07D8FF8F00321BB3 /* ESGaimOTRPrivateKeyGenerationWindowController.m */; };
-		3440931E07D914F500321BB3 /* GaimOTRPrivateKeyGenerationWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3440931D07D914F400321BB3 /* GaimOTRPrivateKeyGenerationWindow.nib */; };
 		344093AA07D9161B00321BB3 /* ESAutoAwayPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 344093A807D9161B00321BB3 /* ESAutoAwayPlugin.h */; };
 		344093AB07D9161B00321BB3 /* ESAutoAwayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 344093A907D9161B00321BB3 /* ESAutoAwayPlugin.m */; };
 		3440974307DA06FE00321BB3 /* MessageContextDisplayPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3440974207DA06FE00321BB3 /* MessageContextDisplayPrefs.nib */; };
@@ -383,7 +388,6 @@
 		3496A8F407CE6D050055BBAB /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */; };
 		3499F4A806309AF60035B468 /* ESGaimRequestWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */; };
 		3499F4A906309AF60035B468 /* ESGaimRequestWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */; };
-		349C2DB1092BCF58002998E1 /* gaimOTRCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 349C2DB0092BCF58002998E1 /* gaimOTRCommon.h */; };
 		349C2F470867AD16000BF883 /* ApplescriptRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C2F460867AD16000BF883 /* ApplescriptRunner.m */; };
 		349C2FE40867AD49000BF883 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F531836F019E40BB01A80165 /* Carbon.framework */; };
 		349C2FF00867AD65000BF883 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349C2FEF0867AD65000BF883 /* Foundation.framework */; };
@@ -505,8 +509,6 @@
 		34BBE1B507A2F36400663CC9 /* adiumGaimCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE1B307A2F36400663CC9 /* adiumGaimCore.m */; };
 		34BBE1BA07A2F4C500663CC9 /* adiumGaimSignals.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE1B807A2F4C500663CC9 /* adiumGaimSignals.h */; };
 		34BBE1BB07A2F4C500663CC9 /* adiumGaimSignals.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */; };
-		34BBE55607A342AF00663CC9 /* adiumGaimOTR.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE55407A342AF00663CC9 /* adiumGaimOTR.h */; };
-		34BBE55707A342AF00663CC9 /* adiumGaimOTR.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE55507A342AF00663CC9 /* adiumGaimOTR.m */; };
 		34BD0DB508D31479000BE2C0 /* AdiumChatEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */; };
 		34BD0DB608D31479000BE2C0 /* AdiumChatEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */; };
 		34BD9D11053146CC000AB133 /* AIPreferenceController.h in Headers */ = {isa = PBXBuildFile; fileRef = F57938ED033E745F01A8010A /* AIPreferenceController.h */; };
@@ -729,8 +731,6 @@
 		34E00F8707B92B89000DF265 /* TextAndButtonsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34E00F8607B92B88000DF265 /* TextAndButtonsWindow.nib */; };
 		34E0103407B956F6000DF265 /* ESGaimNotifyEmailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0103207B956F6000DF265 /* ESGaimNotifyEmailController.m */; };
 		34E0103507B956F6000DF265 /* ESGaimNotifyEmailController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E0103307B956F6000DF265 /* ESGaimNotifyEmailController.h */; };
-		34E0110E07B9E30B000DF265 /* ESGaimOTRUnknownFingerprintController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E0110C07B9E30B000DF265 /* ESGaimOTRUnknownFingerprintController.h */; };
-		34E0110F07B9E30C000DF265 /* ESGaimOTRUnknownFingerprintController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0110D07B9E30B000DF265 /* ESGaimOTRUnknownFingerprintController.m */; };
 		34E0E98707CC48C000A82198 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34E0E9B807CC4B3600A82198 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 34E0E9B707CC4B3600A82198 /* Localizable.strings */; };
 		34E0EA0807CC53ED00A82198 /* NewMessagePrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34E0EA0707CC53EC00A82198 /* NewMessagePrompt.nib */; };
@@ -1611,18 +1611,39 @@
 		340F487F06DA5E440072E2FA /* AIListGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIListGroupCell.h; path = "Frameworks/Adium Framework/AIListGroupCell.h"; sourceTree = "<group>"; };
 		34111A5D06BE1B370005AF5C /* ESObjectWithStatus.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESObjectWithStatus.h; path = "Frameworks/Adium Framework/ESObjectWithStatus.h"; sourceTree = "<group>"; };
 		34111A5E06BE1B370005AF5C /* ESObjectWithStatus.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESObjectWithStatus.m; path = "Frameworks/Adium Framework/ESObjectWithStatus.m"; sourceTree = "<group>"; };
-		3411E1380832E3B9003C8270 /* ESGaimOTRPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimOTRPreferences.h; path = "Plugins/Gaim Service/ESGaimOTRPreferences.h"; sourceTree = "<group>"; };
-		3411E1390832E3B9003C8270 /* ESGaimOTRPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimOTRPreferences.m; path = "Plugins/Gaim Service/ESGaimOTRPreferences.m"; sourceTree = "<group>"; };
-		3411E2470832EB75003C8270 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
-		3411E28F0832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimOTRFingerprintDetailsWindowController.h; path = "Plugins/Gaim Service/ESGaimOTRFingerprintDetailsWindowController.h"; sourceTree = "<group>"; };
-		3411E2900832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimOTRFingerprintDetailsWindowController.m; path = "Plugins/Gaim Service/ESGaimOTRFingerprintDetailsWindowController.m"; sourceTree = "<group>"; };
-		3411E2970832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = GaimOTRFingerprintDetailsWindow.nib; path = "Plugins/Gaim Service/GaimOTRFingerprintDetailsWindow.nib"; sourceTree = "<group>"; };
 		341591E105463DA800291275 /* SQL_Logger_Prefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = SQL_Logger_Prefs.nib; sourceTree = "<group>"; };
 		34167FE5081D700B00E35678 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		341BCF800961354D00CF83F5 /* AIMessageWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageWindow.h; path = Source/AIMessageWindow.h; sourceTree = "<group>"; };
 		341BCF810961354D00CF83F5 /* AIMessageWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageWindow.m; path = Source/AIMessageWindow.m; sourceTree = "<group>"; };
 		341BCF820961354D00CF83F5 /* AIClickThroughThemeDocumentButton.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIClickThroughThemeDocumentButton.h; path = Source/AIClickThroughThemeDocumentButton.h; sourceTree = "<group>"; };
 		341BCF830961354D00CF83F5 /* AIClickThroughThemeDocumentButton.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIClickThroughThemeDocumentButton.m; path = Source/AIClickThroughThemeDocumentButton.m; sourceTree = "<group>"; };
+		341BD5550965E97F00CF83F5 /* ESOTRPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESOTRPreferences.m; path = Source/ESOTRPreferences.m; sourceTree = "<group>"; };
+		341BD5560965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESOTRFingerprintDetailsWindowController.h; path = Source/ESOTRFingerprintDetailsWindowController.h; sourceTree = "<group>"; };
+		341BD5570965E97F00CF83F5 /* ESOTRPrivateKeyGenerationWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESOTRPrivateKeyGenerationWindowController.m; path = Source/ESOTRPrivateKeyGenerationWindowController.m; sourceTree = "<group>"; };
+		341BD5580965E97F00CF83F5 /* ESOTRPrivateKeyGenerationWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESOTRPrivateKeyGenerationWindowController.h; path = Source/ESOTRPrivateKeyGenerationWindowController.h; sourceTree = "<group>"; };
+		341BD5590965E97F00CF83F5 /* ESOTRUnknownFingerprintController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESOTRUnknownFingerprintController.m; path = Source/ESOTRUnknownFingerprintController.m; sourceTree = "<group>"; };
+		341BD55A0965E97F00CF83F5 /* ESOTRUnknownFingerprintController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESOTRUnknownFingerprintController.h; path = Source/ESOTRUnknownFingerprintController.h; sourceTree = "<group>"; };
+		341BD55B0965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESOTRFingerprintDetailsWindowController.m; path = Source/ESOTRFingerprintDetailsWindowController.m; sourceTree = "<group>"; };
+		341BD55C0965E97F00CF83F5 /* ESOTRPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESOTRPreferences.h; path = Source/ESOTRPreferences.h; sourceTree = "<group>"; };
+		341BD5660965E99200CF83F5 /* OTRCommon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OTRCommon.h; path = Source/OTRCommon.h; sourceTree = "<group>"; };
+		341BD5690965E9A500CF83F5 /* AdiumOTREncryption.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumOTREncryption.h; path = Source/AdiumOTREncryption.h; sourceTree = "<group>"; };
+		341BD56A0965E9A500CF83F5 /* AdiumOTREncryption.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumOTREncryption.m; path = Source/AdiumOTREncryption.m; sourceTree = "<group>"; };
+		341BD56E0965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = OTRFingerprintDetailsWindow.nib; path = Resources/OTRFingerprintDetailsWindow.nib; sourceTree = "<group>"; };
+		341BD56F0965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = OTRPrivateKeyGenerationWindow.nib; path = Resources/OTRPrivateKeyGenerationWindow.nib; sourceTree = "<group>"; };
+		341BD57A0965EC4700CF83F5 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BD57F0965EC5A00CF83F5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BD5800965EC5F00CF83F5 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BD5810965EC6400CF83F5 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BD5820965EC6900CF83F5 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BD5830965EC6E00CF83F5 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BD5840965EC7200CF83F5 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = Resources/Russian.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BD5850965EC7A00CF83F5 /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BD5860965ECB500CF83F5 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BD5870965ECB800CF83F5 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BD5880965ECBD00CF83F5 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BD5890965ECC200CF83F5 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BD58A0965ECC800CF83F5 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BD58B0965ECCD00CF83F5 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
 		341DE02F07FE104700EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		341DE03407FE105600EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		341DE03507FE106400EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -1785,9 +1806,6 @@
 		343EC6A70809DEC700E27095 /* ESContactAlertsPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESContactAlertsPane.m; path = Source/ESContactAlertsPane.m; sourceTree = "<group>"; };
 		343EC6A80809DEC700E27095 /* ESContactAlertsPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESContactAlertsPane.h; path = Source/ESContactAlertsPane.h; sourceTree = "<group>"; };
 		343EC6B20809DEEB00E27095 /* ContactAlerts.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ContactAlerts.nib; path = Resources/ContactAlerts.nib; sourceTree = "<group>"; };
-		344092CC07D8FF8F00321BB3 /* ESGaimOTRPrivateKeyGenerationWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimOTRPrivateKeyGenerationWindowController.h; path = "Plugins/Gaim Service/ESGaimOTRPrivateKeyGenerationWindowController.h"; sourceTree = "<group>"; };
-		344092CD07D8FF8F00321BB3 /* ESGaimOTRPrivateKeyGenerationWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimOTRPrivateKeyGenerationWindowController.m; path = "Plugins/Gaim Service/ESGaimOTRPrivateKeyGenerationWindowController.m"; sourceTree = "<group>"; };
-		3440931D07D914F400321BB3 /* GaimOTRPrivateKeyGenerationWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = GaimOTRPrivateKeyGenerationWindow.nib; path = "Plugins/Gaim Service/GaimOTRPrivateKeyGenerationWindow.nib"; sourceTree = "<group>"; };
 		344093A807D9161B00321BB3 /* ESAutoAwayPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESAutoAwayPlugin.h; path = Source/ESAutoAwayPlugin.h; sourceTree = SOURCE_ROOT; };
 		344093A907D9161B00321BB3 /* ESAutoAwayPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESAutoAwayPlugin.m; path = Source/ESAutoAwayPlugin.m; sourceTree = SOURCE_ROOT; };
 		3440974407DA070700321BB3 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
@@ -2185,7 +2203,6 @@
 		3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WebKit Message View.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimRequestWindowController.m; path = "Plugins/Gaim Service/ESGaimRequestWindowController.m"; sourceTree = "<group>"; };
 		3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimRequestWindowController.h; path = "Plugins/Gaim Service/ESGaimRequestWindowController.h"; sourceTree = "<group>"; };
-		349C2DB0092BCF58002998E1 /* gaimOTRCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gaimOTRCommon.h; path = "Plugins/Gaim Service/gaimOTRCommon.h"; sourceTree = "<group>"; };
 		349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AdiumApplescriptRunner; sourceTree = BUILT_PRODUCTS_DIR; };
 		349C2F460867AD16000BF883 /* ApplescriptRunner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ApplescriptRunner.m; path = Source/ApplescriptRunner.m; sourceTree = "<group>"; };
 		349C2FEF0867AD65000BF883 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -2234,7 +2251,6 @@
 		34A30E9C08D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = Resources/Spanish.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34A30E9D08D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = "Plugins/WebKit Message View/Spanish.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		34A30E9E08D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		34A30E9F08D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/Gaim Service/Spanish.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
 		34A30EA008D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		34A30EA108D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		34A30EA208D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Spanish; path = "Resources/Spanish.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
@@ -2284,7 +2300,6 @@
 		34A81DB4093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		34A81DB5093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		34A81DB6093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
-		34A81DB7093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
 		34A81DB8093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
 		34A81DBB093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = Resources/pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34A81DBC093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Plugins/WebKit Message View/pl.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2410,8 +2425,6 @@
 		34BBE1B307A2F36400663CC9 /* adiumGaimCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimCore.m; path = "Plugins/Gaim Service/adiumGaimCore.m"; sourceTree = "<group>"; };
 		34BBE1B807A2F4C500663CC9 /* adiumGaimSignals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumGaimSignals.h; path = "Plugins/Gaim Service/adiumGaimSignals.h"; sourceTree = "<group>"; };
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
-		34BBE55407A342AF00663CC9 /* adiumGaimOTR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumGaimOTR.h; path = "Plugins/Gaim Service/adiumGaimOTR.h"; sourceTree = "<group>"; };
-		34BBE55507A342AF00663CC9 /* adiumGaimOTR.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimOTR.m; path = "Plugins/Gaim Service/adiumGaimOTR.m"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
 		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2489,15 +2502,6 @@
 		34C6A4C9077AB3A900EB423C /* AIImageCellAnimationFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIImageCellAnimationFix.h; path = "Frameworks/Adium Framework/AIImageCellAnimationFix.h"; sourceTree = "<group>"; };
 		34C6A4CA077AB3AA00EB423C /* AIImageCellAnimationFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIImageCellAnimationFix.m; path = "Frameworks/Adium Framework/AIImageCellAnimationFix.m"; sourceTree = "<group>"; };
 		34C898C2089297B00046AD38 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Japanese; path = "Resources/Japanese.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
-		34C898D8089297D30046AD38 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/Gaim Service/zh_TW.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
-		34C898E8089297E30046AD38 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
-		34C898F8089297F00046AD38 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
-		34C8990A089297F90046AD38 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/Gaim Service/cs.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
-		34C8991A089298050046AD38 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/Gaim Service/Swedish.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
-		34C8993C0892981D0046AD38 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = "Plugins/Gaim Service/Japanese.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
-		34C8994C089298300046AD38 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = "Plugins/Gaim Service/Italian.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
-		34C8995C0892983E0046AD38 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Plugins/Gaim Service/German.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
-		34C8996E089298470046AD38 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = "Plugins/Gaim Service/French.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
 		34C899AB07E51B18009357F6 /* BuiltInEventPresets.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist; name = BuiltInEventPresets.plist; path = Resources/BuiltInEventPresets.plist; sourceTree = "<group>"; };
 		34C9A6360822930D004F912C /* ESGaimMeanwhileContactAdditionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimMeanwhileContactAdditionController.h; path = "Plugins/Gaim Service/ESGaimMeanwhileContactAdditionController.h"; sourceTree = "<group>"; };
 		34C9A6370822930D004F912C /* ESGaimMeanwhileContactAdditionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimMeanwhileContactAdditionController.m; path = "Plugins/Gaim Service/ESGaimMeanwhileContactAdditionController.m"; sourceTree = "<group>"; };
@@ -2604,8 +2608,6 @@
 		34E00F8607B92B88000DF265 /* TextAndButtonsWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = TextAndButtonsWindow.nib; path = "Frameworks/Adium Framework/TextAndButtonsWindow.nib"; sourceTree = "<group>"; };
 		34E0103207B956F6000DF265 /* ESGaimNotifyEmailController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimNotifyEmailController.m; path = "Plugins/Gaim Service/ESGaimNotifyEmailController.m"; sourceTree = "<group>"; };
 		34E0103307B956F6000DF265 /* ESGaimNotifyEmailController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimNotifyEmailController.h; path = "Plugins/Gaim Service/ESGaimNotifyEmailController.h"; sourceTree = "<group>"; };
-		34E0110C07B9E30B000DF265 /* ESGaimOTRUnknownFingerprintController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimOTRUnknownFingerprintController.h; path = "Plugins/Gaim Service/ESGaimOTRUnknownFingerprintController.h"; sourceTree = "<group>"; };
-		34E0110D07B9E30B000DF265 /* ESGaimOTRUnknownFingerprintController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimOTRUnknownFingerprintController.m; path = "Plugins/Gaim Service/ESGaimOTRUnknownFingerprintController.m"; sourceTree = "<group>"; };
 		34E0E9B007CC4B1800A82198 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = "Adium Crash Reporter/English.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		34E0EA0707CC53EC00A82198 /* NewMessagePrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = NewMessagePrompt.nib; path = Resources/NewMessagePrompt.nib; sourceTree = "<group>"; };
 		34E0EA0B07CC53FE00A82198 /* AINewMessagePanelPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AINewMessagePanelPlugin.m; path = Source/AINewMessagePanelPlugin.m; sourceTree = "<group>"; };
@@ -3545,6 +3547,27 @@
 			name = "Contact List";
 			sourceTree = "<group>";
 		};
+		341BD5530965E90A00CF83F5 /* OTR */ = {
+			isa = PBXGroup;
+			children = (
+				341BD5690965E9A500CF83F5 /* AdiumOTREncryption.h */,
+				341BD56A0965E9A500CF83F5 /* AdiumOTREncryption.m */,
+				341BD5790965EC4700CF83F5 /* OTRPrefs.nib */,
+				341BD56E0965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib */,
+				341BD56F0965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib */,
+				341BD5550965E97F00CF83F5 /* ESOTRPreferences.m */,
+				341BD5560965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.h */,
+				341BD5570965E97F00CF83F5 /* ESOTRPrivateKeyGenerationWindowController.m */,
+				341BD5580965E97F00CF83F5 /* ESOTRPrivateKeyGenerationWindowController.h */,
+				341BD5590965E97F00CF83F5 /* ESOTRUnknownFingerprintController.m */,
+				341BD55A0965E97F00CF83F5 /* ESOTRUnknownFingerprintController.h */,
+				341BD55B0965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.m */,
+				341BD55C0965E97F00CF83F5 /* ESOTRPreferences.h */,
+				341BD5660965E99200CF83F5 /* OTRCommon.h */,
+			);
+			name = OTR;
+			sourceTree = "<group>";
+		};
 		3428328307D263F0004F01C9 /* Status Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -3647,20 +3670,6 @@
 		3440938407D9151F00321BB3 /* OTR */ = {
 			isa = PBXGroup;
 			children = (
-				34BBE55407A342AF00663CC9 /* adiumGaimOTR.h */,
-				34BBE55507A342AF00663CC9 /* adiumGaimOTR.m */,
-				34E0110C07B9E30B000DF265 /* ESGaimOTRUnknownFingerprintController.h */,
-				34E0110D07B9E30B000DF265 /* ESGaimOTRUnknownFingerprintController.m */,
-				344092CC07D8FF8F00321BB3 /* ESGaimOTRPrivateKeyGenerationWindowController.h */,
-				344092CD07D8FF8F00321BB3 /* ESGaimOTRPrivateKeyGenerationWindowController.m */,
-				3440931D07D914F400321BB3 /* GaimOTRPrivateKeyGenerationWindow.nib */,
-				3411E1380832E3B9003C8270 /* ESGaimOTRPreferences.h */,
-				3411E1390832E3B9003C8270 /* ESGaimOTRPreferences.m */,
-				34057FAC087EEBE500664D64 /* OTRPrefs.nib */,
-				3411E28F0832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.h */,
-				3411E2900832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.m */,
-				3411E2970832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib */,
-				349C2DB0092BCF58002998E1 /* gaimOTRCommon.h */,
 			);
 			name = OTR;
 			sourceTree = "<group>";
@@ -5203,6 +5212,7 @@
 		4BC291F9083D9EDC0075F57D /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				341BD5530965E90A00CF83F5 /* OTR */,
 				346CFDBC087B77FB009711C8 /* System (Idle, Connectivity, etc.) */,
 				4B873F370840D1FB00738987 /* Account */,
 				4BC4439A08612BD800B10F28 /* Content */,
@@ -6567,6 +6577,12 @@
 				34AA369E095CE914003B56DB /* AIContactListNameView.h in Headers */,
 				341BCF840961354D00CF83F5 /* AIMessageWindow.h in Headers */,
 				341BCF860961354D00CF83F5 /* AIClickThroughThemeDocumentButton.h in Headers */,
+				341BD55E0965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.h in Headers */,
+				341BD5600965E97F00CF83F5 /* ESOTRPrivateKeyGenerationWindowController.h in Headers */,
+				341BD5620965E97F00CF83F5 /* ESOTRUnknownFingerprintController.h in Headers */,
+				341BD5640965E97F00CF83F5 /* ESOTRPreferences.h in Headers */,
+				341BD5670965E99200CF83F5 /* OTRCommon.h in Headers */,
+				341BD56B0965E9A500CF83F5 /* AdiumOTREncryption.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6791,14 +6807,9 @@
 				34BBE18C07A2F2A600663CC9 /* adiumGaimEventloop.h in Headers */,
 				34BBE1B407A2F36400663CC9 /* adiumGaimCore.h in Headers */,
 				34BBE1BA07A2F4C500663CC9 /* adiumGaimSignals.h in Headers */,
-				34BBE55607A342AF00663CC9 /* adiumGaimOTR.h in Headers */,
 				34E0103507B956F6000DF265 /* ESGaimNotifyEmailController.h in Headers */,
-				34E0110E07B9E30B000DF265 /* ESGaimOTRUnknownFingerprintController.h in Headers */,
 				34E0EB8F07CD349200A82198 /* ESGaimAIMAccount.h in Headers */,
-				344092CE07D8FF8F00321BB3 /* ESGaimOTRPrivateKeyGenerationWindowController.h in Headers */,
 				34C9A6380822930D004F912C /* ESGaimMeanwhileContactAdditionController.h in Headers */,
-				3411E13A0832E3B9003C8270 /* ESGaimOTRPreferences.h in Headers */,
-				3411E2910832FC4A003C8270 /* ESGaimOTRFingerprintDetailsWindowController.h in Headers */,
 				34B2740C083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.h in Headers */,
 				A3C0432108D74D3100B48CE1 /* AIGaimGTalkAccount.h in Headers */,
 				A3C0432308D74D3100B48CE1 /* AIGaimGTalkAccountViewController.h in Headers */,
@@ -6806,7 +6817,6 @@
 				34AEE7DE08E3547000AE1C78 /* ESGaimFileReceiveRequestController.h in Headers */,
 				34AEE7EA08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h in Headers */,
 				07F1795008EBC5B400A9C392 /* UndeclaredLibgaimFunctions.h in Headers */,
-				349C2DB1092BCF58002998E1 /* gaimOTRCommon.h in Headers */,
 				345A7B5B0954AD1400FF3113 /* ESSimpleService.h in Headers */,
 				345A7B670954AD2800FF3113 /* ESGaimSimpleAccount.h in Headers */,
 				345A7B6D0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.h in Headers */,
@@ -7676,6 +7686,9 @@
 				34D0FE3D09561E3800DCB678 /* PersonalPreferences.nib in Resources */,
 				34D0FF8509569FE500DCB678 /* PersonalPreferencesDefaults.plist in Resources */,
 				34D000C60957918000DCB678 /* ContactListRecentImages.nib in Resources */,
+				341BD5700965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib in Resources */,
+				341BD5710965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib in Resources */,
+				341BD57B0965EC4700CF83F5 /* OTRPrefs.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7772,10 +7785,7 @@
 				343EB40008086D9000E27095 /* ESGaimNovellAccountView.nib in Resources */,
 				343EB40408086D9000E27095 /* ESGaimGaduGaduAccountView.nib in Resources */,
 				3402E04E07CB0EB00044F818 /* Localizable.strings in Resources */,
-				3440931E07D914F500321BB3 /* GaimOTRPrivateKeyGenerationWindow.nib in Resources */,
 				34C9A64508229348004F912C /* GaimMeanwhileContactAdditionWindow.nib in Resources */,
-				34057FAD087EEBE500664D64 /* OTRPrefs.nib in Resources */,
-				3411E2980832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib in Resources */,
 				34B27416083C0B900092A5A0 /* GaimAuthorizationRequestWindow.nib in Resources */,
 				A3C042D208D7483100B48CE1 /* GaimDefaultsGTalk.plist in Resources */,
 				345A7B720954AD4D00FF3113 /* GaimDefaultsSimple.plist in Resources */,
@@ -8179,6 +8189,11 @@
 				34AA369F095CE914003B56DB /* AIContactListNameView.m in Sources */,
 				341BCF850961354D00CF83F5 /* AIMessageWindow.m in Sources */,
 				341BCF870961354D00CF83F5 /* AIClickThroughThemeDocumentButton.m in Sources */,
+				341BD55D0965E97F00CF83F5 /* ESOTRPreferences.m in Sources */,
+				341BD55F0965E97F00CF83F5 /* ESOTRPrivateKeyGenerationWindowController.m in Sources */,
+				341BD5610965E97F00CF83F5 /* ESOTRUnknownFingerprintController.m in Sources */,
+				341BD5630965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.m in Sources */,
+				341BD56C0965E9A500CF83F5 /* AdiumOTREncryption.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8387,14 +8402,9 @@
 				34BBE18D07A2F2A600663CC9 /* adiumGaimEventloop.m in Sources */,
 				34BBE1B507A2F36400663CC9 /* adiumGaimCore.m in Sources */,
 				34BBE1BB07A2F4C500663CC9 /* adiumGaimSignals.m in Sources */,
-				34BBE55707A342AF00663CC9 /* adiumGaimOTR.m in Sources */,
 				34E0103407B956F6000DF265 /* ESGaimNotifyEmailController.m in Sources */,
-				34E0110F07B9E30C000DF265 /* ESGaimOTRUnknownFingerprintController.m in Sources */,
 				34E0EB9007CD349200A82198 /* ESGaimAIMAccount.m in Sources */,
-				344092CF07D8FF8F00321BB3 /* ESGaimOTRPrivateKeyGenerationWindowController.m in Sources */,
 				34C9A6390822930D004F912C /* ESGaimMeanwhileContactAdditionController.m in Sources */,
-				3411E13B0832E3B9003C8270 /* ESGaimOTRPreferences.m in Sources */,
-				3411E2920832FC4A003C8270 /* ESGaimOTRFingerprintDetailsWindowController.m in Sources */,
 				34B2740D083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.m in Sources */,
 				A3C0432208D74D3100B48CE1 /* AIGaimGTalkAccount.m in Sources */,
 				A3C0432408D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m in Sources */,
@@ -8666,25 +8676,6 @@
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
-		34057FAC087EEBE500664D64 /* OTRPrefs.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				3411E2470832EB75003C8270 /* English */,
-				34C898D8089297D30046AD38 /* zh_TW */,
-				34C898E8089297E30046AD38 /* zh_CN */,
-				34C898F8089297F00046AD38 /* is */,
-				34C8990A089297F90046AD38 /* cs */,
-				34C8991A089298050046AD38 /* Swedish */,
-				34C8993C0892981D0046AD38 /* Japanese */,
-				34C8994C089298300046AD38 /* Italian */,
-				34C8995C0892983E0046AD38 /* German */,
-				34C8996E089298470046AD38 /* French */,
-				34A30E9F08D8EE7B00697644 /* Spanish */,
-				34A81DB7093CE92200B0E93D /* pl */,
-			);
-			name = OTRPrefs.nib;
-			sourceTree = "<group>";
-		};
 		34167FEC081D706200E35678 /* DualWindowMessageAdvanced.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -8706,6 +8697,27 @@
 				34A81DCD093CE92300B0E93D /* pl */,
 			);
 			name = DualWindowMessageAdvanced.nib;
+			sourceTree = "<group>";
+		};
+		341BD5790965EC4700CF83F5 /* OTRPrefs.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				341BD57A0965EC4700CF83F5 /* English */,
+				341BD57F0965EC5A00CF83F5 /* zh_CN */,
+				341BD5800965EC5F00CF83F5 /* Swedish */,
+				341BD5810965EC6400CF83F5 /* French */,
+				341BD5820965EC6900CF83F5 /* zh_TW */,
+				341BD5830965EC6E00CF83F5 /* Spanish */,
+				341BD5840965EC7200CF83F5 /* Russian */,
+				341BD5850965EC7A00CF83F5 /* pl */,
+				341BD5860965ECB500CF83F5 /* Japanese */,
+				341BD5870965ECB800CF83F5 /* Italian */,
+				341BD5880965ECBD00CF83F5 /* is */,
+				341BD5890965ECC200CF83F5 /* German */,
+				341BD58A0965ECC800CF83F5 /* cs */,
+				341BD58B0965ECCD00CF83F5 /* Catalan */,
+			);
+			name = OTRPrefs.nib;
 			sourceTree = "<group>";
 		};
 		342113CD08261FB900A3B0FB /* MainMenu.nib */ = {
