@@ -153,5 +153,7 @@
 
 #define Adium_Xtras_Changed					@"Adium_Xtras_Changed"
 #define Adium_CompletedApplicationLoad		@"Adium_CompletedApplicationLoad"
+#define Adium_WillTerminate					@"Adium_WillTerminate"
+
 //#define	Adium_VersionWillBeUpgraded		@"Adium_VersionWillBeUpgraded"
 //#define	Adium_VersionUpgraded			@"Adium_VersionUpgraded"
