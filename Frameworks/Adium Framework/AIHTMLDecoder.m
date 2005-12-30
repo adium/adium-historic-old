@@ -265,6 +265,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	//Setup the default attributes
 	NSString		*currentFamily = [@"Helvetica" retain];
 	NSString		*currentColor = nil;
+	NSString		*currentBackColor = nil;
 	int				 currentSize = 12;
 	BOOL			 currentItalic = NO;
 	BOOL			 currentBold = NO;
@@ -290,6 +291,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		NSDictionary	*attributes = [inMessage attributesAtIndex:searchRange.location effectiveRange:&searchRange];
 		NSFont			*font = [attributes objectForKey:NSFontAttributeName];
 		NSString		*color = [[attributes objectForKey:NSForegroundColorAttributeName] hexString];
+		NSString		*backColor = [[attributes objectForKey:NSBackgroundColorAttributeName] hexString];
 		NSString		*familyName = [font familyName];
 		float			 pointSize = [font pointSize];
 
@@ -316,8 +318,10 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		BOOL changedSize = (pointSize != currentSize);
 		BOOL changedColor = (thingsToInclude.colorTags &&
 							 ((color && ![color isEqualToString:currentColor]) || (!color && currentColor)));
+		BOOL changedBackColor = (thingsToInclude.colorTags &&
+							 ((backColor && ![backColor isEqualToString:currentBackColor]) || (!backColor && currentBackColor)));
 		if((thingsToInclude.fontTags && (changedSize || ![familyName isEqualToString:currentFamily])) ||
-		   changedColor) {
+		   changedColor || changedBackColor) {
 
 			//Close any existing font tags, and open a new one
 			if (thingsToInclude.closingFontTags && openFontTag) {
@@ -360,8 +364,19 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					[string appendString:[NSString stringWithFormat:@" COLOR=\"#%@\"",color]];
 				}
 			}
+			//Background Color per tag
+			if (backColor) {
+				if (!thingsToInclude.simpleTagsOnly) {	
+					[string appendString:[NSString stringWithFormat:@" BACK=\"#%@\"",backColor]];
+				}
+			}
+			
 			if (color != currentColor) {
 				[currentColor release]; currentColor = [color retain];
+			}
+			
+			if (backColor != currentBackColor) {
+				[currentBackColor release]; currentBackColor = [backColor retain];
 			}
 
 			//Close the font tag if necessary
