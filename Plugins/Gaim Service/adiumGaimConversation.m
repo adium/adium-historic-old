@@ -187,7 +187,7 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who,
 			messageString = _processGaimImages(messageString, adiumAccount);
 		}
 
-		messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[AIHTMLDecoder decodeHTML:messageString],@"AttributedMessage",
+		messageDict = [NSDictionary dictionaryWithObjectsAndKeys:messageString,@"Message",
 			[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 			[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
 

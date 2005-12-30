@@ -85,13 +85,6 @@
 - (void)performContactMenuActionFromDict:(NSDictionary *)dict;
 - (void)performAccountMenuActionFromDict:(NSDictionary *)dict;
 
-- (void)requestSecureMessaging:(BOOL)inSecureMessaging
-							   inChat:(AIChat *)inChat;
-- (void)gaimConversation:(GaimConversation *)conv setSecurityDetails:(NSDictionary *)securityDetailsDict;
-- (void)refreshedSecurityOfGaimConversation:(GaimConversation *)conv;
-- (NSString *)localizedOTRMessage:(NSString *)msg withUsername:(const char *)username;
-- (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat;
-
 @end
 
 //Lookup functions
