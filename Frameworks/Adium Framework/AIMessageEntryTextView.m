@@ -27,6 +27,7 @@
 #import "AIInterfaceController.h"
 
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIImageAdditions.h>
 
@@ -351,6 +352,12 @@
 		if (!cachedWhiteColor) cachedWhiteColor = [[NSColor whiteColor] retain];
 
 		[self setBackgroundColor:cachedWhiteColor];
+	}
+	
+	if([[self backgroundColor] colorIsDark]) {
+		[self setInsertionPointColor:[NSColor whiteColor]];
+	} else {
+		[self setInsertionPointColor:[NSColor blackColor]];
 	}
 }
 
