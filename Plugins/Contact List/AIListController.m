@@ -14,11 +14,16 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIChat.h"
+#import "AIChatController.h"
 #import "AIContactController.h"
+#import "AIContentController.h"
+#import "AIContentMessage.h"
 #import "AIInterfaceController.h"
 #import "AIListController.h"
 #import "AIPreferenceController.h"
 #import "ESFileTransfer.h"
+#import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
@@ -492,7 +497,8 @@ typedef enum {
 //
 - (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
-    NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
+	BOOL		success = YES;
+	NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
 	
     if ([availableType isEqualToString:@"AIListObject"]) {
 		//The tree root is not associated with our root contact list group, so we need to make that association here
@@ -528,21 +534,48 @@ typedef enum {
 										   [context retain], //we're responsible for retaining the content object
 										   AILocalizedString(@"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\n\nYou may un-combine these contacts by getting info on the combined contact.","Explanation of metacontact creation"));
 		}
-		//Drag and Drop for the contact list.
 	} else if([[[info draggingPasteboard] types] containsObject:NSFilenamesPboardType]) {
+		//Drag and Drop file transfer for the contact list.
 		NSString		*file;
 		NSArray			*files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
 		NSEnumerator	*enumerator = [files objectEnumerator];
 		
 		while ((file = [enumerator nextObject])) {
-			AIListContact	*targetFileTransferContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE forListContact:item];
+			AIListContact	*targetFileTransferContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+																									forListContact:item];
 			[[adium fileTransferController] sendFile:file toListContact:targetFileTransferContact];
+		}
+	} else if([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) {
+		//Drag and drop text sending via the contact list.
+		AIListContact   *contact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
+																			  forListContact:item];
+		
+		if (contact) {
+			//XXX
+			//This is not the best method for doing this, but I can't figure out why the Message View
+			//won't let me add the text directly into it's text entry even if I expand AIWebKitMessageView.
+			
+			//Open the chat and send the dragged text.
+			AIChat							*chat;
+			AIContentMessage				*messageContent;
+			
+			chat = [[adium chatController] openChatWithContact:contact];
+			messageContent = [AIContentMessage messageInChat:chat
+												  withSource:[chat account]
+												 destination:[chat listObject]
+														date:nil
+													 message:[NSAttributedString stringWithData:[[info draggingPasteboard] dataForType:NSRTFPboardType]]
+												   autoreply:NO];
+			
+			[[adium contentController] sendContentObject:messageContent];
+		} else {
+			success = NO;
 		}
 	}
 	
 	[super outlineView:outlineView acceptDrop:info item:item childIndex:index];
 	
-    return YES;
+    return success;
 }
 - (void)mergeContactSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
