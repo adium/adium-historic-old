@@ -17,8 +17,6 @@
 #import "AIGaimOscarAccountViewController.h"
 #import "CBGaimAccount.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIColorAdditions.h>
-#import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIMessageEntryTextView.h>
