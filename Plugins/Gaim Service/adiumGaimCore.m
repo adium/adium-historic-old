@@ -27,7 +27,6 @@
 #import "adiumGaimRoomlist.h"
 #import "adiumGaimSignals.h"
 #import "adiumGaimWebcam.h"
-#import "adiumGaimOTR.h"
 
 #import <AIUtilities/AIFileManagerAdditions.h>
 
@@ -101,7 +100,6 @@ static void adiumGaimCoreUiInit(void)
     gaim_blist_set_ui_ops(adium_gaim_blist_get_ui_ops());
     gaim_connections_set_ui_ops(adium_gaim_connection_get_ui_ops());
     gaim_privacy_set_ui_ops (adium_gaim_privacy_get_ui_ops());	
-	initGaimOTRSupprt();
 
 	/* Why use Gaim's accounts and blist list when we have the information locally?
 		*		- Faster account connection: Gaim doesn't have to recreate the local list

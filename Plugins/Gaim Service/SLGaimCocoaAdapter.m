@@ -25,7 +25,6 @@
 #import "CBGaimServicePlugin.h"
 #import "adiumGaimCore.h"
 #import "adiumGaimEventloop.h"
-#import "adiumGaimOTR.h"
 #import "UndeclaredLibgaimFunctions.h"
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIAccount.h>
@@ -1451,106 +1450,14 @@ NSMutableDictionary* get_chatDict(void)
 
 
 #pragma mark Secure messaging
-- (void)gaimThreadRequestSecureMessaging:(BOOL)inSecureMessaging
-										 inChat:(AIChat *)inChat
-{
-	GaimConversation	*conv;
-	if ((conv = convLookupFromChat(inChat, [inChat account]))) {
-		
-		if (inSecureMessaging) {
-			adium_gaim_otr_connect_conv(conv);
-		} else {
-			adium_gaim_otr_disconnect_conv(conv);	
-		}
-	}
-}
-
-- (void)requestSecureMessaging:(BOOL)inSecureMessaging
-							   inChat:(AIChat *)inChat
-{
-	[gaimThreadProxy gaimThreadRequestSecureMessaging:inSecureMessaging
-											   inChat:inChat];
-}
-
-- (void)gaimThreaPromptToVerifyEncryptionIdentityInChat:(AIChat *)inChat
-{
-	GaimConversation	*conv;
-	if ((conv = convLookupFromChat(inChat, [inChat account]))) {
-		adium_gaim_verify_fingerprint_for_conv(conv);
-	}
-}
-
-- (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat
-{
-	[gaimThreadProxy gaimThreaPromptToVerifyEncryptionIdentityInChat:inChat];
-}
 
 - (void)gaimConversation:(GaimConversation *)conv setSecurityDetails:(NSDictionary *)securityDetailsDict
 {
-	AIChat	*chat = (conv ? imChatLookupFromConv(conv) : nil);
-
-	if (chat) {
-		NSMutableDictionary	*fullSecurityDetailsDict;
-		
-		if (securityDetailsDict) {
-			NSString				*format, *description;
-			fullSecurityDetailsDict = [[securityDetailsDict mutableCopy] autorelease];
-			
-			/* Encrypted by Off-the-Record Messaging
-				*
-				* Fingerprint for TekJew:
-				* <Fingerprint>
-				*
-				* Secure ID for this session:
-				* Incoming: <Incoming SessionID>
-				* Outgoing: <Outgoing SessionID>
-				*/
-			format = [@"%@\n\n" stringByAppendingString:AILocalizedString(@"Fingerprint for %@:","Fingerprint for <name>:")];
-			format = [format stringByAppendingString:@"\n%@\n\n%@\n%@ %@\n%@ %@"];
-			
-			description = [NSString stringWithFormat:format,
-				AILocalizedString(@"Encrypted by Off-the-Record Messaging",nil),
-				[[chat listObject] formattedUID],
-				[securityDetailsDict objectForKey:@"Fingerprint"],
-				AILocalizedString(@"Secure ID for this session:",nil),
-				AILocalizedString(@"Incoming:",nil),
-				[securityDetailsDict objectForKey:@"Incoming SessionID"],
-				AILocalizedString(@"Outgoing:",nil),
-				[securityDetailsDict objectForKey:@"Outgoing SessionID"],
-				nil];
-			
-			[fullSecurityDetailsDict setObject:description
-										forKey:@"Description"];
-		} else {
-			fullSecurityDetailsDict = nil;	
-		}
-		
-		[chat mainPerformSelector:@selector(setSecurityDetails:)
-					   withObject:fullSecurityDetailsDict];
-	}
 }
 
 - (void)refreshedSecurityOfGaimConversation:(GaimConversation *)conv
 {
 	GaimDebug (@"*** Refreshed security...");
-}
-
-- (NSString *)localizedOTRMessage:(NSString *)message withUsername:(const char *)username
-{
-	NSString	*localizedOTRMessage = nil;
-
-	if (([message rangeOfString:@"You sent unencrypted data to"].location != NSNotFound) &&
-	   ([message rangeOfString:@"who was expecting encrypted messages"].location != NSNotFound)) {
-		localizedOTRMessage = [NSString stringWithFormat:
-			AILocalizedString(@"You sent an unencrypted message, but %s was expecting encryption.", "Message when sending unencrypted messages to a contact expecting encrypted ones. %s will be a name."),
-			username];
-	} else if ([message rangeOfString:@"has closed his private connection to you"].location != NSNotFound) {
-		localizedOTRMessage = [NSString stringWithFormat:
-			AILocalizedString(@"%s is no longer using encryption; you should cancel encryption on your side.", "Message when the remote contact cancels his half of an encrypted conversation. %s will be a name."),
-			username];
-	}
-
-	return localizedOTRMessage;
 }
 
 - (void)dealloc

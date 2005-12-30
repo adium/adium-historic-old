@@ -637,13 +637,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 - (void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
 {
 	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
-	NSAttributedString		*attributedMessage;
-	AIListContact			*listContact;
-	NSDate					*date;
-	
-	attributedMessage = [messageDict objectForKey:@"AttributedMessage"];
-	listContact = [chat listObject];
-	date = [messageDict objectForKey:@"Date"];
 	
 	if ((flags & GAIM_MESSAGE_SEND) != 0) {
         //Gaim is telling us that our message was sent successfully.		
@@ -651,6 +644,14 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 		//We can now tell the other side that we're done typing
 		//[gaimThread sendTyping:AINotTyping inChat:chat];
     } else {
+		NSAttributedString		*attributedMessage;
+		AIListContact			*listContact;
+		
+		listContact = [chat listObject];
+
+		attributedMessage = [[adium contentController] decodedIncomingMessage:[messageDict objectForKey:@"Message"]
+																  fromContact:listContact
+																	onAccount:self];
 		
 		//Clear the typing flag of the chat since a message was just received
 		[self setTypingFlagOfChat:chat to:nil];
@@ -659,7 +660,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 						inChat:chat 
 			   fromListContact:listContact
 						 flags:flags
-						  date:date];
+						  date:[messageDict objectForKey:@"Date"]];
 	}
 }
 
@@ -2118,33 +2119,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	}
 
 	return [NSString stringWithUTF8String:label];
-}
-
-/* Secure messaging */
-#pragma mark Secure Messaging
-- (void)requestSecureMessaging:(BOOL)inSecureMessaging
-						inChat:(AIChat *)inChat
-{
-	[gaimThread requestSecureMessaging:inSecureMessaging
-								inChat:inChat];
-}
-
-- (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat
-{
-	[gaimThread promptToVerifyEncryptionIdentityInChat:inChat];	
-}
-
-- (BOOL)allowSecureMessagingTogglingForChat:(AIChat *)inChat
-{
-	//Allow secure messaging via OTR for one-on-one chats
-	return ![inChat isGroupChat];
-}
-
-- (NSString *)aboutEncryption
-{
-	return [NSString stringWithFormat:
-		AILocalizedString(@"Adium provides encryption, authentication, deniability, and perfect forward secrecy over %@ via Off-the-Record Messaging (OTR). If your contact is not using an OTR-compatible messaging system, your contact will be sent a link to the OTR web site when you attempt to connect. For more information on OTR, visit http://www.cypherpunks.ca/otr/.",nil),
-		[[self service] shortDescription]];
 }
 
 /********************************/
