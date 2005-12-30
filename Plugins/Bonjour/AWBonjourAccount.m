@@ -252,17 +252,22 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
     AIListContact		*listContact;
     AIContentMessage	*msgObj;
     AIChat				*chat;
-	
+	NSAttributedString	*attributedMessage;
+
     listContact = [[adium contactController] existingContactWithService:service
 																account:self
 																	UID:inUID];
 	chat = [[adium chatController] chatWithContact:listContact];
 	
+	attributedMessage = [[adium contentController] decodedIncomingMessage:html
+															  fromContact:listContact
+																onAccount:self];
+	
     msgObj = [AIContentMessage messageInChat:chat
 								  withSource:listContact
 								 destination:self
 										date:nil
-									 message:[AIHTMLDecoder decodeHTML:html]
+									 message:attributedMessage
 								   autoreply:NO];
     
     [[adium contentController] receiveContentObject:msgObj];
