@@ -32,7 +32,7 @@
 
 @protocol AIController, AITextEntryView, AIEventHandler;
 
-@class AdiumMessageEvents, AdiumTyping, AdiumFormatting, AdiumContentFiltering;
+@class AdiumMessageEvents, AdiumTyping, AdiumFormatting, AdiumContentFiltering, AdiumOTREncryption;
 @class AIAccount, AIChat, AIListContact, AIListObject, AIContentObject, NDRunLoopMessenger;
 
 typedef enum {
@@ -76,7 +76,8 @@ typedef enum {
 	AdiumFormatting			*adiumFormatting;
 	AdiumContentFiltering	*adiumContentFiltering;
 	AdiumMessageEvents		*adiumMessageEvents;
-	
+	AdiumOTREncryption		*adiumOTREncryption;
+
 	NSMutableDictionary		*defaultFormattingAttributes;
 	NSMutableSet			*objectsBeingReceived;
 }
@@ -115,6 +116,7 @@ typedef enum {
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
 - (void)receiveContentObject:(AIContentObject *)inObject;
 - (BOOL)sendContentObject:(AIContentObject *)inObject;
+- (void)sendRawMessage:(NSString *)inString toContact:(AIListContact *)inContact;
 - (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat;
 - (void)displayContentObject:(AIContentObject *)inObject;
 - (void)displayContentObject:(AIContentObject *)inObject immediately:(BOOL)immediately;
@@ -123,6 +125,9 @@ typedef enum {
 - (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat;
 
 //Encryption
+- (NSAttributedString *)decodedIncomingMessage:(NSString *)inString
+								   fromContact:(AIListContact *)inListContact 
+									 onAccount:(AIAccount *)inAccount;
 - (NSMenu *)encryptionMenuNotifyingTarget:(id)target withDefault:(BOOL)withDefault;
 
 - (BOOL)chatIsReceivingContent:(AIChat *)chat;

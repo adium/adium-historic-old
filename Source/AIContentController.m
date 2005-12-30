@@ -17,6 +17,7 @@
 // $Id$
 
 #import "AIAccountController.h"
+#import "AIChatController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
@@ -25,6 +26,7 @@
 #import "AdiumFormatting.h"
 #import "AdiumMessageEvents.h"
 #import "AdiumContentFiltering.h"
+#import "AdiumOTREncryption.h"
 #import "ESContactAlertsController.h"
 #import "ESFileTransferController.h"
 #import <AIUtilities/AIArrayAdditions.h>
@@ -42,6 +44,7 @@
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIContentStatus.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
@@ -80,6 +83,7 @@
 		adiumFormatting = [[AdiumFormatting alloc] init];
 		adiumContentFiltering = [[AdiumContentFiltering alloc] init];
 		adiumMessageEvents = [[AdiumMessageEvents alloc] init];
+		adiumOTREncryption = [[AdiumOTREncryption alloc] init];
 
 		objectsBeingReceived = [[NSMutableSet alloc] init];
 	}
@@ -91,6 +95,7 @@
 {
 	[adiumFormatting controllerDidLoad];
 	[adiumMessageEvents controllerDidLoad];
+	[adiumOTREncryption controllerDidLoad];
 }
 
 /*
@@ -498,7 +503,6 @@
 
 	//We are no longer in the process of receiving this object
 	[objectsBeingReceived removeObject:inObject];
-	AILog(@"objectsBeingReceived: %@",([objectsBeingReceived count] ? [objectsBeingReceived description] : @"(empty)"));
 }
 
 #pragma mark -
@@ -561,6 +565,8 @@
 	}
 }
 
+
+
 - (BOOL)processAndSendContentObject:(AIContentObject *)inContentObject
 {
 	AIAccount	*sendingAccount = (AIAccount *)[inContentObject source];
@@ -585,7 +591,7 @@
 			
 			if (encodedOutgoingMessage && [encodedOutgoingMessage length]) {			
 				[contentMessage setEncodedMessage:encodedOutgoingMessage];
-				//			[AdiumOTREncryption willSendContentMessage:contentMessage];
+				[adiumOTREncryption willSendContentMessage:contentMessage];
 				
 				if ([contentMessage encodedMessage]) {
 					[sendingAccount sendMessageObject:contentMessage];
@@ -597,6 +603,48 @@
 	}
 
 	return success;
+}
+
+/*
+ * @brief Send a message as-specified without going through any filters or notifications
+ */
+- (void)sendRawMessage:(NSString *)inString toContact:(AIListContact *)inContact
+{
+	AIAccount		 *account = [inContact account];
+	AIChat			 *chat;
+	AIContentMessage *contentMessage;
+
+	if (!(chat = [[adium chatController] existingChatWithContact:inContact])) {
+		chat = [[adium chatController] chatWithContact:inContact];
+	}
+
+	contentMessage = [AIContentMessage messageInChat:chat
+										  withSource:account
+										 destination:inContact
+												date:nil
+											 message:nil
+										   autoreply:NO];
+	[contentMessage setEncodedMessage:inString];
+
+	[account sendMessageObject:contentMessage];
+}
+
+- (NSAttributedString *)decodedIncomingMessage:(NSString *)inString fromContact:(AIListContact *)inListContact onAccount:(AIAccount *)inAccount
+{
+	NSString *decryptedString = [adiumOTREncryption decryptIncomingMessage:inString fromContact:inListContact onAccount:inAccount];
+
+	return [AIHTMLDecoder decodeHTML:decryptedString];
+}
+
+#pragma mark OTR
+- (void)requestSecureOTRMessaging:(BOOL)inSecureMessaging inChat:(AIChat *)inChat
+{
+	[adiumOTREncryption requestSecureOTRMessaging:inSecureMessaging inChat:inChat];
+}
+
+- (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat
+{
+	[adiumOTREncryption promptToVerifyEncryptionIdentityInChat:inChat];
 }
 
 #pragma mark -
