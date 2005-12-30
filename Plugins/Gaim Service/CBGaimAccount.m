@@ -1560,6 +1560,8 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 		} else {
 			if (lastDisconnectionError) {
 				//Display then clear the last disconnection error
+//				[[adium interfaceController] account:self disconnectedWithError:lastDisconnectionError];
+
 				[self displayError:lastDisconnectionError];
 				[lastDisconnectionError release]; lastDisconnectionError = nil;
 			}
