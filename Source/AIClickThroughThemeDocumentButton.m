@@ -81,4 +81,12 @@
 	inLeftMouseEvent = NO;
 }
 
+- (void)setImage:(NSImage *)inImage
+{
+	[super setImage:inImage];
+
+	//XXX Something isn't getting set properly in AIMessageWindow when we are alloc/init'd, making this necessary to fix drawing glitches.
+	[[self window] display];
+}
+
 @end
