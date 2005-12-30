@@ -336,6 +336,8 @@ static NSString	*prefsCategory;
 	//Take no action if we didn't complete the application load
 	if (!completedApplicationLoad) return;
 
+	[[self notificationCenter] postNotificationName:Adium_WillTerminate object:nil];
+	
 	//Close the preference window before we shut down the plugins that compose it
 	[preferenceController closePreferenceWindow:nil];
 
