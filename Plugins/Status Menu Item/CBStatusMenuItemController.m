@@ -28,74 +28,37 @@
 #import <Adium/AIStatusIcons.h>
 #import <Adium/AIStatusMenu.h>
 #import <Adium/AIAccountMenu.h>
+#import <AIUtilities/AIColorAdditions.h>
+
+#import <QuartzCore/QuartzCore.h>
+
+#define STATUS_ITEM_MARGIN 8
 
 @interface CBStatusMenuItemController (PRIVATE)
 - (void)activateAdium:(id)sender;
-- (void)menuNeedsUpdate:(NSMenu *)menu;
-- (void)accountStateChanged:(NSNotification *)notification;
-
-//Icon State
-- (void)setIconState:(SMI_Icon_State)state;
-
-//Chat Observer
-- (void)chatOpened:(NSNotification *)notification;
-- (void)chatClosed:(NSNotification *)notification;
+- (void)setIconImage:(NSImage *)inImage;
 @end
-
-static	CBStatusMenuItemController	*sharedStatusMenuInstance = nil;
-
-static	NSImage						*adiumOfflineImage = nil;
-static	NSImage						*adiumOfflineHighlightImage = nil;
-
-static	NSImage						*adiumImage = nil;
-static	NSImage						*adiumHighlightImage = nil;
-
-static	NSImage						*adiumRedImage = nil;
-static	NSImage						*adiumRedHighlightImage = nil;
 
 @implementation CBStatusMenuItemController
 
 //Returns the shared instance, possibly initializing and creating a new one.
 + (CBStatusMenuItemController *)statusMenuItemController
 {
-	//Standard singelton stuff.
-	if (!sharedStatusMenuInstance) {
-		sharedStatusMenuInstance = [[self alloc] init];
-	}
-	return sharedStatusMenuInstance;
+	return [[[self alloc] init] autorelease];
 }
 
 - (id)init
 {
 	if ((self = [super init])) {
+		NSImage	*iconImage = [[[adium statusController] activeStatusState] icon];
+		
 		//Create and set up the status item
-		statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength] retain];
+		statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
 		[statusItem setHighlightMode:YES];
 
-		//Initialize our cached images
-		if (!adiumOfflineImage) {
-			adiumOfflineImage = [[NSImage imageNamed:@"adiumOffline.png" forClass:[self class]] retain];
-		}
-		if (!adiumOfflineHighlightImage) {
-			adiumOfflineHighlightImage = [[NSImage imageNamed:@"adiumOfflineHighlight.png" forClass:[self class]] retain];
-		}
-		if (!adiumImage) {
-			adiumImage = [[NSImage imageNamed:@"adium.png" forClass:[self class]] retain];
-		}
-		if (!adiumHighlightImage) {
-			adiumHighlightImage = [[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]] retain];
-		}
-		if (!adiumRedImage) {
-			adiumRedImage = [[NSImage imageNamed:@"adiumRed.png" forClass:[self class]] retain];
-		}
-		if (!adiumRedHighlightImage) {
-			adiumRedHighlightImage = [[NSImage imageNamed:@"adiumRedHighlight.png" forClass:[self class]] retain];
-		}
+		unviewedContent = NO;
 
-		//Initialize our state
-		iconState = -1;
-		
-		[self setIconState:([[adium accountController] oneOrMoreConnectedAccounts] ? ONLINE : OFFLINE)];
+		[self setIconImage:iconImage];
 
 		//Create and install the menu
 		theMenu = [[NSMenu alloc] init];
@@ -124,14 +87,10 @@ static	NSImage						*adiumRedHighlightImage = nil;
 		//Register as a chat observer (So we can catch the unviewed content status flag)
 		[[adium chatController] registerChatObserver:self];
 
-		//Register to recieve connect/disconnect notifications
+		//Register to recieve active state changed notifications
 		[notificationCenter addObserver:self
 		                       selector:@selector(accountStateChanged:)
-		                           name:ACCOUNT_CONNECTED
-		                         object:nil];
-		[notificationCenter addObserver:self
-		                       selector:@selector(accountStateChanged:)
-		                           name:ACCOUNT_DISCONNECTED
+		                           name:AIStatusActiveStateChangedNotification
 		                         object:nil];
 
 		//Register ourself for the status menu items
@@ -168,24 +127,45 @@ static	NSImage						*adiumRedHighlightImage = nil;
 //Icon State --------------------------------------------------------
 #pragma mark Icon State
 
-- (void)setIconState:(SMI_Icon_State)state
+- (NSImage *)alternateImageForImage:(NSImage *)inImage
 {
-	//If we're not already in that state
-	if (state != iconState) {
-		//Set our state to the new one
-		iconState = state;
-		//And set the appropriate icon
-		if (iconState == OFFLINE) {
-			[statusItem setImage:adiumOfflineImage];
-			[statusItem setAlternateImage:adiumOfflineHighlightImage];
-		} else if (iconState == ONLINE) {
-			[statusItem setImage:adiumImage];
-			[statusItem setAlternateImage:adiumHighlightImage];
-		} else {
-			[statusItem setImage:adiumRedImage];
-			[statusItem setAlternateImage:adiumRedHighlightImage];
-		}
-	}
+	NSImage				*altImage = [[NSImage alloc] initWithSize:[inImage size]];
+	NSBitmapImageRep	*srcImageRep = [inImage bitmapRep];
+	
+	Class Filter = NSClassFromString(@"CIFilter");
+	Class Image = NSClassFromString(@"CIImage");
+	Class Color = NSClassFromString(@"CIColor");
+	Class Context = NSClassFromString(@"CIContext");
+	id filter = [Filter filterWithName:@"CIColorMonochrome"];
+	id result;
+
+	[filter setDefaults];
+	[filter setValue:[[Image alloc] initWithBitmapImageRep:srcImageRep]
+			  forKey:@"inputImage"]; 
+	[filter setValue:[NSNumber numberWithFloat:0.9]
+			  forKey:@"inputIntensity"];
+	[filter setValue:[[[Color alloc] initWithColor:[NSColor whiteColor]] autorelease]
+			  forKey:@"inputColor"];
+	
+	result = [filter valueForKey:@"outputImage"];
+
+	[altImage lockFocus];
+	id context = [Context contextWithCGContext:[[NSGraphicsContext currentContext] graphicsPort] 
+									   options:nil];	
+	[context drawImage:result
+			   atPoint:CGPointZero
+			  fromRect:[result extent]];
+	[altImage unlockFocus];
+
+	return [altImage autorelease];
+}
+
+- (void)setIconImage:(NSImage *)inImage
+{	
+	[statusItem setLength:([inImage size].width + STATUS_ITEM_MARGIN)];
+
+	[statusItem setImage:inImage];
+	[statusItem setAlternateImage:[self alternateImageForImage:inImage]];
 }
 
 //Account Menu --------------------------------------------------------
@@ -220,21 +200,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
 - (BOOL)showStatusSubmenu
 {
 	return YES;
-}
-
-//Twiddle visibility --------------------------------------------------------
-#pragma mark Twiddle visibility
-
-- (void)showStatusItem
-{
-	//Kinda cheap hack, but it works
-	[statusItem setLength:NSSquareStatusItemLength];
-}
-
-- (void)hideStatusItem
-{
-	//See above
-	[statusItem setLength:0];
 }
 
 //Chat Observer --------------------------------------------------------
@@ -290,18 +255,23 @@ static	NSImage						*adiumRedHighlightImage = nil;
 
 	if ([unviewedObjectsArray count] == 0) {
 		//If there are no more contacts with unviewed content, set our icon to normal.
-		if (iconState == UNVIEWED) {
-			[self setIconState:([[adium accountController] oneOrMoreConnectedAccounts] ? ONLINE : OFFLINE)];
+		if (unviewedContent) {
+			[self setIconImage:[[[adium statusController] activeStatusState] icon]];
+			unviewedContent = NO;
 		}
 
 	} else {
 		//If this is the first contact with unviewed content, set our icon to unviewed content.
-		if (iconState != UNVIEWED) {
-			[self setIconState:UNVIEWED];
+		if (!unviewedContent) {
+			unviewedContent = YES;
+			[self setIconImage:[AIStatusIcons statusIconForStatusName:@"content"
+														   statusType:AIAvailableStatusType
+															 iconType:AIStatusIconList
+															direction:AIIconNormal]];				
 		}
 	}
 
-	//If they're typing, we also need to update.
+	//If they're typing, we also need to update because we show typing within the menu itself next to chats.
 	if ([inModifiedKeys containsObject:KEY_TYPING]) {
 		needsUpdate = YES;
 	}
@@ -439,8 +409,9 @@ static	NSImage						*adiumRedHighlightImage = nil;
 
 - (void)accountStateChanged:(NSNotification *)notification
 {
-	//Set our Icon State accordingly
-	[self setIconState:([[adium accountController] oneOrMoreConnectedAccounts] == YES ? ONLINE : OFFLINE)];
+	if (!unviewedContent) {
+		[self setIconImage:[[[adium statusController] activeStatusState] icon]];
+	}
 }
 
 @end
