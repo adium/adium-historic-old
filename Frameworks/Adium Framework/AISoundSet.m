@@ -317,7 +317,7 @@
 				//Scan the events
 				while (![scanner isAtEnd]) {
 					NSString	*event;
-					NSString	*path;
+					NSString	*path = nil;
 					
 					//Get the event and file name
 					[scanner scanUpToString:@"\"" intoString:nil];
@@ -328,11 +328,13 @@
 					[scanner scanCharactersFromSet:newlineSet intoString:nil];
 					
 					//Move the sound into our new pack
-					success = [mgr copyPath:[tempSetPath stringByAppendingPathComponent:path]
-									 toPath:[setPath stringByAppendingPathComponent:[path lastPathComponent]]
-									handler:nil];
-					if (success) {
-						[newSounds setObject:[path lastPathComponent] forKey:event];
+					if (path && [path length]) {
+						success = [mgr copyPath:[tempSetPath stringByAppendingPathComponent:path]
+										 toPath:[setPath stringByAppendingPathComponent:[path lastPathComponent]]
+										handler:nil];
+						if (success) {
+							[newSounds setObject:[path lastPathComponent] forKey:event];
+						}
 					}
 				}
 			}
