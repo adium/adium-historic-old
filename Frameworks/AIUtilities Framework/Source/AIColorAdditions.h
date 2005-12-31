@@ -15,6 +15,9 @@
 int hexToInt(char hex);
 char intToHex(int digit);
 
+void getHueLuminanceSaturationFromRGB(float *hue, float *luminance, float *saturation, float r, float g, float b);
+void getRGBFromHueLuminanceSaturation(float *r, float *g, float *b, float hue, float luminance, float saturation);
+
 @interface NSString (AIColorAdditions)
 
 - (NSColor *)representedColor;
