@@ -28,6 +28,7 @@
 #import "CSMessageToOfflineContactWindowController.h"
 #import "ESContactAlertsController.h"
 #import "ESGeneralPreferencesPlugin.h"
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
@@ -582,12 +583,20 @@
  */
 - (void)clearTextEntryView
 {
-	NSWritingDirection writingDirection = [textView_outgoing baseWritingDirection];
+	NSWritingDirection	writingDirection;
+	BOOL				tigerOrBetter = [NSApp isOnTigerOrBetter];
+
+	if (tigerOrBetter) {
+		writingDirection = [textView_outgoing baseWritingDirection];
+	}
 	
 	[textView_outgoing setString:@""];
 	[textView_outgoing setTypingAttributes:[[adium contentController] defaultFormattingAttributes]];
-	[textView_outgoing setBaseWritingDirection:writingDirection];	//Preserve the writing diraction
 	
+	if (tigerOrBetter) {
+		[textView_outgoing setBaseWritingDirection:writingDirection];	//Preserve the writing diraction
+	}
+
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification
 														object:textView_outgoing];
 }
