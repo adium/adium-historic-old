@@ -27,7 +27,6 @@
 
 - (void)installPlugin
 {
-	//Just in case
 	itemController = nil;
 
 	//Register our defaults
@@ -43,7 +42,7 @@
 
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
-	//Observe for preference changes, initially loading our status menu item controller if necessary
+	//Observe for preference changes, initially loading our status menu item controller
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_STATUS_MENU_ITEM];
 
 	[[adium notificationCenter] removeObserver:self
@@ -53,13 +52,6 @@
 
 - (void)uninstallPlugin
 {
-	/*itemController is set to non-nil when we are notified that prefs changed,
-	 *	which only happens when we are registered as an observer,
-	 *	which only happens when -adiumFinishedLaunching: is called,
-	 *	which only happens when we are registered as an observer in Adium's notification center,
-	 *	which only happens under Panther in -installPlugin.
-	 *so we don't need to undo the first two items under non-Panther.
-	 */
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[itemController release]; itemController = nil;
 }
@@ -69,15 +61,12 @@
 {
 	if ([[prefDict objectForKey:KEY_STATUS_MENU_ITEM_ENABLED] boolValue]) {
 		//If it hasn't been created yet, create it. It will be created visible.
-		//Otherwise, tell it to show itself.
 		if (!itemController) {
-			itemController = [CBStatusMenuItemController statusMenuItemController];
-		} else {
-			[itemController showStatusItem];
+			itemController = [[CBStatusMenuItemController statusMenuItemController] retain];
 		}
+
 	} else {
-		//if it exists, tell it to hide itself.
-		[itemController hideStatusItem];
+		[itemController release]; itemController = nil;
 	}
 }
 

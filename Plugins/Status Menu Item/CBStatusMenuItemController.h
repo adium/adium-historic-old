@@ -19,12 +19,6 @@
 @class AIAccountMenu, AIStatusMenu;
 @protocol AIChatObserver;
 
-typedef enum {
-	OFFLINE	= 0,
-	ONLINE = 1,
-	UNVIEWED = 2
-} SMI_Icon_State;
-
 @interface CBStatusMenuItemController : AIObject <AIChatObserver>
 {
 	NSStatusItem            *statusItem;
@@ -37,15 +31,10 @@ typedef enum {
 	NSMutableArray          *unviewedObjectsArray;
 	NSMutableArray          *openChatsArray;
 
-	SMI_Icon_State          iconState;
-
+	BOOL					unviewedContent;
 	BOOL                    needsUpdate;
 }
 
 + (CBStatusMenuItemController *)statusMenuItemController;
-
-//Twiddle visibility
-- (void)showStatusItem;
-- (void)hideStatusItem;
 
 @end
