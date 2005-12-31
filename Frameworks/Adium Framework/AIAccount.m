@@ -19,6 +19,7 @@
 #import "AIContactController.h"
 #import "AIListContact.h"
 #import "AIContentMessage.h"
+#import "AIService.h"
 
 /*!
  * @class AIAccount
@@ -504,7 +505,8 @@
  */
 - (BOOL)allowSecureMessagingTogglingForChat:(AIChat *)inChat
 {
-	return NO;
+	//Allow secure messaging via OTR for one-on-one chats
+	return ![inChat isGroupChat];
 }
 
 /*!
@@ -516,9 +518,13 @@
  */
 - (NSString *)aboutEncryption
 {
-	return nil;
+	return [NSString stringWithFormat:
+		AILocalizedString(@"Adium provides encryption, authentication, deniability, and perfect forward secrecy over %@ via Off-the-Record Messaging (OTR). If your contact is not using an OTR-compatible messaging system, your contact will be sent a link to the OTR web site when you attempt to connect. For more information on OTR, visit http://www.cypherpunks.ca/otr/.",nil),
+		[[self service] shortDescription]];
 }
 
+/* Secure messaging */
+#pragma mark Secure Messaging
 /*!
  * @brief Start or stop secure messaging in a chat
  *
@@ -528,7 +534,8 @@
 - (void)requestSecureMessaging:(BOOL)inSecureMessaging
 						inChat:(AIChat *)inChat
 {
-	
+	[[adium contentController] requestSecureOTRMessaging:inSecureMessaging
+												  inChat:inChat];
 }
 
 /*!
@@ -540,7 +547,7 @@
  */
 - (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat
 {
-	
+	[[adium contentController] promptToVerifyEncryptionIdentityInChat:inChat];
 }
 
 #pragma mark Image sending
