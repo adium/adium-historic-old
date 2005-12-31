@@ -40,6 +40,9 @@ typedef enum {
 - (NSRect)drawInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position fraction:(float)fraction;
 - (NSRect)rectForDrawingInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position;
 
+- (NSBitmapImageRep *)bitmapRep;
+
+
 @end
 
 //Defined in AppKit.framework
