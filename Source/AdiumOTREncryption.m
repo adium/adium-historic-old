@@ -40,7 +40,7 @@
 
 @interface AdiumOTREncryption (PRIVATE)
 - (void)setSecurityDetails:(NSDictionary *)securityDetailsDict forChat:(AIChat *)inChat;
-- (NSString *)localizedOTRMessage:(NSString *)message withUsername:(const char *)username;
+- (NSString *)localizedOTRMessage:(NSString *)message withUsername:(NSString *)username;
 - (void)notifyWithTitle:(NSString *)title primary:(NSString *)primary secondary:(NSString *)secondary;
 @end
 
