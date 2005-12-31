@@ -317,99 +317,21 @@ end:
 {
     NSColor	*rgbColor;
     float	r, g, b;
-    float	minValue, maxValue;
     
     //Get the current RGB values
     rgbColor = [self colorUsingColorSpaceName:NSDeviceRGBColorSpace];
 	[rgbColor getRed:&r green:&g blue:&b alpha:NULL];
 
-    //Determine the smallest and largest color component
-    minValue = min(r, g, b);
-    maxValue = max(r, g, b);
-
-    //Calculate the luminance
-	float lum = (minValue + maxValue) / 2.0f;
-
-	if (luminance) *luminance = lum;
-
-    //Special case for grays (They'll make us divide by zero below)
-    if (minValue == maxValue)
-	{
-		if (hue)
-			*hue = 0.0f;
-		if (saturation)
-			*saturation = 0.0f;
-        return;
-    }
-
-    //Calculate Saturation
-	if (saturation)
-	{
-		if (lum < 0.5f)
-			*saturation = (maxValue - minValue) / (maxValue + minValue);
-		else
-			*saturation = (maxValue - minValue) / (2.0 - maxValue - minValue);
-	}
-
-	if (hue)
-	{
-		//Calculate hue
-		r = (maxValue - r) / (maxValue - minValue);
-		g = (maxValue - g) / (maxValue - minValue);
-		b = (maxValue - b) / (maxValue - minValue);
-
-		if (r == maxValue)
-			*hue = b - g;
-		else if (g == maxValue)
-			*hue = 2.0f + r - b;
-		else
-			*hue = 4.0f + g - r;
-
-		*hue = (*hue / 6.0f);// % 1.0f;
-
-		//hue = hue % 1.0f
-		while (*hue < 0.0f) *hue += 1.0f;
-		while (*hue > 1.0f) *hue -= 1.0f;
-	}
+	getHueLuminanceSaturationFromRGB(hue, luminance, saturation, r, g, b);
 }
 
 + (NSColor *)colorWithCalibratedHue:(float)hue luminance:(float)luminance saturation:(float)saturation alpha:(float)alpha
 {
     float r, g, b;
-    float m1, m2;
 
-    //Special case for grays
-    if (saturation == 0) {
-        r = luminance;
-        g = luminance;
-        b = luminance;
-        
-    } else {
-        //Generate some magic numbers
-        if (luminance <= 0.5) m2 = luminance * (1.0 + saturation);
-        else m2 = luminance + saturation - (luminance * saturation);
-        m1 = 2.0 * luminance - m2;
-
-        //Calculate the RGB
-        r = _v(m1, m2, hue + ONE_THIRD);
-        g = _v(m1, m2, hue);
-        b = _v(m1, m2, hue - ONE_THIRD);
-    }
+	getRGBFromHueLuminanceSaturation(&r, &g, &b, hue, luminance, saturation);
 
     return [NSColor colorWithCalibratedRed:r green:g blue:b alpha:alpha];
-}
-
-//??
-float _v(float m1, float m2, float hue) {
-
-    //hue = hue % 1.0
-    while (hue < 0.0) hue += 1.0;
-    while (hue > 1.0) hue -= 1.0;
-    
-    if     (hue < ONE_SIXTH) return ( m1 + (m2 - m1) *              hue  * 6.0);
-    else if (hue < 0.5)       return ( m2 );
-    else if (hue < TWO_THIRD) return ( m1 + (m2 - m1) * (TWO_THIRD - hue) * 6.0);
-    else                     return ( m1 );
 }
 
 - (NSString *)hexString
@@ -588,5 +510,95 @@ char intToHex(int digit)
         return ('a' + digit - 10);
     } else {
         return ('0' + digit);
+    }
+}
+
+void getHueLuminanceSaturationFromRGB(float *hue, float *luminance, float *saturation, float r, float g, float b)
+{
+	float	minValue, maxValue;
+
+	//Determine the smallest and largest color component
+    minValue = min(r, g, b);
+    maxValue = max(r, g, b);
+	
+    //Calculate the luminance
+	float lum = (minValue + maxValue) / 2.0f;
+	
+	if (luminance) *luminance = lum;
+	
+    //Special case for grays (They'll make us divide by zero below)
+    if (minValue == maxValue)
+	{
+		if (hue)
+			*hue = 0.0f;
+		if (saturation)
+			*saturation = 0.0f;
+        return;
+    }
+	
+    //Calculate Saturation
+	if (saturation)
+	{
+		if (lum < 0.5f)
+			*saturation = (maxValue - minValue) / (maxValue + minValue);
+		else
+			*saturation = (maxValue - minValue) / (2.0 - maxValue - minValue);
+	}
+	
+	if (hue)
+	{
+		//Calculate hue
+		r = (maxValue - r) / (maxValue - minValue);
+		g = (maxValue - g) / (maxValue - minValue);
+		b = (maxValue - b) / (maxValue - minValue);
+		
+		if (r == maxValue)
+			*hue = b - g;
+		else if (g == maxValue)
+			*hue = 2.0f + r - b;
+		else
+			*hue = 4.0f + g - r;
+		
+		*hue = (*hue / 6.0f);// % 1.0f;
+			
+			//hue = hue % 1.0f
+			while (*hue < 0.0f) *hue += 1.0f;
+			while (*hue > 1.0f) *hue -= 1.0f;
+	}	
+}
+
+//??
+float _v(float m1, float m2, float hue) {
+	
+    //hue = hue % 1.0
+    while (hue < 0.0) hue += 1.0;
+    while (hue > 1.0) hue -= 1.0;
+    
+    if     (hue < ONE_SIXTH) return ( m1 + (m2 - m1) *              hue  * 6.0);
+    else if (hue < 0.5)       return ( m2 );
+    else if (hue < TWO_THIRD) return ( m1 + (m2 - m1) * (TWO_THIRD - hue) * 6.0);
+    else                     return ( m1 );
+}
+
+void getRGBFromHueLuminanceSaturation(float *r, float *g, float *b, float hue, float luminance, float saturation)
+{
+	float m1, m2;
+	
+    //Special case for grays
+    if (saturation == 0) {
+        *r = luminance;
+        *g = luminance;
+        *b = luminance;
+        
+    } else {
+        //Generate some magic numbers
+        if (luminance <= 0.5) m2 = luminance * (1.0 + saturation);
+        else m2 = luminance + saturation - (luminance * saturation);
+        m1 = 2.0 * luminance - m2;
+		
+        //Calculate the RGB
+        *r = _v(m1, m2, hue + ONE_THIRD);
+        *g = _v(m1, m2, hue);
+        *b = _v(m1, m2, hue - ONE_THIRD);
     }
 }
