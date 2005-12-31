@@ -502,6 +502,8 @@ gboolean gaim_init_jabber_plugin(void);
 	NSString		*statusName = [statusState statusName];
 	NSString		*statusMessageString = [statusState statusMessageString];
 	
+	if (!statusMessageString) statusMessageString = @"";
+
 	switch ([statusState statusType]) {
 		case AIAvailableStatusType:
 		{
