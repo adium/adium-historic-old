@@ -29,6 +29,10 @@
 #define	PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 #define SHOW_OFFLINE_MENU_TITLE				AILocalizedString(@"Show Offline Contacts",nil)
 #define KEY_SHOW_OFFLINE_CONTACTS			@"Show Offline Contacts"
+
+#define	USE_OFFLINE_GROUP_MENU_TITLE		AILocalizedString(@"Show Offline Group",nil)
+#define	KEY_USE_OFFLINE_GROUP				@"Use Offline Group"
+
 #define OFFLINE_CONTACTS_IDENTIFER			@"OfflineContacts"
 #define	KEY_HIDE_CONTACT_LIST_GROUPS		@"Hide Contact List Groups"
 
@@ -49,12 +53,18 @@
 - (void)installPlugin
 {	
 	//Show offline contacts menu item
-    showOfflineMenuItem = [[NSMenuItem alloc] initWithTitle:SHOW_OFFLINE_MENU_TITLE
+    menuItem_showOffline = [[NSMenuItem alloc] initWithTitle:SHOW_OFFLINE_MENU_TITLE
 													 target:self
 													 action:@selector(toggleOfflineContactsMenu:)
 											  keyEquivalent:@"H"];
-	[[adium menuController] addMenuItem:showOfflineMenuItem toLocation:LOC_View_Toggles];		
+	[[adium menuController] addMenuItem:menuItem_showOffline toLocation:LOC_View_Toggles];		
 
+	menuItem_useOfflineGroup = [[NSMenuItem alloc] initWithTitle:USE_OFFLINE_GROUP_MENU_TITLE
+														  target:self
+														  action:@selector(toggleUseOfflineGroup:)
+												   keyEquivalent:@""];
+	[[adium menuController] addMenuItem:menuItem_useOfflineGroup toLocation:LOC_View_Toggles];
+	
 	//Register preference observer first so values will be correct for the following calls
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 	
@@ -93,7 +103,7 @@
  */
 - (void)dealloc
 {
-	[showOfflineMenuItem release]; showOfflineMenuItem = nil;
+	[menuItem_showOffline release]; menuItem_showOffline = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	[super dealloc];
@@ -107,6 +117,7 @@
 {
 	showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
 	useContactListGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
+	useOfflineGroup = [[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue];
 
 	if (firstTime) {
 		//Observe contact and preference changes
@@ -121,7 +132,8 @@
 	}
 
 	//Update our menu to reflect the current preferences
-	[showOfflineMenuItem setState:showOfflineContacts];
+	[menuItem_showOffline setState:showOfflineContacts];
+	[menuItem_useOfflineGroup setState:useOfflineGroup];
 }
 
 /*!
@@ -163,7 +175,7 @@
  * @brief Update visibility of a list object
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{    
+{
     if (inModifiedKeys == nil ||
 	   [inModifiedKeys containsObject:@"Online"] ||
 	   [inModifiedKeys containsObject:@"Signed Off"] ||
@@ -189,11 +201,30 @@
 			BOOL	newObject = [inObject integerStatusObjectForKey:@"New Object"];
 
 			[inObject setVisible:((useContactListGroups) &&
-								  ([(AIListGroup *)inObject visibleCount] > 0 || newObject))];
+								  ([(AIListGroup *)inObject visibleCount] > 0 || newObject) &&
+								  (useOfflineGroup || ((AIListGroup *)inObject != [[adium contactController] offlineGroup])))];
 		}
 	}
 	
     return nil;
 }
 
+#pragma mark Offline group
+
+- (IBAction)toggleUseOfflineGroup:(id)sender
+{
+	//Store the preference
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:!useOfflineGroup]
+										 forKey:KEY_USE_OFFLINE_GROUP
+										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	if (menuItem == menuItem_useOfflineGroup) {
+		return (useContactListGroups && showOfflineContacts);
+	}
+	
+	return YES;
+}
 @end
