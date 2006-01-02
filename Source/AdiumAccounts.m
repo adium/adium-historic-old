@@ -97,7 +97,8 @@
 	AIAccount		*account;
 	
 	while ((account = [enumerator nextObject])) {
-		if ([[[account service] serviceClass] isEqualToString:[service serviceClass]]) {
+		if ([account enabled] &&
+			[[[account service] serviceClass] isEqualToString:[service serviceClass]]) {
 			[matchingAccounts addObject:account];
 		}
 	}
@@ -105,20 +106,13 @@
 	return matchingAccounts;	
 }
 
-//XXX - Change this.  Everyone should be finding accounts by UID and service, not internalObjectID!
 - (AIAccount *)accountWithInternalObjectID:(NSString *)objectID
 {
     NSEnumerator	*enumerator = [accounts objectEnumerator];
     AIAccount		*account = nil;
-	
-	//XXX - This upgrade should be occuring in the code that has stored these values, not here -ai
-	if (![objectID isKindOfClass:[NSString class]]) {
-		if ([objectID isKindOfClass:[NSNumber class]]) {
-			objectID = [NSString stringWithFormat:@"%i",[(NSNumber *)objectID intValue]];
-		} else {
-			objectID = nil; //Unrecognizable, ignore
-		}
-	}
+
+	//XXX temporary -- is any code using passing us NSNumbers?
+	NSParameterAssert([objectID isKindOfClass:[NSString class]]);
 	
     while (objectID && (account = [enumerator nextObject])) {
         if ([objectID isEqualToString:[account internalObjectID]]) break;
