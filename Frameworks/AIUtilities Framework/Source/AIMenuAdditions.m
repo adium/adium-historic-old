@@ -125,6 +125,11 @@
 	[self release];
 }
 
+- (NSComparisonResult)titleCompare:(NSMenuItem *)inMenuItem
+{
+	return [[self title] caseInsensitiveCompare:[inMenuItem title]];
+}
+
 @end
 
 //Note: AdditionsFromCarbonMenuManager require the menu item already be added to a menu. 
