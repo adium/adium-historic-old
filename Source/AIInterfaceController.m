@@ -1043,11 +1043,11 @@
 																				 attributes:labelDict];
         
         //Add a carriage return
-        [titleString appendString:@"\r" withAttributes:labelEndLineDict];
+        [titleString appendString:@"\n" withAttributes:labelEndLineDict];
         
         if (isFirst) {
             //skip a line
-            [titleString appendString:@"\r" withAttributes:labelEndLineDict];
+            [titleString appendString:@"\n" withAttributes:labelEndLineDict];
             isFirst = NO;
         }
         
@@ -1124,7 +1124,7 @@
             firstEntry = NO;
         } else {
             //Add a carriage return and skip a line
-            [tipString appendString:@"\r\r" withAttributes:labelEndLineDict];
+            [tipString appendString:@"\n\n" withAttributes:labelEndLineDict];
         }
         
         //Add the label (with its spacing)
@@ -1140,7 +1140,7 @@
         [entryString adjustColorsToShowOnBackground:[NSColor colorWithCalibratedRed:1.000 green:1.000 blue:0.800 alpha:1.0]];
 
         //headIndent doesn't apply to the first line of a paragraph... so when new lines are in the entry, we need to tab over to the proper location
-        if ([entryString replaceOccurrencesOfString:@"\r" withString:@"\r\t\t" options:NSLiteralSearch range:fullLength])
+		if ([entryString replaceOccurrencesOfString:@"\r" withString:@"\r\t\t" options:NSLiteralSearch range:fullLength])
             fullLength = NSMakeRange(0, [entryString length]);
         if ([entryString replaceOccurrencesOfString:@"\n" withString:@"\n\t\t" options:NSLiteralSearch range:fullLength])
             fullLength = NSMakeRange(0, [entryString length]);
