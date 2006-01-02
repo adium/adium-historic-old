@@ -168,6 +168,9 @@
 			[soundCacheArray insertObject:inPath atIndex:0];
 			[soundCacheDict setObject:existingPlayer forKey:inPath];
 			[existingPlayer release];
+
+			//Set the volume (otherwise #2283 happens)
+			[existingPlayer setVolume:[[[adium preferenceController] preferenceForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL group:PREF_GROUP_SOUNDS] floatValue]];
 		}
 
     } else {
@@ -176,13 +179,10 @@
 		[soundCacheArray insertObject:inPath atIndex:0];
     }
 
-    //Set the volume and play sound
+    //Engage!
     if (existingPlayer) {
 		//Ensure the sound is starting from the beginning; necessary for cached sounds that have already been played
 		[existingPlayer setPlaybackPosition:0];
-
-		//Set the volume too (otherwise #2283 happens)
-		[existingPlayer setVolume:[[[adium preferenceController] preferenceForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL group:PREF_GROUP_SOUNDS] floatValue]];
 
 		//QTSoundFilePlayer won't play if the sound is already playing, but that's fine since we
 		//reset the playback position and it will start playing there in the next run loop.
