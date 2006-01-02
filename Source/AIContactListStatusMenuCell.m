@@ -81,9 +81,12 @@
 }
 
 - (void)dealloc
-{
-	[title release];
-	[currentImage release];
+{	
+	/* Super's implementation calls setImage:nil in 10.4; we shouldn't depend on this implementation detail but should
+	 * set our ivars to nil to ensure we don't double-release.
+	 */
+	[title release]; title = nil;
+	[currentImage release]; currentImage = nil;
 
 	[statusParagraphStyle release];
 	[statusAttributes release];
