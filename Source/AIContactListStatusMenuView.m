@@ -119,6 +119,18 @@
 	//Empty
 }
 
+- (NSView *)hitTest:(NSPoint)aPoint
+{
+	NSRect	myFrame = [self frame];
+	myFrame.size.width = [[self cell] trackingWidth];
+
+	if (NSPointInRect(aPoint, myFrame)) {
+		return [super hitTest:aPoint];
+	} else {
+		return nil;
+	}
+}
+
 /*
  * @brief Set the title
  */
