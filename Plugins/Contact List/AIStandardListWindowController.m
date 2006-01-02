@@ -29,6 +29,7 @@
 
 #import "AIContactListStatusMenuView.h"
 #import "AIContactListImagePicker.h"
+#import "AIContactListNameView.h"
 
 #define TOOLBAR_CONTACT_LIST				@"ContactList"				//Toolbar identifier
 
@@ -59,6 +60,7 @@
  */
 - (void)dealloc
 {
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	[toolbarItems release];
 	
@@ -94,7 +96,9 @@
 								   selector:@selector(activeStateChanged:)
 									   name:AIStatusActiveStateChangedNotification
 									 object:nil];
-	[self activeStateChanged:nil];	
+	[self activeStateChanged:nil];
+	
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
 }
 
 /*!
@@ -155,21 +159,23 @@
 
 		image = [[[NSImage alloc] initWithData:data] autorelease];
 	}
-	
+
 	[imagePicker setImage:image];
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if ([key isEqualToString:KEY_USER_ICON] ||
-		[key isEqualToString:KEY_DEFAULT_USER_ICON] || 
-		[key isEqualToString:KEY_USE_USER_ICON] ||
-		[key isEqualToString:@"Active Icon Selection Account"] ||
-		firstTime) {
-		[self updateImagePicker];
+	if ([group isEqualToString:GROUP_ACCOUNT_STATUS]) {
+		if ([key isEqualToString:KEY_USER_ICON] ||
+			[key isEqualToString:KEY_DEFAULT_USER_ICON] || 
+			[key isEqualToString:KEY_USE_USER_ICON] ||
+			[key isEqualToString:@"Active Icon Selection Account"] ||
+			firstTime) {
+			[self updateImagePicker];
+		}
 	}
-	
+
 	/*
 	 * We move our image picker to mirror the contact list's own layout
 	 */

@@ -503,10 +503,14 @@ typedef enum {
     if ([availableType isEqualToString:@"AIListObject"]) {
 		//The tree root is not associated with our root contact list group, so we need to make that association here
 		if (item == nil) item = contactList;
-		
+
 		//Move the list object to its new location
 		if ([item isKindOfClass:[AIListGroup class]]) {
-			[[adium contactController] moveListObjects:dragItems toGroup:item index:index];
+			if (item != [[adium contactController] offlineGroup]) {
+				[[adium contactController] moveListObjects:dragItems toGroup:item index:index];
+			} else {
+				success = NO;
+			}
 			
 		} else if ([item isKindOfClass:[AIListContact class]]) {
 			NSString	*promptTitle;
@@ -534,6 +538,7 @@ typedef enum {
 										   [context retain], //we're responsible for retaining the content object
 										   AILocalizedString(@"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\n\nYou may un-combine these contacts by getting info on the combined contact.","Explanation of metacontact creation"));
 		}
+
 	} else if([[[info draggingPasteboard] types] containsObject:NSFilenamesPboardType]) {
 		//Drag and Drop file transfer for the contact list.
 		NSString		*file;
@@ -545,6 +550,7 @@ typedef enum {
 																									forListContact:item];
 			[[adium fileTransferController] sendFile:file toListContact:targetFileTransferContact];
 		}
+
 	} else if([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) {
 		//Drag and drop text sending via the contact list.
 		AIListContact   *contact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
@@ -607,6 +613,7 @@ typedef enum {
 
 - (void)outlineViewUserDidExpandItem:(NSNotification *)notification
 {
+	NSLog(@"%@",[[notification userInfo] objectForKey:@"Object"],[[[notification userInfo] objectForKey:@"Object"] containedObjects]);
 	[self contactListDesiredSizeChanged];
 }
 
