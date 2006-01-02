@@ -16,11 +16,11 @@
 
 #import <Adium/AIContactInfoPane.h>
 
-@class AILinkTextView, AILocalizationTextField;
+@class AILocalizationTextField;
 
 @interface AIContactProfilePane : AIContactInfoPane <AIListObjectObserver> {
-	IBOutlet		AILinkTextView			*textView_profile;
-	IBOutlet		AILinkTextView			*textView_status;
+	IBOutlet		NSTextView			*textView_profile;
+	IBOutlet		NSTextView			*textView_status;
 
 	IBOutlet		AILocalizationTextField	*label_status;
 	IBOutlet		AILocalizationTextField	*label_profileIfAvailable;
