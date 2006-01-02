@@ -20,6 +20,8 @@
 #import "AIListContact.h"
 #import "AIContentMessage.h"
 #import "AIService.h"
+#import "AIChat.h"
+#import "AIContentController.h"
 
 /*!
  * @class AIAccount
