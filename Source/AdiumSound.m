@@ -45,18 +45,18 @@
 
 		//Observe workspace activity changes so we can mute sounds as necessary
 		NSNotificationCenter *workspaceCenter = [[NSWorkspace sharedWorkspace] notificationCenter];
-		
+
 		[workspaceCenter addObserver:self
 							selector:@selector(workspaceSessionDidBecomeActive:)
 								name:NSWorkspaceSessionDidBecomeActiveNotification
 							  object:nil];
-		
+
 		[workspaceCenter addObserver:self
 							selector:@selector(workspaceSessionDidResignActive:)
 								name:NSWorkspaceSessionDidResignActiveNotification
 							  object:nil];
 	}
-	
+
 	return self;
 }
 
@@ -71,7 +71,7 @@
 	//Register our default preferences and observe changes
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]]
 										  forGroup:PREF_GROUP_SOUNDS];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];	
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
 }
 
 /*!
@@ -81,13 +81,13 @@
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
-	
+
 	[self _stopAndReleaseAllSounds];
 
 	[soundCacheDict release]; soundCacheDict = nil;
 	[soundCacheArray release]; soundCacheArray = nil;
 	[soundCacheCleanupTimer invalidate]; [soundCacheCleanupTimer release]; soundCacheCleanupTimer = nil;
-	
+
 	[super dealloc];
 }
 
@@ -137,7 +137,7 @@
 {
 	NSEnumerator 		*enumerator = [soundCacheDict objectEnumerator];
 	QTSoundFilePlayer	*player;
-	
+
 	while((player = [enumerator nextObject])){
 		[player setVolume:inVolume];
 	}
@@ -151,14 +151,14 @@
 - (void)coreAudioPlaySound:(NSString *)inPath
 {
     QTSoundFilePlayer	*existingPlayer = [soundCacheDict objectForKey:inPath];
-	
+
 	//Load the sound if necessary
     if (!existingPlayer) {
 		//If the cache is full, remove the least recently used cached sound
 		if ([soundCacheDict count] >= MAX_CACHED_SOUNDS) {
 			[self _uncacheLeastRecentlyUsedSound];
 		}
-		
+
 		//Load and cache the sound
 		existingPlayer = [[QTSoundFilePlayer alloc] initWithContentsOfFile:inPath
 													usingSystemAlertDevice:YES];
@@ -168,18 +168,18 @@
 			[soundCacheDict setObject:existingPlayer forKey:inPath];
 			[existingPlayer release];
 		}
-		
+
     } else {
 		//Move this sound to the front of the cache (This will naturally move lesser used sounds to the back for removal)
 		[soundCacheArray removeObject:inPath];
 		[soundCacheArray insertObject:inPath atIndex:0];
     }
-	
+
     //Set the volume and play sound
     if (existingPlayer) {
 		//Ensure the sound is starting from the beginning; necessary for cached sounds that have already been played
 		[existingPlayer setPlaybackPosition:0];
-		
+
 		//QTSoundFilePlayer won't play if the sound is already playing, but that's fine since we
 		//reset the playback position and it will start playing there in the next run loop.
 		[existingPlayer play];
@@ -193,11 +193,11 @@
 {
 	NSString			*lastCachedPath = [soundCacheArray lastObject];
 	QTSoundFilePlayer   *existingPlayer = [soundCacheDict objectForKey:lastCachedPath];
-	
+
 	if (![existingPlayer isPlaying]) {
 		[existingPlayer stop];
 		[soundCacheDict removeObjectForKey:lastCachedPath];
-		[soundCacheArray removeLastObject];	
+		[soundCacheArray removeLastObject];
 	}
 }
 
@@ -215,7 +215,7 @@
 - (void)workspaceSessionDidResignActive:(NSNotification *)notification
 {
 	workspaceSessionIsActive = NO;
-	[self _stopAndReleaseAllSounds];	
+	[self _stopAndReleaseAllSounds];
 }
 
 @end
