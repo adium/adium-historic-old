@@ -20,6 +20,7 @@
 #import "AIDockController.h"
 #import "AIPreferenceController.h"
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
 #import <Adium/AIChat.h>
 
 @interface AIDockUnviewedContentPlugin (PRIVATE)
@@ -42,9 +43,9 @@
     unviewedState = NO;
 
 	//Register our default preferences
-    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:@"DockUnviewedContentDefaults"
-																forClass:[self class]] 
-	                              forGroup:PREF_GROUP_APPEARANCE];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"DockUnviewedContentDefaults"
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_APPEARANCE];
 	
 	//Observe pref changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
