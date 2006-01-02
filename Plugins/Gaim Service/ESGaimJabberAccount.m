@@ -373,31 +373,10 @@ gboolean gaim_init_jabber_plugin(void);
 			if (msg) {
 				//Get the custom jabber status message if one is set
 				statusMessageString = [NSString stringWithUTF8String:msg];
-				
-			} else {
-				//XXX
-				/*
-				//If no custom status message, use the preset possibilities
-				switch (b->uc) {
-					case JABBER_STATE_CHAT:
-						statusMessageString = STATUS_DESCRIPTION_FREE_FOR_CHAT;
-						break;
-
-					case JABBER_STATE_XA:
-						statusMessageString = STATUS_DESCRIPTION_EXTENDED_AWAY;
-						break;
-						
-					case JABBER_STATE_DND:
-						statusMessageString = STATUS_DESCRIPTION_DND;
-						break;
-						
-				}
-				 */
 			}
 			
 			if (statusMessageString && [statusMessageString length]) {
-				statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
-																 attributes:nil] autorelease];
+				statusMessage = [AIHTMLDecoder decodeHTML:statusMessageString];
 			}
 		}
 		
