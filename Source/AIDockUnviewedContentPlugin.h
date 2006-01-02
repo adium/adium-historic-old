@@ -20,8 +20,9 @@
 
 @interface AIDockUnviewedContentPlugin : AIPlugin <AIChatObserver> {
     NSMutableArray		*unviewedObjectsArray;
-    BOOL			unviewedState;
-
+    BOOL				unviewedState;
+	
+	BOOL				animateDockIcon;
 }
 
 @end
