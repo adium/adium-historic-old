@@ -327,11 +327,6 @@
 										  group:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES];
 }
 
-int menuTitleSort(id objectA, id objectB, void *context)
-{
-	return [[objectA title] caseInsensitiveCompare:[objectB title]];
-}
-\
 /*!
  * @brief Builds and returns a menu of available styles
  */
@@ -354,7 +349,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 		[menuItemArray addObject:menuItem];
 	}
 	
-	[menuItemArray sortUsingFunction:menuTitleSort context:nil];
+	[menuItemArray sortUsingSelector:@selector(titleCompare:)];
 	
 	enumerator = [menuItemArray objectEnumerator];
 	while ((menuItem = [enumerator nextObject])) {
