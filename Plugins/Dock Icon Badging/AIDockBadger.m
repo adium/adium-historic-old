@@ -49,9 +49,9 @@
 	overlayState = nil;
 
 	//Register our default preferences
-    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:@"BadgerDefaults"
-																forClass:[self class]] 
-	                              forGroup:PREF_GROUP_APPEARANCE];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"BadgerDefaults"
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_APPEARANCE];
 
 	//Observe pref changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
