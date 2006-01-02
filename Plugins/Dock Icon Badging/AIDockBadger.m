@@ -33,6 +33,7 @@
 #import <Adium/AIIconState.h>
 
 @interface AIDockBadger (PRIVATE)
+- (void)removeOverlay;
 - (void)_setOverlay;
 @end
 
@@ -47,20 +48,13 @@
 {
 	overlayState = nil;
 
-	//Register as a chat observer (for unviewed content)
-	[[adium chatController] registerChatObserver:self];
-	
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(contentAdded:)
-									   name:Content_WillReceiveContent
-									 object:nil];
-	
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(chatClosed:)
-									   name:Chat_WillClose
-									 object:nil];
-	//Prefs
-//	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
+	//Register our default preferences
+    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:@"BadgerDefaults"
+																forClass:[self class]] 
+	                              forGroup:PREF_GROUP_APPEARANCE];
+
+	//Observe pref changes
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 }
 
 - (void)uninstallPlugin
@@ -93,6 +87,41 @@
 			   withObject:nil
 			   afterDelay:0];
 }
+
+#pragma mark Preference observing
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if (!key || [key isEqualToString:KEY_BADGE_DOCK_ICON]) {
+		BOOL	newShouldBadge = [[prefDict objectForKey:KEY_BADGE_DOCK_ICON] boolValue];
+		if (newShouldBadge != shouldBadge) {
+			shouldBadge = newShouldBadge;
+			
+			if (shouldBadge) {
+				//Register as a chat observer (for unviewed content)
+				[[adium chatController] registerChatObserver:self];
+				
+				[[adium notificationCenter] addObserver:self
+											   selector:@selector(contentAdded:)
+												   name:Content_WillReceiveContent
+												 object:nil];
+				
+				[[adium notificationCenter] addObserver:self
+											   selector:@selector(chatClosed:)
+												   name:Chat_WillClose
+												 object:nil];
+				
+			} else {
+				//Remove any existing overlay
+				[self removeOverlay];
+				
+				//Stop observing
+				[[adium chatController] unregisterChatObserver:self];
+				[[adium notificationCenter] removeObserver:self];
+			}
+		}
+	}
+}	
 
 #pragma mark Work methods
 
@@ -139,17 +168,27 @@
 	return badge;
 }
 
-//
+/*
+ * @brief Remove any existing dock overlay
+ */
+- (void)removeOverlay
+{
+	if (overlayState) {
+		[[adium dockController] removeIconStateNamed:@"UnviewedContentCount"];
+		[overlayState release]; overlayState = nil;
+	}
+}
+
+/*
+ * @brief Update our overlay to the current unviewed content count
+ */
 - (void)_setOverlay
 {
 	int contentCount = [[adium chatController] unviewedContentCount];
 
 	if (contentCount != lastUnviewedContentCount) {
 		//Remove & release the current overlay state
-		if (overlayState) {
-			[[adium dockController] removeIconStateNamed:@"UnviewedContentCount"];
-			[overlayState release]; overlayState = nil;
-		}
+		[self removeOverlay];
 
 		//Create & set the new overlay state
 		if (contentCount > 0) {

@@ -19,8 +19,13 @@
 #define Dock_IconWillChange			@"Dock_IconWillChange"
 #define Dock_IconDidChange			@"Dock_IconDidChange"
 
+#define PREF_GROUP_APPEARANCE		@"Appearance"
+
 #define KEY_ACTIVE_DOCK_ICON		@"Dock Icon"
 #define FOLDER_DOCK_ICONS			@"Dock Icons"
+
+#define KEY_ANIMATE_DOCK_ICON	@"Animate Dock Icon on Unread Messages"
+#define KEY_BADGE_DOCK_ICON		@"Badge Dock Icon on Unread Messages"
 
 @class AIIconState;
 

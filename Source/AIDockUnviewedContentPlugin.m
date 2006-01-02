@@ -18,8 +18,13 @@
 #import "AIChatController.h"
 #import "AIContentController.h"
 #import "AIDockController.h"
+#import "AIPreferenceController.h"
 #import <AIUtilities/AIArrayAdditions.h>
 #import <Adium/AIChat.h>
+
+@interface AIDockUnviewedContentPlugin (PRIVATE)
+- (void)removeAlert;
+@end
 
 /*
  * @class AIDockUnviewedContentPlugin
@@ -36,12 +41,13 @@
     unviewedObjectsArray = [[NSMutableArray alloc] init];
     unviewedState = NO;
 
-    //Register as a chat observer (So we can catch the unviewed content status flag)
-    [[adium chatController] registerChatObserver:self];
+	//Register our default preferences
+    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:@"DockUnviewedContentDefaults"
+																forClass:[self class]] 
+	                              forGroup:PREF_GROUP_APPEARANCE];
 	
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(chatWillClose:)
-									   name:Chat_WillClose object:nil];
+	//Observe pref changes
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 }
 
 /*
@@ -53,6 +59,33 @@
 	[[adium notificationCenter] removeObserver:self];
 }
 
+#pragma mark Preference observing
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if (!key || [key isEqualToString:KEY_ANIMATE_DOCK_ICON]) {
+		BOOL newAnimateDockIcon = [[prefDict objectForKey:KEY_ANIMATE_DOCK_ICON] boolValue];
+
+		if (newAnimateDockIcon != animateDockIcon) {
+			animateDockIcon = newAnimateDockIcon;
+			
+			if (animateDockIcon) {
+				//Register as a chat observer (So we can catch the unviewed content status flag)
+				[[adium chatController] registerChatObserver:self];
+				
+				[[adium notificationCenter] addObserver:self
+											   selector:@selector(chatWillClose:)
+												   name:Chat_WillClose object:nil];
+				
+			} else {
+				[self removeAlert];
+
+				[[adium chatController] unregisterChatObserver:self];
+				[[adium notificationCenter] removeObserver:self];
+			}
+		}
+	}
+}
 /*
  * @brief Chat was updated
  *
@@ -80,14 +113,22 @@
 
                 //If there are no more contacts with unviewed content, stop animating the dock
                 if ([unviewedObjectsArray count] == 0 && unviewedState) {
-                    [[adium dockController] removeIconStateNamed:@"Alert"];
-                    unviewedState = NO;
+					[self removeAlert];
                 }
             }
         }
     }
 
     return nil;
+}
+
+/*!
+ * @brief Remove any existing alert state
+ */
+- (void)removeAlert
+{
+	[[adium dockController] removeIconStateNamed:@"Alert"];
+	unviewedState = NO;
 }
 
 /*!
@@ -104,8 +145,7 @@
 		
 		//If there are no more contacts with unviewed content, stop animating the dock
 		if ([unviewedObjectsArray count] == 0 && unviewedState) {
-			[[adium dockController] removeIconStateNamed:@"Alert"];
-			unviewedState = NO;
+			[self removeAlert];
 		}
 	}
 }

@@ -25,6 +25,8 @@
 	AIIconState					*overlayState;
 	NSImage						*badgeOne, *badgeTwo;
 	int							lastUnviewedContentCount;
+	
+	BOOL						shouldBadge;
 }
 
 @end

@@ -25,6 +25,9 @@
 #define KEY_WEBKIT_MIN_FONT_SIZE				@"Min Font Size"
 
 @interface ESDualWindowMessageAdvancedPreferences : AIPreferencePane {
+    IBOutlet	NSButton		*checkBox_animateDockIcon;
+    IBOutlet    NSButton		*checkBox_badgeDockIcon;
+
     IBOutlet	NSButton		*autohide_tabBar;
     IBOutlet    NSButton		*checkBox_allowInactiveClosing;
 	

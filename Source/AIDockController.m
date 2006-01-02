@@ -16,7 +16,6 @@
 
 // $Id$
 
-#import "AIAppearancePreferencesPlugin.h"
 #import "AIDockController.h"
 #import "AIInterfaceController.h"
 #import "AIPreferenceController.h"
