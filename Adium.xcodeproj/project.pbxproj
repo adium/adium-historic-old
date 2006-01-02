@@ -123,7 +123,7 @@
 		341BD5700965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341BD56E0965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib */; };
 		341BD5710965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341BD56F0965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib */; };
 		341BD57B0965EC4700CF83F5 /* OTRPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341BD5790965EC4700CF83F5 /* OTRPrefs.nib */; };
-		341BDBBB0968BC9B00CF83F5 /* OTR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
+		341BDBBB0968BC9B00CF83F5 /* OTR.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		341E886B0648FF1B00E0C828 /* ESGaimRequestActionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341E88680648FF1B00E0C828 /* ESGaimRequestActionController.h */; };
 		341E886C0648FF1B00E0C828 /* ESGaimRequestActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */; };
 		3420E6600611D80100AE67E3 /* ESAccountPasswordPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3420E65B0611D80000AE67E3 /* ESAccountPasswordPromptController.h */; };
@@ -290,7 +290,6 @@
 		346CFDC6087B7836009711C8 /* AdiumIdleManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 346CFDC4087B7836009711C8 /* AdiumIdleManager.h */; };
 		346CFDC7087B7836009711C8 /* AdiumIdleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 346CFDC5087B7836009711C8 /* AdiumIdleManager.m */; };
 		346F5CB408A418FB0055C610 /* iTunes.png in Resources */ = {isa = PBXBuildFile; fileRef = 346F5CB208A418FA0055C610 /* iTunes.png */; };
-		346F5CB508A418FB0055C610 /* CurrentTunes.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 346F5CB308A418FB0055C610 /* CurrentTunes.scpt */; };
 		346F5D3208A43E7B0055C610 /* CurrentTunes.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 346F5CB308A418FB0055C610 /* CurrentTunes.scpt */; };
 		347065E506015DC5004F0D20 /* WebKit Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 347065E406015DC5004F0D20 /* WebKit Defaults.plist */; };
 		3474E000082550FD00BF30F0 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3474DFFF082550FD00BF30F0 /* Credits.rtf */; };
@@ -350,12 +349,6 @@
 		347E7AC407CAF96000350507 /* AIContactWarningLevelPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 347E7AC207CAF95F00350507 /* AIContactWarningLevelPlugin.h */; };
 		347E7ACF07CAF98500350507 /* ESMetaContactContentsPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 347E7ACD07CAF98400350507 /* ESMetaContactContentsPlugin.m */; };
 		347E7AD007CAF98500350507 /* ESMetaContactContentsPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 347E7ACE07CAF98500350507 /* ESMetaContactContentsPlugin.h */; };
-		347F50EA094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347F50E4094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt */; };
-		347F50EB094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347F50E5094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt */; };
-		347F50EC094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347F50E6094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt */; };
-		347F50ED094743B100CEF1FF /* AdiumAddressBookAction_MSN.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347F50E7094743B100CEF1FF /* AdiumAddressBookAction_MSN.scpt */; };
-		347F50EE094743B100CEF1FF /* AdiumAddressBookAction_SMS.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347F50E8094743B100CEF1FF /* AdiumAddressBookAction_SMS.scpt */; };
-		347F50EF094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347F50E9094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt */; };
 		347F51810947449000CEF1FF /* AdiumAddressBookAction_Yahoo.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E4094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt */; };
 		347F51820947449000CEF1FF /* AdiumAddressBookAction_AIM.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E5094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt */; };
 		347F51830947449000CEF1FF /* AdiumAddressBookAction_ICQ.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E6094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt */; };
@@ -1470,15 +1463,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				341BDBBB0968BC9B00CF83F5 /* OTR.framework in CopyFiles */,
 				3419FE230531586A00C68BA3 /* Adium.framework in CopyFiles */,
 				9E12765407D38B5000AA91C5 /* Growl-WithInstaller.framework in CopyFiles */,
-				346F5CB508A418FB0055C610 /* CurrentTunes.scpt in CopyFiles */,
-				347F50EA094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt in CopyFiles */,
-				347F50EB094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt in CopyFiles */,
-				347F50EC094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt in CopyFiles */,
-				347F50ED094743B100CEF1FF /* AdiumAddressBookAction_MSN.scpt in CopyFiles */,
-				347F50EE094743B100CEF1FF /* AdiumAddressBookAction_SMS.scpt in CopyFiles */,
-				347F50EF094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2429,7 +2416,7 @@
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3343,7 +3330,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				341BDBBB0968BC9B00CF83F5 /* OTR.framework in Frameworks */,
 				34D835D907CBED8F006466F2 /* AIUtilities.framework in Frameworks */,
 				3496A8F407CE6D050055BBAB /* AIHyperlinks.framework in Frameworks */,
 				3448758E06D1EBDF00DA778C /* Cocoa.framework in Frameworks */,
