@@ -132,4 +132,8 @@ typedef enum {
 
 - (BOOL)chatIsReceivingContent:(AIChat *)chat;
 
+//OTR
+- (void)requestSecureOTRMessaging:(BOOL)inSecureMessaging inChat:(AIChat *)inChat;
+- (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat;
+
 @end
