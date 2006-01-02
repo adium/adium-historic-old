@@ -65,11 +65,6 @@
 					 group:GROUP_ACCOUNT_STATUS];
 }
 
-int menuItemSort(id menuItemA, id menuItemB, void *context)
-{
-	return [[menuItemA title] caseInsensitiveCompare:[menuItemB title]];
-}
-
 - (NSMenu *)chatServerMenu
 {
 	NSMenu			*chatServerMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
@@ -120,8 +115,8 @@ int menuItemSort(id menuItemA, id menuItemB, void *context)
 		[menuItems addObject:menuItem];		
 	}
 
-	[menuItems sortUsingFunction:menuItemSort context:NULL];
-	
+	[menuItems sortUsingSelector:@selector(titleCompare:)];
+
 	enumerator = [menuItems objectEnumerator];
 	while ((menuItem = [enumerator nextObject])) {
 		[chatServerMenu addItem:menuItem];
