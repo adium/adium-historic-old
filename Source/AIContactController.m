@@ -1293,7 +1293,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			//If this contact is not its own parent contact, don't bother since we'll get an update for the parent if appropriate
 			if (inObject == [(AIListContact *)inObject parentContact]) {
 				if (useOfflineGroup) {
-					AIListContact *containingObject = [inObject containingObject];
+					AIListObject *containingObject = [inObject containingObject];
 					
 					if ([inObject online] &&
 						(containingObject == [self offlineGroup])) {
