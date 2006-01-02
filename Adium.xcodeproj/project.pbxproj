@@ -123,6 +123,7 @@
 		341BD5700965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341BD56E0965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib */; };
 		341BD5710965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341BD56F0965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib */; };
 		341BD57B0965EC4700CF83F5 /* OTRPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341BD5790965EC4700CF83F5 /* OTRPrefs.nib */; };
+		341BDBBB0968BC9B00CF83F5 /* OTR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		341E886B0648FF1B00E0C828 /* ESGaimRequestActionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341E88680648FF1B00E0C828 /* ESGaimRequestActionController.h */; };
 		341E886C0648FF1B00E0C828 /* ESGaimRequestActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */; };
 		3420E6600611D80100AE67E3 /* ESAccountPasswordPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3420E65B0611D80000AE67E3 /* ESAccountPasswordPromptController.h */; };
@@ -1644,6 +1645,7 @@
 		341BD5890965ECC200CF83F5 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
 		341BD58A0965ECC800CF83F5 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
 		341BD58B0965ECCD00CF83F5 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341BDBBA0968BC9A00CF83F5 /* OTR.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OTR.framework; path = Frameworks/OTR.framework; sourceTree = "<group>"; };
 		341DE02F07FE104700EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		341DE03407FE105600EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		341DE03507FE106400EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -2427,7 +2429,7 @@
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3341,6 +3343,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				341BDBBB0968BC9B00CF83F5 /* OTR.framework in Frameworks */,
 				34D835D907CBED8F006466F2 /* AIUtilities.framework in Frameworks */,
 				3496A8F407CE6D050055BBAB /* AIHyperlinks.framework in Frameworks */,
 				3448758E06D1EBDF00DA778C /* Cocoa.framework in Frameworks */,
@@ -3496,6 +3499,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				341BDBBA0968BC9A00CF83F5 /* OTR.framework */,
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
 				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
 				3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */,
@@ -9556,9 +9560,19 @@
 		34BAF98C0942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"Plugins/Gaim Service/Include/glib",
+					"Plugins/Gaim Service/Include/glib/glib",
+					"Plugins/Gaim Service/Include/glib/gmodule",
+					"Plugins/Gaim Service/Include/",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
+				);
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				PRODUCT_NAME = Adium;
 			};
@@ -10037,9 +10051,19 @@
 		DADE8E23085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"Plugins/Gaim Service/Include/glib",
+					"Plugins/Gaim Service/Include/glib/glib",
+					"Plugins/Gaim Service/Include/glib/gmodule",
+					"Plugins/Gaim Service/Include/",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
+				);
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				PRODUCT_NAME = Adium;
 			};
@@ -10048,9 +10072,19 @@
 		DADE8E24085507450062B664 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"Plugins/Gaim Service/Include/glib",
+					"Plugins/Gaim Service/Include/glib/glib",
+					"Plugins/Gaim Service/Include/glib/gmodule",
+					"Plugins/Gaim Service/Include/",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
+				);
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				PRODUCT_NAME = Adium;
 			};
@@ -10059,9 +10093,19 @@
 		DADE8E25085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"Plugins/Gaim Service/Include/glib",
+					"Plugins/Gaim Service/Include/glib/glib",
+					"Plugins/Gaim Service/Include/glib/gmodule",
+					"Plugins/Gaim Service/Include/",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
+				);
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				PRODUCT_NAME = Adium;
 			};
