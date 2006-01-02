@@ -76,11 +76,26 @@
 		//If we've messaged this object previously, and the account we used to message it is online, return that account
         NSString *accountID = [inContact preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
 													group:PREF_GROUP_PREFERRED_ACCOUNTS];
-        if (accountID && (account = [[adium accountController] accountWithInternalObjectID:accountID])) {
-            if ([account availableForSendingContentType:inType toContact:inContact]) {
-                return account;
-            }
-        }
+		if (accountID) {
+			if (![accountID isKindOfClass:[NSString class]]) {
+				//Old code stored this as an NSNumber; upgrade.
+				if ([accountID isKindOfClass:[NSNumber class]]) {
+					accountID = [NSString stringWithFormat:@"%i",[(NSNumber *)accountID intValue]];
+				} else {
+					accountID = nil; //Unrecognizable, ignore
+				}
+				
+				[inContact setPreference:accountID
+								  forKey:KEY_PREFERRED_SOURCE_ACCOUNT
+								   group:PREF_GROUP_PREFERRED_ACCOUNTS];
+			}
+
+			if ((account = [[adium accountController] accountWithInternalObjectID:accountID])) {
+				if ([account availableForSendingContentType:inType toContact:inContact]) {
+					return account;
+				}
+			}
+		}
 		
 		//If inObject is an AIListContact return the account the object is on
 		if ((account = [inContact account])) {
