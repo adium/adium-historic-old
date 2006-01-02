@@ -588,6 +588,9 @@
 
 	if (tigerOrBetter) {
 		writingDirection = [textView_outgoing baseWritingDirection];
+	} else {
+		//Just silencing gcc; this will
+		writingDirection = NSWritingDirectionLeftToRight;
 	}
 	
 	[textView_outgoing setString:@""];
