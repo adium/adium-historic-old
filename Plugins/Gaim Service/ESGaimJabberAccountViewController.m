@@ -23,6 +23,13 @@
     return @"ESGaimJabberAccountView";
 }
 
+- (void)awakeFromNib
+{
+	[super awakeFromNib];
+	
+	[checkBox_checkMail setEnabled:NO];
+}
+
 //Configure our controls
 - (void)configureForAccount:(AIAccount *)inAccount
 {
