@@ -1297,18 +1297,18 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 					
 					if ([inObject online] &&
 						(containingObject == [self offlineGroup])) {
-						[inObject restoreGrouping];
+						[(AIListContact *)inObject restoreGrouping];
 						
 					} else if (![inObject online] &&
 							   containingObject &&
 							   (containingObject != [self offlineGroup])) {
-						[self _moveContactLocally:inObject
+						[self _moveContactLocally:(AIListContact *)inObject
 										  toGroup:[self offlineGroup]];
 					}
 					
 				} else {
 					if ([inObject containingObject] == [self offlineGroup]) {
-						[inObject restoreGrouping];
+						[(AIListContact *)inObject restoreGrouping];
 					}
 				}
 			}
