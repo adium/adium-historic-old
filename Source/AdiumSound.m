@@ -110,6 +110,7 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	float newVolume = [[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue];
+	NSLog(@"new volume: %f%%", newVolume * 100.0f);
 
 	//If sound volume has changed, we must update all existing sounds to the new volume
 	if (customVolume != newVolume) {
@@ -179,6 +180,9 @@
     if (existingPlayer) {
 		//Ensure the sound is starting from the beginning; necessary for cached sounds that have already been played
 		[existingPlayer setPlaybackPosition:0];
+
+		//Set the volume too (otherwise #2283 happens)
+		[existingPlayer setVolume:[[[adium preferenceController] preferenceForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL group:PREF_GROUP_SOUNDS] floatValue]];
 
 		//QTSoundFilePlayer won't play if the sound is already playing, but that's fine since we
 		//reset the playback position and it will start playing there in the next run loop.
