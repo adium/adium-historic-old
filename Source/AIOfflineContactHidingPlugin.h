@@ -19,10 +19,12 @@
 @protocol AIListObjectObserver;
 
 @interface AIOfflineContactHidingPlugin : AIPlugin <AIListObjectObserver> {
-	NSMenuItem		*showOfflineMenuItem;
+	NSMenuItem		*menuItem_showOffline;
+	NSMenuItem		*menuItem_useOfflineGroup;
+
 	BOOL			showOfflineContacts;
 	BOOL			useContactListGroups;
-
+	BOOL			useOfflineGroup;
 }
 
 @end

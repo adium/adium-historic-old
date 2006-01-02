@@ -74,7 +74,7 @@ typedef enum {
 @protocol ContactListOutlineView
 @end
 
-@interface AIContactController : AIObject <AIController> {
+@interface AIContactController : AIObject <AIController, AIListObjectObserver> {
 	//Contacts and metaContacts
 	NSMutableDictionary		*contactDict;
 	NSMutableDictionary		*metaContactDict;
@@ -83,9 +83,10 @@ typedef enum {
 	//Contact List and Groups
     AIListGroup				*contactList;
 	NSMutableDictionary		*groupDict;
-    AIListGroup				*strangerGroup;
 	BOOL					useContactListGroups;
-	NSMenuItem				*showGroupsMenuItem;
+	NSMenuItem				*menuItem_showGroups;
+	BOOL					useOfflineGroup;
+	NSMenuItem				*menuItem_useOfflineGroup;
 	
 	//Status and Attribute updates
     NSMutableSet			*contactObservers;
@@ -124,6 +125,7 @@ typedef enum {
 - (NSMenu *)menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)inGroup withTarget:(id)target;
 - (NSMenu *)menuOfAllGroupsInGroup:(AIListGroup *)inGroup withTarget:(id)target;
 - (NSSet *)allContactsWithService:(AIService *)service UID:(NSString *)inUID existingOnly:(BOOL)existingOnly;
+- (AIListGroup *)offlineGroup;
 
 - (AIMetaContact *)groupUIDs:(NSArray *)UIDsArray forServices:(NSArray *)servicesArray;
 - (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray;

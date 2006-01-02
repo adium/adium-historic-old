@@ -76,6 +76,9 @@
 #define SHOW_GROUPS_IDENTIFER			@"ShowGroups"
 
 #define	KEY_HIDE_CONTACT_LIST_GROUPS	@"Hide Contact List Groups"
+#define	KEY_USE_OFFLINE_GROUP			@"Use Offline Group"
+#define KEY_SHOW_OFFLINE_CONTACTS		@"Show Offline Contacts"
+
 #define	PREF_GROUP_CONTACT_LIST_DISPLAY	@"Contact List Display"
 
 #define SERVICE_ID_KEY					@"ServiceID"
@@ -120,6 +123,9 @@
 - (void)_storeListObject:(AIListObject *)listObject inMetaContact:(AIMetaContact *)metaContact;
 
 - (void)_addMenuItemsFromArray:(NSArray *)contactArray toMenu:(NSMenu *)contactMenu target:(id)target offlineContacts:(BOOL)offlineContacts;
+
+- (void)_performChangeOfUseOfflineGroup;
+
 @end
 
 @implementation AIContactController
@@ -174,6 +180,8 @@
 
 	[self loadContactList];
 	[self sortContactList];
+
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 }
 
 //close
@@ -185,6 +193,8 @@
 //dealloc
 - (void)dealloc
 {
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+
     [contactList release];
     [contactObservers release]; contactObservers = nil;
 
@@ -495,7 +505,9 @@
 			//If no similar objects exist, we add this contact directly to the list
 			AIListGroup *targetGroup;
 
-			targetGroup = (useContactListGroups ? [self groupWithUID:remoteGroupName] : contactList);
+			targetGroup = (useContactListGroups ?
+						   ((useOfflineGroup && ![inContact online]) ? [self offlineGroup] : [self groupWithUID:remoteGroupName]) :
+						   contactList);
 
 			[targetGroup addObject:containingObject];
 			[self _listChangedGroup:targetGroup object:containingObject];
@@ -506,7 +518,10 @@
 		if (remoteGroupName) {
 			AIListGroup *localGroup;
 
-			localGroup = (useContactListGroups ? [self groupWithUID:remoteGroupName] : contactList);
+			localGroup = (useContactListGroups ?
+						  ((useOfflineGroup && ![inContact online]) ? [self offlineGroup] : [self groupWithUID:remoteGroupName]) :
+						  contactList);
+
 			[self _moveContactLocally:inContact
 							  toGroup:localGroup];
 
@@ -616,7 +631,6 @@
 - (void)setUseContactListGroups:(BOOL)inFlag
 {
 	if (inFlag != useContactListGroups) {
-
 		useContactListGroups = inFlag;
 
 		[self _performChangeOfUseContactListGroups];
@@ -681,12 +695,12 @@
 																	  group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
 
 	//Show offline contacts menu item
-    showGroupsMenuItem = [[NSMenuItem alloc] initWithTitle:SHOW_GROUPS_MENU_TITLE
+    menuItem_showGroups = [[NSMenuItem alloc] initWithTitle:SHOW_GROUPS_MENU_TITLE
 													target:self
 													action:@selector(toggleShowGroups:)
 											 keyEquivalent:@""];
-	[showGroupsMenuItem setState:useContactListGroups];
-	[[adium menuController] addMenuItem:showGroupsMenuItem toLocation:LOC_View_Toggles];
+	[menuItem_showGroups setState:useContactListGroups];
+	[[adium menuController] addMenuItem:menuItem_showGroups toLocation:LOC_View_Toggles];
 
 	//Toolbar
 	NSToolbarItem	*toolbarItem;
@@ -709,7 +723,7 @@
 {
 	//Flip-flop.
 	useContactListGroups = !useContactListGroups;
-	[showGroupsMenuItem setState:useContactListGroups];
+	[menuItem_showGroups setState:useContactListGroups];
 
 	//Update the contact list.  Do it on the next run loop for better menu responsiveness, as it may be a lengthy procedure.
 	[self performSelector:@selector(_performChangeOfUseContactListGroups)
@@ -725,6 +739,30 @@
 										  @"togglegroups_transparent" :
 										  @"togglegroups")
 								forClass:[self class]]];
+}
+
+- (BOOL)useOfflineGroup
+{
+	return useOfflineGroup;
+}
+
+- (void)setUseOfflineGroup:(BOOL)inFlag
+{
+	if (inFlag != useOfflineGroup) {
+		useOfflineGroup = inFlag;
+		
+		if (useOfflineGroup) {
+			[self registerListObjectObserver:self];	
+		} else {
+			[self updateAllListObjectsForObserver:self];
+			[self unregisterListObjectObserver:self];	
+		}
+	}
+}
+
+- (AIListGroup *)offlineGroup
+{
+	return [self groupWithUID:AILocalizedString(@"Offline", "Name of offline group")];
 }
 
 #pragma mark Meta Contacts
@@ -1231,6 +1269,55 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 	return listObject;
 }
+
+#pragma mark Preference observing
+/*!
+* @brief Preferences changed
+ */
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if (firstTime ||
+		[key isEqualToString:KEY_USE_OFFLINE_GROUP]) {
+
+		[self setUseOfflineGroup:[[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue]];
+	}
+}
+
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+{
+	if (!inModifiedKeys ||
+		[inModifiedKeys containsObject:@"Online"]) {
+
+		if ([inObject isKindOfClass:[AIListContact class]]) {			
+			//If this contact is not its own parent contact, don't bother since we'll get an update for the parent if appropriate
+			if (inObject == [(AIListContact *)inObject parentContact]) {
+				if (useOfflineGroup) {
+					AIListObject *containingObject = [inObject containingObject];
+					
+					if ([inObject online] &&
+						(containingObject == [self offlineGroup])) {
+						[inObject restoreGrouping];
+						
+					} else if (![inObject online] &&
+							   containingObject &&
+							   (containingObject != [self offlineGroup])) {
+						[self _moveContactLocally:inObject
+										  toGroup:[self offlineGroup]];
+					}
+					
+				} else {
+					if ([inObject containingObject] == [self offlineGroup]) {
+						[inObject restoreGrouping];
+					}
+				}
+			}
+		}
+	}
+	
+	return nil;
+}
+
 //Contact Info --------------------------------------------------------------------------------
 #pragma mark Contact Info
 //Show info for the selected contact
