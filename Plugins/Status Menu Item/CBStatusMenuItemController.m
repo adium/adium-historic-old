@@ -19,6 +19,7 @@
 #import "AIInterfaceController.h"
 #import "AIStatusController.h"
 #import "CBStatusMenuItemController.h"
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
@@ -84,6 +85,11 @@
 		                           name:Chat_WillClose
 		                         object:nil];
 
+		[notificationCenter addObserver:self
+							   selector:@selector(statusIconSetDidChange:)
+								   name:AIStatusIconSetDidChangeNotification
+								 object:nil];
+		
 		//Register as a chat observer (So we can catch the unviewed content status flag)
 		[[adium chatController] registerChatObserver:self];
 
@@ -136,22 +142,30 @@
 	Class Image = NSClassFromString(@"CIImage");
 	Class Color = NSClassFromString(@"CIColor");
 	Class Context = NSClassFromString(@"CIContext");
-	id filter = [Filter filterWithName:@"CIColorMonochrome"];
-	id result;
+	id monochromeFilter, invertFilter, alphaFilter;
 
-	[filter setDefaults];
-	[filter setValue:[[Image alloc] initWithBitmapImageRep:srcImageRep]
+	monochromeFilter = [Filter filterWithName:@"CIColorMonochrome"];
+	[monochromeFilter setValue:[[[Image alloc] initWithBitmapImageRep:srcImageRep] autorelease]
+						forKey:@"inputImage"]; 
+	[monochromeFilter setValue:[NSNumber numberWithFloat:1.0]
+						forKey:@"inputIntensity"];
+	[monochromeFilter setValue:[[[Color alloc] initWithColor:[NSColor blackColor]] autorelease]
+						forKey:@"inputColor"];
+
+	//Now invert our greyscale image
+	invertFilter = [Filter filterWithName:@"CIColorInvert"];
+	[invertFilter setValue:[monochromeFilter valueForKey:@"outputImage"]
+					forKey:@"inputImage"]; 
+
+	//And turn the parts that were previously white (are now black) into transparent
+	alphaFilter = [Filter filterWithName:@"CIMaskToAlpha"];
+	[alphaFilter setValue:[invertFilter valueForKey:@"outputImage"]
 			  forKey:@"inputImage"]; 
-	[filter setValue:[NSNumber numberWithFloat:0.9]
-			  forKey:@"inputIntensity"];
-	[filter setValue:[[[Color alloc] initWithColor:[NSColor whiteColor]] autorelease]
-			  forKey:@"inputColor"];
-	
-	result = [filter valueForKey:@"outputImage"];
 
 	[altImage lockFocus];
 	id context = [Context contextWithCGContext:[[NSGraphicsContext currentContext] graphicsPort] 
-									   options:nil];	
+									   options:nil];
+	id result = [alphaFilter valueForKey:@"outputImage"];
 	[context drawImage:result
 			   atPoint:CGPointZero
 			  fromRect:[result extent]];
@@ -165,7 +179,10 @@
 	[statusItem setLength:([inImage size].width + STATUS_ITEM_MARGIN)];
 
 	[statusItem setImage:inImage];
-	[statusItem setAlternateImage:[self alternateImageForImage:inImage]];
+	
+	if ([NSApp isOnTigerOrBetter]) {
+		[statusItem setAlternateImage:[self alternateImageForImage:inImage]];
+	}
 }
 
 //Account Menu --------------------------------------------------------
@@ -404,13 +421,24 @@
 	[NSApp arrangeInFront:nil];
 }
 
-//Offline Icon Control --------------------------------------------------------
-#pragma mark Offline Icon Control
+#pragma mark -
 
 - (void)accountStateChanged:(NSNotification *)notification
 {
 	if (!unviewedContent) {
 		[self setIconImage:[[[adium statusController] activeStatusState] icon]];
+	}
+}
+
+- (void)statusIconSetDidChange:(NSNotification *)notification
+{
+	if (unviewedContent) {
+		[self setIconImage:[AIStatusIcons statusIconForStatusName:@"content"
+													   statusType:AIAvailableStatusType
+														 iconType:AIStatusIconList
+														direction:AIIconNormal]];				
+	} else {
+		[self setIconImage:[[[adium statusController] activeStatusState] icon]];		
 	}
 }
 
