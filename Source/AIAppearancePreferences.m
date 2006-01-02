@@ -852,11 +852,6 @@ typedef enum {
 	[AIDockIconSelectionSheet showDockIconSelectorOnWindow:[[self view] window]];
 }
 
-int _menuItemTitleSort(id objectA, id objectB, void *context)
-{
-	return ([[(NSMenuItem *)objectA title] caseInsensitiveCompare:[(NSMenuItem *)objectB title]]);
-}
-
 /*
  * @brief Return the menu item for a dock icon
  */
@@ -899,7 +894,7 @@ int _menuItemTitleSort(id objectA, id objectB, void *context)
 		[menuItemArray addObject:[self meuItemForDockIconPackAtPath:packPath]];
 	}
 
-	[menuItemArray sortUsingFunction:_menuItemTitleSort context:NULL];
+	[menuItemArray sortUsingSelector:@selector(titleCompare:)];
 
 	return menuItemArray;
 }
@@ -958,7 +953,7 @@ int _menuItemTitleSort(id objectA, id objectB, void *context)
 		[menuItemArray addObject:[self meuItemForIconPackAtPath:packPath class:iconClass]];
 	}
 	
-	[menuItemArray sortUsingFunction:_menuItemTitleSort context:NULL];
+	[menuItemArray sortUsingSelector:@selector(titleCompare:)];
 
 	return menuItemArray;	
 }

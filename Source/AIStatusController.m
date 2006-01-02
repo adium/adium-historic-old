@@ -273,16 +273,6 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 }
 
 /*!
- * @brief Sort status menu items
- *
- * Sort alphabetically by title.
- */
-int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
-{
-	return [[menuItemA title] caseInsensitiveCompare:[menuItemB title]];
-}
-
-/*!
  * @brief Return an array of menu items for an AIStatusType and service
  *
  * @pram type The AIStatusType for which to return statuses
@@ -341,7 +331,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		}
 	}
 
-	[menuItems sortUsingFunction:statusMenuItemSort context:nil];
+	[menuItems sortUsingSelector:@selector(titleCompare:)];
 
 	return [menuItems autorelease];
 }

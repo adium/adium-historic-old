@@ -28,8 +28,6 @@
 
 @implementation ESContactAlertsController
 
-int menuItemTitleSort(id menuItemA, id menuItemB, void *context);
-
 static	NSMutableDictionary		*eventHandlersByGroup[EVENT_HANDLER_GROUP_COUNT];
 static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_COUNT];
 
@@ -189,8 +187,8 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 			}
 			
 			//Sort the array of menuItems alphabetically by title within this group
-			[groupMenuItemArray sortUsingFunction:menuItemTitleSort context:nil];
-			
+			[groupMenuItemArray sortUsingSelector:@selector(titleCompare:)];
+
 			[menuItemArray addObjectsFromArray:groupMenuItemArray];
 		}
 	}
@@ -540,8 +538,8 @@ int eventIDSort(id objectA, id objectB, void *context) {
 		[menuItem release];
     }
 
-	//Sort the array of menuItems alphabetically by title
-	[menuItemArray sortUsingFunction:menuItemTitleSort context:nil];
+	//Sort the array of menuItems alphabetically by title	
+	[menuItemArray sortUsingSelector:@selector(titleCompare:)];
 	
 	enumerator = [menuItemArray objectEnumerator];
 	while ((menuItem = [enumerator nextObject])) {
@@ -875,13 +873,6 @@ int eventIDSort(id objectA, id objectB, void *context) {
 {
 	return ([eventHandlersByGroup[AIMessageEventHandlerGroup] objectForKey:eventID] != nil ||
 		   ([globalOnlyEventHandlersByGroup[AIMessageEventHandlerGroup] objectForKey:eventID] != nil));
-}
-
-/*!
- * @brief Sort menu items by title
- */
-int menuItemTitleSort(id menuItemA, id menuItemB, void *context) {
-	return ([[menuItemA title] caseInsensitiveCompare:[menuItemB title]]);
 }
 
 @end
