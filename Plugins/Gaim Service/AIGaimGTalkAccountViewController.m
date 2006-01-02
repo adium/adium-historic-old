@@ -25,6 +25,8 @@
 	
 	//GTalk forces the use of TLS
 	[checkBox_useTLS setEnabled:NO];
+	
+	[checkBox_checkMail setEnabled:YES];
 }
 
 @end
