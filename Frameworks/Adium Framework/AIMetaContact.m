@@ -123,7 +123,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	if ([[adium contactController] useContactListGroups] &&
 		![inGroupInternalObjectID isEqualToString:[self preferenceForKey:KEY_CONTAINING_OBJECT_ID
 																   group:OBJECT_STATUS_CACHE
-												   ignoreInheritedValues:YES]]) {
+												   ignoreInheritedValues:YES]] &&
+		(inGroup != [[adium contactController] offlineGroup])) {
 
 		[self setPreference:inGroupInternalObjectID
 					 forKey:KEY_CONTAINING_OBJECT_ID
@@ -146,8 +147,10 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 		oldContainingObjectID = [self preferenceForKey:KEY_CONTAINING_OBJECT_ID
 												 group:OBJECT_STATUS_CACHE];
-		oldContainingObject = [[adium contactController] existingListObjectWithUniqueID:oldContainingObjectID];
-		
+		oldContainingObject = (oldContainingObjectID ?
+							   [[adium contactController] existingListObjectWithUniqueID:oldContainingObjectID] :
+							   nil);
+
 		if (oldContainingObject &&
 			[oldContainingObject isKindOfClass:[AIListGroup class]]) {
 			//A previous grouping is saved; restore it
@@ -165,8 +168,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			
 			//Find the first contact with a group
 			while ((containedContact = [enumerator nextObject]) &&
-				   (bestGuessRemoteGroup = [containedContact remoteGroupName]));
-
+				   !(bestGuessRemoteGroup = [containedContact remoteGroupName]));
 			//Put this metacontact in that group
 			if (bestGuessRemoteGroup) {
 				[[adium contactController] _moveContactLocally:self
