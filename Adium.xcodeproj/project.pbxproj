@@ -125,6 +125,8 @@
 		341BD5710965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341BD56F0965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib */; };
 		341BD57B0965EC4700CF83F5 /* OTRPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341BD5790965EC4700CF83F5 /* OTRPrefs.nib */; };
 		341BDBBB0968BC9B00CF83F5 /* OTR.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
+		341BDF5E0969814A00CF83F5 /* BadgerDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF5D0969814900CF83F5 /* BadgerDefaults.plist */; };
+		341BDF700969829E00CF83F5 /* DockUnviewedContentDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF6F0969829E00CF83F5 /* DockUnviewedContentDefaults.plist */; };
 		341E886B0648FF1B00E0C828 /* ESGaimRequestActionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341E88680648FF1B00E0C828 /* ESGaimRequestActionController.h */; };
 		341E886C0648FF1B00E0C828 /* ESGaimRequestActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */; };
 		3420E6600611D80100AE67E3 /* ESAccountPasswordPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3420E65B0611D80000AE67E3 /* ESAccountPasswordPromptController.h */; };
@@ -1634,6 +1636,8 @@
 		341BD58A0965ECC800CF83F5 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
 		341BD58B0965ECCD00CF83F5 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
 		341BDBBA0968BC9A00CF83F5 /* OTR.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OTR.framework; path = Frameworks/OTR.framework; sourceTree = "<group>"; };
+		341BDF5D0969814900CF83F5 /* BadgerDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = BadgerDefaults.plist; path = Resources/BadgerDefaults.plist; sourceTree = SOURCE_ROOT; };
+		341BDF6F0969829E00CF83F5 /* DockUnviewedContentDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = DockUnviewedContentDefaults.plist; path = Resources/DockUnviewedContentDefaults.plist; sourceTree = "<group>"; };
 		341DE02F07FE104700EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		341DE03407FE105600EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		341DE03507FE106400EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -3598,16 +3602,6 @@
 			name = "Send Message Contact Alert";
 			sourceTree = "<group>";
 		};
-		34306FE3076F53F60025102A /* Events and Contact Alerts */ = {
-			isa = PBXGroup;
-			children = (
-				346BA3330774C21300628F06 /* Global Events Preferences */,
-				344AB2B4057912C500384CEE /* Open Message Window Contact Alert */,
-				342DC48A05783B8D000E1D83 /* Send Message Contact Alert */,
-			);
-			name = "Events and Contact Alerts";
-			sourceTree = "<group>";
-		};
 		343A7F2206935DAF00150CEC /* Meanwhile */ = {
 			isa = PBXGroup;
 			children = (
@@ -3995,11 +3989,21 @@
 		347E778507CA825F00350507 /* Messaging */ = {
 			isa = PBXGroup;
 			children = (
-				34CF9DEF085B8B3D00D87E37 /* iTunes Now Playing */,
-				4BF4813B049A802E00A8010A /* Auto Linking */,
-				34F8A7FA05A8927F00577775 /* Applescript Filters */,
 				9E4CF9D104AA69B000415B22 /* Action Support */,
+				34F8A7FA05A8927F00577775 /* Applescript Filters */,
+				4BF4813B049A802E00A8010A /* Auto Linking */,
+				636AB7EC087E2A2E00A87670 /* Dock Icon Badging */,
+				4B1332130459B98E00A8010A /* Dock Unviewed Content */,
+				11C157D504A88DE0008E0C76 /* Emoticons */,
+				3429BAF70703789D00EED705 /* File Transfer Messages */,
+				34CF9DEF085B8B3D00D87E37 /* iTunes Now Playing */,
+				7E824CCD06387FAF00813072 /* Link Management */,
+				9C8C7FA303CBA17B00267226 /* Logger */,
+				F1D0C631051AC2380000000E /* Message Alias Support */,
+				6E5A43DC0611604B0078C342 /* Message History */,
 				34A65AF606A5A0C400898470 /* Safari Link Toolbar Item */,
+				34DFF46607A5EAC800B92233 /* Secure Messaging */,
+				B023552808CBE84F008CDDDA /* SQLite Logger */,
 				4B0473B7043E43F200A8010A /* Status Changed Messages */,
 			);
 			name = Messaging;
@@ -4008,14 +4012,17 @@
 		347E77A907CA909E00350507 /* Events and Actions */ = {
 			isa = PBXGroup;
 			children = (
-				343EAB8306EF857F001CDAFF /* Applescript Contact Alert */,
-				346E640C05153395003B2F21 /* Announcer */,
 				34E385FF068FAA5100303451 /* Account Events */,
+				346E640C05153395003B2F21 /* Announcer */,
+				343EAB8306EF857F001CDAFF /* Applescript Contact Alert */,
 				4B18A51F0459F89300A8010A /* Contact and Chat Dock Overlays */,
 				4BAA1B3F0632EDDE00D8B92C /* Contact Status Events */,
 				9EB7C05703D52AFA00415B22 /* Dock Behavior Contact Alert */,
-				F5AAD085039BA0D301A8010A /* Sound */,
+				346BA3330774C21300628F06 /* Global Events Preferences */,
 				52C623DE06697AFA0006C387 /* Growl */,
+				344AB2B4057912C500384CEE /* Open Message Window Contact Alert */,
+				342DC48A05783B8D000E1D83 /* Send Message Contact Alert */,
+				F5AAD085039BA0D301A8010A /* Sound */,
 			);
 			name = "Events and Actions";
 			sourceTree = "<group>";
@@ -4433,12 +4440,21 @@
 				4BAE6D3707CFA09F007E2820 /* Appearance Preferences */,
 				4B9A683D06AEB41C0010BF69 /* Chat Consolidation */,
 				F5CDCE460350758501A8010A /* Contact Info Window */,
+				4B0E342E04C4677700A8010A /* Contact Status Coloring */,
+				40AC0EEA03B5BEDB00A80202 /* Error Message Handler */,
+				34C68B1C0778F9C200EB423C /* General Preferences */,
+				6EC1684406C1707800F9FAD3 /* Invite to Chat */,
+				6E4D961006B73991005235E9 /* Join Chat Panel */,
 				F51DEC0D03262FB501A8010A /* Login Window */,
+				F569E38102CA876501A8010A /* Message Windows */,
 				4B60991906A447D400EC8D78 /* New Message Panel */,
 				F5A3C2DD039A516E01A8010A /* Password Prompt */,
 				F5D746FA0338D79801A8010A /* Preference Window */,
 				F501BB0D03882A0201A8010A /* Standard Toolbar Items */,
+				9E791D8505768A3000547562 /* Status Menu Item */,
 				4BF303160687466D000DCA65 /* Tab Status Icons */,
+				4BC5A5C90764F70E0080ECF7 /* Video Chat Interface */,
+				632D800908E7DE2C0032C187 /* Xtras Management */,
 			);
 			name = Interface;
 			sourceTree = "<group>";
@@ -4691,6 +4707,7 @@
 		4B1332130459B98E00A8010A /* Dock Unviewed Content */ = {
 			isa = PBXGroup;
 			children = (
+				341BDF6F0969829E00CF83F5 /* DockUnviewedContentDefaults.plist */,
 				4B13322B0459BAB800A8010A /* AIDockUnviewedContentPlugin.h */,
 				4B13322C0459BAB800A8010A /* AIDockUnviewedContentPlugin.m */,
 			);
@@ -4791,38 +4808,6 @@
 			name = "MSN Service Preferences";
 			sourceTree = "<group>";
 		};
-		4B4F5B23042D636700A8010A /* Interface */ = {
-			isa = PBXGroup;
-			children = (
-				632D800908E7DE2C0032C187 /* Xtras Management */,
-				34C68B1C0778F9C200EB423C /* General Preferences */,
-				4B0E342E04C4677700A8010A /* Contact Status Coloring */,
-				40AC0EEA03B5BEDB00A80202 /* Error Message Handler */,
-				6EC1684406C1707800F9FAD3 /* Invite to Chat */,
-				6E4D961006B73991005235E9 /* Join Chat Panel */,
-				F569E38102CA876501A8010A /* Message Windows */,
-				9E791D8505768A3000547562 /* Status Menu Item */,
-				4BC5A5C90764F70E0080ECF7 /* Video Chat Interface */,
-			);
-			name = Interface;
-			sourceTree = "<group>";
-		};
-		4B4F5B2A042D63E200A8010A /* Messaging */ = {
-			isa = PBXGroup;
-			children = (
-				4B1332130459B98E00A8010A /* Dock Unviewed Content */,
-				11C157D504A88DE0008E0C76 /* Emoticons */,
-				3429BAF70703789D00EED705 /* File Transfer Messages */,
-				7E824CCD06387FAF00813072 /* Link Management */,
-				9C8C7FA303CBA17B00267226 /* Logger */,
-				B023552808CBE84F008CDDDA /* SQLite Logger */,
-				F1D0C631051AC2380000000E /* Message Alias Support */,
-				6E5A43DC0611604B0078C342 /* Message History */,
-				34DFF46607A5EAC800B92233 /* Secure Messaging */,
-			);
-			name = Messaging;
-			sourceTree = "<group>";
-		};
 		4B4F5B2D042D645F00A8010A /* Accounts & Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -4892,16 +4877,6 @@
 				4BB7670C05B31DBA00E89FA2 /* crashDuck.png */,
 			);
 			name = "Crash Reporter Application";
-			sourceTree = "<group>";
-		};
-		4B587C0807ABFC8E001832A9 /* Sad Components */ = {
-			isa = PBXGroup;
-			children = (
-				34306FE3076F53F60025102A /* Events and Contact Alerts */,
-				4B4F5B2A042D63E200A8010A /* Messaging */,
-				4B4F5B23042D636700A8010A /* Interface */,
-			);
-			name = "Sad Components";
 			sourceTree = "<group>";
 		};
 		4B587C3707ABFCA8001832A9 /* State & Status */ = {
@@ -5221,7 +5196,6 @@
 				DA4B5CDE080FCC080017BF17 /* CoreComponents.plist */,
 				4B0149050733D3A4001A4C57 /* AICoreComponentLoader.h */,
 				4B0149060733D3A5001A4C57 /* AICoreComponentLoader.m */,
-				4B587C0807ABFC8E001832A9 /* Sad Components */,
 				34E29FCE07AF091C006735BC /* Accounts */,
 				34E2A2FD07B0193B006735BC /* Contacts */,
 				349C6E8207C9728B005EB896 /* Contact List */,
@@ -5366,7 +5340,6 @@
 		4BD672C706001B560049CAF7 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				636AB7EC087E2A2E00A87670 /* Dock Icon Badging */,
 				B782F088058BB60B00AF4BBA /* LaTeX Plugin */,
 				B7AE664D0465778E0051E914 /* SQL Logger */,
 			);
@@ -5583,6 +5556,7 @@
 		636AB7EC087E2A2E00A87670 /* Dock Icon Badging */ = {
 			isa = PBXGroup;
 			children = (
+				341BDF5D0969814900CF83F5 /* BadgerDefaults.plist */,
 				636AB7F1087E2B6700A87670 /* AIDockBadger.h */,
 				636AB7F2087E2B6700A87670 /* AIDockBadger.m */,
 				63093C2D0892143500F118D3 /* newContentThreeDigits.png */,
@@ -7681,6 +7655,8 @@
 				341BD5700965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib in Resources */,
 				341BD5710965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib in Resources */,
 				341BD57B0965EC4700CF83F5 /* OTRPrefs.nib in Resources */,
+				341BDF5E0969814A00CF83F5 /* BadgerDefaults.plist in Resources */,
+				341BDF700969829E00CF83F5 /* DockUnviewedContentDefaults.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
