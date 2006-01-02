@@ -370,7 +370,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 //outgoing before being used.
 - (NSString *)_mapIncomingGroupName:(NSString *)name
 {
-	if (!name || ([[name compactedString] caseInsensitiveCompare:[self UID]] == 0)) {
+	if (!name || ([[name compactedString] caseInsensitiveCompare:[self UID]] == NSOrderedSame)) {
 		return ADIUM_ROOT_GROUP_NAME;
 	} else {
 		return name;
@@ -378,7 +378,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 }
 - (NSString *)_mapOutgoingGroupName:(NSString *)name
 {
-	if ([[name compactedString] caseInsensitiveCompare:ADIUM_ROOT_GROUP_NAME] == 0) {
+	if ([[name compactedString] caseInsensitiveCompare:ADIUM_ROOT_GROUP_NAME] == NSOrderedSame) {
 		return [self UID];
 	} else {
 		return name;
@@ -496,7 +496,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 // Return YES if the contact list is editable
 - (BOOL)contactListEditable
 {
-    return [[self statusObjectForKey:@"Online"] boolValue];
+    return [self online];
 }
 
 //Chats ------------------------------------------------------------
