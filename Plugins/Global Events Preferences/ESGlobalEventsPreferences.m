@@ -705,6 +705,7 @@
 	[self updateSoundSetSelectionForSoundSet:soundSet];
 }
 
+#define NONE AILocalizedString(@"None",nil)
 /*!
  * @brief Build and return a menu of sound set choices
  *
@@ -714,16 +715,39 @@
 {
     NSMenu			*soundSetMenu = [[NSMenu alloc] init];
     NSEnumerator	*enumerator = [[[adium soundController] soundSets] objectEnumerator];
+	NSMutableArray	*menuItemArray = [NSMutableArray array];
     AISoundSet		*soundSet;
-    
-    while ((soundSet = [enumerator nextObject])) {
-		[soundSetMenu addItemWithTitle:[self _localizedTitle:[soundSet name]]
-								target:self
-								action:@selector(selectSoundSet:)
-						 keyEquivalent:@""
-					 representedObject:soundSet];
-    }
+    NSMenuItem		*menuItem, *noneMenuItem = nil;
 
+    while ((soundSet = [enumerator nextObject])) {
+		menuItem = [[NSMenuItem alloc] initWithTitle:[self _localizedTitle:[soundSet name]]
+											  target:self
+											  action:@selector(selectSoundSet:)
+									   keyEquivalent:@""
+								   representedObject:soundSet];
+		
+		if ([[menuItem title] isEqualToString:NONE]) {
+			noneMenuItem = menuItem;
+
+		} else {
+			[menuItemArray addObject:menuItem];
+			[menuItem release];
+		}
+	}
+	
+	[menuItemArray sortUsingSelector:@selector(titleCompare:)];
+	
+	enumerator = [menuItemArray objectEnumerator];
+	while ((menuItem = [enumerator nextObject])) {
+		[soundSetMenu addItem:menuItem];
+	}
+
+	if (noneMenuItem) {
+		[soundSetMenu addItem:[NSMenuItem separatorItem]];
+		[soundSetMenu addItem:noneMenuItem];
+		[noneMenuItem release];
+	}
+	
     return [soundSetMenu autorelease];
 }
 
@@ -738,7 +762,7 @@
 	NSString	*localizedTitle = nil;
 	
 	if ([englishTitle isEqualToString:@"None"])
-		localizedTitle = AILocalizedString(@"None",nil);
+		localizedTitle = NONE;
 	else if ([englishTitle isEqualToString:@"Default Notifications"])
 		localizedTitle = AILocalizedString(@"Default Notifications",nil);
 	else if ([englishTitle isEqualToString:@"Visual Notifications"])
