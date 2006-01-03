@@ -38,6 +38,11 @@
 @interface CBStatusMenuItemController (PRIVATE)
 - (void)activateAdium:(id)sender;
 - (void)setIconImage:(NSImage *)inImage;
+- (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)inImage;
+- (NSImage *)badgeOnlineDuckWithImage:(NSImage *)inImage;
+- (NSImage *)badgeOnlineHighlightDuckWithImage:(NSImage *)inImage;
+- (void)setOfflineDuck;
+- (void)setOnlineDuckWithBadgeImage:(NSImage *)inImage;
 @end
 
 @implementation CBStatusMenuItemController
@@ -51,16 +56,18 @@
 - (id)init
 {
 	if ((self = [super init])) {
-		NSImage	*iconImage = [[[adium statusController] activeStatusState] icon];
-		
 		//Create and set up the status item
-		statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
+		statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength] retain];
 		[statusItem setHighlightMode:YES];
 
 		unviewedContent = NO;
 
-		[self setIconImage:iconImage];
-
+		if ([[adium accountController] oneOrMoreConnectedAccounts]) {
+			[self setOnlineDuckWithBadgeImage:nil];
+		} else {
+			[self setOfflineDuck];
+		}
+		
 		//Create and install the menu
 		theMenu = [[NSMenu alloc] init];
 		[theMenu setAutoenablesItems:YES];
@@ -123,6 +130,11 @@
 	[accountMenu release];
 	[statusMenu release];
 
+	[adiumOfflineImage release]; 
+	[adiumOfflineHighlightImage release];
+	[adiumImage release];
+	[adiumHighlightImage release];
+
 	// Can't release this because it causes a crash on quit. rdar://4139755, rdar://4160625, and #743. --boredzo
 	// [statusItem release];
 
@@ -133,6 +145,44 @@
 //Icon State --------------------------------------------------------
 #pragma mark Icon State
 
+- (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)inImage {
+	NSImage *image = duckImage;
+
+	if (inImage) {
+		image = [[duckImage copy] autorelease];
+
+		[image lockFocus];
+		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+
+		NSRect rect = { NSZeroPoint, [inImage size] };
+		//Draw in the lower-right corner.
+		NSPoint destPoint = { .x = [duckImage size].width - rect.size.width, .y = 0.0 };
+		[inImage drawAtPoint:destPoint
+					fromRect:rect
+				   operation:NSCompositeSourceOver
+					fraction:0.75];
+		[image unlockFocus];
+	}
+
+	return image;
+}
+
+- (NSImage *)badgeOnlineDuckWithImage:(NSImage *)inImage
+{
+	if (!adiumImage) {
+		adiumImage = [[NSImage imageNamed:@"adium.png" forClass:[self class]] retain];
+	}
+	return [self badgeDuck:adiumImage withImage:inImage];
+}
+- (NSImage *)badgeOnlineHighlightDuckWithImage:(NSImage *)inImage
+{
+	if (!adiumHighlightImage) {
+		adiumHighlightImage = [[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]] retain];
+	}
+	return [self badgeDuck:adiumHighlightImage withImage:inImage];
+}
+
+#if 0
 - (NSImage *)alternateImageForImage:(NSImage *)inImage
 {
 	NSImage				*altImage = [[NSImage alloc] initWithSize:[inImage size]];
@@ -173,16 +223,29 @@
 
 	return [altImage autorelease];
 }
+#endif //0
 
-- (void)setIconImage:(NSImage *)inImage
-{	
-	[statusItem setLength:([inImage size].width + STATUS_ITEM_MARGIN)];
-
-	[statusItem setImage:inImage];
-	
-	if ([NSApp isOnTigerOrBetter]) {
-		[statusItem setAlternateImage:[self alternateImageForImage:inImage]];
+- (void)setOfflineDuck
+{
+	if (!adiumOfflineImage) {
+		adiumOfflineImage = [[NSImage imageNamed:@"adiumOffline.png" forClass:[self class]] retain];
 	}
+	if (!adiumOfflineHighlightImage) {
+		adiumOfflineHighlightImage = [[NSImage imageNamed:@"adiumOfflineHighlight.png" forClass:[self class]] retain];
+	}
+
+	[statusItem setImage:adiumOfflineImage];
+	[statusItem setAlternateImage:adiumOfflineHighlightImage];
+}
+- (void)setOnlineDuckWithBadgeImage:(NSImage *)inImage
+{	
+	if (!inImage) {
+		inImage = [[[adium statusController] activeStatusState] icon];
+	}
+
+	[statusItem setImage:[self badgeOnlineDuckWithImage:inImage]];
+
+	[statusItem setAlternateImage:[self badgeOnlineHighlightDuckWithImage:inImage]];
 }
 
 //Account Menu --------------------------------------------------------
@@ -273,7 +336,11 @@
 	if ([unviewedObjectsArray count] == 0) {
 		//If there are no more contacts with unviewed content, set our icon to normal.
 		if (unviewedContent) {
-			[self setIconImage:[[[adium statusController] activeStatusState] icon]];
+			if ([[adium accountController] oneOrMoreConnectedAccounts]) {
+				[self setOnlineDuckWithBadgeImage:nil];
+			} else {
+				[self setOfflineDuck];
+			}
 			unviewedContent = NO;
 		}
 
@@ -281,10 +348,10 @@
 		//If this is the first contact with unviewed content, set our icon to unviewed content.
 		if (!unviewedContent) {
 			unviewedContent = YES;
-			[self setIconImage:[AIStatusIcons statusIconForStatusName:@"content"
-														   statusType:AIAvailableStatusType
-															 iconType:AIStatusIconList
-															direction:AIIconNormal]];				
+			[self setOnlineDuckWithBadgeImage:[AIStatusIcons statusIconForStatusName:@"content"
+																		  statusType:AIAvailableStatusType
+																			iconType:AIStatusIconList
+																		   direction:AIIconNormal]];
 		}
 	}
 
@@ -426,19 +493,27 @@
 - (void)accountStateChanged:(NSNotification *)notification
 {
 	if (!unviewedContent) {
-		[self setIconImage:[[[adium statusController] activeStatusState] icon]];
+		if ([[adium accountController] oneOrMoreConnectedAccounts]) {
+			[self setOnlineDuckWithBadgeImage:nil];
+		} else {
+			[self setOfflineDuck];
+		}
 	}
 }
 
 - (void)statusIconSetDidChange:(NSNotification *)notification
 {
 	if (unviewedContent) {
-		[self setIconImage:[AIStatusIcons statusIconForStatusName:@"content"
-													   statusType:AIAvailableStatusType
-														 iconType:AIStatusIconList
-														direction:AIIconNormal]];				
+		[self setOnlineDuckWithBadgeImage:[AIStatusIcons statusIconForStatusName:@"content"
+																	  statusType:AIAvailableStatusType
+																		iconType:AIStatusIconList
+																	   direction:AIIconNormal]];
 	} else {
-		[self setIconImage:[[[adium statusController] activeStatusState] icon]];		
+		if ([[adium accountController] oneOrMoreConnectedAccounts]) {
+			[self setOnlineDuckWithBadgeImage:nil];
+		} else {
+			[self setOfflineDuck];
+		}
 	}
 }
 
