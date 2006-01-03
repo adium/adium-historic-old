@@ -31,11 +31,6 @@
 	NSMutableArray          *unviewedObjectsArray;
 	NSMutableArray          *openChatsArray;
 
-	NSImage                 *adiumOfflineImage; 
-	NSImage                 *adiumOfflineHighlightImage;
-	NSImage                 *adiumImage;
-	NSImage                 *adiumHighlightImage;
-
 	BOOL					unviewedContent;
 	BOOL                    needsUpdate;
 }
