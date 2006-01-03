@@ -32,9 +32,7 @@ static NSSize				menuIconCacheSize;
 	if (self == [AIUserIcons class]) {
 		iconCache = [[NSMutableDictionary alloc] init];
 		menuIconCache = [[NSMutableDictionary alloc] init];
-		menuIconCacheSize = NSMakeSize(16,16);
-		
-		//	defaultUserIcon = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
+		menuIconCacheSize = NSMakeSize(16,16);		
 	}
 }
 
@@ -56,7 +54,7 @@ static NSSize				menuIconCacheSize;
 		if (userIcon && cache) [iconCache setObject:userIcon forKey:[inContact internalObjectID]];
 	}
 	
-	return userIcon/* ? userIcon : defaultUserIcon*/;
+	return userIcon;
 }
 
 //Retrieve a user icon sized for a menu, returning the appropriate service icon if no user icon is found
