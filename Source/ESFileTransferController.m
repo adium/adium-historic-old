@@ -265,9 +265,7 @@ static ESFileTransferPreferences *preferences;
 			//Ensure our temporary directory exists [it never will the first time this method is called]
 			[defaultManager createDirectoryAtPath:tmpDir attributes:nil];
 
-			destinationName = [self uniquePathForPath:[tmpDir stringByAppendingPathComponent:folderName]];
-
-			pathToArchive = [tmpDir stringByAppendingPathComponent:[destinationName stringByAppendingPathExtension:@"zip"]];
+			pathToArchive = [self uniquePathForPath:[tmpDir stringByAppendingPathComponent:[folderName stringByAppendingPathExtension:@"zip"]]];
 
 			arguments = [NSArray arrayWithObjects:
 				@"-r", //we'll want to store recursively
