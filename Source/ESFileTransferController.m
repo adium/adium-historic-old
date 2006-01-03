@@ -236,9 +236,17 @@ static ESFileTransferPreferences *preferences;
 {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	[openPanel setTitle:[NSString stringWithFormat:AILocalizedString(@"Send File to %@",nil),[listContact displayName]]];
-	
+	[openPanel setCanChooseDirectories:YES];
+	[openPanel setResolvesAliases:YES];
+	[openPanel setAllowsMultipleSelection:YES];
+
 	if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
-		[self sendFile:[openPanel filename] toListContact:listContact];
+		NSEnumerator *enumerator = [[openPanel filenames] objectEnumerator];
+		NSString	 *filePath;
+
+		while ((filePath = [enumerator nextObject])) {
+			[self sendFile:filePath toListContact:listContact];
+		}
 	}
 }
 
@@ -256,7 +264,6 @@ static ESFileTransferPreferences *preferences;
 		//Proceed only if /usr/bin/zip exists
 		if ([defaultManager fileExistsAtPath:launchPath]) {
 			NSString	*folderName = [inPath lastPathComponent];
-			NSString	*destinationName;
 			NSArray		*arguments;
 			NSTask		*zipTask;
 			
