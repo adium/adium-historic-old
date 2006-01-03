@@ -49,8 +49,6 @@
 - (AIListContact *)preferredContact;
 - (AIListContact *)preferredContactWithService:(AIService *)inService;
 
-//Used for one metaContact talking to another
-- (void)containedMetaContact:(AIMetaContact *)containedMetaContact didChangeContainsOnlyOneUniqueContact:(BOOL)inContainsOnlyOneUniqueContact;
 - (void)remoteGroupingOfContainedObject:(AIListObject *)inListObject changedTo:(NSString *)inRemoteGroupName;
 
 //YES if the metaContact has only one UID/serviceID within it - for example, three different accounts' AIListContacts for a particular screen name
