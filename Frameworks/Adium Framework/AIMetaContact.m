@@ -19,6 +19,7 @@
 #import "AIListContact.h"
 #import "AIListGroup.h"
 #import "AIService.h"
+#import "AIUserIcons.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIArrayAdditions.h>
 
@@ -217,6 +218,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			[self _determineIfWeShouldAppearToContainOnlyOneContact];
 		}
 		
+		//Our effective icon may have changed
+		[AIUserIcons flushCacheForContact:self];
+		
 		//Add the object from our status cache, notifying of the changes (silently) as appropriate
 		[self _updateCachedStatusOfObject:inObject];
 		
@@ -254,6 +258,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		if (!containsOnlyOneUniqueContact) {
 			[self _determineIfWeShouldAppearToContainOnlyOneContact];
 		}
+
+		//Our effective icon may have changed
+		[AIUserIcons flushCacheForContact:self];
 
 		//Remove all references to the object from our status cache; notifying of the changes as appropriate
 		[self _removeCachedStatusOfObject:inObject];
@@ -449,9 +456,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return [services autorelease];
 }
 
-
-
-
 - (unsigned)uniqueContainedObjectsCount
 {
 	return [[self listContacts] count];
@@ -522,13 +526,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	}
 	
 	return containsOnlyOneService;
-}
-
-- (void)containedMetaContact:(AIMetaContact *)containedMetaContact didChangeContainsOnlyOneUniqueContact:(BOOL)inContainsOnlyOneUniqueContact
-{
-	if (inContainsOnlyOneUniqueContact != containsOnlyOneUniqueContact) {
-		[self _determineIfWeShouldAppearToContainOnlyOneContact];
-	}
 }
 
 //When the listContacts array has a single member, we only contain one unique contact.
@@ -1027,6 +1024,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	containedObjectsNeedsSort = YES;
 	_preferredContact = nil;
 	[_listContacts release]; _listContacts = nil;
+
+	//Our effective icon may have changed
+	[AIUserIcons flushCacheForContact:self];
 }
 
 - (float)smallestOrder
@@ -1050,6 +1050,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		_preferredContact = nil;
 		
 		[_listContacts release]; _listContacts = nil;
+		
+		//Our effective icon may have changed
+		[AIUserIcons flushCacheForContact:self];
 	}
 }
 
