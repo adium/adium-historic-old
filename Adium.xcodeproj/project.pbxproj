@@ -383,6 +383,7 @@
 		34943DEF07BAD918000F2A03 /* AccountPrivacy.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34943DEE07BAD918000F2A03 /* AccountPrivacy.nib */; };
 		3496A8C207CE6B880055BBAB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3496A8C107CE6B880055BBAB /* InfoPlist.strings */; };
 		3496A8F407CE6D050055BBAB /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */; };
+		349710DD096C4C7700699948 /* Buttons.strings in Resources */ = {isa = PBXBuildFile; fileRef = 349710DB096C4C7700699948 /* Buttons.strings */; };
 		3499F4A806309AF60035B468 /* ESGaimRequestWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */; };
 		3499F4A906309AF60035B468 /* ESGaimRequestWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */; };
 		349C2F470867AD16000BF883 /* ApplescriptRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C2F460867AD16000BF883 /* ApplescriptRunner.m */; };
@@ -2189,6 +2190,31 @@
 		3496A8BF07CE6B3D0055BBAB /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIHyperlinks.framework.xcodeproj; path = "Frameworks/AIHyperlinks Framework/AIHyperlinks.framework.xcodeproj"; sourceTree = "<group>"; };
 		3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AIHyperlinks.framework; path = "Frameworks/AIHyperlinks Framework/build/AIHyperlinks.framework"; sourceTree = "<group>"; };
+		349710CA096C4C2300699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = "Plugins/Gaim Service/en_AU.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		349710CB096C4C2300699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = Resources/en_AU.lproj/Localizable.strings; sourceTree = "<group>"; };
+		349710CC096C4C2300699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = "Plugins/WebKit Message View/en_AU.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		349710D2096C4C3300699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = Resources/en_AU.lproj/AdiumFramework.strings; sourceTree = "<group>"; };
+		349710DC096C4C7700699948 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710E1096C4C9000699948 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Catalan; path = Resources/Catalan.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710E2096C4C9400699948 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Danish; path = Resources/Danish.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710E3096C4C9900699948 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = Resources/Dutch.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710E4096C4C9F00699948 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = Resources/French.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710E5096C4CA300699948 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = Resources/German.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710E6096C4CA900699948 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Resources/Italian.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710E7096C4CAD00699948 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Resources/Japanese.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710E8096C4CB300699948 /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Norwegian; path = Resources/Norwegian.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710E9096C4CB900699948 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Russian; path = Resources/Russian.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710EA096C4CBD00699948 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = Resources/Spanish.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710EB096C4CC200699948 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Swedish; path = Resources/Swedish.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710EC096C4CC600699948 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = Resources/cs.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710EF096C4CD600699948 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = Resources/is.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710F0096C4CDB00699948 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = Resources/pl.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710F1096C4CE000699948 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = Resources/zh_CN.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710F2096C4CE500699948 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = Resources/zh_TW.lproj/Buttons.strings; sourceTree = "<group>"; };
+		349710F9096C4D4F00699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_AU; path = "Plugins/WebKit Message View/en_AU.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
+		349710FF096C4D7F00699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_AU; path = Resources/en_AU.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
+		34971104096C4D9200699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_AU; path = Resources/en_AU.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
+		34971108096C4D9C00699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_AU; path = Resources/en_AU.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		3498FE9107F488EF0004B79A /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = "Plugins/Gaim Service/Italian.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9707F488FD0004B79A /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = "Plugins/Gaim Service/Dutch.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9807F489020004B79A /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = "Plugins/Gaim Service/French.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2421,7 +2447,7 @@
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -5995,6 +6021,7 @@
 				34575E3807CBA88E004A4FFF /* MainMenu.nib */,
 				4B191D8C0611C11000E8A4E7 /* Changes.txt */,
 				3474DFFC08254F3500BF30F0 /* Copyright.txt */,
+				349710DB096C4C7700699948 /* Buttons.strings */,
 				346798EF08947FB800F68A98 /* AdiumFramework.strings */,
 				3402E04107CB0E4D0044F818 /* Localizable.strings */,
 				3496A8C107CE6B880055BBAB /* InfoPlist.strings */,
@@ -7360,17 +7387,18 @@
 				Russian,
 				pl,
 				en_CA,
+				en_AU,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CocAIMe2 */;
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
-					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
-				},
-				{
 					ProductGroup = 3496A8E807CE6CA30055BBAB /* Products */;
 					ProjectRef = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
+				},
+				{
+					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
+					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 				},
 			);
 			targets = (
@@ -7657,6 +7685,7 @@
 				341BD57B0965EC4700CF83F5 /* OTRPrefs.nib in Resources */,
 				341BDF5E0969814A00CF83F5 /* BadgerDefaults.plist in Resources */,
 				341BDF700969829E00CF83F5 /* DockUnviewedContentDefaults.plist in Resources */,
+				349710DD096C4C7700699948 /* Buttons.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8592,6 +8621,7 @@
 				34A30E9C08D8EE7B00697644 /* Spanish */,
 				34A81DBB093CE92200B0E93D /* pl */,
 				34A81DF5093CE98F00B0E93D /* en_CA */,
+				349710CB096C4C2300699948 /* en_AU */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -8616,6 +8646,7 @@
 				340580A6087EEFA200664D64 /* Russian */,
 				34A30E9B08D8EE7B00697644 /* Spanish */,
 				34A81DBD093CE92200B0E93D /* pl */,
+				349710CA096C4C2300699948 /* en_AU */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -8640,6 +8671,7 @@
 				340580A5087EEFA200664D64 /* Russian */,
 				34A30E9D08D8EE7B00697644 /* Spanish */,
 				34A81DBC093CE92200B0E93D /* pl */,
+				349710CC096C4C2300699948 /* en_AU */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -8790,6 +8822,7 @@
 				34A30E7708D8EE7800697644 /* Spanish */,
 				34A81DD3093CE92300B0E93D /* pl */,
 				34A81DDE093CE94300B0E93D /* en_CA */,
+				349710FF096C4D7F00699948 /* en_AU */,
 			);
 			name = AppearancePrefs.nib;
 			sourceTree = "<group>";
@@ -9149,6 +9182,7 @@
 				34A30E9A08D8EE7B00697644 /* Spanish */,
 				34A81DBE093CE92200B0E93D /* pl */,
 				34A81DF0093CE96300B0E93D /* en_CA */,
+				34971108096C4D9C00699948 /* en_AU */,
 			);
 			name = ListThemeSheet.nib;
 			sourceTree = "<group>";
@@ -9173,6 +9207,7 @@
 				34A30E9908D8EE7B00697644 /* Spanish */,
 				34A81DBF093CE92200B0E93D /* pl */,
 				34A81DEA093CE95B00B0E93D /* en_CA */,
+				34971104096C4D9200699948 /* en_AU */,
 			);
 			name = ListLayoutSheet.nib;
 			sourceTree = "<group>";
@@ -9228,6 +9263,7 @@
 				34679904089480B700F68A98 /* zh_TW */,
 				34A30E7608D8EE7800697644 /* Spanish */,
 				34A81DD4093CE92400B0E93D /* pl */,
+				349710D2096C4C3300699948 /* en_AU */,
 			);
 			name = AdiumFramework.strings;
 			sourceTree = "<group>";
@@ -9277,6 +9313,7 @@
 				34A30EA508D8EE7B00697644 /* Spanish */,
 				34A81DB2093CE92200B0E93D /* pl */,
 				34A81DFB093CE99F00B0E93D /* en_CA */,
+				349710F9096C4D4F00699948 /* en_AU */,
 			);
 			name = WebKitPreferencesView.nib;
 			sourceTree = "<group>";
@@ -9289,6 +9326,30 @@
 				34A81DC0093CE92200B0E93D /* pl */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		349710DB096C4C7700699948 /* Buttons.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				349710DC096C4C7700699948 /* English */,
+				349710E1096C4C9000699948 /* Catalan */,
+				349710E2096C4C9400699948 /* Danish */,
+				349710E3096C4C9900699948 /* Dutch */,
+				349710E4096C4C9F00699948 /* French */,
+				349710E5096C4CA300699948 /* German */,
+				349710E6096C4CA900699948 /* Italian */,
+				349710E7096C4CAD00699948 /* Japanese */,
+				349710E8096C4CB300699948 /* Norwegian */,
+				349710E9096C4CB900699948 /* Russian */,
+				349710EA096C4CBD00699948 /* Spanish */,
+				349710EB096C4CC200699948 /* Swedish */,
+				349710EC096C4CC600699948 /* cs */,
+				349710EF096C4CD600699948 /* is */,
+				349710F0096C4CDB00699948 /* pl */,
+				349710F1096C4CE000699948 /* zh_CN */,
+				349710F2096C4CE500699948 /* zh_TW */,
+			);
+			name = Buttons.strings;
 			sourceTree = "<group>";
 		};
 		34A6F68407D65D6200972830 /* GeneralPreferences.nib */ = {
