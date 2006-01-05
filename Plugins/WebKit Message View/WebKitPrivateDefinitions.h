@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Mar 10 2004.
-//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
+//  Copyright (c) 2004-2006 The Adium Team. All rights reserved.
 //
 
 #import <WebKit/WebKit.h>
