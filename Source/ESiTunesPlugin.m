@@ -396,11 +396,11 @@
 /*!
  * @brief Filter priority
  *
- * Filter earlier than the default
+ * Filter at default priority
  */
 - (float)filterPriority
 {
-	return HIGH_FILTER_PRIORITY;
+	return DEFAULT_FILTER_PRIORITY;
 }
 
 #pragma mark -
