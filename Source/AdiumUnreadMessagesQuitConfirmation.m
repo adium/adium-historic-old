@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on 12/15/05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2006 The Adium Team. All rights reserved.
 //
 
 #import "AdiumUnreadMessagesQuitConfirmation.h"

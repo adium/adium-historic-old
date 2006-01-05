@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on 12/16/05.
-//  Copyright 2005 The Adium Team. All rights reserved.
+//  Copyright 2006 The Adium Team. All rights reserved.
 //
 
 #import "AIContactListImagePicker.h"
