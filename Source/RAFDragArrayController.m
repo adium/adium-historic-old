@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Augie Fackler on 7/6/05.
-//  Copyright 2006 __MyCompanyName__. All rights reserved.
+//  Copyright 2006 The Adium Team. All rights reserved.
 //
 
 #import "RAFDragArrayController.h"
