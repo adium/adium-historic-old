@@ -30,6 +30,8 @@
 	if (button == NSWindowDocumentIconButton) {
 		[NSKeyedArchiver setClassName:@"AIClickThroughThemeDocumentButton" forClass:[NSThemeDocumentButton class]];
 		standardWindowButton = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:standardWindowButton]];
+		
+		[[standardWindowButton retain] autorelease];
 	}
 	
 	return standardWindowButton;
