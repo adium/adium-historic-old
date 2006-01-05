@@ -74,6 +74,9 @@
 		[[adium preferenceController] registerDefaults:defaults
 											  forGroup:GROUP_ACCOUNT_STATUS
 												object:self];
+		
+		enabled = [[self preferenceForKey:KEY_ENABLED group:GROUP_ACCOUNT_STATUS] boolValue];
+
 		[self updateStatusForKey:@"FullNameAttr"];
 		[self updateStatusForKey:@"FormattedUID"];
 		
@@ -211,7 +214,7 @@
  */
 - (BOOL)enabled
 {
-	return [[self preferenceForKey:KEY_ENABLED group:GROUP_ACCOUNT_STATUS] boolValue];	
+	return enabled;
 }
 
 /*!
@@ -219,6 +222,8 @@
  */
 - (void)setEnabled:(BOOL)inEnabled
 {
+	enabled = inEnabled;
+
 	[self setPreference:[NSNumber numberWithBool:inEnabled]
 				 forKey:KEY_ENABLED
 				  group:GROUP_ACCOUNT_STATUS];
@@ -426,13 +431,13 @@
 					   notify:NotifyNow];
 		
 	} else if ([key isEqualToString:@"Enabled"]) {
-		BOOL	enabled = [self enabled];
+		BOOL	isEnabled = [self enabled];
 		
 		//We are now enabled so should go online, or we are now disabled so should disconnect
-		[self setShouldBeOnline:enabled];
+		[self setShouldBeOnline:isEnabled];
 		
 		//Set a status object so observers are notified
-		[self setStatusObject:[NSNumber numberWithBool:enabled]
+		[self setStatusObject:[NSNumber numberWithBool:isEnabled]
 					   forKey:@"Enabled"
 					   notify:NotifyNow];
 	}
