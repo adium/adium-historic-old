@@ -38,5 +38,6 @@ David Smith
 Greg Smith
 Vinay Venkatesh
 Wesley Underwood
+Ofri Wolfus
 
 If you have contributed to Adium and are not on this list, please contact us.
