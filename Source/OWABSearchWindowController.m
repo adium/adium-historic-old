@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Ofri Wolfus on 19/07/05.
-//  Copyright 2005 Ofri Wolfus. All rights reserved.
+//  Copyright 2006 Ofri Wolfus. All rights reserved.
 //
 
 #import "OWABSearchWindowController.h"

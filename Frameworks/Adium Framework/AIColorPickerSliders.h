@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on 9/25/05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2006 __MyCompanyName__. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>

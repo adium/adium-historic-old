@@ -1,5 +1,5 @@
 Adium
-Copyright (C) 2001-2005 by the following:
+Copyright (C) 2001-2006 by the following:
 
 Adam Atlas
 Colin Barrett

@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Augie Fackler on 5/26/05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2006 __MyCompanyName__. All rights reserved.
 //
 
 #import "RAFBlockEditorPlugin.h"
