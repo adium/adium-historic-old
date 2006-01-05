@@ -728,12 +728,15 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 - (NSArray *)sortedFullStateArray
 {
 	if (!_sortedFullStateArray) {
-		//Start with everything contained by our root group
-		NSArray			*originalStateArray = [[self rootStateGroup] containedStatusItems];
-		NSMutableArray	*tempArray = [originalStateArray mutableCopy];
+		NSArray			*originalStateArray;
+		NSMutableArray	*tempArray;
 
-		//Now add the built-in and temporary statues
-		[tempArray addObjectsFromArray:[self builtInStateArray]];
+		//Start with everything contained 1) in our built-in array and then 2) in our root group
+		originalStateArray = [[self builtInStateArray] arrayByAddingObjectsFromArray:[[self rootStateGroup] containedStatusItems]];
+		
+		tempArray = [originalStateArray mutableCopy];
+
+		//Now add the temporary statues
 		[tempArray addObjectsFromArray:[temporaryStateArray allObjects]];
 
 		//Pass the original array so its indexes can be used for comparison of saved state ordering
