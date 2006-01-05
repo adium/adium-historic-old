@@ -81,12 +81,12 @@
 	inLeftMouseEvent = NO;
 }
 
-- (void)setImage:(NSImage *)inImage
+/*
+ * @brief HACK: When deallocing, we crash in setRepresentedFilename presumably because of an NSCoder failure in AIMesageWindow
+ */
+- (void)setRepresentedFilename:(NSString *)inFilename
 {
-	[super setImage:inImage];
-
-	//XXX Something isn't getting set properly in AIMessageWindow when we are alloc/init'd, making this necessary to fix drawing glitches.
-	[[self window] display];
+	//Empty
 }
 
 @end
