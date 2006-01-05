@@ -756,7 +756,7 @@
 //Display then clear the last disconnection error
 - (void)account:(AIAccount *)inAccount disconnectedWithError:(NSString *)disconnectionError
 {
-	[AdiumDisconnectionErrorController account:inAccount disconnectedWithError:disconnectionError];
+//	[AdiumDisconnectionErrorController account:inAccount disconnectedWithError:disconnectionError];
 }
 
 //Synchronized Flashing ------------------------------------------------------------------------------------------------
