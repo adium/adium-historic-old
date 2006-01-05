@@ -102,6 +102,8 @@ typedef enum {
     BOOL						disconnectedByFastUserSwitch;	//We are offline because of a fast user switch
 	BOOL						namesAreCaseSensitive;
 	
+	BOOL						enabled;
+	
 	//Auto-reconnect
 	NSTimer						*reconnectTimer;
 	
