@@ -18,15 +18,16 @@
 #import "AIDockController.h"
 #import "ESContactAlertsController.h"
 #import "ESDockAlertDetailPane.h"
+#import "AIInterfaceController.h"
+#import <Adium/AIChat.h>
 #import <AIUtilities/AIImageAdditions.h>
 
 #define DOCK_BEHAVIOR_ALERT_SHORT	AILocalizedString(@"Bounce the dock icon",nil)
 #define DOCK_BEHAVIOR_ALERT_LONG	AILocalizedString(@"Bounce the dock icon %@",nil)
 
 @interface AIDockBehaviorPlugin (PRIVATE)
-- (void)preferencesChanged:(NSNotification *)notification;
-- (void)eventNotification:(NSNotification *)notification;
-- (BOOL)_upgradeCustomDockBehavior;
+- (void)observeToStopBouncingForChat:(AIChat *)chat;
+- (void)stopBouncing:(NSNotification *)inNotification;
 @end
 
 /*!
@@ -93,7 +94,54 @@
  */
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	[[adium dockController] performBehavior:[[details objectForKey:KEY_DOCK_BEHAVIOR_TYPE] intValue]];
+	if ([[adium dockController] performBehavior:[[details objectForKey:KEY_DOCK_BEHAVIOR_TYPE] intValue]]) {
+		//The behavior will continue into the future
+		if ([[adium contactAlertsController] isMessageEvent:eventID]) {
+			AIChat *chat = [userInfo objectForKey:@"AIChat"];
+			
+			if (chat == [[adium interfaceController] activeChat]) {
+				//If this is the active chat, stop the bouncing immediately
+				[self stopBouncing:nil];
+	
+			} else {
+				[self observeToStopBouncingForChat:chat];
+			}
+		}
+	}
+}
+
+/*
+ * @brief Begin watching for this chat to close or become active so we'll know to stop bouncing
+ */
+- (void)observeToStopBouncingForChat:(AIChat *)chat
+{
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(stopBouncing:)
+									   name:Chat_WillClose
+									 object:chat];
+
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(stopBouncing:)
+									   name:Chat_BecameActive
+									 object:chat];
+}
+
+/*
+ * @brief Remove our observers and stop bouncing
+ *
+ * We remove all observers because no matter how many chats we were watching, we will stop bouncing; subsequently, stopping a bounce
+ * would be inappropriate as it would not be associated with the chat or event which triggered a later bounce.
+ */
+- (void)stopBouncing:(NSNotification *)inNotification
+{
+	[[adium notificationCenter] removeObserver:self
+										  name:Chat_WillClose
+										object:nil];
+	[[adium notificationCenter] removeObserver:self
+										  name:Chat_BecameActive
+										object:nil];
+
+	[[adium dockController] performBehavior:BOUNCE_NONE];
 }
 
 /*!
