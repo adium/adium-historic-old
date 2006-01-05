@@ -1255,6 +1255,8 @@
 		EE147A790896B32400A21377 /* ABSearch.nib in Resources */ = {isa = PBXBuildFile; fileRef = EE147A780896B32400A21377 /* ABSearch.nib */; };
 		EE147A800896B33400A21377 /* OWABSearchWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE147A7E0896B33400A21377 /* OWABSearchWindowController.m */; };
 		EE147A810896B33400A21377 /* OWABSearchWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = EE147A7F0896B33400A21377 /* OWABSearchWindowController.h */; };
+		EEC461B6096D68580028632F /* OWSpellingPerContactPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */; };
+		EEC461B7096D68580028632F /* OWSpellingPerContactPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = EEC461B5096D68580028632F /* OWSpellingPerContactPlugin.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
@@ -2447,7 +2449,7 @@
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3266,6 +3268,8 @@
 		EE147A780896B32400A21377 /* ABSearch.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ABSearch.nib; path = Resources/ABSearch.nib; sourceTree = "<group>"; };
 		EE147A7E0896B33400A21377 /* OWABSearchWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = OWABSearchWindowController.m; path = Source/OWABSearchWindowController.m; sourceTree = "<group>"; };
 		EE147A7F0896B33400A21377 /* OWABSearchWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWABSearchWindowController.h; path = Source/OWABSearchWindowController.h; sourceTree = "<group>"; };
+		EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = OWSpellingPerContactPlugin.m; path = "Plugins/Spelling Per Contact/OWSpellingPerContactPlugin.m"; sourceTree = "<group>"; };
+		EEC461B5096D68580028632F /* OWSpellingPerContactPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWSpellingPerContactPlugin.h; path = "Plugins/Spelling Per Contact/OWSpellingPerContactPlugin.h"; sourceTree = "<group>"; };
 		F11B9621051CDB3B0000000E /* AIMessageAliasPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageAliasPlugin.h; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.h"; sourceTree = "<group>"; };
 		F11B9622051CDB3B0000000E /* AIMessageAliasPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageAliasPlugin.m; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.m"; sourceTree = "<group>"; };
 		F531836F019E40BB01A80165 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
@@ -4528,6 +4532,7 @@
 				4B28907503C1D14200A8010A /* Alias Support */,
 				34C2D31006334A460018E5D2 /* Blocking */,
 				34086A1005E5E17B00ABB759 /* User Icon Handling */,
+				EEC461B1096D67F00028632F /* Spelling Per Contact */,
 			);
 			name = Contacts;
 			sourceTree = "<group>";
@@ -5984,6 +5989,15 @@
 			name = "About Box";
 			sourceTree = "<group>";
 		};
+		EEC461B1096D67F00028632F /* Spelling Per Contact */ = {
+			isa = PBXGroup;
+			children = (
+				EEC461B5096D68580028632F /* OWSpellingPerContactPlugin.h */,
+				EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */,
+			);
+			name = "Spelling Per Contact";
+			sourceTree = "<group>";
+		};
 		F1D0C631051AC2380000000E /* Message Alias Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -6576,6 +6590,7 @@
 				341BD5640965E97F00CF83F5 /* ESOTRPreferences.h in Headers */,
 				341BD5670965E99200CF83F5 /* OTRCommon.h in Headers */,
 				341BD56B0965E9A500CF83F5 /* AdiumOTREncryption.h in Headers */,
+				EEC461B7096D68580028632F /* OWSpellingPerContactPlugin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8191,6 +8206,7 @@
 				341BD5610965E97F00CF83F5 /* ESOTRUnknownFingerprintController.m in Sources */,
 				341BD5630965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.m in Sources */,
 				341BD56C0965E9A500CF83F5 /* AdiumOTREncryption.m in Sources */,
+				EEC461B6096D68580028632F /* OWSpellingPerContactPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
