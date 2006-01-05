@@ -112,8 +112,8 @@
     AIAccount		*account = nil;
 
 	//XXX temporary -- is any code using passing us NSNumbers?
-	NSParameterAssert([objectID isKindOfClass:[NSString class]]);
-	
+	NSParameterAssert(!objectID || [objectID isKindOfClass:[NSString class]]);
+
     while (objectID && (account = [enumerator nextObject])) {
         if ([objectID isEqualToString:[account internalObjectID]]) break;
     }
