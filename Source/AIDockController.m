@@ -40,9 +40,9 @@
 - (void)_buildIcon;
 - (void)animateIcon:(NSTimer *)timer;
 - (void)_singleBounce;
-- (void)_continuousBounce;
+- (BOOL)_continuousBounce;
 - (void)_stopBouncing;
-- (void)_bounceWithInterval:(double)delay;
+- (BOOL)_bounceWithInterval:(double)delay;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (AIIconState *)iconStateFromStateDict:(NSDictionary *)stateDict folderPath:(NSString *)folderPath;
 - (void)updateAppBundleIcon;
@@ -532,9 +532,15 @@
 //Bouncing -------------------------------------------------------------------------------------------------------------
 #pragma mark Bouncing
 
-//Perform a bouncing behavior
-- (void)performBehavior:(DOCK_BEHAVIOR)behavior
+/*
+ * @brief Perform a bouncing behavior
+ *
+ * @result YES if the behavior is ongoing; NO if it isn't (because it is immediately complete or some other, faster continuous behavior is in progress)
+ */
+- (BOOL)performBehavior:(DOCK_BEHAVIOR)behavior
 {
+	BOOL	ongoingBehavior = NO;
+
     //Start up the new behavior
     switch (behavior) {
         case BOUNCE_NONE: {
@@ -548,14 +554,16 @@
 			}
 			break;
 		}
-        case BOUNCE_REPEAT: [self _continuousBounce]; break;
-        case BOUNCE_DELAY5: [self _bounceWithInterval:5.0]; break;
-        case BOUNCE_DELAY10: [self _bounceWithInterval:10.0]; break;
-        case BOUNCE_DELAY15: [self _bounceWithInterval:15.0]; break;
-        case BOUNCE_DELAY30: [self _bounceWithInterval:30.0]; break;
-        case BOUNCE_DELAY60: [self _bounceWithInterval:60.0]; break;
+        case BOUNCE_REPEAT: ongoingBehavior = [self _continuousBounce]; break;
+        case BOUNCE_DELAY5: ongoingBehavior = [self _bounceWithInterval:5.0]; break;
+        case BOUNCE_DELAY10: ongoingBehavior = [self _bounceWithInterval:10.0]; break;
+        case BOUNCE_DELAY15: ongoingBehavior = [self _bounceWithInterval:15.0]; break;
+        case BOUNCE_DELAY30: ongoingBehavior = [self _bounceWithInterval:30.0]; break;
+        case BOUNCE_DELAY60: ongoingBehavior = [self _bounceWithInterval:60.0]; break;
         default: break;
-    }    
+    }
+	
+	return ongoingBehavior;
 }
 
 //Return a string description of the bouncing behavior
@@ -578,9 +586,15 @@
 	return desc;
 }
 
-//Start a delayed bounce
-- (void)_bounceWithInterval:(NSTimeInterval)delay
+/*
+ * @brief Start a delayed, repeated bounce
+ *
+ * @result YES if we are now bouncing more frequently than before; NO if this call had no effect
+ */
+- (BOOL)_bounceWithInterval:(NSTimeInterval)delay
 {
+	BOOL	ongoingBehavior;
+
 	//Bounce only if the new delay is a faster bounce than the current one
 	if (delay < currentBounceInterval) {
 		[self _singleBounce]; // do one right away
@@ -592,7 +606,13 @@
 													  selector:@selector(bounceWithTimer:)
 													  userInfo:nil
 													   repeats:YES] retain];
+		
+		ongoingBehavior = YES;
+	} else {
+		ongoingBehavior = NO;
 	}
+	
+	return ongoingBehavior;
 }
 
 //Activated by the time after each delay
@@ -610,15 +630,29 @@
     }
 }
 
-//Bounce continuously via NSApp's NSCriticalRequest
-- (void)_continuousBounce
+/*
+ * @brief Bounce continuously via NSApp's NSCriticalRequest
+ *
+ * We will bounce until we become the active application or our dock icon is clicked
+ *
+ * @result YES if we are now bouncing more frequently than before; NO if this call had no effect
+ */
+- (BOOL)_continuousBounce
 {
+	BOOL ongoingBehavior;
+
 	if (CONTINUOUS_BOUNCE_INTERVAL < currentBounceInterval) {
 		currentBounceInterval = CONTINUOUS_BOUNCE_INTERVAL;
 		if ([NSApp respondsToSelector:@selector(requestUserAttention:)]) {
 			currentAttentionRequest = [NSApp requestUserAttention:NSCriticalRequest];
 		}
+
+		ongoingBehavior = YES;
+	} else {
+		ongoingBehavior = NO;	
 	}
+	
+	return ongoingBehavior;
 }
 
 //Stop bouncing
