@@ -28,9 +28,10 @@
 	NSButton *standardWindowButton = [super standardWindowButton:button forStyleMask:styleMask];
 
 	if (button == NSWindowDocumentIconButton) {
-		standardWindowButton = [[[AIClickThroughThemeDocumentButton alloc] initWithFrame:[standardWindowButton frame]] autorelease];
+		[NSKeyedArchiver setClassName:@"AIClickThroughThemeDocumentButton" forClass:[NSThemeDocumentButton class]];
+		standardWindowButton = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:standardWindowButton]];
 	}
-
+	
 	return standardWindowButton;
 }
 
