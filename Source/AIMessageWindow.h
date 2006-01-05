@@ -5,9 +5,10 @@
 //  Created by Evan Schoenberg on 12/26/05.
 //
 
-#import <AIUtilities/AIDockingWindow.h>
+#import <Cocoa/Cocoa.h>
 
-@interface AIMessageWindow : AIDockingWindow {
+
+@interface AIMessageWindow : NSWindow {
 
 }
 
