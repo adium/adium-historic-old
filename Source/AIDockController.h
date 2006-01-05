@@ -74,7 +74,7 @@ typedef enum {
 - (AIIconState *)previewStateForIconPackAtPath:(NSString *)folderPath;
 
 //Bouncing & behavior
-- (void)performBehavior:(DOCK_BEHAVIOR)behavior;
+- (BOOL)performBehavior:(DOCK_BEHAVIOR)behavior;
 - (NSString *)descriptionForBehavior:(DOCK_BEHAVIOR)behavior;
 
 @end
