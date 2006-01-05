@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Adam Iser on 5/31/05.
-//  Copyright 2006 __MyCompanyName__. All rights reserved.
+//  Copyright 2006 The Adium Team. All rights reserved.
 //
 
 #import <Adium/AIAbstractListObjectMenu.h>
