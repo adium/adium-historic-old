@@ -94,7 +94,17 @@
 	BOOL					useAnotherAccount;
 		
 	//Intended source and dest
-	account = [[adium accountController] accountWithInternalObjectID:[details objectForKey:KEY_MESSAGE_SEND_FROM]];
+	id accountID = [details objectForKey:KEY_MESSAGE_SEND_FROM];
+	if (![accountID isKindOfClass:[NSString class]]) {
+		//Old code stored this as an NSNumber; upgrade.
+		if ([accountID isKindOfClass:[NSNumber class]]) {
+			accountID = [NSString stringWithFormat:@"%i",[(NSNumber *)accountID intValue]];
+		} else {
+			accountID = nil; //Unrecognizable, ignore
+		}
+	}
+	account = [[adium accountController] accountWithInternalObjectID:(NSString *)accountID];
+
 	destUniqueID = [details objectForKey:KEY_MESSAGE_SEND_TO];
 	if (destUniqueID) contact = (AIListContact *)[[adium contactController] existingListObjectWithUniqueID:destUniqueID];
 

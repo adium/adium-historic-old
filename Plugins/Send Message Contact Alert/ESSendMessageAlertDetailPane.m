@@ -90,7 +90,17 @@
 	}
 	
 	//Configure the remaining controls
-	if ((sourceAccount = [[adium accountController] accountWithInternalObjectID:[inDetails objectForKey:KEY_MESSAGE_SEND_FROM]])) {
+	id accountID = [inDetails objectForKey:KEY_MESSAGE_SEND_FROM];
+	if (![accountID isKindOfClass:[NSString class]]) {
+		//Old code stored this as an NSNumber; upgrade.
+		if ([accountID isKindOfClass:[NSNumber class]]) {
+			accountID = [NSString stringWithFormat:@"%i",[(NSNumber *)accountID intValue]];
+		} else {
+			accountID = nil; //Unrecognizable, ignore
+		}
+	}
+
+	if ((sourceAccount = [[adium accountController] accountWithInternalObjectID:(NSString *)accountID])) {
 		[popUp_messageFrom selectItemWithRepresentedObject:sourceAccount];
 	}
 	
