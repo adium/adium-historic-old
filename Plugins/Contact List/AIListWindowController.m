@@ -71,7 +71,6 @@
 
 @implementation AIListWindowController
 
-
 + (void)initialize
 {
 	if ([self isEqual:[AIListWindowController class]]) {
@@ -84,18 +83,25 @@
 	}
 }
 
-
 //Return a new contact list window controller
 + (AIListWindowController *)listWindowController
 {
-    return [[[self alloc] init] autorelease];
+    return [[[self alloc] initWithWindowNibName:[self nibName]] autorelease];
+}
+
+//Our window nib name
++ (NSString *)nibName
+{
+    return @"";
 }
 
 //Init
-- (id)init
+- (id)initWithWindowNibName:(NSString *)inNibName
 {	
-    [super initWithWindowNibName:[self nibName]];
-	preventHiding = NO;
+    if ((self = [super initWithWindowNibName:inNibName])) {
+		preventHiding = NO;
+	}
+
     return self;
 }
 
@@ -106,11 +112,6 @@
 	[super dealloc];
 }
 
-//Our window nib name
-- (NSString *)nibName
-{
-    return @"";
-}
 
 //
 - (NSString *)adiumFrameAutosaveName
@@ -159,7 +160,6 @@
 											 selector:@selector(updateWindowHidesOnDeactivateWithNotification:) 
 												 name:NSApplicationWillBecomeActiveNotification 
 											   object:nil];
-    
 }
 
 //Close the contact list window
@@ -198,8 +198,10 @@
 			case AIFloatingWindowLevel: level = NSFloatingWindowLevel; break;
 			case AIDesktopWindowLevel: level = kCGDesktopWindowLevel; break;
 		}
+
 		[[self window] setLevel:level];
 		[[self window] setIgnoresExpose:(windowLevel == AIDesktopWindowLevel)]; //Ignore expose while on the desktop
+
 		[[self window] setHasShadow:[[prefDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue]];
 		windowShouldBeVisibleInBackground = ![[prefDict objectForKey:KEY_CL_HIDE] boolValue];
 		permitSlidingInForeground = [[prefDict objectForKey:KEY_CL_EDGE_SLIDE] boolValue];
@@ -342,19 +344,6 @@
 	}
 }
 
-//- (float)backgroundAlpha
-//{
-//#warning hmm, need?
-//	if ([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
-//												 group:PREF_GROUP_LIST_LAYOUT] intValue] != WINDOW_STYLE_MOCKIE) {
-//		return [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY
-//														 group:PREF_GROUP_LIST_LAYOUT] floatValue];
-//	} else {
-//		return 0.0;
-//	}
-//}
-//
-
 - (IBAction)performDefaultActionOnSelectedObject:(AIListObject *)selectedObject sender:(NSOutlineView *)sender
 {	
     if ([selectedObject isKindOfClass:[AIListGroup class]]) {
@@ -491,9 +480,10 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 - (void)slideWindowIfNeeded:(id)sender
 {
-	if ([self shouldSlideWindowOnScreen])
+	if ([self shouldSlideWindowOnScreen]) {
 		[self slideWindowOnScreen];
-	else if([self shouldSlideWindowOffScreen]) {
+
+	} else if([self shouldSlideWindowOffScreen]) {
 		AIRectEdgeMask adjacentEdges = [self slidableEdgesAdjacentToWindow];
         if (adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask))
             [self slideWindowOffScreenEdges:(adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask))];
@@ -669,7 +659,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 			newWindowFrame = AIRectByAligningRect_edge_toRect_edge_(newWindowFrame, AIOppositeRectEdge_(edge), screenSlideBoundaryRect, edge);
 		}
 	}
-	
+
 	[window setFrame:newWindowFrame display:NO animate:YES];
 	[window orderOut:nil]; // otherwise we cast a shadow on the screen
 	windowSlidOffScreenEdgeMask |= rectEdgeMask;

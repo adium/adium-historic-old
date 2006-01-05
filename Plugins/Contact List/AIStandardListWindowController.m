@@ -45,10 +45,9 @@
 /*
  * @brief Initialize
  */
-- (id)init
-{
-	if ((self = [super init]))
-	{
+- (id)initWithWindowNibName:(NSString *)inNibName
+{	
+    if ((self = [super initWithWindowNibName:inNibName])) {
 		toolbarItems = nil;
 	}
 
@@ -70,7 +69,7 @@
 /*
  * @brief Nib name
  */
-- (NSString *)nibName
++ (NSString *)nibName
 {
     return @"ContactListWindow";
 }

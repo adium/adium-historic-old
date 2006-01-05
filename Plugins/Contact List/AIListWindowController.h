@@ -47,7 +47,7 @@
 }
 
 + (AIListWindowController *)listWindowController;
-- (NSString *)nibName;
++ (NSString *)nibName;
 - (void)close:(id)sender;
 - (void)showWindowInFront:(BOOL)inFront;
 
