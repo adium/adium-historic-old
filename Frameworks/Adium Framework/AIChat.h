@@ -23,6 +23,7 @@
 #define Chat_WillClose							@"Chat_WillClose"
 #define	Chat_Created							@"Chat_Created"
 #define Chat_DidOpen							@"Chat_DidOpen"
+#define Chat_BecameActive						@"Chat_BecameActive"
 #define Chat_AttributesChanged					@"Chat_AttributesChanged"
 #define Chat_StatusChanged						@"Chat_StatusChagned"
 #define Chat_ParticipatingListObjectsChanged	@"Chat_ParticipatingListObjectsChanged"

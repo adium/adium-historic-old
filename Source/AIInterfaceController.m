@@ -455,11 +455,13 @@
 		mostRecentActiveChat = [inChat retain];
 	}
 
+	[[adium notificationCenter] postNotificationName:Chat_BecameActive object:inChat];
+
 	if (inChat) {
 		/* Clear the unviewed content on the next event loop so other methods have a chance to react to the chat becoming
-		* active. Specifically, this lets the handleReopenWithVisibleWindows: method have a chance to know that this chat
-		* had unviewed content.
-		*/
+		 * active. Specifically, this lets the handleReopenWithVisibleWindows: method have a chance to know that this chat
+		 * had unviewed content.
+		 */
 		[inChat performSelector:@selector(clearUnviewedContentCount)
 					 withObject:nil
 				   afterDelay:0];
