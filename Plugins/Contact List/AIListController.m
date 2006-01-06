@@ -144,11 +144,13 @@ typedef enum {
 		if (!NSEqualRects(currentFrame, desiredFrame)) {
 			//We must set the min/max first, otherwise our setFrame will be restricted by them and not produce the
 			//expected results
-			[theWindow setMinSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : minWindowSize.width),
-											 (autoResizeVertically ? desiredFrame.size.height : minWindowSize.height))];
-			[theWindow setMaxSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : 10000),
-											 (autoResizeVertically ? desiredFrame.size.height : 10000))];
+			float toolbarHeight = (autoResizeVertically ? [theWindow toolbarHeight] : 0);
 			
+			[theWindow setMinSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : minWindowSize.width),
+											 (autoResizeVertically ? (desiredFrame.size.height - toolbarHeight) : minWindowSize.height))];
+			[theWindow setMaxSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : 10000),
+											 (autoResizeVertically ? (desiredFrame.size.height - toolbarHeight) : 10000))];
+
 			[theWindow setFrame:desiredFrame display:YES animate:NO];
 		}
     }
