@@ -2222,7 +2222,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 				}
 			}
 		}
-		
 	}
 }
 

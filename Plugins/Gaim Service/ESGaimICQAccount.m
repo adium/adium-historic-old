@@ -76,6 +76,8 @@
 	NSString		*statusName = [statusState statusName];
 	NSString		*statusMessageString = [statusState statusMessageString];
 	
+	if (!statusMessageString) statusMessageString = @"";
+		
 	switch ([statusState statusType]) {
 		case AIAvailableStatusType:
 			if ([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT]) {

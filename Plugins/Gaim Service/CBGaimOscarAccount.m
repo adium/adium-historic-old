@@ -396,21 +396,21 @@ gboolean gaim_init_oscar_plugin(void);
 	if (aim_sn_is_icq(buddy->name)) {
 		GaimPresence	*presence = gaim_buddy_get_presence(buddy);
 		GaimStatus *status = gaim_presence_get_active_status(presence);
-		const char *gaimStatusName = gaim_status_get_name(status);
+		const char *gaimStatusID = gaim_status_get_id(status);
 
-		if (!strcmp(gaimStatusName, OSCAR_STATUS_ID_INVISIBLE)) {
+		if (!strcmp(gaimStatusID, OSCAR_STATUS_ID_INVISIBLE)) {
 			statusName = STATUS_NAME_INVISIBLE;
 
-		} else if (!strcmp(gaimStatusName, OSCAR_STATUS_ID_OCCUPIED)) {
+		} else if (!strcmp(gaimStatusID, OSCAR_STATUS_ID_OCCUPIED)) {
 			statusName = STATUS_NAME_OCCUPIED;
 
-		} else if (!strcmp(gaimStatusName, OSCAR_STATUS_ID_NA)) {
+		} else if (!strcmp(gaimStatusID, OSCAR_STATUS_ID_NA)) {
 			statusName = STATUS_NAME_NOT_AVAILABLE;
 
-		} else if (!strcmp(gaimStatusName, OSCAR_STATUS_ID_DND)) {
+		} else if (!strcmp(gaimStatusID, OSCAR_STATUS_ID_DND)) {
 			statusName = STATUS_NAME_DND;
 
-		} else if (!strcmp(gaimStatusName, OSCAR_STATUS_ID_FREE4CHAT)) {
+		} else if (!strcmp(gaimStatusID, OSCAR_STATUS_ID_FREE4CHAT)) {
 			statusName = STATUS_NAME_FREE_FOR_CHAT;
 
 		}
