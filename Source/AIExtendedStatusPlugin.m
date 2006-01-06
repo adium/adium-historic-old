@@ -94,7 +94,7 @@
     if ((inModifiedKeys == nil || 
 		 (showIdle && [inModifiedKeys containsObject:@"Idle"]) ||
 		 (showStatus && ([inModifiedKeys containsObject:@"StatusMessage"] ||
-						 [inModifiedKeys containsObject:@"ContactListStatusMessage"] ||
+						 [inModifiedKeys containsObject:@"ContactListDisplayName"] ||
 						 [inModifiedKeys containsObject:@"StatusName"]))) &&
 		[inObject isKindOfClass:[AIListContact class]]){
 		NSMutableString	*statusMessage = nil;
