@@ -19,6 +19,7 @@
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIGradient.h>
 #import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIParagraphStyleAdditions.h>
 
 #define FLIPPY_TEXT_PADDING		4
 
