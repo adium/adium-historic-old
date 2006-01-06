@@ -481,7 +481,7 @@
 	NSAttributedString	*contactListStatusMessage;
 	
 	if (!(contactListStatusMessage = [self statusMessage])) {
-		contactListStatusMessage = [self statusObjectForKey:@"ContactListDisplayName"]
+		contactListStatusMessage = [self statusObjectForKey:@"ContactListDisplayName"];
 	}
 	   
 	if (!contactListStatusMessage) {
