@@ -458,8 +458,12 @@
 		mostRecentActiveChat = [inChat retain];
 	}
 	
-	[[adium notificationCenter] postNotificationName:Chat_BecameActive object:inChat userInfo:[NSDictionary dictionaryWithObject:previouslyActiveChat
-																														  forKey:@"PreviouslyActiveChat"]];
+	[[adium notificationCenter] postNotificationName:Chat_BecameActive
+											  object:inChat 
+											userInfo:(previouslyActiveChat ?
+													  [NSDictionary dictionaryWithObject:previouslyActiveChat
+																				  forKey:@"PreviouslyActiveChat"] :
+													  nil)];
 	
 	if (inChat) {
 		/* Clear the unviewed content on the next event loop so other methods have a chance to react to the chat becoming
