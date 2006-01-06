@@ -204,9 +204,9 @@
 
 	//Use it either as the status message or the display name.
 	if (useAsStatusMessage) {
-		if (![[self stringFromAttributedStringStatusObjectForKey:@"ContactListStatusMessage"] isEqualToString:cleanedAlias]) {
+		if (![[self stringFromAttributedStringStatusObjectForKey:@"ContactListDisplayName"] isEqualToString:cleanedAlias]) {
 			[self setStatusObject:[[[NSAttributedString alloc] initWithString:cleanedAlias] autorelease]
-						   forKey:@"ContactListStatusMessage" 
+						   forKey:@"ContactListDisplayName" 
 						   notify:NotifyLater];
 			
 			changes = YES;
@@ -480,40 +480,24 @@
 {
 	NSAttributedString	*contactListStatusMessage;
 	
-	if (!(contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"])) {
-		contactListStatusMessage = [self statusMessage];
+	if (!(contactListStatusMessage = [self statusMessage])) {
+		contactListStatusMessage = [self statusObjectForKey:@"ContactListDisplayName"]
 	}
 	   
-	   if (!contactListStatusMessage) {
-		   NSString *statusName;
-		   
-		   if ((statusName = [self statusName])) {
-			   NSString *descriptionOfStatus;
-			   
-			   if ((descriptionOfStatus = [[adium statusController] localizedDescriptionForStatusName:statusName
-																						   statusType:[self statusType]])) {
-				   contactListStatusMessage = [[[NSAttributedString alloc] initWithString:descriptionOfStatus] autorelease];			
-			   }
-		   }
-	   }
-	   
-	   return contactListStatusMessage;	
-}
-
-/*
- * @brief Return just the status message, not looking as deep as a localized status name
- *
- * This is used by AIMetaContact to be able to sort out what status to display
- */
-- (NSAttributedString *)contactListStatusMessageIgnoringStatusName
-{
-	NSAttributedString	*contactListStatusMessage;
-	
-	if (!(contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"])) {
-		contactListStatusMessage = [self statusMessage];
+	if (!contactListStatusMessage) {
+		NSString *statusName;
+		
+		if ((statusName = [self statusName])) {
+			NSString *descriptionOfStatus;
+			
+			if ((descriptionOfStatus = [[adium statusController] localizedDescriptionForStatusName:statusName
+																						statusType:[self statusType]])) {
+				contactListStatusMessage = [[[NSAttributedString alloc] initWithString:descriptionOfStatus] autorelease];			
+			}
+		}
 	}
 	   
-	   return contactListStatusMessage;
+	return contactListStatusMessage;	
 }
 
 #pragma mark Parents

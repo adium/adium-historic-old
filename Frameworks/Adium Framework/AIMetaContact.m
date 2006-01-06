@@ -928,14 +928,24 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	NSAttributedString	*contactListStatusMessage = nil;
 	AIListContact		*listContact;
 	
+	//Try to use an actual status message first
 	enumerator = [[self listContacts] objectEnumerator];
 	while (!contactListStatusMessage && (listContact = [enumerator nextObject])) {
-		contactListStatusMessage = [listContact contactListStatusMessageIgnoringStatusName];
+		contactListStatusMessage = [listContact statusMessage];
 	}
 
-	if (!contactListStatusMessage)
-		contactListStatusMessage = [self statusMessage];
-	
+	if (!contactListStatusMessage) {
+		//Next go for any contact list status message, which may include a display name or the name of a status such as "BRB"
+		enumerator = [[self listContacts] objectEnumerator];
+		while (!contactListStatusMessage && (listContact = [enumerator nextObject])) {
+			contactListStatusMessage = [listContact contactListStatusMessage];
+		}		
+	}
+
+	if (!contactListStatusMessage) {
+		return [self statusMessage];
+	}
+
 	return contactListStatusMessage;
 }
 
