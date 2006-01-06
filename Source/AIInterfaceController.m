@@ -446,26 +446,35 @@
 //A chat has become active: update our chat closing keys and flag this chat as selected in the window menu
 - (void)chatDidBecomeActive:(AIChat *)inChat
 {
-	[activeChat release]; activeChat = [inChat retain];
-	[self updateCloseMenuKeys];
-	[self updateActiveWindowMenuItem];
-	
-	if (inChat && (inChat != mostRecentActiveChat)) {
-		[mostRecentActiveChat release]; mostRecentActiveChat = nil;
-		mostRecentActiveChat = [inChat retain];
+	if (inChat != activeChat) {
+		AIChat	*previouslyActiveChat = activeChat;
+
+		activeChat = [inChat retain];
+		
+		[self updateCloseMenuKeys];
+		[self updateActiveWindowMenuItem];
+		
+		if (inChat && (inChat != mostRecentActiveChat)) {
+			[mostRecentActiveChat release]; mostRecentActiveChat = nil;
+			mostRecentActiveChat = [inChat retain];
+		}
+		
+		[[adium notificationCenter] postNotificationName:Chat_BecameActive object:inChat userInfo:[NSDictionary dictionaryWithObject:previouslyActiveChat
+																															  forKey:@"PreviouslyActiveChat"]];
+		
+		if (inChat) {
+			/* Clear the unviewed content on the next event loop so other methods have a chance to react to the chat becoming
+			* active. Specifically, this lets the handleReopenWithVisibleWindows: method have a chance to know that this chat
+			* had unviewed content.
+			*/
+			[inChat performSelector:@selector(clearUnviewedContentCount)
+						 withObject:nil
+						 afterDelay:0];
+		}
+		
+		[previouslyActiveChat release];
 	}
-
-	[[adium notificationCenter] postNotificationName:Chat_BecameActive object:inChat];
-
-	if (inChat) {
-		/* Clear the unviewed content on the next event loop so other methods have a chance to react to the chat becoming
-		 * active. Specifically, this lets the handleReopenWithVisibleWindows: method have a chance to know that this chat
-		 * had unviewed content.
-		 */
-		[inChat performSelector:@selector(clearUnviewedContentCount)
-					 withObject:nil
-				   afterDelay:0];
-	}		
+	
 }
 
 //A chat has become visible: send out a notification for components and plugins to take action
