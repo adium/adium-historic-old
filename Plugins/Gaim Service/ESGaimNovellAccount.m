@@ -70,6 +70,8 @@ gboolean gaim_init_novell_plugin(void);
 	NSString		*statusName = [statusState statusName];
 	NSString		*statusMessageString = [statusState statusMessageString];
 	
+	if (!statusMessageString) statusMessageString = @"";
+
 	switch ([statusState statusType]) {
 		case AIAvailableStatusType:
 			break;

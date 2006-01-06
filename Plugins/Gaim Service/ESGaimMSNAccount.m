@@ -345,23 +345,23 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 	NSString		*statusName = nil;
 	GaimPresence	*presence = gaim_buddy_get_presence(buddy);
 	GaimStatus		*status = gaim_presence_get_active_status(presence);
-	const char		*gaimStatusName = gaim_status_get_name(status);
+	const char		*gaimStatusID = gaim_status_get_id(status);
 
-	if (!gaimStatusName) return nil;
+	if (!gaimStatusID) return nil;
 
-	if (!strcmp(gaimStatusName, "brb")) {
+	if (!strcmp(gaimStatusID, "brb")) {
 		statusName = STATUS_NAME_BRB;
 		
-	} else if (!strcmp(gaimStatusName, "busy")) {
+	} else if (!strcmp(gaimStatusID, "busy")) {
 		statusName = STATUS_NAME_BUSY;
 		
-	} else if (!strcmp(gaimStatusName, "phone")) {
+	} else if (!strcmp(gaimStatusID, "phone")) {
 		statusName = STATUS_NAME_PHONE;
 		
-	} else if (!strcmp(gaimStatusName, "lunch")) {
+	} else if (!strcmp(gaimStatusID, "lunch")) {
 		statusName = STATUS_NAME_LUNCH;
 		
-	} else if (!strcmp(gaimStatusName, "invisible")) {
+	} else if (!strcmp(gaimStatusID, "invisible")) {
 		statusName = STATUS_NAME_INVISIBLE;		
 	}
 	
@@ -390,6 +390,8 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 	char			*statusID = NULL;
 	NSString		*statusName = [statusState statusName];
 	NSString		*statusMessageString = [statusState statusMessageString];
+
+	if (!statusMessageString) statusMessageString = @"";
 
 	switch ([statusState statusType]) {
 		case AIAvailableStatusType:

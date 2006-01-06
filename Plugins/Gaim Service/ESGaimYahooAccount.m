@@ -150,38 +150,38 @@ gboolean gaim_init_yahoo_plugin(void);
 	NSString		*statusName = nil;
 	GaimPresence	*presence = gaim_buddy_get_presence(buddy);
 	GaimStatus		*status = gaim_presence_get_active_status(presence);
-	const char		*gaimStatusName = gaim_status_get_name(status);
+	const char		*gaimStatusID = gaim_status_get_id(status);
 	
-	if (!gaimStatusName) return nil;
+	if (!gaimStatusID) return nil;
 	
-	if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_BRB)) {
+	if (!strcmp(gaimStatusID, YAHOO_STATUS_TYPE_BRB)) {
 		statusName = STATUS_NAME_BRB;
 		
-	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_BUSY)) {
+	} else if (!strcmp(gaimStatusID, YAHOO_STATUS_TYPE_BUSY)) {
 		statusName = STATUS_NAME_BUSY;
 		
-	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_NOTATHOME)) {
+	} else if (!strcmp(gaimStatusID, YAHOO_STATUS_TYPE_NOTATHOME)) {
 		statusName = STATUS_NAME_NOT_AT_HOME;
 		
-	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_NOTATDESK)) {
+	} else if (!strcmp(gaimStatusID, YAHOO_STATUS_TYPE_NOTATDESK)) {
 		statusName = STATUS_NAME_NOT_AT_DESK;
 		
-	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_NOTINOFFICE)) {
+	} else if (!strcmp(gaimStatusID, YAHOO_STATUS_TYPE_NOTINOFFICE)) {
 		statusName = STATUS_NAME_NOT_IN_OFFICE;
 		
-	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_ONPHONE)) {
+	} else if (!strcmp(gaimStatusID, YAHOO_STATUS_TYPE_ONPHONE)) {
 		statusName = STATUS_NAME_PHONE;
 		
-	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_ONVACATION)) {
+	} else if (!strcmp(gaimStatusID, YAHOO_STATUS_TYPE_ONVACATION)) {
 		statusName = STATUS_NAME_VACATION;
 		
-	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_OUTTOLUNCH)) {
+	} else if (!strcmp(gaimStatusID, YAHOO_STATUS_TYPE_OUTTOLUNCH)) {
 		statusName = STATUS_NAME_LUNCH;
 		
-	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_STEPPEDOUT)) {
+	} else if (!strcmp(gaimStatusID, YAHOO_STATUS_TYPE_STEPPEDOUT)) {
 		statusName = STATUS_NAME_STEPPED_OUT;
 		
-	} else if (!strcmp(gaimStatusName, YAHOO_STATUS_TYPE_INVISIBLE)) {
+	} else if (!strcmp(gaimStatusID, YAHOO_STATUS_TYPE_INVISIBLE)) {
 		statusName = STATUS_NAME_INVISIBLE;
 	}
 	
@@ -344,6 +344,8 @@ gboolean gaim_init_yahoo_plugin(void);
 	char			*statusID = NULL;
 	NSString		*statusName = [statusState statusName];
 	NSString		*statusMessageString = [statusState statusMessageString];
+
+	if (!statusMessageString) statusMessageString = @"";
 
 	switch ([statusState statusType]) {
 		case AIAvailableStatusType:
