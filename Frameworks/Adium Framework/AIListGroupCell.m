@@ -205,20 +205,38 @@
 	return [self textColor];
 }
 
-//Add a simple shadow to our text attributes
+/*
+ * @brief Additional label attributes
+ *
+ * We override the paragraph style to be truncating middle.
+ * The user's layout preferences may have indicated to add a shadow to the text.
+ */
 - (NSDictionary *)additionalLabelAttributes
 {
-	if (!shadowColor) {
-		return nil;
+	NSMutableDictionary *additionalLabelAttributes = [NSMutableDictionary dictionary];
+	
+	if (shadowColor) {
+		NSShadow	*shadow = [[[NSShadow alloc] init] autorelease];
+		
+		[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
+		[shadow setShadowBlurRadius:2.0];
+		[shadow setShadowColor:shadowColor];
+		
+		[additionalLabelAttributes setObject:shadow forKey:NSShadowAttributeName];
+	}
+	
+	static NSMutableParagraphStyle *leftParagraphStyleWithTruncatingMiddle = nil;
+	if (!leftParagraphStyleWithTruncatingMiddle) {
+		leftParagraphStyleWithTruncatingMiddle = [[NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
+																			  lineBreakMode:NSLineBreakByTruncatingMiddle] retain];
 	}
 
-	NSShadow	*shadow = [[[NSShadow alloc] init] autorelease];
+	[leftParagraphStyleWithTruncatingMiddle setMaximumLineHeight:(float)labelFontHeight];
 
-	[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
-	[shadow setShadowBlurRadius:2.0];
-	[shadow setShadowColor:shadowColor];
-
-	return [NSDictionary dictionaryWithObject:shadow forKey:NSShadowAttributeName];
+	[additionalLabelAttributes setObject:leftParagraphStyleWithTruncatingMiddle
+								  forKey:NSParagraphStyleAttributeName];
+	
+	return additionalLabelAttributes;
 }
 
 
