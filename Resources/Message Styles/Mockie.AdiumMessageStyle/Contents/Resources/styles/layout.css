@@ -54,6 +54,7 @@ body {
 	padding-right: 4px;
 	right: 0px;
 	margin-bottom: -14px;
+	word-wrap: normal;
 }
 
 .time_initial, .time_consecutive {
