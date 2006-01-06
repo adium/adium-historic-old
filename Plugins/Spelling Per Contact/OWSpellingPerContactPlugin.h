@@ -19,7 +19,7 @@
 @class AIChat;
 
 @interface OWSpellingPerContactPlugin : AIPlugin {
-	AIChat *previousChat;
+	NSMutableDictionary	*languageDict;
 }
 
 @end

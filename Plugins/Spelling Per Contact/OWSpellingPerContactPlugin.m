@@ -18,14 +18,13 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 
-#define LastUsedSpellingGroup	@"Last Used Spelling"
-#define LastUsedSpellingLang	@"Last Used Spelling Languge"
+#define GROUP_LAST_USED_SPELLING	@"Last Used Spelling"
+#define KEY_LAST_USED_SPELLING		@"Last Used Spelling Languge"
 
 @interface OWSpellingPerContactPlugin (private)
 - (void)chatDidBecomeVisible:(NSNotification *)notification;
 - (void)chatWillClose:(NSNotification *)notification;
 @end
-
 
 @implementation OWSpellingPerContactPlugin
 
@@ -34,8 +33,8 @@
 	NSNotificationCenter *notificationCenter = [adium notificationCenter];
 	
 	[notificationCenter addObserver:self
-						   selector:@selector(chatDidBecomeVisible:)
-							   name:@"AIChatDidBecomeVisible"
+						   selector:@selector(chatBecameActive:)
+							   name:Chat_BecameActive
 							 object:nil];
 	
 	[notificationCenter addObserver:self
@@ -43,45 +42,78 @@
 							   name:Chat_WillClose
 							 object:nil];
 	
-	previousChat = nil;
+	languageDict = [[NSMutableDictionary alloc] init];
 }
 
 - (void)uninstallPlugin
 {
+	[languageDict release]; languageDict = nil;
+
 	[[adium notificationCenter] removeObserver:self];
-	[previousChat release];
-	previousChat = nil;
 }
 
-- (void)chatDidBecomeVisible:(NSNotification *)notification
+- (void)chatBecameActive:(NSNotification *)notification
 {
-	AIChat *newChat;
+	AIChat	 *newChat = [notification object];
+	AIChat	 *previousChat = [[notification userInfo] objectForKey:@"PreviouslyActiveChat"];
+	NSString *language = [[NSSpellChecker sharedSpellChecker] language];
+
+	if (previousChat) {
+		NSString *chatID = [previousChat uniqueChatID];
+		if (![[languageDict objectForKey:chatID] isEqualToString:language]) {
+			//If this chat is not known to be in the current language, store its setting in our languageDict
+			[languageDict setObject:language
+							 forKey:chatID];
+		}
+	}
 	
-	if([[notification object] isKindOfClass:[AIChat class]]){
-		newChat = [notification object];
+	if (newChat) {
+		NSString *chatID = [newChat uniqueChatID];
+		NSString *newChatLanguage = [languageDict objectForKey:chatID];
 		
-		if(previousChat)
-			//Save the last used language for the previous chat
-			[[previousChat listObject] setPreference:[[NSSpellChecker sharedSpellChecker] language]
-											  forKey:LastUsedSpellingLang
-											   group:LastUsedSpellingGroup];
-		[previousChat release];
-		previousChat = [newChat retain];
+		//If we don't have a previously noted language, try to load one from a preference
+		if (!newChatLanguage) {
+			AIListObject *listObject = [newChat listObject];
+
+			if (listObject) {
+				//Load the preference if possible
+				newChatLanguage = [listObject preferenceForKey:KEY_LAST_USED_SPELLING group:GROUP_LAST_USED_SPELLING];
+			}
+
+			if (!newChatLanguage) {
+				//If no preference, set to @"" so we won't keep trying to load the preference
+				newChatLanguage = @"";
+			}
+
+			[languageDict setObject:newChatLanguage
+							 forKey:chatID];
+		}
 		
-		//Load the last used language for the new chat
-		[[NSSpellChecker sharedSpellChecker] setLanguage:[[newChat listObject] preferenceForKey:LastUsedSpellingLang group:LastUsedSpellingGroup]];
+		if ([newChatLanguage length]) {
+			//Only set the language if we have one specified
+			[[NSSpellChecker sharedSpellChecker] setLanguage:newChatLanguage];
+		}
 	}
 }
 
 - (void)chatWillClose:(NSNotification *)notification
 {
-	if(previousChat == [notification object]){
-		//Save the last used language for the previous chat
-		[[previousChat listObject] setPreference:[[NSSpellChecker sharedSpellChecker] language]
-										  forKey:LastUsedSpellingLang
-										   group:LastUsedSpellingGroup];
-		[previousChat release];
-		previousChat = nil;
+	AIChat		 *chat = [notification object];
+	AIListObject *listObject = [chat listObject];
+
+	if (listObject) {
+		NSString	 *chatID = [chat uniqueChatID];
+		NSString	 *chatLanguage = [languageDict objectForKey:chatID];
+
+		//If we didn't cache a language for this chat, we might just never have made it inactive; save the current language
+		if (!chatLanguage) chatLanguage = [[NSSpellChecker sharedSpellChecker] language];
+		
+		//Save the last used language for this chat as it closes
+		[listObject setPreference:chatLanguage
+						   forKey:KEY_LAST_USED_SPELLING
+							group:GROUP_LAST_USED_SPELLING];
+
+		[languageDict removeObjectForKey:chatID];
 	}
 }
 
