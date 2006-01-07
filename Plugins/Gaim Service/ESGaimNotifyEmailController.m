@@ -69,7 +69,7 @@
 	} else {
 		numberMessage = ((count == 1) ? 
 						 AILocalizedString(@"You have 1 new message.",nil) :
-						 [NSString stringWithFormat:AILocalizedString(@"Your have %i new messages.",nil), count]);		
+						 [NSString stringWithFormat:AILocalizedString(@"You have %i new messages.",nil), count]);		
 	}
 
 	numberMessageAttributes = [NSDictionary dictionaryWithObjectsAndKeys:messageFont,NSFontAttributeName,
