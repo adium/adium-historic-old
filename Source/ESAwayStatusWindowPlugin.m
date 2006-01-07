@@ -86,6 +86,11 @@
 			[[adium contactController] unregisterListObjectObserver:self];
 		}
 	}
+
+	if (showStatusWindow) {
+		[ESAwayStatusWindowController setAlwaysOnTop:[[prefDict objectForKey:KEY_STATUS_STATUS_WINDOW_ON_TOP] boolValue]];
+		[ESAwayStatusWindowController setHideInBackground:[[prefDict objectForKey:KEY_STATUS_STATUS_WINDOW_HIDE_IN_BACKGROUND] boolValue]];
+	}
 }
 
 /*!
