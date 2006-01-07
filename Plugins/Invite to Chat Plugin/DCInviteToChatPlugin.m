@@ -175,6 +175,5 @@
 
 // Dummy target so that we get validateMenuItem calls
 - (IBAction)dummyTarget:(id)sender { }
-
-
+	
 @end

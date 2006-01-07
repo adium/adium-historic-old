@@ -20,6 +20,7 @@
 #import <AIUtilities/AICompletingTextField.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
+#import "DCInviteToChatPlugin.h"
 
 @interface DCGaimOscarJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
@@ -80,16 +81,24 @@
 	room = [textField_roomName stringValue];
 
 	if (room && [room length]) {
+		//XXX we should probaly let the user pick the exchange
 		exchange = 4;
 				
 		//The chatCreationInfo has keys corresponding to the GHashTable keys and values to match them.
 		chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",[NSNumber numberWithInt:exchange],@"exchange",nil];
 		
+		NSString *invitationMessage = [textField_inviteMessage stringValue];
+		
+		if (!invitationMessage || ![invitationMessage length]) {
+			invitationMessage = [[adium chatController] defaultInvitationMessageForRoom:room account:inAccount];
+		}
+
 		[self doJoinChatWithName:room
 					   onAccount:inAccount
 				chatCreationInfo:chatCreationInfo
 				invitingContacts:[self contactsFromNamesSeparatedByCommas:[textField_inviteUsers stringValue] onAccount:inAccount]
-		  withInvitationMessage:[textField_inviteMessage stringValue]];
+		  withInvitationMessage:invitationMessage];
+
 	} else {
 		NSLog(@"Error: No room specified.");
 	}

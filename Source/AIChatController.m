@@ -761,4 +761,10 @@
 											  object:chat];
 }
 
+
+- (NSString *)defaultInvitationMessageForRoom:(NSString *)room account:(AIAccount *)inAccount
+{
+	return [NSString stringWithFormat:AILocalizedString(@"%@ invites you to join the chat \"%@\"", nil), [inAccount formattedUID], room];
+}
+
 @end

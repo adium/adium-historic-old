@@ -87,11 +87,15 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 - (IBAction)invite:(id)sender
 {	
 	// Sanity check: is there really a list object and a chat?
-	if ( contact && [contact isKindOfClass:[AIListContact class]] && chat ) {
+	if (contact && [contact isKindOfClass:[AIListContact class]] && chat) {
 		
 		// Sanity check: is it a group chat?
 		if ([chat isGroupChat]) {
-			[chat inviteListContact:(AIListContact *)contact withMessage:[textField_message stringValue]];
+			NSString *message = [textField_message stringValue];
+			if (!message || ![message length]) {
+				message = [[adium chatController] defaultInvitationMessageForRoom:room account:[chat account]];
+			}
+			[chat inviteListContact:(AIListContact *)contact withMessage:message];
 		} else {
 			//NSLog(@"#### Inviting %@ to a one-on-one chat?",contact);
 		}
@@ -110,7 +114,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 	//If the contact is not online, we should include offline so it will be shown; if it is, we don't need 'em
     [menu_contacts setMenu:[AIContactMenu contactMenuWithDelegate:self forContactsInObject:contact]];
 
-	if ( [contact isKindOfClass:[AIMetaContact class]] ) {
+	if ([contact isKindOfClass:[AIMetaContact class]]) {
 		[menu_contacts selectItemWithRepresentedObject:[(AIMetaContact *)contact preferredContactWithService:service]];
 	} else {
 		[menu_contacts selectItemAtIndex:0];
