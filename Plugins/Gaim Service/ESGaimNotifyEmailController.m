@@ -61,9 +61,17 @@
 	NSString		*numberMessage;
 	NSDictionary	*numberMessageAttributes;
 	
-	numberMessage = ((count == 1) ? 
-					 [NSString stringWithFormat:AILocalizedString(@"%s has 1 new message.",nil), *tos] :
-					 [NSString stringWithFormat:AILocalizedString(@"%s has %i new messages.",nil), *tos,count]);
+	if (tos && *tos) {
+		numberMessage = ((count == 1) ? 
+						 [NSString stringWithFormat:AILocalizedString(@"%s has 1 new message.",nil), *tos] :
+						 [NSString stringWithFormat:AILocalizedString(@"%s has %i new messages.",nil), *tos,count]);
+
+	} else {
+		numberMessage = ((count == 1) ? 
+						 AILocalizedString(@"You have 1 new message.",nil) :
+						 [NSString stringWithFormat:AILocalizedString(@"Your have %i new messages.",nil), count]);		
+	}
+
 	numberMessageAttributes = [NSDictionary dictionaryWithObjectsAndKeys:messageFont,NSFontAttributeName,
 		centeredParagraphStyle,NSParagraphStyleAttributeName,nil];
 	
