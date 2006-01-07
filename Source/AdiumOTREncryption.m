@@ -382,10 +382,8 @@ static int display_otr_message(const char *accountname, const char *protocol,
 	
 	message = [NSString stringWithUTF8String:msg];
 	
-	if ((localizedMessage = [adiumOTREncryption localizedOTRMessage:message
-													   withUsername:[listContact formattedUID]])) {
-		message = localizedMessage;
-	}
+	localizedMessage = [adiumOTREncryption localizedOTRMessage:message
+												  withUsername:[listContact formattedUID]];
 
 	[[sharedAdium contentController] displayStatusMessage:localizedMessage
 												   ofType:@"encryption"
@@ -398,9 +396,15 @@ static void notify_cb(void *opdata, OtrlNotifyLevel level,
 					  const char *accountname, const char *protocol, const char *username,
 					  const char *title, const char *primary, const char *secondary)
 {
-	[adiumOTREncryption notifyWithTitle:[NSString stringWithUTF8String:title]
-								primary:[NSString stringWithUTF8String:primary]
-							  secondary:[NSString stringWithUTF8String:secondary]];
+	AIListContact	*listContact = contactFromInfo(accountname, protocol, username);
+	NSString		*formattedUID = [listContact formattedUID];
+
+	[adiumOTREncryption notifyWithTitle:[adiumOTREncryption localizedOTRMessage:[NSString stringWithUTF8String:title]
+																   withUsername:formattedUID]
+								primary:[adiumOTREncryption localizedOTRMessage:[NSString stringWithUTF8String:primary]
+																   withUsername:formattedUID]
+							  secondary:[adiumOTREncryption localizedOTRMessage:[NSString stringWithUTF8String:secondary]
+																   withUsername:formattedUID]];
 }
 
 static int display_otr_message_cb(void *opdata, const char *accountname,
@@ -779,13 +783,25 @@ OtrlUserState otrg_get_userstate(void)
 		localizedOTRMessage = [NSString stringWithFormat:
 			AILocalizedString(@"You sent an unencrypted message, but %@ was expecting encryption.", "Message when sending unencrypted messages to a contact expecting encrypted ones. %s will be a name."),
 			username];
+		
 	} else if ([message rangeOfString:@CLOSED_CONNECTION_MESSAGE].location != NSNotFound) {
 		localizedOTRMessage = [NSString stringWithFormat:
 			AILocalizedString(@"%@ is no longer using encryption; you should cancel encryption on your side.", "Message when the remote contact cancels his half of an encrypted conversation. %s will be a name."),
 			username];
+		
+	} else if ([message isEqualToString:@"Private connection closed"]) {
+		localizedOTRMessage = AILocalizedString(@"Private connectiion closed", nil);
+
+	} else if ([message rangeOfString:@"has already closed his private connection to you"].location != NSNotFound) {
+		localizedOTRMessage = [NSString stringWithFormat:
+			AILocalizedString(@"%@'s private connection to you is closed.", "Statement that someone's private (encrypted) connection is closed."),
+			username];
+
+	} else if ([message isEqualToString:@"Your message was not sent.  Either close your private connection to him, or refresh it."]) {
+		localizedOTRMessage = AILocalizedString(@"Your message was not sent. You should end the encrypted chat on your side or re-request encryption.", nil);
 	}
 	
-	return localizedOTRMessage;
+	return (localizedOTRMessage ? localizedOTRMessage : message);
 }
 
 
