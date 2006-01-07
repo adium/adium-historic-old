@@ -45,7 +45,10 @@
 #define KEY_STATUS_FUS							@"Fast User Switching Auto Away"
 #define KEY_STATUS_FUS_STATUS_STATE_ID			@"Fast User Switching Status State ID"
 #define KEY_STATUS_AUTO_AWAY_INTERVAL			@"Auto Away Interval"
-#define KEY_STATUS_SHOW_STATUS_WINDOW			@"Show Status Window"
+
+#define KEY_STATUS_SHOW_STATUS_WINDOW				@"Show Status Window"
+#define KEY_STATUS_STATUS_WINDOW_ON_TOP				@"Status Window Always On Top"
+#define KEY_STATUS_STATUS_WINDOW_HIDE_IN_BACKGROUND	@"Status Window Hide in Background"
 
 //Built-in names and descriptions, which services should use when they support identical or approximately identical states
 #define	STATUS_NAME_AVAILABLE				@"Generic Available"

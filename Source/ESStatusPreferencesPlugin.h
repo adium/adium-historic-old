@@ -8,10 +8,11 @@
 
 #import <Adium/AIPlugin.h>
 
-@class ESStatusPreferences;
+@class ESStatusPreferences, ESStatusAdvancedPreferences;
 
 @interface ESStatusPreferencesPlugin : AIPlugin {
-	ESStatusPreferences	*preferences;
+	ESStatusPreferences			*preferences;
+	ESStatusAdvancedPreferences *advancedPreferences;
 }
 
 @end

@@ -28,6 +28,9 @@
 }
 
 + (void)updateStatusWindowWithVisibility:(BOOL)shouldBeVisibile;
++ (void)setAlwaysOnTop:(BOOL)flag;
++ (void)setHideInBackground:(BOOL)flag;
+
 - (IBAction)returnFromAway:(id)sender;
 
 - (IBAction)toggleMuteWhileAway:(id)sender;

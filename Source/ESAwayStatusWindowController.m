@@ -41,6 +41,8 @@
 @implementation ESAwayStatusWindowController
 
 static ESAwayStatusWindowController	*sharedInstance = nil;
+static BOOL							alwaysOnTop = NO;
+static BOOL							hideInBackground = NO;
 
 /*!
  * @brief Update the visibility of the status window
@@ -70,6 +72,26 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	}
 }
 
++ (void)setAlwaysOnTop:(BOOL)flag
+{
+	alwaysOnTop = flag;
+	
+	if (sharedInstance) {
+		//Update any open window
+		[[sharedInstance window] setLevel:(alwaysOnTop ? NSFloatingWindowLevel : NSNormalWindowLevel)];
+	}
+}
+
++ (void)setHideInBackground:(BOOL)flag
+{
+	hideInBackground = flag;
+	
+	if (sharedInstance) {
+		//Update any open window
+		[[sharedInstance window] setHidesOnDeactivate:hideInBackground];
+	}
+}	
+
 /*!
  * @brief Window size and position autosave name
  */
@@ -86,6 +108,9 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	//Call super first so we get our placement before performing autosizing
 	[super windowDidLoad];
 	
+	[[self window] setLevel:(alwaysOnTop ? NSFloatingWindowLevel : NSNormalWindowLevel)];
+	[[self window] setHidesOnDeactivate:hideInBackground];
+
 	//Setup the textviews
     [textView_singleStatus setHorizontallyResizable:NO];
     [textView_singleStatus setVerticallyResizable:YES];
