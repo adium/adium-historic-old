@@ -16,5 +16,9 @@
 	<true/>
 	<key>Fast User Switching Status State ID</key>
 	<integer>-1000</integer>
+	<key>Status Window Always On Top</key>
+	<true/>
+	<key>Status Window Hide in Background</key>
+	<true/>
 </dict>
 </plist>
