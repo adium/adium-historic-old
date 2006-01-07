@@ -269,7 +269,9 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 {
 	NSTabViewItem	*selectedTabViewItem = [tabView_configuration selectedTabViewItem];
 	AIStatus		*availableStatusState = [[adium statusController] defaultInitialStatusState];
-	
+
+	[self retain];
+
 	if ([[selectedTabViewItem identifier] isEqualToString:@"singlestatus"]) {
 		//Put all accounts in the Available status state
 		[[adium statusController] applyState:availableStatusState
@@ -293,6 +295,8 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 
 		[selectedAccounts release];
 	}
+
+	[self release];
 }
 
 /*!
