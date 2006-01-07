@@ -52,6 +52,8 @@
 - (void)chat:(AIChat *)chat addedListContact:(AIListContact *)inContact notify:(BOOL)notify;
 - (void)chat:(AIChat *)chat removedListContact:(AIListContact *)inContact;
 
+- (NSString *)defaultInvitationMessageForRoom:(NSString *)room account:(AIAccount *)inAccount;
+
 @end
 
 @interface AIChatController (AIChatMethods)

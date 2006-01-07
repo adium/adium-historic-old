@@ -17,10 +17,10 @@
 #import "AIContactController.h"
 #import "DCGaimOscarJoinChatViewController.h"
 #import "DCJoinChatWindowController.h"
+#import "AIChatController.h"
 #import <AIUtilities/AICompletingTextField.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
-#import "DCInviteToChatPlugin.h"
 
 @interface DCGaimOscarJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
