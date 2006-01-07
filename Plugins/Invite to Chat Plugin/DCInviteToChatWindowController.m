@@ -94,7 +94,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 		if ([chat isGroupChat]) {
 			NSString *message = [textField_message stringValue];
 			if (!message || ![message length]) {
-				message = [[adium chatController] defaultInvitationMessageForRoom:room account:[chat account]];
+				message = [[adium chatController] defaultInvitationMessageForRoom:[chat name] account:[chat account]];
 			}
 			[chat inviteListContact:(AIListContact *)contact withMessage:message];
 		} else {
