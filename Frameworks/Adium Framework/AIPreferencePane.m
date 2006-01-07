@@ -52,11 +52,11 @@
 //this does the same thing, but case-insensitively.
 - (NSComparisonResult)caseInsensitiveCompare:(id)other
 {
-	NSString *nibName = [self nibName];
+	NSString *nibName = [self label];
 	if ([other isKindOfClass:[NSString class]]) {
 		return [nibName caseInsensitiveCompare:other];
 	} else {
-		return [nibName caseInsensitiveCompare:[other nibName]];
+		return [nibName caseInsensitiveCompare:[other label]];
 	}
 }
 
