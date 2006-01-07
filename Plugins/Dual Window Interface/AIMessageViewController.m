@@ -25,7 +25,6 @@
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
 #import "AIPreferenceController.h"
-#import "CSMessageToOfflineContactWindowController.h"
 #import "ESContactAlertsController.h"
 #import "ESGeneralPreferencesPlugin.h"
 #import <AIUtilities/AIApplicationAdditions.h>
@@ -36,10 +35,12 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListOutlineView.h>
 #import <Adium/AIMessageEntryTextView.h>
+#import <Adium/ESTextAndButtonsWindowController.h>
 
 //Heights and Widths
 #define MESSAGE_VIEW_MIN_HEIGHT_RATIO		.50						//Mininum height ratio of the message view
@@ -308,13 +309,30 @@
 		AIListObject				*listObject = [chat listObject];
 		
 		if (!sendMessagesToOfflineContact &&
-		   ![chat isGroupChat] &&
-		   ![listObject online] &&
-		   ![listObject isStranger]) {
+			![chat isGroupChat] &&
+			![listObject online] &&
+			![listObject isStranger] &&
+			![[chat account] supportsOfflineMessaging]) {
 			
-			//Contact is offline.  Ask how the user wants to handle the situation.
-			[CSMessageToOfflineContactWindowController showSheetInWindow:[view_contents window]
-												forMessageViewController:self];
+			NSString			*messageHeader;
+			NSAttributedString	*message;
+			NSString			*formattedUID = [listObject formattedUID];
+			messageHeader = [NSString stringWithFormat:AILocalizedString(@"%@ appears to be offline. How do you want to send this message?", nil),
+				formattedUID];
+			message = [AIHTMLDecoder decodeHTML:[NSString stringWithFormat:
+				AILocalizedString(@"<font size=8><b>Send Later<b> will send the message the next time both you and %@ are online. <b>Send Now</b> may work if %@ only appears to be offline, such as if %@ is invisible.</font>", "Send Later dialogue explanation text"),
+				formattedUID, formattedUID, formattedUID]];
+
+			[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:nil
+																  defaultButton:AILocalizedString(@"Send Now", nil)
+																alternateButton:AILocalizedString(@"Send Later", nil)
+																	otherButton:AILocalizedString(@"Don't Send", nil)
+																	   onWindow:[view_contents window]
+															  withMessageHeader:messageHeader
+																	 andMessage:message
+																		  image:([listObject userIcon] ? [listObject userIcon] : nil)
+																		 target:self
+																	   userInfo:nil];
 			
 		} else {
 			AIContentMessage		*message;
@@ -341,6 +359,30 @@
 			}
 		}
     }
+}
+
+/*!
+* @brief Send Later button was pressed
+*
+* @result YES to allow the close
+*/
+- (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
+{
+	switch (returnCode) {
+		case AITextAndButtonsDefaultReturn:
+			[self setShouldSendMessagesToOfflineContacts:YES]; //don't ask again
+			[self sendMessage:nil];
+			break;
+
+		case AITextAndButtonsAlternateReturn:
+			[self sendMessageLater:nil];
+			break;
+		case AITextAndButtonsOtherReturn:
+		case AITextAndButtonsClosedWithoutResponse:
+			break;		
+	}
+	
+	return YES;
 }
 
 /*!
