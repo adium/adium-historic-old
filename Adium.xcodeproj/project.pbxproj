@@ -181,6 +181,9 @@
 		343EC6A90809DEC800E27095 /* ESContactAlertsPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 343EC6A70809DEC700E27095 /* ESContactAlertsPane.m */; };
 		343EC6AA0809DEC800E27095 /* ESContactAlertsPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 343EC6A80809DEC700E27095 /* ESContactAlertsPane.h */; };
 		343EC6B30809DEEB00E27095 /* ContactAlerts.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EC6B20809DEEB00E27095 /* ContactAlerts.nib */; };
+		343EC6C1096F7DEA00349098 /* StatusPreferencesAdvanced.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EC6C0096F7DEA00349098 /* StatusPreferencesAdvanced.nib */; };
+		343EC6C7096F7E1700349098 /* ESStatusAdvancedPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 343EC6C5096F7E1700349098 /* ESStatusAdvancedPreferences.h */; };
+		343EC6C8096F7E1700349098 /* ESStatusAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 343EC6C6096F7E1700349098 /* ESStatusAdvancedPreferences.m */; };
 		344093AA07D9161B00321BB3 /* ESAutoAwayPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 344093A807D9161B00321BB3 /* ESAutoAwayPlugin.h */; };
 		344093AB07D9161B00321BB3 /* ESAutoAwayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 344093A907D9161B00321BB3 /* ESAutoAwayPlugin.m */; };
 		3440974307DA06FE00321BB3 /* MessageContextDisplayPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3440974207DA06FE00321BB3 /* MessageContextDisplayPrefs.nib */; };
@@ -1803,6 +1806,9 @@
 		343EC6A70809DEC700E27095 /* ESContactAlertsPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESContactAlertsPane.m; path = Source/ESContactAlertsPane.m; sourceTree = "<group>"; };
 		343EC6A80809DEC700E27095 /* ESContactAlertsPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESContactAlertsPane.h; path = Source/ESContactAlertsPane.h; sourceTree = "<group>"; };
 		343EC6B20809DEEB00E27095 /* ContactAlerts.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ContactAlerts.nib; path = Resources/ContactAlerts.nib; sourceTree = "<group>"; };
+		343EC6C0096F7DEA00349098 /* StatusPreferencesAdvanced.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = StatusPreferencesAdvanced.nib; path = Resources/StatusPreferencesAdvanced.nib; sourceTree = "<group>"; };
+		343EC6C5096F7E1700349098 /* ESStatusAdvancedPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESStatusAdvancedPreferences.h; path = Source/ESStatusAdvancedPreferences.h; sourceTree = "<group>"; };
+		343EC6C6096F7E1700349098 /* ESStatusAdvancedPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESStatusAdvancedPreferences.m; path = Source/ESStatusAdvancedPreferences.m; sourceTree = "<group>"; };
 		344093A807D9161B00321BB3 /* ESAutoAwayPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESAutoAwayPlugin.h; path = Source/ESAutoAwayPlugin.h; sourceTree = SOURCE_ROOT; };
 		344093A907D9161B00321BB3 /* ESAutoAwayPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESAutoAwayPlugin.m; path = Source/ESAutoAwayPlugin.m; sourceTree = SOURCE_ROOT; };
 		3440974407DA070700321BB3 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
@@ -3604,6 +3610,9 @@
 				348F57910936F3CC00288E41 /* ESEditStatusGroupWindowController.h */,
 				348F57920936F3CC00288E41 /* ESEditStatusGroupWindowController.m */,
 				34A250B507E0F822009854E1 /* StatusDefaults.plist */,
+				343EC6C5096F7E1700349098 /* ESStatusAdvancedPreferences.h */,
+				343EC6C6096F7E1700349098 /* ESStatusAdvancedPreferences.m */,
+				343EC6C0096F7DEA00349098 /* StatusPreferencesAdvanced.nib */,
 				348F579D0936FA6D00288E41 /* EditStatusGroup.nib */,
 				3474E0900825634300BF30F0 /* StatusPreferences.nib */,
 			);
@@ -6591,6 +6600,7 @@
 				341BD5670965E99200CF83F5 /* OTRCommon.h in Headers */,
 				341BD56B0965E9A500CF83F5 /* AdiumOTREncryption.h in Headers */,
 				EEC461B7096D68580028632F /* OWSpellingPerContactPlugin.h in Headers */,
+				343EC6C7096F7E1700349098 /* ESStatusAdvancedPreferences.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7701,6 +7711,7 @@
 				341BDF5E0969814A00CF83F5 /* BadgerDefaults.plist in Resources */,
 				341BDF700969829E00CF83F5 /* DockUnviewedContentDefaults.plist in Resources */,
 				349710DD096C4C7700699948 /* Buttons.strings in Resources */,
+				343EC6C1096F7DEA00349098 /* StatusPreferencesAdvanced.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8207,6 +8218,7 @@
 				341BD5630965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.m in Sources */,
 				341BD56C0965E9A500CF83F5 /* AdiumOTREncryption.m in Sources */,
 				EEC461B6096D68580028632F /* OWSpellingPerContactPlugin.m in Sources */,
+				343EC6C8096F7E1700349098 /* ESStatusAdvancedPreferences.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
