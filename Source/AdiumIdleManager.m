@@ -53,7 +53,7 @@ extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
 }
 
 /*!
-* @brief Returns the current machine idle time
+ * @brief Returns the current machine idle time
  *
  * Returns the current number of seconds the machine has been idle.  The machine is idle when there are no input
  * events from the user (such as mouse movement or keyboard input) or when the screen saver is active.
@@ -76,7 +76,7 @@ extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
 }
 
 /*!
-* @brief Timer that checkes for machine idle
+ * @brief Timer that checkes for machine idle
  *
  * This timer periodically checks the machine for inactivity.  When the machine has been inactive for atleast
  * MACHINE_IDLE_THRESHOLD seconds, a notification is broadcast.
@@ -115,7 +115,7 @@ extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
 }
 
 /*!
-* @brief Sets the machine as idle or not
+ * @brief Sets the machine as idle or not
  *
  * This internal method updates the frequency of our idle timer depending on whether the machine is considered
  * idle or not.  It also posts the AIMachineIsIdleNotification and AIMachineIsActiveNotification notifications
@@ -153,7 +153,7 @@ extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
 }
 
 /*!
-* @brief Called by the screen saver when it starts
+ * @brief Called by the screen saver when it starts
  *
  * When the screen saver stops, we set ourself to active.
  */
