@@ -15,6 +15,7 @@
  */
 
 #import "AIContactController.h"
+#import "AIChatController.h"
 #import "DCInviteToChatWindowController.h"
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <Adium/AIAccount.h>
