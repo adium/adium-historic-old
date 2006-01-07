@@ -1224,9 +1224,6 @@
 		B747E986058D144C00A9F037 /* AILaTeXPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B747E984058D144C00A9F037 /* AILaTeXPlugin.h */; };
 		B747E987058D144C00A9F037 /* AILaTeXPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B747E985058D144C00A9F037 /* AILaTeXPlugin.m */; };
 		B7FD6C170596550F000C4D9D /* SQLLogging.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7FD6C160596550F000C4D9D /* SQLLogging.plist */; };
-		BF000238063A4D2E0019910B /* CSMessageToOfflineContactWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = BF000236063A4D2E0019910B /* CSMessageToOfflineContactWindowController.h */; };
-		BF000239063A4D2E0019910B /* CSMessageToOfflineContactWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF000237063A4D2E0019910B /* CSMessageToOfflineContactWindowController.m */; };
-		BF00023B063A4FFE0019910B /* OfflineContactMessage.nib in Resources */ = {isa = PBXBuildFile; fileRef = BF00023A063A4FFE0019910B /* OfflineContactMessage.nib */; };
 		C45F7F6506C75E210056B1F2 /* BGContactsTable.h in Headers */ = {isa = PBXBuildFile; fileRef = C45F7F6206C75E200056B1F2 /* BGContactsTable.h */; };
 		C45F7F6606C75E210056B1F2 /* BGContactsTable.m in Sources */ = {isa = PBXBuildFile; fileRef = C45F7F6306C75E210056B1F2 /* BGContactsTable.m */; };
 		C45F7F6706C75E210056B1F2 /* showdrawer.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C45F7F6406C75E210056B1F2 /* showdrawer.tiff */; };
@@ -3236,9 +3233,6 @@
 		B7AE664F0465778E0051E914 /* AISQLLoggerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AISQLLoggerPlugin.h; path = "Plugins/SQL Logger/AISQLLoggerPlugin.h"; sourceTree = SOURCE_ROOT; };
 		B7AE66500465778E0051E914 /* AISQLLoggerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AISQLLoggerPlugin.m; path = "Plugins/SQL Logger/AISQLLoggerPlugin.m"; sourceTree = SOURCE_ROOT; };
 		B7FD6C160596550F000C4D9D /* SQLLogging.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = SQLLogging.plist; sourceTree = "<group>"; };
-		BF000236063A4D2E0019910B /* CSMessageToOfflineContactWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSMessageToOfflineContactWindowController.h; path = "Plugins/Dual Window Interface/CSMessageToOfflineContactWindowController.h"; sourceTree = "<group>"; };
-		BF000237063A4D2E0019910B /* CSMessageToOfflineContactWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSMessageToOfflineContactWindowController.m; path = "Plugins/Dual Window Interface/CSMessageToOfflineContactWindowController.m"; sourceTree = "<group>"; };
-		BF00023A063A4FFE0019910B /* OfflineContactMessage.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = OfflineContactMessage.nib; path = "Plugins/Dual Window Interface/OfflineContactMessage.nib"; sourceTree = "<group>"; };
 		C4243C920638E4EA007AD2D9 /* BGEmoticonMenuPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = BGEmoticonMenuPlugin.h; path = Source/BGEmoticonMenuPlugin.h; sourceTree = "<group>"; };
 		C4243C930638E4EA007AD2D9 /* BGEmoticonMenuPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = BGEmoticonMenuPlugin.m; path = Source/BGEmoticonMenuPlugin.m; sourceTree = "<group>"; };
 		C45F7F6206C75E200056B1F2 /* BGContactsTable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = BGContactsTable.h; path = Plugins/Logger/BGContactsTable.h; sourceTree = "<group>"; };
@@ -5332,9 +5326,6 @@
 				4B25494603F6A32700A8010A /* AIAccountSelectionView.h */,
 				4B25494703F6A32700A8010A /* AIAccountSelectionView.m */,
 				4BCFEF4C03F59F2800A8010A /* AccountSelectionView.nib */,
-				BF000236063A4D2E0019910B /* CSMessageToOfflineContactWindowController.h */,
-				BF000237063A4D2E0019910B /* CSMessageToOfflineContactWindowController.m */,
-				BF00023A063A4FFE0019910B /* OfflineContactMessage.nib */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -6422,7 +6413,6 @@
 				7E824CE006387FAF00813072 /* SHAutoValidatingTextView.h in Headers */,
 				7E824CE206387FAF00813072 /* SHLinkEditorWindowController.h in Headers */,
 				7E824CEA06387FAF00813072 /* SHLinkManagementPlugin.h in Headers */,
-				BF000238063A4D2E0019910B /* CSMessageToOfflineContactWindowController.h in Headers */,
 				4B909C8B064D75400074C9A8 /* BGEmoticonMenuPlugin.h in Headers */,
 				4BBF41E30661194A001D31E1 /* AIContactProfilePane.h in Headers */,
 				4B2DC06D066F705800AD5AAD /* AIContactSettingsPane.h in Headers */,
@@ -7572,7 +7562,6 @@
 				4BD6758506001E450049CAF7 /* ErrorWindow.nib in Resources */,
 				4BD6758806001E460049CAF7 /* AlertMessageContactAlert.nib in Resources */,
 				7E824CDD06387FAF00813072 /* LinkEditor.nib in Resources */,
-				BF00023B063A4FFE0019910B /* OfflineContactMessage.nib in Resources */,
 				4BBF41E70661194A001D31E1 /* ContactProfilePane.nib in Resources */,
 				4B2DC069066F6B1200AD5AAD /* ContactSettingsPane.nib in Resources */,
 				6EC1685006C170A000F9FAD3 /* InviteToChatWindow.nib in Resources */,
@@ -8045,7 +8034,6 @@
 				7E824CE106387FAF00813072 /* SHAutoValidatingTextView.m in Sources */,
 				7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */,
 				7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */,
-				BF000239063A4D2E0019910B /* CSMessageToOfflineContactWindowController.m in Sources */,
 				4B909C8A064D75400074C9A8 /* BGEmoticonMenuPlugin.m in Sources */,
 				4BBF41E40661194A001D31E1 /* AIContactProfilePane.m in Sources */,
 				4B2DC06E066F705800AD5AAD /* AIContactSettingsPane.m in Sources */,
