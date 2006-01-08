@@ -94,7 +94,7 @@
     [stringSet addObject:string];
 }
 
-- (void)addCompletionString:(NSString *)string withImpliedCompletion:(NSString *)impliedCompletion
+- (void)addCompletionString:(NSString *)string withImpliedCompletion:(id)impliedCompletion
 {
 	if (![string isEqualToString:impliedCompletion]) {
 		if (!impliedCompletionDictionary) impliedCompletionDictionary = [[NSMutableDictionary alloc] init];
@@ -203,31 +203,56 @@
     return nil;
 }
 
-//Return a string which may be the actual aString or may be some other string implied by it
-- (NSString *)impliedStringValueForString:(NSString *)aString
+- (id)impliedValueForString:(NSString *)aString
 {
+	id impliedValue = aString;
+
 	if (aString) {
-		//Check if aString implies a different completion; ensure that this new completion is not itself
-		//a potential completion (if it is, we assume the user's manually entered stringValue to be the intended value)
-		NSString	*impliedCompletion = [impliedCompletionDictionary objectForKey:aString];
+		/* Check if aString implies a different completion; ensure that this new completion is not itself
+		* a potential completion (if it is, we assume the user's manually entered stringValue to be the intended value)
+		*/
+		id impliedCompletion = [impliedCompletionDictionary objectForKey:aString];
 		
-		NSString	*impliedCompletionOfImpliedCompletion = [impliedCompletionDictionary objectForKey:impliedCompletion];
-		//If we got an implied completion, and using that implied completion wouldn't get us into a loop with other
-		//completions (leading to unpredicatable behavior as far as the user would be concerned), return the implied
-		//completion
-		if (impliedCompletion && (!impliedCompletionOfImpliedCompletion || [impliedCompletionOfImpliedCompletion isEqualToString:impliedCompletion])) {
-			aString = impliedCompletion;
+		id impliedCompletionOfImpliedCompletion = [impliedCompletionDictionary objectForKey:impliedCompletion];
+		
+		/* If we got an implied completion, and using that implied completion wouldn't get us into a loop with other
+		 * completions (leading to unpredicatable behavior as far as the user would be concerned), return the implied
+		 * completion
+		 */
+		if (impliedCompletion &&
+			(!impliedCompletionOfImpliedCompletion || ([impliedCompletionOfImpliedCompletion compare:impliedCompletion] == NSOrderedSame))) {
+			impliedValue = impliedCompletion;
 		}
 	}
 	
 	return aString;	
+	
+}
+
+//Return a string which may be the actual aString or may be some other string implied by it
+- (NSString *)impliedStringValueForString:(NSString *)aString
+{
+	NSString *returnString;
+	id		 possibleImpliedString = [self impliedValueForString:aString];
+	
+	if (possibleImpliedString && [possibleImpliedString isKindOfClass:[NSString class]]) {
+		returnString = possibleImpliedString;
+	} else {
+		returnString = aString;
+	}
+	
+	return returnString;
 }
 
 //Return a string which may be the actual contents of the text field, or some other string implied by it
 - (NSString *)impliedStringValue
 {
-	NSString		*returnString = [self stringValue];
-	return [self impliedStringValueForString:returnString];
+	return [self impliedStringValueForString:[self stringValue]];
+}
+
+- (id)impliedValue
+{
+	return [self impliedValueForString:[self stringValue]];
 }
 
 @end
