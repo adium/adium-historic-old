@@ -79,8 +79,8 @@
 																	 attributes:numberMessageAttributes] autorelease]];
 	
 	if (count == 1) {
-		BOOL	haveFroms = (froms != NULL);
-		BOOL	haveSubjects = (subjects != NULL);
+		BOOL	haveFroms    = (froms    && *froms);
+		BOOL	haveSubjects = (subjects && *subjects);
 		
 		if (haveFroms || haveSubjects) {
 			NSFont			*fieldFont;
@@ -104,10 +104,20 @@
 				[[message mutableString] appendString:@"\n"];
 			}
 			if (haveSubjects) {
+				NSAttributedString *temp = [[NSAttributedString alloc] initWithString:AILocalizedString(@"Subject: ",nil)
+																					 attributes:fieldAttributed];
+				AILog(@"(Subject header) String: '%@'; attributes: %@; attributed string: %@", AILocalizedString(@"Subject: ",nil), fieldAttributed, temp);
+				[temp release];
 				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"Subject: ",nil)
 																				 attributes:fieldAttributed] autorelease]];
+
+				temp = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(*subjects)]
+																				 attributes:infoAttributed];
+				AILog(@"(Subject string) String: '%@'; attributes: %@; attributed string: %@", (*subjects), infoAttributed, temp);
+				[temp release];
 				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(*subjects)]
 																				 attributes:infoAttributed] autorelease]];				
+				AILog(@"workie!");
 			}
 		}
 	}
