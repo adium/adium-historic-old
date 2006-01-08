@@ -70,9 +70,9 @@
  *
  * Add a completion for the field.  <b>string</b> is the string which will complete for the user (so its beginning is what the user must type, and it is what the user will see in the field). <b>impliedCompletion</b> is what will be returned by <tt>impliedStringValue</tt> when <b>completion</b> is in the text field.
  * @param string The visual completion to add.
- * @param impliedCompletion The actual completion for <b>string</b>, which will be returned by <tt>impliedStringValue</tt> when <b>string</b> is in the text field.
+ * @param impliedCompletion The actual completion for <b>string</b>, which will be returned by impliedValue and -- if it is an NSString -- by impliedStringValue when string is in the text field.
  */
-- (void)addCompletionString:(NSString *)string withImpliedCompletion:(NSString *)impliedCompletion;
+- (void)addCompletionString:(NSString *)string withImpliedCompletion:(id)impliedCompletion;
 
 /*!
  * @brief Return the completed string value of the field
@@ -90,4 +90,11 @@
  * @result	An <tt>NSString</tt> of the implied string value, or <b>aString</b> if no implied string value is assigned
  */
 - (NSString *)impliedStringValueForString:(NSString *)aString;
+
+/*
+ * @brief Return the implied value of the field
+ *
+ * This may be the impliedStringValue or some non-NSString which was set as an implied completion
+ */
+- (id)impliedValue;
 @end
