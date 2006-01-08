@@ -33,11 +33,7 @@
 	IBOutlet	NSTextField		*label_messagesSendOn;
 	IBOutlet	NSTextField		*label_messagesTabs;
 	IBOutlet	NSTextField		*label_menuItem;
-	IBOutlet	NSTextField		*label_switchTabsWith;
-	
-	IBOutlet	AIColorSelectionPopUpButton		*colorPopUp_text;
-	IBOutlet	AIColorSelectionPopUpButton		*colorPopUp_background;
-	IBOutlet	AIFontSelectionPopUpButton		*fontPopUp_text;
+	IBOutlet	NSTextField		*label_switchTabsWith;	
 }
 
 @end
