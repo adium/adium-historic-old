@@ -110,7 +110,6 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	float newVolume = [[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue];
-	NSLog(@"new volume: %f%%", newVolume * 100.0f);
 
 	//If sound volume has changed, we must update all existing sounds to the new volume
 	if (customVolume != newVolume) {
