@@ -9,6 +9,7 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #import "AISystemNetworkDefaults.h"
 #import "AIKeychain.h"
+#import "AIApplicationAdditions.h"
 
 @implementation AISystemNetworkDefaults
 
@@ -71,7 +72,6 @@
 	}
 
 	if ((proxyDict = (NSDictionary *)SCDynamicStoreCopyProxies(NULL))) {
-
 		//Enabled?
 		enable = [[proxyDict objectForKey:(NSString *)enableKey] intValue];
 		if (enable) {
@@ -102,6 +102,27 @@
 					}
 				}
 			}
+
+		} else {
+			if ([NSApp isOnTigerOrBetter]) {
+				//Check for a PAC configuration
+				enable = [[proxyDict objectForKey:(NSString *)kSCPropNetProxiesProxyAutoConfigEnable] boolValue];
+				if (enable) {
+					NSString *pacFile = [proxyDict objectForKey:(NSString *)kSCPropNetProxiesProxyAutoConfigURLString];
+					
+					if (pacFile) {
+						//XXX can't use pac file
+						NSString *msg = [NSString stringWithFormat:
+							@"The systemwide proxy configuration specified via the Network System Preferences depends upon reading a PAC (Proxy Automatic Confiruation) file from %@.  This information can not be used at this time; to connect, please obtain proxy information from your network administrator and use it manually.",
+							pacFile];
+						NSRunCriticalAlertPanel(@"Unable to read proxy information",
+												msg,
+												nil,
+												nil,
+												nil);
+					}
+				}
+			}		
 		}
 		// Could check and process kSCPropNetProxiesExceptionsList here, which returns: CFArray[CFString]
 
