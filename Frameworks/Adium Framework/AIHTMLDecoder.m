@@ -290,8 +290,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	while (searchRange.location < messageLength) {
 		NSDictionary	*attributes = [inMessage attributesAtIndex:searchRange.location effectiveRange:&searchRange];
 		NSFont			*font = [attributes objectForKey:NSFontAttributeName];
-		NSString		*color = [[attributes objectForKey:NSForegroundColorAttributeName] hexString];
-		NSString		*backColor = [[attributes objectForKey:NSBackgroundColorAttributeName] hexString];
+		NSString		*color = (thingsToInclude.colorTags ? [[attributes objectForKey:NSForegroundColorAttributeName] hexString] : nil);
+		NSString		*backColor = (thingsToInclude.colorTags ? [[attributes objectForKey:NSBackgroundColorAttributeName] hexString] : nil);
 		NSString		*familyName = [font familyName];
 		float			 pointSize = [font pointSize];
 
@@ -316,10 +316,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 		//Font (If the color, font, or size has changed)
 		BOOL changedSize = (pointSize != currentSize);
-		BOOL changedColor = (thingsToInclude.colorTags &&
-							 ((color && ![color isEqualToString:currentColor]) || (!color && currentColor)));
-		BOOL changedBackColor = (thingsToInclude.colorTags &&
-							 ((backColor && ![backColor isEqualToString:currentBackColor]) || (!backColor && currentBackColor)));
+		BOOL changedColor = ((color && ![color isEqualToString:currentColor]) || (!color && currentColor));
+		BOOL changedBackColor = ((backColor && ![backColor isEqualToString:currentBackColor]) || (!backColor && currentBackColor));
 		if((thingsToInclude.fontTags && (changedSize || ![familyName isEqualToString:currentFamily])) ||
 		   changedColor || changedBackColor) {
 
