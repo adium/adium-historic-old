@@ -34,6 +34,7 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -46,9 +47,7 @@
 #import <Adium/AIUserIcons.h>
 #import <Adium/AIServiceIcons.h>
 
-#ifdef CONTACTS_INFO_WITH_PROMPT
 #import "ESShowContactInfoPromptController.h"
-#endif
 
 #define PREF_GROUP_CONTACT_LIST			@"Contact List"			//Contact list preference group
 #define KEY_FLAT_GROUPS					@"FlatGroups"			//Group storage
@@ -58,7 +57,7 @@
 #define	OBJECT_STATUS_CACHE				@"Object Status Cache"
 
 #define VIEW_CONTACTS_INFO				AILocalizedString(@"Get Info",nil)
-#define VIEW_CONTACTS_INFO_WITH_PROMPT	[VIEW_CONTACTS_INFO stringByAppendingEllipsis]
+#define VIEW_CONTACTS_INFO_WITH_PROMPT	[AILocalizedString(@"Get Info for Contact", nil) stringByAppendingEllipsis]
 #define GET_INFO_MASK					(NSCommandKeyMask | NSShiftKeyMask)
 #define ALTERNATE_GET_INFO_MASK			(NSCommandKeyMask | NSShiftKeyMask | NSControlKeyMask)
 
@@ -1337,12 +1336,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 }
 
-#ifdef CONTACTS_INFO_WITH_PROMPT
 - (void)showSpecifiedContactInfo:(id)sender
 {
 	[ESShowContactInfoPromptController showPrompt];
 }
-#endif
 
 //Add a contact info view
 - (void)addContactInfoPane:(AIContactInfoPane *)inPane
@@ -1403,14 +1400,12 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 									   name:Menu_didChange
 									 object:[menuItem_getInfoAlternate menu]];
 
-#ifdef CONTACTS_INFO_WITH_PROMPT
 	//Install the Get Info (prompting for a contact name) menu item
-	menuItem_getInfo = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO_WITH_PROMPT
-																			target:self
-																			action:@selector(showSpecifiedContactInfo:)
-																	 keyEquivalent:@""];
+	menuItem_getInfoWithPrompt = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO_WITH_PROMPT
+																					  target:self
+																					  action:@selector(showSpecifiedContactInfo:)
+																			   keyEquivalent:@""];
 	[[adium menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Info];
-#endif
 
 	//Add our get info toolbar item
 	NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"ShowInfo"
@@ -1434,6 +1429,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	} else if ((menuItem == menuItem_getInfoContextualContact) || (menuItem == menuItem_getInfoContextualGroup)) {
 		return [[adium menuController] currentContextMenuObject] != nil;
 
+	} else if (menuItem == menuItem_getInfoWithPrompt) {
+		return [[adium accountController] oneOrMoreConnectedAccounts];
 	}
 
 	return YES;
