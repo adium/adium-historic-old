@@ -206,17 +206,10 @@
 	BOOL			accountOnline;
 		
 	account =  [accounts objectAtIndex:row];
-	if ([listObject isKindOfClass:[AIMetaContact class]]) {
-		//If we're dealing with a metaContact, make sure it's the topmost one
-		exactContact = [(AIMetaContact *)listObject parentContact];
 
-	} else {
-		//Retrieve an AIListContact on this account
-		exactContact = [[adium contactController] existingContactWithService:[listObject service]
-																	 account:account
-																		 UID:[listObject UID]];
-	}
-				
+	exactContact = [[adium contactController] existingContactWithService:[listObject service]
+																 account:account
+																	 UID:[listObject UID]];				
 	accountOnline = [account online];
 
 	//Disable cells for offline accounts
