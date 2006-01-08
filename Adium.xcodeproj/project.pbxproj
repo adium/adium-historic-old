@@ -185,6 +185,9 @@
 		343EC6C7096F7E1700349098 /* ESStatusAdvancedPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 343EC6C5096F7E1700349098 /* ESStatusAdvancedPreferences.h */; };
 		343EC6C8096F7E1700349098 /* ESStatusAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 343EC6C6096F7E1700349098 /* ESStatusAdvancedPreferences.m */; };
 		343EC9810970C29400349098 /* OfflineContactHidingDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 343EC9800970C29400349098 /* OfflineContactHidingDefaults.plist */; };
+		343ECBEA0971B18200349098 /* ESShowContactInfoPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = 343ECBE80971B18200349098 /* ESShowContactInfoPromptController.h */; };
+		343ECBEB0971B18200349098 /* ESShowContactInfoPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 343ECBE90971B18200349098 /* ESShowContactInfoPromptController.m */; };
+		343ECBEE0971B18E00349098 /* ShowContactInfoPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343ECBED0971B18E00349098 /* ShowContactInfoPrompt.nib */; };
 		344093AA07D9161B00321BB3 /* ESAutoAwayPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 344093A807D9161B00321BB3 /* ESAutoAwayPlugin.h */; };
 		344093AB07D9161B00321BB3 /* ESAutoAwayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 344093A907D9161B00321BB3 /* ESAutoAwayPlugin.m */; };
 		3440974307DA06FE00321BB3 /* MessageContextDisplayPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3440974207DA06FE00321BB3 /* MessageContextDisplayPrefs.nib */; };
@@ -1808,6 +1811,9 @@
 		343EC6C5096F7E1700349098 /* ESStatusAdvancedPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESStatusAdvancedPreferences.h; path = Source/ESStatusAdvancedPreferences.h; sourceTree = "<group>"; };
 		343EC6C6096F7E1700349098 /* ESStatusAdvancedPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESStatusAdvancedPreferences.m; path = Source/ESStatusAdvancedPreferences.m; sourceTree = "<group>"; };
 		343EC9800970C29400349098 /* OfflineContactHidingDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = OfflineContactHidingDefaults.plist; path = Resources/OfflineContactHidingDefaults.plist; sourceTree = "<group>"; };
+		343ECBE80971B18200349098 /* ESShowContactInfoPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESShowContactInfoPromptController.h; path = Source/ESShowContactInfoPromptController.h; sourceTree = "<group>"; };
+		343ECBE90971B18200349098 /* ESShowContactInfoPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESShowContactInfoPromptController.m; path = Source/ESShowContactInfoPromptController.m; sourceTree = "<group>"; };
+		343ECBED0971B18E00349098 /* ShowContactInfoPrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ShowContactInfoPrompt.nib; path = Resources/ShowContactInfoPrompt.nib; sourceTree = "<group>"; };
 		344093A807D9161B00321BB3 /* ESAutoAwayPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESAutoAwayPlugin.h; path = Source/ESAutoAwayPlugin.h; sourceTree = SOURCE_ROOT; };
 		344093A907D9161B00321BB3 /* ESAutoAwayPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESAutoAwayPlugin.m; path = Source/ESAutoAwayPlugin.m; sourceTree = SOURCE_ROOT; };
 		3440974407DA070700321BB3 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
@@ -4036,6 +4042,7 @@
 				9C8C7FA303CBA17B00267226 /* Logger */,
 				F1D0C631051AC2380000000E /* Message Alias Support */,
 				6E5A43DC0611604B0078C342 /* Message History */,
+				F569E38102CA876501A8010A /* Message Window Interface */,
 				34A65AF606A5A0C400898470 /* Safari Link Toolbar Item */,
 				34DFF46607A5EAC800B92233 /* Secure Messaging */,
 				B023552808CBE84F008CDDDA /* SQLite Logger */,
@@ -4481,7 +4488,6 @@
 				6EC1684406C1707800F9FAD3 /* Invite to Chat */,
 				6E4D961006B73991005235E9 /* Join Chat Panel */,
 				F51DEC0D03262FB501A8010A /* Login Window */,
-				F569E38102CA876501A8010A /* Message Windows */,
 				4B60991906A447D400EC8D78 /* New Message Panel */,
 				F5A3C2DD039A516E01A8010A /* Password Prompt */,
 				F5D746FA0338D79801A8010A /* Preference Window */,
@@ -6194,7 +6200,7 @@
 			name = Messages;
 			sourceTree = "<group>";
 		};
-		F569E38102CA876501A8010A /* Message Windows */ = {
+		F569E38102CA876501A8010A /* Message Window Interface */ = {
 			isa = PBXGroup;
 			children = (
 				F579397F033E756E01A8010A /* AIDualWindowInterfacePlugin.h */,
@@ -6204,7 +6210,7 @@
 				4BCFEC5803F5718700A8010A /* Other */,
 				34D43504051ADC10003B2F21 /* DualWindowDefaults.plist */,
 			);
-			name = "Message Windows";
+			name = "Message Window Interface";
 			sourceTree = "<group>";
 		};
 		F5A3C2DD039A516E01A8010A /* Password Prompt */ = {
@@ -6318,6 +6324,9 @@
 				34D8328E07CBD5E2006466F2 /* Contact Info List Theme.plist */,
 				34D8328F07CBD5E2006466F2 /* Contact Info List Layout.plist */,
 				34BFE30007E8FA7800AD984D /* ContactAccounts.nib */,
+				343ECBE80971B18200349098 /* ESShowContactInfoPromptController.h */,
+				343ECBE90971B18200349098 /* ESShowContactInfoPromptController.m */,
+				343ECBED0971B18E00349098 /* ShowContactInfoPrompt.nib */,
 				343EC6B20809DEEB00E27095 /* ContactAlerts.nib */,
 				34575E3207CBA7CC004A4FFF /* ContactInfoWindow.nib */,
 				4BBF41E10661194A001D31E1 /* ContactProfilePane.nib */,
@@ -6594,6 +6603,7 @@
 				341BD56B0965E9A500CF83F5 /* AdiumOTREncryption.h in Headers */,
 				EEC461B7096D68580028632F /* OWSpellingPerContactPlugin.h in Headers */,
 				343EC6C7096F7E1700349098 /* ESStatusAdvancedPreferences.h in Headers */,
+				343ECBEA0971B18200349098 /* ESShowContactInfoPromptController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7705,6 +7715,7 @@
 				349710DD096C4C7700699948 /* Buttons.strings in Resources */,
 				343EC6C1096F7DEA00349098 /* StatusPreferencesAdvanced.nib in Resources */,
 				343EC9810970C29400349098 /* OfflineContactHidingDefaults.plist in Resources */,
+				343ECBEE0971B18E00349098 /* ShowContactInfoPrompt.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8211,6 +8222,7 @@
 				341BD56C0965E9A500CF83F5 /* AdiumOTREncryption.m in Sources */,
 				EEC461B6096D68580028632F /* OWSpellingPerContactPlugin.m in Sources */,
 				343EC6C8096F7E1700349098 /* ESStatusAdvancedPreferences.m in Sources */,
+				343ECBEB0971B18200349098 /* ESShowContactInfoPromptController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
