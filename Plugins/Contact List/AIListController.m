@@ -350,7 +350,7 @@ typedef enum {
 /*
  * @brief The entire contact list, or an entire group, changed
  *
- * This indicates that an entire gorup changed -- the contact list is just a giant group, so that includes hte entire
+ * This indicates that an entire group changed -- the contact list is just a giant group, so that includes the entire
  * contact list changing.  Reload the appropriate object.
  */
 - (void)contactListChanged:(NSNotification *)notification

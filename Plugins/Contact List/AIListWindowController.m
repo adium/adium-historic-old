@@ -95,6 +95,11 @@
     return @"";
 }
 
+- (Class)listControllerClass
+{
+	return [AIListController class];
+}
+
 //Init
 - (id)initWithWindowNibName:(NSString *)inNibName
 {	
@@ -124,9 +129,9 @@
 {
 	[super windowDidLoad];
 
-	contactListController = [[AIListController alloc] initWithContactListView:contactListView
-																 inScrollView:scrollView_contactList 
-																	 delegate:self];
+	contactListController = [[[self listControllerClass] alloc] initWithContactListView:contactListView
+																		   inScrollView:scrollView_contactList 
+																			   delegate:self];
 	
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];

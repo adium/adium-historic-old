@@ -15,10 +15,7 @@
  */
 
 #import "AIBorderlessListWindowController.h"
-
-@interface AIBorderlessListWindowController (PRIVATE)
-- (void)centerWindowOnMainScreenIfNeeded:(NSNotification *)notification;
-@end
+#import "AIBorderlessListController.h"
 
 @implementation AIBorderlessListWindowController
 
@@ -44,19 +41,16 @@
     return @"ContactListWindowBorderless";
 }
 
+- (Class)listControllerClass
+{
+	return [AIBorderlessListController class];
+}
 
 - (void)dealloc
 {
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 	[super dealloc];
 }
-
-//Ensure we're on the main screen on load
-- (void)windowDidLoad
-{
-	[super windowDidLoad];
-	[self centerWindowOnMainScreenIfNeeded:nil];
-}	
 
 //If our window is no longer on a screen, move it to the main screen and center
 - (void)centerWindowOnMainScreenIfNeeded:(NSNotification *)notification
@@ -65,6 +59,13 @@
 		[[self window] setFrameOrigin:[[NSScreen mainScreen] frame].origin];
 		[[self window] center];
 	}
+}
+
+//Ensure we're on the main screen on load
+- (void)windowDidLoad
+{
+	[super windowDidLoad];
+	[self centerWindowOnMainScreenIfNeeded:nil];
 }
 
 @end
