@@ -113,7 +113,7 @@
 
 				temp = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(*subjects)]
 																				 attributes:infoAttributed];
-				AILog(@"(Subject string) String: '%@'; attributes: %@; attributed string: %@", (*subjects), infoAttributed, temp);
+				AILog(@"(Subject string) String: '%@'; attributes: %@; attributed string: %@", [NSString stringWithUTF8String:(*subjects)], infoAttributed, temp);
 				[temp release];
 				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(*subjects)]
 																				 attributes:infoAttributed] autorelease]];				
