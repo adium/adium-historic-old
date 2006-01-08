@@ -1108,10 +1108,59 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 				[textAttributes setTextColor:[NSColor grayColor]];
 				inLogSpan = YES;
 			}
+		} else if ([arg caseInsensitiveCompare:@"style"] == NSOrderedSame) {
+			NSString	*style = [inArgs objectForKey:arg];
+			int			styleLength = [style length];
+			NSRange		attributeRange;
+			
+			attributeRange = [style rangeOfString:@"font-family: " options:NSCaseInsensitiveSearch];
+			if (attributeRange.location != NSNotFound) {
+				NSRange	 nextSemicolon  =[style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				NSString *fontFamily = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
+
+				[textAttributes setFontFamily:fontFamily];
+			}
+			
+			attributeRange = [style rangeOfString:@"font-size: " options:NSCaseInsensitiveSearch];
+			if (attributeRange.location != NSNotFound) {
+				NSRange	 nextSemicolon  =[style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				NSString *fontSize = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
+				
+				static int stylePointSizes[] = { 9, 10, 12, 14, 18, 24 };
+				int size = 12;
+
+				if ([fontSize caseInsensitiveCompare:@"xx-small"] == NSOrderedSame) {
+					size = stylePointSizes[0];
+					
+				} else if ([fontSize caseInsensitiveCompare:@"x-small"] == NSOrderedSame) {
+					size = stylePointSizes[1];
+				
+				} else if ([fontSize caseInsensitiveCompare:@"small"] == NSOrderedSame) {
+					size = stylePointSizes[2];
+					
+				} else if ([fontSize caseInsensitiveCompare:@"medium"] == NSOrderedSame) {
+					size = stylePointSizes[3];
+					
+				} else if ([fontSize caseInsensitiveCompare:@"large"] == NSOrderedSame) {
+					size = stylePointSizes[4];
+					
+				} else if ([fontSize caseInsensitiveCompare:@"x-large"] == NSOrderedSame) {
+					size = stylePointSizes[5];
+				}
+
+				[textAttributes setFontSize:size];
+			}
+			
+			attributeRange = [style rangeOfString:@"color: " options:NSCaseInsensitiveSearch];
+			if (attributeRange.location != NSNotFound) {
+				NSRange	 nextSemicolon  =[style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				NSString *hexColor = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
+
+				[textAttributes setTextColor:[NSColor colorWithHTMLString:hexColor
+															 defaultColor:[NSColor blackColor]]];
+				
+			}
 		}
-		
-		//XXX Jabber can send a tag like so: <span style='font-family: Helvetica; font-size: small; '>
-		
 	}
 }
 
