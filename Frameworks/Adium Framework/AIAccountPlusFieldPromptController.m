@@ -59,18 +59,28 @@
 
 - (AIListContact *)contactFromTextField
 {
-	AIListContact	*contact;
-	AIAccount		*account;
-	NSString		*UID;
+	AIListContact	*contact = nil;
+	NSString		*UID = nil;
+	AIAccount		*account = [[popUp_service selectedItem] representedObject];;
+
+	id impliedValue = [textField_handle impliedValue];
+	if ([impliedValue isKindOfClass:[AIMetaContact class]]) {
+		contact = impliedValue;
+
+	} else if ([impliedValue isKindOfClass:[AIListContact class]]) {
+		UID = [contact UID];
+
+	} else  if ([impliedValue isKindOfClass:[NSString class]]) {
+		UID = [[account service] filterUID:impliedValue removeIgnoredCharacters:YES];
+	}
 	
-	//Get the service type and UID
-	account = [[popUp_service selectedItem] representedObject];
-	UID = [[account service] filterUID:[textField_handle impliedStringValue] removeIgnoredCharacters:YES];
-	
-	//Find the contact
-	contact = [[adium contactController] contactWithService:[account service]
-													account:account 
-														UID:UID];
+	if (!contact && UID) {
+
+		//Find the contact
+		contact = [[adium contactController] contactWithService:[account service]
+														account:account 
+															UID:UID];		
+	}
 	
 	return contact;
 }
@@ -83,13 +93,16 @@
 	//Clear the completing strings
 	[textField_handle setCompletingStrings:nil];
 	
-	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
+	/* Configure the auto-complete view to autocomplete for contacts matching the selected account's service
+	 * Don't include meta contacts which don't currently contain any valid contacts
+	 */
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
     while ((contact = [enumerator nextObject])) {
-		if ([contact service] == [account service]) {
+		if ([contact service] == [account service] &&
+			(![contact isKindOfClass:[AIMetaContact class]] || [[(AIMetaContact *)contact listContacts] count])) {
 			NSString *UID = [contact UID];
 			[textField_handle addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
-			[textField_handle addCompletionString:[contact displayName] withImpliedCompletion:UID];
+			[textField_handle addCompletionString:[contact displayName] withImpliedCompletion:contact];
 			[textField_handle addCompletionString:UID];
 		}
     }
