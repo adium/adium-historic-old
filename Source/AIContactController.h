@@ -108,6 +108,7 @@ typedef enum {
 	NSMenuItem				*menuItem_getInfoAlternate;
 	NSMenuItem				*menuItem_getInfoContextualContact;
 	NSMenuItem				*menuItem_getInfoContextualGroup;	
+	NSMenuItem				*menuItem_getInfoWithPrompt;
 
 	//Contact Info Panes
     NSMutableArray			*contactInfoPanes;	
