@@ -80,11 +80,17 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 	//Configure and show window
 
-	//Find the highest-up metaContact so our info is accurate
-
-	AIListObject	*containingObject;
-	while ([(containingObject = [listObject containingObject]) isKindOfClass:[AIMetaContact class]]) {
-		listObject = containingObject;
+	if ([listObject isKindOfClass:[AIListContact class]]) {
+		AIListContact *parentContact = [(AIListContact *)listObject parentContact];
+		
+		/* Use the parent contact if it is a valid meta contact which contains contacts
+		 * If this contact is within a metacontact but not currently listed on any buddy list, we don't want to 
+		 * display the effectively-invisible metacontact's info but rather the info of this contact itself.
+		 */
+		if (![parentContact isKindOfClass:[AIMetaContact class]] ||
+			[[(AIMetaContact *)parentContact listContacts] count]) {
+			listObject = parentContact;
+		}
 	}
 
 	[sharedContactInfoInstance configureForListObject:listObject];
@@ -441,7 +447,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	AIListObject	*listObject = ([displayedObject isKindOfClass:[AIListContact class]] ?
 								   [(AIListContact *)displayedObject parentContact] :
 								   displayedObject);
-
+	
 	if ([listObject isKindOfClass:[AIMetaContact class]] &&
 		([[(AIMetaContact *)listObject listContacts] count] > 1)) {
 		[contactListController setContactListRoot:(AIMetaContact *)listObject];
