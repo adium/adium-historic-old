@@ -95,7 +95,6 @@
 	[colorPopUp_background setColor:[[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor]];
 	[fontPopUp_text setAvailableFonts:[NSArray arrayWithObjects:
 		@"Arial", [NSFont fontWithName:@"Arial" size:12],
-		@"Comic Sans MS", [NSFont fontWithName:@"Comic Sans MS" size:12],
 		@"Courier", [NSFont fontWithName:@"Courier" size:12],
 		@"Helvetica", [NSFont fontWithName:@"Helvetica" size:12],
 		@"Times", [NSFont fontWithName:@"Times" size:12],
