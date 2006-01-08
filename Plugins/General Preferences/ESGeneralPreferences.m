@@ -23,8 +23,6 @@
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
-#import <AIUtilities/AIFontSelectionPopUpButton.h>
-#import <AIUtilities/AIColorSelectionPopUpButton.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
 
@@ -89,20 +87,6 @@
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_MENU_ITEM];
 	[checkBox_enableMenuItem setState:[[prefDict objectForKey:KEY_STATUS_MENU_ITEM_ENABLED] boolValue]];
 		
-	//Formatting
-	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
-	[colorPopUp_text setColor:[[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor]];
-	[colorPopUp_background setColor:[[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor]];
-	[fontPopUp_text setAvailableFonts:[NSArray arrayWithObjects:
-		@"Arial", [NSFont fontWithName:@"Arial" size:12],
-		@"Courier", [NSFont fontWithName:@"Courier" size:12],
-		@"Helvetica", [NSFont fontWithName:@"Helvetica" size:12],
-		@"Times", [NSFont fontWithName:@"Times" size:12],
-		@"Trebuchet MS", [NSFont fontWithName:@"Trebuchet MS" size:12],
-		@"Verdana", [NSFont fontWithName:@"Verdana" size:12],
-		nil]];
-	[fontPopUp_text setFont:[[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont]];
-	
     [self configureControlDimming];
 }
 
@@ -147,21 +131,6 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkBox_enableMenuItem state]] 
 											 forKey:KEY_STATUS_MENU_ITEM_ENABLED
 											  group:PREF_GROUP_STATUS_MENU_ITEM];
-	} else if (sender == colorPopUp_text) {
-		[[adium preferenceController] setPreference:[[sender color] stringRepresentation]
-											 forKey:KEY_FORMATTING_TEXT_COLOR
-											  group:PREF_GROUP_FORMATTING];
-
-	} else if (sender == colorPopUp_background) {
-		[[adium preferenceController] setPreference:[[sender color] stringRepresentation]
-											 forKey:KEY_FORMATTING_BACKGROUND_COLOR
-											  group:PREF_GROUP_FORMATTING];
-		
-	} else if (sender == fontPopUp_text) {
-		[[adium preferenceController] setPreference:[[sender font] stringRepresentation]
-											 forKey:KEY_FORMATTING_FONT
-											  group:PREF_GROUP_FORMATTING];
-		
 	}
 }
 
