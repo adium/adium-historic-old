@@ -95,29 +95,30 @@
 			[[message mutableString] appendString:@"\n\n"];
 			
 			if (haveFroms) {
-				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"From: ",nil)
-																				 attributes:fieldAttributed] autorelease]];
-				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(*froms)]
-																				 attributes:infoAttributed] autorelease]];
+				NSString	*fromString = [NSString stringWithUTF8String:(*froms)];
+				if (fromString && [fromString length]) {
+					[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"From: ",nil)
+																					 attributes:fieldAttributed] autorelease]];
+					[message appendAttributedString:[[[NSAttributedString alloc] initWithString:fromString
+																					 attributes:infoAttributed] autorelease]];
+				}
 			}
+			
 			if (haveFroms && haveSubjects) {
 				[[message mutableString] appendString:@"\n"];
 			}
+			
 			if (haveSubjects) {
-				NSAttributedString *temp = [[NSAttributedString alloc] initWithString:AILocalizedString(@"Subject: ",nil)
-																					 attributes:fieldAttributed];
-				AILog(@"(Subject header) String: '%@'; attributes: %@; attributed string: %@", AILocalizedString(@"Subject: ",nil), fieldAttributed, temp);
-				[temp release];
-				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"Subject: ",nil)
-																				 attributes:fieldAttributed] autorelease]];
-
-				temp = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(*subjects)]
-																				 attributes:infoAttributed];
-				AILog(@"(Subject string) String: '%@'; attributes: %@; attributed string: %@", [NSString stringWithUTF8String:(*subjects)], infoAttributed, temp);
-				[temp release];
-				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(*subjects)]
-																				 attributes:infoAttributed] autorelease]];				
-				AILog(@"workie!");
+				NSString	*subjectString = [NSString stringWithUTF8String:(*subjects)];
+				if (subjectString && [subjectString length]) {
+					[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"Subject: ",nil)
+																					 attributes:fieldAttributed] autorelease]];
+					AILog(@"%@: %@ appending %@",self,message,subjectString);
+					[message appendAttributedString:[[[NSAttributedString alloc] initWithString:subjectString
+																					 attributes:infoAttributed] autorelease]];				
+				} else {
+					AILog(@"Got an invalid subjectString from %s",*subjects);
+				}
 			}
 		}
 	}
@@ -125,13 +126,15 @@
 	NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:title,@"Title",
 		message,@"Message",nil];
 	
-	if (urls != NULL) {
-		[infoDict setObject:[NSString stringWithUTF8String:urls[0]] forKey:@"URL"];
+	NSString	*urlString = (urls ? [NSString stringWithUTF8String:urls[0]] : nil);
+
+	if (urlString) {
+		[infoDict setObject:urlString forKey:@"URL"];
 	}
 	
 	[self mainPerformSelector:@selector(showNotifyEmailWindowWithMessage:URLString:)
 				   withObject:message
-				   withObject:(urls ? [NSString stringWithUTF8String:urls[0]] : nil)];
+				   withObject:(urlString ? urlString : nil)];
 
 	[centeredParagraphStyle release];
 	[message release];
