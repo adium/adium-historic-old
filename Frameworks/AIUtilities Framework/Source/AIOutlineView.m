@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIOutlineView.h"
+#import "AIOutlineViewAdditions.h"
 
 @interface AIOutlineView (PRIVATE)
 - (void)_initOutlineView;
@@ -169,6 +170,8 @@
 
     } else {
         needsReload = NO;
+		NSArray		*selectedItems = [self arrayOfSelectedItems];
+
 		[super reloadData];
 
 		//After reloading data, we correctly expand/collapse all groups
@@ -193,6 +196,8 @@
 				}
 			}
 		}
+		
+		[self selectItemsInArray:selectedItems];
 	}
 }
 
@@ -204,13 +209,12 @@
 //Preserve selection through a reload
 - (void)reloadItem:(id)item reloadChildren:(BOOL)reloadChildren
 {
-	//See warning in -(void)reloadData
-//	NSArray		*selectedItems = [self arrayOfSelectedItems];
+	NSArray		*selectedItems = [self arrayOfSelectedItems];
 
 	[super reloadItem:item reloadChildren:reloadChildren];
 
 	//Restore (if possible) the previously selected object
-//	[self selectItemsInArray:selectedItems];
+	[self selectItemsInArray:selectedItems];
 }
 
 #pragma mark Dragging
