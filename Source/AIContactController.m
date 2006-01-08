@@ -1404,7 +1404,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	menuItem_getInfoWithPrompt = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO_WITH_PROMPT
 																					  target:self
 																					  action:@selector(showSpecifiedContactInfo:)
-																			   keyEquivalent:@""];
+																			   keyEquivalent:@"i"];
+	[menuItem_getInfoWithPrompt setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+
 	[[adium menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Info];
 
 	//Add our get info toolbar item
