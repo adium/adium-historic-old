@@ -17,7 +17,7 @@
 #import <Adium/AIWindowController.h>
 
 @class ESContactInfoListController, AIModularPaneCategoryView, AIImageViewWithImagePicker, AIAutoScrollView,
-	   AIListOutlineView;
+	   AIListOutlineView, AIListObject;
 @protocol AIListControllerDelegate;
 
 @interface AIContactInfoWindowController : AIWindowController <AIListControllerDelegate> {	
