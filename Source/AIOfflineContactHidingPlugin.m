@@ -36,11 +36,6 @@
 #define OFFLINE_CONTACTS_IDENTIFER			@"OfflineContacts"
 #define	KEY_HIDE_CONTACT_LIST_GROUPS		@"Hide Contact List Groups"
 
-@interface AIOfflineContactHidingPlugin (PRIVATE)
-- (void)configureOfflineContactHiding;
-- (void)configurePreferences;
-@end
-
 /*!
  * @class AIOfflineContactHidingPlugin
  * @brief Component to handle showing or hiding offline contacts and hiding empty groups
@@ -52,6 +47,10 @@
  */
 - (void)installPlugin
 {	
+	//Default preferences
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"OfflineContactHidingDefaults" forClass:[self class]]
+										  forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+	
 	//Show offline contacts menu item
     menuItem_showOffline = [[NSMenuItem alloc] initWithTitle:SHOW_OFFLINE_MENU_TITLE
 													 target:self
