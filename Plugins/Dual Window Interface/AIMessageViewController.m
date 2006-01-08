@@ -320,7 +320,7 @@
 			messageHeader = [NSString stringWithFormat:AILocalizedString(@"%@ appears to be offline. How do you want to send this message?", nil),
 				formattedUID];
 			message = [AIHTMLDecoder decodeHTML:[NSString stringWithFormat:
-				AILocalizedString(@"<font size=8><b>Send Later<b> will send the message the next time both you and %@ are online. <b>Send Now</b> may work if %@ only appears to be offline, such as if %@ is invisible.</font>", "Send Later dialogue explanation text"),
+				AILocalizedString(@"<font size=8><b>Send Later<b> will send the message the next time both you and %@ are online. <b>Send Now</b> may work if %@ only appears to be offline, such as if %@ is invisible or not on your contact list.</font>", "Send Later dialogue explanation text"),
 				formattedUID, formattedUID, formattedUID]];
 
 			[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:nil
