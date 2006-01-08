@@ -79,8 +79,8 @@
 																	 attributes:numberMessageAttributes] autorelease]];
 	
 	if (count == 1) {
-		BOOL	haveFroms    = (froms    && *froms);
-		BOOL	haveSubjects = (subjects && *subjects);
+		BOOL	haveFroms    = (froms    != NULL);
+		BOOL	haveSubjects = (subjects != NULL);
 		
 		if (haveFroms || haveSubjects) {
 			NSFont			*fieldFont;
