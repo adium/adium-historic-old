@@ -79,10 +79,11 @@
 }
 
 - (void) setName:(NSString *)newName {
-    if (name != newName)
-	[name release];
-    name = [newName retain];
-    [manager updatedName];
+    if (name != newName) {
+		[name release];
+		name = [newName retain];
+		[manager updatedName];
+	}
 }
 
 - (void) setStatus:(AWEzvStatus)newStatus withMessage:(NSString *)message{
