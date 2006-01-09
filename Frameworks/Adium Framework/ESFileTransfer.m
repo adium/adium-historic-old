@@ -20,6 +20,10 @@
 
 static NSBezierPath *arrowPath = nil;
 
+#define MAGIC_ARROW_SCALE       0.85
+#define MAGIC_ARROW_TRANSLATE_X 2.85
+#define MAGIC_ARROW_TRANSLATE_Y 0.75
+
 @implementation ESFileTransfer
 //Init
 + (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount
@@ -267,7 +271,7 @@ static NSBezierPath *arrowPath = nil;
 	[[NSWorkspace sharedWorkspace] openFile:localFilename];
 }
 
-- (NSBezierPath *)arrowPathInSize:(NSSize)arrowSize pointingDown:(BOOL)pointItDown
+- (NSBezierPath *)arrowPathInSize:(NSSize)arrowSize pointingDown:(BOOL)pointItDown shaftLengthMultiplier:(float)shaftLengthMulti
 {
 	if(!arrowPath) {
 		arrowPath = [[NSBezierPath bezierPath] retain];
@@ -283,12 +287,14 @@ static NSBezierPath *arrowPath = nil;
 #		define ONE_THIRD  (1.0/3.0)
 #		define TWO_THIRDS (2.0/3.0)
 #		define ONE_HALF    0.5
+		const float shaftLength = ONE_HALF * shaftLengthMulti;
+		const float shaftEndY = -(shaftLength - ONE_HALF); //the end of the arrow shaft (points 1-2).
 
 		//start with the bottom vertex.
-		[arrowPath moveToPoint:NSMakePoint(ONE_THIRD,  0.0)]; //1
-		[arrowPath lineToPoint:NSMakePoint(TWO_THIRDS,  0.0)]; //2
+		[arrowPath moveToPoint:NSMakePoint(ONE_THIRD,  shaftEndY)]; //1
+		[arrowPath lineToPoint:NSMakePoint(TWO_THIRDS, shaftEndY)]; //2
 		//up to the inner right corner.
-		[arrowPath relativeLineToPoint:NSMakePoint(0.0, ONE_HALF)]; //3
+		[arrowPath relativeLineToPoint:NSMakePoint(0.0, shaftLength)]; //3
 		//far right.
 		[arrowPath relativeLineToPoint:NSMakePoint(ONE_THIRD,  0.0)]; //4
 		//top center - the point of the arrow.
@@ -320,6 +326,11 @@ static NSBezierPath *arrowPath = nil;
 	[path transformUsingAffineTransform:transform];
 
 	return [path autorelease];	
+}
+
+- (NSBezierPath *)arrowPathInSize:(NSSize)arrowSize pointingDown:(BOOL)pointItDown
+{
+	return [self arrowPathInSize:arrowSize pointingDown:pointItDown shaftLengthMultiplier:1.0f];
 }
 
 - (NSImage *)iconImage
@@ -367,14 +378,24 @@ static NSBezierPath *arrowPath = nil;
 
 		//and the arrow on top of it.
 		if(drawArrow) {
-			NSBezierPath *arrow = [self arrowPathInSize:bottomRight.size pointingDown:pointingDown];
+			NSBezierPath *arrow = [self arrowPathInSize:bottomRight.size pointingDown:pointingDown shaftLengthMultiplier:5.0f];
 
 			//bring it into position.
 			NSAffineTransform *transform = [NSAffineTransform transform];
 			[transform translateXBy:circleRect.origin.x yBy:circleRect.origin.y];
 			[arrow transformUsingAffineTransform:transform];
 
-			NSLog(@"arrow bounds (after): %@", NSStringFromRect([arrow bounds]));
+			//fine-tune size.
+			transform = [NSAffineTransform transform];
+			[transform scaleBy:MAGIC_ARROW_SCALE];
+			[arrow transformUsingAffineTransform:transform];
+
+			//fine-tune position.
+			transform = [NSAffineTransform transform];
+			[transform translateXBy:MAGIC_ARROW_TRANSLATE_X yBy:MAGIC_ARROW_TRANSLATE_Y];
+			[arrow transformUsingAffineTransform:transform];
+
+			[circle addClip];
 			[[NSColor alternateSelectedControlColor] setFill];
 			[arrow fill];
 		}
