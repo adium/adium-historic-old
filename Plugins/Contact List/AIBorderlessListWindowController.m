@@ -43,6 +43,7 @@
 	[super windowDidLoad];
 	NSWindow * window = [self window];
 	if (![window screen]) {
-		[window constrainFrameRect:[window frame] toScreen:[NSScreen mainScreen]];}
-
+		[window constrainFrameRect:[window frame] toScreen:[NSScreen mainScreen]];
+	}
+}
 @end
