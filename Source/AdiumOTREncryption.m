@@ -74,47 +74,6 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 		/* Initialize the OTR library */
 		OTRL_INIT;
 
-		/* Make our OtrlUserState; we'll only use the one. */
-		otrg_plugin_userstate = otrl_userstate_create();
-		
-		if (![[[adium preferenceController] preferenceForKey:@"GaimOTR_to_AdiumOTR_Update"
-													   group:@"OTR"] boolValue]) {
-			NSFileManager *fileManager = [NSFileManager defaultManager];
-			NSString	  *destinationPath = [[adium loginController] userDirectory];
-			NSString	  *sourcePath = [destinationPath stringByAppendingPathComponent:@"libgaim"];
-
-			[fileManager copyPath:[sourcePath stringByAppendingPathComponent:@"otr.fingerprints"]
-						   toPath:[destinationPath stringByAppendingPathComponent:@"otr.fingerprints"]
-						  handler:nil];
-			[fileManager copyPath:[sourcePath stringByAppendingPathComponent:@"otr.private_key"]
-						   toPath:[destinationPath stringByAppendingPathComponent:@"otr.private_key"]
-						  handler:nil];			
-			
-			[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
-												 forKey:@"GaimOTR_to_AdiumOTR_Update"
-												  group:@"OTR"];
-		}
-		
-		otrl_privkey_read(otrg_plugin_userstate, PRIVKEY_PATH);
-		otrl_privkey_read_fingerprints(otrg_plugin_userstate, STORE_PATH,
-									   NULL, NULL);
-		
-		otrg_ui_update_fingerprint();
-		
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(adiumWillTerminate:)
-										   name:Adium_WillTerminate
-										 object:nil];
-
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(updateSecurityDetails:) 
-										   name:Chat_SourceChanged
-										 object:nil];
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(updateSecurityDetails:) 
-										   name:Chat_DestinationChanged
-										 object:nil];
-
 		/*
 		gaim_signal_connect(conn_handle, "signed-on", otrg_plugin_handle,
 							GAIM_CALLBACK(process_connection_change), NULL);
@@ -128,7 +87,47 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 
 - (void)controllerDidLoad
 {
+	if (![[[adium preferenceController] preferenceForKey:@"GaimOTR_to_AdiumOTR_Update"
+												   group:@"OTR"] boolValue]) {
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		NSString	  *destinationPath = [[adium loginController] userDirectory];
+		NSString	  *sourcePath = [destinationPath stringByAppendingPathComponent:@"libgaim"];
+		
+		[fileManager copyPath:[sourcePath stringByAppendingPathComponent:@"otr.fingerprints"]
+					   toPath:[destinationPath stringByAppendingPathComponent:@"otr.fingerprints"]
+					  handler:nil];
+		[fileManager copyPath:[sourcePath stringByAppendingPathComponent:@"otr.private_key"]
+					   toPath:[destinationPath stringByAppendingPathComponent:@"otr.private_key"]
+					  handler:nil];			
+		
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
+											 forKey:@"GaimOTR_to_AdiumOTR_Update"
+											  group:@"OTR"];
+	}
+
+	/* Make our OtrlUserState; we'll only use the one. */
+	otrg_plugin_userstate = otrl_userstate_create();
+
+	otrl_privkey_read(otrg_plugin_userstate, PRIVKEY_PATH);
+	otrl_privkey_read_fingerprints(otrg_plugin_userstate, STORE_PATH,
+								   NULL, NULL);
 	
+	otrg_ui_update_fingerprint();
+	
+	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumWillTerminate:)
+									   name:Adium_WillTerminate
+									 object:nil];
+	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(updateSecurityDetails:) 
+									   name:Chat_SourceChanged
+									 object:nil];
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(updateSecurityDetails:) 
+									   name:Chat_DestinationChanged
+									 object:nil];	
 }
 
 - (void)dealloc
