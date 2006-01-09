@@ -19,22 +19,6 @@
 
 @implementation AIBorderlessListWindowController
 
-//Init
-- (id)initWithWindowNibName:(NSString *)inNibName
-{	
-    if ((self = [super initWithWindowNibName:inNibName])) {
-		/* Unlike with a normal window, the system doesn't assist us in keeping the borderless contact list on a visible screen,
-		 * so we'll observe screen changes and ensure that the contact list stays on a valid screen
-		 */
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(centerWindowOnMainScreenIfNeeded:) 
-													 name:NSApplicationDidChangeScreenParametersNotification 
-												   object:nil];
-	}
-
-	return self;
-}
-
 //Borderless nib
 + (NSString *)nibName
 {
@@ -52,20 +36,13 @@
 	[super dealloc];
 }
 
-//If our window is no longer on a screen, move it to the main screen and center
-- (void)centerWindowOnMainScreenIfNeeded:(NSNotification *)notification
-{
-	if (![[self window] screen]) {
-		[[self window] setFrameOrigin:[[NSScreen mainScreen] frame].origin];
-		[[self window] center];
-	}
-}
-
+#warning this seems like it would mess up people with more than one screen
 //Ensure we're on the main screen on load
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
-	[self centerWindowOnMainScreenIfNeeded:nil];
-}
+	NSWindow * window = [self window];
+	if (![window screen]) {
+		[window constrainFrameRect:[window frame] toScreen:[NSScreen mainScreen]];}
 
 @end

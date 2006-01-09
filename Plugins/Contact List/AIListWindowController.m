@@ -415,6 +415,7 @@
 
 - (void)screenParametersChanged:(NSNotification *)notification
 {
+	[self slideWindowOnScreen];
 	[contactListController contactListDesiredSizeChanged];
 }
 
@@ -515,8 +516,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 - (BOOL)shouldSlideWindowOffScreen
 {
 	BOOL shouldSlide = NO;
-    
-    if (preventHiding) {
+	    if (preventHiding) {
         shouldSlide = NO;
     }
     else if (windowSlidOffScreenEdgeMask != 0) {
