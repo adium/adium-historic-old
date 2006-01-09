@@ -35,7 +35,6 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
-#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListOutlineView.h>
@@ -319,21 +318,25 @@
 			NSString			*formattedUID = [listObject formattedUID];
 			messageHeader = [NSString stringWithFormat:AILocalizedString(@"%@ appears to be offline. How do you want to send this message?", nil),
 				formattedUID];
-			message = [AIHTMLDecoder decodeHTML:[NSString stringWithFormat:
-				AILocalizedString(@"<font size=8><b>Send Later<b> will send the message the next time both you and %@ are online. <b>Send Now</b> may work if %@ only appears to be offline, such as if %@ is invisible or not on your contact list.</font>", "Send Later dialogue explanation text"),
-				formattedUID, formattedUID, formattedUID]];
+			message = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:
+				AILocalizedString(@"Send Later will send the message the next time both you and %@ are online. Send Now may work if %@ is invisible or is not on your contact list and so only appears to be offline.", "Send Later dialogue explanation text"),
+				formattedUID, formattedUID, formattedUID]
+													  attributes:nil];
 
 			[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:nil
 																  defaultButton:AILocalizedString(@"Send Now", nil)
-																alternateButton:AILocalizedString(@"Send Later", nil)
-																	otherButton:AILocalizedString(@"Don't Send", nil)
+																alternateButton:AILocalizedString(@"Don't Send", nil)
+																	otherButton:AILocalizedString(@"Send Later", nil)
 																	   onWindow:[view_contents window]
 															  withMessageHeader:messageHeader
 																	 andMessage:message
-																		  image:([listObject userIcon] ? [listObject userIcon] : nil)
+																		  image:([listObject userIcon] ? [listObject userIcon] : [AIServiceIcons serviceIconForObject:listObject
+																																								 type:AIServiceIconLarge
+																																							direction:AIIconNormal])
 																		 target:self
 																	   userInfo:nil];
-			
+			[message release];
+
 		} else {
 			AIContentMessage		*message;
 			NSAttributedString		*outgoingAttributedString;
@@ -374,10 +377,10 @@
 			[self sendMessage:nil];
 			break;
 
-		case AITextAndButtonsAlternateReturn:
+		case AITextAndButtonsOtherReturn:
 			[self sendMessageLater:nil];
 			break;
-		case AITextAndButtonsOtherReturn:
+		case AITextAndButtonsAlternateReturn:
 		case AITextAndButtonsClosedWithoutResponse:
 			break;		
 	}
