@@ -367,7 +367,7 @@
 								 userInfo:userInfo]) {
 		
 		//Close the window if the target returns YES
-		[[self window] close];
+		[self closeWindow:nil];
 	}
 }
 
