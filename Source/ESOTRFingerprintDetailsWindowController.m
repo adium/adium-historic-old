@@ -19,25 +19,31 @@
 
 @interface ESOTRFingerprintDetailsWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName forFingerprintDict:(NSDictionary *)inFingerprintDict;
+- (void)setFingerprintDict:(NSDictionary *)inFingerprintDict;
 @end
 
 @implementation ESOTRFingerprintDetailsWindowController
 
+static ESOTRFingerprintDetailsWindowController	*sharedController = nil;
+
 + (void)showDetailsForFingerprintDict:(NSDictionary *)inFingerprintDict
 {
-	ESOTRFingerprintDetailsWindowController	*controller;
-	
-	if ((controller = [[self alloc] initWithWindowNibName:@"OTRFingerprintDetailsWindow" 
-									   forFingerprintDict:inFingerprintDict])) {
-		[controller showWindow:nil];
-		[[controller window] makeKeyAndOrderFront:nil];
+	if (sharedController) {
+		[sharedController setFingerprintDict:inFingerprintDict];
+
+	} else {
+		sharedController = [[self alloc] initWithWindowNibName:@"OTRFingerprintDetailsWindow" 
+											forFingerprintDict:inFingerprintDict];
 	}
+		
+	[sharedController showWindow:nil];
+	[[sharedController window] makeKeyAndOrderFront:nil];
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName forFingerprintDict:(NSDictionary *)inFingerprintDict
 {
 	if ((self = [super initWithWindowNibName:windowNibName])) {
-		fingerprintDict = [inFingerprintDict retain];
+		[self setFingerprintDict:inFingerprintDict];
 	}
 	
 	return self;
@@ -50,16 +56,33 @@
 	[super dealloc];
 }
 
-- (void)windowDidLoad
+- (void)configureWindow
 {
 	AIAccount	*account = [fingerprintDict objectForKey:@"AIAccount"];
-
+	
+	//Ensure the window is loaded
+	[self window];
+	
 	[textField_UID setStringValue:[fingerprintDict objectForKey:@"UID"]];
 	[textField_fingerprint setStringValue:[fingerprintDict objectForKey:@"FingerprintString"]];
 	
 	[imageView_service setImage:[AIServiceIcons serviceIconForObject:account
 																type:AIServiceIconLarge
-														   direction:AIIconNormal]];
+														   direction:AIIconNormal]];	
+}
+
+- (void)setFingerprintDict:(NSDictionary *)inFingerprintDict
+{
+	if (inFingerprintDict != fingerprintDict) {
+		[fingerprintDict release];
+		fingerprintDict = [inFingerprintDict retain];
+		
+		[self configureWindow];
+	}
+}
+
+- (void)windowDidLoad
+{
 	[imageView_lock setImage:[NSImage imageNamed:@"Lock_Locked State" forClass:[adium class]]];	
 	
 	[[self window] setTitle:AILocalizedString(@"OTR Fingerprint",nil)];
@@ -72,7 +95,8 @@
 - (void)windowWillClose:(id)sender
 {
 	[super windowWillClose:sender];
-	[self autorelease];
+
+	[sharedController autorelease]; sharedController = nil;
 }
 
 /*!
