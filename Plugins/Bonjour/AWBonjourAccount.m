@@ -139,6 +139,10 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 {
 	[self didConnect];
     
+	//Silence updates
+    [self silenceAllContactUpdatesForInterval:18.0];
+	[[adium contactController] delayListObjectNotificationsUntilInactivity];
+	
 	//We need to set our user icon after connecting
     [self updateStatusForKey:KEY_USER_ICON];	
 }
