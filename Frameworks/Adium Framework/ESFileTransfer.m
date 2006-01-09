@@ -18,7 +18,7 @@
 #import "AIListContact.h"
 #import "ESFileTransfer.h"
 
-static NSBezierPath *arrowPath = nil;
+#import <AIUtilities/AIBezierPathAdditions.h>
 
 #define MAGIC_ARROW_SCALE       0.85
 #define MAGIC_ARROW_TRANSLATE_X 2.85
@@ -271,68 +271,6 @@ static NSBezierPath *arrowPath = nil;
 	[[NSWorkspace sharedWorkspace] openFile:localFilename];
 }
 
-- (NSBezierPath *)arrowPathInSize:(NSSize)arrowSize pointingDown:(BOOL)pointItDown shaftLengthMultiplier:(float)shaftLengthMulti
-{
-	if(!arrowPath) {
-		arrowPath = [[NSBezierPath bezierPath] retain];
-
-		/*   5
-		 *  / \ 
-		 * /   \    1-7 = points
-		 *6-7 3-4   the point of the triangle is 100% from the bottom.
-		 *    |     the back edge of the triangle is 50% from the bottom.
-		 *  1-2
-		 */
-
-#		define ONE_THIRD  (1.0/3.0)
-#		define TWO_THIRDS (2.0/3.0)
-#		define ONE_HALF    0.5
-		const float shaftLength = ONE_HALF * shaftLengthMulti;
-		const float shaftEndY = -(shaftLength - ONE_HALF); //the end of the arrow shaft (points 1-2).
-
-		//start with the bottom vertex.
-		[arrowPath moveToPoint:NSMakePoint(ONE_THIRD,  shaftEndY)]; //1
-		[arrowPath lineToPoint:NSMakePoint(TWO_THIRDS, shaftEndY)]; //2
-		//up to the inner right corner.
-		[arrowPath relativeLineToPoint:NSMakePoint(0.0, shaftLength)]; //3
-		//far right.
-		[arrowPath relativeLineToPoint:NSMakePoint(ONE_THIRD,  0.0)]; //4
-		//top center - the point of the arrow.
-		[arrowPath lineToPoint:NSMakePoint(ONE_HALF,  1.0)]; //5
-		//far left.
-		[arrowPath lineToPoint:NSMakePoint(0.0,  ONE_HALF)]; //6
-		//inner left corner.
-		[arrowPath relativeLineToPoint:NSMakePoint(ONE_THIRD,  0.0)]; //7
-		//to the finish line! yay!
-		[arrowPath closePath];
-	}
-
-	NSBezierPath *path = [arrowPath copy];
-
-	NSAffineTransform *transform = [NSAffineTransform transform];
-
-	if(pointItDown) {
-		//http://developer.apple.com/documentation/Carbon/Conceptual/QuickDrawToQuartz2D/tq_other/chapter_3_section_2.html
-		[transform translateXBy:0.0 yBy:1.0];
-		[transform     scaleXBy:1.0 yBy:-1.0];
-
-		[path transformUsingAffineTransform:transform];	
-
-		transform = [NSAffineTransform transform];
-	}
-
-	[transform scaleXBy:arrowSize.width yBy:arrowSize.height];
-
-	[path transformUsingAffineTransform:transform];
-
-	return [path autorelease];	
-}
-
-- (NSBezierPath *)arrowPathInSize:(NSSize)arrowSize pointingDown:(BOOL)pointItDown
-{
-	return [self arrowPathInSize:arrowSize pointingDown:pointItDown shaftLengthMultiplier:1.0f];
-}
-
 - (NSImage *)iconImage
 {
 	NSImage		*iconImage = nil;
@@ -378,7 +316,9 @@ static NSBezierPath *arrowPath = nil;
 
 		//and the arrow on top of it.
 		if(drawArrow) {
-			NSBezierPath *arrow = [self arrowPathInSize:bottomRight.size pointingDown:pointingDown shaftLengthMultiplier:5.0f];
+			NSBezierPath *arrow = [NSBezierPath bezierPathWithArrowWithShaftLengthMultiplier:2.0f];
+			if(pointingDown) [arrow flipVertically];
+			[arrow scaleToSize:bottomRight.size];
 
 			//bring it into position.
 			NSAffineTransform *transform = [NSAffineTransform transform];
