@@ -361,6 +361,7 @@
 		347E7AC407CAF96000350507 /* AIContactWarningLevelPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 347E7AC207CAF95F00350507 /* AIContactWarningLevelPlugin.h */; };
 		347E7ACF07CAF98500350507 /* ESMetaContactContentsPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 347E7ACD07CAF98400350507 /* ESMetaContactContentsPlugin.m */; };
 		347E7AD007CAF98500350507 /* ESMetaContactContentsPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 347E7ACE07CAF98500350507 /* ESMetaContactContentsPlugin.h */; };
+		347EAB2D09721D490090EA6E /* pref-personal.png in Resources */ = {isa = PBXBuildFile; fileRef = 347EAB2C09721D490090EA6E /* pref-personal.png */; };
 		347F51810947449000CEF1FF /* AdiumAddressBookAction_Yahoo.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E4094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt */; };
 		347F51820947449000CEF1FF /* AdiumAddressBookAction_AIM.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E5094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt */; };
 		347F51830947449000CEF1FF /* AdiumAddressBookAction_ICQ.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E6094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt */; };
@@ -2173,6 +2174,7 @@
 		347E7AC207CAF95F00350507 /* AIContactWarningLevelPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactWarningLevelPlugin.h; path = Source/AIContactWarningLevelPlugin.h; sourceTree = "<group>"; };
 		347E7ACD07CAF98400350507 /* ESMetaContactContentsPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESMetaContactContentsPlugin.m; path = Source/ESMetaContactContentsPlugin.m; sourceTree = "<group>"; };
 		347E7ACE07CAF98500350507 /* ESMetaContactContentsPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESMetaContactContentsPlugin.h; path = Source/ESMetaContactContentsPlugin.h; sourceTree = "<group>"; };
+		347EAB2C09721D490090EA6E /* pref-personal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-personal.png"; path = "Resources/pref-personal.png"; sourceTree = "<group>"; };
 		347F50E4094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_Yahoo.scpt; path = Resources/AdiumAddressBookAction_Yahoo.scpt; sourceTree = "<group>"; };
 		347F50E5094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_AIM.scpt; path = Resources/AdiumAddressBookAction_AIM.scpt; sourceTree = "<group>"; };
 		347F50E6094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_ICQ.scpt; path = Resources/AdiumAddressBookAction_ICQ.scpt; sourceTree = "<group>"; };
@@ -5683,6 +5685,7 @@
 				34D8336B07CBD807006466F2 /* pref-ft.png */,
 				34D8336807CBD807006466F2 /* pref-general.png */,
 				34D8336707CBD807006466F2 /* pref-messages.png */,
+				347EAB2C09721D490090EA6E /* pref-personal.png */,
 				4BB5B78107D2DC4900CFE06F /* pref-status.png */,
 			);
 			name = Icons;
@@ -7723,6 +7726,7 @@
 				343EC6C1096F7DEA00349098 /* StatusPreferencesAdvanced.nib in Resources */,
 				343EC9810970C29400349098 /* OfflineContactHidingDefaults.plist in Resources */,
 				343ECBEE0971B18E00349098 /* ShowContactInfoPrompt.nib in Resources */,
+				347EAB2D09721D490090EA6E /* pref-personal.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
