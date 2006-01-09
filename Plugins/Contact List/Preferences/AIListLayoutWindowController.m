@@ -170,7 +170,7 @@
 
 	[slider_groupTopSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
 	[slider_groupTopSpacing setMinValue:0];
-	[slider_groupTopSpacing setMinValue:16];
+	[slider_groupTopSpacing setMaxValue:16];
 
 	[slider_contactLeftIndent setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
 	[slider_contactRightIndent setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
