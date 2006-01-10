@@ -17,6 +17,8 @@
 #import <AIUtilities/AIBorderlessWindow.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
+#import <AIUtilities/AIColorSelectionPopUpButton.h>
+#import <AIUtilities/AIColoredBoxView.h>
 
 #import "NSIPRecentPicture.h"
 

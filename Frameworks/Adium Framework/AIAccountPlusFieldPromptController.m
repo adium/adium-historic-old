@@ -23,6 +23,7 @@
 #import "AIService.h"
 #import <AIUtilities/AICompletingTextField.h>
 #import <Adium/AIAccountMenu.h>
+#import <Adium/AIMetaContact.h>
 
 @interface AIAccountPlusFieldPromptController (PRIVATE)
 - (void)_configureTextFieldForAccount:(AIAccount *)account;
