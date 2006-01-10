@@ -41,9 +41,9 @@
     //Install the services
 #ifndef JOSCAR_SUPERCEDE_LIBGAIM
 	AIMService			= [[ESAIMService alloc] init];
+	DotMacService		= [[ESDotMacService alloc] init];
 #endif
 	ICQService			= [[ESICQService alloc] init];
-	DotMacService		= [[ESDotMacService alloc] init];
 	GaduGaduService		= [[ESGaduGaduService alloc] init];
 	GTalkService		= [[AIGTalkService alloc] init];
 	MSNService			= [[ESMSNService alloc] init];
