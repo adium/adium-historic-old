@@ -692,13 +692,12 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		{
 			[window constrainFrameRect:newWindowFrame toScreen:[[NSScreen screens] objectAtIndex:0]];
 		}
-		
-		windowSlidOffScreenEdgeMask = 0;
-		
+				
 		// when the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
 		// it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
 		[contactListController contactListDesiredSizeChanged];
 	}
+	windowSlidOffScreenEdgeMask = 0;
 }
 
 - (void)setPreventHiding:(BOOL)newPreventHiding {
