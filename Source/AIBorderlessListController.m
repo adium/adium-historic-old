@@ -6,6 +6,7 @@
 //
 
 #import "AIBorderlessListController.h"
+#import <Cocoa/Cocoa.h>
 
 @implementation AIBorderlessListController
 

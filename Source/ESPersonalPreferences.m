@@ -10,8 +10,11 @@
 #import "AIContactController.h"
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIImageViewWithImagePicker.h>
 #import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AIDelayedTextField.h>
 #import <Adium/AIMessageEntryTextView.h>
+#import <Cocoa/Cocoa.h>
 
 @interface ESPersonalPreferences (PRIVATE)
 - (void)fireProfileChangesImmediately;

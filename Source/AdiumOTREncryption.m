@@ -18,6 +18,8 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIService.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIListContact.h>
 
 #import "ESOTRPrivateKeyGenerationWindowController.h"
 #import "ESOTRPreferences.h"

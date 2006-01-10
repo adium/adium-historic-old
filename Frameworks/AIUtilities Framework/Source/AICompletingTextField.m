@@ -211,9 +211,9 @@
 		/* Check if aString implies a different completion; ensure that this new completion is not itself
 		* a potential completion (if it is, we assume the user's manually entered stringValue to be the intended value)
 		*/
-		id impliedCompletion = [impliedCompletionDictionary objectForKey:aString];
+		NSString *impliedCompletion = (NSString *)[impliedCompletionDictionary objectForKey:aString];
 		
-		id impliedCompletionOfImpliedCompletion = [impliedCompletionDictionary objectForKey:impliedCompletion];
+		NSString *impliedCompletionOfImpliedCompletion = (NSString *)[impliedCompletionDictionary objectForKey:impliedCompletion];
 		
 		/* If we got an implied completion, and using that implied completion wouldn't get us into a loop with other
 		 * completions (leading to unpredicatable behavior as far as the user would be concerned), return the implied
