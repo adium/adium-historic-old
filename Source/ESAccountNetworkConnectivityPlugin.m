@@ -108,52 +108,52 @@
  */
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
-	if (![NSEvent shiftKey]) {
-		NSArray						*accounts = [[adium accountController] accounts];
-		AIHostReachabilityMonitor	*monitor = [AIHostReachabilityMonitor defaultMonitor];
-		BOOL						shouldAutoconnectAll = [self shouldAutoconnectAllEnabled];
-
-		//Start off forbidding all accounts from auto-connecting.
-		accountsToConnect    = [[NSMutableSet alloc] initWithArray:accounts];
-		accountsToNotConnect = [accountsToConnect mutableCopy];
-		knownHosts			 = [[NSMutableSet alloc] init];
-		
-		/* Add ourselves to the default host-reachability monitor as an observer for each account's host.
-		 * At the same time, weed accounts that are to be auto-connected out of the accountsToNotConnect set.
-		 */
-		NSEnumerator	*accountsEnum;
-		AIAccount		*account;
-		
-		accountsEnum = [accounts objectEnumerator];
-		while ((account = [accountsEnum nextObject])) {
-			if ([account connectivityBasedOnNetworkReachability]) {
-				NSString *host = [account host];
-				if (host && ![knownHosts containsObject:host]) {
-					[monitor addObserver:self forHost:host];
-					[knownHosts addObject:host];
-				}
-
-				//if this is an account we should auto-connect, remove it from accountsToNotConnect so that we auto-connect it.
-				if ([account enabled] &&
-					([account shouldBeOnline] ||
-					 shouldAutoconnectAll)) {
-					[accountsToNotConnect removeObject:account];
-					continue; //prevent the account from being removed from accountsToConnect.
-				}
-
-			}  else if ([[account supportedPropertyKeys] containsObject:@"Online"]
-						&& [account enabled]) {
-				/* This account does not connect based on network reachability, but can go online
-				 * and should autoconnect.  Connect it immediately.
-				 */
-				[account setShouldBeOnline:YES];
+	NSArray						*accounts = [[adium accountController] accounts];
+	AIHostReachabilityMonitor	*monitor = [AIHostReachabilityMonitor defaultMonitor];
+	BOOL						shouldAutoconnectAll = [self shouldAutoconnectAllEnabled];
+	BOOL						shiftHeld = [NSEvent shiftKey];
+	
+	//Start off forbidding all accounts from auto-connecting.
+	accountsToConnect    = [[NSMutableSet alloc] initWithArray:accounts];
+	accountsToNotConnect = [accountsToConnect mutableCopy];
+	knownHosts			 = [[NSMutableSet alloc] init];
+	
+	/* Add ourselves to the default host-reachability monitor as an observer for each account's host.
+	 * At the same time, weed accounts that are to be auto-connected out of the accountsToNotConnect set.
+	 */
+	NSEnumerator	*accountsEnum;
+	AIAccount		*account;
+	
+	accountsEnum = [accounts objectEnumerator];
+	while ((account = [accountsEnum nextObject])) {
+		if ([account connectivityBasedOnNetworkReachability]) {
+			NSString *host = [account host];
+			if (host && ![knownHosts containsObject:host]) {
+				[monitor addObserver:self forHost:host];
+				[knownHosts addObject:host];
 			}
-
-			[accountsToConnect removeObject:account];
+			
+			//If this is an account we should auto-connect, remove it from accountsToNotConnect so that we auto-connect it.
+			if (!shiftHeld  &&
+				[account enabled] &&
+				([account shouldBeOnline] ||
+				 shouldAutoconnectAll)) {
+				[accountsToNotConnect removeObject:account];
+				continue; //prevent the account from being removed from accountsToConnect.
+			}
+			
+		}  else if ([[account supportedPropertyKeys] containsObject:@"Online"]
+					&& [account enabled]) {
+			/* This account does not connect based on network reachability, but can go online
+			 * and should autoconnect.  Connect it immediately.
+			 */
+			[account setShouldBeOnline:YES];
 		}
 		
-		[knownHosts release];
+		[accountsToConnect removeObject:account];
 	}
+	
+	[knownHosts release];
 }
 
 /*!
