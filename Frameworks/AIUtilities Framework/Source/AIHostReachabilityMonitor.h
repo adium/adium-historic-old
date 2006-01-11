@@ -36,5 +36,6 @@
 
 - (void)addObserver:(id <AIHostReachabilityObserver>)newObserver forHost:(NSString *)host;
 - (void)removeObserver:(id <AIHostReachabilityObserver>)observer forHost:(NSString *)host;
+- (BOOL)observer:(id)observer isObservingHost:(NSString *)host;
 
 @end
