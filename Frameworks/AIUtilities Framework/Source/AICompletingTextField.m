@@ -205,7 +205,7 @@
 
 - (id)impliedValueForString:(NSString *)aString
 {
-	id impliedValue = aString;
+	id impliedValue = nil;
 
 	if (aString) {
 		/* Check if aString implies a different completion; ensure that this new completion is not itself
@@ -220,12 +220,12 @@
 		 * completion
 		 */
 		if (impliedCompletion &&
-			(!impliedCompletionOfImpliedCompletion || ([impliedCompletionOfImpliedCompletion compare:impliedCompletion] == NSOrderedSame))) {
+			(!impliedCompletionOfImpliedCompletion || [impliedCompletionOfImpliedCompletion isEqual:impliedCompletion])) {
 			impliedValue = impliedCompletion;
 		}
 	}
 	
-	return aString;	
+	return (impliedValue ? impliedValue : (id)aString);	
 	
 }
 
