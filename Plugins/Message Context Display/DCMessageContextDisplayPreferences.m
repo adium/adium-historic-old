@@ -20,9 +20,6 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 
-#warning crosslink
-#import "AIPreferenceWindowController.h"
-
 typedef enum {
 	AIMessageHistory_Always = 0,
 	AIMessageHistory_HaveTalkedInInterval,

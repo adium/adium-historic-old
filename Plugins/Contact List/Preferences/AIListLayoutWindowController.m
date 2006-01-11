@@ -16,6 +16,7 @@
 
 #import "AIPreferenceController.h"
 #import "AIListLayoutWindowController.h"
+#import "AIDockController.h"
 #import "AISCLViewPlugin.h"
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -23,9 +24,6 @@
 #import <AIUtilities/AIArrayAdditions.h>
 #import <Adium/AIAbstractListController.h>
 #import <Adium/JVFontPreviewField.h>
-
-#warning crosslink
-#import "AIAppearancePreferencesPlugin.h"
 
 #define	MAX_ALIGNMENT_CHOICES	10
 

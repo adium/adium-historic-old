@@ -21,15 +21,13 @@
 #import "AIListThemeWindowController.h"
 #import "AIListWindowController.h"
 #import "AIPreferenceController.h"
+#import "AIDockController.h"
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIFunctions.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIUserIcons.h>
-
-#warning crosslink
-#import "AIAppearancePreferencesPlugin.h"
 
 #define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_WINDOW_TRANSPARENT_NIB @"ContactListWindowTransparent" //Filename of the minimalist transparent version
