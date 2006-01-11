@@ -64,12 +64,12 @@
 	if (tos && *tos) {
 		numberMessage = ((count == 1) ? 
 						 [NSString stringWithFormat:AILocalizedString(@"%s has 1 new message.",nil), *tos] :
-						 [NSString stringWithFormat:AILocalizedString(@"%s has %i new messages.",nil), *tos,count]);
+						 [NSString stringWithFormat:AILocalizedString(@"%s has %u new messages.",nil), *tos,count]);
 
 	} else {
 		numberMessage = ((count == 1) ? 
 						 AILocalizedString(@"You have 1 new message.",nil) :
-						 [NSString stringWithFormat:AILocalizedString(@"You have %i new messages.",nil), count]);		
+						 [NSString stringWithFormat:AILocalizedString(@"You have %u new messages.",nil), count]);		
 	}
 
 	numberMessageAttributes = [NSDictionary dictionaryWithObjectsAndKeys:messageFont,NSFontAttributeName,
