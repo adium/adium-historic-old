@@ -36,7 +36,7 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
  * @brief Handle Fast User Switching with a changed status and sound muting
  *
  * When another user logs in via Fast User Switching (OS X 10.3 and above), this plugin sets a status state if an away
- * state is not already set.  It also mutes sounds as per the HIG.
+ * state is not already set.
  *
  * At present, this plugin uses a hardcoded away message.
  */
