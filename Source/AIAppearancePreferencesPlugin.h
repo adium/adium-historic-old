@@ -16,7 +16,6 @@
 
 #import <Adium/AIPlugin.h>
 
-#define PREF_GROUP_APPEARANCE		@"Appearance"
 #define	KEY_STATUS_ICON_PACK		@"Status Icon Pack"
 #define	KEY_SERVICE_ICON_PACK		@"Service Icon Pack"
 
