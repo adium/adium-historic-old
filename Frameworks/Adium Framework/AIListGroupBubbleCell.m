@@ -15,10 +15,10 @@
  */
 
 #import "AIListGroupBubbleCell.h"
+#import "AIListOutlineView.h"
 #import <AIUtilities/AIBezierPathAdditions.h>
 #import <AIUtilities/AIGradient.h>
 #import <AIUtilities/AIColorAdditions.h>
-#import <AIUtilities/AIListOutlineView.h>
 
 #define EDGE_INDENT 			4
 
