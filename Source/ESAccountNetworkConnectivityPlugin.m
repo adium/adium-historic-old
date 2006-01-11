@@ -154,6 +154,12 @@
 	}
 	
 	[knownHosts release];
+	
+	//Watch for future changes to our account list
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(accountListChanged:)
+									   name:Account_ListChanged
+									 object:nil];
 }
 
 /*!
@@ -305,6 +311,30 @@
 		if (![account connectivityBasedOnNetworkReachability] && [accountsToConnect containsObject:account]) {
 			[account setShouldBeOnline:YES];
 			[accountsToConnect removeObject:account];
+		}
+	}
+}
+
+#pragma mark Changes to the account list
+/*
+ * @brief When the account list changes, ensure we're monitoring for each account
+ */
+- (void)accountListChanged:(NSNotification *)notification
+{
+	NSEnumerator	*enumerator;
+	AIAccount		*account;
+	AIHostReachabilityMonitor	*monitor = [AIHostReachabilityMonitor defaultMonitor];
+
+	//Immediately re-connect accounts which are ignoring the server reachability
+	enumerator = [[[adium accountController] accounts] objectEnumerator];	
+	while ((account = [enumerator nextObject])) {
+		if ([account connectivityBasedOnNetworkReachability]) {
+			NSString *host = [account host];
+			
+			if (host &&
+				![monitor observer:self isObservingHost:host]) {
+				[monitor addObserver:self forHost:host];
+			}
 		}
 	}
 }
