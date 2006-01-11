@@ -19,6 +19,7 @@
 #import "AIOfflineContactHidingPlugin.h"
 #import "AIPreferenceController.h"
 #import "AIToolbarController.h"
+#import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>

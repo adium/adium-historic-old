@@ -16,6 +16,7 @@
 
 #import "AIAppearancePreferencesPlugin.h"
 #import "AIAppearancePreferences.h"
+#import "AIDockController.h"
 #import <Adium/AIStatusIcons.h>
 #import <Adium/AIServiceIcons.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
