@@ -12,7 +12,7 @@
 #include <netdb.h>
 #include <netinet/in.h>
 
-#define CONNECTIVITY_DEBUG FALSE
+#define CONNECTIVITY_DEBUG TRUE
 
 static AIHostReachabilityMonitor *singleton = nil;
 
@@ -130,7 +130,7 @@ static AIHostReachabilityMonitor *singleton = nil;
 	for (unsigned i = 0; i < numObservers; ) {
 		BOOL removed = NO;
 		if (newObserver == [observers objectAtIndex:i]) {
-			if ((!host) || (host == [hosts objectAtIndex:i])) {
+			if ((!host) || ([host isEqualToString:[hosts objectAtIndex:i]])) {
 				[hosts          removeObjectAtIndex:i];
 				[observers      removeObjectAtIndex:i];
 				SCNetworkReachabilityScheduleWithRunLoop((SCNetworkReachabilityRef)[reachabilities objectAtIndex:i],
@@ -149,6 +149,43 @@ static AIHostReachabilityMonitor *singleton = nil;
 	}
 
 	[hostAndObserverListLock unlock];
+}
+
+/*
+ * @brief Is an observer currently observing a host?
+ *
+ * @result YES if so, NO if not
+ */
+- (BOOL)observer:(id)observer isObservingHost:(NSString *)host
+{
+	BOOL isObserving = NO;
+	
+	[hostAndObserverListLock lock];
+
+	if (host && observer) {
+		unsigned numObservers = [observers count];
+		for (unsigned i = 0; i < numObservers; ) {
+			if ((observer == [observers objectAtIndex:i]) &&
+				([host isEqualToString:[hosts objectAtIndex:i]])) {
+				isObserving = YES;
+				break;
+			}
+		}
+		
+		if (!isObserving && [unconfiguredHostsAndObservers count]) {
+			NSDictionary *unconfiguredHostObserverDict = [NSDictionary dictionaryWithObjectsAndKeys:
+				observer, @"observer",
+				host, @"host",
+				nil];
+			if ([unconfiguredHostsAndObservers containsObject:unconfiguredHostObserverDict]) {
+				isObserving = YES;
+			}
+		}
+	}
+	
+	[hostAndObserverListLock unlock];
+
+	return isObserving;
 }
 
 #pragma mark -
