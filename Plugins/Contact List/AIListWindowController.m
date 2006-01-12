@@ -212,8 +212,7 @@
 		
 		// don't slide the window the first time this is called, because the contact list will display
 		// before it is prepared.  This produces screen artifacts.
-		if (!firstTime)
-			[self slideWindowIfNeeded:nil];
+		[self slideWindowIfNeeded:nil];
 
 		if (!windowShouldBeVisibleInBackground || permitSlidingInForeground) {
 			if (slideWindowIfNeededTimer == nil) {
