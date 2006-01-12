@@ -515,7 +515,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 - (BOOL)shouldSlideWindowOffScreen
 {
 	BOOL shouldSlide = NO;
-	    if (preventHiding) {
+    if (preventHiding) {
         shouldSlide = NO;
     }
     else if (windowSlidOffScreenEdgeMask != 0) {
@@ -655,6 +655,8 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSRect newWindowFrame = [window frame];
 	NSRectEdge edge;
 	
+	[window setHasShadow:NO]; // otherwise we cast a shadow on the screen
+	
 	if (rectEdgeMask == 0)
 		return;
 	
@@ -665,7 +667,6 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 
 	[window setFrame:newWindowFrame display:NO animate:YES];
-	[window setHasShadow:NO]; // otherwise we cast a shadow on the screen
 	windowSlidOffScreenEdgeMask |= rectEdgeMask;
 }
 
@@ -676,8 +677,6 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSRect		newWindowFrame = windowFrame;
 
 	newWindowFrame = AIRectByMovingRect_intoRect_(newWindowFrame, screenSlideBoundaryRect);
-	
-	[window setHasShadow:listHasShadow];
 
 	if (!NSEqualRects(windowFrame, newWindowFrame)) {
 		
@@ -700,6 +699,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		[contactListController contactListDesiredSizeChanged];
 	}
 	windowSlidOffScreenEdgeMask = 0;
+	[window setHasShadow:listHasShadow];
 }
 
 - (void)setPreventHiding:(BOOL)newPreventHiding {
