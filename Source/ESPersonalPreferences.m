@@ -76,6 +76,8 @@
 {
 	[self fireProfileChangesImmediately];
 
+	[[NSFontPanel sharedFontPanel] setDelegate:nil];
+
 	[super viewWillClose];
 }
 
@@ -129,10 +131,9 @@
 		*/
 		[(AIMessageEntryTextView *)textView_profile setSendingEnabled:NO];
 	}
-	
-#warning What is this for?
+
 	[[NSFontPanel sharedFontPanel] setDelegate:textView_profile];
-	
+
 	NSData				*profileData = [[adium preferenceController] preferenceForKey:@"TextProfile"
 																				group:GROUP_ACCOUNT_STATUS];
 	NSAttributedString	*profile = (profileData ? [NSAttributedString stringWithData:profileData] : nil);
