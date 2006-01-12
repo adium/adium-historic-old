@@ -49,6 +49,7 @@
 	IBOutlet	NSStepper			*stepper_idleHours;
 
 	IBOutlet	NSButton			*checkBox_save;
+	IBOutlet	NSButton			*checkBox_muteSounds;
 	IBOutlet	NSButton			*checkBox_okay;
 	IBOutlet	NSButton			*checkBox_cancel;
 

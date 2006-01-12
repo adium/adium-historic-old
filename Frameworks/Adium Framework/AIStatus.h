@@ -26,6 +26,7 @@
 #define	STATUS_FORCED_INITIAL_IDLE_TIME		@"Forced Initial Idle Time"
 #define STATUS_INVISIBLE					@"Invisible"
 #define STATUS_MUTABILITY_TYPE				@"Mutability Type"
+#define STATUS_MUTE_SOUNDS					@"Mute Sounds"
 
 @interface AIStatus : AIStatusItem {
 
@@ -58,5 +59,8 @@
 - (void)setForcedInitialIdleTime:(double)forcedInitialIdleTime;
 
 - (void)setMutabilityType:(AIStatusMutabilityType)mutabilityType;
+
+- (BOOL)mutesSound;
+- (void)setMutesSound:(BOOL)mutes;
 
 @end
