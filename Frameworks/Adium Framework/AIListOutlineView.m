@@ -288,6 +288,11 @@
 	}
 
 	[self setNeedsDisplay:YES];
+	//delayed performs eat flicker.
+	NSTimeInterval delay = GetDblTime() * 120.0; //double-click time * 2
+	[[self window] performSelector:@selector(invalidateShadow)
+	                    withObject:nil
+	                    afterDelay:delay];
 }
 
 - (void)setBackgroundFade:(float)fade
