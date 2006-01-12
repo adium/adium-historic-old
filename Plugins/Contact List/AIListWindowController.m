@@ -664,7 +664,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 
 	[window setFrame:newWindowFrame display:NO animate:YES];
-	[window orderOut:nil]; // otherwise we cast a shadow on the screen
+	[window setHasShadow:NO]; // otherwise we cast a shadow on the screen
 	windowSlidOffScreenEdgeMask |= rectEdgeMask;
 }
 
@@ -675,8 +675,11 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSRect		newWindowFrame = windowFrame;
 
 	newWindowFrame = AIRectByMovingRect_intoRect_(newWindowFrame, screenSlideBoundaryRect);
+	
+	[window setHasShadow:YES];
 
 	if (!NSEqualRects(windowFrame, newWindowFrame)) {
+		
 		if([NSApp isActive])
 			[window orderFront:nil]; 
 		else
@@ -688,7 +691,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		// necessarily on screen
 		if ([window screen] == nil)
 		{
-			[window constrainFrameRect:newWindowFrame toScreen:[[NSScreen screens] objectAtIndex:0]];
+			[window constrainFrameRect:newWindowFrame toScreen:[NSScreen mainScreen]];
 		}
 				
 		// when the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
