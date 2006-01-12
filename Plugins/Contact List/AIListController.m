@@ -134,8 +134,11 @@ typedef enum {
 //Dynamically resize the contact list
 - (void)contactListDesiredSizeChanged
 {
-    if ((autoResizeVertically || autoResizeHorizontally) && [[self window] screen]) {
-		NSWindow	*theWindow = [contactListView window];
+	NSWindow	*theWindow;
+
+    if ((autoResizeVertically || autoResizeHorizontally) &&
+		(theWindow = [contactListView window]) &&
+		[theWindow screen]) {
 		
 		NSRect  currentFrame = [theWindow frame];
         NSRect	desiredFrame = [self _desiredWindowFrameUsingDesiredWidth:(autoResizeHorizontally || (forcedWindowWidth != -1))
