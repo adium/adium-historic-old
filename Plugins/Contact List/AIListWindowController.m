@@ -514,20 +514,14 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 - (BOOL)shouldSlideWindowOffScreen
 {
 	BOOL shouldSlide = NO;
-    if (preventHiding) {
-        shouldSlide = NO;
-    }
-    else if (windowSlidOffScreenEdgeMask != 0) {
-        // window is already slid off screen in some direction
-        shouldSlide = NO;
-    }
-    else if (permitSlidingInForeground) {
-        shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
-    } 
-    else if (!windowShouldBeVisibleInBackground && ![NSApp isActive] && [[self window] isVisible]) {
-        shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
-    }
-
+	
+	if (!preventHiding && !windowSlidOffScreenEdgeMask) {
+		if (permitSlidingInForeground ||
+			(!windowShouldBeVisibleInBackground && ![NSApp isActive] && [[self window] isVisible])) {
+			shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
+		}
+	}
+	
 	return shouldSlide;
 }
 
@@ -679,24 +673,28 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 	if (!NSEqualRects(windowFrame, newWindowFrame)) {
 		
-		if([NSApp isActive])
+		if ([NSApp isActive])
 			[window orderFront:nil]; 
 		else
 			[window makeKeyAndOrderFront:nil];
 		
 		[window setFrame:newWindowFrame display:NO animate:YES];
 		
-		// be lenient; the window is now within the screenSlideBoundaryRect, but it isn't
-		// necessarily on screen
-		if ([window screen] == nil)
-		{
-			[window constrainFrameRect:newWindowFrame toScreen:[NSScreen mainScreen]];
+		/* Be lenient; the window is now within the screenSlideBoundaryRect, but it isn't
+		 * necessarily on screen
+		 */
+		if (![window screen]) {
+			newWindowFrame = [window constrainFrameRect:newWindowFrame toScreen:[NSScreen mainScreen]];
+			
+			[window setFrame:newWindowFrame display:YES animate:NO];
 		}
-				
-		// when the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
-		// it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
+		
+		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
+		 * it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
+		 */
 		[contactListController contactListDesiredSizeChanged];
 	}
+
 	windowSlidOffScreenEdgeMask = 0;
 	[window setHasShadow:listHasShadow];
 }
