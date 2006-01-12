@@ -52,5 +52,7 @@ typedef enum{
 //Soundsets
 - (NSArray *)soundSets;
 
+- (void)setSoundsAreMuted:(BOOL)muted;
+
 @end
 

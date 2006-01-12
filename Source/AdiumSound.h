@@ -24,10 +24,11 @@
 
     float				customVolume;
 	
-	BOOL				workspaceSessionIsActive;
+	BOOL				soundsAreMuted;
 }
 
 - (void)controllerDidLoad;
 - (void)playSoundAtPath:(NSString *)inPath;
+- (void)setSoundsAreMuted:(BOOL)mute;
 
 @end

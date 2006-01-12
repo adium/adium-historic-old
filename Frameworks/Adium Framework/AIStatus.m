@@ -391,4 +391,15 @@
 				   forKey:STATUS_MUTABILITY_TYPE];
 }
 
+- (BOOL)mutesSound
+{
+	return [[statusDict objectForKey:STATUS_MUTE_SOUNDS] boolValue];
+}
+
+- (void)setMutesSound:(BOOL)mutes
+{
+	[statusDict setObject:[NSNumber numberWithBool:mutes] forKey:STATUS_MUTE_SOUNDS];
+}
+
+
 @end

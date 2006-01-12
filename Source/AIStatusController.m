@@ -19,6 +19,7 @@
 #import "AIPreferenceController.h"
 #import "AIStatusController.h"
 #import "AdiumIdleManager.h"
+#import "AISoundController.h"
 
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
@@ -106,14 +107,15 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 
 	//Put each account into the status it was in last time we quit.
 	BOOL		needToRebuildMenus = NO;
+	BOOL		allStatusesInSameState = YES;
+	AIStatus *prevStatus = nil;
 	enumerator = [[[adium accountController] accounts] objectEnumerator];
 	while ((account = [enumerator nextObject])) {
 		NSData		*lastStatusData = [account preferenceForKey:@"LastStatus"
 														  group:GROUP_ACCOUNT_STATUS];
 		AIStatus	*lastStatus = nil;
-		if (lastStatusData) {
+		if (lastStatusData)
 			lastStatus = [NSKeyedUnarchiver unarchiveObjectWithData:lastStatusData];
-		}
 
 		if (lastStatus && [lastStatus isKindOfClass:[AIStatus class]]) {
 			AIStatus	*existingStatus;
@@ -137,10 +139,16 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 
 				needToRebuildMenus = YES;
 			}
-			
+			if (!prevStatus)
+				prevStatus = lastStatus;
+			else if (prevStatus != lastStatus)
+				allStatusesInSameState = NO;
 			[account setStatusStateAndRemainOffline:lastStatus];
 		}
 	}
+	
+	if (allStatusesInSameState && [prevStatus mutesSound])
+		[[adium soundController] setSoundsAreMuted:YES];
 	
 	if (needToRebuildMenus) {
 		[self notifyOfChangedStatusArray];
@@ -492,6 +500,14 @@ static 	NSMutableSet			*temporaryStateArray = nil;
  */
 - (void)setActiveStatusState:(AIStatus *)statusState
 {
+	#warning it'd be nice to only mute/unmute if there's actually a change but the code below doesn't work	
+//	if (_activeStatusState == nil || [statusState mutesSound] != [[self activeStatusState] mutesSound]) {
+	if ([statusState mutesSound])
+		[[adium soundController] setSoundsAreMuted:YES];
+	else
+		[[adium soundController] setSoundsAreMuted:NO];		
+//	}
+
 	//Apply the state to our accounts and notify (delay to the next run loop to improve perceived speed)
 	[self performSelector:@selector(applyState:toAccounts:)
 			   withObject:statusState

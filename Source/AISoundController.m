@@ -81,4 +81,9 @@
 	return [adiumSoundSets soundSets];
 }
 
+- (void)setSoundsAreMuted:(BOOL)muted
+{
+	[adiumSound setSoundsAreMuted:muted];
+}
+
 @end

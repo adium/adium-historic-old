@@ -8,8 +8,6 @@
 
 #import <Adium/AIWindowController.h>
 
-#define KEY_SOUND_MUTE @"Mute Sounds"
-
 @interface ESAwayStatusWindowController : AIWindowController {
 	IBOutlet	NSButton		*button_return;
 	IBOutlet	NSButton		*button_muteWhileAway;
@@ -25,6 +23,7 @@
 	IBOutlet	NSTableView		*tableView_multiStatus;
 	
 	NSMutableArray				*_awayAccounts;
+	BOOL			allStatusesMuteSound;
 }
 
 + (void)updateStatusWindowWithVisibility:(BOOL)shouldBeVisibile;

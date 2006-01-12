@@ -341,14 +341,14 @@ static	NSMutableDictionary	*controllerDict = nil;
  */
 - (IBAction)statusControlChanged:(id)sender
 {
-	if (sender == checkbox_autoReply) {
-		[workingStatusState setHasAutoReply:[checkbox_autoReply state]];
-		
-	} else if (sender == checkbox_customAutoReply) {
+	if (sender == checkbox_autoReply)
+		[workingStatusState setHasAutoReply:[checkbox_autoReply state]];	
+	else if (sender == checkbox_customAutoReply) 
 		[workingStatusState setAutoReplyIsStatusMessage:![checkbox_customAutoReply state]];	
-	} else if (sender == checkbox_idle) {
+	else if (sender == checkbox_idle)
 		[workingStatusState setShouldForceInitialIdleTime:[checkbox_idle state]];
-	}
+	else if (sender == checkBox_muteSounds)
+		[workingStatusState setMutesSound:[checkBox_muteSounds state]];
 	
 	[self updateControlVisibilityAndResizeWindow];
 	[self updateTitleDisplay];
@@ -449,6 +449,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	current = [self _positionControl:scrollView_autoReply relativeTo:current height:&height];
 	current = [self _positionControl:checkbox_idle relativeTo:current height:&height];
 	current = [self _positionControl:box_idle relativeTo:current height:&height];
+	current = [self _positionControl:checkBox_muteSounds relativeTo:current height:&height];
 
 	[window setContentSize:NSMakeSize([[window contentView] frame].size.width, height)
 				   display:YES
@@ -523,6 +524,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[checkbox_idle setState:[statusState shouldForceInitialIdleTime]];
 	[checkbox_autoReply setState:[statusState hasAutoReply]];
 	[checkbox_customAutoReply setState:![statusState autoReplyIsStatusMessage]];
+	[checkBox_muteSounds setState:[statusState mutesSound]];
 	
 	//Strings
 	NSAttributedString	*statusMessage = [statusState statusMessage];

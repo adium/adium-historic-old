@@ -28,7 +28,6 @@
 @interface ESAwayStatusWindowController (PRIVATE)
 - (void)localizeButtons;
 - (void)configureStatusWindow;
-- (void)configureMuteWhileAway;
 - (NSAttributedString *)attributedStatusTitleForStatus:(AIStatus *)statusState withIcon:(NSImage *)statusIcon;
 - (NSArray *)awayAccounts;
 - (void)setupMultistatusTable;
@@ -120,7 +119,6 @@ static BOOL							hideInBackground = NO;
 
 	[self localizeButtons];
 	[self setupMultistatusTable];
-	[self configureMuteWhileAway];
 
 	[self configureStatusWindow];
 }
@@ -132,12 +130,9 @@ static BOOL							hideInBackground = NO;
  */
 - (void)windowWillClose:(id)sender
 {
-	//If we are muting while this window is open, remove the mute before closing
-	if ([button_muteWhileAway state]) {
-		[[adium preferenceController] setPreference:nil
-											 forKey:KEY_SOUND_MUTE
-											  group:PREF_GROUP_SOUNDS];
-	}
+	
+	if (!allStatusesMuteSound)
+		[[adium soundController] setSoundsAreMuted:NO];
 
 	[super windowWillClose:sender];
 
@@ -167,6 +162,7 @@ static BOOL							hideInBackground = NO;
 	NSSet			*relevantStatuses;
 	NSRect			frame = [window frame];
 	int				newHeight;
+	allStatusesMuteSound = NO;
 	
 	[window setTitle:AILocalizedString(@"Current Status",nil)];
 	[_awayAccounts release]; _awayAccounts = nil;
@@ -196,6 +192,7 @@ static BOOL							hideInBackground = NO;
 		//Select the right tab view item
 		[tabView_configuration selectTabViewItemWithIdentifier:@"singlestatus"];
 		
+		allStatusesMuteSound = [(AIStatus *)[relevantStatuses anyObject] mutesSound];
 	} else {
 		/* Show the multistatus tableview tab if accounts are in different states, which includes the case of only one
 		 * away state being in use but not all online accounts currently making use of it.
@@ -216,7 +213,16 @@ static BOOL							hideInBackground = NO;
 		/* Multiple statuses */
 		[tabView_configuration selectTabViewItemWithIdentifier:@"multistatus"];
 	}
-
+	
+	//configure sound related things
+	BOOL shouldMuteWhileWindowIsOpen = [[[adium preferenceController] preferenceForKey:@"Mute While Away Status Window is Open"
+																				 group:PREF_GROUP_STATUS_PREFERENCES] boolValue];
+	[button_muteWhileAway setState:shouldMuteWhileWindowIsOpen];
+	if (!allStatusesMuteSound) 
+		[[adium soundController] setSoundsAreMuted:shouldMuteWhileWindowIsOpen];
+	 else
+		[button_muteWhileAway setEnabled:NO];
+	
 	//Perform the window resizing as needed
 	[window setFrame:frame display:YES animate:YES];
 }
@@ -373,33 +379,16 @@ static BOOL							hideInBackground = NO;
 	[cell setSubString:[[account statusState] title]];
 }
 
-- (void)configureMuteWhileAway
-{
-	NSNumber	*shouldMuteWhileWindowIsOpen = [[adium preferenceController] preferenceForKey:@"Mute While Away Status Window is Open"
-																					group:PREF_GROUP_STATUS_PREFERENCES];
-	//Apply the mute to the sound controller by setting a preference for it
-	//XXX - This is BROKEN.  The "muting" should occur at the event level, NOT in the sound controller as it was before. -ai
-	[[adium preferenceController] setPreference:shouldMuteWhileWindowIsOpen
-										 forKey:KEY_SOUND_MUTE
-										  group:PREF_GROUP_SOUNDS];
-	[button_muteWhileAway setState:([shouldMuteWhileWindowIsOpen boolValue] ? NSOnState : NSOffState)];
-}
-
 - (IBAction)toggleMuteWhileAway:(id)sender
 {
-	NSNumber	*shouldMuteWhileWindowIsOpen;
+	BOOL	shouldMuteWhileWindowIsOpen;
 	
-	shouldMuteWhileWindowIsOpen = ([sender state] ?
-								   [NSNumber numberWithBool:YES] :
-								   nil);
+	shouldMuteWhileWindowIsOpen = [sender state];
 	//Store for restoring here
-	[[adium preferenceController] setPreference:shouldMuteWhileWindowIsOpen
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:shouldMuteWhileWindowIsOpen]
 										 forKey:@"Mute While Away Status Window is Open"
 										  group:PREF_GROUP_STATUS_PREFERENCES];
-	//And apply the mute to the sound controller by setting a preference for it
-	[[adium preferenceController] setPreference:shouldMuteWhileWindowIsOpen
-										 forKey:KEY_SOUND_MUTE
-										  group:PREF_GROUP_SOUNDS];	
+	[[adium soundController] setSoundsAreMuted:shouldMuteWhileWindowIsOpen];
 }
 
 - (void)localizeButtons

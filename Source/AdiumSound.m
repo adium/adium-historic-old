@@ -41,7 +41,7 @@
 		soundCacheDict = [[NSMutableDictionary alloc] init];
 		soundCacheArray = [[NSMutableArray alloc] init];
 		soundCacheCleanupTimer = nil;
-		workspaceSessionIsActive = YES;
+		soundsAreMuted = NO;
 
 		//Observe workspace activity changes so we can mute sounds as necessary
 		NSNotificationCenter *workspaceCenter = [[NSWorkspace sharedWorkspace] notificationCenter];
@@ -98,7 +98,7 @@
  */
 - (void)playSoundAtPath:(NSString *)inPath
 {
-	if (inPath && customVolume != 0.0 && workspaceSessionIsActive) {
+	if (inPath && customVolume != 0.0 && !soundsAreMuted) {
 		[self coreAudioPlaySound:inPath];
 	}
 }
@@ -209,7 +209,7 @@
  */
 - (void)workspaceSessionDidBecomeActive:(NSNotification *)notification
 {
-	workspaceSessionIsActive = YES;
+	[self setSoundsAreMuted:YES];
 }
 
 /*!
@@ -217,8 +217,14 @@
  */
 - (void)workspaceSessionDidResignActive:(NSNotification *)notification
 {
-	workspaceSessionIsActive = NO;
-	[self _stopAndReleaseAllSounds];
+	[self setSoundsAreMuted:YES];
+}
+
+- (void)setSoundsAreMuted:(BOOL)mute
+{
+	soundsAreMuted = mute;
+	if (soundsAreMuted)
+		[self _stopAndReleaseAllSounds];
 }
 
 @end
