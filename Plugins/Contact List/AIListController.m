@@ -134,7 +134,7 @@ typedef enum {
 //Dynamically resize the contact list
 - (void)contactListDesiredSizeChanged
 {
-    if (autoResizeVertically || autoResizeHorizontally) {
+    if ((autoResizeVertically || autoResizeHorizontally) && [[self window] screen]) {
 		NSWindow	*theWindow = [contactListView window];
 		
 		NSRect  currentFrame = [theWindow frame];
@@ -608,7 +608,6 @@ typedef enum {
 
 - (void)outlineViewUserDidExpandItem:(NSNotification *)notification
 {
-	NSLog(@"%@",[[notification userInfo] objectForKey:@"Object"],[[[notification userInfo] objectForKey:@"Object"] containedObjects]);
 	[self contactListDesiredSizeChanged];
 }
 
