@@ -164,7 +164,7 @@ static AIHostReachabilityMonitor *singleton = nil;
 
 	if (host && observer) {
 		unsigned numObservers = [observers count];
-		for (unsigned i = 0; i < numObservers; ) {
+		for (unsigned i = 0; i < numObservers; i++) {
 			if ((observer == [observers objectAtIndex:i]) &&
 				([host isEqualToString:[hosts objectAtIndex:i]])) {
 				isObserving = YES;
