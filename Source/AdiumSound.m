@@ -222,8 +222,11 @@
 
 - (void)setSoundsAreMuted:(BOOL)mute
 {
-	soundsAreMuted = mute;
-	if (soundsAreMuted)
+	if (soundsAreMuted > 0 && !mute)
+		soundsAreMuted--;
+	else if (mute)
+		soundsAreMuted++;
+	if (soundsAreMuted == 0)
 		[self _stopAndReleaseAllSounds];
 }
 
