@@ -24,7 +24,7 @@
 
     float				customVolume;
 	
-	BOOL				soundsAreMuted;
+	unsigned			soundsAreMuted;
 }
 
 - (void)controllerDidLoad;
