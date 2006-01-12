@@ -21,6 +21,8 @@
 #import <AIUtilities/AIOutlineViewAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIGradient.h>
+//needed for GetDblTime()
+#import <Carbon/Carbon.h>
 
 #define MINIMUM_HEIGHT				48
 #define MINIMUM_WIDTH				140
