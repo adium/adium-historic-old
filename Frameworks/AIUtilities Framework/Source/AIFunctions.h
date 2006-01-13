@@ -33,6 +33,7 @@ void AISetRangeInMemory(void *buf, NSRange range, int ch);
 #pragma mark Rect utilities
 
 typedef enum AIRectEdgeMask {
+	AINoEdges = 0,
 	AIMaxXEdgeMask = (1 << NSMaxXEdge),
 	AIMaxYEdgeMask = (1 << NSMaxYEdge),
 	AIMinXEdgeMask = (1 << NSMinXEdge),
