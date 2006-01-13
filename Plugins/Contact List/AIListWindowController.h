@@ -65,5 +65,6 @@
 - (void)slideWindowOnScreen;
 - (void)setPreventHiding:(BOOL)newPreventHiding;
 - (BOOL)windowShouldHideOnDeactivate;
+- (AIRectEdgeMask)windowSlidOffScreenEdgeMask;
 
 @end

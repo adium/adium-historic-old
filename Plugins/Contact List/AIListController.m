@@ -23,15 +23,17 @@
 #import "AIListController.h"
 #import "AIPreferenceController.h"
 #import "ESFileTransfer.h"
-#import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIAutoScrollView.h>
-#import <AIUtilities/AIWindowAdditions.h>
-#import <AIUtilities/AIOutlineViewAdditions.h>
+#import "AIListWindowController.h"
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListOutlineView.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AIWindowAdditions.h>
+#import <AIUtilities/AIOutlineViewAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
+#import <AIUtilities/AIFunctions.h>
 
 #define CONTACT_LIST_SCROLLER_CONTROL_SIZE NSRegularControlSize
 
@@ -138,7 +140,7 @@ typedef enum {
 
     if ((autoResizeVertically || autoResizeHorizontally) &&
 		(theWindow = [contactListView window]) &&
-		[theWindow screen]) {
+		[(AIListWindowController *)[theWindow windowController] windowSlidOffScreenEdgeMask] != AINoEdges) {
 		
 		NSRect  currentFrame = [theWindow frame];
         NSRect	desiredFrame = [self _desiredWindowFrameUsingDesiredWidth:(autoResizeHorizontally || (forcedWindowWidth != -1))
