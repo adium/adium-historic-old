@@ -707,4 +707,10 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	preventHiding = newPreventHiding;
 }
 
+- (AIRectEdgeMask)windowSlidOffScreenEdgeMask
+{
+	return windowSlidOffScreenEdgeMask;
+
+}
+
 @end
