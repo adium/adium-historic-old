@@ -46,4 +46,31 @@
 		[window constrainFrameRect:[window frame] toScreen:[NSScreen mainScreen]];
 	}
 }
+
+/*
+ * @brief Slide the window to a given point
+ *
+ * windowSlidOffScreenEdgeMask must already be set to the resulting offscreen mask (or 0 if the window is sliding on screen)
+ *
+ * A borderless window can do whatever it wants; animate the sucker offscreen.
+ */
+- (void)slideWindowToPoint:(NSPoint)inPoint
+{
+	NSWindow	*myWindow = [self window];
+	NSRect		newFrame = [[self window] frame];
+	
+	newFrame.origin = inPoint;
+
+	[myWindow setFrame:newFrame
+			   display:YES
+			   animate:YES];
+
+	if (!windowSlidOffScreenEdgeMask) {
+		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
+		 * it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
+		 */
+		[contactListController contactListDesiredSizeChanged];			
+	}	
+}
+
 @end

@@ -33,6 +33,8 @@ typedef enum {
 
 	NSDictionary				*toolbarItems;
 	AIStatusMenu				*statusMenu;
+	
+	float						previousAlpha;
 }
 
 - (void)updateImagePicker;
