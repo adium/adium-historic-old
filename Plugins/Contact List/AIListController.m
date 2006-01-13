@@ -140,7 +140,7 @@ typedef enum {
 
     if ((autoResizeVertically || autoResizeHorizontally) &&
 		(theWindow = [contactListView window]) &&
-		[(AIListWindowController *)[theWindow windowController] windowSlidOffScreenEdgeMask] != AINoEdges) {
+		[(AIListWindowController *)[theWindow windowController] windowSlidOffScreenEdgeMask] == AINoEdges) {
 		
 		NSRect  currentFrame = [theWindow frame];
         NSRect	desiredFrame = [self _desiredWindowFrameUsingDesiredWidth:(autoResizeHorizontally || (forcedWindowWidth != -1))

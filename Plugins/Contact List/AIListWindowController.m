@@ -56,7 +56,6 @@
 @interface AIListWindowController (PRIVATE)
 - (void)windowDidLoad;
 - (void)_configureAutoResizing;
-- (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureToolbar;
 + (void)updateScreenSlideBoundaryRect:(id)sender;
 - (BOOL)shouldSlideWindowOffScreen_mousePositionStrategy;
