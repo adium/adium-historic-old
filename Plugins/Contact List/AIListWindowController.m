@@ -463,20 +463,19 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 // instead of orderOut:-type hiding.
 - (BOOL)windowShouldHideOnDeactivate
 {
-	BOOL shouldHideOnDeactivate = NO;
-		
-	if (!windowShouldBeVisibleInBackground) {
-		shouldHideOnDeactivate = YES; // unless..
-		
-		// window is slid off the screen
-		if (windowSlidOffScreenEdgeMask != 0) {
-			shouldHideOnDeactivate = NO;
-		}
-		
-		// or window is in position to slide off of the screen
-		if ([self slidableEdgesAdjacentToWindow] != 0) {
-			shouldHideOnDeactivate = NO;
-		}
+	BOOL shouldHideOnDeactivate;
+
+	if (!windowShouldBeVisibleInBackground &&
+		(windowSlidOffScreenEdgeMask == AINoEdges) &&
+		([self slidableEdgesAdjacentToWindow] == AINoEdges)) {
+		/*
+		 * Hide on deactivate if the window should not be visible in the background, the window is not slid off screen,
+		 * and the window is not in a position to be about to slide off screen
+		 */
+		shouldHideOnDeactivate = YES;
+
+	} else {
+		shouldHideOnDeactivate = NO;	
 	}
 
 	return shouldHideOnDeactivate;
@@ -502,9 +501,8 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	
 	if ((permitSlidingInForeground && ![NSApp isHidden]) || (![NSApp isActive] && !windowShouldBeVisibleInBackground)) {
 		shouldSlide = [self shouldSlideWindowOnScreen_mousePositionStrategy];
-	}
-	else if (!permitSlidingInForeground && [NSApp isActive] && (windowSlidOffScreenEdgeMask != 0))
-	{
+
+	} else if (!permitSlidingInForeground && [NSApp isActive] && (windowSlidOffScreenEdgeMask != 0)) {
 		shouldSlide = YES;
 	}
 	
@@ -545,10 +543,14 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		}
 	}
 	
-	// don't allow the window to slide off if the user is dragging
-	// this method is hacky and does not completely work.  is there a way to detect if the mouse is down?
+	/* Don't allow the window to slide off if the user is dragging
+	 * This method is hacky and does not completely work.  is there a way to detect if the mouse is down?
+	 */
 	NSEventType currentEventType = [[NSApp currentEvent] type];
-	if (currentEventType == NSLeftMouseDragged || currentEventType == NSRightMouseDragged || currentEventType == NSOtherMouseDragged) {
+	if (currentEventType == NSLeftMouseDragged ||
+		currentEventType == NSRightMouseDragged ||
+		currentEventType == NSOtherMouseDragged ||
+		currentEventType == NSPeriodic) {
 		shouldSlideOffScreen = NO;
 	}	
 	
@@ -556,7 +558,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 }
 
 // note: may be inaccurate when mouse is up against an edge 
-- (NSScreen *)ScreenForPoint:(NSPoint)point
+- (NSScreen *)screenForPoint:(NSPoint)point
 {
 	NSScreen *pointScreen = nil;
 	
@@ -572,28 +574,28 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	return pointScreen;
 }	
 
-- (NSRect)SquareRectWithCenter:(NSPoint)point sideLength:(float)sideLength
+- (NSRect)squareRectWithCenter:(NSPoint)point sideLength:(float)sideLength
 {
 	return NSMakeRect(point.x - sideLength*0.5f, point.y - sideLength*0.5f, sideLength, sideLength);
 }
 
-- (BOOL)PointIsInScreenCorner:(NSPoint)point
+- (BOOL)pointIsInScreenCorner:(NSPoint)point
 {
 	BOOL inCorner = NO;
 	NSScreen *menubarScreen = [[NSScreen screens] objectAtIndex:0];
 	float menubarHeight = NSMaxY([menubarScreen frame]) - NSMaxY([menubarScreen visibleFrame]); // breaks if the dock is at the top of the screen (i.e. if the user is insane)
 	
-	NSRect screenFrame = [[self ScreenForPoint:point] frame];
+	NSRect screenFrame = [[self screenForPoint:point] frame];
 	NSPoint lowerLeft  = screenFrame.origin;
 	NSPoint upperRight = NSMakePoint(NSMaxX(screenFrame), NSMaxY(screenFrame));
 	NSPoint lowerRight = NSMakePoint(upperRight.x, lowerLeft.y);
 	NSPoint upperLeft  = NSMakePoint(lowerLeft.x, upperRight.y);
 	
 	float sideLength = menubarHeight * 2.0f;
-	inCorner = (NSPointInRect(point, [self SquareRectWithCenter:lowerLeft sideLength:sideLength])
-				|| NSPointInRect(point, [self SquareRectWithCenter:lowerRight sideLength:sideLength])
-				|| NSPointInRect(point, [self SquareRectWithCenter:upperLeft sideLength:sideLength])
-				|| NSPointInRect(point, [self SquareRectWithCenter:upperRight sideLength:sideLength]));
+	inCorner = (NSPointInRect(point, [self squareRectWithCenter:lowerLeft sideLength:sideLength])
+				|| NSPointInRect(point, [self squareRectWithCenter:lowerRight sideLength:sideLength])
+				|| NSPointInRect(point, [self squareRectWithCenter:upperLeft sideLength:sideLength])
+				|| NSPointInRect(point, [self squareRectWithCenter:upperRight sideLength:sideLength]));
 	
 	return inCorner;
 }
@@ -616,13 +618,29 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		}
 	}
 	
-	return mouseNearSlideOffEdges && ![self PointIsInScreenCorner:mouseLocation];
+	return mouseNearSlideOffEdges && ![self pointIsInScreenCorner:mouseLocation];
 }
 
-// ----------------------------------
-// ------------------- window sliding
-// ----------------------------------
+#pragma mark Window sliding
+//Window sliding ------------------------------------------------------------------------------------------------------
 
+/*
+ * @brief Slide the window to a given point
+ *
+ * windowSlidOffScreenEdgeMask must already be set to the resulting offscreen mask (or 0 if the window is sliding on screen)
+ *
+ * This must be overridden by a subclass
+ */
+- (void)slideWindowToPoint:(NSPoint)inPoint
+{
+	NSAssert(FALSE, @"Abstract implementation called!");
+}
+
+/*
+ * @brief Find the mask specifying what edges are potentially slidable for our window
+ *
+ * @result AIRectEdgeMask, which is 0 if no edges are slidable
+ */
 - (AIRectEdgeMask)slidableEdgesAdjacentToWindow
 {
 	AIRectEdgeMask slidableEdges = 0;
@@ -632,9 +650,12 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	
 	NSRectEdge edge;
 	for (edge = 0; edge < 4; edge++) {
-		if (   (SLIDE_ALLOWED_RECT_EDGE_MASK & (1 << edge))
-		   && (AIRectIsAligned_edge_toRect_edge_tolerance_(windowFrame, edge, screenSlideBoundaryRect, edge, WINDOW_ALIGNMENT_TOLERANCE))) 
-		{
+		if ((SLIDE_ALLOWED_RECT_EDGE_MASK & (1 << edge)) &&
+			(AIRectIsAligned_edge_toRect_edge_tolerance_(windowFrame,
+														 edge,
+														 screenSlideBoundaryRect,
+														 edge,
+														 WINDOW_ALIGNMENT_TOLERANCE))) { 
 			slidableEdges |= (1 << edge);
 		}
 	}
@@ -648,9 +669,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSRect newWindowFrame = [window frame];
 	NSRectEdge edge;
 	
-	[window setHasShadow:NO]; // otherwise we cast a shadow on the screen
-	
-	if (rectEdgeMask == 0)
+	if (rectEdgeMask == AINoEdges)
 		return;
 	
 	for (edge = 0; edge < 4; edge++) {
@@ -659,8 +678,9 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		}
 	}
 
-	[window setFrame:newWindowFrame display:NO animate:YES];
 	windowSlidOffScreenEdgeMask |= rectEdgeMask;
+	
+	[self slideWindowToPoint:newWindowFrame.origin];
 }
 
 - (void)slideWindowOnScreen
@@ -672,34 +692,19 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	newWindowFrame = AIRectByMovingRect_intoRect_(newWindowFrame, screenSlideBoundaryRect);
 
 	if (!NSEqualRects(windowFrame, newWindowFrame)) {
-		
 		if ([NSApp isActive])
 			[window orderFront:nil]; 
 		else
 			[window makeKeyAndOrderFront:nil];
 		
-		[window setFrame:newWindowFrame display:NO animate:YES];
-		
-		/* Be lenient; the window is now within the screenSlideBoundaryRect, but it isn't
-		 * necessarily on screen
-		 */
-		if (![window screen]) {
-			newWindowFrame = [window constrainFrameRect:newWindowFrame toScreen:[NSScreen mainScreen]];
-			
-			[window setFrame:newWindowFrame display:YES animate:NO];
-		}
-		
-		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
-		 * it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
-		 */
-		[contactListController contactListDesiredSizeChanged];
+		windowSlidOffScreenEdgeMask = AINoEdges;
+	
+		[self slideWindowToPoint:newWindowFrame.origin];
 	}
-
-	windowSlidOffScreenEdgeMask = 0;
-	[window setHasShadow:listHasShadow];
 }
 
 - (void)setPreventHiding:(BOOL)newPreventHiding {
 	preventHiding = newPreventHiding;
 }
+
 @end

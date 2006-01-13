@@ -47,6 +47,8 @@
 	BOOL								permitSlidingInForeground;
 	AIRectEdgeMask						windowSlidOffScreenEdgeMask;
 	NSTimer								*slideWindowIfNeededTimer;
+	
+	NSTimer								*movementTimer;
 }
 
 + (AIListWindowController *)listWindowController;

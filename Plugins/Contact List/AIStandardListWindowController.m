@@ -49,6 +49,7 @@
 {	
     if ((self = [super initWithWindowNibName:inNibName])) {
 		toolbarItems = nil;
+		previousAlpha = 0;
 	}
 
 	return self;
@@ -376,14 +377,101 @@
 
 #pragma mark Dock-like hiding
 
-- (AIRectEdgeMask)slidableEdgesAdjacentToWindow
+void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdgeMask windowSlidOffScreenEdgeMask, AIListController *contactListController)
 {
-	// no edges are slidable if the window has a border.
-	// Attempting to use -[NSWindow setFrame:display:animate:] to slide a bordered window off screen will 
-	// cause the application to crash.  So why is Dock-like hiding implemented in AIListWindowController instead of 
-	// AIBorderlessWindowController?  This is because it would be a good thing (tm) if we could make it work
-	// for bordered windows as well.  We should try implementing -[NSWindow constrainFrameRect:toScreen:].
-	return 0;
+	NSRect	frame = [inWindow frame];
+	BOOL	finishedX = NO, finishedY = NO;
+	
+#define INCREMENT 15
+	if (abs(targetPoint.x - frame.origin.x) <= INCREMENT) {
+		//Our target point is within INCREMENT of the current point on the x axis
+
+		if (windowSlidOffScreenEdgeMask != AINoEdges) {
+			//If the window is sliding off screen, keep one pixel onscreen to avoid crashing
+			if (targetPoint.x < frame.origin.x) {
+				frame.origin.x = targetPoint.x + 1;
+			} else if (targetPoint.x > frame.origin.x) {
+				frame.origin.x = targetPoint.x - 1;
+			}
+			
+		} else {
+			//If the window is sliding on screen, go to the exact desired point
+			frame.origin.x = targetPoint.x;
+		}
+		
+		finishedX = YES;
+		
+	} else if (targetPoint.x < frame.origin.x) {
+		frame.origin.x -= INCREMENT;
+	} else if (targetPoint.x > frame.origin.x) {
+		frame.origin.x += INCREMENT;		
+	}
+	
+	if (abs(targetPoint.y - frame.origin.y) <= INCREMENT) {
+		//Our target point is within INCREMENT of the current point on the y axis
+		if (windowSlidOffScreenEdgeMask != AINoEdges) {
+			//If the window is sliding off screen, keep one pixel onscreen to avoid crashing
+			if (targetPoint.y < frame.origin.y) {
+				frame.origin.y = targetPoint.y + 1;
+			} else if (targetPoint.y > frame.origin.y) {
+				frame.origin.y = targetPoint.y - 1;
+			}
+
+		} else {
+			//If the window is sliding on screen, go to the exact desired point
+			frame.origin.y = targetPoint.y;
+			
+		}
+		
+		finishedY = YES;
+
+	} else if (targetPoint.y < frame.origin.y) {
+		frame.origin.y -= INCREMENT;
+	} else if (targetPoint.y > frame.origin.y) {
+		frame.origin.y += INCREMENT;		
+	}
+	
+	[inWindow setFrame:frame display:YES animate:NO];
+	
+	if (!finishedX || !finishedY) {
+		//If we're not finished, call again
+		manualWindowMoveToPoint(inWindow, targetPoint, windowSlidOffScreenEdgeMask, contactListController);
+	}
+}
+
+/*
+ * @brief Slide the window to a given point
+ *
+ * windowSlidOffScreenEdgeMask must already be set to the resulting offscreen mask (or 0 if the window is sliding on screen)
+ *
+ * A standard window (titlebar window) will crash if told to setFrame completely offscreen,
+ * so we implement our own animated movement.
+ */
+- (void)slideWindowToPoint:(NSPoint)inPoint
+{
+	NSWindow	*myWindow = [self window];
+
+	if ((windowSlidOffScreenEdgeMask == AINoEdges) &&
+		(previousAlpha > 0.0)) {
+		//Before sliding onscreen, restore any previous alpha value
+		[myWindow setAlphaValue:previousAlpha];
+	}
+	
+	manualWindowMoveToPoint([self window],
+							inPoint,
+							windowSlidOffScreenEdgeMask,
+							contactListController);
+	
+	if (windowSlidOffScreenEdgeMask == AINoEdges) {
+		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
+		 * it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
+		 */
+		[contactListController contactListDesiredSizeChanged];			
+	} else {
+		//After sliding off screen, go to an alpha value of 0 to hide our 1 px remaining on screen
+		previousAlpha = [myWindow alphaValue];
+		[myWindow setAlphaValue:0.0];
+	}
 }
 
 @end
