@@ -286,7 +286,7 @@
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>Adium</string>
+	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleGetInfoString</key>
 	<string>1.0svn, Copyright 2001-2005 The Adium Team</string>
 	<key>CFBundleHelpBookFolder</key>
@@ -374,6 +374,11 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1.0svn</string>
+	<key>LSEnvironment</key>
+	<dict>
+		<key>MinimumSystemVersion</key>
+		<string>10.3.9</string>
+	</dict>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
 	<key>NSMainNibFile</key>
