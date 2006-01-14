@@ -123,7 +123,10 @@
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	NSString			*textToSpeak = nil;
-	
+
+	//Do nothing if sounds are muted for this object
+	if ([listObject soundsAreMuted]) return;
+
 	if ([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]) {
 		NSMutableString	*userText = [[[details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK] mutableCopy] autorelease];
 		

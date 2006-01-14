@@ -500,6 +500,14 @@
 	return contactListStatusMessage;	
 }
 
+/*
+ * @brief Are sounds for this contact muted?
+ */
+- (BOOL)soundsAreMuted
+{
+	return [[[self account] statusState] mutesSound];
+}
+
 #pragma mark Parents
 /*
  * @brief This object's parent AIListGroup

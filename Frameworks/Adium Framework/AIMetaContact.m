@@ -20,6 +20,7 @@
 #import "AIListGroup.h"
 #import "AIService.h"
 #import "AIUserIcons.h"
+#import "AIAccount.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIArrayAdditions.h>
 
@@ -948,6 +949,14 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	}
 
 	return contactListStatusMessage;
+}
+
+/*
+ * @brief Are sounds for this contact muted?
+ */
+- (BOOL)soundsAreMuted
+{
+	return [[[[self preferredContact] account] statusState] mutesSound];
 }
 
 //Object Storage ---------------------------------------------------------------------------------------------

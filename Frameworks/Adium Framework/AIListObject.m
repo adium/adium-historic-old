@@ -655,6 +655,14 @@
 	[super notifyOfChangedStatusSilently:silent];
 }
 
+/*
+ * @brief Are sounds for this object muted?
+ */
+- (BOOL)soundsAreMuted
+{
+	return NO;
+}
+
 #pragma mark Debugging
 - (NSString *)description
 {

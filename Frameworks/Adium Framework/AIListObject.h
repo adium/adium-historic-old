@@ -119,6 +119,8 @@ typedef enum {
 - (void)setBaseAvailableStatusAndNotify:(NotifyTiming)notify;
 - (AIStatusSummary)statusSummary;
 
+- (BOOL)soundsAreMuted;
+
 - (BOOL)isStranger;
 - (BOOL)isMobile;
 

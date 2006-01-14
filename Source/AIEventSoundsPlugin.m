@@ -18,6 +18,7 @@
 #import "AISoundController.h"
 #import "ESContactAlertsController.h"
 #import "ESEventSoundAlertDetailPane.h"
+#import <Adium/AIListObject.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 
@@ -101,8 +102,10 @@
  */
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	NSString	*soundPath = [[details objectForKey:KEY_ALERT_SOUND_PATH] stringByExpandingBundlePath];
-	[[adium soundController] playSoundAtPath:soundPath];
+	if (![listObject soundsAreMuted]) {
+		NSString	*soundPath = [[details objectForKey:KEY_ALERT_SOUND_PATH] stringByExpandingBundlePath];
+		[[adium soundController] playSoundAtPath:soundPath];
+	}
 }
 
 /*!
