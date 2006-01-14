@@ -1041,9 +1041,6 @@
 		4BCAC4E607B59B65006641B9 /* Alias Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC4E307B59B65006641B9 /* Alias Defaults.plist */; };
 		4BCAC4E707B59B65006641B9 /* Display Format Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC4E407B59B65006641B9 /* Display Format Defaults.plist */; };
 		4BCAC56D07B5A31A006641B9 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC56C07B5A31A006641B9 /* Sounds */; };
-		4BCAC70707B5A4FB006641B9 /* CPFVersionChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BCAC70307B5A4FA006641B9 /* CPFVersionChecker.h */; };
-		4BCAC70807B5A4FB006641B9 /* CPFVersionChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCAC70407B5A4FA006641B9 /* CPFVersionChecker.m */; };
-		4BCAC71807B5A50F006641B9 /* VersionChecker Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC71207B5A50F006641B9 /* VersionChecker Defaults.plist */; };
 		4BD548B0086086B5008DF3CB /* AISoundSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD548AE086086B5008DF3CB /* AISoundSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BD548B1086086B5008DF3CB /* AISoundSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD548AF086086B5008DF3CB /* AISoundSet.m */; };
 		4BD62D8007CE8F240099EBA2 /* AIWebkitMessageViewStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD62D7E07CE8F240099EBA2 /* AIWebkitMessageViewStyle.h */; };
@@ -1144,6 +1141,11 @@
 		4BFF665C063693FB00308A3B /* ESSendMessageAlertDetailPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 342DC49B05783BE8000E1D83 /* ESSendMessageAlertDetailPane.h */; };
 		63093C2F0892143500F118D3 /* newContentThreeDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2D0892143500F118D3 /* newContentThreeDigits.png */; };
 		63093C300892143500F118D3 /* newContentTwoDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2E0892143500F118D3 /* newContentTwoDigits.png */; };
+		6315FFB00977187E005794CC /* RSS.h in Headers */ = {isa = PBXBuildFile; fileRef = 6315FFAA0977187E005794CC /* RSS.h */; };
+		6315FFB10977187E005794CC /* RSS.m in Sources */ = {isa = PBXBuildFile; fileRef = 6315FFAB0977187E005794CC /* RSS.m */; };
+		6315FFB20977187E005794CC /* SUUpdater.h in Headers */ = {isa = PBXBuildFile; fileRef = 6315FFAC0977187E005794CC /* SUUpdater.h */; };
+		6315FFB30977187E005794CC /* SUUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = 6315FFAD0977187E005794CC /* SUUpdater.m */; };
+		6315FFB5097718A1005794CC /* Sparkle.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6315FFB4097718A1005794CC /* Sparkle.strings */; };
 		632D608E094B7EEB003A9786 /* AIXtraPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 632D608D094B7EEB003A9786 /* AIXtraPreviewController.h */; };
 		632D60C0094B81AB003A9786 /* AIDockIconPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */; };
 		632D60C1094B81AB003A9786 /* AIDockIconPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */; };
@@ -3099,6 +3101,11 @@
 		4BFE2E9F07E61A4E00C07EBE /* NewAlertNoEvents.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = NewAlertNoEvents.nib; path = "Frameworks/Adium Framework/NewAlertNoEvents.nib"; sourceTree = "<group>"; };
 		63093C2D0892143500F118D3 /* newContentThreeDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentThreeDigits.png; sourceTree = "<group>"; };
 		63093C2E0892143500F118D3 /* newContentTwoDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentTwoDigits.png; sourceTree = "<group>"; };
+		6315FFAA0977187E005794CC /* RSS.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = RSS.h; path = Source/RSS.h; sourceTree = "<group>"; };
+		6315FFAB0977187E005794CC /* RSS.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = RSS.m; path = Source/RSS.m; sourceTree = "<group>"; };
+		6315FFAC0977187E005794CC /* SUUpdater.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SUUpdater.h; path = Source/SUUpdater.h; sourceTree = "<group>"; };
+		6315FFAD0977187E005794CC /* SUUpdater.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SUUpdater.m; path = Source/SUUpdater.m; sourceTree = "<group>"; };
+		6315FFB4097718A1005794CC /* Sparkle.strings */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = Sparkle.strings; path = Resources/Sparkle.strings; sourceTree = "<group>"; };
 		632D608D094B7EEB003A9786 /* AIXtraPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraPreviewController.h; path = Source/AIXtraPreviewController.h; sourceTree = "<group>"; };
 		632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockIconPreviewController.h; path = Source/AIDockIconPreviewController.h; sourceTree = "<group>"; };
 		632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDockIconPreviewController.m; path = Source/AIDockIconPreviewController.m; sourceTree = "<group>"; };
@@ -4476,6 +4483,7 @@
 		34D8342B07CBE6A4006466F2 /* External Sources */ = {
 			isa = PBXGroup;
 			children = (
+				6315FFA309771742005794CC /* Automatic Updating (Sparkle) */,
 				34D834E207CBE7D5006466F2 /* Sound Playing */,
 				34D834CD07CBE7A3006466F2 /* Text field for previewing font preferences */,
 				34A6FE8007D7E07300972830 /* Type Select Table View */,
@@ -5621,6 +5629,18 @@
 			name = Growl;
 			sourceTree = "<group>";
 		};
+		6315FFA309771742005794CC /* Automatic Updating (Sparkle) */ = {
+			isa = PBXGroup;
+			children = (
+				6315FFB4097718A1005794CC /* Sparkle.strings */,
+				6315FFAA0977187E005794CC /* RSS.h */,
+				6315FFAB0977187E005794CC /* RSS.m */,
+				6315FFAC0977187E005794CC /* SUUpdater.h */,
+				6315FFAD0977187E005794CC /* SUUpdater.m */,
+			);
+			name = "Automatic Updating (Sparkle)";
+			sourceTree = "<group>";
+		};
 		632D800908E7DE2C0032C187 /* Xtras Management */ = {
 			isa = PBXGroup;
 			children = (
@@ -6555,7 +6575,6 @@
 				34E2A2F207B018B2006735BC /* ESAddressBookIntegrationAdvancedPreferences.h in Headers */,
 				34E2A2F407B018B2006735BC /* ESAddressBookIntegrationPlugin.h in Headers */,
 				34E2A3E907B08CCB006735BC /* AIAliasSupportPlugin.h in Headers */,
-				4BCAC70707B5A4FB006641B9 /* CPFVersionChecker.h in Headers */,
 				349C6E4A07C96D45005EB896 /* CBContactCountingDisplayPlugin.h in Headers */,
 				349C6E8D07C972B2005EB896 /* AIExtendedStatusPlugin.h in Headers */,
 				349C6F6507C99ACF005EB896 /* ESContactListAdvancedPreferences.h in Headers */,
@@ -6673,6 +6692,8 @@
 				343EC6C7096F7E1700349098 /* ESStatusAdvancedPreferences.h in Headers */,
 				343ECBEA0971B18200349098 /* ESShowContactInfoPromptController.h in Headers */,
 				343ECBFB0971B92100349098 /* AIBorderlessListController.h in Headers */,
+				6315FFB00977187E005794CC /* RSS.h in Headers */,
+				6315FFB20977187E005794CC /* SUUpdater.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7719,7 +7740,6 @@
 				4BCAC4E607B59B65006641B9 /* Alias Defaults.plist in Resources */,
 				4BCAC4E707B59B65006641B9 /* Display Format Defaults.plist in Resources */,
 				4BCAC56D07B5A31A006641B9 /* Sounds in Resources */,
-				4BCAC71807B5A50F006641B9 /* VersionChecker Defaults.plist in Resources */,
 				3496A8C207CE6B880055BBAB /* InfoPlist.strings in Resources */,
 				4BAE6C1F07CF9389007E2820 /* AnnouncerAlert.png in Resources */,
 				4BAE6C2007CF9389007E2820 /* AnnouncerDefaults.plist in Resources */,
@@ -7812,6 +7832,7 @@
 				343EC9810970C29400349098 /* OfflineContactHidingDefaults.plist in Resources */,
 				343ECBEE0971B18E00349098 /* ShowContactInfoPrompt.nib in Resources */,
 				347EAB2D09721D490090EA6E /* pref-personal.png in Resources */,
+				6315FFB5097718A1005794CC /* Sparkle.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8240,7 +8261,6 @@
 				34E2A2F007B018B2006735BC /* ESAddressBookIntegrationPlugin.m in Sources */,
 				34E2A2F507B018B2006735BC /* ESAddressBookIntegrationAdvancedPreferences.m in Sources */,
 				34E2A3E807B08CCB006735BC /* AIAliasSupportPlugin.m in Sources */,
-				4BCAC70807B5A4FB006641B9 /* CPFVersionChecker.m in Sources */,
 				349C6E4907C96D45005EB896 /* CBContactCountingDisplayPlugin.m in Sources */,
 				349C6E8E07C972B2005EB896 /* AIExtendedStatusPlugin.m in Sources */,
 				349C6F6607C99ACF005EB896 /* ESContactListAdvancedPreferences.m in Sources */,
@@ -8354,6 +8374,8 @@
 				343EC6C8096F7E1700349098 /* ESStatusAdvancedPreferences.m in Sources */,
 				343ECBEB0971B18200349098 /* ESShowContactInfoPromptController.m in Sources */,
 				343ECBFC0971B92100349098 /* AIBorderlessListController.m in Sources */,
+				6315FFB10977187E005794CC /* RSS.m in Sources */,
+				6315FFB30977187E005794CC /* SUUpdater.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

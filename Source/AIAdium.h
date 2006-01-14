@@ -23,7 +23,7 @@
 		AICoreComponentLoader, AIContentController, AIToolbarController, AIContactInfoViewController, 
 		AIPreferenceViewController, AISoundController, AIDockController, ESFileTransferController, 
 		ESContactAlertsController, ESApplescriptabilityController, AIStatusController, ESDebugController,
-		AIEmoticonController, AIChatController;
+		AIEmoticonController, AIChatController, SUUpdater;
 
 @protocol AIController
 - (void)controllerDidLoad;
@@ -33,6 +33,7 @@
 @interface AIAdium : NSObject {
     IBOutlet	AIMenuController				*menuController;
     IBOutlet	AIInterfaceController			*interfaceController;
+	IBOutlet	SUUpdater						*updater;
 
 	AIAccountController				*accountController;
 	AIChatController				*chatController;
