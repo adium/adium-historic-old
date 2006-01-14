@@ -842,4 +842,77 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 	}
 }
 
+- (NSString *) trimWhiteSpace {
+	
+	NSMutableString *s = [[self mutableCopy] autorelease];
+	
+	CFStringTrimWhitespace ((CFMutableStringRef) s);
+	
+	return (NSString *) [[s copy] autorelease];
+} /*trimWhiteSpace*/
+
+
+- (NSString *) ellipsizeAfterNWords: (int) n {
+	
+	NSArray *stringComponents = [self componentsSeparatedByString: @" "];
+	NSMutableArray *componentsCopy = [stringComponents mutableCopy];
+	int ix = n;
+	int len = [componentsCopy count];
+	
+	if (len < n)
+		ix = len;
+	
+	[componentsCopy removeObjectsInRange: NSMakeRange (ix, len - ix)];
+	
+	return [componentsCopy componentsJoinedByString: @" "];
+} /*ellipsizeAfterNWords*/
+
+
+- (NSString *) stripHTML {
+	
+	int len = [self length];
+	NSMutableString *s = [NSMutableString stringWithCapacity: len];
+	int i = 0, level = 0;
+	
+	for (i = 0; i < len; i++) {
+		
+		NSString *ch = [self substringWithRange: NSMakeRange (i, 1)];
+		
+		if ([ch isEqualTo: @"<"])
+			level++;
+		
+		else if ([ch isEqualTo: @">"]) {
+			
+			level--;
+			
+			if (level == 0)			
+				[s appendString: @" "];
+		} /*else if*/
+		
+		else if (level == 0)			
+			[s appendString: ch];
+	} /*for*/
+	
+	return (NSString *) [[s copy] autorelease];
+} /*stripHTML*/
+
+
++ (BOOL) stringIsEmpty: (NSString *) s {
+	
+	NSString *copy;
+	
+	if (s == nil)
+		return (YES);
+	
+	if ([s isEqualTo: @""])
+		return (YES);
+	
+	copy = [[s copy] autorelease];
+	
+	if ([[copy trimWhiteSpace] isEqualTo: @""])
+		return (YES);
+	
+	return (NO);
+} /*stringIsEmpty*/
+
 @end

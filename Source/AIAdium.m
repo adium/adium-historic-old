@@ -43,6 +43,7 @@
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <Adium/AIPathUtilities.h>
+#import "SUUpdater.h"
 
 //Path to Adium's application support preferences
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
@@ -55,6 +56,10 @@
 
 //Portable Adium prefs key
 #define PORTABLE_ADIUM_KEY					@"Preference Folder Location"
+
+//Intervals to re-check for updates after a successful update check
+#define VERSION_CHECK_INTERVAL			24		//24 hours
+#define BETA_VERSION_CHECK_INTERVAL 	1		//1 hours - Beta releases have a nice annoying refresh >:D
 
 #define ALWAYS_RUN_SETUP_WIZARD FALSE
 
@@ -324,6 +329,10 @@ static NSString	*prefsCategory;
 		}
 		[queuedURLEvents release]; queuedURLEvents = nil;
 	}
+	
+	[updater scheduleCheckWithInterval:(NSTimeInterval)(60 * 60 * (BETA_RELEASE ?
+																   BETA_VERSION_CHECK_INTERVAL :
+																   VERSION_CHECK_INTERVAL))];
 	
 	completedApplicationLoad = YES;
 
