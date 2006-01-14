@@ -146,10 +146,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 			[account setStatusStateAndRemainOffline:lastStatus];
 		}
 	}
-	
-	if (allStatusesInSameState && [prevStatus mutesSound])
-		[[adium soundController] setSoundsAreMuted:YES];
-	
+
 	if (needToRebuildMenus) {
 		[self notifyOfChangedStatusArray];
 	}
@@ -500,14 +497,6 @@ static 	NSMutableSet			*temporaryStateArray = nil;
  */
 - (void)setActiveStatusState:(AIStatus *)statusState
 {
-#warning it would be nice to only mute/unmute if there is actually a change but the code below does not work	
-//	if (_activeStatusState == nil || [statusState mutesSound] != [[self activeStatusState] mutesSound]) {
-	if ([statusState mutesSound])
-		[[adium soundController] setSoundsAreMuted:YES];
-	else
-		[[adium soundController] setSoundsAreMuted:NO];		
-//	}
-
 	//Apply the state to our accounts and notify (delay to the next run loop to improve perceived speed)
 	[self performSelector:@selector(applyState:toAccounts:)
 			   withObject:statusState
