@@ -130,10 +130,6 @@ static BOOL							hideInBackground = NO;
  */
 - (void)windowWillClose:(id)sender
 {
-	
-	if (!allStatusesMuteSound)
-		[[adium soundController] setSoundsAreMuted:NO];
-
 	[super windowWillClose:sender];
 
     //Clean up and release the shared instance
@@ -162,7 +158,6 @@ static BOOL							hideInBackground = NO;
 	NSSet			*relevantStatuses;
 	NSRect			frame = [window frame];
 	int				newHeight;
-	allStatusesMuteSound = NO;
 	
 	[window setTitle:AILocalizedString(@"Current Status",nil)];
 	[_awayAccounts release]; _awayAccounts = nil;
@@ -192,7 +187,6 @@ static BOOL							hideInBackground = NO;
 		//Select the right tab view item
 		[tabView_configuration selectTabViewItemWithIdentifier:@"singlestatus"];
 		
-		allStatusesMuteSound = [(AIStatus *)[relevantStatuses anyObject] mutesSound];
 	} else {
 		/* Show the multistatus tableview tab if accounts are in different states, which includes the case of only one
 		 * away state being in use but not all online accounts currently making use of it.
@@ -213,15 +207,6 @@ static BOOL							hideInBackground = NO;
 		/* Multiple statuses */
 		[tabView_configuration selectTabViewItemWithIdentifier:@"multistatus"];
 	}
-	
-	//configure sound related things
-	BOOL shouldMuteWhileWindowIsOpen = [[[adium preferenceController] preferenceForKey:@"Mute While Away Status Window is Open"
-																				 group:PREF_GROUP_STATUS_PREFERENCES] boolValue];
-	[button_muteWhileAway setState:shouldMuteWhileWindowIsOpen];
-	if (!allStatusesMuteSound) 
-		[[adium soundController] setSoundsAreMuted:shouldMuteWhileWindowIsOpen];
-	 else
-		[button_muteWhileAway setEnabled:NO];
 	
 	//Perform the window resizing as needed
 	[window setFrame:frame display:YES animate:YES];
@@ -379,25 +364,12 @@ static BOOL							hideInBackground = NO;
 	[cell setSubString:[[account statusState] title]];
 }
 
-- (IBAction)toggleMuteWhileAway:(id)sender
-{
-	BOOL	shouldMuteWhileWindowIsOpen;
-	
-	shouldMuteWhileWindowIsOpen = [sender state];
-	//Store for restoring here
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:shouldMuteWhileWindowIsOpen]
-										 forKey:@"Mute While Away Status Window is Open"
-										  group:PREF_GROUP_STATUS_PREFERENCES];
-	[[adium soundController] setSoundsAreMuted:shouldMuteWhileWindowIsOpen];
-}
-
 - (void)localizeButtons
 {
 	[button_return setLocalizedString:AILocalizedStringFromTableInBundle(@"Return", 
 																		 @"Buttons",
 																		 [NSBundle bundleForClass:[self class]],
 																		 "Button to return from away in the away status window")];
-	[button_muteWhileAway setLocalizedString:AILocalizedString(@"Mute While Away", "Mute sounds while away. Found in the away status window.")];
 }
 
 @end
