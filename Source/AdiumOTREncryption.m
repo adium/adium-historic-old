@@ -20,6 +20,7 @@
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListContact.h>
+#import <Adium/AIHTMLDecoder.h>
 
 #import "ESOTRPrivateKeyGenerationWindowController.h"
 #import "ESOTRPreferences.h"
@@ -386,29 +387,69 @@ static void inject_message_cb(void *opdata, const char *accountname,
 															 toContact:contactFromInfo(accountname, protocol, recipient)];
 }
 
+/*
+ * @brief Display an OTR message
+ *
+ * This should be displayed within the relevant chat.
+ *
+ * @result 0 if we handled displaying the message; 1 if we could not
+ */
 static int display_otr_message(const char *accountname, const char *protocol,
 							   const char *username, const char *msg)
 {
-	NSString		*message;
-	NSString		*localizedMessage;
-	AIAdium			*sharedAdium = [AIObject sharedAdiumInstance];
-	AIListContact	*listContact = contactFromInfo(accountname, protocol, username);
-	AIChat			*chat;
-
+	NSString		 *message;
+	AIAdium			 *sharedAdium = [AIObject sharedAdiumInstance];
+	AIListContact	 *listContact = contactFromInfo(accountname, protocol, username);
+	AIChat			 *chat;
+	AIContentMessage *messageObject;
+	
 	if (!(chat = [[sharedAdium chatController] existingChatWithContact:listContact])) {
 		chat = [[sharedAdium chatController] chatWithContact:listContact];
 	}
 	
+	//If we can't get a chat for some reason, we can't handle displayed this error message, so return 1
+	if (!chat) return 1;
+
 	message = [NSString stringWithUTF8String:msg];
 	
-	localizedMessage = [adiumOTREncryption localizedOTRMessage:message
-												  withUsername:[listContact formattedUID]];
+	if (([message rangeOfString:@"The following message received from"].location != NSNotFound) &&
+		([message rangeOfString:@"was not encrypted:"].location != NSNotFound)) {
+		/*
+		 * If we receive an unencrypted message, display it as a normal incoming message with the bolded warning that
+		 * the message was not encrypted
+		 */		
+		NSRange			startRange = [message rangeOfString:@"The following message received from"];
+		NSRange			endRange = [message rangeOfString:@"was not encrypted:"];
+		NSMutableString *mutableMessage = [[message mutableCopy] autorelease];
+		
+		[mutableMessage replaceCharactersInRange:NSMakeRange(startRange.location, NSMaxRange(endRange) - startRange.location)
+									  withString:[adiumOTREncryption localizedOTRMessage:@"The following message was not encrypted:"
+																			withUsername:nil]];
+		
+		message = mutableMessage;
 
-	[[sharedAdium contentController] displayStatusMessage:localizedMessage
-												   ofType:@"encryption"
-												   inChat:chat];
+		messageObject = [AIContentMessage messageInChat:chat
+											 withSource:listContact
+											destination:[chat account]
+												   date:nil
+												message:[AIHTMLDecoder decodeHTML:message]
+											  autoreply:NO];
+		
+		[[sharedAdium contentController] receiveContentObject:messageObject];
+		
+	} else {
+		NSString	*formattedUID = [listContact formattedUID];
+
+		//All other OTR messages should be displayed as status messages; decode the message to strip any HTML
+		message = [adiumOTREncryption localizedOTRMessage:message
+											 withUsername:formattedUID];
+		[[sharedAdium contentController] displayStatusMessage:[[AIHTMLDecoder decodeHTML:message] string]
+													   ofType:@"encryption"
+													   inChat:chat];
+	}
 	
-	return 0; /* We handled it */
+	//We handled it
+	return 0;
 }
 
 static void notify_cb(void *opdata, OtrlNotifyLevel level,
@@ -818,6 +859,9 @@ OtrlUserState otrg_get_userstate(void)
 
 	} else if ([message isEqualToString:@"Your message was not sent.  Either close your private connection to him, or refresh it."]) {
 		localizedOTRMessage = AILocalizedString(@"Your message was not sent. You should end the encrypted chat on your side or re-request encryption.", nil);
+
+	} else if ([message isEqualToString:@"The following message was not encrypted:"]) {
+		localizedOTRMessage = AILocalizedString(@"The following message was not encrypted:", nil);
 	}
 	
 	return (localizedOTRMessage ? localizedOTRMessage : message);
