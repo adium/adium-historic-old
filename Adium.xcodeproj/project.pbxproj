@@ -11,6 +11,7 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 347A21BA09786C7300A30431 /* Build configuration list for PBXAggregateTarget "Adium with SystemVersionCheck" */;
 			buildPhases = (
+				074949DD0978E2DE002D9D1A /* ShellScript */,
 				347A21A609786C3A00A30431 /* CopyFiles */,
 				347A21AC09786C5100A30431 /* ShellScript */,
 			);
@@ -1383,14 +1384,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 34BD9CD1053146CC000AB133 /* Adium */;
+			remoteGlobalIDString = 34BD9CD1053146CC000AB133;
 			remoteInfo = Adium;
 		};
 		347A21A009786C1F00A30431 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 347A210E09786B5F00A30431 /* SystemVersionCheck */;
+			remoteGlobalIDString = 347A210E09786B5F00A30431;
 			remoteInfo = SystemVersionCheck;
 		};
 		3496A8ED07CE6CCB0055BBAB /* PBXContainerItemProxy */ = {
@@ -1507,7 +1508,7 @@
 		347A21A609786C3A00A30431 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = SystemVersionCheck;
+			dstPath = "SystemVersionCheck-script_wd";
 			dstSubfolderSpec = 16;
 			files = (
 				347A21B409786C6C00A30431 /* Adium.app in CopyFiles */,
@@ -7936,6 +7937,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		074949DD0978E2DE002D9D1A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "WORK_DIRECTORY_PATH=\"${BUILT_PRODUCTS_DIR}/SystemVersionCheck-script_wd\"\n\nmkdir ${WORK_DIRECTORY_PATH}";
+		};
 		07D43998084E5A4B00BFFF05 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -7990,7 +8004,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "WORK_DIRECTORY_PATH=\"${BUILT_PRODUCTS_DIR}/SystemVersionCheck\"\nRESULTS_DIRECTORY_PATH=\"${WORK_DIRECTORY_PATH}/Results\"\nSVC_EXECUTABLE_PATH=\"${WORK_DIRECTORY_PATH}/SystemVersionCheck\"\n\nif [ ! -f \"${SVC_EXECUTABLE_PATH}\" ]; then\n    echo \"Missing SystemVersionCheck file\"\n    exit 1\nfi\n\nrm -rf \"${RESULTS_DIRECTORY_PATH}\"\n\nORIG_APP_WRAPPER_PATH=`find ${WORK_DIRECTORY_PATH} -name '*.app' | head -n 1`\n\nif [ ! -d \"${ORIG_APP_WRAPPER_PATH}\" ]; then\n    echo \"Missing application\"\n    exit 1\nfi\n\nAPP_WRAPPER_NAME=`basename \"${ORIG_APP_WRAPPER_PATH}\"`\nAPP_WRAPPER_PATH=\"${RESULTS_DIRECTORY_PATH}/${APP_WRAPPER_NAME}\"\n\nmkdir -p \"${RESULTS_DIRECTORY_PATH}\"\n\ncp -Rp \"${ORIG_APP_WRAPPER_PATH}\" \"${APP_WRAPPER_PATH}\"\n\nAPP_EXECUTABLE_NAME=`basename \"${APP_WRAPPER_NAME}\" .app`\nAPP_EXECUTABLE_PATH=\"${APP_WRAPPER_PATH}/Contents/MacOS/${APP_EXECUTABLE_NAME}\"\n\necho \"Installing SystemVersionCheck\"\nmv \"${APP_EXECUTABLE_PATH}\" \"${APP_EXECUTABLE_PATH}.real\" \ncp \"${SVC_EXECUTABLE_PATH}\" \"${APP_EXECUTABLE_PATH}\"\nchmod a+x \"${APP_EXECUTABLE_PATH}\"";
+			shellScript = "WORK_DIRECTORY_PATH=\"${BUILT_PRODUCTS_DIR}/SystemVersionCheck-script_wd\"\nRESULTS_DIRECTORY_PATH=\"${WORK_DIRECTORY_PATH}/Results\"\nSVC_EXECUTABLE_PATH=\"${WORK_DIRECTORY_PATH}/SystemVersionCheck\"\n\nif [ ! -f \"${SVC_EXECUTABLE_PATH}\" ]; then\n    echo \"Missing SystemVersionCheck file\"\n    exit 1\nfi\n\nrm -rf \"${RESULTS_DIRECTORY_PATH}\"\n\nORIG_APP_WRAPPER_PATH=`find ${WORK_DIRECTORY_PATH} -name '*.app' | head -n 1`\n\nif [ ! -d \"${ORIG_APP_WRAPPER_PATH}\" ]; then\n    echo \"Missing application\"\n    exit 1\nfi\n\nAPP_WRAPPER_NAME=`basename \"${ORIG_APP_WRAPPER_PATH}\"`\nAPP_WRAPPER_PATH=\"${RESULTS_DIRECTORY_PATH}/${APP_WRAPPER_NAME}\"\n\nmkdir -p \"${RESULTS_DIRECTORY_PATH}\"\n\ncp -Rp \"${ORIG_APP_WRAPPER_PATH}\" \"${APP_WRAPPER_PATH}\"\n\nAPP_EXECUTABLE_NAME=`basename \"${APP_WRAPPER_NAME}\" .app`\nAPP_EXECUTABLE_PATH=\"${APP_WRAPPER_PATH}/Contents/MacOS/${APP_EXECUTABLE_NAME}\"\n\necho \"Installing SystemVersionCheck\"\nmv \"${APP_EXECUTABLE_PATH}\" \"${APP_EXECUTABLE_PATH}.real\" \ncp \"${SVC_EXECUTABLE_PATH}\" \"${APP_EXECUTABLE_PATH}\"\nchmod a+x \"${APP_EXECUTABLE_PATH}\"";
 		};
 		34CF9EEF085B98D400D87E37 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
