@@ -115,10 +115,12 @@ int compareNewsItems(id item1, id item2, void *context)
 		/*If there was a problem parsing the RSS file,
 		raise an exception.*/
 	
-		NSException *exception = [NSException exceptionWithName: @"RSSParseFailed"
+		/*NSException *exception = [NSException exceptionWithName: @"RSSParseFailed"
 			reason: @"The XML parser could not parse the RSS data." userInfo: nil];
+		*/
+		AILog(@"Sparkle couldn't parse the RSS data");
 		
-		[exception raise];
+		//[exception raise];
 		} /*if*/
 	
 	[self createheaderdictionary: tree];
@@ -147,20 +149,25 @@ int compareNewsItems(id item1, id item2, void *context)
 		/*If there was a problem reading the RSS file,
 		raise an exception.*/
 		
-		NSException *exception = [NSException exceptionWithName: @"RSSDownloadFailed"
+		/*NSException *exception = [NSException exceptionWithName: @"RSSDownloadFailed"
 			reason: [urlHandle failureReason] userInfo: nil];
+		*/
+		AILog(@"Sparkle RSS Download Failed: %@", [urlHandle failureReason]);
 
-		[exception raise];
+		//[exception raise];
 		} /*if*/
 	
 	if (rssData == nil) {
 		
 		/*Another possible error.*/
 		
-		NSException *exception = [NSException exceptionWithName: @"RSSNoData"
+		/*NSException *exception = [NSException exceptionWithName: @"RSSNoData"
 			reason: @"Couldn't retrieve update information from the server" userInfo: nil];
-
-		[exception raise];
+		*/
+		
+		AILog(@"Sparkle couldn't retrieve update information from the server");
+		
+		//[exception raise];
 		} /*if*/
 	
 	return [self initWithData: rssData normalize: fl];	
@@ -212,10 +219,11 @@ int compareNewsItems(id item1, id item2, void *context)
 	
 	if (channelTree == nil) {
 	
-		NSException *exception = [NSException exceptionWithName: @"RSSCreateHeaderDictionaryFailed"
+		/*NSException *exception = [NSException exceptionWithName: @"RSSCreateHeaderDictionaryFailed"
 			reason: @"Couldn't find the channel tree." userInfo: nil];
-
-		[exception raise];
+		*/
+		AILog(@"Sparkle: RSSCreateHeaderDictionaryFailed: Couldn't find the channel tree.");
+		//[exception raise];
 		} /*if*/
 
 	childCount = CFTreeGetChildCount (channelTree);
@@ -263,10 +271,12 @@ int compareNewsItems(id item1, id item2, void *context)
 	
 	if (channelTree == nil) {
 		
-		NSException *exception = [NSException exceptionWithName: @"RSSCreateItemsArrayFailed"
+		/*NSException *exception = [NSException exceptionWithName: @"RSSCreateItemsArrayFailed"
 			reason: @"Couldn't find the news items." userInfo: nil];
+		*/
+		AILog(@"Sparkle couldn't find the news items");
 
-		[exception raise];
+		//[exception raise];
 		} /*if*/
 	
 	childCount = CFTreeGetChildCount (channelTree);
