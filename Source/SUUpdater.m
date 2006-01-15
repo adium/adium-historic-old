@@ -194,6 +194,7 @@ NSString *SUHostAppName()
 	// Numeric literals abound! Run for the hills! But they're mostly taken from the HIG dialog reference layout.
 	
 	statusWindow = [[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, 384, 106) styleMask:NSTitledWindowMask | NSMiniaturizableWindowMask backing:NSBackingStoreBuffered defer:NO];
+	[statusWindow setHidesOnDeactivate:NO];
 	[statusWindow center];
 	[statusWindow setTitle:[NSString stringWithFormat:NSLocalizedStringFromTable(@"Updating %@", @"Sparkle", nil), SUHostAppName()]];
 	
