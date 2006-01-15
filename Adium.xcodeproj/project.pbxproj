@@ -326,7 +326,6 @@
 		3474E0910825634300BF30F0 /* StatusPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3474E0900825634300BF30F0 /* StatusPreferences.nib */; };
 		3477CAD10776E55800995429 /* AIContactInfoPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBF41ED066119A8001D31E1 /* AIContactInfoPane.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		347A211D09786BA900A30431 /* SystemVersionCheck.m in Sources */ = {isa = PBXBuildFile; fileRef = 347A211C09786BA900A30431 /* SystemVersionCheck.m */; };
-		347A211E09786C0200A30431 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349C2FEF0867AD65000BF883 /* Foundation.framework */; };
 		347A21B409786C6C00A30431 /* Adium.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34BD9DA9053146CC000AB133 /* Adium.app */; };
 		347A21B509786C6C00A30431 /* SystemVersionCheck in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347A210F09786B5F00A30431 /* SystemVersionCheck */; };
 		347C6942080C8F2B00E69674 /* ESAwayStatusWindowPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 347C6940080C8F2B00E69674 /* ESAwayStatusWindowPlugin.h */; };
@@ -752,6 +751,7 @@
 		34D8374E07CC2F2E006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34D8375407CC2FA3006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34D8378307CC31B9006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		34DCF0E3097A30AD0054194E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		34DFF53907A62EB200B92233 /* Lock_Unlocked State.png in Resources */ = {isa = PBXBuildFile; fileRef = 34DFF52607A62EB000B92233 /* Lock_Unlocked State.png */; };
 		34DFF54307A62EB200B92233 /* Lock_Locked State.png in Resources */ = {isa = PBXBuildFile; fileRef = 34DFF53007A62EB100B92233 /* Lock_Locked State.png */; };
 		34DFF5FC07A63DB100B92233 /* ESSecureMessagingPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34DFF46007A5EABF00B92233 /* ESSecureMessagingPlugin.h */; };
@@ -3426,7 +3426,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				347A211E09786C0200A30431 /* Foundation.framework in Frameworks */,
+				34DCF0E3097A30AD0054194E /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
