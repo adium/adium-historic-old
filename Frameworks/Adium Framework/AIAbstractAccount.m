@@ -576,7 +576,13 @@
 	return [[self statusState] statusMessage];
 }
 
-
+/*
+ * @brief Are sounds for this acount muted?
+ */
+- (BOOL)soundsAreMuted
+{
+	return [[self statusState] mutesSound];
+}
 
 #pragma mark Passwords
 
