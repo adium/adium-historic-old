@@ -137,6 +137,8 @@
 	minWindowSize = [[self window] minSize];
 	[contactListController setMinWindowSize:minWindowSize];
 
+	[[self window] setTitle:AILocalizedString(@"Contacts","Contact List window title")];
+
     //Watch for resolution and screen configuration changes
     [[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(screenParametersChanged:) 
@@ -171,6 +173,7 @@
 	// need to do this before calling -[AIWindowController windowWillClose:], because it's
 	// that method that does the saving.  
 	[self slideWindowOnScreen]; 
+
 	[super windowWillClose:notification];
 
 	// kill dock-like hiding timer, if it isn't nil
