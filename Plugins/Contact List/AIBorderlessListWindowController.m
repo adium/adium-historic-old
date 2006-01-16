@@ -40,8 +40,12 @@
 //Ensure we're on the main screen on load
 - (void)windowDidLoad
 {
+	//Clear the minimum size before our window restores its position and size; a borderless window can be any size it wants
+	[[self window] setMinSize:NSZeroSize];
+
 	[super windowDidLoad];
-	NSWindow * window = [self window];
+	
+	NSWindow *window = [self window];
 	if (![window screen]) {
 		[window constrainFrameRect:[window frame] toScreen:[NSScreen mainScreen]];
 	}

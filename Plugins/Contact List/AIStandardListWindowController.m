@@ -86,7 +86,6 @@
 	[super windowDidLoad];
 	
 	[self _configureToolbar];
-	[[self window] setTitle:AILocalizedString(@"Contacts","Contact List window title")];
 
 	//Configure the state menu
 	statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
@@ -99,6 +98,9 @@
 	[self activeStateChanged:nil];
 	
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+	
+	//Set our minimum size here rather than in the nib to avoid conflicts with autosizing
+	[[self window] setMinSize:NSMakeSize(135, 60)];
 }
 
 /*!
