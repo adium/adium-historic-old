@@ -9,9 +9,13 @@
 #import "SUUpdater.h"
 #import "RSS.h"
 #import <stdio.h>
+#import <Adium/AIAdium.h>
 
 NSString *SUCheckAtStartupKey = @"SUCheckAtStartup";
-NSString *SUFeedURLKey = @"SUFeedURL";
+#if BETA_RELEASE == TRUE
+	NSString *SUFeedURLKey = @"SUBetaFeedURL";
+#else
+	NSString *SUFeedURLKey = @"SUFeedURL";
 NSString *SUShowReleaseNotesKey = @"SUShowReleaseNotes";
 
 NSString *SUHostAppName()
