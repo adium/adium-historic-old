@@ -42,8 +42,8 @@
 #ifndef JOSCAR_SUPERCEDE_LIBGAIM
 	AIMService			= [[ESAIMService alloc] init];
 	DotMacService		= [[ESDotMacService alloc] init];
-#endif
 	ICQService			= [[ESICQService alloc] init];
+#endif
 	GaduGaduService		= [[ESGaduGaduService alloc] init];
 	GTalkService		= [[AIGTalkService alloc] init];
 	MSNService			= [[ESMSNService alloc] init];
@@ -63,9 +63,9 @@
 {
 #ifndef JOSCAR_SUPERCEDE_LIBGAIM
 	[AIMService release]; AIMService = nil;
-#endif
 	[ICQService release]; ICQService = nil;
 	[DotMacService release]; DotMacService = nil;
+#endif
 	[GaduGaduService release]; GaduGaduService = nil;
 	[GTalkService release]; GTalkService = nil;
 	[JabberService release]; JabberService = nil;
