@@ -76,6 +76,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			@"NSArchiverArchiveInconsistency", //Odd system hacks can lead to this one
 			@"NSUnknownKeyException", //No reason to crash on invalid Applescript syntax
 			@"NSObjectInaccessibleException", //We don't use DO, but spell checking does; AppleScript execution requires multiple run loops, and the HIToolbox can get confused and try to spellcheck in the applescript thread. Silly Apple.
+			@"RSSNoData", //Sparkle throws this if there's no data in the appcast. No reason to crash on it.
 			nil];
 	}
 }
