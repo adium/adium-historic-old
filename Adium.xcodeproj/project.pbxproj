@@ -7969,7 +7969,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "WORK_DIRECTORY_PATH=\"${BUILT_PRODUCTS_DIR}/SystemVersionCheck-script_wd\"\n\nmkdir ${WORK_DIRECTORY_PATH}";
+			shellScript = "WORK_DIRECTORY_PATH=\"${BUILT_PRODUCTS_DIR}/SystemVersionCheck-script_wd\"\n\nif [[ ! -d Projects ]]; then\n\tmkdir ${WORK_DIRECTORY_PATH}\nfi";
 		};
 		07D43998084E5A4B00BFFF05 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
