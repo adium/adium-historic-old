@@ -10,6 +10,10 @@
 	<string>YES</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
+    <key>SmartCrashReports_CompanyName</key>
+    <string>Adium</string>
+    <key>SmartCrashReports_EmailTicket</key>
+    <string>SCR-4C60AF7BD3</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -389,6 +393,8 @@
 	<string>http://www.adiumx.com/adiumbeta.xml</string>
 	<key>SUFeedURL</key>
 	<string>http://www.adiumx.com/adium.xml</string>
+	<key>SUCheckAtStartup</key>
+	<true/>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
