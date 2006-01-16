@@ -296,11 +296,19 @@
 	//testing joscar doesn't break people's libgaim accounts.
 	if ([serviceID isEqualToString:@"joscar-OSCAR-AIM"])
 		serviceID = @"libgaim-oscar-AIM";
+	if ([serviceID isEqualToString:@"joscar-OSCAR-ICQ"])
+		serviceID = @"libgaim-oscar-ICQ";
+	if ([serviceID isEqualToString:@"joscar-OSCAR-dotMac"])
+		serviceID = @"libgaim-oscar-Mac";
 #endif
 	
 #ifdef JOSCAR_SUPERCEDE_LIBGAIM
 	if ([serviceID isEqualToString:@"libgaim-oscar-AIM"])
 		serviceID = @"joscar-OSCAR-AIM";
+	if ([serviceID isEqualToString:@"libgaim-oscar-ICQ"])
+		serviceID = @"joscar-OSCAR-ICQ";
+	if ([serviceID isEqualToString:@"libgaim-oscar-Mac"])
+		serviceID = @"joscar-OSCAR-dotMac";
 #endif
 	
 	return serviceID;
