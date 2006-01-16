@@ -16,6 +16,7 @@ NSString *SUCheckAtStartupKey = @"SUCheckAtStartup";
 	NSString *SUFeedURLKey = @"SUBetaFeedURL";
 #else
 	NSString *SUFeedURLKey = @"SUFeedURL";
+#endif
 NSString *SUShowReleaseNotesKey = @"SUShowReleaseNotes";
 
 NSString *SUHostAppName()
