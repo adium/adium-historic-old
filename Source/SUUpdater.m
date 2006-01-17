@@ -148,22 +148,17 @@ NSString *SUHostAppName()
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	RSS *feed;
 	BOOL shouldContinue = YES;
-	NS_DURING
-		NSString *path = [[[NSBundle mainBundle] infoDictionary] objectForKey:SUFeedURLKey];
-		if (!path) { [NSException raise:@"SUNoFeedURL" format:@"No feed URL is specified in the Info.plist!"]; }
-		feed = [[RSS alloc] initWithURL:[NSURL URLWithString:path] normalize:YES];
-	NS_HANDLER
+
+	NSString *path = [[[NSBundle mainBundle] infoDictionary] objectForKey:SUFeedURLKey];
+	if (!path) {
+		AILog(@"No feed URL is specified in the Info.plist!");
 		shouldContinue = NO;
-		if ([[localException name] isEqualToString:@"RSSDownloadFailed"] || [[localException name] isEqualToString:@"RSSNoData"])
-		{
-			// We only run a panel on these if the notify flag is YES. 
-			if (!verbose)
-				NS_VOIDRETURN;
-		}
-		// We have to make the main thread do this instead of doing it ourselves because secondary
-		// threads can't do GUI stuff (like popping alert dialogs).
-		[self performSelectorOnMainThread:@selector(feedFetchDidFailWithException:) withObject:localException waitUntilDone:NO];
-	NS_ENDHANDLER
+	}
+	feed = [[RSS alloc] initWithURL:[NSURL URLWithString:path] normalize:YES];
+	if(!feed) {
+		AILog(@"An error occurred while parsing or downloading the RSS for Sparkle");
+		shouldContinue = NO;
+	}
 	
 	if (shouldContinue)
 		[self performSelectorOnMainThread:@selector(didFetchFeed:) withObject:feed waitUntilDone:NO];
