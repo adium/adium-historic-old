@@ -806,6 +806,20 @@ Boolean fillSoundConverterBuffer(SoundComponentDataPtr *data, void *refCon)
     if (err)
         return NO;
 
+    // If it wants float but little-endian, change it to big-endian.  We have to do this because the SoundConverter
+    // can only output big-endian floats (sadly).  The output AU will do the swapping necessary to get the data to the hardware.
+    if ((outputCoreAudioFormat.mFormatFlags & kLinearPCMFormatFlagIsFloat) && !(outputCoreAudioFormat.mFormatFlags & kLinearPCMFormatFlagIsBigEndian))
+    {
+        outputCoreAudioFormat.mFormatFlags |= kLinearPCMFormatFlagIsBigEndian;
+
+        err = AudioUnitSetProperty(outputAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &outputCoreAudioFormat, size);
+        if (err)
+        {
+            NSLog(@"couldn't set AU to be big-endian float");
+            return NO;
+        }   
+    }
+
     // Translate the format to a SoundComponentData for the sound converter. Yuck.
     outputSoundConverterFormat->flags = 0;
 
