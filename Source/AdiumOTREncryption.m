@@ -22,6 +22,8 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIHTMLDecoder.h>
 
+#import <AIUtilities/AIStringAdditions.h>
+
 #import "ESOTRPrivateKeyGenerationWindowController.h"
 #import "ESOTRPreferences.h"
 #import "ESOTRUnknownFingerprintController.h"
@@ -45,6 +47,8 @@
 - (void)setSecurityDetails:(NSDictionary *)securityDetailsDict forChat:(AIChat *)inChat;
 - (NSString *)localizedOTRMessage:(NSString *)message withUsername:(NSString *)username;
 - (void)notifyWithTitle:(NSString *)title primary:(NSString *)primary secondary:(NSString *)secondary;
+
+- (void)upgradeOTRFromGaimIfNeeded;
 @end
 
 @implementation AdiumOTREncryption
@@ -90,31 +94,24 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 
 - (void)controllerDidLoad
 {
-	if (![[[adium preferenceController] preferenceForKey:@"GaimOTR_to_AdiumOTR_Update"
-												   group:@"OTR"] boolValue]) {
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		NSString	  *destinationPath = [[adium loginController] userDirectory];
-		NSString	  *sourcePath = [destinationPath stringByAppendingPathComponent:@"libgaim"];
-		
-		[fileManager copyPath:[sourcePath stringByAppendingPathComponent:@"otr.fingerprints"]
-					   toPath:[destinationPath stringByAppendingPathComponent:@"otr.fingerprints"]
-					  handler:nil];
-		[fileManager copyPath:[sourcePath stringByAppendingPathComponent:@"otr.private_key"]
-					   toPath:[destinationPath stringByAppendingPathComponent:@"otr.private_key"]
-					  handler:nil];			
-		
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
-											 forKey:@"GaimOTR_to_AdiumOTR_Update"
-											  group:@"OTR"];
-	}
+	[self upgradeOTRFromGaimIfNeeded];
 
 	/* Make our OtrlUserState; we'll only use the one. */
 	otrg_plugin_userstate = otrl_userstate_create();
 
-	otrl_privkey_read(otrg_plugin_userstate, PRIVKEY_PATH);
-	otrl_privkey_read_fingerprints(otrg_plugin_userstate, STORE_PATH,
-								   NULL, NULL);
+	int err;
 	
+	err = otrl_privkey_read(otrg_plugin_userstate, PRIVKEY_PATH);
+	if (err) {
+		NSLog(@"Error reading OTR private keys: %s", gpg_strerror(err));
+	}
+
+	err = otrl_privkey_read_fingerprints(otrg_plugin_userstate, STORE_PATH,
+								   NULL, NULL);
+	if (err) {
+		NSLog(@"Error reading OTR fingerprints: %s", gpg_strerror(err));
+	}
+
 	otrg_ui_update_fingerprint();
 	
 	
@@ -874,6 +871,205 @@ OtrlUserState otrg_get_userstate(void)
 	[[adium interfaceController] handleMessage:primary
 							   withDescription:secondary
 							   withWindowTitle:title];
+}
+
+#pragma mark Upgrading
+- (NSDictionary *)prplDict
+{
+	return [NSDictionary dictionaryWithObjectsAndKeys:
+		@"joscar-OSCAR-AIM", @"prpl-oscar",
+		@"libgaim-Gadu-Gadu", @"prpl-gg",
+		@"libgaim-Jabber", @"prpl-jabber",
+		@"libgaim-Sametime", @"prpl-meanwhile",
+		@"libgaim-MSN", @"prpl-msn",
+		@"libgaim-GroupWise", @"prpl-novell",
+		@"libgaim-Yahoo!", @"prpl-yahoo",
+		@"libgaim-zephyr", @"prpl-zephyr", nil];
+}
+
+- (NSString *)upgradedFingerprintsFromFile:(NSString *)inPath
+{
+	NSString		*sourceFingerprints = [NSString stringWithContentsOfUTF8File:inPath];
+	NSScanner		*scanner = [NSScanner scannerWithString:sourceFingerprints];
+	NSMutableString *outFingerprints = [NSMutableString string];
+	
+	NSCharacterSet	*tabAndNewlineSet = [NSCharacterSet characterSetWithCharactersInString:@"\t\n\r"];
+	
+	//Skip quotes
+	[scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+	
+	NSDictionary	*prplDict = [self prplDict];
+	
+	NSArray			*adiumAccounts = [[adium accountController] accounts];
+	
+	while (![scanner isAtEnd]) {
+		//username     accountname  protocol      key	trusted\n
+		NSString		*chunk;
+		NSString		*username, *accountname, *protocol, *key, *trusted;
+		
+		//username
+		[scanner scanUpToCharactersFromSet:tabAndNewlineSet intoString:&username];
+		[scanner scanCharactersFromSet:tabAndNewlineSet intoString:NULL];
+		
+		//accountname
+		[scanner scanUpToCharactersFromSet:tabAndNewlineSet intoString:&accountname];
+		[scanner scanCharactersFromSet:tabAndNewlineSet intoString:NULL];
+		
+		//protocol
+		[scanner scanUpToCharactersFromSet:tabAndNewlineSet intoString:&protocol];
+		[scanner scanCharactersFromSet:tabAndNewlineSet intoString:NULL];
+		
+		//key
+		[scanner scanUpToCharactersFromSet:tabAndNewlineSet intoString:&key];
+		[scanner scanCharactersFromSet:tabAndNewlineSet intoString:&chunk];
+		
+		//We have a trusted entry
+		if ([chunk isEqualToString:@"\t"]) {
+			//key
+			[scanner scanUpToCharactersFromSet:tabAndNewlineSet intoString:&trusted];
+			[scanner scanCharactersFromSet:tabAndNewlineSet intoString:NULL];		
+		} else {
+			trusted = nil;
+		}
+		
+		AIAccount		*account;
+		NSEnumerator	*enumerator = [adiumAccounts objectEnumerator];
+		
+		while ((account = [enumerator nextObject])) {
+			//Hit every possibile name for this account along the way
+			if ([[NSSet setWithObjects:[account UID],[account formattedUID],[[account UID] compactedString], nil] containsObject:accountname]) {
+				if ([[[account service] serviceCodeUniqueID] isEqualToString:[prplDict objectForKey:protocol]]) {
+					[outFingerprints appendString:
+						[NSString stringWithFormat:@"%@\t%@\t%@\t%@", username, [account internalObjectID], [[account service] serviceCodeUniqueID], key]];
+					if (trusted) {
+						[outFingerprints appendString:@"\t"];
+						[outFingerprints appendString:trusted];
+					}
+					[outFingerprints appendString:@"\n"];
+				}
+			}
+		}
+	}
+	
+	return outFingerprints;
+}
+
+- (NSString *)upgradedPrivateKeyFromFile:(NSString *)inPath
+{
+	NSMutableString	*sourcePrivateKey = [[[NSString stringWithContentsOfUTF8File:inPath] mutableCopy] autorelease];
+	/*
+	 * Gaim used the account name for the name and the prpl id for the protocol.
+	 * We will use the internalObjectID for the name and the service's uniqueID for the protocol.
+	 */
+	
+	/* Remove Jabber resources... from the private key list
+	* If you used a non-default resource, no upgrade for you.
+	*/
+	[sourcePrivateKey replaceOccurrencesOfString:@"/Adium"
+									  withString:@""
+										 options:NSLiteralSearch
+										   range:NSMakeRange(0, [sourcePrivateKey length])];
+	
+	AIAccount		*account;
+	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
+	
+	NSDictionary	*prplDict = [self prplDict];
+	
+	while ((account = [enumerator nextObject])) {
+		//Hit every possibile name for this account along the way
+		NSEnumerator	*accountNameEnumerator = [[NSSet setWithObjects:[account UID],[account formattedUID],[[account UID] compactedString], nil] objectEnumerator];
+		NSString		*accountName;
+		NSString		*accountInternalObjectID = [NSString stringWithFormat:@"\"%@\"",[account internalObjectID]];
+		
+		while ((accountName = [accountNameEnumerator nextObject])) {
+			NSRange			accountNameRange = NSMakeRange(0, 0);
+			NSRange			searchRange = NSMakeRange(0, [sourcePrivateKey length]);
+			
+			while (accountNameRange.location != NSNotFound &&
+				   (NSMaxRange(searchRange) <= [sourcePrivateKey length])) {
+				//Find the next place this account name is located
+				accountNameRange = [sourcePrivateKey rangeOfString:accountName
+														   options:NSLiteralSearch
+															 range:searchRange];
+				
+				if (accountNameRange.location != NSNotFound) {
+					//Update our search range
+					searchRange.location = NSMaxRange(accountNameRange);
+					searchRange.length = [sourcePrivateKey length] - searchRange.location;
+					
+					//Make sure that this account name actually begins and finishes a name; otherwise (name TekJew2) matches (name TekJew)
+					if ((![[sourcePrivateKey substringWithRange:NSMakeRange(accountNameRange.location - 6, 6)] isEqualToString:@"(name "] &&
+						 ![[sourcePrivateKey substringWithRange:NSMakeRange(accountNameRange.location - 7, 7)] isEqualToString:@"(name \""]) ||
+						(![[sourcePrivateKey substringWithRange:NSMakeRange(NSMaxRange(accountNameRange), 1)] isEqualToString:@")"] &&
+						 ![[sourcePrivateKey substringWithRange:NSMakeRange(NSMaxRange(accountNameRange), 2)] isEqualToString:@"\")"])) {
+						continue;
+					}
+					
+					/* Within that range, find the next "(protocol " which encloses
+						* a string of the form "(protocol protocol-name)"
+						*/
+					NSRange protocolRange = [sourcePrivateKey rangeOfString:@"(protocol "
+																	options:NSLiteralSearch
+																	  range:searchRange];
+					if (protocolRange.location != NSNotFound) {
+						//Update our search range
+						searchRange.location = NSMaxRange(protocolRange);
+						searchRange.length = [sourcePrivateKey length] - searchRange.location;
+
+						NSRange nextClosingParen = [sourcePrivateKey rangeOfString:@")"
+																		   options:NSLiteralSearch
+																			 range:searchRange];
+						NSRange protocolNameRange = NSMakeRange(NSMaxRange(protocolRange),
+																nextClosingParen.location - NSMaxRange(protocolRange));
+						NSString *protocolName = [sourcePrivateKey substringWithRange:protocolNameRange];
+						//Remove a trailing quote if necessary
+						if ([[protocolName substringFromIndex:([protocolName length]-1)] isEqualToString:@"\""]) {
+							protocolName = [protocolName substringToIndex:([protocolName length]-1)];
+						}
+							
+						NSString *uniqueServiceID = [prplDict objectForKey:protocolName];
+						
+						if ([[[account service] serviceCodeUniqueID] isEqualToString:uniqueServiceID]) {
+							//Replace the protocol name first
+							[sourcePrivateKey replaceCharactersInRange:protocolNameRange
+															withString:uniqueServiceID];
+							
+							//Then replace the account name which was before it (so the range hasn't changed)
+							[sourcePrivateKey replaceCharactersInRange:accountNameRange
+															withString:accountInternalObjectID];
+						}
+					}
+				}
+			}
+		}			
+	}
+	
+	return sourcePrivateKey;
+}
+
+- (void)upgradeOTRFromGaimIfNeeded
+{
+	if (![[[adium preferenceController] preferenceForKey:@"GaimOTR_to_AdiumOTR_Update"
+												   group:@"OTR"] boolValue]) {
+		NSString	  *destinationPath = [[adium loginController] userDirectory];
+		NSString	  *sourcePath = [destinationPath stringByAppendingPathComponent:@"libgaim"];
+		
+		NSString *privateKey = [self upgradedPrivateKeyFromFile:[sourcePath stringByAppendingPathComponent:@"otr.private_key"]];
+		if (privateKey && [privateKey length]) {
+			[privateKey writeToFile:[destinationPath stringByAppendingPathComponent:@"otr.private_key"]
+						 atomically:NO];
+		}
+
+		NSString *fingerprints = [self upgradedFingerprintsFromFile:[sourcePath stringByAppendingPathComponent:@"otr.fingerprints"]];
+		if (fingerprints && [fingerprints length]) {
+			[fingerprints writeToFile:[destinationPath stringByAppendingPathComponent:@"otr.fingerprints"]
+						   atomically:NO];
+		}
+
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
+											 forKey:@"GaimOTR_to_AdiumOTR_Update"
+											  group:@"OTR"];
+	}
 }
 
 @end
