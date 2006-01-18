@@ -396,6 +396,11 @@ static void adiumGaimConvUpdateUser(GaimConversation *conv, const char *user)
 	GaimDebug (@"adiumGaimConvUpdateUser: %s",user);
 }
 
+static void adiumGaimConvPresent(GaimConversation *conv)
+{
+	
+}
+
 //This isn't a function we want Gaim doing anything with, I don't think
 static gboolean adiumGaimConvHasFocus(GaimConversation *conv)
 {
@@ -489,7 +494,7 @@ static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type
 }
 
 #pragma mark Custom smileys
-gboolean adiumGaimConvCustomSmileyAdd(GaimConversation *conv, const char *smile)
+gboolean adiumGaimConvCustomSmileyAdd(GaimConversation *conv, const char *smile, gboolean remote)
 {
 	GaimDebug (@"%s: Added %s",gaim_conversation_get_name(conv),smile);
 
@@ -516,6 +521,8 @@ static GaimConversationUiOps adiumGaimConversationOps = {
     adiumGaimConvChatRemoveUser,
     adiumGaimConvChatRemoveUsers,
 	adiumGaimConvUpdateUser,
+	
+	adiumGaimConvPresent,
 	adiumGaimConvHasFocus,
 
 	/* Custom Smileys */
