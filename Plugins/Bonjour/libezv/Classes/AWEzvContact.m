@@ -83,6 +83,9 @@
 	NSString *messageExtraEscapedString;
 	NSString *htmlFiltered;
 
+	//XXX if _ipAddr is nil, we should do something
+	if (_ipAddr != nil) {
+
     if (_stream == nil) {
 	[self createConnection];
     }
@@ -141,6 +144,10 @@
     [messageNode release];
 	[messageExtraEscapedString release];
 	[htmlFiltered release];
+
+	} else {
+		NSLog(@"Could not message %@ (%@) - Probably no longer online"),[self name], [self uniqueID]);
+	}
 }
 
 - (void) sendTypingNotification:(AWEzvTyping)typingStatus {
