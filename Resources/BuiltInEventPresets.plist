@@ -47,7 +47,7 @@
 		<key>Name</key>
 		<string>Visual Notifications</string>
 		<key>Event Sound Set</key>
-		<string></string>
+		<string>$$BundlePath$$/Contents/Resources/Sounds/None.AdiumSoundset</string>
 		<key>Built In</key>
 		<true/>
 		<key>Events</key>
