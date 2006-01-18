@@ -33,20 +33,26 @@ static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, c
 																 secondary:secondary]);
 }
 
-static void *adiumGaimNotifyEmails(size_t count, gboolean detailed, const char **subjects, const char **froms, const char **tos, const char **urls)
+static void *adiumGaimNotifyEmails(GaimConnection *gc, size_t count, gboolean detailed, const char **subjects, const char **froms, const char **tos, const char **urls)
 {
     //Values passed can be null
-    return [ESGaimNotifyEmailController handleNotifyEmails:count 
-												  detailed:detailed
-												  subjects:subjects
-													 froms:froms
-													   tos:tos
-													  urls:urls];
+	AIAccount	*account = (GAIM_CONNECTION_IS_VALID(gc) ?
+							accountLookup(gaim_connection_get_account(gc)) :
+							nil);
+			
+    return [ESGaimNotifyEmailController handleNotifyEmailsForAccount:account
+															   count:count 
+															detailed:detailed
+															subjects:subjects
+															   froms:froms
+																 tos:tos
+																urls:urls];
 }
 
-static void *adiumGaimNotifyEmail(const char *subject, const char *from, const char *to, const char *url)
+static void *adiumGaimNotifyEmail(GaimConnection *gc, const char *subject, const char *from, const char *to, const char *url)
 {
-	return adiumGaimNotifyEmails(1,
+	return adiumGaimNotifyEmails(gc,
+								 1,
 								 TRUE,
 								 (subject ? &subject : NULL),
 								 (from ? &from : NULL),

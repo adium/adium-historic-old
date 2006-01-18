@@ -19,6 +19,7 @@
 #import "GaimCommon.h"
 #import "ESTextAndButtonsWindowController.h"
 #import "ESContactAlertsController.h"
+#import <Adium/AIAccount.h>
 #import <AIUtilities/AIObjectAdditions.h>
 
 @interface ESGaimNotifyEmailController (PRIVATE)
@@ -32,7 +33,7 @@
  *
  * This may be called from the gaim thread.
  */
-+ (void *)handleNotifyEmails:(size_t)count detailed:(BOOL)detailed subjects:(const char **)subjects froms:(const char **)froms tos:(const char **)tos urls:(const char **)urls
++ (void *)handleNotifyEmailsForAccount:(AIAccount *)account count:(size_t)count detailed:(BOOL)detailed subjects:(const char **)subjects froms:(const char **)froms tos:(const char **)tos urls:(const char **)urls
 {
 	NSFontManager				*fontManager = [NSFontManager sharedFontManager];
 	NSFont						*messageFont = [NSFont messageFontOfSize:11];
@@ -60,11 +61,20 @@
 	//Message
 	NSString		*numberMessage;
 	NSDictionary	*numberMessageAttributes;
+	NSString		*yourName;
 	
-	if (tos && *tos) {
+	if (account) {
+		yourName = [account formattedUID];
+	} else if (tos && *tos) {
+		yourName = [NSString stringWithUTF8String:*tos];
+	} else {
+		yourName = nil;
+	}
+
+	if (yourName && [yourName length]) {
 		numberMessage = ((count == 1) ? 
-						 [NSString stringWithFormat:AILocalizedString(@"%s has 1 new message.",nil), *tos] :
-						 [NSString stringWithFormat:AILocalizedString(@"%s has %u new messages.",nil), *tos,count]);
+						 [NSString stringWithFormat:AILocalizedString(@"%@ has 1 new message.",nil), yourName] :
+						 [NSString stringWithFormat:AILocalizedString(@"%@ has %u new messages.",nil), yourName, count]);
 
 	} else {
 		numberMessage = ((count == 1) ? 
