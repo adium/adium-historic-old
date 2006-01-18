@@ -150,7 +150,7 @@
  */
 - (void)coreAudioPlaySound:(NSString *)inPath
 {
-    QTSoundFilePlayer	*existingPlayer = [soundCacheDict objectForKey:inPath];
+    QTSoundFilePlayer *existingPlayer = [soundCacheDict objectForKey:inPath];
 
 	//Load the sound if necessary
     if (!existingPlayer) {
@@ -169,7 +169,7 @@
 			[existingPlayer release];
 
 			//Set the volume (otherwise #2283 happens)
-			[existingPlayer setVolume:[[[adium preferenceController] preferenceForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL group:PREF_GROUP_SOUNDS] floatValue]];
+			[existingPlayer setVolume:customVolume];
 		}
 
     } else {
