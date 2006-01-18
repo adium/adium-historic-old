@@ -152,19 +152,20 @@ struct _GaimConversationUiOps
 	                   const char *message, GaimMessageFlags flags,
 	                   time_t mtime);
 
-	void (*chat_add_users)(GaimConversation *conv, GList *users, GList *flags, GList *aliases,
-						   gboolean new_arrivals);
+	void (*chat_add_users)(GaimConversation *conv, GList *users,
+						   GList *flags, GList *aliases, gboolean new_arrivals);
 	void (*chat_rename_user)(GaimConversation *conv, const char *old_name,
 	                         const char *new_name, const char *new_alias);
 	void (*chat_remove_user)(GaimConversation *conv, const char *user);
 	void (*chat_remove_users)(GaimConversation *conv, GList *users);
 	void (*chat_update_user)(GaimConversation *conv, const char *user);
 
+	void (*present)(GaimConversation *conv);
 
 	gboolean (*has_focus)(GaimConversation *conv);
 
 	/* Custom Smileys */
-	gboolean (*custom_smiley_add)(GaimConversation *conv, const char *smile);
+	gboolean (*custom_smiley_add)(GaimConversation *conv, const char *smile, gboolean remote);
 	void (*custom_smiley_write)(GaimConversation *conv, const char *smile,
 	                            const guchar *data, gsize size);
 	void (*custom_smiley_close)(GaimConversation *conv, const char *smile);
@@ -286,6 +287,15 @@ GaimConversation *gaim_conversation_new(GaimConversationType type,
  * @param conv The conversation to destroy.
  */
 void gaim_conversation_destroy(GaimConversation *conv);
+
+
+/**
+ * Present a conversation to the user. This allows core code to initiate a
+ * conversation by displaying the IM dialog.
+ * @param conv The conversation to present
+ */
+void gaim_conversation_present(GaimConversation *conv);
+
 
 /**
  * Returns the specified conversation's type.
@@ -769,6 +779,7 @@ void gaim_conv_im_send_with_flags(GaimConvIm *im, const char *message, GaimMessa
  * @param smile The text associated with the smiley
  * @param cksum_type The type of checksum.
  * @param chksum The checksum, as a NUL terminated base64 string.
+ * @param remote @c TRUE if the custom smiley is set by the remote user (buddy).
  * @return      @c TRUE if an icon is expected, else FALSE. Note that
  *              it is an error to never call gaim_conv_custom_smiley_close if
  *              this function returns @c TRUE, but an error to call it if
@@ -776,7 +787,8 @@ void gaim_conv_im_send_with_flags(GaimConvIm *im, const char *message, GaimMessa
  */
 
 gboolean gaim_conv_custom_smiley_add(GaimConversation *conv, const char *smile,
-                                      const char *cksum_type, const char *chksum);
+                                      const char *cksum_type, const char *chksum,
+									  gboolean remote);
 
 
 /**

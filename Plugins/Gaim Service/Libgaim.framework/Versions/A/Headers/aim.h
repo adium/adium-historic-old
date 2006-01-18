@@ -1025,7 +1025,6 @@ faim_export int aim_rv_proxy_init_send(struct aim_rv_proxy_info *proxy_info);
 
 faim_export int aim_sendfile_listen(aim_session_t *sess, struct aim_oft_info *oft_info, int listenfd);
 faim_export int aim_oft_sendheader(aim_session_t *sess, fu16_t type, struct aim_oft_info *oft_info);
-int aim_bstream_send(aim_bstream_t *bs, aim_conn_t *conn, size_t count);
 faim_internal struct aim_rv_proxy_info *aim_rv_proxy_read(aim_session_t *sess, aim_conn_t *conn);
 
 /* 0x0002 - locate.c */
@@ -1267,6 +1266,10 @@ faim_export int aim_bart_request(aim_session_t *sess, const char *sn, fu8_t icon
 #define AIM_SSI_ACK_INVALIDNAME		0x000d
 #define AIM_SSI_ACK_AUTHREQUIRED	0x000e
 
+/* These flags are set in the 0x00c9 TLV of SSI teyp 0x0005 */
+#define AIM_SSI_PRESENCE_FLAG_SHOWIDLE        0x00000400
+#define AIM_SSI_PRESENCE_FLAG_NORECENTBUDDIES 0x00020000
+
 struct aim_ssi_item {
 	char *name;
 	fu16_t gid;
@@ -1409,8 +1412,7 @@ struct aim_icq_info {
 
 faim_export int aim_icq_reqofflinemsgs(aim_session_t *sess);
 faim_export int aim_icq_ackofflinemsgs(aim_session_t *sess);
-faim_export int aim_icq_setsecurity(aim_session_t *sess, const int auth, const int web, const int hide);
-faim_export int aim_icq_setauthsetting(aim_session_t *sess, int auth_required);
+faim_export int aim_icq_setsecurity(aim_session_t *sess, gboolean auth_required, gboolean webaware);
 faim_export int aim_icq_changepasswd(aim_session_t *sess, const char *passwd);
 faim_export int aim_icq_getsimpleinfo(aim_session_t *sess, const char *uin);
 faim_export int aim_icq_getalias(aim_session_t *sess, const char *uin);
