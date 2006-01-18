@@ -206,6 +206,40 @@ gboolean gaim_init_jabber_plugin(void);
 	return YES;
 }
 
+- (AIListContact *)contactWithUID:(NSString *)sourceUID
+{
+	AIListContact	*contact;
+	
+	contact = [[adium contactController] existingContactWithService:service
+															account:self
+																UID:sourceUID];
+	if (!contact) {		
+		contact = [[adium contactController] contactWithService:[self _serviceForUID:sourceUID]
+														account:self
+															UID:sourceUID];
+	}
+	
+	return contact;
+}
+
+- (AIService *)_serviceForUID:(NSString *)contactUID
+{
+	AIService	*contactService;
+	NSString	*contactServiceID = nil;
+
+	if ([contactUID hasSuffix:@"@gmail.com"] ||
+		[contactUID hasSuffix:@"@googlemail.com"]) {
+		contactServiceID = @"libgaim-jabber-gtalk";
+
+	} else {
+		contactServiceID = @"libgaim-Jabber";
+	}
+
+	contactService = [[adium accountController] serviceWithUniqueID:contactServiceID];
+	
+	return contactService;
+}
+
 #pragma mark Status
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
