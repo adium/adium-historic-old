@@ -37,10 +37,6 @@
 - (NSString *)serviceID{
 	return @"GTalk";
 }
-//When GTalk has interserver communication, remove this so GTalk and Jabber share a serviceClass.
-- (NSString *)serviceClass{
-	return @"GTalk";
-}
 - (NSString *)shortDescription{
 	return @"GTalk";
 }
