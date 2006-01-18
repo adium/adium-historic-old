@@ -184,7 +184,8 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	
 	if ([contact status] == AWEzvUndefined) {
 		[listContact setRemoteGroupName:nil];
-		
+		[listContact setOnline:NO notify:NotifyLater silently:silentAndDelayed];
+
 	} else {
 		if (![listContact remoteGroupName]) {
 			[listContact setRemoteGroupName:@"Bonjour"];

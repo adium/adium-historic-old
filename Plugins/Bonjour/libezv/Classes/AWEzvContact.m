@@ -146,7 +146,7 @@
 	[htmlFiltered release];
 
 	} else {
-		NSLog(@"Could not message %@ (%@) - Probably no longer online"),[self name], [self uniqueID]);
+		NSLog(@"Could not message %@ (%@) - Probably no longer online",[self name], [self uniqueID]);
 	}
 }
 
