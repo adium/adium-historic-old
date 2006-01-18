@@ -862,9 +862,14 @@ NSData *decode_dns(char* buffer, unsigned int len )
     
     ipAddr = [NSString stringWithCString:hbuf];
     range = [ipAddr rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@":"]];
-    if (range.location == NSNotFound)
-	[contact setIpaddr:ipAddr];
-    
+    if (range.location == NSNotFound) {
+		[contact setIpaddr:ipAddr];
+	}
+	
+	if (![contact ipaddr] || ![[contact ipaddr] length]) {
+		[contact setStatus: AWEzvUndefined];
+	}
+
     /* and notify of new user */
     [[client client] userChangedState:contact];
 }

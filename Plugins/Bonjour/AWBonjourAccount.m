@@ -182,13 +182,18 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 														account:self
 															UID:[self UIDForContact:contact]];  
 	
-	if (![listContact remoteGroupName]) {
-		[listContact setRemoteGroupName:@"Bonjour"];
+	if ([contact status] == AWEzvUndefined) {
+		[listContact setRemoteGroupName:nil];
+		
+	} else {
+		if (![listContact remoteGroupName]) {
+			[listContact setRemoteGroupName:@"Bonjour"];
+		}
+		
+		//We only get state change updates on Online contacts
+		[listContact setOnline:YES notify:NotifyLater silently:silentAndDelayed];
 	}
 
-	//We only get state change updates on Online contacts
-	[listContact setOnline:YES notify:NotifyLater silently:silentAndDelayed];
-	
 	[listContact setStatusWithName:nil
 					   statusType:(([contact status] == AWEzvAway) ? AIAwayStatusType : AIAvailableStatusType)
 						   notify:NotifyLater];
