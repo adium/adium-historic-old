@@ -777,6 +777,14 @@ void gaim_account_remove_group(GaimAccount *account, GaimGroup *group);
 void gaim_account_change_password(GaimAccount *account, const char *orig_pw,
 									const char *new_pw);
 
+/**
+ * Whether the account supports sending offline messages to buddy.
+ *
+ * @param account The account
+ * @param buddy   The buddy
+ */
+gboolean gaim_account_supports_offline_message(GaimAccount *account, GaimBuddy *buddy);
+
 /*@}*/
 
 /**************************************************************************/
@@ -815,7 +823,7 @@ void gaim_accounts_delete(GaimAccount *account);
  * @param account   The account to reorder.
  * @param new_index The new index for the account.
  */
-void gaim_accounts_reorder(GaimAccount *account, size_t new_index);
+void gaim_accounts_reorder(GaimAccount *account, gint new_index);
 
 /**
  * Returns a list of all accounts.
