@@ -43,34 +43,37 @@ static AIXtrasManager * manager;
 
 - (void) showXtras
 {
-	showInfo = NO;
-	
-	[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self
-															selector:@selector(xtrasChanged:)
-																name:Adium_Xtras_Changed
-															  object:nil];
 	[self loadXtras];
-	[NSBundle loadNibNamed:@"XtrasManager" owner:self];
-	
-	AIImageTextCell			*cell;
-	//Configure our tableViews
-	cell = [[AIImageTextCell alloc] init];
-	[cell setFont:[NSFont systemFontOfSize:12]];
-	[cell setDrawsGradientHighlight:YES];
-	[[sidebar tableColumnWithIdentifier:@"name"] setDataCell:cell];
-	[cell release];
-	
-	cell = [[AIImageTextCell alloc] init];
-	[cell setFont:[NSFont systemFontOfSize:12]];
-	[cell setDrawsGradientHighlight:YES];
-	[[xtraList tableColumnWithIdentifier:@"xtras"] setDataCell:cell];
-	[cell release];
-	
-	[previewContainerView setHasVerticalScroller:YES];
-	[previewContainerView setAutohidesScrollers:YES];
-	[previewContainerView setBorderType:NSBezelBorder];
-	
-	[self setCategory:nil];
+
+	if(![window isVisible]) {
+		showInfo = NO;
+		
+		[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self
+																selector:@selector(xtrasChanged:)
+																	name:Adium_Xtras_Changed
+																  object:nil];
+		[NSBundle loadNibNamed:@"XtrasManager" owner:self];
+		
+		AIImageTextCell			*cell;
+		//Configure our tableViews
+		cell = [[AIImageTextCell alloc] init];
+		[cell setFont:[NSFont systemFontOfSize:12]];
+		[cell setDrawsGradientHighlight:YES];
+		[[sidebar tableColumnWithIdentifier:@"name"] setDataCell:cell];
+		[cell release];
+		
+		cell = [[AIImageTextCell alloc] init];
+		[cell setFont:[NSFont systemFontOfSize:12]];
+		[cell setDrawsGradientHighlight:YES];
+		[[xtraList tableColumnWithIdentifier:@"xtras"] setDataCell:cell];
+		[cell release];
+		
+		[previewContainerView setHasVerticalScroller:YES];
+		[previewContainerView setAutohidesScrollers:YES];
+		[previewContainerView setBorderType:NSBezelBorder];
+		
+		[self setCategory:nil];		
+	}
 	
 	[window makeKeyAndOrderFront:nil];
 }
