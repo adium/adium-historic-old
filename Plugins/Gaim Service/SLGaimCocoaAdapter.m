@@ -1422,12 +1422,12 @@ NSMutableDictionary* get_chatDict(void)
 
 - (void)gaimThreadPerformContactMenuActionFromDict:(NSDictionary *)dict
 {
-	GaimBlistNodeAction *act = [[dict objectForKey:@"GaimBlistNodeAction"] pointerValue];
-	GaimBuddy			*buddy = [[dict objectForKey:@"GaimBuddy"] pointerValue];
+	GaimMenuAction	*act = [[dict objectForKey:@"GaimMenuAction"] pointerValue];
+	GaimBuddy		*buddy = [[dict objectForKey:@"GaimBuddy"] pointerValue];
 
 	//Perform act's callback with the desired buddy and data
 	if (act->callback)
-		act->callback((GaimBlistNode *)buddy, act->data);
+		((void (*)(void *, void *))act->callback)((GaimBlistNode *)buddy, act->data);
 }
 - (void)performContactMenuActionFromDict:(NSDictionary *)dict 
 {
@@ -1448,6 +1448,42 @@ NSMutableDictionary* get_chatDict(void)
 	[gaimThreadProxy gaimThreadPerformAccountMenuActionFromDict:dict];
 }
 
+/*!
+* @brief Call the gaim callback to finish up the window
+ *
+ * @param inCallBackValue The cb to use
+ * @param inUserDataValue Original user data
+ * @param inFieldsValue The entire GaimRequestFields pointer originally passed
+ */
+- (oneway void)gaimThreadDoAuthRequestCbValue:(NSValue *)inCallBackValue
+							withUserDataValue:(NSValue *)inUserDataValue 
+						  callBackIndexNumber:(NSNumber *)inIndexNumber
+							  isInputCallback:(NSNumber *)isInputCallback
+{	
+	if ([isInputCallback boolValue]) {
+		GaimRequestInputCb callBack = [inCallBackValue pointerValue];
+		if (callBack) {
+			callBack([inUserDataValue pointerValue], "");
+		}
+		
+	} else {		
+		GaimRequestActionCb callBack = [inCallBackValue pointerValue];
+		if (callBack) {
+			callBack([inUserDataValue pointerValue], [inIndexNumber intValue]);
+		}
+	}
+}
+
+- (void)doAuthRequestCbValue:(NSValue *)inCallBackValue
+		   withUserDataValue:(NSValue *)inUserDataValue 
+		 callBackIndexNumber:(NSNumber *)inIndexNumber
+			 isInputCallback:(NSNumber *)isInputCallback
+{
+	[gaimThreadProxy gaimThreadDoAuthRequestCbValue:inCallBackValue
+								  withUserDataValue:inUserDataValue 
+								callBackIndexNumber:inIndexNumber
+									isInputCallback:isInputCallback];
+}
 
 #pragma mark Secure messaging
 
