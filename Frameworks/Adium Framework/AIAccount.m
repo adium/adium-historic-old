@@ -567,5 +567,15 @@
 	return (iconData ? [[[NSImage alloc] initWithData:iconData] autorelease] : nil);
 }
 
+#pragma mark Authorization
+/*
+ * @brief An authorization prompt closed, granting or denying a contact's request for authorization
+ *
+ * @param inWindowController The window controller which closed; an account may have kept track of what windows were showing its authorization prompts
+ * @param inDict A dictionary of authorization information created by the account originally and possibly modified
+ * @param inDidAuthorize YES if authorization was granted; NO if it was denied
+ */
+- (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize
+{}
 
 @end
