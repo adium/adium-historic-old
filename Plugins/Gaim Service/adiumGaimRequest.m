@@ -74,6 +74,90 @@ NSString *processButtonText(NSString *inButtonText)
 	
 }
 
+static id processAuthorizationRequest(NSString *primaryString, GCallback authorizeCB, GCallback denyCB, void *userData, BOOL isInputCallback)
+{
+	NSString	*remoteName;
+	NSString	*accountName;
+	NSString	*reason = nil;
+	NSRange		wantsToAddRange, secondSearchRange;
+	unsigned	remoteNameStartingLocation, accountNameStartingLocation;	
+	id			requestController = nil;
+	
+	AILog(@"Authorization request: %@",primaryString);
+	
+	/* "The user %s wants to add %s to" where the first is the remote contact and the second is the account name.
+		* MSN, Jabber: "The user %s wants to add %s to his or her buddy list."
+		* OSCAR: The user %s wants to add %s to their buddy list for the following reason:\n%s
+		*		The reason may be passed as "No reason given."
+		*/
+	NSRange	remoteNameRange;
+	wantsToAddRange = [primaryString rangeOfString:@" wants to add "];
+	remoteNameStartingLocation = [@"The user " length];
+	remoteNameRange = NSMakeRange(remoteNameStartingLocation,
+								  (wantsToAddRange.location - remoteNameStartingLocation));
+	remoteName = [primaryString substringWithRange:remoteNameRange];
+	AILog(@"Authorization request: Remote name is %@ (Range was %@)",remoteName, NSStringFromRange(remoteNameRange));
+	
+	secondSearchRange = [primaryString rangeOfString:@" to his or her buddy list."];
+	if (secondSearchRange.location == NSNotFound) {
+		secondSearchRange = [primaryString rangeOfString:@" to their buddy list for the following reason:\n"];
+	}
+	
+	//ICQ and MSN may have the friendly name or alias after the name; we want just the screen name
+	NSRange	aliasBeginRange = [remoteName rangeOfString:@" ("];
+	if (aliasBeginRange.location != NSNotFound) {
+		remoteName = [remoteName substringToIndex:aliasBeginRange.location];
+	}
+	AILog(@"Authorization request: After postprocessing, remote name is %@",remoteName);
+	
+	//Extract the account name
+	{
+		NSRange accountNameRange;
+		
+		//Start after the space after the 'wants to add' phrase (the max of wantsToAddRange)
+		accountNameStartingLocation = NSMaxRange(wantsToAddRange);
+		
+		//Stop before the space before the second search range
+		accountNameRange = NSMakeRange(accountNameStartingLocation,
+									   secondSearchRange.location - accountNameStartingLocation);
+		if (NSMaxRange(accountNameRange) <= [primaryString length]) {
+			accountName = [primaryString substringWithRange:accountNameRange];
+		} else {
+			accountName = nil;
+			AILog(@"Authorization request: Could not find account name within %@",primaryString);
+		}
+		
+		//Remove jabber resource if necessary.  Check for the @ symbol, which is present in all Jabber names, then truncate to the /
+		if ([accountName rangeOfString:@"@"].location != NSNotFound &&
+			[accountName rangeOfString:@"/"].location != NSNotFound) {
+			accountName = [accountName substringToIndex:[accountName rangeOfString:@"/"].location];
+		}
+		AILog(@"Authorization request: Account name is %@",accountName);
+	}
+	
+	if ((NSMaxRange(secondSearchRange) < [primaryString length]) &&
+		[primaryString rangeOfString:@"No reason given."].location == NSNotFound) {
+		reason = [primaryString substringFromIndex:NSMaxRange(secondSearchRange)];
+	}
+	
+	NSMutableDictionary	*infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithInt:isInputCallback], @"isInputCallback",
+		remoteName, @"Remote Name",
+		accountName, @"Account Name",
+		[NSValue valueWithPointer:authorizeCB], @"authorizeCB",
+		[NSValue valueWithPointer:denyCB], @"denyCB",
+		[NSValue valueWithPointer:userData], @"userData",
+		nil];
+	
+	if (reason && [reason length]) [infoDict setObject:reason forKey:@"Reason"];
+	
+	requestController = [ESGaimAuthorizationRequestWindowController mainPerformSelector:@selector(showAuthorizationRequestWithDict:)
+																			 withObject:infoDict
+																			returnValue:YES];
+	
+	return requestController;
+}
+
 static void *adiumGaimRequestInput(
 								   const char *title, const char *primary,
 								   const char *secondary, const char *defaultValue,
@@ -91,12 +175,21 @@ static void *adiumGaimRequestInput(
 	NSString			*primaryString = (primary ? [NSString stringWithUTF8String:primary] : nil);
 	
 	//Ignore gaim trying to get an account's password; we'll feed it the password and reconnect if it gets here, somehow.
-	if ([primaryString rangeOfString:@"Enter password for "].location == NSNotFound) {
+	if ([primaryString rangeOfString:@"Enter password for "].location != NSNotFound) return [NSNull null];
+	
+	if (([primaryString rangeOfString:@"wants to add"].location != NSNotFound) &&
+		([primaryString rangeOfString:@"to his or her buddy list"].location != NSNotFound)) {
+		//This is the bizarre Yahoo authorization dialogue which allows a message. Messages are dumb.
+		requestController = processAuthorizationRequest(primaryString,
+														okCb,
+														cancelCb,
+														userData,
+														/* isInputCallback */ YES);
+
+	} else {
 		NSMutableDictionary *infoDict;
 		NSString			*okButtonText = processButtonText([NSString stringWithUTF8String:okText]);
 		NSString			*cancelButtonText = processButtonText([NSString stringWithUTF8String:cancelText]);
-
-		
 		
 		infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:okButtonText,@"OK Text",
 			cancelButtonText,@"Cancel Text",
@@ -119,7 +212,7 @@ static void *adiumGaimRequestInput(
 																	withObject:infoDict
 																   returnValue:YES];
 	}
-
+	
 	return (requestController ? requestController : [NSNull null]);
 }
 
@@ -158,11 +251,6 @@ static void *adiumGaimRequestAction(const char *title, const char *primary,
 		((GaimRequestActionCb)ok_cb)(userData, default_action);
 		
     } else if (primaryString && ([primaryString rangeOfString:@"wants to add"].location != NSNotFound)) {
-		NSString	*remoteName;
-		NSString	*accountName;
-		NSString	*reason = nil;
-		NSRange		wantsToAddRange, secondSearchRange;
-		unsigned	remoteNameStartingLocation, accountNameStartingLocation;
 		GCallback	authorizeCB, denyCB;
     	
 		//Get the callback for Authorize, skipping over the title
@@ -173,76 +261,11 @@ static void *adiumGaimRequestAction(const char *title, const char *primary,
 		va_arg(actions, char *);
 		denyCB = va_arg(actions, GCallback);
 
-		AILog(@"Authorization request: %@",primaryString);
-	
-		/* "The user %s wants to add %s to" where the first is the remote contact and the second is the account name.
-		 * MSN, Jabber: "The user %s wants to add %s to his or her buddy list."
-		 * OSCAR: The user %s wants to add %s to their buddy list for the following reason:\n%s
-		 *		The reason may be passed as "No reason given."
-		 */
-		NSRange	remoteNameRange;
-		wantsToAddRange = [primaryString rangeOfString:@" wants to add "];
-		remoteNameStartingLocation = [@"The user " length];
-		remoteNameRange = NSMakeRange(remoteNameStartingLocation,
-									  (wantsToAddRange.location - remoteNameStartingLocation));
-		remoteName = [primaryString substringWithRange:remoteNameRange];
-		AILog(@"Authorization request: Remote name is %@ (Range was %@)",remoteName, NSStringFromRange(remoteNameRange));
-
-		secondSearchRange = [primaryString rangeOfString:@" to his or her buddy list."];
-		if (secondSearchRange.location == NSNotFound) {
-			secondSearchRange = [primaryString rangeOfString:@" to their buddy list for the following reason:\n"];
-		}
-
-		//ICQ and MSN may have the friendly name or alias after the name; we want just the screen name
-		NSRange	aliasBeginRange = [remoteName rangeOfString:@" ("];
-		if (aliasBeginRange.location != NSNotFound) {
-			remoteName = [remoteName substringToIndex:aliasBeginRange.location];
-		}
-		AILog(@"Authorization request: After postprocessing, remote name is %@",remoteName);
-
-		//Extract the account name
-		{
-			NSRange accountNameRange;
-			
-			//Start after the space after the 'wants to add' phrase (the max of wantsToAddRange)
-			accountNameStartingLocation = NSMaxRange(wantsToAddRange);
-			
-			//Stop before the space before the second search range
-			accountNameRange = NSMakeRange(accountNameStartingLocation,
-										   secondSearchRange.location - accountNameStartingLocation);
-			if (NSMaxRange(accountNameRange) <= [primaryString length]) {
-				accountName = [primaryString substringWithRange:accountNameRange];
-			} else {
-				accountName = nil;
-				AILog(@"Authorization request: Could not find account name within %@",primaryString);
-			}
-			
-			//Remove jabber resource if necessary.  Check for the @ symbol, which is present in all Jabber names, then truncate to the /
-			if ([accountName rangeOfString:@"@"].location != NSNotFound &&
-				[accountName rangeOfString:@"/"].location != NSNotFound) {
-				accountName = [accountName substringToIndex:[accountName rangeOfString:@"/"].location];
-			}
-			AILog(@"Authorization request: Account name is %@",accountName);
-		}
-		
-		if ((NSMaxRange(secondSearchRange) < [primaryString length]) &&
-		   [primaryString rangeOfString:@"No reason given."].location == NSNotFound) {
-			reason = [primaryString substringFromIndex:NSMaxRange(secondSearchRange)];
-		}
-		
-		NSMutableDictionary	*infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-			remoteName, @"Remote Name",
-			accountName, @"Account Name",
-			[NSValue valueWithPointer:authorizeCB],@"authorizeCB",
-			[NSValue valueWithPointer:denyCB],@"denyCB",
-			[NSValue valueWithPointer:userData],@"userData",
-			nil];
-
-		if (reason && [reason length]) [infoDict setObject:reason forKey:@"Reason"];
-
-		requestController = [ESGaimAuthorizationRequestWindowController mainPerformSelector:@selector(showAuthorizationRequestWithDict:)
-																				 withObject:infoDict
-																				returnValue:YES];
+		requestController = processAuthorizationRequest(primaryString,
+														authorizeCB,
+														denyCB,
+														userData,
+														/* isInputCallback */ NO);
 
 	} else if (primaryString && ([primaryString rangeOfString:@"Add buddy to your list?"].location != NSNotFound)) {
 		/* This is Jabber doing inelegantly what we elegantly handle in the authorization request window for all

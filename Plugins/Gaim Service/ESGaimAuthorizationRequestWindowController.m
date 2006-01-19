@@ -50,7 +50,7 @@
 
 - (void)dealloc
 {
-	[infoDict release];
+	[infoDict release]; infoDict = nil;
 	
 	[super dealloc];
 }
@@ -66,16 +66,26 @@
 							withUserDataValue:(NSValue *)inUserDataValue 
 						  callBackIndexNumber:(NSNumber *)inIndexNumber
 {	
-	GaimRequestActionCb callBack = [inCallBackValue pointerValue];
-	if (callBack) {
-		callBack([inUserDataValue pointerValue], [inIndexNumber intValue]);
+	if ([[infoDict objectForKey:@"isInputCallback"] boolValue]) {
+		GaimRequestInputCb callBack = [inCallBackValue pointerValue];
+		if (callBack) {
+			callBack([inUserDataValue pointerValue], "");
+		}
+
+	} else {		
+		GaimRequestActionCb callBack = [inCallBackValue pointerValue];
+		if (callBack) {
+			callBack([inUserDataValue pointerValue], [inIndexNumber intValue]);
+		}
 	}
 }
 
 - (void)windowDidLoad
 {	
 	NSString	*message;
-	
+
+	[super windowDidLoad];
+
 	[textField_header setStringValue:AILocalizedString(@"Authorization Requested",nil)];
 	
 	if ([infoDict objectForKey:@"Reason"]) {
@@ -91,10 +101,25 @@
 			[infoDict objectForKey:@"Remote Name"],
 			[infoDict objectForKey:@"Account Name"]];
 	}
+
+	NSScrollView *scrollView_message = [textView_message enclosingScrollView];
 	
-	[textField_message setStringValue:message];
+	[textView_message setVerticallyResizable:YES];
+	[textView_message setHorizontallyResizable:NO];
+	[textView_message setDrawsBackground:NO];
+	[textView_message setTextContainerInset:NSZeroSize];
+	[scrollView_message setDrawsBackground:NO];
 	
-	[super windowDidLoad];
+	[textView_message setString:(message ? message : @"")];
+	
+	//Resize the window frame to fit the error title
+	[textView_message sizeToFit];
+	float heightChange = [textView_message frame].size.height - [scrollView_message documentVisibleRect].size.height;
+
+	NSRect windowFrame = [[self window] frame];
+	windowFrame.size.height += heightChange;
+	windowFrame.origin.y -= heightChange;
+	[[self window] setFrame:windowFrame display:YES animate:NO];
 }
 
 - (IBAction)authorize:(id)sender
@@ -121,7 +146,7 @@
 		enumerator = [[[adium accountController] accounts] objectEnumerator];
 		while ((account = [enumerator nextObject])) {
 			if ([account online] &&
-			   [[[account UID] compactedString] isEqualToString:accountName] &&
+			    [[[account UID] compactedString] isEqualToString:accountName] &&
 			   ![requestedServices containsObject:[account service]]) {
 				AIService	*service = [account service];
 				

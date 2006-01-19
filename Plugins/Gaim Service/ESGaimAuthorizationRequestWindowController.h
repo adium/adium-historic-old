@@ -10,7 +10,7 @@
 
 @interface ESGaimAuthorizationRequestWindowController : ESGaimRequestAbstractWindowController {
 	IBOutlet	NSTextField		*textField_header;
-	IBOutlet	NSTextField		*textField_message;
+	IBOutlet	NSTextView		*textView_message;
 
 	IBOutlet	NSButton		*button_authorize;
 	IBOutlet	NSButton		*button_deny;
