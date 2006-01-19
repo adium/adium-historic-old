@@ -360,18 +360,6 @@ static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldN
 			   oldName, newName, newAlias);
 }
 
-static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user)
-{
- 	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_CHAT) {
-		[accountLookup(conv->account) mainPerformSelector:@selector(removeUser:fromChat:)
-											   withObject:[NSString stringWithUTF8String:gaim_normalize(conv->account, user)]
-											   withObject:existingChatLookupFromConv(conv)];
-	} else {
-		GaimDebug (@"adiumGaimConvChatRemoveUser: IM: remove %s",user);
-	}
-
-}
-
 static void adiumGaimConvChatRemoveUsers(GaimConversation *conv, GList *users)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_CHAT) {
@@ -518,7 +506,6 @@ static GaimConversationUiOps adiumGaimConversationOps = {
     adiumGaimConvWriteConv,
     adiumGaimConvChatAddUsers,
     adiumGaimConvChatRenameUser,
-    adiumGaimConvChatRemoveUser,
     adiumGaimConvChatRemoveUsers,
 	adiumGaimConvUpdateUser,
 	
@@ -529,12 +516,19 @@ static GaimConversationUiOps adiumGaimConversationOps = {
 	adiumGaimConvCustomSmileyAdd,
 	adiumGaimConvCustomSmileyWrite,
 	adiumGaimConvCustomSmileyClose,
-	
-	/* Events */
-    adiumGaimConvUpdated
 };
 
 GaimConversationUiOps *adium_gaim_conversation_get_ui_ops(void)
 {
 	return &adiumGaimConversationOps;
+}
+
+void adiumGaimConversation_init(void)
+{	
+	gaim_conversations_set_ui_ops(adium_gaim_conversation_get_ui_ops());
+
+	gaim_signal_connect_priority(gaim_conversations_get_handle(), "conversation-updated", adium_gaim_get_handle(),
+								 GAIM_CALLBACK(adiumGaimConvUpdated), NULL,
+								 GAIM_SIGNAL_PRIORITY_LOWEST);
+	
 }

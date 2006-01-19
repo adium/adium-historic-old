@@ -29,6 +29,16 @@
 #include <glib.h>
 
 /**
+ * String format for preferences.
+ */
+typedef enum
+{
+	GAIM_STRING_FORMAT_TYPE_NONE      = 0,
+	GAIM_STRING_FORMAT_TYPE_MULTILINE = 1 << 0,
+	GAIM_STRING_FORMAT_TYPE_HTML      = 1 << 1
+} GaimStringFormatType;
+
+/**
  * Pref data types.
  */
 typedef enum _GaimPrefType
@@ -46,7 +56,7 @@ typedef enum _GaimPrefType
  */
 
 typedef void (*GaimPrefCallback) (const char *name, GaimPrefType type,
-		gpointer val, gpointer data);
+		gconstpointer val, gpointer data);
 
 #ifdef __cplusplus
 extern "C" {
