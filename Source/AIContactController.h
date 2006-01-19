@@ -22,6 +22,8 @@
 @class AIAccount, AIListObject,  AIListContact, AIListGroup, AIMetaContact, AIMessageObject, AIService, AIContactInfoPane,
 	   AISortController;
 
+@class AdiumAuthorization;
+
 #define ListObject_AttributesChanged			@"ListObject_AttributesChanged"
 #define ListObject_StatusChanged				@"ListObject_StatusChanged"
 #define Contact_OrderChanged					@"Contact_OrderChanged"
@@ -111,7 +113,10 @@ typedef enum {
 	NSMenuItem				*menuItem_getInfoWithPrompt;
 
 	//Contact Info Panes
-    NSMutableArray			*contactInfoPanes;	
+    NSMutableArray			*contactInfoPanes;
+	
+	//Authorization
+	AdiumAuthorization		*adiumAuthorization;
 }
 
 //Contact list access
@@ -168,6 +173,8 @@ typedef enum {
 - (void)moveContact:(AIListContact *)listContact toGroup:(AIListObject<AIContainingObject> *)group;
 - (void)_moveContactLocally:(AIListContact *)listContact toGroup:(AIListGroup *)group;
 - (BOOL)useContactListGroups;
+
+- (id)showAuthorizationRequestWithDict:(NSDictionary *)inDict forAccount:(AIAccount *)inAccount;
 
 //Contact info
 - (IBAction)showContactInfo:(id)sender;
