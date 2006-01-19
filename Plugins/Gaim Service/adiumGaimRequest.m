@@ -18,7 +18,6 @@
 #import "UndeclaredLibgaimFunctions.h"
 #import "ESGaimRequestActionController.h"
 #import "ESGaimRequestWindowController.h"
-#import "ESGaimAuthorizationRequestWindowController.h"
 #import "ESGaimFileReceiveRequestController.h"
 #import "ESGaimMeanwhileContactAdditionController.h"
 #import <Adium/NDRunLoopMessenger.h>
@@ -143,7 +142,7 @@ static id processAuthorizationRequest(NSString *primaryString, GCallback authori
 	NSMutableDictionary	*infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[NSNumber numberWithInt:isInputCallback], @"isInputCallback",
 		remoteName, @"Remote Name",
-		accountName, @"Account Name",
+//		accountName, @"Account Name",
 		[NSValue valueWithPointer:authorizeCB], @"authorizeCB",
 		[NSValue valueWithPointer:denyCB], @"denyCB",
 		[NSValue valueWithPointer:userData], @"userData",
@@ -151,10 +150,16 @@ static id processAuthorizationRequest(NSString *primaryString, GCallback authori
 	
 	if (reason && [reason length]) [infoDict setObject:reason forKey:@"Reason"];
 	
-	requestController = [ESGaimAuthorizationRequestWindowController mainPerformSelector:@selector(showAuthorizationRequestWithDict:)
-																			 withObject:infoDict
-																			returnValue:YES];
+	//We depend on the GaimConnection being the first item in the userData struct we were passed. This is a temporary hack :)
+	struct fake_struct {
+		GaimConnection *gc;
+	};
 	
+	requestController = [[[AIObject sharedAdiumInstance] contactController] mainPerformSelector:@selector(showAuthorizationRequestWithDict:forAccount:)
+																					 withObject:infoDict
+																					 withObject:accountLookup(gaim_connection_get_account(((struct fake_struct *)userData)->gc))
+																					returnValue:YES];
+
 	return requestController;
 }
 
@@ -607,6 +612,9 @@ static void adiumGaimRequestClose(GaimRequestType type, void *uiHandle)
 	AILog(@"adiumGaimRequestClose %@ (%i)",uiHandle,[ourHandle respondsToSelector:@selector(gaimRequestClose)]);
 	if ([ourHandle respondsToSelector:@selector(gaimRequestClose)]) {
 		[ourHandle mainPerformSelector:@selector(gaimRequestClose)];
+
+	} else if ([ourHandle respondsToSelector:@selector(closeWindow:)]) {
+		[ourHandle closeWindow:nil];
 	}
 }
 

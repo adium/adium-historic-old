@@ -46,6 +46,8 @@
 #import <Adium/ESFileTransfer.h>
 #import <Adium/AIWindowController.h>
 
+#import "adiumGaimRequest.h"
+
 #define NO_GROUP						@"__NoGroup__"
 
 #define AUTO_RECONNECT_DELAY		2.0	//Delay in seconds
@@ -497,6 +499,28 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 - (BOOL)contactListEditable
 {
     return [self online];
+}
+
+- (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize
+{
+	id		 callback;
+	NSNumber *indexNumber;
+	
+	//Inform libgaim that the request window closed
+	[ESGaimRequestAdapter requestCloseWithHandle:inWindowController];
+
+	if (inDidAuthorize) {
+		callback = [[[infoDict objectForKey:@"authorizeCB"] retain] autorelease];
+		indexNumber = [NSNumber numberWithInt:0];
+	} else {
+		callback = [[[infoDict objectForKey:@"denyCB"] retain] autorelease];
+		indexNumber = [NSNumber numberWithInt:1];		
+	}
+
+	[gaimThread doAuthRequestCbValue:callback
+				   withUserDataValue:[[[infoDict objectForKey:@"userData"] retain] autorelease]
+				 callBackIndexNumber:indexNumber
+					 isInputCallback:[[[infoDict objectForKey:@"isInputCallback"] retain] autorelease]];
 }
 
 //Chats ------------------------------------------------------------
@@ -1991,10 +2015,10 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 			
 			//Add a NSMenuItem for each node action specified by the prpl
 			for (l = ll = prpl_info->blist_node_menu((GaimBlistNode *)buddy); l; l = l->next) {
-				GaimBlistNodeAction *act = (GaimBlistNodeAction *) l->data;
-				NSDictionary		*dict;
-				NSMenuItem			*menuItem;
-				NSString			*title;
+				GaimMenuAction	*act = (GaimMenuAction *) l->data;
+				NSDictionary	*dict;
+				NSMenuItem		*menuItem;
+				NSString		*title;
 				
 				//If titleForContactMenuLabel:forContact: returns nil, we don't add the menuItem
 				if (act &&
@@ -2007,7 +2031,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 																			  keyEquivalent:@""] autorelease];
 					[menuItem setImage:serviceIcon];
 					dict = [NSDictionary dictionaryWithObjectsAndKeys:
-						[NSValue valueWithPointer:act],@"GaimBlistNodeAction",
+						[NSValue valueWithPointer:act],@"GaimMenuAction",
 						[NSValue valueWithPointer:buddy],@"GaimBuddy",
 						nil];
 					
