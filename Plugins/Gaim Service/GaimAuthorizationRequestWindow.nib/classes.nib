@@ -27,8 +27,13 @@
                 "button_deny" = NSButton; 
                 "checkBox_addToList" = NSButton; 
                 "textField_header" = NSTextField; 
-                "textField_message" = NSTextField; 
+                "textView_message" = NSTextView; 
             }; 
+            SUPERCLASS = ESGaimRequestAbstractWindowController; 
+        }, 
+        {
+            CLASS = ESGaimRequestAbstractWindowController; 
+            LANGUAGE = ObjC; 
             SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
