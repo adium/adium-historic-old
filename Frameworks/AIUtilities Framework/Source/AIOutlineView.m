@@ -170,7 +170,6 @@
 
     } else {
         needsReload = NO;
-		NSArray		*selectedItems = [self arrayOfSelectedItems];
 
 		[super reloadData];
 
@@ -196,8 +195,6 @@
 				}
 			}
 		}
-		
-		[self selectItemsInArray:selectedItems];
 	}
 }
 
