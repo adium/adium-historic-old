@@ -1187,7 +1187,7 @@
 /*
  * @brief Send a paste message, using preferredSelector if possible and paste: if not
  *
- * Walks the responder chain looking for a responder which can handle preferredSelector, skipping instances of
+ * Walks the responder chain looking for a responder which can handle pasting, skipping instances of
  * WebHTMLView.  These are skipped because we can control what paste does to WebView (by using a custom subclass) but
  * have no control over what the WebHTMLView would do.
  *
@@ -1196,16 +1196,20 @@
 - (void)_pasteWithPreferredSelector:(SEL)selector sender:(id)sender
 {
 	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
-	NSResponder	*responder = [keyWindow firstResponder];
-	
+	NSResponder	*responder;
+
 	//First, look for a responder which can handle the preferred selector
 	if (!(responder = [keyWindow earliestResponderWhichRespondsToSelector:selector
 														  andIsNotOfClass:NSClassFromString(@"WebHTMLView")])) {		
 		//No responder found.  Try again, looking for one which will respond to paste:
 		selector = @selector(paste:);
-		
 		responder = [keyWindow earliestResponderWhichRespondsToSelector:selector
 														andIsNotOfClass:NSClassFromString(@"WebHTMLView")];
+	}
+
+	//Sending pasteAsRichText: to a non rich text NSTextView won't do anything; change it to a generic paste:
+	if ([responder isKindOfClass:[NSTextView class]] && ![(NSTextView *)responder isRichText]) {
+		selector = @selector(paste:);
 	}
 
 	if (selector) {
