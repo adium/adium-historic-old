@@ -16,6 +16,7 @@
 
 #import "AIAccountController.h"
 #import "AIStatusController.h"
+#import "AIContactController.h"
 #import "ESGaimJabberAccount.h"
 #import "ESGaimJabberAccountViewController.h"
 #import "SLGaimCocoaAdapter.h"
