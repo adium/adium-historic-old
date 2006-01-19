@@ -28,6 +28,8 @@
 #import "AIToolbarController.h"
 #import "AIToolbarController.h"
 #import "ESContactAlertsController.h"
+#import "AdiumAuthorization.h"
+
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -179,6 +181,8 @@
 
 	[self loadContactList];
 	[self sortContactList];
+
+	adiumAuthorization = [[AdiumAuthorization alloc] init];
 
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 }
@@ -2304,6 +2308,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 }
 
+#pragma mark Authorization
+- (id)showAuthorizationRequestWithDict:(NSDictionary *)inDict forAccount:(AIAccount *)inAccount
+{
+	return [adiumAuthorization showAuthorizationRequestWithDict:inDict forAccount:inAccount];
+}
+
 @end
-
-
