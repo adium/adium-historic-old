@@ -8,8 +8,9 @@
 #import <Adium/AIObject.h>
 
 @class AIAccount;
+@protocol AIEventHandler;
 
-@interface AdiumAuthorization : AIObject {
+@interface AdiumAuthorization : AIObject <AIEventHandler> {
 
 }
 
