@@ -176,6 +176,8 @@ typedef enum {
 
 - (BOOL)canSendImagesForChat:(AIChat *)inChat;
 
+- (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize;
+
 @end
 
 #import "AIAbstractAccount.h"
