@@ -391,6 +391,11 @@
 		347F51860947449000CEF1FF /* AdiumAddressBookAction_Jabber.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E9094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt */; };
 		3483928605E68B05002BC6C0 /* AIIconState.m in Sources */ = {isa = PBXBuildFile; fileRef = 3483928405E68B05002BC6C0 /* AIIconState.m */; };
 		3483928705E68B05002BC6C0 /* AIIconState.h in Headers */ = {isa = PBXBuildFile; fileRef = 3483928505E68B05002BC6C0 /* AIIconState.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3486E8A6097F24A90044C496 /* AdiumAuthorization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3486E8A4097F24A90044C496 /* AdiumAuthorization.h */; };
+		3486E8A7097F24A90044C496 /* AdiumAuthorization.m in Sources */ = {isa = PBXBuildFile; fileRef = 3486E8A5097F24A90044C496 /* AdiumAuthorization.m */; };
+		3486E9DB097F5FCE0044C496 /* AuthorizationRequestWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3486E9DA097F5FCE0044C496 /* AuthorizationRequestWindow.nib */; };
+		3486E9E2097F5FE20044C496 /* ESAuthorizationRequestWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3486E9E0097F5FE20044C496 /* ESAuthorizationRequestWindowController.m */; };
+		3486E9E3097F5FE20044C496 /* ESAuthorizationRequestWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3486E9E1097F5FE20044C496 /* ESAuthorizationRequestWindowController.h */; };
 		348862D105645EB5003C9627 /* ESFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 348862CE05645E95003C9627 /* ESFileTransfer.m */; };
 		348862D205645EB6003C9627 /* ESFileTransfer.h in Headers */ = {isa = PBXBuildFile; fileRef = 348862CD05645E94003C9627 /* ESFileTransfer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		348D8D1C06CC079F00449EBB /* ESZephyrService.m in Sources */ = {isa = PBXBuildFile; fileRef = 348D8D1A06CC079F00449EBB /* ESZephyrService.m */; };
@@ -494,9 +499,6 @@
 		34AEE7EA08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AEE7E808E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h */; };
 		34AEE7EB08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AEE7E908E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m */; };
 		34B27295083ACA900092A5A0 /* DeadStrings.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B27293083ACA900092A5A0 /* DeadStrings.h */; };
-		34B2740C083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B2740A083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.h */; };
-		34B2740D083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2740B083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.m */; };
-		34B27416083C0B900092A5A0 /* GaimAuthorizationRequestWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B27415083C0B900092A5A0 /* GaimAuthorizationRequestWindow.nib */; };
 		34B4B5A30708B049002C4C6D /* ESDebugController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B4B5A10708B049002C4C6D /* ESDebugController.h */; };
 		34B4B5A40708B049002C4C6D /* ESDebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B4B5A20708B049002C4C6D /* ESDebugController.m */; };
 		34B588A1058D833A00E7EF0D /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */; };
@@ -2234,6 +2236,11 @@
 		347F50E9094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_Jabber.scpt; path = Resources/AdiumAddressBookAction_Jabber.scpt; sourceTree = "<group>"; };
 		3483928405E68B05002BC6C0 /* AIIconState.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIIconState.m; path = "Frameworks/Adium Framework/AIIconState.m"; sourceTree = "<group>"; };
 		3483928505E68B05002BC6C0 /* AIIconState.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIIconState.h; path = "Frameworks/Adium Framework/AIIconState.h"; sourceTree = "<group>"; };
+		3486E8A4097F24A90044C496 /* AdiumAuthorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumAuthorization.h; path = Source/AdiumAuthorization.h; sourceTree = "<group>"; };
+		3486E8A5097F24A90044C496 /* AdiumAuthorization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumAuthorization.m; path = Source/AdiumAuthorization.m; sourceTree = "<group>"; };
+		3486E9DA097F5FCE0044C496 /* AuthorizationRequestWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AuthorizationRequestWindow.nib; path = Resources/AuthorizationRequestWindow.nib; sourceTree = "<group>"; };
+		3486E9E0097F5FE20044C496 /* ESAuthorizationRequestWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAuthorizationRequestWindowController.m; path = Source/ESAuthorizationRequestWindowController.m; sourceTree = "<group>"; };
+		3486E9E1097F5FE20044C496 /* ESAuthorizationRequestWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAuthorizationRequestWindowController.h; path = Source/ESAuthorizationRequestWindowController.h; sourceTree = "<group>"; };
 		348862CD05645E94003C9627 /* ESFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransfer.h; path = "Frameworks/Adium Framework/ESFileTransfer.h"; sourceTree = "<group>"; };
 		348862CE05645E95003C9627 /* ESFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransfer.m; path = "Frameworks/Adium Framework/ESFileTransfer.m"; sourceTree = "<group>"; };
 		348A8A190629A68C00FC6E03 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
@@ -2470,9 +2477,6 @@
 		34B272170839E8FB0092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = "Plugins/WebKit Message View/is.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		34B272180839E8FB0092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = Resources/is.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34B27293083ACA900092A5A0 /* DeadStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeadStrings.h; path = Source/DeadStrings.h; sourceTree = "<group>"; };
-		34B2740A083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimAuthorizationRequestWindowController.h; path = "Plugins/Gaim Service/ESGaimAuthorizationRequestWindowController.h"; sourceTree = "<group>"; };
-		34B2740B083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimAuthorizationRequestWindowController.m; path = "Plugins/Gaim Service/ESGaimAuthorizationRequestWindowController.m"; sourceTree = "<group>"; };
-		34B27415083C0B900092A5A0 /* GaimAuthorizationRequestWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = GaimAuthorizationRequestWindow.nib; path = "Plugins/Gaim Service/GaimAuthorizationRequestWindow.nib"; sourceTree = "<group>"; };
 		34B4B5A10708B049002C4C6D /* ESDebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESDebugController.h; path = Source/ESDebugController.h; sourceTree = "<group>"; };
 		34B4B5A20708B049002C4C6D /* ESDebugController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESDebugController.m; path = Source/ESDebugController.m; sourceTree = "<group>"; };
 		34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
@@ -3765,13 +3769,6 @@
 			name = "Applescript Contact Alert";
 			sourceTree = "<group>";
 		};
-		3440938407D9151F00321BB3 /* OTR */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = OTR;
-			sourceTree = "<group>";
-		};
 		3440938707D915D300321BB3 /* Auto-Away */ = {
 			isa = PBXGroup;
 			children = (
@@ -4163,6 +4160,18 @@
 			name = Sorting;
 			sourceTree = "<group>";
 		};
+		3486E88E097F24530044C496 /* Contacts */ = {
+			isa = PBXGroup;
+			children = (
+				3486E8A4097F24A90044C496 /* AdiumAuthorization.h */,
+				3486E8A5097F24A90044C496 /* AdiumAuthorization.m */,
+				3486E9E1097F5FE20044C496 /* ESAuthorizationRequestWindowController.h */,
+				3486E9E0097F5FE20044C496 /* ESAuthorizationRequestWindowController.m */,
+				3486E9DA097F5FCE0044C496 /* AuthorizationRequestWindow.nib */,
+			);
+			name = Contacts;
+			sourceTree = "<group>";
+		};
 		34878F710518289B003B2F21 /* Contact List Advanced Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -4346,9 +4355,6 @@
 				34C9A6360822930D004F912C /* ESGaimMeanwhileContactAdditionController.h */,
 				34C9A6370822930D004F912C /* ESGaimMeanwhileContactAdditionController.m */,
 				34C9A64408229348004F912C /* GaimMeanwhileContactAdditionWindow.nib */,
-				34B2740A083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.h */,
-				34B2740B083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.m */,
-				34B27415083C0B900092A5A0 /* GaimAuthorizationRequestWindow.nib */,
 				34AEE7DC08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.h */,
 				34AEE7DD08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.m */,
 				341E88680648FF1B00E0C828 /* ESGaimRequestActionController.h */,
@@ -5133,7 +5139,6 @@
 				34F59B760667A33900F01E8C /* Notify UI */,
 				34C2CF8F0633405C0018E5D2 /* Request UI */,
 				34C2CFE6063340780018E5D2 /* Libgaim */,
-				3440938407D9151F00321BB3 /* OTR */,
 			);
 			name = Gaim;
 			sourceTree = "<group>";
@@ -5299,6 +5304,7 @@
 				341BD5530965E90A00CF83F5 /* OTR */,
 				346CFDBC087B77FB009711C8 /* System (Idle, Connectivity, etc.) */,
 				4B873F370840D1FB00738987 /* Account */,
+				3486E88E097F24530044C496 /* Contacts */,
 				4BC4439A08612BD800B10F28 /* Content */,
 				34E104D60951E02300EBE478 /* Interface */,
 				344161B60943E0AF00BC26ED /* Setup Wizard */,
@@ -6694,6 +6700,8 @@
 				343ECBFB0971B92100349098 /* AIBorderlessListController.h in Headers */,
 				6315FFB00977187E005794CC /* RSS.h in Headers */,
 				6315FFB20977187E005794CC /* SUUpdater.h in Headers */,
+				3486E8A6097F24A90044C496 /* AdiumAuthorization.h in Headers */,
+				3486E9E3097F5FE20044C496 /* ESAuthorizationRequestWindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6921,7 +6929,6 @@
 				34E0103507B956F6000DF265 /* ESGaimNotifyEmailController.h in Headers */,
 				34E0EB8F07CD349200A82198 /* ESGaimAIMAccount.h in Headers */,
 				34C9A6380822930D004F912C /* ESGaimMeanwhileContactAdditionController.h in Headers */,
-				34B2740C083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.h in Headers */,
 				A3C0432108D74D3100B48CE1 /* AIGaimGTalkAccount.h in Headers */,
 				A3C0432308D74D3100B48CE1 /* AIGaimGTalkAccountViewController.h in Headers */,
 				A3C0432508D74D3100B48CE1 /* AIGTalkService.h in Headers */,
@@ -7833,6 +7840,7 @@
 				343ECBEE0971B18E00349098 /* ShowContactInfoPrompt.nib in Resources */,
 				347EAB2D09721D490090EA6E /* pref-personal.png in Resources */,
 				6315FFB5097718A1005794CC /* Sparkle.strings in Resources */,
+				3486E9DB097F5FCE0044C496 /* AuthorizationRequestWindow.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7930,7 +7938,6 @@
 				343EB40408086D9000E27095 /* ESGaimGaduGaduAccountView.nib in Resources */,
 				3402E04E07CB0EB00044F818 /* Localizable.strings in Resources */,
 				34C9A64508229348004F912C /* GaimMeanwhileContactAdditionWindow.nib in Resources */,
-				34B27416083C0B900092A5A0 /* GaimAuthorizationRequestWindow.nib in Resources */,
 				A3C042D208D7483100B48CE1 /* GaimDefaultsGTalk.plist in Resources */,
 				345A7B720954AD4D00FF3113 /* GaimDefaultsSimple.plist in Resources */,
 				345A7B850954AEF400FF3113 /* ESGaimSimpleAccountView.nib in Resources */,
@@ -8376,6 +8383,8 @@
 				343ECBFC0971B92100349098 /* AIBorderlessListController.m in Sources */,
 				6315FFB10977187E005794CC /* RSS.m in Sources */,
 				6315FFB30977187E005794CC /* SUUpdater.m in Sources */,
+				3486E8A7097F24A90044C496 /* AdiumAuthorization.m in Sources */,
+				3486E9E2097F5FE20044C496 /* ESAuthorizationRequestWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8587,7 +8596,6 @@
 				34E0103407B956F6000DF265 /* ESGaimNotifyEmailController.m in Sources */,
 				34E0EB9007CD349200A82198 /* ESGaimAIMAccount.m in Sources */,
 				34C9A6390822930D004F912C /* ESGaimMeanwhileContactAdditionController.m in Sources */,
-				34B2740D083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.m in Sources */,
 				A3C0432208D74D3100B48CE1 /* AIGaimGTalkAccount.m in Sources */,
 				A3C0432408D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m in Sources */,
 				A3C0432608D74D3100B48CE1 /* AIGTalkService.m in Sources */,
