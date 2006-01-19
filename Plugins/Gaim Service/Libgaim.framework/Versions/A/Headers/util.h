@@ -37,6 +37,13 @@
 extern "C" {
 #endif
 
+typedef struct _GaimMenuAction
+{
+	char *label;
+	GaimCallback callback;
+	gpointer data;
+	GList *children;
+} GaimMenuAction;
 
 /**
  * A key-value pair.
@@ -51,7 +58,18 @@ typedef struct _GaimKeyValuePair
 
 } GaimKeyValuePair;
 
-
+/**
+ * Creates a new GaimMenuAction.
+ * @param label    The text label to display for this action.
+ * @param callback The function to be called when the action is used on
+ *                 the selected item.
+ * @param data     Additional data to be passed to the callback.
+ * @param children A GList of GaimMenuActions to be added as a submenu
+ *                 of the action.
+ * @return The GaimMenuAction.
+ */
+GaimMenuAction *gaim_menu_action_new(char *label, GaimCallback callback,
+                                     gpointer data, GList *children);
 
 /**************************************************************************/
 /** @name Base16 Functions                                                */
@@ -89,7 +107,6 @@ gchar *gaim_base16_encode(const guchar *data, gsize len);
 guchar *gaim_base16_decode(const char *str, gsize *ret_len);
 
 /*@}*/
-
 
 /**************************************************************************/
 /** @name Base64 Functions                                                */
@@ -637,6 +654,20 @@ void gaim_util_chrreplace(char *string, char delimiter,
 gchar *gaim_strreplace(const char *string, const char *delimiter,
 					   const char *replacement);
 
+
+/**
+ * Given a string, this replaces any utf-8 substrings in that string with
+ * the corresponding numerical character reference, and returns a newly
+ * allocated string.
+ *
+ * @param in The string which might contain utf-8 substrings
+ *
+ * @return A new string, with utf-8 replaced with numerical character
+ *         references, free this with g_free()
+*/
+char *gaim_utf8_ncr_encode(const char *in);
+
+
 /**
  * Given a string, this replaces any numerical character references
  * in that string with the corresponding actual utf-8 substrings,
@@ -648,6 +679,7 @@ gchar *gaim_strreplace(const char *string, const char *delimiter,
  *         replaced with actual utf-8, free this with g_free().
  */
 char *gaim_utf8_ncr_decode(const char *in);
+
 
 /**
  * Given a string, this replaces one substring with another
@@ -732,6 +764,8 @@ char *gaim_str_binary_to_ascii(const unsigned char *binary, guint len);
 gboolean gaim_url_parse(const char *url, char **ret_host, int *ret_port,
 						char **ret_path, char **ret_user, char **ret_passwd);
 
+typedef void (*GaimURLFetchCallback) (gpointer data, const char *buf, gsize len);
+
 /**
  * Fetches the data from a URL, and passes it to a callback function.
  *
@@ -743,10 +777,30 @@ gboolean gaim_url_parse(const char *url, char **ret_host, int *ret_port,
  * @param cb         The callback function.
  * @param data       The user data to pass to the callback function.
  */
-void gaim_url_fetch(const char *url, gboolean full,
-					const char *user_agent, gboolean http11,
-					void (*cb)(void *, const char *, size_t),
-					void *data);
+#define gaim_url_fetch(url, full, user_agent, http11, cb, data) \
+	gaim_url_fetch_request(url, full, user_agent, http11, NULL, \
+		FALSE, cb, data);
+
+/**
+ * Fetches the data from a URL, and passes it to a callback function.
+ *
+ * @param url        The URL.
+ * @param full       TRUE if this is the full URL, or FALSE if it's a
+ *                   partial URL.
+ * @param user_agent The user agent field to use, or NULL.
+ * @param http11     TRUE if HTTP/1.1 should be used to download the file.
+ * @param request    A HTTP request to send to the server instead of the
+ *                   standard GET
+ * @param include_headers if TRUE, include the HTTP headers in the
+ *                   response
+ * @param cb         The callback function.
+ * @param data       The user data to pass to the callback function.
+ */
+void gaim_url_fetch_request(const char *url, gboolean full,
+		const char *user_agent, gboolean http11,
+		const char *request, gboolean include_headers,
+		GaimURLFetchCallback cb, void *data);
+
 /**
  * Decodes a URL into a plain string.
  *
@@ -833,7 +887,7 @@ gchar *gaim_utf8_try_convert(const char *str);
 gchar *gaim_utf8_salvage(const char *str);
 
 /**
- * Compares two UTF-8 strings.
+ * Compares two UTF-8 strings case-insensitively.
  *
  * @param a The first string.
  * @param b The second string.
