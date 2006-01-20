@@ -890,9 +890,11 @@ OtrlUserState otrg_get_userstate(void)
 - (NSString *)upgradedFingerprintsFromFile:(NSString *)inPath
 {
 	NSString		*sourceFingerprints = [NSString stringWithContentsOfUTF8File:inPath];
+	
+	if (!sourceFingerprints  || ![sourceFingerprints length]) return nil;
+
 	NSScanner		*scanner = [NSScanner scannerWithString:sourceFingerprints];
 	NSMutableString *outFingerprints = [NSMutableString string];
-	
 	NSCharacterSet	*tabAndNewlineSet = [NSCharacterSet characterSetWithCharactersInString:@"\t\n\r"];
 	
 	//Skip quotes
@@ -957,6 +959,9 @@ OtrlUserState otrg_get_userstate(void)
 - (NSString *)upgradedPrivateKeyFromFile:(NSString *)inPath
 {
 	NSMutableString	*sourcePrivateKey = [[[NSString stringWithContentsOfUTF8File:inPath] mutableCopy] autorelease];
+	
+	if (!sourcePrivateKey || ![sourcePrivateKey length]) return nil;
+
 	/*
 	 * Gaim used the account name for the name and the prpl id for the protocol.
 	 * We will use the internalObjectID for the name and the service's uniqueID for the protocol.
