@@ -45,6 +45,7 @@
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
 #import <Adium/AIWindowController.h>
+#import <Adium/AIEmoticon.h>
 
 #import "adiumGaimRequest.h"
 
@@ -57,6 +58,7 @@
 
 @interface CBGaimAccount (PRIVATE)
 - (NSString *)_userIconCachePath;
+- (NSString *)_emoticonCachePathForChat:(AIChat *)inChat;
 
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
 - (NSString *)_mapOutgoingGroupName:(NSString *)name;
@@ -732,7 +734,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 }
 
 - (void)_receivedMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date
-{		
+{
 	AIContentMessage *messageObject = [AIContentMessage messageInChat:chat
 														   withSource:sourceContact
 														  destination:self
@@ -740,7 +742,14 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 															  message:attributedMessage
 															autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
 	
-	[[adium contentController] receiveContentObject:messageObject];
+	if (!customEmoticonWaitingDict ||
+		![[[customEmoticonWaitingDict objectForKey:[chat uniqueChatID]] objectForKey:@"WaitingCount"] intValue]) {
+		[[adium contentController] receiveContentObject:messageObject];
+
+	} else {
+		//If this chat is waiting on a custom emoticon, queue display of the message
+		[self enqueueMessage:messageObject forChat:chat];
+	}
 }
 
 /*********************/
@@ -841,6 +850,121 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	}
 	
 	return NO;
+}
+
+#pragma mark Custom emoticons and message queuing
+- (void)enqueueMessage:(AIContentMessage *)inMessage forChat:(AIChat *)inChat
+{
+	NSMutableDictionary *chatDict;
+	NSMutableArray		*queuedMessages;
+
+	if (!(chatDict = [customEmoticonWaitingDict objectForKey:[inChat uniqueChatID]])) {
+		chatDict = [NSMutableDictionary dictionary];
+		[customEmoticonWaitingDict setObject:chatDict
+									  forKey:[inChat uniqueChatID]];
+	}
+	
+	if (!(queuedMessages = [chatDict objectForKey:@"QueuedMessages"])) {
+		queuedMessages = [NSMutableArray array];
+		[chatDict setObject:queuedMessages
+					 forKey:@"QueuedMessages"];
+	}
+	
+	[queuedMessages addObject:inMessage];
+}
+
+- (void)dequeueWaitingMessagesForChat:(AIChat *)inChat
+{
+	NSMutableDictionary *chatDict;
+	NSMutableArray		*queuedMessages;
+	NSEnumerator		*enumerator;
+	AIContentMessage	*messageObject;
+
+	chatDict = [customEmoticonWaitingDict objectForKey:[inChat uniqueChatID]];
+	queuedMessages = [chatDict objectForKey:@"QueuedMessages"];
+	
+	enumerator = [queuedMessages objectEnumerator];
+	while ((messageObject = [enumerator nextObject])) {
+		[[adium contentController] receiveContentObject:messageObject];
+	}
+}
+
+- (void)chat:(AIChat *)inChat isWaitingOnCustomEmoticon:(NSNumber *)isWaiting
+{
+	if ([isWaiting boolValue]) {
+		NSMutableDictionary *chatDict;
+		NSNumber			*waitingNumber;
+
+		if (!customEmoticonWaitingDict) customEmoticonWaitingDict = [[NSMutableDictionary alloc] init];
+
+		if (!(chatDict = [customEmoticonWaitingDict objectForKey:[inChat uniqueChatID]])) {
+			chatDict = [NSMutableDictionary dictionary];
+			[customEmoticonWaitingDict setObject:chatDict
+										  forKey:[inChat uniqueChatID]];
+		}
+		
+		if ((waitingNumber = [chatDict objectForKey:@"WaitingCount"])) {
+			waitingNumber = [NSNumber numberWithInt:([waitingNumber intValue] + 1)];
+		} else {
+			waitingNumber = [NSNumber numberWithInt:1];
+		}
+		
+		[chatDict setObject:waitingNumber
+					 forKey:@"WaitingCount"];		
+	} else {
+		NSMutableDictionary *chatDict;
+		NSNumber			*waitingNumber;
+		
+		chatDict = [customEmoticonWaitingDict objectForKey:[inChat uniqueChatID]];
+		waitingNumber = [chatDict objectForKey:@"WaitingCount"];
+		
+		if ([waitingNumber intValue] > 1) {
+			waitingNumber = [NSNumber numberWithInt:([waitingNumber intValue] - 1)];
+			[chatDict setObject:waitingNumber
+						 forKey:@"WaitingCount"];
+		} else {
+			//We now are not waiting
+			[self dequeueWaitingMessagesForChat:inChat];
+			
+			//No further need for the dict
+			[customEmoticonWaitingDict removeObjectForKey:[inChat uniqueChatID]];
+			
+			if (![customEmoticonWaitingDict count]) {
+				[customEmoticonWaitingDict release]; customEmoticonWaitingDict = nil;
+			}
+		}
+	}
+}
+
+- (void)chat:(AIChat *)inChat setCustomEmoticon:(NSString *)emoticonEquivalent withImage:(NSImage *)inImage
+{
+	/* XXX Note: If we can set outgoing emoticons, this method needs to be updated to mark emoticons as incoming
+	 * and AIEmoticonController needs to be able to handle that.
+	 */
+	AIEmoticon	*emoticon;
+
+	//Look for an existing emoticon with this equivalent
+	NSEnumerator *enumerator = [[inChat customEmoticons] objectEnumerator];
+	while ((emoticon = [enumerator nextObject])) {
+		if ([[emoticon textEquivalents] containsObject:emoticonEquivalent]) break;
+	}
+	
+	//Write out our image
+	NSString	*path = [self _emoticonCachePathForChat:inChat];
+	[[inImage PNGRepresentation] writeToFile:path
+								  atomically:NO];
+
+	if (emoticon) {
+		//If we already have an emoticon, just update its path
+		[emoticon setPath:path];
+
+	} else {
+		emoticon = [AIEmoticon emoticonWithIconPath:path
+										equivalents:[NSArray arrayWithObject:emoticonEquivalent]
+											   name:emoticonEquivalent
+											   pack:nil];
+		[inChat addCustomEmoticon:emoticon];
+	}
 }
 
 #pragma mark GaimConversation User Lists
@@ -2275,6 +2399,12 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 {    
     NSString    *userIconCacheFilename = [NSString stringWithFormat:@"TEMP-UserIcon_%@_%@", [self internalObjectID], [NSString randomStringOfLength:4]];
     return [[adium cachesPath] stringByAppendingPathComponent:userIconCacheFilename];
+}
+
+- (NSString *)_emoticonCachePathForChat:(AIChat *)inChat
+{
+    NSString    *filename = [NSString stringWithFormat:@"TEMP-CustomEmoticon_%@_%@", [inChat uniqueChatID], [NSString randomStringOfLength:4]];
+    return [[adium cachesPath] stringByAppendingPathComponent:filename];	
 }
 
 - (AIListContact *)contactWithUID:(NSString *)inUID

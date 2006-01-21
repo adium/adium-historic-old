@@ -59,6 +59,7 @@ static int nextChatNumber = 0;
 		isOpen = NO;
 		isGroupChat = NO;
 		expanded = YES;
+		customEmoticons = nil;
 
 		pendingOutgoingContentObjects = [[NSMutableArray alloc] init];
 		
@@ -81,7 +82,8 @@ static int nextChatNumber = 0;
 	[ignoredListContacts release];
 	[pendingOutgoingContentObjects release];
 	[uniqueChatID release]; uniqueChatID = nil;
-	
+	[customEmoticons release]; customEmoticons = nil;
+
 	[super dealloc];
 }
 
@@ -622,6 +624,19 @@ static int nextChatNumber = 0;
 - (BOOL)isGroupChat
 {
 	return isGroupChat;
+}
+
+#pragma mark Custom emoticons
+
+- (void)addCustomEmoticon:(AIEmoticon *)inEmoticon
+{
+	if (!customEmoticons) customEmoticons = [[NSMutableSet alloc] init];
+	[customEmoticons addObject:inEmoticon];
+}
+
+- (NSSet *)customEmoticons;
+{
+	return customEmoticons;
 }
 
 @end

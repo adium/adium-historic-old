@@ -96,7 +96,7 @@ static void adiumGaimConvCreate(GaimConversation *conv)
 	//Pass chats along to the account
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_CHAT) {
 		
-		AIChat *chat = chatLookupFromConv(conv);
+		AIChat *chat = groupChatLookupFromConv(conv);
 		
 		[accountLookup(conv->account) mainPerformSelector:@selector(addChat:)
 											   withObject:chat];
@@ -161,7 +161,7 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who,
 			
 			[accountLookup(conv->account) mainPerformSelector:@selector(receivedMultiChatMessage:inChat:)
 												   withObject:messageDict
-												   withObject:chatLookupFromConv(conv)];
+												   withObject:groupChatLookupFromConv(conv)];
 		}
 	}
 }
@@ -485,17 +485,32 @@ static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type
 gboolean adiumGaimConvCustomSmileyAdd(GaimConversation *conv, const char *smile, gboolean remote)
 {
 	GaimDebug (@"%s: Added %s",gaim_conversation_get_name(conv),smile);
-
+	[accountLookup(conv->account) mainPerformSelector:@selector(chat:isWaitingOnCustomEmoticon:)
+										   withObject:chatLookupFromConv(conv)
+										   withObject:[NSNumber numberWithBool:YES]];
 	return TRUE;
 }
 void adiumGaimConvCustomSmileyWrite(GaimConversation *conv, const char *smile,
 									const guchar *data, gsize size)
 {
-	GaimDebug (@"%s: Write %s (%x %i)",gaim_conversation_get_name(conv),smile,data,size);	
+	GaimDebug (@"%s: Write %s (%x %i)",gaim_conversation_get_name(conv),smile,data,size);
+
+	NSImage	*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:data
+																  length:size]];
+
+	[accountLookup(conv->account) mainPerformSelector:@selector(chat:setCustomEmoticon:withImage:)
+										   withObject:chatLookupFromConv(conv)
+										   withObject:[NSString stringWithUTF8String:smile]
+										   withObject:image];
+	[image release];
 }
 void adiumGaimConvCustomSmileyClose(GaimConversation *conv, const char *smile)
 {
 	GaimDebug (@"%s: Close %s",gaim_conversation_get_name(conv),smile);
+
+	[accountLookup(conv->account) mainPerformSelector:@selector(chat:isWaitingOnCustomEmoticon:)
+										   withObject:chatLookupFromConv(conv)
+										   withObject:[NSNumber numberWithBool:NO]];	
 }
 
 static GaimConversationUiOps adiumGaimConversationOps = {

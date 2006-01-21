@@ -24,8 +24,8 @@
 {   	
     GaimAccount         *account;
 
-    NSMutableDictionary *chatDict;
-	
+	NSMutableDictionary	*customEmoticonWaitingDict;
+
 	NSString			*lastDisconnectionError;
     int                 reconnectAttemptsRemaining;
 	
