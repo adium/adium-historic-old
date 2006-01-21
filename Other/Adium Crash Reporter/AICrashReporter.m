@@ -72,7 +72,7 @@
 //
 - (void)awakeFromNib
 {
-    [textView_details setPlaceholder:AILocalizedString(@"A detailed explanation of what you were doing when Adium crashed (optional)",nil)];
+    [textView_details setPlaceholderString:AILocalizedString(@"A detailed explanation of what you were doing when Adium crashed (optional)",nil)];
 
     [scrollView_details setAlwaysDrawFocusRingIfFocused:YES];
 	
