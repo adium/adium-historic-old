@@ -21,6 +21,7 @@
 - (void)fireProfileChangesImmediately;
 - (void)configureProfile;
 - (void)configureImageView;
+- (void)configureTooltips;
 @end
 
 @implementation ESPersonalPreferences
@@ -58,7 +59,7 @@
 	
 	[self configureProfile];
 	[self configureImageView];
-	
+	[self configureTooltips];
 	
 	if ([[[adium preferenceController] preferenceForKey:KEY_USE_USER_ICON
 												  group:GROUP_ACCOUNT_STATUS] boolValue]) {
@@ -114,7 +115,7 @@
 	BOOL enableUserIcon = ([[matrix_userIcon selectedCell] tag] == 1);
 
 	[button_chooseIcon setEnabled:enableUserIcon];
-	[imageView_userIcon setEnabled:enableUserIcon];
+	[imageView_userIcon setEnabled:enableUserIcon];	
 }
 
 #pragma mark Profile
@@ -194,6 +195,26 @@
 	}
 
 	[imageView_userIcon setImage:(imageData ? [[[NSImage alloc] initWithData:imageData] autorelease] : nil)];
+}
+
+- (void)configureTooltips
+{
+	[matrix_userIcon setToolTip:AILocalizedString(@"Do not use an icon to represent you.", nil)
+						forCell:[matrix_userIcon cellWithTag:0]];
+	[matrix_userIcon setToolTip:AILocalizedString(@"Use the icon below represent you. %@", nil)
+						forCell:[matrix_userIcon cellWithTag:1]];
+	
+#define LOCAL_ALIAS_TOOLTIP AILocalizedString(@"Name to display locally for you in outgoing messages", nil)
+	[label_localAlias setToolTip:LOCAL_ALIAS_TOOLTIP];
+	[textField_alias setToolTip:LOCAL_ALIAS_TOOLTIP];
+	
+#define REMOTE_ALIAS_TOOLTIP AILocalizedString(@"Name to display to remote contacts (not supported by all services)", nil)
+	[label_remoteAlias  setToolTip:REMOTE_ALIAS_TOOLTIP];
+	[textField_displayName setToolTip:REMOTE_ALIAS_TOOLTIP];
+
+#define PROFILE_TOOLTIP AILocalizedString(@"Profile to display when contacts request information about you (not supported by all services). Text may be formatted using the Edit and Format menus.", nil)
+	[label_profile setToolTip:PROFILE_TOOLTIP];
+	[textView_profile setToolTip:PROFILE_TOOLTIP];
 }
 
 @end
