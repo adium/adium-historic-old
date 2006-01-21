@@ -56,16 +56,24 @@
 	[[NSFontPanel sharedFontPanel] setDelegate: textView_textProfile];
     
     //Profile
-    NSData				*profileData = [account preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
-	NSAttributedString	*profile = nil;
-    if (profileData) {
-        profile = [NSAttributedString stringWithData:profileData];
-	}
+    NSData				*profileData = [account preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES];
+	NSAttributedString	*profile = (profileData ? [NSAttributedString stringWithData:profileData] : nil);
 	
 	if (profile && [profile length]) {
 		[[textView_textProfile textStorage] setAttributedString:profile];
 	} else {
 		[textView_textProfile setString:@""];
+	}
+	
+	if ([textView_textProfile isKindOfClass:[AITextViewWithPlaceholder class]]) {
+		NSData				*globalProfileData = [[adium preferenceController] preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
+		NSAttributedString	*globalProfile = (globalProfileData ? [NSAttributedString stringWithData:globalProfileData] : nil);
+		
+		if (globalProfile && [globalProfile length]) {
+			[(AITextViewWithPlaceholder *)textView_textProfile setPlaceholder:globalProfile];
+		} else {
+			[(AITextViewWithPlaceholder *)textView_textProfile setPlaceholder:nil];
+		}
 	}
 }
 
@@ -75,7 +83,9 @@
 - (void)saveConfiguration
 {
     [super saveConfiguration];
-	[account setPreference:[[textView_textProfile textStorage] dataRepresentation] 
+	[account setPreference:([[textView_textProfile textStorage] length] ?
+							[[textView_textProfile textStorage] dataRepresentation] :
+							nil)
 					forKey:@"TextProfile"
 					 group:GROUP_ACCOUNT_STATUS];	
 }

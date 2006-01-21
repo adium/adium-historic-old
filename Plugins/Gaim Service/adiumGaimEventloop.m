@@ -87,7 +87,8 @@ void callTimerFunc(CFRunLoopTimerRef timer, void *info)
 	struct SourceInfo *sourceInfo = info;
 	
 	//	GaimDebug (@"%x: Fired %f-ms timer (tag %u)",[NSRunLoop currentRunLoop],CFRunLoopTimerGetInterval(timer)*1000,sourceInfo->tag);
-	if (! sourceInfo->sourceFunction(sourceInfo->user_data)) {
+	if (!sourceInfo->sourceFunction ||
+		!sourceInfo->sourceFunction(sourceInfo->user_data)) {
         adium_source_remove(sourceInfo->tag);
 	}
 }
