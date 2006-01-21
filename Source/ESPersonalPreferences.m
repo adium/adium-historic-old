@@ -201,7 +201,7 @@
 {
 	[matrix_userIcon setToolTip:AILocalizedString(@"Do not use an icon to represent you.", nil)
 						forCell:[matrix_userIcon cellWithTag:0]];
-	[matrix_userIcon setToolTip:AILocalizedString(@"Use the icon below represent you. %@", nil)
+	[matrix_userIcon setToolTip:AILocalizedString(@"Use the icon below represent you.", nil)
 						forCell:[matrix_userIcon cellWithTag:1]];
 	
 #define LOCAL_ALIAS_TOOLTIP AILocalizedString(@"Name to display locally for you in outgoing messages", nil)
