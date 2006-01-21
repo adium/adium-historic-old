@@ -13,14 +13,14 @@
 
 //Current implementation suggested by Philippe Mougin on the cocoadev mailing list
 
-- (void)setPlaceholder:(NSString *)inPlaceholder
+- (void)setPlaceholder:(NSString *)inPlaceholderString
 {
     NSDictionary *attributes;
 	
 	[placeholder release];
 
 	attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor grayColor], NSForegroundColorAttributeName, nil];
-    placeholder = [[NSAttributedString alloc] initWithString:inPlaceholder
+    placeholder = [[NSAttributedString alloc] initWithString:inPlaceholderString
 												  attributes:attributes];
 	
 	[self setNeedsDisplay:YES];
@@ -42,7 +42,8 @@
 {
 	[super drawRect:rect];
 
-	if (([[self string] isEqualToString:@""]) && 
+	if (placeholder &&
+		([[self string] isEqualToString:@""]) && 
 		([[self window] firstResponder] != self)) {
 		NSSize	size = [self frame].size;
 		NSSize textContainerInset = [self textContainerInset];
@@ -56,14 +57,14 @@
 
 - (BOOL)becomeFirstResponder
 {
-	[self setNeedsDisplay:YES];
+	if (placeholder) [self setNeedsDisplay:YES];
 
 	return [super becomeFirstResponder];
 }
 
 - (BOOL)resignFirstResponder
 {
-	[self setNeedsDisplay:YES];
+	if (placeholder) [self setNeedsDisplay:YES];
 	
 	return [super resignFirstResponder];
 }
