@@ -1,20 +1,6 @@
 {
     IBClasses = (
         {
-            ACTIONS = {deleteAccount = id; editAccount = id; }; 
-            CLASS = AIAccountListPreferences; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "button_deleteAccount" = NSButton; 
-                "button_editAccount" = NSButton; 
-                "button_newAccount" = NSButton; 
-                "scrollView_accountList" = AIAutoScrollView; 
-                "tableView_accountList" = NSTableView; 
-                "textField_overview" = NSTextField; 
-            }; 
-            SUPERCLASS = AIPreferencePane; 
-        }, 
-        {
             CLASS = AIAlternatingRowTableView; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSTableView; 
@@ -70,6 +56,9 @@
             OUTLETS = {
                 "button_chooseIcon" = NSButton; 
                 "imageView_userIcon" = AIImageViewWithImagePicker; 
+                "label_localAlias" = NSTextField; 
+                "label_profile" = NSTextField; 
+                "label_remoteAlias" = NSTextField; 
                 "matrix_userIcon" = NSMatrix; 
                 "textField_alias" = AIDelayedTextField; 
                 "textField_displayName" = AIDelayedTextField; 
