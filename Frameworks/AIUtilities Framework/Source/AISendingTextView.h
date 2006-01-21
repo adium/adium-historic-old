@@ -6,6 +6,8 @@
 //  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
+#import "AITextViewWithPlaceholder.h"
+
 /*!
  * @class AISendingTextView
  * @brief NSTextView which fixes issues with return and enter under high system load
@@ -14,7 +16,7 @@
  * <p>This fix watches for returns in the insertText method.  However, since it's impossible to distinguish a return from an enter by the characters inserted (both insert /r, 10), it also watches and remembers the keys being pressed with interpretKeyEvents... When insertText sees a /r, it checks to see what key was pressed to generate that /r, and makes a decision to send or not.  Since the sending occurs from within insertText, the returns are processed in the correct order with the text, and the problem is illiminated.</p>
  */
 
-@interface AISendingTextView : NSTextView {
+@interface AISendingTextView : AITextViewWithPlaceholder {
     NSMutableArray	*returnArray;
     BOOL			insertingText;
 
