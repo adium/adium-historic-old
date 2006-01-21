@@ -15,6 +15,7 @@
 
 @interface AITextViewWithPlaceholder : NSTextView {
     NSAttributedString *placeholder;
+	BOOL				placeholderHasOwnAttributes;
 }
 
 /*
@@ -23,14 +24,16 @@
  * Set the placeholder string, which is text which is displayed but greyed out when the text view is empty and unselected.
  * @param inPlaceholder An <tt>NSString</tt> to display as the placeholder
  */
--(void)setPlaceholder:(NSString *)inPlaceholder;
+-(void)setPlaceholderString:(NSString *)inPlaceholder;
+
+- (void)setPlaceholder:(NSAttributedString *)inPlaceholder;
 
 /*
  * @brief Returns the current placeholder string
  *
  * Returns the current placeholder string
- * @return An <tt>NSString</tt>
+ * @return An <tt>NSAttributedString</tt>
  */
--(NSString *)placeholder;
+-(NSAttributedString *)placeholder;
 
 @end

@@ -13,22 +13,32 @@
 
 //Current implementation suggested by Philippe Mougin on the cocoadev mailing list
 
-- (void)setPlaceholder:(NSString *)inPlaceholderString
+- (void)setPlaceholderString:(NSString *)inPlaceholderString
 {
-    NSDictionary *attributes;
+  //  NSDictionary *attributes;
 	
-	[placeholder release];
-
-	attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor grayColor], NSForegroundColorAttributeName, nil];
-    placeholder = [[NSAttributedString alloc] initWithString:inPlaceholderString
-												  attributes:attributes];
-	
-	[self setNeedsDisplay:YES];
+//	attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor grayColor], NSForegroundColorAttributeName, nil];
+	[self setPlaceholder:[[[NSAttributedString alloc] initWithString:inPlaceholderString
+														  attributes:nil] autorelease]];
 }
 
-- (NSString *)placeholder
+- (void)setPlaceholder:(NSAttributedString *)inPlaceholder
 {
-    return [placeholder string];
+	if (inPlaceholder != placeholder) {
+		[placeholder release];
+		
+		NSMutableAttributedString	*tempPlaceholder = [inPlaceholder mutableCopy];
+		[tempPlaceholder addAttribute:NSForegroundColorAttributeName value:[NSColor grayColor] range:NSMakeRange(0, [tempPlaceholder length])];
+
+		placeholder = tempPlaceholder;
+	
+		[self setNeedsDisplay:YES];
+	}
+}
+
+- (NSAttributedString *)placeholder
+{
+    return placeholder;
 }
 
 - (void)dealloc
@@ -46,8 +56,10 @@
 		([[self string] isEqualToString:@""]) && 
 		([[self window] firstResponder] != self)) {
 		NSSize	size = [self frame].size;
-		NSSize textContainerInset = [self textContainerInset];
-		
+		NSSize	textContainerInset = [self textContainerInset];
+		textContainerInset.width += 4;
+		textContainerInset.height += 2;
+
 		[placeholder drawInRect:NSMakeRect(textContainerInset.width, 
 										   textContainerInset.height, 
 										   size.width - (textContainerInset.width * 2),
