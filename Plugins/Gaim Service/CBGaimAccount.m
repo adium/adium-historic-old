@@ -87,6 +87,8 @@
 - (void)setAccountProfileTo:(NSAttributedString *)profile configureGaimAccountContext:(NSInvocation *)inInvocation;
 
 - (void)performAccountMenuAction:(NSMenuItem *)sender;
+
+- (void)enqueueMessage:(AIContentMessage *)inMessage forChat:(AIChat *)inChat;
 @end
 
 @implementation CBGaimAccount
