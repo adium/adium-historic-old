@@ -10,6 +10,7 @@
 #import "AIContactController.h"
 #import "ESContactAlertsController.h"
 #import <Adium/AIAccount.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #define	CONTACT_REQUESTED_AUTHORIZATION @"Contact Requested Authorization"
 
@@ -34,7 +35,7 @@
 																			 UID:[inDict objectForKey:@"Remote Name"]];
 
 	[[adium contactAlertsController] generateEvent:CONTACT_REQUESTED_AUTHORIZATION
-									 forListObject:listContact
+									 forListObject:(AIListObject *)listContact
 										  userInfo:nil
 					  previouslyPerformedActionIDs:nil];				
 	
