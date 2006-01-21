@@ -20,6 +20,7 @@
 
 @interface AIEmoticon : AIObject {
     NSString                *path;
+	NSImage					*image;
     NSString                *name;
     NSArray                 *textEquivalents;
 	AIEmoticonPack			*pack;
@@ -36,6 +37,7 @@
 - (NSMutableAttributedString *)attributedStringWithTextEquivalent:(NSString *)textEquivalent;
 - (BOOL)isAppropriateForServiceClass:(NSString *)inServiceClass;
 - (NSImage *)image;
+- (void)setPath:(NSString *)inPath;
 - (NSString *)name;
 - (void)setEnabled:(BOOL)inEnabled;
 - (BOOL)isEnabled;

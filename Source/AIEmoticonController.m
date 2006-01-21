@@ -28,6 +28,7 @@
 #import "AIListContact.h"
 #import "AIService.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
+#import "AIChat.h"
 
 #define EMOTICON_DEFAULT_PREFS				@"EmoticonDefaults"
 #define PATH_EMOTICONS						@"/Emoticons"
@@ -138,9 +139,13 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 {
     NSMutableAttributedString   *replacementMessage = nil;
     if (inAttributedString) {
-        //First, we do a quick scan of the message for any characters that might end up being emoticons
-        //This avoids having to do the slower, more complicated scan for the majority of messages.
-        if ([[inAttributedString string] rangeOfCharacterFromSet:[self emoticonHintCharacterSet]].location != NSNotFound) {
+        /* First, we do a quick scan of the message for any characters that might end up being emoticons
+         * This avoids having to do the slower, more complicated scan for the majority of messages.
+		 *
+		 * We also look for emoticons if this messsage is for a chat and it has one or more custom emoticons
+		 */
+        if (([[inAttributedString string] rangeOfCharacterFromSet:[self emoticonHintCharacterSet]].location != NSNotFound) ||
+			([context isKindOfClass:[AIContentObject class]] && ([[(AIContentObject *)context chat] customEmoticons]))){
             //If an emoticon character was found, we do a more thorough scan
             replacementMessage = [self _convertEmoticonsInMessage:inAttributedString context:context];
         }
@@ -167,13 +172,15 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 										 intoString:(NSMutableAttributedString **)newMessage
 								   replacementCount:(unsigned *)replacementCount
 								 callingRecursively:(BOOL)callingRecursively
-											context:(id)serviceClassContext
+								serviceClassContext:(id)serviceClassContext
+						  emoticonStartCharacterSet:(NSCharacterSet *)emoticonStartCharacterSet
+									  emoticonIndex:(NSDictionary *)emoticonIndex
 {
 	unsigned int	messageStringLength = [messageString length];
 	unsigned int	originalEmoticonLocation = NSNotFound;
 
 	//Find the next occurence of a suspected emoticon
-	*currentLocation = [messageString rangeOfCharacterFromSet:[self emoticonStartCharacterSet]
+	*currentLocation = [messageString rangeOfCharacterFromSet:emoticonStartCharacterSet
 													  options:NSLiteralSearch
 														range:NSMakeRange(*currentLocation, 
 																		  messageStringLength - *currentLocation)].location;
@@ -187,7 +194,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		AIEmoticon      *emoticon;     
 
 		//Check for the presence of all emoticons starting with this character
-		emoticonEnumerator = [[[self emoticonIndex] objectForKey:currentCharacterString] objectEnumerator];
+		emoticonEnumerator = [[emoticonIndex objectForKey:currentCharacterString] objectEnumerator];
 		while ((emoticon = [emoticonEnumerator nextObject])) {
 			NSEnumerator        *textEnumerator;
 			NSString            *text;
@@ -289,7 +296,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 																	  intoString:newMessage
 																replacementCount:replacementCount
 															  callingRecursively:YES
-																		 context:serviceClassContext];
+															 serviceClassContext:serviceClassContext
+													   emoticonStartCharacterSet:emoticonStartCharacterSet
+																   emoticonIndex:emoticonIndex];
 				if (nextEmoticonLocation != NSNotFound) {
 					if (nextEmoticonLocation == (*currentLocation + textLength)) {
 						/* The next emoticon is immediately after the candidate we're looking at right now. That means
@@ -353,14 +362,66 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     NSMutableAttributedString   *newMessage = nil; //We avoid creating a new string unless necessary
 	NSString					*serviceClassContext = nil;
     unsigned					currentLocation = 0, messageStringLength;
-	
+	NSCharacterSet				*emoticonStartCharacterSet = [self emoticonStartCharacterSet];
+	NSDictionary				*emoticonIndex = [self emoticonIndex];
+
 	//Determine our service class context
 	if ([context isKindOfClass:[AIContentObject class]]) {
 		serviceClassContext = [[[(AIContentObject *)context destination] service] serviceClass];
 		//If there's no destination, try to use the source for context
 		if (!serviceClassContext) {
 			serviceClassContext = [[[(AIContentObject *)context source] service] serviceClass];
-		}			
+		}
+		
+		//Expand our emoticon information to include any custom emoticons in this chat
+		NSSet *customEmoticons = [[(AIContentObject *)context chat] customEmoticons];
+		if (customEmoticons && ![(AIContentObject *)context isOutgoing]) {
+			/* XXX Note that we only display custom emoticons for incoming messages; we can not set our own custom emotcions
+			 * at this time
+			 */
+			NSMutableCharacterSet	*newEmoticonStartCharacterSet = [emoticonStartCharacterSet mutableCopy];
+			NSMutableDictionary		*newEmoticonIndex = [emoticonIndex mutableCopy];
+
+			NSEnumerator *enumerator = [customEmoticons objectEnumerator];
+			AIEmoticon	 *emoticon;
+			
+			while ((emoticon = [enumerator nextObject])) {
+				NSEnumerator *textEquivalentEnumerator = [[emoticon textEquivalents] objectEnumerator];
+				NSString	 *textEquivalent;
+				while ((textEquivalent = [textEquivalentEnumerator nextObject])) {
+					if ([textEquivalent length]) {
+						NSMutableArray	*subIndex;
+						NSString		*firstCharacterString;
+
+						firstCharacterString = [NSString stringWithFormat:@"%C",[textEquivalent characterAtIndex:0]];
+
+						//'First characters' set
+						[newEmoticonStartCharacterSet addCharactersInString:firstCharacterString];
+						
+						// -- Index --
+						//Get the index according to this emoticon's first character
+						if ((subIndex = [newEmoticonIndex objectForKey:firstCharacterString])) {
+							subIndex = [subIndex mutableCopy];
+						} else {
+							subIndex = [[NSMutableArray alloc] init];
+						}
+						
+						[newEmoticonIndex setObject:subIndex forKey:firstCharacterString];
+						[subIndex release];
+						
+						//Place the emoticon into that index (If it isn't already in there)
+						if (![subIndex containsObject:emoticon]) {
+							[subIndex addObject:emoticon];
+						}
+					}
+				}
+			}
+			
+			//Use our new index and character set for processing emoticons in this message
+			emoticonIndex = [newEmoticonIndex autorelease];
+			emoticonStartCharacterSet = [newEmoticonStartCharacterSet autorelease];
+		}
+
 	} else if ([context isKindOfClass:[AIListContact class]]) {
 		serviceClassContext = [[[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																					   toContact:(AIListContact *)context] service] serviceClass];
@@ -379,7 +440,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 									   intoString:&newMessage
 								 replacementCount:&replacementCount
 							   callingRecursively:NO
-										  context:serviceClassContext];
+							  serviceClassContext:serviceClassContext
+						emoticonStartCharacterSet:emoticonStartCharacterSet
+									emoticonIndex:emoticonIndex];
     }
 
     return (newMessage ? [newMessage autorelease] : inMessage);

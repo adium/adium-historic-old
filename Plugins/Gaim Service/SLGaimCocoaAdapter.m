@@ -333,7 +333,7 @@ AIListContact* contactLookupFromIMConv(GaimConversation *conv)
 	return nil;
 }
 
-AIChat* chatLookupFromConv(GaimConversation *conv)
+AIChat* groupChatLookupFromConv(GaimConversation *conv)
 {
 	AIChat *chat;
 	
@@ -353,6 +353,21 @@ AIChat* chatLookupFromConv(GaimConversation *conv)
 AIChat* existingChatLookupFromConv(GaimConversation *conv)
 {
 	return (conv ? conv->ui_data : nil);
+}
+
+AIChat* chatLookupFromConv(GaimConversation *conv)
+{
+	switch(gaim_conversation_get_type(conv)) {
+		case GAIM_CONV_TYPE_CHAT:
+			return groupChatLookupFromConv(conv);
+			break;
+		case GAIM_CONV_TYPE_IM:
+			return imChatLookupFromConv(conv);
+			break;
+		default:
+			return existingChatLookupFromConv(conv);
+			break;
+	}
 }
 
 AIChat* imChatLookupFromConv(GaimConversation *conv)
@@ -443,7 +458,7 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 				 
 				 We will never find one if we are joining a chat on our own (via the Join Chat dialogue).
 				 
-				 We should never get to this point if we were invited to a chat, as chatLookupFromConv(),
+				 We should never get to this point if we were invited to a chat, as groupChatLookupFromConv(),
 				 which was called when we accepted the invitation and got the chat information from Gaim,
 				 will have associated the GaimConversation with the chat and we would have stopped after
 				 [[chatDict objectForKey:[chat uniqueChatID]] pointerValue] above.

@@ -52,7 +52,7 @@
 		name = [inName retain];
 		textEquivalents = [inTextEquivalents retain];
 		pack = [inPack retain];
-		_cachedAttributedString = nil;
+		_cachedAttributedString = nil;	
     }
 
     return self;
@@ -62,6 +62,7 @@
 - (void)dealloc
 {
     [path release];
+	[image release];
 	[name release];
     [textEquivalents release];
 	[pack release];
@@ -133,6 +134,19 @@
 - (NSImage *)image
 {
     return [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
+}
+
+/*
+ * @brief Change the path to the image for this emoticon
+ */
+- (void)setPath:(NSString *)inPath
+{
+	if (path != inPath) {
+		[path release];
+		path = [inPath retain];
+		
+		[_cachedAttributedString release]; _cachedAttributedString = nil;
+	}
 }
 
 /*!

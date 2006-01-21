@@ -17,7 +17,7 @@
 #import "ESObjectWithStatus.h"
 #import "AIContentTyping.h"
 
-@class AIAccount, AIListObject, AIListContact, AIContentObject;
+@class AIAccount, AIListObject, AIListContact, AIContentObject, AIEmoticon;
 @protocol AIContainingObject;
 
 #define Chat_WillClose							@"Chat_WillClose"
@@ -102,6 +102,8 @@ typedef enum {
 	BOOL				expanded;			//Exanded/Collapsed state of this object
 	
 	BOOL				enableTypingNotifications;
+	
+	NSMutableSet		*customEmoticons;
 }
 
 + (id)chatForAccount:(AIAccount *)inAccount;
@@ -156,4 +158,7 @@ typedef enum {
 
 - (BOOL)isGroupChat;
 - (void)setIsGroupChat:(BOOL)flag;
+
+- (void)addCustomEmoticon:(AIEmoticon *)inEmoticon;
+- (NSSet *)customEmoticons;
 @end

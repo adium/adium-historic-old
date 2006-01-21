@@ -97,6 +97,7 @@ void *adium_gaim_get_handle(void);
 GaimConversation *existingConvLookupFromChat(AIChat *chat);
 GaimConversation *convLookupFromChat(AIChat *chat, id adiumAccount);
 AIChat *imChatLookupFromConv(GaimConversation *conv);
+AIChat *groupChatLookupFromConv(GaimConversation *conv);
 AIChat *existingChatLookupFromConv(GaimConversation *conv);
 AIChat *chatLookupFromConv(GaimConversation *conv);
 AIListContact *contactLookupFromIMConv(GaimConversation *conv);
