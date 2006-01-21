@@ -301,6 +301,8 @@
  */
 - (void)_stopSpeaking
 {
+	[speechArray removeAllObjects];
+
 	[_defaultVoice stopSpeaking];
 	[_variableVoice stopSpeaking];
 }
