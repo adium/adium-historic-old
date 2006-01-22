@@ -458,10 +458,23 @@ static void hostResolvedCallback(CFHostRef theHost, CFHostInfoType typeInfo,  co
 	if ([unconfiguredHostsAndObservers count] == 1) {
 		[self beginMonitorngIPChanges];
 	}
-	
+
 #if CONNECTIVITY_DEBUG
 	NSLog(@"Unable to resolve %@. Now monitoring IP changes for %@",host,unconfiguredHostsAndObservers);
 #endif
+	
+	/*
+	 * There are various ways we can get here when we already have an IP, such as when other network conditions
+	 * need to be negotiated at the router-level before we're actually connected.  In such a case, IPs aren't going to
+	 * change... so we'll check one more time, 5 seconds from the last time we get an unconfigured host call,
+	 * for connectivity.
+	 */
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(queryUnconfiguredHosts)
+											   object:nil];
+	[self performSelector:@selector(queryUnconfiguredHosts)
+			   withObject:nil
+			   afterDelay:5.0];
 }
 
 /*
@@ -485,6 +498,8 @@ static void hostResolvedCallback(CFHostRef theHost, CFHostInfoType typeInfo,  co
  * @brief Attempt to set up reachability monitoring for all currently unconfigured hosts
  *
  * Called by localIPsChangedCallback() in response to a change in the local IP list.
+ *
+ * Also called 5 seconds after one or more unconfigured hosts are added to verify they are actually unreachable.
  *
  * If we are able to schedule reachability monitoring for a given host, its dictionary in unconfiguredHostsAndObservers
  * will be removed.
