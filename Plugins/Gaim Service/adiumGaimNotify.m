@@ -94,12 +94,13 @@ static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who,
 	NSString	*textString = [NSString stringWithUTF8String:text];
 	
 	if (GAIM_CONNECTION_IS_VALID(gc)) {
-		GaimAccount		*account = gc->account;
+		GaimAccount		*account = gaim_connection_get_account(gc);
 		GaimBuddy		*buddy = gaim_find_buddy(account,who);
+		AIAccount		*adiumAccount = accountLookup(account);
 		AIListContact   *theContact = contactLookupFromBuddy(buddy);
 		
-		
-		[accountLookup(account) mainPerformSelector:@selector(updateUserInfo:withData:)
+		textString = processGaimImages(textString, adiumAccount);
+		[adiumAccount mainPerformSelector:@selector(updateUserInfo:withData:)
 										 withObject:theContact
 										 withObject:textString];
 	}

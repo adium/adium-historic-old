@@ -22,73 +22,6 @@
 #import <Adium/AIListContact.h>
 
 #pragma mark Gaim Images
-#define MESSAGE_IMAGE_CACHE_NAME		@"TEMP-Image_%@_%i"
-
-static NSString* _messageImageCachePath(int imageID, CBGaimAccount* adiumAccount)
-{
-    NSString    *messageImageCacheFilename = [NSString stringWithFormat:MESSAGE_IMAGE_CACHE_NAME, [adiumAccount internalObjectID], imageID];
-    return [[[[AIObject sharedAdiumInstance] cachesPath] stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"];
-}
-
-static NSString* _processGaimImages(NSString* inString, CBGaimAccount* adiumAccount)
-{
-	NSScanner			*scanner;
-    NSString			*chunkString = nil;
-    NSMutableString		*newString;
-	NSString			*targetString = @"<IMG ID=\"";
-    int imageID;
-
-    //set up
-	newString = [[NSMutableString alloc] init];
-
-    scanner = [NSScanner scannerWithString:inString];
-    [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
-
-	//A gaim image tag takes the form <IMG ID="12"></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)
-
-	//Parse the incoming HTML
-    while (![scanner isAtEnd]) {
-
-		//Find the beginning of a gaim IMG ID tag
-		if ([scanner scanUpToString:targetString intoString:&chunkString]) {
-			[newString appendString:chunkString];
-		}
-
-		if ([scanner scanString:targetString intoString:&chunkString]) {
-
-			//Get the image ID from the tag
-			[scanner scanInt:&imageID];
-
-			//Scan up to ">
-			[scanner scanString:@"\">" intoString:nil];
-
-			//Get the image, then write it out as a png
-			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
-			if (gaimImage) {
-				NSString			*imagePath = _messageImageCachePath(imageID, adiumAccount);
-
-				//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
-				//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
-				NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_imgstore_get_data(gaimImage)
-																						  length:gaim_imgstore_get_size(gaimImage)]];
-				NSData				*imageTIFFData = [image TIFFRepresentation];
-				NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
-
-				//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string
-				if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]) {
-					[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
-				}
-
-				[image release];
-			} else {
-				//If we didn't get a gaimImage, just leave the tag for now.. maybe it was important?
-				[newString appendString:chunkString];
-			}
-		}
-	}
-
-	return ([newString autorelease]);
-}
 
 #pragma mark Conversations
 static void adiumGaimConvCreate(GaimConversation *conv)
@@ -183,9 +116,7 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who,
 		GaimDebug (@"adiumGaimConvWriteIm: Received %@ from %@", messageString, [[chat listObject] UID]);
 
 		//Process any gaim imgstore references into real HTML tags pointing to real images
-		if ([messageString rangeOfString:@"<IMG ID=\"" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-			messageString = _processGaimImages(messageString, adiumAccount);
-		}
+		messageString = processGaimImages(messageString, adiumAccount);
 
 		messageDict = [NSDictionary dictionaryWithObjectsAndKeys:messageString,@"Message",
 			[NSNumber numberWithInt:flags],@"GaimMessageFlags",

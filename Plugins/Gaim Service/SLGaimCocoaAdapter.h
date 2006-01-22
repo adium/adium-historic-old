@@ -105,3 +105,6 @@ AIListContact *contactLookupFromBuddy(GaimBuddy *buddy);
 GaimAccount *accountLookupFromAdiumAccount(CBGaimAccount *adiumAccount);
 CBGaimAccount *accountLookup(GaimAccount *acct);
 NSMutableDictionary *get_chatDict(void);
+
+//Images
+NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount);
