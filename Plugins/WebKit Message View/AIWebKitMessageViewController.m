@@ -335,7 +335,7 @@ static NSArray *draggedTypes = nil;
 	[webView setUIDelegate:self];
 	[webView setDraggingDelegate:self];
 	[webView setMaintainsBackForwardList:NO];
-	
+
 	if (!draggedTypes) {
 		draggedTypes = [[NSArray alloc] initWithObjects:
 			NSFilenamesPboardType,
@@ -424,7 +424,8 @@ static NSArray *draggedTypes = nil;
 	} else {
 		[messageStyle setCustomBackgroundColor:nil];
 	}
-	
+	[webView setDrawsBackground:![[self messageStyle] isBackgroundTransparent]];
+
 	//Update webview font settings
 	NSString	*fontFamily = [prefDict objectForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:activeStyle]];
 	[webView setFontFamily:(fontFamily ? fontFamily : [messageStyle defaultFontFamily])];

@@ -20,7 +20,11 @@
 	id		draggingDelegate;
 	BOOL	allowsDragAndDrop;
 	BOOL	shouldForwardEvents;
+	BOOL	transparentBackground;
 }
+
+- (void)setDrawsBackground:(BOOL)flag;
+- (BOOL)drawsBackground;
 
 - (void)setFontFamily:(NSString *)familyName;
 - (NSString *)fontFamily;

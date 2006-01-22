@@ -57,6 +57,7 @@ typedef enum {
 
 	//Style settings
 	BOOL				allowsCustomBackground;
+	BOOL				transparentDefaultBackground;
 	BOOL				allowsUserIcons;
 	BOOL				usingCustomBaseHTML;
 
@@ -88,6 +89,7 @@ typedef enum {
 
 //Settings
 - (BOOL)allowsCustomBackground;
+- (BOOL)isBackgroundTransparent;
 - (NSString *)defaultFontFamily;
 - (NSNumber *)defaultFontSize;
 - (BOOL)hasHeader;

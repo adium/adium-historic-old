@@ -107,6 +107,11 @@
 
 	//Observe preference changes and set our initial preferences
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	
+	//Allow the alpha component to be set for our background color
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
+	
+	[self configureControlDimming];
 }
 
 /*!
@@ -114,6 +119,9 @@
  */
 - (void)viewWillClose
 {
+	//Hide the alpha component
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
+	
 	[[adium notificationCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[previewListObjectsDict release]; previewListObjectsDict = nil;
@@ -255,7 +263,17 @@
 												 forKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]
 												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		}
+		
+		[self configureControlDimming];
 	}
+}
+
+- (void)configureControlDimming
+{
+	BOOL customBackground = [checkBox_useCustomBackground state];
+	[popUp_backgroundImageType setEnabled:customBackground];
+	[imageView_backgroundImage setEnabled:customBackground];
+	[colorWell_customBackgroundColor setEnabled:customBackground];
 }
 
 /*!
@@ -575,7 +593,7 @@
 												 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
 											  message:message
 											autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
-			
+
 			//AIContentMessage won't know whether the message is outgoing unless we tell it since neither our source
 			//nor our destination are AIAccount objects.
 			//[content _setIsOutgoing:outgoing];

@@ -91,6 +91,8 @@
 
 		//Style flags
 		allowsCustomBackground = ![[styleBundle objectForInfoDictionaryKey:@"DisableCustomBackground"] boolValue];
+		transparentDefaultBackground = [[styleBundle objectForInfoDictionaryKey:@"DefaultBackgroundIsTransparent"] boolValue];
+
 		combineConsecutive = ![[styleBundle objectForInfoDictionaryKey:@"DisableCombineConsecutive"] boolValue];
 
 		NSNumber *tmpNum = [styleBundle objectForInfoDictionaryKey:@"ShowsUserIcons"];
@@ -155,6 +157,16 @@
 - (BOOL)allowsCustomBackground
 {
 	return allowsCustomBackground;
+}
+
+/*!
+ * @breif Style has a transparent background
+ */
+- (BOOL)isBackgroundTransparent
+{
+	//Our custom background is only transparent if the user has set a custom color with an alpha component less than 1.0
+	return ((!customBackgroundColor && transparentDefaultBackground) ||
+		   (customBackgroundColor && [customBackgroundColor alphaComponent] < 0.99));
 }
 
 /*!
@@ -1023,7 +1035,9 @@
 					}
 				}
 				if (customBackgroundColor) {
-					[bodyTag appendString:[NSString stringWithFormat:@"background-color: #%@; ", [customBackgroundColor hexString]]];
+					float red, green, blue, alpha;
+					[customBackgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
+					[bodyTag appendString:[NSString stringWithFormat:@"background-color: rgba(%i, %i, %i, %f); ", (int)(red * 255.0), (int)(green * 255.0), (int)(blue * 255.0), alpha]];
 				}
  			}
 			
