@@ -43,14 +43,21 @@
 {
 	[super drawRect:rect];
 	
-	//Only reset the shadow if we're transparent
-	if (transparentBackground) {
+	//Only reset the shadow if we're transparent and not currently resizing
+	if (transparentBackground && ![self inLiveResize]) {
 		//This happens after the next run loop to ensure that we invalidate the shadow after all of our subviews have drawn
 		[[self window] performSelector:@selector(invalidateShadow)
 							withObject:nil
 							afterDelay:0
 							   inModes:[NSArray arrayWithObjects:NSDefaultRunLoopMode, NSEventTrackingRunLoopMode, nil]];
 	}
+}
+
+- (void)viewDidEndLiveResize
+{
+	[self setNeedsDisplay:YES];
+	
+	[super viewDidEndLiveResize];
 }
 
 //Background Drawing ---------------------------------------------------------------------------------------------------
