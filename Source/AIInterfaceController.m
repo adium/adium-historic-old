@@ -974,7 +974,7 @@
     NSAttributedString                  *displayName = [[NSAttributedString alloc] initWithString:[object displayName]
 																					   attributes:titleDict];
 	NSAttributedString					*filtedDisplayName = [[adium contentController] filterAttributedString:displayName
-																							   usingFilterType:AIFilterDisplay
+																							   usingFilterType:AIFilterTooltips
 																									 direction:AIFilterIncoming
 																									   context:nil];
 	
@@ -1158,7 +1158,7 @@
 		
         //Run the entry through the filters and add it to tipString
 		entryString = [[[adium contentController] filterAttributedString:entryString
-														 usingFilterType:AIFilterDisplay
+														 usingFilterType:AIFilterTooltips
 															   direction:AIFilterIncoming
 																 context:object] mutableCopy];
 		
