@@ -272,6 +272,11 @@
 	//scrollView_messages is originally a placeholder; replace it with controllerView_messages
 	[controllerView_messages setFrame:[scrollView_messages documentVisibleRect]];
 	[[customView_messages superview] replaceSubview:customView_messages with:controllerView_messages];
+
+	//This is what draws our transparent background
+	//Technically, it could be set in MessageView.nib, too
+	[scrollView_messages setBackgroundColor:[NSColor clearColor]];
+
 	[controllerView_messages setNextResponder:textView_outgoing];
 }
 

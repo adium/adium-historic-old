@@ -88,7 +88,10 @@
 		
 		//Load our window
 		myWindow = [self window];
-		
+
+		//Disable the optimization for opaque windows since ours might not be
+		[myWindow setOpaque:NO];
+
 		//Tab hiding suppression (used to force tab bars visible when a drag is occuring)
 		tabBarIsVisible = YES;
 		supressHiding = NO;
@@ -297,7 +300,7 @@
 	}
 	
 	[inTabViewItem setContainer:self];
-
+	
 	if (!silent) [[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
 }
 

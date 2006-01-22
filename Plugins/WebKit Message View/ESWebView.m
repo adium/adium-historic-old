@@ -16,6 +16,11 @@
 
 #import "ESWebView.h"
 
+@interface WebView (PRIVATE)
+- (void)setDrawsBackground:(BOOL)flag;
+- (BOOL)drawsBackground;
+@end
+
 @interface ESWebView (PRIVATE)
 - (void)forwardSelector:(SEL)selector withObject:(id)object;
 @end
@@ -24,14 +29,46 @@
 
 - (id)initWithFrame:(NSRect)frameRect frameName:(NSString *)frameName groupName:(NSString *)groupName
 {
-	[super initWithFrame:frameRect frameName:frameName groupName:groupName];
-
-	draggingDelegate = nil;
-	allowsDragAndDrop = YES;
-	shouldForwardEvents = YES;
-
+	if ((self = [super initWithFrame:frameRect frameName:frameName groupName:groupName])) {
+		draggingDelegate = nil;
+		allowsDragAndDrop = YES;
+		shouldForwardEvents = YES;
+		transparentBackground = (![self drawsBackground]);
+	}
+	
 	return self;
 }
+
+- (void)drawRect:(NSRect)rect
+{
+	[super drawRect:rect];
+	
+	//Only reset the shadow if we're transparent
+	if (transparentBackground) {
+		//This happens after the next run loop to ensure that we invalidate the shadow after all of our subviews have drawn
+		[[self window] performSelector:@selector(invalidateShadow)
+							withObject:nil
+							afterDelay:0
+							   inModes:[NSArray arrayWithObjects:NSDefaultRunLoopMode, NSEventTrackingRunLoopMode, nil]];
+	}
+}
+
+//Background Drawing ---------------------------------------------------------------------------------------------------
+#pragma mark Background Drawing
+- (void)setDrawsBackground:(BOOL)flag
+{
+	if ([super respondsToSelector:@selector(setDrawsBackground:)]) {
+		[super setDrawsBackground:flag];
+		transparentBackground = !flag;
+	}
+}
+- (BOOL)drawsBackground
+{
+	BOOL flag = YES;
+	if ([super respondsToSelector:@selector(drawsBackground)]) flag = [super drawsBackground];
+	return flag;
+}
+
 //Font Family ----------------------------------------------------------------------------------------------------------
 #pragma mark Font Family
 - (void)setFontFamily:(NSString *)familyName
