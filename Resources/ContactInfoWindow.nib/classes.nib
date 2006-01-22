@@ -1,15 +1,6 @@
 {
     IBClasses = (
         {
-            CLASS = AIAbstractListWindowController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                contactListView = AIMultiCellOutlineView; 
-                "scrollView_contactList" = AIAutoScrollView; 
-            }; 
-            SUPERCLASS = AIWindowController; 
-        }, 
-        {
             CLASS = AIAlternatingRowOutlineView; 
             LANGUAGE = ObjC; 
             OUTLETS = {lastSelectedRowIndexes = id; }; 
@@ -22,7 +13,7 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            ACTIONS = {addContact = id; closeWindow = id; removeContact = id; }; 
+            ACTIONS = {addContact = id; removeContact = id; }; 
             CLASS = AIContactInfoWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -30,8 +21,10 @@
                 "button_removeContact" = NSButton; 
                 contactListView = AIListOutlineView; 
                 "drawer_metaContact" = NSDrawer; 
-                "imageView_userIcon" = ESImageViewWithImagePicker; 
+                "imageView_userIcon" = AIImageViewWithImagePicker; 
                 "scrollView_contactList" = AIAutoScrollView; 
+                "tabViewItem_accounts" = NSTabViewItem; 
+                "tabViewItem_info" = NSTabViewItem; 
                 "tabView_category" = NSTabView; 
                 "textField_accountName" = NSTextField; 
                 "textField_service" = NSTextField; 

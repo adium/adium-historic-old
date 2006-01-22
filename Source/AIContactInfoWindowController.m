@@ -51,6 +51,8 @@
 
 - (void)localizeTabViewItemTitles;
 - (void)configureDrawer;
+- (void)configureVisiblityOfTabViewItemsForListObject:(AIListObject *)inObject;
+- (void)configurePanes:(NSArray *)inPanes;
 - (void)setupMetaContactDrawer;
 
 @end
@@ -107,19 +109,17 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	}
 }
 
-//init
-- (id)initWithWindowNibName:(NSString *)windowNibName
-{
-	self = [super initWithWindowNibName:windowNibName];
-
-	return self;
-}
-
 - (void)dealloc
 {
+	//If we removed the account and info tab view items, we're currently also retaining them
+	if ([tabView_category indexOfTabViewItem:tabViewItem_info] == NSNotFound) {
+		[tabViewItem_accounts release]; tabViewItem_accounts = nil;
+		[tabViewItem_info release]; tabViewItem_info = nil;
+	}
+
 	[displayedObject release]; displayedObject = nil;
 	[loadedPanes release]; loadedPanes = nil;
-
+	
 	[super dealloc];
 }
 
@@ -237,34 +237,35 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	if (tabView == tabView_category) {
-		int	identifier = [[tabViewItem identifier] intValue];
+		int			identifier = [[tabViewItem identifier] intValue];
+		NSArray		*panes = nil;
 
-		//Take focus away from any controls to ensure that they register changes and save
-		//	[[self window] makeFirstResponder:tabView_category];
-		[[self window] makeFirstResponder:nil];
+		//Take focus away from any textual controls to ensure that they register changes and save
+		if ([[[self window] firstResponder] isKindOfClass:[NSText class]]) {
+			[[self window] makeFirstResponder:nil];
+		}
 
 		switch (identifier) {
 			case AIInfo_Profile:
-				[view_Profile setPanes:[self _panesInCategory:AIInfo_Profile]];
+				panes = [self _panesInCategory:AIInfo_Profile];
+				[view_Profile setPanes:panes];
 				break;
 			case AIInfo_Accounts:
-				[view_Accounts setPanes:[self _panesInCategory:AIInfo_Accounts]];
+				panes = [self _panesInCategory:AIInfo_Accounts];
+				[view_Accounts setPanes:panes];
 				break;
 			case AIInfo_Alerts:
-				[view_Alerts setPanes:[self _panesInCategory:AIInfo_Alerts]];
+				panes = [self _panesInCategory:AIInfo_Alerts];
+				[view_Alerts setPanes:panes];
 				break;
 			case AIInfo_Settings:
-				[view_Settings setPanes:[self _panesInCategory:AIInfo_Settings]];
+				panes = [self _panesInCategory:AIInfo_Settings];
+				[view_Settings setPanes:panes];
 				break;
-		}
-
-		//Update the selected toolbar item (10.3 or higher)
-		if ([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]) {
-			[[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
 		}
 
 		//Configure the loaded panes
-		[self configurePanes];
+		[self configurePanes:panes];
 	}
 }
 
@@ -376,24 +377,65 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		[imageView_userIcon setTitle:(inObject ?
 									  [NSString stringWithFormat:AILocalizedString(@"%@'s Image",nil),[inObject displayName]] :
 									  AILocalizedString(@"Image Picker",nil))];
+
 		//Configure our subpanes
-		[self configurePanes];
+		[self configureVisiblityOfTabViewItemsForListObject:inObject];
 
 		//Confiugre the drawer
 		[self configureDrawer];
+		
+		//Reconfigure the currently selected tab view item
+		[self tabView:tabView_category willSelectTabViewItem:[tabView_category selectedTabViewItem]];
+
 	}
 }
 
 //Configure our views
-- (void)configurePanes
+- (void)configurePanes:(NSArray *)panes
 {
 	if (displayedObject) {
-		NSEnumerator		*enumerator = [loadedPanes objectEnumerator];
+		NSEnumerator		*enumerator = [panes objectEnumerator];
 		AIContactInfoPane	*pane;
 
 		while ((pane = [enumerator nextObject])) {
 			[pane configureForListObject:displayedObject];
 		}
+	}
+}
+
+- (void)configureVisiblityOfTabViewItemsForListObject:(AIListObject *)inObject
+{
+	if ([inObject isKindOfClass:[AIListGroup class]]) {
+		//Remove the info and account items for groups
+		if ([tabView_category indexOfTabViewItem:tabViewItem_info] != NSNotFound) {
+			[tabViewItem_accounts retain];
+			[tabViewItem_info retain];
+			
+			//Store the tab view item selected out of accounts or info, if one is selected
+			NSTabViewItem *currentlySelected = [tabView_category selectedTabViewItem];
+			tabViewItem_lastSelectedForListContacts = ((currentlySelected == tabViewItem_accounts || currentlySelected == tabViewItem_info) ?
+													   currentlySelected :
+													   nil);
+
+			[tabView_category removeTabViewItem:tabViewItem_accounts];
+			[tabView_category removeTabViewItem:tabViewItem_info];
+		}
+		
+	} else {
+		//Add the info and account items back in if they are missing
+		if ([tabView_category indexOfTabViewItem:tabViewItem_info] == NSNotFound) {
+			[tabView_category insertTabViewItem:tabViewItem_accounts atIndex:0];
+			[tabView_category insertTabViewItem:tabViewItem_info atIndex:0];
+			
+			//Restore the tab view item last selected for a contact if we have one stored
+			if (tabViewItem_lastSelectedForListContacts) {
+				[tabView_category selectTabViewItem:tabViewItem_lastSelectedForListContacts];
+				tabViewItem_lastSelectedForListContacts = nil;
+			}
+			
+			[tabViewItem_accounts release];
+			[tabViewItem_info release];
+		}			
 	}
 }
 

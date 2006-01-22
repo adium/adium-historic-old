@@ -22,6 +22,11 @@
 
 @interface AIContactInfoWindowController : AIWindowController <AIListControllerDelegate> {	
 	IBOutlet		NSTabView						*tabView_category;
+	
+	IBOutlet		NSTabViewItem					*tabViewItem_info;
+	IBOutlet		NSTabViewItem					*tabViewItem_accounts;
+	NSTabViewItem									*tabViewItem_lastSelectedForListContacts;
+
 	IBOutlet		AIImageViewWithImagePicker		*imageView_userIcon;
 	IBOutlet		NSTextField						*textField_accountName;
 	IBOutlet		NSTextField						*textField_service;
@@ -47,7 +52,6 @@
 + (id)showInfoWindowForListObject:(AIListObject *)listObject;
 + (void)closeInfoWindow;
 - (void)configureForListObject:(AIListObject *)inObject;
-- (void)configurePanes;
 
 - (IBAction)addContact:(id)sender;
 - (IBAction)removeContact:(id)sender;
