@@ -45,11 +45,6 @@
 #import <Adium/AIPathUtilities.h>
 #import "SUUpdater.h"
 
-//Path to Adium's application support preferences
-#define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
-#define ADIUM_SUBFOLDER_OF_APP_SUPPORT		@"Adium 2.0"
-#define ADIUM_SUBFOLDER_OF_LIBRARY			[@"Application Support" stringByAppendingPathComponent:@"Adium 2.0"]
-
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
@@ -104,7 +99,7 @@ static NSString	*prefsCategory;
 	if (!_preferencesFolderPath) {
 		_preferencesFolderPath = [[[[[NSBundle mainBundle] infoDictionary] objectForKey:PORTABLE_ADIUM_KEY] stringByExpandingTildeInPath] retain];
 		if (!_preferencesFolderPath)
-			_preferencesFolderPath = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] retain];
+			_preferencesFolderPath = [[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"] retain];
 	}
 
 	return _preferencesFolderPath;
@@ -634,7 +629,7 @@ static NSString	*prefsCategory;
 
 	defaultManager = [NSFileManager defaultManager];
 	existingResourcePaths = [self resourcePathsForName:name];
-	targetPath = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:name];	
+	targetPath = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:name];	
 	
     /*
 	 If the targetPath doesn't exist, create it, as this method was called to ensure that it exists
@@ -696,7 +691,9 @@ static NSString	*prefsCategory;
 	NSFileManager	*defaultManager = [NSFileManager defaultManager];
 	BOOL			isDir;
 			
-	adiumFolderName = (name ? [ADIUM_SUBFOLDER_OF_LIBRARY stringByAppendingPathComponent:name] : ADIUM_SUBFOLDER_OF_LIBRARY);
+	adiumFolderName = (name ?
+					   [[@"Application Support" stringByAppendingPathComponent:@"Adium 2.0"] stringByAppendingPathComponent:name] :
+					   [@"Application Support" stringByAppendingPathComponent:@"Adium 2.0"]);
 
 	//Find Library directories in all domains except /System (as of Panther, that's ~/Library, /Library, and /Network/Library)
 	librarySearchPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSAllDomainsMask - NSSystemDomainMask, YES);
@@ -708,12 +705,24 @@ static NSString	*prefsCategory;
 		
 		fullPath = [path stringByAppendingPathComponent:adiumFolderName];
 		if (([defaultManager fileExistsAtPath:fullPath isDirectory:&isDir]) &&
-		   (isDir)) {
+			(isDir)) {
 			
 			[pathArray addObject:fullPath];
 		}
 	}
 	
+	/* Check our application support directory directly. It may have been covered by the NSSearchPathForDirectoriesInDomains() search,
+	 * or it may be distinct via the Portable Adium preference.
+	 */
+	path = (name ?
+			[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:name] :
+			[AIAdium applicationSupportDirectory]);
+	if (![pathArray containsObject:adiumFolderName] &&
+		([defaultManager fileExistsAtPath:path isDirectory:&isDir]) &&
+		(isDir)) {
+		[pathArray addObject:path];
+	}
+
 	//Add the path to the resource in Adium's bundle
 	if (name) {
 		path = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:name] stringByExpandingTildeInPath];
