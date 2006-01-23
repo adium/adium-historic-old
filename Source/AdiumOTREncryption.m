@@ -103,13 +103,21 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 	
 	err = otrl_privkey_read(otrg_plugin_userstate, PRIVKEY_PATH);
 	if (err) {
-		NSLog(@"Error reading OTR private keys: %s", gpg_strerror(err));
+		const char *errMsg = gpg_strerror(err);
+		
+		if (errMsg && strcmp(errMsg, "No such file or directory")) {
+			NSLog(@"Error reading %s: %s", PRIVKEY_PATH, errMsg);
+		}
 	}
 
 	err = otrl_privkey_read_fingerprints(otrg_plugin_userstate, STORE_PATH,
 								   NULL, NULL);
 	if (err) {
-		NSLog(@"Error reading OTR fingerprints: %s", gpg_strerror(err));
+		const char *errMsg = gpg_strerror(err);
+		
+		if (errMsg && strcmp(errMsg, "No such file or directory")) {
+			NSLog(@"Error reading %s: %s", STORE_PATH, errMsg);
+		}
 	}
 
 	otrg_ui_update_fingerprint();
