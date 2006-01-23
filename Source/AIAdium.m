@@ -720,7 +720,11 @@ static NSString	*prefsCategory;
 	if (![pathArray containsObject:adiumFolderName] &&
 		([defaultManager fileExistsAtPath:path isDirectory:&isDir]) &&
 		(isDir)) {
-		[pathArray addObject:path];
+		if ([pathArray count]) {
+			[pathArray insertObject:path atIndex:0];
+		} else {
+			[pathArray addObject:path];			
+		}
 	}
 
 	//Add the path to the resource in Adium's bundle
