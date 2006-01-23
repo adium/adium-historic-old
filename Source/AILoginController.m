@@ -72,7 +72,7 @@
     selector = inSelector;
 
     //Open the login preferences
-    loginDict = [NSMutableDictionary dictionaryAtPath:[AIAdium applicationSupportDirectory] withName:LOGIN_PREFERENCES_FILE_NAME create:YES];
+    loginDict = [NSMutableDictionary dictionaryAtPath:[adium applicationSupportDirectory] withName:LOGIN_PREFERENCES_FILE_NAME create:YES];
 
     //Make sure that atleast 1 login name is available.  If not, create the name 'default'
     if ([[self userArray] count] == 0) {
@@ -81,7 +81,7 @@
 
         //Set 'default' as the login of choice
         [loginDict setObject:DEFAULT_USER_NAME forKey:LOGIN_LAST_USER];
-		[loginDict writeToPath:[AIAdium applicationSupportDirectory] withName:LOGIN_PREFERENCES_FILE_NAME];
+		[loginDict writeToPath:[adium applicationSupportDirectory] withName:LOGIN_PREFERENCES_FILE_NAME];
     }
 	
 	//Retrieve the desired user from the command line if possible
@@ -148,7 +148,7 @@
 
     //Save the user directory
     currentUser = [userName retain];
-    userDirectory = [[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:userName] retain];
+    userDirectory = [[[[adium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:userName] retain];
     
     //Tell Adium to complete login
     [target performSelector:selector];
@@ -176,7 +176,7 @@
     BOOL			isDirectory;
 
     //Get the users path
-    userPath = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS];
+    userPath = [[adium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS];
 
     //Build the user array
     userArray = [[NSMutableArray alloc] init];
@@ -205,7 +205,7 @@
     NSParameterAssert(inUserName != nil);
 
     //Create the source and dest paths	
-    sourcePath = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:inUserName];
+    sourcePath = [[[adium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:inUserName];
 	[[NSFileManager defaultManager] trashFileAtPath:sourcePath];
 }
 
@@ -217,7 +217,7 @@
     NSParameterAssert(inUserName != nil);
 
     //Create the user path
-    userPath = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:inUserName];
+    userPath = [[[adium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:inUserName];
     
     //Create a folder for the new user
     [[NSFileManager defaultManager] createDirectoriesForPath:userPath];
@@ -232,8 +232,8 @@
     NSParameterAssert(newName != nil);
 
     //Create the source and dest paths
-    sourcePath = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:oldName];
-    destPath = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:newName];
+    sourcePath = [[[adium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:oldName];
+    destPath = [[[adium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:newName];
 
     //Rename the user's folder (by moving it to a path with a different name)
     [[NSFileManager defaultManager] movePath:sourcePath toPath:destPath handler:nil];

@@ -85,27 +85,6 @@ static NSString	*prefsCategory;
 }
 
 /*!
- * @brief Returns the location of Adium's preference folder
- * 
- * This may be specified in our bundle's info dictionary keyed as PORTABLE_ADIUM_KEY
- * or, by default, be within the system's 'application support' directory.
- */
-+ (NSString *)applicationSupportDirectory
-{
-	//Path to the preferences folder
-	static NSString *_preferencesFolderPath = nil;
-
-    //Determine the preferences path if neccessary
-	if (!_preferencesFolderPath) {
-		_preferencesFolderPath = [[[[[NSBundle mainBundle] infoDictionary] objectForKey:PORTABLE_ADIUM_KEY] stringByExpandingTildeInPath] retain];
-		if (!_preferencesFolderPath)
-			_preferencesFolderPath = [[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"] retain];
-	}
-
-	return _preferencesFolderPath;
-}
-
-/*!
  * @brief Returns the identifier of this build
  */
 + (NSString *)buildIdentifier
@@ -615,6 +594,27 @@ static NSString	*prefsCategory;
 }
 
 /*!
+ * @brief Returns the location of Adium's preference folder
+ * 
+ * This may be specified in our bundle's info dictionary keyed as PORTABLE_ADIUM_KEY
+ * or, by default, be within the system's 'application support' directory.
+ */
+- (NSString *)applicationSupportDirectory
+{
+	//Path to the preferences folder
+	static NSString *_preferencesFolderPath = nil;
+	
+    //Determine the preferences path if neccessary
+	if (!_preferencesFolderPath) {
+		_preferencesFolderPath = [[[[[NSBundle mainBundle] infoDictionary] objectForKey:PORTABLE_ADIUM_KEY] stringByExpandingTildeInPath] retain];
+		if (!_preferencesFolderPath)
+			_preferencesFolderPath = [[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"] retain];
+	}
+	
+	return _preferencesFolderPath;
+}
+
+/*!
  * @brief Create a resource folder in the Library/Application\ Support/Adium\ 2.0 folder.
  *
  * Pass it the name of the folder (e.g. @"Scripts").
@@ -629,7 +629,7 @@ static NSString	*prefsCategory;
 
 	defaultManager = [NSFileManager defaultManager];
 	existingResourcePaths = [self resourcePathsForName:name];
-	targetPath = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:name];	
+	targetPath = [[self applicationSupportDirectory] stringByAppendingPathComponent:name];	
 	
     /*
 	 If the targetPath doesn't exist, create it, as this method was called to ensure that it exists
@@ -715,11 +715,12 @@ static NSString	*prefsCategory;
 	 * or it may be distinct via the Portable Adium preference.
 	 */
 	path = (name ?
-			[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:name] :
-			[AIAdium applicationSupportDirectory]);
+			[[self applicationSupportDirectory] stringByAppendingPathComponent:name] :
+			[self applicationSupportDirectory]);
 	if (![pathArray containsObject:adiumFolderName] &&
 		([defaultManager fileExistsAtPath:path isDirectory:&isDir]) &&
 		(isDir)) {
+		//Our application support directory should always be first
 		if ([pathArray count]) {
 			[pathArray insertObject:path atIndex:0];
 		} else {
