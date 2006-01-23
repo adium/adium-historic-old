@@ -178,7 +178,23 @@ static NSSize		rightCapSize;
 - (void)setSelected:(BOOL)inSelected
 {
     selected = inSelected;
+	
+	/* If we were selected via an area within our close button rect, we should update accordingly. When we originally received the mouseEntered:
+	 * event it was ignored because we weren't selected at the time.
+	 */
+	if (selected) {
+		NSPoint	localPoint;
+
+		//Local mouse location
+		localPoint = [[view window] convertScreenToBase:[NSEvent mouseLocation]];
+		localPoint = [view convertPoint:localPoint fromView:nil];
+
+		if (NSPointInRect(localPoint, [self _closeButtonRect])) {
+			[self setHoveringClose:YES];
+		}
+	}
 }
+
 - (BOOL)isSelected{
     return selected;
 }
