@@ -69,7 +69,6 @@
 + (NSString *)buildIdentifier;
 + (NSDate *)buildDate;
 
-+ (NSString *)applicationSupportDirectory;
 - (AIAccountController *)accountController;
 - (AIChatController *)chatController;
 - (AIContactController *)contactController;
@@ -100,6 +99,7 @@
 - (IBAction)confirmQuit:(id)sender;
 - (IBAction)launchJeeves:(id)sender;
 
+- (NSString *)applicationSupportDirectory;
 - (NSString *)createResourcePathForName:(NSString *)name;
 - (NSArray *)resourcePathsForName:(NSString *)name;
 - (NSArray *)allResourcesForName:(NSString *)name withExtensions:(id)extensions;

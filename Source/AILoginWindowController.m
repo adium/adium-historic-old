@@ -106,7 +106,7 @@
     NSString 		*selectedUserName = [userArray objectAtIndex:[tableView_userList selectedRow]];
 
     //Open the login preferences
-    loginDict = [NSMutableDictionary dictionaryAtPath:[AIAdium applicationSupportDirectory]
+    loginDict = [NSMutableDictionary dictionaryAtPath:[adium applicationSupportDirectory]
                                          withName:LOGIN_PREFERENCES_FILE_NAME
                                            create:YES];
 
@@ -117,7 +117,7 @@
     [loginDict setObject:selectedUserName forKey:LOGIN_LAST_USER];
 
     //Save the login preferences
-    [loginDict writeToPath:[AIAdium applicationSupportDirectory]
+    [loginDict writeToPath:[adium applicationSupportDirectory]
                            withName:LOGIN_PREFERENCES_FILE_NAME];
 
     //Login
@@ -224,7 +224,7 @@
     NSString		*lastLogin;
 
     //Open the login preferences
-    loginDict = [NSDictionary dictionaryAtPath:[AIAdium applicationSupportDirectory]
+    loginDict = [NSDictionary dictionaryAtPath:[adium applicationSupportDirectory]
                                          withName:LOGIN_PREFERENCES_FILE_NAME
                                            create:YES];
 
