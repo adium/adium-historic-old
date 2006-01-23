@@ -222,7 +222,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	AIAdium			*sharedAdiumInstance = [AIObject sharedAdiumInstance];
 
 	//If we don't find one, create a path to a bundle in the application support directory
-	path = [[[adium applicationSupportDirectory] stringByAppendingPathComponent:folder] stringByAppendingPathComponent:fileName];
+	path = [[[[AIObject sharedAdiumInstance] applicationSupportDirectory] stringByAppendingPathComponent:folder] stringByAppendingPathComponent:fileName];
 	if ([AIXtrasManager createXtraBundleAtPath:path])
 		path = [path stringByAppendingPathComponent:@"Contents/Resources/Data.plist"];
 	
@@ -264,7 +264,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 {
 	BOOL		success;
 	
-	NSString	*destFolder = [[adium applicationSupportDirectory] stringByAppendingPathComponent:folder];
+	NSString	*destFolder = [[[AIObject sharedAdiumInstance] applicationSupportDirectory] stringByAppendingPathComponent:folder];
 	NSString	*newFileName = [newName stringByAppendingPathExtension:extension];
 	
 	success = [[NSFileManager defaultManager] movePath:[[AIObject sharedAdiumInstance] pathOfPackWithName:setName
@@ -285,7 +285,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	BOOL		success;
 	
 	//Duplicate the set
-	NSString	*destFolder = [[adium applicationSupportDirectory] stringByAppendingPathComponent:folder];
+	NSString	*destFolder = [[[AIObject sharedAdiumInstance] applicationSupportDirectory] stringByAppendingPathComponent:folder];
 	NSString	*newFileName = [newName stringByAppendingPathExtension:extension];
 	
 	success = [[NSFileManager defaultManager] copyPath:[[AIObject sharedAdiumInstance] pathOfPackWithName:setName
