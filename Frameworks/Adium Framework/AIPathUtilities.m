@@ -15,6 +15,7 @@
  */
 
 #import "AIPathUtilities.h"
+#import "AIObject.h"
 
 #define CACHES_DIRECTORY			@"Caches"
 #define ADIUM_CACHES				@"Adium"
@@ -115,6 +116,21 @@ AISearchPathForDirectoriesInDomains(unsigned directory, unsigned domainMask, BOO
 			}
 		} else {
 			[dirs addObjectsFromArray:searchPaths];
+		}
+		
+		/* If we are retrieving directories in the user domain, be sure to include the current Adium app support folder, which
+		 * may not be covered above if we are installed as Portable Adium
+		 */
+		if (adiumResourceName &&
+			(domainMask & NSUserDomainMask)) {
+			NSString *path = [[[AIObject sharedAdiumInstance] applicationSupportDirectory] stringByAppendingPathComponent:adiumResourceName];
+
+			//Our application support directory should always be first
+			if ([dirs count]) {
+				[dirs insertObject:path atIndex:0];
+			} else {
+				[dirs addObject:path];			
+			}
 		}
 	}
 
