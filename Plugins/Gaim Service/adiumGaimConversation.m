@@ -275,9 +275,9 @@ static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users, GLis
 
 		[accountLookup(conv->account) mainPerformSelector:@selector(addUsersArray:withFlags:andAliases:newArrivals:toChat:)
 											  withObjects:usersArray, flagsArray, 
-														  aliasesArray, [NSNumber numberWithBool:new_arrivals],
-														  existingChatLookupFromConv(conv)];
-
+			aliasesArray, [NSNumber numberWithBool:new_arrivals],
+			existingChatLookupFromConv(conv), nil];
+		
 	} else {
 		GaimDebug (@"adiumGaimConvChatAddUsers: IM");
 	}
