@@ -212,6 +212,7 @@
 	[self performSelectorOnMainThread:@selector(handleInvocation:) withObject:invocation waitUntilDone:flag];
 }
 
+//nil terminated
 - (void)mainPerformSelector:(SEL)aSelector withObjects:(id)argument1, ...
 {	
 	NSInvocation	*invocation;
@@ -225,7 +226,7 @@
 	va_start(args, argument1);
 	
 	id anArgument;
-	while ((anArgument = va_arg(args, id)) != NULL) {
+	while ((anArgument = va_arg(args, id))) {
 		[invocation setArgument:&anArgument atIndex:index++];
 	}
 
