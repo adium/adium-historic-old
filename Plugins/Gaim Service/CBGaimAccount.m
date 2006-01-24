@@ -762,8 +762,10 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 {
 	AIChat *chat = [inContentTyping chat];
 
-	[gaimThread sendTyping:[inContentTyping typingState] inChat:chat];
-	
+	if (![chat isGroupChat]) {
+		[gaimThread sendTyping:[inContentTyping typingState] inChat:chat];
+	}
+
 	return YES;
 }
 
