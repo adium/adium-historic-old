@@ -717,7 +717,7 @@ static NSString	*prefsCategory;
 	path = (name ?
 			[[self applicationSupportDirectory] stringByAppendingPathComponent:name] :
 			[self applicationSupportDirectory]);
-	if (![pathArray containsObject:adiumFolderName] &&
+	if (![pathArray containsObject:path] &&
 		([defaultManager fileExistsAtPath:path isDirectory:&isDir]) &&
 		(isDir)) {
 		//Our application support directory should always be first
