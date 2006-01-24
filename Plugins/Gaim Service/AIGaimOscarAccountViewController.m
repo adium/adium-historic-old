@@ -18,6 +18,7 @@
 #import "CBGaimAccount.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AITextViewWithPlaceholder.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIMessageEntryTextView.h>
 
