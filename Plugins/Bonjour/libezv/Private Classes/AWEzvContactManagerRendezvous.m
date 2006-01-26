@@ -653,17 +653,21 @@ NSData *decode_dns(char* buffer, unsigned int len )
     
 	if (!replyName)
 		return;
-	
+
+	NSString *replyNameString = [NSString stringWithUTF8String:replyName];
+	if (!replyNameString)
+		return;
+
     if (resultType == DNSServiceBrowserReplyRemoveInstance) {
 		/* delete the contact */
-        contact = [contacts objectForKey:[NSString stringWithUTF8String:replyName]];
+        contact = [contacts objectForKey:replyNameString];
 		if (!contact)
 			return;
 		
 		[[client client] userLoggedOut:contact];
 		
 		/* remove the contact from our data structures */
-		[contacts removeObjectForKey:[NSString stringWithUTF8String:replyName]];
+		[contacts removeObjectForKey:replyNameString];
 		return;
     } else if (resultType != DNSServiceBrowserReplyAddInstance) {
 		AWEzvLog(@"Unknown rendezvous browser return type");
@@ -674,10 +678,10 @@ NSData *decode_dns(char* buffer, unsigned int len )
     
     /* initialise contact */
     contact = [[AWEzvContact alloc] init];
-    [contact setUniqueID:[NSString stringWithUTF8String:replyName]];
+    [contact setUniqueID:replyNameString];
     [contact setManager:self];
     /* save contact in dictionary */
-    [contacts setObject:contact forKey:[NSString stringWithUTF8String:replyName]];
+    [contacts setObject:contact forKey:replyNameString];
     
     /* and resolve contact */
     /* initialise context */
