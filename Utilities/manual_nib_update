@@ -22,6 +22,7 @@ Italian \
 Japanese \
 Norwegian \
 Russian \
+Spanish \
 Swedish \
 cs \
 is \
@@ -50,6 +51,7 @@ if [ -d $lang.lproj ] ; then
     rm d.d
     rm -rf $ORIGINAL_NIBNAME.nib
     rm -rf $NEW_NIBNAME.nib
+    rm $NIBNAME.nib/info.nib
     cd ..
 	echo Updated $lang
 fi
