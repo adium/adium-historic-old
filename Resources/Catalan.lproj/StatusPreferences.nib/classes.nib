@@ -1,6 +1,11 @@
 {
     IBClasses = (
         {
+            CLASS = AIAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIOutlineView; 
+        }, 
+        {
             CLASS = AIAlternatingRowTableView; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSTableView; 
@@ -36,28 +41,30 @@
             SUPERCLASS = AIObject; 
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {CLASS = AISmartStepper; LANGUAGE = ObjC; SUPERCLASS = NSStepper; }, 
         {
-            ACTIONS = {deleteState = id; editState = id; newState = id; }; 
+            ACTIONS = {addGroup = id; deleteState = id; editState = id; newState = id; }; 
             CLASS = ESStatusPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_addGroup" = NSButton; 
                 "button_deleteState" = NSButton; 
                 "button_editState" = NSButton; 
                 "checkBox_autoAway" = NSButton; 
                 "checkBox_fastUserSwitching" = NSButton; 
                 "checkBox_idle" = NSButton; 
                 "checkBox_showStatusWindow" = NSButton; 
+                "outlineView_stateList" = NSOutlineView; 
                 "popUp_autoAwayStatusState" = NSPopUpButton; 
                 "popUp_fastUserSwitchingStatusState" = NSPopUpButton; 
                 "scrollView_stateList" = AIAutoScrollView; 
                 "stepper_autoAwayMinutes" = NSStepper; 
                 "stepper_idleMinutes" = NSStepper; 
-                "tableView_stateList" = NSTableView; 
                 "textField_autoAwayMinutes" = NSTextField; 
                 "textField_idleMinutes" = NSTextField; 
             }; 
