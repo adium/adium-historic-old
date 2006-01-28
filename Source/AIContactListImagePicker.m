@@ -12,6 +12,7 @@
 #import "AIAccountController.h"
 #import "AIContactController.h"
 #import "AIContactListRecentImagesWindowController.h"
+#import <AIUtilities/AIBezierPathAdditions.h>
 
 #define ARROW_WIDTH		8
 #define ARROW_HEIGHT	(ARROW_WIDTH/2.0)
@@ -69,12 +70,18 @@
 
 - (void)drawRect:(NSRect)inRect
 {
+	[NSGraphicsContext saveGraphicsState];
+
+	NSBezierPath	*clipPath = [NSBezierPath bezierPathWithRoundedRect:inRect radius:3];
+	//Ensure we have an even/odd winding rule in effect
+	[clipPath setWindingRule:NSEvenOddWindingRule];
+	[clipPath addClip];
+
 	[super drawRect:inRect];
 	
 	if (hovered) {
-		NSBezierPath	*selfPath = [NSBezierPath bezierPathWithRect:inRect];
 		[[[NSColor blackColor] colorWithAlphaComponent:0.40] set];
-		[selfPath fill];
+		[clipPath fill];
 
 		//Draw the arrow
 		NSBezierPath	*arrowPath = [NSBezierPath bezierPath];
@@ -87,6 +94,8 @@
 		[[NSColor whiteColor] set];
 		[arrowPath fill];
 	}
+	
+	[NSGraphicsContext restoreGraphicsState];
 }
 
 #pragma mark Mouse movement

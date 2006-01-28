@@ -19,6 +19,7 @@
 	NSMutableParagraphStyle			*statusParagraphStyle;
 	
 	BOOL					hovered;
+	float					hoveredFraction;
 }
 
 - (void)setTitle:(NSString *)inTitle;
