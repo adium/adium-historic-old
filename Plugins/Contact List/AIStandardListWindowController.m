@@ -36,7 +36,7 @@
 
 @interface AIStandardListWindowController (PRIVATE)
 - (void)_configureToolbar;
-- (void)activeStateChanged:(NSNotification *)notification;
+- (void)updateStatusMenuSelection:(NSNotification *)notification;
 - (void)updateImagePicker;
 - (void)updateNameView;
 - (void)repositionImagePickerToPosition:(ContactListImagePickerPosition)desiredImagePickerPosition;
@@ -94,10 +94,15 @@
 
 	//Update the selections in our state menu when the active state changes
 	[[adium notificationCenter] addObserver:self
-								   selector:@selector(activeStateChanged:)
+								   selector:@selector(updateStatusMenuSelection::)
 									   name:AIStatusActiveStateChangedNotification
 									 object:nil];
-	[self activeStateChanged:nil];
+	//Update our state menus when the status icon set changes
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(updateStatusMenuSelection:)
+									   name:AIStatusIconSetDidChangeNotification
+									 object:nil];
+	[self updateStatusMenuSelection:nil];
 	
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
 	
@@ -187,11 +192,12 @@
 /*
  * Update popup button to match selected menu item
  */
-- (void)activeStateChanged:(NSNotification *)notification
+- (void)updateStatusMenuSelection:(NSNotification *)notification
 {
 	AIStatus	*activeStatus = [[adium statusController] activeStatusState];
 	NSString	*title = [activeStatus title];
 	if (!title) NSLog(@"Warning: Title for %@ is (null)",activeStatus);
+
 	[statusMenuView setTitle:(title ? title : @"")];
 	[statusMenuView setImage:[activeStatus iconOfType:AIStatusIconList
 											direction:AIIconFlipped]];
