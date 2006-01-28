@@ -32,12 +32,13 @@
 #import "AIContactListImagePicker.h"
 #import "AIContactListNameView.h"
 
-#define TOOLBAR_CONTACT_LIST				@"ContactList"				//Toolbar identifier
+#define TOOLBAR_CONTACT_LIST				@"ContactList 1.0"				//Toolbar identifier
 
 @interface AIStandardListWindowController (PRIVATE)
 - (void)_configureToolbar;
 - (void)activeStateChanged:(NSNotification *)notification;
 - (void)updateImagePicker;
+- (void)updateNameView;
 - (void)repositionImagePickerToPosition:(ContactListImagePickerPosition)desiredImagePickerPosition;
 @end
 
@@ -102,6 +103,53 @@
 	
 	//Set our minimum size here rather than in the nib to avoid conflicts with autosizing
 	[[self window] setMinSize:NSMakeSize(135, 60)];
+			
+	[self updateNameView];
+}
+
+- (void)updateNameView
+{
+	NSString *alias = [[adium preferenceController] preferenceForKey:@"LocalAccountAlias"
+																   group:GROUP_ACCOUNT_STATUS];
+	if (!alias || ![alias length]) {
+		alias = [[adium preferenceController] preferenceForKey:@"DefaultLocalAccountAlias"
+															group:GROUP_ACCOUNT_STATUS];
+	}
+	
+	if (!alias || ![alias length]) {
+		NSArray		 *accounts = [[adium accountController] accounts];
+		NSEnumerator *enumerator;
+		AIAccount	 *account;
+		
+		if ([accounts count]) {
+			//Online?
+			enumerator = [accounts objectEnumerator];
+			while ((account = [enumerator nextObject])) {
+				if ([account online]) {
+					alias = [account displayName];
+					break;
+				}
+			}
+			
+			if (!alias || ![alias length]) {
+				//Enabled?
+				enumerator = [accounts objectEnumerator];
+				while ((account = [enumerator nextObject])) {
+					if ([account enabled]) {
+						alias = [account displayName];
+						break;
+					}
+				}
+			}
+			
+			//First one
+			if (!alias || ![alias length]) {
+				alias = [[accounts objectAtIndex:0] displayName];
+			}
+		}
+	}
+
+	[nameView setStringValue:((alias && [alias length]) ? alias : @"Adium")];		
 }
 
 /*!
@@ -142,7 +190,9 @@
 - (void)activeStateChanged:(NSNotification *)notification
 {
 	AIStatus	*activeStatus = [[adium statusController] activeStatusState];
-	[statusMenuView setTitle:[activeStatus title]];
+	NSString	*title = [activeStatus title];
+	if (!title) NSLog(@"Warning: Title for %@ is (null)",activeStatus);
+	[statusMenuView setTitle:(title ? title : @"")];
 	[statusMenuView setImage:[activeStatus iconOfType:AIStatusIconList
 											direction:AIIconFlipped]];
 
@@ -338,12 +388,9 @@
     [toolbar setDelegate:self];
     [toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
     [toolbar setSizeMode:NSToolbarSizeModeSmall];
-    [toolbar setVisible:NO];
-    [toolbar setAllowsUserCustomization:YES];
-    [toolbar setAutosavesConfiguration:YES];
-	
-    //
-    toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"ContactList",nil]] retain];
+    [toolbar setVisible:YES];
+    [toolbar setAllowsUserCustomization:NO];
+    [toolbar setAutosavesConfiguration:NO];
 	
 	/* Seemingly randomling, setToolbar: may throw:
 	 * Exception:	NSInternalInconsistencyException
@@ -363,22 +410,22 @@
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
 {
-    return [AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier];
+	NSToolbarItem *statusAndIconItem = [[NSToolbarItem alloc] initWithItemIdentifier:@"StatusAndIcon"];
+	[statusAndIconItem setView:view_statusAndImage];
+	[statusAndIconItem setMinSize:NSMakeSize(50, [view_statusAndImage bounds].size.height)];
+	[statusAndIconItem setMaxSize:NSMakeSize(100000, [view_statusAndImage bounds].size.height)];
+
+	return [statusAndIconItem autorelease];
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    return[NSArray arrayWithObjects:@"OfflineContacts", NSToolbarSeparatorItemIdentifier,
-		@"ShowInfo", @"NewMessage", NSToolbarFlexibleSpaceItemIdentifier, @"AddContact", nil];
+    return [NSArray arrayWithObject:@"StatusAndIcon"];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
 {
-    return [[toolbarItems allKeys] arrayByAddingObjectsFromArray:
-		[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier,
-			NSToolbarSpaceItemIdentifier,
-			NSToolbarFlexibleSpaceItemIdentifier,
-			NSToolbarCustomizeToolbarItemIdentifier, nil]];
+    return [NSArray arrayWithObject:@"StatusAndIcon"];
 }
 
 - (void)windowDidToggleToolbarShown:(NSWindow *)sender

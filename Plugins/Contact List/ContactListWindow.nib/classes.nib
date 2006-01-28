@@ -45,6 +45,7 @@
                 imagePicker = AIContactListImagePicker; 
                 nameView = AIContactListNameView; 
                 statusMenuView = AIContactListStatusMenuView; 
+                "view_statusAndImage" = NSView; 
             }; 
             SUPERCLASS = AIListWindowController; 
         }, 
