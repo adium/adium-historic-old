@@ -315,7 +315,30 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 {
 	[self mainPerformSelector:@selector(mainThreadUserWithUID:typingNotificationNumber:)
 				   withObject:[contact uniqueID]
-				   withObject:((typingStatus == AWEzvIsTyping) ? [NSNumber numberWithInt:AITyping] : nil)];;
+				   withObject:((typingStatus == AWEzvIsTyping) ? [NSNumber numberWithInt:AITyping] : nil)];
+}
+
+/*
+ * @brief A message could not be sent
+ *
+ * @param inContactUniqueID Unique ID of the contact to whom the message could not be sent
+ */
+- (void)mainThreadCouldNotSendToUserWithUID:(NSString *)inContactUniqueID
+{
+    AIListContact   *listContact;
+    AIChat			*chat;
+
+    listContact = [[adium contactController] existingContactWithService:service
+																account:self
+																	UID:inContactUniqueID];
+	chat = [[adium chatController] existingChatWithContact:listContact];
+
+	[chat setStatusObject:[NSNumber numberWithInt:AIChatMessageSendingUserNotAvailable]
+				   forKey:KEY_CHAT_ERROR
+				   notify:NotifyNow];
+	[chat setStatusObject:nil
+				   forKey:KEY_CHAT_ERROR
+				   notify:NotifyNever];
 }
 
 - (void)user:(AWEzvContact *)contact typeAhead:(NSString *)message withHtml:(NSString *)html {
@@ -329,12 +352,20 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
 - (void)reportError:(NSString *)error ofLevel:(AWEzvErrorSeverity)severity
 {
-
+	NSLog(@"Bonjour Error (%i): %@", severity, error);
+	AILog(@"Bonjour Error (%i): %@", severity, error);
 }
 
-- (void)reportError:(NSString *)error ofLevel:(AWEzvErrorSeverity)severity forUser:(NSString *)contact
+- (void)reportError:(NSString *)error ofLevel:(AWEzvErrorSeverity)severity forUser:(NSString *)contactUniqueID
 {
-
+	if ([error isEqualToString:@"Could Not Send"]) {
+		[self mainPerformSelector:@selector(mainThreadCouldNotSendToUserWithUID:)
+					   withObject:contactUniqueID];
+		
+	} else {
+		NSLog(@"Bonjour Error (%i): %@", severity, error);
+		AILog(@"Bonjour Error (%i): %@", severity, error);
+	}
 }
 
 #pragma mark AIAccount Messaging
