@@ -364,7 +364,7 @@
 		
 		if (*whoami) {
 			//If the application was built by one of these people, we assume that it is a release, which means we should not show their username in the crash log.
-			//Otherwise, this is somebody's custom build, and including the username marks at such.
+			//Otherwise, this is somebody's custom build, and including the username marks it as such.
 			buildUser = [[NSString stringWithFormat:@"%s", whoami] retain];
 			if ([buildUser isEqualToString:@"adamiser"] || 
 				[buildUser isEqualToString:@"evands"] || 
