@@ -94,7 +94,7 @@
 
 	//Update the selections in our state menu when the active state changes
 	[[adium notificationCenter] addObserver:self
-								   selector:@selector(updateStatusMenuSelection::)
+								   selector:@selector(updateStatusMenuSelection:)
 									   name:AIStatusActiveStateChangedNotification
 									 object:nil];
 	//Update our state menus when the status icon set changes
