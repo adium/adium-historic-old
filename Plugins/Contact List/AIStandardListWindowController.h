@@ -25,6 +25,8 @@ typedef enum {
 } ContactListImagePickerPosition;
 
 @interface AIStandardListWindowController : AIListWindowController {
+	IBOutlet	NSView						*view_statusAndImage;
+	
 	IBOutlet	AIContactListStatusMenuView	*statusMenuView;
 	IBOutlet	AIContactListNameView		*nameView;
 
