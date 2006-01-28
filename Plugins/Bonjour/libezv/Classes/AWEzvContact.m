@@ -147,6 +147,11 @@
 
 	} else {
 		NSLog(@"Could not message %@ (%@) - Probably no longer online",[self name], [self uniqueID]);
+		[self setStatus: AWEzvUndefined];
+
+		/* and notify */
+		[[[[self manager] client] client] userChangedState:self];
+		[[[[self manager] client] client] reportError:@"Could Not Send" ofLevel:AWEzvError forUser:[self uniqueID]];
 	}
 }
 
