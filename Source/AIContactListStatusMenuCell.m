@@ -116,9 +116,40 @@
 	}	
 }
 
+- (void)fadeHovered
+{
+	if (hovered) {
+		if (hoveredFraction < 1.0) hoveredFraction += 0.05;
+	} else {
+		if (hoveredFraction > 0.0) hoveredFraction -= 0.05;
+	}
+
+	[[self controlView] display];
+
+	if ((hoveredFraction > 0.0) &&
+		(hoveredFraction < 1.0)) {
+		[NSObject cancelPreviousPerformRequestsWithTarget:self
+												 selector:@selector(fadeHovered)
+												   object:nil];
+		
+		[self performSelector:@selector(fadeHovered)
+				   withObject:nil
+				   afterDelay:0];
+	}
+}
+
 - (void)setHovered:(BOOL)inHovered
 {
 	hovered = inHovered;
+	
+	hoveredFraction = (hovered ? 0.80 : 0.20);
+	
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(fadeHovered)
+											   object:nil];
+	[self performSelector:@selector(fadeHovered)
+			   withObject:nil
+			   afterDelay:0];
 }
 
 #pragma mark Drawing
@@ -163,7 +194,7 @@
 		textRect.size.width = maxTextWidth;
 	}
 
-	if (hovered) {
+	if (hovered || (hoveredFraction > 0.0)) {
 		//Draw our hovered / highlighted background first
 		NSBezierPath	*path;
 		
@@ -180,15 +211,19 @@
 												radius:10];
 		
 		if ([self isHighlighted]) {
-			[[NSColor darkGrayColor] set];
+			[[[NSColor darkGrayColor] colorWithAlphaComponent:hoveredFraction] set];
 
-		} else{
-			[[NSColor grayColor] set];
+		} else {
+			[[[NSColor grayColor]  colorWithAlphaComponent:hoveredFraction] set];
 		}
-		
-		[path fill];
-		drawingColor = [NSColor whiteColor];
 
+		[path fill];
+		
+		if (hovered) {
+			drawingColor = [NSColor whiteColor];
+		} else {
+			drawingColor = [NSColor blackColor];
+		}
 	} else {
 		drawingColor = [NSColor blackColor];
 	}
