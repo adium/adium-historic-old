@@ -367,6 +367,7 @@
 			if ([buildUser isEqualToString:@"adamiser"] || 
 				[buildUser isEqualToString:@"evands"] || 
 				[buildUser isEqualToString:@"jmelloy"]) {
+				[buildUser release];
 				buildUser = nil;
 			}
 			
