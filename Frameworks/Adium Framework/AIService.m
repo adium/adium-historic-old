@@ -52,7 +52,7 @@
  * UID, since both those values may change.
  * @param inUID A unique identifier for the account being created.
  * @param inAccountNumber A unique number for the account being created.
- * @return An <tt>AIAccount</tt> object for this service.
+ * @return An AIAccount object for this service.
  */
 - (id)accountWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID
 {
@@ -77,7 +77,7 @@
  *
  * Subclass to return an account view controller which provides the necessary controls for configuring an account
  * on this service.
- * @return An <tt>AIAccountViewController</tt> or subclass for this service.
+ * @return An AIAccountViewController or subclass for this service.
  */
 - (AIAccountViewController *)accountViewController
 {
@@ -89,7 +89,7 @@
  *
  * Subclass to return a join chat view controller which provides the necessary controls for joining a chat on this
  * service.
- * @return An <tt>DCJoinChatViewController</tt> or subclass for this service.
+ * @return An DCJoinChatViewController or subclass for this service.
  */
 - (DCJoinChatViewController *)joinChatView
 {
@@ -187,7 +187,7 @@
  *
  * Importance grouping of this service.  Used to make service listings and menus more organized by placing more important
  * services at the top of lists or displaying them with more visibility.
- * @return <tt>AIServiceImportance</tt> importance of this service
+ * @return AIServiceImportance importance of this service
  */
 - (AIServiceImportance)serviceImportance
 {
@@ -206,7 +206,7 @@
  * The service should _not_ cache this icon internally; multiple calls should return unique NSImage objects.
  *
  * @param iconType The AIServiceIconType of the icon to return. This specifies the desired size of the icon.
- * @return <tt>NSImage</tt> to use for this service by default
+ * @return NSImage to use for this service by default
  */
 - (NSImage *)defaultServiceIconOfType:(AIServiceIconType)iconType
 {
@@ -220,7 +220,7 @@
  *
  * Characters allowed in user names on this service.  The user will not be allowed to type any characters not in this
  * set as a contact or account name.
- * @return <tt>NSCharacterSet</tt> of allowed characters
+ * @return NSCharacterSet of allowed characters
  */
 - (NSCharacterSet *)allowedCharacters
 {
@@ -233,7 +233,7 @@
  * Offers further distinction of allowed characters, for situations where certain characters are allowed
  * for our account name only, or characters which are allowed in user names are forbidden in our own account name.
  * If this distinction is not made, do not subclass this methods and instead subclass allowedCharacters.
- * @return <tt>NSCharacterSet</tt> of allowed characters
+ * @return NSCharacterSet of allowed characters
  */
 - (NSCharacterSet *)allowedCharactersForAccountName
 {
@@ -246,7 +246,7 @@
  * Offers further distinction of allowed characters, for situations where certain characters are allowed
  * for our account name only, or characters which are allowed in user names are forbidden in our own account name.
  * If this distinction is not made, do not subclass this methods and instead subclass allowedCharacters.
- * @return <tt>NSCharacterSet</tt> of allowed characters
+ * @return NSCharacterSet of allowed characters
  */
 - (NSCharacterSet *)allowedCharactersForUIDs
 {
@@ -259,7 +259,7 @@
  * Ignored characters for user names on this service.  Ignored characters are stripped from account and contact names
  * before they are used, but the user is free to type them and they may be used by the service code.  For instance, 
  * spaces are allowed in AIM usernames, but "ad am" is treated as equal to "adam" because space is an ignored character.
- * @return <tt>NSCharacterSet</tt> of ignored characters
+ * @return NSCharacterSet of ignored characters
  */
 - (NSCharacterSet *)ignoredCharacters
 {

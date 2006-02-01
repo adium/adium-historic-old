@@ -25,7 +25,6 @@
 #import <Carbon/Carbon.h>
 
 #define MINIMUM_HEIGHT				48
-#define MINIMUM_WIDTH				140
 
 @interface AIListOutlineView (PRIVATE)
 - (void)_initListOutlineView;
@@ -145,13 +144,13 @@
 		int	width = [(AIListCell *)cell cellWidth];
 		if (width > widestCell) widestCell = width;
 	}
-	
-	return ((widestCell > MINIMUM_WIDTH) || ignoreMinimumWidth) ? widestCell : MINIMUM_WIDTH;
+
+	return ((widestCell > minimumDesiredWidth) ? widestCell : minimumDesiredWidth);
 }
 
-- (void)setIgnoreMinimumWidth:(BOOL)inFlag
+- (void)setMinimumDesiredWidth:(int)inMinimumDesiredWidth
 {
-	ignoreMinimumWidth = inFlag;
+	minimumDesiredWidth = inMinimumDesiredWidth;
 }
 
 //Add padding to the desired height
