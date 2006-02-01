@@ -55,7 +55,7 @@
 
 /* We'll only use the one OtrlUserState. */
 static OtrlUserState otrg_plugin_userstate = NULL;
-static AdiumOTREncryption	*adiumOTREncryption = NULL;
+static AdiumOTREncryption	*adiumOTREncryption = nil;
 
 void otrg_ui_update_fingerprint(void);
 void update_security_details_for_chat(AIChat *chat);
@@ -109,6 +109,8 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 			NSLog(@"Error reading %s: %s", PRIVKEY_PATH, errMsg);
 		}
 	}
+
+	otrg_ui_update_keylist();
 
 	err = otrl_privkey_read_fingerprints(otrg_plugin_userstate, STORE_PATH,
 								   NULL, NULL);
@@ -367,7 +369,7 @@ void otrg_plugin_create_privkey(const char *accountname,
     /* Generate the key */
     otrl_privkey_generate(otrg_plugin_userstate, PRIVKEY_PATH,
 						  accountname, protocol);
-    otrg_ui_update_fingerprint();
+    otrg_ui_update_keylist();
 	
     /* Mark the dialog as done. */
 	[ESOTRPrivateKeyGenerationWindowController finishedGeneratingForIdentifier:identifier];
@@ -523,6 +525,7 @@ static void gone_secure_cb(void *opdata, ConnContext *context)
 	AIChat *chat = chatForContext(context);
 	
     update_security_details_for_chat(chat);
+	otrg_ui_update_fingerprint();
 }
 
 static void gone_insecure_cb(void *opdata, ConnContext *context)
@@ -530,6 +533,7 @@ static void gone_insecure_cb(void *opdata, ConnContext *context)
 	AIChat *chat = chatForContext(context);
 	
     update_security_details_for_chat(chat);
+	otrg_ui_update_fingerprint();
 }
 
 static void still_secure_cb(void *opdata, ConnContext *context, int is_reply)
@@ -771,24 +775,21 @@ void disconnect_from_chat(AIChat *inChat)
 void otrg_ui_forget_fingerprint(Fingerprint *fingerprint)
 {
     ConnContext *context;
-	
-    if (fingerprint == NULL) return;
-	
+
     /* Don't do anything with the active fingerprint if we're in the
-		* ENCRYPTED state. */
-    context = fingerprint->context;
+	 * ENCRYPTED state. */
+    context = (fingerprint ? fingerprint->context : NULL);
     if (context && (context->msgstate == OTRL_MSGSTATE_ENCRYPTED &&
 					context->active_fingerprint == fingerprint)) return;
 	
     otrl_context_forget_fingerprint(fingerprint, 1);
     otrg_plugin_write_fingerprints();
-	
-    otrg_ui_update_keylist();
 }
 
 void otrg_plugin_write_fingerprints(void)
 {
     otrl_privkey_write_fingerprints(otrg_plugin_userstate, STORE_PATH);
+	otrg_ui_update_fingerprint();
 }
 
 void otrg_ui_update_keylist(void)
@@ -818,26 +819,22 @@ OtrlUserState otrg_get_userstate(void)
 }
 
 /*
- * @brief Call this function when the DSA key is updated; it will redraw the UI, if visible.
- *
- * Note that OTR calls this the "fingerprint" in this context, but it is more properly called the private key list
+ * @brief Call this function when our DSA key is updated; it will redraw the Encryption preferences item, if visible.
  */
 - (void)prefsShouldUpdatePrivateKeyList
 {
-	AILog(@"Should update private key list");
 	[OTRPrefs updatePrivateKeyList];
 }
 
 /*
- * @brief Update the keylist, if it's visible
- *
- * Note that the 'keylist' is the list of fingerprints, which we call the fingerprints list for clarity.
+ * @brief Update the list of other users' fingerprints, if it's visible
  */
 - (void)prefsShouldUpdateFingerprintsList
 {
-	AILog(@"Should update fingerprints list");
 	[OTRPrefs updateFingerprintsList];
 }
+
+#pragma mark Localization
 
 - (NSString *)localizedOTRMessage:(NSString *)message withUsername:(NSString *)username
 {
@@ -881,7 +878,7 @@ OtrlUserState otrg_get_userstate(void)
 							   withWindowTitle:title];
 }
 
-#pragma mark Upgrading
+#pragma mark Upgrading gaim-otr --> Adium-otr
 - (NSDictionary *)prplDict
 {
 	return [NSDictionary dictionaryWithObjectsAndKeys:
