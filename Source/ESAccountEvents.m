@@ -20,7 +20,7 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 
-#define ACCOUNT_CONNECTION_STATUS_GROUPING  2.0
+#define ACCOUNT_CONNECTION_STATUS_GROUPING  4.0
 
 /*!
  * @class ESAccountEvents
