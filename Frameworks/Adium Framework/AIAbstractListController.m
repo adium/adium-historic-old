@@ -370,9 +370,6 @@
 										 !(pillowsOrPillowsFittedWindowStyle))];
 	[contactListView setBackgroundStyle:[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_STYLE] intValue]];
 
-	//Desired Size determination.  For non-standard (borderless) styles, ignore the minimum width.
-	[contactListView setIgnoreMinimumWidth:(windowStyle != WINDOW_STYLE_STANDARD)];
-
 	//Theme related cell preferences
 	//We must re-apply these because we've created new cells
 	[self updateCellRelatedThemePreferencesFromDict:themeDict];

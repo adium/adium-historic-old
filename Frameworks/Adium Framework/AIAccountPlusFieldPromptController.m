@@ -69,20 +69,19 @@
 		contact = impliedValue;
 
 	} else if ([impliedValue isKindOfClass:[AIListContact class]]) {
-		UID = [contact UID];
+		UID = [(AIListContact *)impliedValue UID];
 
 	} else  if ([impliedValue isKindOfClass:[NSString class]]) {
 		UID = [[account service] filterUID:impliedValue removeIgnoredCharacters:YES];
 	}
-	
-	if (!contact && UID) {
 
+	if (!contact && UID) {
 		//Find the contact
 		contact = [[adium contactController] contactWithService:[account service]
 														account:account 
 															UID:UID];		
 	}
-	
+
 	return contact;
 }
 
