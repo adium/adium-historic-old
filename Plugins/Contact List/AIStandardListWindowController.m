@@ -87,8 +87,6 @@
 
 	[super windowDidLoad];
 	
-	[self _configureToolbar];
-
 	//Configure the state menu
 	statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
 
@@ -108,7 +106,8 @@
 	
 	//Set our minimum size here rather than in the nib to avoid conflicts with autosizing
 	[[self window] setMinSize:NSMakeSize(135, 60)];
-			
+
+	[self _configureToolbar];
 	[self updateNameView];
 }
 
@@ -289,41 +288,41 @@
 	
 	if (desiredImagePickerPosition == ContactListImagePickerOnLeft) {
 		//Image picker is on the right but we want it on the left
-		float margin = (NSMinX(imagePickerFrame) - NSMaxX(statusMenuViewFrame));
 		
-		newImagePickerFrame.origin.x = statusMenuViewFrame.origin.x;
-		newStatusMenuViewFrame.origin.x = (NSMaxX(newImagePickerFrame) + margin);
-		newNameViewFrame.origin.x = newStatusMenuViewFrame.origin.x + (statusMenuViewFrame.origin.x - nameViewFrame.origin.x);
+		newImagePickerFrame.origin.x = nameViewFrame.origin.x;
 		
+		/* I hate a magic number, but for some reason autosizing doesn't seem to work properly for the name view on first load
+		 * so if we start off on the right and then move left, a calculated margin of NSMaxX(nameViewFrame) - NSMinX(imagePickerFrame)
+		 * wouldn't work.
+		 */
+		newNameViewFrame.origin.x = (NSMaxX(newImagePickerFrame) + 9.0);
+		newStatusMenuViewFrame.origin.x = newNameViewFrame.origin.x + (statusMenuViewFrame.origin.x - nameViewFrame.origin.x);
+
 		[imagePicker setAutoresizingMask:(NSViewMaxXMargin | NSViewMinYMargin)];
 
 	} else {
-		//Image picker is on the left but we want it on the right
-		float margin = (NSMinX(statusMenuViewFrame) - NSMaxX(imagePickerFrame));
+		//Image picker is on the left but we want it on the right		
+		newNameViewFrame.origin.x = imagePickerFrame.origin.x;
+		newStatusMenuViewFrame.origin.x = newNameViewFrame.origin.x + (statusMenuViewFrame.origin.x - nameViewFrame.origin.x);
 		
-		newStatusMenuViewFrame.origin.x = imagePickerFrame.origin.x;
-		newNameViewFrame.origin.x = newStatusMenuViewFrame.origin.x + (statusMenuViewFrame.origin.x - nameViewFrame.origin.x);
-		
-		newImagePickerFrame.origin.x = (NSMaxX(newStatusMenuViewFrame) + margin);
+		newImagePickerFrame.origin.x = ([[imagePicker superview] frame].size.width - NSMaxX(imagePickerFrame));
 
 		[imagePicker setAutoresizingMask:(NSViewMinXMargin | NSViewMinYMargin)];
 	}
 	
-	NSView *myContentView = [[self window] contentView];
-	
 	[statusMenuView setFrame:newStatusMenuViewFrame];
-	[myContentView setNeedsDisplayInRect:statusMenuViewFrame];
+	[[statusMenuView superview] setNeedsDisplayInRect:statusMenuViewFrame];
 	[statusMenuView setNeedsDisplay:YES];
 	
 	[nameView setFrame:newNameViewFrame];
-	[myContentView setNeedsDisplayInRect:nameViewFrame];
+	[[nameView superview] setNeedsDisplayInRect:nameViewFrame];
 	[nameView setNeedsDisplay:YES];
 	
 	[imagePicker setFrame:newImagePickerFrame];
-	[myContentView setNeedsDisplayInRect:imagePickerFrame];
+	[[imagePicker superview] setNeedsDisplayInRect:imagePickerFrame];
 	[imagePicker setNeedsDisplay:YES];
 	
-	imagePickerPosition = desiredImagePickerPosition;
+	imagePickerPosition = desiredImagePickerPosition;	
 }
 
 /*
@@ -390,14 +389,14 @@
 - (void)_configureToolbar
 {
     NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_CONTACT_LIST] autorelease];
-	
+
     [toolbar setDelegate:self];
     [toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
     [toolbar setSizeMode:NSToolbarSizeModeSmall];
     [toolbar setVisible:YES];
     [toolbar setAllowsUserCustomization:NO];
-    [toolbar setAutosavesConfiguration:NO];
-	
+    [toolbar setAutosavesConfiguration:YES];
+
 	/* Seemingly randomling, setToolbar: may throw:
 	 * Exception:	NSInternalInconsistencyException
 	 * Reason:		Uninitialized rectangle passed to [View initWithFrame:].
@@ -417,9 +416,9 @@
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
 {
 	NSToolbarItem *statusAndIconItem = [[NSToolbarItem alloc] initWithItemIdentifier:@"StatusAndIcon"];
-	[statusAndIconItem setView:view_statusAndImage];
-	[statusAndIconItem setMinSize:NSMakeSize(50, [view_statusAndImage bounds].size.height)];
+	[statusAndIconItem setMinSize:NSMakeSize(100, [view_statusAndImage bounds].size.height)];
 	[statusAndIconItem setMaxSize:NSMakeSize(100000, [view_statusAndImage bounds].size.height)];
+	[statusAndIconItem setView:view_statusAndImage];
 
 	return [statusAndIconItem autorelease];
 }
