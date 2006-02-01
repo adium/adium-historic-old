@@ -940,7 +940,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	}
 }
 
-- (void)chat:(AIChat *)inChat setCustomEmoticon:(NSString *)emoticonEquivalent withImage:(NSImage *)inImage
+- (void)chat:(AIChat *)inChat setCustomEmoticon:(NSString *)emoticonEquivalent withImageData:(NSData *)inImageData
 {
 	/* XXX Note: If we can set outgoing emoticons, this method needs to be updated to mark emoticons as incoming
 	 * and AIEmoticonController needs to be able to handle that.
@@ -955,8 +955,8 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	
 	//Write out our image
 	NSString	*path = [self _emoticonCachePathForChat:inChat];
-	[[inImage PNGRepresentation] writeToFile:path
-								  atomically:NO];
+	[inImageData writeToFile:path
+				  atomically:NO];
 
 	if (emoticon) {
 		//If we already have an emoticon, just update its path
@@ -2123,14 +2123,75 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	[gaimThread performContactMenuActionFromDict:dict];
 }
 
+/*
+ * @brief Utility method when generating buddy-specific menu items
+ *
+ * Adds the menu item for act to a growing array of NSMenuItems.  If act has children (a submenu), this method is used recursively
+ * to generate the submenu containing each child menu item.
+ */
+- (void)addMenuItemForMenuAction:(GaimMenuAction *)act forListContact:(AIListContact *)inContact gaimBuddy:(GaimBuddy *)buddy toArray:(NSMutableArray *)menuItemArray withServiceIcon:(NSImage *)serviceIcon
+{
+	NSDictionary	*dict;
+	NSMenuItem		*menuItem;
+	NSString		*title;
+				
+	//If titleForContactMenuLabel:forContact: returns nil, we don't add the menuItem
+	if (act &&
+		act->label &&
+		(title = [self titleForContactMenuLabel:act->label
+									 forContact:inContact])) { 
+		menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
+																		target:self
+																		action:@selector(performContactMenuAction:)
+																 keyEquivalent:@""];
+		[menuItem setImage:serviceIcon];
+		dict = [NSDictionary dictionaryWithObjectsAndKeys:
+			[NSValue valueWithPointer:act],@"GaimMenuAction",
+			[NSValue valueWithPointer:buddy],@"GaimBuddy",
+			nil];
+		
+		[menuItem setRepresentedObject:dict];
+		
+		//If there is a submenu, generate and set it
+		if (act->children) {
+			NSMutableArray	*childrenArray = [NSMutableArray array];
+			GList			*l, *ll;
+			//Add a NSMenuItem for each child
+			for (l = ll = act->children; l; l = l->next) {
+				[self addMenuItemForMenuAction:(GaimMenuAction *)l->data
+								forListContact:inContact
+									 gaimBuddy:buddy
+									   toArray:childrenArray
+							   withServiceIcon:serviceIcon];
+			}
+			
+			if ([childrenArray count]) {
+				NSEnumerator *enumerator = [childrenArray objectEnumerator];
+				NSMenuItem	 *childMenuItem;
+				NSMenu		 *submenu = [[NSMenu alloc] init];
+				
+				while ((childMenuItem = [enumerator nextObject])) {
+					[submenu addItem:childMenuItem];
+				}
+				
+				[menuItem setSubmenu:submenu];
+				[submenu release];
+			}
+		}
+
+		[menuItemArray addObject:menuItem];
+		[menuItem release];
+	}				
+}
+
 //Returns an array of menuItems specific for this contact based on its account and potentially status
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact
 {
 	NSMutableArray			*menuItemArray = nil;
+
 	if (account && gaim_account_is_connected(account)) {
 		GaimPluginProtocolInfo	*prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(account->gc->prpl);
 		GList					*l, *ll;
-		
 		GaimBuddy				*buddy;
 		
 		//Find the GaimBuddy
@@ -2141,35 +2202,20 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 																	type:AIServiceIconSmall
 															   direction:AIIconNormal];
 			
+			menuItemArray = [NSMutableArray array];
+
 			//Add a NSMenuItem for each node action specified by the prpl
 			for (l = ll = prpl_info->blist_node_menu((GaimBlistNode *)buddy); l; l = l->next) {
-				GaimMenuAction	*act = (GaimMenuAction *) l->data;
-				NSDictionary	*dict;
-				NSMenuItem		*menuItem;
-				NSString		*title;
-				
-				//If titleForContactMenuLabel:forContact: returns nil, we don't add the menuItem
-				if (act &&
-					act->label &&
-					(title = [self titleForContactMenuLabel:act->label
-												 forContact:inContact])) { 
-					menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
-																					 target:self
-																					 action:@selector(performContactMenuAction:)
-																			  keyEquivalent:@""] autorelease];
-					[menuItem setImage:serviceIcon];
-					dict = [NSDictionary dictionaryWithObjectsAndKeys:
-						[NSValue valueWithPointer:act],@"GaimMenuAction",
-						[NSValue valueWithPointer:buddy],@"GaimBuddy",
-						nil];
-					
-					if (!menuItemArray) menuItemArray = [NSMutableArray array];
-
-					[menuItem setRepresentedObject:dict];
-					[menuItemArray addObject:menuItem];
-				}
+				[self addMenuItemForMenuAction:(GaimMenuAction *)l->data
+								forListContact:inContact
+									 gaimBuddy:buddy
+									   toArray:menuItemArray
+							   withServiceIcon:serviceIcon];
 			}
 			g_list_free(ll);
+			
+			//Don't return an empty array
+			if (![menuItemArray count]) menuItemArray = nil;
 		}
 	}
 	
@@ -2395,19 +2441,30 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 
 - (void)displayError:(NSString *)errorDesc
 {
-    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Gaim error",[self UID],[[self service] shortDescription]]
+    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Error",[self UID],[[self service] shortDescription]]
                                     withDescription:errorDesc];
 }
 
+/*
+ * @brief Return the path at which to save our own user icon
+ *
+ * Gaim expects a file path, not data
+ */
 - (NSString *)_userIconCachePath
 {    
     NSString    *userIconCacheFilename = [NSString stringWithFormat:@"TEMP-UserIcon_%@_%@", [self internalObjectID], [NSString randomStringOfLength:4]];
     return [[adium cachesPath] stringByAppendingPathComponent:userIconCacheFilename];
 }
 
+/*
+ * @brief Return the path at which to save an emoticon
+ *
+ * We may have data of some type other than JPEG, but providing _some_ file extension means the cached file can easily be opened
+ * in an image editor if the user saves the file or checks the cache directory
+ */
 - (NSString *)_emoticonCachePathForChat:(AIChat *)inChat
 {
-    NSString    *filename = [NSString stringWithFormat:@"TEMP-CustomEmoticon_%@_%@", [inChat uniqueChatID], [NSString randomStringOfLength:4]];
+    NSString    *filename = [NSString stringWithFormat:@"TEMP-CustomEmoticon_%@_%@.jpg", [inChat uniqueChatID], [NSString randomStringOfLength:4]];
     return [[adium cachesPath] stringByAppendingPathComponent:filename];	
 }
 
