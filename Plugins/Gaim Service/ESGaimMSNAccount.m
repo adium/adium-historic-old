@@ -188,55 +188,63 @@ gboolean gaim_init_msn_plugin(void);
  *
  * Well behaved MSN clients respect the serverside display name so that an update on one client is reflected on another.
  * 
- * If our display name is static, we should update to the serverside one if they aren't the same.
+ * If our display name is static and specified specifically for our account, we should update to the serverside one if they aren't the same.
  *
  * However, if our display name is dynamic, most likely we're looking at the filtered version of our dynamic
- * name, so we shouldn't update to the filtered one.
+ * name, so we shouldn't update to the filtered one.  Furthermore, if our display name is set at the Aduim-global level,
+ * we should use that name, not whatever is specified by the last client to connect.
  */
 - (void)updateFriendlyNameAfterConnect
 {
-	const char *displayName = gaim_connection_get_display_name(gaim_account_get_connection(account));
-	BOOL		invokedFilter = NO;
-	
-	//If the friendly name changed since the last time we connected, set it serverside and clear the flag
-	if ([[self preferenceForKey:KEY_MSN_DISPLAY_NAMED_CHANGED
-						  group:GROUP_ACCOUNT_STATUS] boolValue]) {
+	const char			*displayName = gaim_connection_get_display_name(gaim_account_get_connection(account));
+	NSAttributedString	*accountDisplayName = [[self preferenceForKey:@"FullNameAttr"
+														   group:GROUP_ACCOUNT_STATUS
+										   ignoreInheritedValues:YES] attributedString];
+	NSAttributedString	*globalPreference = [[self preferenceForKey:@"FullNameAttr"
+															  group:GROUP_ACCOUNT_STATUS
+											  ignoreInheritedValues:YES] attributedString];
+	BOOL				accountDisplayNameChanged = NO;
+
+	/* If the friendly name changed since the last time we connected (the user changed it while offline)
+	 * set it serverside and clear the flag.
+	 */
+	if ((accountDisplayName && (accountDisplayNameChanged = [[self preferenceForKey:KEY_MSN_DISPLAY_NAMED_CHANGED group:GROUP_ACCOUNT_STATUS] boolValue])) ||
+		(!accountDisplayName && globalPreference)) {
 		[self updateStatusForKey:@"FullNameAttr"];
-		[self setPreference:nil
-					 forKey:KEY_MSN_DISPLAY_NAMED_CHANGED
-					  group:GROUP_ACCOUNT_STATUS];
+
+		if (accountDisplayNameChanged) {
+			[self setPreference:nil
+						 forKey:KEY_MSN_DISPLAY_NAMED_CHANGED
+						  group:GROUP_ACCOUNT_STATUS];
+		}
 
 	} else {
-		/* If our locally set friendly name didn't change since the last time we connected, we want to update
-		 * to the serverside settings as appropriate.
+		/* If our locally set friendly name didn't change since the last time we connected but one is set for this specific account,
+		 * we want to update to the serverside settings as appropriate.
+		 *
+		 * An important exception is if our per-account display name is dynamic (i.e. a 'Now Playing in iTunes' name).
 		 */
 		if (displayName &&
 			strcmp(displayName, [[self UID] UTF8String]) &&
 			strcmp(displayName, [[self formattedUID] UTF8String])) {
 			/* There is a serverside display name, and it's not the same as our UID. */
-			NSAttributedString	*ourPreference = [[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString];
-			const char			*ourPreferenceUTF8String = [[ourPreference string] UTF8String];
+			const char			*accountDisplayNameUTF8String = [[accountDisplayName string] UTF8String];
 			
-			if (!ourPreferenceUTF8String ||
-				strcmp(ourPreferenceUTF8String, displayName)) {
-				/* The display name is different from our preference. Check if our preference is static. */
-				[[adium contentController] filterAttributedString:ourPreference
+			if (accountDisplayNameUTF8String &&
+				strcmp(accountDisplayNameUTF8String, displayName)) {
+				/* The display name is different from our per-account preference, which exists. Check if our preference is static.
+				 * If the if() above got FALSE, we don't need to do anything; the serverside preference should stand as-is. */
+				[[adium contentController] filterAttributedString:accountDisplayName
 												  usingFilterType:AIFilterContent
 														direction:AIFilterOutgoing
 													filterContext:self
 												  notifyingTarget:self
 														 selector:@selector(gotFilteredFriendlyName:context:)
 														  context:[NSDictionary dictionaryWithObjectsAndKeys:
-															  ourPreference, @"ourPreference",
+															  accountDisplayName, @"accountDisplayName",
 															  [NSString stringWithUTF8String:displayName], @"displayName",
 															  nil]];
-				invokedFilter = YES;
 			}
-		}
-		
-		if (!invokedFilter) {
-			[self gotFilteredFriendlyName:nil
-								  context:nil];
 		}
 	}
 }
@@ -244,7 +252,7 @@ gboolean gaim_init_msn_plugin(void);
 - (void)gotFilteredFriendlyName:(NSAttributedString *)filteredFriendlyName context:(NSDictionary *)infoDict
 {
 	if ((!filteredFriendlyName && [infoDict objectForKey:@"displayName"]) ||
-	   ([[filteredFriendlyName string] isEqualToString:[[infoDict objectForKey:@"ourPreference"] string]])) {
+	   ([[filteredFriendlyName string] isEqualToString:[[infoDict objectForKey:@"accountDisplayName"] string]])) {
 		/* Filtering made no changes to the string, so we're static. If we make it here, update to match the server. */
 		NSAttributedString	*newPreference;
 		
@@ -254,9 +262,9 @@ gboolean gaim_init_msn_plugin(void);
 					 forKey:@"FullNameAttr"
 					  group:GROUP_ACCOUNT_STATUS];
 		[newPreference release];
-	}
 
-	[self updateStatusForKey:@"FullNameAttr"];
+		[self updateStatusForKey:@"FullNameAttr"];
+	}
 }
 
 extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
