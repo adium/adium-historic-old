@@ -15,6 +15,7 @@
  */
 
 #import "AIChatController.h"
+#import "AIAccountController.h"
 #import "AIInterfaceController.h"
 #import "AIListLayoutWindowController.h"
 #import "AIListOutlineView.h"
@@ -302,7 +303,13 @@
 			thisMinimumSize.width = currentFrame.size.width;
 			thisMaximumSize.width = currentFrame.size.width;			
 		}
-		
+
+		/* For a standard window, inform the contact list that, if asked, it wants to be 175 pixels or more.
+		 * A maximum width less than this can make the list autosize smaller, but if it has its druthers it'll be a sane
+		 * size.
+		 */
+		[contactListView setMinimumDesiredWidth:((windowStyle == WINDOW_STYLE_STANDARD) ? 175 : 0)];
+
 		[[self window] setMinSize:thisMinimumSize];
 		[[self window] setMaxSize:thisMaximumSize];
 		
