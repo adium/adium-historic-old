@@ -421,20 +421,19 @@ gboolean adiumGaimConvCustomSmileyAdd(GaimConversation *conv, const char *smile,
 										   withObject:[NSNumber numberWithBool:YES]];
 	return TRUE;
 }
+
 void adiumGaimConvCustomSmileyWrite(GaimConversation *conv, const char *smile,
 									const guchar *data, gsize size)
 {
 	GaimDebug (@"%s: Write %s (%x %i)",gaim_conversation_get_name(conv),smile,data,size);
 
-	NSImage	*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:data
-																  length:size]];
-
-	[accountLookup(conv->account) mainPerformSelector:@selector(chat:setCustomEmoticon:withImage:)
+	[accountLookup(conv->account) mainPerformSelector:@selector(chat:setCustomEmoticon:withImageData:)
 										   withObject:chatLookupFromConv(conv)
 										   withObject:[NSString stringWithUTF8String:smile]
-										   withObject:image];
-	[image release];
+										   withObject:[NSData dataWithBytes:data
+																	 length:size]];
 }
+
 void adiumGaimConvCustomSmileyClose(GaimConversation *conv, const char *smile)
 {
 	GaimDebug (@"%s: Close %s",gaim_conversation_get_name(conv),smile);
