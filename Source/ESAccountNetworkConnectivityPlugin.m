@@ -142,10 +142,10 @@
 				continue; //prevent the account from being removed from accountsToConnect.
 			}
 			
-		}  else if ([[account supportedPropertyKeys] containsObject:@"Online"]
-					&& [account enabled]) {
-			/* This account does not connect based on network reachability, but can go online
-			 * and should autoconnect.  Connect it immediately.
+		}  else if (!shiftHeld &&
+					[account enabled]) {
+			/* This account does not connect based on network reachability, but should autoconnect.
+			 * Connect it immediately.
 			 */
 			[account setShouldBeOnline:YES];
 		}
