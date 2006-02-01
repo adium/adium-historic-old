@@ -407,17 +407,36 @@ gboolean gaim_init_yahoo_plugin(void);
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	if (strcmp(label, "Add Buddy") == 0) {
+	if (!strcmp(label, "Add Buddy")) {
 		//We handle Add Buddy ourselves
 		return nil;
-	} else if (strcmp(label, "Join in Chat") == 0) {
+		
+	} else if (!strcmp(label, "Join in Chat")) {
 		return [NSString stringWithFormat:AILocalizedString(@"Join %@'s Chat",nil),[inContact formattedUID]];
 
-	} else if (strcmp(label, "Initiate Conference") == 0) {
+	} else if (!strcmp(label, "Initiate Conference")) {
 		return [NSString stringWithFormat:AILocalizedString(@"Initiate Conference with %@",nil), [inContact formattedUID]];
 
-	}  else if (strcmp(label, "View Webcam") == 0) {
+	} else if (!strcmp(label, "Presence Settings")) {
+		return [NSString stringWithFormat:AILocalizedString(@"Presence Settings for %@",nil), [inContact formattedUID]];
+
+	} else if (!strcmp(label, "Appear Online")) {
+		return [NSString stringWithFormat:AILocalizedString(@"Appear Online to %@",nil), [inContact formattedUID]];
+		
+	} else if (!strcmp(label, "Appear Offline")) {
+		return [NSString stringWithFormat:AILocalizedString(@"Appear Offline to %@",nil), [inContact formattedUID]];
+		
+	} else if (!strcmp(label, "Appear Permanently Offline")) {
+		return [NSString stringWithFormat:AILocalizedString(@"Always Appear Offline to %@",nil), [inContact formattedUID]];
+		
+	} else if (!strcmp(label, "Don't Appear Permanently Offline")) {
+		return [NSString stringWithFormat:AILocalizedString(@"Don't Always Appear Offline to %@",nil), [inContact formattedUID]];
+		
+	} else if (!strcmp(label, "View Webcam")) {
 		//return [NSString stringWithFormat:AILocalizedString(@"View %@'s Webcam",nil), [inContact formattedUID]];		
+		return nil;
+
+	} else if (!strcmp(label, "Start Doodling")) {
 		return nil;
 	}
 
