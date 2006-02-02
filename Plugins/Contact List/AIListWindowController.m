@@ -701,11 +701,8 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	newWindowFrame = AIRectByMovingRect_intoRect_(newWindowFrame, screenSlideBoundaryRect);
 
 	if (!NSEqualRects(windowFrame, newWindowFrame)) {
-		if ([NSApp isActive])
-			[window orderFront:nil]; 
-		else
-			[window makeKeyAndOrderFront:nil];
-		
+		[window orderFront:nil]; 
+
 		windowSlidOffScreenEdgeMask = AINoEdges;
 	
 		[self slideWindowToPoint:newWindowFrame.origin];
