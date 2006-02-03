@@ -177,11 +177,11 @@ static NSImage * scriptImage;
 - (void) updatePreview
 {
 	AIXtraInfo * xtra = [selectedCategory objectAtIndex:[xtraList selectedRow]];
-	[showInfoControl setHidden:NO];
+	//[showInfoControl setHidden:NO];
 	if(showInfo)
 		[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
 	else {
-		NSString * xtraType = [xtra type];
+	/*	NSString * xtraType = [xtra type];
 		
 		if ([xtraType isEqualToString:AIXtraTypeEmoticons])
 			[NSBundle loadNibNamed:@"EmoticonPreviewView" owner:self];
@@ -192,10 +192,10 @@ static NSImage * scriptImage;
 		else if ([xtraType isEqualToString:AIXtraTypeStatusIcons]) {
 			[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self];
 		}
-		else { //catchall behavior is to just show the readme
+		else {*/ //catchall behavior is to just show the readme
 			[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
 			[showInfoControl setHidden:YES];
-		}
+		//}
 	}
 	
 	if(previewController)
