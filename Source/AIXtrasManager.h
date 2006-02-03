@@ -42,6 +42,7 @@
 	IBOutlet id<AIXtraPreviewController>	previewController;
 	IBOutlet NSView							*readmeView;
 	IBOutlet NSSegmentedControl				*showInfoControl;
+	IBOutlet NSSplitView					*splitView;
 	NSString								*infoPath;
 	BOOL									showInfo; //YES = info, NO = preview
 }
