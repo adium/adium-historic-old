@@ -1112,18 +1112,26 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			NSString	*style = [inArgs objectForKey:arg];
 			int			styleLength = [style length];
 			NSRange		attributeRange;
-			
+
+			NSLog(@"style string is %@", style);
+			NSLog(@"checking for font family...");
 			attributeRange = [style rangeOfString:@"font-family: " options:NSCaseInsensitiveSearch];
 			if (attributeRange.location != NSNotFound) {
+				NSLog(@"reading font family...");
 				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				NSLog(@"successfully got range (%@)", NSStringFromRange(nextSemicolon));
+
 				NSString *fontFamily = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
 
 				[textAttributes setFontFamily:fontFamily];
 			}
 			
+			NSLog(@"checking for font size...");
 			attributeRange = [style rangeOfString:@"font-size: " options:NSCaseInsensitiveSearch];
 			if (attributeRange.location != NSNotFound) {
+				NSLog(@"reading font size...");
 				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				NSLog(@"successfully got range (%@)", NSStringFromRange(nextSemicolon));
 				NSString *fontSize = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
 				
 				static int stylePointSizes[] = { 9, 10, 12, 14, 18, 24 };
@@ -1151,9 +1159,12 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 				[textAttributes setFontSize:size];
 			}
 			
+			NSLog(@"checking for font color...");
 			attributeRange = [style rangeOfString:@"color: " options:NSCaseInsensitiveSearch];
 			if (attributeRange.location != NSNotFound) {
+				NSLog(@"reading font color...");
 				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				NSLog(@"successfully got range (%@)", NSStringFromRange(nextSemicolon));
 				NSString *hexColor = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
 
 				[textAttributes setTextColor:[NSColor colorWithHTMLString:hexColor
