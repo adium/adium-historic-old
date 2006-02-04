@@ -1123,7 +1123,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			
 			attributeRange = [style rangeOfString:@"font-size: " options:NSCaseInsensitiveSearch];
 			if (attributeRange.location != NSNotFound) {
-				NSRange	 nextSemicolon  =[style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
 				NSString *fontSize = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
 				
 				static int stylePointSizes[] = { 9, 10, 12, 14, 18, 24 };
