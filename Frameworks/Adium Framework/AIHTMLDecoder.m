@@ -1153,7 +1153,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			
 			attributeRange = [style rangeOfString:@"color: " options:NSCaseInsensitiveSearch];
 			if (attributeRange.location != NSNotFound) {
-				NSRange	 nextSemicolon  =[style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
 				NSString *hexColor = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
 
 				[textAttributes setTextColor:[NSColor colorWithHTMLString:hexColor
