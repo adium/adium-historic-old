@@ -111,13 +111,13 @@ static NSImage * scriptImage;
 	categoryNames = [[NSMutableArray alloc] init];
 	categoryImages = [[NSMutableArray alloc] init];
 	
-	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIContactListDirectory, AIAllDomainsMask, YES)]];
-	[categoryNames addObject:@"Contact List Themes"];
-	[categoryImages addObject:listThemeImage];
-	
 	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIMessageStylesDirectory, AIAllDomainsMask, YES)]];
 	[categoryNames addObject:@"Message Styles"];
 	[categoryImages addObject:messageStyleImage];
+	
+	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIContactListDirectory, AIAllDomainsMask, YES)]];
+	[categoryNames addObject:@"Contact List Themes"];
+	[categoryImages addObject:listThemeImage];
 
 	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIStatusIconsDirectory, AIAllDomainsMask, YES)]];
 	[categoryNames addObject:@"Status Icons"];
@@ -142,7 +142,7 @@ static NSImage * scriptImage;
 
 - (NSArray *) arrayOfXtrasAtPaths:(NSArray *)paths
 {
-	NSMutableArray * contents = [[NSMutableArray alloc] init];
+	NSMutableArray * contents = [NSMutableArray array];
 	NSEnumerator * dirEnu = [paths objectEnumerator];
 	NSString * path;
 	NSEnumerator * xEnu;
@@ -156,7 +156,7 @@ static NSImage * scriptImage;
 			[contents addObject:[AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[path stringByAppendingPathComponent:xtraName]]]];
 		}
 	}
-	return [contents autorelease];
+	return contents;
 }
 
 - (void) dealloc
