@@ -156,7 +156,7 @@ static NSImage * scriptImage;
 			[contents addObject:[AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[path stringByAppendingPathComponent:xtraName]]]];
 		}
 	}
-	return contents;
+	return [contents autorelease];
 }
 
 - (void) dealloc
