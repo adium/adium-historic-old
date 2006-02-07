@@ -183,6 +183,7 @@
 																				 keyEquivalent:@""
 																			 representedObject:account];
 			[self _updateMenuItem:menuItem];
+			[menuItem setSubmenu:[self actionsMenuForAccount:account]];
 			[menuItemArray addObject:menuItem];
 			[menuItem release];
 		}
@@ -270,18 +271,16 @@
 			}
 		}
 
-		if (submenuType == AIAccountOptionsSubmenu) {
+		if ((submenuType == AIAccountOptionsSubmenu) && [inModifiedKeys containsObject:@"Online"]) {
 			if (rebuilt) menuItem = [self menuItemForAccount:(AIAccount *)inObject];
 
-			//Append the account actions menu for online accounts
+			//Append the account actions menu
 			if (menuItem) {
-				if ([inModifiedKeys containsObject:@"Online"]) {
-					[menuItem setSubmenu:([inObject online] ? [self actionsMenuForAccount:(AIAccount *)inObject] : nil)];
-				}
+				[menuItem setSubmenu:[self actionsMenuForAccount:(AIAccount *)inObject]];
 			}
 		}
 	}
-	
+
     return nil;
 }
 
@@ -290,29 +289,71 @@
 #pragma mark Account Action Submenu
 /*!
  * @brief Returns an action menu for the passed account
+ *
+ * If the account is online, it is queried for account actions.
+ * If it is offline, this menu has only "Edit Account" and "Disable."
  */
 - (NSMenu *)actionsMenuForAccount:(AIAccount *)inAccount
 {
-	NSArray	*accountActionMenuItems = [inAccount accountActionMenuItems];
-	NSMenu	*actionsSubmenu = nil;
-	
+	NSArray		*accountActionMenuItems = ([inAccount online] ? [inAccount accountActionMenuItems] : nil);
+	NSMenu		*actionsSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+	NSMenuItem	*menuItem;
+
+	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Edit Account", nil)
+																	target:self
+																	action:@selector(editAccount:)
+															 keyEquivalent:@""
+														 representedObject:inAccount];
+	[actionsSubmenu addItem:menuItem];
+	[menuItem release];
+
+	[actionsSubmenu addItem:[NSMenuItem separatorItem]];
+
 	//Only build a menu if we have items
 	if (accountActionMenuItems && [accountActionMenuItems count]) {
-		actionsSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
-		
 		//Build a menu containing all the items
 		NSEnumerator	*enumerator = [accountActionMenuItems objectEnumerator];
-		NSMenuItem		*menuItem;
 		while ((menuItem = [enumerator nextObject])) {
 			NSMenuItem	*newMenuItem = [menuItem copy];
 			[actionsSubmenu addItem:newMenuItem];
 			[newMenuItem release];
 		}
+
+		//Separate the actions from our final menu items which apply to all accounts
+		[actionsSubmenu addItem:[NSMenuItem separatorItem]];
 	}
+	
+	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Disable", nil)
+																	target:self
+																	action:@selector(disableAccount:)
+															 keyEquivalent:@""
+														 representedObject:inAccount];
+	[actionsSubmenu addItem:menuItem];
+	[menuItem release];
 	
 	return actionsSubmenu;
 }	
 
+/*
+ * @brief Edit an account
+ *
+ * @param sender An NSMenuItem whose representedObject is an AIAccount
+ */
+- (void)editAccount:(id)sender
+{
+	[[adium notificationCenter] postNotificationName:@"AIEditAccount"
+											  object:[sender representedObject]];
+}
+
+/*
+ * @brief Disable an account
+ *
+ * @param sender An NSMenuItem whose representedObject is an AIAccount
+ */
+- (void)disableAccount:(id)sender
+{
+	[[sender representedObject]	setEnabled:NO];
+}
 
 //Account Status Submenu -----------------------------------------------------------------------------------------------
 #pragma mark Account Status Submenu
