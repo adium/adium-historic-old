@@ -2247,9 +2247,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 			
 			//Avoid adding separators between nonexistant items (i.e. items which Gaim shows but we don't)
 			BOOL	addedAnAction = NO;
-			NSImage	*serviceIcon = [AIServiceIcons serviceIconForService:[self service]
-																	type:AIServiceIconSmall
-															   direction:AIIconNormal];
 			for (l = ll = GAIM_PLUGIN_ACTIONS(plugin, account->gc); l; l = l->next) {
 				
 				if (l->data) {
@@ -2272,7 +2269,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 																						 target:self
 																						 action:@selector(performAccountMenuAction:)
 																				  keyEquivalent:@""] autorelease];
-						[menuItem setImage:serviceIcon];
 						dict = [NSDictionary dictionaryWithObject:[NSValue valueWithPointer:action]
 														   forKey:@"GaimPluginAction"];
 						
