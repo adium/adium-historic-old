@@ -352,7 +352,7 @@
  */
 - (void)disableAccount:(id)sender
 {
-	[[sender representedObject]	setEnabled:NO];
+	[[sender representedObject] setEnabled:NO];
 }
 
 //Account Status Submenu -----------------------------------------------------------------------------------------------
