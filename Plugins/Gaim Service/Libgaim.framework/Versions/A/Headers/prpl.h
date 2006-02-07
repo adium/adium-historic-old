@@ -74,8 +74,8 @@ typedef struct {
 #include "whiteboard.h"
 
 struct proto_chat_entry {
-	char *label;
-	char *identifier;
+	const char *label;
+	const char *identifier;
 	gboolean required;
 	gboolean is_int;
 	int min;
@@ -189,9 +189,9 @@ struct _GaimPluginProtocolInfo
 	char *(*status_text)(GaimBuddy *buddy);
 
 	/**
-	 * Gets a string to put in the buddy list tooltip.
+	 * Allows the prpl to add text to a buddy's tooltip.
 	 */
-	char *(*tooltip_text)(GaimBuddy *buddy);
+	void (*tooltip_text)(GaimBuddy *buddy, GString *str, gboolean full);
 
 	/**
 	 * This must be implemented, and must add at least the offline

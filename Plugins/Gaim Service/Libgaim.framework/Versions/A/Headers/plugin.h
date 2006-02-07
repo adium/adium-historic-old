@@ -66,6 +66,11 @@ typedef enum
  *
  * This is used in the version 2.0 API and up.
  */
+/* TODO We need to figure out exactly what parts of this are required. The
+ * dependent plugin unloading stuff was causing crashes with perl and tcl
+ * plugins because they didn't set ids and the dependency code was requiring
+ * them. Then we need to actually make sure that plugins have all the right
+ * parts before loading them. */
 struct _GaimPluginInfo
 {
 	unsigned int magic;
@@ -623,8 +628,18 @@ void gaim_plugins_uninit(void);
 
 /**
  * Allocates and returns a new GaimPluginAction.
+ *
+ * @param label    The description of the action to show to the user.
+ * @param callback The callback to call when the user selects this action.
  */
-GaimPluginAction *gaim_plugin_action_new(char* label, void (*callback)(GaimPluginAction *));
+GaimPluginAction *gaim_plugin_action_new(const char* label, void (*callback)(GaimPluginAction *));
+
+/**
+ * Frees a GaimPluginAction
+ *
+ * @param action The GaimPluginAction to free.
+ */
+void gaim_plugin_action_free(GaimPluginAction *action);
 
 #ifdef __cplusplus
 }
