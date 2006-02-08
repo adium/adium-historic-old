@@ -289,11 +289,16 @@
 	}
 
 	[self setNeedsDisplay:YES];
-	//delayed performs eat flicker.
-	NSTimeInterval delay = GetDblTime() * 120.0; //double-click time * 2
+
+	/* This may be called repeatedly. We want to invalidate our shadow as our opacity changes, but we'll flicker
+	 * if we do it immediately.
+	 */
+	[NSObject cancelPreviousPerformRequestsWithTarget:[self window]
+											 selector:@selector(invalidateShadow)
+											   object:nil];
 	[[self window] performSelector:@selector(invalidateShadow)
 	                    withObject:nil
-	                    afterDelay:delay];
+	                    afterDelay:0.2];
 }
 
 - (void)setBackgroundFade:(float)fade
