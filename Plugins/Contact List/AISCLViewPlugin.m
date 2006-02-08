@@ -188,7 +188,6 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	NSFileManager	*defaultManager = [NSFileManager defaultManager];
 	NSEnumerator	*enumerator;
 	NSString		*fileName, *resourcePath;
-	NSString		*key;
 	NSDictionary	*setDictionary = nil;
 
 	//Look in each resource location until we find it
@@ -204,14 +203,8 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	}
 	
 	//Apply its values
-	[[adiumInstance preferenceController] delayPreferenceChangedNotifications:YES];
-	enumerator = [setDictionary keyEnumerator];
-	while ((key = [enumerator nextObject])) {
-		[[adiumInstance preferenceController] setPreference:[setDictionary objectForKey:key]
-													 forKey:key
-													  group:preferenceGroup];
-	}
-	[[adiumInstance preferenceController] delayPreferenceChangedNotifications:NO];
+	[[adiumInstance preferenceController] setPreferences:setDictionary
+												 inGroup:preferenceGroup];
 }
 
 //Create a layout or theme set
