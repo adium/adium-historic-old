@@ -220,7 +220,10 @@
 		[statusDict removeObjectForKey:STATUS_UNIQUE_ID];
 	}
 	
-	if (!encoding) {
+	/* If we're not currently encoding and we're within a status group, we need to let the status controller know so that it
+	 * can save us and our contained group.
+	 */
+	if (!encoding && containingStatusGroup) {
 		[[adium statusController] statusStateDidSetUniqueStatusID];
 	}
 }
