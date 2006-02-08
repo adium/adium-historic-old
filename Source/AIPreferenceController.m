@@ -297,6 +297,22 @@
 }
 
 /*!
+ * @brief Set multiple global preferences at once
+ *
+ * @param inPrefDict An NSDictionary whose keys are preference keys and objects are the preferences for those keys. All must be plist-encodable.
+ * @param group An arbitrary NSString group
+ */
+- (void)setPreferences:(NSDictionary *)inPrefDict inGroup:(NSString *)group
+{
+	NSMutableDictionary	*prefDict = [self cachedPreferencesForGroup:group object:nil];
+
+	[prefDict addEntriesFromDictionary:inPrefDict];
+	
+	[self updateCachedPreferences:prefDict forGroup:group object:nil];
+	[self informObserversOfChangedKey:nil inGroup:group object:nil];
+}
+
+/*!
  * @brief Set a global or object-specific preference
  *
  * Set and save a preference.  This should not be called directly from plugins or components.  To set an object-specific
@@ -437,9 +453,7 @@
 	
 	//Object specific preferences are stored by path and objectID, while regular preferences are stored by group.
 	if (object) {
-		NSString	*path = [object pathToPreferences];
-		NSString	*uniqueID = [object internalObjectID];
-		cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
+		cacheKey = [object preferencesCacheKey];
 		activeDefaultsCache = objectPrefWithDefaultsCache;
 		targetDefaultsDict = objectDefaults;
 		
@@ -477,13 +491,11 @@
 	
 	//Object specific preferences are stored by path and objectID, while regular preferences are stored by group.
 	if (object) {
-		NSString	*path = [object pathToPreferences];
-		NSString	*uniqueID = [object internalObjectID];
-		NSString	*cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
+		NSString	*cacheKey = [object preferencesCacheKey];
 		
 		if (!(prefDict = [objectPrefCache objectForKey:cacheKey])) {
-			prefDict = [NSMutableDictionary dictionaryAtPath:[userDirectory stringByAppendingPathComponent:path]
-													withName:[uniqueID safeFilenameString]
+			prefDict = [NSMutableDictionary dictionaryAtPath:[userDirectory stringByAppendingPathComponent:[object pathToPreferences]]
+													withName:[[object internalObjectID] safeFilenameString]
 													  create:YES];
 			[objectPrefCache setObject:prefDict forKey:cacheKey];
 		}
@@ -513,9 +525,7 @@
 
 	//Object specific preferences are stored by path and objectID, while regular preferences are stored by group.
 	if (object) {
-		NSString	*path = [object pathToPreferences];
-		NSString	*uniqueID = [object internalObjectID];
-		cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
+		cacheKey = [object preferencesCacheKey];
 		sourceDefaultsDict = objectDefaults;
 		
 	} else {
@@ -541,9 +551,7 @@
 	
 	//Object specific preferences are stored by path and objectID, while regular preferences are stored by group.
 	if (object) {
-		NSString	*path = [object pathToPreferences];
-		NSString	*uniqueID = [object internalObjectID];
-		cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
+		cacheKey = [object preferencesCacheKey];
 		activeDefaultsCache = objectPrefWithDefaultsCache;
 		sourceDefaultsDict = objectDefaults;
 
@@ -584,9 +592,7 @@
 - (void)updateCachedPreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)group object:(AIListObject *)object
 {
 	if (object) {
-		NSString	*path = [object pathToPreferences];
-		NSString	*uniqueID = [object internalObjectID];
-		NSString	*cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
+		NSString	*cacheKey = [object preferencesCacheKey];
 
 		//Store to our object pref cache
 		[objectPrefCache setObject:prefDict forKey:cacheKey];
@@ -600,8 +606,8 @@
 		[objectPrefWithDefaultsCache removeObjectForKey:cacheKey];
 
 		//Save the preference change immediately (Probably not the best idea?)
-		[prefDict writeToPath:[userDirectory stringByAppendingPathComponent:path]
-					 withName:[uniqueID safeFilenameString]];
+		[prefDict writeToPath:[userDirectory stringByAppendingPathComponent:[object pathToPreferences]]
+					 withName:[[object internalObjectID] safeFilenameString]];
 
 	} else {
 		/* Retain and autorelease the current prefDict so it remains viable for this run loop, since code should be
