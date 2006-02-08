@@ -50,6 +50,7 @@
 {
 	if ((self = [super init])) {
 		containingObject = nil;
+		preferencesCacheKey = nil;
 		UID = [inUID retain];	
 		service = inService;
 
@@ -69,7 +70,8 @@
 	[UID release]; UID = nil;
 	[internalObjectID release]; internalObjectID = nil;
 	[containingObject release]; containingObject = nil;
-	
+	[preferencesCacheKey release]; preferencesCacheKey = nil;
+
     [super dealloc];
 }
 
@@ -328,6 +330,15 @@
 - (NSString *)pathToPreferences
 {
     return OBJECT_PREFS_PATH;
+}
+
+- (NSString *)preferencesCacheKey
+{
+	if (!preferencesCacheKey) {
+		preferencesCacheKey = [[NSString alloc] initWithFormat:@"%@:%@", [self pathToPreferences], [self internalObjectID]];
+	}
+	
+	return preferencesCacheKey;
 }
 
 //Display Name  -------------------------------------------------------------------------------------
