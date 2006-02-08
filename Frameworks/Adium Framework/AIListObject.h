@@ -71,6 +71,8 @@ typedef enum {
 	//Grouping, Manual ordering
     id <AIContainingObject, AIListObject>	containingObject;		//The group/metacontact this object is in
 	float									orderIndex;				//Placement of this contact within a group
+	
+	NSString	*preferencesCacheKey;
 }
 
 //
@@ -101,6 +103,7 @@ typedef enum {
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName ignoreInheritedValues:(BOOL)ignore;
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName;
 - (NSString *)pathToPreferences;
+- (NSString *)preferencesCacheKey;
 
 //Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)
 - (void)setOrderIndex:(float)inIndex;
