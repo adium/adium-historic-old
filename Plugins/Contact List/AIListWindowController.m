@@ -690,6 +690,9 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	windowSlidOffScreenEdgeMask |= rectEdgeMask;
 	
 	[self slideWindowToPoint:newWindowFrame.origin];
+	
+	listHasShadow = [[self window] hasShadow];
+	[[self window] setHasShadow:NO];
 }
 
 - (void)slideWindowOnScreen
@@ -705,6 +708,8 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 		windowSlidOffScreenEdgeMask = AINoEdges;
 	
+		[[self window] setHasShadow:listHasShadow];
+		
 		[self slideWindowToPoint:newWindowFrame.origin];
 	}
 }
