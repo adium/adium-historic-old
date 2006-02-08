@@ -65,6 +65,11 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 
 	newCell->listObject = nil;
 	[newCell setListObject:listObject];
+
+	[newCell->font retain];
+	[newCell->textColor retain];
+	[newCell->invertedTextColor retain];
+
 	return newCell;
 }
 
