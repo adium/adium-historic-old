@@ -30,12 +30,6 @@
 	return [AIBorderlessListController class];
 }
 
-- (void)dealloc
-{
-	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
-	[super dealloc];
-}
-
 #warning this seems like it would mess up people with more than one screen
 //Ensure we're on the main screen on load
 - (void)windowDidLoad
