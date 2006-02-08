@@ -65,7 +65,8 @@
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	[toolbarItems release];
-	
+	[view_statusAndImage release];
+
 	[super dealloc];
 }
 
