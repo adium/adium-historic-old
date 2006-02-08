@@ -173,12 +173,13 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 			NSString		*scriptsSetName;
 			NSEnumerator	*scriptEnumerator;
 			NSDictionary	*scriptDict;
-			
+			NSDictionary	*infoDict = [scriptBundle localizedInfoDictionary];
+
 			//Get the name of the set these scripts will go into
-			scriptsSetName = [scriptBundle objectForInfoDictionaryKey:@"Set"];
+			scriptsSetName = [infoDict objectForKey:@"Set"];
 			
 			//Now enumerate each script the bundle claims as its own
-			scriptEnumerator = [[scriptBundle objectForInfoDictionaryKey:@"Scripts"] objectEnumerator];
+			scriptEnumerator = [[infoDict objectForKey:@"Scripts"] objectEnumerator];
 			
 			while ((scriptDict = [scriptEnumerator nextObject])) {
 				NSString		*scriptFileName, *scriptFilePath, *keyword, *title;
