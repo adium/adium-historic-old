@@ -1016,6 +1016,15 @@ typedef enum {
 		repObject = [[adium preferenceController] preferenceForKey:KEY_STATUS_ICON_PACK
 															 group:PREF_GROUP_APPEARANCE];
 		popUpButton = popUp_statusIcons;
+		
+	} else if ([title isEqualToString:@"Temporary Service Icons Menu"]) {		
+		menuItemArray = [self _iconPackMenuArrayForPacks:[adium allResourcesForName:@"Service Icons" 
+																	 withExtensions:@"AdiumServiceIcons"] 
+												   class:[AIServiceIcons class]];
+		repObject = [[adium preferenceController] preferenceForKey:KEY_SERVICE_ICON_PACK
+															 group:PREF_GROUP_APPEARANCE];
+		popUpButton = popUp_serviceIcons;
+		
 	}
 	
 	if (menuItemArray) {
