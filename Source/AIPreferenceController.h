@@ -77,6 +77,7 @@ typedef enum {
 //Setting Preferences
 - (void)setPreference:(id)value forKey:(NSString *)key group:(NSString *)group;
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)group object:(AIListObject *)object;
+- (void)setPreferences:(NSDictionary *)inPrefDict inGroup:(NSString *)group;
 
 //Retrieving Preferences
 - (id)preferenceForKey:(NSString *)key group:(NSString *)group;
