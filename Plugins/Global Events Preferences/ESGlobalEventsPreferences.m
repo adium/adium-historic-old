@@ -33,8 +33,9 @@
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIImageTextCell.h>
 
-#define PREF_GROUP_EVENT_PRESETS			@"Event Presets"
-#define CUSTOM_TITLE						AILocalizedString(@"Custom",nil)
+#define PREF_GROUP_EVENT_PRESETS	@"Event Presets"
+#define CUSTOM_TITLE				AILocalizedString(@"Custom",nil)
+#define COPY_IN_PARENTHESIS			AILocalizedString(@"(Copy)","Copy, in parenthesis, as a noun indicating that the preceding item is a duplicate")
 
 #define VOLUME_SOUND_PATH   [NSString pathWithComponents:[NSArray arrayWithObjects: \
 	@"/", @"System", @"Library", @"LoginPlugins", \
@@ -293,7 +294,7 @@
 	defaultName = [NSString stringWithFormat:@"%@ %@",
 		[self _localizedTitle:[[adium preferenceController] preferenceForKey:KEY_ACTIVE_EVENT_SET
 																	   group:PREF_GROUP_EVENT_PRESETS]],
-		AILocalizedString(@"(Copy)","Copy, in parenthesis, as a noun indicating that the preceding item is a duplicate")];
+		COPY_IN_PARENTHESIS];
 	explanatoryText = AILocalizedString(@"Enter a unique name for this new event set.",nil);
 
 	[ESPresetNameSheetController showPresetNameSheetWithDefaultName:defaultName
@@ -362,7 +363,7 @@
 - (NSArray *)duplicatePreset:(NSDictionary *)preset inPresets:(NSArray *)presets createdDuplicate:(id *)duplicatePreset
 {
 	NSMutableDictionary	*newEventPreset = [preset mutableCopy];
-	NSString			*newName = [NSString stringWithFormat:@"%@ (%@)", [preset objectForKey:@"Name"], AILocalizedString(@"Copy",nil)];
+	NSString			*newName = [NSString stringWithFormat:@"%@ %@", [preset objectForKey:@"Name"], COPY_IN_PARENTHESIS];
 	[newEventPreset setObject:newName
 					   forKey:@"Name"];
 	
@@ -613,7 +614,7 @@
 	NSString	*defaultName;
 	NSString	*explanatoryText;
 	
-	defaultName = [NSString stringWithFormat:@"%@ (%@)", originalPresetName, AILocalizedString(@"Copy",nil)];
+	defaultName = [NSString stringWithFormat:@"%@ %@", originalPresetName, COPY_IN_PARENTHESIS];
 	explanatoryText = AILocalizedString(@"You are editing a default event set.  Please enter a unique name for your modified set.",nil);
 	
 	[ESPresetNameSheetController showPresetNameSheetWithDefaultName:defaultName
