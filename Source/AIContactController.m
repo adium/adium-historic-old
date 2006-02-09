@@ -2238,13 +2238,25 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (void)moveContact:(AIListContact *)listContact toGroup:(AIListObject<AIContainingObject> *)group
 {
-	//Move the object to the new group if necessary
+	//Move the object to the new group only if necessary
 	if (group != [listContact containingObject]) {
-
 		if ([group isKindOfClass:[AIListGroup class]]) {
+			//Move a contact into a new group
 			if ([listContact isKindOfClass:[AIMetaContact class]]) {
-				//This is a meta contact, move the objects within it.  listContacts will give us a flat array of AIListContacts.
+				//Move the meta contact to this new group
 				[self _moveContactLocally:listContact toGroup:(AIListGroup *)group];
+
+				NSEnumerator	*enumerator;
+				AIListContact	*actualListContact;
+
+				//This is a meta contact, move the objects within it.  listContacts will give us a flat array of AIListContacts.
+				enumerator = [[(AIMetaContact *)listContact listContacts] objectEnumerator];
+				while ((actualListContact = [enumerator nextObject])) {
+					//Only move the contact if it is actually listed on the account in question
+					if (![actualListContact isStranger]) {
+						[self _moveObjectServerside:actualListContact toGroup:(AIListGroup *)group];
+					}
+				}
 
 			} else if ([listContact isKindOfClass:[AIListContact class]]) {
 				//Move the object
