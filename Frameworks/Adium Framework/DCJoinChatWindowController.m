@@ -87,6 +87,10 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 		[view_customView addSubview:currentView];
 		[controller configureForAccount:inAccount];
 	}
+	
+	if ([[self window] respondsToSelector:@selector(recalculateKeyViewLoop)]) {
+		[[self window] recalculateKeyViewLoop];
+	}
 }
 
 //Init
