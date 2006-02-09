@@ -31,18 +31,22 @@
 #ifdef DEBUG_BUILD
 void AILog (NSString *format, ...) {
 	va_list		ap; /* Points to each unamed argument in turn */
-	NSString	*actualMessage;
+	NSString	*debugMessage, *actualMessage;
 	
 	va_start(ap, format); /* Make ap point to the first unnamed argument */
-	actualMessage = [[NSString alloc] initWithFormat:format
-										   arguments:ap];
-
+	
+	debugMessage = [[NSString alloc] initWithFormat:format
+										  arguments:ap];
+	
+	actualMessage = [[[NSDate date] descriptionWithCalendarFormat:@"%H:%M:%S: "
+														 timeZone:nil
+														   locale:nil] stringByAppendingString:debugMessage];
+	[debugMessage release];
+	
 	/* Be careful; we should only modify debugLogArray and the windowController's view on the main thread. */
 	[[NSClassFromString(@"ESDebugController") sharedDebugController] performSelectorOnMainThread:@selector(addMessage:)
 																					  withObject:actualMessage
-																				   waitUntilDone:NO];
-	
-	[actualMessage release];
+																				   waitUntilDone:NO];	
 	va_end(ap); /* clean up when done */
 }
 #else
