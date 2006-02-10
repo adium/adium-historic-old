@@ -18,22 +18,6 @@
 
 @implementation NSTableView (AITableViewAdditions)
 
-- (int)indexOfTableColumn:(NSTableColumn *)inColumn
-{
-    NSTableColumn	*column;
-    NSEnumerator	*enumerator;
-    int			index = 0;
-
-    enumerator = [[self tableColumns] objectEnumerator];
-    while ((column = [enumerator nextObject])) {
-        if (column == inColumn) return index;
-        index++;
-    }
-
-    return NSNotFound;
-}
-
-
 //Return an array of items which are currently selected. SourceArray should be an array from which to pull the items;
 //its count must be the same as the number of rows
 - (NSArray *)arrayOfSelectedItemsUsingSourceArray:(NSArray *)sourceArray
@@ -62,20 +46,5 @@
 
 	return itemArray;
 }
-
-- (int)indexOfTableColumnWithIdentifier:(id)inIdentifier
-{
-    NSTableColumn	*column;
-    NSEnumerator	*enumerator;
-    int			index = 0;
-    
-    enumerator = [[self tableColumns] objectEnumerator];
-    while ((column = [enumerator nextObject])) {
-        if ([column identifier] == inIdentifier/*[(NSString *)[column identifier] compare:inIdentifier] == 0*/) return index;
-        index++;
-    }
-
-    return NSNotFound;
-}  
 
 @end
