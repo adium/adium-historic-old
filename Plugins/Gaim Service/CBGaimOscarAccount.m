@@ -28,7 +28,7 @@
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
 
-#define DELAYED_UPDATE_INTERVAL			1.0
+#define DELAYED_UPDATE_INTERVAL			2.0
 
 @implementation CBGaimOscarAccount
 
