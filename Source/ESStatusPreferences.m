@@ -18,6 +18,7 @@
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import "KFTypeSelectTableView.h"
 
 #define STATE_DRAG_TYPE	@"AIState"
