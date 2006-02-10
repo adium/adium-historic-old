@@ -37,6 +37,7 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIService.h>
 
+#import "AIWebKitJSBridge.h"
 #import "ESWebView.h"
 
 @class AIContentMessage, AIContentStatus, AIContentObject;
@@ -350,6 +351,8 @@ static NSArray *draggedTypes = nil;
 			nil];
 	}
 	[webView registerForDraggedTypes:draggedTypes];
+	
+	[[webView windowScriptObject] setValue:[AIWebKitJSBridge bridgeWithController:self] forKey:@"adium"];
 }
 
 /*!
