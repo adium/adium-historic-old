@@ -100,6 +100,11 @@ int HTMLEquivalentForFontSize(int fontSize);
 - (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string;
 @end
 
+@interface NSString (AIHTMLDecoderAdditions)
+- (NSString *)stringByConvertingWingdingsToUnicode;
+- (NSString *)stringByConvertingSymbolToSymbolUnicode;
+@end
+
 @implementation AIHTMLDecoder
 
 static AITextAttributes *_defaultTextDecodingAttributes = nil;
@@ -684,7 +689,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	receive = NO;
 	inDiv = NO;
 	inLogSpan = NO;
-	
+
     //set up
 	if (inDefaultAttributes) {
 		textAttributes = [AITextAttributes textAttributesWithDictionary:inDefaultAttributes];
@@ -711,36 +716,27 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		 * those characters to our final attributed string with the desired attributes before continuing.
 		 */
 		if ([scanner scanUpToCharactersFromSet:tagCharStart intoString:&chunkString]) {
-			/* XXX not quite right yet; ends up throwing exceptions in Tiger when rendering the 'translated'
-			 * characters */
-#if 0
 			id	languageValue = [textAttributes languageValue];
 			
-			/* AIM sets language value 143 for characters which are actually in the private unicode space;
-			 * the most obvious example is Wingdings messages sent from Windows AIM, where Wingdings is in the normal ASCII
-			 * range on Windows but has its special characters in the private unicode space, 0xF000 above normal.
-			 *
-			 * Handle this special case. */
-			if (languageValue && ([languageValue intValue] == 143)) {
-				NSString	*fontFamily = [textAttributes fontFamily];
-				int			offset;
-				
-				if ([fontFamily caseInsensitiveCompare:@"Symbol"] == NSOrderedSame) {
-					/* XXX - Can't figure out how to map the Symbol font. 0x0300 as an offset gets us into the Greek
-					 * letters, * which almost maps up.. except on Windows "D" = delta and "G" = gamma,
-					 * whereas delta and gamma are adjacent in the  Greek letters section of the font on OS X. */
-					offset = 0x0300;
+			//AIM sets language value 143 for characters which are in Symbol or Wingdings.
+			if (languageValue && ([languageValue intValue] == 143)) {				
+				if ([[textAttributes fontFamily] caseInsensitiveCompare:@"Symbol"] == NSOrderedSame) {
+					chunkString = [chunkString stringByConvertingSymbolToSymbolUnicode];
+
 				} else {
-					offset = 0xF000;
-				}
+					if ([NSFont fontWithName:@"Wingdings" size:0]) {
+						//Use the Wingdings font if it is installed
+						chunkString = [chunkString stringByTranslatingByOffset:0xF000];
 
-				chunkString = [chunkString stringByTranslatingByOffset:offset];
+					} else {
+						chunkString = [chunkString stringByConvertingWingdingsToUnicode];
+					}
+				}				
 			}
-#endif
-
+			
 			[attrString appendString:chunkString withAttributes:[textAttributes dictionary]];
 		}
-
+		
 		//Process the tag
 		if ([scanner scanCharactersFromSet:tagCharStart intoString:&tagOpen]) { //If a tag wasn't found, we don't process.
 			unsigned scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
@@ -1547,6 +1543,131 @@ int HTMLEquivalentForFontSize(int fontSize)
 - (NSString *)absoluteString
 {
 	return self;
+}
+
+/*!
+ * @brief Convert ASCII Symbol font to the appropriate Unicode characters
+ *
+ * This is needed because Windows Symbol font uses the normal ASCII range while OS X's uses Unicode properly.
+ * A table extracted from http://www.alanwood.net/demos/symbol.html converts
+ * Symbol characters in the 32 to 254 range into their Unicode equivalents (also in the Symbol font).
+ *
+ * Characters which can't be converted are replaced by ''.
+ */
+- (NSString *)stringByConvertingSymbolToSymbolUnicode
+{
+	NSMutableString		*decodedString = [NSMutableString string];
+
+	//Symbol to Unicode Escape for characters 32 through 126 in the Symbol font
+	static const char *lowSymbolTable[] = {
+		" ", "", "\xE2\x88\x80", "", "\xE2\x88\x83", "", "", "\xE2\x88\x8D", "", "", "\xE2\x88\x97",
+		"", "", "\xE2\x88\x92", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+		"\xE2\x89\x85", "\xCE\x91", "\xCE\x92", "\xCE\xA7", "\xCE\x94", "\xCE\x95", "\xCE\xA6", "\xCE\x93",
+		"\xCE\x97", "\xCE\x99", "\xCF\x91", "\xCE\x9A", "\xCE\x9B", "\xCE\x9C", "\xCE\x9D", "\xCE\x9F",
+		"\xCE\xA0", "\xCE\x98", "\xCE\xA1", "\xCE\xA3", "\xCE\xA4", "\xCE\xA5", "\xCF\x82", "\xCE\xA9",
+		"\xCE\x9E", "\xCE\xA8", "\xCE\x96", "", "\xE2\x88\xB4", "", "\xE2\x8A\xA5", "", "", "\xCE\xB1",
+		"\xCE\xB2", "\xCF\x87", "\xCE\xB4", "\xCE\xB5", "\xCF\x86", "\xCE\xB3", "\xCE\xB7", "\xCE\xB9", "\xCF\x95",
+		"\xCE\xBA", "\xCE\xBB", "\xCE\xBC", "\xCE\xBD", "\xCE\xBF", "\xCF\x80", "\xCE\xB8", "\xCF\x81", "\xCF\x83",
+		"\xCF\x84", "\xCF\x85", "\xCF\x96", "\xCF\x89", "\xCE\xBE", "\xCF\x88", "\xCE\xB6", "", "", "", "\xE2\x88\xBC"	};
+
+	//Symbol to Unicode Escape for characters 161 through 254 in the Symbol font
+	static const char *highSymbolTable[] = {
+		"\xCF\x92", "\xE2\x80\xB2", "\xE2\x89\xA4", "\xE2\x81\x84", "\xE2\x88\x9E", "\xC6\x92", "\xE2\x99\xA3",
+		"\xE2\x99\xA6", "\xE2\x99\xA5", "\xE2\x99\xA0", "\xE2\x86\x94", "\xE2\x86\x90", "\xE2\x86\x91", "\xE2\x86\x92",
+		"\xE2\x86\x93", "\xC2\xB1", "\xE2\x80\xB3", "\xE2\x89\xA5", "\xC3\x97", "\xE2\x88\x9D", "\xE2\x88\x82", "\xE2\x88\x99",
+		"\xC3\xB7", "\xE2\x89\xA0", "\xE2\x89\xA1", "\xE2\x89\x88", "\xE2\x80\xA6", "\xE2\x8F\x90", "\xE2\x8E\xAF",
+		"\xE2\x86\xB5", "\xE2\x84\xB5", "\xE2\x84\x91", "\xE2\x84\x9C", "\xE2\x84\x98", "\xE2\x8A\x97", "\xE2\x8A\x95",
+		"\xE2\x88\x85", "\xE2\x88\xA9", "\xE2\x88\xAA", "\xE2\x8A\x83", "\xE2\x8A\x87", "\xE2\x8A\x84", "\xE2\x8A\x82",
+		"\xE2\x8A\x86", "\xE2\x88\x88", "\xE2\x88\x89", "\xE2\x88\xA0", "\xE2\x88\x87", "\xC2\xAE", "\xC2\xA9", "\xE2\x84\xA2",
+		"\xE2\x88\x8F", "\xE2\x88\x9A", "\xE2\x8B\x85", "\xC2\xAC", "\xE2\x88\xA7", "\xE2\x88\xA8", "\xE2\x87\x94",
+		"\xE2\x87\x90", "\xE2\x87\x91", "\xE2\x87\x92", "\xE2\x87\x93", "\xE2\x97\x8A", "\xE2\x8C\xA9", "\xC2\xAE",
+		"\xC2\xA9", "\xE2\x84\xA2", "\xE2\x88\x91", "\xE2\x8E\x9B", "\xE2\x8E\x9C", "\xE2\x8E\x9D", "\xE2\x8E\xA1", "\xE2\x8E\xA2",
+		"\xE2\x8E\xA3", "\xE2\x8E\xA7", "\xE2\x8E\xA8", "\xE2\x8E\xA9", "\xE2\x8E\xAA", "\xE2\x82\xAC", "\xE2\x8C\xAA",
+		"\xE2\x88\xAB", "\xE2\x8C\xA0", "\xE2\x8E\xAE", "\xE2\x8C\xA1", "\xE2\x8E\x9E", "\xE2\x8E\x9F", "\xE2\x8E\xA0",
+		"\xE2\x8E\xA4", "\xE2\x8E\xA5", "\xE2\x8E\xA6", "\xE2\x8E\xAB", "\xE2\x8E\xAC", "\xE2\x8E\xAD"};
+	
+	int i;
+	const char *utf8String = [self UTF8String];
+	unsigned sourceLength = strlen(utf8String);
+	
+	for (i = 0; i < sourceLength; i++) {
+		unichar	ch = utf8String[i];
+		const char *replacement;
+		
+		if (ch >= 32 && ch <= 126) {
+			replacement = lowSymbolTable[ch - 32];
+
+		} else if (ch >= 161 && ch <= 254) {
+			replacement = highSymbolTable[ch - 161];
+
+		} else {
+			replacement = NULL;
+		}
+
+		if (replacement && strlen(replacement)) {
+			[decodedString appendString:[NSString stringWithUTF8String:replacement]];
+
+		} else {
+			[decodedString appendFormat:@"%c", ch];			
+		}
+	}
+	
+	return decodedString;	
+}
+
+/*
+ * @brief Convert Wingdings characters to their Unicode equivalents if possible
+ *
+ * This table extracted from http://www.alanwood.net/demos/wingdings.html attempts to convert
+ * Wingdings characters into Unicode equivalents.  Characters which can't be converted are replaced by ''.
+ */
+- (NSString *)stringByConvertingWingdingsToUnicode
+{	
+	NSMutableString		*decodedString = [NSMutableString string];
+
+	//Wingdings to Unicode Escape for characters 32 through 255 in the Wingdings font
+	static const char *wingdingsTable[] = {
+		" ", "\xE2\x9C\x8F", "\xE2\x9C\x82", "\xE2\x9C\x81", "", "", "", "",
+		"\xE2\x98\x8E", "\xE2\x9C\x86", "\xE2\x9C\x89", "", "", "", "",
+		"", "", "", "", "", "", "", "\xE2\x8C\x9B", "\xE2\x8C\xA8", "",
+		"", "", "", "", "", "\xE2\x9C\x87", "\xE2\x9C\x8D", "", "\xE2\x9C\x8C",
+		"", "", "", "\xE2\x98\x9C", "\xE2\x98\x9E", "\xE2\x98\x9D", "\xE2\x98\x9F",
+		"", "\xE2\x98\xBA", "", "\xE2\x98\xB9", "", "\xE2\x98\xA0", "\xE2\x9A\x90",
+		"", "\xE2\x9C\x88", "\xE2\x98\xBC", "", "\xE2\x9D\x84", "", "\xE2\x9C\x9E",
+		"", "\xE2\x9C\xA0", "\xE2\x9C\xA1", "\xE2\x98\xAA", "\xE2\x98\xAF", "\xE0\xA5\x90",
+		"\xE2\x98\xB8", "\xE2\x99\x88", "\xE2\x99\x89", "\xE2\x99\x8A", "\xE2\x99\x8B",
+		"\xE2\x99\x8C", "\xE2\x99\x8D", "\xE2\x99\x8E", "\xE2\x99\x8F", "\xE2\x99\x90",
+		"\xE2\x99\x91", "\xE2\x99\x92", "\xE2\x99\x93", "&", "&", "\xE2\x97\x8F", "\xE2\x9D\x8D",
+		"\xE2\x96\xA0", "\xE2\x96\xA1", "", "\xE2\x9D\x91", "\xE2\x9D\x92", "", "\xE2\x99\xA6",
+		"\xE2\x97\x86", "\xE2\x9D\x96", "", "\xE2\x8C\xA7", "\xE2\x8D\x93", "\xE2\x8C\x98", "\xE2\x9D\x80",
+		"\xE2\x9C\xBF", "\xE2\x9D\x9D", "\xE2\x9D\x9E", "\xE2\x96\xAF", "\xE2\x93\xAA", "\xE2\x91\xA0",
+		"\xE2\x91\xA1", "\xE2\x91\xA2", "\xE2\x91\xA3", "\xE2\x91\xA4", "\xE2\x91\xA5", "\xE2\x91\xA6",
+		"\xE2\x91\xA7", "\xE2\x91\xA8", "\xE2\x91\xA9", "\xE2\x93\xBF", "\xE2\x9D\xB6", "\xE2\x9D\xB7",
+		"\xE2\x9D\xB8", "\xE2\x9D\xB9", "\xE2\x9D\xBA", "\xE2\x9D\xBB", "\xE2\x9D\xBC", "\xE2\x9D\xBD",
+		"\xE2\x9D\xBE", "\xE2\x9D\xBF", "", "", "", "", "", "", "", "", "\xC2\xB7", "\xE2\x80\xA2",
+		"\xE2\x96\xAA", "\xE2\x97\x8B", "", "", "\xE2\x97\x89", "\xE2\x97\x8E", "", "\xE2\x96\xAA",
+		"\xE2\x97\xBB", "", "\xE2\x9C\xA6", "\xE2\x98\x85", "\xE2\x9C\xB6", "\xE2\x9C\xB4", "\xE2\x9C\xB9",
+		"\xE2\x9C\xB5", "", "\xE2\x8C\x96", "\xE2\x9C\xA7", "\xE2\x8C\x91", "", "\xE2\x9C\xAA", "\xE2\x9C\xB0",
+		"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+		"", "", "", "", "\xE2\x8C\xAB", "\xE2\x8C\xA6", "", "\xE2\x9E\xA2", "", "", "", "\xE2\x9E\xB2", "", "",
+		"", "", "", "", "", "", "", "", "", "\xE2\x9E\x94", "", "", "", "", "", "", "\xE2\x87\xA6", "\xE2\x87\xA8",
+		"\xE2\x87\xA7", "\xE2\x87\xA9", "\xE2\xAC\x84", "\xE2\x87\xB3", "\xE2\xAC\x80", "\xE2\xAC\x81", "\xE2\xAC\x83",
+		"\xE2\xAC\x82", "\xE2\x96\xAD", "\xE2\x96\xAB", "\xE2\x9C\x97", "\xE2\x9C\x93", "\xE2\x98\x92", "\xE2\x98\x91", ""};
+	
+	int i;
+	const char *utf8String = [self UTF8String];
+	unsigned sourceLength = strlen(utf8String);
+	
+	for (i = 0; i < sourceLength; i++) {
+		unichar	ch = utf8String[i];
+		if (ch >= 32 && ch <= 255) {
+			[decodedString appendString:[NSString stringWithUTF8String:wingdingsTable[ch - 32]]];
+		} else {
+			[decodedString appendFormat:@"%c", ch];
+		}
+	}
+	
+	return decodedString;
 }
 
 @end
