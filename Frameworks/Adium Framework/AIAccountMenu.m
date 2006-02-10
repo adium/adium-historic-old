@@ -183,7 +183,9 @@
 																				 keyEquivalent:@""
 																			 representedObject:account];
 			[self _updateMenuItem:menuItem];
-			[menuItem setSubmenu:[self actionsMenuForAccount:account]];
+			if (submenuType == AIAccountOptionsSubmenu) {
+				[menuItem setSubmenu:[self actionsMenuForAccount:account]];
+			}
 			[menuItemArray addObject:menuItem];
 			[menuItem release];
 		}
