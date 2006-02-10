@@ -369,6 +369,12 @@
 			NSTextAttachment		*attachment;
 			NSTextAttachmentCell	*cell;
 			
+			NSSize					iconSize = [icon size];
+			
+			if ((iconSize.width > 13) || (iconSize.height > 13)) {
+				icon = [icon imageByScalingToSize:NSMakeSize(13, 13)];
+			}
+
 			cell = [[[NSTextAttachmentCell alloc] init] autorelease];
 			[cell setImage:icon];
 			
