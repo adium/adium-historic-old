@@ -22,6 +22,7 @@
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
+#import <AIUtilities/AITableViewAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
@@ -169,6 +170,19 @@
     }
 }
 
+/*
+ * @brief Handle a double click within our table
+ *
+ * Ignore double clicks on the enable/disable checkbox
+ */
+- (void)doubleClickInTableView:(id)sender
+{
+	if (!(NSPointInRect([tableView_accountList convertPoint:[[NSApp currentEvent] locationInWindow] fromView:nil],
+						[tableView_accountList rectOfColumn:[tableView_accountList columnWithIdentifier:@"enabled"]]))) {
+		[self editAccount:sender];
+	}
+}
+
 /*!
  * @brief Editing of an account completed
  */
@@ -264,7 +278,7 @@
 
 	//Configure our table view
 	[tableView_accountList setTarget:self];
-	[tableView_accountList setDoubleAction:@selector(editAccount:)];
+	[tableView_accountList setDoubleAction:@selector(doubleClickInTableView:)];
 	[tableView_accountList setIntercellSpacing:NSMakeSize(4,4)];
 
 	//Enable dragging of accounts
