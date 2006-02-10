@@ -31,8 +31,6 @@
 #import <Adium/AIAccountMenu.h>
 #import <AIUtilities/AIColorAdditions.h>
 
-#import <QuartzCore/QuartzCore.h>
-
 #define STATUS_ITEM_MARGIN 8
 
 @interface CBStatusMenuItemController (PRIVATE)
@@ -208,49 +206,6 @@
 	}
 	return [self badgeDuck:adiumHighlightImage withImage:inImage];
 }
-
-#if 0
-- (NSImage *)alternateImageForImage:(NSImage *)inImage
-{
-	NSImage				*altImage = [[NSImage alloc] initWithSize:[inImage size]];
-	NSBitmapImageRep	*srcImageRep = [inImage bitmapRep];
-	
-	Class Filter = NSClassFromString(@"CIFilter");
-	Class Image = NSClassFromString(@"CIImage");
-	Class Color = NSClassFromString(@"CIColor");
-	Class Context = NSClassFromString(@"CIContext");
-	id monochromeFilter, invertFilter, alphaFilter;
-
-	monochromeFilter = [Filter filterWithName:@"CIColorMonochrome"];
-	[monochromeFilter setValue:[[[Image alloc] initWithBitmapImageRep:srcImageRep] autorelease]
-						forKey:@"inputImage"]; 
-	[monochromeFilter setValue:[NSNumber numberWithFloat:1.0]
-						forKey:@"inputIntensity"];
-	[monochromeFilter setValue:[[[Color alloc] initWithColor:[NSColor blackColor]] autorelease]
-						forKey:@"inputColor"];
-
-	//Now invert our greyscale image
-	invertFilter = [Filter filterWithName:@"CIColorInvert"];
-	[invertFilter setValue:[monochromeFilter valueForKey:@"outputImage"]
-					forKey:@"inputImage"]; 
-
-	//And turn the parts that were previously white (are now black) into transparent
-	alphaFilter = [Filter filterWithName:@"CIMaskToAlpha"];
-	[alphaFilter setValue:[invertFilter valueForKey:@"outputImage"]
-			  forKey:@"inputImage"]; 
-
-	[altImage lockFocus];
-	id context = [Context contextWithCGContext:[[NSGraphicsContext currentContext] graphicsPort] 
-									   options:nil];
-	id result = [alphaFilter valueForKey:@"outputImage"];
-	[context drawImage:result
-			   atPoint:CGPointZero
-			  fromRect:[result extent]];
-	[altImage unlockFocus];
-
-	return [altImage autorelease];
-}
-#endif //0
 
 - (void)setOfflineDuck
 {
