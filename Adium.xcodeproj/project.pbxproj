@@ -63,6 +63,8 @@
 		078C5CD2079EFF88004C75A4 /* AILocalizationButtonCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		078C5CD3079EFF88004C75A4 /* AILocalizationButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */; };
 		07AF3C5A07D4897300409BC8 /* pref-messagehistory.png in Resources */ = {isa = PBXBuildFile; fileRef = 07AF3C5907D4897200409BC8 /* pref-messagehistory.png */; };
+		07B7CCB8099E910C00744461 /* AIWebKitJSBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B7CCB6099E910C00744461 /* AIWebKitJSBridge.h */; };
+		07B7CCB9099E910C00744461 /* AIWebKitJSBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 07B7CCB7099E910C00744461 /* AIWebKitJSBridge.m */; };
 		07F1795008EBC5B400A9C392 /* UndeclaredLibgaimFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F1794F08EBC5B300A9C392 /* UndeclaredLibgaimFunctions.h */; };
 		07F8303509693F5E002FC851 /* OTR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		110763F508676CC9005987A5 /* RAFBlockEditorPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */; };
@@ -1581,6 +1583,8 @@
 		078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButtonCell.h; path = "Frameworks/Adium Framework/AILocalizationButtonCell.h"; sourceTree = "<group>"; };
 		078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButtonCell.m; path = "Frameworks/Adium Framework/AILocalizationButtonCell.m"; sourceTree = "<group>"; };
 		07AF3C5907D4897200409BC8 /* pref-messagehistory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-messagehistory.png"; path = "Resources/pref-messagehistory.png"; sourceTree = "<group>"; };
+		07B7CCB6099E910C00744461 /* AIWebKitJSBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIWebKitJSBridge.h; path = "Plugins/WebKit Message View/AIWebKitJSBridge.h"; sourceTree = "<group>"; };
+		07B7CCB7099E910C00744461 /* AIWebKitJSBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIWebKitJSBridge.m; path = "Plugins/WebKit Message View/AIWebKitJSBridge.m"; sourceTree = "<group>"; };
 		07F1794F08EBC5B300A9C392 /* UndeclaredLibgaimFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UndeclaredLibgaimFunctions.h; path = "Plugins/Gaim Service/UndeclaredLibgaimFunctions.h"; sourceTree = "<group>"; };
 		110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorPlugin.h; path = Source/RAFBlockEditorPlugin.h; sourceTree = "<group>"; };
 		110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorPlugin.m; path = Source/RAFBlockEditorPlugin.m; sourceTree = "<group>"; };
@@ -5795,6 +5799,8 @@
 				4B539C4C05EFD6CD00E5921A /* AIWebKitMessageViewPlugin.m */,
 				4B539C5105EFD6FA00E5921A /* AIWebKitMessageViewController.h */,
 				4B539C5205EFD6FB00E5921A /* AIWebKitMessageViewController.m */,
+				07B7CCB6099E910C00744461 /* AIWebKitJSBridge.h */,
+				07B7CCB7099E910C00744461 /* AIWebKitJSBridge.m */,
 				4BD62D7E07CE8F240099EBA2 /* AIWebkitMessageViewStyle.h */,
 				4BD62D7F07CE8F240099EBA2 /* AIWebkitMessageViewStyle.m */,
 				34C2D70306338E2E0018E5D2 /* ESWebKitMessageViewPreferences.h */,
@@ -6463,6 +6469,7 @@
 				346C9D3006004650000F5A8A /* WebKitPrivateDefinitions.h in Headers */,
 				34C2D70506338E2E0018E5D2 /* ESWebKitMessageViewPreferences.h in Headers */,
 				4BD62D8007CE8F240099EBA2 /* AIWebkitMessageViewStyle.h in Headers */,
+				07B7CCB8099E910C00744461 /* AIWebKitJSBridge.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8134,6 +8141,7 @@
 				346C9D1606004646000F5A8A /* ESWebView.m in Sources */,
 				34C2D70606338E2E0018E5D2 /* ESWebKitMessageViewPreferences.m in Sources */,
 				4BD62D8107CE8F240099EBA2 /* AIWebkitMessageViewStyle.m in Sources */,
+				07B7CCB9099E910C00744461 /* AIWebKitJSBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
