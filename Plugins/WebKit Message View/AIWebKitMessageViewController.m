@@ -352,7 +352,7 @@ static NSArray *draggedTypes = nil;
 	}
 	[webView registerForDraggedTypes:draggedTypes];
 	
-	[[webView windowScriptObject] setValue:[AIWebKitJSBridge bridgeWithController:self] forKey:@"adium"];
+	[[webView windowScriptObject] setValue:[[AIWebKitJSBridge alloc] initWithController:self] forKey:@"adium"];
 }
 
 /*!
