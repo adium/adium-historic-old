@@ -16,7 +16,7 @@
 
 #import <Adium/AIObject.h>
 
-@class AIWebKitMessageViewPlugin, AIWebkitMessageViewStyle, AIContentObject, ESWebView;
+@class AIWebKitMessageViewPlugin, AIWebkitMessageViewStyle, AIContentObject, ESWebView, AIWebKitJSBridge;
 
 @protocol AIMessageViewController;
 
@@ -40,6 +40,9 @@
 	//User icon masking
 	NSImage						*imageMask;
 	NSMutableArray				*objectsWithUserIconsArray;
+	
+	//javascript bridging
+	AIWebKitJSBridge			*jsBridge;
 }
 
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
