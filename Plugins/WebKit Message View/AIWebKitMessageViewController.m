@@ -156,7 +156,7 @@ static NSArray *draggedTypes = nil;
 	//Release the chat
 	[chat release]; chat = nil;
 	
-	[jsBridge release]; jsBridge = nil;
+	//[jsBridge release]; jsBridge = nil;
 
 	[super dealloc];
 }
@@ -354,8 +354,8 @@ static NSArray *draggedTypes = nil;
 	}
 	[webView registerForDraggedTypes:draggedTypes];
 	
-	jsBridge = [[AIWebKitJSBridge alloc] initWithController:self];
-	[[webView windowScriptObject] setValue:jsBridge forKey:@"adium"];
+//	jsBridge = [[AIWebKitJSBridge alloc] initWithController:self];
+//	[[webView windowScriptObject] setValue:jsBridge forKey:@"adium"];
 }
 
 /*!
