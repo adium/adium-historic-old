@@ -12,7 +12,7 @@
 #define IGNORED_Y_RESISTS			3
 
 @interface AIDockingWindow (PRIVATE)
-- (id)_init;
+- (id)_initDockingWindow;
 - (NSRect)dockWindowFrame:(NSRect)windowFrame toScreenFrame:(NSRect)screenFrame;
 @end
 
@@ -24,25 +24,30 @@
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
 {
-	self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag];
-	self = [self _init];
+	if ((self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag])) {
+		[self _initDockingWindow];
+	}
+
 	return self;
 }
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	self = [super initWithCoder:aDecoder];
-	self = [self _init];
+	if ((self = [super initWithCoder:aDecoder])) {
+		[self _initDockingWindow];
+	}
+
 	return self;
 }
 - (id)init
 {
-	self = [super init];
-	self = [self _init];
+	if ((self = [super init])) {
+		[self _initDockingWindow];
+	}
 	return self;
 }
 
 //Observe window movement
-- (id)_init
+- (void)_initDockingWindow
 {
 	[[NSNotificationCenter defaultCenter] addObserver:self 
 											 selector:@selector(windowDidMove:)
@@ -52,8 +57,6 @@
 	resisted_YMotion = 0;
 	oldWindowFrame = NSMakeRect(0,0,0,0);
 	alreadyMoving = NO;
-
-	return self;
 }
 
 //Stop observing movement
