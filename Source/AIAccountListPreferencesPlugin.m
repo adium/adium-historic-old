@@ -30,7 +30,36 @@
  */
 - (void)installPlugin
 {
-    [[AIAccountListPreferences preferencePaneForPlugin:self] retain];	
+	accountListPreferences = [[AIAccountListPreferences preferencePaneForPlugin:self] retain];
+	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(editAccount:)
+									   name:@"AIEditAccount"
+									 object:nil];
+}
+
+- (void)dealloc
+{
+	[[adium notificationCenter] removeObserver:self];
+	[accountListPreferences release];
+
+	[super dealloc];
+}
+
+/*
+ * @brief Edit an account
+ *
+ * @param inNotification An AIEditAccount notification whose object is the AIAccount to edit
+ */
+- (void)editAccount:(NSNotification *)inNotification
+{
+	AIAccount	*account = [inNotification object];
+	
+	//Open the preferences to the accounts pane
+	[[adium preferenceController] openPreferencesToCategoryWithIdentifier:@"accounts"];
+
+	//Then edit the account
+	[accountListPreferences editAccount:account];
 }
 
 @end
