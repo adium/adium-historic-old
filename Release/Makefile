@@ -12,7 +12,7 @@
 # - make all
 ###########
 
-VERSION=1.0svn14450
+VERSION=1.0svn
 BETA=TRUE
 
 ###########
