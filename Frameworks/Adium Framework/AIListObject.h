@@ -19,7 +19,8 @@
 
 @class AIListObject, AIService, AIMutableOwnerArray, AIListGroup;
 
-#define	KEY_ORDER_INDEX	@"Order Index"
+#define	KEY_ORDER_INDEX		@"Order Index"
+#define KEY_IS_BLOCKED		@"isBlocked"
 
 typedef enum {
 	AIAvailableStatus = 'avaL',
@@ -126,6 +127,7 @@ typedef enum {
 
 - (BOOL)isStranger;
 - (BOOL)isMobile;
+- (BOOL)isBlocked;
 
 - (NSString *)displayName;
 - (void)setDisplayName:(NSString *)alias;

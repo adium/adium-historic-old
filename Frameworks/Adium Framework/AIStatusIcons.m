@@ -135,42 +135,54 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 				[statusIcon release];
 			}
 		} else {
-			NSString	*defaultStatusName = defaultNameForStatusType(statusType);
-
-			if (![defaultStatusName isEqualToString:statusName]) {
-				/* If the pack doesn't provide an icon for this specific status name, fall back on and then cache the default. */
-				if ((statusIcon = [self statusIconForStatusName:defaultStatusName
-													statusType:statusType
-													  iconType:iconType
-													 direction:iconDirection])) {
+			if ([statusName isEqualToString:@"Blocked"]) {
+				//We want a blocked icon but the status set does not give us one
+				statusIcon = [NSImage imageNamed:@"DefaultBlockedStatusIcon" forClass:[self class]];
+				
+				if (statusIcon) {
+					if (iconDirection == AIIconFlipped) [statusIcon setFlipped:YES];
 					[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusName];
-				}
+				}				
+			}
 
-			} else {
-				if (statusType == AIInvisibleStatusType) {
-					/* If we get here with an invisible status type, fall back on AIAwayStatusType */
-					if ((statusIcon = [self statusIconForStatusName:nil
-														statusType:AIAwayStatusType
-														  iconType:iconType
-														 direction:iconDirection])) {
+			if (!statusIcon) {
+				NSString	*defaultStatusName = defaultNameForStatusType(statusType);
+				
+				if (![defaultStatusName isEqualToString:statusName]) {
+					/* If the pack doesn't provide an icon for this specific status name, fall back on and then cache the default. */
+					if ((statusIcon = [self statusIconForStatusName:defaultStatusName
+														 statusType:statusType
+														   iconType:iconType
+														  direction:iconDirection])) {
 						[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusName];
 					}
 					
 				} else {
-					NSString	*errorMessage;
-					
-					errorMessage = [NSString stringWithFormat:
-						AILocalizedStringFromTable(@"The active status icon pack \"%@\" installed at \"%@\" is invalid.  It is missing the required status icon \"%@\".  If you received this pack from adiumxtras.com, please contact its author. Your status icon setting will be restored to the default.", @"AdiumFramework", nil),
-						[[statusIconBasePath lastPathComponent] stringByDeletingPathExtension],
-						statusIconBasePath,
-						defaultStatusName];
-					
-					NSRunCriticalAlertPanel(AILocalizedStringFromTable(@"Invalid status icon pack", @"AdiumFramework", nil),errorMessage,nil,nil,nil);
-					
-					//Post a notification so someone, somewhere can fix us :)
-					[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIStatusIconSetInvalidSetNotification
-																					   object:nil];
+					if (statusType == AIInvisibleStatusType) {
+						/* If we get here with an invisible status type, fall back on AIAwayStatusType */
+						if ((statusIcon = [self statusIconForStatusName:nil
+															 statusType:AIAwayStatusType
+															   iconType:iconType
+															  direction:iconDirection])) {
+							[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusName];
+						}
+						
+					} else {
+						NSString	*errorMessage;
+						
+						errorMessage = [NSString stringWithFormat:
+							AILocalizedStringFromTable(@"The active status icon pack \"%@\" installed at \"%@\" is invalid.  It is missing the required status icon \"%@\".  If you received this pack from adiumxtras.com, please contact its author. Your status icon setting will be restored to the default.", @"AdiumFramework", nil),
+							[[statusIconBasePath lastPathComponent] stringByDeletingPathExtension],
+							statusIconBasePath,
+							defaultStatusName];
+						
+						NSRunCriticalAlertPanel(AILocalizedStringFromTable(@"Invalid status icon pack", @"AdiumFramework", nil),errorMessage,nil,nil,nil);
+						
+						//Post a notification so someone, somewhere can fix us :)
+						[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIStatusIconSetInvalidSetNotification
+																						   object:nil];
 				}
+			}
 			}
 		}
 	}
@@ -262,7 +274,8 @@ static NSString *statusNameForListObject(AIListObject *listObject)
 
 	if ([listObject isMobile]) {
 		statusName = @"Mobile";
-	
+	} else if ([listObject isBlocked]) {
+		statusName = @"Blocked";
 	} else {
 		AIStatusSummary	statusSummary = [listObject statusSummary];
 

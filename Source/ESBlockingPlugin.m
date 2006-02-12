@@ -29,6 +29,7 @@
 @interface ESBlockingPlugin(PRIVATE)
 - (void)_blockContact:(AIListContact *)contact unblock:(BOOL)unblock;
 - (BOOL)_searchPrivacyListsForListContact:(AIListContact *)contact withDesiredResult:(BOOL)desiredResult;
+- (void)accountConnected:(NSNotification *)notification;
 @end
 
 @implementation ESBlockingPlugin
@@ -48,10 +49,17 @@
 																action:@selector(blockContact:)
 														 keyEquivalent:@""];
     [[adium menuController] addContextualMenuItem:blockContactContextualMenuItem toLocation:Context_Contact_NegativeAction];
+	
+	//we want to know when an account connects
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(accountConnected:)
+									   name:ACCOUNT_CONNECTED
+									 object:nil];
 }
 
 - (void)uninstallPlugin
 {
+	[[adium notificationCenter] removeObserver:self];
 	[blockContactMenuItem release];
 	[blockContactContextualMenuItem release];
 }
@@ -78,7 +86,7 @@
 
 		if (NSRunAlertPanel([NSString stringWithFormat:format, [contact displayName]],
 						   @"",
-						   AILocalizedString(@"OK", nil),
+						   [sender title],
 						   AILocalizedString(@"Cancel", nil),
 						   nil) == NSAlertDefaultReturn) {
 			
@@ -190,21 +198,15 @@
 - (void)_blockContact:(AIListContact *)contact unblock:(BOOL)unblock
 {
 	//We want to block on all accounts with the same service class. If you want someone gone, you want 'em GONE.
-	NSEnumerator *enumerator = [[[adium accountController] accountsCompatibleWithService:[contact service]] objectEnumerator];
-	AIAccount *account = nil;
-
+	NSEnumerator	*enumerator = [[[adium accountController] accountsCompatibleWithService:[contact service]] objectEnumerator];
+	AIAccount		*account = nil;
+	AIListContact	*sameContact = nil;
+	
 	while ((account = [enumerator nextObject])) {
-		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-			AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
-			if (unblock) {
-				if ([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]) {
-					[privacyAccount removeListObject:contact fromPrivacyList:PRIVACY_DENY];
-				}
-			} else {
-				if (![[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]) {
-					[privacyAccount addListObject:contact toPrivacyList:PRIVACY_DENY];
-				}
-			}
+		sameContact = [account contactWithUID:[contact UID]];
+		
+		if (sameContact) {
+			[sameContact setIsBlocked:!unblock updateList:YES];
 		}
 	}
 }
@@ -225,6 +227,35 @@
 		}
 	}
 	return NO;
+}
+
+/*!
+ * @brief Inform AIListContact instances of the user's intended privacy towards the people they represent
+ */
+- (void)accountConnected:(NSNotification *)notification
+{
+	//NSLog(@"account connected: %@", notification);
+	
+	AIAccount		*accountConnected = [notification object];
+	NSEnumerator	*contactEnumerator = nil;
+	AIListContact	*currentContact = nil;
+	
+	if ([accountConnected conformsToProtocol:@protocol(AIAccount_Privacy)]) {
+		
+		//check if each contact is on the account's deny list
+		contactEnumerator = [[accountConnected contacts] objectEnumerator];
+		while ((currentContact = [contactEnumerator nextObject])) {
+			//NSLog(@"The current contact is: %@", currentContact);
+			
+			if ([[(AIAccount <AIAccount_Privacy> *)accountConnected listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[currentContact UID]]) {
+				//inform the contact that they're blocked
+				[currentContact setIsBlocked:YES updateList:NO];
+				//NSLog(@"** %@ is blocked **", [currentContact formattedUID]);
+			} else {
+				[currentContact setIsBlocked:NO updateList:NO];
+			}
+		}
+	}
 }
 
 @end

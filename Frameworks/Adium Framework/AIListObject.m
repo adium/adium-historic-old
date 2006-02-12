@@ -601,6 +601,16 @@
 }
 
 /*!
+ * @brief Is this contact blocked?
+ *
+ * @result A boolean indicating if the object is blocked
+ */
+- (BOOL)isBlocked
+{
+	return NO;
+}
+
+/*!
  * @brief Set the current status message
  *
  * @param statusMessage Status message. May be nil.
