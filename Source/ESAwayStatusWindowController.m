@@ -109,6 +109,11 @@ static BOOL							hideInBackground = NO;
 	[[self window] setLevel:(alwaysOnTop ? NSFloatingWindowLevel : NSNormalWindowLevel)];
 	[[self window] setHidesOnDeactivate:hideInBackground];
 
+	/* Set a more reasonable minimum size after the window is sized using our nib's specification.
+	 * NSPanel behaves oddly with minimum size... it seems to increase the nib-specified minimum by 11.
+	 */
+	[[self window] setMinSize:NSMakeSize([[self window] minSize].width, 80)];
+	
 	//Setup the textviews
     [textView_singleStatus setHorizontallyResizable:NO];
     [textView_singleStatus setVerticallyResizable:YES];
