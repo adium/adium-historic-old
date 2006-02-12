@@ -24,7 +24,9 @@
 	
 	IBOutlet	NSView		*view_anchorToLeftSide;
 	IBOutlet	NSView		*view_anchorToRightSide;
+
 	AILocalizationAnchorMovementType	rightAnchorMovementType;
+	BOOL								alwaysMoveRightAnchoredWindow;
 }
 
 @end

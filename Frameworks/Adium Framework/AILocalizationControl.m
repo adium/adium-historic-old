@@ -48,6 +48,19 @@
 	rightAnchorMovementType = inType;
 }
 
+/*
+ * @brief Set if resizing of this control should always resize its right-anchored window
+ *
+ * The default is NO.  If YES, resizing the control will maintain distance to the right side of the window
+ * even if by resizing the control isn't at the window's edge.  This is useful, for example, to keep a left-aligned checkbox
+ * with a right-aligned button to its right from overlapping the button.  In a perfect world, we would move the button
+ * which would then shift the window, but we're not set up for that kind of recursively intelligent positioning.
+ */
+- (void)setAlwaysMoveRightAnchoredWindow:(BOOL)inAlwaysMove
+{
+	alwaysMoveRightAnchoredWindow = inAlwaysMove;
+}
+
 - (void)setFrame:(NSRect)inFrame
 {
 	originalFrame = inFrame;
@@ -161,7 +174,14 @@
 				
 				[TARGET_CONTROL setFrame:newFrame];
 				[TARGET_CONTROL setNeedsDisplay:YES];
+
+			} else if (alwaysMoveRightAnchoredWindow) {
+				float		difference =  NSMaxX(newFrame) - NSMaxX(oldFrame);
+				if (difference > 0) {
+					[self _resizeWindow:window_anchorOnRightSide rightBy:difference];
+				}
 			}
+
 		} else {
 			/* We don't have a window anchored to the right side.
 			 * If we are outside our superview's frame, we should try moving our origin left.  If we can do
