@@ -12,7 +12,7 @@
 # - make all
 ###########
 
-VERSION=1.0svn
+VERSION=1.0svn14450
 BETA=TRUE
 
 ###########
@@ -79,9 +79,17 @@ createfolder:
 	cp $(SRC_DIR)/Changes.txt $(ADIUM_DIR)
 	cp $(SRC_DIR)/License.txt $(ADIUM_DIR)
 	
-	@# delete svn and backup files
+	@# symlink /Applications
+	ln -s /Applications $(ADIUM_DIR)/Applications
+
+	@# delete svn  and backup files
 	find $(BUILD_DIR) -name ".svn" -type d -exec rm -rf {} \; -prune
-	find $(BUILD_DIR) \( -name "*~" -or -name .DS_Store -or -name classes.nib -or -name info.nib \) -type f -delete
+	find $(BUILD_DIR) \( -name "*~" -or -name .DS_Store \) -type f -delete
+	
+	@# delete unneeded nib files for non-beta builds
+ifeq ($(BETA),FALSE)
+	find $(BUILD_DIR) \( -name classes.nib -or -name info.nib \) -type f -delete
+endif
 	
 diskimage:
 	rm "$(BUILD_DIR)/$(RELEASE_NAME).dmg" || true
