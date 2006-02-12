@@ -53,7 +53,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	_listContacts = nil;
 
 	[super initWithUID:[objectID stringValue] service:nil];
-
+	
 	containedObjects = [[NSMutableArray alloc] init];
 	
 	containsOnlyOneUniqueContact = NO;
@@ -185,6 +185,47 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 - (BOOL)isStranger
 {
 	return NO;
+}
+
+/*!
+ * @brief Are all the contacts in this meta blocked?
+ *
+ * @result Boolean flag indicating if all the listContacts are blocked
+ */
+- (BOOL)isBlocked
+{
+	BOOL			allContactsBlocked = ([[self listContacts] count] ? YES : NO);
+	NSEnumerator	*enumerator = [[self listContacts] objectEnumerator];
+	AIListContact	*currentContact = nil;
+	
+	while ((currentContact = [enumerator nextObject])) {
+		//find any unblocked contacts
+		if (![currentContact isBlocked]) {
+			allContactsBlocked = NO;
+			break;
+		}
+	}
+	
+	return allContactsBlocked;
+}
+
+/*!
+ * @brief Block each contact contained in the meta
+ */
+- (void)setIsBlocked:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists
+{
+	NSEnumerator	*contactEnumerator = [[self listContacts] objectEnumerator];
+	AIListContact	*currentContact = nil;
+	
+	//attempt to block entire meta
+	while ((currentContact = [contactEnumerator nextObject])) {
+		[currentContact setIsBlocked:yesOrNo updateList:addToPrivacyLists];
+	}
+	
+	//update status object if we are completely blocked
+	[self setStatusObject:([self isBlocked] ? [NSNumber numberWithBool:YES] : nil)
+				   forKey:KEY_IS_BLOCKED 
+				   notify:NotifyNow];
 }
 
 //Object Storage -------------------------------------------------------------------------------------------------------

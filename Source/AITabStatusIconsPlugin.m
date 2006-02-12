@@ -86,6 +86,7 @@
 	   [inModifiedKeys containsObject:@"StatusType"] ||
 	   [inModifiedKeys containsObject:@"IsIdle"] ||
 	   [inModifiedKeys containsObject:@"NotAStranger"] ||
+	   [inModifiedKeys containsObject:KEY_IS_BLOCKED] ||
 	   [inModifiedKeys containsObject:@"IsMobile"]) {
 		
 		//Tab
