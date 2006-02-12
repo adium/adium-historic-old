@@ -157,16 +157,21 @@
 							   notifyingTarget:self];
 }
 
+- (void)editAccount:(AIAccount *)inAccount
+{
+	[AIEditAccountWindowController editAccount:inAccount
+									  onWindow:[[self view] window]
+							   notifyingTarget:self];	
+}
+
 /*!
  * @brief Edit the currently selected account using <tt>AIEditAccountWindowController</tt>
  */
-- (IBAction)editAccount:(id)sender
+- (IBAction)editSelectedAccount:(id)sender
 {
     int	selectedRow = [tableView_accountList selectedRow];
-	if (selectedRow >= 0 && selectedRow < [accountArray count]) {		
-		[AIEditAccountWindowController editAccount:[accountArray objectAtIndex:selectedRow] 
-										  onWindow:[[self view] window]
-								   notifyingTarget:self];
+	if (selectedRow >= 0 && selectedRow < [accountArray count]) {
+		[self editAccount:[accountArray objectAtIndex:selectedRow]];
     }
 }
 

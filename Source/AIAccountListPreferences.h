@@ -34,7 +34,8 @@
 }
 
 - (IBAction)deleteAccount:(id)sender;
-- (IBAction)editAccount:(id)sender;
+- (void)editAccount:(AIAccount *)inAccount;
+- (IBAction)editSelectedAccount:(id)sender;
 - (void)updateAccountOverview;
 - (void)updateControlAvailability;
 

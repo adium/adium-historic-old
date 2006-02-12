@@ -16,8 +16,10 @@
 
 #import <Adium/AIPlugin.h>
 
-@interface AIAccountListPreferencesPlugin : AIPlugin {
+@class AIAccountListPreferences;
 
+@interface AIAccountListPreferencesPlugin : AIPlugin {
+	AIAccountListPreferences	*accountListPreferences;
 }
 
 @end
