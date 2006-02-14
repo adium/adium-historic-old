@@ -20,6 +20,7 @@
 #import "AIObject.h"
 #import "AIStatusIcons.h"
 #import "AIStatusController.h"
+#import <AIUtilities/AIImageAdditions.h>
 
 @implementation AIStatusIcons
 
