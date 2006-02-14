@@ -26,6 +26,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 #import <Adium/AITextAttachmentExtension.h>
 #import <Adium/ESFileWrapperExtension.h>
@@ -467,6 +468,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			for (i = 0; (i < searchRange.length); i++) { 
 				NSTextAttachment *textAttachment = [[inMessage attributesAtIndex:searchRange.location+i 
 																  effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
+
 				if (textAttachment) {
 					AITextAttachmentExtension *attachment = (AITextAttachmentExtension *)textAttachment;
 					/* If we have a path to which we want to save any images and either
@@ -484,7 +486,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 															(!thingsToInclude.onlyIncludeOutgoingImages || (![attachment respondsToSelector:@selector(shouldAlwaysSendAsText)] ||
 																											![attachment shouldAlwaysSendAsText])));
 					BOOL appendedImage = NO;
-					
+
 					if (shouldSaveImage || shouldIncludeImageWithoutSaving) {
 						NSString	*existingPath, *imageName;
 						NSImage		*image;
@@ -502,13 +504,13 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						} else {
 							image = nil;
 						}
-						
+
 						if (existingPath || image) {
 							appendedImage = [self appendImage:image
 													   atPath:existingPath
 													 toString:string
 													 withName:imageName
-												   imagesPath:imagesSavePath];
+												   imagesPath:(shouldIncludeImageWithoutSaving ? imagesSavePath : nil)];
 							
 							//We were succesful appending the image tag, so release this chunk
 							[chunk release]; chunk = nil;	
@@ -1253,15 +1255,12 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	NSEnumerator				*enumerator;
 	NSString					*arg;
 	NSAttributedString			*attachString;
-	NSFileWrapper				*fileWrapper = nil;
-	NSString					*path = nil;
-	AITextAttachmentExtension   *attachment = [[[AITextAttachmentExtension alloc] init] autorelease];
+	AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
 
 	enumerator = [inArgs keyEnumerator];
 	while ((arg = [enumerator nextObject])) {
 		if ([arg caseInsensitiveCompare:@"SRC"] == NSOrderedSame) {
-			path = [inArgs objectForKey:arg];
-			fileWrapper = [[[NSFileWrapper alloc] initWithPath:path] autorelease];
+			[attachment setPath:[inArgs objectForKey:arg]];
 		}
 		if ([arg caseInsensitiveCompare:@"ALT"] == NSOrderedSame) {
 			[attachment setString:[inArgs objectForKey:arg]];
@@ -1269,13 +1268,21 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		}
 	}
 	
-	if (![attachment hasAlternate] && path) {
-		[attachment setString:path];
-	}
-	
-	[attachment setFileWrapper:fileWrapper];
 	[attachment setShouldSaveImageForLogging:YES];
+
+	//Use the real image if possible
+	NSImage		*image = [attachment image];
+	
+	//Otherwise, use an icon representing the image
+	if (!image) image = [attachment iconImage];
+
+	NSTextAttachmentCell *cell = [[NSTextAttachmentCell alloc] initImageCell:image];
+	[attachment setAttachmentCell:cell];
+	[cell release];
+
 	attachString = [NSAttributedString attributedStringWithAttachment:attachment];
+	[attachment release];
+
 	return attachString;
 }
 
@@ -1289,28 +1296,35 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	NSString			*shortFileName;
 	NSString			*fileURL;	
 	BOOL				success = NO;
-	
+
 	if (imagesPath || !inPath) {
 		//create the images directory if it doesn't exist
 		if (imagesPath) {
 			[[NSFileManager defaultManager] createDirectoriesForPath:imagesPath];
 		}
 
-		//If we get here and don't have a path at which to save images, save to the temporary directory
-		if (!imagesPath) {
-			imagesPath = NSTemporaryDirectory();
-		}
-
 		if (inPath) {
+			NSString *localPath = [[NSFileManager defaultManager] uniquePathForPath:[imagesPath stringByAppendingPathComponent:[inPath lastPathComponent]]];
+
 			//Image already exists on disk; copy it to our images path
 			success = [[NSFileManager defaultManager] copyPath:inPath
-														toPath:[imagesPath stringByAppendingPathComponent:[inPath lastPathComponent]]
+														toPath:localPath
 													   handler:NULL];
+			
+			inPath = localPath;
+
 		} else {
+			/* If we get here, the image is not on disk. If we don't have a path at which to save images,
+			 * save to the temporary directory.
+			 */
+			if (!imagesPath) {
+				imagesPath = NSTemporaryDirectory();
+			}
+			
 			//Image doesn't exist on disk; write it out to our images path
 			shortFileName = [[inName safeFilenameString] stringByAppendingPathExtension:@"png"];
-			inPath = [imagesPath stringByAppendingPathComponent:shortFileName];
-			
+			inPath = [[NSFileManager defaultManager] uniquePathForPath:[imagesPath stringByAppendingPathComponent:shortFileName]];
+
 			success = [[attachmentImage PNGRepresentation] writeToFile:inPath atomically:YES];
 		}
 		
@@ -1324,7 +1338,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	
 	if (success) {
 		fileURL = [[NSURL fileURLWithPath:inPath] absoluteString];
-	
+
 		[string appendFormat:@"<img src=\"%@\" alt=\"%@\">", [fileURL stringByEscapingForHTML], [inName stringByEscapingForHTML]];
 	}
 	
