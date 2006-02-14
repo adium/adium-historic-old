@@ -256,7 +256,7 @@ gboolean gaim_init_jabber_plugin(void);
 						encodeSpaces:NO
 						  imagesPath:nil
 				   attachmentsAsText:YES
-	  attachmentImagesOnlyForSending:YES
+		   onlyIncludeOutgoingImages:YES
 					  simpleTagsOnly:NO
 					  bodyBackground:NO];
 }

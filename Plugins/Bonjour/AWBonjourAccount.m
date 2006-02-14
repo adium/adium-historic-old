@@ -410,7 +410,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 						encodeSpaces:NO
 						  imagesPath:nil
 				   attachmentsAsText:YES
-	  attachmentImagesOnlyForSending:NO
+		   onlyIncludeOutgoingImages:NO
 					  simpleTagsOnly:NO
 					  bodyBackground:NO];
 }

@@ -1136,19 +1136,19 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key) {
 	if (searchMode == LOG_SEARCH_CONTENT) {
 		[activeSearchStringEncoded release];
 		activeSearchStringEncoded = [[AIHTMLDecoder encodeHTML:[[[NSAttributedString alloc] initWithString:activeSearchString] autorelease]
-                                                                headers:NO 
-                                                               fontTags:NO 
-                                                     includingColorTags:NO
-                                                          closeFontTags:NO 
-                                                              styleTags:NO
-                                             closeStyleTagsOnFontChange:NO
-                                                         encodeNonASCII:YES 
-                                                           encodeSpaces:NO
-                                                             imagesPath:nil 
-                                                      attachmentsAsText:YES 
-                                         attachmentImagesOnlyForSending:NO 
-                                                         simpleTagsOnly:NO
-                                                         bodyBackground:NO] retain];
+													   headers:NO 
+													  fontTags:NO 
+											includingColorTags:NO
+												 closeFontTags:NO 
+													 styleTags:NO
+									closeStyleTagsOnFontChange:NO
+												encodeNonASCII:YES 
+												  encodeSpaces:NO
+													imagesPath:nil 
+											 attachmentsAsText:YES 
+									 onlyIncludeOutgoingImages:NO 
+												simpleTagsOnly:NO
+												bodyBackground:NO] retain];
 		AILog(@"Search will be on %@",activeSearchStringEncoded);
 	} else {
 		[activeSearchStringEncoded release]; activeSearchStringEncoded = nil;

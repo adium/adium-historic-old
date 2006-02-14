@@ -329,7 +329,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 							 encodeSpaces:NO
 							   imagesPath:nil
 						attachmentsAsText:YES 
-		   attachmentImagesOnlyForSending:NO 
+				onlyIncludeOutgoingImages:NO 
 						   simpleTagsOnly:NO
 						   bodyBackground:NO]];
 		} else {

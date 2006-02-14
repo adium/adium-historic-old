@@ -105,7 +105,7 @@ gboolean gaim_init_yahoo_plugin(void);
 							encodeSpaces:NO
 							  imagesPath:nil
 					   attachmentsAsText:YES
-		  attachmentImagesOnlyForSending:NO
+			   onlyIncludeOutgoingImages:NO
 						  simpleTagsOnly:YES
 						  bodyBackground:NO];
 	} else {
