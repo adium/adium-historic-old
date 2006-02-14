@@ -69,4 +69,6 @@
  */
 - (NSString *)pathIfNotDirectory:(NSString *)path;
 
+- (NSString *)uniquePathForPath:(NSString *)inPath;
+
 @end
