@@ -14,31 +14,111 @@
 \------------------------------------------------------------------------------------------------------ */
 
 #import "AITextAttachmentExtension.h"
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AITextAttachmentAdditions.h>
 
 @implementation AITextAttachmentExtension
 
 - (id)init
 {
-    if ((self = [super init]))
-	{
+    if ((self = [super init])) {
 		stringRepresentation = nil;
 		shouldSaveImageForLogging = NO;
 		hasAlternate = NO;
 		shouldAlwaysSendAsText = NO;
-		imagePath = nil;
-		imageSize = NSMakeSize(0,0);
+		path = nil;
+		image = nil;
 	}
 	
     return self;
 }
 
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
-	[imagePath release];
+	[image release];
+	[path release];
 	[stringRepresentation release];
 	[super dealloc];
 }
-    
+
+/*
+ * @brief Set the path represented by this text attachment
+ *
+ * If an image has not been set, and this path points to an image, [self image] will return the image, loading it from this path
+ */
+- (void)setPath:(NSString *)inPath
+{
+	if (inPath != path) {
+		[path release];
+		path = [inPath retain];
+	}
+}
+
+- (NSString *)path
+{
+	return path;
+}
+
+/*
+ * @brief Set the image represented by this text attachment
+ */
+- (void)setImage:(NSImage *)inImage
+{
+	if (inImage != image) {
+		[image release];
+		image = [inImage retain];
+	}
+}
+
+/*
+ * @brief Returns YES if this attachment is for an image
+ */
+- (BOOL)attachesAnImage
+{
+	BOOL attachesAnImage = (image != nil);
+	
+	if (!attachesAnImage && path) {
+		NSArray			*imageFileTypes = [NSImage imageFileTypes];
+		OSType			HFSTypeCode = [[[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES] fileHFSTypeCode];
+		NSString		*pathExtension;
+		
+		attachesAnImage = ([imageFileTypes containsObject:NSFileTypeForHFSTypeCode(HFSTypeCode)] ||
+					  ((pathExtension = [path pathExtension]) && [imageFileTypes containsObject:pathExtension]));
+	}
+
+	return attachesAnImage;
+}
+
+- (NSImage *)image
+{
+	if (!image && [self wrapsImage]) {
+		image = [[NSImage alloc] initWithContentsOfFile:[self path]];
+	}
+	
+	return image;
+}
+
+/*
+ * @brief Return a 32x32 image representing this attachment
+ */
+- (NSImage *)iconImage
+{
+	NSImage *originalImage;
+	NSImage *iconImage;
+
+	if ((originalImage = [self image])) {
+		iconImage = [originalImage imageByScalingToSize:NSMakeSize(32, 32)];
+
+	} else {
+		iconImage = [[NSWorkspace sharedWorkspace] iconForFile:[self path]];
+	}
+	
+	return iconImage;
+}
+
 - (void)setString:(NSString *)inString
 {
     if (stringRepresentation != inString) {
@@ -47,8 +127,33 @@
     }
 }
 
+/*
+ * @brief Return a fileWrapper for the file/image we represent, creating and caching it if necessary
+ *
+ * @result An NSFileWrapper
+ */
+- (NSFileWrapper *)fileWrapper
+{
+	NSFileWrapper *myFilewrapper = [super fileWrapper];
+	
+	if (!myFilewrapper) {
+		if ([self path]) {
+			myFilewrapper = [[[NSFileWrapper alloc] initWithPath:[self path]] autorelease];
+
+		} else if ([self image]) {
+			myFilewrapper = [[[NSFileWrapper alloc] initWithSerializedRepresentation:[[self image] TIFFRepresentation]] autorelease];
+		}
+
+		[self setFileWrapper:myFilewrapper];
+	}
+	
+	return myFilewrapper;
+}
+
 /*!
- * @brief If asked for a string and we don't have one available, set and return a globally unique string
+ * @brief Return a string which represents our object
+ *
+ * If asked for a string and we don't have one available, create, cache, and return a globally unique string
  */
 - (NSString *)string
 {
@@ -57,27 +162,6 @@
     }
 	
     return (stringRepresentation);
-}
-
-- (void)setImagePath:(NSString *)inPath
-{
-	if (imagePath != inPath) {
-		[imagePath release];
-		imagePath = [inPath retain];
-	}
-}
-- (NSString *)imagePath
-{
-	return imagePath;
-}
-
-- (void)setImageSize:(NSSize)inSize
-{
-	imageSize = inSize;
-}
-- (NSSize)imageSize
-{
-	return imageSize;
 }
 
 - (BOOL)shouldSaveImageForLogging

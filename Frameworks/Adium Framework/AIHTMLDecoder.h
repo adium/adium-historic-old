@@ -28,7 +28,7 @@
 		unsigned nonASCII: 1;
 		unsigned allSpaces: 1;
 		unsigned attachmentTextEquivalents: 1;
-		unsigned attachmentImagesOnlyForSending: 1;
+		unsigned onlyIncludeOutgoingImages: 1;
 		unsigned bodyBackground: 1;
 
 		unsigned simpleTagsOnly: 1;
@@ -59,7 +59,7 @@
 	   encodeNonASCII:(BOOL)encodeNonASCII
 		 encodeSpaces:(BOOL)encodeSpaces
 	attachmentsAsText:(BOOL)attachmentsAsText
-attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
+onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	   simpleTagsOnly:(BOOL)simpleOnly
 	   bodyBackground:(BOOL)bodyBackground;
 
@@ -71,7 +71,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					   encodeNonASCII:(BOOL)encodeNonASCII
 						 encodeSpaces:(BOOL)encodeSpaces
 					attachmentsAsText:(BOOL)attachmentsAsText
-	   attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
+			onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					   simpleTagsOnly:(BOOL)simpleOnly
 					   bodyBackground:(BOOL)bodyBackground;
 
@@ -158,7 +158,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			encodeSpaces:(BOOL)encodeSpaces
 			  imagesPath:(NSString *)imagesPath
 	   attachmentsAsText:(BOOL)attachmentsAsText
-attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
+onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		  simpleTagsOnly:(BOOL)simpleOnly
 		  bodyBackground:(BOOL)bodyBackground;
 

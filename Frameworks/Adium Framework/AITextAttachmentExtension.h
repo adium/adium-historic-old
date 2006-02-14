@@ -17,8 +17,8 @@
     NSString	*stringRepresentation;
     BOOL        shouldSaveImageForLogging;
 	BOOL		hasAlternate;
-	NSString	*imagePath;
-	NSSize		imageSize;
+	NSString	*path;
+	NSImage		*image;
 	BOOL		shouldAlwaysSendAsText;
 }
 
@@ -29,11 +29,15 @@
 - (BOOL)hasAlternate;
 - (void)setHasAlternate:(BOOL)flag;
 
-- (void)setImagePath:(NSString *)inPath;
-- (NSString *)imagePath;
+- (void)setPath:(NSString *)inPath;
+- (NSString *)path;
 
-- (void)setImageSize:(NSSize)inSize;
-- (NSSize)imageSize;
+- (void)setImage:(NSImage *)inImage;
+- (NSImage *)image;
+
+- (NSImage *)iconImage;
+
+- (BOOL)attachesAnImage;
 
 - (BOOL)shouldAlwaysSendAsText;
 - (void)setShouldAlwaysSendAsText:(BOOL)flag;
