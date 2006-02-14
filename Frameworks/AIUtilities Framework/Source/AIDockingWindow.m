@@ -12,7 +12,7 @@
 #define IGNORED_Y_RESISTS			3
 
 @interface AIDockingWindow (PRIVATE)
-- (id)_initDockingWindow;
+- (void)_initDockingWindow;
 - (NSRect)dockWindowFrame:(NSRect)windowFrame toScreenFrame:(NSRect)screenFrame;
 @end
 
