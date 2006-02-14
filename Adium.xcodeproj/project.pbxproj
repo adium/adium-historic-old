@@ -660,6 +660,7 @@
 		34C9A6380822930D004F912C /* ESGaimMeanwhileContactAdditionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C9A6360822930D004F912C /* ESGaimMeanwhileContactAdditionController.h */; };
 		34C9A6390822930D004F912C /* ESGaimMeanwhileContactAdditionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C9A6370822930D004F912C /* ESGaimMeanwhileContactAdditionController.m */; };
 		34C9A64508229348004F912C /* GaimMeanwhileContactAdditionWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C9A64408229348004F912C /* GaimMeanwhileContactAdditionWindow.nib */; };
+		34C9EC41099FA2A8007ECAB3 /* DefaultBlockedStatusIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 34C9EC40099FA2A8007ECAB3 /* DefaultBlockedStatusIcon.png */; };
 		34CEBE6206F117DF00A89DDE /* ESContactInfoListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */; };
 		34CEBE6306F117DF00A89DDE /* ESContactInfoListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */; };
 		34CF9DF4085B8B7900D87E37 /* ESiTunesPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */; };
@@ -2604,6 +2605,7 @@
 		34C9A6360822930D004F912C /* ESGaimMeanwhileContactAdditionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimMeanwhileContactAdditionController.h; path = "Plugins/Gaim Service/ESGaimMeanwhileContactAdditionController.h"; sourceTree = "<group>"; };
 		34C9A6370822930D004F912C /* ESGaimMeanwhileContactAdditionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimMeanwhileContactAdditionController.m; path = "Plugins/Gaim Service/ESGaimMeanwhileContactAdditionController.m"; sourceTree = "<group>"; };
 		34C9A64408229348004F912C /* GaimMeanwhileContactAdditionWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = GaimMeanwhileContactAdditionWindow.nib; path = "Plugins/Gaim Service/GaimMeanwhileContactAdditionWindow.nib"; sourceTree = "<group>"; };
+		34C9EC40099FA2A8007ECAB3 /* DefaultBlockedStatusIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DefaultBlockedStatusIcon.png; path = "Frameworks/Adium Framework/DefaultBlockedStatusIcon.png"; sourceTree = "<group>"; };
 		34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESContactInfoListController.h; path = Source/ESContactInfoListController.h; sourceTree = "<group>"; };
 		34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESContactInfoListController.m; path = Source/ESContactInfoListController.m; sourceTree = "<group>"; };
 		34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESiTunesPlugin.h; path = Source/ESiTunesPlugin.h; sourceTree = "<group>"; };
@@ -5198,6 +5200,7 @@
 				4B93588E06DBC71B007977AA /* AIUserIcons.m */,
 				4B93588F06DBC71B007977AA /* AIStatusIcons.h */,
 				4B93588B06DBC71B007977AA /* AIStatusIcons.m */,
+				34C9EC40099FA2A8007ECAB3 /* DefaultBlockedStatusIcon.png */,
 				4B93588D06DBC71B007977AA /* AIServiceIcons.h */,
 				4B93588C06DBC71B007977AA /* AIServiceIcons.m */,
 			);
@@ -7868,6 +7871,7 @@
 				34BFD7F607E6A22700AD984D /* PresetManagement.nib in Resources */,
 				34BFDB3907E7714300AD984D /* PresetNameSheet.nib in Resources */,
 				348FF84A09128D6300A942A8 /* AccountDefaults.plist in Resources */,
+				34C9EC41099FA2A8007ECAB3 /* DefaultBlockedStatusIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
