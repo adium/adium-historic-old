@@ -315,7 +315,7 @@
 																	   encodeSpaces:YES
 																		 imagesPath:nil
 																  attachmentsAsText:YES
-													 attachmentImagesOnlyForSending:NO
+														  onlyIncludeOutgoingImages:NO
 																	 simpleTagsOnly:NO
 																	 bodyBackground:NO]];
 	NSString *time = [messageDate descriptionWithCalendarFormat:@"%Y-%m-%d %H:%M:%S" timeZone:nil locale:nil];

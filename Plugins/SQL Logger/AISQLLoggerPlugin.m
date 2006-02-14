@@ -184,7 +184,7 @@
 																		  styleTags:YES closeStyleTagsOnFontChange:NO
 																	 encodeNonASCII:YES encodeSpaces:YES
 																		 imagesPath:nil
-																  attachmentsAsText:YES attachmentImagesOnlyForSending:NO
+																  attachmentsAsText:YES onlyIncludeOutgoingImages:NO
 																	 simpleTagsOnly:NO
 																	 bodyBackground:NO]];
 

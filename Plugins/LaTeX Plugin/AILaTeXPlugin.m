@@ -120,6 +120,7 @@
     [attachment setString:textEquivalent];
     [attachment setShouldSaveImageForLogging:YES];
 	[attachment setHasAlternate:YES];
+	[attachment setImage:img];
     attachString = [[[NSAttributedString attributedStringWithAttachment:attachment] mutableCopy] autorelease];
     
     [img release];
