@@ -594,9 +594,9 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	NSScanner			*scanner;
     NSString			*chunkString = nil;
     NSMutableString		*newString;
-	NSString			*targetString = @"<IMG ID=\"";
+	NSString			*targetString = @"<IMG ID='";
     int imageID;
-	
+
 	if ([inString rangeOfString:targetString options:NSCaseInsensitiveSearch].location == NSNotFound) {
 		return inString;
 	}
@@ -607,8 +607,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
     scanner = [NSScanner scannerWithString:inString];
     [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
 	
-	//A gaim image tag takes the form <IMG ID="12"></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)
-	
+	//A gaim image tag takes the form <IMG ID='12'></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)
+
 	//Parse the incoming HTML
     while (![scanner isAtEnd]) {
 		
@@ -621,9 +621,9 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			
 			//Get the image ID from the tag
 			[scanner scanInt:&imageID];
-			
+
 			//Scan up to ">
-			[scanner scanString:@"\">" intoString:nil];
+			[scanner scanString:@"'>" intoString:nil];
 			
 			//Get the image, then write it out as a png
 			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
@@ -649,7 +649,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			}
 		}
 	}
-	
+
 	return ([newString autorelease]);
 }
 
