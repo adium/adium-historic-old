@@ -25,6 +25,7 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #import <Adium/AITextAttachmentExtension.h>
 #import <Adium/ESFileWrapperExtension.h>
@@ -96,7 +97,11 @@ int HTMLEquivalentForFontSize(int fontSize);
 - (void)processSpanTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processDivTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
-- (BOOL)appendImage:(NSImage *)attachmentImage toString:(NSMutableString *)string withName:(NSString *)fileSafeChunk  altString:(NSString *)attachmentString imagesPath:(NSString *)imagesPath;
+- (BOOL)appendImage:(NSImage *)attachmentImage
+			 atPath:(NSString *)inPath
+		   toString:(NSMutableString *)string
+		   withName:(NSString *)inName 
+		 imagesPath:(NSString *)imagesPath;
 - (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string;
 @end
 
@@ -142,7 +147,7 @@ static NSString			*horizontalRule = nil;
 	   encodeNonASCII:(BOOL)encodeNonASCII
 		 encodeSpaces:(BOOL)encodeSpaces
 	attachmentsAsText:(BOOL)attachmentsAsText
-attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
+onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	   simpleTagsOnly:(BOOL)simpleOnly
 	   bodyBackground:(BOOL)bodyBackground
 {
@@ -155,7 +160,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		thingsToInclude.nonASCII						= encodeNonASCII;
 		thingsToInclude.allSpaces						= encodeSpaces;
 		thingsToInclude.attachmentTextEquivalents		= attachmentsAsText;
-		thingsToInclude.attachmentImagesOnlyForSending	= attachmentImagesOnlyForSending;
+		thingsToInclude.onlyIncludeOutgoingImages	= onlyIncludeOutgoingImages;
 		thingsToInclude.simpleTagsOnly					= simpleOnly;
 		thingsToInclude.bodyBackground					= bodyBackground;
 		
@@ -173,7 +178,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					   encodeNonASCII:(BOOL)encodeNonASCII
 						 encodeSpaces:(BOOL)encodeSpaces
 					attachmentsAsText:(BOOL)attachmentsAsText
-	   attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
+	   onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					   simpleTagsOnly:(BOOL)simpleOnly
 					   bodyBackground:(BOOL)bodyBackground
 {
@@ -185,7 +190,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						   encodeNonASCII:encodeNonASCII
 							 encodeSpaces:encodeSpaces
 						attachmentsAsText:attachmentsAsText
-		   attachmentImagesOnlyForSending:attachmentImagesOnlyForSending
+		   onlyIncludeOutgoingImages:onlyIncludeOutgoingImages
 						   simpleTagsOnly:simpleOnly
 						   bodyBackground:bodyBackground] autorelease];
 }
@@ -238,7 +243,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	return argDict;
 }
 
-- (NSString *)encodeHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesPath
+- (NSString *)encodeHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesSavePath
 {
 	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
 	NSRange			 searchRange;
@@ -458,60 +463,66 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		if ([attributes objectForKey:NSAttachmentAttributeName]) {
 			int i;
 
-			for (i = 0; (i < searchRange.length); i++) { //Each attachment takes a character.. they are grouped by the attribute scan
-				NSTextAttachment *textAttachment = [[inMessage attributesAtIndex:searchRange.location+i effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
+			//Each attachment takes a character.. they are grouped by the attribute scan
+			for (i = 0; (i < searchRange.length); i++) { 
+				NSTextAttachment *textAttachment = [[inMessage attributesAtIndex:searchRange.location+i 
+																  effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
 				if (textAttachment) {
-
-					//We can work efficiently on an AITextAttachmentExtension
-					if ([textAttachment isKindOfClass:[AITextAttachmentExtension class]]) {
-						AITextAttachmentExtension *attachment = (AITextAttachmentExtension *)textAttachment;
-
-						if ((imagesPath) &&
-						   ([attachment shouldSaveImageForLogging]) && 
-						   ([[attachment attachmentCell] respondsToSelector:@selector(image)])) {
-
-							//We have an NSImage but no file at which to point the img tag
-							NSString			*attachmentString;
-
-							attachmentString = [attachment string];
-
-							if ([self appendImage:[[attachment attachmentCell] performSelector:@selector(image)]
-										 toString:string
-										 withName:[attachmentString safeFilenameString]
-										altString:attachmentString
-									   imagesPath:imagesPath]) {
-
-								//We were succesful appending the image tag, so release this chunk
-								[chunk release]; chunk = nil;	
-							}
-
-						} else if (!thingsToInclude.attachmentTextEquivalents &&
-								 (!thingsToInclude.attachmentImagesOnlyForSending || ![attachment shouldAlwaysSendAsText])) {
-							//We want attachments as images where appropriate, and this attachment is not marked
-							//to always send as text.  The attachment will have an imagePath pointing to a file
-							//which we can link directly via an img tag.
-
-							NSSize imageSize = [attachment imageSize];
-
-							[string appendFormat:@"<img src=\"file://%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
-								[[attachment imagePath] stringByEscapingForHTML], [[attachment string] stringByEscapingForHTML],
-								(int)imageSize.width, (int)imageSize.height];
-
-							//Release the chunk
-							[chunk release]; chunk = nil;
-
+					AITextAttachmentExtension *attachment = (AITextAttachmentExtension *)textAttachment;
+					/* If we have a path to which we want to save any images and either
+					 *		the attachment should save such images OR
+					 *		the attachment is a plain NSTextAttachment and so doesn't respond to shouldSaveImageForLogging
+					 */						
+					BOOL shouldSaveImage = (imagesSavePath &&
+											((![attachment respondsToSelector:@selector(shouldSaveImageForLogging)] ||
+											  [attachment shouldSaveImageForLogging])));
+					
+					/* We want attachments as images where appropriate. We either want all images (we don't want only outgoing images) or
+					 * this attachment may be sent as an image rather than as text.
+					 */						
+					BOOL shouldIncludeImageWithoutSaving = (!thingsToInclude.attachmentTextEquivalents &&
+															(!thingsToInclude.onlyIncludeOutgoingImages || (![attachment respondsToSelector:@selector(shouldAlwaysSendAsText)] ||
+																											![attachment shouldAlwaysSendAsText])));
+					BOOL appendedImage = NO;
+					
+					if (shouldSaveImage || shouldIncludeImageWithoutSaving) {
+						NSString	*existingPath, *imageName;
+						NSImage		*image;
+						
+						//We want to use the image; collect all the information we have available
+						existingPath = ([attachment respondsToSelector:@selector(path)] ?
+										[attachment performSelector:@selector(path)] :
+										nil);
+						imageName = [attachment string];
+						
+						if ([attachment respondsToSelector:@selector(image)]) {
+							image = [attachment performSelector:@selector(image)];
+						} else if ([[attachment attachmentCell] respondsToSelector:@selector(image)]) {
+							image = [[attachment attachmentCell] performSelector:@selector(image)];
 						} else {
-							//We should replace the attachment with its textual equivalent if possible
-
-							NSString	*attachmentString = [attachment string];
-							if (attachmentString) {
-								[string appendString:attachmentString];
-							}
-
-							[chunk release]; chunk = nil;
+							image = nil;
 						}
-					} else {
-						NSLog(@"Shouldn't get here... textAttachment is %@",textAttachment);
+						
+						if (existingPath || image) {
+							appendedImage = [self appendImage:image
+													   atPath:existingPath
+													 toString:string
+													 withName:imageName
+												   imagesPath:imagesSavePath];
+							
+							//We were succesful appending the image tag, so release this chunk
+							[chunk release]; chunk = nil;	
+						}
+					}
+					
+					if (!appendedImage) {
+						//We should replace the attachment with its textual equivalent if we didn't append an image
+						NSString	*attachmentString;
+						if ((attachmentString = [attachment string])) {
+							[string appendString:attachmentString];
+						}
+						
+						[chunk release]; chunk = nil;
 					}
 				}
 			}
@@ -707,6 +718,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	scanner = [NSScanner scannerWithString:inMessage];
 	[scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
 
+//	NSLog(@"Decoding %@",inMessage);
 	//Parse the HTML
 	while (![scanner isAtEnd]) {
 		/*
@@ -719,7 +731,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			id	languageValue = [textAttributes languageValue];
 			
 			//AIM sets language value 143 for characters which are in Symbol or Wingdings.
-			if (languageValue && ([languageValue intValue] == 143)) {				
+			if (languageValue && ([languageValue intValue] == 143)) {
+				NSLog(@"Chunk string is %@ (font family %@)",chunkString,[textAttributes fontFamily]);
 				if ([[textAttributes fontFamily] caseInsensitiveCompare:@"Symbol"] == NSOrderedSame) {
 					chunkString = [chunkString stringByConvertingSymbolToSymbolUnicode];
 
@@ -731,7 +744,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					} else {
 						chunkString = [chunkString stringByConvertingWingdingsToUnicode];
 					}
-				}				
+				}
+				
+//				NSLog(@"Chunk string is now %@",chunkString);
 			}
 			
 			[attrString appendString:chunkString withAttributes:[textAttributes dictionary]];
@@ -1266,33 +1281,62 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 //XXX - Currently always appends as png.  This is probably not always best as Windows DirectIM will not handle it.
 - (BOOL)appendImage:(NSImage *)attachmentImage
+			 atPath:(NSString *)inPath
 		   toString:(NSMutableString *)string
-		   withName:(NSString *)fileSafeChunk 
-		  altString:(NSString *)attachmentString
+		   withName:(NSString *)inName 
 		 imagesPath:(NSString *)imagesPath
 {	
 	NSString			*shortFileName;
-	NSString			*fileName;
 	NSString			*fileURL;	
-	NSBitmapImageRep	*bitmapRep;
 	BOOL				success = NO;
 	
-	bitmapRep = [NSBitmapImageRep imageRepWithData:[attachmentImage TIFFRepresentation]];
-	shortFileName = [fileSafeChunk stringByAppendingPathExtension:@"png"];
-	fileName = [imagesPath stringByAppendingPathComponent:shortFileName];
-	fileURL = [[NSURL fileURLWithPath:fileName] absoluteString];
-	
-	//create the images directory if it doesn't exist
-	[[NSFileManager defaultManager] createDirectoriesForPath:imagesPath];
-	
-	if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName
-																		  atomically:YES]) {
-		[string appendFormat:@"<img src=\"%@\" alt=\"%@\">", [fileURL stringByEscapingForHTML], [attachmentString stringByEscapingForHTML]];
-		success = YES;
+	if (imagesPath || !inPath) {
+		//create the images directory if it doesn't exist
+		if (imagesPath) {
+			[[NSFileManager defaultManager] createDirectoriesForPath:imagesPath];
+		}
+
+		//If we get here and don't have a path at which to save images, save to the temporary directory
+		if (!imagesPath) {
+			imagesPath = NSTemporaryDirectory();
+		}
+
+		if (inPath) {
+			//Image already exists on disk; copy it to our images path
+			success = [[NSFileManager defaultManager] copyPath:inPath
+														toPath:[imagesPath stringByAppendingPathComponent:[inPath lastPathComponent]]
+													   handler:NULL];
+		} else {
+			//Image doesn't exist on disk; write it out to our images path
+			shortFileName = [[inName safeFilenameString] stringByAppendingPathExtension:@"png"];
+			inPath = [imagesPath stringByAppendingPathComponent:shortFileName];
+			
+			success = [[attachmentImage PNGRepresentation] writeToFile:inPath atomically:YES];
+		}
 		
+		if (!success) {
+			NSLog(@"Failed to write image %@",inName);
+		}
+
 	} else {
-		NSLog(@"failed to write log image");
+		success = YES;
 	}
+	
+	if (success) {
+		fileURL = [[NSURL fileURLWithPath:inPath] absoluteString];
+	
+		[string appendFormat:@"<img src=\"%@\" alt=\"%@\">", [fileURL stringByEscapingForHTML], [inName stringByEscapingForHTML]];
+	}
+	
+	/*
+	 NSSize imageSize = [attachmentImage size];
+	 
+	 [string appendFormat:@"<img src=\"file://%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
+		 [inPath stringByEscapingForHTML], inName,
+		 (int)imageSize.width, (int)imageSize.height];
+	 */
+	
+	
 
 	return success;
 }
@@ -1378,11 +1422,11 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 - (BOOL)onlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage
 {
-	return thingsToInclude.attachmentImagesOnlyForSending;
+	return thingsToInclude.onlyIncludeOutgoingImages;
 }
 - (void)setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:(BOOL)newValue
 {
-	thingsToInclude.attachmentImagesOnlyForSending = newValue;
+	thingsToInclude.onlyIncludeOutgoingImages = newValue;
 }
 
 - (BOOL)onlyUsesSimpleTags
@@ -1439,7 +1483,7 @@ static AIHTMLDecoder *classMethodInstance = nil;
 	classMethodInstance->thingsToInclude.styleTags = 
 	classMethodInstance->thingsToInclude.attachmentTextEquivalents = 
 		YES;
-	classMethodInstance->thingsToInclude.attachmentImagesOnlyForSending = 
+	classMethodInstance->thingsToInclude.onlyIncludeOutgoingImages = 
 	classMethodInstance->thingsToInclude.simpleTagsOnly = 
 	classMethodInstance->thingsToInclude.bodyBackground =
 	classMethodInstance->thingsToInclude.allowAIMsubprofileLinks =
@@ -1457,7 +1501,7 @@ static AIHTMLDecoder *classMethodInstance = nil;
 // encodeNonASCII: YES to encode non-ASCII characters as their HTML equivalents
 // encodeSpaces: YES to preserve spacing when displaying the HTML in a web browser by converting multiple spaces and tabs to &nbsp codes.
 // attachmentsAsText: YES to convert all attachments to their text equivalent if possible; NO to imbed <IMG SRC="...> tags
-// attachmentImagesOnlyForSending: YES to only convert attachments to <IMG SRC="...> tags which should be sent to another user
+// onlyIncludeOutgoingImages: YES to only convert attachments to <IMG SRC="...> tags which should be sent to another user
 // simpleTagsOnly: YES to separate out FONT tags and include only the most basic HTML elements
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage
 				 headers:(BOOL)includeHeaders 
@@ -1470,7 +1514,7 @@ static AIHTMLDecoder *classMethodInstance = nil;
 			encodeSpaces:(BOOL)encodeSpaces
 			  imagesPath:(NSString *)imagesPath
 	   attachmentsAsText:(BOOL)attachmentsAsText
-attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
+onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		  simpleTagsOnly:(BOOL)simpleOnly
 		  bodyBackground:(BOOL)bodyBackground
 {
@@ -1484,7 +1528,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	classMethodInstance->thingsToInclude.nonASCII = encodeNonASCII;
 	classMethodInstance->thingsToInclude.allSpaces = encodeSpaces;
 	classMethodInstance->thingsToInclude.attachmentTextEquivalents = attachmentsAsText;
-	classMethodInstance->thingsToInclude.attachmentImagesOnlyForSending = attachmentImagesOnlyForSending;
+	classMethodInstance->thingsToInclude.onlyIncludeOutgoingImages = onlyIncludeOutgoingImages;
 	classMethodInstance->thingsToInclude.simpleTagsOnly = simpleOnly;
 	classMethodInstance->thingsToInclude.bodyBackground = bodyBackground;
 	classMethodInstance->thingsToInclude.allowAIMsubprofileLinks = NO;

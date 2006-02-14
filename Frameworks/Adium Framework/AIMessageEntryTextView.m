@@ -762,6 +762,42 @@
 	}
 }
 
+- (void)insertAttachment:(AITextAttachmentExtension *)attachment
+{
+	NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:[attachment iconImage]];
+	NSAttributedString			*attachString;
+	
+	[attachment setHasAlternate:NO];
+	[attachment setAttachmentCell:cell];
+	
+	//Insert an attributed string into the text at the current insertion point
+	attachString = [NSAttributedString attributedStringWithAttachment:attachment];
+	[self insertText:attachString];
+	
+	//Clean up
+	[cell release];
+}
+
+- (void)addAttachmentOfPath:(NSString *)inPath
+{
+	AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
+	[attachment setPath:inPath];
+	
+	[self insertAttachment:attachment];
+	[attachment release];
+}
+
+- (void)addAttachmentOfImage:(NSImage *)inImage
+{
+	AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
+
+	[attachment setImage:inImage];
+	[attachment setShouldSaveImageForLogging:YES];
+
+	[self insertAttachment:attachment];
+	[attachment release];
+}
+
 //The textView's method of inserting into the view is insufficient; we can do better.
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
@@ -771,52 +807,22 @@
 
 	BOOL	success = NO;
 	if (type && !superclassType) {
-		NSAttributedString			*attachString;
-		NSImage						*img = [[[NSImage alloc] initWithPasteboard:pasteboard] autorelease];
-		
-		//Check if we are able to create an image out of this pasteboard.  If so, use NSTextAttachmentCell
-		//which will display the image for us in the text view.  Otherwise, use ESFileWrapperExtension so
-		//we can keep track of the paths of the files sent to us and insert their icons into the text view for later
-		//use.
-		
-		if (img && [chat canSendImages]) {
-			AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
-			NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:img];
-			
-			[attachment setAttachmentCell:cell];
-			[attachment setShouldSaveImageForLogging:YES];
-			[attachment setHasAlternate:NO];
-
-			//Insert an attributed string into the text at the current insertion point
-			attachString = [NSAttributedString attributedStringWithAttachment:attachment];
-			[self insertText:attachString];
-			
-			//Clean up
-			[cell release];
-			[attachment release];
-		} else {
+		if ([pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]]) {
+			//The pasteboard points to one or more files on disc.  Use them directly.
 			NSArray			*files = [pasteboard propertyListForType:NSFilenamesPboardType];
 			NSEnumerator	*enumerator = [files objectEnumerator];
 			NSString		*path;
 			while ((path = [enumerator nextObject])) {
-				ESFileWrapperExtension  *fileWrapper;
-				NSTextAttachment		*attachment;
-				
-				//Create the ESFileWrapper, which will handle both icon setting and path retention
-				fileWrapper = [[[ESFileWrapperExtension alloc] initWithPath:path] autorelease];
-				
-				//Create an attachment using that file wrapper
-				attachment = [[NSTextAttachment alloc] initWithFileWrapper:fileWrapper];
-				
-				//Insert an attributed string into the text at the current insertion point
-				attachString = [NSAttributedString attributedStringWithAttachment:attachment];
-				[self insertText:attachString];
-				
-				//Clean up
-				[attachment release];
+				[self addAttachmentOfPath:path];
 			}
+				
+		} else {
+			//The pasteboard contains image data with no corresponding file.
+			NSImage	*image = [[NSImage alloc] initWithPasteboard:pasteboard];
+			[self addAttachmentOfImage:image];
+			[image release];			
 		}
-		
+
 		success = YES;
 	} else {
 		success = [super performDragOperation:sender];

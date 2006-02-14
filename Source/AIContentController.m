@@ -35,6 +35,7 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AITextAttachmentAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIImageAdditions.h>
@@ -529,28 +530,59 @@
 			NSTextAttachment *textAttachment = [currentAttributedString attribute:NSAttachmentAttributeName
 																		  atIndex:searchRange.location
 																   effectiveRange:&searchRange];
-			//AITextAttachment is used for our emoticons and so forth... this needs to be a better system one way or another.
-			if (textAttachment &&
-				![textAttachment isKindOfClass:[AITextAttachmentExtension class]]) {
-				//Proceed if this account can't send images or, if it can, if this attachment is not an image
-				if (![(AIAccount *)[inContentMessage source] canSendImagesForChat:[inContentMessage chat]] ||
-					![textAttachment wrapsImage]) {
+			if (textAttachment) {
+				BOOL shouldSendAttachmentAsFile;
+				//Invariant within the loop, but most calls to handleFileSendsForContentMessage: don't get here at all
+				BOOL canSendImages = [(AIAccount *)[inContentMessage source] canSendImagesForChat:[inContentMessage chat]];
+
+				if ([textAttachment isKindOfClass:[AITextAttachmentExtension class]]) {
+					AITextAttachmentExtension *textAttachmentExtension = (AITextAttachmentExtension *)textAttachment;
 					
+					/* Send if:
+					 *		This attachment isn't just for display (i.e. isn't an emoticon) AND
+					 *		This chat can't send images, or it can but this attachment isn't an image
+					 */
+					shouldSendAttachmentAsFile = (![textAttachmentExtension shouldAlwaysSendAsText] &&
+												  (!canSendImages || ![textAttachmentExtension attachesAnImage]));
+					
+				} else {
+					shouldSendAttachmentAsFile = (!canSendImages || ![textAttachment wrapsImage]);
+				}
+
+				if (shouldSendAttachmentAsFile) {
 					if (!newAttributedString) {
 						newAttributedString = [[attributedMessage mutableCopy] autorelease];
 						currentAttributedString = newAttributedString;
 					}
 					
-					NSFileWrapper *fileWrapper = [textAttachment fileWrapper];
-					if ([fileWrapper isKindOfClass:[ESFileWrapperExtension class]]) {
-						NSString	*path = [(ESFileWrapperExtension *)fileWrapper originalPath];
+					NSString	*path;
+					if ([textAttachment isKindOfClass:[AITextAttachmentExtension class]]) {
+						path = [(AITextAttachmentExtension *)textAttachment path];
+						
+					} else {
+						//Write out the file so we can send it if we have a standard NSTextAttachment to send
+						NSFileWrapper *fileWrapper = [textAttachment fileWrapper];
+					
+						//Desired folder: /private/tmp/$UID/`uuidgen`
+						NSString *tmpDir = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]];
+						NSString *filename = [fileWrapper preferredFilename];
+						if (!filename) filename = [NSString randomStringOfLength:5];
 
-						[[adium fileTransferController] sendFile:path
-												   toListContact:(AIListContact *)[inContentMessage destination]];
+						path = [tmpDir stringByAppendingPathComponent:filename];
 					}
 
+					[[adium fileTransferController] sendFile:path
+											   toListContact:(AIListContact *)[inContentMessage destination]];
+
 					//Now remove the attachment
-					[newAttributedString removeAttribute:NSAttachmentAttributeName range:NSMakeRange(searchRange.location, 0)];
+					[newAttributedString removeAttribute:NSAttachmentAttributeName range:NSMakeRange(searchRange.location,
+																									 searchRange.length)];
+					[newAttributedString replaceCharactersInRange:searchRange withString:@""];
+					//Decrease length by the number of characters we replaced
+					length -= searchRange.length;
+					
+					//And don't increase our location in the searchRange.location += searchRange.length below
+					searchRange.length = 0;
 				}
 			}
 			
@@ -570,12 +602,11 @@
 - (BOOL)processAndSendContentObject:(AIContentObject *)inContentObject
 {
 	AIAccount	*sendingAccount = (AIAccount *)[inContentObject source];
-	BOOL		success = NO;
+	BOOL		success = YES;
 
 	if ([inContentObject isKindOfClass:[AIContentTyping class]]) {
 		/* Typing */
-		[sendingAccount sendTypingObject:(AIContentTyping *)inContentObject];
-		success = YES;
+		success = [sendingAccount sendTypingObject:(AIContentTyping *)inContentObject];
 	
 	} else if ([inContentObject isKindOfClass:[AIContentMessage class]]) {
 		/* Sending a message */
@@ -585,7 +616,9 @@
 		//Before we send the message on to the account, we need to look for embedded files which should be sent as file transfers
 		[self handleFileSendsForContentMessage:contentMessage];
 		
-		//Let the account encode it as appropriate for sending
+		/* Let the account encode it as appropriate for sending. Note that we succeeded in sending if we have no length
+		 * as that means that somewhere we meant to stop the send -- a file send, an encryption message, etc.
+		 */
 		if ([[contentMessage message] length]) {
 			encodedOutgoingMessage = [sendingAccount encodedAttributedStringForSendingContentMessage:contentMessage];
 			
@@ -594,12 +627,14 @@
 				[adiumOTREncryption willSendContentMessage:contentMessage];
 				
 				if ([contentMessage encodedMessage]) {
-					[sendingAccount sendMessageObject:contentMessage];
+					success = [sendingAccount sendMessageObject:contentMessage];
 				}
-				
-				success = YES;
 			}
 		}
+
+	} else {
+		/* Eating a tasty sandwich */
+		success = NO;
 	}
 
 	return success;

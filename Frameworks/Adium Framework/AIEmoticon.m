@@ -166,12 +166,9 @@
     
     //Cache this attachment for ourself
     if (!_cachedAttributedString) {
-        NSFileWrapper               *emoticonFileWrapper = [[[NSFileWrapper alloc] initWithPath:path] autorelease];
         AITextAttachmentExtension   *emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
         
-		[emoticonAttachment setImagePath:path];
-		[emoticonAttachment setImageSize:[[self image] size]];
-        [emoticonAttachment setFileWrapper:emoticonFileWrapper];
+		[emoticonAttachment setPath:path];
 		[emoticonAttachment setHasAlternate:YES];
 		
 		//Emoticons should not ever be sent out as images
