@@ -757,9 +757,9 @@
 												closeStyleTagsOnFontChange:NO
 															encodeNonASCII:NO
 															  encodeSpaces:NO
-																imagesPath:@"/tmp"
+																imagesPath:NSTemporaryDirectory()
 														 attachmentsAsText:NO
-											attachmentImagesOnlyForSending:NO
+												 onlyIncludeOutgoingImages:NO
 															simpleTagsOnly:NO
 															bodyBackground:YES];
 						hexcode = [NSScanner scannerWithString:thisIsATemporaryString];
@@ -788,9 +788,9 @@
 												closeStyleTagsOnFontChange:NO
 															encodeNonASCII:NO
 															  encodeSpaces:NO
-																imagesPath:@"/tmp"
+																imagesPath:NSTemporaryDirectory()
 														 attachmentsAsText:NO
-											attachmentImagesOnlyForSending:NO
+												 onlyIncludeOutgoingImages:NO
 															simpleTagsOnly:NO
 															bodyBackground:YES];
 						[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
@@ -819,9 +819,9 @@
 															   closeStyleTagsOnFontChange:YES
 																		   encodeNonASCII:YES
 																			 encodeSpaces:YES
-																			   imagesPath:@"/tmp"
+																			   imagesPath:NSTemporaryDirectory()
 																		attachmentsAsText:NO
-														   attachmentImagesOnlyForSending:NO
+																onlyIncludeOutgoingImages:NO
 																		   simpleTagsOnly:NO
 																		   bodyBackground:NO]];
 		}
@@ -875,9 +875,9 @@
 							   closeStyleTagsOnFontChange:YES
 										   encodeNonASCII:YES
 											 encodeSpaces:YES
-											   imagesPath:@"/tmp"
+											   imagesPath:NSTemporaryDirectory()
 										attachmentsAsText:NO
-						   attachmentImagesOnlyForSending:NO
+								onlyIncludeOutgoingImages:NO
 										   simpleTagsOnly:NO
 										   bodyBackground:NO];
 			}
