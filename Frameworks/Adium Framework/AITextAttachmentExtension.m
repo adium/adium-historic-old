@@ -94,7 +94,7 @@
 
 - (NSImage *)image
 {
-	if (!image && [self wrapsImage]) {
+	if (!image && [self attachesAnImage]) {
 		image = [[NSImage alloc] initWithContentsOfFile:[self path]];
 	}
 	
