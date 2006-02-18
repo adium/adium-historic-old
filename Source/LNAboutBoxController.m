@@ -23,13 +23,11 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
 
-#define ABOUT_BOX_NIB					@"AboutBox"
-#define	ADIUM_SITE_LINK					AILocalizedString(@"http://www.adiumx.com/","Adium homepage. Only localize if a translated version of the page exists.")
+#define ABOUT_BOX_NIB		@"AboutBox"
+#define	ADIUM_SITE_LINK		AILocalizedString(@"http://www.adiumx.com/","Adium homepage. Only localize if a translated version of the page exists.")
 
-#define PATH_TO_SOUNDS					[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"/Contents/Resources/Adium.AdiumSoundset"] stringByExpandingTildeInPath]
-
-#define ABOUT_SCROLL_FPS				30.0
-#define ABOUT_SCROLL_RATE				1.0
+#define ABOUT_SCROLL_FPS	30.0
+#define ABOUT_SCROLL_RATE	1.0
 
 @interface LNAboutBoxController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
@@ -203,11 +201,13 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 {
     numberOfDuckClicks++;
 	
+#define PATH_TO_SOUNDS		[NSString pathWithComponents:[NSArray arrayWithObjects:[[NSBundle mainBundle] bundlePath], @"Contents", @"Resources", @"Sounds", @"Adium.AdiumSoundset", nil]]
+
 	if (numberOfDuckClicks == 10) {
 		numberOfDuckClicks = -1;            
-		[[adium soundController] playSoundAtPath:[PATH_TO_SOUNDS stringByAppendingPathComponent:@"/Adium.AdiumSoundset/Feather Ruffle.aif"]];
+		[[adium soundController] playSoundAtPath:[PATH_TO_SOUNDS stringByAppendingPathComponent:@"Feather Ruffle.aif"]];
 	} else {
-		[[adium soundController] playSoundAtPath:[PATH_TO_SOUNDS stringByAppendingPathComponent:@"/Adium.AdiumSoundset/Quack.aif"]];
+		[[adium soundController] playSoundAtPath:[PATH_TO_SOUNDS stringByAppendingPathComponent:@"Quack.aif"]];
 	}
 	
 }
