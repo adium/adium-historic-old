@@ -1293,9 +1293,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		   withName:(NSString *)inName 
 		 imagesPath:(NSString *)imagesPath
 {	
-	NSString			*shortFileName;
-	NSString			*fileURL;	
-	BOOL				success = NO;
+	NSString	*shortFileName;
+	BOOL		success = NO;
 
 	if (imagesPath || !inPath) {
 		//create the images directory if it doesn't exist
@@ -1337,20 +1336,20 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	}
 	
 	if (success) {
-		fileURL = [[NSURL fileURLWithPath:inPath] absoluteString];
+		NSString *srcPath = [[[NSURL fileURLWithPath:inPath] absoluteString] stringByEscapingForHTML];
+		NSString *altName = [inName stringByEscapingForHTML];
 
-		[string appendFormat:@"<img src=\"%@\" alt=\"%@\">", [fileURL stringByEscapingForHTML], [inName stringByEscapingForHTML]];
+		if (attachmentImage) {
+			//Include size information if possible
+			NSSize imageSize = [attachmentImage size];
+
+			[string appendFormat:@"<img src=\"%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
+				srcPath, altName, (int)imageSize.width, (int)imageSize.height];
+
+		} else {
+			[string appendFormat:@"<img src=\"%@\" alt=\"%@\">", srcPath, altName];
+		}
 	}
-	
-	/*
-	 NSSize imageSize = [attachmentImage size];
-	 
-	 [string appendFormat:@"<img src=\"file://%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
-		 [inPath stringByEscapingForHTML], inName,
-		 (int)imageSize.width, (int)imageSize.height];
-	 */
-	
-	
 
 	return success;
 }
