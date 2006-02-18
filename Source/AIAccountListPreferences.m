@@ -184,7 +184,7 @@
 {
 	if (!(NSPointInRect([tableView_accountList convertPoint:[[NSApp currentEvent] locationInWindow] fromView:nil],
 						[tableView_accountList rectOfColumn:[tableView_accountList columnWithIdentifier:@"enabled"]]))) {
-		[self editAccount:sender];
+		[self editSelectedAccount:sender];
 	}
 }
 
