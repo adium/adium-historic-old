@@ -1990,7 +1990,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
         if ((internalObjectID) &&
 		   (preferredContact = [self existingListObjectWithUniqueID:internalObjectID]) &&
 		   ([preferredContact isKindOfClass:[AIListContact class]]) &&
-		   ([preferredContact statusSummary] == AIAvailableStatus)) {
+		   ([preferredContact statusSummary] == AIAvailableStatus) &&
+			([[(AIMetaContact *)inContact containedObjects] containsObject:preferredContact])) {
 			returnContact = [self preferredContactForContentType:inType
 												  forListContact:(AIListContact *)preferredContact];
         }
