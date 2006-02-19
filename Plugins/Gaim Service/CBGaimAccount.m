@@ -2003,7 +2003,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 			if (prpl_info && (prpl_info->icon_spec.format)) {
 				NSString	*buddyIconFilename = [self _userIconCachePath];
 				NSData		*buddyIconData = nil;
-				NSSize		imageSize = [image size];
 				BOOL		smallEnough, prplScales;
 				unsigned	i;
 				
