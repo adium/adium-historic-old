@@ -21,8 +21,9 @@
 @class AIChat;
 
 @interface AIContentMessage : AIContentObject {
-    BOOL					isAutoreply;
-	NSString				*encodedMessage;
+    BOOL		isAutoreply;
+	NSString	*encodedMessage;
+	id			encodedMessageAccountData;
 }
 
 + (id)messageInChat:(AIChat *)inChat
@@ -36,4 +37,8 @@
 
 - (NSString *)encodedMessage;
 - (void)setEncodedMessage:(NSString *)inEncodedMessage;
+
+- (id)encodedMessageAccountData;
+- (void)setEncodedMessageAccountData:(id)inEncodedMessageAccountData;
+
 @end
