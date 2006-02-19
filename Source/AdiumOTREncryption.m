@@ -523,7 +523,7 @@ static void write_fingerprints_cb(void *opdata)
 static void gone_secure_cb(void *opdata, ConnContext *context)
 {
 	AIChat *chat = chatForContext(context);
-	
+
     update_security_details_for_chat(chat);
 	otrg_ui_update_fingerprint();
 }
@@ -531,7 +531,7 @@ static void gone_secure_cb(void *opdata, ConnContext *context)
 static void gone_insecure_cb(void *opdata, ConnContext *context)
 {
 	AIChat *chat = chatForContext(context);
-	
+
     update_security_details_for_chat(chat);
 	otrg_ui_update_fingerprint();
 }
@@ -759,14 +759,12 @@ void disconnect_from_context(ConnContext *context)
 {
     otrl_message_disconnect(otrg_plugin_userstate, &ui_ops, NULL,
 							context->accountname, context->protocol, context->username);
+	gone_insecure_cb(NULL, context);
 }
 
 void disconnect_from_chat(AIChat *inChat)
 {
-	otrl_message_disconnect(otrg_plugin_userstate, &ui_ops, NULL,
-							[[[inChat account] internalObjectID] UTF8String],
-							[[[[inChat account] service] serviceCodeUniqueID] UTF8String],
-							[[[inChat listObject] UID] UTF8String]);
+	disconnect_from_context(contextForChat(inChat));
 }
 
 #pragma mark -
