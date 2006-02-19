@@ -720,7 +720,6 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	scanner = [NSScanner scannerWithString:inMessage];
 	[scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
 
-//	NSLog(@"Decoding %@",inMessage);
 	//Parse the HTML
 	while (![scanner isAtEnd]) {
 		/*
@@ -732,23 +731,38 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		if ([scanner scanUpToCharactersFromSet:tagCharStart intoString:&chunkString]) {
 			id	languageValue = [textAttributes languageValue];
 			
-			//AIM sets language value 143 for characters which are in Symbol or Wingdings.
+			/* AIM sets language value 143 for characters which are in Symbol, Wingdings, or Webdings.
+			 * All Symbol characters can be represented in the Symbol font. When the language value is 143, they are being sent
+			 * as normal ASCII characters and we must run them through stringByConvertingSymbolToSymbolUnicode.
+			 *
+			 * Wingdings characters can be represented in the font Wingdings, if available, by offsetting the ASCII characters
+			 * by 0xF000 to move into the Private  Use space.  If the font is not available, many of them can be represented
+			 * in any font via our stringByConvertingWingdingsToUnicode conversion table. Wingdings2 and Wingdings3 do not have
+			 * conversion tables but can also be used as fonts so long as we move the ASCII characters to the Private Use space.
+			 *
+			 * Similarly, Webdings can be represented in the font Webdings in the Private Use unicode space.
+			 */
 			if (languageValue && ([languageValue intValue] == 143)) {
-				NSLog(@"Chunk string is %@ (font family %@)",chunkString,[textAttributes fontFamily]);
-				if ([[textAttributes fontFamily] caseInsensitiveCompare:@"Symbol"] == NSOrderedSame) {
+				NSString *fontFamily = [textAttributes fontFamily];
+
+				if ([fontFamily caseInsensitiveCompare:@"Symbol"] == NSOrderedSame) {
 					chunkString = [chunkString stringByConvertingSymbolToSymbolUnicode];
 
-				} else {
-					if ([NSFont fontWithName:@"Wingdings" size:0]) {
-						//Use the Wingdings font if it is installed
+				} else if ([fontFamily rangeOfString:@"Wingdings" options:NSCaseInsensitiveSearch].location != NSNotFound) {
+					if ([NSFont fontWithName:fontFamily size:0]) {
+						//Use the font (in is Private Use space) if it is installed
 						chunkString = [chunkString stringByTranslatingByOffset:0xF000];
 
 					} else {
 						chunkString = [chunkString stringByConvertingWingdingsToUnicode];
 					}
+
+				} else if ([fontFamily rangeOfString:@"Webdings" options:NSCaseInsensitiveSearch].location != NSNotFound) {
+					if ([NSFont fontWithName:fontFamily size:0]) {
+						//Use the Webdings font if it is installed
+						chunkString = [chunkString stringByTranslatingByOffset:0xF000];
+					}						
 				}
-				
-//				NSLog(@"Chunk string is now %@",chunkString);
 			}
 			
 			[attrString appendString:chunkString withAttributes:[textAttributes dictionary]];
@@ -1020,7 +1034,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 								  range:NSMakeRange(0,[attrString length])];
 		}
 	}
-	
+
 	return [attrString autorelease];
 }
 
