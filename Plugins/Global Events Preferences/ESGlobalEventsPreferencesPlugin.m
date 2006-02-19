@@ -59,7 +59,6 @@
 #define KEY_GROWL_PRESET_EVENT_ID			@"Notification"
 
 @interface ESGlobalEventsPreferencesPlugin (PRIVATE)
-- (NSArray *)soundSetArrayAtPath:(NSString *)inPath creator:(NSString **)outCreator description:(NSString **)outDesc;
 - (void)activateSoundSet:(NSArray *)soundSetArray;
 
 - (void)activateDockBehaviorSet:(NSArray *)behaviorArray;
