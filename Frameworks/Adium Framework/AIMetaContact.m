@@ -294,7 +294,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		}
 		
 		[_listContacts release]; _listContacts = nil;
-		
+		_preferredContact = nil;
+
 		//Only need to check if we are now unique if we weren't unique before, since we've either become
 		//unique are stayed the same.
 		if (!containsOnlyOneUniqueContact) {
