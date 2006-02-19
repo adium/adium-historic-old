@@ -321,6 +321,7 @@
 	if ((stringMessage = [inAttributedString string])) {
 		NSEnumerator	*enumerator;
 		NSString		*trigger;
+		BOOL			addStoreLinkAsSubtext = NO;
 		
 		/* Replace the phrases with the string containing the triggers.
 		 * For example, /music will become *is listening to %_track by %_artist*.
@@ -340,6 +341,14 @@
 				//replacement of phrase should reflect iTunes player state
 				if (![self iTunesIsStopped]) {
 					replacement = [replacementDict objectForKey:KEY_PLAYING];
+					
+					/* If the trigger is the trigger used for the Current iTunes Track status, we'll want to add a subtext of the store link
+					 * so account code can send it out later on.
+					 */
+					if ([trigger isEqualToString:CURRENT_TRACK_TRIGGER]) {
+						addStoreLinkAsSubtext = YES;
+					}
+
 				} else {
 					replacement = [replacementDict objectForKey:KEY_STOPPED];					
 				}
@@ -385,6 +394,15 @@
 												 withString:replacement
 													options:NSLiteralSearch
 													  range:NSMakeRange(0, [filteredMessage length])];
+			}
+		}
+		
+		if (addStoreLinkAsSubtext && filteredMessage) {
+			NSString *storeLinkForSubtext = [iTunesCurrentInfo objectForKey:[substitutionDict objectForKey:STORE_URL_TRIGGER]];
+			if (storeLinkForSubtext) {
+				[filteredMessage addAttribute:@"AIMessageSubtext"
+										value:storeLinkForSubtext
+										range:NSMakeRange(0, [filteredMessage length])];
 			}
 		}
 	}
@@ -593,7 +611,7 @@
 		}
 	}
 	
-	//if something has been added to our search request, create it a lovely label for it
+	//if something has been added to our search request, create a lovely label for it
 	if (![url isEqualToString:ITMS_SEARCH_URL] && [url length]) {
 		urlLabel = [[NSString alloc] initWithFormat:@"%@ - %@", trackName, artist];
 	} else {
