@@ -18,7 +18,7 @@
     SpeechChannel _speechChannel;
     id _delegate;
     NSPort *_port;
-	unsigned char *currentSpeechMacRomanData;
+	NSData *currentSpeechMacRomanData;
 
     BOOL _usePort;
     unsigned int _reserved1;
