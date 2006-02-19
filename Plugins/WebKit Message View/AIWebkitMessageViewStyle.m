@@ -577,6 +577,13 @@
 
 //Keyword Replacement --------------------------------------------------------------------------------------------------
 #pragma mark Keyword replacement
+
+- (void) replaceKeyword:(NSString *)keyWord inString:(NSMutableString *)inString withString:(NSString *)newWord
+{
+	for(NSRange range = [inString rangeOfString:keyWord]; range.location != NSNotFound; range = [inString rangeOfString:keyWord])
+		[inString replaceCharactersInRange:range withString:newWord];
+}
+
 /*!
  * @brief Substitute content keywords
  *
@@ -597,16 +604,9 @@
 	}
 	
 	//Replacements applicable to any AIContentObject
-	do{
-		range = [inString rangeOfString:@"%time%"];
-		if (range.location != NSNotFound) {
-			if (date) {
-				[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:date]];
-			} else {
-				[inString deleteCharactersInRange:range];
-			}
-		}
-	} while (range.location != NSNotFound);
+	[self replaceKeyword:@"%time%" 
+				inString:inString 
+			  withString:(date != nil ? [timeStampFormatter stringForObjectValue:date] : @"")];
 	
 	//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
 	do{
@@ -660,16 +660,12 @@
 			}
 		} while (range.location != NSNotFound);
 		
-		do{
-			range = [inString rangeOfString:@"%senderScreenName%"];
-			if (range.location != NSNotFound) {
-				NSString *formattedUID = [contentSource formattedUID];
-				[inString replaceCharactersInRange:range 
-										withString:[(formattedUID ?
-													 formattedUID :
-													 [contentSource displayName]) stringByEscapingForHTML]];
-			}
-		} while (range.location != NSNotFound);
+		NSString *formattedUID = [contentSource formattedUID];
+		[self replaceKeyword:@"%senderScreenName%" 
+					inString:inString 
+				  withString:[(formattedUID ?
+							   formattedUID :
+							   [contentSource displayName]) stringByEscapingForHTML]];
         
 		do{
 			range = [inString rangeOfString:@"%sender%"];
@@ -728,12 +724,9 @@
 			}
 		} while (range.location != NSNotFound);
 		
-		do{
-			range = [inString rangeOfString:@"%service%"];
-			if (range.location != NSNotFound) {
-				[inString replaceCharactersInRange:range withString:[[contentSource service] shortDescription]];
-			}
-		} while (range.location != NSNotFound);	
+		[self replaceKeyword:@"%service%" 
+					inString:inString 
+				  withString:[[contentSource service] shortDescription]];
 
 		//Blatantly stealing the date code for the background color script.
 		do{
@@ -830,21 +823,13 @@
 		NSString	*statusPhrase;
 		BOOL		replacedStatusPhrase = NO;
 		
-		do{
-			range = [inString rangeOfString:@"%status%"];
-			if (range.location != NSNotFound) {
-				[inString replaceCharactersInRange:range
-										withString:[[(AIContentStatus *)content status] stringByEscapingForHTML]];
-			}
-		} while (range.location != NSNotFound);
+		[self replaceKeyword:@"%status%" 
+					inString:inString 
+				  withString:[[(AIContentStatus *)content status] stringByEscapingForHTML]];
 		
-		do{
-			range = [inString rangeOfString:@"%statusSender%"];
-			if (range.location != NSNotFound) {
-				[inString replaceCharactersInRange:range
-										withString:[[[(AIContentStatus *)content source] displayName] stringByEscapingForHTML]];
-			}
-		} while (range.location != NSNotFound);
+		[self replaceKeyword:@"%statusSender%" 
+					inString:inString 
+				  withString:[[[(AIContentStatus *)content source] displayName] stringByEscapingForHTML]];
 
 		if ((statusPhrase = [[content userInfo] objectForKey:@"Status Phrase"])) {
 			do{
@@ -899,93 +884,57 @@
 {
 	NSRange	range;
 	
-	do{
-		range = [inString rangeOfString:@"%chatName%"];
-		if (range.location != NSNotFound) {
-			[inString replaceCharactersInRange:range
-									withString:[[chat displayName] stringByEscapingForHTML]];
-			
-		}
-	} while (range.location != NSNotFound);
+	[self replaceKeyword:@"%chatName%"
+				inString:inString
+			  withString:[[chat displayName] stringByEscapingForHTML]];
 
-	do{
-		range = [inString rangeOfString:@"%sourceName%"];
-		if(range.location != NSNotFound){
-			NSString * sourceName = [[[chat account] displayName] stringByEscapingForHTML];
-			if(!sourceName) sourceName = @" ";
-			[inString replaceCharactersInRange:range
-									withString:sourceName];
-			
-		}
-	} while(range.location != NSNotFound);
-
-	do{
-		range = [inString rangeOfString:@"%destinationName%"];
-		if(range.location != NSNotFound){
-			NSString *destinationName = [[chat listObject] displayName];
-			if (!destinationName) destinationName = [chat displayName];
-			
-			[inString replaceCharactersInRange:range
-									withString:[destinationName stringByEscapingForHTML]];
-			
-		}
-	} while(range.location != NSNotFound);	
+	NSString * sourceName = [[[chat account] displayName] stringByEscapingForHTML];
+	if(!sourceName) sourceName = @" ";
+	[self replaceKeyword:@"%sourceName%"
+				inString:inString
+			  withString:sourceName];
 	
-	do {
-		range = [inString rangeOfString:@"%destinationDisplayName%"];
-		if (range.location != NSNotFound) {
-			NSString *serversideDisplayName = [[chat listObject] serversideDisplayName];
-			if (!serversideDisplayName) {
-				serversideDisplayName = [chat displayName];
-			}
-			
-			[inString replaceCharactersInRange:range
-									withString:[serversideDisplayName stringByEscapingForHTML]];
-		}
-	} while (range.location != NSNotFound);
+	NSString *destinationName = [[chat listObject] displayName];
+	if (!destinationName) destinationName = [chat displayName];
+	[self replaceKeyword:@"%destinationName%"
+				inString:inString
+			  withString:destinationName];
+	
+	NSString *serversideDisplayName = [[chat listObject] serversideDisplayName];
+	if (!serversideDisplayName) serversideDisplayName = [chat displayName];
+	[self replaceKeyword:@"%destinationDisplayName%"
+				inString:inString
+			  withString:[serversideDisplayName stringByEscapingForHTML]];
 		
-	do{
-		range = [inString rangeOfString:@"%incomingIconPath%"];
-		if (range.location != NSNotFound) {
-			AIListContact	*listObject = [chat listObject];
-			NSString		*iconPath = nil;
-			
-			if (listObject) {
-				iconPath = [listObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
-				if (!iconPath) {
-					iconPath = [listObject statusObjectForKey:@"UserIconPath"];
-				}
-			}
-						
-			[inString replaceCharactersInRange:range
-									withString:(iconPath ? iconPath : @"incoming_icon.png")];
-		}
-	} while (range.location != NSNotFound);
+	AIListContact	*listObject = [chat listObject];
+	NSString		*iconPath = nil;
 	
-	do{
-		range = [inString rangeOfString:@"%outgoingIconPath%"];
-		if (range.location != NSNotFound) {
-			AIListObject	*account = [chat account];
-			NSString		*iconPath = nil;
-			
-			if (account) {
-				iconPath = [account statusObjectForKey:KEY_WEBKIT_USER_ICON];
-				if (!iconPath) {
-					iconPath = [account statusObjectForKey:@"UserIconPath"];
-				}
-			}
-			
-			[inString replaceCharactersInRange:range
-									withString:(iconPath ? iconPath : @"outgoing_icon.png")];
+	if (listObject) {
+		iconPath = [listObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		if (!iconPath) {
+			iconPath = [listObject statusObjectForKey:@"UserIconPath"];
 		}
-	} while (range.location != NSNotFound);
+	}
+	[self replaceKeyword:@"%incomingIconPath%"
+				inString:inString
+			  withString:(iconPath ? iconPath : @"incoming_icon.png")];
 	
-	do{
-		range = [inString rangeOfString:@"%timeOpened%"];
-		if (range.location != NSNotFound) {
-			[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[chat dateOpened]]];
+	AIListObject	*account = [chat account];
+	iconPath = nil;
+	
+	if (account) {
+		iconPath = [account statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		if (!iconPath) {
+			iconPath = [account statusObjectForKey:@"UserIconPath"];
 		}
-	} while (range.location != NSNotFound);
+	}
+	[self replaceKeyword:@"%outgoingIconPath%"
+				inString:inString
+			  withString:(iconPath ? iconPath : @"outgoing_icon.png")];
+	
+	[self replaceKeyword:@"%timeOpened%"
+				inString:inString
+			  withString:[timeStampFormatter stringForObjectValue:[chat dateOpened]]];
 	
 	//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
 	do{
@@ -1048,5 +997,4 @@
 
 	return inString;
 }
-
 @end
