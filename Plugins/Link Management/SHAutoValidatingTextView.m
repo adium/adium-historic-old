@@ -90,6 +90,7 @@
 - (NSString *)linkURL
 {
 	NSString	*linkURL = [[self textStorage] string];
+	CFStringRef preprocessedString, escapedURLString;
 
 	if ([linkURL rangeOfString:@"%n"].location != NSNotFound) {
 		NSMutableString	*newLinkURL = [linkURL mutableCopy];
@@ -97,13 +98,28 @@
 									withString:@"%25n"
 									   options:NSLiteralSearch
 										 range:NSMakeRange(0, [newLinkURL length])];
-		linkURL = newLinkURL;
+		linkURL = [newLinkURL autorelease];
 		
-	} else {
-		linkURL = [linkURL copy];
 	}
-	
-	return [linkURL autorelease];
+
+	//Replace all existing percent escapes (in case the user actually escaped the URL properly or it was copy/pasted)
+	preprocessedString = CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault,
+																				 (CFStringRef)linkURL,
+																				 CFSTR(""),
+																				 kCFStringEncodingUTF8);
+	//Now escape it the way NSURL demands
+	if (preprocessedString) {
+		escapedURLString = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+																   preprocessedString,
+																   /* charactersToLeaveUnescaped */ NULL,
+																   /* legalURLCharactersToBeEscaped */ NULL,
+																   kCFStringEncodingUTF8);
+		CFRelease(preprocessedString);
+	} else {
+		escapedURLString = nil;
+	}
+
+	return (escapedURLString ? [(NSString *)escapedURLString autorelease] : linkURL);
 }
 
 @end
