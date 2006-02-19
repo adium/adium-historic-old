@@ -18,7 +18,6 @@
     SpeechChannel _speechChannel;
     id _delegate;
     NSPort *_port;
-	NSData *currentSpeechMacRomanData;
 
     BOOL _usePort;
     unsigned int _reserved1;
@@ -42,6 +41,7 @@
 
 - (void) speakText:(NSString*)text;
 - (void) stopSpeaking;
+- (BOOL) isSpeaking;
 
 - (void) resetToDefaults;
 
