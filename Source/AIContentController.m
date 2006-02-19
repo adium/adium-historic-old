@@ -664,11 +664,22 @@
 	[account sendMessageObject:contentMessage];
 }
 
+/*
+ * @brief Given an incoming message, decrypt it.  It is likely not yet ready for display when returned, as it may still include HTML.
+ */
+- (NSString *)decryptedIncomingMessage:(NSString *)inString fromContact:(AIListContact *)inListContact onAccount:(AIAccount *)inAccount
+{
+	return [adiumOTREncryption decryptIncomingMessage:inString fromContact:inListContact onAccount:inAccount];
+}
+
+/*
+ * @brief Given an incoming message, decrypt it if necessary then convert it to an NSAttributedString, processing HTML if possible
+ */
 - (NSAttributedString *)decodedIncomingMessage:(NSString *)inString fromContact:(AIListContact *)inListContact onAccount:(AIAccount *)inAccount
 {
-	NSString *decryptedString = [adiumOTREncryption decryptIncomingMessage:inString fromContact:inListContact onAccount:inAccount];
-
-	return [AIHTMLDecoder decodeHTML:decryptedString];
+	return [AIHTMLDecoder decodeHTML:[self decryptedIncomingMessage:inString
+														fromContact:inListContact
+														  onAccount:inAccount]];
 }
 
 #pragma mark OTR
