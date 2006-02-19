@@ -129,6 +129,10 @@ typedef enum {
 - (NSAttributedString *)decodedIncomingMessage:(NSString *)inString
 								   fromContact:(AIListContact *)inListContact 
 									 onAccount:(AIAccount *)inAccount;
+- (NSString *)decryptedIncomingMessage:(NSString *)inString
+						   fromContact:(AIListContact *)inListContact
+							 onAccount:(AIAccount *)inAccount;
+
 - (NSMenu *)encryptionMenuNotifyingTarget:(id)target withDefault:(BOOL)withDefault;
 
 - (BOOL)chatIsReceivingContent:(AIChat *)chat;
