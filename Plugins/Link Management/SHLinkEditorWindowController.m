@@ -136,15 +136,22 @@
 			NSString	*tmpString = ([linkURL isKindOfClass:[NSString class]] ? 
 									  (NSString *)linkURL : 
 									  [(NSURL *)linkURL absoluteString]);
-
-			if ([tmpString length]) {
+			
+			tmpString = (NSString *)CFURLCreateStringByReplacingPercentEscapes(kCFAllocatorDefault,
+																			   (CFStringRef)tmpString,
+																			   CFSTR(""));
+			
+			if (tmpString) {
 				NSAttributedString	*initialURL;
 				
 				initialURL = [[NSAttributedString alloc] initWithString:tmpString];
 				[[textView_URL textStorage] setAttributedString:initialURL];
 				[textView_URL setSelectedRange:NSMakeRange(0,[initialURL length])];
 				[initialURL release];
+				
+				[tmpString release];
 			}
+
 		} else if ([linkText length]) {
 			//focus the URL field so that the user can enter an URL right away.
 			[[self window] makeFirstResponder:textView_URL];
@@ -200,11 +207,9 @@
 		default:
 			break;
 	}
-	
-	//Insert it into the text view
-	URL = [NSURL URLWithString:urlString];
 
-	if (URL) {
+	//Insert it into the text view
+	if ((URL = [NSURL URLWithString:urlString])) {
 		[self insertLinkTo:URL
 				  withText:linkString
 					inView:textView];
