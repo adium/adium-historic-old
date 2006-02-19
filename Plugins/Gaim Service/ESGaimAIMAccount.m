@@ -356,17 +356,13 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 - (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString
 {
 	NSScanner			*scanner;
-	//    NSCharacterSet		*tagCharStart, *tagEnd, *absoluteTagEnd;
+
 	static NSCharacterSet *elementEndCharacters = nil;
 	if (!elementEndCharacters)
 		elementEndCharacters = [[NSCharacterSet characterSetWithCharactersInString:@" >"] retain];
 	static NSString		*tagStart = @"<", *tagEnd = @">";
 	NSString			*chunkString;
 	NSMutableString		*processedString;
-	
-	//    tagCharStart = [NSCharacterSet characterSetWithCharactersInString:@"<"];
-	//    tagEnd = [NSCharacterSet characterSetWithCharactersInString:@" >"];
-	//    absoluteTagEnd = [NSCharacterSet characterSetWithCharactersInString:@">"];
 	
     scanner = [NSScanner scannerWithString:inString];
 	[scanner setCaseSensitive:NO];
@@ -382,9 +378,9 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
             [processedString appendString:chunkString];
         }
 		
-        //Process the tag
-        if ([scanner scanString:tagStart intoString:nil]) { //If a tag wasn't found, we don't process.
-														  //Get the tag itself
+        //Look for the start of a tag
+        if ([scanner scanString:tagStart intoString:nil]) {
+			//Get the tag itself
 			if ([scanner scanUpToCharactersFromSet:elementEndCharacters intoString:&chunkString]) {
 				if ([chunkString caseInsensitiveCompare:@"IMG"] == NSOrderedSame) {
 					if ([scanner scanUpToString:tagEnd intoString:&chunkString]) {
