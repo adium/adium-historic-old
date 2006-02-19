@@ -61,11 +61,7 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
 		[self stopSpeaking];
         DisposeSpeechChannel(_speechChannel);
     }
-	
-	if (currentSpeechMacRomanData) {
-		free(currentSpeechMacRomanData);
-		currentSpeechMacRomanData = NULL;
-	}
+    [currentSpeechMacRomanData release]; currentSpeechMacRomanData = nil;
 
     [super dealloc];
 }
@@ -201,29 +197,16 @@ Note that extreme value can make your app crash..."  */
 		if (currentSpeechMacRomanData) {
 			[self stopSpeaking];
 		}
-		NSData *data = [text dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion:YES];
-		int length = [data length];
-
-		//Malloc the bytes we'll pass to SpeakText to ensure they are wired down and safe for use beyond the current run loop
-		currentSpeechMacRomanData = malloc(length + 1);
-		[data getBytes:currentSpeechMacRomanData];
-
-		//Ensure null-termination
-		currentSpeechMacRomanData[length] = '\0';
-
-		SpeakText(_speechChannel, currentSpeechMacRomanData, length);
+		currentSpeechMacRomanData = [[text dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion:YES] retain];
+		SpeakText(_speechChannel, [currentSpeechMacRomanData bytes], [currentSpeechMacRomanData length]);
     }
 }
 -(void)stopSpeaking
 {
     if (_speechChannel) {
         StopSpeech(_speechChannel);
-
-		if (currentSpeechMacRomanData) {
-			free(currentSpeechMacRomanData);
-			currentSpeechMacRomanData = NULL;
-		}
-
+		[currentSpeechMacRomanData autorelease];
+        currentSpeechMacRomanData = nil;
         if ([_delegate respondsToSelector:@selector(didFinishSpeaking:)]) {
             [_delegate didFinishSpeaking:self];
         }
@@ -313,10 +296,8 @@ Note that extreme value can make your app crash..."  */
         }
     } else if (msgid == 8) {
 		//First, clear currentSpeechMacRomanData since we are no longer speaking
-		if (currentSpeechMacRomanData) {
-			free(currentSpeechMacRomanData);
-			currentSpeechMacRomanData = NULL;
-		}
+		[currentSpeechMacRomanData release];
+		currentSpeechMacRomanData = nil;
 
 		//Next, notify our delegate that we finished
         if ([_delegate respondsToSelector:@selector(didFinishSpeaking:)]) {
