@@ -55,13 +55,11 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
 
 -(void)dealloc
 {
-
     [_port release];
     if (_speechChannel != NULL) {
 		[self stopSpeaking];
         DisposeSpeechChannel(_speechChannel);
     }
-    [currentSpeechMacRomanData release]; currentSpeechMacRomanData = nil;
 
     [super dealloc];
 }
@@ -127,10 +125,10 @@ Note that extreme value can make your app crash..."  */
 		error = GetIndVoice(index+1, &voice);
 		if (error == noErr) {
 			if (_speechChannel) {
-				//If we're currently speaking, stop.
-				if (currentSpeechMacRomanData) {
+				if ([self isSpeaking]) {
 					[self stopSpeaking];
 				}
+
 				error = SetSpeechInfo(_speechChannel, soCurrentVoice, &voice);
 				/* If SetSpeechInfo() returns incompatibleVoice, we need to use a new speech channel, as the
 				 * synthesizer must have changed
@@ -193,25 +191,36 @@ Note that extreme value can make your app crash..."  */
 -(void)speakText:(NSString*)text
 {
     if (_speechChannel && text) {
-		//If we're currently speaking, stop
-		if (currentSpeechMacRomanData) {
+		if ([self isSpeaking]) {
 			[self stopSpeaking];
 		}
-		currentSpeechMacRomanData = [[text dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion:YES] retain];
-		SpeakText(_speechChannel, [currentSpeechMacRomanData bytes], [currentSpeechMacRomanData length]);
+
+		NSData *data = [text dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion:YES];
+		SpeakText(_speechChannel, [data bytes], [data length]);
     }
 }
 -(void)stopSpeaking
 {
     if (_speechChannel) {
         StopSpeech(_speechChannel);
-		[currentSpeechMacRomanData autorelease];
-        currentSpeechMacRomanData = nil;
         if ([_delegate respondsToSelector:@selector(didFinishSpeaking:)]) {
             [_delegate didFinishSpeaking:self];
         }
     }
 }
+-(BOOL)isSpeaking {
+	if (!_speechChannel) return NO;
+
+	struct SpeechStatusInfo status;
+	OSStatus err = GetSpeechInfo(_speechChannel, soStatus, &status);
+	if (err != noErr) {
+		NSLog(@"in -isSpeaking, GetSpeechInfo returned %li", (long)err);
+		return NO;
+	} else {
+		return status.outputBusy;
+	}
+}
+
 -(NSString *)demoTextForVoiceAtIndex:(int)voiceIndex
 {
 	NSString *demoText = nil;
@@ -256,6 +265,7 @@ Note that extreme value can make your app crash..."  */
 	OSErr error;
 
 	if (_speechChannel) {
+		[self stopSpeaking];
 		DisposeSpeechChannel(_speechChannel);
 		_speechChannel = NULL;
 	}
@@ -295,11 +305,7 @@ Note that extreme value can make your app crash..."  */
                 [_delegate willSpeakWord:self at:0 length:0];
         }
     } else if (msgid == 8) {
-		//First, clear currentSpeechMacRomanData since we are no longer speaking
-		[currentSpeechMacRomanData release];
-		currentSpeechMacRomanData = nil;
-
-		//Next, notify our delegate that we finished
+		//Notify our delegate that we finished
         if ([_delegate respondsToSelector:@selector(didFinishSpeaking:)]) {
             [_delegate didFinishSpeaking:self];
         }
