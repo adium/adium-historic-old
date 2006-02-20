@@ -87,6 +87,12 @@ static  NSImage			*tabDivider = nil;
 		selectedCustomTabCell = nil;
 		ignoreTabNumberChange = NO;
 
+		[self setPostsFrameChangedNotifications:YES];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(ownFrameChanged:)
+													 name:NSViewFrameDidChangeNotification
+												   object:self];
+			
 		//register as a drag observer
 		[self registerForDraggedTypes:[self acceptableDragTypes]];
 		[self rebuildTabCells];
@@ -97,6 +103,8 @@ static  NSImage			*tabDivider = nil;
 //Dealloc
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[dragCell release];
 	[arrangeCellTimer invalidate]; [arrangeCellTimer release];
 	[tabCellArray release];
@@ -335,38 +343,42 @@ static  NSImage			*tabDivider = nil;
 	}
 }
 
-//Intercept frame changes and correctly resize our tabs
-- (void)setFrame:(NSRect)frameRect
+/*
+ * @brief Our frame changed
+ */
+- (void)ownFrameChanged:(NSNotification *)inNotification
 {
-    [super setFrame:frameRect];
     [self arrangeTabs];
-	[self resetCursorTracking];
 }
 
 //Rebuild the tab cells for this view
 - (void)rebuildTabCells
 {
+	NSTabViewItem *selectedTabViewItem = [tabView selectedTabViewItem];
+	int	i, numberOfTabViewItems;
+
 	//Clean up existing cells
 	[self stopCursorTracking];
     [tabCellArray release]; tabCellArray = [[NSMutableArray alloc] init];
 	selectedCustomTabCell = nil;
 	
-	//Create a tab cell for each tabViewItem
-	int	loop;
-	for (loop = 0;loop < [tabView numberOfTabViewItems];loop++) {
-		NSTabViewItem		*tabViewItem = [tabView tabViewItemAtIndex:loop];
+	//Create a tab cell for each tabViewItem	
+	numberOfTabViewItems = [tabView numberOfTabViewItems];
+	for (i = 0; i < numberOfTabViewItems; i++) {
+		NSTabViewItem		*tabViewItem = [tabView tabViewItemAtIndex:i];
 		AICustomTabCell		*tabCell;
-		
+		BOOL				isSelected = (tabViewItem == selectedTabViewItem);
+
 		//Create a new tab cell
 		tabCell = [AICustomTabCell customTabForTabViewItem:tabViewItem customTabsView:self];
-		[tabCell setSelected:(tabViewItem == [tabView selectedTabViewItem])];
+		[tabCell setSelected:isSelected];
 		[tabCell setAllowsInactiveTabClosing:allowsInactiveTabClosing];
-		
+
 		//Update our direct reference to the selected cell
-		if (tabViewItem == [tabView selectedTabViewItem]) {
+		if (isSelected) {
 			selectedCustomTabCell = tabCell;
 		}
-		
+
 		//Add the tab cell to our array
 		[tabCellArray addObject:tabCell];
 	}
@@ -437,6 +449,7 @@ static  NSImage			*tabDivider = nil;
     int				totalTabWidth;
     int				reducedWidth = 0;
     int				reduceThreshold = 1000000;
+	BOOL			changed = NO;
 
     //Get the total tab width
     totalTabWidth = [self totalWidthOfTabs] + tabGapWidth;
@@ -476,7 +489,8 @@ static  NSImage			*tabDivider = nil;
 		if (tabCell != dragCell) {
 			NSSize	size;
 			NSPoint	origin;
-			
+			NSRect	tabCellFrame = [tabCell frame];
+
 			//Make a gap to signify that the dragged cell can be dropped here
 			if (index == tabGapIndex) xLocation += tabGapWidth;
 			
@@ -491,22 +505,27 @@ static  NSImage			*tabDivider = nil;
 			//Move the tab closer to its desired location
 			origin = NSMakePoint(xLocation, 0 );
 			if (!absolute) {
-				if (origin.x > [tabCell frame].origin.x) {
-					int distance = (origin.x - [tabCell frame].origin.x) * ([NSEvent shiftKey] ? CUSTOM_TABS_SLOW_STEP : CUSTOM_TABS_STEP);
+				if (origin.x > tabCellFrame.origin.x) {
+					int distance = (origin.x - tabCellFrame.origin.x) * ([NSEvent shiftKey] ? CUSTOM_TABS_SLOW_STEP : CUSTOM_TABS_STEP);
 					if (distance < 1) distance = 1;
 					
-					origin.x = [tabCell frame].origin.x + distance;
+					origin.x = tabCellFrame.origin.x + distance;
 					
 					if (finished) finished = NO;
-				} else if (origin.x < [tabCell frame].origin.x) {
-					int distance = ([tabCell frame].origin.x - origin.x) * ([NSEvent shiftKey] ? CUSTOM_TABS_SLOW_STEP : CUSTOM_TABS_STEP);
+				} else if (origin.x < tabCellFrame.origin.x) {
+					int distance = (tabCellFrame.origin.x - origin.x) * ([NSEvent shiftKey] ? CUSTOM_TABS_SLOW_STEP : CUSTOM_TABS_STEP);
 					if (distance < 1) distance = 1;
 					
-					origin.x = [tabCell frame].origin.x - distance;
+					origin.x = tabCellFrame.origin.x - distance;
 					if (finished) finished = NO;
 				}
 			}
-			[tabCell setFrame:NSMakeRect((int)origin.x, (int)origin.y, (int)size.width, (int)size.height)];
+			
+			NSRect newTabCellFrame = NSMakeRect((int)origin.x, (int)origin.y, (int)size.width, (int)size.height);
+			if (!NSEqualRects(newTabCellFrame, tabCellFrame)) {
+				[tabCell setFrame:newTabCellFrame];
+				changed = YES;
+			}
 			
 			//Move to the next tab
 			xLocation += size.width + CUSTOM_TABS_GAP; //overlap the tabs a bit
@@ -514,10 +533,13 @@ static  NSImage			*tabDivider = nil;
 		index++;
 	}
     
-	//When we finish, update the cursor tracking
-	if (finished) [self resetCursorTracking];
-	
-    [self setNeedsDisplay:YES];
+	//When we finish, update the cursor tracking if anything changed
+	if (changed) {
+		if (finished) [self resetCursorTracking];
+		
+		[self setNeedsDisplay:YES];
+	}
+
     return finished;
 }
 
@@ -877,6 +899,11 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 {
 	[self stopCursorTracking];
 	[self startCursorTracking];
+}
+
+- (void)resetCursorRects
+{
+	[self resetCursorTracking];
 }
 
 //Install tracking rects for each tab
