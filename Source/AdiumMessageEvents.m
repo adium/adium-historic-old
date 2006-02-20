@@ -269,25 +269,50 @@
 		
 		if ([eventID isEqualToString:CONTENT_MESSAGE_SENT]) {
 			displayName = (listObject ? [listObject displayName] : [[contentObject chat] name]);
-			
-			description = [NSString stringWithFormat:
-				AILocalizedString(@"You said %@ to %@","You said Message to Contact"),
-				messageText,
-				displayName];
+		
+			if (messageText && [messageText length]) {
+				description = [NSString stringWithFormat:
+					AILocalizedString(@"You said %@ to %@","You said Message to Contact"),
+					messageText,
+					displayName];
+
+			} else {
+				description [NSString stringWithFormat:
+					AILocalizedString(@"You sent a message to %@","You sent a message to Contact"),
+					displayName];
+			}
 			
 		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
 				   [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST] ||
 				   [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 			displayName = (listObject ? [listObject displayName] : [[contentObject source] displayName]);
 			
-			description = [NSString stringWithFormat:
-				AILocalizedString(@"%@ said %@","Contact said Message"),
-				displayName,
-				messageText];
+			if (messageText && [messageText length]) {
+				description = [NSString stringWithFormat:
+					AILocalizedString(@"%@ said %@","Contact said Message"),
+					displayName,
+					messageText];
+
+			} else {
+				description = [NSString stringWithFormat:
+					AILocalizedString(@"%@ sent you a message","Contact sent you a message"),
+					displayName];				
+			}
 		}	
 		
 	} else {
-		description = messageText;
+		if (messageText && [messageText length]) {
+			description = messageText;
+		} else {
+			if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
+				[eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST] ||
+				[eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
+				//Use the message received text for all message received events if we don't have a message
+				description = [self globalShortDescriptionForEventID:CONTENT_MESSAGE_RECEIVED];
+			} else {
+				description = [self globalShortDescriptionForEventID:eventID];				
+			}
+		}
 	}
 	
 	return description;
