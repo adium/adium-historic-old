@@ -68,7 +68,10 @@
     
 	validStatus = SH_URL_INVALID; // assume the URL is invalid
 
-	inStringUTF8 = [inString UTF8String];
+	if (!(inStringUTF8 = [inString UTF8String])) {
+		return NO;
+	}
+
 	utf8Length = strlen(inStringUTF8); // length of the string in utf-8
     
 	// initialize the buffer (flex automatically switches to the buffer in this function)
