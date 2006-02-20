@@ -182,7 +182,7 @@
     
     //Create a copy of our cached string, and update it for the new text equivalent
     attributedString = [_cachedAttributedString mutableCopy];
-    attachment = [attributedString attribute:NSAttachmentAttributeName atIndex:0 effectiveRange:nil];
+    attachment = [attributedString attribute:NSAttachmentAttributeName atIndex:0 effectiveRange:NULL];
     [attachment setString:textEquivalent];
     
     return [attributedString autorelease];
