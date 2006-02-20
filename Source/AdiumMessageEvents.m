@@ -277,7 +277,7 @@
 					displayName];
 
 			} else {
-				description [NSString stringWithFormat:
+				description = [NSString stringWithFormat:
 					AILocalizedString(@"You sent a message to %@","You sent a message to Contact"),
 					displayName];
 			}
