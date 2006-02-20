@@ -782,7 +782,8 @@
 {
 	AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
 	[attachment setPath:inPath];
-	
+	[attachment setString:[inPath lastPathComponent]];
+
 	[self insertAttachment:attachment];
 	[attachment release];
 }
