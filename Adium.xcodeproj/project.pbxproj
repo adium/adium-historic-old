@@ -10004,6 +10004,7 @@
 					"-DCRASH_REPORTER",
 					"-DDEBUG_BUILD",
 					"-fconstant-cfstrings",
+					"-fms-extensions",
 				);
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
@@ -10676,6 +10677,7 @@
 				OTHER_CFLAGS = (
 					"-DDEBUG_BUILD",
 					"-fconstant-cfstrings",
+					"-fms-extensions",
 				);
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
@@ -10711,6 +10713,7 @@
 				OTHER_CFLAGS = (
 					"-DCRASH_REPORTER",
 					"-fconstant-cfstrings",
+					"-fms-extensions",
 				);
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
@@ -10743,6 +10746,7 @@
 					"-DCRASH_REPORTER",
 					"-DDEBUG_BUILD",
 					"-fconstant-cfstrings",
+					"-fms-extensions",
 				);
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
