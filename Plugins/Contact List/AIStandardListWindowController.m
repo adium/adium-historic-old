@@ -50,7 +50,6 @@
 - (id)initWithWindowNibName:(NSString *)inNibName
 {	
     if ((self = [super initWithWindowNibName:inNibName])) {
-		toolbarItems = nil;
 		previousAlpha = 0;
 	}
 
@@ -64,8 +63,6 @@
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium notificationCenter] removeObserver:self];
-	[toolbarItems release];
-	[view_statusAndImage release];
 
 	[super dealloc];
 }
