@@ -431,13 +431,13 @@
 					   notify:NotifyNow];
 		
 	} else if ([key isEqualToString:@"Enabled"]) {
-		//We are now enabled so should go online, or we are now disabled so should disconnect
-		[self setShouldBeOnline:enabled];
-		
 		//Set a status object so observers are notified
 		[self setStatusObject:[NSNumber numberWithBool:enabled]
 					   forKey:@"Enabled"
 					   notify:NotifyNow];
+		
+		//We are now enabled so should go online, or we are now disabled so should disconnect
+		[self setShouldBeOnline:enabled];
 	}
 }
 

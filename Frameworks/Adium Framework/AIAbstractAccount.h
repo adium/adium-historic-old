@@ -49,6 +49,7 @@
 - (void)_startAttributedRefreshTimer;
 - (void)_stopAttributedRefreshTimer;
 - (void)gotFilteredStatusMessage:(NSAttributedString *)statusMessage forStatusState:(AIStatus *)statusState;
+- (void)updateLocalDisplayNameTo:(NSString *)displayName;
 
 //Contacts
 - (NSArray *)contacts;
