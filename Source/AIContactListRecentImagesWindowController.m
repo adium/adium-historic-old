@@ -246,6 +246,14 @@
 		AIAccount	 *account;
 		NSEnumerator *enumerator;
 
+		menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Change Icon For:", nil)
+											  target:nil
+											  action:nil
+									   keyEquivalent:@""];
+		[menuItem setEnabled:NO];
+		[menu addItem:menuItem];
+		[menuItem release];
+		
 		enumerator = [ownIconAccounts objectEnumerator];
 		while ((account = [enumerator nextObject])) {
 			//Put a check before the account if it is the active account
