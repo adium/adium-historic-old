@@ -16,7 +16,7 @@
 
 #import <Adium/AIObject.h>
 
-@class AIWebKitMessageViewPlugin, AIWebkitMessageViewStyle, AIContentObject, ESWebView, AIWebKitJSBridge;
+@class AIWebKitMessageViewPlugin, AIWebkitMessageViewStyle, AIContentObject, ESWebView;
 
 @protocol AIMessageViewController;
 
