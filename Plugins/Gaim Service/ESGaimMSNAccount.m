@@ -295,7 +295,7 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 						   forKey:@"AccountServerDisplayName"
 						   notify:NotifyNever];
 			
-			[self updateLocalDisplayNameTo:friendlyName]
+			[self updateLocalDisplayNameTo:friendlyName];
 		}
 	}
 }
