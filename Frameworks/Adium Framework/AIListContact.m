@@ -648,11 +648,11 @@
 	//Send any file we were told to send
 	if (filePath && [filePath length]) {
 		//Make sure we know where we are sending the file - if we don't have a target yet, find the best contact for
-		//sending FILE_TRANSFER_TYPE.
+		//sending CONTENT_FILE_TRANSFER_TYPE.
 		if (!targetFileTransferContact) {
 			//Get the target contact.  This could be the same contact, an identical contact on another account, 
 			//or a subcontact (if we're talking about a metaContact, for example)
-			targetFileTransferContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+			targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																				   forListContact:self];
 		}
 		

@@ -28,21 +28,13 @@
 		CBGaimAccount		*account = [inDict objectForKey:@"CBGaimAccount"];
 		ESFileTransfer		*fileTransfer = [inDict objectForKey:@"ESFileTransfer"];
 		
-		requestController = [[account requestReceiveOfFileTransfer:fileTransfer] retain];
-		if (requestController) {
-			NSWindow	*window = [requestController window];
-			
-			//Watch for the window to close
-			[[NSNotificationCenter defaultCenter] addObserver:self
-													 selector:@selector(windowWillClose:)
-														 name:NSWindowWillCloseNotification
-													   object:window];
-			
-		} else {
-			//Didn't get a request control; no need for us here anymore.
-			[self release];
-			self = nil;
-		}
+		[account requestReceiveOfFileTransfer:fileTransfer];
+
+		[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self
+																selector:@selector(cancel:)
+																	name:FILE_TRANSFER_CANCELED
+																  object:nil];
+
 	}
 	
 	return self;
@@ -50,8 +42,7 @@
 
 - (void)dealloc
 {
-	[requestController release]; requestController = nil;
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[[AIObject sharedAdiumInstance] notificationCenter] removeObserver:self];
 	
 	[super dealloc];
 }
@@ -59,28 +50,19 @@
 /*
  * @brief libgaim has been made aware we closed or has informed us we should close
  *
- * Close our requestController's window if it's open; then release (we returned without autoreleasing initially).
+ * release (we returned without autoreleasing initially).
  */
 - (void)gaimRequestClose
-{
-	AILog(@"%@: gaimRequestClose (%@)",self,requestController);
-
-	if (requestController) {
-		[[requestController window] close];
-	}
-	
+{	
 	[self release];
 }
 
 /*
- * @brief Our requestController's window is closing
+ * @brief Our file transfer was canceled
  */
-- (void)windowWillClose:(NSNotification *)inNotification
+- (void)cancel:(NSNotification *)inNotification
 {
-	//We won't need to try to close it ourselves later
-	[requestController release]; requestController = nil;
-
-	//Inform libgaim that the request window closed
+	//Inform libgaim that the request was canceled
 	[ESGaimRequestAdapter requestCloseWithHandle:self];
 }
 

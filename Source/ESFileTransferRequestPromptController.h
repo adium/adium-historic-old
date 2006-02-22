@@ -18,16 +18,22 @@
 
 @class ESTextAndButtonsWindowController, ESFileTransfer;
 
-@interface ESFileTransferRequestPromptController : AIObject {
-	ESTextAndButtonsWindowController *windowController;
+typedef enum {
+	AISaveFile = 0,
+	AISaveFileAs,
+	AICancel
+} AIFileTransferAction;
 
+@interface ESFileTransferRequestPromptController : AIObject {
 	ESFileTransfer	*fileTransfer;
 	id	target;
 	SEL	selector;
 }
 
-+ (AIWindowController *)displayPromptForFileTransfer:(ESFileTransfer *)inFileTransfer
-									 notifyingTarget:(id)inTarget
-											selector:(SEL)inSelector;
++ (void )displayPromptForFileTransfer:(ESFileTransfer *)inFileTransfer
+					  notifyingTarget:(id)inTarget
+							 selector:(SEL)inSelector;
+- (ESFileTransfer *) fileTransfer;
+- (void)handleFileTransferAction:(AIFileTransferAction)action;
 
 @end

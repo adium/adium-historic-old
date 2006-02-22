@@ -826,7 +826,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 			([self integerStatusObjectForKey:@"Connecting"])) {  //XXX - Why do we lie if we're connecting? -ai
 			return YES;
         }
-    } else if (([inType isEqualToString:FILE_TRANSFER_TYPE]) && ([self conformsToProtocol:@protocol(AIAccount_Files)])) {
+    } else if (([inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) && ([self conformsToProtocol:@protocol(AIAccount_Files)])) {
 		if (weAreOnline) {
 			if (inContact) {
 				if ([inContact online]) {
@@ -1233,12 +1233,11 @@ gboolean gaim_init_ssl_openssl_plugin(void);
  *
  * Set up the ESFileTransfer and query the fileTransferController for a save location.
  * 
- * @result The window controller for the window prompting the user to take action, or nil if no prompt was shown
  */
-- (AIWindowController *)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer
+- (void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	GaimDebug(@"File transfer request received: %@",fileTransfer);
-	return [[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
+	[[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
 }
 
 - (ESFileTransfer *)_mainThreadNewFileTransferObjectWith:(NSString *)destinationUID
@@ -1247,9 +1246,10 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 {
 	AIListContact   *contact = [self contactWithUID:destinationUID];
     ESFileTransfer	*fileTransfer;
-	
+
 	fileTransfer = [[adium fileTransferController] newFileTransferWithContact:contact
-																   forAccount:self]; 
+																   forAccount:self
+																		 type:Unknown_FileTransfer]; 
 	[fileTransfer setSize:[inSize unsignedLongLongValue]];
 	[fileTransfer setRemoteFilename:remoteFilename];
 
@@ -1305,9 +1305,9 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 
     xferType = gaim_xfer_get_type(xfer);
     if ( xferType == GAIM_XFER_SEND ) {
-        [fileTransfer setType:Outgoing_FileTransfer];   
+        [fileTransfer setFileTransferType:Outgoing_FileTransfer];   
     } else if ( xferType == GAIM_XFER_RECEIVE ) {
-        [fileTransfer setType:Incoming_FileTransfer];
+        [fileTransfer setFileTransferType:Incoming_FileTransfer];
 		[fileTransfer setSize:(xfer->size)];
     }
     

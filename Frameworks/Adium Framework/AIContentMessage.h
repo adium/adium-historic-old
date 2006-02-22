@@ -32,6 +32,14 @@
 			   date:(NSDate *)inDate
 			message:(NSAttributedString *)inMessage 
 		  autoreply:(BOOL)inAutoreply;
+
+- (id)initWithChat:(AIChat *)inChat
+			source:(id)inSource
+	   destination:(id)inDest
+			  date:(NSDate *)inDate
+		   message:(NSAttributedString *)inMessage
+		 autoreply:(BOOL)inAutoreply;
+
 - (void)setIsAutoreply:(BOOL)inAutoreply;
 - (BOOL)isAutoreply;
 

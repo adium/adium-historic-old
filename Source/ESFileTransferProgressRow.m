@@ -85,7 +85,7 @@
 	//If we already know something about this file transfer, update since we missed delegate calls
 	[self fileTransfer:fileTransfer didSetSize:[fileTransfer size]];
 	[self fileTransfer:fileTransfer didSetLocalFilename:[fileTransfer localFilename]];
-	[self fileTransfer:fileTransfer didSetType:[fileTransfer type]];
+	[self fileTransfer:fileTransfer didSetType:[fileTransfer fileTransferType]];
 
 	//This always calls gotUpdate and display, so do it last
 	[self fileTransfer:fileTransfer didSetStatus:[fileTransfer status]];
@@ -116,7 +116,7 @@
 
 - (FileTransferType)type
 {
-	return [fileTransfer type];
+	return [fileTransfer fileTransferType];
 }
 
 - (void)fileTransfer:(ESFileTransfer *)inFileTransfer didSetSize:(unsigned long long)inSize
@@ -164,7 +164,7 @@
 
 	unsigned long long	bytesSent = [inFileTransfer bytesSent];
 	NSString			*transferBytesStatus = nil, *transferSpeedStatus = nil, *transferRemainingStatus = nil;
-	FileTransferType	type = [inFileTransfer type];
+	FileTransferType	type = [inFileTransfer fileTransferType];
 	
 	if (!size) {
 		size = [inFileTransfer size];
@@ -328,7 +328,7 @@
 	
 	//Allow open and show in finder on complete incoming transfers and all outgoing transfers
 	if (([fileTransfer status] == Complete_FileTransfer) ||
-	   ([fileTransfer type] == Outgoing_FileTransfer)) {
+	   ([fileTransfer fileTransferType] == Outgoing_FileTransfer)) {
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Open",nil)
 																		 target:self
 																		 action:@selector(openFileAction:)

@@ -10,7 +10,6 @@
 @class AIWindowController;
 
 @interface ESGaimFileReceiveRequestController : NSObject {
-	AIWindowController	*requestController;
 }
 
 + (ESGaimFileReceiveRequestController *)showFileReceiveWindowWithDict:(NSDictionary *)inDict;

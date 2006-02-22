@@ -471,8 +471,8 @@ static int nextChatNumber = 0;
 																		fromListContact:listContact];
 			} else {
 				//Make sure we know where we are sending the file by finding the best contact for
-				//sending FILE_TRANSFER_TYPE.
-				targetFileTransferContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+				//sending CONTENT_FILE_TRANSFER_TYPE.
+				targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																					   forListContact:listContact];
 			}
 			

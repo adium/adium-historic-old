@@ -41,8 +41,8 @@
 	NSImage						*imageMask;
 	NSMutableArray				*objectsWithUserIconsArray;
 	
-	//javascript bridging
-	AIWebKitJSBridge			*jsBridge;
+	//for inline file transfer requests
+	NSMutableDictionary			*fileTransferRequestControllers;
 }
 
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;

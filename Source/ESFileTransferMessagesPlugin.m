@@ -39,17 +39,17 @@
 {
 	//Install our observers
     [[adium notificationCenter] addObserver:self 
-								   selector:@selector(handleFleTransferEvent:) 
+								   selector:@selector(handleFileTransferEvent:) 
 									   name:FILE_TRANSFER_CANCELED 
 									 object:nil];
 
 	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(handleFleTransferEvent:) 
+								   selector:@selector(handleFileTransferEvent:) 
 									   name:FILE_TRANSFER_COMPLETE 
 									 object:nil];
 	
 	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(handleFleTransferEvent:) 
+								   selector:@selector(handleFileTransferEvent:) 
 									   name:FILE_TRANSFER_BEGAN 
 									 object:nil];
 }
@@ -65,7 +65,7 @@
 /*!
  * @brief A file transfer event occurred
  */
-- (void)handleFleTransferEvent:(NSNotification *)notification
+- (void)handleFileTransferEvent:(NSNotification *)notification
 {
 	ESFileTransfer	*fileTransfer = (ESFileTransfer *)[notification userInfo];
 	AIListContact	*listContact = [notification object];
@@ -86,7 +86,7 @@
 
 		} else if ([notificationName isEqualToString:FILE_TRANSFER_COMPLETE]) {
 			type = @"file_transfer_complete";
-			if ([fileTransfer type] == Incoming_FileTransfer) {
+			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
 				message = [NSString stringWithFormat:AILocalizedString(@"Successfully received %@",nil),filename];
 			} else {
 				message = [NSString stringWithFormat:AILocalizedString(@"Successfully sent %@",nil),filename];			
@@ -94,7 +94,7 @@
 
 		} else if ([notificationName isEqualToString:FILE_TRANSFER_BEGAN]) {
 			type = @"file_transfer_began";
-			if ([fileTransfer type] == Incoming_FileTransfer) {
+			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
 				message = [NSString stringWithFormat:AILocalizedString(@"Began receiving %@",nil),filename];
 			} else {
 				message = [NSString stringWithFormat:AILocalizedString(@"Began sending %@",nil),filename];			
