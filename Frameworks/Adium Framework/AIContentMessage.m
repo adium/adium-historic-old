@@ -18,15 +18,6 @@
 #import "AIContentMessage.h"
 #import "AIContentObject.h"
 
-@interface AIContentMessage (PRIVATE)
-- (id)initWithChat:(AIChat *)inChat
-			source:(id)inSource
-	   destination:(id)inDest
-			  date:(NSDate *)inDate
-		   message:(NSAttributedString *)inMessage
-		 autoreply:(BOOL)inAutoreply;
-@end
-
 @implementation AIContentMessage
 
 //Create a content message

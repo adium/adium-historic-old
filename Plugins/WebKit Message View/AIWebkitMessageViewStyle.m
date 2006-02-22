@@ -28,6 +28,7 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
+#import <Adium/ESFileTransfer.h>
 
 //
 #define LEGACY_VERSION_THRESHOLD		3	//Styles older than this version are considered legacy
@@ -48,6 +49,7 @@
 - (void)_loadTemplates;
 - (NSMutableString *)_escapeStringForPassingToScript:(NSMutableString *)inString;
 - (NSString *)noVariantName;
+- (NSString *)_webKitFileIconPathForObject:(ESFileTransfer *)inObject;
 @end
 
 @implementation AIWebkitMessageViewStyle
@@ -366,9 +368,11 @@
 			template = (contentIsSimilar ? nextContextInHTML : contextInHTML);
 		}
 
-	} else {
+	} else if([[content type] isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) {
+		template = [[fileTransferHTML mutableCopy] autorelease];
+	}
+	else {
 		template = statusHTML;
-	
 	}
 	
 	return template;
@@ -417,6 +421,16 @@
 
 	//Status
 	statusHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Status.html"]] retain];
+	
+	fileTransferHTML = [NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Incoming/FileTransferRequest.html"]];
+	if(!fileTransferHTML) {
+		fileTransferHTML = [statusHTML mutableCopy];
+		[(NSMutableString *)fileTransferHTML replaceOccurrencesOfString:@"%message%"
+															 withString:@"%message% <br> <input type=\"button\" onclick=\"%fileTransferClickHandler%\" value=\"Accept File Transfer\"> </input>"
+																options:NSLiteralSearch
+																  range:NSMakeRange(0, [fileTransferHTML length] -1)];
+	}
+	
 }
 
 //Scripts --------------------------------------------------------------------------------------------------------------
@@ -597,11 +611,8 @@
 	NSRange			range;
 		
 	//date
-	if ([content isKindOfClass:[AIContentMessage class]]) {
+	if ([content respondsToSelector:@selector(date)])
 		date = [(AIContentMessage *)content date];
-	} else if ([content isKindOfClass:[AIContentStatus class]]) {
-		date = [(AIContentStatus *)content date];
-	}
 	
 	//Replacements applicable to any AIContentObject
 	[self replaceKeyword:@"%time%" 
@@ -795,6 +806,31 @@
 				}
 			}
 		} while (range.location != NSNotFound);
+		
+		if ([content isKindOfClass:[ESFileTransfer class]]) { //file transfers are an AIContentMessage subclass
+		
+			ESFileTransfer *transfer = (ESFileTransfer *)content;
+			NSString *fileName = [transfer remoteFilename];
+			do{
+				range = [inString rangeOfString:@"%fileIconPath%"];
+				NSString *iconPath = [self _webKitFileIconPathForObject:transfer];
+				NSImage *icon = [transfer iconImage];
+				[[icon TIFFRepresentation] writeToFile:iconPath atomically:YES];
+				if (range.location != NSNotFound) {
+					[inString replaceCharactersInRange:range withString:iconPath];
+				}
+			} while (range.location != NSNotFound);
+			
+			[self replaceKeyword:@"%fileName%"
+						inString:inString
+					  withString:fileName];
+			
+			[self replaceKeyword:@"%fileTransferClickHandler%"
+						inString:inString
+					  withString:[NSString stringWithFormat:@"adium.acceptFileTransfer('%@')", fileName]];
+			
+		}
+		
 		
 		//Message (must do last)
 		range = [inString rangeOfString:@"%message%"];
@@ -997,4 +1033,11 @@
 
 	return inString;
 }
+
+- (NSString *)_webKitFileIconPathForObject:(ESFileTransfer *)inObject
+{
+	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff",[inObject remoteFilename],[NSString randomStringOfLength:5]];
+	return [[[AIObject sharedAdiumInstance] cachesPath] stringByAppendingPathComponent:filename];
+}
+
 @end

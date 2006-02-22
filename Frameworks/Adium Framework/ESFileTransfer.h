@@ -15,9 +15,10 @@
  */
 
 #import "AIObject.h"
+#import <Adium/AIContentMessage.h>
 #import "ESFileTransferController.h"
 
-#define FILE_TRANSFER_TYPE  @"File Transfer Type"
+#define CONTENT_FILE_TRANSFER_TYPE  @"File Transfer Type"
 
 @protocol AIAccount_Files;
 
@@ -31,9 +32,7 @@
 -(void)gotUpdateForFileTransfer:(ESFileTransfer *)fileTransfer;
 @end
 
-@interface ESFileTransfer : AIObject {
-    AIListContact				*contact;
-    AIAccount<AIAccount_Files> 	*account;
+@interface ESFileTransfer : AIContentMessage {
     NSString					*localFilename;
     NSString					*remoteFilename;
     id							accountData;
@@ -47,8 +46,8 @@
 	id <FileTransferDelegate>   delegate;
 }
 
-+ (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount;
-- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount;
++ (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(FileTransferType)t;
+- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(FileTransferType)t;
 
 - (AIListContact *)contact;
 - (AIAccount<AIAccount_Files> *)account;
@@ -64,8 +63,8 @@
 - (void)setSize:(unsigned long long)inSize;
 - (unsigned long long)size;
 
-- (void)setType:(FileTransferType)inType;
-- (FileTransferType)type;
+- (void)setFileTransferType:(FileTransferType)inType;
+- (FileTransferType)fileTransferType;
 
 - (void)setStatus:(FileTransferStatus)inStatus;
 - (FileTransferStatus)status;
@@ -79,9 +78,6 @@
 
 - (void)setDelegate:(id <FileTransferDelegate>)inDelegate;
 - (id <FileTransferDelegate>)delegate;
-
-- (AIListObject *)source;
-- (AIListObject *)destination;
 
 - (BOOL)isStopped;
 

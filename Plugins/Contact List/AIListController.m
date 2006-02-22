@@ -546,7 +546,7 @@ typedef enum {
 		NSEnumerator	*enumerator = [files objectEnumerator];
 		
 		while ((file = [enumerator nextObject])) {
-			AIListContact	*targetFileTransferContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+			AIListContact	*targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																									forListContact:item];
 			[[adium fileTransferController] sendFile:file toListContact:targetFileTransferContact];
 		}

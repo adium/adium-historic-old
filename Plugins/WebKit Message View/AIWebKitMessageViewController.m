@@ -36,8 +36,10 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIService.h>
+#import "ESFileTransfer.h"
+#import "ESFileTransferRequestPromptController.h"
+#import "ESTextAndButtonsWindowController.h"
 
-#import "AIWebKitJSBridge.h"
 #import "ESWebView.h"
 
 @class AIContentMessage, AIContentStatus, AIContentObject;
@@ -56,6 +58,7 @@
 - (void)participatingListObjectsChanged:(NSNotification *)notification;
 - (void)sourceOrDestinationChanged:(NSNotification *)notification;
 - (BOOL)shouldHandleDragWithPasteboard:(NSPasteboard *)pasteboard;
+- (void) enqueueContentObject:(AIContentObject *)contentObject;
 @end
 
 static NSArray *draggedTypes = nil;
@@ -116,6 +119,16 @@ static NSArray *draggedTypes = nil;
 									   selector:@selector(chatDidFinishAddingUntrackedContent:)
 										   name:Content_ChatDidFinishAddingUntrackedContent 
 										 object:inChat];
+		
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(showFileTransferRequest:)
+										   name:@"FileTransferRequestReceived"
+										 object:nil];
+		
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(cancelFileTransferRequest:)
+										   name:FILE_TRANSFER_CANCELED
+										 object:nil];
 	}
 	
     return self;
@@ -155,8 +168,8 @@ static NSArray *draggedTypes = nil;
 
 	//Release the chat
 	[chat release]; chat = nil;
-	
-	[jsBridge release]; jsBridge = nil;
+		
+	[fileTransferRequestControllers release]; fileTransferRequestControllers = nil;
 
 	[super dealloc];
 }
@@ -354,8 +367,7 @@ static NSArray *draggedTypes = nil;
 	}
 	[webView registerForDraggedTypes:draggedTypes];
 	
-	jsBridge = [[AIWebKitJSBridge alloc] initWithController:self];
-	[[webView windowScriptObject] setValue:jsBridge forKey:@"adium"];
+	[[webView windowScriptObject] setValue:self forKey:@"adium"];
 }
 
 /*!
@@ -506,12 +518,17 @@ static NSArray *draggedTypes = nil;
 - (void)contentObjectAdded:(NSNotification *)notification
 {
 	AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"AIContentObject"];
+	[self enqueueContentObject:contentObject];
+}
+
+- (void) enqueueContentObject:(AIContentObject *)contentObject
+{
 	[contentQueue addObject:contentObject];
 	
 	/* Immediately update our display if the content requires it.
-	 * This is NO, for example, when we receive an entire block of message history content so that we can avoid scrolling
-	 * after each one.
-	 */
+	* This is NO, for example, when we receive an entire block of message history content so that we can avoid scrolling
+	* after each one.
+	*/
 	if ([contentObject displayContentImmediately]) {
 		[self processQueuedContent];
 	}
@@ -1023,6 +1040,55 @@ static NSArray *draggedTypes = nil;
 {
 	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff",[inObject internalObjectID],[NSString randomStringOfLength:5]];
 	return [[adium cachesPath] stringByAppendingPathComponent:filename];
+}
+
+#pragma mark File Transfer
+
+- (void) showFileTransferRequest:(NSNotification *)not
+{
+	if(!fileTransferRequestControllers) fileTransferRequestControllers = [[NSMutableDictionary alloc] init];
+	ESFileTransferRequestPromptController *tc = (ESFileTransferRequestPromptController *)[[not userInfo] objectForKey:@"FileTransferRequestController"];
+	ESFileTransfer *transfer = [tc fileTransfer];
+	[fileTransferRequestControllers setObject:tc forKey:[transfer remoteFilename]];
+	if([transfer chat] != chat) return;
+	[self enqueueContentObject:transfer];
+}
+
+- (void) cancelFileTransferRequest:(NSNotification *)not
+{
+	ESFileTransfer *e = (ESFileTransfer *)[not userInfo];
+	[fileTransferRequestControllers removeObjectForKey:[e remoteFilename]];
+}
+
+- (void) acceptFileTransfer:(NSString *)fileName
+{
+	ESFileTransferRequestPromptController *tc = [fileTransferRequestControllers objectForKey:fileName];
+	if(!tc) return;
+	[fileTransferRequestControllers removeObjectForKey:fileName];
+	[tc handleFileTransferAction:AISaveFile];
+}
+
+#pragma mark JS Bridging
+/*See http://developer.apple.com/documentation/AppleApplications/Conceptual/SafariJSProgTopics/Tasks/ObjCFromJavaScript.html#//apple_ref/doc/uid/30001215 for more information.
+*/
+
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
+{
+	if(aSelector == @selector(acceptFileTransfer:)) return NO;
+	return YES;
+}
+
+/*
+ This method returns the name to be used in the scripting environment for the selector specified by aSelector. It is your responsibility to ensure that the returned name is unique to the script invoking this method. If this method returns nil or you do not implement it, the default name for the selector will be constructed as follows:
+ 
+ Any colon (“:”)in the Objective-C selector is replaced by an underscore (“_”).
+ Any underscore in the Objective-C selector is prefixed with a dollar sign (“$”).
+ Any dollar sign in the Objective-C selector is prefixed with another dollar sign.
+ */
++ (NSString *)webScriptNameForSelector:(SEL)aSelector
+{
+	if(aSelector == @selector(acceptFileTransfer:)) return @"acceptFileTransfer";
+	return @"";
 }
 
 @end

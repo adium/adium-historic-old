@@ -136,12 +136,13 @@ static ESFileTransferPreferences *preferences;
 }
 
 #pragma mark Access to file transfer objects
-- (ESFileTransfer *)newFileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount
+- (ESFileTransfer *)newFileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(FileTransferType)t
 {
 	ESFileTransfer *fileTransfer;
 	
 	fileTransfer = [ESFileTransfer fileTransferWithContact:inContact
-												forAccount:inAccount];
+												forAccount:inAccount
+													  type:t];
 	[fileTransferArray addObject:fileTransfer];
 	[fileTransfer setStatus:Not_Started_FileTransfer];
 
@@ -169,13 +170,12 @@ static ESFileTransferPreferences *preferences;
 
 #pragma mark Sending and receiving
 //Sent by an account when it gets a request for us to receive a file; prompt the user for a save location
-- (AIWindowController *)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer
+- (void)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	AIListContact		*listContact = [fileTransfer contact];
 	NSString			*localFilename = nil;
-	AIWindowController	*promptController = nil;
 
-	[fileTransfer setType:Incoming_FileTransfer];
+	[fileTransfer setFileTransferType:Incoming_FileTransfer];
 
 	[[adium contactAlertsController] generateEvent:FILE_TRANSFER_REQUEST
 									 forListObject:listContact
@@ -195,12 +195,10 @@ static ESFileTransferPreferences *preferences;
 			
 	} else {
 		//Prompt to accept/deny
-		promptController = [ESFileTransferRequestPromptController displayPromptForFileTransfer:fileTransfer
-																			   notifyingTarget:self
-																					  selector:@selector(_finishReceiveRequestForFileTransfer:localFilename:)];
+		[ESFileTransferRequestPromptController displayPromptForFileTransfer:fileTransfer
+															notifyingTarget:self
+																   selector:@selector(_finishReceiveRequestForFileTransfer:localFilename:)];
 	}
-	
-	return promptController;
 }
 
 /*!
@@ -308,15 +306,16 @@ static ESFileTransferPreferences *preferences;
 	AIAccount		*account;
 	ESFileTransfer	*fileTransfer;
 	
-	if ((account = [[adium accountController] preferredAccountForSendingContentType:FILE_TRANSFER_TYPE
+	if ((account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_FILE_TRANSFER_TYPE
 																		  toContact:listContact])) {
 		NSFileManager	*defaultManager = [NSFileManager defaultManager];
 		BOOL			isDir;
 		
 		//Set up a fileTransfer object
 		fileTransfer = [self newFileTransferWithContact:listContact
-											 forAccount:account];
-		[fileTransfer setType:Outgoing_FileTransfer];
+											 forAccount:account
+												   type:Outgoing_FileTransfer];
+		
 
 		if ([defaultManager fileExistsAtPath:inPath isDirectory:&isDir]) {
 			//If we get a directory, compress it first (this could be specified on a per-account basis later if we have services supporting folder transfer)
@@ -349,7 +348,7 @@ static ESFileTransferPreferences *preferences;
 	
 	selectedObject = [[adium contactController] selectedListObject];
 	if ([selectedObject isKindOfClass:[AIListContact class]]) {
-		listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+		listContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																 forListContact:(AIListContact *)selectedObject];
 	}
 	
@@ -361,7 +360,7 @@ static ESFileTransferPreferences *preferences;
 - (IBAction)contextualMenuSendFile:(id)sender
 {
 	AIListObject	*selectedObject = [[adium menuController] currentContextMenuObject];
-	AIListContact   *listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+	AIListContact   *listContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																			  forListContact:(AIListContact *)selectedObject];
 	
 	[NSApp activateIgnoringOtherApps:YES];
@@ -421,7 +420,7 @@ static ESFileTransferPreferences *preferences;
 	BOOL	shouldOpen = NO;
 	
 	if (autoOpenSafe &&
-	   ([fileTransfer type] == Incoming_FileTransfer)) {
+	   ([fileTransfer fileTransferType] == Incoming_FileTransfer)) {
 		
 		if (!safeFileExtensions) safeFileExtensions = [SAFE_FILE_EXTENSIONS_SET retain];		
 
@@ -438,7 +437,7 @@ static ESFileTransferPreferences *preferences;
     if (menuItem == menuItem_sendFile) {
         AIListObject	*selectedObject = [[adium contactController] selectedListObject];
 		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]) {
-			listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+			listContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																	 forListContact:(AIListContact *)selectedObject];
 		}
 		
@@ -447,7 +446,7 @@ static ESFileTransferPreferences *preferences;
 	} else if (menuItem == menuItem_sendFileContext) {
 		AIListObject	*selectedObject = [[adium menuController] currentContextMenuObject];
 		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]) {
-			listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+			listContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																	 forListContact:(AIListContact *)selectedObject];
 		}
 		
@@ -467,7 +466,7 @@ static ESFileTransferPreferences *preferences;
 	
 	AIListObject	*selectedObject = [[adium contactController] selectedListObject];
 	if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]) {
-		listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+		listContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																 forListContact:(AIListContact *)selectedObject];
 	}
 
@@ -599,7 +598,7 @@ static ESFileTransferPreferences *preferences;
 			format = AILocalizedString(@"%@ requests to send you %@",nil);
 			
 		} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
-			if ([fileTransfer type] == Incoming_FileTransfer) {
+			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
 				format = AILocalizedString(@"%@ began sending you %@",nil);
 			} else {
 				format = AILocalizedString(@"%@ began receiving %@",nil);	
@@ -607,7 +606,7 @@ static ESFileTransferPreferences *preferences;
 		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
 			format = AILocalizedString(@"%@ canceled the transfer of %@",nil);
 		} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
-			if ([fileTransfer type] == Incoming_FileTransfer) {
+			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
 				format = AILocalizedString(@"%@ sent you %@",nil);
 			} else {
 				format = AILocalizedString(@"%@ received %@",nil);	
@@ -625,7 +624,7 @@ static ESFileTransferPreferences *preferences;
 			format = AILocalizedString(@"requests to send you %@",nil);
 			
 		} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
-			if ([fileTransfer type] == Incoming_FileTransfer) {
+			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
 				format = AILocalizedString(@"began sending you %@",nil);
 			} else {
 				format = AILocalizedString(@"began receiving %@",nil);	
@@ -633,7 +632,7 @@ static ESFileTransferPreferences *preferences;
 		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
 			format = AILocalizedString(@"canceled the transfer of %@",nil);
 		} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
-			if ([fileTransfer type] == Incoming_FileTransfer) {
+			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
 				format = AILocalizedString(@"sent you %@",nil);
 			} else {
 				format = AILocalizedString(@"received %@",nil);	

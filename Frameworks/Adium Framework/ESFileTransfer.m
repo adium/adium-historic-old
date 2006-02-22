@@ -17,30 +17,59 @@
 #import "AIAccount.h"
 #import "AIListContact.h"
 #import "ESFileTransfer.h"
+#import "AIChatController.h"
 
+#import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIBezierPathAdditions.h>
 
 #define MAGIC_ARROW_SCALE       0.85
 #define MAGIC_ARROW_TRANSLATE_X 2.85
 #define MAGIC_ARROW_TRANSLATE_Y 0.75
 
+@interface ESFileTransfer (PRIVATE)
+- (void) recreateMessage;
+@end
+
 @implementation ESFileTransfer
 //Init
-+ (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount
++ (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(FileTransferType)t
 {
-    return [[[self alloc] initWithContact:inContact forAccount:inAccount] autorelease];    
+    return [[[self alloc] initWithContact:inContact forAccount:inAccount type:t] autorelease];    
 }
 
-- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount;
+//Content Identifier
+- (NSString *)type
 {
-    if ((self = [super init]))
+    return CONTENT_FILE_TRANSFER_TYPE;
+}
+
+- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(FileTransferType)t
+{
+	AIChat *c = [[[AIObject sharedAdiumInstance] chatController] openChatWithContact:inContact]; 
+	AIListObject *s, *d;
+	switch(t)
 	{
-		//Retain our information
-		contact = [inContact retain];
-		account = [inAccount retain];
-		type = Unknown_FileTransfer;
+		case Outgoing_FileTransfer:
+			s = inAccount;
+			d = inContact;
+			break;
+		case Incoming_FileTransfer:
+		case Unknown_FileTransfer: //we have to pick one or the other, and we can set it correctly when they set the type
+			s = inContact;
+			d = inAccount;
+			break;
+	}
+    if ((self = [super initWithChat:c
+							 source:s
+						destination:d
+							   date:[NSDate date]
+							message:@""
+						  autoreply:NO]))
+	{
+		type = t;
 		status = Unknown_Status_FileTransfer;
 		delegate = nil;
+		[self recreateMessage];
 	}
 	
     return self;
@@ -48,8 +77,6 @@
 
 - (void)dealloc
 {
-    [contact release];
-    [account release];
     [remoteFilename release];
     [localFilename release];
     [accountData release];
@@ -59,12 +86,12 @@
 
 - (AIListContact *)contact
 {
-    return contact;   
+    return ([self fileTransferType] == Incoming_FileTransfer || [self fileTransferType] == Unknown_FileTransfer) ? (AIListContact *)[self source] : (AIListContact *)[self destination];   
 }
 
 - (AIAccount<AIAccount_Files> *)account
 {
-    return account;   
+    return [[self chat] account];   
 }
 
 - (void)setRemoteFilename:(NSString *)inRemoteFilename
@@ -73,7 +100,9 @@
         [remoteFilename release];
         remoteFilename = [inRemoteFilename retain];
     }
+	[self recreateMessage];
 }
+
 - (NSString *)remoteFilename
 {
     return remoteFilename;
@@ -110,20 +139,33 @@
 	
 	if (delegate)
 		[delegate fileTransfer:self didSetSize:size];
+	
+	[self recreateMessage];
 }
 - (unsigned long long)size
 {
     return size;
 }
 
-- (void)setType:(FileTransferType)inType
+- (void)setFileTransferType:(FileTransferType)inType
 {
+	//incoming file transfers should always have a non-account as the source, and outgoing ones should always have an account as the source
+	if((inType == Incoming_FileTransfer && [source isKindOfClass:[AIAccount class]]) ||
+	   (inType == Outgoing_FileTransfer && [destination isKindOfClass:[AIAccount class]]))
+	{
+		AIListObject *temp = source;
+		source = destination;
+		destination = temp;
+	}
     type = inType;
 	
 	if (delegate)
 		[delegate fileTransfer:self didSetType:type];
+	
+	[self recreateMessage];
 }
-- (FileTransferType)type
+
+- (FileTransferType)fileTransferType
 {
     return type;   
 }
@@ -139,6 +181,7 @@
 			[delegate fileTransfer:self didSetStatus:status];
 	}
 }
+
 - (FileTransferStatus)status
 {
 	return status;
@@ -218,41 +261,6 @@
 - (id <FileTransferDelegate>)delegate;
 {
 	return delegate;
-}
-
-- (AIListObject *)source
-{
-	AIListObject	*source;
-	switch (type) {
-		case Incoming_FileTransfer:
-			source = contact;
-			break;
-		case Outgoing_FileTransfer:
-			source = account;
-			break;
-		default:
-			source = nil;
-			break;
-	}
-	
-	return source;
-}
-- (AIListObject *)destination
-{
-	AIListObject	*destination;
-	switch (type) {
-		case Incoming_FileTransfer:
-			destination = account;
-			break;
-		case Outgoing_FileTransfer:
-			destination = contact;
-			break;
-		default:
-			destination = nil;
-			break;
-	}
-	
-	return destination;	
 }
 
 - (void)cancel
@@ -352,6 +360,31 @@
 	return (status == Complete_FileTransfer ||
 		   (status == Canceled_Local_FileTransfer) ||
 		   (status == Canceled_Remote_FileTransfer));
+}
+
+- (void) recreateMessage
+{
+	NSString			*filenameDisplay;
+	NSString			*rFilename = [self remoteFilename];
+	if(!rFilename) rFilename = @"";
+	
+	//Display the name of the file, with the file's size if available
+	unsigned long long fileSize = [self size];
+	
+	if (fileSize) {
+		NSString	*fileSizeString;
+		
+		fileSizeString = [[adium fileTransferController] stringForSize:fileSize];
+		filenameDisplay = [NSString stringWithFormat:@"%@ (%@)", rFilename, fileSizeString];
+	} else {
+		filenameDisplay = rFilename;
+	}
+	
+	[self setMessage:[NSAttributedString stringWithString:
+		[NSString stringWithFormat:AILocalizedString(@"%@ requests to send you %@",nil),
+			[[self contact] formattedUID],
+			filenameDisplay]]];
+	
 }
 
 @end

@@ -36,6 +36,8 @@ typedef enum {
 	BackgroundTile
 } AIWebkitBackgroundType;
 
+@class ESFileTransfer;
+
 @interface AIWebkitMessageViewStyle : NSObject {
 	int					styleVersion;
 	NSBundle			*styleBundle;
@@ -54,6 +56,7 @@ typedef enum {
 	NSString			*contextOutHTML;
 	NSString			*nextContextOutHTML;
 	NSString			*statusHTML;
+	NSString			*fileTransferHTML;
 
 	//Style settings
 	BOOL				allowsCustomBackground;
@@ -119,5 +122,4 @@ typedef enum {
 - (void) replaceKeyword:(NSString *)word inString:(NSMutableString *)string withString:(NSString *)newWord;
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content;
 - (NSMutableString *)fillKeywordsForBaseTemplate:(NSMutableString *)inString chat:(AIChat *)chat;
-
 @end

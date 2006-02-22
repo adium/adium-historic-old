@@ -69,10 +69,11 @@ typedef enum {
 }
 
 //Should be the only vendor of new ESFileTransfer* objects, as it creates, tracks, and returns them
-- (ESFileTransfer *)newFileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount;
+- (ESFileTransfer *)newFileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(FileTransferType)type;
+
 - (NSArray *)fileTransferArray;
 
-- (AIWindowController *)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer;
+- (void)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer;
 
 - (void)fileTransfer:(ESFileTransfer *)fileTransfer didSetStatus:(FileTransferStatus)status;
 
