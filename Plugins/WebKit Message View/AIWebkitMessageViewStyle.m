@@ -430,6 +430,8 @@
 																options:NSLiteralSearch
 																  range:NSMakeRange(0, [fileTransferHTML length] -1)];
 	}
+	else
+		[fileTransferHTML retain];
 	
 }
 
