@@ -290,17 +290,12 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 
 			if ([friendlyName length] == 0) friendlyName = nil;
 			
-			[[self displayArrayForKey:@"Display Name"] setObject:friendlyName
-													   withOwner:self];
-
 			//Keep track of the friendly name so we can avoid doing duplicate sets on the same name
 			[self setStatusObject:friendlyName
 						   forKey:@"AccountServerDisplayName"
 						   notify:NotifyNever];
 			
-			//notify
-			[[adium contactController] listObjectAttributesChanged:self
-													  modifiedKeys:[NSSet setWithObject:@"Display Name"]];			
+			[self updateLocalDisplayNameTo:friendlyName]
 		}
 	}
 }
