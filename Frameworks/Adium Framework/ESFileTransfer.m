@@ -54,7 +54,7 @@
 			d = inContact;
 			break;
 		case Incoming_FileTransfer:
-		case Unknown_FileTransfer: //we have to pick one or the other, and we can set it correctly when they set the type
+		default: //we have to pick one or the other, and we can set it correctly when they set the type
 			s = inContact;
 			d = inAccount;
 			break;
