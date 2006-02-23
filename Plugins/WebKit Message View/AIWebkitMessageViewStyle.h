@@ -78,6 +78,9 @@ typedef enum {
 	NSString			*customBackgroundPath;
 	NSColor				*customBackgroundColor;
 	NSImage				*userIconMask;
+	
+	//icon path caches
+	NSMutableDictionary *statusIconPathCache;
 }
 
 + (id)messageViewStyleFromBundle:(NSBundle *)inBundle;

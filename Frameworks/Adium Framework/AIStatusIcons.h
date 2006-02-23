@@ -47,4 +47,5 @@ typedef enum {
 + (BOOL)setActiveStatusIconsFromPath:(NSString *)inPath;
 + (NSImage *)previewMenuImageForIconPackAtPath:(NSString *)inPath;
 
++ (NSString *)statusNameForListObject:(AIListObject *)listObject;
 @end

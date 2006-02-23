@@ -29,8 +29,6 @@ static NSMutableDictionary	*statusIcons[NUMBER_OF_STATUS_ICON_TYPES][NUMBER_OF_I
 static NSString				*statusIconBasePath = nil;
 static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 
-static NSString *statusNameForListObject(AIListObject *listObject);
-
 static NSString *statusNameForChat(AIChat *inChat);
 
 static BOOL					statusIconsReady = NO;
@@ -50,7 +48,7 @@ static BOOL					statusIconsReady = NO;
 //Retrieve the correct status icon for a given list object
 + (NSImage *)statusIconForListObject:(AIListObject *)listObject type:(AIStatusIconType)iconType direction:(AIIconDirection)iconDirection
 {
-	return [AIStatusIcons statusIconForStatusName:statusNameForListObject(listObject)
+	return [AIStatusIcons statusIconForStatusName:[self statusNameForListObject:listObject]
 									   statusType:[listObject statusType]
 										 iconType:iconType
 										direction:iconDirection];
@@ -269,7 +267,7 @@ static NSString *statusNameForChat(AIChat *inChat)
  * Finally, return nil if none of these conditions are met, indicating that the statusType's default
  * should be used.
  */
-static NSString *statusNameForListObject(AIListObject *listObject)
++ (NSString *)statusNameForListObject:(AIListObject *)listObject
 {
 	NSString		*statusName = nil;
 

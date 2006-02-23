@@ -44,12 +44,25 @@
 #define APPEND_MESSAGE_NO_SCROLL		@"appendMessageNoScroll(\"%@\");"
 #define	APPEND_NEXT_MESSAGE_NO_SCROLL	@"appendNextMessageNoScroll(\"%@\");"
 
+@interface NSMutableString (AIKeywordReplacementAdditions)
+- (void) replaceKeyword:(NSString *)word withString:(NSString *)newWord;
+@end
+
+@implementation NSMutableString (AIKeywordReplacementAdditions)
+- (void) replaceKeyword:(NSString *)keyWord withString:(NSString *)newWord
+{
+	for(NSRange range = [self rangeOfString:keyWord]; range.location != NSNotFound; range = [self rangeOfString:keyWord])
+		[self replaceCharactersInRange:range withString:newWord];
+}
+@end
+
 @interface AIWebkitMessageViewStyle (PRIVATE)
 - (id)initWithBundle:(NSBundle *)inBundle;
 - (void)_loadTemplates;
 - (NSMutableString *)_escapeStringForPassingToScript:(NSMutableString *)inString;
 - (NSString *)noVariantName;
-- (NSString *)_webKitFileIconPathForObject:(ESFileTransfer *)inObject;
+- (NSString *)iconPathForFileTransfer:(ESFileTransfer *)inObject;
+- (NSString *)statusIconPathForListObject:(AIListObject *)inObject;
 @end
 
 @implementation AIWebkitMessageViewStyle
@@ -596,8 +609,7 @@
 
 - (void) replaceKeyword:(NSString *)keyWord inString:(NSMutableString *)inString withString:(NSString *)newWord
 {
-	for(NSRange range = [inString rangeOfString:keyWord]; range.location != NSNotFound; range = [inString rangeOfString:keyWord])
-		[inString replaceCharactersInRange:range withString:newWord];
+
 }
 
 /*!
@@ -617,9 +629,11 @@
 		date = [(AIContentMessage *)content date];
 	
 	//Replacements applicable to any AIContentObject
-	[self replaceKeyword:@"%time%" 
-				inString:inString 
+	[inString replaceKeyword:@"%time%" 
 			  withString:(date != nil ? [timeStampFormatter stringForObjectValue:date] : @"")];
+	
+	[inString replaceKeyword:@"%senderStatusIcon%"
+				  withString:[self statusIconPathForListObject:[content source]]];
 	
 	//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
 	do{
@@ -737,9 +751,8 @@
 			}
 		} while (range.location != NSNotFound);
 		
-		[self replaceKeyword:@"%service%" 
-					inString:inString 
-				  withString:[[contentSource service] shortDescription]];
+		[inString replaceKeyword:@"%service%" 
+					  withString:[[contentSource service] shortDescription]];
 
 		//Blatantly stealing the date code for the background color script.
 		do{
@@ -815,7 +828,7 @@
 			NSString *fileName = [transfer remoteFilename];
 			do{
 				range = [inString rangeOfString:@"%fileIconPath%"];
-				NSString *iconPath = [self _webKitFileIconPathForObject:transfer];
+				NSString *iconPath = [self iconPathForFileTransfer:transfer];
 				NSImage *icon = [transfer iconImage];
 				[[icon TIFFRepresentation] writeToFile:iconPath atomically:YES];
 				if (range.location != NSNotFound) {
@@ -823,13 +836,11 @@
 				}
 			} while (range.location != NSNotFound);
 			
-			[self replaceKeyword:@"%fileName%"
-						inString:inString
-					  withString:fileName];
+			[inString replaceKeyword:@"%fileName%"
+						  withString:fileName];
 			
-			[self replaceKeyword:@"%fileTransferClickHandler%"
-						inString:inString
-					  withString:[NSString stringWithFormat:@"adium.acceptFileTransfer('%@')", fileName]];
+			[inString replaceKeyword:@"%fileTransferClickHandler%"
+						  withString:[NSString stringWithFormat:@"adium.acceptFileTransfer('%@')", fileName]];
 			
 		}
 		
@@ -1036,10 +1047,32 @@
 	return inString;
 }
 
-- (NSString *)_webKitFileIconPathForObject:(ESFileTransfer *)inObject
+#pragma mark Icons
+
+- (NSString *)iconPathForFileTransfer:(ESFileTransfer *)inObject
 {
-	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff",[inObject remoteFilename],[NSString randomStringOfLength:5]];
+	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff", [inObject remoteFilename], [NSString randomStringOfLength:5]];
 	return [[[AIObject sharedAdiumInstance] cachesPath] stringByAppendingPathComponent:filename];
+}
+
+- (NSString *)statusIconPathForListObject:(AIListObject *)inObject
+{
+	if(!statusIconPathCache) statusIconPathCache = [[NSMutableDictionary alloc] init];
+	NSImage *icon = [AIStatusIcons statusIconForListObject:inObject
+													  type:AIStatusIconTab
+												 direction:AIIconNormal];
+	NSString *statusName = [AIStatusIcons statusNameForListObject:inObject];
+	if(!statusName)
+		statusName = @"UnknownStatus";
+	NSString *path = [statusIconPathCache objectForKey:statusName];
+	if(!path)
+	{
+		path = [[[AIObject sharedAdiumInstance] cachesPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"TEMP-%@%@.tiff", statusName, [NSString randomStringOfLength:5]]];
+		[[icon TIFFRepresentation] writeToFile:path atomically:YES];
+		[statusIconPathCache setObject:path forKey:statusName];
+	}
+
+	return path;
 }
 
 @end
