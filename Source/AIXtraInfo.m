@@ -31,9 +31,12 @@
 
 - (void) setName:(NSString *)inName
 {
-	[inName retain];
-	[name autorelease];
-	name = inName;
+	if(!inName) name = @"Unnamed Xtra";
+	else {
+		[inName retain];
+		[name autorelease];
+		name = inName;
+	}
 }
 
 - (NSString *) description
