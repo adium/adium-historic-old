@@ -232,9 +232,9 @@ static NSImage * scriptImage;
 				[manager removeFileAtPath:path handler:nil];
 			}
 		}
+		[xtraList selectRow:0 byExtendingSelection:NO];
 		[selectedCategory removeObjectsAtIndexes:indices];
 		[xtraList reloadData];
-		[xtraList selectRow:0 byExtendingSelection:NO];
 		/*
 		 XXX this is ugly. We should use the AIXtraInfo's type instead of the path extension
 		*/
