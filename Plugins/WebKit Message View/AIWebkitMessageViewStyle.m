@@ -607,11 +607,6 @@
 //Keyword Replacement --------------------------------------------------------------------------------------------------
 #pragma mark Keyword replacement
 
-- (void) replaceKeyword:(NSString *)keyWord inString:(NSMutableString *)inString withString:(NSString *)newWord
-{
-
-}
-
 /*!
  * @brief Substitute content keywords
  *
@@ -688,11 +683,10 @@
 		} while (range.location != NSNotFound);
 		
 		NSString *formattedUID = [contentSource formattedUID];
-		[self replaceKeyword:@"%senderScreenName%" 
-					inString:inString 
-				  withString:[(formattedUID ?
-							   formattedUID :
-							   [contentSource displayName]) stringByEscapingForHTML]];
+		[inString replaceKeyword:@"%senderScreenName%" 
+					  withString:[(formattedUID ?
+								   formattedUID :
+								   [contentSource displayName]) stringByEscapingForHTML]];
         
 		do{
 			range = [inString rangeOfString:@"%sender%"];
@@ -872,12 +866,10 @@
 		NSString	*statusPhrase;
 		BOOL		replacedStatusPhrase = NO;
 		
-		[self replaceKeyword:@"%status%" 
-					inString:inString 
+		[inString replaceKeyword:@"%status%" 
 				  withString:[[(AIContentStatus *)content status] stringByEscapingForHTML]];
 		
-		[self replaceKeyword:@"%statusSender%" 
-					inString:inString 
+		[inString replaceKeyword:@"%statusSender%" 
 				  withString:[[[(AIContentStatus *)content source] displayName] stringByEscapingForHTML]];
 
 		if ((statusPhrase = [[content userInfo] objectForKey:@"Status Phrase"])) {
@@ -933,27 +925,23 @@
 {
 	NSRange	range;
 	
-	[self replaceKeyword:@"%chatName%"
-				inString:inString
-			  withString:[[chat displayName] stringByEscapingForHTML]];
+	[inString replaceKeyword:@"%chatName%"
+				  withString:[[chat displayName] stringByEscapingForHTML]];
 
 	NSString * sourceName = [[[chat account] displayName] stringByEscapingForHTML];
 	if(!sourceName) sourceName = @" ";
-	[self replaceKeyword:@"%sourceName%"
-				inString:inString
-			  withString:sourceName];
+	[inString replaceKeyword:@"%sourceName%"
+				  withString:sourceName];
 	
 	NSString *destinationName = [[chat listObject] displayName];
 	if (!destinationName) destinationName = [chat displayName];
-	[self replaceKeyword:@"%destinationName%"
-				inString:inString
-			  withString:destinationName];
+	[inString replaceKeyword:@"%destinationName%"
+				  withString:destinationName];
 	
 	NSString *serversideDisplayName = [[chat listObject] serversideDisplayName];
 	if (!serversideDisplayName) serversideDisplayName = [chat displayName];
-	[self replaceKeyword:@"%destinationDisplayName%"
-				inString:inString
-			  withString:[serversideDisplayName stringByEscapingForHTML]];
+	[inString replaceKeyword:@"%destinationDisplayName%"
+				  withString:[serversideDisplayName stringByEscapingForHTML]];
 		
 	AIListContact	*listObject = [chat listObject];
 	NSString		*iconPath = nil;
@@ -964,9 +952,8 @@
 			iconPath = [listObject statusObjectForKey:@"UserIconPath"];
 		}
 	}
-	[self replaceKeyword:@"%incomingIconPath%"
-				inString:inString
-			  withString:(iconPath ? iconPath : @"incoming_icon.png")];
+	[inString replaceKeyword:@"%incomingIconPath%"
+				  withString:(iconPath ? iconPath : @"incoming_icon.png")];
 	
 	AIListObject	*account = [chat account];
 	iconPath = nil;
@@ -977,13 +964,11 @@
 			iconPath = [account statusObjectForKey:@"UserIconPath"];
 		}
 	}
-	[self replaceKeyword:@"%outgoingIconPath%"
-				inString:inString
-			  withString:(iconPath ? iconPath : @"outgoing_icon.png")];
+	[inString replaceKeyword:@"%outgoingIconPath%"
+				  withString:(iconPath ? iconPath : @"outgoing_icon.png")];
 	
-	[self replaceKeyword:@"%timeOpened%"
-				inString:inString
-			  withString:[timeStampFormatter stringForObjectValue:[chat dateOpened]]];
+	[inString replaceKeyword:@"%timeOpened%"
+				  withString:[timeStampFormatter stringForObjectValue:[chat dateOpened]]];
 	
 	//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
 	do{
