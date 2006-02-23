@@ -31,6 +31,8 @@
 
 - (void) setName:(NSString *)inName
 {
+	[inName retain];
+	[name autorelease];
 	name = inName;
 }
 
@@ -52,19 +54,19 @@
 		type = [[[[url path] pathExtension] lowercaseString] retain];
 		xtraBundle = [[NSBundle alloc] initWithPath:path];
 		if (xtraBundle && ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1)) { //This checks for a new-style xtra
-			name = [xtraBundle objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
+			[self setName:[xtraBundle objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey]];
 			resourcePath = [[xtraBundle resourcePath] retain];
 			icon = [[NSImage alloc] initByReferencingFile:[xtraBundle pathForResource:@"Icon" ofType:@"icns"]];
 			readMePath = [[xtraBundle pathForResource:@"ReadMe" ofType:@"rtf"] retain];
-			if (!readMePath)
-				readMePath = [[[NSBundle mainBundle] pathForResource:@"DefaultXtraReadme" ofType:@"rtf"] retain];
+			
 
 		}
 		else {
-			name = [[[path lastPathComponent] stringByDeletingPathExtension]retain];
+			[self setName:[[path lastPathComponent] stringByDeletingPathExtension]];
 			resourcePath = [path copy];//root of the xtra
-			readMePath = [[[NSBundle mainBundle] pathForResource:@"DefaultXtraReadme" ofType:@"rtf"] retain];
 		}	
+		if (!readMePath)
+			readMePath = [[[NSBundle mainBundle] pathForResource:@"DefaultXtraReadme" ofType:@"rtf"] retain];
 		if(!icon)
 			icon = [[[NSWorkspace sharedWorkspace] iconForFile:path]retain];
 	}
