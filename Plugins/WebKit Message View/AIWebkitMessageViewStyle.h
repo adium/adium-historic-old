@@ -122,7 +122,6 @@ typedef enum {
 + (NSString *)defaultVariantForBundle:(NSBundle *)inBundle;
 
 //Keyword substitution
-- (void) replaceKeyword:(NSString *)word inString:(NSMutableString *)string withString:(NSString *)newWord;
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content;
 - (NSMutableString *)fillKeywordsForBaseTemplate:(NSMutableString *)inString chat:(AIChat *)chat;
 @end
