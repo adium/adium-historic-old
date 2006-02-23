@@ -168,7 +168,8 @@ static NSImage * scriptImage;
 
 - (IBAction) setCategory:(id)sender
 {
-	selectedCategory = [categories objectAtIndex:[sidebar selectedRow]];
+	[selectedCategory autorelease];
+	selectedCategory = [[categories objectAtIndex:[sidebar selectedRow]]retain];
 	[xtraList selectRow:0 byExtendingSelection:NO];
 	[xtraList reloadData];
 	[self updatePreview];
@@ -232,8 +233,8 @@ static NSImage * scriptImage;
 			}
 		}
 		[selectedCategory removeObjectsAtIndexes:indices];
-		[xtraList selectRow:0 byExtendingSelection:NO];
 		[xtraList reloadData];
+		[xtraList selectRow:0 byExtendingSelection:NO];
 		/*
 		 XXX this is ugly. We should use the AIXtraInfo's type instead of the path extension
 		*/
@@ -330,7 +331,8 @@ static NSImage * scriptImage;
 		return [categoryNames objectAtIndex:row];
 	}
 	else {
-		return [[selectedCategory objectAtIndex:row] name];
+		NSString * name = [[selectedCategory objectAtIndex:row] name];
+		return (name != nil) ? name : @"";
 	}
 }
 
