@@ -44,6 +44,10 @@
 #define APPEND_MESSAGE_NO_SCROLL		@"appendMessageNoScroll(\"%@\");"
 #define	APPEND_NEXT_MESSAGE_NO_SCROLL	@"appendNextMessageNoScroll(\"%@\");"
 
+#define VALID_SENDER_COLORS_ARRAY [[NSArray alloc] initWithObjects:@"red", @"blue" , @"gray", @"magenta", @"violet", @"olive", @"yellowgreen", @"darkred", @"darkgreen", @"darksalmon", @"darkcyan", @"darkyellow", @"mediumpurple", @"peru", @"olivedrab", @"royalred", @"darkorange", @"slateblue", @"slategray", @"goldenrod", @"orangered", @"tomato", @"dogderblue", @"steelblue", @"deeppink", @"saddlebrown", @"coral", @"royalblue", nil]
+
+static NSArray *validSenderColors;
+
 @interface NSMutableString (AIKeywordReplacementAdditions)
 - (void) replaceKeyword:(NSString *)word withString:(NSString *)newWord;
 @end
@@ -629,6 +633,10 @@
 	
 	[inString replaceKeyword:@"%senderStatusIcon%"
 				  withString:[self statusIconPathForListObject:[content source]]];
+	
+	if(!validSenderColors) validSenderColors = VALID_SENDER_COLORS_ARRAY;
+	[inString replaceKeyword:@"%senderColor%"
+				  withString:[validSenderColors objectAtIndex:([[[content source] UID] hash] % ([validSenderColors count] - 1))]];
 	
 	//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
 	do{
