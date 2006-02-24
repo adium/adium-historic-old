@@ -18,7 +18,6 @@
  * @brief <tt>NSScrollView</tt> subclass which adds automatic scrolling, scroll bar hiding, and other features.
  *
  * This <tt>NSScrollView</tt> subclass adds:
- * 	 - Automatic scrolling as text is added and automatic hiding of the scroll bar, even on 10.2 (these features were added in 10.3)
  * 	 - Methods to scroll to the top and bottom of the view
  * 	 - Key press forwarding to the document view
  * 	 - Focus ring drawing for views such as NSTextView which do not normally draw a focus ring
@@ -29,22 +28,12 @@
     BOOL			autoScrollToBottom;
 	BOOL			inAutoScrollToBottom;
 
-    BOOL			autoHideScrollBar;
-
 	BOOL			passKeysToDocumentView;
 
 	BOOL			alwaysDrawFocusRingIfFocused;
 	BOOL			shouldDrawFocusRing;
 	NSResponder		*lastResp;
 }
-
-/*!
- * @brief Set if the scroll bar should be automatically hidden and shown as necessary
- *
- * If YES, the scroll bar will be hidden when it is not needed and automatically shown when the document view exceeds the frame available for its display. The default value is NO.
- * @param inValue YES if the scroll bar should be automatically hidden; NO if not.
- */
-- (void)setAutoHideScrollBar:(BOOL)inValue;
 
 /*!
  * @brief Set if the scrollView should scroll to the bottom when new content is added

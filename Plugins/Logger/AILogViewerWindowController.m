@@ -1164,15 +1164,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key) {
     [cellMenu addItem:[self _menuItemWithTitle:FROM forSearchMode:LOG_SEARCH_FROM]];
     [cellMenu addItem:[self _menuItemWithTitle:TO forSearchMode:LOG_SEARCH_TO]];
     [cellMenu addItem:[self _menuItemWithTitle:DATE forSearchMode:LOG_SEARCH_DATE]];
-    if (!popUp_jagSearchMode) [cellMenu addItem:[self _menuItemWithTitle:CONTENT forSearchMode:LOG_SEARCH_CONTENT]]; //Not in jag
-    
-    //In 10.2 we use a popup button here, later we use the search field's embedded menu
-    if (popUp_jagSearchMode) {
-		[popUp_jagSearchMode setMenu:cellMenu];
-		[popUp_jagSearchMode selectItem:[cellMenu itemWithTag:searchMode]];
-    } else {
-		[[searchField_logs cell] setSearchMenuTemplate:cellMenu];
-    }
+    [cellMenu addItem:[self _menuItemWithTitle:CONTENT forSearchMode:LOG_SEARCH_CONTENT]];
 }
 
 //Returns a menu item for the search mode menu
