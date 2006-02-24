@@ -443,7 +443,7 @@ static NSArray *validSenderColors;
 	if(!fileTransferHTML) {
 		fileTransferHTML = [statusHTML mutableCopy];
 		[(NSMutableString *)fileTransferHTML replaceOccurrencesOfString:@"%message%"
-															 withString:@"%message% <br> <input type=\"button\" onclick=\"%fileTransferClickHandler%\" value=\"Accept File Transfer\"> </input>"
+															 withString:@"%message% <br> <input type=\"button\" onclick=\"%saveFileAsHandler%\" value=\"Accept File Transfer\"> </input>"
 																options:NSLiteralSearch
 																  range:NSMakeRange(0, [fileTransferHTML length] -1)];
 	}
