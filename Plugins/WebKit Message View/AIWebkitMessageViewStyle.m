@@ -827,7 +827,7 @@ static NSArray *validSenderColors;
 		if ([content isKindOfClass:[ESFileTransfer class]]) { //file transfers are an AIContentMessage subclass
 		
 			ESFileTransfer *transfer = (ESFileTransfer *)content;
-			NSString *fileName = [transfer remoteFilename];
+			NSString *fileName = [[transfer remoteFilename] stringByEscapingForHTML];
 			do{
 				range = [inString rangeOfString:@"%fileIconPath%"];
 				NSString *iconPath = [self iconPathForFileTransfer:transfer];
@@ -841,8 +841,14 @@ static NSArray *validSenderColors;
 			[inString replaceKeyword:@"%fileName%"
 						  withString:fileName];
 			
-			[inString replaceKeyword:@"%fileTransferClickHandler%"
-						  withString:[NSString stringWithFormat:@"adium.acceptFileTransfer('%@')", fileName]];
+			[inString replaceKeyword:@"%saveFileHandler%"
+						  withString:[NSString stringWithFormat:@"adium.handleFileTransfer('Save', '%@')", fileName]];
+			
+			[inString replaceKeyword:@"%saveFileAsHandler%"
+						  withString:[NSString stringWithFormat:@"adium.handleFileTransfer('SaveAs', '%@')", fileName]];
+			
+			[inString replaceKeyword:@"%cancelRequestHandler%"
+						  withString:[NSString stringWithFormat:@"adium.handleFileTransfer('Cancel', '%@')", fileName]];
 			
 		}
 		

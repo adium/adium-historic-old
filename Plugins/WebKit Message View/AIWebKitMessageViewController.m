@@ -1060,12 +1060,16 @@ static NSArray *draggedTypes = nil;
 	[fileTransferRequestControllers removeObjectForKey:[e remoteFilename]];
 }
 
-- (void) acceptFileTransfer:(NSString *)fileName
+- (void) handleAction:(NSString *)action forFileTransfer:(NSString *)fileName
 {
+	NSLog(@"%@ : %@", action, fileName);
 	ESFileTransferRequestPromptController *tc = [fileTransferRequestControllers objectForKey:fileName];
 	if(!tc) return;
 	[fileTransferRequestControllers removeObjectForKey:fileName];
-	[tc handleFileTransferAction:AISaveFile];
+	AIFileTransferAction a = AISaveFile;
+	if([action isEqualToString:@"SaveAs"]) a = AISaveFileAs;
+	else if([action isEqualToString:@"Cancel"]) a = AICancel;
+	[tc handleFileTransferAction:a];
 }
 
 #pragma mark JS Bridging
@@ -1074,7 +1078,7 @@ static NSArray *draggedTypes = nil;
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
 {
-	if(aSelector == @selector(acceptFileTransfer:)) return NO;
+	if(aSelector == @selector(handleAction:forFileTransfer:)) return NO;
 	return YES;
 }
 
@@ -1087,7 +1091,7 @@ static NSArray *draggedTypes = nil;
  */
 + (NSString *)webScriptNameForSelector:(SEL)aSelector
 {
-	if(aSelector == @selector(acceptFileTransfer:)) return @"acceptFileTransfer";
+	if(aSelector == @selector(handleAction:forFileTransfer:)) return @"handleFileTransfer";
 	return @"";
 }
 
