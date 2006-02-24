@@ -38,7 +38,6 @@ typedef enum {
     IBOutlet	NSTableView                 *tableView_results;
     IBOutlet	NSTextView                  *textView_content;
     IBOutlet    id                          searchField_logs;       //May be an NSSearchField or an NSTextField
-    IBOutlet    NSPopUpButton               *popUp_jagSearchMode;   //Used in the jag log viewer to select search mode
     IBOutlet    NSProgressIndicator         *progressIndicator;
     IBOutlet    NSTextField                 *textField_progress;
     IBOutlet    NSButton                    *button_deleteLogs;

@@ -19,7 +19,6 @@
 
 @interface AIAutoScrollView (PRIVATE)
 - (void)_initAutoScrollView;
-- (void)setCorrectScrollbarVisibility;
 @end
 
 @implementation AIAutoScrollView
@@ -28,7 +27,6 @@
  A subclass of NSScrollView that:
 
     - Automatically scrolls to bottom on new content
-    - Automatically hides & shows the vertical scroller depending on content height (including on 10.2)
 	- Shows a focus ring even if the contained view would not normally show one (an NSTextView, for example)
  */
 
@@ -53,7 +51,6 @@
 {
     autoScrollToBottom = NO;
 	inAutoScrollToBottom = NO;
-    autoHideScrollBar = NO;
 	passKeysToDocumentView = NO;
 	
 	//Focus ring
@@ -61,7 +58,7 @@
 	lastResp = nil;
 	shouldDrawFocusRing = NO;
 	
-    [self setAutoHideScrollBar:YES];
+    [self setAutohidesScrollers:YES];
 }
 
 - (void)dealloc
@@ -145,17 +142,6 @@
     }
 }
 
-//Called as the view resizes or scrolls
-- (void)reflectScrolledClipView:(NSClipView *)cView
-{
-    [super reflectScrolledClipView:cView];
-
-    //Set our correct scrollbar visibility
-    if (autoHideScrollBar) {
-        [self setCorrectScrollbarVisibility];
-    }
-}
-
 //Scroll to the top of our view
 - (void)scrollToTop
 {    
@@ -166,30 +152,6 @@
 - (void)scrollToBottom
 {
     [[self documentView] scrollPoint:NSMakePoint(0, 1000000)];
-}
-
-
-//Automatic scrollbar hiding ---------------------------------------------------------------
-#pragma mark Automatic scrollbar hiding
-- (void)setAutoHideScrollBar:(BOOL)inValue
-{
-    autoHideScrollBar = inValue;
-    
-    if (autoHideScrollBar) [self setCorrectScrollbarVisibility];
-}
-
-//Hides or shows the scrollbar as necessary
-- (void)setCorrectScrollbarVisibility
-{
-    float	visibleHeight =  [self documentVisibleRect].size.height;
-    float	  totalHeight = [[self documentView] frame].size.height;
-
-    //Hide or show scrollbar
-    if (totalHeight > visibleHeight) {
-        if (![self hasVerticalScroller]) [self setHasVerticalScroller:YES];
-    } else {
-        if ( [self hasVerticalScroller]) [self setHasVerticalScroller:NO];
-    }
 }
 
 //Key forwarding ----------------------

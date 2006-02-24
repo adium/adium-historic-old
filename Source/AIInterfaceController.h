@@ -118,7 +118,7 @@ typedef enum {
 
 //Identifiers for the various message views
 typedef enum {
-	DCStandardMessageView = 1,	//10.2 only, unless webkit is not available
+	DCStandardMessageView = 1,	//webkit is not available
 	DCWebkitMessageView			//Preferred message view
 } DCMessageViewType;
 

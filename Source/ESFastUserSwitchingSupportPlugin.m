@@ -105,7 +105,6 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
  * @brief Handle a fast user switch event
  *
  * Calling this with (notification == nil) is the same as when the user switches back.
- * Do not call this method in OS X 10.2.x.
  *
  * @param notification The notification has a name NSWorkspaceSessionDidResignActiveNotification when the user switches away and NSWorkspaceSessionDidBecomeActiveNotification when the user switches back.
  */
