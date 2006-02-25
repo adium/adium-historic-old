@@ -622,6 +622,30 @@ static NSArray *validSenderColors;
 {
 	NSDate			*date = nil;
 	NSRange			range;
+	/*
+		htmlEncodedMessage is only encoded correctly for AIContentMessages
+		but we do it up here so that we can check for RTL/LTR text below without
+		having to encode the message twice. This is less than ideal 
+	 */
+	NSString		*htmlEncodedMessage = [AIHTMLDecoder encodeHTML:[content message]
+															headers:NO 
+														   fontTags:([content isOutgoing] ?
+																	 YES :
+																	 showIncomingFonts)
+												 includingColorTags:([content isOutgoing] ? 
+																	 YES : 
+																	 showIncomingColors)
+													  closeFontTags:YES
+														  styleTags:YES
+										 closeStyleTagsOnFontChange:YES
+													 encodeNonASCII:YES
+													   encodeSpaces:YES
+														 imagesPath:NSTemporaryDirectory()
+												  attachmentsAsText:NO
+										  onlyIncludeOutgoingImages:NO
+													 simpleTagsOnly:NO
+													 bodyBackground:NO];
+		
 		
 	//date
 	if ([content respondsToSelector:@selector(date)])
@@ -637,6 +661,10 @@ static NSArray *validSenderColors;
 	if(!validSenderColors) validSenderColors = VALID_SENDER_COLORS_ARRAY;
 	[inString replaceKeyword:@"%senderColor%"
 				  withString:[validSenderColors objectAtIndex:([[[content source] UID] hash] % ([validSenderColors count] - 1))]];
+	
+	//HAX. The odd conditional here detects the rtl html that our html parser spits out.
+	[inString replaceKeyword:@"%messageDirection%"
+				  withString:(([inString rangeOfString:@"<DIV dir=\"rtl\">"].location != NSNotFound) ? @"rtl" : @"ltr")];
 	
 	//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
 	do{
@@ -856,24 +884,7 @@ static NSArray *validSenderColors;
 		//Message (must do last)
 		range = [inString rangeOfString:@"%message%"];
 		if (range.location != NSNotFound) {
-			[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
-																				  headers:NO 
-																				 fontTags:([content isOutgoing] ?
-																						   YES :
-																						   showIncomingFonts)
-																	   includingColorTags:([content isOutgoing] ? 
-																						   YES : 
-																						   showIncomingColors)
-																			closeFontTags:YES
-																				styleTags:YES
-															   closeStyleTagsOnFontChange:YES
-																		   encodeNonASCII:YES
-																			 encodeSpaces:YES
-																			   imagesPath:NSTemporaryDirectory()
-																		attachmentsAsText:NO
-																onlyIncludeOutgoingImages:NO
-																		   simpleTagsOnly:NO
-																		   bodyBackground:NO]];
+			[inString replaceCharactersInRange:range withString:htmlEncodedMessage];
 		}
 		
 	} else if ([content isKindOfClass:[AIContentStatus class]]) {
