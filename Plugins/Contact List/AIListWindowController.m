@@ -429,8 +429,8 @@
 	NSScreen * windowScreen = [window screen];
 	if(!windowScreen) windowScreen = [NSScreen mainScreen];
 		
-	NSRect newScreenFrame = [windowScreen frame];
-	NSRect currentScreenFrame = [currentScreen frame];
+	NSRect newScreenFrame = [windowScreen visibleFrame];
+	NSRect currentScreenFrame = [currentScreen visibleFrame];
 	NSRect listFrame = [window frame];
 	
 	if(NSEqualRects(currentScreenFrame, newScreenFrame)) return;
@@ -739,7 +739,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSWindow	*window = [self window];
 	NSRect		windowFrame = [window frame];
 	
-	if (!NSEqualRects(windowFrame, oldFrame)) {
+	if (!NSEqualRects(windowFrame, oldFrame) && windowSlidOffScreenEdgeMask != AINoEdges) {
 		[window orderFront:nil]; 
 		
 		windowSlidOffScreenEdgeMask = AINoEdges;
