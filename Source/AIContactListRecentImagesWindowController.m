@@ -12,7 +12,9 @@
 #import "AIStandardListWindowController.h"
 #import "AIContactListImagePicker.h"
 #import "AIMenuItemView.h"
+#import "AISCLViewPlugin.h"
 #import <Adium/AIAccount.h>
+#import <Adium/AICoreComponentLoader.h>
 #import <AIUtilities/AIImageGridView.h>
 #import <AIUtilities/AIBorderlessWindow.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -100,6 +102,9 @@
 	if (frame.origin.y < screenFrame.origin.y) {
 		frame.origin.y = screenFrame.origin.y;
 	}
+	
+	NSWindow *contactList = [[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] window];
+	[window setLevel:[contactList level] + 1];
 	
 	[window setFrame:frame display:NO animate:NO];	
 }
