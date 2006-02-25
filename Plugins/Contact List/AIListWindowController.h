@@ -60,7 +60,7 @@
 - (void)showWindowInFront:(BOOL)inFront;
 
 // Dock-like hiding
-- (void)slideWindowOnScreenWithAnimation:(BOOL)flag
+- (void)slideWindowOnScreenWithAnimation:(BOOL)flag;
 - (BOOL)shouldSlideWindowOnScreen;
 - (BOOL)shouldSlideWindowOffScreen;
 
