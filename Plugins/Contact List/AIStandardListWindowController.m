@@ -446,64 +446,68 @@
 
 void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdgeMask windowSlidOffScreenEdgeMask, AIListController *contactListController)
 {
-	NSRect	frame = [inWindow frame];
+	NSScreen *windowScreen = [inWindow screen];
+	if(!windowScreen) windowScreen = [NSScreen mainScreen];
 	BOOL	finishedX = NO, finishedY = NO;
-	
+	NSRect	frame = [inWindow frame];
+	float yOff = (targetPoint.y + frame.size.height) - [windowScreen visibleFrame].size.height;
+	if(yOff > 0) targetPoint.y -= yOff;
+
+	do
+	{
+		frame = [inWindow frame];
 #define INCREMENT 15
-	if (abs(targetPoint.x - frame.origin.x) <= INCREMENT) {
-		//Our target point is within INCREMENT of the current point on the x axis
-
-		if (windowSlidOffScreenEdgeMask != AINoEdges) {
-			//If the window is sliding off screen, keep one pixel onscreen to avoid crashing
-			if (targetPoint.x < frame.origin.x) {
-				frame.origin.x = targetPoint.x + 1;
-			} else if (targetPoint.x > frame.origin.x) {
-				frame.origin.x = targetPoint.x - 1;
+		if (abs(targetPoint.x - frame.origin.x) <= INCREMENT) {
+			//Our target point is within INCREMENT of the current point on the x axis
+			
+			if (windowSlidOffScreenEdgeMask != AINoEdges) {
+				//If the window is sliding off screen, keep one pixel onscreen to avoid crashing
+				if (targetPoint.x < frame.origin.x) {
+					frame.origin.x = targetPoint.x + 1;
+				} else if (targetPoint.x > frame.origin.x) {
+					frame.origin.x = targetPoint.x - 1;
+				}
+				
+			} else {
+				//If the window is sliding on screen, go to the exact desired point
+				frame.origin.x = targetPoint.x;
 			}
 			
-		} else {
-			//If the window is sliding on screen, go to the exact desired point
-			frame.origin.x = targetPoint.x;
-		}
-		
-		finishedX = YES;
-		
-	} else if (targetPoint.x < frame.origin.x) {
-		frame.origin.x -= INCREMENT;
-	} else if (targetPoint.x > frame.origin.x) {
-		frame.origin.x += INCREMENT;		
-	}
-	
-	if (abs(targetPoint.y - frame.origin.y) <= INCREMENT) {
-		//Our target point is within INCREMENT of the current point on the y axis
-		if (windowSlidOffScreenEdgeMask != AINoEdges) {
-			//If the window is sliding off screen, keep one pixel onscreen to avoid crashing
-			if (targetPoint.y < frame.origin.y) {
-				frame.origin.y = targetPoint.y + 1;
-			} else if (targetPoint.y > frame.origin.y) {
-				frame.origin.y = targetPoint.y - 1;
-			}
-
-		} else {
-			//If the window is sliding on screen, go to the exact desired point
-			frame.origin.y = targetPoint.y;
+			finishedX = YES;
 			
+		} else if (targetPoint.x < frame.origin.x) {
+			frame.origin.x -= INCREMENT;
+		} else if (targetPoint.x > frame.origin.x) {
+			frame.origin.x += INCREMENT;		
 		}
 		
-		finishedY = YES;
-
-	} else if (targetPoint.y < frame.origin.y) {
-		frame.origin.y -= INCREMENT;
-	} else if (targetPoint.y > frame.origin.y) {
-		frame.origin.y += INCREMENT;		
+		if (abs(targetPoint.y - frame.origin.y) <= INCREMENT) {
+			//Our target point is within INCREMENT of the current point on the y axis
+			if (windowSlidOffScreenEdgeMask != AINoEdges) {
+				//If the window is sliding off screen, keep one pixel onscreen to avoid crashing
+				if (targetPoint.y < frame.origin.y) {
+					frame.origin.y = targetPoint.y + 1;
+				} else if (targetPoint.y > frame.origin.y) {
+					frame.origin.y = targetPoint.y - 1;
+				}
+				
+			} else {
+				//If the window is sliding on screen, go to the exact desired point
+				frame.origin.y = targetPoint.y;
+				
+			}
+			
+			finishedY = YES;
+			
+		} else if (targetPoint.y < frame.origin.y) {
+			frame.origin.y -= INCREMENT;
+		} else if (targetPoint.y > frame.origin.y) {
+			frame.origin.y += INCREMENT;		
+		}
+		
+		[inWindow setFrame:frame display:YES animate:NO];
 	}
-	
-	[inWindow setFrame:frame display:YES animate:NO];
-	
-	if (!finishedX || !finishedY) {
-		//If we're not finished, call again
-		manualWindowMoveToPoint(inWindow, targetPoint, windowSlidOffScreenEdgeMask, contactListController);
-	}
+	while(!finishedX || !finishedY);
 }
 
 /*
