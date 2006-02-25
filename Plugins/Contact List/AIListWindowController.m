@@ -414,6 +414,8 @@
 	} else {
 		[[self window] orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
 	}
+	oldFrame = [[self window] frame];
+	currentScreen = [[self window] screen];
 }
 
 
@@ -422,8 +424,50 @@
 
 - (void)screenParametersChanged:(NSNotification *)notification
 {
-	[self slideWindowOnScreen];
+	NSWindow * window = [self window];
+	
+	NSScreen * windowScreen = [window screen];
+	if(!windowScreen) windowScreen = [NSScreen mainScreen];
+		
+	NSRect newScreenFrame = [windowScreen frame];
+	NSRect currentScreenFrame = [currentScreen frame];
+	NSRect listFrame = [window frame];
+	
+	if(NSEqualRects(currentScreenFrame, newScreenFrame)) return;
+	
+	NSPoint scaleFactor = NSMakePoint(newScreenFrame.size.width / currentScreenFrame.size.width, newScreenFrame.size.height / currentScreenFrame.size.height);
+	
+	NSLog(@"window is: %@, window screen is: %@, scale factor is: %f, %f", window, windowScreen, scaleFactor.x, scaleFactor.y);
+	
+	float x1 = (NSMinX(listFrame) - NSMinX(currentScreenFrame)) * scaleFactor.x;
+	float x2 = (NSMaxX(currentScreenFrame) - NSMaxX(listFrame)) * scaleFactor.x;
+	float y1 = (NSMinY(listFrame) - NSMinY(currentScreenFrame)) * scaleFactor.y;
+	float y2 = (NSMaxY(currentScreenFrame) - NSMaxY(listFrame)) * scaleFactor.y;
+	
+	NSPoint origin = NSZeroPoint;
+	if (x1 <= x2)
+		origin.x = x1;
+	else
+		origin.x = NSMaxX(newScreenFrame) - x2 - listFrame.size.width;
+	
+	if (y1 <= y2)
+		origin.y = y1;
+	else
+		origin.y = NSMaxY(newScreenFrame) - y2 - listFrame.size.height;
+	
+	oldFrame.origin = origin;
+	
+	NSLog(@"newOrigin = %f, %f : oldOrigin = %f, %f", origin.x, origin.y, listFrame.origin.x, listFrame.origin.y);
+	//[window setFrameOrigin:origin];
+	
+	if([window screen] && windowSlidOffScreenEdgeMask == AINoEdges)
+		[self slideWindowOnScreenWithAnimation:NO];
+	
 	[contactListController contactListDesiredSizeChanged];
+
+	currentScreen = [window screen];
+
+	oldFrame = [window frame];
 }
 
 // Printing
@@ -675,7 +719,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 - (void)slideWindowOffScreenEdges:(AIRectEdgeMask)rectEdgeMask
 {
 	NSWindow *window = [self window];
-	NSRect newWindowFrame = [window frame];
+	NSRect newWindowFrame = oldFrame = [window frame];
 	NSRectEdge edge;
 	
 	if (rectEdgeMask == AINoEdges)
@@ -688,30 +732,35 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 
 	windowSlidOffScreenEdgeMask |= rectEdgeMask;
-	
+		
 	[self slideWindowToPoint:newWindowFrame.origin];
 	
 	listHasShadow = [[self window] hasShadow];
 	[[self window] setHasShadow:NO];
 }
 
-- (void)slideWindowOnScreen
+- (void)slideWindowOnScreenWithAnimation:(BOOL)flag
 {
 	NSWindow	*window = [self window];
 	NSRect		windowFrame = [window frame];
-	NSRect		newWindowFrame = windowFrame;
-
-	newWindowFrame = AIRectByMovingRect_intoRect_(newWindowFrame, screenSlideBoundaryRect);
-
-	if (!NSEqualRects(windowFrame, newWindowFrame)) {
-		[window orderFront:nil]; 
-
-		windowSlidOffScreenEdgeMask = AINoEdges;
+	//	NSRect		newWindowFrame = windowFrame;
 	
+	//newWindowFrame = AIRectByMovingRect_intoRect_(newWindowFrame, screenSlideBoundaryRect);
+	
+	if (!NSEqualRects(windowFrame, oldFrame)) {
+		[window orderFront:nil]; 
+		
+		windowSlidOffScreenEdgeMask = AINoEdges;
+		
 		[[self window] setHasShadow:listHasShadow];
 		
-		[self slideWindowToPoint:newWindowFrame.origin];
+		flag ? [self slideWindowToPoint:oldFrame.origin] : [[self window] setFrameOrigin:oldFrame.origin];
 	}
+}
+
+- (void)slideWindowOnScreen
+{
+	[self slideWindowOnScreenWithAnimation:YES];
 }
 
 - (void)setPreventHiding:(BOOL)newPreventHiding {

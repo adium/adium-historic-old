@@ -48,6 +48,9 @@
 	AIRectEdgeMask						windowSlidOffScreenEdgeMask;
 	NSTimer								*slideWindowIfNeededTimer;
 	
+	NSRect								oldFrame;
+	NSScreen							*currentScreen;
+	
 	NSTimer								*movementTimer;
 }
 
@@ -57,6 +60,7 @@
 - (void)showWindowInFront:(BOOL)inFront;
 
 // Dock-like hiding
+- (void)slideWindowOnScreenWithAnimation:(BOOL)flag
 - (BOOL)shouldSlideWindowOnScreen;
 - (BOOL)shouldSlideWindowOffScreen;
 
