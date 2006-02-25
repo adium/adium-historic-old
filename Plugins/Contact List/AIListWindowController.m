@@ -436,9 +436,7 @@
 	if(NSEqualRects(currentScreenFrame, newScreenFrame)) return;
 	
 	NSPoint scaleFactor = NSMakePoint(newScreenFrame.size.width / currentScreenFrame.size.width, newScreenFrame.size.height / currentScreenFrame.size.height);
-	
-	NSLog(@"window is: %@, window screen is: %@, scale factor is: %f, %f", window, windowScreen, scaleFactor.x, scaleFactor.y);
-	
+		
 	float x1 = (NSMinX(listFrame) - NSMinX(currentScreenFrame)) * scaleFactor.x;
 	float x2 = (NSMaxX(currentScreenFrame) - NSMaxX(listFrame)) * scaleFactor.x;
 	float y1 = (NSMinY(listFrame) - NSMinY(currentScreenFrame)) * scaleFactor.y;
@@ -456,9 +454,6 @@
 		origin.y = NSMaxY(newScreenFrame) - y2 - listFrame.size.height;
 	
 	oldFrame.origin = origin;
-	
-	NSLog(@"newOrigin = %f, %f : oldOrigin = %f, %f", origin.x, origin.y, listFrame.origin.x, listFrame.origin.y);
-	//[window setFrameOrigin:origin];
 	
 	if([window screen] && windowSlidOffScreenEdgeMask == AINoEdges)
 		[self slideWindowOnScreenWithAnimation:NO];
@@ -743,9 +738,6 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	NSWindow	*window = [self window];
 	NSRect		windowFrame = [window frame];
-	//	NSRect		newWindowFrame = windowFrame;
-	
-	//newWindowFrame = AIRectByMovingRect_intoRect_(newWindowFrame, screenSlideBoundaryRect);
 	
 	if (!NSEqualRects(windowFrame, oldFrame)) {
 		[window orderFront:nil]; 
@@ -770,7 +762,6 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 - (AIRectEdgeMask)windowSlidOffScreenEdgeMask
 {
 	return windowSlidOffScreenEdgeMask;
-
 }
 
 @end
