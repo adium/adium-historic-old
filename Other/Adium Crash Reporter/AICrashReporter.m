@@ -206,15 +206,12 @@
  */
 - (void)activateProgressIndicator
 {
-	//Hide the button, even on 10.2
-	[button_close setFrame:NSZeroRect];
+	[button_close setHidden:YES];
 	
 	//Display immediately since we need it for this run loop.
 	[[button_close superview] display];
 	
-	if ([progress_sending respondsToSelector:@selector(setHidden:)]) {
-		[progress_sending setHidden:NO];
-	}
+	[progress_sending setHidden:NO];
 	
 	//start the progress spinner (using multi-threading)
 	[progress_sending setUsesThreadedAnimation:YES];
