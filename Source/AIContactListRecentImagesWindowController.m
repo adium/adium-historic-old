@@ -12,9 +12,7 @@
 #import "AIStandardListWindowController.h"
 #import "AIContactListImagePicker.h"
 #import "AIMenuItemView.h"
-#import "AISCLViewPlugin.h"
 #import <Adium/AIAccount.h>
-#import <Adium/AICoreComponentLoader.h>
 #import <AIUtilities/AIImageGridView.h>
 #import <AIUtilities/AIBorderlessWindow.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -23,8 +21,6 @@
 #import <AIUtilities/AIColoredBoxView.h>
 
 #import "NSIPRecentPicture.h"
-
-#define ALL_OTHER_ACCOUNTS AILocalizedString(@"All Other Accounts", nil)
 
 #define FADE_INCREMENT	0.3
 #define FADE_TIME		.3
@@ -103,8 +99,10 @@
 		frame.origin.y = screenFrame.origin.y;
 	}
 	
-	NSWindow *contactList = [[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] window];
-	[window setLevel:[contactList level] + 1];
+	//Ensure our window is visible above the window of the imagePicker that created us
+	if ([window level] < [[picker window] level]) {
+		[window setLevel:[[picker window] level] + 1];
+	}
 	
 	[window setFrame:frame display:NO animate:NO];	
 }
@@ -241,7 +239,8 @@
 	AIAccount	 *activeAccount = nil;
 	NSMenuItem	 *menuItem;
 
-	activeAccount = [AIStandardListWindowController activeAccountGettingOnlineAccounts:onlineAccounts ownIconAccounts:ownIconAccounts];
+	activeAccount = [AIStandardListWindowController activeAccountForIconsGettingOnlineAccounts:onlineAccounts
+																			   ownIconAccounts:ownIconAccounts];
 	
 	int ownIconAccountsCount = [ownIconAccounts count];
 	int onlineAccountsCount = [onlineAccounts count];
@@ -271,6 +270,7 @@
 			if (activeAccount == account) {
 				[menuItem setState:NSOnState];
 			}
+			[menuItem setIndentationLevel:1];
 			[menu addItem:menuItem];
 			
 			[menuItem release];
@@ -284,6 +284,7 @@
 			if (!activeAccount) {
 				[menuItem setState:NSOnState];
 			}
+			[menuItem setIndentationLevel:1];
 
 			[menu addItem:menuItem];
 			[menuItem release];
