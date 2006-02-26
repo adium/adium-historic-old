@@ -21,10 +21,10 @@
 												 name:NSViewFrameDidChangeNotification
 											   object:self];
 	[self setPostsFrameChangedNotifications:YES];
-	
+
 	trackingTag = -1;
 	[self resetCursorRects];
-	
+
 	highlightOnHoverAndClick = YES;
 }
 
@@ -33,7 +33,7 @@
 	if ((self = [super initWithFrame:inFrame])) {
 		[self initHoveringPopUpButton];
 	}
-	
+
 	return self;
 }
 
@@ -42,7 +42,7 @@
 	if ([[AIHoveringPopUpButton superclass] instancesRespondToSelector:@selector(awakeFromNib)]) {
         [super awakeFromNib];
 	}
-	
+
 	[self initHoveringPopUpButton];
 }
 
