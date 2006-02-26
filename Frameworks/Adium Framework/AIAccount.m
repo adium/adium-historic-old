@@ -110,6 +110,16 @@
 	[self removeAllContacts];
 }
 
+/*
+ * @brief A formatted UID which may include additional necessary identifying information.
+ *
+ * For example, an AIM account (tekjew) and a .Mac account (tekjew@mac.com, entered only as tekjew) may appear identical
+ * without service information (tekjew). The explicit formatted UID is therefore tekjew@mac.com
+ */
+- (NSString *)explicitFormattedUID
+{
+	return [self formattedUID];
+}
 
 //Properties -----------------------------------------------------------------------------------------------------------
 #pragma mark Properties
