@@ -18,6 +18,7 @@
 #import "AIContactController.h"
 #import "ESAddressBookIntegrationPlugin.h"
 #import "AIMenuController.h"
+#import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -130,6 +131,13 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	[[adium menuController] addContextualMenuItem:editInABContextualMenuItem toLocation:Context_Contact_Action];
 	
 	[self installAddressBookActions];
+	
+	//Wait for Adium to finish launching before we build the address book so the contact list will be ready
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumFinishedLaunching:)
+									   name:Adium_CompletedApplicationLoad
+									 object:nil];
+	[self updateSelfIncludingIcon:YES];
 }
 
 - (void)installAddressBookActions
@@ -169,19 +177,13 @@ NSString* serviceIDForJabberUID(NSString *UID);
 				[fileManager trashFileAtPath:[pluginDirectory stringByAppendingPathComponent:
 					[NSString stringWithFormat:@"%@-Adium.scpt",name]]];
 			} else {
-				NSLog(@"Could not find %@",fullName);
+				NSLog(@"%@: Could not find %@",self, fullName);
 			}
 		}
 
 		[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES]
 												  forKey:@"Adium:Installed Adress Book Actions"];
 	}
-
-	//Wait for Adium to finish launching before we build the address book so the contact list will be ready
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(adiumFinishedLaunching:)
-									   name:Adium_CompletedApplicationLoad
-									 object:nil];
 }
 
 /*!
@@ -453,8 +455,8 @@ NSString* serviceIDForJabberUID(NSString *UID);
 			//Register ourself as a listObject observer, which will update all objects
 			[[adium contactController] registerListObjectObserver:self];
 			
-			//Now update from our "me" card information
-		    [self updateSelfIncludingIcon:YES];	
+			//Now update from our "me" card information to apply to the accounts which loaded
+		    [self updateSelfIncludingIcon:NO];	
 			
 		} else {
 			//This isn't the first time through
@@ -983,9 +985,9 @@ NSString* serviceIDForJabberUID(NSString *UID);
 					}									
 				}
 				
-				[[adium preferenceController] setPreference:myDisplayName
-													 forKey:@"DefaultLocalAccountAlias"
-													  group:GROUP_ACCOUNT_STATUS];
+				[[adium preferenceController] registerDefaults:[NSDictionary dictionaryWithObject:[[NSAttributedString stringWithString:myDisplayName] dataRepresentation]
+																						   forKey:KEY_ACCOUNT_DISPLAY_NAME]
+													  forGroup:GROUP_ACCOUNT_STATUS];
 			}
         }
 	AI_HANDLER
