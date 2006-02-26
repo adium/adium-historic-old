@@ -41,7 +41,7 @@
 	
 	//Alias
 	if (![account online] &&
-		![[textField_alias stringValue] isEqualToString:[[NSAttributedString stringWithData:[account preferenceForKey:@"FullNameAttr"
+		![[textField_alias stringValue] isEqualToString:[[NSAttributedString stringWithData:[account preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME
 																											   group:GROUP_ACCOUNT_STATUS]] string]]) {
 		[account setPreference:[NSNumber numberWithBool:YES]
 						forKey:KEY_MSN_DISPLAY_NAMED_CHANGED
