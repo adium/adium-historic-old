@@ -663,7 +663,7 @@ static NSArray *draggedTypes = nil;
 }
 
 /*!
- * @brief Prevent the webview from following external links.  We direct these to the users web browser.
+ * @brief Prevent the webview from following external links.  We direct these to the user's web browser.
  */
 - (void)webView:(WebView *)sender
     decidePolicyForNavigationAction:(NSDictionary *)actionInformation
@@ -747,14 +747,11 @@ static NSArray *draggedTypes = nil;
 		NSMenu  *originalMenu = [[adium menuController] contextualMenuWithLocations:locations
 																	  forListObject:chatListObject];
 		
-		//Have to copy and autorelease here since the itemArray will change as we go through the items
-		enumerator = [[[[originalMenu itemArray] copy] autorelease] objectEnumerator];
-		
+		enumerator = [[originalMenu itemArray] objectEnumerator];
 		while ((menuItem = [enumerator nextObject])) {
-			[menuItem retain];
-			[originalMenu removeItem:menuItem];
-			[webViewMenuItems addObject:menuItem];
-			[menuItem release];
+			NSMenuItem	*webViewMenuItem = [menuItem copy];
+			[webViewMenuItems addObject:webViewMenuItem];
+			[webViewMenuItem release];
 		}
 	}
 	
