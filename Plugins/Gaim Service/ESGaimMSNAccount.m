@@ -170,19 +170,6 @@ gboolean gaim_init_msn_plugin(void);
 	[self updateFriendlyNameAfterConnect];
 }	
 
-//Update our status
-- (void)updateStatusForKey:(NSString *)key
-{    
-	//We'll handle FullNameAttr, the rest we let AIAccount handle for us
-	if ([key isEqualToString:@"FullNameAttr"]) {
-		if ([[self statusObjectForKey:@"Online"] boolValue]) {
-			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(_setFriendlyNameTo:)];
-		}
-	} else {
-		[super updateStatusForKey:key];
-	}
-}
-
 /*
  * @brief Update our friendly name to match the server friendly name if appropriate
  *
@@ -197,10 +184,10 @@ gboolean gaim_init_msn_plugin(void);
 - (void)updateFriendlyNameAfterConnect
 {
 	const char			*displayName = gaim_connection_get_display_name(gaim_account_get_connection(account));
-	NSAttributedString	*accountDisplayName = [[self preferenceForKey:@"FullNameAttr"
+	NSAttributedString	*accountDisplayName = [[self preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME
 														   group:GROUP_ACCOUNT_STATUS
 										   ignoreInheritedValues:YES] attributedString];
-	NSAttributedString	*globalPreference = [[self preferenceForKey:@"FullNameAttr"
+	NSAttributedString	*globalPreference = [[self preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME
 															  group:GROUP_ACCOUNT_STATUS
 											  ignoreInheritedValues:YES] attributedString];
 	BOOL				accountDisplayNameChanged = NO;
@@ -210,7 +197,7 @@ gboolean gaim_init_msn_plugin(void);
 	 */
 	if ((accountDisplayName && (accountDisplayNameChanged = [[self preferenceForKey:KEY_MSN_DISPLAY_NAMED_CHANGED group:GROUP_ACCOUNT_STATUS] boolValue])) ||
 		(!accountDisplayName && globalPreference)) {
-		[self updateStatusForKey:@"FullNameAttr"];
+		[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
 
 		if (accountDisplayNameChanged) {
 			[self setPreference:nil
@@ -255,15 +242,15 @@ gboolean gaim_init_msn_plugin(void);
 	   ([[filteredFriendlyName string] isEqualToString:[[infoDict objectForKey:@"accountDisplayName"] string]])) {
 		/* Filtering made no changes to the string, so we're static. If we make it here, update to match the server. */
 		NSAttributedString	*newPreference;
-		
+
 		newPreference = [[NSAttributedString alloc] initWithString:[infoDict objectForKey:@"displayName"]];
 
 		[self setPreference:[newPreference dataRepresentation]
-					 forKey:@"FullNameAttr"
+					 forKey:KEY_ACCOUNT_DISPLAY_NAME
 					  group:GROUP_ACCOUNT_STATUS];
 		[newPreference release];
 
-		[self updateStatusForKey:@"FullNameAttr"];
+		[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
 	}
 }
 
@@ -277,27 +264,20 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
  * @param attributedFriendlyName The new friendly name.  This is used as plaintext; it is an NSAttributedString for generic useage with the autoupdating filtering system.
  *
  */
--(void)_setFriendlyNameTo:(NSAttributedString *)attributedFriendlyName
+- (void)gotFilteredDisplayName:(NSAttributedString *)attributedDisplayName
 {
-	NSString	*friendlyName = [attributedFriendlyName string];
+	NSString	*friendlyName = [attributedDisplayName string];
 	
-	if (!friendlyName || ![friendlyName isEqualToString:[self statusObjectForKey:@"AccountServerDisplayName"]]) {
+	if (!friendlyName || ![friendlyName isEqualToString:[self currentDisplayName]]) {
 		
 		if (gaim_account_is_connected(account)) {
 			GaimDebug (@"Updating FullNameAttr to %@",friendlyName);
 
 			msn_set_friendly_name(account->gc, [friendlyName UTF8String]);
-
-			if ([friendlyName length] == 0) friendlyName = nil;
-			
-			//Keep track of the friendly name so we can avoid doing duplicate sets on the same name
-			[self setStatusObject:friendlyName
-						   forKey:@"AccountServerDisplayName"
-						   notify:NotifyNever];
-			
-			[self updateLocalDisplayNameTo:friendlyName];
 		}
 	}
+	
+	[super gotFilteredDisplayName:attributedDisplayName];
 }
 
 - (BOOL)useDisplayNameAsStatusMessage
