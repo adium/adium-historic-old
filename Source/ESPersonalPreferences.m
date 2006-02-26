@@ -44,19 +44,16 @@
  */
 - (void)viewDidLoad
 {
-	NSString *displayName = [[[[adium preferenceController] preferenceForKey:@"FullNameAttr"
+	NSString *displayName = [[[[adium preferenceController] preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME
 																	   group:GROUP_ACCOUNT_STATUS] attributedString] string];
 	[textField_displayName setStringValue:(displayName ? displayName : @"")];
 	
-	NSString *alias = [[adium preferenceController] preferenceForKey:@"LocalAccountAlias"
-															   group:GROUP_ACCOUNT_STATUS];
-	[textField_alias setStringValue:(alias ? alias : @"")];
-	
 	//Set the default local alias (address book name) as the placeholder for the local alias
-	NSString *defaultAlias = [[adium preferenceController] preferenceForKey:@"DefaultLocalAccountAlias"
-																	  group:GROUP_ACCOUNT_STATUS];
+	NSString *defaultAlias = [[[[adium preferenceController] defaultPreferenceForKey:KEY_ACCOUNT_DISPLAY_NAME
+																			   group:GROUP_ACCOUNT_STATUS
+																			  object:nil] attributedString] string];
 	[[textField_alias cell] setPlaceholderString:(defaultAlias ? defaultAlias : @"")];
-	
+
 	[self configureProfile];
 	[self configureImageView];
 	[self configureTooltips];
@@ -84,14 +81,13 @@
 
 - (void)changePreference:(id)sender
 {	
-	if (sender == textField_alias) {
-		[[adium preferenceController] setPreference:[textField_alias stringValue]
-											 forKey:@"LocalAccountAlias"
-											  group:GROUP_ACCOUNT_STATUS];
-
-	} else if (sender == textField_displayName) {
-		[[adium preferenceController] setPreference:[[NSAttributedString stringWithString:[textField_displayName stringValue]] dataRepresentation]
-											 forKey:@"FullNameAttr"
+	if (sender == textField_displayName) {
+		NSString *displayName = [textField_displayName stringValue];
+		
+		[[adium preferenceController] setPreference:((displayName && [displayName length]) ?
+													 [[NSAttributedString stringWithString:displayName] dataRepresentation] :
+													 nil)
+											 forKey:KEY_ACCOUNT_DISPLAY_NAME
 											  group:GROUP_ACCOUNT_STATUS];
 
 	} else if (sender == textView_profile) {
@@ -203,14 +199,10 @@
 						forCell:[matrix_userIcon cellWithTag:0]];
 	[matrix_userIcon setToolTip:AILocalizedString(@"Use the icon below represent you.", nil)
 						forCell:[matrix_userIcon cellWithTag:1]];
-	
-#define LOCAL_ALIAS_TOOLTIP AILocalizedString(@"Name to display locally for you in outgoing messages", nil)
-	[label_localAlias setToolTip:LOCAL_ALIAS_TOOLTIP];
-	[textField_alias setToolTip:LOCAL_ALIAS_TOOLTIP];
-	
-#define REMOTE_ALIAS_TOOLTIP AILocalizedString(@"Name to display to remote contacts (not supported by all services)", nil)
-	[label_remoteAlias  setToolTip:REMOTE_ALIAS_TOOLTIP];
-	[textField_displayName setToolTip:REMOTE_ALIAS_TOOLTIP];
+
+#define DISPLAY_NAME_TOOLTIP AILocalizedString(@"Your name, which on supported services will be sent to remote contacts. Substitutions from the Edit->Scripts and Edit->iTunes menus may be used here.", nil)
+	[label_remoteAlias  setToolTip:DISPLAY_NAME_TOOLTIP];
+	[textField_displayName setToolTip:DISPLAY_NAME_TOOLTIP];
 
 #define PROFILE_TOOLTIP AILocalizedString(@"Profile to display when contacts request information about you (not supported by all services). Text may be formatted using the Edit and Format menus.", nil)
 	[label_profile setToolTip:PROFILE_TOOLTIP];
