@@ -1,20 +1,20 @@
 //
-//  AIContactListStatusMenuView.m
+//  AIHoveringPopUpButton.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 12/16/05.
 //
 
-#import "AIContactListStatusMenuView.h"
-#import "AIContactListStatusMenuCell.h"
+#import "AIHoveringPopUpButton.h"
+#import "AIHoveringPopUpButtonCell.h"
 
-@implementation AIContactListStatusMenuView
+@implementation AIHoveringPopUpButton
 
 + (void)initialize {
-	[self setCellClass:[AIContactListStatusMenuCell class]];
+	[self setCellClass:[AIHoveringPopUpButtonCell class]];
 }
 
-- (void)configureTracking
+- (void)initHoveringPopUpButton
 {
 	[[NSNotificationCenter defaultCenter] addObserver:self 
 											 selector:@selector(frameDidChange:)
@@ -23,13 +23,15 @@
 	[self setPostsFrameChangedNotifications:YES];
 	
 	trackingTag = -1;
-	[self resetCursorRects];			
+	[self resetCursorRects];
+	
+	highlightOnHoverAndClick = YES;
 }
 
 - (id)initWithFrame:(NSRect)inFrame
 {
 	if ((self = [super initWithFrame:inFrame])) {
-		[self configureTracking];
+		[self initHoveringPopUpButton];
 	}
 	
 	return self;
@@ -37,17 +39,17 @@
 
 - (void)awakeFromNib
 {
-	if ([[self superclass] instancesRespondToSelector:@selector(awakeFromNib)]) {
+	if ([[AIHoveringPopUpButton superclass] instancesRespondToSelector:@selector(awakeFromNib)]) {
         [super awakeFromNib];
 	}
 	
-	[self configureTracking];
+	[self initHoveringPopUpButton];
 }
 
 //
 - (id)copyWithZone:(NSZone *)zone
 {
-	AIContactListStatusMenuView	*newButton = [[[self class] allocWithZone:zone] initWithFrame:[self frame]];
+	AIHoveringPopUpButton	*newButton = [[[self class] allocWithZone:zone] initWithFrame:[self frame]];
 	
 	[newButton setMenu:[[[self menu] copy] autorelease]];
 	
@@ -58,6 +60,11 @@
 - (void)setMenu:(NSMenu *)menu {
 	[super setMenu:menu];
 	[[self cell] setMenu:menu];
+}
+
+- (void)setDoubleAction:(SEL)inDoubleAction
+{
+	doubleAction = inDoubleAction;
 }
 
 - (void)dealloc
@@ -78,11 +85,17 @@
 - (void)mouseDown:(NSEvent *)theEvent
 {
 	if (![self menu]) {
-		[super mouseDown:theEvent];
+		if (doubleAction && (([theEvent clickCount] % 2) == 0)) {
+			[[self target] performSelector:doubleAction
+								withObject:self];
+		} else {
+			[super mouseDown:theEvent];
+		}
+
 	} else {
 		if ([self isEnabled]) {
 			[self highlight:YES];
-			
+				
 			[self setNeedsDisplay:YES];
 
 			//2 pt down, 1 pt to the left.
@@ -103,6 +116,16 @@
 			
 			[self mouseUp:[[NSApplication sharedApplication] currentEvent]];
 		}
+	}
+}
+
+/*
+ * @brief Only pass on a highlight message if we're highlighting on click or this is turning off a highlight
+ */
+- (void)highlight:(BOOL)inFlag
+{
+	if (!inFlag || highlightOnHoverAndClick) {
+		[super highlight:inFlag];
 	}
 }
 
@@ -142,12 +165,29 @@
 	[self resetCursorRects];
 }
 
+- (void)setFont:(NSFont *)inFont
+{
+	[[self cell] setFont:inFont];
+	[self setNeedsDisplay:YES];
+}
+
 - (void)setImage:(NSImage *)inImage
 {
 	[[self cell] setImage:inImage];
 	[self setNeedsDisplay:YES];
 	
 	[self resetCursorRects];	
+}
+
+- (void)setHighlightOnHoverAndClick:(BOOL)inHighlightOnHoverAndClick
+{
+	highlightOnHoverAndClick = inHighlightOnHoverAndClick;
+	
+	//If we are not going to highlight, ensure we're not currently doing so
+	if (!highlightOnHoverAndClick) {
+		[[self cell] setHovered:NO animate:NO];
+		[self setNeedsDisplay:YES];
+	}
 }
 
 #pragma mark Tracking rects
@@ -214,15 +254,21 @@
 		BOOL	mouseInside = NSPointInRect(localPoint, trackRect);
 
 		trackingTag = [self addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseInside];
-		if (mouseInside) [self mouseEntered:nil];
+		if (mouseInside) {
+			[self mouseEntered:nil];
+		} else {
+			[self mouseExited:nil];			
+		}
 	}
 }
 
 //Cursor entered our view
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-	[[self cell] setHovered:YES];
-	[self setNeedsDisplay:YES];
+	if (highlightOnHoverAndClick) {
+		[[self cell] setHovered:YES animate:YES];
+		[self setNeedsDisplay:YES];
+	}
 
 	[super mouseEntered:theEvent];
 }
@@ -231,8 +277,10 @@
 //Cursor left our view
 - (void)mouseExited:(NSEvent *)theEvent
 {
-	[[self cell] setHovered:NO];
-	[self setNeedsDisplay:YES];
+	if (highlightOnHoverAndClick) {
+		[[self cell] setHovered:NO animate:YES];
+		[self setNeedsDisplay:YES];
+	}
 	
 	[super mouseExited:theEvent];
 }
