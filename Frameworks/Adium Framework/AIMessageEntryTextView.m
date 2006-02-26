@@ -354,11 +354,7 @@
 		[self setBackgroundColor:cachedWhiteColor];
 	}
 	
-	if([[self backgroundColor] colorIsDark]) {
-		[self setInsertionPointColor:[NSColor whiteColor]];
-	} else {
-		[self setInsertionPointColor:[NSColor blackColor]];
-	}
+	[self setInsertionPointColor:[backgroundColor colorWithInvertedLuminance]];
 }
 
 //Paste as rich text without altering our typing attributes
