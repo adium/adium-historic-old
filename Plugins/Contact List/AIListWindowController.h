@@ -50,8 +50,10 @@
 	
 	NSRect								oldFrame;
 	NSScreen							*currentScreen;
+	NSRect								currentScreenFrame;
 	
 	NSTimer								*movementTimer;
+	float								previousAlpha;
 }
 
 + (AIListWindowController *)listWindowController;

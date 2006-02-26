@@ -416,6 +416,8 @@
 	}
 	oldFrame = [[self window] frame];
 	currentScreen = [[self window] screen];
+	currentScreenFrame = [currentScreen frame];
+	currentScreenFrame.size.height -= [NSMenuView menuBarHeight];
 }
 
 
@@ -428,41 +430,28 @@
 	
 	NSScreen * windowScreen = [window screen];
 	if(!windowScreen) windowScreen = [NSScreen mainScreen];
-		
-	NSRect newScreenFrame = [windowScreen visibleFrame];
-	NSRect currentScreenFrame = [currentScreen visibleFrame];
-	NSRect listFrame = [window frame];
+	
+	float menuHeight = [NSMenuView menuBarHeight];
+	NSRect newScreenFrame = [windowScreen frame];
+	newScreenFrame.size.height -= menuHeight;
 	
 	if(NSEqualRects(currentScreenFrame, newScreenFrame)) return;
-	
-	NSPoint scaleFactor = NSMakePoint(newScreenFrame.size.width / currentScreenFrame.size.width, newScreenFrame.size.height / currentScreenFrame.size.height);
 		
-	float x1 = (NSMinX(listFrame) - NSMinX(currentScreenFrame)) * scaleFactor.x;
-	float x2 = (NSMaxX(currentScreenFrame) - NSMaxX(listFrame)) * scaleFactor.x;
-	float y1 = (NSMinY(listFrame) - NSMinY(currentScreenFrame)) * scaleFactor.y;
-	float y2 = (NSMaxY(currentScreenFrame) - NSMaxY(listFrame)) * scaleFactor.y;
+	NSPoint scaleFactor = NSMakePoint(newScreenFrame.size.width / currentScreenFrame.size.width, newScreenFrame.size.height / currentScreenFrame.size.height);
 	
-	NSPoint origin = NSZeroPoint;
-	if (x1 <= x2)
-		origin.x = x1;
-	else
-		origin.x = NSMaxX(newScreenFrame) - x2 - listFrame.size.width;
-	
-	if (y1 <= y2)
-		origin.y = y1;
-	else
-		origin.y = NSMaxY(newScreenFrame) - y2 - listFrame.size.height;
-	
-	oldFrame.origin = origin;
-	
-	if([window screen] && windowSlidOffScreenEdgeMask == AINoEdges)
-		[self slideWindowOnScreenWithAnimation:NO];
+	oldFrame.origin.x *= scaleFactor.x;
+	oldFrame.origin.y *= scaleFactor.y;
+
+	[self slideWindowOnScreenWithAnimation:NO];
 	
 	[contactListController contactListDesiredSizeChanged];
 
 	currentScreen = [window screen];
+	currentScreenFrame = newScreenFrame;
 
 	oldFrame = [window frame];
+	
+	[window setAlphaValue:previousAlpha];
 }
 
 // Printing
@@ -727,6 +716,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 
 	windowSlidOffScreenEdgeMask |= rectEdgeMask;
+	previousAlpha = [[self window] alphaValue];
 		
 	[self slideWindowToPoint:newWindowFrame.origin];
 	
@@ -739,7 +729,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSWindow	*window = [self window];
 	NSRect		windowFrame = [window frame];
 	
-	if (!NSEqualRects(windowFrame, oldFrame) && windowSlidOffScreenEdgeMask != AINoEdges) {
+	if (!NSEqualRects(windowFrame, oldFrame)) {
 		[window orderFront:nil]; 
 		
 		windowSlidOffScreenEdgeMask = AINoEdges;
