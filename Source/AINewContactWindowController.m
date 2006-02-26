@@ -512,7 +512,7 @@
 			   [NSNumber numberWithBool:NO]);
 	
 	} else if ([identifier isEqualToString:@"account"]) {
-		return [[accounts objectAtIndex:row] formattedUID];
+		return [[accounts objectAtIndex:row] explicitFormattedUID];
 		
 	} else {
 		return @"";
