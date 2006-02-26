@@ -129,6 +129,7 @@ typedef enum {
 - (NSString *)accountWillSetUID:(NSString *)proposedUID;
 - (void)didChangeUID;
 - (void)willBeDeleted;
+- (NSString *)explicitFormattedUID;
 
 //Properties
 - (BOOL)shouldSendAutoresponsesWhileAway;
