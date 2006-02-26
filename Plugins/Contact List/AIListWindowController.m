@@ -434,13 +434,12 @@
 	float menuHeight = [NSMenuView menuBarHeight];
 	NSRect newScreenFrame = [windowScreen frame];
 	newScreenFrame.size.height -= menuHeight;
+	NSRect listFrame = [window frame];
 	
 	if(NSEqualRects(currentScreenFrame, newScreenFrame)) return;
 		
-	NSPoint scaleFactor = NSMakePoint(newScreenFrame.size.width / currentScreenFrame.size.width, newScreenFrame.size.height / currentScreenFrame.size.height);
-	
-	oldFrame.origin.x *= scaleFactor.x;
-	oldFrame.origin.y *= scaleFactor.y;
+	oldFrame.origin.x *= ((newScreenFrame.size.width - listFrame.size.width) / ((currentScreenFrame.size.width - listFrame.size.width) + 0.00001));
+	oldFrame.origin.y *= ((newScreenFrame.size.height - listFrame.size.height) / ((currentScreenFrame.size.height - listFrame.size.height) + 0.00001));
 
 	[self slideWindowOnScreenWithAnimation:NO];
 	
@@ -529,7 +528,10 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
             [self slideWindowOffScreenEdges:(adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask))];
         else
             [self slideWindowOffScreenEdges:adjacentEdges];
+	} else if(windowSlidOffScreenEdgeMask == AINoEdges) {
+		oldFrame = [[self window] frame];
 	}
+			
 }
 
 - (BOOL)shouldSlideWindowOnScreen
