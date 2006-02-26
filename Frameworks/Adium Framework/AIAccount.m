@@ -181,6 +181,23 @@
 	return YES;
 }
 
+/*
+ * @brief Called once the display name has been properly filtered
+ *
+ * Subclasses may override to pass this name on to the server if appropriate.
+ * Super's implementation should then be called.
+ */
+- (void)gotFilteredDisplayName:(NSAttributedString *)attributedDisplayName
+{
+	[self updateLocalDisplayNameTo:attributedDisplayName];
+}
+
+- (NSImage *)userIcon
+{
+	NSData	*iconData = [self userIconData];
+	return (iconData ? [[[NSImage alloc] initWithData:iconData] autorelease] : nil);
+}
+
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
 /*!
@@ -199,7 +216,7 @@
 		supportedPropertyKeys = [[NSSet alloc] initWithObjects:
 			@"Online",
 			@"FormattedUID",
-			@"FullNameAttr",
+			KEY_ACCOUNT_DISPLAY_NAME,
 			@"Display Name",
 			@"StatusState",
 			KEY_USER_ICON,
@@ -556,15 +573,6 @@
 - (BOOL)canSendImagesForChat:(AIChat *)inChat
 {
 	return NO;
-}
-
-
-//Display Name Convenience Methods -------------------------------------------------------------------------------------
-#pragma mark Display Name Convenience Methods
-- (NSImage *)userIcon
-{
-	NSData	*iconData = [self userIconData];
-	return (iconData ? [[[NSImage alloc] initWithData:iconData] autorelease] : nil);
 }
 
 #pragma mark Authorization
