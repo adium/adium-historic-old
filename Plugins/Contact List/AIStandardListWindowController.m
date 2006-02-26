@@ -449,10 +449,10 @@
 
 - (void)nameView:(AIContactListNameButton *)nameView didChangeToString:(NSString *)inName userInfo:(NSDictionary *)userInfo
 {
-	AIAccount			*activeAccount = [userInfo objectForKey:@"activeAccount"];
-	NSAttributedString	*newDisplayName = ((inName && [inName length]) ?
-										   [[NSAttributedString stringWithString:inName] dataRepresentation] :
-										   nil);
+	AIAccount	*activeAccount = [userInfo objectForKey:@"activeAccount"];
+	NSData		*newDisplayName = ((inName && [inName length]) ?
+								   [[NSAttributedString stringWithString:inName] dataRepresentation] :
+								   nil);
 
 	if (activeAccount) {
 		[activeAccount setPreference:newDisplayName
