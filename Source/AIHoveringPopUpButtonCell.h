@@ -1,5 +1,5 @@
 //
-//  AIContactListStatusMenuCell.h
+//  AIHoveringPopUpButtonCell.h
 //  Adium
 //
 //  Created by Evan Schoenberg on 12/16/05.
@@ -7,8 +7,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-
-@interface AIContactListStatusMenuCell : NSButtonCell {
+@interface AIHoveringPopUpButtonCell : NSButtonCell {
 	NSMutableAttributedString		*title;
 	NSSize							textSize;
 
@@ -25,7 +24,7 @@
 - (void)setTitle:(NSString *)inTitle;
 - (void)setImage:(NSImage *)inImage;
 
-- (void)setHovered:(BOOL)inHovered;
+- (void)setHovered:(BOOL)inHovered animate:(BOOL)animate;
 - (float)trackingWidth;
 
 @end

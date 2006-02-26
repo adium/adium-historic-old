@@ -1,11 +1,11 @@
 //
-//  AIContactListStatusMenuCell.m
+//  AIHoveringPopUpButtonCell.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 12/16/05.
 //
 
-#import "AIContactListStatusMenuCell.h"
+#import "AIHoveringPopUpButtonCell.h"
 #import <AIUtilities/AIParagraphStyleAdditions.h>
 #import <AIUtilities/AIBezierPathAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
@@ -20,7 +20,7 @@
 #define ARROW_XOFFSET	5
 #define RIGHT_MARGIN	5
 
-@implementation AIContactListStatusMenuCell
+@implementation AIHoveringPopUpButtonCell
 
 - (void)commonInit
 {
@@ -28,6 +28,8 @@
 	currentImage = nil;
 	textSize = NSZeroSize;
 	imageSize = NSZeroSize;
+	hovered = NO;
+	hoveredFraction = 0.0;
 
 	statusParagraphStyle = [[NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 														  lineBreakMode:NSLineBreakByTruncatingTail] retain];
@@ -57,7 +59,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-	AIContactListStatusMenuCell	*newCell = [[self class] allocWithZone:zone];
+	AIHoveringPopUpButtonCell	*newCell = [[self class] allocWithZone:zone];
 
 	switch ([self type]) {
 		case NSImageCellType:
@@ -101,9 +103,24 @@
 	//Strip out all newlines
 	inTitleString = [inTitleString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"]];
 
-	title = [[NSMutableAttributedString alloc] initWithString:inTitleString
-												   attributes:statusAttributes];
-	textSize = [title size];
+	if (inTitleString && [inTitleString length]) {
+		title = [[NSMutableAttributedString alloc] initWithString:inTitleString
+													   attributes:statusAttributes];
+		textSize = [title size];
+	} else {
+		title = nil;
+		textSize = NSZeroSize;
+	}
+}
+
+- (void)setFont:(NSFont *)inFont
+{
+	NSString *oldTitleString = [[title string] copy];
+
+	[statusAttributes setObject:inFont
+						 forKey:NSFontAttributeName];
+	[self setTitle:oldTitleString];
+	[oldTitleString release];
 }
 
 -(void)setImage:(NSImage *)inImage
@@ -138,18 +155,25 @@
 	}
 }
 
-- (void)setHovered:(BOOL)inHovered
+- (void)setHovered:(BOOL)inHovered animate:(BOOL)animate
 {
-	hovered = inHovered;
-	
-	hoveredFraction = (hovered ? 0.80 : 0.20);
-	
-	[NSObject cancelPreviousPerformRequestsWithTarget:self
-											 selector:@selector(fadeHovered)
-											   object:nil];
-	[self performSelector:@selector(fadeHovered)
-			   withObject:nil
-			   afterDelay:0];
+	if (animate && (hovered != inHovered)) {
+		hovered = inHovered;
+
+		hoveredFraction = (hovered ? 0.80 : 0.20);
+		
+		[NSObject cancelPreviousPerformRequestsWithTarget:self
+												 selector:@selector(fadeHovered)
+												   object:nil];
+		[self performSelector:@selector(fadeHovered)
+				   withObject:nil
+				   afterDelay:0];
+	} else {
+		hovered = inHovered;
+
+		hoveredFraction = (hovered ? 1.0 : 0.0);
+		[[self controlView] display];	
+	}
 }
 
 #pragma mark Drawing
@@ -164,8 +188,10 @@
 {
 	float trackingWidth;
 	
-	trackingWidth = LEFT_MARGIN + [title size].width + ARROW_XOFFSET + ARROW_WIDTH + RIGHT_MARGIN;
-	
+	trackingWidth = LEFT_MARGIN + [title size].width + RIGHT_MARGIN;
+	if ([self menu]) {
+		trackingWidth += ARROW_XOFFSET + ARROW_WIDTH;
+	}
 	if (currentImage) {
 		trackingWidth += imageSize.width + IMAGE_MARGIN;
 	}
@@ -177,17 +203,24 @@
 {
 	NSRect	textRect;
 	NSColor	*drawingColor;
+	NSMenu	*myMenu = [self menu];
+	float	maxTextWidth;
 
 	[statusParagraphStyle setMaximumLineHeight:cellFrame.size.height];
 
-	textRect = NSMakeRect(cellFrame.origin.x + LEFT_MARGIN + imageSize.width + IMAGE_MARGIN,
+	textRect = NSMakeRect(cellFrame.origin.x + LEFT_MARGIN,
 						  cellFrame.origin.y + ((cellFrame.size.height - textSize.height) / 2),
 						  textSize.width,
 						  textSize.height);
+	maxTextWidth = (cellFrame.size.width - LEFT_MARGIN - RIGHT_MARGIN);
 
-	float maxTextWidth = (cellFrame.size.width - LEFT_MARGIN - ARROW_XOFFSET - ARROW_WIDTH - RIGHT_MARGIN);
 	if (currentImage) {
+		textRect.origin.x += (imageSize.width + IMAGE_MARGIN);
 		maxTextWidth -= (imageSize.width + IMAGE_MARGIN);
+	}
+
+	if (myMenu) {
+		maxTextWidth -= (ARROW_XOFFSET + ARROW_WIDTH);
 	}
 
 	if (textRect.size.width > maxTextWidth) {
@@ -198,8 +231,11 @@
 		//Draw our hovered / highlighted background first
 		NSBezierPath	*path;
 		
-		float backgroundWidth = LEFT_MARGIN + textRect.size.width + ARROW_XOFFSET + ARROW_WIDTH + RIGHT_MARGIN;
+		float backgroundWidth = LEFT_MARGIN + textRect.size.width + RIGHT_MARGIN;
 		
+		if (myMenu) {
+			backgroundWidth += (ARROW_XOFFSET + ARROW_WIDTH);
+		}
 		if (currentImage) {
 			backgroundWidth += imageSize.width + IMAGE_MARGIN;
 		}
@@ -241,19 +277,21 @@
 	[statusAttributes setObject:drawingColor
 						 forKey:NSForegroundColorAttributeName];
 	[title setAttributes:statusAttributes
-						   range:NSMakeRange(0, [title  length])];
+				   range:NSMakeRange(0, [title length])];
 	[title drawInRect:textRect];
 	
 	//Draw the arrow
-	NSBezierPath *arrowPath = [NSBezierPath bezierPath];
+	if (myMenu) {
+		NSBezierPath *arrowPath = [NSBezierPath bezierPath];
 	
-	[arrowPath moveToPoint:NSMakePoint(NSMaxX(textRect) + ARROW_XOFFSET, 
-									   (NSMaxY(cellFrame) / 2) - (ARROW_HEIGHT / 2))];
-	[arrowPath relativeLineToPoint:NSMakePoint(ARROW_WIDTH, 0)];
-	[arrowPath relativeLineToPoint:NSMakePoint(-(ARROW_WIDTH/2), (ARROW_HEIGHT))];
-	
-	[drawingColor set];
-	[arrowPath fill];
+		[arrowPath moveToPoint:NSMakePoint(NSMaxX(textRect) + ARROW_XOFFSET, 
+										   (NSMaxY(cellFrame) / 2) - (ARROW_HEIGHT / 2))];
+		[arrowPath relativeLineToPoint:NSMakePoint(ARROW_WIDTH, 0)];
+		[arrowPath relativeLineToPoint:NSMakePoint(-(ARROW_WIDTH/2), (ARROW_HEIGHT))];
+
+		[drawingColor set];
+		[arrowPath fill];
+	}
 }
 
 - (BOOL)isOpaque

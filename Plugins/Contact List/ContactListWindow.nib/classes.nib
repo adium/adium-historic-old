@@ -6,9 +6,15 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = AIImageViewWithImagePicker; 
         }, 
+        {
+            CLASS = AIContactListNameButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {editTarget = id; editUserInfo = id; }; 
+            SUPERCLASS = AIHoveringPopUpButton; 
+        }, 
         {CLASS = AIContactListNameView; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
-        {CLASS = AIContactListStatusMenuView; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {CLASS = AIDockingWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
+        {CLASS = AIHoveringPopUpButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {
             ACTIONS = {showImagePicker = id; }; 
             CLASS = AIImageViewWithImagePicker; 
@@ -43,8 +49,8 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 imagePicker = AIContactListImagePicker; 
-                nameView = AIContactListNameView; 
-                statusMenuView = AIContactListStatusMenuView; 
+                nameView = AIHoveringPopUpButton; 
+                statusMenuView = AIHoveringPopUpButton; 
                 "view_statusAndImage" = NSView; 
             }; 
             SUPERCLASS = AIListWindowController; 

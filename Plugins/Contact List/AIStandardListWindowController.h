@@ -16,8 +16,10 @@
 
 #import "AIListWindowController.h"
 
+#define ALL_OTHER_ACCOUNTS AILocalizedString(@"All Other Accounts", nil)
+
 @protocol AIListObjectObserver, StateMenuPlugin;
-@class AIAccount, AIStatusMenu, AIContactListStatusMenuView, AIContactListImagePicker, AIContactListNameView;
+@class AIAccount, AIStatusMenu, AIHoveringPopUpButton, AIContactListNameButton, AIContactListImagePicker;
 
 typedef enum {
 	ContactListImagePickerOnLeft = 0,
@@ -27,8 +29,8 @@ typedef enum {
 @interface AIStandardListWindowController : AIListWindowController {
 	IBOutlet	NSView						*view_statusAndImage;
 	
-	IBOutlet	AIContactListStatusMenuView	*statusMenuView;
-	IBOutlet	AIContactListNameView		*nameView;
+	IBOutlet	AIHoveringPopUpButton		*statusMenuView;
+	IBOutlet	AIContactListNameButton		*nameView;
 
 	IBOutlet	AIContactListImagePicker	*imagePicker;
 	ContactListImagePickerPosition			imagePickerPosition;
@@ -40,6 +42,8 @@ typedef enum {
 
 - (void)updateImagePicker;
 
-+ (AIAccount *)activeAccountGettingOnlineAccounts:(NSMutableSet *)onlineAccounts ownIconAccounts:(NSMutableSet *)ownIconAccounts;
-
++ (AIAccount *)activeAccountForIconsGettingOnlineAccounts:(NSMutableSet *)onlineAccounts
+										  ownIconAccounts:(NSMutableSet *)ownIconAccounts;
++ (AIAccount *)activeAccountForDisplayNameGettingOnlineAccounts:(NSMutableSet *)onlineAccounts
+										 ownDisplayNameAccounts:(NSMutableSet *)ownDisplayNameAccounts;
 @end

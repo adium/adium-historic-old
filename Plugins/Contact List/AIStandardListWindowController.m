@@ -24,13 +24,15 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIStatusMenu.h>
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIExceptionHandlingUtilities.h>
 
-#import "AIContactListStatusMenuView.h"
+#import "AIHoveringPopUpButton.h"
 #import "AIContactListImagePicker.h"
-#import "AIContactListNameView.h"
+#import "AIContactListNameButton.h"
 
 #define TOOLBAR_CONTACT_LIST				@"ContactList 1.0"				//Toolbar identifier
 
@@ -100,58 +102,18 @@
 									 object:nil];
 	[self updateStatusMenuSelection:nil];
 	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(listObjectAttributesChanged:)
+									   name:ListObject_AttributesChanged
+									 object:nil];
+	
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
 	
 	//Set our minimum size here rather than in the nib to avoid conflicts with autosizing
 	[[self window] setMinSize:NSMakeSize(135, 60)];
 
 	[self _configureToolbar];
-	[self updateNameView];
-}
-
-- (void)updateNameView
-{
-	NSString *alias = [[adium preferenceController] preferenceForKey:@"LocalAccountAlias"
-																   group:GROUP_ACCOUNT_STATUS];
-	if (!alias || ![alias length]) {
-		alias = [[adium preferenceController] preferenceForKey:@"DefaultLocalAccountAlias"
-															group:GROUP_ACCOUNT_STATUS];
-	}
-	
-	if (!alias || ![alias length]) {
-		NSArray		 *accounts = [[adium accountController] accounts];
-		NSEnumerator *enumerator;
-		AIAccount	 *account;
-		
-		if ([accounts count]) {
-			//Online?
-			enumerator = [accounts objectEnumerator];
-			while ((account = [enumerator nextObject])) {
-				if ([account online]) {
-					alias = [account displayName];
-					break;
-				}
-			}
-			
-			if (!alias || ![alias length]) {
-				//Enabled?
-				enumerator = [accounts objectEnumerator];
-				while ((account = [enumerator nextObject])) {
-					if ([account enabled]) {
-						alias = [account displayName];
-						break;
-					}
-				}
-			}
-			
-			//First one
-			if (!alias || ![alias length]) {
-				alias = [[accounts objectAtIndex:0] displayName];
-			}
-		}
-	}
-
-	[nameView setStringValue:((alias && [alias length]) ? alias : @"Adium")];		
+	[nameView setFont:[NSFont boldSystemFontOfSize:10]];	
 }
 
 /*!
@@ -159,64 +121,10 @@
  */
 - (void)windowWillClose:(id)sender
 {
+	[[adium notificationCenter] removeObserver:self];
 	[statusMenu release];
 	
 	[super windowWillClose:sender];
-}
-
-/*!
- * @brief Add state menu items to our location
- *
- * Implemented as required by the StateMenuPlugin protocol.
- *
- * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be added to the menu
- */
-- (void)statusMenu:(AIStatusMenu *)inStatusMenu didRebuildStatusMenuItems:(NSArray *)menuItemArray
-{
-    NSMenu			*menu = [[NSMenu alloc] init];
-	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
-	NSMenuItem		*menuItem;
-
-	//Add a menu item for each state
-	while ((menuItem = [enumerator nextObject])) {
-		[menu addItem:menuItem];
-	}
-	
-	[statusMenuView setMenu:menu];
-	[menu release];
-}
-
-/*
- * Update popup button to match selected menu item
- */
-- (void)updateStatusMenuSelection:(NSNotification *)notification
-{
-	AIStatus	*activeStatus = [[adium statusController] activeStatusState];
-	NSString	*title = [activeStatus title];
-	if (!title) NSLog(@"Warning: Title for %@ is (null)",activeStatus);
-
-	[statusMenuView setTitle:(title ? title : @"")];
-	[statusMenuView setImage:[activeStatus iconOfType:AIStatusIconList
-											direction:AIIconFlipped]];
-
-	[self updateImagePicker];
-}
-
-- (void)updateImagePicker
-{
-	AIAccount *activeAccount = [[self class] activeAccountGettingOnlineAccounts:nil ownIconAccounts:nil];
-	NSImage	  *image;
-
-	if (activeAccount) {
-		image = [activeAccount userIcon];
-	} else {
-		NSData *data = [[adium preferenceController] preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
-		if (!data) data = [[adium preferenceController] preferenceForKey:KEY_DEFAULT_USER_ICON group:GROUP_ACCOUNT_STATUS];
-
-		image = [[[NSImage alloc] initWithData:data] autorelease];
-	}
-
-	[imagePicker setImage:image];
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
@@ -229,6 +137,11 @@
 			[key isEqualToString:@"Active Icon Selection Account"] ||
 			firstTime) {
 			[self updateImagePicker];
+		}
+		
+		if ([key isEqualToString:@"Active Display Name Account"] ||
+			firstTime) {
+			[self updateNameView];
 		}
 	}
 
@@ -266,6 +179,16 @@
 							   object:object
 					   preferenceDict:prefDict
 							firstTime:firstTime];
+}
+
+- (void)listObjectAttributesChanged:(NSNotification *)inNotification
+{
+    AIListObject	*object = [inNotification object];
+
+	if ([object isKindOfClass:[AIAccount class]] &&
+		[[[inNotification userInfo] objectForKey:@"Keys"] containsObject:@"Display Name"]) {
+		[self updateNameView];
+	}
 }
 
 /*
@@ -323,21 +246,28 @@
 	imagePickerPosition = desiredImagePickerPosition;	
 }
 
+
+#pragma mark User icon changing
+
 /*
  * @brief Determine the account which will be modified by a change to the image picker
  *
- * @result The 'active' accnt for image purposes, or nil if the global icon is active
+ * @result The 'active' account for image purposes, or nil if the global icon is active
  */
-+ (AIAccount *)activeAccountGettingOnlineAccounts:(NSMutableSet *)onlineAccounts ownIconAccounts:(NSMutableSet *)ownIconAccounts
++ (AIAccount *)activeAccountForIconsGettingOnlineAccounts:(NSMutableSet *)onlineAccounts ownIconAccounts:(NSMutableSet *)ownIconAccounts
 {
 	AIAdium		  *sharedAdium = [AIObject sharedAdiumInstance];
 	AIAccount	  *account;
 	AIAccount	  *activeAccount = nil;
 	NSEnumerator  *enumerator;
 	BOOL		  atLeastOneOwnIconAccount = NO;
+	NSArray		  *accounts = [[sharedAdium accountController] accounts];
 
-	//Figure out what accounts are online and what of those have their own custom icon so we can display an appropriate set of choices
-	enumerator = [[[sharedAdium accountController] accounts] objectEnumerator];
+	if (!onlineAccounts) onlineAccounts = [NSMutableSet set];
+	if (!ownIconAccounts) ownIconAccounts = [NSMutableSet set];
+	
+	//Figure out what accounts are online and what of those have their own custom icon
+	enumerator = [accounts objectEnumerator];
 	while ((account = [enumerator nextObject])) {
 		if ([account online]) {
 			[onlineAccounts addObject:account];
@@ -351,15 +281,45 @@
 	//At least one account is using its own icon rather than the global preference
 	if (atLeastOneOwnIconAccount) {
 		NSString	*accountID = [[sharedAdium preferenceController] preferenceForKey:@"Active Icon Selection Account"
-																		  group:GROUP_ACCOUNT_STATUS];
+																				group:GROUP_ACCOUNT_STATUS];
 		
 		activeAccount = (accountID ? [[sharedAdium accountController] accountWithInternalObjectID:accountID] : nil);
 		
 		//If the activeAccount isn't in ownIconAccounts we don't want anything to do with it
 		if (![ownIconAccounts containsObject:activeAccount]) activeAccount = nil;
+		
+		/* However, if all accounts are using their own icon, we should return one of them.
+		 * Let's use the first one in the accounts list.
+		 */
+		if (!activeAccount && ([ownIconAccounts count] == [onlineAccounts count])) {
+			enumerator = [accounts objectEnumerator];
+			while ((account = [enumerator nextObject])) {
+				if ([account online]) {
+					activeAccount = account;
+					break;
+				}
+			}
+		}
+	}
+
+	return activeAccount;
+}
+
+- (void)updateImagePicker
+{
+	AIAccount *activeAccount = [[self class] activeAccountForIconsGettingOnlineAccounts:nil ownIconAccounts:nil];
+	NSImage	  *image;
+	
+	if (activeAccount) {
+		image = [activeAccount userIcon];
+	} else {
+		NSData *data = [[adium preferenceController] preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
+		if (!data) data = [[adium preferenceController] preferenceForKey:KEY_DEFAULT_USER_ICON group:GROUP_ACCOUNT_STATUS];
+		
+		image = [[[NSImage alloc] initWithData:data] autorelease];
 	}
 	
-	return activeAccount;
+	[imagePicker setImage:image];
 }
 
 /*
@@ -367,7 +327,8 @@
  */
 - (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)picker didChangeToImageData:(NSData *)imageData
 {
-	AIAccount	*activeAccount = [AIStandardListWindowController activeAccountGettingOnlineAccounts:nil ownIconAccounts:nil];
+	AIAccount	*activeAccount = [[self class] activeAccountForIconsGettingOnlineAccounts:nil
+																		  ownIconAccounts:nil];
 
 	if (activeAccount) {
 		[activeAccount setPreference:imageData
@@ -379,6 +340,278 @@
 											 forKey:KEY_USER_ICON
 											  group:GROUP_ACCOUNT_STATUS];
 	}
+}
+
+#pragma mark Status menu
+/*!
+* @brief Add state menu items to our location
+ *
+ * Implemented as required by the StateMenuPlugin protocol.
+ *
+ * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be added to the menu
+ */
+- (void)statusMenu:(AIStatusMenu *)inStatusMenu didRebuildStatusMenuItems:(NSArray *)menuItemArray
+{
+    NSMenu			*menu = [[NSMenu alloc] init];
+	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
+	NSMenuItem		*menuItem;
+	
+	//Add a menu item for each state
+	while ((menuItem = [enumerator nextObject])) {
+		[menu addItem:menuItem];
+	}
+	
+	[statusMenuView setMenu:menu];
+	[menu release];
+}
+
+/*
+ * Update popup button to match selected menu item
+ */
+- (void)updateStatusMenuSelection:(NSNotification *)notification
+{
+	AIStatus	*activeStatus = [[adium statusController] activeStatusState];
+	NSString	*title = [activeStatus title];
+	if (!title) NSLog(@"Warning: Title for %@ is (null)",activeStatus);
+	
+	[statusMenuView setTitle:(title ? title : @"")];
+	[statusMenuView setImage:[activeStatus iconOfType:AIStatusIconList
+											direction:AIIconFlipped]];
+	
+	[self updateImagePicker];
+	[self updateNameView];
+}
+
+#pragma mark Name view
+
+/*
+ * @brief Determine the account which will be displayed / modified by the name view
+ *
+ * @result The 'active' account for display name purposes, or nil if the global display name is active
+ */
++ (AIAccount *)activeAccountForDisplayNameGettingOnlineAccounts:(NSMutableSet *)onlineAccounts ownDisplayNameAccounts:(NSMutableSet *)ownDisplayNameAccounts
+{
+	AIAdium		  *sharedAdium = [AIObject sharedAdiumInstance];
+	AIAccount	  *account;
+	AIAccount	  *activeAccount = nil;
+	NSEnumerator  *enumerator;
+	BOOL		  atLeastOneOwnDisplayNameAccount = NO;
+	NSArray		  *accounts = [[sharedAdium accountController] accounts];
+	
+	if (!onlineAccounts) onlineAccounts = [NSMutableSet set];
+	if (!ownDisplayNameAccounts) ownDisplayNameAccounts = [NSMutableSet set];
+	
+	//Figure out what accounts are online and what of those have their own custom display name
+	enumerator = [[[sharedAdium accountController] accounts] objectEnumerator];
+	while ((account = [enumerator nextObject])) {
+		if ([account online]) {
+			[onlineAccounts addObject:account];
+			if ([[[account preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES] attributedString] length]) {
+				[ownDisplayNameAccounts addObject:account];
+				atLeastOneOwnDisplayNameAccount = YES;
+			}
+		}
+	}
+	
+	//At least one account is using its own display name rather than the global preference
+	if (atLeastOneOwnDisplayNameAccount) {
+		NSString	*accountID = [[sharedAdium preferenceController] preferenceForKey:@"Active Display Name Account"
+																				group:GROUP_ACCOUNT_STATUS];
+		
+		activeAccount = (accountID ? [[sharedAdium accountController] accountWithInternalObjectID:accountID] : nil);
+		
+		//If the activeAccount isn't in ownDisplayNameAccounts we don't want anything to do with it
+		if (![ownDisplayNameAccounts containsObject:activeAccount]) activeAccount = nil;
+		
+		/* However, if all accounts are using their own display name, we should return one of them.
+			* Let's use the first one in the accounts list.
+			*/
+		if (!activeAccount && ([ownDisplayNameAccounts count] == [onlineAccounts count])) {
+			enumerator = [accounts objectEnumerator];
+			while ((account = [enumerator nextObject])) {
+				if ([account online]) {
+					activeAccount = account;
+					break;
+				}
+			}
+		}
+	}
+	
+	return activeAccount;
+}
+
+- (void)nameViewSelectedAccount:(id)sender
+{
+	[[adium preferenceController] setPreference:[[sender representedObject] internalObjectID]
+										 forKey:@"Active Display Name Account"
+										  group:GROUP_ACCOUNT_STATUS];
+}
+
+- (void)nameView:(AIContactListNameButton *)nameView didChangeToString:(NSString *)inName userInfo:(NSDictionary *)userInfo
+{
+	AIAccount			*activeAccount = [userInfo objectForKey:@"activeAccount"];
+	NSAttributedString	*newDisplayName = ((inName && [inName length]) ?
+										   [[NSAttributedString stringWithString:inName] dataRepresentation] :
+										   nil);
+
+	if (activeAccount) {
+		[activeAccount setPreference:newDisplayName
+							  forKey:KEY_ACCOUNT_DISPLAY_NAME
+							   group:GROUP_ACCOUNT_STATUS];
+	} else {
+		[[adium preferenceController] setPreference:newDisplayName
+											 forKey:KEY_ACCOUNT_DISPLAY_NAME
+											  group:GROUP_ACCOUNT_STATUS];
+	}
+}
+
+- (void)nameViewChangeName:(id)sender
+{
+	AIAccount	*activeAccount = [[self class] activeAccountForDisplayNameGettingOnlineAccounts:nil
+																		  ownDisplayNameAccounts:nil];
+	NSString	*startingString = nil;
+
+	if (activeAccount) {
+		startingString = [[[activeAccount preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME
+													 group:GROUP_ACCOUNT_STATUS] attributedString] string];		
+
+	} else {
+		startingString = [[[[adium preferenceController] preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME
+																	group:GROUP_ACCOUNT_STATUS] attributedString] string];
+	}
+
+	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+	if (activeAccount) {
+		[userInfo setObject:activeAccount
+					 forKey:@"activeAccount"];
+	}
+
+	[nameView editNameStartingWithString:startingString
+						 notifyingTarget:self
+								selector:@selector(nameView:didChangeToString:userInfo:)
+								userInfo:userInfo];
+}
+
+- (NSMenu *)nameViewMenuWithActiveAccount:(AIAccount *)activeAccount accountsUsingOwnName:(NSSet *)ownDisplayNameAccounts onlineAccounts:(NSSet *)onlineAccounts
+{
+	NSEnumerator *enumerator;
+	AIAccount *account;
+	NSMenu *menu = [[NSMenu alloc] init];
+	NSMenuItem *menuItem;
+
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Display Name For:", nil)
+										  target:nil
+										  action:nil
+								   keyEquivalent:@""];
+	[menuItem setEnabled:NO];
+	[menu addItem:menuItem];
+	[menuItem release];
+	
+	enumerator = [ownDisplayNameAccounts objectEnumerator];
+	while ((account = [enumerator nextObject])) {
+		//Put a check before the account if it is the active account
+		menuItem = [[NSMenuItem alloc] initWithTitle:[account formattedUID]
+											  target:self
+											  action:@selector(nameViewSelectedAccount:)
+									   keyEquivalent:@""];
+		[menuItem setRepresentedObject:account];
+		
+		if (activeAccount == account) {
+			[menuItem setState:NSOnState];
+		}
+		[menuItem setIndentationLevel:1];
+		[menu addItem:menuItem];
+		
+		[menuItem release];
+	}
+	
+	//Show "All Other Accounts" if some accounts are using the global preference
+	if ([ownDisplayNameAccounts count] != [onlineAccounts count]) {
+		menuItem = [[NSMenuItem alloc] initWithTitle:ALL_OTHER_ACCOUNTS
+											  target:self
+											  action:@selector(nameViewSelectedAccount:)
+									   keyEquivalent:@""];
+		if (!activeAccount) {
+			[menuItem setState:NSOnState];
+		}
+		[menuItem setIndentationLevel:1];
+		[menu addItem:menuItem];
+		[menuItem release];
+	}
+	
+	[menu addItem:[NSMenuItem separatorItem]];
+	
+	menuItem = [[NSMenuItem alloc] initWithTitle:[AILocalizedString(@"Change Display Name", nil) stringByAppendingEllipsis]
+										  target:self
+										  action:@selector(nameViewChangeName:)
+								   keyEquivalent:@""];
+	[menu addItem:menuItem];
+	[menuItem release];	
+	
+	return [menu autorelease];
+}
+
+- (void)updateNameView
+{
+	NSMutableSet *ownDisplayNameAccounts = [NSMutableSet set];
+	NSMutableSet *onlineAccounts = [NSMutableSet set];
+	AIAccount	 *activeAccount = [[self class] activeAccountForDisplayNameGettingOnlineAccounts:onlineAccounts
+																		  ownDisplayNameAccounts:ownDisplayNameAccounts];
+	NSString	 *alias = nil;
+
+	if (activeAccount) {
+		//There is a specific account active whose display name we should show
+		alias = [activeAccount displayName];
+	} else {
+		/* There isn't an account active. We should show the global preference if possible.  Using it directly would mean
+		 * that it displays exactly as typed by the user, whereas using it via an account's displayName means it is preprocessed
+		 * for any substitutions, which looks better.
+		*/
+		NSMutableSet *onlineAccountsUsingGlobalPreference = [onlineAccounts mutableCopy];
+		[onlineAccountsUsingGlobalPreference minusSet:ownDisplayNameAccounts];
+		if ([onlineAccountsUsingGlobalPreference count]) {
+			alias = [[onlineAccountsUsingGlobalPreference anyObject] displayName];
+
+		} else {
+			//No online accounts... look for an enabled account ('cause we still want to use displayName if possible)
+			NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
+			AIAccount		*account = nil;
+			
+			while ((account = [enumerator nextObject]) && ![account enabled]);
+			
+			alias = [account displayName];
+		}
+
+		[onlineAccountsUsingGlobalPreference release];
+	}
+	
+	if ((!activeAccount && ![ownDisplayNameAccounts count]) || ([onlineAccounts count] == 1)) {
+		//We're using the global preference, or we're the single online account has its own display name
+		[nameView setHighlightOnHoverAndClick:NO];
+		[nameView setTarget:self];
+		[nameView setDoubleAction:@selector(nameViewChangeName:)];
+		[nameView setMenu:nil];
+	} else {
+		//Multiple possibilities, so we rock with a menu
+		[nameView setHighlightOnHoverAndClick:YES];
+		[nameView setDoubleAction:NULL];
+		[nameView setMenu:[self nameViewMenuWithActiveAccount:activeAccount 
+										 accountsUsingOwnName:ownDisplayNameAccounts
+											   onlineAccounts:onlineAccounts]];
+	}
+
+	/* If we don't have an alias to display as our text yet, grab from the global preferences. This can be the case
+	 * in a no-accounts-enabled situation.
+	 */
+	if (!alias || ![alias length]) {
+		alias = [[[[adium preferenceController] preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME
+														   group:GROUP_ACCOUNT_STATUS] attributedString] string];
+		if (!alias || ![alias length]) {
+			alias = @"Adium";
+		}
+	}
+
+	[nameView setTitle:alias];
 }
 
 //Toolbar --------------------------------------------------------------------------------------------------------------
