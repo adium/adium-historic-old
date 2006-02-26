@@ -27,6 +27,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIExceptionHandlingUtilities.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 
 #import "AIContactListStatusMenuView.h"
 #import "AIContactListImagePicker.h"
@@ -450,7 +451,7 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 	if(!windowScreen) windowScreen = [NSScreen mainScreen];
 	BOOL	finishedX = NO, finishedY = NO;
 	NSRect	frame = [inWindow frame];
-	float yOff = (targetPoint.y + frame.size.height) - [windowScreen visibleFrame].size.height;
+	float yOff = (targetPoint.y + frame.size.height) - ([windowScreen frame].size.height - [NSMenuView menuBarHeight]);
 	if(yOff > 0) targetPoint.y -= yOff;
 
 	do
