@@ -204,7 +204,7 @@
 		[textField_password setStringValue:[savedPassword length] ? savedPassword : @""];
 		
 		//User alias (display name)
-		NSString *alias = [[[account preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
+		NSString *alias = [[[account preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME group:GROUP_ACCOUNT_STATUS] attributedString] string];
 		[textField_alias setStringValue:(alias ? alias : @"")];
 		
 		//Server Host
@@ -261,7 +261,8 @@
 	}
 	
 	//Connect Host
-	[account setPreference:([[textField_connectHost stringValue] length] ? [textField_connectHost stringValue] : nil)
+	NSString *connectHost = [textField_connectHost stringValue];
+	[account setPreference:((connectHost && [connectHost length]) ? connectHost : nil)
 					forKey:KEY_CONNECT_HOST
 					 group:GROUP_ACCOUNT_STATUS];	
 	
@@ -271,9 +272,12 @@
 					 group:GROUP_ACCOUNT_STATUS];
 
 	//Alias
-	[account setPreference:[[NSAttributedString stringWithString:[textField_alias stringValue]] dataRepresentation]
-					forKey:@"FullNameAttr"
-					 group:GROUP_ACCOUNT_STATUS];
+	NSString *displayName = [textField_alias stringValue];
+	[account setPreference:((displayName && [displayName length]) ?
+							[[NSAttributedString stringWithString:displayName] dataRepresentation] :
+							nil)
+					forKey:KEY_ACCOUNT_DISPLAY_NAME
+					 group:GROUP_ACCOUNT_STATUS];		
 	
 	//Check mail	
 	[account setPreference:[NSNumber numberWithBool:[checkBox_checkMail state]]
