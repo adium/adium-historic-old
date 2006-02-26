@@ -65,7 +65,8 @@
 	//Register our observers
 	[[adium contactController] registerListObjectObserver:self];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_USERICONS];
-	[[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:)
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(listObjectAttributesChanged:)
 									   name:ListObject_AttributesChanged
 									 object:nil];
 
