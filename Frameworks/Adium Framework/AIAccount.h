@@ -20,14 +20,18 @@
 
 #define GROUP_ACCOUNT_STATUS   @"Account Status"
 
-//Connect host and port keys
+//All keys below are for NSString objects
 #define KEY_CONNECT_HOST 			@"Connect Host"
+#define KEY_DEFAULT_USER_ICON		@"Default User Icon"
+#define KEY_USE_USER_ICON			@"Use User Icon"
+
+//NSNumber objects
 #define KEY_CONNECT_PORT 			@"Connect Port"
 #define KEY_ACCOUNT_CHECK_MAIL		@"Check Mail"
 #define KEY_ENABLED					@"Enabled"
 
-#define KEY_DEFAULT_USER_ICON		@"Default User Icon"
-#define KEY_USE_USER_ICON			@"Use User Icon"
+//NSData archive of an NSAttributedString
+#define KEY_ACCOUNT_DISPLAY_NAME	@"FullNameAttr"
 
 #define	Adium_RequestImmediateDynamicContentUpdate	@"Adium_RequestImmediateDynamicContentUpdate"
 
@@ -133,6 +137,7 @@ typedef enum {
 - (BOOL)suppressTypingNotificationChangesAfterSend;
 - (BOOL)supportsOfflineMessaging;
 - (BOOL)allowsNewlinesInMessages;
+- (BOOL)supportsServersideDisplayName;
 
 //Status
 - (NSSet *)supportedPropertyKeys;

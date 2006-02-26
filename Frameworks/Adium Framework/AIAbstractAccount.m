@@ -59,9 +59,6 @@
 		}
 		
 		namesAreCaseSensitive = [[self service] caseSensitive];
-		
-		//Handle the preference changed monitoring (for account status) for our subclass
-		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
 
 		//Register the defaults
 		static NSDictionary	*defaults = nil;
@@ -77,9 +74,6 @@
 		
 		enabled = [[self preferenceForKey:KEY_ENABLED group:GROUP_ACCOUNT_STATUS] boolValue];
 
-		[self updateStatusForKey:@"FullNameAttr"];
-		[self updateStatusForKey:@"FormattedUID"];
-		
 		autoRefreshingKeys = [[NSMutableSet alloc] init];
 		dynamicKeys = [[NSMutableSet alloc] init];
 		attributedRefreshTimer = nil;
@@ -94,7 +88,14 @@
 									   selector:@selector(requestImmediateDynamicContentUpdate:)
 										   name:Adium_RequestImmediateDynamicContentUpdate
 										 object:nil];	
-
+		
+		//Handle the preference changed monitoring (for account status) for our subclass
+		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+		
+		//Update our display name and formattedUID immediately
+		[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
+		[self updateStatusForKey:@"FormattedUID"];
+		
 		//Init the account
 		[self initFUSDisconnecting];
 		[self initAccount];
@@ -227,6 +228,9 @@
 	[self setPreference:[NSNumber numberWithBool:inEnabled]
 				 forKey:KEY_ENABLED
 				  group:GROUP_ACCOUNT_STATUS];
+	
+	//We don't update the display name unless we're enabled, so update it now
+	[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
 }
 
 /*!
@@ -346,15 +350,33 @@
 	delayedUpdateStatusTimer = nil;
 }
 
-- (void)updateLocalDisplayNameTo:(NSString *)displayName
+- (void)updateLocalDisplayNameTo:(NSAttributedString *)attributedDisplayName
 {
+	NSString	*displayName = [attributedDisplayName string];
 	if ([displayName length] == 0) displayName = nil;
 	
+	//Apply the display name for local display
 	[[self displayArrayForKey:@"Display Name"] setObject:displayName
 											   withOwner:self];
-	//notify
+	
+	//Note the actual value we've set in CurrentDisplayName so we can compare against it later
+	[self setStatusObject:displayName
+				   forKey:@"CurrentDisplayName"
+				   notify:NotifyNever];
+	
+	//Notify
 	[[adium contactController] listObjectAttributesChanged:self
-											  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
+											  modifiedKeys:[NSSet setWithObject:@"Display Name"]];	
+}
+
+/*
+ * @brief Current display name, post filtering
+ *
+ * This might be used to see if a new display name needs to be sent to the server or if it is the same as the old one.
+ */
+- (NSString *)currentDisplayName
+{
+	return [self statusObjectForKey:@"CurrentDisplayName"];
 }
 
 /*!
@@ -396,32 +418,19 @@
         }
 		
     } else if ([key isEqualToString:@"StatusState"]) {
-
 		if (areOnline) {
 			//Set the status state after filtering its statusMessage as appropriate
 			[self autoRefreshingOutgoingContentForStatusKey:@"StatusState"
 												   selector:@selector(gotFilteredStatusMessage:forStatusState:)
 													context:[self statusObjectForKey:@"StatusState"]];
 		} else {
-			//XXX behavior for setting a status when account is currently offline:
 			//Check if account is 'enabled' in the accounts preferences.  If so, bring it online in the specified state.
 			[self setShouldBeOnline:YES];
 		}
-		
-	} else if ([key isEqualToString:@"FullNameAttr"]) {
-		if (![self preferenceForKey:@"LocalAccountAlias" group:GROUP_ACCOUNT_STATUS]) {
-			//Update the display name for this account if we don't have a local account alias
-			NSString	*displayName = [[[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
-			[self updateLocalDisplayNameTo:displayName];
-		}
 
-    } else if ([key isEqualToString:@"LocalAccountAlias"]) {
-		NSString	*localAlias = [self preferenceForKey:@"LocalAccountAlias" group:GROUP_ACCOUNT_STATUS];
-		if (localAlias) {
-			[self updateLocalDisplayNameTo:localAlias];
-		} else {
-			//Call with FullNameAttr to use that display name if it is set (or to clear if it is not)
-			[self updateCommonStatusForKey:@"FullNameAttr"];
+    } else if ([key isEqualToString:KEY_ACCOUNT_DISPLAY_NAME]) {
+		if ([self enabled]) {
+			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(gotFilteredDisplayName:)];
 		}
 
 	} else if ([key isEqualToString:@"FormattedUID"]) {
@@ -705,7 +714,7 @@
 		originalValue = [[self statusState] statusMessage];
 
 	} else {
-		originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] attributedString];		
+		originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] attributedString];				
 	}
 
 	return originalValue;
@@ -1152,7 +1161,7 @@
 	[self setPreference:(displayName ?
 						 [[NSAttributedString stringWithString:displayName] dataRepresentation] :
 						 nil)
-				 forKey:@"FullNameAttr"
+				 forKey:KEY_ACCOUNT_DISPLAY_NAME
 				  group:GROUP_ACCOUNT_STATUS];
 }	
 
