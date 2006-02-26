@@ -34,6 +34,7 @@
 - (void)_saveAccounts;
 - (NSString *)_generateUniqueInternalObjectID;
 - (NSString *)_upgradeServiceID:(NSString *)serviceID forAccountDict:(NSDictionary *)accountDict;
+- (void)upgradeAccounts;
 @end
 
 @implementation AdiumAccounts
@@ -69,6 +70,8 @@
 - (void)controllerDidLoad
 {
 	[self _loadAccounts];
+	
+	[self upgradeAccounts];
 }
 
 
@@ -296,18 +299,18 @@
 	//testing joscar doesn't break people's libgaim accounts.
 	if ([serviceID isEqualToString:@"joscar-OSCAR-AIM"])
 		serviceID = @"libgaim-oscar-AIM";
-	if ([serviceID isEqualToString:@"joscar-OSCAR-ICQ"])
+	else if ([serviceID isEqualToString:@"joscar-OSCAR-ICQ"])
 		serviceID = @"libgaim-oscar-ICQ";
-	if ([serviceID isEqualToString:@"joscar-OSCAR-dotMac"])
+	else if ([serviceID isEqualToString:@"joscar-OSCAR-dotMac"])
 		serviceID = @"libgaim-oscar-Mac";
 #endif
 	
 #ifdef JOSCAR_SUPERCEDE_LIBGAIM
 	if ([serviceID isEqualToString:@"libgaim-oscar-AIM"])
 		serviceID = @"joscar-OSCAR-AIM";
-	if ([serviceID isEqualToString:@"libgaim-oscar-ICQ"])
+	else if ([serviceID isEqualToString:@"libgaim-oscar-ICQ"])
 		serviceID = @"joscar-OSCAR-ICQ";
-	if ([serviceID isEqualToString:@"libgaim-oscar-Mac"])
+	else if ([serviceID isEqualToString:@"libgaim-oscar-Mac"])
 		serviceID = @"joscar-OSCAR-dotMac";
 #endif
 	
@@ -342,6 +345,43 @@
 	//Save and broadcast an account list changed notification
 	[[adium preferenceController] setPreference:flatAccounts forKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
 	[[adium notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
+}
+
+/*
+ * @brief Perform upgrades for a new version
+ */
+- (void)upgradeAccounts
+{
+	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
+	NSNumber		*upgradedAccounts = [userDefaults objectForKey:@"Adium:Accounts Upgraded for 1.0"];
+	
+	if (!upgradedAccounts || ![upgradedAccounts boolValue]) {
+		[userDefaults setObject:[NSNumber numberWithBool:YES] forKey:@"Adium:Accounts Upgraded for 1.0"];
+		[userDefaults synchronize];
+
+		AIAccount		*account;
+		NSEnumerator	*enumerator;
+		
+		//Adium 0.8x would store @"" in preferences which we now want to be able to inherit global values if they don't have a value.
+		NSSet	*keysToClear = [NSSet setWithObjects:KEY_ACCOUNT_DISPLAY_NAME, @"TextProfile", nil];
+
+		enumerator = [[self accounts] objectEnumerator];
+		while ((account = [enumerator nextObject])) {
+			NSEnumerator	*keyEnumerator = [keysToClear objectEnumerator];
+			NSString		*key;
+			
+			while ((key = [keyEnumerator nextObject])) {
+				NSAttributedString *attributedString = [[account preferenceForKey:key
+																			group:GROUP_ACCOUNT_STATUS
+															ignoreInheritedValues:YES] attributedString];
+				if (attributedString && ![attributedString length]) {
+					[account setPreference:nil
+									forKey:key
+									 group:GROUP_ACCOUNT_STATUS];					
+				}
+			}
+		}
+	}
 }
 
 @end
