@@ -27,7 +27,6 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIExceptionHandlingUtilities.h>
-#import <AIUtilities/AIApplicationAdditions.h>
 
 #import "AIContactListStatusMenuView.h"
 #import "AIContactListImagePicker.h"
