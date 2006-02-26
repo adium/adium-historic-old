@@ -14,6 +14,7 @@
 	NSMutableSet	*trackingTags;
 	NSDictionary	*menuItemAttributes;
 	NSDictionary	*hoveredMenuItemAttributes;
+	NSDictionary	*disabledMenuItemAttributes;
 
 	int currentHoveredIndex;
 }

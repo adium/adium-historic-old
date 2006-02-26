@@ -49,6 +49,8 @@
 	[menu release];
 	[trackingTags release];
 	[menuItemAttributes release];
+	[disabledMenuItemAttributes release];
+	[hoveredMenuItemAttributes release];
 
 	[super dealloc];
 }
@@ -143,18 +145,23 @@
 	
 			} else {
 				NSAttributedString	*title;
-				BOOL				currentlyHovered = (currentHoveredIndex == i);
-	
+				BOOL				currentlyHovered = ((currentHoveredIndex == i) && [menuItem isEnabled]);
+
 				if (currentlyHovered) {
 					//Draw a selectedMenuItemColor box if we are hovered...
 					[[NSColor selectedMenuItemColor] set];
 					NSRectFill(menuItemRect);
 				}
 				
-				//Move in 2 pixels so the highlight drawn above has proper borders around a checkmark
-				menuItemRect.origin.x += 2;
-				menuItemRect.size.width -= 2;
+				//Move in so the highlight drawn above has proper borders around a checkmark
+				menuItemRect.origin.x += 1;
+				menuItemRect.size.width -= 1;
 				
+				//Indent the menu item if appropriate
+				float indentation = [menuItem indentationLevel] * 5.0;
+				menuItemRect.origin.x += indentation;
+				menuItemRect.size.width -= indentation;
+
 				if ([menuItem state] == NSOnState) {
 					NSImage	*onStateImage;
 					NSSize	size;
@@ -191,6 +198,8 @@
 									 fraction:(currentlyHovered ? 1.0 : 0.85)];
 				}
 				
+				NSDictionary	*currentTextAttributes;
+
 				if (currentlyHovered) {
 					//We're displaying the hovered menu item
 					if (!hoveredMenuItemAttributes) {
@@ -199,10 +208,20 @@
 							[NSColor selectedMenuItemTextColor], NSForegroundColorAttributeName,
 							nil];
 					}
-					title = [[NSAttributedString alloc] initWithString:[menuItem title]
-															attributes:hoveredMenuItemAttributes];
 					
+					currentTextAttributes = hoveredMenuItemAttributes;
 					
+				} else if (![menuItem isEnabled]) {
+					//We're displaying a disabled menu item
+					if (!disabledMenuItemAttributes) {
+						disabledMenuItemAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
+						[NSFont menuFontOfSize:13], NSFontAttributeName,
+						[NSColor disabledControlTextColor], NSForegroundColorAttributeName,
+						nil];
+					}
+
+					currentTextAttributes = disabledMenuItemAttributes;
+
 				} else {
 					//We're displaying a non-hovered menu item
 					if (!menuItemAttributes) {
@@ -210,13 +229,17 @@
 							[NSFont menuFontOfSize:13], NSFontAttributeName,
 							nil];
 					}
-					title = [[NSAttributedString alloc] initWithString:[menuItem title]
-															attributes:menuItemAttributes];
+					
+					currentTextAttributes = menuItemAttributes;
 				}
-	
+
+				title = [[NSAttributedString alloc] initWithString:[menuItem title]
+														attributes:currentTextAttributes];
+				
 				//Shift right, and shorten our width, for indentation like a real menu, leaving space for the checkmark if it's needed
-				menuItemRect.origin.x += 12;
-				menuItemRect.size.width -= 12;
+#define CHECKMARK_WIDTH 9
+				menuItemRect.origin.x += CHECKMARK_WIDTH + 2;
+				menuItemRect.size.width -= CHECKMARK_WIDTH + 2;
 				
 				[title drawInRect:menuItemRect];
 				[title release];
