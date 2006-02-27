@@ -39,6 +39,7 @@ void getRGBFromHueLuminanceSaturation(float *r, float *g, float *b, float hue, f
 + (NSControlTint)currentControlTintSupportingJag;
 - (BOOL)equalToRGBColor:(NSColor *)inColor;
 - (BOOL)colorIsDark;
+- (BOOL)colorIsMedium;
 - (NSColor *)darkenBy:(float)amount;
 - (NSColor *)darkenAndAdjustSaturationBy:(float)amount;
 - (NSString *)hexString;
@@ -46,6 +47,7 @@ void getRGBFromHueLuminanceSaturation(float *r, float *g, float *b, float hue, f
 - (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation;
 + (NSColor *)colorWithCalibratedHue:(float)hue luminance:(float)luminance saturation:(float)saturation alpha:(float)alpha;
 - (NSColor *)colorWithInvertedLuminance;
+- (NSColor *)contrastingColor;
 - (NSColor *)adjustHue:(float)dHue saturation:(float)dSat brightness:(float)dBrit;
 
 //these use arc4random() for their random numbers. there is no need to seed anything.

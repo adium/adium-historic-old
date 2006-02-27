@@ -259,6 +259,12 @@ end:
     return ([[self colorUsingColorSpaceName:NSCalibratedRGBColorSpace] brightnessComponent] < 0.5);
 }
 
+- (BOOL)colorIsMedium
+{
+	float brightness = [[self colorUsingColorSpaceName:NSCalibratedRGBColorSpace] brightnessComponent];
+	return (0.35 < brightness && brightness < 0.65);
+}
+
 //Percent should be -1.0 to 1.0 (negatives will make the color brighter)
 - (NSColor *)darkenBy:(float)amount
 {
@@ -311,6 +317,22 @@ end:
 
     //Return the new color
     return [NSColor colorWithCalibratedHue:h luminance:l saturation:s alpha:1.0];
+}
+
+//Returns a color that contrasts well with this one
+- (NSColor *)contrastingColor
+{
+	if ([self colorIsMedium]) {
+		if ([self colorIsDark])
+			return [NSColor whiteColor];
+		else
+			return [NSColor blackColor];
+	} else {
+		return [NSColor colorWithCalibratedRed:1.0 - [self redComponent]
+							   green:1.0 - [self greenComponent]
+							    blue:1.0 - [self blueComponent]
+							   alpha:1.0];
+	}
 }
 
 - (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation

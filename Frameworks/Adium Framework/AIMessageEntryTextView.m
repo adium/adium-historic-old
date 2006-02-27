@@ -354,7 +354,7 @@
 		[self setBackgroundColor:cachedWhiteColor];
 	}
 	
-	[self setInsertionPointColor:[backgroundColor colorWithInvertedLuminance]];
+	[self setInsertionPointColor:[backgroundColor contrastingColor]];
 }
 
 //Paste as rich text without altering our typing attributes
