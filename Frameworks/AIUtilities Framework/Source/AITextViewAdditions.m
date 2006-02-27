@@ -15,7 +15,6 @@
 - (void)changeDocumentBackgroundColor:(id)sender
 {
 	NSColor		*newColor = [sender color];
-	BOOL		isDark = [newColor colorIsDark];
 	NSRange		selectedText = [self selectedRange];
 	
 	if (selectedText.length > 0) {
