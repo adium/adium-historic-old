@@ -24,11 +24,7 @@
 		[self setBackgroundColor:newColor];
 		[[self textStorage] addAttribute:AIBodyColorAttributeName value:newColor range:NSMakeRange(0, [[[self textStorage] string] length])];
 		
-		if (isDark) {
-			[self setInsertionPointColor:[NSColor whiteColor]];
-		} else {
-			[self setInsertionPointColor:[NSColor blackColor]];
-		}
+		[self setInsertionPointColor:[newColor contrastingColor]];
 	}
 
 	if (selectedText.length > 0) {
