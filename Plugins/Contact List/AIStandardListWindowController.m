@@ -447,7 +447,7 @@
 										  group:GROUP_ACCOUNT_STATUS];
 }
 
-- (void)nameView:(AIContactListNameButton *)nameView didChangeToString:(NSString *)inName userInfo:(NSDictionary *)userInfo
+- (void)nameView:(AIContactListNameButton *)inNameView didChangeToString:(NSString *)inName userInfo:(NSDictionary *)userInfo
 {
 	AIAccount	*activeAccount = [userInfo objectForKey:@"activeAccount"];
 	NSData		*newDisplayName = ((inName && [inName length]) ?
