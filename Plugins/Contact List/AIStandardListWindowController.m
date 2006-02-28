@@ -387,6 +387,9 @@
 /*
  * @brief Determine the account which will be displayed / modified by the name view
  *
+ * @param onlineAccounts If non-nil, the NSMutableSet will have all online accounts
+ * @param onlineAccounts If non-nil, the NSMutableSet will have all online accounts with a per-account display name set
+ *
  * @result The 'active' account for display name purposes, or nil if the global display name is active
  */
 + (AIAccount *)activeAccountForDisplayNameGettingOnlineAccounts:(NSMutableSet *)onlineAccounts ownDisplayNameAccounts:(NSMutableSet *)ownDisplayNameAccounts
@@ -573,12 +576,19 @@
 			alias = [[onlineAccountsUsingGlobalPreference anyObject] displayName];
 
 		} else {
-			//No online accounts... look for an enabled account ('cause we still want to use displayName if possible)
+			/* No online accounts... look for an enabled account using the global preference
+			 * 'cause we still want to use displayName if possible
+			 */
 			NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
 			AIAccount		*account = nil;
 			
-			while ((account = [enumerator nextObject]) && ![account enabled]);
-			
+			while ((account = [enumerator nextObject])) {
+				if ([account enabled] && 
+					![[[account preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME 
+										   group:GROUP_ACCOUNT_STATUS
+						   ignoreInheritedValues:YES] attributedString] length]) break;
+			}
+
 			alias = [account displayName];
 		}
 
