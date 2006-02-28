@@ -105,7 +105,9 @@ gboolean gaim_init_jabber_plugin(void);
 	
 	NSString	*connectServer;
 	BOOL		forceOldSSL, useTLS, allowPlaintext;
-	
+
+	gaim_account_set_username(account, [self gaimAccountName]);
+
 	//'Connect via' server (nil by default)
 	connectServer = [self preferenceForKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS];
 	
