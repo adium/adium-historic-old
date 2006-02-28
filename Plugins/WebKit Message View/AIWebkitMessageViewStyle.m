@@ -55,8 +55,10 @@ static NSArray *validSenderColors;
 @implementation NSMutableString (AIKeywordReplacementAdditions)
 - (void) replaceKeyword:(NSString *)keyWord withString:(NSString *)newWord
 {
-	for(NSRange range = [self rangeOfString:keyWord]; range.location != NSNotFound; range = [self rangeOfString:keyWord])
-		[self replaceCharactersInRange:range withString:newWord];
+	[self replaceOccurrencesOfString:keyWord
+						  withString:newWord
+							 options:NSLiteralSearch
+							   range:NSMakeRange(0, [self length])];
 }
 @end
 
