@@ -101,14 +101,16 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 			contactListWindowController = [[AIBorderlessListWindowController listWindowController] retain];
 		}
     }
-
+	
 	[contactListWindowController showWindowInFront:bringToFront];
 }
 
 //Returns YES if the contact list is visible and in front
 - (BOOL)contactListIsVisibleAndMain
 {
-	return (contactListWindowController && [[contactListWindowController window] isMainWindow]);
+	return (contactListWindowController &&
+			[[contactListWindowController window] isVisible] &&
+			[[contactListWindowController window] isMainWindow]);
 }
 
 //Close contact list
