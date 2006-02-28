@@ -422,7 +422,11 @@
 	oldFrame = [[self window] frame];
 	currentScreen = [[self window] screen];
 	currentScreenFrame = [currentScreen frame];
-	currentScreenFrame.size.height -= [NSMenuView menuBarHeight];
+
+	if ([[NSScreen screens] count] && 
+		(currentScreen == [[NSScreen screens] objectAtIndex:0])) {
+		currentScreenFrame.size.height -= [NSMenuView menuBarHeight];
+	}	
 }
 
 
@@ -435,10 +439,14 @@
 	
 	NSScreen * windowScreen = [window screen];
 	if(!windowScreen) windowScreen = [NSScreen mainScreen];
-	
-	float menuHeight = [NSMenuView menuBarHeight];
+
 	NSRect newScreenFrame = [windowScreen frame];
-	newScreenFrame.size.height -= menuHeight;
+	
+	if ([[NSScreen screens] count] &&
+		(windowScreen == [[NSScreen screens] objectAtIndex:0])) {
+		newScreenFrame.size.height -= [NSMenuView menuBarHeight];
+	}
+
 	NSRect listFrame = [window frame];
 	
 	if(NSEqualRects(currentScreenFrame, newScreenFrame)) return;
