@@ -414,7 +414,6 @@
 //
 - (void)showWindowInFront:(BOOL)inFront
 {
-	NSLog(@"In front? %i ; mainWindow is %@",inFront,[NSApp mainWindow]);
 	if (inFront) {
 		[self showWindow:nil];
 	} else {
