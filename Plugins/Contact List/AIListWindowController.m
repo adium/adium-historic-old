@@ -165,15 +165,20 @@
 											 selector:@selector(updateWindowHidesOnDeactivateWithNotification:) 
 												 name:NSApplicationWillBecomeActiveNotification 
 											   object:nil];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(applicationDidUnhide:) 
+												 name:NSApplicationDidUnhideNotification 
+											   object:nil];
 }
 
 //Close the contact list window
 - (void)windowWillClose:(NSNotification *)notification
 {
-	// don't let the window's saved position be offscreen
-	// need to do this before calling -[AIWindowController windowWillClose:], because it's
-	// that method that does the saving.  
-	[self slideWindowOnScreen]; 
+	//Don't let the window's saved position be offscreen in -[AIWindowController windowWillClose:]
+	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
+		[self slideWindowOnScreen];
+	}
 
 	[super windowWillClose:notification];
 
@@ -409,6 +414,7 @@
 //
 - (void)showWindowInFront:(BOOL)inFront
 {
+	NSLog(@"In front? %i ; mainWindow is %@",inFront,[NSApp mainWindow]);
 	if (inFront) {
 		[self showWindow:nil];
 	} else {
@@ -463,8 +469,9 @@
 // Dock-like hiding -----------------------------------------------------------------------------------------------------
 #pragma mark Dock-like hiding
 
-// screenSlideBoundaryRect is the rect that the contact list slides in and out of for dock-like hiding
-// screenSlideBoundaryRect = (menubarScreen frame without menubar) union (union of frames of all other screens) 
+/* screenSlideBoundaryRect is the rect that the contact list slides in and out of for dock-like hiding
+ * screenSlideBoundaryRect = (menubarScreen frame without menubar) union (union of frames of all other screens) 
+ */
 static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 + (void)updateScreenSlideBoundaryRect:(id)sender
 {
@@ -473,7 +480,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	int i;
 	
 	if (numScreens > 0) {
-		// menubar screen is a special case - the menubar is not a part of the rect we're interested in
+		//The menubar screen is a special case - the menubar is not a part of the rect we're interested in
 		NSScreen *menubarScreen = [screens objectAtIndex:0];
 		screenSlideBoundaryRect = [menubarScreen frame];
 		screenSlideBoundaryRect.size.height = NSMaxY([menubarScreen visibleFrame]) - NSMinY([menubarScreen frame]);
@@ -485,36 +492,42 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 - (void)updateWindowHidesOnDeactivateWithNotification:(NSNotification *)notification
 {
-    if ([notification isKindOfClass:[NSNotification class]] && [[notification name] isEqualToString:NSApplicationWillResignActiveNotification]) {
-        [[self window] setHidesOnDeactivate:[self windowShouldHideOnDeactivate]];
-    }
-    else {
-        [[self window] setHidesOnDeactivate:NO];
-        [[[self window] contentView] setNeedsDisplay:YES];
+	NSWindow	*myWindow = [self window];
+	
+    if ([[notification name] isEqualToString:NSApplicationWillResignActiveNotification]) {
+        [myWindow setHidesOnDeactivate:[self windowShouldHideOnDeactivate]];
+
+    } else {
+        [myWindow setHidesOnDeactivate:NO];
     }
 }
 
-// this refers to the value of [[self window] hidesOnDeactivate]
-// this should return NO if we're going to do dock-like sliding
-// instead of orderOut:-type hiding.
+/*
+ * @brief Adium unhid
+ *
+ * If the contact list is open but not visible when we unhide, we should always display it; it should not, however, steal focus.
+ */
+- (void)applicationDidUnhide:(NSNotification *)notification
+{
+	if (![[self window] isVisible]) {
+		[self showWindowInFront:NO];
+	}
+}
+
+/*
+ * @brief Should the window hide immediately when Adium deactivates?
+ *
+ * This refers to the value of [[self window] hidesOnDeactivate].
+ * Hide on deactivate if the window should not be visible in the background, the window is not slid off screen,
+ * and the window is not in a position to be about to slide off screen
+ *
+ * @result NO if we're going to do dock-like sliding instead of orderOut:-type hiding.
+ */
 - (BOOL)windowShouldHideOnDeactivate
 {
-	BOOL shouldHideOnDeactivate;
-
-	if (!windowShouldBeVisibleInBackground &&
-		(windowSlidOffScreenEdgeMask == AINoEdges) &&
-		([self slidableEdgesAdjacentToWindow] == AINoEdges)) {
-		/*
-		 * Hide on deactivate if the window should not be visible in the background, the window is not slid off screen,
-		 * and the window is not in a position to be about to slide off screen
-		 */
-		shouldHideOnDeactivate = YES;
-
-	} else {
-		shouldHideOnDeactivate = NO;	
-	}
-
-	return shouldHideOnDeactivate;
+	return (!windowShouldBeVisibleInBackground &&
+			(windowSlidOffScreenEdgeMask == AINoEdges) &&
+			([self slidableEdgesAdjacentToWindow] == AINoEdges));
 }
 
 - (void)slideWindowIfNeeded:(id)sender
@@ -522,13 +535,16 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	if ([self shouldSlideWindowOnScreen]) {
 		[self slideWindowOnScreen];
 
-	} else if([self shouldSlideWindowOffScreen]) {
+	} else if ([self shouldSlideWindowOffScreen]) {
 		AIRectEdgeMask adjacentEdges = [self slidableEdgesAdjacentToWindow];
-        if (adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask))
+		
+        if (adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask)) {
             [self slideWindowOffScreenEdges:(adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask))];
-        else
+		} else {
             [self slideWindowOffScreenEdges:adjacentEdges];
-	} else if(windowSlidOffScreenEdgeMask == AINoEdges) {
+		}
+
+	} else if (windowSlidOffScreenEdgeMask == AINoEdges) {
 		oldFrame = [[self window] frame];
 	}
 			
@@ -726,7 +742,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	[[self window] setHasShadow:NO];
 }
 
-- (void)slideWindowOnScreenWithAnimation:(BOOL)flag
+- (void)slideWindowOnScreenWithAnimation:(BOOL)animate
 {
 	NSWindow	*window = [self window];
 	NSRect		windowFrame = [window frame];
@@ -738,7 +754,11 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		
 		[[self window] setHasShadow:listHasShadow];
 		
-		flag ? [self slideWindowToPoint:oldFrame.origin] : [[self window] setFrameOrigin:oldFrame.origin];
+		if (animate) {
+			[self slideWindowToPoint:oldFrame.origin];
+		} else {
+			[[self window] setFrameOrigin:oldFrame.origin];
+		}
 	}
 }
 
