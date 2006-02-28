@@ -225,13 +225,6 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	//Set the gaim user directory to be within this user's directory
 	NSString	*gaimUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libgaim"];
 	gaim_util_set_user_dir([[gaimUserDir stringByExpandingTildeInPath] UTF8String]);
-
-	/* Remove the accounts.xml before the core inits; if accounts init before the core, all sorts of stuff (status registration for example)
-	 * gets messed up because of static prpls.
-	 */
-	[[NSFileManager defaultManager] removeFileAtPath:
-		[[gaimUserDir stringByAppendingPathComponent:@"accounts"] stringByAppendingPathExtension:@"xml"]
-											 handler:nil];
 	
 	/* Set plugin search directories */
 /*
