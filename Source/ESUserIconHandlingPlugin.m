@@ -252,8 +252,15 @@
 	BOOL		success;
 	NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
 
-	success = ([inData writeToFile:cachedImagePath
-						atomically:YES]);
+	if (inData && [inData length]) {
+		success = ([inData writeToFile:cachedImagePath
+							atomically:YES]);
+	} else {
+		success = [[NSFileManager defaultManager] removeFileAtPath:cachedImagePath
+														   handler:NULL];
+		cachedImagePath = nil;
+	}
+
 	if (success) {
 		[inObject setStatusObject:cachedImagePath
 						   forKey:@"UserIconPath"
