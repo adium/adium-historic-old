@@ -102,20 +102,25 @@ static void adiumGaimCoreUiInit(void)
     gaim_privacy_set_ui_ops (adium_gaim_privacy_get_ui_ops());	
 
 	/* Why use Gaim's accounts and blist list when we have the information locally?
-	 *		- Faster account connection: Gaim doesn't have to recreate the local list
-	 *		- Privacy/blocking support depends on the accounts and blist files existing
-	 *
-	 *	Another possible advantage:
-	 *		- Using Gaim's own buddy icon caching (which depends on both files) allows us to avoid
-	 *			re-requesting icons we already have locally on some protocols such as AIM.
-	 *   However, we seem to end up with out of date icons when we rely on Gaim's caching, particularly over MSN,
-	 *   so we'll just ignore this gain and turn off caching. 
-	 */	
+		*		- Faster account connection: Gaim doesn't have to recreate the local list
+		*		- Privacy/blocking support depends on the accounts and blist files existing
+		*
+		*	Another possible advantage:
+		*		- Using Gaim's own buddy icon caching (which depends on both files) allows us to avoid
+		*			re-requesting icons we already have locally on some protocols such as AIM.
+		*   However, we seem to end up with out of date icons when we rely on Gaim's caching, particularly over MSN,
+		*   so we'll just ignore this gain and turn off caching. 
+		*/	
 	//Setup the buddy list; then load the blist.
 	gaim_set_blist(gaim_blist_new());
 
 	//Turn off buddy icon caching
 	gaim_buddy_icons_set_caching(FALSE);
+
+	//Kill the Gaim blist file each launch; it just causes trouble
+	[[NSFileManager defaultManager] removeFileAtPath:
+		[[[NSString stringWithUTF8String:gaim_user_dir()] stringByAppendingPathComponent:@"blist"] stringByAppendingPathExtension:@"xml"]
+											 handler:nil];
 
 	gaim_blist_load();
 	
