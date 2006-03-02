@@ -109,4 +109,7 @@ typedef enum {
 
 - (void)rebuildIndices;
 
+- (void)searchComplete;
+- (void)stopSearching;
+
 @end

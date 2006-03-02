@@ -6,8 +6,10 @@
 //
 
 #import "AIMDLogViewerWindowController.h"
+#import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import "AILoggerPlugin.h"
+#import "AILogToGroup.h"
 
 @implementation AIMDLogViewerWindowController
 - (void)windowDidLoad
@@ -54,6 +56,7 @@
 	}
 	
 	//Only search within our log folder
+	//XXX need to escape ? and * if they are typed
 	[currentQuery setSearchScopes:[NSArray arrayWithObject:[NSURL fileURLWithPath:[AILoggerPlugin logBasePath]]]];
 	NSPredicate *queryPredicate;
 	NSPredicate	*contentTypePredicate = [NSPredicate predicateWithFormat:@"((kMDItemContentType = \"com.adiumx.log\") or (kMDItemContentType = \"com.adiumx.htmllog\"))"];
