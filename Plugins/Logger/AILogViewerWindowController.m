@@ -738,7 +738,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 			logFileText = [NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];                
 			
 			if (logFileText && [logFileText length]) {
-				if ([[theLog path] hasSuffix:@".html"] || [[theLog path] hasSuffix:@".html.bak"]) {
+				if ([[theLog path] hasSuffix:@".AdiumHTMLLog"] || [[theLog path] hasSuffix:@".html"] || [[theLog path] hasSuffix:@".html.bak"]) {
 					logText = [[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]] autorelease];
 				} else {
 					AITextAttributes *textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
