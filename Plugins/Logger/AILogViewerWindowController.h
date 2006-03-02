@@ -83,6 +83,9 @@ typedef enum {
     
     int					sameSelection;
     BOOL				useSame;
+	
+	NSMutableDictionary		*logToGroupDict;
+	NSTimer					*refreshResultsTimer;
 }
 
 + (id)openForPlugin:(id)inPlugin;

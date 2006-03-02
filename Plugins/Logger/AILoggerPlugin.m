@@ -19,6 +19,7 @@
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 #import "AILogViewerWindowController.h"
+#import "AIMDLogViewerWindowController.h"
 #import "AIContentController.h"
 #import "AILoggerPlugin.h"
 #import "AILoginController.h"
@@ -77,12 +78,15 @@
 @end
 
 static NSString     *logBasePath = nil;     //The base directory of all logs
-
+Class LogViewerWindowControllerClass = NULL;
 @implementation AILoggerPlugin
 
 //
 - (void)installPlugin
 {
+	LogViewerWindowControllerClass = ([NSApp isOnTigerOrBetter] ?
+									  [AIMDLogViewerWindowController class] :
+									  [AILogViewerWindowController class]);
     //Init
 	observingContent = NO;
 	index_Content = nil;
@@ -236,7 +240,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
  */
 - (void)showLogViewer:(id)sender
 {
-    [AILogViewerWindowController openForContact:nil  
+    [LogViewerWindowControllerClass openForContact:nil  
 										 plugin:self];	
 }
 
@@ -248,7 +252,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 - (void)showLogViewerToSelectedContact:(id)sender
 {
     AIListObject   *selectedObject = [[adium contactController] selectedListObject];
-    [AILogViewerWindowController openForContact:([selectedObject isKindOfClass:[AIListContact class]] ?
+    [LogViewerWindowControllerClass openForContact:([selectedObject isKindOfClass:[AIListContact class]] ?
 												 (AIListContact *)selectedObject : 
 												 nil)  
 										 plugin:self];
@@ -264,7 +268,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	AIListObject* object = [[adium menuController] currentContextMenuObject];
 	if ([object isKindOfClass:[AIListContact class]]) {
 		[NSApp activateIgnoringOtherApps:YES];
-		[[[AILogViewerWindowController openForContact:(AIListContact *)object plugin:self] window]
+		[[[LogViewerWindowControllerClass openForContact:(AIListContact *)object plugin:self] window]
 									 makeKeyAndOrderFront:nil];
 	}
 }
@@ -678,7 +682,7 @@ this problem is along the lines of:
     }
     
     //Begin cleaning the logs (If the log viewer is open)
-    if ([AILogViewerWindowController existingWindowController]) {
+    if ([LogViewerWindowControllerClass existingWindowController]) {
 		[self cleanDirtyLogs];
     }
     
@@ -740,7 +744,7 @@ this problem is along the lines of:
 				//Update our progress
 				logsIndexed++;
 				if (lastUpdate == 0 || TickCount() > lastUpdate + LOG_INDEX_STATUS_INTERVAL) {
-					[[AILogViewerWindowController existingWindowController]
+					[[LogViewerWindowControllerClass existingWindowController]
                                             performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
                                                              withObject:nil
                                                           waitUntilDone:NO];
@@ -775,7 +779,7 @@ this problem is along the lines of:
 		
 		//Update our progress
 		logsToIndex = 0;
-		[[AILogViewerWindowController existingWindowController] performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
+		[[LogViewerWindowControllerClass existingWindowController] performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
                                                                                          withObject:nil
                                                                                       waitUntilDone:NO];
     }
