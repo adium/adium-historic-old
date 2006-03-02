@@ -646,6 +646,63 @@
 				</array>
 			</dict>
 		</dict>
+		<dict>
+			<key>UTTypeDescription</key>
+			<string>Adium X chat log</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.content</string>
+				<string>public.message</string>
+			</array>
+			<!---
+			<key>UTTypeIconFile</key>
+			<string>AdiumServiceIcons.icns</string>
+			-->
+
+			<key>UTTypeIdentifier</key>
+			<string>com.adiumx.log</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://www.adiumx.com</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<string>AILo</string>
+				<key>public.filename-extension</key>
+				<array>
+					<string>AdiumLog</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeDescription</key>
+			<string>Adium X HTML chat log</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.content</string>
+				<string>public.message</string>
+			</array>
+			<!---
+			<key>UTTypeIconFile</key>
+			<string>AdiumServiceIcons.icns</string>
+			-->
+
+			<key>UTTypeIdentifier</key>
+			<string>com.adiumx.htmllog</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://www.adiumx.com</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<string>AILh</string>
+				<key>public.filename-extension</key>
+				<array>
+					<string>AdiumHTMLLog</string>
+				</array>
+			</dict>
+
+		</dict>
 	</array>
 </dict>
 </plist>
