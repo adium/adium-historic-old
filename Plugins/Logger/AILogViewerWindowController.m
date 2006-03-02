@@ -98,9 +98,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key);
 
 //Open the log viewer window
 static AILogViewerWindowController          *sharedLogViewerInstance = nil;
-static NSTimer                              *refreshResultsTimer = nil;
 static NSMutableDictionary                  *logFromGroupDict = nil;
-static NSMutableDictionary                  *logToGroupDict = nil;
 static NSString                             *filterForAccountName = nil;	//Account name to restrictively match content searches
 static NSString                             *filterForContactName = nil;	//Contact name to restrictively match content searches
 
@@ -179,7 +177,7 @@ static NSString                             *filterForContactName = nil;	//Conta
     logToGroupDict = [[NSMutableDictionary alloc] init];
     resultsLock = [[NSLock alloc] init];
     searchingLock = [[NSLock alloc] init];
-
+	
     [super initWithWindowNibName:windowNibName];
 	
     return self;
@@ -902,7 +900,8 @@ static NSString                             *filterForContactName = nil;	//Conta
     sortDirection = direction;
 	
     //Resort the data
-    [resultsLock lock];
+#warning Sorting is slow and sucky...
+   [resultsLock lock];
     identifier = [selectedColumn identifier];
     if ([identifier isEqualToString:@"To"]) {
 		[selectedLogArray sortUsingSelector:(sortDirection ? @selector(compareToReverse:) : @selector(compareTo:))];
@@ -918,7 +917,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 	}
 	
     [resultsLock unlock];
-    
+
     //Reload the data
     [tableView_results reloadData];
     
@@ -1165,6 +1164,8 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key) {
     [cellMenu addItem:[self _menuItemWithTitle:TO forSearchMode:LOG_SEARCH_TO]];
     [cellMenu addItem:[self _menuItemWithTitle:DATE forSearchMode:LOG_SEARCH_DATE]];
     [cellMenu addItem:[self _menuItemWithTitle:CONTENT forSearchMode:LOG_SEARCH_CONTENT]];
+
+	[[searchField_logs cell] setSearchMenuTemplate:cellMenu];
 }
 
 //Returns a menu item for the search mode menu
@@ -1343,6 +1344,11 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key) {
     [self startSearchingClearingCurrentResults:YES];	
 }
 
+- (NSDictionary *)logToGroupDict
+{
+	return logToGroupDict;
+}
+
 Boolean ContentResultsFilter (SKIndexRef     inIndex,
                               SKDocumentRef     inDocument,
                               void      *inContext)
@@ -1351,7 +1357,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 		//Searching for a specific contact
 		NSString		*path = (NSString *)SKDocumentGetName(inDocument);
 		NSString		*toPath = [path stringByDeletingLastPathComponent];
-		AILogToGroup	*toGroup = [logToGroupDict objectForKey:toPath];
+		AILogToGroup	*toGroup = [[(AILogViewerWindowController *)inContext logToGroupDict] objectForKey:toPath];
 
 		return [[toGroup to] caseInsensitiveCompare:filterForContactName] == NSOrderedSame;
 
@@ -1427,6 +1433,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 				 */
 				[resultsLock lock];
 				theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
+				NSLog(@"%@ by using key %@ and path %@",theLog,toPath,path);
 				if ((theLog != nil) && (![selectedLogArray containsObjectIdenticalTo:theLog])) {
 					[theLog setRankingPercentage:outScoresArray[i]];
 					[selectedLogArray addObject:theLog];
