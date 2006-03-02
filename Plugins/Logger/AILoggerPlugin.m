@@ -72,6 +72,8 @@
 - (NSString *)_dirtyLogArrayPath;
 - (void)_dirtyAllLogsThread;
 - (void)_cleanDirtyLogsThread;
+
+- (void)upgradeLogExtensions;
 @end
 
 static NSString     *logBasePath = nil;     //The base directory of all logs
@@ -124,6 +126,8 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 
 	//Init index searching
 	[self initLogIndexing];
+	
+	[self upgradeLogExtensions];
 }
 
 - (void)uninstallPlugin
@@ -785,6 +789,76 @@ this problem is along the lines of:
 	return logAccessLock;
 }
 
+#pragma mark Upgrade code
+- (void)upgradeLogExtensions
+{
+	if (![[[adium preferenceController] preferenceForKey:@"Log Extensions Updated" group:PREF_GROUP_LOGGING] boolValue] /*||
+		TRUE*/) {
+		/* This could all be a simple NSDirectEnumerator call on basePath, but we wouldn't be able to show progress,
+		 * and this could take a bit.
+		 */
+		NSString		*accountBasePath = [AILoggerPlugin logBasePath];
+		NSFileManager	*defaultManager = [NSFileManager defaultManager];
+		NSArray			*accountFolders = [defaultManager directoryContentsAtPath:accountBasePath];
+		NSEnumerator	*accountFolderEnumerator = [accountFolders objectEnumerator];
+		NSString		*accountFolderName;
+		
+		NSMutableSet	*logBasePaths = [NSMutableSet set];
+		while ((accountFolderName = [accountFolderEnumerator nextObject])) {
+			NSString		*contactBasePath = [accountBasePath stringByAppendingPathComponent:accountFolderName];
+			NSArray			*contactFolders = [defaultManager directoryContentsAtPath:contactBasePath];
+			
+			NSEnumerator	*contactFolderEnumerator = [contactFolders objectEnumerator];
+			NSString		*contactFolderName;
+			
+			while ((contactFolderName = [contactFolderEnumerator nextObject])) {
+				NSString			  *logBasePath = [contactBasePath stringByAppendingPathComponent:contactFolderName];
+				[logBasePaths addObject:logBasePath];
+			}
+		}
+		
+		unsigned		contactsToProcess = [logBasePaths count];
+		unsigned		processed = 0;
+
+		if (contactsToProcess) {
+			NSEnumerator	*logBasePathEnumerator = [logBasePaths objectEnumerator];
+			NSString		*logBasePath;
+			while ((logBasePath = [logBasePathEnumerator nextObject])) {
+				NSDirectoryEnumerator *enumerator = [defaultManager enumeratorAtPath:logBasePath];
+				NSString	*file;
+				
+				while ((file = [enumerator nextObject])) {
+					if (([[file pathExtension] isEqualToString:@"html"]) ||
+						([[file pathExtension] isEqualToString:@"adiumLog"]) ||
+						(([[file pathExtension] isEqualToString:@"bak"]) && ([file hasSuffix:@".html.bak"] || 
+																			 [file hasSuffix:@".adiumLog.bak"]))) {
+						NSString *fullFile = [logBasePath stringByAppendingPathComponent:file];
+						NSString *newFile = [[fullFile stringByDeletingPathExtension] stringByAppendingPathExtension:@"AdiumHTMLLog"];
+						
+						[defaultManager movePath:fullFile
+										  toPath:newFile
+										 handler:self];
+					}
+				}
+				
+				//XXX to do - update a progress bar displayed on screen
+				processed++;
+				NSLog(@"%f%% complete...", ((processed*100.0)/contactsToProcess));
+			}
+		}
+
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
+											 forKey:@"Log Extensions Updated"
+											  group:PREF_GROUP_LOGGING];
+	}
+}
+
+- (BOOL)fileManager:(NSFileManager *)manager shouldProceedAfterError:(NSDictionary *)errorInfo
+{
+	NSLog(@"Error: %@",errorInfo);
+	
+	return NO;
+}
 @end
 
 
