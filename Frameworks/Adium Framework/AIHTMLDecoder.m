@@ -22,7 +22,6 @@
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
-#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
