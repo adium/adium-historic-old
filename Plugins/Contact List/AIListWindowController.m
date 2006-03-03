@@ -65,6 +65,7 @@
 - (BOOL)shouldSlideWindowOnScreen_adiumActiveStrategy;
 - (BOOL)shouldSlideWindowOffScreen_adiumActiveStrategy;
 - (void)setPermitSlidingInForeground:(BOOL)flag;
+- (void) setSavedFrame:(NSRect)f;
 @end
 
 @implementation AIListWindowController
@@ -197,8 +198,11 @@
 }
 
 //Preferences have changed
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+- (void)preferencesChangedForGroup:(NSString *)group 
+							   key:(NSString *)key
+							object:(AIListObject *)object 
+					preferenceDict:(NSDictionary *)prefDict 
+						 firstTime:(BOOL)firstTime
 {
     if ([group isEqualToString:PREF_GROUP_CONTACT_LIST]) {
 		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_CL_WINDOW_LEVEL] intValue];
@@ -414,19 +418,35 @@
 //
 - (void)showWindowInFront:(BOOL)inFront
 {
+	NSWindow * w = [self window];
 	if (inFront) {
 		[self showWindow:nil];
 	} else {
-		[[self window] orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
+		[w orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
 	}
-	oldFrame = [[self window] frame];
-	currentScreen = [[self window] screen];
+	NSDictionary * prefsDict = [[[AIObject sharedAdiumInstance] preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+	[w setHasShadow:[[prefsDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue]];
+	[w setFrameUsingName:@"SavedContactListFrame" force:YES];
+	[self setSavedFrame:[w frame]];
+	NSNumber *opacity = [prefsDict objectForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY];
+	[w setAlphaValue:(opacity != nil) ? [opacity floatValue] : 1.0f];
+
+	previousAlpha = [w alphaValue];
+	windowSlidOffScreenEdgeMask = AINoEdges;
+	
+	currentScreen = [w screen];
 	currentScreenFrame = [currentScreen frame];
 
 	if ([[NSScreen screens] count] && 
 		(currentScreen == [[NSScreen screens] objectAtIndex:0])) {
 		currentScreenFrame.size.height -= [NSMenuView menuBarHeight];
 	}	
+}
+
+- (void) setSavedFrame:(NSRect)frame
+{
+	oldFrame = frame;
+	[[self window] saveFrameUsingName:@"SavedContactListFrame"];
 }
 
 
@@ -461,7 +481,7 @@
 	currentScreen = [window screen];
 	currentScreenFrame = newScreenFrame;
 
-	oldFrame = [window frame];
+	[self setSavedFrame:[window frame]];
 	
 	[window setAlphaValue:previousAlpha];
 }
@@ -552,7 +572,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		}
 
 	} else if (windowSlidOffScreenEdgeMask == AINoEdges) {
-		oldFrame = [[self window] frame];
+		[self setSavedFrame:[[self window] frame]];
 	}
 			
 }
@@ -728,7 +748,8 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 - (void)slideWindowOffScreenEdges:(AIRectEdgeMask)rectEdgeMask
 {
 	NSWindow *window = [self window];
-	NSRect newWindowFrame = oldFrame = [window frame];
+	NSRect newWindowFrame = [window frame];
+	[self setSavedFrame:newWindowFrame];
 	NSRectEdge edge;
 	
 	if (rectEdgeMask == AINoEdges)
