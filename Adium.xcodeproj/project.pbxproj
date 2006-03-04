@@ -506,6 +506,18 @@
 		34AEE7EA08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AEE7E808E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h */; };
 		34AEE7EB08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AEE7E908E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m */; };
 		34B27295083ACA900092A5A0 /* DeadStrings.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B27293083ACA900092A5A0 /* DeadStrings.h */; };
+		34B323B809B9FEAC00029361 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
+		34B3243A09B9FFA200029361 /* CBGaimAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3243909B9FFA200029361 /* CBGaimAccount.h */; };
+		34B3243F09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3243D09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h */; };
+		34B3244009B9FFE800029361 /* ESIRCLibgaimServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3243E09B9FFE800029361 /* ESIRCLibgaimServicePlugin.m */; };
+		34B3244409BA003C00029361 /* AILibgaimPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3244309BA003C00029361 /* AILibgaimPlugin.h */; };
+		34B3245309BA00E700029361 /* ESIRCAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3245109BA00E700029361 /* ESIRCAccount.h */; };
+		34B3245409BA00E700029361 /* ESIRCAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3245209BA00E700029361 /* ESIRCAccount.m */; };
+		34B3245909BA00FB00029361 /* ESIRCService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3245709BA00FA00029361 /* ESIRCService.h */; };
+		34B3245A09BA00FB00029361 /* ESIRCService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3245809BA00FB00029361 /* ESIRCService.m */; };
+		34B3246209BA015E00029361 /* AIService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3245F09BA015E00029361 /* AIService.h */; };
+		34B3246309BA015E00029361 /* AIServiceIcons.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3246009BA015E00029361 /* AIServiceIcons.h */; };
+		34B3246409BA015E00029361 /* AIObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3246109BA015E00029361 /* AIObject.h */; };
 		34B4B5A30708B049002C4C6D /* ESDebugController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B4B5A10708B049002C4C6D /* ESDebugController.h */; };
 		34B4B5A40708B049002C4C6D /* ESDebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B4B5A20708B049002C4C6D /* ESDebugController.m */; };
 		34B588A1058D833A00E7EF0D /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */; };
@@ -2502,6 +2514,19 @@
 		34B272170839E8FB0092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = "Plugins/WebKit Message View/is.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		34B272180839E8FB0092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = Resources/is.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34B27293083ACA900092A5A0 /* DeadStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeadStrings.h; path = Source/DeadStrings.h; sourceTree = "<group>"; };
+		34B323C009B9FEAC00029361 /* IRC Service.AdiumLibgaimPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "IRC Service.AdiumLibgaimPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		34B323C109B9FEAD00029361 /* Gaim_Service copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "Gaim_Service copy.plist"; path = "Plists/Gaim_Service copy.plist"; sourceTree = "<group>"; };
+		34B3243909B9FFA200029361 /* CBGaimAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBGaimAccount.h; path = "Plugins/Gaim Service/CBGaimAccount.h"; sourceTree = "<group>"; };
+		34B3243D09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESIRCLibgaimServicePlugin.h; path = "Plugins/IRC Libgaim Plugin/ESIRCLibgaimServicePlugin.h"; sourceTree = "<group>"; };
+		34B3243E09B9FFE800029361 /* ESIRCLibgaimServicePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESIRCLibgaimServicePlugin.m; path = "Plugins/IRC Libgaim Plugin/ESIRCLibgaimServicePlugin.m"; sourceTree = "<group>"; };
+		34B3244309BA003C00029361 /* AILibgaimPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILibgaimPlugin.h; path = "Plugins/Gaim Service/AILibgaimPlugin.h"; sourceTree = "<group>"; };
+		34B3245109BA00E700029361 /* ESIRCAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESIRCAccount.h; path = "Plugins/IRC Libgaim Plugin/ESIRCAccount.h"; sourceTree = "<group>"; };
+		34B3245209BA00E700029361 /* ESIRCAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESIRCAccount.m; path = "Plugins/IRC Libgaim Plugin/ESIRCAccount.m"; sourceTree = "<group>"; };
+		34B3245709BA00FA00029361 /* ESIRCService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESIRCService.h; path = "Plugins/IRC Libgaim Plugin/ESIRCService.h"; sourceTree = "<group>"; };
+		34B3245809BA00FB00029361 /* ESIRCService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESIRCService.m; path = "Plugins/IRC Libgaim Plugin/ESIRCService.m"; sourceTree = "<group>"; };
+		34B3245F09BA015E00029361 /* AIService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIService.h; path = "Frameworks/Adium Framework/AIService.h"; sourceTree = "<group>"; };
+		34B3246009BA015E00029361 /* AIServiceIcons.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIServiceIcons.h; path = "Frameworks/Adium Framework/AIServiceIcons.h"; sourceTree = "<group>"; };
+		34B3246109BA015E00029361 /* AIObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIObject.h; path = "Frameworks/Adium Framework/AIObject.h"; sourceTree = "<group>"; };
 		34B4B5A10708B049002C4C6D /* ESDebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESDebugController.h; path = Source/ESDebugController.h; sourceTree = "<group>"; };
 		34B4B5A20708B049002C4C6D /* ESDebugController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESDebugController.m; path = Source/ESDebugController.m; sourceTree = "<group>"; };
 		34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
@@ -3465,6 +3490,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		34B323B609B9FEAC00029361 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34B323B809B9FEAC00029361 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		34BD9D57053146CC000AB133 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3593,6 +3626,7 @@
 				349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */,
 				349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */,
 				347A210F09786B5F00A30431 /* SystemVersionCheck */,
+				34B323C009B9FEAC00029361 /* IRC Service.AdiumLibgaimPlugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3620,6 +3654,7 @@
 				4B3717000510D19400A8010A /* (Old Code, Disabled, etc) */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				34B323C109B9FEAD00029361 /* Gaim_Service copy.plist */,
 			);
 			name = CocAIMe2;
 			sourceTree = "<group>";
@@ -4336,6 +4371,23 @@
 				34A6FE7907D7E06A00972830 /* KFTypeSelectTableView.h */,
 			);
 			name = "Type Select Table View";
+			sourceTree = "<group>";
+		};
+		34B3241D09B9FF6900029361 /* IRC Libgaim Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				34B3245F09BA015E00029361 /* AIService.h */,
+				34B3246009BA015E00029361 /* AIServiceIcons.h */,
+				34B3246109BA015E00029361 /* AIObject.h */,
+				34B3243909B9FFA200029361 /* CBGaimAccount.h */,
+				34B3243D09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h */,
+				34B3243E09B9FFE800029361 /* ESIRCLibgaimServicePlugin.m */,
+				34B3245109BA00E700029361 /* ESIRCAccount.h */,
+				34B3245209BA00E700029361 /* ESIRCAccount.m */,
+				34B3245709BA00FA00029361 /* ESIRCService.h */,
+				34B3245809BA00FB00029361 /* ESIRCService.m */,
+			);
+			name = "IRC Libgaim Plugin";
 			sourceTree = "<group>";
 		};
 		34B7033B076EDB240016E8BA /* Group Chat */ = {
@@ -5174,6 +5226,7 @@
 		4B7F278605440C6200CDFC90 /* Gaim */ = {
 			isa = PBXGroup;
 			children = (
+				34B3244309BA003C00029361 /* AILibgaimPlugin.h */,
 				340915F105C0A5DF00CDE3DD /* GaimCommon.h */,
 				4B7F278905440C8D00CDFC90 /* CBGaimServicePlugin.h */,
 				4B7F278A05440C8D00CDFC90 /* CBGaimServicePlugin.m */,
@@ -5495,6 +5548,7 @@
 		4BD672C406001B530049CAF7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				34B3241D09B9FF6900029361 /* IRC Libgaim Plugin */,
 				4B7F278605440C6200CDFC90 /* Gaim */,
 				4947F5BB0655E7C400B791E5 /* Bonjour */,
 				4BA88A4C0524AFD700A8010A /* Stress Test */,
@@ -6508,6 +6562,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		34B322F909B9FEAC00029361 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34B3243A09B9FFA200029361 /* CBGaimAccount.h in Headers */,
+				34B3243F09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h in Headers */,
+				34B3244409BA003C00029361 /* AILibgaimPlugin.h in Headers */,
+				34B3245309BA00E700029361 /* ESIRCAccount.h in Headers */,
+				34B3245909BA00FB00029361 /* ESIRCService.h in Headers */,
+				34B3246209BA015E00029361 /* AIService.h in Headers */,
+				34B3246309BA015E00029361 /* AIServiceIcons.h in Headers */,
+				34B3246409BA015E00029361 /* AIObject.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		34BD9D10053146CC000AB133 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -7172,6 +7241,71 @@
 			productReference = 349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */;
 			productType = "com.apple.product-type.tool";
 		};
+		34B322F609B9FEAC00029361 /* IRC Service Libgaim Plugin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 34B323BB09B9FEAC00029361 /* Build configuration list for PBXNativeTarget "IRC Service Libgaim Plugin" */;
+			buildPhases = (
+				34B322F909B9FEAC00029361 /* Headers */,
+				34B3234409B9FEAC00029361 /* Resources */,
+				34B3236E09B9FEAC00029361 /* Sources */,
+				34B323B609B9FEAC00029361 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
+					"Frameworks/AIUtilities Framework/build",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH/Libgaim.framework/Headers,
+					"Plugins/Gaim Service/Include/glib",
+					"Plugins/Gaim Service/Include/glib/glib",
+					"Plugins/Gaim Service/Include/glib/gmodule",
+					"Plugins/Gaim Service/Include/",
+				);
+				INFOPLIST_FILE = Plists/Gaim_Service.plist;
+				OTHER_LDFLAGS = "";
+				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
+				PRODUCT_NAME = Gaim;
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			name = "IRC Service Libgaim Plugin";
+			productName = Gaim;
+			productReference = 34B323C009B9FEAC00029361 /* IRC Service.AdiumLibgaimPlugin */;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Gaim</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Gaim</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
 		34BD9CD1053146CC000AB133 /* Adium */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E22085507450062B664 /* Build configuration list for PBXNativeTarget "Adium" */;
@@ -7611,6 +7745,7 @@
 				DACF3ED3085574D0006BFB18 /* External Frameworks */,
 				349C2EF90867AC97000BF883 /* AdiumApplescriptRunner */,
 				347A210E09786B5F00A30431 /* SystemVersionCheck */,
+				34B322F609B9FEAC00029361 /* IRC Service Libgaim Plugin */,
 			);
 		};
 /* End PBXProject section */
@@ -7660,6 +7795,13 @@
 				34C2DF03063498EF0018E5D2 /* terminator.png in Resources */,
 				4B03711606595A70008F5981 /* Template.html in Resources */,
 				3402E07607CB0FAA0044F818 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34B3234409B9FEAC00029361 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8191,6 +8333,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				349C2F470867AD16000BF883 /* ApplescriptRunner.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34B3236E09B9FEAC00029361 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34B3244009B9FFE800029361 /* ESIRCLibgaimServicePlugin.m in Sources */,
+				34B3245409BA00E700029361 /* ESIRCAccount.m in Sources */,
+				34B3245A09BA00FB00029361 /* ESIRCService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9776,6 +9928,70 @@
 			};
 			name = "Deployment-Debug";
 		};
+		34B323BC09B9FEAC00029361 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "/Users/evands/adium/Plists/Gaim_Service copy.plist";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PRODUCT_NAME = "IRC Service";
+				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
+			};
+			name = Development;
+		};
+		34B323BD09B9FEAC00029361 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "/Users/evands/adium/Plists/Gaim_Service copy.plist";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PRODUCT_NAME = "IRC Service";
+				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
+			};
+			name = Deployment;
+		};
+		34B323BE09B9FEAC00029361 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "/Users/evands/adium/Plists/Gaim_Service copy.plist";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PRODUCT_NAME = "IRC Service";
+				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
+			};
+			name = "Deployment-Debug";
+		};
+		34B323BF09B9FEAC00029361 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "/Users/evands/adium/Plists/Gaim_Service copy.plist";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PRODUCT_NAME = "IRC Service";
+				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		34BAF9840942598700689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -9846,7 +10062,11 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10223,7 +10443,11 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10248,7 +10472,11 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10273,6 +10501,11 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10822,6 +11055,17 @@
 				349C2F240867ACA9000BF883 /* Deployment */,
 				349C2F250867ACA9000BF883 /* Deployment-Debug */,
 				34BAF98B0942598800689991 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		34B323BB09B9FEAC00029361 /* Build configuration list for PBXNativeTarget "IRC Service Libgaim Plugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				34B323BC09B9FEAC00029361 /* Development */,
+				34B323BD09B9FEAC00029361 /* Deployment */,
+				34B323BE09B9FEAC00029361 /* Deployment-Debug */,
+				34B323BF09B9FEAC00029361 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
