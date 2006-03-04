@@ -414,11 +414,11 @@
 /*!
  * @brief Filter priority
  *
- * Filter at default priority
+ * Filter earlier than normal
  */
 - (float)filterPriority
 {
-	return DEFAULT_FILTER_PRIORITY;
+	return HIGH_FILTER_PRIORITY;
 }
 
 #pragma mark -
