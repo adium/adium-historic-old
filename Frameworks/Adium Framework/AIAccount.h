@@ -138,7 +138,6 @@ typedef enum {
 - (BOOL)suppressTypingNotificationChangesAfterSend;
 - (BOOL)supportsOfflineMessaging;
 - (BOOL)allowsNewlinesInMessages;
-- (BOOL)supportsServersideDisplayName;
 
 //Status
 - (NSSet *)supportedPropertyKeys;
@@ -184,6 +183,10 @@ typedef enum {
 
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize;
 
+@end
+
+@interface AIAccount (Private_ForSubclasses)
+- (void)gotFilteredDisplayName:(NSAttributedString *)attributedDisplayName;
 @end
 
 #import "AIAbstractAccount.h"
