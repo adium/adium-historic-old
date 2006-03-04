@@ -36,7 +36,6 @@
 - (const char*)protocolPlugin;
 - (GaimAccount*)gaimAccount;
 
-- (void)initSSL;
 - (void)createNewGaimAccount;
 
 - (void)dealloc;

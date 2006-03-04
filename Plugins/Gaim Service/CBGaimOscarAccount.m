@@ -32,15 +32,8 @@
 
 @implementation CBGaimOscarAccount
 
-gboolean gaim_init_oscar_plugin(void);
 - (const char*)protocolPlugin
 {
-	static BOOL didInitOscar = NO;
-	if (!didInitOscar) {
-		didInitOscar = gaim_init_oscar_plugin();
-		if (!didInitOscar) NSLog(@"CBGaimOscarAccount: Oscar plugin failed to load.");
-	}
-	
     return "prpl-oscar";
 }
 

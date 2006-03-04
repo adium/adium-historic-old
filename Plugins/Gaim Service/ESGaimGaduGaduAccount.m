@@ -27,11 +27,8 @@
 
 @implementation ESGaimGaduGaduAccount
 
-gboolean gaim_init_gg_plugin(void);
 - (const char*)protocolPlugin
 {
-	static BOOL didInitGG = NO;
-	if (!didInitGG) didInitGG = gaim_init_gg_plugin();
     return "prpl-gg";
 }
 
