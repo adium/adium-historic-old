@@ -35,6 +35,7 @@
 
 - (const char*)protocolPlugin;
 - (GaimAccount*)gaimAccount;
+- (const char *)gaimAccountName;
 
 - (void)createNewGaimAccount;
 
