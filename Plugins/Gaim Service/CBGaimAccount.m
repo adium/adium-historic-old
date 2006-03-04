@@ -1622,10 +1622,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}	
 
 	//Create a fresh version of the account
-    account = gaim_account_new([self gaimAccountName], [self protocolPlugin]);
-	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
-
-	[gaimThread addAdiumAccount:self];
+    if ((account = gaim_account_new([self gaimAccountName], [self protocolPlugin]))) {
+		account->perm_deny = GAIM_PRIVACY_DENY_USERS;
+		
+		[gaimThread addAdiumAccount:self];
+	} else {
+		AILog(@"Unable to create Libgaim account with name %s and protocol plugin %s",
+			  [self gaimAccountName], [self protocolPlugin]);
+		NSLog(@"Unable to create Libgaim account with name %s and protocol plugin %s",
+			  [self gaimAccountName], [self protocolPlugin]);
+	}
 }
 
 #pragma mark Disconnect
@@ -2323,7 +2329,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	permittedContactsArray = [[NSMutableArray alloc] init];
 	deniedContactsArray = [[NSMutableArray alloc] init];
-	
+
 	//We will create a gaimAccount the first time we attempt to connect
 	account = NULL;
 
