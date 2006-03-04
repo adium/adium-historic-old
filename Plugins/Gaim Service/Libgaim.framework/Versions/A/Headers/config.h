@@ -83,7 +83,7 @@ first (like Motorola and SPARC, unlike Intel and VAX). */
 /* #define ENABLE_NLS 0 */
 
 /* Define if plugins are enabled. */
-/* #undef GAIM_PLUGINS */
+#define GAIM_PLUGINS
 
 /* Define to 1 if you have `alloca', as a function or macro. */
 #define HAVE_ALLOCA 1
