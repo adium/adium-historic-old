@@ -117,11 +117,6 @@ static void adiumGaimCoreUiInit(void)
 	//Turn off buddy icon caching
 	gaim_buddy_icons_set_caching(FALSE);
 
-	//Kill the Gaim blist file each launch; it just causes trouble
-	[[NSFileManager defaultManager] removeFileAtPath:
-		[[[NSString stringWithUTF8String:gaim_user_dir()] stringByAppendingPathComponent:@"blist"] stringByAppendingPathExtension:@"xml"]
-											 handler:nil];
-
 	gaim_blist_load();
 	
 	//Configure signals for receiving gaim events

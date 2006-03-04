@@ -30,13 +30,8 @@
 
 #ifndef MEANWHILE_NOT_AVAILABLE
 
-gboolean gaim_init_sametime_plugin(void);
 - (const char*)protocolPlugin
 {
-	static gboolean didInitSametime = NO;
-	
-	[self initSSL];
-	if (!didInitSametime) didInitSametime = gaim_init_sametime_plugin(); 
     return "prpl-sametime";
 }
 

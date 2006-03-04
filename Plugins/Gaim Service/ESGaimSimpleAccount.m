@@ -12,8 +12,6 @@
 gboolean gaim_init_simple_plugin(void);
 - (const char*)protocolPlugin
 {
-	static BOOL didInitSimple = NO;
-	if (!didInitSimple) didInitSimple = gaim_init_simple_plugin();
     return "prpl-simple";
 }
 

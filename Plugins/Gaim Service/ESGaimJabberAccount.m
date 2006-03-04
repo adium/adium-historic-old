@@ -74,14 +74,9 @@
 	return correctUID;
 }
 
-gboolean gaim_init_jabber_plugin(void);
 - (const char*)protocolPlugin
 {
-	[self initSSL];
-
-	static BOOL				didInitJabber = NO;
-	if (!didInitJabber) didInitJabber = gaim_init_jabber_plugin();
-    return "prpl-jabber";
+   return "prpl-jabber";
 }
 
 - (NSSet *)supportedPropertyKeys

@@ -75,13 +75,8 @@
 	[super dealloc];
 }
 
-gboolean gaim_init_msn_plugin(void);
 - (const char*)protocolPlugin
 {
-	static BOOL didInitMSN = NO;
-
-	[self initSSL];
-	if (!didInitMSN) didInitMSN = gaim_init_msn_plugin();
     return "prpl-msn";
 }
 

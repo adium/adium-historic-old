@@ -219,28 +219,20 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 }
 
-
 - (void)initLibGaim
 {	
 	//Set the gaim user directory to be within this user's directory
 	NSString	*gaimUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libgaim"];
 	gaim_util_set_user_dir([[gaimUserDir stringByExpandingTildeInPath] UTF8String]);
 
-	/* Remove the accounts.xml before the core inits; if accounts init before the core, all sorts of stuff (status registration for example)
-	 * gets messed up because of static prpls.
-	 */
-	[[NSFileManager defaultManager] removeFileAtPath:
-		[[gaimUserDir stringByAppendingPathComponent:@"accounts"] stringByAppendingPathExtension:@"xml"]
-											 handler:nil];
-	
-	/* Set plugin search directories */
-/*
+	//Set plugin search directories
 	NSString	*gaimBundlePath = [[NSBundle bundleForClass:[SLGaimCocoaAdapter class]] bundlePath];
 	NSString	*frameworksPath = [[gaimBundlePath stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"Frameworks"];
-	NSString	*pluginsPath = [[[frameworksPath stringByAppendingPathComponent:@"Libgaim.framework"] stringByAppendingPathComponent:@"Resources"] stringByAppendingPathComponent:@"Plugins"];
+	NSString	*pluginsPath = [[frameworksPath stringByAppendingPathComponent:@"Libgaim.framework"] stringByAppendingPathComponent:@"Resources"];
 	gaim_plugins_add_search_path([pluginsPath UTF8String]);
-*/
 
+	//XXX Load .AdiumLibGaimPlugin bundles from our Plugins folder, giving them the chance to add their search paths
+	
 	gaim_core_set_ui_ops(adium_gaim_core_get_ops());
 	gaim_eventloop_set_ui_ops(adium_gaim_eventloop_get_ui_ops());
 

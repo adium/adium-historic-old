@@ -112,22 +112,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return gaimThread;
 }
 
-gboolean gaim_init_ssl_openssl_plugin(void);
-- (void)initSSL
-{
-	static BOOL didInitSSL = NO;
-
-	if (!didInitSSL) {
-		didInitSSL = gaim_init_ssl_openssl_plugin();
-		if (!didInitSSL) {
-			NSLog(@"*** Unabled to initialize openssl ***");
-			GaimDebug(@"*** Unabled to initialize openssl ***");
-		} else {
-			GaimDebug(@"+++ Initialized OpenSSL (%x).",gaim_ssl_get_ops());
-		}
-	}
-}
-
 // Subclasses must override this
 - (const char*)protocolPlugin { return NULL; }
 
