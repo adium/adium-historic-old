@@ -429,6 +429,17 @@
 		3496A8C207CE6B880055BBAB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3496A8C107CE6B880055BBAB /* InfoPlist.strings */; };
 		3496A8F407CE6D050055BBAB /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */; };
 		349710DD096C4C7700699948 /* Buttons.strings in Resources */ = {isa = PBXBuildFile; fileRef = 349710DB096C4C7700699948 /* Buttons.strings */; };
+		3497CBAA09BA0B4100C0428E /* libirc.so in Resources */ = {isa = PBXBuildFile; fileRef = 3497CBA909BA0B4100C0428E /* libirc.so */; };
+		3497CBAF09BA0B5D00C0428E /* ESIRCJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CBAD09BA0B5D00C0428E /* ESIRCJoinChatViewController.h */; };
+		3497CBB009BA0B5D00C0428E /* ESIRCJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3497CBAE09BA0B5D00C0428E /* ESIRCJoinChatViewController.m */; };
+		3497CBDB09BA0B9900C0428E /* DCJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CBDA09BA0B9900C0428E /* DCJoinChatViewController.h */; };
+		3497CBDE09BA0C0900C0428E /* ESIRCJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3497CBDD09BA0C0900C0428E /* ESIRCJoinChatView.nib */; };
+		3497CC0C09BA0D7900C0428E /* ESIRCAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CC0A09BA0D7900C0428E /* ESIRCAccountViewController.h */; };
+		3497CC0D09BA0D7900C0428E /* ESIRCAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3497CC0B09BA0D7900C0428E /* ESIRCAccountViewController.m */; };
+		3497CC1709BA0D9E00C0428E /* AIAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CC1609BA0D9E00C0428E /* AIAccountViewController.h */; };
+		3497CC1C09BA0DC100C0428E /* ESIRCAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC1B09BA0DC100C0428E /* ESIRCAccountView.nib */; };
+		3497CC2709BA0FDB00C0428E /* GaimDefaultsIRC.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC2609BA0FDB00C0428E /* GaimDefaultsIRC.plist */; };
+		3497CD4E09BA131400C0428E /* AIAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CD4D09BA131400C0428E /* AIAccount.h */; };
 		3499F4A806309AF60035B468 /* ESGaimRequestWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */; };
 		3499F4A906309AF60035B468 /* ESGaimRequestWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */; };
 		349C2F470867AD16000BF883 /* ApplescriptRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C2F460867AD16000BF883 /* ApplescriptRunner.m */; };
@@ -507,7 +518,6 @@
 		34AEE7EB08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AEE7E908E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m */; };
 		34B27295083ACA900092A5A0 /* DeadStrings.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B27293083ACA900092A5A0 /* DeadStrings.h */; };
 		34B323B809B9FEAC00029361 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
-		34B3243A09B9FFA200029361 /* CBGaimAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3243909B9FFA200029361 /* CBGaimAccount.h */; };
 		34B3243F09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3243D09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h */; };
 		34B3244009B9FFE800029361 /* ESIRCLibgaimServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3243E09B9FFE800029361 /* ESIRCLibgaimServicePlugin.m */; };
 		34B3244409BA003C00029361 /* AILibgaimPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3244309BA003C00029361 /* AILibgaimPlugin.h */; };
@@ -2331,6 +2341,17 @@
 		349710FF096C4D7F00699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_AU; path = Resources/en_AU.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
 		34971104096C4D9200699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_AU; path = Resources/en_AU.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		34971108096C4D9C00699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_AU; path = Resources/en_AU.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
+		3497CBA909BA0B4100C0428E /* libirc.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libirc.so; path = "Plugins/IRC Libgaim Plugin/libirc.so"; sourceTree = "<group>"; };
+		3497CBAD09BA0B5D00C0428E /* ESIRCJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESIRCJoinChatViewController.h; path = "Plugins/IRC Libgaim Plugin/ESIRCJoinChatViewController.h"; sourceTree = "<group>"; };
+		3497CBAE09BA0B5D00C0428E /* ESIRCJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESIRCJoinChatViewController.m; path = "Plugins/IRC Libgaim Plugin/ESIRCJoinChatViewController.m"; sourceTree = "<group>"; };
+		3497CBDA09BA0B9900C0428E /* DCJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCJoinChatViewController.h; path = "Frameworks/Adium Framework/DCJoinChatViewController.h"; sourceTree = "<group>"; };
+		3497CBDD09BA0C0900C0428E /* ESIRCJoinChatView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ESIRCJoinChatView.nib; path = "Plugins/IRC Libgaim Plugin/ESIRCJoinChatView.nib"; sourceTree = "<group>"; };
+		3497CC0A09BA0D7900C0428E /* ESIRCAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESIRCAccountViewController.h; path = "Plugins/IRC Libgaim Plugin/ESIRCAccountViewController.h"; sourceTree = "<group>"; };
+		3497CC0B09BA0D7900C0428E /* ESIRCAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESIRCAccountViewController.m; path = "Plugins/IRC Libgaim Plugin/ESIRCAccountViewController.m"; sourceTree = "<group>"; };
+		3497CC1609BA0D9E00C0428E /* AIAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountViewController.h; path = "Frameworks/Adium Framework/AIAccountViewController.h"; sourceTree = "<group>"; };
+		3497CC1B09BA0DC100C0428E /* ESIRCAccountView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ESIRCAccountView.nib; path = "Plugins/IRC Libgaim Plugin/ESIRCAccountView.nib"; sourceTree = "<group>"; };
+		3497CC2609BA0FDB00C0428E /* GaimDefaultsIRC.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = GaimDefaultsIRC.plist; path = "Plugins/IRC Libgaim Plugin/GaimDefaultsIRC.plist"; sourceTree = "<group>"; };
+		3497CD4D09BA131400C0428E /* AIAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccount.h; path = "Frameworks/Adium Framework/AIAccount.h"; sourceTree = "<group>"; };
 		3498FE9107F488EF0004B79A /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = "Plugins/Gaim Service/Italian.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9707F488FD0004B79A /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = "Plugins/Gaim Service/Dutch.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9807F489020004B79A /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = "Plugins/Gaim Service/French.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2515,8 +2536,6 @@
 		34B272180839E8FB0092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = Resources/is.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34B27293083ACA900092A5A0 /* DeadStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeadStrings.h; path = Source/DeadStrings.h; sourceTree = "<group>"; };
 		34B323C009B9FEAC00029361 /* IRC Service.AdiumLibgaimPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "IRC Service.AdiumLibgaimPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
-		34B323C109B9FEAD00029361 /* Gaim_Service copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "Gaim_Service copy.plist"; path = "Plists/Gaim_Service copy.plist"; sourceTree = "<group>"; };
-		34B3243909B9FFA200029361 /* CBGaimAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBGaimAccount.h; path = "Plugins/Gaim Service/CBGaimAccount.h"; sourceTree = "<group>"; };
 		34B3243D09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESIRCLibgaimServicePlugin.h; path = "Plugins/IRC Libgaim Plugin/ESIRCLibgaimServicePlugin.h"; sourceTree = "<group>"; };
 		34B3243E09B9FFE800029361 /* ESIRCLibgaimServicePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESIRCLibgaimServicePlugin.m; path = "Plugins/IRC Libgaim Plugin/ESIRCLibgaimServicePlugin.m"; sourceTree = "<group>"; };
 		34B3244309BA003C00029361 /* AILibgaimPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILibgaimPlugin.h; path = "Plugins/Gaim Service/AILibgaimPlugin.h"; sourceTree = "<group>"; };
@@ -3654,7 +3673,6 @@
 				4B3717000510D19400A8010A /* (Old Code, Disabled, etc) */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				34B323C109B9FEAD00029361 /* Gaim_Service copy.plist */,
 			);
 			name = CocAIMe2;
 			sourceTree = "<group>";
@@ -4294,6 +4312,19 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		3497CBB309BA0B6B00C0428E /* Headers from Elsewhere */ = {
+			isa = PBXGroup;
+			children = (
+				3497CC1609BA0D9E00C0428E /* AIAccountViewController.h */,
+				3497CBDA09BA0B9900C0428E /* DCJoinChatViewController.h */,
+				34B3245F09BA015E00029361 /* AIService.h */,
+				34B3246009BA015E00029361 /* AIServiceIcons.h */,
+				34B3246109BA015E00029361 /* AIObject.h */,
+				3497CD4D09BA131400C0428E /* AIAccount.h */,
+			);
+			name = "Headers from Elsewhere";
+			sourceTree = "<group>";
+		};
 		349C2F310867ACF7000BF883 /* ApplescriptRunner */ = {
 			isa = PBXGroup;
 			children = (
@@ -4376,16 +4407,21 @@
 		34B3241D09B9FF6900029361 /* IRC Libgaim Plugin */ = {
 			isa = PBXGroup;
 			children = (
-				34B3245F09BA015E00029361 /* AIService.h */,
-				34B3246009BA015E00029361 /* AIServiceIcons.h */,
-				34B3246109BA015E00029361 /* AIObject.h */,
-				34B3243909B9FFA200029361 /* CBGaimAccount.h */,
+				3497CBB309BA0B6B00C0428E /* Headers from Elsewhere */,
 				34B3243D09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h */,
 				34B3243E09B9FFE800029361 /* ESIRCLibgaimServicePlugin.m */,
 				34B3245109BA00E700029361 /* ESIRCAccount.h */,
 				34B3245209BA00E700029361 /* ESIRCAccount.m */,
 				34B3245709BA00FA00029361 /* ESIRCService.h */,
 				34B3245809BA00FB00029361 /* ESIRCService.m */,
+				3497CBA909BA0B4100C0428E /* libirc.so */,
+				3497CBAD09BA0B5D00C0428E /* ESIRCJoinChatViewController.h */,
+				3497CBAE09BA0B5D00C0428E /* ESIRCJoinChatViewController.m */,
+				3497CBDD09BA0C0900C0428E /* ESIRCJoinChatView.nib */,
+				3497CC0A09BA0D7900C0428E /* ESIRCAccountViewController.h */,
+				3497CC0B09BA0D7900C0428E /* ESIRCAccountViewController.m */,
+				3497CC1B09BA0DC100C0428E /* ESIRCAccountView.nib */,
+				3497CC2609BA0FDB00C0428E /* GaimDefaultsIRC.plist */,
 			);
 			name = "IRC Libgaim Plugin";
 			sourceTree = "<group>";
@@ -6566,7 +6602,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				34B3243A09B9FFA200029361 /* CBGaimAccount.h in Headers */,
 				34B3243F09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h in Headers */,
 				34B3244409BA003C00029361 /* AILibgaimPlugin.h in Headers */,
 				34B3245309BA00E700029361 /* ESIRCAccount.h in Headers */,
@@ -6574,6 +6609,11 @@
 				34B3246209BA015E00029361 /* AIService.h in Headers */,
 				34B3246309BA015E00029361 /* AIServiceIcons.h in Headers */,
 				34B3246409BA015E00029361 /* AIObject.h in Headers */,
+				3497CBAF09BA0B5D00C0428E /* ESIRCJoinChatViewController.h in Headers */,
+				3497CBDB09BA0B9900C0428E /* DCJoinChatViewController.h in Headers */,
+				3497CC0C09BA0D7900C0428E /* ESIRCAccountViewController.h in Headers */,
+				3497CC1709BA0D9E00C0428E /* AIAccountViewController.h in Headers */,
+				3497CD4E09BA131400C0428E /* AIAccount.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7802,6 +7842,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3497CBAA09BA0B4100C0428E /* libirc.so in Resources */,
+				3497CC2709BA0FDB00C0428E /* GaimDefaultsIRC.plist in Resources */,
+				3497CBDE09BA0C0900C0428E /* ESIRCJoinChatView.nib in Resources */,
+				3497CC1C09BA0DC100C0428E /* ESIRCAccountView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8343,6 +8387,8 @@
 				34B3244009B9FFE800029361 /* ESIRCLibgaimServicePlugin.m in Sources */,
 				34B3245409BA00E700029361 /* ESIRCAccount.m in Sources */,
 				34B3245A09BA00FB00029361 /* ESIRCService.m in Sources */,
+				3497CBB009BA0B5D00C0428E /* ESIRCJoinChatViewController.m in Sources */,
+				3497CC0D09BA0D7900C0428E /* ESIRCAccountViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9931,9 +9977,9 @@
 		34B323BC09B9FEAC00029361 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "/Users/evands/adium/Plists/Gaim_Service copy.plist";
+				HEADER_SEARCH_PATHS = "Plugins/Gaim\\ Service";
+				INFOPLIST_FILE = "/Users/evands/adium/Plists/IRC Service Libgaim.plist";
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
@@ -9947,9 +9993,9 @@
 		34B323BD09B9FEAC00029361 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "/Users/evands/adium/Plists/Gaim_Service copy.plist";
+				HEADER_SEARCH_PATHS = "Plugins/Gaim\\ Service";
+				INFOPLIST_FILE = "/Users/evands/adium/Plists/IRC Service Libgaim.plist";
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
@@ -9963,9 +10009,9 @@
 		34B323BE09B9FEAC00029361 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "/Users/evands/adium/Plists/Gaim_Service copy.plist";
+				HEADER_SEARCH_PATHS = "Plugins/Gaim\\ Service";
+				INFOPLIST_FILE = "/Users/evands/adium/Plists/IRC Service Libgaim.plist";
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
@@ -9979,9 +10025,9 @@
 		34B323BF09B9FEAC00029361 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "/Users/evands/adium/Plists/Gaim_Service copy.plist";
+				HEADER_SEARCH_PATHS = "Plugins/Gaim\\ Service";
+				INFOPLIST_FILE = "/Users/evands/adium/Plists/IRC Service Libgaim.plist";
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
