@@ -38,9 +38,8 @@
 
 @interface AICorePluginLoader (PRIVATE)
 - (void)loadPlugins;
-- (void)loadPluginAtPath:(NSString *)pluginName confirmLoading:(BOOL)confirmLoading;
-- (BOOL)confirmPluginAtPath:(NSString *)pluginPath;
-- (void)disablePlugin:(NSString *)pluginPath;
++ (BOOL)confirmPluginAtPath:(NSString *)pluginPath;
++ (void)disablePlugin:(NSString *)pluginPath;
 @end
 
 @implementation AICorePluginLoader
@@ -68,14 +67,14 @@
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:CONFIRMED_PLUGINS];
 		[[NSUserDefaults standardUserDefaults] setObject:[NSApp applicationVersion] forKey:CONFIRMED_PLUGINS_VERSION];
 	}
-	
-	
-	NSEnumerator	*enumerator = [[adium allResourcesForName:EXTERNAL_PLUGIN_FOLDER withExtensions:EXTENSION_ADIUM_PLUGIN] objectEnumerator];
+
+	NSEnumerator	*enumerator = [[adium allResourcesForName:EXTERNAL_PLUGIN_FOLDER
+											   withExtensions:EXTENSION_ADIUM_PLUGIN] objectEnumerator];
 	NSString		*path;
 
 	//Load any external plugins the user has installed
 	while ((path = [enumerator nextObject])) {
-		[self loadPluginAtPath:path confirmLoading:YES];
+		[[self class] loadPluginAtPath:path confirmLoading:YES pluginArray:pluginArray];
 	}
 	
 	NSString *internalPluginsPath = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath];
@@ -83,7 +82,9 @@
 	enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:internalPluginsPath] objectEnumerator];
 	while ((path = [enumerator nextObject])) {
 		if ([[path pathExtension] caseInsensitiveCompare:EXTENSION_ADIUM_PLUGIN] == 0)
-			[self loadPluginAtPath:[internalPluginsPath stringByAppendingPathComponent:path] confirmLoading:NO];
+			[[self class] loadPluginAtPath:[internalPluginsPath stringByAppendingPathComponent:path]
+							confirmLoading:NO
+							   pluginArray:pluginArray];
 	}
 }
 
@@ -112,8 +113,14 @@
 	[super dealloc];
 }
 
-//Load plugins from the specified path
-- (void)loadPluginAtPath:(NSString *)pluginPath confirmLoading:(BOOL)confirmLoading
+/*
+ * @brief Load plugins from the specified path
+ *
+ * @param pluginPath The path to the plugin bundle
+ * @param confirmLoading If YES, confirm loading of the plugin if it hasn't been loaded with this Adium version before
+ * @param inPluginArray May be nil.  If non-nil, an NSMutableArray to fill with an instance of the principal class (AIPlugin conforming) of each plugin which loads.
+ */
++ (void)loadPluginAtPath:(NSString *)pluginPath confirmLoading:(BOOL)confirmLoading pluginArray:(NSMutableArray *)inPluginArray
 {
 	BOOL			loadPlugin = YES;
 
@@ -141,7 +148,7 @@
 			
 			if (plugin) {
 				[plugin installPlugin];
-				[pluginArray addObject:plugin];
+				[inPluginArray addObject:plugin];
 				[plugin release];
 			} else {
 				NSLog(@"Failed to initialize Plugin \"%@\" (\"%@\")!",[pluginPath lastPathComponent],pluginPath);
@@ -168,7 +175,7 @@
 }
 
 //Confirm the presence of an external plugin with the user.  Returns YES if the plugin should be loaded.
-- (BOOL)confirmPluginAtPath:(NSString *)pluginPath
++ (BOOL)confirmPluginAtPath:(NSString *)pluginPath
 {
 	BOOL	loadPlugin = YES;
 	NSArray	*confirmed = [[NSUserDefaults standardUserDefaults] objectForKey:CONFIRMED_PLUGINS];
@@ -194,7 +201,7 @@
 }
 
 //Move a plugin to the disabled plugins folder
-- (void)disablePlugin:(NSString *)pluginPath
++ (void)disablePlugin:(NSString *)pluginPath
 {
 	NSString	*pluginName = [pluginPath lastPathComponent];
 	NSString	*basePath = [pluginPath stringByDeletingLastPathComponent];
