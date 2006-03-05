@@ -41,6 +41,28 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
+				<string>AdiumLibgaimPlugin</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumPlugin.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Adium Libgaim Plugin</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AdIM</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.libgaimplugin</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
 				<string>AdiumIcon</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
@@ -434,6 +456,29 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>AdiumPlugin</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.adiumx.xtra</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Adium X Libgaim plug-in</string>
+			<key>UTTypeIconFile</key>
+			<string>AdiumPlugin.icns</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.adiumx.libgaimplugin</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://xtras.adiumx.com</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<string>AdIM</string>
+				<key>public.filename-extension</key>
+				<array>
+					<string>AdiumLibgaimPlugin</string>
 				</array>
 			</dict>
 		</dict>
