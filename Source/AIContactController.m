@@ -1107,7 +1107,7 @@
  */
 - (AIMetaContact *)groupUIDs:(NSArray *)UIDsArray forServices:(NSArray *)servicesArray
 {
-	NSMutableSet	*internalObjectIDs = [NSMutableSet set];
+	NSMutableSet	*internalObjectIDs = [[NSMutableSet alloc] init];
 	AIMetaContact	*metaContact = nil;
 	NSEnumerator	*enumerator;
 	NSString		*internalObjectID;
@@ -1151,6 +1151,7 @@
 											   forKey:internalObjectID];			
 		}
 	}
+	[internalObjectIDs release];
 
 	return metaContact;
 }
