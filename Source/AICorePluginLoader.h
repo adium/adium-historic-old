@@ -22,4 +22,6 @@
     NSMutableArray			*pluginArray;
 }
 
++ (void)loadPluginAtPath:(NSString *)pluginName confirmLoading:(BOOL)confirmLoading pluginArray:(NSMutableArray *)pluginArray;
+
 @end
