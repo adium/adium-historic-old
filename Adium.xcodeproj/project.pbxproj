@@ -10019,7 +10019,11 @@
 		34B323BC09B9FEAC00029361 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Plugins/Gaim Service\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/Plugins/Gaim Service",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
 					"Plugins/Gaim Service/Include/glib",
@@ -10042,7 +10046,11 @@
 		34B323BD09B9FEAC00029361 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Plugins/Gaim Service\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/Plugins/Gaim Service",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
 					"Plugins/Gaim Service/Include/glib",
@@ -10065,7 +10073,11 @@
 		34B323BE09B9FEAC00029361 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Plugins/Gaim Service\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/Plugins/Gaim Service",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
 					"Plugins/Gaim Service/Include/glib",
@@ -10088,7 +10100,11 @@
 		34B323BF09B9FEAC00029361 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Plugins/Gaim Service\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/Plugins/Gaim Service",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
 					"Plugins/Gaim Service/Include/glib",
