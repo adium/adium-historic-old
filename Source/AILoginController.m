@@ -24,7 +24,7 @@
 
 //Paths & Filenames
 #define PATH_USERS 			@"/Users"		//Path of the users folder
-#define PATH_TRASH			@"~/.Trash"		//Path to the trash
+
 //Other
 #define DEFAULT_USER_NAME		@"Default"		//The default user name
 
