@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "GaimCommon.h"
 #import <Adium/AIAccount.h>
+#import "GaimCommon.h"
 
 @protocol AIAccount_Privacy;
 @class SLGaimCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus, AIWindowController;

@@ -15,10 +15,12 @@
  */
 
 #import "SLGaimCocoaAdapter.h"
+#import "AILibgaimPlugin.h"
 
 #import "AIAccountController.h"
 #import "AIInterfaceController.h"
 #import "AILoginController.h"
+#import "AICorePluginLoader.h"
 #import "CBGaimAccount.h"
 #import "ESGaimAIMAccount.h"
 #import "CBGaimOscarAccount.h"
@@ -93,6 +95,30 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	[gaimCocoaAdapter release];
 }
 
++ (void)loadLibgaimPlugins
+{
+	NSMutableArray	*pluginArray = [[NSMutableArray alloc] init];
+
+	NSEnumerator	*enumerator;
+	NSString		*libgaimPluginPath;
+	
+	enumerator = [[[AIObject sharedAdiumInstance] allResourcesForName:@"Plugins"
+													   withExtensions:@"AdiumLibgaimPlugin"] objectEnumerator];
+	while ((libgaimPluginPath = [enumerator nextObject])) {
+		[AICorePluginLoader loadPluginAtPath:libgaimPluginPath
+							  confirmLoading:YES
+								 pluginArray:pluginArray];
+	}
+	
+	//For each plugin, add the search path if there is one
+	id <AILibgaimPlugin>	plugin;
+	enumerator = [pluginArray objectEnumerator];
+	while ((plugin = [enumerator nextObject])) {
+		if ([plugin respondsToSelector:@selector(libgaimPluginPath)]) {
+			gaim_plugins_add_search_path([[plugin libgaimPluginPath] UTF8String]);
+		}
+	}
+}
 /*!
  * @brief Called early in the startup process by CBGaimServicePlugin to begin initializing Gaim
  *
@@ -106,7 +132,9 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	
 	//Obtain it
 	[gaimThreadCreationLock lock];
-	
+
+	[self loadLibgaimPlugins];
+
 	//Detach the thread which will serve for all gaim messaging in the future
 	[NSThread detachNewThreadSelector:@selector(_createThreadedGaimCocoaAdapter)
 							 toTarget:[self class]
@@ -225,14 +253,12 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	NSString	*gaimUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libgaim"];
 	gaim_util_set_user_dir([[gaimUserDir stringByExpandingTildeInPath] UTF8String]);
 
-	//Set plugin search directories
+	//Add the plugin search path for our built-in .so files
 	NSString	*gaimBundlePath = [[NSBundle bundleForClass:[SLGaimCocoaAdapter class]] bundlePath];
 	NSString	*frameworksPath = [[gaimBundlePath stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"Frameworks"];
 	NSString	*pluginsPath = [[frameworksPath stringByAppendingPathComponent:@"Libgaim.framework"] stringByAppendingPathComponent:@"Resources"];
 	gaim_plugins_add_search_path([pluginsPath UTF8String]);
 
-	//XXX Load .AdiumLibGaimPlugin bundles from our Plugins folder, giving them the chance to add their search paths
-	
 	gaim_core_set_ui_ops(adium_gaim_core_get_ops());
 	gaim_eventloop_set_ui_ops(adium_gaim_eventloop_get_ui_ops());
 
@@ -812,15 +838,16 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 
 //Called on the gaim thread, actually performs the specified command (it should have already been tested by 
 //attemptGaimCommandOnMessage:... above.
-- (void)gaimThreadDoCommand:(NSString *)originalMessage
-					   fromAccount:(id)sourceAccount
-							inChat:(AIChat *)chat
+- (NSNumber *)gaimThreadDoCommand:(NSString *)originalMessage
+					  fromAccount:(id)sourceAccount
+						   inChat:(AIChat *)chat
 {
 	GaimConversation	*conv = convLookupFromChat(chat, sourceAccount);
 	GaimCmdStatus		status;
 	char				*markup, *error;
 	const char			*cmd;
-	
+	BOOL				didCommand = NO;
+
 	cmd = [originalMessage UTF8String];
 	
 	//cmd+1 will be the cmd without the leading character, which should be "/"
@@ -832,22 +859,27 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		case GAIM_CMD_STATUS_FAILED:
 		{
 			gaim_conv_present_error(conv->name, conv->account, "Command failed");
-			
+			didCommand = YES;
 			break;
 		}	
 		case GAIM_CMD_STATUS_WRONG_ARGS:
 		{
 			gaim_conv_present_error(conv->name, conv->account, "Wrong number of arguments");
-			
+			didCommand = YES;			
 			break;
 		}
 		case GAIM_CMD_STATUS_OK:
-			/* All these statuses are taken care of by gaim_cmd_check_command */
+			didCommand = YES;
+			break;
 		case GAIM_CMD_STATUS_NOT_FOUND:
 		case GAIM_CMD_STATUS_WRONG_TYPE:
 		case GAIM_CMD_STATUS_WRONG_PRPL:
+			/* Ignore this command and let the message send; the user probably doesn't even know what they typed is a command */
+			didCommand = NO;
 			break;
 	}
+	NSLog(@"gaim thread says %i",didCommand);
+	return [NSNumber numberWithBool:didCommand];
 }
 
 /*
@@ -857,68 +889,17 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
  */
 - (BOOL)attemptGaimCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat
 {
-	GaimConversation	*conv;
-	GaimCmdStatus		status;
-	char				*markup;
-	const char			*cmd;
-	BOOL				didCommand;
+	BOOL				didCommand = NO;
 	
-	if (![originalMessage hasPrefix:@"/"]) {
-		return NO;
+	if ([originalMessage hasPrefix:@"/"]) {	
+		didCommand = [[self mainPerformSelector:@selector(gaimThreadDoCommand:fromAccount:inChat:)
+									 withObject:originalMessage
+									 withObject:sourceAccount withObject:chat returnValue:YES] boolValue];
 	}
-	
-	didCommand = NO;
-	cmd = [originalMessage UTF8String];
-	
-	//cmd+1 will be the cmd without the leading character, which should be "/"
-	markup = g_markup_escape_text(cmd+1, -1);
-#warning command
-	return didCommand;
 
-	conv = convLookupFromChat(chat, sourceAccount);
-//	status = gaim_cmd_check_command(conv, cmd+1, markup, &error);
-	AILog(@"Command status is %i",status);
-	g_free(markup);
-	
-	switch (status) {
-		case GAIM_CMD_STATUS_OK:
-			didCommand = YES;
-			//We're good to go (the arguments may be wrong, or it may fail, but it is an account-appropriate command);
-			//perform the command on the gaim thread.
-			[gaimThreadProxy gaimThreadDoCommand:originalMessage
-									 fromAccount:sourceAccount
-										  inChat:chat];
-			break;
-		case GAIM_CMD_STATUS_WRONG_ARGS:			
-		{
-			didCommand = YES;
-			
-			gaim_conv_present_error(conv->name, conv->account, "Wrong number of arguments");
-			
-			break;
-		}
-		case GAIM_CMD_STATUS_WRONG_TYPE:
-		{
-			//XXX Do we want to error on this or pretend there was no command?
-			didCommand = YES;
-			if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_IM) {
-				gaim_notify_error(gaim_account_get_connection(conv->account),"Attempted to use Chat command in IM",cmd,NULL);
-			} else {
-				gaim_notify_error(gaim_account_get_connection(conv->account),"Attempted to use IM command in Chat",cmd,NULL);
-			}
-		}
-		case GAIM_CMD_STATUS_FAILED:
-			/* We will never receive this from gaim_cmd_check_command() */
-			break;
-		case GAIM_CMD_STATUS_NOT_FOUND:
-		case GAIM_CMD_STATUS_WRONG_PRPL:
-			/* Ignore this command and let the message send; the user probably doesn't even know what they typed is a command */
-			break;
-	}		
-	
 	return didCommand;
 }
-	
+
 - (void)gaimThreadSendEncodedMessage:(NSString *)encodedMessage
 						 fromAccount:(id)sourceAccount
 							  inChat:(AIChat *)chat

@@ -98,5 +98,6 @@
 	}
 	
 	return shouldAttemptReconnect;
-}		
+}
+
 @end

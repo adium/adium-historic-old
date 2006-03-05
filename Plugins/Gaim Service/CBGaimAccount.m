@@ -784,7 +784,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	encodedString = (didCommand ?
 					 nil :
 					 [super encodedAttributedStringForSendingContentMessage:inContentMessage]);
-
+	NSLog(@"gaimaccount didcommand? %i",didCommand);
 	return encodedString;
 }
 
@@ -1196,16 +1196,17 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //By default, protocols can not create GaimXfer objects
 - (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	GaimPluginProtocolInfo	*prpl_info;
 	GaimXfer				*newGaimXfer = NULL;
 
 	if (account && gaim_account_get_connection(account)) {
-		GaimConnection *gc = gaim_account_get_connection(account);
-		prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl);
+		GaimPlugin				*prpl;
+		GaimPluginProtocolInfo  *prpl_info = ((prpl = gaim_find_prpl(account->protocol_id)) ?
+											  GAIM_PLUGIN_PROTOCOL_INFO(prpl) :
+											  NULL);
 
 		if (prpl_info && prpl_info->new_xfer) {
 			char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
-			newGaimXfer = (prpl_info->new_xfer)(gc, destsn);
+			newGaimXfer = (prpl_info->new_xfer)(gaim_account_get_connection(account), destsn);
 		}
 	}
 
@@ -1624,7 +1625,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//Create a fresh version of the account
     if ((account = gaim_account_new([self gaimAccountName], [self protocolPlugin]))) {
 		account->perm_deny = GAIM_PRIVACY_DENY_USERS;
-		
+
 		[gaimThread addAdiumAccount:self];
 	} else {
 		AILog(@"Unable to create Libgaim account with name %s and protocol plugin %s",
@@ -1986,10 +1987,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		 * image to one, and then pass libgaim the path. Check to be sure our image doesn't have an NSZeroSize size,
 		 * which would indicate currupt data */
 		if (image && !NSEqualSizes(NSZeroSize, imageSize)) {
-			GaimPluginProtocolInfo  *prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(gaim_find_prpl(account->protocol_id));
+			GaimPlugin				*prpl;
+			GaimPluginProtocolInfo  *prpl_info = ((prpl = gaim_find_prpl(account->protocol_id)) ?
+												  GAIM_PLUGIN_PROTOCOL_INFO(prpl) :
+												  NULL);
+
 			GaimDebug(@"Original image of size %f %f",imageSize.width,imageSize.height);
-			
-			
+
 			if (prpl_info && (prpl_info->icon_spec.format)) {
 				NSString	*buddyIconFilename = [self _userIconCachePath];
 				NSData		*buddyIconData = nil;
@@ -2179,7 +2183,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	NSMutableArray			*menuItemArray = nil;
 
 	if (account && gaim_account_is_connected(account)) {
-		GaimPluginProtocolInfo	*prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(account->gc->prpl);
+		GaimPlugin				*prpl;
+		GaimPluginProtocolInfo  *prpl_info = ((prpl = gaim_find_prpl(account->protocol_id)) ?
+											  GAIM_PLUGIN_PROTOCOL_INFO(prpl) :
+											  NULL);
 		GList					*l, *ll;
 		GaimBuddy				*buddy;
 		
