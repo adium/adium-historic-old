@@ -629,6 +629,9 @@
 				if ([contentMessage encodedMessage]) {
 					success = [sendingAccount sendMessageObject:contentMessage];
 				}
+			} else {
+				//If the account returns nil when encoding the attributed string, we shouldn't display it on-screen.
+				[contentMessage setDisplayContent:NO];
 			}
 		}
 
