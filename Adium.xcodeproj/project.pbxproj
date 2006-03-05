@@ -10024,6 +10024,7 @@
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(SRCROOT)/Frameworks",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
 					"Plugins/Gaim Service/Include/glib",
@@ -10051,6 +10052,7 @@
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(SRCROOT)/Frameworks",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
 					"Plugins/Gaim Service/Include/glib",
@@ -10078,6 +10080,7 @@
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(SRCROOT)/Frameworks",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
 					"Plugins/Gaim Service/Include/glib",
@@ -10105,6 +10108,7 @@
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(SRCROOT)/Frameworks",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
 					"Plugins/Gaim Service/Include/glib",
