@@ -10028,7 +10028,7 @@
 					"Plugins/Gaim Service/Include/",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
-				INFOPLIST_FILE = "/Users/evands/adium/Plists/IRC Service Libgaim.plist";
+				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
@@ -10051,7 +10051,7 @@
 					"Plugins/Gaim Service/Include/",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
-				INFOPLIST_FILE = "/Users/evands/adium/Plists/IRC Service Libgaim.plist";
+				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
@@ -10074,7 +10074,7 @@
 					"Plugins/Gaim Service/Include/",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
-				INFOPLIST_FILE = "/Users/evands/adium/Plists/IRC Service Libgaim.plist";
+				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
@@ -10097,7 +10097,7 @@
 					"Plugins/Gaim Service/Include/",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
-				INFOPLIST_FILE = "/Users/evands/adium/Plists/IRC Service Libgaim.plist";
+				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
