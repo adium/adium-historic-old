@@ -151,7 +151,7 @@ Boolean GetMetadataForHTMLLog(NSMutableDictionary *attributes, NSString *pathToF
 		const char *plainText = gaim_markup_strip_html([textContent UTF8String]);
 		[attributes setObject:[NSString stringWithUTF8String:plainText]
 					   forKey:(NSString *)kMDItemTextContent];
-		free(plainText);
+		free((void *)plainText);
 	}
 
 	[attributes setObject:serviceClass
