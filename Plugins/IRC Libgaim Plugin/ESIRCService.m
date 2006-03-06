@@ -9,6 +9,7 @@
 #import "ESIRCAccount.h"
 #import "ESIRCAccountViewController.h"
 #import "ESIRCJoinChatViewController.h"
+#import <AIUtilities/AIImageAdditions.h>
 
 @implementation ESIRCService
 //Account Creation
@@ -87,10 +88,8 @@
 	NSImage *baseImage = [NSImage imageNamed:@"irc" forClass:[self class]];
 	if (iconType == AIServiceIconSmall) {
 		[baseImage imageByScalingToSize:NSMakeSize(16, 16)];
-
-	} else {
-		return baseImage;
 	}
+		return baseImage;
 }
 
 @end
