@@ -37,6 +37,7 @@
 - (AIStatus *)actualStatusState;
 - (void)setStatusState:(AIStatus *)statusState;
 - (void)setStatusStateAndRemainOffline:(AIStatus *)statusState;
+- (NSString *)currentDisplayName;
 
 //Auto-Refreshing Status String
 - (NSAttributedString *)autoRefreshingOutgoingContentForStatusKey:(NSString *)key;
