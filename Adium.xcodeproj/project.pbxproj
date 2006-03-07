@@ -1207,6 +1207,8 @@
 		633F175D08F905A800C76383 /* AIXtrasManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175908F905A700C76383 /* AIXtrasManager.m */; };
 		636AB7F3087E2B6700A87670 /* AIDockBadger.h in Headers */ = {isa = PBXBuildFile; fileRef = 636AB7F1087E2B6700A87670 /* AIDockBadger.h */; };
 		63C120750910A0DD00C9DB57 /* DefaultXtraReadme.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 63C120740910A0DD00C9DB57 /* DefaultXtraReadme.rtf */; };
+		63DEB88F09BD3FEC0026DC69 /* AIXtraPreviewImageController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63DEB88D09BD3FEC0026DC69 /* AIXtraPreviewImageController.h */; };
+		63DEB89009BD3FEC0026DC69 /* AIXtraPreviewImageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEB88E09BD3FEC0026DC69 /* AIXtraPreviewImageController.m */; };
 		63EA62C9094B832D009C8453 /* AIEmoticonPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63EA62C7094B832D009C8453 /* AIEmoticonPreviewController.h */; };
 		63EA62CA094B832D009C8453 /* AIEmoticonPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA62C8094B832D009C8453 /* AIEmoticonPreviewController.m */; };
 		63EA62EF094B8705009C8453 /* AIXtraInfoController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63EA62ED094B8705009C8453 /* AIXtraInfoController.h */; };
@@ -3212,6 +3214,8 @@
 		636AB7F1087E2B6700A87670 /* AIDockBadger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIDockBadger.h; sourceTree = "<group>"; };
 		636AB7F2087E2B6700A87670 /* AIDockBadger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIDockBadger.m; sourceTree = "<group>"; };
 		63C120740910A0DD00C9DB57 /* DefaultXtraReadme.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = DefaultXtraReadme.rtf; path = Resources/DefaultXtraReadme.rtf; sourceTree = "<group>"; };
+		63DEB88D09BD3FEC0026DC69 /* AIXtraPreviewImageController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraPreviewImageController.h; path = Source/AIXtraPreviewImageController.h; sourceTree = "<group>"; };
+		63DEB88E09BD3FEC0026DC69 /* AIXtraPreviewImageController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraPreviewImageController.m; path = Source/AIXtraPreviewImageController.m; sourceTree = "<group>"; };
 		63EA62C7094B832D009C8453 /* AIEmoticonPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPreviewController.h; path = Source/AIEmoticonPreviewController.h; sourceTree = "<group>"; };
 		63EA62C8094B832D009C8453 /* AIEmoticonPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPreviewController.m; path = Source/AIEmoticonPreviewController.m; sourceTree = "<group>"; };
 		63EA62ED094B8705009C8453 /* AIXtraInfoController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraInfoController.h; path = Source/AIXtraInfoController.h; sourceTree = "<group>"; };
@@ -5829,6 +5833,8 @@
 				63EA62C8094B832D009C8453 /* AIEmoticonPreviewController.m */,
 				632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */,
 				632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */,
+				63DEB88D09BD3FEC0026DC69 /* AIXtraPreviewImageController.h */,
+				63DEB88E09BD3FEC0026DC69 /* AIXtraPreviewImageController.m */,
 				63336E14094AB81300970871 /* XtraInfoView.nib */,
 				6333699309497DB000970871 /* EmoticonPreviewView.nib */,
 				63336B050949908300970871 /* DockIconPreviewView.nib */,
@@ -6636,6 +6642,7 @@
 				3497CC0C09BA0D7900C0428E /* ESIRCAccountViewController.h in Headers */,
 				3497CC1709BA0D9E00C0428E /* AIAccountViewController.h in Headers */,
 				3497CD4E09BA131400C0428E /* AIAccount.h in Headers */,
+				63DEB88F09BD3FEC0026DC69 /* AIXtraPreviewImageController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8431,6 +8438,7 @@
 				34B3245A09BA00FB00029361 /* ESIRCService.m in Sources */,
 				3497CBB009BA0B5D00C0428E /* ESIRCJoinChatViewController.m in Sources */,
 				3497CC0D09BA0D7900C0428E /* ESIRCAccountViewController.m in Sources */,
+				63DEB89009BD3FEC0026DC69 /* AIXtraPreviewImageController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
