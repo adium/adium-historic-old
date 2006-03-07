@@ -426,6 +426,47 @@
 {
 	return [self arrayOfSelectedItems];
 }
+#pragma mark Drag & Drop Drawing
+-(void)_drawDropHighlightOnRow:(int)rowIndex
+{
+	float widthOffset = 5.0;
+	float heightOffset = 1.0;
+	[self lockFocus];
+	NSRect drawRect = [self rectOfRow:rowIndex];
+	
+	drawRect.size.width -= widthOffset;
+	drawRect.origin.x += widthOffset/2.0;
+	
+	drawRect.size.height -= heightOffset;
+	drawRect.origin.y += heightOffset/2.0;
+	
+	[[[NSColor blueColor]colorWithAlphaComponent:0.2]set];
+	NSBezierPath	*filler = [self bezierPathWithRoundRectInRect:drawRect radius:4.0];
+	[filler fill];
+	
+	[[[NSColor blueColor]colorWithAlphaComponent:0.8]set];
+	[NSBezierPath setDefaultLineWidth:2.0];
+	NSBezierPath	*stroker = [self bezierPathWithRoundRectInRect:drawRect radius:4.0];
+	[stroker stroke];
+	[self unlockFocus];
+}
+
+- (NSBezierPath *)bezierPathWithRoundRectInRect:(NSRect)aRect radius:(float)radius
+{
+	NSBezierPath	*path = [NSBezierPath bezierPath];
+	radius = MIN(radius, 0.5f * MIN(NSWidth(aRect), NSHeight(aRect)));
+	NSRect rect = NSInsetRect(aRect, radius, radius);
+	[path appendBezierPathWithArcWithCenter:NSMakePoint(NSMinX(rect), NSMinY(rect)) 
+									 radius:radius startAngle:180.0 endAngle:270.0];
+	[path appendBezierPathWithArcWithCenter:NSMakePoint(NSMaxX(rect), NSMinY(rect)) 
+									 radius:radius startAngle:270.0 endAngle:360.0];
+	[path appendBezierPathWithArcWithCenter:NSMakePoint(NSMaxX(rect), NSMaxY(rect)) 
+									 radius:radius startAngle:  0.0 endAngle: 90.0];
+	[path appendBezierPathWithArcWithCenter:NSMakePoint(NSMinX(rect), NSMaxY(rect)) 
+									 radius:radius startAngle: 90.0 endAngle:180.0];
+	[path closePath];
+	return path;
+}
 
 @end
 
