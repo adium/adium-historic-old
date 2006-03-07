@@ -61,8 +61,9 @@
 			resourcePath = [[xtraBundle resourcePath] retain];
 			icon = [[NSImage alloc] initByReferencingFile:[xtraBundle pathForResource:@"Icon" ofType:@"icns"]];
 			readMePath = [[xtraBundle pathForResource:@"ReadMe" ofType:@"rtf"] retain];
-			
-
+			NSString *previewImagePath = [xtraBundle pathForImageResource:@"PreviewImage"];
+			if(previewImagePath)
+				previewImage = [[NSImage alloc] initByReferencingFile:previewImagePath];
 		}
 		else {
 			[self setName:[[path lastPathComponent] stringByDeletingPathExtension]];
@@ -72,6 +73,8 @@
 			readMePath = [[[NSBundle mainBundle] pathForResource:@"DefaultXtraReadme" ofType:@"rtf"] retain];
 		if(!icon)
 			icon = [[[NSWorkspace sharedWorkspace] iconForFile:path]retain];
+		if(!previewImage)
+			previewImage = [icon retain];
 	}
 	return self;
 }
@@ -84,6 +87,7 @@
 - (void) dealloc
 {
 	[icon release];
+	[previewImage release];
 	[path release];
 	[name release];
 	[resourcePath release];
@@ -110,6 +114,11 @@
 - (NSBundle *)bundle
 {
 	return xtraBundle;
+}
+
+- (NSImage *)previewImage
+{
+	return previewImage;
 }
 
 @end

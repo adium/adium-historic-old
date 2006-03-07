@@ -72,9 +72,10 @@ static AIXtrasManager * manager;
 		[previewContainerView setAutohidesScrollers:YES];
 		[previewContainerView setBorderType:NSBezelBorder];
 		
-		[self setCategory:nil];		
+		[self setCategory:nil];
 	}
-	
+	[self setCategory:nil];//Hax. This shouldn't be needed, but it is.
+		
 	[window makeKeyAndOrderFront:nil];
 }
 
@@ -178,10 +179,11 @@ static NSImage * scriptImage;
 - (void) updatePreview
 {
 	AIXtraInfo * xtra = [selectedCategory objectAtIndex:[xtraList selectedRow]];
-	//[showInfoControl setHidden:NO];
+	[showInfoControl setHidden:NO];
 	if(showInfo)
 		[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
 	else {
+		[NSBundle loadNibNamed:@"XtraPreviewImageView" owner:self];
 	/*	NSString * xtraType = [xtra type];
 		
 		if ([xtraType isEqualToString:AIXtraTypeEmoticons])
@@ -193,15 +195,21 @@ static NSImage * scriptImage;
 		else if ([xtraType isEqualToString:AIXtraTypeStatusIcons]) {
 			[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self];
 		}
-		else {*/ //catchall behavior is to just show the readme
+		else { //catchall behavior is to just show the readme
 			[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
 			[showInfoControl setHidden:YES];
-		//}
+		}*/
 	}
-	
-	if(previewController)
+	if(previewController/* && previewContainerView*/)
 	{
-		[previewContainerView setDocumentView:[previewController previewView]];
+		NSView *pv = [previewController previewView];
+		NSSize docSize = [previewContainerView documentVisibleRect].size;
+		NSRect viewFrame = [pv frame];
+		viewFrame.size.width = docSize.width;
+		if([pv respondsToSelector:@selector(image)]) viewFrame.size.height = [[(NSImageView *)pv image]size].height;
+		if(viewFrame.size.height < docSize.height) viewFrame.size.height = docSize.height;
+		[pv setFrameSize:viewFrame.size];
+		[previewContainerView setDocumentView:pv];
 		[previewController setXtra:xtra];
 		[previewContainerView setNeedsDisplay:YES];
 	}	

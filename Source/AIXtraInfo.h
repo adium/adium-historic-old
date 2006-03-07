@@ -21,6 +21,7 @@
 	NSString		*name;
 	NSString		*path;
 	NSImage			*icon;
+	NSImage			*previewImage;
 	NSString		*resourcePath;
 	NSString		*type;
 	NSString		*readMePath;
@@ -36,6 +37,7 @@
 - (NSString *)resourcePath;
 - (NSString *)readMePath;
 - (NSImage *)icon;
+- (NSImage *)previewImage;
 - (void)setName:(NSString *)name;
 - (NSBundle *)bundle; //returns nil if no bundle is available
 @end
