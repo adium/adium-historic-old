@@ -125,21 +125,13 @@ AISearchPathForDirectoriesInDomains(unsigned directory, unsigned domainMask, BOO
 			(domainMask & NSUserDomainMask)) {
 			NSString *path = [[[AIObject sharedAdiumInstance] applicationSupportDirectory] stringByAppendingPathComponent:adiumResourceName];
 
-			// But we don't want duplicate items
-			NSEnumerator *existingSearchPaths = [dirs objectEnumerator];
-			NSString *enumPath;
-			
-			while ((enumPath = [existingSearchPaths nextObject])) {
-				if ([path isEqualToString:enumPath]) {
-					[dirs removeObject:enumPath];
+			if (![dirs containsObject:path]) {
+				//Our application support directory should always be first
+				if ([dirs count]) {
+					[dirs insertObject:path atIndex:0];
+				} else {
+					[dirs addObject:path];			
 				}
-			}
-			
-			//Our application support directory should always be first
-			if ([dirs count]) {
-				[dirs insertObject:path atIndex:0];
-			} else {
-				[dirs addObject:path];			
 			}
 		}
 	}
