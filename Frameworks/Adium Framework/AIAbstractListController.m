@@ -608,6 +608,7 @@
 	
 	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",@"AIListObjectUniqueIDs",nil] owner:self];
 	[pboard setString:@"Private" forType:@"AIListObject"];
+	[self setShowTooltips:NO];
 	
 	return YES;
 }
@@ -632,7 +633,10 @@
 {
 	if (dragItems) {
 		[dragItems release]; dragItems = nil;
-	}	
+	}
+	
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+	[self setShowTooltips:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS] boolValue]];
 }
 
 - (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
