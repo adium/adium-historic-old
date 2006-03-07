@@ -599,10 +599,7 @@
  * the drag items array.
  */
 - (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
-{
-	//Kill any selections
-	[outlineView deselectAll:nil];
-	
+{	
 	//Begin the drag
 	if (dragItems != items) {
 		[dragItems release];

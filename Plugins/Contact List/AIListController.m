@@ -464,6 +464,10 @@ typedef enum {
 	
 	//No dropping into contacts
     if ([avaliableType isEqualToString:@"AIListObject"]) {
+		if (index != NSOutlineViewDropOnItemIndex && (![[[[adium contactController] activeSortController] identifier] isEqualToString:@"ManualSort"])) {
+			//disable drop between for non-Manual Sort.
+			return NSDragOperationNone;
+		}
 		id	primaryDragItem = [dragItems objectAtIndex:0];
 		
 		if ([primaryDragItem isKindOfClass:[AIListGroup class]]) {
@@ -478,12 +482,11 @@ typedef enum {
 			
 		} else {
 			//Disallow dragging contacts onto anything besides a group
-			if (index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]) {
+			if (allowBetweenContactDrop == YES && ![item isKindOfClass:[AIListGroup class]]) {
 				[outlineView setDropItem:item dropChildIndex:NSOutlineViewDropOnItemIndex];
 			}
 			
 		}
-		
 		if (index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]) {
 			retVal = NSDragOperationCopy;
 		}
@@ -501,6 +504,8 @@ typedef enum {
 	NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
 	
     if ([availableType isEqualToString:@"AIListObject"]) {
+		//Kill the selection now, (in a more finder-esque way)
+		[outlineView deselectAll:nil];
 		//The tree root is not associated with our root contact list group, so we need to make that association here
 		if (item == nil) item = contactList;
 
