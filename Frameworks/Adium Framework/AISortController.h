@@ -41,6 +41,7 @@ typedef int(*sortfunc)(id, id, BOOL);
 - (NSArray *)sortListObjects:(NSArray *)inObjects;
 - (NSView *)configureView;
 - (void)forceIgnoringOfGroups:(BOOL)shouldForce;
+- (BOOL)canSortManually;
 
 //For subclasses to override
 - (NSString *)identifier;

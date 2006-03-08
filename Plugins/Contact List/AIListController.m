@@ -22,6 +22,7 @@
 #import "AIInterfaceController.h"
 #import "AIListController.h"
 #import "AIPreferenceController.h"
+#import "AISortController.h"
 #import "ESFileTransfer.h"
 #import "AIListWindowController.h"
 #import <Adium/AIListContact.h>
@@ -464,7 +465,7 @@ typedef enum {
 	
 	//No dropping into contacts
     if ([avaliableType isEqualToString:@"AIListObject"]) {
-		if (index != NSOutlineViewDropOnItemIndex && (![[[[adium contactController] activeSortController] identifier] isEqualToString:@"ManualSort"])) {
+		if (index != NSOutlineViewDropOnItemIndex && (![[[adium contactController] activeSortController] canSortManually])) {
 			//disable drop between for non-Manual Sort.
 			return NSDragOperationNone;
 		}

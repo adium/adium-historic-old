@@ -17,7 +17,10 @@
 #import "AIListContact.h"
 #import "AIListGroup.h"
 #import "AISortController.h"
+#import "AIPreferenceController.h"
 #import <AIUtilities/AIStringAdditions.h>
+
+#define KEY_RESOLVE_ALPHABETICALLY  @"Status:Resolve Alphabetically"
 
 int basicGroupVisibilitySort(id objectA, id objectB, void *context);
 int basicVisibilitySort(id objectA, id objectB, void *context);
@@ -123,6 +126,18 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	} else {
 		alwaysSortGroupsToTop = [self alwaysSortGroupsToTopByDefault];
 	}
+}
+
+/*
+ * @brief Should we be sorted?
+ *
+ * @param canSortManually If YES, We should allow manual sorting. If NO, disable it.
+ */
+- (BOOL)canSortManually {
+	if([[self identifier] isEqualToString:@"ManualSort"] || (![[[[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING] objectForKey:KEY_RESOLVE_ALPHABETICALLY] boolValue])) {
+		return YES;
+	}
+	return NO;
 }
 
 //Sorting -------------------------------------------------------------------------------------------------------
