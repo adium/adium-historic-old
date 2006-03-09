@@ -589,6 +589,19 @@
 	return [self statusObjectForKey:@"StatusMessage"];
 }
 
+/*
+ * @brief Return the status message for this object as NSString
+ *
+ * The statusMessageString may supplement the statusType and statusName with a message describing the object's status; in AIM,
+ * for example, both available and away statuses can have an associated, user-set message.
+ *
+ * @result The NSString statusMessage, or nil if none is set
+ */
+- (NSString *)statusMessageString;
+{
+	return [[self statusObjectForKey:@"StatusMessage"] string];
+}
+
 /*!
  * @brief Is this object connected via a mobile device?
  *

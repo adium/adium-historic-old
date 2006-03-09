@@ -312,7 +312,7 @@
 					<key>Name</key>
 					<string>status</string>
 				</dict>
-				<key>statusMessage</key>
+				<key>statusMessageString</key>
 				<dict>
 					<key>Description</key>
 					<string>A message describing the status of this contact or account ('away message' in AIM terminology).</string>

@@ -119,6 +119,7 @@ typedef enum {
 - (AIStatusType)statusType;
 - (void)setStatusWithName:(NSString *)statusName statusType:(AIStatusType)statusType notify:(NotifyTiming)notify;
 - (NSAttributedString *)statusMessage;
+- (NSString *)statusMessageString;
 - (void)setStatusMessage:(NSAttributedString *)statusMessage notify:(NotifyTiming)notify;
 - (void)setBaseAvailableStatusAndNotify:(NotifyTiming)notify;
 - (AIStatusSummary)statusSummary;
