@@ -289,7 +289,7 @@
 					<key>Type</key>
 					<string>NSNumber&lt;AIStatusSummary&gt;</string>
 				</dict>
-				<key>statusMessage</key>
+				<key>statusMessageString</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>Amsg</string>
