@@ -67,6 +67,8 @@
 	[textField_editor removeFromSuperview];
 	[textField_editor release]; textField_editor = nil;
 
+	[self setFrame:[self frame]];
+
 	[self resetCursorRects];
 }
 
