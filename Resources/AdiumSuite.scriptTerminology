@@ -310,7 +310,7 @@
 					<key>Description</key>
 					<string>The status of this contact or account.</string>
 					<key>Name</key>
-					<string>status</string>
+					<string>status type</string>
 				</dict>
 				<key>statusMessageString</key>
 				<dict>
