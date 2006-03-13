@@ -80,7 +80,7 @@ static NSArray *draggedTypes = nil;
 {
     //init
     if ((self = [super init]))
-	{
+	{		
 		[self _initWebView];
 
 		chat = [inChat retain];
@@ -921,9 +921,9 @@ static NSArray *draggedTypes = nil;
 									   name:ListObject_AttributesChanged
 									 object:[chat account]];
 	
-	//We've now masked every user currently in the pariticpating list objects
+	//We've now masked every user currently in the participating list objects
 	[objectsWithUserIconsArray release]; 
-	objectsWithUserIconsArray = [participatingListObjects mutableCopy];
+	objectsWithUserIconsArray = [participatingListObjects mutableCopy];	
 }
 
 /*!
@@ -1013,7 +1013,7 @@ static NSArray *draggedTypes = nil;
 		
 		/*
 		 * Writing the icon out is necessary for webkit to be able to use it; it also guarantees that there won't be
-		 * any animation, which is good since animation in the messagae view is slow and annoying.
+		 * any animation, which is good since animation in the message view is slow and annoying.
 		 */
 		webKitUserIconPath = [self _webKitUserIconPathForObject:inObject];
 		if ([[webKitUserIcon TIFFRepresentation] writeToFile:webKitUserIconPath
@@ -1025,6 +1025,14 @@ static NSArray *draggedTypes = nil;
 			//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
 			if (![objectsWithUserIconsArray containsObjectIdenticalTo:inObject]) {
 				[objectsWithUserIconsArray addObject:inObject];
+			}
+			
+			DOMNodeList *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
+			for(int i = 0; i < [images length]; i++)
+			{
+				DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
+				if([[img getAttribute:@"src"] rangeOfString:[inObject internalObjectID]].location != NSNotFound)
+					[img setSrc:webKitUserIconPath];
 			}
 		}
 	}
