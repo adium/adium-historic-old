@@ -164,6 +164,16 @@
 										 withMessage:nil];
 				}
 				
+			} else if ([host caseInsensitiveCompare:@"im"] == NSOrderedSame) {
+				// ymsgr://im?to=tekjew
+				NSString *name = [[[url queryArgumentForKey:@"to"] stringByDecodingURLEscapes] compactedString];
+				
+				if (name) {
+					[self _openChatToContactWithName:name
+										   onService:serviceID
+										 withMessage:nil];
+				}
+				
 			} else if ([host caseInsensitiveCompare:@"gochat"]  == NSOrderedSame) {
 				// aim://gochat?RoomName=AdiumRocks
 				NSString	*roomname = [[url queryArgumentForKey:@"roomname"] stringByDecodingURLEscapes];
