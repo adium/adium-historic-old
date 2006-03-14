@@ -102,7 +102,7 @@
 				nil];
 		}
 		newScheme = [schemeMappingDict objectForKey:scheme];
-		if (newScheme && ![newScheme isEqualToString:scheme]) {
+		if (newScheme) {
 			scheme = newScheme;
 			eventString = [NSString stringWithFormat:@"%@:%@", scheme, [url resourceSpecifier]];
 			url = [NSURL URLWithString:eventString];
