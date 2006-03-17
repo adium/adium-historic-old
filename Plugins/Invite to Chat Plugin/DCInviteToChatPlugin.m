@@ -108,7 +108,6 @@
 	NSMenu			*menu_chatMenu = nil;
 	NSDictionary	*serviceDict;
 	NSString		*serviceClass;
-	int i;
 	
 	if (contact && ![contact isKindOfClass:[AIListGroup class]]) {
 		NSEnumerator *enumerator;
@@ -132,7 +131,7 @@
 			}
 			
 			// Loop through all chats
-			for (i = 0; i < [openChats count]; i++) {
+			for (int i = 0; i < [openChats count]; i++) {
 				chat = [openChats objectAtIndex:i];
 				
 				// Is this the same serviceClass as this contact?				

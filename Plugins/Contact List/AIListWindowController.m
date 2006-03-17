@@ -289,7 +289,7 @@
 		
 		if (forcedWindowWidth != -1) {
 			/*
-			 If we have a forced width but we are doing no autoresizing, set our frame now so we don't have t be doing checks every time
+			 If we have a forced width but we are doing no autoresizing, set our frame now so we don't have to be doing checks every time
 			 contactListDesiredSizeChanged is called.
 			 */
 			if (!(autoResizeVertically || autoResizeHorizontally)) {
@@ -504,14 +504,13 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	NSArray *screens = [NSScreen screens];
 	int numScreens = [screens count];
-	int i;
 	
 	if (numScreens > 0) {
 		//The menubar screen is a special case - the menubar is not a part of the rect we're interested in
 		NSScreen *menubarScreen = [screens objectAtIndex:0];
 		screenSlideBoundaryRect = [menubarScreen frame];
 		screenSlideBoundaryRect.size.height = NSMaxY([menubarScreen visibleFrame]) - NSMinY([menubarScreen frame]);
-		for (i = 1; i < numScreens; i++) {
+		for (int i = 1; i < numScreens; i++) {
 			screenSlideBoundaryRect = NSUnionRect(screenSlideBoundaryRect, [[screens objectAtIndex:i] frame]);
 		}		
 	}

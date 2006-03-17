@@ -84,19 +84,26 @@
 			head.appendChild( documentFragment );
 		}
 		
-		//Swap an image with its alt-tag text on click
+		//Swap an image with its alt-tag text on click, or expand/unexpand an attached image
 		document.onclick = imageCheck;
 		function imageCheck() {		
 			node = event.target;
-			if(node.tagName == 'IMG' && node.alt) {
-				a = document.createElement('a');
-				a.setAttribute('onclick', 'imageSwap(this)');
-				a.setAttribute('src', node.src);
-				text = document.createTextNode(node.alt);
-				a.appendChild(text);
-				node.parentNode.replaceChild(a, node);
-			}
+			if(node.tagName == 'IMG') {
+                if(node.className == 'attachedImage')
+                    node.setAttribute('class', 'attachedImageExpanded');
+                else if(node.className == 'attachedImageExpanded')
+                    node.setAttribute('class', 'attachedImage');
+                else if(node.alt) {
+                    a = document.createElement('a');
+                    a.setAttribute('onclick', 'imageSwap(this)');
+                    a.setAttribute('src', node.src);
+                    text = document.createTextNode(node.alt);
+                    a.appendChild(text);
+                    node.parentNode.replaceChild(a, node);
+                }
+            }
 		}
+
 		function imageSwap(node) {
 			shouldScroll = nearBottom();
 
@@ -138,6 +145,7 @@
 	<style id="baseStyle" type="text/css" media="screen,print">	
 		%@  
 		*{ word-wrap:break-word; }
+		img.attachedImage { height:auto; width:100%; }
 	</style>
 	
 	<!-- Although we call this mainStyle for legacy reasons, it's actually the variant style !-->

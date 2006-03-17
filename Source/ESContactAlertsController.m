@@ -38,8 +38,7 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 {
 	static BOOL didInitialize = NO;
 	if (!didInitialize) {
-		int i;
-		for (i = 0; i < EVENT_HANDLER_GROUP_COUNT; i++) {
+		for (int i = 0; i < EVENT_HANDLER_GROUP_COUNT; i++) {
 			eventHandlersByGroup[i] = nil;
 			globalOnlyEventHandlersByGroup[i] = nil;
 		}

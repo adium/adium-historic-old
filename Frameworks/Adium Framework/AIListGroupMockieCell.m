@@ -27,8 +27,7 @@
 {
 	AIListGroupMockieCell *newCell = [super copyWithZone:zone];
 	
-	int i;
-	for (i = 0; i < NUMBER_OF_GROUP_STATES; i++) {
+	for (int i = 0; i < NUMBER_OF_GROUP_STATES; i++) {
 		newCell->_mockieGradient[i] = [_mockieGradient[i] retain];
 	}
 	
@@ -40,8 +39,7 @@
 {
 	if ((self = [super init]))
 	{
-		int i;
-		for (i = 0; i < NUMBER_OF_GROUP_STATES; i++) {
+		for (int i = 0; i < NUMBER_OF_GROUP_STATES; i++) {
 			_mockieGradient[i] = nil;
 		}
 	}
@@ -113,8 +111,7 @@
 //Remake of flushGradientCache, supporting 2 gradients depending on group state
 - (void)flushGradientCache
 {
-	int i;
-	for (i = 0; i < NUMBER_OF_GROUP_STATES; i++) {
+	for (int i = 0; i < NUMBER_OF_GROUP_STATES; i++) {
 		[_mockieGradient[i] release]; _mockieGradient[i] = nil;
 		_mockieGradientSize[i] = NSMakeSize(0,0);
 	}
