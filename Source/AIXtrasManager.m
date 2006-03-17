@@ -232,8 +232,7 @@ static NSImage * scriptImage;
 		NSIndexSet * indices = [xtraList selectedRowIndexes];
 		NSMutableSet * pathExtensions = [NSMutableSet set];
 		NSString * path;
-		int i;
-		for (i = [indices lastIndex]; i >= 0; i--) {
+		for (int i = [indices lastIndex]; i >= 0; i--) {
 			if ([indices containsIndex:i]) {
 				path = [[selectedCategory objectAtIndex:i] path];
 				[pathExtensions addObject:[path pathExtension]];

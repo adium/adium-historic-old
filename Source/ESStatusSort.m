@@ -124,8 +124,7 @@ static int  sizeOfSortOrder;
 {
 	NSEnumerator	*enumerator;
 	NSNumber		*sortTypeNumber;
-	
-	unsigned int i;
+	int i;
 	
 	for (i = 0; i < MAX_SORT_ORDER_DIMENSION; i++) {
 		sortOrder[i] = -1;

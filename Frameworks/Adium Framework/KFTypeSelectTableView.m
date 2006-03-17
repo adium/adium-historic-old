@@ -298,9 +298,8 @@ static BOOL KFKeyEventIsBeginFindEvent(NSEvent *keyEvent)
     NSMutableCharacterSet *beginFindCharacterSet = [[[NSCharacterSet alphanumericCharacterSet] mutableCopy] autorelease];
     [beginFindCharacterSet formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
 
-    int i;
     unichar character;
-    for (i = 0; i < numCharacters; i++)
+    for (int i = 0; i < numCharacters; i++)
     {
         character = [characters characterAtIndex:i];
         if (![beginFindCharacterSet characterIsMember:character])
@@ -328,9 +327,8 @@ static BOOL KFKeyEventIsExtendFindEvent(NSEvent *keyEvent)
     [extendFindCharacterSet formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
     [extendFindCharacterSet addCharactersInString:@" "];
     
-    int i;
     unichar character;
-    for (i = 0; i < numCharacters; i++)
+    for (int i = 0; i < numCharacters; i++)
     {
         character = [characters characterAtIndex:i];
         if (![extendFindCharacterSet characterIsMember:character])

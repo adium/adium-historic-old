@@ -113,9 +113,8 @@
 		
         if ([type isEqualToString:@"create"]) {
             int count = [[commands objectAtIndex:1] intValue];
-            int i;
             
-            for (i=0;i < count;i++) {
+            for (int i=0;i < count;i++) {
                 NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 				AIListContact	*contact;
 				

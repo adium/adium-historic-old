@@ -845,8 +845,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
 						//Keep emoticons in order from largest to smallest.  This prevents icons that contain other
 						//icons from being masked by the smaller icons they contain.
 						//This cannot work unless the emoticon equivelents are broken down.
-						/*int i;
-						for (i = 0;i < [subIndex count]; i++) {
+						/*
+						for (int i = 0;i < [subIndex count]; i++) {
 							if ([subIndex objectAtIndex:i] equivelentLength] < ourLength]) break;
 						}*/
                         

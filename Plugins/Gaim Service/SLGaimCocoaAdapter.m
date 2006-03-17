@@ -655,9 +655,9 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 				NSData				*imageTIFFData = [image TIFFRepresentation];
 				NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
 				
-				//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string
+				//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string; the 'attachedImage' class lets us apply CSS to directIM images only
 				if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]) {
-					[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
+					[newString appendString:[NSString stringWithFormat:@"<IMG CLASS=\"attachedImage\" SRC=\"%@\">",imagePath]];
 				}
 				
 				[image release];
