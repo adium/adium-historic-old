@@ -235,8 +235,12 @@
 
 		//If windows are open, try switching to a chat with unviewed content
 		if ((mostRecentUnviewedChat = [[adium chatController] mostRecentUnviewedChat])) {
-			//If the most recently active chat has unviewed content, don't switch away from it
-			if (![[self mostRecentActiveChat] unviewedContentCount]) {
+			if ([mostRecentActiveChat unviewedContentCount]) {
+				//If the most recently active chat has unviewed content, ensure it is in the front
+				[self setActiveChat:mostRecentActiveChat];
+
+			} else {
+				//Otherwise, switch to the chat which most recently received content
 				[self setActiveChat:mostRecentUnviewedChat];
 			}
 
