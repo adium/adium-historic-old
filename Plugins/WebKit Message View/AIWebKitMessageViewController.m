@@ -1103,6 +1103,6 @@ static NSArray *draggedTypes = nil;
 	return @"";
 }
 
-- (void) debugLog:(NSString *)message { NSLog(message); }
+- (void) debugLog:(NSString *)message { AILog(message); }
 
 @end
