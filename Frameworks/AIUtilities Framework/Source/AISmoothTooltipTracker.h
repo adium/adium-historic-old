@@ -68,4 +68,16 @@
  */ 
 - (void)setDelegate:(id<AISmoothTooltipTrackerDelegate>)inDelegate;
 
+/*
+ * @brief This should be called when the view for which we are tracking will be removed from its window without the window closing
+ *
+ * This allows us to remove our cursor rects (there isn't a notification by which we can do it automatically)
+ */
+- (void)viewWillBeRemovedFromWindow;
+
+/*
+ * @brief After calling viewWillBeRemovedFromWindow, call viewWasAddedToWindow to reinitiate tracking
+ */
+- (void)viewWasAddedToWindow;
+
 @end

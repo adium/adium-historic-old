@@ -10,10 +10,10 @@
 
 #import "AISmoothTooltipTracker.h"
 
-#define TOOL_TIP_CHECK_INTERVAL				45.0	//Check for mouse X times a second
-#define TOOL_TIP_DELAY						35.0	//Number of check intervals of no movement before a tip is displayed
+#define TOOL_TIP_CHECK_INTERVAL	45.0	//Check for mouse X times a second
+#define TOOL_TIP_DELAY			35.0	//Number of check intervals of no movement before a tip is displayed
 
-#define	LOG_TRACKING_INFO					FALSE
+#define	LOG_TRACKING_INFO		FALSE
 
 @interface AISmoothTooltipTracker (PRIVATE)
 - (AISmoothTooltipTracker *)initForView:(NSView *)inView withDelegate:(id)inDelegate;
@@ -76,6 +76,25 @@
 		
 		delegate = inDelegate;
 	}
+}
+
+/*
+ * @brief This should be called when the view for which we are tracking will be removed from its window without the window closing
+ *
+ * This allows us to remove our cursor rects (there isn't a notification by which we can do it automatically)
+ */
+- (void)viewWillBeRemovedFromWindow
+{
+	[self removeCursorRect];
+	[self _stopTrackingMouse];
+}
+
+/*
+ * @brief After calling viewWillBeRemovedFromWindow, call viewWasAddedToWindow to reinitiate tracking
+ */
+- (void)viewWasAddedToWindow
+{
+	[self installCursorRect];
 }
 
 //Cursor Rects ---------------------------------------------------------------------------------------------------------
