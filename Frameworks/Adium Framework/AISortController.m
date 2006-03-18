@@ -129,14 +129,11 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 }
 
 /*
- * @brief Should we be sorted?
+ * @brief Can the user manually reorder when this sort controller is active?
  *
- * @param canSortManually If YES, We should allow manual sorting. If NO, disable it.
+ * @result YES if we should allow manual sorting; NO if we should not.
  */
 - (BOOL)canSortManually {
-	if([[self identifier] isEqualToString:@"ManualSort"] || (![[[[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING] objectForKey:KEY_RESOLVE_ALPHABETICALLY] boolValue])) {
-		return YES;
-	}
 	return NO;
 }
 
