@@ -650,7 +650,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	id							standardOutput = [scriptTask standardOutput];
 	NSMutableAttributedString	*attributedString = [environment objectForKey:@"Mutable Attributed String"];
 	NSRange						keywordRange = NSRangeFromString([environment objectForKey:@"Range"]);
-	unsigned long long			*uniqueID = [[environment objectForKey:@"uniqueID"] unsignedLongLongValue];
+	unsigned long long			uniqueID = [[environment objectForKey:@"uniqueID"] unsignedLongLongValue];
 	NSFileHandle				*output = nil;
 	NSString					*scriptResult = nil;
 			
