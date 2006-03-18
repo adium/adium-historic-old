@@ -60,6 +60,20 @@
 - (void)registerToolbarItem;
 
 - (void)scriptDidFinish:(NSNotification *)aNotification;
+
+- (void)_replaceKeyword:(NSString *)keyword
+			 withScript:(NSMutableDictionary *)infoDict
+			   inString:(NSString *)inString
+	 inAttributedString:(NSMutableAttributedString *)attributedString
+				context:(id)context
+			   uniqueID:(unsigned long long)uniqueID;
+
+- (void)_executeScript:(NSMutableDictionary *)infoDict 
+		 withArguments:(NSArray *)arguments
+		 forAttributedString:(NSMutableAttributedString *)attributedString
+		  keywordRange:(NSRange)keywordRange
+			   context:(id)context
+			  uniqueID:(unsigned long long)uniqueID;
 @end
 
 int _scriptTitleSort(id scriptA, id scriptB, void *context);
