@@ -2,6 +2,13 @@
     IBClasses = (
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
+            ACTIONS = {showImagePicker = id; }; 
+            CLASS = AIImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
+        {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIModularPane; 
             LANGUAGE = ObjC; 

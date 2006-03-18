@@ -1028,12 +1028,17 @@ static NSArray *draggedTypes = nil;
 				[objectsWithUserIconsArray addObject:inObject];
 			}
 			
-			DOMNodeList *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
-			for(int i = 0; i < [images length]; i++)
-			{
-				DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
-				if([[img getAttribute:@"src"] rangeOfString:[inObject internalObjectID]].location != NSNotFound)
-					[img setSrc:webKitUserIconPath];
+			DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
+			unsigned int imagesCount;
+
+			if ((imagesCount = [images length])) {
+				NSString	*internalObjectID = [inObject internalObjectID];
+
+				for (int i = 0; i < imagesCount; i++) {
+					DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
+					if([[img getAttribute:@"src"] rangeOfString:internalObjectID].location != NSNotFound)
+						[img setSrc:webKitUserIconPath];
+				}
 			}
 		}
 	}
@@ -1044,38 +1049,49 @@ static NSArray *draggedTypes = nil;
  */
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject
 {
-	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff",[inObject internalObjectID],[NSString randomStringOfLength:5]];
+	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff", [inObject internalObjectID], [NSString randomStringOfLength:5]];
 	return [[adium cachesPath] stringByAppendingPathComponent:filename];
 }
 
 #pragma mark File Transfer
 
-- (void) showFileTransferRequest:(NSNotification *)not
+- (void)showFileTransferRequest:(NSNotification *)not
 {
-	if(!fileTransferRequestControllers) fileTransferRequestControllers = [[NSMutableDictionary alloc] init];
 	ESFileTransferRequestPromptController *tc = (ESFileTransferRequestPromptController *)[[not userInfo] objectForKey:@"FileTransferRequestController"];
 	ESFileTransfer *transfer = [tc fileTransfer];
+
+	if (!fileTransferRequestControllers) fileTransferRequestControllers = [[NSMutableDictionary alloc] init];
 	[fileTransferRequestControllers setObject:tc forKey:[transfer remoteFilename]];
-	if([transfer chat] != chat) return;
-	[self enqueueContentObject:transfer];
+
+	if ([transfer chat] == chat) {
+		[self enqueueContentObject:transfer];
+	}
 }
 
-- (void) cancelFileTransferRequest:(NSNotification *)not
+- (void)cancelFileTransferRequest:(NSNotification *)not
 {
 	ESFileTransfer *e = (ESFileTransfer *)[not userInfo];
 	[fileTransferRequestControllers removeObjectForKey:[e remoteFilename]];
 }
 
-- (void) handleAction:(NSString *)action forFileTransfer:(NSString *)fileName
+- (void)handleAction:(NSString *)action forFileTransfer:(NSString *)fileName
 {
 	NSLog(@"%@ : %@", action, fileName);
 	ESFileTransferRequestPromptController *tc = [fileTransferRequestControllers objectForKey:fileName];
-	if(!tc) return;
-	[fileTransferRequestControllers removeObjectForKey:fileName];
-	AIFileTransferAction a = AISaveFile;
-	if([action isEqualToString:@"SaveAs"]) a = AISaveFileAs;
-	else if([action isEqualToString:@"Cancel"]) a = AICancel;
-	[tc handleFileTransferAction:a];
+
+	if (tc) {
+		[fileTransferRequestControllers removeObjectForKey:fileName];
+		
+		AIFileTransferAction a;
+		if ([action isEqualToString:@"SaveAs"])
+			a = AISaveFileAs;
+		else if ([action isEqualToString:@"Cancel"]) 
+			a = AICancel;
+		else
+			a = AISaveFile;
+		
+		[tc handleFileTransferAction:a];
+	}
 }
 
 #pragma mark JS Bridging
@@ -1090,11 +1106,13 @@ static NSArray *draggedTypes = nil;
 }
 
 /*
- This method returns the name to be used in the scripting environment for the selector specified by aSelector. It is your responsibility to ensure that the returned name is unique to the script invoking this method. If this method returns nil or you do not implement it, the default name for the selector will be constructed as follows:
- 
- Any colon (“:”)in the Objective-C selector is replaced by an underscore (“_”).
- Any underscore in the Objective-C selector is prefixed with a dollar sign (“$”).
- Any dollar sign in the Objective-C selector is prefixed with another dollar sign.
+ * This method returns the name to be used in the scripting environment for the selector specified by aSelector.
+ * It is your responsibility to ensure that the returned name is unique to the script invoking this method.
+ * If this method returns nil or you do not implement it, the default name for the selector will be constructed as follows:
+ *
+ * Any colon (“:”)in the Objective-C selector is replaced by an underscore (“_”).
+ * Any underscore in the Objective-C selector is prefixed with a dollar sign (“$”).
+ * Any dollar sign in the Objective-C selector is prefixed with another dollar sign.
  */
 + (NSString *)webScriptNameForSelector:(SEL)aSelector
 {
