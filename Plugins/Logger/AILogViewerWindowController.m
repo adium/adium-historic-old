@@ -78,13 +78,14 @@
 - (NSAttributedString *)hilightOccurrencesOfString:(NSString *)littleString inString:(NSAttributedString *)bigString firstOccurrence:(NSRange *)outRange;
 - (void)sortSelectedLogArrayForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction;
 - (void)startSearchingClearingCurrentResults:(BOOL)clearCurrentResults;
-- (void)stopSearching;
 - (void)buildSearchMenu;
 - (NSMenuItem *)_menuItemWithTitle:(NSString *)title forSearchMode:(LogSearchMode)mode;
 - (void)_logFilter:(NSString *)searchString searchID:(int)searchID mode:(LogSearchMode)mode;
 - (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID;
 - (void)installToolbar;
 - (void)updateRankColumnVisibility;
+
+- (void)resortLogs;
 @end
 
 int _sortStringWithKey(id objectA, id objectB, void *key);
@@ -99,8 +100,8 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key);
 //Open the log viewer window
 static AILogViewerWindowController          *sharedLogViewerInstance = nil;
 static NSMutableDictionary                  *logFromGroupDict = nil;
-static NSString                             *filterForAccountName = nil;	//Account name to restrictively match content searches
-static NSString                             *filterForContactName = nil;	//Contact name to restrictively match content searches
+static NSString				*staticFilterForAccountName ;	//Account name to restrictively match content searches
+static NSString				*staticFilterForContactName;	//Contact name to restrictively match content searches
 
 + (id)openForPlugin:(id)inPlugin
 {
@@ -208,7 +209,10 @@ static NSString                             *filterForContactName = nil;	//Conta
 	[logToGroupDict release]; logToGroupDict = nil;
 
     [filterForContactName release]; filterForContactName = nil;
+    [staticFilterForContactName release]; staticFilterForContactName = nil;
+
     [filterForAccountName release]; filterForAccountName = nil;
+    [staticFilterForAccountName release]; staticFilterForAccountName = nil;
 
     [super dealloc];
 }
@@ -347,6 +351,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 	if (!selectedColumn) {
 		selectedColumn = [[tableView_results tableColumnWithIdentifier:@"Date"] retain];
 	}
+	[self sortSelectedLogArrayForTableColumn:selectedColumn direction:YES];
 
     //Prepare indexing and filter searching
     [self initLogFiltering];
@@ -689,14 +694,11 @@ static NSString                             *filterForContactName = nil;	//Conta
     [resultsLock unlock];
 	
     if (!searching || count <= MAX_LOGS_TO_SORT_WHILE_SEARCHING) {
-		//Sort the logs correctly
-		[self sortSelectedLogArrayForTableColumn:selectedColumn direction:sortDirection];
+		//Sort the logs correctly which will also reload the table
+		[self resortLogs];
 		
-		//Refresh the table
-		[tableView_results reloadData];
-
 		if (searchIsComplete && automaticSearch) {
-			//If search is complete, select the first log if requestead and possible
+			//If search is complete, select the first log if requested and possible
 			[self selectFirstLog];
 			
 		} else {
@@ -880,29 +882,12 @@ static NSString                             *filterForContactName = nil;	//Conta
 
 //Sorting --------------------------------------------------------------------------------------------------------------
 #pragma mark Sorting
-//Sorts the selected log array and adjusts the selected column
-- (void)sortSelectedLogArrayForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction
+- (void)resortLogs
 {
-    NSString	*identifier;
-    
-    //If there already was a sorted column, remove the indicator image from it.
-    if (selectedColumn && selectedColumn != tableColumn) {
-        [tableView_results setIndicatorImage:nil inTableColumn:selectedColumn];
-    }
-    
-    //Set the indicator image in the newly selected column
-    [tableView_results setIndicatorImage:[NSImage imageNamed:(direction ? @"NSDescendingSortIndicator" : @"NSAscendingSortIndicator")]
-                           inTableColumn:tableColumn];
-    
-    //Set the highlighted table column.
-    [tableView_results setHighlightedTableColumn:tableColumn];
-    [selectedColumn release]; selectedColumn = [tableColumn retain];
-    sortDirection = direction;
-	
+	NSString *identifier = [selectedColumn identifier];
+
     //Resort the data
-#warning Sorting is slow and sucky...
-   [resultsLock lock];
-    identifier = [selectedColumn identifier];
+	[resultsLock lock];
     if ([identifier isEqualToString:@"To"]) {
 		[selectedLogArray sortUsingSelector:(sortDirection ? @selector(compareToReverse:) : @selector(compareTo:))];
 		
@@ -917,12 +902,32 @@ static NSString                             *filterForContactName = nil;	//Conta
 	}
 	
     [resultsLock unlock];
-
+	
     //Reload the data
     [tableView_results reloadData];
-    
+
     //Reapply the selection
-    [self selectDisplayedLog];
+    [self selectDisplayedLog];	
+}
+
+//Sorts the selected log array and adjusts the selected column
+- (void)sortSelectedLogArrayForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction
+{
+    //If there already was a sorted column, remove the indicator image from it.
+    if (selectedColumn && selectedColumn != tableColumn) {
+        [tableView_results setIndicatorImage:nil inTableColumn:selectedColumn];
+    }
+    
+    //Set the indicator image in the newly selected column
+    [tableView_results setIndicatorImage:[NSImage imageNamed:(direction ? @"NSDescendingSortIndicator" : @"NSAscendingSortIndicator")]
+                           inTableColumn:tableColumn];
+    
+    //Set the highlighted table column.
+    [tableView_results setHighlightedTableColumn:tableColumn];
+    [selectedColumn release]; selectedColumn = [tableColumn retain];
+    sortDirection = direction;
+	
+	[self resortLogs];
 }
 
 int _sortStringWithKey(id objectA, id objectB, void *key) {
@@ -1056,10 +1061,14 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key) {
 	switch (searchMode) {
 		case LOG_SEARCH_FROM:
 			[filterForAccountName release]; filterForAccountName = nil;
+			[staticFilterForAccountName release]; staticFilterForAccountName = nil;
+
 			[cell setPlaceholderString:AILocalizedString(@"Search From","Placeholder for searching logs from an account")];
 			break;
 		case LOG_SEARCH_TO:
 			[filterForContactName release]; filterForContactName = nil;
+			[staticFilterForContactName release]; staticFilterForContactName = nil;
+
 			[cell setPlaceholderString:AILocalizedString(@"Search To","Placeholder for searching logs with/to a contact")];
 			break;
 			
@@ -1310,8 +1319,11 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key) {
 {
 	[filterForContactName release]; filterForContactName = nil;
 	[filterForAccountName release]; filterForAccountName = nil;
-	
+	[staticFilterForContactName release]; staticFilterForContactName = nil;
+	[staticFilterForAccountName release]; staticFilterForAccountName = nil;
+
 	filterForContactName = [[inContactName safeFilenameString] retain];
+	staticFilterForContactName = [filterForContactName retain];
 
 	//If the search mode is currently the TO field, switch it to content, which is what it should now intuitively do
 	if (searchMode == LOG_SEARCH_TO) {
@@ -1329,8 +1341,11 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key) {
 {
 	[filterForContactName release]; filterForContactName = nil;
 	[filterForAccountName release]; filterForAccountName = nil;
-
+	[staticFilterForContactName release]; staticFilterForContactName = nil;
+	[staticFilterForAccountName release]; staticFilterForAccountName = nil;
+	
 	filterForAccountName = [[inAccountName safeFilenameString] retain];
+	staticFilterForAccountName = [filterForAccountName retain];
 
 	//If the search mode is currently the FROM field, switch it to content, which is what it should now intuitively do
 	if (searchMode == LOG_SEARCH_FROM) {
@@ -1353,22 +1368,22 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
                               SKDocumentRef     inDocument,
                               void      *inContext)
 {
-	if (filterForContactName) {
+	if (staticFilterForContactName) {
 		//Searching for a specific contact
 		NSString		*path = (NSString *)SKDocumentGetName(inDocument);
 		NSString		*toPath = [path stringByDeletingLastPathComponent];
 		AILogToGroup	*toGroup = [[(AILogViewerWindowController *)inContext logToGroupDict] objectForKey:toPath];
 
-		return [[toGroup to] caseInsensitiveCompare:filterForContactName] == NSOrderedSame;
+		return [[toGroup to] caseInsensitiveCompare:staticFilterForContactName] == NSOrderedSame;
 
-	} else if (filterForAccountName) {
+	} else if (staticFilterForAccountName) {
 		//Searching for a specific account
 		NSString		*path = (NSString *)SKDocumentGetName(inDocument);
 		NSString		*toPath = [path stringByDeletingLastPathComponent];
 		NSString		*fromPath = [toPath stringByDeletingLastPathComponent];
 		AILogFromGroup	*fromGroup = [logFromGroupDict objectForKey:fromPath];
 
-		return [[fromGroup fromUID] caseInsensitiveCompare:filterForAccountName] == NSOrderedSame;
+		return [[fromGroup fromUID] caseInsensitiveCompare:staticFilterForAccountName] == NSOrderedSame;
 
 	} else {
 		return true; //Boolean, not BOOL

@@ -796,9 +796,7 @@ this problem is along the lines of:
 #pragma mark Upgrade code
 - (void)upgradeLogExtensions
 {
-#warning this needs to not be || TRUE when we ship 1.0 release...leave for now to make sure it really happens for devs -RAF
-	if (![[[adium preferenceController] preferenceForKey:@"Log Extensions Updated" group:PREF_GROUP_LOGGING] boolValue] ||
-		TRUE) {
+	if (![[[adium preferenceController] preferenceForKey:@"Log Extensions Updated" group:PREF_GROUP_LOGGING] boolValue]) {
 		/* This could all be a simple NSDirectEnumerator call on basePath, but we wouldn't be able to show progress,
 		 * and this could take a bit.
 		 */
