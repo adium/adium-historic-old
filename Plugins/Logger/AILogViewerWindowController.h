@@ -86,6 +86,9 @@ typedef enum {
 	
 	NSMutableDictionary		*logToGroupDict;
 	NSTimer					*refreshResultsTimer;
+	
+	NSString				*filterForAccountName ;	//Account name to restrictively match content searches
+	NSString				*filterForContactName;	//Contact name to restrictively match content searches
 }
 
 + (id)openForPlugin:(id)inPlugin;
