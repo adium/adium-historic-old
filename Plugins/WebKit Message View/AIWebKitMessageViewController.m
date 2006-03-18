@@ -59,6 +59,7 @@
 - (void)sourceOrDestinationChanged:(NSNotification *)notification;
 - (BOOL)shouldHandleDragWithPasteboard:(NSPasteboard *)pasteboard;
 - (void) enqueueContentObject:(AIContentObject *)contentObject;
+- (void) debugLog:(NSString *)message;
 @end
 
 static NSArray *draggedTypes = nil;
@@ -1084,6 +1085,7 @@ static NSArray *draggedTypes = nil;
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
 {
 	if(aSelector == @selector(handleAction:forFileTransfer:)) return NO;
+	if(aSelector == @selector(debugLog:)) return NO;
 	return YES;
 }
 
@@ -1097,7 +1099,10 @@ static NSArray *draggedTypes = nil;
 + (NSString *)webScriptNameForSelector:(SEL)aSelector
 {
 	if(aSelector == @selector(handleAction:forFileTransfer:)) return @"handleFileTransfer";
+	if(aSelector == @selector(debugLog:)) return @"debugLog";
 	return @"";
 }
+
+- (void) debugLog:(NSString *)message { NSLog(message); }
 
 @end
