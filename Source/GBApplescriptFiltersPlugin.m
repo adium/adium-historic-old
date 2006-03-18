@@ -469,6 +469,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 						   withScript:infoDict
 							 inString:stringMessage
 				   inAttributedString:[[inAttributedString mutableCopy] autorelease]
+							  context:context
 							 uniqueID:uniqueID];
 
 				shouldSendNumber = [infoDict objectForKey:@"ShouldSend"];
@@ -503,6 +504,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 			 withScript:(NSMutableDictionary *)infoDict
 			   inString:(NSString *)inString
 	 inAttributedString:(NSMutableAttributedString *)attributedString
+				context:(id)context
 			   uniqueID:(unsigned long long)uniqueID
 {
 	NSScanner	*scanner;
@@ -546,6 +548,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 					   withArguments:argArray
 				 forAttributedString:attributedString
 						keywordRange:keywordRange
+							 context:context
 							uniqueID:uniqueID];
 
 				beganExecutingScript = YES;
@@ -564,6 +567,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 			   withArguments:(NSArray *)arguments
 		 forAttributedString:(NSMutableAttributedString *)attributedString
 				keywordRange:(NSRange)keywordRange
+					 context:(id)context
 					uniqueID:(unsigned long long)uniqueID
 {
 	NSAutoreleasePool	*autoreleasePool = [[NSAutoreleasePool alloc] init];
@@ -613,6 +617,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		attributedString, @"Mutable Attributed String",
 		NSStringFromRange(keywordRange), @"Range",
 		[NSNumber numberWithUnsignedLongLong:uniqueID], @"uniqueID",
+		(context ? context : [NSNull null]), @"context",
 		nil]];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self
@@ -645,7 +650,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	id							standardOutput = [scriptTask standardOutput];
 	NSMutableAttributedString	*attributedString = [environment objectForKey:@"Mutable Attributed String"];
 	NSRange						keywordRange = NSRangeFromString([environment objectForKey:@"Range"]);
-	NSNumber					*uniqueID = [environment objectForKey:@"uniqueID"];
+	unsigned long long			*uniqueID = [[environment objectForKey:@"uniqueID"] unsignedLongLongValue];
 	NSFileHandle				*output = nil;
 	NSString					*scriptResult = nil;
 			
@@ -699,8 +704,13 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	[scriptTask release];
 	[autoreleasePool release];
 
-	//Inform the content controller that we're done
-	[[adium contentController] delayedFilterDidFinish:attributedString uniqueID:[uniqueID unsignedLongLongValue]];
+	//Inform the content controller that we're done if we don't need to do any more filtering
+	if (![self delayedFilterAttributedString:attributedString
+									 context:[environment objectForKey:@"context"]
+									uniqueID:uniqueID]) {
+		[[adium contentController] delayedFilterDidFinish:attributedString
+												 uniqueID:uniqueID];
+	}
 }
 
 /*!

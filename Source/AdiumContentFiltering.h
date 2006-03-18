@@ -19,7 +19,8 @@
 
 @interface AdiumContentFiltering : AIObject {
 	NSMutableArray			*contentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
-	NSMutableArray			*delayedContentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
+
+	NSMutableArray			*delayedContentFilters[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
 	
 	NSMutableSet			*stringsRequiringPolling;
 	
