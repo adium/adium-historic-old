@@ -72,6 +72,8 @@
 - (void)_updateUserListViewWidth;
 - (int)_userListViewProperWidthIgnoringUserMininum:(BOOL)ignoreUserMininum;
 - (void)_updateAccountSelectionViewHeight;
+
+- (void)saveUserListMinimumSize;
 @end
 
 @implementation AIMessageViewController
@@ -154,6 +156,14 @@
 {   
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 
+	//Store our minimum height for the text entry area, and minimim width for the user list
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:entryMinHeight]
+										 forKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT
+										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	if (userListController) {
+		[self saveUserListMinimumSize];
+	}
+
 	[chat release]; chat = nil;
 
     //remove observers
@@ -180,29 +190,31 @@
     [super dealloc];
 }
 
-/*!
- * @brief Invoked before the tab view item closes
- *
- * This method is invoked before our message view controller is closed.  We take the opportunity to save state
- * and clean up our user list to invalidate cursor tracking before the view closes.
- */
-//XXX - The name of this method implies tabView, while this class isn't related to tab views. -ai
-//XXX - The user list controller should clean up tracking when removed from its parent view, why do we have to special case for it here? -ai
-//XXX - This is called when dragging tabs, not just when tabs are CLOSING, so deallocating anything from this method,
-//      even though the method name says WillClose, is a very bad idea.
-- (void)tabViewItemWillClose
+- (void)saveUserListMinimumSize
 {
-	//Store our minimum height for the text entry area, and minimim width for the user list
-	[[adium preferenceController] setPreference:[NSNumber numberWithInt:entryMinHeight]
-										 forKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT
-										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:userListMinWidth]
 										 forKey:KEY_ENTRY_USER_LIST_MIN_WIDTH
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-	
-#warning Wrong as per the third XXX above, but a crash fix for now.
-	AILog(@"-[%@ tabViewItemWillClose]: entryMinHeight %i; userListMinWidth %i",self,entryMinHeight,userListMinWidth);
-	[userListController contactListWillBeRemoved];
+}
+
+/*!
+ * @brief Invoked before the message view closes
+ *
+ * This method is invoked before our message view controller's message view leaves a window.
+ * We need to clean up our user list to invalidate cursor tracking before the view closes.
+ */
+- (void)messageViewWillLeaveWindow:(NSWindow *)inWindow
+{
+	if (inWindow) {
+		[userListController contactListWillBeRemovedFromWindow];
+	}
+}
+
+- (void)messageViewAddedToWindow:(NSWindow *)inWindow
+{
+	if (inWindow) {
+		[userListController contactListWasAddedBackToWindow];
+	}
 }
 
 /*!
@@ -800,6 +812,10 @@
 		[scrollView_userList retain];
 		[scrollView_userList removeFromSuperview];
 		retainingScrollViewUserList = YES;
+		
+		[self saveUserListMinimumSize];
+
+		[userListController release]; userListController = nil;
 	}
 }
 

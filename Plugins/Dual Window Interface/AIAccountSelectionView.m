@@ -162,17 +162,16 @@
 {
 	//Update selection in contact menu
 	[popUp_contacts selectItemWithRepresentedObject:[chat listObject]];
-	
+
 	[self _destroyAccountMenu];
 	//Rebuild 'From' account menu
 	if([self choicesAvailableForAccount]){
 		[self _createAccountMenu];
-		[popUp_accounts selectItemWithRepresentedObject:[chat listObject]];
 	}
-	
+
 	//Reposition our menus and resize as necessary
 	[self _repositionMenusAndResize];
-	
+
 	//Update selection in account menu
 	[self chatSourceChanged:nil];
 }

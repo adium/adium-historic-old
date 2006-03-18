@@ -52,11 +52,10 @@
 }
 
 + (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;
-- (void)tabViewItemWillClose;
+- (void)messageViewWillLeaveWindow:(NSWindow *)inWindow;
+- (void)messageViewAddedToWindow:(NSWindow *)inWindow;
 - (AIChat *)chat;
-//- (void)setAccount:(AIAccount *)inAccount;
-//- (AIAccount *)account;
-//- (void)setListObject:(AIListContact *)listContact;
+
 - (AIListContact *)listObject;
 - (AIListObject *)preferredListObject;
 
