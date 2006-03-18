@@ -115,4 +115,12 @@ typedef enum {
 - (void)searchComplete;
 - (void)stopSearching;
 
+- (void)resortLogs;
+- (void)selectFirstLog;
+- (void)selectDisplayedLog;
+- (void)refreshResults;
+- (void)refreshResultsSearchIsComplete:(BOOL)searchIsComplete;
+- (void)updateProgressDisplay;
+- (void)_logFilter:(NSString *)searchString searchID:(int)searchID mode:(LogSearchMode)mode;
+
 @end

@@ -69,23 +69,15 @@
 @interface AILogViewerWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
 - (void)initLogFiltering;
-- (void)updateProgressDisplay;
-- (void)refreshResults;
-- (void)refreshResultsSearchIsComplete:(BOOL)searchIsComplete;
 - (void)displayLog:(AIChatLog *)log;
-- (void)selectFirstLog;
-- (void)selectDisplayedLog;
 - (NSAttributedString *)hilightOccurrencesOfString:(NSString *)littleString inString:(NSAttributedString *)bigString firstOccurrence:(NSRange *)outRange;
 - (void)sortSelectedLogArrayForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction;
 - (void)startSearchingClearingCurrentResults:(BOOL)clearCurrentResults;
 - (void)buildSearchMenu;
 - (NSMenuItem *)_menuItemWithTitle:(NSString *)title forSearchMode:(LogSearchMode)mode;
-- (void)_logFilter:(NSString *)searchString searchID:(int)searchID mode:(LogSearchMode)mode;
 - (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID;
 - (void)installToolbar;
 - (void)updateRankColumnVisibility;
-
-- (void)resortLogs;
 @end
 
 int _sortStringWithKey(id objectA, id objectB, void *key);
