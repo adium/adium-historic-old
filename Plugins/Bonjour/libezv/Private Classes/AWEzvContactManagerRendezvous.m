@@ -139,10 +139,10 @@ void av_resolve_reply (struct sockaddr	*interface,
     currentHost = [NSHost currentHost];
     enumerator = [[currentHost addresses] objectEnumerator];
     while ((instanceName = [enumerator nextObject])) {
-	/* skip 127.0.0.1 */
+		/* skip 127.0.0.1 */
         if ([instanceName isEqualToString:@"127.0.0.1"])
             continue;
-	/* and skip IPv6 */
+		/* and skip IPv6 */
         range = [instanceName rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@":"]];
         if (range.location != NSNotFound)
             continue;
@@ -150,15 +150,15 @@ void av_resolve_reply (struct sockaddr	*interface,
     }
     
     if (instanceName == nil) {
-	[[client client] reportError:@"No available IPv4 interfaces" ofLevel:AWEzvError];
-	return;
+		[[client client] reportError:@"No available IPv4 interfaces" ofLevel:AWEzvError];
+		return;
     }
     /* replace . with _ for rendezvous name, this is for iChat 1.0 */
     instanceName = [[instanceName mutableCopy] autorelease];
     [instanceName replaceOccurrencesOfString:@"."
-		  withString:@"_"
-		  options:0
-		  range:NSMakeRange(0, [instanceName length])];
+								  withString:@"_"
+									 options:0
+									   range:NSMakeRange(0, [instanceName length])];
     myname = [instanceName retain];
     
     /* initialise context */
@@ -170,74 +170,72 @@ void av_resolve_reply (struct sockaddr	*interface,
     
     /* register service with mDNSResponder */
     dns_client = DNSServiceRegistrationCreate (
-	    [instanceName UTF8String],
-	    "_ichat._tcp",
-	    "",
-	    port,
-	    [[userAnnounceData dataAsDNSTXT] UTF8String],
-	    reg_reply,
-	    self
-	    );
-
+											   [instanceName UTF8String],
+											   "_ichat._tcp",
+											   "",
+											   port,
+											   [[userAnnounceData dataAsDNSTXT] UTF8String],
+											   reg_reply,
+											   self
+											   );
+	
     /* get mach port and configure for run loop */
     mach_port = DNSServiceDiscoveryMachPort(dns_client);
     if (mach_port) {
-	cfMachPort = CFMachPortCreateWithPort (kCFAllocatorDefault, mach_port,
-			    (CFMachPortCallBack) handleMachMessage, &context,
-			    &shouldFreeInfo);
-	
-	/* setup run loop */
-	rls = CFMachPortCreateRunLoopSource (NULL, cfMachPort, 0);
-	CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
-	CFRelease(rls);
-	
-	/* save data for later release */
-	dnsRef = dns_client;
+		cfMachPort = CFMachPortCreateWithPort (kCFAllocatorDefault, mach_port,
+											   (CFMachPortCallBack) handleMachMessage, &context,
+											   &shouldFreeInfo);
+		
+		/* setup run loop */
+		rls = CFMachPortCreateRunLoopSource (NULL, cfMachPort, 0);
+		CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
+		CFRelease(rls);
+		
+		/* save data for later release */
+		dnsRef = dns_client;
     } else {
-	AWEzvLog(@"Could not obtain client port for Mach messaging (advertise)");
-	[[client client] reportError:@"Could not obtain client port for Mach messaging (advertise)"
-		ofLevel:AWEzvError];
-	[self disconnect];
+		AWEzvLog(@"Could not obtain client port for Mach messaging (advertise)");
+		[[client client] reportError:@"Could not obtain client port for Mach messaging (advertise)"
+							 ofLevel:AWEzvError];
+		[self disconnect];
     }
     
     avInstanceName = [NSString stringWithFormat:@"%@@%@",
-			SCDynamicStoreCopyConsoleUser(NULL, NULL, NULL),
-			SCDynamicStoreCopyComputerName(NULL, NULL)];
+		SCDynamicStoreCopyConsoleUser(NULL, NULL, NULL),
+		SCDynamicStoreCopyComputerName(NULL, NULL)];
     myavname = [avInstanceName retain];
     
     /* register service with mDNSResponder */
     dns_client = DNSServiceRegistrationCreate (
-	   [avInstanceName UTF8String],
-	   "_presence._tcp",
-	   "",
-	   port,
-	   [[userAnnounceData avDataAsDNSTXT] UTF8String],
-	   reg_reply,
-	   self
-	   );
+											   [avInstanceName UTF8String],
+											   "_presence._tcp",
+											   "",
+											   port,
+											   [[userAnnounceData avDataAsDNSTXT] UTF8String],
+											   reg_reply,
+											   self
+											   );
     
     /* get mach port and configure for run loop */
     mach_port = DNSServiceDiscoveryMachPort(dns_client);
     if (mach_port) {
-	cfMachPort = CFMachPortCreateWithPort (kCFAllocatorDefault, mach_port,
-					       (CFMachPortCallBack) handleMachMessage, &context,
-					       &shouldFreeInfo);
-	
-	/* setup run loop */
-	rls = CFMachPortCreateRunLoopSource (NULL, cfMachPort, 0);
-	CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
-	CFRelease(rls);
-	
-	/* save data for later release */
-	avDnsRef = dns_client;
+		cfMachPort = CFMachPortCreateWithPort (kCFAllocatorDefault, mach_port,
+											   (CFMachPortCallBack) handleMachMessage, &context,
+											   &shouldFreeInfo);
+		
+		/* setup run loop */
+		rls = CFMachPortCreateRunLoopSource (NULL, cfMachPort, 0);
+		CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
+		CFRelease(rls);
+		
+		/* save data for later release */
+		avDnsRef = dns_client;
     } else {
-	AWEzvLog(@"Could not obtain client port for Mach messaging (advertise AV)");
-	[[client client] reportError:@"Could not obtain client port for Mach messaging (advertise AV)"
-			     ofLevel:AWEzvError];
-	[self disconnect];
+		AWEzvLog(@"Could not obtain client port for Mach messaging (advertise AV)");
+		[[client client] reportError:@"Could not obtain client port for Mach messaging (advertise AV)"
+							 ofLevel:AWEzvError];
+		[self disconnect];
     }
-
-
 }
 
 /* this is used for a clean logout */
@@ -250,22 +248,22 @@ void av_resolve_reply (struct sockaddr	*interface,
 /* this causes an actual disconnect */
 - (void) disconnect {
     if (dnsRef != NULL) {
-	DNSServiceDiscoveryDeallocate(dnsRef);
-	dnsRef = NULL;
-	isConnected = NO;
-	if (myname != nil) {
-	    [myname release];
-	    myname = nil;
-	}
+		DNSServiceDiscoveryDeallocate(dnsRef);
+		dnsRef = NULL;
+		isConnected = NO;
+		if (myname != nil) {
+			[myname release];
+			myname = nil;
+		}
     }
     if (avDnsRef != NULL) {
-	DNSServiceDiscoveryDeallocate(avDnsRef);
-	avDnsRef = NULL;
-	isConnected = NO;
-	if (myavname != nil) {
-	    [myavname release];
-	    myavname = nil;
-	}
+		DNSServiceDiscoveryDeallocate(avDnsRef);
+		avDnsRef = NULL;
+		isConnected = NO;
+		if (myavname != nil) {
+			[myavname release];
+			myavname = nil;
+		}
     }
 }
 
@@ -363,26 +361,37 @@ void av_resolve_reply (struct sockaddr	*interface,
 
 - (void)setImageData:(NSData *)JPEGData {
     NSData *plist;
-    NSString *error;
+    NSString *error = nil;
     SHA1_CTX ctx;
     unsigned char digest[20];
 
-    if (JPEGData == nil) {
-	[userAnnounceData deleteField:@"phsh"];
-	[self updateAnnounceInfo];
-	return;
-    }
-
-    plist = [NSPropertyListSerialization dataFromPropertyList:JPEGData
-    				    format:NSPropertyListXMLFormat_v1_0
-    				    errorDescription:&error];    
-    if (plist != nil) {
-	if (imageRef == 0) {
-	    imageRef = DNSServiceRegistrationAddRecord(dnsRef, T_NULL, [plist length], [plist bytes], 10);
-	} else {
-	    DNSServiceRegistrationUpdateRecord(dnsRef, imageRef, [plist length], [plist bytes], 10);
+	if (!dnsRef || !avDnsRef) {
+		AWEzvLog(@"Attempted to set image data with no dnsRef or no avDnsRef");
+		return;
 	}
+
+    if (JPEGData == nil) {
+		[userAnnounceData deleteField:@"phsh"];
+		[self updateAnnounceInfo];
+		return;
     }
+	
+    plist = [NSPropertyListSerialization dataFromPropertyList:JPEGData
+													   format:NSPropertyListXMLFormat_v1_0
+											 errorDescription:&error];    
+    if (plist != nil) {
+		if (imageRef == 0) {
+			imageRef = DNSServiceRegistrationAddRecord(dnsRef, T_NULL, [plist length], [plist bytes], 10);
+		} else {
+			DNSServiceRegistrationUpdateRecord(dnsRef, imageRef, [plist length], [plist bytes], 10);
+		}
+
+    } else {
+		if (error) {
+			AWEzvLog(@"Error in NSPropertyListSerialization converting JPEGData: %@",error);
+			[error release];
+		}
+	}
     
     if (avImageRef == 0) {
     	avImageRef = DNSServiceRegistrationAddRecord(avDnsRef, T_NULL, [JPEGData length], [JPEGData bytes], 10);
