@@ -26,15 +26,13 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
+#import <Adium/AIAbstractListController.h>
 #import <Adium/AIEmoticonController.h>
 #import <Adium/AIIconState.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
 #import <Adium/ESPresetManagementController.h>
 #import <Adium/ESPresetNameSheetController.h>
-
-#warning crosslink
-#import "AISCLViewPlugin.h"
 
 typedef enum {
 	AIEmoticonMenuNone = 1,
@@ -271,7 +269,7 @@ typedef enum {
 	} else if (sender == popUp_listLayout) {
         [[adium preferenceController] setPreference:[[sender selectedItem] title]
                                              forKey:KEY_LIST_LAYOUT_NAME
-                                              group:PREF_GROUP_APPEARANCE];
+                                              group:PREF_GROUP_APPEARANCE];		
 		
 	} else if (sender == popUp_colorTheme) {
 		[[adium preferenceController] setPreference:[[sender selectedItem] title]
@@ -477,11 +475,11 @@ typedef enum {
 {
 	if (saveChanges) {
 		//Update the modified theme
-		if ([AISCLViewPlugin createSetFromPreferenceGroup:PREF_GROUP_LIST_THEME
-												withName:name
-											   extension:LIST_THEME_EXTENSION
-												inFolder:LIST_THEME_FOLDER]) {
-		
+		if ([plugin createSetFromPreferenceGroup:PREF_GROUP_LIST_THEME
+										withName:name
+									   extension:LIST_THEME_EXTENSION
+										inFolder:LIST_THEME_FOLDER]) {
+			
 			[[adium preferenceController] setPreference:name
 												 forKey:KEY_LIST_THEME_NAME
 												  group:PREF_GROUP_APPEARANCE];
@@ -490,13 +488,13 @@ typedef enum {
 	} else {
 		//Revert back to selected theme
 		NSString *theme = [[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_APPEARANCE];	
-
-		[AISCLViewPlugin applySetWithName:theme
-								extension:LIST_THEME_EXTENSION
-								 inFolder:LIST_THEME_FOLDER
-						toPreferenceGroup:PREF_GROUP_LIST_THEME];
+		
+		[plugin applySetWithName:theme
+					   extension:LIST_THEME_EXTENSION
+						inFolder:LIST_THEME_FOLDER
+			   toPreferenceGroup:PREF_GROUP_LIST_THEME];
 	}
-
+	
 
 	//No longer allow alpha in our color pickers
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
@@ -507,7 +505,7 @@ typedef enum {
  */
 - (void)manageListThemes:(id)sender
 {
-	_listThemes = [AISCLViewPlugin availableThemeSets];
+	_listThemes = [plugin availableThemeSets];
 	[ESPresetManagementController managePresets:_listThemes
 									 namedByKey:@"name"
 									   onWindow:[[self view] window]
@@ -553,10 +551,10 @@ typedef enum {
 {
 	if (saveChanges) {
 		//Update the modified layout
-		if ([AISCLViewPlugin createSetFromPreferenceGroup:PREF_GROUP_LIST_LAYOUT
-												withName:name
-											   extension:LIST_LAYOUT_EXTENSION
-												inFolder:LIST_LAYOUT_FOLDER]) {
+		if ([plugin createSetFromPreferenceGroup:PREF_GROUP_LIST_LAYOUT
+										withName:name
+									   extension:LIST_LAYOUT_EXTENSION
+										inFolder:LIST_LAYOUT_FOLDER]) {
 			
 			[[adium preferenceController] setPreference:name
 												 forKey:KEY_LIST_LAYOUT_NAME
@@ -567,12 +565,12 @@ typedef enum {
 		//Revert back to selected layout
 		NSString *layout = [[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_APPEARANCE];	
 		
-		[AISCLViewPlugin applySetWithName:layout
-								extension:LIST_LAYOUT_EXTENSION
-								 inFolder:LIST_LAYOUT_FOLDER
-						toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
+		[plugin applySetWithName:layout
+					   extension:LIST_LAYOUT_EXTENSION
+						inFolder:LIST_LAYOUT_FOLDER
+			   toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
 	}
-
+	
 	//No longer allow alpha in our color pickers
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
 }
@@ -582,7 +580,7 @@ typedef enum {
  */
 - (void)manageListLayouts:(id)sender
 {
-	_listLayouts = [AISCLViewPlugin availableLayoutSets];
+	_listLayouts = [plugin availableLayoutSets];
 	[ESPresetManagementController managePresets:_listLayouts
 									 namedByKey:@"name"
 									   onWindow:[[self view] window]
@@ -604,9 +602,9 @@ typedef enum {
 
 	//Scan the correct presets to ensure this name doesn't already exist
 	if ([userInfo isEqualToString:@"theme"]) {
-		enumerator = [[AISCLViewPlugin availableThemeSets] objectEnumerator];
+		enumerator = [[plugin availableThemeSets] objectEnumerator];
 	} else {
-		enumerator = [[AISCLViewPlugin availableLayoutSets] objectEnumerator];
+		enumerator = [[plugin availableLayoutSets] objectEnumerator];
 	}
 	
 	while ((presetDict = [enumerator nextObject])) {
@@ -655,23 +653,23 @@ typedef enum {
 - (NSArray *)renamePreset:(NSDictionary *)preset toName:(NSString *)newName inPresets:(NSArray *)presets renamedPreset:(id *)renamedPreset
 {
 	NSArray		*newPresets;
-
+	
 	if (presets == _listLayouts) {
-		[AISCLViewPlugin renameSetWithName:[preset objectForKey:@"name"]
-								 extension:LIST_LAYOUT_EXTENSION
-								  inFolder:LIST_LAYOUT_FOLDER
-									toName:newName];		
-		_listLayouts = [AISCLViewPlugin availableLayoutSets];
+		[plugin renameSetWithName:[preset objectForKey:@"name"]
+						extension:LIST_LAYOUT_EXTENSION
+						 inFolder:LIST_LAYOUT_FOLDER
+						   toName:newName];		
+		_listLayouts = [plugin availableLayoutSets];
 		newPresets = _listLayouts;
 		
 	} else if (presets == _listThemes) {
-		[AISCLViewPlugin renameSetWithName:[preset objectForKey:@"name"]
-								 extension:LIST_THEME_EXTENSION
-								  inFolder:LIST_THEME_FOLDER
-									toName:newName];		
-		_listThemes = [AISCLViewPlugin availableThemeSets];
+		[plugin renameSetWithName:[preset objectForKey:@"name"]
+						extension:LIST_THEME_EXTENSION
+						 inFolder:LIST_THEME_FOLDER
+						   toName:newName];		
+		_listThemes = [plugin availableThemeSets];
 		newPresets = _listThemes;
-
+		
 	} else {
 		newPresets = nil;
 	}
@@ -701,22 +699,22 @@ typedef enum {
 	NSArray		*newPresets = nil;
 	
 	if (presets == _listLayouts) {
-		[AISCLViewPlugin duplicateSetWithName:[preset objectForKey:@"name"]
-									extension:LIST_LAYOUT_EXTENSION
-									 inFolder:LIST_LAYOUT_FOLDER
-									  newName:newName];		
-		_listLayouts = [AISCLViewPlugin availableLayoutSets];
+		[plugin duplicateSetWithName:[preset objectForKey:@"name"]
+						   extension:LIST_LAYOUT_EXTENSION
+							inFolder:LIST_LAYOUT_FOLDER
+							 newName:newName];		
+		_listLayouts = [plugin availableLayoutSets];
 		newPresets = _listLayouts;
 		
 	} else if (presets == _listThemes) {
-		[AISCLViewPlugin duplicateSetWithName:[preset objectForKey:@"name"]
-									extension:LIST_THEME_EXTENSION
-									 inFolder:LIST_THEME_FOLDER
-									  newName:newName];
-		_listThemes = [AISCLViewPlugin availableThemeSets];
+		[plugin duplicateSetWithName:[preset objectForKey:@"name"]
+						   extension:LIST_THEME_EXTENSION
+							inFolder:LIST_THEME_FOLDER
+							 newName:newName];
+		_listThemes = [plugin availableThemeSets];
 		newPresets = _listThemes;
 	}
-
+	
 	//Return the new duplicate by reference for the preset controller
 	if (duplicatePreset) {
 		NSEnumerator	*enumerator = [newPresets objectEnumerator];
@@ -739,21 +737,21 @@ typedef enum {
 - (NSArray *)deletePreset:(NSDictionary *)preset inPresets:(NSArray *)presets
 {
 	if (presets == _listLayouts) {
-		[AISCLViewPlugin deleteSetWithName:[preset objectForKey:@"name"]
-								 extension:LIST_LAYOUT_EXTENSION
-								  inFolder:LIST_LAYOUT_FOLDER];		
-		_listLayouts = [AISCLViewPlugin availableLayoutSets];
+		[plugin deleteSetWithName:[preset objectForKey:@"name"]
+						extension:LIST_LAYOUT_EXTENSION
+						 inFolder:LIST_LAYOUT_FOLDER];		
+		_listLayouts = [plugin availableLayoutSets];
 		
 		return _listLayouts;
-	
+		
 	} else if (presets == _listThemes) {
-		[AISCLViewPlugin deleteSetWithName:[preset objectForKey:@"name"]
-								 extension:LIST_THEME_EXTENSION
-								  inFolder:LIST_THEME_FOLDER];		
-		_listThemes = [AISCLViewPlugin availableThemeSets];
+		[plugin deleteSetWithName:[preset objectForKey:@"name"]
+						extension:LIST_THEME_EXTENSION
+						 inFolder:LIST_THEME_FOLDER];		
+		_listThemes = [plugin availableThemeSets];
 		
 		return _listThemes;
-
+		
 	} else {
 		return nil;
 	}
@@ -765,7 +763,7 @@ typedef enum {
 - (NSMenu *)_listLayoutMenu
 {
 	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
-	NSEnumerator	*enumerator = [[AISCLViewPlugin availableLayoutSets] objectEnumerator];
+	NSEnumerator	*enumerator = [[plugin availableLayoutSets] objectEnumerator];
 	NSDictionary	*set;
 	NSMenuItem		*menuItem;
 	NSString		*name;
@@ -806,7 +804,7 @@ typedef enum {
 - (NSMenu *)_colorThemeMenu
 {
 	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
-	NSEnumerator	*enumerator = [[AISCLViewPlugin availableThemeSets] objectEnumerator];
+	NSEnumerator	*enumerator = [[plugin availableThemeSets] objectEnumerator];
 	NSDictionary	*set;
 	NSMenuItem		*menuItem;
 	NSString		*name;

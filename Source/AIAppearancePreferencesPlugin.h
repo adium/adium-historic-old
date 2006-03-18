@@ -19,10 +19,25 @@
 #define	KEY_STATUS_ICON_PACK		@"Status Icon Pack"
 #define	KEY_SERVICE_ICON_PACK		@"Service Icon Pack"
 
+#define KEY_LIST_LAYOUT_NAME		@"List Layout Name"
+#define KEY_LIST_THEME_NAME			@"List Theme Name"
+
 @class AIAppearancePreferences;
 
 @interface AIAppearancePreferencesPlugin : AIPlugin {
 	AIAppearancePreferences		*preferences;
+	
+	NSMenuItem					*menuItem_userIcons;
+	NSMenuItem					*menuItem_userStatusMessages;
 }
+
+//Themes and Layouts
+- (void)applySetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder toPreferenceGroup:(NSString *)preferenceGroup;
+- (BOOL)createSetFromPreferenceGroup:(NSString *)preferenceGroup withName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
+- (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
+- (BOOL)renameSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder toName:(NSString *)newName;
+- (BOOL)duplicateSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder newName:(NSString *)newName;
+- (NSArray *)availableLayoutSets;
+- (NSArray *)availableThemeSets;
 
 @end
