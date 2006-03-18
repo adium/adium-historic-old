@@ -51,7 +51,7 @@
 	<key>Offline Label Color</key>
 	<string>240,240,240</string>
 	<key>Online Color</key>
-	<string>0,0,0</string>
+	<string>255,255,255</string>
 	<key>Online Enabled</key>
 	<false/>
 	<key>Online Label Color</key>
