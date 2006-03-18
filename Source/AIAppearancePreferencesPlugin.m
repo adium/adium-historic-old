@@ -17,9 +17,14 @@
 #import "AIAppearancePreferencesPlugin.h"
 #import "AIAppearancePreferences.h"
 #import "AIDockController.h"
+#import "AIMenuController.h"
+#import <Adium/AIAbstractListController.h>
 #import <Adium/AIStatusIcons.h>
 #import <Adium/AIServiceIcons.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import "AIXtrasManager.h"
 
 #define APPEARANCE_DEFAUT_PREFS 	@"AppearanceDefaults"
 
@@ -29,11 +34,13 @@
 {
 	AIPreferenceController *preferenceController = [adium preferenceController];
 
+	[adium createResourcePathForName:LIST_LAYOUT_FOLDER];
+	[adium createResourcePathForName:LIST_THEME_FOLDER];
+
 	//Prepare our preferences
 	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:APPEARANCE_DEFAUT_PREFS
-	                              forClass:[self class]] 
+																forClass:[self class]] 
 	                              forGroup:PREF_GROUP_APPEARANCE];
-	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];	
 
 	preferences = [[AIAppearancePreferences preferencePaneForPlugin:self] retain];	
 
@@ -42,18 +49,37 @@
 									   name:AIStatusIconSetInvalidSetNotification
 									 object:nil];
 	
-//	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:ICON_PACK_DEFAULT_PREFS
-//	                              forClass:[self class]] 
-//	                              forGroup:PREF_GROUP_INTERFACE];
-//	
-//	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS
-//	                              forClass:[self class]]
-//	                              forGroup:PREF_GROUP_GENERAL];
+	//Add the menu item for configuring the sort
+	menuItem_userIcons = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Show User Icons", nil)
+																	target:self
+																	action:@selector(toggleAppearancePreference:)
+															 keyEquivalent:@"i"];
+	[menuItem_userIcons setKeyEquivalentModifierMask:(NSControlKeyMask | NSCommandKeyMask)];
+	[[adium menuController] addMenuItem:menuItem_userIcons toLocation:LOC_View_Appearance_Toggles];
+
+	menuItem_userStatusMessages = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Show Status Messages", nil)
+																					   target:self
+																					   action:@selector(toggleAppearancePreference:)
+																				keyEquivalent:@"s"];
+	[menuItem_userStatusMessages setKeyEquivalentModifierMask:(NSControlKeyMask | NSCommandKeyMask)];
+	[[adium menuController] addMenuItem:menuItem_userStatusMessages toLocation:LOC_View_Appearance_Toggles];
+	
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
+	
 }	
 
 - (void)uninstallPlugin
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+}
+
+- (void)dealloc
+{
+	[menuItem_userIcons release];
+	
+	[super dealloc];
 }
 
 /*!
@@ -63,41 +89,71 @@
 					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Status icons
-	if (firstTime || [key isEqualToString:KEY_STATUS_ICON_PACK]) {
-		NSString *path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_STATUS_ICON_PACK]
-										 extension:@"AdiumStatusIcons"
-								resourceFolderName:@"Status Icons"];
-		
-		//If the preferred pack isn't found (it was probably deleted while active), use the default one
-		if (!path) {
-			NSString *name = [[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
-																			 group:PREF_GROUP_APPEARANCE
-																			object:nil];
-			path = [adium pathOfPackWithName:name
-								   extension:@"AdiumStatusIcons"
-						  resourceFolderName:@"Status Icons"];
+	if ([group isEqualToString:PREF_GROUP_APPEARANCE]) {
+		if (firstTime || [key isEqualToString:KEY_STATUS_ICON_PACK]) {
+			NSString *path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_STATUS_ICON_PACK]
+											 extension:@"AdiumStatusIcons"
+									resourceFolderName:@"Status Icons"];
+			
+			//If the preferred pack isn't found (it was probably deleted while active), use the default one
+			if (!path) {
+				NSString *name = [[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
+																				 group:PREF_GROUP_APPEARANCE
+																				object:nil];
+				path = [adium pathOfPackWithName:name
+									   extension:@"AdiumStatusIcons"
+							  resourceFolderName:@"Status Icons"];
+			}
+			
+			[AIStatusIcons setActiveStatusIconsFromPath:path];
 		}
 		
-		[AIStatusIcons setActiveStatusIconsFromPath:path];
+		//Service icons
+		if (firstTime || [key isEqualToString:KEY_SERVICE_ICON_PACK]) {
+			NSString *path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]
+											 extension:@"AdiumServiceIcons"
+									resourceFolderName:@"Service Icons"];
+			
+			//If the preferred pack isn't found (it was probably deleted while active), use the default one
+			if (!path) {
+				NSString *name = [[adium preferenceController] defaultPreferenceForKey:KEY_SERVICE_ICON_PACK
+																				 group:PREF_GROUP_APPEARANCE
+																				object:nil];
+				path = [adium pathOfPackWithName:name
+									   extension:@"AdiumServiceIcons"
+							  resourceFolderName:@"Service Icons"];
+			}
+			
+			[AIServiceIcons setActiveServiceIconsFromPath:path];
+		}
 	}
-	
-	//Service icons
-	if (firstTime || [key isEqualToString:KEY_SERVICE_ICON_PACK]) {
-		NSString *path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]
-										 extension:@"AdiumServiceIcons"
-								resourceFolderName:@"Service Icons"];
-		
-		//If the preferred pack isn't found (it was probably deleted while active), use the default one
-		if (!path) {
-			NSString *name = [[adium preferenceController] defaultPreferenceForKey:KEY_SERVICE_ICON_PACK
-																			 group:PREF_GROUP_APPEARANCE
-																			object:nil];
-			path = [adium pathOfPackWithName:name
-								   extension:@"AdiumServiceIcons"
-						  resourceFolderName:@"Service Icons"];
+
+	//Theme
+	if ([group isEqualToString:PREF_GROUP_LIST_THEME] &&
+		(firstTime || [key isEqualToString:KEY_LIST_THEME_NAME])) {
+		[self applySetWithName:[prefDict objectForKey:KEY_LIST_THEME_NAME]
+					 extension:LIST_THEME_EXTENSION
+					  inFolder:LIST_THEME_FOLDER
+			 toPreferenceGroup:PREF_GROUP_LIST_THEME];
+	}
+
+	//Layout
+	if ([group isEqualToString:PREF_GROUP_LIST_LAYOUT]) {
+		if (firstTime || [key isEqualToString:KEY_LIST_LAYOUT_NAME]) {
+			[self applySetWithName:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]
+						 extension:LIST_LAYOUT_EXTENSION
+						  inFolder:LIST_LAYOUT_FOLDER
+				 toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
 		}
 		
-		[AIServiceIcons setActiveServiceIconsFromPath:path];
+		if (firstTime || !key ||
+			[key isEqualToString:KEY_LIST_LAYOUT_SHOW_ICON] ||
+			[key isEqualToString:KEY_LIST_LAYOUT_SHOW_EXT_STATUS]) {
+			[menuItem_userIcons setState:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_SHOW_ICON
+																				   group:PREF_GROUP_LIST_LAYOUT] boolValue]];
+			[menuItem_userStatusMessages setState:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS
+																							group:PREF_GROUP_LIST_LAYOUT] boolValue]];
+		}
 	}
 }
 
@@ -114,6 +170,203 @@
 	
 	//Tell the preferences to update
 	[preferences xtrasChanged:nil];
+}
+
+- (void)toggleAppearancePreference:(NSMenuItem *)sender
+{
+	BOOL	 oldValue = [sender state];
+	NSString *key;
+
+	if (sender == menuItem_userIcons) {		
+		key = KEY_LIST_LAYOUT_SHOW_ICON;
+		
+	} else if (sender == menuItem_userStatusMessages) {
+		key = KEY_LIST_LAYOUT_SHOW_EXT_STATUS;
+
+	} else {
+		key = nil;
+	}
+	
+	if (key) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:!oldValue]
+											 forKey:key
+											  group:PREF_GROUP_LIST_LAYOUT];
+		[sender setState:!oldValue];
+
+		//Save the updated layout
+		[self createSetFromPreferenceGroup:PREF_GROUP_LIST_LAYOUT
+								  withName:[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME
+																					group:PREF_GROUP_APPEARANCE]
+								 extension:LIST_LAYOUT_EXTENSION
+								  inFolder:LIST_LAYOUT_FOLDER];
+	}
+}
+
+#pragma mark ListLayout and ListTheme preference management
+//Apply a set of preferences
+- (void)applySetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder toPreferenceGroup:(NSString *)preferenceGroup
+{
+	NSFileManager	*defaultManager = [NSFileManager defaultManager];
+	NSEnumerator	*enumerator;
+	NSString		*fileName, *resourcePath;
+	NSDictionary	*setDictionary = nil;
+	
+	//Look in each resource location until we find it
+	fileName = [setName stringByAppendingPathExtension:extension];
+	
+	enumerator = [[adium resourcePathsForName:folder] objectEnumerator];
+	while ((resourcePath = [enumerator nextObject]) && !setDictionary) {
+		NSString		*filePath = [resourcePath stringByAppendingPathComponent:fileName];
+		
+		if ([defaultManager fileExistsAtPath:filePath]) {
+			setDictionary = [NSDictionary dictionaryWithContentsOfFile:filePath];
+		}
+	}
+	
+	//Apply its values
+	[[adium preferenceController] setPreferences:setDictionary
+										 inGroup:preferenceGroup];
+}
+
+//Create a layout or theme set
+- (BOOL)createSetFromPreferenceGroup:(NSString *)preferenceGroup withName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder
+{
+	NSString		*path;
+	NSString		*fileName = [[setName safeFilenameString] stringByAppendingPathExtension:extension];
+	AIAdium			*sharedAdiumInstance = adium;
+	
+	//If we don't find one, create a path to a bundle in the application support directory
+	path = [[[adium applicationSupportDirectory] stringByAppendingPathComponent:folder] stringByAppendingPathComponent:fileName];
+	if ([AIXtrasManager createXtraBundleAtPath:path])
+		path = [path stringByAppendingPathComponent:@"Contents/Resources/Data.plist"];
+	
+	if ([[[sharedAdiumInstance preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]) {
+		
+		[[sharedAdiumInstance notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+		
+		return YES;
+	} else {
+		NSRunAlertPanel(AILocalizedString(@"Error Saving Theme",nil),
+						AILocalizedString(@"Unable to write file %@ to %@",nil),
+						AILocalizedString(@"OK",nil),
+						nil,
+						nil,
+						fileName,
+						path);
+		return NO;
+	}
+}
+
+//Delete a layout or theme set
+- (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder
+{
+	BOOL		success;
+	
+	success = [[NSFileManager defaultManager] removeFileAtPath:[adium pathOfPackWithName:setName
+																			   extension:extension
+																	  resourceFolderName:folder]
+													   handler:nil];
+	
+	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
+	[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+	
+	return success;
+}
+
+//
+- (BOOL)renameSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder toName:(NSString *)newName
+{
+	BOOL		success;
+	
+	NSString	*destFolder = [[adium applicationSupportDirectory] stringByAppendingPathComponent:folder];
+	NSString	*newFileName = [newName stringByAppendingPathExtension:extension];
+	
+	success = [[NSFileManager defaultManager] movePath:[adium pathOfPackWithName:setName
+																	   extension:extension
+															  resourceFolderName:folder]
+												toPath:[destFolder stringByAppendingPathComponent:newFileName]
+											   handler:nil];
+	
+	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
+	[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+	
+	return success;
+}
+
+//
+- (BOOL)duplicateSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder newName:(NSString *)newName
+{
+	BOOL		success;
+	
+	//Duplicate the set
+	NSString	*destFolder = [[adium applicationSupportDirectory] stringByAppendingPathComponent:folder];
+	NSString	*newFileName = [newName stringByAppendingPathExtension:extension];
+	
+	success = [[NSFileManager defaultManager] copyPath:[adium pathOfPackWithName:setName
+																	   extension:extension
+															  resourceFolderName:folder]
+												toPath:[destFolder stringByAppendingPathComponent:newFileName]
+											   handler:nil];
+	
+	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
+	[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+	
+	return success;
+}
+
+//Sort sets
+int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context) {
+	return [[objectA objectForKey:@"name"] caseInsensitiveCompare:[objectB objectForKey:@"name"]];
+}
+
+//
+- (NSArray *)availableSetsWithExtension:(NSString *)extension fromFolder:(NSString *)folder
+{
+	NSMutableArray	*setArray = [NSMutableArray array];
+	NSEnumerator	*enumerator = [[adium allResourcesForName:folder withExtensions:extension] objectEnumerator];
+	NSMutableSet	*alreadyAddedArray = [NSMutableSet set];
+	NSString		*filePath;
+	
+    while ((filePath = [enumerator nextObject])) {
+		NSString		*name;
+		NSBundle		*xtraBundle;
+		NSDictionary 	*themeDict;
+
+		name = [[filePath lastPathComponent] stringByDeletingPathExtension];
+		NSLog(@"Name is %@",name);
+		if((xtraBundle = [NSBundle bundleWithPath:filePath]) &&
+		   ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1)) {
+			filePath = [[xtraBundle resourcePath] stringByAppendingPathComponent:@"Data.plist"];
+		}
+
+		if ((themeDict = [NSDictionary dictionaryWithContentsOfFile:filePath])) {			
+			//The Adium resource path is last in our resourcePaths array; by only adding sets we haven't
+			//already added, we allow precedence to occur rather than conflict.
+			if (![alreadyAddedArray containsObject:name]) {
+				[setArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+					name, @"name",
+					filePath, @"path",
+					themeDict, @"preferences",
+					nil]];
+				[alreadyAddedArray addObject:name];
+			} else {
+				NSLog(@"Already added");
+			}
+		}
+	}
+	
+	return [setArray sortedArrayUsingFunction:availableSetSort context:nil];
+}
+
+- (NSArray *)availableLayoutSets
+{
+	return [self availableSetsWithExtension:LIST_LAYOUT_EXTENSION 
+								 fromFolder:LIST_LAYOUT_FOLDER];
+}
+- (NSArray *)availableThemeSets
+{
+	return [self availableSetsWithExtension:LIST_THEME_EXTENSION
+								 fromFolder:LIST_THEME_FOLDER];
 }
 
 @end
