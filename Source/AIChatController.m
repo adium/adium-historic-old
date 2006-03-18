@@ -614,7 +614,7 @@
  * 
  * @result The number of unviewed messages
  */
-- (int) unviewedContentCount
+- (int)unviewedContentCount
 {
 	int				count = 0;
 	AIChat			*chat;
