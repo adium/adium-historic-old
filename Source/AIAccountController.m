@@ -67,9 +67,6 @@
 	
 	//Finish prepping the accounts
 	[adiumAccounts controllerDidLoad];
-	
-	//Temporary upgrade code
-	[adiumPasswords upgradePasswords];
 }
 
 //close
