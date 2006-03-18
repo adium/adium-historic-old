@@ -141,7 +141,7 @@
 		if (hoveredFraction > 0.0) hoveredFraction -= 0.05;
 	}
 
-	[[self controlView] display];
+	[[self controlView] setNeedsDisplay:YES];
 
 	if ((hoveredFraction > 0.0) &&
 		(hoveredFraction < 1.0)) {
@@ -172,8 +172,13 @@
 		hovered = inHovered;
 
 		hoveredFraction = (hovered ? 1.0 : 0.0);
-		[[self controlView] display];	
+		[[self controlView] setNeedsDisplay:YES];	
 	}
+}
+
+- (BOOL)hovered
+{
+	return hovered;
 }
 
 #pragma mark Drawing

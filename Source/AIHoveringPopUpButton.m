@@ -33,20 +33,8 @@
 	if ((self = [super initWithFrame:inFrame])) {
 		[self initHoveringPopUpButton];
 	}
-	
+
 	return self;
-}
-
-- (void) setFrameSize:(NSSize)frameSize
-{
-	frameSize.width = [[self cell] trackingWidth];
-	[super setFrameSize:frameSize];
-}
-
-- (void) setFrame:(NSRect)frame
-{
-	[self setFrameSize:frame.size];
-	[self setFrameOrigin:frame.origin];
 }
 
 - (void)awakeFromNib
@@ -137,6 +125,7 @@
 - (void)highlight:(BOOL)inFlag
 {
 	if (!inFlag || highlightOnHoverAndClick) {
+		NSLog(@"Highlight: %i",inFlag);
 		[super highlight:inFlag];
 	}
 }
@@ -151,13 +140,14 @@
 //Ignore dragging
 - (void)mouseDragged:(NSEvent *)theEvent
 {
+	//Empty
 }
 
 - (NSView *)hitTest:(NSPoint)aPoint
 {
 	NSRect	myFrame = [self frame];
 	myFrame.size.width = [[self cell] trackingWidth];
-	
+
 	if (NSPointInRect(aPoint, myFrame)) {
 		return [super hitTest:aPoint];
 	} else {
@@ -171,7 +161,6 @@
 - (void)setTitle:(NSString *)inTitle
 {
 	[[self cell] setTitle:inTitle];
-	[self setFrame:[self frame]];
 	[self setNeedsDisplay:YES];
 
 	[self resetCursorRects];
@@ -180,7 +169,6 @@
 - (void)setFont:(NSFont *)inFont
 {
 	[[self cell] setFont:inFont];
-	[self setFrame:[self frame]];
 	[self setNeedsDisplay:YES];
 }
 
@@ -242,7 +230,6 @@
 - (void)frameDidChange:(NSNotification *)inNotification
 {
 	[self resetCursorRects];
-	[[self superview] setNeedsDisplay:YES];
 }
 
 //Reset our cursor tracking
@@ -279,7 +266,7 @@
 //Cursor entered our view
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-	if (highlightOnHoverAndClick) {
+	if (highlightOnHoverAndClick && ![[self cell] hovered]) {
 		[[self cell] setHovered:YES animate:YES];
 		[self setNeedsDisplay:YES];
 	}
@@ -291,7 +278,7 @@
 //Cursor left our view
 - (void)mouseExited:(NSEvent *)theEvent
 {
-	if (highlightOnHoverAndClick) {
+	if (highlightOnHoverAndClick && [[self cell] hovered]) {
 		[[self cell] setHovered:NO animate:YES];
 		[self setNeedsDisplay:YES];
 	}
