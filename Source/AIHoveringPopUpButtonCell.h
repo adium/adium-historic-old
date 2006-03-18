@@ -25,6 +25,7 @@
 - (void)setImage:(NSImage *)inImage;
 
 - (void)setHovered:(BOOL)inHovered animate:(BOOL)animate;
+- (BOOL)hovered;
 - (float)trackingWidth;
 
 @end
