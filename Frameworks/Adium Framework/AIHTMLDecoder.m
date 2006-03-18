@@ -30,64 +30,6 @@
 #import <Adium/AITextAttachmentExtension.h>
 #import <Adium/ESFileWrapperExtension.h>
 
-#define HTML				@"HTML"
-#define CloseHTML			@"/HTML"
-#define Body				@"BODY"
-#define CloseBody			@"/BODY"
-#define Font				@"FONT"
-#define CloseFont			@"/FONT"
-
-#define Span				@"SPAN"
-#define CloseSpan			@"/SPAN"
-#define BR					@"BR"
-#define BRSlash				@"BR/"
-#define CloseBR				@"/BR"
-#define B					@"B"
-#define CloseB				@"/B"
-#define I					@"I"
-#define CloseI				@"/I"
-#define U					@"U"
-#define CloseU				@"/U"
-#define P					@"P"
-#define CloseP				@"/P"
-
-#define IMG					@"IMG"
-#define CloseIMG			@"/IMG"
-#define Face				@"FACE"
-#define SIZE				@"SIZE"
-#define Color				@"COLOR"
-#define Back				@"BACK"
-#define ABSZ				@"ABSZ"
-
-#define OpenFontTag			@"<FONT"
-#define CloseFontTag		@"</FONT>"
-#define SizeTag				@" ABSZ=\"%i\" SIZE=\"%i\""
-#define BRTag				@"<BR>"
-#define Return				@"\r"
-#define Newline				@"\n"
-
-#define Ampersand			@"&"
-#define AmpersandHTML		@"&amp;"
-
-#define LessThan			@"<"
-#define LessThanHTML		@"&lt;"
-
-#define GreaterThan			@">"
-#define GreaterThanHTML		@"&gt;"
-
-#define Semicolon			@";"
-#define SpaceGreaterThan	@" >"
-#define TagCharStartString	@"<&"
-
-#define Tab					@"\t"
-#define TabHTML				@" &nbsp;&nbsp;&nbsp;"
-
-#define LeadSpace			@" "
-#define LeadSpaceHTML		@"&nbsp;"
-
-#define Space				@"  "
-#define SpaceHTML			@" &nbsp;"
-
 int HTMLEquivalentForFontSize(int fontSize);
 
 @interface AIHTMLDecoder (PRIVATE)
@@ -334,11 +276,12 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			//Close any existing font tags, and open a new one
 			if (thingsToInclude.closingFontTags && openFontTag) {
-				[string appendString:CloseFontTag];
+				[string appendString:@"</FONT>"];
 			}
 			if (!thingsToInclude.simpleTagsOnly) {
 				openFontTag = YES;
-				[string appendString:OpenFontTag];
+				//Leave the <FONT open since we'll add the rest of the font tag on below
+				[string appendString:@"<FONT"];
 			}
 
 			//Family
@@ -361,7 +304,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			//Size
 			if (thingsToInclude.fontTags && !thingsToInclude.simpleTagsOnly) {
-				[string appendString:[NSString stringWithFormat:SizeTag, (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
+				[string appendString:[NSString stringWithFormat:@" ABSZ=\"%i\" SIZE=\"%i\"", (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
 				currentSize = pointSize;
 			}
 
@@ -390,7 +333,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			//Close the font tag if necessary
 			if (!thingsToInclude.simpleTagsOnly) {
-				[string appendString:GreaterThan];
+				[string appendString:@">"];
 			}
 		}
 
@@ -601,10 +544,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						if ((i + 1 < length) && ([chunk characterAtIndex:(i+1)] == '\n')) {
 							i++;
 						}
-						[string appendString:BRTag];
+						[string appendString:@"<BR>"];
 						
 					} else if (currentChar == '\n') {
-						[string appendString:BRTag];
+						[string appendString:@"<BR>"];
 						
 					} else {
 						//unichar characters may have a length of up to 3; be careful to get the whole character
@@ -661,7 +604,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		oldLink = nil;
 	}
 	
-	if (thingsToInclude.fontTags && thingsToInclude.closingFontTags && openFontTag) [string appendString:CloseFontTag]; //Close any open font tag
+	if (thingsToInclude.fontTags && thingsToInclude.closingFontTags && openFontTag) [string appendString:@"</FONT>"]; //Close any open font tag
 	if (rightToLeft) {
 		[string appendString:@"</DIV>"];
 	}
@@ -712,10 +655,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	
     attrString = [[NSMutableAttributedString alloc] init];
 
-	if (!tagCharStart)     tagCharStart = [[NSCharacterSet characterSetWithCharactersInString:TagCharStartString] retain];
-	if (!tagEnd)                 tagEnd = [[NSCharacterSet characterSetWithCharactersInString:SpaceGreaterThan] retain];
-	if (!charEnd)               charEnd = [[NSCharacterSet characterSetWithCharactersInString:Semicolon]          retain];
-	if (!absoluteTagEnd) absoluteTagEnd = [[NSCharacterSet characterSetWithCharactersInString:GreaterThan] retain];
+	if (!tagCharStart)     tagCharStart = [[NSCharacterSet characterSetWithCharactersInString:@"<&"] retain];
+	if (!tagEnd)                 tagEnd = [[NSCharacterSet characterSetWithCharactersInString:@" >"] retain];
+	if (!charEnd)               charEnd = [[NSCharacterSet characterSetWithCharactersInString:@";"] retain];
+	if (!absoluteTagEnd) absoluteTagEnd = [[NSCharacterSet characterSetWithCharactersInString:@">"] retain];
 
 	scanner = [NSScanner scannerWithString:inMessage];
 	[scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
@@ -772,17 +715,17 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		if ([scanner scanCharactersFromSet:tagCharStart intoString:&tagOpen]) { //If a tag wasn't found, we don't process.
 			unsigned scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
 
-			if ([tagOpen isEqualToString:LessThan]) { // HTML <tag>
+			if ([tagOpen isEqualToString:@"<"]) { // HTML <tag>
 				BOOL		validTag = [scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]; //Get the tag
 				NSString	*charactersToSkipAfterThisTag = nil;
 
 				if (validTag) { 
 					//HTML
-					if ([chunkString caseInsensitiveCompare:HTML] == NSOrderedSame) {
+					if ([chunkString caseInsensitiveCompare:@"HTML"] == NSOrderedSame) {
 						//We ignore most stuff inside the HTML tag, but don't want to see the end of it.
 						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
 	
-					} else if ([chunkString caseInsensitiveCompare:CloseHTML] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"/HTML"] == NSOrderedSame) {
 						//We are done
 						break;
 
@@ -818,31 +761,31 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						[textAttributes setLinkURL:nil];
 
 					//Body
-					} else if ([chunkString caseInsensitiveCompare:Body] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"BODY"] == NSOrderedSame) {
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
 							[self processBodyTagArgs:[self parseArguments:chunkString] attributes:textAttributes]; //Process the font tag's contents
 						}
 
-					} else if ([chunkString caseInsensitiveCompare:CloseBody] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"/BODY"] == NSOrderedSame) {
 						//ignore
 
 					//Font
-					} else if ([chunkString caseInsensitiveCompare:Font] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"FONT"] == NSOrderedSame) {
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
 							//Process the font tag's contents
 							[self processFontTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
 						}
 
-					} else if ([chunkString caseInsensitiveCompare:CloseFont] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"/FONT"] == NSOrderedSame) {
 						[textAttributes resetFontAttributes];
 						
 					//span
-					} else if ([chunkString caseInsensitiveCompare:Span] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"SPAN"] == NSOrderedSame) {
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
 							[self processSpanTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
 						}
 
-					} else if ([chunkString caseInsensitiveCompare:CloseSpan] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"/SPAN"] == NSOrderedSame) {
 						if (inLogSpan) {
 							[textAttributes setTextColor:[NSColor blackColor]];
 							[textAttributes setFontFamily:@"Helvetica"];
@@ -851,10 +794,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						}
 						
 					//Line Break
-					} else if ([chunkString caseInsensitiveCompare:BR] == NSOrderedSame || 
-							 [chunkString caseInsensitiveCompare:BRSlash] == NSOrderedSame ||
-							 [chunkString caseInsensitiveCompare:CloseBR] == NSOrderedSame) {
-						[attrString appendString:Return withAttributes:nil];
+					} else if ([chunkString caseInsensitiveCompare:@"BR"] == NSOrderedSame || 
+							 [chunkString caseInsensitiveCompare:@"BR/"] == NSOrderedSame ||
+							 [chunkString caseInsensitiveCompare:@"/BR"] == NSOrderedSame) {
+						[attrString appendString:@"\n" withAttributes:nil];
 						
 						/* Make sure the tag closes; it may have a <BR /> which stopped the scanner at
 						 * at the space rather than the '>'
@@ -868,9 +811,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						charactersToSkipAfterThisTag = @"\n\r";
 
 					//Bold
-					} else if ([chunkString caseInsensitiveCompare:B] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"B"] == NSOrderedSame) {
 						[textAttributes enableTrait:NSBoldFontMask];
-					} else if ([chunkString caseInsensitiveCompare:CloseB] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"/B"] == NSOrderedSame) {
 						[textAttributes disableTrait:NSBoldFontMask];
 
 					//Strong (interpreted as bold)
@@ -880,9 +823,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						[textAttributes disableTrait:NSBoldFontMask];
 
 					//Italic
-					} else if ([chunkString caseInsensitiveCompare:I] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"I"] == NSOrderedSame) {
 						[textAttributes enableTrait:NSItalicFontMask];
-					} else if ([chunkString caseInsensitiveCompare:CloseI] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"/I"] == NSOrderedSame) {
 						[textAttributes disableTrait:NSItalicFontMask];
 
 					//Emphasised (interpreted as italic)
@@ -892,9 +835,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						[textAttributes disableTrait:NSItalicFontMask];
 
 					//Underline
-					} else if ([chunkString caseInsensitiveCompare:U] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"U"] == NSOrderedSame) {
 						[textAttributes setUnderline:YES];
-					} else if ([chunkString caseInsensitiveCompare:CloseU] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"/U"] == NSOrderedSame) {
 						[textAttributes setUnderline:NO];
 
 					//Strikethrough: <s> is deprecated, but people use it
@@ -916,13 +859,13 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						[textAttributes setSuperscript:NO];
 
 					//Image
-					} else if ([chunkString caseInsensitiveCompare:IMG] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"IMG"] == NSOrderedSame) {
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
 							NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] 
 																			attributes:textAttributes];
 							[attrString appendAttributedString:attachString];
 						}
-					} else if ([chunkString caseInsensitiveCompare:CloseIMG] == NSOrderedSame) {
+					} else if ([chunkString caseInsensitiveCompare:@"/IMG"] == NSOrderedSame) {
 						//just ignore </img> if we find it
 
 					//Horizontal Rule
@@ -930,8 +873,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						[attrString appendString:horizontalRule withAttributes:nil];
 						
 					// Ignore <p> for those wacky AIM express users
-					} else if ([chunkString caseInsensitiveCompare:P] == NSOrderedSame ||
-							   ([chunkString caseInsensitiveCompare:CloseP] == NSOrderedSame)) {
+					} else if ([chunkString caseInsensitiveCompare:@"P"] == NSOrderedSame ||
+							   ([chunkString caseInsensitiveCompare:@"/P"] == NSOrderedSame)) {
 						
 					//Invalid
 					} else {
@@ -955,24 +898,24 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					
 				} else {
 					//When an invalid tag is encountered, we add the <, and then move our scanner back to continue processing
-					[attrString appendString:LessThan withAttributes:[textAttributes dictionary]];
+					[attrString appendString:@"<" withAttributes:[textAttributes dictionary]];
 					[scanner setScanLocation:scanLocation];
 				}
 
-			} else if ([tagOpen compare:Ampersand] == NSOrderedSame) { // escape character, eg &gt;
+			} else if ([tagOpen compare:@"&"] == NSOrderedSame) { // escape character, eg &gt;
 				BOOL validTag = [scanner scanUpToCharactersFromSet:charEnd intoString:&chunkString];
 
 				if (validTag) {
 					// We could upgrade this to use an NSDictionary with lots of chars
 					// but for now, if-blocks will do
 					if ([chunkString caseInsensitiveCompare:@"GT"] == NSOrderedSame) {
-						[attrString appendString:GreaterThan withAttributes:[textAttributes dictionary]];
+						[attrString appendString:@">" withAttributes:[textAttributes dictionary]];
 
 					} else if ([chunkString caseInsensitiveCompare:@"LT"] == NSOrderedSame) {
-						[attrString appendString:LessThan withAttributes:[textAttributes dictionary]];
+						[attrString appendString:@"<" withAttributes:[textAttributes dictionary]];
 
 					} else if ([chunkString caseInsensitiveCompare:@"AMP"] == NSOrderedSame) {
-						[attrString appendString:Ampersand withAttributes:[textAttributes dictionary]];
+						[attrString appendString:@"&" withAttributes:[textAttributes dictionary]];
 
 					} else if ([chunkString caseInsensitiveCompare:@"QUOT"] == NSOrderedSame) {
 						[attrString appendString:@"\"" withAttributes:[textAttributes dictionary]];
@@ -1002,7 +945,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						[scanner setScanLocation:[scanner scanLocation] + 1];
 				} else {
 					//When an invalid tag is encountered, we add the &, and then move our scanner back to continue processing
-					[attrString appendString:Ampersand withAttributes:[textAttributes dictionary]];
+					[attrString appendString:@"&" withAttributes:[textAttributes dictionary]];
 					[scanner setScanLocation:scanLocation];
 				}
 			} else { //Invalid tag character (most likely a stray < or &)
@@ -1052,12 +995,12 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while ((arg = [enumerator nextObject])) {
-		if ([arg caseInsensitiveCompare:Face] == NSOrderedSame) {
+		if ([arg caseInsensitiveCompare:@"FACE"] == NSOrderedSame) {
 			[textAttributes setFontFamily:[inArgs objectForKey:arg]];
 
-		} else if ([arg caseInsensitiveCompare:SIZE] == NSOrderedSame) {
+		} else if ([arg caseInsensitiveCompare:@"SIZE"] == NSOrderedSame) {
 			//Always prefer an ABSZ to a size
-			if (![inArgs objectForKey:ABSZ] && ![inArgs objectForKey:@"absz"]) {
+			if (![inArgs objectForKey:@"ABSZ"] && ![inArgs objectForKey:@"absz"]) {
 				unsigned absSize = [[inArgs objectForKey:arg] intValue];
 				static int pointSizes[] = { 9, 10, 12, 14, 18, 24, 48, 72 };
 				int size = (absSize <= 8 ? pointSizes[absSize-1] : 12);
@@ -1065,14 +1008,14 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				[textAttributes setFontSize:size];
 			}
 
-		} else if ([arg caseInsensitiveCompare:ABSZ] == NSOrderedSame) {
+		} else if ([arg caseInsensitiveCompare:@"ABSZ"] == NSOrderedSame) {
 			[textAttributes setFontSize:[[inArgs objectForKey:arg] intValue]];
 
-		} else if ([arg caseInsensitiveCompare:Color] == NSOrderedSame) {
+		} else if ([arg caseInsensitiveCompare:@"COLOR"] == NSOrderedSame) {
 			[textAttributes setTextColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] 
 														 defaultColor:[NSColor blackColor]]];
 
-		} else if ([arg caseInsensitiveCompare:Back] == NSOrderedSame) {
+		} else if ([arg caseInsensitiveCompare:@"BACK"] == NSOrderedSame) {
 			[textAttributes setTextBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg]
 																   defaultColor:[NSColor whiteColor]]];
 
@@ -1531,7 +1474,7 @@ static AIHTMLDecoder *classMethodInstance = nil;
 // encodeNonASCII: YES to encode non-ASCII characters as their HTML equivalents
 // encodeSpaces: YES to preserve spacing when displaying the HTML in a web browser by converting multiple spaces and tabs to &nbsp codes.
 // attachmentsAsText: YES to convert all attachments to their text equivalent if possible; NO to imbed <IMG SRC="...> tags
-// onlyIncludeOutgoingImages: YES to only convert attachments to <IMG SRC="...> tags which should be sent to another user
+// onlyIncludeOutgoingImages: YES to only convert attachments to <IMG SRC="...> tags which should be sent to another user. Only relevant if attachmentsAsText is NO.
 // simpleTagsOnly: YES to separate out FONT tags and include only the most basic HTML elements
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage
 				 headers:(BOOL)includeHeaders 
