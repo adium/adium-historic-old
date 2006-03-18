@@ -101,6 +101,7 @@ int HTMLEquivalentForFontSize(int fontSize);
 			 atPath:(NSString *)inPath
 		   toString:(NSMutableString *)string
 		   withName:(NSString *)inName 
+		 imageClass:(NSString *)imageClass
 		 imagesPath:(NSString *)imagesPath;
 - (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string;
 @end
@@ -508,6 +509,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 													   atPath:existingPath
 													 toString:string
 													 withName:imageName
+												   imageClass:[attachment imageClass]
 												   imagesPath:(shouldIncludeImageWithoutSaving ? imagesSavePath : nil)];
 							
 							//We were succesful appending the image tag, so release this chunk
@@ -1278,6 +1280,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			[attachment setString:[inArgs objectForKey:arg]];
 			[attachment setHasAlternate:YES];
 		}
+		if ([arg caseInsensitiveCompare:@"CLASS"] == NSOrderedSame) {
+			[attachment setImageClass:[inArgs objectForKey:arg]];
+		}
 	}
 	
 	[attachment setShouldSaveImageForLogging:YES];
@@ -1303,6 +1308,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			 atPath:(NSString *)inPath
 		   toString:(NSMutableString *)string
 		   withName:(NSString *)inName 
+		 imageClass:(NSString *)imageClass
 		 imagesPath:(NSString *)imagesPath
 {	
 	NSString	*shortFileName;
@@ -1355,11 +1361,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			//Include size information if possible
 			NSSize imageSize = [attachmentImage size];
 
-			[string appendFormat:@"<img src=\"%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
-				srcPath, altName, (int)imageSize.width, (int)imageSize.height];
+			[string appendFormat:@"<img class=\"%@\" src=\"%@\" alt=\"%@\" width=\"%i\" height=\"%i\">", imageClass, srcPath, altName, (int)imageSize.width, (int)imageSize.height];
 
 		} else {
-			[string appendFormat:@"<img src=\"%@\" alt=\"%@\">", srcPath, altName];
+			[string appendFormat:@"<img class=\"%@\" src=\"%@\" alt=\"%@\">", imageClass, srcPath, altName];
 		}
 	}
 

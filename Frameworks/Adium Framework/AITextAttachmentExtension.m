@@ -122,7 +122,7 @@
 - (void)setString:(NSString *)inString
 {
     if (stringRepresentation != inString) {
-        [stringRepresentation release];
+        [stringRepresentation autorelease];
         stringRepresentation = [inString retain];
     }
 }
@@ -162,6 +162,19 @@
     }
 	
     return (stringRepresentation);
+}
+
+- (void)setImageClass:(NSString *)inString
+{
+	if (imageClass != inString) {
+        [imageClass autorelease];
+        imageClass = [inString retain];
+    }
+}
+
+- (NSString *)imageClass
+{
+	return imageClass;
 }
 
 - (BOOL)shouldSaveImageForLogging
