@@ -19,13 +19,6 @@
 @interface AdiumContentFiltering (PRIVATE)
 - (void)_registerContentFilter:(id)inFilter
 				   filterArray:(NSMutableArray *)inFilterArray;
-
-- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString
-								  contentFilter:(NSArray *)inContentFilterArray
-								  filterContext:(id)filterContext;
-
-int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *context);
-
 @end
 
 @implementation AdiumContentFiltering
@@ -91,26 +84,19 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	NSParameterAssert(type >= 0 && type < FILTER_TYPE_COUNT);
 	NSParameterAssert(direction >= 0 && direction < FILTER_DIRECTION_COUNT);
 
-	if (!delayedContentFilter[type][direction]) {
-		delayedContentFilter[type][direction] = [[NSMutableArray alloc] init];
+	if (!contentFilter[type][direction]) {
+		contentFilter[type][direction] = [[NSMutableArray alloc] init];
 	}
 	
+	//Register the filter
 	[self _registerContentFilter:inFilter
-					 filterArray:delayedContentFilter[type][direction]];
-}
+					 filterArray:contentFilter[type][direction]];
 
-/*
- * @brief Add a content filter to the specified array
- *
- * Adds, then sorts by priority
- */
-- (void)_registerContentFilter:(id)inFilter
-				   filterArray:(NSMutableArray *)inFilterArray
-{
-	NSParameterAssert(inFilter != nil);
-	
-	[inFilterArray addObject:inFilter];
-	[inFilterArray sortUsingFunction:filterSort context:nil];	
+	//Note that this is a delayed filter
+	if (!delayedContentFilters[type][direction]) {
+		delayedContentFilters[type][direction] = [[NSMutableArray alloc] init];
+	}
+	[delayedContentFilters[type][direction] addObject:inFilter];
 }
 
 /*
@@ -126,7 +112,6 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	for (i = 0; i < FILTER_TYPE_COUNT; i++) {
 		for (j = 0; j < FILTER_DIRECTION_COUNT; j++) {
 			[contentFilter[i][j] removeObject:inFilter];
-			[delayedContentFilter[i][j] removeObject:inFilter];
 		}
 	}
 }
@@ -160,9 +145,61 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 }
 
 /*
+ * @brief Perform the filtering of an attributedString on the specified content filter.
+ *
+ * @param attributedString A pointer to the NSAttributedString to filter
+ * @param inContentFilterArray Array of filters to use, which must each conform to either AIDelayedContentFilter or AIContentFilter
+ * @param filtercontext Passed to each filter as context.
+ * @param uniqueID A unique ID used by delayed filters
+ * @param performedFilters An array of filters which should not be performed, such as previously performed or inappropriate filters
+ * @param finishedFilters A pointer to an array which will be filled with the filters which were performed, suitable for passing later as performedFilters
+ *
+ * @result YES if any delayed filtering began; NO if it did not
+ */
+- (BOOL)_filterAttributedString:(NSAttributedString **)attributedString
+				  contentFilter:(NSArray *)inContentFilterArray
+				  filterContext:(id)filterContext
+		  uniqueDelayedFilterID:(unsigned long long)uniqueID
+				  filtersToSkip:(NSArray *)filtersToSkip
+				finishedFilters:(NSArray **)finishedFilters
+{
+	NSEnumerator	*enumerator = [inContentFilterArray objectEnumerator];
+	id				filter;
+	BOOL			beganDelayedFiltering = NO;
+	NSMutableArray	*performedFilters;
+	
+	//If we're passed previouslyPerformedFilters, use them as a starting point for performedFilters
+	if (filtersToSkip) {
+		performedFilters = [[filtersToSkip mutableCopy] autorelease];
+	} else {
+		performedFilters = [NSMutableArray array];
+	}
+
+	while ((filter = [enumerator nextObject]) && !beganDelayedFiltering) {
+		//Only run the filter if there were no previously performed filters or this hasn't been previously done
+		if (!filtersToSkip || ![filtersToSkip containsObject:filter]) {
+			if ([filter conformsToProtocol:@protocol(AIDelayedContentFilter)]) {
+				beganDelayedFiltering = [(id <AIDelayedContentFilter>)filter delayedFilterAttributedString:*attributedString 
+																								   context:filterContext
+																								  uniqueID:uniqueID];			
+			} else {
+				*attributedString = [(id <AIContentFilter>)filter filterAttributedString:*attributedString context:filterContext];
+			}
+		}
+		
+		//Note that we've now completed this filter
+		[performedFilters addObject:filter];
+	}
+	
+	if (finishedFilters) *finishedFilters = performedFilters;
+
+	return beganDelayedFiltering;
+}
+
+/*
  * @brief Filter an attributed string immediately
  *
- * This does not perform delayed filters.
+ * This does not perform delayed filters (it passes the delayed content filters as filtersToSkip).
  *
  * @param attributedString NSAttributedString to filter
  * @param type Type of the filter
@@ -175,58 +212,14 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 									 direction:(AIFilterDirection)direction
 									   context:(id)filterContext
 {
-	attributedString = [self _filterAttributedString:attributedString
-									   contentFilter:contentFilter[type][direction]
-									   filterContext:filterContext];
+	[self _filterAttributedString:&attributedString
+					contentFilter:contentFilter[type][direction]
+					filterContext:filterContext
+			uniqueDelayedFilterID:0
+					filtersToSkip:delayedContentFilters[type][direction]
+				  finishedFilters:NULL];
 	
 	return attributedString;
-}
-
-
-/*
- * @brief Perform the filtering of an attributedString on the specified content filter.
- *
- * @param attributedString NSAttributedString to filter
- * @param inContentFilterArray Array of filters to use
- * @param filtercontext Passed to each filter as context.
- * @result The filtered NSAttributedString, which may be the same as attributedString
- */
-- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString
-								  contentFilter:(NSArray *)inContentFilterArray
-								  filterContext:(id)filterContext
-{
-	NSEnumerator		*enumerator = [inContentFilterArray objectEnumerator];
-	id<AIContentFilter>	filter;
-	
-	while ((filter = [enumerator nextObject])) {
-		attributedString = [filter filterAttributedString:attributedString context:filterContext];
-	}
-	
-	return attributedString;
-}
-
-/*
- * @brief Begin delayed filtering of an attributedString
- *
- * @result YES if any delayed filtering began; NO if it did not
- */
-- (BOOL)_delayedFilterAttributedString:(NSAttributedString *)attributedString
-						 contentFilter:(NSArray *)inContentFilterArray
-						 filterContext:(id)filterContext
-				 uniqueDelayedFilterID:(unsigned long long)uniqueID
-{
-	NSEnumerator				*enumerator = [inContentFilterArray objectEnumerator];
-	id<AIDelayedContentFilter>	filter;
-	BOOL						beganDelayedFiltering = NO;
-	
-	//Break as soon as we begin delayed filtering; we'll be back through here when that filtering is done
-	while ((filter = [enumerator nextObject]) && !beganDelayedFiltering) {
-		beganDelayedFiltering = [filter delayedFilterAttributedString:attributedString 
-															  context:filterContext
-															 uniqueID:uniqueID];
-	}
-	
-	return beganDelayedFiltering;	
 }
 
 /*
@@ -266,31 +259,38 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 
 	if (attributedString) {
 		static unsigned long long	uniqueDelayedFilterID = 0;
+		NSArray	*performedFilters = nil;
 		
-		//Perform the main filters
-		attributedString = [self _filterAttributedString:attributedString
-										   contentFilter:contentFilter[type][direction]
-										   filterContext:filterContext];
-
-		//Now perform the delayed filters
-		shouldDelay = [self _delayedFilterAttributedString:attributedString
-											 contentFilter:delayedContentFilter[type][direction]
-											 filterContext:filterContext
-									 uniqueDelayedFilterID:uniqueDelayedFilterID];
+		//Perform the filters
+		shouldDelay = [self _filterAttributedString:&attributedString
+									  contentFilter:contentFilter[type][direction]
+									  filterContext:filterContext
+							  uniqueDelayedFilterID:uniqueDelayedFilterID
+									  filtersToSkip:nil
+									finishedFilters:&performedFilters];
 
 		//If we should delay (a delayed filter is doing its thing), store what we need to finish later
 		if (shouldDelay) {
+			NSMutableDictionary *trackingDict;
+			
 			//NSInvocation does not retain its arguments by default; if we're caching the invocation, we must tell it to.
 			[invocation retainArguments];
 
-			//Track this so we can invoke with the filtered product later
-			[delayedFilteringDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:
+			trackingDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 				invocation, @"Invocation",
-				delayedContentFilter[type][direction], @"Delayed Content Filter",
-				filterContext, @"Filter Context", nil]
+				contentFilter[type][direction], @"Delayed Content Filter",
+				filterContext, @"Filter Context", nil];
+			
+			if (performedFilters) {
+				[trackingDict setObject:performedFilters
+								 forKey:@"Performed Filters"];
+			}
+	
+			//Track this so we can invoke with the filtered product later
+			[delayedFilteringDict setObject:trackingDict
 									 forKey:[NSNumber numberWithUnsignedLongLong:uniqueDelayedFilterID]];
 		}
-
+		
 		//Increment our delayed filter ID
 		uniqueDelayedFilterID++;
 	}
@@ -316,18 +316,21 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
  */
 - (void)delayedFilterDidFinish:(NSAttributedString *)attributedString uniqueID:(unsigned long long)uniqueID
 {
-	NSNumber		*uniqueIDNumber;
-	NSDictionary	*infoDict;
-	BOOL			shouldDelay;
+	NSNumber			*uniqueIDNumber;
+	NSMutableDictionary	*infoDict;
+	NSArray				*performedFilters = nil;
+	BOOL				shouldDelay;
 
 	uniqueIDNumber = [NSNumber numberWithUnsignedLongLong:uniqueID];
 	infoDict = [delayedFilteringDict objectForKey:uniqueIDNumber];
-	
-	//Run through the delayed filters again, since a delayed filter would stop after the first hit
-	shouldDelay = [self _delayedFilterAttributedString:attributedString
-										 contentFilter:[infoDict objectForKey:@"Delayed Content Filter"]
-										 filterContext:[infoDict objectForKey:@"Filter Context"]
-								 uniqueDelayedFilterID:uniqueID];
+
+	//Run through the filters again, skipping the ones we did previously, since a delayed filter would stop after the first hit
+	shouldDelay = [self _filterAttributedString:&attributedString
+								  contentFilter:[infoDict objectForKey:@"Delayed Content Filter"]
+								  filterContext:[infoDict objectForKey:@"Filter Context"]
+						  uniqueDelayedFilterID:uniqueID
+								  filtersToSkip:[infoDict objectForKey:@"Performed Filters"]
+								finishedFilters:&performedFilters];
 	
 	//If we no longer need to delay, set up the invocation and invoke it
 	if (!shouldDelay) {
@@ -341,11 +344,18 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 
 		//No further need for the infoDict from delayedFilteringDict
 		[delayedFilteringDict removeObjectForKey:uniqueIDNumber];
+
+	} else {
+		/* performedFilters may now be a different object after filters ran;
+		 * update the infoDict for the next delayedFilterDidFinsh:uniqueId: call
+		 */
+		[infoDict setObject:performedFilters
+					 forKey:@"Performed Filters"];
 	}
 }
 
 #pragma mark Filter priority sort
-int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *context)
+static int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *context)
 {
 	float filterPriorityA = [filterA filterPriority];
 	float filterPriorityB = [filterB filterPriority];
@@ -356,6 +366,20 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		return NSOrderedDescending;
 	else
 		return NSOrderedSame;
+}
+
+/*
+ * @brief Add a content filter to the specified array
+ *
+ * Adds, then sorts by priority
+ */
+- (void)_registerContentFilter:(id)inFilter
+				   filterArray:(NSMutableArray *)inFilterArray
+{
+	NSParameterAssert(inFilter != nil);
+	
+	[inFilterArray addObject:inFilter];
+	[inFilterArray sortUsingFunction:filterSort context:nil];	
 }
 
 @end
