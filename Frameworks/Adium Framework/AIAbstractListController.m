@@ -125,12 +125,18 @@
  * when the tooltipTracker removes it from the view.  After that, a simple mouseEntered: or mouseExited: event will
  * send that message on to the deallocated AISmoothTooltipTracker instance.  Braaains.
  */
-- (void)contactListWillBeRemoved
+- (void)contactListWillBeRemovedFromWindow
 {
 	if (tooltipTracker) {
-		[tooltipTracker setDelegate:nil];
-		[tooltipTracker release]; tooltipTracker = nil;
+		[tooltipTracker viewWillBeRemovedFromWindow];
 	}	
+}
+
+- (void)contactListWasAddedBackToWindow
+{
+	if (tooltipTracker) {
+		[tooltipTracker viewWasAddedToWindow];
+	}
 }
 
 //Setup the window after it has loaded
@@ -560,6 +566,9 @@
 - (void)configureTypeSelectTableView:(KFTypeSelectTableView *)tableView
 {
     [tableView setSearchWraps:YES]; 
+
+	//Use substring matching so that last names and screen names (if displayed) can be search targets
+	[tableView setMatchAlgorithm:KFSubstringMatchAlgorithm];
 }
 
 /*!
@@ -635,8 +644,8 @@
 		[dragItems release]; dragItems = nil;
 	}
 	
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
-	[self setShowTooltips:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS] boolValue]];
+	[self setShowTooltips:[[[adium preferenceController] preferenceForKey:KEY_CL_SHOW_TOOLTIPS
+																	group:PREF_GROUP_CONTACT_LIST] boolValue]];
 }
 
 - (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
