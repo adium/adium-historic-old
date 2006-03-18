@@ -149,10 +149,11 @@
                 "menu_Status_Accounts" = id; 
                 "menu_Status_Additions" = id; 
                 "menu_Status_State" = id; 
+                "menu_View_Additions" = id; 
+                "menu_View_Appearance_Toggles" = id; 
                 "menu_View_General" = id; 
-                "menu_View_Unnamed_A" = id; 
-                "menu_View_Unnamed_B" = id; 
-                "menu_View_Unnamed_C" = id; 
+                "menu_View_Sorting" = id; 
+                "menu_View_Toggles" = id; 
                 "menu_Window_Auxiliary" = id; 
                 "menu_Window_Commands" = id; 
                 "menu_Window_Fixed" = id; 
