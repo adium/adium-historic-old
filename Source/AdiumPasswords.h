@@ -33,7 +33,4 @@
 - (NSString *)passwordForProxyServer:(NSString *)server userName:(NSString *)userName;
 - (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 
-//Upgrade
-- (void)upgradePasswords;
-
 @end
