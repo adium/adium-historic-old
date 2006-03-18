@@ -225,6 +225,15 @@ static int  sizeOfSortOrder;
 	return [NSSet setWithObject:@"Display Name"];
 }
 
+/*
+ * @brief Can the user manually reorder when this sort controller is active?
+ *
+ * The status sort can sort within status groupings either manually or alphabetically. Only the former should allow user reordering.
+ */
+- (BOOL)canSortManually {
+	return !resolveAlphabetically;
+}
+
 //Configuration
 #pragma mark Configuration
 /*!
