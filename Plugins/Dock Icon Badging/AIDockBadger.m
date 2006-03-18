@@ -57,6 +57,9 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 }
 
+/*
+ * @brief Uninstall
+ */
 - (void)uninstallPlugin
 {
 	[[adium chatController] unregisterChatObserver:self];
@@ -66,21 +69,23 @@
 
 #pragma mark Signals to update
 
+/*
+ * @brief Update our overlay when a chat updates with a relevant key
+ */
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	[self performSelector:@selector(_setOverlay)
-			   withObject:nil
-			   afterDelay:0];
+	if (!inModifiedKeys || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) {
+		[self performSelector:@selector(_setOverlay)
+				   withObject:nil
+				   afterDelay:0];
+	}
+	
 	return nil;
 }
 
-- (void)contentAdded:(NSNotification *)not
-{
-	[self performSelector:@selector(_setOverlay)
-			   withObject:nil
-			   afterDelay:0];
-}
-
+/*
+ * @brief Update our overlay when a chat closes
+ */
 - (void)chatClosed:(NSNotification *)notification
 {	
 	[self performSelector:@selector(_setOverlay)
@@ -98,19 +103,13 @@
 			shouldBadge = newShouldBadge;
 			
 			if (shouldBadge) {
-				//Register as a chat observer (for unviewed content)
+				//Register as a chat observer (for unviewed content). If there is any unviewed content, our overlay will be set.
 				[[adium chatController] registerChatObserver:self];
-				
-				[[adium notificationCenter] addObserver:self
-											   selector:@selector(contentAdded:)
-												   name:Content_WillReceiveContent
-												 object:nil];
 				
 				[[adium notificationCenter] addObserver:self
 											   selector:@selector(chatClosed:)
 												   name:Chat_WillClose
 												 object:nil];
-				
 			} else {
 				//Remove any existing overlay
 				[self removeOverlay];
@@ -127,35 +126,37 @@
 
 - (NSImage *)numberedBadge:(int)count
 {
-	if(!badgeOne) {
-		badgeOne = [[NSImage imageNamed:@"newContentTwoDigits"] retain];
-		badgeTwo = [[NSImage imageNamed:@"newContentThreeDigits"] retain];
+	if(!badgeTwoDigits) {
+		badgeTwoDigits = [[NSImage imageNamed:@"newContentTwoDigits"] retain];
+		badgeThreeDigits = [[NSImage imageNamed:@"newContentThreeDigits"] retain];
 	}
 
-	NSImage *badge = nil, *badgeToComposite = nil;
-	NSString *numString = nil;
+	NSImage		*badge = nil, *badgeToComposite = nil;
+	NSString	*numString = nil;
 
-	if(count < 1000) {
-		NSImage *badges[] = { badgeOne, badgeTwo };
-		badgeToComposite = badges[(count >= 10)];
-		numString = [[NSNumber numberWithInt:count] description];
-	} else {
-		//999 unread messages should be enough for anyone
-		badgeToComposite = badgeTwo;
-		numString = AILocalizedString(@">= 1000 unread messages", /*comment*/ @"Used by AIDockBadger.");
+	//999 unread messages should be enough for anyone
+	if (count >= 1000) {
+		count = 999;
 	}
-	
+
+	badgeToComposite = ((count < 10) ? badgeTwoDigits : badgeThreeDigits);
+	numString = [[NSNumber numberWithInt:count] description];
+
 	NSRect rect = { NSZeroPoint, [badgeToComposite size] };
+	NSFont *font = [NSFont fontWithName:@"Helvetica-Bold" size:24];
+	
+	if (!font) font = [NSFont systemFontOfSize:24];
+	
 	NSDictionary *atts = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSColor whiteColor], NSForegroundColorAttributeName,
-		[NSFont fontWithName:@"Helvetica-Bold" size:24], NSFontAttributeName,
+		font, NSFontAttributeName,
 		nil];
 	
 	NSSize numSize = [numString sizeWithAttributes:atts];
 	rect.origin.x = (rect.size.width / 2) - (numSize.width / 2);
 	rect.origin.y = (rect.size.height / 2) - (numSize.height / 2);
 
-	badge = [[[NSImage alloc] initWithSize:rect.size] autorelease];
+	badge = [[NSImage alloc] initWithSize:rect.size];
 	[badge setFlipped:YES];
 	[badge lockFocus];
 	[badgeToComposite compositeToPoint:NSMakePoint(0, rect.size.height) operation:NSCompositeSourceOver];
@@ -165,7 +166,7 @@
 	
 	[badge unlockFocus];
 		
-	return badge;
+	return [badge autorelease];
 }
 
 /*

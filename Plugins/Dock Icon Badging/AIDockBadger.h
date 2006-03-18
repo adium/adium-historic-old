@@ -23,7 +23,7 @@
 
 @interface AIDockBadger : AIPlugin <AIChatObserver> {
 	AIIconState					*overlayState;
-	NSImage						*badgeOne, *badgeTwo;
+	NSImage						*badgeTwoDigits, *badgeThreeDigits;
 	int							lastUnviewedContentCount;
 	
 	BOOL						shouldBadge;
