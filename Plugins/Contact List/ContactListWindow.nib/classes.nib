@@ -60,6 +60,7 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
         }, 
+        {CLASS = AIWindowDraggingView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
