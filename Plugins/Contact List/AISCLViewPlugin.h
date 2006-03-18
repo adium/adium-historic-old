@@ -40,14 +40,4 @@
 - (void)closeContactList;
 - (void)contactListDidClose;
 
-//Themes and Layouts
-+ (void)applySetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder toPreferenceGroup:(NSString *)preferenceGroup;
-+ (BOOL)createSetFromPreferenceGroup:(NSString *)preferenceGroup withName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
-+ (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
-+ (BOOL)renameSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder toName:(NSString *)newName;
-+ (BOOL)duplicateSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder newName:(NSString *)newName;
-+ (NSArray *)availableLayoutSets;
-+ (NSArray *)availableThemeSets;
-+ (NSArray *)availableSetsWithExtension:(NSString *)extension fromFolder:(NSString *)folder;
-
 @end

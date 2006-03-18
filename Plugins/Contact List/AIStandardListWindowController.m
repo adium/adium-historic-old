@@ -34,7 +34,7 @@
 #import "AIContactListImagePicker.h"
 #import "AIContactListNameButton.h"
 
-#define TOOLBAR_CONTACT_LIST				@"ContactList 1.0"				//Toolbar identifier
+#define TOOLBAR_CONTACT_LIST				@"ContactList:1.0"				//Toolbar identifier
 
 @interface AIStandardListWindowController (PRIVATE)
 - (void)_configureToolbar;
@@ -373,11 +373,11 @@
 	AIStatus	*activeStatus = [[adium statusController] activeStatusState];
 	NSString	*title = [activeStatus title];
 	if (!title) NSLog(@"Warning: Title for %@ is (null)",activeStatus);
-	
+
 	[statusMenuView setTitle:(title ? title : @"")];
 	[statusMenuView setImage:[activeStatus iconOfType:AIStatusIconList
 											direction:AIIconFlipped]];
-	
+
 	[self updateImagePicker];
 	[self updateNameView];
 }
@@ -631,12 +631,12 @@
 {
     NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_CONTACT_LIST] autorelease];
 
+	[toolbar setAutosavesConfiguration:NO];
     [toolbar setDelegate:self];
     [toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
-    [toolbar setSizeMode:NSToolbarSizeModeSmall];
+    [toolbar setSizeMode:NSToolbarSizeModeRegular];
     [toolbar setVisible:YES];
     [toolbar setAllowsUserCustomization:NO];
-    [toolbar setAutosavesConfiguration:YES];
 
 	/* Seemingly randomling, setToolbar: may throw:
 	 * Exception:	NSInternalInconsistencyException
