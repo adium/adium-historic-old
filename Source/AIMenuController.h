@@ -20,11 +20,15 @@
 
 @protocol AIController;
 
+/* Each of the items in this enum must correspond to an NSMenuItem declared in the interface and connected in MainMenu.nib.
+ * If the menu item isn't the first in its menu, it can be connected to the Quit Adium menu item; AIMenuController will move it
+ * to the appropriate place.
+ */
 typedef enum {
     LOC_Adium_About = 0, LOC_Adium_Preferences,
     LOC_File_New, LOC_File_Close, LOC_File_Save, LOC_File_Additions,
     LOC_Edit_Bottom, LOC_Edit_Additions,
-	LOC_View_General, LOC_View_Sorting, LOC_View_Toggles, LOC_View_Additions, 
+	LOC_View_General, LOC_View_Sorting, LOC_View_Toggles, LOC_View_Appearance_Toggles, LOC_View_Additions, 
     LOC_Contact_Manage, LOC_Contact_Info, LOC_Contact_Action, LOC_Contact_NegativeAction, LOC_Contact_Additions,
 	LOC_Status_State, LOC_Status_Accounts, LOC_Status_Additions,
     LOC_Format_Styles, LOC_Format_Palettes, LOC_Format_Additions, 
@@ -54,9 +58,10 @@ typedef enum {
     IBOutlet	id		menu_Edit_Bottom;
     IBOutlet	id		menu_Edit_Additions;
     IBOutlet	id		menu_View_General;
-    IBOutlet	id		menu_View_Unnamed_A;
-    IBOutlet	id		menu_View_Unnamed_B;
-    IBOutlet	id		menu_View_Unnamed_C;
+    IBOutlet	id		menu_View_Sorting;
+    IBOutlet	id		menu_View_Toggles;
+    IBOutlet	id		menu_View_Appearance_Toggles;	
+    IBOutlet	id		menu_View_Additions;
 	IBOutlet	id		menu_Status_State;
     IBOutlet	id		menu_Status_Accounts;
     IBOutlet	id		menu_Status_Additions;
@@ -78,7 +83,7 @@ typedef enum {
     IBOutlet	id		menu_Dock_Status;
     IBOutlet    id  	menuItem_Format_Italics;
     
-	//Menu items in MainMenu.nib for localization purposes
+	//Menu items below this point are connected in MainMenu.nib for localization purposes
 	IBOutlet	NSMenuItem	*menuItem_file;
 	IBOutlet	NSMenuItem	*menuItem_edit;
 	IBOutlet	NSMenuItem	*menuItem_view;
@@ -159,7 +164,6 @@ typedef enum {
     AIListObject						*currentContextMenuObject;
     AIChat								*currentContextMenuChat;
 	
-    //disabled until post .53
     NSMenu                              *textViewContextualMenu;
     NSTextView                          *contextualMenu_TextView;
     
@@ -186,9 +190,4 @@ typedef enum {
 - (void)removeItalicsKeyEquivalent;
 - (void)restoreItalicsKeyEquivalent;
 
-@end
-
-
-
-@interface AIMenuController (INTERNAL)
 @end
