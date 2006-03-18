@@ -22,6 +22,7 @@
 #import <AIUtilities/AIGradientCell.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 #import "AIXtraPreviewController.h"
 
@@ -48,10 +49,10 @@ static AIXtrasManager * manager;
 	if(![window isVisible]) {
 		showInfo = NO;
 		
-		[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self
-																selector:@selector(xtrasChanged:)
-																	name:Adium_Xtras_Changed
-																  object:nil];
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(xtrasChanged:)
+										   name:Adium_Xtras_Changed
+										 object:nil];
 		[NSBundle loadNibNamed:@"XtrasManager" owner:self];
 		
 		AIImageTextCell			*cell;
@@ -79,84 +80,96 @@ static AIXtrasManager * manager;
 	[window makeKeyAndOrderFront:nil];
 }
 
-- (void) xtrasChanged:(NSNotification *)not
+- (void)windowWillClose:(NSNotification *)aNotification
 {
-	[self loadXtras];//OMG HAX
+	[[adium notificationCenter] removeObserver:self
+										  name:Adium_Xtras_Changed
+										object:nil];
+	
+	[categories release]; categories = nil;
+	[categoryNames release]; categoryNames = nil;
+	[categoryImages release]; categoryImages = nil;
 }
 
-static NSImage * listThemeImage;
-static NSImage * messageStyleImage;
-static NSImage * statusIconImage;
-static NSImage * soundSetImage;
-static NSImage * dockIconImage;
-static NSImage * emoticonSetImage;
-static NSImage * scriptImage;
+
+- (void) xtrasChanged:(NSNotification *)not
+{
+	//Clear our cache of loaded Xtras
+	[self loadXtras];
+	
+	//Now redisplay our current category, in case it changed
+	[self setCategory:nil];
+}
 
 - (void) loadXtras
 {
-	if (!listThemeImage) {
-		listThemeImage = [NSImage imageNamed:@"AdiumListTheme"];
-		messageStyleImage = [NSImage imageNamed:@"AdiumMessageStyle"];
-		statusIconImage = [NSImage imageNamed:@"AdiumStatusIcons"];
-		soundSetImage = [NSImage imageNamed:@"AdiumSoundset"];
-		dockIconImage = [NSImage imageNamed:@"AdiumIcon"];
-		emoticonSetImage = [NSImage imageNamed:@"AdiumEmoticonset"];
-		scriptImage = [NSImage imageNamed:@"AdiumScripts"];
-	}
-	if (categories) {
-		[categories autorelease];
-		[categoryNames autorelease];
-		[categoryImages autorelease];
-	}
+	[categories release];
+	[categoryNames release];
+	[categoryImages release];
+
 	categories = [[NSMutableArray alloc] init];
 	categoryNames = [[NSMutableArray alloc] init];
 	categoryImages = [[NSMutableArray alloc] init];
 	
-	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIMessageStylesDirectory, AIAllDomainsMask, YES)]];
+	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIMessageStylesDirectory]
+													  forKey:@"Directory"]];	
 	[categoryNames addObject:@"Message Styles"];
-	[categoryImages addObject:messageStyleImage];
+	[categoryImages addObject:[NSImage imageNamed:@"AdiumMessageStyle"]];
 	
-	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIContactListDirectory, AIAllDomainsMask, YES)]];
+	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIContactListDirectory]
+													  forKey:@"Directory"]];
 	[categoryNames addObject:@"Contact List Themes"];
-	[categoryImages addObject:listThemeImage];
-
-	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIStatusIconsDirectory, AIAllDomainsMask, YES)]];
+	[categoryImages addObject:[NSImage imageNamed:@"AdiumListTheme"]];
+	
+	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIStatusIconsDirectory]
+													  forKey:@"Directory"]];
+	
 	[categoryNames addObject:@"Status Icons"];
-	[categoryImages addObject:statusIconImage];
-
-	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AISoundsDirectory, AIAllDomainsMask, YES)]];
+	[categoryImages addObject:[NSImage imageNamed:@"AdiumStatusIcons"]];
+	
+	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AISoundsDirectory]
+													  forKey:@"Directory"]];
+	
 	[categoryNames addObject:@"Sound Sets"];
-	[categoryImages addObject:soundSetImage];
-
-	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIDockIconsDirectory, AIAllDomainsMask, YES)]];
+	[categoryImages addObject:[NSImage imageNamed:@"AdiumSoundset"]];
+	
+	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIDockIconsDirectory]
+													  forKey:@"Directory"]];
+	
 	[categoryNames addObject:@"Dock Icons"];
-	[categoryImages addObject:dockIconImage];
-
-	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIEmoticonsDirectory, AIAllDomainsMask, YES)]];
+	[categoryImages addObject:[NSImage imageNamed:@"AdiumIcon"]];
+	
+	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIEmoticonsDirectory]
+													  forKey:@"Directory"]];
 	[categoryNames addObject:@"Emoticons"];
-	[categoryImages addObject:emoticonSetImage];
-
-	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIScriptsDirectory, AIAllDomainsMask, YES)]];
+	[categoryImages addObject:[NSImage imageNamed:@"AdiumEmoticonset"]];
+	
+	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIScriptsDirectory]
+													  forKey:@"Directory"]];
+	
 	[categoryNames addObject:@"Scripts"];
-	[categoryImages addObject:scriptImage];
+	[categoryImages addObject:[NSImage imageNamed:@"AdiumScripts"]];
 }
 
-- (NSArray *) arrayOfXtrasAtPaths:(NSArray *)paths
+- (NSArray *)arrayOfXtrasAtPaths:(NSArray *)paths
 {
-	NSMutableArray * contents = [NSMutableArray array];
-	NSEnumerator * dirEnu = [paths objectEnumerator];
-	NSString * path;
-	NSEnumerator * xEnu;
-	NSString * xtraName;
-	while((path = [dirEnu nextObject]))
-	{
-		xEnu = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
-		while((xtraName = [xEnu nextObject]))
-		{
-			if([xtraName isEqualToString:@".DS_Store"]) continue;
-			[contents addObject:[AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[path stringByAppendingPathComponent:xtraName]]]];
+	NSMutableArray	*contents = [NSMutableArray array];
+	NSEnumerator	*dirEnu;
+	NSString		*path, *xtraName;
+	NSFileManager	*manager = [NSFileManager defaultManager];
+
+	dirEnu = [paths objectEnumerator];
+	while ((path = [dirEnu nextObject])) {
+		NSEnumerator	*xEnu;
+
+		xEnu = [[manager directoryContentsAtPath:path] objectEnumerator];
+		while ((xtraName = [xEnu nextObject])) {
+			if (![xtraName hasPrefix:@"."]) {
+				[contents addObject:[AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[path stringByAppendingPathComponent:xtraName]]]];
+			}
 		}
 	}
+
 	return contents;
 }
 
@@ -167,12 +180,31 @@ static NSImage * scriptImage;
 	[super dealloc];
 }
 
+- (NSArray *)xtrasForCategoryAtIndex:(int)inIndex
+{
+	NSDictionary	*xtrasDict = [categories objectAtIndex:inIndex];
+	NSArray			*xtras;
+	
+	if (!(xtras = [xtrasDict objectForKey:@"Xtras"])) {
+		xtras = [self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains([[xtrasDict objectForKey:@"Directory"] intValue],
+																			  AIAllDomainsMask & ~AIInternalDomainMask,
+																			  YES)];
+		[categories replaceObjectAtIndex:inIndex
+							  withObject:[NSDictionary dictionaryWithObject:xtras
+																	 forKey:@"Xtras"]];
+	}
+	
+	return xtras;
+}
+
 - (IBAction) setCategory:(id)sender
 {
 	[selectedCategory autorelease];
-	selectedCategory = [[categories objectAtIndex:[sidebar selectedRow]]retain];
+	selectedCategory = [[self xtrasForCategoryAtIndex:[sidebar selectedRow]] retain];
+
 	[xtraList selectRow:0 byExtendingSelection:NO];
 	[xtraList reloadData];
+
 	[self updatePreview];
 }
 
@@ -217,17 +249,14 @@ static NSImage * scriptImage;
 
 - (IBAction) setShowsInfo:(id)sender
 {
-	if([sender selectedSegment] == 0)
-		showInfo = NO;
-	else
-		showInfo = YES;
+	showInfo = ([sender selectedSegment] != 0);
+
 	[self updatePreview];
 }
 
 - (void)deleteXtrasAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-	if(returnCode == NSAlertDefaultReturn)
-	{
+	if (returnCode == NSAlertDefaultReturn) {
 		NSFileManager * manager = [NSFileManager defaultManager];
 		NSIndexSet * indices = [xtraList selectedRowIndexes];
 		NSMutableSet * pathExtensions = [NSMutableSet set];
@@ -236,7 +265,7 @@ static NSImage * scriptImage;
 			if ([indices containsIndex:i]) {
 				path = [[selectedCategory objectAtIndex:i] path];
 				[pathExtensions addObject:[path pathExtension]];
-				[manager removeFileAtPath:path handler:nil];
+				[manager trashFileAtPath:path];
 			}
 		}
 		[xtraList selectRow:0 byExtendingSelection:NO];
@@ -246,8 +275,7 @@ static NSImage * scriptImage;
 		 XXX this is ugly. We should use the AIXtraInfo's type instead of the path extension
 		*/
 		NSEnumerator * extEnu = [pathExtensions objectEnumerator];
-		while((path = [extEnu nextObject])) //usually this will only run once
-		{
+		while ((path = [extEnu nextObject])) { //usually this will only run once
 			[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed
 													  object:path];
 		}
@@ -256,11 +284,17 @@ static NSImage * scriptImage;
 
 - (IBAction) deleteXtra:(id)sender
 {
-	NSAlert * warning = [NSAlert alertWithMessageText:@"Delete Xtra(s)?"
-										defaultButton:@"Delete"
-									  alternateButton:@"Don't Delete"
+	int selectionCount = [[xtraList selectedRowIndexes] count];
+
+	NSAlert * warning = [NSAlert alertWithMessageText:((selectionCount > 1) ?
+													   [NSString stringWithFormat:AILocalizedString(@"Delete %i Xtras?", nil), selectionCount] :
+													   AILocalizedString(@"Delete Xtra?", nil))
+										defaultButton:AILocalizedString(@"Delete", nil)
+									  alternateButton:AILocalizedString(@"Cancel", nil)
 										  otherButton:nil
-							informativeTextWithFormat:@"The selected Xtra(s) will be deleted permanently. This cannot be undone."];
+							informativeTextWithFormat:((selectionCount > 1) ?
+													   AILocalizedString(@"The selected Xtras will be moved to the Trash.", nil) :
+													   AILocalizedString(@"The selected Xtra will be moved to the Trash.", nil))];
 	[warning beginSheetModalForWindow:window
 						modalDelegate:self
 					   didEndSelector:@selector(deleteXtrasAlertDidEnd:returnCode:contextInfo:)
@@ -354,6 +388,11 @@ static NSImage * scriptImage;
 	else if ([aNotification object] == sidebar) {
 		[self setCategory:nil];
 	}
+}
+
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
+{
+	
 }
 
 @end
