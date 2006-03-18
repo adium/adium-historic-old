@@ -14,12 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// $Id$
-
 #import "AIToolbarController.h"
-
-#define TOOLBAR_DEFAULT_PREFS			@"ToolbarPrefs"
-#define TOOLBAR_ITEMS_PREFIX			@"ToolbarItems_"
 
 @implementation AIToolbarController
 
