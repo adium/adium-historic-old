@@ -17,6 +17,9 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AITextAttachmentAdditions.h>
 
+#define ICON_WIDTH	64
+#define ICON_HEIGHT	64
+
 @implementation AITextAttachmentExtension
 
 - (id)init
@@ -42,6 +45,56 @@
 	[path release];
 	[stringRepresentation release];
 	[super dealloc];
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+	if ([encoder allowsKeyedCoding]) {
+        [encoder encodeObject:stringRepresentation forKey:@"AITextAttachmentExtension_stringRepresentation"];
+        [encoder encodeObject:[NSNumber numberWithBool:shouldSaveImageForLogging] forKey:@"AITextAttachmentExtension_shouldSaveImageForLogging"];
+        [encoder encodeObject:[NSNumber numberWithBool:hasAlternate] forKey:@"AITextAttachmentExtension_hasAlternate"];
+        [encoder encodeObject:[NSNumber numberWithBool:shouldAlwaysSendAsText] forKey:@"AITextAttachmentExtension_shouldAlwaysSendAsText"];
+		[encoder encodeObject:path forKey:@"AITextAttachmentExtension_path"];
+		[encoder encodeObject:image forKey:@"AITextAttachmentExtension_image"];
+		
+    } else {
+        [encoder encodeObject:stringRepresentation];
+        [encoder encodeObject:[NSNumber numberWithBool:shouldSaveImageForLogging]];
+        [encoder encodeObject:[NSNumber numberWithBool:hasAlternate]];
+        [encoder encodeObject:[NSNumber numberWithBool:shouldAlwaysSendAsText]];
+		[encoder encodeObject:path];
+		[encoder encodeObject:image];
+    }
+}
+
+/*!
+* @brief Initialize with coder
+ */
+- (id)initWithCoder:(NSCoder *)decoder
+{
+	if ((self = [super init]))
+	{
+		if ([decoder allowsKeyedCoding]) {
+			// Can decode keys in any order		
+			[self setString:[decoder decodeObjectForKey:@"AITextAttachmentExtension_stringRepresentation"]];
+			[self setShouldSaveImageForLogging:[[decoder decodeObjectForKey:@"AITextAttachmentExtension_shouldSaveImageForLogging"] boolValue]];
+			[self setHasAlternate:[[decoder decodeObjectForKey:@"AITextAttachmentExtension_hasAlternate"] boolValue]];
+			[self setShouldAlwaysSendAsText:[[decoder decodeObjectForKey:@"AITextAttachmentExtension_shouldAlwaysSendAsText"] boolValue]];
+			[self setPath:[decoder decodeObjectForKey:@"AITextAttachmentExtension_path"]];
+			[self setImage:[decoder decodeObjectForKey:@"AITextAttachmentExtension_image"]];
+			
+		} else {
+			// Must decode keys in same order as encodeWithCoder:		
+			[self setString:[decoder decodeObject]];
+			[self setShouldSaveImageForLogging:[[decoder decodeObject] boolValue]];
+			[self setHasAlternate:[[decoder decodeObject] boolValue]];
+			[self setShouldAlwaysSendAsText:[[decoder decodeObject] boolValue]];
+			[self setPath:[decoder decodeObject]];
+			[self setImage:[decoder decodeObject]];
+		}
+	}
+	
+	return self;
 }
 
 /*
@@ -110,7 +163,13 @@
 	NSImage *iconImage;
 
 	if ((originalImage = [self image])) {
-		iconImage = [originalImage imageByScalingToSize:NSMakeSize(32, 32)];
+		NSSize currentSize = [originalImage size];
+		if ((currentSize.width > ICON_WIDTH) || (currentSize.height > ICON_HEIGHT)) {
+			iconImage = [originalImage imageByScalingToSize:NSMakeSize(ICON_WIDTH, ICON_WIDTH)];
+
+		} else {
+			iconImage = [[originalImage copy] autorelease];
+		}
 
 	} else {
 		iconImage = [[NSWorkspace sharedWorkspace] iconForFile:[self path]];
