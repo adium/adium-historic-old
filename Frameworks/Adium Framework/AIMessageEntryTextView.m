@@ -30,6 +30,7 @@
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define MAX_HISTORY					25		//Number of messages to remember in history
 #define ENTRY_TEXTVIEW_PADDING		6		//Padding for auto-sizing
@@ -43,6 +44,11 @@
 - (void)_setPushIndicatorVisible:(BOOL)visible;
 - (void)_positionIndicator:(NSNotification *)notification;
 - (void)_resetCacheAndPostSizeChanged;
+
+- (NSAttributedString *)attributedStringWithAITextAttachmentExtensionsFromRTFDData:(NSData *)data;
+- (NSAttributedString *)attributedStringWithTextAttachmentExtension:(AITextAttachmentExtension *)attachment;
+- (void)addAttachmentOfPath:(NSString *)inPath;
+- (void)addAttachmentOfImage:(NSImage *)inImage;
 @end
 
 @implementation AIMessageEntryTextView
@@ -362,7 +368,14 @@
 {
 	NSDictionary	*attributes = [[self typingAttributes] copy];
 
-	[super paste:sender];
+	NSPasteboard *generalPasteboard = [NSPasteboard generalPasteboard];
+	if ([generalPasteboard availableTypeFromArray:[NSArray arrayWithObject:NSRTFDPboardType]]) {
+		NSData *data = [generalPasteboard dataForType:NSRTFDPboardType];
+		[self insertText:[self attributedStringWithAITextAttachmentExtensionsFromRTFDData:data]];
+
+	} else {
+		[super paste:sender];
+	}
 
 	if (attributes) {
 		[self setTypingAttributes:attributes];
@@ -758,43 +771,6 @@
 	}
 }
 
-- (void)insertAttachment:(AITextAttachmentExtension *)attachment
-{
-	NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:[attachment iconImage]];
-	NSAttributedString			*attachString;
-	
-	[attachment setHasAlternate:NO];
-	[attachment setAttachmentCell:cell];
-	
-	//Insert an attributed string into the text at the current insertion point
-	attachString = [NSAttributedString attributedStringWithAttachment:attachment];
-	[self insertText:attachString];
-	
-	//Clean up
-	[cell release];
-}
-
-- (void)addAttachmentOfPath:(NSString *)inPath
-{
-	AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
-	[attachment setPath:inPath];
-	[attachment setString:[inPath lastPathComponent]];
-
-	[self insertAttachment:attachment];
-	[attachment release];
-}
-
-- (void)addAttachmentOfImage:(NSImage *)inImage
-{
-	AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
-
-	[attachment setImage:inImage];
-	[attachment setShouldSaveImageForLogging:YES];
-
-	[self insertAttachment:attachment];
-	[attachment release];
-}
-
 //The textView's method of inserting into the view is insufficient; we can do better.
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
@@ -845,11 +821,123 @@
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 }
 
-- (void)toggleBaseWritingDirection:(id)sender
+#pragma mark Attachments
+/*
+ * @brief Add an attachment of the file at inPath at the current insertion point
+ *
+ * @param inPath The full path, whose contents will not be loaded into memory at this time
+ */
+- (void)addAttachmentOfPath:(NSString *)inPath
 {
-	[super toggleBaseWritingDirection:sender];
+	AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
+	[attachment setPath:inPath];
+	[attachment setString:[inPath lastPathComponent]];
 	
-//	NSLog(@"Toggling (%@)",sender);
+	//Insert an attributed string into the text at the current insertion point
+	[self insertText:[self attributedStringWithTextAttachmentExtension:attachment]];
+	
+	[attachment release];
+}
+
+/*
+ * @brief Add an attachment of inImage at the current insertion point
+ */
+- (void)addAttachmentOfImage:(NSImage *)inImage
+{
+	AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
+	
+	[attachment setImage:inImage];
+	[attachment setShouldSaveImageForLogging:YES];
+	
+	//Insert an attributed string into the text at the current insertion point
+	[self insertText:[self attributedStringWithTextAttachmentExtension:attachment]];
+	
+	[attachment release];
+}
+
+/*
+ * @brief Generate an NSAttributedString which contains attachment and displays it using attachment's iconImage
+ */
+- (NSAttributedString *)attributedStringWithTextAttachmentExtension:(AITextAttachmentExtension *)attachment
+{
+	NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:[attachment iconImage]];
+	
+	[attachment setHasAlternate:NO];
+	[attachment setAttachmentCell:cell];
+	[cell release];
+	
+	return [NSAttributedString attributedStringWithAttachment:attachment];
+}
+
+/*
+ * @brief Given RTFD data, return an NSAttributedString whose attachments are all AITextAttachmentExtension objects
+ */
+- (NSAttributedString *)attributedStringWithAITextAttachmentExtensionsFromRTFDData:(NSData *)data
+{
+	NSMutableAttributedString *attributedString = [[[NSMutableAttributedString alloc] initWithRTFD:data
+																				documentAttributes:NULL] autorelease];
+	if ([attributedString length] && [attributedString containsAttachments]) {
+		int							currentLocation = 0;
+		NSRange						attachmentRange;
+		
+		NSString					*attachmentCharacterString = [NSString stringWithFormat:@"%C",NSAttachmentCharacter];
+		
+		//Find each attachment
+		attachmentRange = [[attributedString string] rangeOfString:attachmentCharacterString
+														   options:0 
+															 range:NSMakeRange(currentLocation,
+																			   [attributedString length] - currentLocation)];
+		
+		while (attachmentRange.length != 0) {
+			//Found an attachment in at attachmentRange.location
+			NSTextAttachment	*attachment = [attributedString attribute:NSAttachmentAttributeName
+																  atIndex:attachmentRange.location
+														   effectiveRange:nil];
+			//If it's not already an AITextAttachmentExtension, make it into one
+			if (![attachment isKindOfClass:[AITextAttachmentExtension class]]) {
+				NSAttributedString	*replacement;
+				NSFileWrapper		*fileWrapper = [attachment fileWrapper];
+				NSString			*destinationPath;
+				NSString			*preferredName = [fileWrapper preferredFilename];
+				
+				//Get a unique folder within our temporary directory
+				destinationPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]];
+				[[NSFileManager defaultManager] createDirectoriesForPath:destinationPath];
+				destinationPath = [destinationPath stringByAppendingPathComponent:preferredName];
+				
+				//Write the file out to it
+				[fileWrapper writeToFile:destinationPath
+							  atomically:NO
+						 updateFilenames:NO];
+				
+				//Now create an AITextAttachmentExtension pointing to it
+				AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
+				[attachment setPath:destinationPath];
+				[attachment setString:preferredName];
+				
+				//Insert an attributed string into the text at the current insertion point
+				replacement = [self attributedStringWithTextAttachmentExtension:attachment];
+				[attachment release];
+				
+				//Remove the NSTextAttachment, replacing it the AITextAttachmentExtension
+				[attributedString replaceCharactersInRange:attachmentRange
+									  withAttributedString:replacement];
+				
+				attachmentRange.length = [replacement length];					
+			} 
+			
+			currentLocation = attachmentRange.location + attachmentRange.length;
+			
+			
+			//Find the next attachment
+			attachmentRange = [[attributedString string] rangeOfString:attachmentCharacterString
+															   options:0
+																 range:NSMakeRange(currentLocation,
+																				   [attributedString length] - currentLocation)];
+		}
+	}
+
+	return attributedString;
 }
 
 @end
