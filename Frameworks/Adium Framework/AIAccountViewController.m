@@ -204,9 +204,10 @@
 		[textField_password setStringValue:[savedPassword length] ? savedPassword : @""];
 		
 		//User alias (display name)
-		NSString *alias = [[[account preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME group:GROUP_ACCOUNT_STATUS] attributedString] string];
+		NSString *alias = [[[account preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES] attributedString] string];
 		[textField_alias setStringValue:(alias ? alias : @"")];
-		
+		[[textField_alias cell] setPlaceholderString:[[[[adium preferenceController] preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME group:GROUP_ACCOUNT_STATUS] attributedString] string]];
+	
 		//Server Host
 		NSString	*host = [account preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS];
 		[textField_connectHost setStringValue:([host length] ? host : @"")];
