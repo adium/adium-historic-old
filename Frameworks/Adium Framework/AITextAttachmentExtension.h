@@ -19,11 +19,14 @@
 	BOOL		hasAlternate;
 	NSString	*path;
 	NSImage		*image;
+	NSString	*imageClass; //set as class attribute in html, used to tell images apart for CSS
 	BOOL		shouldAlwaysSendAsText;
 }
 
 - (void)setString:(NSString *)inString;
 - (NSString *)string;
+- (void)setImageClass:(NSString *)inString;
+- (NSString *)imageClass;
 - (BOOL)shouldSaveImageForLogging;
 - (void)setShouldSaveImageForLogging:(BOOL)flag;
 - (BOOL)hasAlternate;
