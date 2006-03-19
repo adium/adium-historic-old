@@ -874,13 +874,13 @@ static NSArray *validSenderColors;
 						  withString:fileName];
 			
 			[inString replaceKeyword:@"%saveFileHandler%"
-						  withString:[NSString stringWithFormat:@"adium.handleFileTransfer('Save', '%@')", fileName]];
+						  withString:[NSString stringWithFormat:@"client.handleFileTransfer('Save', '%@')", fileName]];
 			
 			[inString replaceKeyword:@"%saveFileAsHandler%"
-						  withString:[NSString stringWithFormat:@"adium.handleFileTransfer('SaveAs', '%@')", fileName]];
+						  withString:[NSString stringWithFormat:@"client.handleFileTransfer('SaveAs', '%@')", fileName]];
 			
 			[inString replaceKeyword:@"%cancelRequestHandler%"
-						  withString:[NSString stringWithFormat:@"adium.handleFileTransfer('Cancel', '%@')", fileName]];
+						  withString:[NSString stringWithFormat:@"client.handleFileTransfer('Cancel', '%@')", fileName]];
 			
 		}
 		
