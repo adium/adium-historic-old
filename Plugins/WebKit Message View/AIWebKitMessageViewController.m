@@ -1102,6 +1102,7 @@ static NSArray *draggedTypes = nil;
 {
 	if(aSelector == @selector(handleAction:forFileTransfer:)) return NO;
 	if(aSelector == @selector(debugLog:)) return NO;
+	if(aSelector == @selector(zoomImage:)) return NO;
 	return YES;
 }
 
@@ -1118,7 +1119,28 @@ static NSArray *draggedTypes = nil;
 {
 	if(aSelector == @selector(handleAction:forFileTransfer:)) return @"handleFileTransfer";
 	if(aSelector == @selector(debugLog:)) return @"debugLog";
+	if(aSelector == @selector(zoomImage:)) return @"zoomImage";
 	return @"";
+}
+
+- (BOOL) zoomImage:(DOMHTMLImageElement *)img
+{
+	NSMutableString *className = [[img className]mutableCopy];
+	if([className rangeOfString:@"fullSizeImage"].location != NSNotFound)
+		[className replaceOccurrencesOfString:@"fullSizeImage"
+								   withString:@"scaledToFitImage"
+									  options:NSLiteralSearch
+										range:NSMakeRange(0, [className length])];
+	else if([className rangeOfString:@"scaledToFitImage"].location != NSNotFound)
+		[className replaceOccurrencesOfString:@"scaledToFitImage"
+								   withString:@"fullSizeImage"
+									  options:NSLiteralSearch
+										range:NSMakeRange(0, [className length])];
+	else return NO;
+	
+	[img setClassName:className];
+	[[webView windowScriptObject] callWebScriptMethod:@"alignChat" withArguments:[NSArray arrayWithObject:[NSNumber numberWithBool:YES]]];
+	return YES;
 }
 
 - (void) debugLog:(NSString *)message { AILog(message); }
