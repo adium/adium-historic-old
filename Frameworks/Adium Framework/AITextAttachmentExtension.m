@@ -31,6 +31,7 @@
 		shouldAlwaysSendAsText = NO;
 		path = nil;
 		image = nil;
+		imageClass = nil;
 	}
 	
     return self;
