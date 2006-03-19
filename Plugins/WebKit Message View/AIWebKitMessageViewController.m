@@ -368,7 +368,7 @@ static NSArray *draggedTypes = nil;
 	}
 	[webView registerForDraggedTypes:draggedTypes];
 	
-	[[webView windowScriptObject] setValue:self forKey:@"adium"];
+	[[webView windowScriptObject] setValue:self forKey:@"client"];
 }
 
 /*!
