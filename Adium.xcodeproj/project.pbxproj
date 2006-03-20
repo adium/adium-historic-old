@@ -10293,6 +10293,7 @@
 					"-Wno-four-char-constants",
 					"-Wno-unknown-pragmas",
 				);
+				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -10333,6 +10334,7 @@
 					"-Wno-four-char-constants",
 					"-Wno-unknown-pragmas",
 				);
+				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
@@ -10377,6 +10379,7 @@
 					"-Wno-four-char-constants",
 					"-Wno-unknown-pragmas",
 				);
+				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = NO;
 			};
 			name = "Deployment-Debug";
@@ -10408,6 +10411,7 @@
 					"-Wno-four-char-constants",
 					"-Wno-unknown-pragmas",
 				);
+				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			name = Default;
 		};
