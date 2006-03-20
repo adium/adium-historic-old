@@ -71,8 +71,52 @@
 		110763F708676CC9005987A5 /* RAFBlockEditorWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */; };
 		110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */; };
 		110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 110763F908676D04005987A5 /* BlockEditorWindow.nib */; };
+		110C121809608C5A003FAD0A /* RAFjoscarLogHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 110C121609608C5A003FAD0A /* RAFjoscarLogHandler.h */; };
+		110C125909608F6C003FAD0A /* RAFjoscarLogHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 110C121709608C5A003FAD0A /* RAFjoscarLogHandler.m */; };
+		11247EC60956177D00F69C1E /* RAFjoscarAIMService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11247EC40956177D00F69C1E /* RAFjoscarAIMService.h */; };
+		11247EC70956177D00F69C1E /* RAFjoscarAIMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 11247EC50956177D00F69C1E /* RAFjoscarAIMService.m */; };
+		11247EF409561A8500F69C1E /* RAFjoscarAIMAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11247EF209561A8500F69C1E /* RAFjoscarAIMAccount.h */; };
+		11247EF509561A8500F69C1E /* RAFjoscarAIMAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */; };
+		1124816C09562C9D00F69C1E /* joscar bridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124816909562C9500F69C1E /* joscar bridge.jar */; };
+		1124816D09562C9D00F69C1E /* joscar-0.9.4-cvs-bin.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124816A09562C9500F69C1E /* joscar-0.9.4-cvs-bin.jar */; };
+		1124816E09562C9D00F69C1E /* oscar.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124816B09562C9A00F69C1E /* oscar.jar */; };
+		1124817409562CDB00F69C1E /* retroweaver-rt.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124817309562CDB00F69C1E /* retroweaver-rt.jar */; };
+		112FC2B309393926001FB00D /* ESjoscarCocoaAdapter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */; };
+		112FC2B409393926001FB00D /* ESjoscarCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */; };
+		115E0E8E0952514A003218FE /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
+		11669A2D0999395D003CB8A1 /* ESjoscarJoinChatViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */; };
+		11669A2E0999395D003CB8A1 /* ESjoscarJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */; };
+		11669AB309994697003CB8A1 /* joscarJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11669AB109994697003CB8A1 /* joscarJoinChatView.nib */; };
+		11669ABA09994865003CB8A1 /* joscarJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11669AB109994697003CB8A1 /* joscarJoinChatView.nib */; };
+		117481E0092E68DD00CFE3FF /* RAFjoscarServicePlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 117481DE092E68DC00CFE3FF /* RAFjoscarServicePlugin.h */; };
+		117481E1092E68DD00CFE3FF /* RAFjoscarServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 117481DF092E68DC00CFE3FF /* RAFjoscarServicePlugin.m */; };
+		11A00DD209742D9700768128 /* RAFjoscarDotMacAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11A00DCC09742D8600768128 /* RAFjoscarDotMacAccount.h */; };
+		11A00DD309742D9700768128 /* RAFjoscarDotMacAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11A00DCD09742D8600768128 /* RAFjoscarDotMacAccount.m */; };
+		11A00DD409742D9700768128 /* RAFjoscarDotMacService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11A00DAC09742B9E00768128 /* RAFjoscarDotMacService.h */; };
+		11A00DD509742D9700768128 /* RAFjoscarDotMacService.m in Sources */ = {isa = PBXBuildFile; fileRef = 11A00DAD09742B9E00768128 /* RAFjoscarDotMacService.m */; };
+		11AD534C0963492D00CA0C6F /* RAFjoscarDebugWindowController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11AD534A0963492D00CA0C6F /* RAFjoscarDebugWindowController.h */; };
+		11AD534D0963492D00CA0C6F /* RAFjoscarDebugWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11AD534B0963492D00CA0C6F /* RAFjoscarDebugWindowController.m */; };
+		11AD5362096349D000CA0C6F /* RAFjoscarDebugController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11AD5360096349D000CA0C6F /* RAFjoscarDebugController.h */; };
+		11AD5363096349D000CA0C6F /* RAFjoscarDebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11AD5361096349D000CA0C6F /* RAFjoscarDebugController.m */; };
+		11AD53E90963523000CA0C6F /* joscarDebugWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11AD53E80963523000CA0C6F /* joscarDebugWindow.nib */; };
 		11B648DF087C62C5008F528B /* RAFDragArrayController.h in Headers */ = {isa = PBXBuildFile; fileRef = 11B648DD087C62C5008F528B /* RAFDragArrayController.h */; };
 		11B648E0087C62C5008F528B /* RAFDragArrayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11B648DE087C62C5008F528B /* RAFDragArrayController.m */; };
+		11CBDD4309326F8100BE7961 /* RAFjoscarAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11CBDD3D09326F7F00BE7961 /* RAFjoscarAccount.h */; };
+		11CBDD4409326F8100BE7961 /* RAFjoscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CBDD3E09326F8000BE7961 /* RAFjoscarAccount.m */; };
+		11CBDD4509326F8100BE7961 /* RAFjoscarAccountViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */; };
+		11CBDD4609326F8100BE7961 /* RAFjoscarAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CBDD4009326F8000BE7961 /* RAFjoscarAccountViewController.m */; };
+		11CBDD4709326F8100BE7961 /* RAFjoscarService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11CBDD4109326F8100BE7961 /* RAFjoscarService.h */; };
+		11CBDD4809326F8100BE7961 /* RAFjoscarService.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CBDD4209326F8100BE7961 /* RAFjoscarService.m */; };
+		11CC0DBB097B0AE600E1DE20 /* RAFjoscarICQService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11CC0DB9097B0AE600E1DE20 /* RAFjoscarICQService.h */; };
+		11CC0DBC097B0AE700E1DE20 /* RAFjoscarICQService.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CC0DBA097B0AE600E1DE20 /* RAFjoscarICQService.m */; };
+		11CC0DED097B120D00E1DE20 /* RAFjoscarICQAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11CC0DEB097B120C00E1DE20 /* RAFjoscarICQAccount.h */; };
+		11CC0DEE097B120D00E1DE20 /* RAFjoscarICQAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */; };
+		11DAEBD0092FB857007A8682 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
+		11DAEBD1092FB85F007A8682 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		11F5F44309537E34007DCC49 /* joscar.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 118C52C6091BF0DB00219458 /* joscar.bundle */; };
+		11F5F46409538B99007DCC49 /* RAFjoscarAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11F5F46309538B99007DCC49 /* RAFjoscarAccountView.nib */; };
+		11F5F70209539C70007DCC49 /* joscarDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11F5F70109539C70007DCC49 /* joscarDefaults.plist */; };
+		11F5F72E0953A227007DCC49 /* joscarClasses.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F5F72D0953A227007DCC49 /* joscarClasses.h */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
 		3402E01B07CB0CED0044F818 /* ESFileTransferProgressView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */; };
 		3402E02407CB0D1B0044F818 /* ProxyPasswordPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02307CB0D1B0044F818 /* ProxyPasswordPrompt.nib */; };
@@ -187,6 +231,7 @@
 		343A7F3106935DC500150CEC /* ESGaimMeanwhileAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 343A7F2D06935DC500150CEC /* ESGaimMeanwhileAccount.h */; };
 		343A7F3906935DD700150CEC /* ESMeanwhileService.m in Sources */ = {isa = PBXBuildFile; fileRef = 343A7F3706935DD700150CEC /* ESMeanwhileService.m */; };
 		343A7F3A06935DD700150CEC /* ESMeanwhileService.h in Headers */ = {isa = PBXBuildFile; fileRef = 343A7F3806935DD700150CEC /* ESMeanwhileService.h */; };
+		343E7718097BEFE000BCFF92 /* jsocks-klea.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 343E7716097BEFD500BCFF92 /* jsocks-klea.jar */; };
 		343EB3FE08086D2F00E27095 /* AccountProxy.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB3FD08086D2F00E27095 /* AccountProxy.nib */; };
 		343EB40008086D9000E27095 /* ESGaimNovellAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB3FF08086D9000E27095 /* ESGaimNovellAccountView.nib */; };
 		343EB40208086D9000E27095 /* AppearancePrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40108086D9000E27095 /* AppearancePrefs.nib */; };
@@ -1420,6 +1465,13 @@
 /* End PBXBuildStyle section */
 
 /* Begin PBXContainerItemProxy section */
+		11F5F42B09537E00007DCC49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 118C52C5091BF0DB00219458;
+			remoteInfo = joscar;
+		};
 		34611C8209B6756D00870036 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 34611C7D09B6756D00870036 /* AdiumSpotlightImporter.xcodeproj */;
@@ -1570,6 +1622,44 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		1151F1630922A7DB0081FFB2 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 15;
+			files = (
+				117481E0092E68DD00CFE3FF /* RAFjoscarServicePlugin.h in CopyFiles */,
+				11CBDD4309326F8100BE7961 /* RAFjoscarAccount.h in CopyFiles */,
+				11CBDD4509326F8100BE7961 /* RAFjoscarAccountViewController.h in CopyFiles */,
+				11CBDD4709326F8100BE7961 /* RAFjoscarService.h in CopyFiles */,
+				112FC2B309393926001FB00D /* ESjoscarCocoaAdapter.h in CopyFiles */,
+				11F5F72E0953A227007DCC49 /* joscarClasses.h in CopyFiles */,
+				11247EC60956177D00F69C1E /* RAFjoscarAIMService.h in CopyFiles */,
+				11247EF409561A8500F69C1E /* RAFjoscarAIMAccount.h in CopyFiles */,
+				11AD534C0963492D00CA0C6F /* RAFjoscarDebugWindowController.h in CopyFiles */,
+				11AD5362096349D000CA0C6F /* RAFjoscarDebugController.h in CopyFiles */,
+				11A00DD209742D9700768128 /* RAFjoscarDotMacAccount.h in CopyFiles */,
+				11A00DD409742D9700768128 /* RAFjoscarDotMacService.h in CopyFiles */,
+				11CC0DBB097B0AE600E1DE20 /* RAFjoscarICQService.h in CopyFiles */,
+				11CC0DED097B120D00E1DE20 /* RAFjoscarICQAccount.h in CopyFiles */,
+				11669A2D0999395D003CB8A1 /* ESjoscarJoinChatViewController.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11C0F96C09562DE100619216 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 15;
+			files = (
+				343E7718097BEFE000BCFF92 /* jsocks-klea.jar in CopyFiles */,
+				1124816C09562C9D00F69C1E /* joscar bridge.jar in CopyFiles */,
+				1124816D09562C9D00F69C1E /* joscar-0.9.4-cvs-bin.jar in CopyFiles */,
+				1124816E09562C9D00F69C1E /* oscar.jar in CopyFiles */,
+				1124817409562CDB00F69C1E /* retroweaver-rt.jar in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		34677B3607CC3D6200F59F7B /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1610,6 +1700,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				11F5F44309537E34007DCC49 /* joscar.bundle in CopyFiles */,
 				348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */,
 				4B7F27C705440DE900CDFC90 /* Gaim.AdiumPlugin in CopyFiles */,
 				344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */,
@@ -1658,10 +1749,52 @@
 		110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorWindowController.h; path = Source/RAFBlockEditorWindowController.h; sourceTree = "<group>"; };
 		110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorWindowController.m; path = Source/RAFBlockEditorWindowController.m; sourceTree = "<group>"; };
 		110763F908676D04005987A5 /* BlockEditorWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = BlockEditorWindow.nib; path = Resources/BlockEditorWindow.nib; sourceTree = "<group>"; };
+		110C121609608C5A003FAD0A /* RAFjoscarLogHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarLogHandler.h; path = "Plugins/joscar Service/RAFjoscarLogHandler.h"; sourceTree = "<group>"; };
+		110C121709608C5A003FAD0A /* RAFjoscarLogHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarLogHandler.m; path = "Plugins/joscar Service/RAFjoscarLogHandler.m"; sourceTree = "<group>"; };
+		11247EC40956177D00F69C1E /* RAFjoscarAIMService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAIMService.h; path = "Plugins/joscar Service/RAFjoscarAIMService.h"; sourceTree = "<group>"; };
+		11247EC50956177D00F69C1E /* RAFjoscarAIMService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAIMService.m; path = "Plugins/joscar Service/RAFjoscarAIMService.m"; sourceTree = "<group>"; };
+		11247EF209561A8500F69C1E /* RAFjoscarAIMAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAIMAccount.h; path = "Plugins/joscar Service/RAFjoscarAIMAccount.h"; sourceTree = "<group>"; };
+		11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAIMAccount.m; path = "Plugins/joscar Service/RAFjoscarAIMAccount.m"; sourceTree = "<group>"; };
+		1124816909562C9500F69C1E /* joscar bridge.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar bridge.jar"; path = "Plugins/joscar Service/joscar bridge.jar"; sourceTree = SOURCE_ROOT; };
+		1124816A09562C9500F69C1E /* joscar-0.9.4-cvs-bin.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-0.9.4-cvs-bin.jar"; path = "Plugins/joscar Service/joscar-0.9.4-cvs-bin.jar"; sourceTree = SOURCE_ROOT; };
+		1124816B09562C9A00F69C1E /* oscar.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = oscar.jar; path = "Plugins/joscar Service/oscar.jar"; sourceTree = SOURCE_ROOT; };
+		1124817309562CDB00F69C1E /* retroweaver-rt.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "retroweaver-rt.jar"; path = "Plugins/joscar Service/joscar Java Bridge/Utilities/Retroweave/release/retroweaver-rt.jar"; sourceTree = SOURCE_ROOT; };
+		112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESjoscarCocoaAdapter.h; path = "Plugins/joscar Service/ESjoscarCocoaAdapter.h"; sourceTree = "<group>"; };
+		112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESjoscarCocoaAdapter.m; path = "Plugins/joscar Service/ESjoscarCocoaAdapter.m"; sourceTree = "<group>"; };
+		115E0E8D0952514A003218FE /* JavaVM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaVM.framework; path = /System/Library/Frameworks/JavaVM.framework; sourceTree = "<absolute>"; };
+		11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESjoscarJoinChatViewController.h; path = "Plugins/joscar Service/ESjoscarJoinChatViewController.h"; sourceTree = "<group>"; };
+		11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESjoscarJoinChatViewController.m; path = "Plugins/joscar Service/ESjoscarJoinChatViewController.m"; sourceTree = "<group>"; };
+		11669AB209994697003CB8A1 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/joscar Service/English.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		117481DE092E68DC00CFE3FF /* RAFjoscarServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarServicePlugin.h; path = "Plugins/joscar Service/RAFjoscarServicePlugin.h"; sourceTree = "<group>"; };
+		117481DF092E68DC00CFE3FF /* RAFjoscarServicePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarServicePlugin.m; path = "Plugins/joscar Service/RAFjoscarServicePlugin.m"; sourceTree = "<group>"; };
+		118C52C6091BF0DB00219458 /* joscar.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = joscar.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		118C52CC091BF0DB00219458 /* joscar-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "joscar-Info.plist"; path = "Plists/joscar-Info.plist"; sourceTree = "<group>"; };
+		11A00DAC09742B9E00768128 /* RAFjoscarDotMacService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDotMacService.h; path = "Plugins/joscar Service/RAFjoscarDotMacService.h"; sourceTree = "<group>"; };
+		11A00DAD09742B9E00768128 /* RAFjoscarDotMacService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDotMacService.m; path = "Plugins/joscar Service/RAFjoscarDotMacService.m"; sourceTree = "<group>"; };
+		11A00DCC09742D8600768128 /* RAFjoscarDotMacAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDotMacAccount.h; path = "Plugins/joscar Service/RAFjoscarDotMacAccount.h"; sourceTree = "<group>"; };
+		11A00DCD09742D8600768128 /* RAFjoscarDotMacAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDotMacAccount.m; path = "Plugins/joscar Service/RAFjoscarDotMacAccount.m"; sourceTree = "<group>"; };
+		11AD534A0963492D00CA0C6F /* RAFjoscarDebugWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDebugWindowController.h; path = "Plugins/joscar Service/RAFjoscarDebugWindowController.h"; sourceTree = "<group>"; };
+		11AD534B0963492D00CA0C6F /* RAFjoscarDebugWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDebugWindowController.m; path = "Plugins/joscar Service/RAFjoscarDebugWindowController.m"; sourceTree = "<group>"; };
+		11AD5360096349D000CA0C6F /* RAFjoscarDebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDebugController.h; path = "Plugins/joscar Service/RAFjoscarDebugController.h"; sourceTree = "<group>"; };
+		11AD5361096349D000CA0C6F /* RAFjoscarDebugController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDebugController.m; path = "Plugins/joscar Service/RAFjoscarDebugController.m"; sourceTree = "<group>"; };
+		11AD53E80963523000CA0C6F /* joscarDebugWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = joscarDebugWindow.nib; path = "Plugins/joscar Service/joscarDebugWindow.nib"; sourceTree = "<group>"; };
 		11B648DD087C62C5008F528B /* RAFDragArrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFDragArrayController.h; path = Source/RAFDragArrayController.h; sourceTree = "<group>"; };
 		11B648DE087C62C5008F528B /* RAFDragArrayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFDragArrayController.m; path = Source/RAFDragArrayController.m; sourceTree = "<group>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Source/AIEmoticonController.h; sourceTree = "<group>"; };
 		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = Source/AIEmoticonController.m; sourceTree = "<group>"; };
+		11CBDD3D09326F7F00BE7961 /* RAFjoscarAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAccount.h; path = "Plugins/joscar Service/RAFjoscarAccount.h"; sourceTree = "<group>"; };
+		11CBDD3E09326F8000BE7961 /* RAFjoscarAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAccount.m; path = "Plugins/joscar Service/RAFjoscarAccount.m"; sourceTree = "<group>"; };
+		11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAccountViewController.h; path = "Plugins/joscar Service/RAFjoscarAccountViewController.h"; sourceTree = "<group>"; };
+		11CBDD4009326F8000BE7961 /* RAFjoscarAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAccountViewController.m; path = "Plugins/joscar Service/RAFjoscarAccountViewController.m"; sourceTree = "<group>"; };
+		11CBDD4109326F8100BE7961 /* RAFjoscarService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarService.h; path = "Plugins/joscar Service/RAFjoscarService.h"; sourceTree = "<group>"; };
+		11CBDD4209326F8100BE7961 /* RAFjoscarService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarService.m; path = "Plugins/joscar Service/RAFjoscarService.m"; sourceTree = "<group>"; };
+		11CC0DB9097B0AE600E1DE20 /* RAFjoscarICQService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarICQService.h; path = "Plugins/joscar Service/RAFjoscarICQService.h"; sourceTree = "<group>"; };
+		11CC0DBA097B0AE600E1DE20 /* RAFjoscarICQService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarICQService.m; path = "Plugins/joscar Service/RAFjoscarICQService.m"; sourceTree = "<group>"; };
+		11CC0DEB097B120C00E1DE20 /* RAFjoscarICQAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarICQAccount.h; path = "Plugins/joscar Service/RAFjoscarICQAccount.h"; sourceTree = "<group>"; };
+		11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarICQAccount.m; path = "Plugins/joscar Service/RAFjoscarICQAccount.m"; sourceTree = "<group>"; };
+		11F5F46309538B99007DCC49 /* RAFjoscarAccountView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = RAFjoscarAccountView.nib; path = "Plugins/joscar Service/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		11F5F70109539C70007DCC49 /* joscarDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = joscarDefaults.plist; path = "Plugins/joscar Service/joscarDefaults.plist"; sourceTree = SOURCE_ROOT; };
+		11F5F72D0953A227007DCC49 /* joscarClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = joscarClasses.h; path = "Plugins/joscar Service/joscarClasses.h"; sourceTree = SOURCE_ROOT; };
 		3402E01807CB0CE40044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		3402E01F07CB0D150044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3402E02007CB0D150044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -1936,6 +2069,7 @@
 		343C461F0816CD0400FF5FA7 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = "Plugins/Gaim Service/Italian.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
 		343C47760816FBDA00FF5FA7 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Plugins/WebKit Message View/German.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		343C47790816FBE500FF5FA7 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = "Plugins/WebKit Message View/German.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		343E7716097BEFD500BCFF92 /* jsocks-klea.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "jsocks-klea.jar"; path = "Plugins/joscar Service/jsocks-klea.jar"; sourceTree = "<group>"; };
 		343EB4270808709E00E27095 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		343EC68F0809DD2900E27095 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		343EC6A70809DEC700E27095 /* ESContactAlertsPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESContactAlertsPane.m; path = Source/ESContactAlertsPane.m; sourceTree = "<group>"; };
@@ -2629,7 +2763,7 @@
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3515,6 +3649,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		118C52C4091BF0DB00219458 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11DAEBD0092FB857007A8682 /* Adium.framework in Frameworks */,
+				11DAEBD1092FB85F007A8682 /* AIUtilities.framework in Frameworks */,
+				115E0E8E0952514A003218FE /* JavaVM.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3417D25809C332B900FC413E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3669,6 +3813,70 @@
 			name = Localized;
 			sourceTree = "<group>";
 		};
+		118C52BA091BF05B00219458 /* joscar */ = {
+			isa = PBXGroup;
+			children = (
+				11669AB109994697003CB8A1 /* joscarJoinChatView.nib */,
+				11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */,
+				11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */,
+				11AD5343096348B200CA0C6F /* Debug Window */,
+				11F5F70109539C70007DCC49 /* joscarDefaults.plist */,
+				11F5F46309538B99007DCC49 /* RAFjoscarAccountView.nib */,
+				11CBDD3D09326F7F00BE7961 /* RAFjoscarAccount.h */,
+				11CBDD3E09326F8000BE7961 /* RAFjoscarAccount.m */,
+				11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */,
+				11CBDD4009326F8000BE7961 /* RAFjoscarAccountViewController.m */,
+				11CBDD4109326F8100BE7961 /* RAFjoscarService.h */,
+				11CBDD4209326F8100BE7961 /* RAFjoscarService.m */,
+				117481DF092E68DC00CFE3FF /* RAFjoscarServicePlugin.m */,
+				117481DE092E68DC00CFE3FF /* RAFjoscarServicePlugin.h */,
+				118C52CC091BF0DB00219458 /* joscar-Info.plist */,
+				118C52F4091BF64800219458 /* bridge */,
+				11247EC40956177D00F69C1E /* RAFjoscarAIMService.h */,
+				11247EC50956177D00F69C1E /* RAFjoscarAIMService.m */,
+				11247EF209561A8500F69C1E /* RAFjoscarAIMAccount.h */,
+				11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */,
+				11A00DAC09742B9E00768128 /* RAFjoscarDotMacService.h */,
+				11A00DAD09742B9E00768128 /* RAFjoscarDotMacService.m */,
+				11A00DCC09742D8600768128 /* RAFjoscarDotMacAccount.h */,
+				11A00DCD09742D8600768128 /* RAFjoscarDotMacAccount.m */,
+				11CC0DB9097B0AE600E1DE20 /* RAFjoscarICQService.h */,
+				11CC0DBA097B0AE600E1DE20 /* RAFjoscarICQService.m */,
+				11CC0DEB097B120C00E1DE20 /* RAFjoscarICQAccount.h */,
+				11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */,
+			);
+			name = joscar;
+			sourceTree = "<group>";
+		};
+		118C52F4091BF64800219458 /* bridge */ = {
+			isa = PBXGroup;
+			children = (
+				1124817309562CDB00F69C1E /* retroweaver-rt.jar */,
+				1124816909562C9500F69C1E /* joscar bridge.jar */,
+				1124816A09562C9500F69C1E /* joscar-0.9.4-cvs-bin.jar */,
+				1124816B09562C9A00F69C1E /* oscar.jar */,
+				343E7716097BEFD500BCFF92 /* jsocks-klea.jar */,
+				11F5F72D0953A227007DCC49 /* joscarClasses.h */,
+				112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */,
+				112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */,
+				110C121609608C5A003FAD0A /* RAFjoscarLogHandler.h */,
+				110C121709608C5A003FAD0A /* RAFjoscarLogHandler.m */,
+			);
+			name = bridge;
+			sourceTree = "<group>";
+		};
+		11AD5343096348B200CA0C6F /* Debug Window */ = {
+			isa = PBXGroup;
+			children = (
+				11AD53E80963523000CA0C6F /* joscarDebugWindow.nib */,
+				11AD534A0963492D00CA0C6F /* RAFjoscarDebugWindowController.h */,
+				11AD534B0963492D00CA0C6F /* RAFjoscarDebugWindowController.m */,
+				11AD5360096349D000CA0C6F /* RAFjoscarDebugController.h */,
+				11AD5361096349D000CA0C6F /* RAFjoscarDebugController.m */,
+			);
+			name = "Debug Window";
+			sourceTree = "<group>";
+		};
 		11C157D504A88DE0008E0C76 /* Emoticons */ = {
 			isa = PBXGroup;
 			children = (
@@ -3696,6 +3904,7 @@
 				4947F5CB0655E85200B791E5 /* Bonjour.AdiumPlugin */,
 				349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */,
 				349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */,
+				118C52C6091BF0DB00219458 /* joscar.bundle */,
 				347A210F09786B5F00A30431 /* SystemVersionCheck */,
 				34B323C009B9FEAC00029361 /* IRC Service.AdiumLibgaimPlugin */,
 				3417D26109C332B900FC413E /* Translator.AdiumPlugin */,
@@ -3734,6 +3943,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				115E0E8D0952514A003218FE /* JavaVM.framework */,
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
 				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
 				3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */,
@@ -5599,6 +5809,7 @@
 		4BD672C406001B530049CAF7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				118C52BA091BF05B00219458 /* joscar */,
 				34B3241D09B9FF6900029361 /* IRC Libgaim Plugin */,
 				4B7F278605440C6200CDFC90 /* Gaim */,
 				4947F5BB0655E7C400B791E5 /* Bonjour */,
@@ -6835,6 +7046,7 @@
 				34D001E70958868000DCB678 /* AIMenuItemView.h in Headers */,
 				34D007B1095964F000DCB678 /* NSIPRecentPicture.h in Headers */,
 				34D007DC095966E200DCB678 /* AIContactListRecentImagesWindowController.h in Headers */,
+				110C121809608C5A003FAD0A /* RAFjoscarLogHandler.h in Headers */,
 				34AA35DB095CCA4D003B56DB /* AdiumDisconnectionErrorController.h in Headers */,
 				34AA366B095CE124003B56DB /* AIStatusDefines.h in Headers */,
 				341BCF840961354D00CF83F5 /* AIMessageWindow.h in Headers */,
@@ -7131,6 +7343,72 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		118C52C5091BF0DB00219458 /* joscar */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 11B1A56A09CE42300087442E /* Build configuration list for PBXNativeTarget "joscar" */;
+			buildPhases = (
+				118C52C2091BF0DB00219458 /* Resources */,
+				118C52C3091BF0DB00219458 /* Sources */,
+				118C52C4091BF0DB00219458 /* Frameworks */,
+				1151F1630922A7DB0081FFB2 /* CopyFiles */,
+				11C0F96C09562DE100619216 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "Plists/joscar-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_STYLE = BUNDLE;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = joscar;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			dependencies = (
+			);
+			name = joscar;
+			productName = joscar;
+			productReference = 118C52C6091BF0DB00219458 /* joscar.bundle */;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>joscar</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.yourcompany.joscar</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
 		3417D25009C332B900FC413E /* Translator */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3417D25C09C332B900FC413E /* Build configuration list for PBXNativeTarget "Translator" */;
@@ -7473,6 +7751,7 @@
 				346C9D46060046AB000F5A8A /* PBXTargetDependency */,
 				34677B3F07CC3E8400F59F7B /* PBXTargetDependency */,
 				349C31630867D199000BF883 /* PBXTargetDependency */,
+				11F5F42C09537E00007DCC49 /* PBXTargetDependency */,
 			);
 			name = Adium;
 			productInstallPath = /;
@@ -7860,6 +8139,7 @@
 				4947F5BC0655E85200B791E5 /* Bonjour */,
 				DACF3ED3085574D0006BFB18 /* External Frameworks */,
 				349C2EF90867AC97000BF883 /* AdiumApplescriptRunner */,
+				118C52C5091BF0DB00219458 /* joscar */,
 				347A210E09786B5F00A30431 /* SystemVersionCheck */,
 				34B322F609B9FEAC00029361 /* IRC Service Libgaim Plugin */,
 				3417D25009C332B900FC413E /* Translator */,
@@ -7892,6 +8172,17 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		118C52C2091BF0DB00219458 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11F5F46409538B99007DCC49 /* RAFjoscarAccountView.nib in Resources */,
+				11F5F70209539C70007DCC49 /* joscarDefaults.plist in Resources */,
+				11AD53E90963523000CA0C6F /* joscarDebugWindow.nib in Resources */,
+				11669AB309994697003CB8A1 /* joscarJoinChatView.nib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3417D25509C332B900FC413E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -8154,6 +8445,7 @@
 				34D0FE3D09561E3800DCB678 /* PersonalPreferences.nib in Resources */,
 				34D0FF8509569FE500DCB678 /* PersonalPreferencesDefaults.plist in Resources */,
 				34D000C60957918000DCB678 /* ContactListRecentImages.nib in Resources */,
+				11669ABA09994865003CB8A1 /* joscarJoinChatView.nib in Resources */,
 				341BD5700965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib in Resources */,
 				341BD5710965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib in Resources */,
 				341BD57B0965EC4700CF83F5 /* OTRPrefs.nib in Resources */,
@@ -8431,6 +8723,28 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		118C52C3091BF0DB00219458 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				117481E1092E68DD00CFE3FF /* RAFjoscarServicePlugin.m in Sources */,
+				11CBDD4409326F8100BE7961 /* RAFjoscarAccount.m in Sources */,
+				11CBDD4609326F8100BE7961 /* RAFjoscarAccountViewController.m in Sources */,
+				11CBDD4809326F8100BE7961 /* RAFjoscarService.m in Sources */,
+				112FC2B409393926001FB00D /* ESjoscarCocoaAdapter.m in Sources */,
+				11247EC70956177D00F69C1E /* RAFjoscarAIMService.m in Sources */,
+				11247EF509561A8500F69C1E /* RAFjoscarAIMAccount.m in Sources */,
+				110C125909608F6C003FAD0A /* RAFjoscarLogHandler.m in Sources */,
+				11AD534D0963492D00CA0C6F /* RAFjoscarDebugWindowController.m in Sources */,
+				11AD5363096349D000CA0C6F /* RAFjoscarDebugController.m in Sources */,
+				11A00DD309742D9700768128 /* RAFjoscarDotMacAccount.m in Sources */,
+				11A00DD509742D9700768128 /* RAFjoscarDotMacService.m in Sources */,
+				11CC0DBC097B0AE700E1DE20 /* RAFjoscarICQService.m in Sources */,
+				11CC0DEE097B120D00E1DE20 /* RAFjoscarICQAccount.m in Sources */,
+				11669A2E0999395D003CB8A1 /* ESjoscarJoinChatViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3417D25609C332B900FC413E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -8969,6 +9283,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		11F5F42C09537E00007DCC49 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 118C52C5091BF0DB00219458 /* joscar */;
+			targetProxy = 11F5F42B09537E00007DCC49 /* PBXContainerItemProxy */;
+		};
 		34611CCF09B67ABC00870036 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = AdiumSpotlightImporter;
@@ -9078,6 +9397,14 @@
 				34A30EA208D8EE7B00697644 /* Spanish */,
 			);
 			name = "Shared Dock Icon Images";
+			sourceTree = "<group>";
+		};
+		11669AB109994697003CB8A1 /* joscarJoinChatView.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				11669AB209994697003CB8A1 /* English */,
+			);
+			name = joscarJoinChatView.nib;
 			sourceTree = "<group>";
 		};
 		3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */ = {
@@ -9922,6 +10249,168 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		11B1A56B09CE42300087442E /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_WARN_MISSING_PARENTHESES = NO;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "Plists/joscar-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_STYLE = BUNDLE;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
+				PRODUCT_NAME = joscar;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		11B1A56C09CE42300087442E /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "Plists/joscar-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_STYLE = BUNDLE;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = "-DCRASH_REPORTER";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
+				PRODUCT_NAME = joscar;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		11B1A56D09CE42300087442E /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "Plists/joscar-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_STYLE = BUNDLE;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
+				PRODUCT_NAME = joscar;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = NO;
+			};
+			name = "Deployment-Debug";
+		};
+		11B1A56E09CE42300087442E /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "Plists/joscar-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_STYLE = BUNDLE;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = joscar;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
 		3417D25D09C332B900FC413E /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -10516,6 +11005,7 @@
 				OTHER_CFLAGS = (
 					"-DCRASH_REPORTER",
 					"-DDEBUG_BUILD",
+					"-DJOSCAR_SUPERCEDE_LIBGAIM",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
 				);
@@ -11202,6 +11692,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = (
 					"-DDEBUG_BUILD",
+					"-DJOSCAR_SUPERCEDE_LIBGAIM",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
 				);
@@ -11238,6 +11729,7 @@
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				OTHER_CFLAGS = (
 					"-DCRASH_REPORTER",
+					"-DJOSCAR_SUPERCEDE_LIBGAIM",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
 				);
@@ -11271,6 +11763,7 @@
 				OTHER_CFLAGS = (
 					"-DCRASH_REPORTER",
 					"-DDEBUG_BUILD",
+					"-DJOSCAR_SUPERCEDE_LIBGAIM",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
 				);
@@ -11284,6 +11777,17 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		11B1A56A09CE42300087442E /* Build configuration list for PBXNativeTarget "joscar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				11B1A56B09CE42300087442E /* Development */,
+				11B1A56C09CE42300087442E /* Deployment */,
+				11B1A56D09CE42300087442E /* Deployment-Debug */,
+				11B1A56E09CE42300087442E /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
 		3417D25C09C332B900FC413E /* Build configuration list for PBXNativeTarget "Translator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

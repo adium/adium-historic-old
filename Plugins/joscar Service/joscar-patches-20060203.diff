@@ -1,0 +1,48 @@
+? .DS_Store
+? dist
+? aolrtf/bin
+? app/bin
+? common/bin
+? oscar/bin
+? oscar/src/net/.DS_Store
+? oscar/src/net/kano/.DS_Store
+? oscar/src/net/kano/joustsim/.DS_Store
+? oscar/src/net/kano/joustsim/oscar/oscar/service/.DS_Store
+Index: oscar/src/net/kano/joustsim/oscar/oscar/service/ssi/AbstractGroup.java
+===================================================================
+RCS file: /cvsroot/joustsim/joustsim/oscar/src/net/kano/joustsim/oscar/oscar/service/ssi/AbstractGroup.java,v
+retrieving revision 1.2
+diff -u -r1.2 AbstractGroup.java
+--- oscar/src/net/kano/joustsim/oscar/oscar/service/ssi/AbstractGroup.java	14 Jul 2005 04:37:02 -0000	1.2
++++ oscar/src/net/kano/joustsim/oscar/oscar/service/ssi/AbstractGroup.java	4 Feb 2006 04:12:45 -0000
+@@ -40,12 +40,11 @@
+ import java.util.Collection;
+ import java.util.Set;
+ import java.util.HashSet;
+-import java.util.concurrent.CopyOnWriteArrayList;
+ 
+ abstract class AbstractGroup implements Group {
+     private final SimpleBuddyList buddyList;
+-    private CopyOnWriteArrayList<GroupListener> listeners
+-            = new CopyOnWriteArrayList<GroupListener>();
++    private ArrayList<GroupListener> listeners
++            = new ArrayList<GroupListener>();
+ 
+     private List<SimpleBuddy> buddies = new ArrayList<SimpleBuddy>();
+ 
+@@ -116,12 +115,13 @@
+         }
+     }
+ 
+-    protected CopyOnWriteArrayList<GroupListener> getListeners() {
++    protected ArrayList<GroupListener> getListeners() {
+         return listeners;
+     }
+ 
+     public void addGroupListener(GroupListener listener) {
+-        listeners.addIfAbsent(listener);
++		if (listeners.contains(listener))
++			listeners.add(listener);
+     }
+ 
+     public void removeGroupListener(GroupListener listener) {
