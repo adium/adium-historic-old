@@ -367,7 +367,7 @@ static NSArray *draggedTypes = nil;
 			nil];
 	}
 	[webView registerForDraggedTypes:draggedTypes];
-	
+		
 	[[webView windowScriptObject] setValue:self forKey:@"client"];
 }
 
@@ -1123,9 +1123,11 @@ static NSArray *draggedTypes = nil;
 	return @"";
 }
 
-- (BOOL) zoomImage:(DOMHTMLImageElement *)img
+- (BOOL)zoomImage:(DOMHTMLImageElement *)img
 {
+	AILog(@"Zooming an image");
 	NSMutableString *className = [[img className]mutableCopy];
+	AILog(@"Class name is:%@", className);
 	if([className rangeOfString:@"fullSizeImage"].location != NSNotFound)
 		[className replaceOccurrencesOfString:@"fullSizeImage"
 								   withString:@"scaledToFitImage"
@@ -1143,6 +1145,6 @@ static NSArray *draggedTypes = nil;
 	return YES;
 }
 
-- (void) debugLog:(NSString *)message { AILog(message); }
+- (void)debugLog:(NSString *)message { AILog(message); }
 
 @end

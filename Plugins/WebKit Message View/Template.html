@@ -88,16 +88,14 @@
 		document.onclick = imageCheck;
 		function imageCheck() {		
 			node = event.target;
-			if(node.tagName == 'IMG') {
-                if(!client.zoomImage(node) && node.alt) {
-                    a = document.createElement('a');
-                    a.setAttribute('onclick', 'imageSwap(this)');
-                    a.setAttribute('src', node.src);
-                    text = document.createTextNode(node.alt);
-                    a.appendChild(text);
-                    node.parentNode.replaceChild(a, node);
-                }
-            }
+			if(node.tagName == 'IMG' && !client.zoomImage(node) && node.alt) {
+				a = document.createElement('a');
+				a.setAttribute('onclick', 'imageSwap(this)');
+				a.setAttribute('src', node.src);
+				text = document.createTextNode(node.alt);
+				a.appendChild(text);
+				node.parentNode.replaceChild(a, node);
+			}
 		}
 
 		function imageSwap(node) {
