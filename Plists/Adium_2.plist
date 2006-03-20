@@ -405,6 +405,15 @@
 		<key>MinimumSystemVersion</key>
 		<string>10.3.9</string>
 	</dict>
+	<key>Java</key>
+	<dict>
+		<key>JVMVersion</key>
+		<string>1.4+</string>
+		<key>VMOptions</key>
+		<string>-enableassertions</string>
+	</dict>
+	<key>LSRequiresNativeExecution</key>
+	<true/>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
 	<key>NSMainNibFile</key>
