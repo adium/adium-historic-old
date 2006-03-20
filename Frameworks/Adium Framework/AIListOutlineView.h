@@ -78,7 +78,6 @@ typedef enum {
 - (NSColor *)highlightColor;
 - (void)setAlternatingRowColor:(NSColor *)color;
 - (NSColor *)alternatingRowColor;
-- (NSBezierPath *)bezierPathWithRoundRectInRect:(NSRect)aRect radius:(float)radius;
 
 @end
 
