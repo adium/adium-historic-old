@@ -113,7 +113,7 @@
 		11CC0DEE097B120D00E1DE20 /* RAFjoscarICQAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */; };
 		11DAEBD0092FB857007A8682 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		11DAEBD1092FB85F007A8682 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
-		11F5F44309537E34007DCC49 /* joscar.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 118C52C6091BF0DB00219458 /* joscar.bundle */; };
+		11F5F44309537E34007DCC49 /* joscar.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */; };
 		11F5F46409538B99007DCC49 /* RAFjoscarAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11F5F46309538B99007DCC49 /* RAFjoscarAccountView.nib */; };
 		11F5F70209539C70007DCC49 /* joscarDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11F5F70109539C70007DCC49 /* joscarDefaults.plist */; };
 		11F5F72E0953A227007DCC49 /* joscarClasses.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F5F72D0953A227007DCC49 /* joscarClasses.h */; };
@@ -1700,7 +1700,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				11F5F44309537E34007DCC49 /* joscar.bundle in CopyFiles */,
+				11F5F44309537E34007DCC49 /* joscar.AdiumPlugin in CopyFiles */,
 				348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */,
 				4B7F27C705440DE900CDFC90 /* Gaim.AdiumPlugin in CopyFiles */,
 				344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */,
@@ -1767,7 +1767,7 @@
 		11669AB209994697003CB8A1 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/joscar Service/English.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
 		117481DE092E68DC00CFE3FF /* RAFjoscarServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarServicePlugin.h; path = "Plugins/joscar Service/RAFjoscarServicePlugin.h"; sourceTree = "<group>"; };
 		117481DF092E68DC00CFE3FF /* RAFjoscarServicePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarServicePlugin.m; path = "Plugins/joscar Service/RAFjoscarServicePlugin.m"; sourceTree = "<group>"; };
-		118C52C6091BF0DB00219458 /* joscar.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = joscar.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = joscar.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		118C52CC091BF0DB00219458 /* joscar-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "joscar-Info.plist"; path = "Plists/joscar-Info.plist"; sourceTree = "<group>"; };
 		11A00DAC09742B9E00768128 /* RAFjoscarDotMacService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDotMacService.h; path = "Plugins/joscar Service/RAFjoscarDotMacService.h"; sourceTree = "<group>"; };
 		11A00DAD09742B9E00768128 /* RAFjoscarDotMacService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDotMacService.m; path = "Plugins/joscar Service/RAFjoscarDotMacService.m"; sourceTree = "<group>"; };
@@ -3904,7 +3904,7 @@
 				4947F5CB0655E85200B791E5 /* Bonjour.AdiumPlugin */,
 				349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */,
 				349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */,
-				118C52C6091BF0DB00219458 /* joscar.bundle */,
+				118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */,
 				347A210F09786B5F00A30431 /* SystemVersionCheck */,
 				34B323C009B9FEAC00029361 /* IRC Service.AdiumLibgaimPlugin */,
 				3417D26109C332B900FC413E /* Translator.AdiumPlugin */,
@@ -7385,7 +7385,7 @@
 			);
 			name = joscar;
 			productName = joscar;
-			productReference = 118C52C6091BF0DB00219458 /* joscar.bundle */;
+			productReference = 118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
 <plist version=\"1.0\">
