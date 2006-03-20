@@ -1870,7 +1870,6 @@
 		341591E105463DA800291275 /* SQL_Logger_Prefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = SQL_Logger_Prefs.nib; sourceTree = "<group>"; };
 		34167FE5081D700B00E35678 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		3417D26109C332B900FC413E /* Translator.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Translator.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
-		3417D26209C332BA00FC413E /* Latex Plugin copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "Latex Plugin copy.plist"; path = "Plists/Latex Plugin copy.plist"; sourceTree = "<group>"; };
 		3417D27709C3336900FC413E /* TranslationEngine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TranslationEngine.h; path = Plugins/Translation/TranslationEngine.h; sourceTree = "<group>"; };
 		3417D27809C3336900FC413E /* TranslationEngine.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = TranslationEngine.m; path = Plugins/Translation/TranslationEngine.m; sourceTree = "<group>"; };
 		3417D27909C3336900FC413E /* AITranslatorPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITranslatorPlugin.m; path = Plugins/Translation/AITranslatorPlugin.m; sourceTree = "<group>"; };
@@ -3935,7 +3934,6 @@
 				34D8342B07CBE6A4006466F2 /* External Sources */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				3417D26209C332BA00FC413E /* Latex Plugin copy.plist */,
 			);
 			name = CocAIMe2;
 			sourceTree = "<group>";
