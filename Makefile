@@ -12,7 +12,7 @@ BUILDCONFIGURATION?=$(DEFAULT_BUILDCONFIGURATION)
 CP=ditto --rsrc
 RM=rm
 
-.PHONY: all adium clean localizable-strings
+.PHONY: all adium clean localizable-strings latest
 
 adium:
 	xcodebuild -project Adium.xcodeproj -configuration $(BUILDCONFIGURATION) build
@@ -41,4 +41,6 @@ localizable-strings:
 	mv "tmp/WebKit Message View" Plugins
 	rmdir tmp || true
 
-
+latest:
+	svn up
+	make adium
