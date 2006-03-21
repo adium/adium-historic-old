@@ -10425,7 +10425,7 @@
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "/Users/evands/adium/Plists/Latex Plugin copy.plist";
+				INFOPLIST_FILE = Plists/Translator.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = (
@@ -10448,7 +10448,7 @@
 			buildSettings = {
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				INFOPLIST_FILE = "/Users/evands/adium/Plists/Latex Plugin copy.plist";
+				INFOPLIST_FILE = Plists/Translator.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
@@ -10464,7 +10464,7 @@
 		3417D25F09C332B900FC413E /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				INFOPLIST_FILE = "/Users/evands/adium/Plists/Latex Plugin copy.plist";
+				INFOPLIST_FILE = Plists/Translator.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
@@ -10483,7 +10483,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				INFOPLIST_FILE = "/Users/evands/adium/Plists/Latex Plugin copy.plist";
+				INFOPLIST_FILE = Plists/Translator.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = (
