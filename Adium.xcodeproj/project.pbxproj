@@ -204,6 +204,8 @@
 		342113CE08261FB900A3B0FB /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342113CD08261FB900A3B0FB /* MainMenu.nib */; };
 		342114B50826D37100A3B0FB /* EditStateSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342114B40826D37100A3B0FB /* EditStateSheet.nib */; };
 		3421D3AB0753EE2F00EBCF4F /* ESFileTransferProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 349FE2FE074D01D300E36B3B /* ESFileTransferProgressView.m */; };
+		342340E009D1AF58009FF634 /* RAFjoscarSecuridPromptController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */; };
+		342340E109D1AF58009FF634 /* RAFjoscarSecuridPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */; };
 		3426FD0B0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3426FD090699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m */; };
 		3426FD0C0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 3426FD0A0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3428328807D2643F004F01C9 /* ESStatusPreferencesPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 3428328407D2643E004F01C9 /* ESStatusPreferencesPlugin.h */; };
@@ -1643,6 +1645,7 @@
 				11CC0DBB097B0AE600E1DE20 /* RAFjoscarICQService.h in CopyFiles */,
 				11CC0DED097B120D00E1DE20 /* RAFjoscarICQAccount.h in CopyFiles */,
 				11669A2D0999395D003CB8A1 /* ESjoscarJoinChatViewController.h in CopyFiles */,
+				342340E009D1AF58009FF634 /* RAFjoscarSecuridPromptController.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1793,7 +1796,7 @@
 		11CC0DEB097B120C00E1DE20 /* RAFjoscarICQAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarICQAccount.h; path = "Plugins/joscar Service/RAFjoscarICQAccount.h"; sourceTree = "<group>"; };
 		11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarICQAccount.m; path = "Plugins/joscar Service/RAFjoscarICQAccount.m"; sourceTree = "<group>"; };
 		11F5F46309538B99007DCC49 /* RAFjoscarAccountView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = RAFjoscarAccountView.nib; path = "Plugins/joscar Service/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		11F5F70109539C70007DCC49 /* joscarDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = joscarDefaults.plist; path = "Plugins/joscar Service/joscarDefaults.plist"; sourceTree = SOURCE_ROOT; };
+		11F5F70109539C70007DCC49 /* joscarDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = joscarDefaults.plist; path = "Plugins/joscar Service/joscarDefaults.plist"; sourceTree = "<group>"; };
 		11F5F72D0953A227007DCC49 /* joscarClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = joscarClasses.h; path = "Plugins/joscar Service/joscarClasses.h"; sourceTree = SOURCE_ROOT; };
 		3402E01807CB0CE40044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		3402E01F07CB0D150044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
@@ -1956,6 +1959,8 @@
 		3421181A0827D86900A3B0FB /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = "Plugins/Gaim Service/Dutch.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		3421186C0827D8B100A3B0FB /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = "Frameworks/Adium Framework/Dutch.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		342118800827D8C300A3B0FB /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
+		342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = RAFjoscarSecuridPromptController.h; path = "Plugins/joscar Service/RAFjoscarSecuridPromptController.h"; sourceTree = "<group>"; };
+		342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarSecuridPromptController.m; path = "Plugins/joscar Service/RAFjoscarSecuridPromptController.m"; sourceTree = "<group>"; };
 		3426FD090699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m; path = "Frameworks/Adium Framework/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m"; sourceTree = "<group>"; };
 		3426FD0A0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h; path = "Frameworks/Adium Framework/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h"; sourceTree = "<group>"; };
 		3428328407D2643E004F01C9 /* ESStatusPreferencesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESStatusPreferencesPlugin.h; path = Source/ESStatusPreferencesPlugin.h; sourceTree = "<group>"; };
@@ -3815,53 +3820,43 @@
 		118C52BA091BF05B00219458 /* joscar */ = {
 			isa = PBXGroup;
 			children = (
-				11669AB109994697003CB8A1 /* joscarJoinChatView.nib */,
-				11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */,
-				11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */,
-				11AD5343096348B200CA0C6F /* Debug Window */,
-				11F5F70109539C70007DCC49 /* joscarDefaults.plist */,
-				11F5F46309538B99007DCC49 /* RAFjoscarAccountView.nib */,
+				118C52F4091BF64800219458 /* joscar Bridge and Jars */,
+				342340F909D1B03A009FF634 /* AIM */,
+				342340F609D1B02D009FF634 /* dotMac */,
+				342340F309D1B010009FF634 /* ICQ */,
 				11CBDD3D09326F7F00BE7961 /* RAFjoscarAccount.h */,
 				11CBDD3E09326F8000BE7961 /* RAFjoscarAccount.m */,
-				11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */,
-				11CBDD4009326F8000BE7961 /* RAFjoscarAccountViewController.m */,
 				11CBDD4109326F8100BE7961 /* RAFjoscarService.h */,
 				11CBDD4209326F8100BE7961 /* RAFjoscarService.m */,
-				117481DF092E68DC00CFE3FF /* RAFjoscarServicePlugin.m */,
-				117481DE092E68DC00CFE3FF /* RAFjoscarServicePlugin.h */,
-				118C52CC091BF0DB00219458 /* joscar-Info.plist */,
-				118C52F4091BF64800219458 /* bridge */,
-				11247EC40956177D00F69C1E /* RAFjoscarAIMService.h */,
-				11247EC50956177D00F69C1E /* RAFjoscarAIMService.m */,
-				11247EF209561A8500F69C1E /* RAFjoscarAIMAccount.h */,
-				11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */,
-				11A00DAC09742B9E00768128 /* RAFjoscarDotMacService.h */,
-				11A00DAD09742B9E00768128 /* RAFjoscarDotMacService.m */,
-				11A00DCC09742D8600768128 /* RAFjoscarDotMacAccount.h */,
-				11A00DCD09742D8600768128 /* RAFjoscarDotMacAccount.m */,
-				11CC0DB9097B0AE600E1DE20 /* RAFjoscarICQService.h */,
-				11CC0DBA097B0AE600E1DE20 /* RAFjoscarICQService.m */,
-				11CC0DEB097B120C00E1DE20 /* RAFjoscarICQAccount.h */,
-				11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */,
+				342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */,
+				342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */,
+				11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */,
+				11CBDD4009326F8000BE7961 /* RAFjoscarAccountViewController.m */,
+				11F5F46309538B99007DCC49 /* RAFjoscarAccountView.nib */,
+				11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */,
+				11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */,
+				11669AB109994697003CB8A1 /* joscarJoinChatView.nib */,
+				342340EA09D1AFAF009FF634 /* Plugin */,
+				11AD5343096348B200CA0C6F /* Debug Window */,
 			);
 			name = joscar;
 			sourceTree = "<group>";
 		};
-		118C52F4091BF64800219458 /* bridge */ = {
+		118C52F4091BF64800219458 /* joscar Bridge and Jars */ = {
 			isa = PBXGroup;
 			children = (
-				1124817309562CDB00F69C1E /* retroweaver-rt.jar */,
-				1124816909562C9500F69C1E /* joscar bridge.jar */,
-				1124816A09562C9500F69C1E /* joscar-0.9.4-cvs-bin.jar */,
-				1124816B09562C9A00F69C1E /* oscar.jar */,
-				343E7716097BEFD500BCFF92 /* jsocks-klea.jar */,
 				11F5F72D0953A227007DCC49 /* joscarClasses.h */,
 				112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */,
 				112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */,
 				110C121609608C5A003FAD0A /* RAFjoscarLogHandler.h */,
 				110C121709608C5A003FAD0A /* RAFjoscarLogHandler.m */,
+				1124817309562CDB00F69C1E /* retroweaver-rt.jar */,
+				1124816909562C9500F69C1E /* joscar bridge.jar */,
+				1124816A09562C9500F69C1E /* joscar-0.9.4-cvs-bin.jar */,
+				1124816B09562C9A00F69C1E /* oscar.jar */,
+				343E7716097BEFD500BCFF92 /* jsocks-klea.jar */,
 			);
-			name = bridge;
+			name = "joscar Bridge and Jars";
 			sourceTree = "<group>";
 		};
 		11AD5343096348B200CA0C6F /* Debug Window */ = {
@@ -4019,6 +4014,50 @@
 				341BD5660965E99200CF83F5 /* OTRCommon.h */,
 			);
 			name = OTR;
+			sourceTree = "<group>";
+		};
+		342340EA09D1AFAF009FF634 /* Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				117481DE092E68DC00CFE3FF /* RAFjoscarServicePlugin.h */,
+				117481DF092E68DC00CFE3FF /* RAFjoscarServicePlugin.m */,
+				11F5F70109539C70007DCC49 /* joscarDefaults.plist */,
+				118C52CC091BF0DB00219458 /* joscar-Info.plist */,
+			);
+			name = Plugin;
+			sourceTree = "<group>";
+		};
+		342340F309D1B010009FF634 /* ICQ */ = {
+			isa = PBXGroup;
+			children = (
+				11CC0DB9097B0AE600E1DE20 /* RAFjoscarICQService.h */,
+				11CC0DBA097B0AE600E1DE20 /* RAFjoscarICQService.m */,
+				11CC0DEB097B120C00E1DE20 /* RAFjoscarICQAccount.h */,
+				11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */,
+			);
+			name = ICQ;
+			sourceTree = "<group>";
+		};
+		342340F609D1B02D009FF634 /* dotMac */ = {
+			isa = PBXGroup;
+			children = (
+				11A00DAC09742B9E00768128 /* RAFjoscarDotMacService.h */,
+				11A00DAD09742B9E00768128 /* RAFjoscarDotMacService.m */,
+				11A00DCC09742D8600768128 /* RAFjoscarDotMacAccount.h */,
+				11A00DCD09742D8600768128 /* RAFjoscarDotMacAccount.m */,
+			);
+			name = dotMac;
+			sourceTree = "<group>";
+		};
+		342340F909D1B03A009FF634 /* AIM */ = {
+			isa = PBXGroup;
+			children = (
+				11247EC40956177D00F69C1E /* RAFjoscarAIMService.h */,
+				11247EC50956177D00F69C1E /* RAFjoscarAIMService.m */,
+				11247EF209561A8500F69C1E /* RAFjoscarAIMAccount.h */,
+				11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */,
+			);
+			name = AIM;
 			sourceTree = "<group>";
 		};
 		3428328307D263F0004F01C9 /* Status Preferences */ = {
@@ -8740,6 +8779,7 @@
 				11CC0DBC097B0AE700E1DE20 /* RAFjoscarICQService.m in Sources */,
 				11CC0DEE097B120D00E1DE20 /* RAFjoscarICQAccount.m in Sources */,
 				11669A2E0999395D003CB8A1 /* ESjoscarJoinChatViewController.m in Sources */,
+				342340E109D1AF58009FF634 /* RAFjoscarSecuridPromptController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
