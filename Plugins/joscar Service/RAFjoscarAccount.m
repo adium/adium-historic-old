@@ -6,6 +6,7 @@
 //
 
 #import "RAFjoscarAccount.h"
+#import "RAFjoscarSecuridPromptController.h"
 #import "AIAdium.h"
 #import "AIPreferenceController.h"
 #import "AIContactController.h"
@@ -1174,6 +1175,11 @@
 	NSString *uid;
 	while ((uid = [iter nextObject]))
 		[chat addParticipatingListObject:[self contactWithUID:uid]];
+}
+
+- (NSString *)getSecurid
+{
+	return [RAFjoscarSecuridPromptController getSecuridForAccount:self];
 }
 
 @end

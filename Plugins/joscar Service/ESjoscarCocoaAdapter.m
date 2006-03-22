@@ -137,6 +137,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[aimConnection addStateListener:joscarBridge];
 	[aimConnection addOpenedServiceListener:joscarBridge];
 	[[aimConnection getChatRoomManager] addListener:joscarBridge];
+	[[aimConnection getLoginService] setSecuridProvider:self];
 	
 	//Connect!
 	AILog(@"*** %@ connecting %@ with Java bridge %@ ***",appSession, screenName, joscarBridge);
@@ -147,6 +148,11 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 - (void)disconnect
 {
 	[aimConnection disconnect];
+}
+
+- (NSString *)getSecurid
+{
+	return [account getSecurid];
 }
 
 /*

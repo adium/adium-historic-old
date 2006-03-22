@@ -11,7 +11,7 @@
 //See http://www.cocoadevcentral.com/articles/000024.php for info on constructors
 
 /* Forward declarations */
-@class AimSession, AppSession, BuddyInfoManager, MainBosService, BosService, BuddyInfoTracker, State, StateInfo;
+@class AimSession, AppSession, BuddyInfoManager, MainBosService, BosService, BuddyInfoTracker, State, StateInfo, LoginService;
 @class MutableBuddyList, PermissionList, MyBuddyIconManager;
 @class RvConnectionManager;
 @class IcbmService, InfoService, SsiService, TypingState;
@@ -57,6 +57,7 @@
 - (AppSession *)getAppSession;
 - (AimSession *)getAimSession;
 - (Screenname *)getScreenname;
+- (LoginService *)getLoginService;
 /* XXX - MANY MORE */
 - (BuddyInfoManager *)getBuddyInfoManager;
 - (BuddyInfoTracker *)getBuddyInfoTracker;
@@ -78,6 +79,21 @@
 - (void)addOpenedServiceListener:(id<OpenedServiceListener>)listener;
 - (void)removeOpenedServiceListener:(id<OpenedServiceListener>)listener;
 
+@end
+
+/*
+ * net.kano.joustsim.oscar.oscar.service.login.SecuridProvider
+ */
+@protocol SecuridProvider
+- (NSString *)getSecurid;
+@end
+
+/*
+ * net.kano.joustsim.oscar.oscar.service.login.LoginService
+ */
+@interface LoginService : NSObject {}
+- (void)setSecuridProvider:(id<SecuridProvider>)provider;
+- (id<SecuridProvider>)getSecuridProvider;
 @end
 
 /*
