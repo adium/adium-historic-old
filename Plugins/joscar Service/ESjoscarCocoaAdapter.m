@@ -14,6 +14,7 @@
 #import <Adium/AIChat.h>
 #import <Adium/ESDebugAILog.h>
 #import <Adium/AIHTMLDecoder.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 #import <Carbon/Carbon.h>
 
 #import "ESFileTransferController.h"
@@ -345,7 +346,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 					if ([scanner scanUpToString:@">" intoString:&chunkString]) {
 						//Load the src image
 						NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];
-						NSLog(@"%@ gives arguments %@",chunkString, imgArguments);
 
 						NSString		*source, *altName, *identifier;
 						NSImage			*image;
@@ -383,7 +383,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 							(int)imageSize.width, (int)imageSize.height,
 							dataLength];
 						[processedString appendString:newTag];
-						NSLog(@"processedString is now %@",processedString);
 						
 						if (!attachmentsSet) attachmentsSet = [[[NSMutableSet alloc] init] autorelease];
 						[attachmentsSet addObject:fileAttachment];
@@ -600,16 +599,17 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 						NSLog(@"%@ gives arguments %@",chunkString, imgArguments);
 						
 						NSString		*name, *identifier;
-						NSData			*imageData = nil;
 						NSString		*imagePath = nil;
 						
 						identifier = [imgArguments objectForKey:@"ID"];
 						name = [imgArguments objectForKey:@"src"];
-						
+
+						if(!name) name = @"Received Image";
+
 						id<Iterator>	iterator = [attachmentsSet iterator];
 						Attachment		*attachment;
 						
-						while (!imageData && 
+						while (!imagePath && 
 							   [iterator hasNext] && (attachment = (Attachment *)[iterator next])) {
 							NSLog(@"Looking for %@; Attachment %@ has ID %@",identifier, attachment, [attachment getId]);
 							if ([identifier isEqualToString:[attachment getId]]) {
@@ -619,13 +619,12 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 									imagePath = [[(FileAttachment *)attachment getFile] getCanonicalPath];
 								} else {					
 									//If it is not on disk, write it out so we can use it
-									imagePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]];
+									imagePath = [NSTemporaryDirectory() stringByAppendingPathComponent:name];
+									imagePath = [[NSFileManager defaultManager] uniquePathForPath:imagePath];
 									[[joscarBridge dataFromAttachment:attachment] writeToFile:imagePath atomically:YES];
 								}
 							}
 						}
-						
-						if(!name) name = @"Attached Image";
 						
 						//Append the tag; the 'scaledToFitImage' class lets us apply CSS to directIM images only
 						[processedString appendString:[NSString stringWithFormat:@"<IMG CLASS=\"scaledToFitImage\" SRC=\"%@\" ALT=\"%@\">",imagePath, name]];
