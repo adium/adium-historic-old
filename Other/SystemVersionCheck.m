@@ -10,6 +10,7 @@
 #import <AppKit/AppKit.h>
 
 #include <stdlib.h>
+#include <unistd.h>
 
 static void GetVersionComponentsFromString(int *majorPtr, int *minorPtr, int *bugfixPtr, NSString *versionString)
 {
