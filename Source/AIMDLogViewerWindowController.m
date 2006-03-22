@@ -5,6 +5,8 @@
 //  Created by Evan Schoenberg on 3/1/06.
 //
 
+//XXX - when we drop Panther support, the NSClassFromString() uses in here should die. -RAF
+
 #import "AIMDLogViewerWindowController.h"
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -117,13 +119,13 @@
 
 		enumerator = [searchStrings objectEnumerator];
 		while ((searchString = [enumerator nextObject])) {
-			[predicates addObject:[NSPredicate predicateWithFormat:@"%K like[c] %@", key, searchString]];
+			[predicates addObject:[NSClassFromString(@"NSPredicate") predicateWithFormat:@"%K like[c] %@", key, searchString]];
 		}
 		
-		predicate = [NSCompoundPredicate orPredicateWithSubpredicates:predicates];
+		predicate = [NSClassFromString(@"NSCompoundPredicate") orPredicateWithSubpredicates:predicates];
 	} else {
 		searchString = [searchStrings anyObject];
-		predicate = [NSPredicate predicateWithFormat:@"%K like[c] %@", key, searchString];
+		predicate = [NSClassFromString(@"NSPredicate") predicateWithFormat:@"%K like[c] %@", key, searchString];
 	}
 	
 	return predicate;
@@ -137,7 +139,7 @@
 
 	[self stopSearching];
 
-	currentQuery = [[NSMetadataQuery alloc] init];
+	currentQuery = [[NSClassFromString(@"NSMetadataQuery") alloc] init];
 	
 	//Once all searches have exited, we can start a new one
 	if (clearCurrentResults) {
@@ -151,7 +153,7 @@
 	[currentQuery setSearchScopes:[NSArray arrayWithObject:[NSURL fileURLWithPath:[AILoggerPlugin logBasePath]]]];
 	NSPredicate *queryPredicate;
 
-	[predicatesArray addObject:[NSPredicate predicateWithFormat:@"((kMDItemContentType = \"com.adiumx.log\") or (kMDItemContentType = \"com.adiumx.htmllog\"))"]];
+	[predicatesArray addObject:[NSClassFromString(@"NSPredicate") predicateWithFormat:@"((kMDItemContentType = \"com.adiumx.log\") or (kMDItemContentType = \"com.adiumx.htmllog\"))"]];
 
 	switch (searchMode) {
 		case LOG_SEARCH_FROM:
@@ -170,14 +172,14 @@
 		{
 			NSDate *searchStringDate = [NSDate dateWithNaturalLanguageString:activeSearchString];
 
-			[predicatesArray addObject:[NSPredicate predicateWithFormat:@"kMDItemLastUsedDate like[c] %@",[NSString stringWithFormat:@"*%@*",[searchStringDate descriptionWithCalendarFormat:@"%y-%m-%d"
+			[predicatesArray addObject:[NSClassFromString(@"NSPredicate") predicateWithFormat:@"kMDItemLastUsedDate like[c] %@",[NSString stringWithFormat:@"*%@*",[searchStringDate descriptionWithCalendarFormat:@"%y-%m-%d"
 																																											   timeZone:nil 
 																																												  locale:nil]]]];
 			break;
 		}
 		case LOG_SEARCH_CONTENT:
 			if ([activeSearchString length]) {
-				[predicatesArray addObject:[NSPredicate predicateWithFormat:@"kMDItemTextContent like[c] %@",[NSString stringWithFormat:@"*%@*",activeSearchString]]];
+				[predicatesArray addObject:[NSClassFromString(@"NSPredicate") predicateWithFormat:@"kMDItemTextContent like[c] %@",[NSString stringWithFormat:@"*%@*",activeSearchString]]];
 			}
 			break;
 	}
@@ -195,7 +197,7 @@
 	[refreshResultsTimer invalidate]; [refreshResultsTimer release];
 	
 	if ([predicatesArray count] > 1) {
-		queryPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicatesArray];
+		queryPredicate = [NSClassFromString(@"NSCompoundPredicate") andPredicateWithSubpredicates:predicatesArray];
 
 		NSLog(@"Predicate is %@",queryPredicate);
 		[currentQuery setPredicate:queryPredicate];
