@@ -1474,6 +1474,13 @@
 			remoteGlobalIDString = 118C52C5091BF0DB00219458;
 			remoteInfo = joscar;
 		};
+		3423412D09D1B67B009FF634 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 112480870956271F00F69C1E /* joscar bridge.jar */;
+			remoteInfo = "joscar bridge";
+		};
 		34611C8209B6756D00870036 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 34611C7D09B6756D00870036 /* AdiumSpotlightImporter.xcodeproj */;
@@ -1961,6 +1968,7 @@
 		342118800827D8C300A3B0FB /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = RAFjoscarSecuridPromptController.h; path = "Plugins/joscar Service/RAFjoscarSecuridPromptController.h"; sourceTree = "<group>"; };
 		342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarSecuridPromptController.m; path = "Plugins/joscar Service/RAFjoscarSecuridPromptController.m"; sourceTree = "<group>"; };
+		3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "joscar Java Bridge.xcodeproj"; path = "Plugins/joscar Service/joscar Java Bridge/joscar Java Bridge.xcodeproj"; sourceTree = "<group>"; };
 		3426FD090699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m; path = "Frameworks/Adium Framework/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m"; sourceTree = "<group>"; };
 		3426FD0A0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h; path = "Frameworks/Adium Framework/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h"; sourceTree = "<group>"; };
 		3428328407D2643E004F01C9 /* ESStatusPreferencesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESStatusPreferencesPlugin.h; path = Source/ESStatusPreferencesPlugin.h; sourceTree = "<group>"; };
@@ -3855,6 +3863,7 @@
 				1124816A09562C9500F69C1E /* joscar-0.9.4-cvs-bin.jar */,
 				1124816B09562C9A00F69C1E /* oscar.jar */,
 				343E7716097BEFD500BCFF92 /* jsocks-klea.jar */,
+				3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */,
 			);
 			name = "joscar Bridge and Jars";
 			sourceTree = "<group>";
@@ -4058,6 +4067,14 @@
 				11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */,
 			);
 			name = AIM;
+			sourceTree = "<group>";
+		};
+		3423412809D1B67B009FF634 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3423412E09D1B67B009FF634 /* joscar bridge.jar */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		3428328307D263F0004F01C9 /* Status Preferences */ = {
@@ -8161,6 +8178,10 @@
 					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
 					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 				},
+				{
+					ProductGroup = 3423412809D1B67B009FF634 /* Products */;
+					ProjectRef = 3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */;
+				},
 			);
 			targets = (
 				347A219D09786C1700A30431 /* Adium with SystemVersionCheck */,
@@ -8185,6 +8206,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		3423412E09D1B67B009FF634 /* joscar bridge.jar */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.jar;
+			path = "joscar bridge.jar";
+			remoteRef = 3423412D09D1B67B009FF634 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
