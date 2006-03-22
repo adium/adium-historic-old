@@ -70,4 +70,6 @@
 - (void)objectsJoinedChat:(NSArray *)objects chatName:(NSString *)name;
 - (void)addChat:(AIChat *)chat;
 
+- (NSString *)getSecurid;
+
 @end

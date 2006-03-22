@@ -11,9 +11,9 @@
 #import "AIAccount.h"
 
 @class RAFjoscarAccount, DefaultAppSession, AimConnection, JoscarBridge, NSJavaVirtualMachine;
-@protocol Set,ChatRoomManagerListener,ChatInvitation;
+@protocol Set,ChatRoomManagerListener,ChatInvitation,SecuridProvider;
 
-@interface ESjoscarCocoaAdapter : AIObject {
+@interface ESjoscarCocoaAdapter : AIObject <SecuridProvider> {
 	JoscarBridge			*joscarBridge;
 
 	RAFjoscarAccount		*account;
