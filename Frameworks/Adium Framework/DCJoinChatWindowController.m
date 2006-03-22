@@ -120,7 +120,9 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
 											  submenuType:AIAccountNoSubmenu
 										   showTitleVerbs:NO] retain];
-	
+
+	[self configureForAccount:[[popUp_service selectedItem] representedObject]];
+
     //Center the window
     [[self window] center];
 	[super windowDidLoad];
