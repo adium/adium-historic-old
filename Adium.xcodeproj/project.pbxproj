@@ -1478,7 +1478,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 112480870956271F00F69C1E /* joscar bridge.jar */;
+			remoteGlobalIDString = 112480870956271F00F69C1E;
 			remoteInfo = "joscar bridge";
 		};
 		34611C8209B6756D00870036 /* PBXContainerItemProxy */ = {
