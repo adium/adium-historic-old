@@ -25,5 +25,6 @@
 
 + (ESAuthorizationRequestWindowController *)showAuthorizationRequestWithDict:(NSDictionary *)inInfoDict  forAccount:(AIAccount *)inAccount;
 - (IBAction)authorize:(id)sender;
+- (IBAction)deny:(id)sender;
 
 @end
