@@ -75,6 +75,7 @@ typedef enum {
 	AIChatMessageSendingTooLarge,
 	AIChatMessageSendingTimeOutOccurred,
 	AIChatMessageSendingConnectionError,
+	AIChatMessageSendingMissedRateLimitExceeded,
 	AIChatMessageReceivingMissedTooLarge,
 	AIChatMessageReceivingMissedInvalid,
 	AIChatMessageReceivingMissedRateLimitExceeded,
@@ -161,4 +162,7 @@ typedef enum {
 
 - (void)addCustomEmoticon:(AIEmoticon *)inEmoticon;
 - (NSSet *)customEmoticons;
+
+- (void)receivedError:(NSNumber *)type;
+
 @end

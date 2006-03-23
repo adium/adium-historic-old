@@ -92,6 +92,10 @@
 					message = AILocalizedString(@"A message may not have been sent; a timeout occurred.",nil);
 					break;
 					
+				case AIChatMessageSendingMissedRateLimitExceeded:
+					message = AILocalizedString(@"Could not send the last message because the rate limit has been exceeded. Please wait a moment and then try again.",nil);
+					break;
+
 				case AIChatMessageReceivingMissedTooLarge:
 					message = AILocalizedString(@"Could not receive the last message because it was too large.",nil);
 					break;
@@ -101,7 +105,7 @@
 					break;
 					
 				case AIChatMessageReceivingMissedRateLimitExceeded:
-					message = AILocalizedString(@"Could not receive because the rate limit has been exceeded.",nil);
+					message = AILocalizedString(@"Could not receive the last message because the rate limit has been exceeded. Please wait a moment and then try again.",nil);
 					break;
 					
 				case AIChatMessageReceivingMissedRemoteIsTooEvil:
