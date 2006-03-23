@@ -114,13 +114,13 @@
 	[self closeWindow:nil];
 }
 
-- (void)windowWillClose:(id)sender
+- (IBAction)deny:(id)sender
 {
-	if (infoDict) {
-		[account authorizationWindowController:self
-						 authorizationWithDict:infoDict
-								  didAuthorize:NO];
-	}
+	[account authorizationWindowController:self
+					 authorizationWithDict:infoDict
+							  didAuthorize:NO];	
+	
+	[infoDict release]; infoDict = nil;
 }
 
 @end

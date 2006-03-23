@@ -19,8 +19,8 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
-            ACTIONS = {authorize = id; }; 
-            CLASS = ESGaimAuthorizationRequestWindowController; 
+            ACTIONS = {authorize = id; deny = id; }; 
+            CLASS = ESAuthorizationRequestWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_authorize" = NSButton; 
@@ -29,11 +29,6 @@
                 "textField_header" = NSTextField; 
                 "textView_message" = NSTextView; 
             }; 
-            SUPERCLASS = ESGaimRequestAbstractWindowController; 
-        }, 
-        {
-            CLASS = ESGaimRequestAbstractWindowController; 
-            LANGUAGE = ObjC; 
             SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
