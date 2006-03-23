@@ -639,4 +639,20 @@ static int nextChatNumber = 0;
 	return customEmoticons;
 }
 
+#pragma mark Errors
+
+/*
+ * @brief Inform the chat that an error occurred
+ *
+ * @param type An NSNumber containing an AIChatErrorType
+ */
+- (void)receivedError:(NSNumber *)type
+{
+	//Notify observers
+	[self setStatusObject:type forKey:KEY_CHAT_ERROR notify:NotifyNow];
+
+	//No need to continue to store the NSNumber
+	[self setStatusObject:nil forKey:KEY_CHAT_ERROR notify:NotifyNever];
+}
+
 @end
