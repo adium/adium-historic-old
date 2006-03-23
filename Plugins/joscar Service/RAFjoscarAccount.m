@@ -720,6 +720,16 @@
 				   notify:NotifyNow];	
 }
 
+- (void)chatWithUID:(NSString *)inUID gotError:(NSNumber *)errorType
+{
+	AIListContact	*sourceContact = [self contactWithUID:inUID];
+	AIChat			*chat;
+	
+	chat = [[adium chatController] existingChatWithContact:sourceContact];
+
+	[chat receivedError:errorType];
+}
+
 - (BOOL)canSendImagesForChat:(AIChat *)inChat
 {
 	//XXX Check against the chat's list object's capabilities for DirectIM

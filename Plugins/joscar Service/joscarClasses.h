@@ -607,6 +607,21 @@
 - (NSString *)getMessage;
 @end
 
+@interface Reason : NSObject {}
+//getName returns one of @"TOO_FAST", @"TOO_LARGE", @"SENDER_WARNING_LEVEL", @"YOUR_WARNING_LEVEL"
+- (NSString *)getName;
+@end
+
+/*
+ * net.kano.joustsim.oscar.oscar.service.icbm.MissedImInfo
+ */
+@interface MissedImInfo : NSObject {}
+- (Screenname *)getFrom;
+- (Screenname *)getTo;
+- (int)getCount;
+- (Reason *)getReason;
+@end
+
 #pragma mark File transfer
 
 @interface FileSendBlock : NSObject {}

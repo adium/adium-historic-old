@@ -17,7 +17,7 @@
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <Carbon/Carbon.h>
 
-#import "ESFileTransferController.h"
+#import "ESFileTransferController.h"pdate
 #import "RAFjoscarLogHandler.h"
 
 //#define JOSCAR_LOG_WARNING
@@ -690,6 +690,34 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 			   gotTypingState:[NSNumber numberWithInt:typingState]];
 }
 
+- (void)setMissedMessages:(HashMap *)userInfo
+{
+	ImConversation	*conversation = [userInfo get:@"ImConversation"];
+	MissedImInfo	*missedImInfo = [userInfo get:@"MissedImInfo"];
+	Screenname		*sn = [conversation getBuddy];
+	AIChatErrorType errorType = AIChatUnknownError;
+	Screenname		*imSource = [missedImInfo getFrom];
+	BOOL			receiving = [imSource isEqual:sn];
+
+	//getName returns one of @"TOO_FAST", @"TOO_LARGE", @"SENDER_WARNING_LEVEL", @"YOUR_WARNING_LEVEL"
+	NSString		*imError = [[missedImInfo getReason] getName];
+	if ([imError isEqualToString:@"TOO_LARGE"]) {
+		errorType = (receiving ? AIChatMessageReceivingMissedTooLarge : AIChatMessageSendingTooLarge);
+
+	} else if ([imError isEqualToString:@"TOO_FAST"]) {
+		errorType = (receiving ? AIChatMessageReceivingMissedRateLimitExceeded : AIChatMessageSendingMissedRateLimitExceeded);
+		
+	} else if ([imError isEqualToString:@"SENDER_WARNING_LEVEL"]) {
+		errorType = (receiving ? AIChatMessageReceivingMissedRemoteIsTooEvil : AIChatMessageReceivingMissedLocalIsTooEvil);
+
+	} else if ([imError isEqualToString:@"YOUR_WARNING_LEVEL"]) {
+		errorType = AIChatMessageReceivingMissedLocalIsTooEvil;
+	}
+
+	[accountProxy chatWithUID:[[[sn getNormal] copy] autorelease]
+					 gotError:[NSNumber numberWithInt:errorType]];
+}
+				   
 #pragma mark File transfer
 - (void)setNewIncomingFileTransfer:(HashMap *)userInfo
 {

@@ -72,4 +72,6 @@
 
 - (NSString *)getSecurid;
 
+- (void)chatWithUID:(NSString *)inUID gotError:(NSNumber *)errorType;
+
 @end

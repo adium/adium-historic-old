@@ -538,12 +538,15 @@ RvConnectionEventListener, IconRequestListener, ChatRoomManagerListener, ChatRoo
     public void sentOtherEvent(Conversation conversation, ConversationEventInfo event) {
 		
 	}
-	
-	public void missedMessages(ImConversation conv, MissedImInfo info) {
-		System.out.println("missed messages...");
 
+	public void missedMessages(ImConversation conv, MissedImInfo info) {
+		HashMap map = new HashMap();
+		map.put("ImConversation", conv);
+		map.put("MissedImInfo", info);
+
+		sendDelegateMessageWithMap("MissedMessages", map);
 	}
-	
+
 	public void gotTypingState(Conversation conversation, TypingInfo typingInfo) {
 		HashMap map = new HashMap();
 		map.put("Conversation", conversation);
@@ -552,7 +555,7 @@ RvConnectionEventListener, IconRequestListener, ChatRoomManagerListener, ChatRoo
 		sendDelegateMessageWithMap("GotTypingState", map);
 	}
 	
-	/*Enum Conversion for TypingState { TYPING, NO_TEXT, PAUSED }*/
+	/* Enum Conversion for TypingState { TYPING, NO_TEXT, PAUSED } */
 	TypingState typingStateFromString(String modeName)
 	{
 		TypingState mode = null;
