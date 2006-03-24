@@ -357,6 +357,7 @@
 - (ImConversation *)getImConversation:(Screenname *)sn;
 - (DirectimConversation *)getDirectimConversation:(Screenname *)sn;
 - (RvConnectionManager *)getRvConnectionManager;
+- (void)sendAutomatically:(Screenname *)sn :(Message *)msg;
 @end
 
 #pragma mark Buddies and Groups
