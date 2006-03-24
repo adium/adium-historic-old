@@ -67,7 +67,7 @@
 }
 
 /*!
-* @brief Initialize with coder
+ * @brief Initialize with coder
  */
 - (id)initWithCoder:(NSCoder *)decoder
 {

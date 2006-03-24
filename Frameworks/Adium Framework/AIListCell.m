@@ -334,7 +334,6 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		break;
 	}
 	
-	
 	return inRect;
 }
 
