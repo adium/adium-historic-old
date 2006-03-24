@@ -445,11 +445,9 @@ static NSArray *validSenderColors;
 	
 	fileTransferHTML = [NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Incoming/FileTransferRequest.html"]];
 	if(!fileTransferHTML) {
-		fileTransferHTML = [statusHTML mutableCopy];
-		[(NSMutableString *)fileTransferHTML replaceOccurrencesOfString:@"%message%"
-															 withString:@"%message% <br> <input type=\"button\" onclick=\"%saveFileAsHandler%\" value=\"Accept File Transfer\"> </input>"
-																options:NSLiteralSearch
-																  range:NSMakeRange(0, [fileTransferHTML length] -1)];
+		fileTransferHTML = [contentInHTML mutableCopy];
+		[(NSMutableString *)fileTransferHTML replaceKeyword:@"%message%"
+												 withString:@"<p><img src=\"%fileIconPath%\" style=\"width:32px; height:32px; vertical-align:middle;\"></img><input type=\"button\" onclick=\"%saveFileAsHandler%\" value=\"Download %fileName%\"></p>"];
 	}
 	else
 		[fileTransferHTML retain];

@@ -626,9 +626,11 @@ static NSArray *draggedTypes = nil;
 		[previousContent release]; previousContent = [dateSeparator retain];
 	}
 	
+	BOOL similar = (previousContent && [content isSimilarToContent:previousContent] && ![content isKindOfClass:[ESFileTransfer class]]);
+	
 	//Add the content object
 	[self _appendContent:content 
-				 similar:(previousContent && [content isSimilarToContent:previousContent])
+				 similar:similar
 	willAddMoreContentObjects:willAddMoreContentObjects];
 	
 	[previousContent release]; previousContent = [content retain];
