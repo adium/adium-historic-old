@@ -7,6 +7,7 @@
 
 #import "ESjoscarCocoaAdapter.h"
 #import "RAFjoscarAccount.h"
+#import "AIAccountController.h"
 #import <JavaVM/JavaVM.h>
 #import "joscarClasses.h"
 #import <Adium/NDRunLoopMessenger.h>
@@ -115,7 +116,49 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[super dealloc];
 }
 
-- (void)connectWithPassword:(NSString *)password
+- (AimProxyInfo *)aimProxyInfoForConfiguration:(NSDictionary *)proxyConfig
+{
+	AimProxyInfo		*proxyInfo = nil;
+	AdiumProxyType  	proxyType = [[proxyConfig objectForKey:@"AdiumProxyType"] intValue];
+	
+	if (proxyType != Adium_Proxy_None) {
+		NSString	*host, *username, *password;
+		int			port;
+
+		host = [proxyConfig objectForKey:@"Host"];
+		port = [[proxyConfig objectForKey:@"Port"] intValue];
+		username = [proxyConfig objectForKey:@"Username"];
+		password = [proxyConfig objectForKey:@"Password"];
+		
+		switch (proxyType) {
+			case Adium_Proxy_HTTP:
+			case Adium_Proxy_Default_HTTP:
+				proxyInfo = [AimProxyInfoClass forHttp:host :port :username :password];				
+				break;
+				
+			case Adium_Proxy_SOCKS4:
+			case Adium_Proxy_Default_SOCKS4:
+				proxyInfo = [AimProxyInfoClass forSocks4:host :port];
+				break;
+				
+			case Adium_Proxy_SOCKS5:
+			case Adium_Proxy_Default_SOCKS5:
+				proxyInfo = [AimProxyInfoClass forSocks5:host :port :username :password];
+				break;
+				
+			case Adium_Proxy_None:
+				//Can't get here
+				break;
+		}
+
+	} else {
+		proxyInfo = [AimProxyInfoClass forNoProxy];
+	}
+	
+	return proxyInfo;
+}
+
+- (void)connectWithPassword:(NSString *)password proxyConfiguration:(NSDictionary *)proxyConfiguration
 {
 	AimConnectionProperties	*aimConnectionProperties;
 	Screenname				*screenName;
@@ -139,7 +182,8 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[aimConnection addOpenedServiceListener:joscarBridge];
 	[[aimConnection getChatRoomManager] addListener:joscarBridge];
 	[[aimConnection getLoginService] setSecuridProvider:self];
-	
+
+	[aimConnection setProxy:[self aimProxyInfoForConfiguration:proxyConfiguration]];
 	//Connect!
 	AILog(@"*** %@ connecting %@ with Java bridge %@ ***",appSession, screenName, joscarBridge);
 

@@ -90,7 +90,14 @@
 	}
 	AILog(@"+++ Connecting %@ via %@", self, joscarAdapter);
 
-	[joscarAdapter connectWithPassword:password];
+	[self getProxyConfigurationNotifyingTarget:self
+									  selector:@selector(retrievedProxyConfiguration:context:)
+									   context:nil];	
+}
+
+- (void)retrievedProxyConfiguration:(NSDictionary *)proxyConfiguration context:(id)context
+{
+	[joscarAdapter connectWithPassword:password proxyConfiguration:proxyConfiguration];
 }
 
 - (void)disconnect

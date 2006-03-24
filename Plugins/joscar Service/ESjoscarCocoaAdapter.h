@@ -37,7 +37,7 @@
 + (void)initializeJavaVM;
 - (id)initForAccount:(RAFjoscarAccount *)inAccount;
 
-- (void)connectWithPassword:(NSString *)password;
+- (void)connectWithPassword:(NSString *)password proxyConfiguration:(NSDictionary *)proxyConfiguration;
 - (void)disconnect;
 
 - (NSString *)processOutgoingMessage:(NSString *)message /*toUID:(NSString *)inUID*/ joscarData:(id *)outJoscarData;

@@ -46,6 +46,17 @@
 @end
 
 /*
+ * net.kano.joustsim.oscar.proxy.AimProxyInfo
+ */
+#define AimProxyInfoClass NSClassFromString(@"net.kano.joustsim.oscar.proxy.AimProxyInfo")
+@interface AimProxyInfo : NSObject {}
++ (AimProxyInfo *)forSocks5:(NSString *)host :(int)port :(NSString *)username :(NSString *)password;
++ (AimProxyInfo *)forHttp:(NSString *)host :(int)port :(NSString *)username :(NSString *)password;
++ (AimProxyInfo *)forSocks4:(NSString *)host :(int)port;
++ (AimProxyInfo *)forNoProxy;
+@end
+
+/*
  * net.kano.joustsim.oscar.AimConnection
  * Constructor: (Screenname sn, String password)
  * Constructor: (AimConnectionProperties props)
@@ -79,6 +90,7 @@
 - (void)addOpenedServiceListener:(id<OpenedServiceListener>)listener;
 - (void)removeOpenedServiceListener:(id<OpenedServiceListener>)listener;
 
+- (void)setProxy:(AimProxyInfo *)proxyInfo;
 @end
 
 /*
