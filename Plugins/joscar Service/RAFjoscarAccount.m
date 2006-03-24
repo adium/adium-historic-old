@@ -611,7 +611,9 @@
  */
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
 {
-	NSAttributedString *message = [inContentMessage message];
+	NSAttributedString	*message = [inContentMessage message];
+	NSString			*htmlMessage;
+
 	if([message containsAttachments]) {
 		NSRange limitRange;
 		NSRange effectiveRange;
@@ -630,25 +632,26 @@
 									 NSMaxRange(limitRange) - NSMaxRange(effectiveRange));
 		}
 	}
-	//XXX To do: Create an AIHTMLDecoder instance with these settings and keep it around
-	NSString	*htmlMessage = [AIHTMLDecoder encodeHTML:message
-												 headers:YES
-												fontTags:YES
-									  includingColorTags:YES
-										   closeFontTags:YES
-											   styleTags:YES
-							  closeStyleTagsOnFontChange:YES
-										  encodeNonASCII:YES
-											encodeSpaces:YES
-											  imagesPath:NSTemporaryDirectory()
-									   attachmentsAsText:NO
-							   onlyIncludeOutgoingImages:YES
-										  simpleTagsOnly:NO
-										  bodyBackground:NO];	
 	
-	id			joscarDataForThisMessage = nil;
-	htmlMessage = [joscarAdapter processOutgoingMessage:htmlMessage
-//												  toUID:[[inContentMessage destination] UID]
+	static AIHTMLDecoder *messageEncoder = nil;
+	if (!messageEncoder) {
+		messageEncoder = [[AIHTMLDecoder alloc] init];
+		[messageEncoder setIncludesHeaders:YES];
+		[messageEncoder setIncludesFontTags:YES];
+		[messageEncoder setClosesFontTags:NO];
+		[messageEncoder setIncludesStyleTags:YES];
+		[messageEncoder setIncludesColorTags:YES];
+		[messageEncoder setEncodesNonASCII:NO];
+		[messageEncoder setPreservesAllSpaces:NO];
+		[messageEncoder setUsesAttachmentTextEquivalents:NO];
+		[messageEncoder setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
+		[messageEncoder setOnlyUsesSimpleTags:NO];
+		[messageEncoder setAllowAIMsubprofileLinks:YES];
+	}
+
+	id	joscarDataForThisMessage = nil;
+	htmlMessage = [joscarAdapter processOutgoingMessage:[messageEncoder encodeHTML:message
+																		imagesPath:NSTemporaryDirectory()]
 											 joscarData:&joscarDataForThisMessage];
 	if (joscarDataForThisMessage) {
 		[inContentMessage setEncodedMessageAccountData:joscarDataForThisMessage];

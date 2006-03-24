@@ -451,27 +451,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 }
 
 /*
- * @brief Add a message to the queue to be sent when a directIM is established with inUID
- */
-- (void)queueDirectMessage:(DirectMessage *)directMsg toUID:(NSString *)inUID
-{
-	NSMutableArray	*pendingMsgsToContact;
-
-	@synchronized(pendingDirectMsgDict) {
-		if (!pendingDirectMsgDict) pendingDirectMsgDict = [[NSMutableDictionary alloc] init];
-		
-		if (!(pendingMsgsToContact = [pendingDirectMsgDict objectForKey:inUID])) {
-			pendingMsgsToContact = [[NSMutableArray alloc] init];
-			[pendingDirectMsgDict setObject:pendingMsgsToContact
-									 forKey:inUID];
-			[pendingMsgsToContact release];
-		}
-		
-		[pendingMsgsToContact addObject:directMsg];
-	}
-}
-
-/*
  * @brief A directIM conversation was established
  */
 - (void)setOpenedDirectIMConversation:(HashMap *)userInfo
@@ -481,26 +460,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	NSString				*inUID = [sn getNormal];
 
 	NSLog(@"Opened direct IM with %@",inUID);
-	
-	@synchronized(pendingDirectMsgDict) {
-		NSArray		 *pendingMsgsToContact = [pendingDirectMsgDict objectForKey:inUID];
-		NSEnumerator *enumerator;
-		Message		 *msg;
-		
-		//Send each waiting message
-		enumerator = [pendingMsgsToContact objectEnumerator];
-		while ((msg = [enumerator nextObject])) {
-			[conversation sendMessage:msg];
-		}
-		
-		//Clear our global pending dictionary for this particular contact
-		[pendingDirectMsgDict removeObjectForKey:inUID];
-		
-		//Release the global pending dictionary if it is now empty
-		if (![pendingDirectMsgDict count]) {
-			[pendingDirectMsgDict release]; pendingDirectMsgDict = nil;
-		}
-	}
 }
 
 /*
@@ -520,9 +479,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 - (BOOL)chatWithUID:(NSString *)inUID sendMessage:(NSString *)message isAutoreply:(BOOL)isAutoreply joscarData:(NSSet *)attachmentsSet
 {
 	Screenname			*sn = [NewScreenname(inUID) autorelease];
-	Conversation		*conversation;
 	Message				*msg;
-	BOOL				sentImmediately;
 
 	if (attachmentsSet) {
 		HashSet *attachmentsHashSet = NewHashSet([attachmentsSet count]);
@@ -540,33 +497,14 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		msg = [NewDirectMessage(message, isAutoreply, attachmentsHashSet) autorelease];
 		[attachmentsHashSet release];
 
-		//Get the DirectConversation, which will create it if necessray but will not 'open' it (initiate the connection)
-		conversation = [[aimConnection getIcbmService] getDirectimConversation:sn];
-		
-		//We need to open our conversation, then wait for it be connected, if it's not already open
-		if (![conversation isOpen]) {
-			NSLog(@"%@ is not open, so opening it...", conversation);
-			[conversation open];
-			[self queueDirectMessage:(DirectMessage *)msg toUID:inUID];
-
-			msg = nil;
-		}
-
 	} else {
-		conversation = [[aimConnection getIcbmService] getImConversation:sn];
 		msg = [NewBasicInstantMessage(message,
 									  isAutoreply) autorelease];		
 	}
 	
-	if (msg) {
-		/* Send message */
-		[conversation sendMessage:msg];
-		sentImmediately = YES;
-	} else {
-		sentImmediately = NO;
-	}
+	[[aimConnection getIcbmService] sendAutomatically:sn :msg];
 	
-	return sentImmediately;
+	return YES;
 }
 
 /*

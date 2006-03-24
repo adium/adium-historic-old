@@ -25,9 +25,7 @@
 	NSMutableDictionary		*pendingBuddyAddDict;
 	NSMutableDictionary		*pendingBuddyMoveDict;
 
-	NSMutableDictionary		*joscarChatsDict;
-	
-	NSMutableDictionary		*pendingDirectMsgDict;
+	NSMutableDictionary		*joscarChatsDict;	
 	
 	NSMutableDictionary		*fileTransferPollingTimersDict;
 	
