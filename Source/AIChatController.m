@@ -532,7 +532,7 @@
 }
 
 /*!
- * @brief Find all chats with a contact
+ * @brief Find all open chats with a contact
  *
  * @param inContact The contact. If inContact is an AIMetaContact, all chats with all contacts within the metaContact will be returned.
  * @result An NSSet with all chats with the contact.  In general, will contain 0 or 1 AIChat objects, though it may contain more.
@@ -564,7 +564,8 @@
 		enumerator = [openChats objectEnumerator];
 		while ((chat = [enumerator nextObject])) {
 			if (![chat isGroupChat] &&
-				[[[chat listObject] internalObjectID] isEqualToString:[inContact internalObjectID]]) {
+				[[[chat listObject] internalObjectID] isEqualToString:[inContact internalObjectID]] &&
+				[chat isOpen]) {
 				if (!foundChats) foundChats = [NSMutableSet set];
 				[foundChats addObject:chat];
 			}
