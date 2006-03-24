@@ -645,7 +645,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 						NSString		*name, *identifier;
 						NSString		*imagePath = nil;
 						
-						identifier = [imgArguments objectForKey:@"ID"];
+						identifier = [imgArguments objectForKey:@"id"];
 						name = [imgArguments objectForKey:@"src"];
 
 						if(!name) name = @"Received Image";
