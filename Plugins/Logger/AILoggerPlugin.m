@@ -177,6 +177,23 @@ Class LogViewerWindowControllerClass = NULL;
 	return [NSString stringWithFormat:@"%@.%@/%@", [[account service] serviceID], [[account UID] safeFilenameString], object];
 }
 
++ (NSString *)imagesPathForContentObject:(AIContentObject *)contentObject
+{
+	AIChat		*chat = [contentObject chat];
+	NSString	*object = [chat name];
+	if (!object) object = [[chat listObject] UID];
+
+	//Get the log path and name
+	object = [object safeFilenameString];
+	
+	NSString *relativePath = [AILoggerPlugin relativePathForLogWithObject:object onAccount:[chat account]];
+	NSString *fullPath = [AILoggerPlugin fullPathOfLogAtRelativePath:relativePath];
+
+	NSString	*dateString = [[contentObject date] descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:nil];
+
+	return ([fullPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", object, dateString]]);
+}
+
 //Returns the file name for the log
 + (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date plainText:(BOOL)plainText
 {
@@ -298,10 +315,10 @@ Class LogViewerWindowControllerClass = NULL;
 			if (!objectUID) objectUID = [[chat listObject] UID];
 
 			relativePath = [self _writeMessage:logString
-                                            betweenAccount:[chat account] 
-                                                 andObject:objectUID
-                                                    onDate:[content date]];
-
+								betweenAccount:[chat account] 
+									 andObject:objectUID
+										onDate:[content date]];
+			
 			[self markLogDirtyAtPath:relativePath forChat:chat];
 		}
 	}
@@ -315,7 +332,7 @@ Class LogViewerWindowControllerClass = NULL;
 																													 showingAMorPM:YES]
 																 timeZone:nil
 																   locale:nil];
-	NSAttributedString      *message = [[content message] attributedStringByConvertingAttachmentsToStrings];
+	NSAttributedString      *message = [content message];
 	AIListObject			*source = [content source];
 	NSString				*logString = nil;
 
@@ -335,9 +352,9 @@ Class LogViewerWindowControllerClass = NULL;
 			   closeStyleTagsOnFontChange:YES
 						   encodeNonASCII:YES
 							 encodeSpaces:NO
-							   imagesPath:nil
-						attachmentsAsText:YES 
-				onlyIncludeOutgoingImages:NO 
+							   imagesPath:[AILoggerPlugin imagesPathForContentObject:content]
+						attachmentsAsText:NO 
+				onlyIncludeOutgoingImages:YES 
 						   simpleTagsOnly:NO
 						   bodyBackground:NO]];
 		} else {
