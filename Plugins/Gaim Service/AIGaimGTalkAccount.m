@@ -41,4 +41,14 @@
 	return @"@gmail.com";
 }
 
+/*
+ * @brief Allow a file transfer with an object?
+ *
+ * As of 3/24/2006, GTalk does not allow file transfers.
+ */
+- (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
+{
+	return NO;
+}
+
 @end

@@ -389,6 +389,17 @@
 	[super cancelFileTransfer:fileTransfer];
 }
 
+/*
+ * @brief Allow a file transfer with an object?
+ *
+ * As of 3/24/2006, GTalk does not allow file transfers.
+ */
+- (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
+{
+	return (![[[inListObject UID] lowercaseString] hasSuffix:@"@gmail.com"]);
+}
+
+
 #pragma mark Status Messages
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
 {
