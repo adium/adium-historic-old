@@ -136,6 +136,12 @@ static BOOL							hideInBackground = NO;
 {
 	[super windowWillClose:sender];
 
+	/* Hack of the day.  The table view crashes when the window is released out from under it after it has reloaded data because
+	 * it thinks it needs display. It thinks that because we are animating the window's resizing process.  We could do animate:NO
+	 * in configureStatusWindow, but that wouldn't be as pretty.
+	 */
+	[tableView_multiStatus setDataSource:nil];
+
     //Clean up and release the shared instance
     [sharedInstance autorelease]; sharedInstance = nil;
 }
@@ -145,7 +151,7 @@ static BOOL							hideInBackground = NO;
  */
 - (void)dealloc
 {
-	[_awayAccounts release];
+	[_awayAccounts release]; _awayAccounts = nil;
 	
 	[super dealloc];
 }
@@ -190,7 +196,6 @@ static BOOL							hideInBackground = NO;
 			
 		//Select the right tab view item
 		[tabView_configuration selectTabViewItemWithIdentifier:@"singlestatus"];
-		
 	} else {
 		/* Show the multistatus tableview tab if accounts are in different states, which includes the case of only one
 		 * away state being in use but not all online accounts currently making use of it.
@@ -315,7 +320,7 @@ static BOOL							hideInBackground = NO;
 
 		[selectedAccounts release];
 	}
-
+	
 	[self release];
 }
 
