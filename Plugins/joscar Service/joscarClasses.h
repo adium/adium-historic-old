@@ -765,7 +765,7 @@
  * java.util.Date
  */
 #define NewDate(timeInterval)	[NSClassFromString(@"java.util.Date") \
-								newWithSignature:@"(J", \
+								newWithSignature:@"(J)", \
 								(timeInterval)]
 @interface Date : NSObject {}
 @end
