@@ -130,7 +130,7 @@
 		}
 		case AICancel: /* Closed = Cancel */
 		{
-			/* File name remains nil and the transfer will therefore be canceled */
+			/* File name remains nil and the transfer will therefore be cancelled */
 			finished = YES;
 			break;
 		}

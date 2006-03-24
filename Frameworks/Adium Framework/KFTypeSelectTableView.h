@@ -108,7 +108,7 @@ typedef enum KFTypeSelectMatchAlgorithm {
 // userInfo dictionary has @"oldPattern" key
 // this notification is sent
 //    when a search begins or is modified
-//    when a search is canceled
+//    when a search is cancelled
 //    x seconds after a search either succeeds or fails, where x is a timeout period
 - (void)typeSelectTableViewPatternDidChange:(NSNotification *)aNotification; 
 - (void)typeSelectTableView:(id)tableView didFindMatch:(NSString *)match range:(NSRange)matchedRange forPattern:(NSString *)pattern;

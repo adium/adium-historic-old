@@ -190,8 +190,8 @@
 			[view setProgressVisible:NO];
 			transferSpeedStatus = AILocalizedString(@"Complete",nil);
 			break;
-		case Canceled_Local_FileTransfer:
-		case Canceled_Remote_FileTransfer:
+		case Cancelled_Local_FileTransfer:
+		case Cancelled_Remote_FileTransfer:
 			[view setProgressVisible:NO];
 			transferSpeedStatus = AILocalizedString(@"Stopped",nil);
 			break;
@@ -239,11 +239,17 @@
 				
 				break;
 			}
-			case Canceled_Local_FileTransfer:
-				transferBytesStatus = AILocalizedString(@"Canceled","File transfer canceled locally status description");
+			case Cancelled_Local_FileTransfer:
+				transferBytesStatus = AILocalizedString(@"Cancelled","File transfer cancelled locally status description");
 				break;
-			case Canceled_Remote_FileTransfer:
-				transferBytesStatus = AILocalizedString(@"Remote contact canceled","File transfer canceled remotely status description");
+			case Cancelled_Remote_FileTransfer:
+				transferBytesStatus = AILocalizedString(@"Remote contact cancelled","File transfer cancelled remotely status description");
+				break;
+			case Checksumming_Filetransfer:
+				transferBytesStatus = [AILocalizedString(@"Preparing file transfer","File transfer preparing status description") stringByAppendingEllipsis];
+				break;
+			case Failed_FileTransfer:
+				transferBytesStatus = AILocalizedString(@"Failed","File transfer failed status description");
 				break;
 			default: 
 				break;

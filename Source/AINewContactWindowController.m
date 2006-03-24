@@ -448,7 +448,7 @@
 		[self buildGroupMenu];
 		
 		/* Select the new group if it exists; otherwise select the first group (so we don't still have New Group... selected).
-		 * If the user canceled, group will be nil since the group doesn't exist.
+		 * If the user cancelled, group will be nil since the group doesn't exist.
 		 */
 		if (![popUp_targetGroup selectItemWithRepresentedObject:group]) {
 			[popUp_targetGroup selectItemAtIndex:0];			

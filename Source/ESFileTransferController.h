@@ -38,8 +38,8 @@ typedef enum {
 	Accepted_FileTransfer,			//Could also be called Began_FileTransfer or Started_FileTransfer
 	In_Progress_FileTransfer,		//Currently transferring, not yet complete
 	Complete_FileTransfer,			//File is complete; transferring is finished.
-	Canceled_Local_FileTransfer,	//The local user canceled the transfer
-	Canceled_Remote_FileTransfer,	//The remote user canceled the transfer
+	Cancelled_Local_FileTransfer,	//The local user cancelled the transfer
+	Cancelled_Remote_FileTransfer,	//The remote user cancelled the transfer
 	Failed_FileTransfer				//The transfer failed.
 } FileTransferStatus;
 

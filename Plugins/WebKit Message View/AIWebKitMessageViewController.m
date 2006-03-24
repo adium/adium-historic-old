@@ -128,7 +128,7 @@ static NSArray *draggedTypes = nil;
 		
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(cancelFileTransferRequest:)
-										   name:FILE_TRANSFER_CANCELED
+										   name:FILE_TRANSFER_CANCELLED
 										 object:nil];
 	}
 	

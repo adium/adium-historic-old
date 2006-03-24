@@ -1166,7 +1166,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 
 - (void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName
 {
-	//Only start the file transfer if it's still not marked as canceled and therefore can be begun.
+	//Only start the file transfer if it's still not marked as cancelled and therefore can be begun.
 	if ((gaim_xfer_get_status(xfer) != GAIM_XFER_STATUS_CANCEL_LOCAL) &&
 		(gaim_xfer_get_status(xfer) != GAIM_XFER_STATUS_CANCEL_REMOTE)) {
 		//XXX should do further error checking as done by gaim_xfer_choose_file_ok_cb() in gaim's ft.c
