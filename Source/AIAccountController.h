@@ -43,7 +43,8 @@ typedef enum
 	Adium_Proxy_SOCKS5,
 	Adium_Proxy_Default_HTTP,
 	Adium_Proxy_Default_SOCKS4,
-	Adium_Proxy_Default_SOCKS5
+	Adium_Proxy_Default_SOCKS5,
+	Adium_Proxy_None
 } AdiumProxyType;
 
 @protocol AIController, AIListObjectObserver, StateMenuPlugin;
