@@ -19,23 +19,19 @@
 
 static void adiumGaimPermitAdded(GaimAccount *account, const char *name)
 {
-	[accountLookup(account)	mainPerformSelector:@selector(privacyPermitListAdded:)
-									 withObject:[NSString stringWithUTF8String:gaim_normalize(account, name)]];
+	[accountLookup(account)	privacyPermitListAdded:[NSString stringWithUTF8String:gaim_normalize(account, name)]];
 }
 static void adiumGaimPermitRemoved(GaimAccount *account, const char *name)
 {
-	[accountLookup(account)	mainPerformSelector:@selector(privacyPermitListRemoved:)
-									 withObject:[NSString stringWithUTF8String:gaim_normalize(account, name)]];
+	[accountLookup(account)	privacyPermitListRemoved:[NSString stringWithUTF8String:gaim_normalize(account, name)]];
 }
 static void adiumGaimDenyAdded(GaimAccount *account, const char *name)
 {
-	[accountLookup(account)	mainPerformSelector:@selector(privacyDenyListAdded:)
-									 withObject:[NSString stringWithUTF8String:gaim_normalize(account, name)]];
+	[accountLookup(account)	privacyDenyListAdded:[NSString stringWithUTF8String:gaim_normalize(account, name)]];
 }
 static void adiumGaimDenyRemoved(GaimAccount *account, const char *name)
 {
-	[accountLookup(account)	mainPerformSelector:@selector(privacyDenyListRemoved:)
-									 withObject:[NSString stringWithUTF8String:gaim_normalize(account, name)]];
+	[accountLookup(account)	privacyDenyListRemoved:[NSString stringWithUTF8String:gaim_normalize(account, name)]];
 }
 
 static GaimPrivacyUiOps adiumGaimPrivacyOps = {

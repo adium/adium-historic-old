@@ -88,13 +88,12 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 		
 		if (letAccountHandleUpdate) {
 			if (updateSelector) {
-				[account mainPerformSelector:updateSelector
-								  withObject:theContact
-								  withObject:data];
+				[account performSelector:updateSelector
+							  withObject:theContact
+							  withObject:data];
 			} else {
-				[account mainPerformSelector:@selector(updateContact:forEvent:)
-								  withObject:theContact
-								  withObject:data];
+				[account updateContact:theContact
+							  forEvent:data];
 			}
 		}
 	}
@@ -125,11 +124,10 @@ static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, Gai
 	statusName = [account statusNameForGaimBuddy:buddy];
 	statusMessage = [account statusMessageForGaimBuddy:buddy];
 
-	[account mainPerformSelector:@selector(updateStatusForContact:toStatusType:statusName:statusMessage:)
-					  withObject:theContact
-					  withObject:statusTypeNumber
-					  withObject:statusName
-					  withObject:statusMessage];
+	[account updateStatusForContact:theContact
+					   toStatusType:statusTypeNumber
+						 statusName:statusName
+					  statusMessage:statusMessage];
 }
 
 static void buddy_idle_changed_cb(GaimBuddy *buddy, gboolean old_idle, gboolean idle, GaimBuddyEvent event)
@@ -141,15 +139,13 @@ static void buddy_idle_changed_cb(GaimBuddy *buddy, gboolean old_idle, gboolean 
 	if (idle) {
 		time_t		idleTime = gaim_presence_get_idle_time(presence);
 
-		[account mainPerformSelector:@selector(updateWentIdle:withData:)
-						  withObject:theContact
-						  withObject:(idleTime ?
+		[account updateWentIdle:theContact
+					   withData:(idleTime ?
 									  [NSDate dateWithTimeIntervalSince1970:idleTime] :
 									  nil)];
 	} else {
-		[account mainPerformSelector:@selector(updateIdleReturn:withData:)
-						  withObject:theContact
-						  withObject:nil];
+		[account updateIdleReturn:theContact
+						 withData:nil];
 	}
 				
 	AILog(@"buddy_event_cb: %@ is %@ [old_idle %i, idle %i]",theContact,(idle ? @"idle" : @"not idle"),old_idle,idle);

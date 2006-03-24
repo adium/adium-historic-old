@@ -34,9 +34,9 @@
 #define DEFAULT_JABBER_HOST @"@jabber.org"
 
 @implementation ESGaimJabberAccount
-
+	
 /*!
-* @brief The UID will be changed. The account has a chance to perform modifications
+ * @brief The UID will be changed. The account has a chance to perform modifications
  *
  * Upgrade old Jabber accounts stored with the host in a separate key to have the right UID, in the form
  * name@server.org
@@ -242,20 +242,20 @@
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-	return [AIHTMLDecoder encodeHTML:inAttributedString
-							 headers:YES
-							fontTags:YES
-				  includingColorTags:YES
-					   closeFontTags:YES
-						   styleTags:YES
-		  closeStyleTagsOnFontChange:YES
-					  encodeNonASCII:NO
-						encodeSpaces:NO
-						  imagesPath:nil
-				   attachmentsAsText:YES
-		   onlyIncludeOutgoingImages:YES
-					  simpleTagsOnly:NO
-					  bodyBackground:NO];
+	static AIHTMLDecoder *jabberHtmlEncoder = nil;
+	if (!jabberHtmlEncoder) {
+		jabberHtmlEncoder = [[AIHTMLDecoder alloc] init];
+		[jabberHtmlEncoder setIncludesHeaders:NO];
+		[jabberHtmlEncoder setIncludesFontTags:YES];
+		[jabberHtmlEncoder setClosesFontTags:YES];
+		[jabberHtmlEncoder setIncludesStyleTags:YES];
+		[jabberHtmlEncoder setIncludesColorTags:YES];
+		[jabberHtmlEncoder setEncodesNonASCII:NO];
+		[jabberHtmlEncoder setPreservesAllSpaces:NO];
+		[jabberHtmlEncoder setUsesAttachmentTextEquivalents:YES];
+	}
+	
+	return [jabberHtmlEncoder encodeHTML:inAttributedString imagesPath:nil];
 }
 
 - (NSString *)_UIDForAddingObject:(AIListContact *)object

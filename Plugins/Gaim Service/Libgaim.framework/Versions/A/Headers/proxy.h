@@ -201,6 +201,15 @@ GaimProxyInfo *gaim_global_proxy_get_info(void);
 void gaim_proxy_init(void);
 
 /**
+ * Returns configuration of a proxy.
+ *
+ * @param account The account for which the configuration is needed.
+ *
+ * @return The configuration of a proxy.
+ */
+GaimProxyInfo *gaim_proxy_get_setup(GaimAccount *account);
+
+/**
  * Makes a connection to the specified host and port.
  *
  * @param account The account making the connection.
@@ -237,7 +246,8 @@ typedef void (*dns_callback_t)(GSList *hosts, gpointer data,
  * @param port A portnumber which is stored in the struct sockaddr
  * @param callback Callback to call after resolving
  * @param data Extra data for the callback function
- * @return a GSList containing the size of followed by the struct sockaddr for any returned IP
+ *
+ * @return Zero indicates the connection is pending. Any other value indicates failure.
  */
 int gaim_gethostbyname_async(const char *hostname, int port, dns_callback_t callback, gpointer data);
 

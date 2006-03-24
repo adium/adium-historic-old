@@ -81,7 +81,6 @@
 - (void)configureGaimAccountNotifyingTarget:(id)target selector:(SEL)selector;
 - (void)continueConnectWithConfiguredGaimAccount;
 - (void)continueConnectWithConfiguredProxy;
-- (void)gotProxyServerPassword:(NSString *)inPassword context:(NSInvocation *)invocation;
 - (void)continueRegisterWithConfiguredGaimAccount;
 
 - (void)setAccountProfileTo:(NSAttributedString *)profile configureGaimAccountContext:(NSInvocation *)inInvocation;
@@ -642,8 +641,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)errorForChat:(AIChat *)chat type:(NSNumber *)type
 {
-	[chat setStatusObject:type forKey:KEY_CHAT_ERROR notify:NotifyNow];
-	[chat setStatusObject:nil forKey:KEY_CHAT_ERROR notify:NotifyNever];
+	[chat receivedError:type];
 }
 
 - (void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
@@ -1423,152 +1421,73 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     [self updateStatusForKey:KEY_USER_ICON];
 }
 
-//Configure libgaim's proxy settings using the current system values
+/*
+ * @brief Configure libgaim's proxy settings using the current system values
+ *
+ * target/selector are used rather than a hardcoded callback (or getProxyConfigurationNotifyingTarget: directly) because this allows code reuse
+ * between the connect and register processes, which are similar in their need for proxy configuration
+ */
+ */
 - (void)configureAccountProxyNotifyingTarget:(id)target selector:(SEL)selector
 {
-	GaimProxyInfo		*proxy_info;
-	GaimProxyType		gaimAccountProxyType = GAIM_PROXY_NONE;
-	
-	NSNumber			*proxyPref = [self preferenceForKey:KEY_ACCOUNT_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
-	BOOL				proxyEnabled = [[self preferenceForKey:KEY_ACCOUNT_PROXY_ENABLED group:GROUP_ACCOUNT_STATUS] boolValue];
-
-	NSString			*host = nil;
-	NSString			*proxyUserName = nil;
-	NSString			*proxyPassword = nil;
-	AdiumProxyType  	proxyType;
-	int					port = 0;
 	NSInvocation		*invocation; 
-	
+
 	//Configure the invocation we will use when we are done configuring
 	invocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
 	[invocation setSelector:selector];
 	[invocation setTarget:target];
-		
-	proxy_info = gaim_proxy_info_new();
-	gaim_account_set_proxy_info(account, proxy_info);
 	
-	proxyType = (proxyPref ? [proxyPref intValue] : Adium_Proxy_Default_SOCKS5);
-	
-	if (!proxyEnabled) {
-		//No proxy
-		gaim_proxy_info_set_type(proxy_info, GAIM_PROXY_NONE);
-		GaimDebug(@"Adium: Connect: %@ Connecting with no proxy.",[self UID]);
-		[invocation invoke];
-		
-	} else if ((proxyType == Adium_Proxy_Default_SOCKS5) || 
-			  (proxyType == Adium_Proxy_Default_HTTP) || 
-			  (proxyType == Adium_Proxy_Default_SOCKS4)) {
-		//Load and use systemwide proxy settings
-		NSDictionary *systemProxySettingsDictionary;
-		ProxyType adiumProxyType = Proxy_None;
-		
-		if (proxyType == Adium_Proxy_Default_SOCKS5) {
-			gaimAccountProxyType = GAIM_PROXY_SOCKS5;
-			adiumProxyType = Proxy_SOCKS5;
-			
-		} else if (proxyType == Adium_Proxy_Default_HTTP) {
-			gaimAccountProxyType = GAIM_PROXY_HTTP;
-			adiumProxyType = Proxy_HTTP;
-			
-		} else if (proxyType == Adium_Proxy_Default_SOCKS4) {
-				gaimAccountProxyType = GAIM_PROXY_SOCKS4;
-				adiumProxyType = Proxy_SOCKS4;
-		}
-		
-		GaimDebug(@"Loading proxy dictionary.");
-		
-		if ((systemProxySettingsDictionary = [AISystemNetworkDefaults systemProxySettingsDictionaryForType:adiumProxyType])) {
-
-			GaimDebug(@"Retrieved %@",systemProxySettingsDictionary);
-
-			host = [systemProxySettingsDictionary objectForKey:@"Host"];
-			port = [[systemProxySettingsDictionary objectForKey:@"Port"] intValue];
-			
-			proxyUserName = [systemProxySettingsDictionary objectForKey:@"Username"];
-			proxyPassword = [systemProxySettingsDictionary objectForKey:@"Password"];
-			
-		} else {
-			//Using system wide defaults, and no proxy of the specified type is set in the system preferences
-			gaimAccountProxyType = GAIM_PROXY_NONE;
-		}
-		
-		gaim_proxy_info_set_type(proxy_info, gaimAccountProxyType);
-		
-		gaim_proxy_info_set_host(proxy_info, (char *)[host UTF8String]);
-		gaim_proxy_info_set_port(proxy_info, port);
-		
-		if (proxyUserName && [proxyUserName length]) {
-			gaim_proxy_info_set_username(proxy_info, (char *)[proxyUserName UTF8String]);
-			if (proxyPassword && [proxyPassword length]) {
-				gaim_proxy_info_set_password(proxy_info, (char *)[proxyPassword UTF8String]);
-			}
-		}
-		
-		GaimDebug(@"Systemwide proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
-		
-		[invocation invoke];
-
-	} else {
-		host = [self preferenceForKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
-		port = [[self preferenceForKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
-		
-		switch (proxyType) {
-			case Adium_Proxy_HTTP:
-				gaimAccountProxyType = GAIM_PROXY_HTTP;
-				break;
-			case Adium_Proxy_SOCKS4:
-				gaimAccountProxyType = GAIM_PROXY_SOCKS4;
-				break;
-			case Adium_Proxy_SOCKS5:
-				gaimAccountProxyType = GAIM_PROXY_SOCKS5;
-				break;
-			case Adium_Proxy_Default_HTTP:
-			case Adium_Proxy_Default_SOCKS4:
-			case Adium_Proxy_Default_SOCKS5:
-				gaimAccountProxyType = GAIM_PROXY_NONE;
-				break;
-		}
-		
-		gaim_proxy_info_set_type(proxy_info, gaimAccountProxyType);
-		gaim_proxy_info_set_host(proxy_info, (char *)[host UTF8String]);
-		gaim_proxy_info_set_port(proxy_info, port);
-		
-		//If we need to authenticate, request the password and finish setting up the proxy in gotProxyServerPassword:context:
-		proxyUserName = [self preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
-		if (proxyUserName && [proxyUserName length]) {
-			gaim_proxy_info_set_username(proxy_info, (char *)[proxyUserName UTF8String]);
-			
-			[[adium accountController] passwordForProxyServer:host 
-													 userName:proxyUserName 
-											  notifyingTarget:self 
-													 selector:@selector(gotProxyServerPassword:context:)
-													  context:invocation];
-		} else {
-			
-			GaimDebug(@"Adium proxy settings: %i %s:%i",proxy_info->type,proxy_info->host,proxy_info->port);
-			[invocation invoke];
-		}
-	}
+	[self getProxyConfigurationNotifyingTarget:self
+									  selector:@selector(retrievedProxyConfiguration:context:)
+									   context:invocation];
 }
 
-//Retried the proxy password from the keychain
-- (void)gotProxyServerPassword:(NSString *)inPassword context:(NSInvocation *)invocation
+/*
+ * @brief Callback for -[self getProxyConfigurationNotifyingTarget:selector:context:]
+ */
+- (void)retrievedProxyConfiguration:(NSDictionary *)proxyConfig context:(NSInvocation *)invocation
 {
-	GaimProxyInfo		*proxy_info = gaim_account_get_proxy_info(account);
+	GaimProxyInfo		*proxy_info;
 	
-	if (inPassword) {
-		gaim_proxy_info_set_password(proxy_info, (char *)[inPassword UTF8String]);
-		
-		GaimDebug(@"GotPassword: Proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
+	AdiumProxyType  	proxyType = [[proxyConfig objectForKey:@"AdiumProxyType"] intValue];
+	
+	proxy_info = gaim_proxy_info_new();
+	gaim_account_set_proxy_info(account, proxy_info);
 
-		[invocation invoke];
-
-	} else {
-		gaim_proxy_info_set_username(proxy_info, NULL);
-		
-		//We are no longer connecting
-		[self setStatusObject:nil forKey:@"Connecting" notify:NotifyNow];
+	GaimProxyType		gaimAccountProxyType;
+	
+	switch (proxyType) {
+		case Adium_Proxy_HTTP:
+		case Adium_Proxy_Default_HTTP:
+			gaimAccountProxyType = GAIM_PROXY_HTTP;
+			break;
+		case Adium_Proxy_SOCKS4:
+		case Adium_Proxy_Default_SOCKS4:
+			gaimAccountProxyType = GAIM_PROXY_SOCKS4;
+			break;
+		case Adium_Proxy_SOCKS5:
+		case Adium_Proxy_Default_SOCKS5:
+			gaimAccountProxyType = GAIM_PROXY_SOCKS5;
+			break;
+		case Adium_Proxy_None:
+		default:
+			gaimAccountProxyType = GAIM_PROXY_NONE;
+			break;
 	}
+	
+	gaim_proxy_info_set_type(proxy_info, gaimAccountProxyType);
+
+	if (proxyType != Adium_Proxy_None) {
+		gaim_proxy_info_set_host(proxy_info, (char *)[[proxyConfig objectForKey:@"Host"] UTF8String]);
+		gaim_proxy_info_set_port(proxy_info, [[proxyConfig objectForKey:@"Port"] intValue]);
+
+		gaim_proxy_info_set_username(proxy_info, (char *)[[proxyConfig objectForKey:@"Username"] UTF8String]);
+		gaim_proxy_info_set_password(proxy_info, (char *)[[proxyConfig objectForKey:@"Password"] UTF8String]);
+		
+		GaimDebug(@"Connecting with proxy type %i and proxy host %@",proxyType, [proxyConfig objectForKey:@"Host"]);
+	}
+
+	[invocation invoke];
 }
 
 //Sublcasses should override to provide a string for each progress step

@@ -70,30 +70,11 @@ NSMutableDictionary *accountDict = nil;
 //NSMutableDictionary *contactDict = nil;
 NSMutableDictionary *chatDict = nil;
 
-static NDRunLoopMessenger		*gaimThreadMessenger = nil;
-static SLGaimCocoaAdapter		*gaimThreadProxy = nil;
-static NSLock					*gaimThreadCreationLock = nil;
-
 //The autorelease pool presently in use; it will be periodically released and recreated
 static NSAutoreleasePool *currentAutoreleasePool = nil;
 #define	AUTORELEASE_POOL_REFRESH	5.0
 
 @implementation SLGaimCocoaAdapter
-
-/*!
- * @brief Create the instance of SLGaimCocoaAdapter used throughout this program session
- *
- * Called on the Gaim thread, never returns until the program terminates
- */
-+ (void)_createThreadedGaimCocoaAdapter
-{
-	SLGaimCocoaAdapter  *gaimCocoaAdapter;
-
-	//Will not return until the program terminates
-    gaimCocoaAdapter = [[self alloc] init];
-	
-	[gaimCocoaAdapter release];
-}
 
 + (void)loadLibgaimPlugins
 {
@@ -122,68 +103,38 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 /*!
  * @brief Called early in the startup process by CBGaimServicePlugin to begin initializing Gaim
  *
- * Should only be called once.  Creates and locks gaimThreadCreationLock so later activity can relock in order to wait
- * on the thread to be ready for use.
+ * Should only be called once.
  */
 + (void)prepareSharedInstance
 {
-	//Create the lock to be able to wait for the gaim thread to be ready
-	gaimThreadCreationLock = [[NSLock alloc] init];
-	
-	//Obtain it
-	[gaimThreadCreationLock lock];
+	SLGaimCocoaAdapter  *gaimCocoaAdapter;
 
 	[self loadLibgaimPlugins];
 
-	//Detach the thread which will serve for all gaim messaging in the future
-	[NSThread detachNewThreadSelector:@selector(_createThreadedGaimCocoaAdapter)
-							 toTarget:[self class]
-						   withObject:nil];
+	//Will not return until the program terminates
+    gaimCocoaAdapter = [[self alloc] init];
 }
 
 /*!
  * @brief Return the shared instance
- *
- * Should only be called once and then cached by CBGaimAccount.  Locks gaimThreadCreationLock, which will only be
- * unlocked once the gaim thread is fully ready for use.
  */
 + (SLGaimCocoaAdapter *)sharedInstance
-{
-	//Wait for the lock to be unlocked once the thread is ready
-	[gaimThreadCreationLock lock];
-	
-	//No further need for the lock
-	[gaimThreadCreationLock release]; gaimThreadCreationLock = nil;
-	
+{	
 	return sharedInstance;
 }
 
-+ (NDRunLoopMessenger *)gaimThreadMessenger
-{
-	return gaimThreadMessenger;
-}
-
-//Register the account gaimside in the gaim thread to avoid a conflict on the g_hash_table containing accounts
-- (void)gaimThreadAddGaimAccount:(GaimAccount *)account
-{
-    gaim_accounts_add(account);
-	gaim_account_set_ui_bool(account, "Adium", "auto-login", TRUE);
-	gaim_account_set_status_list(account, "offline", YES, NULL);
-}
-
+//Register the account gaimside in the gaim thread
 - (void)addAdiumAccount:(CBGaimAccount *)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	account->ui_data = [adiumAccount retain];
 	
-	[gaimThreadProxy gaimThreadAddGaimAccount:account];
+	gaim_accounts_add(account);
+	gaim_account_set_ui_bool(account, "Adium", "auto-login", TRUE);
+	gaim_account_set_status_list(account, "offline", YES, NULL);
 }
 
 //Remove an account gaimside
-- (void)gaimThreadRemoveGaimAccount:(GaimAccount *)account
-{
-    gaim_accounts_remove(account);	
-}
 - (void)removeAdiumAccount:(CBGaimAccount *)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
@@ -191,50 +142,21 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	[(CBGaimAccount *)account->ui_data release];
 	account->ui_data = nil;
 	
-	[gaimThreadProxy gaimThreadRemoveGaimAccount:account];
+    gaim_accounts_remove(account);	
 }
 
 #pragma mark Initialization
 - (id)init
 {
-	NSTimer	*autoreleaseTimer;
-
-	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
-	
-	if ((self = [super init]))
-	{
+	if ((self = [super init])) {
 		accountDict = [[NSMutableDictionary alloc] init];
 		chatDict = [[NSMutableDictionary alloc] init];
-			
+		
 		sharedInstance = self;
 		
-		[self initLibGaim];
-
-		gaimThreadMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
-		[gaimThreadMessenger setMessageRetryTimeout:0.1];
-		[gaimThreadMessenger setMessageRetry:0.1];
-		gaimThreadProxy = [[gaimThreadMessenger target:self] retain];
-		
-		//Use a time to periodically release our autorelease pool so we don't continually grow in memory usage
-		autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
-															 target:self
-														   selector:@selector(refreshAutoreleasePool:)
-														   userInfo:nil
-															repeats:YES] retain];
-
-		//We're ready now, so unlock the creation lock on the next run loop  which is being waited upon in the main thread
-		[gaimThreadCreationLock performSelector:@selector(unlock)
-									 withObject:nil
-									 afterDelay:0];
-
-		CFRunLoopRun();
-
-		[autoreleaseTimer invalidate]; [autoreleaseTimer release];
-		[gaimThreadMessenger release]; gaimThreadMessenger = nil;
-		[gaimThreadProxy release]; gaimThreadProxy = nil;
-		[currentAutoreleasePool release];
+		[self initLibGaim];		
 	}
-			
+	
     return self;
 }
 
@@ -689,10 +611,12 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	NSString *errorMessage = nil;
 	NSString *description = nil;
 	
-	if (primaryString && ([primaryString rangeOfString:@"Already there"].location != NSNotFound)) {
-		return adium_gaim_get_handle();
+	if (primaryString) {
+		if (([primaryString rangeOfString:@"Already there"].location != NSNotFound)) {
+			return adium_gaim_get_handle();
+		}
 	}
-	
+
 	//Suppress notification warnings we have no interest in seeing
 	if (secondaryString) {
 		if (([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound) ||
@@ -700,12 +624,11 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			([secondaryString rangeOfString:@"Error reading from Switchboard server"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"0x001a: Unknown error"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Passport not verified"].location != NSNotFound)) {
+			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound)) {
 			return adium_gaim_get_handle();
 		}
 	}
-	
+
     if ([primaryString rangeOfString: @"Yahoo! message did not get sent."].location != NSNotFound) {
 		//Yahoo send error
 		errorMessage = AILocalizedString(@"Your Yahoo! message did not get sent.", nil);
@@ -751,10 +674,9 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	}
 	
 	//If we didn't grab a translated version, at least display the English version Gaim supplied
-	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
-										  withObject:([errorMessage length] ? errorMessage : primaryString)
-										  withObject:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
-										  withObject:titleString];
+	[[adium interfaceController] handleMessage:([errorMessage length] ? errorMessage : primaryString)
+							   withDescription:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
+							   withWindowTitle:titleString];
 	
 	return adium_gaim_get_handle();
 }
@@ -796,10 +718,9 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	
 	NSString	*message = primaryString;
 	
-	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
-										  withObject:(message ? message : @"")
-										  withObject:(description ? description : @"")
-										  withObject:(titleString ? titleString : @"")];
+	[[adium interfaceController] handleMessage:(message ? message : @"")
+							   withDescription:(description ? description : @"")
+							   withWindowTitle:(titleString ? titleString : @"")];
 
 	return adium_gaim_get_handle();
 }
@@ -808,39 +729,27 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 #pragma mark File transfers
 - (void)displayFileSendError
 {
-	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
-										  withObject:AILocalizedString(@"File Send Error",nil)
-										  withObject:AILocalizedString(@"An error was encoutered sending the file.  Please note that sending of folders is not currently supported; this includes Application bundles.",nil)
-										  withObject:AILocalizedString(@"File Send Error",nil)];
+	[[adium interfaceController] handleMessage:AILocalizedString(@"File Send Error",nil)
+							   withDescription:AILocalizedString(@"An error was encoutered sending the file.",nil)
+							   withWindowTitle:AILocalizedString(@"File Send Error",nil)];
 }
 
 #pragma mark Thread accessors
-- (void)gaimThreadDisconnectAccount:(id)adiumAccount
-{
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	
-	gaim_account_set_status_list(account, "offline", YES, NULL);
-}
-
 - (void)disconnectAccount:(id)adiumAccount
 {
-	[gaimThreadProxy gaimThreadDisconnectAccount:adiumAccount];
+	gaim_account_set_status_list(accountLookupFromAdiumAccount(adiumAccount), "offline", YES, NULL);
 }
 
-- (void)gaimThreadRegisterAccount:(id)adiumAccount
-{
-	gaim_account_register(accountLookupFromAdiumAccount(adiumAccount));
-}
 - (void)registerAccount:(id)adiumAccount
 {
-	[gaimThreadProxy gaimThreadRegisterAccount:adiumAccount];
+	gaim_account_register(accountLookupFromAdiumAccount(adiumAccount));
 }
 
 //Called on the gaim thread, actually performs the specified command (it should have already been tested by 
 //attemptGaimCommandOnMessage:... above.
-- (NSNumber *)gaimThreadDoCommand:(NSString *)originalMessage
-					  fromAccount:(id)sourceAccount
-						   inChat:(AIChat *)chat
+- (BOOL)doCommand:(NSString *)originalMessage
+			fromAccount:(id)sourceAccount
+				 inChat:(AIChat *)chat
 {
 	GaimConversation	*conv = convLookupFromChat(chat, sourceAccount);
 	GaimCmdStatus		status;
@@ -878,8 +787,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			didCommand = NO;
 			break;
 	}
-	NSLog(@"gaim thread says %i",didCommand);
-	return [NSNumber numberWithBool:didCommand];
+
+	return didCommand;
 }
 
 /*
@@ -892,18 +801,19 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	BOOL				didCommand = NO;
 	
 	if ([originalMessage hasPrefix:@"/"]) {	
-		didCommand = [[self mainPerformSelector:@selector(gaimThreadDoCommand:fromAccount:inChat:)
-									 withObject:originalMessage
-									 withObject:sourceAccount withObject:chat returnValue:YES] boolValue];
+		didCommand = [self doCommand:originalMessage
+						 fromAccount:sourceAccount
+							  inChat:chat];
 	}
 
 	return didCommand;
 }
 
-- (void)gaimThreadSendEncodedMessage:(NSString *)encodedMessage
-						 fromAccount:(id)sourceAccount
-							  inChat:(AIChat *)chat
-						   withFlags:(GaimMessageFlags)flags
+//Returns YES if the message was sent (and should therefore be displayed).  Returns NO if it was not sent or was otherwise used.
+- (void)sendEncodedMessage:(NSString *)encodedMessage
+			   fromAccount:(id)sourceAccount
+					inChat:(AIChat *)chat
+				 withFlags:(GaimMessageFlags)flags
 {	
 	const char *encodedMessageUTF8String;
 	
@@ -936,20 +846,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	}
 }
 
-//Returns YES if the message was sent (and should therefore be displayed).  Returns NO if it was not sent or was otherwise used.
-- (void)sendEncodedMessage:(NSString *)encodedMessage
-			   fromAccount:(id)sourceAccount
-					inChat:(AIChat *)chat
-				 withFlags:(GaimMessageFlags)flags
-{
-	AILog(@"Sending %@ from %@ to %@",encodedMessage,sourceAccount,chat);
-	[gaimThreadProxy gaimThreadSendEncodedMessage:encodedMessage
-									  fromAccount:sourceAccount
-										   inChat:chat
-										withFlags:flags];
-}
-
-- (void)gaimThreadSendTyping:(AITypingState)typingState inChat:(AIChat *)chat
+- (void)sendTyping:(AITypingState)typingState inChat:(AIChat *)chat
 {
 	GaimConversation *conv = convLookupFromChat(chat,nil);
 	if (conv) {
@@ -975,13 +872,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 						 gaimTypingState);
 	}	
 }
-- (void)sendTyping:(AITypingState)typingState inChat:(AIChat *)chat
-{
-	[gaimThreadProxy gaimThreadSendTyping:typingState
-								   inChat:chat];
-}
 
-- (void)gaimThreadAddUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
+- (void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	const char	*groupUTF8String, *buddyUTF8String;
@@ -1009,14 +901,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	gaim_account_add_buddy(account, buddy);
 }
 
-- (void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
-{
-	[gaimThreadProxy gaimThreadAddUID:objectUID
-							onAccount:adiumAccount
-							  toGroup:groupName];
-}
-
-- (void)gaimThreadRemoveUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
+- (void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	GaimBuddy 	*buddy;
@@ -1038,14 +923,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	}
 }
 
-- (void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
-{
-	[gaimThreadProxy gaimThreadRemoveUID:objectUID
-							   onAccount:adiumAccount
-							   fromGroup:groupName];
-}
-
-- (void)gaimThreadMoveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
+- (void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
 	GaimAccount *account;
 	GaimGroup 	*group;
@@ -1081,14 +959,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	/* gaim_blist_add_buddy() won't perform a serverside add, however.  Add if necessary. */
 	if (needToAddServerside) gaim_account_add_buddy(account, buddy);
 }
-- (void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
-{
-	[gaimThreadProxy gaimThreadMoveUID:objectUID
-							 onAccount:adiumAccount
-							   toGroup:groupName];
-}
 
-- (void)gaimThreadRenameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
+- (void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
 {
     GaimGroup *group = gaim_find_group([oldGroupName UTF8String]);
 	
@@ -1098,14 +970,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		gaim_blist_rename_group(group, [newGroupName UTF8String]);
 	}
 }
-- (void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
-{	
-	[gaimThreadProxy gaimThreadRenameGroup:oldGroupName
-								 onAccount:adiumAccount
-										to:newGroupName];
-}
 
-- (void)gaimThreadDeleteGroup:(NSString *)groupName onAccount:(id)adiumAccount
+- (void)deleteGroup:(NSString *)groupName onAccount:(id)adiumAccount
 {
 	GaimGroup *group = gaim_find_group([groupName UTF8String]);
 	
@@ -1113,14 +979,9 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		gaim_blist_remove_group(group);
 	}
 }
-- (void)deleteGroup:(NSString *)groupName onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadDeleteGroup:groupName
-								 onAccount:adiumAccount];
-}
 
 #pragma mark Alias
-- (void)gaimThreadSetAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount
+- (void)setAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)) {
@@ -1141,41 +1002,29 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			if (oldAlias && !alias) {
 				AIListContact *theContact = contactLookupFromBuddy(buddy);
 				
-				[adiumAccount mainPerformSelector:@selector(updateContact:toAlias:)
-									   withObject:theContact
-									   withObject:nil];
+				[adiumAccount updateContact:theContact
+									toAlias:nil];
 			}
 		}
 	}
 }
-- (void)setAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadSetAlias:alias
-								 forUID:UID
-							  onAccount:adiumAccount];
-}
 
 #pragma mark Chats
-- (void)gaimThreadOpenChat:(AIChat *)chat onAccount:(id)adiumAccount
+- (void)openChat:(AIChat *)chat onAccount:(id)adiumAccount
 {
 	//Looking up the conv from the chat will create the GaimConversation gaimside, joining the chat, opening the server
 	//connection, or whatever else is done when a chat is opened.
 	convLookupFromChat(chat,adiumAccount);
 }
-- (void)openChat:(AIChat *)chat onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadOpenChat:chat
-							  onAccount:adiumAccount];
-}
 
-- (void)gaimThreadCloseGaimConversation:(NSValue *)convValue withChatID:(NSString *)chatUniqueID
+- (void)closeChat:(AIChat *)chat
 {
-	GaimConversation *conv = [convValue pointerValue];
+	GaimConversation *conv = existingConvLookupFromChat(chat);
 
 	if (conv) {
 		//We use chatDict's objectfor the passed chatUniqueID because we can no longer trust any other
 		//values due to threading potentially letting them have changed on us.
-		[chatDict removeObjectForKey:chatUniqueID];
+		[chatDict removeObjectForKey:[chat uniqueChatID]];
 			
 		//We retained the chat when setting it as the ui_data; we are releasing here, so be sure to set conv->ui_data
 		//to nil so we don't try to do it again.
@@ -1186,22 +1035,15 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		gaim_conversation_destroy(conv);
 	}	
 }
-- (void)closeChat:(AIChat *)chat
-{
-	//We look up the conv and the chat's uniqueChatID now since threading may make them change before
-	//the gaimThread actually utilizes them
-	[gaimThreadProxy gaimThreadCloseGaimConversation:[NSValue valueWithPointer:existingConvLookupFromChat(chat)]
-										  withChatID:[chat uniqueChatID]];
-}
 
-- (void)gaimThreadInviteContact:(AIListContact *)listContact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage
+- (void)inviteContact:(AIListContact *)listContact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 {
 	GaimConversation	*conv;
 	GaimAccount			*account;
 	GaimConvChat		*gaimChat;
 	AIAccount			*adiumAccount = [chat account];
 	
-	GaimDebug (@"#### gaimThreadInviteContact:%@ toChat:%@",[listContact UID],[chat name]);
+	GaimDebug (@"#### inviteContact:%@ toChat:%@",[listContact UID],[chat name]);
 	// dchoby98
 	if (([adiumAccount isKindOfClass:[CBGaimAccount class]]) &&
 	   (conv = convLookupFromChat(chat, adiumAccount)) &&
@@ -1209,7 +1051,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	   (gaimChat = gaim_conversation_get_chat_data(conv))) {
 
 		//GaimBuddy		*buddy = gaim_find_buddy(account, [[listObject UID] UTF8String]);
-		GaimDebug (@"#### gaimThreadAddChatUser chat: %@ (%@) buddy: %@",[chat name], chat,[listContact UID]);
+		GaimDebug (@"#### addChatUser chat: %@ (%@) buddy: %@",[chat name], chat,[listContact UID]);
 		serv_chat_invite(gaim_conversation_get_gc(conv),
 						 gaim_conv_chat_get_id(gaimChat),
 						 (inviteMessage ? [inviteMessage UTF8String] : ""),
@@ -1217,32 +1059,21 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		
 	}
 }
-- (void)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
-{
-	[gaimThreadProxy gaimThreadInviteContact:contact
-									  toChat:chat
-								 withMessage:inviteMessage];
-}
 
-- (void)gaimThreadCreateNewChat:(AIChat *)chat withListContact:(AIListContact *)contact
+- (void)createNewGroupChat:(AIChat *)chat withListContact:(AIListContact *)contact
 {
 	//Create the chat
 	convLookupFromChat(chat, [chat account]);
 	
 	//Invite the contact, with no message
-	[self gaimThreadInviteContact:contact toChat:chat withMessage:nil];
-}
-- (void)createNewGroupChat:(AIChat *)chat withListContact:(AIListContact *)contact
-{
-	[gaimThreadProxy gaimThreadCreateNewChat:chat
-							  withListContact:contact];
+	[self inviteContact:contact toChat:chat withMessage:nil];
 }
 
 #pragma mark Account Status
-- (void)gaimThreadSetStatusID:(const char *)statusID 
-					 isActive:(NSNumber *)isActive
-					arguments:(NSMutableDictionary *)arguments
-					onAccount:(id)adiumAccount
+- (void)setStatusID:(const char *)statusID 
+		   isActive:(NSNumber *)isActive
+		  arguments:(NSMutableDictionary *)arguments
+		  onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	GList		*attrs = NULL;
@@ -1284,15 +1115,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	gaim_account_set_status_list(account, statusID, [isActive boolValue], attrs);
 }
 
-- (void)setStatusID:(const char *)statusID isActive:(NSNumber *)isActive arguments:(NSMutableDictionary *)arguments onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadSetStatusID:statusID
-								  isActive:isActive 
-								 arguments:arguments 
-								 onAccount:adiumAccount];
-}
-
-- (void)gaimThreadSetInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
+- (void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
 {
 	GaimAccount 	*account = accountLookupFromAdiumAccount(adiumAccount);
 	const char *profileHTMLUTF8 = [profileHTML UTF8String];
@@ -1303,26 +1126,16 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		serv_set_info(account->gc, profileHTMLUTF8);
 	}
 }
-- (void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadSetInfo:profileHTML
-							 onAccount:adiumAccount];
-}
 
-- (void)gaimThreadSetBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
+- (void)setBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (account) {
 		gaim_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
 	}
 }
-- (void)setBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadSetBuddyIcon:buddyImageFilename
-								  onAccount:adiumAccount];
-}
 
-- (void)gaimThreadSetIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount
+- (void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)) {
@@ -1334,13 +1147,9 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		gaim_presence_set_idle(presence, (idle > 0), idle);
 	}
 }
-- (void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadSetIdleSinceTo:idleSince onAccount:adiumAccount];
-}
 
 #pragma mark Get Info
-- (void)gaimThreadGetInfoFor:(NSString *)inUID onAccount:(id)adiumAccount
+- (void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)) {
@@ -1348,26 +1157,15 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		serv_get_info(account->gc, [inUID UTF8String]);
 	}
 }
-- (void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadGetInfoFor:inUID
-								onAccount:adiumAccount];
-}
 
 #pragma mark Xfer
-- (void)gaimThreadXferRequest:(NSValue *)xferValue
-{
-	GaimXfer	*xfer = [xferValue pointerValue];
-	gaim_xfer_request(xfer);
-}
 - (void)xferRequest:(GaimXfer *)xfer
 {
-	[gaimThreadProxy gaimThreadXferRequest:[NSValue valueWithPointer:xfer]];
+	gaim_xfer_request(xfer);
 }
 
-- (void)gaimThreadXferRequestAccepted:(NSValue *)xferValue withFileName:(NSString *)xferFileName
+- (void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName
 {
-	GaimXfer	*xfer = [xferValue pointerValue];
 	//Only start the file transfer if it's still not marked as canceled and therefore can be begun.
 	if ((gaim_xfer_get_status(xfer) != GAIM_XFER_STATUS_CANCEL_LOCAL) &&
 		(gaim_xfer_get_status(xfer) != GAIM_XFER_STATUS_CANCEL_REMOTE)) {
@@ -1375,25 +1173,14 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		gaim_xfer_request_accepted(xfer, [xferFileName UTF8String]);
 	}
 }
-- (void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName
-{
-	[gaimThreadProxy gaimThreadXferRequestAccepted:[NSValue valueWithPointer:xfer]
-									  withFileName:xferFileName];
-}
 
-- (void)gaimThreadXferRequestRejected:(NSValue *)xferValue
-{
-	GaimXfer	*xfer = [xferValue pointerValue];
-	gaim_xfer_request_denied(xfer);
-}
 - (void)xferRequestRejected:(GaimXfer *)xfer
 {
-	[gaimThreadProxy gaimThreadXferRequestRejected:[NSValue valueWithPointer:xfer]];
+	gaim_xfer_request_denied(xfer);
 }
 
-- (void)gaimThreadXferCancel:(NSValue *)xferValue
+- (void)xferCancel:(GaimXfer *)xfer
 {
-	GaimXfer	*xfer = [xferValue pointerValue];
 	if ((gaim_xfer_get_status(xfer) == GAIM_XFER_STATUS_UNKNOWN) ||
 		(gaim_xfer_get_status(xfer) == GAIM_XFER_STATUS_NOT_STARTED) ||
 		(gaim_xfer_get_status(xfer) == GAIM_XFER_STATUS_STARTED) ||
@@ -1402,26 +1189,16 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	}
 }
 
-- (void)xferCancel:(GaimXfer *)xfer
-{
-	[gaimThreadProxy gaimThreadXferCancel:[NSValue valueWithPointer:xfer]];
-}
-
 #pragma mark Account settings
-- (void)gaimThreadSetCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount
+- (void)setCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	BOOL		shouldCheckMail = [checkMail boolValue];
 
 	gaim_account_set_check_mail(account, shouldCheckMail);
 }
-- (void)setCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadSetCheckMail:checkMail
-								 forAccount:adiumAccount];
-}
 
-- (void)gaimThreadSetDefaultPermitDenyForAccount:(id)adiumAccount
+- (void)setDefaultPermitDenyForAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 
@@ -1430,14 +1207,9 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		serv_set_permit_deny(gaim_account_get_connection(account));
 	}	
 }
-- (void)setDefaultPermitDenyForAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadSetDefaultPermitDenyForAccount:adiumAccount];
-}
-
 
 #pragma mark Protocol specific accessors
-- (void)gaimThreadOSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
+- (void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)) {
@@ -1454,14 +1226,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		}
 	}
 }
-- (void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadOSCAREditComment:comment
-										 forUID:inUID
-									  onAccount:adiumAccount];
-}
 
-- (void)gaimThreadOSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
+- (void)OSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 
@@ -1472,15 +1238,10 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		oscar_reformat_screenname(gaim_account_get_connection(account), [inFormattedUID UTF8String]);
 	}
 }
-- (void)OSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadOSCARSetFormatTo:inFormattedUID
-									  onAccount:adiumAccount];
-}
 
 #pragma mark Request callbacks
 
-- (void)gaimThreadPerformContactMenuActionFromDict:(NSDictionary *)dict
+- (void)performContactMenuActionFromDict:(NSDictionary *)dict 
 {
 	GaimMenuAction	*act = [[dict objectForKey:@"GaimMenuAction"] pointerValue];
 	GaimBuddy		*buddy = [[dict objectForKey:@"GaimBuddy"] pointerValue];
@@ -1489,23 +1250,13 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	if (act->callback)
 		((void (*)(void *, void *))act->callback)((GaimBlistNode *)buddy, act->data);
 }
-- (void)performContactMenuActionFromDict:(NSDictionary *)dict 
-{
-	[gaimThreadProxy gaimThreadPerformContactMenuActionFromDict:dict];
-}
 
-
-- (void)gaimThreadPerformAccountMenuActionFromDict:(NSDictionary *)dict
+- (void)performAccountMenuActionFromDict:(NSDictionary *)dict
 {
 	GaimPluginAction	*pam = [[dict objectForKey:@"GaimPluginAction"] pointerValue];
 
 	if (pam->callback)
 		pam->callback(pam);
-}
-
-- (void)performAccountMenuActionFromDict:(NSDictionary *)dict
-{
-	[gaimThreadProxy gaimThreadPerformAccountMenuActionFromDict:dict];
 }
 
 /*!
@@ -1515,10 +1266,10 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
  * @param inUserDataValue Original user data
  * @param inFieldsValue The entire GaimRequestFields pointer originally passed
  */
-- (oneway void)gaimThreadDoAuthRequestCbValue:(NSValue *)inCallBackValue
-							withUserDataValue:(NSValue *)inUserDataValue 
-						  callBackIndexNumber:(NSNumber *)inIndexNumber
-							  isInputCallback:(NSNumber *)isInputCallback
+- (void)doAuthRequestCbValue:(NSValue *)inCallBackValue
+		   withUserDataValue:(NSValue *)inUserDataValue 
+		 callBackIndexNumber:(NSNumber *)inIndexNumber
+			 isInputCallback:(NSNumber *)isInputCallback
 {	
 	if ([isInputCallback boolValue]) {
 		GaimRequestInputCb callBack = [inCallBackValue pointerValue];
@@ -1532,17 +1283,6 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			callBack([inUserDataValue pointerValue], [inIndexNumber intValue]);
 		}
 	}
-}
-
-- (void)doAuthRequestCbValue:(NSValue *)inCallBackValue
-		   withUserDataValue:(NSValue *)inUserDataValue 
-		 callBackIndexNumber:(NSNumber *)inIndexNumber
-			 isInputCallback:(NSNumber *)isInputCallback
-{
-	[gaimThreadProxy gaimThreadDoAuthRequestCbValue:inCallBackValue
-								  withUserDataValue:inUserDataValue 
-								callBackIndexNumber:inIndexNumber
-									isInputCallback:isInputCallback];
 }
 
 #pragma mark Secure messaging
@@ -1559,8 +1299,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 - (void)dealloc
 {
 	gaim_signals_disconnect_by_handle(adium_gaim_get_handle());
+
 	[super dealloc];
 }
-
 
 @end

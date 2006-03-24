@@ -17,7 +17,7 @@
 #import "adiumGaimEventloop.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 
-static guint				sourceId = nil;		//The next source key; continuously incrementing
+static guint				sourceId = 0;		//The next source key; continuously incrementing
 static NSMutableDictionary	*sourceInfoDict = nil;
 static CFRunLoopRef			gaimRunLoop = nil;
 
@@ -85,8 +85,7 @@ guint adium_timeout_remove(guint tag) {
 void callTimerFunc(CFRunLoopTimerRef timer, void *info)
 {
 	struct SourceInfo *sourceInfo = info;
-	
-	//	GaimDebug (@"%x: Fired %f-ms timer (tag %u)",[NSRunLoop currentRunLoop],CFRunLoopTimerGetInterval(timer)*1000,sourceInfo->tag);
+
 	if (!sourceInfo->sourceFunction ||
 		!sourceInfo->sourceFunction(sourceInfo->user_data)) {
         adium_source_remove(sourceInfo->tag);
@@ -95,8 +94,6 @@ void callTimerFunc(CFRunLoopTimerRef timer, void *info)
 
 guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 {
-	//    GaimDebug (@"%x: New %u-ms timer (tag %u)",[NSRunLoop currentRunLoop], interval, sourceId);
-	
     struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
 	
 	sourceId++;
@@ -142,7 +139,6 @@ guint adium_input_add(int fd, GaimInputCondition condition,
     CFOptionFlags callBackTypes = 0;
     if ((condition & GAIM_INPUT_READ ) != 0) callBackTypes |= kCFSocketReadCallBack;
     if ((condition & GAIM_INPUT_WRITE) != 0) callBackTypes |= kCFSocketWriteCallBack;	
-	//	if ((condition & GAIM_INPUT_CONNECT) != 0) callBackTypes |= kCFSocketConnectCallBack;
 	
     // And likewise the entire CFSocket
     CFSocketContext context = { 0, info, NULL, NULL, NULL };
@@ -150,13 +146,12 @@ guint adium_input_add(int fd, GaimInputCondition condition,
     NSCAssert(socket != NULL, @"CFSocket creation failed");
     info->socket = socket;
 	
-    // Re-enable callbacks automatically and _don't_ close the socket on
-    // invalidate
+    //Re-enable callbacks automatically and _don't_ close the socket on invalidate
 	CFSocketSetSocketFlags(socket, kCFSocketAutomaticallyReenableReadCallBack | 
 						   kCFSocketAutomaticallyReenableDataCallBack |
 						   kCFSocketAutomaticallyReenableWriteCallBack);
 	
-    // Add it to our run loop
+    //Add it to our run loop
     CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(NULL, socket, 0);
 	
 	if (rls) {
@@ -165,15 +160,13 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 
 	sourceId++;
 
-	//	GaimDebug (@"Adding for %i",sourceId);
-
 	info->rls = rls;
 	info->timer = NULL;
     info->tag = sourceId;
     info->ioFunction = func;
     info->user_data = user_data;
     info->fd = fd;
-    NSCAssert1([sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:sourceId]] == nil, @"Key %u in use", sourceId);
+
     [sourceInfoDict setObject:[NSValue valueWithPointer:info]
 					   forKey:[NSNumber numberWithUnsignedInt:sourceId]];
 	
@@ -192,9 +185,6 @@ static void socketCallback(CFSocketRef s,
     GaimInputCondition c = 0;
     if ((callbackType & kCFSocketReadCallBack) != 0)  c |= GAIM_INPUT_READ;
     if ((callbackType & kCFSocketWriteCallBack) != 0) c |= GAIM_INPUT_WRITE;
-	//	if ((callbackType & kCFSocketConnectCallBack) != 0) c |= GAIM_INPUT_CONNECT;
-	
-	//	GaimDebug (@"***SOCKETCALLBACK : %i (%i)",info->fd,c);
 	
 	if ((callbackType & kCFSocketConnectCallBack) != 0) {
 		//Got a file handle; invalidate and release the source and the socket
@@ -208,7 +198,6 @@ static void socketCallback(CFSocketRef s,
 		free(sourceInfo);
 		
 	} else {
-		//		GaimDebug (@"%x: Socket callback: %i",[NSRunLoop currentRunLoop],sourceInfo->tag);
 		sourceInfo->ioFunction(sourceInfo->user_data, sourceInfo->fd, c);
 	}	
 }

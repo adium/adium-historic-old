@@ -20,7 +20,7 @@ struct resolved_id {
 @interface ESGaimMeanwhileContactAdditionController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)inInfoDict;
 - (void)doubleClickInTableView:(id)sender;
-- (oneway void)gaimThreadDoRequestFieldsCbValue:(NSValue *)inCallBackValue
+- (oneway void)doRequestFieldsCbValue:(NSValue *)inCallBackValue
 							  withUserDataValue:(NSValue *)inUserDataValue 
 									fieldsValue:(NSValue *)inFieldsValue;	
 @end
@@ -117,12 +117,10 @@ struct resolved_id {
 		label = g_strdup_printf("%s (%s)", res->name, res->id);
 		gaim_request_field_list_add_selected(field, label);
 		g_free(label);
-
-		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
-										 performSelector:@selector(gaimThreadDoRequestFieldsCbValue:withUserDataValue:fieldsValue:)
-											  withObject:[infoDict objectForKey:@"OK Callback"]
-											  withObject:[infoDict objectForKey:@"userData"]
-											  withObject:[infoDict objectForKey:@"fieldsValue"]];
+		
+		[self doRequestFieldsCbValue:[infoDict objectForKey:@"OK Callback"]
+				   withUserDataValue:[infoDict objectForKey:@"userData"]
+						 fieldsValue:[infoDict objectForKey:@"fieldsValue"]];
 
 		[infoDict release]; infoDict = nil;
 		[[self window] close];
@@ -149,9 +147,9 @@ struct resolved_id {
  * @param inUserDataValue Original user data
  * @param inFieldsValue The entire GaimRequestFields pointer originally passed
  */
-- (oneway void)gaimThreadDoRequestFieldsCbValue:(NSValue *)inCallBackValue
-							 withUserDataValue:(NSValue *)inUserDataValue 
-								   fieldsValue:(NSValue *)inFieldsValue
+- (oneway void)doRequestFieldsCbValue:(NSValue *)inCallBackValue
+					withUserDataValue:(NSValue *)inUserDataValue 
+						  fieldsValue:(NSValue *)inFieldsValue
 {	
 	GaimRequestFieldsCb callBack = [inCallBackValue pointerValue];
 	if (callBack) {
@@ -162,11 +160,9 @@ struct resolved_id {
 - (void)doWindowWillClose
 {
 	if (infoDict) {
-		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
-										 performSelector:@selector(gaimThreadDoRequestFieldsCbValue:withUserDataValue:fieldsValue:)
-											  withObject:[infoDict objectForKey:@"Cancel Callback"]
-											  withObject:[infoDict objectForKey:@"userData"]
-											  withObject:[infoDict objectForKey:@"fieldsValue"]];
+		[self doRequestFieldsCbValue:[infoDict objectForKey:@"Cancel Callback"]
+				   withUserDataValue:[infoDict objectForKey:@"userData"]
+						 fieldsValue:[infoDict objectForKey:@"fieldsValue"]];
 	}
 }
 
