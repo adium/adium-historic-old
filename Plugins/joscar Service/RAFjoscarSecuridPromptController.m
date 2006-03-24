@@ -8,6 +8,7 @@
 #import "RAFjoscarSecuridPromptController.h"
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIStringUtilities.h>
+#import <Adium/ESDebugAILog.h>
 
 #define SECURID_NIB_NAME @"SecuridPrompt"
 
