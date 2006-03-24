@@ -371,8 +371,18 @@ static ESFileTransferPreferences *preferences;
 - (void)fileTransfer:(ESFileTransfer *)fileTransfer didSetStatus:(FileTransferStatus)status
 {
 	switch (status) {
+		case Checksumming_Filetransfer:
+			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_CHECKSUMMING
+											 forListObject:[fileTransfer contact] 
+												  userInfo:fileTransfer
+							  previouslyPerformedActionIDs:nil];
+			
+			if (showProgressWindow) {
+				[self showProgressWindowIfNotOpen:nil];
+			}	
+			break;
+
 		case Accepted_FileTransfer:
-		{
 			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_BEGAN
 											 forListObject:[fileTransfer contact] 
 												  userInfo:fileTransfer
@@ -383,9 +393,7 @@ static ESFileTransferPreferences *preferences;
 			}
 			
 			break;
-		}
 		case Complete_FileTransfer:
-		{		
 			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_COMPLETE
 											 forListObject:[fileTransfer contact] 
 												  userInfo:fileTransfer
@@ -401,15 +409,18 @@ static ESFileTransferPreferences *preferences;
 				[self _removeFileTransfer:fileTransfer];
 			}
 			break;
-		}
 		case Canceled_Remote_FileTransfer:
-		{
 			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_CANCELED
 											 forListObject:[fileTransfer contact] 
 												  userInfo:fileTransfer
 							  previouslyPerformedActionIDs:nil];
 			break;
-		}
+		case Failed_FileTransfer:
+			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_FAILED
+											 forListObject:[fileTransfer contact] 
+												  userInfo:fileTransfer
+							  previouslyPerformedActionIDs:nil];
+			break;
 		default:
 			break;
 	}
@@ -522,6 +533,8 @@ static ESFileTransferPreferences *preferences;
 	
 	if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
 		description = AILocalizedString(@"File transfer requested",nil);
+	} else if ([eventID isEqualToString:FILE_TRANSFER_CHECKSUMMING]) {
+		description = AILocalizedString(@"File is checksummed before sending",nil);
 	} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 		description = AILocalizedString(@"File transfer begins",nil);
 	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
@@ -537,12 +550,15 @@ static ESFileTransferPreferences *preferences;
 
 //Evan: This exists because old X(tras) relied upon matching the description of event IDs, and I don't feel like making
 //a converter for old packs.  If anyone wants to fix this situation, please feel free :)
+//XXX-fix this for the above comment.
 - (NSString *)englishGlobalShortDescriptionForEventID:(NSString *)eventID
 {
 	NSString	*description;
 	
 	if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
 		description = @"File Transfer Request";
+	} else if ([eventID isEqualToString:FILE_TRANSFER_CHECKSUMMING]) {
+		description = @"File Checksumming for Sending";
 	} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 		description = @"File Transfer Began";
 	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
@@ -562,6 +578,8 @@ static ESFileTransferPreferences *preferences;
 	
 	if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
 		description = AILocalizedString(@"When a file transfer is requested",nil);
+	} else if ([eventID isEqualToString:FILE_TRANSFER_CHECKSUMMING]) {
+		description = AILocalizedString(@"When a file is checksummed prior to sending",nil);
 	} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 		description = AILocalizedString(@"When a file transfer begins",nil);
 	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {

@@ -52,6 +52,10 @@
 								   selector:@selector(handleFileTransferEvent:) 
 									   name:FILE_TRANSFER_BEGAN 
 									 object:nil];
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(handleFileTransferEvent:) 
+									   name:FILE_TRANSFER_FAILED 
+									 object:nil];
 }
 
 /*!
@@ -81,10 +85,12 @@
 		NSString		*type = nil;
 
 		if ([notificationName isEqualToString:FILE_TRANSFER_CANCELED]) {
-			type = @"file_transfer_canceled";
+			type = @"file_transfer_cancelled";
 			message = [NSString stringWithFormat:AILocalizedString(@"%@ canceled the transfer of %@",nil),[listContact formattedUID],filename];
-
-		} else if ([notificationName isEqualToString:FILE_TRANSFER_COMPLETE]) {
+		} else if ([notificationName isEqualToString:FILE_TRANSFER_FAILED]) {
+			type = @"file_transfer_failed";
+			message = [NSString stringWithFormat:AILocalizedString(@"The transfer of %@ failed",nil),filename];
+		}else if ([notificationName isEqualToString:FILE_TRANSFER_COMPLETE]) {
 			type = @"file_transfer_complete";
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
 				message = [NSString stringWithFormat:AILocalizedString(@"Successfully received %@",nil),filename];

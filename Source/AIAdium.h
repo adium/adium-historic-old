@@ -148,8 +148,10 @@
 #define ACCOUNT_DISCONNECTED				@"Account_Disconnected"
 #define	ACCOUNT_RECEIVED_EMAIL				@"Account_NewMailReceived"
 #define FILE_TRANSFER_REQUEST				@"FileTransfer_Request"
+#define FILE_TRANSFER_CHECKSUMMING			@"FileTransfer_Checksumming"
 #define FILE_TRANSFER_BEGAN					@"FileTransfer_Began"
 #define FILE_TRANSFER_CANCELED				@"FileTransfer_Canceled"
+#define FILE_TRANSFER_FAILED				@"FileTransfer_Failed"
 #define FILE_TRANSFER_COMPLETE				@"FileTransfer_Complete"
 
 #define Adium_Xtras_Changed					@"Adium_Xtras_Changed"

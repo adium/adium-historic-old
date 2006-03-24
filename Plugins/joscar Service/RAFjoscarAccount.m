@@ -851,6 +851,7 @@
 	identifier = [joscarAdapter initiateOutgoingFileTransferForUID:contactUID
 														  forFiles:files];
 	
+	[fileTransfer setAccountData:identifier];
 	[fileTransferDict setObject:fileTransfer
 						 forKey:identifier];
 }

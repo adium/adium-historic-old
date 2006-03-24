@@ -792,7 +792,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 - (void)cancelFileTransferWithIdentifier:(NSValue *)identifier
 {
 	FileTransfer	*fileTransfer = (FileTransfer *)[identifier pointerValue];
-
 	[fileTransfer close];
 }
 
@@ -806,7 +805,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 {
 	OutgoingFileTransfer	*outgoingFileTransfer;
 	RvConnectionManager		*rvConnectionManager;
-	InvitationMessage		*invitationMessage;
 	Screenname				*sn = [NewScreenname(UID) autorelease];
 	NSString				*path;
 
@@ -833,10 +831,10 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		[outgoingFileTransfer addFilesInFlatFolder:@"Joscar Folder" :fileList];
 	}
 
-	invitationMessage = [NewInvitationMessage(NULL) autorelease];
 	[joscarBridge prepareOutgoingFileTransfer:outgoingFileTransfer];
-	[outgoingFileTransfer sendRequest:invitationMessage];
-	
+	[NSThread detachNewThreadSelector:@selector(sendRequest:) 
+							 toTarget:outgoingFileTransfer 
+						   withObject:[NewInvitationMessage(NULL) autorelease]];
 	return [NSValue valueWithPointer:outgoingFileTransfer];
 }
 
@@ -874,12 +872,12 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	NSValue				*identifier = [NSValue valueWithPointer:fileTransfer];
 	FileTransferStatus	fileTransferStatus;
 	BOOL				shouldPollForStatus = NO;
-	
+
 	if ([newState isEqualToString:@"WAITING"]) {
 		fileTransferStatus = Not_Started_FileTransfer;
 		
 	} else if ([newState isEqualToString:@"CONNECTING"]) {
-		//XXX I believe we get here before the transfer is actually accepted...
+#warning we get here before the transfer is actually accepted...
 		fileTransferStatus = Accepted_FileTransfer;
 		
 	} else if ([newState isEqualToString:@"CONNECTED"]) {
@@ -903,9 +901,10 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		fileTransferStatus = Complete_FileTransfer;
 
 	} else if ([newState isEqualToString:@"FAILED"]) {
-		//XXX Local vs. Remote cancel isn't the same as failed...
-		fileTransferStatus = Canceled_Remote_FileTransfer;
+		fileTransferStatus = Failed_FileTransfer;
 
+	} else if ([newState isEqualToString:@"PREPARING"]) {
+		fileTransferStatus = Checksumming_Filetransfer;
 	} else {
 		fileTransferStatus = Unknown_Status_FileTransfer;
 	}
@@ -945,8 +944,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 			}
 		}
 	}
-	
-#warning Checksumming event is currently ignored
 	
 	//Inform the account of the status update
 	if (fileTransferStatus != Unknown_Status_FileTransfer) {
