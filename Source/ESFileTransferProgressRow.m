@@ -180,7 +180,11 @@
 			[view setProgressIndeterminate:YES];
 			[view setProgressAnimation:YES];
 			transferSpeedStatus = AILocalizedString(@"Waiting to start.","waiting to begin a file transfer status");
-			
+			break;
+		case Checksumming_Filetransfer:
+			[view setProgressIndeterminate:YES];
+			[view setProgressAnimation:YES];
+			transferSpeedStatus = AILocalizedString(@"Preparing file...","waiting to begin a file transfer status");
 			break;
 		case In_Progress_FileTransfer:
 			[view setProgressIndeterminate:NO];
@@ -194,6 +198,10 @@
 		case Cancelled_Remote_FileTransfer:
 			[view setProgressVisible:NO];
 			transferSpeedStatus = AILocalizedString(@"Stopped",nil);
+			break;
+		case Failed_FileTransfer:
+			[view setProgressVisible:NO];
+			transferSpeedStatus = AILocalizedString(@"Failed",nil);
 			break;
 	}
 
