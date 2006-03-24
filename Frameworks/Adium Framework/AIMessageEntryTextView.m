@@ -40,6 +40,11 @@
 #define KEY_SPELL_CHECKING						@"Spell Checking Enabled"
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE		@"Dual Window Interface"
 
+#define ATTACHMENT_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
+	NSFilenamesPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil]
+
+#define PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY [NSArray arrayWithObject:NSStringPboardType]
+
 @interface AIMessageEntryTextView (PRIVATE)
 - (void)_setPushIndicatorVisible:(BOOL)visible;
 - (void)_positionIndicator:(NSNotification *)notification;
@@ -49,6 +54,7 @@
 - (NSAttributedString *)attributedStringWithTextAttachmentExtension:(AITextAttachmentExtension *)attachment;
 - (void)addAttachmentOfPath:(NSString *)inPath;
 - (void)addAttachmentOfImage:(NSImage *)inImage;
+- (void)addAttachmentsFromPasteboard:(NSPasteboard *)pasteboard;
 @end
 
 @implementation AIMessageEntryTextView
@@ -363,17 +369,30 @@
 	[self setInsertionPointColor:[backgroundColor contrastingColor]];
 }
 
+- (BOOL)handledPasteAsRichText
+{
+	NSPasteboard *generalPasteboard = [NSPasteboard generalPasteboard];
+	BOOL		 handledPaste = NO;
+	
+	if ([generalPasteboard availableTypeFromArray:[NSArray arrayWithObject:NSRTFDPboardType]]) {
+		NSData *data = [generalPasteboard dataForType:NSRTFDPboardType];
+		[self insertText:[self attributedStringWithAITextAttachmentExtensionsFromRTFDData:data]];
+		handledPaste = YES;
+		
+	} else if ([generalPasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY]) {
+		[self addAttachmentsFromPasteboard:generalPasteboard];
+		handledPaste = YES;
+	}
+	
+	return handledPaste;
+}
+
 //Paste as rich text without altering our typing attributes
 - (void)pasteAsRichText:(id)sender
 {
 	NSDictionary	*attributes = [[self typingAttributes] copy];
 
-	NSPasteboard *generalPasteboard = [NSPasteboard generalPasteboard];
-	if ([generalPasteboard availableTypeFromArray:[NSArray arrayWithObject:NSRTFDPboardType]]) {
-		NSData *data = [generalPasteboard dataForType:NSRTFDPboardType];
-		[self insertText:[self attributedStringWithAITextAttachmentExtensionsFromRTFDData:data]];
-
-	} else {
+	if (![self handledPasteAsRichText]) {
 		[super paste:sender];
 	}
 
@@ -736,16 +755,11 @@
 }
 */
 
-#define SUPPORTED_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
-	NSFilenamesPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil]
-
-#define PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY [NSArray arrayWithObject:NSStringPboardType]
-
 //We don't need to prepare for the types we are handling in performDragOperation: below
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:SUPPORTED_DRAG_TYPE_ARRAY];
+	NSString 		*type = [pasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 	BOOL			allowDragOperation;
 
@@ -763,7 +777,7 @@
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:SUPPORTED_DRAG_TYPE_ARRAY];
+	NSString 		*type = [pasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 	
 	if (!type || superclassType) {
@@ -771,30 +785,35 @@
 	}
 }
 
+- (void)addAttachmentsFromPasteboard:(NSPasteboard *)pasteboard
+{
+	if ([pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]]) {
+		//The pasteboard points to one or more files on disc.  Use them directly.
+		NSArray			*files = [pasteboard propertyListForType:NSFilenamesPboardType];
+		NSEnumerator	*enumerator = [files objectEnumerator];
+		NSString		*path;
+		while ((path = [enumerator nextObject])) {
+			[self addAttachmentOfPath:path];
+		}
+		
+	} else {
+		//The pasteboard contains image data with no corresponding file.
+		NSImage	*image = [[NSImage alloc] initWithPasteboard:pasteboard];
+		[self addAttachmentOfImage:image];
+		[image release];			
+	}	
+}
+
 //The textView's method of inserting into the view is insufficient; we can do better.
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:SUPPORTED_DRAG_TYPE_ARRAY];
+	NSString 		*type = [pasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 
 	BOOL	success = NO;
 	if (type && !superclassType) {
-		if ([pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]]) {
-			//The pasteboard points to one or more files on disc.  Use them directly.
-			NSArray			*files = [pasteboard propertyListForType:NSFilenamesPboardType];
-			NSEnumerator	*enumerator = [files objectEnumerator];
-			NSString		*path;
-			while ((path = [enumerator nextObject])) {
-				[self addAttachmentOfPath:path];
-			}
-				
-		} else {
-			//The pasteboard contains image data with no corresponding file.
-			NSImage	*image = [[NSImage alloc] initWithPasteboard:pasteboard];
-			[self addAttachmentOfImage:image];
-			[image release];			
-		}
+		[self addAttachmentsFromPasteboard:pasteboard];
 
 		success = YES;
 	} else {
