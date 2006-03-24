@@ -28,6 +28,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AISystemNetworkDefaults.h>
 
 #define FILTERED_STRING_REFRESH    30.0    //delay in seconds between refresh of our attributed string statuses when needed
 
@@ -1164,5 +1165,141 @@
 				 forKey:KEY_ACCOUNT_DISPLAY_NAME
 				  group:GROUP_ACCOUNT_STATUS];
 }	
+
+#pragma mark Proxy Configuration Retrieval
+
+/*
+ * @brief Retrieve the proxy configuration information for this account
+ *
+ * This should be used by the AIAccount subclass before initiating its connect process if it supports proxies.
+ *
+ * target will be notified via selector, which must take two arguments,
+ * the first of which will be an NSDictionary of information and the second of which will be the passed context.
+ *
+ * The NSDictionary which is returned will have the following key/object pairs:
+ *	@"AdiumProxyType"	an NSNumber containing an AdiumProxyType value
+ *  @"Host"				an NSString
+ *  @"Port"				an NSNumber
+ *  @"Username"			an NSString (potentially nil)
+ *  @"Password"			an NSString (relevant only if Username is non-nil)
+ */
+- (void)getProxyConfigurationNotifyingTarget:(id)target selector:(SEL)selector context:(id)context
+{
+	NSMutableDictionary *proxyConfiguration = [NSMutableDictionary dictionary];
+	BOOL				notifyTargetNow = YES;
+	
+	if ([[self preferenceForKey:KEY_ACCOUNT_PROXY_ENABLED group:GROUP_ACCOUNT_STATUS] boolValue]) {
+		NSNumber		*proxyPref = [self preferenceForKey:KEY_ACCOUNT_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
+		AdiumProxyType	proxyType = (proxyPref ? [proxyPref intValue] : Adium_Proxy_Default_SOCKS5);
+
+		NSNumber		*port = nil;
+		NSString		*host = nil, *username = nil, *proxyPassword = nil;
+		BOOL			promptForPassword = NO;
+
+		if ((proxyType == Adium_Proxy_Default_SOCKS5) || 
+			(proxyType == Adium_Proxy_Default_HTTP) || 
+			(proxyType == Adium_Proxy_Default_SOCKS4)) {
+			NSDictionary	*systemProxySettingsDictionary;
+			ProxyType		systemConfigurationProxyType = Proxy_None;
+
+			if (proxyType == Adium_Proxy_Default_SOCKS5) {
+				systemConfigurationProxyType = Proxy_SOCKS5;
+				
+			} else if (proxyType == Adium_Proxy_Default_HTTP) {
+				systemConfigurationProxyType = Proxy_HTTP;
+				
+			} else /*if (proxyType == Adium_Proxy_Default_SOCKS4) */{
+				systemConfigurationProxyType = Proxy_SOCKS4;
+			}
+			
+			if ((systemProxySettingsDictionary = [AISystemNetworkDefaults systemProxySettingsDictionaryForType:systemConfigurationProxyType])) {
+				host = [systemProxySettingsDictionary objectForKey:@"Host"];
+				port = [systemProxySettingsDictionary objectForKey:@"Port"];
+				
+				username = [systemProxySettingsDictionary objectForKey:@"Username"];
+				proxyPassword = [systemProxySettingsDictionary objectForKey:@"Password"];
+				if ((username && [username length]) &&
+					(!proxyPassword || ![proxyPassword length])) {
+					promptForPassword = YES;
+				}
+			}
+		} else {
+			host = [self preferenceForKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
+			port = [self preferenceForKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS];
+			
+			if (host && [host length]) {
+				//If we need to authenticate, request the password and finish setting up the proxy in gotProxyServerPassword:proxyConfiguration:
+				username = [self preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
+				if (username && [username length]) {
+					promptForPassword = YES;					
+				}
+			}
+		}
+		
+		if (host) {
+			[proxyConfiguration setObject:host forKey:@"Host"];
+			
+			if (port) [proxyConfiguration setObject:port forKey:@"Port"];
+			if (username) [proxyConfiguration setObject:username forKey:@"Username"];
+			if (proxyPassword) [proxyConfiguration setObject:proxyPassword forKey:@"Password"];
+			
+			[proxyConfiguration setObject:[NSNumber numberWithInt:proxyType]
+								   forKey:@"AdiumProxyType"];
+		} else {
+			[proxyConfiguration setObject:[NSNumber numberWithInt:Adium_Proxy_None]
+								   forKey:@"AdiumProxyType"];
+		}
+		
+		if (promptForPassword) {
+			if (target) [proxyConfiguration setObject:target forKey:@"NotificationTarget"];
+			if (selector) [proxyConfiguration setObject:NSStringFromSelector(selector) forKey:@"NotificationSelector"];
+			if (context) [proxyConfiguration setObject:context forKey:@"NotificationContext"];
+			
+			[[adium accountController] passwordForProxyServer:host 
+													 userName:username 
+											  notifyingTarget:self 
+													 selector:@selector(gotProxyServerPassword:proxyConfiguration:)
+													  context:proxyConfiguration];
+			
+			//gotProxyServerPassword:proxyConfiguration: is responsible for notifying the target
+			notifyTargetNow = NO;
+		}
+		
+	} else {
+		[proxyConfiguration setObject:[NSNumber numberWithInt:Adium_Proxy_None]
+							   forKey:@"AdiumProxyType"];
+	}
+	
+	if (notifyTargetNow) {
+		[target performSelector:selector
+					 withObject:proxyConfiguration
+					 withObject:context];
+	}
+}
+
+/*
+ * @brief Callback for the accountController's passwordForProxyServer:... method
+ *
+ * @param inPassword The retrieved password
+ * @param proxyConfiguration The proxy configuration dictionary, which also includes the original target/selector/context passed to getProxyConfigurationNotifyingTarget:selector:context:
+ */
+- (void)gotProxyServerPassword:(NSString *)inPassword proxyConfiguration:(NSMutableDictionary *)proxyConfiguration
+{
+	if (inPassword) {
+		id target = [proxyConfiguration objectForKey:@"NotificationTarget"];
+		SEL selector = NSSelectorFromString([proxyConfiguration objectForKey:@"NotificationSelector"]);
+		id context = [proxyConfiguration objectForKey:@"NotificationContext"];
+		
+		[proxyConfiguration setObject:inPassword forKey:@"Password"];
+		
+		[target performSelector:selector
+					 withObject:proxyConfiguration
+					 withObject:context];
+		
+	} else {
+		//If passed a nil password, cancel the connection attempt
+		[self disconnect];
+	}
+}
 
 @end

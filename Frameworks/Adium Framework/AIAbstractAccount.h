@@ -51,6 +51,7 @@
 - (void)_stopAttributedRefreshTimer;
 - (void)gotFilteredStatusMessage:(NSAttributedString *)statusMessage forStatusState:(AIStatus *)statusState;
 - (void)updateLocalDisplayNameTo:(NSAttributedString *)displayName;
+- (NSString *)currentDisplayName;
 
 //Contacts
 - (NSArray *)contacts;
@@ -68,6 +69,7 @@
 - (void)connectScriptCommand:(NSScriptCommand *)command;
 - (void)disconnectScriptCommand:(NSScriptCommand *)command;
 - (void)serverReportedInvalidPassword;
+- (void)getProxyConfigurationNotifyingTarget:(id)target selector:(SEL)selector context:(id)context;
 
 //FUS Disconnecting
 - (void)autoReconnectAfterDelay:(int)delay;
