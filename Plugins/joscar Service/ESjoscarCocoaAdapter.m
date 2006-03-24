@@ -197,6 +197,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 - (NSString *)getSecurid
 {
+	AILog(@"Retrieving securID for %@", account);
 	return [account getSecurid];
 }
 

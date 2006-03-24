@@ -23,6 +23,7 @@
 {
 	RAFjoscarSecuridPromptController *promptWindow = [[RAFjoscarSecuridPromptController alloc] initWithAccount:account];
 	[NSApp runModalForWindow:[promptWindow window]];
+	AILog(@"Ran %@ modally (window: %@)", promptWindow, [promptWindow window]);
 	return [[promptWindow autorelease] getSecurid];
 }
 
