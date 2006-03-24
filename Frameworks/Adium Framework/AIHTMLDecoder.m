@@ -140,6 +140,11 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 #pragma mark Work methods
 
+/*
+ * @brief Parse arguments in a string
+ *
+ * The arguments are returned in an NSDictionary whose keys are all-lowercase
+ */
 - (NSDictionary *)parseArguments:(NSString *)arguments
 {
 	NSMutableDictionary		*argDict;
@@ -179,7 +184,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 		//Store in dict
 		if (validValue && value != nil && [value length] != 0 && validKey && key != nil && [key length] != 0) { //Watch out for invalid & empty tags
-			[argDict setObject:value forKey:key];
+			[argDict setObject:value forKey:[key lowercaseString]];
 		}
 	}
 
@@ -995,10 +1000,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while ((arg = [enumerator nextObject])) {
-		if ([arg caseInsensitiveCompare:@"FACE"] == NSOrderedSame) {
+		if ([arg caseInsensitiveCompare:@"face"] == NSOrderedSame) {
 			[textAttributes setFontFamily:[inArgs objectForKey:arg]];
 
-		} else if ([arg caseInsensitiveCompare:@"SIZE"] == NSOrderedSame) {
+		} else if ([arg caseInsensitiveCompare:@"size"] == NSOrderedSame) {
 			//Always prefer an ABSZ to a size
 			if (![inArgs objectForKey:@"ABSZ"] && ![inArgs objectForKey:@"absz"]) {
 				unsigned absSize = [[inArgs objectForKey:arg] intValue];
@@ -1008,18 +1013,18 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				[textAttributes setFontSize:size];
 			}
 
-		} else if ([arg caseInsensitiveCompare:@"ABSZ"] == NSOrderedSame) {
+		} else if ([arg caseInsensitiveCompare:@"absz"] == NSOrderedSame) {
 			[textAttributes setFontSize:[[inArgs objectForKey:arg] intValue]];
 
-		} else if ([arg caseInsensitiveCompare:@"COLOR"] == NSOrderedSame) {
+		} else if ([arg caseInsensitiveCompare:@"color"] == NSOrderedSame) {
 			[textAttributes setTextColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] 
 														 defaultColor:[NSColor blackColor]]];
 
-		} else if ([arg caseInsensitiveCompare:@"BACK"] == NSOrderedSame) {
+		} else if ([arg caseInsensitiveCompare:@"back"] == NSOrderedSame) {
 			[textAttributes setTextBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg]
 																   defaultColor:[NSColor whiteColor]]];
 
-		} else if ([arg caseInsensitiveCompare:@"LANG"] == NSOrderedSame) {
+		} else if ([arg caseInsensitiveCompare:@"lang"] == NSOrderedSame) {
 			[textAttributes setLanguageValue:[inArgs objectForKey:arg]];
 
 		}  else if ([arg caseInsensitiveCompare:@"sender"] == NSOrderedSame) {
@@ -1041,7 +1046,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while ((arg = [enumerator nextObject])) {
-		if ([arg caseInsensitiveCompare:@"BGCOLOR"] == NSOrderedSame) {
+		if ([arg caseInsensitiveCompare:@"bgcolor"] == NSOrderedSame) {
 			[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] defaultColor:[NSColor whiteColor]]];
 
 		}	
@@ -1152,7 +1157,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while ((arg = [enumerator nextObject])) {
-		if ([arg caseInsensitiveCompare:@"HREF"] == NSOrderedSame) {
+		if ([arg caseInsensitiveCompare:@"href"] == NSOrderedSame) {
 			NSString	*linkString = [inArgs objectForKey:arg];
 			
 			/* Replace any AIM-specific %n occurances with their escaped version.
@@ -1216,7 +1221,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	enumerator = [inArgs keyEnumerator];
 	while ((arg = [enumerator nextObject])) {
-		if ([arg caseInsensitiveCompare:@"SRC"] == NSOrderedSame) {
+		if ([arg caseInsensitiveCompare:@"src"] == NSOrderedSame) {
 			NSString	*src = [inArgs objectForKey:arg];
 
 			//The src may be a file:// style path; convert it to a system path via NSURL
@@ -1225,11 +1230,11 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			[attachment setPath:src];
 		}
-		if ([arg caseInsensitiveCompare:@"ALT"] == NSOrderedSame) {
+		if ([arg caseInsensitiveCompare:@"alt"] == NSOrderedSame) {
 			[attachment setString:[inArgs objectForKey:arg]];
 			[attachment setHasAlternate:YES];
 		}
-		if ([arg caseInsensitiveCompare:@"CLASS"] == NSOrderedSame) {
+		if ([arg caseInsensitiveCompare:@"class"] == NSOrderedSame) {
 			[attachment setImageClass:[inArgs objectForKey:arg]];
 		}
 	}
