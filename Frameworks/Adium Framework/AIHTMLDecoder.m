@@ -1217,7 +1217,13 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	enumerator = [inArgs keyEnumerator];
 	while ((arg = [enumerator nextObject])) {
 		if ([arg caseInsensitiveCompare:@"SRC"] == NSOrderedSame) {
-			[attachment setPath:[inArgs objectForKey:arg]];
+			NSString	*src = [inArgs objectForKey:arg];
+
+			//The src may be a file:// style path; convert it to a system path via NSURL
+			NSURL		*url = [NSURL URLWithString:src];
+			if (url && [url isFileURL]) src = [url path];
+
+			[attachment setPath:src];
 		}
 		if ([arg caseInsensitiveCompare:@"ALT"] == NSOrderedSame) {
 			[attachment setString:[inArgs objectForKey:arg]];
