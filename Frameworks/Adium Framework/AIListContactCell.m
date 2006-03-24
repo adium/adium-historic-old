@@ -343,7 +343,6 @@
 	if (extendedStatusIsBelowName) rect = [self drawUserExtendedStatusInRect:rect drawUnder:YES];
 	rect = [self drawDisplayNameWithFrame:rect];
 	if (!extendedStatusIsBelowName) rect = [self drawUserExtendedStatusInRect:rect drawUnder:NO];
-	
 }
 
 //Draw the background of our cell
