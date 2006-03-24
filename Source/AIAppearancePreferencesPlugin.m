@@ -65,9 +65,7 @@
 	[[adium menuController] addMenuItem:menuItem_userStatusMessages toLocation:LOC_View_Appearance_Toggles];
 	
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
-	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
-	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
-	
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];	
 }	
 
 - (void)uninstallPlugin
