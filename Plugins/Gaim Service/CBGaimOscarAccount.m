@@ -22,7 +22,6 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
-#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
@@ -268,6 +267,14 @@
 																		repeats:YES] retain];
 		}
 	}
+}
+
+- (void)removeContacts:(NSArray *)objects
+{
+	//Stop any pending delayed updates for these objects
+	[arrayOfContactsForDelayedUpdates removeObjectsInArray:objects];
+
+	[super removeContacts:objects];
 }
 
 #pragma mark File transfer

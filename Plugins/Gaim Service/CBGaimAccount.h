@@ -161,6 +161,7 @@
 - (void)renameContact:(AIListContact *)theContact toUID:(NSString *)newUID;
 - (void)updateWentIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate;
 - (void)updateIdleReturn:(AIListContact *)theContact withData:(void *)data;
+- (void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString;
 
 #pragma mark Chats
 - (void)errorForChat:(AIChat *)chat type:(NSNumber *)type;
@@ -168,6 +169,11 @@
 - (void)updateTopic:(NSString *)inTopic forChat:(AIChat *)chat;
 - (void)updateTitle:(NSString *)inTitle forChat:(AIChat *)chat;
 - (void)convUpdateForChat:(AIChat *)chat type:(NSNumber *)type;
+- (void)addUsersArray:(NSArray *)usersArray
+			withFlags:(NSArray *)flagsArray
+		   andAliases:(NSArray *)aliasesArray 
+		  newArrivals:(NSNumber *)newArrivals
+			   toChat:(AIChat *)chat;
 
 
 #pragma mark Privacy
@@ -176,5 +182,9 @@
 - (void)privacyDenyListAdded:(NSString *)sourceUID;
 - (void)privacyDenyListRemoved:(NSString *)sourceUID;
 
+
+#pragma mark Emoticons
+- (void)chat:(AIChat *)inChat isWaitingOnCustomEmoticon:(NSNumber *)isWaiting;
+- (void)chat:(AIChat *)inChat setCustomEmoticon:(NSString *)emoticonEquivalent withImageData:(NSData *)inImageData;
 
 @end

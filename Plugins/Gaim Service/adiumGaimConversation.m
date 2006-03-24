@@ -31,8 +31,7 @@ static void adiumGaimConvCreate(GaimConversation *conv)
 		
 		AIChat *chat = groupChatLookupFromConv(conv);
 		
-		[accountLookup(conv->account) mainPerformSelector:@selector(addChat:)
-											   withObject:chat];
+		[accountLookup(conv->account) addChat:chat];
 	}
 }
 
@@ -92,9 +91,8 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who,
 					date, @"Date",nil];
 			}
 			
-			[accountLookup(conv->account) mainPerformSelector:@selector(receivedMultiChatMessage:inChat:)
-												   withObject:messageDict
-												   withObject:groupChatLookupFromConv(conv)];
+			[accountLookup(conv->account) receivedMultiChatMessage:messageDict
+															inChat:groupChatLookupFromConv(conv)];
 		}
 	}
 }
@@ -122,9 +120,8 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who,
 			[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 			[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
 
-		[adiumAccount mainPerformSelector:@selector(receivedIMChatMessage:inChat:)
-							   withObject:messageDict
-							   withObject:chat];
+		[adiumAccount receivedIMChatMessage:messageDict
+									 inChat:chat];
 	}
 }
 
@@ -154,9 +151,8 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 				}
 
 				if (updateType != -1) {
-					[accountLookup(conv->account) mainPerformSelector:@selector(updateForChat:type:)
-														   withObject:chat
-														   withObject:[NSNumber numberWithInt:updateType]];
+					[accountLookup(conv->account) updateForChat:chat
+														   type:[NSNumber numberWithInt:updateType]];
 				}
 			}
 		} else if (flags & GAIM_MESSAGE_ERROR) {
@@ -238,9 +234,8 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 				}
 
 				if (errorType != -2) {
-					[accountLookup(conv->account) mainPerformSelector:@selector(errorForChat:type:)
-														   withObject:chat
-														   withObject:[NSNumber numberWithInt:errorType]];
+					[accountLookup(conv->account) errorForChat:chat
+														  type:[NSNumber numberWithInt:errorType]];
 				}
 
 				GaimDebug (@"*** Conversation error type %i (%@): %@",
@@ -273,10 +268,11 @@ static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users, GLis
 			[aliasesArray addObject:[NSString stringWithUTF8String:(const char *)l->data]];
 		}
 
-		[accountLookup(conv->account) mainPerformSelector:@selector(addUsersArray:withFlags:andAliases:newArrivals:toChat:)
-											  withObjects:usersArray, flagsArray, 
-			aliasesArray, [NSNumber numberWithBool:new_arrivals],
-			existingChatLookupFromConv(conv), nil];
+		[accountLookup(conv->account) addUsersArray:usersArray
+										  withFlags:flagsArray
+										 andAliases:aliasesArray
+										newArrivals:[NSNumber numberWithBool:new_arrivals]
+											 toChat:existingChatLookupFromConv(conv)];
 		
 	} else {
 		GaimDebug (@"adiumGaimConvChatAddUsers: IM");
@@ -301,9 +297,8 @@ static void adiumGaimConvChatRemoveUsers(GaimConversation *conv, GList *users)
 			[usersArray addObject:[NSString stringWithUTF8String:gaim_normalize(conv->account, (char *)l->data)]];
 		}
 
-		[accountLookup(conv->account) mainPerformSelector:@selector(removeUsersArray:fromChat:)
-											   withObject:usersArray
-											   withObject:existingChatLookupFromConv(conv)];
+		[accountLookup(conv->account) removeUsersArray:usersArray
+											  fromChat:existingChatLookupFromConv(conv)];
 
 	} else {
 		GaimDebug (@"adiumGaimConvChatRemoveUser: IM");
@@ -333,18 +328,16 @@ static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type
 		
 		switch(type) {
 			case GAIM_CONV_UPDATE_TOPIC:
-				[accountLookup(conv->account) mainPerformSelector:@selector(updateTopic:forChat:)
-													   withObject:(gaim_conv_chat_get_topic(chat) ?
-																   [NSString stringWithUTF8String:gaim_conv_chat_get_topic(chat)] :
-																   nil)
-													   withObject:existingChatLookupFromConv(conv)];
+				[accountLookup(conv->account) updateTopic:(gaim_conv_chat_get_topic(chat) ?
+														   [NSString stringWithUTF8String:gaim_conv_chat_get_topic(chat)] :
+														   nil)
+												  forChat:existingChatLookupFromConv(conv)];
 				break;
 			case GAIM_CONV_UPDATE_TITLE:
-				[accountLookup(conv->account) mainPerformSelector:@selector(updateTitle:forChat:)
-													   withObject:(gaim_conversation_get_title(conv) ?
-																   [NSString stringWithUTF8String:gaim_conversation_get_title(conv)] :
-																   nil)
-													   withObject:existingChatLookupFromConv(conv)];
+				[accountLookup(conv->account) updateTitle:(gaim_conversation_get_title(conv) ?
+														   [NSString stringWithUTF8String:gaim_conversation_get_title(conv)] :
+														   nil)
+												  forChat:existingChatLookupFromConv(conv)];
 				
 				GaimDebug (@"Update to title: %s",gaim_conversation_get_title(conv));
 				break;
@@ -394,9 +387,8 @@ static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type
 
 				NSNumber	*typingStateNumber = [NSNumber numberWithInt:typingState];
 
-				[accountLookup(conv->account) mainPerformSelector:@selector(typingUpdateForIMChat:typing:)
-													   withObject:imChatLookupFromConv(conv)
-													   withObject:typingStateNumber];
+				[accountLookup(conv->account) typingUpdateForIMChat:imChatLookupFromConv(conv)
+															 typing:typingStateNumber];
 				break;
 			}
 			case GAIM_CONV_UPDATE_AWAY: {
@@ -416,9 +408,9 @@ static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type
 gboolean adiumGaimConvCustomSmileyAdd(GaimConversation *conv, const char *smile, gboolean remote)
 {
 	GaimDebug (@"%s: Added %s",gaim_conversation_get_name(conv),smile);
-	[accountLookup(conv->account) mainPerformSelector:@selector(chat:isWaitingOnCustomEmoticon:)
-										   withObject:chatLookupFromConv(conv)
-										   withObject:[NSNumber numberWithBool:YES]];
+	[accountLookup(conv->account) chat:chatLookupFromConv(conv)
+			 isWaitingOnCustomEmoticon:[NSNumber numberWithBool:YES]];
+
 	return TRUE;
 }
 
@@ -427,20 +419,18 @@ void adiumGaimConvCustomSmileyWrite(GaimConversation *conv, const char *smile,
 {
 	GaimDebug (@"%s: Write %s (%x %i)",gaim_conversation_get_name(conv),smile,data,size);
 
-	[accountLookup(conv->account) mainPerformSelector:@selector(chat:setCustomEmoticon:withImageData:)
-										   withObject:chatLookupFromConv(conv)
-										   withObject:[NSString stringWithUTF8String:smile]
-										   withObject:[NSData dataWithBytes:data
-																	 length:size]];
+	[accountLookup(conv->account) chat:chatLookupFromConv(conv)
+					 setCustomEmoticon:[NSString stringWithUTF8String:smile]
+						 withImageData:[NSData dataWithBytes:data
+													  length:size]];
 }
 
 void adiumGaimConvCustomSmileyClose(GaimConversation *conv, const char *smile)
 {
 	GaimDebug (@"%s: Close %s",gaim_conversation_get_name(conv),smile);
 
-	[accountLookup(conv->account) mainPerformSelector:@selector(chat:isWaitingOnCustomEmoticon:)
-										   withObject:chatLookupFromConv(conv)
-										   withObject:[NSNumber numberWithBool:NO]];	
+	[accountLookup(conv->account) chat:chatLookupFromConv(conv)
+			 isWaitingOnCustomEmoticon:[NSNumber numberWithBool:NO]];
 }
 
 static GaimConversationUiOps adiumGaimConversationOps = {

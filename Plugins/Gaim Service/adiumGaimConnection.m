@@ -33,7 +33,7 @@ static void adiumGaimConnConnected(GaimConnection *gc)
 {
     GaimDebug (@"Connected: gc=%x", gc);
 	
-	[accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionConnected)];
+	[accountLookup(gc->account) accountConnectionConnected];
 }
 
 static void adiumGaimConnDisconnected(GaimConnection *gc)
@@ -41,7 +41,7 @@ static void adiumGaimConnDisconnected(GaimConnection *gc)
     GaimDebug (@"Disconnected: gc=%x", gc);
 	//    if (_accountDict == nil) // if this has been destroyed, unloadPlugin has already been called
 	//        return;
-    [accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionDisconnected)];
+    [accountLookup(gc->account) accountConnectionDisconnected];
 }
 
 static void adiumGaimConnNotice(GaimConnection *gc, const char *text)
@@ -49,8 +49,7 @@ static void adiumGaimConnNotice(GaimConnection *gc, const char *text)
     GaimDebug (@"Connection Notice: gc=%x (%s)", gc, text);
 	
 	NSString *connectionNotice = [NSString stringWithUTF8String:text];
-	[accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionNotice:)
-										 withObject:connectionNotice];
+	[accountLookup(gc->account) accountConnectionNotice:connectionNotice];
 }
 
 static void adiumGaimConnReportDisconnect(GaimConnection *gc, const char *text)
@@ -58,8 +57,7 @@ static void adiumGaimConnReportDisconnect(GaimConnection *gc, const char *text)
     GaimDebug (@"Connection Disconnected: gc=%x (%s)", gc, text);
 	
 	NSString	*disconnectError = [NSString stringWithUTF8String:text];
-    [accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionReportDisconnect:)
-										 withObject:disconnectError];
+    [accountLookup(gc->account) accountConnectionReportDisconnect:disconnectError];
 }
 
 static GaimConnectionUiOps adiumGaimConnectionOps = {

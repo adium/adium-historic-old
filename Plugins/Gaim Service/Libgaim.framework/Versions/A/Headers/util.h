@@ -223,10 +223,18 @@ char *gaim_mime_decode_field(const char *str);
  * GMT.  Required to emit RFC822-conformant dates
  * (using "%a, %d %b %Y %H:%M:%S %z"). (GNU)'
  *
- * @param format The format string
+ * On Windows, this function also converts the results for %Z from a timezone
+ * name (as returned by the system strftime() %Z format string) to a timezone
+ * abbreviation (as is the case on Unix).  As with %z, conversion specifiers
+ * should not be used.
+ *
+ * @param format The format string, in UTF-8
  * @param tm     The time to format, or @c NULL to use the current local time
  *
  * @return The formatted time, in UTF-8.
+ *
+ * @note @a format is required to be in UTF-8.  This differs from strftime(),
+ *       where the format is provided in the locale charset.
  */
 const char *gaim_utf8_strftime(const char *format, const struct tm *tm);
 
@@ -644,18 +652,6 @@ gboolean gaim_str_has_prefix(const char *s, const char *p);
  * @return   TRUE if x is a a suffix of s, otherwise FALSE.
  */
 gboolean gaim_str_has_suffix(const char *s, const char *x);
-
-/**
- * Looks for %n, %d, or %t in a string, and replaces them with the
- * specified name, date, and time, respectively.
- *
- * @param str  The string that may contain the special variables.
- * @param name The sender name.
- *
- * @return A newly allocated string where the special variables are
- *         expanded.  This should be g_free'd by the caller.
- */
-gchar *gaim_str_sub_away_formatters(const char *str, const char *name);
 
 /**
  * Duplicates a string and replaces all newline characters from the

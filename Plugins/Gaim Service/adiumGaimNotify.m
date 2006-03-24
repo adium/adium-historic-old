@@ -90,19 +90,17 @@ static void adiumGaimNotifySearchResultsNewRows(GaimConnection *gc,
 
 static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who,
 									 const char *text)
-{
-	NSString	*textString = [NSString stringWithUTF8String:text];
-	
+{	
 	if (GAIM_CONNECTION_IS_VALID(gc)) {
+		NSString		*textString;
 		GaimAccount		*account = gaim_connection_get_account(gc);
-		GaimBuddy		*buddy = gaim_find_buddy(account,who);
-		AIAccount		*adiumAccount = accountLookup(account);
-		AIListContact   *theContact = contactLookupFromBuddy(buddy);
+		GaimBuddy		*buddy = gaim_find_buddy(account, who);
+		CBGaimAccount	*adiumAccount = accountLookup(account);
 		
-		textString = processGaimImages(textString, adiumAccount);
-		[adiumAccount mainPerformSelector:@selector(updateUserInfo:withData:)
-										 withObject:theContact
-										 withObject:textString];
+		textString = processGaimImages([NSString stringWithUTF8String:text],
+									   adiumAccount);
+		[adiumAccount updateUserInfo:contactLookupFromBuddy(buddy)
+							withData:textString];
 	}
 	
     return adium_gaim_get_handle();

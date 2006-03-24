@@ -20,6 +20,7 @@
 #import "ESGaimRequestWindowController.h"
 #import "ESGaimFileReceiveRequestController.h"
 #import "ESGaimMeanwhileContactAdditionController.h"
+#import "AIContactController.h"
 #import <Adium/NDRunLoopMessenger.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/ESFileTransfer.h>
@@ -155,10 +156,8 @@ static id processAuthorizationRequest(NSString *primaryString, GCallback authori
 		GaimConnection *gc;
 	};
 	
-	requestController = [[[AIObject sharedAdiumInstance] contactController] mainPerformSelector:@selector(showAuthorizationRequestWithDict:forAccount:)
-																					 withObject:infoDict
-																					 withObject:accountLookup(gaim_connection_get_account(((struct fake_struct *)userData)->gc))
-																					returnValue:YES];
+	requestController = [[[AIObject sharedAdiumInstance] contactController] showAuthorizationRequestWithDict:infoDict
+																								  forAccount:accountLookup(gaim_connection_get_account(((struct fake_struct *)userData)->gc))];
 
 	return requestController;
 }
@@ -213,9 +212,7 @@ static void *adiumGaimRequestInput(
 		
 		GaimDebug (@"adiumGaimRequestInput: %@",infoDict);
 		
-		requestController = [ESGaimRequestWindowController mainPerformSelector:@selector(showInputWindowWithDict:)
-																	withObject:infoDict
-																   returnValue:YES];
+		requestController = [ESGaimRequestWindowController showInputWindowWithDict:infoDict];
 	}
 	
 	return (requestController ? requestController : [NSNull null]);
@@ -340,9 +337,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary,
 			titleString,@"Title String",
 			msg,@"Message",nil];
 		
-		requestController = [ESGaimRequestActionController mainPerformSelector:@selector(showActionWindowWithDict:)
-																	withObject:infoDict
-																   returnValue:YES];
+		requestController = [ESGaimRequestActionController showActionWindowWithDict:infoDict];
 	}
 
 	return (requestController ? requestController : [NSNull null]);
@@ -469,9 +464,8 @@ static void *adiumGaimRequestFields(const char *title, const char *primary,
 			originalName, @"Original Name",
 			nil];
 
-		requestController = [ESGaimMeanwhileContactAdditionController mainPerformSelector:@selector(showContactAdditionListWithDict:)
-																			   withObject:infoDict
-																			  returnValue:YES];
+		requestController = [ESGaimMeanwhileContactAdditionController showContactAdditionListWithDict:infoDict];
+
 	} else {		
 		GaimDebug (@"adiumGaimRequestFields: %s\n%s\n%s ",
 				   (title ? title : ""),
@@ -577,9 +571,7 @@ static void *adiumGaimRequestFile(const char *title, const char *filename,
 					accountLookup(xfer->account), @"CBGaimAccount",
 					fileTransfer, @"ESFileTransfer",
 					nil];
-				requestController = [ESGaimFileReceiveRequestController mainPerformSelector:@selector(showFileReceiveWindowWithDict:)
-																				 withObject:infoDict
-																				returnValue:YES];
+				requestController = [ESGaimFileReceiveRequestController showFileReceiveWindowWithDict:infoDict];
 				AILog(@"GAIM_XFER_RECEIVE: Request controller for %x is %@",xfer,requestController);
 			} else if (xferType == GAIM_XFER_SEND) {
 				if (xfer->local_filename != NULL && xfer->filename != NULL) {
@@ -611,7 +603,7 @@ static void adiumGaimRequestClose(GaimRequestType type, void *uiHandle)
 	id	ourHandle = (id)uiHandle;
 	AILog(@"adiumGaimRequestClose %@ (%i)",uiHandle,[ourHandle respondsToSelector:@selector(gaimRequestClose)]);
 	if ([ourHandle respondsToSelector:@selector(gaimRequestClose)]) {
-		[ourHandle mainPerformSelector:@selector(gaimRequestClose)];
+		[ourHandle gaimRequestClose];
 
 	} else if ([ourHandle respondsToSelector:@selector(closeWindow:)]) {
 		[ourHandle closeWindow:nil];
@@ -634,17 +626,10 @@ GaimRequestUiOps *adium_gaim_request_get_ui_ops()
 
 @implementation ESGaimRequestAdapter
 
-+ (void)gaimThreadRequestCloseWithHandle:(id)handle
++ (void)requestCloseWithHandle:(id)handle
 {
 	AILog(@"gaimThreadRequestCloseWithHandle: %@",handle);
 	gaim_request_close_with_handle(handle);
-}
-
-+ (void)requestCloseWithHandle:(id)handle
-{
-	[[SLGaimCocoaAdapter gaimThreadMessenger] target:self 
-									 performSelector:@selector(gaimThreadRequestCloseWithHandle:)
-										  withObject:handle];
 }
 
 @end

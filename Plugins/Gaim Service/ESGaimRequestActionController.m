@@ -25,9 +25,9 @@
 @interface ESGaimRequestActionController (PRIVATE)
 - (id)initWithDict:(NSDictionary *)infoDict;
 - (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict;
-- (void)gaimThreadDoRequestActionCbValue:(NSValue *)callBackValue
-					   withUserDataValue:(NSValue *)userDataValue 
-						   callBackIndex:(NSNumber *)callBackIndexNumber;
+- (void)doRequestActionCbValue:(NSValue *)callBackValue
+			 withUserDataValue:(NSValue *)userDataValue 
+				 callBackIndex:(NSNumber *)callBackIndexNumber;
 @end
 
 @implementation ESGaimRequestActionController
@@ -128,11 +128,10 @@
 	}
 
 	if ((callBackIndex != -1) && (theCallBacks[callBackIndex] != NULL)) {
-		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
-										 performSelector:@selector(gaimThreadDoRequestActionCbValue:withUserDataValue:callBackIndex:)
-											  withObject:[NSValue valueWithPointer:theCallBacks[callBackIndex]]
-											  withObject:[userInfo objectForKey:@"userData"]
-											  withObject:[NSNumber numberWithInt:callBackIndex]];
+		[self doRequestActionCbValue:[NSValue valueWithPointer:theCallBacks[callBackIndex]]
+				   withUserDataValue:[userInfo objectForKey:@"userData"]
+					   callBackIndex:[NSNumber numberWithInt:callBackIndex]];
+
 	} else {
 		NSLog(@"Failure.");
 	}
@@ -146,9 +145,9 @@
 	return YES;
 }
 
-- (void)gaimThreadDoRequestActionCbValue:(NSValue *)callBackValue
-					   withUserDataValue:(NSValue *)userDataValue 
-						   callBackIndex:(NSNumber *)callBackIndexNumber
+- (void)doRequestActionCbValue:(NSValue *)callBackValue
+			 withUserDataValue:(NSValue *)userDataValue 
+				 callBackIndex:(NSNumber *)callBackIndexNumber
 {
 	GaimRequestActionCb callBack = [callBackValue pointerValue];
 	if (callBack) {

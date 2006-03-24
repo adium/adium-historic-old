@@ -77,10 +77,9 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 				[groupDict removeObjectForKey:buddyValue];
 			}
 
-			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:contactName:)
-													withObject:theContact
-													withObject:groupName
-													withObject:contactName];
+			[accountLookup(buddy->account) updateContact:theContact
+											 toGroupName:groupName
+											 contactName:contactName];
 		}
 		
 		/* We have no way of differentiating when the buddy's alias changes versus when we get an update
@@ -107,9 +106,8 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 				}
 				
 				//Send it to the main thread
-				[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
-														withObject:theContact
-														withObject:aliasString];
+				[accountLookup(buddy->account) updateContact:theContact
+													 toAlias:aliasString];
 			}
 		}
 	}
@@ -124,8 +122,7 @@ static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
 		NSValue		*buddyValue = [NSValue valueWithPointer:buddy];
 
 //		GaimDebug (@"adiumGaimBlistRemove %s",buddy->name);
-		[accountLookup(buddy->account) mainPerformSelector:@selector(removeContact:)
-												withObject:contactLookupFromBuddy(buddy)];
+		[accountLookup(buddy->account) removeContact:contactLookupFromBuddy(buddy)];
 
 		//Clear our dictionaries
 		[groupDict removeObjectForKey:buddyValue];
@@ -149,8 +146,7 @@ static void adiumGaimBlistSetVisible(GaimBuddyList *list, gboolean show)
 
 static void adiumGaimBlistRequestAddBuddy(GaimAccount *account, const char *username, const char *group, const char *alias)
 {
-	[accountLookup(account) mainPerformSelector:@selector(requestAddContactWithUID:)
-									 withObject:[NSString stringWithUTF8String:username]];
+	[accountLookup(account) requestAddContactWithUID:[NSString stringWithUTF8String:username]];
 }
 
 static void adiumGaimBlistRequestAddChat(GaimAccount *account, GaimGroup *group, const char *alias, const char *name)

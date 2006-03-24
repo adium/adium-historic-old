@@ -25,8 +25,7 @@ static void adiumGaimNewXfer(GaimXfer *xfer)
 static void adiumGaimDestroy(GaimXfer *xfer)
 {
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
-	[accountLookup(xfer->account) mainPerformSelector:@selector(destroyFileTransfer:)
-										   withObject:fileTransfer];
+	[accountLookup(xfer->account) destroyFileTransfer:fileTransfer];
 	
 	xfer->ui_data = nil;
 }
@@ -41,10 +40,9 @@ static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
 	
 	if (fileTransfer) {
-		[accountLookup(xfer->account) mainPerformSelector:@selector(updateProgressForFileTransfer:percent:bytesSent:)
-											   withObject:fileTransfer
-											   withObject:[NSNumber numberWithFloat:percent]
-											   withObject:[NSNumber numberWithUnsignedLong:xfer->bytes_sent]];
+		[accountLookup(xfer->account) updateProgressForFileTransfer:fileTransfer
+															percent:[NSNumber numberWithFloat:percent]
+														  bytesSent:[NSNumber numberWithUnsignedLong:xfer->bytes_sent]];
 	}
 }
 
@@ -52,16 +50,14 @@ static void adiumGaimCancelLocal(GaimXfer *xfer)
 {
 	GaimDebug (@"adiumGaimCancelLocal");
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
-    [accountLookup(xfer->account) mainPerformSelector:@selector(fileTransferCanceledLocally:)
-										   withObject:fileTransfer];	
+    [accountLookup(xfer->account) fileTransferCanceledLocally:fileTransfer];
 }
 
 static void adiumGaimCancelRemote(GaimXfer *xfer)
 {
 	GaimDebug (@"adiumGaimCancelRemote");
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
-    [accountLookup(xfer->account) mainPerformSelector:@selector(fileTransferCanceledRemotely:)
-										   withObject:fileTransfer];
+    [accountLookup(xfer->account) fileTransferCanceledRemotely:fileTransfer];
 }
 
 static GaimXferUiOps adiumGaimFileTransferOps = {

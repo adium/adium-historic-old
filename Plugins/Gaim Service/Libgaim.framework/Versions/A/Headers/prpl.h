@@ -47,7 +47,7 @@ typedef enum {
  * Dimensions less than 1 should be ignored and the image not scaled.
  */
 typedef struct {
-	char *format;                       /**< This is a comma-delimited list of image formats or NULL if icons are not supported. 
+	char *format;                       /**< This is a comma-delimited list of image formats or NULL if icons are not supported.
 					     * The core nor the prpl will actually check to see if the data it's given matches this, it's entirely
 					     * up to the UI to do what it wants */
 	int min_width;                          /**< The minimum width of this icon  */
@@ -68,7 +68,6 @@ typedef struct {
 #include "ft.h"
 #include "proxy.h"
 #include "plugin.h"
-#include "media.h"
 #include "roomlist.h"
 #include "status.h"
 #include "whiteboard.h"
@@ -296,10 +295,9 @@ struct _GaimPluginProtocolInfo
 	gboolean (*can_receive_file)(GaimConnection *, const char *who);
 	void (*send_file)(GaimConnection *, const char *who, const char *filename);
 	GaimXfer *(*new_xfer)(GaimConnection *, const char *who);
- 	gboolean (*offline_message)(const GaimBuddy *buddy);
+	gboolean (*offline_message)(const GaimBuddy *buddy);
 
 	GaimWhiteboardPrplOps *whiteboard_prpl_ops;
-	GaimMediaPrplOps *media_prpl_ops;
 };
 
 #define GAIM_IS_PROTOCOL_PLUGIN(plugin) \
@@ -346,13 +344,11 @@ void gaim_prpl_got_account_login_time(GaimAccount *account, time_t login_time);
  *
  * @param account   The account the user is on.
  * @param status_id The status ID.
- * @param attr_id   The first attribute ID, or NULL for no attribute updates.
  * @param ...       A NULL-terminated list of attribute IDs and values,
  *                  beginning with the value for @a attr_id.
  */
 void gaim_prpl_got_account_status(GaimAccount *account,
-								  const char *status_id, const char *attr_id,
-								  ...);
+								  const char *status_id, ...);
 /**
  * Notifies Gaim that a user's idle state and time have changed.
  *
@@ -388,12 +384,11 @@ void gaim_prpl_got_user_login_time(GaimAccount *account, const char *name,
  * @param account   The account the user is on.
  * @param name      The screen name of the user.
  * @param status_id The status ID.
- * @param attr_id   The first attribute ID, or NULL for no attribute updates.
  * @param ...       A NULL-terminated list of attribute IDs and values,
  *                  beginning with the value for @a attr_id.
  */
 void gaim_prpl_got_user_status(GaimAccount *account, const char *name,
-							   const char *status_id, const char *attr_id, ...);
+							   const char *status_id, ...);
 /**
  * Informs the server that an account's status changed.
  *
