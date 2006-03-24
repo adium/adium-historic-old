@@ -1427,7 +1427,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  * target/selector are used rather than a hardcoded callback (or getProxyConfigurationNotifyingTarget: directly) because this allows code reuse
  * between the connect and register processes, which are similar in their need for proxy configuration
  */
- */
 - (void)configureAccountProxyNotifyingTarget:(id)target selector:(SEL)selector
 {
 	NSInvocation		*invocation; 
