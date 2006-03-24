@@ -34,11 +34,13 @@ typedef enum {
 typedef enum {
 	Unknown_Status_FileTransfer = 0,
 	Not_Started_FileTransfer,		//File transfer is pending confirmation from a user, either local or remote
+	Checksumming_Filetransfer,		//Calculating a checksum for a file that is to be sent
 	Accepted_FileTransfer,			//Could also be called Began_FileTransfer or Started_FileTransfer
 	In_Progress_FileTransfer,		//Currently transferring, not yet complete
 	Complete_FileTransfer,			//File is complete; transferring is finished.
 	Canceled_Local_FileTransfer,	//The local user canceled the transfer
-	Canceled_Remote_FileTransfer	//The remote user canceled the transfer
+	Canceled_Remote_FileTransfer,	//The remote user canceled the transfer
+	Failed_FileTransfer				//The transfer failed.
 } FileTransferStatus;
 
 typedef enum {
