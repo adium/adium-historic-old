@@ -126,33 +126,30 @@
 			
 			[AIServiceIcons setActiveServiceIconsFromPath:path];
 		}
-	}
-
-	//Theme
-	if ([group isEqualToString:PREF_GROUP_LIST_THEME] &&
-		(firstTime || [key isEqualToString:KEY_LIST_THEME_NAME])) {
-		[self applySetWithName:[prefDict objectForKey:KEY_LIST_THEME_NAME]
-					 extension:LIST_THEME_EXTENSION
-					  inFolder:LIST_THEME_FOLDER
-			 toPreferenceGroup:PREF_GROUP_LIST_THEME];
-	}
-
-	//Layout
-	if ([group isEqualToString:PREF_GROUP_LIST_LAYOUT]) {
+		
+		//Theme
+		if (firstTime || [key isEqualToString:KEY_LIST_THEME_NAME]) {
+			[self applySetWithName:[prefDict objectForKey:KEY_LIST_THEME_NAME]
+						 extension:LIST_THEME_EXTENSION
+						  inFolder:LIST_THEME_FOLDER
+				 toPreferenceGroup:PREF_GROUP_LIST_THEME];
+		}
+	
 		if (firstTime || [key isEqualToString:KEY_LIST_LAYOUT_NAME]) {
 			[self applySetWithName:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]
 						 extension:LIST_LAYOUT_EXTENSION
 						  inFolder:LIST_LAYOUT_FOLDER
 				 toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
-		}
-		
+		}		
+	}
+
+	//Layout
+	if ([group isEqualToString:PREF_GROUP_LIST_LAYOUT]) {
 		if (firstTime || !key ||
 			[key isEqualToString:KEY_LIST_LAYOUT_SHOW_ICON] ||
 			[key isEqualToString:KEY_LIST_LAYOUT_SHOW_EXT_STATUS]) {
-			[menuItem_userIcons setState:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_SHOW_ICON
-																				   group:PREF_GROUP_LIST_LAYOUT] boolValue]];
-			[menuItem_userStatusMessages setState:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS
-																							group:PREF_GROUP_LIST_LAYOUT] boolValue]];
+			[menuItem_userIcons setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
+			[menuItem_userStatusMessages setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
 		}
 	}
 }
