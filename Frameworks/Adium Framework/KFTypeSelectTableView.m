@@ -1126,7 +1126,7 @@ static NSMutableDictionary *idToSimulatedIvarsMap = nil;
 //  -[NSObject performSelector:afterDelay:] retains the receiver until after the message send is
 //  performed.  That can extend the life of the tableView past the life of the delegate, which is
 //  bad mojo.  Yielded a crash in Adium.  By buffering with an invocation that doesn't retain its
-//  target, we can avoid the problem.  Any pending delayed messages are canceled when the table
+//  target, we can avoid the problem.  Any pending delayed messages are cancelled when the table
 //  table is dealloc'd.
 //
 - (NSInvocation *)kfTimeoutInvocation

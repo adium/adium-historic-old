@@ -1257,16 +1257,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     [fileTransfer setPercentDone:percentDone bytesSent:[bytesSent unsignedLongValue]];
 }
 
-//The local side canceled the transfer.  We probably already have this status set, but set it just in case.
-- (void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer
+//The local side cancelled the transfer.  We probably already have this status set, but set it just in case.
+- (void)fileTransfercancelledLocally:(ESFileTransfer *)fileTransfer
 {
-	[fileTransfer setStatus:Canceled_Local_FileTransfer];
+	[fileTransfer setStatus:Cancelled_Local_FileTransfer];
 }
 
-//The remote side canceled the transfer, the fool. Update our status.
-- (void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer
+//The remote side cancelled the transfer, the fool. Update our status.
+- (void)fileTransfercancelledRemotely:(ESFileTransfer *)fileTransfer
 {
-	[fileTransfer setStatus:Canceled_Remote_FileTransfer];
+	[fileTransfer setStatus:Cancelled_Remote_FileTransfer];
 }
 
 - (void)destroyFileTransfer:(ESFileTransfer *)fileTransfer
@@ -1305,7 +1305,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 //User refused a receive request.  Tell gaim; we don't release the ESFileTransfer object
 //since that will happen when the xfer is destroyed.  This will end up calling back on
-//- (void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer
+//- (void)fileTransfercancelledLocally:(ESFileTransfer *)fileTransfer
 - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
 {
 	GaimXfer	*xfer = [[fileTransfer accountData] pointerValue];
@@ -1316,7 +1316,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 //Cancel a file transfer in progress.  Tell gaim; we don't release the ESFileTransfer object
 //since that will happen when the xfer is destroyed.  This will end up calling back on
-//- (void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer
+//- (void)fileTransfercancelledLocally:(ESFileTransfer *)fileTransfer
 - (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	GaimXfer	*xfer = [[fileTransfer accountData] pointerValue];

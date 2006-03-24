@@ -32,7 +32,7 @@
 
 		[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self
 																selector:@selector(cancel:)
-																	name:FILE_TRANSFER_CANCELED
+																	name:FILE_TRANSFER_CANCELLED
 																  object:nil];
 
 	}
@@ -58,11 +58,11 @@
 }
 
 /*
- * @brief Our file transfer was canceled
+ * @brief Our file transfer was cancelled
  */
 - (void)cancel:(NSNotification *)inNotification
 {
-	//Inform libgaim that the request was canceled
+	//Inform libgaim that the request was cancelled
 	[ESGaimRequestAdapter requestCloseWithHandle:self];
 }
 

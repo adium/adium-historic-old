@@ -358,8 +358,8 @@
 - (BOOL)isStopped
 {
 	return (status == Complete_FileTransfer ||
-		   (status == Canceled_Local_FileTransfer) ||
-		   (status == Canceled_Remote_FileTransfer));
+		   (status == Cancelled_Local_FileTransfer) ||
+		   (status == Cancelled_Remote_FileTransfer));
 }
 
 - (void) recreateMessage

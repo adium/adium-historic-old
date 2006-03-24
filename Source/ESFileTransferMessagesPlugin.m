@@ -40,7 +40,7 @@
 	//Install our observers
     [[adium notificationCenter] addObserver:self 
 								   selector:@selector(handleFileTransferEvent:) 
-									   name:FILE_TRANSFER_CANCELED 
+									   name:FILE_TRANSFER_CANCELLED 
 									 object:nil];
 
 	[[adium notificationCenter] addObserver:self 
@@ -84,9 +84,10 @@
 		NSString		*message = nil;
 		NSString		*type = nil;
 
-		if ([notificationName isEqualToString:FILE_TRANSFER_CANCELED]) {
+		if ([notificationName isEqualToString:FILE_TRANSFER_CANCELLED]) {
 			type = @"file_transfer_cancelled";
-			message = [NSString stringWithFormat:AILocalizedString(@"%@ canceled the transfer of %@",nil),[listContact formattedUID],filename];
+			message = [NSString stringWithFormat:AILocalizedString(@"%@ cancelled the transfer of %@",nil),[listContact formattedUID],filename];
+
 		} else if ([notificationName isEqualToString:FILE_TRANSFER_FAILED]) {
 			type = @"file_transfer_failed";
 			message = [NSString stringWithFormat:AILocalizedString(@"The transfer of %@ failed",nil),filename];

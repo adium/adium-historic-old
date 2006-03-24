@@ -131,8 +131,8 @@
 - (void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer 
 									 percent:(NSNumber *)percent
 								   bytesSent:(NSNumber *)bytesSent;
-- (void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
-- (void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer;
+- (void)fileTransfercancelledRemotely:(ESFileTransfer *)fileTransfer;
+- (void)fileTransfercancelledLocally:(ESFileTransfer *)fileTransfer;
 - (void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
 - (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID
 										 size:(unsigned long long)inSize

@@ -85,7 +85,7 @@ static ESFileTransferPreferences *preferences;
 	ESContactAlertsController *contactAlertsController = [adium contactAlertsController];
 	[contactAlertsController registerEventID:FILE_TRANSFER_REQUEST withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	[contactAlertsController registerEventID:FILE_TRANSFER_BEGAN withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
-	[contactAlertsController registerEventID:FILE_TRANSFER_CANCELED withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
+	[contactAlertsController registerEventID:FILE_TRANSFER_CANCELLED withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	[contactAlertsController registerEventID:FILE_TRANSFER_COMPLETE withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	
     //Install the Send File menu item
@@ -224,7 +224,7 @@ static ESFileTransferPreferences *preferences;
 		
 	} else {
 		[(AIAccount<AIAccount_Files> *)[fileTransfer account] rejectFileReceiveRequest:fileTransfer];
-		[fileTransfer setStatus:Canceled_Local_FileTransfer];
+		[fileTransfer setStatus:Cancelled_Local_FileTransfer];
 	}	
 }
 
@@ -409,8 +409,8 @@ static ESFileTransferPreferences *preferences;
 				[self _removeFileTransfer:fileTransfer];
 			}
 			break;
-		case Canceled_Remote_FileTransfer:
-			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_CANCELED
+		case Cancelled_Remote_FileTransfer:
+			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_CANCELLED
 											 forListObject:[fileTransfer contact] 
 												  userInfo:fileTransfer
 							  previouslyPerformedActionIDs:nil];
@@ -537,8 +537,8 @@ static ESFileTransferPreferences *preferences;
 		description = AILocalizedString(@"File is checksummed before sending",nil);
 	} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 		description = AILocalizedString(@"File transfer begins",nil);
-	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
-		description = AILocalizedString(@"File transfer canceled by the other side",nil);
+	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
+		description = AILocalizedString(@"File transfer cancelled by the other side",nil);
 	} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 		description = AILocalizedString(@"File transfer completed successfully",nil);
 	} else {		
@@ -561,8 +561,8 @@ static ESFileTransferPreferences *preferences;
 		description = @"File Checksumming for Sending";
 	} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 		description = @"File Transfer Began";
-	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
-		description = @"File Transfer Canceled Remotely";
+	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
+		description = @"File Transfer cancelled Remotely";
 	} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 		description = @"File Transfer Complete";
 	} else {		
@@ -582,8 +582,8 @@ static ESFileTransferPreferences *preferences;
 		description = AILocalizedString(@"When a file is checksummed prior to sending",nil);
 	} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 		description = AILocalizedString(@"When a file transfer begins",nil);
-	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
-		description = AILocalizedString(@"When a file transfer is canceled remotely",nil);
+	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
+		description = AILocalizedString(@"When a file transfer is cancelled remotely",nil);
 	} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 		description = AILocalizedString(@"When a file transfer is completed successfully",nil);
 	} else {		
@@ -621,8 +621,8 @@ static ESFileTransferPreferences *preferences;
 			} else {
 				format = AILocalizedString(@"%@ began receiving %@",nil);	
 			}
-		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
-			format = AILocalizedString(@"%@ canceled the transfer of %@",nil);
+		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
+			format = AILocalizedString(@"%@ cancelled the transfer of %@",nil);
 		} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
 				format = AILocalizedString(@"%@ sent you %@",nil);
@@ -647,8 +647,8 @@ static ESFileTransferPreferences *preferences;
 			} else {
 				format = AILocalizedString(@"began receiving %@",nil);	
 			}
-		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
-			format = AILocalizedString(@"canceled the transfer of %@",nil);
+		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
+			format = AILocalizedString(@"cancelled the transfer of %@",nil);
 		} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
 				format = AILocalizedString(@"sent you %@",nil);
