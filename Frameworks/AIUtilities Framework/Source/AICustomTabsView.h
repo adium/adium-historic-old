@@ -103,6 +103,5 @@
 - (void)drawBackgroundInRect:(NSRect)rect withFrame:(NSRect)viewFrame selectedTabRect:(NSRect)tabFrame;
 
 //Tooltips
-- (NSString *)tooltipForTabCell:(AICustomTabCell *)tabCell
-
+- (NSString *)tooltipForTabCell:(AICustomTabCell *)tabCell;
 @end
