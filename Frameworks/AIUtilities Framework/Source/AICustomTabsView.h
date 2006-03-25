@@ -27,6 +27,7 @@
 - (void)customTabView:(AICustomTabsView *)tabView closeTabViewItem:(NSTabViewItem *)tabViewItem;
 - (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)tabView;
 - (void)customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *)tabView;
+- (NSString *)customTabView:(AICustomTabsView *)tabView tooltipForTabViewItem:(NSTabViewItem *)tabViewItem;;
 - (void)customTabView:(AICustomTabsView *)tabView didMoveTabViewItem:(NSTabViewItem *)tabViewItem toCustomTabView:(AICustomTabsView *)destTabView index:(int)index screenPoint:(NSPoint)point;
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem;
 - (BOOL)customTabView:(AICustomTabsView *)tabView didAcceptDragPasteboard:(NSPasteboard *)pasteboard onTabViewItem:(NSTabViewItem *)tabViewItem;
@@ -100,5 +101,8 @@
 
 //Drawing
 - (void)drawBackgroundInRect:(NSRect)rect withFrame:(NSRect)viewFrame selectedTabRect:(NSRect)tabFrame;
+
+//Tooltips
+- (NSString *)tooltipForTabCell:(AICustomTabCell *)tabCell
 
 @end

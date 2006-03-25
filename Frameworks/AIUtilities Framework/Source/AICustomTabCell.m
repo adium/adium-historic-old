@@ -89,6 +89,7 @@ static NSSize		rightCapSize;
 		hoveringClose = NO;
 		selected = NO;
 		trackingTag = 0;
+		tooltipTag = 0;
 		closeTrackingTag = 0;
 	}
 
@@ -344,6 +345,8 @@ static NSSize		rightCapSize;
                            assumeInside:NSPointInRect(cursorLocation, trackRect)];
     [self setHighlighted:NSPointInRect(cursorLocation, trackRect)];
 	
+	tooltipTag = [view addToolTipRect:trackRect owner:self userData:NULL];
+
     closeTrackingTag = [view addTrackingRect:[self _closeButtonRect]
                                        owner:self
                                     userData:nil
@@ -355,6 +358,7 @@ static NSSize		rightCapSize;
 - (void)removeTrackingRects
 {
     [view removeTrackingRect:trackingTag]; trackingTag = 0;
+	[view removeToolTip:tooltipTag]; tooltipTag = 0;
     [view removeTrackingRect:closeTrackingTag]; closeTrackingTag = 0;
 }
 
@@ -372,7 +376,7 @@ static NSSize		rightCapSize;
 		[self setHoveringClose:YES];
     } else {
 		[self setHighlighted:YES];
-    }
+    }	
 }
 
 //Mouse left one of our tabs - Set ourself (or our close button) as not hovered
@@ -438,6 +442,11 @@ static NSSize		rightCapSize;
 	
     trackingClose = NO;
 	[self setHoveringClose:NO];
+}
+
+- (NSString *)view:(NSView *)controlView stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData
+{
+	return [(AICustomTabsView *)controlView tooltipForTabCell:self];
 }
 
 @end

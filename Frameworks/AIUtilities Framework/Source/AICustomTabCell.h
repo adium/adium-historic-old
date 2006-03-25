@@ -26,6 +26,7 @@
     BOOL								hoveringClose;
     
     NSTrackingRectTag					trackingTag;
+	NSToolTipTag						tooltipTag;
     NSDictionary						*userData;
     NSTrackingRectTag					closeTrackingTag;
     NSDictionary						*closeUserData;
