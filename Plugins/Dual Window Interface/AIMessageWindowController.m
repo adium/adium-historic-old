@@ -23,10 +23,12 @@
 #import "AIDockController.h"
 #import "AIPreferenceController.h"
 #import "AIToolbarController.h"
+#import "AIAccountController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AICustomTabDragging.h>
 #import <AIUtilities/AICustomTabsView.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
@@ -528,6 +530,48 @@
 	AIChat	*chat = [(AIMessageTabViewItem *)tabViewItem chat];
 
 	[interface closeChat:chat];
+}
+
+- (NSString *)customTabView:(AICustomTabsView *)tabView tooltipForTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	AIChat		*chat = [(AIMessageTabViewItem *)tabViewItem chat];
+	NSString	*tooltip = nil;
+
+	if ([chat isGroupChat]) {
+		tooltip = [NSString stringWithFormat:AILocalizedString(@"%@ in %@","AccountName on ChatRoomName"), [[chat account] formattedUID], [chat name]];
+	} else {
+		AIListObject	*destination = [chat listObject];
+		NSString		*destinationFormattedUID = [destination formattedUID];
+		BOOL			includeDestination = NO;
+		BOOL			includeSource = NO;
+
+		if (![[[destination displayName] compactedString] isEqualToString:[destinationFormattedUID compactedString]]) {
+			includeDestination = YES;
+		}
+		
+		AIAccount	*account;
+		NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
+		int onlineAccounts = 0;
+		while ((account = [enumerator nextObject]) && onlineAccounts < 2) {
+			if ([account online]) onlineAccounts++;
+		}
+		
+		if (onlineAccounts >=2) {
+			includeSource = YES;
+		}
+		
+		if (includeDestination && includeSource) {
+			tooltip = [NSString stringWithFormat:AILocalizedString(@"%@ talking to %@","AccountName talking to Username"), [[chat account] formattedUID], destinationFormattedUID];
+
+		} else if (includeDestination) {
+			tooltip = destinationFormattedUID;
+			
+		} else if (includeSource) {
+			tooltip =  [[chat account] formattedUID];
+		}
+	}
+
+	return tooltip;
 }
 
 //Allow dragging of text
