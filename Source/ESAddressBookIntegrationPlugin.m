@@ -95,6 +95,10 @@ NSString* serviceIDForJabberUID(NSString *UID);
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AB_DISPLAYFORMAT_DEFAULT_PREFS 
 																		forClass:[self class]]  
 										  forGroup:PREF_GROUP_ADDRESSBOOK];
+
+	//We want the enableImport preference immediately (without waiting for the preferences observer to be registered in adiumFinishedLaunching:)
+	enableImport = [[[adium preferenceController] preferenceForKey:KEY_AB_ENABLE_IMPORT
+															 group:PREF_GROUP_ADDRESSBOOK] boolValue];
     advancedPreferences = [[ESAddressBookIntegrationAdvancedPreferences preferencePane] retain];
 	
     //Services dictionary
@@ -137,6 +141,8 @@ NSString* serviceIDForJabberUID(NSString *UID);
 								   selector:@selector(adiumFinishedLaunching:)
 									   name:Adium_CompletedApplicationLoad
 									 object:nil];
+	
+	//Update self immediately so the information is available to plugins and interface elements as they load
 	[self updateSelfIncludingIcon:YES];
 }
 
@@ -455,9 +461,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 			//Register ourself as a listObject observer, which will update all objects
 			[[adium contactController] registerListObjectObserver:self];
 			
-			//Now update from our "me" card information to apply to the accounts which loaded
-		    [self updateSelfIncludingIcon:NO];	
-			
+			//Note: we don't need to call updateSelfIncludingIcon: because it was already done in installPlugin			
 		} else {
 			//This isn't the first time through
 
@@ -984,7 +988,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 																   priorityLevel:Low_Priority];										
 					}									
 				}
-				
+				NSLog(@"Registering %@ as the default...", myDisplayName);
 				[[adium preferenceController] registerDefaults:[NSDictionary dictionaryWithObject:[[NSAttributedString stringWithString:myDisplayName] dataRepresentation]
 																						   forKey:KEY_ACCOUNT_DISPLAY_NAME]
 													  forGroup:GROUP_ACCOUNT_STATUS];
