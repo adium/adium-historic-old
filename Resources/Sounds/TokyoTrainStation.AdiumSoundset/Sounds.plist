@@ -15,15 +15,15 @@ http://www.adiumx.com
 	<key>Sounds</key>
 	<dict>
 		<key>Contact Signed Off</key>
-		<string>Contact_Off.aif</string>
+		<string>Contact_Off.m4a</string>
 		<key>Contact Signed On</key>
-		<string>Contact_On.aif</string>
+		<string>Contact_On.m4a</string>
 		<key>Message Received</key>
-		<string>Message_Received.aif</string>
+		<string>Message_Received.m4a</string>
 		<key>Message Received (New)</key>
-		<string>New_Message.aif</string>
+		<string>New_Message.m4a</string>
 		<key>Message Sent</key>
-		<string>Message_Sent.aif</string>
+		<string>Message_Sent.m4a</string>
 	</dict>
 </dict>
 </plist>
