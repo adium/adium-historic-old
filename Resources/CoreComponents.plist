@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <array>
+	<? *** Load the Address Book Plugin early so AB information is available to later components *** ?>
+	<string>ESAddressBookIntegrationPlugin</string>
 	<string>AIAccountListPreferencesPlugin</string>
 	<string>AIAccountMenuAccessPlugin</string>
 	<string>AIAliasSupportPlugin</string>
@@ -48,7 +50,6 @@
 	<string>DCMessageContextDisplayPlugin</string>
 	<string>ESAccountEvents</string>
 	<string>ESAccountNetworkConnectivityPlugin</string>
-	<string>ESAddressBookIntegrationPlugin</string>
 	<string>ESAnnouncerPlugin</string>
 	<string>ESApplescriptContactAlertPlugin</string>
 	<string>ESBlockingPlugin</string>
