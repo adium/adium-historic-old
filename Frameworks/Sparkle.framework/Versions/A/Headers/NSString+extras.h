@@ -31,67 +31,31 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 */
 
-/*
-	RSS.h
-	A class for reading RSS feeds.
 
-	Created by Brent Simmons on Wed Apr 17 2002.
+/*
+	NSString+extras.h
+	NetNewsWire
+
+	Created by Brent Simmons on Fri Jun 14 2002.
 	Copyright (c) 2002 Brent Simmons. All rights reserved.
 */
 
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 #import <CoreFoundation/CoreFoundation.h>
-#import <AIUtilities/AIStringAdditions.h>
 
 
-@interface RSS : NSObject {
-	
-	NSDictionary *headerItems;
-	NSMutableArray *newsItems;
-	NSString *version;
-	
-	BOOL flRdf;
-	BOOL normalize;
-	}
+@interface NSString (extras)
 
+- (NSString *)stringWithSubstitute:(NSString *)subs forCharactersFromSet:(NSCharacterSet *)set;
 
-/*Public*/
+- (NSString *) trimWhiteSpace;
 
-- (RSS *) initWithTitle: (NSString *) title andDescription: (NSString *) description;
+- (NSString *) stripHTML;
 
-- (RSS *) initWithData: (NSData *) rssData normalize: (BOOL) fl;
+- (NSString *) ellipsizeAfterNWords: (int) n;
 
-- (RSS *) initWithURL: (NSURL *) url normalize: (BOOL) fl;
++ (BOOL) stringIsEmpty: (NSString *) s;
 
-- (NSDictionary *) headerItems;
-
-- (NSMutableArray *) newsItems;
-
-- (NSString *) version;
-
-// AMM's extensions for Sparkle
-- (NSDictionary *)newestItem;
-
-
-/*Private*/
-
-- (void) createheaderdictionary: (CFXMLTreeRef) tree;
-
-- (void) createitemsarray: (CFXMLTreeRef) tree;
-
-- (void) setversionstring: (CFXMLTreeRef) tree;
-
-- (void) flattenimagechildren: (CFXMLTreeRef) tree into: (NSMutableDictionary *) dictionary;
-
-- (void) flattensourceattributes: (CFXMLNodeRef) node into: (NSMutableDictionary *) dictionary;
-
-- (CFXMLTreeRef) getchanneltree: (CFXMLTreeRef) tree;
-
-- (CFXMLTreeRef) getnamedtree: (CFXMLTreeRef) currentTree name: (NSString *) name;
-
-- (void) normalizeRSSItem: (NSMutableDictionary *) rssItem;
-
-- (NSString *) getelementvalue: (CFXMLTreeRef) tree;
 
 @end
