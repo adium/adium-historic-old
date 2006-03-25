@@ -1245,11 +1245,6 @@
 		4BFF665C063693FB00308A3B /* ESSendMessageAlertDetailPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 342DC49B05783BE8000E1D83 /* ESSendMessageAlertDetailPane.h */; };
 		63093C2F0892143500F118D3 /* newContentThreeDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2D0892143500F118D3 /* newContentThreeDigits.png */; };
 		63093C300892143500F118D3 /* newContentTwoDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2E0892143500F118D3 /* newContentTwoDigits.png */; };
-		6315FFB00977187E005794CC /* RSS.h in Headers */ = {isa = PBXBuildFile; fileRef = 6315FFAA0977187E005794CC /* RSS.h */; };
-		6315FFB10977187E005794CC /* RSS.m in Sources */ = {isa = PBXBuildFile; fileRef = 6315FFAB0977187E005794CC /* RSS.m */; };
-		6315FFB20977187E005794CC /* SUUpdater.h in Headers */ = {isa = PBXBuildFile; fileRef = 6315FFAC0977187E005794CC /* SUUpdater.h */; };
-		6315FFB30977187E005794CC /* SUUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = 6315FFAD0977187E005794CC /* SUUpdater.m */; };
-		6315FFB5097718A1005794CC /* Sparkle.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6315FFB4097718A1005794CC /* Sparkle.strings */; };
 		632D608E094B7EEB003A9786 /* AIXtraPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 632D608D094B7EEB003A9786 /* AIXtraPreviewController.h */; };
 		632D60C0094B81AB003A9786 /* AIDockIconPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */; };
 		632D60C1094B81AB003A9786 /* AIDockIconPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */; };
@@ -1262,6 +1257,9 @@
 		633F175C08F905A700C76383 /* AIXtrasManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633F175808F905A700C76383 /* AIXtrasManager.h */; };
 		633F175D08F905A800C76383 /* AIXtrasManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175908F905A700C76383 /* AIXtrasManager.m */; };
 		636AB7F3087E2B6700A87670 /* AIDockBadger.h in Headers */ = {isa = PBXBuildFile; fileRef = 636AB7F1087E2B6700A87670 /* AIDockBadger.h */; };
+		638392F709D4D67A0067B9B7 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
+		638392F809D4D67A0067B9B7 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
+		6383935009D4D6AA0067B9B7 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		63C120750910A0DD00C9DB57 /* DefaultXtraReadme.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 63C120740910A0DD00C9DB57 /* DefaultXtraReadme.rtf */; };
 		63DEB88F09BD3FEC0026DC69 /* AIXtraPreviewImageController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63DEB88D09BD3FEC0026DC69 /* AIXtraPreviewImageController.h */; };
 		63DEB89009BD3FEC0026DC69 /* AIXtraPreviewImageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEB88E09BD3FEC0026DC69 /* AIXtraPreviewImageController.m */; };
@@ -1698,6 +1696,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6383935009D4D6AA0067B9B7 /* Sparkle.framework in CopyFiles */,
 				341BDBBB0968BC9B00CF83F5 /* OTR.framework in CopyFiles */,
 				3419FE230531586A00C68BA3 /* Adium.framework in CopyFiles */,
 				9E12765407D38B5000AA91C5 /* Growl-WithInstaller.framework in CopyFiles */,
@@ -3359,11 +3358,6 @@
 		4BFE2E9F07E61A4E00C07EBE /* NewAlertNoEvents.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = NewAlertNoEvents.nib; path = "Frameworks/Adium Framework/NewAlertNoEvents.nib"; sourceTree = "<group>"; };
 		63093C2D0892143500F118D3 /* newContentThreeDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentThreeDigits.png; sourceTree = "<group>"; };
 		63093C2E0892143500F118D3 /* newContentTwoDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentTwoDigits.png; sourceTree = "<group>"; };
-		6315FFAA0977187E005794CC /* RSS.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = RSS.h; path = Source/RSS.h; sourceTree = "<group>"; };
-		6315FFAB0977187E005794CC /* RSS.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = RSS.m; path = Source/RSS.m; sourceTree = "<group>"; };
-		6315FFAC0977187E005794CC /* SUUpdater.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SUUpdater.h; path = Source/SUUpdater.h; sourceTree = "<group>"; };
-		6315FFAD0977187E005794CC /* SUUpdater.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SUUpdater.m; path = Source/SUUpdater.m; sourceTree = "<group>"; };
-		6315FFB4097718A1005794CC /* Sparkle.strings */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = Sparkle.strings; path = Resources/Sparkle.strings; sourceTree = "<group>"; };
 		632D608D094B7EEB003A9786 /* AIXtraPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraPreviewController.h; path = Source/AIXtraPreviewController.h; sourceTree = "<group>"; };
 		632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockIconPreviewController.h; path = Source/AIDockIconPreviewController.h; sourceTree = "<group>"; };
 		632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDockIconPreviewController.m; path = Source/AIDockIconPreviewController.m; sourceTree = "<group>"; };
@@ -3378,6 +3372,7 @@
 		633F175908F905A700C76383 /* AIXtrasManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtrasManager.m; path = Source/AIXtrasManager.m; sourceTree = "<group>"; };
 		636AB7F1087E2B6700A87670 /* AIDockBadger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIDockBadger.h; sourceTree = "<group>"; };
 		636AB7F2087E2B6700A87670 /* AIDockBadger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIDockBadger.m; sourceTree = "<group>"; };
+		638392F609D4D67A0067B9B7 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		63C120740910A0DD00C9DB57 /* DefaultXtraReadme.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = DefaultXtraReadme.rtf; path = Resources/DefaultXtraReadme.rtf; sourceTree = "<group>"; };
 		63DEB88D09BD3FEC0026DC69 /* AIXtraPreviewImageController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraPreviewImageController.h; path = Source/AIXtraPreviewImageController.h; sourceTree = "<group>"; };
 		63DEB88E09BD3FEC0026DC69 /* AIXtraPreviewImageController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraPreviewImageController.m; path = Source/AIXtraPreviewImageController.m; sourceTree = "<group>"; };
@@ -3722,6 +3717,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34B323B809B9FEAC00029361 /* Cocoa.framework in Frameworks */,
+				638392F709D4D67A0067B9B7 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3739,6 +3735,7 @@
 				348E5ACB06D2A74C004C051C /* AddressBook.framework in Frameworks */,
 				9E124DF607D34CF500AA91C5 /* Growl-WithInstaller.framework in Frameworks */,
 				07F8303509693F5E002FC851 /* OTR.framework in Frameworks */,
+				638392F809D4D67A0067B9B7 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3945,6 +3942,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				638392F609D4D67A0067B9B7 /* Sparkle.framework */,
 				115E0E8D0952514A003218FE /* JavaVM.framework */,
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
 				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
@@ -4929,7 +4927,6 @@
 		34D8342B07CBE6A4006466F2 /* External Sources */ = {
 			isa = PBXGroup;
 			children = (
-				6315FFA309771742005794CC /* Automatic Updating (Sparkle) */,
 				34D834E207CBE7D5006466F2 /* Sound Playing */,
 				34D834CD07CBE7A3006466F2 /* Text field for previewing font preferences */,
 				34A6FE8007D7E07300972830 /* Type Select Table View */,
@@ -6050,18 +6047,6 @@
 			name = Growl;
 			sourceTree = "<group>";
 		};
-		6315FFA309771742005794CC /* Automatic Updating (Sparkle) */ = {
-			isa = PBXGroup;
-			children = (
-				6315FFB4097718A1005794CC /* Sparkle.strings */,
-				6315FFAA0977187E005794CC /* RSS.h */,
-				6315FFAB0977187E005794CC /* RSS.m */,
-				6315FFAC0977187E005794CC /* SUUpdater.h */,
-				6315FFAD0977187E005794CC /* SUUpdater.m */,
-			);
-			name = "Automatic Updating (Sparkle)";
-			sourceTree = "<group>";
-		};
 		632D800908E7DE2C0032C187 /* Xtras Management */ = {
 			isa = PBXGroup;
 			children = (
@@ -7115,8 +7100,6 @@
 				343EC6C7096F7E1700349098 /* ESStatusAdvancedPreferences.h in Headers */,
 				343ECBEA0971B18200349098 /* ESShowContactInfoPromptController.h in Headers */,
 				343ECBFB0971B92100349098 /* AIBorderlessListController.h in Headers */,
-				6315FFB00977187E005794CC /* RSS.h in Headers */,
-				6315FFB20977187E005794CC /* SUUpdater.h in Headers */,
 				3486E8A6097F24A90044C496 /* AdiumAuthorization.h in Headers */,
 				3486E9E3097F5FE20044C496 /* ESAuthorizationRequestWindowController.h in Headers */,
 				34607EE809B228FE000DB3D2 /* AIContactListNameButton.h in Headers */,
@@ -8521,7 +8504,6 @@
 				343EC9810970C29400349098 /* OfflineContactHidingDefaults.plist in Resources */,
 				343ECBEE0971B18E00349098 /* ShowContactInfoPrompt.nib in Resources */,
 				347EAB2D09721D490090EA6E /* pref-personal.png in Resources */,
-				6315FFB5097718A1005794CC /* Sparkle.strings in Resources */,
 				3486E9DB097F5FCE0044C496 /* AuthorizationRequestWindow.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9098,8 +9080,6 @@
 				343EC6C8096F7E1700349098 /* ESStatusAdvancedPreferences.m in Sources */,
 				343ECBEB0971B18200349098 /* ESShowContactInfoPromptController.m in Sources */,
 				343ECBFC0971B92100349098 /* AIBorderlessListController.m in Sources */,
-				6315FFB10977187E005794CC /* RSS.m in Sources */,
-				6315FFB30977187E005794CC /* SUUpdater.m in Sources */,
 				3486E8A7097F24A90044C496 /* AdiumAuthorization.m in Sources */,
 				3486E9E2097F5FE20044C496 /* ESAuthorizationRequestWindowController.m in Sources */,
 				34607EE909B228FE000DB3D2 /* AIContactListNameButton.m in Sources */,
