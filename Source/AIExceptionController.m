@@ -106,6 +106,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			[theReason rangeOfString:@"NSMutableRLEArray objectAtIndex:effectiveRange:: Out of bounds"].location != NSNotFound || //-[NSLayoutManager textContainerForGlyphAtIndex:effectiveRange:] as of 10.4 can throw this
 			[theReason rangeOfString:@"TSMProcessRawKeyCode failed"].location != NSNotFound || //May be raised by -[NSEvent charactersIgnoringModifiers]
 			(!theName) || //Harmless
+			[theName rangeOfString:@"RSS"].location != NSNotFound || //Sparkle's RSS handling whines sometimes, but we don't care.
 		   [safeExceptionNames containsObject:theName])
 		{
 			shouldLaunchCrashReporter = NO;
