@@ -945,6 +945,16 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		trackingCursor = NO;
 	}
 }
-		  
+
+#pragma mark Tooltips
+- (NSString *)tooltipForTabCell:(AICustomTabCell *)tabCell
+{
+	if ([delegate respondsToSelector:@selector(customTabView:tooltipForTabViewItem:)]) {
+		return [delegate customTabView:self tooltipForTabViewItem:[tabCell tabViewItem]];
+	} else {
+		return nil;
+	}
+}
+
 @end
 
