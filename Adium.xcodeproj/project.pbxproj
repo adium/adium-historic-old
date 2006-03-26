@@ -206,6 +206,9 @@
 		3421D3AB0753EE2F00EBCF4F /* ESFileTransferProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 349FE2FE074D01D300E36B3B /* ESFileTransferProgressView.m */; };
 		342340E009D1AF58009FF634 /* RAFjoscarSecuridPromptController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */; };
 		342340E109D1AF58009FF634 /* RAFjoscarSecuridPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */; };
+		342353BC09D450ED009FF634 /* MDLogViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342353BB09D450ED009FF634 /* MDLogViewer.nib */; };
+		342353D609D45726009FF634 /* AIAbstractLogViewerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */; };
+		342353D709D45726009FF634 /* AIAbstractLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */; };
 		3426FD0B0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3426FD090699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m */; };
 		3426FD0C0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 3426FD0A0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3428328807D2643F004F01C9 /* ESStatusPreferencesPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 3428328407D2643E004F01C9 /* ESStatusPreferencesPlugin.h */; };
@@ -1968,6 +1971,9 @@
 		342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = RAFjoscarSecuridPromptController.h; path = "Plugins/joscar Service/RAFjoscarSecuridPromptController.h"; sourceTree = "<group>"; };
 		342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarSecuridPromptController.m; path = "Plugins/joscar Service/RAFjoscarSecuridPromptController.m"; sourceTree = "<group>"; };
 		3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "joscar Java Bridge.xcodeproj"; path = "Plugins/joscar Service/joscar Java Bridge/joscar Java Bridge.xcodeproj"; sourceTree = "<group>"; };
+		342353BB09D450ED009FF634 /* MDLogViewer.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MDLogViewer.nib; path = Resources/MDLogViewer.nib; sourceTree = "<group>"; };
+		342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAbstractLogViewerWindowController.h; path = Source/AIAbstractLogViewerWindowController.h; sourceTree = "<group>"; };
+		342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAbstractLogViewerWindowController.m; path = Source/AIAbstractLogViewerWindowController.m; sourceTree = "<group>"; };
 		3426FD090699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m; path = "Frameworks/Adium Framework/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m"; sourceTree = "<group>"; };
 		3426FD0A0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h; path = "Frameworks/Adium Framework/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h"; sourceTree = "<group>"; };
 		3428328407D2643E004F01C9 /* ESStatusPreferencesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESStatusPreferencesPlugin.h; path = Source/ESStatusPreferencesPlugin.h; sourceTree = "<group>"; };
@@ -5918,6 +5924,9 @@
 				4B3DB8FD04547A8D00A8010A /* LogViewer.nib */,
 				3410745D09B6965600565C9E /* AIMDLogViewerWindowController.h */,
 				3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */,
+				342353BB09D450ED009FF634 /* MDLogViewer.nib */,
+				342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */,
+				342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */,
 			);
 			name = "Log Viewer";
 			sourceTree = "<group>";
@@ -7107,6 +7116,7 @@
 				34607F1309B2296A000DB3D2 /* AIHoveringPopUpButton.h in Headers */,
 				3410745F09B6965700565C9E /* AIMDLogViewerWindowController.h in Headers */,
 				34AE249D09BCCFA900A35B51 /* AIWindowDraggingView.h in Headers */,
+				342353D609D45726009FF634 /* AIAbstractLogViewerWindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8505,6 +8515,7 @@
 				343ECBEE0971B18E00349098 /* ShowContactInfoPrompt.nib in Resources */,
 				347EAB2D09721D490090EA6E /* pref-personal.png in Resources */,
 				3486E9DB097F5FCE0044C496 /* AuthorizationRequestWindow.nib in Resources */,
+				342353BC09D450ED009FF634 /* MDLogViewer.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8752,7 +8763,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "find \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' ';'\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -depth -type d -name 'English.lproj' -exec mv -f \"{}\" \"{}/../en.lproj\" \\;\n";
+			shellScript = "# Delete .svn, .DS_Store, and .h files\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' \\;\n\n####\n\n# Move English.lproj folders to en.lproj folders...\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -depth -type d -name 'English.lproj' -exec ditto \"{}\" \"{}/../en.lproj\" \\;\n\n# And delete the old English.lproj folders\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -depth -type d -name 'English.lproj' -exec rm -rf \"{}\" \\;";
 		};
 		DACF3ED2085574D0006BFB18 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -9087,6 +9098,7 @@
 				34607F1209B2296A000DB3D2 /* AIHoveringPopUpButton.m in Sources */,
 				3410746009B6965700565C9E /* AIMDLogViewerWindowController.m in Sources */,
 				34AE249E09BCCFA900A35B51 /* AIWindowDraggingView.m in Sources */,
+				342353D709D45726009FF634 /* AIAbstractLogViewerWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
