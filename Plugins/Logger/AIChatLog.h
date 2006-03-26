@@ -23,7 +23,7 @@
 	float			rankingPercentage;
 }
 
-- (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass date:(NSDate *)inDate;
+- (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass;
 
 //Accessors
 - (NSString *)path;

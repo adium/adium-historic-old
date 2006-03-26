@@ -12,13 +12,23 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import "AILoggerPlugin.h"
 #import "AILogToGroup.h"
+#import "AILogFromGroup.h"
 #import "AIContactController.h"
 
-#define	REFRESH_RESULTS_INTERVAL		0.5 //Interval between results refreshes while searching
+#define NSMetadataQueryClass NSClassFromString(@"NSMetadataQuery")
+#define NSCompoundPredicateClass NSClassFromString(@"NSCompoundPredicate")
+#define NSPredicateClass NSClassFromString(@"NSPredicate")
 
 @implementation AIMDLogViewerWindowController
++ (NSString *)nibName
+{
+	return @"MDLogViewer";
+}
+
 - (void)windowDidLoad
 {	
+	[super windowDidLoad];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(queryGatheringProgress:)
 												 name:NSMetadataQueryGatheringProgressNotification
@@ -30,9 +40,15 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(queryUpdate:)
 												 name:NSMetadataQueryDidUpdateNotification
-											   object:nil];
+											   object:nil];    
 
-	[super windowDidLoad];
+	//Localize and center the column headers
+	[[[[tableView_fromAccounts tableColumns] objectAtIndex:0] headerCell] setStringValue:ACCOUNT];
+	[[[[tableView_fromAccounts tableColumns] objectAtIndex:0] headerCell] setAlignment:NSCenterTextAlignment];
+	[[[[tableView_toContacts tableColumns] objectAtIndex:0] headerCell] setStringValue:DESTINATION];
+	[[[[tableView_toContacts tableColumns] objectAtIndex:0] headerCell] setAlignment:NSCenterTextAlignment];
+	[[[[tableView_dates tableColumns] objectAtIndex:0] headerCell] setStringValue:DATE];
+	[[[[tableView_dates tableColumns] objectAtIndex:0] headerCell] setAlignment:NSCenterTextAlignment];
 }
 
 - (void)dealloc
@@ -40,31 +56,6 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	[super dealloc];
-}
-
-- (NSArray *)sortDescriptors
-{
-	NSMutableArray	*sortDescriptors = [NSMutableArray array];
-
-	NSString *identifier = [selectedColumn identifier];
-
-	if ([identifier isEqualToString:@"Date"]) {
-		[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:(NSString *)kMDItemLastUsedDate ascending:!sortDirection] autorelease]];
-		[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"com_adiumX_chatDestination" ascending:sortDirection] autorelease]];
-
-	} else {
-		if ([identifier isEqualToString:@"To"]) {
-			[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"com_adiumX_chatDestination" ascending:sortDirection] autorelease]];
-			
-		} else if ([identifier isEqualToString:@"From"]) {
-			[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"com_adiumX_chatSource" ascending:sortDirection] autorelease]];
-			
-		}
-
-		[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:(NSString *)kMDItemLastUsedDate ascending:sortDirection] autorelease]];
-	}
-
-	return sortDescriptors;
 }
 
 - (void)stopSearching
@@ -119,41 +110,66 @@
 
 		enumerator = [searchStrings objectEnumerator];
 		while ((searchString = [enumerator nextObject])) {
-			[predicates addObject:[NSClassFromString(@"NSPredicate") predicateWithFormat:@"%K like[c] %@", key, searchString]];
+			[predicates addObject:[NSPredicateClass predicateWithFormat:@"%K like[c] %@", key, searchString]];
 		}
 		
-		predicate = [NSClassFromString(@"NSCompoundPredicate") orPredicateWithSubpredicates:predicates];
+		predicate = [NSCompoundPredicateClass orPredicateWithSubpredicates:predicates];
 	} else {
 		searchString = [searchStrings anyObject];
-		predicate = [NSClassFromString(@"NSPredicate") predicateWithFormat:@"%K like[c] %@", key, searchString];
+		predicate = [NSPredicateClass predicateWithFormat:@"%K like[c] %@", key, searchString];
 	}
 	
 	return predicate;
 }
 
+- (NSSet *)selectedItemsInTable:(NSTableView *)tableView basedOnArray:(NSArray *)inArray
+{	
+	NSMutableSet 	*itemSet = nil;
+	id 				item;
+	
+	//Apple wants us to do some pretty crazy stuff for selections in 10.3
+	NSIndexSet *indices = [tableView selectedRowIndexes];
+	unsigned int bufSize = [indices count];
+	unsigned int *buf = malloc(bufSize + sizeof(unsigned int));
+	unsigned int i;
+	
+	//If the first item ("All") is selected, don't return any items, which means no filtering.
+	if ([indices firstIndex] != 0) {
+		itemSet = [NSMutableSet set];
+		
+		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
+		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
+		
+		for (i = 0; i != bufSize; i++) {
+			//-1 because the first item in the table is the "All" item
+			if ((item = [inArray objectAtIndex:(buf[i]-1)])) {
+				[itemSet addObject:item];
+			}
+		}
+	}
+	
+	free(buf);
+
+	return itemSet;
+}
 
 //Begin the current search
 - (void)startSearchingClearingCurrentResults:(BOOL)clearCurrentResults
 {
 	NSMutableArray	*predicatesArray = [NSMutableArray array];
 
-	[self stopSearching];
+	[super startSearchingClearingCurrentResults:clearCurrentResults];
 
-	currentQuery = [[NSClassFromString(@"NSMetadataQuery") alloc] init];
-	
-	//Once all searches have exited, we can start a new one
-	if (clearCurrentResults) {
-		[resultsLock lock];
-		[selectedLogArray release]; selectedLogArray = [[NSMutableArray alloc] init];
-		[resultsLock unlock];
-	}
-	
+	currentQuery = [[NSMetadataQueryClass alloc] init];
+
 	//Only search within our log folder
 	//XXX need to escape ? and * if they are typed
 	[currentQuery setSearchScopes:[NSArray arrayWithObject:[NSURL fileURLWithPath:[AILoggerPlugin logBasePath]]]];
+
 	NSPredicate *queryPredicate;
 
-	[predicatesArray addObject:[NSClassFromString(@"NSPredicate") predicateWithFormat:@"((kMDItemContentType = \"com.adiumx.log\") or (kMDItemContentType = \"com.adiumx.htmllog\"))"]];
+	//Add the basic predicate for matching the file type
+	[predicatesArray addObject:[NSPredicateClass predicateWithFormat:@"((kMDItemContentType = \"com.adiumx.log\") or (kMDItemContentType = \"com.adiumx.htmllog\"))"]];
 
 	switch (searchMode) {
 		case LOG_SEARCH_FROM:
@@ -172,27 +188,33 @@
 		{
 			NSDate *searchStringDate = [NSDate dateWithNaturalLanguageString:activeSearchString];
 
-			[predicatesArray addObject:[NSClassFromString(@"NSPredicate") predicateWithFormat:@"kMDItemLastUsedDate like[c] %@",[NSString stringWithFormat:@"*%@*",[searchStringDate descriptionWithCalendarFormat:@"%y-%m-%d"
-																																											   timeZone:nil 
-																																												  locale:nil]]]];
+			[predicatesArray addObject:[NSPredicateClass predicateWithFormat:@"kMDItemLastUsedDate like[c] %@",[NSString stringWithFormat:@"*%@*",[searchStringDate descriptionWithCalendarFormat:@"%y-%m-%d"
+																																														 timezone:nil
+																																														   locale:nil]]]];
 			break;
 		}
 		case LOG_SEARCH_CONTENT:
 			if ([activeSearchString length]) {
-				[predicatesArray addObject:[NSClassFromString(@"NSPredicate") predicateWithFormat:@"kMDItemTextContent like[c] %@",[NSString stringWithFormat:@"*%@*",activeSearchString]]];
+				[predicatesArray addObject:[NSPredicateClass predicateWithFormat:@"kMDItemTextContent like[c] %@",[NSString stringWithFormat:@"*%@*",activeSearchString]]];
 			}
 			break;
 	}
 
-	
-	//Note: filterForContactName an filterForAccountName are 'safe filename strings' - they shouldn't be once we're using data from outside the file name (e.g. an xml log)
-	if (filterForAccountName) {
-		[predicatesArray addObject:[self predicateForContactString:filterForAccountName key:@"com_adiumX_chatSource"]];
+	NSEnumerator *enumerator;
+	NSString	 *item;
+
+	//Restrict to exact (case insensitive) matches on any selected accounts
+	enumerator = [[self selectedItemsInTable:tableView_fromAccounts basedOnArray:fromArray] objectEnumerator];
+	while ((item = [enumerator nextObject])) {
+		[predicatesArray addObject:[NSPredicateClass predicateWithFormat:@"%K like[c] %@", @"com_adiumX_chatSource", item]];
 	}
-	
-	if (filterForContactName) {
-		[predicatesArray addObject:[self predicateForContactString:filterForContactName key:@"com_adiumX_chatDestination"]];
+
+	//Restrict to exact (case insensitive) matches on any selected contacts
+	enumerator = [[self selectedItemsInTable:tableView_toContacts basedOnArray:toArray] objectEnumerator];
+	while ((item = [enumerator nextObject])) {
+		[predicatesArray addObject:[NSPredicateClass predicateWithFormat:@"%K like[c] %@", @"com_adiumX_chatDestination", item]];
 	}
+
 	//Update the table periodically while the logs load.
 	[refreshResultsTimer invalidate]; [refreshResultsTimer release];
 	
@@ -202,8 +224,8 @@
 		NSLog(@"Predicate is %@",queryPredicate);
 		[currentQuery setPredicate:queryPredicate];
 		
-		//Presort the results...
-		[currentQuery setSortDescriptors:[self sortDescriptors]];
+		//Presort the results... (?)
+		//[currentQuery setSortDescriptors:[self sortDescriptors]];
 		
 		lastResult = 0;
 		[currentQuery startQuery];
@@ -215,8 +237,6 @@
 															   repeats:YES] retain];
 	} else {
 		//Just looking for any log...
-		//		queryPredicate = contentTypePredicate;
-
 		[NSThread detachNewThreadSelector:@selector(loadAllLogs:)
 								 toTarget:self
 							   withObject:[NSNumber numberWithInt:activeSearchID]];		
@@ -243,17 +263,9 @@
 	int searchID = [inSearchID intValue];
 
 	//Process the results
-	NSLog(@"Query 0 is %@:",[myQuery resultAtIndex:0]);
-
-	/*
-	[resultsLock lock];
-	[selectedLogArray removeAllObjects];
-	[resultsLock unlock];
-	*/
 
 	unsigned count = [myQuery resultCount];
 	int i = 0;
-//	while ((lastResult < count) && (searchID == activeSearchID)) {
 	while ((i < count) && (searchID == activeSearchID)) {
 		NSString		*path = [[myQuery resultAtIndex:/*lastResult*/i++] valueForAttribute:(NSString *)kMDItemPath];
 		//Path is a full path; we want everything after the base path since the old logging system used relative paths
@@ -370,19 +382,157 @@
 {
 	[self refreshResults];
 	[self resortLogs];
+	[self updateProgressDisplay];
 }
 
 //Faster, manual loading of all logs...
 - (void)loadAllLogs:(NSString *)inSearchID
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	[self _logFilter:nil searchID:[inSearchID intValue] mode:LOG_SEARCH_TO];
+	
+	NSEnumerator        *fromEnumerator, *toEnumerator, *logEnumerator;
+    AILogToGroup        *toGroup;
+    AILogFromGroup      *fromGroup;
+    AIChatLog			*theLog;
+    UInt32				lastUpdate = TickCount();
+    int					searchID = [inSearchID intValue];
+	
+    //Walk through every 'from' group
+    fromEnumerator = [logFromGroupDict objectEnumerator];
+    while ((fromGroup = [fromEnumerator nextObject]) && (searchID == activeSearchID)) {		
+		/*
+		 When searching in LOG_SEARCH_FROM, we only proceed into matching groups
+		 For all other search modes, we always proceed here so long as either:
+		 a) We are not filtering for the account name or
+		 b) The account name matches
+		 */
+		/*
+		if ((!filterForAccountName || ([[fromGroup fromUID] caseInsensitiveCompare:filterForAccountName] == NSOrderedSame)) &&
+			((mode != LOG_SEARCH_FROM) ||
+			 (!searchString) || 
+			 ([[fromGroup fromUID] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound))) {
+		*/	
+			//Walk through every 'to' group
+			toEnumerator = [[fromGroup toGroupArray] objectEnumerator];
+			while ((toGroup = [toEnumerator nextObject]) && (searchID == activeSearchID)) {
+				
+				/*
+				 When searching in LOG_SEARCH_TO, we only proceed into matching groups
+				 For all other search modes, we always proceed here so long as either:
+				 a) We are not filtering for the contact name or
+				 b) The contact name matches
+				 */
+				/*
+				if ((!filterForContactName || ([[toGroup to] caseInsensitiveCompare:filterForContactName] == NSOrderedSame)) &&
+					((mode != LOG_SEARCH_TO) ||
+					 (!searchString) || 
+					 ([[toGroup to] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound))) {
+				*/	
+					//Walk through every log
+					[resultsLock lock];
 
+					logEnumerator = [toGroup logEnumerator];
+					while ((theLog = [logEnumerator nextObject]) && (searchID == activeSearchID)) {
+						
+						//When searching in LOG_SEARCH_DATE, we must have matching dates
+						//For all other search modes, we always proceed here
+						if (/*(mode != LOG_SEARCH_DATE) ||
+							(!searchString) ||
+							(searchStringDate && [theLog isFromSameDayAsDate:searchStringDate])*/ TRUE) {
+							
+							//Add the log
+							[selectedLogArray addObject:theLog];
+							
+							//Update our status
+							if (lastUpdate == 0 || TickCount() > lastUpdate + LOG_SEARCH_STATUS_INTERVAL) {
+								//[self updateProgressDisplay];
+								lastUpdate = TickCount();
+							}
+						}
+					}
+					[resultsLock unlock];
+				}
+    }
+	
 	[self performSelectorOnMainThread:@selector(searchComplete)
 						   withObject:nil
 						waitUntilDone:NO];
 	[pool release];
 }
 
+#pragma mark Browser table views delegate
+
+- (void)determineToAndFromGroupDicts
+{
+	[super determineToAndFromGroupDicts];
+	
+	[tableView_fromAccounts reloadData];
+	[tableView_toContacts reloadData];
+	[tableView_dates reloadData];
+}
+
+- (int)numberOfRowsInTableView:(NSTableView *)tableView
+{
+	if (tableView == tableView_fromAccounts) {
+		return ([fromArray count] + 1);
+	} else if (tableView == tableView_toContacts) {
+		return ([toArray count] + 1);
+		
+	} else if (tableView == tableView_dates) {
+		return 0;
+	} else {
+		return [super numberOfRowsInTableView:tableView];
+	}
+}
+
+#define ALL AILocalizedString(@"All", nil)
+
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+	if (tableView == tableView_fromAccounts) {
+		if (row == 0) {
+			return ALL;
+		} else {
+			return [fromArray objectAtIndex:row-1];
+		}
+		
+	} else if (tableView == tableView_toContacts) {
+		if (row == 0) {
+			return ALL;
+		} else {
+			return [toArray objectAtIndex:row-1];
+		}
+		
+	} else if (tableView == tableView_dates) {
+		if (row == 0) {
+			return ALL;
+		} else {
+			return @"";
+		}
+		
+	} else {
+		return [super tableView:tableView objectValueForTableColumn:tableColumn row:row];
+	}
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)notification
+{
+	NSTableView	*tableView = [notification object];
+
+	if ((tableView == tableView_fromAccounts) ||
+		(tableView == tableView_toContacts) ||
+		(tableView == tableView_dates)) {
+		[self startSearchingClearingCurrentResults:YES];
+
+	} else {
+		[super tableViewSelectionDidChange:notification];
+	}
+}
+
+#pragma mark Toolbar
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
+{
+    return [NSArray arrayWithObjects:@"delete", NSToolbarFlexibleSpaceItemIdentifier, @"search", nil];
+}
 
 @end

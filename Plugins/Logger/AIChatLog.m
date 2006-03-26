@@ -20,7 +20,9 @@
 
 @implementation AIChatLog
 
-- (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass date:(NSDate *)inDate
+static NSCalendarDate *dateFromFileName(NSString *fileName);
+
+- (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass
 {
     if ((self = [super init]))
 	{
@@ -28,7 +30,6 @@
 		from = [inFrom retain];
 		to = [inTo retain];
 		serviceClass = [inServiceClass retain];
-		date = [inDate retain];
 		rankingPercentage = 0;
 	}
 		
@@ -59,6 +60,24 @@
 	return serviceClass;
 }
 - (NSDate *)date{
+	//Determine the date of this log lazily
+	if (!date) {
+		date = dateFromFileName([path lastPathComponent]);
+
+		if (abs([date timeIntervalSinceDate:[NSDate date]]) <= 86400) {
+			NSDictionary	*fileAttributes = [[NSFileManager defaultManager] fileAttributesAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path]
+																					  traverseLink:NO];
+			NSDate			*fileDate = [fileAttributes fileModificationDate];
+			
+			//If the date is today, and the file mod date is also today (so can be trusted), use it for finer timing granularity
+			if (fileDate && abs([date timeIntervalSinceDate:fileDate]) <= 86400) {
+				date = fileDate;
+			}
+		}
+		
+		[date retain];
+	}
+		
     return date;
 }
 
@@ -200,6 +219,89 @@
     }
 	
 	return result;
+}
+
+#pragma mark Date utilities
+
+//Scan an Adium date string, supahfast C style
+static BOOL scandate(const char *sample, unsigned long *outyear,
+					 unsigned long *outmonth, unsigned long *outdate)
+{
+	BOOL success = YES;
+	unsigned long component;
+    //read three numbers, starting after:
+	
+	//a space...
+	while (*sample != ' ') {
+    	if (!*sample) {
+    		success = NO;
+    		goto fail;
+		} else {
+			++sample;
+		}
+    }
+	
+	//...followed by a (
+	while (*sample != '(') {
+    	if (!*sample) {
+    		success = NO;
+    		goto fail;
+		} else {
+			++sample;
+		}
+    }
+	
+	//current character is a '(' now, so skip over it.
+    ++sample; //start with the next character
+	
+    /*get the year*/ {
+		while (*sample && (*sample < '0' || *sample > '9')) ++sample;
+		if (!*sample) {
+			success = NO;
+			goto fail;
+		}
+		component = strtoul(sample, (char **)&sample, 10);
+		if (outyear) *outyear = component;
+    }
+    
+    /*get the month*/ {
+		while (*sample && (*sample < '0' || *sample > '9')) ++sample;
+		if (!*sample) {
+			success = NO;
+			goto fail;
+		}
+		component = strtoul(sample, (char **)&sample, 10);
+		if (outmonth) *outmonth = component;
+    }
+    
+    /*get the date*/ {
+		while (*sample && (*sample < '0' || *sample > '9')) ++sample;
+		if (!*sample) {
+			success = NO;
+			goto fail;
+		}
+		component = strtoul(sample, (char **)&sample, 10);
+		if (outdate) *outdate = component;
+    }
+	
+fail:
+		return success;
+}
+
+//Given an Adium log file name, return an NSCalendarDate with year, month, and day specified
+static NSCalendarDate *dateFromFileName(NSString *fileName)
+{
+	unsigned long   year = 0;
+	unsigned long   month = 0;
+	unsigned long   day = 0;
+	
+	if (scandate([fileName UTF8String], &year, &month, &day)) {
+		if (year && month && day) {
+			return [NSCalendarDate dateWithYear:year month:month day:day hour:0 minute:0 second:0 timeZone:[NSTimeZone defaultTimeZone]];
+		}
+	}
+	
+	return nil;
 }
 
 @end

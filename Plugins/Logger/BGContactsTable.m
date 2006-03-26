@@ -48,8 +48,8 @@
 	[[popup_filterType menu] removeItemAtIndex:0];
 	
 	[[adium notificationCenter] addObserver:self
-								   selector:@selector(logViewerDidCreateLogArrays:)
-									   name:LOG_VIEWER_DID_CREATE_LOG_ARRAYS
+								   selector:@selector(logViewerDidUpdateLogArrays:)
+									   name:LOG_VIEWER_DID_UPDATE_LOG_ARRAYS
 									 object:nil];
 }
 
@@ -234,7 +234,7 @@
 	return [_displayNameArray objectAtIndex:index];
 }
 
-- (void)logViewerDidCreateLogArrays:(NSNotification *)aNotification
+- (void)logViewerDidUpdateLogArrays:(NSNotification *)aNotification
 {
 	[_displayNameArray release]; _displayNameArray = nil;
 	[table_filterList setNeedsDisplay:YES];
