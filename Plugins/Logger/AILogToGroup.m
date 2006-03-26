@@ -18,9 +18,6 @@
 #import "AILogToGroup.h"
 #import "AIChatLog.h"
 
-static BOOL scandate(const char *sample, unsigned long *outyear,
-	unsigned long *outmonth, unsigned long *outdate);
-
 @interface AILogToGroup (PRIVATE)
 - (NSDictionary *)logDict;
 - (AIChatLog *)_logAtRelativeLogPath:(NSString *)relativeLogPath fileName:(NSString *)fileName;
@@ -83,8 +80,8 @@ static BOOL scandate(const char *sample, unsigned long *outyear,
 {
     if (!logDict) {
 		NSEnumerator    *enumerator;
-		NSString	*fileName;
-		NSString	*fullPath;
+		NSString		*fileName;
+		NSString		*logBasePath, *fullPath;
 		
 		//
 		logDict = [[NSMutableDictionary alloc] init];
@@ -95,64 +92,32 @@ static BOOL scandate(const char *sample, unsigned long *outyear,
 			[partialLogDict release]; partialLogDict = nil;
 		}
 		
-		fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path];
+		logBasePath = [AILoggerPlugin logBasePath];
+		fullPath = [logBasePath stringByAppendingPathComponent:path];
 		enumerator = [[defaultManager directoryContentsAtPath:fullPath] objectEnumerator];
-		while ((fileName = [enumerator nextObject])) {
-			NSString		*relativeLogPath = [path stringByAppendingPathComponent:fileName];
-			
-			if (![logDict objectForKey:relativeLogPath]) {
-				AIChatLog	*theLog;
-				
-				if ((theLog = [self _logAtRelativeLogPath:relativeLogPath fileName:fileName])) {
+		while ((fileName = [enumerator nextObject])) {			
+			if (![fileName hasPrefix:@"."]) {
+				NSString	*relativeLogPath = [path stringByAppendingPathComponent:fileName];
+				BOOL		isDir;
+
+				if (![logDict objectForKey:relativeLogPath] &&
+					([defaultManager fileExistsAtPath:[logBasePath stringByAppendingPathComponent:relativeLogPath] isDirectory:&isDir] &&
+					 !isDir)) {
+					AIChatLog	*theLog;
+					
+					theLog = [[AIChatLog alloc] initWithPath:relativeLogPath
+														from:from
+														  to:to
+												serviceClass:serviceClass];
 					[logDict setObject:theLog
 								forKey:relativeLogPath];
+					[theLog release];
 				}
 			}
 		}
     }
 	
     return logDict;
-}
-
-- (AIChatLog *)_logAtRelativeLogPath:(NSString *)relativeLogPath fileName:(NSString *)fileName
-{
-	NSDate			*date;
-	AIChatLog		*theLog = nil;
-	NSDictionary	*fileAttributes = [defaultManager fileAttributesAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:relativeLogPath]
-															  traverseLink:NO];
-
-	//If we are given a filename and it's invalid, abort
-	if (fileName && (([fileName characterAtIndex:0] == '.') ||
-					!([[fileAttributes fileType] isEqualToString:NSFileTypeRegular]))) {
-		return nil;
-	}
-
-	//Create & add the log
-	if ((date = [fileAttributes fileModificationDate])) {
-		NSDate	*fileNameDate = [[self class] dateFromFileName:(fileName ? fileName : [relativeLogPath lastPathComponent])];
-		
-		NSTimeInterval dateTimeIntervalSinceFileNameDate = [date timeIntervalSinceDate:fileNameDate];
-
-		if (dateTimeIntervalSinceFileNameDate < 0) {
-			//Date is earlier than the filename date; simply use the fileNameDate. 
-			//This is clearly a misrepresentation; the date on which the log was written according to Adium
-			//will be more accurate.
-			date = fileNameDate;
-		} else if (dateTimeIntervalSinceFileNameDate >= 86400) {
-			//Date is more than a day after the filename date, which will always start at 00:00:00
-			//Set up this date as being 11:59:59 on the filename date, so it is later than other logs on that date
-			//but still shows the correct start date
-			date = [NSDate dateWithTimeIntervalSinceReferenceDate:([fileNameDate timeIntervalSinceReferenceDate] + 86399)];
-		}
-
-		theLog = [[[AIChatLog alloc] initWithPath:relativeLogPath
-											 from:from
-											   to:to
-									 serviceClass:serviceClass
-											 date:date] autorelease];
-	}
-	
-	return theLog;
 }
 
 - (AIChatLog *)logAtPath:(NSString *)inPath
@@ -168,95 +133,19 @@ static BOOL scandate(const char *sample, unsigned long *outyear,
 		if (!partialLogDict) partialLogDict = [[NSMutableDictionary alloc] init];
 		
 		if (!(theLog = [partialLogDict objectForKey:inPath])) {
-			theLog = [self _logAtRelativeLogPath:inPath fileName:nil];
-			if (theLog) {
-				[partialLogDict setObject:theLog forKey:inPath];
-			}
+			AIChatLog	*theLog;
+			
+			theLog = [[AIChatLog alloc] initWithPath:inPath
+												from:from
+												  to:to
+										serviceClass:serviceClass];
+			[partialLogDict setObject:theLog
+							   forKey:inPath];
+			[theLog release];
 		}
 	}
 
 	return theLog;
 }
 
-//Given an Adium log file name, return an NSCalendarDate with year, month, and day specified
-+ (NSCalendarDate *)dateFromFileName:(NSString *)fileName
-{
-	unsigned long   year = 0;
-	unsigned long   month = 0;
-	unsigned long   day = 0;
-	
-	if (scandate([fileName UTF8String], &year, &month, &day)) {
-		if (year && month && day) {
-			return [NSCalendarDate dateWithYear:year month:month day:day hour:0 minute:0 second:0 timeZone:[NSTimeZone defaultTimeZone]];
-		}
-	}
-
-	return nil;
-}
-
 @end
-
-//Scan an Adium date string, supahfast C style
-static BOOL scandate(const char *sample, unsigned long *outyear,
-	unsigned long *outmonth, unsigned long *outdate)
-{
-	BOOL success = YES;
-	unsigned long component;
-    //read three numbers, starting after:
-	
-	//a space...
-	while (*sample != ' ') {
-    	if (!*sample) {
-    		success = NO;
-    		goto fail;
-		} else {
-			++sample;
-		}
-    }
-
-	//...followed by a (
-	while (*sample != '(') {
-    	if (!*sample) {
-    		success = NO;
-    		goto fail;
-		} else {
-			++sample;
-		}
-    }
-
-	//current character is a '(' now, so skip over it.
-    ++sample; //start with the next character
-
-    /*get the year*/ {
-		while (*sample && (*sample < '0' || *sample > '9')) ++sample;
-		if (!*sample) {
-			success = NO;
-			goto fail;
-		}
-		component = strtoul(sample, (char **)&sample, 10);
-		if (outyear) *outyear = component;
-    }
-    
-    /*get the month*/ {
-		while (*sample && (*sample < '0' || *sample > '9')) ++sample;
-		if (!*sample) {
-			success = NO;
-			goto fail;
-		}
-		component = strtoul(sample, (char **)&sample, 10);
-		if (outmonth) *outmonth = component;
-    }
-    
-    /*get the date*/ {
-		while (*sample && (*sample < '0' || *sample > '9')) ++sample;
-		if (!*sample) {
-			success = NO;
-			goto fail;
-		}
-		component = strtoul(sample, (char **)&sample, 10);
-		if (outdate) *outdate = component;
-    }
-
-fail:
-	return success;
-}
