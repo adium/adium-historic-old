@@ -108,46 +108,7 @@
  */
 + (NSToolbarItem *)toolbarItemFromDictionary:(NSDictionary *)theDict withIdentifier:(NSString *)itemIdentifier
 {
-    /* We create and autorelease a new NSToolbarItem (or a subclass of one, hence [item class])
-	 * and then go through the process of setting up its attributes from the master toolbar item matching that identifier
-	 * in our dictionary of items.
-	 */
-    NSToolbarItem *item;
-	NSToolbarItem *newItem;
-	
-	item = [theDict objectForKey:itemIdentifier];
-	newItem = [[[[item class] alloc] initWithItemIdentifier:itemIdentifier] autorelease];
-
-    [newItem setLabel:[item label]];
-    [newItem setPaletteLabel:[item paletteLabel]];
-    if ([item view] != NULL) {
-		//For a toolbar only used in one window at a time, it's alright for a view to not allow copying
-		if ([[item view] respondsToSelector:@selector(copyWithZone:)]) {
-			[newItem setView:[[[item view] copy] autorelease]];
-		} else {
-			[newItem setView:[item view]];
-		}
-    } else {
-        [newItem setImage:[item image]];
-    }
-	
-    [newItem setToolTip:[item toolTip]];
-    [newItem setTarget:[item target]];
-    [newItem setAction:[item action]];
-    [newItem setMenuFormRepresentation:[item menuFormRepresentation]];
-	
-    //If we have a custom view, we *have* to set the min/max size - otherwise, it'll default to 0,0 and the custom
-    //view won't show up at all!  This doesn't affect toolbar items with images, however.
-    if ([newItem view] != NULL) {
-        [newItem setMinSize:[item minSize]];
-        [newItem setMaxSize:[item maxSize]];
-		
-		if ([[newItem view] respondsToSelector:@selector(setToolbarItem:)]) {
-			[[newItem view] setToolbarItem:newItem];
-		}
-    }
-
-    return newItem;
+	return [[[theDict objectForKey:itemIdentifier] copy] autorelease];
 }
 
 @end
