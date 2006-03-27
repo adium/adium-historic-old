@@ -84,19 +84,14 @@ Class LogViewerWindowControllerClass = NULL;
 //
 - (void)installPlugin
 {
+	//Don't need log indexing on Tiger and later since we use Spotlight
+	logIndexingEnabled = ![NSApp isOnTigerOrBetter];
 	LogViewerWindowControllerClass = ([NSApp isOnTigerOrBetter] ?
 									  [AIMDLogViewerWindowController class] :
 									  [AILogViewerWindowController class]);
+
     //Init
 	observingContent = NO;
-	index_Content = nil;
-	stopIndexingThreads = NO;
-	suspendDirtyArraySave = NO;
-	logIndexingEnabled = NO;
-	dirtyLogArray = nil;
-	indexingThreadLock = [[NSLock alloc] init];
-	dirtyLogLock = [[NSLock alloc] init];
-	logAccessLock = [[NSLock alloc] init];
 
 	AIPreferenceController *preferenceController = [adium preferenceController];
 
@@ -128,10 +123,25 @@ Class LogViewerWindowControllerClass = NULL;
 	                                                       menu:nil];
 	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 
-	//Init index searching
-	[self initLogIndexing];
+	if (logIndexingEnabled) {
+		dirtyLogArray = nil;
+		index_Content = nil;
+		stopIndexingThreads = NO;
+		suspendDirtyArraySave = NO;		
+		indexingThreadLock = [[NSLock alloc] init];
+		dirtyLogLock = [[NSLock alloc] init];
+		logAccessLock = [[NSLock alloc] init];
+
+		//Init index searching
+		[self initLogIndexing];
+	}
 	
 	[self upgradeLogExtensions];
+	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(showLogNotification:)
+									   name:Adium_ShowLogAtPath
+									 object:nil];
 }
 
 - (void)uninstallPlugin
@@ -273,6 +283,16 @@ Class LogViewerWindowControllerClass = NULL;
 												 (AIListContact *)selectedObject : 
 												 nil)  
 										 plugin:self];
+}
+
+- (void)showLogViewerForLogAtPath:(NSString *)inPath
+{
+	[LogViewerWindowControllerClass openLogAtPath:inPath plugin:self];
+}
+
+- (void)showLogNotification:(NSNotification *)inNotification
+{
+	[self showLogViewerForLogAtPath:[inNotification object]];
 }
 
 /*!
@@ -443,32 +463,108 @@ Class LogViewerWindowControllerClass = NULL;
 }
 
 
+#pragma mark Upgrade code
+- (void)upgradeLogExtensions
+{
+	if (![[[adium preferenceController] preferenceForKey:@"Log Extensions Updated" group:PREF_GROUP_LOGGING] boolValue]) {
+		/* This could all be a simple NSDirectEnumerator call on basePath, but we wouldn't be able to show progress,
+		* and this could take a bit.
+		*/
+		NSString		*accountBasePath = [AILoggerPlugin logBasePath];
+		NSFileManager	*defaultManager = [NSFileManager defaultManager];
+		NSArray			*accountFolders = [defaultManager directoryContentsAtPath:accountBasePath];
+		NSEnumerator	*accountFolderEnumerator = [accountFolders objectEnumerator];
+		NSString		*accountFolderName;
+		
+		NSMutableSet	*logBasePaths = [NSMutableSet set];
+		while ((accountFolderName = [accountFolderEnumerator nextObject])) {
+			NSString		*contactBasePath = [accountBasePath stringByAppendingPathComponent:accountFolderName];
+			NSArray			*contactFolders = [defaultManager directoryContentsAtPath:contactBasePath];
+			
+			NSEnumerator	*contactFolderEnumerator = [contactFolders objectEnumerator];
+			NSString		*contactFolderName;
+			
+			while ((contactFolderName = [contactFolderEnumerator nextObject])) {
+				NSString			  *logBasePath = [contactBasePath stringByAppendingPathComponent:contactFolderName];
+				[logBasePaths addObject:logBasePath];
+			}
+		}
+		
+		unsigned		contactsToProcess = [logBasePaths count];
+		unsigned		processed = 0;
+		
+		if (contactsToProcess) {
+			NSEnumerator	*logBasePathEnumerator = [logBasePaths objectEnumerator];
+			NSString		*logBasePath;
+			while ((logBasePath = [logBasePathEnumerator nextObject])) {
+				NSDirectoryEnumerator *enumerator = [defaultManager enumeratorAtPath:logBasePath];
+				NSString	*file;
+				
+				while ((file = [enumerator nextObject])) {
+					if (([[file pathExtension] isEqualToString:@"html"]) ||
+						([[file pathExtension] isEqualToString:@"adiumLog"]) ||
+						(([[file pathExtension] isEqualToString:@"bak"]) && ([file hasSuffix:@".html.bak"] || 
+																			 [file hasSuffix:@".adiumLog.bak"]))) {
+						NSString *fullFile = [logBasePath stringByAppendingPathComponent:file];
+						NSString *newFile = [[fullFile stringByDeletingPathExtension] stringByAppendingPathExtension:@"AdiumHTMLLog"];
+						
+						[defaultManager movePath:fullFile
+										  toPath:newFile
+										 handler:self];
+					}
+				}
+				
+				//XXX to do - update a progress bar displayed on screen
+				processed++;
+				NSLog(@"%f%% complete...", ((processed*100.0)/contactsToProcess));
+			}
+		}
+		
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
+											 forKey:@"Log Extensions Updated"
+											  group:PREF_GROUP_LOGGING];
+	}
+}
+
+- (BOOL)fileManager:(NSFileManager *)manager shouldProceedAfterError:(NSDictionary *)errorInfo
+{
+	NSLog(@"Error: %@",errorInfo);
+	
+	return NO;
+}
+
 //Log Indexing ---------------------------------------------------------------------------------------------------------
-#pragma mark Log Indexing
+#pragma mark Log Indexing - 10.3 only
+/***** Everything below this point is related to log index generation and access; it is only used in 10.3 ****/
+
 /* For the log content searching, we are required to re-index a log whenever it changes.  The solution below to
-this problem is along the lines of:
-- Keep an array of logs that need to be re-indexed
-- Whenever a log is changed, add it to this array
-- When the log viewer is opened, re-index all the logs in the array
+ * this problem is along the lines of:
+ *		- Keep an array of logs that need to be re-indexed
+ *		- Whenever a log is changed, add it to this array
+ *		- When the log viewer is opened, re-index all the logs in the array
 */
 //Load the list of logs that need re-indexing
 - (void)initLogIndexing
 {
-    logIndexingEnabled = YES;
 	[self loadDirtyLogArray];
 }
 
-//Prepare the log index for searching.  (Must call before attempting to use the logSearchIndex)
+/*
+ * @brief Prepare the log index for searching.
+ *
+ * Must call before attempting to use the logSearchIndex.
+ * Only used in 10.3 -- 10.4 and later's AIMDLogViewerWindowController doesn't need the logSearchIndex
+ */
 - (void)prepareLogContentSearching
 {
-    //If we're going to need to re-index all our logs from scratch, it will make
-    //things faster if we start with a fresh log index as well.
-    if (!dirtyLogArray) {
-		[self resetLogIndex];
-    }
-    
     //Load the index and start indexing to make it current
     if (logIndexingEnabled) {
+		//If we're going to need to re-index all our logs from scratch, it will make
+		//things faster if we start with a fresh log index as well.
+		if (!dirtyLogArray) {
+			[self resetLogIndex];
+		}
+		
 		[self loadLogIndex];
 		stopIndexingThreads = NO;
 		if (!dirtyLogArray) {
@@ -810,75 +906,6 @@ this problem is along the lines of:
 	return logAccessLock;
 }
 
-#pragma mark Upgrade code
-- (void)upgradeLogExtensions
-{
-	if (![[[adium preferenceController] preferenceForKey:@"Log Extensions Updated" group:PREF_GROUP_LOGGING] boolValue]) {
-		/* This could all be a simple NSDirectEnumerator call on basePath, but we wouldn't be able to show progress,
-		 * and this could take a bit.
-		 */
-		NSString		*accountBasePath = [AILoggerPlugin logBasePath];
-		NSFileManager	*defaultManager = [NSFileManager defaultManager];
-		NSArray			*accountFolders = [defaultManager directoryContentsAtPath:accountBasePath];
-		NSEnumerator	*accountFolderEnumerator = [accountFolders objectEnumerator];
-		NSString		*accountFolderName;
-		
-		NSMutableSet	*logBasePaths = [NSMutableSet set];
-		while ((accountFolderName = [accountFolderEnumerator nextObject])) {
-			NSString		*contactBasePath = [accountBasePath stringByAppendingPathComponent:accountFolderName];
-			NSArray			*contactFolders = [defaultManager directoryContentsAtPath:contactBasePath];
-			
-			NSEnumerator	*contactFolderEnumerator = [contactFolders objectEnumerator];
-			NSString		*contactFolderName;
-			
-			while ((contactFolderName = [contactFolderEnumerator nextObject])) {
-				NSString			  *logBasePath = [contactBasePath stringByAppendingPathComponent:contactFolderName];
-				[logBasePaths addObject:logBasePath];
-			}
-		}
-		
-		unsigned		contactsToProcess = [logBasePaths count];
-		unsigned		processed = 0;
-
-		if (contactsToProcess) {
-			NSEnumerator	*logBasePathEnumerator = [logBasePaths objectEnumerator];
-			NSString		*logBasePath;
-			while ((logBasePath = [logBasePathEnumerator nextObject])) {
-				NSDirectoryEnumerator *enumerator = [defaultManager enumeratorAtPath:logBasePath];
-				NSString	*file;
-				
-				while ((file = [enumerator nextObject])) {
-					if (([[file pathExtension] isEqualToString:@"html"]) ||
-						([[file pathExtension] isEqualToString:@"adiumLog"]) ||
-						(([[file pathExtension] isEqualToString:@"bak"]) && ([file hasSuffix:@".html.bak"] || 
-																			 [file hasSuffix:@".adiumLog.bak"]))) {
-						NSString *fullFile = [logBasePath stringByAppendingPathComponent:file];
-						NSString *newFile = [[fullFile stringByDeletingPathExtension] stringByAppendingPathExtension:@"AdiumHTMLLog"];
-						
-						[defaultManager movePath:fullFile
-										  toPath:newFile
-										 handler:self];
-					}
-				}
-				
-				//XXX to do - update a progress bar displayed on screen
-				processed++;
-				NSLog(@"%f%% complete...", ((processed*100.0)/contactsToProcess));
-			}
-		}
-
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
-											 forKey:@"Log Extensions Updated"
-											  group:PREF_GROUP_LOGGING];
-	}
-}
-
-- (BOOL)fileManager:(NSFileManager *)manager shouldProceedAfterError:(NSDictionary *)errorInfo
-{
-	NSLog(@"Error: %@",errorInfo);
-	
-	return NO;
-}
 @end
 
 

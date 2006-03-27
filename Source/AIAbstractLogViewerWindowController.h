@@ -46,7 +46,7 @@ typedef enum {
     IBOutlet    NSButton                    *button_deleteLogs;
 
 	//Array of selected / displayed logs.  (Locked access)
-    NSMutableArray		*selectedLogArray;		//Array of filtered/resulting logs
+    NSMutableArray		*currentSearchResults;		//Array of filtered/resulting logs
     NSLock				*resultsLock;			//Lock before touching the array
     AIChatLog			*displayedLog;			//Currently selected/displayed log	
 
@@ -55,7 +55,7 @@ typedef enum {
 	IBOutlet    NSProgressIndicator         *progressIndicator;
     IBOutlet    NSTextField                 *textField_progress;
 
-	IBOutlet    id                          searchField_logs;       //May be an NSSearchField or an NSTextField
+	NSSearchField		*searchField_logs;
 	
 	NSTableColumn		*selectedColumn;		//Selected/active sort column
 	
@@ -97,6 +97,7 @@ typedef enum {
 
 + (id)openForPlugin:(id)inPlugin;
 + (id)openForContact:(AIListContact *)inContact plugin:(id)inPlugin;
++ (id)openLogAtPath:(NSString *)inPath plugin:(id)inPlugin;
 + (id)existingWindowController;
 + (void)closeSharedInstance;
 

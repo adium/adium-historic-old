@@ -304,6 +304,13 @@ static NSString	*prefsCategory;
 		[queuedURLEvents release]; queuedURLEvents = nil;
 	}
 	
+	//If we were asked to open a log at launch, do it now
+	if (queuedLogPathToShow) {
+		[[self notificationCenter] postNotificationName:Adium_ShowLogAtPath
+												 object:queuedLogPathToShow];
+		[queuedLogPathToShow release];
+	}
+	
 	[updater scheduleCheckWithInterval:(NSTimeInterval)(60 * 60 * (BETA_RELEASE ?
 																   BETA_VERSION_CHECK_INTERVAL :
 																   VERSION_CHECK_INTERVAL))];
@@ -413,9 +420,26 @@ static NSString	*prefsCategory;
 	BOOL				success = NO, requiresRestart = NO;
 	int					buttonPressed;
 	
+	if (([extension caseInsensitiveCompare:@"AdiumLog"] == NSOrderedSame) ||
+		([extension caseInsensitiveCompare:@"AdiumHtmlLog"] == NSOrderedSame)) {
+		if (completedApplicationLoad) {
+			//Request display of the log immediately if Adium is ready
+			[[self notificationCenter] postNotificationName:Adium_ShowLogAtPath
+													 object:filename];
+		} else {
+			//Queue the request until Adium is done launching if Adium is not ready
+			[queuedLogPathToShow release]; queuedLogPathToShow = [filename retain];
+		}
+		
+		//Don't continue to the xtras installation code. Return YES because we handled the open.
+		return YES;
+	}	
+	
+	/* Installation of Xtras below this point */
+
 	[prefsCategory release]; prefsCategory = nil;
     [advancedPrefsName release]; advancedPrefsName = nil;
-	
+
     //Specify a file extension and a human-readable description of what the files of this type do
     if (([extension caseInsensitiveCompare:@"AdiumPlugin"] == NSOrderedSame) ||
 		([extension caseInsensitiveCompare:@"AdiumLibgaimPlugin"] == NSOrderedSame)) {

@@ -17,6 +17,7 @@
 #import <Adium/KFTypeSelectTableView.h>
 
 #import "AIAccountController.h"
+#import "AIContactController.h"
 #import "AILogToGroup.h"
 #import "AILogFromGroup.h"
 #import "AIChatLog.h"
@@ -31,8 +32,9 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 @interface AIAbstractLogViewerWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
 - (void)filterForContact:(AIListContact *)listContact;
+- (void)openLogAtPath:(NSString *)inPath;
 - (void)buildSearchMenu;
-- (void)sortSelectedLogArrayForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction;
+- (void)sortCurrentSearchResultsForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction;
 - (NSAttributedString *)hilightOccurrencesOfString:(NSString *)littleString inString:(NSAttributedString *)bigString firstOccurrence:(NSRange *)outRange;
 @end
 
@@ -64,6 +66,15 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     return sharedLogViewerInstance;
 }
 
++ (id)openLogAtPath:(NSString *)inPath plugin:(id)inPlugin
+{
+    [self openForPlugin:inPlugin];
+	
+	[sharedLogViewerInstance openLogAtPath:inPath];
+
+	return sharedLogViewerInstance;
+}
+
 //init
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin
 {
@@ -84,7 +95,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 
 		sortDirection = YES;
 		searchMode = LOG_SEARCH_TO;
-		selectedLogArray = [[NSMutableArray alloc] init];
+		currentSearchResults = [[NSMutableArray alloc] init];
 		fromArray = [[NSMutableArray alloc] init];
 		fromServiceArray = [[NSMutableArray alloc] init];
 		logFromGroupDict = [[NSMutableDictionary alloc] init];
@@ -122,7 +133,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     [toArray release];
     [toServiceArray release];
     //[availableLogArray release];
-    [selectedLogArray release];
+    [currentSearchResults release];
     [selectedColumn release];
     [dateFormatter release];
     [displayedLog release];
@@ -133,7 +144,12 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 
 	[super dealloc];
 }
-	
+
+- (LogSearchMode)defaultSearchMode
+{
+	return LOG_SEARCH_TO;
+}
+
 - (void)windowDidLoad
 {
 	[self determineToAndFromGroupDicts];
@@ -150,7 +166,6 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 	
 	
     //Prepare the search controls
-    [self buildSearchMenu];
     if ([textView_content respondsToSelector:@selector(setUsesFindPanel:)]) {
 		[textView_content setUsesFindPanel:YES];
     }
@@ -164,12 +179,13 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 	if (!selectedColumn) {
 		selectedColumn = [[tableView_results tableColumnWithIdentifier:@"Date"] retain];
 	}
-	[self sortSelectedLogArrayForTableColumn:selectedColumn direction:YES];
+	[self sortCurrentSearchResultsForTableColumn:selectedColumn direction:YES];
 	
 	//Begin our initial search
-	[self setSearchMode:LOG_SEARCH_TO];
-	
+	[self setSearchMode:[self defaultSearchMode]];
+
     [searchField_logs setStringValue:(activeSearchString ? activeSearchString : @"")];
+
     [self startSearchingClearingCurrentResults:YES];	
 }
 
@@ -182,7 +198,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     //We always convey the number of logs being displayed
     [resultsLock lock];
     if (activeSearchString && [activeSearchString length]) {
-		unsigned count = [selectedLogArray count];
+		unsigned count = [currentSearchResults count];
 		progress = [NSMutableString stringWithFormat:((count != 1) ? 
 													  AILocalizedString(@"Found %i matches",nil) :
 													  AILocalizedString(@"Found 1 match",nil)),count];
@@ -190,7 +206,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 		progress = [[AILocalizedString(@"Opening logs",nil) stringByAppendingEllipsis] mutableCopy];
 		
     } else {
-		unsigned count = [selectedLogArray count];
+		unsigned count = [currentSearchResults count];
 		progress = [NSMutableString stringWithFormat:((count != 1) ?
 													  AILocalizedString(@"%i logs",nil) :
 													  AILocalizedString(@"1 log",nil)),count];
@@ -229,7 +245,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 - (void)refreshResultsSearchIsComplete:(BOOL)searchIsComplete
 {
     [resultsLock lock];
-    int count = [selectedLogArray count];
+    int count = [currentSearchResults count];
     [resultsLock unlock];
 	
     if (!searching || count <= MAX_LOGS_TO_SORT_WHILE_SEARCHING) {
@@ -273,7 +289,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     //Once all searches have exited, we can start a new one
 	if (clearCurrentResults) {
 		[resultsLock lock];
-		[selectedLogArray release]; selectedLogArray = [[NSMutableArray alloc] init];
+		[currentSearchResults release]; currentSearchResults = [[NSMutableArray alloc] init];
 		[resultsLock unlock];
 	}
 }
@@ -314,19 +330,18 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 - (void)setSearchMode:(LogSearchMode)inMode
 {
 	//Get the NSTextFieldCell and use it only if it responds to setPlaceholderString: (10.3 and above)
-	NSTextFieldCell	*cell = [searchField_logs cell];
-	if (![cell respondsToSelector:@selector(setPlaceholderString:)]) cell = nil;
-	
+	NSSearchFieldCell	*cell = [searchField_logs cell];
+
     searchMode = inMode;
 	
 	//Clear any filter from the table if it's the current mode, as well
 	switch (searchMode) {
 		case LOG_SEARCH_FROM:
-			[cell setPlaceholderString:AILocalizedString(@"Search From","Placeholder for searching logs from an account")];
+			[cell setPlaceholderString:AILocalizedString(@"Account Search","Placeholder for searching logs from an account")];
 			break;
 
 		case LOG_SEARCH_TO:
-			[cell setPlaceholderString:AILocalizedString(@"Search To","Placeholder for searching logs with/to a contact")];
+			[cell setPlaceholderString:AILocalizedString(@"Destination Search","Placeholder for searching logs with/to a contact")];
 			break;
 			
 		case LOG_SEARCH_DATE:
@@ -334,7 +349,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 			break;
 			
 		case LOG_SEARCH_CONTENT:
-			[cell setPlaceholderString:AILocalizedString(@"Search Content","Placeholder for searching logs by content")];
+			[cell setPlaceholderString:AILocalizedString(@"Content Search","Placeholder for searching logs by content")];
 			break;
 	}
 	
@@ -490,6 +505,64 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     }
 }
 
+- (void)openLogAtPath:(NSString *)inPath
+{
+	AIChatLog   *chatLog = nil;
+	NSString	*basePath = [AILoggerPlugin logBasePath];
+
+	//inPath should be in a folder of the form SERVICE.ACCOUNT_NAME/CONTACT_NAME/log.extension
+	NSArray		*pathComponents = [inPath pathComponents];
+	int			lastIndex = [pathComponents count];
+	NSString	*logName = [pathComponents objectAtIndex:--lastIndex];
+	NSString	*contactName = [pathComponents objectAtIndex:--lastIndex];
+	NSString	*serviceAndAccountName = [pathComponents objectAtIndex:--lastIndex];	
+	NSString		*relativeToGroupPath = [serviceAndAccountName stringByAppendingPathComponent:contactName];
+
+	NSString	*serviceID = [[serviceAndAccountName componentsSeparatedByString:@"."] objectAtIndex:0];
+	//Filter for logs from the contact associated with the log we're loading
+	[self filterForContact:[[adium contactController] contactWithService:[[adium accountController] firstServiceWithServiceID:serviceID]
+																 account:nil
+																	 UID:contactName]];
+	
+	NSString *canonicalBasePath = [basePath stringByStandardizingPath];
+	NSString *canonicalInPath = [inPath stringByStandardizingPath];
+
+	if ([canonicalInPath hasPrefix:[canonicalBasePath stringByAppendingString:@"/"]]) {
+		AILogToGroup	*logToGroup = [logToGroupDict objectForKey:[serviceAndAccountName stringByAppendingPathComponent:contactName]];
+		
+		chatLog = [logToGroup logAtPath:[relativeToGroupPath stringByAppendingPathComponent:logName]];
+		
+	} else {
+		/* Different Adium user... this sucks. We're given a path like this:
+		 *	/Users/evands/Application Support/Adium 2.0/Users/OtherUser/Logs/AIM.Tekjew/HotChick001/HotChick001 (3-30-2005).AdiumLog
+		 * and we want to make it relative to our current user's logs folder, which might be
+		 *  /Users/evands/Application Support/Adium 2.0/Users/Default/Logs
+		 *
+		 * To achieve this, add a "/.." for each directory in our current user's logs folder, then add the full path to the log.
+		 */
+		NSString	*fakeRelativePath = @"";
+		
+		//Use .. to get back to the root from the base path
+		int componentsOfBasePath = [[canonicalBasePath pathComponents] count];
+		for (int i = 0; i < componentsOfBasePath; i++) {
+			fakeRelativePath = [fakeRelativePath stringByAppendingPathComponent:@".."];
+		}
+		
+		//Now add the path from the root to the actual log
+		fakeRelativePath = [fakeRelativePath stringByAppendingPathComponent:canonicalInPath];
+		NSLog(@"Fake relative path is %@ (will give %@)",fakeRelativePath,[canonicalBasePath stringByAppendingPathComponent:fakeRelativePath]);
+		chatLog = [[[AIChatLog alloc] initWithPath:fakeRelativePath
+											  from:[serviceAndAccountName substringFromIndex:([serviceID length] + 1)] //One off for the '.'
+												to:contactName
+									  serviceClass:serviceID] autorelease];
+	}
+
+	//Now display the requested log
+	if (chatLog) {
+		[self displayLog:chatLog];
+	}
+}
+
 #pragma mark Selected log
 
 //Reselect the displayed log (Or another log if not possible)
@@ -502,7 +575,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     // end up with the newest log selected, even when a search takes multiple passes/refreshes to complete).
     if (!automaticSearch) {
 		[resultsLock lock];
-		index = [selectedLogArray indexOfObject:displayedLog];
+		index = [currentSearchResults indexOfObject:displayedLog];
 		[resultsLock unlock];
     }
 	
@@ -527,8 +600,8 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 	
 	//If our selected log is no more, select the first one in the list
 	[resultsLock lock];
-	if ([selectedLogArray count] != 0) {
-		theLog = [selectedLogArray objectAtIndex:0];
+	if ([currentSearchResults count] != 0) {
+		theLog = [currentSearchResults objectAtIndex:0];
 	}
 	[resultsLock unlock];
 	
@@ -584,16 +657,16 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     //Resort the data
 	[resultsLock lock];
     if ([identifier isEqualToString:@"To"]) {
-		[selectedLogArray sortUsingSelector:(sortDirection ? @selector(compareToReverse:) : @selector(compareTo:))];
+		[currentSearchResults sortUsingSelector:(sortDirection ? @selector(compareToReverse:) : @selector(compareTo:))];
 		
     } else if ([identifier isEqualToString:@"From"]) {
-        [selectedLogArray sortUsingSelector:(sortDirection ? @selector(compareFromReverse:) : @selector(compareFrom:))];
+        [currentSearchResults sortUsingSelector:(sortDirection ? @selector(compareFromReverse:) : @selector(compareFrom:))];
 		
     } else if ([identifier isEqualToString:@"Date"]) {
-        [selectedLogArray sortUsingSelector:(sortDirection ? @selector(compareDateReverse:) : @selector(compareDate:))];
+        [currentSearchResults sortUsingSelector:(sortDirection ? @selector(compareDateReverse:) : @selector(compareDate:))];
 		
     } else if ([identifier isEqualToString:@"Rank"]) {
-	    [selectedLogArray sortUsingSelector:(sortDirection ? @selector(compareRankReverse:) : @selector(compareRank:))];
+	    [currentSearchResults sortUsingSelector:(sortDirection ? @selector(compareRankReverse:) : @selector(compareRank:))];
 	}
 	
     [resultsLock unlock];
@@ -606,7 +679,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 }
 
 //Sorts the selected log array and adjusts the selected column
-- (void)sortSelectedLogArrayForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction
+- (void)sortCurrentSearchResultsForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction
 {
     //If there already was a sorted column, remove the indicator image from it.
     if (selectedColumn && selectedColumn != tableColumn) {
@@ -641,7 +714,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 		int count;
 		
 		[resultsLock lock];
-		count = [selectedLogArray count];
+		count = [currentSearchResults count];
 		[resultsLock unlock];
 		
 		return count;
@@ -658,7 +731,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 		id          value = nil;
 		
 		[resultsLock lock];
-		if (row < 0 || row >= [selectedLogArray count]) {
+		if (row < 0 || row >= [currentSearchResults count]) {
 			if ([identifier isEqualToString:@"Service"]) {
 				value = blankImage;
 			} else {
@@ -666,7 +739,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 			}
 			
 		} else {
-			AIChatLog       *theLog = [selectedLogArray objectAtIndex:row];
+			AIChatLog       *theLog = [currentSearchResults objectAtIndex:row];
 			
 			if ([identifier isEqualToString:@"To"]) {
 				value = [theLog to]; 
@@ -708,8 +781,8 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 			automaticSearch = NO;
 			
 			[resultsLock lock];
-			if (row >= 0 && row < [selectedLogArray count]) {
-				theLog = [selectedLogArray objectAtIndex:row];
+			if (row >= 0 && row < [currentSearchResults count]) {
+				theLog = [currentSearchResults objectAtIndex:row];
 			}
 			[resultsLock unlock];
 			
@@ -722,7 +795,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 - (void)tableView:(NSTableView*)tableView didClickTableColumn:(NSTableColumn *)tableColumn
 {
 	if (tableView == tableView_results) {
-		[self sortSelectedLogArrayForTableColumn:tableColumn
+		[self sortCurrentSearchResultsForTableColumn:tableColumn
 									   direction:(selectedColumn == tableColumn ? !sortDirection : sortDirection)];
 	}
 }
@@ -789,19 +862,23 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 											  menu:nil];
 	
 	//Search
-	[self window]; //Ensure the window is loaded, since we're pulling the search view from our nib
+	NSRect searchFieldFrame = NSMakeRect(0, 0, 230, 32);
+	searchField_logs = [[NSSearchField alloc] initWithFrame:searchFieldFrame];
+	[searchField_logs setTarget:self];
+	[searchField_logs setAction:@selector(updateSearch:)];
+
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"search"
 														  label:SEARCH
 												   paletteLabel:SEARCH
 														toolTip:AILocalizedString(@"Search or filter logs",nil)
 														 target:self
 												settingSelector:@selector(setView:)
-													itemContent:view_SearchField
+													itemContent:searchField_logs
 														 action:@selector(updateSearch:)
 														   menu:nil];
 	
-	[toolbarItem setMinSize:NSMakeSize(150, NSHeight([view_SearchField frame]))];
-	[toolbarItem setMaxSize:NSMakeSize(230, NSHeight([view_SearchField frame]))];
+	[toolbarItem setMinSize:NSMakeSize(150, 32)];
+	[toolbarItem setMaxSize:NSMakeSize(230, 32)];
 	[toolbarItems setObject:toolbarItem forKey:[toolbarItem itemIdentifier]];
 
 	[[self window] setToolbar:toolbar];
@@ -898,7 +975,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     [cellMenu addItem:[self _menuItemWithTitle:DESTINATION forSearchMode:LOG_SEARCH_TO]];
     [cellMenu addItem:[self _menuItemWithTitle:DATE forSearchMode:LOG_SEARCH_DATE]];
     [cellMenu addItem:[self _menuItemWithTitle:CONTENT forSearchMode:LOG_SEARCH_CONTENT]];
-	
+
 	[[searchField_logs cell] setSearchMenuTemplate:cellMenu];
 }
 

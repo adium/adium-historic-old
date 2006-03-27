@@ -51,6 +51,11 @@
 	[[[[tableView_dates tableColumns] objectAtIndex:0] headerCell] setAlignment:NSCenterTextAlignment];
 }
 
+- (LogSearchMode)defaultSearchMode
+{
+	return LOG_SEARCH_CONTENT;
+}
+
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -170,6 +175,8 @@
 
 	//Add the basic predicate for matching the file type
 	[predicatesArray addObject:[NSPredicateClass predicateWithFormat:@"((kMDItemContentType = \"com.adiumx.log\") or (kMDItemContentType = \"com.adiumx.htmllog\"))"]];
+	
+	NSLog(@"Searching in mode %i",searchMode);
 
 	switch (searchMode) {
 		case LOG_SEARCH_FROM:
@@ -189,7 +196,7 @@
 			NSDate *searchStringDate = [NSDate dateWithNaturalLanguageString:activeSearchString];
 
 			[predicatesArray addObject:[NSPredicateClass predicateWithFormat:@"kMDItemLastUsedDate like[c] %@",[NSString stringWithFormat:@"*%@*",[searchStringDate descriptionWithCalendarFormat:@"%y-%m-%d"
-																																														 timezone:nil
+																																														 timeZone:nil
 																																														   locale:nil]]]];
 			break;
 		}
@@ -250,7 +257,7 @@
 }
 
 /*
- * @brief Process updates to our query, adding its new results to the selectedLogArray
+ * @brief Process updates to our query, adding its new results to the currentSearchResults
  *
  * May be called from any thread.  Caller is responsible for actually updating the display at some point.
  */
@@ -276,10 +283,10 @@
 
 		[resultsLock lock];
 		theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
-		if ((theLog != nil) && (![selectedLogArray containsObjectIdenticalTo:theLog]) && (searchID == activeSearchID)) {
+		if ((theLog != nil) && (![currentSearchResults containsObjectIdenticalTo:theLog]) && (searchID == activeSearchID)) {
 			//			[theLog setRankingPercentage:outScoresArray[i]];
 			//			NSLog(@"relevance is %@",[NSMetadataQueryResultContentRelevanceAttribute);
-			[selectedLogArray addObject:theLog];
+			[currentSearchResults addObject:theLog];
 		}
 		[resultsLock unlock];
 	}
@@ -441,7 +448,7 @@
 							(searchStringDate && [theLog isFromSameDayAsDate:searchStringDate])*/ TRUE) {
 							
 							//Add the log
-							[selectedLogArray addObject:theLog];
+							[currentSearchResults addObject:theLog];
 							
 							//Update our status
 							if (lastUpdate == 0 || TickCount() > lastUpdate + LOG_SEARCH_STATUS_INTERVAL) {
@@ -458,6 +465,25 @@
 						   withObject:nil
 						waitUntilDone:NO];
 	[pool release];
+}
+
+/*
+ * @brief Configure to display the logs for a specified contact
+ *
+ * At present, filters on the contact's UID using the contact browser table
+ */
+- (void)filterForContact:(AIListContact *)listContact
+{
+	int contactIndex = [toArray indexOfObject:[listContact UID]];
+	if (contactIndex == NSNotFound) {
+		contactIndex = [toArray indexOfObject:[[listContact UID] compactedString]];
+	}
+	
+	if (contactIndex != NSNotFound) {		
+		//+1 to allow for the All entry at the top
+		[tableView_toContacts selectRowIndexes:[NSIndexSet indexSetWithIndex:(contactIndex + 1)]
+						  byExtendingSelection:NO];
+	}
 }
 
 #pragma mark Browser table views delegate
@@ -522,6 +548,7 @@
 	if ((tableView == tableView_fromAccounts) ||
 		(tableView == tableView_toContacts) ||
 		(tableView == tableView_dates)) {
+		automaticSearch = YES;
 		[self startSearchingClearingCurrentResults:YES];
 
 	} else {

@@ -29,7 +29,6 @@
     
     //Current logging settings
     BOOL				observingContent;
-    BOOL				logIndexingEnabled; //Does this system support log indexing?
     BOOL				logHTML;
 	
     //Log viewer menu items
@@ -38,7 +37,8 @@
     NSMenuItem                          *viewContactLogsContextMenuItem;
 
     //Log content search index
-    SKIndexRef                          index_Content;	
+	BOOL				logIndexingEnabled; //Does this system use log indexing?
+    SKIndexRef			index_Content;	
 
     //Dirty all information (First build of the dirty cache)
     BOOL				stopIndexingThreads;    //Set to YES to abort a dirty all or clean
