@@ -43,7 +43,8 @@
 #define ATTACHMENT_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
 	NSFilenamesPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil]
 
-#define PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY [NSArray arrayWithObject:NSStringPboardType]
+#define PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
+	NSRTFPboardType, NSStringPboardType, nil]
 
 @interface AIMessageEntryTextView (PRIVATE)
 - (void)_setPushIndicatorVisible:(BOOL)visible;
@@ -372,16 +373,26 @@
 - (BOOL)handledPasteAsRichText
 {
 	NSPasteboard *generalPasteboard = [NSPasteboard generalPasteboard];
+	NSEnumerator *enumerator = [[generalPasteboard types] objectEnumerator];
+	NSString	 *type;
 	BOOL		 handledPaste = NO;
 	
-	if ([generalPasteboard availableTypeFromArray:[NSArray arrayWithObject:NSRTFDPboardType]]) {
-		NSData *data = [generalPasteboard dataForType:NSRTFDPboardType];
-		[self insertText:[self attributedStringWithAITextAttachmentExtensionsFromRTFDData:data]];
-		handledPaste = YES;
+	//Types is ordered by the preference for handling of the data; enumerating it lets us allow the sending application's hints to be followed.
+	while ((type = [enumerator nextObject]) && !handledPaste) {
+		if ([type isEqualToString:NSRTFDPboardType]) {
+			NSData *data = [generalPasteboard dataForType:NSRTFDPboardType];
+			[self insertText:[self attributedStringWithAITextAttachmentExtensionsFromRTFDData:data]];
+			handledPaste = YES;
+			
+		} else if ([PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY containsObject:type]) {
+			//When we hit a type we should let the superclass handle, break without doing anything
+			break;
+			
+		} else if ([ATTACHMENT_DRAG_TYPE_ARRAY containsObject:type]) {
+			[self addAttachmentsFromPasteboard:generalPasteboard];
+			handledPaste = YES;
+		}
 		
-	} else if ([generalPasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY]) {
-		[self addAttachmentsFromPasteboard:generalPasteboard];
-		handledPaste = YES;
 	}
 	
 	return handledPaste;
@@ -906,12 +917,12 @@
 														   options:0 
 															 range:NSMakeRange(currentLocation,
 																			   [attributedString length] - currentLocation)];
-		
 		while (attachmentRange.length != 0) {
 			//Found an attachment in at attachmentRange.location
 			NSTextAttachment	*attachment = [attributedString attribute:NSAttachmentAttributeName
 																  atIndex:attachmentRange.location
 														   effectiveRange:nil];
+
 			//If it's not already an AITextAttachmentExtension, make it into one
 			if (![attachment isKindOfClass:[AITextAttachmentExtension class]]) {
 				NSAttributedString	*replacement;
