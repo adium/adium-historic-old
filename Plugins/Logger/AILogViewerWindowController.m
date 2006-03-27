@@ -158,8 +158,8 @@ static NSString	*staticFilterForContactName = nil;	//Contact name to restrictive
 		{
 			AIChatLog   *theLog = nil;
 			[resultsLock lock];
-			if (row >= 0 && row < [selectedLogArray count]) {
-				theLog = [selectedLogArray objectAtIndex:row];
+			if (row >= 0 && row < [currentSearchResults count]) {
+				theLog = [currentSearchResults objectAtIndex:row];
 				sameSelection = (row - 1);
 			}
 			[resultsLock unlock];
@@ -169,7 +169,7 @@ static NSString	*staticFilterForContactName = nil;	//Contact name to restrictive
 				[theLog retain];
 				
 				[resultsLock lock];
-				[selectedLogArray removeObjectAtIndex:row];
+				[currentSearchResults removeObjectAtIndex:row];
 				[resultsLock unlock];
 				
 				[[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
@@ -202,8 +202,8 @@ static NSString	*staticFilterForContactName = nil;	//Contact name to restrictive
     AIChatLog   *theLog = nil;
 	int row = [tableView_results selectedRow];
 	[resultsLock lock];
-	if (row >= 0 && row < [selectedLogArray count]) {
-		theLog = [selectedLogArray objectAtIndex:row];
+	if (row >= 0 && row < [currentSearchResults count]) {
+		theLog = [currentSearchResults objectAtIndex:row];
 		sameSelection = (row - 1);
 	}
 	[resultsLock unlock];
@@ -220,7 +220,7 @@ static NSString	*staticFilterForContactName = nil;	//Contact name to restrictive
 		[theLog retain];
 		
 		[resultsLock lock];
-		[selectedLogArray removeObjectAtIndex:row];
+		[currentSearchResults removeObjectAtIndex:row];
 		[resultsLock unlock];
 		
 		[[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
@@ -522,8 +522,8 @@ static NSString	*staticFilterForContactName = nil;	//Contact name to restrictive
 	if (tableView == tableView_results) {
 		NSString	*identifier = [tableColumn identifier];
 		
-		if ([identifier isEqualToString:@"Rank"] && row >= 0 && row < [selectedLogArray count]) {
-			AIChatLog       *theLog = [selectedLogArray objectAtIndex:row];
+		if ([identifier isEqualToString:@"Rank"] && row >= 0 && row < [currentSearchResults count]) {
+			AIChatLog       *theLog = [currentSearchResults objectAtIndex:row];
 			
 			[aCell setPercentage:[theLog rankingPercentage]];
 		}
@@ -532,7 +532,7 @@ static NSString	*staticFilterForContactName = nil;	//Contact name to restrictive
 
 //Threaded filter/search methods ---------------------------------------------------------------------------------------
 #pragma mark Threaded filter/search methods
-//Search the logs, filtering out any matching logs into the selectedLogArray
+//Search the logs, filtering out any matching logs into the currentSearchResults
 - (void)filterLogsWithSearch:(NSDictionary *)searchInfoDict
 {
     NSAutoreleasePool       *pool = [[NSAutoreleasePool alloc] init];
@@ -638,7 +638,7 @@ static NSString	*staticFilterForContactName = nil;	//Contact name to restrictive
 
 							//Add the log
 							[resultsLock lock];
-							[selectedLogArray addObject:theLog];
+							[currentSearchResults addObject:theLog];
 							[resultsLock unlock];
 
 							//Update our status
@@ -806,9 +806,9 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 				 */
 				[resultsLock lock];
 				theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
-				if ((theLog != nil) && (![selectedLogArray containsObjectIdenticalTo:theLog])) {
+				if ((theLog != nil) && (![currentSearchResults containsObjectIdenticalTo:theLog])) {
 					[theLog setRankingPercentage:outScoresArray[i]];
-					[selectedLogArray addObject:theLog];
+					[currentSearchResults addObject:theLog];
 				}
 				[resultsLock unlock];
 			}	 

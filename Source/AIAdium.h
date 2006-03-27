@@ -54,16 +54,16 @@
 	AICoreComponentLoader			*componentLoader;
 	AICorePluginLoader				*pluginLoader;
     
-    NSNotificationCenter						*notificationCenter;
-    NSMutableDictionary							*eventNotifications;
+    NSNotificationCenter			*notificationCenter;
+    NSMutableDictionary				*eventNotifications;
 
 	//pathnames to the different Application Support folders.
-    NSArray										*appSupportPaths;
+    NSArray							*appSupportPaths;
 	
-	NSMutableArray								*queuedURLEvents;
-	
-    BOOL										completedApplicationLoad;
-	NSString									*advancedPrefsName;	
+	NSMutableArray					*queuedURLEvents;
+	NSString						*queuedLogPathToShow;
+    BOOL							completedApplicationLoad;
+	NSString						*advancedPrefsName;	
 }
 
 + (NSString *)buildIdentifier;
@@ -157,6 +157,7 @@
 #define Adium_Xtras_Changed					@"Adium_Xtras_Changed"
 #define Adium_CompletedApplicationLoad		@"Adium_CompletedApplicationLoad"
 #define Adium_WillTerminate					@"Adium_WillTerminate"
+#define Adium_ShowLogAtPath					@"Adium_ShowLogAtPath"
 
 //#define	Adium_VersionWillBeUpgraded		@"Adium_VersionWillBeUpgraded"
 //#define	Adium_VersionUpgraded			@"Adium_VersionUpgraded"
