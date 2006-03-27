@@ -181,7 +181,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[aimConnection addStateListener:joscarBridge];
 	[aimConnection addOpenedServiceListener:joscarBridge];
 	[[aimConnection getChatRoomManager] addListener:joscarBridge];
-	[[aimConnection getLoginService] setSecuridProvider:joscarBridge];
 
 	[aimConnection setProxy:[self aimProxyInfoForConfiguration:proxyConfiguration]];
 	//Connect!
@@ -200,6 +199,16 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	AILog(@"Retrieving securID for %@", account);
 	return [account mainPerformSelector:@selector(getSecurid)
 							returnValue:YES];
+}
+
+/*
+ * @brief Login service opened
+ *
+ * Once the login service is open, we can set the securID provider.
+ */
+- (void)setLoginServiceOpened:(HashMap *)userInfo
+{
+	[[aimConnection getLoginService] setSecuridProvider:joscarBridge];	
 }
 
 /*
