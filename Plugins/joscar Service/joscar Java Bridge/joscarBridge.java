@@ -25,6 +25,7 @@ import net.kano.joustsim.oscar.oscar.service.chatrooms.*;
 import net.kano.joscar.*;
 import net.kano.joscar.snaccmd.*;
 
+import net.kano.joustsim.oscar.oscar.service.login.LoginService;
 import net.kano.joustsim.oscar.oscar.service.login.SecuridProvider;
 
 import net.kano.joustsim.trust.BuddyCertificateInfo;
@@ -368,10 +369,14 @@ SecuridProvider
 				//listen for incoming file transfers
 				RvConnectionManager ftManager = icbmService.getRvConnectionManager();
 				ftManager.addConnectionManagerListener(this);
+
 			} else if (service instanceof IconService) {
 				IconService iconService = (IconService) service;
 				//Listen for buddy icon changes
 				iconService.addIconRequestListener(this);
+
+			} else if (service instanceof LoginService) {
+				sendDelegateMessageWithMap("LoginServiceOpened", null);
 			}
 		}
 	}
