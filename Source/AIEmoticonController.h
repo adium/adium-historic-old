@@ -32,8 +32,8 @@
     NSMutableArray              *_availableEmoticonPacks;
     NSMutableArray              *_activeEmoticons;
     NSMutableArray              *_activeEmoticonPacks;
-    NSMutableCharacterSet       *_emoticonHintCharacterSet;
-    NSMutableCharacterSet       *_emoticonStartCharacterSet;
+    NSCharacterSet				*_emoticonHintCharacterSet;
+    NSCharacterSet				*_emoticonStartCharacterSet;
     NSMutableDictionary         *_emoticonIndexDict;
 	
 	BOOL						serviceAppropriateEmoticons;
