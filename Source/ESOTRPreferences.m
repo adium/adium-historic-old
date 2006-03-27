@@ -106,10 +106,11 @@
  */
 - (void)updateFingerprintsList
 {
-	if (viewIsOpen) {
+	OtrlUserState   otrg_plugin_userstate = otrg_get_userstate();
+
+	if (viewIsOpen && otrg_plugin_userstate) {
 		ConnContext		*context;
 		Fingerprint		*fingerprint;
-		OtrlUserState	otrg_plugin_userstate = otrg_get_userstate();
 
 		[fingerprintDictArray release];
 		fingerprintDictArray = [[NSMutableArray alloc] init];
@@ -191,16 +192,18 @@
 			const char		*accountname = [[account internalObjectID] UTF8String];
 			const char		*protocol = [[[account service] serviceCodeUniqueID] UTF8String];
 			char			*fingerprint;
-			OtrlUserState	otrg_plugin_userstate = otrg_get_userstate();
-
-			char fingerprint_buf[45];
-			fingerprint = otrl_privkey_fingerprint(otrg_plugin_userstate,
-												   fingerprint_buf, accountname, protocol);
-
-			if (fingerprint) {
-				fingerprintString = [NSString stringWithFormat:AILocalizedString(@"Fingerprint: %.80s",nil), fingerprint];
-			} else {
-				fingerprintString = AILocalizedString(@"No private key present", "Message to show in the Encryption OTR preferences when an account is selected which does not have a private key");
+			OtrlUserState	otrg_plugin_userstate;
+			
+			if ((otrg_plugin_userstate = otrg_get_userstate())){
+				char fingerprint_buf[45];
+				fingerprint = otrl_privkey_fingerprint(otrg_plugin_userstate,
+													   fingerprint_buf, accountname, protocol);
+				
+				if (fingerprint) {
+					fingerprintString = [NSString stringWithFormat:AILocalizedString(@"Fingerprint: %.80s",nil), fingerprint];
+				} else {
+					fingerprintString = AILocalizedString(@"No private key present", "Message to show in the Encryption OTR preferences when an account is selected which does not have a private key");
+				}
 			}
 		}
 
