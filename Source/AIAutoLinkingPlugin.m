@@ -20,7 +20,7 @@
  
 /*!
  * @class AIAutoLinkingPlugin
- * @brief Filter component to automatically create links within attributed strings as appropriate
+ * @brief Filter component ta automatically create links within attributed strings as appropriate
  *
  * The bulk of this component's work is accomplished by SHHyperlinkScanner
  */
@@ -60,19 +60,22 @@
 		unsigned					index = 0;
 		unsigned					stringLength = [inAttributedString length];
 
-		replacementMessage = [[[NSMutableAttributedString alloc] initWithString:@""] autorelease];
+		replacementMessage = [inAttributedString mutableCopy];
 
-		// do some quick scanning to avoid overwriting custom titled links that happen to have domain names in them.
-		// e.g. if the entire string "check out the new story on adiumx.com" is linked to a specific story URI, then
-		// adiumx.com should not link to only http://adiumx.com
 		while (index < stringLength) {
-			if ([inAttributedString attribute:NSLinkAttributeName atIndex:index effectiveRange:&linkRange]) {
-				// if the link is found at that index, append the link's whole range to the replacement string
-				[replacementMessage appendAttributedString:[inAttributedString attributedSubstringFromRange:linkRange]];
-			} else {
-				// if not, the range to the next link attribute is returned, and we linkify that range's substring
-				[replacementMessage appendAttributedString:[hyperlinkScanner linkifyString:[inAttributedString attributedSubstringFromRange:linkRange]]];
+			if (![replacementMessage attribute:NSLinkAttributeName atIndex:index effectiveRange:&linkRange]) {
+				/* If there's no link at this index already, process it via the hyperlinkScanner to see if there should be one.
+				 * We don't process existing links because (a) it would be duplicative effort and (b) we might mess up a link which had
+				 * a linkable item within its text, such as "Check out the new story at adiumx.com" linked to an adiumx.com page.
+				 */
+				NSAttributedString	*replacementPart = [hyperlinkScanner linkifyString:[inAttributedString attributedSubstringFromRange:linkRange]];
+				[replacementMessage replaceCharactersInRange:linkRange
+										withAttributedString:replacementPart];
+				stringLength -= linkRange.length;
+				linkRange.length = [replacementPart length];
+				stringLength += linkRange.length;
 			}
+			
 			// increase the index
 			index += linkRange.length;
 		}
