@@ -76,8 +76,6 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 	if ((self = [super init])) {
 		adiumOTREncryption = self;
 
-		OTRPrefs = [[ESOTRPreferences preferencePane] retain];
-		
 		/* Initialize the OTR library */
 		OTRL_INIT;
 
@@ -137,7 +135,10 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(updateSecurityDetails:) 
 									   name:Chat_DestinationChanged
-									 object:nil];	
+									 object:nil];
+	
+	//Add the Encryption preferences
+	OTRPrefs = [[ESOTRPreferences preferencePane] retain];
 }
 
 - (void)dealloc
