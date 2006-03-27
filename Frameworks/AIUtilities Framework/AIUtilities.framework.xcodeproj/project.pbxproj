@@ -30,6 +30,8 @@
 		34057F28087E032400664D64 /* AIFontManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34057F26087E032400664D64 /* AIFontManagerAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		341BCFF709615D8600CF83F5 /* AITextAttachmentAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BCFF509615D8600CF83F5 /* AITextAttachmentAdditions.m */; };
 		341BCFF809615D8600CF83F5 /* AITextAttachmentAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BCFF609615D8600CF83F5 /* AITextAttachmentAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		34235A6B09D7B370009FF634 /* AICharacterSetAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34235A6909D7B370009FF634 /* AICharacterSetAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		34235A6C09D7B371009FF634 /* AICharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 34235A6A09D7B370009FF634 /* AICharacterSetAdditions.m */; };
 		34486C3806D1DF0400DA778C /* AIAlternatingRowOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B3806D1DF0300DA778C /* AIAlternatingRowOutlineView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34486C3906D1DF0400DA778C /* AIAlternatingRowOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B3906D1DF0300DA778C /* AIAlternatingRowOutlineView.m */; };
 		34486C3A06D1DF0400DA778C /* AIAlternatingRowTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B3A06D1DF0300DA778C /* AIAlternatingRowTableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -304,6 +306,8 @@
 		340580C3087EEFB900664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Russian; path = Resources/Russian.lproj/Localizable.strings; sourceTree = "<group>"; };
 		341BCFF509615D8600CF83F5 /* AITextAttachmentAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITextAttachmentAdditions.m; path = Source/AITextAttachmentAdditions.m; sourceTree = "<group>"; };
 		341BCFF609615D8600CF83F5 /* AITextAttachmentAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITextAttachmentAdditions.h; path = Source/AITextAttachmentAdditions.h; sourceTree = "<group>"; };
+		34235A6909D7B370009FF634 /* AICharacterSetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICharacterSetAdditions.h; path = Source/AICharacterSetAdditions.h; sourceTree = "<group>"; };
+		34235A6A09D7B370009FF634 /* AICharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICharacterSetAdditions.m; path = Source/AICharacterSetAdditions.m; sourceTree = "<group>"; };
 		34486B3806D1DF0300DA778C /* AIAlternatingRowOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAlternatingRowOutlineView.h; path = Source/AIAlternatingRowOutlineView.h; sourceTree = "<group>"; };
 		34486B3906D1DF0300DA778C /* AIAlternatingRowOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAlternatingRowOutlineView.m; path = Source/AIAlternatingRowOutlineView.m; sourceTree = "<group>"; };
 		34486B3A06D1DF0300DA778C /* AIAlternatingRowTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAlternatingRowTableView.h; path = Source/AIAlternatingRowTableView.h; sourceTree = "<group>"; };
@@ -860,6 +864,8 @@
 				34486B4706D1DF0300DA778C /* AIBezierPathAdditions.m */,
 				34FFB288087DF1300000A517 /* AIBundleAdditions.h */,
 				34FFB28F087DF1300000A517 /* AIBundleAdditions.m */,
+				34235A6909D7B370009FF634 /* AICharacterSetAdditions.h */,
+				34235A6A09D7B370009FF634 /* AICharacterSetAdditions.m */,
 				34486B4A06D1DF0300DA778C /* AIColorAdditions.h */,
 				34486B4B06D1DF0300DA778C /* AIColorAdditions.m */,
 				34486B5206D1DF0300DA778C /* AICursorAdditions.h */,
@@ -1527,6 +1533,7 @@
 				013F80C408E685B8000F31B2 /* AITextViewAdditions.h in Headers */,
 				073C0D8D0939023200D6AEEA /* AIPlasticButtonCell.h in Headers */,
 				341BCFF809615D8600CF83F5 /* AITextAttachmentAdditions.h in Headers */,
+				34235A6B09D7B370009FF634 /* AICharacterSetAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1765,6 +1772,7 @@
 				013F80C508E685B8000F31B2 /* AITextViewAdditions.m in Sources */,
 				073C0D8E0939023200D6AEEA /* AIPlasticButtonCell.m in Sources */,
 				341BCFF709615D8600CF83F5 /* AITextAttachmentAdditions.m in Sources */,
+				34235A6C09D7B371009FF634 /* AICharacterSetAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
