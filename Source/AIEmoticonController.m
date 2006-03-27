@@ -28,6 +28,7 @@
 #import "AIListContact.h"
 #import "AIService.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AICharacterSetAdditions.h>
 #import "AIChat.h"
 
 #define EMOTICON_DEFAULT_PREFS				@"EmoticonDefaults"
@@ -170,6 +171,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
  */
 - (unsigned int)replaceAnEmoticonStartingAtLocation:(unsigned *)currentLocation
 										 fromString:(NSString *)messageString
+								messageStringLength:(unsigned int)messageStringLength
 						   originalAttributedString:(NSAttributedString *)originalAttributedString
 										 intoString:(NSMutableAttributedString **)newMessage
 								   replacementCount:(unsigned *)replacementCount
@@ -178,7 +180,6 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 						  emoticonStartCharacterSet:(NSCharacterSet *)emoticonStartCharacterSet
 									  emoticonIndex:(NSDictionary *)emoticonIndex
 {
-	unsigned int	messageStringLength = [messageString length];
 	unsigned int	originalEmoticonLocation = NSNotFound;
 
 	//Find the next occurence of a suspected emoticon
@@ -294,6 +295,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 				newCurrentLocation += textLength;
 				nextEmoticonLocation = [self replaceAnEmoticonStartingAtLocation:&newCurrentLocation
 																	  fromString:messageString
+															 messageStringLength:messageStringLength
 														originalAttributedString:originalAttributedString
 																	  intoString:newMessage
 																replacementCount:replacementCount
@@ -438,6 +440,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     while (currentLocation != NSNotFound && currentLocation < messageStringLength) {
 		[self replaceAnEmoticonStartingAtLocation:&currentLocation
 									   fromString:messageString
+							  messageStringLength:messageStringLength
 						 originalAttributedString:inMessage
 									   intoString:&newMessage
 								 replacementCount:&replacementCount
@@ -798,9 +801,10 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
     AIEmoticon          *emoticon;
     
     //Start with a fresh character set, and a fresh index
-    [_emoticonHintCharacterSet release]; _emoticonHintCharacterSet = [[NSMutableCharacterSet alloc] init];
-    [_emoticonStartCharacterSet release]; _emoticonStartCharacterSet = [[NSMutableCharacterSet alloc] init];
-    [_emoticonIndexDict release]; _emoticonIndexDict = [[NSMutableDictionary alloc] init];
+	NSMutableCharacterSet	*tmpEmoticonHintCharacterSet = [[NSMutableCharacterSet alloc] init];
+	NSMutableCharacterSet	*tmpEmoticonStartCharacterSet = [[NSMutableCharacterSet alloc] init];
+
+	[_emoticonIndexDict release]; _emoticonIndexDict = [[NSMutableDictionary alloc] init];
     
     //Process all the text equivalents of each active emoticon
     emoticonEnumerator = [[self activeEmoticons] objectEnumerator];
@@ -821,15 +825,15 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
                     
                     // -- Emoticon Hint Character Set --
                     //If any letter in this text equivalent already exists in the quick scan character set, we can skip it
-                    if ([text rangeOfCharacterFromSet:_emoticonHintCharacterSet].location == NSNotFound) {
+                    if ([text rangeOfCharacterFromSet:tmpEmoticonHintCharacterSet].location == NSNotFound) {
                         //Potential for optimization!: Favor punctuation characters ( :();- ) over letters (especially vowels).                
-                        [_emoticonHintCharacterSet addCharactersInString:firstCharacterString];
+                        [tmpEmoticonHintCharacterSet addCharactersInString:firstCharacterString];
                     }
                     
                     // -- Emoticon Start Character Set --
                     //First letter of this emoticon goes in the start set
-                    if (![_emoticonStartCharacterSet characterIsMember:firstCharacter]) {
-                        [_emoticonStartCharacterSet addCharactersInString:firstCharacterString];
+                    if (![tmpEmoticonStartCharacterSet characterIsMember:firstCharacter]) {
+                        [tmpEmoticonStartCharacterSet addCharactersInString:firstCharacterString];
                     }
                     
                     // -- Index --
@@ -859,8 +863,13 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
             
         }
     }
-	
-	
+
+	[_emoticonHintCharacterSet release]; _emoticonHintCharacterSet = [tmpEmoticonHintCharacterSet immutableCopy];
+	[tmpEmoticonHintCharacterSet release];
+
+    [_emoticonStartCharacterSet release]; _emoticonStartCharacterSet = [tmpEmoticonStartCharacterSet immutableCopy];
+	[tmpEmoticonStartCharacterSet release];
+
 	//After building all the subIndexes, sort them by length here
 }
 
