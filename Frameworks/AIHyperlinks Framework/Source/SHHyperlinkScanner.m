@@ -114,19 +114,23 @@
 	//get our location from SHStringOffset, so we can pick up where we left off
     int			location = SHStringOffset;
 
-	static NSMutableCharacterSet *skipSet = nil;
+	static NSCharacterSet *skipSet = nil;
     if (!skipSet) {
-        skipSet = [[NSMutableCharacterSet alloc] init];
-        [skipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        [skipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
-        [skipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
+        NSMutableCharacterSet *mutableSkipSet = [[NSMutableCharacterSet alloc] init];
+        [mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        [mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
+        [mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
+		skipSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableSkipSet bitmapRepresentation]] retain];
+		[mutableSkipSet release];
     }
-    
-	static NSMutableCharacterSet *startSet = nil;
+
+	static NSCharacterSet *startSet = nil;
     if (!startSet) {
-        startSet = [[NSMutableCharacterSet alloc] init];
-        [startSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        [startSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'-,:;<([{.?!"]];
+        NSMutableCharacterSet *mutableStartSet = [[NSMutableCharacterSet alloc] init];
+        [mutableStartSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        [mutableStartSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'-,:;<([{.?!"]];
+		startSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableStartSet bitmapRepresentation]] retain];
+		[mutableStartSet release];
     }
 
 	static NSCharacterSet *endSet = nil;
