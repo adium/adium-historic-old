@@ -126,6 +126,11 @@
 	
 	accountsEnum = [accounts objectEnumerator];
 	while ((account = [accountsEnum nextObject])) {
+		BOOL	connectAccount = (!shiftHeld  &&
+								  [account enabled] &&
+								  ([account shouldBeOnline] ||
+								   shouldAutoconnectAll));
+
 		if ([account connectivityBasedOnNetworkReachability]) {
 			NSString *host = [account host];
 			if (host && ![knownHosts containsObject:host]) {
@@ -134,16 +139,12 @@
 			}
 			
 			//If this is an account we should auto-connect, remove it from accountsToNotConnect so that we auto-connect it.
-			if (!shiftHeld  &&
-				[account enabled] &&
-				([account shouldBeOnline] ||
-				 shouldAutoconnectAll)) {
+			if (connectAccount) {
 				[accountsToNotConnect removeObject:account];
 				continue; //prevent the account from being removed from accountsToConnect.
 			}
 			
-		}  else if (!shiftHeld &&
-					[account enabled]) {
+		}  else if (connectAccount) {
 			/* This account does not connect based on network reachability, but should autoconnect.
 			 * Connect it immediately.
 			 */
