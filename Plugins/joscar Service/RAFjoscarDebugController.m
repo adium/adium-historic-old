@@ -66,6 +66,13 @@ static RAFjoscarDebugController *sharedDebugController = nil;
 
 - (void)dealloc
 {
+	//Save the open state of the debug window
+	[[adium preferenceController] setPreference:([RAFjoscarDebugWindowController debugWindowIsOpen] ?
+												 [NSNumber numberWithBool:YES] :
+												 nil)
+										 forKey:KEY_JOSCAR_DEBUG_WINDOW_OPEN
+										  group:GROUP_JOSCAR_DEBUG];
+	
 	[debugLogArray release];
 	if (debugLogFile) {
 		[debugLogFile closeFile];

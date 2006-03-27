@@ -18,9 +18,14 @@
 	joscarDotMacService = [[RAFjoscarDotMacService alloc] init];
 	joscarICQService = [[RAFjoscarICQService alloc] init];
 #ifdef DEBUG_BUILD
-	RAFjoscarDebugController *debugController = [[RAFjoscarDebugController alloc] init];
+	debugController = [[RAFjoscarDebugController alloc] init];
 	[debugController activateDebugController];
 #endif
+}
+
+- (void)uninstallPlugin
+{
+	[debugController release]; debugController = nil;
 }
 
 - (void)dealloc

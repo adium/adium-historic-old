@@ -10,10 +10,14 @@
 #import "RAFjoscarDotMacService.h"
 #import "RAFjoscarICQService.h"
 
+@class RAFjoscarDebugController;
+
 @interface RAFjoscarServicePlugin : AIPlugin {
 	RAFjoscarAIMService *joscarAIMService;
 	RAFjoscarDotMacService *joscarDotMacService;
 	RAFjoscarICQService *joscarICQService;
+	
+	RAFjoscarDebugController *debugController;
 }
 
 @end
