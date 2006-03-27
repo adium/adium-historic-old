@@ -108,7 +108,37 @@
  */
 + (NSToolbarItem *)toolbarItemFromDictionary:(NSDictionary *)theDict withIdentifier:(NSString *)itemIdentifier
 {
-	return [[[theDict objectForKey:itemIdentifier] copy] autorelease];
+    NSToolbarItem *item;
+	NSToolbarItem *newItem;
+	
+	item = [theDict objectForKey:itemIdentifier];
+	newItem = [[item copy] autorelease];
+
+    if ([item view] != NULL) {
+		if ([[item view] respondsToSelector:@selector(copyWithZone:)]) {
+			[newItem setView:[[[item view] copy] autorelease]];
+
+		} else {
+			/* For a toolbar only used in one window at a time, it's alright for a view to not allow copying.
+			 * If the view doesn't conform to NSCopying, use the _same_ view. NSToolbar's copy method will have created a new NSView
+			 * and attempted to make it match to the original one.
+			 */
+			[newItem setView:[item view]];
+		}
+    }
+
+    //If we have a custom view, we *have* to set the min/max size - otherwise, it'll default to 0,0 and the custom
+    //view won't show up at all!  This doesn't affect toolbar items with images, however.
+    if ([newItem view] != NULL) {
+        [newItem setMinSize:[item minSize]];
+        [newItem setMaxSize:[item maxSize]];
+		
+		if ([[newItem view] respondsToSelector:@selector(setToolbarItem:)]) {
+			[[newItem view] setToolbarItem:newItem];
+		}
+    }
+
+    return newItem;
 }
 
 @end
