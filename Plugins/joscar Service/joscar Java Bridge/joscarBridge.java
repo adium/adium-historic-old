@@ -25,6 +25,8 @@ import net.kano.joustsim.oscar.oscar.service.chatrooms.*;
 import net.kano.joscar.*;
 import net.kano.joscar.snaccmd.*;
 
+import net.kano.joustsim.oscar.oscar.service.login.SecuridProvider;
+
 import net.kano.joustsim.trust.BuddyCertificateInfo;
 
 import net.adium.joscarBridge.BridgeToAdiumHandler;
@@ -55,7 +57,8 @@ OpenedServiceListener, BuddyListLayoutListener,
 BuddyListener, GroupListener,
 IcbmListener, RvConnectionManagerListener,
 ImConversationListener, TypingListener,
-RvConnectionEventListener, IconRequestListener, ChatRoomManagerListener, ChatRoomSessionListener
+RvConnectionEventListener, IconRequestListener, ChatRoomManagerListener, ChatRoomSessionListener,
+SecuridProvider
 {
 	private NSObject delegate;
 	
@@ -705,4 +708,9 @@ RvConnectionEventListener, IconRequestListener, ChatRoomManagerListener, ChatRoo
 		sendDelegateMessageWithMap("GroupChatIncomingMessage",map);
 	}
 	
+	/* SecurID */
+	public String getSecurid()
+	{
+		return (String)delegate.valueForKey("securid");
+	}
 }

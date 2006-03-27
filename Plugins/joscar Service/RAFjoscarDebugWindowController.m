@@ -84,6 +84,29 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 	
 	[checkBox_logWriting setState:[[[adium preferenceController] preferenceForKey:KEY_JOSCAR_DEBUG_WRITE_LOG
 																			group:GROUP_JOSCAR_DEBUG] boolValue]];
+	
+	NSString	*javaVersion = [NSClassFromString(@"java.lang.System") getProperty:@"java.version"];
+	
+	if (javaVersion) {
+		[textView_version setStringValue:[NSString stringWithFormat:@"Java version: %@, joscar version: %@", 
+			javaVersion,
+			[NSClassFromString(@"net.kano.joscar.JoscarTools") getVersionString]]];
+	} else {
+		[textView_version setStringValue:[NSString stringWithFormat:@"Java not loaded"]];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(attachedJavaVM:)
+													 name:@"AttachedJavaVM"
+												   object:nil];
+	}
+}
+
+/*
+ * @brief Java VM was attached
+ *
+ * Update our displayed version info
+ */
+- (void)attachedJavaVM:(NSNotification *)inNotification
+{
 	[textView_version setStringValue:[NSString stringWithFormat:@"Java version: %@, joscar version: %@", 
 		[NSClassFromString(@"java.lang.System") getProperty:@"java.version"],
 		[NSClassFromString(@"net.kano.joscar.JoscarTools") getVersionString]]];
@@ -105,6 +128,8 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 	//Close down
 	[mutableDebugString release]; mutableDebugString = nil;
     [self autorelease]; sharedDebugWindowInstance = nil;
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (IBAction)toggleLogWriting:(id)sender

@@ -181,7 +181,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[aimConnection addStateListener:joscarBridge];
 	[aimConnection addOpenedServiceListener:joscarBridge];
 	[[aimConnection getChatRoomManager] addListener:joscarBridge];
-	[[aimConnection getLoginService] setSecuridProvider:self];
+	[[aimConnection getLoginService] setSecuridProvider:joscarBridge];
 
 	[aimConnection setProxy:[self aimProxyInfoForConfiguration:proxyConfiguration]];
 	//Connect!
@@ -198,7 +198,8 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 - (NSString *)getSecurid
 {
 	AILog(@"Retrieving securID for %@", account);
-	return [account getSecurid];
+	return [account mainPerformSelector:@selector(getSecurid)
+							returnValue:YES];
 }
 
 /*
@@ -1405,7 +1406,7 @@ Date* javaDateFromDate(NSDate *date)
 										msg,
 										nil,nil,nil);
 			}
-			
+
 			[pool release];
 		} else {
 			if  (!attachedVmToMainRunLoop && onMainRunLoop) {
@@ -1413,6 +1414,13 @@ Date* javaDateFromDate(NSDate *date)
 				attachedVmToMainRunLoop = YES;
 			}
 		}
+
+#ifdef DEBUG_BUILD
+		if (onMainRunLoop) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"AttachedJavaVM"
+																object:nil];
+		}
+#endif
 	}
 }
 
