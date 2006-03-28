@@ -20,11 +20,13 @@
 
 @interface CBContactCountingDisplayPlugin : AIPlugin <AIListObjectObserver>
 {
-    BOOL                                countAllObjects;
-    BOOL                                countOnlineObjects;
-    
-    NSMenuItem                          *menuItem_countOnlineObjects;
-    NSMenuItem                          *menuItem_countAllObjects;
+    BOOL		countAllObjects;
+    BOOL		countOnlineObjects;
+
+	BOOL		showingGroups;
+
+    NSMenuItem	*menuItem_countOnlineObjects;
+    NSMenuItem	*menuItem_countAllObjects;
 }
 
 @end
