@@ -209,6 +209,7 @@
 		342353BC09D450ED009FF634 /* MDLogViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342353BB09D450ED009FF634 /* MDLogViewer.nib */; };
 		342353D609D45726009FF634 /* AIAbstractLogViewerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */; };
 		342353D709D45726009FF634 /* AIAbstractLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */; };
+		3423622B09D8BCAA009FF634 /* SecuridPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3423622A09D8BCA9009FF634 /* SecuridPrompt.nib */; };
 		3426FD0B0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3426FD090699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m */; };
 		3426FD0C0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 3426FD0A0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3428328807D2643F004F01C9 /* ESStatusPreferencesPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 3428328407D2643E004F01C9 /* ESStatusPreferencesPlugin.h */; };
@@ -1974,6 +1975,7 @@
 		342353BB09D450ED009FF634 /* MDLogViewer.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MDLogViewer.nib; path = Resources/MDLogViewer.nib; sourceTree = "<group>"; };
 		342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAbstractLogViewerWindowController.h; path = Source/AIAbstractLogViewerWindowController.h; sourceTree = "<group>"; };
 		342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAbstractLogViewerWindowController.m; path = Source/AIAbstractLogViewerWindowController.m; sourceTree = "<group>"; };
+		3423622A09D8BCA9009FF634 /* SecuridPrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = SecuridPrompt.nib; path = "Plugins/joscar Service/SecuridPrompt.nib"; sourceTree = "<group>"; };
 		3426FD090699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m; path = "Frameworks/Adium Framework/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m"; sourceTree = "<group>"; };
 		3426FD0A0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h; path = "Frameworks/Adium Framework/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h"; sourceTree = "<group>"; };
 		3428328407D2643E004F01C9 /* ESStatusPreferencesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESStatusPreferencesPlugin.h; path = Source/ESStatusPreferencesPlugin.h; sourceTree = "<group>"; };
@@ -3841,6 +3843,7 @@
 				11CBDD4209326F8100BE7961 /* RAFjoscarService.m */,
 				342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */,
 				342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */,
+				3423622A09D8BCA9009FF634 /* SecuridPrompt.nib */,
 				11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */,
 				11CBDD4009326F8000BE7961 /* RAFjoscarAccountViewController.m */,
 				11F5F46309538B99007DCC49 /* RAFjoscarAccountView.nib */,
@@ -8238,6 +8241,7 @@
 				11F5F70209539C70007DCC49 /* joscarDefaults.plist in Resources */,
 				11AD53E90963523000CA0C6F /* joscarDebugWindow.nib in Resources */,
 				11669AB309994697003CB8A1 /* joscarJoinChatView.nib in Resources */,
+				3423622B09D8BCAA009FF634 /* SecuridPrompt.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
