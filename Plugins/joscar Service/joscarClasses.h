@@ -826,7 +826,10 @@
 #define NewJoscarBridge(logLevel)	[NSClassFromString(@"net.adium.joscarBridge.joscarBridge") \
 									newWithSignature:@"(I)", \
 									(logLevel)]
-@interface JoscarBridge : NSObject <GlobalBuddyInfoListener, StateListener, OpenedServiceListener, BuddyInfoTrackerListener, InfoServiceListener, EventListener, FileTransferListener, ChatRoomManagerListener, ChatRoomSessionListener>
+@interface JoscarBridge : NSObject <GlobalBuddyInfoListener, StateListener, OpenedServiceListener,
+									BuddyInfoTrackerListener, InfoServiceListener, EventListener, FileTransferListener,
+									ChatRoomManagerListener, ChatRoomSessionListener,
+									SecuridProvider>
 {
 }
 
