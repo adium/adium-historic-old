@@ -22,22 +22,28 @@
 
 + (NSString *)getSecuridForAccount:(AIAccount *)account
 {
-	RAFjoscarSecuridPromptController *promptWindow = [[RAFjoscarSecuridPromptController alloc] initWithAccount:account];
+	RAFjoscarSecuridPromptController *promptWindow = [[[RAFjoscarSecuridPromptController alloc] initWithAccount:account] autorelease];
+
 	[NSApp runModalForWindow:[promptWindow window]];
+
 	AILog(@"Ran %@ modally (window: %@)", promptWindow, [promptWindow window]);
-	return [[promptWindow autorelease] getSecurid];
+
+	return [promptWindow getSecurid];
 }
 
 - (RAFjoscarSecuridPromptController *)initWithAccount:(AIAccount *)account
 {
-	if ((self = [super initWithWindowNibName:SECURID_NIB_NAME]))
-		accountUID = [[account UID] retain];
-	securidString = nil;
+	if ((self = [super initWithWindowNibName:SECURID_NIB_NAME])) {
+		accountUID = [[account formattedUID] retain];
+		securidString = nil;
+	}
+
 	return self;
 }
 
 - (void)dealloc
 {
+	[securidString release];
 	[accountUID release];
 	[super dealloc];
 }
@@ -50,12 +56,12 @@
 	[okButton setStringValue:OKAY];
 	[accountText setStringValue:accountUID];
 	[securidView setStringValue:SECURID_NAME];
-	[securid setStringValue:nil];
+	[securid setStringValue:@""];
 }
 
 - (IBAction)okButtonClicked:(id)sender
 {
-	securidString = [securid stringValue];
+	securidString = [[securid stringValue] retain];
 	[[self window] close];
 }
 
@@ -66,7 +72,7 @@
 
 - (NSString *)getSecurid
 {
-	return securidString;
+	return [[securidString retain] autorelease];
 }
 
 @end
