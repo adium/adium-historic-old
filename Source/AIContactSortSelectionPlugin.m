@@ -166,6 +166,15 @@
 }
 
 /*!
+ * @brief Configure the currently active sort
+ */
+- (void)configureSort:(id)sender
+{
+	AISortController *controller = [[adium contactController] activeSortController];
+	[ESContactSortConfigurationWindowController showSortConfigurationWindowForController:controller];
+}
+
+/*!
  * @brief Changed sort selection
  *
  * @param sender <tt>NSMenuItem</tt> with an <tt>AISortController</tt> representedObject
@@ -189,6 +198,10 @@
 	//Check the menu item and update the configure sort menu item title
 	[sender setState:NSOnState];
 	[self _setConfigureSortMenuItemTitleForController:controller];
+	
+	if ([ESContactSortConfigurationWindowController sortConfigurationIsOpen]) {
+		[self configureSort:nil];
+	}
 }
 
 /*!
@@ -204,15 +217,6 @@
 		[menuItem_configureSort setTitle:CONFIGURE_SORT_MENU_TITLE];
 		enableConfigureSort = NO;
 	}
-}
-
-/*!
- * @brief Configure the currently active sort
- */
-- (void)configureSort:(id)sender
-{
-	AISortController *controller = [[adium contactController] activeSortController];
-	[ESContactSortConfigurationWindowController showSortConfigurationWindowForController:controller];
 }
 
 /* 

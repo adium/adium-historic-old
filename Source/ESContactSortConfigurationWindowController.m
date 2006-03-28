@@ -23,6 +23,8 @@
  */
 @implementation ESContactSortConfigurationWindowController
 
+static ESContactSortConfigurationWindowController   *sharedSortConfigInstance = nil;
+
 /*!
  * @brief Show the sort configuration window for a controller
  *
@@ -30,23 +32,36 @@
  */
 + (id)showSortConfigurationWindowForController:(AISortController *)controller
 {
-	static ESContactSortConfigurationWindowController   *sharedSortConfigInstance = nil;
-	
-    if (!sharedSortConfigInstance) {
-        sharedSortConfigInstance = [[self alloc] initWithWindowNibName:@"SortConfiguration"];
+	if ([controller configureSortWindowTitle]) {
+		if (!sharedSortConfigInstance) {
+			//Load the window controller if necessary. We retain ourselves, closing when our window closes.
+			sharedSortConfigInstance = [[self alloc] initWithWindowNibName:@"SortConfiguration"];
+			
+			//Remove those buttons we don't want.  removeFromSuperview will confuse the window, so just make them invisible.
+			NSButton *standardWindowButton = [[sharedSortConfigInstance window] standardWindowButton:NSWindowMiniaturizeButton];
+			[standardWindowButton setFrame:NSMakeRect(0,0,0,0)];
+			standardWindowButton = [[sharedSortConfigInstance window] standardWindowButton:NSWindowZoomButton];
+			[standardWindowButton setFrame:NSMakeRect(0,0,0,0)];
+		}
 		
-		//Remove those buttons we don't want.  removeFromSuperview will confuse the window, so just make them invisible.
-		NSButton *standardWindowButton = [[sharedSortConfigInstance window] standardWindowButton:NSWindowMiniaturizeButton];
-		[standardWindowButton setFrame:NSMakeRect(0,0,0,0)];
-		standardWindowButton = [[sharedSortConfigInstance window] standardWindowButton:NSWindowZoomButton];
-		[standardWindowButton setFrame:NSMakeRect(0,0,0,0)];
-    }
-	
-	[sharedSortConfigInstance configureForController:controller];
-	
-	[sharedSortConfigInstance showWindow:nil];
+		[sharedSortConfigInstance configureForController:controller];
+		
+		[sharedSortConfigInstance showWindow:nil];
+
+	} else {
+		//Configuring for a controller which has no configuration view...
+		if (sharedSortConfigInstance) {
+			[sharedSortConfigInstance closeWindow:nil];
+			[sharedSortConfigInstance autorelease]; sharedSortConfigInstance = nil;
+		}
+	}
 	
 	return sharedSortConfigInstance;
+}
+
++ (BOOL)sortConfigurationIsOpen
+{
+	return (sharedSortConfigInstance != nil);
 }
 
 /*!
@@ -77,6 +92,13 @@
 	[super windowDidLoad];
 	
 	[[self window] setTitle:AILocalizedString(@"Configure Sorting","Configure Sort window title")];
+}
+
+- (void)windowWillClose:(id)sender
+{
+	[super windowWillClose:sender];
+
+	[sharedSortConfigInstance autorelease]; sharedSortConfigInstance = nil;
 }
 
 @end

@@ -21,6 +21,7 @@
 }
 
 + (id)showSortConfigurationWindowForController:(AISortController *)controller;
++ (BOOL)sortConfigurationIsOpen;
 - (void)configureForController:(AISortController *)controller;
 
 @end
