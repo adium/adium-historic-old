@@ -345,11 +345,14 @@
 {
     //Grab the info from our buildnum script
     char *path, unixDate[256], num[256],whoami[256];
-    if ((path = (char *)[[[[NSBundle mainBundle] resourcePath] stringByAppendingString:@"/../../../buildnum"] fileSystemRepresentation]))
-    {
-        FILE *f = fopen(path, "r");
-        fscanf(f, "%s | %s | %s", num, unixDate, whoami);
-        fclose(f);
+	FILE *f;
+    if ((path = (char *)[[[[NSBundle mainBundle] resourcePath] stringByAppendingString:@"/../../../buildnum"] fileSystemRepresentation]) &&
+		([[NSFileManager defaultManager] fileExistsAtPath:path]) &&
+		(f= fopen(path, "r"))) {
+		if (f) {
+			fscanf(f, "%s | %s | %s", num, unixDate, whoami);
+			fclose(f);
+		}
 		
         if (*num) {
             buildNumber = [[NSString stringWithFormat:@"%s", num] retain];
@@ -371,7 +374,10 @@
 			}
 			
 		}
-    }
+
+    } else {
+		NSLog(@"Unable to open the buildnum file.");
+	}
     
     //Default to empty strings if something goes wrong
     if (!buildDate) buildDate = [@"" retain];
