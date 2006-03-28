@@ -35,6 +35,9 @@
 #define KEY_COUNT_ALL_CONTACTS					@"Count All Contacts"
 #define KEY_COUNT_ONLINE_CONTACTS				@"Count Online Contacts"
 
+#define	KEY_HIDE_CONTACT_LIST_GROUPS			@"Hide Contact List Groups"
+#define	PREF_GROUP_CONTACT_LIST_DISPLAY			@"Contact List Display"
+
 /*!
  * @class CBContactCountingDisplayPlugin
  *
@@ -54,7 +57,7 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS 
 																		forClass:[self class]] 
 										  forGroup:PREF_GROUP_CONTACT_LIST];
-
+	
     //init our menu items
     menuItem_countOnlineObjects = [[NSMenuItem alloc] initWithTitle:COUNT_ONLINE_CONTACTS_TITLE 
 														 target:self 
@@ -73,6 +76,7 @@
 	countOnlineObjects = NO;
 	
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 }
 
 /*!
@@ -83,41 +87,47 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	BOOL oldCountAllObjects = countAllObjects;
-	BOOL oldCountOnlineObjects = countOnlineObjects;
-	
-	countAllObjects = [[prefDict objectForKey:KEY_COUNT_ALL_CONTACTS] boolValue];
-	countOnlineObjects = [[prefDict objectForKey:KEY_COUNT_ONLINE_CONTACTS] boolValue];
-	
-	if ((countAllObjects && !oldCountAllObjects) || (countOnlineObjects && !oldCountOnlineObjects)) {
-		//One of the displays is on, but it was off before
+	if ([group isEqualToString:PREF_GROUP_CONTACT_LIST]) {
+		BOOL oldCountAllObjects = countAllObjects;
+		BOOL oldCountOnlineObjects = countOnlineObjects;
 		
-		if (!oldCountAllObjects && !oldCountOnlineObjects) {
-			//Install our observer if we are now counting contacts in some form but weren't before
-			//This will update all list objects.
-			[[adium contactController] registerListObjectObserver:self];				
-		} else {
+		countAllObjects = [[prefDict objectForKey:KEY_COUNT_ALL_CONTACTS] boolValue];
+		countOnlineObjects = [[prefDict objectForKey:KEY_COUNT_ONLINE_CONTACTS] boolValue];
+		
+		if ((countAllObjects && !oldCountAllObjects) || (countOnlineObjects && !oldCountOnlineObjects)) {
+			//One of the displays is on, but it was off before
+			
+			if (!oldCountAllObjects && !oldCountOnlineObjects) {
+				//Install our observer if we are now counting contacts in some form but weren't before
+				//This will update all list objects.
+				[[adium contactController] registerListObjectObserver:self];				
+			} else {
+				//Refresh all
+				[[adium contactController] updateAllListObjectsForObserver:self];
+			}
+			
+		} else if ((!countAllObjects && oldCountAllObjects) || (!countOnlineObjects && oldCountOnlineObjects)) {
+			//One of the displays is off, but it was on before
+			
 			//Refresh all
 			[[adium contactController] updateAllListObjectsForObserver:self];
+			
+			if (!countAllObjects && !countOnlineObjects) {
+				//Remove our observer since we are now doing no counting
+				[[adium contactController] unregisterListObjectObserver:self];
+			}
 		}
 		
-	} else if ((!countAllObjects && oldCountAllObjects) || (!countOnlineObjects && oldCountOnlineObjects)) {
-		//One of the displays is off, but it was on before
-		
-		//Refresh all
-		[[adium contactController] updateAllListObjectsForObserver:self];
-		
-		if (!countAllObjects && !countOnlineObjects) {
-			//Remove our observer since we are now doing no counting
-			[[adium contactController] unregisterListObjectObserver:self];
+		if ([menuItem_countAllObjects state] != countAllObjects) {
+			[menuItem_countAllObjects setState:countAllObjects];
 		}
-	}
+		if ([menuItem_countOnlineObjects state] != countOnlineObjects) {
+			[menuItem_countOnlineObjects setState:countOnlineObjects];
+		}
 
-	if ([menuItem_countAllObjects state] != countAllObjects) {
-		[menuItem_countAllObjects setState:countAllObjects];
-	}
-	if ([menuItem_countOnlineObjects state] != countOnlineObjects) {
-		[menuItem_countOnlineObjects setState:countOnlineObjects];
+	} else if (([group isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) &&
+			   (!key || [key isEqualToString:KEY_HIDE_CONTACT_LIST_GROUPS])) {		
+		showingGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
 	}
 }
 
@@ -204,7 +214,7 @@
  */
 - (void)toggleMenuItem:(id)sender
 {
-    if (sender == menuItem_countOnlineObjects || sender == menuItem_countAllObjects) {
+    if ((sender == menuItem_countOnlineObjects) || (sender == menuItem_countAllObjects)) {
 		BOOL	newState = ![sender state];
 		
 		//Toggle and set, which will call back on preferencesChanged: above
@@ -215,6 +225,15 @@
 													 KEY_COUNT_ONLINE_CONTACTS)
 											  group:PREF_GROUP_CONTACT_LIST];
     }
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+    if ((menuItem == menuItem_countOnlineObjects) || (menuItem == menuItem_countAllObjects)) {
+		return showingGroups;
+	}
+	
+	return YES;
 }
 
 /*
