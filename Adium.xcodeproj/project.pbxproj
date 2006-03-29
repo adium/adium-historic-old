@@ -3484,8 +3484,8 @@
 		9EB3C52E04F94F24001D1F74 /* MainMenu.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MainMenu.nib; sourceTree = "<group>"; };
 		9EB3C53304F94FAE001D1F74 /* CBOldPrefsImporterAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBOldPrefsImporterAppController.h; sourceTree = "<group>"; };
 		9EB3C53404F94FAE001D1F74 /* CBOldPrefsImporterAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBOldPrefsImporterAppController.m; sourceTree = "<group>"; };
-		9EF0DBF309D944A300FBCC1E /* block.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = block.png; sourceTree = "<group>"; };
-		9EF0DBF409D944A300FBCC1E /* unblock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unblock.png; sourceTree = "<group>"; };
+		9EF0DBF309D944A300FBCC1E /* block.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Resources/block.png; sourceTree = "<group>"; };
+		9EF0DBF409D944A300FBCC1E /* unblock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Resources/unblock.png; sourceTree = "<group>"; };
 		A3C042D108D7483100B48CE1 /* GaimDefaultsGTalk.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsGTalk.plist; path = "Plugins/Gaim Service/GaimDefaultsGTalk.plist"; sourceTree = "<group>"; };
 		A3C0431B08D74D3100B48CE1 /* AIGaimGTalkAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGaimGTalkAccount.h; path = "Plugins/Gaim Service/AIGaimGTalkAccount.h"; sourceTree = "<group>"; };
 		A3C0431C08D74D3100B48CE1 /* AIGaimGTalkAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGaimGTalkAccount.m; path = "Plugins/Gaim Service/AIGaimGTalkAccount.m"; sourceTree = "<group>"; };
