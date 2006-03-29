@@ -16,9 +16,12 @@
 
 #import <Adium/AIPlugin.h>
 
-@interface ESBlockingPlugin : AIPlugin {
+@interface ESBlockingPlugin : AIPlugin <AIListObjectObserver> {
 	NSMenuItem  *blockContactMenuItem;
 	NSMenuItem  *blockContactContextualMenuItem;
+	
+	NSMutableSet	*chatToolbarItems;
+	NSDictionary	*blockedToolbarIcons;
 }
 
 - (IBAction)blockContact:(id)sender;
