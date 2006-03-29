@@ -17,30 +17,56 @@
 #import "AIAccountController.h"
 #import "AIContactController.h"
 #import "AIMenuController.h"
+#import "AIToolbarController.h"
+#import "AIInterfaceController.h"
+#import "AIChatController.h"
 #import "ESBlockingPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIToolbarUtilities.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
+#import <Adium/AIChat.h>
 
-#define BLOCK_CONTACT	AILocalizedString(@"Block","Block Contact menu item")
-#define UNBLOCK_CONTACT AILocalizedString(@"Unblock","Unblock Contact menu item")
+#define BLOCK_CONTACT				AILocalizedString(@"Block","Block Contact menu item")
+#define UNBLOCK_CONTACT				AILocalizedString(@"Unblock","Unblock Contact menu item")
+#define TOOLBAR_ITEM_IDENTIFIER		@"chatItem"
+#define TOOLBAR_BLOCK_ICON_KEY		@"Block"
+#define TOOLBAR_UNBLOCK_ICON_KEY	@"Unblock"
 
 @interface ESBlockingPlugin(PRIVATE)
 - (void)_blockContact:(AIListContact *)contact unblock:(BOOL)unblock;
 - (BOOL)_searchPrivacyListsForListContact:(AIListContact *)contact withDesiredResult:(BOOL)desiredResult;
 - (void)accountConnected:(NSNotification *)notification;
+- (BOOL)areAllGivenContactsBlocked:(NSArray *)contacts;
+- (void)setPrivacy:(BOOL)block forContacts:(NSArray *)contacts;
+- (IBAction)blockOrUnblockParticipants:(NSToolbarItem *)senderItem;
+
+//protocols
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
+
+//notifications
+- (void)chatDidBecomeVisible:(NSNotification *)notification;
+- (void)toolbarWillAddItem:(NSNotification *)notification;
+- (void)toolbarDidRemoveItem:(NSNotification *)notification;
+
+//toolbar item methods
+- (void)updateToolbarIconOfChat:(AIChat *)inChat inWindow:(NSWindow *)window;
+- (void)updateToolbarItem:(NSToolbarItem *)item forChat:(AIChat *)chat;
+- (void)updateToolbarItemForObject:(AIListObject *)inObject;
 @end
 
+#pragma mark -
 @implementation ESBlockingPlugin
 
 - (void)installPlugin
 {
 	//Install the Block menu items
 	blockContactMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_CONTACT
-														 target:self
-														 action:@selector(blockContact:)
-												  keyEquivalent:@""];
+													  target:self
+													  action:@selector(blockContact:)
+											   keyEquivalent:@""];
 	[[adium menuController] addMenuItem:blockContactMenuItem toLocation:LOC_Contact_NegativeAction];
 
     //Add our get info contextual menu items
@@ -55,15 +81,65 @@
 								   selector:@selector(accountConnected:)
 									   name:ACCOUNT_CONNECTED
 									 object:nil];
+	
+	//create the block toolbar item
+	chatToolbarItems = [[NSMutableSet alloc] init];
+	//cache toolbar icons
+	blockedToolbarIcons = [[NSDictionary alloc] initWithObjectsAndKeys:
+								[NSImage imageNamed:@"block.png" forClass:[self class]], TOOLBAR_BLOCK_ICON_KEY, 
+								[NSImage imageNamed:@"unblock.png" forClass:[self class]], TOOLBAR_UNBLOCK_ICON_KEY, 
+								nil];
+	NSToolbarItem	*chatItem = [AIToolbarUtilities toolbarItemWithIdentifier:TOOLBAR_ITEM_IDENTIFIER
+																		label:BLOCK_CONTACT
+																 paletteLabel:BLOCK_CONTACT
+																	  toolTip:BLOCK_CONTACT
+																	   target:self
+															  settingSelector:@selector(setImage:)
+																  itemContent:[blockedToolbarIcons valueForKey:TOOLBAR_BLOCK_ICON_KEY]
+																	   action:@selector(blockOrUnblockParticipants:)
+																		 menu:nil];
+	
+	[[adium toolbarController] registerToolbarItem:chatItem forToolbarType:@"MessageWindow"];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(toolbarWillAddItem:)
+												 name:NSToolbarWillAddItemNotification
+											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(toolbarDidRemoveItem:)
+												 name:NSToolbarDidRemoveItemNotification
+											   object:nil];
+	[[adium contactController] registerListObjectObserver:self];
 }
 
 - (void)uninstallPlugin
 {
 	[[adium notificationCenter] removeObserver:self];
+	[[adium contactController] unregisterListObjectObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[chatToolbarItems release];
+	[blockedToolbarIcons release];
 	[blockContactMenuItem release];
 	[blockContactContextualMenuItem release];
 }
 
+/*!
+ * @brief Block or unblock contacts
+ *
+ * @param block Flag indicating what the operation should achieve: NO for unblock, YES for block.
+ * @param contacts The contacts to block or unblock
+ */
+- (void)setPrivacy:(BOOL)block forContacts:(NSArray *)contacts
+{
+	NSEnumerator	*contactEnumerator = [contacts objectEnumerator];
+	AIListContact	*currentContact = nil;
+	
+	while ((currentContact = [contactEnumerator nextObject])) {
+		if ([currentContact isBlocked] != block) {
+			[currentContact setIsBlocked:block updateList:YES];
+		}
+	}
+}
 
 - (IBAction)blockContact:(id)sender
 {
@@ -192,6 +268,7 @@
 	return NO;
 }
 
+#pragma mark -
 #pragma mark Private
 //Private --------------------------------------------------------------------------------------------------------------
 
@@ -254,6 +331,206 @@
 			} else {
 				[currentContact setIsBlocked:NO updateList:NO];
 			}
+		}
+	}
+}
+
+/*!
+ * @brief Determine if all the referenced contacts are blocked or unblocked
+ *
+ * @param contacts The contacts to query
+ * @result A flag indicating if all the contacts are blocked or not
+ */
+- (BOOL)areAllGivenContactsBlocked:(NSArray *)contacts
+{
+	NSEnumerator	*contactEnumerator = [contacts objectEnumerator];
+	AIListContact	*currentContact = nil;
+	BOOL			areAllGivenContactsBlocked = YES;
+	
+	//for each contact in the array
+	while ((currentContact = [contactEnumerator nextObject])) {
+		
+		//if the contact is unblocked, then all the contacts in the array aren't blocked
+		if (![currentContact isBlocked]) {
+			areAllGivenContactsBlocked = NO;
+			break;
+		}
+	}
+	
+	return areAllGivenContactsBlocked;
+}
+
+/*!
+ * @brief Block or unblock participants of the active chat in a chat window
+ *
+ * If all the participants of the chat are blocked, attempt to unblock each
+ * Else, attempt to block those that are not already blocked.
+ * Then, Update the item for the chat.
+ *
+ * We have to do it this way because a user can (un)block participants of 
+ * a chat window in the background by command-clicking the toolbar item.
+ *
+ * @param senderItem The toolbar item that received the event
+ */
+- (IBAction)blockOrUnblockParticipants:(NSToolbarItem *)senderItem
+{
+	NSEnumerator	*windowEnumerator = [[NSApp windows] objectEnumerator];
+	NSWindow		*currentWindow = nil;
+	NSToolbar		*windowToolbar = nil;
+	NSToolbar		*senderToolbar = [senderItem toolbar];
+	AIChat			*activeChatInWindow = nil;
+	NSArray			*participants = nil;
+	
+	//for each open window
+	while ((currentWindow = [windowEnumerator nextObject])) {
+
+		//if it has a toolbar
+		if ((windowToolbar = [currentWindow toolbar])) {
+
+			//do the toolbars match?
+			if (windowToolbar == senderToolbar) {
+				activeChatInWindow = [[adium interfaceController] activeChatInWindow:currentWindow];
+				participants = [activeChatInWindow participatingListObjects];
+				
+				//do the deed
+				[self setPrivacy:(![self areAllGivenContactsBlocked:participants]) forContacts:participants];
+				[self updateToolbarItem:senderItem forChat:activeChatInWindow];
+				break;
+			}
+		}
+	}
+}
+
+#pragma mark -
+#pragma mark Protocols
+
+/*!
+ * @brief Update any chat with the list object
+ *
+ * If the list object is (un)blocked, update any chats that we my have open with it.
+ */
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+{
+	if ([inModifiedKeys containsObject:@"isBlocked"]) {
+		[self updateToolbarItemForObject:inObject];
+	}
+	
+	return nil;
+}
+
+#pragma mark -
+#pragma mark Notifications
+
+/*!
+ * @brief Toolbar has added an instance of the chat block toolbar item
+ */
+- (void)toolbarWillAddItem:(NSNotification *)notification
+{
+	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
+	
+	if ([[item itemIdentifier] isEqualToString:TOOLBAR_ITEM_IDENTIFIER]) {
+		
+		//If this is the first item added, start observing for chats becoming visible so we can update the item
+		if ([chatToolbarItems count] == 0) {
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(chatDidBecomeVisible:)
+											   name:@"AIChatDidBecomeVisible"
+											 object:nil];
+		}
+		
+		[self updateToolbarItem:item forChat:[[adium interfaceController] activeChat]];
+		[chatToolbarItems addObject:item];
+	}
+}
+
+/*!
+ * @brief A toolbar item was removed
+ */
+- (void)toolbarDidRemoveItem:(NSNotification *)notification
+{
+	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
+	[chatToolbarItems removeObject:item];
+	
+	if ([chatToolbarItems count] == 0) {
+		[[adium notificationCenter] removeObserver:self
+											  name:@"AIChatDidBecomeVisible"
+											object:nil];
+	}
+}
+
+/*!
+ * @brief A chat became visible in a window.
+ *
+ * Update the window's (un)block toolbar item to reflect the block state of a list object
+ *
+ * @param notification Notification with an AIChat object and an @"NSWindow" userInfo key
+ */
+- (void)chatDidBecomeVisible:(NSNotification *)notification
+{
+	[self updateToolbarIconOfChat:[notification object]
+						  inWindow:[[notification userInfo] objectForKey:@"NSWindow"]];
+}
+
+#pragma mark -
+#pragma mark Toolbar Item Update Methods
+
+/*!
+ * @brief Update the toolbar icon in a chat for a particular contact
+ *
+ * @param inObject The list object we want to update the toolbar item for
+ */
+- (void)updateToolbarItemForObject:(AIListObject *)inObject
+{
+	AIChat		*chat = nil;
+	NSWindow	*window = nil;
+	
+	//Update the icon in the toolbar for this contact if a chat is open and we have any toolbar items
+	if (([chatToolbarItems count] > 0) &&
+		[inObject isKindOfClass:[AIListContact class]] &&
+		(chat = [[adium chatController] existingChatWithContact:(AIListContact *)inObject]) &&
+		(window = [[adium interfaceController] windowForChat:chat])) {
+		[self updateToolbarIconOfChat:chat
+							  inWindow:window];
+	}
+}
+
+/*!
+ * @brief Update the toolbar item for the particpants of a particular chat
+ *
+ * @param item The toolbar item to modify
+ * @param chat The chat for which the participants are participating in
+ */
+- (void)updateToolbarItem:(NSToolbarItem *)item forChat:(AIChat *)chat
+{
+	if ([self areAllGivenContactsBlocked:[chat participatingListObjects]]) {
+		//assume unblock appearance
+		[item setLabel:UNBLOCK_CONTACT];
+		[item setPaletteLabel:UNBLOCK_CONTACT];
+		[item setImage:[blockedToolbarIcons valueForKey:TOOLBAR_UNBLOCK_ICON_KEY]];
+	} else {
+		//assume block appearance
+		[item setLabel:BLOCK_CONTACT];
+		[item setPaletteLabel:BLOCK_CONTACT];
+		[item setImage:[blockedToolbarIcons valueForKey:TOOLBAR_BLOCK_ICON_KEY]];
+	}
+}
+
+/*!
+ * @brief Update the (un)block toolbar icon in a chat
+ *
+ * @param chat The chat with the participants
+ * @param window The window in which the chat resides
+ */
+- (void)updateToolbarIconOfChat:(AIChat *)chat inWindow:(NSWindow *)window
+{
+	NSToolbar		*toolbar = [window toolbar];
+	NSEnumerator	*enumerator = [[toolbar items] objectEnumerator];
+	NSToolbarItem	*item;
+	
+	while ((item = [enumerator nextObject])) {
+		if ([[item itemIdentifier] isEqualToString:TOOLBAR_ITEM_IDENTIFIER]) {
+			[self updateToolbarItem:item forChat:chat];
+			break;
 		}
 	}
 }
