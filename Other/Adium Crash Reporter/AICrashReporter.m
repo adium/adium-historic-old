@@ -347,7 +347,7 @@
     char *path, unixDate[256], num[256],whoami[256];
 	FILE *f;
     if ((path = (char *)[[[[NSBundle mainBundle] resourcePath] stringByAppendingString:@"/../../../buildnum"] fileSystemRepresentation]) &&
-		([[NSFileManager defaultManager] fileExistsAtPath:path]) &&
+		([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithUTF8String:path]]) &&
 		(f= fopen(path, "r"))) {
 		if (f) {
 			fscanf(f, "%s | %s | %s", num, unixDate, whoami);
