@@ -17,6 +17,7 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <Carbon/Carbon.h>
+#import <AIUtilities/AIObjectAdditions.h>
 
 #import "ESFileTransferController.h"pdate
 #import "RAFjoscarLogHandler.h"
@@ -826,8 +827,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		fileTransferStatus = Not_Started_FileTransfer;
 		
 	} else if ([newState isEqualToString:@"CONNECTING"]) {
-#warning we get here before the transfer is actually accepted...
-		fileTransferStatus = Accepted_FileTransfer;
+		fileTransferStatus = Not_Started_FileTransfer;
 		
 	} else if ([newState isEqualToString:@"CONNECTED"]) {
 		//XXX Adium doesn't have a state for this yet
@@ -1326,6 +1326,8 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 			break;
 		case PRIVACY_ALLOW_USERS:
 			modeName = @"ALLOW_ALLOWED";
+			break;
+		default:
 			break;
 	}
 	[[[aimConnection getSsiService] getPermissionList] setPrivacyMode:[joscarBridge privacyModeFromString:modeName]];
