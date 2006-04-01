@@ -75,6 +75,8 @@ typedef enum {
 
 - (NSArray *)fileTransferArray;
 
+- (int)activeTransferCount;
+
 - (void)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer;
 
 - (void)fileTransfer:(ESFileTransfer *)fileTransfer didSetStatus:(FileTransferStatus)status;

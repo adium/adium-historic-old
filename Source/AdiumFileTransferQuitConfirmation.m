@@ -2,11 +2,11 @@
 //  AdiumUnreadMessagesQuitConfirmation.m
 //  Adium
 //
-//  Created by Evan Schoenberg on 12/15/05.
+//  Created by Matt Molinaro on 03/25/06.
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "AdiumUnreadMessagesQuitConfirmation.h"
+#import "AdiumFileTransferQuitConfirmation.h"
 #import "AIPreferenceController.h"
 
 #define PREF_GROUP_CONFIRMATIONS @"Confirmations"
@@ -15,22 +15,21 @@
  * @class AdiumUnreadMessagesQuitConfirmation
  * @brief Window controller for a confirmation when quitting with unread messages
  */
-@implementation AdiumUnreadMessagesQuitConfirmation
-
-static AdiumUnreadMessagesQuitConfirmation *unreadMessagesWindowController = nil;
+@implementation AdiumFileTransferQuitConfirmation
+static AdiumFileTransferQuitConfirmation *fileTransferWindowController = nil;
 
 /*
- * @brief Show the unread messages quit confirmatio dialog
+ * @brief Show the unread messages quit confirmation dialog
  */
-+ (void)showUnreadMessagesQuitConfirmation
++ (void)showFileTransferQuitConfirmation
 {
-	if (!unreadMessagesWindowController) {
-		unreadMessagesWindowController = [[self alloc] initWithWindowNibName:@"UnreadMessagesQuitConfirmation"];
+	if (!fileTransferWindowController) {
+		fileTransferWindowController = [[self alloc] initWithWindowNibName:@"FileTransferQuitConfirmation"];
 	}
 
 	//Configure and show window
-	[unreadMessagesWindowController showWindow:nil];
-	[[unreadMessagesWindowController window] makeKeyAndOrderFront:nil];	
+	[fileTransferWindowController showWindow:nil];
+	[[fileTransferWindowController window] makeKeyAndOrderFront:nil];	
 }
 
 /*
@@ -44,7 +43,7 @@ static AdiumUnreadMessagesQuitConfirmation *unreadMessagesWindowController = nil
 	[button_quit setLocalizedString:AILocalizedString(@"Quit", nil)];
 	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 	[checkBox_dontAskAgain setLocalizedString:AILocalizedString(@"Don't ask again", "Button for stopping the quit confirmation from being shown again")];
-	[textField_quitConfirmation setStringValue:AILocalizedString(@"You have unread messages.\nAre you sure you want to quit?",nil)];
+	[textField_quitConfirmation setStringValue:AILocalizedString(@"You have file transfers in progress.\nAre you sure you want to quit?",nil)];
 	
 	[[self window] center];
 }
@@ -58,8 +57,8 @@ static AdiumUnreadMessagesQuitConfirmation *unreadMessagesWindowController = nil
 {
 	[super windowWillClose:sender];
 
-	[unreadMessagesWindowController autorelease];
-	unreadMessagesWindowController = nil;
+	[fileTransferWindowController autorelease];
+	fileTransferWindowController = nil;
 }
 
 /*
@@ -72,7 +71,7 @@ static AdiumUnreadMessagesQuitConfirmation *unreadMessagesWindowController = nil
 	if (sender == button_quit) {
 		if ([checkBox_dontAskAgain state] == NSOnState) {
 			[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
-												 forKey:@"Suppress Quit Confirmation for Unread Messages"
+												 forKey:@"Suppress Quit Confirmation for File Transfers"
 												  group:PREF_GROUP_CONFIRMATIONS];
 		}
 			
@@ -83,5 +82,4 @@ static AdiumUnreadMessagesQuitConfirmation *unreadMessagesWindowController = nil
 }
 
 @end
-
 
