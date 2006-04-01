@@ -157,6 +157,22 @@ static ESFileTransferPreferences *preferences;
 	return fileTransfer;
 }
 
+- (int)activeTransferCount
+{
+	int count = 0;
+	ESFileTransfer *t;
+	NSEnumerator * fts = [fileTransferArray objectEnumerator];
+	while((t = [fts nextObject])) 
+	{
+		FileTransferStatus status = [t status];
+
+		if(status == Unknown_Status_FileTransfer || status == Not_Started_FileTransfer || status == Checksumming_Filetransfer || status == Accepted_FileTransfer || status == In_Progress_FileTransfer)
+			count++;
+	}
+	return count;
+}
+
+
 - (NSArray *)fileTransferArray
 {
 	return fileTransferArray;

@@ -1351,8 +1351,8 @@
 		9E6A9BF80732CB500032C9F6 /* adiumOffline.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF60732CB500032C9F6 /* adiumOffline.png */; };
 		9EA125E9055B630900ECF349 /* CBGaimOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA125E8055B630900ECF349 /* CBGaimOscarAccount.m */; };
 		9EA125EF055B633000ECF349 /* CBGaimOscarAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EA125EE055B633000ECF349 /* CBGaimOscarAccount.h */; };
-		9EF0DBFA09D944C200FBCC1E /* block.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EF0DBF309D944A300FBCC1E /* block.png */; };
-		9EF0DBFB09D944C200FBCC1E /* unblock.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EF0DBF409D944A300FBCC1E /* unblock.png */; };
+		9EF0DBFA09D944C200FBCC1E /* Resources/block.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EF0DBF309D944A300FBCC1E /* Resources/block.png */; };
+		9EF0DBFB09D944C200FBCC1E /* Resources/unblock.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EF0DBF409D944A300FBCC1E /* Resources/unblock.png */; };
 		A3C042D208D7483100B48CE1 /* GaimDefaultsGTalk.plist in Resources */ = {isa = PBXBuildFile; fileRef = A3C042D108D7483100B48CE1 /* GaimDefaultsGTalk.plist */; };
 		A3C0432108D74D3100B48CE1 /* AIGaimGTalkAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C0431B08D74D3100B48CE1 /* AIGaimGTalkAccount.h */; };
 		A3C0432208D74D3100B48CE1 /* AIGaimGTalkAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C0431C08D74D3100B48CE1 /* AIGaimGTalkAccount.m */; };
@@ -1368,6 +1368,9 @@
 		C45F7F6506C75E210056B1F2 /* BGContactsTable.h in Headers */ = {isa = PBXBuildFile; fileRef = C45F7F6206C75E200056B1F2 /* BGContactsTable.h */; };
 		C45F7F6606C75E210056B1F2 /* BGContactsTable.m in Sources */ = {isa = PBXBuildFile; fileRef = C45F7F6306C75E210056B1F2 /* BGContactsTable.m */; };
 		C45F7F6706C75E210056B1F2 /* showdrawer.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C45F7F6406C75E210056B1F2 /* showdrawer.tiff */; };
+		C962831709DEE5B4004235A9 /* AdiumFileTransferQuitConfirmation.m in Sources */ = {isa = PBXBuildFile; fileRef = C96282E609DE2FAA004235A9 /* AdiumFileTransferQuitConfirmation.m */; };
+		C962831809DEE5BD004235A9 /* AdiumFileTransferQuitConfirmation.h in Headers */ = {isa = PBXBuildFile; fileRef = C96282E709DE2FAA004235A9 /* AdiumFileTransferQuitConfirmation.h */; };
+		C962831909DEE5C3004235A9 /* FileTransferQuitConfirmation.nib in Resources */ = {isa = PBXBuildFile; fileRef = C96282E809DE2FAA004235A9 /* FileTransferQuitConfirmation.nib */; };
 		CA25AAA907B428C800DDBD7E /* BDFireImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = CA25AA9F07B428C600DDBD7E /* BDFireImporter.h */; };
 		CA25AAAA07B428C800DDBD7E /* BDFireImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CA25AAA007B428C700DDBD7E /* BDFireImporter.m */; };
 		CA25AAAB07B428C800DDBD7E /* BDiChatImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = CA25AAA107B428C700DDBD7E /* BDiChatImporter.h */; };
@@ -3484,8 +3487,8 @@
 		9EB3C52E04F94F24001D1F74 /* MainMenu.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MainMenu.nib; sourceTree = "<group>"; };
 		9EB3C53304F94FAE001D1F74 /* CBOldPrefsImporterAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBOldPrefsImporterAppController.h; sourceTree = "<group>"; };
 		9EB3C53404F94FAE001D1F74 /* CBOldPrefsImporterAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBOldPrefsImporterAppController.m; sourceTree = "<group>"; };
-		9EF0DBF309D944A300FBCC1E /* block.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Resources/block.png; sourceTree = "<group>"; };
-		9EF0DBF409D944A300FBCC1E /* unblock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Resources/unblock.png; sourceTree = "<group>"; };
+		9EF0DBF309D944A300FBCC1E /* Resources/block.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Resources/block.png; sourceTree = "<group>"; };
+		9EF0DBF409D944A300FBCC1E /* Resources/unblock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Resources/unblock.png; sourceTree = "<group>"; };
 		A3C042D108D7483100B48CE1 /* GaimDefaultsGTalk.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsGTalk.plist; path = "Plugins/Gaim Service/GaimDefaultsGTalk.plist"; sourceTree = "<group>"; };
 		A3C0431B08D74D3100B48CE1 /* AIGaimGTalkAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGaimGTalkAccount.h; path = "Plugins/Gaim Service/AIGaimGTalkAccount.h"; sourceTree = "<group>"; };
 		A3C0431C08D74D3100B48CE1 /* AIGaimGTalkAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGaimGTalkAccount.m; path = "Plugins/Gaim Service/AIGaimGTalkAccount.m"; sourceTree = "<group>"; };
@@ -3575,6 +3578,9 @@
 		C45F7F6206C75E200056B1F2 /* BGContactsTable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = BGContactsTable.h; path = Plugins/Logger/BGContactsTable.h; sourceTree = "<group>"; };
 		C45F7F6306C75E210056B1F2 /* BGContactsTable.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = BGContactsTable.m; path = Plugins/Logger/BGContactsTable.m; sourceTree = "<group>"; };
 		C45F7F6406C75E210056B1F2 /* showdrawer.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = showdrawer.tiff; path = Plugins/Logger/showdrawer.tiff; sourceTree = "<group>"; };
+		C96282E609DE2FAA004235A9 /* AdiumFileTransferQuitConfirmation.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumFileTransferQuitConfirmation.m; path = Source/AdiumFileTransferQuitConfirmation.m; sourceTree = "<group>"; };
+		C96282E709DE2FAA004235A9 /* AdiumFileTransferQuitConfirmation.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumFileTransferQuitConfirmation.h; path = Source/AdiumFileTransferQuitConfirmation.h; sourceTree = "<group>"; };
+		C96282E809DE2FAA004235A9 /* FileTransferQuitConfirmation.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FileTransferQuitConfirmation.nib; path = Resources/FileTransferQuitConfirmation.nib; sourceTree = "<group>"; };
 		CA25AA9F07B428C600DDBD7E /* BDFireImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BDFireImporter.h; sourceTree = "<group>"; };
 		CA25AAA007B428C700DDBD7E /* BDFireImporter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = BDFireImporter.m; sourceTree = "<group>"; };
 		CA25AAA107B428C700DDBD7E /* BDiChatImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BDiChatImporter.h; sourceTree = "<group>"; };
@@ -3934,7 +3940,6 @@
 				4B873F330840D14A00738987 /* Public Interface (Controllers) */,
 				4BC291F9083D9EDC0075F57D /* Core (Private classes for the Public Interface) */,
 				F53B9A1302CCEDCA01A8010A /* Adium.Framework */,
-				4BC291FC083D9EDD0075F57D /* Components */,
 				4BD6720906001B2C0049CAF7 /* Plugins (Built In) */,
 				344C0D4306B6D5E300DA7200 /* Applescriptability */,
 				4BF2E6BE067CB72400743318 /* Xtras (Built In) */,
@@ -4510,6 +4515,9 @@
 		347A2CEC09C26D3A0032764B /* File Transfer */ = {
 			isa = PBXGroup;
 			children = (
+				C96282E609DE2FAA004235A9 /* AdiumFileTransferQuitConfirmation.m */,
+				C96282E709DE2FAA004235A9 /* AdiumFileTransferQuitConfirmation.h */,
+				C96282E809DE2FAA004235A9 /* FileTransferQuitConfirmation.nib */,
 				3452A9F607891C8A00C3C494 /* ESFileTransferRequestPromptController.h */,
 				3452A9F707891C8A00C3C494 /* ESFileTransferRequestPromptController.m */,
 				34575E2A07CBA70D004A4FFF /* FileTransferRequestPrompt.nib */,
@@ -4853,8 +4861,8 @@
 			isa = PBXGroup;
 			children = (
 				110763F908676D04005987A5 /* BlockEditorWindow.nib */,
-				9EF0DBF309D944A300FBCC1E /* block.png */,
-				9EF0DBF409D944A300FBCC1E /* unblock.png */,
+				9EF0DBF309D944A300FBCC1E /* Resources/block.png */,
+				9EF0DBF409D944A300FBCC1E /* Resources/unblock.png */,
 				110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */,
 				110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */,
 				110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */,
@@ -5033,6 +5041,7 @@
 		34E104D60951E02300EBE478 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				4BC291FC083D9EDD0075F57D /* Components */,
 				34E104EA0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h */,
 				34E104EB0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m */,
 				34E105030951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib */,
@@ -6894,6 +6903,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BD9D11053146CC000AB133 /* AIPreferenceController.h in Headers */,
+				C962831809DEE5BD004235A9 /* AdiumFileTransferQuitConfirmation.h in Headers */,
 				34BD9D12053146CC000AB133 /* AIAccountController.h in Headers */,
 				34BD9D13053146CC000AB133 /* AIPreferenceWindowController.h in Headers */,
 				34BD9D15053146CC000AB133 /* AIInterfaceController.h in Headers */,
@@ -8298,10 +8308,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EF0DBFA09D944C200FBCC1E /* block.png in Resources */,
-				9EF0DBFB09D944C200FBCC1E /* unblock.png in Resources */,
+				9EF0DBFA09D944C200FBCC1E /* Resources/block.png in Resources */,
+				9EF0DBFB09D944C200FBCC1E /* Resources/unblock.png in Resources */,
 				346F5CB408A418FB0055C610 /* iTunes.png in Resources */,
 				346F5D3208A43E7B0055C610 /* CurrentTunes.scpt in Resources */,
+				C962831909DEE5C3004235A9 /* FileTransferQuitConfirmation.nib in Resources */,
 				349C30790867ADA3000BF883 /* AdiumApplescriptRunner in Resources */,
 				DA4B5CDF080FCC080017BF17 /* CoreComponents.plist in Resources */,
 				349C7C7A07C9AE1B005EB896 /* ContactListAdvancedPrefs.nib in Resources */,
@@ -9111,6 +9122,7 @@
 				3410746009B6965700565C9E /* AIMDLogViewerWindowController.m in Sources */,
 				34AE249E09BCCFA900A35B51 /* AIWindowDraggingView.m in Sources */,
 				342353D709D45726009FF634 /* AIAbstractLogViewerWindowController.m in Sources */,
+				C962831709DEE5B4004235A9 /* AdiumFileTransferQuitConfirmation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

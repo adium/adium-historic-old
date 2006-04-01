@@ -40,6 +40,7 @@
 #import "AIXtrasManager.h"
 #import "AdiumSetupWizard.h"
 #import "AdiumUnreadMessagesQuitConfirmation.h"
+#import "AdiumFileTransferQuitConfirmation.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <Adium/AIPathUtilities.h>
@@ -391,11 +392,19 @@ static NSString	*prefsCategory;
 - (IBAction)confirmQuit:(id)sender
 {
 	if (([chatController unviewedContentCount] > 0) &&
-		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation"
+		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for Unread Messages"
 											group:@"Confirmations"] boolValue])) {
 			[AdiumUnreadMessagesQuitConfirmation showUnreadMessagesQuitConfirmation];
 
-	} else {
+	} 
+	
+	if (([fileTransferController activeTransferCount] > 0) && 		
+	(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for File Transfers"
+										group:@"Confirmations"]  boolValue])) {
+				[AdiumFileTransferQuitConfirmation showFileTransferQuitConfirmation];
+	}
+	
+	else {
 		[NSApp terminate:nil];
 	}
 }
