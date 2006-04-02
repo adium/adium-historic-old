@@ -1361,12 +1361,11 @@ Date* javaDateFromDate(NSDate *date)
 	static NSJavaVirtualMachine	*vm = nil;
 	static BOOL attachedVmToMainRunLoop = NO;
 
-	BOOL onMainRunLoop = (CFRunLoopGetCurrent() == CFRunLoopGetMain());
+	BOOL			  onMainRunLoop = (CFRunLoopGetCurrent() == CFRunLoopGetMain());
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	@synchronized(vm) {
 		if (!vm) {
-			NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
 			NSString	*oscarJarPath, *joscarJarPath, *joscarBridgePath, *retroweaverJarPath, *socksJarPath;
 			NSString	*classPath;
 
@@ -1392,33 +1391,16 @@ Date* javaDateFromDate(NSDate *date)
 			
 			vm = [[NSJavaVirtualMachine alloc] initWithClassPath:classPath];
 			
-			if (onMainRunLoop) {
-				attachedVmToMainRunLoop = YES;
-			}
-
 			AILog(@"-[%@ prepareJavaVM]: Java %@ ; joscar %@. Using classPath: %@",
 				  self,
 				  [NSClassFromString(@"java.lang.System") getProperty:@"java.version"],
 				  [NSClassFromString(@"net.kano.joscar.JoscarTools") getVersionString],
 				  classPath);
 			
-			if (!NSClassFromString(@"net.kano.joscar.JoscarTools")) {
-				NSMutableString	*msg = [NSMutableString string];
-				
-				[msg appendFormat:@"Java version %@ could not load JoscarTools\n",[NSClassFromString(@"java.lang.System") getProperty:@"java.version"]];
-				[msg appendFormat:@"Retroweaver-rt.jar %@\n", ((NSClassFromString(@"com.rc.retroweaver.runtime.ClassLiteral") != NULL) ? @"loaded" : @"NOT loaded")];
-				[msg appendFormat:@"jsocks-klea.jar %@\n", ((NSClassFromString(@"socks.Proxy") != NULL) ? @"loaded" : @"NOT loaded")];
-				[msg appendFormat:@"joscar bridge.jar %@\n", ((NSClassFromString(@"net.adium.joscarBridge.joscarBridge") != NULL) ? @"loaded" : @"NOT loaded")];
-				[msg appendFormat:@"oscar.jar %@\n", ((NSClassFromString(@"net.kano.joustsim.Screenname") != NULL) ? @"loaded" : @"NOT loaded")];
-				[msg appendFormat:@"joscar-0.9.4-cvs-bin.jar %@\n", ((NSClassFromString(@"net.kano.joscar.JoscarTools") != NULL) ? @"loaded" : @"NOT loaded")];
-				[msg appendFormat:@"\nClass path: %@\n\n",classPath];
-
-				NSRunCriticalAlertPanel(@"Fatal Java error",
-										msg,
-										nil,nil,nil);
+			if (onMainRunLoop) {
+				attachedVmToMainRunLoop = YES;
 			}
 
-			[pool release];
 		} else {
 			if  (!attachedVmToMainRunLoop && onMainRunLoop) {
 				[vm attachCurrentThread];
@@ -1426,6 +1408,22 @@ Date* javaDateFromDate(NSDate *date)
 			}
 		}
 
+		if (onMainRunLoop &&
+			!NSClassFromString(@"net.kano.joscar.JoscarTools")) {
+			NSMutableString	*msg = [NSMutableString string];
+			
+			[msg appendFormat:@"Java version %@ could not load JoscarTools\n",[NSClassFromString(@"java.lang.System") getProperty:@"java.version"]];
+			[msg appendFormat:@"Retroweaver-rt.jar %@\n", ((NSClassFromString(@"com.rc.retroweaver.runtime.ClassLiteral") != NULL) ? @"loaded" : @"NOT loaded")];
+			[msg appendFormat:@"jsocks-klea.jar %@\n", ((NSClassFromString(@"socks.Proxy") != NULL) ? @"loaded" : @"NOT loaded")];
+			[msg appendFormat:@"joscar bridge.jar %@\n", ((NSClassFromString(@"net.adium.joscarBridge.joscarBridge") != NULL) ? @"loaded" : @"NOT loaded")];
+			[msg appendFormat:@"oscar.jar %@\n", ((NSClassFromString(@"net.kano.joustsim.Screenname") != NULL) ? @"loaded" : @"NOT loaded")];
+			[msg appendFormat:@"joscar-0.9.4-cvs-bin.jar %@\n", ((NSClassFromString(@"net.kano.joscar.JoscarTools") != NULL) ? @"loaded" : @"NOT loaded")];
+			
+			NSRunCriticalAlertPanel(@"Fatal Java error",
+									msg,
+									nil,nil,nil);
+		}
+		
 #ifdef DEBUG_BUILD
 		if (onMainRunLoop) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"AttachedJavaVM"
@@ -1433,6 +1431,8 @@ Date* javaDateFromDate(NSDate *date)
 		}
 #endif
 	}
+
+	[pool release];
 }
 
 
