@@ -19,6 +19,7 @@
 #import "ESGaimMeanwhileAccount.h"
 #import "ESGaimMeanwhileAccountViewController.h"
 #import "ESMeanwhileService.h"
+#import <AIUtilities/AICharacterSetAdditions.h>
 
 @implementation ESMeanwhileService
 
@@ -53,10 +54,17 @@
 }
 - (NSCharacterSet *)allowedCharacters{
 	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
+	NSCharacterSet			*returnSet;
+
 	[allowedCharacters formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
 	[allowedCharacters formUnionWithCharacterSet:[NSCharacterSet symbolCharacterSet]];
 	[allowedCharacters addCharactersInString:@" "];
 
+	returnSet = [allowedCharacters immutableCopy];
+	[allowedCharacters release];
+	
+	return [returnSet autorelease];
+	
 	return [allowedCharacters autorelease];
 }
 - (NSCharacterSet *)ignoredCharacters{
