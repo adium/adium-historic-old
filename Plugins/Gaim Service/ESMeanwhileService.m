@@ -64,8 +64,6 @@
 	[allowedCharacters release];
 	
 	return [returnSet autorelease];
-	
-	return [allowedCharacters autorelease];
 }
 - (NSCharacterSet *)ignoredCharacters{
 	return [NSCharacterSet characterSetWithCharactersInString:@""];
