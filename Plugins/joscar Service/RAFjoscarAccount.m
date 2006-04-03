@@ -245,11 +245,19 @@
 			}
 		}
 		
+	} else if ([newState isEqualToString:@"SIGNINGON"]) {
+		//At the start of signing on, we'll get a bunch of object notifications in rapid succession... group 'em
+		[[adium contactController] delayListObjectNotifications];
+		
 	} else if ([newState isEqualToString:@"ONLINE"]) {
+		//Now end the grouping we started in SIGNINGON
+		[[adium contactController] endListObjectNotificationsDelay];
+
+		//We're connected!
 		[self didConnect];
 		
-		//Silence initial updates
-		[self silenceAllContactUpdatesForInterval:18.0];
+		//Silence subsequent initial updates as they come in over the next 10 seconds or so
+		[self silenceAllContactUpdatesForInterval:10.0];
 		[[adium contactController] delayListObjectNotificationsUntilInactivity];
 	}
 	
