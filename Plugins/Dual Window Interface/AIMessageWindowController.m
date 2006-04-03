@@ -584,12 +584,13 @@
 - (BOOL)customTabView:(AICustomTabsView *)tabView didAcceptDragPasteboard:(NSPasteboard *)pasteboard onTabViewItem:(NSTabViewItem *)tabViewItem
 {
     NSString    *type = [pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSRTFPboardType]];
-	BOOL tmp = NO;
-    if ([type isEqualToString:NSRTFPboardType]) { //got RTF data
+	BOOL		handleDrag = [type isEqualToString:NSRTFPboardType];
+
+    if (handleDrag) { //got RTF data
         [[(AIMessageTabViewItem *)tabViewItem messageViewController] addToTextEntryView:[NSAttributedString stringWithData:[pasteboard dataForType:NSRTFPboardType]]];
-        tmp = YES;
     }
-    return tmp;
+
+    return handleDrag;
 }
 
 
