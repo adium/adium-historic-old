@@ -148,7 +148,7 @@ Boolean GetMetadataForHTMLLog(NSMutableDictionary *attributes, NSString *pathToF
 																 encoding:NSUTF8StringEncoding 
 																	error:NULL];
 	if (textContent) {
-		const char *plainText = gaim_markup_strip_html([textContent UTF8String]);
+		char *plainText = gaim_markup_strip_html([textContent UTF8String]);
 		[attributes setObject:[NSString stringWithUTF8String:plainText]
 					   forKey:(NSString *)kMDItemTextContent];
 		free((void *)plainText);
