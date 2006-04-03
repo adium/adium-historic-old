@@ -1425,10 +1425,9 @@ Date* javaDateFromDate(NSDate *date)
 		}
 		
 #ifdef DEBUG_BUILD
-		if (onMainRunLoop) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"AttachedJavaVM"
-																object:nil];
-		}
+		[[NSNotificationCenter defaultCenter] performSelector:@selector(postNotificationName:object:)
+												   withObject:@"AttachedJavaVM"
+												   withObject:nil];
 #endif
 	}
 
