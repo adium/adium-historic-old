@@ -1357,14 +1357,14 @@ Date* javaDateFromDate(NSDate *date)
 #pragma mark Java VM Preparation
 + (void)prepareJavaVM
 {
-	//Only one vm is needed for all accounts
-	static NSJavaVirtualMachine	*vm = nil;
-	static BOOL attachedVmToMainRunLoop = NO;
-
-	BOOL			  onMainRunLoop = (CFRunLoopGetCurrent() == CFRunLoopGetMain());
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	@synchronized(vm) {
+	@synchronized(self) {
+		//Only one vm is needed for all accounts
+		static	NSJavaVirtualMachine	*vm = nil;
+		static BOOL		attachedVmToMainRunLoop = NO;
+		BOOL			onMainRunLoop = (CFRunLoopGetCurrent() == CFRunLoopGetMain());
+
 		if (!vm) {
 			NSString	*oscarJarPath, *joscarJarPath, *joscarBridgePath, *retroweaverJarPath, *socksJarPath;
 			NSString	*classPath;
@@ -1418,7 +1418,7 @@ Date* javaDateFromDate(NSDate *date)
 			[msg appendFormat:@"joscar bridge.jar %@\n", ((NSClassFromString(@"net.adium.joscarBridge.joscarBridge") != NULL) ? @"loaded" : @"NOT loaded")];
 			[msg appendFormat:@"oscar.jar %@\n", ((NSClassFromString(@"net.kano.joustsim.Screenname") != NULL) ? @"loaded" : @"NOT loaded")];
 			[msg appendFormat:@"joscar-0.9.4-cvs-bin.jar %@\n", ((NSClassFromString(@"net.kano.joscar.JoscarTools") != NULL) ? @"loaded" : @"NOT loaded")];
-			
+
 			NSRunCriticalAlertPanel(@"Fatal Java error",
 									msg,
 									nil,nil,nil);
