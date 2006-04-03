@@ -19,6 +19,7 @@
 #import "ESGaimJabberAccount.h"
 #import "ESGaimJabberAccountViewController.h"
 #import "ESJabberService.h"
+#import <AIUtilities/AICharacterSetAdditions.h>
 
 @implementation ESJabberService
 
@@ -74,10 +75,13 @@
  */
 - (NSCharacterSet *)allowedCharacters{
 	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
+	NSCharacterSet			*returnSet;
 
 	[allowedCharacters addCharactersInString:@"._@-()[]%|\\"];
-	
-	return [allowedCharacters autorelease];
+	returnSet = [allowedCharacters immutableCopy];
+	[allowedCharacters release];
+
+	return [returnSet autorelease];
 }
 
 /*!
@@ -87,10 +91,13 @@
  */
 - (NSCharacterSet *)allowedCharactersForUIDs{
 	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
-	
+	NSCharacterSet			*returnSet;
+
 	[allowedCharacters addCharactersInString:@"._@-()[]%|\\/+"];
+	returnSet = [allowedCharacters immutableCopy];
+	[allowedCharacters release];
 	
-	return [allowedCharacters autorelease];
+	return [returnSet autorelease];
 }
 
 - (NSCharacterSet *)ignoredCharacters{
