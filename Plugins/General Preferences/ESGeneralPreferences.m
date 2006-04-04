@@ -53,22 +53,23 @@
 - (void)viewDidLoad
 {
 	BOOL			sendOnEnter, sendOnReturn;
-    NSDictionary	*prefDict;
 	
 	//Interface
-	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_INTERFACE];
-    [checkBox_messagesInTabs setState:[[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue]];
-	[checkBox_arrangeByGroup setState:[[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue]];
+    [checkBox_messagesInTabs setState:[[[adium preferenceController] preferenceForKey:KEY_TABBED_CHATTING
+																				group:PREF_GROUP_INTERFACE] boolValue]];
+	[checkBox_arrangeByGroup setState:[[[adium preferenceController] preferenceForKey:KEY_GROUP_CHATS_BY_GROUP
+																				group:PREF_GROUP_INTERFACE] boolValue]];
 
 	//Chat Cycling
-	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CHAT_CYCLING];
 	[popUp_tabKeys setMenu:[self tabKeysMenu]];
-	[popUp_tabKeys compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_TAB_SWITCH_KEYS] intValue]];
+	[popUp_tabKeys compatibleSelectItemWithTag:[[[adium preferenceController] preferenceForKey:KEY_TAB_SWITCH_KEYS
+																						 group:PREF_GROUP_CHAT_CYCLING] intValue]];
 
 	//General
-	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
-	sendOnEnter = [[prefDict objectForKey:SEND_ON_ENTER] boolValue];
-	sendOnReturn = [[prefDict objectForKey:SEND_ON_RETURN] boolValue];
+	sendOnEnter = [[[adium preferenceController] preferenceForKey:SEND_ON_ENTER
+															group:PREF_GROUP_GENERAL] boolValue];
+	sendOnReturn = [[[adium preferenceController] preferenceForKey:SEND_ON_RETURN
+															group:PREF_GROUP_GENERAL] boolValue];
 	[popUp_sendKeys setMenu:[self sendKeysMenu]];
 	
 	if (sendOnEnter && sendOnReturn) {
@@ -80,12 +81,12 @@
 	}
 
 	//Logging
-	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
-	[checkBox_enableLogging setState:[[prefDict objectForKey:KEY_LOGGER_ENABLE] boolValue]];
+	[checkBox_enableLogging setState:[[[adium preferenceController] preferenceForKey:KEY_LOGGER_ENABLE
+																			   group:PREF_GROUP_LOGGING] boolValue]];
 
 	//Status Menu
-	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_MENU_ITEM];
-	[checkBox_enableMenuItem setState:[[prefDict objectForKey:KEY_STATUS_MENU_ITEM_ENABLED] boolValue]];
+	[checkBox_enableMenuItem setState:[[[adium preferenceController] preferenceForKey:KEY_STATUS_MENU_ITEM_ENABLED
+																				group:PREF_GROUP_LOGGING] boolValue]];
 		
     [self configureControlDimming];
 }
