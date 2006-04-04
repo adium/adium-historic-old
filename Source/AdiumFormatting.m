@@ -73,10 +73,12 @@
 - (NSDictionary *)defaultFormattingAttributes
 {
 	if(!_defaultAttributes){
-		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
-		NSFont	*font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
-		NSColor	*textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
-		NSColor	*backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
+		NSFont	*font = [[[adium preferenceController] preferenceForKey:KEY_FORMATTING_FONT
+																  group:PREF_GROUP_FORMATTING] representedFont];
+		NSColor	*textColor = [[[adium preferenceController] preferenceForKey:KEY_FORMATTING_TEXT_COLOR
+																	   group:PREF_GROUP_FORMATTING] representedColor];
+		NSColor	*backgroundColor = [[[adium preferenceController] preferenceForKey:KEY_FORMATTING_BACKGROUND_COLOR
+																			 group:PREF_GROUP_FORMATTING] representedColor];
 				
 		//Build formatting dict
 		_defaultAttributes = [[NSMutableDictionary dictionaryWithObject:font forKey:NSFontAttributeName] retain];
