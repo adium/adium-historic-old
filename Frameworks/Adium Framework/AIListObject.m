@@ -697,6 +697,14 @@
 	return NO;
 }
 
+/*
+- (BOOL)isEqual:(id)anObject
+{
+	return ([anObject isMemberOfClass:[self class]] &&
+			[[(AIListObject *)anObject internalObjectID] isEqualToString:[self internalObjectID]]);
+}
+*/
+
 #pragma mark Debugging
 - (NSString *)description
 {
