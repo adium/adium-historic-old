@@ -16,13 +16,14 @@
 
 #import <Adium/AIObject.h>
 
-@class AIWebKitMessageViewPlugin, AIWebkitMessageViewStyle, AIContentObject, ESWebView;
+@class AIWebKitMessageViewPlugin, AIWebkitMessageViewStyle, AIContentObject, ESWebView, DOMDocument;
 
 @protocol AIMessageViewController;
 
 @interface AIWebKitMessageViewController : AIObject <AIMessageViewController> {
 	id							plugin;
 	ESWebView					*webView;
+	DOMDocument					*domDocument;
 	AIChat						*chat;
 	BOOL						shouldReflectPreferenceChanges;
 
