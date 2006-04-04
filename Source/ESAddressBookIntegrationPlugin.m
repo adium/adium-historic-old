@@ -440,7 +440,6 @@ NSString* serviceIDForJabberUID(NSString *UID);
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
     if ([group isEqualToString:PREF_GROUP_ADDRESSBOOK]) {
-        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
 		BOOL			oldCreateMetaContacts = createMetaContacts;
 		
         //load new displayFormat
