@@ -126,7 +126,7 @@
 	BOOL            enableImport = [[[adium preferenceController] preferenceForKey:KEY_AB_ENABLE_IMPORT
 																			 group:PREF_GROUP_ADDRESSBOOK] boolValue];
 	BOOL            useImages = [[[adium preferenceController] preferenceForKey:KEY_AB_USE_IMAGES
-																		  gorup:PREF_GROUP_ADDRESSBOOK] boolValue];
+																		  group:PREF_GROUP_ADDRESSBOOK] boolValue];
 	
 	//Use Nick Name and the format menu are irrelevent if importing of names is not enabled
 	[checkBox_useNickName setEnabled:enableImport];	
