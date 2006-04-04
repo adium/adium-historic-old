@@ -601,8 +601,6 @@
  */
 - (void)_configureTextEntryView
 {	
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE] ;
-	
 	//Configure the text entry view
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
     [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
@@ -613,7 +611,8 @@
 	[textView_outgoing setTypingAttributes:[[adium contentController] defaultFormattingAttributes]];
 	
 	//User's choice of mininum height for their text entry view
-	entryMinHeight = [[prefDict objectForKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT] intValue];
+	entryMinHeight = [[[adium preferenceController] preferenceForKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT
+															   group:PREF_GROUP_DUAL_WINDOW_INTERFACE] intValue];
 	if (entryMinHeight < ENTRY_TEXTVIEW_MIN_HEIGHT) entryMinHeight = ENTRY_TEXTVIEW_MIN_HEIGHT;
 
 	
