@@ -596,7 +596,14 @@
 	return parentContact;
  }
  
-
+#pragma mark Equality
+/*
+- (BOOL)isEqual:(id)anObject
+{
+	return ([anObject isMemberOfClass:[self class]] &&
+			[[(AIListContact *)anObject internalUniqueObjectID] isEqualToString:[self internalUniqueObjectID]]);
+}
+*/
 //AppleScript ----------------------------------------------------------------------------------------------------------
 #pragma mark AppleScript
 
