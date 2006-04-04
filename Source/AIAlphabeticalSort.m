@@ -46,9 +46,10 @@ static  BOOL	sortByLastName;
 										  forGroup:PREF_GROUP_CONTACT_SORTING];
 	
 	//Load our preferences
-	NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING];
-	sortGroups = [[prefDict objectForKey:KEY_SORT_GROUPS] boolValue];
-	sortByLastName = [[prefDict objectForKey:KEY_SORT_BY_LAST_NAME] boolValue];
+	sortGroups = [[[adium preferenceController] preferenceForKey:KEY_SORT_GROUPS
+														   group:PREF_GROUP_CONTACT_SORTING] boolValue];
+	sortByLastName = [[[adium preferenceController] preferenceForKey:KEY_SORT_BY_LAST_NAME
+															   group:PREF_GROUP_CONTACT_SORTING] boolValue];
 }
 
 /*!
