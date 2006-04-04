@@ -77,17 +77,9 @@ typedef enum {
  * @brief Configure the preference view
  */
 - (void)viewDidLoad
-{
-    NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_APPEARANCE];
-	
+{	
 	//Other list options
 	[popUp_windowStyle setMenu:[self _windowStyleMenu]];
-	[popUp_windowStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]];	
-	[checkBox_verticalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue]];
-	[checkBox_horizontalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue]];
-	[slider_windowOpacity setFloatValue:([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY] floatValue] * 100.0)];
-	[slider_horizontalWidth setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue]];
-	[self _updateSliderValues];
 
 	//Localized strings
 	[label_serviceIcons setLocalizedString:AILocalizedString(@"Service icons:","Label for preference to select the icon pack to used for service (AIM, MSN, etc.)")];
@@ -122,7 +114,6 @@ typedef enum {
 - (void)xtrasChanged:(NSNotification *)notification
 {
 	NSString		*type = [[notification object] lowercaseString];
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_APPEARANCE];
 
 	if (!type || [type isEqualToString:@"adiumemoticonset"]) {
 		[self _rebuildEmoticonMenuAndSelectActivePack];
@@ -142,12 +133,14 @@ typedef enum {
 	
 	if (!type || [type isEqualToString:@"listtheme"]) {
 		[popUp_colorTheme setMenu:[self _colorThemeMenu]];
-		[popUp_colorTheme selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_THEME_NAME]];	
+		[popUp_colorTheme selectItemWithRepresentedObject:[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME
+																								   group:PREF_GROUP_APPEARANCE]];
 	}
 
 	if (!type || [type isEqualToString:@"listlayout"]) {
 		[popUp_listLayout setMenu:[self _listLayoutMenu]];
-		[popUp_listLayout selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]];
+		[popUp_listLayout selectItemWithRepresentedObject:[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME
+																								   group:PREF_GROUP_APPEARANCE]];
 	}
 }
 
@@ -222,7 +215,15 @@ typedef enum {
 		}	
 		if (firstTime || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]) {
 			[popUp_dockIcon selectItemWithRepresentedObject:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
-		}		
+		}
+		if (firstTime) {
+			[popUp_windowStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]];	
+			[checkBox_verticalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue]];
+			[checkBox_horizontalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue]];
+			[slider_windowOpacity setFloatValue:([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY] floatValue] * 100.0)];
+			[slider_horizontalWidth setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue]];
+			[self _updateSliderValues];
+		}
 	}
 }
 
