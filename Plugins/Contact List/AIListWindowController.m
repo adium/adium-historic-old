@@ -339,9 +339,9 @@
 	BOOL groupLayout = ([group isEqualToString:PREF_GROUP_LIST_LAYOUT]);
 	BOOL groupTheme = ([group isEqualToString:PREF_GROUP_LIST_THEME]);
     if (groupLayout || (groupTheme && !firstTime)) { /* We don't want to execute this code twice when initializing */
-        NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
+		NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 		NSDictionary	*themeDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
-		
+
 		//Layout only
 		if (groupLayout) {
 			int iconSize = [[layoutDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue];
@@ -418,23 +418,26 @@
 //
 - (void)showWindowInFront:(BOOL)inFront
 {
-	NSWindow * w = [self window];
+	NSWindow	*window = [self window];
 	if (inFront) {
 		[self showWindow:nil];
 	} else {
-		[w orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
+		[window orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
 	}
-	NSDictionary * prefsDict = [[[AIObject sharedAdiumInstance] preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
-	[w setHasShadow:[[prefsDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue]];
-	[w setFrameUsingName:@"SavedContactListFrame" force:YES];
-	[self setSavedFrame:[w frame]];
-	NSNumber *opacity = [prefsDict objectForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY];
-	[w setAlphaValue:(opacity != nil) ? [opacity floatValue] : 1.0f];
+	
+	[window setHasShadow:[[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_HAS_SHADOW
+																   group:PREF_GROUP_CONTACT_LIST] boolValue]];
+	[window setFrameUsingName:@"SavedContactListFrame" force:YES];
+	[self setSavedFrame:[window frame]];
+	
+	NSNumber *opacity = [[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY
+																 group:PREF_GROUP_CONTACT_LIST];
+	[window setAlphaValue:((opacity != nil) ? [opacity floatValue] : 1.0f)];
 
-	previousAlpha = [w alphaValue];
+	previousAlpha = [window alphaValue];
 	windowSlidOffScreenEdgeMask = AINoEdges;
 	
-	currentScreen = [w screen];
+	currentScreen = [window screen];
 	currentScreenFrame = [currentScreen frame];
 
 	if ([[NSScreen screens] count] && 
