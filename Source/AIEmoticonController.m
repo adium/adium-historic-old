@@ -589,7 +589,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
         _activeEmoticonPacks = [[NSMutableArray alloc] init];
         
         //Get the names of our active packs
-        activePackNames = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS] objectForKey:KEY_EMOTICON_ACTIVE_PACKS];
+        activePackNames = [[adium preferenceController] preferenceForKey:KEY_EMOTICON_ACTIVE_PACKS
+																   group:PREF_GROUP_EMOTICONS];
         //Use the names to build an array of the desired emoticon packs
         enumerator = [activePackNames objectEnumerator];
         while ((packName = [enumerator nextObject])) {
