@@ -41,9 +41,8 @@
 
 - (void)viewDidLoad
 {
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_MSN_SERVICE];
-	
-	[checkBox_treatDisplayNamesAsStatus setState:[[prefDict objectForKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS] boolValue]];
+	[checkBox_treatDisplayNamesAsStatus setState:[[[adium preferenceController] preferenceForKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS
+																						   group:PREF_GROUP_MSN_SERVICE] boolValue]];
 	
 	[checkBox_treatDisplayNamesAsStatus setLocalizedString:AILocalizedString(@"Show display names as status messages",nil)];
 	
