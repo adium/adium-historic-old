@@ -87,8 +87,8 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    NSDictionary		*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FILE_TRANSFER];
-	FTAutoAcceptType	autoAcceptType = [[prefDict objectForKey:KEY_FT_AUTO_ACCEPT] intValue];
+	FTAutoAcceptType	autoAcceptType = [[[adium preferenceController] preferenceForKey:KEY_FT_AUTO_ACCEPT
+																				   group:PREF_GROUP_FILE_TRANSFER] intValue];
 	
 	[self buildDownloadLocationMenu];
 	
@@ -109,9 +109,12 @@
 			break;
 	}
 	
-	[checkBox_autoOpenFiles setState:[[prefDict objectForKey:KEY_FT_AUTO_OPEN_SAFE] boolValue]];
-	[checkBox_showProgress setState:[[prefDict objectForKey:KEY_FT_SHOW_PROGRESS_WINDOW] boolValue]];
-	[checkBox_autoClearCompleted setState:[[prefDict objectForKey:KEY_FT_AUTO_CLEAR_COMPLETED] boolValue]];
+	[checkBox_autoOpenFiles setState:[[[adium preferenceController] preferenceForKey:KEY_FT_AUTO_OPEN_SAFE
+																			   group:PREF_GROUP_FILE_TRANSFER] boolValue]];
+	[checkBox_showProgress setState:[[[adium preferenceController] preferenceForKey:KEY_FT_SHOW_PROGRESS_WINDOW
+																			  group:PREF_GROUP_FILE_TRANSFER] boolValue]];
+	[checkBox_autoClearCompleted setState:[[[adium preferenceController] preferenceForKey:KEY_FT_AUTO_CLEAR_COMPLETED
+																					group:PREF_GROUP_FILE_TRANSFER] boolValue]];
 
 	[self configureControlDimming];
 	
