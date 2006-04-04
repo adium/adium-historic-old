@@ -90,7 +90,11 @@
 //Incomplete - make AIStatus scriptable, pass that in
 - (void)setMyStatus:(AIStatus *)newStatus
 {
-	[[adium statusController] setActiveStatusState:newStatus];
+	if ([newStatus isKindOfClass:[AIStatus class]]) {
+		[[adium statusController] setActiveStatusState:newStatus];
+	} else {
+		NSLog(@"Applescript error: Tried to set status to %@ which is of class %@.  This method expects an object of class %@.",newStatus, NSStringFromClass([newStatus class]),NSStringFromClass([AIStatus class]));
+	}
 }
 
 - (AIStatusTypeApplescript)myStatusTypeApplescript
