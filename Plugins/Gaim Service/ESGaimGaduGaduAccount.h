@@ -15,12 +15,6 @@
  */
 
 #import "CBGaimAccount.h"
-#import "libgg.h"
-
-struct agg_data {
-	struct gg_session *sess;
-	int own_status;
-};
 
 @interface ESGaimGaduGaduAccount : CBGaimAccount {
     
