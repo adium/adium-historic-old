@@ -203,7 +203,7 @@
 		
 		//Finder won't update Adium's icon to match the new one until it is restarted if we don't
 		//tell NSWorkspace to note the change.
-		[[NSWorkspace sharedWorkspace] noteFileSystemChanged:[[NSBundle mainBundle] bundlePath]];		
+		[[NSWorkspace sharedWorkspace] noteFileSystemChanged:[[NSBundle mainBundle] bundlePath]];
 	}
 }
 
