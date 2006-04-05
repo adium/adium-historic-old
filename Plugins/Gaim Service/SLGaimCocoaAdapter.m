@@ -22,8 +22,6 @@
 #import "AILoginController.h"
 #import "AICorePluginLoader.h"
 #import "CBGaimAccount.h"
-#import "ESGaimAIMAccount.h"
-#import "CBGaimOscarAccount.h"
 #import "CBGaimServicePlugin.h"
 #import "adiumGaimCore.h"
 #import "adiumGaimEventloop.h"
@@ -39,14 +37,13 @@
 #import <CoreFoundation/CFRunLoop.h>
 #import <CoreFoundation/CFSocket.h>
 #include <Libgaim/libgaim.h>
-//#include <Libgaim/oscar-adium.h>
 #include <glib.h>
 #include <stdlib.h>
 
-//For MSN user icons
-//#include <libgaim/session.h>
-//#include <libgaim/userlist.h>
-//#include <libgaim/user.h>
+#ifndef JOSCAR_SUPERCEDE_LIBGAIM
+	#import "ESGaimAIMAccount.h"
+	#import "CBGaimOscarAccount.h"
+#endif
 
 //Gaim slash command interface
 #include <Libgaim/cmds.h>
@@ -130,7 +127,6 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	account->ui_data = [adiumAccount retain];
 	
 	gaim_accounts_add(account);
-	gaim_account_set_ui_bool(account, "Adium", "auto-login", TRUE);
 	gaim_account_set_status_list(account, "offline", YES, NULL);
 }
 
@@ -737,7 +733,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 #pragma mark Thread accessors
 - (void)disconnectAccount:(id)adiumAccount
 {
-	gaim_account_set_status_list(accountLookupFromAdiumAccount(adiumAccount), "offline", YES, NULL);
+	AILog(@"Setting %x disabled...",accountLookupFromAdiumAccount(adiumAccount));
+	gaim_account_set_enabled(accountLookupFromAdiumAccount(adiumAccount), "Adium", NO);
 }
 
 - (void)registerAccount:(id)adiumAccount
@@ -1113,6 +1110,10 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	AILog(@"Setting status on %x (%s): ID %s, isActive %i, attributes %@",account, gaim_account_get_username(account),
 		  statusID, [isActive boolValue], arguments);
 	gaim_account_set_status_list(account, statusID, [isActive boolValue], attrs);
+
+	if (!gaim_account_get_enabled(account, "Adium")) {
+		gaim_account_set_enabled(account, "Adium", YES);
+	}
 }
 
 - (void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
@@ -1209,6 +1210,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 }
 
 #pragma mark Protocol specific accessors
+#ifndef JOSCAR_SUPERCEDE_LIBGAIM
 - (void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
@@ -1238,6 +1240,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		oscar_reformat_screenname(gaim_account_get_connection(account), [inFormattedUID UTF8String]);
 	}
 }
+#endif
 
 #pragma mark Request callbacks
 

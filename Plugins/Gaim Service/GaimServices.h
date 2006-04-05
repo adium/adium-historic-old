@@ -14,9 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESAIMService.h"
-#import "ESICQService.h"
-#import "ESDotMacService.h"
+#ifndef JOSCAR_SUPERCEDE_LIBGAIM
+	#import "ESAIMService.h"
+	#import "ESICQService.h"
+	#import "ESDotMacService.h"
+#endif
+
 #import "ESGaduGaduService.h"
 #import "AIGTalkService.h"
 #import "ESJabberService.h"
