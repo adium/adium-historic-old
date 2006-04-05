@@ -79,7 +79,6 @@ static void adiumGaimPrefsInit(void)
 	//MSN preferences
 	gaim_prefs_set_bool("/plugins/prpl/msn/conv_close_notice", TRUE);
 	gaim_prefs_set_bool("/plugins/prpl/msn/conv_timeout_notice", TRUE);
-	
 
 	//Ensure we are using caching
 	gaim_buddy_icons_set_caching(TRUE);
@@ -113,9 +112,6 @@ static void adiumGaimCoreUiInit(void)
 		*/	
 	//Setup the buddy list; then load the blist.
 	gaim_set_blist(gaim_blist_new());
-
-	//Turn off buddy icon caching
-	gaim_buddy_icons_set_caching(FALSE);
 
 	gaim_blist_load();
 	

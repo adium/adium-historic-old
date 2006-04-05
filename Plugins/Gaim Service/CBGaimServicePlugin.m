@@ -40,6 +40,7 @@
 	
     //Install the services
 #ifndef JOSCAR_SUPERCEDE_LIBGAIM
+	/* Not currently compiled */
 	AIMService			= [[ESAIMService alloc] init];
 	DotMacService		= [[ESDotMacService alloc] init];
 	ICQService			= [[ESICQService alloc] init];

@@ -15,7 +15,7 @@
  */
 
 #import "CBGaimAccount.h"
-#import <Libgaim/aim.h>
+#import <Libgaim/oscar.h>
 
 @class AIHTMLDecoder;
 

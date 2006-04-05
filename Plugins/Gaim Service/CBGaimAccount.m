@@ -1585,7 +1585,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:NotifyNow];
 	
-	GaimDebug(@"%@ reported disconnecting: %@",[self UID],lastDisconnectionError);
+	GaimDebug(@"%@ accountConnectionReportDisconnect: %@",self,lastDisconnectionError);
 }
 
 - (void)accountConnectionNotice:(NSString *)connectionNotice
@@ -1615,7 +1615,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	if ([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]/* && lastDisconnectionError*/) {
 		if (reconnectAttemptsRemaining && 
 			[self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError] && !(connectionIsSuicidal)) {
-			
+			GaimDebug(@"Automatically reconnecting in %1f seconds (%i attempts remaining)", AUTO_RECONNECT_DELAY, reconnectAttemptsRemaining);
 			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 			reconnectAttemptsRemaining--;
 		} else {
@@ -1631,13 +1631,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 			
 			//Clear our desire to be online.
+			/*
 			[self setPreference:nil
 						 forKey:@"Online"
 						  group:GROUP_ACCOUNT_STATUS];
+			 */
 		}
 	}
 	
 	//Report that we disconnected
+	GaimDebug(@"%@: Telling the core we disconnected", self);
 	[self didDisconnect];
 }
 
