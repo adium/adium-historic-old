@@ -22,8 +22,8 @@
 //From oscar.c
 typedef struct _OscarData OscarData;
 struct _OscarData {
-	aim_session_t *sess;
-	aim_conn_t *conn;
+	OscarSession *sess;
+	OscarConnection *conn;
 	
 	guint cnpa;
 	guint paspa;
