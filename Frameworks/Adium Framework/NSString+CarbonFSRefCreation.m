@@ -1,9 +1,18 @@
-//IconFamily depends heavily upon Carbon calls and thus will only work in Mac OS X
-#ifdef MAC_OS_X_VERSION_10_0
+/*
+    Copyright (c) 2001-2006 Troy N. Stephens
 
-#import "NSString+CarbonFSSpecCreation.h"
+    Use and distribution of this source code is governed by the MIT License, whose terms are as follows.
 
-@implementation NSString (CarbonFSSpecCreation)
+    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+#import "NSString+CarbonFSRefCreation.h"
+
+@implementation NSString (CarbonFSRefCreation)
 
 - (BOOL) getFSRef:(FSRef*)fsRef createFileIfNecessary:(BOOL)createFile
 {
@@ -46,44 +55,4 @@
     return YES;
 }
 
-- (BOOL) getFSSpec:(FSSpec*)fsSpec createFileIfNecessary:(BOOL)createFile
-{
-    FSRef fsRef;
-
-    if (![self getFSRef:&fsRef createFileIfNecessary:createFile])
-        return NO;
-    
-    if (FSGetCatalogInfo( &fsRef,
-                          kFSCatInfoNone,
-                          NULL,
-                          NULL,
-                          fsSpec,
-                          NULL ) != noErr) {
-        //        printf( "** Couldn't get an FSSpec for the file.\n" );
-        return NO;
-    }
-
-    return YES;
-}
-
-+ (NSString *)pathForFSRef:(FSRef *)object
-{
-	NSString *path = NULL;
-
-	UInt8 *pathbuf = malloc(PATH_MAX);
-	if (pathbuf != NULL) {
-		OSStatus err = FSRefMakePath(object, pathbuf, PATH_MAX);
-
-		if (err == noErr) {
-			path = [(NSString *)CFStringCreateWithCString(kCFAllocatorDefault, (char *)pathbuf, kCFStringEncodingUTF8) autorelease];
-		}
-
-		free(pathbuf);
-	}
-
-	return path;
-}
-
 @end
-
-#endif
