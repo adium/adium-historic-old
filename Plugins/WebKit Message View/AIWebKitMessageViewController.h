@@ -23,7 +23,6 @@
 @interface AIWebKitMessageViewController : AIObject <AIMessageViewController> {
 	id							plugin;
 	ESWebView					*webView;
-	DOMDocument					*domDocument;
 	AIChat						*chat;
 	BOOL						shouldReflectPreferenceChanges;
 
