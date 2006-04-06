@@ -23,10 +23,12 @@
 #import <Adium/AIAccount.h>
 
 //Menu titles
-#define	ACCOUNT_CONNECT_MENU_TITLE			AILocalizedStringFromTable(@"Connect: %@", @"AdiumFramework", "Connect account prefix")
-#define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedStringFromTable(@"Disconnect: %@", @"AdiumFramework", "Disconnect account prefix")
-#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedStringFromTable(@"Cancel: %@", @"AdiumFramework", "Cancel current account activity prefix")
-#define	ACCOUNT_DISCONNECTING_MENU_TITLE	ACCOUNT_CONNECTING_MENU_TITLE
+#define	ACCOUNT_CONNECT_ACTION_MENU_TITLE			AILocalizedStringFromTable(@"Connect: %@", @"AdiumFramework", "Connect account prefix")
+#define	ACCOUNT_DISCONNECT_ACTION_MENU_TITLE		AILocalizedStringFromTable(@"Disconnect: %@", @"AdiumFramework", "Disconnect account prefix")
+#define	ACCOUNT_CONNECTING_ACTION_MENU_TITLE		AILocalizedStringFromTable(@"Cancel: %@", @"AdiumFramework", "Cancel current account activity prefix")
+#define	ACCOUNT_DISCONNECTING_ACTION_MENU_TITLE		ACCOUNT_CONNECTING_ACTION_MENU_TITLE
+
+#define ACCOUNT_CONNECT_PARENS_MENU_TITLE			AILocalizedStringFromTable(@"%@ (Connecting)", @"AdiumFramework", "Account Name (Connecting) - shown for an account while it is connecting")
 
 #define NEW_ACCOUNT_DISPLAY_TEXT			AILocalizedStringFromTable(@"<New Account>", @"AdiumFramework", "Placeholder displayed as the name of a new account")
 
@@ -229,12 +231,17 @@
 	
 	if (showTitleVerbs) {
 		if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
-			titleFormat = ACCOUNT_CONNECTING_MENU_TITLE;
+			titleFormat = ACCOUNT_CONNECTING_ACTION_MENU_TITLE;
 		} else if ([[account statusObjectForKey:@"Disconnecting"] boolValue]) {
-			titleFormat = ACCOUNT_DISCONNECTING_MENU_TITLE;
+			titleFormat = ACCOUNT_DISCONNECTING_ACTION_MENU_TITLE;
 		} else {
 			//Display 'connect' or 'disconnect' before the account name
-			titleFormat = ([account online] ? ACCOUNT_DISCONNECT_MENU_TITLE : ACCOUNT_CONNECT_MENU_TITLE);
+			titleFormat = ([account online] ? ACCOUNT_DISCONNECT_ACTION_MENU_TITLE : ACCOUNT_CONNECT_ACTION_MENU_TITLE);
+		}
+
+	} else {
+		if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
+			titleFormat = ACCOUNT_CONNECT_PARENS_MENU_TITLE;
 		}
 	}
 
