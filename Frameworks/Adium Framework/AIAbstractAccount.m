@@ -983,7 +983,7 @@
  * Attempts to auto-reconnect after a delay
  * @param delayNumber Delay in seconds
  */
-- (void)autoReconnectAfterDelay:(int)delay
+- (void)autoReconnectAfterDelay:(NSTimeInterval)delay
 {
 	//We could use performSelector:afterDelay here, but using a timer allows us to cancel it.
 	[reconnectTimer invalidate]; [reconnectTimer release];
