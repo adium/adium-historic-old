@@ -553,7 +553,6 @@
 //New value selected on the volume slider or chosen by clicking a volume icon
 - (IBAction)selectVolume:(id)sender
 {
-    NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
     float			volume, oldVolume;
 	
 	if (sender == slider_volume) {
@@ -567,7 +566,10 @@
 	} else {
 		volume = 0;
 	}
-	oldVolume = [[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue];
+	
+	NSNumber *oldVolumeValue = [[adium preferenceController] preferenceForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL
+																		group:PREF_GROUP_SOUNDS];
+	oldVolume = (oldVolumeValue ? [oldVolumeValue floatValue] : -1.0);
 	
     //Volume
     if (volume != oldVolume) {
