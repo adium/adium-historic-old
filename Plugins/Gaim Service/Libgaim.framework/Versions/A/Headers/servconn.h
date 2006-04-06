@@ -84,6 +84,9 @@ struct _MsnServConn
 						  It's only set when we've received a command that
 						  has a payload. */
 
+	GaimCircBuffer *tx_buf;
+	guint tx_handler;
+
 	void (*connect_cb)(MsnServConn *); /**< The callback to call when connecting. */
 	void (*disconnect_cb)(MsnServConn *); /**< The callback to call when disconnecting. */
 	void (*destroy_cb)(MsnServConn *); /**< The callback to call when destroying. */
@@ -152,7 +155,7 @@ void msn_servconn_set_destroy_cb(MsnServConn *servconn,
  * @param buf The data to write.
  * @param size The size of the data.
  */
-size_t msn_servconn_write(MsnServConn *servconn, const char *buf,
+ssize_t msn_servconn_write(MsnServConn *servconn, const char *buf,
 						  size_t size);
 
 /**
