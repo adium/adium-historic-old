@@ -52,7 +52,7 @@
 	NSString *defaultAlias = [[[[adium preferenceController] defaultPreferenceForKey:KEY_ACCOUNT_DISPLAY_NAME
 																			   group:GROUP_ACCOUNT_STATUS
 																			  object:nil] attributedString] string];
-	[[textField_alias cell] setPlaceholderString:(defaultAlias ? defaultAlias : @"")];
+	[[textField_displayName cell] setPlaceholderString:(defaultAlias ? defaultAlias : @"")];
 
 	[self configureProfile];
 	[self configureImageView];
