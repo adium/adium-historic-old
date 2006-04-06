@@ -369,7 +369,6 @@ static NSArray *draggedTypes = nil;
 	[webView registerForDraggedTypes:draggedTypes];
 		
 	[[webView windowScriptObject] setValue:self forKey:@"client"];
-	domDocument = [[webView mainFrame] DOMDocument];
 }
 
 /*!
@@ -1031,7 +1030,7 @@ static NSArray *draggedTypes = nil;
 				[objectsWithUserIconsArray addObject:inObject];
 			}
 			
-			DOMNodeList  *images = [domDocument getElementsByTagName:@"img"];
+			DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
 			unsigned int imagesCount = [images length];
 
 			if (imagesCount > 0) {
