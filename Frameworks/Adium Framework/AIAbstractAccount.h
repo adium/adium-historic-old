@@ -72,7 +72,7 @@
 - (void)getProxyConfigurationNotifyingTarget:(id)target selector:(SEL)selector context:(id)context;
 
 //FUS Disconnecting
-- (void)autoReconnectAfterDelay:(int)delay;
+- (void)autoReconnectAfterDelay:(NSTimeInterval)delay;
 - (void)initFUSDisconnecting;
 
 @end
