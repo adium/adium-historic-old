@@ -555,11 +555,11 @@
 		while ((account = [enumerator nextObject]) && onlineAccounts < 2) {
 			if ([account online]) onlineAccounts++;
 		}
-		
+
 		if (onlineAccounts >=2) {
 			includeSource = YES;
 		}
-		
+
 		if (includeDestination && includeSource) {
 			tooltip = [NSString stringWithFormat:AILocalizedString(@"%@ talking to %@","AccountName talking to Username"), [[chat account] formattedUID], destinationFormattedUID];
 
@@ -567,7 +567,7 @@
 			tooltip = destinationFormattedUID;
 			
 		} else if (includeSource) {
-			tooltip =  [[chat account] formattedUID];
+			tooltip = [[chat account] formattedUID];
 		}
 	}
 
