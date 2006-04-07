@@ -238,10 +238,6 @@
 			
 			if (shouldReconnect) {
 				[self autoReconnectAfterDelay:3.0];
-				
-			} else {
-				//Clear our desire to be online.
-				[self setShouldBeOnline:NO];
 			}
 		}
 		
@@ -613,59 +609,77 @@
 }
 
 /*
- * @encode Encode a message to HTML
+ * @brief Should HTML be sent in messages to this contact?
+ *
+ * We don't want to send HTML to ICQ users or mobile phone users
+ */
+BOOL shouldSendHTMLToObject(AIListObject *inListObject)
+{
+	char		firstCharacter = [[inListObject UID] characterAtIndex:0];
+	
+	return ((firstCharacter < '0' || firstCharacter > '9') && firstCharacter != '+');
+}
+
+
+/*
+ * @encode Encode a message to HTML if appropriate
  *
  * We take this opportunity to process the HTML message, looking for IMG tags to send via DirectIM
  */
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
 {
 	NSAttributedString	*message = [inContentMessage message];
-	NSString			*htmlMessage;
+	NSString			*encodedMessage;
 
-	if([message containsAttachments]) {
-		NSRange limitRange;
-		NSRange effectiveRange;
-		id attributeValue;
-		
-		limitRange = NSMakeRange(0, [message length]);
-		
-		while (limitRange.length > 0) {
-			attributeValue = [message attribute:NSAttachmentAttributeName
-							  atIndex:limitRange.location 
-				longestEffectiveRange:&effectiveRange
-							  inRange:limitRange];
-			if([attributeValue respondsToSelector:@selector(setImageClass:)])
-				[(AITextAttachmentExtension *)attributeValue setImageClass:@"scaledToFitImage"];
-			limitRange = NSMakeRange(NSMaxRange(effectiveRange),
-									 NSMaxRange(limitRange) - NSMaxRange(effectiveRange));
+	if (shouldSendHTMLToObject([inContentMessage destination])) {
+		if([message containsAttachments]) {
+			NSRange limitRange;
+			NSRange effectiveRange;
+			id attributeValue;
+			
+			limitRange = NSMakeRange(0, [message length]);
+			
+			while (limitRange.length > 0) {
+				attributeValue = [message attribute:NSAttachmentAttributeName
+											atIndex:limitRange.location 
+							  longestEffectiveRange:&effectiveRange
+											inRange:limitRange];
+				if([attributeValue respondsToSelector:@selector(setImageClass:)])
+					[(AITextAttachmentExtension *)attributeValue setImageClass:@"scaledToFitImage"];
+				limitRange = NSMakeRange(NSMaxRange(effectiveRange),
+										 NSMaxRange(limitRange) - NSMaxRange(effectiveRange));
+			}
 		}
-	}
-	
-	static AIHTMLDecoder *messageEncoder = nil;
-	if (!messageEncoder) {
-		messageEncoder = [[AIHTMLDecoder alloc] init];
-		[messageEncoder setIncludesHeaders:YES];
-		[messageEncoder setIncludesFontTags:YES];
-		[messageEncoder setClosesFontTags:NO];
-		[messageEncoder setIncludesStyleTags:YES];
-		[messageEncoder setIncludesColorTags:YES];
-		[messageEncoder setEncodesNonASCII:NO];
-		[messageEncoder setPreservesAllSpaces:NO];
-		[messageEncoder setUsesAttachmentTextEquivalents:NO];
-		[messageEncoder setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
-		[messageEncoder setOnlyUsesSimpleTags:NO];
-		[messageEncoder setAllowAIMsubprofileLinks:YES];
-	}
+		
+		static AIHTMLDecoder *messageEncoder = nil;
+		if (!messageEncoder) {
+			messageEncoder = [[AIHTMLDecoder alloc] init];
+			[messageEncoder setIncludesHeaders:YES];
+			[messageEncoder setIncludesFontTags:YES];
+			[messageEncoder setClosesFontTags:NO];
+			[messageEncoder setIncludesStyleTags:YES];
+			[messageEncoder setIncludesColorTags:YES];
+			[messageEncoder setEncodesNonASCII:NO];
+			[messageEncoder setPreservesAllSpaces:NO];
+			[messageEncoder setUsesAttachmentTextEquivalents:NO];
+			[messageEncoder setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
+			[messageEncoder setOnlyUsesSimpleTags:NO];
+			[messageEncoder setAllowAIMsubprofileLinks:YES];
+		}
+		
+		id	joscarDataForThisMessage = nil;
+		encodedMessage = [joscarAdapter processOutgoingMessage:[messageEncoder encodeHTML:message
+																			   imagesPath:NSTemporaryDirectory()]
+													joscarData:&joscarDataForThisMessage];
+		if (joscarDataForThisMessage) {
+			[inContentMessage setEncodedMessageAccountData:joscarDataForThisMessage];
+		}
 
-	id	joscarDataForThisMessage = nil;
-	htmlMessage = [joscarAdapter processOutgoingMessage:[messageEncoder encodeHTML:message
-																		imagesPath:NSTemporaryDirectory()]
-											 joscarData:&joscarDataForThisMessage];
-	if (joscarDataForThisMessage) {
-		[inContentMessage setEncodedMessageAccountData:joscarDataForThisMessage];
+	} else {
+		encodedMessage = [[message attributedStringByConvertingLinksToStrings] string];
 	}
 	
-	return htmlMessage;
+	return encodedMessage;
 }
 
 - (void)chatWithContact:(AIListContact *)sourceContact receivedAttributedMessage:(NSAttributedString *)inMessage isAutoreply:(NSNumber *)isAutoreply
