@@ -19,9 +19,9 @@
 #import "AISoundController.h"
 #import "ESGeneralPreferences.h"
 #import "ESGeneralPreferencesPlugin.h"
-#import "PTHotKeyCenter.h"
-#import "PTHotKey.h"
-#import "ShortcutRecorderCell.h"
+//#import "PTHotKeyCenter.h"
+//#import "PTHotKey.h"
+//#import "ShortcutRecorderCell.h"
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -45,7 +45,7 @@
 #warning XXX in order to use shortcutrecorder you need a pallette
 // grab to http://brok3n.org/shortcutrecorder/ShortcutRecorder-pre-dist.zip and the updated http://brok3n.org/shortcutrecorder/ShortCutRecorderCell.m in order for this to work for you. Compile the pallette and install.
 // This comes from http://wafflesoftware.net/shortcut/
-
+/*
 - (void) awakeFromNib {
 	
 	//Grab the default	
@@ -71,7 +71,7 @@
 	
 }
 
-
+*/
 
 
 //Preference pane properties
@@ -215,7 +215,7 @@
 
 
 
-
+/*
 - (BOOL)shortcutRecorder:(ShortcutRecorder *)aRecorder isKeyCode:(signed short)keyCode andFlagsTaken:(unsigned int)flags reason:(NSString **)aReason
 {
 	if (aRecorder == shortcutRecorder)
@@ -392,7 +392,7 @@
 		}
 	}
 }	
-
+*/
 
 
 
