@@ -497,6 +497,11 @@ SecuridProvider
 		
 	}
 	
+	public void sendAutomaticallyFailed(IcbmService service, Message message,
+										Set<Conversation> triedConversations) {
+		// this should do something
+	}
+	
 	/* ImConversationListener (extends ConversationListener, TypingListener) */
 
 	/** This may never be called */
