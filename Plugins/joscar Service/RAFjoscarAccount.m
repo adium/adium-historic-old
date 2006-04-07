@@ -613,7 +613,7 @@
  *
  * We don't want to send HTML to ICQ users or mobile phone users
  */
-BOOL shouldSendHTMLToObject(AIListObject *inListObject)
+BOOL isHTMLContact(AIListObject *inListObject)
 {
 	char		firstCharacter = [[inListObject UID] characterAtIndex:0];
 	
@@ -631,7 +631,7 @@ BOOL shouldSendHTMLToObject(AIListObject *inListObject)
 	NSAttributedString	*message = [inContentMessage message];
 	NSString			*encodedMessage;
 
-	if (shouldSendHTMLToObject([inContentMessage destination])) {
+	if (isHTMLContact([inContentMessage destination])) {
 		if([message containsAttachments]) {
 			NSRange limitRange;
 			NSRange effectiveRange;
@@ -708,10 +708,27 @@ BOOL shouldSendHTMLToObject(AIListObject *inListObject)
 - (void)chatWithUID:(NSString *)inUID receivedMessage:(NSString *)inHTML isAutoreply:(NSNumber *)isAutoreply
 {
 	AIListContact		*sourceContact = [self contactWithUID:inUID];
+	NSAttributedString	*attributedMessage;
+	if (isHTMLContact(sourceContact)) { 
+		attributedMessage = [[adium contentController] decodedIncomingMessage:inHTML
+																  fromContact:sourceContact
+																	onAccount:self];
+	} else {
+		NSString	*decryptedIncomingMessage;
 
-	NSAttributedString *attributedMessage = [[adium contentController] decodedIncomingMessage:inHTML
-																				  fromContact:sourceContact
-																					onAccount:self];
+		decryptedIncomingMessage = [[adium contentController] decryptedIncomingMessage:inHTML
+																		   fromContact:sourceContact
+																			 onAccount:self];
+		
+		if ([decryptedIncomingMessage rangeOfString:@"ichatballooncolor"].location != NSNotFound) {
+			//iChat ICQ contacts still send HTML. Decode it.
+			attributedMessage = [AIHTMLDecoder decodeHTML:decryptedIncomingMessage];
+
+		} else {
+			attributedMessage = [[[NSAttributedString alloc] initWithString:decryptedIncomingMessage] autorelease];
+		}
+	}
+
 	[self chatWithContact:sourceContact receivedAttributedMessage:attributedMessage isAutoreply:isAutoreply];
 }
 
