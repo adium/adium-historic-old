@@ -19,9 +19,9 @@
 #import "AISoundController.h"
 #import "ESGeneralPreferences.h"
 #import "ESGeneralPreferencesPlugin.h"
-//#import "PTHotKeyCenter.h"
-//#import "PTHotKey.h"
-//#import "ShortcutRecorderCell.h"
+#import "PTHotKeyCenter.h"
+#import "PTHotKey.h"
+#import "ShortcutRecorderCell.h"
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -45,7 +45,7 @@
 #warning XXX in order to use shortcutrecorder you need a pallette
 // grab to http://brok3n.org/shortcutrecorder/ShortcutRecorder-pre-dist.zip and the updated http://brok3n.org/shortcutrecorder/ShortCutRecorderCell.m in order for this to work for you. Compile the pallette and install.
 // This comes from http://wafflesoftware.net/shortcut/
-/*
+
 - (void) awakeFromNib {
 	
 	//Grab the default	
@@ -71,7 +71,7 @@
 	
 }
 
-*/
+
 
 
 //Preference pane properties
@@ -215,7 +215,7 @@
 
 
 
-/*
+
 - (BOOL)shortcutRecorder:(ShortcutRecorder *)aRecorder isKeyCode:(signed short)keyCode andFlagsTaken:(unsigned int)flags reason:(NSString **)aReason
 {
 	if (aRecorder == shortcutRecorder)
@@ -267,44 +267,9 @@
 
 - (void)hitHotKey:(PTHotKey *)hotKey
 {
-	NSString		*internalObjectID, *uniqueChatID;
-	AIListObject	*listObject;
-	AIChat			*chat = nil;
-	
-	if ((internalObjectID = [clickContext objectForKey:@"internalObjectID"])) {
-		
-		if ((listObject = [[adium contactController] existingListObjectWithUniqueID:internalObjectID]) &&
-			([listObject isKindOfClass:[AIListContact class]])) {
-			
-			//First look for an existing chat to avoid changing anything
-			if (!(chat = [[adium chatController] existingChatWithContact:(AIListContact *)listObject])) {
-				//If we don't find one, create one
-				chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject];
-			}
-		}
-	} else if ((uniqueChatID = [clickContext objectForKey:@"uniqueChatID"])) {
-		chat = [[adium chatController] existingChatWithUniqueChatID:uniqueChatID];
-		
-		//If we didn't find a chat, it may have closed since the notification was posted.
-		//If we have an appropriate existing list object, we can create a new chat.
-		if ((!chat) &&
-			(listObject = [[adium contactController] existingListObjectWithUniqueID:uniqueChatID]) &&
-			([listObject isKindOfClass:[AIListContact class]])) {
-			
-			//If the uniqueChatID led us to an existing contact, create a chat with it
-			chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject];
-		}	
-	}
-	
-	if (chat) {
-		//Make the chat active
-		[[adium interfaceController] setActiveChat:chat];
-		
-		//And make Adium active (needed if, for example, our notification was clicked with another app active)
-		[NSApp activateIgnoringOtherApps:YES];
-	}
-	
-	
+	NSLog(@"Got to hit hotkey");
+	[NSApp activateIgnoringOtherApps:YES];	
+
 }
 
 - (void) savePref{
@@ -323,76 +288,7 @@
 	
 }
 
-//adding this for now so it can compile
 
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
-{
-	NSString			*title, *description;
-	NSDictionary		*clickContext = nil;
-	NSData				*iconData = nil;
-	AIChat				*chat = nil;
-	BOOL				isMessageEvent = [[adium contactAlertsController] isMessageEvent:eventID];
-	
-	//For a message event, listObject should become whomever sent the message
-	if (isMessageEvent) {
-		AIContentObject	*contentObject = [userInfo objectForKey:@"AIContentObject"];
-		AIListObject	*source = [contentObject source];
-		chat = [userInfo objectForKey:@"AIChat"];
-		
-		if (source) listObject = source;
-	}
-	
-	if (listObject) {
-		if ([listObject isKindOfClass:[AIListContact class]]) {
-			//Use the parent
-			listObject = [(AIListContact *)listObject parentContact];
-			title = [listObject longDisplayName];
-		} else {
-			title = [listObject displayName];
-		}
-		
-		iconData = [listObject userIconData];
-		
-		if (!iconData) {
-			iconData = [[AIServiceIcons serviceIconForObject:listObject
-														type:AIServiceIconLarge
-												   direction:AIIconNormal] TIFFRepresentation];
-		}
-		
-		if (chat) {
-			clickContext = [NSDictionary dictionaryWithObjectsAndKeys:
-				[chat uniqueChatID], @"uniqueChatID",
-				eventID, @"eventID",
-				nil];
-			
-		} else {
-			clickContext = [NSDictionary dictionaryWithObjectsAndKeys:
-				[listObject internalObjectID], @"internalObjectID",
-				eventID, @"eventID",
-				nil];
-		}
-		
-	} else {
-		if (chat) {
-			title = [chat name];
-			
-			clickContext = [NSDictionary dictionaryWithObjectsAndKeys:
-				[chat uniqueChatID], @"uniqueChatID",
-				eventID, @"eventID",
-				nil];
-			
-			//If we have no listObject or we have a name, we are a group chat and
-			//should use the account's service icon
-			iconData = [[AIServiceIcons serviceIconForObject:[chat account]
-														type:AIServiceIconLarge
-												   direction:AIIconNormal] TIFFRepresentation];
-			
-		} else {
-			title = @"Adium";
-		}
-	}
-}	
-*/
 
 
 
