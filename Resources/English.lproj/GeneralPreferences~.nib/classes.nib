@@ -67,7 +67,6 @@
                 "label_switchTabsWith" = NSTextField; 
                 "popUp_sendKeys" = NSPopUpButton; 
                 "popUp_tabKeys" = NSPopUpButton; 
-                shortcutRecorder = ShortcutRecorder; 
                 "slider_volume" = NSSlider; 
             }; 
             SUPERCLASS = AIPreferencePane; 

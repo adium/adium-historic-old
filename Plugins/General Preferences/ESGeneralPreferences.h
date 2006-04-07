@@ -15,6 +15,11 @@
  */
 
 #import <Adium/AIPreferencePane.h>
+#import "ShortcutRecorder.h"
+#define SYNCHRONIZE_ADIUM_HOTKEY_PREFS() CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
+
+
+@class PTHotKey;
 
 @class AIColorSelectionPopUpButton, AIFontSelectionPopUpButton;
 
@@ -34,6 +39,11 @@
 	IBOutlet	NSTextField		*label_messagesTabs;
 	IBOutlet	NSTextField		*label_menuItem;
 	IBOutlet	NSTextField		*label_switchTabsWith;	
+
+    IBOutlet	ShortcutRecorder	*shortcutRecorder;
+		
+	PTHotKey	*globalHotKey;
+
 }
 
 @end
