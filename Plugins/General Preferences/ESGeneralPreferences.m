@@ -19,12 +19,16 @@
 #import "AISoundController.h"
 #import "ESGeneralPreferences.h"
 #import "ESGeneralPreferencesPlugin.h"
+#import "PTHotKeyCenter.h"
+#import "PTHotKey.h"
+#import "ShortcutRecorderCell.h"
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
+
 
 @interface ESGeneralPreferences (PRIVATE)
 - (NSMenu *)tabKeysMenu;
@@ -37,6 +41,38 @@
 @end
 
 @implementation ESGeneralPreferences
+
+#warning XXX in order to use shortcutrecorder you need a pallette
+// grab to http://brok3n.org/shortcutrecorder/ShortcutRecorder-pre-dist.zip and the updated http://brok3n.org/shortcutrecorder/ShortCutRecorderCell.m in order for this to work for you. Compile the pallette and install.
+// This comes from http://wafflesoftware.net/shortcut/
+
+- (void) awakeFromNib {
+	
+	//Grab the default	
+	
+	NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+	NSString *awakePrefHotKey = nil;
+	
+	if (standardUserDefaults) 
+		awakePrefHotKey = [standardUserDefaults objectForKey:@"ShortcutRecorder prefHotKey"];
+	
+	NSLog(@"omg awakePrefHotKey is %@", awakePrefHotKey);
+	
+	//Set the globalHotKey if there is a hotkey from above
+	
+	globalHotKey = [[PTHotKey alloc] initWithIdentifier:@"SRTest"
+											   keyCombo:[PTKeyCombo keyComboWithKeyCode:[shortcutRecorder keyCombo].code
+																			  modifiers:[shortcutRecorder cocoaToCarbonFlags: [shortcutRecorder keyCombo].flags]]];
+	
+	[globalHotKey setTarget: self];
+	[globalHotKey setAction: @selector(hitHotKey:)];
+	
+	[[PTHotKeyCenter sharedCenter] registerHotKey: globalHotKey];
+	
+}
+
+
+
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
@@ -174,6 +210,125 @@
 	
 	return [menu autorelease];		
 }
+
+
+
+
+
+
+- (BOOL)shortcutRecorder:(ShortcutRecorder *)aRecorder isKeyCode:(signed short)keyCode andFlagsTaken:(unsigned int)flags reason:(NSString **)aReason
+{
+	if (aRecorder == shortcutRecorder)
+	{
+		BOOL isTaken = NO;
+		
+		return isTaken;
+	}
+	
+	return NO;
+}
+
+- (void)shortcutRecorder:(ShortcutRecorder *)aRecorder keyComboDidChange:(KeyCombo)newKeyCombo
+{
+	if (aRecorder == shortcutRecorder)
+	{
+		
+		[self toggleGlobalHotKey: aRecorder];
+		NSLog(@"%@", aRecorder);
+		NSLog(@"got to shortcutrecorder keycombodidchange:(keycombo)newcombo");
+	}
+}
+
+
+
+- (void)toggleGlobalHotKey:(id)sender
+{
+	//if (globalHotKey != nil)
+	//{
+	//	[[PTHotKeyCenter sharedCenter] unregisterHotKey: globalHotKey];
+	//	[globalHotKey release];
+	//	globalHotKey = nil;
+	//}
+		
+	//	if (![globalHotKeyCheckBox state]) return;
+	
+	globalHotKey = [[PTHotKey alloc] initWithIdentifier:@"SRTest"
+											   keyCombo:[PTKeyCombo keyComboWithKeyCode:[shortcutRecorder keyCombo].code
+																			  modifiers:[shortcutRecorder cocoaToCarbonFlags: [shortcutRecorder keyCombo].flags]]];
+	
+	[globalHotKey setTarget: self];
+	[globalHotKey setAction: @selector(hitHotKey:)];
+	
+	[[PTHotKeyCenter sharedCenter] registerHotKey: globalHotKey];
+	[self savePref];
+}
+
+
+
+- (void)hitHotKey:(PTHotKey *)hotKey
+{
+	NSString		*internalObjectID, *uniqueChatID;
+	AIListObject	*listObject;
+	AIChat			*chat = nil;
+	
+	if ((internalObjectID = [clickContext objectForKey:@"internalObjectID"])) {
+		
+		if ((listObject = [[adium contactController] existingListObjectWithUniqueID:internalObjectID]) &&
+			([listObject isKindOfClass:[AIListContact class]])) {
+			
+			//First look for an existing chat to avoid changing anything
+			if (!(chat = [[adium chatController] existingChatWithContact:(AIListContact *)listObject])) {
+				//If we don't find one, create one
+				chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject];
+			}
+		}
+	} else if ((uniqueChatID = [clickContext objectForKey:@"uniqueChatID"])) {
+		chat = [[adium chatController] existingChatWithUniqueChatID:uniqueChatID];
+		
+		//If we didn't find a chat, it may have closed since the notification was posted.
+		//If we have an appropriate existing list object, we can create a new chat.
+		if ((!chat) &&
+			(listObject = [[adium contactController] existingListObjectWithUniqueID:uniqueChatID]) &&
+			([listObject isKindOfClass:[AIListContact class]])) {
+			
+			//If the uniqueChatID led us to an existing contact, create a chat with it
+			chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject];
+		}	
+	}
+	
+	if (chat) {
+		//Make the chat active
+		[[adium interfaceController] setActiveChat:chat];
+		
+		//And make Adium active (needed if, for example, our notification was clicked with another app active)
+		[NSApp activateIgnoringOtherApps:YES];
+	}
+	
+	
+}
+
+- (void) savePref{
+	
+	//Grab that pref and send it to the dungeon of the plist. Hurray for NSUD not being about to write to the domain of another app :(
+	
+	CFPreferencesSetAppValue(CFSTR("ShortcutRecorder prefHotKey"), [[globalHotKey keyCombo] plistRepresentation], kCFPreferencesCurrentApplication);
+	
+	//CFSTR("com.google.GmailNotifier"));
+	
+	
+	//Sync it, just sync it
+	
+	SYNCHRONIZE_ADIUM_HOTKEY_PREFS();
+	
+	
+}
+
+
+
+
+
+
+
 
 /*!
  * @brief Construct our menu by hand for easy localization
