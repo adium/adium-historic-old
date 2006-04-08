@@ -1312,6 +1312,10 @@
 		83B9216B09E709AF008D8436 /* ShortcutRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 83B9215D09E709AF008D8436 /* ShortcutRecorder.m */; };
 		83B9216C09E709AF008D8436 /* ShortcutRecorderCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 83B9215E09E709AF008D8436 /* ShortcutRecorderCell.h */; };
 		83B9216D09E709AF008D8436 /* ShortcutRecorderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 83B9215F09E709AF008D8436 /* ShortcutRecorderCell.m */; };
+		83C52C7809E73D1D00ED2F90 /* RemoveShortcut.tif in Resources */ = {isa = PBXBuildFile; fileRef = 83C52C7409E73D1D00ED2F90 /* RemoveShortcut.tif */; };
+		83C52C7909E73D1D00ED2F90 /* RemoveShortcutPressed.tif in Resources */ = {isa = PBXBuildFile; fileRef = 83C52C7509E73D1D00ED2F90 /* RemoveShortcutPressed.tif */; };
+		83C52C7A09E73D1D00ED2F90 /* RemoveShortcutRollover.tif in Resources */ = {isa = PBXBuildFile; fileRef = 83C52C7609E73D1D00ED2F90 /* RemoveShortcutRollover.tif */; };
+		83C52C7B09E73D1D00ED2F90 /* Snapback.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 83C52C7709E73D1D00ED2F90 /* Snapback.tiff */; };
 		9E124DEB07D34C7300AA91C5 /* CBGrowlAlertDetailPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */; };
 		9E124DEC07D34C7300AA91C5 /* CBGrowlAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */; };
 		9E124DED07D34C7400AA91C5 /* NEHGrowlPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E124DE907D34C7300AA91C5 /* NEHGrowlPlugin.h */; };
@@ -2771,7 +2775,7 @@
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3453,6 +3457,10 @@
 		83B9215D09E709AF008D8436 /* ShortcutRecorder.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ShortcutRecorder.m; path = "Plugins/Hot Key/ShortcutRecorder.m"; sourceTree = "<group>"; };
 		83B9215E09E709AF008D8436 /* ShortcutRecorderCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ShortcutRecorderCell.h; path = "Plugins/Hot Key/ShortcutRecorderCell.h"; sourceTree = "<group>"; };
 		83B9215F09E709AF008D8436 /* ShortcutRecorderCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ShortcutRecorderCell.m; path = "Plugins/Hot Key/ShortcutRecorderCell.m"; sourceTree = "<group>"; };
+		83C52C7409E73D1D00ED2F90 /* RemoveShortcut.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = RemoveShortcut.tif; path = "Plugins/Hot Key/RemoveShortcut.tif"; sourceTree = "<group>"; };
+		83C52C7509E73D1D00ED2F90 /* RemoveShortcutPressed.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = RemoveShortcutPressed.tif; path = "Plugins/Hot Key/RemoveShortcutPressed.tif"; sourceTree = "<group>"; };
+		83C52C7609E73D1D00ED2F90 /* RemoveShortcutRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = RemoveShortcutRollover.tif; path = "Plugins/Hot Key/RemoveShortcutRollover.tif"; sourceTree = "<group>"; };
+		83C52C7709E73D1D00ED2F90 /* Snapback.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Snapback.tiff; path = "Plugins/Hot Key/Snapback.tiff"; sourceTree = "<group>"; };
 		9C103FAE057127A500F3C158 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		9C8C7FA403CBA21B00267226 /* AILoggerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILoggerPlugin.h; path = Plugins/Logger/AILoggerPlugin.h; sourceTree = "<group>"; };
 		9C8C7FA503CBA21B00267226 /* AILoggerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILoggerPlugin.m; path = Plugins/Logger/AILoggerPlugin.m; sourceTree = "<group>"; };
@@ -6180,6 +6188,7 @@
 		83B920F809E70778008D8436 /* Hot Key */ = {
 			isa = PBXGroup;
 			children = (
+				83C52C7309E73CE200ED2F90 /* Images */,
 				83B9215209E709AE008D8436 /* CTGradient.h */,
 				83B9215309E709AE008D8436 /* CTGradient.m */,
 				83B9215409E709AE008D8436 /* NSBezierPathAdditions.h */,
@@ -6196,6 +6205,17 @@
 				83B9215F09E709AF008D8436 /* ShortcutRecorderCell.m */,
 			);
 			name = "Hot Key";
+			sourceTree = "<group>";
+		};
+		83C52C7309E73CE200ED2F90 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				83C52C7409E73D1D00ED2F90 /* RemoveShortcut.tif */,
+				83C52C7509E73D1D00ED2F90 /* RemoveShortcutPressed.tif */,
+				83C52C7609E73D1D00ED2F90 /* RemoveShortcutRollover.tif */,
+				83C52C7709E73D1D00ED2F90 /* Snapback.tiff */,
+			);
+			name = Images;
 			sourceTree = "<group>";
 		};
 		83DB8F21061145C400A5C28C /* Version Checker */ = {
@@ -8554,6 +8574,10 @@
 				347EAB2D09721D490090EA6E /* pref-personal.png in Resources */,
 				3486E9DB097F5FCE0044C496 /* AuthorizationRequestWindow.nib in Resources */,
 				342353BC09D450ED009FF634 /* MDLogViewer.nib in Resources */,
+				83C52C7809E73D1D00ED2F90 /* RemoveShortcut.tif in Resources */,
+				83C52C7909E73D1D00ED2F90 /* RemoveShortcutPressed.tif in Resources */,
+				83C52C7A09E73D1D00ED2F90 /* RemoveShortcutRollover.tif in Resources */,
+				83C52C7B09E73D1D00ED2F90 /* Snapback.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
