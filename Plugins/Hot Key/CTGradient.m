@@ -616,6 +616,8 @@ static const CGFunctionCallbacks _CTLinearGradientFunction = { 0, &linearEvaluat
 		}
 	}
   removedElement.position = NAN;
+  removedElement.nextElement = nil;
+  removedElement.alpha = removedElement.red = removedElement.blue = removedElement.green = 0;
   return removedElement;
   }
 
@@ -654,6 +656,8 @@ static const CGFunctionCallbacks _CTLinearGradientFunction = { 0, &linearEvaluat
 		}
 	}
   removedElement.position = NAN;
+  removedElement.nextElement = nil;
+  removedElement.alpha = removedElement.red = removedElement.blue = removedElement.green = 0;
   return removedElement;
   }
 
