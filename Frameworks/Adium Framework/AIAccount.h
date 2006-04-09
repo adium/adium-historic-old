@@ -105,7 +105,8 @@ typedef enum {
     BOOL                        silentAndDelayed;				//We are waiting for and processing our sign on updates
     BOOL						disconnectedByFastUserSwitch;	//We are offline because of a fast user switch
 	BOOL						namesAreCaseSensitive;
-	
+	BOOL						isTemporary;
+
 	BOOL						enabled;
 	
 	//Auto-reconnect

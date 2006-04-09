@@ -52,7 +52,8 @@
 		NSString	*accountModifiedUID;
 
 		internalObjectID = [inInternalObjectID retain];
-		
+		isTemporary = NO;
+
 		accountModifiedUID = [self accountWillSetUID:UID];
 		if (accountModifiedUID != UID) {
 			[UID release];
@@ -596,6 +597,16 @@
 
 #pragma mark Passwords
 
+/*
+ * @brief Store in memory (but nowhere else) the password for this account
+ */
+- (void)setPasswordTemporarily:(NSString *)inPassword
+{
+	if (password != inPassword) {
+		[password release]; password = [inPassword retain];
+	}	
+}
+
 /*!
  * @brief Password entered callback
  *
@@ -607,11 +618,8 @@
     if (inPassword && [inPassword length] != 0) {
 		if (![[self statusObjectForKey:@"Online"] boolValue] &&
 		   ![[self statusObjectForKey:@"Connecting"] boolValue]) {
-			//Save the new password
-			if (password != inPassword) {
-				[password release]; password = [inPassword retain];
-			}
-			
+			[self setPasswordTemporarily:inPassword];
+
 			//Tell the account to connect
 			[self connect];
 		}
@@ -624,7 +632,7 @@
 - (void)serverReportedInvalidPassword
 {
 	[[adium accountController] forgetPasswordForAccount:self];
-	[password release]; password = nil;
+	[self setPasswordTemporarily:nil];
 }
 
 //Auto-Refreshing Status String ----------------------------------------------------------------------------------------
@@ -943,7 +951,7 @@
 	 * have the password 'on tap' for use at that time.
 	 */
 	if (!shouldBeOnline) {
-		[password release]; password = nil;
+		[self setPasswordTemporarily:nil];
 	}
 }
 
@@ -1300,6 +1308,17 @@
 		//If passed a nil password, cancel the connection attempt
 		[self disconnect];
 	}
+}
+
+#pragma mark Temporary Accounts
+
+- (BOOL)isTemporary
+{
+	return isTemporary;
+}
+- (void)setIsTemporary:(BOOL)inIsTemporary;
+{
+	isTemporary = inIsTemporary;
 }
 
 @end

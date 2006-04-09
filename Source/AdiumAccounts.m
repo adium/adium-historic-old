@@ -329,14 +329,16 @@
 	//Build a flattened array of the accounts
 	enumerator = [accounts objectEnumerator];
 	while ((account = [enumerator nextObject])) {
-		NSMutableDictionary		*flatAccount = [NSMutableDictionary dictionary];
-		
-		[flatAccount setObject:[[account service] serviceCodeUniqueID] forKey:ACCOUNT_TYPE]; 	//Unique plugin ID
-		[flatAccount setObject:[[account service] serviceID] forKey:ACCOUNT_SERVICE];	    	//Shared service ID
-		[flatAccount setObject:[account UID] forKey:ACCOUNT_UID];		    					//Account UID
-		[flatAccount setObject:[account internalObjectID] forKey:ACCOUNT_OBJECT_ID];  			//Account Object ID
-		
-		[flatAccounts addObject:flatAccount];
+		if (![account isTemporary]) {
+			NSMutableDictionary		*flatAccount = [NSMutableDictionary dictionary];
+			
+			[flatAccount setObject:[[account service] serviceCodeUniqueID] forKey:ACCOUNT_TYPE]; 	//Unique plugin ID
+			[flatAccount setObject:[[account service] serviceID] forKey:ACCOUNT_SERVICE];	    	//Shared service ID
+			[flatAccount setObject:[account UID] forKey:ACCOUNT_UID];		    					//Account UID
+			[flatAccount setObject:[account internalObjectID] forKey:ACCOUNT_OBJECT_ID];  			//Account Object ID
+			
+			[flatAccounts addObject:flatAccount];
+		}
 	}
 	
 	//Add any unloadable accounts so they're not lost

@@ -75,4 +75,10 @@
 - (void)autoReconnectAfterDelay:(NSTimeInterval)delay;
 - (void)initFUSDisconnecting;
 
+//Temporary Accounts
+- (BOOL)isTemporary;
+- (void)setIsTemporary:(BOOL)inIsTemporary;
+
+- (void)setPasswordTemporarily:(NSString *)inPassword;
+
 @end
