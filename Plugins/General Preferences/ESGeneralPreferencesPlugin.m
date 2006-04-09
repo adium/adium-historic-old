@@ -37,6 +37,9 @@
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
 
+#import "PTHotKey.h"
+#import "PTHotKeyCenter.h"
+
 #define	TAB_DEFAULT_PREFS			@"TabDefaults"
 
 #define	SENDING_KEY_DEFAULT_PREFS	@"SendingKeyDefaults"
@@ -61,12 +64,48 @@
 
 	//Install our preference view
 	preferences = [[ESGeneralPreferences preferencePaneForPlugin:self] retain];	
-
+	
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
 }
 
 - (void)uninstallPlugin
 {
 
+}
+
+- (void)hitHotKey:(PTHotKey *)hotKey
+{
+	if (![NSApp isActive]) {
+		[NSApp activateIgnoringOtherApps:YES];
+	}
+
+	//Switch to the appropriate window, just like clicking the dock; this method will handle switching to a chat with unviewed content, for example.
+	NSLog(@"Do it.");
+	[[adium interfaceController] handleReopenWithVisibleWindows:NO];
+}
+
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
+					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if (firstTime || [key isEqualToString:KEY_GENERAL_HOTKEY]) {
+		if (globalHotKey) {
+			//Unregister the old global hot key if it exists
+			[[PTHotKeyCenter sharedCenter] unregisterHotKey:globalHotKey];
+			[globalHotKey release];
+		}
+		
+		id plistRepresentation = [prefDict objectForKey:KEY_GENERAL_HOTKEY];
+		if (plistRepresentation) {
+			//Register a new one if we want one
+			globalHotKey = [[PTHotKey alloc] initWithIdentifier:KEY_GENERAL_HOTKEY
+													   keyCombo:[[[PTKeyCombo alloc] initWithPlistRepresentation:plistRepresentation] autorelease]];
+			
+			[globalHotKey setTarget:self];
+			[globalHotKey setAction:@selector(hitHotKey:)];
+
+			[[PTHotKeyCenter sharedCenter] registerHotKey:globalHotKey];
+		} 
+	}
 }
 
 @end
