@@ -172,6 +172,7 @@
 		[emoticonAttachment setPath:path];
 		[emoticonAttachment setHasAlternate:YES];
 		[emoticonAttachment setAttachmentCell:cell];
+		[emoticonAttachment setImageClass:@"emoticon"];
 		[cell release];
 
 		//Emoticons should not ever be sent out as images
