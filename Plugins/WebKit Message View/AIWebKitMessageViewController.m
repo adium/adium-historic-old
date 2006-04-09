@@ -1038,7 +1038,12 @@ static NSArray *draggedTypes = nil;
 
 				for (int i = 0; i < imagesCount; i++) {
 					DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
-					if([[img getAttribute:@"src"] rangeOfString:internalObjectID].location != NSNotFound)
+					NSString *imgClass = [img className];
+					//being very careful to only get user icons... a better way would be to put a class "usericon" on the img, but I haven't worked out how to do that, so we test for the name of the person in the src, and that it's not an emoticon or direct connect image.
+					if([[img getAttribute:@"src"] rangeOfString:internalObjectID].location != NSNotFound &&
+					   [imgClass rangeOfString:@"emoticon"].location == NSNotFound &&
+					   [imgClass rangeOfString:@"fullSizeImage"].location == NSNotFound &&
+					   [imgClass rangeOfString:@"scaledToFitImage"].location == NSNotFound)
 						[img setSrc:webKitUserIconPath];
 				}
 			}
