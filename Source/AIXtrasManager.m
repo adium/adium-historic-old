@@ -380,12 +380,14 @@ static AIXtrasManager * manager;
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
 	if ([aNotification object] == xtraList) {
-		AIXtraInfo *xtraInfo  = [AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[[selectedCategory objectAtIndex:[xtraList selectedRow]] path]]];
-		if ([[xtraList selectedRowIndexes] count] == 1) {
-			[previewController setXtra:xtraInfo];
+		int	selectedRow = [xtraList selectedRow];
+		if ((selectedRow >= 0) && (selectedRow < [selectedCategory count])) {
+			AIXtraInfo *xtraInfo  = [AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[[selectedCategory objectAtIndex:selectedRow] path]]];
+			if ([[xtraList selectedRowIndexes] count] == 1) {
+				[previewController setXtra:xtraInfo];
+			}
 		}
-	}
-	else if ([aNotification object] == sidebar) {
+	} else if ([aNotification object] == sidebar) {
 		[self setCategory:nil];
 	}
 }
