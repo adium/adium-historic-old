@@ -53,8 +53,8 @@
  */
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
-	if(!inAttributedString) return nil;
-	
+	if(!inAttributedString || ![inAttributedString length]) return inAttributedString;
+
 	NSMutableAttributedString	*replacementMessage = [inAttributedString mutableCopy];
 	NSRange						linkRange = NSMakeRange(0,0);
 	unsigned					stringLength = [replacementMessage length];
