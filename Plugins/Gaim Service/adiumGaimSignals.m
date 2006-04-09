@@ -17,6 +17,8 @@
 #import "adiumGaimSignals.h"
 #import <AIUtilities/AIObjectAdditions.h>
 
+static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, GaimStatus *status, GaimBuddyEvent event);
+
 static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 {
 	if (buddy) {
@@ -95,6 +97,13 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 				[account updateContact:theContact
 							  forEvent:data];
 			}
+		}
+		
+		//Update the contact's status if the event was a signon or signoff event, since the status changed event may not be sent.
+		if (event == GAIM_BUDDY_SIGNON || event == GAIM_BUDDY_SIGNOFF) {
+			GaimPresence	*presence = gaim_buddy_get_presence(buddy);
+			GaimStatus		*status = gaim_presence_get_active_status(presence);
+			buddy_status_changed_cb(buddy, NULL, status, event);
 		}
 	}
 }
