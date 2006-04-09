@@ -42,8 +42,8 @@
 
 @implementation ESGeneralPreferences
 
-#warning XXX in order to use shortcutrecorder you need a pallette
-// grab to http://brok3n.org/shortcutrecorder/ShortcutRecorder-pre-dist.zip and the updated http://brok3n.org/shortcutrecorder/ShortCutRecorderCell.m in order for this to work for you. Compile the pallette and install.
+// XXX in order to use shortcutrecorder you need a palette
+// grab http://brok3n.org/shortcutrecorder/ShortcutRecorder-pre-dist.zip and the updated http://brok3n.org/shortcutrecorder/ShortCutRecorderCell.m in order for this to work for you. Compile the palette and install.
 // This comes from http://wafflesoftware.net/shortcut/
 
 - (void) awakeFromNib {
@@ -272,7 +272,8 @@
 
 }
 
-- (void) savePref{
+- (void) savePref
+{
 	
 	//Grab that pref and send it to the dungeon of the plist. Hurray for NSUD not being about to write to the domain of another app :(
 	
@@ -280,12 +281,9 @@
 	
 	//CFSTR("com.google.GmailNotifier"));
 	
-	
 	//Sync it, just sync it
 	
 	SYNCHRONIZE_ADIUM_HOTKEY_PREFS();
-	
-	
 }
 
 

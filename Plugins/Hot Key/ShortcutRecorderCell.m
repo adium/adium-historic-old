@@ -1098,7 +1098,7 @@ enum {
 	if (flags & shiftKey) localShiftMod = YES;
 	if (flags & controlKey) localCtrlMod = YES;
 
-	while (globalHotKeyInfoDictionary = [globalHotKeysEnumerator nextObject])
+	while ((globalHotKeyInfoDictionary = [globalHotKeysEnumerator nextObject]))
 	{
 		// Only check if global hotkey is enabled
 		if ((CFBooleanRef)[globalHotKeyInfoDictionary objectForKey: (NSString *)kHISymbolicHotKeyEnabled] == kCFBooleanTrue)
@@ -1163,7 +1163,7 @@ enum {
 	if (flags & shiftKey) localShiftMod = YES;
 	if (flags & controlKey) localCtrlMod = YES;
 	
-	while (menuItem = [menuItemsEnumerator nextObject])
+	while ((menuItem = [menuItemsEnumerator nextObject]))
 	{
 		if ([menuItem hasSubmenu])
 		{
