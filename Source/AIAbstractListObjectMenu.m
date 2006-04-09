@@ -95,11 +95,22 @@
 {
 	NSEnumerator	*enumerator = [[self menuItems] objectEnumerator];
 	NSMenuItem		*menuItem;
-	
-	while((menuItem = [enumerator nextObject])){    
-		if([menuItem representedObject] == object) return menuItem;
+
+	while ((menuItem = [enumerator nextObject])) {
+		if ([menuItem representedObject] == object) {
+			return menuItem;
+		} else if ([menuItem submenu]) {
+			NSEnumerator	*submenuEnumerator = [[[menuItem submenu] itemArray] objectEnumerator];
+			NSMenuItem		*submenuItem;
+			
+			while ((submenuItem = [submenuEnumerator nextObject])) {
+				if ([submenuItem representedObject] == object) {
+					return submenuItem;
+				}
+			}
+		}
 	}
-	
+
 	return nil;
 }
 

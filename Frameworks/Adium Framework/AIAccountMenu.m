@@ -27,6 +27,7 @@
 #define	ACCOUNT_DISCONNECT_ACTION_MENU_TITLE		AILocalizedStringFromTable(@"Disconnect: %@", @"AdiumFramework", "Disconnect account prefix")
 #define	ACCOUNT_CONNECTING_ACTION_MENU_TITLE		AILocalizedStringFromTable(@"Cancel: %@", @"AdiumFramework", "Cancel current account activity prefix")
 #define	ACCOUNT_DISCONNECTING_ACTION_MENU_TITLE		ACCOUNT_CONNECTING_ACTION_MENU_TITLE
+#define ACCOUNT_ENABLE_ACTION_MENU_TITLE			AILocalizedStringFromTable(@"Enable %@", @"AdiumFramework", "Enable account prefix")
 
 #define ACCOUNT_CONNECT_PARENS_MENU_TITLE			AILocalizedStringFromTable(@"%@ (Connecting)", @"AdiumFramework", "Account Name (Connecting) - shown for an account while it is connecting")
 
@@ -137,7 +138,10 @@
 	//Ensure the the delegate implements all required selectors and remember which optional selectors it supports.
 	NSParameterAssert([delegate respondsToSelector:@selector(accountMenu:didRebuildMenuItems:)]);
 	delegateRespondsToDidSelectAccount = [delegate respondsToSelector:@selector(accountMenu:didSelectAccount:)];
-	delegateRespondsToShouldIncludeAccount = [delegate respondsToSelector:@selector(accountMenu:shouldIncludeAccount:)];	
+	delegateRespondsToShouldIncludeAccount = [delegate respondsToSelector:@selector(accountMenu:shouldIncludeAccount:)];
+	
+	includeDisabledAccountsMenu = ([delegate respondsToSelector:@selector(accountMenuShouldIncludeDisabledAccountsMenu:)] &&
+								   [delegate accountMenuShouldIncludeDisabledAccountsMenu:self ]);
 }
 - (id)delegate
 {
@@ -172,10 +176,12 @@
 - (NSArray *)buildMenuItems
 {
 	NSMutableArray	*menuItemArray = [NSMutableArray array];
-	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
+	NSArray			*accounts = [[adium accountController] accounts];
+	NSEnumerator	*enumerator;
 	AIAccount		*account;
 	
-	//Add a menuitem for each account the delegate allows (or all accounts if it doesn't specify)
+	//Add a menuitem for each enabled account the delegate allows (or all enabled accounts if it doesn't specify)
+	enumerator = [accounts objectEnumerator];
 	while ((account = [enumerator nextObject])) {
 		if ([account enabled] &&
 			(!delegateRespondsToShouldIncludeAccount || [delegate accountMenu:self shouldIncludeAccount:account])) {
@@ -193,7 +199,41 @@
 		}
 	}
 	
-	//Update our status submenus once this method returns so thatour menuItemArray is set
+	if (includeDisabledAccountsMenu) {
+		NSMenu			*disabledAccountMenu = [[NSMenu alloc] init];
+
+		enumerator = [accounts objectEnumerator];
+		while ((account = [enumerator nextObject])) {
+			if (![account enabled] &&
+				(!delegateRespondsToShouldIncludeAccount || [delegate accountMenu:self shouldIncludeAccount:account])) {
+				NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
+																							target:self
+																							action:@selector(toggleAccountEnabled:)
+																					 keyEquivalent:@""
+																				 representedObject:account];
+				[self _updateMenuItem:menuItem];
+				[disabledAccountMenu addItem:menuItem];
+				[menuItem release];
+			}
+		}
+
+		if ([disabledAccountMenu numberOfItems]) {
+			[menuItemArray addObject:[NSMenuItem separatorItem]];
+
+			NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Disabled Accounts", nil)
+																						target:self
+																						action:@selector(dummyAction:)
+																				 keyEquivalent:@""
+																			 representedObject:nil];
+			[menuItemArray addObject:menuItem];
+			[menuItem setSubmenu:disabledAccountMenu];
+			[menuItem release];
+		}
+		
+		[disabledAccountMenu release];
+	}
+
+	//Update our status submenus once this method returns so that our menuItemArray is set
 	if (submenuType == AIAccountStatusSubmenu) {
 		[statusMenu performSelector:@selector(rebuildMenu)
 						 withObject:nil
@@ -201,6 +241,20 @@
 	}
 	
 	return menuItemArray;
+}
+
+/*!
+* @brief Returns a menu image for the account
+ */
+- (NSImage *)imageForListObject:(AIListObject *)listObject
+{
+	if ([listObject isKindOfClass:[AIAccount class]] &&
+		![(AIAccount *)listObject enabled]) {
+		return [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconSmall direction:AIIconNormal];	
+
+	} else {
+		return [super imageForListObject:listObject];
+	}
 }
 
 /*!
@@ -229,22 +283,28 @@
 	//If the account doesn't have a name, give it a generic one
 	if (!accountTitle || ![accountTitle length]) accountTitle = NEW_ACCOUNT_DISPLAY_TEXT;
 	
-	if (showTitleVerbs) {
-		if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
-			titleFormat = ACCOUNT_CONNECTING_ACTION_MENU_TITLE;
-		} else if ([[account statusObjectForKey:@"Disconnecting"] boolValue]) {
-			titleFormat = ACCOUNT_DISCONNECTING_ACTION_MENU_TITLE;
+	if ([account enabled]) {
+		if (showTitleVerbs) {
+			if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
+				titleFormat = ACCOUNT_CONNECTING_ACTION_MENU_TITLE;
+			} else if ([[account statusObjectForKey:@"Disconnecting"] boolValue]) {
+				titleFormat = ACCOUNT_DISCONNECTING_ACTION_MENU_TITLE;
+			} else {
+				//Display 'connect' or 'disconnect' before the account name
+				titleFormat = ([account online] ? ACCOUNT_DISCONNECT_ACTION_MENU_TITLE : ACCOUNT_CONNECT_ACTION_MENU_TITLE);
+			}
+			
 		} else {
-			//Display 'connect' or 'disconnect' before the account name
-			titleFormat = ([account online] ? ACCOUNT_DISCONNECT_ACTION_MENU_TITLE : ACCOUNT_CONNECT_ACTION_MENU_TITLE);
+			if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
+				titleFormat = ACCOUNT_CONNECT_PARENS_MENU_TITLE;
+			}
 		}
-
 	} else {
-		if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
-			titleFormat = ACCOUNT_CONNECT_PARENS_MENU_TITLE;
+		if (showTitleVerbs) {
+			titleFormat = ACCOUNT_ENABLE_ACTION_MENU_TITLE;
 		}
 	}
-
+		
 	return (titleFormat ? [NSString stringWithFormat:titleFormat, accountTitle] : accountTitle);
 }
 
@@ -284,7 +344,7 @@
 			if (rebuilt) menuItem = [self menuItemForAccount:(AIAccount *)inObject];
 
 			//Append the account actions menu
-			if (menuItem) {
+			if (menuItem && [(AIAccount *)inObject enabled]) {
 				[menuItem setSubmenu:[self actionsMenuForAccount:(AIAccount *)inObject]];
 			}
 		}
@@ -334,7 +394,7 @@
 	
 	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Disable", nil)
 																	target:self
-																	action:@selector(disableAccount:)
+																	action:@selector(toggleAccountEnabled:)
 															 keyEquivalent:@""
 														 representedObject:inAccount];
 	[actionsSubmenu addItem:menuItem];
@@ -359,13 +419,71 @@
  *
  * @param sender An NSMenuItem whose representedObject is an AIAccount
  */
-- (void)disableAccount:(id)sender
+- (void)toggleAccountEnabled:(id)sender
 {
-	[[sender representedObject] setEnabled:NO];
+	AIAccount	*account = [sender representedObject];
+	[account setEnabled:![account enabled]];
 }
 
 //Account Status Submenu -----------------------------------------------------------------------------------------------
 #pragma mark Account Status Submenu
+NSMenu *statusMenuForAccountMenuItem(NSArray *menuItemArray, NSMenuItem *accountMenuItem, BOOL addOriginalItems, id self)
+{
+	AIAccount			*account = [accountMenuItem representedObject];
+	NSMenu				*accountSubmenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
+	NSEnumerator		*menuItemEnumerator;
+	NSMenuItem			*statusMenuItem;
+	
+	[accountSubmenu setMenuChangedMessagesEnabled:NO];
+	
+	//Enumerate all the menu items we were originally passed
+	menuItemEnumerator = [menuItemArray objectEnumerator];
+	while ((statusMenuItem = [menuItemEnumerator nextObject])) {
+		AIStatus		*status;
+		NSDictionary	*newRepresentedObject;
+		
+		//Set the represented object to indicate both the right status and the right account
+		if ((status = [[statusMenuItem representedObject] objectForKey:@"AIStatus"])) {
+			newRepresentedObject = [NSDictionary dictionaryWithObjectsAndKeys:
+				status, @"AIStatus",
+				account, @"AIAccount",
+				nil];
+		} else {
+			//Custom status items don't have an associated AIStatus.
+			newRepresentedObject = [NSDictionary dictionaryWithObject:account
+															   forKey:@"AIAccount"];
+		}
+		
+		if (addOriginalItems) {
+			//The last time, we can use the original menu item rather than creating a copy
+			[statusMenuItem setRepresentedObject:newRepresentedObject];
+			[accountSubmenu addItem:statusMenuItem];
+			
+		} else {
+			//Create a copy of the item for this account and add it to our status menu
+			NSMenuItem *newItem = [statusMenuItem copy];
+			[newItem setRepresentedObject:newRepresentedObject];
+			[accountSubmenu addItem:newItem];
+			[newItem release];				
+		}
+	}
+	
+	if ([account enabled]) {
+		NSMenuItem	*disableItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Disable", nil)
+																						target:self
+																						action:@selector(toggleAccountEnabled:)
+																				 keyEquivalent:@""
+																			 representedObject:account];
+		[accountSubmenu addItem:[NSMenuItem separatorItem]];
+		[accountSubmenu addItem:disableItem];
+		[disableItem release];
+	}
+	
+	[accountSubmenu setMenuChangedMessagesEnabled:YES];
+	
+	return [accountSubmenu autorelease];
+}
+
 /*!
  * @brief Add the passed state menu items to each of our account menu items
  */
@@ -374,68 +492,66 @@
 	NSMutableArray		*newMenuItems = [NSMutableArray array];
 	NSArray				*accountMenuItems = [self menuItems];
 	unsigned int		accountMenuItemsCount = [accountMenuItems count];
-	unsigned int		index;
+	unsigned int		i;
 	
 	//Add status items only if we have more than one account
 	if (accountMenuItemsCount <= 1) return;
 
-	for (index = 0; index < accountMenuItemsCount; index++) {
-		NSMenuItem			*accountMenuItem  = [accountMenuItems objectAtIndex:index];
-		AIAccount			*account = [accountMenuItem representedObject];
-		NSMenu				*accountSubmenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
-		NSEnumerator		*menuItemEnumerator = [menuItemArray objectEnumerator];
-		NSMenuItem			*statusMenuItem;
-		BOOL				lastTime = (index == (accountMenuItemsCount - 1));
+	for (i = 0; i < accountMenuItemsCount; i++) {
+		/* Add the original items the last time; all other times, add copies of the items.
+		 * An NSMenuItem can only be in one menu, so we have to make copies for all but one; without this specifier, we'd create one more copy
+		 * than necessary, which is	inefficient.
+		 */
+		BOOL		addOriginalItems = (i == (accountMenuItemsCount - 1));
+		NSMenuItem	*menuItem = [accountMenuItems objectAtIndex:i];
+		NSMenu		*accountSubmenu = nil;
 
-		[accountSubmenu setMenuChangedMessagesEnabled:NO];
-		
-		//Enumerate all the menu items we were originally passed
-		while ((statusMenuItem = [menuItemEnumerator nextObject])) {
-			AIStatus		*status;
-			NSDictionary	*newRepresentedObject;
+		if ([[menuItem representedObject] isKindOfClass:[AIAccount class]]) {
+			//The menu item is for an AIAccount directly.  Get its status menu
+			accountSubmenu = statusMenuForAccountMenuItem(menuItemArray, menuItem, addOriginalItems, self);
 			
-			//Set the represented object to indicate both the right status and the right account
-			if ((status = [[statusMenuItem representedObject] objectForKey:@"AIStatus"])) {
-				newRepresentedObject = [NSDictionary dictionaryWithObjectsAndKeys:
-					status, @"AIStatus",
-					account, @"AIAccount",
-					nil];
-			} else {
-				//Custom status items don't have an associated AIStatus.
-				newRepresentedObject = [NSDictionary dictionaryWithObject:account
-																   forKey:@"AIAccount"];
+			if (!addOriginalItems) {
+				[newMenuItems addObjectsFromArray:[accountSubmenu itemArray]];
 			}
 			
+			//Add the status menu to our account menu item
+			[menuItem setSubmenu:accountSubmenu];
 			
-			if (lastTime) {
-				//The last time, we can use the original menu item rather than creating a copy
-				[statusMenuItem setRepresentedObject:newRepresentedObject];
-				[accountSubmenu addItem:statusMenuItem];
+		} else {
+			//The menu item is not for an AIAccount directly. If it has a submenu of AIAccount-representing NSMenuItems, handle those.
+			NSMenu			*thisItemSubmenu;
 
-			} else {
-				//Create a copy of the item for this account and add it to our status menu
-				NSMenuItem *newItem = [statusMenuItem copy];
-				[newItem setRepresentedObject:newRepresentedObject];
-				[accountSubmenu addItem:newItem];
-				[newItem release];				
+			if ((thisItemSubmenu = [menuItem submenu])) {
+				unsigned int	thisItemSubmenuCount = [thisItemSubmenu numberOfItems];
+				unsigned int	j;
+				
+				for (j = 0; j < thisItemSubmenuCount; j++) {
+					menuItem = [thisItemSubmenu itemAtIndex:j];
+
+					if ([[menuItem representedObject] isKindOfClass:[AIAccount class]]) {
+						BOOL		reallyAddOriginalItems = (addOriginalItems && (j == (thisItemSubmenuCount - 1)));
+						accountSubmenu = statusMenuForAccountMenuItem(menuItemArray, menuItem, reallyAddOriginalItems, self);
+						
+						if (!reallyAddOriginalItems) {
+							[newMenuItems addObjectsFromArray:[accountSubmenu itemArray]];
+						}
+						
+						//Add the status menu to our account menu item
+						[menuItem setSubmenu:accountSubmenu];
+					}
+				}
 			}
 		}
-		
-		[accountSubmenu setMenuChangedMessagesEnabled:YES];
-
-		if (!lastTime) {
-			[newMenuItems addObjectsFromArray:[accountSubmenu itemArray]];
-		}
-
-		//Add the status menu to our account menu item
-		[accountMenuItem setSubmenu:accountSubmenu];
-		[accountSubmenu release];
 	}
 	
 	/* Let the statusMenu know about the menuItems we created based on the menuItemArray
-	 * we were passed. This will allow the status controller to manage the proper checkboxes.
+	 * we were passed. This will allow it to manage the proper checkboxes.
 	 */
 	 [statusMenu delegateCreatedMenuItems:newMenuItems];
+}
+
+- (void)dummyAction:(id)sender
+{
 }
 
 @end
