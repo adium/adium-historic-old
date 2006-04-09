@@ -1136,6 +1136,11 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		//Now set the newState for the account
 		[account setStatusState:newState];
 		
+		//Enable the account if it isn't currently enabled
+		if (![account enabled]) {
+			[account setEnabled:YES];
+		}		
+
 	} else {
 		//Set the state for all accounts.  This will clear out the temporaryStatusArray as necessary.
 		[self setActiveStatusState:newState];

@@ -32,7 +32,8 @@ typedef enum {
 
 	BOOL			submenuType;
 	BOOL			showTitleVerbs;
-	
+	BOOL			includeDisabledAccountsMenu;
+
 	AIStatusMenu	*statusMenu;
 }
 
@@ -51,4 +52,5 @@ typedef enum {
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems;
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount; 	//Optional
 - (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount; //Optional
+- (BOOL)accountMenuShouldIncludeDisabledAccountsMenu:(AIAccountMenu *)inAccountMenu;			//Optional
 @end

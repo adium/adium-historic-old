@@ -375,6 +375,11 @@
 			
 			shouldRebuild = [[adium statusController] removeIfNecessaryTemporaryStatusState:[account statusState]];
 			[account setStatusState:(AIStatus *)statusItem];
+
+			//Enable the account if it isn't currently enabled
+			if (![account enabled]) {
+				[account setEnabled:YES];
+			}
 			
 			if (shouldRebuild) {
 				//Rebuild our menus if there was a change
@@ -497,11 +502,6 @@
 	[statusStatesMenu setMenuChangedMessagesEnabled:YES];
 	
 	return [statusStatesMenu autorelease];
-}
-
-+ (IBAction)blah:(id)sender
-{
-	NSLog(@"%@",sender);
 }
 
 /*!

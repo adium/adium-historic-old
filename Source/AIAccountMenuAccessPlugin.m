@@ -56,7 +56,7 @@
 
 	//Remove any existing menu items
 	enumerator = [installedMenuItems objectEnumerator];
-    while((menuItem = [enumerator nextObject])){    
+    while ((menuItem = [enumerator nextObject])) { 
 		[[adium menuController] removeMenuItem:menuItem];
     }
 	
@@ -72,6 +72,11 @@
 }
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
 	[inAccount toggleOnline];
+}
+
+- (BOOL)accountMenuShouldIncludeDisabledAccountsMenu:(AIAccountMenu *)inAccountMenu
+{
+	return YES;
 }
 
 @end
