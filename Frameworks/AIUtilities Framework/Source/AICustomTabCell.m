@@ -88,9 +88,9 @@ static NSSize		rightCapSize;
 		trackingClose = NO;
 		hoveringClose = NO;
 		selected = NO;
-		trackingTag = 0;
-		tooltipTag = 0;
-		closeTrackingTag = 0;
+		trackingTag = -1;
+		tooltipTag = -1;
+		closeTrackingTag = -1;
 	}
 
 	return self;
@@ -99,6 +99,9 @@ static NSSize		rightCapSize;
 //dealloc
 - (void)dealloc
 {
+	NSLog(@"%@: deallocate",self);
+	[self removeTrackingRects];
+	
 	[attributedLabel release];
 	[tabViewItem release];
 
@@ -345,7 +348,7 @@ static NSSize		rightCapSize;
                            assumeInside:NSPointInRect(cursorLocation, trackRect)];
     [self setHighlighted:NSPointInRect(cursorLocation, trackRect)];
 	
-	tooltipTag = [view addToolTipRect:trackRect owner:self userData:NULL];
+	tooltipTag = [view addToolTipRect:trackRect owner:view userData:NULL];
 
     closeTrackingTag = [view addTrackingRect:[self _closeButtonRect]
                                        owner:self
@@ -357,9 +360,15 @@ static NSSize		rightCapSize;
 //Remove our tracking rects
 - (void)removeTrackingRects
 {
-    [view removeTrackingRect:trackingTag]; trackingTag = 0;
-	[view removeToolTip:tooltipTag]; tooltipTag = 0;
-    [view removeTrackingRect:closeTrackingTag]; closeTrackingTag = 0;
+	if (trackingTag != -1) {
+		[view removeTrackingRect:trackingTag]; trackingTag = -1;
+	}
+	if (tooltipTag != -1) {
+		[view removeToolTip:tooltipTag]; tooltipTag = -1;
+	}
+	if (closeTrackingTag != -1) {
+		[view removeTrackingRect:closeTrackingTag]; closeTrackingTag = -1;
+	}
 }
 
 //Mouse entered our tabs (or close button)
@@ -442,11 +451,6 @@ static NSSize		rightCapSize;
 	
     trackingClose = NO;
 	[self setHoveringClose:NO];
-}
-
-- (NSString *)view:(NSView *)controlView stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData
-{
-	return [(AICustomTabsView *)controlView tooltipForTabCell:self];
 }
 
 @end

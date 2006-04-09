@@ -956,5 +956,10 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 	}
 }
 
+- (NSString *)view:(NSView *)controlView stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData
+{
+	return [self tooltipForTabCell:[self tabAtPoint:point]];
+}
+
 @end
 
