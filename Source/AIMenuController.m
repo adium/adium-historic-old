@@ -141,10 +141,10 @@
 	//Remove the item
 	[targetMenu removeItem:targetItem];
 
-	//Remove any double dividers by removing the upper divier. Also, remove dividers at the bottom of the menu
+	//Remove any double dividers by removing the upper divier. Also, remove dividers at the top or bottom of the menu
 	for (loop = 0; loop < [targetMenu numberOfItems]; loop++) {
 		if (([[targetMenu itemAtIndex:loop] isSeparatorItem]) && 
-		   (loop == [targetMenu numberOfItems]-1 || [[targetMenu itemAtIndex:loop-1] isSeparatorItem])) {
+		   ((loop == [targetMenu numberOfItems] - 1) || (loop == 0) || ([[targetMenu itemAtIndex:loop-1] isSeparatorItem]))) {
 			[targetMenu removeItemAtIndex:loop];
 			loop--;//re-search the location
 		}
