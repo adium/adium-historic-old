@@ -15,13 +15,8 @@
  */
 
 #import <Adium/AIPreferencePane.h>
-#import "ShortcutRecorder.h"
-#define SYNCHRONIZE_ADIUM_HOTKEY_PREFS() CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
 
-
-@class PTHotKey;
-
-@class AIColorSelectionPopUpButton, AIFontSelectionPopUpButton;
+@class ShortcutRecorder;
 
 @interface ESGeneralPreferences : AIPreferencePane {
     IBOutlet	NSButton		*checkBox_messagesInTabs;
@@ -40,13 +35,7 @@
 	IBOutlet	NSTextField		*label_menuItem;
 	IBOutlet	NSTextField		*label_switchTabsWith;	
 
-    IBOutlet	ShortcutRecorder	*shortcutRecorder;
-		
-	PTHotKey	*globalHotKey;
-
+    IBOutlet	ShortcutRecorder	*shortcutRecorder;		
 }
-
-- (void)toggleGlobalHotKey:(id)sender;
-- (void) savePref;
 
 @end

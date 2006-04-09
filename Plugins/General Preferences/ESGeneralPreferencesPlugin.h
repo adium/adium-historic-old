@@ -43,8 +43,14 @@ typedef enum {
 #define PREF_GROUP_STATUS_MENU_ITEM     @"Status Menu Item"
 #define KEY_STATUS_MENU_ITEM_ENABLED    @"Status Menu Item Enabled"
 
+#define	KEY_GENERAL_HOTKEY				@"General Hot Key"
+
+@class PTHotKey;
+
 @interface ESGeneralPreferencesPlugin : AIPlugin {
 	ESGeneralPreferences	*preferences;
+	
+	PTHotKey	*globalHotKey;
 }
 
 @end

@@ -29,6 +29,8 @@
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
 
+#import "ShortcutRecorder.h"
+#import "PTHotKey.h"
 
 @interface ESGeneralPreferences (PRIVATE)
 - (NSMenu *)tabKeysMenu;
@@ -45,34 +47,6 @@
 // XXX in order to use shortcutrecorder you need a palette
 // grab http://brok3n.org/shortcutrecorder/ShortcutRecorder-pre-dist.zip and the updated http://brok3n.org/shortcutrecorder/ShortCutRecorderCell.m in order for this to work for you. Compile the palette and install.
 // This comes from http://wafflesoftware.net/shortcut/
-
-- (void) awakeFromNib {
-	
-	//Grab the default	
-	
-	NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *awakePrefHotKey = nil;
-	
-	if (standardUserDefaults) 
-		awakePrefHotKey = [standardUserDefaults objectForKey:@"ShortcutRecorder prefHotKey"];
-	
-	NSLog(@"omg awakePrefHotKey is %@", awakePrefHotKey);
-	
-	//Set the globalHotKey if there is a hotkey from above
-	
-	globalHotKey = [[PTHotKey alloc] initWithIdentifier:@"SRTest"
-											   keyCombo:[PTKeyCombo keyComboWithKeyCode:[shortcutRecorder keyCombo].code
-																			  modifiers:[shortcutRecorder cocoaToCarbonFlags: [shortcutRecorder keyCombo].flags]]];
-	
-	[globalHotKey setTarget: self];
-	[globalHotKey setAction: @selector(hitHotKey:)];
-	
-	[[PTHotKeyCenter sharedCenter] registerHotKey: globalHotKey];
-	
-}
-
-
-
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
@@ -123,7 +97,12 @@
 	//Status Menu
 	[checkBox_enableMenuItem setState:[[[adium preferenceController] preferenceForKey:KEY_STATUS_MENU_ITEM_ENABLED
 																				group:PREF_GROUP_LOGGING] boolValue]];
-		
+	
+	//Global hotkey
+	PTKeyCombo *keyCombo = [[[PTKeyCombo alloc] initWithPlistRepresentation:[[adium preferenceController] preferenceForKey:KEY_GENERAL_HOTKEY
+																													 group:PREF_GROUP_GENERAL]] autorelease];
+	[shortcutRecorder setKeyCombo:SRMakeKeyCombo([keyCombo keyCode], [shortcutRecorder carbonToCocoaFlags:[keyCombo modifiers]])];
+
     [self configureControlDimming];
 }
 
@@ -211,84 +190,22 @@
 	return [menu autorelease];		
 }
 
-
-
-
-
-
 - (BOOL)shortcutRecorder:(ShortcutRecorder *)aRecorder isKeyCode:(signed short)keyCode andFlagsTaken:(unsigned int)flags reason:(NSString **)aReason
 {
-	if (aRecorder == shortcutRecorder)
-	{
-		BOOL isTaken = NO;
-		
-		return isTaken;
-	}
-	
 	return NO;
 }
 
 - (void)shortcutRecorder:(ShortcutRecorder *)aRecorder keyComboDidChange:(KeyCombo)newKeyCombo
 {
-	if (aRecorder == shortcutRecorder)
-	{
+	if (aRecorder == shortcutRecorder) {
+		PTKeyCombo *keyCombo = [PTKeyCombo keyComboWithKeyCode:[shortcutRecorder keyCombo].code
+													 modifiers:[shortcutRecorder cocoaToCarbonFlags:[shortcutRecorder keyCombo].flags]];
 		
-		[self toggleGlobalHotKey: aRecorder];
-		NSLog(@"%@", aRecorder);
-		NSLog(@"got to shortcutrecorder keycombodidchange:(keycombo)newcombo");
+		[[adium preferenceController] setPreference:[keyCombo plistRepresentation]
+											 forKey:KEY_GENERAL_HOTKEY
+											  group:PREF_GROUP_GENERAL];
 	}
 }
-
-
-
-- (void)toggleGlobalHotKey:(id)sender
-{
-	//if (globalHotKey != nil)
-	//{
-	//	[[PTHotKeyCenter sharedCenter] unregisterHotKey: globalHotKey];
-	//	[globalHotKey release];
-	//	globalHotKey = nil;
-	//}
-		
-	//	if (![globalHotKeyCheckBox state]) return;
-	
-	globalHotKey = [[PTHotKey alloc] initWithIdentifier:@"SRTest"
-											   keyCombo:[PTKeyCombo keyComboWithKeyCode:[shortcutRecorder keyCombo].code
-																			  modifiers:[shortcutRecorder cocoaToCarbonFlags: [shortcutRecorder keyCombo].flags]]];
-	
-	[globalHotKey setTarget: self];
-	[globalHotKey setAction: @selector(hitHotKey:)];
-	
-	[[PTHotKeyCenter sharedCenter] registerHotKey: globalHotKey];
-	[self savePref];
-}
-
-
-
-- (void)hitHotKey:(PTHotKey *)hotKey
-{
-	NSLog(@"Got to hit hotkey");
-	[NSApp activateIgnoringOtherApps:YES];	
-
-}
-
-- (void) savePref
-{
-	
-	//Grab that pref and send it to the dungeon of the plist. Hurray for NSUD not being about to write to the domain of another app :(
-	
-	CFPreferencesSetAppValue(CFSTR("ShortcutRecorder prefHotKey"), [[globalHotKey keyCombo] plistRepresentation], kCFPreferencesCurrentApplication);
-	
-	//CFSTR("com.google.GmailNotifier"));
-	
-	//Sync it, just sync it
-	
-	SYNCHRONIZE_ADIUM_HOTKEY_PREFS();
-}
-
-
-
-
 
 /*!
  * @brief Construct our menu by hand for easy localization
