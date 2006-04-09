@@ -319,6 +319,10 @@ Class LogViewerWindowControllerClass = NULL;
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
 	if ([content postProcessContent]) {
 		AIChat				*chat = [notification object];
+
+		//Don't log chats for temporary accounts
+		if ([[chat account] isTemporary]) return;
+
 		NSString			*logString = nil;
 
 		//Generate a plaintext string for this content
