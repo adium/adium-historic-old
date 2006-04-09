@@ -99,7 +99,6 @@ static NSSize		rightCapSize;
 //dealloc
 - (void)dealloc
 {
-	NSLog(@"%@: deallocate",self);
 	[self removeTrackingRects];
 	
 	[attributedLabel release];
