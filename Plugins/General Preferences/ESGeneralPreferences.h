@@ -46,4 +46,7 @@
 
 }
 
+- (void)toggleGlobalHotKey:(id)sender;
+- (void) savePref;
+
 @end
