@@ -26,7 +26,7 @@
  */
 typedef enum {
     LOC_Adium_About = 0, LOC_Adium_Preferences,
-    LOC_File_New, LOC_File_Close, LOC_File_Save, LOC_File_Additions,
+    LOC_File_New, LOC_File_Close, LOC_File_Save, LOC_File_Accounts, LOC_File_Additions,
     LOC_Edit_Bottom, LOC_Edit_Additions,
 	LOC_View_General, LOC_View_Sorting, LOC_View_Toggles, LOC_View_Appearance_Toggles, LOC_View_Additions, 
     LOC_Contact_Manage, LOC_Contact_Info, LOC_Contact_Action, LOC_Contact_NegativeAction, LOC_Contact_Additions,
@@ -54,6 +54,7 @@ typedef enum {
     IBOutlet	id		menu_File_New;
     IBOutlet	id		menu_File_Close;
     IBOutlet	id		menu_File_Save;
+    IBOutlet	id		menu_File_Accounts;
     IBOutlet	id		menu_File_Additions;
     IBOutlet	id		menu_Edit_Bottom;
     IBOutlet	id		menu_Edit_Additions;
