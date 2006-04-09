@@ -10506,7 +10506,7 @@
 			};
 			name = "Deployment-Debug";
 		};
-		11B1A56E09CE42300087442E /* Default */ = {
+		11B1A56E09CE42300087442E /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -10535,7 +10535,7 @@
 				);
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
-			name = Default;
+			name = Deployment-Debug_PPC-Only;
 		};
 		3417D25D09C332B900FC413E /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -11909,10 +11909,10 @@
 				11B1A56B09CE42300087442E /* Development */,
 				11B1A56C09CE42300087442E /* Deployment */,
 				11B1A56D09CE42300087442E /* Deployment-Debug */,
-				11B1A56E09CE42300087442E /* Default */,
+				11B1A56E09CE42300087442E /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		3417D25C09C332B900FC413E /* Build configuration list for PBXNativeTarget "Translator" */ = {
 			isa = XCConfigurationList;
