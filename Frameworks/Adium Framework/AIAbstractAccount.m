@@ -169,10 +169,10 @@
 {
 	NSData	*userIconData = nil;
 
-	if ([[self preferenceForKey:KEY_USE_USER_ICON group:GROUP_ACCOUNT_STATUS] boolValue]) {
-		userIconData = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
+	if ([[self preferenceForKey:KEY_USE_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:isTemporary] boolValue]) {
+		userIconData = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:isTemporary];
 		if (!userIconData) {
-			userIconData = [self preferenceForKey:KEY_DEFAULT_USER_ICON group:GROUP_ACCOUNT_STATUS];
+			userIconData = [self preferenceForKey:KEY_DEFAULT_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:isTemporary];
 		}
 	}
 
@@ -723,7 +723,7 @@
 		originalValue = [[self statusState] statusMessage];
 
 	} else {
-		originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] attributedString];				
+		originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:isTemporary] attributedString];				
 	}
 
 	return originalValue;
