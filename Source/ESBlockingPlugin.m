@@ -35,6 +35,8 @@
 #define TOOLBAR_BLOCK_ICON_KEY		@"Block"
 #define TOOLBAR_UNBLOCK_ICON_KEY	@"Unblock"
 
+NSString * TOOLBAR_ITEM_IDENTIFIER = @"chatItem";
+
 @interface ESBlockingPlugin(PRIVATE)
 - (void)_blockContact:(AIListContact *)contact unblock:(BOOL)unblock;
 - (BOOL)_searchPrivacyListsForListContact:(AIListContact *)contact withDesiredResult:(BOOL)desiredResult;
@@ -490,7 +492,7 @@
 		(chat = [[adium chatController] existingChatWithContact:(AIListContact *)inObject]) &&
 		(window = [[adium interfaceController] windowForChat:chat])) {
 		[self updateToolbarIconOfChat:chat
-							  inWindow:window];
+							 inWindow:window];
 	}
 }
 
