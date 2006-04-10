@@ -58,7 +58,7 @@
 {
 	return [[[[self accountClass] alloc] initWithUID:[self filterUID:inUID removeIgnoredCharacters:YES]
 									internalObjectID:inInternalObjectID
-											 service:self] autorelease] ;
+											 service:self] autorelease];
 }
 
 /*!
