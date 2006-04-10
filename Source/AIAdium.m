@@ -239,6 +239,10 @@ static NSString	*prefsCategory;
 //Called by the login controller when a user has been selected, continue logging in
 - (void)completeLogin
 {
+	NSAutoreleasePool *pool;
+
+	pool = [[NSAutoreleasePool alloc] init];
+
 	/* Init the controllers.
 	 * Menu and interface controllers are created by MainMenu.nib when it loads.
 	 */
@@ -266,16 +270,23 @@ static NSString	*prefsCategory;
 	//Finish setting up the preference controller before the components and plugins load so they can read prefs 
 	[preferenceController controllerDidLoad];
 	[debugController controllerDidLoad];
+	[pool release];
 
 	//Plugins and components should always init last, since they rely on everything else.
+	pool = [[NSAutoreleasePool alloc] init];
 	componentLoader = [[AICoreComponentLoader alloc] init];
 	pluginLoader = [[AICorePluginLoader alloc] init];
-	
+	[pool release];
+
 	//Finish initing
+	pool = [[NSAutoreleasePool alloc] init];
 	[menuController controllerDidLoad];			//Loaded by nib
 	[accountController controllerDidLoad];		//** Before contactController so accounts and services are available for contact creation
 	[contactController controllerDidLoad];		//** Before interfaceController so the contact list is available to the interface
 	[interfaceController controllerDidLoad];	//Loaded by nib
+	[pool release];
+
+	pool = [[NSAutoreleasePool alloc] init];
 	[toolbarController controllerDidLoad];
 	[contactAlertsController controllerDidLoad];
 	[soundController controllerDidLoad];
@@ -284,6 +295,9 @@ static NSString	*prefsCategory;
 	[contentController controllerDidLoad];
 	[dockController controllerDidLoad];
 	[fileTransferController controllerDidLoad];
+	[pool release];
+
+	pool = [[NSAutoreleasePool alloc] init];
 	[applescriptabilityController controllerDidLoad];
 	[statusController controllerDidLoad];
 
@@ -319,6 +333,7 @@ static NSString	*prefsCategory;
 	completedApplicationLoad = YES;
 
 	[[self notificationCenter] postNotificationName:Adium_CompletedApplicationLoad object:nil];
+	[pool release];
 }
 
 //Give all the controllers a chance to close down
