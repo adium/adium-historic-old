@@ -6,12 +6,24 @@
 #ifndef __G_LIBCONFIG_H__
 #define __G_LIBCONFIG_H__
 
+//Needed to do proper VERSION_MIN_REQUIRED checking
+#include <AvailabilityMacros.h>
+
 #include <glib/gmacros.h>
 
 #include <limits.h>
 #include <float.h>
+
+#ifdef __LITTLE_ENDIAN__
+	#define INTEL_BUILD
+#else
+	#undef INTEL_BUILD
+#endif
+
 #define GLIB_HAVE_ALLOCA_H
-#define GLIB_HAVE_SYS_POLL_H
+//XXX Change after we don't require the 10.2.8 SDK anymore
+//#define GLIB_HAVE_SYS_POLL_H
+#undef GLIB_HAVE_SYS_POLL_H
 
 G_BEGIN_DECLS
 
@@ -78,8 +90,8 @@ typedef unsigned long gsize;
 #define g_memmove(d,s,n) G_STMT_START { memmove ((d), (s), (n)); } G_STMT_END
 
 #define GLIB_MAJOR_VERSION 2
-#define GLIB_MINOR_VERSION 6
-#define GLIB_MICRO_VERSION 1
+#define GLIB_MINOR_VERSION 8
+#define GLIB_MICRO_VERSION 6
 
 #define G_OS_UNIX
 
@@ -132,7 +144,13 @@ struct _GStaticMutex
     long   dummy_long;
   } static_mutex;
 };
-#define	G_STATIC_MUTEX_INIT	{ NULL, { { 50,-86,-85,-89,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} } }
+
+#ifdef INTEL_BUILD
+	#define	G_STATIC_MUTEX_INIT	{ NULL, { { -89,-85,-86,50,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} } }
+#else
+	#define	G_STATIC_MUTEX_INIT	{ NULL, { { 50,-86,-85,-89,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} } }
+#endif
+
 #define	g_static_mutex_get_mutex(mutex) \
   (g_thread_use_default_impl ? ((GMutex*) &((mutex)->static_mutex)) : \
    g_static_mutex_get_mutex_impl_shortcut (&((mutex)->runtime_mutex)))
@@ -149,29 +167,54 @@ union _GSystemThread
   long   dummy_long;
 };
 
-#define G_ATOMIC_OP_MEMORY_BARRIER_NEEDED 1
 
-#define GINT16_TO_BE(val)	((gint16) (val))
-#define GUINT16_TO_BE(val)	((guint16) (val))
-#define GINT16_TO_LE(val)	((gint16) GUINT16_SWAP_LE_BE (val))
-#define GUINT16_TO_LE(val)	(GUINT16_SWAP_LE_BE (val))
-#define GINT32_TO_BE(val)	((gint32) (val))
-#define GUINT32_TO_BE(val)	((guint32) (val))
-#define GINT32_TO_LE(val)	((gint32) GUINT32_SWAP_LE_BE (val))
-#define GUINT32_TO_LE(val)	(GUINT32_SWAP_LE_BE (val))
-#define GINT64_TO_BE(val)	((gint64) (val))
-#define GUINT64_TO_BE(val)	((guint64) (val))
-#define GINT64_TO_LE(val)	((gint64) GUINT64_SWAP_LE_BE (val))
-#define GUINT64_TO_LE(val)	(GUINT64_SWAP_LE_BE (val))
-#define GLONG_TO_LE(val)	((glong) GINT32_TO_LE (val))
-#define GULONG_TO_LE(val)	((gulong) GUINT32_TO_LE (val))
-#define GLONG_TO_BE(val)	((glong) GINT32_TO_BE (val))
-#define GULONG_TO_BE(val)	((gulong) GUINT32_TO_BE (val))
-#define GINT_TO_LE(val)		((gint) GINT32_TO_LE (val))
-#define GUINT_TO_LE(val)	((guint) GUINT32_TO_LE (val))
-#define GINT_TO_BE(val)		((gint) GINT32_TO_BE (val))
-#define GUINT_TO_BE(val)	((guint) GUINT32_TO_BE (val))
-#define G_BYTE_ORDER G_BIG_ENDIAN
+#ifdef INTEL_BUILD
+	#define GINT16_TO_LE(val)	((gint16) (val))
+	#define GUINT16_TO_LE(val)	((guint16) (val))
+	#define GINT16_TO_BE(val)	((gint16) GUINT16_SWAP_LE_BE (val))
+	#define GUINT16_TO_BE(val)	(GUINT16_SWAP_LE_BE (val))
+	#define GINT32_TO_LE(val)	((gint32) (val))
+	#define GUINT32_TO_LE(val)	((guint32) (val))
+	#define GINT32_TO_BE(val)	((gint32) GUINT32_SWAP_LE_BE (val))
+	#define GUINT32_TO_BE(val)	(GUINT32_SWAP_LE_BE (val))
+	#define GINT64_TO_LE(val)	((gint64) (val))
+	#define GUINT64_TO_LE(val)	((guint64) (val))
+	#define GINT64_TO_BE(val)	((gint64) GUINT64_SWAP_LE_BE (val))
+	#define GUINT64_TO_BE(val)	(GUINT64_SWAP_LE_BE (val))
+	#define GLONG_TO_LE(val)	((glong) GINT32_TO_LE (val))
+	#define GULONG_TO_LE(val)	((gulong) GUINT32_TO_LE (val))
+	#define GLONG_TO_BE(val)	((glong) GINT32_TO_BE (val))
+	#define GULONG_TO_BE(val)	((gulong) GUINT32_TO_BE (val))
+	#define GINT_TO_LE(val)		((gint) GINT32_TO_LE (val))
+	#define GUINT_TO_LE(val)	((guint) GUINT32_TO_LE (val))
+	#define GINT_TO_BE(val)		((gint) GINT32_TO_BE (val))
+	#define GUINT_TO_BE(val)	((guint) GUINT32_TO_BE (val))
+	#define G_BYTE_ORDER G_LITTLE_ENDIAN
+#else
+	#define GINT16_TO_BE(val)	((gint16) (val))
+	#define GUINT16_TO_BE(val)	((guint16) (val))
+	#define GINT16_TO_LE(val)	((gint16) GUINT16_SWAP_LE_BE (val))
+	#define GUINT16_TO_LE(val)	(GUINT16_SWAP_LE_BE (val))
+	#define GINT32_TO_BE(val)	((gint32) (val))
+	#define GUINT32_TO_BE(val)	((guint32) (val))
+	#define GINT32_TO_LE(val)	((gint32) GUINT32_SWAP_LE_BE (val))
+	#define GUINT32_TO_LE(val)	(GUINT32_SWAP_LE_BE (val))
+	#define GINT64_TO_BE(val)	((gint64) (val))
+	#define GUINT64_TO_BE(val)	((guint64) (val))
+	#define GINT64_TO_LE(val)	((gint64) GUINT64_SWAP_LE_BE (val))
+	#define GUINT64_TO_LE(val)	(GUINT64_SWAP_LE_BE (val))
+	#define GLONG_TO_LE(val)	((glong) GINT32_TO_LE (val))
+	#define GULONG_TO_LE(val)	((gulong) GUINT32_TO_LE (val))
+	#define GLONG_TO_BE(val)	((glong) GINT32_TO_BE (val))
+	#define GULONG_TO_BE(val)	((gulong) GUINT32_TO_BE (val))
+	#define GINT_TO_LE(val)		((gint) GINT32_TO_LE (val))
+	#define GUINT_TO_LE(val)	((guint) GUINT32_TO_LE (val))
+	#define GINT_TO_BE(val)		((gint) GINT32_TO_BE (val))
+	#define GUINT_TO_BE(val)	((guint) GUINT32_TO_BE (val))
+	#define G_BYTE_ORDER G_BIG_ENDIAN
+	
+	#define G_ATOMIC_OP_MEMORY_BARRIER_NEEDED 1
+#endif
 
 #define GLIB_SYSDEF_POLLIN =1
 #define GLIB_SYSDEF_POLLOUT =4

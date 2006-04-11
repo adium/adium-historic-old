@@ -22,12 +22,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#warning Trying...
+
 #ifndef _GAIM_INTERNAL_H_
 #define _GAIM_INTERNAL_H_
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
+
+#warning Internal
 
 /*
  * If we're using NLS, make sure gettext works.  If not, then define
