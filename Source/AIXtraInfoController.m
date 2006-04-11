@@ -18,6 +18,11 @@
 
 @implementation AIXtraInfoController
 
+- (void)awakeFromNib
+{
+	[readMeView setEditable:NO];
+}
+
 - (void)setXtra:(AIXtraInfo *)xtraInfo
 {
 	//Load the readme and set it.
