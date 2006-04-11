@@ -71,6 +71,7 @@ afp:\/\/		|
 adiumxtra:\/\/		|
 webcal:\/\/		|
 svn(\+ssh)?:\/\/	|
+notes:\/\/		|
 gopher:\/\/		    {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
 
 mailto:{mailSpecifier}      {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
