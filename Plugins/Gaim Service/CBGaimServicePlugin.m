@@ -16,10 +16,10 @@
 
 #import "CBGaimServicePlugin.h"
 #import "GaimServices.h"
-#import "GaimCommon.h"
-#import "SLGaimCocoaAdapter.h"
 #import "AIPreferenceController.h"
+#import <Adium/AIAccount.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
+#import <AdiumLibgaim/SLGaimCocoaAdapter.h>
 
 @implementation CBGaimServicePlugin
 
