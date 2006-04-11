@@ -6,7 +6,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "CBGaimAccount.h"
+#import <AdiumLibgaim/CBGaimAccount.h>
 
 #define KEY_IRC_USE_SSL	@"IRC:Use SSL"
 

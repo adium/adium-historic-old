@@ -6,11 +6,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "AILibgaimPlugin.h"
+#import <Adium/AIPlugin.h>
+#import <AdiumLibgaim/AILibgaimPlugin.h>
 
 @class ESIRCService;
 
-@interface ESIRCLibgaimServicePlugin : NSObject <AILibgaimPlugin> {
+@interface ESIRCLibgaimServicePlugin : AIPlugin <AILibgaimPlugin> {
 	ESIRCService *ircService;
 }
 
