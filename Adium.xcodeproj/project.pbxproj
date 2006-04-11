@@ -1474,13 +1474,6 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
 			remoteInfo = AIUtilities;
 		};
-		340BAB4A09EC6F9A000EC441 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
-			remoteInfo = AIUtilities;
-		};
 		340BAB4E09EC6FA7000EC441 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1488,12 +1481,12 @@
 			remoteGlobalIDString = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			remoteInfo = Adium.Framework;
 		};
-		340BAB5009EC6FA7000EC441 /* PBXContainerItemProxy */ = {
+		340BAB5D09EC70F2000EC441 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
-			remoteInfo = AIUtilities;
+			remoteGlobalIDString = DACF3ED3085574D0006BFB18 /* External Frameworks */;
+			remoteInfo = "External Frameworks";
 		};
 		3423412D09D1B67B009FF634 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -7776,7 +7769,6 @@
 			};
 			dependencies = (
 				340BAB4F09EC6FA7000EC441 /* PBXTargetDependency */,
-				340BAB5109EC6FA7000EC441 /* PBXTargetDependency */,
 			);
 			name = AdiumLibgaim;
 			productName = AdiumLibgaim;
@@ -8004,7 +7996,7 @@
 				);
 			};
 			dependencies = (
-				340BAB4B09EC6F9A000EC441 /* PBXTargetDependency */,
+				340BAB5E09EC70F2000EC441 /* PBXTargetDependency */,
 			);
 			name = Adium.Framework;
 			productInstallPath = "@executable_path/../Frameworks";
@@ -9531,20 +9523,15 @@
 			name = AIUtilities;
 			targetProxy = 340BAB4609EC6F8C000EC441 /* PBXContainerItemProxy */;
 		};
-		340BAB4B09EC6F9A000EC441 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIUtilities;
-			targetProxy = 340BAB4A09EC6F9A000EC441 /* PBXContainerItemProxy */;
-		};
 		340BAB4F09EC6FA7000EC441 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			targetProxy = 340BAB4E09EC6FA7000EC441 /* PBXContainerItemProxy */;
 		};
-		340BAB5109EC6FA7000EC441 /* PBXTargetDependency */ = {
+		340BAB5E09EC70F2000EC441 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = AIUtilities;
-			targetProxy = 340BAB5009EC6FA7000EC441 /* PBXContainerItemProxy */;
+			target = DACF3ED3085574D0006BFB18 /* External Frameworks */;
+			targetProxy = 340BAB5D09EC70F2000EC441 /* PBXContainerItemProxy */;
 		};
 		34611CCF09B67ABC00870036 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -10860,7 +10847,7 @@
 					"Plugins/Gaim Service/Include/",
 					"Plugins/Gaim Service/Libgaim.framework/Headers",
 				);
-				INFOPLIST_FILE = "AdiumLibgaim-Info.plist";
+				INFOPLIST_FILE = Plists/AdiumLibgaim.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -10900,7 +10887,7 @@
 					"Plugins/Gaim Service/Include/",
 					"Plugins/Gaim Service/Libgaim.framework/Headers",
 				);
-				INFOPLIST_FILE = "AdiumLibgaim-Info.plist";
+				INFOPLIST_FILE = Plists/AdiumLibgaim.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -10938,7 +10925,7 @@
 					"Plugins/Gaim Service/Include/",
 					"Plugins/Gaim Service/Libgaim.framework/Headers",
 				);
-				INFOPLIST_FILE = "AdiumLibgaim-Info.plist";
+				INFOPLIST_FILE = Plists/AdiumLibgaim.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -10976,7 +10963,7 @@
 					"Plugins/Gaim Service/Include/",
 					"Plugins/Gaim Service/Libgaim.framework/Headers",
 				);
-				INFOPLIST_FILE = "AdiumLibgaim-Info.plist";
+				INFOPLIST_FILE = Plists/AdiumLibgaim.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
 				OTHER_LDFLAGS = (
 					"-framework",
