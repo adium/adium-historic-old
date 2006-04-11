@@ -80,7 +80,7 @@
 									 object:nil];
 	[self xtrasChanged:nil];
 
-	[button_OK setLocalizedString:AILocalizedString(@"OK",nil)];
+	[button_OK setLocalizedString:AILocalizedString(@"CloseSheet",nil)];
 
 	[super windowDidLoad];
 }
