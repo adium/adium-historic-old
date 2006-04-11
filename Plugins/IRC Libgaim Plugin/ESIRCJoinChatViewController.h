@@ -6,7 +6,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "DCJoinChatViewController.h"
+#import <Adium/DCJoinChatViewController.h>
 
 @interface ESIRCJoinChatViewController : DCJoinChatViewController {
 	IBOutlet	NSTextField	*textField_channel;

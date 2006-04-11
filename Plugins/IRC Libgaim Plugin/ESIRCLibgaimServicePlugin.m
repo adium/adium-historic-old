@@ -16,6 +16,13 @@
 	NSLog(@"Init %@ and got %@",self, ircService);
 }
 
+extern BOOL gaim_init_irc_plugin(void);
+
+- (void)installLibgaimPlugin
+{
+	gaim_init_irc_plugin();
+}
+
 - (void)dealloc
 {
 	[ircService release];
