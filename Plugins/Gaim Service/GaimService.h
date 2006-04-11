@@ -15,8 +15,6 @@
  */
 
 #import <Adium/AIService.h>
-#import "GaimCommon.h"
-#import "CBGaimAccount.h"
 
 @interface GaimService : AIService {
 

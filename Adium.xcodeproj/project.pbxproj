@@ -64,7 +64,6 @@
 		078C5CD2079EFF88004C75A4 /* AILocalizationButtonCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		078C5CD3079EFF88004C75A4 /* AILocalizationButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */; };
 		07AF3C5A07D4897300409BC8 /* pref-messagehistory.png in Resources */ = {isa = PBXBuildFile; fileRef = 07AF3C5907D4897200409BC8 /* pref-messagehistory.png */; };
-		07F1795008EBC5B400A9C392 /* UndeclaredLibgaimFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F1794F08EBC5B300A9C392 /* UndeclaredLibgaimFunctions.h */; };
 		07F8303509693F5E002FC851 /* OTR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		110763F508676CC9005987A5 /* RAFBlockEditorPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */; };
 		110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */; };
@@ -124,17 +123,16 @@
 		3402E02E07CB0DBB0044F818 /* AboutBox.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02D07CB0DBB0044F818 /* AboutBox.nib */; };
 		3402E03707CB0DFB0044F818 /* PreferenceWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E03607CB0DFB0044F818 /* PreferenceWindow.nib */; };
 		3402E04207CB0E4D0044F818 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E04107CB0E4D0044F818 /* Localizable.strings */; };
-		3402E04E07CB0EB00044F818 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E04D07CB0EB00044F818 /* Localizable.strings */; };
 		3402E07607CB0FAA0044F818 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E07507CB0FAA0044F818 /* Localizable.strings */; };
-		34048AC70617CB4C004D0B7E /* SLGaimCocoaAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 34048AC50617CB4C004D0B7E /* SLGaimCocoaAdapter.h */; };
-		34048AC80617CB4C004D0B7E /* SLGaimCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34048AC60617CB4C004D0B7E /* SLGaimCocoaAdapter.m */; };
 		34082675075B079800703011 /* Dock Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3408254D075B078B00703011 /* Dock Icons */; };
 		34082690075B5CB900703011 /* Awake.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268E075B5CB900703011 /* Awake.png */; };
 		34082691075B5CB900703011 /* Flap.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268F075B5CB900703011 /* Flap.png */; };
 		340833EC075C3A7900703011 /* AILocalizationTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 340833EA075C3A7900703011 /* AILocalizationTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		340833ED075C3A7900703011 /* AILocalizationTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 340833EB075C3A7900703011 /* AILocalizationTextField.m */; };
-		340915F205C0A5DF00CDE3DD /* GaimCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 340915F105C0A5DF00CDE3DD /* GaimCommon.h */; };
 		340B9BD4069C735900FE1E57 /* WebKit Message View.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */; };
+		340BA84609EC593B000EC441 /* AICorePluginLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 340BA84409EC593A000EC441 /* AICorePluginLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340BA84709EC593B000EC441 /* AICorePluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 340BA84509EC593B000EC441 /* AICorePluginLoader.m */; };
+		340BA8D809EC5E35000EC441 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
 		340EC2280736BF32001653BF /* ESRankingCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 340EC2260736BF31001653BF /* ESRankingCell.h */; };
 		340EC2290736BF32001653BF /* ESRankingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 340EC2270736BF32001653BF /* ESRankingCell.m */; };
 		340F440506D8202A0072E2FA /* AIAbstractListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 340F440306D8202A0072E2FA /* AIAbstractListController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -198,8 +196,6 @@
 		341BDBBB0968BC9B00CF83F5 /* OTR.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		341BDF5E0969814A00CF83F5 /* BadgerDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF5D0969814900CF83F5 /* BadgerDefaults.plist */; };
 		341BDF700969829E00CF83F5 /* DockUnviewedContentDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF6F0969829E00CF83F5 /* DockUnviewedContentDefaults.plist */; };
-		341E886B0648FF1B00E0C828 /* ESGaimRequestActionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341E88680648FF1B00E0C828 /* ESGaimRequestActionController.h */; };
-		341E886C0648FF1B00E0C828 /* ESGaimRequestActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */; };
 		3420E6600611D80100AE67E3 /* ESAccountPasswordPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3420E65B0611D80000AE67E3 /* ESAccountPasswordPromptController.h */; };
 		3420E6610611D80100AE67E3 /* ESAccountPasswordPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3420E65C0611D80000AE67E3 /* ESAccountPasswordPromptController.m */; };
 		3420E6620611D80100AE67E3 /* ESProxyPasswordPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3420E65D0611D80000AE67E3 /* ESProxyPasswordPromptController.h */; };
@@ -223,38 +219,18 @@
 		3428B33F0815E1FB00C0D3DC /* emoticon32.png in Resources */ = {isa = PBXBuildFile; fileRef = 3428B33E0815E1FB00C0D3DC /* emoticon32.png */; };
 		342910CC07AE228600C815F6 /* AIEmoticonPackPreviewTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 342910CA07AE228600C815F6 /* AIEmoticonPackPreviewTableView.h */; };
 		342910CD07AE228600C815F6 /* AIEmoticonPackPreviewTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 342910CB07AE228600C815F6 /* AIEmoticonPackPreviewTableView.m */; };
-		3429280A0628BB4200BB9217 /* ESGaimYahooAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 342928080628BB4200BB9217 /* ESGaimYahooAccountViewController.h */; };
-		3429280B0628BB4200BB9217 /* ESGaimYahooAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342928090628BB4200BB9217 /* ESGaimYahooAccountViewController.m */; };
 		3429BB05070378F700EED705 /* ESFileTransferMessagesPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 3429BB03070378F700EED705 /* ESFileTransferMessagesPlugin.h */; };
 		3429BB06070378F700EED705 /* ESFileTransferMessagesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3429BB04070378F700EED705 /* ESFileTransferMessagesPlugin.m */; };
 		342B77BF09C67C0700DB7AAF /* TranslatorOptions.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342B77BE09C67C0700DB7AAF /* TranslatorOptions.nib */; };
 		342B785409C67F4100DB7AAF /* AITranslatorOptionsWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 342B77B309C678B700DB7AAF /* AITranslatorOptionsWindowController.h */; };
 		342B785509C67F4100DB7AAF /* AITranslatorOptionsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342B77B409C678B700DB7AAF /* AITranslatorOptionsWindowController.m */; };
 		342C2FB4082C16FC00A50DC2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
-		34327CA9060D40A1003D7AD9 /* GaimServiceDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34327BD6060D2FE6003D7AD9 /* GaimServiceDefaults.plist */; };
 		3439FDA905794D0F00B2E449 /* JMSQLLoggerAdvancedPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = B799BC8105793C1300338E54 /* JMSQLLoggerAdvancedPreferences.h */; };
 		3439FDAA05794D1300B2E449 /* JMSQLLoggerAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = B799BC8005793C1200338E54 /* JMSQLLoggerAdvancedPreferences.m */; };
-		343A7F2E06935DC500150CEC /* ESGaimMeanwhileAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 343A7F2A06935DC500150CEC /* ESGaimMeanwhileAccountViewController.m */; };
-		343A7F2F06935DC500150CEC /* ESGaimMeanwhileAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 343A7F2B06935DC500150CEC /* ESGaimMeanwhileAccountViewController.h */; };
-		343A7F3006935DC500150CEC /* ESGaimMeanwhileAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 343A7F2C06935DC500150CEC /* ESGaimMeanwhileAccount.m */; };
-		343A7F3106935DC500150CEC /* ESGaimMeanwhileAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 343A7F2D06935DC500150CEC /* ESGaimMeanwhileAccount.h */; };
-		343A7F3906935DD700150CEC /* ESMeanwhileService.m in Sources */ = {isa = PBXBuildFile; fileRef = 343A7F3706935DD700150CEC /* ESMeanwhileService.m */; };
-		343A7F3A06935DD700150CEC /* ESMeanwhileService.h in Headers */ = {isa = PBXBuildFile; fileRef = 343A7F3806935DD700150CEC /* ESMeanwhileService.h */; };
 		343E7718097BEFE000BCFF92 /* jsocks-klea.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 343E7716097BEFD500BCFF92 /* jsocks-klea.jar */; };
 		343EB3FE08086D2F00E27095 /* AccountProxy.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB3FD08086D2F00E27095 /* AccountProxy.nib */; };
-		343EB40008086D9000E27095 /* ESGaimNovellAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB3FF08086D9000E27095 /* ESGaimNovellAccountView.nib */; };
 		343EB40208086D9000E27095 /* AppearancePrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40108086D9000E27095 /* AppearancePrefs.nib */; };
-		343EB40408086D9000E27095 /* ESGaimGaduGaduAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40308086D9000E27095 /* ESGaimGaduGaduAccountView.nib */; };
-		343EB40608086D9100E27095 /* ESGaimMSNAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40508086D9000E27095 /* ESGaimMSNAccountView.nib */; };
-		343EB40A08086D9100E27095 /* DCGaimZephyrJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40908086D9100E27095 /* DCGaimZephyrJoinChatView.nib */; };
-		343EB40F08086D9100E27095 /* DCGaimYahooJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40E08086D9100E27095 /* DCGaimYahooJoinChatView.nib */; };
-		343EB41308086D9100E27095 /* ESGaimZephyrAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41208086D9100E27095 /* ESGaimZephyrAccountView.nib */; };
-		343EB41508086D9100E27095 /* DCGaimMeanwhileJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41408086D9100E27095 /* DCGaimMeanwhileJoinChatView.nib */; };
 		343EB41708086D9100E27095 /* StatusSortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41608086D9100E27095 /* StatusSortConfiguration.nib */; };
-		343EB41908086D9100E27095 /* DCGaimJabberJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41808086D9100E27095 /* DCGaimJabberJoinChatView.nib */; };
-		343EB41F08086D9200E27095 /* ESGaimMeanwhileAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41E08086D9100E27095 /* ESGaimMeanwhileAccountView.nib */; };
-		343EB42108086D9200E27095 /* ESGaimYahooAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB42008086D9200E27095 /* ESGaimYahooAccountView.nib */; };
-		343EB42308086D9200E27095 /* ESGaimJabberAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB42208086D9200E27095 /* ESGaimJabberAccountView.nib */; };
 		343EC6920809DD3400E27095 /* ListLayoutSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EC6910809DD3400E27095 /* ListLayoutSheet.nib */; };
 		343EC6A90809DEC800E27095 /* ESContactAlertsPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 343EC6A70809DEC700E27095 /* ESContactAlertsPane.m */; };
 		343EC6AA0809DEC800E27095 /* ESContactAlertsPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 343EC6A80809DEC700E27095 /* ESContactAlertsPane.h */; };
@@ -271,33 +247,8 @@
 		344093AA07D9161B00321BB3 /* ESAutoAwayPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 344093A807D9161B00321BB3 /* ESAutoAwayPlugin.h */; };
 		344093AB07D9161B00321BB3 /* ESAutoAwayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 344093A907D9161B00321BB3 /* ESAutoAwayPlugin.m */; };
 		3440974307DA06FE00321BB3 /* MessageContextDisplayPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3440974207DA06FE00321BB3 /* MessageContextDisplayPrefs.nib */; };
-		344158AB059F90FB0019246B /* ESMSNService.h in Headers */ = {isa = PBXBuildFile; fileRef = 344158A9059F90FA0019246B /* ESMSNService.h */; };
-		344158AC059F90FB0019246B /* ESMSNService.m in Sources */ = {isa = PBXBuildFile; fileRef = 344158AA059F90FB0019246B /* ESMSNService.m */; };
-		34415941059F94C10019246B /* ESGaimMSNAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 3441593F059F94C10019246B /* ESGaimMSNAccount.h */; };
-		34415942059F94C10019246B /* ESGaimMSNAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34415940059F94C10019246B /* ESGaimMSNAccount.m */; };
-		344159B5059F97800019246B /* ESGaimMSNAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 344159B3059F977F0019246B /* ESGaimMSNAccountViewController.h */; };
-		344159B6059F97800019246B /* ESGaimMSNAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344159B4059F97800019246B /* ESGaimMSNAccountViewController.m */; };
-		34415A65059F9B9C0019246B /* GaimService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34415A63059F9B9B0019246B /* GaimService.h */; };
-		34415A66059F9B9C0019246B /* GaimService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34415A64059F9B9B0019246B /* GaimService.m */; };
-		34415B9D059FA8DF0019246B /* ESYahooService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34415B9B059FA8DF0019246B /* ESYahooService.h */; };
-		34415B9E059FA8DF0019246B /* ESYahooService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34415B9C059FA8DF0019246B /* ESYahooService.m */; };
-		34415BD3059FA9CE0019246B /* ESGaimYahooAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34415BCF059FA9CD0019246B /* ESGaimYahooAccount.m */; };
-		34415BD5059FA9CE0019246B /* ESGaimYahooAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34415BD1059FA9CE0019246B /* ESGaimYahooAccount.h */; };
-		34416072059FC27E0019246B /* ESGaimGaduGaduAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34416070059FC27D0019246B /* ESGaimGaduGaduAccount.h */; };
-		34416073059FC27E0019246B /* ESGaimGaduGaduAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34416071059FC27D0019246B /* ESGaimGaduGaduAccount.m */; };
-		34416087059FC2A40019246B /* ESGaimGaduGaduAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34416085059FC2A30019246B /* ESGaimGaduGaduAccountViewController.h */; };
-		34416088059FC2A40019246B /* ESGaimGaduGaduAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34416086059FC2A30019246B /* ESGaimGaduGaduAccountViewController.m */; };
-		344160B6059FC2F60019246B /* ESGaimJabberAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 344160B4059FC2F50019246B /* ESGaimJabberAccountViewController.h */; };
-		344160B7059FC2F60019246B /* ESGaimJabberAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344160B5059FC2F50019246B /* ESGaimJabberAccountViewController.m */; };
-		344160C5059FC3090019246B /* ESGaimJabberAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 344160C3059FC3080019246B /* ESGaimJabberAccount.h */; };
-		344160C6059FC3090019246B /* ESGaimJabberAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 344160C4059FC3080019246B /* ESGaimJabberAccount.m */; };
-		3441615B059FC5340019246B /* ESGaduGaduService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34416159059FC5330019246B /* ESGaduGaduService.h */; };
-		3441615C059FC5340019246B /* ESGaduGaduService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3441615A059FC5340019246B /* ESGaduGaduService.m */; };
-		34416173059FC55A0019246B /* ESJabberService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34416171059FC55A0019246B /* ESJabberService.h */; };
-		34416174059FC55A0019246B /* ESJabberService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34416172059FC55A0019246B /* ESJabberService.m */; };
 		344161BD0943E0D900BC26ED /* AdiumSetupWizard.h in Headers */ = {isa = PBXBuildFile; fileRef = 344161BB0943E0D800BC26ED /* AdiumSetupWizard.h */; };
 		344161BE0943E0D900BC26ED /* AdiumSetupWizard.m in Sources */ = {isa = PBXBuildFile; fileRef = 344161BC0943E0D800BC26ED /* AdiumSetupWizard.m */; };
-		344161C5059FC72E0019246B /* GaimServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 344161C4059FC72E0019246B /* GaimServices.h */; };
 		344161D00943E20D00BC26ED /* AdiumyButler.png in Resources */ = {isa = PBXBuildFile; fileRef = 344161CF0943E20D00BC26ED /* AdiumyButler.png */; };
 		344161D40943E22F00BC26ED /* SetupWizard.nib in Resources */ = {isa = PBXBuildFile; fileRef = 344161D30943E22F00BC26ED /* SetupWizard.nib */; };
 		344162400943E76400BC26ED /* SetupWizardBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3441623E0943E76400BC26ED /* SetupWizardBackgroundView.h */; };
@@ -336,14 +287,6 @@
 		34575E3507CBA7E0004A4FFF /* LoginSelect.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3407CBA7DF004A4FFF /* LoginSelect.nib */; };
 		34575E3707CBA874004A4FFF /* DebugWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3607CBA874004A4FFF /* DebugWindow.nib */; };
 		34575E3907CBA88E004A4FFF /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3807CBA88E004A4FFF /* MainMenu.nib */; };
-		345A7B5B0954AD1400FF3113 /* ESSimpleService.h in Headers */ = {isa = PBXBuildFile; fileRef = 345A7B590954AD1400FF3113 /* ESSimpleService.h */; };
-		345A7B5C0954AD1400FF3113 /* ESSimpleService.m in Sources */ = {isa = PBXBuildFile; fileRef = 345A7B5A0954AD1400FF3113 /* ESSimpleService.m */; };
-		345A7B670954AD2800FF3113 /* ESGaimSimpleAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 345A7B650954AD2800FF3113 /* ESGaimSimpleAccount.h */; };
-		345A7B680954AD2800FF3113 /* ESGaimSimpleAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 345A7B660954AD2800FF3113 /* ESGaimSimpleAccount.m */; };
-		345A7B6D0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 345A7B6B0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.h */; };
-		345A7B6E0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 345A7B6C0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.m */; };
-		345A7B720954AD4D00FF3113 /* GaimDefaultsSimple.plist in Resources */ = {isa = PBXBuildFile; fileRef = 345A7B710954AD4D00FF3113 /* GaimDefaultsSimple.plist */; };
-		345A7B850954AEF400FF3113 /* ESGaimSimpleAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 345A7B830954AEF400FF3113 /* ESGaimSimpleAccountView.nib */; };
 		345ACC970811C20F008E4D22 /* AwayStatusWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 345ACC960811C20F008E4D22 /* AwayStatusWindow.nib */; };
 		345F566B08178356001F733C /* AdiumServiceIcons.icns in Resources */ = {isa = PBXBuildFile; fileRef = 345F566A08178356001F733C /* AdiumServiceIcons.icns */; };
 		345F57400817FF80001F733C /* pref-contactList.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F573F0817FF80001F733C /* pref-contactList.png */; };
@@ -457,6 +400,162 @@
 		347F51860947449000CEF1FF /* AdiumAddressBookAction_Jabber.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E9094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt */; };
 		3483928605E68B05002BC6C0 /* AIIconState.m in Sources */ = {isa = PBXBuildFile; fileRef = 3483928405E68B05002BC6C0 /* AIIconState.m */; };
 		3483928705E68B05002BC6C0 /* AIIconState.h in Headers */ = {isa = PBXBuildFile; fileRef = 3483928505E68B05002BC6C0 /* AIIconState.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485D40409EB3FEA00232CC4 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
+		3485D5F409EB406000232CC4 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		3485D8B809EB436500232CC4 /* AdiumLibgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3485D68009EB416300232CC4 /* AdiumLibgaim.framework */; };
+		3485D8BD09EB436C00232CC4 /* AdiumLibgaim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3485D68009EB416300232CC4 /* AdiumLibgaim.framework */; };
+		3485D8E709EB445C00232CC4 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		3485D8EA09EB446900232CC4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
+		3485D8EB09EB446900232CC4 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
+		3485D8EC09EB447100232CC4 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
+		3485DB1809EBCE6500232CC4 /* SLGaimCocoaAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 34048AC50617CB4C004D0B7E /* SLGaimCocoaAdapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB1909EBCE6500232CC4 /* SLGaimCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34048AC60617CB4C004D0B7E /* SLGaimCocoaAdapter.m */; };
+		3485DB1A09EBCE6500232CC4 /* adiumGaimBlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE10907A2EE3700663CC9 /* adiumGaimBlist.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB1B09EBCE6500232CC4 /* adiumGaimBlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE10A07A2EE3700663CC9 /* adiumGaimBlist.m */; };
+		3485DB1C09EBCE6500232CC4 /* adiumGaimConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE0E907A2ECCF00663CC9 /* adiumGaimConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB1D09EBCE6500232CC4 /* adiumGaimConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE0EA07A2ECD000663CC9 /* adiumGaimConnection.m */; };
+		3485DB1E09EBCE6500232CC4 /* adiumGaimConversation.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE17E07A2F10400663CC9 /* adiumGaimConversation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB1F09EBCE6500232CC4 /* adiumGaimConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE17F07A2F10400663CC9 /* adiumGaimConversation.m */; };
+		3485DB2009EBCE6500232CC4 /* adiumGaimCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE1B207A2F36400663CC9 /* adiumGaimCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB2109EBCE6500232CC4 /* adiumGaimCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE1B307A2F36400663CC9 /* adiumGaimCore.m */; };
+		3485DB2209EBCE6500232CC4 /* adiumGaimEventloop.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE18A07A2F2A600663CC9 /* adiumGaimEventloop.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB2309EBCE6500232CC4 /* adiumGaimEventloop.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE18B07A2F2A600663CC9 /* adiumGaimEventloop.m */; };
+		3485DB2409EBCE6500232CC4 /* adiumGaimFt.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE11007A2EED500663CC9 /* adiumGaimFt.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB2509EBCE6500232CC4 /* adiumGaimFt.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE11107A2EED600663CC9 /* adiumGaimFt.m */; };
+		3485DB2609EBCE6500232CC4 /* adiumGaimNotify.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE12207A2EFF800663CC9 /* adiumGaimNotify.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB2709EBCE6500232CC4 /* adiumGaimNotify.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE12307A2EFF800663CC9 /* adiumGaimNotify.m */; };
+		3485DB2809EBCE6500232CC4 /* adiumGaimPrivacy.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE11607A2EF2B00663CC9 /* adiumGaimPrivacy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB2909EBCE6500232CC4 /* adiumGaimPrivacy.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE11707A2EF2B00663CC9 /* adiumGaimPrivacy.m */; };
+		3485DB2A09EBCE6500232CC4 /* adiumGaimRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE11C07A2EF7F00663CC9 /* adiumGaimRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB2B09EBCE6500232CC4 /* adiumGaimRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE11D07A2EF7F00663CC9 /* adiumGaimRequest.m */; };
+		3485DB2C09EBCE6500232CC4 /* adiumGaimRoomlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE12807A2F09A00663CC9 /* adiumGaimRoomlist.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB2D09EBCE6500232CC4 /* adiumGaimRoomlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE12907A2F09B00663CC9 /* adiumGaimRoomlist.m */; };
+		3485DB2E09EBCE6500232CC4 /* adiumGaimSignals.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE1B807A2F4C500663CC9 /* adiumGaimSignals.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB2F09EBCE6500232CC4 /* adiumGaimSignals.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */; };
+		3485DB3009EBCE6500232CC4 /* adiumGaimWebcam.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE18407A2F20E00663CC9 /* adiumGaimWebcam.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB3109EBCE6500232CC4 /* adiumGaimWebcam.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE18507A2F20E00663CC9 /* adiumGaimWebcam.m */; };
+		3485DB3209EBCE6500232CC4 /* UndeclaredLibgaimFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F1794F08EBC5B300A9C392 /* UndeclaredLibgaimFunctions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB3709EBCE7400232CC4 /* GaimService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34415A63059F9B9B0019246B /* GaimService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB3809EBCE7400232CC4 /* GaimService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34415A64059F9B9B0019246B /* GaimService.m */; };
+		3485DB3909EBCE7400232CC4 /* CBGaimAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7F278705440C8D00CDFC90 /* CBGaimAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB3A09EBCE7400232CC4 /* CBGaimAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 348FF83E09128BEB00A942A8 /* CBGaimAccount.m */; };
+		3485DB5909EBCE7400232CC4 /* ESGaduGaduService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34416159059FC5330019246B /* ESGaduGaduService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB5A09EBCE7400232CC4 /* ESGaduGaduService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3441615A059FC5340019246B /* ESGaduGaduService.m */; };
+		3485DB5B09EBCE7400232CC4 /* ESGaimGaduGaduAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34416070059FC27D0019246B /* ESGaimGaduGaduAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB5C09EBCE7400232CC4 /* ESGaimGaduGaduAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34416071059FC27D0019246B /* ESGaimGaduGaduAccount.m */; };
+		3485DB5D09EBCE7400232CC4 /* DCGaimGaduGaduJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E4D961C06B73B38005235E9 /* DCGaimGaduGaduJoinChatViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB5E09EBCE7400232CC4 /* DCGaimGaduGaduJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D961D06B73B38005235E9 /* DCGaimGaduGaduJoinChatViewController.m */; };
+		3485DB5F09EBCE7400232CC4 /* DCGaimGaduGaduJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6E4D961B06B73B38005235E9 /* DCGaimGaduGaduJoinChatView.nib */; };
+		3485DB6009EBCE7400232CC4 /* ESGaimGaduGaduAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34416085059FC2A30019246B /* ESGaimGaduGaduAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB6109EBCE7400232CC4 /* ESGaimGaduGaduAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34416086059FC2A30019246B /* ESGaimGaduGaduAccountViewController.m */; };
+		3485DB6209EBCE7400232CC4 /* ESGaimGaduGaduAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40308086D9000E27095 /* ESGaimGaduGaduAccountView.nib */; };
+		3485DB6309EBCE7400232CC4 /* GaimDefaultsGadu-Gadu.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76473F07A07B620021CCD7 /* GaimDefaultsGadu-Gadu.plist */; };
+		3485DB6409EBCE7400232CC4 /* ESJabberService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34416171059FC55A0019246B /* ESJabberService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB6509EBCE7400232CC4 /* ESJabberService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34416172059FC55A0019246B /* ESJabberService.m */; };
+		3485DB6609EBCE7400232CC4 /* ESGaimJabberAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 344160C3059FC3080019246B /* ESGaimJabberAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB6709EBCE7400232CC4 /* ESGaimJabberAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 344160C4059FC3080019246B /* ESGaimJabberAccount.m */; };
+		3485DB6809EBCE7400232CC4 /* DCGaimJabberJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E4D962206B73BE0005235E9 /* DCGaimJabberJoinChatViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB6909EBCE7400232CC4 /* DCGaimJabberJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D962306B73BE0005235E9 /* DCGaimJabberJoinChatViewController.m */; };
+		3485DB6A09EBCE7400232CC4 /* DCGaimJabberJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41808086D9100E27095 /* DCGaimJabberJoinChatView.nib */; };
+		3485DB6B09EBCE7400232CC4 /* ESGaimJabberAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 344160B4059FC2F50019246B /* ESGaimJabberAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB6C09EBCE7400232CC4 /* ESGaimJabberAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344160B5059FC2F50019246B /* ESGaimJabberAccountViewController.m */; };
+		3485DB6D09EBCE7400232CC4 /* ESGaimJabberAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB42208086D9200E27095 /* ESGaimJabberAccountView.nib */; };
+		3485DB6E09EBCE7400232CC4 /* GaimDefaultsJabber.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BB19298079EE90900DAA523 /* GaimDefaultsJabber.plist */; };
+		3485DB6F09EBCE7400232CC4 /* AIGaimGTalkAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C0431B08D74D3100B48CE1 /* AIGaimGTalkAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB7009EBCE7400232CC4 /* AIGaimGTalkAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C0431C08D74D3100B48CE1 /* AIGaimGTalkAccount.m */; };
+		3485DB7109EBCE7400232CC4 /* AIGaimGTalkAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C0431D08D74D3100B48CE1 /* AIGaimGTalkAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB7209EBCE7400232CC4 /* AIGaimGTalkAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C0431E08D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m */; };
+		3485DB7309EBCE7400232CC4 /* AIGTalkService.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C0431F08D74D3100B48CE1 /* AIGTalkService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB7409EBCE7400232CC4 /* AIGTalkService.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C0432008D74D3100B48CE1 /* AIGTalkService.m */; };
+		3485DB7509EBCE7400232CC4 /* GaimDefaultsGTalk.plist in Resources */ = {isa = PBXBuildFile; fileRef = A3C042D108D7483100B48CE1 /* GaimDefaultsGTalk.plist */; };
+		3485DB7609EBCE7400232CC4 /* ESMeanwhileService.h in Headers */ = {isa = PBXBuildFile; fileRef = 343A7F3806935DD700150CEC /* ESMeanwhileService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB7709EBCE7400232CC4 /* ESMeanwhileService.m in Sources */ = {isa = PBXBuildFile; fileRef = 343A7F3706935DD700150CEC /* ESMeanwhileService.m */; };
+		3485DB7809EBCE7400232CC4 /* ESGaimMeanwhileAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 343A7F2D06935DC500150CEC /* ESGaimMeanwhileAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB7909EBCE7400232CC4 /* ESGaimMeanwhileAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 343A7F2C06935DC500150CEC /* ESGaimMeanwhileAccount.m */; };
+		3485DB7A09EBCE7400232CC4 /* DCGaimMeanwhileJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E4D962806B73C18005235E9 /* DCGaimMeanwhileJoinChatViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB7B09EBCE7400232CC4 /* DCGaimMeanwhileJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D962906B73C18005235E9 /* DCGaimMeanwhileJoinChatViewController.m */; };
+		3485DB7C09EBCE7400232CC4 /* DCGaimMeanwhileJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41408086D9100E27095 /* DCGaimMeanwhileJoinChatView.nib */; };
+		3485DB7D09EBCE7400232CC4 /* ESGaimMeanwhileAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 343A7F2B06935DC500150CEC /* ESGaimMeanwhileAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB7E09EBCE7400232CC4 /* ESGaimMeanwhileAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 343A7F2A06935DC500150CEC /* ESGaimMeanwhileAccountViewController.m */; };
+		3485DB7F09EBCE7400232CC4 /* ESGaimMeanwhileAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41E08086D9100E27095 /* ESGaimMeanwhileAccountView.nib */; };
+		3485DB8009EBCE7400232CC4 /* GaimDefaultsSametime.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76474C07A07B900021CCD7 /* GaimDefaultsSametime.plist */; };
+		3485DB8109EBCE7400232CC4 /* ESMSNService.h in Headers */ = {isa = PBXBuildFile; fileRef = 344158A9059F90FA0019246B /* ESMSNService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB8209EBCE7400232CC4 /* ESMSNService.m in Sources */ = {isa = PBXBuildFile; fileRef = 344158AA059F90FB0019246B /* ESMSNService.m */; };
+		3485DB8309EBCE7400232CC4 /* ESGaimMSNAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 3441593F059F94C10019246B /* ESGaimMSNAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB8409EBCE7400232CC4 /* ESGaimMSNAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34415940059F94C10019246B /* ESGaimMSNAccount.m */; };
+		3485DB8509EBCE7400232CC4 /* DCGaimMSNJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E4D962E06B73C4D005235E9 /* DCGaimMSNJoinChatViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB8609EBCE7400232CC4 /* DCGaimMSNJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D962F06B73C4D005235E9 /* DCGaimMSNJoinChatViewController.m */; };
+		3485DB8709EBCE7400232CC4 /* DCGaimMSNJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6E4D962D06B73C4D005235E9 /* DCGaimMSNJoinChatView.nib */; };
+		3485DB8809EBCE7400232CC4 /* ESGaimMSNAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 344159B3059F977F0019246B /* ESGaimMSNAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB8909EBCE7400232CC4 /* ESGaimMSNAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344159B4059F97800019246B /* ESGaimMSNAccountViewController.m */; };
+		3485DB8A09EBCE7400232CC4 /* ESGaimMSNAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40508086D9000E27095 /* ESGaimMSNAccountView.nib */; };
+		3485DB8B09EBCE7400232CC4 /* GaimDefaultsMSN.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B7644DD07A05E7E0021CCD7 /* GaimDefaultsMSN.plist */; };
+		3485DB8C09EBCE7400232CC4 /* AIMSNServicePreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B388E0D0719C376004DE713 /* AIMSNServicePreferences.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB8D09EBCE7400232CC4 /* AIMSNServicePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B388E0E0719C376004DE713 /* AIMSNServicePreferences.m */; };
+		3485DB8E09EBCE7400232CC4 /* MSNServicePrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B388E4C0719C445004DE713 /* MSNServicePrefs.nib */; };
+		3485DB8F09EBCE7400232CC4 /* ESNovellService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C2EA180634DB5E0018E5D2 /* ESNovellService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB9009EBCE7400232CC4 /* ESNovellService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C2EA190634DB5E0018E5D2 /* ESNovellService.m */; };
+		3485DB9109EBCE7400232CC4 /* ESGaimNovellAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C2E66F0634CF5F0018E5D2 /* ESGaimNovellAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB9209EBCE7400232CC4 /* ESGaimNovellAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C2E6700634CF5F0018E5D2 /* ESGaimNovellAccount.m */; };
+		3485DB9309EBCE7400232CC4 /* DCGaimNovellJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EA3688306B73E7D009CA81A /* DCGaimNovellJoinChatViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB9409EBCE7400232CC4 /* DCGaimNovellJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA3688406B73E7D009CA81A /* DCGaimNovellJoinChatViewController.m */; };
+		3485DB9509EBCE7400232CC4 /* DCGaimNovellJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6EA3688206B73E7D009CA81A /* DCGaimNovellJoinChatView.nib */; };
+		3485DB9609EBCE7400232CC4 /* ESGaimNovellAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C2E6870634CF940018E5D2 /* ESGaimNovellAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB9709EBCE7400232CC4 /* ESGaimNovellAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C2E6880634CF940018E5D2 /* ESGaimNovellAccountViewController.m */; };
+		3485DB9809EBCE7400232CC4 /* ESGaimNovellAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB3FF08086D9000E27095 /* ESGaimNovellAccountView.nib */; };
+		3485DB9909EBCE7400232CC4 /* GaimDefaultsGroupWise.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76476007A07BC90021CCD7 /* GaimDefaultsGroupWise.plist */; };
+		3485DB9A09EBCE7400232CC4 /* ESSimpleService.h in Headers */ = {isa = PBXBuildFile; fileRef = 345A7B590954AD1400FF3113 /* ESSimpleService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB9B09EBCE7400232CC4 /* ESSimpleService.m in Sources */ = {isa = PBXBuildFile; fileRef = 345A7B5A0954AD1400FF3113 /* ESSimpleService.m */; };
+		3485DB9C09EBCE7400232CC4 /* ESGaimSimpleAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 345A7B650954AD2800FF3113 /* ESGaimSimpleAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB9D09EBCE7400232CC4 /* ESGaimSimpleAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 345A7B660954AD2800FF3113 /* ESGaimSimpleAccount.m */; };
+		3485DB9E09EBCE7400232CC4 /* ESGaimSimpleAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 345A7B6B0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DB9F09EBCE7400232CC4 /* ESGaimSimpleAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 345A7B6C0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.m */; };
+		3485DBA009EBCE7400232CC4 /* ESGaimSimpleAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 345A7B830954AEF400FF3113 /* ESGaimSimpleAccountView.nib */; };
+		3485DBA109EBCE7400232CC4 /* GaimDefaultsSimple.plist in Resources */ = {isa = PBXBuildFile; fileRef = 345A7B710954AD4D00FF3113 /* GaimDefaultsSimple.plist */; };
+		3485DBA209EBCE7400232CC4 /* ESYahooService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34415B9B059FA8DF0019246B /* ESYahooService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBA309EBCE7400232CC4 /* ESYahooService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34415B9C059FA8DF0019246B /* ESYahooService.m */; };
+		3485DBA409EBCE7400232CC4 /* ESGaimYahooAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34415BD1059FA9CE0019246B /* ESGaimYahooAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBA509EBCE7400232CC4 /* ESGaimYahooAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34415BCF059FA9CD0019246B /* ESGaimYahooAccount.m */; };
+		3485DBA609EBCE7400232CC4 /* DCGaimYahooJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EA3688F06B73F67009CA81A /* DCGaimYahooJoinChatViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBA709EBCE7400232CC4 /* DCGaimYahooJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA3689006B73F67009CA81A /* DCGaimYahooJoinChatViewController.m */; };
+		3485DBA809EBCE7400232CC4 /* DCGaimYahooJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40E08086D9100E27095 /* DCGaimYahooJoinChatView.nib */; };
+		3485DBA909EBCE7400232CC4 /* ESGaimYahooAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 342928080628BB4200BB9217 /* ESGaimYahooAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBAA09EBCE7400232CC4 /* ESGaimYahooAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342928090628BB4200BB9217 /* ESGaimYahooAccountViewController.m */; };
+		3485DBAB09EBCE7400232CC4 /* ESGaimYahooAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB42008086D9200E27095 /* ESGaimYahooAccountView.nib */; };
+		3485DBAC09EBCE7400232CC4 /* GaimDefaultsYahoo!.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76471707A079A40021CCD7 /* GaimDefaultsYahoo!.plist */; };
+		3485DBAD09EBCE7400232CC4 /* ESYahooJapanService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E3C8870638D40500AA3EF7 /* ESYahooJapanService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBAE09EBCE7400232CC4 /* ESYahooJapanService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E3C8880638D40500AA3EF7 /* ESYahooJapanService.m */; };
+		3485DBAF09EBCE7400232CC4 /* ESGaimYahooJapanAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E3C8A50638D50F00AA3EF7 /* ESGaimYahooJapanAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBB009EBCE7400232CC4 /* ESGaimYahooJapanAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E3C8A60638D50F00AA3EF7 /* ESGaimYahooJapanAccount.m */; };
+		3485DBB109EBCE7400232CC4 /* GaimDefaultsYahoo! Japan.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76478507A07C440021CCD7 /* GaimDefaultsYahoo! Japan.plist */; };
+		3485DBB209EBCE7400232CC4 /* ESZephyrService.h in Headers */ = {isa = PBXBuildFile; fileRef = 348D8D1B06CC079F00449EBB /* ESZephyrService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBB309EBCE7400232CC4 /* ESZephyrService.m in Sources */ = {isa = PBXBuildFile; fileRef = 348D8D1A06CC079F00449EBB /* ESZephyrService.m */; };
+		3485DBB409EBCE7400232CC4 /* ESGaimZephyrAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 348D8D2806CC07BD00449EBB /* ESGaimZephyrAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBB509EBCE7400232CC4 /* ESGaimZephyrAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 348D8D2606CC07BD00449EBB /* ESGaimZephyrAccount.m */; };
+		3485DBB609EBCE7400232CC4 /* DCGaimZephyrJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 348D8D2706CC07BD00449EBB /* DCGaimZephyrJoinChatViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBB709EBCE7400232CC4 /* DCGaimZephyrJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348D8D2506CC07BD00449EBB /* DCGaimZephyrJoinChatViewController.m */; };
+		3485DBB809EBCE7400232CC4 /* DCGaimZephyrJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40908086D9100E27095 /* DCGaimZephyrJoinChatView.nib */; };
+		3485DBB909EBCE7400232CC4 /* ESGaimZephyrAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 348D8D2406CC07BD00449EBB /* ESGaimZephyrAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBBA09EBCE7400232CC4 /* ESGaimZephyrAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348D8D2206CC07BC00449EBB /* ESGaimZephyrAccountViewController.m */; };
+		3485DBBB09EBCE7400232CC4 /* ESGaimZephyrAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41208086D9100E27095 /* ESGaimZephyrAccountView.nib */; };
+		3485DBBC09EBCE7400232CC4 /* GaimDefaultsZephyr.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B7646CE07A078E60021CCD7 /* GaimDefaultsZephyr.plist */; };
+		3485DBBD09EBCE7400232CC4 /* ESGaimNotifyEmailController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E0103307B956F6000DF265 /* ESGaimNotifyEmailController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBBE09EBCE7400232CC4 /* ESGaimNotifyEmailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0103207B956F6000DF265 /* ESGaimNotifyEmailController.m */; };
+		3485DBBF09EBCE7400232CC4 /* ESGaimRequestAbstractWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AEE7E808E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBC009EBCE7400232CC4 /* ESGaimRequestAbstractWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AEE7E908E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m */; };
+		3485DBC109EBCE7400232CC4 /* ESGaimRequestWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBC209EBCE7400232CC4 /* ESGaimRequestWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */; };
+		3485DBC309EBCE7400232CC4 /* GaimMultilineRequestWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C2CF85063340540018E5D2 /* GaimMultilineRequestWindow.nib */; };
+		3485DBC409EBCE7400232CC4 /* GaimSinglelineRequestWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C2CF86063340540018E5D2 /* GaimSinglelineRequestWindow.nib */; };
+		3485DBC509EBCE7400232CC4 /* ESGaimMeanwhileContactAdditionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C9A6360822930D004F912C /* ESGaimMeanwhileContactAdditionController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBC609EBCE7400232CC4 /* ESGaimMeanwhileContactAdditionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C9A6370822930D004F912C /* ESGaimMeanwhileContactAdditionController.m */; };
+		3485DBC709EBCE7400232CC4 /* GaimMeanwhileContactAdditionWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C9A64408229348004F912C /* GaimMeanwhileContactAdditionWindow.nib */; };
+		3485DBC809EBCE7400232CC4 /* ESGaimFileReceiveRequestController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AEE7DC08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBC909EBCE7400232CC4 /* ESGaimFileReceiveRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AEE7DD08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.m */; };
+		3485DBCA09EBCE7400232CC4 /* ESGaimRequestActionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341E88680648FF1B00E0C828 /* ESGaimRequestActionController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3485DBCB09EBCE7400232CC4 /* ESGaimRequestActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */; };
+		3485DBD009EBCE8200232CC4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E04D07CB0EB00044F818 /* Localizable.strings */; };
+		3485DBF209EBD01900232CC4 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
 		3486E8A6097F24A90044C496 /* AdiumAuthorization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3486E8A4097F24A90044C496 /* AdiumAuthorization.h */; };
 		3486E8A7097F24A90044C496 /* AdiumAuthorization.m in Sources */ = {isa = PBXBuildFile; fileRef = 3486E8A5097F24A90044C496 /* AdiumAuthorization.m */; };
 		3486E9DB097F5FCE0044C496 /* AuthorizationRequestWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3486E9DA097F5FCE0044C496 /* AuthorizationRequestWindow.nib */; };
@@ -464,14 +563,6 @@
 		3486E9E3097F5FE20044C496 /* ESAuthorizationRequestWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3486E9E1097F5FE20044C496 /* ESAuthorizationRequestWindowController.h */; };
 		348862D105645EB5003C9627 /* ESFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 348862CE05645E95003C9627 /* ESFileTransfer.m */; };
 		348862D205645EB6003C9627 /* ESFileTransfer.h in Headers */ = {isa = PBXBuildFile; fileRef = 348862CD05645E94003C9627 /* ESFileTransfer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		348D8D1C06CC079F00449EBB /* ESZephyrService.m in Sources */ = {isa = PBXBuildFile; fileRef = 348D8D1A06CC079F00449EBB /* ESZephyrService.m */; };
-		348D8D1D06CC079F00449EBB /* ESZephyrService.h in Headers */ = {isa = PBXBuildFile; fileRef = 348D8D1B06CC079F00449EBB /* ESZephyrService.h */; };
-		348D8D2906CC07BE00449EBB /* ESGaimZephyrAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348D8D2206CC07BC00449EBB /* ESGaimZephyrAccountViewController.m */; };
-		348D8D2B06CC07BE00449EBB /* ESGaimZephyrAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 348D8D2406CC07BD00449EBB /* ESGaimZephyrAccountViewController.h */; };
-		348D8D2C06CC07BE00449EBB /* DCGaimZephyrJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348D8D2506CC07BD00449EBB /* DCGaimZephyrJoinChatViewController.m */; };
-		348D8D2D06CC07BE00449EBB /* ESGaimZephyrAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 348D8D2606CC07BD00449EBB /* ESGaimZephyrAccount.m */; };
-		348D8D2E06CC07BE00449EBB /* DCGaimZephyrJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 348D8D2706CC07BD00449EBB /* DCGaimZephyrJoinChatViewController.h */; };
-		348D8D2F06CC07BE00449EBB /* ESGaimZephyrAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 348D8D2806CC07BD00449EBB /* ESGaimZephyrAccount.h */; };
 		348E5ACB06D2A74C004C051C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348E5ACA06D2A74C004C051C /* AddressBook.framework */; };
 		348EE1B4080A57480015E0FC /* WebKitPreferencesView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348EE1B3080A57480015E0FC /* WebKitPreferencesView.nib */; };
 		348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */; };
@@ -480,7 +571,6 @@
 		348F57930936F3CC00288E41 /* ESEditStatusGroupWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 348F57910936F3CC00288E41 /* ESEditStatusGroupWindowController.h */; };
 		348F57940936F3CC00288E41 /* ESEditStatusGroupWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348F57920936F3CC00288E41 /* ESEditStatusGroupWindowController.m */; };
 		348F579E0936FA6D00288E41 /* EditStatusGroup.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348F579D0936FA6D00288E41 /* EditStatusGroup.nib */; };
-		348FF83F09128BEB00A942A8 /* CBGaimAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 348FF83E09128BEB00A942A8 /* CBGaimAccount.m */; };
 		348FF84A09128D6300A942A8 /* AccountDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 348FF84909128D6300A942A8 /* AccountDefaults.plist */; };
 		34943DEF07BAD918000F2A03 /* AccountPrivacy.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34943DEE07BAD918000F2A03 /* AccountPrivacy.nib */; };
 		3496A8C207CE6B880055BBAB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3496A8C107CE6B880055BBAB /* InfoPlist.strings */; };
@@ -489,24 +579,11 @@
 		3497CBAA09BA0B4100C0428E /* libirc.so in Resources */ = {isa = PBXBuildFile; fileRef = 3497CBA909BA0B4100C0428E /* libirc.so */; };
 		3497CBAF09BA0B5D00C0428E /* ESIRCJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CBAD09BA0B5D00C0428E /* ESIRCJoinChatViewController.h */; };
 		3497CBB009BA0B5D00C0428E /* ESIRCJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3497CBAE09BA0B5D00C0428E /* ESIRCJoinChatViewController.m */; };
-		3497CBDB09BA0B9900C0428E /* DCJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CBDA09BA0B9900C0428E /* DCJoinChatViewController.h */; };
 		3497CBDE09BA0C0900C0428E /* ESIRCJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3497CBDD09BA0C0900C0428E /* ESIRCJoinChatView.nib */; };
 		3497CC0C09BA0D7900C0428E /* ESIRCAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CC0A09BA0D7900C0428E /* ESIRCAccountViewController.h */; };
 		3497CC0D09BA0D7900C0428E /* ESIRCAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3497CC0B09BA0D7900C0428E /* ESIRCAccountViewController.m */; };
-		3497CC1709BA0D9E00C0428E /* AIAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CC1609BA0D9E00C0428E /* AIAccountViewController.h */; };
 		3497CC1C09BA0DC100C0428E /* ESIRCAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC1B09BA0DC100C0428E /* ESIRCAccountView.nib */; };
 		3497CC2709BA0FDB00C0428E /* GaimDefaultsIRC.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC2609BA0FDB00C0428E /* GaimDefaultsIRC.plist */; };
-		3497CD4E09BA131400C0428E /* AIAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CD4D09BA131400C0428E /* AIAccount.h */; };
-		3497D3AC09BA273F00C0428E /* ESIRCLibgaimServicePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3243D09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h */; };
-		3497D3AE09BA273F00C0428E /* ESIRCAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3245109BA00E700029361 /* ESIRCAccount.h */; };
-		3497D3B009BA273F00C0428E /* ESIRCService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3245709BA00FA00029361 /* ESIRCService.h */; };
-		3497D3B309BA273F00C0428E /* ESIRCJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CBAD09BA0B5D00C0428E /* ESIRCJoinChatViewController.h */; };
-		3497D3B509BA273F00C0428E /* ESIRCJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3497CBDD09BA0C0900C0428E /* ESIRCJoinChatView.nib */; };
-		3497D3B609BA273F00C0428E /* ESIRCAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CC0A09BA0D7900C0428E /* ESIRCAccountViewController.h */; };
-		3497D3B809BA273F00C0428E /* ESIRCAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC1B09BA0DC100C0428E /* ESIRCAccountView.nib */; };
-		3497D3B909BA274000C0428E /* GaimDefaultsIRC.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC2609BA0FDB00C0428E /* GaimDefaultsIRC.plist */; };
-		3499F4A806309AF60035B468 /* ESGaimRequestWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */; };
-		3499F4A906309AF60035B468 /* ESGaimRequestWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */; };
 		349C2F470867AD16000BF883 /* ApplescriptRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C2F460867AD16000BF883 /* ApplescriptRunner.m */; };
 		349C2FE40867AD49000BF883 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F531836F019E40BB01A80165 /* Carbon.framework */; };
 		349C2FF00867AD65000BF883 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349C2FEF0867AD65000BF883 /* Foundation.framework */; };
@@ -528,11 +605,6 @@
 		349FE308074D01D300E36B3B /* ESFileTransferProgressRow.h in Headers */ = {isa = PBXBuildFile; fileRef = 349FE301074D01D300E36B3B /* ESFileTransferProgressRow.h */; };
 		34A250B607E0F822009854E1 /* StatusDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34A250B507E0F822009854E1 /* StatusDefaults.plist */; };
 		34A29DB706ED68C000E1366C /* Contact List in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34A29D9406ED68BF00E1366C /* Contact List */; };
-		34A30ECA08D8EFE700697644 /* ESGaimYahooJapanAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E3C8A50638D50F00AA3EF7 /* ESGaimYahooJapanAccount.h */; };
-		34A30ECB08D8EFE700697644 /* ESGaimYahooJapanAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E3C8A60638D50F00AA3EF7 /* ESGaimYahooJapanAccount.m */; };
-		34A30EDB08D8EFFB00697644 /* ESYahooJapanService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E3C8870638D40500AA3EF7 /* ESYahooJapanService.h */; };
-		34A30EDC08D8EFFB00697644 /* ESYahooJapanService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E3C8880638D40500AA3EF7 /* ESYahooJapanService.m */; };
-		34A30EDD08D8EFFB00697644 /* GaimDefaultsYahoo! Japan.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76478507A07C440021CCD7 /* GaimDefaultsYahoo! Japan.plist */; };
 		34A489F306F64359002C7C5F /* AISCLViewPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A489F106F64359002C7C5F /* AISCLViewPlugin.m */; };
 		34A489F406F64359002C7C5F /* AISCLViewPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A489F206F64359002C7C5F /* AISCLViewPlugin.h */; };
 		34A48A0106F6436D002C7C5F /* AIStandardListWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A489FB06F6436D002C7C5F /* AIStandardListWindowController.m */; };
@@ -579,21 +651,13 @@
 		34AC36BC07B5C51500145239 /* AIStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AC36BA07B5C51400145239 /* AIStatus.m */; };
 		34AE249D09BCCFA900A35B51 /* AIWindowDraggingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AE249B09BCCFA900A35B51 /* AIWindowDraggingView.h */; };
 		34AE249E09BCCFA900A35B51 /* AIWindowDraggingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AE249C09BCCFA900A35B51 /* AIWindowDraggingView.m */; };
-		34AEE7DE08E3547000AE1C78 /* ESGaimFileReceiveRequestController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AEE7DC08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.h */; };
-		34AEE7DF08E3547000AE1C78 /* ESGaimFileReceiveRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AEE7DD08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.m */; };
-		34AEE7EA08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AEE7E808E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h */; };
-		34AEE7EB08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AEE7E908E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m */; };
 		34B323B809B9FEAC00029361 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		34B3243F09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3243D09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h */; };
 		34B3244009B9FFE800029361 /* ESIRCLibgaimServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3243E09B9FFE800029361 /* ESIRCLibgaimServicePlugin.m */; };
-		34B3244409BA003C00029361 /* AILibgaimPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3244309BA003C00029361 /* AILibgaimPlugin.h */; };
 		34B3245309BA00E700029361 /* ESIRCAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3245109BA00E700029361 /* ESIRCAccount.h */; };
 		34B3245409BA00E700029361 /* ESIRCAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3245209BA00E700029361 /* ESIRCAccount.m */; };
 		34B3245909BA00FB00029361 /* ESIRCService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3245709BA00FA00029361 /* ESIRCService.h */; };
 		34B3245A09BA00FB00029361 /* ESIRCService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3245809BA00FB00029361 /* ESIRCService.m */; };
-		34B3246209BA015E00029361 /* AIService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3245F09BA015E00029361 /* AIService.h */; };
-		34B3246309BA015E00029361 /* AIServiceIcons.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3246009BA015E00029361 /* AIServiceIcons.h */; };
-		34B3246409BA015E00029361 /* AIObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3246109BA015E00029361 /* AIObject.h */; };
 		34B4B5A30708B049002C4C6D /* ESDebugController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B4B5A10708B049002C4C6D /* ESDebugController.h */; };
 		34B4B5A40708B049002C4C6D /* ESDebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B4B5A20708B049002C4C6D /* ESDebugController.m */; };
 		34B588A1058D833A00E7EF0D /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */; };
@@ -607,30 +671,6 @@
 		34B82C8B085A87B000864531 /* AdiumMessageEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B82C89085A87B000864531 /* AdiumMessageEvents.h */; };
 		34B82C8C085A87B000864531 /* AdiumMessageEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B82C8A085A87B000864531 /* AdiumMessageEvents.m */; };
 		34B995DA092A832700E31E91 /* FontPanelAccessoryView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B995D9092A832700E31E91 /* FontPanelAccessoryView.nib */; };
-		34BBE0EB07A2ECD000663CC9 /* adiumGaimConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE0E907A2ECCF00663CC9 /* adiumGaimConnection.h */; };
-		34BBE0EC07A2ECD000663CC9 /* adiumGaimConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE0EA07A2ECD000663CC9 /* adiumGaimConnection.m */; };
-		34BBE10B07A2EE3800663CC9 /* adiumGaimBlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE10907A2EE3700663CC9 /* adiumGaimBlist.h */; };
-		34BBE10C07A2EE3800663CC9 /* adiumGaimBlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE10A07A2EE3700663CC9 /* adiumGaimBlist.m */; };
-		34BBE11207A2EED600663CC9 /* adiumGaimFt.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE11007A2EED500663CC9 /* adiumGaimFt.h */; };
-		34BBE11307A2EED600663CC9 /* adiumGaimFt.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE11107A2EED600663CC9 /* adiumGaimFt.m */; };
-		34BBE11807A2EF2B00663CC9 /* adiumGaimPrivacy.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE11607A2EF2B00663CC9 /* adiumGaimPrivacy.h */; };
-		34BBE11907A2EF2B00663CC9 /* adiumGaimPrivacy.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE11707A2EF2B00663CC9 /* adiumGaimPrivacy.m */; };
-		34BBE11E07A2EF8000663CC9 /* adiumGaimRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE11C07A2EF7F00663CC9 /* adiumGaimRequest.h */; };
-		34BBE11F07A2EF8000663CC9 /* adiumGaimRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE11D07A2EF7F00663CC9 /* adiumGaimRequest.m */; };
-		34BBE12407A2EFF800663CC9 /* adiumGaimNotify.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE12207A2EFF800663CC9 /* adiumGaimNotify.h */; };
-		34BBE12507A2EFF800663CC9 /* adiumGaimNotify.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE12307A2EFF800663CC9 /* adiumGaimNotify.m */; };
-		34BBE12A07A2F09B00663CC9 /* adiumGaimRoomlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE12807A2F09A00663CC9 /* adiumGaimRoomlist.h */; };
-		34BBE12B07A2F09B00663CC9 /* adiumGaimRoomlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE12907A2F09B00663CC9 /* adiumGaimRoomlist.m */; };
-		34BBE18007A2F10400663CC9 /* adiumGaimConversation.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE17E07A2F10400663CC9 /* adiumGaimConversation.h */; };
-		34BBE18107A2F10400663CC9 /* adiumGaimConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE17F07A2F10400663CC9 /* adiumGaimConversation.m */; };
-		34BBE18607A2F20E00663CC9 /* adiumGaimWebcam.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE18407A2F20E00663CC9 /* adiumGaimWebcam.h */; };
-		34BBE18707A2F20E00663CC9 /* adiumGaimWebcam.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE18507A2F20E00663CC9 /* adiumGaimWebcam.m */; };
-		34BBE18C07A2F2A600663CC9 /* adiumGaimEventloop.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE18A07A2F2A600663CC9 /* adiumGaimEventloop.h */; };
-		34BBE18D07A2F2A600663CC9 /* adiumGaimEventloop.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE18B07A2F2A600663CC9 /* adiumGaimEventloop.m */; };
-		34BBE1B407A2F36400663CC9 /* adiumGaimCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE1B207A2F36400663CC9 /* adiumGaimCore.h */; };
-		34BBE1B507A2F36400663CC9 /* adiumGaimCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE1B307A2F36400663CC9 /* adiumGaimCore.m */; };
-		34BBE1BA07A2F4C500663CC9 /* adiumGaimSignals.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE1B807A2F4C500663CC9 /* adiumGaimSignals.h */; };
-		34BBE1BB07A2F4C500663CC9 /* adiumGaimSignals.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */; };
 		34BD0DB508D31479000BE2C0 /* AdiumChatEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */; };
 		34BD0DB608D31479000BE2C0 /* AdiumChatEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */; };
 		34BD9D11053146CC000AB133 /* AIPreferenceController.h in Headers */ = {isa = PBXBuildFile; fileRef = F57938ED033E745F01A8010A /* AIPreferenceController.h */; };
@@ -725,19 +765,11 @@
 		34C14CD307A8B1AB003CC138 /* AIEmoticonPackPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C14CD107A8B1AB003CC138 /* AIEmoticonPackPreviewView.m */; };
 		34C14D5107A8BA00003CC138 /* EmoticonPackPreview.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C14D5007A8BA00003CC138 /* EmoticonPackPreview.nib */; };
 		34C18B0D06CAC95400FF5FF9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E839050583207E00F2AADB /* SystemConfiguration.framework */; };
-		34C2CF87063340540018E5D2 /* GaimMultilineRequestWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C2CF85063340540018E5D2 /* GaimMultilineRequestWindow.nib */; };
-		34C2CF88063340540018E5D2 /* GaimSinglelineRequestWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C2CF86063340540018E5D2 /* GaimSinglelineRequestWindow.nib */; };
 		34C2D70506338E2E0018E5D2 /* ESWebKitMessageViewPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C2D70306338E2E0018E5D2 /* ESWebKitMessageViewPreferences.h */; };
 		34C2D70606338E2E0018E5D2 /* ESWebKitMessageViewPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C2D70406338E2E0018E5D2 /* ESWebKitMessageViewPreferences.m */; };
 		34C2DBE6063449AF0018E5D2 /* Preview.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34C2DBE5063449AF0018E5D2 /* Preview.plist */; };
 		34C2DF02063498ED0018E5D2 /* SoulEdge.png in Resources */ = {isa = PBXBuildFile; fileRef = 34C2DF00063498ED0018E5D2 /* SoulEdge.png */; };
 		34C2DF03063498EF0018E5D2 /* terminator.png in Resources */ = {isa = PBXBuildFile; fileRef = 34C2DF01063498ED0018E5D2 /* terminator.png */; };
-		34C2E6710634CF5F0018E5D2 /* ESGaimNovellAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C2E66F0634CF5F0018E5D2 /* ESGaimNovellAccount.h */; };
-		34C2E6720634CF5F0018E5D2 /* ESGaimNovellAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C2E6700634CF5F0018E5D2 /* ESGaimNovellAccount.m */; };
-		34C2E6890634CF940018E5D2 /* ESGaimNovellAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C2E6870634CF940018E5D2 /* ESGaimNovellAccountViewController.h */; };
-		34C2E68A0634CF940018E5D2 /* ESGaimNovellAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C2E6880634CF940018E5D2 /* ESGaimNovellAccountViewController.m */; };
-		34C2EA1A0634DB5E0018E5D2 /* ESNovellService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C2EA180634DB5E0018E5D2 /* ESNovellService.h */; };
-		34C2EA1B0634DB5E0018E5D2 /* ESNovellService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C2EA190634DB5E0018E5D2 /* ESNovellService.m */; };
 		34C68B250778FA1300EB423C /* ESGeneralPreferencesPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C68B230778FA1300EB423C /* ESGeneralPreferencesPlugin.h */; };
 		34C68B260778FA1300EB423C /* ESGeneralPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C68B240778FA1300EB423C /* ESGeneralPreferencesPlugin.m */; };
 		34C68B2B0778FA5C00EB423C /* ESGeneralPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C68B290778FA5C00EB423C /* ESGeneralPreferences.h */; };
@@ -747,10 +779,10 @@
 		34C6A3BC077A8CB500EB423C /* AppearanceDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34C6A3BB077A8CB500EB423C /* AppearanceDefaults.plist */; };
 		34C6A4CB077AB3AA00EB423C /* AIImageCellAnimationFix.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C6A4C9077AB3A900EB423C /* AIImageCellAnimationFix.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34C6A4CC077AB3AD00EB423C /* AIImageCellAnimationFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C6A4CA077AB3AA00EB423C /* AIImageCellAnimationFix.m */; };
+		34C7C5DC09EC4D7A0060FB4A /* AdiumLibgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3485D68009EB416300232CC4 /* AdiumLibgaim.framework */; };
+		34C7C62809EC4E890060FB4A /* AILibgaimPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3244309BA003C00029361 /* AILibgaimPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		34C7C82709EC55FF0060FB4A /* libirc.so in Frameworks */ = {isa = PBXBuildFile; fileRef = 3497CBA909BA0B4100C0428E /* libirc.so */; };
 		34C899AC07E51B18009357F6 /* BuiltInEventPresets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34C899AB07E51B18009357F6 /* BuiltInEventPresets.plist */; };
-		34C9A6380822930D004F912C /* ESGaimMeanwhileContactAdditionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C9A6360822930D004F912C /* ESGaimMeanwhileContactAdditionController.h */; };
-		34C9A6390822930D004F912C /* ESGaimMeanwhileContactAdditionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C9A6370822930D004F912C /* ESGaimMeanwhileContactAdditionController.m */; };
-		34C9A64508229348004F912C /* GaimMeanwhileContactAdditionWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C9A64408229348004F912C /* GaimMeanwhileContactAdditionWindow.nib */; };
 		34C9EC41099FA2A8007ECAB3 /* DefaultBlockedStatusIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 34C9EC40099FA2A8007ECAB3 /* DefaultBlockedStatusIcon.png */; };
 		34CEBE6206F117DF00A89DDE /* ESContactInfoListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */; };
 		34CEBE6306F117DF00A89DDE /* ESContactInfoListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */; };
@@ -855,8 +887,6 @@
 		34E00F7607B92B2F000DF265 /* ESTextAndButtonsWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E00F7407B92B2E000DF265 /* ESTextAndButtonsWindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E00F7707B92B2F000DF265 /* ESTextAndButtonsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E00F7507B92B2F000DF265 /* ESTextAndButtonsWindowController.m */; };
 		34E00F8707B92B89000DF265 /* TextAndButtonsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34E00F8607B92B88000DF265 /* TextAndButtonsWindow.nib */; };
-		34E0103407B956F6000DF265 /* ESGaimNotifyEmailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0103207B956F6000DF265 /* ESGaimNotifyEmailController.m */; };
-		34E0103507B956F6000DF265 /* ESGaimNotifyEmailController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E0103307B956F6000DF265 /* ESGaimNotifyEmailController.h */; };
 		34E0E98707CC48C000A82198 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34E0E9B807CC4B3600A82198 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 34E0E9B707CC4B3600A82198 /* Localizable.strings */; };
 		34E0EA0807CC53ED00A82198 /* NewMessagePrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34E0EA0707CC53EC00A82198 /* NewMessagePrompt.nib */; };
@@ -892,17 +922,6 @@
 		34F102320734499700890D3B /* NSString_UUID.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F1022D0734499700890D3B /* NSString_UUID.h */; };
 		34F1023B073449D500890D3B /* XtrasInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F10239073449D500890D3B /* XtrasInstaller.m */; };
 		34F1023C073449D500890D3B /* XtrasInstaller.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F1023A073449D500890D3B /* XtrasInstaller.h */; };
-		34F18E6809BA47C7001D6BE2 /* AIAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CC1609BA0D9E00C0428E /* AIAccountViewController.h */; };
-		34F18E6909BA47C7001D6BE2 /* DCJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CBDA09BA0B9900C0428E /* DCJoinChatViewController.h */; };
-		34F18E6A09BA47C7001D6BE2 /* AIService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3245F09BA015E00029361 /* AIService.h */; };
-		34F18E6B09BA47C7001D6BE2 /* AIServiceIcons.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3246009BA015E00029361 /* AIServiceIcons.h */; };
-		34F18E6C09BA47C7001D6BE2 /* AIObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3246109BA015E00029361 /* AIObject.h */; };
-		34F18E6D09BA47C7001D6BE2 /* AIAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CD4D09BA131400C0428E /* AIAccount.h */; };
-		34F18E6E09BA47C7001D6BE2 /* ESIRCLibgaimServicePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3243D09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h */; };
-		34F18E7009BA47C7001D6BE2 /* ESIRCAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3245109BA00E700029361 /* ESIRCAccount.h */; };
-		34F18E7209BA47C7001D6BE2 /* ESIRCService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3245709BA00FA00029361 /* ESIRCService.h */; };
-		34F18E7509BA47C7001D6BE2 /* ESIRCJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CBAD09BA0B5D00C0428E /* ESIRCJoinChatViewController.h */; };
-		34F18E7809BA47C7001D6BE2 /* ESIRCAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CC0A09BA0D7900C0428E /* ESIRCAccountViewController.h */; };
 		34F191DC09BA5F43001D6BE2 /* irc.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F191DB09BA5F43001D6BE2 /* irc.png */; };
 		34F2BD25059CF8070005B238 /* c++filt in Resources */ = {isa = PBXBuildFile; fileRef = 34F2BD24059CF8070005B238 /* c++filt */; };
 		34F2E81107C2CD5E007EAAAB /* AIHTMLDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E80F07C2CD5E007EAAAB /* AIHTMLDecoder.m */; };
@@ -999,9 +1018,6 @@
 		4B2DC069066F6B1200AD5AAD /* ContactSettingsPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B2DC068066F6B1200AD5AAD /* ContactSettingsPane.nib */; };
 		4B2DC06D066F705800AD5AAD /* AIContactSettingsPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B2DC06B066F705800AD5AAD /* AIContactSettingsPane.h */; };
 		4B2DC06E066F705800AD5AAD /* AIContactSettingsPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2DC06C066F705800AD5AAD /* AIContactSettingsPane.m */; };
-		4B388E0F0719C376004DE713 /* AIMSNServicePreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B388E0D0719C376004DE713 /* AIMSNServicePreferences.h */; };
-		4B388E100719C376004DE713 /* AIMSNServicePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B388E0E0719C376004DE713 /* AIMSNServicePreferences.m */; };
-		4B388E4D0719C445004DE713 /* MSNServicePrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B388E4C0719C445004DE713 /* MSNServicePrefs.nib */; };
 		4B3B125907AC411D00187CCF /* AIChatLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B3B125707AC411D00187CCF /* AIChatLog.h */; };
 		4B3B125A07AC411D00187CCF /* AIChatLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B125807AC411D00187CCF /* AIChatLog.m */; };
 		4B422C0B05ACB248005E720B /* AISortController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B422C0905ACB248005E720B /* AISortController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1015,16 +1031,9 @@
 		4B5827EB0613CE9D0004BD25 /* AIMessageEntryTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B5827E90613CE9D0004BD25 /* AIMessageEntryTextView.m */; };
 		4B588C9D07AC23B3001832A9 /* AIEditStateWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B588C9B07AC23B2001832A9 /* AIEditStateWindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B588C9E07AC23B3001832A9 /* AIEditStateWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B588C9C07AC23B2001832A9 /* AIEditStateWindowController.m */; };
-		4B7644DF07A05E7E0021CCD7 /* GaimDefaultsMSN.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B7644DD07A05E7E0021CCD7 /* GaimDefaultsMSN.plist */; };
-		4B7646CF07A078E60021CCD7 /* GaimDefaultsZephyr.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B7646CE07A078E60021CCD7 /* GaimDefaultsZephyr.plist */; };
-		4B76471807A079A40021CCD7 /* GaimDefaultsYahoo!.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76471707A079A40021CCD7 /* GaimDefaultsYahoo!.plist */; };
-		4B76474007A07B630021CCD7 /* GaimDefaultsGadu-Gadu.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76473F07A07B620021CCD7 /* GaimDefaultsGadu-Gadu.plist */; };
-		4B76474D07A07B900021CCD7 /* GaimDefaultsSametime.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76474C07A07B900021CCD7 /* GaimDefaultsSametime.plist */; };
-		4B76476107A07BC90021CCD7 /* GaimDefaultsGroupWise.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76476007A07BC90021CCD7 /* GaimDefaultsGroupWise.plist */; };
 		4B7A567A07A1754400BDC540 /* AIEditAccountWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7A567707A1754400BDC540 /* AIEditAccountWindowController.h */; };
 		4B7A567B07A1754400BDC540 /* AIEditAccountWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7A567807A1754400BDC540 /* AIEditAccountWindowController.m */; };
-		4B7F278B05440C8D00CDFC90 /* CBGaimAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7F278705440C8D00CDFC90 /* CBGaimAccount.h */; };
-		4B7F278D05440C8D00CDFC90 /* CBGaimServicePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7F278905440C8D00CDFC90 /* CBGaimServicePlugin.h */; };
+		4B7F278D05440C8D00CDFC90 /* CBGaimServicePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7F278905440C8D00CDFC90 /* CBGaimServicePlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B7F278E05440C8D00CDFC90 /* CBGaimServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F278A05440C8D00CDFC90 /* CBGaimServicePlugin.m */; settings = {COMPILER_FLAGS = "-fconstant-cfstrings"; }; };
 		4B7F27C705440DE900CDFC90 /* Gaim.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B7F278305440C0800CDFC90 /* Gaim.AdiumPlugin */; };
 		4B7F78BF0597F44D00162728 /* AICrashReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7F78BD0597F44D00162728 /* AICrashReporter.h */; };
@@ -1045,8 +1054,6 @@
 		4B93589306DBC71B007977AA /* AIServiceIcons.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B93588D06DBC71B007977AA /* AIServiceIcons.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B93589406DBC71B007977AA /* AIUserIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B93588E06DBC71B007977AA /* AIUserIcons.m */; };
 		4B93589506DBC71B007977AA /* AIStatusIcons.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B93588F06DBC71B007977AA /* AIStatusIcons.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4B935E690733E4ED00C23FC6 /* AICorePluginLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B935E670733E4EC00C23FC6 /* AICorePluginLoader.h */; };
-		4B935E6A0733E4ED00C23FC6 /* AICorePluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B935E680733E4EC00C23FC6 /* AICorePluginLoader.m */; };
 		4B97DB6706AC123A0003EE49 /* linkToolbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B97DB6606AC123A0003EE49 /* linkToolbar.png */; };
 		4BA62D8E06C51257001D6B3C /* Status Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BA62D7F06C51256001D6B3C /* Status Icons */; };
 		4BAA1B390632ED8B00D8B92C /* AIActionDetailsPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAA1B350632ED8B00D8B92C /* AIActionDetailsPane.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1097,7 +1104,6 @@
 		4BAFD57A06E0091100FF7FBC /* AIService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD57806E0091100FF7FBC /* AIService.m */; };
 		4BAFD5CA06E00B7C00FF7FBC /* AIStressTestService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5C806E00B7C00FF7FBC /* AIStressTestService.h */; };
 		4BAFD5CB06E00B7C00FF7FBC /* AIStressTestService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5C906E00B7C00FF7FBC /* AIStressTestService.m */; };
-		4BB19299079EE90900DAA523 /* GaimDefaultsJabber.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BB19298079EE90900DAA523 /* GaimDefaultsJabber.plist */; };
 		4BB1E493067F2EAC00D1DB86 /* Scripts in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1E47D067F2E9F00D1DB86 /* Scripts */; };
 		4BB5B78207D2DC4900CFE06F /* pref-status.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BB5B78107D2DC4900CFE06F /* pref-status.png */; };
 		4BB7670D05B31DBA00E89FA2 /* crashDuck.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BB7670C05B31DBA00E89FA2 /* crashDuck.png */; };
@@ -1196,7 +1202,6 @@
 		4BDD81EA07A0B6D30057DB2C /* AccountOptions.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDD81E707A0B6D30057DB2C /* AccountOptions.nib */; };
 		4BDD81EB07A0B6D30057DB2C /* AccountProfile.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDD81E807A0B6D30057DB2C /* AccountProfile.nib */; };
 		4BDD81EC07A0B6D30057DB2C /* AccountSetup.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDD81E907A0B6D30057DB2C /* AccountSetup.nib */; };
-		4BDF2C92061E376C00EA75C5 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
 		4BDF2CA5061E378400EA75C5 /* Libgaim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
 		4BE3AD1E085F3EDD005919E7 /* AdiumPreferredAccounts.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE3AD1C085F3EDD005919E7 /* AdiumPreferredAccounts.h */; };
 		4BE3AD1F085F3EDD005919E7 /* AdiumPreferredAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE3AD1D085F3EDD005919E7 /* AdiumPreferredAccounts.m */; };
@@ -1238,7 +1243,6 @@
 		633F175C08F905A700C76383 /* AIXtrasManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633F175808F905A700C76383 /* AIXtrasManager.h */; };
 		633F175D08F905A800C76383 /* AIXtrasManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175908F905A700C76383 /* AIXtrasManager.m */; };
 		636AB7F3087E2B6700A87670 /* AIDockBadger.h in Headers */ = {isa = PBXBuildFile; fileRef = 636AB7F1087E2B6700A87670 /* AIDockBadger.h */; };
-		638392F709D4D67A0067B9B7 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		638392F809D4D67A0067B9B7 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		6383935009D4D6AA0067B9B7 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		63C120750910A0DD00C9DB57 /* DefaultXtraReadme.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 63C120740910A0DD00C9DB57 /* DefaultXtraReadme.rtf */; };
@@ -1262,25 +1266,10 @@
 		6E4D960F06B7397A005235E9 /* JoinChatWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6E4D960A06B7397A005235E9 /* JoinChatWindow.nib */; };
 		6E4D961306B739AC005235E9 /* DCJoinChatPanelPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E4D961106B739AC005235E9 /* DCJoinChatPanelPlugin.h */; };
 		6E4D961406B739AC005235E9 /* DCJoinChatPanelPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D961206B739AC005235E9 /* DCJoinChatPanelPlugin.m */; };
-		6E4D961E06B73B38005235E9 /* DCGaimGaduGaduJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6E4D961B06B73B38005235E9 /* DCGaimGaduGaduJoinChatView.nib */; };
-		6E4D961F06B73B38005235E9 /* DCGaimGaduGaduJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E4D961C06B73B38005235E9 /* DCGaimGaduGaduJoinChatViewController.h */; };
-		6E4D962006B73B38005235E9 /* DCGaimGaduGaduJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D961D06B73B38005235E9 /* DCGaimGaduGaduJoinChatViewController.m */; };
-		6E4D962506B73BE0005235E9 /* DCGaimJabberJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E4D962206B73BE0005235E9 /* DCGaimJabberJoinChatViewController.h */; };
-		6E4D962606B73BE0005235E9 /* DCGaimJabberJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D962306B73BE0005235E9 /* DCGaimJabberJoinChatViewController.m */; };
-		6E4D962B06B73C18005235E9 /* DCGaimMeanwhileJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E4D962806B73C18005235E9 /* DCGaimMeanwhileJoinChatViewController.h */; };
-		6E4D962C06B73C18005235E9 /* DCGaimMeanwhileJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D962906B73C18005235E9 /* DCGaimMeanwhileJoinChatViewController.m */; };
-		6E4D963006B73C4D005235E9 /* DCGaimMSNJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6E4D962D06B73C4D005235E9 /* DCGaimMSNJoinChatView.nib */; };
-		6E4D963106B73C4D005235E9 /* DCGaimMSNJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E4D962E06B73C4D005235E9 /* DCGaimMSNJoinChatViewController.h */; };
-		6E4D963206B73C4D005235E9 /* DCGaimMSNJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D962F06B73C4D005235E9 /* DCGaimMSNJoinChatViewController.m */; };
 		6E5A43DF061160C60078C342 /* DCMessageContextDisplayPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E5A43DD061160C50078C342 /* DCMessageContextDisplayPlugin.h */; };
 		6E5A43E0061160C60078C342 /* DCMessageContextDisplayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A43DE061160C50078C342 /* DCMessageContextDisplayPlugin.m */; };
 		6E7C19BC0623BF80008A1C99 /* DCMessageContextDisplayPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E7C19B90623BF7F008A1C99 /* DCMessageContextDisplayPreferences.h */; };
 		6E7C19BD0623BF80008A1C99 /* DCMessageContextDisplayPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E7C19BA0623BF7F008A1C99 /* DCMessageContextDisplayPreferences.m */; };
-		6EA3688506B73E7D009CA81A /* DCGaimNovellJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6EA3688206B73E7D009CA81A /* DCGaimNovellJoinChatView.nib */; };
-		6EA3688606B73E7D009CA81A /* DCGaimNovellJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EA3688306B73E7D009CA81A /* DCGaimNovellJoinChatViewController.h */; };
-		6EA3688706B73E7D009CA81A /* DCGaimNovellJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA3688406B73E7D009CA81A /* DCGaimNovellJoinChatViewController.m */; };
-		6EA3689206B73F67009CA81A /* DCGaimYahooJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EA3688F06B73F67009CA81A /* DCGaimYahooJoinChatViewController.h */; };
-		6EA3689306B73F67009CA81A /* DCGaimYahooJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA3689006B73F67009CA81A /* DCGaimYahooJoinChatViewController.m */; };
 		6EA3689706B73FE5009CA81A /* DCStressTestJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6EA3689406B73FE5009CA81A /* DCStressTestJoinChatView.nib */; };
 		6EA3689806B73FE5009CA81A /* DCStressTestJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EA3689506B73FE5009CA81A /* DCStressTestJoinChatViewController.h */; };
 		6EA3689906B73FE5009CA81A /* DCStressTestJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA3689606B73FE5009CA81A /* DCStressTestJoinChatViewController.m */; };
@@ -1344,13 +1333,6 @@
 		9E6A9BF80732CB500032C9F6 /* adiumOffline.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF60732CB500032C9F6 /* adiumOffline.png */; };
 		9EF0DBFA09D944C200FBCC1E /* Resources/block.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EF0DBF309D944A300FBCC1E /* Resources/block.png */; };
 		9EF0DBFB09D944C200FBCC1E /* Resources/unblock.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EF0DBF409D944A300FBCC1E /* Resources/unblock.png */; };
-		A3C042D208D7483100B48CE1 /* GaimDefaultsGTalk.plist in Resources */ = {isa = PBXBuildFile; fileRef = A3C042D108D7483100B48CE1 /* GaimDefaultsGTalk.plist */; };
-		A3C0432108D74D3100B48CE1 /* AIGaimGTalkAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C0431B08D74D3100B48CE1 /* AIGaimGTalkAccount.h */; };
-		A3C0432208D74D3100B48CE1 /* AIGaimGTalkAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C0431C08D74D3100B48CE1 /* AIGaimGTalkAccount.m */; };
-		A3C0432308D74D3100B48CE1 /* AIGaimGTalkAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C0431D08D74D3100B48CE1 /* AIGaimGTalkAccountViewController.h */; };
-		A3C0432408D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C0431E08D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m */; };
-		A3C0432508D74D3100B48CE1 /* AIGTalkService.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C0431F08D74D3100B48CE1 /* AIGTalkService.h */; };
-		A3C0432608D74D3100B48CE1 /* AIGTalkService.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C0432008D74D3100B48CE1 /* AIGTalkService.m */; };
 		B72537C4058C45EF004BA969 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		B73E464307DB5F9200D9129E /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		B747E986058D144C00A9F037 /* AILaTeXPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B747E984058D144C00A9F037 /* AILaTeXPlugin.h */; };
@@ -1472,6 +1454,20 @@
 			remoteGlobalIDString = 118C52C5091BF0DB00219458;
 			remoteInfo = joscar;
 		};
+		340BA85509EC59AF000EC441 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133 /* Adium.Framework */;
+			remoteInfo = Adium.Framework;
+		};
+		340BA85709EC59AF000EC441 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteInfo = AIUtilities;
+		};
 		3423412D09D1B67B009FF634 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */;
@@ -1528,6 +1524,13 @@
 			remoteGlobalIDString = 347A210E09786B5F00A30431;
 			remoteInfo = SystemVersionCheck;
 		};
+		3485D69209EB41D700232CC4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3485D67F09EB416300232CC4;
+			remoteInfo = AdiumLibgaim;
+		};
 		3496A8ED07CE6CCB0055BBAB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
@@ -1562,6 +1565,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 34BD9DAF05314751000AB133;
 			remoteInfo = Adium.Framework;
+		};
+		34C7C62C09EC4EBE0060FB4A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3485D67F09EB416300232CC4;
+			remoteInfo = AdiumLibgaim;
 		};
 		34D834DC07CBE7BB006466F2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1723,6 +1733,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				3485D8BD09EB436C00232CC4 /* AdiumLibgaim.framework in CopyFiles */,
 				4BDF2CA5061E378400EA75C5 /* Libgaim.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1850,6 +1861,8 @@
 		340833EA075C3A7900703011 /* AILocalizationTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationTextField.h; path = "Frameworks/Adium Framework/AILocalizationTextField.h"; sourceTree = "<group>"; };
 		340833EB075C3A7900703011 /* AILocalizationTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationTextField.m; path = "Frameworks/Adium Framework/AILocalizationTextField.m"; sourceTree = "<group>"; };
 		340915F105C0A5DF00CDE3DD /* GaimCommon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GaimCommon.h; path = "Plugins/Gaim Service/GaimCommon.h"; sourceTree = "<group>"; };
+		340BA84409EC593A000EC441 /* AICorePluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICorePluginLoader.h; path = "Frameworks/Adium Framework/AICorePluginLoader.h"; sourceTree = "<group>"; };
+		340BA84509EC593B000EC441 /* AICorePluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICorePluginLoader.m; path = "Frameworks/Adium Framework/AICorePluginLoader.m"; sourceTree = "<group>"; };
 		340EC2260736BF31001653BF /* ESRankingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESRankingCell.h; path = Plugins/Logger/ESRankingCell.h; sourceTree = "<group>"; };
 		340EC2270736BF32001653BF /* ESRankingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESRankingCell.m; path = Plugins/Logger/ESRankingCell.m; sourceTree = "<group>"; };
 		340F440306D8202A0072E2FA /* AIAbstractListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAbstractListController.h; path = "Frameworks/Adium Framework/AIAbstractListController.h"; sourceTree = "<group>"; };
@@ -2475,6 +2488,8 @@
 		347F50E9094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_Jabber.scpt; path = Resources/AdiumAddressBookAction_Jabber.scpt; sourceTree = "<group>"; };
 		3483928405E68B05002BC6C0 /* AIIconState.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIIconState.m; path = "Frameworks/Adium Framework/AIIconState.m"; sourceTree = "<group>"; };
 		3483928505E68B05002BC6C0 /* AIIconState.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIIconState.h; path = "Frameworks/Adium Framework/AIIconState.h"; sourceTree = "<group>"; };
+		3485D68009EB416300232CC4 /* AdiumLibgaim.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AdiumLibgaim.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3485D68109EB416300232CC4 /* AdiumLibgaim-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "AdiumLibgaim-Info.plist"; sourceTree = "<group>"; };
 		3486E8A4097F24A90044C496 /* AdiumAuthorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumAuthorization.h; path = Source/AdiumAuthorization.h; sourceTree = "<group>"; };
 		3486E8A5097F24A90044C496 /* AdiumAuthorization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumAuthorization.m; path = Source/AdiumAuthorization.m; sourceTree = "<group>"; };
 		3486E9DA097F5FCE0044C496 /* AuthorizationRequestWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AuthorizationRequestWindow.nib; path = Resources/AuthorizationRequestWindow.nib; sourceTree = "<group>"; };
@@ -2534,14 +2549,11 @@
 		3497CBA909BA0B4100C0428E /* libirc.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libirc.so; path = "Plugins/IRC Libgaim Plugin/libirc.so"; sourceTree = "<group>"; };
 		3497CBAD09BA0B5D00C0428E /* ESIRCJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESIRCJoinChatViewController.h; path = "Plugins/IRC Libgaim Plugin/ESIRCJoinChatViewController.h"; sourceTree = "<group>"; };
 		3497CBAE09BA0B5D00C0428E /* ESIRCJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESIRCJoinChatViewController.m; path = "Plugins/IRC Libgaim Plugin/ESIRCJoinChatViewController.m"; sourceTree = "<group>"; };
-		3497CBDA09BA0B9900C0428E /* DCJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCJoinChatViewController.h; path = "Frameworks/Adium Framework/DCJoinChatViewController.h"; sourceTree = "<group>"; };
 		3497CBDD09BA0C0900C0428E /* ESIRCJoinChatView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ESIRCJoinChatView.nib; path = "Plugins/IRC Libgaim Plugin/ESIRCJoinChatView.nib"; sourceTree = "<group>"; };
 		3497CC0A09BA0D7900C0428E /* ESIRCAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESIRCAccountViewController.h; path = "Plugins/IRC Libgaim Plugin/ESIRCAccountViewController.h"; sourceTree = "<group>"; };
 		3497CC0B09BA0D7900C0428E /* ESIRCAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESIRCAccountViewController.m; path = "Plugins/IRC Libgaim Plugin/ESIRCAccountViewController.m"; sourceTree = "<group>"; };
-		3497CC1609BA0D9E00C0428E /* AIAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountViewController.h; path = "Frameworks/Adium Framework/AIAccountViewController.h"; sourceTree = "<group>"; };
 		3497CC1B09BA0DC100C0428E /* ESIRCAccountView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ESIRCAccountView.nib; path = "Plugins/IRC Libgaim Plugin/ESIRCAccountView.nib"; sourceTree = "<group>"; };
 		3497CC2609BA0FDB00C0428E /* GaimDefaultsIRC.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = GaimDefaultsIRC.plist; path = "Plugins/IRC Libgaim Plugin/GaimDefaultsIRC.plist"; sourceTree = "<group>"; };
-		3497CD4D09BA131400C0428E /* AIAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccount.h; path = "Frameworks/Adium Framework/AIAccount.h"; sourceTree = "<group>"; };
 		3498FE9107F488EF0004B79A /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = "Plugins/Gaim Service/Italian.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9707F488FD0004B79A /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = "Plugins/Gaim Service/Dutch.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9807F489020004B79A /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = "Plugins/Gaim Service/French.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2734,9 +2746,6 @@
 		34B3245209BA00E700029361 /* ESIRCAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESIRCAccount.m; path = "Plugins/IRC Libgaim Plugin/ESIRCAccount.m"; sourceTree = "<group>"; };
 		34B3245709BA00FA00029361 /* ESIRCService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESIRCService.h; path = "Plugins/IRC Libgaim Plugin/ESIRCService.h"; sourceTree = "<group>"; };
 		34B3245809BA00FB00029361 /* ESIRCService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESIRCService.m; path = "Plugins/IRC Libgaim Plugin/ESIRCService.m"; sourceTree = "<group>"; };
-		34B3245F09BA015E00029361 /* AIService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIService.h; path = "Frameworks/Adium Framework/AIService.h"; sourceTree = "<group>"; };
-		34B3246009BA015E00029361 /* AIServiceIcons.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIServiceIcons.h; path = "Frameworks/Adium Framework/AIServiceIcons.h"; sourceTree = "<group>"; };
-		34B3246109BA015E00029361 /* AIObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIObject.h; path = "Frameworks/Adium Framework/AIObject.h"; sourceTree = "<group>"; };
 		34B4B5A10708B049002C4C6D /* ESDebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESDebugController.h; path = Source/ESDebugController.h; sourceTree = "<group>"; };
 		34B4B5A20708B049002C4C6D /* ESDebugController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESDebugController.m; path = Source/ESDebugController.m; sourceTree = "<group>"; };
 		34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
@@ -3211,8 +3220,6 @@
 		4B93588D06DBC71B007977AA /* AIServiceIcons.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIServiceIcons.h; path = "Frameworks/Adium Framework/AIServiceIcons.h"; sourceTree = "<group>"; };
 		4B93588E06DBC71B007977AA /* AIUserIcons.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIUserIcons.m; path = "Frameworks/Adium Framework/AIUserIcons.m"; sourceTree = "<group>"; };
 		4B93588F06DBC71B007977AA /* AIStatusIcons.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStatusIcons.h; path = "Frameworks/Adium Framework/AIStatusIcons.h"; sourceTree = "<group>"; };
-		4B935E670733E4EC00C23FC6 /* AICorePluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICorePluginLoader.h; path = Source/AICorePluginLoader.h; sourceTree = "<group>"; };
-		4B935E680733E4EC00C23FC6 /* AICorePluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICorePluginLoader.m; path = Source/AICorePluginLoader.m; sourceTree = "<group>"; };
 		4B970BF80535B864002F28F9 /* ESDualWindowMessageAdvancedPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESDualWindowMessageAdvancedPreferences.h; path = "Plugins/Dual Window Interface/ESDualWindowMessageAdvancedPreferences.h"; sourceTree = "<group>"; };
 		4B970BF90535B864002F28F9 /* ESDualWindowMessageAdvancedPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESDualWindowMessageAdvancedPreferences.m; path = "Plugins/Dual Window Interface/ESDualWindowMessageAdvancedPreferences.m"; sourceTree = "<group>"; };
 		4B97DB6606AC123A0003EE49 /* linkToolbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = linkToolbar.png; path = Resources/linkToolbar.png; sourceTree = SOURCE_ROOT; };
@@ -3733,6 +3740,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3485D67E09EB416300232CC4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3485DBF209EBD01900232CC4 /* Libgaim.framework in Frameworks */,
+				3485D8EA09EB446900232CC4 /* Cocoa.framework in Frameworks */,
+				3485D8EB09EB446900232CC4 /* Adium.framework in Frameworks */,
+				3485D8E709EB445C00232CC4 /* AIUtilities.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		349C2EF80867AC97000BF883 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3746,8 +3764,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34C7C82709EC55FF0060FB4A /* libirc.so in Frameworks */,
+				340BA8D809EC5E35000EC441 /* Libgaim.framework in Frameworks */,
+				34C7C5DC09EC4D7A0060FB4A /* AdiumLibgaim.framework in Frameworks */,
+				3485D5F409EB406000232CC4 /* AIUtilities.framework in Frameworks */,
+				3485D40409EB3FEA00232CC4 /* Adium.framework in Frameworks */,
 				34B323B809B9FEAC00029361 /* Cocoa.framework in Frameworks */,
-				638392F709D4D67A0067B9B7 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3815,10 +3837,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3485D8EC09EB447100232CC4 /* Libgaim.framework in Frameworks */,
+				3485D8B809EB436500232CC4 /* AdiumLibgaim.framework in Frameworks */,
 				34D8374E07CC2F2E006466F2 /* AIUtilities.framework in Frameworks */,
 				3448763B06D1EF0500DA778C /* Cocoa.framework in Frameworks */,
 				6C3E0730054471CD00A4AE2E /* Adium.framework in Frameworks */,
-				4BDF2C92061E376C00EA75C5 /* Libgaim.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3939,6 +3962,7 @@
 				347A210F09786B5F00A30431 /* SystemVersionCheck */,
 				34B323C009B9FEAC00029361 /* IRC Service.AdiumLibgaimPlugin */,
 				3417D26109C332B900FC413E /* Translator.AdiumPlugin */,
+				3485D68009EB416300232CC4 /* AdiumLibgaim.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3966,6 +3990,7 @@
 				34D8342B07CBE6A4006466F2 /* External Sources */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				3485D68109EB416300232CC4 /* AdiumLibgaim-Info.plist */,
 			);
 			name = CocAIMe2;
 			sourceTree = "<group>";
@@ -4210,12 +4235,10 @@
 		34415880059F8F050019246B /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				344161C4059FC72E0019246B /* GaimServices.h */,
 				34415A63059F9B9B0019246B /* GaimService.h */,
 				34415A64059F9B9B0019246B /* GaimService.m */,
 				4B7F278705440C8D00CDFC90 /* CBGaimAccount.h */,
 				348FF83E09128BEB00A942A8 /* CBGaimAccount.m */,
-				34415960059F94F80019246B /* Oscar */,
 				34416060059FC2450019246B /* Gadu-Gadu */,
 				34416053059FC2270019246B /* Jabber */,
 				343A7F2206935DAF00150CEC /* Meanwhile */,
@@ -4361,6 +4384,8 @@
 		3448055407AC5203006A7F7B /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				340BA84409EC593A000EC441 /* AICorePluginLoader.h */,
+				340BA84509EC593B000EC441 /* AICorePluginLoader.m */,
 				34503C7F058F96C400FB7AD1 /* AIEmoticon.h */,
 				34503C7E058F96C400FB7AD1 /* AIEmoticon.m */,
 				3448054F07AC5151006A7F7B /* ESDebugAILog.h */,
@@ -4687,19 +4712,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		3497CBB309BA0B6B00C0428E /* Headers from Elsewhere */ = {
-			isa = PBXGroup;
-			children = (
-				3497CC1609BA0D9E00C0428E /* AIAccountViewController.h */,
-				3497CBDA09BA0B9900C0428E /* DCJoinChatViewController.h */,
-				34B3245F09BA015E00029361 /* AIService.h */,
-				34B3246009BA015E00029361 /* AIServiceIcons.h */,
-				34B3246109BA015E00029361 /* AIObject.h */,
-				3497CD4D09BA131400C0428E /* AIAccount.h */,
-			);
-			name = "Headers from Elsewhere";
-			sourceTree = "<group>";
-		};
 		349C2F310867ACF7000BF883 /* ApplescriptRunner */ = {
 			isa = PBXGroup;
 			children = (
@@ -4746,7 +4758,6 @@
 		34B3241D09B9FF6900029361 /* IRC Libgaim Plugin */ = {
 			isa = PBXGroup;
 			children = (
-				3497CBB309BA0B6B00C0428E /* Headers from Elsewhere */,
 				34B3243D09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h */,
 				34B3243E09B9FFE800029361 /* ESIRCLibgaimServicePlugin.m */,
 				34B3245109BA00E700029361 /* ESIRCAccount.h */,
@@ -4838,6 +4849,7 @@
 		34C2CFE6063340780018E5D2 /* Libgaim */ = {
 			isa = PBXGroup;
 			children = (
+				3402E04D07CB0EB00044F818 /* Localizable.strings */,
 				34048AC50617CB4C004D0B7E /* SLGaimCocoaAdapter.h */,
 				34048AC60617CB4C004D0B7E /* SLGaimCocoaAdapter.m */,
 				34BBE10907A2EE3700663CC9 /* adiumGaimBlist.h */,
@@ -4920,6 +4932,27 @@
 				34BFDF1F07E8978900AD984D /* TabDefaults.plist */,
 			);
 			name = "General Preferences";
+			sourceTree = "<group>";
+		};
+		34C7C62009EC4E140060FB4A /* Services (Disabled) */ = {
+			isa = PBXGroup;
+			children = (
+				34415960059F94F80019246B /* Oscar */,
+			);
+			name = "Services (Disabled)";
+			sourceTree = "<group>";
+		};
+		34C7C62109EC4E480060FB4A /* AdiumLibgaim */ = {
+			isa = PBXGroup;
+			children = (
+				34415880059F8F050019246B /* Services */,
+				34C7C62009EC4E140060FB4A /* Services (Disabled) */,
+				34F59B760667A33900F01E8C /* Notify UI */,
+				34C2CF8F0633405C0018E5D2 /* Request UI */,
+				34C2CFE6063340780018E5D2 /* Libgaim */,
+				34B3244309BA003C00029361 /* AILibgaimPlugin.h */,
+			);
+			name = AdiumLibgaim;
 			sourceTree = "<group>";
 		};
 		34CF9DEF085B8B3D00D87E37 /* iTunes Now Playing */ = {
@@ -5602,16 +5635,12 @@
 		4B7F278605440C6200CDFC90 /* Gaim */ = {
 			isa = PBXGroup;
 			children = (
-				34B3244309BA003C00029361 /* AILibgaimPlugin.h */,
 				340915F105C0A5DF00CDE3DD /* GaimCommon.h */,
+				344161C4059FC72E0019246B /* GaimServices.h */,
 				4B7F278905440C8D00CDFC90 /* CBGaimServicePlugin.h */,
 				4B7F278A05440C8D00CDFC90 /* CBGaimServicePlugin.m */,
 				34327BD6060D2FE6003D7AD9 /* GaimServiceDefaults.plist */,
-				3402E04D07CB0EB00044F818 /* Localizable.strings */,
-				34415880059F8F050019246B /* Services */,
-				34F59B760667A33900F01E8C /* Notify UI */,
-				34C2CF8F0633405C0018E5D2 /* Request UI */,
-				34C2CFE6063340780018E5D2 /* Libgaim */,
+				34C7C62109EC4E480060FB4A /* AdiumLibgaim */,
 			);
 			name = Gaim;
 			sourceTree = "<group>";
@@ -5885,8 +5914,6 @@
 		4BD6720906001B2C0049CAF7 /* Plugins (Built In) */ = {
 			isa = PBXGroup;
 			children = (
-				4B935E670733E4EC00C23FC6 /* AICorePluginLoader.h */,
-				4B935E680733E4EC00C23FC6 /* AICorePluginLoader.m */,
 				9CBADC5005712615005187DA /* WebKit Message View */,
 				4BD672C406001B530049CAF7 /* Services */,
 				4BD672C706001B560049CAF7 /* Other */,
@@ -6927,22 +6954,82 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3485DB1209EBCE4000232CC4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3485DB1809EBCE6500232CC4 /* SLGaimCocoaAdapter.h in Headers */,
+				3485DB1A09EBCE6500232CC4 /* adiumGaimBlist.h in Headers */,
+				3485DB1C09EBCE6500232CC4 /* adiumGaimConnection.h in Headers */,
+				3485DB1E09EBCE6500232CC4 /* adiumGaimConversation.h in Headers */,
+				3485DB2009EBCE6500232CC4 /* adiumGaimCore.h in Headers */,
+				3485DB2209EBCE6500232CC4 /* adiumGaimEventloop.h in Headers */,
+				3485DB2409EBCE6500232CC4 /* adiumGaimFt.h in Headers */,
+				3485DB2609EBCE6500232CC4 /* adiumGaimNotify.h in Headers */,
+				3485DB2809EBCE6500232CC4 /* adiumGaimPrivacy.h in Headers */,
+				3485DB2A09EBCE6500232CC4 /* adiumGaimRequest.h in Headers */,
+				3485DB2C09EBCE6500232CC4 /* adiumGaimRoomlist.h in Headers */,
+				3485DB2E09EBCE6500232CC4 /* adiumGaimSignals.h in Headers */,
+				3485DB3009EBCE6500232CC4 /* adiumGaimWebcam.h in Headers */,
+				3485DB3209EBCE6500232CC4 /* UndeclaredLibgaimFunctions.h in Headers */,
+				3485DB3709EBCE7400232CC4 /* GaimService.h in Headers */,
+				3485DB3909EBCE7400232CC4 /* CBGaimAccount.h in Headers */,
+				3485DB5909EBCE7400232CC4 /* ESGaduGaduService.h in Headers */,
+				3485DB5B09EBCE7400232CC4 /* ESGaimGaduGaduAccount.h in Headers */,
+				3485DB5D09EBCE7400232CC4 /* DCGaimGaduGaduJoinChatViewController.h in Headers */,
+				3485DB6009EBCE7400232CC4 /* ESGaimGaduGaduAccountViewController.h in Headers */,
+				3485DB6409EBCE7400232CC4 /* ESJabberService.h in Headers */,
+				3485DB6609EBCE7400232CC4 /* ESGaimJabberAccount.h in Headers */,
+				3485DB6809EBCE7400232CC4 /* DCGaimJabberJoinChatViewController.h in Headers */,
+				3485DB6B09EBCE7400232CC4 /* ESGaimJabberAccountViewController.h in Headers */,
+				3485DB6F09EBCE7400232CC4 /* AIGaimGTalkAccount.h in Headers */,
+				3485DB7109EBCE7400232CC4 /* AIGaimGTalkAccountViewController.h in Headers */,
+				3485DB7309EBCE7400232CC4 /* AIGTalkService.h in Headers */,
+				3485DB7609EBCE7400232CC4 /* ESMeanwhileService.h in Headers */,
+				3485DB7809EBCE7400232CC4 /* ESGaimMeanwhileAccount.h in Headers */,
+				3485DB7A09EBCE7400232CC4 /* DCGaimMeanwhileJoinChatViewController.h in Headers */,
+				3485DB7D09EBCE7400232CC4 /* ESGaimMeanwhileAccountViewController.h in Headers */,
+				3485DB8109EBCE7400232CC4 /* ESMSNService.h in Headers */,
+				3485DB8309EBCE7400232CC4 /* ESGaimMSNAccount.h in Headers */,
+				3485DB8509EBCE7400232CC4 /* DCGaimMSNJoinChatViewController.h in Headers */,
+				3485DB8809EBCE7400232CC4 /* ESGaimMSNAccountViewController.h in Headers */,
+				3485DB8C09EBCE7400232CC4 /* AIMSNServicePreferences.h in Headers */,
+				3485DB8F09EBCE7400232CC4 /* ESNovellService.h in Headers */,
+				3485DB9109EBCE7400232CC4 /* ESGaimNovellAccount.h in Headers */,
+				3485DB9309EBCE7400232CC4 /* DCGaimNovellJoinChatViewController.h in Headers */,
+				3485DB9609EBCE7400232CC4 /* ESGaimNovellAccountViewController.h in Headers */,
+				3485DB9A09EBCE7400232CC4 /* ESSimpleService.h in Headers */,
+				3485DB9C09EBCE7400232CC4 /* ESGaimSimpleAccount.h in Headers */,
+				3485DB9E09EBCE7400232CC4 /* ESGaimSimpleAccountViewController.h in Headers */,
+				3485DBA209EBCE7400232CC4 /* ESYahooService.h in Headers */,
+				3485DBA409EBCE7400232CC4 /* ESGaimYahooAccount.h in Headers */,
+				3485DBA609EBCE7400232CC4 /* DCGaimYahooJoinChatViewController.h in Headers */,
+				3485DBA909EBCE7400232CC4 /* ESGaimYahooAccountViewController.h in Headers */,
+				3485DBAD09EBCE7400232CC4 /* ESYahooJapanService.h in Headers */,
+				3485DBAF09EBCE7400232CC4 /* ESGaimYahooJapanAccount.h in Headers */,
+				3485DBB209EBCE7400232CC4 /* ESZephyrService.h in Headers */,
+				3485DBB409EBCE7400232CC4 /* ESGaimZephyrAccount.h in Headers */,
+				3485DBB609EBCE7400232CC4 /* DCGaimZephyrJoinChatViewController.h in Headers */,
+				3485DBB909EBCE7400232CC4 /* ESGaimZephyrAccountViewController.h in Headers */,
+				3485DBBD09EBCE7400232CC4 /* ESGaimNotifyEmailController.h in Headers */,
+				3485DBBF09EBCE7400232CC4 /* ESGaimRequestAbstractWindowController.h in Headers */,
+				3485DBC109EBCE7400232CC4 /* ESGaimRequestWindowController.h in Headers */,
+				3485DBC509EBCE7400232CC4 /* ESGaimMeanwhileContactAdditionController.h in Headers */,
+				3485DBC809EBCE7400232CC4 /* ESGaimFileReceiveRequestController.h in Headers */,
+				3485DBCA09EBCE7400232CC4 /* ESGaimRequestActionController.h in Headers */,
+				34C7C62809EC4E890060FB4A /* AILibgaimPlugin.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		34B322F909B9FEAC00029361 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				34B3243F09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h in Headers */,
-				34B3244409BA003C00029361 /* AILibgaimPlugin.h in Headers */,
 				34B3245309BA00E700029361 /* ESIRCAccount.h in Headers */,
 				34B3245909BA00FB00029361 /* ESIRCService.h in Headers */,
-				34B3246209BA015E00029361 /* AIService.h in Headers */,
-				34B3246309BA015E00029361 /* AIServiceIcons.h in Headers */,
-				34B3246409BA015E00029361 /* AIObject.h in Headers */,
 				3497CBAF09BA0B5D00C0428E /* ESIRCJoinChatViewController.h in Headers */,
-				3497CBDB09BA0B9900C0428E /* DCJoinChatViewController.h in Headers */,
 				3497CC0C09BA0D7900C0428E /* ESIRCAccountViewController.h in Headers */,
-				3497CC1709BA0D9E00C0428E /* AIAccountViewController.h in Headers */,
-				3497CD4E09BA131400C0428E /* AIAccount.h in Headers */,
 				63DEB88F09BD3FEC0026DC69 /* AIXtraPreviewImageController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7027,7 +7114,6 @@
 				34B4B5A30708B049002C4C6D /* ESDebugController.h in Headers */,
 				344458EF070B5BEF00D8E932 /* ESDebugWindowController.h in Headers */,
 				4B0149070733D3A5001A4C57 /* AICoreComponentLoader.h in Headers */,
-				4B935E690733E4ED00C23FC6 /* AICorePluginLoader.h in Headers */,
 				34F102320734499700890D3B /* NSString_UUID.h in Headers */,
 				34F1023C073449D500890D3B /* XtrasInstaller.h in Headers */,
 				340EC2280736BF32001653BF /* ESRankingCell.h in Headers */,
@@ -7284,6 +7370,7 @@
 				34AC2EA10934FAE100393D7A /* AIStatusMenu.h in Headers */,
 				34AC2FA709352C2500393D7A /* AIStatusGroup.h in Headers */,
 				348F50C20935317C00288E41 /* AIStatusItem.h in Headers */,
+				340BA84609EC593B000EC441 /* AICorePluginLoader.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7354,84 +7441,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B7F278B05440C8D00CDFC90 /* CBGaimAccount.h in Headers */,
 				4B7F278D05440C8D00CDFC90 /* CBGaimServicePlugin.h in Headers */,
-				344158AB059F90FB0019246B /* ESMSNService.h in Headers */,
-				34415941059F94C10019246B /* ESGaimMSNAccount.h in Headers */,
-				344159B5059F97800019246B /* ESGaimMSNAccountViewController.h in Headers */,
-				34415A65059F9B9C0019246B /* GaimService.h in Headers */,
-				34415B9D059FA8DF0019246B /* ESYahooService.h in Headers */,
-				34415BD5059FA9CE0019246B /* ESGaimYahooAccount.h in Headers */,
-				34416072059FC27E0019246B /* ESGaimGaduGaduAccount.h in Headers */,
-				34416087059FC2A40019246B /* ESGaimGaduGaduAccountViewController.h in Headers */,
-				344160B6059FC2F60019246B /* ESGaimJabberAccountViewController.h in Headers */,
-				344160C5059FC3090019246B /* ESGaimJabberAccount.h in Headers */,
-				3441615B059FC5340019246B /* ESGaduGaduService.h in Headers */,
-				34416173059FC55A0019246B /* ESJabberService.h in Headers */,
-				344161C5059FC72E0019246B /* GaimServices.h in Headers */,
-				340915F205C0A5DF00CDE3DD /* GaimCommon.h in Headers */,
-				34048AC70617CB4C004D0B7E /* SLGaimCocoaAdapter.h in Headers */,
-				3429280A0628BB4200BB9217 /* ESGaimYahooAccountViewController.h in Headers */,
-				3499F4A906309AF60035B468 /* ESGaimRequestWindowController.h in Headers */,
-				34C2E6710634CF5F0018E5D2 /* ESGaimNovellAccount.h in Headers */,
-				34C2E6890634CF940018E5D2 /* ESGaimNovellAccountViewController.h in Headers */,
-				34C2EA1A0634DB5E0018E5D2 /* ESNovellService.h in Headers */,
-				34A30EDB08D8EFFB00697644 /* ESYahooJapanService.h in Headers */,
-				34A30ECA08D8EFE700697644 /* ESGaimYahooJapanAccount.h in Headers */,
-				341E886B0648FF1B00E0C828 /* ESGaimRequestActionController.h in Headers */,
-				343A7F2F06935DC500150CEC /* ESGaimMeanwhileAccountViewController.h in Headers */,
-				343A7F3106935DC500150CEC /* ESGaimMeanwhileAccount.h in Headers */,
-				343A7F3A06935DD700150CEC /* ESMeanwhileService.h in Headers */,
-				6E4D961F06B73B38005235E9 /* DCGaimGaduGaduJoinChatViewController.h in Headers */,
-				6E4D962506B73BE0005235E9 /* DCGaimJabberJoinChatViewController.h in Headers */,
-				6E4D962B06B73C18005235E9 /* DCGaimMeanwhileJoinChatViewController.h in Headers */,
-				6E4D963106B73C4D005235E9 /* DCGaimMSNJoinChatViewController.h in Headers */,
-				6EA3688606B73E7D009CA81A /* DCGaimNovellJoinChatViewController.h in Headers */,
-				6EA3689206B73F67009CA81A /* DCGaimYahooJoinChatViewController.h in Headers */,
-				348D8D1D06CC079F00449EBB /* ESZephyrService.h in Headers */,
-				348D8D2B06CC07BE00449EBB /* ESGaimZephyrAccountViewController.h in Headers */,
-				348D8D2E06CC07BE00449EBB /* DCGaimZephyrJoinChatViewController.h in Headers */,
-				348D8D2F06CC07BE00449EBB /* ESGaimZephyrAccount.h in Headers */,
-				4B388E0F0719C376004DE713 /* AIMSNServicePreferences.h in Headers */,
-				34BBE0EB07A2ECD000663CC9 /* adiumGaimConnection.h in Headers */,
-				34BBE10B07A2EE3800663CC9 /* adiumGaimBlist.h in Headers */,
-				34BBE11207A2EED600663CC9 /* adiumGaimFt.h in Headers */,
-				34BBE11807A2EF2B00663CC9 /* adiumGaimPrivacy.h in Headers */,
-				34BBE11E07A2EF8000663CC9 /* adiumGaimRequest.h in Headers */,
-				34BBE12407A2EFF800663CC9 /* adiumGaimNotify.h in Headers */,
-				34BBE12A07A2F09B00663CC9 /* adiumGaimRoomlist.h in Headers */,
-				34BBE18007A2F10400663CC9 /* adiumGaimConversation.h in Headers */,
-				34BBE18607A2F20E00663CC9 /* adiumGaimWebcam.h in Headers */,
-				34BBE18C07A2F2A600663CC9 /* adiumGaimEventloop.h in Headers */,
-				34BBE1B407A2F36400663CC9 /* adiumGaimCore.h in Headers */,
-				34BBE1BA07A2F4C500663CC9 /* adiumGaimSignals.h in Headers */,
-				34E0103507B956F6000DF265 /* ESGaimNotifyEmailController.h in Headers */,
-				34C9A6380822930D004F912C /* ESGaimMeanwhileContactAdditionController.h in Headers */,
-				A3C0432108D74D3100B48CE1 /* AIGaimGTalkAccount.h in Headers */,
-				A3C0432308D74D3100B48CE1 /* AIGaimGTalkAccountViewController.h in Headers */,
-				A3C0432508D74D3100B48CE1 /* AIGTalkService.h in Headers */,
-				34AEE7DE08E3547000AE1C78 /* ESGaimFileReceiveRequestController.h in Headers */,
-				34AEE7EA08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h in Headers */,
-				07F1795008EBC5B400A9C392 /* UndeclaredLibgaimFunctions.h in Headers */,
-				345A7B5B0954AD1400FF3113 /* ESSimpleService.h in Headers */,
-				345A7B670954AD2800FF3113 /* ESGaimSimpleAccount.h in Headers */,
-				345A7B6D0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.h in Headers */,
-				3497D3AC09BA273F00C0428E /* ESIRCLibgaimServicePlugin.h in Headers */,
-				3497D3AE09BA273F00C0428E /* ESIRCAccount.h in Headers */,
-				3497D3B009BA273F00C0428E /* ESIRCService.h in Headers */,
-				3497D3B309BA273F00C0428E /* ESIRCJoinChatViewController.h in Headers */,
-				3497D3B609BA273F00C0428E /* ESIRCAccountViewController.h in Headers */,
-				34F18E6809BA47C7001D6BE2 /* AIAccountViewController.h in Headers */,
-				34F18E6909BA47C7001D6BE2 /* DCJoinChatViewController.h in Headers */,
-				34F18E6A09BA47C7001D6BE2 /* AIService.h in Headers */,
-				34F18E6B09BA47C7001D6BE2 /* AIServiceIcons.h in Headers */,
-				34F18E6C09BA47C7001D6BE2 /* AIObject.h in Headers */,
-				34F18E6D09BA47C7001D6BE2 /* AIAccount.h in Headers */,
-				34F18E6E09BA47C7001D6BE2 /* ESIRCLibgaimServicePlugin.h in Headers */,
-				34F18E7009BA47C7001D6BE2 /* ESIRCAccount.h in Headers */,
-				34F18E7209BA47C7001D6BE2 /* ESIRCService.h in Headers */,
-				34F18E7509BA47C7001D6BE2 /* ESIRCJoinChatViewController.h in Headers */,
-				34F18E7809BA47C7001D6BE2 /* ESIRCAccountViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7706,6 +7716,65 @@
 			productReference = 347A210F09786B5F00A30431 /* SystemVersionCheck */;
 			productType = "com.apple.product-type.tool";
 		};
+		3485D67F09EB416300232CC4 /* AdiumLibgaim */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3485D68209EB416500232CC4 /* Build configuration list for PBXNativeTarget "AdiumLibgaim" */;
+			buildPhases = (
+				3485DB1209EBCE4000232CC4 /* Headers */,
+				3485D67C09EB416300232CC4 /* Resources */,
+				3485D67D09EB416300232CC4 /* Sources */,
+				3485D67E09EB416300232CC4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "AdiumLibgaim-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AdiumLibgaim;
+				ZERO_LINK = YES;
+			};
+			dependencies = (
+			);
+			name = AdiumLibgaim;
+			productName = AdiumLibgaim;
+			productReference = 3485D68009EB416300232CC4 /* AdiumLibgaim.framework */;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.yourcompany.AdiumLibgaim</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>FMWK</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.framework";
+		};
 		349C2EF90867AC97000BF883 /* AdiumApplescriptRunner */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 349C2F220867ACA9000BF883 /* Build configuration list for PBXNativeTarget "AdiumApplescriptRunner" */;
@@ -7778,6 +7847,9 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				34C7C62D09EC4EBE0060FB4A /* PBXTargetDependency */,
+				340BA85609EC59AF000EC441 /* PBXTargetDependency */,
+				340BA85809EC59AF000EC441 /* PBXTargetDependency */,
 			);
 			name = "IRC Service Libgaim Plugin";
 			productName = Gaim;
@@ -8003,7 +8075,6 @@
 			buildConfigurationList = DADE8E09085507450062B664 /* Build configuration list for PBXNativeTarget "Gaim" */;
 			buildPhases = (
 				4B7F277E05440C0800CDFC90 /* Headers */,
-				4B7F277F05440C0800CDFC90 /* Resources */,
 				07D43998084E5A4B00BFFF05 /* ShellScript */,
 				4BDF2C97061E377E00EA75C5 /* CopyFiles */,
 				344ECA570620A04E007256C6 /* ShellScript */,
@@ -8033,6 +8104,7 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				3485D69309EB41D700232CC4 /* PBXTargetDependency */,
 				6C3E0152054445C000A4AE2E /* PBXTargetDependency */,
 			);
 			name = Gaim;
@@ -8246,6 +8318,7 @@
 				4B7F78B40597F42400162728 /* Adium Crash Reporter */,
 				34BD9F2C0531477E000AB133 /* Adium 1.6 Pref Importer */,
 				34BD9DAF05314751000AB133 /* Adium.Framework */,
+				3485D67F09EB416300232CC4 /* AdiumLibgaim */,
 				4B7F278205440C0800CDFC90 /* Gaim */,
 				B72537BB058C4577004BA969 /* Latex Plugin */,
 				3419F3A605314BE000C68BA3 /* SQL Logger */,
@@ -8334,6 +8407,43 @@
 				34C2DF03063498EF0018E5D2 /* terminator.png in Resources */,
 				4B03711606595A70008F5981 /* Template.html in Resources */,
 				3402E07607CB0FAA0044F818 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3485D67C09EB416300232CC4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3485DB5F09EBCE7400232CC4 /* DCGaimGaduGaduJoinChatView.nib in Resources */,
+				3485DB6209EBCE7400232CC4 /* ESGaimGaduGaduAccountView.nib in Resources */,
+				3485DB6309EBCE7400232CC4 /* GaimDefaultsGadu-Gadu.plist in Resources */,
+				3485DB6A09EBCE7400232CC4 /* DCGaimJabberJoinChatView.nib in Resources */,
+				3485DB6D09EBCE7400232CC4 /* ESGaimJabberAccountView.nib in Resources */,
+				3485DB6E09EBCE7400232CC4 /* GaimDefaultsJabber.plist in Resources */,
+				3485DB7509EBCE7400232CC4 /* GaimDefaultsGTalk.plist in Resources */,
+				3485DB7C09EBCE7400232CC4 /* DCGaimMeanwhileJoinChatView.nib in Resources */,
+				3485DB7F09EBCE7400232CC4 /* ESGaimMeanwhileAccountView.nib in Resources */,
+				3485DB8009EBCE7400232CC4 /* GaimDefaultsSametime.plist in Resources */,
+				3485DB8709EBCE7400232CC4 /* DCGaimMSNJoinChatView.nib in Resources */,
+				3485DB8A09EBCE7400232CC4 /* ESGaimMSNAccountView.nib in Resources */,
+				3485DB8B09EBCE7400232CC4 /* GaimDefaultsMSN.plist in Resources */,
+				3485DB8E09EBCE7400232CC4 /* MSNServicePrefs.nib in Resources */,
+				3485DB9509EBCE7400232CC4 /* DCGaimNovellJoinChatView.nib in Resources */,
+				3485DB9809EBCE7400232CC4 /* ESGaimNovellAccountView.nib in Resources */,
+				3485DB9909EBCE7400232CC4 /* GaimDefaultsGroupWise.plist in Resources */,
+				3485DBA009EBCE7400232CC4 /* ESGaimSimpleAccountView.nib in Resources */,
+				3485DBA109EBCE7400232CC4 /* GaimDefaultsSimple.plist in Resources */,
+				3485DBA809EBCE7400232CC4 /* DCGaimYahooJoinChatView.nib in Resources */,
+				3485DBAB09EBCE7400232CC4 /* ESGaimYahooAccountView.nib in Resources */,
+				3485DBAC09EBCE7400232CC4 /* GaimDefaultsYahoo!.plist in Resources */,
+				3485DBB109EBCE7400232CC4 /* GaimDefaultsYahoo! Japan.plist in Resources */,
+				3485DBB809EBCE7400232CC4 /* DCGaimZephyrJoinChatView.nib in Resources */,
+				3485DBBB09EBCE7400232CC4 /* ESGaimZephyrAccountView.nib in Resources */,
+				3485DBBC09EBCE7400232CC4 /* GaimDefaultsZephyr.plist in Resources */,
+				3485DBC309EBCE7400232CC4 /* GaimMultilineRequestWindow.nib in Resources */,
+				3485DBC409EBCE7400232CC4 /* GaimSinglelineRequestWindow.nib in Resources */,
+				3485DBC709EBCE7400232CC4 /* GaimMeanwhileContactAdditionWindow.nib in Resources */,
+				3485DBD009EBCE8200232CC4 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8649,47 +8759,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4B7F277F05440C0800CDFC90 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				343EB40608086D9100E27095 /* ESGaimMSNAccountView.nib in Resources */,
-				34327CA9060D40A1003D7AD9 /* GaimServiceDefaults.plist in Resources */,
-				343EB42308086D9200E27095 /* ESGaimJabberAccountView.nib in Resources */,
-				343EB42108086D9200E27095 /* ESGaimYahooAccountView.nib in Resources */,
-				34C2CF87063340540018E5D2 /* GaimMultilineRequestWindow.nib in Resources */,
-				34C2CF88063340540018E5D2 /* GaimSinglelineRequestWindow.nib in Resources */,
-				343EB41F08086D9200E27095 /* ESGaimMeanwhileAccountView.nib in Resources */,
-				6E4D961E06B73B38005235E9 /* DCGaimGaduGaduJoinChatView.nib in Resources */,
-				343EB41908086D9100E27095 /* DCGaimJabberJoinChatView.nib in Resources */,
-				343EB41508086D9100E27095 /* DCGaimMeanwhileJoinChatView.nib in Resources */,
-				6E4D963006B73C4D005235E9 /* DCGaimMSNJoinChatView.nib in Resources */,
-				6EA3688506B73E7D009CA81A /* DCGaimNovellJoinChatView.nib in Resources */,
-				343EB40F08086D9100E27095 /* DCGaimYahooJoinChatView.nib in Resources */,
-				343EB41308086D9100E27095 /* ESGaimZephyrAccountView.nib in Resources */,
-				4B388E4D0719C445004DE713 /* MSNServicePrefs.nib in Resources */,
-				4BB19299079EE90900DAA523 /* GaimDefaultsJabber.plist in Resources */,
-				4B7644DF07A05E7E0021CCD7 /* GaimDefaultsMSN.plist in Resources */,
-				4B7646CF07A078E60021CCD7 /* GaimDefaultsZephyr.plist in Resources */,
-				343EB40A08086D9100E27095 /* DCGaimZephyrJoinChatView.nib in Resources */,
-				4B76471807A079A40021CCD7 /* GaimDefaultsYahoo!.plist in Resources */,
-				4B76474007A07B630021CCD7 /* GaimDefaultsGadu-Gadu.plist in Resources */,
-				4B76474D07A07B900021CCD7 /* GaimDefaultsSametime.plist in Resources */,
-				4B76476107A07BC90021CCD7 /* GaimDefaultsGroupWise.plist in Resources */,
-				34A30EDD08D8EFFB00697644 /* GaimDefaultsYahoo! Japan.plist in Resources */,
-				343EB40008086D9000E27095 /* ESGaimNovellAccountView.nib in Resources */,
-				343EB40408086D9000E27095 /* ESGaimGaduGaduAccountView.nib in Resources */,
-				3402E04E07CB0EB00044F818 /* Localizable.strings in Resources */,
-				34C9A64508229348004F912C /* GaimMeanwhileContactAdditionWindow.nib in Resources */,
-				A3C042D208D7483100B48CE1 /* GaimDefaultsGTalk.plist in Resources */,
-				345A7B720954AD4D00FF3113 /* GaimDefaultsSimple.plist in Resources */,
-				345A7B850954AEF400FF3113 /* ESGaimSimpleAccountView.nib in Resources */,
-				3497D3B509BA273F00C0428E /* ESIRCJoinChatView.nib in Resources */,
-				3497D3B809BA273F00C0428E /* ESIRCAccountView.nib in Resources */,
-				3497D3B909BA274000C0428E /* GaimDefaultsIRC.plist in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4B7F78B10597F42400162728 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -8912,6 +8981,71 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3485D67D09EB416300232CC4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3485DB1909EBCE6500232CC4 /* SLGaimCocoaAdapter.m in Sources */,
+				3485DB1B09EBCE6500232CC4 /* adiumGaimBlist.m in Sources */,
+				3485DB1D09EBCE6500232CC4 /* adiumGaimConnection.m in Sources */,
+				3485DB1F09EBCE6500232CC4 /* adiumGaimConversation.m in Sources */,
+				3485DB2109EBCE6500232CC4 /* adiumGaimCore.m in Sources */,
+				3485DB2309EBCE6500232CC4 /* adiumGaimEventloop.m in Sources */,
+				3485DB2509EBCE6500232CC4 /* adiumGaimFt.m in Sources */,
+				3485DB2709EBCE6500232CC4 /* adiumGaimNotify.m in Sources */,
+				3485DB2909EBCE6500232CC4 /* adiumGaimPrivacy.m in Sources */,
+				3485DB2B09EBCE6500232CC4 /* adiumGaimRequest.m in Sources */,
+				3485DB2D09EBCE6500232CC4 /* adiumGaimRoomlist.m in Sources */,
+				3485DB2F09EBCE6500232CC4 /* adiumGaimSignals.m in Sources */,
+				3485DB3109EBCE6500232CC4 /* adiumGaimWebcam.m in Sources */,
+				3485DB3809EBCE7400232CC4 /* GaimService.m in Sources */,
+				3485DB3A09EBCE7400232CC4 /* CBGaimAccount.m in Sources */,
+				3485DB5A09EBCE7400232CC4 /* ESGaduGaduService.m in Sources */,
+				3485DB5C09EBCE7400232CC4 /* ESGaimGaduGaduAccount.m in Sources */,
+				3485DB5E09EBCE7400232CC4 /* DCGaimGaduGaduJoinChatViewController.m in Sources */,
+				3485DB6109EBCE7400232CC4 /* ESGaimGaduGaduAccountViewController.m in Sources */,
+				3485DB6509EBCE7400232CC4 /* ESJabberService.m in Sources */,
+				3485DB6709EBCE7400232CC4 /* ESGaimJabberAccount.m in Sources */,
+				3485DB6909EBCE7400232CC4 /* DCGaimJabberJoinChatViewController.m in Sources */,
+				3485DB6C09EBCE7400232CC4 /* ESGaimJabberAccountViewController.m in Sources */,
+				3485DB7009EBCE7400232CC4 /* AIGaimGTalkAccount.m in Sources */,
+				3485DB7209EBCE7400232CC4 /* AIGaimGTalkAccountViewController.m in Sources */,
+				3485DB7409EBCE7400232CC4 /* AIGTalkService.m in Sources */,
+				3485DB7709EBCE7400232CC4 /* ESMeanwhileService.m in Sources */,
+				3485DB7909EBCE7400232CC4 /* ESGaimMeanwhileAccount.m in Sources */,
+				3485DB7B09EBCE7400232CC4 /* DCGaimMeanwhileJoinChatViewController.m in Sources */,
+				3485DB7E09EBCE7400232CC4 /* ESGaimMeanwhileAccountViewController.m in Sources */,
+				3485DB8209EBCE7400232CC4 /* ESMSNService.m in Sources */,
+				3485DB8409EBCE7400232CC4 /* ESGaimMSNAccount.m in Sources */,
+				3485DB8609EBCE7400232CC4 /* DCGaimMSNJoinChatViewController.m in Sources */,
+				3485DB8909EBCE7400232CC4 /* ESGaimMSNAccountViewController.m in Sources */,
+				3485DB8D09EBCE7400232CC4 /* AIMSNServicePreferences.m in Sources */,
+				3485DB9009EBCE7400232CC4 /* ESNovellService.m in Sources */,
+				3485DB9209EBCE7400232CC4 /* ESGaimNovellAccount.m in Sources */,
+				3485DB9409EBCE7400232CC4 /* DCGaimNovellJoinChatViewController.m in Sources */,
+				3485DB9709EBCE7400232CC4 /* ESGaimNovellAccountViewController.m in Sources */,
+				3485DB9B09EBCE7400232CC4 /* ESSimpleService.m in Sources */,
+				3485DB9D09EBCE7400232CC4 /* ESGaimSimpleAccount.m in Sources */,
+				3485DB9F09EBCE7400232CC4 /* ESGaimSimpleAccountViewController.m in Sources */,
+				3485DBA309EBCE7400232CC4 /* ESYahooService.m in Sources */,
+				3485DBA509EBCE7400232CC4 /* ESGaimYahooAccount.m in Sources */,
+				3485DBA709EBCE7400232CC4 /* DCGaimYahooJoinChatViewController.m in Sources */,
+				3485DBAA09EBCE7400232CC4 /* ESGaimYahooAccountViewController.m in Sources */,
+				3485DBAE09EBCE7400232CC4 /* ESYahooJapanService.m in Sources */,
+				3485DBB009EBCE7400232CC4 /* ESGaimYahooJapanAccount.m in Sources */,
+				3485DBB309EBCE7400232CC4 /* ESZephyrService.m in Sources */,
+				3485DBB509EBCE7400232CC4 /* ESGaimZephyrAccount.m in Sources */,
+				3485DBB709EBCE7400232CC4 /* DCGaimZephyrJoinChatViewController.m in Sources */,
+				3485DBBA09EBCE7400232CC4 /* ESGaimZephyrAccountViewController.m in Sources */,
+				3485DBBE09EBCE7400232CC4 /* ESGaimNotifyEmailController.m in Sources */,
+				3485DBC009EBCE7400232CC4 /* ESGaimRequestAbstractWindowController.m in Sources */,
+				3485DBC209EBCE7400232CC4 /* ESGaimRequestWindowController.m in Sources */,
+				3485DBC609EBCE7400232CC4 /* ESGaimMeanwhileContactAdditionController.m in Sources */,
+				3485DBC909EBCE7400232CC4 /* ESGaimFileReceiveRequestController.m in Sources */,
+				3485DBCB09EBCE7400232CC4 /* ESGaimRequestActionController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		349C2EF70867AC97000BF883 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -9013,7 +9147,6 @@
 				34B4B5A40708B049002C4C6D /* ESDebugController.m in Sources */,
 				344458F0070B5BEF00D8E932 /* ESDebugWindowController.m in Sources */,
 				4B0149080733D3A5001A4C57 /* AICoreComponentLoader.m in Sources */,
-				4B935E6A0733E4ED00C23FC6 /* AICorePluginLoader.m in Sources */,
 				34F1022E0734499700890D3B /* NSString_UUID.m in Sources */,
 				34F1023B073449D500890D3B /* XtrasInstaller.m in Sources */,
 				340EC2290736BF32001653BF /* ESRankingCell.m in Sources */,
@@ -9264,6 +9397,7 @@
 				34AC2EA20934FAE100393D7A /* AIStatusMenu.m in Sources */,
 				34AC2FA809352C2500393D7A /* AIStatusGroup.m in Sources */,
 				348F50C30935317C00288E41 /* AIStatusItem.m in Sources */,
+				340BA84709EC593B000EC441 /* AICorePluginLoader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9324,64 +9458,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B7F278E05440C8D00CDFC90 /* CBGaimServicePlugin.m in Sources */,
-				344158AC059F90FB0019246B /* ESMSNService.m in Sources */,
-				34415942059F94C10019246B /* ESGaimMSNAccount.m in Sources */,
-				344159B6059F97800019246B /* ESGaimMSNAccountViewController.m in Sources */,
-				34415A66059F9B9C0019246B /* GaimService.m in Sources */,
-				34415B9E059FA8DF0019246B /* ESYahooService.m in Sources */,
-				34415BD3059FA9CE0019246B /* ESGaimYahooAccount.m in Sources */,
-				34416073059FC27E0019246B /* ESGaimGaduGaduAccount.m in Sources */,
-				34416088059FC2A40019246B /* ESGaimGaduGaduAccountViewController.m in Sources */,
-				344160B7059FC2F60019246B /* ESGaimJabberAccountViewController.m in Sources */,
-				344160C6059FC3090019246B /* ESGaimJabberAccount.m in Sources */,
-				3441615C059FC5340019246B /* ESGaduGaduService.m in Sources */,
-				34416174059FC55A0019246B /* ESJabberService.m in Sources */,
-				34048AC80617CB4C004D0B7E /* SLGaimCocoaAdapter.m in Sources */,
-				3429280B0628BB4200BB9217 /* ESGaimYahooAccountViewController.m in Sources */,
-				3499F4A806309AF60035B468 /* ESGaimRequestWindowController.m in Sources */,
-				34C2E6720634CF5F0018E5D2 /* ESGaimNovellAccount.m in Sources */,
-				34C2E68A0634CF940018E5D2 /* ESGaimNovellAccountViewController.m in Sources */,
-				34C2EA1B0634DB5E0018E5D2 /* ESNovellService.m in Sources */,
-				34A30EDC08D8EFFB00697644 /* ESYahooJapanService.m in Sources */,
-				34A30ECB08D8EFE700697644 /* ESGaimYahooJapanAccount.m in Sources */,
-				341E886C0648FF1B00E0C828 /* ESGaimRequestActionController.m in Sources */,
-				343A7F2E06935DC500150CEC /* ESGaimMeanwhileAccountViewController.m in Sources */,
-				343A7F3006935DC500150CEC /* ESGaimMeanwhileAccount.m in Sources */,
-				343A7F3906935DD700150CEC /* ESMeanwhileService.m in Sources */,
-				6E4D962006B73B38005235E9 /* DCGaimGaduGaduJoinChatViewController.m in Sources */,
-				6E4D962606B73BE0005235E9 /* DCGaimJabberJoinChatViewController.m in Sources */,
-				6E4D962C06B73C18005235E9 /* DCGaimMeanwhileJoinChatViewController.m in Sources */,
-				6E4D963206B73C4D005235E9 /* DCGaimMSNJoinChatViewController.m in Sources */,
-				6EA3688706B73E7D009CA81A /* DCGaimNovellJoinChatViewController.m in Sources */,
-				6EA3689306B73F67009CA81A /* DCGaimYahooJoinChatViewController.m in Sources */,
-				348D8D1C06CC079F00449EBB /* ESZephyrService.m in Sources */,
-				348D8D2906CC07BE00449EBB /* ESGaimZephyrAccountViewController.m in Sources */,
-				348D8D2C06CC07BE00449EBB /* DCGaimZephyrJoinChatViewController.m in Sources */,
-				348D8D2D06CC07BE00449EBB /* ESGaimZephyrAccount.m in Sources */,
-				4B388E100719C376004DE713 /* AIMSNServicePreferences.m in Sources */,
-				34BBE0EC07A2ECD000663CC9 /* adiumGaimConnection.m in Sources */,
-				34BBE10C07A2EE3800663CC9 /* adiumGaimBlist.m in Sources */,
-				34BBE11307A2EED600663CC9 /* adiumGaimFt.m in Sources */,
-				34BBE11907A2EF2B00663CC9 /* adiumGaimPrivacy.m in Sources */,
-				34BBE11F07A2EF8000663CC9 /* adiumGaimRequest.m in Sources */,
-				34BBE12507A2EFF800663CC9 /* adiumGaimNotify.m in Sources */,
-				34BBE12B07A2F09B00663CC9 /* adiumGaimRoomlist.m in Sources */,
-				34BBE18107A2F10400663CC9 /* adiumGaimConversation.m in Sources */,
-				34BBE18707A2F20E00663CC9 /* adiumGaimWebcam.m in Sources */,
-				34BBE18D07A2F2A600663CC9 /* adiumGaimEventloop.m in Sources */,
-				34BBE1B507A2F36400663CC9 /* adiumGaimCore.m in Sources */,
-				34BBE1BB07A2F4C500663CC9 /* adiumGaimSignals.m in Sources */,
-				34E0103407B956F6000DF265 /* ESGaimNotifyEmailController.m in Sources */,
-				34C9A6390822930D004F912C /* ESGaimMeanwhileContactAdditionController.m in Sources */,
-				A3C0432208D74D3100B48CE1 /* AIGaimGTalkAccount.m in Sources */,
-				A3C0432408D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m in Sources */,
-				A3C0432608D74D3100B48CE1 /* AIGTalkService.m in Sources */,
-				34AEE7DF08E3547000AE1C78 /* ESGaimFileReceiveRequestController.m in Sources */,
-				34AEE7EB08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m in Sources */,
-				348FF83F09128BEB00A942A8 /* CBGaimAccount.m in Sources */,
-				345A7B5C0954AD1400FF3113 /* ESSimpleService.m in Sources */,
-				345A7B680954AD2800FF3113 /* ESGaimSimpleAccount.m in Sources */,
-				345A7B6E0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9409,6 +9485,16 @@
 			isa = PBXTargetDependency;
 			target = 118C52C5091BF0DB00219458 /* joscar */;
 			targetProxy = 11F5F42B09537E00007DCC49 /* PBXContainerItemProxy */;
+		};
+		340BA85609EC59AF000EC441 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
+			targetProxy = 340BA85509EC59AF000EC441 /* PBXContainerItemProxy */;
+		};
+		340BA85809EC59AF000EC441 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = 340BA85709EC59AF000EC441 /* PBXContainerItemProxy */;
 		};
 		34611CCF09B67ABC00870036 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -9440,6 +9526,11 @@
 			target = 347A210E09786B5F00A30431 /* SystemVersionCheck */;
 			targetProxy = 347A21A009786C1F00A30431 /* PBXContainerItemProxy */;
 		};
+		3485D69309EB41D700232CC4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3485D67F09EB416300232CC4 /* AdiumLibgaim */;
+			targetProxy = 3485D69209EB41D700232CC4 /* PBXContainerItemProxy */;
+		};
 		349C31630867D199000BF883 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 349C2EF90867AC97000BF883 /* AdiumApplescriptRunner */;
@@ -9459,6 +9550,11 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			targetProxy = 34BD98D10531467B000AB133 /* PBXContainerItemProxy */;
+		};
+		34C7C62D09EC4EBE0060FB4A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3485D67F09EB416300232CC4 /* AdiumLibgaim */;
+			targetProxy = 34C7C62C09EC4EBE0060FB4A /* PBXContainerItemProxy */;
 		};
 		4947F5BD0655E85200B791E5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -10535,7 +10631,7 @@
 				);
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
-			name = Deployment-Debug_PPC-Only;
+			name = "Deployment-Debug_PPC-Only";
 		};
 		3417D25D09C332B900FC413E /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -10690,6 +10786,164 @@
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
+		3485D68309EB416500232CC4 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS)",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"Plugins/Gaim Service/Include/glib",
+					"Plugins/Gaim Service/Include/glib/glib",
+					"Plugins/Gaim Service/Include/glib/gmodule",
+					"Plugins/Gaim Service/Include/",
+					"Plugins/Gaim Service/Libgaim.framework/Headers",
+				);
+				INFOPLIST_FILE = "AdiumLibgaim-Info.plist";
+				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AdiumLibgaim;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wno-long-double",
+				);
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		3485D68409EB416500232CC4 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS)",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"Plugins/Gaim Service/Include/glib",
+					"Plugins/Gaim Service/Include/glib/glib",
+					"Plugins/Gaim Service/Include/glib/gmodule",
+					"Plugins/Gaim Service/Include/",
+					"Plugins/Gaim Service/Libgaim.framework/Headers",
+				);
+				INFOPLIST_FILE = "AdiumLibgaim-Info.plist";
+				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AdiumLibgaim;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wno-long-double",
+				);
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		3485D68509EB416500232CC4 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS)",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"Plugins/Gaim Service/Include/glib",
+					"Plugins/Gaim Service/Include/glib/glib",
+					"Plugins/Gaim Service/Include/glib/gmodule",
+					"Plugins/Gaim Service/Include/",
+					"Plugins/Gaim Service/Libgaim.framework/Headers",
+				);
+				INFOPLIST_FILE = "AdiumLibgaim-Info.plist";
+				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AdiumLibgaim;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wno-long-double",
+				);
+				ZERO_LINK = YES;
+			};
+			name = "Deployment-Debug";
+		};
+		3485D68609EB416500232CC4 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS)",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"Plugins/Gaim Service/Include/glib",
+					"Plugins/Gaim Service/Include/glib/glib",
+					"Plugins/Gaim Service/Include/glib/gmodule",
+					"Plugins/Gaim Service/Include/",
+					"Plugins/Gaim Service/Libgaim.framework/Headers",
+				);
+				INFOPLIST_FILE = "AdiumLibgaim-Info.plist";
+				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AdiumLibgaim;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wno-long-double",
+				);
+				ZERO_LINK = YES;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		349C2F230867ACA9000BF883 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -10771,11 +11025,6 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
-				OTHER_LDFLAGS = (
-					"-flat_namespace",
-					"-undefined",
-					suppress,
-				);
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
@@ -10799,11 +11048,6 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
-				OTHER_LDFLAGS = (
-					"-flat_namespace",
-					"-undefined",
-					suppress,
-				);
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
@@ -10827,11 +11071,6 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
-				OTHER_LDFLAGS = (
-					"-flat_namespace",
-					"-undefined",
-					suppress,
-				);
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
@@ -10855,11 +11094,6 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
-				OTHER_LDFLAGS = (
-					"-flat_namespace",
-					"-undefined",
-					suppress,
-				);
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
@@ -10922,8 +11156,8 @@
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
+					"$(FRAMEWORK_SEARCH_PATHS)",
+					"$(SRCROOT)/Plugins/Gaim Service",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
@@ -10932,7 +11166,7 @@
 					"Plugins/Gaim Service/Include/glib/glib",
 					"Plugins/Gaim Service/Include/glib/gmodule",
 					"Plugins/Gaim Service/Include/",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
+					"Plugins/Gaim Service/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				OTHER_LDFLAGS = (
@@ -11304,8 +11538,8 @@
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
+					"$(FRAMEWORK_SEARCH_PATHS)",
+					"$(SRCROOT)/Plugins/Gaim Service",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
@@ -11314,7 +11548,7 @@
 					"Plugins/Gaim Service/Include/glib/glib",
 					"Plugins/Gaim Service/Include/glib/gmodule",
 					"Plugins/Gaim Service/Include/",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
+					"Plugins/Gaim Service/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				OTHER_LDFLAGS = (
@@ -11333,8 +11567,8 @@
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
+					"$(FRAMEWORK_SEARCH_PATHS)",
+					"$(SRCROOT)/Plugins/Gaim Service",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
@@ -11343,7 +11577,7 @@
 					"Plugins/Gaim Service/Include/glib/glib",
 					"Plugins/Gaim Service/Include/glib/gmodule",
 					"Plugins/Gaim Service/Include/",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
+					"Plugins/Gaim Service/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				OTHER_LDFLAGS = (
@@ -11362,8 +11596,8 @@
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
+					"$(FRAMEWORK_SEARCH_PATHS)",
+					"$(SRCROOT)/Plugins/Gaim Service",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
@@ -11372,7 +11606,7 @@
 					"Plugins/Gaim Service/Include/glib/glib",
 					"Plugins/Gaim Service/Include/glib/gmodule",
 					"Plugins/Gaim Service/Include/",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
+					"Plugins/Gaim Service/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				OTHER_LDFLAGS = (
@@ -11943,6 +12177,17 @@
 				347A21BC09786C7300A30431 /* Deployment */,
 				347A21BD09786C7300A30431 /* Deployment-Debug */,
 				347A21BE09786C7300A30431 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		3485D68209EB416500232CC4 /* Build configuration list for PBXNativeTarget "AdiumLibgaim" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3485D68309EB416500232CC4 /* Development */,
+				3485D68409EB416500232CC4 /* Deployment */,
+				3485D68509EB416500232CC4 /* Deployment-Debug */,
+				3485D68609EB416500232CC4 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;

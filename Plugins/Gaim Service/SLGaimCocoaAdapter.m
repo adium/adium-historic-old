@@ -73,13 +73,47 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 @implementation SLGaimCocoaAdapter
 
+extern gboolean gaim_init_ssl_plugin(void);
+extern gboolean gaim_init_ssl_openssl_plugin(void);
+extern gboolean gaim_init_gg_plugin(void);
+extern gboolean gaim_init_jabber_plugin(void);
+extern gboolean gaim_init_sametime_plugin(void);
+extern gboolean gaim_init_sametime_plugin(void);
+extern gboolean gaim_init_msn_plugin(void);
+extern gboolean gaim_init_novell_plugin(void);
+extern gboolean gaim_init_msn_plugin(void);
+extern gboolean gaim_init_simple_plugin(void);
+extern gboolean gaim_init_yahoo_plugin(void);
+extern gboolean gaim_init_zephyr_plugin(void);
+#ifndef JOSCAR_SUPERCEDE_LIBGAIM
+	extern gboolean gaim_init_oscar_plugin(void);
+#endif
+
 + (void)loadLibgaimPlugins
 {
+	//First, initialize our built-in plugins
+	gaim_init_ssl_plugin();
+	gaim_init_ssl_openssl_plugin();
+	gaim_init_gg_plugin();
+	gaim_init_jabber_plugin();
+	gaim_init_sametime_plugin();
+	gaim_init_sametime_plugin();
+	gaim_init_msn_plugin();
+	gaim_init_novell_plugin();
+	gaim_init_msn_plugin();
+	gaim_init_simple_plugin();
+	gaim_init_yahoo_plugin();
+	gaim_init_zephyr_plugin();
+#ifndef JOSCAR_SUPERCEDE_LIBGAIM
+	gaim_init_oscar_plugin();
+#endif
+	
+	//Next, load any external AdiumLibgaimPlugin bundles
 	NSMutableArray	*pluginArray = [[NSMutableArray alloc] init];
 
 	NSEnumerator	*enumerator;
 	NSString		*libgaimPluginPath;
-	
+
 	enumerator = [[[AIObject sharedAdiumInstance] allResourcesForName:@"Plugins"
 													   withExtensions:@"AdiumLibgaimPlugin"] objectEnumerator];
 	while ((libgaimPluginPath = [enumerator nextObject])) {
@@ -88,12 +122,12 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 								 pluginArray:pluginArray];
 	}
 	
-	//For each plugin, add the search path if there is one
+	//Load each plugin
 	id <AILibgaimPlugin>	plugin;
 	enumerator = [pluginArray objectEnumerator];
 	while ((plugin = [enumerator nextObject])) {
-		if ([plugin respondsToSelector:@selector(libgaimPluginPath)]) {
-			gaim_plugins_add_search_path([[plugin libgaimPluginPath] UTF8String]);
+		if ([plugin respondsToSelector:@selector(installLibgaimPlugin)]) {
+			[plugin installLibgaimPlugin];
 		}
 	}
 }
