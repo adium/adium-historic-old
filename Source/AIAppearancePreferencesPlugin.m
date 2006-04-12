@@ -328,7 +328,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 		NSDictionary 	*themeDict;
 
 		name = [[filePath lastPathComponent] stringByDeletingPathExtension];
-		NSLog(@"Name is %@",name);
+
 		if((xtraBundle = [NSBundle bundleWithPath:filePath]) &&
 		   ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1)) {
 			filePath = [[xtraBundle resourcePath] stringByAppendingPathComponent:@"Data.plist"];
@@ -345,7 +345,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 					nil]];
 				[alreadyAddedArray addObject:name];
 			} else {
-				NSLog(@"Already added");
+				//NSLog(@"Already added");
 			}
 		}
 	}

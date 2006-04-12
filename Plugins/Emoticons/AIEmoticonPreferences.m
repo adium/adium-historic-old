@@ -24,11 +24,14 @@
 #import <AIUtilities/AITableViewAdditions.h>
 #import <AIUtilities/AIGenericViewCell.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIVerticallyCenteredTextCell.h>
+
 #import <Adium/AIListObject.h>
 #import "AIPreferenceController.h"
 
 #define	EMOTICON_PACK_DRAG_TYPE         @"AIEmoticonPack"
 #define EMOTICON_MIN_ROW_HEIGHT         17
+#define EMOTICON_MAX_ROW_HEIGHT			64
 #define EMOTICON_PACKS_TOOLTIP          AILocalizedString(@"Reorder emoticon packs by dragging. Packs are used in the order listed.",nil)
 
 @interface AIEmoticonPreferences (PRIVATE)
@@ -104,11 +107,23 @@
     [checkCell setTitle:@""];
     [checkCell setRefusesFirstResponder:YES];
     [[table_emoticons tableColumnWithIdentifier:@"Enabled"] setDataCell:checkCell];
-	
-	NSImageCell *imageCell = [[[NSImageCell alloc] init] autorelease];
+	[checkCell release];
+
+	NSImageCell *imageCell = [[NSImageCell alloc] initImageCell:nil];
 	if ([imageCell respondsToSelector:@selector(_setAnimates:)]) [imageCell _setAnimates:NO];
+	[[table_emoticons tableColumnWithIdentifier:@"Image"] setDataCell:imageCell];
+	[imageCell release];
+
+	AIVerticallyCenteredTextCell *textCell = [[AIVerticallyCenteredTextCell alloc] init];
+	[textCell setLineBreakMode:NSLineBreakByTruncatingTail];
+	[[table_emoticons tableColumnWithIdentifier:@"Name"] setDataCell:textCell];
+	[textCell release];
 	
-    [[table_emoticons tableColumnWithIdentifier:@"Image"] setDataCell:imageCell];
+	textCell = [[AIVerticallyCenteredTextCell alloc] init];
+	[textCell setLineBreakMode:NSLineBreakByTruncatingTail];
+	[[table_emoticons tableColumnWithIdentifier:@"String"] setDataCell:textCell];
+	[textCell release];
+
     [table_emoticons setDrawsAlternatingRows:YES];
         
     //Observe prefs    
@@ -118,7 +133,7 @@
     [self _configureEmoticonListForSelection];
 
 	[button_OK setLocalizedString:AILocalizedString(@"CloseSheet",nil)];
-
+	
 	//Redisplay the emoticons after an small delay so the sample emoticons line up properly
 	//since the desired width isn't known by AIEmoticonPackCell until once through the list of packs
 	[table_emoticonPacks performSelector:@selector(display) withObject:nil afterDelay:0.0001];
@@ -134,6 +149,7 @@
 	[selectedEmoticonPack release]; selectedEmoticonPack = nil;
 	[emoticonPackPreviewControllers release]; emoticonPackPreviewControllers = nil;
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[emoticonImageCache release]; emoticonImageCache = nil;
 
     //Flush all the images we loaded
     [[adium emoticonController] flushEmoticonImageCache];
@@ -196,8 +212,12 @@
 
         rowHeight = totalHeight / [[selectedEmoticonPack emoticons] count];
         if (rowHeight < EMOTICON_MIN_ROW_HEIGHT) rowHeight = EMOTICON_MIN_ROW_HEIGHT;
+		if (rowHeight > EMOTICON_MAX_ROW_HEIGHT) rowHeight = EMOTICON_MAX_ROW_HEIGHT;
     }
     
+	[emoticonImageCache release];
+	emoticonImageCache = [[NSMutableDictionary alloc] init];
+	
     //Update the table
     [table_emoticons reloadData];
     [table_emoticons setRowHeight:rowHeight];
@@ -269,9 +289,17 @@
             return [NSNumber numberWithBool:[emoticon isEnabled]];
             
         } else if ([identifier isEqualToString:@"Image"]) {
-            return [emoticon image];
-            
-        } else if ([identifier isEqualToString:@"Name"]) {
+			NSNumber *key = [NSNumber numberWithUnsignedInt:[emoticon hash]];
+			NSImage	*image = [emoticonImageCache objectForKey:key];
+			if (!image) {
+				image = [emoticon image];
+				[emoticonImageCache setObject:image
+									   forKey:key];
+			}
+			
+			return image;
+	
+		} else if ([identifier isEqualToString:@"Name"]) {
             if ([selectedEmoticonPack isEnabled] && [emoticon isEnabled]) {
 				return [emoticon name];
             } else {
