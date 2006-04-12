@@ -36,8 +36,6 @@
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIFunctions.h>
 
-#define CONTACT_LIST_SCROLLER_CONTROL_SIZE NSRegularControlSize
-
 #define EDGE_CATCH_X						40
 #define EDGE_CATCH_Y						40
 
@@ -309,7 +307,7 @@ typedef enum {
 		* windows... I'm not sure why it's needed, but it doesn't hurt anything.
 		*/
 		if (desiredHeight + (windowFrame.size.height - viewFrame.size.height) > newWindowFrame.size.height + 2) {
-			float scrollerWidth = [NSScroller scrollerWidthForControlSize:CONTACT_LIST_SCROLLER_CONTROL_SIZE];
+			float scrollerWidth = [NSScroller scrollerWidthForControlSize:[[scrollView_contactList verticalScroller] controlSize]];
 			newWindowFrame.size.width += scrollerWidth;
 			
 			if (anchorToRightEdge) {
