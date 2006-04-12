@@ -15,12 +15,10 @@
  */
 
 #import "SLGaimCocoaAdapter.h"
-#import "AILibgaimPlugin.h"
 
 #import "AIAccountController.h"
 #import "AIInterfaceController.h"
 #import "AILoginController.h"
-#import "AICorePluginLoader.h"
 #import "CBGaimAccount.h"
 #import "CBGaimServicePlugin.h"
 #import "adiumGaimCore.h"
@@ -73,64 +71,6 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 @implementation SLGaimCocoaAdapter
 
-extern gboolean gaim_init_ssl_plugin(void);
-extern gboolean gaim_init_ssl_openssl_plugin(void);
-extern gboolean gaim_init_gg_plugin(void);
-extern gboolean gaim_init_jabber_plugin(void);
-extern gboolean gaim_init_sametime_plugin(void);
-extern gboolean gaim_init_sametime_plugin(void);
-extern gboolean gaim_init_msn_plugin(void);
-extern gboolean gaim_init_novell_plugin(void);
-extern gboolean gaim_init_msn_plugin(void);
-extern gboolean gaim_init_simple_plugin(void);
-extern gboolean gaim_init_yahoo_plugin(void);
-extern gboolean gaim_init_zephyr_plugin(void);
-#ifndef JOSCAR_SUPERCEDE_LIBGAIM
-	extern gboolean gaim_init_oscar_plugin(void);
-#endif
-
-+ (void)loadLibgaimPlugins
-{
-	//First, initialize our built-in plugins
-	gaim_init_ssl_plugin();
-	gaim_init_ssl_openssl_plugin();
-	gaim_init_gg_plugin();
-	gaim_init_jabber_plugin();
-	gaim_init_sametime_plugin();
-	gaim_init_sametime_plugin();
-	gaim_init_msn_plugin();
-	gaim_init_novell_plugin();
-	gaim_init_msn_plugin();
-	gaim_init_simple_plugin();
-	gaim_init_yahoo_plugin();
-	gaim_init_zephyr_plugin();
-#ifndef JOSCAR_SUPERCEDE_LIBGAIM
-	gaim_init_oscar_plugin();
-#endif
-	
-	//Next, load any external AdiumLibgaimPlugin bundles
-	NSMutableArray	*pluginArray = [[NSMutableArray alloc] init];
-
-	NSEnumerator	*enumerator;
-	NSString		*libgaimPluginPath;
-
-	enumerator = [[[AIObject sharedAdiumInstance] allResourcesForName:@"Plugins"
-													   withExtensions:@"AdiumLibgaimPlugin"] objectEnumerator];
-	while ((libgaimPluginPath = [enumerator nextObject])) {
-		[AICorePluginLoader loadPluginAtPath:libgaimPluginPath
-							  confirmLoading:YES
-								 pluginArray:pluginArray];
-	}
-	
-	//Load each plugin
-	id <AILibgaimPlugin>	plugin;
-	enumerator = [pluginArray objectEnumerator];
-	while ((plugin = [enumerator nextObject])) {
-		if ([plugin respondsToSelector:@selector(installLibgaimPlugin)]) {
-			[plugin installLibgaimPlugin];
-		}
-	}
-}
 /*!
  * @brief Called early in the startup process by CBGaimServicePlugin to begin initializing Gaim
  *
@@ -140,9 +80,6 @@ extern gboolean gaim_init_zephyr_plugin(void);
 {
 	SLGaimCocoaAdapter  *gaimCocoaAdapter;
 
-	[self loadLibgaimPlugins];
-
-	//Will not return until the program terminates
     gaimCocoaAdapter = [[self alloc] init];
 }
 
@@ -204,12 +141,6 @@ extern gboolean gaim_init_zephyr_plugin(void);
 	//Set the gaim user directory to be within this user's directory
 	NSString	*gaimUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libgaim"];
 	gaim_util_set_user_dir([[gaimUserDir stringByExpandingTildeInPath] UTF8String]);
-
-	//Add the plugin search path for our built-in .so files
-	NSString	*gaimBundlePath = [[NSBundle bundleForClass:[SLGaimCocoaAdapter class]] bundlePath];
-	NSString	*frameworksPath = [[gaimBundlePath stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"Frameworks"];
-	NSString	*pluginsPath = [[frameworksPath stringByAppendingPathComponent:@"Libgaim.framework"] stringByAppendingPathComponent:@"Resources"];
-	gaim_plugins_add_search_path([pluginsPath UTF8String]);
 
 	gaim_core_set_ui_ops(adium_gaim_core_get_ops());
 	gaim_eventloop_set_ui_ops(adium_gaim_eventloop_get_ui_ops());
