@@ -32,6 +32,7 @@
 		
     NSButtonCell                            *checkCell;
     AIEmoticonPack                          *selectedEmoticonPack;
+	NSMutableDictionary						*emoticonImageCache;
 
     NSArray                                 *dragRows;
 	
