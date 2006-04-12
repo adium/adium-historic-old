@@ -230,7 +230,12 @@
 			} else if ([errorMessageShort isEqualToString:@"TooFrequently"]) {
 				shouldReconnect = NO;
 				NSLog(@"Connecting too frequently!");
-				
+				AILog(@"Connecting too frequently!");
+
+			} else if ([errorMessageShort isEqualToString:@"TemporarilyBlocked"]) {
+				shouldReconnect = NO;
+				NSLog(@"Temporarily blocked!");
+				AILog(@"Temporarily blocked!");
 			} else {
 				NSLog(@"Error message short is %@; code %@",errorMessageShort,
 					  errorCode);
@@ -850,11 +855,10 @@ BOOL isHTMLContact(AIListObject *inListObject)
 }
 
 #pragma mark File Transfer
-- (BOOL)canSendFolders
+- (BOOL)supportsFolderTransfer
 {
 	return YES;
 }
-
 
 - (void)newIncomingFileTransferWithUID:(NSString *)inUID
 							  fileName:(NSString *)fileName
