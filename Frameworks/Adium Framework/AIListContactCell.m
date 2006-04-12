@@ -18,7 +18,6 @@
 #import "AIListLayoutWindowController.h"
 #import "AIListObject.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIBezierPathAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIUserIcons.h>
@@ -368,16 +367,11 @@
 		if (!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
 		
 		//Rounded corners for our user images.
-		[NSGraphicsContext saveGraphicsState];
-		NSBezierPath	*clipPath = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(rect.origin.x, rect.origin.y, [image size].width, [image size].height) radius:3.0];
-		[clipPath addClip];
-		rect = [image drawInRect:rect
-						  atSize:userIconSize
-						position:position
-						fraction:[self imageOpacityForDrawing]];
-		//safety since I'm not sure exactly how the contact list depends on all this to draw.
-		[clipPath removeAllPoints];
-		[NSGraphicsContext restoreGraphicsState];
+		rect = [image drawRoundedInRect:rect
+								atSize:userIconSize
+							  position:position
+							  fraction:[self imageOpacityForDrawing]
+								radius:(userIconSize.width/4.0)];
 		
 		//If we're using space on the left, shift the origin right
 		if (position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_LEFT_PAD;
