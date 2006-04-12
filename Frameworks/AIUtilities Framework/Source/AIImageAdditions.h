@@ -37,6 +37,9 @@ typedef enum {
 + (NSImage *)imageFromGWorld:(GWorldPtr)gWorldPtr;
 + (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state controlTint:(NSControlTint)inTint;
 + (NSImage *)systemCheckmark;
+- (NSRect)drawRoundedInRect:(NSRect)rect radius:(float)radius;
+- (NSRect)drawRoundedInRect:(NSRect)rect fraction:(float)fraction radius:(float)radius;
+- (NSRect)drawRoundedInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position fraction:(float)fraction radius:(float)radius;
 - (NSRect)drawInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position fraction:(float)fraction;
 - (NSRect)rectForDrawingInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position;
 

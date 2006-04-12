@@ -9,6 +9,7 @@
 #import "pxmLib.h"
 
 #import "AIExceptionHandlingUtilities.h"
+#import "AIBezierPathAdditions.h"
 
 #define RESOURCE_ID_CLOSE_BUTTON_AQUA       201
 #define RESOURCE_ID_CLOSE_BUTTON_GRAPHITE   10191
@@ -474,6 +475,64 @@
 	return drawRect;
 }
 
+//General purpose draw image rounded in a NSRect.
+- (NSRect)drawRoundedInRect:(NSRect)rect radius:(float)radius
+{
+	return [self drawRoundedInRect:rect atSize:NSMakeSize(0,0) position:nil fraction:1.0 radius:radius];
+}
+
+//Perhaps if you desired to draw it rounded in the tooltip.
+- (NSRect)drawRoundedInRect:(NSRect)rect fraction:(float)fraction radius:(float)radius
+{
+	return [self drawRoundedInRect:rect atSize:NSMakeSize(0,0) position:nil fraction:fraction radius:radius];
+}
+
+//Draw an image, round the corner. Meant to replace the method above.
+- (NSRect)drawRoundedInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position fraction:(float)fraction radius:(float)radius
+{
+	NSRect	drawRect;
+	
+	//We use our own size for drawing purposes no matter the passed size to avoid distorting the image via stretching
+	NSSize	ownSize = [self size];
+	
+	//If we're passed a 0,0 size, use the image's size for the area taken up by the image 
+	//(which may exceed the actual image dimensions)
+	if (size.width == 0 || size.height == 0) size = ownSize;
+	
+	drawRect = [self rectForDrawingInRect:rect atSize:size position:position];
+	
+	//If we are drawing in a rect wider than we are, center horizontally
+	if (drawRect.size.width > ownSize.width) {
+		drawRect.origin.x += (drawRect.size.width - ownSize.width) / 2;
+		drawRect.size.width -= (drawRect.size.width - ownSize.width);
+	}
+	
+	//If we are drawing in a rect higher than we are, center vertically
+	if (drawRect.size.height > ownSize.height) {
+		drawRect.origin.y += (drawRect.size.height - ownSize.height) / 2;
+		drawRect.size.height -= (drawRect.size.height - ownSize.height);
+	}
+	
+	//Create Rounding.
+	[NSGraphicsContext saveGraphicsState];
+	NSBezierPath	*clipPath = [NSBezierPath bezierPathWithRoundedRect:drawRect radius:radius];
+	[clipPath addClip];
+	
+	//Draw
+	[self drawInRect:drawRect
+			fromRect:NSMakeRect(0, 0, ownSize.width, ownSize.height)
+		   operation:NSCompositeSourceOver
+			fraction:fraction];
+	
+	[clipPath removeAllPoints];
+	[NSGraphicsContext restoreGraphicsState];
+	//Shift the origin if needed, and decrease the available destination rect width, by the passed size
+	//(which may exceed the actual image dimensions)
+	if (position == IMAGE_POSITION_LEFT) rect.origin.x += size.width;
+	rect.size.width -= size.width;
+	
+	return rect;
+}
 
 /* From GimmeGIF by Stone Design Software */
 
