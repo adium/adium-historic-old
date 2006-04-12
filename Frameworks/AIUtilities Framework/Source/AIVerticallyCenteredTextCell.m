@@ -25,7 +25,7 @@
 - (id)init
 {
 	if ((self = [super init])) {
-		lineBreakMode = /*NSLineBreakByTruncatingTail*/ NSLineBreakByWordWrapping;
+		[self setLineBreakMode:NSLineBreakByWordWrapping];
 	}
 
 	return self;
@@ -57,7 +57,7 @@
 		//Paragraph style for alignment and clipping
 		NSMutableParagraphStyle *style = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 		[style setAlignment:[self alignment]];
-		[style setLineBreakMode:lineBreakMode];
+		[style setLineBreakMode:[self lineBreakMode]];
 
 		//
 		if (font) {
