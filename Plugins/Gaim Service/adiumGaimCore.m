@@ -28,6 +28,9 @@
 #import "adiumGaimSignals.h"
 #import "adiumGaimWebcam.h"
 
+#import "SLGaimCocoaAdapter.h"
+#import "AILibgaimPlugin.h"
+#import <Adium/AICorePluginLoader.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 
 #pragma mark Debug
@@ -57,6 +60,66 @@ GaimDebugUiOps *adium_gaim_debug_get_ui_ops(void)
 #endif
 
 // Core ------------------------------------------------------------------------------------------------------
+
+extern gboolean gaim_init_ssl_plugin(void);
+extern gboolean gaim_init_ssl_openssl_plugin(void);
+extern gboolean gaim_init_gg_plugin(void);
+extern gboolean gaim_init_jabber_plugin(void);
+extern gboolean gaim_init_sametime_plugin(void);
+extern gboolean gaim_init_sametime_plugin(void);
+extern gboolean gaim_init_msn_plugin(void);
+extern gboolean gaim_init_novell_plugin(void);
+extern gboolean gaim_init_msn_plugin(void);
+extern gboolean gaim_init_simple_plugin(void);
+extern gboolean gaim_init_yahoo_plugin(void);
+extern gboolean gaim_init_zephyr_plugin(void);
+#ifndef JOSCAR_SUPERCEDE_LIBGAIM
+	extern gboolean gaim_init_oscar_plugin(void);
+#endif
+
+static void load_all_plugins()
+{
+	//First, initialize our built-in plugins
+	gaim_init_ssl_plugin();
+	gaim_init_ssl_openssl_plugin();
+	gaim_init_gg_plugin();
+	gaim_init_jabber_plugin();
+	gaim_init_sametime_plugin();
+	gaim_init_sametime_plugin();
+	gaim_init_msn_plugin();
+	gaim_init_novell_plugin();
+	gaim_init_msn_plugin();
+	gaim_init_simple_plugin();
+	gaim_init_yahoo_plugin();
+	gaim_init_zephyr_plugin();
+#ifndef JOSCAR_SUPERCEDE_LIBGAIM
+	gaim_init_oscar_plugin();
+#endif
+	
+	//Next, load any external AdiumLibgaimPlugin bundles. We're delibrately leaking this array to keep the plugins in memory...
+	NSMutableArray	*pluginArray = [[NSMutableArray alloc] init];
+	
+	NSEnumerator	*enumerator;
+	NSString		*libgaimPluginPath;
+	
+	enumerator = [[[AIObject sharedAdiumInstance] allResourcesForName:@"Plugins"
+													   withExtensions:@"AdiumLibgaimPlugin"] objectEnumerator];
+	while ((libgaimPluginPath = [enumerator nextObject])) {
+		[AICorePluginLoader loadPluginAtPath:libgaimPluginPath
+							  confirmLoading:YES
+								 pluginArray:pluginArray];
+	}
+	
+	//Load each plugin
+	id <AILibgaimPlugin>	plugin;
+	enumerator = [pluginArray objectEnumerator];
+	while ((plugin = [enumerator nextObject])) {
+		if ([plugin respondsToSelector:@selector(installLibgaimPlugin)]) {
+			[plugin installLibgaimPlugin];
+		}
+	}
+}
+
 static void adiumGaimPrefsInit(void)
 {
     //Disable gaim away handling - we do it ourselves
@@ -82,6 +145,9 @@ static void adiumGaimPrefsInit(void)
 
 	//Ensure we are using caching
 	gaim_buddy_icons_set_caching(TRUE);
+	
+	//Load all plugins. This could be done in STATIC_PROTO_INIT in libgaim's config.h at build time, but doing it here allows easier changes.
+	load_all_plugins();
 }
 
 static void adiumGaimCoreDebugInit(void)
