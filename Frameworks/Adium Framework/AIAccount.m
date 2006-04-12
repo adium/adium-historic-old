@@ -190,6 +190,18 @@
 	return YES;
 }
 
+/*!
+ * @brief Support sending folders directly via file transfer
+ *
+ * Some protocols allow sending of an entire folder (recursively).  Subclasses may return YES to allow this.
+ * If NO, the file transfer controller will automatically compress specified folders to a single file before attempting
+ * a file transfser.
+ */
+- (BOOL)supportsFolderTransfer
+{
+	return NO;
+}
+
 /*
  * @brief Called once the display name has been properly filtered
  *

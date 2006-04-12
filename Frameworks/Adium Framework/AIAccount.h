@@ -139,6 +139,7 @@ typedef enum {
 - (BOOL)suppressTypingNotificationChangesAfterSend;
 - (BOOL)supportsOfflineMessaging;
 - (BOOL)allowsNewlinesInMessages;
+- (BOOL)supportsFolderTransfer;
 
 //Status
 - (NSSet *)supportedPropertyKeys;
