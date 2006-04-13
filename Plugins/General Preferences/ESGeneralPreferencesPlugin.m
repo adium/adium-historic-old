@@ -80,7 +80,6 @@
 	}
 
 	//Switch to the appropriate window, just like clicking the dock; this method will handle switching to a chat with unviewed content, for example.
-	NSLog(@"Do it.");
 	[[adium interfaceController] handleReopenWithVisibleWindows:NO];
 }
 
@@ -91,7 +90,7 @@
 		if (globalHotKey) {
 			//Unregister the old global hot key if it exists
 			[[PTHotKeyCenter sharedCenter] unregisterHotKey:globalHotKey];
-			[globalHotKey release];
+			[globalHotKey release]; globalHotKey = nil;
 		}
 		
 		id plistRepresentation = [prefDict objectForKey:KEY_GENERAL_HOTKEY];
