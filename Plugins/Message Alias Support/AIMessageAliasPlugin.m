@@ -44,62 +44,60 @@
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
-	NSMutableAttributedString	*filteredMessage = nil;
-	
-	if (inAttributedString) {
-		//Filter keywords in the message
-		filteredMessage = [self replaceKeywordsInString:inAttributedString context:context];
-		
-		//Filter keywords in URLs (For AIM subprofile links, mostly)
-		int	length = [(filteredMessage ? filteredMessage : inAttributedString) length];
-		NSRange scanRange = NSMakeRange(0, 0);
-		while (NSMaxRange(scanRange) < length) {
-			id linkURL = [(filteredMessage ? filteredMessage : inAttributedString) attribute:NSLinkAttributeName
-																					 atIndex:NSMaxRange(scanRange)
-																			  effectiveRange:&scanRange];
-			if (linkURL) {
-				NSString	*linkURLString;
+	if (!inAttributedString || ![inAttributedString length]) return inAttributedString;
+
+	//Filter keywords in the message
+	NSMutableAttributedString	*filteredMessage = [self replaceKeywordsInString:inAttributedString context:context];;
+
+	//Filter keywords in URLs (For AIM subprofile links, mostly)
+	int	length = [(filteredMessage ? filteredMessage : inAttributedString) length];
+	NSRange scanRange = NSMakeRange(0, 0);
+	while (NSMaxRange(scanRange) < length) {
+		id linkURL = [(filteredMessage ? filteredMessage : inAttributedString) attribute:NSLinkAttributeName
+																				 atIndex:NSMaxRange(scanRange)
+																		  effectiveRange:&scanRange];
+		if (linkURL) {
+			NSString	*linkURLString;
+			
+			if ([linkURL isKindOfClass:[NSURL class]]) {
+				linkURLString = (NSString *)CFURLCreateStringByReplacingPercentEscapes(kCFAllocatorDefault,
+																					   (CFStringRef)[(NSURL *)linkURL absoluteString],
+																					   /* characters to leave escaped */ CFSTR(""));
+				[linkURLString autorelease];
 				
-				if ([linkURL isKindOfClass:[NSURL class]]) {
-					linkURLString = (NSString *)CFURLCreateStringByReplacingPercentEscapes(kCFAllocatorDefault,
-																						   (CFStringRef)[(NSURL *)linkURL absoluteString],
-																						   /* characters to leave escaped */ CFSTR(""));
-					[linkURLString autorelease];
-					
-				} else {
-					linkURLString = (NSString *)linkURL;
-				}
+			} else {
+				linkURLString = (NSString *)linkURL;
+			}
+			
+			if (linkURLString) {
+				//If we found a URL, replace any keywords within it
+				NSString	*result = [[self replaceKeywordsInString:[NSAttributedString stringWithString:linkURLString]
+															 context:context] string];
 				
-				if (linkURLString) {
-					//If we found a URL, replace any keywords within it
-					NSString	*result = [[self replaceKeywordsInString:[NSAttributedString stringWithString:linkURLString]
-																 context:context] string];
+				if (result) {
+					NSURL		*newURL;
+					NSString	*escapedLinkURLString;
 					
-					if (result) {
-						NSURL		*newURL;
-						NSString	*escapedLinkURLString;
-						
-						if (!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
-						escapedLinkURLString = (NSString *)CFURLCreateStringByAddingPercentEscapes(/* allocator */ kCFAllocatorDefault,
-																								   (CFStringRef)result,
-																								   /* characters to leave unescaped */ NULL,
-																								   /* legal characters to escape */ NULL,
-																								   kCFStringEncodingUTF8);
-						newURL = [NSURL URLWithString:escapedLinkURLString];
-						
-						if (newURL) {
-							[filteredMessage addAttribute:NSLinkAttributeName
-													value:newURL
-													range:scanRange];
-						}
-						[escapedLinkURLString release];
+					if (!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
+					escapedLinkURLString = (NSString *)CFURLCreateStringByAddingPercentEscapes(/* allocator */ kCFAllocatorDefault,
+																							   (CFStringRef)result,
+																							   /* characters to leave unescaped */ NULL,
+																							   /* legal characters to escape */ NULL,
+																							   kCFStringEncodingUTF8);
+					newURL = [NSURL URLWithString:escapedLinkURLString];
+					
+					if (newURL) {
+						[filteredMessage addAttribute:NSLinkAttributeName
+												value:newURL
+												range:scanRange];
 					}
+					[escapedLinkURLString release];
 				}
 			}
 		}
 	}
 	
-    return filteredMessage ? filteredMessage : inAttributedString;
+    return (filteredMessage ? filteredMessage : inAttributedString);
 }
 
 - (float)filterPriority
