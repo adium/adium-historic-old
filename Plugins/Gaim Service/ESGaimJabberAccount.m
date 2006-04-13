@@ -311,7 +311,8 @@
 	BOOL shouldReconnect = YES;
 	
 	if (disconnectionError && *disconnectionError) {
-		if ([*disconnectionError rangeOfString:@"401"].location != NSNotFound) {
+		if (([*disconnectionError rangeOfString:@"401"].location != NSNotFound) ||
+			([*disconnectionError rangeOfString:@"Authentication Failure"].location != NSNotFound)) {
 			shouldReconnect = NO;
 
 			/* Automatic registration attempt */
@@ -335,9 +336,6 @@
 
 		} else if ([*disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound) {
 			shouldReconnect = NO;
-
-		} else if ([*disconnectionError rangeOfString:@"Authentication Failure"].location != NSNotFound) {
-			[self serverReportedInvalidPassword];
 		}
 	}
 	
