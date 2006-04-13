@@ -46,14 +46,19 @@
 
     NSParameterAssert(path != nil); NSParameterAssert([path length] != 0);
     NSParameterAssert(name != nil); NSParameterAssert([name length] != 0);
-    
-    //open the dictionary
-    dictionary = [NSDictionary dictionaryWithContentsOfFile:[[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]];
 
-    //if the dictionary doesn't exist, create and return a new one
-    if (dictionary == nil && create) {
-        dictionary = [NSDictionary dictionary];
-    }
+	NSData *plistData;
+	NSString *error;
+
+	plistData = [[NSData alloc] initWithContentsOfFile:[[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]];
+	
+	dictionary = [NSPropertyListSerialization propertyListFromData:plistData
+												  mutabilityOption:NSPropertyListImmutable
+															format:NULL
+												  errorDescription:&error];
+	[plistData release];
+
+	if (!dictionary && create) dictionary = [NSDictionary dictionary];
 
     return dictionary;
 }
@@ -65,7 +70,17 @@
     NSParameterAssert(name != nil); NSParameterAssert([name length] != 0);
 
 	[[NSFileManager defaultManager] createDirectoriesForPath:path]; //make sure the path exists
-    return ([self writeToFile:[[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"] atomically:YES]);
+	
+	NSData *plistData;
+	plistData = [NSPropertyListSerialization dataFromPropertyList:self
+														   format:NSPropertyListBinaryFormat_v1_0
+												 errorDescription:NULL];
+	if (plistData) {
+		return [plistData writeToFile:[[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]
+						   atomically:YES];
+	} else {
+		return NO;
+	}
 }
 
 - (NSDictionary *)dictionaryByTranslating:(NSDictionary *)translation adding:(NSDictionary *)addition removing:(NSSet *)removal
@@ -94,21 +109,27 @@
 // returns the dictionary from the specified path
 + (NSMutableDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create
 {
-    NSMutableDictionary	*dictionary;
-
+	NSMutableDictionary	*dictionary;
+	
     NSParameterAssert(path != nil); NSParameterAssert([path length] != 0);
     NSParameterAssert(name != nil); NSParameterAssert([name length] != 0);
-    
-    //open the dictionary
-    dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.plist",path,name]];
+	
+	NSData *plistData;
+	NSString *error;
+	
+	plistData = [[NSData alloc] initWithContentsOfFile:[[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]];
+	
+	dictionary = [NSPropertyListSerialization propertyListFromData:plistData
+												  mutabilityOption:NSPropertyListMutableContainers
+															format:NULL
+												  errorDescription:&error];
+	[plistData release];
 
-    //if the dictionary doesn't exist, create and return a new one
-    if (dictionary == nil && create) {
-        dictionary = [NSMutableDictionary dictionary];
-    }
-
+	if (!dictionary && create) dictionary = [NSMutableDictionary dictionary];
+	
     return dictionary;
 }
+
 
 - (void)translate:(NSDictionary *)translation add:(NSDictionary *)addition remove:(NSSet *)removal
 {
