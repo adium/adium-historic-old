@@ -64,7 +64,9 @@ extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
 	CFTimeInterval idleTime;
 
-	//CGSSecondsSinceLastInputEvent is a private function available in 10.2 and later
+	/* CGSSecondsSinceLastInputEvent is a private function available in 10.2 and later. Note that CGEventSourceSecondsSinceLastEventType()
+	 * should work as of 10.4 but doesn't return a sensical value.
+	 */
 	idleTime = CGSSecondsSinceLastInputEvent(-1);
 	
 	/* On MDD Powermacs, the above function will return a large value when the machine is active (perhaps a -1?).
