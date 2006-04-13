@@ -534,11 +534,17 @@
 - (NSImage *)baseApplicationIconImage
 {
 	NSDictionary	*availableIcons = [availableIconStateDict objectForKey:@"State"];
-	AIIconState		*iconState;
+	AIIconState		*baseState;
+	NSImage			*baseApplicationIconImage;
+
+	if ((baseState = [availableIcons objectForKey:@"Base"])) {
+		AIIconState		*iconState = [[[AIIconState alloc] initByCompositingStates:[NSArray arrayWithObject:baseState]] autorelease];
+		baseApplicationIconImage = [iconState image];
+	} else {
+		baseApplicationIconImage = nil;
+	}
 	
-	iconState = [[[AIIconState alloc] initByCompositingStates:[NSArray arrayWithObject:[availableIcons objectForKey:@"Base"]]] autorelease];
-	
-	return [iconState image];
+	return baseApplicationIconImage;
 }
 
 //Bouncing -------------------------------------------------------------------------------------------------------------
