@@ -48,7 +48,9 @@
 #define	STORE_URL_TRIGGER			AILocalizedString(@"%_iTMS","Trigger for an iTunes Music Store link to the currently playing iTunes song")
 #define MUSIC_TRIGGER				AILocalizedString(@"%_music","Command which triggers *is listening to %_track by %_artist*")
 #define CURRENT_TRACK_TRIGGER		AILocalizedString(@"%_iTunes","Trigger for the song - artist of the currently playing iTunes song")
-#define CURRENT_ITUNES_TRACK		AILocalizedString(@"Current iTunes Track", "Title of the status item for the currently playing iTunes song")
+
+#define	MUSICAL_NOTE				[NSString stringWithUTF8String:"\342\231\253"]
+#define CURRENT_ITUNES_TRACK		[NSString stringWithFormat:@"%@ iTunes", MUSICAL_NOTE]
 
 #define TOOLBAR_LABEL				AILocalizedString(@"iTunes","Label for iTunes toolbar menu item.")
 
