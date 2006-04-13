@@ -238,7 +238,10 @@
 - (void)setUserIconSize:(int)inSize
 {
 	userIconSize = NSMakeSize(inSize, inSize);
+	userIconRoundingRadius = (userIconSize.width / 4.0);
+	if (userIconRoundingRadius > 3) userIconRoundingRadius = 3;
 }
+
 - (int)userIconSize{
 	return userIconSize.height;
 }
@@ -365,14 +368,14 @@
 		
 		image = [self userIconImage];
 		if (!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
-		
+
 		//Rounded corners for our user images.
 		rect = [image drawRoundedInRect:rect
-								atSize:userIconSize
-							  position:position
-							  fraction:[self imageOpacityForDrawing]
-								radius:(userIconSize.width/4.0)];
-		
+								 atSize:userIconSize
+							   position:position
+							   fraction:[self imageOpacityForDrawing]
+								 radius:userIconRoundingRadius];
+
 		//If we're using space on the left, shift the origin right
 		if (position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_LEFT_PAD;
 		rect.size.width -= USER_ICON_LEFT_PAD;
