@@ -239,10 +239,10 @@ typedef enum {
 			}
 		}		
 	}
-	
-	
-    //Compute boundingFrame for window     
+
 	/*
+	 * Compute boundingFrame for window
+	 *
 	 * If the window is against the left or right edges of the screen AND the user did not dock to the visibleFrame last,
 	 * we use the full screenFrame as our bound.
 	 * The edge check is used since most users' docks will not extend to the edges of the screen.
@@ -303,9 +303,9 @@ typedef enum {
 
 	if (useDesiredWidth) {
 		/* If the desired height plus any toolbar height exceeds the height we determined, we will be showing a scroller; 
-		* expand horizontally to take that into account.  The magic number 2 fixes this method for use with our borderless
-		* windows... I'm not sure why it's needed, but it doesn't hurt anything.
-		*/
+		 * expand horizontally to take that into account.  The magic number 2 fixes this method for use with our borderless
+		 * windows... I'm not sure why it's needed, but it doesn't hurt anything.
+		 */
 		if (desiredHeight + (windowFrame.size.height - viewFrame.size.height) > newWindowFrame.size.height + 2) {
 			float scrollerWidth = [NSScroller scrollerWidthForControlSize:[[scrollView_contactList verticalScroller] controlSize]];
 			newWindowFrame.size.width += scrollerWidth;
