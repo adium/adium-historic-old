@@ -136,6 +136,7 @@
                 "menu_Dock_Status" = id; 
                 "menu_Edit_Additions" = id; 
                 "menu_Edit_Bottom" = id; 
+                "menu_Edit_Links" = id; 
                 "menu_File_Accounts" = id; 
                 "menu_File_Additions" = id; 
                 "menu_File_Close" = id; 
