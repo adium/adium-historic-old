@@ -221,7 +221,7 @@
 #pragma mark Account state and status
 - (void)stateChangedTo:(NSString *)newState errorMessageShort:(NSString *)errorMessageShort errorCode:(NSString *)errorCode
 {
-	AILog(@"%@: State changed to %@ (%@ - %@)",self,newState,errorMessaegShort,errorCode);
+	AILog(@"%@: State changed to %@ (%@ - %@)",self,newState,errorMessageShort,errorCode);
 
 	if ([newState isEqualToString:@"FAILED"] || [newState isEqualToString:@"DISCONNECTED"]) {
 		[self didDisconnect];
