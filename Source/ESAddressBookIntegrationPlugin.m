@@ -723,7 +723,8 @@ NSString* serviceIDForJabberUID(NSString *UID);
 			
 			person = [self _searchForUID:UID serviceID:serviceID];
 			
-			/* If we don't find anything yet, look at alternative service possibilities, AIM <--> ICQ,
+			/* If we don't find anything yet, look at alternative service possibilities:
+			 *    AIM <--> ICQ
 			 */
 			if (!person) {
 				if ([serviceID isEqualToString:@"AIM"]) {
@@ -757,6 +758,9 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	} else if ([serviceID isEqualToString:@"GTalk"]) {
 		dict = [addressBookDict objectForKey:@"Jabber"];
 
+	} else if ([serviceID isEqualToString:@"Yahoo! Japan"]) {
+		dict = [addressBookDict objectForKey:@"Yahoo!"];
+		
 	} else {
 		dict = [addressBookDict objectForKey:serviceID];
 	} 
