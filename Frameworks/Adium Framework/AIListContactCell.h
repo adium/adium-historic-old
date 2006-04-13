@@ -37,6 +37,7 @@
 	BOOL				statusIconsVisible;
 	BOOL				serviceIconsVisible;
 	NSSize				userIconSize;
+	int					userIconRoundingRadius;
 	int					statusFontHeight;	
 	
 	BOOL				backgroundColorIsStatus;
