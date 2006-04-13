@@ -42,7 +42,7 @@ typedef enum {
     Context_Contact_Additions, Context_Contact_ChatAction, Context_Contact_Stranger_ChatAction, Context_Contact_ListAction,
 	Context_Contact_GroupChatAction,
 	Context_Tab_Action,
-	Context_TextView_Edit
+	Context_TextView_LinkEditing, Context_TextView_Edit
 } CONTEXT_MENU_LOCATION;
 
 @interface AIMenuController : NSObject <AIController> {

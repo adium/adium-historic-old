@@ -52,7 +52,7 @@
 																	 target:self
 																	 action:@selector(editFormattedLink:)
 															  keyEquivalent:@""] autorelease];
-    [[adium menuController] addContextualMenuItem:menuItem toLocation:Context_TextView_Edit];
+    [[adium menuController] addContextualMenuItem:menuItem toLocation:Context_TextView_LinkEditing];
     [self registerToolbarItem];
 	
     //rm link context
@@ -60,7 +60,7 @@
 																	 target:self
 																	 action:@selector(removeFormattedLink:)
 															  keyEquivalent:@""] autorelease];
-    [[adium menuController] addContextualMenuItem:menuItem toLocation:Context_TextView_Edit];
+    [[adium menuController] addContextualMenuItem:menuItem toLocation:Context_TextView_LinkEditing];
 }
 
 - (void)uninstallPlugin
