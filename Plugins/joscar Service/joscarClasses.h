@@ -525,7 +525,7 @@
 @interface OutgoingFileTransfer : FileTransfer {}
 - (void)sendRequest:(InvitationMessage *)invitationMessage;
 - (id<Collection>)getFiles;
-- (void)addFilesInHierarchy:(NSString *)string :(id)root :(id<Collection>)list;
+- (void)addFilesInHierarchy:(NSString *)string :(File *)root :(id<Collection> /*File * */)list;
 - (void)addFilesInFlatFolder:(NSString *)string :(id<Collection>)list;
 - (void)addFile:(File *)file;
 - (void)setSingleFile:(File *)file;

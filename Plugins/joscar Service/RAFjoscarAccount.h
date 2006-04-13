@@ -13,6 +13,8 @@
 @interface RAFjoscarAccount : AIAccount <AIAccount_Privacy> {
 	ESjoscarCocoaAdapter	*joscarAdapter;
 	NSMutableDictionary		*fileTransferDict;
+	
+	BOOL					inSignOnDelay;
 }
 
 - (NSString *)serversideUID;
