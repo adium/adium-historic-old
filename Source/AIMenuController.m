@@ -52,7 +52,7 @@
 	//Build the array of menu locations
 	locationArray = [[NSMutableArray alloc] initWithObjects:menu_Adium_About, menu_Adium_Preferences,
 		menu_File_New, menu_File_Close, menu_File_Save, menu_File_Accounts, menu_File_Additions,	
-		menu_Edit_Bottom, menu_Edit_Additions,
+		menu_Edit_Bottom, menu_Edit_Links, menu_Edit_Additions,
 		menu_View_General, menu_View_Sorting, menu_View_Toggles, menu_View_Appearance_Toggles, menu_View_Additions, 
 		menu_Contact_Manage, menu_Contact_Info, menu_Contact_Action, menu_Contact_NegativeAction, menu_Contact_Additions,
 		menu_Status_State, menu_Status_Accounts, menu_Status_Additions,

@@ -45,7 +45,7 @@
 																	 target:self
 																	 action:@selector(editFormattedLink:)
 															  keyEquivalent:@"k"] autorelease];
-    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Edit_Additions];
+    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Edit_Links];
     
     //Context menu
     menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:EDIT_LINK_TITLE
