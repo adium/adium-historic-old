@@ -703,20 +703,52 @@
 
 #pragma mark Contextual Menus
 
-+ (NSMenu *)defaultMenu
+- (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
 	NSMenu			*contextualMenu = nil;
 	
 	NSArray			*itemsArray = nil;
 	NSEnumerator    *enumerator;
 	NSMenuItem		*menuItem;
-	
-	//Grab NSTextView's default menu, copying so we don't effect menus elsewhere
-	contextualMenu = [[super defaultMenu] copy];
-	
+	BOOL			addedOurLinkItems = NO;
+
+	if ((contextualMenu = [super menuForEvent:theEvent])) {		
+		enumerator = [[contextualMenu itemArray] objectEnumerator];
+		NSMenuItem	*editLinkItem = nil;
+		while ((menuItem = [enumerator nextObject])) {
+			if ([[menuItem title] rangeOfString:AILocalizedString(@"Edit Link", nil)].location != NSNotFound) {
+				NSLog(@"menu item is %@",menuItem);
+				editLinkItem = menuItem;
+				break;
+			}
+		}
+
+		if (editLinkItem) {
+			//There was an Edit Link item.  Remove it, and add out own link editing items in its place.
+			int editIndex = [contextualMenu indexOfItem:editLinkItem];
+			[contextualMenu removeItem:editLinkItem];
+			
+			NSMenu  *linkItemsMenu = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObject:
+				[NSNumber numberWithInt:Context_TextView_LinkEditing]]
+																								  forTextView:self];
+			
+			enumerator = [[linkItemsMenu itemArray] objectEnumerator];
+			while ((menuItem = [enumerator nextObject])) {
+				[contextualMenu insertItem:[[menuItem copy] autorelease] atIndex:editIndex++];
+			}
+			
+			addedOurLinkItems = YES;
+		}
+	} else {
+		contextualMenu = [[NSMenu alloc] init];	
+	}
+
 	//Retrieve the items which should be added to the bottom of the default menu
-	NSMenu  *adiumMenu = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObject:
-		[NSNumber numberWithInt:Context_TextView_Edit]]
+	NSArray	*locationArray = (addedOurLinkItems ?
+							  [NSArray arrayWithObject:[NSNumber numberWithInt:Context_TextView_Edit]] :
+							  [NSArray arrayWithObjects:[NSNumber numberWithInt:Context_TextView_LinkEditing], 
+								  [NSNumber numberWithInt:Context_TextView_Edit], nil]);
+	NSMenu  *adiumMenu = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:locationArray
 																						  forTextView:self];
 	itemsArray = [adiumMenu itemArray];
 	
@@ -737,7 +769,7 @@
 		}
 	}
 	
-    return [contextualMenu autorelease];
+    return contextualMenu;
 }
 
 #pragma mark Drag and drop
