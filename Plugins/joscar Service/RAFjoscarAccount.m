@@ -69,11 +69,14 @@
 		[ESjoscarCocoaAdapter initializeJavaVM];
 		beganInitializingJavaVM = YES;
 	}
+	
+	inSignOnDelay = NO;
 }
 
 - (void)dealloc
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[fileTransferDict release]; fileTransferDict = nil;
 
 	[super dealloc];
 }
@@ -218,6 +221,8 @@
 #pragma mark Account state and status
 - (void)stateChangedTo:(NSString *)newState errorMessageShort:(NSString *)errorMessageShort errorCode:(NSString *)errorCode
 {
+	AILog(@"%@: State changed to %@ (%@ - %@)",self,newState,errorMessaegShort,errorCode);
+
 	if ([newState isEqualToString:@"FAILED"] || [newState isEqualToString:@"DISCONNECTED"]) {
 		[self didDisconnect];
 		
@@ -248,20 +253,25 @@
 		
 	} else if ([newState isEqualToString:@"SIGNINGON"]) {
 		//At the start of signing on, we'll get a bunch of object notifications in rapid succession... group 'em
-		[[adium contactController] delayListObjectNotifications];
+		if (!inSignOnDelay) {
+			[[adium contactController] delayListObjectNotifications];
+			inSignOnDelay = YES;
+		}
 		
 	} else if ([newState isEqualToString:@"ONLINE"]) {
 		//Now end the grouping we started in SIGNINGON
-		[[adium contactController] endListObjectNotificationsDelay];
-
+		if (inSignOnDelay) {
+			[[adium contactController] endListObjectNotificationsDelay];
+			inSignOnDelay = NO;
+		}
+		
 		//We're connected!
 		[self didConnect];
 		
 		//Silence subsequent initial updates as they come in over the next 10 seconds or so
-		[self silenceAllContactUpdatesForInterval:10.0];
+		[self silenceAllContactUpdatesForInterval:18.0];
 		[[adium contactController] delayListObjectNotificationsUntilInactivity];
 	}
-	
 }
 
 - (void)didConnect
@@ -270,6 +280,16 @@
 	
 	[self updateStatusForKey:@"TextProfile"];
 	[self updateStatusForKey:KEY_USER_ICON];
+}
+
+- (void)didDisconnect
+{
+	[super didDisconnect];
+
+	if (inSignOnDelay) {
+		[[adium contactController] endListObjectNotificationsDelay];
+		inSignOnDelay = NO;
+	}
 }
 
 #pragma mark Status Messages and Idle

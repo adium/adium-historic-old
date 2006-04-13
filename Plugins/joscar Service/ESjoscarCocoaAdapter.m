@@ -745,6 +745,66 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[fileTransfer close];
 }
 
+- (void)addPaths:(NSArray *)pathArray toOutgoingFileTransfer:(OutgoingFileTransfer *)outgoingFileTransfer
+{
+	NSEnumerator	*enumerator;
+	ArrayList		*fileList = [NewArrayList() autorelease];
+	NSFileManager	*defaultManager = [NSFileManager defaultManager];
+	NSString		*path;
+	NSString		*commonPrefix = nil;
+
+	//Build an ArrayList
+	enumerator = [pathArray objectEnumerator];
+	while ((path = [enumerator nextObject])) {		
+		BOOL	isDir;
+
+		if ([defaultManager fileExistsAtPath:path isDirectory:&isDir] &&
+			!isDir) {
+			//Looking at a file, add it directly
+			[fileList add:[NewFile(path) autorelease]];
+
+		} else {
+			//Looking at a directory
+			NSDirectoryEnumerator	*pathEnumerator = [defaultManager enumeratorAtPath:path];
+			NSString				*filename;
+			
+			while ((filename = [pathEnumerator nextObject])) {
+				//Only add regular files
+				if ([[[pathEnumerator fileAttributes] objectForKey:NSFileType] isEqualToString:NSFileTypeRegular]) {
+					[fileList add:[NewFile([path stringByAppendingPathComponent:filename]) autorelease]];
+				}
+			}
+		}
+		
+		if (!commonPrefix) {
+			commonPrefix = path;
+		} else {
+			commonPrefix = [commonPrefix commonPrefixWithString:path options:NSLiteralSearch];
+		}
+	}
+
+	/**
+	 * documentation for addFilesInHierarchy:
+	 * Adds each file in {@code files} under the given {@code root}. Each file
+	 * will be sent with its full relative path from the {@code root}, not
+	 * including the {@code root}'s name, but prefixed with the {@code folderName}.
+	 *
+	 * For example, calling this method with folderName of "cool", root
+	 * "/home/klea/xyz", and files "/home/klea/xyz/file1" &amp;
+	 * "/home/klea/xyz/dir/file2", will produce {@code TransferredFile}s with
+	 * paths of "cool/file1" and "cool/dir/file2".
+	 */
+	if ([pathArray count] == 1) {
+		//Sending one folder; its name is our root we'll send to the remote contact
+		NSLog(@"Sending %@ with name %@ and root %@",fileList, [[pathArray objectAtIndex:0] lastPathComponent], commonPrefix);
+		[outgoingFileTransfer addFilesInHierarchy:[[pathArray objectAtIndex:0] lastPathComponent] :[NewFile(commonPrefix) autorelease] :fileList];
+	} else {
+		//Sending multiple files or folders; their commonality is the name we'll send to the remote contact
+		NSLog(@"Sending %@ with name %@ and root %@",fileList, [commonPrefix lastPathComponent], commonPrefix);
+		[outgoingFileTransfer addFilesInHierarchy:[commonPrefix lastPathComponent] :[NewFile(commonPrefix) autorelease] :fileList];		
+	}
+}
+
 /*
  * @brief Begin an outgoing file transfer
  *
@@ -756,7 +816,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	OutgoingFileTransfer	*outgoingFileTransfer;
 	RvConnectionManager		*rvConnectionManager;
 	Screenname				*sn = [NewScreenname(UID) autorelease];
-	NSString				*path;
 
 	rvConnectionManager = [[aimConnection getIcbmService] getRvConnectionManager];
 	outgoingFileTransfer = [rvConnectionManager createOutgoingFileTransfer:sn];
@@ -765,20 +824,19 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[outgoingFileTransfer addEventListener:joscarBridge];
 	
 	if ([pathArray count] == 1) {
-		File	*file = [NewFile([pathArray objectAtIndex:0]) autorelease];
-		[outgoingFileTransfer setSingleFile:file];
+		NSString	*path = [pathArray objectAtIndex:0];
+		BOOL		isDir;
+
+		if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir] &&
+			isDir) {
+			[self addPaths:pathArray toOutgoingFileTransfer:outgoingFileTransfer];
+		} else {
+			File	*file = [NewFile(path) autorelease];
+			[outgoingFileTransfer setSingleFile:file];
+		}
 
 	} else {
-		NSEnumerator	*enumerator;
-		ArrayList		*fileList = [NewArrayList() autorelease];
-		
-		//Build an ArrayList
-		enumerator = [pathArray objectEnumerator];
-		while ((path = [enumerator nextObject])) {
-			[fileList add:path];
-		}
-		
-		[outgoingFileTransfer addFilesInFlatFolder:@"Joscar Folder" :fileList];
+		[self addPaths:pathArray toOutgoingFileTransfer:outgoingFileTransfer];
 	}
 
 	[joscarBridge prepareOutgoingFileTransfer:outgoingFileTransfer];
