@@ -334,8 +334,9 @@ static ESFileTransferPreferences *preferences;
 		
 
 		if ([defaultManager fileExistsAtPath:inPath isDirectory:&isDir]) {
-			//If we get a directory, compress it first (this could be specified on a per-account basis later if we have services supporting folder transfer)
-			if (isDir) {
+			//If we get a directory and the account we're sending from doesn't support folder transfers
+			if (isDir &&
+				![account supportsFolderTransfer]) {
 				inPath = [self pathToArchiveOfFolder:inPath];
 			}
 			
