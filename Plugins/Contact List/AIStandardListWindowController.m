@@ -631,11 +631,10 @@
 {
     NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_CONTACT_LIST] autorelease];
 
-	[toolbar setAutosavesConfiguration:NO];
+	[toolbar setAutosavesConfiguration:YES];
     [toolbar setDelegate:self];
     [toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
     [toolbar setSizeMode:NSToolbarSizeModeRegular];
-    [toolbar setVisible:YES];
     [toolbar setAllowsUserCustomization:NO];
 
 	/* Seemingly randomling, setToolbar: may throw:
