@@ -45,7 +45,7 @@
 @implementation ESGeneralPreferences
 
 // XXX in order to use shortcutrecorder you need a palette
-// grab http://brok3n.org/shortcutrecorder/ShortcutRecorder-pre-dist.zip and the updated http://brok3n.org/shortcutrecorder/ShortCutRecorderCell.m in order for this to work for you. Compile the palette and install.
+// grab http://brok3n.org/shortcutrecorder/ShortcutRecorder-pre-dist.zip and the updated http://brok3n.org/shortcutrecorder/ShortcutRecorderCell.m in order for this to work for you. Compile the palette and install.
 // This comes from http://wafflesoftware.net/shortcut/
 
 //Preference pane properties
