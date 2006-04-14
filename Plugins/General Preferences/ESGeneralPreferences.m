@@ -96,7 +96,7 @@
 
 	//Status Menu
 	[checkBox_enableMenuItem setState:[[[adium preferenceController] preferenceForKey:KEY_STATUS_MENU_ITEM_ENABLED
-																				group:PREF_GROUP_LOGGING] boolValue]];
+																				group:PREF_GROUP_STATUS_MENU_ITEM] boolValue]];
 	
 	//Global hotkey
 	PTKeyCombo *keyCombo = [[[PTKeyCombo alloc] initWithPlistRepresentation:[[adium preferenceController] preferenceForKey:KEY_GENERAL_HOTKEY
