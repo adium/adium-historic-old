@@ -419,23 +419,22 @@ static int display_otr_message(const char *accountname, const char *protocol,
 	if (!chat) return 1;
 
 	message = [NSString stringWithUTF8String:msg];
-	
-	if (([message rangeOfString:@"The following message received from"].location != NSNotFound) &&
-		([message rangeOfString:@"was not encrypted:"].location != NSNotFound)) {
+	AILog(@"display_otr_message: %s %s %s: %s",accountname,protocol,username, msg);
+	 
+	if (([message rangeOfString:@"<b>The following message received from"].location != NSNotFound) &&
+		([message rangeOfString:@"was <i>not</i> encrypted: ["].location != NSNotFound)) {
 		/*
 		 * If we receive an unencrypted message, display it as a normal incoming message with the bolded warning that
 		 * the message was not encrypted
 		 */		
-		NSRange			startRange = [message rangeOfString:@"The following message received from"];
-		NSRange			endRange = [message rangeOfString:@"was not encrypted:"];
-		NSMutableString *mutableMessage = [[message mutableCopy] autorelease];
+		NSRange			endRange = [message rangeOfString:@"was <i>not</i> encrypted: ["];
 		
-		[mutableMessage replaceCharactersInRange:NSMakeRange(startRange.location, NSMaxRange(endRange) - startRange.location)
-									  withString:[adiumOTREncryption localizedOTRMessage:@"The following message was not encrypted:"
-																			withUsername:nil]];
-		
-		message = mutableMessage;
-
+		/* The message will be formatted as:
+		 * <b>The following message received from tekjew was <i>not</i> encrypted: [</b>MESSAGE_HERE - POTENTIALLY HTML<b>]</b>
+		 */
+		message = [[adiumOTREncryption localizedOTRMessage:@"The following message was <b>not encrypted</b>: " withUsername:nil] stringByAppendingString:
+			[message substringWithRange:NSMakeRange(NSMaxRange(endRange), [message length] - NSMaxRange(endRange) - [@"<b>]</b>" length])]];
+	
 		messageObject = [AIContentMessage messageInChat:chat
 											 withSource:listContact
 											destination:[chat account]
@@ -851,7 +850,7 @@ OtrlUserState otrg_get_userstate(void)
 			username];
 		
 	} else if ([message isEqualToString:@"Private connection closed"]) {
-		localizedOTRMessage = AILocalizedString(@"Private connectiion closed", nil);
+		localizedOTRMessage = AILocalizedString(@"Private connection closed", nil);
 
 	} else if ([message rangeOfString:@"has already closed his private connection to you"].location != NSNotFound) {
 		localizedOTRMessage = [NSString stringWithFormat:
@@ -861,10 +860,10 @@ OtrlUserState otrg_get_userstate(void)
 	} else if ([message isEqualToString:@"Your message was not sent.  Either close your private connection to him, or refresh it."]) {
 		localizedOTRMessage = AILocalizedString(@"Your message was not sent. You should end the encrypted chat on your side or re-request encryption.", nil);
 
-	} else if ([message isEqualToString:@"The following message was not encrypted:"]) {
-		localizedOTRMessage = AILocalizedString(@"The following message was not encrypted:", nil);
+	} else if ([message isEqualToString:@"The following message was <b>not encrypted</b>: "]) {
+		localizedOTRMessage = AILocalizedString(@"The following message was <b>not encrypted</b>: ", nil);
 	}
-	
+
 	return (localizedOTRMessage ? localizedOTRMessage : message);
 }
 
