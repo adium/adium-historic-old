@@ -71,7 +71,7 @@
 
 - (NSString *)description
 {
-	NSMutableString	*desc = [[NSMutableString alloc] initWithString:@"<"];
+	NSMutableString	*desc = [[NSMutableString alloc] initWithFormat:@"<%@: %x: ", NSStringFromClass([self class]), self];
 	NSEnumerator	*enumerator = [contentArray objectEnumerator];
 	id				object;
 	int				i = 0;
@@ -137,12 +137,12 @@
         [priorityArray addObject:[NSNumber numberWithFloat:priority]];
 	}
 
-	if (delegate && [delegate respondsToSelector:@selector(mutableOwnerArray:didSetObject:withOwner:priorityLevel:)]) {
-		[delegate mutableOwnerArray:self didSetObject:anObject withOwner:inOwner priorityLevel:priority];
-	}
-		
 	//Our array may no longer have the return value sorted to the front, clear this flag so it can be sorted again
 	valueIsSortedToFront = NO;
+	
+	if (delegate && delegateRespondsToDidSetObjectWithOwnerPriorityLevel) {
+		[delegate mutableOwnerArray:self didSetObject:anObject withOwner:inOwner priorityLevel:priority];
+	}	
 }
 
 //The method the delegate would implement, here to make the compiler happy.
@@ -487,6 +487,8 @@
 - (void)setDelegate:(id)inDelegate
 {
 	delegate = inDelegate;
+	
+	delegateRespondsToDidSetObjectWithOwnerPriorityLevel = [delegate respondsToSelector:@selector(mutableOwnerArray:didSetObject:withOwner:priorityLevel:)];
 }
 
 /*!

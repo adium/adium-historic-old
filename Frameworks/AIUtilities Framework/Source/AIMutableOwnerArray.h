@@ -34,6 +34,7 @@
 	BOOL			valueIsSortedToFront;
 	
 	id				delegate;
+	BOOL			delegateRespondsToDidSetObjectWithOwnerPriorityLevel;
 }
 
 //Value Storage
