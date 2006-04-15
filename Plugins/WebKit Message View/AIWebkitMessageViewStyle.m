@@ -624,6 +624,11 @@ static NSArray *validSenderColors;
 {
 	NSDate			*date = nil;
 	NSRange			range;
+	AIListObject	*contentSource = [content source];
+	AIListObject	*theSource = ([contentSource isKindOfClass:[AIListContact class]] ?
+								  [(AIListContact *)contentSource parentContact] :
+								  contentSource);
+
 	/*
 		htmlEncodedMessage is only encoded correctly for AIContentMessages
 		but we do it up here so that we can check for RTL/LTR text below without
@@ -658,11 +663,11 @@ static NSArray *validSenderColors;
 			  withString:(date != nil ? [timeStampFormatter stringForObjectValue:date] : @"")];
 	
 	[inString replaceKeyword:@"%senderStatusIcon%"
-				  withString:[self statusIconPathForListObject:[content source]]];
+				  withString:[self statusIconPathForListObject:theSource]];
 	
 	if(!validSenderColors) validSenderColors = VALID_SENDER_COLORS_ARRAY;
 	[inString replaceKeyword:@"%senderColor%"
-				  withString:[validSenderColors objectAtIndex:([[[content source] UID] hash] % ([validSenderColors count] - 1))]];
+				  withString:[validSenderColors objectAtIndex:([[contentSource UID] hash] % ([validSenderColors count] - 1))]];
 	
 	//HAX. The odd conditional here detects the rtl html that our html parser spits out.
 	[inString replaceKeyword:@"%messageDirection%"
@@ -693,18 +698,15 @@ static NSArray *validSenderColors;
 	
 	//message stuff
 	if ([content isKindOfClass:[AIContentMessage class]]) {
-		
-		AIListObject	*contentSource = [content source];
-		
 		do{
 			range = [inString rangeOfString:@"%userIconPath%"];
 			if (range.location != NSNotFound) {
 				NSString    *userIconPath;
 				NSString	*replacementString;
 				
-				userIconPath = [contentSource statusObjectForKey:KEY_WEBKIT_USER_ICON];
+				userIconPath = [theSource statusObjectForKey:KEY_WEBKIT_USER_ICON];
 				if (!userIconPath) {
-					userIconPath = [contentSource statusObjectForKey:@"UserIconPath"];
+					userIconPath = [theSource statusObjectForKey:@"UserIconPath"];
 				}
 					
 				if (showUserIcons && userIconPath) {
@@ -720,6 +722,7 @@ static NSArray *validSenderColors;
 			}
 		} while (range.location != NSNotFound);
 		
+		//Use [content source] directly rather than the potentially-metaContact theSource
 		NSString *formattedUID = [contentSource formattedUID];
 		[inString replaceKeyword:@"%senderScreenName%" 
 					  withString:[(formattedUID ?
@@ -731,8 +734,8 @@ static NSArray *validSenderColors;
 			if (range.location != NSNotFound) {
 				NSString		*senderDisplay = nil;
 				if (useCustomNameFormat) {
-					NSString		*displayName = [contentSource displayName];
-					NSString		*formattedUID = [contentSource formattedUID];
+					NSString		*displayName = [theSource displayName];
+					NSString		*formattedUID = [theSource formattedUID];
 					
 					if (formattedUID && ![displayName isEqualToString:formattedUID]) {
 						switch (nameFormat) {
@@ -757,7 +760,7 @@ static NSArray *validSenderColors;
 						senderDisplay = displayName;
 					}
 				} else {
-					senderDisplay = [contentSource longDisplayName];
+					senderDisplay = [theSource longDisplayName];
 				}
 				
 				if ([(AIContentMessage *)content isAutoreply]) {
@@ -771,11 +774,11 @@ static NSArray *validSenderColors;
 		do {
 			range = [inString rangeOfString:@"%senderDisplayName%"];
 			if (range.location != NSNotFound) {
-				NSString *serversideDisplayName = ([contentSource isKindOfClass:[AIListContact class]] ?
-												   [(AIListContact *)contentSource serversideDisplayName] :
+				NSString *serversideDisplayName = ([theSource isKindOfClass:[AIListContact class]] ?
+												   [(AIListContact *)theSource serversideDisplayName] :
 												   nil);
 				if (!serversideDisplayName) {
-					serversideDisplayName = [contentSource displayName];
+					serversideDisplayName = [theSource displayName];
 				}
 				
 				[inString replaceCharactersInRange:range
@@ -897,7 +900,7 @@ static NSArray *validSenderColors;
 				  withString:[[(AIContentStatus *)content status] stringByEscapingForHTML]];
 		
 		[inString replaceKeyword:@"%statusSender%" 
-				  withString:[[[(AIContentStatus *)content source] displayName] stringByEscapingForHTML]];
+				  withString:[[theSource displayName] stringByEscapingForHTML]];
 
 		if ((statusPhrase = [[content userInfo] objectForKey:@"Status Phrase"])) {
 			do{
