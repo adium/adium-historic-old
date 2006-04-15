@@ -595,8 +595,15 @@
 		NSString	*cacheKey = [object preferencesCacheKey];
 
 		//Store to our object pref cache
-		[objectPrefCache setObject:prefDict forKey:cacheKey];
-		
+		NSMutableDictionary *existingCachedPrefs = [objectPrefCache objectForKey:cacheKey]; 
+		if (existingCachedPrefs) {
+			//Apply the changes to the existing dictionary.
+			[existingCachedPrefs setDictionary:prefDict];
+		} else {
+			//No existing dictionary. Put in the new one.
+			[objectPrefCache setObject:prefDict forKey:cacheKey];
+		} 
+
 		/* Retain and autorelease the current prefDict so it remains viable for this run loop, since code should be
 		 * able to depend upon a retrieved prefDict remaining usable without bracketing a set of 
 		 * -[AIPreferenceController setPreference:forKey:group:] calls with retain/release. */
@@ -610,13 +617,7 @@
 					 withName:[[object internalObjectID] safeFilenameString]];
 
 	} else {
-		/* Retain and autorelease the current prefDict so it remains viable for this run loop, since code should be
-		 * able to depend upon a retrieved prefDict remaining usable without bracketing a set of 
-		 * -[AIPreferenceController setPreference:forKey:group:] calls with retain/release. */
-		[[[prefWithDefaultsCache objectForKey:group] retain] autorelease];
-		
-		//Clear the cache so the union of defaults and preferences will be recalculated on next call
-		[prefWithDefaultsCache removeObjectForKey:group];
+		[[prefWithDefaultsCache objectForKey:group] setDictionary:prefDict];
 		
 		//Save the preference change immediately (Probably not the best idea?)
 		[prefDict writeToPath:userDirectory withName:group];
@@ -699,6 +700,93 @@
 	[self setPreference:[path stringByAbbreviatingWithTildeInPath]
 				 forKey:@"UserPreferredDownloadFolder"
 				  group:PREF_GROUP_GENERAL];
+}
+
+#pragma mark KVC
+
++ (BOOL) accessInstanceVariablesDirectly {
+	return NO;
+}
+
+- (id) valueForKey:(NSString *)key {
+	id value = [self preferencesForGroup:key];
+	NSLog(@"AIPC's value for key %@ is %p: %@", key, value, value);
+	return value;
+	return [self preferencesForGroup:key];
+}
+- (void) setValue:(id)value forKey:(NSString *)key {
+	NSRange prefixRange = [key rangeOfString:@"Group:" options:NSLiteralSearch | NSAnchoredSearch];
+	if(prefixRange.location == 0) {
+		key = [key substringFromIndex:prefixRange.length + 1];
+	} else {
+		prefixRange = [key rangeOfString:@"ByObject:" options:NSLiteralSearch | NSAnchoredSearch];
+		 if(prefixRange.location == 0) {
+			NSAssert(NO, @"ByObject is not yet supported in AIPreferenceController KVC methods.");
+//			key = [key substringFromIndex:prefixRange.length + 1];
+#warning XXX ByObject NOT REALLY SUPPORTED YET
+		}
+	}
+
+	NSMutableDictionary	*prefDict = [self cachedPreferencesForGroup:key object:nil];
+
+	//Handy feature: This asserts for us that [value isKindOfClass:[NSDictionary class]].
+	[prefDict setDictionary:value];
+
+	[self updateCachedPreferences:prefDict forGroup:key object:nil];
+	[self informObserversOfChangedKey:nil inGroup:key object:nil];
+}
+
+/*Key paths:
+		No prefix: Group
+		"Group:": Group
+		"ByObject" (futar): by-object (objectXyz instead of xyz ivars)
+ */
+
+//- (id) valueForKeyPath:(NSString *)keyPath
+//We don't need this method. NSObject's version works by calling -valueForKey: successively, which works for us.
+
+- (void) setValue:(id)value forKeyPath:(NSString *)keyPath {
+	NSLog(@"AIPC setting value %@ for key path %@", value, keyPath);
+	unsigned periodIdx = [keyPath rangeOfString:@"." options:NSLiteralSearch].location;
+	NSString *key = [keyPath substringToIndex:periodIdx];
+	if(periodIdx == NSNotFound) {
+		[self setValue:value forKey:key];
+	} else {
+		NSRange prefixRange = [key rangeOfString:@"Group:" options:NSLiteralSearch | NSAnchoredSearch];
+		if(prefixRange.location == 0) {
+			key = [key substringFromIndex:prefixRange.length + 1];
+		} else {
+			prefixRange = [key rangeOfString:@"ByObject:" options:NSLiteralSearch | NSAnchoredSearch];
+			if(prefixRange.location == 0) {
+				NSAssert(NO, @"ByObject is not yet supported in AIPreferenceController KVC methods.");
+//				key = [key substringFromIndex:prefixRange.length + 1];
+#warning XXX ByObject NOT REALLY SUPPORTED YET
+			}
+		}
+		keyPath = [keyPath substringFromIndex:periodIdx + 1];
+
+		//We need the key to do AIPC change notifications.
+		NSString *keyInGroup;
+		periodIdx = [keyPath rangeOfString:@"." options:NSLiteralSearch].location;
+		if(periodIdx == NSNotFound) {
+			keyInGroup = keyPath;
+		} else {
+			keyInGroup = [keyPath substringToIndex:periodIdx];
+		}
+
+		NSLog(@"key path: %@; first key: %@; second key: %@", keyPath, key, keyInGroup);
+		[self willChangeValueForKey:key];
+
+		//Change the value.
+		NSMutableDictionary *prefDict = [self valueForKey:key];
+		[prefDict setValue:value forKeyPath:keyPath];
+		[self setValue:prefDict forKey:key];
+
+		[self didChangeValueForKey:key];
+
+		[self updateCachedPreferences:prefDict forGroup:key object:nil];
+		[self informObserversOfChangedKey:keyInGroup inGroup:key object:nil];
+	}
 }
 
 @end
