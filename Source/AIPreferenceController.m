@@ -36,6 +36,9 @@
 - (void)savePreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)groupName;
 - (NSDictionary *)cachedDefaultsForGroup:(NSString *)group object:(AIListObject *)object;
 - (NSDictionary *)cachedPreferencesWithDefaultsForGroup:(NSString *)group object:(AIListObject *)object;
+
+- (void)updatePreferences:(NSMutableDictionary *)prefDict forKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object;
+
 @end
 
 /*!
@@ -308,8 +311,7 @@
 
 	[prefDict addEntriesFromDictionary:inPrefDict];
 	
-	[self updateCachedPreferences:prefDict forGroup:group object:nil];
-	[self informObserversOfChangedKey:nil inGroup:group object:nil];
+	[self updatePreferences:prefDict forKey:nil group:group object:nil];
 }
 
 /*!
@@ -339,8 +341,7 @@
 
 	//Update the preference cache with our changes
 	if (changed) {
-		[self updateCachedPreferences:prefDict forGroup:group object:object];
-		[self informObserversOfChangedKey:key inGroup:group object:object];
+		[self updatePreferences:prefDict forKey:key group:group object:object];
 	}
 }
 
@@ -428,7 +429,6 @@
  */
 - (NSDictionary *)preferencesForGroup:(NSString *)group
 {
-	
     return [self cachedPreferencesWithDefaultsForGroup:group object:nil];
 }
 
@@ -536,6 +536,53 @@
 	return [sourceDefaultsDict objectForKey:cacheKey];
 }
 
+/*
+ * @brief Locally update our cached prefrences, including defaults
+ *
+ * Must be called before preferences are accessed after preferences change for changes to be visible to the rest of Adium
+ */
+- (NSDictionary *)updateCachedPreferencesWithDefaultsForGroup:(NSString *)group object:(AIListObject *)object
+{
+	NSDictionary		*prefWithDefaultsDict;
+	NSMutableDictionary	*activeDefaultsCache;
+	NSDictionary		*sourceDefaultsDict;
+	NSString			*cacheKey;
+
+	//Object specific preferences are stored by path and objectID, while regular preferences are stored by group.
+	if (object) {
+		cacheKey = [object preferencesCacheKey];
+		activeDefaultsCache = objectPrefWithDefaultsCache;
+		sourceDefaultsDict = objectDefaults;
+		
+	} else {
+		cacheKey = group;
+		activeDefaultsCache = prefWithDefaultsCache;
+		sourceDefaultsDict = defaults;
+	}
+
+	NSDictionary	*userPrefs = [self cachedPreferencesForGroup:group object:object];
+	NSDictionary	*defaultPrefs = [sourceDefaultsDict objectForKey:cacheKey];
+	if (defaultPrefs) {
+		//Add the object's own preferences to the defaults dictionary to get a dict with the object's keys
+		//overriding the default keys
+		prefWithDefaultsDict = [[defaultPrefs mutableCopy] autorelease];
+		[(NSMutableDictionary *)prefWithDefaultsDict addEntriesFromDictionary:userPrefs];
+	} else {
+		//With no defaults, just use the userPrefs
+		prefWithDefaultsDict = userPrefs;
+	}
+
+	NSMutableDictionary	*existingDict;
+	
+	if (!(existingDict = [activeDefaultsCache objectForKey:cacheKey])) {
+		existingDict = [NSMutableDictionary dictionary];
+		[activeDefaultsCache setObject:existingDict forKey:cacheKey];
+	}
+	
+	[existingDict setDictionary:prefWithDefaultsDict];
+	return existingDict;
+}
+
 /*!
  * @brief Return the result of taking the defaults and superceding them with any set preferences
  *
@@ -559,24 +606,10 @@
 		cacheKey = group;
 		activeDefaultsCache = prefWithDefaultsCache;
 		sourceDefaultsDict = defaults;
-
 	}
 	
-	if (!(prefWithDefaultsDict = [activeDefaultsCache objectForKey:cacheKey])) {		
-		NSDictionary	*userPrefs = [self cachedPreferencesForGroup:group object:object];
-		NSDictionary	*defaultPrefs = [sourceDefaultsDict objectForKey:cacheKey];
-		if (defaultPrefs) {
-			//Add the object's own preferences to the defaults dictionary to get a dict with the object's keys
-			//overriding the default keys
-			prefWithDefaultsDict = [[defaultPrefs mutableCopy] autorelease];
-			[(NSMutableDictionary *)prefWithDefaultsDict addEntriesFromDictionary:userPrefs];
-		} else {
-			//With no defaults, just use the userPrefs
-			prefWithDefaultsDict = userPrefs;
-		}
-		
-		//And cache the result; the cache should be updated or cleared when the dictionary changes
-		[activeDefaultsCache setObject:prefWithDefaultsDict forKey:cacheKey];
+	if (!(prefWithDefaultsDict = [activeDefaultsCache objectForKey:cacheKey])) {
+		prefWithDefaultsDict = [self updateCachedPreferencesWithDefaultsForGroup:group object:object];
 	}
 
 	return prefWithDefaultsDict;
@@ -586,45 +619,25 @@
  * @brief Write preference changes back to the cache and to disk
  *
  * @param prefDict The user-specified preferences (not including defaults)
+ * @param key The key that changed, or nil if multiple keys changed
  * @param group The group
  * @param object The object, or nil for global
  */
-- (void)updateCachedPreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)group object:(AIListObject *)object
+- (void)updatePreferences:(NSMutableDictionary *)prefDict forKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object
 {
-	if (object) {
-		NSString	*cacheKey = [object preferencesCacheKey];
+	NSString	*path = (object ? [userDirectory stringByAppendingPathComponent:[object pathToPreferences]] : userDirectory);
+	NSString	*name = (object ? [[object internalObjectID] safeFilenameString] : group);
 
-		//Store to our object pref cache
-		NSMutableDictionary *existingCachedPrefs = [objectPrefCache objectForKey:cacheKey]; 
-		if (existingCachedPrefs) {
-			//Apply the changes to the existing dictionary.
-			[existingCachedPrefs setDictionary:prefDict];
-		} else {
-			//No existing dictionary. Put in the new one.
-			[objectPrefCache setObject:prefDict forKey:cacheKey];
-		} 
+	//Update our cache
+	[self updateCachedPreferencesWithDefaultsForGroup:group object:object];
+	
+	//Now inform observers
+	[self informObserversOfChangedKey:key inGroup:group object:nil];
 
-		/* Retain and autorelease the current prefDict so it remains viable for this run loop, since code should be
-		 * able to depend upon a retrieved prefDict remaining usable without bracketing a set of 
-		 * -[AIPreferenceController setPreference:forKey:group:] calls with retain/release. */
-		[[[objectPrefWithDefaultsCache objectForKey:group] retain] autorelease];
-
-		//Clear the cache so the union of defaults and preferences will be recalculated on next call
-		[objectPrefWithDefaultsCache removeObjectForKey:cacheKey];
-
-		//Save the preference change immediately (Probably not the best idea?)
-		[prefDict writeToPath:[userDirectory stringByAppendingPathComponent:[object pathToPreferences]]
-					 withName:[[object internalObjectID] safeFilenameString]];
-
-	} else {
-		[[prefWithDefaultsCache objectForKey:group] setDictionary:prefDict];
-		
-		//Save the preference change immediately (Probably not the best idea?)
-		[prefDict writeToPath:userDirectory withName:group];
-		
-	}
+	//Save the preference change immediately (Probably not the best idea?)
+	[prefDict writeToPath:path
+				 withName:name];
 }
-
 
 //Default download locaiton --------------------------------------------------------------------------------------------
 #pragma mark Default download location
@@ -709,11 +722,17 @@
 }
 
 - (id) valueForKey:(NSString *)key {
-	id value = [self preferencesForGroup:key];
-	NSLog(@"AIPC's value for key %@ is %p: %@", key, value, value);
-	return value;
-	return [self preferencesForGroup:key];
+	return [self cachedPreferencesWithDefaultsForGroup:key object:nil];
 }
+
+/*
+ * @brief Set a dictionary of preferences for a group
+ *
+ * Note that while setPreferences:inGroup: adds the passed dictionary to the current one, this method replaces the dictionary entirely
+ *
+ * @param value An NSDictionary which reprsents an entire group of preferences (without defaults)
+ * @param key The group name
+ */
 - (void) setValue:(id)value forKey:(NSString *)key {
 	NSRange prefixRange = [key rangeOfString:@"Group:" options:NSLiteralSearch | NSAnchoredSearch];
 	if(prefixRange.location == 0) {
@@ -732,19 +751,20 @@
 	//Handy feature: This asserts for us that [value isKindOfClass:[NSDictionary class]].
 	[prefDict setDictionary:value];
 
-	[self updateCachedPreferences:prefDict forGroup:key object:nil];
-	[self informObserversOfChangedKey:nil inGroup:key object:nil];
+	[self updatePreferences:prefDict forKey:nil group:key object:nil];
 }
-
-/*Key paths:
-		No prefix: Group
-		"Group:": Group
-		"ByObject" (futar): by-object (objectXyz instead of xyz ivars)
- */
 
 //- (id) valueForKeyPath:(NSString *)keyPath
 //We don't need this method. NSObject's version works by calling -valueForKey: successively, which works for us.
 
+/* 
+ * Key paths:
+ *		No prefix: Group
+ *		"Group:": Group
+ *		"ByObject" (futar): by-object (objectXyz instead of xyz ivars)
+ *
+ * For example, General.MyKey would refer to the MyKey value of the General group, as would Group:General.MyKey
+ */
 - (void) setValue:(id)value forKeyPath:(NSString *)keyPath {
 	NSLog(@"AIPC setting value %@ for key path %@", value, keyPath);
 	unsigned periodIdx = [keyPath rangeOfString:@"." options:NSLiteralSearch].location;
@@ -759,33 +779,29 @@
 			prefixRange = [key rangeOfString:@"ByObject:" options:NSLiteralSearch | NSAnchoredSearch];
 			if(prefixRange.location == 0) {
 				NSAssert(NO, @"ByObject is not yet supported in AIPreferenceController KVC methods.");
-//				key = [key substringFromIndex:prefixRange.length + 1];
+				//				key = [key substringFromIndex:prefixRange.length + 1];
 #warning XXX ByObject NOT REALLY SUPPORTED YET
 			}
 		}
 		keyPath = [keyPath substringFromIndex:periodIdx + 1];
-
+		
 		//We need the key to do AIPC change notifications.
 		NSString *keyInGroup;
 		periodIdx = [keyPath rangeOfString:@"." options:NSLiteralSearch].location;
-		if(periodIdx == NSNotFound) {
+		if (periodIdx == NSNotFound) {
 			keyInGroup = keyPath;
 		} else {
 			keyInGroup = [keyPath substringToIndex:periodIdx];
 		}
-
+		
 		NSLog(@"key path: %@; first key: %@; second key: %@", keyPath, key, keyInGroup);
-		[self willChangeValueForKey:key];
-
 		//Change the value.
-		NSMutableDictionary *prefDict = [self valueForKey:key];
+		NSMutableDictionary *prefDict = [self cachedPreferencesForGroup:key object:nil];
+
+		[self willChangeValueForKey:key];
 		[prefDict setValue:value forKeyPath:keyPath];
-		[self setValue:prefDict forKey:key];
-
+		[self updatePreferences:prefDict forKey:keyInGroup group:key object:nil];
 		[self didChangeValueForKey:key];
-
-		[self updateCachedPreferences:prefDict forGroup:key object:nil];
-		[self informObserversOfChangedKey:keyInGroup inGroup:key object:nil];
 	}
 }
 
