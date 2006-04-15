@@ -294,10 +294,8 @@
 		[openChats addObject:chat];
 		AILog(@"chatWithContact: Added <<%@>> [%@]",chat,openChats);
 
-		//Inform the account of its creation and post a notification if successful
-		if ([[targetContact account] openChat:chat]) {
-			[[adium notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
-		} else {
+		//Inform the account of its creation
+		if (![[targetContact account] openChat:chat]) {
 			[openChats removeObject:chat];
 			AILog(@"chatWithContact: Immediately removed <<%@>> [%@]",chat,openChats);
 			chat = nil;
@@ -365,10 +363,8 @@
 					   forKey:@"AlwaysShowUserList"
 					   notify:NotifyNever];
 		
-		//Inform the account of its creation and post a notification if successful
-		if ([account openChat:chat]) {
-			[[adium notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
-		} else {
+		//Inform the account of its creation
+		if (![account openChat:chat]) {
 			[openChats removeObject:chat];
 			AILog(@"chatWithName: Immediately removed <<%@>> [%@]",chat,openChats);
 			chat = nil;
