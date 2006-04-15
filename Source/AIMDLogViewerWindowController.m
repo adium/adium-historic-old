@@ -296,7 +296,7 @@
 	[myQuery enableUpdates];
 	[myQuery release];
 	
-	[self performSelectorOnMainThread:@selector(refreshResults)
+	[self performSelectorOnMainThread:@selector(refreshResultsAndSort)
 						   withObject:nil
 						waitUntilDone:NO];
 	[pool release];
@@ -483,6 +483,7 @@
 		//+1 to allow for the All entry at the top
 		[tableView_toContacts selectRowIndexes:[NSIndexSet indexSetWithIndex:(contactIndex + 1)]
 						  byExtendingSelection:NO];
+		[tableView_toContacts scrollRowToVisible:(contactIndex + 1)];
 	}
 }
 
