@@ -103,9 +103,10 @@
 - (void)dealloc
 {
 	if (submenuType == AIAccountStatusSubmenu) {
+		[NSObject cancelPreviousPerformRequestsWithTarget:statusMenu];
 		[statusMenu release]; statusMenu = nil;
 	}
-	
+
 	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 
@@ -233,8 +234,8 @@
 		[disabledAccountMenu release];
 	}
 
-	//Update our status submenus once this method returns so that our menuItemArray is set
 	if (submenuType == AIAccountStatusSubmenu) {
+		//Update our status submenus once this method returns so that our menuItemArray is set
 		[statusMenu performSelector:@selector(rebuildMenu)
 						 withObject:nil
 						 afterDelay:0];
