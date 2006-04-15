@@ -235,11 +235,6 @@
 	}
 	
 	if (displayNameChanges) {
-		//Notify of display name changes
-		[[adium contactController] listObjectAttributesChanged:self
-												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
-		
-		//XXX - There must be a cleaner way to do this alias stuff!  This works for now
 		//Request an alias change
 		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
 												  object:self

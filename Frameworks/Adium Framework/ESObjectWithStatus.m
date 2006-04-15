@@ -280,7 +280,7 @@
 	
     if (!array) {
         array = [[AIMutableOwnerArray alloc] init];
-//		[array setDelegate:self];
+		[array setDelegate:self];
         [displayDictionary setObject:array forKey:inKey];
         [array release];
     }

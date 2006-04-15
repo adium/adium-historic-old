@@ -37,6 +37,7 @@
 
 - (void)_addListContacts:(NSArray *)inContacts toArray:(NSMutableArray *)listContacts uniqueObjectIDs:(NSMutableArray *)uniqueObjectIDs;
 
+- (void)updateDisplayName;
 - (void)restoreGrouping;
 @end
 
@@ -587,10 +588,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 	//If it changed, do stuff
 	if (oldOnlyOne != containsOnlyOneUniqueContact) {
-		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-												  object:self
-												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-																					 forKey:@"Notify"]];
+		[self updateDisplayName];
 	}
 }
 
@@ -717,6 +715,37 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	
 	return returnValue;
 }
+
+#pragma mark Attribute arrays
+/*
+ * @brief Request that Adium update our display name based on our current information
+ */
+- (void)updateDisplayName
+{
+	[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+											  object:self
+											userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																				 forKey:@"Notify"]];
+}
+
+- (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(AIListObject *)inOwner priorityLevel:(float)priority
+{
+	if ((listObject != self) &&
+		(inArray == [listObject displayArrayForKey:@"Display Name" create:NO]) &&
+		(!anObject || ([anObject isEqualToString:[inArray objectValue]]))) {
+		/* One of our contained objects changed itself display name in such a  way that its Display Name array's objectValue changed. 
+		 * Our own display name may need to change in turn.
+		 * We used isEqualToString above because the Display Name array contains NSString objects.
+		 * 
+		 * Wait until the next run loop so that all observers of the changed contained object have done their thing; as a metaContact, our return values
+		 * may be based on this contact's values.
+		 */
+		[self performSelector:@selector(updateDisplayName)
+				   withObject:nil
+				   afterDelay:0];
+	}
+}
+
 //Sorting --------------------------------------------------------------------------------------------------------------
 #pragma mark Sorting
 //Sort one of our containing objects
