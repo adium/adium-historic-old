@@ -52,7 +52,7 @@
 - (id)initWithWindowNibName:(NSString *)inNibName
 {	
     if ((self = [super initWithWindowNibName:inNibName])) {
-		previousAlpha = 0;
+		previousAlpha = 0.0;
 	}
 
 	return self;
@@ -768,6 +768,7 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 		(previousAlpha > 0.0)) {
 		//Before sliding onscreen, restore any previous alpha value
 		[myWindow setAlphaValue:previousAlpha];
+		previousAlpha = 0.0;
 	}
 	
 	manualWindowMoveToPoint([self window],
@@ -784,7 +785,21 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 		//After sliding off screen, go to an alpha value of 0 to hide our 1 px remaining on screen
 		previousAlpha = [myWindow alphaValue];
 		[myWindow setAlphaValue:0.0];
+		
+		NSLog(@"noted an alpha value of %f",previousAlpha);
 	}
+}
+
+- (void)moveWindowToPoint:(NSPoint)inOrigin
+{
+	if ((windowSlidOffScreenEdgeMask == AINoEdges) &&
+		(previousAlpha > 0.0)) {
+		//Before sliding onscreen, restore any previous alpha value
+		[[self window] setAlphaValue:previousAlpha];
+		previousAlpha = 0.0;
+	}
+
+	[[self window] setFrameOrigin:inOrigin];
 }
 
 @end
