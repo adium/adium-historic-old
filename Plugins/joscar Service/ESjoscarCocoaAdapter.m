@@ -468,9 +468,10 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 {
 	DirectimConversation	*conversation = [userInfo get:@"DirectimConversation"];
 	Screenname				*sn = [conversation getBuddy];
-	NSString				*inUID = [sn getNormal];
+	NSString				*UID = [sn getNormal];
 
-	NSLog(@"Opened direct IM with %@",inUID);
+	[accountProxy chatWithUID:UID
+		 setDirectIMConnected:YES];
 }
 
 /*
@@ -480,8 +481,10 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 {
 	DirectimConversation	*conversation = [userInfo get:@"DirectimConversation"];
 	Screenname				*sn = [conversation getBuddy];
-	
-	NSLog(@"Closed direct IM with %@",[sn getNormal]);
+	NSString				*UID = [sn getNormal];
+
+	[accountProxy chatWithUID:UID
+		 setDirectIMConnected:NO];
 }
 
 /*
@@ -589,9 +592,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 				if ([chunkString caseInsensitiveCompare:@"IMG"] == NSOrderedSame) {
 					if ([scanner scanUpToString:@">" intoString:&chunkString]) {
 						//Load the src image
-						NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];
-						NSLog(@"%@ gives arguments %@",chunkString, imgArguments);
-						
+						NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];						
 						NSString		*name, *identifier;
 						NSString		*imagePath = nil;
 						
@@ -605,7 +606,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 						
 						while (!imagePath && 
 							   [iterator hasNext] && (attachment = (Attachment *)[iterator next])) {
-							NSLog(@"Looking for %@; Attachment %@ has ID %@",identifier, attachment, [attachment getId]);
 							if ([identifier isEqualToString:[attachment getId]]) {
 								//Found the right attachment
 								if ([attachment isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.dim.FileAttachment")]) {
@@ -881,7 +881,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	FileTransferStatus	fileTransferStatus;
 	BOOL				shouldPollForStatus = NO;
 
-	NSLog(@"File transfer update: %@",userInfo);
+	AILog(@"File transfer update: %@",userInfo);
 
 	if ([newState isEqualToString:@"WAITING"]) {
 		fileTransferStatus = Not_Started_FileTransfer;
@@ -1279,8 +1279,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 - (void)setAccountUserIconData:(NSData *)data
 {
-	NSLog(@"%@: setAccountUserIconData",self);
-
 	if (data) {
 		///ByteBlock from data
 		[[aimConnection getMyBuddyIconManager] requestSetIcon:[joscarBridge byteBlockFromData:data]];

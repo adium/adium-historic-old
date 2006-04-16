@@ -810,6 +810,18 @@ BOOL isHTMLContact(AIListObject *inListObject)
 	return ![inChat isGroupChat];
 }
 
+- (void)chatWithUID:(NSString *)inUID setDirectIMConnected:(BOOL)isConnected
+{
+	AIListContact	*sourceContact = [self contactWithUID:inUID];
+
+	[[adium contentController] displayStatusMessage:(isConnected ?
+													 AILocalizedString(@"Direct Instant Message session started","Direct IM is an AIM-specific phrase for transferring images in the message window") :
+													 AILocalizedString(@"Direct Instant Message session ended","Direct IM is an AIM-specific phrase for transferring images in the message window"))
+											 ofType:@"directIM"
+											 inChat:[[adium chatController] existingChatWithContact:sourceContact]];	
+}
+
+
 #pragma mark Contact list editing
 /*!
 * @brief Contact list editable?

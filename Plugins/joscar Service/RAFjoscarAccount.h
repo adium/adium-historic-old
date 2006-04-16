@@ -40,7 +40,7 @@
 - (void)chatWithUID:(NSString *)inUID receivedMessage:(NSString *)inHTML isAutoreply:(NSNumber *)isAutoreply;
 - (void)chatWithUID:(NSString *)inUID receivedDirectMessage:(NSString *)inHTML isAutoreply:(NSNumber *)isAutoreply joscarData:(id)joscarData;
 - (void)chatWithUID:(NSString *)inUID gotTypingState:(NSNumber *)typingState;
-
+- (void)chatWithUID:(NSString *)inUID setDirectIMConnected:(BOOL)isConnected;
 
 - (void)newIncomingFileTransferWithUID:(NSString *)inUID
 							  fileName:(NSString *)fileName
