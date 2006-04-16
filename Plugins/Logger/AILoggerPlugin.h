@@ -22,6 +22,9 @@
 #define PREF_GROUP_LOGGING              @"Logging"
 #define KEY_LOGGER_ENABLE               @"Enable Logging"
 
+//Uncomment this to enable XML_LOGGING
+//#define XML_LOGGING
+
 @class AIAccount, AIChat, AILoggerPreferences, AILoggerAdvancedPreferences;
 
 @interface AILoggerPlugin : AIPlugin {
@@ -30,6 +33,10 @@
     //Current logging settings
     BOOL				observingContent;
     BOOL				logHTML;
+
+#ifdef XML_LOGGING
+	NSMutableDictionary					*activeAppenders;
+#endif
 	
     //Log viewer menu items
     NSMenuItem                          *logViewerMenuItem;
@@ -64,6 +71,9 @@
 //Paths
 + (NSString *)logBasePath;
 + (NSString *)relativePathForLogWithObject:(NSString *)object onAccount:(AIAccount *)account;
+#ifdef XML_LOGGING
++ (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date;
+#endif
 + (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date plainText:(BOOL)plainText;
 + (NSString *)fullPathOfLogAtRelativePath:(NSString *)relativePath;
 
