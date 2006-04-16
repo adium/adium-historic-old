@@ -60,6 +60,7 @@ static int nextChatNumber = 0;
 		isGroupChat = NO;
 		expanded = YES;
 		customEmoticons = nil;
+		hasSentOrReceivedContent = NO;
 
 		pendingOutgoingContentObjects = [[NSMutableArray alloc] init];
 		
@@ -156,6 +157,15 @@ static int nextChatNumber = 0;
 - (void)setIsOpen:(BOOL)flag
 {
 	isOpen = flag;
+}
+
+- (BOOL)hasSentOrReceivedContent
+{
+	return hasSentOrReceivedContent;
+}
+- (void)setHasSentOrReceivedContent:(BOOL)flag
+{
+	hasSentOrReceivedContent = flag;
 }
 
 //Status ---------------------------------------------------------------------------------------------------------------

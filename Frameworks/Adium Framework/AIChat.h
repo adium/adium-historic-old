@@ -89,6 +89,7 @@ typedef enum {
 	NSDate				*dateOpened;
 	BOOL				isOpen;
 	BOOL				isGroupChat;
+	BOOL				hasSentOrReceivedContent;
 
 	NSMutableArray		*pendingOutgoingContentObjects;
 
@@ -116,6 +117,9 @@ typedef enum {
 
 - (BOOL)isOpen;
 - (void)setIsOpen:(BOOL)flag;
+
+- (BOOL)hasSentOrReceivedContent;
+- (void)setHasSentOrReceivedContent:(BOOL)flag;
 
 - (int)unviewedContentCount;
 - (void)incrementUnviewedContentCount;

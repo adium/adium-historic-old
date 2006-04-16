@@ -326,7 +326,9 @@
 				[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_SENT
 												 forListObject:[chat listObject]
 													  userInfo:[NSDictionary dictionaryWithObjectsAndKeys:chat,@"AIChat",inObject,@"AIContentObject",nil]
-								  previouslyPerformedActionIDs:nil];				
+								  previouslyPerformedActionIDs:nil];
+				
+				[chat setHasSentOrReceivedContent:YES];
 			}
 
 		} else {
@@ -454,12 +456,11 @@
 		//If the chat of the content object has been cleared, we can't do anything with it, so simply return
 		if (!chat) return;
 		
-		chatIsOpen = [chat isOpen];
 		contentReceived = (([inObject isMemberOfClass:[AIContentMessage class]]) &&
 						   (![inObject isOutgoing]));
 		shouldPostContentReceivedEvents = contentReceived && [inObject trackContent];
 		
-		if (!chatIsOpen) {
+		if (![chat isOpen]) {
 			/*
 			 Tell the interface to open the chat
 			 For incoming messages, we don't open the chat until we're sure that new content is being received.
@@ -477,13 +478,14 @@
 		if (shouldPostContentReceivedEvents) {
 			NSSet			*previouslyPerformedActionIDs = nil;
 			AIListObject	*listObject = [chat listObject];
-			
-			if (!chatIsOpen) {
+
+			if (![chat hasSentOrReceivedContent]) {
 				//If the chat wasn't open before, generate CONTENT_MESSAGE_RECEIVED_FIRST
 				previouslyPerformedActionIDs = [[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_FIRST
 																				forListObject:listObject
 																					 userInfo:userInfo
-																 previouslyPerformedActionIDs:nil];	
+																 previouslyPerformedActionIDs:nil];
+				[chat setHasSentOrReceivedContent:YES];
 			}
 			
 			if (chat != [[adium interfaceController] activeChat]) {
