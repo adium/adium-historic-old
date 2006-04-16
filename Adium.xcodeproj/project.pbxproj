@@ -4391,6 +4391,8 @@
 		344458F3070B5BF500D8E932 /* Debugging */ = {
 			isa = PBXGroup;
 			children = (
+				9ECB03E209F2A9D800996F44 /* AIDictionaryDebug.h */,
+				9ECB03E309F2A9D800996F44 /* AIDictionaryDebug.m */,
 				344458ED070B5BEF00D8E932 /* ESDebugWindowController.h */,
 				344458EE070B5BEF00D8E932 /* ESDebugWindowController.m */,
 				34B4B5A10708B049002C4C6D /* ESDebugController.h */,
@@ -6419,8 +6421,6 @@
 		9ECB03D909F2A57E00996F44 /* XML Logging */ = {
 			isa = PBXGroup;
 			children = (
-				9ECB03E209F2A9D800996F44 /* AIDictionaryDebug.h */,
-				9ECB03E309F2A9D800996F44 /* AIDictionaryDebug.m */,
 				9ECB03E409F2A9D800996F44 /* AIXMLAppender.h */,
 				9ECB03E509F2A9D800996F44 /* AIXMLAppender.m */,
 			);
