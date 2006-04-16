@@ -462,13 +462,19 @@
 			NSString		*key;
 			NSDictionary	*sounds = [soundSet sounds];
 
-			enumerator = [sounds keyEnumerator];
-			while ((key = [enumerator nextObject])) {
-				NSDictionary *soundAlert = [ESGlobalEventsPreferencesPlugin soundAlertForKey:key
-																				inSoundsDict:sounds];
-				if (![alertsArray containsObject:soundAlert]) {
-					soundMenuItem = nil;
-					break;
+			if ([alertsArray count] && ![sounds count]) {
+				//If we have one or more sound alerts and there are no sounds in this sound set ("None" sound set), there's no matching soundSetMenuitem.
+				soundMenuItem = nil;
+
+			} else {
+				enumerator = [sounds keyEnumerator];
+				while ((key = [enumerator nextObject])) {
+					NSDictionary *soundAlert = [ESGlobalEventsPreferencesPlugin soundAlertForKey:key
+																					inSoundsDict:sounds];
+					if (![alertsArray containsObject:soundAlert]) {
+						soundMenuItem = nil;
+						break;
+					}
 				}
 			}
 		}
