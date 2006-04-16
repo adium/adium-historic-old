@@ -49,10 +49,11 @@
 
 #define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
 
-#define SLIDE_ALLOWED_RECT_EDGE_MASK  		(AIMinXEdgeMask | AIMaxXEdgeMask)
-#define DOCK_HIDING_MOUSE_POLL_INTERVAL		0.1
-#define WINDOW_ALIGNMENT_TOLERANCE			2.0f
-#define MOUSE_EDGE_SLIDE_ON_DISTANCE		1.1f
+#define SLIDE_ALLOWED_RECT_EDGE_MASK			(AIMinXEdgeMask | AIMaxXEdgeMask)
+#define DOCK_HIDING_MOUSE_POLL_INTERVAL			0.1
+#define WINDOW_ALIGNMENT_TOLERANCE				2.0f
+#define MOUSE_EDGE_SLIDE_ON_DISTANCE			1.1f
+#define WINDOW_SLIDING_MOUSE_DISTANCE_TOLERANCE 3.0f
 
 @interface AIListWindowController (PRIVATE)
 - (void)windowDidLoad;
@@ -65,7 +66,10 @@
 - (BOOL)shouldSlideWindowOnScreen_adiumActiveStrategy;
 - (BOOL)shouldSlideWindowOffScreen_adiumActiveStrategy;
 - (void)setPermitSlidingInForeground:(BOOL)flag;
-- (void) setSavedFrame:(NSRect)f;
+- (void)setSavedFrame:(NSRect)f;
+- (void)restoreSavedFrame;
+
+- (void)delayWindowSlidingForInterval:(NSTimeInterval)inDelayTime;
 @end
 
 @implementation AIListWindowController
@@ -147,6 +151,9 @@
 												 name:NSApplicationDidChangeScreenParametersNotification 
 											   object:nil];
 
+	//Show the contact list initially even if it is at a screen edge and supposed to slide out of view
+	[self delayWindowSlidingForInterval:5];
+
 	AIPreferenceController *preferenceController = [adium preferenceController];
     //Observe preference changes
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
@@ -171,20 +178,26 @@
 											 selector:@selector(applicationDidUnhide:) 
 												 name:NSApplicationDidUnhideNotification 
 											   object:nil];
+	
+	//Save our frame immediately for sliding purposes
+	[self setSavedFrame:[[self window] frame]];
 }
 
 //Close the contact list window
 - (void)windowWillClose:(NSNotification *)notification
 {
-	//Don't let the window's saved position be offscreen in -[AIWindowController windowWillClose:]
 	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
-		[self slideWindowOnScreen];
+		//Hide the window while it's still off-screen
+		[[self window] setAlphaValue:0.0];
+		
+		//Then move it back on screen so that we'll save the proper position in -[AIWindowController windowWillClose:]
+		[self slideWindowOnScreenWithAnimation:NO];
 	}
 
 	[super windowWillClose:notification];
 
-	// kill dock-like hiding timer, if it isn't nil
-	[slideWindowIfNeededTimer invalidate];
+	//Invalidate the dock-like hiding timer
+	[slideWindowIfNeededTimer invalidate]; [slideWindowIfNeededTimer release];
 
     //Stop observing
 	[[adium preferenceController] unregisterPreferenceObserver:self];
@@ -227,17 +240,17 @@
 		[self slideWindowIfNeeded:nil];
 
 		if (!windowShouldBeVisibleInBackground || permitSlidingInForeground) {
-			if (slideWindowIfNeededTimer == nil) {
-				slideWindowIfNeededTimer = [NSTimer scheduledTimerWithTimeInterval:DOCK_HIDING_MOUSE_POLL_INTERVAL
-																			target:self
-																		  selector:@selector(slideWindowIfNeeded:)
-																		  userInfo:nil
-																		   repeats:YES];            				
+			if (!slideWindowIfNeededTimer) {
+				slideWindowIfNeededTimer = [[NSTimer scheduledTimerWithTimeInterval:DOCK_HIDING_MOUSE_POLL_INTERVAL
+																			 target:self
+																		   selector:@selector(slideWindowIfNeeded:)
+																		   userInfo:nil
+																			repeats:YES] retain];
 			}
-		}
-		else {
+
+		} else if (slideWindowIfNeededTimer) {
             [slideWindowIfNeededTimer invalidate];
-			slideWindowIfNeededTimer = nil;
+			[slideWindowIfNeededTimer release]; slideWindowIfNeededTimer = nil;
 		}
 
 		[contactListController setShowTooltips:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS] boolValue]];
@@ -294,7 +307,6 @@
 			 */
 			if (!(autoResizeVertically || autoResizeHorizontally)) {
 				thisMinimumSize.width = forcedWindowWidth;
-				
 				[[self window] setFrame:NSMakeRect(currentFrame.origin.x,currentFrame.origin.y,forcedWindowWidth,currentFrame.size.height) 
 								display:YES
 								animate:NO];
@@ -418,6 +430,9 @@
 //
 - (void)showWindowInFront:(BOOL)inFront
 {
+	//Always show for five seconds at least if we're told to show
+	[self delayWindowSlidingForInterval:3];
+
 	NSWindow	*window = [self window];
 	if (inFront) {
 		[self showWindow:nil];
@@ -425,16 +440,13 @@
 		[window orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
 	}
 	
-	[window setHasShadow:[[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_HAS_SHADOW
-																   group:PREF_GROUP_CONTACT_LIST] boolValue]];
-	[window setFrameUsingName:@"SavedContactListFrame" force:YES];
-	[self setSavedFrame:[window frame]];
+	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
+		//Restore shadow and frame if we're appearing from having slide off-screen
+		[window setHasShadow:[[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_HAS_SHADOW
+																	   group:PREF_GROUP_CONTACT_LIST] boolValue]];
+		[self slideWindowOnScreenWithAnimation:NO];
+	}
 	
-	NSNumber *opacity = [[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY
-																 group:PREF_GROUP_CONTACT_LIST];
-	[window setAlphaValue:((opacity != nil) ? [opacity floatValue] : 1.0f)];
-
-	previousAlpha = [window alphaValue];
 	windowSlidOffScreenEdgeMask = AINoEdges;
 	
 	currentScreen = [window screen];
@@ -446,12 +458,18 @@
 	}	
 }
 
-- (void) setSavedFrame:(NSRect)frame
+- (void)setSavedFrame:(NSRect)frame
 {
 	oldFrame = frame;
 	[[self window] saveFrameUsingName:@"SavedContactListFrame"];
 }
 
+- (void)restoreSavedFrame
+{
+	NSWindow *myWindow = [self window];
+	[myWindow setFrameUsingName:@"SavedContactListFrame" force:YES];
+	oldFrame = [myWindow frame];
+}
 
 // Auto-resizing support ------------------------------------------------------------------------------------------------
 #pragma mark Auto-resizing support
@@ -483,10 +501,7 @@
 
 	currentScreen = [window screen];
 	currentScreenFrame = newScreenFrame;
-
 	[self setSavedFrame:[window frame]];
-	
-	[window setAlphaValue:previousAlpha];
 }
 
 // Printing
@@ -555,7 +570,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 - (BOOL)windowShouldHideOnDeactivate
 {
 	return (!windowShouldBeVisibleInBackground &&
-			(windowSlidOffScreenEdgeMask == AINoEdges) &&
+			([self windowSlidOffScreenEdgeMask] == AINoEdges) &&
 			([self slidableEdgesAdjacentToWindow] == AINoEdges));
 }
 
@@ -572,11 +587,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		} else {
             [self slideWindowOffScreenEdges:adjacentEdges];
 		}
-
-	} else if (windowSlidOffScreenEdgeMask == AINoEdges) {
-		[self setSavedFrame:[[self window] frame]];
 	}
-			
 }
 
 - (BOOL)shouldSlideWindowOnScreen
@@ -586,7 +597,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	if ((permitSlidingInForeground && ![NSApp isHidden]) || (![NSApp isActive] && !windowShouldBeVisibleInBackground)) {
 		shouldSlide = [self shouldSlideWindowOnScreen_mousePositionStrategy];
 
-	} else if (!permitSlidingInForeground && [NSApp isActive] && (windowSlidOffScreenEdgeMask != 0)) {
+	} else if (!permitSlidingInForeground && [NSApp isActive] && ([self windowSlidOffScreenEdgeMask] != AINoEdges)) {
 		shouldSlide = YES;
 	}
 	
@@ -597,7 +608,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	BOOL shouldSlide = NO;
 	
-	if (!preventHiding && !windowSlidOffScreenEdgeMask) {
+	if (!preventHiding && ![self windowSlidOffScreenEdgeMask]) {
 		if (permitSlidingInForeground ||
 			(!windowShouldBeVisibleInBackground && ![NSApp isActive] && [[self window] isVisible])) {
 			shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
@@ -622,7 +633,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	for (screenEdge = 0; screenEdge < 4; screenEdge++) {		
 		if (slidableEdgesAdjacentToWindow & (1 << screenEdge)) {
 			float distanceMouseOutsideWindow = AISignedExteriorDistanceRect_edge_toPoint_(windowFrame, AIOppositeRectEdge_(screenEdge), mouseLocation);
-			if (distanceMouseOutsideWindow > 0)
+			if (distanceMouseOutsideWindow > WINDOW_SLIDING_MOUSE_DISTANCE_TOLERANCE)
 				shouldSlideOffScreen = YES;
 		}
 	}
@@ -688,7 +699,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 // This means that this method will never return YES of the cl is slid into a corner. 
 - (BOOL)shouldSlideWindowOnScreen_mousePositionStrategy
 {
-	BOOL mouseNearSlideOffEdges = (windowSlidOffScreenEdgeMask != 0);
+	BOOL mouseNearSlideOffEdges = ([self windowSlidOffScreenEdgeMask] != AINoEdges);
 	
 	NSPoint mouseLocation = [NSEvent mouseLocation];
 	
@@ -720,6 +731,11 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSAssert(FALSE, @"Abstract implementation called!");
 }
 
+- (void)moveWindowToPoint:(NSPoint)inPoint
+{
+	[[self window] setFrameOrigin:inPoint];
+}
+
 /*
  * @brief Find the mask specifying what edges are potentially slidable for our window
  *
@@ -749,14 +765,18 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 - (void)slideWindowOffScreenEdges:(AIRectEdgeMask)rectEdgeMask
 {
-	NSWindow *window = [self window];
-	NSRect newWindowFrame = [window frame];
-	[self setSavedFrame:newWindowFrame];
-	NSRectEdge edge;
-	
+	NSWindow	*window;
+	NSRect		newWindowFrame;
+	NSRectEdge	edge;
+
 	if (rectEdgeMask == AINoEdges)
 		return;
-	
+
+	window = [self window];
+	newWindowFrame = [window frame];
+
+	[self setSavedFrame:newWindowFrame];
+
 	for (edge = 0; edge < 4; edge++) {
 		if (rectEdgeMask & (1 << edge)) {
 			newWindowFrame = AIRectByAligningRect_edge_toRect_edge_(newWindowFrame, AIOppositeRectEdge_(edge), screenSlideBoundaryRect, edge);
@@ -764,19 +784,18 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 
 	windowSlidOffScreenEdgeMask |= rectEdgeMask;
-	previousAlpha = [[self window] alphaValue];
 		
 	[self slideWindowToPoint:newWindowFrame.origin];
 	
-	listHasShadow = [[self window] hasShadow];
-	[[self window] setHasShadow:NO];
+	listHasShadow = [window hasShadow];
+	[window setHasShadow:NO];
 }
 
 - (void)slideWindowOnScreenWithAnimation:(BOOL)animate
 {
 	NSWindow	*window = [self window];
 	NSRect		windowFrame = [window frame];
-	
+
 	if (!NSEqualRects(windowFrame, oldFrame)) {
 		[window orderFront:nil]; 
 		
@@ -787,7 +806,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		if (animate) {
 			[self slideWindowToPoint:oldFrame.origin];
 		} else {
-			[[self window] setFrameOrigin:oldFrame.origin];
+			[self moveWindowToPoint:oldFrame.origin];
 		}
 	}
 }
@@ -799,6 +818,23 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 - (void)setPreventHiding:(BOOL)newPreventHiding {
 	preventHiding = newPreventHiding;
+}
+
+- (void)endWindowSlidingDelay
+{
+	[self setPreventHiding:NO];
+}
+
+- (void)delayWindowSlidingForInterval:(NSTimeInterval)inDelayTime
+{
+	[self setPreventHiding:YES];
+	
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(endWindowSlidingDelay)
+											   object:nil];
+	[self performSelector:@selector(endWindowSlidingDelay)
+			   withObject:nil
+			   afterDelay:inDelayTime];
 }
 
 - (AIRectEdgeMask)windowSlidOffScreenEdgeMask

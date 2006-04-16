@@ -99,7 +99,8 @@
 {
 	return (contactListWindowController &&
 			[[contactListWindowController window] isVisible] &&
-			[[contactListWindowController window] isMainWindow]);
+			[[contactListWindowController window] isMainWindow] &&
+			([contactListWindowController windowSlidOffScreenEdgeMask] == AINoEdges));
 }
 
 //Close contact list
