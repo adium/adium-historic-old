@@ -82,6 +82,7 @@ typedef enum {
 //Identifying information
 - (NSString *)UID;
 - (AIService *)service;
+- (NSString *)serviceID;
 - (NSString *)serviceClass;
 - (NSString *)internalObjectID;
 + (NSString *)internalObjectIDForServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
