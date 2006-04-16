@@ -451,7 +451,7 @@
     if ([inObject displayContent] && ([[inObject message] length] > 0)) {
 		AIChat			*chat = [inObject chat];
 		NSDictionary	*userInfo;
-		BOOL			contentReceived, shouldPostContentReceivedEvents, chatIsOpen;
+		BOOL			contentReceived, shouldPostContentReceivedEvents;
 
 		//If the chat of the content object has been cleared, we can't do anything with it, so simply return
 		if (!chat) return;
