@@ -1,5 +1,5 @@
 /*
- * AIDictionaryDebug.m
+ * AIXMLAppender.h
  *
  * Created by Colin Barrett on 12/23/05.
  *
@@ -50,7 +50,6 @@
 - (NSString *)path;
 - (NSString *)rootElement;
 
-//TODO: change the attributes dictionary arguments to be two paralell arrays of objects and keys
-- (void)initializeDocumentWithRootElementName:(NSString *)name attributes:(NSDictionary *)attributes;
-- (void)addElementWithName:(NSString *)name content:(NSString *)content attributes:(NSDictionary *)attributes;
+- (void)initializeDocumentWithRootElementName:(NSString *)name attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
+- (void)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
 @end

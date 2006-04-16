@@ -415,11 +415,13 @@ Class LogViewerWindowControllerClass = NULL;
 	if (![appender isInitialized]) {
 		NSLog(@"Appender not initialized, initializing");
 		[appender initializeDocumentWithRootElementName:@"chat"
-			attributes:[NSDictionary dictionaryWithObjectsAndKeys:
-				[date descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:nil], @"date", 
-				[account UID], @"sender",
-				[account serviceID], @"service",
+			attributeKeys:[NSArray arrayWithObjects:@"date", @"sender", @"service", nil]
+			attributeValues:[NSArray arrayWithObjects:
+				[date descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:nil],
+				[account UID],
+				[account serviceID],
 				nil]];
+			
 	} else { 
 		NSLog(@"Appender initialized");
 	}
