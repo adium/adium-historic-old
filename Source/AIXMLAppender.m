@@ -1,5 +1,5 @@
 /*
- * AIDictionaryDebug.m
+ * AIXMLAppender.m
  *
  * Created by Colin Barrett on 12/23/05.
  *
@@ -30,6 +30,13 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* TODO:
+- Possible support for "healing" a damaged XML file?
+- Possibly refactor the initializeDocument... and addElement... methods to return a BOOL and/or RBR an error code of some kind to indicate success or failure.
+- Instead of just testing for ' ' in -rootElementNameForFileAtPath:, use NSCharacterSet and be more general.
+*/
+
+
 #import "AIXMLAppender.h"
 #import <sys/stat.h>
 
@@ -39,7 +46,7 @@
 enum { xmlMarkerLength = 21 };
 
 @interface AIXMLAppender(PRIVATE)
-- (NSString *)createElementWithName:(NSString *)name content:(NSString *)content attributes:(NSDictionary *)attributes;
+- (NSString *)createElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
 - (NSString *)rootElementNameForFileAtPath:(NSString *)path;
 @end
 
@@ -148,9 +155,10 @@ enum { xmlMarkerLength = 21 };
  * @brief Sets up the document.
  *
  * @param name The name of the root element for this document.
- * @param attributes A dictionary of the element's attributes.
+ * @param attributeKeys An array of the attribute keys the element has.
+ * @param attributeValues An array of the attribute values the element has.
  */
-- (void)initializeDocumentWithRootElementName:(NSString *)name attributes:(NSDictionary *)attributes
+- (void)initializeDocumentWithRootElementName:(NSString *)name attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
 	//Don't initialize twice
 	if (!initialized) {
@@ -159,7 +167,7 @@ enum { xmlMarkerLength = 21 };
 
 		//Create our strings
 		int closingTagLength = [rootElementName length] + 4; //</rootElementName>
-		NSString *rootElement = [self createElementWithName:rootElementName content:@"" attributes:attributes];
+		NSString *rootElement = [self createElementWithName:rootElementName content:@"" attributeKeys:keys attributeValues:values];
 		NSString *initialDocument = [NSString stringWithFormat:@"%@\n%@\n", XML_MARKER, rootElement];
 		
 		//Write the data, and then seek backwards
@@ -176,15 +184,16 @@ enum { xmlMarkerLength = 21 };
  *
  * @param name The name of the root element for this document.
  * @param content The stuff between the open and close tags. If nil, then the tag will be self closing.
- * @param attributes A dictionary of the element's attributes.
+ * @param attributeKeys An array of the attribute keys the element has.
+ * @param attributeValues An array of the attribute values the element has.
  */
 
-- (void)addElementWithName:(NSString *)name content:(NSString *)content attributes:(NSDictionary *)attributes
+- (void)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
 	//Don't add if not initialized
 	if (initialized) {
 		//Create our strings
-		NSString *element = [self createElementWithName:name content:content attributes:attributes];
+		NSString *element = [self createElementWithName:name content:content attributeKeys:keys attributeValues:values];
 		NSString *closingTag = [NSString stringWithFormat:@"</%@>\n", rootElementName];
 		
 		//Write the data, and then seek backwards
@@ -201,23 +210,38 @@ enum { xmlMarkerLength = 21 };
  *
  * @param name The name of the element.
  * @param content The stuff between the open and close tags. If nil, then the tag will be self closing.
- * @param attributes A dictionary of the element's attributes.
+ * @param attributeKeys An array of the attribute keys the element has.
+ * @param attributeValues An array of the attribute values the element has.
  * @return An XML element, suitable for insertion into a document.
  *
- * Currently, attributes doesn't respsect the order specified by -arrayWithObjectsAndKeys:. That's because dictionaries
- * are not ordered.
+ * The two attribute arrays must be of the same size, or the method will return nil.
+ *
+ * If an item in the attribute value array is @"", the expected output of attributeKey="" will be omitted in favor of 
+ * the more succint attributeKey.
  */
 
-- (NSString *)createElementWithName:(NSString *)name content:(NSString *)content attributes:(NSDictionary *)attributes
+- (NSString *)createElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
+	//Check our precondition
+	if ([keys count] != [values count]) {
+		NSLog(@"Attribute key and value arrays are of differing lengths, %u and %u, respectively", [keys count], [values count]);
+		return nil;
+	}
+	
 	//Collapse the attributes
 	NSMutableString *attributeString = [NSMutableString string];
-	NSEnumerator *attributeKeyEnumerator = [attributes keyEnumerator];
-	NSString *key = nil;
-	while ((key = [attributeKeyEnumerator nextObject])) {
-		[attributeString appendFormat:@" %@=\"%@\"", 
-			[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)key, NULL) autorelease],
-			[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)[attributes objectForKey:key], NULL) autorelease]];
+	NSEnumerator *attributeKeyEnumerator = [keys objectEnumerator];
+	NSEnumerator *attributeValueEnumerator = [values objectEnumerator];
+	NSString *key = nil, *value = nil;
+	while ((key = [attributeKeyEnumerator nextObject]) && (value = [attributeValueEnumerator nextObject])) {
+		if ([value isEqualToString:@""]) {
+			[attributeString appendFormat:@" %@",
+				[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)key, NULL) autorelease]];
+		} else {
+			[attributeString appendFormat:@" %@=\"%@\"", 
+				[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)key, NULL) autorelease],
+				[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)value, NULL) autorelease]];
+		}
 	}
 	
 	//Format and return
