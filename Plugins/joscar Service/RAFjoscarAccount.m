@@ -703,7 +703,7 @@ BOOL isHTMLContact(AIListObject *inListObject)
 	} else {
 		encodedMessage = [[message attributedStringByConvertingLinksToStrings] string];
 	}
-	
+	AILog(@"%@: Encoded %@ to send to %@",self, encodedMessage, [inContentMessage destination]);
 	return encodedMessage;
 }
 

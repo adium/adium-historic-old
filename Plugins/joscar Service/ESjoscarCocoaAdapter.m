@@ -881,6 +881,8 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	FileTransferStatus	fileTransferStatus;
 	BOOL				shouldPollForStatus = NO;
 
+	NSLog(@"File transfer update: %@",userInfo);
+
 	if ([newState isEqualToString:@"WAITING"]) {
 		fileTransferStatus = Not_Started_FileTransfer;
 		
