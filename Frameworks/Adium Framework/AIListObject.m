@@ -303,6 +303,7 @@
  * @brief One of our mutable owners set an object
  *
  * A mutable owner array (one of our displayArrays) set an object
+ */
 - (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority
 {
 	if (containingObject) {
