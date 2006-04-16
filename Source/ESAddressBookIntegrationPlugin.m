@@ -991,7 +991,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 																   priorityLevel:Low_Priority];										
 					}									
 				}
-				NSLog(@"Registering %@ as the default...", myDisplayName);
+
 				[[adium preferenceController] registerDefaults:[NSDictionary dictionaryWithObject:[[NSAttributedString stringWithString:myDisplayName] dataRepresentation]
 																						   forKey:KEY_ACCOUNT_DISPLAY_NAME]
 													  forGroup:GROUP_ACCOUNT_STATUS];
