@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
     
     [argvData appendBytes:&nullPtr length:sizeof(nullPtr)];
     
-    execv(((const char **)[argvData bytes])[0], (const char **)[argvData bytes]);
+    execv(((const char **)[argvData bytes])[0], (char * const *)[argvData bytes]);
     
     // This should never be reached
         
