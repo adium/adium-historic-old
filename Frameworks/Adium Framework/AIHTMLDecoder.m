@@ -1088,63 +1088,62 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			int			styleLength = [style length];
 			NSRange		attributeRange;
 
-			NSLog(@"style string is %@", style);
-			NSLog(@"checking for font family...");
 			attributeRange = [style rangeOfString:@"font-family: " options:NSCaseInsensitiveSearch];
 			if (attributeRange.location != NSNotFound) {
-				NSLog(@"reading font family...");
-				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
-				NSLog(@"successfully got range (%@)", NSStringFromRange(nextSemicolon));
-
-				NSString *fontFamily = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
-
-				[textAttributes setFontFamily:fontFamily];
+				NSRange	 nextSemicolon = [style rangeOfString:@";"
+													  options:NSLiteralSearch
+														range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				if (nextSemicolon.location != NSNotFound) {
+					NSString *fontFamily = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange),
+																				 nextSemicolon.location - NSMaxRange(attributeRange))];
+					
+					[textAttributes setFontFamily:fontFamily];
+				}
 			}
 			
-			NSLog(@"checking for font size...");
 			attributeRange = [style rangeOfString:@"font-size: " options:NSCaseInsensitiveSearch];
 			if (attributeRange.location != NSNotFound) {
-				NSLog(@"reading font size...");
-				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
-				NSLog(@"successfully got range (%@)", NSStringFromRange(nextSemicolon));
-				NSString *fontSize = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
-				
-				static int stylePointSizes[] = { 9, 10, 12, 14, 18, 24 };
-				int size = 12;
-
-				if ([fontSize caseInsensitiveCompare:@"xx-small"] == NSOrderedSame) {
-					size = stylePointSizes[0];
+				NSRange	 nextSemicolon = [style rangeOfString:@";"
+													  options:NSLiteralSearch
+														range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				if (nextSemicolon.location != NSNotFound) {
+					NSString *fontSize = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
 					
-				} else if ([fontSize caseInsensitiveCompare:@"x-small"] == NSOrderedSame) {
-					size = stylePointSizes[1];
-				
-				} else if ([fontSize caseInsensitiveCompare:@"small"] == NSOrderedSame) {
-					size = stylePointSizes[2];
+					static int stylePointSizes[] = { 9, 10, 12, 14, 18, 24 };
+					int size = 12;
 					
-				} else if ([fontSize caseInsensitiveCompare:@"medium"] == NSOrderedSame) {
-					size = stylePointSizes[3];
+					if ([fontSize caseInsensitiveCompare:@"xx-small"] == NSOrderedSame) {
+						size = stylePointSizes[0];
+						
+					} else if ([fontSize caseInsensitiveCompare:@"x-small"] == NSOrderedSame) {
+						size = stylePointSizes[1];
+						
+					} else if ([fontSize caseInsensitiveCompare:@"small"] == NSOrderedSame) {
+						size = stylePointSizes[2];
+						
+					} else if ([fontSize caseInsensitiveCompare:@"medium"] == NSOrderedSame) {
+						size = stylePointSizes[3];
+						
+					} else if ([fontSize caseInsensitiveCompare:@"large"] == NSOrderedSame) {
+						size = stylePointSizes[4];
+						
+					} else if ([fontSize caseInsensitiveCompare:@"x-large"] == NSOrderedSame) {
+						size = stylePointSizes[5];
+					}
 					
-				} else if ([fontSize caseInsensitiveCompare:@"large"] == NSOrderedSame) {
-					size = stylePointSizes[4];
-					
-				} else if ([fontSize caseInsensitiveCompare:@"x-large"] == NSOrderedSame) {
-					size = stylePointSizes[5];
+					[textAttributes setFontSize:size];
 				}
-
-				[textAttributes setFontSize:size];
 			}
-			
-			NSLog(@"checking for font color...");
+
 			attributeRange = [style rangeOfString:@"color: " options:NSCaseInsensitiveSearch];
 			if (attributeRange.location != NSNotFound) {
-				NSLog(@"reading font color...");
 				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
-				NSLog(@"successfully got range (%@)", NSStringFromRange(nextSemicolon));
-				NSString *hexColor = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
-
-				[textAttributes setTextColor:[NSColor colorWithHTMLString:hexColor
-															 defaultColor:[NSColor blackColor]]];
-				
+				if (nextSemicolon.location != NSNotFound) {
+					NSString *hexColor = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
+					
+					[textAttributes setTextColor:[NSColor colorWithHTMLString:hexColor
+																 defaultColor:[NSColor blackColor]]];
+				}
 			}
 		}
 	}
@@ -1291,11 +1290,14 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			if (!imagesPath) {
 				imagesPath = NSTemporaryDirectory();
 			}
-			
-			//Image doesn't exist on disk; write it out to our images path
-			shortFileName = [[inName safeFilenameString] stringByAppendingPathExtension:@"png"];
-			inPath = [[NSFileManager defaultManager] uniquePathForPath:[imagesPath stringByAppendingPathComponent:shortFileName]];
 
+			//Make sure the image has an appropriate extension
+			if ([[inName pathExtension] caseInsensitiveCompare:@"png"] != NSOrderedSame) {
+				inName = [inName stringByAppendingPathExtension:@"png"];
+			}	
+
+			shortFileName = [inName safeFilenameString];
+			inPath = [[NSFileManager defaultManager] uniquePathForPath:[imagesPath stringByAppendingPathComponent:shortFileName]];
 			success = [[attachmentImage PNGRepresentation] writeToFile:inPath atomically:YES];
 		}
 		
@@ -1309,7 +1311,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	
 	if (success) {
 		NSString *srcPath = [[[NSURL fileURLWithPath:inPath] absoluteString] stringByEscapingForHTML];
-		NSString *altName = [inName stringByEscapingForHTML];
+		NSString *altName = (inName ? [inName stringByEscapingForHTML] : [srcPath lastPathComponent]);
 
 		if (attachmentImage) {
 			//Include size information if possible
