@@ -26,6 +26,7 @@
 #import "AIMenuController.h"
 #import "AIPreferenceController.h"
 #import "AIToolbarController.h"
+#import "AIXMLAppender.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
@@ -95,6 +96,10 @@ Class LogViewerWindowControllerClass = NULL;
 
 	AIPreferenceController *preferenceController = [adium preferenceController];
 
+	#ifdef XML_LOGGING
+	activeAppenders = [[NSMutableDictionary alloc] init];
+	#endif
+	
 	//Setup our preferences
 	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS 
 	                              forClass:[self class]] 
@@ -142,10 +147,25 @@ Class LogViewerWindowControllerClass = NULL;
 								   selector:@selector(showLogNotification:)
 									   name:Adium_ShowLogAtPath
 									 object:nil];
+	#ifdef XML_LOGGING
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(chatOpened:)
+									   name:Chat_DidOpen
+									 object:nil];
+									 
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(chatClosed:)
+									   name:Chat_WillClose
+									 object:nil];
+	#endif
+	
 }
 
 - (void)uninstallPlugin
 {
+	#ifdef XML_LOGGING
+	[activeAppenders release];
+	#endif
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
@@ -184,7 +204,7 @@ Class LogViewerWindowControllerClass = NULL;
 //Returns the RELATIVE path to the folder where the log should be written
 + (NSString *)relativePathForLogWithObject:(NSString *)object onAccount:(AIAccount *)account
 {	
-	return [NSString stringWithFormat:@"%@.%@/%@", [[account service] serviceID], [[account UID] safeFilenameString], object];
+	return [NSString stringWithFormat:@"%@.%@/%@", [account serviceID], [[account UID] safeFilenameString], object];
 }
 
 + (NSString *)imagesPathForContentObject:(AIContentObject *)contentObject
@@ -204,13 +224,25 @@ Class LogViewerWindowControllerClass = NULL;
 	return ([fullPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", object, dateString]]);
 }
 
-//Returns the file name for the log
+#ifdef XML_LOGGING
++ (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date
+{
+	NSString	*dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:nil];
+	return [NSString stringWithFormat:@"%@ (%@).AdiumXMLLog", object, dateString];
+}
+#endif
+
+//Returns the file name for the log (plaintext logging is deprecated)
 + (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date plainText:(BOOL)plainText
 {
+#ifdef XML_LOGGING
+	return [self fileNameForLogWithObject:object onDate:date];
+#else
 	NSString	*dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:nil];
 	NSString	*extension = (plainText ? @"adiumLog" : @"AdiumHTMLLog");
 	
 	return [NSString stringWithFormat:@"%@ (%@).%@", object, dateString, extension];
+#endif
 }
 
 //Takes the RELATIVE path to a log, and returns a FULL path
@@ -316,6 +348,13 @@ Class LogViewerWindowControllerClass = NULL;
 //Log any content that is sent or received
 - (void)contentObjectAdded:(NSNotification *)notification
 {
+#ifdef XML_LOGGING
+	/*
+		Procedure will be the following:
+		- look the AIXMLAppender for the object and account, creating one if necessary. will probably be in another method.
+		- switch on the content type, and append the XML tag (farm this out to helper methods?)
+	*/
+#else
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
 	if ([content postProcessContent]) {
 		AIChat				*chat = [notification object];
@@ -346,7 +385,76 @@ Class LogViewerWindowControllerClass = NULL;
 			[self markLogDirtyAtPath:relativePath forChat:chat];
 		}
 	}
+#endif
 }
+
+#ifdef XML_LOGGING
+- (void)chatOpened:(NSNotification *)notification
+{
+	AIChat	*chat = [notification object];
+
+	//Don't log chats for temporary accounts
+	if ([[chat account] isTemporary]) return;
+	
+	NSString	*objectUID = [chat name];
+	NSDate		*date = [NSDate date];
+	AIAccount	*account = [chat account];
+
+	if (!objectUID) objectUID = [[chat listObject] UID];
+	objectUID = [objectUID safeFilenameString];
+
+	NSString	*fileName = [AILoggerPlugin fileNameForLogWithObject:objectUID onDate:date];
+	NSString	*relativePath = [AILoggerPlugin relativePathForLogWithObject:objectUID onAccount:account];
+	NSString	*absolutePath = [AILoggerPlugin fullPathOfLogAtRelativePath:relativePath];
+	NSString	*fullPath = [absolutePath stringByAppendingPathComponent:fileName];
+
+	NSLog(@"Creating appender with path: %@", fullPath);
+	AIXMLAppender *appender = [AIXMLAppender documentWithPath:fullPath];
+	
+	
+	if (![appender isInitialized]) {
+		NSLog(@"Appender not initialized, initializing");
+		[appender initializeDocumentWithRootElementName:@"chat"
+			attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+				[date descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:nil], @"date", 
+				[account UID], @"sender",
+				[account serviceID], @"service",
+				nil]];
+	} else { 
+		NSLog(@"Appender initialized");
+	}
+	
+	NSLog(@"activeAppenders count before adding: %i", [activeAppenders count]);
+	[activeAppenders setObject:appender forKey:fullPath];
+	NSLog(@"activeAppenders count after adding: %i", [activeAppenders count]);
+}
+
+- (void)chatClosed:(NSNotification *)notification
+{
+	AIChat	*chat = [notification object];
+
+	//Don't log chats for temporary accounts
+	if ([[chat account] isTemporary]) return;
+	
+	NSString	*objectUID = [chat name];
+	NSDate		*date = [NSDate date];
+	AIAccount	*account = [chat account];
+
+	if (!objectUID) objectUID = [[chat listObject] UID];
+	objectUID = [objectUID safeFilenameString];
+
+	NSString	*fileName = [AILoggerPlugin fileNameForLogWithObject:objectUID onDate:date];
+	NSString	*relativePath = [AILoggerPlugin relativePathForLogWithObject:objectUID onAccount:account];
+	NSString	*absolutePath = [AILoggerPlugin fullPathOfLogAtRelativePath:relativePath];
+	NSString	*fullPath = [absolutePath stringByAppendingPathComponent:fileName];
+	NSLog(@"Removing appender with path: %@", fullPath);
+	
+	NSLog(@"activeAppenders count before removing: %i", [activeAppenders count]);
+	[activeAppenders removeObjectForKey:fullPath];
+	NSLog(@"activeAppenders count after removing: %i", [activeAppenders count]);
+}
+
+#endif
 
 //Generate a plain-text string representing a content message
 #define AUTOREPLY AILocalizedString(@" (Autoreply)",nil)
