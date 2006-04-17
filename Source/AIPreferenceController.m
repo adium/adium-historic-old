@@ -779,7 +779,7 @@
 			prefixRange = [key rangeOfString:@"ByObject:" options:NSLiteralSearch | NSAnchoredSearch];
 			if(prefixRange.location == 0) {
 				NSAssert(NO, @"ByObject is not yet supported in AIPreferenceController KVC methods.");
-				//				key = [key substringFromIndex:prefixRange.length + 1];
+//				key = [key substringFromIndex:prefixRange.length + 1];
 #warning XXX ByObject NOT REALLY SUPPORTED YET
 			}
 		}
@@ -793,7 +793,7 @@
 		} else {
 			keyInGroup = [keyPath substringToIndex:periodIdx];
 		}
-		
+
 		NSLog(@"key path: %@; first key: %@; second key: %@", keyPath, key, keyInGroup);
 		//Change the value.
 		NSMutableDictionary *prefDict = [self cachedPreferencesForGroup:key object:nil];
