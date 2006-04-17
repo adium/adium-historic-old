@@ -58,6 +58,16 @@
 	return nil;
 }
 
+/*!
+ * @brief Supports offline messaging?
+ *
+ * Gadu-Gadu supports offline messaging.
+ */
+- (BOOL)supportsOfflineMessaging
+{
+	return YES;
+}
+
 /*
 - (oneway void)accountConnectionConnected
 {
