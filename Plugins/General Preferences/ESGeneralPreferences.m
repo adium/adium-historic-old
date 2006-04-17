@@ -94,10 +94,6 @@
 	[checkBox_enableLogging setState:[[[adium preferenceController] preferenceForKey:KEY_LOGGER_ENABLE
 																			   group:PREF_GROUP_LOGGING] boolValue]];
 
-	//Status Menu
-	[checkBox_enableMenuItem setState:[[[adium preferenceController] preferenceForKey:KEY_STATUS_MENU_ITEM_ENABLED
-																				group:PREF_GROUP_STATUS_MENU_ITEM] boolValue]];
-	
 	//Global hotkey
 	PTKeyCombo *keyCombo = [[[PTKeyCombo alloc] initWithPlistRepresentation:[[adium preferenceController] preferenceForKey:KEY_GENERAL_HOTKEY
 																													 group:PREF_GROUP_GENERAL]] autorelease];

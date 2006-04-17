@@ -47,28 +47,19 @@
         }, 
         {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
-            ACTIONS = {selectVolume = id; }; 
             CLASS = ESGeneralPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_maxvolume" = NSButton; 
-                "button_minvolume" = NSButton; 
                 "checkBox_arrangeByGroup" = NSButton; 
                 "checkBox_enableLogging" = NSButton; 
-                "checkBox_enableMenuItem" = NSButton; 
                 "checkBox_messagesInTabs" = NSButton; 
-                "colorPopUp_background" = AIColorSelectionPopUpButton; 
-                "colorPopUp_text" = AIColorSelectionPopUpButton; 
-                "fontPopUp_text" = AIFontSelectionPopUpButton; 
                 "label_logging" = NSTextField; 
-                "label_menuItem" = NSTextField; 
                 "label_messagesSendOn" = NSTextField; 
                 "label_messagesTabs" = NSTextField; 
                 "label_switchTabsWith" = NSTextField; 
                 "popUp_sendKeys" = NSPopUpButton; 
                 "popUp_tabKeys" = NSPopUpButton; 
                 shortcutRecorder = ShortcutRecorder; 
-                "slider_volume" = NSSlider; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
