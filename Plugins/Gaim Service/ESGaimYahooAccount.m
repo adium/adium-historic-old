@@ -59,6 +59,16 @@
 	return supportedPropertyKeys;
 }
 
+/*!
+ * @brief Supports offline messaging?
+ *
+ * Yahoo! supports offline messaging.
+ */
+- (BOOL)supportsOfflineMessaging
+{
+	return YES;
+}
+
 #pragma mark Connection
 - (NSString *)connectionStringForStep:(int)step
 {
