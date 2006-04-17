@@ -181,7 +181,7 @@ Class LogViewerWindowControllerClass = NULL;
 	newLogValue = [[prefDict objectForKey:KEY_LOGGER_ENABLE] boolValue];
 	if (newLogValue != observingContent) {
 		observingContent = newLogValue;
-		
+				
 		if (!observingContent) { //Stop Logging
 			[[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
 			

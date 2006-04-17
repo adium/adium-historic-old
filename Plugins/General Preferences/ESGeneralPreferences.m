@@ -90,10 +90,6 @@
 		[popUp_sendKeys compatibleSelectItemWithTag:AISendOnReturn];
 	}
 
-	//Logging
-	[checkBox_enableLogging setState:[[[adium preferenceController] preferenceForKey:KEY_LOGGER_ENABLE
-																			   group:PREF_GROUP_LOGGING] boolValue]];
-
 	//Global hotkey
 	PTKeyCombo *keyCombo = [[[PTKeyCombo alloc] initWithPlistRepresentation:[[adium preferenceController] preferenceForKey:KEY_GENERAL_HOTKEY
 																													 group:PREF_GROUP_GENERAL]] autorelease];
@@ -115,11 +111,6 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_GROUP_CHATS_BY_GROUP
 											  group:PREF_GROUP_INTERFACE];
-		
-	} else if (sender == checkBox_enableLogging) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_LOGGER_ENABLE
-                                              group:PREF_GROUP_LOGGING];
 		
     } else if (sender == popUp_tabKeys) {
 		AITabKeys keySelection = [[sender selectedItem] tag];
