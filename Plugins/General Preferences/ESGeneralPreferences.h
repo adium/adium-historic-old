@@ -21,8 +21,6 @@
 @interface ESGeneralPreferences : AIPreferencePane {
     IBOutlet	NSButton		*checkBox_messagesInTabs;
     IBOutlet	NSButton		*checkBox_arrangeByGroup;
-
-	IBOutlet	NSButton		*checkBox_enableLogging;
 	
 	IBOutlet	NSPopUpButton	*popUp_tabKeys;
 	IBOutlet	NSPopUpButton	*popUp_sendKeys;
