@@ -192,6 +192,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 - (void)disconnect
 {
+	AILog(@"*** %@ disconnecting %@",appSession, [account serversideUID]);
 	[aimConnection disconnect];
 }
 
@@ -295,8 +296,9 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	NSString *iTMSLink = [info getItunesUrl];
 	NSString *message = [info getStatusMessage];
 
+#define MUSICAL_NOTE [NSString stringWithUTF8String:"\342\231\253"]
 	if (iTMSLink)
-		message = [NSString stringWithFormat:@"<a href=\"%@\">%@</a>",iTMSLink,message];
+		message = [NSString stringWithFormat:@"<a href=\"%@\">%@</a> %@", iTMSLink, MUSICAL_NOTE, message];
 
 	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 				setStatusMessage:[[message copy] autorelease]];
