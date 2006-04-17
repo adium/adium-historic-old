@@ -139,10 +139,6 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:sendOnReturn]
 											 forKey:SEND_ON_RETURN
                                               group:PREF_GROUP_GENERAL];
-	} else if (sender == checkBox_enableMenuItem) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkBox_enableMenuItem state]] 
-											 forKey:KEY_STATUS_MENU_ITEM_ENABLED
-											  group:PREF_GROUP_STATUS_MENU_ITEM];
 	}
 }
 
