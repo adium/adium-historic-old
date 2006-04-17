@@ -22,7 +22,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 #ifndef _GAIM_INTERNAL_H_
 #define _GAIM_INTERNAL_H_
 
@@ -143,6 +142,11 @@
 #	define g_open open
 #endif
 
+#if !GLIB_CHECK_VERSION(2,10,0)
+#	define g_slice_new(type) g_new(type, 1)
+#	define g_slice_new0(type) g_new0(type, 1)
+#	define g_slice_free(type, mem) g_free(mem)
+#endif
 
 /* ugly ugly ugly */
 /* This is a workaround for the fact that G_GINT64_MODIFIER and G_GSIZE_FORMAT
