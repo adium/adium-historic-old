@@ -185,7 +185,7 @@
 		[badgeImage drawInRect:destRect
 					  fromRect:srcRect
 					 operation:NSCompositeSourceOver
-					  fraction:0.75];
+					  fraction:1.0];
 		[image unlockFocus];
 	}
 
