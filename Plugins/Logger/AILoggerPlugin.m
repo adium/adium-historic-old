@@ -113,7 +113,15 @@ Class LogViewerWindowControllerClass = NULL;
 	[[NSFileManager defaultManager] createDirectoriesForPath:logBasePath];
 
 	//Observe preference changes
-	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LOGGING];
+	AIPreferenceController *prefController = [adium preferenceController];
+	[prefController addObserver:self
+	                 forKeyPath:PREF_KEYPATH_LOGGER_ENABLE
+	                    options:NSKeyValueObservingOptionNew
+	                    context:NULL];
+	[self observeValueForKeyPath:PREF_KEYPATH_LOGGER_ENABLE
+	                    ofObject:prefController
+	                      change:nil
+	                     context:NULL];
 
 	//Toolbar item
 	NSToolbarItem	*toolbarItem;
@@ -166,25 +174,23 @@ Class LogViewerWindowControllerClass = NULL;
 	#ifdef XML_LOGGING
 	[activeAppenders release];
 	#endif
-	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[[adium preferenceController] removeObserver:self forKeyPath:PREF_KEYPATH_LOGGER_ENABLE];
 }
 
 //Update for the new preferences
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	BOOL            newLogValue;
-	
+	BOOL	newLogValue;
 	logHTML = YES;
 
 	//Start/Stop logging
-	newLogValue = [[prefDict objectForKey:KEY_LOGGER_ENABLE] boolValue];
+	newLogValue = [[object valueForKeyPath:keyPath] boolValue];
 	if (newLogValue != observingContent) {
 		observingContent = newLogValue;
 				
 		if (!observingContent) { //Stop Logging
 			[[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
-			
+
 		} else { //Start Logging
 			[[adium notificationCenter] addObserver:self 
 										   selector:@selector(contentObjectAdded:) 

@@ -22,6 +22,8 @@
 #define PREF_GROUP_LOGGING              @"Logging"
 #define KEY_LOGGER_ENABLE               @"Enable Logging"
 
+#define PREF_KEYPATH_LOGGER_ENABLE		PREF_GROUP_LOGGING @"." KEY_LOGGER_ENABLE
+
 //Uncomment this to enable XML_LOGGING
 //#define XML_LOGGING
 
