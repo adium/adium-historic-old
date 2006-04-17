@@ -76,14 +76,14 @@ static void *adiumGaimNotifyFormatted(const char *title, const char *primary, co
 
 static void *adiumGaimNotifySearchResults(GaimConnection *gc, const char *title,
 										  const char *primary, const char *secondary,
-										  GaimNotifySearchResults *results)
+										  GaimNotifySearchResults *results, gpointer user_data)
 {
 	return adium_gaim_get_handle();
 }
 
 static void adiumGaimNotifySearchResultsNewRows(GaimConnection *gc,
 												 GaimNotifySearchResults *results,
-												 void *data, void *user_data)
+												 void *data)
 {
 
 }
