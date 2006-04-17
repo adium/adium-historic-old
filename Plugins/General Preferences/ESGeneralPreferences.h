@@ -27,12 +27,9 @@
 	IBOutlet	NSPopUpButton	*popUp_tabKeys;
 	IBOutlet	NSPopUpButton	*popUp_sendKeys;
 	
-	IBOutlet	NSButton		*checkBox_enableMenuItem;
-	
 	IBOutlet	NSTextField		*label_logging;
 	IBOutlet	NSTextField		*label_messagesSendOn;
 	IBOutlet	NSTextField		*label_messagesTabs;
-	IBOutlet	NSTextField		*label_menuItem;
 	IBOutlet	NSTextField		*label_switchTabsWith;	
 
     IBOutlet	ShortcutRecorder	*shortcutRecorder;		
