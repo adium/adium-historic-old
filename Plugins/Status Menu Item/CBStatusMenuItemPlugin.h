@@ -20,7 +20,7 @@
 #define STATUS_MENU_ITEM_DEFAULT_PREFS  @"StatusMenuItemDefaultPrefs"
 #define PREF_GROUP_STATUS_MENU_ITEM     @"Status Menu Item"
 #define KEY_STATUS_MENU_ITEM_ENABLED    @"Status Menu Item Enabled"
-#define PREF_KEYPATH_STATUS_MENU_ITEM_ENABLED    @"Status Menu Item.Status Menu Item Enabled"
+#define PREF_KEYPATH_STATUS_MENU_ITEM_ENABLED    PREF_GROUP_STATUS_MENU_ITEM KEY_STATUS_MENU_ITEM_ENABLED
 
 @interface CBStatusMenuItemPlugin : AIPlugin 
 {
