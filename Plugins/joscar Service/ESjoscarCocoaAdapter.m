@@ -296,7 +296,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	NSString *iTMSLink = [info getItunesUrl];
 	NSString *message = [info getStatusMessage];
 
-#define MUSICAL_NOTE [NSString stringWithUTF8String:"\342\231\253"]
+#define MUSICAL_NOTE [NSString stringWithUTF8String:"\xe2\x99\xab"]
 	if (iTMSLink)
 		message = [NSString stringWithFormat:@"<a href=\"%@\">%@</a> %@", iTMSLink, MUSICAL_NOTE, message];
 
