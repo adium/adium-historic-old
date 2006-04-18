@@ -579,7 +579,8 @@ static ESFileTransferPreferences *preferences;
 	} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 		description = @"File Transfer Began";
 	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
-		description = @"File Transfer cancelled Remotely";
+		//Canceled, not Cancelled as we use elsewhere in Adium, for historical reasons. Both are valid spellings.
+		description = @"File Transfer Canceled Remotely";
 	} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 		description = @"File Transfer Complete";
 	} else {		
