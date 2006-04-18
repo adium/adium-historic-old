@@ -26,13 +26,17 @@
 #import <Adium/ESTextAndButtonsWindowController.h>
 #import <Adium/AIContentStatus.h>
 #import <Adium/AITextAttachmentExtension.h>
-#import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AIMutableOwnerArray.h>
-#import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIImageAdditions.h>
+
 #import <AIUtilities/AIApplicationAdditions.h>
-#import <AIUtilities/AIStringUtilities.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
+
+#import <AIUtilities/AIMutableOwnerArray.h>
+#import <AIUtilities/AIStringUtilities.h>
 
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 
@@ -1276,6 +1280,69 @@ BOOL isHTMLContact(AIListObject *inListObject)
 - (NSString *)getSecurid
 {
 	return [RAFjoscarSecuridPromptController getSecuridForAccount:self];
+}
+
+#pragma mark Account Actions
+- (void)goToURL:(id)sender
+{
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[sender representedObject]]];
+}
+
+/*!
+* @brief Menu items for the account's actions
+ *
+ * Returns an array of menu items for account-specific actions.  This is the best place to add protocol-specific
+ * actions that aren't otherwise supported by Adium.  It will only be queried if the account is online.
+ * @return NSArray of NSMenuItem instances for this account
+ */
+- (NSArray *)accountActionMenuItems
+{
+	if (![self online]) return nil;
+
+	BOOL isICQ = isdigit([[self UID] characterAtIndex:0]);
+
+	NSMutableArray	*menuItemArray = [NSMutableArray array];
+	NSMenuItem		*menuItem;
+
+	if (isICQ) {
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[AILocalizedString(@"Change User Details", nil) stringByAppendingEllipsis]
+																		 target:self
+																		 action:@selector(goToURL:)
+																  keyEquivalent:@""] autorelease];
+		[menuItem setRepresentedObject:@"http://www.icq.com/whitepages/user_details.php"];
+		[menuItemArray addObject:menuItem];
+	}
+
+	//Change Password
+	//gchar *substituted = gaim_strreplace(od->authinfo->chpassurl, "%s", gaim_account_get_username(gaim_connection_get_account(gc)));
+
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[AILocalizedString(@"Configure IM Forwarding", nil) stringByAppendingEllipsis]
+																	 target:self
+																	 action:@selector(goToURL:)
+															  keyEquivalent:@""] autorelease];
+	[menuItem setRepresentedObject:@"http://mymobile.aol.com/dbreg/register?action=imf&clientID=1"];
+	[menuItemArray addObject:menuItem];
+	
+	//[menuItemArray addObject:[NSMenuItem separatorItem]];
+	
+	if (isICQ) {
+		//"Set Privacy Options..."
+	} else {
+		/*
+		 "Confirm Account"
+		 "Display Currently Registered E-Mail Address"
+		 "Change Currently Registered E-Mail Address..."
+		 */
+	}
+	
+	//[menuItemArray addObject:[NSMenuItem separatorItem]];
+	
+	//"Show Buddies Awaiting Authorization"
+	//[menuItemArray addObject:[NSMenuItem separatorItem]];
+
+	//"Search for Buddy by E-Mail Address..."
+	
+	return menuItemArray;
 }
 
 @end
