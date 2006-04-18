@@ -220,7 +220,7 @@
  */
 - (void)uninstallPlugin
 {
-	
+	[[adium contentController] unregisterContentFilter:self];
 }
 
 #pragma mark -

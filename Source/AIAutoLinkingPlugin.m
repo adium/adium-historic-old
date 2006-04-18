@@ -38,6 +38,11 @@
 	[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterOutgoing];
 }
 
+- (void)uninstallPlugin
+{
+	[[adium contentController] unregisterContentFilter:self];
+}
+
 /*!
  * @brief Deallocate
  */
