@@ -103,9 +103,7 @@
  */
 - (void)controllerWillClose
 {
-	[adiumTyping release];
-	[adiumFormatting release];
-	[adiumContentFiltering release];
+
 }
 
 /*
@@ -113,7 +111,10 @@
  */
 - (void)dealloc
 {
-	[objectsBeingReceived release];
+	[objectsBeingReceived release]; objectsBeingReceived = nil;
+	[adiumTyping release]; adiumTyping = nil;
+	[adiumFormatting release]; adiumFormatting = nil;
+	[adiumContentFiltering release]; adiumContentFiltering = nil;
 
     [super dealloc];
 }
