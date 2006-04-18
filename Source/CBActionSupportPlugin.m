@@ -35,6 +35,11 @@
 	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterIncoming];
 }
 
+- (void)uninstallPlugin
+{
+	[[adium contentController] unregisterContentFilter:self];
+}
+
 #pragma mark -
 
 - (BOOL)includesDisplayNameInReplacement
