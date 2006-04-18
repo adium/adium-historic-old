@@ -106,7 +106,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 
 - (void)controllerWillClose
 {
-//	[[adium contentController] unregisterOutgoingContentFilter:self];
+	[[adium contentController] unregisterContentFilter:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
