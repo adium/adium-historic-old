@@ -218,7 +218,6 @@ int main(int argc, char *argv[])
     // Change the first argument to the path of the new executable
     
     ((const char **)[argvData mutableBytes])[0] = [path UTF8String];
-    [path release];
 
     // Append a NULL char* to the end of the array
     
