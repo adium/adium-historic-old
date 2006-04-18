@@ -76,6 +76,16 @@
     [self disconnectAllAccounts];
 }
 
+- (void)dealloc
+{
+	[adiumServices release];
+	[adiumPasswords release];
+	[adiumAccounts release];
+	[adiumPreferredAccounts release];
+
+	[super dealloc];
+}
+
 //Services
 #pragma mark Services
 - (void)registerService:(AIService *)inService {
