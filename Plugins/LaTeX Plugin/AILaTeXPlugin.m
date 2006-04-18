@@ -41,7 +41,7 @@
 
 - (void)uninstallPlugin
 {
-	[[adium contentController] unregisterOutgoingContentFilter:self];
+	[[adium contentController] unregisterContentFilter:self];
 }
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
