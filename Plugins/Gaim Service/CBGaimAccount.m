@@ -782,7 +782,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	encodedString = (didCommand ?
 					 nil :
 					 [super encodedAttributedStringForSendingContentMessage:inContentMessage]);
-	NSLog(@"gaimaccount didcommand? %i",didCommand);
+
 	return encodedString;
 }
 
