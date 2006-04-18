@@ -632,7 +632,7 @@
 	[self updateCachedPreferencesWithDefaultsForGroup:group object:object];
 	
 	//Now inform observers
-	[self informObserversOfChangedKey:key inGroup:group object:nil];
+	[self informObserversOfChangedKey:key inGroup:group object:object];
 
 	//Save the preference change immediately (Probably not the best idea?)
 	[prefDict writeToPath:path
