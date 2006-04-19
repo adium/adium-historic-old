@@ -21,6 +21,8 @@
 	IBOutlet	NSTextField					*label_localAlias;
 	IBOutlet	NSTextField					*label_remoteAlias;
 	IBOutlet	NSTextField					*label_profile;
+	
+	IBOutlet	NSButton					*button_enableMusicProfile;
 }
 
 @end
