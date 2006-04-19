@@ -283,6 +283,18 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 				}
 			}
 			if (!acceptable) {
+				/* If the emoticon would end the string except for whitespace or newlines at the end, or it begins the string after removing
+				 * whitespace or newlines at the beginning, it is acceptable even if the previous conditions weren't met.
+				 */
+				NSString	*trimmedString = [messageString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+				unsigned int trimmedLength = [trimmedString length];
+				if ([trimmedString length] == (originalEmoticonLocation + textLength)) {
+					acceptable = YES;
+				} else if ((originalEmoticonLocation - (messageStringLength - trimmedLength)) == 0) {
+					acceptable = YES;					
+				}
+			}
+			if (!acceptable) {
 				/* If we still haven't determined it to be acceptable, look ahead.
 				 * If we do a replacement adjacent to this emoticon, we can do this one, too.
 				 */
