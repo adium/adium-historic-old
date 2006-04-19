@@ -51,7 +51,7 @@
             SUPERCLASS = NSTextView; 
         }, 
         {
-            ACTIONS = {toggleMusicDisplay = id; }; 
+            ACTIONS = {}; 
             CLASS = ESPersonalPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
