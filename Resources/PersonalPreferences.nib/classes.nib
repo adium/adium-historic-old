@@ -51,10 +51,12 @@
             SUPERCLASS = NSTextView; 
         }, 
         {
+            ACTIONS = {toggleMusicDisplay = id; }; 
             CLASS = ESPersonalPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_chooseIcon" = NSButton; 
+                "button_enableMusicProfile" = NSButton; 
                 "imageView_userIcon" = AIImageViewWithImagePicker; 
                 "label_localAlias" = NSTextField; 
                 "label_profile" = NSTextField; 
