@@ -79,21 +79,6 @@
 	[super viewWillClose];
 }
 
--(void)toggleMusicDisplay:(id)sender
-{
-	// disable the profile's editing since this is either/or, the menu is used for manual insertion of tokens
-	if([sender state] == NSOnState)
-	{
-		[textView_profile setEditable:NO];
-		// set the profile's text to our used token, %music 
-		[textView_profile setString:@"%_music"];
-	}
-	else
-	{
-		[textView_profile setEditable:YES];
-	}
-}
-
 - (void)changePreference:(id)sender
 {	
 	if (sender == textField_displayName) {
