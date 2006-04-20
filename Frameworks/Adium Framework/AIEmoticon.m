@@ -133,6 +133,7 @@
  */
 - (NSImage *)image
 {
+	NSLog(@"Grabbing image from %@",path);
     return [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
 }
 
@@ -147,6 +148,11 @@
 		
 		[_cachedAttributedString release]; _cachedAttributedString = nil;
 	}
+}
+
+- (NSString *)path
+{
+	return path;
 }
 
 /*!

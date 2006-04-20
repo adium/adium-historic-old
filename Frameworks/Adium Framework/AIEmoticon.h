@@ -38,6 +38,7 @@
 - (BOOL)isAppropriateForServiceClass:(NSString *)inServiceClass;
 - (NSImage *)image;
 - (void)setPath:(NSString *)inPath;
+- (NSString *)path;
 - (NSString *)name;
 - (void)setEnabled:(BOOL)inEnabled;
 - (BOOL)isEnabled;
