@@ -58,7 +58,7 @@
 
 @interface CBGaimAccount (PRIVATE)
 - (NSString *)_userIconCachePath;
-- (NSString *)_emoticonCachePathForChat:(AIChat *)inChat;
+- (NSString *)_emoticonCachePathForEmoticon:(NSString *)emoticonEquivalent inChat:(AIChat *)inChat;
 
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
 - (NSString *)_mapOutgoingGroupName:(NSString *)name;
@@ -86,8 +86,6 @@
 - (void)setAccountProfileTo:(NSAttributedString *)profile configureGaimAccountContext:(NSInvocation *)inInvocation;
 
 - (void)performAccountMenuAction:(NSMenuItem *)sender;
-
-- (void)enqueueMessage:(AIContentMessage *)inMessage forChat:(AIChat *)inChat;
 @end
 
 @implementation CBGaimAccount
@@ -726,14 +724,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 															  message:attributedMessage
 															autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
 	
-	if (!customEmoticonWaitingDict ||
-		![[[customEmoticonWaitingDict objectForKey:[chat uniqueChatID]] objectForKey:@"WaitingCount"] intValue]) {
-		[[adium contentController] receiveContentObject:messageObject];
-
-	} else {
-		//If this chat is waiting on a custom emoticon, queue display of the message
-		[self enqueueMessage:messageObject forChat:chat];
-	}
+	[[adium contentController] receiveContentObject:messageObject];
 }
 
 /*********************/
@@ -838,87 +829,34 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return NO;
 }
 
-#pragma mark Custom emoticons and message queuing
-- (void)enqueueMessage:(AIContentMessage *)inMessage forChat:(AIChat *)inChat
+#pragma mark Custom emoticons
+- (void)chat:(AIChat *)inChat isWaitingOnCustomEmoticon:(NSString *)inEmoticon
 {
-	NSMutableDictionary *chatDict;
-	NSMutableArray		*queuedMessages;
+	AIEmoticon *emoticon;
 
-	if (!(chatDict = [customEmoticonWaitingDict objectForKey:[inChat uniqueChatID]])) {
-		chatDict = [NSMutableDictionary dictionary];
-		[customEmoticonWaitingDict setObject:chatDict
-									  forKey:[inChat uniqueChatID]];
+	//Look for an existing emoticon with this equivalent
+	NSEnumerator *enumerator = [[inChat customEmoticons] objectEnumerator];
+	while ((emoticon = [enumerator nextObject])) {
+		if ([[emoticon textEquivalents] containsObject:emoticonEquivalent]) break;
 	}
 	
-	if (!(queuedMessages = [chatDict objectForKey:@"QueuedMessages"])) {
-		queuedMessages = [NSMutableArray array];
-		[chatDict setObject:queuedMessages
-					 forKey:@"QueuedMessages"];
+	if (!emoticon) {
+		emoticon = [AIEmoticon emoticonWithIconPath:path
+										equivalents:[NSArray arrayWithObject:inEmoticon]
+											   name:inEmoticon
+											   pack:nil];
+		[inChat addCustomEmoticon:emoticon];			
 	}
 	
-	[queuedMessages addObject:inMessage];
-}
-
-- (void)dequeueWaitingMessagesForChat:(AIChat *)inChat
-{
-	NSMutableDictionary *chatDict;
-	NSMutableArray		*queuedMessages;
-	NSEnumerator		*enumerator;
-	AIContentMessage	*messageObject;
-
-	chatDict = [customEmoticonWaitingDict objectForKey:[inChat uniqueChatID]];
-	queuedMessages = [chatDict objectForKey:@"QueuedMessages"];
-	
-	enumerator = [queuedMessages objectEnumerator];
-	while ((messageObject = [enumerator nextObject])) {
-		[[adium contentController] receiveContentObject:messageObject];
-	}
-}
-
-- (void)chat:(AIChat *)inChat isWaitingOnCustomEmoticon:(NSNumber *)isWaiting
-{
-	if ([isWaiting boolValue]) {
-		NSMutableDictionary *chatDict;
-		NSNumber			*waitingNumber;
-
-		if (!customEmoticonWaitingDict) customEmoticonWaitingDict = [[NSMutableDictionary alloc] init];
-
-		if (!(chatDict = [customEmoticonWaitingDict objectForKey:[inChat uniqueChatID]])) {
-			chatDict = [NSMutableDictionary dictionary];
-			[customEmoticonWaitingDict setObject:chatDict
-										  forKey:[inChat uniqueChatID]];
-		}
+	if (![emoticon path]) {
+		//Set some path for this emoticon so our HTML decoder will insert the img tag and we can update the img later
+		NSString	*path = [self _emoticonCachePathForEmoticon:inEmoticon inChat:inChat];
 		
-		if ((waitingNumber = [chatDict objectForKey:@"WaitingCount"])) {
-			waitingNumber = [NSNumber numberWithInt:([waitingNumber intValue] + 1)];
-		} else {
-			waitingNumber = [NSNumber numberWithInt:1];
-		}
-		
-		[chatDict setObject:waitingNumber
-					 forKey:@"WaitingCount"];		
-	} else {
-		NSMutableDictionary *chatDict;
-		NSNumber			*waitingNumber;
-		
-		chatDict = [customEmoticonWaitingDict objectForKey:[inChat uniqueChatID]];
-		waitingNumber = [chatDict objectForKey:@"WaitingCount"];
-		
-		if ([waitingNumber intValue] > 1) {
-			waitingNumber = [NSNumber numberWithInt:([waitingNumber intValue] - 1)];
-			[chatDict setObject:waitingNumber
-						 forKey:@"WaitingCount"];
-		} else {
-			//We now are not waiting
-			[self dequeueWaitingMessagesForChat:inChat];
-			
-			//No further need for the dict
-			[customEmoticonWaitingDict removeObjectForKey:[inChat uniqueChatID]];
-			
-			if (![customEmoticonWaitingDict count]) {
-				[customEmoticonWaitingDict release]; customEmoticonWaitingDict = nil;
-			}
-		}
+		//XXX Temporary image?
+		NSImage		*image = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
+		[[image TIFFRepresentation] writeToFile:path
+									 atomically:NO];
+		[image release];
 	}
 }
 
@@ -936,7 +874,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 	
 	//Write out our image
-	NSString	*path = [self _emoticonCachePathForChat:inChat];
+	NSString	*path = [self _emoticonCachePathForEmoticon:emoticonEquivalent inChat:inChat];
 	[inImageData writeToFile:path
 				  atomically:NO];
 
@@ -951,6 +889,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 											   pack:nil];
 		[inChat addCustomEmoticon:emoticon];
 	}
+	
+	[[adium notificationCenter] postNotificationName:@"AICustomEmoticonUpdated"
+											  object:inChat
+											userInfo:[NSDictionary dictionaryWithObject:emoticon
+																				 forKey:@"AIEmoticon"]];
+}
+
+- (void)chat:(AIChat *)inChat closedCustomEmoticon:(NSString *)inEmoticon
+{
+	
 }
 
 #pragma mark GaimConversation User Lists
@@ -2375,10 +2323,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  * We may have data of some type other than JPEG, but providing _some_ file extension means the cached file can easily be opened
  * in an image editor if the user saves the file or checks the cache directory
  */
-- (NSString *)_emoticonCachePathForChat:(AIChat *)inChat
+- (NSString *)_emoticonCachePathForEmoticon:(NSString *)emoticonEquivalent inChat:(AIChat *)inChat
 {
-    NSString    *filename = [NSString stringWithFormat:@"TEMP-CustomEmoticon_%@_%@.jpg", [inChat uniqueChatID], [NSString randomStringOfLength:4]];
-    return [[adium cachesPath] stringByAppendingPathComponent:filename];	
+    NSString    *filename = [NSString stringWithFormat:@"TEMP-CustomEmoticon_%@_%@.jpg", [inChat uniqueChatID], emoticonEquivalent];
+    return [[adium cachesPath] stringByAppendingPathComponent:[filename safeFilenameString]];	
 }
 
 - (AIListContact *)contactWithUID:(NSString *)inUID

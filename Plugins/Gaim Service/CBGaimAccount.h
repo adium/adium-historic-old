@@ -184,7 +184,8 @@
 
 
 #pragma mark Emoticons
-- (void)chat:(AIChat *)inChat isWaitingOnCustomEmoticon:(NSNumber *)isWaiting;
+- (void)chat:(AIChat *)inChat isWaitingOnCustomEmoticon:(NSString *)isWaiting;
 - (void)chat:(AIChat *)inChat setCustomEmoticon:(NSString *)emoticonEquivalent withImageData:(NSData *)inImageData;
+- (void)chat:(AIChat *)inChat closedCustomEmoticon:(NSString *)inEmoticon;
 
 @end
