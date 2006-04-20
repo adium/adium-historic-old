@@ -1069,9 +1069,8 @@ static NSArray *draggedTypes = nil;
 		
 		for (int i = 0; i < imagesCount; i++) {
 			DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
-			NSString *imgClass = [img className];
 			
-			if ([imgClass isEqualToString:@"emoticon"] &&
+			if ([[img className] isEqualToString:@"emoticon"] &&
 				[[img getAttribute:@"alt"] isEqualToString:textEquivalent]) {
 				[img setSrc:path];				
 			}
