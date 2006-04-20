@@ -51,7 +51,6 @@
             SUPERCLASS = NSTextView; 
         }, 
         {
-            ACTIONS = {}; 
             CLASS = ESPersonalPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
