@@ -830,7 +830,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 #pragma mark Custom emoticons
-- (void)chat:(AIChat *)inChat isWaitingOnCustomEmoticon:(NSString *)inEmoticon
+- (void)chat:(AIChat *)inChat isWaitingOnCustomEmoticon:(NSString *)emoticonEquivalent
 {
 	AIEmoticon *emoticon;
 
@@ -841,22 +841,24 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 	
 	if (!emoticon) {
-		emoticon = [AIEmoticon emoticonWithIconPath:path
-										equivalents:[NSArray arrayWithObject:inEmoticon]
-											   name:inEmoticon
+		emoticon = [AIEmoticon emoticonWithIconPath:nil
+										equivalents:[NSArray arrayWithObject:emoticonEquivalent]
+											   name:emoticonEquivalent
 											   pack:nil];
 		[inChat addCustomEmoticon:emoticon];			
 	}
 	
 	if (![emoticon path]) {
 		//Set some path for this emoticon so our HTML decoder will insert the img tag and we can update the img later
-		NSString	*path = [self _emoticonCachePathForEmoticon:inEmoticon inChat:inChat];
+		NSString	*path = [self _emoticonCachePathForEmoticon:emoticonEquivalent inChat:inChat];
 		
 		//XXX Temporary image?
 		NSImage		*image = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
 		[[image TIFFRepresentation] writeToFile:path
 									 atomically:NO];
 		[image release];
+		
+		[emoticon setPath:path];
 	}
 }
 
