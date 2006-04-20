@@ -210,41 +210,50 @@ static AIXtrasManager * manager;
 
 - (void) updatePreview
 {
-	AIXtraInfo * xtra = [selectedCategory objectAtIndex:[xtraList selectedRow]];
-	[showInfoControl setHidden:NO];
-	if(showInfo)
-		[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
-	else {
-		[NSBundle loadNibNamed:@"XtraPreviewImageView" owner:self];
-	/*	NSString * xtraType = [xtra type];
-		
-		if ([xtraType isEqualToString:AIXtraTypeEmoticons])
-			[NSBundle loadNibNamed:@"EmoticonPreviewView" owner:self];
-		else if ([xtraType isEqualToString:AIXtraTypeDockIcon])
-			[NSBundle loadNibNamed:@"DockIconPreviewView" owner:self];
-		else if ([xtraType isEqualToString:AIXtraTypeMessageStyle])
-			[NSBundle loadNibNamed:@"WebkitMessageStylePreviewView" owner:self];
-		else if ([xtraType isEqualToString:AIXtraTypeStatusIcons]) {
-			[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self];
-		}
-		else { //catchall behavior is to just show the readme
-			[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
-			[showInfoControl setHidden:YES];
-		}*/
-	}
-	if(previewController/* && previewContainerView*/)
+	AIXtraInfo * xtra = nil;
+	
+	if([selectedCategory count] > 0 && [xtraList selectedRow] != NSNotFound)
 	{
-		NSView *pv = [previewController previewView];
-		NSSize docSize = [previewContainerView documentVisibleRect].size;
-		NSRect viewFrame = [pv frame];
-		viewFrame.size.width = docSize.width;
-		if([pv respondsToSelector:@selector(image)]) viewFrame.size.height = [[(NSImageView *)pv image]size].height;
-		if(viewFrame.size.height < docSize.height) viewFrame.size.height = docSize.height;
-		[pv setFrameSize:viewFrame.size];
-		[previewContainerView setDocumentView:pv];
-		[previewController setXtra:xtra];
-		[previewContainerView setNeedsDisplay:YES];
-	}	
+		xtra = [selectedCategory objectAtIndex:[xtraList selectedRow]];
+	}
+
+	if(xtra)
+	{
+		[showInfoControl setHidden:NO];
+		if(showInfo)
+			[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
+		else {
+			[NSBundle loadNibNamed:@"XtraPreviewImageView" owner:self];
+			/*	NSString * xtraType = [xtra type];
+			
+			if ([xtraType isEqualToString:AIXtraTypeEmoticons])
+			[NSBundle loadNibNamed:@"EmoticonPreviewView" owner:self];
+			else if ([xtraType isEqualToString:AIXtraTypeDockIcon])
+			[NSBundle loadNibNamed:@"DockIconPreviewView" owner:self];
+			else if ([xtraType isEqualToString:AIXtraTypeMessageStyle])
+			[NSBundle loadNibNamed:@"WebkitMessageStylePreviewView" owner:self];
+			else if ([xtraType isEqualToString:AIXtraTypeStatusIcons]) {
+				[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self];
+			}
+			else { //catchall behavior is to just show the readme
+				[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
+				[showInfoControl setHidden:YES];
+			}*/
+		}
+		if(previewController/* && previewContainerView*/)
+		{
+			NSView *pv = [previewController previewView];
+			NSSize docSize = [previewContainerView documentVisibleRect].size;
+			NSRect viewFrame = [pv frame];
+			viewFrame.size.width = docSize.width;
+			if([pv respondsToSelector:@selector(image)]) viewFrame.size.height = [[(NSImageView *)pv image]size].height;
+			if(viewFrame.size.height < docSize.height) viewFrame.size.height = docSize.height;
+			[pv setFrameSize:viewFrame.size];
+			[previewContainerView setDocumentView:pv];
+			[previewController setXtra:xtra];
+			[previewContainerView setNeedsDisplay:YES];
+		}		
+	}
 }
 
 - (IBAction) setShowsInfo:(id)sender
