@@ -33,6 +33,7 @@
 #import <Adium/AIContentContext.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIContentStatus.h>
+#import <Adium/AIEmoticon.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIService.h>
@@ -130,6 +131,11 @@ static NSArray *draggedTypes = nil;
 									   selector:@selector(cancelFileTransferRequest:)
 										   name:FILE_TRANSFER_CANCELLED
 										 object:nil];
+		
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(customEmoticonUpdated:)
+										   name:@"AICustomEmoticonUpdated"
+										 object:inChat];
 	}
 	
     return self;
@@ -1046,6 +1052,28 @@ static NSArray *draggedTypes = nil;
 					   [imgClass rangeOfString:@"scaledToFitImage"].location == NSNotFound)
 						[img setSrc:webKitUserIconPath];
 				}
+			}
+		}
+	}
+}
+
+- (void)customEmoticonUpdated:(NSNotification *)inNotification
+{
+	DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
+	unsigned int imagesCount = [images length];
+
+	if (imagesCount > 0) {
+		AIEmoticon	*emoticon = [[inNotification userInfo] objectForKey:@"AIEmoticon"];
+		NSString	*textEquivalent = [[emoticon textEquivalents] objectAtIndex:0];
+		NSString	*path = [emoticon path];
+		
+		for (int i = 0; i < imagesCount; i++) {
+			DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
+			NSString *imgClass = [img className];
+			
+			if ([imgClass isEqualToString:@"emoticon"] &&
+				[[img getAttribute:@"alt"] isEqualToString:textEquivalent]) {
+				[img setSrc:path];				
 			}
 		}
 	}

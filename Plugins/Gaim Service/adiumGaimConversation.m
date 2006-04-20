@@ -409,7 +409,7 @@ gboolean adiumGaimConvCustomSmileyAdd(GaimConversation *conv, const char *smile,
 {
 	GaimDebug (@"%s: Added Custom Smiley %s",gaim_conversation_get_name(conv),smile);
 	[accountLookup(conv->account) chat:chatLookupFromConv(conv)
-			 isWaitingOnCustomEmoticon:[NSNumber numberWithBool:YES]];
+			 isWaitingOnCustomEmoticon:[NSString stringWithUTF8String:smile]];
 
 	return TRUE;
 }
@@ -430,7 +430,7 @@ void adiumGaimConvCustomSmileyClose(GaimConversation *conv, const char *smile)
 	GaimDebug (@"%s: Close Custom Smiley %s",gaim_conversation_get_name(conv),smile);
 
 	[accountLookup(conv->account) chat:chatLookupFromConv(conv)
-			 isWaitingOnCustomEmoticon:[NSNumber numberWithBool:NO]];
+				  closedCustomEmoticon:[NSString stringWithUTF8String:smile]];
 }
 
 static GaimConversationUiOps adiumGaimConversationOps = {
