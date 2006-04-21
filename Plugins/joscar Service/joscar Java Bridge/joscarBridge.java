@@ -449,14 +449,16 @@ SecuridProvider
 	public void screennameChanged(Buddy buddy, Screenname oldScreenname, Screenname newScreenname) {
 		
 	}
+
+	public void awaitingAuthChanged(Buddy buddy, boolean old, boolean awaiting) {
+	}
 	
 	public void aliasChanged(Buddy buddy, String oldAlias, String newAlias) {
 		HashMap map = new HashMap();
 		map.put("Buddy", buddy);
 		map.put("Alias", newAlias);
 
-		sendDelegateMessageWithMap("AliasChanged", map);
-				
+		sendDelegateMessageWithMap("AliasChanged", map);				
 	}
 	
     public void buddyCommentChanged(Buddy buddy, String oldComment, String newComment) {
