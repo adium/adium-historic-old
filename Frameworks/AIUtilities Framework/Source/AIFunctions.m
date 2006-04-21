@@ -162,7 +162,7 @@ NSRect AIRectByAligningRect_edge_toRect_edge_(NSRect mobileRect, const NSRectEdg
 
 BOOL AIRectIsAligned_edge_toRect_edge_tolerance_(const NSRect rect1, const NSRectEdge edge1, const NSRect rect2, const NSRectEdge edge2, const float tolerance)
 {
-	return fabs(AICoordinateForRect_edge_(rect1, edge1) - AICoordinateForRect_edge_(rect2, edge2)) < tolerance;
+	return fabsf(AICoordinateForRect_edge_(rect1, edge1) - AICoordinateForRect_edge_(rect2, edge2)) < tolerance;
 }
 
 // minimally translate mobileRect so that it lies within stationaryRect
