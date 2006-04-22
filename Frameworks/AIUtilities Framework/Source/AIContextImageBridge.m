@@ -16,48 +16,10 @@ enum {
 };
 const BOOL defaultHasAlpha = YES;
 
-/*!
- * @class AIContextImageBridge
- * @brief Used to translate between Quartz and NSImage.
- *
- * Quick-start for <tt>AIContextImageBridge</tt>:
- * 
- * 1. Create a bridge.
- * 	AIContextImageBridge *bridge = [AIContextImageBridge bridgeWithSize:NSMakeSize(42.0f, 10.0f)];
- * 
- * 2. Obtain the context. The context is retained for you (see below).
- * 	CGContextRef context = [bridge context];
- * 
- * 3. Draw into the context. (note: it is a bitmap context, so you cannot use PDF functions on it.)
- * 
- * 4. Call image. If you call image more than once, the image will not be re-created (although, since the image uses the same backing store as the context, this should not be a problem).
- * 	NSImage *image = [bridge image];
- * 
- * You can obtain greater control over the bridge by initing it using initWithSize:bitsPerComponent:componentsPerPixel:hasAlpha:.
- * 
- * If you use bridgeWithSize:, the bridge is autoreleased.
- * 
- * The <tt>Icon Services</tt> interfaces gives you a nice Cocoa interface for drawing icons in the context.
- * They come in full and abstracted flavours.
- * 
- * Summary of Icon Services methods (without types):
- * - wrapping GetIconRef:
- *   getIconWithType:
- *   getIconWithType:creator:
- * - wrapping other GetIconRef functions:
- *   [future expansion]
- * - wrapping PlotIconRefInContext:
- *   plotIcon:inRect:
- *   plotIcon:inRect:alignment:transform:labelNSColor:flags:
- *   plotIcon:inRect:alignment:transform:labelIndex:flags:
- *   plotIcon:inRect:alignment:transform:labelRGBColor:flags:
- * 
- * For more information, read the Icon Services documentation. They all return the status code returned from the Carbon calls on which these methods are based.<br>
- */
 @implementation AIContextImageBridge
 
 /*!
- * @brief Init a <tt>AIContextImageBridge</tt> with higher granularity of control
+ * @brief Init a <code>AIContextImageBridge</code> with higher granularity of control
  * 
  * The initialized bridge will use 32-bit RGBA.
  */
@@ -67,13 +29,13 @@ const BOOL defaultHasAlpha = YES;
 }
 
 /*!
- * @brief Init a <tt>AIContextImageBridge</tt> with finer granularity of control
+ * @brief Init a <code>AIContextImageBridge</code> with finer granularity of control
  * 
  *	If hasAlpha is true, one of the components counted is an alpha component. For example:<br>
  * 			hasAlpha	componentsPerPixel	result<br>
  * 			YES			4U					RGBA<br>
  * 			NO			3U					RGB<br>
- * @return  An initialised <tt>AIContextImageBridge</tt> object
+ * @return  An initialised <code>AIContextImageBridge</code> object
  */
 - (id)initWithSize:(NSSize)size bitsPerComponent:(unsigned)bpc componentsPerPixel:(unsigned)cpp hasAlpha:(BOOL)hasAlpha
 {
@@ -107,7 +69,7 @@ const BOOL defaultHasAlpha = YES;
 }
 
 /*!
- * @brief Create an autoreleased <tt>AIContextImageBridge</tt>
+ * @brief Create an autoreleased <code>AIContextImageBridge</code>
  */
 + (id)bridgeWithSize:(NSSize)size
 {
@@ -115,7 +77,7 @@ const BOOL defaultHasAlpha = YES;
 }
 
 /*!
- * @brief Create an autoreleased <tt>AIContextImageBridge</tt> with finer granularity of control
+ * @brief Create an autoreleased <code>AIContextImageBridge</code> with finer granularity of control
  */
 + (id)bridgeWithSize:(NSSize)size bitsPerComponent:(unsigned)bpc componentsPerPixel:(unsigned)cpp hasAlpha:(BOOL)hasAlpha
 {
@@ -137,7 +99,7 @@ const BOOL defaultHasAlpha = YES;
 #pragma mark Accessors
 
 /*!
- * @brief Access the raw bytes that back the image</tt>
+ * @brief Access the raw bytes that back the image
  */
 - (unsigned char *)buffer;
 {
@@ -156,9 +118,9 @@ const BOOL defaultHasAlpha = YES;
 }
 
 /*!
- * @brief Obtain an <tt>NSImage</tt>
+ * @brief Obtain an <code>NSImage</code>
  *
- * The image may be cached. If you have made changes to the context, call <tt>-refreshImage</tt> instead.
+ * The image may be cached. If you have made changes to the context, call <code>-refreshImage</code> instead.
  * If the image hasn't been created yet, we call refreshImage to create it.
  * If it has been created, we return that image.
  */
@@ -305,10 +267,10 @@ const BOOL defaultHasAlpha = YES;
 /*!
  * @brief Plot a Carbon icon into the image with finer granularity of control
  *
- * @param align An alignment type from Icon Services. See <tt>HIServices/Icons.h></tt>.
- * @param transform A transform type from Icon Services. See <tt>HIServices/Icons.h></tt>.
+ * @param align An alignment type from Icon Services. See <code>HIServices/Icons.h></code>.
+ * @param transform A transform type from Icon Services. See <code>HIServices/Icons.h></code>.
  * @param color A pointer to a Carbon RGBColor structure. RGBColors have three unsigned 16-bit components (no alpha), which range from 0 to 65535.
- * @param flags Plot flags from Icon Services. See <tt>HIServices/Icons.h></tt>. Usually you will pass kPlotIconRefNormalFlags here.
+ * @param flags Plot flags from Icon Services. See <code>HIServices/Icons.h></code>. Usually you will pass kPlotIconRefNormalFlags here.
  */
 - (OSStatus)plotIcon:(IconRef)icon inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelRGBColor:(const RGBColor *)color flags:(PlotIconRefFlags)flags
 {
