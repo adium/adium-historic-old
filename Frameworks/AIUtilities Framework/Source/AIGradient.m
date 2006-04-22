@@ -201,7 +201,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 			//  the context, not the window. (e.g. 'top' means 'top of the
 			//  context', not 'top of the window'.)
 			if (direction == AIVertical) {
-				//draw the gradient from the top middle to the bottom middle.
+				//draw the gradient from the bottom middle to the top middle.
 				srcPt.x = dstPt.x = width * 0.5f;
 				srcPt.y = 0.0f;
 				dstPt.y = height;
