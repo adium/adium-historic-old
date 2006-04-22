@@ -392,8 +392,8 @@
  * @brief Retrieve owner by object
  *
  * Retrieve the owner within the <tt>AIMutableOwnerArray</tt> which owns the specified object.  If multiple owners own a single object, returns the one with the highest priority.
- * @param anObject An object
- * @return  Returns the owner which owns <i>anObject</i>.
+ * @param inObject An object
+ * @return  Returns the owner which owns <i>inObject</i>.
  */
 - (id)ownerWithObject:(id)inObject
 {
