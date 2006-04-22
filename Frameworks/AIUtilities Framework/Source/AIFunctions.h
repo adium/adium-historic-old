@@ -13,45 +13,98 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+/*!	@brief Obtains the high and low surrogate for a Unicode code-point.
+ *
+ *	If \a in is lower than U+10FFF (which means it would not require surrogates to construct), \c *outHigh will be 0, and \c *outLow will be \a in.
+ *
+ *	@return The high and low surrogate (if applicable), or 0 and the input character.
+ */
 BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow);
 
+#pragma mark Wired memory
+/*!	@defgroup AIWiredMemory Wired memory
+ *
+ *	Functions for allocating and handling wired memory.
+ */
+/*@{*/
+
+/*!	@brief Clobbers a region of memory with gibberish.
+ *
+ *	Use this to sanitize memory that you don't want to be viewed in the future. For example, if you had a password in this memory, you would clobber it using this function so that the password cannot be peeked later.
+ */
 void AIWipeMemory(void *buf, size_t len);
-/*AIReallocWired is for use with wired memory. it returns a block that is
- *	already wired in memory.
- *before freeing the old block, it wipes (see AIWipeMemory) and unlocks it.
- *if the new block could not be allocated or wired,
- *	the old block is still valid, wired, and unchanged.
- *all other aspects of its behaviour are the same as realloc(3)
- *	(for example, realloc(NULL, x) == malloc(x)).
+/*!	@brief Allocate or resize a region of wired memory.
+ *
+ *	AIReallocWired is for use with wired memory. It returns a block that is already wired in core memory.
+ *	Before freeing the old block, it wipes (see AIWipeMemory) and unlocks it.
+ *
+ *	If the new block could not be allocated or wired, the old block is still valid, wired, and unchanged.
+ *	All other aspects of its behaviour are the same as \c realloc(3) (for example, \c realloc(NULL, x) == \c malloc(x)).
+ *	When you are done with the memory, call \c munlock on it, followed by \c free.
+ *
+ *	@return The new region of memory, or \c NULL if one could not be created and wired.
  */
 void *AIReallocWired(void *oldBuf, size_t newLen);
 
-//sets every byte in buf within range to ch.
+/*!	@brief Sets every byte in \a buf within \a range to \a ch.
+ *	Qux.
+ */
 void AISetRangeInMemory(void *buf, NSRange range, int ch);
 
+/*@}*/
 
 #pragma mark Rect utilities
+/*!	@defgroup AIRectUtilities Rectangle utilities
+ *
+ *	Functions for managing the placement and alignment of rectangles relative to other rectangles.
+ */
+/*@{*/
 
+/*!	@enum AIRectEdgeMask
+ *	A bit mask of zero or more edges of a rectangle.
+ */
 typedef enum AIRectEdgeMask {
+	//!No edges.
 	AINoEdges = 0,
+	//!Far right.
 	AIMaxXEdgeMask = (1 << NSMaxXEdge),
+	//!Top.
 	AIMaxYEdgeMask = (1 << NSMaxYEdge),
+	//!Far left.
 	AIMinXEdgeMask = (1 << NSMinXEdge),
+	//!Bottom.
 	AIMinYEdgeMask = (1 << NSMinYEdge),
 } AIRectEdgeMask;
 
 enum {
+	//!This value in an NSRectEdge variable indicates no edge.
 	AINotARectEdge = -1
 };
 
-// e.g., AICoordinateForRect_edge_(rect, NSMaxXEdge) is the same as NSMaxX(rect)
+/*!	@brief Returns the coordinate for an edge of a rectangle.
+ *
+ *	For example, AICoordinateForRect_edge_(rect, NSMaxXEdge) is the same as NSMaxX(rect).
+ *
+ *	@return An X or Y coordinate.
+ */
 float AICoordinateForRect_edge_(NSRect rect, NSRectEdge edge);
 
-// returns the distance that a point lies outside of a rect on a particular side.  If the point lies 
-// on the interior side of that edge, the number returned will be negative
+/*!	@brief Measures a line from \a edge to \a point.
+ *
+ *	Returns the distance that \a point lies outside of \a rect on a particular side (\a edge).
+ *	If the point lies on the interior side of that edge, the number returned will be negative, even if the point is outside the rectangle itself.
+ *	For example, if \c rect.origin.x is 50, and \c rect.size.width is 50, and \c point.x is 25, and \a edge is \c NSMaxXEdge, the result will be -75.0f.
+ *
+ *	@return The distance between the edge and the point. It is positive if the point is outside the edge, negative if it is inside the edge (even it is outside the rectangle).
+ */
 float AISignedExteriorDistanceRect_edge_toPoint_(NSRect rect, NSRectEdge edge, NSPoint point);
 
-// e.g., AIOppositeRectEdge_(NSMaxXEdge) is the same as NSMinXEdge
+/*!	@brief Returns the edge that would be across a rectangle from \a edge.
+ *
+ *	For example, AIOppositeRectEdge_(NSMaxXEdge) is NSMinXEdge.
+ *
+ *	@return An edge.
+ */
 NSRectEdge AIOppositeRectEdge_(NSRectEdge edge);
 
 // translate mobileRect so that it aligns with stationaryRect
@@ -61,7 +114,9 @@ NSRect AIRectByAligningRect_edge_toRect_edge_(NSRect mobileRect,
 											  NSRect stationaryRect, 
 											  NSRectEdge stationaryRectEdge);
 
-
+/*!	@brief Returns whether \a edge1 of \a rect1 is within \a tolerance units of \a edge2 of \a rect2.
+ *	@return \c YES if the distance between the two edges is less than \a tolerance; \c NO if not.
+ */
 BOOL AIRectIsAligned_edge_toRect_edge_tolerance_(NSRect rect1, 
 												 NSRectEdge edge1, 
 												 NSRect rect2, 
@@ -70,3 +125,5 @@ BOOL AIRectIsAligned_edge_toRect_edge_tolerance_(NSRect rect1,
 
 // minimally translate mobileRect so that it lies within stationaryRect
 NSRect AIRectByMovingRect_intoRect_(NSRect mobileRect, NSRect stationaryRect);
+
+/*@}*/
