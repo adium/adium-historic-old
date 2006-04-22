@@ -61,23 +61,18 @@
 - (BOOL)shouldHandleDragWithPasteboard:(NSPasteboard *)pasteboard;
 - (void) enqueueContentObject:(AIContentObject *)contentObject;
 - (void) debugLog:(NSString *)message;
+- (void)processQueuedContent;
 @end
 
 static NSArray *draggedTypes = nil;
 
 @implementation AIWebKitMessageViewController
 
-/*!
- * @brief Create a new message view controller
- */
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
     return [[[self alloc] initForChat:inChat withPlugin:inPlugin] autorelease];
 }
 
-/*!
- * @brief Initialize
- */
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
     //init
@@ -181,11 +176,6 @@ static NSArray *draggedTypes = nil;
 	[super dealloc];
 }
 
-/*!
- * @brief Enable or disable updating to reflect preference changes
- *
- * When disabled, the view will not update when a preferece changes that would require rebuilding the views content
- */
 - (void)setShouldReflectPreferenceChanges:(BOOL)inValue
 {
 	shouldReflectPreferenceChanges = inValue;
@@ -200,17 +190,8 @@ static NSArray *draggedTypes = nil;
 	}
 }
 
-/*!
- * @brief Print the webview
- */
 - (void)adiumPrint:(id)sender
-{
-	/*
-	 Apple, in its infinite wisdom, did not implement a webView print method, and implemented
-	 [[webView mainFrame] frameView] to print only the visible portion of the view. We have to get the scrollview
-	 and from there the documentView to have access to all of the webView.
-	 */
-	
+{	
 	NSPrintOperation	*op;
 	NSView				*documentView;
 	NSImage				*image;
@@ -285,25 +266,16 @@ static NSArray *draggedTypes = nil;
 
 //WebView --------------------------------------------------------------------------------------------------
 #pragma mark WebView
-/*!
- * @brief Return the view which should be inserted into the message window 
- */
 - (NSView *)messageView
 {
 	return webView;
 }
 
-/*!
- * @brief Return our scroll view
- */
 - (NSView *)messageScrollView
 {
 	return [[webView mainFrame] frameView];
 }
 
-/*!
- * @brief Return our message style controller
- */
 - (AIWebkitMessageViewStyle *)messageStyle
 {
 	return messageStyle;
