@@ -57,10 +57,8 @@
 /*!
  *	@brief Print the webview
  *
- *	WebView does not have a print method, and [[webView mainFrame] frameView] is implemented
-  to print only the visible portion of the view. 
- *	We have to get the scrollview
- and from there the documentView to have access to all of the webView.
+ *	WebView does not have a print method, and [[webView mainFrame] frameView] is implemented to print only the visible portion of the view. 
+ *	We have to get the scrollview and from there the documentView to have access to all of the webView.
  */
 - (void)adiumPrint:(id)sender;
 

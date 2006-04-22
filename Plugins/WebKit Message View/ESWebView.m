@@ -60,7 +60,6 @@
 	[super viewDidEndLiveResize];
 }
 
-//Background Drawing ---------------------------------------------------------------------------------------------------
 #pragma mark Background Drawing
 - (void)setDrawsBackground:(BOOL)flag
 {
@@ -92,7 +91,6 @@
 }
 
 
-//Key/Paste Forwarding ---------------------------------------------------------------------------------
 #pragma mark Key/Paste Forwarding
 - (void)setShouldForwardEvents:(BOOL)flag
 {
