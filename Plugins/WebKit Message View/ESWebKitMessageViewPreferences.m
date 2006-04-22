@@ -128,9 +128,6 @@
 	viewIsOpen = NO;
 }
 
-/*!
- * @brief Rebuild our styles menu when installed message styles change
- */
 - (void)messageStyleXtrasDidChange
 {
 	if (viewIsOpen) {
@@ -284,9 +281,6 @@
 	[self _setDisplayFontFace:[font fontName] size:[NSNumber numberWithInt:[font pointSize]]];
 }
 
-/*!
- * @brief Reset display font to the default value
- */
 - (IBAction)resetDisplayFontToDefault:(id)sender
 {
 	[self _setDisplayFontFace:nil size:0];

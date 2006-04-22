@@ -23,14 +23,39 @@
 	BOOL	transparentBackground;
 }
 
+/*!
+ *	@brief Sets background transparency on/off
+ */
 - (void)setDrawsBackground:(BOOL)flag;
+
+/*!
+ *	@return whether background transparency is on or off
+ */
 - (BOOL)drawsBackground;
 
+/*!
+ *	@brief Sets the font family used in webkit's preferences for adium
+ */
 - (void)setFontFamily:(NSString *)familyName;
+
+/*!
+ *	@brief Gets the font family used in webkit's preferences for adium
+ */
 - (NSString *)fontFamily;
+
+/*!
+ *	@brief Sets the delegate used for drag and drop operations
+ */
 - (void)setDraggingDelegate:(id)inDelegate;
 
+/*!
+ *	@brief Sets whether drag and drop is allowed
+ */
 - (void)setAllowsDragAndDrop:(BOOL)flag;
+
+/*!
+ *	@brief ???
+ */
 - (void)setShouldForwardEvents:(BOOL)flag;
 
 @end

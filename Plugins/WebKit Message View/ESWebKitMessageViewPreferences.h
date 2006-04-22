@@ -19,6 +19,10 @@
 @class ESWebView, AIContentObject, AIAutoScrollView, AIWebKitMessageViewController;
 @class JVFontPreviewField, AIImageViewWithImagePicker;
 
+/*!
+ *	@class ESWebKitMessageViewPreferences ESWebKitMessageViewPreferences.h
+ *	@brief Handles the messages preference pane
+ */
 @interface ESWebKitMessageViewPreferences : AIPreferencePane {
 	IBOutlet	JVFontPreviewField  *fontPreviewField_currentFont;
 	IBOutlet	NSPopUpButton   	*popUp_styles;
@@ -41,7 +45,14 @@
 	BOOL							viewIsOpen;
 }
 
+/*!
+ *	@brief Rebuild our styles menu when installed message styles change
+ */
 - (void)messageStyleXtrasDidChange;
+
+/*!
+ * @brief Reset display font to the default value
+ */
 - (IBAction)resetDisplayFontToDefault:(id)sender;
 
 @end
