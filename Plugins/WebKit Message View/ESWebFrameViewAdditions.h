@@ -23,7 +23,3 @@
 @interface WebFrameViewPrivate (ESWebFrameViewPrivateHack)
 - (WebDynamicScrollBarsView *)frameScrollView;
 @end
-
-@interface WebHTMLView (ESWebHTMLViewCrashFix)
-- (float)_destinationFloatValueForScroller:(NSScroller *)inScroller;
-@end
