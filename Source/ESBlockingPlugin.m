@@ -66,7 +66,10 @@
 	blockContactMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_CONTACT
 													  target:self
 													  action:@selector(blockContact:)
-											   keyEquivalent:@""];
+											   keyEquivalent:@"b"];
+	
+	[blockContactMenuItem setKeyEquivalentModifierMask:(NSCommandKeyMask|NSAlternateKeyMask)];
+	
 	[[adium menuController] addMenuItem:blockContactMenuItem toLocation:LOC_Contact_NegativeAction];
 
     //Add our get info contextual menu items
