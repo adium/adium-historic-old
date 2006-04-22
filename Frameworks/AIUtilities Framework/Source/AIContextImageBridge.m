@@ -108,12 +108,9 @@ const BOOL defaultHasAlpha = YES;
 
 /*!
  * @brief Access the Quartz context for the image
- *
- * This method retains the context on the behalf of the caller. It is the caller's responsibility to release it.
  */
 - (CGContextRef)context;
 {
-	CGContextRetain(context);
 	return context;
 }
 

@@ -245,7 +245,6 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 						
 						CGPathRelease(pathToAdd);
 					} /* if (pathToAdd != NULL) */
-					CGContextRelease(context);
 				} /* if (context) */
 				CGShadingRelease(shading);
 			} /* if (shading) */
