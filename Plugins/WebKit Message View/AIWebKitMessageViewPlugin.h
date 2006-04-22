@@ -85,6 +85,8 @@
  */
 #define KEY_WEBKIT_MIN_FONT_SIZE				@"Min Font Size"
 
+#define NEW_CONTENT_RETRY_DELAY					0.01 
+
 @class ESWebKitMessageViewPreferences;
 
 @protocol AIMessageViewPlugin, AIMessageViewController;
