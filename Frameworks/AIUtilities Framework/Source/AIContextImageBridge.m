@@ -164,32 +164,23 @@ const BOOL defaultHasAlpha = YES;
  */
 - (NSImage *)image;
 {
-	if (image == nil) image = [self refreshImage];
-	return image;
-}
-
-/*!
- * @brief Obtain a guaranteed-current <tt>NSImage</tt>
- *
- * The image is (re)generated whenever this method is called. For this reason, you may wish to use <tt>-image</tt> instead if performance is an issue.
- */
-- (NSImage *)refreshImage;
-{
-	unsigned bitsPerPixel = mybitsPerComponent  * mycomponentsPerPixel;
-	unsigned bytesPerRow  = (bitsPerPixel / 8U) * mysize.width;
-	NSBitmapImageRep *representation = [[[NSBitmapImageRep alloc]
-						initWithBitmapDataPlanes:&buffer
-						pixelsWide:mysize.width
-						pixelsHigh:mysize.height
-						bitsPerSample:mybitsPerComponent
-						samplesPerPixel:mycomponentsPerPixel
-						hasAlpha:myhasAlpha
-						isPlanar:NO
-						colorSpaceName:NSDeviceRGBColorSpace
-						bytesPerRow:bytesPerRow
-						bitsPerPixel:bitsPerPixel] autorelease];
-	image = [[NSImage alloc] initWithSize:mysize];
-	[image addRepresentation:representation];
+	if (image == nil) {
+		unsigned bitsPerPixel = mybitsPerComponent  * mycomponentsPerPixel;
+		unsigned bytesPerRow  = (bitsPerPixel / 8U) * mysize.width;
+		NSBitmapImageRep *representation = [[[NSBitmapImageRep alloc]
+							initWithBitmapDataPlanes:&buffer
+							pixelsWide:mysize.width
+							pixelsHigh:mysize.height
+							bitsPerSample:mybitsPerComponent
+							samplesPerPixel:mycomponentsPerPixel
+							hasAlpha:myhasAlpha
+							isPlanar:NO
+							colorSpaceName:NSDeviceRGBColorSpace
+							bytesPerRow:bytesPerRow
+							bitsPerPixel:bitsPerPixel] autorelease];
+		image = [[NSImage alloc] initWithSize:mysize];
+		[image addRepresentation:representation];
+	}
 	return image;
 }
 

@@ -29,7 +29,6 @@
 - (unsigned char *)buffer;
 - (CGContextRef)context;
 - (NSImage *)image;
-- (NSImage *)refreshImage;
 
 - (unsigned)bitsPerComponent;
 - (unsigned)componentsPerPixel;
