@@ -13,23 +13,22 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-/*!
- * @typedef AIDirection
- * A gradient direction
+/*!	@enum AIDirection
+ *	A gradient direction.
  */
-typedef enum {
+enum AIDirection {
 	AIHorizontal = 0, //Horizontal
 	AIVertical //Vertical
-} AIDirection;
+};
 
 /*!
  * @class AIGradient
  * @brief Cocoa wrapper around lower level gradient drawing functions.  Draws simple gradients.
  */
 @interface AIGradient : NSObject {
-	AIDirection		direction;
-	NSColor			*color1;
-	NSColor			*color2;
+	enum AIDirection	 direction;
+	NSColor				*color1;
+	NSColor				*color2;
 }
 
 /*!
@@ -42,7 +41,7 @@ typedef enum {
  */
 + (AIGradient*)gradientWithFirstColor:(NSColor*)inColor1
 						  secondColor:(NSColor*)inColor2
-							direction:(AIDirection)inDirection;
+							direction:(enum AIDirection)inDirection;
 
 /*!
  * @brief Create a gradient for a selected control
@@ -53,7 +52,7 @@ typedef enum {
  * @param inDirection The <tt>AIDirection</tt> for the gradient
  * @result An autoreleased <tt>AIGradient</tt> for a selected control
  */
-+ (AIGradient*)selectedControlGradientWithDirection:(AIDirection)inDirection;
++ (AIGradient*)selectedControlGradientWithDirection:(enum AIDirection)inDirection;
 
 /*!
  * @brief Set the first (left or top) color
@@ -88,14 +87,14 @@ typedef enum {
  *
  * @param inDirection The <tt>AIDirection</tt> for the gradient
  */
-- (void)setDirection:(AIDirection)inDirection;
+- (void)setDirection:(enum AIDirection)inDirection;
 
 /*!
  * @brief Return the direction for the gradient
  *
  * @result The <tt>AIDirection</tt> for the gradient
  */
-- (AIDirection)direction;
+- (enum AIDirection)direction;
 
 /*!
  * @brief Draw the gradient in an <tt>NSRect</tt>

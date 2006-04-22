@@ -22,22 +22,22 @@
 #import "AIColorAdditions.h"
 
 @interface AIGradient (PRIVATE)
-- (id)initWithFirstColor:(NSColor*)inColor1 secondColor:(NSColor*)inColor2 direction:(AIDirection)inDirection;
+- (id)initWithFirstColor:(NSColor*)inColor1 secondColor:(NSColor*)inColor2 direction:(enum AIDirection)inDirection;
 @end
 
 //RGB Color
-typedef struct {
+struct FloatRGB {
 	float red;
 	float green;
 	float blue;
 	float alpha;
-} FloatRGB;
+};
 
 //Start and end colors of a gradient
-typedef struct {
-	FloatRGB start;
-	FloatRGB end;
-} TwoColors;
+struct TwoColors {
+	struct FloatRGB start;
+	struct FloatRGB end;
+};
 
 //Number of bits for each component of a colour value.
 //for a 24-bit RGB value, this is 8.
@@ -49,7 +49,7 @@ enum {
 };
 
 void returnColorValue(void *refcon, const float *blendPoint, float *output);
-int BlendColors(FloatRGB *result, FloatRGB *a, FloatRGB *b, float scale);
+int BlendColors(struct FloatRGB *result, struct FloatRGB *a, struct FloatRGB *b, float scale);
 CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBezierPath *bezierPath);
 
 @implementation AIGradient
@@ -57,12 +57,12 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 #pragma mark Class Initialization
 + (AIGradient*)gradientWithFirstColor:(NSColor*)inColor1
 						  secondColor:(NSColor*)inColor2
-							direction:(AIDirection)inDirection
+							direction:(enum AIDirection)inDirection
 {
 	return ([[[self alloc] initWithFirstColor:inColor1 secondColor:inColor2 direction:inDirection] autorelease]);
 }
 
-+ (AIGradient*)selectedControlGradientWithDirection:(AIDirection)inDirection
++ (AIGradient*)selectedControlGradientWithDirection:(enum AIDirection)inDirection
 {
 	NSColor *selectedColor = [NSColor alternateSelectedControlColor];
 	
@@ -71,7 +71,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 
 - (id)initWithFirstColor:(NSColor*)inColor1
 			 secondColor:(NSColor*)inColor2
-			   direction:(AIDirection)inDirection
+			   direction:(enum AIDirection)inDirection
 {
 	if ((self = [self init])) {
 		[self setFirstColor:inColor1];
@@ -116,10 +116,10 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 }
 
 //Gradient Direction
-- (void)setDirection:(AIDirection)inDirection{
+- (void)setDirection:(enum AIDirection)inDirection{
 	direction = inDirection;
 }
-- (AIDirection)direction{
+- (enum AIDirection)direction{
 	return direction;
 }
 
@@ -154,7 +154,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 	float   width  = inRect.size.width;
 	float	height = inRect.size.height;
 
-	TwoColors blendPoints;
+	struct TwoColors blendPoints;
 	NSColor *startColor = [color1 retain], *endColor = [color2 retain], *temp;
 
 	if (![[startColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace]) {
@@ -270,16 +270,16 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 //reference constant: a pointer to a TwoColors value giving the start and end
 //  points of the aforementioned plane.
 void returnColorValue(void *refcon, const float *blendPoint, float *output) {
-	TwoColors *gradient = refcon;
+	struct TwoColors *gradient = refcon;
 
 	//this version exploits the RGBA nature of the FloatRGB structure to gain
 	//  speed.
-	BlendColors((FloatRGB *)output, &(gradient->start), &(gradient->end), *blendPoint);
+	BlendColors((struct FloatRGB *)output, &(gradient->start), &(gradient->end), *blendPoint);
 
 	//this version is slower, but will be correct no matter what format is used.
 	//use this version instead if FloatRGB ever changes.
 	/*
-	FloatRGB newColor;
+	struct FloatRGB newColor;
 	
 	BlendColors(&newColor, &(gradient->start), &(gradient->end), *blendPoint);
 
@@ -296,7 +296,7 @@ void returnColorValue(void *refcon, const float *blendPoint, float *output) {
 //components, as is typical of Quartz, are 0.0f-1.0f also.
 //return value is 0 if successful or < 0 if not.
 
-int BlendColors(register FloatRGB *result, register FloatRGB *a, register FloatRGB *b, register float scale) {
+int BlendColors(register struct FloatRGB *result, register struct FloatRGB *a, register struct FloatRGB *b, register float scale) {
 	//assure that the scale value is within the range of 0.0f-1.0f.
 	if      (scale > 1.0f) scale = 1.0f;
 	else if (scale < 0.0f) scale = 0.0f;
