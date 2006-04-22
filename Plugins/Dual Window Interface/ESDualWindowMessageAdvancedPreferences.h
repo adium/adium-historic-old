@@ -15,14 +15,7 @@
  */
 
 #import <Adium/AIPreferencePane.h>
-
-#define PREF_GROUP_WEBKIT_MESSAGE_DISPLAY		@"WebKit Message Display"
-#define WEBKIT_DEFAULT_PREFS					@"WebKit Defaults"
-
-#define KEY_WEBKIT_NAME_FORMAT					@"Name Format"
-#define KEY_WEBKIT_USE_NAME_FORMAT				@"Use Custom Name Format"
-#define	KEY_WEBKIT_TIME_STAMP_FORMAT			@"Time Stamp"
-#define KEY_WEBKIT_MIN_FONT_SIZE				@"Min Font Size"
+#import "AIWebKitMessageViewPlugin.h"
 
 @interface ESDualWindowMessageAdvancedPreferences : AIPreferencePane {
     IBOutlet	NSButton		*checkBox_animateDockIcon;

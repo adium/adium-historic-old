@@ -20,6 +20,10 @@
 
 @protocol AIMessageViewController;
 
+/*!
+ *	@class AIWebKitMessageViewController AIWebKitMessageViewController.h
+ *	@brief Main class for the webkit message view. Most of the good stuff happens here
+ */
 @interface AIWebKitMessageViewController : AIObject <AIMessageViewController> {
 	id							plugin;
 	ESWebView					*webView;
@@ -45,18 +49,42 @@
 	NSMutableDictionary			*fileTransferRequestControllers;
 }
 
+/*!
+ *	@brief Create a new message view controller
+ */
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
+
+/*!
+ *	@brief Print the webview
+ *
+ *	WebView does not have a print method, and [[webView mainFrame] frameView] is implemented
+  to print only the visible portion of the view. 
+ *	We have to get the scrollview
+ and from there the documentView to have access to all of the webView.
+ */
 - (void)adiumPrint:(id)sender;
 
 //Webview
+/*!
+ *	@return  the ESWebView which should be inserted into the message window 
+ */
 - (NSView *)messageView;
+
+/*!
+ *	@return our scroll view
+ */
 - (NSView *)messageScrollView;
+
+/*!
+ *	@return our message style controller
+ */
 - (AIWebkitMessageViewStyle *)messageStyle;
 
-//Content
-- (void)processQueuedContent;
-
-//Other
+/*!
+ *	@brief Enable or disable updating to reflect preference changes
+ *
+ *	When disabled, the view will not update when a preferece changes that would require rebuilding the views content
+ */
 - (void)setShouldReflectPreferenceChanges:(BOOL)inValue;
 
 @end

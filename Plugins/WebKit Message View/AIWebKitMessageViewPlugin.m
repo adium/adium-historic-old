@@ -23,6 +23,9 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIBundleAdditions.h>
 
+#define NEW_CONTENT_RETRY_DELAY					0.01
+#define MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT @"Message Styles"
+
 @interface AIWebKitMessageViewPlugin (PRIVATE)
 - (void)_scanAvailableWebkitStyles;
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -59,9 +62,6 @@
 						   withObject:nil];
 }
 
-/*!
- * @brief Returns a new webkit message view controller
- */
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
 {
     return [AIWebKitMessageViewController messageViewControllerForChat:inChat withPlugin:self];
@@ -77,9 +77,6 @@
 	[pool release];
 }
 
-/*!
- * @brief Returns a dictionary of the available message styles
- */
 - (NSDictionary *)availableMessageStyles
 {
 	@synchronized(self) {
@@ -112,10 +109,6 @@
 	return nil; //keep the compiler happy
 }
 
-/*!
- * @brief Returns a message style bundle's bundle
- * @param name Name of the message style
- */
 - (NSBundle *)messageStyleBundleWithIdentifier:(NSString *)identifier
 {	
 	NSDictionary	*styles = [self availableMessageStyles];
@@ -144,11 +137,6 @@
 	}
 }
 
-/*!
- * @brief Returns a preference key which is style specific
- * @param key The preference key
- * @param style The style name it will be specific to
- */
 - (NSString *)styleSpecificKey:(NSString *)key forStyle:(NSString *)style
 {
 	return [NSString stringWithFormat:@"%@:%@", style, key];

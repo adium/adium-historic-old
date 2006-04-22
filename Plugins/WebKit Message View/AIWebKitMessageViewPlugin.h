@@ -17,36 +17,111 @@
 #import <Adium/AIPlugin.h>
 #import <WebKit/WebKit.h>
 
+/*!
+ *	@brief Preference group for webkit display prefs
+ *	@see AIPreferencesController
+ */
 #define PREF_GROUP_WEBKIT_MESSAGE_DISPLAY		@"WebKit Message Display"
+
+/*!
+ *	@brief Preference group for custom images as background in the webkit message view
+ *	@see AIPreferencesController
+ */
 #define PREF_GROUP_WEBKIT_BACKGROUND_IMAGES		@"WebKit Custom Backgrounds"
+
+/*!
+ *	@brief Preference group for default settings
+ *	@see AIPreferencesController
+ */
 #define WEBKIT_DEFAULT_PREFS					@"WebKit Defaults"
-#define WEBKIT_DEFAULT_STYLE					@"com.adiumx.mockie.style"		//Style used if we cannot find the preferred style
 
+/*!
+ *	@brief The bundle identifier of the style we revert to if the preferred style isn't available
+ */
+#define WEBKIT_DEFAULT_STYLE					@"com.adiumx.mockie.style"
+
+/*!
+ *	@brief Key for the preference controlling whether we should show user icons in the message view
+ */
 #define KEY_WEBKIT_SHOW_USER_ICONS				@"Show User Icons"
-#define KEY_WEBKIT_SHOW_HEADER					@"Show Header"
-#define KEY_WEBKIT_SHOW_MESSAGE_COLORS			@"Show Message Colors"
-#define KEY_WEBKIT_SHOW_MESSAGE_FONTS			@"Show Message Fonts"
-#define KEY_WEBKIT_NAME_FORMAT					@"Name Format"
-#define KEY_WEBKIT_USE_NAME_FORMAT				@"Use Custom Name Format"
-#define KEY_WEBKIT_STYLE						@"Message Style"
-#define	KEY_WEBKIT_TIME_STAMP_FORMAT			@"Time Stamp"
-#define KEY_WEBKIT_MIN_FONT_SIZE				@"Min Font Size"
 
-#define NEW_CONTENT_RETRY_DELAY					0.01
-#define MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT @"Message Styles"
+/*!
+ *	@brief Key for the preference controlling whether we should show a header in the message view
+ */
+#define KEY_WEBKIT_SHOW_HEADER					@"Show Header"
+
+/*!
+ *	@brief Key for the preference controlling whether we should show received message colors
+ */
+#define KEY_WEBKIT_SHOW_MESSAGE_COLORS			@"Show Message Colors"
+
+/*!
+ *	@brief Key for the preference controlling whether we should show received message fonts
+ */
+#define KEY_WEBKIT_SHOW_MESSAGE_FONTS			@"Show Message Fonts"
+
+/*!
+ *	@brief Key for the preference controlling how the usernames should be displayed
+ */
+#define KEY_WEBKIT_NAME_FORMAT					@"Name Format"
+
+/*!
+ *	@brief Key for the preference controlling whether we're using a custom format for usernames
+ */
+#define KEY_WEBKIT_USE_NAME_FORMAT				@"Use Custom Name Format"
+
+/*!
+ *	@brief Key for the preference controlling what message style is in use
+ */
+#define KEY_WEBKIT_STYLE						@"Message Style"
+
+/*!
+ *	@brief Key for the preference controlling how the timestamp on messages should be formatted
+ */
+#define	KEY_WEBKIT_TIME_STAMP_FORMAT			@"Time Stamp"
+
+/*!
+ *	@brief Key for the preference controlling the minimum font size in the message view
+ */
+#define KEY_WEBKIT_MIN_FONT_SIZE				@"Min Font Size"
 
 @class ESWebKitMessageViewPreferences;
 
 @protocol AIMessageViewPlugin, AIMessageViewController;
 
+/*!
+ *	@class AIWebKitMessageViewPlugin AIWebKitMessageViewPlugin.h
+ *	@brief Handles loading the WKMV plugin into Adium
+ *	@see AIWebKitMessageViewController
+ */
 @interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageViewPlugin> {
 	ESWebKitMessageViewPreferences  *preferences;
 	NSMutableDictionary				*styleDictionary;
 }
 
+/*!
+ *	@return a new webkit message view controller initialized to display inChat
+ *	@param inChat the chat that the message view will display
+ */
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
+
+/*!
+ *	This method is fairly expensive the first time it's run; however, the first time will almost always been in a thread at startup, to preload the styles. This method is threadsafe.
+ *	@return A dictionary of all available message styles, with their identifiers as keys
+ */
 - (NSDictionary *)availableMessageStyles;
+
+/*!
+ *	@return a message style NSBundle
+ *	@param identifier the identifier of the message style
+ */
 - (NSBundle *)messageStyleBundleWithIdentifier:(NSString *)identifier;
+
+/*!
+ *	@brief Returns a preference key which is style specific
+ *	@param key The preference key
+ *	@param style The style name it will be specific to
+ */
 - (NSString *)styleSpecificKey:(NSString *)key forStyle:(NSString *)style;
 
 @end
