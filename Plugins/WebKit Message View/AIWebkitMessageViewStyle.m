@@ -75,16 +75,13 @@ static NSArray *validSenderColors;
 
 @implementation AIWebkitMessageViewStyle
 
-/*!
- * @brief Create a message view style instance for the passed style bundle
- */
 + (id)messageViewStyleFromBundle:(NSBundle *)inBundle
 {
 	return [[[self alloc] initWithBundle:inBundle] autorelease];
 }
 
 /*!
- * @brief Initialize
+ *	@brief Initialize
  */
 - (id)initWithBundle:(NSBundle *)inBundle
 {
@@ -130,7 +127,7 @@ static NSArray *validSenderColors;
 }
 
 /*!
- * @brief Deallocate
+ *	@brief Deallocate
  */
 - (void)dealloc
 {	
@@ -161,30 +158,17 @@ static NSArray *validSenderColors;
 	[super dealloc];
 }
 
-/*!
- * Returns YES if this style is considered legacy
- *
- * Legacy/outdated styles may perform sub-optimally because they lack beneficial changes made in modern styles.
- */
 - (BOOL)isLegacy
 {
 	return styleVersion < LEGACY_VERSION_THRESHOLD;
 }
 
-
-//Settings -------------------------------------------------------------------------------------------------------------
 #pragma mark Settings
-/*!
- * @brief Style supports custom backgrounds
- */
 - (BOOL)allowsCustomBackground
 {
 	return allowsCustomBackground;
 }
 
-/*!
- * @breif Style has a transparent background
- */
 - (BOOL)isBackgroundTransparent
 {
 	//Our custom background is only transparent if the user has set a custom color with an alpha component less than 1.0
@@ -192,52 +176,33 @@ static NSArray *validSenderColors;
 		   (customBackgroundColor && [customBackgroundColor alphaComponent] < 0.99));
 }
 
-/*!
- * @brief Style supports user icons
- */
 - (BOOL)allowsUserIcons
 {
 	return allowsUserIcons;
 }
 
-/*!
- * @brief Style's default font family
- */
 - (NSString *)defaultFontFamily
 {
 	return [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_FAMILY];
 }
 
-/*!
- * @brief Style's default font size
- */
 - (NSNumber *)defaultFontSize
 {
 	return [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_SIZE];
 }
 
-/*!
- * @brief Style's has a header
- */
 - (BOOL)hasHeader
 {
 	return headerHTML && [headerHTML length];
 }
 
-/*!
- * @brief Style's user icon mask
- */
 - (NSImage *)userIconMask
 {
 	return userIconMask;
 }
 
-
-//Behavior -------------------------------------------------------------------------------------------------------------
 #pragma mark Behavior
-/*!
- * @brief Set format of dates/time stamps
- */
+
 - (void)setDateFormat:(NSString *)format
 {
 	if (!format || [format length] == 0) {
@@ -247,49 +212,31 @@ static NSArray *validSenderColors;
 	timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO];
 }
 
-/*!
- * @brief Set visibility of user icons
- */
 - (void)setShowUserIcons:(BOOL)inValue
 {
 	showUserIcons = inValue;
 }
 
-/*!
- * @brief Set visibility of header
- */
 - (void)setShowHeader:(BOOL)inValue
 {
 	showHeader = inValue;
 }
 
-/*!
- * @brief Toggle use of a custom name format
- */
 - (void)setUseCustomNameFormat:(BOOL)inValue
 {
 	useCustomNameFormat = inValue;
 }
 
-/*!
- * @brief Set the custom name format being used
- */
 - (void)setNameFormat:(int)inValue
 {
 	nameFormat = inValue;
 }
 
-/*!
- * @brief Set visibility of message background colors
- */
 - (void)setAllowTextBackgrounds:(BOOL)inValue
 {
 	allowTextBackgrounds = inValue;
 }
 
-/*!
- * @brief Set the custom background image
- */
 - (void)setCustomBackgroundPath:(NSString *)inPath
 {
 	if (customBackgroundPath != inPath) {
@@ -298,17 +245,11 @@ static NSArray *validSenderColors;
 	}
 }
 
-/*!
- * @brief Set the custom background image type (How it is displayed - stretched, tiled, centered, etc)
- */
 - (void)setCustomBackgroundType:(AIWebkitBackgroundType)inType
 {
 	customBackgroundType = inType;
 }
 
-/*!
- * @brief Set the custom background color
- */
 - (void)setCustomBackgroundColor:(NSColor *)inColor
 {
 	if (customBackgroundColor != inColor) {
@@ -317,17 +258,11 @@ static NSArray *validSenderColors;
 	}
 }
 
-/*!
- * @brief Toggle visibility of received coloring
- */
 - (void)setShowIncomingMessageColors:(BOOL)inValue
 {
 	showIncomingColors = inValue;
 }
 
-/*!
- * @brief Toggle visibility of received fonts
- */
 - (void)setShowIncomingMessageFonts:(BOOL)inValue
 {
 	showIncomingFonts = inValue;
@@ -336,11 +271,6 @@ static NSArray *validSenderColors;
 
 //Templates ------------------------------------------------------------------------------------------------------------
 #pragma mark Templates
-/*!
- * @brief Returns the base template for this style
- *
- * The base template is basically the empty view, and serves as the starting point of all content insertion.
- */
 - (NSString *)baseTemplateWithVariant:(NSString *)variant chat:(AIChat *)chat
 {
 	NSMutableString	*templateHTML;
@@ -365,11 +295,6 @@ static NSArray *validSenderColors;
 	return [self fillKeywordsForBaseTemplate:templateHTML chat:chat];
 }
 
-/*!
- * @brief Returns the template for inserting content
- * 
- * Templates may be different for different content types and for content objects similar to the one preceding them.
- */
 - (NSString *)templateForContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar
 {
 	NSString	*template;
@@ -400,9 +325,9 @@ static NSArray *validSenderColors;
 }
 
 /*!
- * @brief Pre-fetch all the style templates
+ *	@brief Pre-fetch all the style templates
  *
- * This needs to be called before either baseTemplate or templateForContent is called
+ *	This needs to be called before either baseTemplate or templateForContent is called
  */
 - (void)_loadTemplates
 {		
@@ -454,11 +379,7 @@ static NSArray *validSenderColors;
 	
 }
 
-//Scripts --------------------------------------------------------------------------------------------------------------
 #pragma mark Scripts
-/*!
- * @brief Returns the BOM script for appending content
- */
 - (NSString *)scriptForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
 	NSMutableString	*newHTML;
@@ -488,19 +409,11 @@ static NSArray *validSenderColors;
 	return [NSString stringWithFormat:script, [self _escapeStringForPassingToScript:newHTML]]; 
 }
 
-/*!
- * @brief Returns the BOM script for changing the view's variant
- */
 - (NSString *)scriptForChangingVariant:(NSString *)variant
 {
 	return [NSString stringWithFormat:@"setStylesheet(\"mainStyle\",\"%@\");",[self pathForVariant:variant]];
 }
 
-/*!
- * @brief Returns the BOM script for scrolling after adding multiple content objects
- *
- * Only applicable for styles which use the internal template
- */
 - (NSString *)scriptForScrollingAfterAddingMultipleContentObjects
 {
 	if (styleVersion >= 3) {
@@ -511,7 +424,7 @@ static NSArray *validSenderColors;
 }
 
 /*!
- * @brief Escape a string for passing to our BOM scripts
+ *	@brief Escape a string for passing to our BOM scripts
  */
 - (NSMutableString *)_escapeStringForPassingToScript:(NSMutableString *)inString
 {
@@ -538,12 +451,8 @@ static NSArray *validSenderColors;
 	return inString;
 }
 
-
-//Variants -------------------------------------------------------------------------------------------------------------
 #pragma mark Variants
-/*!
- * @brief Returns an alphabetized array of available variant names for this style
- */
+
 - (NSArray *)availableVariants
 {
 	NSMutableArray	*availableVariants = [NSMutableArray array];
@@ -567,9 +476,6 @@ static NSArray *validSenderColors;
 	return availableVariants;
 }
 
-/*!
- * @brief Returns the file path to the css file defining a variant of this style
- */
 - (NSString *)pathForVariant:(NSString *)variant
 {
 	//Styles before version 3 stored the default variant in main.css, and not in the variants folder.
@@ -581,7 +487,7 @@ static NSArray *validSenderColors;
 }
 
 /*!
- * @brief Base variant name for styles before version 2
+ *	@brief Base variant name for styles before version 2
  */
 - (NSString *)noVariantName
 {
@@ -595,9 +501,6 @@ static NSArray *validSenderColors;
 	return noVariantName ? noVariantName : AILocalizedString(@"Normal","Normal style variant menu item");	
 }
 
-/*!
- * @brief Default variant for all style versions
- */
 - (NSString *)defaultVariant
 {
 	return styleVersion < 3 ? [self noVariantName] : [styleBundle objectForInfoDictionaryKey:@"DefaultVariant"];
@@ -610,16 +513,8 @@ static NSArray *validSenderColors;
 		   [inBundle objectForInfoDictionaryKey:@"DefaultVariant"];
 }
 
-//Keyword Replacement --------------------------------------------------------------------------------------------------
 #pragma mark Keyword replacement
 
-/*!
- * @brief Substitute content keywords
- *
- * Substitute keywords in a template with the appropriate values for the passed content object
- * We allow the message style to handle this since the behavior of keywords is dependent on the style and may change
- * for future style versions
- */
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content
 {
 	NSDate			*date = nil;
@@ -945,12 +840,6 @@ static NSArray *validSenderColors;
 	return inString;
 }
 
-/*!
- * @brief Substitute base keywords
- *
- * We allow the message style to handle this since the behavior of keywords is dependent on the style and may change
- * for future style versions
- */
 - (NSMutableString *)fillKeywordsForBaseTemplate:(NSMutableString *)inString chat:(AIChat *)chat
 {
 	NSRange	range;
