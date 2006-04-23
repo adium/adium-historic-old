@@ -41,7 +41,13 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 
 - (void)addedDebugMessage:(NSString *)aDebugString
 {
+	unsigned int aDebugStringLength = [aDebugString length];
+
 	[mutableDebugString appendString:aDebugString];
+	
+	[[textView_debug textStorage] addAttribute:NSParagraphStyleAttributeName
+										 value:debugParagraphStyle
+										 range:NSMakeRange([mutableDebugString length] - aDebugStringLength, aDebugStringLength)];
 }
 + (void)addedDebugMessage:(NSString *)aDebugString
 {
@@ -64,6 +70,10 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 	//We store the reference to the mutableString of the textStore for efficiency
 	mutableDebugString = [[[textView_debug textStorage] mutableString] retain];
 	
+	debugParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+	[debugParagraphStyle setHeadIndent:12];
+	[debugParagraphStyle setFirstLineHeadIndent:2];
+
 	[scrollView_debug setAutoScrollToBottom:YES];
 	
 	//Load the logs which were added before the window was loaded
@@ -128,7 +138,8 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 	//Close down
 	[mutableDebugString release]; mutableDebugString = nil;
     [self autorelease]; sharedDebugWindowInstance = nil;
-	
+	[debugParagraphStyle release]; debugParagraphStyle = nil;
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
