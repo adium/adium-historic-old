@@ -127,8 +127,20 @@
 - (void)drawRect:(NSRect)inRect
 {
 	int		i, numberOfMenuItems;
-	
+	BOOL	willDisplayACheckbox = NO;
+
 	numberOfMenuItems = [menu numberOfItems];
+	
+	//Determine if one or more menu items is in a non-off (that it, on or mixed) state.
+	for (i = 0; i < numberOfMenuItems; i++) {
+		NSMenuItem			*menuItem = [menu itemAtIndex:i];
+		if ([menuItem state] != NSOffState) {
+			willDisplayACheckbox = YES;
+			break;
+		}
+	}
+	
+	//Now do the actual drawing
 	for (i = 0; i < numberOfMenuItems; i++) {
 		NSRect	menuItemRect = [self rectForIndex:i];
 
@@ -235,12 +247,17 @@
 
 				title = [[NSAttributedString alloc] initWithString:[menuItem title]
 														attributes:currentTextAttributes];
-				
-				//Shift right, and shorten our width, for indentation like a real menu, leaving space for the checkmark if it's needed
+
+				menuItemRect.origin.x += 2;
+				menuItemRect.size.width -= 2;
+
+				if (willDisplayACheckbox) {
+					//Shift right, and shorten our width, for indentation like a real menu, leaving space for the checkmark if it's needed
 #define CHECKMARK_WIDTH 9
-				menuItemRect.origin.x += CHECKMARK_WIDTH + 2;
-				menuItemRect.size.width -= CHECKMARK_WIDTH + 2;
-				
+					menuItemRect.origin.x += CHECKMARK_WIDTH;
+					menuItemRect.size.width -= CHECKMARK_WIDTH;
+				}
+
 				[title drawInRect:menuItemRect];
 				[title release];
 			}
