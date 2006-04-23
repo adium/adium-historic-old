@@ -221,6 +221,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	Screenname			*sn = [userInfo get:@"Screenname"];
 	NSString			*message = [userInfo get:@"Away message"];
 
+	NSLog(@"Class is %@ - %@",NSStringFromClass([message class]), NSStringFromClass([[[message copy] autorelease] class]));
 	if (message && [message length])
 		[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 					setStatusMessage:[[message copy] autorelease]];
@@ -796,15 +797,17 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	 * "/home/klea/xyz/dir/file2", will produce {@code TransferredFile}s with
 	 * paths of "cool/file1" and "cool/dir/file2".
 	 */
-	if ([pathArray count] == 1) {
-		//Sending one folder; its name is our root we'll send to the remote contact
-		NSLog(@"Sending %@ with name %@ and root %@",fileList, [[pathArray objectAtIndex:0] lastPathComponent], commonPrefix);
-		[outgoingFileTransfer addFilesInHierarchy:[[pathArray objectAtIndex:0] lastPathComponent] :[NewFile(commonPrefix) autorelease] :fileList];
-	} else {
-		//Sending multiple files or folders; their commonality is the name we'll send to the remote contact
-		NSLog(@"Sending %@ with name %@ and root %@",fileList, [commonPrefix lastPathComponent], commonPrefix);
-		[outgoingFileTransfer addFilesInHierarchy:[commonPrefix lastPathComponent] :[NewFile(commonPrefix) autorelease] :fileList];		
-	}
+	
+	/*
+	 * If we're sending one folder, its name is our root we'll send to the remote contact.
+	 * If we're sending multiple files or folders, their commonality is the name we'll send to the remote contact.
+	 */
+	NSString	*folderName = (([pathArray count] == 1) ?
+							   [[pathArray objectAtIndex:0] lastPathComponent] :
+							   [commonPrefix lastPathComponent]);
+	[outgoingFileTransfer addFilesInHierarchy:folderName :[NewFile(commonPrefix) autorelease] :fileList];
+	[outgoingFileTransfer setDisplayName:folderName];
+	NSLog(@"Sending %@ with name %@ and root %@",fileList, folderName, commonPrefix);
 }
 
 /*
