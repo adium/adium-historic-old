@@ -30,6 +30,9 @@
 	NSString				*sizeString;
 	BOOL					forceUpdate;
 	
+	NSMutableArray			*bytesSentQueue;
+	NSMutableArray			*updateTickQueue;
+	
 	IBOutlet				ESFileTransferProgressView	*view;
 }
 

@@ -25,6 +25,7 @@
 
 #define	BYTES_RECEIVED		[NSString stringWithFormat:AILocalizedString(@"%@ received","(a bytes string) received"),bytesString]
 #define	BYTES_SENT			[NSString stringWithFormat:AILocalizedString(@"%@ sent","(a bytes string) sent"),bytesString]
+#define	BUFFER_SIZE			25
 
 @interface ESFileTransferProgressRow (PRIVATE)
 - (NSString *)stringForSize:(unsigned long long)size;
@@ -52,6 +53,9 @@
 		[fileTransfer setDelegate:self];
 
 		owner = inOwner;
+		
+		bytesSentQueue = [[NSMutableArray alloc] init];
+		updateTickQueue = [[NSMutableArray alloc] init];
 
 		[NSBundle loadNibNamed:@"ESFileTransferProgressView" owner:self];
 	}
@@ -66,6 +70,9 @@
 	[fileTransfer release];
 	[view release]; view = nil;
 	[sizeString release]; sizeString = nil;
+	
+	[bytesSentQueue release]; bytesSentQueue = nil;
+	[updateTickQueue release]; updateTickQueue = nil;
 
 	[super dealloc];
 }
@@ -170,7 +177,7 @@
 		size = [inFileTransfer size];
 		
 		[sizeString release];
-		sizeString = [[[adium fileTransferController] stringForSize:size] retain];		
+		sizeString = [[[adium fileTransferController] stringForSize:size] retain];
 	}
 
 	switch (status) {
@@ -266,15 +273,26 @@
 	
 	if ((status == In_Progress_FileTransfer) && lastUpdateTick && lastBytesSent) {
 		if (updateTick != lastUpdateTick) {
-			unsigned long long	rate;
+			if ([bytesSentQueue count] == 0) {
+				[bytesSentQueue insertObject:[NSNumber numberWithUnsignedLongLong:lastBytesSent] atIndex:0];
+				[updateTickQueue insertObject:[NSNumber numberWithUnsignedLong:lastUpdateTick] atIndex:0];
+			} else if ([bytesSentQueue count] >= BUFFER_SIZE) {
+				[bytesSentQueue removeObjectAtIndex:0];
+				[updateTickQueue removeObjectAtIndex:0];
+			}
 			
-			rate = ((bytesSent - lastBytesSent) / ((updateTick - lastUpdateTick) / 60.0));
+			[bytesSentQueue addObject:[NSNumber numberWithUnsignedLongLong:bytesSent]];
+			[updateTickQueue addObject:[NSNumber numberWithUnsignedLong:updateTick]];
+			
+			unsigned long long	bytesDifference = bytesSent - [[bytesSentQueue objectAtIndex:0] unsignedLongLongValue];
+			unsigned long		ticksDifference = updateTick - [[updateTickQueue objectAtIndex:0] unsignedLongValue];
+			unsigned long long	rate = bytesDifference / (ticksDifference / 60.0);
+			
 			transferSpeedStatus = [NSString stringWithFormat:AILocalizedString(@"%@ per sec.",nil),[[adium fileTransferController] stringForSize:rate]];
 			
 			if (rate > 0) {
 				unsigned long long secsRemaining = ((size - bytesSent) / rate);
 				transferRemainingStatus = [NSString stringWithFormat:AILocalizedString(@"%@ remaining.",nil),[self readableTimeForSecs:secsRemaining inLongFormat:YES]];
-				
 			} else {
 				transferRemainingStatus = AILocalizedString(@"Stalled","file transfer is stalled status message");
 			}
@@ -406,7 +424,7 @@
 	stop = [[breaks objectAtIndex:i] unsignedIntValue];
 	
 	val = (unsigned int) ( secs / stop );
-	use = ( val > 1 ? plural : desc );
+	use = ( val != 1 ? plural : desc );
 	retval = [NSString stringWithFormat:@"%d %@", val, [use objectForKey:[NSNumber numberWithUnsignedInt:stop]]];
 	if ( longFormat && i > 0 ) {
 		unsigned int rest = (unsigned int) ( (unsigned int) secs % stop );
