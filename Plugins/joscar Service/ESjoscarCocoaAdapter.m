@@ -221,7 +221,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	Screenname			*sn = [userInfo get:@"Screenname"];
 	NSString			*message = [userInfo get:@"Away message"];
 
-	NSLog(@"Class is %@ - %@",NSStringFromClass([message class]), NSStringFromClass([[[message copy] autorelease] class]));
 	if (message && [message length])
 		[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 					setStatusMessage:[[message copy] autorelease]];
@@ -458,7 +457,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	
 	if ((attachmentsSet != nil) && (outJoscarData != NULL)) {
 		*outJoscarData = attachmentsSet;
-		NSLog(@"Attachments: %@",attachmentsSet);
 	}
 
 	return [processedString autorelease];
