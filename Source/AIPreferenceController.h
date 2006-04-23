@@ -92,7 +92,6 @@ typedef enum {
 
 //Preference Cache
 - (NSMutableDictionary *)cachedPreferencesForGroup:(NSString *)group object:(AIListObject *)object;
-- (void)updateCachedPreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)group object:(AIListObject *)object;
 
 //Default download location
 - (NSString *)userPreferredDownloadFolder;
