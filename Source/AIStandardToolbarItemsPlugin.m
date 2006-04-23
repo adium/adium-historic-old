@@ -30,7 +30,7 @@
  * @class AIStandardToolbarItemsPlugin
  * @brief Component to provide general-use toolbar items
  *
- * Just provides a Message toolbar item at present.
+ * Just provides a Source/Destination picker toolbar item at present.
  */
 @implementation AIStandardToolbarItemsPlugin
 
@@ -41,22 +41,22 @@
 {
     //New Message
     NSToolbarItem   *toolbarItem = 
-	[AIToolbarUtilities toolbarItemWithIdentifier:@"NewMessage"
-											label:MESSAGE
-									 paletteLabel:MESSAGE
-										  toolTip:MESSAGE
+	[AIToolbarUtilities toolbarItemWithIdentifier:@"SourceDestination"
+											label:AILocalizedString(@"Source/Destination", nil)
+									 paletteLabel:AILocalizedString(@"Change Source or Destination", nil)
+										  toolTip:AILocalizedString(@"If multiple accounts can send to this contact or this is a combined contact, change the source and/or destination of this chat", nil)
 										   target:self
 								  settingSelector:@selector(setImage:)
 									  itemContent:[NSImage imageNamed:@"message" forClass:[self class]]
-										   action:@selector(newMessage:)
+										   action:@selector(showSourceDestinationPicker:)
 											 menu:nil];
-    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
+	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"MessageWindow"];
 }
 
 /*!
  * @brief New chat with the selected list object
  */
-- (IBAction)newMessage:(NSToolbarItem *)toolbarItem
+- (IBAction)showSourceDestinationPicker:(NSToolbarItem *)toolbarItem
 {
     AIListObject	*object = [[adium contactController] selectedListObject];
 
