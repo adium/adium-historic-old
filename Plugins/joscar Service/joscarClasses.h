@@ -530,6 +530,7 @@
 - (void)addFile:(File *)file;
 - (void)setSingleFile:(File *)file;
 - (NSString *)getDisplayName;
+- (void)setDisplayName:(NSString *)inDisplayName;
 //public abstract java/util/Map getNameMappings();
 //public abstract void mapName(java/io/File, java/lang/String);
 //public abstract java/lang/String getMappedName(java/io/File);
