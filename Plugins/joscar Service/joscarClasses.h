@@ -358,6 +358,7 @@
 - (DirectimConversation *)getDirectimConversation:(Screenname *)sn;
 - (RvConnectionManager *)getRvConnectionManager;
 - (void)sendAutomatically:(Screenname *)sn :(Message *)msg;
+- (void)sendTypingAutomatically:(Screenname *)sn :(TypingState *)msg;
 @end
 
 #pragma mark Buddies and Groups
