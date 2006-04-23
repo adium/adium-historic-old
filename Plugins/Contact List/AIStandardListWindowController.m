@@ -785,8 +785,6 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 		//After sliding off screen, go to an alpha value of 0 to hide our 1 px remaining on screen
 		previousAlpha = [myWindow alphaValue];
 		[myWindow setAlphaValue:0.0];
-		
-		NSLog(@"noted an alpha value of %f",previousAlpha);
 	}
 }
 
