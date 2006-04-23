@@ -1252,16 +1252,30 @@ NSString* serviceIDForJabberUID(NSString *UID)
 	
 	if (serviceProperty) {
 		ABPerson				*person = [[ABPerson alloc] init];
-		ABMutableMultiValue		*multiValue = [[ABMutableMultiValue alloc] init];
-		NSString				*UID = [contact formattedUID];
 		
 		//Set the name
 		[person setValue:[contact displayName] forKey:kABFirstNameProperty];
 		[person setValue:[contact phoneticName] forKey:kABFirstNamePhoneticProperty];
 		
-		//Set the IM property
-		[multiValue addValue:UID withLabel:serviceProperty];
-		[person setValue:multiValue forKey:serviceProperty];
+		NSString				*UID = [contact formattedUID];
+	
+		NSEnumerator * containedContactEnu = [contact isKindOfClass:[AIMetaContact class]] ? [[(AIMetaContact *)contact listContacts] objectEnumerator] : [[NSArray arrayWithObject:contact] objectEnumerator];
+		AIListObject *c;
+		ABMutableMultiValue		*multiValue;
+		
+		while((c = [containedContactEnu nextObject]))
+		{
+			multiValue = [[ABMutableMultiValue alloc] init];
+			UID = [c formattedUID];
+			serviceProperty = [ESAddressBookIntegrationPlugin propertyFromService:[c service]];
+			
+			//Set the IM property
+			[multiValue addValue:UID withLabel:serviceProperty];
+			[person setValue:multiValue forKey:serviceProperty];
+			
+			[multiValue release];
+		}
+		
 		
 		//Set the image
 		[person setImageData:[contact userIconData]];
@@ -1292,7 +1306,6 @@ NSString* serviceIDForJabberUID(NSString *UID)
 		}
 		
 		//Clean up
-		[multiValue release];
 		[person release];
 	}
 }
