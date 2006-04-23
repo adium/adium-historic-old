@@ -528,7 +528,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 - (void)chatWithUID:(NSString *)inUID setTypingState:(AITypingState)typingState
 {
 	Screenname			*sn = [NewScreenname(inUID) autorelease];
-	ImConversation		*conversation = [[aimConnection getIcbmService] getImConversation:sn];
 	TypingState			*joscarTypingState;
 
 	switch (typingState) {
@@ -545,7 +544,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	}
 	
 	/* Send typing */
-	[conversation setTypingState:joscarTypingState];
+	[[aimConnection getIcbmService] sendTypingAutomatically:sn :joscarTypingState];
 }
 
 /*
