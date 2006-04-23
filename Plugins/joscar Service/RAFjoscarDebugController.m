@@ -18,11 +18,7 @@
 #include <errno.h>  //errno
 #include <string.h> //strerror(3)
 
-/* XXX- reduce the number of cached logs when joscar is finally done being worked on. leaving it insane now
- * so Keith doesn't have to raise it for himself and so that we can give him useful log files.
- * This may make joscar hog RAM. You've been warned (or not). This is 100 times the number of logs we'd sanely keep.
- */
-#define	CACHED_DEBUG_LOGS		10000		//Number of logs to keep at any given time
+#define	CACHED_DEBUG_LOGS		100		//Number of logs to keep at any given time
 #define	KEY_JOSCAR_DEBUG_WINDOW_OPEN	@"joscar Debug Window Open"
 
 @implementation RAFjoscarDebugController
