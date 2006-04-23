@@ -22,7 +22,7 @@
 	IBOutlet	NSTextView			*textView_debug;
 	IBOutlet	AIAutoScrollView	*scrollView_debug;
 	NSMutableString					*mutableDebugString;
-	
+	NSMutableParagraphStyle			*debugParagraphStyle;
 	IBOutlet	NSButton			*checkBox_logWriting;
 }
 
