@@ -184,6 +184,8 @@
 		case Unknown_Status_FileTransfer:
 		case Not_Started_FileTransfer:
 		case Accepted_FileTransfer:
+		case Waiting_on_Remote_User_FileTransfer:
+		case Connecting_FileTransfer:
 			[view setProgressIndeterminate:YES];
 			[view setProgressAnimation:YES];
 			transferSpeedStatus = AILocalizedString(@"Waiting to start.","waiting to begin a file transfer status");
@@ -212,10 +214,24 @@
 			break;
 	}
 
-	if (type == Unknown_FileTransfer || status == Unknown_Status_FileTransfer || status == Not_Started_FileTransfer) {
+	if (type == Unknown_FileTransfer) {
 		transferBytesStatus = [AILocalizedString(@"Initiating file transfer",nil) stringByAppendingEllipsis];
+
 	} else {		
 		switch (status) {
+			case Unknown_Status_FileTransfer:
+			case Not_Started_FileTransfer:
+				transferBytesStatus = [AILocalizedString(@"Initiating file transfer",nil) stringByAppendingEllipsis];
+				break;
+			case Checksumming_Filetransfer:
+				transferBytesStatus = [AILocalizedString(@"Preparing file transfer","File transfer preparing status description") stringByAppendingEllipsis];
+				break;
+			case Waiting_on_Remote_User_FileTransfer:
+				transferBytesStatus = [AILocalizedString(@"Waiting for transfer to be accepted","File transfer waiting on remote user status description") stringByAppendingEllipsis];
+				break;
+			case Connecting_FileTransfer:
+				transferBytesStatus = [AILocalizedString(@"Establishing file transfer connection","File transfer connecting status description") stringByAppendingEllipsis];
+				break;
 			case Accepted_FileTransfer:
 				transferBytesStatus = [AILocalizedString(@"Accepted file transfer",nil) stringByAppendingEllipsis];
 			break;
@@ -259,9 +275,6 @@
 				break;
 			case Cancelled_Remote_FileTransfer:
 				transferBytesStatus = AILocalizedString(@"Remote contact cancelled","File transfer cancelled remotely status description");
-				break;
-			case Checksumming_Filetransfer:
-				transferBytesStatus = [AILocalizedString(@"Preparing file transfer","File transfer preparing status description") stringByAppendingEllipsis];
 				break;
 			case Failed_FileTransfer:
 				transferBytesStatus = AILocalizedString(@"Failed","File transfer failed status description");

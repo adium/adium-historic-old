@@ -804,7 +804,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 							   [commonPrefix lastPathComponent]);
 	[outgoingFileTransfer addFilesInHierarchy:folderName :[NewFile(commonPrefix) autorelease] :fileList];
 	[outgoingFileTransfer setDisplayName:folderName];
-	NSLog(@"Sending %@ with name %@ and root %@",fileList, folderName, commonPrefix);
+	AILog(@"%@: Sending %@ with name %@ and root %@",self, fileList, folderName, commonPrefix);
 }
 
 /*
@@ -875,44 +875,62 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 - (void)setFileTransferUpdate:(HashMap *)userInfo
 {
-	FileTransfer		*fileTransfer = [userInfo get:@"FileTransfer"];
-	FileTransferState	*ftState = [userInfo get:@"FileTransferState"];
+	RvConnection		*fileTransfer = [userInfo get:@"RvConnection"];
+	RvConnectionState	*ftState = [userInfo get:@"RvConnectionState"];
 	NSString			*newState = [ftState toString];
 	NSDictionary		*pollingUserInfo = nil;
 	NSValue				*identifier = [NSValue valueWithPointer:fileTransfer];
 	FileTransferStatus	fileTransferStatus;
 	BOOL				shouldPollForStatus = NO;
 
-	AILog(@"File transfer update: %@",userInfo);
+	AILog(@"File transfer update: %@ -- %@",userInfo, newState);
 
 	if ([newState isEqualToString:@"WAITING"]) {
-		fileTransferStatus = Not_Started_FileTransfer;
+		fileTransferStatus = Waiting_on_Remote_User_FileTransfer;
 		
 	} else if ([newState isEqualToString:@"CONNECTING"]) {
-		fileTransferStatus = Not_Started_FileTransfer;
+		fileTransferStatus = Connecting_FileTransfer;
 		
 	} else if ([newState isEqualToString:@"CONNECTED"]) {
 		//XXX Adium doesn't have a state for this yet
 		fileTransferStatus = Accepted_FileTransfer;
 		
 	} else if ([newState isEqualToString:@"TRANSFERRING"]) {
-		TransferringFileEvent	*fileEvent = [userInfo get:@"FileTransferEvent"];
-//		TransferredFileInfo		*fileInfo = [fileEvent getFileInfo];
-		ProgressStatusProvider	*progressStatusProvider = [fileEvent getProgressProvider];
-		
+		RvConnectionEvent	*ftEvent = [userInfo get:@"RvConnectionEvent"];
+
 		fileTransferStatus = In_Progress_FileTransfer;
-		shouldPollForStatus = YES;
-		
-		pollingUserInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-			identifier, @"FileTransferValue",
-			progressStatusProvider, @"ProgressStatusProvider",
-			nil];
+
+		if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.TransferringFileEvent")]) {
+			//		TransferredFileInfo		*fileInfo = [fileEvent getFileInfo];
+			ProgressStatusProvider	*progressStatusProvider = [(TransferringFileEvent *)ftEvent getProgressProvider];
+			
+			shouldPollForStatus = YES;
+			
+			pollingUserInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+				identifier, @"FileTransferValue",
+				progressStatusProvider, @"ProgressStatusProvider",
+				nil];
+		}
 
 	} else if ([newState isEqualToString:@"FINISHED"]) {
 		fileTransferStatus = Complete_FileTransfer;
 
+		//Ensure the update timer fires so we know how much we transferred; changes since the last firing won't be shown otherwise.
+		[[fileTransferPollingTimersDict objectForKey:identifier] fire];
+
 	} else if ([newState isEqualToString:@"FAILED"]) {
-		fileTransferStatus = Failed_FileTransfer;
+		RvConnectionEvent *ftEvent = [userInfo get:@"RvConnectionEvent"];
+		AILog(@"Failed event was %@",ftEvent);
+
+		if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.BuddyCancelledEvent")]) {
+			fileTransferStatus = Cancelled_Remote_FileTransfer;
+
+		} else if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.LocallyCancelledEvent")]) {
+			fileTransferStatus = Cancelled_Local_FileTransfer;
+
+		} else {
+			fileTransferStatus = Failed_FileTransfer;
+		}
 
 	} else if ([newState isEqualToString:@"PREPARING"]) {
 		fileTransferStatus = Checksumming_Filetransfer;
@@ -1518,7 +1536,7 @@ Date* javaDateFromDate(NSDate *date)
 		id<Iterator> iter = [[chatSession getUsers] iterator];
 		while ([iter hasNext]) {
 			NSString *tmp = [(Screenname *)[iter next] getNormal];
-			NSLog(@"found contact %@ to be part of chat %@", tmp, [chat name]);
+			AILog(@"found contact %@ to be part of chat %@", tmp, [chat name]);
 			[chat addParticipatingListObject:[account contactWithUID:[(Screenname *)[iter next] getNormal]]];
 		}	
 	} else
