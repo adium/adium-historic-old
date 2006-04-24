@@ -133,7 +133,6 @@
  */
 - (NSImage *)image
 {
-	NSLog(@"Grabbing image from %@",path);
     return [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
 }
 
