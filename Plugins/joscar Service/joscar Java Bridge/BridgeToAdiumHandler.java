@@ -43,7 +43,7 @@ public class BridgeToAdiumHandler extends Handler {
 			String outputString;
 
 			if (formatter != null) {
-				outputString = formatter.formatMessage(record);
+				outputString = formatter.format(record);
 			} else {
 				outputString = record.toString();
 			}
