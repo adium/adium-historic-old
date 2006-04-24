@@ -75,18 +75,16 @@ SecuridProvider
 		h = new BridgeToAdiumHandler();
 		h.setFormatter(new CoolFormatter());
 		
-//		l = Logger.getLogger("net.kano.joustsim");
-//		System.out.println((new Array(Handler.getClass(), l.getHandlers())).toString());
 		l = Logger.getLogger("net.kano.joustsim");
 		handlers = l.getHandlers();
 		if (handlers != null)
-			if (handlers.length > 0)
+			while (handlers.length > 0)
 				l.removeHandler(handlers[0]);
-		
+
 		l = Logger.getLogger("net.kano.joscar");
 		handlers = l.getHandlers();
 		if (handlers != null)
-			if (handlers.length > 0)
+			while (handlers.length > 0)
 				l.removeHandler(handlers[0]);
 
 		l = LOGGER;
@@ -100,39 +98,50 @@ SecuridProvider
 			
 			l = Logger.getLogger("net.kano.joustsim");
 			l.setLevel(Level.SEVERE);
+			l.setUseParentHandlers(false);
 			l.addHandler(h);
 			
 			l = Logger.getLogger("net.kano.joscar");
 			l.setLevel(Level.SEVERE);
+			l.setUseParentHandlers(false);
 			l.addHandler(h);
 			
 			LOGGER.setLevel(Level.SEVERE);
+			l.setUseParentHandlers(false);
 			LOGGER.addHandler(h);
+			
 		} else if (enableLogging == 1) {
 			h.setLevel(Level.ALL);
 
 			l = Logger.getLogger("net.kano.joustsim");
 			l.setLevel(Level.ALL);
+			l.setUseParentHandlers(false);
 			l.addHandler(h);
 			
 			l = Logger.getLogger("net.kano.joscar");
 			l.setLevel(Level.FINE);
+			l.setUseParentHandlers(false);
 			l.addHandler(h);
 			
 			LOGGER.setLevel(Level.ALL);
+			l.setUseParentHandlers(false);
 			LOGGER.addHandler(h);
+			
 		} else if (enableLogging == 2) {
 			h.setLevel(Level.WARNING);
 
 			l = Logger.getLogger("net.kano.joustsim");
 			l.setLevel(Level.WARNING);
+			l.setUseParentHandlers(false);
 			l.addHandler(h);
 			
 			l = Logger.getLogger("net.kano.joscar");
 			l.setLevel(Level.WARNING);
+			l.setUseParentHandlers(false);
 			l.addHandler(h);
 			
 			LOGGER.setLevel(Level.WARNING);
+			l.setUseParentHandlers(false);
 			LOGGER.addHandler(h);
 		}
     }
@@ -155,12 +164,22 @@ SecuridProvider
                 sw = new StringWriter();
                 thrown.printStackTrace(new PrintWriter(sw));
             }
+			/*
             return "[" + formatter.format(new Date(record.getMillis()))
                     + " " + record.getLevel() + "] "
                     + shname + ": "
                     + record.getMessage() + (sw == null ? ""
                     : sw.getBuffer().toString()) + "\n";
+			 */
+			return "[" + formatter.format(new Date(record.getMillis())) + "] "
+				+ shname + ": "
+				+ record.getMessage() + (sw == null ? ""
+													: sw.getBuffer().toString()) + "\n";			
         }
+		
+		public synchronized String formatMessage(LogRecord record) {
+			return format(record);
+		}
     }
 	
 	public NSData dataFromByteBlock(ByteBlock byteBlock) {
@@ -244,7 +263,7 @@ SecuridProvider
 
 	public void newBuddyInfo(BuddyInfoManager manager, Screenname buddy,
 							 BuddyInfo info) {
-//		System.out.println("new buddy info!");
+
     }
 	
     public void buddyInfoChanged(BuddyInfoManager manager, Screenname buddy,
@@ -293,13 +312,6 @@ SecuridProvider
 
     public void receivedStatusUpdate(BuddyInfoManager manager,
 									 Screenname buddy, BuddyInfo info) {
-		/*
-		if (info.isOnline()) {
-			System.out.println("Received status update for " + buddy.getNormal());
-		} else {
-			System.out.println("OFFLINE: Received status update for " + buddy.getNormal());
-		}
-		 */
 		HashMap map = new HashMap();
 		map.put("Screenname", buddy);
 		map.put("BuddyInfo", info);
@@ -603,8 +615,6 @@ SecuridProvider
 		map.put("RvConnectionEvent", ftEvent);
 		
 		sendDelegateMessageWithMap("FileTransferUpdate", map);
-
-		System.out.println(ft.toString() + " ** state " + ftState.toString() + " ** event " + ftEvent.toString());
 	}
 		
 	public void handleEvent(RvConnection ft, RvConnectionEvent ftEvent) {
@@ -613,8 +623,6 @@ SecuridProvider
 		map.put("RvConnectionEvent", ftEvent);
 		
 		sendDelegateMessageWithMap("FileTransferUpdate", map);
-		
-		System.out.println(ft.toString() + " /// event " + ftEvent.toString() + " ///");
 	}
 
 	/* IconRequestListener */
