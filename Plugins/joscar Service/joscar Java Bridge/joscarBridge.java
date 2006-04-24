@@ -175,11 +175,7 @@ SecuridProvider
 				+ shname + ": "
 				+ record.getMessage() + (sw == null ? ""
 													: sw.getBuffer().toString()) + "\n";			
-        }
-		
-		public synchronized String formatMessage(LogRecord record) {
-			return format(record);
-		}
+        }		
     }
 	
 	public NSData dataFromByteBlock(ByteBlock byteBlock) {
