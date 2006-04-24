@@ -95,7 +95,6 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
     [textField_version setStringValue:[self _applicationVersion]];
     
 	//Set the localized values
-	[[self window] setTitle:AILocalizedString(@"About Adium","About window title")];
 	[button_homepage setLocalizedString:AILocalizedString(@"Adium Homepage",nil)];
 	[button_license setLocalizedString:AILocalizedString(@"License",nil)];
 
