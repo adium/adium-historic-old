@@ -283,76 +283,80 @@
 {
 	NSImage		*iconImage = nil;
 	NSString	*extension;
-	
+	NSImage		*systemIcon;
+
 	extension = [[self localFilename] pathExtension];
 	
 	//Fall back on the remote filename if necessary
-	if (!extension) extension = [[self remoteFilename] pathExtension]; 
+	if (!extension || ![extension length]) extension = [[self remoteFilename] pathExtension]; 
 	
-	if (extension && [extension length]) {		
-		NSImage		*systemIcon = [[NSWorkspace sharedWorkspace] iconForFileType:extension];
+	if (extension && [extension length]) {
+		systemIcon = [[NSWorkspace sharedWorkspace] iconForFileType:extension];
 
-		BOOL pointingDown = (type == Incoming_FileTransfer);
-		BOOL drawArrow = pointingDown || (type == Outgoing_FileTransfer);
+	} else {
+		systemIcon = [[NSWorkspace sharedWorkspace] iconForFile:[self localFilename]];
 
-		// If type is Incoming (*down*load) or Outgoing (*up*load), overlay an arrow in a circle.
-		iconImage = [[NSImage alloc] initWithSize:[systemIcon size]];
-		
-		NSRect	rect = { NSZeroPoint, [iconImage size] };
-		NSRect	bottomRight = NSMakeRect(NSMidX(rect), 
-										 ([iconImage isFlipped] ? NSMidY(rect) : NSMinY(rect)), 
-										 (NSWidth(rect)/2.0),
-										 (NSHeight(rect)/2.0));		
-
-		[iconImage lockFocus];
-		
-		[systemIcon compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
-		
-		float line = ((NSWidth(bottomRight) / 15) + ((NSHeight(bottomRight) / 15) / 2));
-		NSRect	circleRect = NSMakeRect(NSMinX(bottomRight),
-										NSMinY(bottomRight) + (line),
-										NSWidth(bottomRight) - (line),
-										NSHeight(bottomRight) - (line));
-
-		//draw our circle background...
-		NSBezierPath *circle = [NSBezierPath bezierPathWithOvalInRect:circleRect];
-		[circle setLineWidth:line];
-		[[[NSColor alternateSelectedControlColor] colorWithAlphaComponent:0.75] setStroke];
-		[[[NSColor alternateSelectedControlTextColor] colorWithAlphaComponent:0.75] setFill];
-		[circle fill];
-		[circle stroke];
-
-		//and the arrow on top of it.
-		if(drawArrow) {
-			NSBezierPath *arrow = [NSBezierPath bezierPathWithArrowWithShaftLengthMultiplier:2.0f];
-			if(pointingDown) [arrow flipVertically];
-			[arrow scaleToSize:bottomRight.size];
-
-			//bring it into position.
-			NSAffineTransform *transform = [NSAffineTransform transform];
-			[transform translateXBy:circleRect.origin.x yBy:circleRect.origin.y];
-			[arrow transformUsingAffineTransform:transform];
-
-			//fine-tune size.
-			transform = [NSAffineTransform transform];
-			[transform scaleBy:MAGIC_ARROW_SCALE];
-			[arrow transformUsingAffineTransform:transform];
-
-			//fine-tune position.
-			transform = [NSAffineTransform transform];
-			[transform translateXBy:MAGIC_ARROW_TRANSLATE_X yBy:MAGIC_ARROW_TRANSLATE_Y];
-			[arrow transformUsingAffineTransform:transform];
-
-			[circle addClip];
-			[[NSColor alternateSelectedControlColor] setFill];
-			[arrow fill];
-		}
-		
-		[iconImage unlockFocus];
-		[iconImage autorelease];
 	}
 
-	return iconImage;
+	BOOL pointingDown = (type == Incoming_FileTransfer);
+	BOOL drawArrow = pointingDown || (type == Outgoing_FileTransfer);
+	
+	// If type is Incoming (*down*load) or Outgoing (*up*load), overlay an arrow in a circle.
+	iconImage = [[NSImage alloc] initWithSize:[systemIcon size]];
+	
+	NSRect	rect = { NSZeroPoint, [iconImage size] };
+	NSRect	bottomRight = NSMakeRect(NSMidX(rect), 
+									 ([iconImage isFlipped] ? NSMidY(rect) : NSMinY(rect)), 
+									 (NSWidth(rect)/2.0),
+									 (NSHeight(rect)/2.0));		
+	
+	[iconImage lockFocus];
+	
+	[systemIcon compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
+	
+	float line = ((NSWidth(bottomRight) / 15) + ((NSHeight(bottomRight) / 15) / 2));
+	NSRect	circleRect = NSMakeRect(NSMinX(bottomRight),
+									NSMinY(bottomRight) + (line),
+									NSWidth(bottomRight) - (line),
+									NSHeight(bottomRight) - (line));
+	
+	//draw our circle background...
+	NSBezierPath *circle = [NSBezierPath bezierPathWithOvalInRect:circleRect];
+	[circle setLineWidth:line];
+	[[[NSColor alternateSelectedControlColor] colorWithAlphaComponent:0.75] setStroke];
+	[[[NSColor alternateSelectedControlTextColor] colorWithAlphaComponent:0.75] setFill];
+	[circle fill];
+	[circle stroke];
+	
+	//and the arrow on top of it.
+	if(drawArrow) {
+		NSBezierPath *arrow = [NSBezierPath bezierPathWithArrowWithShaftLengthMultiplier:2.0f];
+		if(pointingDown) [arrow flipVertically];
+		[arrow scaleToSize:bottomRight.size];
+		
+		//bring it into position.
+		NSAffineTransform *transform = [NSAffineTransform transform];
+		[transform translateXBy:circleRect.origin.x yBy:circleRect.origin.y];
+		[arrow transformUsingAffineTransform:transform];
+		
+		//fine-tune size.
+		transform = [NSAffineTransform transform];
+		[transform scaleBy:MAGIC_ARROW_SCALE];
+		[arrow transformUsingAffineTransform:transform];
+		
+		//fine-tune position.
+		transform = [NSAffineTransform transform];
+		[transform translateXBy:MAGIC_ARROW_TRANSLATE_X yBy:MAGIC_ARROW_TRANSLATE_Y];
+		[arrow transformUsingAffineTransform:transform];
+		
+		[circle addClip];
+		[[NSColor alternateSelectedControlColor] setFill];
+		[arrow fill];
+	}
+	
+	[iconImage unlockFocus];
+
+	return [iconImage autorelease];
 }	
 
 - (BOOL)isStopped
