@@ -598,9 +598,9 @@ SecuridProvider
 	/* FileTransferListener */
 	public void handleEventWithStateChange(RvConnection ft, RvConnectionState ftState, RvConnectionEvent ftEvent) {
 		HashMap map = new HashMap();
-		map.put("FileTransfer", ft);
-		map.put("FileTransferState", ftState);
-		map.put("FileTransferEvent", ftEvent);
+		map.put("RvConnection", ft);
+		map.put("RvConnectionState", ftState);
+		map.put("RvConnectionEvent", ftEvent);
 		
 		sendDelegateMessageWithMap("FileTransferUpdate", map);
 
@@ -609,8 +609,8 @@ SecuridProvider
 		
 	public void handleEvent(RvConnection ft, RvConnectionEvent ftEvent) {
 		HashMap map = new HashMap();
-		map.put("FileTransfer", ft);
-		map.put("FileTransferEvent", ftEvent);
+		map.put("RvConnection", ft);
+		map.put("RvConnectionEvent", ftEvent);
 		
 		sendDelegateMessageWithMap("FileTransferUpdate", map);
 		

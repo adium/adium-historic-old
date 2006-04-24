@@ -2516,7 +2516,6 @@
 		3483928405E68B05002BC6C0 /* AIIconState.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIIconState.m; path = "Frameworks/Adium Framework/AIIconState.m"; sourceTree = "<group>"; };
 		3483928505E68B05002BC6C0 /* AIIconState.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIIconState.h; path = "Frameworks/Adium Framework/AIIconState.h"; sourceTree = "<group>"; };
 		3485D68009EB416300232CC4 /* AdiumLibgaim.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AdiumLibgaim.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3485D68109EB416300232CC4 /* AdiumLibgaim-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "AdiumLibgaim-Info.plist"; sourceTree = "<group>"; };
 		3486E8A4097F24A90044C496 /* AdiumAuthorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumAuthorization.h; path = Source/AdiumAuthorization.h; sourceTree = "<group>"; };
 		3486E8A5097F24A90044C496 /* AdiumAuthorization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumAuthorization.m; path = Source/AdiumAuthorization.m; sourceTree = "<group>"; };
 		3486E9DA097F5FCE0044C496 /* AuthorizationRequestWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AuthorizationRequestWindow.nib; path = Resources/AuthorizationRequestWindow.nib; sourceTree = "<group>"; };
@@ -3968,7 +3967,6 @@
 				3C73F83F04D62A2900A80106 /* AIEmoticonPack.m */,
 				C4243C920638E4EA007AD2D9 /* BGEmoticonMenuPlugin.h */,
 				C4243C930638E4EA007AD2D9 /* BGEmoticonMenuPlugin.m */,
-				4B737B4B065D4FDC0062AB94 /* Preferences */,
 			);
 			name = Emoticons;
 			sourceTree = "<group>";
@@ -4020,7 +4018,6 @@
 				34D8342B07CBE6A4006466F2 /* External Sources */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				3485D68109EB416300232CC4 /* AdiumLibgaim-Info.plist */,
 			);
 			name = CocAIMe2;
 			sourceTree = "<group>";
@@ -4714,6 +4711,7 @@
 				349C6F6307C99ACE005EB896 /* ESContactListAdvancedPreferences.h */,
 				349C6F6407C99ACE005EB896 /* ESContactListAdvancedPreferences.m */,
 				349C6F8A07C99D2C005EB896 /* ContactListAdvancedPrefs.nib */,
+				34D8329F07CBD61A006466F2 /* ContactListDefaults.plist */,
 			);
 			name = "Contact List Advanced Preferences";
 			sourceTree = "<group>";
@@ -5625,9 +5623,12 @@
 			name = "New Message Panel";
 			sourceTree = "<group>";
 		};
-		4B737B4B065D4FDC0062AB94 /* Preferences */ = {
+		4B737B4B065D4FDC0062AB94 /* Emoticon Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				F5F0FE9C04B12CAC01A80106 /* AIEmoticonPreferences.h */,
+				F5F0FE9D04B12CAC01A80106 /* AIEmoticonPreferences.m */,
+				F5F0FEA004B1336C01A80106 /* EmoticonPrefs.nib */,
 				342910CA07AE228600C815F6 /* AIEmoticonPackPreviewTableView.h */,
 				342910CB07AE228600C815F6 /* AIEmoticonPackPreviewTableView.m */,
 				34C14CD007A8B1AB003CC138 /* AIEmoticonPackPreviewView.h */,
@@ -5637,7 +5638,7 @@
 				F5F0FEA204B133AB01A80106 /* EmoticonDefaults.plist */,
 				34C14D5007A8BA00003CC138 /* EmoticonPackPreview.nib */,
 			);
-			name = Preferences;
+			name = "Emoticon Preferences";
 			sourceTree = "<group>";
 		};
 		4B76459307A06CB60021CCD7 /* AIM */ = {
@@ -5819,9 +5820,11 @@
 				343EB42B080870A200E27095 /* ListThemeSheet.nib */,
 				34A48A3C06F64664002C7C5F /* AIListThemeWindowController.h */,
 				34A48A3B06F64664002C7C5F /* AIListThemeWindowController.m */,
-				F5F0FE9C04B12CAC01A80106 /* AIEmoticonPreferences.h */,
-				F5F0FE9D04B12CAC01A80106 /* AIEmoticonPreferences.m */,
-				F5F0FEA004B1336C01A80106 /* EmoticonPrefs.nib */,
+				34A48A4D06F6468D002C7C5F /* AITextColorPreviewView.h */,
+				34A48A4F06F64692002C7C5F /* AITextColorPreviewView.m */,
+				34A48A5806F646BD002C7C5F /* AIListThemePreviewCell.h */,
+				34A48A5906F646BD002C7C5F /* AIListThemePreviewCell.m */,
+				4B737B4B065D4FDC0062AB94 /* Emoticon Preferences */,
 				34C6A3BB077A8CB500EB423C /* AppearanceDefaults.plist */,
 				4BFC2E7807E357F00063D70C /* emoticonBlank.png */,
 			);
@@ -5939,7 +5942,7 @@
 				34A48A1506F6438F002C7C5F /* AIListController.m */,
 				34E1066A09536D7300EBE478 /* Borderless */,
 				4BF98D2906D147BB00E8781D /* Standard Window */,
-				4BF98DB506D1497D00E8781D /* Preferences */,
+				34878F710518289B003B2F21 /* Contact List Advanced Preferences */,
 			);
 			name = "Contact List";
 			sourceTree = "<group>";
@@ -6118,19 +6121,6 @@
 				340F487C06DA5E440072E2FA /* AIListGroupBubbleToFitCell.m */,
 			);
 			name = Group;
-			sourceTree = "<group>";
-		};
-		4BF98DB506D1497D00E8781D /* Preferences */ = {
-			isa = PBXGroup;
-			children = (
-				34A48A4D06F6468D002C7C5F /* AITextColorPreviewView.h */,
-				34A48A4F06F64692002C7C5F /* AITextColorPreviewView.m */,
-				34A48A5806F646BD002C7C5F /* AIListThemePreviewCell.h */,
-				34A48A5906F646BD002C7C5F /* AIListThemePreviewCell.m */,
-				34D8329F07CBD61A006466F2 /* ContactListDefaults.plist */,
-				34878F710518289B003B2F21 /* Contact List Advanced Preferences */,
-			);
-			name = Preferences;
 			sourceTree = "<group>";
 		};
 		52C623DE06697AFA0006C387 /* Growl */ = {

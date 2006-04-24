@@ -665,13 +665,13 @@
 - (NSString *)getFilename;
 @end
 
-@interface FileTransferState : NSObject {}
+@interface RvConnectionState : NSObject {}
 @end
 
 /*
- * net.kano.joustsim.oscar.oscar.service.icbm.ft.events.FileTransferEvent
+ * net.kano.joustsim.oscar.oscar.service.icbm.ft.events.RvConnectionEvent
  */
-@interface FileTransferEvent : NSObject {}
+@interface RvConnectionEvent : NSObject {}
 @end
 
 @interface TransferredFileInfo : NSObject {}
@@ -693,7 +693,7 @@
 /*
  * net.kano.joustsim.oscar.oscar.service.icbm.ft.events.TransferringFileEvent
  */
-@interface TransferringFileEvent : FileTransferEvent {}
+@interface TransferringFileEvent : RvConnectionEvent {}
 - (TransferredFileInfo *)getFileInfo;
 - (ProgressStatusProvider *)getProgressProvider;
 @end
