@@ -50,7 +50,7 @@
 #define PREF_GROUP_FORMATTING			@"Formatting"
 #define KEY_FORMATTING_FONT				@"Default Font"
 
-#define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Messages","Title for the messages window menu item")
+#define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Chats","Title for the messages window menu item")
 
 @interface AIInterfaceController (PRIVATE)
 - (void)_resetOpenChatsCache;
@@ -335,7 +335,7 @@
 		if ([containers count] > 0) {
 			containerID = [[containers objectAtIndex:0] objectForKey:@"ID"];
 		} else {
-			containerID = AILocalizedString(@"Messages",nil);
+			containerID = AILocalizedString(@"Chat",nil);
 		}
 	}
 

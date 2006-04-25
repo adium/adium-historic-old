@@ -329,7 +329,7 @@
 			
 			//Create a new unique container, set the frame
 			newMessageWindow = [self openContainerWithID:[NSString stringWithFormat:@"%@:%i", ADIUM_UNIQUE_CONTAINER, uniqueContainerNumber++]
-													name:AILocalizedString(@"Messages",nil)];
+													name:AILocalizedString(@"Chat",nil)];
 			
 			if (newFrame.origin.x == -1 && newFrame.origin.y == -1) {
 				NSRect curFrame = [[newMessageWindow window] frame];
