@@ -32,11 +32,7 @@
 #import "AIChat.h"
 
 #define EMOTICON_DEFAULT_PREFS				@"EmoticonDefaults"
-#define PATH_EMOTICONS						@"/Emoticons"
-#define PATH_INTERNAL_EMOTICONS				@"/Contents/Resources/Emoticons/"
 #define EMOTICONS_PATH_NAME					@"Emoticons"
-
-#define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
 
 //We support loading .AdiumEmoticonset, .emoticonPack, and .emoticons
 #define ADIUM_EMOTICON_SET_PATH_EXTENSION   @"AdiumEmoticonset"
