@@ -343,10 +343,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 			if ([view isEmpty]) [view setPanes:[self _panesInCategory:selectedIndex]];
 		}
 		
-		//Update the window title
-		[[self window] setTitle:[NSString stringWithFormat:@"%@ : %@",
-			PREFERENCE_WINDOW_TITLE,
-			[self tabView:tabView labelForTabViewItem:tabViewItem]]];
+		//Update the window title, using only the currently selected pane, per the Mac OS X standard
+		[[self window] setTitle:[NSString stringWithFormat:@"%@",
+									[self tabView:tabView labelForTabViewItem:tabViewItem]]];
    }
 }
 
