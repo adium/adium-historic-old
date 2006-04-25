@@ -106,6 +106,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			[theReason rangeOfString:@"NSMutableRLEArray objectAtIndex:effectiveRange:: Out of bounds"].location != NSNotFound || //-[NSLayoutManager textContainerForGlyphAtIndex:effectiveRange:] as of 10.4 can throw this
 			[theReason rangeOfString:@"TSMProcessRawKeyCode failed"].location != NSNotFound || //May be raised by -[NSEvent charactersIgnoringModifiers]
 			[theReason rangeOfString:@"Invalid PMPrintSettings in print info"].location != NSNotFound || //Invalid saved print settings can make the print dialogue throw this
+			[theReason rangeOfString:@"-[NSConcreteTextStorage attribute:atIndex:effectiveRange:]: Range or index out of bounds"].location != NSNotFound || //Can't find the source of this, but it seems to happen randomly and not provide a stack trace.
 			(!theName) || //Harmless
 			[theName rangeOfString:@"RSS"].location != NSNotFound || //Sparkle's RSS handling whines sometimes, but we don't care.
 		   [safeExceptionNames containsObject:theName])
