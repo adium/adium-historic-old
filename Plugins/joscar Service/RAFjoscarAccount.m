@@ -428,7 +428,6 @@
 	NSImage *image = (imageData ? [[[NSImage alloc] initWithData:imageData] autorelease] : nil);
 	NSData	*buddyIconData = nil;
 	NSSize	imageSize = (image ? [image size] : NSZeroSize);
-	NSLog(@"%@: setAccountUserIconData: Size is %@",self, NSStringFromSize(imageSize));
 	if (!NSEqualSizes(NSZeroSize, imageSize)) {
 		NSSize	maxSize = NSMakeSize(50, 50);		
 		
@@ -464,7 +463,7 @@
 			float compressionFactor = ([NSApp isOnTigerOrBetter] ?
 									   0.9 :
 									   1.0);
-			
+
 			buddyIconData = [image JPEGRepresentationWithCompressionFactor:compressionFactor];
 		}
 	}

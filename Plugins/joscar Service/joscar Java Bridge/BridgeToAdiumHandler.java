@@ -41,7 +41,6 @@ public class BridgeToAdiumHandler extends Handler {
 		if (isLoggable(record)) {
 			Formatter formatter = getFormatter();
 			String outputString;
-
 			if (formatter != null) {
 				outputString = formatter.format(record);
 			} else {
