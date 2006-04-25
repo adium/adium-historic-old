@@ -61,7 +61,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		//Set up Java if necessary
 		[[self class] prepareJavaVM];
 
-		//Pass in 0 for no logging, 1 for FINE level logging, and 2 for WARNING level logging
+		//Pass in 0 for SEVERE logging only, 1 for FINE level logging, 2 for WARNING level logging, and -1 for no logging whatsoever
 		int logLevel = 0;
 
 		//Do fine debugging for all debug builds

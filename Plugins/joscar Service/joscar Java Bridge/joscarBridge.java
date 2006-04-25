@@ -71,83 +71,46 @@ SecuridProvider
 	public joscarBridge(int	enableLogging) {
 		Logger l;
 		Handler[] handlers;
+		Level generalLevel, joscarLevel;
 
 		h = new BridgeToAdiumHandler();
 		h.setFormatter(new CoolFormatter());
-		
-		l = Logger.getLogger("net.kano.joustsim");
-		handlers = l.getHandlers();
-		if (handlers != null)
-			while (handlers.length > 0)
-				l.removeHandler(handlers[0]);
-
-		l = Logger.getLogger("net.kano.joscar");
-		handlers = l.getHandlers();
-		if (handlers != null)
-			while (handlers.length > 0)
-				l.removeHandler(handlers[0]);
-
-		l = LOGGER;
-		handlers = l.getHandlers();
-		if (handlers != null)
-			if (handlers.length > 0)
-				l.removeHandler(handlers[0]);		
 
 		if (enableLogging == 0) {
-			h.setLevel(Level.SEVERE);
-			
-			l = Logger.getLogger("net.kano.joustsim");
-			l.setLevel(Level.SEVERE);
-			l.setUseParentHandlers(false);
-			l.addHandler(h);
-			
-			l = Logger.getLogger("net.kano.joscar");
-			l.setLevel(Level.SEVERE);
-			l.setUseParentHandlers(false);
-			l.addHandler(h);
-			
-			LOGGER.setLevel(Level.SEVERE);
-			l.setUseParentHandlers(false);
-			LOGGER.addHandler(h);
-			
+			generalLevel = Level.SEVERE;
+			joscarLevel = Level.SEVERE;
+
 		} else if (enableLogging == 1) {
-			h.setLevel(Level.ALL);
+			generalLevel = Level.ALL;
+			joscarLevel = Level.FINE;
 
-			l = Logger.getLogger("net.kano.joustsim");
-			l.setLevel(Level.ALL);
-			l.setUseParentHandlers(false);
-			l.addHandler(h);
-			
-			l = Logger.getLogger("net.kano.joscar");
-			l.setLevel(Level.FINE);
-			l.setUseParentHandlers(false);
-			l.addHandler(h);
-			
-			LOGGER.setLevel(Level.ALL);
-			l.setUseParentHandlers(false);
-			LOGGER.addHandler(h);
-			
 		} else if (enableLogging == 2) {
-			h.setLevel(Level.WARNING);
+			generalLevel = Level.WARNING;
+			joscarLevel = Level.WARNING;
 
-			l = Logger.getLogger("net.kano.joustsim");
-			l.setLevel(Level.WARNING);
-			l.setUseParentHandlers(false);
-			l.addHandler(h);
-			
-			l = Logger.getLogger("net.kano.joscar");
-			l.setLevel(Level.WARNING);
-			l.setUseParentHandlers(false);
-			l.addHandler(h);
-			
-			LOGGER.setLevel(Level.WARNING);
-			l.setUseParentHandlers(false);
-			LOGGER.addHandler(h);
+		} else {
+			generalLevel = Level.OFF;
+			joscarLevel = Level.OFF;	
 		}
+		
+		h.setLevel(generalLevel);
+		
+		l = Logger.getLogger("net.kano.joustsim");
+		l.setLevel(generalLevel);
+		l.setUseParentHandlers(false);
+		l.addHandler(h);
+		
+		l = Logger.getLogger("net.kano.joscar");
+		l.setLevel(joscarLevel);
+		l.setUseParentHandlers(false);
+		l.addHandler(h);
+		
+		LOGGER.setLevel(generalLevel);
+		LOGGER.setUseParentHandlers(false);
+		LOGGER.addHandler(h);		
     }
 	
-	public BridgeToAdiumHandler getAdiumHandler()
-	{
+	public BridgeToAdiumHandler getAdiumHandler() {
 		return h;
 	}
 	
@@ -160,22 +123,18 @@ SecuridProvider
             String shname = clname.substring(clname.lastIndexOf('.') + 1);
             Throwable thrown = record.getThrown();
             StringWriter sw = null;
+
+			//Get the stack trace if there is one
             if (thrown != null) {
                 sw = new StringWriter();
                 thrown.printStackTrace(new PrintWriter(sw));
             }
-			/*
-            return "[" + formatter.format(new Date(record.getMillis()))
-                    + " " + record.getLevel() + "] "
+
+            return "[" + formatter.format(new Date(record.getMillis())) + "] "
                     + shname + ": "
-                    + record.getMessage() + (sw == null ? ""
-                    : sw.getBuffer().toString()) + "\n";
-			 */
-			return "[" + formatter.format(new Date(record.getMillis())) + "] "
-				+ shname + ": "
-				+ record.getMessage() + (sw == null ? ""
-													: sw.getBuffer().toString()) + "\n";			
-        }		
+                    + record.getMessage() +
+					(sw == null ? "" : sw.getBuffer().toString()) + "\n";
+        }
     }
 	
 	public NSData dataFromByteBlock(ByteBlock byteBlock) {
@@ -259,13 +218,12 @@ SecuridProvider
 
 	public void newBuddyInfo(BuddyInfoManager manager, Screenname buddy,
 							 BuddyInfo info) {
-
+//		System.out.println("new buddy info!");
     }
 	
     public void buddyInfoChanged(BuddyInfoManager manager, Screenname buddy,
 								 BuddyInfo info, PropertyChangeEvent event) {
 		String	changedProperty = event.getPropertyName();
-		LOGGER.fine("buddy info for " + buddy.getNormal() + " changed [ " + changedProperty + " ]");
 		
 		HashMap map = new HashMap();
 		map.put("Screenname", buddy);
@@ -287,7 +245,6 @@ SecuridProvider
 				map.put("Away message", val);
 			}
 			sendDelegateMessageWithMap("AwayMessage", map);
-			LOGGER.fine("- msg is " + val);
 			
 		} else if (changedProperty.equals("userProfile")) {
 			Object userInfo = event.getNewValue();
@@ -296,7 +253,6 @@ SecuridProvider
 			}
 			
 			sendDelegateMessageWithMap("Profile", map);
-			LOGGER.fine("- profile is " + userInfo);
 		}
 		/*else if (changedProperty.equals("mobile")) {
 			sendDelegateMessageWithMap("Mobile", map);
@@ -308,6 +264,13 @@ SecuridProvider
 
     public void receivedStatusUpdate(BuddyInfoManager manager,
 									 Screenname buddy, BuddyInfo info) {
+		/*
+		if (info.isOnline()) {
+			System.out.println("Received status update for " + buddy.getNormal());
+		} else {
+			System.out.println("OFFLINE: Received status update for " + buddy.getNormal());
+		}
+		 */
 		HashMap map = new HashMap();
 		map.put("Screenname", buddy);
 		map.put("BuddyInfo", info);
@@ -611,6 +574,8 @@ SecuridProvider
 		map.put("RvConnectionEvent", ftEvent);
 		
 		sendDelegateMessageWithMap("FileTransferUpdate", map);
+
+		System.out.println(ft.toString() + " ** state " + ftState.toString() + " ** event " + ftEvent.toString());
 	}
 		
 	public void handleEvent(RvConnection ft, RvConnectionEvent ftEvent) {
@@ -619,6 +584,8 @@ SecuridProvider
 		map.put("RvConnectionEvent", ftEvent);
 		
 		sendDelegateMessageWithMap("FileTransferUpdate", map);
+		
+		System.out.println(ft.toString() + " /// event " + ftEvent.toString() + " ///");
 	}
 
 	/* IconRequestListener */
