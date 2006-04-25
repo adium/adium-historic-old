@@ -344,8 +344,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		}
 		
 		//Update the window title, using only the currently selected pane, per the Mac OS X standard
-		[[self window] setTitle:[NSString stringWithFormat:@"%@",
-									[self tabView:tabView labelForTabViewItem:tabViewItem]]];
+		[[self window] setTitle:[self tabView:tabView labelForTabViewItem:tabViewItem]];
    }
 }
 
