@@ -411,6 +411,7 @@
 	NSString	*label = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label];
 	NSString	*title;
 	NSButton	*button;
+	NSWindow	*window = [self window];
 	
 	//Window Title
     if ([tabView_messages numberOfTabViewItems] == 1) {
@@ -418,17 +419,17 @@
     } else {
 		title = [NSString stringWithFormat:@"%@ - %@", containerName, label];
     }
-	[[self window] setTitle:title];
+	[window setTitle:title];
 	
 	//Window Icon (We display state in the window title if tabs are not visible)
 	if (!hasShownDocumentButton) {
-		if ([[self window] respondsToSelector:@selector(addDocumentIconButton)]) {
-			[[self window] addDocumentIconButton];
+		if ([window respondsToSelector:@selector(addDocumentIconButton)]) {
+			[window addDocumentIconButton];
 		}
 		hasShownDocumentButton = YES;
 	}
 	
-	button = [[self window] standardWindowButton:NSWindowDocumentIconButton];
+	button = [window standardWindowButton:NSWindowDocumentIconButton];
 	if (!tabBarIsVisible) {
 		NSImage *image = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] stateIcon];
 		if (image != [button image]) {
