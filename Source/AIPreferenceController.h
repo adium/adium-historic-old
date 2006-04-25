@@ -27,8 +27,8 @@
 
 //Preference Categories
 typedef enum {
-	AIPref_Accounts = 0,
-	AIPref_General,
+	AIPref_General= 0,
+	AIPref_Accounts,
 	AIPref_Personal,
 	AIPref_Appearance,
     AIPref_Messages,
