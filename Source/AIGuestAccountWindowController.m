@@ -61,7 +61,12 @@ static AIGuestAccountWindowController *sharedGuestAccountWindowController = nil;
 
 - (NSString *)UID
 {
-	return [textField_name stringValue];
+	NSString *UID = [textField_name stringValue];
+	
+	//Use the default user name if possible, if no UID is specified
+	if (!UID || ![UID length]) UID = [[self service] defaultUserName];
+
+	return UID;
 }
 
 - (AIAccount *)account
@@ -93,6 +98,9 @@ static AIGuestAccountWindowController *sharedGuestAccountWindowController = nil;
 											   caseSensitive:[service caseSensitive]
 												errorMessage:AILocalizedStringFromTable(@"The characters you're entering are not valid for an account name on this service.", @"AdiumFramework", nil)]];
 	
+	NSString *placeholder = [service defaultUserName];
+	if (!placeholder || ![placeholder length]) placeholder = [service UIDPlaceholder];
+	[[textField_name cell] setPlaceholderString:(placeholder ? placeholder : @"")];
 }
 
 - (IBAction)okay:(id)sender
