@@ -16,10 +16,12 @@
 
 #import "AIContentController.h"
 #import "AIPreferenceController.h"
+#import "AIMenuController.h"
 #import "AdiumFormatting.h"
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
 
 #define DEFAULT_FORMATTING_DEFAULT_PREFS	@"FormattingDefaults"
@@ -51,6 +53,14 @@
 {
 	//Observe formatting preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_FORMATTING];
+	
+	//Reset formatting menu item
+	NSMenuItem	*menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Restore Default Formatting",nil)
+																				 target:self
+																				 action:@selector(restoreDefaultFormat:)
+																		  keyEquivalent:@""];
+	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Format_Additions];
+	[menuItem release];
 }
 
 /*!
@@ -101,6 +111,30 @@
 {
 	[_defaultAttributes release];
 	_defaultAttributes = nil;
+}
+
+- (void)restoreDefaultFormat:(id)sender
+{
+	NSResponder *responder = [[NSApp mainWindow] firstResponder];
+	if ([responder isKindOfClass:[NSTextView class]]) {
+		[(NSTextView *)responder setTypingAttributes:[self defaultFormattingAttributes]];
+	}
+}
+
+/*
+ * @brief Enable/disable our restore default formatting menu item
+ *
+ * The item should only be enabled if the current responder has typing attributes and those typing attributes are not the default attributes
+ */
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	NSResponder *responder = [[NSApp mainWindow] firstResponder];
+
+	if ([responder isKindOfClass:[NSTextView class]]) {
+	NSLog(@"%@ \n\n %@",[(NSTextView *)responder typingAttributes], [self defaultFormattingAttributes]);	
+	}
+	return (([responder isKindOfClass:[NSTextView class]]) &&
+			(![[(NSTextView *)responder typingAttributes] isEqualToDictionary:[self defaultFormattingAttributes]]));
 }
 
 @end
