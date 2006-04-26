@@ -65,7 +65,7 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 		*outError = error;
 	}
 }
-+ (void)unlockDefaultKeychain_error:(out NSError **)outError
++ (BOOL)unlockDefaultKeychain_error:(out NSError **)outError
 {
 	OSStatus err = SecKeychainUnlock(/*keychain*/ NULL, /*passwordLength*/ 0, /*password*/ NULL, /*usePassword*/ false);
 	if (outError) {
@@ -80,8 +80,9 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 		}
 		*outError = error;
 	}
+	return err == noErr;
 }
-+ (void)unlockDefaultKeychainWithPassword:(NSString *)password error:(out NSError **)outError
++ (BOOL)unlockDefaultKeychainWithPassword:(NSString *)password error:(out NSError **)outError
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
@@ -103,6 +104,7 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 		}
 		*outError = error;
 	}
+	return err == noErr;
 }
 
 + (BOOL)allowsUserInteraction_error:(out NSError **)outError
@@ -427,7 +429,7 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 	}
 }
 
-- (void)unlockKeychain_error:(out NSError **)outError
+- (BOOL)unlockKeychain_error:(out NSError **)outError
 {
 	OSStatus err = SecKeychainUnlock(keychainRef, /*passwordLength*/ 0, /*password*/ NULL, /*usePassword*/ false);
 	if (outError) {
@@ -443,8 +445,9 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 		}
 		*outError = error;
 	}
+	return err == noErr;
 }
-- (void)unlockKeychainWithPassword:(NSString *)password error:(out NSError **)outError
+- (BOOL)unlockKeychainWithPassword:(NSString *)password error:(out NSError **)outError
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
@@ -467,6 +470,7 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 		}
 		*outError = error;
 	}
+	return err == noErr;
 }
 
 #pragma mark -
