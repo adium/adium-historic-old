@@ -20,20 +20,24 @@
 //Note: selectItemAtIndex will throw an exception if the menu has no items, even if index is -1
 - (BOOL)selectItemWithRepresentedObject:(id)object
 {
-    int	index = [self indexOfItemWithRepresentedObject:object];
-	if ((index != -1) && ([self numberOfItems] > 0)) {
-		[self selectItemAtIndex:index];
-		return YES;
+	if ([self numberOfItems] > 0) {
+		int	index = [self indexOfItemWithRepresentedObject:object];
+		if (index != -1) {
+			[self selectItemAtIndex:index];
+			return YES;
+		}
 	}
-	
+
 	return NO;
 }
 - (BOOL)compatibleSelectItemWithTag:(int)tag
 {
-    int	index = [self indexOfItemWithTag:tag];
-	if ((index != -1) && ([self numberOfItems] > 0)) {
-		[self selectItemAtIndex:index];
-		return YES;
+	if ([self numberOfItems] > 0) {
+		int	index = [self indexOfItemWithTag:tag];
+		if (index != -1) {
+			[self selectItemAtIndex:index];
+			return YES;
+		}
 	}
 	
 	return NO;
