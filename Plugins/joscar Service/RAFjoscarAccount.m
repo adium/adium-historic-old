@@ -748,8 +748,12 @@ BOOL isHTMLContact(AIListObject *inListObject)
 																		   fromContact:sourceContact
 																			 onAccount:self];
 		
-		if ([decryptedIncomingMessage rangeOfString:@"ichatballooncolor"].location != NSNotFound) {
-			//iChat ICQ contacts still send HTML. Decode it.
+		if (([decryptedIncomingMessage rangeOfString:@"ichatballooncolor"].location != NSNotFound) ||
+			([decryptedIncomingMessage rangeOfString:@"<HTML>"
+											 options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound)) {
+			/* iChat ICQ contacts still send HTML. Decode it.
+			 * Some ICQ clients send HTML anyways; the first part of the incoming message will be <HTML>. Decode it.
+			 */
 			attributedMessage = [AIHTMLDecoder decodeHTML:decryptedIncomingMessage];
 
 		} else {
