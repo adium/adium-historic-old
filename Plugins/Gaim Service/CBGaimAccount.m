@@ -2327,7 +2327,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  */
 - (NSString *)_emoticonCachePathForEmoticon:(NSString *)emoticonEquivalent inChat:(AIChat *)inChat
 {
-    NSString    *filename = [NSString stringWithFormat:@"TEMP-CustomEmoticon_%@_%@.jpg", [inChat uniqueChatID], emoticonEquivalent];
+    NSString    *filename = [NSString stringWithFormat:@"TEMP-CustomEmoticon_%@_%@.gif", [inChat uniqueChatID], emoticonEquivalent];
     return [[adium cachesPath] stringByAppendingPathComponent:[filename safeFilenameString]];	
 }
 

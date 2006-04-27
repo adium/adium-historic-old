@@ -417,7 +417,6 @@ Class LogViewerWindowControllerClass = NULL;
 	NSLog(@"Creating appender with path: %@", fullPath);
 	AIXMLAppender *appender = [AIXMLAppender documentWithPath:fullPath];
 	
-	
 	if (![appender isInitialized]) {
 		NSLog(@"Appender not initialized, initializing");
 		[appender initializeDocumentWithRootElementName:@"chat"
