@@ -1149,6 +1149,6 @@ static NSArray *draggedTypes = nil;
 	return YES;
 }
 
-- (void)debugLog:(NSString *)message { AILog(message); }
+- (void)debugLog:(NSString *)message { NSLog(message); }
 
 @end
