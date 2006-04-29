@@ -46,6 +46,7 @@
 - (void)addContactsWithUIDs:(NSArray *)UIDs toGroup:(NSString *)groupName;
 - (void)removeContactsWithUIDs:(NSArray *)UIDs;
 - (void)moveContactsWithUIDs:(NSArray *)UIDs toGroup:(NSString *)groupName;
+- (void)requestAuthorizationForContactWithUID:(NSString *)UID;
 
 - (void)requestInfoForContactWithUID:(NSString *)UID;
 - (void)setAlias:(NSString *)inAlias forContactWithUID:(NSString *)UID;

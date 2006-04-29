@@ -1204,6 +1204,13 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	}
 }
 
+- (void)requestAuthorizationForContactWithUID:(NSString *)UID
+{
+	Screenname *sn = [NewScreenname(UID) autorelease];
+
+	[[aimConnection getSsiService] requestBuddyAuthorization:sn :nil];
+}
+
 #pragma mark Contact info
 /*
  * @brief Find a MutableBuddy

@@ -235,6 +235,7 @@
 @interface SsiService : NSObject {}
 - (MutableBuddyList *)getBuddyList;
 - (PermissionList *)getPermissionList;
+- (void)requestBuddyAuthorization:(Screenname *)sn :(NSString *)authorizationMessage;
 @end
 
 /*

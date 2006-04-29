@@ -218,7 +218,7 @@ SecuridProvider
 
 	public void newBuddyInfo(BuddyInfoManager manager, Screenname buddy,
 							 BuddyInfo info) {
-//		System.out.println("new buddy info!");
+
     }
 	
     public void buddyInfoChanged(BuddyInfoManager manager, Screenname buddy,
@@ -264,13 +264,6 @@ SecuridProvider
 
     public void receivedStatusUpdate(BuddyInfoManager manager,
 									 Screenname buddy, BuddyInfo info) {
-		/*
-		if (info.isOnline()) {
-			System.out.println("Received status update for " + buddy.getNormal());
-		} else {
-			System.out.println("OFFLINE: Received status update for " + buddy.getNormal());
-		}
-		 */
 		HashMap map = new HashMap();
 		map.put("Screenname", buddy);
 		map.put("BuddyInfo", info);
@@ -574,8 +567,6 @@ SecuridProvider
 		map.put("RvConnectionEvent", ftEvent);
 		
 		sendDelegateMessageWithMap("FileTransferUpdate", map);
-
-		System.out.println(ft.toString() + " ** state " + ftState.toString() + " ** event " + ftEvent.toString());
 	}
 		
 	public void handleEvent(RvConnection ft, RvConnectionEvent ftEvent) {
@@ -584,8 +575,6 @@ SecuridProvider
 		map.put("RvConnectionEvent", ftEvent);
 		
 		sendDelegateMessageWithMap("FileTransferUpdate", map);
-		
-		System.out.println(ft.toString() + " /// event " + ftEvent.toString() + " ///");
 	}
 
 	/* IconRequestListener */
