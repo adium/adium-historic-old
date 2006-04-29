@@ -1348,4 +1348,30 @@ BOOL isHTMLContact(AIListObject *inListObject)
 	return menuItemArray;
 }
 
+- (void)requestAuthorization:(id)sender
+{
+	[joscarAdapter requestAuthorizationForContactWithUID:[[sender representedObject] UID]];
+}
+
+//Returns an array of menuItems specific for this contact based on its account and potentially status
+- (NSArray *)menuItemsForContact:(AIListContact *)inContact
+{
+	BOOL isICQ = isdigit([[inContact UID] characterAtIndex:0]);
+
+	NSMutableArray	*menuItemArray = [NSMutableArray array];
+	NSMenuItem		*menuItem;
+	
+	if (isICQ) {
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Request Authorization", nil)
+																		 target:self
+																		 action:@selector(requestAuthorization:)
+																  keyEquivalent:@""] autorelease];
+		[menuItem setRepresentedObject:inContact];
+		[menuItemArray addObject:menuItem];
+	}
+
+	return menuItemArray;
+}
+
+
 @end
