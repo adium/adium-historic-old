@@ -108,6 +108,7 @@
 {	
     if ((self = [super initWithWindowNibName:inNibName])) {
 		preventHiding = NO;
+		previousAlpha = 0.0;
 	}
 
     return self;
@@ -235,11 +236,10 @@
 		windowShouldBeVisibleInBackground = ![[prefDict objectForKey:KEY_CL_HIDE] boolValue];
 		permitSlidingInForeground = [[prefDict objectForKey:KEY_CL_EDGE_SLIDE] boolValue];
 		
-		// don't slide the window the first time this is called, because the contact list will display
-		// before it is prepared.  This produces screen artifacts.
+		//Do a slide immediately if needed (to display as per our new preferneces)
 		[self slideWindowIfNeeded:nil];
 
-		if (!windowShouldBeVisibleInBackground || permitSlidingInForeground) {
+		if (permitSlidingInForeground) {
 			if (!slideWindowIfNeededTimer) {
 				slideWindowIfNeededTimer = [[NSTimer scheduledTimerWithTimeInterval:DOCK_HIDING_MOUSE_POLL_INTERVAL
 																			 target:self
@@ -594,7 +594,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	BOOL shouldSlide = NO;
 	
-	if ((permitSlidingInForeground && ![NSApp isHidden]) || (![NSApp isActive] && !windowShouldBeVisibleInBackground)) {
+	if ((permitSlidingInForeground && ![NSApp isHidden]) || (![NSApp isActive] && windowShouldBeVisibleInBackground)) {
 		shouldSlide = [self shouldSlideWindowOnScreen_mousePositionStrategy];
 
 	} else if (!permitSlidingInForeground && [NSApp isActive] && ([self windowSlidOffScreenEdgeMask] != AINoEdges)) {
@@ -716,24 +716,97 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	return mouseNearSlideOffEdges && ![self pointIsInScreenCorner:mouseLocation];
 }
 
-#pragma mark Window sliding
-//Window sliding ------------------------------------------------------------------------------------------------------
+#pragma mark Dock-like hiding
+
+void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdgeMask windowSlidOffScreenEdgeMask, AIListController *contactListController, BOOL keepOnScreen)
+{
+	NSScreen *windowScreen = [inWindow screen];
+	if(!windowScreen) windowScreen = [NSScreen mainScreen];
+	BOOL	finishedX = NO, finishedY = NO;
+	NSRect	frame = [inWindow frame];
+	float yOff = (targetPoint.y + frame.size.height) - ([windowScreen frame].size.height - [NSMenuView menuBarHeight]);
+	if(yOff > 0) targetPoint.y -= yOff;
+	
+	do
+	{
+		frame = [inWindow frame];
+#define INCREMENT 15
+		if (abs(targetPoint.x - frame.origin.x) <= INCREMENT) {
+			//Our target point is within INCREMENT of the current point on the x axis
+			
+			if (windowSlidOffScreenEdgeMask != AINoEdges) {
+				//If the window is sliding off screen, keep one pixel onscreen to avoid crashing (moving a titled window offscreen is a crash)
+				if (targetPoint.x < frame.origin.x) {
+					frame.origin.x = (keepOnScreen ? (targetPoint.x + 1) : targetPoint.x);
+				} else if (targetPoint.x > frame.origin.x) {
+					frame.origin.x = (keepOnScreen ? (targetPoint.x - 1) : targetPoint.x);
+				}
+				
+			} else {
+				//If the window is sliding on screen, go to the exact desired point
+				frame.origin.x = targetPoint.x;
+			}
+			
+			finishedX = YES;
+			
+		} else if (targetPoint.x < frame.origin.x) {
+			frame.origin.x -= INCREMENT;
+		} else if (targetPoint.x > frame.origin.x) {
+			frame.origin.x += INCREMENT;		
+		}
+		
+		if (abs(targetPoint.y - frame.origin.y) <= INCREMENT) {
+			//Our target point is within INCREMENT of the current point on the y axis
+			if (windowSlidOffScreenEdgeMask != AINoEdges) {
+				//If the window is sliding off screen, keep one pixel onscreen to avoid crashing (moving a titled window offscreen is a crash)
+				if (targetPoint.y < frame.origin.y) {
+					frame.origin.y = (keepOnScreen ? (targetPoint.y + 1) : targetPoint.y);
+				} else if (targetPoint.y > frame.origin.y) {
+					frame.origin.y = (keepOnScreen ? (targetPoint.y - 1) : targetPoint.y);
+				}
+				
+			} else {
+				//If the window is sliding on screen, go to the exact desired point
+				frame.origin.y = targetPoint.y;
+				
+			}
+			
+			finishedY = YES;
+			
+		} else if (targetPoint.y < frame.origin.y) {
+			frame.origin.y -= INCREMENT;
+		} else if (targetPoint.y > frame.origin.y) {
+			frame.origin.y += INCREMENT;		
+		}
+		
+		[inWindow setFrame:frame display:YES animate:NO];
+	}
+	while(!finishedX || !finishedY);
+}
 
 /*
  * @brief Slide the window to a given point
  *
  * windowSlidOffScreenEdgeMask must already be set to the resulting offscreen mask (or 0 if the window is sliding on screen)
  *
- * This must be overridden by a subclass
+ * A standard window (titlebar window) will crash if told to setFrame completely offscreen. Also, using our own movement we can more precisely
+ * control the movement speed and acceleration.
  */
 - (void)slideWindowToPoint:(NSPoint)inPoint
 {
-	NSAssert(FALSE, @"Abstract implementation called!");
+	NSLog(@"Subclasses must override.");
 }
 
-- (void)moveWindowToPoint:(NSPoint)inPoint
+- (void)moveWindowToPoint:(NSPoint)inOrigin
 {
-	[[self window] setFrameOrigin:inPoint];
+	[[self window] setFrameOrigin:inOrigin];
+
+	if (windowSlidOffScreenEdgeMask == AINoEdges) {
+		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
+		* it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
+		*/
+		[contactListController contactListDesiredSizeChanged];
+	}	
 }
 
 /*
