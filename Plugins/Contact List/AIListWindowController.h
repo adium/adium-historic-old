@@ -72,5 +72,12 @@
 - (void)setPreventHiding:(BOOL)newPreventHiding;
 - (BOOL)windowShouldHideOnDeactivate;
 - (AIRectEdgeMask)windowSlidOffScreenEdgeMask;
+- (void)moveWindowToPoint:(NSPoint)inOrigin;
+
+	void manualWindowMoveToPoint(NSWindow *inWindow,
+								 NSPoint targetPoint,
+								 AIRectEdgeMask windowSlidOffScreenEdgeMask,
+								 AIListController *contactListController,
+								 BOOL keepOnScreen);
 
 @end

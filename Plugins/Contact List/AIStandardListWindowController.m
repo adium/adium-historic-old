@@ -52,7 +52,7 @@
 - (id)initWithWindowNibName:(NSString *)inNibName
 {	
     if ((self = [super initWithWindowNibName:inNibName])) {
-		previousAlpha = 0.0;
+
 	}
 
 	return self;
@@ -684,86 +684,18 @@
 														 desiredHeight:YES];
 }
 
-#pragma mark Dock-like hiding
-
-void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdgeMask windowSlidOffScreenEdgeMask, AIListController *contactListController)
-{
-	NSScreen *windowScreen = [inWindow screen];
-	if(!windowScreen) windowScreen = [NSScreen mainScreen];
-	BOOL	finishedX = NO, finishedY = NO;
-	NSRect	frame = [inWindow frame];
-	float yOff = (targetPoint.y + frame.size.height) - ([windowScreen frame].size.height - [NSMenuView menuBarHeight]);
-	if(yOff > 0) targetPoint.y -= yOff;
-
-	do
-	{
-		frame = [inWindow frame];
-#define INCREMENT 15
-		if (abs(targetPoint.x - frame.origin.x) <= INCREMENT) {
-			//Our target point is within INCREMENT of the current point on the x axis
-			
-			if (windowSlidOffScreenEdgeMask != AINoEdges) {
-				//If the window is sliding off screen, keep one pixel onscreen to avoid crashing
-				if (targetPoint.x < frame.origin.x) {
-					frame.origin.x = targetPoint.x + 1;
-				} else if (targetPoint.x > frame.origin.x) {
-					frame.origin.x = targetPoint.x - 1;
-				}
-				
-			} else {
-				//If the window is sliding on screen, go to the exact desired point
-				frame.origin.x = targetPoint.x;
-			}
-			
-			finishedX = YES;
-			
-		} else if (targetPoint.x < frame.origin.x) {
-			frame.origin.x -= INCREMENT;
-		} else if (targetPoint.x > frame.origin.x) {
-			frame.origin.x += INCREMENT;		
-		}
-		
-		if (abs(targetPoint.y - frame.origin.y) <= INCREMENT) {
-			//Our target point is within INCREMENT of the current point on the y axis
-			if (windowSlidOffScreenEdgeMask != AINoEdges) {
-				//If the window is sliding off screen, keep one pixel onscreen to avoid crashing
-				if (targetPoint.y < frame.origin.y) {
-					frame.origin.y = targetPoint.y + 1;
-				} else if (targetPoint.y > frame.origin.y) {
-					frame.origin.y = targetPoint.y - 1;
-				}
-				
-			} else {
-				//If the window is sliding on screen, go to the exact desired point
-				frame.origin.y = targetPoint.y;
-				
-			}
-			
-			finishedY = YES;
-			
-		} else if (targetPoint.y < frame.origin.y) {
-			frame.origin.y -= INCREMENT;
-		} else if (targetPoint.y > frame.origin.y) {
-			frame.origin.y += INCREMENT;		
-		}
-		
-		[inWindow setFrame:frame display:YES animate:NO];
-	}
-	while(!finishedX || !finishedY);
-}
-
 /*
  * @brief Slide the window to a given point
  *
  * windowSlidOffScreenEdgeMask must already be set to the resulting offscreen mask (or 0 if the window is sliding on screen)
  *
- * A standard window (titlebar window) will crash if told to setFrame completely offscreen,
- * so we implement our own animated movement.
+ * A standard window (titlebar window) will crash if told to setFrame completely offscreen. Also, using our own movement we can more precisely
+ * control the movement speed and acceleration.
  */
 - (void)slideWindowToPoint:(NSPoint)inPoint
 {
 	NSWindow	*myWindow = [self window];
-
+	
 	if ((windowSlidOffScreenEdgeMask == AINoEdges) &&
 		(previousAlpha > 0.0)) {
 		//Before sliding onscreen, restore any previous alpha value
@@ -774,12 +706,13 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 	manualWindowMoveToPoint([self window],
 							inPoint,
 							windowSlidOffScreenEdgeMask,
-							contactListController);
+							contactListController,
+							YES);
 	
 	if (windowSlidOffScreenEdgeMask == AINoEdges) {
 		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
-		 * it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
-		 */
+		* it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
+		*/
 		[contactListController contactListDesiredSizeChanged];			
 	} else {
 		//After sliding off screen, go to an alpha value of 0 to hide our 1 px remaining on screen
@@ -796,8 +729,8 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 		[[self window] setAlphaValue:previousAlpha];
 		previousAlpha = 0.0;
 	}
-
-	[[self window] setFrameOrigin:inOrigin];
+	
+	[super moveWindowToPoint:inOrigin];
 }
 
 @end
