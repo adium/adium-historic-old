@@ -33,7 +33,6 @@
 - (void)controllerDidLoad
 {
 	applescriptRunner = [[AdiumApplescriptRunner alloc] init];
-	[self prepareApplescriptRunner];
 }
 
 
@@ -41,7 +40,6 @@
 - (void)controllerWillClose
 {
 	[applescriptRunner release]; applescriptRunner = nil;
-	[self shutdownApplescriptRunner];
 }
 
 #pragma mark Convenience
