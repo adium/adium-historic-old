@@ -125,7 +125,7 @@
  *	@param outError On return, a pointer to either \c nil (hopefully) or an \c NSError describing what went wrong.
  *	@return \c YES if the keychain was successfully unlocked; \c NO if the password was incorrect or an error occurred.
  */
-+ (void)unlockDefaultKeychain_error:(out NSError **)outError;
++ (BOOL)unlockDefaultKeychain_error:(out NSError **)outError;
 /*!	@brief Unlocks the user's default keychain with a specific password.
  *
  *	Wraps \c SecKeychainUnlock, passing \c NULL as the keychain to unlock.
