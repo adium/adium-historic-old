@@ -31,6 +31,16 @@
 	return self;
 }
 
+- (void)setLineBreakMode:(NSLineBreakMode)inLineBreakMode
+{
+	lineBreakMode = inLineBreakMode;
+}
+
+- (NSLineBreakMode)lineBreakMode
+{
+	return lineBreakMode;
+}
+
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
 	NSFont				*font  = [self font];

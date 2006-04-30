@@ -38,7 +38,7 @@
 		subString = nil;
 		maxImageWidth = DEFAULT_MAX_IMAGE_WIDTH;
 		imageTextPadding = DEFAULT_IMAGE_TEXT_PADDING;
-		lineBreakMode = NSLineBreakByTruncatingTail;
+		[self setLineBreakMode:NSLineBreakByTruncatingTail];
 	}
 
 	return self;
@@ -118,6 +118,12 @@
 {
 	lineBreakMode = inLineBreakMode;
 }
+
+- (NSLineBreakMode)lineBreakMode
+{
+	return lineBreakMode;
+}
+
 
 - (NSSize)cellSizeForBounds:(NSRect)cellFrame
 {
