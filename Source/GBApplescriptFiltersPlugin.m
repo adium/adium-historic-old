@@ -17,6 +17,7 @@
 #import "AIContentController.h"
 #import "AIMenuController.h"
 #import "AIToolbarController.h"
+#import "ESApplescriptabilityController.h"
 #import "GBApplescriptFiltersPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
@@ -585,111 +586,38 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 					 context:(id)context
 					uniqueID:(unsigned long long)uniqueID
 {
-	NSAutoreleasePool	*autoreleasePool = [[NSAutoreleasePool alloc] init];
-	NSTask				*scriptTask;
-	NSMutableArray		*applescriptRunnerArguments = [NSMutableArray arrayWithObject:[infoDict objectForKey:@"Path"]];
-	NSPipe				*outputPipe;
-	
-	static NSString	*applescriptRunnerPath = nil;
-	if (!applescriptRunnerPath) {
-		//Find and cache the path to the ApplescriptRunner application
-		applescriptRunnerPath = [[[NSBundle mainBundle] pathForResource:@"AdiumApplescriptRunner"
-																 ofType:nil
-															inDirectory:nil] retain];
-	}
-
-	//We run the substitute function
-	[applescriptRunnerArguments addObject:@"substitute"];
-
-	if (arguments && [arguments count]) {
-		[applescriptRunnerArguments addObjectsFromArray:arguments];
-	}
-
-	scriptTask = [[NSTask alloc] init];
-
-	//Set up a time out after which the scriptTask will terminate itself
-	[scriptTask performSelector:@selector(terminate)
-					 withObject:nil
-					 afterDelay:SCRIPT_TIMEOUT];
-
-	[scriptTask setLaunchPath:applescriptRunnerPath];
-	[scriptTask setArguments:applescriptRunnerArguments];
-
-	outputPipe = [[NSPipe alloc] init];
-		
-	if (outputPipe) {
-		[scriptTask setStandardOutput:outputPipe];
-		[outputPipe release];
-
-	} else {
-		enum { bufsize = 256 };
-		char *buf = alloca(bufsize);
-		strerror_r(errno, buf, bufsize);
-		NSLog(@"could not create pipe: %s", buf);
-	}
-
-	[scriptTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:
+	NSDictionary	*userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
 		attributedString, @"Mutable Attributed String",
 		NSStringFromRange(keywordRange), @"Range",
 		[NSNumber numberWithUnsignedLongLong:uniqueID], @"uniqueID",
 		(context ? context : [NSNull null]), @"context",
-		nil]];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(scriptDidFinish:)
-												 name:NSTaskDidTerminateNotification
-											   object:scriptTask];
-	AI_DURING
-		[scriptTask launch];
-	AI_HANDLER
-		//If the task fails to launch, send the termination notification
-		NSNotification	*notification = [NSNotification notificationWithName:NSTaskDidTerminateNotification
-																	  object:scriptTask];
-		NSLog(@"Couldn't launch (%@)",localException);
-		[self scriptDidFinish:notification];
-	AI_ENDHANDLER
-		
-	[autoreleasePool release];
+		nil];
+	
+	[[adium applescriptabilityController] runApplescriptAtPath:[infoDict objectForKey:@"Path"]
+													  function:@"substitute"
+													 arguments:arguments
+											   notifyingTarget:self
+													  selector:@selector(applescriptDidRun:resultString:)
+													  userInfo:userInfo];
 }
 
 /*
- * @brief A script finished executing
- *
- * @param aNotification The notification, whose object is the NSTask which terminated
+ * @brief A script finished running
  */
-- (void)scriptDidFinish:(NSNotification *)aNotification
+- (void)applescriptDidRun:(id)userInfo resultString:(NSString *)resultString
 {
-	NSAutoreleasePool			*autoreleasePool = [[NSAutoreleasePool alloc] init];
-	NSTask						*scriptTask = [aNotification object];
-	NSDictionary				*environment = [scriptTask environment];
-	id							standardOutput = [scriptTask standardOutput];
-	NSMutableAttributedString	*attributedString = [environment objectForKey:@"Mutable Attributed String"];
-	NSRange						keywordRange = NSRangeFromString([environment objectForKey:@"Range"]);
-	unsigned long long			uniqueID = [[environment objectForKey:@"uniqueID"] unsignedLongLongValue];
-	NSFileHandle				*output = nil;
-	NSString					*scriptResult = nil;
-			
-	if ([standardOutput isKindOfClass:[NSPipe class]] &&
-		(output = [(NSPipe *)standardOutput fileHandleForReading])) {
-		AI_DURING
-			scriptResult = [[NSString alloc] initWithData:[output readDataToEndOfFile]
-												 encoding:NSUTF8StringEncoding];
-		AI_HANDLER
-			scriptResult = nil;
-		AI_ENDHANDLER
-
-		//The NSFileHandle will be closed automatically when the NSPipe is deallocated... but let's do it immediately
-		[output closeFile];
-	}
+	NSMutableAttributedString	*attributedString = [userInfo objectForKey:@"Mutable Attributed String"];
+	NSRange						keywordRange = NSRangeFromString([userInfo objectForKey:@"Range"]);
+	unsigned long long			uniqueID = [[userInfo objectForKey:@"uniqueID"] unsignedLongLongValue];
 
 	//If the script fails, eat the keyword
-	if (!scriptResult) scriptResult = [@"" retain];
+	if (!resultString) resultString = @"";
 
 	//Replace the substring with script result
 	if (NSMaxRange(keywordRange) <= [attributedString length]) {
-		if (([scriptResult hasPrefix:@"<HTML>"])) {
+		if (([resultString hasPrefix:@"<HTML>"])) {
 			//Obtain the attributed string version of the HTML, passing our current attributes as the default ones
-			NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult
+			NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:resultString
 															 withDefaultAttributes:[attributedString attributesAtIndex:keywordRange.location
 																										effectiveRange:nil]];
 			[attributedString replaceCharactersInRange:keywordRange
@@ -697,31 +625,13 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 			
 		} else {
 			[attributedString replaceCharactersInRange:keywordRange
-											withString:scriptResult];
+											withString:resultString];
 		}
 	}
 
-	//Remove the delayed perform request for termination (which would have been used if the script timed out)
-	[NSObject cancelPreviousPerformRequestsWithTarget:scriptTask
-											 selector:@selector(terminate)
-											   object:nil];
-
-	/* Remove the observer. If we don't, and another NSTask is allocated with the same id as scriptTask, we'll get two
-	 * -scriptDidFinish: callbacks when that task terminates. Because this method releases the task, that would be a
-	 * double-release error, resulting in a crash.
-	 */
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:NSTaskDidTerminateNotification
-												  object:scriptTask];
-
-	//Cleanup
-	[scriptResult release];
-	[scriptTask release];
-	[autoreleasePool release];
-
 	//Inform the content controller that we're done if we don't need to do any more filtering
 	if (![self delayedFilterAttributedString:attributedString
-									 context:[environment objectForKey:@"context"]
+									 context:[userInfo objectForKey:@"context"]
 									uniqueID:uniqueID]) {
 		[[adium contentController] delayedFilterDidFinish:attributedString
 												 uniqueID:uniqueID];

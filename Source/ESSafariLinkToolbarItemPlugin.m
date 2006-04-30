@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "ESApplescriptabilityController.h"
 #import "AIContentController.h"
 #import "AIToolbarController.h"
 #import "ESSafariLinkToolbarItemPlugin.h"
@@ -99,95 +100,41 @@
 	NSTextView	*earliestTextView = (NSTextView *)[keyWindow earliestResponderOfClass:[NSTextView class]];
 	
 	if (earliestTextView) {
-		NSTask		*scriptTask;
-		NSArray		*applescriptRunnerArguments;
-		NSString	*applescriptRunnerPath;
-		NSPipe		*standardOutput;
-
-		//Find the path to the ApplescriptRunner application
-		applescriptRunnerPath = [[NSBundle mainBundle] pathForResource:@"AdiumApplescriptRunner"
-																ofType:nil
-														   inDirectory:nil];
-		//Set up our task
-		scriptTask = [[NSTask alloc] init];
-		[scriptTask setLaunchPath:applescriptRunnerPath];
-		
-		applescriptRunnerArguments = [NSArray arrayWithObjects:
-			SAFARI_LINK_SCRIPT_PATH,
-			@"substitute",
-			AILocalizedString(@"Multiple browsers are open. Please select one link:", "Prompt when more than one web browser is available when inserting a link from the active browser."),
-			nil];
-		[scriptTask setArguments:applescriptRunnerArguments];
-		
-		standardOutput = [[NSPipe alloc] init];
-		if (standardOutput) {
-			//NSPipe can return nil if an error occurs; don't assume success.
-			[scriptTask setStandardOutput:standardOutput];
-			[scriptTask setEnvironment:[NSDictionary dictionaryWithObject:earliestTextView
-																   forKey:@"Text View"]];			
-			[[NSNotificationCenter defaultCenter] addObserver:self
-													 selector:@selector(scriptDidFinish:)
-														 name:NSTaskDidTerminateNotification
-													   object:scriptTask];
-			[scriptTask launch];
-			
-		} else {
-			[scriptTask release];
-			NSBeep();
-		}
-		[standardOutput release];
+		NSArray	*arguments = [NSArray arrayWithObject:AILocalizedString(@"Multiple browsers are open. Please select one link:", "Prompt when more than one web browser is available when inserting a link from the active browser.")];
+		[[adium applescriptabilityController] runApplescriptAtPath:SAFARI_LINK_SCRIPT_PATH
+														  function:@"substitute"
+														 arguments:arguments
+												   notifyingTarget:self
+														  selector:@selector(applescriptDidRun:resultString:)
+														  userInfo:earliestTextView];
+	} else {
+		NSBeep();
 	}
 }
 
 /*
- * @brief A script finished executing
- *
- * @param aNotification The notification, whose object is the NSTask which terminated
+ * @brief A script finished running
  */
-- (void)scriptDidFinish:(NSNotification *)aNotification
+- (void)applescriptDidRun:(id)userInfo resultString:(NSString *)resultString
 {
-	NSTask				*scriptTask = [aNotification object];
-	NSDictionary		*environment = [scriptTask environment];
-	id					standardOutput = [scriptTask standardOutput];
-	NSTextView			*earliestTextView = [environment objectForKey:@"Text View"];
-	NSFileHandle		*output;
-	NSString			*scriptResult = nil;
-	
-	if ([standardOutput isKindOfClass:[NSPipe class]] &&
-		(output = [(NSPipe *)standardOutput fileHandleForReading])) {
-		//Retrieve the HTML returned by the script via standardOutput
-		scriptResult = [[NSString alloc] initWithData:[output readDataToEndOfFile]
-											 encoding:NSUTF8StringEncoding];
-	}
-	
+	NSTextView	*earliestTextView = (NSTextView *)userInfo;
+	NSLog(@"did run %@ - %@",userInfo, resultString);
 	//If the script returns nil or fails, do nothing
-	if (scriptResult && [scriptResult length]) {
+	if (resultString && [resultString length]) {
 		//Insert the script result - it should have returned an HTML link, so process it first
 		NSAttributedString	*attributedScriptResult;
 		NSDictionary		*attributes;
 		
-		attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult];
+		attributedScriptResult = [AIHTMLDecoder decodeHTML:resultString];
 		
 		attributes = [[earliestTextView typingAttributes] copy];
 		[earliestTextView insertText:attributedScriptResult];
 		if (attributes) [earliestTextView setTypingAttributes:attributes];
 		[attributes release];
-		
+
 	} else {
-		NSBeep();
-		
+		NSBeep();		
 	}
-	
-	/* Remove the observer. If we don't, and another NSTask is allocated with the same id as scriptTask, we'll get two
-	 * -scriptDidFinish: callbacks when that task terminates. Because this method releases the task, that would be a
-	 * double-release error, resulting in a crash.
-	 */
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:NSTaskDidTerminateNotification
-												  object:scriptTask];
-	
-	[scriptResult release];
-	[scriptTask release];
 }
 
 @end

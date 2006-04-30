@@ -19,7 +19,11 @@
 @protocol AIController;
 
 @interface ESApplescriptabilityController : AIObject <AIController> {
-
+	NSMutableDictionary	*runningApplescriptsDict;
+	NSMutableArray		*pendingApplescriptsArray;
+	BOOL				applescriptRunnerIsReady;
 }
+
+- (void)runApplescriptAtPath:(NSString *)inPath function:(NSString *)function arguments:(NSArray *)arguments notifyingTarget:(id)target selector:(SEL)selector userInfo:(id)userInfo;
 
 @end
