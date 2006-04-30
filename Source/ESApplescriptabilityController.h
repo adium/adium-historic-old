@@ -16,7 +16,9 @@
 
 #import <Adium/AIObject.h>
 
-@protocol AIController, AdiumApplescriptRunner;
+@protocol AIController;
+
+@class AdiumApplescriptRunner;
 
 @interface ESApplescriptabilityController : AIObject <AIController> {
 	AdiumApplescriptRunner	*applescriptRunner;
