@@ -117,7 +117,7 @@
 										group:@"Translator"];
 		}
 
-		if (![from isEqualToString:to]) {
+		if (from && to && ![from isEqualToString:to]) {
 			[self translateMessage:[NSDictionary dictionaryWithObjectsAndKeys:
 				[inAttributedString string],	TC_MESSAGE_KEY,
 				from,	TC_FROM_KEY,
