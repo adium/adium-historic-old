@@ -164,7 +164,6 @@
 	[menuController addContextualMenuItem:menuItem toLocation:Context_Tab_Action];
 	[menuItem release];
 	
-		
 	//Observe preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
 
