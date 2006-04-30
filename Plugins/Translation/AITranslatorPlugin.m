@@ -224,8 +224,8 @@
 {
 	NSLog(@"%@",[NSString stringWithFormat:NSLocalizedString(@"Translation Error: %@\nOriginal Message: \"%@\"",@"Parameters are <error msg>,<original msg>"),errorMessage,[messageDict objectForKey:TC_MESSAGE_KEY]]);
 
-	//Pass a nil translated string as a result
-	[self translatedString:nil forMessageDict:messageDict];
+	//Pass a the original string as a result
+	[self translatedString:[messageDict objectForKey:TC_MESSAGE_KEY] forMessageDict:messageDict];
 }
 
 @end
