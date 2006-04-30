@@ -56,11 +56,13 @@
 {
 	AIChat	 *newChat = [notification object];
 	AIChat	 *previousChat = [[notification userInfo] objectForKey:@"PreviouslyActiveChat"];
-	NSString *language = [[NSSpellChecker sharedSpellChecker] language];
 
 	if (previousChat) {
+		NSString *language = [[NSSpellChecker sharedSpellChecker] language];
 		NSString *chatID = [previousChat uniqueChatID];
-		if (![[languageDict objectForKey:chatID] isEqualToString:language]) {
+
+		if (language &&
+			![[languageDict objectForKey:chatID] isEqualToString:language]) {
 			//If this chat is not known to be in the current language, store its setting in our languageDict
 			[languageDict setObject:language
 							 forKey:chatID];
