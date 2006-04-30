@@ -586,7 +586,6 @@
 		3497CC1C09BA0DC100C0428E /* ESIRCAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC1B09BA0DC100C0428E /* ESIRCAccountView.nib */; };
 		3497CC2709BA0FDB00C0428E /* GaimDefaultsIRC.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC2609BA0FDB00C0428E /* GaimDefaultsIRC.plist */; };
 		349C2F470867AD16000BF883 /* ApplescriptRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C2F460867AD16000BF883 /* ApplescriptRunner.m */; };
-		349C2FE40867AD49000BF883 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F531836F019E40BB01A80165 /* Carbon.framework */; };
 		349C2FF00867AD65000BF883 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349C2FEF0867AD65000BF883 /* Foundation.framework */; };
 		349C30790867ADA3000BF883 /* AdiumApplescriptRunner in Resources */ = {isa = PBXBuildFile; fileRef = 349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */; };
 		349C6E4907C96D45005EB896 /* CBContactCountingDisplayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C6E4607C96D44005EB896 /* CBContactCountingDisplayPlugin.m */; };
@@ -898,6 +897,8 @@
 		34E104EC0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E104EA0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h */; };
 		34E104ED0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E104EB0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m */; };
 		34E105040951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34E105030951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib */; };
+		34E1EDF50A045AA2003C14F1 /* AdiumApplescriptRunner.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E1EDF30A045AA2003C14F1 /* AdiumApplescriptRunner.h */; };
+		34E1EDF60A045AA2003C14F1 /* AdiumApplescriptRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E1EDF40A045AA2003C14F1 /* AdiumApplescriptRunner.m */; };
 		34E2A0BB07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E2A0B907AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h */; };
 		34E2A0BC07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0BA07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m */; };
 		34E2A0C307AF593B006735BC /* AIAccountMenuAccessPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0C107AF593B006735BC /* AIAccountMenuAccessPlugin.m */; };
@@ -3010,6 +3011,8 @@
 		34E104EA0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumUnreadMessagesQuitConfirmation.h; path = Source/AdiumUnreadMessagesQuitConfirmation.h; sourceTree = "<group>"; };
 		34E104EB0951E0FE00EBE478 /* AdiumUnreadMessagesQuitConfirmation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumUnreadMessagesQuitConfirmation.m; path = Source/AdiumUnreadMessagesQuitConfirmation.m; sourceTree = "<group>"; };
 		34E105030951E29900EBE478 /* UnreadMessagesQuitConfirmation.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = UnreadMessagesQuitConfirmation.nib; path = Resources/UnreadMessagesQuitConfirmation.nib; sourceTree = "<group>"; };
+		34E1EDF30A045AA2003C14F1 /* AdiumApplescriptRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumApplescriptRunner.h; path = Source/AdiumApplescriptRunner.h; sourceTree = "<group>"; };
+		34E1EDF40A045AA2003C14F1 /* AdiumApplescriptRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumApplescriptRunner.m; path = Source/AdiumApplescriptRunner.m; sourceTree = "<group>"; };
 		34E2A0B907AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAccountNetworkConnectivityPlugin.h; path = Source/ESAccountNetworkConnectivityPlugin.h; sourceTree = "<group>"; };
 		34E2A0BA07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAccountNetworkConnectivityPlugin.m; path = Source/ESAccountNetworkConnectivityPlugin.m; sourceTree = "<group>"; };
 		34E2A0C107AF593B006735BC /* AIAccountMenuAccessPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountMenuAccessPlugin.m; path = Source/AIAccountMenuAccessPlugin.m; sourceTree = "<group>"; };
@@ -3784,7 +3787,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				349C2FE40867AD49000BF883 /* Carbon.framework in Frameworks */,
 				349C2FF00867AD65000BF883 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4006,7 +4008,6 @@
 				4BC291F9083D9EDC0075F57D /* Core (Private classes for the Public Interface) */,
 				F53B9A1302CCEDCA01A8010A /* Adium.Framework */,
 				4BD6720906001B2C0049CAF7 /* Plugins (Built In) */,
-				344C0D4306B6D5E300DA7200 /* Applescriptability */,
 				4BF2E6BE067CB72400743318 /* Xtras (Built In) */,
 				4B7F78BA0597F42D00162728 /* Crash Reporter */,
 				344458F3070B5BF500D8E932 /* Debugging */,
@@ -5142,6 +5143,15 @@
 			name = Borderless;
 			sourceTree = "<group>";
 		};
+		34E1EDEF0A045A50003C14F1 /* Applescript Asynchronous Running */ = {
+			isa = PBXGroup;
+			children = (
+				34E1EDF30A045AA2003C14F1 /* AdiumApplescriptRunner.h */,
+				34E1EDF40A045AA2003C14F1 /* AdiumApplescriptRunner.m */,
+			);
+			name = "Applescript Asynchronous Running";
+			sourceTree = "<group>";
+		};
 		34E29FCE07AF091C006735BC /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
@@ -5696,6 +5706,7 @@
 		4B873F330840D14A00738987 /* Public Interface (Controllers) */ = {
 			isa = PBXGroup;
 			children = (
+				344C0D4306B6D5E300DA7200 /* Applescriptability */,
 				F57938EF033E745F01A8010A /* AIAccountController.h */,
 				F57938AA033E737001A8010A /* AIAccountController.m */,
 				34B82C7F085A85D800864531 /* AIChatController.h */,
@@ -5844,6 +5855,7 @@
 			isa = PBXGroup;
 			children = (
 				4B873F370840D1FB00738987 /* Account */,
+				34E1EDEF0A045A50003C14F1 /* Applescript Asynchronous Running */,
 				3486E88E097F24530044C496 /* Contacts */,
 				4BC4439A08612BD800B10F28 /* Content */,
 				347A2CEC09C26D3A0032764B /* File Transfer */,
@@ -7314,6 +7326,7 @@
 				34107B4B09E9923D001CC042 /* AIGuestAccountWindowController.h in Headers */,
 				9ECB03E609F2A9D900996F44 /* AIDictionaryDebug.h in Headers */,
 				9ECB03E809F2A9D900996F44 /* AIXMLAppender.h in Headers */,
+				34E1EDF50A045AA2003C14F1 /* AdiumApplescriptRunner.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9363,6 +9376,7 @@
 				34107B4C09E9923D001CC042 /* AIGuestAccountWindowController.m in Sources */,
 				9ECB03E709F2A9D900996F44 /* AIDictionaryDebug.m in Sources */,
 				9ECB03E909F2A9D900996F44 /* AIXMLAppender.m in Sources */,
+				34E1EDF60A045AA2003C14F1 /* AdiumApplescriptRunner.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
