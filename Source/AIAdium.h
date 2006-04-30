@@ -85,6 +85,7 @@
 - (ESContactAlertsController *)contactAlertsController;
 - (ESDebugController *)debugController;
 - (ESFileTransferController *)fileTransferController;
+- (ESApplescriptabilityController *)applescriptabilityController;
 
 - (AICoreComponentLoader *)componentLoader;
 
