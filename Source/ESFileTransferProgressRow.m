@@ -193,7 +193,7 @@
 		case Checksumming_Filetransfer:
 			[view setProgressIndeterminate:YES];
 			[view setProgressAnimation:YES];
-			transferSpeedStatus = AILocalizedString(@"Preparing file...","waiting to begin a file transfer status");
+			transferSpeedStatus = [AILocalizedString(@"Preparing file","waiting to begin a file transfer status") stringByAppendingEllipsis];
 			break;
 		case In_Progress_FileTransfer:
 			[view setProgressIndeterminate:NO];
@@ -301,11 +301,11 @@
 			unsigned long		ticksDifference = updateTick - [[updateTickQueue objectAtIndex:0] unsignedLongValue];
 			unsigned long long	rate = bytesDifference / (ticksDifference / 60.0);
 			
-			transferSpeedStatus = [NSString stringWithFormat:AILocalizedString(@"%@ per sec.",nil),[[adium fileTransferController] stringForSize:rate]];
+			transferSpeedStatus = [NSString stringWithFormat:AILocalizedString(@"%@/sec","Rate of transfer phrase. %@ will be replaced by an abbreviated data amount such as 4 KB or 1 MB"),[[adium fileTransferController] stringForSize:rate]];
 			
 			if (rate > 0) {
 				unsigned long long secsRemaining = ((size - bytesSent) / rate);
-				transferRemainingStatus = [NSString stringWithFormat:AILocalizedString(@"%@ remaining.",nil),[self readableTimeForSecs:secsRemaining inLongFormat:YES]];
+				transferRemainingStatus = [NSString stringWithFormat:AILocalizedString(@"%@ remaining",nil),[self readableTimeForSecs:secsRemaining inLongFormat:YES]];
 			} else {
 				transferRemainingStatus = AILocalizedString(@"Stalled","file transfer is stalled status message");
 			}
