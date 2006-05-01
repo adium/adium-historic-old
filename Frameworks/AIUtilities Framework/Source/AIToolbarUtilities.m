@@ -15,29 +15,8 @@
 
 #import "AIToolbarUtilities.h"
 
-/*!
- * @class AIToolbarUtilities
- * @brief Helpful methods for creating window toolbar items
- *
- * Methods for conveniently creating, storing, and retrieivng <tt>NSToolbarItem</tt> objects.
- */
 @implementation AIToolbarUtilities
 
-/*!
- * @brief Create an <tt>NSToolbarItem</tt> and add it to an <tt>NSDictionary</tt>
- *
- * Calls <tt>toolbarItemWithIdentifier:label:paletteLabel:toolTip:target:settingSelector:itemContent:action:menu:</tt> and adds the result to a dictionary.
- * @param theDict A dictionary in which to store the <tt>NSToolbarItem</tt>
- * @param identifier
- * @param label
- * @param paletteLabel
- * @param toolTip
- * @param target
- * @param action
- * @param settingSelector Selector to call on the <tt>NSToolbarItem</tt> after it is created.  It should take a single object, which will be <tt>itemContent</tt>.  May be nil.
- * @param itemContent Object for <tt>settingSelector</tt>.  May be nil.
- * @param menu	A menu to set on the NSToolbarItem.  It will be automatically encapsulated by an NSMenuItem as NSToolbarItem requires.
- */
 + (void)addToolbarItemToDictionary:(NSMutableDictionary *)theDict withIdentifier:(NSString *)identifier label:(NSString *)label paletteLabel:(NSString *)paletteLabel toolTip:(NSString *)toolTip target:(id)target settingSelector:(SEL)settingSelector itemContent:(id)itemContent action:(SEL)action menu:(NSMenu *)menu
 {
     NSToolbarItem   *item = [self toolbarItemWithIdentifier:identifier label:label paletteLabel:paletteLabel toolTip:toolTip target:target settingSelector:settingSelector itemContent:itemContent action:action menu:menu];
@@ -45,20 +24,6 @@
     [theDict setObject:item forKey:identifier];
 }
 
-/*!
- * @brief Convenience method for creating an <tt>NSToolbarItem</tt>
- *
- * Parameters not discussed below are simply set using the <tt>NSToolbarItem</tt> setters; see its documentation for details.
- * @param identifier
- * @param label
- * @param paletteLabel
- * @param toolTip
- * @param target
- * @param action
- * @param settingSelector Selector to call on the <tt>NSToolbarItem</tt> after it is created.  It should take a single object, which will be <tt>itemContent</tt>.  May be nil.
- * @param itemContent Object for <tt>settingSelector</tt>.  May be nil.
- * @param menu	A menu to set on the NSToolbarItem.  It will be automatically encapsulated by an NSMenuItem as NSToolbarItem requires.
- */
 + (NSToolbarItem *)toolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label paletteLabel:(NSString *)paletteLabel toolTip:(NSString *)toolTip target:(id)target settingSelector:(SEL)settingSelector itemContent:(id)itemContent action:(SEL)action menu:(NSMenu *)menu
 {
     NSToolbarItem 	*item = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
@@ -98,14 +63,6 @@
     return item;
 }
 
-/*!
- * @brief Retrieve a new NSToolbarItem instance based on a dictionary's entry
- *
- * Retrieves a new copy of the NSToolbarItem stored in <tt>theDict</tt> with the <tt>itemIdentifier</tt> identifier.  This should be used rather than simply copying the existing NSToolbarItem so custom copying behaviors to maintain custom view, image, and menu settings are utilized.
- * @param theDict The source <tt>NSDictionary</tt>
- * @param itemIdentifier The identifier of the NSToolbarItem previous stored with <tt>addToolbarItemToDictionary:withIdentifier:label:paletteLabel:toolTip:target:settingSelector:itemContent:action:menu:</tt>
- * @return The retrieved NSToolbarItem
- */
 + (NSToolbarItem *)toolbarItemFromDictionary:(NSDictionary *)theDict withIdentifier:(NSString *)itemIdentifier
 {
     NSToolbarItem *item;
