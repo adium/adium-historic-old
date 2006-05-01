@@ -1415,7 +1415,10 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		default:
 			break;
 	}
-	[[[aimConnection getSsiService] getPermissionList] setPrivacyMode:[joscarBridge privacyModeFromString:modeName]];
+	if (modeName)
+		[[[aimConnection getSsiService] getPermissionList] setPrivacyMode:[joscarBridge privacyModeFromString:modeName]];
+	else
+		NSLog(@"modeName was nil, and this should never be so.");
 }
 
 #pragma mark Date conversions
