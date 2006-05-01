@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>Status Icon Pack</key>
-	<string>Gems</string>
+	<string>iBubble</string>
 	<key>Service Icon Pack</key>
 	<string>Aqua</string>
 	<key>List Layout Name</key>
-	<string>Normal</string>
+	<string>Aqualicious</string>
 	<key>List Theme Name</key>
-	<string>Pastel Blue</string>
+	<string>Aqualicious</string>
 	<key>Window Style</key>
 	<integer>0</integer>
 	<key>Window Opacity</key>
