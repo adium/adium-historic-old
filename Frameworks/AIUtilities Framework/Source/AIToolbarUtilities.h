@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 
-/*!	@class AIToolbarUtilities
+/*!	@class AIToolbarUtilities <AIToolbarUtilities.h> <AIUtilities/AIToolbarUtilities.h>
  *	@brief Helpful methods for creating window toolbar items.
  *
  *	Methods for conveniently creating, storing, and retrieivng \c NSToolbarItem objects.
