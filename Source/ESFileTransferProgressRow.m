@@ -256,7 +256,7 @@
 			}
 			case Complete_FileTransfer:
 			{
-				NSString			*bytesString = [[adium fileTransferController] stringForSize:bytesSent];
+				NSString			*bytesString = sizeString;
 				switch (type) {
 					case Incoming_FileTransfer:
 						transferBytesStatus = BYTES_RECEIVED;
