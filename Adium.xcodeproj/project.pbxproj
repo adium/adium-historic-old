@@ -134,7 +134,6 @@
 		340BA84709EC593B000EC441 /* AICorePluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 340BA84509EC593B000EC441 /* AICorePluginLoader.m */; };
 		340BA8D809EC5E35000EC441 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
 		340BAB1D09EC6E53000EC441 /* libirc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 340BAB1C09EC6E53000EC441 /* libirc.a */; };
-		340BABAC09EC7C1A000EC441 /* irc-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 340BABAB09EC7C1A000EC441 /* irc-small.png */; };
 		340EC2280736BF32001653BF /* ESRankingCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 340EC2260736BF31001653BF /* ESRankingCell.h */; };
 		340EC2290736BF32001653BF /* ESRankingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 340EC2270736BF32001653BF /* ESRankingCell.m */; };
 		340F440506D8202A0072E2FA /* AIAbstractListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 340F440306D8202A0072E2FA /* AIAbstractListController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1890,7 +1889,6 @@
 		340BA84409EC593A000EC441 /* AICorePluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICorePluginLoader.h; path = "Frameworks/Adium Framework/AICorePluginLoader.h"; sourceTree = "<group>"; };
 		340BA84509EC593B000EC441 /* AICorePluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICorePluginLoader.m; path = "Frameworks/Adium Framework/AICorePluginLoader.m"; sourceTree = "<group>"; };
 		340BAB1C09EC6E53000EC441 /* libirc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libirc.a; path = "Plugins/IRC Libgaim Plugin/libirc.a"; sourceTree = "<group>"; };
-		340BABAB09EC7C1A000EC441 /* irc-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "irc-small.png"; path = "Plugins/IRC Libgaim Plugin/irc-small.png"; sourceTree = "<group>"; };
 		340EC2260736BF31001653BF /* ESRankingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESRankingCell.h; path = Plugins/Logger/ESRankingCell.h; sourceTree = "<group>"; };
 		340EC2270736BF32001653BF /* ESRankingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESRankingCell.m; path = Plugins/Logger/ESRankingCell.m; sourceTree = "<group>"; };
 		340F440306D8202A0072E2FA /* AIAbstractListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAbstractListController.h; path = "Frameworks/Adium Framework/AIAbstractListController.h"; sourceTree = "<group>"; };
@@ -4795,7 +4793,6 @@
 				34B3245209BA00E700029361 /* ESIRCAccount.m */,
 				34B3245709BA00FA00029361 /* ESIRCService.h */,
 				34B3245809BA00FB00029361 /* ESIRCService.m */,
-				340BABAB09EC7C1A000EC441 /* irc-small.png */,
 				34F191DB09BA5F43001D6BE2 /* irc.png */,
 				3497CBAD09BA0B5D00C0428E /* ESIRCJoinChatViewController.h */,
 				3497CBAE09BA0B5D00C0428E /* ESIRCJoinChatViewController.m */,
@@ -8507,7 +8504,6 @@
 				3497CBDE09BA0C0900C0428E /* ESIRCJoinChatView.nib in Resources */,
 				3497CC1C09BA0DC100C0428E /* ESIRCAccountView.nib in Resources */,
 				34F191DC09BA5F43001D6BE2 /* irc.png in Resources */,
-				340BABAC09EC7C1A000EC441 /* irc-small.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8868,7 +8864,7 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin/libirc.a",
+				"$(SRCROOT)/Plugins/IRC Libgaim Plugin/libirc.a",
 			);
 			outputPaths = (
 			);
