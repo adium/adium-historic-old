@@ -346,7 +346,7 @@
 	
 	//Search for an existing chat we can use instead of creating a new one
 	chat = [self existingChatWithName:inName onAccount:account];
-	
+	AILog(@"chatWithName %@ existing --> %@",inName,chat);
 	if (!chat) {
 		//Create a new chat
 		chat = [AIChat chatForAccount:account];
@@ -369,6 +369,8 @@
 			AILog(@"chatWithName: Immediately removed <<%@>> [%@]",chat,openChats);
 			chat = nil;
 		}
+		
+		AILog(@"chatWithName %@ created --> %@",inName,chat);
 	}
 	return chat;
 }
@@ -451,6 +453,8 @@
 		[[inChat account] closeChat:inChat];
 		[openChats removeObject:inChat];
 		AILog(@"closeChat: Removed <<%@>> [%@]",inChat, openChats);
+	} else {
+		AILog(@"closeChat: Did not remove <<%@>> [%@]",inChat, openChats);		
 	}
 	
 	[inChat setIsOpen:NO];
