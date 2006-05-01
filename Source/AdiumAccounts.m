@@ -405,7 +405,7 @@
 			
 			if (allOnThisKeyAreTheSame && firstAttributedString) {
 				//All strings on this key are the same. Set the preference globally...
-				[[adium preferenceController] setPreference:firstAttributedString
+				[[adium preferenceController] setPreference:[firstAttributedString dataRepresentation]
 													 forKey:key
 													  group:GROUP_ACCOUNT_STATUS];
 				
