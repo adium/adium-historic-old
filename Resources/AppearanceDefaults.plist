@@ -7,9 +7,9 @@
 	<key>Service Icon Pack</key>
 	<string>Aqua</string>
 	<key>List Layout Name</key>
-	<string>com.adiumx.aqualicious.listlayout</string>
+	<string>Aqualicious</string>
 	<key>List Theme Name</key>
-	<string>com.adiumx.aqualicious.listtheme</string>
+	<string>Aqualicious</string>
 	<key>Window Style</key>
 	<integer>0</integer>
 	<key>Window Opacity</key>
