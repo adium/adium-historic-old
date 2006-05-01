@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>Status Icon Pack</key>
-	<string>iBubble</string>
+	<string>iBubble Status</string>
 	<key>Service Icon Pack</key>
 	<string>Aqua</string>
 	<key>List Layout Name</key>
-	<string>Aqualicious</string>
+	<string>com.adiumx.aqualicious.listlayout</string>
 	<key>List Theme Name</key>
-	<string>Aqualicious</string>
+	<string>com.adiumx.aqualicious.listtheme</string>
 	<key>Window Style</key>
 	<integer>0</integer>
 	<key>Window Opacity</key>
