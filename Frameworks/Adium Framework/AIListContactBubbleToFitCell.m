@@ -31,6 +31,7 @@
 {
 	NSSize				nameSize = [[self labelString] sizeWithAttributes:[self labelAttributes]];
 	float				originalWidth = rect.size.width;
+	float				originalX = rect.origin.x;
 	
 	//Alignment
 	switch ([self textAlignment]) {
@@ -98,6 +99,7 @@
 
 	//Don't let the bubble try to draw larger than the width we were passed, which was the full width possible
 	if (rect.size.width > originalWidth) rect.size.width = originalWidth;
+	if (rect.origin.x < originalX) rect.origin.x = originalX;
 	
 	return rect;
 }
