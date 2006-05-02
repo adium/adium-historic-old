@@ -15,11 +15,12 @@
 #import <Adium/AIChat.h>
 #import <Adium/ESDebugAILog.h>
 #import <Adium/AIHTMLDecoder.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
-#import <Carbon/Carbon.h>
 #import <AIUtilities/AIObjectAdditions.h>
+#import <Carbon/Carbon.h>
 
-#import "ESFileTransferController.h"pdate
+#import "ESFileTransferController.h"
 #import "RAFjoscarLogHandler.h"
 
 //#define JOSCAR_LOG_WARNING
@@ -29,6 +30,9 @@
 #define JOSCAR_BRIDGE_JAR	@"joscar bridge"
 #define RETROWEAVER_JAR		@"retroweaver-rt"
 #define SOCKS_JAR			@"jsocks-klea"
+
+//Determined experimentally -- may not be the exact value
+#define MAX_AVAILABLE_MESSAGE_LENGTH	58
 
 static NDRunLoopMessenger	*mainThreadMessenger = nil;
 
@@ -1295,11 +1299,15 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 - (void)setStatusMessage:(NSString *)msg
 {
+	msg = [msg stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH];
+
 	[[aimConnection getBosService] setStatusMessage:msg];
 }
 
 - (void)setStatusMessage:(NSString *)msg withSongURL:(NSString *)itmsURL
 {
+	msg = [msg stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH];
+
 	[[aimConnection getBosService] setStatusMessageSong:msg :itmsURL];
 }
 
@@ -1527,10 +1535,10 @@ Date* javaDateFromDate(NSDate *date)
 - (void)setChatInvitation:(HashMap *)invite
 {
 	id<ChatInvitation> invitation = [invite get:@"ChatInvitation"];
-	[account inviteToChat:[invitation getRoomName] 
-			  fromContact:[[invitation getScreenname] getNormal]
-			  withMessage:[invitation getMessage] 
-			 inviteObject:invitation];
+	[accountProxy inviteToChat:[invitation getRoomName] 
+				   fromContact:[[invitation getScreenname] getNormal]
+				   withMessage:[invitation getMessage] 
+				  inviteObject:invitation];
 }
 
 - (AIChat *)handleChatInvitation:(id<ChatInvitation>)invite withDecision:(BOOL)decision
@@ -1558,9 +1566,11 @@ Date* javaDateFromDate(NSDate *date)
 {
 	ChatRoomSession *chatSession;
 	NSAssert(name != nil, @"room name is nil in ESjoscarAdapter -joinChatRoom, this should never happen");
+	AILog(@"Joining %@ - chats dict is %@",name,joscarChatsDict);
 	if (![joscarChatsDict objectForKey:name]) {
 		chatSession = [[aimConnection getChatRoomManager] joinRoom:name];
 		[chatSession addListener:joscarBridge];
+		AILog(@"Created chatSession %@ for group chat %@",chatSession,name);
 		[joscarChatsDict setObject:chatSession forKey:name];
 	}
 }
@@ -1633,6 +1643,8 @@ Date* javaDateFromDate(NSDate *date)
 {
 	[(ChatRoomSession *)[joscarChatsDict objectForKey:name] close];
 	[joscarChatsDict removeObjectForKey:name];
+	
+	AILog(@"Left %@; %@ remaining group chats",name, joscarChatsDict);
 }
 
 
