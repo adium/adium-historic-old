@@ -40,10 +40,7 @@
 
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 
-#define CHAT_INVITE_TITLE AILocalizedString(@"Group Chat Invite","joscar group chat invitation window title")
-#define BASE_INVITE_TEXT AILocalizedString(@"%@ invites you to a group chat with the following message:\n%@","joscar invite message for group chats")
-#define ACCEPT_INVITE_TEXT AILocalizedString(@"Accept","joscar accept group chat button caption")
-#define REJECT_INVITE_TEXT AILocalizedString(@"Reject","joscar reject group chat button caption")
+#define CHAT_INVITE_TITLE 
 
 @implementation RAFjoscarAccount
 
@@ -587,7 +584,7 @@
 #pragma mark Messaging
 //Open a chat for Adium
 - (BOOL)openChat:(AIChat *)chat
-{	
+{
 	if ([chat isGroupChat])
 		[joscarAdapter joinChatRoom:[chat name]];
 	
@@ -1199,12 +1196,15 @@ BOOL isHTMLContact(AIListObject *inListObject)
 
 - (void)inviteToChat:(NSString *)name fromContact:(NSString *)uid withMessage:(NSString *)message inviteObject:(id)invite
 {
-	NSString *inviteText = [NSString stringWithFormat:BASE_INVITE_TEXT, uid, message];
+	NSString *inviteText = (message ?
+							[NSString stringWithFormat:AILocalizedString(@"%@ invites you to chat in \"%@\" with the following message:\n%@","joscar invite message for group chats"), uid, name, message] :
+							[NSString stringWithFormat:AILocalizedString(@"%@ invites you to chat in \"%@\"","joscar invite message for group chats"), uid, name]);
+							
 	ESTextAndButtonsWindowController *windowController;
 #warning we need to get an icon that makes sense
-	windowController = [ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:CHAT_INVITE_TITLE
-																			 defaultButton:ACCEPT_INVITE_TEXT
-																		   alternateButton:REJECT_INVITE_TEXT
+	windowController = [ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:AILocalizedString(@"Group Chat Invitation","joscar group chat invitation window title")
+																			 defaultButton:AILocalizedString(@"Accept","joscar accept group chat button caption")
+																		   alternateButton:AILocalizedString(@"Reject","joscar reject group chat button caption")
 																			   otherButton:nil
 																				  onWindow:nil
 																		 withMessageHeader:nil
