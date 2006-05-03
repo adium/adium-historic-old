@@ -71,4 +71,10 @@
 
 - (NSString *)uniquePathForPath:(NSString *)inPath;
 
+/*
+ * @brief Returns the pathname of the user's application support directory
+ * @result The pathname of the application support dir, or nil on error
+ */
+- (NSString *) userApplicationSupportFolder;
+
 @end

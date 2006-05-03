@@ -173,4 +173,26 @@
 }
 
 
+- (NSString *) findFolderOfType:(OSType)type inDomain:(short)domain createFolder:(BOOL)createFolder
+{
+    CFURLRef folderURL;
+    FSRef folderRef;
+    OSErr err;
+	
+    err = FSFindFolder(domain, type, createFolder, &folderRef);
+    if (err != noErr)
+        return nil;
+    
+    folderURL = CFURLCreateFromFSRef(kCFAllocatorSystemDefault, &folderRef);
+    if (! folderURL)
+        return nil;
+    
+    return [(NSString *)CFURLCopyFileSystemPath(folderURL, kCFURLPOSIXPathStyle) autorelease];
+}
+
+- (NSString *) userApplicationSupportFolder
+{
+    return [self findFolderOfType:kApplicationSupportFolderType inDomain:kUserDomain createFolder:YES];
+}
+
 @end
