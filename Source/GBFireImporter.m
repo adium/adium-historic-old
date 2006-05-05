@@ -21,6 +21,10 @@
 #import "AIStatus.h"
 #import "AIHTMLDecoder.h"
 #import "AIStatusController.h"
+#import "AIContactController.h"
+#import "AIListGroup.h"
+#import "AIListContact.h"
+#import "AIMetaContact.h"
 
 #define FIRECONFIGURATION2		@"FireConfiguration2.plist"
 #define FIRECONFIGURATION		@"FireConfiguration.plist"
@@ -46,9 +50,11 @@
 
 - (BOOL)importFireConfiguration
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *fireDir = [[[NSFileManager defaultManager] userApplicationSupportFolder] stringByAppendingPathComponent:@"Fire"];
 	BOOL version2Succeeded = NO;
 	BOOL version1Succeeded = NO;
+	BOOL ret = YES;
 	
 	version2Succeeded = [self import2:fireDir];
 	
@@ -58,22 +64,14 @@
 	
 	if(!version2Succeeded && !version1Succeeded)
 		//throw some error
-		return NO;
-	return YES;
+		ret = NO;
+	
+	[pool release];
+	return ret;
 }
 
-- (BOOL)import2:(NSString *)fireDir
+- (void)_importAccounts2:(NSArray *)accountsDict translations:(NSMutableDictionary *)accountUIDtoAccount
 {
-	NSString *configPath = [fireDir stringByAppendingPathComponent:FIRECONFIGURATION2];
-	NSString *accountPath = [fireDir stringByAppendingPathComponent:ACCOUNTS2];
-	NSDictionary *configDict = [NSDictionary dictionaryWithContentsOfFile:configPath];
-	NSDictionary *accountDict = [NSDictionary dictionaryWithContentsOfFile:accountPath];
-	
-	if(configDict == nil || accountDict == nil)
-		//no dictionary or no account, can't import
-		return NO;
-	
-	//Start with accounts
 	NSEnumerator *serviceEnum = [[[adium accountController] services] objectEnumerator];
 	AIService *service = nil;
 	NSMutableDictionary *serviceDict = [NSMutableDictionary dictionary];
@@ -84,17 +82,17 @@
 	[serviceDict setObject:[serviceDict objectForKey:@"Bonjour"] forKey:@"Rendezvous"];
 	[serviceDict setObject:[serviceDict objectForKey:@"GTalk"] forKey:@"GoogleTalk"];
 	[serviceDict setObject:[serviceDict objectForKey:@"Yahoo!"] forKey:@"Yahoo"];
-
-	NSEnumerator *accountEnum = [[accountDict objectForKey:@"Accounts"] objectEnumerator];
+	
+	NSEnumerator *accountEnum = [accountsDict objectEnumerator];
 	NSDictionary *account = nil;
 	while((account = [accountEnum nextObject]) != nil)
 	{
 		NSString *serviceName = [account objectForKey:@"ServiceName"];
 		NSString *accountName = [account objectForKey:@"Username"];
-		if(serviceName == nil || accountName == nil)
+		if(![serviceName length] || ![accountName length])
 			continue;
 		AIService *service = [serviceDict objectForKey:serviceName];
-		if(service == nil)
+		if([service length] == 0)
 			//Like irc service
 			continue;
 		AIAccount *newAcct = [[adium accountController] createAccountWithService:service
@@ -119,11 +117,14 @@
 							forKey:KEY_CONNECT_PORT
 							 group:GROUP_ACCOUNT_STATUS];
 		
+		[accountUIDtoAccount setObject:newAcct forKey:[account objectForKey:@"UniqueID"]];
 		[[adium accountController] addAccount:newAcct];
-	}
-	
-	//Away Messages
-	NSEnumerator *awayEnum = [[configDict objectForKey:@"awayMessages"] objectEnumerator];
+	}	
+}
+
+- (void)_importAways2:(NSArray *)awayList
+{
+	NSEnumerator *awayEnum = [awayList objectEnumerator];
 	NSDictionary *away = nil;
 	while((away = [awayEnum nextObject]) != nil)
 	{
@@ -155,31 +156,168 @@
 		[newStatus setAutoReplyIsStatusMessage:YES];
 		[newStatus setShouldForceInitialIdleTime:goIdle];
 		[[adium statusController] addStatusState:newStatus];
-	}
+	}	
+}
 
-	//Now for the groups
-	NSEnumerator *groupEnum = [[configDict objectForKey:@"groups"] objectEnumerator];
+NSComparisonResult groupSort(id left, id right, void *context)
+{
+	NSNumber *leftNum = [left objectForKey:@"position"];
+	NSNumber *rightNum = [right objectForKey:@"position"];
+	NSComparisonResult ret = NSOrderedSame;
+	
+	if(leftNum == nil)
+	{
+		if(rightNum != nil)
+			ret = NSOrderedAscending;
+	}
+	else if (rightNum == nil)
+		ret = NSOrderedDescending;
+	else
+		ret = [leftNum compare:rightNum];
+	
+	return ret;
+}
+
+- (void)_importGroups2:(NSDictionary *)groupList
+{
+	AIContactController *contactController = [adium contactController];
+
+	//First itterate through the groups and create an array we can sort
+	NSEnumerator *groupEnum = [groupList keyEnumerator];
+	NSString *groupName = nil;
+	NSMutableArray *groupArray = [NSMutableArray array];
+	while((groupName = [groupEnum nextObject]) != nil)
+	{
+		NSMutableDictionary *groupDict = [[groupList objectForKey:groupName] mutableCopy];
+		[groupDict setObject:groupName forKey:@"Name"];
+		[groupArray addObject:groupDict];
+		[groupDict release];
+	}
+	[groupArray sortUsingFunction:groupSort context:NULL];
+	groupEnum = [groupArray objectEnumerator];
 	NSDictionary *group = nil;
 	while((group = [groupEnum nextObject]) != nil)
 	{
-		//Add the group
-	}
-	
-	//Buddies
-	NSEnumerator *buddyEnum = [[configDict objectForKey:@"buddies"] objectEnumerator];
+		AIListGroup *newGroup = [contactController groupWithUID:[group objectForKey:@"Name"]];
+		NSNumber *expanded = [group objectForKey:@"groupexpanded"];
+		if(expanded != nil)
+			[newGroup setExpanded:[expanded boolValue]];
+	}	
+}
+
+- (void)_importBuddies2:(NSArray *)buddyArray accountTranslations:(NSMutableDictionary *)accountUIDtoAccount buddiesTranslations:(NSMutableDictionary *)buddiesToContact
+{
+	AIContactController *contactController = [adium contactController];
+
+	NSEnumerator *buddyEnum = [buddyArray objectEnumerator];
 	NSDictionary *buddy = nil;
 	while((buddy = [buddyEnum nextObject]) != nil)
 	{
-		//Add the buddy
-	}
+		NSNumber *inList = [buddy objectForKey:@"BuddyInList"];
+		if(inList == nil || [inList boolValue] == NO)
+			continue;
+		
+		NSNumber *accountNumber = [buddy objectForKey:@"account"];
+		AIAccount *account = [accountUIDtoAccount objectForKey:accountNumber];
+		if(account == nil)
+			continue;
+		
+		NSString *buddyName = [buddy objectForKey:@"buddyname"];
+		if([buddyName length] == 0)
+			continue;
+		
+		AIListContact *newContact = [contactController contactWithService:[account service] account:account UID:buddyName];
+		if(newContact == nil)
+			continue;
+		
+		NSMutableDictionary *accountBuddyList = [buddiesToContact objectForKey:accountNumber];
+		if(accountBuddyList == nil)
+		{
+			accountBuddyList = [NSMutableDictionary dictionary];
+			[buddiesToContact setObject:accountBuddyList forKey:accountNumber];
+		}
+		[accountBuddyList setObject:newContact forKey:buddyName];
+		
+		NSString *alias = [buddy objectForKey:@"displayname"];
+		if([alias length] != 0)
+			[newContact setDisplayName:alias];
+		
+		BOOL blocked = [[buddy objectForKey:@"BuddyBlocked"] boolValue];
+		if(blocked)
+			[newContact setIsBlocked:YES updateList:YES];
+		
+		//Adium can only support a single group per buddy (boo!!!) so use the first
+		NSString *groupName = [[buddy objectForKey:@"Groups"] objectAtIndex:0];
+		if([groupName length] != 0)
+			[newContact setRemoteGroupName:groupName];
+	}	
+}
 
-	//Persons
-	NSEnumerator *personEnum = [[configDict objectForKey:@"persons"] objectEnumerator];
+- (void)_importPersons2:(NSArray *)personArray buddiesTranslations:(NSDictionary *)buddiesToContact
+{
+	AIContactController *contactController = [adium contactController];
+
+	NSEnumerator *personEnum = [personArray objectEnumerator];
 	NSDictionary *person = nil;
 	while((person = [personEnum nextObject]) != nil)
 	{
-		//Add the person
+		NSString *personName = [person objectForKey:@"Name"];
+		if([personName length] == 0)
+			continue;
+		
+		NSArray *buddyArray = [person objectForKey:@"Buddies"];
+		if([buddyArray count] == 0)
+			//Empty meta-contact; don'th bother
+			continue;
+
+		NSEnumerator *buddyEnum = [buddyArray objectEnumerator];
+		NSDictionary *buddyInfo = nil;
+		NSMutableArray *buddies = [NSMutableArray array];
+		while ((buddyInfo = [buddyEnum nextObject]) != nil)
+		{
+			AIListContact *contact = [[buddiesToContact objectForKey:[buddyInfo objectForKey:@"BuddyAccount"]] objectForKey:@"BuddyName"];
+			if(contact == nil)
+				//Contact lookup failed
+				continue;
+			
+			[buddies addObject:contact];
+		}
+		[contactController groupListContacts:buddies];
 	}
+}
+
+- (BOOL)import2:(NSString *)fireDir
+{
+	NSString *configPath = [fireDir stringByAppendingPathComponent:FIRECONFIGURATION2];
+	NSString *accountPath = [fireDir stringByAppendingPathComponent:ACCOUNTS2];
+	NSDictionary *configDict = [NSDictionary dictionaryWithContentsOfFile:configPath];
+	NSDictionary *accountDict = [NSDictionary dictionaryWithContentsOfFile:accountPath];
+	
+	if(configDict == nil || accountDict == nil)
+		//no dictionary or no account, can't import
+		return NO;
+	
+	NSMutableDictionary *accountUIDtoAccount = [NSMutableDictionary dictionary];
+	
+	//Start with accounts
+	[self _importAccounts2:[accountDict objectForKey:@"Accounts"]
+			  translations:accountUIDtoAccount];
+	
+	//Away Messages
+	[self _importAways2:[configDict objectForKey:@"awayMessages"]];
+
+	//Now for the groups
+	[self _importGroups2:[configDict objectForKey:@"groups"]];
+	
+	//Buddies
+	NSMutableDictionary *buddiesToContact = [NSMutableDictionary dictionary];
+	[self _importBuddies2:[configDict objectForKey:@"buddies"]
+	  accountTranslations:accountUIDtoAccount
+	  buddiesTranslations:buddiesToContact];
+
+	//Persons
+	[self _importPersons2:[configDict objectForKey:@"persons"]
+	  buddiesTranslations:buddiesToContact];
 	
 	return YES;
 }
