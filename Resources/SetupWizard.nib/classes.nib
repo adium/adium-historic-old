@@ -43,6 +43,7 @@
                 tabView = NSTabView; 
                 "textField_addAccount" = NSTextField; 
                 "textField_done" = NSTextField; 
+                "textField_import" = NSTextField; 
                 "textField_password" = NSTextField; 
                 "textField_passwordLabel" = NSTextField; 
                 "textField_serviceLabel" = NSTextField; 
@@ -51,6 +52,7 @@
                 "textField_welcome" = NSTextField; 
                 "textView_addAccountMessage" = NSTextView; 
                 "textView_doneMessage" = NSTextView; 
+                "textView_importMessage" = NSTextView; 
                 "textView_welcomeMessage" = NSTextView; 
             }; 
             SUPERCLASS = AIWindowController; 
