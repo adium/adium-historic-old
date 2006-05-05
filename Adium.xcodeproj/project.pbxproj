@@ -1378,6 +1378,8 @@
 		EE147A810896B33400A21377 /* OWABSearchWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = EE147A7F0896B33400A21377 /* OWABSearchWindowController.h */; };
 		EEC461B6096D68580028632F /* OWSpellingPerContactPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */; };
 		EEC461B7096D68580028632F /* OWSpellingPerContactPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = EEC461B5096D68580028632F /* OWSpellingPerContactPlugin.h */; };
+		F50A75A20A0AE77A00A6D1BA /* GBFireImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */; };
+		F50A75A30A0AE77A00A6D1BA /* GBFireImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
@@ -3664,6 +3666,8 @@
 		EEC461B5096D68580028632F /* OWSpellingPerContactPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWSpellingPerContactPlugin.h; path = "Plugins/Spelling Per Contact/OWSpellingPerContactPlugin.h"; sourceTree = "<group>"; };
 		F11B9621051CDB3B0000000E /* AIMessageAliasPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageAliasPlugin.h; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.h"; sourceTree = "<group>"; };
 		F11B9622051CDB3B0000000E /* AIMessageAliasPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageAliasPlugin.m; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.m"; sourceTree = "<group>"; };
+		F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GBFireImporter.h; path = ../../Source/GBFireImporter.h; sourceTree = "<group>"; };
+		F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = GBFireImporter.m; path = ../../Source/GBFireImporter.m; sourceTree = "<group>"; };
 		F531836F019E40BB01A80165 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		F55B413B03AB895501A8010A /* AIAccountListPreferencesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountListPreferencesPlugin.h; path = Source/AIAccountListPreferencesPlugin.h; sourceTree = "<group>"; };
 		F55B413C03AB895501A8010A /* AIAccountListPreferencesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountListPreferencesPlugin.m; path = Source/AIAccountListPreferencesPlugin.m; sourceTree = "<group>"; };
@@ -6583,6 +6587,8 @@
 		CA25AABE07B428FD00DDBD7E /* Fire */ = {
 			isa = PBXGroup;
 			children = (
+				F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */,
+				F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */,
 				CA25AB3307B4296C00DDBD7E /* fire2adium.php */,
 				CA25AA9F07B428C600DDBD7E /* BDFireImporter.h */,
 				CA25AAA007B428C700DDBD7E /* BDFireImporter.m */,
@@ -7324,6 +7330,7 @@
 				9ECB03E609F2A9D900996F44 /* AIDictionaryDebug.h in Headers */,
 				9ECB03E809F2A9D900996F44 /* AIXMLAppender.h in Headers */,
 				34E1EDF50A045AA2003C14F1 /* AdiumApplescriptRunner.h in Headers */,
+				F50A75A20A0AE77A00A6D1BA /* GBFireImporter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9373,6 +9380,7 @@
 				9ECB03E709F2A9D900996F44 /* AIDictionaryDebug.m in Sources */,
 				9ECB03E909F2A9D900996F44 /* AIXMLAppender.m in Sources */,
 				34E1EDF60A045AA2003C14F1 /* AdiumApplescriptRunner.m in Sources */,
+				F50A75A30A0AE77A00A6D1BA /* GBFireImporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -881,6 +881,16 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					} else if ([chunkString caseInsensitiveCompare:@"P"] == NSOrderedSame ||
 							   ([chunkString caseInsensitiveCompare:@"/P"] == NSOrderedSame)) {
 						
+					// Ignore <head> tags
+					} else if ([chunkString caseInsensitiveCompare:@"HEAD"] == NSOrderedSame ||
+							   ([chunkString caseInsensitiveCompare:@"/HEAD"] == NSOrderedSame)) {
+						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
+						
+					// Ignore <meta> tags
+					} else if ([chunkString caseInsensitiveCompare:@"META"] == NSOrderedSame ||
+							   ([chunkString caseInsensitiveCompare:@"/META"] == NSOrderedSame)) {
+						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
+						
 					//Invalid
 					} else {
 						validTag = NO;
@@ -1135,6 +1145,27 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				}
 			}
 
+			attributeRange = [style rangeOfString:@"font: " options:NSCaseInsensitiveSearch];
+			if (attributeRange.location != NSNotFound) {
+				NSRange	 nextSemicolon = [style rangeOfString:@";"
+													  options:NSLiteralSearch
+														range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				if (nextSemicolon.location != NSNotFound) {
+					NSString *fontString = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange),
+																				 nextSemicolon.location - NSMaxRange(attributeRange))];
+					
+                    NSScanner *fontStringScanner = [NSScanner scannerWithString:fontString];
+                    float fontSize;
+                    if([fontStringScanner scanFloat:&fontSize])
+                        [textAttributes setFontSize:fontSize];
+                    [fontStringScanner scanUpToString:@" " intoString:nil];
+                    [fontStringScanner setScanLocation:[fontStringScanner scanLocation] + 1];
+                    NSString *font = [fontString substringFromIndex:[fontStringScanner scanLocation]];
+                    if([font length])
+                        [textAttributes setFontFamily:font];
+				}
+			}
+
 			attributeRange = [style rangeOfString:@"color: " options:NSCaseInsensitiveSearch];
 			if (attributeRange.location != NSNotFound) {
 				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
@@ -1145,7 +1176,18 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 																 defaultColor:[NSColor blackColor]]];
 				}
 			}
-		}
+
+            attributeRange = [style rangeOfString:@"background-color: " options:NSCaseInsensitiveSearch];
+			if (attributeRange.location != NSNotFound) {
+				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				if (nextSemicolon.location != NSNotFound) {
+					NSString *hexColor = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
+					
+					[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:hexColor
+																	   defaultColor:[NSColor blackColor]]];
+				}
+			}
+        }
 	}
 }
 

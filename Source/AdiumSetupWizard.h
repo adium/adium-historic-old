@@ -21,6 +21,11 @@
 	IBOutlet NSTextField *textField_welcome;
 	IBOutlet NSTextView	 *textView_welcomeMessage;
 	
+	//Import
+	IBOutlet NSTextField	*textField_import;
+	IBOutlet NSTextView		*textView_importMessage;
+	BOOL					canImport;
+	
 	//Account Setup
 	IBOutlet NSTextField	*textField_addAccount;
 	IBOutlet NSTextView		*textView_addAccountMessage;

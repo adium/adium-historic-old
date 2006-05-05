@@ -9,15 +9,18 @@
 #import "AIAccountController.h"
 #import "AIContentController.h"
 #import "SetupWizardBackgroundView.h"
+#import "GBFireImporter.h"
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIServiceMenu.h>
 #import <Adium/AIService.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AITextFieldAdditions.h>
 #import <AIUtilities/AIStringFormatter.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 #import <Adium/AIHTMLDecoder.h>
 
 #define ACCOUNT_SETUP_IDENTIFIER	@"account_setup"
+#define IMPORT_IDENTIFIER			@"import_client"
 #define WELCOME_IDENTIFIER			@"welcome"
 #define DONE_IDENTIFIER				@"done"
 
@@ -50,7 +53,7 @@
 	[textField_passwordLabel setLocalizedString:AILocalizedStringFromTable(@"Password:", @"AdiumFramework", "Label for the password field in the account preferences")];
 	[textField_serviceLabel	setLocalizedString:AILocalizedString(@"Service:",nil)];
 	
-	[button_alternate setLocalizedString:AILocalizedString(@"Add Another","button title for adding another account in the setup wizard")];
+	[button_alternate setLocalizedString:AILocalizedString(@"Skip Import","button title for skipping the import of another client in the setup wizard")];
 }
 
 /*
@@ -73,6 +76,13 @@
 	tabViewFrame.origin.y -= backgroundViewFrame.origin.y;
 	[backgroundView setTransparentRect:tabViewFrame];
 
+	//Check to see if we can import Fire's settings
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSString *fireDir = [[fileManager userApplicationSupportFolder] stringByAppendingPathComponent:@"Fire"];
+	BOOL isDir = NO;
+	if([fileManager fileExistsAtPath:fireDir isDirectory:&isDir] && isDir)
+		canImport = YES;
+	
 	[self localizeItems];
 	
 	[[self window] center];
@@ -127,6 +137,9 @@
 			//Successful without having a UID entered if they already added at least one account; unsuccessful otherwise.
 			success = addedAnAccount;
 		}
+	} else if ([identifier isEqualToString:IMPORT_IDENTIFIER]) {
+		success = [GBFireImporter importFireConfiguration];
+		addedAnAccount = [[[adium accountController] accounts] count] != 0;
 	}
 	
 	return success;
@@ -143,6 +156,14 @@
 			//Done
 			[self  close];
 			
+		} else if ([[currentTabViewItem identifier] isEqualToString:WELCOME_IDENTIFIER]) {
+			if(canImport)
+				//We can import; go to next tab
+				[tabView selectNextTabViewItem:self];
+			else
+				//No import; skip it
+				[tabView selectTabViewItemAtIndex:[tabView indexOfTabViewItem:currentTabViewItem] + 2];
+			
 		} else {
 			//Go to the next tab view item
 			[tabView selectNextTabViewItem:self];		
@@ -157,7 +178,11 @@
  */
 - (IBAction)previousTab:(id)sender
 {
-	[tabView selectPreviousTabViewItem:self];
+	NSTabViewItem *currentTabViewItem = [tabView selectedTabViewItem];
+	if([[currentTabViewItem identifier] isEqualToString:ACCOUNT_SETUP_IDENTIFIER] && !canImport)
+		[tabView selectTabViewItemAtIndex:[tabView indexOfTabViewItem:currentTabViewItem] - 2];
+	else
+		[tabView selectPreviousTabViewItem:self];
 }
 
 /*
@@ -176,6 +201,9 @@
 		} else {
 			NSBeep();
 		}
+	} else if ([identifier isEqualToString:IMPORT_IDENTIFIER]) {
+		//skip the import
+		[tabView selectNextTabViewItem:self];
 	}
 }
 
@@ -202,7 +230,7 @@
 
 - (BOOL)showAlternateButtonForIdentifier:(NSString *)identifier
 {
-	return [identifier isEqualToString:ACCOUNT_SETUP_IDENTIFIER];	
+	return [identifier isEqualToString:ACCOUNT_SETUP_IDENTIFIER] || [identifier isEqualToString:IMPORT_IDENTIFIER];	
 }
 
 /*
@@ -242,9 +270,23 @@
 
 		//The continue button is only initially enabled if the user has added at least one account
 		[button_continue setEnabled:addedAnAccount];
+		[button_alternate setLocalizedString:AILocalizedString(@"Add Another","button title for adding another account in the setup wizard")];
 		[button_alternate setEnabled:NO];
 
 		[self configureAccountSetupForService:service];
+
+	} else if ([identifier isEqualToString:IMPORT_IDENTIFIER]) {
+		[textField_import setStringValue:AILocalizedString(@"Import Fire's Settings", nil)];
+		[textView_importMessage setDrawsBackground:NO];
+		[[textView_importMessage enclosingScrollView] setDrawsBackground:NO];
+
+		NSAttributedString *importMessage = [AIHTMLDecoder decodeHTML:
+			AILocalizedString(@"<HTML>Adium has detected that you have previously used Fire.  You may choose to import settings from Fire by pressing continue below.  If you choose to not use these settings, simply skip this step.<HTML>",nil)
+												withDefaultAttributes:[[textView_importMessage textStorage] attributesAtIndex:0
+																											   effectiveRange:NULL]];
+		[[textView_importMessage textStorage] setAttributedString:importMessage];
+		[button_alternate setLocalizedString:AILocalizedString(@"Skip Import","button title for skipping the import of another client in the setup wizard")];
+		[button_alternate setEnabled:YES];
 		
 	} else if ([identifier isEqualToString:WELCOME_IDENTIFIER]) {
 		[textView_welcomeMessage setDrawsBackground:NO];
