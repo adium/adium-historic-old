@@ -393,7 +393,8 @@
 						 * Only need to check if thus far they all have been the same
 						 */
 						if (allOnThisKeyAreTheSame &&
-							![attributedString isEqual:firstAttributedString]) {
+							![[[attributedString string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:
+								[[firstAttributedString string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]] ) {
 							allOnThisKeyAreTheSame = NO;
 						}
 					} else {
