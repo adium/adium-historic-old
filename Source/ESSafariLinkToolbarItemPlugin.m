@@ -78,6 +78,9 @@
 		browserImage = [NSImage imageNamed:@"Safari" forClass:[self class]];
 	}	
 
+	//Remote the path extension if there is one (.app if the Finder is set to show extensions; no change otherwise)
+	browserName = [browserName stringByDeletingPathExtension];
+
 	NSToolbarItem	*toolbarItem;
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:SAFARI_LINK_IDENTIFER
 														  label:[NSString stringWithFormat:AILocalizedString(@"%@ Link",nil), browserName]
