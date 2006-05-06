@@ -20,6 +20,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 
 //Preference keys
 #define TOP_ACCOUNT_ID					@"TopAccountID"   	//Highest account object ID

@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*!
- * @category NSMutableAttributedString(AIAppleScriptAdditions)
+ * @category NSMutableAttributedString(AIAttributedStringAdditions)
  * @brief Additions to NSMutableAttributedString
  *
  * These methods add string replacement, <tt>NSData</tt> conversion, color adjustment, and more.
