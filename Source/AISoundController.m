@@ -39,9 +39,9 @@
 
 - (void)controllerWillClose
 {
-	[adiumSound dealloc]; adiumSound = nil;
-	[adiumSpeech dealloc]; adiumSpeech = nil;
-	[adiumSoundSets dealloc]; adiumSoundSets = nil;
+	[adiumSound release]; adiumSound = nil;
+	[adiumSpeech release]; adiumSpeech = nil;
+	[adiumSoundSets release]; adiumSoundSets = nil;
 }
 
 //Sound

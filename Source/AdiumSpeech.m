@@ -51,15 +51,6 @@
 		speechArray = [[NSMutableArray alloc] init];
 		workspaceSessionIsActive = YES;
 		speaking = NO;
-		
-		//Load voices
-		//Vicki, a new voice in 10.3, returns an invalid name to SUSpeaker, Vicki3Smallurrent. If we see that name,
-		//replace it with just Vicki.  If this gets fixed in a future release of OS X, this code will simply do nothing.
-		voiceArray = [[SUSpeaker voiceNames] mutableCopy];
-		int messedUpIndex = [voiceArray indexOfObject:@"Vicki3Smallurrent"];
-		if (messedUpIndex != NSNotFound) {
-			[voiceArray replaceObjectAtIndex:messedUpIndex withObject:@"Vicki"];
-		}
 
 		//Observe workspace activity changes so we can mute sounds as necessary
 		NSNotificationCenter *workspaceCenter = [[NSWorkspace sharedWorkspace] notificationCenter];
@@ -79,6 +70,21 @@
 }
 
 /*!
+ * @brief Load the array of voices
+ */
+- (void)loadVoices
+{
+	//Load voices
+	//Vicki, a new voice in 10.3, returns an invalid name to SUSpeaker, Vicki3Smallurrent. If we see that name,
+	//replace it with just Vicki.  If this gets fixed in a future release of OS X, this code will simply do nothing.
+	voiceArray = [[SUSpeaker voiceNames] mutableCopy];
+	int messedUpIndex = [voiceArray indexOfObject:@"Vicki3Smallurrent"];
+	if (messedUpIndex != NSNotFound) {
+		[voiceArray replaceObjectAtIndex:messedUpIndex withObject:@"Vicki"];
+	}
+}
+
+/*!
  * @brief Close
  */
 - (void)dealloc
@@ -89,7 +95,11 @@
 	[self _stopSpeaking];
 
 	[speechArray release]; speechArray = nil;
-	[voiceArray release]; voiceArray = nil;
+	if(voiceArray)
+	{
+		[voiceArray release]; 
+		voiceArray = nil;
+	}
 	
 	[super dealloc];
 }
@@ -201,6 +211,7 @@
  */
 - (NSArray *)voices
 {
+	if(!voiceArray) [self loadVoices];
     return voiceArray;
 }
 
@@ -314,7 +325,14 @@
 - (SUSpeaker *)_speakerForVoice:(NSString *)voiceString index:(int *)voiceIndex
 {
 	SUSpeaker	*speaker;
-	int 		theIndex = (voiceString ? [voiceArray indexOfObject:voiceString] : NSNotFound);
+	int 		theIndex;
+	if(voiceString)
+	{
+		if(!voiceArray) [self loadVoices];
+		theIndex = [voiceArray indexOfObject:voiceString];
+	}
+	else
+		theIndex = NSNotFound;
 
 	//Return the voice index by reference
 	if (voiceIndex) *voiceIndex = theIndex;
