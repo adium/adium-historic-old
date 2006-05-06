@@ -129,8 +129,8 @@
 #define KEY_EVENT_NOTIFICATION		@"Notification"
 
 //Adium Notifications
-#define CONTACT_STATUS_ONLINE_YES			@"Contact_StatusOnlineYes"
-#define CONTACT_STATUS_ONLINE_NO			@"Contact_StatusOnlineNo"
+#define CONTACT_STATUS_ONLINE_YES			@"Contact_StatusOnlineYes"	// Contact signs on
+#define CONTACT_STATUS_ONLINE_NO			@"Contact_StatusOnlineNo"	// Contact signs off
 #define CONTACT_STATUS_AWAY_YES				@"Contact_StatusAwayYes"
 #define CONTACT_STATUS_AWAY_NO				@"Contact_StatusAwayNo"
 #define CONTACT_STATUS_IDLE_YES				@"Contact_StatusIdleYes"
