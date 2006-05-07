@@ -553,7 +553,7 @@
 	[popUp_fastUserSwitchingStatusState setMenu:[[statusStatesMenu copy] autorelease]];
 
 	//Now select the proper state, or deselect all items if there is no chosen state or the chosen state doesn't exist
-	targetUniqueStatusIDNumber = [[adium preferenceController] preferenceForKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID
+	targetUniqueStatusIDNumber = [[adium preferenceController] preferenceForKey:KEY_STATUS_AUTO_AWAY_STATUS_STATE_ID
 																		  group:PREF_GROUP_STATUS_PREFERENCES];
 	[self _selectStatusWithUniqueID:targetUniqueStatusIDNumber inPopUpButton:popUp_autoAwayStatusState];
 	
@@ -728,7 +728,7 @@
 	AIStatus	*statusState = [[sender representedObject] objectForKey:@"AIStatus"];
 
 	[[adium preferenceController] setPreference:[statusState uniqueStatusID]
-										 forKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID
+										 forKey:KEY_STATUS_AUTO_AWAY_STATUS_STATE_ID
 										  group:PREF_GROUP_STATUS_PREFERENCES];
 
 	showingSubmenuItemInAutoAway = [self addItemIfNeeded:sender
