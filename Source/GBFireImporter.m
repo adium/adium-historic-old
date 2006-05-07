@@ -155,6 +155,10 @@
 		[newStatus setStatusMessage:[AIHTMLDecoder decodeHTML:attrMessage]];
 		[newStatus setAutoReplyIsStatusMessage:YES];
 		[newStatus setShouldForceInitialIdleTime:goIdle];
+		if(isDefault)
+			[[adium preferenceController] setPreference:[newStatus uniqueStatusID]
+												 forKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID
+												  group:PREF_GROUP_STATUS_PREFERENCES];
 		[[adium statusController] addStatusState:newStatus];
 	}	
 }
@@ -454,6 +458,10 @@ NSComparisonResult groupSort(id left, id right, void *context)
 		[newStatus setStatusMessage:[[[NSAttributedString alloc] initWithString:message] autorelease]];
 		[newStatus setAutoReplyIsStatusMessage:YES];
 		[newStatus setShouldForceInitialIdleTime:goIdle];
+		if(isDefault)
+			[[adium preferenceController] setPreference:[newStatus uniqueStatusID]
+												 forKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID
+												  group:PREF_GROUP_STATUS_PREFERENCES];
 		[[adium statusController] addStatusState:newStatus];
 	}	
 }
