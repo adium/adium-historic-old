@@ -155,6 +155,7 @@
 		[self activateProgressIndicator];
 		success = [GBFireImporter importFireConfiguration];
 		addedAnAccount = [[[adium accountController] accounts] count] != 0;
+		[progress_processing stopAnimation:nil];
 		[progress_processing setHidden:YES];
 	}
 	
