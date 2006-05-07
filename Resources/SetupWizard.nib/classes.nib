@@ -40,6 +40,7 @@
                 "button_continue" = NSButton; 
                 "button_goBack" = NSButton; 
                 "popUp_services" = NSPopUpButton; 
+                "progress_processing" = NSProgressIndicator; 
                 tabView = NSTabView; 
                 "textField_addAccount" = NSTextField; 
                 "textField_done" = NSTextField; 

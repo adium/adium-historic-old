@@ -150,7 +150,6 @@
 				adiumType = AIAwayStatusType;
 		}
 		
-#warning need to check to make sure the status does not exist yet
 		AIStatus *newStatus = [AIStatus statusOfType:adiumType];
 		[newStatus setTitle:title];
 		[newStatus setStatusMessage:[AIHTMLDecoder decodeHTML:attrMessage]];
@@ -284,7 +283,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 		
 		NSArray *buddyArray = [person objectForKey:@"Buddies"];
 		if([buddyArray count] == 0)
-			//Empty meta-contact; don'th bother
+			//Empty meta-contact; don't bother
 			continue;
 
 		NSEnumerator *buddyEnum = [buddyArray objectEnumerator];
@@ -292,7 +291,13 @@ NSComparisonResult groupSort(id left, id right, void *context)
 		NSMutableArray *buddies = [NSMutableArray array];
 		while ((buddyInfo = [buddyEnum nextObject]) != nil)
 		{
-			AIListContact *contact = [[buddiesToContact objectForKey:[buddyInfo objectForKey:@"BuddyAccount"]] objectForKey:@"BuddyName"];
+			NSNumber *buddyAccount = [buddyInfo objectForKey:@"BuddyAccount"];
+			NSString *buddySN = [buddyInfo objectForKey:@"BuddyName"];
+			
+			if(buddyAccount == nil || buddySN == nil)
+				continue;
+			
+			AIListContact *contact = [[buddiesToContact objectForKey:buddyAccount] objectForKey:buddySN];
 			if(contact == nil)
 				//Contact lookup failed
 				continue;
@@ -444,7 +449,6 @@ NSComparisonResult groupSort(id left, id right, void *context)
 				adiumType = AIAwayStatusType;
 		}
 		
-#warning need to check to make sure the status does not exist yet
 		AIStatus *newStatus = [AIStatus statusOfType:adiumType];
 		[newStatus setTitle:title];
 		[newStatus setStatusMessage:[[[NSAttributedString alloc] initWithString:message] autorelease]];

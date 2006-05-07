@@ -82,6 +82,8 @@
 	BOOL isDir = NO;
 	if([fileManager fileExistsAtPath:fireDir isDirectory:&isDir] && isDir)
 		canImport = YES;
+	if([progress_processing respondsToSelector:@selector(setHidden:)])
+		[progress_processing setHidden:YES];
 	
 	[self localizeItems];
 	
@@ -100,6 +102,18 @@
 	[super windowWillClose:sender];
 	
 	[self autorelease];
+}
+
+/*
+ * @brief Start the progress indicator to let the user we are processing
+ */
+- (void)activateProgressIndicator
+{
+	[progress_processing setHidden:NO];
+	
+	//start the progress spinner (using multi-threading)
+	[progress_processing setUsesThreadedAnimation:YES];
+	[progress_processing startAnimation:nil];
 }
 
 /*
@@ -138,8 +152,10 @@
 			success = addedAnAccount;
 		}
 	} else if ([identifier isEqualToString:IMPORT_IDENTIFIER]) {
+		[self activateProgressIndicator];
 		success = [GBFireImporter importFireConfiguration];
 		addedAnAccount = [[[adium accountController] accounts] count] != 0;
+		[progress_processing setHidden:YES];
 	}
 	
 	return success;
