@@ -14,6 +14,7 @@
 	IBOutlet NSButton	*button_continue;
 	IBOutlet NSButton	*button_goBack;
 	IBOutlet NSButton	*button_alternate;
+	IBOutlet NSProgressIndicator	*progress_processing;
 	
 	IBOutlet NSTabView	*tabView;
 
