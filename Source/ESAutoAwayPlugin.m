@@ -69,7 +69,7 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	[autoAwayID release];
-	autoAwayID = [[prefDict objectForKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID] retain];
+	autoAwayID = [[prefDict objectForKey:KEY_STATUS_AUTO_AWAY_STATUS_STATE_ID] retain];
 
 	autoAway = (autoAwayID ? 
 				[[prefDict objectForKey:KEY_STATUS_AUTO_AWAY] boolValue] :

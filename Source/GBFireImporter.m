@@ -157,7 +157,7 @@
 		[newStatus setShouldForceInitialIdleTime:goIdle];
 		if(isDefault)
 			[[adium preferenceController] setPreference:[newStatus uniqueStatusID]
-												 forKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID
+												 forKey:KEY_STATUS_AUTO_AWAY_STATUS_STATE_ID
 												  group:PREF_GROUP_STATUS_PREFERENCES];
 		[[adium statusController] addStatusState:newStatus];
 	}	
@@ -460,7 +460,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 		[newStatus setShouldForceInitialIdleTime:goIdle];
 		if(isDefault)
 			[[adium preferenceController] setPreference:[newStatus uniqueStatusID]
-												 forKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID
+												 forKey:KEY_STATUS_AUTO_AWAY_STATUS_STATE_ID
 												  group:PREF_GROUP_STATUS_PREFERENCES];
 		[[adium statusController] addStatusState:newStatus];
 	}	
