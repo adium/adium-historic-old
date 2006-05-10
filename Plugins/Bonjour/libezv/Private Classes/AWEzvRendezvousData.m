@@ -444,37 +444,37 @@ NSString	*endn = @"\x00\x00\x00\x00";
     enumerator = [keys keyEnumerator];
     
     while ((key = [enumerator nextObject])) {
-	/* convert binary to hex */
-	char *hexdata;
-	int i;
-	
-	value = [keys objectForKey:key];
-	
-	if ([value isKindOfClass:[NSData class]]) {
-	    hexdata = (char *)malloc([(NSData *)value length] * 2 + 1);
-	    
-	    for (i = 0; i < 20; i++) {
-		sprintf(hexdata + (i*2), "%.2x", ((unsigned char *)[(NSData *)value bytes])[i]);
-	    }
-	    hexdata[[(NSData *)value length] * 2] = '\0';
-	    
-	    [infoData appendFormat:@"%c", ([(NSData *)value length] * 2 + [key length] + 1)];
-	    [infoData appendString:key];
-	    [infoData appendString:@"="];
-	    [infoData appendString:[NSString stringWithCString:hexdata]];
-	    
-	} else {
-	    const char *val = [(NSString *)value UTF8String];
-		int len = strlen(val);
-		[infoData appendFormat:@"%c", len + [key length] + 1];
-	    [infoData appendString:key];
-	    [infoData appendString:@"="];
-	    [infoData appendString:value];
-	}
+		/* convert binary to hex */
+		char *hexdata;
+		int i;
+		
+		value = [keys objectForKey:key];
+		
+		if ([value isKindOfClass:[NSData class]]) {
+			hexdata = (char *)malloc([(NSData *)value length] * 2 + 1);
+			
+			for (i = 0; i < 20; i++) {
+				sprintf(hexdata + (i*2), "%.2x", ((unsigned char *)[(NSData *)value bytes])[i]);
+			}
+			hexdata[[(NSData *)value length] * 2] = '\0';
+			
+			[infoData appendFormat:@"%c", ([(NSData *)value length] * 2 + [key length] + 1)];
+			[infoData appendString:key];
+			[infoData appendString:@"="];
+			[infoData appendString:[NSString stringWithCString:hexdata]];
+			free(hexdata);
+		} else {
+			const char *val = [(NSString *)value UTF8String];
+			int len = strlen(val);
+			[infoData appendFormat:@"%c", len + [key length] + 1];
+			[infoData appendString:key];
+			[infoData appendString:@"="];
+			[infoData appendString:value];
+		}
     }
     
 	data = [infoData UTF8String];
-
+	
 	return [NSData dataWithBytes:data length:strlen(data)];
 }
 
