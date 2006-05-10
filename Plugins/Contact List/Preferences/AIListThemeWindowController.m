@@ -434,11 +434,13 @@
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_THEME_GROUP_GRADIENT
                                               group:PREF_GROUP_LIST_THEME];
+		[preview_group setNeedsDisplay:YES];
 		
     } else if (sender == checkBox_groupShadow) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_THEME_GROUP_SHADOW
                                               group:PREF_GROUP_LIST_THEME];
+		[preview_group setNeedsDisplay:YES];
 		
 	} else if (sender == popUp_displayImageStyle) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]

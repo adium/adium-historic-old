@@ -76,9 +76,11 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 backgroundColor = NSColorWell; 
+                backgroundEnabled = NSButton; 
                 backgroundGradientColor = NSColorWell; 
                 textColor = NSColorWell; 
                 textShadowColor = NSColorWell; 
+                textShadowColorEnabled = NSButton; 
             }; 
             SUPERCLASS = NSView; 
         }, 

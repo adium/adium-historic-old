@@ -52,17 +52,19 @@
 	NSSize				sampleSize;
 	
 	//Background
-	if (backgroundGradientColor) {
-		[[AIGradient gradientWithFirstColor:[backgroundGradientColor color]
-							   secondColor:[backgroundColor color]
-								 direction:AIVertical] drawInRect:rect];
-	} else {
-		[(backColorOverride ? backColorOverride : [backgroundColor color]) set];
-		[NSBezierPath fillRect:rect];
+	if ([backgroundEnabled state] != NSOffState) {
+		if (backgroundGradientColor) {
+			[[AIGradient gradientWithFirstColor:[backgroundGradientColor color]
+								   secondColor:[backgroundColor color]
+									 direction:AIVertical] drawInRect:rect];
+		} else {
+			[(backColorOverride ? backColorOverride : [backgroundColor color]) set];
+			[NSBezierPath fillRect:rect];
+		}
 	}
 
 	//Shadow
-	if ([textShadowColor color]) {
+	if (([textShadowColorEnabled state] != NSOffState) && [textShadowColor color]) {
 		shadow = [[[NSShadow alloc] init] autorelease];
 		[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
 		[shadow setShadowBlurRadius:2.0];
@@ -74,8 +76,8 @@
 		[NSFont systemFontOfSize:12], NSFontAttributeName,
 		[NSParagraphStyle styleWithAlignment:NSCenterTextAlignment], NSParagraphStyleAttributeName,
 		[textColor color], NSForegroundColorAttributeName,
+		shadow, NSShadowAttributeName,
 		nil];
-	if (shadow) [attributes setObject:shadow forKey:NSShadowAttributeName];
 	
 	sample = [[[NSAttributedString alloc] initWithString:AILocalizedString(@"Sample",nil)
 											  attributes:attributes] autorelease];

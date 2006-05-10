@@ -16,7 +16,9 @@
 
 @interface AITextColorPreviewView : NSView {
 	IBOutlet	NSColorWell		*textColor;
+	IBOutlet	NSButton		*textShadowColorEnabled;
 	IBOutlet	NSColorWell		*textShadowColor;
+	IBOutlet	NSButton		*backgroundEnabled;
 	IBOutlet	NSColorWell		*backgroundColor;
 	IBOutlet	NSColorWell		*backgroundGradientColor;
 	
