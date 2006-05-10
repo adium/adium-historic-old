@@ -713,9 +713,6 @@ NSData *decode_dns(char* buffer, unsigned int len )
 	    
     /* get the mach port */
     mach_port = DNSServiceDiscoveryMachPort(dns_client);
-    
-	/* free our dns_service_discovery_ref */
-	DNSServiceDiscoveryDeallocate(dns_client);
 	
     /* if we got a port */
     if (mach_port) {
