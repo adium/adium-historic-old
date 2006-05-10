@@ -357,7 +357,7 @@ Class LogViewerWindowControllerClass = NULL;
 #ifdef XML_LOGGING
 	/*
 		Procedure will be the following:
-		- look the AIXMLAppender for the object and account, creating one if necessary. will probably be in another method.
+		- look up the AIXMLAppender for the object and account, creating one if necessary. will probably be in another method.
 		- switch on the content type, and append the XML tag (farm this out to helper methods?)
 	*/
 #else
