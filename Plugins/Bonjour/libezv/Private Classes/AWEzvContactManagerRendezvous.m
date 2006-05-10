@@ -200,9 +200,11 @@ void av_resolve_reply (struct sockaddr	*interface,
 		[self disconnect];
     }
     
-    avInstanceName = [NSString stringWithFormat:@"%@@%@",
-		SCDynamicStoreCopyConsoleUser(NULL, NULL, NULL),
-		SCDynamicStoreCopyComputerName(NULL, NULL)];
+	CFStringRef consoleUser = SCDynamicStoreCopyConsoleUser(NULL, NULL, NULL);
+	CFStringRef computerName = SCDynamicStoreCopyComputerName(NULL, NULL);
+    avInstanceName = [NSString stringWithFormat:@"%@@%@", consoleUser, computerName];
+	CFRelease(consoleUser);
+	CFRelease(computerName);
     myavname = [avInstanceName retain];
     
     /* register service with mDNSResponder */
