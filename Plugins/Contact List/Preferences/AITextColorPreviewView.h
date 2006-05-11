@@ -21,7 +21,7 @@
 	IBOutlet	NSButton		*backgroundEnabled;
 	IBOutlet	NSColorWell		*backgroundColor;
 	IBOutlet	NSColorWell		*backgroundGradientColor;
-	
+
 	NSColor		*backColorOverride;
 }
 
