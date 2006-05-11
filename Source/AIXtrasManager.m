@@ -182,6 +182,8 @@ static AIXtrasManager * manager;
 
 - (NSArray *)xtrasForCategoryAtIndex:(int)inIndex
 {
+	if (inIndex = -1) return nil;
+
 	NSDictionary	*xtrasDict = [categories objectAtIndex:inIndex];
 	NSArray			*xtras;
 	
@@ -210,15 +212,13 @@ static AIXtrasManager * manager;
 
 - (void) updatePreview
 {
-	AIXtraInfo * xtra = nil;
-	
-	if([selectedCategory count] > 0 && [xtraList selectedRow] != NSNotFound)
-	{
+	AIXtraInfo *xtra = nil;
+
+	if ([selectedCategory count] > 0 && [xtraList selectedRow] != -1) {
 		xtra = [selectedCategory objectAtIndex:[xtraList selectedRow]];
 	}
 
-	if(xtra)
-	{
+	if (xtra) {
 		[showInfoControl setHidden:NO];
 		if(showInfo)
 			[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
@@ -240,8 +240,7 @@ static AIXtrasManager * manager;
 				[showInfoControl setHidden:YES];
 			}*/
 		}
-		if(previewController/* && previewContainerView*/)
-		{
+		if (previewController/* && previewContainerView*/) {
 			NSView *pv = [previewController previewView];
 			NSSize docSize = [previewContainerView documentVisibleRect].size;
 			NSRect viewFrame = [pv frame];
@@ -379,8 +378,7 @@ static AIXtrasManager * manager;
 {
 	if (tableView == sidebar) {
 		return [categoryNames objectAtIndex:row];
-	}
-	else {
+	} else {
 		NSString * name = [[selectedCategory objectAtIndex:row] name];
 		return (name != nil) ? name : @"";
 	}
