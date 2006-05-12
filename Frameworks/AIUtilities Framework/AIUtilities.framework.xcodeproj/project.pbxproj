@@ -1851,6 +1851,7 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
@@ -1902,6 +1903,7 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
 			};
 			name = "Deployment-Debug";
 		};
@@ -1983,6 +1985,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				SYMROOT = ../../build;
 			};
 			name = Development;
 		};
@@ -1998,6 +2001,7 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
 			};
 			name = Deployment;
 		};
