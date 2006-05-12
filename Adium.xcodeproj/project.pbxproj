@@ -575,7 +575,6 @@
 		348FF84A09128D6300A942A8 /* AccountDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 348FF84909128D6300A942A8 /* AccountDefaults.plist */; };
 		34943DEF07BAD918000F2A03 /* AccountPrivacy.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34943DEE07BAD918000F2A03 /* AccountPrivacy.nib */; };
 		3496A8C207CE6B880055BBAB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3496A8C107CE6B880055BBAB /* InfoPlist.strings */; };
-		3496A8F407CE6D050055BBAB /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */; };
 		349710DD096C4C7700699948 /* Buttons.strings in Resources */ = {isa = PBXBuildFile; fileRef = 349710DB096C4C7700699948 /* Buttons.strings */; };
 		3497CBAF09BA0B5D00C0428E /* ESIRCJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CBAD09BA0B5D00C0428E /* ESIRCJoinChatViewController.h */; };
 		3497CBB009BA0B5D00C0428E /* ESIRCJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3497CBAE09BA0B5D00C0428E /* ESIRCJoinChatViewController.m */; };
@@ -2547,7 +2546,6 @@
 		349448C207BB29B2000F2A03 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		3496A8BF07CE6B3D0055BBAB /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIHyperlinks.framework.xcodeproj; path = "Frameworks/AIHyperlinks Framework/AIHyperlinks.framework.xcodeproj"; sourceTree = "<group>"; };
-		3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AIHyperlinks.framework; path = "Frameworks/AIHyperlinks Framework/build/AIHyperlinks.framework"; sourceTree = "<group>"; };
 		349710CA096C4C2300699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = "Plugins/Gaim Service/en_AU.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		349710CB096C4C2300699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = Resources/en_AU.lproj/Localizable.strings; sourceTree = "<group>"; };
 		349710CC096C4C2300699948 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = "Plugins/WebKit Message View/en_AU.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -3811,7 +3809,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				34D835D907CBED8F006466F2 /* AIUtilities.framework in Frameworks */,
-				3496A8F407CE6D050055BBAB /* AIHyperlinks.framework in Frameworks */,
 				3448758E06D1EBDF00DA778C /* Cocoa.framework in Frameworks */,
 				3419F7760531512200C68BA3 /* Adium.framework in Frameworks */,
 				34BD9D5A053146CC000AB133 /* Carbon.framework in Frameworks */,
@@ -4032,7 +4029,6 @@
 				115E0E8D0952514A003218FE /* JavaVM.framework */,
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
 				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
-				3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */,
 				341BDBBA0968BC9A00CF83F5 /* OTR.framework */,
 				348E5ACA06D2A74C004C051C /* AddressBook.framework */,
 				F5819CE9032124CE01A8010A /* AppKit.framework */,
@@ -8981,7 +8977,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\necho Symlinking generated frameworks...\n\nif ( ! [ -e \"$BUILT_PRODUCTS_DIR\" ] ); then\n\tmkdir -p \"$BUILT_PRODUCTS_DIR\"\nfi\n\nAIUTILITIES_FRAMEWORK=\"$SRCROOT/Frameworks/AIUtilities Framework/build/$CONFIGURATION/AIUtilities.framework\"\n\nif ( [ -d \"$AIUTILITIES_FRAMEWORK\" ] ); then\n\tif ( ! [ -e \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\" ] ); then\n\t\tln -fs \"$AIUTILITIES_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\"\n\tfi\nfi\n\nAIHYPERLINKS_FRAMEWORK=\"$SRCROOT/Frameworks/AIHyperlinks Framework/build/$CONFIGURATION/AIHyperlinks.framework\"\nif ( [ -d \"$AIHYPERLINKS_FRAMEWORK\" ] ); then\n\tif ( ! [ -e \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\" ] ); then\n\t\tln -fs \"$AIHYPERLINKS_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\"\n\tfi\nfi\n\nGROWLWITHINSTALLER_FRAMEWORK=\"$SRCROOT/Frameworks/Growl-WithInstaller.Framework\"\nif ( [ -d \"$GROWLWITHINSTALLER_FRAMEWORK\" ] ;) then\n\tif ( ! [ -e \"$BUILT_PRODUCTS_DIR/Growl-WithInstaller.framework\" ] ); then\n\t\tln -fs \"$GROWLWITHINSTALLER_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/Growl-WithInstaller.framework\"\n\tfi\nfi\n\nSPOTLIGHT=\"$SRCROOT/Other/Adium Spotlight Importer/build/$CONFIGURATION/AdiumSpotlightImporter.mdimporter\"\nif ( [ -d \"$SPOTLIGHT\" ] ;) then\n\tif ( ! [ -e \"$BUILT_PRODUCTS_DIR/AdiumSpotlightImporter.mdimporter\" ] ); then\n\t\tln -fs \"$SPOTLIGHT\" \"$BUILT_PRODUCTS_DIR/AdiumSpotlightImporter.mdimporter\"\n\tfi\nfi\n\n";
+			shellScript = "#!/bin/sh\n\necho Symlinking generated frameworks...\n\nif ( ! [ -e \"$BUILT_PRODUCTS_DIR\" ] ); then\n\tmkdir -p \"$BUILT_PRODUCTS_DIR\"\nfi\n\nGROWLWITHINSTALLER_FRAMEWORK=\"$SRCROOT/Frameworks/Growl-WithInstaller.Framework\"\nif ( [ -d \"$GROWLWITHINSTALLER_FRAMEWORK\" ] ;) then\n\tif ( ! [ -e \"$BUILT_PRODUCTS_DIR/Growl-WithInstaller.framework\" ] ); then\n\t\tln -fs \"$GROWLWITHINSTALLER_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/Growl-WithInstaller.framework\"\n\tfi\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 

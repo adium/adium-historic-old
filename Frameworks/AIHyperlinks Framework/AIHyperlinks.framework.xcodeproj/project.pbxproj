@@ -298,6 +298,7 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = "Deployment-Debug_PPC-Only";
@@ -341,6 +342,7 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = "Deployment-Debug";
@@ -406,6 +408,7 @@
 		DA8A8088085549EE00F24BB3 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				SYMROOT = ../../build;
 			};
 			name = Development;
 		};
@@ -420,6 +423,7 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Deployment;
