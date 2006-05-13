@@ -219,7 +219,7 @@ static AIXtrasManager * manager;
 	}
 
 	if (xtra) {
-		[showInfoControl setHidden:NO];
+		//[showInfoControl setHidden:NO];
 		if(showInfo)
 			[NSBundle loadNibNamed:@"XtraInfoView" owner:self];
 		else {
