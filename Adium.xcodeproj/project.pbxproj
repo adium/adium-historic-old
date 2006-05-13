@@ -1382,6 +1382,7 @@
 		F51BCD3B0A156261000FDC06 /* AIHyperlinks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
 		F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */; };
+		F51BCEEA0A15793E000FDC06 /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
@@ -3823,6 +3824,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F51BCEEA0A15793E000FDC06 /* AIHyperlinks.framework in Frameworks */,
 				34D835D907CBED8F006466F2 /* AIUtilities.framework in Frameworks */,
 				3448758E06D1EBDF00DA778C /* Cocoa.framework in Frameworks */,
 				3419F7760531512200C68BA3 /* Adium.framework in Frameworks */,
