@@ -30,7 +30,6 @@
 			buildConfigurationList = DACF3EDE085574F6006BFB18 /* Build configuration list for PBXAggregateTarget "External Frameworks" */;
 			buildPhases = (
 				34CF9EEF085B98D400D87E37 /* ShellScript */,
-				DACF3ED2085574D0006BFB18 /* ShellScript */,
 			);
 			buildSettings = {
 				OPTIMIZATION_CFLAGS = "";
@@ -8145,7 +8144,6 @@
 				4B7F277E05440C0800CDFC90 /* Headers */,
 				07D43998084E5A4B00BFFF05 /* ShellScript */,
 				4BDF2C97061E377E00EA75C5 /* CopyFiles */,
-				344ECA570620A04E007256C6 /* ShellScript */,
 				4B7F278005440C0800CDFC90 /* Sources */,
 				4B7F278105440C0800CDFC90 /* Frameworks */,
 			);
@@ -8867,14 +8865,14 @@
 			files = (
 			);
 			inputPaths = (
-				"Plugins/Gaim Service/Libgaim.framework",
 				"Plugins/Gaim Service/Libgaim.framework/Versions/A/libgaim",
 			);
 			outputPaths = (
+				"Plugins/Gaim Service/Libgaim.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/zsh\n\n#we use Xcode's dependency-resolution to determine when this script should be run.\ntouch \"${SCRIPT_INPUT_FILE_0}\"\n";
+			shellScript = "#!/bin/zsh\n\n#we use Xcode's dependency-resolution to determine when this script should be run.\ntouch \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 		};
 		340BABD409EC8C6C000EC441 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8889,19 +8887,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "ranlib \"${SCRIPT_INPUT_FILE_0}\"";
-		};
-		344ECA570620A04E007256C6 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "## Fix Libgaim.framework symlinks\ncd \"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Libgaim.framework\"\nln -sf ${FRAMEWORK_VERSION} Versions/Current\nln -sf Versions/Current/Headers Headers\nln -sf Versions/Current/Libgaim Libgaim\nln -sf Versions/Current/Resources Resources\n";
 		};
 		345DFF4A05564DB200CEE7B3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8937,6 +8922,10 @@
 			inputPaths = (
 			);
 			outputPaths = (
+				"$SRCROOT/Frameworks/Growl-WithInstaller.framework/Versions/Current",
+				"$SRCROOT/Frameworks/Growl-WithInstaller.framework/Headers",
+				"$SRCROOT/Frameworks/Growl-WithInstaller.framework/Growl-WithInstaller",
+				"$SRCROOT/Frameworks/Growl-WithInstaller.framework/Resources",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -8950,6 +8939,7 @@
 			inputPaths = (
 			);
 			outputPaths = (
+				"${BUILT_PRODUCTS_DIR}/Adium Crash Reporter.app/Contents/Frameworks",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -8967,19 +8957,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Delete .svn, .DS_Store, and .h files\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' \\;\n\n####\n\n# Move English.lproj folders to en.lproj folders...\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -depth -type d -name 'English.lproj' -exec ditto \"{}\" \"{}/../en.lproj\" \\;\n\n# And delete the old English.lproj folders\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -depth -type d -name 'English.lproj' -exec rm -rf \"{}\" \\;";
-		};
-		DACF3ED2085574D0006BFB18 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\necho Symlinking generated frameworks...\n\nif ( ! [ -e \"$BUILT_PRODUCTS_DIR\" ] ); then\n\tmkdir -p \"$BUILT_PRODUCTS_DIR\"\nfi\n\nGROWLWITHINSTALLER_FRAMEWORK=\"$SRCROOT/Frameworks/Growl-WithInstaller.Framework\"\nif ( [ -d \"$GROWLWITHINSTALLER_FRAMEWORK\" ] ;) then\n\tif ( ! [ -e \"$BUILT_PRODUCTS_DIR/Growl-WithInstaller.framework\" ] ); then\n\t\tln -fs \"$GROWLWITHINSTALLER_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/Growl-WithInstaller.framework\"\n\tfi\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
