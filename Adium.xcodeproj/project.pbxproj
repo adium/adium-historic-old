@@ -8871,8 +8871,6 @@
 				"Plugins/Gaim Service/Libgaim.framework/Versions/A/libgaim",
 			);
 			outputPaths = (
-				$BUILD_DIR/$WRAPPER_NAME/Contents/Frameworks/Libgaim.framework,
-				$BUILD_DIR/$WRAPPER_NAME/Contents/Frameworks/Libgaim.framework/Versions/A/libgaim,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
