@@ -182,7 +182,7 @@ static AIXtrasManager * manager;
 
 - (NSArray *)xtrasForCategoryAtIndex:(int)inIndex
 {
-	if (inIndex = -1) return nil;
+	if (inIndex == -1) return nil;
 
 	NSDictionary	*xtrasDict = [categories objectAtIndex:inIndex];
 	NSArray			*xtras;
