@@ -1379,6 +1379,9 @@
 		EEC461B7096D68580028632F /* OWSpellingPerContactPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = EEC461B5096D68580028632F /* OWSpellingPerContactPlugin.h */; };
 		F50A75A20A0AE77A00A6D1BA /* GBFireImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */; };
 		F50A75A30A0AE77A00A6D1BA /* GBFireImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */; };
+		F51BCD3B0A156261000FDC06 /* AIHyperlinks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
+		F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
@@ -1732,6 +1735,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				F51BCD3B0A156261000FDC06 /* AIHyperlinks.framework in CopyFiles */,
+				F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */,
 				6383935009D4D6AA0067B9B7 /* Sparkle.framework in CopyFiles */,
 				341BDBBB0968BC9B00CF83F5 /* OTR.framework in CopyFiles */,
 				3419FE230531586A00C68BA3 /* Adium.framework in CopyFiles */,
@@ -1776,6 +1781,16 @@
 				4BF2EA3F067CB7A200743318 /* Emoticons in CopyFiles */,
 				4BF2EA40067CB7A200743318 /* Message Styles in CopyFiles */,
 				4BB1E493067F2EAC00D1DB86 /* Scripts in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F51BCD3E0A156281000FDC06 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/Spotlight;
+			dstSubfolderSpec = 1;
+			files = (
+				F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7941,7 +7956,7 @@
 				34BD9D24053146CC000AB133 /* Resources */,
 				34BD9D42053146CC000AB133 /* Sources */,
 				34BD9D57053146CC000AB133 /* Frameworks */,
-				34CF9F57085BA90200D87E37 /* ShellScript */,
+				F51BCD3E0A156281000FDC06 /* CopyFiles */,
 				34BD9D5F053146CC000AB133 /* CopyFiles */,
 				4BF2E91F067CB76300743318 /* CopyFiles */,
 				34BD9D6A053146CC000AB133 /* CopyFiles */,
@@ -8926,19 +8941,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\n#Versions\ncd \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\n\ncd Versions\nif ( ! [ -e Current ]); then\n\tln -sf $FRAMEWORK_VERSION Current\nfi\ncd \"$OLDPWD\"\n\n#Root\nif ( ! [ -e Headers ]); then\n\tln -sf Versions/Current/Headers   Headers\nfi\n\n\nif ( ! [ -e Growl-WithInstaller ]); then\n\tln -sf Versions/Current/Growl-WithInstaller   Growl-WithInstaller\nfi\n\nif ( ! [ -e Resources ]); then\n\tln -sf Versions/Current/Resources Resources\nfi\n";
-		};
-		34CF9F57085BA90200D87E37 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\necho \"Copying external frameworks into Adium.app\"\n\nPBXCP=\"/System/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks\"\nFRAMEWORKS_DIR=\"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Frameworks\"\n\nif ( ! [ -e \"$FRAMEWORKS_DIR\" ]); then\n\tmkdir \"$FRAMEWORKS_DIR\"\nfi\n\n#Copy AIUtilities.framework\necho $PBXCP \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\" \"$FRAMEWORKS_DIR\"\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIHyperlinks.framework\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\" \"$FRAMEWORKS_DIR\"\n\nSPOTLIGHT_DIR=\"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Library/Spotlight\"\n\nif ( ! [ -e \"$SPOTLIGHT_DIR\" ]); then\n\tmkdir -p \"$SPOTLIGHT_DIR\"\nfi\n\n#Copy AdiumSpotlightImporter.mdimporter\n$PBXCP \"$BUILT_PRODUCTS_DIR/AdiumSpotlightImporter.mdimporter\" \"$SPOTLIGHT_DIR\"\n";
 		};
 		4BC8AABA059A33B400F940E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
