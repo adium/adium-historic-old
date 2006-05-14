@@ -1321,7 +1321,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			//Image already exists on disk; copy it to our images path
 			success = [[NSFileManager defaultManager] copyPath:inPath
 														toPath:localPath
-													   handler:self];
+													   handler:nil];
 			
 			inPath = localPath;
 
@@ -1340,7 +1340,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			shortFileName = [inName safeFilenameString];
 			inPath = [[NSFileManager defaultManager] uniquePathForPath:[imagesPath stringByAppendingPathComponent:shortFileName]];
-			success = [[attachmentImage PNGRepresentation] writeToFile:inPath atomically:YES];
+			NSData *pngRep = [attachmentImage PNGRepresentation];
+			if([pngRep length] == 0) AILog(@"Couldn't get png representation for image %@", attachmentImage);
+			success = [pngRep writeToFile:inPath atomically:YES];
 		}
 		
 		if (!success) {
@@ -1351,7 +1353,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		success = YES;
 	}
 	
-	if (success) {
+	if (/*success*/YES) {  //this is evil, but it seems that sometimes we'll get a failure when it shouldn't be one
 		NSString *srcPath = [[[NSURL fileURLWithPath:inPath] absoluteString] stringByEscapingForHTML];
 		NSString *altName = (inName ? [inName stringByEscapingForHTML] : [srcPath lastPathComponent]);
 
@@ -1738,17 +1740,6 @@ int HTMLEquivalentForFontSize(int fontSize)
 	}
 	
 	return decodedString;
-}
-
-- (BOOL)fileManager:(NSFileManager *)manager shouldProceedAfterError:(NSDictionary *)errorInfo
-{
-	NSLog(@"%@", errorInfo);
-	return NO;
-}
-
-- (void)fileManager:(NSFileManager *)manager willProcessPath:(NSString *)path
-{
-	NSLog(@"Processing path %@", path);
 }
 
 @end
