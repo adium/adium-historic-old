@@ -8997,7 +8997,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "OUTPUT=\"$TARGET_BUILD_DIR/include/PlistMacros.h\"\nPATH=$PATH:/usr/local/bin:/usr/bin:/sw/bin:/opt/local/bin\nbuildid=\"r`svn info | grep -F Revision | sed \"s/^.*: \\(.*\\)$/\\1/\"`\"\n\nif [[ $buildid == \"r\" ]]; then\n\tbuildid=\"r`perl Utilities/svkRevNum.pl .`\"\nfi\n\necho \"#define BUILDID $buildid\" > $OUTPUT\necho \"#define BUILDDATE `date +%s`\" >> $OUTPUT\necho \"#define WHOAMI `whoami`\" >> $OUTPUT";
+			shellScript = "OUTPUT=\"$TARGET_BUILD_DIR/include/PlistMacros.h\"\nPATH=$PATH:/usr/local/bin:/usr/bin:/sw/bin:/opt/local/bin\nbuildid=\"r`svn info | grep -F Revision | awk '{print $2}'`\"\n\nif [[ $buildid == \"r\" ]]; then\n\tbuildid=\"r`perl Utilities/svkRevNum.pl .`\"\nfi\n\necho \"#define BUILDID $buildid\" > $OUTPUT\necho \"#define BUILDDATE `date +%s`\" >> $OUTPUT\necho \"#define WHOAMI `whoami`\" >> $OUTPUT";
 		};
 /* End PBXShellScriptBuildPhase section */
 
