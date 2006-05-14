@@ -1321,7 +1321,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			//Image already exists on disk; copy it to our images path
 			success = [[NSFileManager defaultManager] copyPath:inPath
 														toPath:localPath
-													   handler:NULL];
+													   handler:self];
 			
 			inPath = localPath;
 
@@ -1738,6 +1738,17 @@ int HTMLEquivalentForFontSize(int fontSize)
 	}
 	
 	return decodedString;
+}
+
+- (BOOL)fileManager:(NSFileManager *)manager shouldProceedAfterError:(NSDictionary *)errorInfo
+{
+	NSLog(@"%@", errorInfo);
+	return NO;
+}
+
+- (void)fileManager:(NSFileManager *)manager willProcessPath:(NSString *)path
+{
+	NSLog(@"Processing path %@", path);
 }
 
 @end
