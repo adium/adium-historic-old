@@ -8988,16 +8988,18 @@
 		};
 		F5B17CCE0A16C6AC004AE99E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
 			);
 			outputPaths = (
+				"$(TARGET_BUILD_DIR)/include/PlistMacros.h",
+				"$(TARGET_BUILD_DIR)/include/DummyFileToForceScriptToRunEveryTimeWithoutBeingCreated",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "OUTPUT=\"$TARGET_BUILD_DIR/include/PlistMacros.h\"\nPATH=$PATH:/usr/local/bin:/usr/bin:/sw/bin:/opt/local/bin\nbuildid=\"r`svn info | grep -F Revision | awk '{print $2}'`\"\n\nif [[ $buildid == \"r\" ]]; then\n\tbuildid=\"r`perl Utilities/svkRevNum.pl .`\"\nfi\n\necho \"#define BUILDID $buildid\" > $OUTPUT\necho \"#define BUILDDATE `date +%s`\" >> $OUTPUT\necho \"#define WHOAMI `whoami`\" >> $OUTPUT";
+			shellScript = "PATH=$PATH:/usr/local/bin:/usr/bin:/sw/bin:/opt/local/bin\nbuildid=\"r`svn info | grep -F Revision | awk '{print $2}'`\"\n\nif [[ $buildid == \"r\" ]]; then\n\tbuildid=\"r`perl Utilities/svkRevNum.pl .`\"\nfi\n\necho \"#define BUILDID $buildid\" > $SCRIPT_OUTPUT_FILE_0\necho \"#define BUILDDATE `date +%s`\" >> $SCRIPT_OUTPUT_FILE_0\necho \"#define WHOAMI `whoami`\" >> $SCRIPT_OUTPUT_FILE_0";
 		};
 /* End PBXShellScriptBuildPhase section */
 
