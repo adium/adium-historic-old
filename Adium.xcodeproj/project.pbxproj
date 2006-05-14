@@ -52,6 +52,20 @@
 			name = "External Frameworks";
 			productName = "External Frameworks";
 		};
+		F5B17CCF0A16C6AC004AE99E /* Plist Macros */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = F5B17CD70A16C6BA004AE99E /* Build configuration list for PBXAggregateTarget "Plist Macros" */;
+			buildPhases = (
+				F5B17CCE0A16C6AC004AE99E /* ShellScript */,
+			);
+			buildSettings = {
+				PRODUCT_NAME = "Plist Macros";
+			};
+			dependencies = (
+			);
+			name = "Plist Macros";
+			productName = "Plist Macros";
+		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
@@ -1664,6 +1678,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 4947F5BC0655E85200B791E5;
 			remoteInfo = Bonjour;
+		};
+		F5B17CDE0A16C767004AE99E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F5B17CCF0A16C6AC004AE99E;
+			remoteInfo = "Plist Macros";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -8001,6 +8022,7 @@
 				34677B3F07CC3E8400F59F7B /* PBXTargetDependency */,
 				349C31630867D199000BF883 /* PBXTargetDependency */,
 				11F5F42C09537E00007DCC49 /* PBXTargetDependency */,
+				F5B17CDF0A16C767004AE99E /* PBXTargetDependency */,
 			);
 			name = Adium;
 			productInstallPath = /;
@@ -8398,6 +8420,7 @@
 				347A210E09786B5F00A30431 /* SystemVersionCheck */,
 				34B322F609B9FEAC00029361 /* IRC Service Libgaim Plugin */,
 				3417D25009C332B900FC413E /* Translator */,
+				F5B17CCF0A16C6AC004AE99E /* Plist Macros */,
 			);
 		};
 /* End PBXProject section */
@@ -8894,12 +8917,17 @@
 			files = (
 			);
 			inputPaths = (
+				$TARGET_BUILD_DIR/include/PlistMacros.h,
+				"$(SRCROOT)/Plists/version.plist",
+				"$(SRCROOT)/Plists/buildnum",
 			);
 			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/version.plist",
+				"$(BUILT_PRODUCTS_DIR)/Adium.app/Contents/Resources/buildnum",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "PATH=$PATH:/usr/local/bin:/usr/bin:/sw/bin:/opt/local/bin\nbuildid=\"r`svn info | grep -F Revision | sed \"s/^.*: \\(.*\\)$/\\1/\"`\"\nbuilddate=`date +%s`\nme=`whoami`\n\nif [[ $buildid == \"r\" ]]; then\n\tbuildid=\"r`perl Utilities/svkRevNum.pl .`\"\nfi\n\n\ncp \"Plists/Adium_2.plist\" \"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Info.plist\"\nperl -pi -e \"s/%%BUILD_IDENTIFIER%%/`echo \"$buildid\" | sed 's/@/ %%at%% /'`/\" \"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Info.plist\"\nperl -pi -e \"s/ %%at%% /@/\" \"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Info.plist\"\nperl -pi -e \"s/%%BUILD_DATE%%/$builddate/\" \"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Info.plist\"\nbuildver=`defaults read $TARGET_BUILD_DIR/Adium.app/Contents/Info \"CFBundleShortVersionString\"`\n\necho \\<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?\\>\\<!DOCTYPE plist PUBLIC \\\"-//Apple Computer//DTD PLIST 1.0//EN\\\" \\\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\\\"\\>\\<plist version=\\\"1.0\\\"\\>\\<dict\\>\\<key\\>adium-version\\</key\\>\\<real\\>$builddate\\</real\\>\\<key\\>adium-version-num\\</key\\>\\<string\\>$buildver\\</string\\>\\<key\\>adium-beta-version-num\\</key\\>\\<string\\>$buildver\\</string\\>\\<key\\>adium-beta-version\\</key\\>\\<real\\>$builddate\\</real\\>\\</dict\\>\\</plist\\> > \"$BUILT_PRODUCTS_DIR/version.plist\"\n\necho $buildid \"|\" $builddate \"|\" $me > \"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Resources/buildnum\"\n\necho \"Generated a buildid of\" $buildid \"on\" $builddate\".\"\n";
+			shellScript = "gcc -E -P -x c -Wno-trigraphs -include \"$SCRIPT_INPUT_FILE_0\" -C \"$SCRIPT_INPUT_FILE_1\" -o \"$SCRIPT_OUTPUT_FILE_0\"\ngcc -E -P -x c -Wno-trigraphs -include \"$SCRIPT_INPUT_FILE_0\" -C \"$SCRIPT_INPUT_FILE_2\" -o \"$SCRIPT_OUTPUT_FILE_1\"";
 		};
 		347A21AC09786C5100A30431 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8957,6 +8985,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Delete .svn, .DS_Store, and .h files\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' \\;\n\n####\n\n# Move English.lproj folders to en.lproj folders...\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -depth -type d -name 'English.lproj' -exec ditto \"{}\" \"{}/../en.lproj\" \\;\n\n# And delete the old English.lproj folders\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -depth -type d -name 'English.lproj' -exec rm -rf \"{}\" \\;";
+		};
+		F5B17CCE0A16C6AC004AE99E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "OUTPUT=\"$TARGET_BUILD_DIR/include/PlistMacros.h\"\nPATH=$PATH:/usr/local/bin:/usr/bin:/sw/bin:/opt/local/bin\nbuildid=\"r`svn info | grep -F Revision | sed \"s/^.*: \\(.*\\)$/\\1/\"`\"\nbuilddate=`date +%s`\nme=`whoami`\n\nif [[ $buildid == \"r\" ]]; then\n\tbuildid=\"r`perl Utilities/svkRevNum.pl .`\"\nfi\n\necho \"#define BUILDID $buildid\" > $OUTPUT\necho \"#define BUILDDATE $builddate\" >> $OUTPUT\necho \"#define WHOAMI $me\" >> $OUTPUT";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -9663,6 +9704,11 @@
 			isa = PBXTargetDependency;
 			target = 4947F5BC0655E85200B791E5 /* Bonjour */;
 			targetProxy = DA70F2B1080CAE8200C72D8B /* PBXContainerItemProxy */;
+		};
+		F5B17CDF0A16C767004AE99E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F5B17CCF0A16C6AC004AE99E /* Plist Macros */;
+			targetProxy = F5B17CDE0A16C767004AE99E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -11304,6 +11350,9 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Adium_2.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
+				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
+				INFOPLIST_PREPROCESS = YES;
 				PRODUCT_NAME = Adium;
 			};
 			name = "Deployment-Debug_PPC-Only";
@@ -11804,6 +11853,9 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Adium_2.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
+				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
+				INFOPLIST_PREPROCESS = YES;
 				PRODUCT_NAME = Adium;
 			};
 			name = Development;
@@ -11825,6 +11877,9 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Adium_2.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
+				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
+				INFOPLIST_PREPROCESS = YES;
 				PRODUCT_NAME = Adium;
 			};
 			name = Deployment;
@@ -11846,6 +11901,9 @@
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Adium_2.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
+				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
+				INFOPLIST_PREPROCESS = YES;
 				PRODUCT_NAME = Adium;
 			};
 			name = "Deployment-Debug";
@@ -12157,6 +12215,42 @@
 			};
 			name = "Deployment-Debug";
 		};
+		F5B17CD80A16C6BA004AE99E /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Plist Macros";
+			};
+			name = Development;
+		};
+		F5B17CD90A16C6BA004AE99E /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Plist Macros";
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		F5B17CDA0A16C6BA004AE99E /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "Plist Macros";
+			};
+			name = "Deployment-Debug";
+		};
+		F5B17CDB0A16C6BA004AE99E /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "Plist Macros";
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -12365,6 +12459,17 @@
 				DADE8E3C085507450062B664 /* Deployment */,
 				DADE8E3D085507450062B664 /* Deployment-Debug */,
 				34BAF9900942598800689991 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		F5B17CD70A16C6BA004AE99E /* Build configuration list for PBXAggregateTarget "Plist Macros" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5B17CD80A16C6BA004AE99E /* Development */,
+				F5B17CD90A16C6BA004AE99E /* Deployment */,
+				F5B17CDA0A16C6BA004AE99E /* Deployment-Debug */,
+				F5B17CDB0A16C6BA004AE99E /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
