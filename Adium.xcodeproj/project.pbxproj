@@ -8931,16 +8931,16 @@
 		};
 		347A21AC09786C5100A30431 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "if [ ! \"$CONFIGURATION\" = \"Development\" ]; then\n\nWORK_DIRECTORY_PATH=\"${BUILT_PRODUCTS_DIR}/SystemVersionCheck-script_wd\"\nRESULTS_DIRECTORY_PATH=\"${WORK_DIRECTORY_PATH}/Results\"\nSVC_EXECUTABLE_PATH=\"${WORK_DIRECTORY_PATH}/SystemVersionCheck\"\n\nif [ ! -f \"${SVC_EXECUTABLE_PATH}\" ]; then\n    echo \"Missing SystemVersionCheck file\"\n    exit 1\nfi\n\nrm -rf \"${RESULTS_DIRECTORY_PATH}\"\n\nORIG_APP_WRAPPER_PATH=`find ${WORK_DIRECTORY_PATH} -name '*.app' | head -n 1`\n\nif [ ! -d \"${ORIG_APP_WRAPPER_PATH}\" ]; then\n    echo \"Missing application\"\n    exit 1\nfi\n\nAPP_WRAPPER_NAME=`basename \"${ORIG_APP_WRAPPER_PATH}\"`\nAPP_WRAPPER_PATH=\"${RESULTS_DIRECTORY_PATH}/${APP_WRAPPER_NAME}\"\n\nmkdir -p \"${RESULTS_DIRECTORY_PATH}\"\n\ncp -Rp \"${ORIG_APP_WRAPPER_PATH}\" \"${APP_WRAPPER_PATH}\"\n\nAPP_EXECUTABLE_NAME=`basename \"${APP_WRAPPER_NAME}\" .app`\nAPP_EXECUTABLE_PATH=\"${APP_WRAPPER_PATH}/Contents/MacOS/${APP_EXECUTABLE_NAME}\"\n\necho \"Installing SystemVersionCheck\"\nmv \"${APP_EXECUTABLE_PATH}\" \"${APP_EXECUTABLE_PATH}.real\" \ncp \"${SVC_EXECUTABLE_PATH}\" \"${APP_EXECUTABLE_PATH}\"\nchmod a+x \"${APP_EXECUTABLE_PATH}\"\n\nrm -rf \"${BUILT_PRODUCTS_DIR}/Adium.app\"\nmv \"${APP_WRAPPER_PATH}\" \"`dirname ${APP_WRAPPER_PATH}`/../../\"\nrm -rf \"`dirname ${APP_WRAPPER_PATH}`/../\"\n\nfi";
+			shellScript = "if [ ! \"$CONFIGURATION\" = \"Development\" ]; then\n\nWORK_DIRECTORY_PATH=\"${BUILT_PRODUCTS_DIR}/SystemVersionCheck-script_wd\"\nRESULTS_DIRECTORY_PATH=\"${WORK_DIRECTORY_PATH}/Results\"\nSVC_EXECUTABLE_PATH=\"${WORK_DIRECTORY_PATH}/SystemVersionCheck\"\n\nif [ ! -f \"${SVC_EXECUTABLE_PATH}\" ]; then\n    echo \"Missing SystemVersionCheck file\"\n    exit 1\nfi\n\nrm -rf \"${RESULTS_DIRECTORY_PATH}\"\n\nORIG_APP_WRAPPER_PATH=`find ${WORK_DIRECTORY_PATH} -name '*.app' | head -n 1`\n\nif [ ! -d \"${ORIG_APP_WRAPPER_PATH}\" ]; then\n    echo \"Missing application\"\n    exit 1\nfi\n\nAPP_WRAPPER_NAME=`basename \"${ORIG_APP_WRAPPER_PATH}\"`\nAPP_WRAPPER_PATH=\"${RESULTS_DIRECTORY_PATH}/${APP_WRAPPER_NAME}\"\n\nmkdir -p \"${RESULTS_DIRECTORY_PATH}\"\n\ncp -Rp \"${ORIG_APP_WRAPPER_PATH}\" \"${APP_WRAPPER_PATH}\"\n\nAPP_EXECUTABLE_NAME=`basename \"${APP_WRAPPER_NAME}\" .app`\nAPP_EXECUTABLE_PATH=\"${APP_WRAPPER_PATH}/Contents/MacOS/${APP_EXECUTABLE_NAME}\"\n\necho \"Installing SystemVersionCheck\"\nmv \"${APP_EXECUTABLE_PATH}\" \"${APP_EXECUTABLE_PATH}.real\" \ncp \"${SVC_EXECUTABLE_PATH}\" \"${APP_EXECUTABLE_PATH}\"\nchmod a+x \"${APP_EXECUTABLE_PATH}\"\n\nrm -rf \"${BUILT_PRODUCTS_DIR}/Adium.app\"\nmv \"${APP_WRAPPER_PATH}\" \"${BUILT_PRODUCTS_DIR}\"\nrm -rf \"${WORK_DIRECTORY_PATH}\"\n\nfi";
 		};
 		34CF9EEF085B98D400D87E37 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
