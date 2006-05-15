@@ -12,8 +12,6 @@
 #import <IOKit/IOMessage.h>
 #import "AISleepNotification.h"
 
-static void callback(void *refcon, io_service_t y, natural_t messageType, void *messageArgument);
-
 /*!
  * @class AISleepNotification
  * @brief Class to notify when the system goes to sleep and wakes from sleep and optionally place a hold on the sleep process.
@@ -34,6 +32,8 @@ static io_connect_t			root_port;
 static int					holdSleep = 0;
 static long unsigned int	waitingSleepArgument;
 
+static void powerServiceInterestCallback(void *refcon, io_service_t y, natural_t messageType, void *messageArgument);
+
 /*!
  * @brief Load, called when the framework is loaded
  *
@@ -52,15 +52,15 @@ static long unsigned int	waitingSleepArgument;
  */
 + (void)initialize
 {
-    IONotificationPortRef	notify;
-    io_object_t				anIterator;
+    IONotificationPortRef	notificationPort;
+    io_object_t				notifier;
 	NSNotificationCenter	*defaultCenter = [NSNotificationCenter defaultCenter];
 
     //Observe system power events
-    root_port = IORegisterForSystemPower(0, &notify, callback, &anIterator);
+    root_port = IORegisterForSystemPower(0, &notificationPort, powerServiceInterestCallback, &notifier);
     if (root_port) {
         CFRunLoopAddSource(CFRunLoopGetCurrent(),
-                           IONotificationPortGetRunLoopSource(notify),
+                           IONotificationPortGetRunLoopSource(notificationPort),
                            kCFRunLoopDefaultMode);
     } else {
 		NSLog(@"AISleepNotification: Could not retrieve root_port from IORegisterForSystemPower(). Sleep notification disabled.");
@@ -111,7 +111,7 @@ static long unsigned int	waitingSleepArgument;
  * @param messageType A messageType enum, defined by IOKit/IOMessage.h.
  * @param messageArgument An argument for the message which we store for use when sleeping later.
  */
-static void callback(void *refcon, io_service_t service, natural_t messageType, void *messageArgument)
+static void powerServiceInterestCallback(void *refcon, io_service_t service, natural_t messageType, void *messageArgument)
 {
     switch ( messageType ) {
         case kIOMessageSystemWillSleep:
