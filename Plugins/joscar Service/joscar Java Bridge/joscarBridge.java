@@ -116,7 +116,7 @@ SecuridProvider
 	
     private static class CoolFormatter extends Formatter {
         private final DateFormat formatter
-                = DateFormat.getTimeInstance(DateFormat.SHORT);
+                = DateFormat.getTimeInstance(DateFormat.FULL);
 
         public String format(LogRecord record) {
             String clname = record.getSourceClassName();
