@@ -12,7 +12,7 @@
 #import <IOKit/IOMessage.h>
 #import "AISleepNotification.h"
 
-void callback(void *refcon, io_service_t y, natural_t messageType, void *messageArgument);
+static void callback(void *refcon, io_service_t y, natural_t messageType, void *messageArgument);
 
 /*!
  * @class AISleepNotification
@@ -111,7 +111,7 @@ static long unsigned int	waitingSleepArgument;
  * @param messageType A messageType enum, defined by IOKit/IOMessage.h.
  * @param messageArgument An argument for the message which we store for use when sleeping later.
  */
-void callback(void *refcon, io_service_t service, natural_t messageType, void *messageArgument)
+static void callback(void *refcon, io_service_t service, natural_t messageType, void *messageArgument)
 {
     switch ( messageType ) {
         case kIOMessageSystemWillSleep:
