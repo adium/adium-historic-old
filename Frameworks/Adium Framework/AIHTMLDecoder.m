@@ -1322,7 +1322,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			success = [[NSFileManager defaultManager] copyPath:inPath
 														toPath:localPath
 													   handler:nil];
-			
+			success = YES;//HAX, testing
 			inPath = localPath;
 
 		} else {
@@ -1353,7 +1353,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		success = YES;
 	}
 	
-	if (/*success*/YES) {  //this is evil, but it seems that sometimes we'll get a failure when it shouldn't be one
+	if (success) {
 		NSString *srcPath = [[[NSURL fileURLWithPath:inPath] absoluteString] stringByEscapingForHTML];
 		NSString *altName = (inName ? [inName stringByEscapingForHTML] : [srcPath lastPathComponent]);
 
