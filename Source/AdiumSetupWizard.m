@@ -24,6 +24,13 @@
 #define WELCOME_IDENTIFIER			@"welcome"
 #define DONE_IDENTIFIER				@"done"
 
+enum{
+	WIZARD_TAB_WELCOME = 0,
+	WIZARD_TAB_FIREIMPORT = 1,
+	WIZARD_TAB_ADD_ACCOUNTS = 2,
+	WIZARD_TAB_DONE = 3
+};
+
 /*!
  * @classs AdiumSetupWizard
  * @brief Class responsible for the first-run setup wizard
@@ -64,7 +71,7 @@
 	[[self window] setTitle:AILocalizedString(@"Adium",nil)];
 
 	//Ensure the first tab view item is selected
-	[tabView selectTabViewItemAtIndex:0];
+	[tabView selectTabViewItemAtIndex:WIZARD_TAB_WELCOME];
 	[self tabView:tabView willSelectTabViewItem:[tabView selectedTabViewItem]];
 
 	//Configure our background view; it should display the image transparently where our tabView overlaps it
@@ -169,7 +176,7 @@
 {
 	NSTabViewItem *currentTabViewItem = [tabView selectedTabViewItem];
 	if ([self didCompleteTabViewItemWithIdentifier:[currentTabViewItem identifier]]) {
-		if ([tabView indexOfTabViewItem:currentTabViewItem] == ([tabView numberOfTabViewItems] - 1)) {
+		if ([tabView indexOfTabViewItem:currentTabViewItem] == WIZARD_TAB_DONE) {
 			//Done
 			[self  close];
 			
@@ -179,7 +186,7 @@
 				[tabView selectNextTabViewItem:self];
 			else
 				//No import; skip it
-				[tabView selectTabViewItemAtIndex:[tabView indexOfTabViewItem:currentTabViewItem] + 2];
+				[tabView selectTabViewItemAtIndex:WIZARD_TAB_FIREIMPORT + 1];
 			
 		} else {
 			//Go to the next tab view item
@@ -197,7 +204,7 @@
 {
 	NSTabViewItem *currentTabViewItem = [tabView selectedTabViewItem];
 	if([[currentTabViewItem identifier] isEqualToString:ACCOUNT_SETUP_IDENTIFIER] && !canImport)
-		[tabView selectTabViewItemAtIndex:[tabView indexOfTabViewItem:currentTabViewItem] - 2];
+		[tabView selectTabViewItemAtIndex:WIZARD_TAB_WELCOME];
 	else
 		[tabView selectPreviousTabViewItem:self];
 }
@@ -330,12 +337,12 @@
 	}
 
 	//Hide go back on the first tab
-	[button_goBack setHidden:([tabView indexOfTabViewItem:tabViewItem] == 0)];
+	[button_goBack setHidden:([tabView indexOfTabViewItem:tabViewItem] == WIZARD_TAB_WELCOME)];
 	
 	[button_alternate setHidden:![self showAlternateButtonForIdentifier:identifier]];
 
 	//Set the done / continue button properly
-	if ([tabView indexOfTabViewItem:tabViewItem] == ([tabView numberOfTabViewItems] - 1)) {
+	if ([tabView indexOfTabViewItem:tabViewItem] == WIZARD_TAB_DONE) {
 		[button_continue setLocalizedString:AILocalizedString(@"Done","'done' button title")];
 
 	} else {
