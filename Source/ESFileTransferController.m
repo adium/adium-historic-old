@@ -427,10 +427,6 @@ static ESFileTransferPreferences *preferences;
 				[fileTransfer openFile];
 			}
 			
-			if (autoClearCompletedTransfers) {
-				[ESFileTransferProgressWindowController removeFileTransfer:fileTransfer];
-				[self _removeFileTransfer:fileTransfer];
-			}
 			break;
 		case Cancelled_Remote_FileTransfer:
 			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_CANCELLED
@@ -536,7 +532,6 @@ static ESFileTransferPreferences *preferences;
 {
 	autoAcceptType = [[prefDict objectForKey:KEY_FT_AUTO_ACCEPT] intValue];
 	autoOpenSafe = [[prefDict objectForKey:KEY_FT_AUTO_OPEN_SAFE] boolValue];
-	autoClearCompletedTransfers = [[prefDict objectForKey:KEY_FT_AUTO_CLEAR_COMPLETED] boolValue];
 	
 	//If we created a safe file extensions set and no longer need it, desroy it
 	if (!autoOpenSafe && safeFileExtensions) {

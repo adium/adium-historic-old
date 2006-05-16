@@ -68,7 +68,6 @@ typedef enum {
 	FTAutoAcceptType		autoAcceptType;
 	BOOL					autoChooseFolder;
 	BOOL					autoOpenSafe;
-	BOOL					autoClearCompletedTransfers;
 	BOOL					showProgressWindow;
 }
 

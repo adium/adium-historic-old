@@ -42,17 +42,7 @@
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
-	if (sender == checkBox_autoOpenFiles) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_FT_AUTO_OPEN_SAFE
-                                              group:PREF_GROUP_FILE_TRANSFER];
-
-	} else if (sender == checkBox_showProgress) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_FT_SHOW_PROGRESS_WINDOW
-                                              group:PREF_GROUP_FILE_TRANSFER];
-
-	} else if ((sender == checkBox_autoAcceptFiles) ||
+	if ((sender == checkBox_autoAcceptFiles) ||
 			 (sender == checkBox_autoAcceptOnlyFromCLList)) {
 		FTAutoAcceptType autoAcceptType;
 		
@@ -69,19 +59,7 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:autoAcceptType]
                                              forKey:KEY_FT_AUTO_ACCEPT
                                               group:PREF_GROUP_FILE_TRANSFER];
-		[self configureControlDimming];
-		
-	} else if (sender == checkBox_autoClearCompleted) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_FT_AUTO_CLEAR_COMPLETED
-                                              group:PREF_GROUP_FILE_TRANSFER];
 	}
-}
-
-//Dim controls as needed
-- (void)configureControlDimming
-{
-	[checkBox_autoAcceptOnlyFromCLList setEnabled:([checkBox_autoAcceptFiles state] == NSOnState)];
 }
 
 //Configure the preference view
@@ -108,15 +86,6 @@
 			[checkBox_autoAcceptOnlyFromCLList setState:NSOffState];
 			break;
 	}
-	
-	[checkBox_autoOpenFiles setState:[[[adium preferenceController] preferenceForKey:KEY_FT_AUTO_OPEN_SAFE
-																			   group:PREF_GROUP_FILE_TRANSFER] boolValue]];
-	[checkBox_showProgress setState:[[[adium preferenceController] preferenceForKey:KEY_FT_SHOW_PROGRESS_WINDOW
-																			  group:PREF_GROUP_FILE_TRANSFER] boolValue]];
-	[checkBox_autoClearCompleted setState:[[[adium preferenceController] preferenceForKey:KEY_FT_AUTO_CLEAR_COMPLETED
-																					group:PREF_GROUP_FILE_TRANSFER] boolValue]];
-
-	[self configureControlDimming];
 	
 	[label_whenReceivingFiles setLocalizedString:AILocalizedString(@"Receiving files:","FT Preferences")];
 	[label_defaultReceivingFolder setLocalizedString:AILocalizedString(@"Save files to:","FT Preferences")];
