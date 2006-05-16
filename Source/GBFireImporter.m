@@ -32,9 +32,9 @@
 #define ACCOUNTS				@"Accounts.plist"
 
 @interface GBFireImporter (private)
-- (BOOL)_importFireConfiguration;
-- (BOOL)_import2:(NSString *)fireDir;
-- (BOOL)_import1:(NSString *)fireDir;
+- (BOOL)importFireConfiguration;
+- (BOOL)import2:(NSString *)fireDir;
+- (BOOL)import1:(NSString *)fireDir;
 @end
 
 /*!
@@ -54,13 +54,13 @@
 + (BOOL)importFireConfiguration
 {
 	GBFireImporter *importer = [[GBFireImporter alloc] init];
-	BOOL ret = [importer _importFireConfiguration];
+	BOOL ret = [importer importFireConfiguration];
 	
 	[importer release];
 	return ret;
 }
 
-- (BOOL)_importFireConfiguration
+- (BOOL)importFireConfiguration
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *fireDir = [[[NSFileManager defaultManager] userApplicationSupportFolder] stringByAppendingPathComponent:@"Fire"];
@@ -68,11 +68,11 @@
 	BOOL version1Succeeded = NO;
 	BOOL ret = YES;
 	
-	version2Succeeded = [self _import2:fireDir];
+	version2Succeeded = [self import2:fireDir];
 	
 	if(!version2Succeeded)
 		//try version 1
-		version1Succeeded = [self _import1:fireDir];
+		version1Succeeded = [self import1:fireDir];
 	
 	if(!version2Succeeded && !version1Succeeded)
 		//throw some error
@@ -82,8 +82,8 @@
 	return ret;
 }
 
-- (void)_importAccounts2:(NSArray *)accountsDict
-			translations:(NSMutableDictionary *)accountUIDtoAccount
+- (void)importAccounts2:(NSArray *)accountsDict
+		   translations:(NSMutableDictionary *)accountUIDtoAccount
 {
 	NSEnumerator *serviceEnum = [[[adium accountController] services] objectEnumerator];
 	AIService *service = nil;
@@ -135,7 +135,7 @@
 	}	
 }
 
-- (void)_importAways2:(NSArray *)awayList
+- (void)importAways2:(NSArray *)awayList
 {
 	NSEnumerator *awayEnum = [awayList objectEnumerator];
 	NSDictionary *away = nil;
@@ -194,7 +194,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 	return ret;
 }
 
-- (void)_importGroups2:(NSDictionary *)groupList
+- (void)importGroups2:(NSDictionary *)groupList
 {
 	AIContactController *contactController = [adium contactController];
 
@@ -221,10 +221,10 @@ NSComparisonResult groupSort(id left, id right, void *context)
 	}	
 }
 
-- (void)_importBuddies2:(NSArray *)buddyArray
-	accountTranslations:(NSMutableDictionary *)accountUIDtoAccount
-	buddiesTranslations:(NSMutableDictionary *)buddiesToContact
-	  aliasTranslations:(NSMutableDictionary *)aliasToContacts
+- (void)importBuddies2:(NSArray *)buddyArray
+   accountTranslations:(NSMutableDictionary *)accountUIDtoAccount
+   buddiesTranslations:(NSMutableDictionary *)buddiesToContact
+	 aliasTranslations:(NSMutableDictionary *)aliasToContacts
 {
 	AIContactController *contactController = [adium contactController];
 
@@ -281,8 +281,8 @@ NSComparisonResult groupSort(id left, id right, void *context)
 	}	
 }
 
-- (void)_importPersons2:(NSArray *)personArray
-	buddiesTranslations:(NSDictionary *)buddiesToContact
+- (void)importPersons2:(NSArray *)personArray
+   buddiesTranslations:(NSDictionary *)buddiesToContact
 {
 	AIContactController *contactController = [adium contactController];
 
@@ -324,7 +324,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 	}
 }
 
-- (void)_createMetaContacts:(NSMutableDictionary *)aliasToContacts
+- (void)createMetaContacts:(NSMutableDictionary *)aliasToContacts
 {
 	AIContactController *contactController = [adium contactController];
 
@@ -334,7 +334,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 		[contactController groupListContacts:contacts];
 }
 
-- (BOOL)_import2:(NSString *)fireDir
+- (BOOL)import2:(NSString *)fireDir
 {
 	NSString *configPath = [fireDir stringByAppendingPathComponent:FIRECONFIGURATION2];
 	NSString *accountPath = [fireDir stringByAppendingPathComponent:ACCOUNTS2];
@@ -348,36 +348,36 @@ NSComparisonResult groupSort(id left, id right, void *context)
 	NSMutableDictionary *accountUIDtoAccount = [NSMutableDictionary dictionary];
 	
 	//Start with accounts
-	[self _importAccounts2:[accountDict objectForKey:@"Accounts"]
+	[self importAccounts2:[accountDict objectForKey:@"Accounts"]
 			  translations:accountUIDtoAccount];
 	
 	//Away Messages
-	[self _importAways2:[configDict objectForKey:@"awayMessages"]];
+	[self importAways2:[configDict objectForKey:@"awayMessages"]];
 
 	//Now for the groups
-	[self _importGroups2:[configDict objectForKey:@"groups"]];
+	[self importGroups2:[configDict objectForKey:@"groups"]];
 	
 	//Buddies
 	NSMutableDictionary *buddiesToContact = [NSMutableDictionary dictionary];
 	NSMutableDictionary *aliasToContacts = [NSMutableDictionary dictionary];
-	[self _importBuddies2:[configDict objectForKey:@"buddies"]
-	  accountTranslations:accountUIDtoAccount
-	  buddiesTranslations:buddiesToContact
-		aliasTranslations:aliasToContacts];
+	[self importBuddies2:[configDict objectForKey:@"buddies"]
+	 accountTranslations:accountUIDtoAccount
+	 buddiesTranslations:buddiesToContact
+	   aliasTranslations:aliasToContacts];
 
 	//Persons
 	NSArray *personArray = [configDict objectForKey:@"persons"];
 	if([personArray count] > 0)
-		[self _importPersons2:personArray
-		  buddiesTranslations:buddiesToContact];
+		[self importPersons2:personArray
+		 buddiesTranslations:buddiesToContact];
 	else
-		[self _createMetaContacts:aliasToContacts];
+		[self createMetaContacts:aliasToContacts];
 	
 	return YES;
 }
 
-- (void)_importAccounts1:(NSDictionary *)accountsDict
-			translations:(NSMutableDictionary *)accountUIDtoAccount
+- (void)importAccounts1:(NSDictionary *)accountsDict
+		   translations:(NSMutableDictionary *)accountUIDtoAccount
 {
 	NSEnumerator *serviceEnum = [[[adium accountController] services] objectEnumerator];
 	AIService *service = nil;
@@ -438,7 +438,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 	}
 }
 
-- (void)_importAways1:(NSArray *)awayList
+- (void)importAways1:(NSArray *)awayList
 {
 	NSEnumerator *awayEnum = [awayList objectEnumerator];
 	NSDictionary *away = nil;
@@ -478,10 +478,10 @@ NSComparisonResult groupSort(id left, id right, void *context)
 	}	
 }
 
-- (void)_importBuddies1:(NSArray *)buddyArray
-	accountTranslations:(NSMutableDictionary *)accountUIDtoAccount
-	  aliasTranslations:(NSMutableDictionary *)aliasToContacts
-				toGroup:(NSString *)groupName
+- (void)importBuddies1:(NSArray *)buddyArray
+   accountTranslations:(NSMutableDictionary *)accountUIDtoAccount
+	 aliasTranslations:(NSMutableDictionary *)aliasToContacts
+			   toGroup:(NSString *)groupName
 {
 	AIContactController *contactController = [adium contactController];
 	
@@ -544,9 +544,9 @@ NSComparisonResult groupSort(id left, id right, void *context)
 	}	
 }
 
-- (void)_importGroups1:(NSDictionary *)groupList
-   accountTranslations:(NSMutableDictionary *)accountUIDtoAccount
-	 aliasTranslations:(NSMutableDictionary *)aliasToContacts
+- (void)importGroups1:(NSDictionary *)groupList
+  accountTranslations:(NSMutableDictionary *)accountUIDtoAccount
+	aliasTranslations:(NSMutableDictionary *)aliasToContacts
 {
 	AIContactController *contactController = [adium contactController];
 	
@@ -571,14 +571,14 @@ NSComparisonResult groupSort(id left, id right, void *context)
 		NSNumber *expanded = [group objectForKey:@"groupexpanded"];
 		if(expanded != nil)
 			[newGroup setExpanded:[expanded boolValue]];
-		[self _importBuddies1:[group objectForKey:@"buddies"]
-							  accountTranslations:accountUIDtoAccount
-								aliasTranslations:aliasToContacts
-										  toGroup:groupName];
+		[self importBuddies1:[group objectForKey:@"buddies"]
+		 accountTranslations:accountUIDtoAccount
+		   aliasTranslations:aliasToContacts
+					 toGroup:groupName];
 	}
 }
 
-- (BOOL)_import1:(NSString *)fireDir
+- (BOOL)import1:(NSString *)fireDir
 {
 	NSString *configPath = [fireDir stringByAppendingPathComponent:FIRECONFIGURATION];
 	NSString *accountPath = [fireDir stringByAppendingPathComponent:ACCOUNTS];
@@ -592,20 +592,20 @@ NSComparisonResult groupSort(id left, id right, void *context)
 	NSMutableDictionary *accountUIDtoAccount = [NSMutableDictionary dictionary];
 	
 	//Start with accounts
-	[self _importAccounts1:accountDict
-			  translations:accountUIDtoAccount];
+	[self importAccounts1:accountDict
+			 translations:accountUIDtoAccount];
 	
 	//Away Messages
-	[self _importAways1:[configDict objectForKey:@"awayMessages"]];
+	[self importAways1:[configDict objectForKey:@"awayMessages"]];
 	
 	//Now for the groups
 	NSMutableDictionary *aliasToContacts = [NSMutableDictionary dictionary];
-	[self _importGroups1:[configDict objectForKey:@"groups"]
-	 accountTranslations:accountUIDtoAccount
-	   aliasTranslations:aliasToContacts];
+	[self importGroups1:[configDict objectForKey:@"groups"]
+	accountTranslations:accountUIDtoAccount
+	  aliasTranslations:aliasToContacts];
 	
 	//Persons
-	[self _createMetaContacts:aliasToContacts];
+	[self createMetaContacts:aliasToContacts];
 	
 	return YES;
 }
