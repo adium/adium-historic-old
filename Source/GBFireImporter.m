@@ -32,23 +32,35 @@
 #define ACCOUNTS				@"Accounts.plist"
 
 @interface GBFireImporter (private)
-- (BOOL)importFireConfiguration;
-- (BOOL)import2:(NSString *)fireDir;
-- (BOOL)import1:(NSString *)fireDir;
+- (BOOL)_importFireConfiguration;
+- (BOOL)_import2:(NSString *)fireDir;
+- (BOOL)_import1:(NSString *)fireDir;
 @end
 
+/*!
+ * @class GBFireImporter
+ * @brief Importer for Fire's configuration
+ *
+ * This class attempts to import Fire's configuration.  This includes status messages, accounts,
+ * groups, buddies, and meta-contacts.
+ */
+
 @implementation GBFireImporter
+
+/*!
+ * @brief Attempt to import Fire's config.  Returns YES if successful
+ */
 
 + (BOOL)importFireConfiguration
 {
 	GBFireImporter *importer = [[GBFireImporter alloc] init];
-	BOOL ret = [importer importFireConfiguration];
+	BOOL ret = [importer _importFireConfiguration];
 	
 	[importer release];
 	return ret;
 }
 
-- (BOOL)importFireConfiguration
+- (BOOL)_importFireConfiguration
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *fireDir = [[[NSFileManager defaultManager] userApplicationSupportFolder] stringByAppendingPathComponent:@"Fire"];
@@ -56,11 +68,11 @@
 	BOOL version1Succeeded = NO;
 	BOOL ret = YES;
 	
-	version2Succeeded = [self import2:fireDir];
+	version2Succeeded = [self _import2:fireDir];
 	
 	if(!version2Succeeded)
 		//try version 1
-		version1Succeeded = [self import1:fireDir];
+		version1Succeeded = [self _import1:fireDir];
 	
 	if(!version2Succeeded && !version1Succeeded)
 		//throw some error
@@ -312,7 +324,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 	}
 }
 
-- (void)createMetaContacts:(NSMutableDictionary *)aliasToContacts
+- (void)_createMetaContacts:(NSMutableDictionary *)aliasToContacts
 {
 	AIContactController *contactController = [adium contactController];
 
@@ -322,7 +334,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 		[contactController groupListContacts:contacts];
 }
 
-- (BOOL)import2:(NSString *)fireDir
+- (BOOL)_import2:(NSString *)fireDir
 {
 	NSString *configPath = [fireDir stringByAppendingPathComponent:FIRECONFIGURATION2];
 	NSString *accountPath = [fireDir stringByAppendingPathComponent:ACCOUNTS2];
@@ -359,7 +371,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 		[self _importPersons2:personArray
 		  buddiesTranslations:buddiesToContact];
 	else
-		[self createMetaContacts:aliasToContacts];
+		[self _createMetaContacts:aliasToContacts];
 	
 	return YES;
 }
@@ -566,7 +578,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 	}
 }
 
-- (BOOL)import1:(NSString *)fireDir
+- (BOOL)_import1:(NSString *)fireDir
 {
 	NSString *configPath = [fireDir stringByAppendingPathComponent:FIRECONFIGURATION];
 	NSString *accountPath = [fireDir stringByAppendingPathComponent:ACCOUNTS];
@@ -593,7 +605,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 	   aliasTranslations:aliasToContacts];
 	
 	//Persons
-	[self createMetaContacts:aliasToContacts];
+	[self _createMetaContacts:aliasToContacts];
 	
 	return YES;
 }
