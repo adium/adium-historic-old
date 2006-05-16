@@ -854,6 +854,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		//XXX Temporary image?
 		NSImage		*image = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
+		[image lockFocus];
+		[@"?" drawInRect:NSMakeRect(0, 0, 16, 16) withAttributes:nil];
+		[image unlockFocus];
+
 		[[image TIFFRepresentation] writeToFile:path
 									 atomically:NO];
 		[image release];
