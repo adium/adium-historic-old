@@ -490,11 +490,10 @@
 
 	NSRect listFrame = [window frame];
 	
-	if(NSEqualRects(currentScreenFrame, newScreenFrame)) return;
-		
 	oldFrame.origin.x *= ((newScreenFrame.size.width - listFrame.size.width) / ((currentScreenFrame.size.width - listFrame.size.width) + 0.00001));
 	oldFrame.origin.y *= ((newScreenFrame.size.height - listFrame.size.height) / ((currentScreenFrame.size.height - listFrame.size.height) + 0.00001));
-
+	
+	[self delayWindowSlidingForInterval:2];
 	[self slideWindowOnScreenWithAnimation:NO];
 	
 	[contactListController contactListDesiredSizeChanged];
