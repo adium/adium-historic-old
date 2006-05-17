@@ -774,6 +774,36 @@
 //	[AdiumDisconnectionErrorController account:inAccount disconnectedWithError:disconnectionError];
 }
 
+//Question Display -----------------------------------------------------------------------------------------------------
+#pragma mark Question Display
+- (void)displayQuestion:(NSString *)inTitle withDescription:(NSAttributedString *)inDesc withWindowTitle:(NSString *)inWindowTitle
+		  defaultButton:(NSString *)inDefaultButton alternateButton:(NSString *)inAlternateButton otherButton:(NSString *)inOtherButton
+				 target:(id)inTarget selector:(SEL)inSelector userInfo:(id)inUserInfo
+{
+	NSMutableDictionary *questionDict = [NSMutableDictionary dictionary];
+	
+	if(inTitle != nil)
+		[questionDict setObject:inTitle forKey:@"Title"];
+	if(inDesc != nil)
+		[questionDict setObject:inDesc forKey:@"Description"];
+	if(inWindowTitle != nil)
+		[questionDict setObject:inWindowTitle forKey:@"Window Title"];
+	if(inDefaultButton != nil)
+		[questionDict setObject:inDefaultButton forKey:@"Default Button"];
+	if(inAlternateButton != nil)
+		[questionDict setObject:inAlternateButton forKey:@"Alternate Button"];
+	if(inOtherButton != nil)
+		[questionDict setObject:inOtherButton forKey:@"Other Button"];
+	if(inTarget != nil)
+		[questionDict setObject:inTarget forKey:@"Target"];
+	if(inSelector != NULL)
+		[questionDict setObject:NSStringFromSelector(inSelector) forKey:@"Selector"];
+	if(inUserInfo != nil)
+		[questionDict setObject:inUserInfo forKey:@"Userinfo"];
+	
+	[[adium notificationCenter] postNotificationName:Interface_ShouldDisplayQuestion object:nil userInfo:questionDict];
+}
+
 //Synchronized Flashing ------------------------------------------------------------------------------------------------
 #pragma mark Synchronized Flashing
 //Register to observe the synchronized flashing

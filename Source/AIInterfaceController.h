@@ -19,6 +19,7 @@
 #define Interface_WillSendEnteredMessage 			@"Interface_WillSendEnteredMessage"
 #define Interface_DidSendEnteredMessage				@"Interface_DidSendEnteredMessage"
 #define Interface_ShouldDisplayErrorMessage			@"Interface_ShouldDisplayErrorMessage"
+#define Interface_ShouldDisplayQuestion				@"Interface_ShouldDisplayQuestion"
 #define Interface_ContactListDidBecomeMain			@"Interface_ContactListDidBecomeMain"
 #define Interface_ContactListDidResignMain			@"Interface_contactListDidResignMain"
 #define Interface_ContactListDidClose				@"Interface_contactListDidClose"
@@ -229,6 +230,11 @@ typedef enum {
 //Error Display
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
 - (void)handleMessage:(NSString *)inTitle withDescription:(NSString *)inDesc withWindowTitle:(NSString *)inWindowTitle;
+
+//Question Display
+- (void)displayQuestion:(NSString *)inTitle withDescription:(NSAttributedString *)inDesc withWindowTitle:(NSString *)inWindowTitle
+		  defaultButton:(NSString *)inDefaultButton alternateButton:(NSString *)inAlternateButton otherButton:(NSString *)inOtherButton
+				 target:(id)inTarget selector:(SEL)inSelector userInfo:(id)inUserInfo;
 
 //Synchronized Flashing
 - (void)registerFlashObserver:(id <AIFlashObserver>)inObserver;
