@@ -472,10 +472,20 @@
 	return [self integerStatusObjectForKey:KEY_IS_BLOCKED];
 }
 
-/*!
- * @brief Set if this contact is blocked
- */
 - (void)setIsBlocked:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists
+{
+	[self setIsOnPrivacyList:yesOrNo updateList:addToPrivacyLists privacyType:PRIVACY_DENY];
+}
+
+- (void)setIsAllowed:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists
+{
+	[self setIsOnPrivacyList:yesOrNo updateList:addToPrivacyLists privacyType:PRIVACY_PERMIT];
+}
+
+/*!
+ * @brief Set if this contact is on the privacy list
+ */
+- (void)setIsOnPrivacyList:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists privacyType:(PRIVACY_TYPE)privType
 {
 	if (addToPrivacyLists) {
 		//caller of this method wants to block the contact
@@ -483,23 +493,23 @@
 		
 		if ([contactAccount conformsToProtocol:@protocol(AIAccount_Privacy)]) {
 			BOOL	result = NO;
-			NSArray	*privacyList = [(AIAccount <AIAccount_Privacy> *)contactAccount listObjectIDsOnPrivacyList:PRIVACY_DENY];
+			NSArray	*privacyList = [(AIAccount <AIAccount_Privacy> *)contactAccount listObjectsOnPrivacyList:privType];
 			
 			if (yesOrNo == YES) {
 				//we want to block the contact
-				if (![privacyList containsObject:[self UID]]) {
-					result = [(AIAccount <AIAccount_Privacy> *)contactAccount addListObject:self toPrivacyList:PRIVACY_DENY];
+				if (![privacyList containsObject:self]) {
+					result = [(AIAccount <AIAccount_Privacy> *)contactAccount addListObject:self toPrivacyList:privType];
 				}
 			} else {
 				//unblock contact
-				if ([privacyList containsObject:[self UID]]) {
-					result = [(AIAccount <AIAccount_Privacy> *)contactAccount removeListObject:self fromPrivacyList:PRIVACY_DENY];
+				if ([privacyList containsObject:self]) {
+					result = [(AIAccount <AIAccount_Privacy> *)contactAccount removeListObject:self fromPrivacyList:privType];
 				}
 			}
 			
 			//update status object
 			if (result) {
-				[self setStatusObject:(yesOrNo ? [NSNumber numberWithBool:YES] : nil)
+				[self setStatusObject:((privType == PRIVACY_DENY) == yesOrNo) ? [NSNumber numberWithBool:YES] : nil
 							   forKey:KEY_IS_BLOCKED 
 							   notify:NotifyNow];
 			}
@@ -508,7 +518,7 @@
 		}
 	} else {
 		//caller of this method just wants to update the status object
-		[self setStatusObject:(yesOrNo ? [NSNumber numberWithBool:YES] : nil)
+		[self setStatusObject:((privType == PRIVACY_DENY) == yesOrNo) ? [NSNumber numberWithBool:YES] : nil
 					   forKey:KEY_IS_BLOCKED 
 					   notify:NotifyNow];
 	}

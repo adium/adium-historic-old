@@ -13,6 +13,7 @@
 @interface RAFDragArrayController : NSArrayController {
 	IBOutlet NSTableView *tableView;
 	AIAdium *adium;
+	NSArray *dragItems;
 }
 
 - (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard;

@@ -25,7 +25,13 @@
 	IBOutlet NSTableColumn		*buddyCol;
 	IBOutlet NSTableColumn		*accountCol;
 	
+	IBOutlet NSPopUpButton		*stateChooser;
+	IBOutlet NSPopUpButton		*mainAccounts;
+	IBOutlet NSTextField		*accountCaption;
+	
 	NSMutableArray				*listContents;
+	NSMutableArray				*listContentsAllAccounts;
+	NSMutableDictionary			*accountStates;
 }
 
 + (void)showWindow;
@@ -37,5 +43,8 @@
 - (IBAction)blockFieldUID:(id)sender;
 - (NSMutableArray*)listContents;
 - (void)setListContents:(NSArray*)newList;
-- (AIListContact *)contactFromText:(NSString *)text onAccount:(AIAccount *)account;
+- (AIListContact *)contactFromTextField;
+- (IBAction)setState:(id)sender;
+- (IBAction)setAccount:(id)sender;
+- (void)recomputeListContents;
 @end

@@ -27,8 +27,45 @@
 
 - (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
 {
-#warning We should be able to drag to ourselves, at the very least -durin42
-    return NO;
+	//Begin the drag
+	if (dragItems != rows) {
+		[dragItems release];
+		dragItems = [rows retain];
+	}
+	
+	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",@"AIListObjectUniqueIDs",nil] owner:self];
+	[pboard setString:@"Private" forType:@"AIListObject"];
+
+#warning take this debug code out when we're sure this DnD operation stuff works
+	if (dragItems) {
+		NSEnumerator	*enumerator = [dragItems objectEnumerator];
+		AIListObject	*listObject;
+		while ((listObject = [enumerator nextObject])) {
+			NSLog(@"dragging %@",[listObject internalObjectID]);
+		}
+	}
+	
+	
+	return YES;
+}
+
+- (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
+{
+	//Provide an array of internalObjectIDs which can be used to reference all the dragged contacts
+	if ([type isEqualToString:@"AIListObjectUniqueIDs"]) {
+		
+		if (dragItems) {
+			NSMutableArray	*dragItemsArray = [NSMutableArray array];
+			NSEnumerator	*enumerator = [dragItems objectEnumerator];
+			AIListObject	*listObject;
+			
+			while ((listObject = [enumerator nextObject])) {
+				[dragItemsArray addObject:[listObject internalObjectID]];
+			}
+			
+			[sender setPropertyList:dragItemsArray forType:@"AIListObjectUniqueIDs"];
+		}
+	}
 }
 
 - (NSDragOperation)tableView:(NSTableView*)tv

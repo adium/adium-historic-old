@@ -53,7 +53,9 @@ typedef enum {
 	PRIVACY_DENY_ALL,           //Nobody can contact you
 	PRIVACY_ALLOW_USERS,        //Only those on your allow list can contact you
 	PRIVACY_DENY_USERS,         //Those on your deny list can't contact you
-	PRIVACY_ALLOW_CONTACTLIST   //Only those on your contact list can contact you
+	PRIVACY_ALLOW_CONTACTLIST,	//Only those on your contact list can contact you
+	PRIVACY_UNKNOWN,			//used by the privacy settings window, but could probably also be used by accounts
+	PRIVACY_CUSTOM				//used by the privacy settings window
 } PRIVACY_OPTION;
 
 //Support for file transfer

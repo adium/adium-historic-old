@@ -224,15 +224,22 @@
 				AIAccount <AIAccount_Privacy> *acct = [contact account];
 				if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
 					anyAccount = YES;
-					if ([[acct listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]) {
+					PRIVACY_TYPE privType = [acct privacyOptions] == PRIVACY_ALLOW_USERS ? PRIVACY_PERMIT : PRIVACY_DENY;
+					if ([[acct listObjectsOnPrivacyList:privType] containsObject:contact]) {
 						//title: "Unblock"; enabled
-						if (!unblock) {
+						if (!unblock && PRIVACY_PERMIT == privType) {
+							//removing the guy is blocking him
+							[menuItem setTitle:BLOCK_CONTACT];
+						}
+						else if (unblock && PRIVACY_DENY == privType) {
+							//removing him is unblocking
 							[menuItem setTitle:UNBLOCK_CONTACT];
 						}
 						return YES;
 					}
 				}
 			}
+#warning this next block is a bogus way to handle this, but metas are such a special condition I'm not sure what to do -durin42
 			if (anyAccount) {
 				//title: "Block"; enabled
 				if (unblock) {
@@ -248,17 +255,22 @@
 			AIListContact *contact = (AIListContact *)object;
 			AIAccount <AIAccount_Privacy> *acct = [contact account];
 			if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-				if ([[acct listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]) {
+				PRIVACY_TYPE privType = [acct privacyOptions] == PRIVACY_ALLOW_USERS ? PRIVACY_PERMIT : PRIVACY_DENY;
+				if ([[acct listObjectsOnPrivacyList:privType] containsObject:contact]) {
 					//title: "Unblock"; enabled
-					if (!unblock) {
+					if (!unblock && PRIVACY_PERMIT == privType) {
+						[menuItem setTitle:BLOCK_CONTACT];
+					}
+					else if (unblock && PRIVACY_DENY == privType) {
 						[menuItem setTitle:UNBLOCK_CONTACT];
 					}
 					return YES;
 				} else {
 					//title: "Block"; enabled
-					if (unblock) {
+					if (!unblock && PRIVACY_PERMIT == privType)
+						[menuItem setTitle:UNBLOCK_CONTACT];
+					else if (unblock && PRIVACY_DENY == privType)
 						[menuItem setTitle:BLOCK_CONTACT];
-					}
 					return YES;
 				}
 			} else {
@@ -279,14 +291,19 @@
 {
 	//We want to block on all accounts with the same service class. If you want someone gone, you want 'em GONE.
 	NSEnumerator	*enumerator = [[[adium accountController] accountsCompatibleWithService:[contact service]] objectEnumerator];
-	AIAccount		*account = nil;
+	AIAccount<AIAccount_Privacy>	*account = nil;
 	AIListContact	*sameContact = nil;
 	
 	while ((account = [enumerator nextObject])) {
 		sameContact = [account contactWithUID:[contact UID]];
-		
-		if (sameContact) {
-			[sameContact setIsBlocked:!unblock updateList:YES];
+		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
+			
+			if (sameContact){ 
+				if ([account privacyOptions] == PRIVACY_DENY_USERS)
+					[sameContact setIsBlocked:!unblock updateList:YES];
+				else
+					[sameContact setIsAllowed:unblock updateList:YES];
+			}
 		}
 	}
 }
