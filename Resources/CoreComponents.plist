@@ -80,5 +80,6 @@
 	<string>ESPersonalPreferencesPlugin</string>
 	<string>AIXtrasManager</string>
 	<string>OWSpellingPerContactPlugin</string>
+	<string>GBQuestionHandlerPlugin</string>
 </array>
 </plist>

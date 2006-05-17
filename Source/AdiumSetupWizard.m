@@ -204,7 +204,7 @@ enum{
 {
 	NSTabViewItem *currentTabViewItem = [tabView selectedTabViewItem];
 	if([[currentTabViewItem identifier] isEqualToString:ACCOUNT_SETUP_IDENTIFIER] && !canImport)
-		[tabView selectTabViewItemAtIndex:WIZARD_TAB_WELCOME];
+		[tabView selectTabViewItemAtIndex:WIZARD_TAB_FIREIMPORT - 1];
 	else
 		[tabView selectPreviousTabViewItem:self];
 }

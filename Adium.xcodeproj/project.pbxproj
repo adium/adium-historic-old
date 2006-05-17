@@ -1396,6 +1396,8 @@
 		F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */; };
 		F51BCEEA0A15793E000FDC06 /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
+		F5F8CA4C0A1A9C9400154550 /* GBQuestionHandlerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = F5F8CA4A0A1A9C9400154550 /* GBQuestionHandlerPlugin.h */; };
+		F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8CA4B0A1A9C9400154550 /* GBQuestionHandlerPlugin.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
@@ -3758,6 +3760,8 @@
 		F5F0FE9D04B12CAC01A80106 /* AIEmoticonPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPreferences.m; path = Plugins/Emoticons/AIEmoticonPreferences.m; sourceTree = "<group>"; };
 		F5F0FEA004B1336C01A80106 /* EmoticonPrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EmoticonPrefs.nib; path = Plugins/Emoticons/EmoticonPrefs.nib; sourceTree = "<group>"; };
 		F5F0FEA204B133AB01A80106 /* EmoticonDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = EmoticonDefaults.plist; path = Plugins/Emoticons/EmoticonDefaults.plist; sourceTree = "<group>"; };
+		F5F8CA4A0A1A9C9400154550 /* GBQuestionHandlerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBQuestionHandlerPlugin.h; path = Source/GBQuestionHandlerPlugin.h; sourceTree = "<group>"; };
+		F5F8CA4B0A1A9C9400154550 /* GBQuestionHandlerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBQuestionHandlerPlugin.m; path = Source/GBQuestionHandlerPlugin.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -5145,6 +5149,7 @@
 				F501BB0D03882A0201A8010A /* Standard Toolbar Items */,
 				9E791D8505768A3000547562 /* Status Menu Item */,
 				4BF303160687466D000DCA65 /* Tab Status Icons */,
+				F5F8CA450A1A9BC500154550 /* User Questions */,
 				4BC5A5C90764F70E0080ECF7 /* Video Chat Interface */,
 				632D800908E7DE2C0032C187 /* Xtras Management */,
 			);
@@ -6998,6 +7003,15 @@
 			name = "Preference Window";
 			sourceTree = "<group>";
 		};
+		F5F8CA450A1A9BC500154550 /* User Questions */ = {
+			isa = PBXGroup;
+			children = (
+				F5F8CA4A0A1A9C9400154550 /* GBQuestionHandlerPlugin.h */,
+				F5F8CA4B0A1A9C9400154550 /* GBQuestionHandlerPlugin.m */,
+			);
+			name = "User Questions";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -7364,6 +7378,7 @@
 				9ECB03E809F2A9D900996F44 /* AIXMLAppender.h in Headers */,
 				34E1EDF50A045AA2003C14F1 /* AdiumApplescriptRunner.h in Headers */,
 				F50A75A20A0AE77A00A6D1BA /* GBFireImporter.h in Headers */,
+				F5F8CA4C0A1A9C9400154550 /* GBQuestionHandlerPlugin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9399,6 +9414,7 @@
 				9ECB03E909F2A9D900996F44 /* AIXMLAppender.m in Sources */,
 				34E1EDF60A045AA2003C14F1 /* AdiumApplescriptRunner.m in Sources */,
 				F50A75A30A0AE77A00A6D1BA /* GBFireImporter.m in Sources */,
+				F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
