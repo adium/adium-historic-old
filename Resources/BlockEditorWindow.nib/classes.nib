@@ -29,10 +29,13 @@
                 configTextField = id; 
                 didBlockSheet = id; 
                 runBlockSheet = id; 
+                setAccount = id; 
+                setState = id; 
             }; 
             CLASS = RAFBlockEditorWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                accountCaption = NSTextField; 
                 accountCol = NSTableColumn; 
                 accountText = NSTextField; 
                 accounts = NSPopUpButton; 
@@ -42,7 +45,9 @@
                 cancelButton = NSButton; 
                 doneButton = NSButton; 
                 field = AICompletingTextField; 
+                mainAccounts = NSPopUpButton; 
                 sheet = NSWindow; 
+                stateChooser = NSPopUpButton; 
                 table = NSTableView; 
                 window = NSWindow; 
             }; 

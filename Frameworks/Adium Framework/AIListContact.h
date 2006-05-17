@@ -15,6 +15,7 @@
  */
 
 #import "AIListObject.h"
+#import <Adium/AIAccount.h>
 
 @class AIAccount, AIContentObject, AIListContact, AIListGroup;
 
@@ -46,6 +47,8 @@
 - (void)setSignonDate:(NSDate *)signonDate notify:(NotifyTiming)notify;
 - (NSDate *)signonDate;
 - (void)setIsBlocked:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists;
+- (void)setIsAllowed:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists;
+- (void)setIsOnPrivacyList:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists privacyType:(PRIVACY_TYPE)privType;
 
 - (void)setIdle:(BOOL)isIdle sinceDate:(NSDate *)idleSinceDate notify:(NotifyTiming)notify;
 - (void)setServersideIconData:(NSData *)iconData notify:(NotifyTiming)notify;
