@@ -111,7 +111,7 @@
 }
 
 /*!
- * @bref Initialize
+ * @brief Initialize
  */
 - (id)changeWindowToTitle:(NSString *)inTitle
 			defaultButton:(NSString *)inDefaultButton
