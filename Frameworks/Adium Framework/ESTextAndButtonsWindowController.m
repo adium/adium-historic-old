@@ -20,17 +20,7 @@
 #define TEXT_AND_BUTTONS_WINDOW_NIB   @"TextAndButtonsWindow"
 
 @interface ESTextAndButtonsWindowController (PRIVATE)
-- (void)showWindowWithDict:(NSDictionary *)infoDict;
-- (id)initWithWindowNibName:(NSString *)windowNibName
-				  withTitle:(NSString *)inTitle
-			  defaultButton:(NSString *)inDefaultButton
-			alternateButton:(NSString *)inAlternateButton
-				otherButton:(NSString *)inOtherButton
-		  withMessageHeader:(NSString *)inMessageHeader
-				 andMessage:(NSAttributedString *)inMessage
-					  image:(NSImage *)inImage
-					 target:(id)inTarget
-				   userInfo:(id)inUserInfo;
+- (void)configureWindow;
 @end
 
 @implementation ESTextAndButtonsWindowController
@@ -72,16 +62,16 @@
 {
 	ESTextAndButtonsWindowController	*controller;
 	
-	controller = [[self alloc] initWithWindowNibName:TEXT_AND_BUTTONS_WINDOW_NIB
-										   withTitle:inTitle
-									   defaultButton:inDefaultButton
-									 alternateButton:inAlternateButton
-										 otherButton:inOtherButton
-								   withMessageHeader:inMessageHeader
-										  andMessage:inMessage
-											   image:inImage
-											  target:inTarget
-											userInfo:inUserInfo];
+	controller = [[self alloc] initWithWindowNibName:TEXT_AND_BUTTONS_WINDOW_NIB];
+	[controller changeWindowToTitle:inTitle
+					  defaultButton:inDefaultButton
+					alternateButton:inAlternateButton
+						otherButton:inOtherButton
+				  withMessageHeader:inMessageHeader
+						 andMessage:inMessage
+							  image:inImage
+							 target:inTarget
+						   userInfo:inUserInfo];
 	
 	if (parentWindow) {
 		[NSApp beginSheet:[controller window]
@@ -123,31 +113,39 @@
 /*!
  * @bref Initialize
  */
-- (id)initWithWindowNibName:(NSString *)windowNibName
-				  withTitle:(NSString *)inTitle
-			  defaultButton:(NSString *)inDefaultButton
-			alternateButton:(NSString *)inAlternateButton
-				otherButton:(NSString *)inOtherButton
-		  withMessageHeader:(NSString *)inMessageHeader
-				 andMessage:(NSAttributedString *)inMessage
-					  image:(NSImage *)inImage
-					 target:(id)inTarget
-				   userInfo:(id)inUserInfo
+- (id)changeWindowToTitle:(NSString *)inTitle
+			defaultButton:(NSString *)inDefaultButton
+		  alternateButton:(NSString *)inAlternateButton
+			  otherButton:(NSString *)inOtherButton
+		withMessageHeader:(NSString *)inMessageHeader
+			   andMessage:(NSAttributedString *)inMessage
+					image:(NSImage *)inImage
+				   target:(id)inTarget
+				 userInfo:(id)inUserInfo
 {
-	if ((self = [super initWithWindowNibName:windowNibName])) {
-		title = [inTitle retain];
-		defaultButton = [inDefaultButton retain];
-		alternateButton = ([inAlternateButton length] ? [inAlternateButton retain] : nil);
-		otherButton = ([inOtherButton length] ? [inOtherButton retain] : nil);
-		messageHeader = ([inMessageHeader length] ? [inMessageHeader retain] : nil);
-		message = [inMessage retain];
-		target = [inTarget retain];
-		userInfo = [inUserInfo retain];
-		image = [inImage retain];
+	[title release];
+	[defaultButton release];
+	[alternateButton release];
+	[otherButton release];
+	[messageHeader release];
+	[message release];
+	[target release];
+	[userInfo release];
+	[image release];
+	
+	title = [inTitle retain];
+	defaultButton = [inDefaultButton retain];
+	alternateButton = ([inAlternateButton length] ? [inAlternateButton retain] : nil);
+	otherButton = ([inOtherButton length] ? [inOtherButton retain] : nil);
+	messageHeader = ([inMessageHeader length] ? [inMessageHeader retain] : nil);
+	message = [inMessage retain];
+	target = [inTarget retain];
+	userInfo = [inUserInfo retain];
+	image = [inImage retain];
 
-		userClickedButton = NO;
-		allowsCloseWithoutResponse = YES;
-	}
+	userClickedButton = NO;
+	allowsCloseWithoutResponse = YES;
+	[self configureWindow];
 
     return self;
 }
@@ -222,14 +220,13 @@
 }
 
 /*!
- * @brief Window loaded.
+ * @brief Configure the window.
  *
  * Here we perform configuration and autosizing for our message and buttons.
  */
-- (void)windowDidLoad
-{
-	[super windowDidLoad];
 
+- (void)configureWindow
+{
 	NSWindow	*window = [self window];
 	int			heightChange = 0;
 	int			distanceFromBottomOfMessageToButtons = 24;

@@ -70,6 +70,16 @@ typedef enum {
 								 target:(id)inTarget
 							   userInfo:(id)inUserInfo;
 
+- (id)changeWindowToTitle:(NSString *)inTitle
+			defaultButton:(NSString *)inDefaultButton
+		  alternateButton:(NSString *)inAlternateButton
+			  otherButton:(NSString *)inOtherButton
+		withMessageHeader:(NSString *)inMessageHeader
+			   andMessage:(NSAttributedString *)inMessage
+					image:(NSImage *)inImage
+				   target:(id)inTarget
+				 userInfo:(id)inUserInfo;
+
 - (IBAction)pressedButton:(id)sender;
 
 - (void)setAllowsCloseWithoutResponse:(BOOL)inAllowsCloseWithoutResponse;
