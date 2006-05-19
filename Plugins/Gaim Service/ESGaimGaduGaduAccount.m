@@ -68,37 +68,7 @@
 	return YES;
 }
 
-/*
-- (oneway void)accountConnectionConnected
-{
-	[super accountConnectionConnected];	
-
-	GaimAccount		*gaimAccount = [self gaimAccount];
-	GaimConnection  *gc;
-
-	//We need to do this if we don't cache the gadu-gadu list, which gaim does by default
-	if ((gc = gaim_account_get_connection(gaimAccount))) {
-		gg_userlist_request(((struct agg_data *)gc->proto_data)->sess, GG_USERLIST_GET, NULL);
-	}
-}
-*/
-
 #pragma mark Contact status
-
-- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
-{
-	NSAttributedString  *statusMessage = nil;
-	
-	if (b && b->proto_data) {
-		NSString	*statusMessageString = [NSString stringWithUTF8String:b->proto_data];
-		if (statusMessageString && [statusMessageString length]) {
-			statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
-															 attributes:nil] autorelease];
-		}
-	}   
-	
-	return statusMessage;
-}
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
