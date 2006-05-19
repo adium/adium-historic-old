@@ -69,19 +69,21 @@ typedef enum {
 							 andMessage:(NSAttributedString *)inMessage
 								 target:(id)inTarget
 							   userInfo:(id)inUserInfo;
++ (id)controller;
 
-- (id)changeWindowToTitle:(NSString *)inTitle
-			defaultButton:(NSString *)inDefaultButton
-		  alternateButton:(NSString *)inAlternateButton
-			  otherButton:(NSString *)inOtherButton
-		withMessageHeader:(NSString *)inMessageHeader
-			   andMessage:(NSAttributedString *)inMessage
-					image:(NSImage *)inImage
-				   target:(id)inTarget
-				 userInfo:(id)inUserInfo;
+- (void)changeWindowToTitle:(NSString *)inTitle
+			  defaultButton:(NSString *)inDefaultButton
+			alternateButton:(NSString *)inAlternateButton
+				otherButton:(NSString *)inOtherButton
+		  withMessageHeader:(NSString *)inMessageHeader
+				 andMessage:(NSAttributedString *)inMessage
+					  image:(NSImage *)inImage
+					 target:(id)inTarget
+				   userInfo:(id)inUserInfo;
 
 - (IBAction)pressedButton:(id)sender;
 
+- (void)show;
 - (void)setAllowsCloseWithoutResponse:(BOOL)inAllowsCloseWithoutResponse;
 - (void)setImage:(NSImage *)image;
 

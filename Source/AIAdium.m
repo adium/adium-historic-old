@@ -200,8 +200,6 @@ static NSString	*prefsCategory;
     //sent when write() or similar function calls fail due to a broken pipe in the network connection
     signal(SIGPIPE, SIG_IGN);
 	
-	[AdiumURLHandling registerURLTypes];
-	
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self 
 												   andSelector:@selector(handleURLEvent:withReplyEvent:)
 												 forEventClass:kInternetEventClass
@@ -280,6 +278,7 @@ static NSString	*prefsCategory;
 
 	//Finish initing
 	pool = [[NSAutoreleasePool alloc] init];
+	[AdiumURLHandling registerURLTypes];		//Asks the user questions so must load after components
 	[menuController controllerDidLoad];			//Loaded by nib
 	[accountController controllerDidLoad];		//** Before contactController so accounts and services are available for contact creation
 	[contactController controllerDidLoad];		//** Before interfaceController so the contact list is available to the interface

@@ -232,7 +232,10 @@ typedef enum {
 - (void)handleMessage:(NSString *)inTitle withDescription:(NSString *)inDesc withWindowTitle:(NSString *)inWindowTitle;
 
 //Question Display
-- (void)displayQuestion:(NSString *)inTitle withDescription:(NSAttributedString *)inDesc withWindowTitle:(NSString *)inWindowTitle
+- (void)displayQuestion:(NSString *)inTitle withAttributedDescription:(NSAttributedString *)inDesc withWindowTitle:(NSString *)inWindowTitle
+		  defaultButton:(NSString *)inDefaultButton alternateButton:(NSString *)inAlternateButton otherButton:(NSString *)inOtherButton
+				 target:(id)inTarget selector:(SEL)inSelector userInfo:(id)inUserInfo;
+- (void)displayQuestion:(NSString *)inTitle withDescription:(NSString *)inDesc withWindowTitle:(NSString *)inWindowTitle
 		  defaultButton:(NSString *)inDefaultButton alternateButton:(NSString *)inAlternateButton otherButton:(NSString *)inOtherButton
 				 target:(id)inTarget selector:(SEL)inSelector userInfo:(id)inUserInfo;
 

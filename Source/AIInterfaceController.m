@@ -776,7 +776,7 @@
 
 //Question Display -----------------------------------------------------------------------------------------------------
 #pragma mark Question Display
-- (void)displayQuestion:(NSString *)inTitle withDescription:(NSAttributedString *)inDesc withWindowTitle:(NSString *)inWindowTitle
+- (void)displayQuestion:(NSString *)inTitle withAttributedDescription:(NSAttributedString *)inDesc withWindowTitle:(NSString *)inWindowTitle
 		  defaultButton:(NSString *)inDefaultButton alternateButton:(NSString *)inAlternateButton otherButton:(NSString *)inOtherButton
 				 target:(id)inTarget selector:(SEL)inSelector userInfo:(id)inUserInfo
 {
@@ -804,6 +804,20 @@
 	[[adium notificationCenter] postNotificationName:Interface_ShouldDisplayQuestion object:nil userInfo:questionDict];
 }
 
+- (void)displayQuestion:(NSString *)inTitle withDescription:(NSString *)inDesc withWindowTitle:(NSString *)inWindowTitle
+		  defaultButton:(NSString *)inDefaultButton alternateButton:(NSString *)inAlternateButton otherButton:(NSString *)inOtherButton
+				 target:(id)inTarget selector:(SEL)inSelector userInfo:(id)inUserInfo
+{
+	[self displayQuestion:inTitle
+withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc] autorelease]
+		  withWindowTitle:inWindowTitle
+			defaultButton:inDefaultButton
+		  alternateButton:inAlternateButton
+			  otherButton:inOtherButton
+				   target:inTarget
+				 selector:inSelector
+				 userInfo:inUserInfo];
+}
 //Synchronized Flashing ------------------------------------------------------------------------------------------------
 #pragma mark Synchronized Flashing
 //Register to observe the synchronized flashing

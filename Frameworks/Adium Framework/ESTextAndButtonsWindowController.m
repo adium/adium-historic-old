@@ -81,8 +81,7 @@
 			  contextInfo:nil];
 
 	} else {
-		[controller showWindow:nil];
-		[[controller window] orderFront:nil];
+		[controller show];
 	}
 	
 	return controller;
@@ -110,18 +109,42 @@
 										  userInfo:inUserInfo];
 }
 
++ (id)controller
+{
+	return [[self alloc] initWithWindowNibName:TEXT_AND_BUTTONS_WINDOW_NIB];
+}
+
 /*!
- * @brief Initialize
+ * @brief Change and show a text and buttons window which will notify a target when a button is clicked or the window is closed. 
+ *
+ * The buttons have titles of defaultButton, alternateButton, and otherButton.
+ * The buttons are laid out on the lower-right corner of the window, with defaultButton on the right, alternateButton on
+ * the left, and otherButton in the middle. 
+ *
+ * If defaultButton is nil or an empty string, a default localized button title (“OK” in English) is used. 
+ * For the remaining buttons, the window displays them only if their corresponding button title is non-nil.
+ *
+ * @param inTitle Window title
+ * @param inDefaultButton Rightmost button.  Localized OK if nil.
+ * @param inAlternateButton Leftmost button.  Hidden if nil.
+ * @param inOtherButton Middle button.  Hidden if nil. inAlternateButton must be non-nil for inOtherButton to be used.
+ * @param parentWindow Window on which to display as a sheet.  Displayed as a normal window if nil.
+ * @param inMessageHeader A plain <tt>NSString</tt> which will be displayed as a bolded header for the message.  Hidden if nil.
+ * @param inMessage The <tt>NSAttributedString</tt> which is the body of text for the window.
+ * @param inImage The NSImage to display; if nil, the default application icon will be shown
+ * @param target The target to send the selector <tt>textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo</tt> when the sheet ends.
+ *
+ * @see AITextAndButtonsReturnCode
  */
-- (id)changeWindowToTitle:(NSString *)inTitle
-			defaultButton:(NSString *)inDefaultButton
-		  alternateButton:(NSString *)inAlternateButton
-			  otherButton:(NSString *)inOtherButton
-		withMessageHeader:(NSString *)inMessageHeader
-			   andMessage:(NSAttributedString *)inMessage
-					image:(NSImage *)inImage
-				   target:(id)inTarget
-				 userInfo:(id)inUserInfo
+- (void)changeWindowToTitle:(NSString *)inTitle
+			  defaultButton:(NSString *)inDefaultButton
+			alternateButton:(NSString *)inAlternateButton
+				otherButton:(NSString *)inOtherButton
+		  withMessageHeader:(NSString *)inMessageHeader
+				 andMessage:(NSAttributedString *)inMessage
+					  image:(NSImage *)inImage
+					 target:(id)inTarget
+				   userInfo:(id)inUserInfo
 {
 	[title release];
 	[defaultButton release];
@@ -146,8 +169,12 @@
 	userClickedButton = NO;
 	allowsCloseWithoutResponse = YES;
 	[self configureWindow];
+}
 
-    return self;
+- (void)show
+{
+	[self showWindow:nil];
+	[[self window] orderFront:nil];
 }
 
 /*!
