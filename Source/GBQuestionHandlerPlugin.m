@@ -25,7 +25,7 @@ typedef enum
 } AlertType;
 
 @interface GBQuestionHandlerPlugin (privateFunctions)
-- (void)displayNextAlert;
+- (BOOL)displayNextAlert;
 @end
 
 @implementation GBQuestionHandlerPlugin
@@ -93,6 +93,7 @@ typedef enum
 {
 	NSString *selectorString = [userInfo objectForKey:@"Selector"];
 	id target = [userInfo objectForKey:@"Target"];
+	BOOL	ret = YES;
 	
 	if(target != nil || selectorString != nil)
 	{
@@ -102,41 +103,57 @@ typedef enum
 			[target performSelector:selector withObject:[NSNumber numberWithInt:returnCode] withObject:[userInfo objectForKey:@"Userinfo"]];
 		}
 	}
-	[currentAlert release]; currentAlert = nil;
-	[self displayNextAlert];
-	return YES;
+	if([self displayNextAlert])
+		//More alerts so don't hide window
+		ret = NO;
+	else
+	{
+		[currentAlert release];
+		currentAlert = nil;
+	}
+	return ret;
 }
 
-- (void)displayNextAlert
+- (BOOL)displayNextAlert
 {
+	BOOL ret = NO;
 	if([errorQueue count] != 0)
 	{
 		NSDictionary *info = [errorQueue objectAtIndex:0];
-		currentAlert = [[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:[info objectForKey:@"Window Title"]
-																			  defaultButton:AILocalizedString(@"Next", @"Next Button")
-																			alternateButton:AILocalizedString(@"Dismiss All", @"Dismiss All Button")
-																				otherButton:nil
-																				   onWindow:nil
-																		  withMessageHeader:[info objectForKey:@"Title"]
-																				 andMessage:[info objectForKey:@"Description"]
-																					 target:self
-																				   userInfo:info] retain];
+		if(currentAlert == nil)
+			currentAlert = [[ESTextAndButtonsWindowController controller] retain];
+		[currentAlert changeWindowToTitle:[info objectForKey:@"Window Title"]
+							defaultButton:AILocalizedString(@"Next", @"Next Button")
+						  alternateButton:AILocalizedString(@"Dismiss All", @"Dismiss All Button")
+							  otherButton:nil
+						withMessageHeader:[info objectForKey:@"Title"]
+							   andMessage:[info objectForKey:@"Description"]
+									image:nil
+								   target:self
+								 userInfo:info];
+		[currentAlert show];
 		[errorQueue removeObjectAtIndex:0];
+		ret = YES;
 	}
 	else if ([questionQueue count] != 0)
 	{
 		NSDictionary *info = [questionQueue objectAtIndex:0];
-		currentAlert = [[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:[info objectForKey:@"Window Title"]
-																			  defaultButton:[info objectForKey:@"Default Button"]
-																			alternateButton:[info objectForKey:@"Alternate Button"]
-																				otherButton:[info objectForKey:@"Other Button"]
-																				   onWindow:nil
-																		  withMessageHeader:[info objectForKey:@"Title"]
-																				 andMessage:[info objectForKey:@"Description"]
-																					 target:self
-																				   userInfo:info] retain];
+		if(currentAlert == nil)
+			currentAlert = [[ESTextAndButtonsWindowController controller] retain];
+		[currentAlert changeWindowToTitle:[info objectForKey:@"Window Title"]
+							defaultButton:[info objectForKey:@"Default Button"]
+						  alternateButton:[info objectForKey:@"Alternate Button"]
+							  otherButton:[info objectForKey:@"Other Button"]
+						withMessageHeader:[info objectForKey:@"Title"]
+							   andMessage:[info objectForKey:@"Description"]
+									image:nil
+								   target:self
+								 userInfo:info];
+		[currentAlert show];
 		[questionQueue removeObjectAtIndex:0];
+		ret = YES;
 	}
+	return ret;
 }
 
 @end

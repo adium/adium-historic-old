@@ -26,11 +26,17 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIService.h>
+#import "ESTextAndButtonsWindowController.h"
+
+#define URLHandlingGroup @"URL Handling Group"
+#define DONTPROMPTFORURL @"Don't Prompt for URL"
 
 @interface AdiumURLHandling(PRIVATE)
 + (void)_setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
++ (BOOL)_checkHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
 + (void)_openChatToContactWithName:(NSString *)name onService:(NSString *)serviceIdentifier withMessage:(NSString *)body;
 + (void)_openAIMGroupChat:(NSString *)roomname onExchange:(int)exchange;
+- (void)promptUser;
 @end
 
 @implementation AdiumURLHandling
@@ -48,16 +54,24 @@
 	if (Err == noErr) {
 		//Bracket multiple calls with ICBegin() for efficiency as per documentation
 		ICBegin(ICInst, icReadWritePerm);
+		BOOL alreadySet = YES;
 
 		//Configure the protocols we want.
-		[self _setHelperAppForKey:(kICHelper "aim") withInstance:ICInst]; //AIM, official
-		[self _setHelperAppForKey:(kICHelper "ymsgr") withInstance:ICInst]; //Yahoo!, official
-		[self _setHelperAppForKey:(kICHelper "yahoo") withInstance:ICInst]; //Yahoo!, unofficial
-		[self _setHelperAppForKey:(kICHelper "xmpp") withInstance:ICInst]; //Jabber, official
-		[self _setHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
-		[self _setHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
-		[self _setHelperAppForKey:(kICHelper "msn") withInstance:ICInst]; //MSN, unofficial
+		alreadySet &= [self _checkHelperAppForKey:(kICHelper "aim") withInstance:ICInst]; //AIM, official
+		alreadySet &= [self _checkHelperAppForKey:(kICHelper "ymsgr") withInstance:ICInst]; //Yahoo!, official
+		alreadySet &= [self _checkHelperAppForKey:(kICHelper "yahoo") withInstance:ICInst]; //Yahoo!, unofficial
+		alreadySet &= [self _checkHelperAppForKey:(kICHelper "xmpp") withInstance:ICInst]; //Jabber, official
+		alreadySet &= [self _checkHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
+		alreadySet &= [self _checkHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
+		alreadySet &= [self _checkHelperAppForKey:(kICHelper "msn") withInstance:ICInst]; //MSN, unofficial
 	 
+		if(!alreadySet)
+		{
+			//Ask the user
+			AdiumURLHandling *instance = [[AdiumURLHandling alloc] init];
+			[instance promptUser];
+			[instance release];
+		}
 		//Adium xtras
 		[self _setHelperAppForKey:(kICHelper "adiumxtra") withInstance:ICInst];
 
@@ -247,6 +261,22 @@
 	}
 }
 
++ (BOOL)_checkHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst
+{
+	OSErr		Err;
+	ICAppSpec	Spec;
+	ICAttr		Junk;
+	long		TheSize;
+	
+	TheSize = sizeof(Spec);
+	
+	// Get the current aim helper app, to fill the Spec and TheSize variables
+	Err = ICGetPref(ICInst, key, &Junk, &Spec, &TheSize);
+	
+	//Set the name and creator codes
+	return Spec.fCreator == 'AdIM';
+}
+
 + (void)_openChatToContactWithName:(NSString *)UID onService:(NSString *)serviceID withMessage:(NSString *)message
 {
 	AIListContact   *contact;
@@ -295,6 +325,72 @@
 	} else {
 		NSBeep();
 	}
-}	
+}
+
+- (void)URLQuestion:(NSNumber *)number info:(id)info
+{
+	AITextAndButtonsReturnCode ret = [number intValue];
+	switch(ret)
+	{
+		case AITextAndButtonsOtherReturn:
+			[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES] forKey:DONTPROMPTFORURL group:URLHandlingGroup];
+			break;
+		case AITextAndButtonsDefaultReturn:
+		{
+			ICInstance ICInst;
+			OSErr Err = noErr;
+			
+			//Start Internet Config, passing it Adium's creator code
+			Err = ICStart(&ICInst, 'AdiM');
+			if (Err == noErr) {
+				//Bracket multiple calls with ICBegin() for efficiency as per documentation
+				ICBegin(ICInst, icReadWritePerm);
+				
+				//Configure the protocols we want.
+				[AdiumURLHandling _setHelperAppForKey:(kICHelper "aim") withInstance:ICInst]; //AIM, official
+				[AdiumURLHandling _setHelperAppForKey:(kICHelper "ymsgr") withInstance:ICInst]; //Yahoo!, official
+				[AdiumURLHandling _setHelperAppForKey:(kICHelper "yahoo") withInstance:ICInst]; //Yahoo!, unofficial
+				[AdiumURLHandling _setHelperAppForKey:(kICHelper "xmpp") withInstance:ICInst]; //Jabber, official
+				[AdiumURLHandling _setHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
+				[AdiumURLHandling _setHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
+				[AdiumURLHandling _setHelperAppForKey:(kICHelper "msn") withInstance:ICInst]; //MSN, unofficial
+				
+				//Adium xtras
+				[AdiumURLHandling _setHelperAppForKey:(kICHelper "adiumxtra") withInstance:ICInst];
+				
+				//End whatever it was that ICBegin() began
+				ICEnd(ICInst);
+				
+				//We're done with Internet Config, so stop it
+				Err = ICStop(ICInst);
+				
+				//How there could be an error stopping Internet Config, I don't know.
+				if (Err != noErr) {
+					NSLog(@"Error stopping InternetConfig. Error code: %d", Err);
+				}
+			} else {
+				NSLog(@"Error starting InternetConfig. Error code: %d", Err);
+			}
+			break;
+		}
+		default:
+			break;
+	}
+}
+
+- (void)promptUser
+{
+	AIPreferenceController *prefs = [adium preferenceController];
+	if(![prefs preferenceForKey:DONTPROMPTFORURL group:URLHandlingGroup])
+		[[adium interfaceController] displayQuestion:AILocalizedString(@"URL Handler", nil)
+									 withDescription:AILocalizedString(@"Adium is not the default handler for IM URL's.  Would you like Adium to become the default handler?", nil)
+									 withWindowTitle:nil
+									   defaultButton:AILocalizedString(@"Yes", nil)
+									 alternateButton:AILocalizedString(@"No", nil)
+										 otherButton:AILocalizedString(@"Never", nil)
+											  target:self
+											selector:@selector(URLQuestion:info:)
+											userInfo:nil];
+}
 
 @end
