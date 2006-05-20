@@ -383,7 +383,7 @@
 	AIPreferenceController *prefs = [adium preferenceController];
 	if(![prefs preferenceForKey:DONTPROMPTFORURL group:URLHandlingGroup])
 		[[adium interfaceController] displayQuestion:AILocalizedString(@"URL Handler", nil)
-									 withDescription:AILocalizedString(@"Adium is not the default handler for IM URL's.  Would you like Adium to become the default handler?", nil)
+									 withDescription:AILocalizedString(@"Adium is not the default handler for IM URLs.  Would you like Adium to become the default handler?", nil)
 									 withWindowTitle:nil
 									   defaultButton:AILocalizedString(@"Yes", nil)
 									 alternateButton:AILocalizedString(@"No", nil)
