@@ -7,12 +7,6 @@
 
 #import "AdiumApplescriptRunner.h"
 
-#include <sys/types.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/errno.h>
-#include <unistd.h>
-
 @implementation AdiumApplescriptRunner
 - (id)init
 {
@@ -70,17 +64,21 @@
 	
 	//Houston, we are go for launch.
 	if (applescriptRunnerPath) {
-		pid_t pid = fork();
-		if(pid == 0) {
-			//We are the child process. Turn into an AppleScriptRunner.
-			execl([applescriptRunnerPath fileSystemRepresentation], NULL);
-
-			//If we get here, we have failed.
-			NSLog(@"Could not launch %@: %s", applescriptRunnerPath, strerror(errno));
-			exit(1);
-		} else if(pid < 0) {
-			//Fork failed.
-			NSLog(@"Could not fork to AppleScript runner: %s", strerror(errno));
+		LSLaunchFSRefSpec spec;
+		FSRef appRef;
+		OSStatus err = FSPathMakeRef((UInt8 *)[applescriptRunnerPath fileSystemRepresentation], &appRef, NULL);
+		if (err == noErr) {
+			spec.appRef = &appRef;
+			spec.numDocs = 0;
+			spec.itemRefs = NULL;
+			spec.passThruParams = NULL;
+			spec.launchFlags = kLSLaunchDontAddToRecents | kLSLaunchDontSwitch | kLSLaunchNoParams | kLSLaunchAsync;
+			spec.asyncRefCon = NULL;
+			err = LSOpenFromRefSpec(&spec, NULL);
+			
+			if (err != noErr) {
+				NSLog(@"Could not launch %@",applescriptRunnerPath);
+			}
 		}
 	} else {
 		NSLog(@"Could not find AdiumApplescriptRunner...");
