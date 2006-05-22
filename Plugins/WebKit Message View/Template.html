@@ -105,6 +105,7 @@
 			img = document.createElement('img');
 			img.setAttribute('src', node.src);
 			img.setAttribute('alt', node.firstChild.nodeValue);
+			img.setClass(node.class);
 			node.parentNode.replaceChild(img, node);
 			
 			alignChat(shouldScroll);
