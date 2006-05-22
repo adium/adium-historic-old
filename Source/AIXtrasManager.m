@@ -40,10 +40,6 @@ static AIXtrasManager * manager;
 - (void) installPlugin
 {
 	manager = self;
-	[[adium notificationCenter] addObserver:manager
-								   selector:@selector(xtraNotFound:)
-									   name:@"AIXtraNotFound"
-									 object:nil];
 }
 
 - (void) showXtras
@@ -103,17 +99,6 @@ static AIXtrasManager * manager;
 	
 	//Now redisplay our current category, in case it changed
 	[self setCategory:nil];
-}
-
-- (void) xtraNotFound:(NSNotification *)not
-{
-	NSError *error = [[not userInfo] objectForKey:@"AIXtraNotFoundError"];
-#warning gbooker: maybe we should switch this to use that class you mentioned from Fire, since there may be multiple xtras not found
-	NSAlert *alert = [NSAlert alertWithError:error];
-	int returnval = [alert runModal];
-	
-	if(returnval ==  NSAlertFirstButtonReturn)
-		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://www.adiumxtras.com"]];
 }
 
 - (void) loadXtras

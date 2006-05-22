@@ -116,16 +116,6 @@
 	
 	//If the style isn't available, use our default.  Or, failing that, any available style
 	if (!bundle) {
-		NSError *error = [NSError errorWithDomain:@"AIXtraErrors"
-											 code:0
-										 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-											 @"Couldn't find a message view style", NSLocalizedDescriptionKey,
-											 @"This is probably because the style is not included in this version of Adium", NSLocalizedFailureReasonErrorKey,
-											 @"Adium will revert to the default message style, but you can find the missing one on the Xtras website", NSLocalizedRecoverySuggestionErrorKey,
-											 [NSArray arrayWithObjects:@"Open Xtras Website", @"Continue", nil], NSLocalizedRecoveryOptionsErrorKey, nil]];
-		[[adium notificationCenter] postNotificationName:@"AIXtraNotFound"
-															object:nil
-														  userInfo:[NSDictionary dictionaryWithObject:error forKey:@"AIXtraNotFoundError"]];
 		bundle = [styles objectForKey:WEBKIT_DEFAULT_STYLE];
 		if (!bundle)
 			bundle = [[styles allValues] lastObject];
