@@ -173,7 +173,7 @@
  */
 - (NSString *)autoReplyString
 {
-	return [[self autoReplyString] string];
+	return [[self autoReply] string];
 }
 
 /*!
