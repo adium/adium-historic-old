@@ -24,6 +24,7 @@
 }
 
 - (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass;
+- (id)initWithPath:(NSString *)inPath;
 
 //Accessors
 - (NSString *)path;
@@ -42,5 +43,5 @@
 - (NSComparisonResult)compareFromReverse:(AIChatLog *)inLog;
 - (NSComparisonResult)compareDate:(AIChatLog *)inLog;
 - (NSComparisonResult)compareDateReverse:(AIChatLog *)inLog;
-	
+
 @end
