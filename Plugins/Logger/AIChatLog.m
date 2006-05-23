@@ -24,16 +24,45 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 
 - (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass
 {
-    if ((self = [super init]))
-	{
+    if ((self = [super init])) {
 		path = [inPath retain];
 		from = [inFrom retain];
 		to = [inTo retain];
 		serviceClass = [inServiceClass retain];
 		rankingPercentage = 0;
 	}
-		
+
     return self;
+}
+
+- (id)initWithPath:(NSString *)inPath
+{
+	NSString *parentPath = [path stringByDeletingLastPathComponent];
+	NSString *toUID = [parentPath lastPathComponent];
+	NSString *serviceAndFromUID = [[parentPath stringByDeletingLastPathComponent] lastPathComponent];
+
+	NSString *myServiceClass, *fromUID;
+
+	//Determine the service and fromUID - should be SERVICE.ACCOUNT_NAME
+	//Check against count to guard in case of old, malformed or otherwise odd folders & whatnot sitting in log base
+	NSArray *serviceAndFromUIDArray = [serviceAndFromUID componentsSeparatedByString:@"."];
+	
+	if ([serviceAndFromUIDArray count] >= 2) {
+		myServiceClass = [serviceAndFromUIDArray objectAtIndex:0];
+		
+		//Use substringFromIndex so we include the rest of the string in the case of a UID with a . in it
+		fromUID = [serviceAndFromUID substringFromIndex:([serviceClass length] + 1)]; //One off for the '.'
+
+	} else {
+		//Fallback: blank non-nil serviceClass; folderName as the fromUID
+		myServiceClass = @"";
+		fromUID = serviceAndFromUID;
+	}
+
+	return [self initWithPath:inPath
+						 from:fromUID
+						   to:toUID
+				 serviceClass:myServiceClass];
 }
 
 - (void)dealloc

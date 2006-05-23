@@ -19,7 +19,7 @@
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 #import "AILogViewerWindowController.h"
-#import "AIMDLogViewerWindowController.h"
+//#import "AIMDLogViewerWindowController.h"
 #import "AIContentController.h"
 #import "AILoggerPlugin.h"
 #import "AILoginController.h"
@@ -44,8 +44,8 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 
-#define LOG_INDEX_NAME				@"Logs_%@.index"
-#define DIRTY_LOG_ARRAY_NAME		@"DirtyLogs_%@.plist"
+#define LOG_INDEX_NAME				@"Logs.index"
+#define DIRTY_LOG_ARRAY_NAME		@"DirtyLogs.plist"
 #define KEY_LOG_INDEX_VERSION		@"Log Index Version"
 
 #define LOG_INDEX_STATUS_INTERVAL	20      //Interval before updating the log indexing status
@@ -85,11 +85,9 @@ Class LogViewerWindowControllerClass = NULL;
 //
 - (void)installPlugin
 {
-	//Don't need log indexing on Tiger and later since we use Spotlight
-	logIndexingEnabled = ![NSApp isOnTigerOrBetter];
-	LogViewerWindowControllerClass = ([NSApp isOnTigerOrBetter] ?
-									  [AIMDLogViewerWindowController class] :
-									  [AILogViewerWindowController class]);
+	LogViewerWindowControllerClass = /*(FALSE && [NSApp isOnTigerOrBetter] ?
+									  [AIMDLogViewerWindowController class] :*/
+									  [AILogViewerWindowController class] /*)*/;
 
     //Init
 	observingContent = NO;
@@ -136,18 +134,16 @@ Class LogViewerWindowControllerClass = NULL;
 	                                                       menu:nil];
 	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 
-	if (logIndexingEnabled) {
-		dirtyLogArray = nil;
-		index_Content = nil;
-		stopIndexingThreads = NO;
-		suspendDirtyArraySave = NO;		
-		indexingThreadLock = [[NSLock alloc] init];
-		dirtyLogLock = [[NSLock alloc] init];
-		logAccessLock = [[NSLock alloc] init];
-
-		//Init index searching
-		[self initLogIndexing];
-	}
+	dirtyLogArray = nil;
+	index_Content = nil;
+	stopIndexingThreads = NO;
+	suspendDirtyArraySave = NO;		
+	indexingThreadLock = [[NSLock alloc] init];
+	dirtyLogLock = [[NSLock alloc] init];
+	logAccessLock = [[NSLock alloc] init];
+	
+	//Init index searching
+	[self initLogIndexing];
 	
 	[self upgradeLogExtensions];
 	
@@ -165,8 +161,7 @@ Class LogViewerWindowControllerClass = NULL;
 								   selector:@selector(chatClosed:)
 									   name:Chat_WillClose
 									 object:nil];
-	#endif
-	
+	#endif	
 }
 
 - (void)uninstallPlugin
@@ -653,18 +648,27 @@ Class LogViewerWindowControllerClass = NULL;
 }
 
 //Log Indexing ---------------------------------------------------------------------------------------------------------
-#pragma mark Log Indexing - 10.3 only
-/***** Everything below this point is related to log index generation and access; it is only used in 10.3 ****/
+#pragma mark Log Indexing
+/***** Everything below this point is related to log index generation and access ****/
 
 /* For the log content searching, we are required to re-index a log whenever it changes.  The solution below to
  * this problem is along the lines of:
  *		- Keep an array of logs that need to be re-indexed
  *		- Whenever a log is changed, add it to this array
  *		- When the log viewer is opened, re-index all the logs in the array
-*/
-//Load the list of logs that need re-indexing
+ */
+
+/*
+ * @brief Initialize log indexing
+ */
 - (void)initLogIndexing
 {
+	/* Use SearchKit plugins -- including our own! -- for getting the
+	 * kMDItemTextContent property for files, leaving markup behind.
+	 */
+	SKLoadDefaultExtractorPlugIns();
+
+	//Load the list of logs that need re-indexing
 	[self loadDirtyLogArray];
 }
 
@@ -672,85 +676,71 @@ Class LogViewerWindowControllerClass = NULL;
  * @brief Prepare the log index for searching.
  *
  * Must call before attempting to use the logSearchIndex.
- * Only used in 10.3 -- 10.4 and later's AIMDLogViewerWindowController doesn't need the logSearchIndex
  */
 - (void)prepareLogContentSearching
 {
-    //Load the index and start indexing to make it current
-    if (logIndexingEnabled) {
-		//If we're going to need to re-index all our logs from scratch, it will make
-		//things faster if we start with a fresh log index as well.
-		if (!dirtyLogArray) {
-			[self resetLogIndex];
-		}
-		
-		[self loadLogIndex];
-		stopIndexingThreads = NO;
-		if (!dirtyLogArray) {
-			[self dirtyAllLogs];
-		} else {
-			[self cleanDirtyLogs];
-		}
-    }
+    /* Load the index and start indexing to make it current
+	 * If we're going to need to re-index all our logs from scratch, it will make
+	 * things faster if we start with a fresh log index as well.
+	 */
+	if (!dirtyLogArray) {
+		[self resetLogIndex];
+	}
+	
+	[self loadLogIndex];
+	stopIndexingThreads = NO;
+	if (!dirtyLogArray) {
+		[self dirtyAllLogs];
+	} else {
+		[self cleanDirtyLogs];
+	}
 }
 
 //Close down and clean up the log index  (Call when finished using the logSearchIndex)
 - (void)cleanUpLogContentSearching
 {
-    if (logIndexingEnabled) {
-		[self stopIndexingThreads];
-		[self closeLogIndex];
-    }
+	[self stopIndexingThreads];
+	[self closeLogIndex];
 }
 
 //Returns the Search Kit index for log content searching
 - (SKIndexRef)logContentIndex
 {
-    if (logIndexingEnabled) {
-		[logAccessLock lock];
-		SKIndexFlush(index_Content); //Flush the index before returning to ensure everything is up to date
-		[logAccessLock unlock];
-		return index_Content;
-    } else {
-		return nil;
-    }
+	[logAccessLock lock];
+	SKIndexFlush(index_Content); //Flush the index before returning to ensure everything is up to date
+	[logAccessLock unlock];
+	return index_Content;
 }
 
 //Mark a log as needing a re-index
 - (void)markLogDirtyAtPath:(NSString *)path forChat:(AIChat *)chat
 {
-    if (logIndexingEnabled) {
-		NSString    *dirtyKey = [@"LogIsDirty_" stringByAppendingString:path];
+	NSString    *dirtyKey = [@"LogIsDirty_" stringByAppendingString:path];
+	
+	if (dirtyLogArray && ![chat integerStatusObjectForKey:dirtyKey]) {
+		//Add to dirty array (Lock to ensure that no one changes its content while we are)
+		[dirtyLogLock lock];
+		if (path != nil) {
+			[dirtyLogArray addObject:path];
+		}
+		[dirtyLogLock unlock];
 		
-		if (dirtyLogArray && ![chat integerStatusObjectForKey:dirtyKey]) {
-			//Add to dirty array (Lock to ensure that no one changes its content while we are)
-			[dirtyLogLock lock];
-                        if (path != nil) {
-                            [dirtyLogArray addObject:path];
-                        }
-			[dirtyLogLock unlock];
-			
-			//Save the dirty array immedientally
-			[self _saveDirtyLogArray];
-			
-			//Flag the chat with 'LogIsDirty' for this filename.  On the next message we can quickly check this flag.
-			[chat setStatusObject:[NSNumber numberWithBool:YES]
-						   forKey:dirtyKey
-						   notify:NotifyNever];
-		}	
-    }
+		//Save the dirty array immedientally
+		[self _saveDirtyLogArray];
+		
+		//Flag the chat with 'LogIsDirty' for this filename.  On the next message we can quickly check this flag.
+		[chat setStatusObject:[NSNumber numberWithBool:YES]
+					   forKey:dirtyKey
+					   notify:NotifyNever];
+	}	
 }
 
 //Get the current status of indexing.  Returns NO is indexing is not occuring
 - (BOOL)getIndexingProgress:(int *)complete outOf:(int *)total
 {
-    if (logIndexingEnabled) {
-		*complete = logsIndexed;
-		*total = logsToIndex;
-		return logsToIndex != 0;
-    } else {
-		return NO;
-    }
+	*complete = logsIndexed;
+	*total = logsToIndex;
+	return logsToIndex != 0;
 }
 
 
@@ -766,6 +756,7 @@ Class LogViewerWindowControllerClass = NULL;
     if ([[NSFileManager defaultManager] fileExistsAtPath:logIndexPath]) {
 		[logAccessLock lock];
 		index_Content = SKIndexOpenWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", true);
+		NSLog(@"Loaded %x",index_Content);
 		[logAccessLock unlock];
     }
     if (!index_Content) {
@@ -773,9 +764,12 @@ Class LogViewerWindowControllerClass = NULL;
 		[[NSFileManager defaultManager] createDirectoriesForPath:[logIndexPath stringByDeletingLastPathComponent]];
 		
 		[logAccessLock lock];
-		index_Content = SKIndexCreateWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", kSKIndexVector, NULL);
+		index_Content = SKIndexCreateWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", kSKIndexInverted, NULL);
+		NSLog(@"Created %x",index_Content);
 		[logAccessLock unlock];
     }
+	
+	NSLog(@"Closed with %x",index_Content);
 }
 
 //Close the log index
@@ -957,20 +951,33 @@ Class LogViewerWindowControllerClass = NULL;
 			[dirtyLogLock unlock];
 			
 			if (logPath) {
-				NSString	    *fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:logPath];
 				SKDocumentRef   document;
 				
 				//Re-index the log
 				//What we should do here is the following:
-				//document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:logPath]);
-				//SKIndexAddDocument(index_Content, document, NULL, YES);
+				//
 				//
 				//However, it seems that (10.3.1) SKDocumentCreateWithURL has a pretty serious memory leak.  It works just
 				//as well to use SKDocumentCreate and set the document's name to the path, so we can do that as an alternative:
 				[logAccessLock lock];
-				document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)logPath);
-				SKIndexAddDocumentWithText(index_Content, document, (CFStringRef)[NSString stringWithContentsOfFile:fullPath], YES);
-				CFRelease(document);
+
+				NSString            *fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:logPath];
+
+				document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:fullPath]);
+				if (document) {
+					SKIndexAddDocument(index_Content, document, NULL, YES);
+					
+					/*
+					 document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)logPath);
+					 SKIndexAddDocumentWithText(index_Content,
+												document,
+												(CFStringRef)[NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:logPath]],
+												YES);
+					 */
+					CFRelease(document);
+				} else {
+					NSLog(@"Could not create document for %@ [%@]",fullPath,[NSURL fileURLWithPath:fullPath]);
+				}
 				[logAccessLock unlock];
 				
 				//Update our progress
