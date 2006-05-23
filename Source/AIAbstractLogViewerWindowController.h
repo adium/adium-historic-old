@@ -12,7 +12,8 @@
 #define	REFRESH_RESULTS_INTERVAL		0.5 //Interval between results refreshes while searching
 #define LOG_SEARCH_STATUS_INTERVAL		20	//1/60ths of a second to wait before refreshing search status
 
-#define	LOG_VIEWER_DID_UPDATE_LOG_ARRAYS	@"LogViewerDidUpdateLogArrays"
+#define LOG_CONTENT_SEARCH_MAX_RESULTS	10000	//Max results allowed from a search
+#define LOG_RESULT_CLUMP_SIZE			10	//Number of logs to fetch at a time
 
 #define SEARCH_MENU						AILocalizedString(@"Search Menu",nil)
 #define FROM							AILocalizedString(@"From",nil)
@@ -26,6 +27,13 @@
 #define DELETE							AILocalizedString(@"Delete",nil)
 #define DELETEALL						AILocalizedString(@"Delete All",nil)
 #define SEARCH							AILocalizedString(@"Search",nil)
+
+#define	KEY_LOG_VIEWER_EMOTICONS			@"Log Viewer Emoticons"
+#define	KEY_LOG_VIEWER_DRAWER_STATE			@"Log Viewer Drawer State"
+#define	KEY_LOG_VIEWER_DRAWER_SIZE			@"Log Viewer Drawer Size"
+#define KEY_LOG_VIEWER_SELECTED_COLUMN		@"Log Viewer Selected Column Identifier"
+#define	LOG_VIEWER_DID_CREATE_LOG_ARRAYS	@"LogViewerDidCreateLogArrays"
+#define	LOG_VIEWER_DID_UPDATE_LOG_ARRAYS	@"LogViewerDidUpdateLogArrays"
 
 typedef enum {
     LOG_SEARCH_FROM = 0,
@@ -69,7 +77,8 @@ typedef enum {
 
 	
 	NSTimer					*refreshResultsTimer;
-	
+	NSTimer				*aggregateLogIndexProgressTimer; 
+
 	NSString				*filterForAccountName ;	//Account name to restrictively match content searches
 	NSString				*filterForContactName;	//Contact name to restrictively match content searches
 	
@@ -79,7 +88,7 @@ typedef enum {
 	BOOL				automaticSearch;		//YES if this search was performed automatically for the user (view ___'s logs...)
     BOOL				ignoreSelectionChange;	//Hack to prevent automatic table selection changes from clearing the automaticSearch flag
     BOOL				windowIsClosing;		//YES only if windowShouldClose: has been called, to prevent actions after that point
-
+		
 	NSMutableDictionary	*toolbarItems;
     NSImage				*blankImage;
 	
@@ -89,10 +98,15 @@ typedef enum {
     NSMutableArray		*toServiceArray;		//Array of services for accounts
     NSDateFormatter		*dateFormatter;			//Format for dates displayed in the table
 	
-	
     int					sameSelection;
     BOOL				useSame;
 	
+	//Old
+	BOOL showEmoticons;
+	NSString *activeSearchStringEncoded;
+	IBOutlet NSTextField	*textField_totalAccounts;
+	IBOutlet NSTextField	*textField_totalContacts;
+	IBOutlet NSDrawer		*drawer_contacts;
 }
 
 + (id)openForPlugin:(id)inPlugin;
@@ -103,7 +117,6 @@ typedef enum {
 
 - (void)stopSearching;
 
-- (void)determineToAndFromGroupDicts;
 - (void)displayLog:(AIChatLog *)log;
 - (void)installToolbar;
 
@@ -122,6 +135,15 @@ typedef enum {
 - (void)refreshResultsSearchIsComplete:(BOOL)searchIsComplete;
 - (void)updateProgressDisplay;
 
-- (NSMutableString *)progressString;
+//Contact / account drawer...
+- (void)filterForContactName:(NSString *)inContactName;
+- (void)filterForAccountName:(NSString *)inContactName;
+
+-(void)rebuildIndices;
+
+- (NSMutableArray *)toArray;
+- (NSMutableArray *)fromArray;
+- (NSMutableArray *)toServiceArray;
+- (NSMutableArray *)fromServiceArray;
 
 @end

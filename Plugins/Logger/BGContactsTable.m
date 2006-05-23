@@ -16,6 +16,7 @@
 
 #import "AIContactController.h"
 #import "BGContactsTable.h"
+#import "AILoggerPlugin.h"
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
