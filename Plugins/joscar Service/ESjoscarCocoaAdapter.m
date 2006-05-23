@@ -301,7 +301,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	NSString *message = [info getStatusMessage];
 
 #define MUSICAL_NOTE [NSString stringWithUTF8String:"\xe2\x99\xab"]
-	if (iTMSLink)
+	if (iTMSLink && [iTMSLink length])
 		message = [NSString stringWithFormat:@"<a href=\"%@\">%@</a> %@", iTMSLink, MUSICAL_NOTE, message];
 
 	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
