@@ -11,6 +11,8 @@
 	IBOutlet	NSTableView	*tableView_fromAccounts;
 	IBOutlet	NSTableView	*tableView_toContacts;
 	IBOutlet	NSTableView	*tableView_dates;
+	
+	SKSearchRef currentSearch;
 }
 
 @end

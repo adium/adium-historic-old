@@ -146,4 +146,6 @@ typedef enum {
 - (NSMutableArray *)toServiceArray;
 - (NSMutableArray *)fromServiceArray;
 
+- (BOOL)searchShouldDisplayDocument:(SKDocumentRef)inDocument pathComponents:(NSArray *)pathComponents;
+
 @end
