@@ -8,9 +8,6 @@
 #import "AIAbstractLogViewerWindowController.h"
 
 @interface AIMDLogViewerWindowController : AIAbstractLogViewerWindowController {
-	NSMetadataQuery	*currentQuery;
-	int				lastResult;
-	
 	IBOutlet	NSTableView	*tableView_fromAccounts;
 	IBOutlet	NSTableView	*tableView_toContacts;
 	IBOutlet	NSTableView	*tableView_dates;

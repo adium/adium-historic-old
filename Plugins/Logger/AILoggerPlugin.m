@@ -19,7 +19,7 @@
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 #import "AILogViewerWindowController.h"
-//#import "AIMDLogViewerWindowController.h"
+#import "AIMDLogViewerWindowController.h"
 #import "AIContentController.h"
 #import "AILoggerPlugin.h"
 #import "AILoginController.h"
@@ -85,9 +85,9 @@ Class LogViewerWindowControllerClass = NULL;
 //
 - (void)installPlugin
 {
-	LogViewerWindowControllerClass = /*(FALSE && [NSApp isOnTigerOrBetter] ?
-									  [AIMDLogViewerWindowController class] :*/
-									  [AILogViewerWindowController class] /*)*/;
+	LogViewerWindowControllerClass = ([NSApp isOnTigerOrBetter] ?
+									  [AIMDLogViewerWindowController class] :
+									  [AILogViewerWindowController class]);
 
     //Init
 	observingContent = NO;
@@ -756,7 +756,6 @@ Class LogViewerWindowControllerClass = NULL;
     if ([[NSFileManager defaultManager] fileExistsAtPath:logIndexPath]) {
 		[logAccessLock lock];
 		index_Content = SKIndexOpenWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", true);
-		NSLog(@"Loaded %x",index_Content);
 		[logAccessLock unlock];
     }
     if (!index_Content) {
@@ -765,7 +764,6 @@ Class LogViewerWindowControllerClass = NULL;
 		
 		[logAccessLock lock];
 		index_Content = SKIndexCreateWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", kSKIndexInverted, NULL);
-		NSLog(@"Created %x",index_Content);
 		[logAccessLock unlock];
     }
 	
@@ -954,11 +952,6 @@ Class LogViewerWindowControllerClass = NULL;
 				SKDocumentRef   document;
 				
 				//Re-index the log
-				//What we should do here is the following:
-				//
-				//
-				//However, it seems that (10.3.1) SKDocumentCreateWithURL has a pretty serious memory leak.  It works just
-				//as well to use SKDocumentCreate and set the document's name to the path, so we can do that as an alternative:
 				[logAccessLock lock];
 
 				NSString            *fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:logPath];
@@ -966,14 +959,6 @@ Class LogViewerWindowControllerClass = NULL;
 				document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:fullPath]);
 				if (document) {
 					SKIndexAddDocument(index_Content, document, NULL, YES);
-					
-					/*
-					 document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)logPath);
-					 SKIndexAddDocumentWithText(index_Content,
-												document,
-												(CFStringRef)[NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:logPath]],
-												YES);
-					 */
 					CFRelease(document);
 				} else {
 					NSLog(@"Could not create document for %@ [%@]",fullPath,[NSURL fileURLWithPath:fullPath]);

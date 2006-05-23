@@ -5,72 +5,93 @@
 //  Created by Evan Schoenberg on 3/1/06.
 //
 
-//XXX - when we drop Panther support, the NSClassFromString() uses in here should die. -RAF
-
 #import "AIMDLogViewerWindowController.h"
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import "AILoggerPlugin.h"
 #import "AILogToGroup.h"
 #import "AILogFromGroup.h"
+#import "AIChatLog.h"
 #import "AIContactController.h"
 
-#define NSMetadataQueryClass NSClassFromString(@"NSMetadataQuery")
-#define NSCompoundPredicateClass NSClassFromString(@"NSCompoundPredicate")
-#define NSPredicateClass NSClassFromString(@"NSPredicate")
-
 @implementation AIMDLogViewerWindowController
-+ (NSString *)nibName
+
+//Perform a content search of the indexed logs
+- (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID
 {
-	return @"MDLogViewer";
-}
+	SKIndexRef			logSearchIndex = [plugin logContentIndex];
+	SKSearchRef			search;
 
-- (void)windowDidLoad
-{	
-	[super windowDidLoad];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(queryGatheringProgress:)
-												 name:NSMetadataQueryGatheringProgressNotification
-											   object:nil];	
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(queryDidFinish:)
-												 name:NSMetadataQueryDidFinishGatheringNotification
-											   object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(queryUpdate:)
-												 name:NSMetadataQueryDidUpdateNotification
-											   object:nil];    
-
-	//Localize and center the column headers
-	[[[[tableView_fromAccounts tableColumns] objectAtIndex:0] headerCell] setStringValue:ACCOUNT];
-	[[[[tableView_fromAccounts tableColumns] objectAtIndex:0] headerCell] setAlignment:NSCenterTextAlignment];
-	[[[[tableView_toContacts tableColumns] objectAtIndex:0] headerCell] setStringValue:DESTINATION];
-	[[[[tableView_toContacts tableColumns] objectAtIndex:0] headerCell] setAlignment:NSCenterTextAlignment];
-	[[[[tableView_dates tableColumns] objectAtIndex:0] headerCell] setStringValue:DATE];
-	[[[[tableView_dates tableColumns] objectAtIndex:0] headerCell] setAlignment:NSCenterTextAlignment];
-}
-
-- (LogSearchMode)defaultSearchMode
-{
-	return LOG_SEARCH_CONTENT;
-}
-
-- (void)dealloc
-{
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	search = SKSearchCreate(logSearchIndex,
+							(CFStringRef)searchString,
+							kSKSearchOptionDefault);
 	
-	[super dealloc];
-}
+    Boolean more = true;
+    UInt32 totalCount = 0;
 
-- (void)stopSearching
-{
-	if (currentQuery) {
-		[currentQuery stopQuery];
-		[currentQuery release]; currentQuery = nil;
-	}
+	//Retrieve matches as long as more are pending
+    while (more) {
+#define BATCH_NUMBER 100
+        SKDocumentID	foundDocIDs[BATCH_NUMBER];
+        float			foundScores[BATCH_NUMBER];
+        SKDocumentRef	foundDocRefs[BATCH_NUMBER];
 
-	[super stopSearching];
+        CFIndex foundCount = 0;
+        CFIndex i;
+		
+        more = SKSearchFindMatches (
+									search,
+									BATCH_NUMBER,
+									foundDocIDs,
+									foundScores,
+									0.5, // maximum time before func returns, in seconds
+									&foundCount
+									);
+		
+        totalCount += foundCount;
+		
+        SKIndexCopyDocumentRefsForDocumentIDs (
+											   logSearchIndex,
+											   foundCount,
+											   foundDocIDs,
+											   foundDocRefs
+											   );
+        for (i = 0; i < foundCount; i++) {
+			SKDocumentRef	document = foundDocRefs[i];
+			CFURLRef		url = SKDocumentCopyURL(document);
+			CFStringRef		logPath = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
+			NSArray			*pathComponents = [(NSString *)logPath pathComponents];
+			unsigned int	numPathComponents = [pathComponents count];
+			
+			NSString	*toPath = [NSString stringWithFormat:@"%@/%@",
+				[pathComponents objectAtIndex:numPathComponents-3],
+				[pathComponents objectAtIndex:numPathComponents-2]];
+			NSString	*path = [NSString stringWithFormat:@"%@/%@",toPath,[pathComponents objectAtIndex:numPathComponents-1]];
+			AIChatLog	*theLog;
+			
+			/*	
+				Add the log - if our index is currently out of date (for example, a log was just deleted) 
+			 we may get a null log, so be careful.
+			 */
+			[resultsLock lock];
+			theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
+			if ((theLog != nil) && (![currentSearchResults containsObjectIdenticalTo:theLog])) {
+				[theLog setRankingPercentage:foundScores[i]];
+				[currentSearchResults addObject:theLog];
+			}
+			[resultsLock unlock];
+			
+			CFRelease(logPath);
+			CFRelease(url);
+			CFRelease(document);
+        }
+		
+		[self performSelectorOnMainThread:@selector(updateProgressDisplay)
+							   withObject:nil
+							waitUntilDone:NO];
+    }
+	
+	CFRelease(search);	
 }
 
 /*
@@ -127,6 +148,7 @@
 	return predicate;
 }
 
+/*
 - (NSSet *)selectedItemsInTable:(NSTableView *)tableView basedOnArray:(NSArray *)inArray
 {	
 	NSMutableSet 	*itemSet = nil;
@@ -157,315 +179,7 @@
 
 	return itemSet;
 }
-
-//Begin the current search
-- (void)startSearchingClearingCurrentResults:(BOOL)clearCurrentResults
-{
-	NSMutableArray	*predicatesArray = [NSMutableArray array];
-
-	[super startSearchingClearingCurrentResults:clearCurrentResults];
-
-	currentQuery = [[NSMetadataQueryClass alloc] init];
-
-	//Only search within our log folder
-	//XXX need to escape ? and * if they are typed
-	[currentQuery setSearchScopes:[NSArray arrayWithObject:[NSURL fileURLWithPath:[AILoggerPlugin logBasePath]]]];
-
-	NSPredicate *queryPredicate;
-
-	//Add the basic predicate for matching the file type
-	[predicatesArray addObject:[NSPredicateClass predicateWithFormat:@"((kMDItemContentType = \"com.adiumx.log\") or (kMDItemContentType = \"com.adiumx.htmllog\"))"]];
-	
-	NSLog(@"Searching in mode %i",searchMode);
-
-	switch (searchMode) {
-		case LOG_SEARCH_FROM:
-			if ([activeSearchString length]) {
-				[predicatesArray addObject:[self predicateForContactString:activeSearchString key:@"com_adiumX_chatSource"]];
-			}
-			
-			break;
-		case LOG_SEARCH_TO:
-			if ([activeSearchString length]) {
-				[predicatesArray addObject:[self predicateForContactString:activeSearchString key:@"com_adiumX_chatDestination"]];
-			}
-			
-			break;
-		case LOG_SEARCH_DATE:
-		{
-			NSDate *searchStringDate = [NSDate dateWithNaturalLanguageString:activeSearchString];
-
-			[predicatesArray addObject:[NSPredicateClass predicateWithFormat:@"kMDItemLastUsedDate like[c] %@",[NSString stringWithFormat:@"*%@*",[searchStringDate descriptionWithCalendarFormat:@"%y-%m-%d"
-																																														 timeZone:nil
-																																														   locale:nil]]]];
-			break;
-		}
-		case LOG_SEARCH_CONTENT:
-			if ([activeSearchString length]) {
-				[predicatesArray addObject:[NSPredicateClass predicateWithFormat:@"kMDItemTextContent like[c] %@",[NSString stringWithFormat:@"*%@*",activeSearchString]]];
-			}
-			break;
-	}
-
-	NSEnumerator *enumerator;
-	NSString	 *item;
-
-	//Restrict to exact (case insensitive) matches on any selected accounts
-	enumerator = [[self selectedItemsInTable:tableView_fromAccounts basedOnArray:fromArray] objectEnumerator];
-	while ((item = [enumerator nextObject])) {
-		[predicatesArray addObject:[NSPredicateClass predicateWithFormat:@"%K like[c] %@", @"com_adiumX_chatSource", item]];
-	}
-
-	//Restrict to exact (case insensitive) matches on any selected contacts
-	enumerator = [[self selectedItemsInTable:tableView_toContacts basedOnArray:toArray] objectEnumerator];
-	while ((item = [enumerator nextObject])) {
-		[predicatesArray addObject:[NSPredicateClass predicateWithFormat:@"%K like[c] %@", @"com_adiumX_chatDestination", item]];
-	}
-
-	//Update the table periodically while the logs load.
-	[refreshResultsTimer invalidate]; [refreshResultsTimer release];
-	
-	if ([predicatesArray count] > 1) {
-		queryPredicate = [NSClassFromString(@"NSCompoundPredicate") andPredicateWithSubpredicates:predicatesArray];
-
-		NSLog(@"Predicate is %@",queryPredicate);
-		[currentQuery setPredicate:queryPredicate];
-		
-		//Presort the results... (?)
-		//[currentQuery setSortDescriptors:[self sortDescriptors]];
-		
-		lastResult = 0;
-		[currentQuery startQuery];
-		
-		refreshResultsTimer = [[NSTimer scheduledTimerWithTimeInterval:REFRESH_RESULTS_INTERVAL
-																target:self
-															  selector:@selector(refreshResults)
-															  userInfo:nil
-															   repeats:YES] retain];
-	} else {
-		//Just looking for any log...
-		[NSThread detachNewThreadSelector:@selector(loadAllLogs:)
-								 toTarget:self
-							   withObject:[NSNumber numberWithInt:activeSearchID]];		
-		
-		refreshResultsTimer = [[NSTimer scheduledTimerWithTimeInterval:REFRESH_RESULTS_INTERVAL
-																target:self
-															  selector:@selector(refreshResultsAndSort)
-															  userInfo:nil
-															   repeats:YES] retain];		
-	}
-}
-
-/*
- * @brief Process updates to our query, adding its new results to the currentSearchResults
- *
- * May be called from any thread.  Caller is responsible for actually updating the display at some point.
- */
-- (void)processQueryUpdates:(NSNumber *)inSearchID
-{
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSMetadataQuery *myQuery = [currentQuery retain];
-	//+1 for the trailing slash
-	unsigned logBaseLength = [[AILoggerPlugin logBasePath] length] + 1;
-	int searchID = [inSearchID intValue];
-
-	//Process the results
-
-	unsigned count = [myQuery resultCount];
-	int i = 0;
-	while ((i < count) && (searchID == activeSearchID)) {
-		NSString		*path = [[myQuery resultAtIndex:/*lastResult*/i++] valueForAttribute:(NSString *)kMDItemPath];
-		//Path is a full path; we want everything after the base path since the old logging system used relative paths
-		path = [path substringFromIndex:logBaseLength];
-		
-		NSString		*toPath = [path stringByDeletingLastPathComponent];
-		AIChatLog		*theLog;
-
-		[resultsLock lock];
-		theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
-		if ((theLog != nil) && (![currentSearchResults containsObjectIdenticalTo:theLog]) && (searchID == activeSearchID)) {
-			//			[theLog setRankingPercentage:outScoresArray[i]];
-			//			NSLog(@"relevance is %@",[NSMetadataQueryResultContentRelevanceAttribute);
-			[currentSearchResults addObject:theLog];
-		}
-		[resultsLock unlock];
-	}
-	
-	NSLog(@"Processing complete...");
-
-	[myQuery enableUpdates];
-	[myQuery release];
-	
-	[self performSelectorOnMainThread:@selector(refreshResultsAndSort)
-						   withObject:nil
-						waitUntilDone:NO];
-	[pool release];
-}
-
-- (void)processQueryUpdatesAndSort:(NSNumber *)inSearchID
-{
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-	[self processQueryUpdates:inSearchID];
-	[self performSelectorOnMainThread:@selector(resortLogs)
-						   withObject:nil
-						waitUntilDone:NO];
-
-	[pool release];
-}
-
-/*
- * @brief Called if our query updates after queryDidFinish: is called.
- *
- * Such updates will be small changes; we can handle them on the main thread.
- */
-- (void)queryUpdate:(NSNotification *)inNotification
-{
-	NSLog(@"Query update...");
-//	[self processQueryUpdates:[NSNumber numberWithInt:activeSearchID]];
-//	[self searchComplete];
-	[currentQuery disableUpdates];
-
-	[NSThread detachNewThreadSelector:@selector(processQueryUpdatesAndSort:)
-							 toTarget:self
-						   withObject:[NSNumber numberWithInt:activeSearchID]];		
-}
-
-/*
- * @brief Called repeatedly in the initial gathering phase
- */
-- (void)queryGatheringProgress:(NSNotification *)inNotification
-{
-	NSLog(@"Gathering progress...");
-	[currentQuery disableUpdates];
-
-	[NSThread detachNewThreadSelector:@selector(processQueryUpdates:)
-							 toTarget:self
-						   withObject:[NSNumber numberWithInt:activeSearchID]];	
-}
-/*
- * @brief Called when the search is 'complete' - that is, all existing items have been found
- */
-- (void)queryDidFinish:(NSNotification *)inNotification
-{
-	NSLog(@"Complete!");
-	[self searchComplete];
-}
-
-//Overridden from superclass...
-- (void)refreshResultsSearchIsComplete:(BOOL)searchIsComplete
-{
-	[self resortLogs];	
-
-#if 0
-	if (searchIsComplete) {
-		//Sort the logs correctly which will also reload the table
-		[self resortLogs];	
-	} else {
-		//Otherwise just reload
-		[tableView_results reloadData];
-	}
-#endif
-	if (searchIsComplete && automaticSearch) {
-		//If search is complete, select the first log if requested and possible
-		[self selectFirstLog];
-		
-	} else {
-		BOOL oldAutomaticSearch = automaticSearch;
-		
-		//Re-select displayed log, or display another one
-		[self selectDisplayedLog];
-		
-		//We don't want the above re-selection to change our automaticSearch tracking
-		//(The only reason automaticSearch should change is in response to user action)
-		automaticSearch = oldAutomaticSearch;
-	}
-
-    //Update status
-    [self updateProgressDisplay];
-}
-
-- (void)refreshResultsAndSort
-{
-	[self refreshResults];
-	[self resortLogs];
-	[self updateProgressDisplay];
-}
-
-//Faster, manual loading of all logs...
-- (void)loadAllLogs:(NSString *)inSearchID
-{
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
-	NSEnumerator        *fromEnumerator, *toEnumerator, *logEnumerator;
-    AILogToGroup        *toGroup;
-    AILogFromGroup      *fromGroup;
-    AIChatLog			*theLog;
-    UInt32				lastUpdate = TickCount();
-    int					searchID = [inSearchID intValue];
-	
-    //Walk through every 'from' group
-    fromEnumerator = [logFromGroupDict objectEnumerator];
-    while ((fromGroup = [fromEnumerator nextObject]) && (searchID == activeSearchID)) {		
-		/*
-		 When searching in LOG_SEARCH_FROM, we only proceed into matching groups
-		 For all other search modes, we always proceed here so long as either:
-		 a) We are not filtering for the account name or
-		 b) The account name matches
-		 */
-		/*
-		if ((!filterForAccountName || ([[fromGroup fromUID] caseInsensitiveCompare:filterForAccountName] == NSOrderedSame)) &&
-			((mode != LOG_SEARCH_FROM) ||
-			 (!searchString) || 
-			 ([[fromGroup fromUID] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound))) {
-		*/	
-			//Walk through every 'to' group
-			toEnumerator = [[fromGroup toGroupArray] objectEnumerator];
-			while ((toGroup = [toEnumerator nextObject]) && (searchID == activeSearchID)) {
-				
-				/*
-				 When searching in LOG_SEARCH_TO, we only proceed into matching groups
-				 For all other search modes, we always proceed here so long as either:
-				 a) We are not filtering for the contact name or
-				 b) The contact name matches
-				 */
-				/*
-				if ((!filterForContactName || ([[toGroup to] caseInsensitiveCompare:filterForContactName] == NSOrderedSame)) &&
-					((mode != LOG_SEARCH_TO) ||
-					 (!searchString) || 
-					 ([[toGroup to] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound))) {
-				*/	
-					//Walk through every log
-					[resultsLock lock];
-
-					logEnumerator = [toGroup logEnumerator];
-					while ((theLog = [logEnumerator nextObject]) && (searchID == activeSearchID)) {
-						
-						//When searching in LOG_SEARCH_DATE, we must have matching dates
-						//For all other search modes, we always proceed here
-						if (/*(mode != LOG_SEARCH_DATE) ||
-							(!searchString) ||
-							(searchStringDate && [theLog isFromSameDayAsDate:searchStringDate])*/ TRUE) {
-							
-							//Add the log
-							[currentSearchResults addObject:theLog];
-							
-							//Update our status
-							if (lastUpdate == 0 || TickCount() > lastUpdate + LOG_SEARCH_STATUS_INTERVAL) {
-								//[self updateProgressDisplay];
-								lastUpdate = TickCount();
-							}
-						}
-					}
-					[resultsLock unlock];
-				}
-    }
-	
-	[self performSelectorOnMainThread:@selector(searchComplete)
-						   withObject:nil
-						waitUntilDone:NO];
-	[pool release];
-}
+*/
 
 /*
  * @brief Configure to display the logs for a specified contact
@@ -488,15 +202,6 @@
 }
 
 #pragma mark Browser table views delegate
-
-- (void)determineToAndFromGroupDicts
-{
-	[super determineToAndFromGroupDicts];
-	
-	[tableView_fromAccounts reloadData];
-	[tableView_toContacts reloadData];
-	[tableView_dates reloadData];
-}
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
