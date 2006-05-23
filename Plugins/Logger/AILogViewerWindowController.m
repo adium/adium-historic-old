@@ -27,103 +27,12 @@
 
 @implementation AILogViewerWindowController
 
-//Open the log viewer window
-static NSString				*staticFilterForAccountName;	//Account name to restrictively match content searches
-static NSString				*staticFilterForContactName;	//Contact name to restrictively match content searches
-
-- (NSDictionary *)logToGroupDict
-{
-	return logToGroupDict;
-}
-
-- (NSDictionary *)logFromGroupDict
-{
-	return logFromGroupDict;
-}
-
-- (void)dealloc
-{
-	[staticFilterForContactName release]; staticFilterForContactName = nil;
-    [staticFilterForAccountName release]; staticFilterForAccountName = nil;
-
-	[super dealloc];
-}
-
-- (void)setSearchMode:(LogSearchMode)inMode
-{
-	//Clear any filter from the table if it's the current mode, as well
-	switch (inMode) {
-		case LOG_SEARCH_FROM:
-			[staticFilterForAccountName release]; staticFilterForAccountName = nil;
-			break;
-		case LOG_SEARCH_TO:
-			[staticFilterForContactName release]; staticFilterForContactName = nil;
-			break;
-		default:
-			break;
-	}
-	
-	[super setSearchMode:inMode];
-}
-
-- (void)filterForContactName:(NSString *)inContactName
-{
-	[staticFilterForContactName release]; staticFilterForContactName = nil;
-	[staticFilterForAccountName release]; staticFilterForAccountName = nil;
-	
-	[super filterForContactName:inContactName];
-	
-	staticFilterForContactName = [filterForContactName retain];
-}
-
-- (void)filterForAccountName:(NSString *)inAccountName
-{
-	[staticFilterForContactName release]; staticFilterForContactName = nil;
-	[staticFilterForAccountName release]; staticFilterForAccountName = nil;
-	
-	[super filterForAccountName:inAccountName];
-	
-	staticFilterForAccountName = [filterForAccountName retain];
-}
-
 Boolean ContentResultsFilter (SKIndexRef inIndex,
                               SKDocumentRef inDocument,
                               void *inContext)
 {
-	Boolean includeDocument = true;
-
-	if (staticFilterForContactName) {
-		//Searching for a specific contact		
-		CFURLRef	url = SKDocumentCopyURL(inDocument);
-		CFStringRef logPath = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
-		NSArray		*pathComponents = [(NSString *)logPath pathComponents];
-		unsigned int numPathComponents = [pathComponents count];
-		
-		NSString *contactName = [pathComponents objectAtIndex:(numPathComponents-2)];
-		includeDocument = [[contactName compactedString] isEqualToString:staticFilterForContactName];
-
-		CFRelease(url);
-		CFRelease(logPath);
-		
-	} else if (staticFilterForAccountName) {
-		//Searching for a specific account
-		CFURLRef	url = SKDocumentCopyURL(inDocument);
-		CFStringRef logPath = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
-		NSArray		*pathComponents = [(NSString *)logPath pathComponents];
-		unsigned int numPathComponents = [pathComponents count];
-		
-		NSString *serviceAndAccount = [pathComponents objectAtIndex:(numPathComponents-3)];
-		NSString *accountName = [serviceAndAccount substringFromIndex:[serviceAndAccount rangeOfString:@"."].location];
-		includeDocument = [[accountName compactedString] isEqualToString:staticFilterForContactName];
-		
-		CFRelease(url);
-		CFRelease(logPath);
-		
-	} else {
-		return true; //Boolean, not BOOL
-	}
-	
-	return includeDocument;
+	return [(AILogViewerWindowController *)inContext searchShouldDisplayDocument:inDocument
+																  pathComponents:nil];
 }
 
 //Perform a content search of the indexed logs

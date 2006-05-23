@@ -20,18 +20,22 @@
 - (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID
 {
 	SKIndexRef			logSearchIndex = [plugin logContentIndex];
-	SKSearchRef			search;
 	float				largestRankingValue = 0;
-	
-	search = SKSearchCreate(logSearchIndex,
-							(CFStringRef)searchString,
-							kSKSearchOptionDefault);
+
+	if (currentSearch) {
+		SKSearchCancel(currentSearch);
+		CFRelease(currentSearch); currentSearch = NULL;
+	}
+
+	currentSearch = SKSearchCreate(logSearchIndex,
+								   (CFStringRef)searchString,
+								   kSKSearchOptionDefault);
 	
     Boolean more = true;
     UInt32 totalCount = 0;
 
 	//Retrieve matches as long as more are pending
-    while (more) {
+    while (more && currentSearch) {
 #define BATCH_NUMBER 100
         SKDocumentID	foundDocIDs[BATCH_NUMBER];
         float			foundScores[BATCH_NUMBER];
@@ -41,7 +45,7 @@
         CFIndex i;
 		
         more = SKSearchFindMatches (
-									search,
+									currentSearch,
 									BATCH_NUMBER,
 									foundDocIDs,
 									foundScores,
@@ -57,37 +61,43 @@
 											   foundDocIDs,
 											   foundDocRefs
 											   );
-        for (i = 0; i < foundCount; i++) {
+        for (i = 0; ((i < foundCount) && (searchID == activeSearchID)) ; i++) {
 			SKDocumentRef	document = foundDocRefs[i];
 			CFURLRef		url = SKDocumentCopyURL(document);
 			CFStringRef		logPath = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
 			NSArray			*pathComponents = [(NSString *)logPath pathComponents];
-			unsigned int	numPathComponents = [pathComponents count];
 			
-			NSString	*toPath = [NSString stringWithFormat:@"%@/%@",
-				[pathComponents objectAtIndex:numPathComponents-3],
-				[pathComponents objectAtIndex:numPathComponents-2]];
-			NSString	*path = [NSString stringWithFormat:@"%@/%@",toPath,[pathComponents objectAtIndex:numPathComponents-1]];
-			AIChatLog	*theLog;
-			
-			/*	
-				Add the log - if our index is currently out of date (for example, a log was just deleted) 
-			 we may get a null log, so be careful.
-			 */
-			[resultsLock lock];
-			theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
-			if ((theLog != nil) && (![currentSearchResults containsObjectIdenticalTo:theLog])) {
-				[theLog setRankingValueOnArbitraryScale:foundScores[i]];
+			if ([self searchShouldDisplayDocument:document pathComponents:pathComponents]) {
+				unsigned int	numPathComponents = [pathComponents count];
+				NSString		*toPath = [NSString stringWithFormat:@"%@/%@",
+					[pathComponents objectAtIndex:numPathComponents-3],
+					[pathComponents objectAtIndex:numPathComponents-2]];
+				NSString		*path = [NSString stringWithFormat:@"%@/%@",toPath,[pathComponents objectAtIndex:numPathComponents-1]];
+				AIChatLog		*theLog;
 				
-				//SearchKit does not normalize ranking scores, so we track the largest we've found and use it as 1.0
-				if (foundScores[i] > largestRankingValue) largestRankingValue = foundScores[i];
+				/* Add the log - if our index is currently out of date (for example, a log was just deleted) 
+				 * we may get a null log, so be careful.
+				 */
+				[resultsLock lock];
+				theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
+				if ((theLog != nil) && (![currentSearchResults containsObjectIdenticalTo:theLog])) {
+					[theLog setRankingValueOnArbitraryScale:foundScores[i]];
+					
+					//SearchKit does not normalize ranking scores, so we track the largest we've found and use it as 1.0
+					if (foundScores[i] > largestRankingValue) largestRankingValue = foundScores[i];
+					
+					[currentSearchResults addObject:theLog];
+					
+				} else {
+					//Didn't get a valid log, so decrement our totalCount which is tracking how many logs we found
+					totalCount--;
+				}
+				[resultsLock unlock];
 				
-				[currentSearchResults addObject:theLog];
-
 			} else {
+				//Didn't add this log, so decrement our totalCount which is tracking how many logs we found
 				totalCount--;
 			}
-			[resultsLock unlock];
 			
 			CFRelease(logPath);
 			CFRelease(url);
@@ -96,7 +106,7 @@
 		
 		//Scale all logs' ranking values to the largest ranking value we've seen thus far
 		[resultsLock lock];
-		for (i = 0; i < totalCount; i++) {
+		for (i = 0; ((i < totalCount) && (searchID == activeSearchID)); i++) {
 			AIChatLog	*theLog = [currentSearchResults objectAtIndex:i];
 			[theLog setRankingPercentage:([theLog rankingValueOnArbitraryScale] / largestRankingValue)];
 		}
@@ -105,9 +115,26 @@
 		[self performSelectorOnMainThread:@selector(updateProgressDisplay)
 							   withObject:nil
 							waitUntilDone:NO];
+		
+		if (searchID != activeSearchID) {
+			more = FALSE;
+		}
     }
 	
-	CFRelease(search);	
+	if (currentSearch) {
+		CFRelease(currentSearch);
+		currentSearch = NULL;
+	}
+}
+
+- (void)stopSearching
+{	
+	if (currentSearch) {
+		SKSearchCancel(currentSearch);
+		CFRelease(currentSearch); currentSearch = nil;
+	}
+
+	[super stopSearching];
 }
 
 #if 0

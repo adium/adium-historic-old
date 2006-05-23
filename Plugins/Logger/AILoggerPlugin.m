@@ -49,12 +49,12 @@
 #define KEY_LOG_INDEX_VERSION		@"Log Index Version"
 
 #define LOG_INDEX_STATUS_INTERVAL	20      //Interval before updating the log indexing status
-#define LOG_CLEAN_SAVE_INTERVAL		500     //Number of logs to index continuiously before saving the dirty array and index
+#define LOG_CLEAN_SAVE_INTERVAL		500     //Number of logs to index continuously before saving the dirty array and index
 
 #define LOG_VIEWER					AILocalizedString(@"Log Viewer",nil)
 #define VIEW_LOGS					AILocalizedString(@"View Previous Conversations",nil)
 
-#define	CURRENT_LOG_VERSION			3       //Version of the log index.  Increase this number to reset everyones index.
+#define	CURRENT_LOG_VERSION			4       //Version of the log index.  Increase this number to reset everyones index.
 
 #define	LOG_VIEWER_IDENTIFIER		@"LogViewer"
 
@@ -759,11 +759,19 @@ Class LogViewerWindowControllerClass = NULL;
 		[logAccessLock unlock];
     }
     if (!index_Content) {
+		NSDictionary *textAnalysisProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+			[NSNumber numberWithInt:0], kSKMaximumTerms,
+			kCFBooleanTrue, kSKProximityIndexing, 
+			nil];
+
 		//Create the index if one doesn't exist
 		[[NSFileManager defaultManager] createDirectoriesForPath:[logIndexPath stringByDeletingLastPathComponent]];
 		
 		[logAccessLock lock];
-		index_Content = SKIndexCreateWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", kSKIndexInverted, NULL);
+		index_Content = SKIndexCreateWithURL((CFURLRef)logIndexPathURL,
+											 (CFStringRef)@"Content", 
+											 kSKIndexInverted,
+											 (CFDictionaryRef)textAnalysisProperties);
 		[logAccessLock unlock];
     }
 	

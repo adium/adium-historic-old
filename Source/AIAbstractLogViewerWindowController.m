@@ -336,8 +336,8 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 	[self sortcurrentSearchResultsForTableColumn:selectedColumn direction:YES];
 
     //Prepare indexing and filter searching
+	[plugin prepareLogContentSearching];
     [self initLogFiltering];
-    [plugin prepareLogContentSearching];
 
     //Begin our initial search
 	[self setSearchMode:LOG_SEARCH_TO];
@@ -1141,6 +1141,45 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     return [menuItem autorelease];
 }
 
+#pragma mark Filtering search results
+
+- (BOOL)searchShouldDisplayDocument:(SKDocumentRef)inDocument pathComponents:(NSArray *)pathComponents
+{
+	BOOL shouldDisplayDocument;
+	
+	if (filterForContactName || filterForAccountName) {
+		//Searching for a specific contact
+
+		//Determine the path components if we weren't supplied them
+		if (!pathComponents) {
+			CFURLRef	url = SKDocumentCopyURL(inDocument);
+			CFStringRef logPath = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
+
+			pathComponents = [(NSString *)logPath pathComponents];
+
+			CFRelease(url);
+			CFRelease(logPath);
+		}
+
+		unsigned int numPathComponents = [pathComponents count];
+		
+		if (filterForContactName) {
+			NSString *contactName = [pathComponents objectAtIndex:(numPathComponents-2)];
+			shouldDisplayDocument = [[contactName compactedString] isEqualToString:filterForContactName];
+			
+		} else /* filterForAccountName */ {
+			NSString *serviceAndAccount = [pathComponents objectAtIndex:(numPathComponents-3)];
+			NSString *accountName = [serviceAndAccount substringFromIndex:[serviceAndAccount rangeOfString:@"."].location];
+			shouldDisplayDocument = [[accountName compactedString] isEqualToString:filterForAccountName];
+			
+		}
+		
+	} else {
+		shouldDisplayDocument = YES;
+	}
+	
+	return shouldDisplayDocument;
+}
 
 //Threaded filter/search methods ---------------------------------------------------------------------------------------
 #pragma mark Threaded filter/search methods
