@@ -21,7 +21,8 @@
 {
 	SKIndexRef			logSearchIndex = [plugin logContentIndex];
 	SKSearchRef			search;
-
+	float				largestRankingValue = 0;
+	
 	search = SKSearchCreate(logSearchIndex,
 							(CFStringRef)searchString,
 							kSKSearchOptionDefault);
@@ -76,8 +77,15 @@
 			[resultsLock lock];
 			theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
 			if ((theLog != nil) && (![currentSearchResults containsObjectIdenticalTo:theLog])) {
-				[theLog setRankingPercentage:foundScores[i]];
+				[theLog setRankingValueOnArbitraryScale:foundScores[i]];
+				
+				//SearchKit does not normalize ranking scores, so we track the largest we've found and use it as 1.0
+				if (foundScores[i] > largestRankingValue) largestRankingValue = foundScores[i];
+				
 				[currentSearchResults addObject:theLog];
+
+			} else {
+				totalCount--;
 			}
 			[resultsLock unlock];
 			
@@ -86,6 +94,14 @@
 			CFRelease(document);
         }
 		
+		//Scale all logs' ranking values to the largest ranking value we've seen thus far
+		[resultsLock lock];
+		for (i = 0; i < totalCount; i++) {
+			AIChatLog	*theLog = [currentSearchResults objectAtIndex:i];
+			[theLog setRankingPercentage:([theLog rankingValueOnArbitraryScale] / largestRankingValue)];
+		}
+		[resultsLock unlock];
+
 		[self performSelectorOnMainThread:@selector(updateProgressDisplay)
 							   withObject:nil
 							waitUntilDone:NO];
@@ -94,6 +110,7 @@
 	CFRelease(search);	
 }
 
+#if 0
 /*
  * @brief Return a predicate for searching for a contact, given a key
  *
@@ -147,7 +164,7 @@
 	
 	return predicate;
 }
-
+#endif
 /*
 - (NSSet *)selectedItemsInTable:(NSTableView *)tableView basedOnArray:(NSArray *)inArray
 {	
