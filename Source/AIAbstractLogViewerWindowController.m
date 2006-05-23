@@ -67,6 +67,7 @@
 - (void)_logFilter:(NSString *)searchString searchID:(int)searchID mode:(LogSearchMode)mode;
 - (void)installToolbar;
 - (void)updateRankColumnVisibility;
+- (void)openLogAtPath:(NSString *)inPath;
 @end
 
 @implementation AIAbstractLogViewerWindowController
@@ -1536,6 +1537,11 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 }
 
 #pragma mark Open Log
+
+- (void)filterForContact:(AIListContact *)inContact
+{
+	[self filterForContactName:[inContact UID]];
+}
 
 - (void)openLogAtPath:(NSString *)inPath
 {

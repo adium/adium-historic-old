@@ -110,11 +110,22 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
     return date;
 }
 
-- (float)rankingPercentage{
+- (float)rankingPercentage
+{
 	return rankingPercentage;
 }
-- (void)setRankingPercentage:(float)inRankingPercentage{
+- (void)setRankingPercentage:(float)inRankingPercentage
+{
 	rankingPercentage = inRankingPercentage;
+}
+
+- (void)setRankingValueOnArbitraryScale:(float)inRankingValue
+{
+	rankingValue = inRankingValue;
+}
+- (float)rankingValueOnArbitraryScale
+{
+	return rankingValue;
 }
 
 - (BOOL)isFromSameDayAsDate:(NSCalendarDate *)inDate

@@ -21,6 +21,7 @@
 	NSString		*serviceClass;
     NSDate			*date;
 	float			rankingPercentage;
+	float			rankingValue;
 }
 
 - (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass;
@@ -34,6 +35,8 @@
 - (NSDate *)date;
 - (float)rankingPercentage;
 - (void)setRankingPercentage:(float)inRankingPercentage;
+- (float)rankingValueOnArbitraryScale;
+- (void)setRankingValueOnArbitraryScale:(float)inRankingValue;
 
 //Comparisons
 - (BOOL)isFromSameDayAsDate:(NSCalendarDate *)inDate;
