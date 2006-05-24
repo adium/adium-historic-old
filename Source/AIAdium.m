@@ -39,8 +39,6 @@
 #import "LNAboutBoxController.h"
 #import "AIXtrasManager.h"
 #import "AdiumSetupWizard.h"
-#import "AdiumUnreadMessagesQuitConfirmation.h"
-#import "AdiumFileTransferQuitConfirmation.h"
 #import "ESTextAndButtonsWindowController.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
