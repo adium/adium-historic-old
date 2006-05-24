@@ -32,6 +32,7 @@
 - (NSEnumerator *)logEnumerator;
 - (NSString *)path;
 - (NSString *)to;
+- (NSString *)serviceClass;
 - (AIChatLog *)logAtPath:(NSString *)path;
 
 @end

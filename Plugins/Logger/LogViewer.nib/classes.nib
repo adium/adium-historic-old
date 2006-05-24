@@ -1,6 +1,25 @@
 {
     IBClasses = (
         {
+            ACTIONS = {updateSearch = id; }; 
+            CLASS = AIAbstractLogViewerWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_deleteLogs" = NSButton; 
+                "outlineView_contacts" = NSOutlineView; 
+                progressIndicator = NSProgressIndicator; 
+                "searchField_logs" = NSSearchField; 
+                "splitView_contacts_results" = NSSplitView; 
+                "tableView_results" = NSTableView; 
+                "textField_progress" = NSTextField; 
+                "textField_totalAccounts" = NSTextField; 
+                "textField_totalContacts" = NSTextField; 
+                "textView_content" = NSTextView; 
+                "view_SearchField" = NSView; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
             CLASS = AIAlternatingRowOutlineView; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSOutlineView; 
@@ -12,33 +31,12 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            ACTIONS = {
-                closeWindow = id; 
-                deleteSelectedLogs = id; 
-                selectSearchType = id; 
-                toggleEmoticonFiltering = id; 
-                updateSearch = id; 
-            }; 
             CLASS = AILogViewerWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                "button_deleteLogs" = NSButton; 
-                "button_emoticonToggle" = NSButton; 
-                "drawer_contacts" = NSDrawer; 
-                "popUp_jagSearchMode" = NSPopUpButton; 
-                progressIndicator = NSProgressIndicator; 
-                "searchField_logs" = id; 
-                "tableView_results" = NSTableView; 
-                "textField_progress" = NSTextField; 
-                "textField_totalAccounts" = NSTextField; 
-                "textField_totalContacts" = NSTextField; 
-                "textView_content" = NSTextView; 
-                "view_SearchField" = NSView; 
-                "view_emoteToggle" = NSView; 
-            }; 
-            SUPERCLASS = AIWindowController; 
+            SUPERCLASS = AIAbstractLogViewerWindowController; 
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AISplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }, 
         {
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
