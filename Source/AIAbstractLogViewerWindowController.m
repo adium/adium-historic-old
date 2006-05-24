@@ -23,6 +23,9 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AISplitView.h>
+#import <AIUtilities/AIImageTextCell.h>
+#import <AIUtilities/AIOutlineViewAdditions.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
@@ -73,6 +76,7 @@
 @implementation AIAbstractLogViewerWindowController
 
 static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
+static int toArraySort(id itemA, id itemB, void *context);
 
 + (NSString *)nibName
 {
@@ -152,7 +156,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     blankImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
 
     sortDirection = YES;
-    searchMode = LOG_SEARCH_TO;
+    searchMode = LOG_SEARCH_CONTENT;
     dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] allowNaturalLanguage:YES];
     currentSearchResults = [[NSMutableArray alloc] init];
     fromArray = [[NSMutableArray alloc] init];
@@ -163,7 +167,8 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     logToGroupDict = [[NSMutableDictionary alloc] init];
     resultsLock = [[NSLock alloc] init];
     searchingLock = [[NSLock alloc] init];
-	
+	acceptableContactNames = [[NSMutableSet alloc] initWithCapacity:1];
+
     [super initWithWindowNibName:windowNibName];
 	
     return self;
@@ -193,7 +198,6 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 	[logFromGroupDict release]; logFromGroupDict = nil;
 	[logToGroupDict release]; logToGroupDict = nil;
 
-    [filterForContactName release]; filterForContactName = nil;	
     [filterForAccountName release]; filterForAccountName = nil;
 	
     [super dealloc];
@@ -219,8 +223,9 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 			NSMutableSet	*toSetForThisService;
 			NSArray         *serviceAndFromUIDArray;
 			
-			//Determine the service and fromUID - should be SERVICE.ACCOUNT_NAME
-			//Check against count to guard in case of old, malformed or otherwise odd folders & whatnot sitting in log base
+			/* Determine the service and fromUID - should be SERVICE.ACCOUNT_NAME
+			 * Check against count to guard in case of old, malformed or otherwise odd folders & whatnot sitting in log base
+			 */
 			serviceAndFromUIDArray = [folderName componentsSeparatedByString:@"."];
 
 			if ([serviceAndFromUIDArray count] >= 2) {
@@ -239,10 +244,6 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 			//Store logFromGroup on a key in the form "SERVICE.ACCOUNT_NAME"
 			[logFromGroupDict setObject:logFromGroup forKey:folderName];
 
-			//Table access is easiest from an array
-			[fromArray addObject:fromUID];
-			[fromServiceArray addObject:serviceClass];
-			
 			//To processing
 			if (!(toSetForThisService = [toDict objectForKey:serviceClass])) {
 				toSetForThisService = [NSMutableSet set];
@@ -255,40 +256,29 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 			while ((currentToGroup = [toEnum nextObject])) {
 				NSString	*currentTo = [currentToGroup to];
 				if (currentTo && ![currentTo isEqual:@".DS_Store"]) {
-					[toSetForThisService addObject:currentTo];
-
 					//Store currentToGroup on a key in the form "SERVICE.ACCOUNT_NAME/TARGET_CONTACT"
 					[logToGroupDict setObject:currentToGroup forKey:[currentToGroup path]];
+					
+					AIListObject *listObject = [[adium contactController] existingListObjectWithUniqueID:[AIListObject internalObjectIDForServiceID:serviceClass
+																																				UID:currentTo]];
+					if (listObject && [listObject isKindOfClass:[AIListContact class]]) {
+						AIListContact *parentContact = [(AIListContact *)listObject parentContact];
+						if (![toArray containsObjectIdenticalTo:parentContact]) {
+							[toArray addObject:parentContact];
+						}
+
+					} else {
+						[toArray addObject:currentToGroup];
+					}
 				}
 			}
 
 			[logFromGroup release];
 		}
 	}
-	
-	//Table access is easiest from an array; sort and add the just-created to groups to our table arrays
-	enumerator = [toDict keyEnumerator];
-	while ((serviceClass = [enumerator nextObject])) {
-		NSSet		*toSetForThisService = [toDict objectForKey:serviceClass];
-		unsigned	i;
-		unsigned	count = [toSetForThisService count];
-		
-		[toArray addObjectsFromArray:[[toSetForThisService allObjects] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]];
-		//Add service to the toServiceArray for each of these objects
-		for (i=0 ; i < count ; i++) {
-			[toServiceArray addObject:serviceClass];
-		}
-	}
-	
-	[textField_totalAccounts setStringValue:[NSString stringWithFormat:
-		AILocalizedString(@"%i Accounts",nil),
-		[fromArray count]]];
-	[textField_totalContacts setStringValue:[NSString stringWithFormat:
-		AILocalizedString(@"%i Contacts",nil),
-		[toArray count]]];
 
-	[[adium notificationCenter] postNotificationName:LOG_VIEWER_DID_CREATE_LOG_ARRAYS
-											  object:nil];
+	[toArray sortUsingFunction:toArraySort context:NULL];
+	[outlineView_contacts reloadData];
 }
 
 //
@@ -301,7 +291,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
-    
+
 	[[self window] setTitle:AILocalizedString(@"Log Viewer",nil)];
 	
     //Set emoticon filtering
@@ -312,6 +302,10 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 
 	//Toolbar
 	[self installToolbar];
+
+	[splitView_contacts_results setDividerThickness:6]; //Default is 9
+
+	[[[outlineView_contacts tableColumns] objectAtIndex:0] setDataCell:[[[AIImageTextCell alloc] init] autorelease]];
 
 	//Localize tableView_results column headers
 	[[[tableView_results tableColumnWithIdentifier:@"To"] headerCell] setStringValue:TO];
@@ -344,17 +338,6 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 
     [searchField_logs setStringValue:(activeSearchString ? activeSearchString : @"")];
     [self startSearchingClearingCurrentResults:YES];
-	
-    //Configure drawer
-    if ([[[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_DRAWER_STATE
-                                                  group:PREF_GROUP_LOGGING] boolValue]) {
-            [drawer_contacts open];
-    } else {
-            [drawer_contacts close];
-    }
-    [drawer_contacts setContentSize:NSMakeSize([[[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_DRAWER_SIZE
-                                                                                         group:PREF_GROUP_LOGGING] floatValue], 0)];
-	[drawer_contacts setMinContentSize:NSMakeSize(100.0, 0)];
 }
 
 
@@ -482,31 +465,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 - (void)windowWillClose:(id)sender
 {
 	[super windowWillClose:sender];
-	
-	//Determine and save the current state of the drawer
-	int		drawerState = [drawer_contacts state];
-	NSNumber	*drawerIsOpen = nil;
-	
-	switch (drawerState) {
-		case NSDrawerOpeningState:
-		case NSDrawerOpenState:
-			drawerIsOpen = [NSNumber numberWithBool:YES];
-			break;
-		case NSDrawerClosingState:
-		case NSDrawerClosedState:
-			drawerIsOpen = [NSNumber numberWithBool:NO];
-			break;
-	}
-	
-	[[adium preferenceController] setPreference:drawerIsOpen
-										 forKey:KEY_LOG_VIEWER_DRAWER_STATE
-										  group:PREF_GROUP_LOGGING];
-	
-	//Set preference for drawer size
-	[[adium preferenceController] setPreference:[NSNumber numberWithFloat:[drawer_contacts contentSize].width]
-										 forKey:KEY_LOG_VIEWER_DRAWER_SIZE
-										  group:PREF_GROUP_LOGGING];       
-	
+
 	//Set preference for emoticon filtering
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:showEmoticons]
 										 forKey:KEY_LOG_VIEWER_EMOTICONS
@@ -595,11 +554,13 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     }
     [resultsLock unlock];
 	
+	/*
 	if (filterForAccountName && [filterForAccountName length]) {
 		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" of chats on %@",nil),filterForAccountName]];
 	} else if (filterForContactName && [filterForContactName length]) {
 		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" of chats with %@",nil),filterForContactName]];
 	}
+	 */
 
     //Append search progress
     if (activeSearchString && [activeSearchString length]) {
@@ -1020,6 +981,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 			[cell setPlaceholderString:AILocalizedString(@"Search From","Placeholder for searching logs from an account")];
 			break;
 		case LOG_SEARCH_TO:
+			//XXX
 			[filterForContactName release]; filterForContactName = nil;
 			[cell setPlaceholderString:AILocalizedString(@"Search To","Placeholder for searching logs with/to a contact")];
 			break;
@@ -1143,13 +1105,14 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 
 #pragma mark Filtering search results
 
+/*
+ * @brief Should a search display a document with the given information?
+ */
 - (BOOL)searchShouldDisplayDocument:(SKDocumentRef)inDocument pathComponents:(NSArray *)pathComponents
 {
 	BOOL shouldDisplayDocument;
-	
-	if (filterForContactName || filterForAccountName) {
-		//Searching for a specific contact
 
+	if ([acceptableContactNames count]) {
 		//Determine the path components if we weren't supplied them
 		if (!pathComponents) {
 			CFURLRef	url = SKDocumentCopyURL(inDocument);
@@ -1163,17 +1126,9 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 
 		unsigned int numPathComponents = [pathComponents count];
 		
-		if (filterForContactName) {
-			NSString *contactName = [pathComponents objectAtIndex:(numPathComponents-2)];
-			shouldDisplayDocument = [[contactName compactedString] isEqualToString:filterForContactName];
-			
-		} else /* filterForAccountName */ {
-			NSString *serviceAndAccount = [pathComponents objectAtIndex:(numPathComponents-3)];
-			NSString *accountName = [serviceAndAccount substringFromIndex:[serviceAndAccount rangeOfString:@"."].location];
-			shouldDisplayDocument = [[accountName compactedString] isEqualToString:filterForAccountName];
-			
-		}
-		
+		NSString *contactName = [pathComponents objectAtIndex:(numPathComponents-2)];
+		shouldDisplayDocument = [acceptableContactNames containsObject:[contactName compactedString]];
+
 	} else {
 		shouldDisplayDocument = YES;
 	}
@@ -1272,7 +1227,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 					a) We are not filtering for the contact name or
 					b) The contact name matches
 				 */
-				if ((!filterForContactName || ([[toGroup to] caseInsensitiveCompare:filterForContactName] == NSOrderedSame)) &&
+				if ((![acceptableContactNames count] || [acceptableContactNames containsObject:[[[toGroup to] compactedString] safeFilenameString]]) &&
 				   ((mode != LOG_SEARCH_TO) ||
 				   (!searchString) || 
 				   ([[toGroup to] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound))) {
@@ -1308,10 +1263,10 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 
 - (void)filterForContactName:(NSString *)inContactName
 {
-	[filterForContactName release]; filterForContactName = nil;
 	[filterForAccountName release]; filterForAccountName = nil;
 
-	filterForContactName = [[inContactName safeFilenameString] retain];
+	[acceptableContactNames removeAllObjects];
+	[acceptableContactNames addObject:[[inContactName safeFilenameString] compactedString]];
 
 	//If the search mode is currently the TO field, switch it to content, which is what it should now intuitively do
 	if (searchMode == LOG_SEARCH_TO) {
@@ -1327,7 +1282,6 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 
 - (void)filterForAccountName:(NSString *)inAccountName
 {
-	[filterForContactName release]; filterForContactName = nil;
 	[filterForAccountName release]; filterForAccountName = nil;
 	
 	filterForAccountName = [[inAccountName safeFilenameString] retain];
@@ -1451,12 +1405,6 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     [tableView setSearchColumnIdentifiers:[NSSet setWithObjects:@"To", @"From", nil]];
 }
 
-- (IBAction)toggleDrawer:(id)sender
-{
-
-    [drawer_contacts toggle:sender];
-}
-
 - (IBAction)toggleEmoticonFiltering:(id)sender
 {
 	AIChatLog	*log;
@@ -1474,6 +1422,160 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 	[log release];
 }
 
+#pragma mark Outline View Data source
+- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+{
+	if (!item) {
+		if (index == 0) {
+			return AILocalizedString(@"All", nil);
+
+		} else {
+			return [toArray objectAtIndex:index-1]; //-1 for the All item, which is index 0
+		}
+
+	} else {
+		if ([item isKindOfClass:[AIMetaContact class]]) {
+			return [[(AIMetaContact *)item listContactsIncludingOfflineAccounts] objectAtIndex:index];
+		}
+	}
+	
+	return nil;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+{
+	return (!item || 
+			([item isKindOfClass:[AIMetaContact class]] && ([[(AIMetaContact *)item listContactsIncludingOfflineAccounts] count] > 1)) ||
+			[item isKindOfClass:[NSArray class]]);
+}
+
+- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
+	if (!item) {
+		return [toArray count] + 1; //+1 for the All item
+
+	} else if ([item isKindOfClass:[AIMetaContact class]]) {
+		unsigned count = [[(AIMetaContact *)item listContactsIncludingOfflineAccounts] count];
+		if (count > 1)
+			return count;
+		else
+			return 0;
+
+	} else {
+		return 0;
+	}
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+{
+	if ([item isKindOfClass:[AIMetaContact class]]) {
+		if ([[(AIMetaContact *)item listContactsIncludingOfflineAccounts] count] > 1) {
+			return [(AIMetaContact *)item longDisplayName];
+		} else {
+			NSString *displayName = [(AIListContact *)item displayName];
+			NSString *formattedUID = [(AIListContact *)item formattedUID];
+			
+			if ([displayName isEqualToString:formattedUID]) {
+				return displayName;
+			} else {
+				return [NSString stringWithFormat:@"%@ (%@)", displayName, formattedUID];
+			}
+		}
+
+	} else if ([item isKindOfClass:[AIListContact class]]) {
+		AIListContact *parentContact = [(AIListContact *)item parentContact];
+		if (parentContact != item) {
+			//This contact is within a metacontact
+			return [(AIListContact *)item formattedUID];
+
+		} else {
+			NSString *displayName = [(AIListContact *)item displayName];
+			NSString *formattedUID = [(AIListContact *)item formattedUID];
+			
+			if ([displayName isEqualToString:formattedUID]) {
+				return displayName;
+			} else {
+				return [NSString stringWithFormat:@"%@ (%@)", displayName, formattedUID];
+			}
+		}
+
+	} else if ([item isKindOfClass:[AILogToGroup class]]) {
+		return [(AILogToGroup *)item to];
+
+	} else if ([item isKindOfClass:[NSString class]]) {
+		return item;
+
+	} else {
+		NSLog(@"%@: no idea",item);
+		return nil;
+	}
+}
+
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+	if ([item isKindOfClass:[AIMetaContact class]] &&
+		[[(AIMetaContact *)item listContactsIncludingOfflineAccounts] count] > 1) {
+		[cell setImage:nil];
+
+	} else if ([item isKindOfClass:[AIListContact class]]) {
+		[cell setImage:[AIServiceIcons serviceIconForObject:(AIListContact *)item
+													   type:AIServiceIconSmall
+												  direction:AIIconFlipped]];
+
+	} else if ([item isKindOfClass:[AILogToGroup class]]) {
+		[cell setImage:[AIServiceIcons serviceIconForServiceID:[(AILogToGroup *)item serviceClass]
+													   type:AIServiceIconSmall
+												  direction:AIIconFlipped]];
+		
+	} else if ([item isKindOfClass:[NSString class]]) {
+		[cell setImage:nil];
+		
+	} else {
+		NSLog(@"%@: no idea",item);
+		[cell setImage:nil];
+	}	
+}
+
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
+{
+	NSArray *selectedItems = [outlineView_contacts arrayOfSelectedItems];
+
+	[acceptableContactNames removeAllObjects];
+
+	if ([selectedItems count] && ![selectedItems containsObject:AILocalizedString(@"All", nil)]) {
+		id		item;
+		NSEnumerator *enumerator;
+
+		enumerator = [selectedItems objectEnumerator];
+		while ((item = [enumerator nextObject])) {
+			if ([item isKindOfClass:[AIMetaContact class]]) {
+				NSEnumerator	*metaEnumerator;
+				AIListContact	*contact;
+
+				metaEnumerator = [[(AIMetaContact *)item listContactsIncludingOfflineAccounts] objectEnumerator];
+				while ((contact = [metaEnumerator nextObject])) {
+					[acceptableContactNames addObject:[[[contact UID] compactedString] safeFilenameString]];
+				}
+
+			} else if ([item isKindOfClass:[AIListContact class]]) {
+				[acceptableContactNames addObject:[[[(AIListContact *)item UID] compactedString] safeFilenameString]];
+
+			} else if ([item isKindOfClass:[AILogToGroup class]]) {
+				[acceptableContactNames addObject:[[[(AILogToGroup *)item to] compactedString] safeFilenameString]];
+			}
+		}
+	}
+	
+	[self startSearchingClearingCurrentResults:YES];
+}
+
+static int toArraySort(id itemA, id itemB, void *context)
+{
+	NSString *nameA = [sharedLogViewerInstance outlineView:nil objectValueForTableColumn:nil byItem:itemA];
+	NSString *nameB = [sharedLogViewerInstance outlineView:nil objectValueForTableColumn:nil byItem:itemB];
+
+	return [nameA caseInsensitiveCompare:nameB];
+}	
 
 //Window Toolbar -------------------------------------------------------------------------------------------------------
 #pragma mark Window Toolbar
@@ -1490,17 +1592,6 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
     [toolbar setAutosavesConfiguration:YES];
     toolbarItems = [[NSMutableDictionary alloc] init];
 
-	//Toggle Drawer
-	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-                                        withIdentifier:@"toggledrawer"
-                                                 label:AILocalizedString(@"Contacts",nil)
-                                          paletteLabel:AILocalizedString(@"Contacts Drawer",nil)
-                                               toolTip:AILocalizedString(@"Show/Hide the Contacts Drawer",nil)
-                                                target:self
-                                       settingSelector:@selector(setImage:)
-                                           itemContent:[NSImage imageNamed:@"showdrawer" forClass:[self class]]
-                                                action:@selector(toggleDrawer:)
-                                                  menu:nil];
 	//Delete Logs
 	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
                                         withIdentifier:@"delete"
@@ -1512,18 +1603,6 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
                                            itemContent:[NSImage imageNamed:@"remove" forClass:[self class]]
                                                 action:@selector(deleteSelectedLog:)
                                                   menu:nil];
-	
-	//Delete All Logs
-	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-									withIdentifier:@"deleteall"
-											 label:DELETEALL
-									  paletteLabel:DELETEALL
-										   toolTip:AILocalizedString(@"Delete all logs",nil)
-											target:self
-								   settingSelector:@selector(setImage:)
-									   itemContent:[NSImage imageNamed:@"remove" forClass:[self class]]
-											action:@selector(deleteAllLogs:)
-											  menu:nil];
 	
 	//Search
 	[self window]; //Ensure the window is loaded, since we're pulling the search view from our nib
@@ -1563,7 +1642,7 @@ static AIAbstractLogViewerWindowController	*sharedLogViewerInstance = nil;
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    return [NSArray arrayWithObjects:@"delete", @"toggleemoticons", NSToolbarFlexibleSpaceItemIdentifier, @"search", NSToolbarSeparatorItemIdentifier, @"deleteall", @"toggledrawer", nil];
+    return [NSArray arrayWithObjects:@"delete", @"toggleemoticons", NSToolbarFlexibleSpaceItemIdentifier, @"search", nil];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar

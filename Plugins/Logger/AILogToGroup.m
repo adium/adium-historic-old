@@ -70,6 +70,11 @@
 	return path;
 }
 
+- (NSString *)serviceClass
+{
+	return serviceClass;
+}
+
 //Returns an enumerator for all of our logs
 - (NSEnumerator *)logEnumerator
 {

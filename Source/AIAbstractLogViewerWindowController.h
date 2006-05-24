@@ -29,8 +29,6 @@
 #define SEARCH							AILocalizedString(@"Search",nil)
 
 #define	KEY_LOG_VIEWER_EMOTICONS			@"Log Viewer Emoticons"
-#define	KEY_LOG_VIEWER_DRAWER_STATE			@"Log Viewer Drawer State"
-#define	KEY_LOG_VIEWER_DRAWER_SIZE			@"Log Viewer Drawer Size"
 #define KEY_LOG_VIEWER_SELECTED_COLUMN		@"Log Viewer Selected Column Identifier"
 #define	LOG_VIEWER_DID_CREATE_LOG_ARRAYS	@"LogViewerDidCreateLogArrays"
 #define	LOG_VIEWER_DID_UPDATE_LOG_ARRAYS	@"LogViewerDidUpdateLogArrays"
@@ -42,16 +40,19 @@ typedef enum {
     LOG_SEARCH_CONTENT
 } LogSearchMode;
 
-@class AIListContact;
+@class AIListContact, AISplitView;
 
 @interface AIAbstractLogViewerWindowController : AIWindowController {
-	AILoggerPlugin							*plugin;
+	AILoggerPlugin				*plugin;
 
-    IBOutlet	NSTableView                 *tableView_results;
-    IBOutlet	NSTextView                  *textView_content;
+	IBOutlet	AISplitView		*splitView_contacts_results;
+	IBOutlet	NSOutlineView	*outlineView_contacts;
 
-	IBOutlet    NSView                      *view_SearchField;
-    IBOutlet    NSButton                    *button_deleteLogs;
+    IBOutlet	NSTableView		*tableView_results;
+    IBOutlet	NSTextView		*textView_content;
+
+	IBOutlet    NSView			*view_SearchField;
+    IBOutlet    NSButton		*button_deleteLogs;
 
 	//Array of selected / displayed logs.  (Locked access)
     NSMutableArray		*currentSearchResults;		//Array of filtered/resulting logs
@@ -63,7 +64,7 @@ typedef enum {
 	IBOutlet    NSProgressIndicator         *progressIndicator;
     IBOutlet    NSTextField                 *textField_progress;
 
-	NSSearchField		*searchField_logs;
+	IBOutlet	NSSearchField		*searchField_logs;
 	
 	NSTableColumn		*selectedColumn;		//Selected/active sort column
 	
@@ -81,6 +82,7 @@ typedef enum {
 
 	NSString				*filterForAccountName ;	//Account name to restrictively match content searches
 	NSString				*filterForContactName;	//Contact name to restrictively match content searches
+	NSMutableSet			*acceptableContactNames;
 	
 	NSMutableDictionary		*logToGroupDict;
 	NSMutableDictionary		*logFromGroupDict;
@@ -106,7 +108,6 @@ typedef enum {
 	NSString *activeSearchStringEncoded;
 	IBOutlet NSTextField	*textField_totalAccounts;
 	IBOutlet NSTextField	*textField_totalContacts;
-	IBOutlet NSDrawer		*drawer_contacts;
 }
 
 + (id)openForPlugin:(id)inPlugin;
