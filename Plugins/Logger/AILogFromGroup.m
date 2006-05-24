@@ -71,18 +71,20 @@
 		fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path];
 		enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:fullPath] objectEnumerator];
 		while ((folderName = [enumerator nextObject])) {
-			AILogToGroup    *toGroup = nil;
-			
-			//#### Why does this alloc fail sometimes? ####
-			toGroup = [[AILogToGroup alloc] initWithPath:[path stringByAppendingPathComponent:folderName]
-													from:fromUID
-													  to:folderName
-											serviceClass:serviceClass];
-			
-			//Not sure why, but I've had that alloc fail on me before
-			if (toGroup != nil) [toGroupArray addObject:toGroup];
-			
-			[toGroup release];
+			if (![folderName isEqualToString:@".DS_Store"]) {
+				AILogToGroup    *toGroup = nil;
+				
+				//#### Why does this alloc fail sometimes? ####
+				toGroup = [[AILogToGroup alloc] initWithPath:[path stringByAppendingPathComponent:folderName]
+														from:fromUID
+														  to:folderName
+												serviceClass:serviceClass];
+				
+				//Not sure why, but I've had that alloc fail on me before
+				if (toGroup != nil) [toGroupArray addObject:toGroup];
+				
+				[toGroup release];
+			}
 		}
     }
     

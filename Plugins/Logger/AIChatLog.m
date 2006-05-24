@@ -202,7 +202,7 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 - (NSComparisonResult)compareDate:(AIChatLog *)inLog
 {
 	NSComparisonResult  result;
-	NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
+	NSTimeInterval		interval = [[self date] timeIntervalSinceDate:[inLog date]];
 	
 	if (interval < 0) {
 		result = NSOrderedAscending;
@@ -217,8 +217,8 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 - (NSComparisonResult)compareDateReverse:(AIChatLog *)inLog
 {
 	NSComparisonResult  result;
-	NSTimeInterval		interval = [[inLog date] timeIntervalSinceDate:date];
-	
+	NSTimeInterval		interval = [[inLog date] timeIntervalSinceDate:[self date]];
+
 	if (interval < 0) {
 		result = NSOrderedAscending;
 	} else if (interval > 0) {

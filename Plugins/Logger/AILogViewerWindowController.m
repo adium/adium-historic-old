@@ -18,6 +18,7 @@
 #import "AILoggerPlugin.h"
 #import "AILogToGroup.h"
 #import "AIChatLog.h"
+#import <Adium/AIHTMLDecoder.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 
@@ -37,7 +38,7 @@ Boolean ContentResultsFilter (SKIndexRef inIndex,
 
 //Perform a content search of the indexed logs
 - (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID
-{
+{		
 	SKIndexRef			logSearchIndex = [plugin logContentIndex];
 	SKSearchGroupRef	searchGroup;
 	CFArrayRef			indexArray;
@@ -53,6 +54,25 @@ Boolean ContentResultsFilter (SKIndexRef inIndex,
 	[logAccessLock lock];
 	indexArray = CFArrayCreate(NULL, indexPtr, 1, &kCFTypeArrayCallBacks);
 	searchGroup = SKSearchGroupCreate(indexArray);
+	
+	/* Our logs are stored as HTML.  Non-ASCII characters are therefore HTML-encoded.  We need to have an
+	 * encoded version of our search string with which to search when doing a content-based search, as that's
+	 * how they are on disk.
+	 */
+	searchString = [AIHTMLDecoder encodeHTML:[[[NSAttributedString alloc] initWithString:searchString] autorelease]
+									 headers:NO 
+									fontTags:NO 
+						  includingColorTags:NO
+							   closeFontTags:NO 
+								   styleTags:NO
+				  closeStyleTagsOnFontChange:NO
+							  encodeNonASCII:YES 
+								encodeSpaces:NO
+								  imagesPath:nil 
+						   attachmentsAsText:YES 
+				   onlyIncludeOutgoingImages:NO 
+							  simpleTagsOnly:NO
+							  bodyBackground:NO];
 	
 	searchResults = SKSearchResultsCreateWithQuery(
 												   searchGroup,
