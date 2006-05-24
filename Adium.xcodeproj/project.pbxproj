@@ -219,7 +219,6 @@
 		3421D3AB0753EE2F00EBCF4F /* ESFileTransferProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 349FE2FE074D01D300E36B3B /* ESFileTransferProgressView.m */; };
 		342340E009D1AF58009FF634 /* RAFjoscarSecuridPromptController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */; };
 		342340E109D1AF58009FF634 /* RAFjoscarSecuridPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */; };
-		342353BC09D450ED009FF634 /* MDLogViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342353BB09D450ED009FF634 /* MDLogViewer.nib */; };
 		342353D609D45726009FF634 /* AIAbstractLogViewerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */; };
 		342353D709D45726009FF634 /* AIAbstractLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */; };
 		3423622B09D8BCAA009FF634 /* SecuridPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3423622A09D8BCA9009FF634 /* SecuridPrompt.nib */; };
@@ -1351,8 +1350,6 @@
 		B747E986058D144C00A9F037 /* AILaTeXPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B747E984058D144C00A9F037 /* AILaTeXPlugin.h */; };
 		B747E987058D144C00A9F037 /* AILaTeXPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B747E985058D144C00A9F037 /* AILaTeXPlugin.m */; };
 		B7FD6C170596550F000C4D9D /* SQLLogging.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7FD6C160596550F000C4D9D /* SQLLogging.plist */; };
-		C45F7F6506C75E210056B1F2 /* BGContactsTable.h in Headers */ = {isa = PBXBuildFile; fileRef = C45F7F6206C75E200056B1F2 /* BGContactsTable.h */; };
-		C45F7F6606C75E210056B1F2 /* BGContactsTable.m in Sources */ = {isa = PBXBuildFile; fileRef = C45F7F6306C75E210056B1F2 /* BGContactsTable.m */; };
 		C45F7F6706C75E210056B1F2 /* showdrawer.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C45F7F6406C75E210056B1F2 /* showdrawer.tiff */; };
 		CA25AAA907B428C800DDBD7E /* BDFireImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = CA25AA9F07B428C600DDBD7E /* BDFireImporter.h */; };
 		CA25AAAA07B428C800DDBD7E /* BDFireImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CA25AAA007B428C700DDBD7E /* BDFireImporter.m */; };
@@ -2043,7 +2040,6 @@
 		342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = RAFjoscarSecuridPromptController.h; path = "Plugins/joscar Service/RAFjoscarSecuridPromptController.h"; sourceTree = "<group>"; };
 		342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarSecuridPromptController.m; path = "Plugins/joscar Service/RAFjoscarSecuridPromptController.m"; sourceTree = "<group>"; };
 		3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "joscar Java Bridge.xcodeproj"; path = "Plugins/joscar Service/joscar Java Bridge/joscar Java Bridge.xcodeproj"; sourceTree = "<group>"; };
-		342353BB09D450ED009FF634 /* MDLogViewer.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MDLogViewer.nib; path = Resources/MDLogViewer.nib; sourceTree = "<group>"; };
 		342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAbstractLogViewerWindowController.h; path = Source/AIAbstractLogViewerWindowController.h; sourceTree = "<group>"; };
 		342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAbstractLogViewerWindowController.m; path = Source/AIAbstractLogViewerWindowController.m; sourceTree = "<group>"; };
 		3423622A09D8BCA9009FF634 /* SecuridPrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = SecuridPrompt.nib; path = "Plugins/joscar Service/SecuridPrompt.nib"; sourceTree = "<group>"; };
@@ -3653,8 +3649,6 @@
 		B7FD6C160596550F000C4D9D /* SQLLogging.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = SQLLogging.plist; sourceTree = "<group>"; };
 		C4243C920638E4EA007AD2D9 /* BGEmoticonMenuPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = BGEmoticonMenuPlugin.h; path = Source/BGEmoticonMenuPlugin.h; sourceTree = "<group>"; };
 		C4243C930638E4EA007AD2D9 /* BGEmoticonMenuPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = BGEmoticonMenuPlugin.m; path = Source/BGEmoticonMenuPlugin.m; sourceTree = "<group>"; };
-		C45F7F6206C75E200056B1F2 /* BGContactsTable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = BGContactsTable.h; path = Plugins/Logger/BGContactsTable.h; sourceTree = "<group>"; };
-		C45F7F6306C75E210056B1F2 /* BGContactsTable.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = BGContactsTable.m; path = Plugins/Logger/BGContactsTable.m; sourceTree = "<group>"; };
 		C45F7F6406C75E210056B1F2 /* showdrawer.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = showdrawer.tiff; path = Plugins/Logger/showdrawer.tiff; sourceTree = "<group>"; };
 		CA25AA9F07B428C600DDBD7E /* BDFireImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BDFireImporter.h; sourceTree = "<group>"; };
 		CA25AAA007B428C700DDBD7E /* BDFireImporter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = BDFireImporter.m; sourceTree = "<group>"; };
@@ -6037,8 +6031,6 @@
 			children = (
 				340EC2260736BF31001653BF /* ESRankingCell.h */,
 				340EC2270736BF32001653BF /* ESRankingCell.m */,
-				C45F7F6206C75E200056B1F2 /* BGContactsTable.h */,
-				C45F7F6306C75E210056B1F2 /* BGContactsTable.m */,
 				C45F7F6406C75E210056B1F2 /* showdrawer.tiff */,
 				4B3B125707AC411D00187CCF /* AIChatLog.h */,
 				4B3B125807AC411D00187CCF /* AIChatLog.m */,
@@ -6051,7 +6043,6 @@
 				4B3DB8FD04547A8D00A8010A /* LogViewer.nib */,
 				3410745D09B6965600565C9E /* AIMDLogViewerWindowController.h */,
 				3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */,
-				342353BB09D450ED009FF634 /* MDLogViewer.nib */,
 				342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */,
 				342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */,
 			);
@@ -7173,7 +7164,6 @@
 				6E4D961306B739AC005235E9 /* DCJoinChatPanelPlugin.h in Headers */,
 				6EC1684C06C170A000F9FAD3 /* DCInviteToChatPlugin.h in Headers */,
 				6EC1684E06C170A000F9FAD3 /* DCInviteToChatWindowController.h in Headers */,
-				C45F7F6506C75E210056B1F2 /* BGContactsTable.h in Headers */,
 				34CEBE6206F117DF00A89DDE /* ESContactInfoListController.h in Headers */,
 				34A489F406F64359002C7C5F /* AISCLViewPlugin.h in Headers */,
 				34A48A0206F6436D002C7C5F /* AIStandardListWindowController.h in Headers */,
@@ -8775,7 +8765,6 @@
 				343ECBEE0971B18E00349098 /* ShowContactInfoPrompt.nib in Resources */,
 				347EAB2D09721D490090EA6E /* pref-personal.png in Resources */,
 				3486E9DB097F5FCE0044C496 /* AuthorizationRequestWindow.nib in Resources */,
-				342353BC09D450ED009FF634 /* MDLogViewer.nib in Resources */,
 				83C52C7809E73D1D00ED2F90 /* RemoveShortcut.tif in Resources */,
 				83C52C7909E73D1D00ED2F90 /* RemoveShortcutPressed.tif in Resources */,
 				83C52C7A09E73D1D00ED2F90 /* RemoveShortcutRollover.tif in Resources */,
@@ -9210,7 +9199,6 @@
 				6E4D961406B739AC005235E9 /* DCJoinChatPanelPlugin.m in Sources */,
 				6EC1684D06C170A000F9FAD3 /* DCInviteToChatPlugin.m in Sources */,
 				6EC1684F06C170A000F9FAD3 /* DCInviteToChatWindowController.m in Sources */,
-				C45F7F6606C75E210056B1F2 /* BGContactsTable.m in Sources */,
 				34CEBE6306F117DF00A89DDE /* ESContactInfoListController.m in Sources */,
 				34A489F306F64359002C7C5F /* AISCLViewPlugin.m in Sources */,
 				34A48A0106F6436D002C7C5F /* AIStandardListWindowController.m in Sources */,
