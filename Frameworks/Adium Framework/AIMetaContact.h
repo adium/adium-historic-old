@@ -26,6 +26,7 @@
 	
 	AIListContact			*_preferredContact;
 	NSArray					*_listContacts;
+	NSArray					*_listContactsIncludingOfflineAccounts;
 	
 	BOOL					containsOnlyOneUniqueContact;
 	BOOL					containsOnlyOneService;
@@ -71,6 +72,7 @@
 
 //A flat array of AIListContacts each with a different internalObjectID
 - (NSArray *)listContacts;
+- (NSArray *)listContactsIncludingOfflineAccounts;
 
 //Delay sorting the contained object list; this should only be used by the contactController. Be sure to set it back to YES when operations are done
 - (void)setDelayContainedObjectSorting:(BOOL)flag;

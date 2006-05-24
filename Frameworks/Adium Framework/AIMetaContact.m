@@ -35,7 +35,7 @@
 - (id)_statusObjectForKey:(NSString *)key containedObjectSelector:(SEL)containedObjectSelector;
 - (void)_determineIfWeShouldAppearToContainOnlyOneContact;
 
-- (void)_addListContacts:(NSArray *)inContacts toArray:(NSMutableArray *)listContacts uniqueObjectIDs:(NSMutableArray *)uniqueObjectIDs;
+- (NSArray *)uniqueContainedListContactsIncludingOfflineAccounts:(BOOL)includeOfflineAccounts;
 
 - (void)updateDisplayName;
 - (void)restoreGrouping;
@@ -52,6 +52,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	statusCacheDict = [[NSMutableDictionary alloc] init];
 	_preferredContact = nil;
 	_listContacts = nil;
+	_listContactsIncludingOfflineAccounts = nil;
 
 	[super initWithUID:[objectID stringValue] service:nil];
 	
@@ -231,6 +232,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 //Object Storage -------------------------------------------------------------------------------------------------------
 #pragma mark Object Storage
+- (void)clearContainedObjectInfoCache
+{
+	_preferredContact = nil;
+	[_listContacts release]; _listContacts = nil;
+	[_listContactsIncludingOfflineAccounts release]; _listContactsIncludingOfflineAccounts = nil;
+}
+
 /*!
  * @brief Add an object to this meta contact
  *
@@ -253,7 +261,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		[containedObjects addObject:inObject];
 		containedObjectsNeedsSort = YES;
 		
-		[_listContacts release]; _listContacts = nil;
+		[self clearContainedObjectInfoCache];
 		
 		//If we were unique before, check if we will still be unique after adding this contact.
 		//If we were not, no checking needed.
@@ -294,8 +302,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			[inObject setContainingObject:[self containingObject]];
 		}
 		
-		[_listContacts release]; _listContacts = nil;
-		_preferredContact = nil;
+		[self clearContainedObjectInfoCache];
 
 		//Only need to check if we are now unique if we weren't unique before, since we've either become
 		//unique are stayed the same.
@@ -432,18 +439,14 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 - (NSArray *)listContacts
 {
 	if (!_listContacts) {
-		NSMutableArray	*listContacts = [[NSMutableArray alloc] init];
-		NSMutableArray	*uniqueObjectIDs = [NSMutableArray array];
 		unsigned		count;
 		
-		[self _addListContacts:[self containedObjects] toArray:listContacts uniqueObjectIDs:uniqueObjectIDs];
-
-		_listContacts = listContacts;
+		_listContacts = [[self uniqueContainedListContactsIncludingOfflineAccounts:NO] retain];
 
 		/* Only notify if there is a change.
 		 * Use super's implementation as we don't need to be searching our contained objects...
 		 */
-		count = [listContacts count];
+		count = [_listContacts count];
 		if ([super integerStatusObjectForKey:@"VisibleObjectCount"] != count) {
 			[self setStatusObject:(count ? [NSNumber numberWithInt:count] : nil)
 						   forKey:@"VisibleObjectCount"
@@ -454,10 +457,19 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return _listContacts;
 }
 
+- (NSArray *)listContactsIncludingOfflineAccounts
+{
+	if (!_listContactsIncludingOfflineAccounts) {
+		_listContactsIncludingOfflineAccounts = [[self uniqueContainedListContactsIncludingOfflineAccounts:YES] retain];
+	}
+
+	return _listContactsIncludingOfflineAccounts;
+}
+
 /*!
  * @brief Dictionary of service classes and list contacts
  *
- * @result A dictionary whose keys are serviceClass strings and whose objects are arrays of contained contacts on that serviceClass.
+ * @result A dictionary whose keys are serviceClass strings and whose objects are arrays of contained contacts *on online accounts* on that serviceClass.
  */
 - (NSDictionary *)dictionaryOfServiceClassesAndListContacts
 {
@@ -510,22 +522,29 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return [[self listContacts] objectAtIndex:index];
 }
 
-- (void)_addListContacts:(NSArray *)inContacts toArray:(NSMutableArray *)listContacts uniqueObjectIDs:(NSMutableArray *)uniqueObjectIDs
+/*
+ * @brief Return an array of unique contained list contacts, optionally including those for offline accounts
+ *
+ * This is a reasonably expensive call; its return value is cached by -[self listContacts] and -[self listContactsIncludingOfflineAccounts],
+ * so those are the methods to use externally.
+ *
+ * Implementation note: uniqueObjectIDs is an array because its indexing matches the indexing of the nascent listContacts array;
+ * this allows a fast comparison for existing contacts.
+ */
+- (NSArray *)uniqueContainedListContactsIncludingOfflineAccounts:(BOOL)includeOfflineAccounts
 {
+	NSArray			*myContainedObjects = [self containedObjects];
+	NSMutableArray	*listContacts = [[NSMutableArray alloc] init];
+	NSMutableArray	*uniqueObjectIDs = [[NSMutableArray alloc] initWithCapacity:[myContainedObjects count]];
 	unsigned		index;
-	unsigned		count = [inContacts count];
+	unsigned		count = [myContainedObjects count];
 	
 	//Search for an available contact
 	for (index = 0; index < count; index++) {
-		AIListObject	*listObject = [inContacts objectAtIndex:index];
-		if (([listObject isKindOfClass:[AIMetaContact class]]) && (listObject != self)) {
-			//Parse the contained metacontact recrusively
-			[self _addListContacts:[(AIMetaContact *)listObject containedObjects]
-						   toArray:listContacts
-				   uniqueObjectIDs:uniqueObjectIDs];
-			
-		} else if (([listObject isKindOfClass:[AIListContact class]]) &&
-				 ([(AIListContact *)listObject remoteGroupName] != nil)) {
+		AIListObject	*listObject = [myContainedObjects objectAtIndex:index];
+
+		if (([listObject isKindOfClass:[AIListContact class]]) &&
+			([(AIListContact *)listObject remoteGroupName] || includeOfflineAccounts)) {
 			NSString	*listObjectInternalObjectID = [listObject internalObjectID];
 			unsigned int listContactIndex = [uniqueObjectIDs indexOfObject:listObjectInternalObjectID];
 			
@@ -535,8 +554,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 				[uniqueObjectIDs addObject:listObjectInternalObjectID];
 				
 			} else {
-				//If it is found, but it is offline and this contact is online, swap 'em out so our array
-				//has the best possible listContacts (making display elsewhere more straightforward)
+				/* If it is found, but it is offline and this contact is online, swap 'em out so our array
+				 * has the best possible listContacts (making display elsewhere more straightforward)
+				 */
 				if (![[listContacts objectAtIndex:listContactIndex] online] &&
 					[listObject online]) {
 					
@@ -546,6 +566,10 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			}
 		}
 	}
+	
+	[uniqueObjectIDs release];
+	
+	return [listContacts autorelease];
 }
 
 - (BOOL)containsOnlyOneUniqueContact
@@ -579,9 +603,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	unsigned listContactsCount;
 
 	//Clear our preferred contact so the next call to it will update the preferred contact
-	_preferredContact = nil;
-	
-	[_listContacts release]; _listContacts = nil;
+	[self clearContainedObjectInfoCache];
+
 	listContactsCount = [[self listContacts] count];
 
 	containsOnlyOneUniqueContact = (listContactsCount < 2);
@@ -1113,8 +1136,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 	//We're no longer positive of our preferredContact, so clear the cache
 	containedObjectsNeedsSort = YES;
-	_preferredContact = nil;
-	[_listContacts release]; _listContacts = nil;
+
+	[self clearContainedObjectInfoCache];
 
 	//Our effective icon may have changed
 	[AIUserIcons flushCacheForContact:self];
@@ -1137,10 +1160,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	delayContainedObjectSorting = flag;
 	
 	if (!delayContainedObjectSorting) {
-		//Clear our preferred contact so the next call to it will update the preferred contact
-		_preferredContact = nil;
-		
-		[_listContacts release]; _listContacts = nil;
+		[self clearContainedObjectInfoCache];
 		
 		//Our effective icon may have changed
 		[AIUserIcons flushCacheForContact:self];
