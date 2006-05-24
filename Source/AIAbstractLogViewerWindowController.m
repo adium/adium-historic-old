@@ -15,6 +15,7 @@
 #import "AILoggerPlugin.h"
 #import "AIPreferenceController.h"
 #import "ESRankingCell.h" 
+#import <Adium/AIHTMLDecoder.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
@@ -26,10 +27,11 @@
 #import <AIUtilities/AISplitView.h>
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
-#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIServiceIcons.h>
+#import <Adium/AIUserIcons.h>
+
 #import "KFTypeSelectTableView.h"
 
 #define KEY_LOG_VIEWER_WINDOW_FRAME		@"Log Viewer Frame"
@@ -62,7 +64,7 @@
 - (void)initLogFiltering;
 - (void)displayLog:(AIChatLog *)log;
 - (NSAttributedString *)hilightOccurrencesOfString:(NSString *)littleString inString:(NSAttributedString *)bigString firstOccurrence:(NSRange *)outRange;
-- (void)sortcurrentSearchResultsForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction;
+- (void)sortCurrentSearchResultsForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction;
 - (void)startSearchingClearingCurrentResults:(BOOL)clearCurrentResults;
 - (void)buildSearchMenu;
 - (NSMenuItem *)_menuItemWithTitle:(NSString *)title forSearchMode:(LogSearchMode)mode;
@@ -71,6 +73,8 @@
 - (void)installToolbar;
 - (void)updateRankColumnVisibility;
 - (void)openLogAtPath:(NSString *)inPath;
+- (void)rebuildContactsList;
+- (void)filterForContact:(AIListContact *)inContact;
 @end
 
 @implementation AIAbstractLogViewerWindowController
@@ -107,18 +111,8 @@ static int toArraySort(id itemA, id itemB, void *context);
 + (id)openForContact:(AIListContact *)inContact plugin:(id)inPlugin
 {
     [self openForPlugin:inPlugin];
-    
-	if (inContact) {
-		NSString	*contactName;
-		
-		if ([inContact isKindOfClass:[AIMetaContact class]]) {
-			contactName = [[(AIMetaContact *)inContact preferredContact] UID];
-		} else {
-			contactName = [inContact UID];
-		}
-		
-		[sharedLogViewerInstance filterForContactName:contactName];
-	}
+
+	[sharedLogViewerInstance filterForContact:inContact];
 	
     return sharedLogViewerInstance;
 }
@@ -148,7 +142,6 @@ static int toArraySort(id itemA, id itemB, void *context);
     automaticSearch = YES;
     showEmoticons = NO;
     activeSearchString = nil;
-    activeSearchStringEncoded = nil;
     displayedLog = nil;
     aggregateLogIndexProgressTimer = nil;
     windowIsClosing = NO;
@@ -183,14 +176,13 @@ static int toArraySort(id itemA, id itemB, void *context);
     [fromServiceArray release];
     [toArray release];
     [toServiceArray release];
-    //[availableLogArray release];
     [currentSearchResults release];
     [selectedColumn release];
     [dateFormatter release];
     [displayedLog release];
     [blankImage release];
-    [activeSearchStringEncoded release];
     [activeSearchString release];
+	[acceptableContactNames release];
 
     //toolbarItems?
     //aggregateLogIndexProgressTimer?
@@ -254,22 +246,11 @@ static int toArraySort(id itemA, id itemB, void *context);
 			//Add the 'to' for each grouping on this account
 			toEnum = [[logFromGroup toGroupArray] objectEnumerator];
 			while ((currentToGroup = [toEnum nextObject])) {
-				NSString	*currentTo = [currentToGroup to];
-				if (currentTo && ![currentTo isEqual:@".DS_Store"]) {
+				NSString	*currentTo;
+
+				if ((currentTo = [currentToGroup to])) {
 					//Store currentToGroup on a key in the form "SERVICE.ACCOUNT_NAME/TARGET_CONTACT"
 					[logToGroupDict setObject:currentToGroup forKey:[currentToGroup path]];
-					
-					AIListObject *listObject = [[adium contactController] existingListObjectWithUniqueID:[AIListObject internalObjectIDForServiceID:serviceClass
-																																				UID:currentTo]];
-					if (listObject && [listObject isKindOfClass:[AIListContact class]]) {
-						AIListContact *parentContact = [(AIListContact *)listObject parentContact];
-						if (![toArray containsObjectIdenticalTo:parentContact]) {
-							[toArray addObject:parentContact];
-						}
-
-					} else {
-						[toArray addObject:currentToGroup];
-					}
 				}
 			}
 
@@ -277,8 +258,49 @@ static int toArraySort(id itemA, id itemB, void *context);
 		}
 	}
 
+	[self rebuildContactsList];
+}
+
+- (void)rebuildContactsList
+{
+	NSMutableSet	*addedToGroupNames = [NSMutableSet set];
+	NSEnumerator	*enumerator = [logFromGroupDict objectEnumerator];
+	AILogFromGroup	*logFromGroup;
+	
+	int	oldCount = [toArray count];
+	[toArray release]; toArray = [[NSMutableArray alloc] initWithCapacity:(oldCount ? oldCount : 20)];
+
+	while ((logFromGroup = [enumerator nextObject])) {
+		NSEnumerator	*toEnum;
+		AILogToGroup	*currentToGroup;
+		NSString		*serviceClass = [logFromGroup serviceClass];
+
+		//Add the 'to' for each grouping on this account
+		toEnum = [[logFromGroup toGroupArray] objectEnumerator];
+		while ((currentToGroup = [toEnum nextObject])) {
+			NSString	*currentTo;
+			
+			if ((currentTo = [currentToGroup to])) {
+				AIListObject *listObject = [[adium contactController] existingListObjectWithUniqueID:[AIListObject internalObjectIDForServiceID:serviceClass
+																																			UID:currentTo]];
+				if (listObject && [listObject isKindOfClass:[AIListContact class]]) {
+					AIListContact *parentContact = [(AIListContact *)listObject parentContact];
+					if (![toArray containsObjectIdenticalTo:parentContact]) {
+						[toArray addObject:parentContact];
+					}
+					
+				} else {
+					if (![addedToGroupNames containsObject:[currentToGroup to]]) {
+						[toArray addObject:currentToGroup];
+						[addedToGroupNames addObject:[currentToGroup to]];
+					}
+				}
+			}
+		}		
+	}
+	
 	[toArray sortUsingFunction:toArraySort context:NULL];
-	[outlineView_contacts reloadData];
+	[outlineView_contacts reloadData];	
 }
 
 //
@@ -327,7 +349,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	if (!selectedColumn) {
 		selectedColumn = [[tableView_results tableColumnWithIdentifier:@"Date"] retain];
 	}
-	[self sortcurrentSearchResultsForTableColumn:selectedColumn direction:YES];
+	[self sortCurrentSearchResultsForTableColumn:selectedColumn direction:YES];
 
     //Prepare indexing and filter searching
 	[plugin prepareLogContentSearching];
@@ -501,31 +523,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[toolbarItems autorelease];
 }
 
-
-#pragma mark Array access
-//Array access ----------------------------------------
-
-//Return our handy dandy accounts list
-- (NSMutableArray *)fromArray{
-    return fromArray;
-}
-
-//Return our handy dandy services list to match above
-- (NSMutableArray *)fromServiceArray{
-    return fromServiceArray;
-}
-
-//Return our handy dandy services list to match above
-- (NSMutableArray *)toServiceArray{
-    return toServiceArray;
-}
-
-//Return our handy dandy services list to match above
-- (NSMutableArray *)toArray{
-    return toArray;
-}
-
-
 //Display --------------------------------------------------------------------------------------------------------------
 #pragma mark Display
 //Update log viewer progress string to reflect current status
@@ -543,7 +540,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 													  AILocalizedString(@"Found %i matches",nil) :
 													  AILocalizedString(@"Found 1 match",nil)),count];
     } else if (searching) {
-		progress = [AILocalizedString(@"Opening logs",nil) mutableCopy];
+		progress = [[AILocalizedString(@"Opening logs",nil) mutableCopy] autorelease];
 		[progress appendString:[NSString ellipsis]];
 
     } else {
@@ -601,7 +598,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 			if (!aggregateLogIndexProgressTimer) {
 				aggregateLogIndexProgressTimer = [[NSTimer scheduledTimerWithTimeInterval:7.0
 																				   target:self
-                        selector:@selector(aggregatedLogIndexingProgressUpdate:)
+																				 selector:@selector(aggregatedLogIndexingProgressUpdate:)
 																				 userInfo:[NSNumber numberWithInt:activeSearchID]
 																				  repeats:NO] retain];
 			}
@@ -845,7 +842,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	}
 	
     [resultsLock unlock];
-	
+
     //Reload the data
     [tableView_results reloadData];
 
@@ -854,7 +851,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 }
 
 //Sorts the selected log array and adjusts the selected column
-- (void)sortcurrentSearchResultsForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction
+- (void)sortCurrentSearchResultsForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction
 {
     //If there already was a sorted column, remove the indicator image from it.
     if (selectedColumn && selectedColumn != tableColumn) {
@@ -936,7 +933,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 		[NSNumber numberWithInt:activeSearchID], @"ID",
 		[NSNumber numberWithInt:searchMode], @"Mode",
 		activeSearchString, @"String",
-		activeSearchStringEncoded, @"StringEncoded",
 		nil];
     [NSThread detachNewThreadSelector:@selector(filterLogsWithSearch:) toTarget:self withObject:searchDict];
     
@@ -977,12 +973,10 @@ static int toArraySort(id itemA, id itemB, void *context);
 	//Clear any filter from the table if it's the current mode, as well
 	switch (searchMode) {
 		case LOG_SEARCH_FROM:
-			[filterForAccountName release]; filterForAccountName = nil;
 			[cell setPlaceholderString:AILocalizedString(@"Search From","Placeholder for searching logs from an account")];
 			break;
+
 		case LOG_SEARCH_TO:
-			//XXX
-			[filterForContactName release]; filterForContactName = nil;
 			[cell setPlaceholderString:AILocalizedString(@"Search To","Placeholder for searching logs with/to a contact")];
 			break;
 			
@@ -1051,30 +1045,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 		[activeSearchString release];
 		activeSearchString = [inString retain];
 	}
-	
-	//Our logs are stored as HTML.  Non-ASCII characters are therefore HTML-encoded.  We need to have an
-	//encoded version of our search string with which to search when doing a content-based search, as that's
-	//how they are on disk.
-	if (searchMode == LOG_SEARCH_CONTENT) {
-		[activeSearchStringEncoded release];
-		activeSearchStringEncoded = [[AIHTMLDecoder encodeHTML:[[[NSAttributedString alloc] initWithString:activeSearchString] autorelease]
-													   headers:NO 
-													  fontTags:NO 
-											includingColorTags:NO
-												 closeFontTags:NO 
-													 styleTags:NO
-									closeStyleTagsOnFontChange:NO
-												encodeNonASCII:YES 
-												  encodeSpaces:NO
-													imagesPath:nil 
-											 attachmentsAsText:YES 
-									 onlyIncludeOutgoingImages:NO 
-												simpleTagsOnly:NO
-												bodyBackground:NO] retain];
-		AILog(@"Search will be on %@",activeSearchStringEncoded);
-	} else {
-		[activeSearchStringEncoded release]; activeSearchStringEncoded = nil;
-	}
 
 	[self updateRankColumnVisibility];
 }
@@ -1091,7 +1061,41 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[[searchField_logs cell] setSearchMenuTemplate:cellMenu];
 }
 
-//Returns a menu item for the search mode menu
+/*
+ * @brief Focus the log viewer on a particular contact
+ *
+ * If the contact is within a metacontact, the metacontact will be focused.
+ */
+- (void)filterForContact:(AIListContact *)inContact
+{
+	AIListContact *parentContact = [inContact parentContact];
+	
+	/* Ensure the contacts list includes this contact, since only existing AIListContacts are be used
+	 * (with AILogToGroup objects used if an AIListContact isn't available) but that situation may have changed
+	 * with regard to inContact since the log viewer opened.
+	 */
+	[self rebuildContactsList];
+	
+	[outlineView_contacts selectItemsInArray:[NSArray arrayWithObject:(parentContact ? parentContact : AILocalizedString(@"All", nil))]];
+	unsigned int selectedRow = [[outlineView_contacts selectedRowIndexes] firstIndex];
+	if (selectedRow != NSNotFound) {
+		[outlineView_contacts scrollRowToVisible:selectedRow];
+	}
+
+	//If the search mode is currently the TO field, switch it to content, which is what it should now intuitively do
+	if (searchMode == LOG_SEARCH_TO) {
+		[self setSearchMode:LOG_SEARCH_CONTENT];
+		
+		//Update our search string to ensure we're configured for content searching
+		[self setSearchString:activeSearchString];
+	}
+	
+    [self startSearchingClearingCurrentResults:YES];
+}
+
+/*
+ * @brief Returns a menu item for the search mode menu
+ */
 - (NSMenuItem *)_menuItemWithTitle:(NSString *)title forSearchMode:(LogSearchMode)mode
 {
     NSMenuItem  *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title 
@@ -1145,7 +1149,6 @@ static int toArraySort(id itemA, id itemB, void *context);
     int                     mode = [[searchInfoDict objectForKey:@"Mode"] intValue];
     int                     searchID = [[searchInfoDict objectForKey:@"ID"] intValue];
     NSString                *searchString = [searchInfoDict objectForKey:@"String"];
-    NSString                *searchStringEncoded = [searchInfoDict objectForKey:@"StringEncoded"]; 
 
     //Lock down new thread creation until this thread is complete
     //We must be careful not to wait on performing any main thread selectors when this lock is set!!
@@ -1164,7 +1167,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 								mode:mode];
 					break;
 				case LOG_SEARCH_CONTENT:
-					[self _logContentFilter:searchStringEncoded
+					[self _logContentFilter:searchString
 								   searchID:searchID];
 					break;
 			}
@@ -1206,26 +1209,19 @@ static int toArraySort(id itemA, id itemB, void *context);
     fromEnumerator = [logFromGroupDict objectEnumerator];
     while ((fromGroup = [fromEnumerator nextObject]) && (searchID == activeSearchID)) {
 		
-		/*
-		 When searching in LOG_SEARCH_FROM, we only proceed into matching groups
-		 For all other search modes, we always proceed here so long as either:
-			a) We are not filtering for the account name or
-			b) The account name matches
-		 */
-		if ((!filterForAccountName || ([[fromGroup fromUID] caseInsensitiveCompare:filterForAccountName] == NSOrderedSame)) &&
-		   ((mode != LOG_SEARCH_FROM) ||
-		   (!searchString) || 
-		   ([[fromGroup fromUID] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound))) {
-			
+		//When searching in LOG_SEARCH_FROM, we only proceed into matching groups
+		if ((mode != LOG_SEARCH_FROM) ||
+			(!searchString) || 
+			([[fromGroup fromUID] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)) {
+
 			//Walk through every 'to' group
 			toEnumerator = [[fromGroup toGroupArray] objectEnumerator];
 			while ((toGroup = [toEnumerator nextObject]) && (searchID == activeSearchID)) {
 				
-				/*
-				 When searching in LOG_SEARCH_TO, we only proceed into matching groups
-				 For all other search modes, we always proceed here so long as either:
-					a) We are not filtering for the contact name or
-					b) The contact name matches
+				/* When searching in LOG_SEARCH_TO, we only proceed into matching groups
+				 * For all other search modes, we always proceed here so long as either:
+				 *	a) We are not filtering for specific contact names or
+				 *	b) The contact name matches one of the names in acceptableContactNames
 				 */
 				if ((![acceptableContactNames count] || [acceptableContactNames containsObject:[[[toGroup to] compactedString] safeFilenameString]]) &&
 				   ((mode != LOG_SEARCH_TO) ||
@@ -1233,11 +1229,13 @@ static int toArraySort(id itemA, id itemB, void *context);
 				   ([[toGroup to] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound))) {
 					
 					//Walk through every log
+
 					logEnumerator = [toGroup logEnumerator];
 					while ((theLog = [logEnumerator nextObject]) && (searchID == activeSearchID)) {
 						
-						//When searching in LOG_SEARCH_DATE, we must have matching dates
-						//For all other search modes, we always proceed here
+						/* When searching in LOG_SEARCH_DATE, we must have matching dates
+						 * For all other search modes, we always proceed here
+						 */
 						if ((mode != LOG_SEARCH_DATE) ||
 						   (!searchString) ||
 						   (searchStringDate && [theLog isFromSameDayAsDate:searchStringDate])) {
@@ -1245,57 +1243,21 @@ static int toArraySort(id itemA, id itemB, void *context);
 							//Add the log
 							[resultsLock lock];
 							[currentSearchResults addObject:theLog];
-							[resultsLock unlock];
+							[resultsLock unlock];							
 
 							//Update our status
 							if (lastUpdate == 0 || TickCount() > lastUpdate + LOG_SEARCH_STATUS_INTERVAL) {
-								[self updateProgressDisplay];
+								[self performSelectorOnMainThread:@selector(updateProgressDisplay)
+													   withObject:nil
+													waitUntilDone:NO];
 								lastUpdate = TickCount();
 							}
 						}
-						
 					}
 				}
 			}	    
 		}
     }
-}
-
-- (void)filterForContactName:(NSString *)inContactName
-{
-	[filterForAccountName release]; filterForAccountName = nil;
-
-	[acceptableContactNames removeAllObjects];
-	[acceptableContactNames addObject:[[inContactName safeFilenameString] compactedString]];
-
-	//If the search mode is currently the TO field, switch it to content, which is what it should now intuitively do
-	if (searchMode == LOG_SEARCH_TO) {
-		[self setSearchMode:LOG_SEARCH_CONTENT];
-	}
-
-	//Update our search string; now that we may be on LOG_SEARCH_CONTENT the encoded string is needed,
-	//and we also want the rank column visibility to be updated
-	[self setSearchString:activeSearchString];
-	
-    [self startSearchingClearingCurrentResults:YES];
-}
-
-- (void)filterForAccountName:(NSString *)inAccountName
-{
-	[filterForAccountName release]; filterForAccountName = nil;
-	
-	filterForAccountName = [[inAccountName safeFilenameString] retain];
-
-	//If the search mode is currently the FROM field, switch it to content, which is what it should now intuitively do
-	if (searchMode == LOG_SEARCH_FROM) {
-		[self setSearchMode:LOG_SEARCH_CONTENT];
-	}
-
-	//Update our search string; now that we may be on LOG_SEARCH_CONTENT the encoded string is needed,
-	//and we also want the rank column visibility to be updated
-	[self setSearchString:activeSearchString];
-	
-    [self startSearchingClearingCurrentResults:YES];	
 }
 
 //Search results table view --------------------------------------------------------------------------------------------
@@ -1391,7 +1353,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 //Sort the log array & reflect the new column
 - (void)tableView:(NSTableView*)tableView didClickTableColumn:(NSTableColumn *)tableColumn
 {    
-    [self sortcurrentSearchResultsForTableColumn:tableColumn
+    [self sortCurrentSearchResultsForTableColumn:tableColumn
                                    direction:(selectedColumn == tableColumn ? !sortDirection : sortDirection)];
 }
 
@@ -1402,7 +1364,14 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 - (void)configureTypeSelectTableView:(KFTypeSelectTableView *)tableView
 {
-    [tableView setSearchColumnIdentifiers:[NSSet setWithObjects:@"To", @"From", nil]];
+	if (tableView == tableView_results) {
+		[tableView setSearchColumnIdentifiers:[NSSet setWithObjects:@"To", @"From", nil]];
+
+	} else if (tableView == (KFTypeSelectTableView *)outlineView_contacts) {
+		[tableView setSearchWraps:YES];
+		[tableView setMatchAlgorithm:KFSubstringMatchAlgorithm];
+		[tableView setSearchColumnIdentifiers:[NSSet setWithObject:@"Contacts"]];
+	}
 }
 
 - (IBAction)toggleEmoticonFiltering:(id)sender
@@ -1515,12 +1484,19 @@ static int toArraySort(id itemA, id itemB, void *context);
 {
 	if ([item isKindOfClass:[AIMetaContact class]] &&
 		[[(AIMetaContact *)item listContactsIncludingOfflineAccounts] count] > 1) {
-		[cell setImage:nil];
+		/* If the metacontact contains a single contact, fall through (isKindOfClass:[AIListContact class]) and allow using of a service icon.
+		 * If it has multiple contacts, use no icon unless a user icon is present.
+		 */
+		[cell setImage:[AIUserIcons listUserIconForContact:(AIListContact *)item
+													  size:NSMakeSize(16,16)]];
 
 	} else if ([item isKindOfClass:[AIListContact class]]) {
-		[cell setImage:[AIServiceIcons serviceIconForObject:(AIListContact *)item
-													   type:AIServiceIconSmall
-												  direction:AIIconFlipped]];
+		NSImage	*image = [AIUserIcons listUserIconForContact:(AIListContact *)item
+														size:NSMakeSize(16,16)];
+		if (!image) image = [AIServiceIcons serviceIconForObject:(AIListContact *)item
+															type:AIServiceIconSmall
+													   direction:AIIconFlipped];
+		[cell setImage:image];
 
 	} else if ([item isKindOfClass:[AILogToGroup class]]) {
 		[cell setImage:[AIServiceIcons serviceIconForServiceID:[(AILogToGroup *)item serviceClass]
@@ -1655,11 +1631,6 @@ static int toArraySort(id itemA, id itemB, void *context)
 }
 
 #pragma mark Open Log
-
-- (void)filterForContact:(AIListContact *)inContact
-{
-	[self filterForContactName:[inContact UID]];
-}
 
 - (void)openLogAtPath:(NSString *)inPath
 {

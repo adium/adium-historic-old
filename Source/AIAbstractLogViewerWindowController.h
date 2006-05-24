@@ -54,6 +54,11 @@ typedef enum {
 	IBOutlet    NSView			*view_SearchField;
     IBOutlet    NSButton		*button_deleteLogs;
 
+	IBOutlet    NSProgressIndicator         *progressIndicator;
+    IBOutlet    NSTextField                 *textField_progress;
+	
+	IBOutlet	NSSearchField	*searchField_logs;
+	
 	//Array of selected / displayed logs.  (Locked access)
     NSMutableArray		*currentSearchResults;		//Array of filtered/resulting logs
     NSLock				*resultsLock;			//Lock before touching the array
@@ -61,11 +66,6 @@ typedef enum {
 
 	LogSearchMode		searchMode;				//Currently selected search mode
 
-	IBOutlet    NSProgressIndicator         *progressIndicator;
-    IBOutlet    NSTextField                 *textField_progress;
-
-	IBOutlet	NSSearchField		*searchField_logs;
-	
 	NSTableColumn		*selectedColumn;		//Selected/active sort column
 	
 	//Search information
@@ -77,15 +77,14 @@ typedef enum {
     BOOL				sortDirection;			//Direction to sort
 
 	
-	NSTimer					*refreshResultsTimer;
+	NSTimer				*refreshResultsTimer;
 	NSTimer				*aggregateLogIndexProgressTimer; 
 
-	NSString				*filterForAccountName ;	//Account name to restrictively match content searches
-	NSString				*filterForContactName;	//Contact name to restrictively match content searches
-	NSMutableSet			*acceptableContactNames;
+	NSString			*filterForAccountName;	//Account name to restrictively match content searches
+	NSMutableSet		*acceptableContactNames;
 	
-	NSMutableDictionary		*logToGroupDict;
-	NSMutableDictionary		*logFromGroupDict;
+	NSMutableDictionary	*logToGroupDict;
+	NSMutableDictionary	*logFromGroupDict;
 
 	BOOL				automaticSearch;		//YES if this search was performed automatically for the user (view ___'s logs...)
     BOOL				ignoreSelectionChange;	//Hack to prevent automatic table selection changes from clearing the automaticSearch flag
@@ -105,9 +104,6 @@ typedef enum {
 	
 	//Old
 	BOOL showEmoticons;
-	NSString *activeSearchStringEncoded;
-	IBOutlet NSTextField	*textField_totalAccounts;
-	IBOutlet NSTextField	*textField_totalContacts;
 }
 
 + (id)openForPlugin:(id)inPlugin;
@@ -136,16 +132,7 @@ typedef enum {
 - (void)refreshResultsSearchIsComplete:(BOOL)searchIsComplete;
 - (void)updateProgressDisplay;
 
-//Contact / account drawer...
-- (void)filterForContactName:(NSString *)inContactName;
-- (void)filterForAccountName:(NSString *)inContactName;
-
--(void)rebuildIndices;
-
-- (NSMutableArray *)toArray;
-- (NSMutableArray *)fromArray;
-- (NSMutableArray *)toServiceArray;
-- (NSMutableArray *)fromServiceArray;
+- (void)rebuildIndices;
 
 - (BOOL)searchShouldDisplayDocument:(SKDocumentRef)inDocument pathComponents:(NSArray *)pathComponents;
 

@@ -16,7 +16,12 @@
 
 @implementation AIMDLogViewerWindowController
 
-//Perform a content search of the indexed logs
+/*
+ * @brief Perform a content search of the indexed logs
+ *
+ * This uses the 10.4+ asynchronous search functions.
+ * Google-like search syntax (phrase, prefix/suffix, boolean, etc. searching) is automatically supported.
+ */
 - (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID
 {
 	SKIndexRef			logSearchIndex = [plugin logContentIndex];
@@ -192,124 +197,5 @@
 	return predicate;
 }
 #endif
-/*
-- (NSSet *)selectedItemsInTable:(NSTableView *)tableView basedOnArray:(NSArray *)inArray
-{	
-	NSMutableSet 	*itemSet = nil;
-	id 				item;
-	
-	//Apple wants us to do some pretty crazy stuff for selections in 10.3
-	NSIndexSet *indices = [tableView selectedRowIndexes];
-	unsigned int bufSize = [indices count];
-	unsigned int *buf = malloc(bufSize + sizeof(unsigned int));
-	unsigned int i;
-	
-	//If the first item ("All") is selected, don't return any items, which means no filtering.
-	if ([indices firstIndex] != 0) {
-		itemSet = [NSMutableSet set];
-		
-		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
-		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
-		
-		for (i = 0; i != bufSize; i++) {
-			//-1 because the first item in the table is the "All" item
-			if ((item = [inArray objectAtIndex:(buf[i]-1)])) {
-				[itemSet addObject:item];
-			}
-		}
-	}
-	
-	free(buf);
-
-	return itemSet;
-}
-*/
-
-/*
- * @brief Configure to display the logs for a specified contact
- *
- * At present, filters on the contact's UID using the contact browser table
- */
-- (void)filterForContact:(AIListContact *)listContact
-{
-	int contactIndex = [toArray indexOfObject:[listContact UID]];
-	if (contactIndex == NSNotFound) {
-		contactIndex = [toArray indexOfObject:[[listContact UID] compactedString]];
-	}
-	
-	if (contactIndex != NSNotFound) {		
-		//+1 to allow for the All entry at the top
-		[tableView_toContacts selectRowIndexes:[NSIndexSet indexSetWithIndex:(contactIndex + 1)]
-						  byExtendingSelection:NO];
-		[tableView_toContacts scrollRowToVisible:(contactIndex + 1)];
-	}
-}
-
-#pragma mark Browser table views delegate
-
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
-{
-	if (tableView == tableView_fromAccounts) {
-		return ([fromArray count] + 1);
-	} else if (tableView == tableView_toContacts) {
-		return ([toArray count] + 1);
-		
-	} else if (tableView == tableView_dates) {
-		return 0;
-	} else {
-		return [super numberOfRowsInTableView:tableView];
-	}
-}
-
-#define ALL AILocalizedString(@"All", nil)
-
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
-{
-	if (tableView == tableView_fromAccounts) {
-		if (row == 0) {
-			return ALL;
-		} else {
-			return [fromArray objectAtIndex:row-1];
-		}
-		
-	} else if (tableView == tableView_toContacts) {
-		if (row == 0) {
-			return ALL;
-		} else {
-			return [toArray objectAtIndex:row-1];
-		}
-		
-	} else if (tableView == tableView_dates) {
-		if (row == 0) {
-			return ALL;
-		} else {
-			return @"";
-		}
-		
-	} else {
-		return [super tableView:tableView objectValueForTableColumn:tableColumn row:row];
-	}
-}
-
-- (void)tableViewSelectionDidChange:(NSNotification *)notification
-{
-	NSTableView	*tableView = [notification object];
-
-	if ((tableView == tableView_fromAccounts) ||
-		(tableView == tableView_toContacts) ||
-		(tableView == tableView_dates)) {
-		automaticSearch = YES;
-		[self startSearchingClearingCurrentResults:YES];
-
-	} else {
-		[super tableViewSelectionDidChange:notification];
-	}
-}
-
-#pragma mark Toolbar
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
-{
-    return [NSArray arrayWithObjects:@"delete", NSToolbarFlexibleSpaceItemIdentifier, @"search", nil];
-}
 
 @end
