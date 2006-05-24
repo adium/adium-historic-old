@@ -405,20 +405,22 @@ static NSString	*prefsCategory;
 //Last call to perform actions before the app shuffles off its mortal coil and joins the bleeding choir invisible
 - (IBAction)confirmQuit:(id)sender
 {
+	BOOL allowQuit = YES;
 	if (([chatController unviewedContentCount] > 0) &&
 		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for Unread Messages"
 											group:@"Confirmations"] boolValue])) {
-			[AdiumUnreadMessagesQuitConfirmation showUnreadMessagesQuitConfirmation];
-
+		[AdiumUnreadMessagesQuitConfirmation showUnreadMessagesQuitConfirmation];
+		allowQuit = NO;
 	} 
 	
-	if (([fileTransferController activeTransferCount] > 0) && 		
-	(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for File Transfers"
-										group:@"Confirmations"]  boolValue])) {
-				[AdiumFileTransferQuitConfirmation showFileTransferQuitConfirmation];
+	if (([fileTransferController activeTransferCount] > 0) &&
+		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for File Transfers"
+											group:@"Confirmations"]  boolValue])) {
+		[AdiumFileTransferQuitConfirmation showFileTransferQuitConfirmation];
+		allowQuit = NO;
 	}
 	
-	else {
+	if(allowQuit) {
 		[NSApp terminate:nil];
 	}
 }
