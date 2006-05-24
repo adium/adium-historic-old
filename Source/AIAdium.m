@@ -41,6 +41,7 @@
 #import "AdiumSetupWizard.h"
 #import "AdiumUnreadMessagesQuitConfirmation.h"
 #import "AdiumFileTransferQuitConfirmation.h"
+#import "ESTextAndButtonsWindowController.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <Adium/AIPathUtilities.h>
@@ -402,6 +403,51 @@ static NSString	*prefsCategory;
 	[[AIXtrasManager sharedManager] showXtras];
 }
 
+- (void)unreadQuitQuestion:(NSNumber *)number userInfo:(id)info
+{
+	AITextAndButtonsReturnCode result = [number intValue];
+	switch(result)
+	{
+		case AITextAndButtonsDefaultReturn:
+			//Quit
+			//Should we ask about File Transfers here?????
+			[NSApp terminate:nil];
+			break;
+		case AITextAndButtonsOtherReturn:
+			//Don't Ask Again
+			[[self preferenceController] setPreference:[NSNumber numberWithBool:YES]
+												 forKey:@"Suppress Quit Confirmation for Unread Messages"
+												  group:@"Confirmations"];
+			[NSApp terminate:nil];
+			break;
+		default:
+			//Cancel
+			break;
+	}
+}
+
+- (void)fileTransferQuitQuestion:(NSNumber *)number userInfo:(id)info
+{
+	AITextAndButtonsReturnCode result = [number intValue];
+	switch(result)
+	{
+		case AITextAndButtonsDefaultReturn:
+			//Quit
+			[NSApp terminate:nil];
+			break;
+		case AITextAndButtonsOtherReturn:
+			//Don't Ask Again
+			[[self preferenceController] setPreference:[NSNumber numberWithBool:YES]
+												 forKey:@"Suppress Quit Confirmation for File Transfers"
+												  group:@"Confirmations"];
+			[NSApp terminate:nil];
+			break;
+		default:
+			//Cancel
+			break;
+	}
+}
+
 //Last call to perform actions before the app shuffles off its mortal coil and joins the bleeding choir invisible
 - (IBAction)confirmQuit:(id)sender
 {
@@ -409,14 +455,31 @@ static NSString	*prefsCategory;
 	if (([chatController unviewedContentCount] > 0) &&
 		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for Unread Messages"
 											group:@"Confirmations"] boolValue])) {
-		[AdiumUnreadMessagesQuitConfirmation showUnreadMessagesQuitConfirmation];
+		[[self interfaceController] displayQuestion:AILocalizedString(@"Confirm Quit", nil)
+									withDescription:AILocalizedString(@"You have unread messages.\nAre you sure you want to quit?", nil)
+									withWindowTitle:nil
+									  defaultButton:AILocalizedString(@"Quit", nil)
+									alternateButton:AILocalizedString(@"Cancel", nil)
+										otherButton:AILocalizedString(@"Don't ask again", nil)
+											 target:self
+										   selector:@selector(unreadQuitQuestion:userInfo:)
+										   userInfo:nil];
 		allowQuit = NO;
 	} 
 	
-	if (([fileTransferController activeTransferCount] > 0) &&
+	if (allowQuit &&
+		([fileTransferController activeTransferCount] > 0) &&
 		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for File Transfers"
 											group:@"Confirmations"]  boolValue])) {
-		[AdiumFileTransferQuitConfirmation showFileTransferQuitConfirmation];
+		[[self interfaceController] displayQuestion:AILocalizedString(@"Confirm Quit", nil)
+									withDescription:AILocalizedString(@"You have file transfers in progress.\nAre you sure you want to quit?", nil)
+									withWindowTitle:nil
+									  defaultButton:AILocalizedString(@"Quit", nil)
+									alternateButton:AILocalizedString(@"Cancel", nil)
+										otherButton:AILocalizedString(@"Don't ask again", nil)
+											 target:self
+										   selector:@selector(fileTransferQuitQuestion:userInfo:)
+										   userInfo:nil];
 		allowQuit = NO;
 	}
 	
