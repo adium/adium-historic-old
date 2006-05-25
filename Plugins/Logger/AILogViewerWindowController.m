@@ -22,10 +22,6 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 
-@interface AILogViewerWindowController (PRIVATE)
-
-@end
-
 @implementation AILogViewerWindowController
 
 Boolean ContentResultsFilter (SKIndexRef inIndex,
@@ -33,7 +29,8 @@ Boolean ContentResultsFilter (SKIndexRef inIndex,
                               void *inContext)
 {
 	return [(AILogViewerWindowController *)inContext searchShouldDisplayDocument:inDocument
-																  pathComponents:nil];
+																  pathComponents:nil
+																		testDate:YES];
 }
 
 //Perform a content search of the indexed logs

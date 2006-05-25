@@ -130,7 +130,7 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 
 - (BOOL)isFromSameDayAsDate:(NSCalendarDate *)inDate
 {
-	return [[date dateWithCalendarFormat:nil timeZone:nil] dayOfCommonEra] == [inDate dayOfCommonEra];
+	return [[[self date] dateWithCalendarFormat:nil timeZone:nil] dayOfCommonEra] == [inDate dayOfCommonEra];
 }
 
 #pragma mark Sort Selectors

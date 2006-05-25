@@ -40,6 +40,19 @@ typedef enum {
     LOG_SEARCH_CONTENT
 } LogSearchMode;
 
+typedef enum {
+	AIDateTypeAnyDate = 0,
+	AIDateTypeToday,
+	AIDateTypeSinceYesterday,
+	AIDateTypeThisWeek,
+	AIDateTypeWithinLastTwoWeeks,
+	AIDateTypeThisMonth,
+	AIDateTypeWithinLastTwoMonths,
+	AIDateTypeExactly,
+	AIDateTypeBefore,
+	AIDateTypeAfter
+} AIDateType;
+
 @class AIListContact, AISplitView;
 
 @interface AIAbstractLogViewerWindowController : AIWindowController {
@@ -54,6 +67,10 @@ typedef enum {
 	IBOutlet    NSView			*view_SearchField;
     IBOutlet    NSButton		*button_deleteLogs;
 
+	IBOutlet	NSView			*view_DatePicker;
+	IBOutlet	NSPopUpButton	*popUp_dateFilter;
+	IBOutlet	NSDatePicker	*datePicker;
+	
 	IBOutlet    NSProgressIndicator         *progressIndicator;
     IBOutlet    NSTextField                 *textField_progress;
 	
@@ -76,13 +93,15 @@ typedef enum {
 	
     BOOL				sortDirection;			//Direction to sort
 
-	
 	NSTimer				*refreshResultsTimer;
 	NSTimer				*aggregateLogIndexProgressTimer; 
 
 	NSString			*filterForAccountName;	//Account name to restrictively match content searches
 	NSMutableSet		*acceptableContactNames;
 	
+	AIDateType			filterDateType;
+	NSCalendarDate		*filterDate;
+
 	NSMutableDictionary	*logToGroupDict;
 	NSMutableDictionary	*logFromGroupDict;
 
@@ -120,6 +139,7 @@ typedef enum {
 - (void)setSearchMode:(LogSearchMode)inMode;
 - (void)setSearchString:(NSString *)inString;
 - (IBAction)updateSearch:(id)sender;
+- (IBAction)selectDate:(id)sender;
 
 - (void)searchComplete;
 - (void)startSearchingClearingCurrentResults:(BOOL)clearCurrentResults;
@@ -134,6 +154,7 @@ typedef enum {
 
 - (void)rebuildIndices;
 
-- (BOOL)searchShouldDisplayDocument:(SKDocumentRef)inDocument pathComponents:(NSArray *)pathComponents;
+- (BOOL)searchShouldDisplayDocument:(SKDocumentRef)inDocument pathComponents:(NSArray *)pathComponents testDate:(BOOL)testDate;
+- (BOOL)chatLogMatchesDateFilter:(AIChatLog *)inChatLog;
 
 @end
