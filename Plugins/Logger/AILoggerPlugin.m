@@ -774,8 +774,6 @@ Class LogViewerWindowControllerClass = NULL;
 											 (CFDictionaryRef)textAnalysisProperties);
 		[logAccessLock unlock];
     }
-	
-	NSLog(@"Closed with %x",index_Content);
 }
 
 //Close the log index
@@ -791,6 +789,10 @@ Class LogViewerWindowControllerClass = NULL;
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[self _logIndexPath]]) {
 		[[NSFileManager defaultManager] trashFileAtPath:[self _logIndexPath]];
 	}	
+
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[self _dirtyLogArrayPath]]) {
+		[[NSFileMangaer defaultManager] trashFileAtPath:[self _dirtyLogArrayPath]];
+	}
 }
 
 //Path of log index file
@@ -938,7 +940,7 @@ Class LogViewerWindowControllerClass = NULL;
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
 	
     [indexingThreadLock lock];     //Prevent anything from closing until this thread is complete.
-	
+	NSLog(@"_cleanDirtyLogsThread");
     //Start cleaning (If we're still supposed to go)
     if (!stopIndexingThreads) {
 		UInt32		lastUpdate = TickCount();
@@ -955,7 +957,7 @@ Class LogViewerWindowControllerClass = NULL;
 				[dirtyLogArray removeLastObject];
 			}
 			[dirtyLogLock unlock];
-			
+			NSLog(@"Indexing %@",logPath);
 			if (logPath) {
 				SKDocumentRef   document;
 				
@@ -965,6 +967,7 @@ Class LogViewerWindowControllerClass = NULL;
 				NSString            *fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:logPath];
 
 				document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:fullPath]);
+				NSLog(@"%@ --> document %@ for index %@",index_Content,fullPath,document);
 				if (document) {
 					SKIndexAddDocument(index_Content, document, NULL, YES);
 					CFRelease(document);
