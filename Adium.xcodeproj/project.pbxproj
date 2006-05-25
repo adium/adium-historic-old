@@ -662,6 +662,8 @@
 		34B82C8B085A87B000864531 /* AdiumMessageEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B82C89085A87B000864531 /* AdiumMessageEvents.h */; };
 		34B82C8C085A87B000864531 /* AdiumMessageEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B82C8A085A87B000864531 /* AdiumMessageEvents.m */; };
 		34B995DA092A832700E31E91 /* FontPanelAccessoryView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B995D9092A832700E31E91 /* FontPanelAccessoryView.nib */; };
+		34B9C7900A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */; };
+		34B9C7920A255DCE00CEA8AE /* LogViewerDateFilter.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */; };
 		34BD0DB508D31479000BE2C0 /* AdiumChatEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */; };
 		34BD0DB608D31479000BE2C0 /* AdiumChatEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */; };
 		34BD9D11053146CC000AB133 /* AIPreferenceController.h in Headers */ = {isa = PBXBuildFile; fileRef = F57938ED033E745F01A8010A /* AIPreferenceController.h */; };
@@ -2727,6 +2729,8 @@
 		34B919C9062DEF15004F1223 /* CBOscarService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBOscarService.h; path = "Plugins/Gaim Service/CBOscarService.h"; sourceTree = "<group>"; };
 		34B919CA062DEF15004F1223 /* CBOscarService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBOscarService.m; path = "Plugins/Gaim Service/CBOscarService.m"; sourceTree = "<group>"; };
 		34B995D9092A832700E31E91 /* FontPanelAccessoryView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FontPanelAccessoryView.nib; path = Resources/FontPanelAccessoryView.nib; sourceTree = "<group>"; };
+		34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = "LogViewerDateFilter-Panther.nib"; path = "Resources/LogViewerDateFilter-Panther.nib"; sourceTree = "<group>"; };
+		34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LogViewerDateFilter.nib; path = Resources/LogViewerDateFilter.nib; sourceTree = "<group>"; };
 		34BBE0E907A2ECCF00663CC9 /* adiumGaimConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumGaimConnection.h; path = "Plugins/Gaim Service/adiumGaimConnection.h"; sourceTree = "<group>"; };
 		34BBE0EA07A2ECD000663CC9 /* adiumGaimConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimConnection.m; path = "Plugins/Gaim Service/adiumGaimConnection.m"; sourceTree = "<group>"; };
 		34BBE10907A2EE3700663CC9 /* adiumGaimBlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumGaimBlist.h; path = "Plugins/Gaim Service/adiumGaimBlist.h"; sourceTree = "<group>"; };
@@ -5956,6 +5960,8 @@
 				3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */,
 				342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */,
 				342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */,
+				34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */,
+				34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */,
 			);
 			name = "Log Viewer";
 			sourceTree = "<group>";
@@ -8202,6 +8208,8 @@
 				83C52C7A09E73D1D00ED2F90 /* RemoveShortcutRollover.tif in Resources */,
 				83C52C7B09E73D1D00ED2F90 /* Snapback.tiff in Resources */,
 				34107B5609E992DA001CC042 /* GuestAccountWindow.nib in Resources */,
+				34B9C7900A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib in Resources */,
+				34B9C7920A255DCE00CEA8AE /* LogViewerDateFilter.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

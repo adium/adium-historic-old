@@ -149,5 +149,10 @@ Boolean ContentResultsFilter (SKIndexRef inIndex,
 	[logAccessLock unlock];
 }
 
+- (NSString *)dateItemNibName
+{
+	return @"LogViewerDateFilter-Panther";
+}
+
 @end
 

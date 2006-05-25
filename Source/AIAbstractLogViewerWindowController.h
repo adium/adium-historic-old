@@ -33,6 +33,8 @@
 #define	LOG_VIEWER_DID_CREATE_LOG_ARRAYS	@"LogViewerDidCreateLogArrays"
 #define	LOG_VIEWER_DID_UPDATE_LOG_ARRAYS	@"LogViewerDidUpdateLogArrays"
 
+#define DATE_ITEM_IDENTIFIER			@"date"
+
 typedef enum {
     LOG_SEARCH_FROM = 0,
     LOG_SEARCH_TO,
@@ -69,7 +71,6 @@ typedef enum {
 
 	IBOutlet	NSView			*view_DatePicker;
 	IBOutlet	NSPopUpButton	*popUp_dateFilter;
-	IBOutlet	NSDatePicker	*datePicker;
 	
 	IBOutlet    NSProgressIndicator         *progressIndicator;
     IBOutlet    NSTextField                 *textField_progress;
@@ -139,7 +140,6 @@ typedef enum {
 - (void)setSearchMode:(LogSearchMode)inMode;
 - (void)setSearchString:(NSString *)inString;
 - (IBAction)updateSearch:(id)sender;
-- (IBAction)selectDate:(id)sender;
 
 - (void)searchComplete;
 - (void)startSearchingClearingCurrentResults:(BOOL)clearCurrentResults;
@@ -156,5 +156,11 @@ typedef enum {
 
 - (BOOL)searchShouldDisplayDocument:(SKDocumentRef)inDocument pathComponents:(NSArray *)pathComponents testDate:(BOOL)testDate;
 - (BOOL)chatLogMatchesDateFilter:(AIChatLog *)inChatLog;
+
+- (NSMenu *)dateTypeMenu;
+- (NSMenuItem *)_menuItemForDateType:(AIDateType)dateType dict:(NSDictionary *)dateTypeTitleDict;
+- (IBAction)selectDateType:(id)sender;
+- (void)selectedDateType:(AIDateType)dateType;
+- (void)configureDateFilter;
 
 @end
