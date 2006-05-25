@@ -940,7 +940,6 @@ Class LogViewerWindowControllerClass = NULL;
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
 	
     [indexingThreadLock lock];     //Prevent anything from closing until this thread is complete.
-	NSLog(@"_cleanDirtyLogsThread");
     //Start cleaning (If we're still supposed to go)
     if (!stopIndexingThreads) {
 		UInt32		lastUpdate = TickCount();
@@ -957,7 +956,7 @@ Class LogViewerWindowControllerClass = NULL;
 				[dirtyLogArray removeLastObject];
 			}
 			[dirtyLogLock unlock];
-			NSLog(@"Indexing %@",logPath);
+
 			if (logPath) {
 				SKDocumentRef   document;
 				
@@ -967,9 +966,11 @@ Class LogViewerWindowControllerClass = NULL;
 				NSString            *fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:logPath];
 
 				document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:fullPath]);
-				NSLog(@"%@ --> document %@ for index %@",index_Content,fullPath,document);
 				if (document) {
-					SKIndexAddDocument(index_Content, document, NULL, YES);
+					SKIndexAddDocument(index_Content,
+									   document,
+									   NULL,
+									   YES);
 					CFRelease(document);
 				} else {
 					NSLog(@"Could not create document for %@ [%@]",fullPath,[NSURL fileURLWithPath:fullPath]);
