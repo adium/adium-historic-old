@@ -72,7 +72,8 @@
 			CFStringRef		logPath = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
 			NSArray			*pathComponents = [(NSString *)logPath pathComponents];
 			
-			if ([self searchShouldDisplayDocument:document pathComponents:pathComponents]) {
+			//Don't test for the date now; we'll test once we've found the AIChatLog if we make it that far
+			if ([self searchShouldDisplayDocument:document pathComponents:pathComponents testDate:NO]) {
 				unsigned int	numPathComponents = [pathComponents count];
 				NSString		*toPath = [NSString stringWithFormat:@"%@/%@",
 					[pathComponents objectAtIndex:numPathComponents-3],
@@ -83,21 +84,22 @@
 				/* Add the log - if our index is currently out of date (for example, a log was just deleted) 
 				 * we may get a null log, so be careful.
 				 */
-				[resultsLock lock];
 				theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
-				if ((theLog != nil) && (![currentSearchResults containsObjectIdenticalTo:theLog])) {
+				if ((theLog != nil) &&
+					(![currentSearchResults containsObjectIdenticalTo:theLog]) &&
+					[self chatLogMatchesDateFilter:theLog]) {
 					[theLog setRankingValueOnArbitraryScale:foundScores[i]];
 					
 					//SearchKit does not normalize ranking scores, so we track the largest we've found and use it as 1.0
 					if (foundScores[i] > largestRankingValue) largestRankingValue = foundScores[i];
-					
+
+					[resultsLock lock];
 					[currentSearchResults addObject:theLog];
-					
+					[resultsLock unlock];					
 				} else {
 					//Didn't get a valid log, so decrement our totalCount which is tracking how many logs we found
 					totalCount--;
 				}
-				[resultsLock unlock];
 				
 			} else {
 				//Didn't add this log, so decrement our totalCount which is tracking how many logs we found

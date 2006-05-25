@@ -57,6 +57,8 @@
 #define IMAGE_EMOTICONS_OFF				@"emoticon32"
 #define IMAGE_EMOTICONS_ON				@"emoticon32_transparent"
 
+#define DATE_ITEM_IDENTIFIER			@"date"
+
 #define	REFRESH_RESULTS_INTERVAL		0.5 //Interval between results refreshes while searching
 
 @interface AIAbstractLogViewerWindowController (PRIVATE)
@@ -75,6 +77,7 @@
 - (void)openLogAtPath:(NSString *)inPath;
 - (void)rebuildContactsList;
 - (void)filterForContact:(AIListContact *)inContact;
+- (void)configureDateFilter;
 @end
 
 @implementation AIAbstractLogViewerWindowController
@@ -323,7 +326,8 @@ static int toArraySort(id itemA, id itemB, void *context);
     [[toolbarItems objectForKey:@"toggleemoticons"] setImage:[NSImage imageNamed:(showEmoticons ? IMAGE_EMOTICONS_ON : IMAGE_EMOTICONS_OFF) forClass:[self class]]];
 
 	//Toolbar
-	[self installToolbar];
+	[self installToolbar];	
+	[self configureDateFilter];
 
 	[splitView_contacts_results setDividerThickness:6]; //Default is 9
 
@@ -1076,7 +1080,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	 */
 	[self rebuildContactsList];
 	
-	[outlineView_contacts selectItemsInArray:[NSArray arrayWithObject:(parentContact ? parentContact : AILocalizedString(@"All", nil))]];
+	[outlineView_contacts selectItemsInArray:[NSArray arrayWithObject:(parentContact ? (id)parentContact : (id)AILocalizedString(@"All", nil))]];
 	unsigned int selectedRow = [[outlineView_contacts selectedRowIndexes] firstIndex];
 	if (selectedRow != NSNotFound) {
 		[outlineView_contacts scrollRowToVisible:selectedRow];
@@ -1109,32 +1113,72 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 #pragma mark Filtering search results
 
+- (BOOL)chatLogMatchesDateFilter:(AIChatLog *)inChatLog
+{
+	BOOL matchesDateFilter;
+
+	switch (filterDateType) {
+		case AIDateTypeAfter:
+			matchesDateFilter = ([[inChatLog date] timeIntervalSinceDate:filterDate] > 0);
+			break;
+		case AIDateTypeBefore:
+			matchesDateFilter = ([[inChatLog date] timeIntervalSinceDate:filterDate] < 0);
+			break;
+		case AIDateTypeExactly:
+			matchesDateFilter = [inChatLog isFromSameDayAsDate:filterDate];
+			break;
+		default:
+			matchesDateFilter = YES;
+			break;
+	}
+
+	return matchesDateFilter;
+}
+
+
+NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
+{
+	CFURLRef	url = SKDocumentCopyURL(inDocument);
+	CFStringRef logPath = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
+	NSArray		*pathComponents = [(NSString *)logPath pathComponents];
+	
+	CFRelease(url);
+	CFRelease(logPath);
+	
+	return pathComponents;
+}
+
 /*
  * @brief Should a search display a document with the given information?
  */
-- (BOOL)searchShouldDisplayDocument:(SKDocumentRef)inDocument pathComponents:(NSArray *)pathComponents
+- (BOOL)searchShouldDisplayDocument:(SKDocumentRef)inDocument pathComponents:(NSArray *)pathComponents testDate:(BOOL)testDate
 {
-	BOOL shouldDisplayDocument;
+	BOOL shouldDisplayDocument = YES;
 
 	if ([acceptableContactNames count]) {
 		//Determine the path components if we weren't supplied them
-		if (!pathComponents) {
-			CFURLRef	url = SKDocumentCopyURL(inDocument);
-			CFStringRef logPath = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
-
-			pathComponents = [(NSString *)logPath pathComponents];
-
-			CFRelease(url);
-			CFRelease(logPath);
-		}
+		if (!pathComponents) pathComponents = pathComponentsForDocument(inDocument);
 
 		unsigned int numPathComponents = [pathComponents count];
 		
 		NSString *contactName = [pathComponents objectAtIndex:(numPathComponents-2)];
 		shouldDisplayDocument = [acceptableContactNames containsObject:[contactName compactedString]];
 
-	} else {
-		shouldDisplayDocument = YES;
+	} 
+	
+	if (shouldDisplayDocument && testDate && (filterDateType != AIDateTypeAnyDate)) {
+		if (!pathComponents) pathComponents = pathComponentsForDocument(inDocument);
+
+		unsigned int	numPathComponents = [pathComponents count];
+		NSString		*toPath = [NSString stringWithFormat:@"%@/%@",
+			[pathComponents objectAtIndex:numPathComponents-3],
+			[pathComponents objectAtIndex:numPathComponents-2]];
+		NSString		*path = [NSString stringWithFormat:@"%@/%@",toPath,[pathComponents objectAtIndex:numPathComponents-1]];
+		AIChatLog		*theLog;
+		
+		theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
+		
+		shouldDisplayDocument = [self chatLogMatchesDateFilter:theLog];
 	}
 	
 	return shouldDisplayDocument;
@@ -1232,7 +1276,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 					logEnumerator = [toGroup logEnumerator];
 					while ((theLog = [logEnumerator nextObject]) && (searchID == activeSearchID)) {
-						
 						/* When searching in LOG_SEARCH_DATE, we must have matching dates
 						 * For all other search modes, we always proceed here
 						 */
@@ -1240,17 +1283,19 @@ static int toArraySort(id itemA, id itemB, void *context);
 						   (!searchString) ||
 						   (searchStringDate && [theLog isFromSameDayAsDate:searchStringDate])) {
 
-							//Add the log
-							[resultsLock lock];
-							[currentSearchResults addObject:theLog];
-							[resultsLock unlock];							
-
-							//Update our status
-							if (lastUpdate == 0 || TickCount() > lastUpdate + LOG_SEARCH_STATUS_INTERVAL) {
-								[self performSelectorOnMainThread:@selector(updateProgressDisplay)
-													   withObject:nil
-													waitUntilDone:NO];
-								lastUpdate = TickCount();
+							if ([self chatLogMatchesDateFilter:theLog]) {
+								//Add the log
+								[resultsLock lock];
+								[currentSearchResults addObject:theLog];
+								[resultsLock unlock];							
+								
+								//Update our status
+								if (lastUpdate == 0 || TickCount() > lastUpdate + LOG_SEARCH_STATUS_INTERVAL) {
+									[self performSelectorOnMainThread:@selector(updateProgressDisplay)
+														   withObject:nil
+														waitUntilDone:NO];
+									lastUpdate = TickCount();
+								}
 							}
 						}
 					}
@@ -1596,6 +1641,19 @@ static int toArraySort(id itemA, id itemB, void *context)
 	[toolbarItem setMaxSize:NSMakeSize(230, NSHeight([view_SearchField frame]))];
 	[toolbarItems setObject:toolbarItem forKey:[toolbarItem itemIdentifier]];
 
+	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:DATE_ITEM_IDENTIFIER
+														  label:AILocalizedString(@"Date", nil)
+												   paletteLabel:AILocalizedString(@"Date", nil)
+														toolTip:AILocalizedString(@"Filter logs by date",nil)
+														 target:self
+												settingSelector:@selector(setView:)
+													itemContent:view_DatePicker
+														 action:nil
+														   menu:nil];
+	[toolbarItem setMinSize:[view_DatePicker frame].size];
+	[toolbarItem setMaxSize:[view_DatePicker frame].size];
+	[toolbarItems setObject:toolbarItem forKey:[toolbarItem itemIdentifier]];
+	
 	//Toggle Emoticons
 	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
 									withIdentifier:@"toggleemoticons"
@@ -1618,7 +1676,9 @@ static int toArraySort(id itemA, id itemB, void *context)
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    return [NSArray arrayWithObjects:@"delete", @"toggleemoticons", NSToolbarFlexibleSpaceItemIdentifier, @"search", nil];
+    return [NSArray arrayWithObjects:DATE_ITEM_IDENTIFIER, NSToolbarFlexibleSpaceItemIdentifier,
+		@"delete", @"toggleemoticons", NSToolbarFlexibleSpaceItemIdentifier,
+		@"search", nil];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
@@ -1628,6 +1688,190 @@ static int toArraySort(id itemA, id itemB, void *context)
 			NSToolbarSpaceItemIdentifier,
 			NSToolbarFlexibleSpaceItemIdentifier,
 			NSToolbarCustomizeToolbarItemIdentifier, nil]];
+}
+
+#pragma mark Date filter
+
+/*
+ * @brief Returns a menu item for the date type filter menu
+ */
+- (NSMenuItem *)_menuItemForDateType:(AIDateType)dateType dict:(NSDictionary *)dateTypeTitleDict
+{
+    NSMenuItem  *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[dateTypeTitleDict objectForKey:[NSNumber numberWithInt:dateType]] 
+																				 action:@selector(selectDateType:) 
+																		  keyEquivalent:@""];
+    [menuItem setTag:dateType];
+    
+    return [menuItem autorelease];
+}
+
+- (NSMenu *)dateTypeMenu
+{
+	NSDictionary *dateTypeTitleDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		AILocalizedString(@"Any Date", nil), [NSNumber numberWithInt:AIDateTypeAnyDate],
+		AILocalizedString(@"Today", nil), [NSNumber numberWithInt:AIDateTypeToday],
+		AILocalizedString(@"Since Yesterday", nil), [NSNumber numberWithInt:AIDateTypeSinceYesterday],
+		AILocalizedString(@"This Week", nil), [NSNumber numberWithInt:AIDateTypeThisWeek],
+		AILocalizedString(@"Within Last 2 Weeks", nil), [NSNumber numberWithInt:AIDateTypeWithinLastTwoWeeks],
+		AILocalizedString(@"This Month", nil), [NSNumber numberWithInt:AIDateTypeThisMonth],
+		AILocalizedString(@"Within Last 2 Months", nil), [NSNumber numberWithInt:AIDateTypeWithinLastTwoMonths],
+		AILocalizedString(@"Exactly", nil), [NSNumber numberWithInt:AIDateTypeExactly],
+		AILocalizedString(@"Before", nil), [NSNumber numberWithInt:AIDateTypeBefore],
+		AILocalizedString(@"After", nil), [NSNumber numberWithInt:AIDateTypeAfter],
+		nil];
+	NSMenu	*dateTypeMenu = [[NSMenu alloc] init];
+	AIDateType dateType;
+	
+	[dateTypeMenu addItem:[self _menuItemForDateType:AIDateTypeAnyDate dict:dateTypeTitleDict]];
+	[dateTypeMenu addItem:[NSMenuItem separatorItem]];
+
+	for (dateType = AIDateTypeToday; dateType < AIDateTypeExactly; dateType++) {
+		[dateTypeMenu addItem:[self _menuItemForDateType:dateType dict:dateTypeTitleDict]];
+	}
+	[dateTypeMenu addItem:[NSMenuItem separatorItem]];		
+
+	for (dateType = AIDateTypeExactly; dateType <= AIDateTypeAfter; dateType++) {
+		[dateTypeMenu addItem:[self _menuItemForDateType:dateType dict:dateTypeTitleDict]];
+	}
+	
+	return [dateTypeMenu autorelease];
+}
+
+/*
+ * @brief Select the date type
+ *
+ * The date picker will be hidden/revealed as appropriate.
+ * The search will be restarted with the new date filter value if (sender != nil).
+ */
+- (void)selectDateType:(id)sender
+{
+	AIDateType		dateType = [sender tag];
+	NSCalendarDate	*today = [NSCalendarDate date];
+	BOOL			showDatePicker = NO;
+
+	[filterDate release]; filterDate = nil;
+
+	switch (dateType) {
+		case AIDateTypeAnyDate:
+			filterDateType = AIDateTypeAnyDate;
+			break;
+	
+		case AIDateTypeToday:
+			filterDateType = AIDateTypeExactly;
+			filterDate = [today retain];
+			break;
+			
+		case AIDateTypeSinceYesterday:
+			filterDateType = AIDateTypeAfter;
+			filterDate = [[today dateByAddingYears:0
+											months:0
+											  days:-1
+											 hours:-[today hourOfDay]
+										   minutes:-[today minuteOfHour]
+										   seconds:-([today secondOfMinute] + 1)] retain];
+			break;
+			
+		case AIDateTypeThisWeek:
+			filterDateType = AIDateTypeAfter;
+			filterDate = [[today dateByAddingYears:0
+											months:0
+											  days:-[today dayOfWeek]
+											 hours:-[today hourOfDay]
+										   minutes:-[today minuteOfHour]
+										   seconds:-([today secondOfMinute] + 1)] retain];
+			break;
+			
+		case AIDateTypeWithinLastTwoWeeks:
+			filterDateType = AIDateTypeAfter;
+			filterDate = [[today dateByAddingYears:0
+											months:0
+											  days:-14
+											 hours:-[today hourOfDay]
+										   minutes:-[today minuteOfHour]
+										   seconds:-([today secondOfMinute] + 1)] retain];
+			break;
+
+		case AIDateTypeThisMonth:
+			filterDateType = AIDateTypeAfter;
+			filterDate = [[[NSCalendarDate date] dateByAddingYears:0
+															months:0
+															  days:-[today dayOfMonth]
+															 hours:0
+														   minutes:0
+														   seconds:-1] retain];
+			break;
+
+		case AIDateTypeWithinLastTwoMonths:
+			filterDateType = AIDateTypeAfter;
+			filterDate = [[[NSCalendarDate date] dateByAddingYears:0
+															months:-1
+															  days:-[today dayOfMonth]
+															 hours:0
+														   minutes:0
+														   seconds:-1] retain];			
+			break;
+			
+		case AIDateTypeExactly:
+			filterDateType = AIDateTypeExactly;
+			filterDate = [[[datePicker dateValue] dateWithCalendarFormat:nil timeZone:nil] retain];
+			showDatePicker = YES;
+			break;
+
+		case AIDateTypeBefore:
+			filterDateType = AIDateTypeBefore;
+			filterDate = [[[datePicker dateValue] dateWithCalendarFormat:nil timeZone:nil] retain];
+			showDatePicker = YES;
+			break;
+			
+		case AIDateTypeAfter:
+			filterDateType = AIDateTypeAfter;
+			filterDate = [[[datePicker dateValue] dateWithCalendarFormat:nil timeZone:nil] retain];
+			showDatePicker = YES;
+			break;
+	}
+	
+	BOOL updateSize = NO;
+	if (showDatePicker && [datePicker isHidden]) {
+		[datePicker setHidden:NO];		
+		updateSize = YES;
+
+	} else if (!showDatePicker && ![datePicker isHidden]) {
+		[datePicker setHidden:YES];
+		updateSize = YES;
+	}
+	
+	if (updateSize) {
+		NSEnumerator *enumerator = [[[[self window] toolbar] items] objectEnumerator];
+		NSToolbarItem *toolbarItem;
+		while ((toolbarItem = [enumerator nextObject])) {
+			if ([[toolbarItem itemIdentifier] isEqualToString:DATE_ITEM_IDENTIFIER]) {
+				NSSize newSize = NSMakeSize(([datePicker isHidden] ? 180 : 320), NSHeight([view_DatePicker frame]));
+				[toolbarItem setMinSize:newSize];
+				[toolbarItem setMaxSize:newSize];
+				break;
+			}
+		}		
+	}
+	
+	if (sender) {
+		//Don't start searching if we called this ourselves with a nil sender
+		[self startSearchingClearingCurrentResults:YES];
+	}
+}
+
+- (IBAction)selectDate:(id)sender
+{
+	[filterDate release];
+	filterDate = [[datePicker dateValue] retain];
+
+	[self startSearchingClearingCurrentResults:YES];
+}
+
+- (void)configureDateFilter
+{
+	[popUp_dateFilter setMenu:[self dateTypeMenu]];
+	[popUp_dateFilter selectItemWithTag:AIDateTypeAnyDate];
+	[self selectDateType:nil];
 }
 
 #pragma mark Open Log

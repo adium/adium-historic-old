@@ -1,20 +1,21 @@
 {
     IBClasses = (
         {
-            ACTIONS = {updateSearch = id; }; 
+            ACTIONS = {selectDate = id; updateSearch = id; }; 
             CLASS = AIAbstractLogViewerWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_deleteLogs" = NSButton; 
+                datePicker = NSDatePicker; 
                 "outlineView_contacts" = NSOutlineView; 
+                "popUp_dateFilter" = NSPopUpButton; 
                 progressIndicator = NSProgressIndicator; 
                 "searchField_logs" = NSSearchField; 
-                "splitView_contacts_results" = NSSplitView; 
+                "splitView_contacts_results" = AISplitView; 
                 "tableView_results" = NSTableView; 
                 "textField_progress" = NSTextField; 
-                "textField_totalAccounts" = NSTextField; 
-                "textField_totalContacts" = NSTextField; 
                 "textView_content" = NSTextView; 
+                "view_DatePicker" = NSView; 
                 "view_SearchField" = NSView; 
             }; 
             SUPERCLASS = AIWindowController; 
@@ -54,6 +55,7 @@
             SUPERCLASS = AIObject; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSDatePicker; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
         {CLASS = NSWindow; LANGUAGE = ObjC; SUPERCLASS = NSResponder; }
     ); 
     IBVersion = 1; 
