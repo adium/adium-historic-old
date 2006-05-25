@@ -281,8 +281,10 @@ static int toArraySort(id itemA, id itemB, void *context);
 			NSString	*currentTo;
 			
 			if ((currentTo = [currentToGroup to])) {
-				AIListObject *listObject = [[adium contactController] existingListObjectWithUniqueID:[AIListObject internalObjectIDForServiceID:serviceClass
-																																			UID:currentTo]];
+				AIListObject *listObject = ((serviceClass && currentTo) ?
+											[[adium contactController] existingListObjectWithUniqueID:[AIListObject internalObjectIDForServiceID:serviceClass
+																																			 UID:currentTo]] :
+											nil);
 				if (listObject && [listObject isKindOfClass:[AIListContact class]]) {
 					AIListContact *parentContact = [(AIListContact *)listObject parentContact];
 					if (![toArray containsObjectIdenticalTo:parentContact]) {
@@ -290,9 +292,9 @@ static int toArraySort(id itemA, id itemB, void *context);
 					}
 					
 				} else {
-					if (![addedToGroupNames containsObject:[currentToGroup to]]) {
+					if (![addedToGroupNames containsObject:currentTo]) {
 						[toArray addObject:currentToGroup];
-						[addedToGroupNames addObject:[currentToGroup to]];
+						[addedToGroupNames addObject:currentTo];
 					}
 				}
 			}
