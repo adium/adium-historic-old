@@ -324,7 +324,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 	//Toolbar
 	[self installToolbar];	
-	[self configureDateFilter];
 
 	[splitView_contacts_results setDividerThickness:6]; //Default is 9
 
@@ -1604,6 +1603,8 @@ static int toArraySort(id itemA, id itemB, void *context)
 
 - (void)installToolbar
 {	
+	[NSBundle loadNibNamed:[self dateItemNibName] owner:self];
+
     NSToolbar 		*toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_LOG_VIEWER] autorelease];
     NSToolbarItem	*toolbarItem;
 	
@@ -1611,7 +1612,7 @@ static int toArraySort(id itemA, id itemB, void *context)
     [toolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
     [toolbar setSizeMode:NSToolbarSizeModeRegular];
     [toolbar setVisible:YES];
-    [toolbar setAllowsUserCustomization:YES];
+    [toolbar setAllowsUserCustomization:NO];
     [toolbar setAutosavesConfiguration:YES];
     toolbarItems = [[NSMutableDictionary alloc] init];
 
@@ -1638,12 +1639,13 @@ static int toArraySort(id itemA, id itemB, void *context)
 													itemContent:view_SearchField
 														 action:@selector(updateSearch:)
 														   menu:nil];
-	
-	[toolbarItem setMinSize:NSMakeSize(150, NSHeight([view_SearchField frame]))];
+	if ([toolbarItem respondsToSelector:@selector(setVisibilityPriority:)]) {
+		[toolbarItem setVisibilityPriority:(NSToolbarItemVisibilityPriorityHigh + 1)];
+	}
+	[toolbarItem setMinSize:NSMakeSize(130, NSHeight([view_SearchField frame]))];
 	[toolbarItem setMaxSize:NSMakeSize(230, NSHeight([view_SearchField frame]))];
 	[toolbarItems setObject:toolbarItem forKey:[toolbarItem itemIdentifier]];
 
-	[NSBundle loadNibNamed:[self dateItemNibName] owner:self];
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:DATE_ITEM_IDENTIFIER
 														  label:AILocalizedString(@"Date", nil)
 												   paletteLabel:AILocalizedString(@"Date", nil)
@@ -1653,10 +1655,13 @@ static int toArraySort(id itemA, id itemB, void *context)
 													itemContent:view_DatePicker
 														 action:nil
 														   menu:nil];
+	if ([toolbarItem respondsToSelector:@selector(setVisibilityPriority:)]) {
+		[toolbarItem setVisibilityPriority:NSToolbarItemVisibilityPriorityHigh];
+	}
 	[toolbarItem setMinSize:[view_DatePicker frame].size];
 	[toolbarItem setMaxSize:[view_DatePicker frame].size];
 	[toolbarItems setObject:toolbarItem forKey:[toolbarItem itemIdentifier]];
-	
+
 	//Toggle Emoticons
 	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
 									withIdentifier:@"toggleemoticons"
@@ -1670,6 +1675,8 @@ static int toArraySort(id itemA, id itemB, void *context)
 											  menu:nil];
 
 	[[self window] setToolbar:toolbar];
+
+	[self configureDateFilter];
 }
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
