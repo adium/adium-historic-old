@@ -11,8 +11,8 @@
 @class AIAccount;
 
 @interface RAFjoscarSecuridPromptController : AIWindowController {
-	//this is the secure field we get the securid from:
-	IBOutlet NSSecureTextField *securid;
+	IBOutlet NSTextField *textField_securid;
+
 	// the caption on the field to fill out
 	IBOutlet NSTextField *securidView;
 	//the window title line
