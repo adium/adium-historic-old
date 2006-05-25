@@ -156,8 +156,8 @@
 - (IBAction)selectDate:(id)sender
 {
 	[filterDate release];
-	filterDate = [[datePicker dateValue] retain];
-	
+	filterDate = [[[datePicker dateValue] dateWithCalendarFormat:nil timeZone:nil] retain];
+
 	[self startSearchingClearingCurrentResults:YES];
 }
 
