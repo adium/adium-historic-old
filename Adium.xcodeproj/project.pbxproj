@@ -281,6 +281,10 @@
 		34575E3507CBA7E0004A4FFF /* LoginSelect.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3407CBA7DF004A4FFF /* LoginSelect.nib */; };
 		34575E3707CBA874004A4FFF /* DebugWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3607CBA874004A4FFF /* DebugWindow.nib */; };
 		34575E3907CBA88E004A4FFF /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3807CBA88E004A4FFF /* MainMenu.nib */; };
+		3459CBED0A25FFBF00ECC256 /* GetMetadataForHTMLLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3459CBE90A25FFBE00ECC256 /* GetMetadataForHTMLLog.m */; };
+		3459CBEE0A25FFBF00ECC256 /* GetMetadataForHTMLLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 3459CBEA0A25FFBE00ECC256 /* GetMetadataForHTMLLog.h */; };
+		3459CBEF0A25FFBF00ECC256 /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 3459CBEB0A25FFBE00ECC256 /* GetMetadataForFile.m */; };
+		3459CBF00A25FFBF00ECC256 /* AdiumSpotlightImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3459CBEC0A25FFBF00ECC256 /* AdiumSpotlightImporter.h */; };
 		345ACC970811C20F008E4D22 /* AwayStatusWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 345ACC960811C20F008E4D22 /* AwayStatusWindow.nib */; };
 		345F566B08178356001F733C /* AdiumServiceIcons.icns in Resources */ = {isa = PBXBuildFile; fileRef = 345F566A08178356001F733C /* AdiumServiceIcons.icns */; };
 		345F57400817FF80001F733C /* pref-contactList.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F573F0817FF80001F733C /* pref-contactList.png */; };
@@ -2198,6 +2202,10 @@
 		3458BA9F082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/DCGaimJabberJoinChatView.nib"; sourceTree = "<group>"; };
 		3458BAA0082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
 		3458BAA1082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
+		3459CBE90A25FFBE00ECC256 /* GetMetadataForHTMLLog.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = GetMetadataForHTMLLog.m; path = "Other/Adium Spotlight Importer/GetMetadataForHTMLLog.m"; sourceTree = "<group>"; };
+		3459CBEA0A25FFBE00ECC256 /* GetMetadataForHTMLLog.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GetMetadataForHTMLLog.h; path = "Other/Adium Spotlight Importer/GetMetadataForHTMLLog.h"; sourceTree = "<group>"; };
+		3459CBEB0A25FFBE00ECC256 /* GetMetadataForFile.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = GetMetadataForFile.m; path = "Other/Adium Spotlight Importer/GetMetadataForFile.m"; sourceTree = "<group>"; };
+		3459CBEC0A25FFBF00ECC256 /* AdiumSpotlightImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumSpotlightImporter.h; path = "Other/Adium Spotlight Importer/AdiumSpotlightImporter.h"; sourceTree = "<group>"; };
 		345A7B590954AD1400FF3113 /* ESSimpleService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSimpleService.h; path = "Plugins/Gaim Service/ESSimpleService.h"; sourceTree = "<group>"; };
 		345A7B5A0954AD1400FF3113 /* ESSimpleService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSimpleService.m; path = "Plugins/Gaim Service/ESSimpleService.m"; sourceTree = "<group>"; };
 		345A7B650954AD2800FF3113 /* ESGaimSimpleAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimSimpleAccount.h; path = "Plugins/Gaim Service/ESGaimSimpleAccount.h"; sourceTree = "<group>"; };
@@ -4394,6 +4402,17 @@
 			name = "Fast User Switching Support";
 			sourceTree = "<group>";
 		};
+		3459CBE00A25FFA100ECC256 /* Log Indexing */ = {
+			isa = PBXGroup;
+			children = (
+				3459CBE90A25FFBE00ECC256 /* GetMetadataForHTMLLog.m */,
+				3459CBEA0A25FFBE00ECC256 /* GetMetadataForHTMLLog.h */,
+				3459CBEB0A25FFBE00ECC256 /* GetMetadataForFile.m */,
+				3459CBEC0A25FFBF00ECC256 /* AdiumSpotlightImporter.h */,
+			);
+			name = "Log Indexing";
+			sourceTree = "<group>";
+		};
 		345A7B560954ACD900FF3113 /* SIMPLE */ = {
 			isa = PBXGroup;
 			children = (
@@ -6245,6 +6264,7 @@
 		9C8C7FA303CBA17B00267226 /* Logger */ = {
 			isa = PBXGroup;
 			children = (
+				3459CBE00A25FFA100ECC256 /* Log Indexing */,
 				9ECB03D909F2A57E00996F44 /* XML Logging */,
 				4BE666CC0577AFA0007E115C /* Log Viewer */,
 				9C8C7FA403CBA21B00267226 /* AILoggerPlugin.h */,
@@ -7266,6 +7286,8 @@
 				34E1EDF50A045AA2003C14F1 /* AdiumApplescriptRunner.h in Headers */,
 				F50A75A20A0AE77A00A6D1BA /* GBFireImporter.h in Headers */,
 				F5F8CA4C0A1A9C9400154550 /* GBQuestionHandlerPlugin.h in Headers */,
+				3459CBEE0A25FFBF00ECC256 /* GetMetadataForHTMLLog.h in Headers */,
+				3459CBF00A25FFBF00ECC256 /* AdiumSpotlightImporter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8819,6 +8841,8 @@
 				34E1EDF60A045AA2003C14F1 /* AdiumApplescriptRunner.m in Sources */,
 				F50A75A30A0AE77A00A6D1BA /* GBFireImporter.m in Sources */,
 				F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */,
+				3459CBED0A25FFBF00ECC256 /* GetMetadataForHTMLLog.m in Sources */,
+				3459CBEF0A25FFBF00ECC256 /* GetMetadataForFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10844,9 +10868,7 @@
 		34BAF98D0942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -11428,9 +11450,7 @@
 		DADE8E28085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -11456,9 +11476,7 @@
 		DADE8E29085507450062B664 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -11476,9 +11494,7 @@
 		DADE8E2A085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
