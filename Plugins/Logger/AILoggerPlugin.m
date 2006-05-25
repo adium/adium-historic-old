@@ -44,6 +44,8 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 
+#import "AdiumSpotlightImporter.h"
+
 #define LOG_INDEX_NAME				@"Logs.index"
 #define DIRTY_LOG_ARRAY_NAME		@"DirtyLogs.plist"
 #define KEY_LOG_INDEX_VERSION		@"Log Index Version"
@@ -566,9 +568,10 @@ Class LogViewerWindowControllerClass = NULL;
 //Display a warning to the user that logging failed, and disable logging to prevent additional warnings
 - (void)displayErrorAndDisableLogging
 {
-	NSRunAlertPanel(@"Unable to write log",
-					[NSString stringWithFormat:@"Adium was unable to write the log file for this conversation. Please check your log directory (%@) and then reenable logging in the Message preferences.",logBasePath],
-					@"OK",nil,nil);
+	NSRunAlertPanel(AILocalizedString(@"Unable to write log", nil),
+					[NSString stringWithFormat:
+						AILocalizedString(@"Adium was unable to write the log file for this conversation. Please ensure you have approrpiate file permissions to write to your log directory (%@) for and then reenable logging in the General preferences.", nil), logBasePath],
+					AILocalizedSring(@"OK", nil), nil, nil);
 
 	//Disable logging
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:NO]
@@ -663,11 +666,6 @@ Class LogViewerWindowControllerClass = NULL;
  */
 - (void)initLogIndexing
 {
-	/* Use SearchKit plugins -- including our own! -- for getting the
-	 * kMDItemTextContent property for files, leaving markup behind.
-	 */
-	SKLoadDefaultExtractorPlugIns();
-
 	//Load the list of logs that need re-indexing
 	[self loadDirtyLogArray];
 }
@@ -848,7 +846,6 @@ Class LogViewerWindowControllerClass = NULL;
 {
     //Let any indexing threads know it's time to stop, and wait for them to finish.
     stopIndexingThreads = YES;
-    [indexingThreadLock lock]; [indexingThreadLock unlock];
 }
 
 //The following methods will be run in a separate thread to avoid blocking the interface during index operations
@@ -891,9 +888,9 @@ Class LogViewerWindowControllerClass = NULL;
 				//Add this log's path to our dirty array.  The dirty array is guarded with a lock
 				//since it will be accessed from outside this thread as well
 				[dirtyLogLock lock];
-                                if (theLog != nil) {
-                                    [dirtyLogArray addObject:[theLog path]];
-                                }
+				if (theLog != nil) {
+					[dirtyLogArray addObject:[theLog path]];
+				}
 				[dirtyLogLock unlock];
 			}
 			
@@ -924,7 +921,11 @@ Class LogViewerWindowControllerClass = NULL;
     [pool release];
 }
 
-//THREAD: Index all dirty logs
+/*
+ * @brief Index all dirty logs
+ *
+ * Indexing will occur on a thread
+ */
 - (void)cleanDirtyLogs
 {
     //Reset the cleaning progress
@@ -932,19 +933,23 @@ Class LogViewerWindowControllerClass = NULL;
     logsToIndex = [dirtyLogArray count];
     [dirtyLogLock unlock];
     logsIndexed = 0;
-	
+
 	[NSThread detachNewThreadSelector:@selector(_cleanDirtyLogsThread) toTarget:self withObject:nil];
 }
 - (void)_cleanDirtyLogsThread
 {
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
-	
+	SKIndexRef			theIndex = (SKIndexRef)CFRetain(index_Content);
+
+	//Ensure log indexing (in an old thread) isn't already going on and just waiting to stop
+	[indexingThreadLock lock]; [indexingThreadLock unlock];
+
     [indexingThreadLock lock];     //Prevent anything from closing until this thread is complete.
     //Start cleaning (If we're still supposed to go)
     if (!stopIndexingThreads) {
-		UInt32		lastUpdate = TickCount();
+		UInt32	lastUpdate = TickCount();
 		int		unsavedChanges = 0;
-		
+
 		//Scan until we're done or told to stop
 		while (!stopIndexingThreads) {
 			NSString	*logPath = nil;
@@ -967,10 +972,21 @@ Class LogViewerWindowControllerClass = NULL;
 
 				document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:fullPath]);
 				if (document) {
-					SKIndexAddDocument(index_Content,
-									   document,
-									   NULL,
-									   YES);
+					/* We _could_ use SKIndexAddDocument() and depend on our Spotlight plugin for importing.
+					 * However, this has three problems:
+					 *	1. Slower, especially to start initial indexing, which is the most common use case since the log viewer
+					 *	   indexes recently-modified ("dirty") logs when it opens.
+					 *  2. Sometimes logs don't appear to be associated with the right URI type and therefore don't get indexed.
+					 *  3. On 10.3, this means that logs' markup is indexed in addition to their text, which is undesireable.
+					 */
+					CFStringRef documentText = CopyTextContentForFile(NULL, (CFStringRef)fullPath);
+					if (documentText) {
+						SKIndexAddDocumentWithText(theIndex,
+												   document,
+												   documentText,
+												   YES);
+						CFRelease(documentText);
+					}
 					CFRelease(document);
 				} else {
 					NSLog(@"Could not create document for %@ [%@]",fullPath,[NSURL fileURLWithPath:fullPath]);
@@ -990,13 +1006,9 @@ Class LogViewerWindowControllerClass = NULL;
 				//Save the dirty array
 				if (unsavedChanges++ > LOG_CLEAN_SAVE_INTERVAL) {
 					[self _saveDirtyLogArray];
-					
-					[logAccessLock lock];
-					SKIndexFlush(index_Content);
-					[logAccessLock unlock];
-							
+
 					unsavedChanges = 0;
-					
+
 					//Flush ram
 					[pool release]; pool = [[NSAutoreleasePool alloc] init];
 				}
@@ -1007,20 +1019,21 @@ Class LogViewerWindowControllerClass = NULL;
 		}
 		
 		//Save the slimmed down dirty log array
-		[self _saveDirtyLogArray];
-		
-		[logAccessLock lock];
-		SKIndexFlush(index_Content);
-		[logAccessLock unlock];
-		
+		if (unsavedChanges) {
+			[self _saveDirtyLogArray];
+		}
+
 		//Update our progress
-		logsToIndex = 0;
-		[[LogViewerWindowControllerClass existingWindowController] performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
-                                                                                         withObject:nil
-                                                                                      waitUntilDone:NO];
+		if (!stopIndexingThreads) {
+			logsToIndex = 0;
+			[[LogViewerWindowControllerClass existingWindowController] performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
+																						withObject:nil
+																					 waitUntilDone:NO];
+		}
     }
-    
+
     [indexingThreadLock unlock];
+	CFRelease(theIndex);
     [pool release];
 }
 
