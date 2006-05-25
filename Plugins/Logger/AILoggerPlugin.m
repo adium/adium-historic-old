@@ -791,7 +791,7 @@ Class LogViewerWindowControllerClass = NULL;
 	}	
 
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[self _dirtyLogArrayPath]]) {
-		[[NSFileMangaer defaultManager] trashFileAtPath:[self _dirtyLogArrayPath]];
+		[[NSFileManager defaultManager] trashFileAtPath:[self _dirtyLogArrayPath]];
 	}
 }
 
