@@ -945,8 +945,6 @@ static int toArraySort(id itemA, id itemB, void *context);
                                                               selector:@selector(refreshResults)
                                                               userInfo:nil
                                                                repeats:YES] retain];
-	
-    [searchingLock unlock];
 }
 
 //Abort any active searches
