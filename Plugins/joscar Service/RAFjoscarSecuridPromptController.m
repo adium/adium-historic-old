@@ -18,17 +18,20 @@
 #define CANCEL AILocalizedString(@"Cancel",nil)
 #define OKAY AILocalizedString(@"OK",nil)
 
+typedef enum {
+	AISecuridPromptCancel = 0,
+	AISecuridPromptOK
+} AISecuridPromptResponse;
+
 @implementation RAFjoscarSecuridPromptController
 
 + (NSString *)getSecuridForAccount:(AIAccount *)account
 {
 	RAFjoscarSecuridPromptController *promptWindow = [[[RAFjoscarSecuridPromptController alloc] initWithAccount:account] autorelease];
 
-	[NSApp runModalForWindow:[promptWindow window]];
+	int result = [NSApp runModalForWindow:[promptWindow window]];
 
-	AILog(@"Ran %@ modally (window: %@)", promptWindow, [promptWindow window]);
-
-	return [promptWindow getSecurid];
+	return ((result == AISecuridPromptOK) ? [promptWindow getSecurid] : nil);
 }
 
 - (RAFjoscarSecuridPromptController *)initWithAccount:(AIAccount *)account
@@ -56,23 +59,25 @@
 	[okButton setStringValue:OKAY];
 	[accountText setStringValue:accountUID];
 	[securidView setStringValue:SECURID_NAME];
-	[securid setStringValue:@""];
+
+	[textField_securid setStringValue:@""];
 }
 
 - (IBAction)okButtonClicked:(id)sender
 {
-	securidString = [[securid stringValue] retain];
-	[[self window] close];
+	securidString = [[textField_securid stringValue] retain];
+
+	[NSApp stopModalWithCode:AISecuridPromptOK];
 }
 
 - (IBAction)cancelButtonClicked:(id)sender
 {
-	[[self window] close];
+	[NSApp stopModalWithCode:AISecuridPromptCancel];
 }
 
 - (NSString *)getSecurid
 {
-	return [[securidString retain] autorelease];
+	return [[textField_securid retain] autorelease];
 }
 
 @end

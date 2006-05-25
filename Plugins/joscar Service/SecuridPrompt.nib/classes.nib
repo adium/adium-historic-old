@@ -33,9 +33,9 @@
                 accountTitle = NSTextField; 
                 cancelButton = NSButton; 
                 okButton = NSButton; 
-                securid = NSSecureTextField; 
                 securidTitle = NSTextField; 
                 securidView = NSTextField; 
+                "textField_securid" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
         }
