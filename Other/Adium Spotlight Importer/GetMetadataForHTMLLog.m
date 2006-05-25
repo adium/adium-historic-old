@@ -102,13 +102,13 @@ static NSDate *dateFromHTMLLog(NSString *pathToFile)
 NSString *GetTextContentForHTMLLog(NSString *pathToFile)
 {
 	/* Perhaps we want to decode the HTML instead of stripping it so we can process
-	 * the attributed contents to turn links into link (URL) for searching purposes
+	 * the attributed contents to turn links into link (URL) for searching purposes...
 	 */
-	NSString	*fileContents = [NSString stringWithContentsOfFile:pathToFile
-														  encoding:NSUTF8StringEncoding 
-															 error:NULL];
-	NSString	*textContent;
-	if (fileContents) {
+	NSString	*textContent = [NSString stringWithContentsOfFile:pathToFile
+														 encoding:NSUTF8StringEncoding 
+															error:NULL];
+	if (textContent) {
+		//Strip the HTML markup
 		char *plainText = gaim_markup_strip_html([textContent UTF8String]);
 		textContent = [NSString stringWithUTF8String:plainText];
 		free((void *)plainText);
