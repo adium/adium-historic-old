@@ -8,3 +8,4 @@
 #import <Foundation/Foundation.h>
 
 Boolean GetMetadataForHTMLLog(NSMutableDictionary *attributes, NSString *pathToFile);
+NSString *GetTextContentForHTMLLog(NSString *pathToFile);
