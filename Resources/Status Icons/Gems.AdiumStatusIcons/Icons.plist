@@ -8,7 +8,15 @@
 	<dict>
 		<key>Generic Available</key>
 		<string>available.png</string>
+		<key>Free for Chat</key>
+		<string>available.png</string>
 		<key>Generic Away</key>
+		<string>away.png</string>
+		<key>DND</key>
+		<string>away.png</string>
+		<key>Not Available</key>
+		<string>away.png</string>
+		<key>Occupied</key>
 		<string>away.png</string>
 		<key>Idle</key>
 		<string>idle.png</string>
@@ -30,25 +38,33 @@
 	<key>Tabs</key>
 	<dict>
 		<key>Generic Available</key>
-		<string>tab-available.png</string>
+		<string>tavailable.png</string>
+		<key>Free for Chat</key>
+		<string>tavailable.png</string>
 		<key>Generic Away</key>
-		<string>tab-away.png</string>
+		<string>taway.png</string>
+		<key>DND</key>
+		<string>taway.png</string>
+		<key>Not Available</key>
+		<string>taway.png</string>
+		<key>Occupied</key>
+		<string>taway.png</string>
 		<key>Idle</key>
-		<string>tab-idle.png</string>
+		<string>tidle.png</string>
 		<key>Invisible</key>
-		<string>tab-invisible.png</string>
+		<string>tinvisible.png</string>
 		<key>Mobile</key>
-		<string>tab-mobile.png</string>
+		<string>tmobile.png</string>
 		<key>Offline</key>
-		<string>tab-offline.png</string>
+		<string>toffline.png</string>
 		<key>Unknown</key>
-		<string>tab-unknown.png</string>
+		<string>tunknown.png</string>
 		<key>content</key>
-		<string>tab-content.png</string>
+		<string>tcontent.png</string>
 		<key>enteredtext</key>
-		<string>tab-enteredtext.png</string>
+		<string>tenteredtext.png</string>
 		<key>typing</key>
-		<string>tab-typing.png</string>
+		<string>ttyping.png</string>
 	</dict>
 </dict>
 </plist>
