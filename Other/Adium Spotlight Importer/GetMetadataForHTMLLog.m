@@ -6,16 +6,9 @@
 //
 
 #import "GetMetadataForHTMLLog.h"
+#import "GetMetadataForHTMLLog-Additions.h"
 
-@interface NSString (AdiumSpotlightImporterAdditions)
-- (NSString *)stringByUnescapingFromHTML;
-@end
-
-@interface NSScanner(AIScannerAdditions)
-- (BOOL)scanUnsignedInt:(unsigned int *)unsignedIntValue;
-@end
-
-char *gaim_markup_strip_html(const char *str);
+static char *gaim_markup_strip_html(const char *str);
 
 //Scan an Adium date string, supahfast C style
 static BOOL scandate(const char *sample, unsigned long *outyear,
@@ -106,6 +99,26 @@ static NSDate *dateFromHTMLLog(NSString *pathToFile)
 	return date;
 }
 
+NSString *GetTextContentForHTMLLog(NSString *pathToFile)
+{
+	/* Perhaps we want to decode the HTML instead of stripping it so we can process
+	 * the attributed contents to turn links into link (URL) for searching purposes
+	 */
+	NSString	*fileContents = [NSString stringWithContentsOfFile:pathToFile
+														  encoding:NSUTF8StringEncoding 
+															 error:NULL];
+	NSString	*textContent;
+	if (fileContents) {
+		char *plainText = gaim_markup_strip_html([textContent UTF8String]);
+		textContent = [NSString stringWithUTF8String:plainText];
+		free((void *)plainText);
+	} else {
+		textContent = nil;
+	}
+	
+	return textContent;
+}
+
 Boolean GetMetadataForHTMLLog(NSMutableDictionary *attributes, NSString *pathToFile)
 {
 	/* HTML log is stored as ServiceID.Account_Name/Destination_Name/Destination_Name (2006|03|30).AdiumHTMLLog
@@ -141,19 +154,12 @@ Boolean GetMetadataForHTMLLog(NSMutableDictionary *attributes, NSString *pathToF
 					   forKey:(NSString *)kMDItemLastUsedDate];
 	}
 	
-	/* Perhaps we want to decode the HTML instead of stripping it so we can process
-	 * the attributed contents to turn links into link (URL) for searching purposes
-	 */
-	NSString			*textContent = [NSString stringWithContentsOfFile:pathToFile
-																 encoding:NSUTF8StringEncoding 
-																	error:NULL];
-	if (textContent) {
-		char *plainText = gaim_markup_strip_html([textContent UTF8String]);
-		[attributes setObject:[NSString stringWithUTF8String:plainText]
+	NSString *textContent;
+	if ((textContent = GetTextContentForHTMLLog(pathToFile))) {
+		[attributes setObject:textContent
 					   forKey:(NSString *)kMDItemTextContent];
-		free((void *)plainText);
 	}
-
+	
 	[attributes setObject:serviceClass
 				   forKey:@"com_adiumX_service"];
 	[attributes setObject:fromUID
@@ -180,14 +186,14 @@ static BOOL g_ascii_isspace(char character)
 
 /* Find the length of STRING, but scan at most MAXLEN characters.
  If no '\0' terminator is found in that many characters, return MAXLEN.  */
-size_t
+static size_t
 strnlen (const char *string, size_t maxlen)
 {
 	const char *end = memchr (string, '\0', maxlen);
 	return end ? (size_t) (end - string) : maxlen;
 }
 
-char *strndup (const char *s, int n)
+static char *strndup (const char *s, int n)
 {
 	size_t len = strnlen (s, n);
 	char *nouveau = malloc (len + 1);
@@ -199,7 +205,7 @@ char *strndup (const char *s, int n)
 	return (char *) memcpy (nouveau, s, len);
 }
 
-char *gaim_unescape_html(const char *html) {
+static char *gaim_unescape_html(const char *html) {
 	return strdup([[[NSString stringWithUTF8String:html] stringByUnescapingFromHTML] UTF8String]);
 }
 
@@ -212,7 +218,7 @@ char *gaim_unescape_html(const char *html) {
 * - <script>...</script> and <style>...</style> should be completely removed
 */
 
-char *
+static char *
 gaim_markup_strip_html(const char *str)
 {
 	int i, j, k;
@@ -417,163 +423,3 @@ gaim_markup_strip_html(const char *str)
 
 	return str2;
 }
-
-@implementation NSScanner(AIScannerAdditions)
-
-- (BOOL)scanUnsignedInt:(unsigned int *)unsignedIntValue
-{
-	//skip characters if necessary
-	NSCharacterSet *skipSet = [self charactersToBeSkipped];
-	[self setCharactersToBeSkipped:nil];
-	[self scanCharactersFromSet:skipSet intoString:NULL];
-	[self setCharactersToBeSkipped:skipSet];
-	
-	NSString *string = [self string];
-	NSRange range = NSMakeRange([self scanLocation], 0);
-	register unsigned length = [string length] - range.location; //register because it is used in the loop below.
-	range.length = length;
-	
-	unichar *buf = malloc(length * sizeof(unichar));
-	[string getCharacters:buf range:range];
-	
-	register unsigned i = 0;
-	
-	if (length && (buf[i] == '+')) {
-		++i;
-	}
-	if (i >= length) return NO;
-	if ((buf[i] < '0') || (buf[i] > '9')) return NO;
-	
-	unsigned total = 0;
-	while (i < length) {
-		if ((buf[i] >= '0') && (buf[i] <= '9')) {
-			total *= 10;
-			total += buf[i] - '0';
-			++i;
-		} else {
-			break;
-		}
-	}
-	[self setScanLocation:i];
-	*unsignedIntValue = total;
-	return YES;
-}
-
-@end
-
-//From AIUtilities
-@implementation NSString (AdiumSpotlightImporterAdditions)
-
-BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow)
-{
-	if (in < 0x10000) {
-		if (outHigh) *outHigh = 0;
-		if (outLow)  *outLow  = in;
-		return NO;
-	} else {
-		enum {
-			UTF32LowShiftToUTF16High = 10,
-			UTF32HighShiftToUTF16High,
-			UTF16HighMask = 31,  //0b0000 0111 1100 0000
-			UTF16LowMask  = 63,  //0b0000 0000 0011 1111
-			UTF32LowMask = 1023, //0b0000 0011 1111 1111
-			UTF16HighAdditiveMask = 55296, //0b1101 1000 0000 0000
-			UTF16LowAdditiveMask  = 56320, //0b1101 1100 0000 0000
-		};
-		
-		if (outHigh) {
-			*outHigh = \
-			((in >> UTF32HighShiftToUTF16High) & UTF16HighMask) \
-			| ((in >> UTF32LowShiftToUTF16High) & UTF16LowMask) \
-			| UTF16HighAdditiveMask;
-		}
-		
-		if (outLow) {
-			*outLow = (in & UTF32LowMask) | UTF16LowAdditiveMask;
-		}
-		
-		return YES;
-	}
-}
-
-- (NSString *)stringByUnescapingFromHTML
-{
-	if ([self length] == 0) return [[self copy] autorelease]; //avoids various RangeExceptions.
-	
-	static NSString *ampersand = @"&", *semicolon = @";";
-	
-	NSString *segment = nil, *entity = nil;
-	NSScanner *scanner = [NSScanner scannerWithString:self];
-	[scanner setCaseSensitive:YES];
-	unsigned myLength = [self length];
-	NSMutableString *result = [NSMutableString string];
-	
-	do {
-		if ([scanner scanUpToString:ampersand intoString:&segment] || [self characterAtIndex:[scanner scanLocation]] == '&') {
-			if (segment) {
-				[result appendString:segment];
-				segment = nil;
-			}
-			if (![scanner isAtEnd]) {
-				[scanner setScanLocation:[scanner scanLocation]+1];
-			}
-		}
-		if ([scanner scanUpToString:semicolon intoString:&entity]) {
-			unsigned number;
-			if ([entity characterAtIndex:0] == '#') {
-				NSScanner	*numScanner;
-				unichar		secondCharacter;
-				BOOL		appendIt = NO;
-				
-				numScanner = [NSScanner scannerWithString:entity];
-				[numScanner setCaseSensitive:YES];
-				secondCharacter = [entity characterAtIndex:1];
-				
-				if (secondCharacter == 'x' || secondCharacter == 'X') {
-					//hexadecimal: "#x..." or "#X..."
-					[numScanner setScanLocation:2];
-					appendIt = [numScanner scanHexInt:&number];
-					
-				} else {
-					//decimal: "#..."
-					[numScanner setScanLocation:1];
-					appendIt = [numScanner scanUnsignedInt:&number];
-				}
-				
-				if (appendIt) {
-					unichar chars[2] = { number, 0xffff };
-					CFIndex length = 1;
-					if (number > 0xffff) {
-						//split into surrogate pair
-						AIGetSurrogates(number, &chars[0], &chars[1]);
-						++length;
-					}
-					CFStringAppendCharacters((CFMutableStringRef)result, chars, length);
-				}
-			} else {
-				//named entity. for now, we only support the five essential ones.
-				static NSDictionary *entityNames = nil;
-				if (entityNames == nil) {
-					entityNames = [[NSDictionary alloc] initWithObjectsAndKeys:
-						[NSNumber numberWithUnsignedInt:'"'], @"quot",
-						[NSNumber numberWithUnsignedInt:'&'], @"amp",
-						[NSNumber numberWithUnsignedInt:'<'], @"lt",
-						[NSNumber numberWithUnsignedInt:'>'], @"gt",
-						[NSNumber numberWithUnsignedInt:' '], @"nbsp",
-						nil];
-				}
-				number = [[entityNames objectForKey:[entity lowercaseString]] unsignedIntValue];
-				if (number) {
-					[result appendFormat:@"%C", (unichar)number];
-				}
-			}
-			if (![scanner isAtEnd]) {
-				[scanner setScanLocation:[scanner scanLocation]+1];
-			}
-		} //if ([scanner scanUpToString:semicolon intoString:&entity])
-	} while ([scanner scanLocation] < myLength);
-	//	NSLog(@"unescaped %@\ninto %@", self, result);
-	return result;
-}
-
-@end

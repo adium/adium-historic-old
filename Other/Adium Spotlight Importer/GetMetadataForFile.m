@@ -51,3 +51,45 @@ Boolean GetMetadataForFile(void* thisInterface,
 	
     return success;
 }
+
+/*
+ * @brief Copy the text content for a file
+ *
+ * This is the text which would be the kMDItemTextContent for the file in Spotlight.
+ *
+ * @param contentTypeUTI The UTI type. If NULL, the extension of pathToFile will be used
+ * @param pathToFile The full path to the file
+ *
+ * @result The kMDItemTextContent. Follows the Copy rule.
+ */
+CFStringRef CopyTextContentForFile(CFStringRef contentTypeUTI,
+								   CFStringRef pathToFile)
+{
+	NSAutoreleasePool	*pool;
+	CFStringRef			textContent;
+	pool = [[NSAutoreleasePool alloc] init];
+	
+	//Deteremine the UTI type if we weren't passed one
+	if (contentTypeUTI == NULL) {
+		if (CFStringCompare((CFStringRef)[(NSString *)pathToFile pathExtension],
+							CFSTR("AdiumXMLLog"),
+							(kCFCompareBackwards | kCFCompareCaseInsensitive)) == kCFCompareEqualTo) {
+			contentTypeUTI = CFSTR("com.adiumx.log");
+		} else {
+			//Treat all other log extensions as HTML logs (plaintext will come out fine this way, too)
+			contentTypeUTI = CFSTR("com.adiumx.htmllog");
+		}
+	}
+		
+	if (CFStringCompare(contentTypeUTI, CFSTR("com.adiumx.htmllog"), kCFCompareBackwards) == kCFCompareEqualTo) {
+		textContent = (CFStringRef)GetTextContentForHTMLLog((NSString *)pathToFile);
+	} else {
+		textContent = nil;
+		NSLog(@"We were passed %@, of type %@, which is an unknown type",pathToFile,contentTypeUTI);
+	}
+
+	if (textContent) CFRetain(textContent);
+	[pool release];
+	
+	return textContent;
+}
