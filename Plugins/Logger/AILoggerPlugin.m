@@ -571,7 +571,7 @@ Class LogViewerWindowControllerClass = NULL;
 	NSRunAlertPanel(AILocalizedString(@"Unable to write log", nil),
 					[NSString stringWithFormat:
 						AILocalizedString(@"Adium was unable to write the log file for this conversation. Please ensure you have approrpiate file permissions to write to your log directory (%@) for and then reenable logging in the General preferences.", nil), logBasePath],
-					AILocalizedSring(@"OK", nil), nil, nil);
+					AILocalizedString(@"OK", nil), nil, nil);
 
 	//Disable logging
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:NO]
