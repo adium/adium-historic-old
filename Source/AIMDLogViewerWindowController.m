@@ -231,7 +231,7 @@
 		NSToolbarItem *toolbarItem;
 		while ((toolbarItem = [enumerator nextObject])) {
 			if ([[toolbarItem itemIdentifier] isEqualToString:DATE_ITEM_IDENTIFIER]) {
-				NSSize newSize = NSMakeSize(([datePicker isHidden] ? 180 : 320), NSHeight([view_DatePicker frame]));
+				NSSize newSize = NSMakeSize(([datePicker isHidden] ? 180 : 290), NSHeight([view_DatePicker frame]));
 				[toolbarItem setMinSize:newSize];
 				[toolbarItem setMaxSize:newSize];
 				break;

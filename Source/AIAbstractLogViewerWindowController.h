@@ -109,7 +109,7 @@ typedef enum {
 	BOOL				automaticSearch;		//YES if this search was performed automatically for the user (view ___'s logs...)
     BOOL				ignoreSelectionChange;	//Hack to prevent automatic table selection changes from clearing the automaticSearch flag
     BOOL				windowIsClosing;		//YES only if windowShouldClose: has been called, to prevent actions after that point
-		
+
 	NSMutableDictionary	*toolbarItems;
     NSImage				*blankImage;
 	
