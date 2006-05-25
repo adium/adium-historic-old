@@ -15,9 +15,6 @@
 				347A21A609786C3A00A30431 /* CopyFiles */,
 				347A21AC09786C5100A30431 /* ShellScript */,
 			);
-			buildSettings = {
-				PRODUCT_NAME = "Adium with SystemVersionCheck";
-			};
 			dependencies = (
 				347A219F09786C1C00A30431 /* PBXTargetDependency */,
 				347A21A109786C1F00A30431 /* PBXTargetDependency */,
@@ -31,19 +28,6 @@
 			buildPhases = (
 				34CF9EEF085B98D400D87E37 /* ShellScript */,
 			);
-			buildSettings = {
-				OPTIMIZATION_CFLAGS = "";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "External Frameworks";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
 			dependencies = (
 				4B8E0BD8086A16D4009A7A4D /* PBXTargetDependency */,
 				4B8E0BDA086A16D4009A7A4D /* PBXTargetDependency */,
@@ -58,9 +42,6 @@
 			buildPhases = (
 				F5B17CCE0A16C6AC004AE99E /* ShellScript */,
 			);
-			buildSettings = {
-				PRODUCT_NAME = "Plist Macros";
-			};
 			dependencies = (
 			);
 			name = "Plist Macros";
@@ -1390,76 +1371,6 @@
 		F5F8CA4C0A1A9C9400154550 /* GBQuestionHandlerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = F5F8CA4A0A1A9C9400154550 /* GBQuestionHandlerPlugin.h */; };
 		F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8CA4B0A1A9C9400154550 /* GBQuestionHandlerPlugin.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXBuildStyle section */
-		342E171507284F310054D77A /* Deployment-Debug */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
-				DEBUGGING_SYMBOLS = YES;
-				GCC_DEBUGGING_SYMBOLS = full;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
-				ZERO_LINK = NO;
-			};
-			name = "Deployment-Debug";
-		};
-		4A9504CCFFE6A4B311CA0CBA /* Development */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				GCC_DEBUGGING_SYMBOLS = full;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_MISSING_PARENTHESES = NO;
-				GCC_WARN_SHADOW = NO;
-				GCC_WARN_SIGN_COMPARE = NO;
-				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
-				ZERO_LINK = YES;
-			};
-			name = Development;
-		};
-		4A9504CDFFE6A4B311CA0CBA /* Deployment */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEBUGGING_SYMBOLS = YES;
-				GCC_DEBUGGING_SYMBOLS = full;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-DCRASH_REPORTER";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
-				ZERO_LINK = NO;
-			};
-			name = Deployment;
-		};
-/* End PBXBuildStyle section */
 
 /* Begin PBXContainerItemProxy section */
 		11F5F42B09537E00007DCC49 /* PBXContainerItemProxy */ = {
@@ -7546,58 +7457,11 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INFOPLIST_FILE = "Plists/joscar-Info.plist";
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				LIBRARY_STYLE = BUNDLE;
-				OPTIMIZATION_CFLAGS = "";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-				);
-				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
-				PRODUCT_NAME = joscar;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
 			dependencies = (
 			);
 			name = joscar;
 			productName = joscar;
 			productReference = 118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>joscar</string>
-	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.joscar</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0</string>
-</dict>
-</plist>
-";
 			productType = "com.apple.product-type.bundle";
 		};
 		3417D25009C332B900FC413E /* Translator */ = {
@@ -7611,50 +7475,11 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				PRODUCT_NAME = "Latex Plugin";
-				WARNING_CFLAGS = "-Wall";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
 			dependencies = (
 			);
 			name = Translator;
 			productName = "Latex Plugin";
 			productReference = 3417D26109C332B900FC413E /* Translator.AdiumPlugin */;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Latex Plugin</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.Latex_Plugin</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-	<key>CSResourcesFileMapped</key>
-	<string>yes</string>
-</dict>
-</plist>
-";
 			productType = "com.apple.product-type.bundle";
 		};
 		3419F3A605314BE000C68BA3 /* SQL Logger */ = {
@@ -7668,33 +7493,6 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = /usr/local/pgsql/include;
-				INFOPLIST_FILE = Plists/SQL_Logger.plist;
-				INSTALL_PATH = /Adium.app/Contents/Plugins/;
-				LIBRARY_SEARCH_PATHS = (
-					/usr/local/pgsql/lib,
-					/sw/lib,
-					/opt/local/lib,
-				);
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-lpq",
-					"-lssl",
-					"-lcrypto",
-				);
-				OTHER_REZFLAGS = "";
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "SQL Logger";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
 			dependencies = (
 				B7F09289058C3F16000F9CBE /* PBXTargetDependency */,
 			);
@@ -7715,51 +7513,12 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-				);
-				PRODUCT_NAME = "WebKit Message View";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
 			dependencies = (
 				346C9C9B06004585000F5A8A /* PBXTargetDependency */,
 			);
 			name = "WebKit Message View";
 			productName = "WebKit Message View";
 			productReference = 3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>WebKit Message View</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.WebKit_Message_View</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-</dict>
-</plist>
-";
 			productType = "com.apple.product-type.bundle";
 		};
 		347A210E09786B5F00A30431 /* SystemVersionCheck */ = {
@@ -7771,14 +7530,6 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = "$(HOME)/bin";
-				PREBINDING = NO;
-				PRODUCT_NAME = SystemVersionCheck;
-				ZERO_LINK = YES;
-			};
 			dependencies = (
 			);
 			name = SystemVersionCheck;
@@ -7797,53 +7548,12 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INFOPLIST_FILE = "AdiumLibgaim-Info.plist";
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = AdiumLibgaim;
-				ZERO_LINK = YES;
-			};
 			dependencies = (
 				340BAB4F09EC6FA7000EC441 /* PBXTargetDependency */,
 			);
 			name = AdiumLibgaim;
 			productName = AdiumLibgaim;
 			productReference = 3485D68009EB416300232CC4 /* AdiumLibgaim.framework */;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.AdiumLibgaim</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>FMWK</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0</string>
-</dict>
-</plist>
-";
 			productType = "com.apple.product-type.framework";
 		};
 		349C2EF90867AC97000BF883 /* AdiumApplescriptRunner */ = {
@@ -7855,30 +7565,6 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INSTALL_PATH = /usr/local/bin;
-				OPTIMIZATION_CFLAGS = "";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-				);
-				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
-				PRODUCT_NAME = ApplescriptRunner;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
 			dependencies = (
 			);
 			name = AdiumApplescriptRunner;
@@ -7898,26 +7584,6 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
-					"Frameworks/AIUtilities Framework/build",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = (
-					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH/Libgaim.framework/Headers,
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
-				);
-				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				OTHER_LDFLAGS = "";
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = Gaim;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
 			dependencies = (
 				34C7C62D09EC4EBE0060FB4A /* PBXTargetDependency */,
 				340BA85609EC59AF000EC441 /* PBXTargetDependency */,
@@ -7926,33 +7592,6 @@
 			name = "IRC Service Libgaim Plugin";
 			productName = Gaim;
 			productReference = 34B323C009B9FEAC00029361 /* IRC Service.AdiumLibgaimPlugin */;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Gaim</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.Gaim</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-</dict>
-</plist>
-";
 			productType = "com.apple.product-type.bundle";
 		};
 		34BD9CD1053146CC000AB133 /* Adium */ = {
@@ -7973,30 +7612,6 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"Frameworks/AIUtilities Framework/build",
-					"Frameworks/AIHyperlinks Framework/build",
-					Frameworks,
-					"Frameworks/AIBookmarksImport Framework/build",
-				);
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_USE_GCC3_PFE_SUPPORT = YES;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INFOPLIST_FILE = Plists/Adium_2.plist;
-				INSTALL_PATH = /;
-				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
-				OTHER_LDFLAGS = "";
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = Adium;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wall";
-				ZERO_LINK = YES;
-			};
 			dependencies = (
 				34B9E665085B7C74006216DF /* PBXTargetDependency */,
 				34BD9CD2053146CC000AB133 /* PBXTargetDependency */,
@@ -8026,27 +7641,6 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				FRAMEWORK_VERSION = A;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Adium_Framework.plist;
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x10000000,
-				);
-				PRODUCT_NAME = Adium;
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
-				);
-			};
 			dependencies = (
 				340BAB5E09EC70F2000EC441 /* PBXTargetDependency */,
 			);
@@ -8067,15 +7661,6 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Stress_Test.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "Stress Test";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
 			dependencies = (
 				34BD9EE10531476D000AB133 /* PBXTargetDependency */,
 			);
@@ -8096,16 +7681,6 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Adium_1_6_Pref_Importer.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "Adium 1.6 Pref Importer";
-				WARNING_CFLAGS = "-Wall";
-				WRAPPER_EXTENSION = app;
-			};
 			dependencies = (
 			);
 			name = "Adium 1.6 Pref Importer";
@@ -8125,16 +7700,6 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
-				INFOPLIST_FILE = Plists/Bonjour.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = Bonjour;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
 			dependencies = (
 				4947F5BD0655E85200B791E5 /* PBXTargetDependency */,
 			);
@@ -8156,26 +7721,6 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
-					"Frameworks/AIUtilities Framework/build",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = (
-					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH/Libgaim.framework/Headers,
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
-				);
-				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				OTHER_LDFLAGS = "";
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = Gaim;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
 			dependencies = (
 				3485D69309EB41D700232CC4 /* PBXTargetDependency */,
 				6C3E0152054445C000A4AE2E /* PBXTargetDependency */,
@@ -8184,33 +7729,6 @@
 			name = Gaim;
 			productName = Gaim;
 			productReference = 4B7F278305440C0800CDFC90 /* Gaim.AdiumPlugin */;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Gaim</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.Gaim</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-</dict>
-</plist>
-";
 			productType = "com.apple.product-type.bundle";
 		};
 		4B7F78B40597F42400162728 /* Adium Crash Reporter */ = {
@@ -8225,51 +7743,11 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
-				INSTALL_PATH = "$(USER_APPS_DIR)";
-				PRODUCT_NAME = "Adium Crash Reporter";
-				WARNING_CFLAGS = "-Wall";
-			};
 			dependencies = (
 			);
 			name = "Adium Crash Reporter";
 			productName = "Adium Crash Reporter";
 			productReference = 4B7F78B50597F42400162728 /* Adium Crash Reporter.app */;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Adium Crash Reporter</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.Adium_Crash_Reporter</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
-</dict>
-</plist>
-";
 			productType = "com.apple.product-type.application";
 		};
 		B72537BB058C4577004BA969 /* Latex Plugin */ = {
@@ -8283,51 +7761,12 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				PRODUCT_NAME = "Latex Plugin";
-				WARNING_CFLAGS = "-Wall";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
 			dependencies = (
 				B72537BE058C45CF004BA969 /* PBXTargetDependency */,
 			);
 			name = "Latex Plugin";
 			productName = "Latex Plugin";
 			productReference = 349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Latex Plugin</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.Latex_Plugin</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-	<key>CSResourcesFileMapped</key>
-	<string>yes</string>
-</dict>
-</plist>
-";
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -8336,13 +7775,6 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
-			buildSettings = {
-			};
-			buildStyles = (
-				4A9504CCFFE6A4B311CA0CBA /* Development */,
-				4A9504CDFFE6A4B311CA0CBA /* Deployment */,
-				342E171507284F310054D77A /* Deployment-Debug */,
-			);
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -10855,19 +10287,25 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
-					"Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service";
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
-					"Plugins/Gaim Service/Libgaim.framework/Headers",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Gaim\\ Service/Libgaim.framework/Headers";
 				INFOPLIST_FILE = Plists/AdiumLibgaim.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
 				OTHER_LDFLAGS = (
@@ -10891,19 +10329,25 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
-					"Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service";
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
-					"Plugins/Gaim Service/Libgaim.framework/Headers",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Gaim\\ Service/Libgaim.framework/Headers";
 				INFOPLIST_FILE = Plists/AdiumLibgaim.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
 				OTHER_LDFLAGS = (
@@ -10928,19 +10372,25 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
-					"Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service";
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
-					"Plugins/Gaim Service/Libgaim.framework/Headers",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Gaim\\ Service/Libgaim.framework/Headers";
 				INFOPLIST_FILE = Plists/AdiumLibgaim.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
 				OTHER_LDFLAGS = (
@@ -10965,19 +10415,25 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
-					"Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service";
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
-					"Plugins/Gaim Service/Libgaim.framework/Headers",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Gaim\\ Service/Libgaim.framework/Headers";
 				INFOPLIST_FILE = Plists/AdiumLibgaim.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
 				OTHER_LDFLAGS = (
@@ -11062,24 +10518,31 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(SRCROOT)/Frameworks",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/Plugins/Gaim Service/Libgaim.framework/Headers",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib/glib",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib/gmodule",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib/gobject",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service/Libgaim.framework/Headers";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gobject";
 				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBRARY_SEARCH_PATHS)",
-					"$(SRCROOT)/Plugins/IRC Libgaim Plugin",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
@@ -11089,24 +10552,31 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(SRCROOT)/Frameworks",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/Plugins/Gaim Service/Libgaim.framework/Headers",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib/glib",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib/gmodule",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib/gobject",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service/Libgaim.framework/Headers";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gobject";
 				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBRARY_SEARCH_PATHS)",
-					"$(SRCROOT)/Plugins/IRC Libgaim Plugin",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
@@ -11116,24 +10586,31 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(SRCROOT)/Frameworks",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/Plugins/Gaim Service/Libgaim.framework/Headers",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib/glib",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib/gmodule",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib/gobject",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service/Libgaim.framework/Headers";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gobject";
 				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBRARY_SEARCH_PATHS)",
-					"$(SRCROOT)/Plugins/IRC Libgaim Plugin",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
@@ -11143,24 +10620,31 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(SRCROOT)/Frameworks",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/Plugins/Gaim Service/Libgaim.framework/Headers",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib/glib",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib/gmodule",
-					"$(SRCROOT)/Plugins/Gaim Service/Include/glib/gobject",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service/Libgaim.framework/Headers";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gobject";
 				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBRARY_SEARCH_PATHS)",
-					"$(SRCROOT)/Plugins/IRC Libgaim Plugin",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
@@ -11224,17 +10708,23 @@
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS)",
-					"$(SRCROOT)/Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
-					"Plugins/Gaim Service/Libgaim.framework/Headers",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Gaim\\ Service/Libgaim.framework/Headers";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
@@ -11325,12 +10815,16 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
 				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
@@ -11342,7 +10836,10 @@
 		34BAF98D0942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
@@ -11605,17 +11102,23 @@
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS)",
-					"$(SRCROOT)/Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
-					"Plugins/Gaim Service/Libgaim.framework/Headers",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Gaim\\ Service/Libgaim.framework/Headers";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
@@ -11634,17 +11137,23 @@
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS)",
-					"$(SRCROOT)/Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
-					"Plugins/Gaim Service/Libgaim.framework/Headers",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Gaim\\ Service/Libgaim.framework/Headers";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
@@ -11663,17 +11172,23 @@
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS)",
-					"$(SRCROOT)/Plugins/Gaim Service",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
-					"Plugins/Gaim Service/Libgaim.framework/Headers",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Gaim\\ Service/Libgaim.framework/Headers";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
@@ -11828,12 +11343,16 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
 				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
@@ -11852,12 +11371,16 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
 				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
@@ -11876,12 +11399,16 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"Plugins/Gaim Service/Include/glib",
-					"Plugins/Gaim Service/Include/glib/glib",
-					"Plugins/Gaim Service/Include/glib/gmodule",
-					"Plugins/Gaim Service/Include/",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
 					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
 				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
@@ -11893,7 +11420,10 @@
 		DADE8E28085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
@@ -11918,7 +11448,10 @@
 		DADE8E29085507450062B664 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
@@ -11935,7 +11468,10 @@
 		DADE8E2A085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
@@ -12101,6 +11637,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
