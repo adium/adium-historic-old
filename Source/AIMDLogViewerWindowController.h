@@ -8,11 +8,11 @@
 #import "AIAbstractLogViewerWindowController.h"
 
 @interface AIMDLogViewerWindowController : AIAbstractLogViewerWindowController {
-	IBOutlet	NSTableView	*tableView_fromAccounts;
-	IBOutlet	NSTableView	*tableView_toContacts;
-	IBOutlet	NSTableView	*tableView_dates;
+	IBOutlet	NSDatePicker	*datePicker;
 	
 	SKSearchRef currentSearch;
 }
+
+- (IBAction)selectDate:(id)sender;
 
 @end

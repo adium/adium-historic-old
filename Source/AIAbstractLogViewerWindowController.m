@@ -57,8 +57,6 @@
 #define IMAGE_EMOTICONS_OFF				@"emoticon32"
 #define IMAGE_EMOTICONS_ON				@"emoticon32_transparent"
 
-#define DATE_ITEM_IDENTIFIER			@"date"
-
 #define	REFRESH_RESULTS_INTERVAL		0.5 //Interval between results refreshes while searching
 
 @interface AIAbstractLogViewerWindowController (PRIVATE)
@@ -77,7 +75,6 @@
 - (void)openLogAtPath:(NSString *)inPath;
 - (void)rebuildContactsList;
 - (void)filterForContact:(AIListContact *)inContact;
-- (void)configureDateFilter;
 @end
 
 @implementation AIAbstractLogViewerWindowController
@@ -1600,6 +1597,11 @@ static int toArraySort(id itemA, id itemB, void *context)
 
 //Window Toolbar -------------------------------------------------------------------------------------------------------
 #pragma mark Window Toolbar
+- (NSString *)dateItemNibName
+{
+	return nil;
+}
+
 - (void)installToolbar
 {	
     NSToolbar 		*toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_LOG_VIEWER] autorelease];
@@ -1641,6 +1643,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 	[toolbarItem setMaxSize:NSMakeSize(230, NSHeight([view_SearchField frame]))];
 	[toolbarItems setObject:toolbarItem forKey:[toolbarItem itemIdentifier]];
 
+	[NSBundle loadNibNamed:[self dateItemNibName] owner:self];
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:DATE_ITEM_IDENTIFIER
 														  label:AILocalizedString(@"Date", nil)
 												   paletteLabel:AILocalizedString(@"Date", nil)
@@ -1715,9 +1718,6 @@ static int toArraySort(id itemA, id itemB, void *context)
 		AILocalizedString(@"Within Last 2 Weeks", nil), [NSNumber numberWithInt:AIDateTypeWithinLastTwoWeeks],
 		AILocalizedString(@"This Month", nil), [NSNumber numberWithInt:AIDateTypeThisMonth],
 		AILocalizedString(@"Within Last 2 Months", nil), [NSNumber numberWithInt:AIDateTypeWithinLastTwoMonths],
-		AILocalizedString(@"Exactly", nil), [NSNumber numberWithInt:AIDateTypeExactly],
-		AILocalizedString(@"Before", nil), [NSNumber numberWithInt:AIDateTypeBefore],
-		AILocalizedString(@"After", nil), [NSNumber numberWithInt:AIDateTypeAfter],
 		nil];
 	NSMenu	*dateTypeMenu = [[NSMenu alloc] init];
 	AIDateType dateType;
@@ -1728,34 +1728,26 @@ static int toArraySort(id itemA, id itemB, void *context)
 	for (dateType = AIDateTypeToday; dateType < AIDateTypeExactly; dateType++) {
 		[dateTypeMenu addItem:[self _menuItemForDateType:dateType dict:dateTypeTitleDict]];
 	}
-	[dateTypeMenu addItem:[NSMenuItem separatorItem]];		
-
-	for (dateType = AIDateTypeExactly; dateType <= AIDateTypeAfter; dateType++) {
-		[dateTypeMenu addItem:[self _menuItemForDateType:dateType dict:dateTypeTitleDict]];
-	}
 	
 	return [dateTypeMenu autorelease];
 }
 
 /*
- * @brief Select the date type
+ * @brief A new date type was selected
  *
- * The date picker will be hidden/revealed as appropriate.
- * The search will be restarted with the new date filter value if (sender != nil).
+ * This does not start a search
  */
-- (void)selectDateType:(id)sender
+- (void)selectedDateType:(AIDateType)dateType
 {
-	AIDateType		dateType = [sender tag];
 	NSCalendarDate	*today = [NSCalendarDate date];
-	BOOL			showDatePicker = NO;
-
+	
 	[filterDate release]; filterDate = nil;
-
+	
 	switch (dateType) {
 		case AIDateTypeAnyDate:
 			filterDateType = AIDateTypeAnyDate;
 			break;
-	
+			
 		case AIDateTypeToday:
 			filterDateType = AIDateTypeExactly;
 			filterDate = [today retain];
@@ -1790,7 +1782,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 										   minutes:-[today minuteOfHour]
 										   seconds:-([today secondOfMinute] + 1)] retain];
 			break;
-
+			
 		case AIDateTypeThisMonth:
 			filterDateType = AIDateTypeAfter;
 			filterDate = [[[NSCalendarDate date] dateByAddingYears:0
@@ -1800,7 +1792,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 														   minutes:0
 														   seconds:-1] retain];
 			break;
-
+			
 		case AIDateTypeWithinLastTwoMonths:
 			filterDateType = AIDateTypeAfter;
 			filterDate = [[[NSCalendarDate date] dateByAddingYears:0
@@ -1811,59 +1803,17 @@ static int toArraySort(id itemA, id itemB, void *context)
 														   seconds:-1] retain];			
 			break;
 			
-		case AIDateTypeExactly:
-			filterDateType = AIDateTypeExactly;
-			filterDate = [[[datePicker dateValue] dateWithCalendarFormat:nil timeZone:nil] retain];
-			showDatePicker = YES;
+		default:
 			break;
-
-		case AIDateTypeBefore:
-			filterDateType = AIDateTypeBefore;
-			filterDate = [[[datePicker dateValue] dateWithCalendarFormat:nil timeZone:nil] retain];
-			showDatePicker = YES;
-			break;
-			
-		case AIDateTypeAfter:
-			filterDateType = AIDateTypeAfter;
-			filterDate = [[[datePicker dateValue] dateWithCalendarFormat:nil timeZone:nil] retain];
-			showDatePicker = YES;
-			break;
-	}
-	
-	BOOL updateSize = NO;
-	if (showDatePicker && [datePicker isHidden]) {
-		[datePicker setHidden:NO];		
-		updateSize = YES;
-
-	} else if (!showDatePicker && ![datePicker isHidden]) {
-		[datePicker setHidden:YES];
-		updateSize = YES;
-	}
-	
-	if (updateSize) {
-		NSEnumerator *enumerator = [[[[self window] toolbar] items] objectEnumerator];
-		NSToolbarItem *toolbarItem;
-		while ((toolbarItem = [enumerator nextObject])) {
-			if ([[toolbarItem itemIdentifier] isEqualToString:DATE_ITEM_IDENTIFIER]) {
-				NSSize newSize = NSMakeSize(([datePicker isHidden] ? 180 : 320), NSHeight([view_DatePicker frame]));
-				[toolbarItem setMinSize:newSize];
-				[toolbarItem setMaxSize:newSize];
-				break;
-			}
-		}		
-	}
-	
-	if (sender) {
-		//Don't start searching if we called this ourselves with a nil sender
-		[self startSearchingClearingCurrentResults:YES];
-	}
+	}	
 }
 
-- (IBAction)selectDate:(id)sender
+/*
+ * @brief Select the date type
+ */
+- (void)selectDateType:(id)sender
 {
-	[filterDate release];
-	filterDate = [[datePicker dateValue] retain];
-
+	[self selectedDateType:[sender tag]];
 	[self startSearchingClearingCurrentResults:YES];
 }
 
@@ -1871,7 +1821,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 {
 	[popUp_dateFilter setMenu:[self dateTypeMenu]];
 	[popUp_dateFilter selectItemWithTag:AIDateTypeAnyDate];
-	[self selectDateType:nil];
+	[self selectedDateType:AIDateTypeAnyDate];
 }
 
 #pragma mark Open Log

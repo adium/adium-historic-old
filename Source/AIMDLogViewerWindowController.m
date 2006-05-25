@@ -85,6 +85,7 @@
 				 * we may get a null log, so be careful.
 				 */
 				theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
+				[resultsLock lock];
 				if ((theLog != nil) &&
 					(![currentSearchResults containsObjectIdenticalTo:theLog]) &&
 					[self chatLogMatchesDateFilter:theLog]) {
@@ -93,13 +94,12 @@
 					//SearchKit does not normalize ranking scores, so we track the largest we've found and use it as 1.0
 					if (foundScores[i] > largestRankingValue) largestRankingValue = foundScores[i];
 
-					[resultsLock lock];
 					[currentSearchResults addObject:theLog];
-					[resultsLock unlock];					
 				} else {
 					//Didn't get a valid log, so decrement our totalCount which is tracking how many logs we found
 					totalCount--;
 				}
+				[resultsLock unlock];					
 				
 			} else {
 				//Didn't add this log, so decrement our totalCount which is tracking how many logs we found
@@ -142,6 +142,107 @@
 	}
 
 	[super stopSearching];
+}
+
+#pragma mark Date type menu
+
+- (void)configureDateFilter
+{
+	[super configureDateFilter];
+	
+	[datePicker setDateValue:[NSDate date]];
+}
+
+- (IBAction)selectDate:(id)sender
+{
+	[filterDate release];
+	filterDate = [[datePicker dateValue] retain];
+	
+	[self startSearchingClearingCurrentResults:YES];
+}
+
+- (NSMenu *)dateTypeMenu
+{
+	NSMenu		*dateTypeMenu = [super dateTypeMenu];
+	AIDateType	dateType;
+	NSDictionary *dateTypeTitleDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		AILocalizedString(@"Exactly", nil), [NSNumber numberWithInt:AIDateTypeExactly],
+		AILocalizedString(@"Before", nil), [NSNumber numberWithInt:AIDateTypeBefore],
+		AILocalizedString(@"After", nil), [NSNumber numberWithInt:AIDateTypeAfter],
+		nil];
+
+	[dateTypeMenu addItem:[NSMenuItem separatorItem]];		
+
+	for (dateType = AIDateTypeExactly; dateType <= AIDateTypeAfter; dateType++) {
+		[dateTypeMenu addItem:[self _menuItemForDateType:dateType dict:dateTypeTitleDict]];
+	}
+
+	return dateTypeMenu;
+}
+
+/*
+ * @brief A new date type was selected
+ *
+ * The date picker will be hidden/revealed as appropriate.
+ * This does not start a search
+ */ 
+- (void)selectedDateType:(AIDateType)dateType
+{
+	BOOL			showDatePicker = NO;
+
+	[super selectedDateType:dateType];
+
+	switch (dateType) {
+		case AIDateTypeExactly:
+			filterDateType = AIDateTypeExactly;
+			filterDate = [[[datePicker dateValue] dateWithCalendarFormat:nil timeZone:nil] retain];
+			showDatePicker = YES;
+			break;
+			
+		case AIDateTypeBefore:
+			filterDateType = AIDateTypeBefore;
+			filterDate = [[[datePicker dateValue] dateWithCalendarFormat:nil timeZone:nil] retain];
+			showDatePicker = YES;
+			break;
+			
+		case AIDateTypeAfter:
+			filterDateType = AIDateTypeAfter;
+			filterDate = [[[datePicker dateValue] dateWithCalendarFormat:nil timeZone:nil] retain];
+			showDatePicker = YES;
+			break;
+			
+		default:
+			showDatePicker = NO;
+			break;
+	}
+	
+	BOOL updateSize = NO;
+	if (showDatePicker && [datePicker isHidden]) {
+		[datePicker setHidden:NO];		
+		updateSize = YES;
+		
+	} else if (!showDatePicker && ![datePicker isHidden]) {
+		[datePicker setHidden:YES];
+		updateSize = YES;
+	}
+	
+	if (updateSize) {
+		NSEnumerator *enumerator = [[[[self window] toolbar] items] objectEnumerator];
+		NSToolbarItem *toolbarItem;
+		while ((toolbarItem = [enumerator nextObject])) {
+			if ([[toolbarItem itemIdentifier] isEqualToString:DATE_ITEM_IDENTIFIER]) {
+				NSSize newSize = NSMakeSize(([datePicker isHidden] ? 180 : 320), NSHeight([view_DatePicker frame]));
+				[toolbarItem setMinSize:newSize];
+				[toolbarItem setMaxSize:newSize];
+				break;
+			}
+		}		
+	}
+}
+
+- (NSString *)dateItemNibName
+{
+	return @"LogViewerDateFilter";
 }
 
 #if 0
