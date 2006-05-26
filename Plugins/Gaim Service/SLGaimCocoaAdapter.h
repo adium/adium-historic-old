@@ -31,9 +31,7 @@
 
 }
 
-+ (void)prepareSharedInstance;
 + (SLGaimCocoaAdapter *)sharedInstance;
-//+ (NDRunLoopMessenger *)gaimThreadMessenger;
 
 - (void)addAdiumAccount:(CBGaimAccount *)adiumAccount;
 - (void)removeAdiumAccount:(CBGaimAccount *)adiumAccount;

@@ -72,22 +72,16 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 @implementation SLGaimCocoaAdapter
 
 /*!
- * @brief Called early in the startup process by CBGaimServicePlugin to begin initializing Gaim
- *
- * Should only be called once.
- */
-+ (void)prepareSharedInstance
-{
-	SLGaimCocoaAdapter  *gaimCocoaAdapter;
-
-    gaimCocoaAdapter = [[self alloc] init];
-}
-
-/*!
  * @brief Return the shared instance
  */
 + (SLGaimCocoaAdapter *)sharedInstance
 {	
+	@synchronized(self) {
+		if (!sharedInstance) {
+			sharedInstance = [[self alloc] init];
+		}
+	}
+
 	return sharedInstance;
 }
 
@@ -118,9 +112,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	if ((self = [super init])) {
 		accountDict = [[NSMutableDictionary alloc] init];
 		chatDict = [[NSMutableDictionary alloc] init];
-		
-		sharedInstance = self;
-		
+
 		[self initLibGaim];		
 	}
 	
