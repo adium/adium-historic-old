@@ -1,0 +1,25 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {closeWindow = id; okay = id; okayToAll = id; }; 
+            CLASS = ErrorMessageWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_okay" = NSButton; 
+                "scrollView_errorInfo" = NSScrollView; 
+                "scrollView_errorTitle" = NSScrollView; 
+                "tabView_multipleErrors" = NSTabView; 
+                "textView_errorInfo" = NSTextView; 
+                "textView_errorTitle" = NSTextView; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

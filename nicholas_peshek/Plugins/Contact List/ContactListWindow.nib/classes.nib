@@ -1,0 +1,68 @@
+{
+    IBClasses = (
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {
+            CLASS = AIContactListImagePicker; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIImageViewWithImagePicker; 
+        }, 
+        {
+            CLASS = AIContactListNameButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {editTarget = id; editUserInfo = id; }; 
+            SUPERCLASS = AIHoveringPopUpButton; 
+        }, 
+        {CLASS = AIContactListNameView; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
+        {CLASS = AIDockingWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
+        {CLASS = AIHoveringPopUpButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {
+            ACTIONS = {showImagePicker = id; }; 
+            CLASS = AIImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
+        {
+            CLASS = AIListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIMultiCellOutlineView; 
+        }, 
+        {
+            ACTIONS = {close = id; makeActive = id; }; 
+            CLASS = AIListWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                contactListView = AIListOutlineView; 
+                "scrollView_contactList" = AIAutoScrollView; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {CLASS = AIMultiCellOutlineView; LANGUAGE = ObjC; SUPERCLASS = AIOutlineView; }, 
+        {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {
+            CLASS = AIStandardListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIListOutlineView; 
+        }, 
+        {
+            CLASS = AIStandardListWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                imagePicker = AIContactListImagePicker; 
+                nameView = AIHoveringPopUpButton; 
+                statusMenuView = AIHoveringPopUpButton; 
+                "view_statusAndImage" = NSView; 
+            }; 
+            SUPERCLASS = AIListWindowController; 
+        }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = AIWindowDraggingView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
