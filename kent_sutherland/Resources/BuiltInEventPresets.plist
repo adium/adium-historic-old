@@ -1,0 +1,99 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Default Notifications</key>
+	<dict>
+		<key>Name</key>
+		<string>Default Notifications</string>
+		<key>Event Sound Set</key>
+		<string>$$BundlePath$$/Contents/Resources/Sounds/Adium.AdiumSoundset</string>
+		<key>Built In</key>
+		<true/>
+		<key>Events</key>
+		<array>
+			<dict>
+				<key>EventID</key>
+				<string>Content_MessageReceived</string>
+				<key>ActionID</key>
+				<string>BounceDockIcon</string>
+				<key>ActionDetails</key>
+				<dict>
+					<key>BehaviorType</key>
+					<real>1</real>
+				</dict>		
+			</dict>
+			<dict>
+				<key>EventID</key>
+				<string>Interface_ErrorMessageReceived</string>
+				<key>ActionID</key>
+				<string>BounceDockIcon</string>
+				<key>ActionDetails</key>
+				<dict>
+					<key>BehaviorType</key>
+					<real>2</real>
+				</dict>		
+			</dict>	
+			<dict>
+				<key>EventID</key>
+				<string>Content_MessageReceivedBackground</string>
+				<key>ActionID</key>
+				<string>DockOverlay</string>
+			</dict>
+		</array>
+	</dict>
+	<key>Visual Notifications</key>
+	<dict>
+		<key>Name</key>
+		<string>Visual Notifications</string>
+		<key>Event Sound Set</key>
+		<string>$$BundlePath$$/Contents/Resources/Sounds/None.AdiumSoundset</string>
+		<key>Built In</key>
+		<true/>
+		<key>Events</key>
+		<array>
+			<dict>
+				<key>EventID</key>
+				<string>Content_MessageReceived</string>
+				<key>ActionID</key>
+				<string>DockOverlay</string>
+			</dict>
+			<dict>
+				<key>EventID</key>
+				<string>Interface_ErrorMessageReceived</string>
+				<key>ActionID</key>
+				<string>BounceDockIcon</string>
+				<key>ActionDetails</key>
+				<dict>
+					<key>BehaviorType</key>
+					<real>2</real>
+				</dict>		
+			</dict>	
+			<dict>
+				<key>EventID</key>
+				<string>Interface_ErrorMessageReceived</string>
+				<key>ActionID</key>
+				<string>Growl</string>
+			</dict>
+			<dict>
+				<key>EventID</key>
+				<string>Content_MessageReceivedBackground</string>
+				<key>ActionID</key>
+				<string>Growl</string>
+			</dict>
+			<dict>
+				<key>EventID</key>
+				<string>Content_MessageReceivedBackground</string>
+				<key>ActionID</key>
+				<string>DockOverlay</string>
+			</dict>
+			<dict>
+				<key>EventID</key>
+				<string>FileTransfer_Complete</string>
+				<key>ActionID</key>
+				<string>Growl</string>
+			</dict>
+		</array>
+	</dict>
+</dict>
+</plist>
