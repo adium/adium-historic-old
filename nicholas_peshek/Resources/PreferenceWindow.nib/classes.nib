@@ -1,0 +1,50 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSOutlineView; 
+        }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = AIModularPaneCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = AIPreferenceWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "scrollView_advanced" = AIAutoScrollView; 
+                "tabView_category" = NSTabView; 
+                "tableView_advanced" = NSTableView; 
+                "view_Accounts" = AIModularPaneCategoryView; 
+                "view_Advanced" = AIModularPaneCategoryView; 
+                "view_Appearance" = AIModularPaneCategoryView; 
+                "view_Events" = AIModularPaneCategoryView; 
+                "view_FileTransfer" = AIModularPaneCategoryView; 
+                "view_General" = AIModularPaneCategoryView; 
+                "view_Messages" = AIModularPaneCategoryView; 
+                "view_Personal" = AIModularPaneCategoryView; 
+                "view_Status" = AIModularPaneCategoryView; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
+            CLASS = AIToolbarTabView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "progressIndicator_loading" = NSProgressIndicator; 
+                "tabViewItem_loading" = NSTabViewItem; 
+                "textField_loadingMessage" = NSTextField; 
+            }; 
+            SUPERCLASS = NSTabView; 
+        }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

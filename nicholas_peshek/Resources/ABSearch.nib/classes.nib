@@ -1,0 +1,74 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {showImagePicker = id; }; 
+            CLASS = AIImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
+        {
+            CLASS = AILocalizationButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {
+            CLASS = AILocalizationTextField; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSTextField; 
+        }, 
+        {
+            ACTIONS = {closeWindow = id; }; 
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
+        {
+            ACTIONS = {addPerson = id; cancel = id; createNewPerson = id; select = id; }; 
+            CLASS = OWABSearchWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                addContactButton = AILocalizationButton; 
+                addContactCancelButton = AILocalizationButton; 
+                cancelButton = AILocalizationButton; 
+                delegate = id; 
+                "imageView_contactIcon" = NSImageView; 
+                "label_contactID" = AILocalizationTextField; 
+                "label_contactIcon" = AILocalizationTextField; 
+                "label_contactType" = AILocalizationTextField; 
+                "label_email" = AILocalizationTextField; 
+                "label_firstName" = AILocalizationTextField; 
+                "label_lastName" = AILocalizationTextField; 
+                "label_mainTitle" = AILocalizationTextField; 
+                "label_nickname" = AILocalizationTextField; 
+                "label_secondaryTitle" = AILocalizationTextField; 
+                newContactPanel = NSPanel; 
+                newPersonButton = AILocalizationButton; 
+                peoplePicker = ABPeoplePickerView; 
+                "popUp_contactType" = NSPopUpButton; 
+                selectButton = AILocalizationButton; 
+                "textField_contactID" = NSTextField; 
+                "textField_email" = NSTextField; 
+                "textField_firstName" = NSTextField; 
+                "textField_lastName" = NSTextField; 
+                "textField_nickname" = NSTextField; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

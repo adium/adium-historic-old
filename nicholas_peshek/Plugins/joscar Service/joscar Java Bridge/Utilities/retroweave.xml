@@ -1,0 +1,36 @@
+<project default="retroweave" basedir="..">
+<target name="compile"/>
+<target name="clean" />
+
+	<path id="retropath">
+		<path path="${basedir}/Utilities/Retroweave/release/retroweaver.jar" />
+		<fileset dir="${basedir}/Utilities/Retroweave/lib" includes="*.jar" />
+	</path>
+
+	<target name="retroweave">
+		<property environment="env"/>
+		<echo>${env.BUILT_PRODUCTS_DIR}</echo>
+		<taskdef name="retroweave" classpathref="retropath"	classname="com.rc.retroweaver.ant.RetroWeaverTask" />
+		<property name="buildDir" location="${env.BUILT_PRODUCTS_DIR}" />
+		<property name="unzipDir" location="${buildDir}/tempJarFolder/" />
+		<unzip src="${buildDir}/joscar bridge.jar" dest="${unzipDir}" />
+		<retroweave srcdir="${unzipDir}"/>
+		<jar destfile="${buildDir}/joscar bridge.jar" basedir="${unzipDir}" includes="**/*.class" />
+		<delete dir="${unzipDir}" />
+		
+		<unzip src="${basedir}/../joscar-0.9.4-cvs-bin.jar" dest="${unzipDir}" />
+		<retroweave srcdir="${unzipDir}"/>
+		<jar destfile="${buildDir}/../joscar-0.9.4-cvs-bin.jar" basedir="${unzipDir}" includes="**/*.class" />
+		<delete dir="${unzipDir}" />
+		
+		<unzip src="${basedir}/../oscar.jar" dest="${unzipDir}" />
+		<retroweave srcdir="${unzipDir}"/>
+		<jar destfile="${buildDir}/../oscar.jar" basedir="${unzipDir}" includes="**/*.class" />
+		<delete dir="${unzipDir}" />
+		
+		<unzip src="${basedir}/../jsocks-klea.jar" dest="${unzipDir}" />
+		<retroweave srcdir="${unzipDir}"/>
+		<jar destfile="${buildDir}/../jsocks-klea.jar" basedir="${unzipDir}" includes="**/*.class" />
+		<delete dir="${unzipDir}" />
+	</target>
+</project>

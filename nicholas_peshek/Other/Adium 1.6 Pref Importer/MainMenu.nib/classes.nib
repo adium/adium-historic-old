@@ -1,0 +1,63 @@
+{
+    IBClasses = (
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {
+            CLASS = BDImportController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_Cancel" = NSButton; 
+                "button_Import" = NSButton; 
+                "button_proteusAddAccount" = NSButton; 
+                "button_proteusDelAccount" = NSButton; 
+                "image_clientImage" = NSImageView; 
+                "panel_importPanel" = NSPanel; 
+                "tabView_ClientTab" = NSTabView; 
+                "table_proteusAccounts" = NSTableView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = BDMatteButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {CLASS = BDMatteMinusButton; LANGUAGE = ObjC; SUPERCLASS = BDMatteButton; }, 
+        {CLASS = BDMattePlusButton; LANGUAGE = ObjC; SUPERCLASS = BDMatteButton; }, 
+        {CLASS = BDMattePopupButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {
+            ACTIONS = {
+                changeClientSelection = id; 
+                importAliases = id; 
+                importAwayMessages = id; 
+                importContacts = id; 
+                importLogs = id; 
+                sheetButton = id; 
+            }; 
+            CLASS = CBOldPrefsImporterAppController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_Adium_Aliases" = NSButton; 
+                "button_Adium_Contacts" = NSButton; 
+                "button_Adium_Logs" = NSButton; 
+                "button_Cancel" = NSButton; 
+                "button_ImportAwayMessages" = NSButton; 
+                "button_OK" = NSButton; 
+                currentTask = NSTextField; 
+                "image_Backdrop" = NSImageView; 
+                importListSheet = NSPanel; 
+                importer = BDImportController; 
+                "popUpButton_Clients" = NSPopUpButton; 
+                "popUpButton_account" = NSPopUpButton; 
+                "popUpButton_user" = NSPopUpButton; 
+                progressIndicator = NSProgressIndicator; 
+                "spinner_ClientProgress" = NSProgressIndicator; 
+                "spinner_importProgress" = NSProgressIndicator; 
+                "tabView_ClientTabs" = NSTabView; 
+                "tabView_optionsTab" = NSTabView; 
+                theSheet = NSWindow; 
+                "window_main" = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
