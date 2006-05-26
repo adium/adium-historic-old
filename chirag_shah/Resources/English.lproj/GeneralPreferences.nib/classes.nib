@@ -1,0 +1,69 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIColorSelectionPopUpButton; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIObjectSelectionPopUpButton; 
+        }, 
+        {
+            CLASS = AIFontSelectionPopUpButton; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIObjectSelectionPopUpButton; 
+        }, 
+        {
+            CLASS = AILocalizationButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {
+            CLASS = AILocalizationTextField; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSTextField; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = AIObjectSelectionPopUpButton; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSPopUpButton; 
+        }, 
+        {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
+        {
+            CLASS = ESGeneralPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_arrangeByGroup" = NSButton; 
+                "checkBox_messagesInTabs" = NSButton; 
+                "label_logging" = NSTextField; 
+                "label_messagesSendOn" = NSTextField; 
+                "label_messagesTabs" = NSTextField; 
+                "label_switchTabsWith" = NSTextField; 
+                "popUp_sendKeys" = NSPopUpButton; 
+                "popUp_tabKeys" = NSPopUpButton; 
+                shortcutRecorder = ShortcutRecorder; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

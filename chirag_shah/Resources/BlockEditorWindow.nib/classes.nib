@@ -1,0 +1,64 @@
+{
+    IBClasses = (
+        {
+            CLASS = AICompletingTextField; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AITextFieldWithDraggingDelegate; 
+        }, 
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {
+            CLASS = AITextFieldWithDraggingDelegate; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {dragDelegate = id; }; 
+            SUPERCLASS = NSTextField; 
+        }, 
+        {
+            ACTIONS = {closeWindow = id; }; 
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSWindow; LANGUAGE = ObjC; SUPERCLASS = NSResponder; }, 
+        {
+            ACTIONS = {
+                blockFieldUID = id; 
+                cancelBlockSheet = id; 
+                configTextField = id; 
+                didBlockSheet = id; 
+                runBlockSheet = id; 
+                setAccount = id; 
+                setState = id; 
+            }; 
+            CLASS = RAFBlockEditorWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accountCaption = NSTextField; 
+                accountCol = NSTableColumn; 
+                accountText = NSTextField; 
+                accounts = NSPopUpButton; 
+                blockButton = NSButton; 
+                buddyCol = NSTableColumn; 
+                buddyText = NSTextField; 
+                cancelButton = NSButton; 
+                doneButton = NSButton; 
+                field = AICompletingTextField; 
+                mainAccounts = NSPopUpButton; 
+                sheet = NSWindow; 
+                stateChooser = NSPopUpButton; 
+                table = NSTableView; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
+            CLASS = RAFDragArrayController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {tableView = NSTableView; }; 
+            SUPERCLASS = NSArrayController; 
+        }
+    ); 
+    IBVersion = 1; 
+}
