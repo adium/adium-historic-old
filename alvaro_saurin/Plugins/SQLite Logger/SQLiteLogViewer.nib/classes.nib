@@ -1,0 +1,39 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {closeWindow = id; }; 
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {switchTable = id; }; 
+            CLASS = SMContactsTable; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "controller_logViewer" = SMSQLiteLogViewerWindowController; 
+                "table_contactList" = AIAlternatingRowTableView; 
+            }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {
+            CLASS = SMSQLiteLogViewerWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "drawer_contacts" = NSDrawer; 
+                "table_conversations" = AIAlternatingRowTableView; 
+                "textView_log" = NSTextView; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}
