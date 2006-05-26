@@ -217,6 +217,8 @@
 					preferenceDict:(NSDictionary *)prefDict 
 						 firstTime:(BOOL)firstTime
 {
+	BOOL shouldRevealWindowAndDelaySliding = NO;
+
     if ([group isEqualToString:PREF_GROUP_CONTACT_LIST]) {
 		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_CL_WINDOW_LEVEL] intValue];
 		int				level = NSNormalWindowLevel;
@@ -339,12 +341,20 @@
 		[contactListController setForcedWindowWidth:forcedWindowWidth];
 		[contactListController setMaxWindowWidth:maxWindowWidth];
 		[contactListController contactListDesiredSizeChanged];
+		
+		if (!firstTime) {
+			shouldRevealWindowAndDelaySliding = YES;
+		}
 	}
 
 	//Window opacity
 	if ([group isEqualToString:PREF_GROUP_APPEARANCE]) {
 		float opacity = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY] floatValue];		
 		[contactListController setBackgroundOpacity:opacity];
+		
+		if (!firstTime) {
+			shouldRevealWindowAndDelaySliding = YES;
+		}
 	}
 	
 	//Layout and Theme ------------
@@ -371,9 +381,18 @@
 				[contactListView setBackgroundImage:nil];
 			}
 		}
-
+		
 		//Both layout and theme
 		[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
+		
+		if (!firstTime) {
+			shouldRevealWindowAndDelaySliding = YES;
+		}
+	}
+
+	if (shouldRevealWindowAndDelaySliding) {
+		[self delayWindowSlidingForInterval:2];
+		[self slideWindowOnScreenWithAnimation:NO];
 	}
 }
 
@@ -430,7 +449,7 @@
 //
 - (void)showWindowInFront:(BOOL)inFront
 {
-	//Always show for five seconds at least if we're told to show
+	//Always show for three seconds at least if we're told to show
 	[self delayWindowSlidingForInterval:3];
 
 	NSWindow	*window = [self window];
