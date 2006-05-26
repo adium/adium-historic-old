@@ -1,0 +1,3 @@
+#!/bin/sh
+cp "joscar Java Bridge/build/Release/joscar bridge.jar" .
+
