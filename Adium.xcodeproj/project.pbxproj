@@ -912,9 +912,7 @@
 		34E829840766B0FE00EFB3BC /* AIAccountPlusFieldPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E829820766B0FE00EFB3BC /* AIAccountPlusFieldPromptController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E829850766B0FE00EFB3BC /* AIAccountPlusFieldPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E829830766B0FE00EFB3BC /* AIAccountPlusFieldPromptController.m */; };
 		34EF54A407CE8EC300A685F1 /* JVFontPreviewField.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D8344C07CBE6E2006466F2 /* JVFontPreviewField.m */; };
-		34F1022E0734499700890D3B /* NSString_UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F102290734499600890D3B /* NSString_UUID.m */; };
 		34F1022F0734499700890D3B /* XtraProgressWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F1022A0734499600890D3B /* XtraProgressWindow.nib */; };
-		34F102320734499700890D3B /* NSString_UUID.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F1022D0734499700890D3B /* NSString_UUID.h */; };
 		34F1023B073449D500890D3B /* XtrasInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F10239073449D500890D3B /* XtrasInstaller.m */; };
 		34F1023C073449D500890D3B /* XtrasInstaller.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F1023A073449D500890D3B /* XtrasInstaller.h */; };
 		34F191DC09BA5F43001D6BE2 /* irc.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F191DB09BA5F43001D6BE2 /* irc.png */; };
@@ -2984,9 +2982,7 @@
 		34E839050583207E00F2AADB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		34F101E307342B4D00890D3B /* ESGaimDotMacAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimDotMacAccount.m; path = "Plugins/Gaim Service/ESGaimDotMacAccount.m"; sourceTree = "<group>"; };
 		34F101E407342B4D00890D3B /* ESGaimDotMacAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimDotMacAccount.h; path = "Plugins/Gaim Service/ESGaimDotMacAccount.h"; sourceTree = "<group>"; };
-		34F102290734499600890D3B /* NSString_UUID.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = NSString_UUID.m; path = "Plugins/URL Handling/NSString_UUID.m"; sourceTree = "<group>"; };
 		34F1022A0734499600890D3B /* XtraProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtraProgressWindow.nib; path = "Plugins/URL Handling/XtraProgressWindow.nib"; sourceTree = "<group>"; };
-		34F1022D0734499700890D3B /* NSString_UUID.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NSString_UUID.h; path = "Plugins/URL Handling/NSString_UUID.h"; sourceTree = "<group>"; };
 		34F10239073449D500890D3B /* XtrasInstaller.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = XtrasInstaller.m; path = "Plugins/URL Handling/XtrasInstaller.m"; sourceTree = "<group>"; };
 		34F1023A073449D500890D3B /* XtrasInstaller.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = XtrasInstaller.h; path = "Plugins/URL Handling/XtrasInstaller.h"; sourceTree = "<group>"; };
 		34F1529405E9FDDB00B32FD7 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
@@ -6108,8 +6104,6 @@
 				632D801608E7E0A40032C187 /* XtrasManager.nib */,
 				34F1023A073449D500890D3B /* XtrasInstaller.h */,
 				34F10239073449D500890D3B /* XtrasInstaller.m */,
-				34F1022D0734499700890D3B /* NSString_UUID.h */,
-				34F102290734499600890D3B /* NSString_UUID.m */,
 				34F1022A0734499600890D3B /* XtraProgressWindow.nib */,
 			);
 			name = "Xtras Management";
@@ -7117,7 +7111,6 @@
 				34B4B5A30708B049002C4C6D /* ESDebugController.h in Headers */,
 				344458EF070B5BEF00D8E932 /* ESDebugWindowController.h in Headers */,
 				4B0149070733D3A5001A4C57 /* AICoreComponentLoader.h in Headers */,
-				34F102320734499700890D3B /* NSString_UUID.h in Headers */,
 				34F1023C073449D500890D3B /* XtrasInstaller.h in Headers */,
 				340EC2280736BF32001653BF /* ESRankingCell.h in Headers */,
 				4B5323EC0747BDED0073DF4D /* AICrashController.h in Headers */,
@@ -8677,7 +8670,6 @@
 				34B4B5A40708B049002C4C6D /* ESDebugController.m in Sources */,
 				344458F0070B5BEF00D8E932 /* ESDebugWindowController.m in Sources */,
 				4B0149080733D3A5001A4C57 /* AICoreComponentLoader.m in Sources */,
-				34F1022E0734499700890D3B /* NSString_UUID.m in Sources */,
 				34F1023B073449D500890D3B /* XtrasInstaller.m in Sources */,
 				340EC2290736BF32001653BF /* ESRankingCell.m in Sources */,
 				4B5323ED0747BDED0073DF4D /* AICrashController.m in Sources */,

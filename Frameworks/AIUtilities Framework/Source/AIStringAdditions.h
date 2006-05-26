@@ -74,4 +74,6 @@
 
 + (BOOL) stringIsEmpty: (NSString *) s;
 
++ (NSString *)uuid;
+
 @end

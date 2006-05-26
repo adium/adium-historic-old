@@ -18,7 +18,7 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIBundleAdditions.h>
 #import <AIUtilities/AIExceptionHandlingUtilities.h>
-#import "NSString_UUID.h"
+#import <AIUtilities/AIStringAdditions.h>
 
 //Should only be YES for testing
 #define	ALLOW_UNTRUSTED_XTRAS	NO

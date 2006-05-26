@@ -915,4 +915,16 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 	return (NO);
 } /*stringIsEmpty*/
 
++ (NSString *)uuid
+{
+	CFUUIDRef	uuid;
+	NSString	*uuidStr;
+	
+	uuid = CFUUIDCreate(NULL);
+	uuidStr = (NSString *)CFUUIDCreateString(NULL, uuid);
+	CFRelease(uuid);
+	
+	return [uuidStr autorelease];
+}
+
 @end
