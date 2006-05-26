@@ -64,12 +64,8 @@ static NSString	*prefsCategory;
 - (void)configureCrashReporter;
 - (void)completeLogin;
 - (void)openAppropriatePreferencesIfNeeded;
-- (NSDictionary *)versionUpgradeDict;
 
-- (NSString *)processBetaVersionString:(NSString *)inString;
 - (void)deleteTemporaryFiles;
-
-- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 @end
 
 @implementation AIAdium
