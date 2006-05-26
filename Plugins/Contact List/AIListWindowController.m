@@ -65,7 +65,6 @@
 - (BOOL)shouldSlideWindowOnScreen_mousePositionStrategy;
 - (BOOL)shouldSlideWindowOnScreen_adiumActiveStrategy;
 - (BOOL)shouldSlideWindowOffScreen_adiumActiveStrategy;
-- (void)setPermitSlidingInForeground:(BOOL)flag;
 - (void)setSavedFrame:(NSRect)f;
 - (void)restoreSavedFrame;
 
@@ -233,13 +232,14 @@
 
 		listHasShadow = [[prefDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue];
 		[[self window] setHasShadow:listHasShadow];
-		windowShouldBeVisibleInBackground = ![[prefDict objectForKey:KEY_CL_HIDE] boolValue];
-		permitSlidingInForeground = [[prefDict objectForKey:KEY_CL_EDGE_SLIDE] boolValue];
+		
+		windowHidingStyle = [[prefDict objectForKey:KEY_CL_WINDOW_HIDING_STYLE] intValue];
+		slideOnlyInBackground = [[prefDict objectForKey:KEY_CL_SLIDE_ONLY_IN_BACKGROUND] boolValue];
 		
 		//Do a slide immediately if needed (to display as per our new preferneces)
 		[self slideWindowIfNeeded:nil];
 
-		if (permitSlidingInForeground) {
+		if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
 			if (!slideWindowIfNeededTimer) {
 				slideWindowIfNeededTimer = [[NSTimer scheduledTimerWithTimeInterval:DOCK_HIDING_MOUSE_POLL_INTERVAL
 																			 target:self
@@ -557,6 +557,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 }
 
+#if 0
 /*
  * @brief Should the window hide immediately when Adium deactivates?
  *
@@ -571,6 +572,11 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	return (!windowShouldBeVisibleInBackground &&
 			([self windowSlidOffScreenEdgeMask] == AINoEdges) &&
 			([self slidableEdgesAdjacentToWindow] == AINoEdges));
+}
+#endif
+- (BOOL)windowShouldHideOnDeactivate
+{
+	return (windowHidingStyle == AIContactListWindowHidingStyleBackground);
 }
 
 - (void)slideWindowIfNeeded:(id)sender
@@ -593,13 +599,20 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	BOOL shouldSlide = NO;
 	
-	if ((permitSlidingInForeground && ![NSApp isHidden]) || (![NSApp isActive] && windowShouldBeVisibleInBackground)) {
-		shouldSlide = [self shouldSlideWindowOnScreen_mousePositionStrategy];
+	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
+		if (slideOnlyInBackground && [NSApp isActive]) {
+			//We only slide while in the background, and the app is not in the background. Slide on screen.
+			shouldSlide = YES;
 
-	} else if (!permitSlidingInForeground && [NSApp isActive] && ([self windowSlidOffScreenEdgeMask] != AINoEdges)) {
-		shouldSlide = YES;
+		} else if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
+			//Slide on screen if the mouse position indicates we should
+			shouldSlide = [self shouldSlideWindowOnScreen_mousePositionStrategy];
+		} else {
+			//It's slid off-screen... and it's not supposed to be sliding at all.  Slide back on screen!
+			shouldSlide = YES;
+		}
 	}
-	
+
 	return shouldSlide;
 }
 
@@ -608,8 +621,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	BOOL shouldSlide = NO;
 	
 	if (!preventHiding && ![self windowSlidOffScreenEdgeMask]) {
-		if (permitSlidingInForeground ||
-			(!windowShouldBeVisibleInBackground && ![NSApp isActive] && [[self window] isVisible])) {
+		if (!(slideOnlyInBackground && [NSApp isActive])) {
 			shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
 		}
 	}
