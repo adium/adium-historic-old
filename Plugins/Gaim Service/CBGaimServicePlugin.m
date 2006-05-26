@@ -35,9 +35,6 @@
 																		forClass:[self class]]
 										  forGroup:GROUP_ACCOUNT_STATUS];
 	
-	//Prepare the shared instance of the gaim thread adapter
-	[SLGaimCocoaAdapter prepareSharedInstance];
-	
     //Install the services
 #ifndef JOSCAR_SUPERCEDE_LIBGAIM
 	/* Not currently compiled */
