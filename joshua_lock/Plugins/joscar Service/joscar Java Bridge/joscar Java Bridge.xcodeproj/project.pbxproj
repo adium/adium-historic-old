@@ -1,0 +1,342 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		110C119D096081F6003FAD0A /* BridgeToAdiumHandler.java in Sources */ = {isa = PBXBuildFile; fileRef = 110C119C096081F6003FAD0A /* BridgeToAdiumHandler.java */; };
+		112480930956272E00F69C1E /* joscarBridge.java in Sources */ = {isa = PBXBuildFile; fileRef = 1124808E0956272E00F69C1E /* joscarBridge.java */; };
+		112480940956272E00F69C1E /* JoscarStateInfo.java in Sources */ = {isa = PBXBuildFile; fileRef = 1124808F0956272E00F69C1E /* JoscarStateInfo.java */; };
+		1124815B09562BB400F69C1E /* joscar-0.9.4-cvs-bin.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 1124815909562BB000F69C1E /* joscar-0.9.4-cvs-bin.jar */; };
+		1124815C09562BB400F69C1E /* oscar.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 1124815A09562BB200F69C1E /* oscar.jar */; };
+		1124815E09562BC400F69C1E /* retroweaver-rt.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 1124815D09562BC300F69C1E /* retroweaver-rt.jar */; };
+		340712FA09A8E214002B7464 /* JoscarFileMapper.java in Sources */ = {isa = PBXBuildFile; fileRef = 340712F909A8E214002B7464 /* JoscarFileMapper.java */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		119DD0C3095637D7006ADCD2 /* Development */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Development;
+		};
+		119DD0C4095637D7006ADCD2 /* Deployment */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Deployment;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+		112480A6095627E900F69C1E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 112480700956269C00F69C1E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 112480860956271F00F69C1E;
+			remoteInfo = "joscar bridge";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		110C119C096081F6003FAD0A /* BridgeToAdiumHandler.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = BridgeToAdiumHandler.java; sourceTree = "<group>"; };
+		112480870956271F00F69C1E /* joscar bridge.jar */ = {isa = PBXFileReference; explicitFileType = archive.jar; includeInIndex = 0; path = "joscar bridge.jar"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1124808E0956272E00F69C1E /* joscarBridge.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = joscarBridge.java; sourceTree = "<group>"; };
+		1124808F0956272E00F69C1E /* JoscarStateInfo.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = JoscarStateInfo.java; sourceTree = "<group>"; };
+		1124815909562BB000F69C1E /* joscar-0.9.4-cvs-bin.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-0.9.4-cvs-bin.jar"; path = "../joscar-0.9.4-cvs-bin.jar"; sourceTree = SOURCE_ROOT; };
+		1124815A09562BB200F69C1E /* oscar.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = oscar.jar; path = ../oscar.jar; sourceTree = SOURCE_ROOT; };
+		1124815D09562BC300F69C1E /* retroweaver-rt.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "retroweaver-rt.jar"; path = "Utilities/Retroweave/release/retroweaver-rt.jar"; sourceTree = SOURCE_ROOT; };
+		340712F909A8E214002B7464 /* JoscarFileMapper.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = JoscarFileMapper.java; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		112480850956271F00F69C1E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1124815B09562BB400F69C1E /* joscar-0.9.4-cvs-bin.jar in Frameworks */,
+				1124815C09562BB400F69C1E /* oscar.jar in Frameworks */,
+				1124815E09562BC400F69C1E /* retroweaver-rt.jar in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1124806E0956269B00F69C1E = {
+			isa = PBXGroup;
+			children = (
+				340712F909A8E214002B7464 /* JoscarFileMapper.java */,
+				110C119C096081F6003FAD0A /* BridgeToAdiumHandler.java */,
+				1124815D09562BC300F69C1E /* retroweaver-rt.jar */,
+				1124815909562BB000F69C1E /* joscar-0.9.4-cvs-bin.jar */,
+				1124815A09562BB200F69C1E /* oscar.jar */,
+				1124808E0956272E00F69C1E /* joscarBridge.java */,
+				1124808F0956272E00F69C1E /* JoscarStateInfo.java */,
+				112480880956271F00F69C1E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		112480880956271F00F69C1E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				112480870956271F00F69C1E /* joscar bridge.jar */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXJavaArchiveBuildPhase section */
+		112480840956271F00F69C1E /* JavaArchive */ = {
+			isa = PBXJavaArchiveBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXJavaArchiveBuildPhase section */
+
+/* Begin PBXLegacyTarget section */
+		1124809B0956278300F69C1E /* joscar retroweaver */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "-buildfile Utilities/retroweave.xml $ACTION";
+			buildConfigurationList = 112480A10956279C00F69C1E /* Build configuration list for PBXLegacyTarget "joscar retroweaver" */;
+			buildPhases = (
+			);
+			buildSettings = {
+				PRODUCT_NAME = "joscar retroweaver";
+			};
+			buildToolPath = /usr/bin/ant;
+			dependencies = (
+				112480A7095627E900F69C1E /* PBXTargetDependency */,
+			);
+			name = "joscar retroweaver";
+			passBuildSettingsInEnvironment = 1;
+			productName = "joscar retroweaver";
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXLibraryTarget section */
+		112480860956271F00F69C1E /* joscar bridge */ = {
+			isa = PBXLibraryTarget;
+			buildConfigurationList = 112480890956271F00F69C1E /* Build configuration list for PBXLibraryTarget "joscar bridge" */;
+			buildPhases = (
+				112480830956271F00F69C1E /* Sources */,
+				112480840956271F00F69C1E /* JavaArchive */,
+				112480850956271F00F69C1E /* Frameworks */,
+			);
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				JAVA_ARCHIVE_CLASSES = YES;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_COMPILER_FLAGS = "";
+				JAVA_SOURCE_SUBDIR = .;
+				LIBRARY_STYLE = STATIC;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = joscarBridge;
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			dependencies = (
+			);
+			name = "joscar bridge";
+			productInstallPath = /usr/local/lib;
+			productName = joscarBridge;
+			productReference = 112480870956271F00F69C1E /* joscar bridge.jar */;
+		};
+/* End PBXLibraryTarget section */
+
+/* Begin PBXProject section */
+		112480700956269C00F69C1E /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 112480710956269C00F69C1E /* Build configuration list for PBXProject "joscar Java Bridge" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				119DD0C3095637D7006ADCD2 /* Development */,
+				119DD0C4095637D7006ADCD2 /* Deployment */,
+			);
+			hasScannedForEncodings = 0;
+			mainGroup = 1124806E0956269B00F69C1E;
+			productRefGroup = 112480880956271F00F69C1E /* Products */;
+			projectDirPath = "";
+			targets = (
+				1124809B0956278300F69C1E /* joscar retroweaver */,
+				112480860956271F00F69C1E /* joscar bridge */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		112480830956271F00F69C1E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				112480930956272E00F69C1E /* joscarBridge.java in Sources */,
+				112480940956272E00F69C1E /* JoscarStateInfo.java in Sources */,
+				110C119D096081F6003FAD0A /* BridgeToAdiumHandler.java in Sources */,
+				340712FA09A8E214002B7464 /* JoscarFileMapper.java in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		112480A7095627E900F69C1E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 112480860956271F00F69C1E /* joscar bridge */;
+			targetProxy = 112480A6095627E900F69C1E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		112480720956269C00F69C1E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+		112480730956269C00F69C1E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Release;
+		};
+		1124808A0956271F00F69C1E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				JAVA_ARCHIVE_CLASSES = YES;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_SOURCE_SUBDIR = .;
+				LIBRARY_STYLE = STATIC;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "joscar bridge";
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		1124808B0956271F00F69C1E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				JAVA_ARCHIVE_CLASSES = YES;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_SOURCE_SUBDIR = .;
+				LIBRARY_STYLE = STATIC;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "joscar bridge";
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		112480A20956279C00F69C1E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "joscar retroweaver";
+			};
+			name = Debug;
+		};
+		112480A30956279C00F69C1E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "joscar retroweaver";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		112480710956269C00F69C1E /* Build configuration list for PBXProject "joscar Java Bridge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				112480720956269C00F69C1E /* Debug */,
+				112480730956269C00F69C1E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		112480890956271F00F69C1E /* Build configuration list for PBXLibraryTarget "joscar bridge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1124808A0956271F00F69C1E /* Debug */,
+				1124808B0956271F00F69C1E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		112480A10956279C00F69C1E /* Build configuration list for PBXLegacyTarget "joscar retroweaver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				112480A20956279C00F69C1E /* Debug */,
+				112480A30956279C00F69C1E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 112480700956269C00F69C1E /* Project object */;
+}

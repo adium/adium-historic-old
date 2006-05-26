@@ -1,0 +1,149 @@
+{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf110
+{\fonttbl\f0\fswiss\fcharset77 Arial-BoldMS;\f1\fswiss\fcharset77 Arial-ItalicMS;\f2\fswiss\fcharset77 ArialMS;
+}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww20960\viewh13820\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\b\fs34 \cf0 This file is public domain, and is not under the GPL license.\
+\
+Documentation for the SQLite Logger's schema in Adium follows:\
+\
+
+\f1\i\b0\fs30 (Note:The SQLite 3 database file can be found at
+\f2\i0  ~/Library/Application Support/Adium 2.0/Users/
+\f1\i (User Name)
+\f2\i0 /logs.db
+\f1\i )
+\f0\i0\b\fs54 \
+\
+Tables
+\f2\b0\fs24 \
+(Note: due to the nature of sqlite, the column types are not enforced.)\
+\
+
+\f0\b\fs28 messages
+\f2\b0\fs24 \
+	This table contains one row for each message sent. Each row contains these columns:\
+		
+\f0\b [column name]	[column type]		[description]
+\f2\b0 \
+		
+\f1\i id
+\f2\i0 			integer primary key		This is a key used for reference, and does not contain any important data.\
+\
+		
+\f1\i date
+\f2\i0 			timestamp			This is the time the message was sent/received, encoded as a julian day\
+										with the sqlite "julianday(string day)" function. The "day" argument\
+										to this function should be a complete timestamp without the time\
+										zone. (YYYY-MM-DD HH:MM:SS) You can retrieve this from the\
+										column using the functions "date", "time", or "datetime" on its value.\
+\
+		
+\f1\i message
+\f2\i0 		varchar(8096)		This column contains the message that was sent, or, if it is a status change,\
+										the description of the status change.\
+\
+		
+\f1\i account_id
+\f2\i0 		integer			This is a reference to the account *on the computer* that sent or received\
+										this message. The account information can be found in the "accounts"\
+										table, looking for the row with the same value in the column "id".\
+\
+		
+\f1\i other_id
+\f2\i0 		integer			This is a reference to the contact with whom you are having the conversation.\
+										It is the same number as that in the "id" column of the "others" table.\
+\
+		
+\f1\i sender_display
+\f2\i0 	varchar(256)			This contains the display name of the sender of this message.\
+\
+		
+\f1\i outgoing
+\f2\i0 		boolean			This indicates whether or not the messages was outgoing.\
+\
+		
+\f1\i autoreply
+\f2\i0 		boolean			This indicates whether or not the message is an autoreply, as is used in AIM.\
+\
+		
+\f1\i status
+\f2\i0 			boolean			This indicates whether or not this message was actually a status change.\
+\
+
+\f0\b\fs30 accounts
+\f2\b0\fs24 \
+	This table contains one row for each account that has been used to send or receive a message. Each row contains these columns:\
+	
+\f0\b [column name]		[column type]		[description]
+\f2\b0 \
+	
+\f1\i id
+\f2\i0 				integer primary key		This is a key used for reference by account_id column of the "messages" table.\
+	\
+	
+\f1\i name
+\f2\i0 				varchar(256)			This contains the account identifier for that service. (ex: for AIM, samsamoa....\
+										for Jabber, samsamoa@jabber.com)\
+	\
+	
+\f1\i service
+\f2\i0 			varchar(256)			This contains the service identifier used by Adium. (ex: AIM, Jabber, Mac)\
+\
+
+\f0\b\fs30 others
+\f2\b0\fs24 \
+	This table contains one row for each contact that who has been sent or has sent a message. Each row contains these columns:\
+	
+\f0\b [column name]		[column type]		[description]
+\f2\b0 \
+	
+\f1\i id
+\f2\i0 				integer primary key		This is a key used for reference by other_id column of the "messages" table.\
+	\
+	
+\f1\i name
+\f2\i0 				varchar(256)			This contains the account identifier for that service. (ex: for AIM, samsamoa....\
+										for Jabber, samsamoa@jabber.com)\
+	\
+	
+\f1\i service
+\f2\i0 			varchar(256)			This contains the service identifier used by Adium. (ex: AIM, Jabber, Mac)\
+
+\f0\b\fs30 \
+words
+\f2\b0\fs24 \
+	This table is a table used for the full-text indexing of messages. It contains one row for each word that has been used in a message.\
+	A message is separated into words by using every group of alphanumeric characters as a word (unfortunately, this means that "isn't"\
+	is separated into "isn" and "t", but it should still work. Each row contains these columns:\
+	
+\f0\b [column name]		[column type]		[description]
+\f2\b0 \
+	
+\f1\i id
+\f2\i0 				integer primary key		This is a key used for reference by the "word" column of the "messageIndex"\
+										table.\
+	\
+	
+\f1\i word
+\f2\i0 				integer			The word (ex: "apple", "banana", "orange", "1234", "a12b", "isn", "t")		\
+
+\f0\b\fs30 \
+messageIndex
+\f2\b0\fs24 \
+	This table contains one row for each word in *every message*. It is used for full-text indexing. For example to search for the word\
+	"blah", you would find that word's id in the "words" table, then select every column in this table with the column "word" equalling that\
+	id. That would give you a list of every message id with the word "blah" in it.  Each row contains these columns:\
+	
+\f0\b [column name]		[column type]		[description]
+\f2\b0 \
+	
+\f1\i word				
+\f2\i0 integer			This is the word in the message, and references the "id" column in the "words" table.\
+\
+	
+\f1\i message			
+\f2\i0 integer			This is the message in which the word appears, and references the "id" column in\
+										the "messages" table.}
