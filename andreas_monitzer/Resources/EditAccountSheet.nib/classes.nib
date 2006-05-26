@@ -1,0 +1,77 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {okay = id; }; 
+            CLASS = AIAccountSetupEditAccountView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_autoConnect" = NSButton; 
+                "button_register" = NSButton; 
+                "imageView_userIcon" = ESImageViewWithImagePicker; 
+                "image_serviceIcon" = NSImageView; 
+                "tabView_auxiliary" = NSTabView; 
+                "textField_accountDescription" = NSTextField; 
+                "textField_accountName" = ESDelayedTextField; 
+                "textField_serviceName" = NSTextField; 
+                "textField_userNameLabel" = NSTextField; 
+                "view_accountDetails" = NSView; 
+            }; 
+            SUPERCLASS = AIAccountSetupView; 
+        }, 
+        {
+            CLASS = AIAccountSetupView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {controller = AIAccountSetupWindowController; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {
+            ACTIONS = {cancel = id; changedIconSetting = id; okay = id; }; 
+            CLASS = AIEditAccountWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_OK" = NSButton; 
+                "button_cancel" = NSButton; 
+                "button_chooseIcon" = NSButton; 
+                "imageView_userIcon" = AIImageViewWithImagePicker; 
+                "matrix_userIcon" = NSMatrix; 
+                notifyTarget = id; 
+                "tabView_auxiliary" = NSTabView; 
+                "textField_accountDescription" = NSTextField; 
+                "textField_serviceName" = NSTextField; 
+                "view_accountOptions" = NSView; 
+                "view_accountPrivacy" = NSView; 
+                "view_accountProfile" = NSView; 
+                "view_accountProxy" = NSView; 
+                "view_accountSetup" = NSView; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
+            ACTIONS = {showImagePicker = id; }; 
+            CLASS = AIImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
+        {
+            CLASS = AILocalizationButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

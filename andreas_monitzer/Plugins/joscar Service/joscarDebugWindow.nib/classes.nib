@@ -1,0 +1,25 @@
+{
+    IBClasses = (
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {
+            ACTIONS = {closeWindow = id; }; 
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {clearLog = id; toggleLogWriting = id; }; 
+            CLASS = RAFjoscarDebugWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_logWriting" = NSButton; 
+                "scrollView_debug" = AIAutoScrollView; 
+                "textView_debug" = NSTextView; 
+                "textView_version" = NSTextField; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}
