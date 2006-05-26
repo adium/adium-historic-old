@@ -68,11 +68,13 @@ typedef enum {
 	securidString = [[textField_securid stringValue] retain];
 
 	[NSApp stopModalWithCode:AISecuridPromptOK];
+	[self close];
 }
 
 - (IBAction)cancelButtonClicked:(id)sender
 {
 	[NSApp stopModalWithCode:AISecuridPromptCancel];
+	[self close];
 }
 
 - (NSString *)getSecurid
