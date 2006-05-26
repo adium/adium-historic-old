@@ -10,20 +10,20 @@
 		<string>aim.png</string>
 		<key>Bonjour</key>
 		<string>bonjour.png</string>
+		<key>GTalk</key>
+		<string>gtalk.png</string>
 		<key>Gadu-Gadu</key>
 		<string>gadu-gadu.png</string>
 		<key>GroupWise</key>
 		<string>groupwise.png</string>
-		<key>GTalk</key>
-		<string>gtalk.png</string>
 		<key>ICQ</key>
 		<string>icq.png</string>
 		<key>Jabber</key>
 		<string>jabber.png</string>
-		<key>Mac</key>
-		<string>dotmac.png</string>
 		<key>MSN</key>
 		<string>msn.png</string>
+		<key>Mac</key>
+		<string>dotmac.png</string>
 		<key>Napster</key>
 		<string>napster.png</string>
 		<key>Sametime</key>
@@ -45,20 +45,20 @@
 		<string>aim-small.png</string>
 		<key>Bonjour</key>
 		<string>bonjour-small.png</string>
+		<key>GTalk</key>
+		<string>gtalk-small.png</string>
 		<key>Gadu-Gadu</key>
 		<string>gadu-gadu-small.png</string>
 		<key>GroupWise</key>
 		<string>groupwise-small.png</string>
-		<key>GTalk</key>
-		<string>gtalk-small.png</string>
 		<key>ICQ</key>
 		<string>icq-small.png</string>
 		<key>Jabber</key>
 		<string>jabber-small.png</string>
-		<key>Mac</key>
-		<string>dotmac-small.png</string>
 		<key>MSN</key>
 		<string>msn-small.png</string>
+		<key>Mac</key>
+		<string>dotmac-small.png</string>
 		<key>Napster</key>
 		<string>napster-small.png</string>
 		<key>Sametime</key>
