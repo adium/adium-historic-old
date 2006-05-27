@@ -12,11 +12,8 @@
 
 - (void)finishInstantiate
 {
-	/* `finishInstantiate' can be used to associate non-view objects with
-	 * a view in the palette's nib.  For example:
-	 *   [self associateObject:aNonUIObject ofType:IBObjectPboardType
-	 *                withView:aView];
-	 */
+	[previewView setPreviewText:NSLocalizedString(@"Text color preview", /*comment*/ nil)];
+
 	[super finishInstantiate];
 }
 
