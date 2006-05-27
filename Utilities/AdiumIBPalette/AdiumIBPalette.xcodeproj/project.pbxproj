@@ -246,8 +246,8 @@
 			files = (
 				8D1AC9670486D14A00FE50C9 /* AITextColorPreviewViewInspector.nib in Resources */,
 				8D1AC9680486D14A00FE50C9 /* AdiumIBPalette.nib in Resources */,
-				8D1AC9690486D14A00FE50C9 /* palette.table in Resources */,
 				8D1AC9800486D23B00FE50C9 /* InfoPlist.strings in Resources */,
+				8D1AC9690486D14A00FE50C9 /* palette.table in Resources */,
 				54D33B2906778E3300C9C163 /* AdiumIBPalette.ibclassdescription in Resources */,
 				073481060A28062100F50878 /* AdiumIBPalette.tiff in Resources */,
 			);
@@ -260,9 +260,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D1AC96C0486D14A00FE50C9 /* AITextColorPreviewViewInspector.m in Sources */,
 				8D1AC96D0486D14A00FE50C9 /* AdiumIBPalette.m in Sources */,
 				0762FD020A27F616005CE437 /* AITextColorPreviewView.m in Sources */,
+				8D1AC96C0486D14A00FE50C9 /* AITextColorPreviewViewInspector.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
