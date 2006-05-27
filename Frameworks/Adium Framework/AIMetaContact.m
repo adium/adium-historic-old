@@ -335,15 +335,15 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 - (AIListContact *)preferredContact
 {
 	if (!_preferredContact) {
-		NSArray			*theContainedObjects = [self listContacts];
+		NSArray			*listContacts = [self listContacts];
 		AIListContact   *preferredContact = nil;
 		AIListContact   *thisContact;
 		unsigned		index;
-		unsigned		count = [theContainedObjects count];
+		unsigned		count = [listContacts count];
 		
 		//Search for an available contact who is not mobile
 		for (index = 0; index < count; index++) {
-			thisContact = [theContainedObjects objectAtIndex:index];
+			thisContact = [listContacts objectAtIndex:index];
 			if (([thisContact statusSummary] == AIAvailableStatus) &&
 				(![thisContact isMobile])) {
 				preferredContact = thisContact;
@@ -354,7 +354,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		//If no available contacts, find the first online contact
 		if (!preferredContact) {
 			for (index = 0; index < count; index++) {
-				thisContact = [theContainedObjects objectAtIndex:index];
+				thisContact = [listContacts objectAtIndex:index];
 				if ([thisContact online]) {
 					preferredContact = thisContact;
 					break;
@@ -364,9 +364,16 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 		//If no online contacts, find the first contact
 		if (!preferredContact && (count != 0)) {
-			preferredContact = [theContainedObjects objectAtIndex:0];
+			preferredContact = [listContacts objectAtIndex:0];
 		}
-		
+
+		//If no list contacts at all, try contacts on offline accounts
+		if (!preferredContact) {
+			if ([[self containedObjects] count]) {
+				preferredContact = [[self containedObjects] objectAtIndex:0];
+			}
+		}
+
 		_preferredContact = preferredContact;
 	}
 	
