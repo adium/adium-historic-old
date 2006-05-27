@@ -1,0 +1,26 @@
+{
+    IBClasses = (
+        {
+            CLASS = AITextColorPreviewView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                backgroundColor = NSColorWell; 
+                backgroundEnabled = NSButton; 
+                backgroundGradientColor = NSColorWell; 
+                textColor = NSColorWell; 
+                textShadowColor = NSColorWell; 
+                textShadowColorEnabled = NSButton; 
+            }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {CLASS = AdiumIBPalette; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            CLASS = AdiumIBPalettePalette; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {previewView = AITextColorPreviewView; }; 
+            SUPERCLASS = IBPalette; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
