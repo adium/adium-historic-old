@@ -24,20 +24,21 @@
  */
 - (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID
 {
-	SKIndexRef			logSearchIndex = [plugin logContentIndex];
-	float				largestRankingValue = 0;
+	SKIndexRef		logSearchIndex = [plugin logContentIndex];
+	float			largestRankingValue = 0;
+	SKSearchRef		thisSearch;
+    Boolean			more = true;
+    UInt32			totalCount = 0;
 
 	if (currentSearch) {
 		SKSearchCancel(currentSearch);
 		CFRelease(currentSearch); currentSearch = NULL;
 	}
 
-	currentSearch = SKSearchCreate(logSearchIndex,
-								   (CFStringRef)searchString,
-								   kSKSearchOptionDefault);
-	
-    Boolean more = true;
-    UInt32 totalCount = 0;
+	thisSearch = SKSearchCreate(logSearchIndex,
+								(CFStringRef)searchString,
+								kSKSearchOptionDefault);
+	currentSearch = (SKSearchRef)CFRetain(thisSearch);
 
 	//Retrieve matches as long as more are pending
     while (more && currentSearch) {
@@ -50,7 +51,7 @@
         CFIndex i;
 		
         more = SKSearchFindMatches (
-									currentSearch,
+									thisSearch,
 									BATCH_NUMBER,
 									foundDocIDs,
 									foundScores,
@@ -128,10 +129,13 @@
 		}
     }
 	
+	//Ensure current search isn't released in two places simultaneously
 	if (currentSearch) {
 		CFRelease(currentSearch);
 		currentSearch = NULL;
 	}
+	
+	CFRelease(thisSearch);
 }
 
 - (void)stopSearching
