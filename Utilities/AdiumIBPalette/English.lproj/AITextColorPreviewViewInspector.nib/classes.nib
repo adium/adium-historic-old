@@ -1,6 +1,10 @@
 {
     IBClasses = (
-        {CLASS = AdiumIBPaletteInspector; LANGUAGE = ObjC; SUPERCLASS = IBInspector; }, 
+        {
+            CLASS = AITextColorPreviewInspector; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = IBInspector; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
