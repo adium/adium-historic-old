@@ -1482,8 +1482,8 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		if ([[(AIMetaContact *)item listContactsIncludingOfflineAccounts] count] > 1) {
 			return [(AIMetaContact *)item longDisplayName];
 		} else {
-			NSString *displayName = [(AIListContact *)item displayName];
-			NSString *formattedUID = [(AIListContact *)item formattedUID];
+			NSString *displayName = [(AIMetaContact *)item displayName];
+			NSString *formattedUID = [(AIMetaContact *)item formattedUID];
 			
 			if ([displayName isEqualToString:formattedUID]) {
 				return displayName;
