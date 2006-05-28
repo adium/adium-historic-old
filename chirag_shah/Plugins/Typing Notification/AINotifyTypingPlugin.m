@@ -55,20 +55,20 @@ NSString *AppleSynthesisAttribute = @"AppleSynthesis";
 
 - (id)accessibilityAttributeValue:(NSString *)attribute 
 {
-			NSArray		*commands;
-			AITypingState typingState;
-			message = [[object messageString];
+	NSArray		*commands;
+	AITypingState typingState;
+	message = [[object messageString];
 
-			if ([[commands objectAtIndex:1] isEqualToString:@"on"]) {
-				typingState = AITyping;
+	if ([[commands objectAtIndex:1] isEqualToString:@"on"]) {
+		typingState = AITyping;
 				
-			} else if ([[commands objectAtIndex:1] isEqualToString:@"entered"]) {
-				typingState = AIEnteredText;
-				
-			} else {
-				typingState = AINotTyping;
+	} else if ([[commands objectAtIndex:1] isEqualToString:@"entered"]) {
+		typingState = AIEnteredText;
 		
-//        return @"Typing Notification";
+	} else {
+		typingState = AINotTyping;
+		
+//  return @"Typing Notification";
 
 	
 	return [super accessibilityAttributeValue:attribute];
