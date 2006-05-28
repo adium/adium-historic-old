@@ -1283,6 +1283,18 @@
 		7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */; };
 		7E824CEA06387FAF00813072 /* SHLinkManagementPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */; };
 		7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */; };
+		81F651740A291004008FC8E7 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
+		81F651750A291004008FC8E7 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		81F651760A291004008FC8E7 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
+		81F6519C0A291145008FC8E7 /* SmackServicePlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F6519A0A291145008FC8E7 /* SmackServicePlugin.h */; };
+		81F6519D0A291145008FC8E7 /* SmackServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F6519B0A291145008FC8E7 /* SmackServicePlugin.m */; };
+		81F651AC0A29123D008FC8E7 /* SmackXMPPService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F651AA0A29123C008FC8E7 /* SmackXMPPService.h */; };
+		81F651AD0A29123D008FC8E7 /* SmackXMPPService.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F651AB0A29123C008FC8E7 /* SmackXMPPService.m */; };
+		81F654B10A29339F008FC8E7 /* SmackXMPPAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F654AF0A29339F008FC8E7 /* SmackXMPPAccount.h */; };
+		81F654B20A29339F008FC8E7 /* SmackXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F654B00A29339F008FC8E7 /* SmackXMPPAccount.m */; };
+		81F654BD0A29349C008FC8E7 /* SmackCocoaAdapter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F654BB0A29349C008FC8E7 /* SmackCocoaAdapter.h */; };
+		81F654BE0A29349C008FC8E7 /* SmackCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F654BC0A29349C008FC8E7 /* SmackCocoaAdapter.m */; };
+		81F6554F0A293DD0008FC8E7 /* Smack-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 81F6554E0A293DD0008FC8E7 /* Smack-Info.plist */; };
 		83B9216009E709AF008D8436 /* CTGradient.h in Headers */ = {isa = PBXBuildFile; fileRef = 83B9215209E709AE008D8436 /* CTGradient.h */; };
 		83B9216109E709AF008D8436 /* CTGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 83B9215309E709AE008D8436 /* CTGradient.m */; };
 		83B9216209E709AF008D8436 /* NSBezierPathAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 83B9215409E709AE008D8436 /* NSBezierPathAdditions.h */; };
@@ -1566,6 +1578,20 @@
 			remoteGlobalIDString = 34BD9DAF05314751000AB133;
 			remoteInfo = Adium.Framework;
 		};
+		81F6510B0A290FC8008FC8E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 81F6508C0A290FB6008FC8E7 /* Smack */;
+			remoteInfo = Smack;
+		};
+		81F6543B0A291D04008FC8E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81F651850A29103F008FC8E7 /* Smack Java Bridge.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 81F650720A290EE3008FC8E7 /* SmackBridge.jar */;
+			remoteInfo = "Smack Bridge";
+		};
 		B72537BD058C45CF004BA969 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1710,6 +1736,19 @@
 				4BF2EA3F067CB7A200743318 /* Emoticons in CopyFiles */,
 				4BF2EA40067CB7A200743318 /* Message Styles in CopyFiles */,
 				4BB1E493067F2EAC00D1DB86 /* Scripts in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		81F651810A29101E008FC8E7 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 15;
+			files = (
+				81F6519C0A291145008FC8E7 /* SmackServicePlugin.h in CopyFiles */,
+				81F651AC0A29123D008FC8E7 /* SmackXMPPService.h in CopyFiles */,
+				81F654B10A29339F008FC8E7 /* SmackXMPPAccount.h in CopyFiles */,
+				81F654BD0A29349C008FC8E7 /* SmackCocoaAdapter.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3426,6 +3465,18 @@
 		7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkEditorWindowController.m; sourceTree = "<group>"; };
 		7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SHLinkManagementPlugin.h; sourceTree = "<group>"; };
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
+		81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Smack.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		81F651030A290FB8008FC8E7 /* Smack-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Smack-Info.plist"; sourceTree = "<group>"; };
+		81F651850A29103F008FC8E7 /* Smack Java Bridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Smack Java Bridge.xcodeproj"; path = "Plugins/Smack Service/Smack Java Bridge.xcodeproj"; sourceTree = "<group>"; };
+		81F6519A0A291145008FC8E7 /* SmackServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackServicePlugin.h; path = "Plugins/Smack Service/SmackServicePlugin.h"; sourceTree = "<group>"; };
+		81F6519B0A291145008FC8E7 /* SmackServicePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackServicePlugin.m; path = "Plugins/Smack Service/SmackServicePlugin.m"; sourceTree = "<group>"; };
+		81F651AA0A29123C008FC8E7 /* SmackXMPPService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPService.h; path = "Plugins/Smack Service/SmackXMPPService.h"; sourceTree = "<group>"; };
+		81F651AB0A29123C008FC8E7 /* SmackXMPPService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPService.m; path = "Plugins/Smack Service/SmackXMPPService.m"; sourceTree = "<group>"; };
+		81F654AF0A29339F008FC8E7 /* SmackXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPAccount.h; path = "Plugins/Smack Service/SmackXMPPAccount.h"; sourceTree = "<group>"; };
+		81F654B00A29339F008FC8E7 /* SmackXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPAccount.m; path = "Plugins/Smack Service/SmackXMPPAccount.m"; sourceTree = "<group>"; };
+		81F654BB0A29349C008FC8E7 /* SmackCocoaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackCocoaAdapter.h; path = "Plugins/Smack Service/SmackCocoaAdapter.h"; sourceTree = "<group>"; };
+		81F654BC0A29349C008FC8E7 /* SmackCocoaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackCocoaAdapter.m; path = "Plugins/Smack Service/SmackCocoaAdapter.m"; sourceTree = "<group>"; };
+		81F6554E0A293DD0008FC8E7 /* Smack-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "Smack-Info.plist"; path = "Plugins/Smack Service/Smack-Info.plist"; sourceTree = "<group>"; };
 		83B9215209E709AE008D8436 /* CTGradient.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CTGradient.h; path = "Plugins/Hot Key/CTGradient.h"; sourceTree = "<group>"; };
 		83B9215309E709AE008D8436 /* CTGradient.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CTGradient.m; path = "Plugins/Hot Key/CTGradient.m"; sourceTree = "<group>"; };
 		83B9215409E709AE008D8436 /* NSBezierPathAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NSBezierPathAdditions.h; path = "Plugins/Hot Key/NSBezierPathAdditions.h"; sourceTree = "<group>"; };
@@ -3826,6 +3877,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		81F6508B0A290FB6008FC8E7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81F651740A291004008FC8E7 /* Adium.framework in Frameworks */,
+				81F651750A291004008FC8E7 /* AIUtilities.framework in Frameworks */,
+				81F651760A291004008FC8E7 /* JavaVM.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B72537BA058C4577004BA969 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3934,6 +3995,7 @@
 				34B323C009B9FEAC00029361 /* IRC Service.AdiumLibgaimPlugin */,
 				3417D26109C332B900FC413E /* Translator.AdiumPlugin */,
 				3485D68009EB416300232CC4 /* AdiumLibgaim.framework */,
+				81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3960,6 +4022,7 @@
 				34D8342B07CBE6A4006466F2 /* External Sources */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				81F651030A290FB8008FC8E7 /* Smack-Info.plist */,
 			);
 			name = CocAIMe2;
 			sourceTree = "<group>";
@@ -5917,6 +5980,8 @@
 		4BD672C406001B530049CAF7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				81F650820A290F6C008FC8E7 /* Smack */,
+				81F6554E0A293DD0008FC8E7 /* Smack-Info.plist */,
 				118C52BA091BF05B00219458 /* joscar */,
 				34B3241D09B9FF6900029361 /* IRC Libgaim Plugin */,
 				4B7F278605440C6200CDFC90 /* Gaim */,
@@ -6193,6 +6258,30 @@
 			);
 			name = "Link Management";
 			path = "Plugins/Link Management";
+			sourceTree = "<group>";
+		};
+		81F650820A290F6C008FC8E7 /* Smack */ = {
+			isa = PBXGroup;
+			children = (
+				81F651850A29103F008FC8E7 /* Smack Java Bridge.xcodeproj */,
+				81F6519A0A291145008FC8E7 /* SmackServicePlugin.h */,
+				81F6519B0A291145008FC8E7 /* SmackServicePlugin.m */,
+				81F651AA0A29123C008FC8E7 /* SmackXMPPService.h */,
+				81F651AB0A29123C008FC8E7 /* SmackXMPPService.m */,
+				81F654AF0A29339F008FC8E7 /* SmackXMPPAccount.h */,
+				81F654B00A29339F008FC8E7 /* SmackXMPPAccount.m */,
+				81F654BB0A29349C008FC8E7 /* SmackCocoaAdapter.h */,
+				81F654BC0A29349C008FC8E7 /* SmackCocoaAdapter.m */,
+			);
+			name = Smack;
+			sourceTree = "<group>";
+		};
+		81F654380A291D04008FC8E7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				81F6543C0A291D04008FC8E7 /* SmackBridge.jar */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		83B920F809E70778008D8436 /* Hot Key */ = {
@@ -7644,6 +7733,7 @@
 				349C31630867D199000BF883 /* PBXTargetDependency */,
 				11F5F42C09537E00007DCC49 /* PBXTargetDependency */,
 				F5B17CDF0A16C767004AE99E /* PBXTargetDependency */,
+				81F6510C0A290FC8008FC8E7 /* PBXTargetDependency */,
 			);
 			name = Adium;
 			productInstallPath = /;
@@ -7771,6 +7861,24 @@
 			productReference = 4B7F78B50597F42400162728 /* Adium Crash Reporter.app */;
 			productType = "com.apple.product-type.application";
 		};
+		81F6508C0A290FB6008FC8E7 /* Smack */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 81F651040A290FBB008FC8E7 /* Build configuration list for PBXNativeTarget "Smack" */;
+			buildPhases = (
+				81F650890A290FB6008FC8E7 /* Resources */,
+				81F6508A0A290FB6008FC8E7 /* Sources */,
+				81F6508B0A290FB6008FC8E7 /* Frameworks */,
+				81F651810A29101E008FC8E7 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Smack;
+			productName = Smack;
+			productReference = 81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 		B72537BB058C4577004BA969 /* Latex Plugin */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E1D085507450062B664 /* Build configuration list for PBXNativeTarget "Latex Plugin" */;
@@ -7838,6 +7946,10 @@
 					ProductGroup = 3423412809D1B67B009FF634 /* Products */;
 					ProjectRef = 3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */;
 				},
+				{
+					ProductGroup = 81F654380A291D04008FC8E7 /* Products */;
+					ProjectRef = 81F651850A29103F008FC8E7 /* Smack Java Bridge.xcodeproj */;
+				},
 			);
 			targets = (
 				347A219D09786C1700A30431 /* Adium with SystemVersionCheck */,
@@ -7859,6 +7971,7 @@
 				34B322F609B9FEAC00029361 /* IRC Service Libgaim Plugin */,
 				3417D25009C332B900FC413E /* Translator */,
 				F5B17CCF0A16C6AC004AE99E /* Plist Macros */,
+				81F6508C0A290FB6008FC8E7 /* Smack */,
 			);
 		};
 /* End PBXProject section */
@@ -7890,6 +8003,13 @@
 			fileType = wrapper.framework;
 			path = AIUtilities.framework;
 			remoteRef = 34D834DC07CBE7BB006466F2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		81F6543C0A291D04008FC8E7 /* SmackBridge.jar */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.jar;
+			path = SmackBridge.jar;
+			remoteRef = 81F6543B0A291D04008FC8E7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -8293,6 +8413,14 @@
 				4B215DBE0598A71400305B3C /* crashDuck.icns in Resources */,
 				4BB7670D05B31DBA00E89FA2 /* crashDuck.png in Resources */,
 				34E0E9B807CC4B3600A82198 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		81F650890A290FB6008FC8E7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81F6554F0A293DD0008FC8E7 /* Smack-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8997,6 +9125,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		81F6508A0A290FB6008FC8E7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81F6519D0A291145008FC8E7 /* SmackServicePlugin.m in Sources */,
+				81F651AD0A29123D008FC8E7 /* SmackXMPPService.m in Sources */,
+				81F654B20A29339F008FC8E7 /* SmackXMPPAccount.m in Sources */,
+				81F654BE0A29349C008FC8E7 /* SmackCocoaAdapter.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B72537B8058C4577004BA969 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -9127,6 +9266,11 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			targetProxy = 6C3E0151054445C000A4AE2E /* PBXContainerItemProxy */;
+		};
+		81F6510C0A290FC8008FC8E7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 81F6508C0A290FB6008FC8E7 /* Smack */;
+			targetProxy = 81F6510B0A290FC8008FC8E7 /* PBXContainerItemProxy */;
 		};
 		B72537BE058C45CF004BA969 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -10961,6 +11105,100 @@
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
+		81F651050A290FBB008FC8E7 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "Smack-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Smack;
+				WRAPPER_EXTENSION = AdiumPlugin;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		81F651060A290FBB008FC8E7 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "Smack-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Smack;
+				WRAPPER_EXTENSION = AdiumPlugin;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		81F651070A290FBB008FC8E7 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "Smack-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Smack;
+				WRAPPER_EXTENSION = AdiumPlugin;
+				ZERO_LINK = YES;
+			};
+			name = "Deployment-Debug";
+		};
+		81F651080A290FBB008FC8E7 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "Smack-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Smack;
+				WRAPPER_EXTENSION = AdiumPlugin;
+				ZERO_LINK = YES;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		DACF3EDF085574F6006BFB18 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -11862,6 +12100,17 @@
 				34B323BD09B9FEAC00029361 /* Deployment */,
 				34B323BE09B9FEAC00029361 /* Deployment-Debug */,
 				34B323BF09B9FEAC00029361 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		81F651040A290FBB008FC8E7 /* Build configuration list for PBXNativeTarget "Smack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				81F651050A290FBB008FC8E7 /* Development */,
+				81F651060A290FBB008FC8E7 /* Deployment */,
+				81F651070A290FBB008FC8E7 /* Deployment-Debug */,
+				81F651080A290FBB008FC8E7 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
