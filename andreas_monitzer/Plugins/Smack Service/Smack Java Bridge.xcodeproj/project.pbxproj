@@ -1,0 +1,209 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		81F650730A290EE9008FC8E7 /* SmackBridge.java in Sources */ = {isa = PBXBuildFile; fileRef = 010341B7FEEF030011DB9C8B /* SmackBridge.java */; };
+		81F650740A290EEF008FC8E7 /* smack.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81F650570A290C38008FC8E7 /* smack.jar */; };
+		81F650750A290EEF008FC8E7 /* smackx.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81F650580A290C38008FC8E7 /* smackx.jar */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		010341B7FEEF030011DB9C8B /* SmackBridge.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = SmackBridge.java; sourceTree = "<group>"; };
+		81F650570A290C38008FC8E7 /* smack.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = smack.jar; path = "../Smack Service/smack.jar"; sourceTree = SOURCE_ROOT; };
+		81F650580A290C38008FC8E7 /* smackx.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = smackx.jar; path = "../Smack Service/smackx.jar"; sourceTree = SOURCE_ROOT; };
+		81F650720A290EE3008FC8E7 /* SmackBridge.jar */ = {isa = PBXFileReference; explicitFileType = archive.jar; includeInIndex = 0; path = SmackBridge.jar; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		81F650700A290EE3008FC8E7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81F650740A290EEF008FC8E7 /* smack.jar in Frameworks */,
+				81F650750A290EEF008FC8E7 /* smackx.jar in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		00E6828FFEC88D1A11DB9C8B = {
+			isa = PBXGroup;
+			children = (
+				81F650570A290C38008FC8E7 /* smack.jar */,
+				81F650580A290C38008FC8E7 /* smackx.jar */,
+				010341B7FEEF030011DB9C8B /* SmackBridge.java */,
+				0120612AFEC8923411DB9C8B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0120612AFEC8923411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				81F650720A290EE3008FC8E7 /* SmackBridge.jar */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXJavaArchiveBuildPhase section */
+		81F6506F0A290EE3008FC8E7 /* JavaArchive */ = {
+			isa = PBXJavaArchiveBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXJavaArchiveBuildPhase section */
+
+/* Begin PBXLibraryTarget section */
+		81F650710A290EE3008FC8E7 /* Smack Bridge */ = {
+			isa = PBXLibraryTarget;
+			buildConfigurationList = 81F650790A290F03008FC8E7 /* Build configuration list for PBXLibraryTarget "Smack Bridge" */;
+			buildPhases = (
+				81F6506E0A290EE3008FC8E7 /* Sources */,
+				81F6506F0A290EE3008FC8E7 /* JavaArchive */,
+				81F650700A290EE3008FC8E7 /* Frameworks */,
+			);
+			dependencies = (
+			);
+			name = "Smack Bridge";
+			productInstallPath = /usr/local/lib;
+			productName = "Smack Bridge";
+			productReference = 81F650720A290EE3008FC8E7 /* SmackBridge.jar */;
+		};
+/* End PBXLibraryTarget section */
+
+/* Begin PBXProject section */
+		00E6828EFEC88D1A11DB9C8B /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 0AE31F6908BBAC2E002AF232 /* Build configuration list for PBXProject "Smack Java Bridge" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 00E6828FFEC88D1A11DB9C8B;
+			productRefGroup = 0120612AFEC8923411DB9C8B /* Products */;
+			projectDirPath = "";
+			targets = (
+				81F650710A290EE3008FC8E7 /* Smack Bridge */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		81F6506E0A290EE3008FC8E7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81F650730A290EE9008FC8E7 /* SmackBridge.java in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0AE31F6A08BBAC2E002AF232 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		0AE31F6B08BBAC2E002AF232 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		81F6507A0A290F03008FC8E7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				JAVA_ARCHIVE_CLASSES = YES;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_COMPILER_FLAGS = "";
+				JAVA_SOURCE_SUBDIR = .;
+				LIBRARY_STYLE = STATIC;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SmackBridge;
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		81F6507B0A290F03008FC8E7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				JAVA_ARCHIVE_CLASSES = YES;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_COMPILER_FLAGS = "";
+				JAVA_SOURCE_SUBDIR = .;
+				LIBRARY_STYLE = STATIC;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Smack Bridge";
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0AE31F6908BBAC2E002AF232 /* Build configuration list for PBXProject "Smack Java Bridge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0AE31F6A08BBAC2E002AF232 /* Debug */,
+				0AE31F6B08BBAC2E002AF232 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		81F650790A290F03008FC8E7 /* Build configuration list for PBXLibraryTarget "Smack Bridge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				81F6507A0A290F03008FC8E7 /* Debug */,
+				81F6507B0A290F03008FC8E7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 00E6828EFEC88D1A11DB9C8B /* Project object */;
+}
