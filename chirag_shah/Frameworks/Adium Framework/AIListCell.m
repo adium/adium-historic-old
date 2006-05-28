@@ -448,7 +448,11 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 #define IS_CONTACT (!IS_GROUP)
 
 	if([attribute isEqualToString:NSAccessibilityRoleAttribute])
+	{
 		value = IS_CONTACT ? @"AIContactListItem": @"AIContactListGroup";
+		if(IS_CONTACT)
+			AILog(@"TESTING - contact status");	//What is the contact's status?
+	}
 	else if([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute])
 		value = IS_CONTACT ? AILocalizedString(@"contact list item", /*comment*/ nil) : AILocalizedString(@"contact list group", /*comment*/ nil);
 	else if([attribute isEqualToString:NSAccessibilityValueAttribute])
