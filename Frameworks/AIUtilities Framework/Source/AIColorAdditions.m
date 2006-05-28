@@ -337,40 +337,6 @@ end:
 }
 
 //String representation: R,G,B[,A].
-
-//This method insists that the given str be a complete string representation.
-- (id) initWithStringRepresentation:(NSString *)str
-{
-	NSScanner *scanner = [NSScanner scannerWithString:str];
-	[scanner setCharactersToBeSkipped:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-
-	float red = 255.0, green = 255.0, blue = 255.0, alpha = 255.0;
-
-	if(![scanner scanFloat:&red])
-		goto scanFailed;
-	if(![scanner scanString:@"," intoString:NULL])
-		goto scanFailed;
-	if(![scanner scanFloat:&green])
-		goto scanFailed;
-	if(![scanner scanString:@"," intoString:NULL])
-		goto scanFailed;
-	if(![scanner scanFloat:&blue])
-		goto scanFailed;
-	if([scanner scanString:@"," intoString:NULL]) {
-		if(![scanner scanFloat:&alpha])
-			goto scanFailed;
-	}
-
-	if([scanner scanLocation] != [str length]) {
-	scanFailed:
-		return nil;
-	}
-	return [NSColor colorWithCalibratedRed:red   / 255.0
-	                                 green:green / 255.0
-	                                  blue:blue  / 255.0
-	                                 alpha:alpha / 255.0];
-}
-
 - (NSString *)stringRepresentation
 {
     NSColor	*tempColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
