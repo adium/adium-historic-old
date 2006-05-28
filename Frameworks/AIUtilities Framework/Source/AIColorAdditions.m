@@ -384,7 +384,7 @@ end:
 
 - (NSString *)stringRepresentation
 {
-    NSColor	*tempColor = [self colorUsingColorSpaceName:@"NSCalibratedRGBColorSpace"];
+    NSColor	*tempColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
 	float alphaComponent = [tempColor alphaComponent];
 
 	if (alphaComponent == 1.0) {
