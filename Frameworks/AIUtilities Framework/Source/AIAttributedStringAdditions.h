@@ -131,7 +131,7 @@
  */
 + (NSAttributedString *)stringWithData:(NSData *)inData;
 
-/*
+/*!
  * @brief Generate an NSAttributedString without attachments
  *
  * Generate an NSAttributedString without attachments by substituting their string value if possible (if the attachment responds to @selector(string)), and if not, substituting a characteristic string.
@@ -139,7 +139,7 @@
  */
 - (NSAttributedString *)attributedStringByConvertingAttachmentsToStrings;
 
-/*
+/*!
  * @brief Generate an NSAttributedString without links
  *
  * @return An autoreleased copy of the receiver with each link expanded to its URI.
