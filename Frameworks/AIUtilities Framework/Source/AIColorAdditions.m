@@ -397,7 +397,7 @@ end:
 
 - (NSColor *)representedColor
 {
-    unsigned int	r, g, b;
+    unsigned int	r = 255, g = 255, b = 255;
     unsigned int	a = 255;
 
 	const char *selfUTF8 = [self UTF8String];
@@ -405,16 +405,24 @@ end:
 	//format: r,g,b[,a]
 	//all components are decimal numbers 0..255.
 	r = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	++selfUTF8;
+	if(*selfUTF8 == ',') ++selfUTF8;
+	else                 goto scanFailed;
 	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	++selfUTF8;
+	if(*selfUTF8 == ',') ++selfUTF8;
+	else                 goto scanFailed;
 	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
 	if (*selfUTF8 == ',') {
 		++selfUTF8;
 		a = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+
+		if (*selfUTF8) goto scanFailed;
+	} else if (*selfUTF8 != '\0') {
+		goto scanFailed;
 	}
 
     return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:(a/255.0)] ;
+scanFailed:
+	return nil;
 }
 
 - (NSColor *)representedColorWithAlpha:(float)alpha
