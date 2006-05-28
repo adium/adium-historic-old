@@ -36,7 +36,6 @@ void getRGBFromHueLuminanceSaturation(float *r, float *g, float *b, float hue, f
 
 @interface NSColor (AIColorAdditions)
 
-+ (NSControlTint)currentControlTintSupportingJag;
 - (BOOL)equalToRGBColor:(NSColor *)inColor;
 - (BOOL)colorIsDark;
 - (BOOL)colorIsMedium;
