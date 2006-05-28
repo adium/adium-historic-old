@@ -154,7 +154,13 @@
  */
 - (NSAttributedString *)stringByAddingFormattingForLinks;
 
+/*!
+ * @brief Create a new NSAttributedString from an NSString
+ *
+ * @return An autoreleased <tt>NSAttributedString</tt>.
+ */
 + (NSAttributedString *)stringWithString:(NSString *)inString;
+
 @end
 
 
