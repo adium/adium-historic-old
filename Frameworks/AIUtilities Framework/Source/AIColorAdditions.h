@@ -24,7 +24,7 @@
 
 @interface NSColor (AIColorAdditions_RGBTxtFiles)
 
-+ (NSDictionary *)colorNamesDictionary
++ (NSDictionary *)colorNamesDictionary;
 
 @end
 

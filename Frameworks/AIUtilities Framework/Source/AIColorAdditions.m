@@ -358,7 +358,7 @@ end:
 		goto scanFailed;
 	if([scanner scanString:@"," intoString:NULL]) {
 		if(![scanner scanFloat:&alpha])
-			goto endOfScanning;
+			goto scanFailed;
 	}
 
 	if([scanner scanLocation] != [str length]) {
@@ -390,6 +390,8 @@ end:
 			(int)(alphaComponent * 255.0)];		
 	}
 }
+
+@end
 
 @implementation NSString (AIColorAdditions_RepresentingColors)
 
