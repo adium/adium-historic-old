@@ -12,20 +12,8 @@
  | You should have received a copy of the GNU General Public License along with this program; if not,
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
-int hexToInt(char hex);
-char intToHex(int digit);
 
-void getHueLuminanceSaturationFromRGB(float *hue, float *luminance, float *saturation, float r, float g, float b);
-void getRGBFromHueLuminanceSaturation(float *r, float *g, float *b, float hue, float luminance, float saturation);
-
-@interface NSString (AIColorAdditions)
-
-- (NSColor *)representedColor;
-- (NSColor *)representedColorWithAlpha:(float)alpha;
-
-@end
-
-@interface NSDictionary (AIColorAdditions)
+@interface NSDictionary (AIColorAdditions_RGBTxtFiles)
 
 //see /usr/share/emacs/(some version)/etc/rgb.txt for an example of such a file.
 //the pathname does not need to end in 'rgb.txt', but it must be a file in UTF-8 encoding.
@@ -34,27 +22,71 @@ void getRGBFromHueLuminanceSaturation(float *r, float *g, float *b, float hue, f
 
 @end
 
-@interface NSColor (AIColorAdditions)
+@interface NSColor (AIColorAdditions_RGBTxtFiles)
+
++ (NSDictionary *)colorNamesDictionary
+
+@end
+
+@interface NSColor (AIColorAdditions_Comparison)
 
 - (BOOL)equalToRGBColor:(NSColor *)inColor;
+
+@end
+
+@interface NSColor (AIColorAdditions_DarknessAndContrast)
+
 - (BOOL)colorIsDark;
 - (BOOL)colorIsMedium;
 - (NSColor *)darkenBy:(float)amount;
 - (NSColor *)darkenAndAdjustSaturationBy:(float)amount;
-- (NSString *)hexString;
-- (NSString *)stringRepresentation;
-- (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation;
-+ (NSColor *)colorWithCalibratedHue:(float)hue luminance:(float)luminance saturation:(float)saturation alpha:(float)alpha;
 - (NSColor *)colorWithInvertedLuminance;
 - (NSColor *)contrastingColor;
+
+@end
+
+void getHueLuminanceSaturationFromRGB(float *hue, float *luminance, float *saturation, float r, float g, float b);
+void getRGBFromHueLuminanceSaturation(float *r, float *g, float *b, float hue, float luminance, float saturation);
+
+@interface NSColor (AIColorAdditions_HLS)
+
+- (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation;
++ (NSColor *)colorWithCalibratedHue:(float)hue luminance:(float)luminance saturation:(float)saturation alpha:(float)alpha;
 - (NSColor *)adjustHue:(float)dHue saturation:(float)dSat brightness:(float)dBrit;
+
+@end
+
+@interface NSColor (AIColorAdditions_RepresentingColors)
+
+- (NSString *)hexString;
+
+- (id) initWithStringRepresentation:(NSString *)str;
+- (NSString *)stringRepresentation;
+
+@end
+
+int hexToInt(char hex);
+char intToHex(int digit);
+
+@interface NSString (AIColorAdditions_RepresentingColors)
+
+- (NSColor *)representedColor;
+- (NSColor *)representedColorWithAlpha:(float)alpha;
+
+@end
+
+@interface NSColor (AIColorAdditions_RandomColor)
 
 //these use arc4random() for their random numbers. there is no need to seed anything.
 //+randomColor returns alpha=1.0, whereas +randomColorWithAlpha will use a random alpha value.
 + (NSColor *)randomColor;
 + (NSColor *)randomColorWithAlpha;
 
-/*this accepts HTML/SVG colour names (e.g. 'blue', 'yellow') and
+@end
+
+@interface NSColor (AIColorAdditions_HTMLSVGCSSColors)
+
+/*this accepts HTML/SVG/CSS colour names (e.g. 'blue', 'yellow') and
  *	hex colour specifications (e.g. '#00f', '#ffff00').
  *it is the same as [colorWithHTMLString:str defaultColor:nil].
  */
