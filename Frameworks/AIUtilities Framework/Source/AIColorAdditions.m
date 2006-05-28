@@ -187,22 +187,6 @@ end:
 
 @implementation NSColor (AIColorAdditions)
 
-//Returns the current system control tint, supporting 10.2
-+ (NSControlTint)currentControlTintSupportingJag
-{
-    if ([self respondsToSelector:@selector(currentControlTint)]) {
-		return [self currentControlTint];
-    } else {
-		NSNumber	*tintNum = [[NSUserDefaults standardUserDefaults] objectForKey:@"AppleAquaColorVariant"];
-	
-		if (!tintNum || [tintNum intValue] == 1) {
-			return NSBlueControlTint;
-		} else {
-			return NSGraphiteControlTint;
-		}
-    }
-}
-
 + (NSDictionary *)colorNamesDictionary
 {
 	if (!RGBColorValues) {
