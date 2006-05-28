@@ -187,6 +187,9 @@ static int nextChatNumber = 0;
 		AIListObject	*listObject = [self listObject];
 		
 		if (listObject) [listObject setStatusObject:value forKey:key notify:notify];
+		NSAccessibilityPostNotification(key,@"KEY_TYPING");
+		AILog(@"Test: Status - KEY_TYPING");
+
 	}
 	
 	[super object:inObject didSetStatusObject:value forKey:key notify:notify];
@@ -664,5 +667,52 @@ static int nextChatNumber = 0;
 	//No need to continue to store the NSNumber
 	[self setStatusObject:nil forKey:KEY_CHAT_ERROR notify:NotifyNever];
 }
+
+//Status Accessibility--------------------------------------------------------------------------------------------------
+
+#pragma mark Status Accessibility
+
+/*
+ * @brief Inform NSAccessibility of Status
+ *
+ * @param type NSAccessibility
+ */
+ 
+- (NSArray *)accessibilityAttributeNames
+{
+	NSMutableArray *names = [[super accessibilityAttributeNames] mutableCopy];
+	[names addObject:NSAccessibilityValueAttribute];
+	[names addObject:NSAccessibilityTitleAttribute];
+	[names addObject:@"ClassName"];
+	[names autorelease];
+	return names;
+}
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	AITypingState typingState = [self integerStatusObjectForKey:KEY_TYPING];
+	AIListObject	*listObject = [self listObject];
+	id value;
+	
+	//Currently implements accessibility for Typing State
+
+	if([attribute isEqualToString:NSAccessibilityRoleAttribute] && typingState==AITyping )
+	{
+		value = @"AITyping";
+		AILog(@"Test: NSAccessibilityRoleAttribute - Typing");
+	}
+	else if([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute] && typingState==AITyping){
+		value = AILocalizedString(@"contact is typing", /*comment*/ nil);
+		AILog(@"Test: NSAccessibilityRoleDescriptionAttribute - Typing");
+	}
+	else if([attribute isEqualToString:NSAccessibilityValueAttribute] && typingState==AITyping)
+		value = listObject;
+	else if([attribute isEqualToString:@"ClassName"])
+		value = NSStringFromClass([self class]);
+	else
+		value = [super accessibilityAttributeValue:attribute];
+
+	return value;
+}
+
 
 @end
