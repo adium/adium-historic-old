@@ -7,7 +7,13 @@
 //
 
 #import "SmackXMPPService.h"
-
+#import "SmackXMPPAccount.h"
+#import "SmackXMPPAccountViewController.h"
+#import <AIUtilities/AIStringUtilities.h>
+#import <AIUtilities/AIStringAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import "AIAdium.h"
+#import "AIStatusController.h"
 
 @implementation SmackXMPPService
 
@@ -20,11 +26,8 @@
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return [SmackXMPPJoinChatViewController joinChatView];
-}
-
-- (BOOL)canCreateGroupChats{
-	return YES;
+//	return [SmackXMPPJoinChatViewController joinChatView];
+    return nil;
 }
 
 - (NSString *)serviceClass
@@ -79,10 +82,14 @@
 
 - (NSCharacterSet *)ignoredCharacters{
     // RFC 3454 Table B.1
-	return [NSCharacterSet characterSetWithCharactersInString:@"\xAD\x34F\x1806\x180B\x180C\x180D\x200B\x200C\x200D\x2060"
-        @"\xFE00\xFE01\xFE02\xFE03\xFE04\xFE05\xFE06\xFE07\xFE08\xFE09\xFE0A\xFE0B\xFE0C\xFE0D\xFE0E\xFE0F\xFEFF"];
+    unichar ignoredChars[] = {
+        0x00AD, 0x34F, 0x1806, 0x180B, 0x180C, 0x180D, 0x200B, 0x200C, 0x200D, 0x2060, 0xFE00, 0xFE01, 0xFE02,
+        0xFE03, 0xFE04, 0xFE05, 0xFE06, 0xFE07, 0xFE08, 0xFE09, 0xFE0A, 0xFE0B, 0xFE0C, 0xFE0D, 0xFE0E, 0xFE0F, 0xFEFF
+    };
+    
+	return [NSCharacterSet characterSetWithCharactersInString:[NSString stringWithBytes:ignoredChars length:sizeof(ignoredChars)/sizeof(unichar)
+                                                                               encoding:NSUnicodeStringEncoding]];
 }
-
 
 /*
  * Official spec (RFC 3920, Section 3.1):
@@ -110,11 +117,11 @@
 }
 
 - (NSString *)shortDescription {
-	return @"Smack-XMPP";
+	return @"XMPP";
 }
 
 - (NSString *)longDescription {
-	return @"Smack XMPP Account";
+	return @"XMPP Account";
 }
 
 - (NSString *)serviceID {

@@ -106,19 +106,19 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		0AE31F6A08BBAC2E002AF232 /* Debug */ = {
+		0AE31F6A08BBAC2E002AF232 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Debug;
+			name = Development;
 		};
-		0AE31F6B08BBAC2E002AF232 /* Release */ = {
+		0AE31F6B08BBAC2E002AF232 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Release;
+			name = Deployment;
 		};
-		81F6507A0A290F03008FC8E7 /* Debug */ = {
+		81F6507A0A290F03008FC8E7 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
@@ -130,10 +130,9 @@
 				JAVA_ARCHIVE_CLASSES = YES;
 				JAVA_ARCHIVE_TYPE = JAR;
 				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_COMPILER_FLAGS = "";
 				JAVA_SOURCE_SUBDIR = .;
 				LIBRARY_STYLE = STATIC;
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOL_FLAGS = "";
@@ -148,9 +147,9 @@
 					"-Wno-unknown-pragmas",
 				);
 			};
-			name = Debug;
+			name = Development;
 		};
-		81F6507B0A290F03008FC8E7 /* Release */ = {
+		81F6507B0A290F03008FC8E7 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
@@ -161,10 +160,9 @@
 				JAVA_ARCHIVE_CLASSES = YES;
 				JAVA_ARCHIVE_TYPE = JAR;
 				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_COMPILER_FLAGS = "";
 				JAVA_SOURCE_SUBDIR = .;
 				LIBRARY_STYLE = STATIC;
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOL_FLAGS = "";
@@ -180,7 +178,7 @@
 				);
 				ZERO_LINK = NO;
 			};
-			name = Release;
+			name = Deployment;
 		};
 /* End XCBuildConfiguration section */
 
@@ -188,20 +186,20 @@
 		0AE31F6908BBAC2E002AF232 /* Build configuration list for PBXProject "Smack Java Bridge" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0AE31F6A08BBAC2E002AF232 /* Debug */,
-				0AE31F6B08BBAC2E002AF232 /* Release */,
+				0AE31F6A08BBAC2E002AF232 /* Development */,
+				0AE31F6B08BBAC2E002AF232 /* Deployment */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Deployment;
 		};
 		81F650790A290F03008FC8E7 /* Build configuration list for PBXLibraryTarget "Smack Bridge" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				81F6507A0A290F03008FC8E7 /* Debug */,
-				81F6507B0A290F03008FC8E7 /* Release */,
+				81F6507A0A290F03008FC8E7 /* Development */,
+				81F6507B0A290F03008FC8E7 /* Deployment */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Deployment;
 		};
 /* End XCConfigurationList section */
 	};
