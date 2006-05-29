@@ -8,9 +8,18 @@
 
 #import <Cocoa/Cocoa.h>
 
+#import "AIObject.h"
 
-@interface SmackCocoaAdapter : NSObject {
+@protocol AdiumSmackBridgeDelegate;
+@class SmackXMPPConnection, SmackXMPPAccount;
 
+@interface SmackCocoaAdapter : AIObject <AdiumSmackBridgeDelegate> {
+    SmackXMPPConnection *connection;
 }
+
++ (void)initializeJavaVM;
+- (id)initForAccount:(SmackXMPPAccount *)inAccount;
+
+- (SmackXMPPConnection*)connection;
 
 @end

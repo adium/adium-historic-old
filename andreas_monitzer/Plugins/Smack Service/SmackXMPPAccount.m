@@ -7,24 +7,44 @@
 //
 
 #import "SmackXMPPAccount.h"
+#import "SmackCocoaAdapter.h"
+#import "ESDebugAILog.h"
+#import "SmackInterfaceDefinitions.h"
 
+#import <JavaVM/NSJavaVirtualMachine.h>
 
 @implementation SmackXMPPAccount
 
 - (void)initAccount {
 	[super initAccount];
+
+	static BOOL beganInitializingJavaVM = NO;
+	if (!beganInitializingJavaVM && [self enabled]) {
+		[SmackCocoaAdapter initializeJavaVM];
+		beganInitializingJavaVM = YES;
+	}
 }
 
 - (void)connect {
     [super connect];
+    AILog(@"XMPP connect");
+    
+    if(!smackAdapter)
+        smackAdapter = [[SmackCocoaAdapter alloc] initForAccount:self];
 }
 
 - (void)disconnect {
+    AILog(@"XMPP disconnect");
     [super disconnect];
+    
+    [[smackAdapter connection] close];
+    
+    [smackAdapter release];
+    smackAdapter = nil;
 }
 
 - (void)performRegisterWithPassword:(NSString *)inPassword {
-    [super performReigsterWithPassword:inPassword];
+    [super performRegisterWithPassword:inPassword];
 }
 
 - (NSString *)accountWillSetUID:(NSString *)proposedUID {
@@ -41,6 +61,49 @@
 
 - (NSString *)explicitFormattedUID {
 	return [super explicitFormattedUID];
+}
+
+- (NSString*)hostName {
+    NSString *host = [self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS];
+    if(!host || [host length] == 0) {
+        NSString *jid = [self explicitFormattedUID];
+        NSRange hostrange = [jid rangeOfString:@"@" options:NSLiteralSearch | NSBackwardsSearch];
+        if(hostrange.location != NSNotFound)
+            return [jid substringFromIndex:hostrange.location + 1];
+        else
+            return nil;
+    }
+    return host;
+}
+
+- (SmackConnectionConfiguration*)connectionConfiguration {
+    NSString *hostname = [self hostName];
+    if(!hostname)
+        return nil;
+    NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
+    int portnum;
+    if(!port)
+        portnum = [[self preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue]?5223:5222;
+    else
+        portnum = [port intValue];
+    
+    SmackConnectionConfiguration *conf = [NSClassFromString(@"org.jivesoftware.smack.ConnectionConfiguration") newWithSignature:@"(Ljava/lang/String;I)",hostname,portnum];
+    
+    [conf setCompressionEnabled:![[self preferenceForKey:@"disableCompression"
+                                                   group:GROUP_ACCOUNT_STATUS] boolValue]];
+    [conf setDebuggerEnabled:NO];
+    [conf setExpiredCertificatesCheckEnabled:![[self preferenceForKey:@"allowExpired"
+                                                                group:GROUP_ACCOUNT_STATUS] boolValue]];
+    [conf setNotMatchingDomainCheckEnabled:![[self preferenceForKey:@"allowNonMatchingHost"
+                                                              group:GROUP_ACCOUNT_STATUS] boolValue]];
+    [conf setSASLAuthenticationEnabled:![[self preferenceForKey:@"disableSASL"
+                                                          group:GROUP_ACCOUNT_STATUS] boolValue]];
+    [conf setSelfSignedCertificateEnabled:[[self preferenceForKey:@"allowSelfSigned"
+                                                            group:GROUP_ACCOUNT_STATUS] boolValue]];
+    [conf setTLSEnabled:![[self preferenceForKey:@"disableTLS"
+                                           group:GROUP_ACCOUNT_STATUS] boolValue]];
+    
+    return [conf autorelease];
 }
 
 #pragma mark Properties
@@ -84,7 +147,7 @@
 			KEY_ACCOUNT_DISPLAY_NAME,
 			@"Display Name",
 			@"StatusState",
-			KEY_USER_ICON,
+			KEY_USE_USER_ICON,
 			@"Enabled",
             @"TextProfile",
             @"DefaultUserIconFilename",

@@ -9,8 +9,13 @@
 #import <Cocoa/Cocoa.h>
 #import "AIAccount.h"
 
-@interface SmackXMPPAccount : AIAccount {
+@class SmackCocoaAdapter, SmackConnectionConfiguration;
 
+@interface SmackXMPPAccount : AIAccount {
+    SmackCocoaAdapter *smackAdapter;
 }
+
+- (NSString*)hostName;
+- (SmackConnectionConfiguration*)connectionConfiguration;
 
 @end

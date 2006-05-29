@@ -7,8 +7,158 @@
 //
 
 #import "SmackCocoaAdapter.h"
+#import "SmackInterfaceDefinitions.h"
+#import "SmackXMPPAccount.h"
+#import "ESDebugAILog.h"
 
+#import <JavaVM/NSJavaVirtualMachine.h>
+
+#define SMACKBRIDGE_JAR @"SmackBridge"
+#define SMACK_JAR @"smack"
+#define SMACKX_JAR @"smackx"
+
+extern CFRunLoopRef CFRunLoopGetMain(void);
+/* java.lang.Object */
+@interface NSObject (JavaObjectAdditions)
++ (id)getProperty:(NSString *)property;
+- (NSString *)toString;
+@end
 
 @implementation SmackCocoaAdapter
+
++ (void)initializeJavaVM
+{
+	[NSThread detachNewThreadSelector:@selector(prepareJavaVM)
+							 toTarget:self
+						   withObject:nil];
+}
+
+#pragma mark Java VM Preparation
++ (void)prepareJavaVM
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+	@synchronized(self) {
+		//Only one vm is needed for all accounts
+		static	NSJavaVirtualMachine	*vm = nil;
+		static BOOL		attachedVmToMainRunLoop = NO;
+		BOOL			onMainRunLoop = (CFRunLoopGetCurrent() == CFRunLoopGetMain());
+        
+		if (!vm) {
+			NSString	*smackJarPath, *smackxJarPath, *smackBridgeJarPath;
+			NSString	*classPath;
+            
+			smackBridgeJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:SMACKBRIDGE_JAR
+                                                                                  ofType:@"jar"
+                                                                             inDirectory:@"Java"];
+			smackJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:SMACK_JAR
+																			ofType:@"jar"
+																	   inDirectory:@"Java"];
+			smackxJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:SMACKX_JAR
+																			 ofType:@"jar"
+																		inDirectory:@"Java"];
+			
+			classPath = [NSString stringWithFormat:@"%@:%@:%@:%@",
+				[NSJavaVirtualMachine defaultClassPath],
+				smackJarPath, smackxJarPath, smackBridgeJarPath];
+			
+			vm = [[NSJavaVirtualMachine alloc] initWithClassPath:classPath];
+			
+			AILog(@"-[%@ prepareJavaVM]: Java %@ ; Smack %@. Using classPath: %@",
+				  self,
+				  [NSClassFromString(@"java.lang.System") getProperty:@"java.version"],
+				  [NSClassFromString(@"org.jivesoftware.smack.SmackConfiguration") getVersion],
+				  classPath);
+			
+			if (onMainRunLoop) {
+				attachedVmToMainRunLoop = YES;
+			}
+            
+		} else {
+			if  (!attachedVmToMainRunLoop && onMainRunLoop) {
+				[vm attachCurrentThread];
+				attachedVmToMainRunLoop = YES;
+			}
+		}
+        
+		if (onMainRunLoop &&
+			!NSClassFromString(@"org.jivesoftware.smack.SmackConfiguration")) {
+			NSMutableString	*msg = [NSMutableString string];
+			
+			[msg appendFormat:@"Java version %@ could not load SmackConfiguration\n",[NSClassFromString(@"java.lang.System") getProperty:@"java.version"]];
+            
+			NSRunCriticalAlertPanel(@"Fatal Java error",
+									msg,
+									nil,nil,nil);
+		}
+		
+#ifdef DEBUG_BUILD
+		[[NSNotificationCenter defaultCenter] performSelector:@selector(postNotificationName:object:)
+												   withObject:@"AttachedJavaVM"
+												   withObject:nil];
+#endif
+	}
+    
+	[pool release];
+}
+
+#pragma mark Main Adapter
+
+- (id)initForAccount:(SmackXMPPAccount *)inAccount {
+    if((self=[super init])) {
+        SmackConnectionConfiguration *conf = [inAccount connectionConfiguration];
+        if(conf) {
+            AdiumSmackBridge *bridge = [[NSClassFromString(@"net.adium.smackBridge.SmackBridge") alloc] init];
+            [bridge setDelegate:self];
+                
+            connection = [NSClassFromString(@"org.jivesoftware.smack.XMPPConnection") newWithSignature:@"(Lorg/jivesoftware/smack/ConnectionConfiguration;)",conf];
+            
+            [bridge registerConnection:connection];
+            [bridge release];
+        } else {
+            [self release];
+            return nil;
+        }
+    }
+    return self;
+}
+
+- (SmackXMPPConnection*)connection {
+    return connection;
+}
+
+- (void)dealloc {
+    [connection close];
+    [connection release];
+    [super dealloc];
+}
+
+- (void)setConnection:(NSNumber*)state {
+    AILog(@"XMPP Connection closed.");
+}
+
+- (void)setConnectionError:(NSString*)error {
+    AILog(@"XMPP Connection Error: %@",error);
+}
+
+- (void)setNewPacket:(SmackPacket*)packet {
+    AILog(@"XMPP: new packet!");
+}
+
+- (void)setRosterEntriesAdded:(JavaCollection*)addresses {
+    
+}
+
+- (void)setRosterEntriesUpdated:(JavaCollection*)addresses {
+    
+}
+
+- (void)setRosterEntriesDeleted:(JavaCollection*)addresses {
+    
+}
+
+- (void)setRosterPresenceChanged:(NSString*)xmppAddress {
+    AILog(@"XMPP: roster presence changed: \"%@\"",xmppAddress);
+}
 
 @end

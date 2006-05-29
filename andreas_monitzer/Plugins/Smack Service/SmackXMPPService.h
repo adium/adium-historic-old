@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
+#import "AIService.h"
 
 @interface SmackXMPPService : AIService {
 
