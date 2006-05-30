@@ -71,7 +71,7 @@
     menuItem_addContact = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_ELLIPSIS
 																				target:self
 																				action:@selector(addContact:)
-																		 keyEquivalent:@"+"];
+																		 keyEquivalent:@"d"];
     [[adium menuController] addMenuItem:menuItem_addContact toLocation:LOC_Contact_Manage];
 	
 	menuItem_addContactContext = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_TO_GROUP_ELLIPSIS
@@ -95,8 +95,7 @@
     menuItem_addGroup = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_GROUP_ELLIPSIS
 																			 target:self
 																			 action:@selector(addGroup:) 
-																	  keyEquivalent:@"+"];
-	[menuItem_addGroup setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+																	  keyEquivalent:@"D"];
     [[adium menuController] addMenuItem:menuItem_addGroup toLocation:LOC_Contact_Manage];
 
 	//Delete Selection
