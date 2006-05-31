@@ -58,7 +58,7 @@
                 "label_switchTabsWith" = NSTextField; 
                 "popUp_sendKeys" = NSPopUpButton; 
                 "popUp_tabKeys" = NSPopUpButton; 
-                shortcutRecorder = ShortcutRecorder; 
+                shortcutRecorder = SRRecorderControl; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 

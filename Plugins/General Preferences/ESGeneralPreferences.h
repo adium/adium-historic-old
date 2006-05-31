@@ -16,7 +16,7 @@
 
 #import <Adium/AIPreferencePane.h>
 
-@class ShortcutRecorder;
+@class SRRecorderControl;
 
 @interface ESGeneralPreferences : AIPreferencePane {
     IBOutlet	NSButton		*checkBox_messagesInTabs;
@@ -30,7 +30,7 @@
 	IBOutlet	NSTextField		*label_messagesTabs;
 	IBOutlet	NSTextField		*label_switchTabsWith;	
 
-    IBOutlet	ShortcutRecorder	*shortcutRecorder;		
+    IBOutlet	SRRecorderControl	*shortcutRecorder;		
 }
 
 @end
