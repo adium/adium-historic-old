@@ -31,7 +31,7 @@
 
 #define BLOCK_CONTACT				AILocalizedString(@"Block","Block Contact menu item")
 #define UNBLOCK_CONTACT				AILocalizedString(@"Unblock","Unblock Contact menu item")
-#define TOOLBAR_ITEM_IDENTIFIER		@"chatItem"
+#define TOOLBAR_ITEM_IDENTIFIER		@"BlockParticipants"
 #define TOOLBAR_BLOCK_ICON_KEY		@"Block"
 #define TOOLBAR_UNBLOCK_ICON_KEY	@"Unblock"
 
