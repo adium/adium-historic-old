@@ -77,6 +77,13 @@
 
 @end
 
+@interface JavaBoolean : NSObject {
+}
+
+- (BOOL)booleanValue;
+
+@end
+
 @interface JavaIterator : NSObject {
 }
 
@@ -359,13 +366,13 @@
 
 @protocol AdiumSmackBridgeDelegate
 
-- (void)setConnection:(NSNumber*)state;
+- (void)setConnection:(JavaBoolean*)state;
 - (void)setConnectionError:(NSString*)error;
 - (void)setNewPacket:(SmackPacket*)packet;
-- (void)setRosterEntriesAdded:(JavaCollection*)addresses;
+/*- (void)setRosterEntriesAdded:(JavaCollection*)addresses;
 - (void)setRosterEntriesUpdated:(JavaCollection*)addresses;
 - (void)setRosterEntriesDeleted:(JavaCollection*)addresses;
-- (void)setRosterPresenceChanged:(NSString*)xmppAddress;
+- (void)setRosterPresenceChanged:(NSString*)xmppAddress;*/
 
 @end
 

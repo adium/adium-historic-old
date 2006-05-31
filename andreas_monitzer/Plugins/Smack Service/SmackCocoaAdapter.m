@@ -43,7 +43,9 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
 		static	NSJavaVirtualMachine	*vm = nil;
 		static BOOL		attachedVmToMainRunLoop = NO;
 		BOOL			onMainRunLoop = (CFRunLoopGetCurrent() == CFRunLoopGetMain());
-        
+
+        NSLog(@"VM Thread = %p, main thread = %p",CFRunLoopGetCurrent(),CFRunLoopGetMain());
+
 		if (!vm) {
 			NSString	*smackJarPath, *smackxJarPath, *smackBridgeJarPath;
 			NSString	*classPath;
@@ -78,7 +80,8 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
 			if  (!attachedVmToMainRunLoop && onMainRunLoop) {
 				[vm attachCurrentThread];
 				attachedVmToMainRunLoop = YES;
-			}
+			} else
+                [vm attachCurrentThread];
 		}
         
 		if (onMainRunLoop &&
@@ -106,21 +109,26 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
 
 - (id)initForAccount:(SmackXMPPAccount *)inAccount {
     if((self=[super init])) {
-        SmackConnectionConfiguration *conf = [inAccount connectionConfiguration];
-        if(conf) {
-            AdiumSmackBridge *bridge = [[NSClassFromString(@"net.adium.smackBridge.SmackBridge") alloc] init];
-            [bridge setDelegate:self];
-                
-            connection = [NSClassFromString(@"org.jivesoftware.smack.XMPPConnection") newWithSignature:@"(Lorg/jivesoftware/smack/ConnectionConfiguration;)",conf];
-            
-            [bridge registerConnection:connection];
-            [bridge release];
-        } else {
-            [self release];
-            return nil;
-        }
+        account = inAccount;
+        [NSThread detachNewThreadSelector:@selector(runConnection:) toTarget:self withObject:inAccount];
     }
     return self;
+}
+
+- (void)runConnection:(SmackXMPPAccount*)inAccount {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    SmackConnectionConfiguration *conf = [inAccount connectionConfiguration];
+    if(conf) {
+        AdiumSmackBridge *bridge = [[NSClassFromString(@"net.adium.smackBridge.SmackBridge") alloc] init];
+        [bridge setDelegate:self];
+        
+        connection = [NSClassFromString(@"org.jivesoftware.smack.XMPPConnection") newWithSignature:@"(Lorg/jivesoftware/smack/ConnectionConfiguration;)",conf];
+        
+        [bridge registerConnection:connection];
+        [bridge release];
+    }
+    [pool release];
 }
 
 - (SmackXMPPConnection*)connection {
@@ -133,19 +141,28 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     [super dealloc];
 }
 
-- (void)setConnection:(NSNumber*)state {
-    AILog(@"XMPP Connection closed.");
+- (void)setConnection:(JavaBoolean*)state {
+    if([state booleanValue]) {
+        AILog(@"XMPP Connection established");
+        [account performSelectorOnMainThread:@selector(connected:) withObject:connection waitUntilDone:NO];
+    } else {
+        AILog(@"XMPP Connection closed.");
+        [account performSelectorOnMainThread:@selector(disconnected:) withObject:connection waitUntilDone:NO];
+    }
 }
 
 - (void)setConnectionError:(NSString*)error {
     AILog(@"XMPP Connection Error: %@",error);
+    [account performSelectorOnMainThread:@selector(connectionError:) withObject:error waitUntilDone:NO];
 }
 
 - (void)setNewPacket:(SmackPacket*)packet {
     AILog(@"XMPP: new packet!");
+    NSLog(@"Thread = %p, main thread = %p",CFRunLoopGetCurrent(),CFRunLoopGetMain());
+    [account performSelectorOnMainThread:@selector(receivePacket:) withObject:packet waitUntilDone:NO];
 }
 
-- (void)setRosterEntriesAdded:(JavaCollection*)addresses {
+/*- (void)setRosterEntriesAdded:(JavaCollection*)addresses {
     
 }
 
@@ -159,6 +176,6 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
 
 - (void)setRosterPresenceChanged:(NSString*)xmppAddress {
     AILog(@"XMPP: roster presence changed: \"%@\"",xmppAddress);
-}
+}*/
 
 @end
