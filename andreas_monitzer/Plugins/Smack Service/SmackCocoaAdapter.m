@@ -105,6 +105,12 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
 	[pool release];
 }
 
+#pragma mark utility functions
+
++ (id)staticObjectField:(NSString*)fieldname inJavaClass:(NSString*)className {
+    return [NSClassFromString(@"net.adium.smackBridge.SmackBridge") getStaticFieldFromClass:fieldname :className];
+}
+
 #pragma mark Main Adapter
 
 - (id)initForAccount:(SmackXMPPAccount *)inAccount {
@@ -120,10 +126,11 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     
     SmackConnectionConfiguration *conf = [inAccount connectionConfiguration];
     if(conf) {
+        BOOL useSSL = [[inAccount preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue];
         AdiumSmackBridge *bridge = [[NSClassFromString(@"net.adium.smackBridge.SmackBridge") alloc] init];
         [bridge setDelegate:self];
         
-        connection = [NSClassFromString(@"org.jivesoftware.smack.XMPPConnection") newWithSignature:@"(Lorg/jivesoftware/smack/ConnectionConfiguration;)",conf];
+        connection = [NSClassFromString(useSSL?@"org.jivesoftware.smack.SSLXMPPConnection":@"org.jivesoftware.smack.XMPPConnection") newWithSignature:@"(Lorg/jivesoftware/smack/ConnectionConfiguration;)",conf];
         
         [bridge registerConnection:connection];
         [bridge release];
@@ -156,10 +163,17 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     [account performSelectorOnMainThread:@selector(connectionError:) withObject:error waitUntilDone:NO];
 }
 
-- (void)setNewPacket:(SmackPacket*)packet {
-    AILog(@"XMPP: new packet!");
-    NSLog(@"Thread = %p, main thread = %p",CFRunLoopGetCurrent(),CFRunLoopGetMain());
-    [account performSelectorOnMainThread:@selector(receivePacket:) withObject:packet waitUntilDone:NO];
+- (void)setNewMessagePacket:(SmackPacket*)packet {
+    AILog(@"XMPP: new message packet!");
+    [account performSelectorOnMainThread:@selector(receiveMessagePacket:) withObject:packet waitUntilDone:NO];
+}
+- (void)setNewPresencePacket:(SmackPacket*)packet {
+    AILog(@"XMPP: new presence packet!");
+    [account performSelectorOnMainThread:@selector(receivePresencePacket:) withObject:packet waitUntilDone:NO];
+}
+- (void)setNewIQPacket:(SmackPacket*)packet {
+    AILog(@"XMPP: new IQ packet!");
+    [account performSelectorOnMainThread:@selector(receiveIQPacket:) withObject:packet waitUntilDone:NO];
 }
 
 /*- (void)setRosterEntriesAdded:(JavaCollection*)addresses {

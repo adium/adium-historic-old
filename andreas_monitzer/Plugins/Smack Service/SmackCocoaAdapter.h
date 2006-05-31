@@ -19,8 +19,10 @@
 }
 
 + (void)initializeJavaVM;
-- (id)initForAccount:(SmackXMPPAccount *)inAccount;
 
++ (id)staticObjectField:(NSString*)fieldname inJavaClass:(NSString*)className;
+
+- (id)initForAccount:(SmackXMPPAccount *)inAccount;
 - (SmackXMPPConnection*)connection;
 
 @end
