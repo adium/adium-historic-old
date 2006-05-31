@@ -777,8 +777,10 @@ Class LogViewerWindowControllerClass = NULL;
 //Close the log index
 - (void)closeLogIndex
 {
+	[logAccessLock lock];
     if (index_Content) CFRelease(index_Content);
     index_Content = nil;
+	[logAccessLock unlock];
 }
 
 //Delete the log index
@@ -966,8 +968,6 @@ Class LogViewerWindowControllerClass = NULL;
 				SKDocumentRef   document;
 				
 				//Re-index the log
-				[logAccessLock lock];
-
 				NSString            *fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:logPath];
 
 				document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:fullPath]);
@@ -991,7 +991,6 @@ Class LogViewerWindowControllerClass = NULL;
 				} else {
 					NSLog(@"Could not create document for %@ [%@]",fullPath,[NSURL fileURLWithPath:fullPath]);
 				}
-				[logAccessLock unlock];
 				
 				//Update our progress
 				logsIndexed++;
