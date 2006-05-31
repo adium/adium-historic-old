@@ -48,20 +48,7 @@
 
 @end
 
-@interface SmackMessage : NSObject {
-}
-
-- (NSString*)getBody;
-- (NSString*)getSubject;
-- (NSString*)getThread;
-- (SmackMessageType*)getType;
-- (void)setBody:(NSString*)body;
-- (void)setSubject:(NSString*)subject;
-- (void)setThread:(NSString*)thread;
-- (void)setType:(SmackMessageType*)type;
-- (NSString*)toXML;
-
-@end
+@class SmackMessage;
 
 @interface SmackChat : NSObject {
 }
@@ -235,7 +222,52 @@
 
 @end
 
-@interface SmackPresence : NSObject {
+@class SmackXMPPError;
+@protocol SmackPacketExtension;
+
+@interface SmackPacket : NSObject {
+}
+
+- (void)addExtension:(id<SmackPacketExtension,NSObject>)extension;
+- (void)deleteProperty:(NSString*)name;
+- (SmackXMPPError*)getError;
+- (id<SmackPacketExtension,NSObject>)getExtension:(NSString*)elementName :(NSString*)namespace;
+- (JavaIterator*)getExtensions;
+- (NSString*)getFrom;
+- (NSString*)getPacketID;
+- (id)getProperty:(NSString*)name;
+- (JavaIterator*)getPropertyNames;
+- (NSString*)getTo;
+- (void)removeExtension:(id<SmackPacketExtension,NSObject>)extension;
+
+- (void)setError:(SmackXMPPError*)error;
+- (void)setFrom:(NSString*)from;
+- (void)setPacketID:(NSString*)packetID;
+- (void)setProperty:(NSString*)name :(id)value; // some collisions!
+- (void)setTo:(NSString*)to;
+- (NSString*)toXML;
+
+@end
+
+@interface SmackMessage : SmackPacket {
+}
+
+- (NSString*)getBody;
+- (NSString*)getSubject;
+- (NSString*)getThread;
+- (SmackMessageType*)getType;
+- (void)setBody:(NSString*)body;
+- (void)setSubject:(NSString*)subject;
+- (void)setThread:(NSString*)thread;
+- (void)setType:(SmackMessageType*)type;
+- (NSString*)toXML;
+
+@end
+
+//#define NewSmackMessage(to,type) [NSClassFromString(@"org.jivesoftware.smack.packet.Message") newWithSignature:@"(Ljava/lang/String;Lorg/jivesoftware/smack/packet/Message$Type;)",to,[NSClassFromString(@"org.jivesoftware.smack.packet.Message.Type") fromString:type]]
+#define NewSmackMessage(to,type) [NSClassFromString(@"org.jivesoftware.smack.packet.Message") newWithSignature:@"(Ljava/lang/String;Lorg/jivesoftware/smack/packet/Message$Type;)",to,type]
+
+@interface SmackPresence : SmackPacket {
 }
 
 - (SmackPresenceMode*)getMode;
@@ -247,6 +279,24 @@
 - (void)setStatus:(NSString*)status;
 - (void)setType:(SmackPresenceType*)type;
 - (NSString*)toString;
+- (NSString*)toXML;
+
+@end
+
+@interface SmackIQType : NSObject {
+}
+
++ (SmackIQType*)fromString:(NSString*)type;
+- (NSString*)toString;
+
+@end
+
+@interface SmackIQ : SmackPacket {
+}
+
+- (NSString*)getChildElementXML;
+- (SmackIQType*)getType;
+- (void)setType:(SmackIQType*)type;
 - (NSString*)toXML;
 
 @end
@@ -290,8 +340,7 @@
 
 @end
 
-@interface SmackPacketExtension : NSObject { // this is an interface, only the classes implementing it are really useful
-}
+@protocol SmackPacketExtension
 
 - (NSString*)getElementName;
 - (NSString*)getNamespace;
@@ -305,30 +354,6 @@
 - (int)getCode;
 - (NSString*)getMessage;
 - (NSString*)toString;
-- (NSString*)toXML;
-
-@end
-
-@interface SmackPacket : NSObject {
-}
-
-- (void)addExtension:(SmackPacketExtension*)extension;
-- (void)deleteProperty:(NSString*)name;
-- (SmackXMPPError*)getError;
-- (SmackPacketExtension*)getExtension:(NSString*)elementName :(NSString*)namespace;
-- (JavaIterator*)getExtensions;
-- (NSString*)getFrom;
-- (NSString*)getPacketID;
-- (id)getProperty:(NSString*)name;
-- (JavaIterator*)getPropertyNames;
-- (NSString*)getTo;
-- (void)removeExtension:(SmackPacketExtension*)extension;
-
-- (void)setError:(SmackXMPPError*)error;
-- (void)setFrom:(NSString*)from;
-- (void)setPacketID:(NSString*)packetID;
-- (void)setProperty:(NSString*)name :(id)value; // some collisions!
-- (void)setTo:(NSString*)to;
 - (NSString*)toXML;
 
 @end
@@ -368,11 +393,9 @@
 
 - (void)setConnection:(JavaBoolean*)state;
 - (void)setConnectionError:(NSString*)error;
-- (void)setNewPacket:(SmackPacket*)packet;
-/*- (void)setRosterEntriesAdded:(JavaCollection*)addresses;
-- (void)setRosterEntriesUpdated:(JavaCollection*)addresses;
-- (void)setRosterEntriesDeleted:(JavaCollection*)addresses;
-- (void)setRosterPresenceChanged:(NSString*)xmppAddress;*/
+- (void)setNewMessagePacket:(SmackPacket*)packet;
+- (void)setNewPresencePacket:(SmackPacket*)packet;
+- (void)setNewIQPacket:(SmackPacket*)packet;
 
 @end
 
@@ -385,3 +408,16 @@
 
 @end
 
+#pragma mark Extensions
+
+@interface SmackXXHTMLExtension : NSObject <SmackPacketExtension> {
+}
+
+- (void)addBody:(NSString*)body;
+- (JavaIterator*)getBodies;
+- (int)getBodyCount;
+- (NSString*)getElementName;
+- (NSString*)getNamespace;
+- (NSString*)toXML;
+
+@end
