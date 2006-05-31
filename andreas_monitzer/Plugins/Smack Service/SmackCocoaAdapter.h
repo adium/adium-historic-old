@@ -15,6 +15,7 @@
 
 @interface SmackCocoaAdapter : AIObject <AdiumSmackBridgeDelegate> {
     SmackXMPPConnection *connection;
+    SmackXMPPAccount *account;
 }
 
 + (void)initializeJavaVM;

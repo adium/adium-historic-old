@@ -13,7 +13,7 @@ import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.*;
 import java.util.*;
 
-public class SmackBridge implements ConnectionListener, PacketListener, RosterListener, org.jivesoftware.smack.filter.PacketFilter {
+public class SmackBridge implements ConnectionListener, PacketListener, org.jivesoftware.smack.filter.PacketFilter {
     NSObject delegate;
     
     public SmackBridge() {
@@ -30,7 +30,9 @@ public class SmackBridge implements ConnectionListener, PacketListener, RosterLi
         conn.addConnectionListener(this);
         conn.addPacketListener(this,this);
 //        conn.getRoster().addRosterListener(this); // only works when already logged in
-        System.err.println("Connected to host " + conn.getHost());
+        
+//        System.err.println("Connected to host " + conn.getHost());
+        delegate.takeValueForKey(new Boolean(true),"connection");
     }
     
     public void connectionClosed() {
@@ -48,21 +50,4 @@ public class SmackBridge implements ConnectionListener, PacketListener, RosterLi
     public boolean accept(Packet packet) {
         return true;
     }
-    
-    public void entriesAdded(Collection addresses) {
-        delegate.takeValueForKey(addresses, "rosterEntriesAdded");
-    }
-    
-    public void entriesUpdated(Collection addresses) {
-        delegate.takeValueForKey(addresses, "rosterEntriesUpdated");
-    }
-    
-    public void entriesDeleted(Collection addresses) {
-        delegate.takeValueForKey(addresses, "rosterEntriesDeleted");
-    }
-    
-    public void presenceChanged(String XMPPAddress) {
-        delegate.takeValueForKey(XMPPAddress, "rosterPresenceChanged");
-    }
-
 }

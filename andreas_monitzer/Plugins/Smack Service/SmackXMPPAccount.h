@@ -9,13 +9,19 @@
 #import <Cocoa/Cocoa.h>
 #import "AIAccount.h"
 
-@class SmackCocoaAdapter, SmackConnectionConfiguration;
+@class SmackCocoaAdapter, SmackConnectionConfiguration, SmackXMPPConnection, SmackPacket;
 
 @interface SmackXMPPAccount : AIAccount {
     SmackCocoaAdapter *smackAdapter;
+    SmackXMPPConnection *connection;
 }
 
 - (NSString*)hostName;
 - (SmackConnectionConfiguration*)connectionConfiguration;
+
+- (void)connected:(SmackXMPPConnection*)conn;
+- (void)disconnected:(SmackXMPPConnection*)conn;
+- (void)connectionError:(NSString*)error;
+- (void)receivePacket:(SmackPacket*)packet;
 
 @end

@@ -10,6 +10,8 @@
 #import "SmackCocoaAdapter.h"
 #import "ESDebugAILog.h"
 #import "SmackInterfaceDefinitions.h"
+#import "AIAdium.h"
+#import "AIAccountController.h"
 
 #import <JavaVM/NSJavaVirtualMachine.h>
 
@@ -41,6 +43,39 @@
     
     [smackAdapter release];
     smackAdapter = nil;
+}
+
+- (void)connected:(SmackXMPPConnection*)conn {
+    connection = conn;
+    @try {
+        NSString *username = [self explicitFormattedUID];
+        NSRange userrange = [username rangeOfString:@"@" options:NSLiteralSearch | NSBackwardsSearch];
+        if(userrange.location != NSNotFound)
+            username = [username substringToIndex:userrange.location];
+        
+        [conn login:username
+                   :[[adium accountController] passwordForAccount:self]];
+        
+        [self didConnect];
+		[self silenceAllContactUpdatesForInterval:18.0];
+		[[adium contactController] delayListObjectNotificationsUntilInactivity];
+    }@catch(NSException *e) {
+        NSLog(@"exception raised! name = %@, reason = %@, userInfo = %@",[e name],[e reason],[[e userInfo] description]);
+        [self disconnect];
+    }
+}
+
+- (void)disconnected:(SmackXMPPConnection*)conn {
+    // waaaah
+    [self didDisconnect];
+}
+
+- (void)connectionError:(NSString*)error {
+    AILog(@"Got connection error \"%@\"!",error);
+}
+
+- (void)receivePacket:(SmackPacket*)packet {
+    AILog(@"got new packet:\n%@",[packet toXML]);
 }
 
 - (void)performRegisterWithPassword:(NSString *)inPassword {
