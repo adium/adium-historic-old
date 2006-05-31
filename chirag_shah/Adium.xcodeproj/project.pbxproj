@@ -3489,6 +3489,7 @@
 		A3C0431E08D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGaimGTalkAccountViewController.m; path = "Plugins/Gaim Service/AIGaimGTalkAccountViewController.m"; sourceTree = "<group>"; };
 		A3C0431F08D74D3100B48CE1 /* AIGTalkService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGTalkService.h; path = "Plugins/Gaim Service/AIGTalkService.h"; sourceTree = "<group>"; };
 		A3C0432008D74D3100B48CE1 /* AIGTalkService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGTalkService.m; path = "Plugins/Gaim Service/AIGTalkService.m"; sourceTree = "<group>"; };
+		ADD7E6FD0A2CE5C4001237D5 /* SoC-Changes */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = "SoC-Changes"; sourceTree = "<group>"; };
 		B023552908CBE84F008CDDDA /* SMContactsTable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SMContactsTable.h; sourceTree = "<group>"; };
 		B023552A08CBE84F008CDDDA /* SMContactsTable.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SMContactsTable.m; sourceTree = "<group>"; };
 		B023552B08CBE84F008CDDDA /* SMLoggerContact.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SMLoggerContact.h; sourceTree = "<group>"; };
@@ -3960,6 +3961,7 @@
 				34D8342B07CBE6A4006466F2 /* External Sources */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				ADD7E6FD0A2CE5C4001237D5 /* SoC-Changes */,
 			);
 			name = CocAIMe2;
 			sourceTree = "<group>";
