@@ -368,6 +368,8 @@
 	[menuItem_bold setTitle:AILocalizedString(@"Bold",nil)];
 	[menuItem_italic setTitle:AILocalizedString(@"Italic",nil)];
 	[menuItem_underline setTitle:AILocalizedString(@"Underline",nil)];
+	[menuItem_makeTextBigger setTitle:AILocalizedString(@"Make Text Bigger",nil)];
+	[menuItem_makeTextSmaller setTitle:AILocalizedString(@"Make Text Smaller",nil)];
 	[menuItem_showFonts setTitle:AILocalizedString(@"Show Fonts",nil)];
 	[menuItem_showColors setTitle:AILocalizedString(@"Show Colors",nil)];
 	[menuItem_copyStyle setTitle:AILocalizedString(@"Copy Style",nil)];

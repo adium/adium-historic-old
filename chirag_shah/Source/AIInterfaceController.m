@@ -43,6 +43,8 @@
 #import <Adium/AISortController.h>
 #import <Adium/KFTypeSelectTableView.h>
 
+#import "ESWebView.h"
+
 #define ERROR_MESSAGE_WINDOW_TITLE		AILocalizedString(@"Adium : Error","Error message window title")
 #define LABEL_ENTRY_SPACING				4.0
 #define DISPLAY_IMAGE_ON_RIGHT			NO
@@ -1371,6 +1373,13 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc] au
 	} else if (menuItem == menuItem_paste || menuItem == menuItem_pasteAndMatchStyle) {
 		return [[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType, NSPICTPboardType, NSPDFPboardType, nil]] != nil;
 	
+/*	} else if (menuItem == menuItem_makeTextBigger || menuItem == menuItem_makeTextSmaller) {
+			if ([responder isKindOfClass:[NSTextView class]]) {
+				return (menuItem == menuItem_makeTextBigger ? [webView  makeTextLarger] : [webView makeTextSmaller]); //Make it first responder
+			}
+			return NO;
+
+	}*/
 	} else if (menuItem == menuItem_showToolbar) {
 		[menuItem_showToolbar setTitle:([[keyWindow toolbar] isVisible] ? 
 										AILocalizedString(@"Hide Toolbar",nil) : 

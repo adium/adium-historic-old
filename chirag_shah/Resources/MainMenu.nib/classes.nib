@@ -56,6 +56,8 @@
                 "menuItem_closeChat" = NSMenuItem; 
                 "menuItem_customizeToolbar" = NSMenuItem; 
                 "menuItem_italic" = NSMenuItem; 
+                "menuItem_makeTextBigger" = NSMenuItem; 
+                "menuItem_makeTextSmaller" = NSMenuItem; 
                 "menuItem_paste" = NSMenuItem; 
                 "menuItem_pasteAndMatchStyle" = NSMenuItem; 
                 "menuItem_print" = NSMenuItem; 
@@ -97,6 +99,8 @@
                 "menuItem_hideAdium" = NSMenuItem; 
                 "menuItem_hideOthers" = NSMenuItem; 
                 "menuItem_italic" = NSMenuItem; 
+                "menuItem_makeTextBigger" = NSMenuItem; 
+                "menuItem_makeTextSmaller" = NSMenuItem; 
                 "menuItem_minimize" = NSMenuItem; 
                 "menuItem_pageSetup" = NSMenuItem; 
                 "menuItem_paste" = NSMenuItem; 
