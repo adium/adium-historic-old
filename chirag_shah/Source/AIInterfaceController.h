@@ -136,8 +136,6 @@ typedef enum {
     
     IBOutlet    NSMenuItem      *menuItem_bold;
     IBOutlet    NSMenuItem      *menuItem_italic;
-	IBOutlet	NSMenuItem		*menuItem_makeTextBigger;
-	IBOutlet	NSMenuItem		*menuItem_makeTextSmaller;
 
 	IBOutlet    NSMenuItem      *menuItem_showToolbar;
 	IBOutlet    NSMenuItem      *menuItem_customizeToolbar;
