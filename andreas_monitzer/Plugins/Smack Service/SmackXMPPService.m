@@ -32,7 +32,7 @@
 
 - (NSString *)serviceClass
 {
-	return @"XMPP (Smack)";
+	return @"XMPP";
 }
 
 - (AIServiceImportance)serviceImportance{
@@ -193,11 +193,9 @@
     return AILocalizedString(@"Jabber ID",nil);
 }
 
-- (NSImage *)defaultServiceIcon
+- (NSImage *)defaultServiceIconOfType:(AIServiceIconType)iconType
 {
-	static NSImage	*defaultServiceIcon = nil;
-	if (!defaultServiceIcon) defaultServiceIcon = [[NSImage imageNamed:@"jabber" forClass:[self class]] retain];
-	return defaultServiceIcon;
+    return [NSImage imageNamed:@"Safari"];
 }
 
 
