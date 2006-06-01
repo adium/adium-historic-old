@@ -168,15 +168,12 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
 }
 
 - (void)setNewMessagePacket:(SmackPacket*)packet {
-    AILog(@"XMPP: new message packet!");
     [account performSelectorOnMainThread:@selector(receiveMessagePacket:) withObject:packet waitUntilDone:NO];
 }
 - (void)setNewPresencePacket:(SmackPacket*)packet {
-    AILog(@"XMPP: new presence packet!");
     [account performSelectorOnMainThread:@selector(receivePresencePacket:) withObject:packet waitUntilDone:NO];
 }
 - (void)setNewIQPacket:(SmackPacket*)packet {
-    AILog(@"XMPP: new IQ packet!");
     [account performSelectorOnMainThread:@selector(receiveIQPacket:) withObject:packet waitUntilDone:NO];
 }
 

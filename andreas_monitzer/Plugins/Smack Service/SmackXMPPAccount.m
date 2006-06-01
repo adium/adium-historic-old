@@ -19,6 +19,7 @@
 #import "AIChatController.h"
 #import "AIContentController.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
+#import "AIStatusDefines.h"
 
 #import <JavaVM/NSJavaVirtualMachine.h>
 
@@ -27,6 +28,7 @@
 - (NSString*)jidUsername;
 - (NSString*)jidHost;
 - (NSString*)jidResource;
+- (NSString*)jidUserHost;
 
 @end
 
@@ -193,11 +195,56 @@
     }
 }
 - (void)receivePresencePacket:(SmackPresence*)packet {
-    AILog(@"got new presence packet:\n%@",[packet toXML]);
+    NSString *jid = [packet getFrom];
+    NSString *type = [[packet getType] toString];
+    NSString *status = [packet getStatus];
+    NSString *mode = [[packet getMode] toString];
+    
+    AIListContact *listContact = [self contactWithJID:[jid jidUserHost]];
+    AIStatusType statustype = AIOfflineStatusType;
+    
+    if([type isEqualToString:@"available"]) {
+        if(!mode || [mode isEqualToString:@"available"] || [mode isEqualToString:@"chat"])
+            statustype = AIAvailableStatusType;
+        else if([mode isEqualToString:@"invisible"])
+            statustype = AIInvisibleStatusType;
+        else
+            statustype = AIAwayStatusType;
+    } else if([type isEqualToString:@"unavailable"])
+        statustype = AIOfflineStatusType;
+    else if([type isEqualToString:@"subscribe"]) {
+        // ###
+        return;
+    } else if([type isEqualToString:@"subscribed"]) {
+        // ###
+        return;
+    } else if([type isEqualToString:@"unsubscribe"]) {
+        // ###
+        return;
+    } else if([type isEqualToString:@"unsubscribed"]) {
+        // ###
+        return;
+    }
+    
+//    NSLog(@"jid = \"%@\", mode = \"%@\", statustype = \"%d\"", jid, mode, statustype);
+	[listContact setOnline:statustype != AIOfflineStatusType
+                    notify:NotifyLater
+                  silently:silentAndDelayed];
+    
+    [listContact setStatusWithName:mode statusType:statustype notify:NotifyLater];
+    if(status) {
+        NSAttributedString *statusMessage = [[NSAttributedString alloc] initWithString:status attributes:nil];
+        [listContact setStatusMessage:statusMessage notify:NotifyLater];
+        [statusMessage release];
+    } else
+        [listContact setStatusMessage:nil notify:NotifyLater];
+    
+    //Apply the change
+	[listContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
+
 - (void)receiveIQPacket:(SmackIQ*)packet {
     if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.RosterPacket"]) {
-        NSLog(@"roster packet:\n%@",[packet toXML]);
         SmackRosterPacket *srp =(SmackRosterPacket*)packet;
         JavaIterator *iter = [srp getRosterItems];
         while([iter hasNext]) {
@@ -232,9 +279,10 @@
                 else
                     [listContact setRemoteGroupName:@"nobody knows the trouble I've seen"];
             }
-            NSLog(@"name = \"%@\"",name);
             [self setListContact:listContact toAlias:name];
         }
+//    } else if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@""]) {
+        
     }
 }
 
