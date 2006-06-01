@@ -148,8 +148,6 @@ typedef enum {
 	IBOutlet	NSMenuItem	*menuItem_showColors;
 	IBOutlet	NSMenuItem	*menuItem_copyStyle;
 	IBOutlet	NSMenuItem	*menuItem_pasteStyle;
-	IBOutlet	NSMenuItem	*menuItem_makeTextBigger;
-	IBOutlet	NSMenuItem	*menuItem_makeTextSmaller;
 	IBOutlet	NSMenuItem	*menuItem_writingDirection;
 	IBOutlet	NSMenuItem	*menuItem_rightToLeft;
 	

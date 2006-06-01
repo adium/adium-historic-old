@@ -16,6 +16,7 @@
 
 #import "AIInterfaceController.h"
 #import "AIPreferenceController.h"
+#import "AIMenuController.h"
 #import "AIWebKitMessageViewController.h"
 #import "AIWebKitMessageViewPlugin.h"
 #import "ESWebKitMessageViewPreferences.h"
@@ -40,6 +41,22 @@
  */
 - (void)installPlugin
 {
+
+	//Make Text Bigger
+	NSMenuItem	*menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:NSLocalizedString(@"Increase Text Size",@"Increase Text Size")
+									  action:@selector(makeTextLarger:)
+							   keyEquivalent:@"+"];
+	[[adium menuController] addMenuItem:[[menuItem copy] autorelease] toLocation:LOC_Format_Additions];
+	[menuItem release];
+	
+	//Make Text Smaller
+	NSMenuItem *menuItem_smaller = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:NSLocalizedString(@"Decrease Text Size",@"Decrease Text Size")
+									  action:@selector(makeTextSmaller:)
+							   keyEquivalent:@"-"];
+	[[adium menuController] addMenuItem:[menuItem_smaller copy] toLocation:LOC_Format_Additions];
+	[menuItem_smaller release];
+
+
 	styleDictionary = nil;
 	[adium createResourcePathForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT];
 
