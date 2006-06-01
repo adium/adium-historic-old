@@ -15,7 +15,6 @@
 #import <AIUtilities/AIImageViewWithImagePicker.h>
 #import <AIUtilities/AIDelayedTextField.h>
 #import <Adium/AIMessageEntryTextView.h>
-#import <Cocoa/Cocoa.h>
 
 @interface ESPersonalPreferences (PRIVATE)
 - (void)fireProfileChangesImmediately;

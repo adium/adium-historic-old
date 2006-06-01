@@ -23,7 +23,6 @@
 #import <Adium/AIContentContext.h>
 #import "SMSQLiteLoggerPlugin.h"
 #import "AICoreComponentLoader.h"
-#import <Cocoa/Cocoa.h>
 
 @interface DCMessageContextDisplayPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
