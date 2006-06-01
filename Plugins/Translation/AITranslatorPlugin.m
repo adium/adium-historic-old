@@ -32,6 +32,8 @@
 #import "AIMenuController.h"
 #import "AIContactController.h"
 #import <Adium/AIContentObject.h>
+#import "AIAdium.h" 
+#import <AIUtilities/AIStringUtilities.h> 
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import "AITranslatorOptionsWindowController.h"
