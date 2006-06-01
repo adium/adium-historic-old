@@ -234,7 +234,6 @@
             }
             NSLog(@"name = \"%@\"",name);
             [self setListContact:listContact toAlias:name];
-#warning this is broken: the contact list displays all entries without an alias!
         }
     }
 }
