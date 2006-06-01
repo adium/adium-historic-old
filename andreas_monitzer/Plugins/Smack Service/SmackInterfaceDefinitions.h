@@ -191,6 +191,22 @@
 
 @end
 
+@interface SmackRosterPacketItem : NSObject {
+}
+
+- (void)addGroupName:(NSString*)groupName;
+- (JavaIterator*)getGroupNames;
+- (SmackRosterPacketItemStatus*)getItemsStatus;
+- (SmackRosterPacketItemType*)getItemType;
+- (NSString*)getName;
+- (NSString*)getUser;
+- (void)removeGroupName:(NSString*)groupName;
+- (void)setItemType:(SmackRosterPacketItemType*)itemType;
+- (void)setName:(NSString*)name;
+- (NSString*)toXML;
+
+@end
+
 @interface SmackRosterGroup : NSObject {
 }
 
@@ -301,6 +317,16 @@
 
 @end
 
+@interface SmackRosterPacket : SmackIQ {
+}
+
+- (void)addRosterItem:(SmackRosterPacketItem*)item;
+- (NSString*)getChildElementXML;
+- (int)getRosterItemCount;
+- (JavaIterator*)getRosterItems;
+
+@end
+
 @interface SmackRoster : NSObject {
 }
 
@@ -405,6 +431,8 @@
 - (void)setDelegate:(id<AdiumSmackBridgeDelegate>)delegate;
 - (id<AdiumSmackBridgeDelegate>)delegate;
 - (void)registerConnection:(SmackXMPPConnection*)conn;
++ (id)getStaticFieldFromClass:(NSString*)fieldname :(NSString*)classname;
++ (BOOL)isInstanceOfClass:(id)object :(NSString*)classname;
 
 @end
 

@@ -21,6 +21,7 @@
 + (void)initializeJavaVM;
 
 + (id)staticObjectField:(NSString*)fieldname inJavaClass:(NSString*)className;
++ (BOOL)object:(id)obj isInstanceOfJavaClass:(NSString*)className;
 
 - (id)initForAccount:(SmackXMPPAccount *)inAccount;
 - (SmackXMPPConnection*)connection;

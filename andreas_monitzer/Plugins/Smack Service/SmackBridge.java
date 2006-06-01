@@ -63,4 +63,7 @@ public class SmackBridge implements ConnectionListener {
     public static Object getStaticFieldFromClass(String fieldname, String classname) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
         return Class.forName(classname).getField(fieldname).get(null);
     }
+    public static boolean isInstanceOfClass(Object instance, String classname) throws ClassNotFoundException {
+        return Class.forName(classname).isInstance(instance);
+    }
 }

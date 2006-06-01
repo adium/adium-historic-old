@@ -28,4 +28,6 @@
 - (void)receivePresencePacket:(SmackPresence*)packet;
 - (void)receiveIQPacket:(SmackIQ*)packet;
 
+- (void)setListContact:(AIListContact *)listContact toAlias:(NSString *)inAlias;
+
 @end
