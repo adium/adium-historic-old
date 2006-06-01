@@ -18,6 +18,7 @@
 #import "AIContentMessage.h"
 #import "AIChatController.h"
 #import "AIContentController.h"
+#import <AIUtilities/AIMutableOwnerArray.h>
 
 #import <JavaVM/NSJavaVirtualMachine.h>
 
@@ -130,6 +131,7 @@
         [self didConnect];
 		[self silenceAllContactUpdatesForInterval:18.0];
 		[[adium contactController] delayListObjectNotificationsUntilInactivity];
+        
     }@catch(NSException *e) {
         NSLog(@"exception raised! name = %@, reason = %@, userInfo = %@",[e name],[e reason],[[e userInfo] description]);
         // caused by invalid password
@@ -194,7 +196,47 @@
     AILog(@"got new presence packet:\n%@",[packet toXML]);
 }
 - (void)receiveIQPacket:(SmackIQ*)packet {
-    AILog(@"got new IQ packet:\n%@",[packet toXML]);
+    if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.RosterPacket"]) {
+        NSLog(@"roster packet:\n%@",[packet toXML]);
+        SmackRosterPacket *srp =(SmackRosterPacket*)packet;
+        JavaIterator *iter = [srp getRosterItems];
+        while([iter hasNext]) {
+            SmackRosterPacketItem *srpi = [iter next];
+            NSString *name = [srpi getName];
+            NSString *jid = [srpi getUser];
+            
+            AIListContact *listContact = [self contactWithJID:jid];
+            
+            if(![[listContact formattedUID] isEqualToString:jid])
+                [listContact setFormattedUID:jid notify:NotifyLater];
+            
+            // XMPP supports contacts that are in multiple groups, Adium does not.
+            // First I'm checking if the group it's in here locally is one of the groups
+            // the contact is in on the server. If this is not the case, I set the contact
+            // to be in the first group on the list.
+            JavaIterator *iter2 = [srpi getGroupNames];
+            NSString *storedgroupname = [listContact remoteGroupName];
+            if(storedgroupname) {
+                while([iter2 hasNext]) {
+                    NSString *groupname = [iter2 next];
+                    if([storedgroupname isEqualToString:groupname])
+                        break;
+                }
+                if(![iter2 hasNext])
+                    storedgroupname = nil;
+            }
+            if(!storedgroupname) {
+                iter2 = [srpi getGroupNames];
+                if([iter2 hasNext])
+                    [listContact setRemoteGroupName:[iter2 next]];
+                else
+                    [listContact setRemoteGroupName:@"nobody knows the trouble I've seen"];
+            }
+            NSLog(@"name = \"%@\"",name);
+            [self setListContact:listContact toAlias:name];
+#warning this is broken: the contact list displays all entries without an alias!
+        }
+    }
 }
 
 - (BOOL)sendMessageObject:(AIContentMessage *)inMessageObject {
@@ -263,7 +305,7 @@
     else
         portnum = [port intValue];
     
-    SmackConnectionConfiguration *conf = [NSClassFromString(@"org.jivesoftware.smack.ConnectionConfiguration") newWithSignature:@"(Ljava/lang/String;I)",hostname,portnum];
+    SmackConnectionConfiguration *conf = [NSClassFromString(@"org.jivesoftware.smack.ConnectionConfiguration") newWithSignature:@"(Ljava/lang/String;ILjava/lang/String;)",hostname,portnum,[[self explicitFormattedUID] jidHost]];
     
     [conf setCompressionEnabled:![[self preferenceForKey:@"disableCompression"
                                                    group:GROUP_ACCOUNT_STATUS] boolValue]];
@@ -418,6 +460,52 @@
 }
 
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize {
+}
+
+#pragma mark Buddy list
+- (void)setListContact:(AIListContact *)listContact toAlias:(NSString *)inAlias
+{
+	BOOL			changes = NO, nameChanges = NO;
+	
+	if (inAlias && ([inAlias length] == 0)) inAlias = nil;
+	
+	AIMutableOwnerArray	*displayNameArray = [listContact displayArrayForKey:@"Display Name"];
+	NSString			*oldDisplayName = [displayNameArray objectValue];
+	
+	//If the mutableOwnerArray's current value isn't identical to this alias, we should set it
+	if (![[displayNameArray objectWithOwner:self] isEqualToString:inAlias]) {
+		[displayNameArray setObject:inAlias
+						  withOwner:self
+					  priorityLevel:Low_Priority];
+		
+		//If this causes the object value to change, we need to request a manual update of the display name
+		if (oldDisplayName != [displayNameArray objectValue]) {
+			nameChanges = YES;
+		}
+	}
+	
+	if (![[listContact statusObjectForKey:@"Server Display Name"] isEqualToString:inAlias]) {
+		[listContact setStatusObject:inAlias
+							  forKey:@"Server Display Name"
+							  notify:NotifyLater];
+		changes = YES;
+	}
+	
+	//Apply any changes
+	[listContact notifyOfChangedStatusSilently:silentAndDelayed];
+	
+	if (nameChanges) {
+		//Notify of display name changes
+		[[adium contactController] listObjectAttributesChanged:listContact
+												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
+		
+		//XXX - There must be a cleaner way to do this alias stuff!  This works for now
+		//Request an alias change
+		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+												  object:listContact
+												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																					 forKey:@"Notify"]];
+	}
 }
 
 @end

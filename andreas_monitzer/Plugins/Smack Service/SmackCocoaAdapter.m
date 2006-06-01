@@ -111,6 +111,10 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     return [NSClassFromString(@"net.adium.smackBridge.SmackBridge") getStaticFieldFromClass:fieldname :className];
 }
 
++ (BOOL)object:(id)obj isInstanceOfJavaClass:(NSString*)className {
+    return [NSClassFromString(@"net.adium.smackBridge.SmackBridge") isInstanceOfClass:obj :className];
+}
+
 #pragma mark Main Adapter
 
 - (id)initForAccount:(SmackXMPPAccount *)inAccount {
