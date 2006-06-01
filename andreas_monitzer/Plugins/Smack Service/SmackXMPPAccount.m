@@ -20,6 +20,7 @@
 #import "AIContentController.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import "AIStatusDefines.h"
+#import "AIStatusController.h"
 
 #import <JavaVM/NSJavaVirtualMachine.h>
 
@@ -313,6 +314,31 @@
     return YES;
 }
 
+- (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage {
+    NSString *statusName = [statusState statusName];
+    NSString *statusField = nil;
+    if([statusName isEqualToString:STATUS_NAME_AVAILABLE])
+        statusField = @"AVAILABLE";
+    else if([statusName isEqualToString:STATUS_NAME_AWAY])
+        statusField = @"AWAY";
+    else if([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT])
+        statusField = @"CHAT";
+    else if([statusName isEqualToString:STATUS_NAME_DND])
+        statusField = @"DO_NOT_DISTURB";
+    else if([statusName isEqualToString:STATUS_NAME_EXTENDED_AWAY])
+        statusField = @"EXTENDED_AWAY";
+    else if([statusName isEqualToString:STATUS_NAME_INVISIBLE])
+        statusField = @"INVISIBLE";
+    else // shouldn't happen
+        statusField = @"AVAILABLE";
+    
+    SmackPresence *newPresence = NewSmackPresence([SmackCocoaAdapter staticObjectField:@"AVAILABLE" inJavaClass:@"org.jivesoftware.smack.packet.Presence$Type"], [statusMessage string], [SmackCocoaAdapter staticObjectField:statusField inJavaClass:@"org.jivesoftware.smack.packet.Presence$Mode"]);
+    
+    [connection sendPacket:newPresence];
+    [newPresence release];
+}
+
+
 - (void)performRegisterWithPassword:(NSString *)inPassword {
     [super performRegisterWithPassword:inPassword];
 }
@@ -425,10 +451,6 @@
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact {
     [super delayedUpdateContactStatus:inContact];
 }
-
-- (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage {
-}
-
 
 #pragma mark Messaging, Chatting, Strings
 
