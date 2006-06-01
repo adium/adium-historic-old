@@ -31,8 +31,6 @@
  */
 
 
-#import <Cocoa/Cocoa.h>
-
 @interface AIXMLAppender : NSObject {
 	NSFileHandle	*file;
 	NSString		*filePath;

@@ -5,8 +5,6 @@
 //  Created by Evan Schoenberg on 12/20/05.
 //
 
-#import <Cocoa/Cocoa.h>
-
 @interface AIMenuItemView : NSView {
 	NSMenu			*menu;
 	id				delegate;
