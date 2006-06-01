@@ -29,12 +29,24 @@
 				34CF9EEF085B98D400D87E37 /* ShellScript */,
 			);
 			dependencies = (
+				F53C25E20A2F997700F7B73D /* PBXTargetDependency */,
 				4B8E0BD8086A16D4009A7A4D /* PBXTargetDependency */,
 				4B8E0BDA086A16D4009A7A4D /* PBXTargetDependency */,
 				34611CCF09B67ABC00870036 /* PBXTargetDependency */,
 			);
 			name = "External Frameworks";
 			productName = "External Frameworks";
+		};
+		F53C25AE0A2F95F100F7B73D /* Setup Build Directory */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = F53C25AF0A2F95F600F7B73D /* Build configuration list for PBXAggregateTarget "Setup Build Directory" */;
+			buildPhases = (
+				F53C25AD0A2F95F100F7B73D /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Setup Build Directory";
+			productName = "Setup Build Directory";
 		};
 		F5B17CCF0A16C6AC004AE99E /* Plist Macros */ = {
 			isa = PBXAggregateTarget;
@@ -1590,6 +1602,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 4947F5BC0655E85200B791E5;
 			remoteInfo = Bonjour;
+		};
+		F53C25E10A2F997700F7B73D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F53C25AE0A2F95F100F7B73D /* Setup Build Directory */;
+			remoteInfo = "Setup Build Directory";
 		};
 		F5B17CDE0A16C767004AE99E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -7873,6 +7892,7 @@
 				34B322F609B9FEAC00029361 /* IRC Service Libgaim Plugin */,
 				3417D25009C332B900FC413E /* Translator */,
 				F5B17CCF0A16C6AC004AE99E /* Plist Macros */,
+				F53C25AE0A2F95F100F7B73D /* Setup Build Directory */,
 			);
 		};
 /* End PBXProject section */
@@ -8436,6 +8456,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Delete .svn, .DS_Store, and .h files\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' \\;\n\n####\n\n# Move English.lproj folders to en.lproj folders...\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -depth -type d -name 'English.lproj' -exec ditto \"{}\" \"{}/../en.lproj\" \\;\n\n# And delete the old English.lproj folders\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -depth -type d -name 'English.lproj' -exec rm -rf \"{}\" \\;";
+		};
+		F53C25AD0A2F95F100F7B73D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SOURCE=\"$SRCROOT/build\"\nif [ \"$SOURCE\" != \"$SYMROOT\" ] ; then\n\tif [ -e \"$SOURCE\" ] ; then\n\t\tif [ -L \"$SOURCE\" ] ; then\n\t\t\trm \"$SOURCE\"\n\t\telse\n\t\t\trm -Rf \"$SOURCE\"\n\t\tfi\n\tfi\n\tln -s \"$SYMROOT\" \"$SOURCE\"\nfi";
 		};
 		F5B17CCE0A16C6AC004AE99E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -9158,6 +9191,11 @@
 			isa = PBXTargetDependency;
 			target = 4947F5BC0655E85200B791E5 /* Bonjour */;
 			targetProxy = DA70F2B1080CAE8200C72D8B /* PBXContainerItemProxy */;
+		};
+		F53C25E20A2F997700F7B73D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F53C25AE0A2F95F100F7B73D /* Setup Build Directory */;
+			targetProxy = F53C25E10A2F997700F7B73D /* PBXContainerItemProxy */;
 		};
 		F5B17CDF0A16C767004AE99E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -11766,6 +11804,42 @@
 			};
 			name = "Deployment-Debug";
 		};
+		F53C25B00A2F95F600F7B73D /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Setup Build Directory";
+			};
+			name = Development;
+		};
+		F53C25B10A2F95F600F7B73D /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Setup Build Directory";
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		F53C25B20A2F95F600F7B73D /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "Setup Build Directory";
+			};
+			name = "Deployment-Debug";
+		};
+		F53C25B30A2F95F600F7B73D /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "Setup Build Directory";
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		F5B17CD80A16C6BA004AE99E /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -12010,6 +12084,17 @@
 				DADE8E3C085507450062B664 /* Deployment */,
 				DADE8E3D085507450062B664 /* Deployment-Debug */,
 				34BAF9900942598800689991 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		F53C25AF0A2F95F600F7B73D /* Build configuration list for PBXAggregateTarget "Setup Build Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F53C25B00A2F95F600F7B73D /* Development */,
+				F53C25B10A2F95F600F7B73D /* Deployment */,
+				F53C25B20A2F95F600F7B73D /* Deployment-Debug */,
+				F53C25B30A2F95F600F7B73D /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
