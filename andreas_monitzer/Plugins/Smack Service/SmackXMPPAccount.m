@@ -24,6 +24,9 @@
 
 #import <JavaVM/NSJavaVirtualMachine.h>
 
+#import <dns_sd.h> // for SRV lookup
+#import "ruli/ruli_parse.h"
+
 @interface NSString (JIDAdditions)
 
 - (NSString*)jidUsername;
@@ -367,18 +370,92 @@
     return host;
 }
 
-- (SmackConnectionConfiguration*)connectionConfiguration {
-    NSString *hostname = [self hostName];
-    if(!hostname)
-        return nil;
-    NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
-    int portnum;
-    if(!port)
-        portnum = [[self preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue]?5223:5222;
-    else
-        portnum = [port intValue];
+NSString *decodeDNSName(const unsigned char *input, unsigned len) {
+    NSMutableString *result = [NSMutableString string];
+    unsigned pos = 0;
+    while(input[pos] && pos < len) {
+        if(pos + input[pos] > len)
+            return nil; // invalid string (buffer overflow!)
+        NSString *element = [[NSString alloc] initWithBytesNoCopy:(void*)&input[pos+1] length:input[pos] encoding:NSASCIIStringEncoding freeWhenDone:NO];
+        [result appendFormat:@"%@.",element];
+        [element release];
+        pos += input[pos]+1;
+    }
+    return result;
+}
+
+struct SmackDNSServiceQueryRecordReplyContext {
+    NSString **host;
+    int *portnum;
+};
+
+static void SmackDNSServiceQueryRecordReply(
+ DNSServiceRef                       DNSServiceRef,
+ DNSServiceFlags                     flags,
+ uint32_t                            interfaceIndex,
+ DNSServiceErrorType                 errorCode,
+ const char                          *fullname,
+ uint16_t                            rrtype,
+ uint16_t                            rrclass,
+ uint16_t                            rdlen,
+ const void                          *rdata,
+ uint32_t                            ttl,
+ void                                *context
+ ) {
+    struct SmackDNSServiceQueryRecordReplyContext *ctx = (struct SmackDNSServiceQueryRecordReplyContext*)context;
+    ruli_srv_rdata_t srvdata;
     
-    SmackConnectionConfiguration *conf = [NSClassFromString(@"org.jivesoftware.smack.ConnectionConfiguration") newWithSignature:@"(Ljava/lang/String;ILjava/lang/String;)",hostname,portnum,[[self explicitFormattedUID] jidHost]];
+    if(ruli_parse_rr_srv(&srvdata, rdata, rdlen) == RULI_PARSE_RR_OK) {
+        *(ctx->host) = decodeDNSName(srvdata.target,srvdata.target_len);
+        *(ctx->portnum) = srvdata.port;
+    } else
+        *(ctx->portnum) = -1;
+}
+
+- (SmackConnectionConfiguration*)connectionConfiguration {
+    NSString *host = [self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS];
+    int portnum = 5222;
+    
+    if(!host || [host length] == 0) { // did the user not supply a host?
+        // do an SRV lookup
+        host = [[self explicitFormattedUID] jidHost];
+        char fullName[kDNSServiceMaxDomainName];
+        
+        DNSServiceConstructFullName(fullName,NULL,"_xmpp-client._tcp",[host cStringUsingEncoding:NSUTF8StringEncoding] /* ### punycode */);
+        
+        DNSServiceRef sdRef;
+        struct SmackDNSServiceQueryRecordReplyContext ctx = {
+            &host, &portnum
+        };
+        
+        if(DNSServiceQueryRecord(&sdRef, 0, 0, fullName,
+                                 kDNSServiceType_SRV, kDNSServiceClass_IN, SmackDNSServiceQueryRecordReply, &ctx) == kDNSServiceErr_NoError) {
+            DNSServiceProcessResult(sdRef);
+            DNSServiceRefDeallocate(sdRef);
+            
+            if(portnum==-1) {
+                NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
+                if(!port)
+                    portnum = [[self preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue]?5223:5222;
+                else
+                    portnum = [port intValue];
+            }
+        } else {
+            NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
+            if(!port)
+                portnum = [[self preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue]?5223:5222;
+            else
+                portnum = [port intValue];
+        }
+    } else {
+        NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
+        if(!port)
+            portnum = [[self preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue]?5223:5222;
+        else
+            portnum = [port intValue];
+    }
+    
+    SmackConnectionConfiguration *conf = [NSClassFromString(@"org.jivesoftware.smack.ConnectionConfiguration") newWithSignature:@"(Ljava/lang/String;ILjava/lang/String;)",host,portnum,[[self explicitFormattedUID] jidHost]];
     
     [conf setCompressionEnabled:![[self preferenceForKey:@"disableCompression"
                                                    group:GROUP_ACCOUNT_STATUS] boolValue]];
