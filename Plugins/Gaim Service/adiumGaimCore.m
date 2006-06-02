@@ -30,7 +30,6 @@
 
 #import "SLGaimCocoaAdapter.h"
 #import "AILibgaimPlugin.h"
-#import <Adium/AICorePluginLoader.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 
 #pragma mark Debug
@@ -95,24 +94,11 @@ static void load_all_plugins()
 #ifndef JOSCAR_SUPERCEDE_LIBGAIM
 	gaim_init_oscar_plugin();
 #endif
-	
-	//Next, load any external AdiumLibgaimPlugin bundles. We're delibrately leaking this array to keep the plugins in memory...
-	NSMutableArray	*pluginArray = [[NSMutableArray alloc] init];
-	
-	NSEnumerator	*enumerator;
-	NSString		*libgaimPluginPath;
-	
-	enumerator = [[[AIObject sharedAdiumInstance] allResourcesForName:@"Plugins"
-													   withExtensions:@"AdiumLibgaimPlugin"] objectEnumerator];
-	while ((libgaimPluginPath = [enumerator nextObject])) {
-		[AICorePluginLoader loadPluginAtPath:libgaimPluginPath
-							  confirmLoading:YES
-								 pluginArray:pluginArray];
-	}
-	
+
 	//Load each plugin
+	NSEnumerator			*enumerator = [[SLGaimCocoaAdapter libgaimPluginArray] objectEnumerator];
 	id <AILibgaimPlugin>	plugin;
-	enumerator = [pluginArray objectEnumerator];
+
 	while ((plugin = [enumerator nextObject])) {
 		if ([plugin respondsToSelector:@selector(installLibgaimPlugin)]) {
 			[plugin installLibgaimPlugin];

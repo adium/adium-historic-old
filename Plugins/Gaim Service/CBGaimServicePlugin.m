@@ -16,6 +16,7 @@
 
 #import "CBGaimServicePlugin.h"
 #import "GaimServices.h"
+#import "SLGaimCocoaAdapter.h"
 #import "AIPreferenceController.h"
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
@@ -55,6 +56,8 @@
 #ifndef MEANWHILE_NOT_AVAILABLE
 	MeanwhileService	= [[ESMeanwhileService alloc] init];
 #endif
+	
+	[SLGaimCocoaAdapter pluginDidLoad];
 }
 
 - (void)uninstallPlugin

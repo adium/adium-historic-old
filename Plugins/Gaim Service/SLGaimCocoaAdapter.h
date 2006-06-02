@@ -32,6 +32,8 @@
 }
 
 + (SLGaimCocoaAdapter *)sharedInstance;
++ (void)pluginDidLoad;
++ (NSArray *)libgaimPluginArray;
 
 - (void)addAdiumAccount:(CBGaimAccount *)adiumAccount;
 - (void)removeAdiumAccount:(CBGaimAccount *)adiumAccount;

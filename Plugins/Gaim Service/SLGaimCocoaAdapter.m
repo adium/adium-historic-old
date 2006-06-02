@@ -26,12 +26,14 @@
 #import "UndeclaredLibgaimFunctions.h"
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIAccount.h>
+#import <Adium/AICorePluginLoader.h>
 #import <Adium/AIService.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentTyping.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/NDRunLoopMessenger.h>
+
 #import <CoreFoundation/CFRunLoop.h>
 #import <CoreFoundation/CFSocket.h>
 #include <Libgaim/libgaim.h>
@@ -69,6 +71,8 @@ NSMutableDictionary *chatDict = nil;
 static NSAutoreleasePool *currentAutoreleasePool = nil;
 #define	AUTORELEASE_POOL_REFRESH	5.0
 
+static NSMutableArray	*libgaimPluginArray = nil;
+
 @implementation SLGaimCocoaAdapter
 
 /*!
@@ -83,6 +87,33 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	}
 
 	return sharedInstance;
+}
+
+/*
+ * @brief Plugin loaded
+ *
+ * Initialize each libgaim plugin.  These plugins should not do anything within libgaim itself; this should be done in
+ * -[plugin initLibgaimPlugin].
+ */
++ (void)pluginDidLoad
+{
+	NSEnumerator	*enumerator;
+	NSString		*libgaimPluginPath;
+
+	libgaimPluginArray = [[NSMutableArray alloc] init];
+	
+	enumerator = [[[AIObject sharedAdiumInstance] allResourcesForName:@"Plugins"
+													   withExtensions:@"AdiumLibgaimPlugin"] objectEnumerator];
+	while ((libgaimPluginPath = [enumerator nextObject])) {
+		[AICorePluginLoader loadPluginAtPath:libgaimPluginPath
+							  confirmLoading:YES
+								 pluginArray:libgaimPluginArray];
+	}
+}
+
++ (NSArray *)libgaimPluginArray
+{
+	return libgaimPluginArray;
 }
 
 //Register the account gaimside in the gaim thread
