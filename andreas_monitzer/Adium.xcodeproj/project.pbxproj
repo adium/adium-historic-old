@@ -1303,6 +1303,11 @@
 		81F659960A2A8BFB008FC8E7 /* SmackBridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F6543C0A291D04008FC8E7 /* SmackBridge.jar */; };
 		81F659BD0A2A8C81008FC8E7 /* smack.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F659B90A2A8C4E008FC8E7 /* smack.jar */; };
 		81F659BE0A2A8C81008FC8E7 /* smackx.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F659BA0A2A8C4E008FC8E7 /* smackx.jar */; };
+		81F666270A2FE2D2008FC8E7 /* ruli_parse.c in Sources */ = {isa = PBXBuildFile; fileRef = 81F666160A2FE2D0008FC8E7 /* ruli_parse.c */; };
+		81F666280A2FE2D2008FC8E7 /* ruli_parse.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F666170A2FE2D0008FC8E7 /* ruli_parse.h */; };
+		81F667820A2FF0F3008FC8E7 /* ruli_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 81F667800A2FF0F3008FC8E7 /* ruli_util.c */; };
+		81F667830A2FF0F3008FC8E7 /* ruli_util.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F667810A2FF0F3008FC8E7 /* ruli_util.h */; };
+		81F6679A0A2FF15A008FC8E7 /* ruli_limits.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F667990A2FF15A008FC8E7 /* ruli_limits.h */; };
 		83B9216009E709AF008D8436 /* CTGradient.h in Headers */ = {isa = PBXBuildFile; fileRef = 83B9215209E709AE008D8436 /* CTGradient.h */; };
 		83B9216109E709AF008D8436 /* CTGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 83B9215309E709AE008D8436 /* CTGradient.m */; };
 		83B9216209E709AF008D8436 /* NSBezierPathAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 83B9215409E709AE008D8436 /* NSBezierPathAdditions.h */; };
@@ -1760,6 +1765,9 @@
 				81F654BD0A29349C008FC8E7 /* SmackCocoaAdapter.h in CopyFiles */,
 				81F656710A2A5458008FC8E7 /* SmackXMPPAccountViewController.h in CopyFiles */,
 				81F658170A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h in CopyFiles */,
+				81F666280A2FE2D2008FC8E7 /* ruli_parse.h in CopyFiles */,
+				81F667830A2FF0F3008FC8E7 /* ruli_util.h in CopyFiles */,
+				81F6679A0A2FF15A008FC8E7 /* ruli_limits.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3505,6 +3513,11 @@
 		81F658160A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackInterfaceDefinitions.h; path = "Plugins/Smack Service/SmackInterfaceDefinitions.h"; sourceTree = "<group>"; };
 		81F659B90A2A8C4E008FC8E7 /* smack.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = smack.jar; path = "Plugins/Smack Service/smack.jar"; sourceTree = "<group>"; };
 		81F659BA0A2A8C4E008FC8E7 /* smackx.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = smackx.jar; path = "Plugins/Smack Service/smackx.jar"; sourceTree = "<group>"; };
+		81F666160A2FE2D0008FC8E7 /* ruli_parse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_parse.c; sourceTree = "<group>"; };
+		81F666170A2FE2D0008FC8E7 /* ruli_parse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_parse.h; sourceTree = "<group>"; };
+		81F667800A2FF0F3008FC8E7 /* ruli_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_util.c; sourceTree = "<group>"; };
+		81F667810A2FF0F3008FC8E7 /* ruli_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_util.h; sourceTree = "<group>"; };
+		81F667990A2FF15A008FC8E7 /* ruli_limits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_limits.h; sourceTree = "<group>"; };
 		83B9215209E709AE008D8436 /* CTGradient.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CTGradient.h; path = "Plugins/Hot Key/CTGradient.h"; sourceTree = "<group>"; };
 		83B9215309E709AE008D8436 /* CTGradient.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CTGradient.m; path = "Plugins/Hot Key/CTGradient.m"; sourceTree = "<group>"; };
 		83B9215409E709AE008D8436 /* NSBezierPathAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NSBezierPathAdditions.h; path = "Plugins/Hot Key/NSBezierPathAdditions.h"; sourceTree = "<group>"; };
@@ -6289,6 +6302,7 @@
 		81F650820A290F6C008FC8E7 /* Smack */ = {
 			isa = PBXGroup;
 			children = (
+				81F6660B0A2FE2CF008FC8E7 /* ruli */,
 				81F651850A29103F008FC8E7 /* Smack Java Bridge.xcodeproj */,
 				81F6519A0A291145008FC8E7 /* SmackServicePlugin.h */,
 				81F6519B0A291145008FC8E7 /* SmackServicePlugin.m */,
@@ -6315,6 +6329,19 @@
 				81F6543C0A291D04008FC8E7 /* SmackBridge.jar */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		81F6660B0A2FE2CF008FC8E7 /* ruli */ = {
+			isa = PBXGroup;
+			children = (
+				81F667800A2FF0F3008FC8E7 /* ruli_util.c */,
+				81F667810A2FF0F3008FC8E7 /* ruli_util.h */,
+				81F666160A2FE2D0008FC8E7 /* ruli_parse.c */,
+				81F666170A2FE2D0008FC8E7 /* ruli_parse.h */,
+				81F667990A2FF15A008FC8E7 /* ruli_limits.h */,
+			);
+			name = ruli;
+			path = "Plugins/Smack Service/ruli";
 			sourceTree = "<group>";
 		};
 		83B920F809E70778008D8436 /* Hot Key */ = {
@@ -9169,6 +9196,8 @@
 				81F654B20A29339F008FC8E7 /* SmackXMPPAccount.m in Sources */,
 				81F654BE0A29349C008FC8E7 /* SmackCocoaAdapter.m in Sources */,
 				81F656720A2A5458008FC8E7 /* SmackXMPPAccountViewController.m in Sources */,
+				81F666270A2FE2D2008FC8E7 /* ruli_parse.c in Sources */,
+				81F667820A2FF0F3008FC8E7 /* ruli_util.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11156,6 +11185,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -11181,6 +11211,7 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
@@ -11203,6 +11234,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
@@ -11225,6 +11257,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";

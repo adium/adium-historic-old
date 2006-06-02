@@ -417,6 +417,26 @@
 
 @end
 
+@interface SmackDNSUtilHostAddress : NSObject {
+}
+
+- (NSString*)getHost;
+- (int)getPort;
+- (NSString*)toString;
+- (BOOL)equals:(id)o;
+
+@end
+
+@interface SmackDNSUtil : NSObject {
+}
+
++ (SmackDNSUtilHostAddress*)resolveXMPPDomain:(NSString*)domain;
++ (SmackDNSUtilHostAddress*)resolveXMPPServerDomain:(NSString*)domain;
+
+@end
+
+#define SmackResolveXMPPDomain(domain) [NSClassFromString(@"org.jivesoftware.smack.util.DNSUtil") resolveXMPPDomain:domain]
+
 @protocol AdiumSmackBridgeDelegate
 
 - (void)setConnection:(JavaBoolean*)state;
