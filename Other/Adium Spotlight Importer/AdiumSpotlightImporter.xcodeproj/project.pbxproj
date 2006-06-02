@@ -390,7 +390,7 @@
 				11BD7C1A09BBCD01006B26FD /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Deployment;
+			defaultConfigurationName = Development;
 		};
 		70138C880896BE9A00968C2F /* Build configuration list for PBXProject "AdiumSpotlightImporter" */ = {
 			isa = XCConfigurationList;
@@ -402,7 +402,7 @@
 				11BD7C1B09BBCD01006B26FD /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Deployment;
+			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
 	};
