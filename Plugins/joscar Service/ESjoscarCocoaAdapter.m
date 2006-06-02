@@ -492,6 +492,17 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		 setDirectIMConnected:NO];
 }
 
+
+/*
+ * @brief We are leaving a one-on-one chat
+ *
+ * Close a direct IM if there is one
+ */
+- (void)leaveChatWithUID:(NSString *)inUID
+{
+#warning Close any existing direct IM
+}
+
 /*
  * @brief Send a message to a one-on-one chat
  */
@@ -643,7 +654,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
  * @brief Received a message in a conversation
  */
 - (void)setGotMessage:(HashMap *)userInfo
-{	
+{
 	Conversation	*conversation = [userInfo get:@"Conversation"];
 	MessageInfo		*messageInfo = [userInfo get:@"MessageInfo"];
 	Message			*message = [messageInfo getMessage];
@@ -715,7 +726,54 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[accountProxy chatWithUID:[[[sn getNormal] copy] autorelease]
 					 gotError:[NSNumber numberWithInt:errorType]];
 }
-				   
+
+- (void)setSendAutomaticallyFailed:(HashMap *)userInfo
+{
+	//This is never called as far as I can tell.... -eds
+	NSLog(@"setSendAutomaticallyFailed: %@",userInfo);	
+
+	id<Collection>	triedConversations = [userInfo get:@"Set<Conversation>"];
+	id<Iterator>	iterator = [triedConversations iterator];
+	Conversation	*conversation = ([iterator hasNext] ? [iterator next] : nil);
+
+//	Message			*message = [userInfo get:@"Message"];
+	Screenname		*sn = [conversation getBuddy];
+	AIChatErrorType errorType = AIChatMessageSendingUserNotAvailable;
+
+	[accountProxy chatWithUID:[[[sn getNormal] copy] autorelease]
+					 gotError:[NSNumber numberWithInt:errorType]];
+}
+
+- (void)setGotOtherEvent:(HashMap *)userInfo
+{
+	Conversation			*conversation = [userInfo get:@"Conversation"];
+	ConversationEventInfo	*eventInfo = [userInfo get:@"ConversationEventInfo"];
+	
+	NSLog(@"%@ - %@",eventInfo, NSStringFromClass([eventInfo class]));
+	if ([eventInfo isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ImSendFailedEvent")]) {
+		NSLog(@"%@: error %i",eventInfo,[eventInfo getErrorCode]);
+		AIChatErrorType errorType;
+
+		switch ([(ImSendFailedEvent *)eventInfo getErrorCode]) {
+			case 4:
+				errorType = AIChatMessageSendingUserNotAvailable;
+				break;
+			default:
+				errorType = AIChatUnknownError;
+				break;
+		}
+		
+		NSLog(@"error with %@",[[[[conversation getBuddy] getNormal] copy] autorelease]);
+		[accountProxy chatWithUID:[[[[conversation getBuddy] getNormal] copy] autorelease]
+						 gotError:[NSNumber numberWithInt:errorType]];
+	}
+}
+
+- (void)setSentOtherEvent:(HashMap *)userInfo
+{
+
+}
+
 #pragma mark File transfer
 - (void)setNewIncomingFileTransfer:(HashMap *)userInfo
 {
@@ -1646,7 +1704,6 @@ Date* javaDateFromDate(NSDate *date)
 	
 	AILog(@"Left %@; %@ remaining group chats",name, joscarChatsDict);
 }
-
 
 #pragma mark Utilities
 

@@ -594,8 +594,12 @@
 
 - (BOOL)closeChat:(AIChat*)chat
 {
-	if ([chat isGroupChat])
+	if ([chat isGroupChat]) {
 		[joscarAdapter leaveGroupChatWithName:[chat name]];
+	} else {
+		[joscarAdapter leaveChatWithUID:[[chat listObject] UID]];
+	}
+
     return YES;
 }
 

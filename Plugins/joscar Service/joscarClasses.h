@@ -340,6 +340,19 @@
 @end
 
 @interface ConversationEventInfo : NSObject {}
+- (Screenname *)getFrom;
+- (Screenname *)getTo;
+@end
+
+@interface SendFailedEvent : ConversationEventInfo {}
+- (Message *)getMessage;
+@end
+
+/*
+ * net.kano.joustsim.oscar.oscar.service.icbm.ImSendFailedEvent
+ */
+@interface ImSendFailedEvent : SendFailedEvent {}
+- (int)getErrorCode;
 @end
 
 /*

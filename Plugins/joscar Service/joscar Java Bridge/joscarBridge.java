@@ -465,7 +465,11 @@ SecuridProvider
 	
 	public void sendAutomaticallyFailed(IcbmService service, Message message,
 										Set<Conversation> triedConversations) {
-		// this should do something
+		HashMap map = new HashMap();
+		map.put("Message", message);
+		map.put("Set<Conversation>", triedConversations);
+		
+		sendDelegateMessageWithMap("SendAutomaticallyFailed", map);		
 	}
 	
 	/* ImConversationListener (extends ConversationListener, TypingListener) */
@@ -511,11 +515,19 @@ SecuridProvider
 	}
 	
     public void gotOtherEvent(Conversation conversation, ConversationEventInfo event) {
+		HashMap map = new HashMap();
+		map.put("Conversation", conversation);
+		map.put("ConversationEventInfo", event);
 		
+		sendDelegateMessageWithMap("GotOtherEvent", map);		
 	}
 	
     public void sentOtherEvent(Conversation conversation, ConversationEventInfo event) {
+		HashMap map = new HashMap();
+		map.put("Conversation", conversation);
+		map.put("ConversationEventInfo", event);
 		
+		sendDelegateMessageWithMap("SentOtherEvent", map);
 	}
 
 	public void missedMessages(ImConversation conv, MissedImInfo info) {
