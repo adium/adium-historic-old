@@ -102,6 +102,10 @@
 	return result;
 }
 
+- (NSMutableSet *)allKeysMutableSet {
+	return [NSMutableSet setWithArray:[self allKeys]];
+}
+
 @end
 
 @implementation NSMutableDictionary (AIDictionaryAdditions)
@@ -135,9 +139,9 @@
 {
 	//only do work if we have work to do.
 	if (translation || addition || removal) {
-		NSEnumerator *keyEnum = [self keyEnumerator];
-		NSString *key;
 		NSDictionary *selfCopy = [self copy];
+		NSEnumerator *keyEnum = [selfCopy keyEnumerator];
+		NSString *key;
 
 		while ((key = [keyEnum nextObject])) {
 			NSString *newKey = [translation objectForKey:key];

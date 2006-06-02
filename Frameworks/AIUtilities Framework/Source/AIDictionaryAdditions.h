@@ -21,6 +21,8 @@
 
 - (NSDictionary *)dictionaryByTranslating:(NSDictionary *)translation adding:(NSDictionary *)addition removing:(NSSet *)removal;
 
+- (NSMutableSet *)allKeysMutableSet;
+
 @end
 
 @interface NSMutableDictionary (AIDictionaryAdditions)
