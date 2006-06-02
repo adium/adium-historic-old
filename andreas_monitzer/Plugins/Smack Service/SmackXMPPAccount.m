@@ -130,11 +130,16 @@
     connection = conn;
     @try {
         NSString *jid = [self explicitFormattedUID];
+        NSString *resource = [self preferenceForKey:@"Resource" group:GROUP_ACCOUNT_STATUS];
         
         [conn login:[jid jidUsername]
-                   :[[adium accountController] passwordForAccount:self]];
+                   :[[adium accountController] passwordForAccount:self]
+                   :resource?resource:@"Adium"];
         
         [self didConnect];
+        
+        [self setStatusState:[self statusState] usingStatusMessage:[self statusMessage]];
+        
 		[self silenceAllContactUpdatesForInterval:18.0];
 		[[adium contactController] delayListObjectNotificationsUntilInactivity];
         
