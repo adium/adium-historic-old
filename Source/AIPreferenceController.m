@@ -20,7 +20,6 @@
 #import "AIPreferenceWindowController.h"
 #import "AIToolbarController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
