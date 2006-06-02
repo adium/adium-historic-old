@@ -67,42 +67,12 @@
 	return [NSCharacterSet characterSetWithCharactersInString:@" "];
 }
 
-//subclass should change this
-- (AIServiceImportance)serviceImportance{
-	return AIServiceUnsupported;
-}
-
-//subclass should change this
-- (NSString *)serviceCodeUniqueID{
-	return(@"joscar-OSCAR");
-}
-//subclass should change this
-- (NSString *)shortDescription{
-	return @"joscar-OSCAR";
-}
-//subclass should change this
-- (NSString *)longDescription{
-	return @"joscar OSCAR Account";
-}
-//subclass should change this
-- (NSString *)serviceID{
-	return @"joscar-RAW-ACCOUNT";
-}
-
 - (BOOL)caseSensitive{
 	return NO;
 }
 
 - (NSString *)userNameLabel{
     return AILocalizedString(@"Screen Name",nil); //ScreenName
-}
-
-//subclass should change this
-- (NSImage *)defaultServiceIcon
-{
-	static NSImage	*defaultServiceIcon = nil;
-	if (!defaultServiceIcon) defaultServiceIcon = [[NSImage imageNamed:@"joscar" forClass:[self class]] retain];
-	return defaultServiceIcon;
 }
 
 #pragma mark Statuses
