@@ -114,6 +114,8 @@ typedef struct _JabberStream
 	GaimCircBuffer *write_buffer;
 	guint writeh;
 
+	gchar* last_mail_alert_time;
+
 	/* OK, this stays at the end of the struct, so plugins can depend
 	 * on the rest of the stuff being in the right place
 	 */
