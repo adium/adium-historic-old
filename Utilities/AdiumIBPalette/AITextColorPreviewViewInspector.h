@@ -13,6 +13,7 @@
 @interface AITextColorPreviewViewInspector : IBInspector
 {
 }
+- (void) setPreviewText:(NSString *)newPreviewText;
 @end
 
 @interface AITextColorPreviewView (AdiumIBPaletteInspector)

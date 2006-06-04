@@ -296,7 +296,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		C056398408A954F8003078D8 /* Debug */ = {
+		C056398408A954F8003078D8 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
@@ -304,7 +304,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/../../Frameworks/AIUtilities\\ Framework/build/Deployment";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/../../Frameworks/AIUtilities\\ Framework/build/$(BUILD_STYLE) $(SRCROOT)/../../build/$(BUILD_STYLE)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -317,9 +317,9 @@
 				WRAPPER_EXTENSION = palette;
 				ZERO_LINK = YES;
 			};
-			name = Debug;
+			name = Development;
 		};
-		C056398508A954F8003078D8 /* Release */ = {
+		C056398508A954F8003078D8 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
@@ -330,7 +330,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/../../Frameworks/AIUtilities\\ Framework/build/Deployment";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/../../Frameworks/AIUtilities\\ Framework/build/$(BUILD_STYLE) $(SRCROOT)/../../build/$(BUILD_STYLE)";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -340,9 +340,9 @@
 				PRODUCT_NAME = AdiumIBPalette;
 				WRAPPER_EXTENSION = palette;
 			};
-			name = Release;
+			name = Deployment;
 		};
-		C056398C08A954F8003078D8 /* Debug */ = {
+		C056398C08A954F8003078D8 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_C_LANGUAGE_STANDARD = c99;
@@ -351,9 +351,9 @@
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
-			name = Debug;
+			name = Development;
 		};
-		C056398D08A954F8003078D8 /* Release */ = {
+		C056398D08A954F8003078D8 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_C_LANGUAGE_STANDARD = c99;
@@ -362,7 +362,7 @@
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
-			name = Release;
+			name = Deployment;
 		};
 /* End XCBuildConfiguration section */
 
@@ -370,20 +370,20 @@
 		C056398308A954F8003078D8 /* Build configuration list for PBXNativeTarget "AdiumIBPalette" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C056398408A954F8003078D8 /* Debug */,
-				C056398508A954F8003078D8 /* Release */,
+				C056398408A954F8003078D8 /* Development */,
+				C056398508A954F8003078D8 /* Deployment */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Deployment;
 		};
 		C056398B08A954F8003078D8 /* Build configuration list for PBXProject "AdiumIBPalette" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C056398C08A954F8003078D8 /* Debug */,
-				C056398D08A954F8003078D8 /* Release */,
+				C056398C08A954F8003078D8 /* Development */,
+				C056398D08A954F8003078D8 /* Deployment */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Deployment;
 		};
 /* End XCConfigurationList section */
 	};
