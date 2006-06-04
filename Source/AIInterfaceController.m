@@ -1380,6 +1380,9 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc] au
 	} else if (menuItem == menuItem_customizeToolbar) {
 		return [keyWindow toolbar] != nil && [[keyWindow toolbar] isVisible];
 
+	} else if (menuItem == menuItem_close) {
+		return (keyWindow && [[keyWindow standardWindowButton:NSWindowCloseButton] isEnabled]);
+		
 	} else if (menuItem == menuItem_closeChat) {
 		return activeChat != nil;
 		
