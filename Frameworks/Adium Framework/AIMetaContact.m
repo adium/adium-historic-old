@@ -529,7 +529,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return [[self listContacts] objectAtIndex:index];
 }
 
-/*
+/**
  * @brief Return an array of unique contained list contacts, optionally including those for offline accounts
  *
  * This is a reasonably expensive call; its return value is cached by -[self listContacts] and -[self listContactsIncludingOfflineAccounts],
@@ -747,7 +747,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 }
 
 #pragma mark Attribute arrays
-/*
+/**
  * @brief Request that Adium update our display name based on our current information
  */
 - (void)updateDisplayName
@@ -912,7 +912,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 }
 
 #pragma mark User Icon
-/* 
+/** 
  * @brief Return the user icon for this metaContact
  *
  * We always want to provide a userIcon if at all possible.
@@ -942,7 +942,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return userIcon;
 }
 
-/* @brief Return a medium-priority or better user icon from this specific meta contact's display array
+/** @brief Return a medium-priority or better user icon from this specific meta contact's display array
  *
  * If the meta contact has a medium-priority or better user icon, such as a user-specified icon or an address book
  * supplied icon with the "prefer address book icon images" preference, return it.  Otherwise, return nil, indicating
@@ -1052,7 +1052,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return contactListStatusMessage;
 }
 
-/*
+/**
  * @brief Are sounds for this contact muted?
  */
 - (BOOL)soundsAreMuted
