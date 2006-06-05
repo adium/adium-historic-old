@@ -5,24 +5,28 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Minimal Adium Message Style</string>
+	<string>SmoothSeparateLines Adium Message Style</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.adiumx.minimal.style</string>
+	<string>de.proculo.smoothseperatelines.style</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>1.0</string>
+	<string>1.1</string>
 	<key>CFBundleName</key>
-	<string>Minimal</string>
+	<string>SmoothSeparateLines</string>
 	<key>CFBundlePackageType</key>
 	<string>AdIM</string>
-	<key>MessageViewVersion</key>
-	<integer>3</integer>
 	<key>DefaultFontFamily</key>
 	<string>Lucida Grande</string>
 	<key>DefaultFontSize</key>
 	<integer>11</integer>
-	<key>ShowsUserIcons</key>
+	<key>DisableCombineConsecutive</key>
 	<true/>
-	<key>DefaultVariant</key>
-	<string>Red vs Blue</string>
+	<key>DisableCustomBackground</key>
+	<true/>
+	<key>DisplayNameForNoVariant</key>
+	<string>Red vs. Blue - No Time</string>
+	<key>MessageViewVersion</key>
+	<integer>3</integer>
+	<key>ShowsUserIcons</key>
+	<false/>
 </dict>
 </plist>
