@@ -46,6 +46,12 @@
 	//Connect server
 	NSString *connectServer = [account preferenceForKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS];
 	[textField_connectServer setStringValue:(connectServer ? connectServer : @"")];
+	
+	//Priority
+	NSNumber *priority = [account preferenceForKey:KEY_JABBER_PRIORITY_AVAILABLE group:GROUP_ACCOUNT_STATUS];
+	[textField_priorityAvailable setStringValue:(priority ? [priority stringValue] : @"")];
+	priority = [account preferenceForKey:KEY_JABBER_PRIORITY_AWAY group:GROUP_ACCOUNT_STATUS];
+	[textField_priorityAway setStringValue:(priority ? [priority stringValue] : @"")];
 }
 
 //Save controls
@@ -68,6 +74,14 @@
 	//Connect server
 	[account setPreference:([[textField_connectServer stringValue] length] ? [textField_connectServer stringValue] : nil)
 					forKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS];
+
+	//Priority
+	[account setPreference:([textField_priorityAvailable intValue] ? [NSNumber numberWithInt:[textField_priorityAvailable intValue]] : nil)
+					forKey:KEY_JABBER_PRIORITY_AVAILABLE
+					 group:GROUP_ACCOUNT_STATUS];
+	[account setPreference:([textField_priorityAway intValue] ? [NSNumber numberWithInt:[textField_priorityAway intValue]] : nil)
+					forKey:KEY_JABBER_PRIORITY_AWAY
+					 group:GROUP_ACCOUNT_STATUS];
 }
 
 @end

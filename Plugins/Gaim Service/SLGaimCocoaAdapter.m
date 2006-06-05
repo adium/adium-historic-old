@@ -1077,7 +1077,6 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			
 			if ([value isKindOfClass:[NSNumber class]]) {
 				valueUTF8String = [[value stringValue] UTF8String];
-				
 			} else if ([value isKindOfClass:[NSString class]]) {
 				valueUTF8String = [value UTF8String];
 			}				
