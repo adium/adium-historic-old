@@ -557,7 +557,7 @@
 	}
 
 	//Set our priority, which is actually set along with the status...Default is 0.
-	[arguments setObject:(priority ? [priority intValue] : [NSNumber numberWithInt:0])
+	[arguments setObject: ( priority ? priority : [NSNumber numberWithInt:0] )
 				  forKey:@"priority"];
 
 	//If we didn't get a gaim status ID, request one from super
