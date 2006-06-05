@@ -749,7 +749,9 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	Conversation			*conversation = [userInfo get:@"Conversation"];
 	ConversationEventInfo	*eventInfo = [userInfo get:@"ConversationEventInfo"];
 	
-	NSLog(@"%@ - %@",eventInfo, NSStringFromClass([eventInfo class]));
+	NSLog(@"got other event: %@ - %@",eventInfo, NSStringFromClass([eventInfo class]));
+	AILog(@"got other event: %@ - %@",eventInfo, NSStringFromClass([eventInfo class]));
+
 	if ([eventInfo isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ImSendFailedEvent")]) {
 		NSLog(@"%@: error %i",eventInfo,[(ImSendFailedEvent *)eventInfo getErrorCode]);
 		AIChatErrorType errorType;
@@ -757,6 +759,9 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		switch ([(ImSendFailedEvent *)eventInfo getErrorCode]) {
 			case 4:
 				errorType = AIChatMessageSendingUserNotAvailable;
+				break;
+			case 10:
+				errorType = AIChatMessageSendingTooLarge;
 				break;
 			default:
 				errorType = AIChatUnknownError;
