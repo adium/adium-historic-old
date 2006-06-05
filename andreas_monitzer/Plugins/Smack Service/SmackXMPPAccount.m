@@ -428,8 +428,10 @@ static void SmackDNSServiceQueryRecordReply(
  uint32_t                            ttl,
  void                                *context
  ) {
-    struct SmackDNSServiceQueryRecordReplyContext *ctx = (struct SmackDNSServiceQueryRecordReplyContext*)context;
+    struct SmackDNSServiceQueryRecordReplyContext *ctx = *(struct SmackDNSServiceQueryRecordReplyContext**)context;
     ruli_srv_rdata_t srvdata;
+    
+    NSLog(@"SRV info received.");
     
     if(errorCode == kDNSServiceErr_NoError) {
         if(ruli_parse_rr_srv(&srvdata, rdata, rdlen) == RULI_PARSE_RR_OK) {
@@ -446,6 +448,7 @@ static void SmackDNSServiceQueryRecordReply(
 
 static void SmackDNSSocketCallBack(CFSocketRef s, CFSocketCallBackType type, CFDataRef address, const void *data, void *info) {
     struct SmackDNSServiceQueryRecordReplyContext *ctx = (struct SmackDNSServiceQueryRecordReplyContext*)info;
+    NSLog(@"DNSServiceProcessResult");
     DNSServiceProcessResult(ctx->sdRef);
 }
 
@@ -474,13 +477,21 @@ static void SmackDNSTimerCallBack(CFRunLoopTimerRef timer, void *info) {
         ctx->sdRef = NULL;
         
         if(DNSServiceQueryRecord(&ctx->sdRef, 0, 0, fullName,
-                                 kDNSServiceType_SRV, kDNSServiceClass_IN, SmackDNSServiceQueryRecordReply, ctx) == kDNSServiceErr_NoError) {
+                                 kDNSServiceType_SRV, kDNSServiceClass_IN, SmackDNSServiceQueryRecordReply, &ctx) == kDNSServiceErr_NoError) {
             CFRunLoopRef rl = CFRunLoopGetCurrent();
             
             int dnssocket = DNSServiceRefSockFD(ctx->sdRef);
             
+            CFSocketContext socketctx = {
+                0,
+                ctx,
+                NULL,
+                NULL,
+                NULL
+            };
+            
             CFSocketRef sock = CFSocketCreateWithNative(kCFAllocatorDefault,dnssocket,kCFSocketDataCallBack,
-                                                        (CFSocketCallBack)SmackDNSSocketCallBack,(void*)ctx);
+                                                        (CFSocketCallBack)SmackDNSSocketCallBack,&socketctx);
             ctx->socketsource = CFSocketCreateRunLoopSource(kCFAllocatorDefault,sock,0);
             
             CFRunLoopTimerRef timer = CFRunLoopTimerCreate(kCFAllocatorDefault,CFAbsoluteTimeGetCurrent()+SRVDNSTimeout,
@@ -514,6 +525,7 @@ static void SmackDNSTimerCallBack(CFRunLoopTimerRef timer, void *info) {
                 portnum = [port intValue];
         }
         free(ctx);
+        NSLog(@"host = %@:%d",host,portnum);
     } else {
         NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
         if(!port)
