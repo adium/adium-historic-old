@@ -48,26 +48,25 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //init
 - (id)initWithObjectID:(NSNumber *)inObjectID
 {
-	objectID = [inObjectID retain];
-	statusCacheDict = [[NSMutableDictionary alloc] init];
-	_preferredContact = nil;
-	_listContacts = nil;
-	_listContactsIncludingOfflineAccounts = nil;
-
-	[super initWithUID:[objectID stringValue] service:nil];
-	
-	containedObjects = [[NSMutableArray alloc] init];
-	
-	containsOnlyOneUniqueContact = NO;
-	containsOnlyOneService = YES;
-	expanded = YES;
-	containedObjectsNeedsSort = NO;
-	delayContainedObjectSorting = NO;
-	saveGroupingChanges = YES;
-	
-	largestOrder = 1.0;
-	smallestOrder = 1.0;
+	if ((self = [super initWithUID:[inObjectID stringValue] service:nil])) {
+		objectID = [inObjectID retain];
+		statusCacheDict = [[NSMutableDictionary alloc] init];
+		_preferredContact = nil;
+		_listContacts = nil;
+		_listContactsIncludingOfflineAccounts = nil;
 		
+		containedObjects = [[NSMutableArray alloc] init];
+		
+		containsOnlyOneUniqueContact = NO;
+		containsOnlyOneService = YES;
+		expanded = YES;
+		containedObjectsNeedsSort = NO;
+		delayContainedObjectSorting = NO;
+		saveGroupingChanges = YES;
+		
+		largestOrder = 1.0;
+		smallestOrder = 1.0;
+	}
 	return self;
 }
 
