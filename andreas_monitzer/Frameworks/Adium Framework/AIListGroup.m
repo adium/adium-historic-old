@@ -97,10 +97,6 @@
 	[[adium contactController] sortListObject:inObject];
 }
 
-- (BOOL)canContainOtherContacts {
-    return NO;
-}
-
 //Object Storage ---------------------------------------------------------------------------------------------
 #pragma mark Object Storage
 //Return our contained objects

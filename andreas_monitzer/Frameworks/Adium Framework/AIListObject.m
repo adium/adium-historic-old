@@ -744,4 +744,8 @@
 	return [NSString stringWithFormat:@"%@:%@",[super description],[self internalObjectID]];
 }
 
+- (BOOL)canContainOtherContacts {
+    return NO;
+}
+
 @end
