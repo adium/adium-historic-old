@@ -49,8 +49,6 @@
 - (void)updateFileTransferWithIdentifier:(NSValue *)identifier toFileTransferStatus:(NSNumber *)fileTransferStatusNumber;
 - (void)updateFileTransferWithIdentifier:(NSValue *)identifier toPosition:(NSNumber *)positionNumber;
 
-- (void)handleMenuItem:(id)sender;
-
 - (void)setAccountProfileTo:(NSAttributedString *)profile;
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage;
 - (void)setAccountIdleSinceTo:(NSDate *)idleSince;
