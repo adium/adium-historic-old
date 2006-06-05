@@ -344,9 +344,12 @@
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage {
     NSString *statusName = [statusState statusName];
     NSString *statusField = nil;
-    if([statusName isEqualToString:STATUS_NAME_AVAILABLE])
+    int priority = [[self preferenceForKey:@"awayPriority" group:GROUP_ACCOUNT_STATUS] intValue];
+    
+    if([statusName isEqualToString:STATUS_NAME_AVAILABLE]) {
         statusField = @"AVAILABLE";
-    else if([statusName isEqualToString:STATUS_NAME_AWAY])
+        priority = [[self preferenceForKey:@"availablePriority" group:GROUP_ACCOUNT_STATUS] intValue];
+    } else if([statusName isEqualToString:STATUS_NAME_AWAY])
         statusField = @"AWAY";
     else if([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT])
         statusField = @"CHAT";
@@ -359,7 +362,7 @@
     else // shouldn't happen
         statusField = @"AVAILABLE";
     
-    SmackPresence *newPresence = NewSmackPresence([SmackCocoaAdapter staticObjectField:@"AVAILABLE" inJavaClass:@"org.jivesoftware.smack.packet.Presence$Type"], [statusMessage string], [SmackCocoaAdapter staticObjectField:statusField inJavaClass:@"org.jivesoftware.smack.packet.Presence$Mode"]);
+    SmackPresence *newPresence = NewSmackPresence([SmackCocoaAdapter staticObjectField:@"AVAILABLE" inJavaClass:@"org.jivesoftware.smack.packet.Presence$Type"], [statusMessage string], priority, [SmackCocoaAdapter staticObjectField:statusField inJavaClass:@"org.jivesoftware.smack.packet.Presence$Mode"]);
     
     [connection sendPacket:newPresence];
     [newPresence release];

@@ -20,6 +20,12 @@
     IBOutlet NSButton *checkBox_allowExpired;
     IBOutlet NSButton *checkBox_allowNonMatchingHost;
     IBOutlet NSButton *checkBox_useCompression;
+
+    IBOutlet NSSlider *slider_availablePriority;
+    IBOutlet NSSlider *slider_awayPriority;
+    
+    IBOutlet NSTextField *textfield_availablePriority;
+    IBOutlet NSTextField *textfield_awayPriority;
     
     NSString *currentJID;
     BOOL useSSL;
