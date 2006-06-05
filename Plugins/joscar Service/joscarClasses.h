@@ -81,7 +81,6 @@
 - (void)connect;
 - (void)disconnect;
 - (ChatRoomManager *)getChatRoomManager;
-- (NSString *)getChangePasswordUrl;
 
 - (IcbmService *)getIcbmService;
 
