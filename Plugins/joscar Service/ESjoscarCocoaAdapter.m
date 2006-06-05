@@ -751,7 +751,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	
 	NSLog(@"%@ - %@",eventInfo, NSStringFromClass([eventInfo class]));
 	if ([eventInfo isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ImSendFailedEvent")]) {
-		NSLog(@"%@: error %i",eventInfo,[eventInfo getErrorCode]);
+		NSLog(@"%@: error %i",eventInfo,[(ImSendFailedEvent *)eventInfo getErrorCode]);
 		AIChatErrorType errorType;
 
 		switch ([(ImSendFailedEvent *)eventInfo getErrorCode]) {
