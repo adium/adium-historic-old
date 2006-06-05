@@ -60,6 +60,7 @@ typedef enum {
 - (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify;
 - (void)notifyOfChangedStatusSilently:(BOOL)silent;
 - (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(AIListObject *)anObject withOwner:(AIListObject *)inOwner priorityLevel:(float)priority;
+- (BOOL)canContainOtherContacts;
 @end
 
 @interface AIListObject : ESObjectWithStatus <AIListObject> {
@@ -148,7 +149,5 @@ typedef enum {
 
 //mutableOwnerArray delegate and methods
 - (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(AIListObject *)inOwner priorityLevel:(float)priority;
-
-- (BOOL)canContainOtherContacts;
 
 @end
