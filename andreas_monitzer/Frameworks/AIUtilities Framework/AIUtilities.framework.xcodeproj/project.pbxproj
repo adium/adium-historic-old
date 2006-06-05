@@ -1768,7 +1768,9 @@
 				LIBRARY_STYLE = DYNAMIC;
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-fconstant-cfstrings",
+				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0x12000000,
@@ -1792,6 +1794,7 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
@@ -1816,7 +1819,9 @@
 				LIBRARY_STYLE = DYNAMIC;
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-fconstant-cfstrings",
+				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0x12000000,
@@ -1843,6 +1848,7 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
 			};
 			name = "Deployment-Debug";
 		};
@@ -1869,7 +1875,9 @@
 				LIBRARY_STYLE = DYNAMIC;
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-fconstant-cfstrings",
+				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0x12000000,
@@ -1905,7 +1913,9 @@
 				LIBRARY_STYLE = DYNAMIC;
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-fconstant-cfstrings",
+				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0x12000000,
@@ -1924,6 +1934,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				SYMROOT = ../../build;
 			};
 			name = Development;
 		};
@@ -1939,6 +1950,7 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
 			};
 			name = Deployment;
 		};
