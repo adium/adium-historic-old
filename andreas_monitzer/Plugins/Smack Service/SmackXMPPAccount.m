@@ -208,12 +208,11 @@
     NSString *type = [[packet getType] toString];
     NSString *status = [packet getStatus];
     NSString *mode = [[packet getMode] toString];
+    int priority = [packet getPriority];
     
     AIListContact *listContact = [self contactWithJID:jidWithResource];
     
     SmackListContact *listEntry = (SmackListContact*)[self contactWithJID:[jidWithResource jidUserHost]];
-    NSLog(@"listEntry class for %@ = %@", [jidWithResource jidUserHost], [listEntry className]);
-    
     
     if(![listEntry containsObject:listContact])
         [listEntry addObject:listContact];
@@ -247,6 +246,8 @@
 	[listContact setOnline:statustype != AIOfflineStatusType
                     notify:NotifyLater
                   silently:NO];
+    
+    [listContact setStatusObject:[NSNumber numberWithInt:priority] forKey:@"XMPPPriority" notify:NotifyLater];
     
     [listContact setStatusWithName:mode statusType:statustype notify:NotifyLater];
     if(status) {
