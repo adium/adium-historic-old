@@ -18,10 +18,12 @@
 	<string>Arial</string>
 	<key>DefaultFontSize</key>
 	<integer>11</integer>
+	<key>DefaultVariant</key>
+	<string>Cosmic</string>
 	<key>DisplayNameForNoVariant</key>
 	<string>Standard</string>
 	<key>MessageViewVersion</key>
-	<integer>1</integer>
+	<integer>3</integer>
 	<key>ShowsUserIcons</key>
 	<true/>
 </dict>
