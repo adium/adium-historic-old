@@ -45,7 +45,11 @@
                 "checkBox_useSSL" = NSButton; 
                 "checkBox_useTLS" = NSButton; 
                 "label_resource" = NSTextField; 
+                "slider_availablePriority" = NSSlider; 
+                "slider_awayPriority" = NSSlider; 
                 "textField_resource" = NSTextField; 
+                "textfield_availablePriority" = NSTextField; 
+                "textfield_awayPriority" = NSTextField; 
             }; 
             SUPERCLASS = AIAccountViewController; 
         }

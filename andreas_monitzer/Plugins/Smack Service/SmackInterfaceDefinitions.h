@@ -299,7 +299,7 @@
 
 @end
 
-#define NewSmackPresence(type, status, mode) [NSClassFromString(@"org.jivesoftware.smack.packet.Presence") newWithSignature:@"(Lorg/jivesoftware/smack/packet/Presence$Type;Ljava/lang/String;ILorg/jivesoftware/smack/packet/Presence$Mode;)",type,status,0,mode]
+#define NewSmackPresence(type, status, priority, mode) [NSClassFromString(@"org.jivesoftware.smack.packet.Presence") newWithSignature:@"(Lorg/jivesoftware/smack/packet/Presence$Type;Ljava/lang/String;ILorg/jivesoftware/smack/packet/Presence$Mode;)",type,status,priority,mode]
 
 @interface SmackIQType : NSObject {
 }

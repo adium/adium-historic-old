@@ -44,6 +44,16 @@
 		[checkBox_useCompression setState:![[inAccount preferenceForKey:@"disableCompression"
 															group:GROUP_ACCOUNT_STATUS] boolValue]];
 
+        [slider_availablePriority setIntValue:[[inAccount preferenceForKey:@"availablePriority"
+                                                                     group:GROUP_ACCOUNT_STATUS] intValue]];
+        [textfield_availablePriority setIntValue:[[inAccount preferenceForKey:@"availablePriority"
+                                                                        group:GROUP_ACCOUNT_STATUS] intValue]];
+        [slider_awayPriority setIntValue:[[inAccount preferenceForKey:@"awayPriority"
+                                                                group:GROUP_ACCOUNT_STATUS] intValue]];
+        [textfield_awayPriority setIntValue:[[inAccount preferenceForKey:@"awayPriority"
+                                                                   group:GROUP_ACCOUNT_STATUS] intValue]];
+        
+        
         
         [self setCurrentJID:[inAccount explicitFormattedUID]];
     }
@@ -78,6 +88,12 @@
 					forKey:@"disableCompression"
 					 group:GROUP_ACCOUNT_STATUS];
     
+    [account setPreference:[NSNumber numberWithInt:[slider_availablePriority intValue]]
+					forKey:@"availablePriority"
+					 group:GROUP_ACCOUNT_STATUS];
+    [account setPreference:[NSNumber numberWithInt:[slider_awayPriority intValue]]
+					forKey:@"awayPriority"
+					 group:GROUP_ACCOUNT_STATUS];
 }
 
 - (void)setCurrentJID:(NSString*)jid {
