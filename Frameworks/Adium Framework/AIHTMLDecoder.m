@@ -308,7 +308,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			}
 
 			//Size
-			if (thingsToInclude.fontTags && !thingsToInclude.simpleTagsOnly) {
+			if (!thingsToInclude.simpleTagsOnly) {
 				[string appendString:[NSString stringWithFormat:@" ABSZ=\"%i\" SIZE=\"%i\"", (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
 				currentSize = pointSize;
 			}
@@ -608,7 +608,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		[string appendString:@"</a>"];
 		oldLink = nil;
 	}
-	
+
 	if (thingsToInclude.fontTags && thingsToInclude.closingFontTags && openFontTag) [string appendString:@"</FONT>"]; //Close any open font tag
 	if (rightToLeft) {
 		[string appendString:@"</DIV>"];
