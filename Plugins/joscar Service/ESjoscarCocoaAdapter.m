@@ -758,6 +758,9 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 			case 4:
 				errorType = AIChatMessageSendingUserNotAvailable;
 				break;
+			case 10:
+				errorType = AIChatMessageSendingTooLarge;
+				break;
 			default:
 				errorType = AIChatUnknownError;
 				break;
@@ -1380,6 +1383,12 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		[[aimConnection getMyBuddyIconManager] requestClearIcon];
 	}
 }
+
+- (NSString *)getChangePasswordUrl
+{
+	return [aimConnection getChangePasswordUrl];
+}
+
 
 #pragma mark Privacy functions
 
