@@ -65,4 +65,6 @@
 
 - (NSAttributedString *)contactListStatusMessage;
 
+- (BOOL)canContainOtherContacts;
+
 @end

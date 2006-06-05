@@ -1283,6 +1283,8 @@
 		7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */; };
 		7E824CEA06387FAF00813072 /* SHLinkManagementPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */; };
 		7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */; };
+		8156798F0A339B1F005ADC13 /* SmackListContact.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8156798D0A339B1F005ADC13 /* SmackListContact.h */; };
+		815679900A339B1F005ADC13 /* SmackListContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8156798E0A339B1F005ADC13 /* SmackListContact.m */; };
 		81F651740A291004008FC8E7 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		81F651750A291004008FC8E7 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		81F651760A291004008FC8E7 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
@@ -1595,14 +1597,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 81F6508C0A290FB6008FC8E7 /* Smack */;
+			remoteGlobalIDString = 81F6508C0A290FB6008FC8E7;
 			remoteInfo = Smack;
 		};
 		81F6543B0A291D04008FC8E7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 81F651850A29103F008FC8E7 /* Smack Java Bridge.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 81F650720A290EE3008FC8E7 /* SmackBridge.jar */;
+			remoteGlobalIDString = 81F650720A290EE3008FC8E7;
 			remoteInfo = "Smack Bridge";
 		};
 		B72537BD058C45CF004BA969 /* PBXContainerItemProxy */ = {
@@ -1768,6 +1770,7 @@
 				81F666280A2FE2D2008FC8E7 /* ruli_parse.h in CopyFiles */,
 				81F667830A2FF0F3008FC8E7 /* ruli_util.h in CopyFiles */,
 				81F6679A0A2FF15A008FC8E7 /* ruli_limits.h in CopyFiles */,
+				8156798F0A339B1F005ADC13 /* SmackListContact.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3496,6 +3499,8 @@
 		7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkEditorWindowController.m; sourceTree = "<group>"; };
 		7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SHLinkManagementPlugin.h; sourceTree = "<group>"; };
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
+		8156798D0A339B1F005ADC13 /* SmackListContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackListContact.h; path = "Plugins/Smack Service/SmackListContact.h"; sourceTree = "<group>"; };
+		8156798E0A339B1F005ADC13 /* SmackListContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackListContact.m; path = "Plugins/Smack Service/SmackListContact.m"; sourceTree = "<group>"; };
 		81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Smack.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		81F651850A29103F008FC8E7 /* Smack Java Bridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Smack Java Bridge.xcodeproj"; path = "Plugins/Smack Service/Smack Java Bridge.xcodeproj"; sourceTree = "<group>"; };
 		81F6519A0A291145008FC8E7 /* SmackServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackServicePlugin.h; path = "Plugins/Smack Service/SmackServicePlugin.h"; sourceTree = "<group>"; };
@@ -6310,6 +6315,8 @@
 				81F651AB0A29123C008FC8E7 /* SmackXMPPService.m */,
 				81F654AF0A29339F008FC8E7 /* SmackXMPPAccount.h */,
 				81F654B00A29339F008FC8E7 /* SmackXMPPAccount.m */,
+				8156798D0A339B1F005ADC13 /* SmackListContact.h */,
+				8156798E0A339B1F005ADC13 /* SmackListContact.m */,
 				81F654BB0A29349C008FC8E7 /* SmackCocoaAdapter.h */,
 				81F654BC0A29349C008FC8E7 /* SmackCocoaAdapter.m */,
 				81F6566F0A2A5457008FC8E7 /* SmackXMPPAccountViewController.h */,
@@ -9198,6 +9205,7 @@
 				81F656720A2A5458008FC8E7 /* SmackXMPPAccountViewController.m in Sources */,
 				81F666270A2FE2D2008FC8E7 /* ruli_parse.c in Sources */,
 				81F667820A2FF0F3008FC8E7 /* ruli_util.c in Sources */,
+				815679900A339B1F005ADC13 /* SmackListContact.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

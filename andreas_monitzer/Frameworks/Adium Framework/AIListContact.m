@@ -590,25 +590,29 @@
  *
  * @result Either this contact, if it is not in a metaContact, or the AIMetaContact which contains it.
  */
- - (AIListContact *)parentContact
- {
-	AIListContact	*parentContact = self;
+- (AIListContact *)parentContact
+{
+    AIListContact	*parentContact = self;
+    
+    if (containingObject && [containingObject canContainOtherContacts]) {
+        parentContact = (AIMetaContact *)containingObject;		
+    }
+    
+    return parentContact;
+}
 
-	if (containingObject && [containingObject isKindOfClass:[AIMetaContact class]]) {
-		parentContact = (AIMetaContact *)containingObject;		
-	}
-
-	return parentContact;
- }
+- (BOOL)canContainOtherContacts {
+    return NO;
+}
  
 #pragma mark Equality
-/*
+
 - (BOOL)isEqual:(id)anObject
 {
 	return ([anObject isMemberOfClass:[self class]] &&
 			[[(AIListContact *)anObject internalUniqueObjectID] isEqualToString:[self internalUniqueObjectID]]);
 }
-*/
+
 //AppleScript ----------------------------------------------------------------------------------------------------------
 #pragma mark AppleScript
 
