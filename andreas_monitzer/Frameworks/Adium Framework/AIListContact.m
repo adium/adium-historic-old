@@ -600,10 +600,6 @@
     
     return parentContact;
 }
-
-- (BOOL)canContainOtherContacts {
-    return NO;
-}
  
 #pragma mark Equality
 
