@@ -1070,26 +1070,27 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		
 		enumerator = [arguments keyEnumerator];
 		while ((key = [enumerator nextObject])) {
-			const char *valueUTF8String = NULL;
-			id	 value;
+			const char *value = NULL;
+			id	 valueObject;
 
-			value = [arguments objectForKey:key];
+			valueObject = [arguments objectForKey:key];
 			
-			if ([value isKindOfClass:[NSNumber class]]) {
-				valueUTF8String = [[value stringValue] UTF8String];
-			} else if ([value isKindOfClass:[NSString class]]) {
-				valueUTF8String = [value UTF8String];
+			if ([valueObject isKindOfClass:[NSNumber class]]) {
+				value = GINT_TO_POINTER([valueObject intValue]);
+
+			} else if ([valueObject isKindOfClass:[NSString class]]) {
+				value = [valueObject UTF8String];
 			}				
 			
-			if (valueUTF8String) {
+			if (value) {
 				//Append the key
-				attrs = g_list_append(attrs, (char *)[key UTF8String]);
+				attrs = g_list_append(attrs, (gpointer)[key UTF8String]);
 				
 				//Now append the value
-				attrs = g_list_append(attrs, (char *)valueUTF8String);
+				attrs = g_list_append(attrs, (gpointer)value);
 
 			} else {
-				AILog(@"Warning; could not determine value of %@ for key %@, statusID %s",value,key,statusID);
+				AILog(@"Warning; could not determine value of %@ for key %@, statusID %s",valueObject,key,statusID);
 			}
 		}
 	}
