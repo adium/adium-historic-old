@@ -40,6 +40,7 @@
 
 - (NSString *)processOutgoingMessage:(NSString *)message /*toUID:(NSString *)inUID*/ joscarData:(id *)outJoscarData;
 - (NSString *)processIncomingDirectMessage:(NSString *)message joscarData:(id)directMessage;
+- (void)leaveChatWithUID:(NSString *)inUID;
 - (BOOL)chatWithUID:(NSString *)inUID sendMessage:(NSString *)message isAutoreply:(BOOL)isAutoreply joscarData:(NSSet *)attachmentsSet;
 - (void)chatWithUID:(NSString *)inUID setTypingState:(AITypingState)typingState;
 
