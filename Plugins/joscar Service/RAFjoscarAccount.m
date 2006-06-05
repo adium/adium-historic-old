@@ -40,7 +40,8 @@
 
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 
-#define CHAT_INVITE_TITLE 
+#define JOSCAR_BUDDIES_AUTH_TEXT	AILocalizedString(@"Show Buddies Awaiting Authorization",nil)
+#define JOSCAR_SEARCH_EMAIL_TEXT	AILocalizedString(@"Search for Buddy by E-Mail Address...",nil)
 
 @implementation RAFjoscarAccount
 
@@ -291,6 +292,15 @@
 		[[adium contactController] endListObjectNotificationsDelay];
 		inSignOnDelay = NO;
 	}
+}
+
+- (void)handleMenuItem:(id)sender
+{
+#warning actually handle these cases instead of just logging them
+	if ([[(NSMenuItem *)sender title] isEqualToString:JOSCAR_BUDDIES_AUTH_TEXT])
+		NSLog(@"Auth buddies list");
+	else if ([[(NSMenuItem *)sender title] isEqualToString:JOSCAR_SEARCH_EMAIL_TEXT])
+		NSLog(@"Email Search!");
 }
 
 #pragma mark Status Messages and Idle
