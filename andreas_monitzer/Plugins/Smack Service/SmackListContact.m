@@ -37,20 +37,16 @@
     
     NSLog(@"contacts = %@",[contacts description]);
     
-    AIStatusType besttype = (AIStatusType)STATUS_TYPES_COUNT;
     AIListContact *bestcontact = nil;
+    int priority = -129;
     
     NSEnumerator *e = [contacts objectEnumerator];
     AIListContact *contact;
     while((contact = [e nextObject])) {
-        AIStatusType type = [contact statusType];
-        if(type == AIAvailableStatusType) {
-            NSLog(@"best contact = %@",[contact internalUniqueObjectID]);
-            return contact; // shortcut
-        }
-        if(type < besttype) {
-            besttype = type;
+        int c_prio = [[contact statusObjectForKey:@"XMPPPriority"] intValue];
+        if(priority < c_prio) {
             bestcontact = contact;
+            priority = c_prio;
         }
     }
     NSLog(@"best contact = %@",[bestcontact internalUniqueObjectID]);
