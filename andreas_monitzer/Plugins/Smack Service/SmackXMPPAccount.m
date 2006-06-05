@@ -21,11 +21,14 @@
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import "AIStatusDefines.h"
 #import "AIStatusController.h"
+#import "SmackListContact.h"
 
 #import <JavaVM/NSJavaVirtualMachine.h>
 
 #import <dns_sd.h> // for SRV lookup
 #import "ruli/ruli_parse.h"
+
+#define SRVDNSTimeout 2.0
 
 @interface NSString (JIDAdditions)
 
@@ -80,29 +83,24 @@
 		[SmackCocoaAdapter initializeJavaVM];
 		beganInitializingJavaVM = YES;
 	}
-    if(!chatdata) {
-        chatdata = [[NSMutableDictionary alloc] init];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(removeChat:)
-                                                     name:Chat_WillClose
-                                                   object:nil];
-    } else
-        [chatdata removeAllObjects];
+    
+    if(!roster)
+        roster = [[NSMutableDictionary alloc] init];
+    else
+        [roster removeAllObjects];
 }
 
 - (void)dealloc {
-    [chatdata release];
-    chatdata = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [roster release];
     [super dealloc];
-}
-
-- (void)removeChat:(NSNotification*)n {
-    [chatdata removeObjectForKey:[[n object] uniqueChatID]];
 }
 
 - (AIListContact *)contactWithJID:(NSString *)inJID
 {
+    AIListContact *result = [roster objectForKey:inJID];
+    if(result)
+        return result;
 	return ([[adium contactController] contactWithService:service
 												  account:self
 													  UID:inJID]);
@@ -174,10 +172,12 @@
         
         if (!(chat = [[adium chatController] existingChatWithContact:sourceContact])) {
             chat = [[adium chatController] openChatWithContact:sourceContact];
-            [chatdata setObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                                thread?thread:[chat uniqueChatID], @"thread",
-                                resource, @"resource", // might be nil!
-                                nil] forKey:[chat uniqueChatID]];
+            [chat setStatusObject:thread?thread:[chat uniqueChatID] forKey:@"XMPPThreadID" notify:NotifyLater];
+            if(resource)
+                [chat setStatusObject:resource forKey:@"XMPPResource" notify:NotifyLater];
+
+            //Apply the change
+            [chat notifyOfChangedStatusSilently:silentAndDelayed];
         }
         
         SmackXXHTMLExtension *spe = [packet getExtension:@"html" :@"http://jabber.org/protocol/xhtml-im"];
@@ -204,12 +204,20 @@
     }
 }
 - (void)receivePresencePacket:(SmackPresence*)packet {
-    NSString *jid = [packet getFrom];
+    NSString *jidWithResource = [packet getFrom];
     NSString *type = [[packet getType] toString];
     NSString *status = [packet getStatus];
     NSString *mode = [[packet getMode] toString];
     
-    AIListContact *listContact = [self contactWithJID:[jid jidUserHost]];
+    AIListContact *listContact = [self contactWithJID:jidWithResource];
+    
+    SmackListContact *listEntry = (SmackListContact*)[self contactWithJID:[jidWithResource jidUserHost]];
+    NSLog(@"listEntry class for %@ = %@", [jidWithResource jidUserHost], [listEntry className]);
+    
+    
+    if(![listEntry containsObject:listContact])
+        [listEntry addObject:listContact];
+    
     AIStatusType statustype = AIOfflineStatusType;
     
     if([type isEqualToString:@"available"]) {
@@ -238,7 +246,7 @@
 //    NSLog(@"jid = \"%@\", mode = \"%@\", statustype = \"%d\"", jid, mode, statustype);
 	[listContact setOnline:statustype != AIOfflineStatusType
                     notify:NotifyLater
-                  silently:silentAndDelayed];
+                  silently:NO];
     
     [listContact setStatusWithName:mode statusType:statustype notify:NotifyLater];
     if(status) {
@@ -250,6 +258,7 @@
     
     //Apply the change
 	[listContact notifyOfChangedStatusSilently:silentAndDelayed];
+    [listEntry notifyOfChangedStatusSilently:NO];
 }
 
 - (void)receiveIQPacket:(SmackIQ*)packet {
@@ -261,7 +270,9 @@
             NSString *name = [srpi getName];
             NSString *jid = [srpi getUser];
             
-            AIListContact *listContact = [self contactWithJID:jid];
+//            AIListContact *listContact = [self contactWithJID:jid];
+            SmackListContact *listContact = [[SmackListContact alloc] initWithUID:jid account:self service:service];
+            NSLog(@"creating account for jid %@", jid);
             
             if(![[listContact formattedUID] isEqualToString:jid])
                 [listContact setFormattedUID:jid notify:NotifyLater];
@@ -269,7 +280,7 @@
             // XMPP supports contacts that are in multiple groups, Adium does not.
             // First I'm checking if the group it's in here locally is one of the groups
             // the contact is in on the server. If this is not the case, I set the contact
-            // to be in the first group on the list.
+            // to be in the first group on the list. XXX -> Adium folks, add this feature!
             JavaIterator *iter2 = [srpi getGroupNames];
             NSString *storedgroupname = [listContact remoteGroupName];
             if(storedgroupname) {
@@ -289,6 +300,10 @@
                     [listContact setRemoteGroupName:@"nobody knows the trouble I've seen"];
             }
             [self setListContact:listContact toAlias:name];
+            
+            [roster setObject:listContact forKey:jid];
+            
+            [listContact release];
         }
 //    } else if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@""]) {
         
@@ -300,20 +315,24 @@
         return NO; // protocol doesn't support autoreplies
     
     AIChat *chat = [inMessageObject chat];
-    NSDictionary *chatinfo = [chatdata objectForKey:[chat uniqueChatID]];
     
-    if(!chatinfo) // first message was sent by us
-        [chatdata setObject:chatinfo = [NSDictionary dictionaryWithObjectsAndKeys:
-            [chat uniqueChatID], @"thread",
-            nil] forKey:[chat uniqueChatID]];
+    NSString *threadid = [chat statusObjectForKey:@"XMPPThreadID"];
+    NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
+    
+    if(!threadid) { // first message was sent by us
+        [chat setStatusObject:threadid = [chat uniqueChatID] forKey:@"XMPPThreadID"  notify:NotifyLater];
+        
+        //Apply the change
+        [chat notifyOfChangedStatusSilently:silentAndDelayed];
+    }
     
     NSString *jid = [[[inMessageObject chat] listObject] UID];
-    if([chatinfo objectForKey:@"resource"])
-        jid = [NSString stringWithFormat:@"%@/%@",jid,[chatinfo objectForKey:@"resource"]];
+    if(resource)
+        jid = [NSString stringWithFormat:@"%@/%@",jid,resource];
 
     SmackMessage *newmsg = NewSmackMessage(jid,[SmackCocoaAdapter staticObjectField:@"CHAT" inJavaClass:@"org.jivesoftware.smack.packet.Message$Type"]);
     
-    [newmsg setThread:[chatinfo objectForKey:@"thread"]];
+    [newmsg setThread:threadid];
     [newmsg setBody:[inMessageObject messageString]];
     // ### XHTML
     
@@ -392,6 +411,8 @@ NSString *decodeDNSName(const unsigned char *input, unsigned len) {
 struct SmackDNSServiceQueryRecordReplyContext {
     NSString **host;
     int *portnum;
+    CFRunLoopSourceRef socketsource;
+    DNSServiceRef sdRef;
 };
 
 static void SmackDNSServiceQueryRecordReply(
@@ -410,11 +431,28 @@ static void SmackDNSServiceQueryRecordReply(
     struct SmackDNSServiceQueryRecordReplyContext *ctx = (struct SmackDNSServiceQueryRecordReplyContext*)context;
     ruli_srv_rdata_t srvdata;
     
-    if(ruli_parse_rr_srv(&srvdata, rdata, rdlen) == RULI_PARSE_RR_OK) {
-        *(ctx->host) = decodeDNSName(srvdata.target,srvdata.target_len);
-        *(ctx->portnum) = srvdata.port;
+    if(errorCode == kDNSServiceErr_NoError) {
+        if(ruli_parse_rr_srv(&srvdata, rdata, rdlen) == RULI_PARSE_RR_OK) {
+            *(ctx->host) = decodeDNSName(srvdata.target,srvdata.target_len);
+            *(ctx->portnum) = srvdata.port;
+        } else
+            *(ctx->portnum) = -1;
     } else
-        *(ctx->portnum) = -1;
+        NSLog(@"SRV record errorcode %d",errorCode);
+    
+    
+    CFRunLoopStop(CFRunLoopGetCurrent());
+}
+
+static void SmackDNSSocketCallBack(CFSocketRef s, CFSocketCallBackType type, CFDataRef address, const void *data, void *info) {
+    struct SmackDNSServiceQueryRecordReplyContext *ctx = (struct SmackDNSServiceQueryRecordReplyContext*)info;
+    DNSServiceProcessResult(ctx->sdRef);
+}
+
+static void SmackDNSTimerCallBack(CFRunLoopTimerRef timer, void *info) {
+//    struct SmackDNSServiceQueryRecordReplyContext *ctx = (struct SmackDNSServiceQueryRecordReplyContext*)info;
+    
+    CFRunLoopStop(CFRunLoopGetCurrent());
 }
 
 - (SmackConnectionConfiguration*)connectionConfiguration {
@@ -428,15 +466,38 @@ static void SmackDNSServiceQueryRecordReply(
         
         DNSServiceConstructFullName(fullName,NULL,"_xmpp-client._tcp",[host cStringUsingEncoding:NSUTF8StringEncoding] /* ### punycode */);
         
-        DNSServiceRef sdRef;
-        struct SmackDNSServiceQueryRecordReplyContext ctx = {
-            &host, &portnum
-        };
+        struct SmackDNSServiceQueryRecordReplyContext *ctx = (struct SmackDNSServiceQueryRecordReplyContext *)malloc(sizeof(struct SmackDNSServiceQueryRecordReplyContext));
         
-        if(DNSServiceQueryRecord(&sdRef, 0, 0, fullName,
-                                 kDNSServiceType_SRV, kDNSServiceClass_IN, SmackDNSServiceQueryRecordReply, &ctx) == kDNSServiceErr_NoError) {
-            DNSServiceProcessResult(sdRef);
-            DNSServiceRefDeallocate(sdRef);
+        ctx->host = &host;
+        ctx->portnum = &portnum;
+        ctx->socketsource =  NULL;
+        ctx->sdRef = NULL;
+        
+        if(DNSServiceQueryRecord(&ctx->sdRef, 0, 0, fullName,
+                                 kDNSServiceType_SRV, kDNSServiceClass_IN, SmackDNSServiceQueryRecordReply, ctx) == kDNSServiceErr_NoError) {
+            CFRunLoopRef rl = CFRunLoopGetCurrent();
+            
+            int dnssocket = DNSServiceRefSockFD(ctx->sdRef);
+            
+            CFSocketRef sock = CFSocketCreateWithNative(kCFAllocatorDefault,dnssocket,kCFSocketDataCallBack,
+                                                        (CFSocketCallBack)SmackDNSSocketCallBack,(void*)ctx);
+            ctx->socketsource = CFSocketCreateRunLoopSource(kCFAllocatorDefault,sock,0);
+            
+            CFRunLoopTimerRef timer = CFRunLoopTimerCreate(kCFAllocatorDefault,CFAbsoluteTimeGetCurrent()+SRVDNSTimeout,
+                                                           -1.0,0,0,SmackDNSTimerCallBack,NULL);//,ctx);
+
+            CFRunLoopAddTimer(rl,timer,kCFRunLoopDefaultMode);
+            CFRunLoopAddSource(rl,ctx->socketsource,kCFRunLoopDefaultMode);
+            
+            CFRunLoopRun();
+
+            CFRunLoopRemoveSource(rl,ctx->socketsource,kCFRunLoopDefaultMode);
+            CFRunLoopRemoveTimer(rl,timer,kCFRunLoopDefaultMode);
+
+            CFRelease(ctx->socketsource);
+            CFRelease(sock);
+            CFRelease(timer);
+            DNSServiceRefDeallocate(ctx->sdRef);
             
             if(portnum==-1) {
                 NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
@@ -452,6 +513,7 @@ static void SmackDNSServiceQueryRecordReply(
             else
                 portnum = [port intValue];
         }
+        free(ctx);
     } else {
         NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
         if(!port)

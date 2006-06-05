@@ -232,6 +232,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 //Object Storage -------------------------------------------------------------------------------------------------------
 #pragma mark Object Storage
+
+- (BOOL)canContainOtherContacts {
+    return YES;
+}
+
 - (void)clearContainedObjectInfoCache
 {
 	_preferredContact = nil;

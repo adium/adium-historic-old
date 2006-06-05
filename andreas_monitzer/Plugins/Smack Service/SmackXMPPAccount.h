@@ -15,7 +15,7 @@
     SmackCocoaAdapter *smackAdapter;
     SmackXMPPConnection *connection;
     
-    NSMutableDictionary *chatdata; // stores additional data for our chats
+    NSMutableDictionary *roster;
 }
 
 - (NSString*)hostName;
