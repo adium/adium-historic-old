@@ -244,9 +244,9 @@
 		6E03C8D307C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E03C8D107C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6E03C8D407C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E03C8D207C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
-		9E24860A0A359D310070153D /* NSCalendarDate+ISO8601Parsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2486060A359D310070153D /* NSCalendarDate+ISO8601Parsing.h */; };
+		9E24860A0A359D310070153D /* NSCalendarDate+ISO8601Parsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2486060A359D310070153D /* NSCalendarDate+ISO8601Parsing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E24860B0A359D310070153D /* NSCalendarDate+ISO8601Parsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2486070A359D310070153D /* NSCalendarDate+ISO8601Parsing.m */; };
-		9E24860C0A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2486080A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h */; };
+		9E24860C0A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2486080A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E24860D0A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2486090A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m */; };
 		EEB11D590887E5B200D0C340 /* OWAddressBookAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = EEB11D570887E5B200D0C340 /* OWAddressBookAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EEB11D5A0887E5B200D0C340 /* OWAddressBookAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB11D580887E5B200D0C340 /* OWAddressBookAdditions.m */; };
@@ -835,10 +835,6 @@
 		4BD1EEDE06D25F0300B3975E /* Additions */ = {
 			isa = PBXGroup;
 			children = (
-				9E2486060A359D310070153D /* NSCalendarDate+ISO8601Parsing.h */,
-				9E2486070A359D310070153D /* NSCalendarDate+ISO8601Parsing.m */,
-				9E2486080A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h */,
-				9E2486090A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m */,
 				34486B4006D1DF0300DA778C /* AIAppleScriptAdditions.h */,
 				34486B4106D1DF0300DA778C /* AIAppleScriptAdditions.m */,
 				34FFB27D087DF1060000A517 /* AIApplicationAdditions.h */,
@@ -911,6 +907,10 @@
 				34FFB272087DF0F70000A517 /* AIFontAdditions.h */,
 				EEB11D570887E5B200D0C340 /* OWAddressBookAdditions.h */,
 				EEB11D580887E5B200D0C340 /* OWAddressBookAdditions.m */,
+				9E2486060A359D310070153D /* NSCalendarDate+ISO8601Parsing.h */,
+				9E2486070A359D310070153D /* NSCalendarDate+ISO8601Parsing.m */,
+				9E2486080A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h */,
+				9E2486090A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m */,
 			);
 			name = Additions;
 			sourceTree = "<group>";
