@@ -453,7 +453,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		NSString *currentStatus = nil;
 		
 		if([listObject statusType] == AIAvailableStatusType)
-			currentStatus = @"available";
+			currentStatus = @"available contact";
 		else if([listObject statusType] == AIAwayStatusType)
 			currentStatus = @"away";
 		else if([listObject statusType] == AIIdleStatus)
