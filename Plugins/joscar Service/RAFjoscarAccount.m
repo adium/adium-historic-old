@@ -228,19 +228,22 @@
 		[self didDisconnect];
 		
 		if (errorMessageShort) {
-			BOOL shouldReconnect = YES;
+			BOOL	 shouldReconnect = YES;
+			NSString *errorMessage = nil;
 			
 			if ([errorMessageShort isEqualToString:@"Password"]) {
 				[self serverReportedInvalidPassword];
 				
 			} else if ([errorMessageShort isEqualToString:@"TooFrequently"]) {
 				shouldReconnect = NO;
-				NSLog(@"Connecting too frequently!");
+				errorMessage = AILocalizedString(@"You have been connecting too frequently. Please wait five minutes or more before trying again; trying sooner will increase the timespan of this temporary ban.", nil);
+
 				AILog(@"Connecting too frequently!");
 
 			} else if ([errorMessageShort isEqualToString:@"TemporarilyBlocked"]) {
 				shouldReconnect = NO;
-				NSLog(@"Temporarily blocked!");
+				errorMessage = AILocalizedString(@"You have been temporarily blocked by the AIM server and cannot connect at this time. Please try again later.", nil);
+				
 				AILog(@"Temporarily blocked!");
 			} else {
 				NSLog(@"Error message short is %@; code %@",errorMessageShort,
@@ -249,6 +252,10 @@
 			
 			if (shouldReconnect) {
 				[self autoReconnectAfterDelay:3.0];
+				
+			} else if (errorMessage) {
+			    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Connection Error",[self formattedUID],[[self service] shortDescription]]
+												withDescription:errorMessage];	
 			}
 		}
 		

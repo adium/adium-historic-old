@@ -871,7 +871,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 							   [commonPrefix lastPathComponent]);
 	[outgoingFileTransfer addFilesInHierarchy:folderName :[NewFile(commonPrefix) autorelease] :fileList];
 	[outgoingFileTransfer setDisplayName:folderName];
-	AILog(@"%@: Sending %@ with name %@ and root %@",self, fileList, folderName, commonPrefix);
+	AILog(@"%@: Sending %@ [common prefix: %@] with name %@ and root %@",self, fileList, commonPrefix, folderName, commonPrefix);
 }
 
 /*
