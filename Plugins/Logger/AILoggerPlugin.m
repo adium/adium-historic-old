@@ -290,7 +290,11 @@ Class LogViewerWindowControllerClass = NULL;
 	if (!objectUID) objectUID = [[chat listObject] UID];
 	objectUID = [objectUID safeFilenameString];
 
+#ifdef XML_LOGGING
 	NSString	*fileName = [self fileNameForLogWithObject:objectUID onDate:date];
+#else
+	NSString	*fileName = [self fileNameForLogWithObject:objectUID onDate:date plainText:NO];
+#endif
 	NSString	*relativePath = [self relativePathForLogWithObject:objectUID onAccount:account];
 	NSString	*absolutePath = [self fullPathOfLogAtRelativePath:relativePath];
 	NSString	*fullPath = [absolutePath stringByAppendingPathComponent:fileName];
