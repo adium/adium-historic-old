@@ -26,7 +26,6 @@
 - (void)_configurePeoplePicker;
 - (void)_setCarryingWindow:(NSWindow *)inWindow;
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
-- (AIService *)serviceFromProperty:(NSString *)property;
 - (NSString *)propertyFromService:(AIService *)service;
 - (void)buildContactTypeMenu;
 - (void)ensureValidContactTypeSelection;
@@ -218,7 +217,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	if ([selectedValues count] > 0)
 		[self _setScreenName:[selectedValues objectAtIndex:0]];
 	//Set the selected service
-	[self _setService:[self serviceFromProperty:[peoplePicker displayedProperty]]];
+	[self _setService:[ESAddressBookIntegrationPlugin serviceFromProperty:[peoplePicker displayedProperty]]];
 	//Set the selected person
 	[self _setPerson:[[peoplePicker selectedRecords] objectAtIndex:0]];
 	
