@@ -163,16 +163,6 @@
 	//Preference code below assumes layout is done before theme.
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
-    
-    //Decide whether the contact list needs to hide when the app is about to deactivate
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(updateWindowHidesOnDeactivateWithNotification:) 
-												 name:NSApplicationWillResignActiveNotification 
-											   object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(updateWindowHidesOnDeactivateWithNotification:) 
-												 name:NSApplicationWillBecomeActiveNotification 
-											   object:nil];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(applicationDidUnhide:) 
@@ -240,6 +230,8 @@
 		
 		//Do a slide immediately if needed (to display as per our new preferneces)
 		[self slideWindowIfNeeded:nil];
+
+		[[self window] setHidesOnDeactivate:(windowHidingStyle == AIContactListWindowHidingStyleBackground)];
 
 		if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
 			if (!slideWindowIfNeededTimer) {
@@ -552,18 +544,6 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 }
 
-- (void)updateWindowHidesOnDeactivateWithNotification:(NSNotification *)notification
-{
-	NSWindow	*myWindow = [self window];
-	
-    if ([[notification name] isEqualToString:NSApplicationWillResignActiveNotification]) {
-        [myWindow setHidesOnDeactivate:[self windowShouldHideOnDeactivate]];
-
-    } else {
-        [myWindow setHidesOnDeactivate:NO];
-    }
-}
-
 /*
  * @brief Adium unhid
  *
@@ -576,23 +556,6 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 }
 
-#if 0
-/*
- * @brief Should the window hide immediately when Adium deactivates?
- *
- * This refers to the value of [[self window] hidesOnDeactivate].
- * Hide on deactivate if the window should not be visible in the background, the window is not slid off screen,
- * and the window is not in a position to be about to slide off screen
- *
- * @result NO if we're going to do dock-like sliding instead of orderOut:-type hiding.
- */
-- (BOOL)windowShouldHideOnDeactivate
-{
-	return (!windowShouldBeVisibleInBackground &&
-			([self windowSlidOffScreenEdgeMask] == AINoEdges) &&
-			([self slidableEdgesAdjacentToWindow] == AINoEdges));
-}
-#endif
 - (BOOL)windowShouldHideOnDeactivate
 {
 	return (windowHidingStyle == AIContactListWindowHidingStyleBackground);
@@ -639,12 +602,13 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	BOOL shouldSlide = NO;
 	
-	if (!preventHiding && ![self windowSlidOffScreenEdgeMask]) {
-		if (!(slideOnlyInBackground && [NSApp isActive])) {
-			shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
-		}
+	if ((windowHidingStyle == AIContactListWindowHidingStyleSliding) &&
+		!preventHiding &&
+		![self windowSlidOffScreenEdgeMask] &&
+		(!(slideOnlyInBackground && [NSApp isActive]))) {
+		shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
 	}
-	
+
 	return shouldSlide;
 }
 
