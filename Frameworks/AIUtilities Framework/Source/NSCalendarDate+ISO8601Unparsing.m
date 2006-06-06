@@ -18,7 +18,7 @@ static BOOL is_leap_year(unsigned year) {
 #pragma mark Public methods
 
 - (NSString *)ISO8601DateStringWithTime:(BOOL)includeTime {
-	NSDateFormatter *formatter = [[NSDateFormatter alloc] initWithDateFormat:(includeTime ? @"%Y-%m-%d" : @"%Y-%m-%dT%H:%M:%S%z") allowNaturalLanguage:NO];
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] initWithDateFormat:(includeTime ? @"%Y-%m-%dT%H:%M:%S%z" : @"%Y-%m-%d") allowNaturalLanguage:NO];
 	NSString *str = [formatter stringFromDate:self];
 	[formatter release];
 	return str;
