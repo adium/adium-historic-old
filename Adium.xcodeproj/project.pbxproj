@@ -1334,6 +1334,10 @@
 		9E20910F06A601B100E33E27 /* CBStatusMenuItemPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E791D9405768B7A00547562 /* CBStatusMenuItemPlugin.h */; };
 		9E20911006A601B200E33E27 /* CBStatusMenuItemPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E791D9505768B7A00547562 /* CBStatusMenuItemPlugin.m */; };
 		9E217B7B06A74CA8002A3F27 /* StatusMenuItemDefaultPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E217B7706A74CA7002A3F27 /* StatusMenuItemDefaultPrefs.plist */; };
+		9E2484E10A35691F0070153D /* NSCalendarDate+ISO8601Parsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2484DD0A35691F0070153D /* NSCalendarDate+ISO8601Parsing.h */; };
+		9E2484E20A35691F0070153D /* NSCalendarDate+ISO8601Unparsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2484DE0A35691F0070153D /* NSCalendarDate+ISO8601Unparsing.m */; };
+		9E2484E30A35691F0070153D /* NSCalendarDate+ISO8601Parsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2484DF0A35691F0070153D /* NSCalendarDate+ISO8601Parsing.m */; };
+		9E2484E40A35691F0070153D /* NSCalendarDate+ISO8601Unparsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2484E00A35691F0070153D /* NSCalendarDate+ISO8601Unparsing.h */; };
 		9E28FDE706ADB30D0041553E /* adiumRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E28FDE506ADB30D0041553E /* adiumRed.png */; };
 		9E28FDE806ADB30D0041553E /* adiumRedHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */; };
 		9E44248808E11F380015D4DD /* AdiumURLHandling.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E44248608E11F380015D4DD /* AdiumURLHandling.h */; };
@@ -1607,7 +1611,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = F53C25AE0A2F95F100F7B73D /* Setup Build Directory */;
+			remoteGlobalIDString = F53C25AE0A2F95F100F7B73D;
 			remoteInfo = "Setup Build Directory";
 		};
 		F5B17CDE0A16C767004AE99E /* PBXContainerItemProxy */ = {
@@ -3484,6 +3488,10 @@
 		9E125C6307D3571400AA91C5 /* ESBlockingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESBlockingPlugin.h; path = Source/ESBlockingPlugin.h; sourceTree = "<group>"; };
 		9E125C6407D3571400AA91C5 /* ESBlockingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESBlockingPlugin.m; path = Source/ESBlockingPlugin.m; sourceTree = "<group>"; };
 		9E217B7706A74CA7002A3F27 /* StatusMenuItemDefaultPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = StatusMenuItemDefaultPrefs.plist; path = "Plugins/Status Menu Item/StatusMenuItemDefaultPrefs.plist"; sourceTree = "<group>"; };
+		9E2484DD0A35691F0070153D /* NSCalendarDate+ISO8601Parsing.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = "NSCalendarDate+ISO8601Parsing.h"; path = "Source/NSCalendarDate+ISO8601Parsing.h"; sourceTree = "<group>"; };
+		9E2484DE0A35691F0070153D /* NSCalendarDate+ISO8601Unparsing.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = "NSCalendarDate+ISO8601Unparsing.m"; path = "Source/NSCalendarDate+ISO8601Unparsing.m"; sourceTree = "<group>"; };
+		9E2484DF0A35691F0070153D /* NSCalendarDate+ISO8601Parsing.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = "NSCalendarDate+ISO8601Parsing.m"; path = "Source/NSCalendarDate+ISO8601Parsing.m"; sourceTree = "<group>"; };
+		9E2484E00A35691F0070153D /* NSCalendarDate+ISO8601Unparsing.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = "NSCalendarDate+ISO8601Unparsing.h"; path = "Source/NSCalendarDate+ISO8601Unparsing.h"; sourceTree = "<group>"; };
 		9E28FDE506ADB30D0041553E /* adiumRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumRed.png; path = "Plugins/Status Menu Item/adiumRed.png"; sourceTree = "<group>"; };
 		9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumRedHighlight.png; path = "Plugins/Status Menu Item/adiumRedHighlight.png"; sourceTree = "<group>"; };
 		9E44248608E11F380015D4DD /* AdiumURLHandling.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumURLHandling.h; path = Source/AdiumURLHandling.h; sourceTree = "<group>"; };
@@ -6323,6 +6331,17 @@
 			name = "WebKit Message View";
 			sourceTree = "<group>";
 		};
+		9E2484BA0A3565450070153D /* ISO Dates */ = {
+			isa = PBXGroup;
+			children = (
+				9E2484DD0A35691F0070153D /* NSCalendarDate+ISO8601Parsing.h */,
+				9E2484DF0A35691F0070153D /* NSCalendarDate+ISO8601Parsing.m */,
+				9E2484E00A35691F0070153D /* NSCalendarDate+ISO8601Unparsing.h */,
+				9E2484DE0A35691F0070153D /* NSCalendarDate+ISO8601Unparsing.m */,
+			);
+			name = "ISO Dates";
+			sourceTree = "<group>";
+		};
 		9E4CF9D104AA69B000415B22 /* Action Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -6397,6 +6416,7 @@
 		9ECB03D909F2A57E00996F44 /* XML Logging */ = {
 			isa = PBXGroup;
 			children = (
+				9E2484BA0A3565450070153D /* ISO Dates */,
 				9ECB03E409F2A9D800996F44 /* AIXMLAppender.h */,
 				9ECB03E509F2A9D800996F44 /* AIXMLAppender.m */,
 			);
@@ -7314,6 +7334,8 @@
 				342F88D00A2A74EB0001DB29 /* PTKeyCombo.h in Headers */,
 				342F88D20A2A74EB0001DB29 /* PTHotKeyCenter.h in Headers */,
 				342F88D40A2A74EB0001DB29 /* PTHotKey.h in Headers */,
+				9E2484E10A35691F0070153D /* NSCalendarDate+ISO8601Parsing.h in Headers */,
+				9E2484E40A35691F0070153D /* NSCalendarDate+ISO8601Unparsing.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8884,6 +8906,8 @@
 				342F88CF0A2A74EB0001DB29 /* PTKeyCombo.m in Sources */,
 				342F88D10A2A74EB0001DB29 /* PTHotKeyCenter.m in Sources */,
 				342F88D30A2A74EB0001DB29 /* PTHotKey.m in Sources */,
+				9E2484E20A35691F0070153D /* NSCalendarDate+ISO8601Unparsing.m in Sources */,
+				9E2484E30A35691F0070153D /* NSCalendarDate+ISO8601Parsing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
