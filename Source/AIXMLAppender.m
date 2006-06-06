@@ -38,6 +38,7 @@
 
 
 #import "AIXMLAppender.h"
+#import <AIUtilities/AIFileManagerAdditions.h>
 #import <sys/stat.h>
 
 #define XML_APPENDER_BLOCK_SIZE 4096
@@ -89,6 +90,9 @@ enum { xmlMarkerLength = 21 };
 			//Get the root element name and set initialized
 			rootElementName = [[self rootElementNameForFileAtPath:filePath] retain];
 			initialized = (rootElementName != nil);				
+		//We may need to create the directory structure, so call this just in case
+		} else {
+			[[NSFileManager defaultManager] createDirectoriesForPath:[filePath stringByDeletingLastPathComponent]];
 		}
 		
 		//Open our file handle and seek if necessary
