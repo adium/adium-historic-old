@@ -36,6 +36,7 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/NSCalendarDate+ISO8601Unparsing.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -60,6 +61,11 @@
 
 #define	LOG_VIEWER_IDENTIFIER		@"LogViewer"
 
+#ifdef XML_LOGGING
+#define XML_LOGGING_VERSION			@"0.4"
+#define NEW_LOGFILE_TIMEOUT			600		//10 minutes
+#endif
+
 @interface AILoggerPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)configureMenuItems;
@@ -78,6 +84,12 @@
 - (void)_cleanDirtyLogsThread;
 
 - (void)upgradeLogExtensions;
+
+#ifdef XML_LOGGING
+- (NSString *)keyForChat:(AIChat *)chat;
+- (AIXMLAppender *)appenderForChat:(AIChat *)chat;
+- (void)closeAppenderForChat:(AIChat *)chat;
+#endif
 @end
 
 static NSString     *logBasePath = nil;     //The base directory of all logs
@@ -98,6 +110,20 @@ Class LogViewerWindowControllerClass = NULL;
 
 	#ifdef XML_LOGGING
 	activeAppenders = [[NSMutableDictionary alloc] init];
+	activeTimers = [[NSMutableDictionary alloc] init];
+	
+	XHTMLDecoder = [[AIHTMLDecoder alloc] initWithHeaders:NO
+												 fontTags:YES
+											closeFontTags:YES
+												colorTags:YES
+												styleTags:YES
+										   encodeNonASCII:YES
+											 encodeSpaces:NO
+										attachmentsAsText:YES
+								onlyIncludeOutgoingImages:NO
+										   simpleTagsOnly:NO
+										   bodyBackground:NO];
+	
 	#endif
 	
 	//Setup our preferences
@@ -227,11 +253,12 @@ Class LogViewerWindowControllerClass = NULL;
 	return ([fullPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", object, dateString]]);
 }
 
+
 #ifdef XML_LOGGING
 + (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date
 {
-	NSString	*dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:nil];
-	return [NSString stringWithFormat:@"%@ (%@).AdiumXMLLog", object, dateString];
+	NSString    *dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil locale:nil];
+	return [NSString stringWithFormat:@"%@ (%@).chatlog", object, dateString];
 }
 #endif
 
@@ -254,6 +281,22 @@ Class LogViewerWindowControllerClass = NULL;
 	return [[self logBasePath] stringByAppendingPathComponent:relativePath];
 }
 
+
++ (NSString *)fullPathForLogOfChat:(AIChat *)chat onDate:(NSDate *)date
+{
+	NSString	*objectUID = [chat name];
+	AIAccount	*account = [chat account];
+
+	if (!objectUID) objectUID = [[chat listObject] UID];
+	objectUID = [objectUID safeFilenameString];
+
+	NSString	*fileName = [self fileNameForLogWithObject:objectUID onDate:date];
+	NSString	*relativePath = [self relativePathForLogWithObject:objectUID onAccount:account];
+	NSString	*absolutePath = [self fullPathOfLogAtRelativePath:relativePath];
+	NSString	*fullPath = [absolutePath stringByAppendingPathComponent:fileName];
+
+	return fullPath;
+}
 
 //Menu Items -----------------------------------------------------------------------------------------------------------
 #pragma mark Menu Items
@@ -351,12 +394,32 @@ Class LogViewerWindowControllerClass = NULL;
 //Log any content that is sent or received
 - (void)contentObjectAdded:(NSNotification *)notification
 {
-#ifdef XML_LOGGING
-	/*
-		Procedure will be the following:
-		- look up the AIXMLAppender for the object and account, creating one if necessary. will probably be in another method.
-		- switch on the content type, and append the XML tag (farm this out to helper methods?)
-	*/
+#ifdef XML_LOGGING	
+	AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
+	if ([content postProcessContent]) {
+		AIChat				*chat = [notification object];
+
+		//Don't log chats for temporary accounts
+		if ([[chat account] isTemporary]) return;	
+							
+		AIXMLAppender *appender = [self appenderForChat:chat];
+		
+		if ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
+			[appender addElementWithName:@"message" 
+								 content:[XHTMLDecoder encodeHTML:[content message] imagesPath:nil]
+						   attributeKeys:[NSArray arrayWithObjects:@"sender", @"time", nil]
+						 attributeValues:[NSArray arrayWithObjects:[[content source] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
+		} else if ([[content type] isEqualToString:CONTENT_STATUS_TYPE]) {
+			[appender addElementWithName:@"status"
+								 content:[XHTMLDecoder encodeHTML:[content message] imagesPath:nil]
+						   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
+						 attributeValues:[NSArray arrayWithObjects:
+							 [(AIContentStatus *)content status], 
+							 [[content source] UID], 
+							 [[NSCalendarDate date] ISO8601DateString], 
+							 nil]];
+		}
+	}
 #else
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
 	if ([content postProcessContent]) {
@@ -399,38 +462,13 @@ Class LogViewerWindowControllerClass = NULL;
 	//Don't log chats for temporary accounts
 	if ([[chat account] isTemporary]) return;
 	
-	NSString	*objectUID = [chat name];
-	NSDate		*date = [NSDate date];
-	AIAccount	*account = [chat account];
+	AIXMLAppender *appender = [self appenderForChat:chat];
 
-	if (!objectUID) objectUID = [[chat listObject] UID];
-	objectUID = [objectUID safeFilenameString];
+	[appender addElementWithName:@"event"
+						 content:nil
+				   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
+				 attributeValues:[NSArray arrayWithObjects:@"windowOpened", [[chat account] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
 
-	NSString	*fileName = [AILoggerPlugin fileNameForLogWithObject:objectUID onDate:date];
-	NSString	*relativePath = [AILoggerPlugin relativePathForLogWithObject:objectUID onAccount:account];
-	NSString	*absolutePath = [AILoggerPlugin fullPathOfLogAtRelativePath:relativePath];
-	NSString	*fullPath = [absolutePath stringByAppendingPathComponent:fileName];
-
-	NSLog(@"Creating appender with path: %@", fullPath);
-	AIXMLAppender *appender = [AIXMLAppender documentWithPath:fullPath];
-	
-	if (![appender isInitialized]) {
-		NSLog(@"Appender not initialized, initializing");
-		[appender initializeDocumentWithRootElementName:@"chat"
-			attributeKeys:[NSArray arrayWithObjects:@"date", @"sender", @"service", nil]
-			attributeValues:[NSArray arrayWithObjects:
-				[date descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:nil],
-				[account UID],
-				[account serviceID],
-				nil]];
-			
-	} else { 
-		NSLog(@"Appender initialized");
-	}
-	
-	NSLog(@"activeAppenders count before adding: %i", [activeAppenders count]);
-	[activeAppenders setObject:appender forKey:fullPath];
-	NSLog(@"activeAppenders count after adding: %i", [activeAppenders count]);
 }
 
 - (void)chatClosed:(NSNotification *)notification
@@ -439,23 +477,73 @@ Class LogViewerWindowControllerClass = NULL;
 
 	//Don't log chats for temporary accounts
 	if ([[chat account] isTemporary]) return;
-	
-	NSString	*objectUID = [chat name];
-	NSDate		*date = [NSDate date];
-	AIAccount	*account = [chat account];
 
-	if (!objectUID) objectUID = [[chat listObject] UID];
-	objectUID = [objectUID safeFilenameString];
+	AIXMLAppender *appender = [self appenderForChat:chat];
 
-	NSString	*fileName = [AILoggerPlugin fileNameForLogWithObject:objectUID onDate:date];
-	NSString	*relativePath = [AILoggerPlugin relativePathForLogWithObject:objectUID onAccount:account];
-	NSString	*absolutePath = [AILoggerPlugin fullPathOfLogAtRelativePath:relativePath];
-	NSString	*fullPath = [absolutePath stringByAppendingPathComponent:fileName];
-	NSLog(@"Removing appender with path: %@", fullPath);
+	[appender addElementWithName:@"event"
+						 content:nil
+				   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
+				 attributeValues:[NSArray arrayWithObjects:@"windowClosed", [[chat account] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
+
+	[self closeAppenderForChat:chat];
+}
+
+- (NSString *)keyForChat:(AIChat *)chat
+{
+	AIAccount *account = [chat account];
+	NSString *chatID = [chat isGroupChat] ? [chat name] : [[chat listObject] UID];
 	
-	NSLog(@"activeAppenders count before removing: %i", [activeAppenders count]);
-	[activeAppenders removeObjectForKey:fullPath];
-	NSLog(@"activeAppenders count after removing: %i", [activeAppenders count]);
+	return [NSString stringWithFormat:@"%@.%@-%@", [account serviceID], [account UID], chatID];
+}
+
+- (AIXMLAppender *)appenderForChat:(AIChat *)chat
+{
+	//Look up the key for this chat and use it to try to retrieve the appender
+	NSString *chatKey = [self keyForChat:chat];
+	AIXMLAppender *appender = [activeAppenders objectForKey:chatKey];
+	
+	//If there's already an appender for this chat, we need to invalidate the timer to close it, since we're using it now
+	if (appender) {
+		[[activeTimers objectForKey:chatKey] invalidate];
+		[activeTimers removeObjectForKey:chatKey];
+	//Otherwise, create a new appender and add it to the dictionary
+	} else {
+		NSDate		*date = [chat dateOpened];
+		NSString	*fullPath = [AILoggerPlugin fullPathForLogOfChat:chat onDate:date];
+
+		appender = [AIXMLAppender documentWithPath:fullPath];
+		[appender initializeDocumentWithRootElementName:@"chat"
+										  attributeKeys:[NSArray arrayWithObjects:@"account", @"service", @"version", nil]
+										attributeValues:[NSArray arrayWithObjects:
+											[[chat account] UID],
+											[[chat account] serviceID],
+											XML_LOGGING_VERSION,
+											nil]];
+		[activeAppenders setObject:appender forKey:chatKey];
+	}
+	
+	return appender;
+}
+
+- (void)closeAppenderForChat:(AIChat *)chat
+{
+	//Create a new timer to fire after the timeout period, which will close the appender
+	NSString *chatKey = [self keyForChat:chat];
+	NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:NEW_LOGFILE_TIMEOUT 
+													  target:self 
+													selector:@selector(finishClosingAppender:) 
+													userInfo:chatKey
+													 repeats:NO];
+	//Add it to the activeTimers dictionary
+	[activeTimers setObject:timer forKey:chatKey];
+}
+
+- (void)finishClosingAppender:(NSTimer *)timer
+{
+	//Remove the appender, closing its file descriptor upon dealloc
+	[activeAppenders removeObjectForKey:[timer userInfo]];
+	//Remove the timer, it's invalid anyway and not very useful
+	[activeTimers removeObjectForKey:[timer userInfo]];
 }
 
 #endif

@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIPlugin.h>
 
 #define PATH_LOGS                       @"/Logs"
@@ -38,6 +39,9 @@
 
 #ifdef XML_LOGGING
 	NSMutableDictionary					*activeAppenders;
+	NSMutableDictionary					*activeTimers;
+	
+	AIHTMLDecoder						*XHTMLDecoder;
 #endif
 	
     //Log viewer menu items
