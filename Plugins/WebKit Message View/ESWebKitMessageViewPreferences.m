@@ -157,15 +157,16 @@
 			[popUp_styles selectItemWithRepresentedObject:style];
 		}
 
-		variant = [prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:style]];
-		if (!variant) variant = [AIWebkitMessageViewStyle defaultVariantForBundle:[plugin messageStyleBundleWithIdentifier:style]];
-		
 		//When the active style changes, rebuild our variant menu for the new style
 		if (!key || [key isEqualToString:KEY_WEBKIT_STYLE]) {
 			[popUp_variants setMenu:[self _variantsMenu]];
 		}
-		
-		[popUp_variants selectItemWithRepresentedObject:variant];
+
+		variant = [prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:style]];
+		if (!variant || ![popUp_variants selectItemWithRepresentedObject:variant]) {
+			variant = [AIWebkitMessageViewStyle defaultVariantForBundle:[plugin messageStyleBundleWithIdentifier:style]];
+			[popUp_variants selectItemWithRepresentedObject:variant];
+		}
 		
 		//Configure our style-specific controls to represent the current style
 		NSFont	*defaultFont = [NSFont cachedFontWithName:[prefDict objectForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:style]]
