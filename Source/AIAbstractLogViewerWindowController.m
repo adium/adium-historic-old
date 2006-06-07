@@ -68,7 +68,7 @@
 - (void)startSearchingClearingCurrentResults:(BOOL)clearCurrentResults;
 - (void)buildSearchMenu;
 - (NSMenuItem *)_menuItemWithTitle:(NSString *)title forSearchMode:(LogSearchMode)mode;
-- (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID;
+- (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID onSearchIndex:(SKIndexRef)logSearchIndex;
 - (void)_logFilter:(NSString *)searchString searchID:(int)searchID mode:(LogSearchMode)mode;
 - (void)installToolbar;
 - (void)updateRankColumnVisibility;
@@ -183,15 +183,15 @@ static int toArraySort(id itemA, id itemB, void *context);
     [blankImage release];
     [activeSearchString release];
 	[acceptableContactNames release];
-
-    //toolbarItems?
-    //aggregateLogIndexProgressTimer?
     
 	[logFromGroupDict release]; logFromGroupDict = nil;
 	[logToGroupDict release]; logToGroupDict = nil;
 
     [filterForAccountName release]; filterForAccountName = nil;
-	
+
+	//We loaded	view_DatePicker from a nib manually, so we must release it
+	[view_DatePicker release]; view_DatePicker = nil;
+
     [super dealloc];
 }
 
@@ -500,13 +500,15 @@ static int toArraySort(id itemA, id itemB, void *context);
 										 forKey:KEY_LOG_VIEWER_SELECTED_COLUMN
 										  group:PREF_GROUP_LOGGING];
 
-    //Disable the search field.  If we don't disable the search field, it will often try to call its target action
-    //after the window has closed (and we are gone).  I'm not sure why this happens, but disabling the field
-    //before we close the window down seems to prevent the crash.
+    /* Disable the search field.  If we don't disable the search field, it will often try to call its target action
+     * after the window has closed (and we are gone).  I'm not sure why this happens, but disabling the field
+     * before we close the window down seems to prevent the crash.
+	 */
     [searchField_logs setEnabled:NO];
 	
-	//Note that the window is closing so we don't take behaviors which could cause messages to the window after
-	//it was gone, like responding to a logIndexUpdated message
+	/* Note that the window is closing so we don't take behaviors which could cause messages to the window after
+	 * it was gone, like responding to a logIndexUpdated message
+	 */
 	windowIsClosing = YES;
 
     //Abort any in-progress searching and indexing, and wait for their completion
@@ -522,7 +524,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[self updateRankColumnVisibility];
 	
 	[sharedLogViewerInstance autorelease]; sharedLogViewerInstance = nil;
-	[toolbarItems autorelease];
+	[toolbarItems autorelease]; toolbarItems = nil;
 }
 
 //Display --------------------------------------------------------------------------------------------------------------
@@ -935,6 +937,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 		[NSNumber numberWithInt:activeSearchID], @"ID",
 		[NSNumber numberWithInt:searchMode], @"Mode",
 		activeSearchString, @"String",
+		[plugin logContentIndex], @"SearchIndex",
 		nil];
     [NSThread detachNewThreadSelector:@selector(filterLogsWithSearch:) toTarget:self withObject:searchDict];
     
@@ -953,7 +956,10 @@ static int toArraySort(id itemA, id itemB, void *context);
     //Increase the active search ID so any existing searches stop, and then
     //wait for any active searches to finish and release the lock
     activeSearchID++;
-    [searchingLock lock]; [searchingLock unlock];
+
+	if (!windowIsClosing) {
+		[searchingLock lock]; [searchingLock unlock];
+	}
 	
 	//If the plugin is in the middle of indexing, and we are content searching, we could be autoupdating a search.
 	//Be sure to invalidate the timer.
@@ -1208,7 +1214,8 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 					break;
 				case LOG_SEARCH_CONTENT:
 					[self _logContentFilter:searchString
-								   searchID:searchID];
+								   searchID:searchID
+							  onSearchIndex:[searchInfoDict objectForKey:@"SearchIndex"]];
 					break;
 			}
 		} else {
@@ -1878,7 +1885,6 @@ static int toArraySort(id itemA, id itemB, void *context)
 		
 		//Now add the path from the root to the actual log
 		fakeRelativePath = [fakeRelativePath stringByAppendingPathComponent:canonicalInPath];
-		NSLog(@"Fake relative path is %@ (will give %@)",fakeRelativePath,[canonicalBasePath stringByAppendingPathComponent:fakeRelativePath]);
 		chatLog = [[[AIChatLog alloc] initWithPath:fakeRelativePath
 											  from:[serviceAndAccountName substringFromIndex:([serviceID length] + 1)] //One off for the '.'
 												to:contactName
