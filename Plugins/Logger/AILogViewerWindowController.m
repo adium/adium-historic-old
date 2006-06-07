@@ -34,9 +34,8 @@ Boolean ContentResultsFilter (SKIndexRef inIndex,
 }
 
 //Perform a content search of the indexed logs
-- (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID
+- (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID onSearchIndex:(SKIndexRef)logSearchIndex
 {		
-	SKIndexRef			logSearchIndex = [plugin logContentIndex];
 	SKSearchGroupRef	searchGroup;
 	CFArrayRef			indexArray;
 	SKSearchResultsRef	searchResults;

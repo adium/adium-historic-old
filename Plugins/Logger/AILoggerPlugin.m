@@ -54,8 +54,8 @@
 #define LOG_INDEX_STATUS_INTERVAL	20      //Interval before updating the log indexing status
 #define LOG_CLEAN_SAVE_INTERVAL		500     //Number of logs to index continuously before saving the dirty array and index
 
-#define LOG_VIEWER					AILocalizedString(@"Log Viewer",nil)
-#define VIEW_LOGS					AILocalizedString(@"View Previous Conversations",nil)
+#define LOG_VIEWER					AILocalizedString(@"Previous Conversations Viewer",nil)
+#define VIEW_LOGS_WITH_CONTACT		AILocalizedString(@"View Previous Conversations",nil)
 
 #define	CURRENT_LOG_VERSION			4       //Version of the log index.  Increase this number to reset everyones index.
 
@@ -73,7 +73,7 @@
 - (NSString *)stringForContentStatus:(AIContentStatus *)inContent;
 - (NSString  *)_writeMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date;
 - (void)displayErrorAndDisableLogging;
-- (void)loadLogIndex;
+- (SKIndexRef)createLogIndex;
 - (void)closeLogIndex;
 - (void)resetLogIndex;
 - (NSString *)_logIndexPath;
@@ -152,9 +152,9 @@ Class LogViewerWindowControllerClass = NULL;
 	//Toolbar item
 	NSToolbarItem	*toolbarItem;
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:LOG_VIEWER_IDENTIFIER
-	                                                    label:AILocalizedString(@"Logs",nil)
+														  label:AILocalizedString(@"Logs",nil)
 	                                               paletteLabel:AILocalizedString(@"View Logs",nil)
-	                                                    toolTip:AILocalizedString(@"View logs of this contact or chat",nil)
+	                                                    toolTip:AILocalizedString(@"View previous conversations with this contact or chat",nil)
 	                                                     target:self
 	                                            settingSelector:@selector(setImage:)
 	                                                itemContent:[NSImage imageNamed:@"LogViewer" forClass:[self class]]
@@ -313,13 +313,13 @@ Class LogViewerWindowControllerClass = NULL;
 																	   keyEquivalent:@"L"] autorelease];
     [[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxiliary];
 
-    viewContactLogsMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_LOGS 
+    viewContactLogsMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_LOGS_WITH_CONTACT
 																					target:self
 																					action:@selector(showLogViewerToSelectedContact:) 
 																			 keyEquivalent:@"l"] autorelease];
     [[adium menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Info];
 
-    viewContactLogsContextMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_LOGS
+    viewContactLogsContextMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_LOGS_WITH_CONTACT
 																						   target:self
 																						   action:@selector(showLogViewerToSelectedContextContact:) 
 																					keyEquivalent:@""] autorelease];
@@ -777,7 +777,6 @@ Class LogViewerWindowControllerClass = NULL;
 		[self resetLogIndex];
 	}
 	
-	[self loadLogIndex];
 	stopIndexingThreads = NO;
 	if (!dirtyLogArray) {
 		[self dirtyAllLogs];
@@ -796,10 +795,14 @@ Class LogViewerWindowControllerClass = NULL;
 //Returns the Search Kit index for log content searching
 - (SKIndexRef)logContentIndex
 {
+	SKIndexRef	returnIndex;
+
 	[logAccessLock lock];
-	SKIndexFlush(index_Content); //Flush the index before returning to ensure everything is up to date
+	if (!index_Content) index_Content = [self createLogIndex];
+	returnIndex = (SKIndexRef)[[(NSObject *)index_Content retain] autorelease];
 	[logAccessLock unlock];
-	return index_Content;
+
+	return returnIndex;
 }
 
 //Mark a log as needing a re-index
@@ -837,18 +840,21 @@ Class LogViewerWindowControllerClass = NULL;
 //Log index ------------------------------------------------------------------------------------------------------------
 //Search kit index used to searching log content
 #pragma mark Log Index
-//Load the log index
-- (void)loadLogIndex
+/*
+ * @brief Create the log index
+ *
+ * Should be called within logAccessLock being locked
+ */
+- (SKIndexRef)createLogIndex
 {
     NSString    *logIndexPath = [self _logIndexPath];
     NSURL       *logIndexPathURL = [NSURL fileURLWithPath:logIndexPath];
-	
+	SKIndexRef	newIndex = NULL;
+
     if ([[NSFileManager defaultManager] fileExistsAtPath:logIndexPath]) {
-		[logAccessLock lock];
-		index_Content = SKIndexOpenWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", true);
-		[logAccessLock unlock];
+		newIndex = SKIndexOpenWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", true);
     }
-    if (!index_Content) {
+    if (!newIndex) {
 		NSDictionary *textAnalysisProperties = [NSDictionary dictionaryWithObjectsAndKeys:
 			[NSNumber numberWithInt:0], kSKMaximumTerms,
 			kCFBooleanTrue, kSKProximityIndexing, 
@@ -857,13 +863,13 @@ Class LogViewerWindowControllerClass = NULL;
 		//Create the index if one doesn't exist
 		[[NSFileManager defaultManager] createDirectoriesForPath:[logIndexPath stringByDeletingLastPathComponent]];
 		
-		[logAccessLock lock];
-		index_Content = SKIndexCreateWithURL((CFURLRef)logIndexPathURL,
-											 (CFStringRef)@"Content", 
-											 kSKIndexInverted,
-											 (CFDictionaryRef)textAnalysisProperties);
-		[logAccessLock unlock];
+		newIndex = SKIndexCreateWithURL((CFURLRef)logIndexPathURL,
+										(CFStringRef)@"Content", 
+										kSKIndexInverted,
+										(CFDictionaryRef)textAnalysisProperties);
     }
+	
+	return newIndex;
 }
 
 //Close the log index
@@ -1028,17 +1034,17 @@ Class LogViewerWindowControllerClass = NULL;
     [dirtyLogLock unlock];
     logsIndexed = 0;
 
-	[NSThread detachNewThreadSelector:@selector(_cleanDirtyLogsThread) toTarget:self withObject:nil];
+	[NSThread detachNewThreadSelector:@selector(_cleanDirtyLogsThread:) toTarget:self withObject:(id)[self logContentIndex]];
 }
-- (void)_cleanDirtyLogsThread
+- (void)_cleanDirtyLogsThread:(SKSearchRef)searchIndex
 {
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
-	SKIndexRef			theIndex = (SKIndexRef)CFRetain(index_Content);
 
 	//Ensure log indexing (in an old thread) isn't already going on and just waiting to stop
 	[indexingThreadLock lock]; [indexingThreadLock unlock];
-
+	
     [indexingThreadLock lock];     //Prevent anything from closing until this thread is complete.
+
     //Start cleaning (If we're still supposed to go)
     if (!stopIndexingThreads) {
 		UInt32	lastUpdate = TickCount();
@@ -1073,7 +1079,7 @@ Class LogViewerWindowControllerClass = NULL;
 					 */
 					CFStringRef documentText = CopyTextContentForFile(NULL, (CFStringRef)fullPath);
 					if (documentText) {
-						SKIndexAddDocumentWithText(theIndex,
+						SKIndexAddDocumentWithText(searchIndex,
 												   document,
 												   documentText,
 												   YES);
@@ -1123,8 +1129,8 @@ Class LogViewerWindowControllerClass = NULL;
 		}
     }
 
-    [indexingThreadLock unlock];
-	CFRelease(theIndex);
+	[indexingThreadLock unlock];
+
     [pool release];
 }
 
