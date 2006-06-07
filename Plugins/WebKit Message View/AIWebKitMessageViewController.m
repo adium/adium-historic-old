@@ -47,7 +47,7 @@
 @class AIContentMessage, AIContentStatus, AIContentObject;
 
 @interface AIWebKitMessageViewController (PRIVATE)
-- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
+- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin preferencesChangedDelegate:(id)inPreferencesChangedDelegate;
 - (void)_initWebView;
 - (void)_primeWebViewAndReprocessContent:(BOOL)reprocessContent;
 - (void)_updateWebViewForCurrentPreferences;
@@ -69,18 +69,24 @@ static NSArray *draggedTypes = nil;
 
 @implementation AIWebKitMessageViewController
 
-+ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
++ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin preferencesChangedDelegate:(id)inPreferencesChangedDelegate
 {
-    return [[[self alloc] initForChat:inChat withPlugin:inPlugin] autorelease];
+    return [[[self alloc] initForChat:inChat withPlugin:inPlugin preferencesChangedDelegate:inPreferencesChangedDelegate] autorelease];	
 }
 
-- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
++ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
+{
+    return [[[self alloc] initForChat:inChat withPlugin:inPlugin preferencesChangedDelegate:nil] autorelease];
+}
+
+- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin preferencesChangedDelegate:(id)inPreferencesChangedDelegate
 {
     //init
     if ((self = [super init]))
 	{		
 		[self _initWebView];
 
+		preferencesChangedDelegate = [inPreferencesChangedDelegate retain];
 		chat = [inChat retain];
 		plugin = [inPlugin retain];
 		contentQueue = [[NSMutableArray alloc] init];
@@ -142,6 +148,7 @@ static NSArray *draggedTypes = nil;
  */
 - (void)dealloc
 {
+	[preferencesChangedDelegate release]; preferencesChangedDelegate = nil;
 	[plugin release]; plugin = nil;
 	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
 
@@ -315,6 +322,13 @@ static NSArray *draggedTypes = nil;
 		[self _updateWebViewForCurrentPreferences];
 	}
 	
+	if (preferencesChangedDelegate) {
+		[preferencesChangedDelegate preferencesChangedForGroup:group
+														   key:key
+														object:object
+												preferenceDict:prefDict
+													 firstTime:firstTime];
+	}
 }
 
 /*!

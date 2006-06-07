@@ -105,9 +105,6 @@
 	[checkBox_showMessageColors setState:[[prefDict objectForKey:KEY_WEBKIT_SHOW_MESSAGE_COLORS] boolValue]];	
 	[checkBox_showMessageFonts setState:[[prefDict objectForKey:KEY_WEBKIT_SHOW_MESSAGE_FONTS] boolValue]];
 
-	//Observe preference changes and set our initial preferences
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	
 	//Allow the alpha component to be set for our background color
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
 	
@@ -123,7 +120,6 @@
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
 	
 	[[adium notificationCenter] removeObserver:self];
-	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[previewListObjectsDict release]; previewListObjectsDict = nil;
 	viewIsOpen = NO;
 }
@@ -433,7 +429,8 @@
 	previewChat = [[AIChat chatForAccount:nil] retain];
 	[previewChat setDisplayName:AILocalizedString(@"Sample Conversation", "Title for the sample conversation")];
 	previewController = [[AIWebKitMessageViewController messageViewControllerForChat:previewChat
-																		  withPlugin:plugin] retain];
+																		  withPlugin:plugin
+														  preferencesChangedDelegate:self] retain];
 	
 	//Enable live refreshing of our preview
 	[previewController setShouldReflectPreferenceChanges:YES];
