@@ -140,8 +140,6 @@
 		340BA84709EC593B000EC441 /* AICorePluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 340BA84509EC593B000EC441 /* AICorePluginLoader.m */; };
 		340BA8D809EC5E35000EC441 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
 		340BAB1D09EC6E53000EC441 /* libirc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 340BAB1C09EC6E53000EC441 /* libirc.a */; };
-		340EC2280736BF32001653BF /* ESRankingCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 340EC2260736BF31001653BF /* ESRankingCell.h */; };
-		340EC2290736BF32001653BF /* ESRankingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 340EC2270736BF32001653BF /* ESRankingCell.m */; };
 		340F440506D8202A0072E2FA /* AIAbstractListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 340F440306D8202A0072E2FA /* AIAbstractListController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		340F440606D8202A0072E2FA /* AIAbstractListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340F440406D8202A0072E2FA /* AIAbstractListController.m */; };
 		340F485206DA5E060072E2FA /* AIListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 340F485006DA5E060072E2FA /* AIListCell.m */; };
@@ -307,6 +305,17 @@
 		3452A9F807891C8A00C3C494 /* ESFileTransferRequestPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3452A9F607891C8A00C3C494 /* ESFileTransferRequestPromptController.h */; };
 		3452A9F907891C8A00C3C494 /* ESFileTransferRequestPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3452A9F707891C8A00C3C494 /* ESFileTransferRequestPromptController.m */; };
 		34536751059BA8EE00A83D9E /* atos in Resources */ = {isa = PBXBuildFile; fileRef = 34536750059BA8ED00A83D9E /* atos */; };
+		3456231C0A3771D800E7FC97 /* ESRankingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231A0A3771D800E7FC97 /* ESRankingCell.m */; };
+		3456231D0A3771D900E7FC97 /* ESRankingCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 3456231B0A3771D800E7FC97 /* ESRankingCell.h */; };
+		345623200A3771E100E7FC97 /* AIChatLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231E0A3771E100E7FC97 /* AIChatLog.m */; };
+		345623210A3771E100E7FC97 /* AIChatLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 3456231F0A3771E100E7FC97 /* AIChatLog.h */; };
+		345623280A3771F400E7FC97 /* AILogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 345623220A3771F300E7FC97 /* AILogViewerWindowController.m */; };
+		345623290A3771F400E7FC97 /* AILogViewerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 345623230A3771F300E7FC97 /* AILogViewerWindowController.h */; };
+		3456232A0A3771F400E7FC97 /* AILogToGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 345623240A3771F300E7FC97 /* AILogToGroup.m */; };
+		3456232B0A3771F400E7FC97 /* AILogToGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 345623250A3771F400E7FC97 /* AILogToGroup.h */; };
+		3456232C0A3771F400E7FC97 /* AILogFromGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 345623260A3771F400E7FC97 /* AILogFromGroup.m */; };
+		3456232D0A3771F400E7FC97 /* AILogFromGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 345623270A3771F400E7FC97 /* AILogFromGroup.h */; };
+		3456232F0A37723400E7FC97 /* LogViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3456232E0A37723400E7FC97 /* LogViewer.nib */; };
 		34575E2E07CBA70D004A4FFF /* FileTransferRequestPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E2A07CBA70D004A4FFF /* FileTransferRequestPrompt.nib */; };
 		34575E2F07CBA70D004A4FFF /* FileTransferProgressWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E2B07CBA70D004A4FFF /* FileTransferProgressWindow.nib */; };
 		34575E3007CBA70D004A4FFF /* FileTransferPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34575E2C07CBA70D004A4FFF /* FileTransferPrefs.plist */; };
@@ -1045,8 +1054,6 @@
 		4B2DC069066F6B1200AD5AAD /* ContactSettingsPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B2DC068066F6B1200AD5AAD /* ContactSettingsPane.nib */; };
 		4B2DC06D066F705800AD5AAD /* AIContactSettingsPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B2DC06B066F705800AD5AAD /* AIContactSettingsPane.h */; };
 		4B2DC06E066F705800AD5AAD /* AIContactSettingsPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2DC06C066F705800AD5AAD /* AIContactSettingsPane.m */; };
-		4B3B125907AC411D00187CCF /* AIChatLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B3B125707AC411D00187CCF /* AIChatLog.h */; };
-		4B3B125A07AC411D00187CCF /* AIChatLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B125807AC411D00187CCF /* AIChatLog.m */; };
 		4B422C0B05ACB248005E720B /* AISortController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B422C0905ACB248005E720B /* AISortController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B422C0C05ACB248005E720B /* AISortController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B422C0A05ACB248005E720B /* AISortController.m */; };
 		4B4B60B507D39910004C5D11 /* AIContentController.m in Sources */ = {isa = PBXBuildFile; fileRef = F55B415D03AB8B5601A8010A /* AIContentController.m */; };
@@ -1190,13 +1197,6 @@
 		4BD6746206001D750049CAF7 /* ESSendMessageContactAlertPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 342DC5C005783DE7000E1D83 /* ESSendMessageContactAlertPlugin.h */; };
 		4BD6746306001D760049CAF7 /* ESSendMessageContactAlertPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 342DC5BF05783DE7000E1D83 /* ESSendMessageContactAlertPlugin.m */; };
 		4BD6746606001D770049CAF7 /* SendMessageContactAlert.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342DC7FE05784463000E1D83 /* SendMessageContactAlert.nib */; };
-		4BD6746906001D7F0049CAF7 /* AILogFromGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 6C644D3605776BC600D79723 /* AILogFromGroup.h */; };
-		4BD6746A06001D800049CAF7 /* AILogFromGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C644D3705776BC600D79723 /* AILogFromGroup.m */; };
-		4BD6746B06001D800049CAF7 /* AILogToGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 6C644D3C05776BEF00D79723 /* AILogToGroup.h */; };
-		4BD6746C06001D800049CAF7 /* AILogToGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C644D3D05776BF000D79723 /* AILogToGroup.m */; };
-		4BD6746D06001D800049CAF7 /* AILogViewerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD68227045B010D00A8010A /* AILogViewerWindowController.h */; };
-		4BD6746E06001D810049CAF7 /* AILogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD68228045B010D00A8010A /* AILogViewerWindowController.m */; };
-		4BD6746F06001D810049CAF7 /* LogViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B3DB8FD04547A8D00A8010A /* LogViewer.nib */; };
 		4BD6747106001D820049CAF7 /* AILoggerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C8C7FA403CBA21B00267226 /* AILoggerPlugin.h */; };
 		4BD6747206001D820049CAF7 /* AILoggerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C8C7FA503CBA21B00267226 /* AILoggerPlugin.m */; };
 		4BD6747606001D840049CAF7 /* LoggingDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B54D10605028BC400A8010A /* LoggingDefaults.plist */; };
@@ -1351,7 +1351,6 @@
 		B747E986058D144C00A9F037 /* AILaTeXPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B747E984058D144C00A9F037 /* AILaTeXPlugin.h */; };
 		B747E987058D144C00A9F037 /* AILaTeXPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B747E985058D144C00A9F037 /* AILaTeXPlugin.m */; };
 		B7FD6C170596550F000C4D9D /* SQLLogging.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7FD6C160596550F000C4D9D /* SQLLogging.plist */; };
-		C45F7F6706C75E210056B1F2 /* showdrawer.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C45F7F6406C75E210056B1F2 /* showdrawer.tiff */; };
 		CA25AAA907B428C800DDBD7E /* BDFireImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = CA25AA9F07B428C600DDBD7E /* BDFireImporter.h */; };
 		CA25AAAA07B428C800DDBD7E /* BDFireImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CA25AAA007B428C700DDBD7E /* BDFireImporter.m */; };
 		CA25AAAB07B428C800DDBD7E /* BDiChatImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = CA25AAA107B428C700DDBD7E /* BDiChatImporter.h */; };
@@ -1857,8 +1856,6 @@
 		340BA84409EC593A000EC441 /* AICorePluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICorePluginLoader.h; path = "Frameworks/Adium Framework/AICorePluginLoader.h"; sourceTree = "<group>"; };
 		340BA84509EC593B000EC441 /* AICorePluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICorePluginLoader.m; path = "Frameworks/Adium Framework/AICorePluginLoader.m"; sourceTree = "<group>"; };
 		340BAB1C09EC6E53000EC441 /* libirc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libirc.a; path = "Plugins/IRC Libgaim Plugin/libirc.a"; sourceTree = "<group>"; };
-		340EC2260736BF31001653BF /* ESRankingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESRankingCell.h; path = Plugins/Logger/ESRankingCell.h; sourceTree = "<group>"; };
-		340EC2270736BF32001653BF /* ESRankingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESRankingCell.m; path = Plugins/Logger/ESRankingCell.m; sourceTree = "<group>"; };
 		340F440306D8202A0072E2FA /* AIAbstractListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAbstractListController.h; path = "Frameworks/Adium Framework/AIAbstractListController.h"; sourceTree = "<group>"; };
 		340F440406D8202A0072E2FA /* AIAbstractListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAbstractListController.m; path = "Frameworks/Adium Framework/AIAbstractListController.m"; sourceTree = "<group>"; };
 		340F485006DA5E060072E2FA /* AIListCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIListCell.m; path = "Frameworks/Adium Framework/AIListCell.m"; sourceTree = "<group>"; };
@@ -2183,6 +2180,17 @@
 		3452A9F607891C8A00C3C494 /* ESFileTransferRequestPromptController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferRequestPromptController.h; path = Source/ESFileTransferRequestPromptController.h; sourceTree = "<group>"; };
 		3452A9F707891C8A00C3C494 /* ESFileTransferRequestPromptController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferRequestPromptController.m; path = Source/ESFileTransferRequestPromptController.m; sourceTree = "<group>"; };
 		34536750059BA8ED00A83D9E /* atos */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = atos; sourceTree = "<group>"; };
+		3456231A0A3771D800E7FC97 /* ESRankingCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESRankingCell.m; path = Source/ESRankingCell.m; sourceTree = "<group>"; };
+		3456231B0A3771D800E7FC97 /* ESRankingCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESRankingCell.h; path = Source/ESRankingCell.h; sourceTree = "<group>"; };
+		3456231E0A3771E100E7FC97 /* AIChatLog.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIChatLog.m; path = Source/AIChatLog.m; sourceTree = "<group>"; };
+		3456231F0A3771E100E7FC97 /* AIChatLog.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIChatLog.h; path = Source/AIChatLog.h; sourceTree = "<group>"; };
+		345623220A3771F300E7FC97 /* AILogViewerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILogViewerWindowController.m; path = Source/AILogViewerWindowController.m; sourceTree = "<group>"; };
+		345623230A3771F300E7FC97 /* AILogViewerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILogViewerWindowController.h; path = Source/AILogViewerWindowController.h; sourceTree = "<group>"; };
+		345623240A3771F300E7FC97 /* AILogToGroup.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILogToGroup.m; path = Source/AILogToGroup.m; sourceTree = "<group>"; };
+		345623250A3771F400E7FC97 /* AILogToGroup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILogToGroup.h; path = Source/AILogToGroup.h; sourceTree = "<group>"; };
+		345623260A3771F400E7FC97 /* AILogFromGroup.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILogFromGroup.m; path = Source/AILogFromGroup.m; sourceTree = "<group>"; };
+		345623270A3771F400E7FC97 /* AILogFromGroup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILogFromGroup.h; path = Source/AILogFromGroup.h; sourceTree = "<group>"; };
+		3456232E0A37723400E7FC97 /* LogViewer.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LogViewer.nib; path = Resources/LogViewer.nib; sourceTree = "<group>"; };
 		34575E2A07CBA70D004A4FFF /* FileTransferRequestPrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FileTransferRequestPrompt.nib; path = Resources/FileTransferRequestPrompt.nib; sourceTree = "<group>"; };
 		34575E2B07CBA70D004A4FFF /* FileTransferProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FileTransferProgressWindow.nib; path = Resources/FileTransferProgressWindow.nib; sourceTree = "<group>"; };
 		34575E2C07CBA70D004A4FFF /* FileTransferPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = FileTransferPrefs.plist; path = Resources/FileTransferPrefs.plist; sourceTree = "<group>"; };
@@ -3176,9 +3184,6 @@
 		4B388E0D0719C376004DE713 /* AIMSNServicePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIMSNServicePreferences.h; path = "Plugins/Gaim Service/AIMSNServicePreferences.h"; sourceTree = "<group>"; };
 		4B388E0E0719C376004DE713 /* AIMSNServicePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIMSNServicePreferences.m; path = "Plugins/Gaim Service/AIMSNServicePreferences.m"; sourceTree = "<group>"; };
 		4B388E4C0719C445004DE713 /* MSNServicePrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MSNServicePrefs.nib; path = "Plugins/Gaim Service/MSNServicePrefs.nib"; sourceTree = "<group>"; };
-		4B3B125707AC411D00187CCF /* AIChatLog.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIChatLog.h; path = Plugins/Logger/AIChatLog.h; sourceTree = "<group>"; };
-		4B3B125807AC411D00187CCF /* AIChatLog.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIChatLog.m; path = Plugins/Logger/AIChatLog.m; sourceTree = "<group>"; };
-		4B3DB8FD04547A8D00A8010A /* LogViewer.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LogViewer.nib; path = Plugins/Logger/LogViewer.nib; sourceTree = SOURCE_ROOT; };
 		4B422C0905ACB248005E720B /* AISortController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AISortController.h; path = "Frameworks/Adium Framework/AISortController.h"; sourceTree = "<group>"; };
 		4B422C0A05ACB248005E720B /* AISortController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AISortController.m; path = "Frameworks/Adium Framework/AISortController.m"; sourceTree = "<group>"; };
 		4B5323EA0747BDED0073DF4D /* AICrashController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICrashController.h; path = Source/AICrashController.h; sourceTree = SOURCE_ROOT; };
@@ -3342,8 +3347,6 @@
 		4BD548AF086086B5008DF3CB /* AISoundSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISoundSet.m; path = "Frameworks/Adium Framework/AISoundSet.m"; sourceTree = "<group>"; };
 		4BD62D7E07CE8F240099EBA2 /* AIWebkitMessageViewStyle.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIWebkitMessageViewStyle.h; path = "Plugins/WebKit Message View/AIWebkitMessageViewStyle.h"; sourceTree = "<group>"; };
 		4BD62D7F07CE8F240099EBA2 /* AIWebkitMessageViewStyle.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIWebkitMessageViewStyle.m; path = "Plugins/WebKit Message View/AIWebkitMessageViewStyle.m"; sourceTree = "<group>"; };
-		4BD68227045B010D00A8010A /* AILogViewerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILogViewerWindowController.h; path = Plugins/Logger/AILogViewerWindowController.h; sourceTree = "<group>"; };
-		4BD68228045B010D00A8010A /* AILogViewerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILogViewerWindowController.m; path = Plugins/Logger/AILogViewerWindowController.m; sourceTree = "<group>"; };
 		4BDAB9910861C661009FB73B /* AdiumTyping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumTyping.h; path = Source/AdiumTyping.h; sourceTree = "<group>"; };
 		4BDAB9920861C661009FB73B /* AdiumTyping.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumTyping.m; path = Source/AdiumTyping.m; sourceTree = "<group>"; };
 		4BDAF69507A1560F00276D68 /* AIAccountProxySettings.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountProxySettings.h; path = Source/AIAccountProxySettings.h; sourceTree = "<group>"; };
@@ -3413,10 +3416,6 @@
 		63EA6407094BB9A9009C8453 /* AIStatusIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStatusIconPreviewController.m; path = Source/AIStatusIconPreviewController.m; sourceTree = "<group>"; };
 		6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumHighlight.png; path = "Plugins/Status Menu Item/adiumHighlight.png"; sourceTree = "<group>"; };
 		6C5C3C2605F6532600490341 /* SQL Logger.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SQL Logger.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6C644D3605776BC600D79723 /* AILogFromGroup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILogFromGroup.h; path = Plugins/Logger/AILogFromGroup.h; sourceTree = "<group>"; };
-		6C644D3705776BC600D79723 /* AILogFromGroup.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILogFromGroup.m; path = Plugins/Logger/AILogFromGroup.m; sourceTree = "<group>"; };
-		6C644D3C05776BEF00D79723 /* AILogToGroup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILogToGroup.h; path = Plugins/Logger/AILogToGroup.h; sourceTree = "<group>"; };
-		6C644D3D05776BF000D79723 /* AILogToGroup.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILogToGroup.m; path = Plugins/Logger/AILogToGroup.m; sourceTree = "<group>"; };
 		6CF42677057763E100F27FAA /* ESContactAlertsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESContactAlertsController.h; path = Source/ESContactAlertsController.h; sourceTree = "<group>"; };
 		6CF42678057763E200F27FAA /* ESContactAlertsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESContactAlertsController.m; path = Source/ESContactAlertsController.m; sourceTree = "<group>"; };
 		6E4D960606B73979005235E9 /* DCJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCJoinChatViewController.h; path = "Frameworks/Adium Framework/DCJoinChatViewController.h"; sourceTree = "<group>"; };
@@ -3595,7 +3594,6 @@
 		B7FD6C160596550F000C4D9D /* SQLLogging.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = SQLLogging.plist; sourceTree = "<group>"; };
 		C4243C920638E4EA007AD2D9 /* BGEmoticonMenuPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = BGEmoticonMenuPlugin.h; path = Source/BGEmoticonMenuPlugin.h; sourceTree = "<group>"; };
 		C4243C930638E4EA007AD2D9 /* BGEmoticonMenuPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = BGEmoticonMenuPlugin.m; path = Source/BGEmoticonMenuPlugin.m; sourceTree = "<group>"; };
-		C45F7F6406C75E210056B1F2 /* showdrawer.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = showdrawer.tiff; path = Plugins/Logger/showdrawer.tiff; sourceTree = "<group>"; };
 		CA25AA9F07B428C600DDBD7E /* BDFireImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BDFireImporter.h; sourceTree = "<group>"; };
 		CA25AAA007B428C700DDBD7E /* BDFireImporter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = BDFireImporter.m; sourceTree = "<group>"; };
 		CA25AAA107B428C700DDBD7E /* BDiChatImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BDiChatImporter.h; sourceTree = "<group>"; };
@@ -5986,20 +5984,19 @@
 		4BE666CC0577AFA0007E115C /* Log Viewer */ = {
 			isa = PBXGroup;
 			children = (
-				340EC2260736BF31001653BF /* ESRankingCell.h */,
-				340EC2270736BF32001653BF /* ESRankingCell.m */,
-				C45F7F6406C75E210056B1F2 /* showdrawer.tiff */,
-				4B3B125707AC411D00187CCF /* AIChatLog.h */,
-				4B3B125807AC411D00187CCF /* AIChatLog.m */,
-				6C644D3605776BC600D79723 /* AILogFromGroup.h */,
-				6C644D3705776BC600D79723 /* AILogFromGroup.m */,
-				6C644D3C05776BEF00D79723 /* AILogToGroup.h */,
-				6C644D3D05776BF000D79723 /* AILogToGroup.m */,
-				4BD68227045B010D00A8010A /* AILogViewerWindowController.h */,
-				4BD68228045B010D00A8010A /* AILogViewerWindowController.m */,
-				4B3DB8FD04547A8D00A8010A /* LogViewer.nib */,
+				3456231A0A3771D800E7FC97 /* ESRankingCell.m */,
+				3456231B0A3771D800E7FC97 /* ESRankingCell.h */,
+				3456231E0A3771E100E7FC97 /* AIChatLog.m */,
+				3456231F0A3771E100E7FC97 /* AIChatLog.h */,
+				345623220A3771F300E7FC97 /* AILogViewerWindowController.m */,
+				345623230A3771F300E7FC97 /* AILogViewerWindowController.h */,
+				345623240A3771F300E7FC97 /* AILogToGroup.m */,
+				345623250A3771F400E7FC97 /* AILogToGroup.h */,
+				345623260A3771F400E7FC97 /* AILogFromGroup.m */,
+				345623270A3771F400E7FC97 /* AILogFromGroup.h */,
 				3410745D09B6965600565C9E /* AIMDLogViewerWindowController.h */,
 				3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */,
+				3456232E0A37723400E7FC97 /* LogViewer.nib */,
 				342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */,
 				342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */,
 				34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */,
@@ -7097,9 +7094,6 @@
 				4BD6745706001D5E0049CAF7 /* AIDockUnviewedContentPlugin.h in Headers */,
 				4BD6745D06001D730049CAF7 /* ESOpenMessageWindowContactAlertPlugin.h in Headers */,
 				4BD6746206001D750049CAF7 /* ESSendMessageContactAlertPlugin.h in Headers */,
-				4BD6746906001D7F0049CAF7 /* AILogFromGroup.h in Headers */,
-				4BD6746B06001D800049CAF7 /* AILogToGroup.h in Headers */,
-				4BD6746D06001D800049CAF7 /* AILogViewerWindowController.h in Headers */,
 				4BD6747106001D820049CAF7 /* AILoggerPlugin.h in Headers */,
 				4BD6752F06001E0C0049CAF7 /* AIDualWindowInterfacePlugin.h in Headers */,
 				4BD6753506001E0F0049CAF7 /* AIMessageTabViewItem.h in Headers */,
@@ -7143,7 +7137,6 @@
 				344458EF070B5BEF00D8E932 /* ESDebugWindowController.h in Headers */,
 				4B0149070733D3A5001A4C57 /* AICoreComponentLoader.h in Headers */,
 				34F1023C073449D500890D3B /* XtrasInstaller.h in Headers */,
-				340EC2280736BF32001653BF /* ESRankingCell.h in Headers */,
 				4B5323EC0747BDED0073DF4D /* AICrashController.h in Headers */,
 				4B53245A0747C82B0073DF4D /* AIExceptionController.h in Headers */,
 				349FE304074D01D300E36B3B /* ESFileTransferProgressWindowController.h in Headers */,
@@ -7164,7 +7157,6 @@
 				349E2E8D07A8AF0C00EAB76A /* AIEmoticonPackPreviewController.h in Headers */,
 				34C14CD207A8B1AB003CC138 /* AIEmoticonPackPreviewView.h in Headers */,
 				4B292D3207A9C8E100C5F882 /* AIStatusController.h in Headers */,
-				4B3B125907AC411D00187CCF /* AIChatLog.h in Headers */,
 				4BE6175507AC67EE0049C87D /* AIAutoIdlePlugin.h in Headers */,
 				4BE6175707AC67EE0049C87D /* AIAutoReplyPlugin.h in Headers */,
 				4BE6175D07AC67EE0049C87D /* AIStateMenuPlugin.h in Headers */,
@@ -7314,6 +7306,11 @@
 				342F88D00A2A74EB0001DB29 /* PTKeyCombo.h in Headers */,
 				342F88D20A2A74EB0001DB29 /* PTHotKeyCenter.h in Headers */,
 				342F88D40A2A74EB0001DB29 /* PTHotKey.h in Headers */,
+				3456231D0A3771D900E7FC97 /* ESRankingCell.h in Headers */,
+				345623210A3771E100E7FC97 /* AIChatLog.h in Headers */,
+				345623290A3771F400E7FC97 /* AILogViewerWindowController.h in Headers */,
+				3456232B0A3771F400E7FC97 /* AILogToGroup.h in Headers */,
+				3456232D0A3771F400E7FC97 /* AILogFromGroup.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8103,7 +8100,6 @@
 				34D8337707CBD808006466F2 /* pref-advanced.png in Resources */,
 				4BD6742F06001D1D0049CAF7 /* EmoticonPrefs.nib in Resources */,
 				4BD6746606001D770049CAF7 /* SendMessageContactAlert.nib in Resources */,
-				4BD6746F06001D810049CAF7 /* LogViewer.nib in Resources */,
 				4BD6753906001E100049CAF7 /* MessageView.nib in Resources */,
 				4BD6753B06001E120049CAF7 /* MessageWindow.nib in Resources */,
 				4BD6753F06001E150049CAF7 /* AccountSelectionView.nib in Resources */,
@@ -8137,7 +8133,6 @@
 				4B97DB6706AC123A0003EE49 /* linkToolbar.png in Resources */,
 				9E28FDE706ADB30D0041553E /* adiumRed.png in Resources */,
 				9E28FDE806ADB30D0041553E /* adiumRedHighlight.png in Resources */,
-				C45F7F6706C75E210056B1F2 /* showdrawer.tiff in Resources */,
 				4BF98DCD06D149EE00E8781D /* ContactStatusColoringDefaults.plist in Resources */,
 				3461621406FB482D009181D8 /* UserList Theme.plist in Resources */,
 				3461621706FB482D009181D8 /* UserList Layout.plist in Resources */,
@@ -8259,6 +8254,7 @@
 				342F88AA0A2A74BF0001DB29 /* RemoveShortcutRollover.tif in Resources */,
 				342F88AB0A2A74BF0001DB29 /* RemoveShortcut.tif in Resources */,
 				342F88AC0A2A74BF0001DB29 /* RemoveShortcutPressed.tif in Resources */,
+				3456232F0A37723400E7FC97 /* LogViewer.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8671,9 +8667,6 @@
 				4BD6745806001D5E0049CAF7 /* AIDockUnviewedContentPlugin.m in Sources */,
 				4BD6745E06001D740049CAF7 /* ESOpenMessageWindowContactAlertPlugin.m in Sources */,
 				4BD6746306001D760049CAF7 /* ESSendMessageContactAlertPlugin.m in Sources */,
-				4BD6746A06001D800049CAF7 /* AILogFromGroup.m in Sources */,
-				4BD6746C06001D800049CAF7 /* AILogToGroup.m in Sources */,
-				4BD6746E06001D810049CAF7 /* AILogViewerWindowController.m in Sources */,
 				4BD6747206001D820049CAF7 /* AILoggerPlugin.m in Sources */,
 				4BD6753006001E0D0049CAF7 /* AIDualWindowInterfacePlugin.m in Sources */,
 				4BD6753606001E0F0049CAF7 /* AIMessageTabViewItem.m in Sources */,
@@ -8718,7 +8711,6 @@
 				344458F0070B5BEF00D8E932 /* ESDebugWindowController.m in Sources */,
 				4B0149080733D3A5001A4C57 /* AICoreComponentLoader.m in Sources */,
 				34F1023B073449D500890D3B /* XtrasInstaller.m in Sources */,
-				340EC2290736BF32001653BF /* ESRankingCell.m in Sources */,
 				4B5323ED0747BDED0073DF4D /* AICrashController.m in Sources */,
 				4B53245B0747C82B0073DF4D /* AIExceptionController.m in Sources */,
 				349FE303074D01D300E36B3B /* ESFileTransferProgressWindowController.m in Sources */,
@@ -8738,7 +8730,6 @@
 				349E2E8E07A8AF0C00EAB76A /* AIEmoticonPackPreviewController.m in Sources */,
 				34C14CD307A8B1AB003CC138 /* AIEmoticonPackPreviewView.m in Sources */,
 				4B292D3307A9C8E100C5F882 /* AIStatusController.m in Sources */,
-				4B3B125A07AC411D00187CCF /* AIChatLog.m in Sources */,
 				4BE6175607AC67EE0049C87D /* AIAutoIdlePlugin.m in Sources */,
 				4BE6175807AC67EE0049C87D /* AIAutoReplyPlugin.m in Sources */,
 				4BE6175E07AC67EE0049C87D /* AIStateMenuPlugin.m in Sources */,
@@ -8884,6 +8875,11 @@
 				342F88CF0A2A74EB0001DB29 /* PTKeyCombo.m in Sources */,
 				342F88D10A2A74EB0001DB29 /* PTHotKeyCenter.m in Sources */,
 				342F88D30A2A74EB0001DB29 /* PTHotKey.m in Sources */,
+				3456231C0A3771D800E7FC97 /* ESRankingCell.m in Sources */,
+				345623200A3771E100E7FC97 /* AIChatLog.m in Sources */,
+				345623280A3771F400E7FC97 /* AILogViewerWindowController.m in Sources */,
+				3456232A0A3771F400E7FC97 /* AILogToGroup.m in Sources */,
+				3456232C0A3771F400E7FC97 /* AILogFromGroup.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

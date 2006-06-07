@@ -57,22 +57,18 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 	return self;
 }
 
-//Dealloc
-- (void)dealloc
-{    
-    [super dealloc];
-}
-
 //Prepare the about box window
 - (void)windowDidLoad
 {
     NSAttributedString		*creditsString;
     
     //Credits
-    creditsString = [[[NSAttributedString alloc] initWithPath:[[NSBundle mainBundle] pathForResource:@"Credits.rtf" ofType:nil] documentAttributes:nil] autorelease];
+    creditsString = [[[NSAttributedString alloc] initWithPath:[[NSBundle mainBundle] pathForResource:@"Credits" ofType:@"rtf"]
+										   documentAttributes:nil] autorelease];
     [[textView_credits textStorage] setAttributedString:creditsString];
     [[textView_credits enclosingScrollView] setLineScroll:0.0];
     [[textView_credits enclosingScrollView] setPageScroll:0.0];
+	[[textView_credits enclosingScrollView] setVerticalScroller:nil];
     
     //Start scrolling    
     scrollLocation = 0; 
