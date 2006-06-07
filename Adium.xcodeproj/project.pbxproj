@@ -316,6 +316,9 @@
 		3456232C0A3771F400E7FC97 /* AILogFromGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 345623260A3771F400E7FC97 /* AILogFromGroup.m */; };
 		3456232D0A3771F400E7FC97 /* AILogFromGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 345623270A3771F400E7FC97 /* AILogFromGroup.h */; };
 		3456232F0A37723400E7FC97 /* LogViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3456232E0A37723400E7FC97 /* LogViewer.nib */; };
+		345623380A3773C300E7FC97 /* LoggingDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 345623370A3773C300E7FC97 /* LoggingDefaults.plist */; };
+		3456233F0A3773D100E7FC97 /* AILoggerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456233D0A3773D000E7FC97 /* AILoggerPlugin.m */; };
+		345623400A3773D100E7FC97 /* AILoggerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 3456233E0A3773D000E7FC97 /* AILoggerPlugin.h */; };
 		34575E2E07CBA70D004A4FFF /* FileTransferRequestPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E2A07CBA70D004A4FFF /* FileTransferRequestPrompt.nib */; };
 		34575E2F07CBA70D004A4FFF /* FileTransferProgressWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E2B07CBA70D004A4FFF /* FileTransferProgressWindow.nib */; };
 		34575E3007CBA70D004A4FFF /* FileTransferPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34575E2C07CBA70D004A4FFF /* FileTransferPrefs.plist */; };
@@ -1197,9 +1200,6 @@
 		4BD6746206001D750049CAF7 /* ESSendMessageContactAlertPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 342DC5C005783DE7000E1D83 /* ESSendMessageContactAlertPlugin.h */; };
 		4BD6746306001D760049CAF7 /* ESSendMessageContactAlertPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 342DC5BF05783DE7000E1D83 /* ESSendMessageContactAlertPlugin.m */; };
 		4BD6746606001D770049CAF7 /* SendMessageContactAlert.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342DC7FE05784463000E1D83 /* SendMessageContactAlert.nib */; };
-		4BD6747106001D820049CAF7 /* AILoggerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C8C7FA403CBA21B00267226 /* AILoggerPlugin.h */; };
-		4BD6747206001D820049CAF7 /* AILoggerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C8C7FA503CBA21B00267226 /* AILoggerPlugin.m */; };
-		4BD6747606001D840049CAF7 /* LoggingDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B54D10605028BC400A8010A /* LoggingDefaults.plist */; };
 		4BD6752F06001E0C0049CAF7 /* AIDualWindowInterfacePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = F579397F033E756E01A8010A /* AIDualWindowInterfacePlugin.h */; };
 		4BD6753006001E0D0049CAF7 /* AIDualWindowInterfacePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5793980033E756E01A8010A /* AIDualWindowInterfacePlugin.m */; };
 		4BD6753506001E0F0049CAF7 /* AIMessageTabViewItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BACB70103C8CB5E00A8010A /* AIMessageTabViewItem.h */; };
@@ -2191,6 +2191,9 @@
 		345623260A3771F400E7FC97 /* AILogFromGroup.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILogFromGroup.m; path = Source/AILogFromGroup.m; sourceTree = "<group>"; };
 		345623270A3771F400E7FC97 /* AILogFromGroup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILogFromGroup.h; path = Source/AILogFromGroup.h; sourceTree = "<group>"; };
 		3456232E0A37723400E7FC97 /* LogViewer.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LogViewer.nib; path = Resources/LogViewer.nib; sourceTree = "<group>"; };
+		345623370A3773C300E7FC97 /* LoggingDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = LoggingDefaults.plist; path = Resources/LoggingDefaults.plist; sourceTree = "<group>"; };
+		3456233D0A3773D000E7FC97 /* AILoggerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILoggerPlugin.m; path = Source/AILoggerPlugin.m; sourceTree = "<group>"; };
+		3456233E0A3773D000E7FC97 /* AILoggerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILoggerPlugin.h; path = Source/AILoggerPlugin.h; sourceTree = "<group>"; };
 		34575E2A07CBA70D004A4FFF /* FileTransferRequestPrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FileTransferRequestPrompt.nib; path = Resources/FileTransferRequestPrompt.nib; sourceTree = "<group>"; };
 		34575E2B07CBA70D004A4FFF /* FileTransferProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FileTransferProgressWindow.nib; path = Resources/FileTransferProgressWindow.nib; sourceTree = "<group>"; };
 		34575E2C07CBA70D004A4FFF /* FileTransferPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = FileTransferPrefs.plist; path = Resources/FileTransferPrefs.plist; sourceTree = "<group>"; };
@@ -3194,7 +3197,6 @@
 		4B539C4C05EFD6CD00E5921A /* AIWebKitMessageViewPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIWebKitMessageViewPlugin.m; path = "Plugins/WebKit Message View/AIWebKitMessageViewPlugin.m"; sourceTree = "<group>"; };
 		4B539C5105EFD6FA00E5921A /* AIWebKitMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIWebKitMessageViewController.h; path = "Plugins/WebKit Message View/AIWebKitMessageViewController.h"; sourceTree = "<group>"; };
 		4B539C5205EFD6FB00E5921A /* AIWebKitMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIWebKitMessageViewController.m; path = "Plugins/WebKit Message View/AIWebKitMessageViewController.m"; sourceTree = "<group>"; };
-		4B54D10605028BC400A8010A /* LoggingDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist; name = LoggingDefaults.plist; path = Plugins/Logger/LoggingDefaults.plist; sourceTree = "<group>"; };
 		4B5827E80613CE9D0004BD25 /* AIMessageEntryTextView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageEntryTextView.h; path = "Frameworks/Adium Framework/AIMessageEntryTextView.h"; sourceTree = "<group>"; };
 		4B5827E90613CE9D0004BD25 /* AIMessageEntryTextView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageEntryTextView.m; path = "Frameworks/Adium Framework/AIMessageEntryTextView.m"; sourceTree = "<group>"; };
 		4B588C9807AC23A9001832A9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Frameworks/Adium Framework/English.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
@@ -3471,8 +3473,6 @@
 		7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SHLinkManagementPlugin.h; sourceTree = "<group>"; };
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
 		9C103FAE057127A500F3C158 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
-		9C8C7FA403CBA21B00267226 /* AILoggerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILoggerPlugin.h; path = Plugins/Logger/AILoggerPlugin.h; sourceTree = "<group>"; };
-		9C8C7FA503CBA21B00267226 /* AILoggerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILoggerPlugin.m; path = Plugins/Logger/AILoggerPlugin.m; sourceTree = "<group>"; };
 		9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBGrowlAlertDetailPane.h; path = Source/CBGrowlAlertDetailPane.h; sourceTree = "<group>"; };
 		9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBGrowlAlertDetailPane.m; path = Source/CBGrowlAlertDetailPane.m; sourceTree = "<group>"; };
 		9E124DE907D34C7300AA91C5 /* NEHGrowlPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NEHGrowlPlugin.h; path = Source/NEHGrowlPlugin.h; sourceTree = "<group>"; };
@@ -6289,10 +6289,10 @@
 				3459CBE00A25FFA100ECC256 /* Log Indexing */,
 				9ECB03D909F2A57E00996F44 /* XML Logging */,
 				4BE666CC0577AFA0007E115C /* Log Viewer */,
-				9C8C7FA403CBA21B00267226 /* AILoggerPlugin.h */,
-				9C8C7FA503CBA21B00267226 /* AILoggerPlugin.m */,
+				3456233D0A3773D000E7FC97 /* AILoggerPlugin.m */,
+				3456233E0A3773D000E7FC97 /* AILoggerPlugin.h */,
 				345F58C6081990FF001F733C /* LogViewer.png */,
-				4B54D10605028BC400A8010A /* LoggingDefaults.plist */,
+				345623370A3773C300E7FC97 /* LoggingDefaults.plist */,
 			);
 			name = Logger;
 			sourceTree = "<group>";
@@ -7094,7 +7094,6 @@
 				4BD6745706001D5E0049CAF7 /* AIDockUnviewedContentPlugin.h in Headers */,
 				4BD6745D06001D730049CAF7 /* ESOpenMessageWindowContactAlertPlugin.h in Headers */,
 				4BD6746206001D750049CAF7 /* ESSendMessageContactAlertPlugin.h in Headers */,
-				4BD6747106001D820049CAF7 /* AILoggerPlugin.h in Headers */,
 				4BD6752F06001E0C0049CAF7 /* AIDualWindowInterfacePlugin.h in Headers */,
 				4BD6753506001E0F0049CAF7 /* AIMessageTabViewItem.h in Headers */,
 				4BD6753706001E100049CAF7 /* AIMessageViewController.h in Headers */,
@@ -7311,6 +7310,7 @@
 				345623290A3771F400E7FC97 /* AILogViewerWindowController.h in Headers */,
 				3456232B0A3771F400E7FC97 /* AILogToGroup.h in Headers */,
 				3456232D0A3771F400E7FC97 /* AILogFromGroup.h in Headers */,
+				345623400A3773D100E7FC97 /* AILoggerPlugin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8118,7 +8118,6 @@
 				4BD6743106001D1E0049CAF7 /* EmoticonDefaults.plist in Resources */,
 				4BD6744906001D460049CAF7 /* DockOverlayDefaults.plist in Resources */,
 				4BD6745506001D4E0049CAF7 /* DockBehaviorDefaults.plist in Resources */,
-				4BD6747606001D840049CAF7 /* LoggingDefaults.plist in Resources */,
 				4BD6755406001E1E0049CAF7 /* DualWindowDefaults.plist in Resources */,
 				4BD6756B06001E320049CAF7 /* EventSoundDefaults.plist in Resources */,
 				4B191D8A0611C10800E8A4E7 /* License.txt in Resources */,
@@ -8255,6 +8254,7 @@
 				342F88AB0A2A74BF0001DB29 /* RemoveShortcut.tif in Resources */,
 				342F88AC0A2A74BF0001DB29 /* RemoveShortcutPressed.tif in Resources */,
 				3456232F0A37723400E7FC97 /* LogViewer.nib in Resources */,
+				345623380A3773C300E7FC97 /* LoggingDefaults.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8667,7 +8667,6 @@
 				4BD6745806001D5E0049CAF7 /* AIDockUnviewedContentPlugin.m in Sources */,
 				4BD6745E06001D740049CAF7 /* ESOpenMessageWindowContactAlertPlugin.m in Sources */,
 				4BD6746306001D760049CAF7 /* ESSendMessageContactAlertPlugin.m in Sources */,
-				4BD6747206001D820049CAF7 /* AILoggerPlugin.m in Sources */,
 				4BD6753006001E0D0049CAF7 /* AIDualWindowInterfacePlugin.m in Sources */,
 				4BD6753606001E0F0049CAF7 /* AIMessageTabViewItem.m in Sources */,
 				4BD6753806001E100049CAF7 /* AIMessageViewController.m in Sources */,
@@ -8880,6 +8879,7 @@
 				345623280A3771F400E7FC97 /* AILogViewerWindowController.m in Sources */,
 				3456232A0A3771F400E7FC97 /* AILogToGroup.m in Sources */,
 				3456232C0A3771F400E7FC97 /* AILogFromGroup.m in Sources */,
+				3456233F0A3773D100E7FC97 /* AILoggerPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
