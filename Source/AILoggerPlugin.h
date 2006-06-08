@@ -41,7 +41,7 @@
 	NSMutableDictionary					*activeAppenders;
 	NSMutableDictionary					*activeTimers;
 	
-	AIHTMLDecoder						*XHTMLDecoder;
+	AIHTMLDecoder						*HTMLDecoder;
 #endif
 	
     //Log viewer menu items

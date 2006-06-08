@@ -112,7 +112,7 @@ Class LogViewerWindowControllerClass = NULL;
 	activeAppenders = [[NSMutableDictionary alloc] init];
 	activeTimers = [[NSMutableDictionary alloc] init];
 	
-	XHTMLDecoder = [[AIHTMLDecoder alloc] initWithHeaders:NO
+	HTMLDecoder = [[AIHTMLDecoder alloc] initWithHeaders:NO
 												 fontTags:YES
 											closeFontTags:YES
 												colorTags:YES
@@ -197,7 +197,7 @@ Class LogViewerWindowControllerClass = NULL;
 	#ifdef XML_LOGGING
 	[activeAppenders release];
 	[activeTimers release];
-	[XHTMLDecoder release];
+	[HTMLDecoder release];
 	#endif
 	[[adium preferenceController] removeObserver:self forKeyPath:PREF_KEYPATH_LOGGER_ENABLE];
 }
@@ -412,7 +412,7 @@ Class LogViewerWindowControllerClass = NULL;
 		
 		if ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
 			[appender addElementWithName:@"message" 
-								 content:[XHTMLDecoder encodeHTML:[content message] imagesPath:nil]
+								 content:[HTMLDecoder encodeHTML:[content message] imagesPath:nil]
 						   attributeKeys:[NSArray arrayWithObjects:@"sender", @"time", nil]
 						 attributeValues:[NSArray arrayWithObjects:[[content source] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
 		} else if ([[content type] isEqualToString:CONTENT_STATUS_TYPE]) {
@@ -437,7 +437,7 @@ Class LogViewerWindowControllerClass = NULL;
 			//If we can't find it for some reason, we probably shouldn't attempt logging.
 			if (actualObject) {
 				[appender addElementWithName:@"status"
-									 content:[XHTMLDecoder encodeHTML:[content message] imagesPath:nil]
+									 content:[HTMLDecoder encodeHTML:[content message] imagesPath:nil]
 							   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
 							 attributeValues:[NSArray arrayWithObjects:
 								 [(AIContentStatus *)content status], 
