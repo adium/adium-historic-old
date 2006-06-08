@@ -194,6 +194,23 @@ enum { xmlMarkerLength = 21 };
 
 - (void)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
+	[self addElementWithName:name
+			  escapedContent:[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)content, NULL) autorelease]
+			   attributeKeys:keys
+			 attributeValues:values];
+}
+
+/*!
+ * @brief Adds a node to the document, performing no escaping on the content.
+ *
+ * @param name The name of the root element for this document.
+ * @param content The stuff between the open and close tags. If nil, then the tag will be self closing. No escaping will be performed on the content.
+ * @param attributeKeys An array of the attribute keys the element has.
+ * @param attributeValues An array of the attribute values the element has.
+ */
+
+- (void)addElementWithName:(NSString *)name escapedContent:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
+{
 	//Don't add if not initialized
 	if (initialized) {
 		//Create our strings
@@ -213,7 +230,7 @@ enum { xmlMarkerLength = 21 };
  * @brief Creates an element node.
  *
  * @param name The name of the element.
- * @param content The stuff between the open and close tags. If nil, then the tag will be self closing.
+ * @param content The stuff between the open and close tags. If nil, then the tag will be self closing. No escaping will be performed on the content.
  * @param attributeKeys An array of the attribute keys the element has.
  * @param attributeValues An array of the attribute values the element has.
  * @return An XML element, suitable for insertion into a document.
@@ -243,8 +260,7 @@ enum { xmlMarkerLength = 21 };
 	//Format and return
 	NSString *escapedName = [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)name, NULL) autorelease];
 	if (content)
-		return [NSString stringWithFormat:@"<%@%@>%@</%@>", escapedName, attributeString, 
-			[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)content, NULL) autorelease], escapedName];
+		return [NSString stringWithFormat:@"<%@%@>%@</%@>", escapedName, attributeString, content, escapedName];
 	else
 		return [NSString stringWithFormat:@"<%@%@/>", escapedName, attributeString];
 }
