@@ -205,7 +205,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	//Setup the destination HTML string
 	NSMutableString *string = [NSMutableString string];
 	if (thingsToInclude.headers) {
-			[string appendString:@"<HTML>"];
+		[string appendString:@"<HTML>"];
 	}
 
 	//If the text is right-to-left, enclose all our HTML in an rtl DIV tag
@@ -368,13 +368,13 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				currentBold = YES;
 			}
         
-        if (currentStrikethrough && !hasStrikethrough) {
-           [string appendString:@"</S>"];
-           currentStrikethrough = NO;
-        } else if (!currentStrikethrough && hasStrikethrough) {
-           [string appendString:@"<S>"];
-           currentStrikethrough = YES;
-        }
+			if (currentStrikethrough && !hasStrikethrough) {
+				[string appendString:@"</S>"];
+				currentStrikethrough = NO;
+			} else if (!currentStrikethrough && hasStrikethrough) {
+				[string appendString:@"<S>"];
+				currentStrikethrough = YES;
+			}
 		}
 
 		//Link
@@ -596,10 +596,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	//Finish off the HTML
 	if (thingsToInclude.styleTags) {
-		if (currentItalic) [string appendString:@"</I>"];
-		if (currentBold) [string appendString:@"</B>"];
-		if (currentUnderline) [string appendString:@"</U>"];
-      if (currentStrikethrough) [string appendString:@"</S>"];
+		if (currentItalic)        [string appendString:@"</I>"];
+		if (currentBold)          [string appendString:@"</B>"];
+		if (currentUnderline)     [string appendString:@"</U>"];
+		if (currentStrikethrough) [string appendString:@"</S>"];
 	}
 	
 	//If we had a link on the last pass, close the link tag
@@ -609,12 +609,22 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		oldLink = nil;
 	}
 
-	if (thingsToInclude.fontTags && thingsToInclude.closingFontTags && openFontTag) [string appendString:@"</FONT>"]; //Close any open font tag
+	if (thingsToInclude.fontTags && thingsToInclude.closingFontTags && openFontTag) {
+		//Close any open font tag
+		[string appendString:@"</FONT>"];
+	}
 	if (rightToLeft) {
+		//Close any open div
 		[string appendString:@"</DIV>"];
 	}
-	if (thingsToInclude.headers && pageColor) [string appendString:@"</BODY>"]; //Close the body tag
-	if (thingsToInclude.headers) [string appendString:@"</HTML>"]; //Close the HTML
+	if (thingsToInclude.headers && pageColor) {
+		//Close the body tag
+		[string appendString:@"</BODY>"];
+	}
+	if (thingsToInclude.headers) {
+		//Close the HTML
+		[string appendString:@"</HTML>"];
+	}
 	
 	//KBOTC's odd hackish body background thingy for WMV since no one else will add it
 	if (thingsToInclude.bodyBackground &&
