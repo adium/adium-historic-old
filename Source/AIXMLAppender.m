@@ -219,9 +219,6 @@ enum { xmlMarkerLength = 21 };
  * @return An XML element, suitable for insertion into a document.
  *
  * The two attribute arrays must be of the same size, or the method will return nil.
- *
- * If an item in the attribute value array is @"", the expected output of attributeKey="" will be omitted in favor of 
- * the more succint attributeKey.
  */
 
 - (NSString *)createElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
@@ -238,14 +235,9 @@ enum { xmlMarkerLength = 21 };
 	NSEnumerator *attributeValueEnumerator = [values objectEnumerator];
 	NSString *key = nil, *value = nil;
 	while ((key = [attributeKeyEnumerator nextObject]) && (value = [attributeValueEnumerator nextObject])) {
-		if ([value isEqualToString:@""]) {
-			[attributeString appendFormat:@" %@",
-				[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)key, NULL) autorelease]];
-		} else {
-			[attributeString appendFormat:@" %@=\"%@\"", 
-				[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)key, NULL) autorelease],
-				[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)value, NULL) autorelease]];
-		}
+		[attributeString appendFormat:@" %@=\"%@\"", 
+			[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)key, NULL) autorelease],
+			[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)value, NULL) autorelease]];
 	}
 	
 	//Format and return
