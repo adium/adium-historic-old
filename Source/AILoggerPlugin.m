@@ -1059,7 +1059,7 @@ Class LogViewerWindowControllerClass = NULL;
 
 	[NSThread detachNewThreadSelector:@selector(_cleanDirtyLogsThread:) toTarget:self withObject:(id)[self logContentIndex]];
 }
-- (void)_cleanDirtyLogsThread:(SKSearchRef)searchIndex
+- (void)_cleanDirtyLogsThread:(SKIndexRef)searchIndex
 {
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
 

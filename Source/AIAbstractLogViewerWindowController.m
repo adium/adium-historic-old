@@ -1215,7 +1215,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 				case LOG_SEARCH_CONTENT:
 					[self _logContentFilter:searchString
 								   searchID:searchID
-							  onSearchIndex:[searchInfoDict objectForKey:@"SearchIndex"]];
+							  onSearchIndex:(SKIndexRef)[searchInfoDict objectForKey:@"SearchIndex"]];
 					break;
 			}
 		} else {
