@@ -195,7 +195,7 @@ enum { xmlMarkerLength = 21 };
 - (void)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
 	[self addElementWithName:name
-			  escapedContent:[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)content, NULL) autorelease]
+			  escapedContent:(content ? [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)content, NULL) autorelease] : nil)
 			   attributeKeys:keys
 			 attributeValues:values];
 }
