@@ -86,4 +86,5 @@
 - (void)joinChatRoom:(NSString *)name;
 - (void)inviteUser:(NSString *)inUID toChat:(NSString *)chatName withMessage:(NSString *)inviteMessage;
 
+- (void)setDisplayRecentBuddies:(BOOL)inDisplayRecentBuddies;
 @end

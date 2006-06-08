@@ -6,6 +6,7 @@
 //
 
 #import "RAFjoscarAccountViewController.h"
+#import "RAFjoscarAccount.h"
 
 #import "AIPreferenceController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
@@ -71,6 +72,9 @@
 			[(AITextViewWithPlaceholder *)textView_textProfile setPlaceholder:nil];
 		}
 	}
+	
+	[checkbox_recentBuddies setState:[[account preferenceForKey:KEY_DISPLAY_RECENT_BUDDIES
+														  group:GROUP_ACCOUNT_STATUS] boolValue]];
 }
 
 /*!
@@ -83,7 +87,11 @@
 							[[textView_textProfile textStorage] dataRepresentation] :
 							nil)
 					forKey:@"TextProfile"
-					 group:GROUP_ACCOUNT_STATUS];	
+					 group:GROUP_ACCOUNT_STATUS];
+	
+	[account setPreference:[NSNumber numberWithBool:[checkbox_recentBuddies state]]
+					forKey:KEY_DISPLAY_RECENT_BUDDIES
+					 group:GROUP_ACCOUNT_STATUS];
 }
 
 @end
