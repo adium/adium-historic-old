@@ -196,6 +196,8 @@ Class LogViewerWindowControllerClass = NULL;
 {
 	#ifdef XML_LOGGING
 	[activeAppenders release];
+	[activeTimers release];
+	[XHTMLDecoder release];
 	#endif
 	[[adium preferenceController] removeObserver:self forKeyPath:PREF_KEYPATH_LOGGER_ENABLE];
 }
