@@ -416,14 +416,35 @@ Class LogViewerWindowControllerClass = NULL;
 						   attributeKeys:[NSArray arrayWithObjects:@"sender", @"time", nil]
 						 attributeValues:[NSArray arrayWithObjects:[[content source] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
 		} else if ([[content type] isEqualToString:CONTENT_STATUS_TYPE]) {
-			[appender addElementWithName:@"status"
-								 content:[XHTMLDecoder encodeHTML:[content message] imagesPath:nil]
-						   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
-						 attributeValues:[NSArray arrayWithObjects:
-							 [(AIContentStatus *)content status], 
-							 [[content source] UID], 
-							 [[NSCalendarDate date] ISO8601DateString], 
-							 nil]];
+			/*
+			 * Oh. My. God. This is the ugliest thing I have ever seen in my life. Why do we have to do this?! We are
+			 * notified of status changes by meta contact, not the actual contact. We have to search the chat for the
+			 * acutal contact we're looking for. This makes me want to cry.
+			 */
+			AIListObject	*retardedMetaObject = [content source];
+			AIListObject	*actualObject = nil;
+			AIListContact	*participatingListObject = nil;
+			
+			NSEnumerator	*enumerator = [[chat participatingListObjects] objectEnumerator];
+			
+			while ((participatingListObject = [enumerator nextObject])) {
+				if ([participatingListObject parentContact] == retardedMetaObject) {
+					actualObject = participatingListObject;
+					break;
+				}
+			}
+			
+			//If we can't find it for some reason, we probably shouldn't attempt logging.
+			if (actualObject) {
+				[appender addElementWithName:@"status"
+									 content:[XHTMLDecoder encodeHTML:[content message] imagesPath:nil]
+							   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
+							 attributeValues:[NSArray arrayWithObjects:
+								 [(AIContentStatus *)content status], 
+								 [actualObject UID], 
+								 [[NSCalendarDate date] ISO8601DateString],
+								 nil]];
+			}
 		}
 	}
 #else
