@@ -288,6 +288,9 @@
 	
 	[self updateStatusForKey:@"TextProfile"];
 	[self updateStatusForKey:KEY_USER_ICON];
+	
+	[joscarAdapter setDisplayRecentBuddies:[[self preferenceForKey:KEY_DISPLAY_RECENT_BUDDIES
+															 group:GROUP_ACCOUNT_STATUS] boolValue]];
 }
 
 - (void)didDisconnect

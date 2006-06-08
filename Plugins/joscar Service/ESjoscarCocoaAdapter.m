@@ -1278,6 +1278,13 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getSsiService] requestBuddyAuthorization:sn :nil];
 }
 
+- (void)setDisplayRecentBuddies:(BOOL)inDisplayRecentBuddies
+{
+	ServerStoredSettings *serverStoredSettings = [[aimConnection getSsiService] getServerStoredSettings];
+
+	[serverStoredSettings changeRecentBuddiesUsed:inDisplayRecentBuddies];
+}
+
 #pragma mark Contact info
 /*
  * @brief Find a MutableBuddy
