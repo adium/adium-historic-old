@@ -179,17 +179,6 @@ Class LogViewerWindowControllerClass = NULL;
 								   selector:@selector(showLogNotification:)
 									   name:Adium_ShowLogAtPath
 									 object:nil];
-	#ifdef XML_LOGGING
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(chatOpened:)
-									   name:Chat_DidOpen
-									 object:nil];
-									 
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(chatClosed:)
-									   name:Chat_WillClose
-									 object:nil];
-	#endif	
 }
 
 - (void)uninstallPlugin
@@ -215,12 +204,30 @@ Class LogViewerWindowControllerClass = NULL;
 				
 		if (!observingContent) { //Stop Logging
 			[[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
+			
+			#ifdef XML_LOGGING
+			[[adium notificationCenter] removeObserver:self name:Chat_DidOpen object:nil];			
+			[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];			
+			#endif
 
 		} else { //Start Logging
 			[[adium notificationCenter] addObserver:self 
 										   selector:@selector(contentObjectAdded:) 
 											   name:Content_ContentObjectAdded 
 											 object:nil];
+											 
+			#ifdef XML_LOGGING
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(chatOpened:)
+											   name:Chat_DidOpen
+											 object:nil];
+											 
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(chatClosed:)
+											   name:Chat_WillClose
+											 object:nil];
+			#endif	
+
 		}
 	}
 }
