@@ -957,4 +957,21 @@ static NSString	*prefsCategory;
 	return handleKey;
 }
 
+#pragma mark Sparkle Delegate Methods
+
+// Specify whether the updater should include system-profile information with update checks.
+- (BOOL)updaterShouldSendProfileInfo
+{
+#warning Need a UI for opting out of this
+	return NO;
+}
+
+// This method gives the delegate the opportunity to customize the information that will
+// be included with update checks.  Add or remove items from the dictionary as desired.
+- (NSMutableDictionary *)updaterCustomizeProfileInfo:(NSMutableDictionary *)profileInfo
+{
+	//we can add/remove information to/from this as needed, for now we just return it intact
+	return profileInfo;
+}
+
 @end
