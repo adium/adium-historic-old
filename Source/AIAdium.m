@@ -962,8 +962,26 @@ static NSString	*prefsCategory;
 // Specify whether the updater should include system-profile information with update checks.
 - (BOOL)updaterShouldSendProfileInfo
 {
-#warning Need a UI for opting out of this
-	return NO;
+	AIPreferenceController *prefs = [self preferenceController];
+	BOOL firstRun = [[prefs preferenceForKey:@"SparkleSendProfileOptOutHasRun"
+									   group:PREF_GROUP_GENERAL] boolValue];
+	if(firstRun)
+	{
+		[prefs setPreference:[NSNumber numberWithBool:YES]
+					  forKey:@"SparkleSendProfileOptOutHasRun"
+					   group:PREF_GROUP_GENERAL];
+		NSAlert *alert = [NSAlert alertWithMessageText:@"Adium can optionally submit non-personal system information such as operating system version and computer speed as it checks for new versions. This information can help the development team make decisions."
+										 defaultButton:@"Send Information"
+									   alternateButton:@"Don't Send Information"
+										   otherButton:nil
+							 informativeTextWithFormat:nil];
+		
+		[prefs setPreference:[NSNumber numberWithBool:(([alert runModal] == NSAlertDefaultReturn) ? YES : NO)]
+					  forKey:@"SparkleSendProfile"
+					   group:PREF_GROUP_GENERAL];
+	}
+
+	return [[prefs preferenceForKey:@"SparkleSendProfile" group:PREF_GROUP_GENERAL] boolValue];
 }
 
 // This method gives the delegate the opportunity to customize the information that will
