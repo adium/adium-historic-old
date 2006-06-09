@@ -971,8 +971,8 @@ static NSString	*prefsCategory;
 					  forKey:@"SparkleSendProfileOptOutHasRun"
 					   group:PREF_GROUP_GENERAL];
 		NSAlert *alert = [NSAlert alertWithMessageText:@"Adium can optionally submit non-personal system information such as operating system version and computer speed as it checks for new versions. This information can help the development team make decisions."
-										 defaultButton:@"Send Information"
-									   alternateButton:@"Don't Send Information"
+										 defaultButton:@"Send"
+									   alternateButton:@"Don't Send"
 										   otherButton:nil
 							 informativeTextWithFormat:nil];
 		
