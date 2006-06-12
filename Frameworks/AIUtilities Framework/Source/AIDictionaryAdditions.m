@@ -102,8 +102,80 @@
 	return result;
 }
 
+- (NSSet *)allKeysSet {
+	return [NSSet setWithArray:[self allKeys]];
+}
 - (NSMutableSet *)allKeysMutableSet {
 	return [NSMutableSet setWithArray:[self allKeys]];
+}
+
+- (void)compareWithPriorDictionary:(NSDictionary *)other
+                      getAddedKeys:(out NSSet **)outAddedKeys
+                    getRemovedKeys:(out NSSet **)outRemovedKeys
+                includeChangedKeys:(BOOL)flag
+{
+	if (!other) {
+		if (outAddedKeys) *outAddedKeys = [self allKeysSet];
+		if (outRemovedKeys) *outRemovedKeys = [NSSet set];
+	} else {
+		NSMutableSet *addedKeys = nil;
+		if (outAddedKeys) {
+			unsigned capacity = [self count];
+			if (flag) capacity += [other count];
+			addedKeys = [NSMutableSet setWithCapacity:capacity];
+		}
+
+		NSMutableSet *removedKeys = nil;
+		if (outRemovedKeys) {
+			unsigned capacity = [other count];
+			if (flag) capacity += [self count];
+			removedKeys = [NSMutableSet setWithCapacity:capacity];
+		}
+
+		NSEnumerator *keysEnum = [self keyEnumerator];
+		NSString *key;
+		while ((key = [keysEnum nextObject])) {
+			id otherObj = [other objectForKey:key];
+			if (!otherObj) {
+				//Not in other, but is in self: Added.
+				[addedKeys addObject:key];
+			} else if(flag && ![otherObj isEqual:[self objectForKey:key]]) {
+				//Exists in both, objects are not equal, and flag is not NO: Different, and we should put the key in both sets to indicate this.
+				[addedKeys addObject:key];
+				[removedKeys addObject:key];
+			}
+		}
+		if (outAddedKeys) *outAddedKeys = [NSSet setWithSet:addedKeys];
+
+		if (outRemovedKeys) {
+			keysEnum = [other keyEnumerator];
+			while ((key = [keysEnum nextObject])) {
+				if (![self objectForKey:key]) {
+					//In other, but not in self: Removed.
+					[removedKeys addObject:key];
+				}
+			}
+
+			*outRemovedKeys = [NSSet setWithSet:removedKeys];
+		}
+	}
+}
+
+- (NSDictionary *)dictionaryWithIntersectionWithSetOfKeys:(NSSet *)keys
+{
+	NSMutableDictionary *mutableSelf = [self mutableCopy];
+	[mutableSelf intersectSetOfKeys:keys];
+	NSDictionary *result = [NSDictionary dictionaryWithDictionary:mutableSelf];
+	[mutableSelf release];
+	return result;
+}
+- (NSDictionary *)dictionaryWithDifferenceWithSetOfKeys:(NSSet *)keys
+{
+	NSMutableDictionary *mutableSelf = [self mutableCopy];
+	[mutableSelf minusSetOfKeys:keys];
+	NSDictionary *result = [NSDictionary dictionaryWithDictionary:mutableSelf];
+	[mutableSelf release];
+	return result;
 }
 
 @end
@@ -158,6 +230,25 @@
 		}
 
 		[selfCopy release];		
+	}
+}
+
+- (void)intersectSetOfKeys:(NSSet *)keys
+{
+	NSEnumerator *myKeysEnum = [self keyEnumerator];
+	NSString *key;
+	while ((key = [myKeysEnum nextObject])) {
+		if (![keys containsObject:key]) {
+			[self removeObjectForKey:key];
+		}
+	}
+}
+- (void)minusSetOfKeys:(NSSet *)keys
+{
+	NSEnumerator *keysEnum = [keys objectEnumerator];
+	NSString *key;
+	while ((key = [keysEnum nextObject])) {
+		[self removeObjectForKey:key];
 	}
 }
 

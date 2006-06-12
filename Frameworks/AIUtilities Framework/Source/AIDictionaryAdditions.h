@@ -21,7 +21,17 @@
 
 - (NSDictionary *)dictionaryByTranslating:(NSDictionary *)translation adding:(NSDictionary *)addition removing:(NSSet *)removal;
 
+- (NSSet *)allKeysSet;
 - (NSMutableSet *)allKeysMutableSet;
+
+//If flag is non-NO, keys that are in both dicts but whose values are different will be included in both sets.
+- (void)compareWithPriorDictionary:(NSDictionary *)other
+                      getAddedKeys:(out NSSet **)outAddedKeys
+                    getRemovedKeys:(out NSSet **)outRemovedKeys
+                includeChangedKeys:(BOOL)flag;
+
+- (NSDictionary *)dictionaryWithIntersectionWithSetOfKeys:(NSSet *)keys;
+- (NSDictionary *)dictionaryWithDifferenceWithSetOfKeys:(NSSet *)keys;
 
 @end
 
@@ -30,5 +40,8 @@
 + (NSMutableDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create;
 
 - (void)translate:(NSDictionary *)translation add:(NSDictionary *)addition remove:(NSSet *)removal;
+
+- (void)intersectSetOfKeys:(NSSet *)keys;
+- (void)minusSetOfKeys:(NSSet *)keys;
 
 @end
