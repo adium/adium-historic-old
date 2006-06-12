@@ -21,11 +21,12 @@
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"
 
 @class AIMessageSendingTextView, AIMessageTabViewItem, AIMessageViewController, AICustomTabsView, AIDualWindowInterfacePlugin;
+@class PSMTabBarControl;
 @protocol AIFlexibleToolbarItemDelegate;
 
 @interface AIMessageWindowController : AIWindowController<AIFlexibleToolbarItemDelegate> {
     IBOutlet	NSTabView			*tabView_messages;
-    IBOutlet	AICustomTabsView	*tabView_customTabs;
+    IBOutlet	PSMTabBarControl	*tabView_tabBar;
     AIDualWindowInterfacePlugin 	*interface;
 	NSString						*containerName;
 	NSString						*containerID;
@@ -52,6 +53,7 @@
 - (IBAction)closeWindow:(id)sender;
 - (NSString *)containerID;
 - (NSString *)name;
+- (PSMTabBarControl *)tabBar;
 - (AIChat *)activeChat;
 
 //Contained Chats
