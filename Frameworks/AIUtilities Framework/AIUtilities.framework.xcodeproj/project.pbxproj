@@ -21,6 +21,8 @@
 		079C113C0782FB500048E350 /* AIScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 079C113A0782FB500048E350 /* AIScannerAdditions.m */; };
 		07B87B7D0A3A7A3B00A38283 /* AISetAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B87B790A3A7A3B00A38283 /* AISetAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07B87B7E0A3A7A3B00A38283 /* AISetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 07B87B7A0A3A7A3B00A38283 /* AISetAdditions.m */; };
+		07B87B7F0A3A7A3B00A38283 /* AIShadowAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B87B7B0A3A7A3B00A38283 /* AIShadowAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		07B87B800A3A7A3B00A38283 /* AIShadowAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 07B87B7C0A3A7A3B00A38283 /* AIShadowAdditions.m */; };
 		07BB5A0D07C4833E008996A0 /* AIWiredString.m in Sources */ = {isa = PBXBuildFile; fileRef = 0795642007C3553A00F9A88F /* AIWiredString.m */; };
 		07BB5A0E07C48340008996A0 /* AIWiredData.m in Sources */ = {isa = PBXBuildFile; fileRef = 078DF8AF07C2948200831ABF /* AIWiredData.m */; };
 		07C52D4707BD2F97006BE37C /* AIHostReachabilityMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 07C52D4507BD2F97006BE37C /* AIHostReachabilityMonitor.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -276,6 +278,8 @@
 		07B7AF9E0797A952003B71E1 /* AITree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AITree.m; path = Source/AITree.m; sourceTree = "<group>"; };
 		07B87B790A3A7A3B00A38283 /* AISetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISetAdditions.h; path = Source/AISetAdditions.h; sourceTree = "<group>"; };
 		07B87B7A0A3A7A3B00A38283 /* AISetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISetAdditions.m; path = Source/AISetAdditions.m; sourceTree = "<group>"; };
+		07B87B7B0A3A7A3B00A38283 /* AIShadowAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIShadowAdditions.h; path = Source/AIShadowAdditions.h; sourceTree = "<group>"; };
+		07B87B7C0A3A7A3B00A38283 /* AIShadowAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIShadowAdditions.m; path = Source/AIShadowAdditions.m; sourceTree = "<group>"; };
 		07C52D4507BD2F97006BE37C /* AIHostReachabilityMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIHostReachabilityMonitor.h; path = Source/AIHostReachabilityMonitor.h; sourceTree = "<group>"; };
 		07C52D4607BD2F97006BE37C /* AIHostReachabilityMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIHostReachabilityMonitor.m; path = Source/AIHostReachabilityMonitor.m; sourceTree = "<group>"; };
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -891,6 +895,8 @@
 				34486BA506D1DF0300DA778C /* AIScrollViewAdditions.m */,
 				07B87B790A3A7A3B00A38283 /* AISetAdditions.h */,
 				07B87B7A0A3A7A3B00A38283 /* AISetAdditions.m */,
+				07B87B7B0A3A7A3B00A38283 /* AIShadowAdditions.h */,
+				07B87B7C0A3A7A3B00A38283 /* AIShadowAdditions.m */,
 				34486BB006D1DF0300DA778C /* AIStringAdditions.h */,
 				34486BB106D1DF0300DA778C /* AIStringAdditions.m */,
 				34486BB406D1DF0300DA778C /* AITableViewAdditions.h */,
@@ -1530,6 +1536,7 @@
 				9E24860A0A359D310070153D /* NSCalendarDate+ISO8601Parsing.h in Headers */,
 				9E24860C0A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h in Headers */,
 				07B87B7D0A3A7A3B00A38283 /* AISetAdditions.h in Headers */,
+				07B87B7F0A3A7A3B00A38283 /* AIShadowAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1738,6 +1745,7 @@
 				9E24860B0A359D310070153D /* NSCalendarDate+ISO8601Parsing.m in Sources */,
 				9E24860D0A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m in Sources */,
 				07B87B7E0A3A7A3B00A38283 /* AISetAdditions.m in Sources */,
+				07B87B800A3A7A3B00A38283 /* AIShadowAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,6 +13,11 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+extern NSString *AIFontFamilyAttributeName;
+extern NSString *AIFontSizeAttributeName;
+extern NSString *AIFontWeightAttributeName;
+extern NSString *AIFontStyleAttributeName;
+
 /*!
  * @category NSMutableAttributedString(AIAttributedStringAdditions)
  * @brief Additions to NSMutableAttributedString
@@ -96,6 +101,43 @@
 @end
 
 @interface NSAttributedString (AIAttributedStringAdditions)
+/*!
+ *	@brief Returns the set of \c NSAttributedString attributes that can be represented in CSS by \c +CSSStringForTextAttributes:.
+ *	@return An \c NSSet.
+ *
+ */
++ (NSSet *)CSSCapableAttributesSet;
+
+/*!
+ *	@brief Create a string of CSS attributes for AppKit text attributes.
+ *
+ *	Methods used by this method:
+	-[NSColor  CSSRepresentation]: Returns color name when color space is named; else, # + hexString
+	-[NSShadow CSSRepresentation]: Color, space, offset, space, blur radius
+	-[NSCursor CSSRepresentation]: Cursor name
+	-[NSFont   CSSRepresentation]: [Font weight, space, ]size, space, family(?) name (name in quotes if >1 words); example: @"12pt \"Lucida Grande\""
+
+	Not currently used:
+	-[NSURL    CSSRepresentation]: @url
+	-[NSString CSSRepresentation]: Quoted form, unless it's a URL, in which case @url
+	-[NSValue  CSSRepresentation]: If NSRect, @"top right bottom left". Else, nil.
+
+	Note that NSLinkAttributeName and NSAttachmentAttributeName will not be included in the CSS. Those must be implemented as HTML (\<a\> and \<img\>).
+
+	Attribute                            CSS property
+	NSFontAttributeName                  font             (use -CSSRepresentation)
+	NSForegroundColorAttributeName       color            (use -CSSRepresentation)
+	NSBackgroundColorAttributeName       background-color (use -CSSRepresentation)
+	NSStrikethroughStyleAttributeName    text-decoration
+	NSUnderlineStyleAttributeName        text-decoration
+	NSSuperscriptAttributeName           vertical-align
+	NSShadowAttributeName                text-shadow      (use -CSSRepresentation)
+	NSCursorAttributeName                cursor           (use -CSSRepresentation)
+ *
+ *	@return A \c NSString of CSS code.
+ */
++ (NSString *)CSSStringForTextAttributes:(NSDictionary *)attrs;
+
 /*!
  * @brief Determine the height needed to display an NSAttributedString with certain attributes
  *

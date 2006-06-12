@@ -14,8 +14,12 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AIHTMLDecoder : NSObject {
+	NSString *XMLNamespace;
+
 	struct AIHTMLDecoderOptionsBitField {
-		unsigned reserved: 22;
+		unsigned reserved: 19;
+
+		unsigned generateStrictXHTML: 1;
 
 		//these next ten members are derived from the arguments to
 		//  +encodeHTML:::::::::::: in the old AIHTMLDecoder.
@@ -96,6 +100,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 - (NSDictionary *)parseArguments:(NSString *)arguments;
 
 #pragma mark Accessors
+
+- (BOOL)generatesStrictXHTML;
+- (void)setGeneratesStrictXHTML:(BOOL)newValue;
 
 //meaning <HTML> and </HTML>.
 - (BOOL)includesHeaders;

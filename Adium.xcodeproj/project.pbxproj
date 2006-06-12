@@ -70,6 +70,8 @@
 		078C5CD2079EFF88004C75A4 /* AILocalizationButtonCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		078C5CD3079EFF88004C75A4 /* AILocalizationButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */; };
 		07AF3C5A07D4897300409BC8 /* pref-messagehistory.png in Resources */ = {isa = PBXBuildFile; fileRef = 07AF3C5907D4897200409BC8 /* pref-messagehistory.png */; };
+		07B87BDF0A3A7CB300A38283 /* AIXMLElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B87BDD0A3A7CB300A38283 /* AIXMLElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		07B87BE00A3A7CB300A38283 /* AIXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 07B87BDE0A3A7CB300A38283 /* AIXMLElement.m */; };
 		07B87D770A3A9FCF00A38283 /* AIStatusDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B87D760A3A9FCF00A38283 /* AIStatusDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07F8303509693F5E002FC851 /* OTR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		110763F508676CC9005987A5 /* RAFBlockEditorPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */; };
@@ -1756,6 +1758,8 @@
 		078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButtonCell.h; path = "Frameworks/Adium Framework/AILocalizationButtonCell.h"; sourceTree = "<group>"; };
 		078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButtonCell.m; path = "Frameworks/Adium Framework/AILocalizationButtonCell.m"; sourceTree = "<group>"; };
 		07AF3C5907D4897200409BC8 /* pref-messagehistory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-messagehistory.png"; path = "Resources/pref-messagehistory.png"; sourceTree = "<group>"; };
+		07B87BDD0A3A7CB300A38283 /* AIXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIXMLElement.h; path = "Frameworks/Adium Framework/AIXMLElement.h"; sourceTree = "<group>"; };
+		07B87BDE0A3A7CB300A38283 /* AIXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIXMLElement.m; path = "Frameworks/Adium Framework/AIXMLElement.m"; sourceTree = "<group>"; };
 		07B87D760A3A9FCF00A38283 /* AIStatusDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusDefines.h; path = "Frameworks/Adium Framework/AIStatusDefines.h"; sourceTree = "<group>"; };
 		07F1794F08EBC5B300A9C392 /* UndeclaredLibgaimFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UndeclaredLibgaimFunctions.h; path = "Plugins/Gaim Service/UndeclaredLibgaimFunctions.h"; sourceTree = "<group>"; };
 		110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorPlugin.h; path = Source/RAFBlockEditorPlugin.h; sourceTree = "<group>"; };
@@ -5498,6 +5502,8 @@
 				F5793912033E748F01A8010A /* AIPlugin.m */,
 				34F2E81807C2CD6B007EAAAB /* AITextAttachmentExtension.h */,
 				34F2E81907C2CD6C007EAAAB /* AITextAttachmentExtension.m */,
+				07B87BDD0A3A7CB300A38283 /* AIXMLElement.h */,
+				07B87BDE0A3A7CB300A38283 /* AIXMLElement.m */,
 				348862CD05645E94003C9627 /* ESFileTransfer.h */,
 				348862CE05645E95003C9627 /* ESFileTransfer.m */,
 				34F2E83907C2CDBD007EAAAB /* ESFileWrapperExtension.h */,
@@ -7382,6 +7388,7 @@
 				3448055107AC5151006A7F7B /* ESDebugAILog.h in Headers */,
 				34AC36BB07B5C51500145239 /* AIStatus.h in Headers */,
 				34E00F7607B92B2F000DF265 /* ESTextAndButtonsWindowController.h in Headers */,
+				07B87BDF0A3A7CB300A38283 /* AIXMLElement.h in Headers */,
 				34F2E81207C2CD5E007EAAAB /* AIHTMLDecoder.h in Headers */,
 				34F2E81A07C2CD6C007EAAAB /* AITextAttachmentExtension.h in Headers */,
 				34F2E83B07C2CDBE007EAAAB /* ESFileWrapperExtension.h in Headers */,
@@ -8974,6 +8981,7 @@
 				34AC2FA809352C2500393D7A /* AIStatusGroup.m in Sources */,
 				348F50C30935317C00288E41 /* AIStatusItem.m in Sources */,
 				340BA84709EC593B000EC441 /* AICorePluginLoader.m in Sources */,
+				07B87BE00A3A7CB300A38283 /* AIXMLElement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

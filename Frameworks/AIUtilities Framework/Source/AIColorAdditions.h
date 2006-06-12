@@ -62,6 +62,8 @@ void getRGBFromHueLuminanceSaturation(float *r, float *g, float *b, float hue, f
 
 - (NSString *)stringRepresentation;
 
+- (NSString *)CSSRepresentation;
+
 @end
 
 int hexToInt(char hex);

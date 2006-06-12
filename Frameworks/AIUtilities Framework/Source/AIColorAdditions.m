@@ -357,6 +357,21 @@ end:
 	}
 }
 
+- (NSString *)CSSRepresentation
+{
+	float alpha = [self alphaComponent];
+	if ((1.0 - alpha) >= 0.000001) {
+		NSColor *rgb = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+		return [NSString stringWithFormat:@"rgba(%@,%@,%@,%@)",
+			[NSString stringWithFloat:[rgb redComponent]   maxDigits:6],
+			[NSString stringWithFloat:[rgb greenComponent] maxDigits:6],
+			[NSString stringWithFloat:[rgb blueComponent]  maxDigits:6],
+			[NSString stringWithFloat:alpha                maxDigits:6]];
+	} else {
+		return [@"#" stringByAppendingString:[self hexString]];
+	}
+}
+
 @end
 
 @implementation NSString (AIColorAdditions_RepresentingColors)
