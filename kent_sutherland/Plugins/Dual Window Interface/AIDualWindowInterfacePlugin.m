@@ -348,5 +348,12 @@
 	
 }
 
+- (id)openNewContainer
+{
+	AIMessageWindowController *controller = [self openContainerWithID:[NSString stringWithFormat:@"%@:%i", ADIUM_UNIQUE_CONTAINER, uniqueContainerNumber++]
+													name:AILocalizedString(@"Chat",nil)];
+	return controller;
+}
+
 @end
 
