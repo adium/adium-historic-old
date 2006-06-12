@@ -24,6 +24,11 @@
 
 #import "AIExceptionHandlingUtilities.h"
 
+NSString *AIFontFamilyAttributeName = @"AIFontFamily";
+NSString *AIFontSizeAttributeName   = @"AIFontSize";
+NSString *AIFontWeightAttributeName = @"AIFontWeight";
+NSString *AIFontStyleAttributeName  = @"AIFontStyle";
+
 @implementation NSMutableAttributedString (AIAttributedStringAdditions)
 
 //Append a plain string, adding the specified attributes
@@ -283,6 +288,83 @@
 @end
 
 @implementation NSAttributedString (AIAttributedStringAdditions)
+
++ (NSSet *)CSSCapableAttributesSet
+{
+	return [NSSet setWithObjects:
+		NSFontAttributeName,
+		AIFontFamilyAttributeName,
+		AIFontSizeAttributeName,
+		AIFontWeightAttributeName,
+		AIFontStyleAttributeName,
+		NSForegroundColorAttributeName,
+		NSBackgroundColorAttributeName,
+		NSShadowAttributeName,
+		NSCursorAttributeName,
+		NSUnderlineStyleAttributeName,
+		NSStrikethroughStyleAttributeName,
+		NSSuperscriptAttributeName,
+		nil];
+}
++ (NSString *)CSSStringForTextAttributes:(NSDictionary *)attrs
+{
+	static NSDictionary *attributeNamesToCSSPropertyNames = nil;
+	if (!attributeNamesToCSSPropertyNames) {
+		attributeNamesToCSSPropertyNames = [[NSDictionary alloc] initWithObjectsAndKeys:
+			@"font",             NSFontAttributeName,
+			@"font-family",      AIFontFamilyAttributeName,
+			@"font-size",        AIFontSizeAttributeName,
+			@"font-weight",      AIFontWeightAttributeName,
+			@"font-style",       AIFontStyleAttributeName,
+			@"color",            NSForegroundColorAttributeName,
+			@"background-color", NSBackgroundColorAttributeName,
+			@"text-shadow",      NSShadowAttributeName,
+			@"cursor",           NSCursorAttributeName,
+			nil];
+	}
+
+	NSMutableArray *CSSProperties = [NSMutableArray arrayWithCapacity:[attrs count]];
+
+	BOOL hasLineThrough = NO, hasUnderline = NO;
+
+	NSEnumerator *keysEnum = [attrs keyEnumerator];
+	NSString *key;
+	while ((key = [keysEnum nextObject])) {
+		if ([key isEqualToString:NSUnderlineStyleAttributeName]) {
+			hasUnderline = YES;
+		} else if ([key isEqualToString:NSStrikethroughStyleAttributeName]) {
+			hasLineThrough = YES;
+		} else if ([key isEqualToString:NSSuperscriptAttributeName]) {
+			[CSSProperties addObject:@"vertical-align: baseline;"];
+		} else {
+			NSString *CSSPropertyName = [attributeNamesToCSSPropertyNames objectForKey:key];
+			id obj = [attrs objectForKey:key];
+			if (CSSPropertyName) {
+				if ([obj respondsToSelector:@selector(CSSRepresentation)]) {
+					obj = [obj CSSRepresentation];
+				} else if ([obj respondsToSelector:@selector(stringValue)]) {
+					obj = [obj stringValue];
+				} else if ([obj respondsToSelector:@selector(absoluteString)]) {
+					obj = [obj absoluteString];
+				}
+
+				[CSSProperties addObject:[NSString stringWithFormat:@"%@: %@;", CSSPropertyName, obj]];
+			}
+		}
+	}
+
+	if (hasLineThrough && hasUnderline) {
+		[CSSProperties addObject:@"text-decoration: line-through underline;"];
+	} else if (hasLineThrough) {
+		[CSSProperties addObject:@"text-decoration: line-through;"];
+	} else if (hasUnderline) {
+		[CSSProperties addObject:@"text-decoration: underline;"];
+	}
+
+	[CSSProperties sortUsingSelector:@selector(compare:)];
+
+	return [CSSProperties componentsJoinedByString:@" "];
+}
 
 //Height of a string
 #define FONT_HEIGHT_STRING		@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()"

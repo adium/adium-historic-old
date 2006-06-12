@@ -178,6 +178,19 @@
 	return result;
 }
 
+- (NSString *)CSSString
+{
+	NSMutableArray *properties = [NSMutableArray arrayWithCapacity:[self count]];
+
+	NSEnumerator *keysEnum = [self keyEnumerator];
+	NSString *key;
+	while ((key = [keysEnum nextObject])) {
+		[properties addObject:[NSString stringWithFormat:@"%@: %@;", key, [self objectForKey:key]]];
+	}
+
+	return [properties componentsJoinedByString:@" "];
+}
+
 @end
 
 @implementation NSMutableDictionary (AIDictionaryAdditions)

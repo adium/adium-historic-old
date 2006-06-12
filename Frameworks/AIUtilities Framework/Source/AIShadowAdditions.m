@@ -13,14 +13,18 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface NSFont (AIFontAdditions)
-+ (NSFont *)cachedFontWithName:(NSString *)fontName size:(float)fontSize;
-- (NSString *)stringRepresentation;
-- (NSString *)CSSRepresentation;
-- (BOOL)supportsBold;
-- (BOOL)supportsItalics;
-@end
+#import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
-@interface NSString (AIFontAdditions)
-- (NSFont *)representedFont;
+@implementation NSShadow (AIShadowAdditions)
+
+- (NSString *) CSSRepresentation
+{
+	NSSize shadowOffset = [self shadowOffset];
+	return [NSString stringWithFormat:@"%@ %@pt %@pt %@pt",
+		[[self shadowColor] CSSRepresentation],
+		[NSString stringWithFloat:shadowOffset.width maxDigits:2], [NSString stringWithFloat:shadowOffset.height maxDigits:2],
+		[NSString stringWithFloat:[self shadowBlurRadius] maxDigits:2]];
+}
+
 @end

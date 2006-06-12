@@ -13,14 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface NSFont (AIFontAdditions)
-+ (NSFont *)cachedFontWithName:(NSString *)fontName size:(float)fontSize;
-- (NSString *)stringRepresentation;
-- (NSString *)CSSRepresentation;
-- (BOOL)supportsBold;
-- (BOOL)supportsItalics;
-@end
+@interface NSShadow (AIShadowAdditions)
 
-@interface NSString (AIFontAdditions)
-- (NSFont *)representedFont;
+- (NSString *) CSSRepresentation;
+
 @end
