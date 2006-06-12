@@ -70,6 +70,7 @@
 		078C5CD2079EFF88004C75A4 /* AILocalizationButtonCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		078C5CD3079EFF88004C75A4 /* AILocalizationButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */; };
 		07AF3C5A07D4897300409BC8 /* pref-messagehistory.png in Resources */ = {isa = PBXBuildFile; fileRef = 07AF3C5907D4897200409BC8 /* pref-messagehistory.png */; };
+		07B87D770A3A9FCF00A38283 /* AIStatusDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B87D760A3A9FCF00A38283 /* AIStatusDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07F8303509693F5E002FC851 /* OTR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		110763F508676CC9005987A5 /* RAFBlockEditorPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */; };
 		110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */; };
@@ -610,7 +611,7 @@
 		348E5ACB06D2A74C004C051C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348E5ACA06D2A74C004C051C /* AddressBook.framework */; };
 		348EE1B4080A57480015E0FC /* WebKitPreferencesView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348EE1B3080A57480015E0FC /* WebKitPreferencesView.nib */; };
 		348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */; };
-		348F50C20935317C00288E41 /* AIStatusItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 348F50C00935317C00288E41 /* AIStatusItem.h */; };
+		348F50C20935317C00288E41 /* AIStatusItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 348F50C00935317C00288E41 /* AIStatusItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		348F50C30935317C00288E41 /* AIStatusItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 348F50C10935317C00288E41 /* AIStatusItem.m */; };
 		348F57930936F3CC00288E41 /* ESEditStatusGroupWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 348F57910936F3CC00288E41 /* ESEditStatusGroupWindowController.h */; };
 		348F57940936F3CC00288E41 /* ESEditStatusGroupWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348F57920936F3CC00288E41 /* ESEditStatusGroupWindowController.m */; };
@@ -1755,6 +1756,7 @@
 		078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButtonCell.h; path = "Frameworks/Adium Framework/AILocalizationButtonCell.h"; sourceTree = "<group>"; };
 		078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButtonCell.m; path = "Frameworks/Adium Framework/AILocalizationButtonCell.m"; sourceTree = "<group>"; };
 		07AF3C5907D4897200409BC8 /* pref-messagehistory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-messagehistory.png"; path = "Resources/pref-messagehistory.png"; sourceTree = "<group>"; };
+		07B87D760A3A9FCF00A38283 /* AIStatusDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusDefines.h; path = "Frameworks/Adium Framework/AIStatusDefines.h"; sourceTree = "<group>"; };
 		07F1794F08EBC5B300A9C392 /* UndeclaredLibgaimFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UndeclaredLibgaimFunctions.h; path = "Plugins/Gaim Service/UndeclaredLibgaimFunctions.h"; sourceTree = "<group>"; };
 		110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorPlugin.h; path = Source/RAFBlockEditorPlugin.h; sourceTree = "<group>"; };
 		110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorPlugin.m; path = Source/RAFBlockEditorPlugin.m; sourceTree = "<group>"; };
@@ -5577,6 +5579,7 @@
 		4B587CAB07ABFF18001832A9 /* State & Status */ = {
 			isa = PBXGroup;
 			children = (
+				07B87D760A3A9FCF00A38283 /* AIStatusDefines.h */,
 				348F50C00935317C00288E41 /* AIStatusItem.h */,
 				348F50C10935317C00288E41 /* AIStatusItem.m */,
 				34AC36B907B5C51400145239 /* AIStatus.h */,
@@ -7403,6 +7406,7 @@
 				34AC2FA709352C2500393D7A /* AIStatusGroup.h in Headers */,
 				348F50C20935317C00288E41 /* AIStatusItem.h in Headers */,
 				340BA84609EC593B000EC441 /* AICorePluginLoader.h in Headers */,
+				07B87D770A3A9FCF00A38283 /* AIStatusDefines.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
