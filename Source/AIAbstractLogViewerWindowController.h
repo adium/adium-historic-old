@@ -78,9 +78,9 @@ typedef enum {
 	IBOutlet	NSSearchField	*searchField_logs;
 	
 	//Array of selected / displayed logs.  (Locked access)
-    NSMutableArray		*currentSearchResults;		//Array of filtered/resulting logs
-    NSLock				*resultsLock;			//Lock before touching the array
-    AIChatLog			*displayedLog;			//Currently selected/displayed log	
+    NSMutableArray		*currentSearchResults;	//Array of filtered/resulting logs
+    NSRecursiveLock		*resultsLock;			//Lock before touching the array
+	NSArray				*displayedLogArray;		//Currently selected/displayed log(s)
 
 	LogSearchMode		searchMode;				//Currently selected search mode
 
@@ -122,6 +122,8 @@ typedef enum {
     int					sameSelection;
     BOOL				useSame;
 	
+	NSString			*horizontalRule;
+
 	//Old
 	BOOL showEmoticons;
 }
