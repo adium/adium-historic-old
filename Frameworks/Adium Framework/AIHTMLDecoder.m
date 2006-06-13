@@ -67,7 +67,7 @@ static NSString			*horizontalRule = nil;
 		_defaultTextDecodingAttributes = [[AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12] retain];
 	}
 
-	//Set up the horizontal rule which will be search for when encoding and inserted when decoding
+	//Set up the horizontal rule which will be searched-for when encoding and inserted when decoding
 	if (!horizontalRule) {
 #define HORIZONTAL_BAR			0x2013
 #define HORIZONTAL_RULE_LENGTH	12
