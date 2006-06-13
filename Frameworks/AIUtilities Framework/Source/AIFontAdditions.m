@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIFontAdditions.h"
+#import "AIStringAdditions.h"
 
 @implementation NSFont (AIFontAdditions)
 
