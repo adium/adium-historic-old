@@ -1390,7 +1390,11 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc] au
 		return [[self openChats] count] > 0;
 
 	} else if (menuItem == menuItem_print) {
-		return [[keyWindow windowController] respondsToSelector:@selector(adiumPrint:)];
+		NSWindowController *windowController = [keyWindow windowController];
+
+		return ([windowController respondsToSelector:@selector(adiumPrint:)] &&
+				(![windowController respondsToSelector:@selector(validatePrintMenuItem:)] ||
+				 [windowController validatePrintMenuItem:menuItem]));
 		
 	} else {
 		return YES;
