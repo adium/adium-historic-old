@@ -899,7 +899,6 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			while ((item = [startedKeysEnum nextObject])) {
 				NSSet *itemKeys = [item objectAtIndex:1];
 
-				NSString *linkValue = [attributes objectForKey:NSLinkAttributeName];
 				AIXMLElement *thisElement = [self elementWithAppKitAttributes:attributes attributeNames:itemKeys elementContent:elementContent shouldAddElementContentToTopElement:&addElementContentToTopElement];
 				if (thisElement) {
 					[[elementStack lastObject] addObject:thisElement];
