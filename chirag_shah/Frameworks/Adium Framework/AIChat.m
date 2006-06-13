@@ -187,9 +187,6 @@ static int nextChatNumber = 0;
 		AIListObject	*listObject = [self listObject];
 		
 		if (listObject) [listObject setStatusObject:value forKey:key notify:notify];
-		NSAccessibilityPostNotification(key,@"KEY_TYPING");
-		AILog(@"Test: Status - KEY_TYPING");
-
 	}
 	
 	[super object:inObject didSetStatusObject:value forKey:key notify:notify];
