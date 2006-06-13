@@ -275,4 +275,5 @@ typedef enum {
 //Custom printing informal protocol
 @interface NSObject (AdiumPrinting)
 - (void)adiumPrint:(id)sender;
+- (BOOL)validatePrintMenuItem:(id <NSMenuItem>)menuItem;
 @end
