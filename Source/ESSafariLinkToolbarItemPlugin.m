@@ -121,7 +121,7 @@
 - (void)applescriptDidRun:(id)userInfo resultString:(NSString *)resultString
 {
 	NSTextView	*earliestTextView = (NSTextView *)userInfo;
-	NSLog(@"did run %@ - %@",userInfo, resultString);
+
 	//If the script returns nil or fails, do nothing
 	if (resultString && [resultString length]) {
 		//Insert the script result - it should have returned an HTML link, so process it first
