@@ -53,27 +53,28 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	[self willChangeValueForKey:@"listContents"];
 	accountStates = [[NSMutableDictionary alloc] init];
 	listContents = [[NSMutableArray alloc] init];
+
 	NSMenu *tmpMenu = [[NSMenu alloc] init];
 	NSMenu *tmpMainAcctsMenu = [[NSMenu alloc] init];
 	[tmpMainAcctsMenu addItem:[[[NSMenuItem alloc] initWithTitle:@"All" action:NULL keyEquivalent:@""] autorelease]];
 	AIAccount <AIAccount_Privacy> *account;
 	NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
-	PRIVACY_OPTION currentState = PRIVACY_UNKNOWN;
+	AIPrivacyOption currentState = AIPrivacyOptionUnknown;
 	while((account = [enumerator nextObject])) {
 		/* we can't do much with offline accounts and their block lists... */
 		if([[account statusObjectForKey:@"Online"] boolValue] &&
 		   [account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-			PRIVACY_OPTION accountState = [account privacyOptions];
+			AIPrivacyOption accountState = [account privacyOptions];
 			[accountStates setObject:[NSNumber numberWithInt: (int)accountState] forKey:[account UID]];
-			if (currentState == PRIVACY_UNKNOWN)
+			if (currentState == AIPrivacyOptionUnknown)
 				currentState = accountState;
 			else if (accountState != currentState)
-				currentState = PRIVACY_CUSTOM;
-			if (accountState == PRIVACY_DENY_USERS)
-				[listContents addObjectsFromArray:[account listObjectsOnPrivacyList:PRIVACY_DENY]];
-			else if (accountState == PRIVACY_ALLOW_USERS) {
+				currentState = AIPrivacyOptionCustom;
+			if (accountState == AIPrivacyOptionDenyUsers)
+				[listContents addObjectsFromArray:[account listObjectsOnPrivacyList:AIPrivacyTypeDeny]];
+			else if (accountState == AIPrivacyOptionAllowUsers) {
 				// if it's an allow list, we have to "invert" it so that it looks right.
-				NSArray *tmpArr = [account listObjectsOnPrivacyList:PRIVACY_PERMIT];
+				NSArray *tmpArr = [account listObjectsOnPrivacyList:AIPrivacyTypePermit];
 				NSMutableArray *allContacts = [[account contacts] mutableCopy];
 				[allContacts removeObjectsInArray:tmpArr];
 				[listContents addObjectsFromArray:allContacts];
@@ -89,26 +90,27 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	//build the menu of states
 	NSMenu *stateMenu = [[NSMenu alloc] init];
 	NSMenuItem *tmpItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Allow anyone", nil) action:NULL keyEquivalent:@""];
-	[tmpItem setRepresentedObject:[NSNumber numberWithInt:PRIVACY_ALLOW_ALL]];
+	[tmpItem setRepresentedObject:[NSNumber numberWithInt:AIPrivacyOptionAllowAll]];
 	[stateMenu addItem:[tmpItem autorelease]];
 	
 	tmpItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Allow anyone on my contact list", nil) action:NULL keyEquivalent:@""];
-	[tmpItem setRepresentedObject:[NSNumber numberWithInt:PRIVACY_ALLOW_CONTACTLIST]];
+	[tmpItem setRepresentedObject:[NSNumber numberWithInt:AIPrivacyOptionAllowContactList]];
 	[stateMenu addItem:[tmpItem autorelease]];
 	
 	tmpItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Allow people on my contact list except those below", nil) action:NULL keyEquivalent:@""];
-	[tmpItem setRepresentedObject:[NSNumber numberWithInt:PRIVACY_ALLOW_USERS]];
+	[tmpItem setRepresentedObject:[NSNumber numberWithInt:AIPrivacyOptionAllowUsers]];
 	[stateMenu addItem:[tmpItem autorelease]];
 	
 	tmpItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Deny below contacts", nil) action:NULL keyEquivalent:@""];
-	[tmpItem setRepresentedObject:[NSNumber numberWithInt:PRIVACY_DENY_USERS]];
+	[tmpItem setRepresentedObject:[NSNumber numberWithInt:AIPrivacyOptionDenyUsers]];
 	[stateMenu addItem:[tmpItem autorelease]];
 	
 	tmpItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Custom settings for each account", nil) action:NULL keyEquivalent:@""];
-	[tmpItem setRepresentedObject:[NSNumber numberWithInt:PRIVACY_CUSTOM]];
+	[tmpItem setRepresentedObject:[NSNumber numberWithInt:AIPrivacyOptionCustom]];
 	[stateMenu addItem:[tmpItem autorelease]];
 	
 	[stateChooser setMenu:[stateMenu autorelease]];
+
 	[stateChooser selectItemWithRepresentedObject:[NSNumber numberWithInt:currentState]];
 	
 	[self didChangeValueForKey:@"listContents"];
@@ -133,10 +135,10 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	//remove "unblocked" people
 	while ((account = [enumerator nextObject])) {
 		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-			PRIVACY_OPTION accountState = [[accountStates objectForKey:[account UID]] intValue];
+			AIPrivacyOption accountState = [[accountStates objectForKey:[account UID]] intValue];
 			[account setPrivacyOptions:accountState];
-			PRIVACY_TYPE privType = PRIVACY_DENY;
-			if (accountState == PRIVACY_ALLOW_USERS) {
+			AIPrivacyType privType = AIPrivacyTypeDeny;
+			if (accountState == AIPrivacyOptionAllowUsers) {
 				//convert to NSSets and use set voodoo to do our bidding
 				NSMutableSet *allContacts = [NSMutableSet setWithArray:[account contacts]];
 				NSMutableSet *disallowedContacts = [NSMutableSet setWithArray:listContents];
@@ -144,13 +146,13 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 				[allContacts minusSet:disallowedContacts];				
 				[listContents removeObjectsInArray:[disallowedContacts allObjects]];
 				[listContents addObjectsFromArray:[allContacts allObjects]];
-				privType = PRIVACY_PERMIT;
+				privType = AIPrivacyTypePermit;
 			}
 			NSEnumerator *tmp=[[account listObjectsOnPrivacyList:privType] objectEnumerator];
 			while((contact = [tmp nextObject])) {
 				if( ![listContents containsObject:contact]) {
 					[account removeListObject:contact fromPrivacyList:privType];
-					[contact setIsBlocked:(PRIVACY_PERMIT == privType) updateList:NO];
+					[contact setIsBlocked:(AIPrivacyTypePermit == privType) updateList:NO];
 				}
 			}
 		}
@@ -160,14 +162,14 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	enumerator = [listContents objectEnumerator];
 	while ((contact = [enumerator nextObject])) {
 		account = [contact account];
-		PRIVACY_OPTION accountState = [[accountStates objectForKey:[account UID]] intValue];
-		PRIVACY_TYPE privState = PRIVACY_DENY;
-		if (accountState == PRIVACY_ALLOW_USERS)
-			privState = PRIVACY_PERMIT;
+		AIPrivacyOption accountState = [[accountStates objectForKey:[account UID]] intValue];
+		AIPrivacyType privState = AIPrivacyTypeDeny;
+		if (accountState == AIPrivacyOptionAllowUsers)
+			privState = AIPrivacyTypePermit;
 		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)] &&
 			![[account listObjectsOnPrivacyList:accountState] containsObject:contact]) {
 			[account addListObject:contact toPrivacyList:privState];
-			[contact setIsBlocked:(PRIVACY_DENY == privState) updateList:NO];
+			[contact setIsBlocked:(AIPrivacyTypeDeny == privState) updateList:NO];
 		}
 	}
 	sharedInstance = nil;
@@ -287,7 +289,7 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	[self willChangeValueForKey:@"listContents"];
 	[listContents release];
 	listContents = [listContentsAllAccounts mutableCopy];
-	PRIVACY_OPTION currentState = PRIVACY_UNKNOWN;
+	AIPrivacyOption currentState = AIPrivacyOptionUnknown;
 	if (repObj != nil) {
 		//clean out the listObjs for other accounts
 		AIListContact *listObj;
@@ -303,10 +305,10 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 		NSEnumerator *enumerator = [accountStates objectEnumerator];
 		NSNumber *tmpNum;
 		while((tmpNum = [enumerator nextObject])) {
-			if (currentState == PRIVACY_UNKNOWN)
+			if (currentState == AIPrivacyOptionUnknown)
 				currentState = [tmpNum intValue];
 			else if ([tmpNum intValue] != currentState)
-				currentState = PRIVACY_CUSTOM;
+				currentState = AIPrivacyOptionCustom;
 		}
 	}
 	[stateChooser selectItemWithRepresentedObject:[NSNumber numberWithInt:currentState]];
@@ -315,18 +317,18 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 
 - (IBAction)setState:(id)sender
 {
-	PRIVACY_OPTION newState = [[[stateChooser selectedItem] representedObject] intValue];
-	if (newState == PRIVACY_CUSTOM) {
-		newState = PRIVACY_UNKNOWN;
+	AIPrivacyOption newState = [[[stateChooser selectedItem] representedObject] intValue];
+	if (newState == AIPrivacyOptionCustom) {
+		newState = AIPrivacyOptionUnknown;
 		NSEnumerator *enumerator = [accountStates objectEnumerator];
 		NSNumber *tmpNum;
 		while((tmpNum = [enumerator nextObject])) {
-			if (newState == PRIVACY_UNKNOWN)
+			if (newState == AIPrivacyOptionUnknown)
 				newState = [tmpNum intValue];
 			else if ([tmpNum intValue] != newState)
-				newState = PRIVACY_CUSTOM;
+				newState = AIPrivacyOptionCustom;
 		}
-		if (newState != PRIVACY_CUSTOM)
+		if (newState != AIPrivacyOptionCustom)
 			[stateChooser selectItemWithRepresentedObject:[NSNumber numberWithInt:newState]];
 	} else {
 		if ([[mainAccounts selectedItem] representedObject] == nil) {
@@ -358,13 +360,13 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 		/* we can't do much with offline accounts and their block lists... */
 		if([[account statusObjectForKey:@"Online"] boolValue] &&
 		   [account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-			PRIVACY_OPTION accountState = [[accountStates objectForKey:[account UID]] intValue];
-			if (accountState == PRIVACY_DENY_USERS) {
-				[listContents addObjectsFromArray:[account listObjectsOnPrivacyList:PRIVACY_DENY]];
+			AIPrivacyOption accountState = [[accountStates objectForKey:[account UID]] intValue];
+			if (accountState == AIPrivacyOptionDenyUsers) {
+				[listContents addObjectsFromArray:[account listObjectsOnPrivacyList:AIPrivacyTypeDeny]];
 			}
-			else if (accountState == PRIVACY_ALLOW_USERS) {
+			else if (accountState == AIPrivacyOptionAllowUsers) {
 				// if it's an allow list, we have to "invert" it so that it looks right.
-				NSArray *tmpArr = [account listObjectsOnPrivacyList:PRIVACY_PERMIT];
+				NSArray *tmpArr = [account listObjectsOnPrivacyList:AIPrivacyTypePermit];
 				NSMutableArray *allContacts = [[account contacts] mutableCopy];
 				[allContacts removeObjectsInArray:tmpArr];
 				[listContents addObjectsFromArray:allContacts];

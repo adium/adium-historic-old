@@ -224,14 +224,14 @@
 				AIAccount <AIAccount_Privacy> *acct = [contact account];
 				if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
 					anyAccount = YES;
-					PRIVACY_TYPE privType = [acct privacyOptions] == PRIVACY_ALLOW_USERS ? PRIVACY_PERMIT : PRIVACY_DENY;
+					AIPrivacyType privType = [acct privacyOptions] == AIPrivacyOptionAllowUsers ? AIPrivacyTypePermit : AIPrivacyTypeDeny;
 					if ([[acct listObjectsOnPrivacyList:privType] containsObject:contact]) {
 						//title: "Unblock"; enabled
-						if (!unblock && PRIVACY_PERMIT == privType) {
+						if (!unblock && AIPrivacyTypePermit == privType) {
 							//removing the guy is blocking him
 							[menuItem setTitle:BLOCK_CONTACT];
 						}
-						else if (unblock && PRIVACY_DENY == privType) {
+						else if (unblock && AIPrivacyTypeDeny == privType) {
 							//removing him is unblocking
 							[menuItem setTitle:UNBLOCK_CONTACT];
 						}
@@ -255,21 +255,21 @@
 			AIListContact *contact = (AIListContact *)object;
 			AIAccount <AIAccount_Privacy> *acct = [contact account];
 			if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-				PRIVACY_TYPE privType = [acct privacyOptions] == PRIVACY_ALLOW_USERS ? PRIVACY_PERMIT : PRIVACY_DENY;
+				AIPrivacyType privType = [acct privacyOptions] == AIPrivacyOptionAllowUsers ? AIPrivacyTypePermit : AIPrivacyTypeDeny;
 				if ([[acct listObjectsOnPrivacyList:privType] containsObject:contact]) {
 					//title: "Unblock"; enabled
-					if (!unblock && PRIVACY_PERMIT == privType) {
+					if (!unblock && AIPrivacyTypePermit == privType) {
 						[menuItem setTitle:BLOCK_CONTACT];
 					}
-					else if (unblock && PRIVACY_DENY == privType) {
+					else if (unblock && AIPrivacyTypeDeny == privType) {
 						[menuItem setTitle:UNBLOCK_CONTACT];
 					}
 					return YES;
 				} else {
 					//title: "Block"; enabled
-					if (!unblock && PRIVACY_PERMIT == privType)
+					if (!unblock && AIPrivacyTypePermit == privType)
 						[menuItem setTitle:UNBLOCK_CONTACT];
-					else if (unblock && PRIVACY_DENY == privType)
+					else if (unblock && AIPrivacyTypeDeny == privType)
 						[menuItem setTitle:BLOCK_CONTACT];
 					return YES;
 				}
@@ -299,7 +299,7 @@
 		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
 			
 			if (sameContact){ 
-				if ([account privacyOptions] == PRIVACY_DENY_USERS)
+				if ([account privacyOptions] == AIPrivacyOptionDenyUsers)
 					[sameContact setIsBlocked:!unblock updateList:YES];
 				else
 					[sameContact setIsAllowed:unblock updateList:YES];
@@ -318,7 +318,7 @@
 	while ((account = [enumerator nextObject])) {
 		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
 			AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
-			if ([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]] == desiredResult) {
+			if ([[privacyAccount listObjectIDsOnPrivacyList:AIPrivacyTypeDeny] containsObject:[contact UID]] == desiredResult) {
 				return YES;
 			}
 		}
@@ -344,7 +344,7 @@
 		while ((currentContact = [contactEnumerator nextObject])) {
 			//NSLog(@"The current contact is: %@", currentContact);
 			
-			if ([[(AIAccount <AIAccount_Privacy> *)accountConnected listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[currentContact UID]]) {
+			if ([[(AIAccount <AIAccount_Privacy> *)accountConnected listObjectIDsOnPrivacyList:AIPrivacyTypeDeny] containsObject:[currentContact UID]]) {
 				//inform the contact that they're blocked
 				[currentContact setIsBlocked:YES updateList:NO];
 				//NSLog(@"** %@ is blocked **", [currentContact formattedUID]);

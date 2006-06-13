@@ -1017,41 +1017,41 @@ BOOL isHTMLContact(AIListObject *inListObject)
 }
 
 #pragma mark Privacy
-//Add a list object to the privacy list (either PRIVACY_PERMIT or PRIVACY_DENY). Return value indicates success.
--(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type
+//Add a list object to the privacy list (either AIPrivacyTypePermit or AIPrivacyTypeDeny). Return value indicates success.
+-(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(AIPrivacyType)type
 {
 	switch (type) {
-		case PRIVACY_DENY:
+		case AIPrivacyTypeDeny:
 			[joscarAdapter addToBlockList:[inObject UID]];
 			break;
-		case PRIVACY_PERMIT:
+		case AIPrivacyTypePermit:
 			[joscarAdapter addToAllowedList:[inObject UID]];
 			break;
 	}
 	return YES;
 }
-//Remove a list object from the privacy list (either PRIVACY_PERMIT or PRIVACY_DENY). Return value indicates success
--(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type
+//Remove a list object from the privacy list (either AIPrivacyTypePermit or AIPrivacyTypeDeny). Return value indicates success
+-(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(AIPrivacyType)type
 {
 	switch (type) {
-		case PRIVACY_DENY:
+		case AIPrivacyTypeDeny:
 			[joscarAdapter removeFromBlockList:[inObject UID]];
 			break;
-		case PRIVACY_PERMIT:
+		case AIPrivacyTypePermit:
 			[joscarAdapter removeFromAllowedList:[inObject UID]];
 			break;
 	}
 	return YES;
 }
 //Return an array of AIListContacts on the specified privacy list.  Returns an empty array if no contacts are on the list.
--(NSArray *)listObjectsOnPrivacyList:(PRIVACY_TYPE)type
+-(NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type
 {
 	NSArray *tmp = nil;
 	switch (type) {
-		case PRIVACY_DENY:
+		case AIPrivacyTypeDeny:
 			tmp = [joscarAdapter getBlockedBuddies];
 			break;
-		case PRIVACY_PERMIT:
+		case AIPrivacyTypePermit:
 			tmp = [joscarAdapter getAllowedBuddies];
 			break;
 	}
@@ -1064,14 +1064,14 @@ BOOL isHTMLContact(AIListObject *inListObject)
 }
 
 //Identical to the above method, except it returns an array of strings, not list objects
--(NSArray *)listObjectIDsOnPrivacyList:(PRIVACY_TYPE)type
+-(NSArray *)listObjectIDsOnPrivacyList:(AIPrivacyType)type
 {
 	NSArray *tmp = nil;
 	switch (type) {
-		case PRIVACY_DENY:
+		case AIPrivacyTypeDeny:
 			tmp = [joscarAdapter getBlockedBuddies];
 			break;
-		case PRIVACY_PERMIT:
+		case AIPrivacyTypePermit:
 			tmp = [joscarAdapter getAllowedBuddies];
 			break;
 	}
@@ -1084,13 +1084,13 @@ BOOL isHTMLContact(AIListObject *inListObject)
 	return [retArr autorelease];
 }
 //Set the privacy options
--(void)setPrivacyOptions:(PRIVACY_OPTION)option
+-(void)setPrivacyOptions:(AIPrivacyOption)option
 {
 	[joscarAdapter setPrivacyMode:option];
 }
 
 //Get the privacy options
--(PRIVACY_OPTION)privacyOptions
+-(AIPrivacyOption)privacyOptions
 {
 	return [joscarAdapter privacyMode];
 }

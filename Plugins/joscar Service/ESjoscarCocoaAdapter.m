@@ -1406,18 +1406,18 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	return [array autorelease];
 }
 
-- (PRIVACY_OPTION)privacyMode
+- (AIPrivacyOption)privacyMode
 {	
 	NSString *mode = [[[[aimConnection getSsiService] getPermissionList] getPrivacyMode] name];
-	PRIVACY_OPTION prvType = PRIVACY_ALLOW_ALL;
+	AIPrivacyOption prvType = AIPrivacyOptionAllowAll;
 	if ([mode isEqualToString:@"ALLOW_ALLOWED"])
-		prvType = PRIVACY_ALLOW_USERS;
+		prvType = AIPrivacyOptionAllowUsers;
 	if ([mode isEqualToString:@"BLOCK_ALL"])
-		prvType = PRIVACY_DENY_ALL;
+		prvType = AIPrivacyOptionDenyAll;
 	if ([mode isEqualToString:@"BLOCK_BLOCKED"])
-		prvType = PRIVACY_DENY_USERS;
+		prvType = AIPrivacyOptionDenyUsers;
 	if ([mode isEqualToString:@"ALLOW_BUDDIES"])
-		prvType = PRIVACY_ALLOW_CONTACTLIST;
+		prvType = AIPrivacyOptionAllowContactList;
 	return prvType;
 }
 
@@ -1471,23 +1471,23 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[[aimConnection getSsiService] getPermissionList] removeFromAllowedList:NewScreenname(sn)];
 }
 
-- (void)setPrivacyMode:(PRIVACY_OPTION)mode
+- (void)setPrivacyMode:(AIPrivacyOption)mode
 {
 	NSString *modeName = nil;
 	switch(mode) {
-		case PRIVACY_ALLOW_ALL:
+		case AIPrivacyOptionAllowAll:
 			modeName = @"ALLOW_ALL";
 			break;
-		case PRIVACY_ALLOW_CONTACTLIST:
+		case AIPrivacyOptionAllowContactList:
 			modeName = @"ALLOW_BUDDIES";
 			break;
-		case PRIVACY_DENY_ALL:
+		case AIPrivacyOptionDenyAll:
 			modeName = @"BLOCK_ALL";
 			break;
-		case PRIVACY_DENY_USERS:
+		case AIPrivacyOptionDenyUsers:
 			modeName = @"BLOCK_BLOCKED";
 			break;
-		case PRIVACY_ALLOW_USERS:
+		case AIPrivacyOptionAllowUsers:
 			modeName = @"ALLOW_ALLOWED";
 			break;
 		default:
