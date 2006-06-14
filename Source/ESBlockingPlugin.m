@@ -22,6 +22,7 @@
 #import "AIChatController.h"
 #import "ESBlockingPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
@@ -29,8 +30,10 @@
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIChat.h>
 
-#define BLOCK_CONTACT				AILocalizedString(@"Block","Block Contact menu item")
-#define UNBLOCK_CONTACT				AILocalizedString(@"Unblock","Unblock Contact menu item")
+#define BLOCK_CONTACT_TOOLBAR		AILocalizedString(@"Block","Block Contact menu item")
+#define UNBLOCK_CONTACT_TOOLBAR		AILocalizedString(@"Unblock","Unblock Contact menu item")
+#define BLOCK_CONTACT				[BLOCK_CONTACT_TOOLBAR stringByAppendingEllipsis]
+#define UNBLOCK_CONTACT				[UNBLOCK_CONTACT_TOOLBAR stringByAppendingEllipsis]
 #define TOOLBAR_ITEM_IDENTIFIER		@"BlockParticipants"
 #define TOOLBAR_BLOCK_ICON_KEY		@"Block"
 #define TOOLBAR_UNBLOCK_ICON_KEY	@"Unblock"
@@ -93,9 +96,9 @@
 								[NSImage imageNamed:@"unblock.png" forClass:[self class]], TOOLBAR_UNBLOCK_ICON_KEY, 
 								nil];
 	NSToolbarItem	*chatItem = [AIToolbarUtilities toolbarItemWithIdentifier:TOOLBAR_ITEM_IDENTIFIER
-																		label:BLOCK_CONTACT
-																 paletteLabel:BLOCK_CONTACT
-																	  toolTip:BLOCK_CONTACT
+																		label:BLOCK_CONTACT_TOOLBAR
+																 paletteLabel:BLOCK_CONTACT_TOOLBAR
+																	  toolTip:BLOCK_CONTACT_TOOLBAR
 																	   target:self
 															  settingSelector:@selector(setImage:)
 																  itemContent:[blockedToolbarIcons valueForKey:TOOLBAR_BLOCK_ICON_KEY]
@@ -157,7 +160,7 @@
 		AIListContact	*contact = (AIListContact *)object;
 		BOOL			unblock;
 		NSString		*format;
-		
+
 		unblock = [[sender title] isEqualToString:UNBLOCK_CONTACT];
 		format = (unblock ? 
 				  AILocalizedString(@"Are you sure you want to unblock %@?",nil) :
@@ -293,7 +296,7 @@
 	NSEnumerator	*enumerator = [[[adium accountController] accountsCompatibleWithService:[contact service]] objectEnumerator];
 	AIAccount<AIAccount_Privacy>	*account = nil;
 	AIListContact	*sameContact = nil;
-	
+
 	while ((account = [enumerator nextObject])) {
 		sameContact = [account contactWithUID:[contact UID]];
 		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
@@ -524,13 +527,13 @@
 {
 	if ([self areAllGivenContactsBlocked:[chat participatingListObjects]]) {
 		//assume unblock appearance
-		[item setLabel:UNBLOCK_CONTACT];
-		[item setPaletteLabel:UNBLOCK_CONTACT];
+		[item setLabel:UNBLOCK_CONTACT_TOOLBAR];
+		[item setPaletteLabel:UNBLOCK_CONTACT_TOOLBAR];
 		[item setImage:[blockedToolbarIcons valueForKey:TOOLBAR_UNBLOCK_ICON_KEY]];
 	} else {
 		//assume block appearance
-		[item setLabel:BLOCK_CONTACT];
-		[item setPaletteLabel:BLOCK_CONTACT];
+		[item setLabel:BLOCK_CONTACT_TOOLBAR];
+		[item setPaletteLabel:BLOCK_CONTACT_TOOLBAR];
 		[item setImage:[blockedToolbarIcons valueForKey:TOOLBAR_BLOCK_ICON_KEY]];
 	}
 }
