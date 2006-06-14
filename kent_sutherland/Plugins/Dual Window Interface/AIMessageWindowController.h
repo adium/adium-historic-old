@@ -65,7 +65,6 @@
 - (NSArray *)containedChats;
 
 //Tabs
-- (void)updateTabBarVisibilityAndAnimate:(BOOL)animate;
 - (void)updateIconForTabViewItem:(AIMessageTabViewItem *)tabViewItem;
 
 @end
