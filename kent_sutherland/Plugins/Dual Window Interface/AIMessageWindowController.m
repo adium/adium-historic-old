@@ -51,10 +51,9 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName interface:(AIDualWindowInterfacePlugin *)inInterface containerID:(NSString *)inContainerID containerName:(NSString *)inName;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureToolbar;
-- (BOOL)_resizeTabBarAbsolute:(NSNumber *)absolute;
-- (void)_suppressTabHiding:(BOOL)suppress;
 - (void)_updateWindowTitleAndIcon;
 - (NSString *)_frameSaveKey;
+- (void)_reloadContainedChats;
 @end
 
 //Used to squelch compiler warnings on this private call
@@ -99,9 +98,15 @@
 		//Tab hiding suppression (used to force tab bars visible when a drag is occuring)
 		tabBarIsVisible = YES;
 		supressHiding = NO;
-		[[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(tabDraggingEnded:)
-													 name:AICustomTabDragDidComplete
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(tabDraggingNotificationReceived:)
+													 name:PSMTabDragDidBeginNotification
+												   object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(tabDraggingNotificationReceived:)
+													 name:PSMTabDragDidEndNotification
 												   object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self 
@@ -112,7 +117,7 @@
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 		
 		//Register as a tab drag observer so we know when tabs are dragged over our window and can show our tab bar
-		[myWindow registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
+		[myWindow registerForDraggedTypes:[NSArray arrayWithObject:@"PSMTabBarControlItemPBType"]];
 	}
 
     return self;
@@ -192,6 +197,8 @@
 	//Setup the tab bar
 	[tabView_tabBar setStyleNamed:@"Adium"];
 	[tabView_tabBar setCanCloseOnlyTab:YES];
+	[tabView_tabBar setUseOverflowMenu:NO];
+	[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
 }
 
 //Frames
@@ -265,9 +272,9 @@
 		NSWindow	*window = [self window];
 		
 		alwaysShowTabs = ![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
+		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
 		[tabView_tabBar setAllowsBackgroundTabClosing:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
 		
-		[self updateTabBarVisibilityAndAnimate:!firstTime];
 		[self _updateWindowTitleAndIcon];
 
 		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_WINDOW_LEVEL] intValue];
@@ -291,6 +298,15 @@
 	}
 }
 
+//Send the print message to our view
+- (void)adiumPrint:(id)sender
+{
+	id	controller = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] messageViewController];
+	
+	if ([controller respondsToSelector:@selector(adiumPrint:)]) {
+		[controller adiumPrint:sender];
+	}
+}
 
 //Contained Chats ------------------------------------------------------------------------------------------------------
 #pragma mark Contained Chats
@@ -364,8 +380,10 @@
 	AIChat	*chat = [inTabViewItem chat];
 
 	if ([containedChats indexOfObject:chat] != index) {
-		//[[tabView_tabBar cells] moveTab:inTabViewItem toIndex:index];
-		#warning Fix tabBar
+		NSMutableArray *cells = [tabView_tabBar cells];
+		
+		[cells moveObject:[cells objectAtIndex:[[tabView_tabBar representedTabViewItems] indexOfObject:inTabViewItem]] toIndex:index];
+		[tabView_tabBar setNeedsDisplay:YES];
 		[containedChats moveObject:chat toIndex:index];
 		
 		[[adium interfaceController] chatOrderDidChange];
@@ -384,6 +402,19 @@
     return containedChats;
 }
 
+- (void)_reloadContainedChats
+{
+	NSEnumerator			*enumerator;
+	AIMessageTabViewItem	*tabViewItem;
+	
+	//Update our contained chats array to mirror the order of the tabs
+	[containedChats release]; containedChats = [[NSMutableArray alloc] init];
+	enumerator = [[tabView_messages tabViewItems] objectEnumerator];
+	while ((tabViewItem = [enumerator nextObject])) {
+		[tabViewItem setContainer:self];
+		[containedChats addObject:[tabViewItem chat]];
+	}
+}
 
 //Active Chat Tracking -------------------------------------------------------------------------------------------------
 #pragma mark Active Chat Tracking
@@ -447,7 +478,7 @@
 
 - (BOOL)tabView:(NSTabView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	[self removeTabViewItem:tabViewItem silent:YES];
+	[self removeTabViewItem:(AIMessageTabViewItem *)tabViewItem silent:YES];
 	return NO;
 }
 
@@ -480,7 +511,7 @@
 
 - (void)tabView:(NSTabView *)tabView closeWindowForLastTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	[[self window] close];
+	[self closeWindow:self];
 }
 
 //Contextual menu for tabs
@@ -523,37 +554,15 @@
 //Tab count changed
 - (void)tabViewDidChangeNumberOfTabViewItems:(NSTabView *)tabView
 {
-	[self updateTabBarVisibilityAndAnimate:([[tabView window] isVisible])];
     [self _updateWindowTitleAndIcon];
-	
-	NSEnumerator			*enumerator;
-	AIMessageTabViewItem	*tabViewItem;
-	
-	//Update our contained chats array to mirror the order of the tabs
-	[containedChats release]; containedChats = [[NSMutableArray alloc] init];
-	enumerator = [[tabView_messages tabViewItems] objectEnumerator];
-	while ((tabViewItem = [enumerator nextObject])) {
-		[tabViewItem setContainer:self];
-		[containedChats addObject:[tabViewItem chat]];
-	}
-	
+	[self _reloadContainedChats];
 	[[adium interfaceController] chatOrderDidChange];
 }
 
-//Tab rearranging
-- (void)tabViewDidChangeOrderOfTabViewItems:(NSTabView *)tabView
+//Tabs reordered, rebuild the containedChats collection
+- (void)tabView:(NSTabView*)aTabView didDropTabViewItem:(NSTabViewItem *)tabViewItem inTabBar:(PSMTabBarControl *)tabBarControl;
 {
-	NSEnumerator			*enumerator;
-	AIMessageTabViewItem	*tabViewItem;
-	
-	//Update our contained chats array to mirror the order of the tabs
-	[containedChats release]; containedChats = [[NSMutableArray alloc] init];
-	enumerator = [[tabView_messages tabViewItems] objectEnumerator];
-	while ((tabViewItem = [enumerator nextObject])) {
-		[tabViewItem setContainer:self];
-		[containedChats addObject:[tabViewItem chat]];
-	}
-	
+	[self _reloadContainedChats];
 	[[adium interfaceController] chatOrderDidChange];
 }
 
@@ -715,116 +724,35 @@
 
 
 //Tab Bar Visibility --------------------------------------------------------------------------------------------------
-#pragma mark Tab Bar Visibility
-//Update the visibility of our tab bar (Tab bar is visible if autohide is off, or if there are 2 or more tabs present)
-- (void)updateTabBarVisibilityAndAnimate:(BOOL)animate
-{
-    if (tabView_messages != nil) {
-        BOOL    shouldShowTabs = (supressHiding || alwaysShowTabs || ([tabView_messages numberOfTabViewItems] > 1));
+#pragma mark Tab Bar Visibility/Drag And Drop
 
-        if (shouldShowTabs != tabBarIsVisible) {
-            tabBarIsVisible = shouldShowTabs;
-            
-			//We invoke both of these on a delay to prevent a display issue when dragging completes and the tab bar
-			//is momentarily told to hide and then quickly to become visible again
-			if (animate) {
-				[self performSelector:@selector(_resizeTabBarAbsolute:)
-						   withObject:[NSNumber numberWithBool:YES]
-						   afterDelay:0.0001];
-			} else {
-				[self _resizeTabBarAbsolute:[NSNumber numberWithBool:YES]];
-			}
-        }
-    }    
-}
+//Replaced by PSMTabBarControl
 
-//Smoothly resize the tab bar (Calls itself with a timer until the tabbar is correctly positioned)
-//- (void)_resizeTabBarTimer:(NSTimer *)inTimer
-//{
-//    //If the tab bar isn't at the right height, we set ourself to adjust it again
-//    if (![self _resizeTabBarAbsolute:[NSNumber numberWithBool:NO]]) { 
-//        [NSTimer scheduledTimerWithTimeInterval:(1.0/TAB_BAR_FPS)
-//										 target:self
-//									   selector:@selector(_resizeTabBarTimer:)
-//									   userInfo:nil
-//										repeats:NO];
-//    }
-//}
-
-//Resize the tab bar towards it's desired height
-- (BOOL)_resizeTabBarAbsolute:(NSNumber *)absolute
-{   
-    NSSize              tabSize = [tabView_tabBar frame].size;
-    double              destHeight;
-    NSRect              newFrame;
-
-    //Determine the desired height
-    destHeight = (tabBarIsVisible ? tabBarHeight : 0);
-    
-    //Move the tab view's height towards this desired height
-    int distance = (destHeight - tabSize.height) * TAB_BAR_STEP;
-    if ([absolute boolValue] || (distance > -1 && distance < 1)) distance = destHeight - tabSize.height;
-
-    tabSize.height += distance;
-    [tabView_tabBar setFrameSize:tabSize];
-    [tabView_tabBar setNeedsDisplay:YES];
-
-    //Adjust other views
-    newFrame = [tabView_messages frame];
-    newFrame.size.height -= distance;
-    newFrame.origin.y += distance;
-    [tabView_messages setFrame:newFrame];
-    [tabView_messages setNeedsDisplay:YES];
-
-	//[[self window] displayIfNeeded];
-	
-    //Return YES when the desired height is reached
-    return (tabSize.height == destHeight);
-}
-
-
-//Tab Bar Hiding Suppression -------------------------------------------------------------------------------------------
 //Make sure auto-hide suppression is off after a drag completes
-- (void)tabDraggingEnded:(NSNotification *)notification
+- (void)tabDraggingNotificationReceived:(NSNotification *)notification
 {
-	[self _suppressTabHiding:NO];
+	if ([[notification name] isEqualToString:PSMTabDragDidBeginNotification]) {
+		[tabView_tabBar setHideForSingleTab:NO];
+	} else {
+		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
+	}
 }
 
 //Bring our window to the front
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
 	NSDragOperation tmp = NSDragOperationNone;
-    NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
+    NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"PSMTabBarControlItemPBType"]];
 
     if (sender == nil || type) {
-        if (![[self window] isKeyWindow]) [[self window] makeKeyAndOrderFront:nil];
-		[self _suppressTabHiding:YES];
+        if (![[self window] isKeyWindow]) {
+			[[self window] makeKeyAndOrderFront:nil];
+		}
+		
+		[tabView_tabBar setHideForSingleTab:NO];
         tmp = NSDragOperationPrivate;
     }
 	return tmp;
-}
-
-- (void)draggingExited:(id <NSDraggingInfo>)sender
-{
-	NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
-	
-    if (sender == nil || type) [self _suppressTabHiding:NO];
-}
-
-- (void)_suppressTabHiding:(BOOL)suppress
-{
-	supressHiding = suppress;
-	[self updateTabBarVisibilityAndAnimate:YES];
-}
-
-//Send the print message to our view
-- (void)adiumPrint:(id)sender
-{
-	id	controller = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] messageViewController];
-	
-	if ([controller respondsToSelector:@selector(adiumPrint:)]) {
-		[controller adiumPrint:sender];
-	}
 }
 
 //Toolbar --------------------------------------------------------------------------------------------------------------
