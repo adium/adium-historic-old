@@ -39,7 +39,7 @@
 #define TOOLBAR_UNBLOCK_ICON_KEY	@"Unblock"
 
 @interface ESBlockingPlugin(PRIVATE)
-- (void)_blockContact:(AIListContact *)contact unblock:(BOOL)unblock;
+- (void)_setContact:(AIListContact *)contact isBlocked:(BOOL)isBlocked;
 - (BOOL)_searchPrivacyListsForListContact:(AIListContact *)contact withDesiredResult:(BOOL)desiredResult;
 - (void)accountConnected:(NSNotification *)notification;
 - (BOOL)areAllGivenContactsBlocked:(NSArray *)contacts;
@@ -158,13 +158,13 @@
 	//Don't do groups
 	if ([object isKindOfClass:[AIListContact class]]) {
 		AIListContact	*contact = (AIListContact *)object;
-		BOOL			unblock;
+		BOOL			shouldBlock;
 		NSString		*format;
 
-		unblock = [[sender title] isEqualToString:UNBLOCK_CONTACT];
-		format = (unblock ? 
-				  AILocalizedString(@"Are you sure you want to unblock %@?",nil) :
-				  AILocalizedString(@"Are you sure you want to block %@?",nil));
+		shouldBlock = [[sender title] isEqualToString:BLOCK_CONTACT];
+		format = (shouldBlock ? 
+				  AILocalizedString(@"Are you sure you want to block %@?",nil) :
+				  AILocalizedString(@"Are you sure you want to unblock %@?",nil));
 
 		if (NSRunAlertPanel([NSString stringWithFormat:format, [contact displayName]],
 						   @"",
@@ -183,7 +183,7 @@
 				while ((containedContact = [enumerator nextObject])) {
 					AIAccount <AIAccount_Privacy> *acct = [containedContact account];
 					if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-						[self _blockContact:containedContact unblock:unblock];
+						[self _setContact:containedContact isBlocked:shouldBlock];
 					} else {
 						NSLog(@"Account %@ does not support blocking (contact %@ not blocked on this account)", acct, containedContact);
 					}
@@ -192,11 +192,14 @@
 				AIListContact *contact = (AIListContact *)object;
 				AIAccount <AIAccount_Privacy> *acct = [contact account];
 				if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-					[self _blockContact:contact unblock:unblock];
+					[self _setContact:contact isBlocked:shouldBlock];
 				} else {
 					NSLog(@"Account %@ does not support blocking (contact %@ not blocked on this account)", acct, contact);
 				}
 			}
+			
+			[[adium notificationCenter] postNotificationName:@"AIPrivacySettingsChangedOutsideOfPrivacyWindow"
+													  object:nil];		
 		}
 	}
 }
@@ -290,7 +293,7 @@
 #pragma mark Private
 //Private --------------------------------------------------------------------------------------------------------------
 
-- (void)_blockContact:(AIListContact *)contact unblock:(BOOL)unblock
+- (void)_setContact:(AIListContact *)contact isBlocked:(BOOL)isBlocked
 {
 	//We want to block on all accounts with the same service class. If you want someone gone, you want 'em GONE.
 	NSEnumerator	*enumerator = [[[adium accountController] accountsCompatibleWithService:[contact service]] objectEnumerator];
@@ -302,10 +305,25 @@
 		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
 			
 			if (sameContact){ 
-				if ([account privacyOptions] == AIPrivacyOptionDenyUsers)
-					[sameContact setIsBlocked:!unblock updateList:YES];
-				else
-					[sameContact setIsAllowed:unblock updateList:YES];
+				/* If the account is in AIPrivacyOptionAllowUsers mode, blocking a contact means removing it from the allow list.
+				 * Similarly, in allow mode, unblocking a contact means adding it to the allow list.
+				 *
+				 * In AIPrivacyOptionDenyUsers mode, blocking a contact means adding it to the block list.
+				 *
+				 * In all other modes, we can't block specific contacts... so we first switch to AIPrivacyOptionDenyUsers, the more lenient
+				 * of the two possibilities, then add the contact to the block list.
+				 */
+				AIPrivacyOption privacyOption = [account privacyOptions];
+				if (privacyOption == AIPrivacyOptionAllowUsers) {
+					[sameContact setIsAllowed:!isBlocked updateList:YES];
+
+				} else {
+					if (privacyOption != AIPrivacyOptionDenyUsers) {
+						[account setPrivacyOptions:AIPrivacyOptionDenyUsers];
+					}
+
+					[sameContact setIsBlocked:isBlocked updateList:YES];
+				}
 			}
 		}
 	}
