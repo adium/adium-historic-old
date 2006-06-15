@@ -1222,13 +1222,18 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc] au
 //Paste, stripping formatting
 - (IBAction)paste:(id)sender
 {
-	[self _pasteWithPreferredSelector:@selector(pasteAsRichText:) sender:sender];
+	[self _pasteWithPreferredSelector:@selector(pasteAsPlainTextWithTraits:) sender:sender];
 }
 
 //Paste with formatting
 - (IBAction)pasteAndMatchStyle:(id)sender
 {
 	[self _pasteWithPreferredSelector:@selector(pasteAsPlainText:) sender:sender];
+}
+
+- (IBAction)pasteWithImagesAndColors:(id)sender
+{
+	[self _pasteWithPreferredSelector:@selector(pasteAsRichText:) sender:sender];	
 }
 
 /*

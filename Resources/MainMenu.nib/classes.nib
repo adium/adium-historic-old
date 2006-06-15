@@ -29,6 +29,7 @@
                 nextMessage = id; 
                 paste = id; 
                 pasteAndMatchStyle = id; 
+                pasteWithImagesAndColors = id; 
                 previousMessage = id; 
                 runToolbarCustomizationPalette = id; 
                 setFontPanelSettingsAsDefaultFont = id; 
@@ -102,6 +103,7 @@
                 "menuItem_paste" = NSMenuItem; 
                 "menuItem_pasteAndMatchStyle" = NSMenuItem; 
                 "menuItem_pasteStyle" = NSMenuItem; 
+                "menuItem_pasteWithImagesAndColors" = NSMenuItem; 
                 "menuItem_preferences" = NSMenuItem; 
                 "menuItem_print" = NSMenuItem; 
                 "menuItem_quitAdium" = NSMenuItem; 
