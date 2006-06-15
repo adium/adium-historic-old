@@ -38,6 +38,17 @@ Boston, MA 02111-1307, USA.
 #define RULI_MIN(a, b) (((a) < (b)) ? (a) : (b))
 #endif
 
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+
+#if defined(_RULI_SOLARIS_) && !defined(__cplusplus)
+extern int strcasecmp(const char *s1, const char *s2);
+extern int strncasecmp(const char *s1, const char *s2, size_t n);
+extern int snprintf(char *, size_t, const char *, ...);
+#endif
+
+
 typedef unsigned char  ruli_uint8_t;
 typedef unsigned short ruli_uint16_t;
 typedef unsigned int   ruli_uint32_t;

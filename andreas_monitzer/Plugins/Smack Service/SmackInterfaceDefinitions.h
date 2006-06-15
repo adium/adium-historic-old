@@ -280,9 +280,6 @@
 
 @end
 
-//#define NewSmackMessage(to,type) [NSClassFromString(@"org.jivesoftware.smack.packet.Message") newWithSignature:@"(Ljava/lang/String;Lorg/jivesoftware/smack/packet/Message$Type;)",to,[NSClassFromString(@"org.jivesoftware.smack.packet.Message.Type") fromString:type]]
-#define NewSmackMessage(to,type) [NSClassFromString(@"org.jivesoftware.smack.packet.Message") newWithSignature:@"(Ljava/lang/String;Lorg/jivesoftware/smack/packet/Message$Type;)",to,type]
-
 @interface SmackPresence : SmackPacket {
 }
 
@@ -298,8 +295,6 @@
 - (NSString*)toXML;
 
 @end
-
-#define NewSmackPresence(type, status, priority, mode) [NSClassFromString(@"org.jivesoftware.smack.packet.Presence") newWithSignature:@"(Lorg/jivesoftware/smack/packet/Presence$Type;Ljava/lang/String;ILorg/jivesoftware/smack/packet/Presence$Mode;)",type,status,priority,mode]
 
 @interface SmackIQType : NSObject {
 }

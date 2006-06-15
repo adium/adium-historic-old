@@ -23,12 +23,10 @@
 #import "AIStatusController.h"
 #import "SmackListContact.h"
 
-#import <JavaVM/NSJavaVirtualMachine.h>
+//#import <dns_sd.h> // for SRV lookup
+#import "ruli/ruli.h"
 
-#import <dns_sd.h> // for SRV lookup
-#import "ruli/ruli_parse.h"
-
-#define SRVDNSTimeout 2.0
+//#define SRVDNSTimeout 2.0
 
 @interface NSString (JIDAdditions)
 
@@ -331,14 +329,13 @@
     if(resource)
         jid = [NSString stringWithFormat:@"%@/%@",jid,resource];
 
-    SmackMessage *newmsg = NewSmackMessage(jid,[SmackCocoaAdapter staticObjectField:@"CHAT" inJavaClass:@"org.jivesoftware.smack.packet.Message$Type"]);
+    SmackMessage *newmsg = [SmackCocoaAdapter messageTo:jid typeString:@"CHAT"];
     
     [newmsg setThread:threadid];
     [newmsg setBody:[inMessageObject messageString]];
     // ### XHTML
     
     [connection sendPacket:newmsg];
-    [newmsg release];
     return YES;
 }
 
@@ -363,12 +360,13 @@
     else // shouldn't happen
         statusField = @"AVAILABLE";
     
-    SmackPresence *newPresence = NewSmackPresence([SmackCocoaAdapter staticObjectField:@"AVAILABLE" inJavaClass:@"org.jivesoftware.smack.packet.Presence$Type"], [statusMessage string], priority, [SmackCocoaAdapter staticObjectField:statusField inJavaClass:@"org.jivesoftware.smack.packet.Presence$Mode"]);
+    SmackPresence *newPresence = [SmackCocoaAdapter presenceWithTypeString:@"AVAILABLE"
+                                                                    status:[statusMessage string]
+                                                                  priority:priority
+                                                                modeString:statusField];
     
     [connection sendPacket:newPresence];
-    [newPresence release];
 }
-
 
 - (void)performRegisterWithPassword:(NSString *)inPassword {
     [super performRegisterWithPassword:inPassword];
@@ -411,6 +409,8 @@ NSString *decodeDNSName(const unsigned char *input, unsigned len) {
     }
     return result;
 }
+
+#if 0
 
 struct SmackDNSServiceQueryRecordReplyContext {
     NSString **host;
@@ -462,11 +462,44 @@ static void SmackDNSTimerCallBack(CFRunLoopTimerRef timer, void *info) {
     CFRunLoopStop(CFRunLoopGetCurrent());
 }
 
+#endif
+
 - (SmackConnectionConfiguration*)connectionConfiguration {
     NSString *host = [self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS];
-    int portnum = 5222;
+    int portnum = [[self preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue]?5223:5222;
     
     if(!host || [host length] == 0) { // did the user not supply a host?
+ 
+        // do an SRV lookup
+        
+        host = [[self explicitFormattedUID] jidHost];
+        ruli_sync_t *query = ruli_sync_query("_xmpp-client._tcp", [host cStringUsingEncoding:NSUTF8StringEncoding] /* ### punycode */, portnum, RULI_RES_OPT_SEARCH | RULI_RES_OPT_SRV_RFC3484 | RULI_RES_OPT_SRV_CNAME /* be tolerant to broken DNS configurations */);
+        
+        int srv_code;
+        
+        if(query != NULL && (srv_code = ruli_sync_srv_code(query)) == 0) {
+            ruli_list_t *list = ruli_sync_srv_list(query);
+            // we should use some kind of round-robbin to try the other results from this query
+            
+            if(ruli_list_size(list) > 0) {
+                ruli_srv_entry_t *srventry = ruli_list_get(list,0);
+                
+                char dname[RULI_LIMIT_DNAME_TEXT_BUFSZ];
+                int dname_length;
+                
+                if(ruli_dname_decode(dname, RULI_LIMIT_DNAME_TEXT_BUFSZ, &dname_length, srventry->target, srventry->target_len) == RULI_TXT_OK) {
+                    host = [[[NSString alloc] initWithBytes:dname length:dname_length encoding:NSASCIIStringEncoding] autorelease];
+                    portnum = srventry->port;
+                } else
+                    AILog(@"XMPP: failed decoding SRV resolve domain name");
+            } else
+                AILog(@"XMPP: SRV query returned 0 results");
+            
+            ruli_sync_delete(query);
+        } else
+            AILog(@"XMPP: SRV resolve for host \"%@\" returned error %d", host, srv_code);
+
+#if 0
         // do an SRV lookup
         host = [[self explicitFormattedUID] jidHost];
         char fullName[kDNSServiceMaxDomainName];
@@ -521,25 +554,23 @@ static void SmackDNSTimerCallBack(CFRunLoopTimerRef timer, void *info) {
                 else
                     portnum = [port intValue];
             }
+            
         } else {
             NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
-            if(!port)
-                portnum = [[self preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue]?5223:5222;
-            else
+            if(port)
                 portnum = [port intValue];
         }
         free(ctx);
+#endif
         NSLog(@"host = %@:%d",host,portnum);
     } else {
         NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
-        if(!port)
-            portnum = [[self preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue]?5223:5222;
-        else
+        if(port)
             portnum = [port intValue];
     }
     
-    SmackConnectionConfiguration *conf = [NSClassFromString(@"org.jivesoftware.smack.ConnectionConfiguration") newWithSignature:@"(Ljava/lang/String;ILjava/lang/String;)",host,portnum,[[self explicitFormattedUID] jidHost]];
-    
+    SmackConnectionConfiguration *conf = [SmackCocoaAdapter connectionConfigurationWithHost:host port:portnum service:[[self explicitFormattedUID] jidHost]];
+        
     [conf setCompressionEnabled:![[self preferenceForKey:@"disableCompression"
                                                    group:GROUP_ACCOUNT_STATUS] boolValue]];
     [conf setDebuggerEnabled:NO];
@@ -554,7 +585,7 @@ static void SmackDNSTimerCallBack(CFRunLoopTimerRef timer, void *info) {
     [conf setTLSEnabled:![[self preferenceForKey:@"disableTLS"
                                            group:GROUP_ACCOUNT_STATUS] boolValue]];
     
-    return [conf autorelease];
+    return conf;
 }
 
 #pragma mark Properties
