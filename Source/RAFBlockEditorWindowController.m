@@ -64,6 +64,8 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 
 	[stateChooser setMenu:[self privacyOptionsMenu]];
 
+	[[table tableColumnWithIdentifier:@"icon"] setDataCell:[[[NSImageCell alloc] init] autorelease]];
+	
 	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
 											  submenuType:AIAccountNoSubmenu
 										   showTitleVerbs:NO] retain];
