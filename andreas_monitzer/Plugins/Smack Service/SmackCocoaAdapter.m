@@ -177,20 +177,27 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     [account performSelectorOnMainThread:@selector(receiveIQPacket:) withObject:packet waitUntilDone:NO];
 }
 
-/*- (void)setRosterEntriesAdded:(JavaCollection*)addresses {
-    
+#pragma mark Bridged Object Creation
+
++ (SmackConnectionConfiguration*)connectionConfigurationWithHost:(NSString*)host port:(int)port service:(NSString*)service {
+    return [[NSClassFromString(@"org.jivesoftware.smack.ConnectionConfiguration") newWithSignature:@"(Ljava/lang/String;ILjava/lang/String;)",host,port,service] autorelease];
 }
 
-- (void)setRosterEntriesUpdated:(JavaCollection*)addresses {
-    
++ (SmackPresence*)presenceWithType:(SmackPresenceType*)type status:(NSString*)status priority:(int)priority mode:(SmackPresenceMode*)mode {
+    return [[NSClassFromString(@"org.jivesoftware.smack.packet.Presence") newWithSignature:@"(Lorg/jivesoftware/smack/packet/Presence$Type;Ljava/lang/String;ILorg/jivesoftware/smack/packet/Presence$Mode;)",type,status,priority,mode] autorelease];
 }
 
-- (void)setRosterEntriesDeleted:(JavaCollection*)addresses {
-    
++ (SmackPresence*)presenceWithTypeString:(NSString*)type status:(NSString*)status priority:(int)priority modeString:(NSString*)mode {
+    return [self presenceWithType:[SmackCocoaAdapter staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.Presence$Type"] status:status priority:priority mode:[SmackCocoaAdapter staticObjectField:mode inJavaClass:@"org.jivesoftware.smack.packet.Presence$Mode"]];
 }
 
-- (void)setRosterPresenceChanged:(NSString*)xmppAddress {
-    AILog(@"XMPP: roster presence changed: \"%@\"",xmppAddress);
-}*/
++ (SmackMessage*)messageTo:(NSString*)to type:(SmackMessageType*)type {
+    return [[NSClassFromString(@"org.jivesoftware.smack.packet.Message") newWithSignature:@"(Ljava/lang/String;Lorg/jivesoftware/smack/packet/Message$Type;)",to,type] autorelease];
+}
+
++ (SmackMessage*)messageTo:(NSString*)to typeString:(NSString*)type {
+    return [self messageTo:to type:[SmackCocoaAdapter staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.Message$Type"]];
+}
+
 
 @end

@@ -50,6 +50,30 @@ void getRGBFromHueLuminanceSaturation(float *r, float *g, float *b, float hue, f
 - (NSColor *)contrastingColor;
 - (NSColor *)adjustHue:(float)dHue saturation:(float)dSat brightness:(float)dBrit;
 
+@end
+
+@interface NSColor (AIColorAdditions_RepresentingColors)
+
+- (NSString *)hexString;
+
+- (NSString *)stringRepresentation;
+
+- (NSString *)CSSRepresentation;
+
+@end
+
+int hexToInt(char hex);
+char intToHex(int digit);
+
+@interface NSString (AIColorAdditions_RepresentingColors)
+
+- (NSColor *)representedColor;
+- (NSColor *)representedColorWithAlpha:(float)alpha;
+
+@end
+
+@interface NSColor (AIColorAdditions_RandomColor)
+
 //these use arc4random() for their random numbers. there is no need to seed anything.
 //+randomColor returns alpha=1.0, whereas +randomColorWithAlpha will use a random alpha value.
 + (NSColor *)randomColor;

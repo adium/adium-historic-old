@@ -402,6 +402,78 @@ end:
 	}
 }
 
+- (NSString *)CSSRepresentation
+{
+	float alpha = [self alphaComponent];
+	if ((1.0 - alpha) >= 0.000001) {
+		NSColor *rgb = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+		return [NSString stringWithFormat:@"rgba(%@,%@,%@,%@)",
+			[NSString stringWithFloat:[rgb redComponent]   maxDigits:6],
+			[NSString stringWithFloat:[rgb greenComponent] maxDigits:6],
+			[NSString stringWithFloat:[rgb blueComponent]  maxDigits:6],
+			[NSString stringWithFloat:alpha                maxDigits:6]];
+	} else {
+		return [@"#" stringByAppendingString:[self hexString]];
+	}
+}
+
+@end
+
+@implementation NSString (AIColorAdditions_RepresentingColors)
+
+- (NSColor *)representedColor
+{
+    unsigned int	r = 255, g = 255, b = 255;
+    unsigned int	a = 255;
+
+	const char *selfUTF8 = [self UTF8String];
+	
+	//format: r,g,b[,a]
+	//all components are decimal numbers 0..255.
+	r = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+	if(*selfUTF8 == ',') ++selfUTF8;
+	else                 goto scanFailed;
+	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+	if(*selfUTF8 == ',') ++selfUTF8;
+	else                 goto scanFailed;
+	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+	if (*selfUTF8 == ',') {
+		++selfUTF8;
+		a = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+
+		if (*selfUTF8) goto scanFailed;
+	} else if (*selfUTF8 != '\0') {
+		goto scanFailed;
+	}
+
+    return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:(a/255.0)] ;
+scanFailed:
+	return nil;
+}
+
+- (NSColor *)representedColorWithAlpha:(float)alpha
+{
+	//this is the same as above, but the alpha component is overridden.
+
+    unsigned int	r, g, b;
+
+	const char *selfUTF8 = [self UTF8String];
+	
+	//format: r,g,b
+	//all components are decimal numbers 0..255.
+	r = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+	++selfUTF8;
+	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+	++selfUTF8;
+	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+
+    return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:alpha];
+}
+
+@end
+
+@implementation NSColor (AIColorAdditions_RandomColor)
+
 + (NSColor *)randomColor {
 	return [NSColor colorWithCalibratedRed:(arc4random() % 65536) / 65536.0
 	                                 green:(arc4random() % 65536) / 65536.0

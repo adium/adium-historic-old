@@ -70,6 +70,8 @@
 		078C5CD2079EFF88004C75A4 /* AILocalizationButtonCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		078C5CD3079EFF88004C75A4 /* AILocalizationButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */; };
 		07AF3C5A07D4897300409BC8 /* pref-messagehistory.png in Resources */ = {isa = PBXBuildFile; fileRef = 07AF3C5907D4897200409BC8 /* pref-messagehistory.png */; };
+		07B87BDF0A3A7CB300A38283 /* AIXMLElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B87BDD0A3A7CB300A38283 /* AIXMLElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		07B87BE00A3A7CB300A38283 /* AIXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 07B87BDE0A3A7CB300A38283 /* AIXMLElement.m */; };
 		07F8303509693F5E002FC851 /* OTR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		110763F508676CC9005987A5 /* RAFBlockEditorPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */; };
 		110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */; };
@@ -1297,6 +1299,62 @@
 		7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */; };
 		8156798F0A339B1F005ADC13 /* SmackListContact.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8156798D0A339B1F005ADC13 /* SmackListContact.h */; };
 		815679900A339B1F005ADC13 /* SmackListContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8156798E0A339B1F005ADC13 /* SmackListContact.m */; };
+		81B4CA200A416C3B00A8ABF5 /* SmackBridge.java in Sources */ = {isa = PBXBuildFile; fileRef = 81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */; };
+		81B4CA210A416C4200A8ABF5 /* smack.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81F659B90A2A8C4E008FC8E7 /* smack.jar */; };
+		81B4CA220A416C4200A8ABF5 /* smackx.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81F659BA0A2A8C4E008FC8E7 /* smackx.jar */; };
+		81B4CA250A416CAF00A8ABF5 /* SmackBridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */; };
+		81B4CA7D0A416F8300A8ABF5 /* ruli_addr.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA520A416F7E00A8ABF5 /* ruli_addr.c */; };
+		81B4CA7E0A416F8300A8ABF5 /* ruli_addr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA530A416F7E00A8ABF5 /* ruli_addr.h */; };
+		81B4CA7F0A416F8300A8ABF5 /* ruli_conf.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA540A416F7F00A8ABF5 /* ruli_conf.c */; };
+		81B4CA800A416F8300A8ABF5 /* ruli_conf.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA550A416F7F00A8ABF5 /* ruli_conf.h */; };
+		81B4CA810A416F8300A8ABF5 /* ruli_fsm.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA560A416F7F00A8ABF5 /* ruli_fsm.c */; };
+		81B4CA820A416F8300A8ABF5 /* ruli_fsm.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA570A416F7F00A8ABF5 /* ruli_fsm.h */; };
+		81B4CA830A416F8300A8ABF5 /* ruli_getaddrinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA580A416F7F00A8ABF5 /* ruli_getaddrinfo.c */; };
+		81B4CA840A416F8300A8ABF5 /* ruli_getaddrinfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA590A416F7F00A8ABF5 /* ruli_getaddrinfo.h */; };
+		81B4CA850A416F8300A8ABF5 /* ruli_host.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA5A0A416F7F00A8ABF5 /* ruli_host.c */; };
+		81B4CA860A416F8300A8ABF5 /* ruli_host.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA5B0A416F7F00A8ABF5 /* ruli_host.h */; };
+		81B4CA870A416F8300A8ABF5 /* ruli_http.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA5C0A416F7F00A8ABF5 /* ruli_http.c */; };
+		81B4CA880A416F8300A8ABF5 /* ruli_http.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA5D0A416F7F00A8ABF5 /* ruli_http.h */; };
+		81B4CA890A416F8300A8ABF5 /* ruli_isaac.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA5E0A416F7F00A8ABF5 /* ruli_isaac.c */; };
+		81B4CA8A0A416F8300A8ABF5 /* ruli_isaac.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA5F0A416F7F00A8ABF5 /* ruli_isaac.h */; };
+		81B4CA8B0A416F8300A8ABF5 /* ruli_limits.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA600A416F8000A8ABF5 /* ruli_limits.h */; };
+		81B4CA8C0A416F8300A8ABF5 /* ruli_list.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA610A416F8000A8ABF5 /* ruli_list.c */; };
+		81B4CA8D0A416F8300A8ABF5 /* ruli_list.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA620A416F8000A8ABF5 /* ruli_list.h */; };
+		81B4CA8E0A416F8300A8ABF5 /* ruli_mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA630A416F8000A8ABF5 /* ruli_mem.c */; };
+		81B4CA8F0A416F8300A8ABF5 /* ruli_mem.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA640A416F8000A8ABF5 /* ruli_mem.h */; };
+		81B4CA900A416F8300A8ABF5 /* ruli_msg.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA650A416F8000A8ABF5 /* ruli_msg.c */; };
+		81B4CA910A416F8300A8ABF5 /* ruli_msg.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA660A416F8000A8ABF5 /* ruli_msg.h */; };
+		81B4CA920A416F8300A8ABF5 /* ruli_oop.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA670A416F8000A8ABF5 /* ruli_oop.h */; };
+		81B4CA930A416F8300A8ABF5 /* ruli_parse.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA680A416F8000A8ABF5 /* ruli_parse.c */; };
+		81B4CA940A416F8300A8ABF5 /* ruli_parse.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA690A416F8100A8ABF5 /* ruli_parse.h */; };
+		81B4CA950A416F8300A8ABF5 /* ruli_rand.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA6A0A416F8100A8ABF5 /* ruli_rand.c */; };
+		81B4CA960A416F8300A8ABF5 /* ruli_rand.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA6B0A416F8100A8ABF5 /* ruli_rand.h */; };
+		81B4CA970A416F8300A8ABF5 /* ruli_res.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA6C0A416F8100A8ABF5 /* ruli_res.c */; };
+		81B4CA980A416F8300A8ABF5 /* ruli_res.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA6D0A416F8100A8ABF5 /* ruli_res.h */; };
+		81B4CA990A416F8300A8ABF5 /* ruli_search.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA6E0A416F8100A8ABF5 /* ruli_search.c */; };
+		81B4CA9A0A416F8300A8ABF5 /* ruli_search.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA6F0A416F8100A8ABF5 /* ruli_search.h */; };
+		81B4CA9B0A416F8300A8ABF5 /* ruli_smtp.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA700A416F8100A8ABF5 /* ruli_smtp.c */; };
+		81B4CA9C0A416F8300A8ABF5 /* ruli_smtp.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA710A416F8200A8ABF5 /* ruli_smtp.h */; };
+		81B4CA9D0A416F8300A8ABF5 /* ruli_sock.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA720A416F8200A8ABF5 /* ruli_sock.c */; };
+		81B4CA9E0A416F8300A8ABF5 /* ruli_sock.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA730A416F8200A8ABF5 /* ruli_sock.h */; };
+		81B4CA9F0A416F8300A8ABF5 /* ruli_srv.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA740A416F8200A8ABF5 /* ruli_srv.c */; };
+		81B4CAA00A416F8300A8ABF5 /* ruli_srv.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA750A416F8200A8ABF5 /* ruli_srv.h */; };
+		81B4CAA10A416F8300A8ABF5 /* ruli_sync.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA760A416F8200A8ABF5 /* ruli_sync.c */; };
+		81B4CAA20A416F8300A8ABF5 /* ruli_sync.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA770A416F8200A8ABF5 /* ruli_sync.h */; };
+		81B4CAA30A416F8300A8ABF5 /* ruli_txt.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA780A416F8200A8ABF5 /* ruli_txt.c */; };
+		81B4CAA40A416F8300A8ABF5 /* ruli_txt.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA790A416F8200A8ABF5 /* ruli_txt.h */; };
+		81B4CAA50A416F8300A8ABF5 /* ruli_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA7A0A416F8200A8ABF5 /* ruli_util.c */; };
+		81B4CAA60A416F8300A8ABF5 /* ruli_util.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA7B0A416F8200A8ABF5 /* ruli_util.h */; };
+		81B4CAA70A416F8300A8ABF5 /* ruli.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA7C0A416F8200A8ABF5 /* ruli.h */; };
+		81B4CDA20A4181C500A8ABF5 /* oop-read.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CD9A0A4181C500A8ABF5 /* oop-read.h */; };
+		81B4CDA30A4181C500A8ABF5 /* oop.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CD9B0A4181C500A8ABF5 /* oop.h */; };
+		81B4CDA40A4181C500A8ABF5 /* read-fd.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CD9C0A4181C500A8ABF5 /* read-fd.c */; };
+		81B4CDA50A4181C500A8ABF5 /* read-mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CD9D0A4181C500A8ABF5 /* read-mem.c */; };
+		81B4CDA60A4181C500A8ABF5 /* read.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CD9E0A4181C500A8ABF5 /* read.c */; };
+		81B4CDA70A4181C500A8ABF5 /* select.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CD9F0A4181C500A8ABF5 /* select.c */; };
+		81B4CDA80A4181C500A8ABF5 /* signal.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDA00A4181C500A8ABF5 /* signal.c */; };
+		81B4CDA90A4181C500A8ABF5 /* sys.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDA10A4181C500A8ABF5 /* sys.c */; };
+		81B4CDE50A41857D00A8ABF5 /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDE40A41857D00A8ABF5 /* alloc.c */; };
 		81F651740A291004008FC8E7 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		81F651750A291004008FC8E7 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		81F651760A291004008FC8E7 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
@@ -1314,14 +1372,8 @@
 		81F656720A2A5458008FC8E7 /* SmackXMPPAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F656700A2A5458008FC8E7 /* SmackXMPPAccountViewController.m */; };
 		81F656BE0A2A5880008FC8E7 /* SmackXMPPAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81F656BC0A2A587F008FC8E7 /* SmackXMPPAccountView.nib */; };
 		81F658170A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F658160A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h */; };
-		81F659960A2A8BFB008FC8E7 /* SmackBridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F6543C0A291D04008FC8E7 /* SmackBridge.jar */; };
 		81F659BD0A2A8C81008FC8E7 /* smack.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F659B90A2A8C4E008FC8E7 /* smack.jar */; };
 		81F659BE0A2A8C81008FC8E7 /* smackx.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F659BA0A2A8C4E008FC8E7 /* smackx.jar */; };
-		81F666270A2FE2D2008FC8E7 /* ruli_parse.c in Sources */ = {isa = PBXBuildFile; fileRef = 81F666160A2FE2D0008FC8E7 /* ruli_parse.c */; };
-		81F666280A2FE2D2008FC8E7 /* ruli_parse.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F666170A2FE2D0008FC8E7 /* ruli_parse.h */; };
-		81F667820A2FF0F3008FC8E7 /* ruli_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 81F667800A2FF0F3008FC8E7 /* ruli_util.c */; };
-		81F667830A2FF0F3008FC8E7 /* ruli_util.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F667810A2FF0F3008FC8E7 /* ruli_util.h */; };
-		81F6679A0A2FF15A008FC8E7 /* ruli_limits.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F667990A2FF15A008FC8E7 /* ruli_limits.h */; };
 		83B9216009E709AF008D8436 /* CTGradient.h in Headers */ = {isa = PBXBuildFile; fileRef = 83B9215209E709AE008D8436 /* CTGradient.h */; };
 		83B9216109E709AF008D8436 /* CTGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 83B9215309E709AE008D8436 /* CTGradient.m */; };
 		83B9216209E709AF008D8436 /* NSBezierPathAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 83B9215409E709AE008D8436 /* NSBezierPathAdditions.h */; };
@@ -1605,19 +1657,19 @@
 			remoteGlobalIDString = 34BD9DAF05314751000AB133;
 			remoteInfo = Adium.Framework;
 		};
+		81B4CA1A0A416C1000A8ABF5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 81B4C98F0A416BE500A8ABF5 /* SmackJavaBridge */;
+			remoteInfo = SmackJavaBridge;
+		};
 		81F6510B0A290FC8008FC8E7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 81F6508C0A290FB6008FC8E7;
 			remoteInfo = Smack;
-		};
-		81F6543B0A291D04008FC8E7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81F651850A29103F008FC8E7 /* Smack Java Bridge.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 81F650720A290EE3008FC8E7;
-			remoteInfo = "Smack Bridge";
 		};
 		B72537BD058C45CF004BA969 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1786,10 +1838,32 @@
 				81F654BD0A29349C008FC8E7 /* SmackCocoaAdapter.h in CopyFiles */,
 				81F656710A2A5458008FC8E7 /* SmackXMPPAccountViewController.h in CopyFiles */,
 				81F658170A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h in CopyFiles */,
-				81F666280A2FE2D2008FC8E7 /* ruli_parse.h in CopyFiles */,
-				81F667830A2FF0F3008FC8E7 /* ruli_util.h in CopyFiles */,
-				81F6679A0A2FF15A008FC8E7 /* ruli_limits.h in CopyFiles */,
 				8156798F0A339B1F005ADC13 /* SmackListContact.h in CopyFiles */,
+				81B4CA7E0A416F8300A8ABF5 /* ruli_addr.h in CopyFiles */,
+				81B4CA800A416F8300A8ABF5 /* ruli_conf.h in CopyFiles */,
+				81B4CA820A416F8300A8ABF5 /* ruli_fsm.h in CopyFiles */,
+				81B4CA840A416F8300A8ABF5 /* ruli_getaddrinfo.h in CopyFiles */,
+				81B4CA860A416F8300A8ABF5 /* ruli_host.h in CopyFiles */,
+				81B4CA880A416F8300A8ABF5 /* ruli_http.h in CopyFiles */,
+				81B4CA8A0A416F8300A8ABF5 /* ruli_isaac.h in CopyFiles */,
+				81B4CA8B0A416F8300A8ABF5 /* ruli_limits.h in CopyFiles */,
+				81B4CA8D0A416F8300A8ABF5 /* ruli_list.h in CopyFiles */,
+				81B4CA8F0A416F8300A8ABF5 /* ruli_mem.h in CopyFiles */,
+				81B4CA910A416F8300A8ABF5 /* ruli_msg.h in CopyFiles */,
+				81B4CA920A416F8300A8ABF5 /* ruli_oop.h in CopyFiles */,
+				81B4CA940A416F8300A8ABF5 /* ruli_parse.h in CopyFiles */,
+				81B4CA960A416F8300A8ABF5 /* ruli_rand.h in CopyFiles */,
+				81B4CA980A416F8300A8ABF5 /* ruli_res.h in CopyFiles */,
+				81B4CA9A0A416F8300A8ABF5 /* ruli_search.h in CopyFiles */,
+				81B4CA9C0A416F8300A8ABF5 /* ruli_smtp.h in CopyFiles */,
+				81B4CA9E0A416F8300A8ABF5 /* ruli_sock.h in CopyFiles */,
+				81B4CAA00A416F8300A8ABF5 /* ruli_srv.h in CopyFiles */,
+				81B4CAA20A416F8300A8ABF5 /* ruli_sync.h in CopyFiles */,
+				81B4CAA40A416F8300A8ABF5 /* ruli_txt.h in CopyFiles */,
+				81B4CAA60A416F8300A8ABF5 /* ruli_util.h in CopyFiles */,
+				81B4CAA70A416F8300A8ABF5 /* ruli.h in CopyFiles */,
+				81B4CDA20A4181C500A8ABF5 /* oop-read.h in CopyFiles */,
+				81B4CDA30A4181C500A8ABF5 /* oop.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1799,9 +1873,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 15;
 			files = (
+				81B4CA250A416CAF00A8ABF5 /* SmackBridge.jar in CopyFiles */,
 				81F659BD0A2A8C81008FC8E7 /* smack.jar in CopyFiles */,
 				81F659BE0A2A8C81008FC8E7 /* smackx.jar in CopyFiles */,
-				81F659960A2A8BFB008FC8E7 /* SmackBridge.jar in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1825,6 +1899,8 @@
 		078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButtonCell.h; path = "Frameworks/Adium Framework/AILocalizationButtonCell.h"; sourceTree = "<group>"; };
 		078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButtonCell.m; path = "Frameworks/Adium Framework/AILocalizationButtonCell.m"; sourceTree = "<group>"; };
 		07AF3C5907D4897200409BC8 /* pref-messagehistory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-messagehistory.png"; path = "Resources/pref-messagehistory.png"; sourceTree = "<group>"; };
+		07B87BDD0A3A7CB300A38283 /* AIXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIXMLElement.h; path = "Frameworks/Adium Framework/AIXMLElement.h"; sourceTree = "<group>"; };
+		07B87BDE0A3A7CB300A38283 /* AIXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIXMLElement.m; path = "Frameworks/Adium Framework/AIXMLElement.m"; sourceTree = "<group>"; };
 		07F1794F08EBC5B300A9C392 /* UndeclaredLibgaimFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UndeclaredLibgaimFunctions.h; path = "Plugins/Gaim Service/UndeclaredLibgaimFunctions.h"; sourceTree = "<group>"; };
 		110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorPlugin.h; path = Source/RAFBlockEditorPlugin.h; sourceTree = "<group>"; };
 		110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorPlugin.m; path = Source/RAFBlockEditorPlugin.m; sourceTree = "<group>"; };
@@ -3520,8 +3596,61 @@
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
 		8156798D0A339B1F005ADC13 /* SmackListContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackListContact.h; path = "Plugins/Smack Service/SmackListContact.h"; sourceTree = "<group>"; };
 		8156798E0A339B1F005ADC13 /* SmackListContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackListContact.m; path = "Plugins/Smack Service/SmackListContact.m"; sourceTree = "<group>"; };
+		81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */ = {isa = PBXFileReference; explicitFileType = archive.jar; includeInIndex = 0; path = SmackBridge.jar; sourceTree = BUILT_PRODUCTS_DIR; };
+		81B4CA520A416F7E00A8ABF5 /* ruli_addr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_addr.c; sourceTree = "<group>"; };
+		81B4CA530A416F7E00A8ABF5 /* ruli_addr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_addr.h; sourceTree = "<group>"; };
+		81B4CA540A416F7F00A8ABF5 /* ruli_conf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_conf.c; sourceTree = "<group>"; };
+		81B4CA550A416F7F00A8ABF5 /* ruli_conf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_conf.h; sourceTree = "<group>"; };
+		81B4CA560A416F7F00A8ABF5 /* ruli_fsm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_fsm.c; sourceTree = "<group>"; };
+		81B4CA570A416F7F00A8ABF5 /* ruli_fsm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_fsm.h; sourceTree = "<group>"; };
+		81B4CA580A416F7F00A8ABF5 /* ruli_getaddrinfo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_getaddrinfo.c; sourceTree = "<group>"; };
+		81B4CA590A416F7F00A8ABF5 /* ruli_getaddrinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_getaddrinfo.h; sourceTree = "<group>"; };
+		81B4CA5A0A416F7F00A8ABF5 /* ruli_host.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_host.c; sourceTree = "<group>"; };
+		81B4CA5B0A416F7F00A8ABF5 /* ruli_host.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_host.h; sourceTree = "<group>"; };
+		81B4CA5C0A416F7F00A8ABF5 /* ruli_http.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_http.c; sourceTree = "<group>"; };
+		81B4CA5D0A416F7F00A8ABF5 /* ruli_http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_http.h; sourceTree = "<group>"; };
+		81B4CA5E0A416F7F00A8ABF5 /* ruli_isaac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_isaac.c; sourceTree = "<group>"; };
+		81B4CA5F0A416F7F00A8ABF5 /* ruli_isaac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_isaac.h; sourceTree = "<group>"; };
+		81B4CA600A416F8000A8ABF5 /* ruli_limits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_limits.h; sourceTree = "<group>"; };
+		81B4CA610A416F8000A8ABF5 /* ruli_list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_list.c; sourceTree = "<group>"; };
+		81B4CA620A416F8000A8ABF5 /* ruli_list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_list.h; sourceTree = "<group>"; };
+		81B4CA630A416F8000A8ABF5 /* ruli_mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_mem.c; sourceTree = "<group>"; };
+		81B4CA640A416F8000A8ABF5 /* ruli_mem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_mem.h; sourceTree = "<group>"; };
+		81B4CA650A416F8000A8ABF5 /* ruli_msg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_msg.c; sourceTree = "<group>"; };
+		81B4CA660A416F8000A8ABF5 /* ruli_msg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_msg.h; sourceTree = "<group>"; };
+		81B4CA670A416F8000A8ABF5 /* ruli_oop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_oop.h; sourceTree = "<group>"; };
+		81B4CA680A416F8000A8ABF5 /* ruli_parse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_parse.c; sourceTree = "<group>"; };
+		81B4CA690A416F8100A8ABF5 /* ruli_parse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_parse.h; sourceTree = "<group>"; };
+		81B4CA6A0A416F8100A8ABF5 /* ruli_rand.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_rand.c; sourceTree = "<group>"; };
+		81B4CA6B0A416F8100A8ABF5 /* ruli_rand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_rand.h; sourceTree = "<group>"; };
+		81B4CA6C0A416F8100A8ABF5 /* ruli_res.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_res.c; sourceTree = "<group>"; };
+		81B4CA6D0A416F8100A8ABF5 /* ruli_res.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_res.h; sourceTree = "<group>"; };
+		81B4CA6E0A416F8100A8ABF5 /* ruli_search.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_search.c; sourceTree = "<group>"; };
+		81B4CA6F0A416F8100A8ABF5 /* ruli_search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_search.h; sourceTree = "<group>"; };
+		81B4CA700A416F8100A8ABF5 /* ruli_smtp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_smtp.c; sourceTree = "<group>"; };
+		81B4CA710A416F8200A8ABF5 /* ruli_smtp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_smtp.h; sourceTree = "<group>"; };
+		81B4CA720A416F8200A8ABF5 /* ruli_sock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_sock.c; sourceTree = "<group>"; };
+		81B4CA730A416F8200A8ABF5 /* ruli_sock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_sock.h; sourceTree = "<group>"; };
+		81B4CA740A416F8200A8ABF5 /* ruli_srv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_srv.c; sourceTree = "<group>"; };
+		81B4CA750A416F8200A8ABF5 /* ruli_srv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_srv.h; sourceTree = "<group>"; };
+		81B4CA760A416F8200A8ABF5 /* ruli_sync.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_sync.c; sourceTree = "<group>"; };
+		81B4CA770A416F8200A8ABF5 /* ruli_sync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_sync.h; sourceTree = "<group>"; };
+		81B4CA780A416F8200A8ABF5 /* ruli_txt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_txt.c; sourceTree = "<group>"; };
+		81B4CA790A416F8200A8ABF5 /* ruli_txt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_txt.h; sourceTree = "<group>"; };
+		81B4CA7A0A416F8200A8ABF5 /* ruli_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_util.c; sourceTree = "<group>"; };
+		81B4CA7B0A416F8200A8ABF5 /* ruli_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_util.h; sourceTree = "<group>"; };
+		81B4CA7C0A416F8200A8ABF5 /* ruli.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli.h; sourceTree = "<group>"; };
+		81B4CD9A0A4181C500A8ABF5 /* oop-read.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "oop-read.h"; path = "Plugins/Smack Service/oop/oop-read.h"; sourceTree = "<group>"; };
+		81B4CD9B0A4181C500A8ABF5 /* oop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oop.h; path = "Plugins/Smack Service/oop/oop.h"; sourceTree = "<group>"; };
+		81B4CD9C0A4181C500A8ABF5 /* read-fd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "read-fd.c"; path = "Plugins/Smack Service/oop/read-fd.c"; sourceTree = "<group>"; };
+		81B4CD9D0A4181C500A8ABF5 /* read-mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "read-mem.c"; path = "Plugins/Smack Service/oop/read-mem.c"; sourceTree = "<group>"; };
+		81B4CD9E0A4181C500A8ABF5 /* read.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = read.c; path = "Plugins/Smack Service/oop/read.c"; sourceTree = "<group>"; };
+		81B4CD9F0A4181C500A8ABF5 /* select.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = select.c; path = "Plugins/Smack Service/oop/select.c"; sourceTree = "<group>"; };
+		81B4CDA00A4181C500A8ABF5 /* signal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = signal.c; path = "Plugins/Smack Service/oop/signal.c"; sourceTree = "<group>"; };
+		81B4CDA10A4181C500A8ABF5 /* sys.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sys.c; path = "Plugins/Smack Service/oop/sys.c"; sourceTree = "<group>"; };
+		81B4CDE40A41857D00A8ABF5 /* alloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = alloc.c; path = "Plugins/Smack Service/oop/alloc.c"; sourceTree = "<group>"; };
+		81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = SmackBridge.java; path = "Plugins/Smack Service/SmackBridge.java"; sourceTree = "<group>"; };
 		81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Smack.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
-		81F651850A29103F008FC8E7 /* Smack Java Bridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Smack Java Bridge.xcodeproj"; path = "Plugins/Smack Service/Smack Java Bridge.xcodeproj"; sourceTree = "<group>"; };
 		81F6519A0A291145008FC8E7 /* SmackServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackServicePlugin.h; path = "Plugins/Smack Service/SmackServicePlugin.h"; sourceTree = "<group>"; };
 		81F6519B0A291145008FC8E7 /* SmackServicePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackServicePlugin.m; path = "Plugins/Smack Service/SmackServicePlugin.m"; sourceTree = "<group>"; };
 		81F651AA0A29123C008FC8E7 /* SmackXMPPService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPService.h; path = "Plugins/Smack Service/SmackXMPPService.h"; sourceTree = "<group>"; };
@@ -3537,11 +3666,6 @@
 		81F658160A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackInterfaceDefinitions.h; path = "Plugins/Smack Service/SmackInterfaceDefinitions.h"; sourceTree = "<group>"; };
 		81F659B90A2A8C4E008FC8E7 /* smack.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = smack.jar; path = "Plugins/Smack Service/smack.jar"; sourceTree = "<group>"; };
 		81F659BA0A2A8C4E008FC8E7 /* smackx.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = smackx.jar; path = "Plugins/Smack Service/smackx.jar"; sourceTree = "<group>"; };
-		81F666160A2FE2D0008FC8E7 /* ruli_parse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_parse.c; sourceTree = "<group>"; };
-		81F666170A2FE2D0008FC8E7 /* ruli_parse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_parse.h; sourceTree = "<group>"; };
-		81F667800A2FF0F3008FC8E7 /* ruli_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_util.c; sourceTree = "<group>"; };
-		81F667810A2FF0F3008FC8E7 /* ruli_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_util.h; sourceTree = "<group>"; };
-		81F667990A2FF15A008FC8E7 /* ruli_limits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_limits.h; sourceTree = "<group>"; };
 		83B9215209E709AE008D8436 /* CTGradient.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CTGradient.h; path = "Plugins/Hot Key/CTGradient.h"; sourceTree = "<group>"; };
 		83B9215309E709AE008D8436 /* CTGradient.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CTGradient.m; path = "Plugins/Hot Key/CTGradient.m"; sourceTree = "<group>"; };
 		83B9215409E709AE008D8436 /* NSBezierPathAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NSBezierPathAdditions.h; path = "Plugins/Hot Key/NSBezierPathAdditions.h"; sourceTree = "<group>"; };
@@ -3942,6 +4066,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		81B4C98E0A416BE500A8ABF5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81B4CA210A416C4200A8ABF5 /* smack.jar in Frameworks */,
+				81B4CA220A416C4200A8ABF5 /* smackx.jar in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		81F6508B0A290FB6008FC8E7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -4061,6 +4194,7 @@
 				3417D26109C332B900FC413E /* Translator.AdiumPlugin */,
 				3485D68009EB416300232CC4 /* AdiumLibgaim.framework */,
 				81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */,
+				81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -5598,6 +5732,8 @@
 				F5793912033E748F01A8010A /* AIPlugin.m */,
 				34F2E81807C2CD6B007EAAAB /* AITextAttachmentExtension.h */,
 				34F2E81907C2CD6C007EAAAB /* AITextAttachmentExtension.m */,
+				07B87BDD0A3A7CB300A38283 /* AIXMLElement.h */,
+				07B87BDE0A3A7CB300A38283 /* AIXMLElement.m */,
 				348862CD05645E94003C9627 /* ESFileTransfer.h */,
 				348862CE05645E95003C9627 /* ESFileTransfer.m */,
 				34F2E83907C2CDBD007EAAAB /* ESFileWrapperExtension.h */,
@@ -6323,11 +6459,38 @@
 			path = "Plugins/Link Management";
 			sourceTree = "<group>";
 		};
+		81B4CD870A4181A000A8ABF5 /* liboop */ = {
+			isa = PBXGroup;
+			children = (
+				81B4CDE40A41857D00A8ABF5 /* alloc.c */,
+				81B4CD9A0A4181C500A8ABF5 /* oop-read.h */,
+				81B4CD9B0A4181C500A8ABF5 /* oop.h */,
+				81B4CD9C0A4181C500A8ABF5 /* read-fd.c */,
+				81B4CD9D0A4181C500A8ABF5 /* read-mem.c */,
+				81B4CD9E0A4181C500A8ABF5 /* read.c */,
+				81B4CD9F0A4181C500A8ABF5 /* select.c */,
+				81B4CDA00A4181C500A8ABF5 /* signal.c */,
+				81B4CDA10A4181C500A8ABF5 /* sys.c */,
+			);
+			name = liboop;
+			sourceTree = "<group>";
+		};
+		81E2C5FD0A416AB60070CE78 /* Java-part */ = {
+			isa = PBXGroup;
+			children = (
+				81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */,
+				81F659B90A2A8C4E008FC8E7 /* smack.jar */,
+				81F659BA0A2A8C4E008FC8E7 /* smackx.jar */,
+			);
+			name = "Java-part";
+			sourceTree = "<group>";
+		};
 		81F650820A290F6C008FC8E7 /* Smack */ = {
 			isa = PBXGroup;
 			children = (
 				81F6660B0A2FE2CF008FC8E7 /* ruli */,
-				81F651850A29103F008FC8E7 /* Smack Java Bridge.xcodeproj */,
+				81B4CD870A4181A000A8ABF5 /* liboop */,
+				81E2C5FD0A416AB60070CE78 /* Java-part */,
 				81F6519A0A291145008FC8E7 /* SmackServicePlugin.h */,
 				81F6519B0A291145008FC8E7 /* SmackServicePlugin.m */,
 				81F651AA0A29123C008FC8E7 /* SmackXMPPService.h */,
@@ -6340,8 +6503,6 @@
 				81F654BC0A29349C008FC8E7 /* SmackCocoaAdapter.m */,
 				81F6566F0A2A5457008FC8E7 /* SmackXMPPAccountViewController.h */,
 				81F656700A2A5458008FC8E7 /* SmackXMPPAccountViewController.m */,
-				81F659B90A2A8C4E008FC8E7 /* smack.jar */,
-				81F659BA0A2A8C4E008FC8E7 /* smackx.jar */,
 				81F6554E0A293DD0008FC8E7 /* Smack-Info.plist */,
 				81F656BC0A2A587F008FC8E7 /* SmackXMPPAccountView.nib */,
 				81F658160A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h */,
@@ -6349,22 +6510,52 @@
 			name = Smack;
 			sourceTree = "<group>";
 		};
-		81F654380A291D04008FC8E7 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				81F6543C0A291D04008FC8E7 /* SmackBridge.jar */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		81F6660B0A2FE2CF008FC8E7 /* ruli */ = {
 			isa = PBXGroup;
 			children = (
-				81F667800A2FF0F3008FC8E7 /* ruli_util.c */,
-				81F667810A2FF0F3008FC8E7 /* ruli_util.h */,
-				81F666160A2FE2D0008FC8E7 /* ruli_parse.c */,
-				81F666170A2FE2D0008FC8E7 /* ruli_parse.h */,
-				81F667990A2FF15A008FC8E7 /* ruli_limits.h */,
+				81B4CA520A416F7E00A8ABF5 /* ruli_addr.c */,
+				81B4CA530A416F7E00A8ABF5 /* ruli_addr.h */,
+				81B4CA540A416F7F00A8ABF5 /* ruli_conf.c */,
+				81B4CA550A416F7F00A8ABF5 /* ruli_conf.h */,
+				81B4CA560A416F7F00A8ABF5 /* ruli_fsm.c */,
+				81B4CA570A416F7F00A8ABF5 /* ruli_fsm.h */,
+				81B4CA580A416F7F00A8ABF5 /* ruli_getaddrinfo.c */,
+				81B4CA590A416F7F00A8ABF5 /* ruli_getaddrinfo.h */,
+				81B4CA5A0A416F7F00A8ABF5 /* ruli_host.c */,
+				81B4CA5B0A416F7F00A8ABF5 /* ruli_host.h */,
+				81B4CA5C0A416F7F00A8ABF5 /* ruli_http.c */,
+				81B4CA5D0A416F7F00A8ABF5 /* ruli_http.h */,
+				81B4CA5E0A416F7F00A8ABF5 /* ruli_isaac.c */,
+				81B4CA5F0A416F7F00A8ABF5 /* ruli_isaac.h */,
+				81B4CA600A416F8000A8ABF5 /* ruli_limits.h */,
+				81B4CA610A416F8000A8ABF5 /* ruli_list.c */,
+				81B4CA620A416F8000A8ABF5 /* ruli_list.h */,
+				81B4CA630A416F8000A8ABF5 /* ruli_mem.c */,
+				81B4CA640A416F8000A8ABF5 /* ruli_mem.h */,
+				81B4CA650A416F8000A8ABF5 /* ruli_msg.c */,
+				81B4CA660A416F8000A8ABF5 /* ruli_msg.h */,
+				81B4CA670A416F8000A8ABF5 /* ruli_oop.h */,
+				81B4CA680A416F8000A8ABF5 /* ruli_parse.c */,
+				81B4CA690A416F8100A8ABF5 /* ruli_parse.h */,
+				81B4CA6A0A416F8100A8ABF5 /* ruli_rand.c */,
+				81B4CA6B0A416F8100A8ABF5 /* ruli_rand.h */,
+				81B4CA6C0A416F8100A8ABF5 /* ruli_res.c */,
+				81B4CA6D0A416F8100A8ABF5 /* ruli_res.h */,
+				81B4CA6E0A416F8100A8ABF5 /* ruli_search.c */,
+				81B4CA6F0A416F8100A8ABF5 /* ruli_search.h */,
+				81B4CA700A416F8100A8ABF5 /* ruli_smtp.c */,
+				81B4CA710A416F8200A8ABF5 /* ruli_smtp.h */,
+				81B4CA720A416F8200A8ABF5 /* ruli_sock.c */,
+				81B4CA730A416F8200A8ABF5 /* ruli_sock.h */,
+				81B4CA740A416F8200A8ABF5 /* ruli_srv.c */,
+				81B4CA750A416F8200A8ABF5 /* ruli_srv.h */,
+				81B4CA760A416F8200A8ABF5 /* ruli_sync.c */,
+				81B4CA770A416F8200A8ABF5 /* ruli_sync.h */,
+				81B4CA780A416F8200A8ABF5 /* ruli_txt.c */,
+				81B4CA790A416F8200A8ABF5 /* ruli_txt.h */,
+				81B4CA7A0A416F8200A8ABF5 /* ruli_util.c */,
+				81B4CA7B0A416F8200A8ABF5 /* ruli_util.h */,
+				81B4CA7C0A416F8200A8ABF5 /* ruli.h */,
 			);
 			name = ruli;
 			path = "Plugins/Smack Service/ruli";
@@ -7524,6 +7715,7 @@
 				3448055107AC5151006A7F7B /* ESDebugAILog.h in Headers */,
 				34AC36BB07B5C51500145239 /* AIStatus.h in Headers */,
 				34E00F7607B92B2F000DF265 /* ESTextAndButtonsWindowController.h in Headers */,
+				07B87BDF0A3A7CB300A38283 /* AIXMLElement.h in Headers */,
 				34F2E81207C2CD5E007EAAAB /* AIHTMLDecoder.h in Headers */,
 				34F2E81A07C2CD6C007EAAAB /* AITextAttachmentExtension.h in Headers */,
 				34F2E83B07C2CDBE007EAAAB /* ESFileWrapperExtension.h in Headers */,
@@ -7639,6 +7831,16 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
+
+/* Begin PBXJavaArchiveBuildPhase section */
+		81B4C98D0A416BE500A8ABF5 /* JavaArchive */ = {
+			isa = PBXJavaArchiveBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXJavaArchiveBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		118C52C5091BF0DB00219458 /* joscar */ = {
@@ -7960,6 +8162,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				81B4CA1B0A416C1000A8ABF5 /* PBXTargetDependency */,
 			);
 			name = Smack;
 			productName = Smack;
@@ -8033,10 +8236,6 @@
 					ProductGroup = 3423412809D1B67B009FF634 /* Products */;
 					ProjectRef = 3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */;
 				},
-				{
-					ProductGroup = 81F654380A291D04008FC8E7 /* Products */;
-					ProjectRef = 81F651850A29103F008FC8E7 /* Smack Java Bridge.xcodeproj */;
-				},
 			);
 			targets = (
 				347A219D09786C1700A30431 /* Adium with SystemVersionCheck */,
@@ -8060,6 +8259,7 @@
 				F5B17CCF0A16C6AC004AE99E /* Plist Macros */,
 				81F6508C0A290FB6008FC8E7 /* Smack */,
 				F53C25AE0A2F95F100F7B73D /* Setup Build Directory */,
+				81B4C98F0A416BE500A8ABF5 /* SmackJavaBridge */,
 			);
 		};
 /* End PBXProject section */
@@ -8091,13 +8291,6 @@
 			fileType = wrapper.framework;
 			path = AIUtilities.framework;
 			remoteRef = 34D834DC07CBE7BB006466F2 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		81F6543C0A291D04008FC8E7 /* SmackBridge.jar */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.jar;
-			path = SmackBridge.jar;
-			remoteRef = 81F6543B0A291D04008FC8E7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -9155,6 +9348,7 @@
 				34AC2FA809352C2500393D7A /* AIStatusGroup.m in Sources */,
 				348F50C30935317C00288E41 /* AIStatusItem.m in Sources */,
 				340BA84709EC593B000EC441 /* AICorePluginLoader.m in Sources */,
+				07B87BE00A3A7CB300A38283 /* AIXMLElement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9227,6 +9421,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		81B4C98C0A416BE500A8ABF5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81B4CA200A416C3B00A8ABF5 /* SmackBridge.java in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		81F6508A0A290FB6008FC8E7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -9236,9 +9438,34 @@
 				81F654B20A29339F008FC8E7 /* SmackXMPPAccount.m in Sources */,
 				81F654BE0A29349C008FC8E7 /* SmackCocoaAdapter.m in Sources */,
 				81F656720A2A5458008FC8E7 /* SmackXMPPAccountViewController.m in Sources */,
-				81F666270A2FE2D2008FC8E7 /* ruli_parse.c in Sources */,
-				81F667820A2FF0F3008FC8E7 /* ruli_util.c in Sources */,
 				815679900A339B1F005ADC13 /* SmackListContact.m in Sources */,
+				81B4CA7D0A416F8300A8ABF5 /* ruli_addr.c in Sources */,
+				81B4CA7F0A416F8300A8ABF5 /* ruli_conf.c in Sources */,
+				81B4CA810A416F8300A8ABF5 /* ruli_fsm.c in Sources */,
+				81B4CA830A416F8300A8ABF5 /* ruli_getaddrinfo.c in Sources */,
+				81B4CA850A416F8300A8ABF5 /* ruli_host.c in Sources */,
+				81B4CA870A416F8300A8ABF5 /* ruli_http.c in Sources */,
+				81B4CA890A416F8300A8ABF5 /* ruli_isaac.c in Sources */,
+				81B4CA8C0A416F8300A8ABF5 /* ruli_list.c in Sources */,
+				81B4CA8E0A416F8300A8ABF5 /* ruli_mem.c in Sources */,
+				81B4CA900A416F8300A8ABF5 /* ruli_msg.c in Sources */,
+				81B4CA930A416F8300A8ABF5 /* ruli_parse.c in Sources */,
+				81B4CA950A416F8300A8ABF5 /* ruli_rand.c in Sources */,
+				81B4CA970A416F8300A8ABF5 /* ruli_res.c in Sources */,
+				81B4CA990A416F8300A8ABF5 /* ruli_search.c in Sources */,
+				81B4CA9B0A416F8300A8ABF5 /* ruli_smtp.c in Sources */,
+				81B4CA9D0A416F8300A8ABF5 /* ruli_sock.c in Sources */,
+				81B4CA9F0A416F8300A8ABF5 /* ruli_srv.c in Sources */,
+				81B4CAA10A416F8300A8ABF5 /* ruli_sync.c in Sources */,
+				81B4CAA30A416F8300A8ABF5 /* ruli_txt.c in Sources */,
+				81B4CAA50A416F8300A8ABF5 /* ruli_util.c in Sources */,
+				81B4CDA40A4181C500A8ABF5 /* read-fd.c in Sources */,
+				81B4CDA50A4181C500A8ABF5 /* read-mem.c in Sources */,
+				81B4CDA60A4181C500A8ABF5 /* read.c in Sources */,
+				81B4CDA70A4181C500A8ABF5 /* select.c in Sources */,
+				81B4CDA80A4181C500A8ABF5 /* signal.c in Sources */,
+				81B4CDA90A4181C500A8ABF5 /* sys.c in Sources */,
+				81B4CDE50A41857D00A8ABF5 /* alloc.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9373,6 +9600,11 @@
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			targetProxy = 6C3E0151054445C000A4AE2E /* PBXContainerItemProxy */;
 		};
+		81B4CA1B0A416C1000A8ABF5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 81B4C98F0A416BE500A8ABF5 /* SmackJavaBridge */;
+			targetProxy = 81B4CA1A0A416C1000A8ABF5 /* PBXContainerItemProxy */;
+		};
 		81F6510C0A290FC8008FC8E7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 81F6508C0A290FB6008FC8E7 /* Smack */;
@@ -9404,6 +9636,24 @@
 			targetProxy = F5B17CDE0A16C767004AE99E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXToolTarget section */
+		81B4C98F0A416BE500A8ABF5 /* SmackJavaBridge */ = {
+			isa = PBXToolTarget;
+			buildConfigurationList = 81B4CA110A416BEC00A8ABF5 /* Build configuration list for PBXToolTarget "SmackJavaBridge" */;
+			buildPhases = (
+				81B4C98C0A416BE500A8ABF5 /* Sources */,
+				81B4C98D0A416BE500A8ABF5 /* JavaArchive */,
+				81B4C98E0A416BE500A8ABF5 /* Frameworks */,
+			);
+			dependencies = (
+			);
+			name = SmackJavaBridge;
+			productInstallPath = /usr/local/bin;
+			productName = SmackJavaBridge;
+			productReference = 81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */;
+		};
+/* End PBXToolTarget section */
 
 /* Begin PBXVariantGroup section */
 		071C56310827933000399C0F /* Shared Dock Icon Images */ = {
@@ -11224,6 +11474,110 @@
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
+		81B4CA120A416BEC00A8ABF5 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				JAVA_ARCHIVE_CLASSES = YES;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_COMPILER_FLAGS = "";
+				JAVA_SOURCE_SUBDIR = .;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SmackBridge;
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Development;
+		};
+		81B4CA130A416BEC00A8ABF5 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				JAVA_ARCHIVE_CLASSES = YES;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_COMPILER_FLAGS = "";
+				JAVA_SOURCE_SUBDIR = .;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SmackJavaBridge;
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		81B4CA140A416BEC00A8ABF5 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				JAVA_ARCHIVE_CLASSES = YES;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_COMPILER_FLAGS = "";
+				JAVA_SOURCE_SUBDIR = .;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SmackJavaBridge;
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = "Deployment-Debug";
+		};
+		81B4CA150A416BEC00A8ABF5 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				JAVA_ARCHIVE_CLASSES = YES;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_COMPILER_FLAGS = "";
+				JAVA_SOURCE_SUBDIR = .;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SmackJavaBridge;
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		81F651050A290FBB008FC8E7 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -12259,6 +12613,17 @@
 				34B323BD09B9FEAC00029361 /* Deployment */,
 				34B323BE09B9FEAC00029361 /* Deployment-Debug */,
 				34B323BF09B9FEAC00029361 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		81B4CA110A416BEC00A8ABF5 /* Build configuration list for PBXToolTarget "SmackJavaBridge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				81B4CA120A416BEC00A8ABF5 /* Development */,
+				81B4CA130A416BEC00A8ABF5 /* Deployment */,
+				81B4CA140A416BEC00A8ABF5 /* Deployment-Debug */,
+				81B4CA150A416BEC00A8ABF5 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
