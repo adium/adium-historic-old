@@ -7,23 +7,32 @@
 //
 
 #import "RAFBlockEditorWindowController.h"
-#import "Adium/AIAccount.h"
-#import "AIListContact.h"
-#import "AIService.h"
-#import "Adium/AIAccountController.h"
-#import "Adium/ESDebugAILog.h"
+#import "AIAccountController.h"
 #import "AIContactController.h"
 #import <AIUtilities/AICompletingTextField.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIAccountMenu.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIMetaContact.h>
+#import <Adium/AIService.h>
 
 #define BLOCK_EDITOR_TITLE AILocalizedString(@"Privacy Settings","Privacy Settings window title")
 #define BLOCK_DONE	AILocalizedString(@"Done","Done button for Privacy Settings")
 #define BLOCK_BLOCK	AILocalizedString(@"Add","Add button for Privacy Settings")
 #define BLOCK_CANCEL	AILocalizedString(@"Cancel","Cancel button for Privacy Settings")
 #define BLOCK_ACCOUNT AILocalizedString(@"Account:",nil)
-#define BLOCK_BUDDY AILocalizedString(@"Buddy:",nil)
 #define BLOCK_BUDDY_COL AILocalizedString(@"Contact","Title of column containing user IDs of blocked contacts")
 #define BLOCK_ACCOUNT_COL AILocalizedString(@"Account","Title of column containing blocking accounts")
+
+@interface RAFBlockEditorWindowController (PRIVATE)
+- (NSMenu *)privacyOptionsMenu;
+- (AIAccount<AIAccount_Privacy> *)selectedAccount;
+- (void)configureTextField;
+- (NSSet *)contactsFromTextField;
+- (AIPrivacyOption)selectedPrivacyOption;
+@end
 
 @implementation RAFBlockEditorWindowController
 
@@ -31,178 +40,62 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 
 + (void)showWindow
 {	
-	if (sharedInstance == nil)
+	if (!sharedInstance) {
 		sharedInstance = [[self alloc] initWithWindowNibName:@"BlockEditorWindow"];
+	}
+
 	[sharedInstance showWindow:nil];
 	[[sharedInstance window] makeKeyAndOrderFront:nil];
-	[NSApp activateIgnoringOtherApps:YES];
 }
 
 - (void)windowDidLoad
 {
 	[[self window] setTitle:BLOCK_EDITOR_TITLE];
-	[doneButton setTitle:BLOCK_DONE];
 	[cancelButton setTitle:BLOCK_CANCEL];
 	[blockButton setTitle:BLOCK_BLOCK];
 	[accountText setStringValue:BLOCK_ACCOUNT];
-	[buddyText setStringValue:BLOCK_BUDDY];
 	[[buddyCol headerCell] setTitle:BLOCK_BUDDY_COL];
 	[[accountCol headerCell] setTitle:BLOCK_ACCOUNT_COL];
-	
-	
-	[self willChangeValueForKey:@"listContents"];
-	accountStates = [[NSMutableDictionary alloc] init];
+
+	accountColumnsVisible = YES;
+	[accountCol retain];
+
 	listContents = [[NSMutableArray alloc] init];
 
-	NSMenu *tmpMenu = [[NSMenu alloc] init];
-	NSMenu *tmpMainAcctsMenu = [[NSMenu alloc] init];
-	[tmpMainAcctsMenu addItem:[[[NSMenuItem alloc] initWithTitle:@"All" action:NULL keyEquivalent:@""] autorelease]];
-	AIAccount <AIAccount_Privacy> *account;
-	NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
-	AIPrivacyOption currentState = AIPrivacyOptionUnknown;
-	while((account = [enumerator nextObject])) {
-		/* we can't do much with offline accounts and their block lists... */
-		if([[account statusObjectForKey:@"Online"] boolValue] &&
-		   [account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-			AIPrivacyOption accountState = [account privacyOptions];
-			[accountStates setObject:[NSNumber numberWithInt: (int)accountState] forKey:[account UID]];
-			if (currentState == AIPrivacyOptionUnknown)
-				currentState = accountState;
-			else if (accountState != currentState)
-				currentState = AIPrivacyOptionCustom;
-			if (accountState == AIPrivacyOptionDenyUsers)
-				[listContents addObjectsFromArray:[account listObjectsOnPrivacyList:AIPrivacyTypeDeny]];
-			else if (accountState == AIPrivacyOptionAllowUsers) {
-				// if it's an allow list, we have to "invert" it so that it looks right.
-				NSArray *tmpArr = [account listObjectsOnPrivacyList:AIPrivacyTypePermit];
-				NSMutableArray *allContacts = [[account contacts] mutableCopy];
-				[allContacts removeObjectsInArray:tmpArr];
-				[listContents addObjectsFromArray:allContacts];
-			}
-			NSMenuItem *tmpItem = [[NSMenuItem alloc]
-								initWithTitle:[account UID] action:NULL keyEquivalent:@""];
-			[tmpItem setRepresentedObject:account];
-			[tmpMainAcctsMenu addItem:[[tmpItem copy] autorelease]];
-			[tmpMenu addItem:[tmpItem autorelease]];
-		}
-	}
-	
-	//build the menu of states
-	NSMenu *stateMenu = [[NSMenu alloc] init];
-	NSMenuItem *tmpItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Allow anyone", nil) action:NULL keyEquivalent:@""];
-	[tmpItem setRepresentedObject:[NSNumber numberWithInt:AIPrivacyOptionAllowAll]];
-	[stateMenu addItem:[tmpItem autorelease]];
-	
-	tmpItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Allow anyone on my contact list", nil) action:NULL keyEquivalent:@""];
-	[tmpItem setRepresentedObject:[NSNumber numberWithInt:AIPrivacyOptionAllowContactList]];
-	[stateMenu addItem:[tmpItem autorelease]];
-	
-	tmpItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Allow people on my contact list except those below", nil) action:NULL keyEquivalent:@""];
-	[tmpItem setRepresentedObject:[NSNumber numberWithInt:AIPrivacyOptionAllowUsers]];
-	[stateMenu addItem:[tmpItem autorelease]];
-	
-	tmpItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Deny below contacts", nil) action:NULL keyEquivalent:@""];
-	[tmpItem setRepresentedObject:[NSNumber numberWithInt:AIPrivacyOptionDenyUsers]];
-	[stateMenu addItem:[tmpItem autorelease]];
-	
-	tmpItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Custom settings for each account", nil) action:NULL keyEquivalent:@""];
-	[tmpItem setRepresentedObject:[NSNumber numberWithInt:AIPrivacyOptionCustom]];
-	[stateMenu addItem:[tmpItem autorelease]];
-	
-	[stateChooser setMenu:[stateMenu autorelease]];
+	[stateChooser setMenu:[self privacyOptionsMenu]];
 
-	[stateChooser selectItemWithRepresentedObject:[NSNumber numberWithInt:currentState]];
-	
-	[self didChangeValueForKey:@"listContents"];
-	listContentsAllAccounts = [listContents mutableCopy];
-
+	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
+											  submenuType:AIAccountNoSubmenu
+										   showTitleVerbs:NO] retain];
 	[table registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs",nil]];
-	
-	[mainAccounts setMenu:[tmpMainAcctsMenu autorelease]];
-	[accounts setMenu:[tmpMenu autorelease]];
-	
-	[self configTextField:self];
+
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(privacySettingsChangedExternally:)
+									   name:@"AIPrivacySettingsChangedOutsideOfPrivacyWindow"
+									 object:nil];
 	
 	[super windowDidLoad];
 }
 
 - (void)windowWillClose:(id)sender
 {
-	AIAccount <AIAccount_Privacy> *account;
-	AIListContact *contact;
-	NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
-
-	//remove "unblocked" people
-	while ((account = [enumerator nextObject])) {
-		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-			AIPrivacyOption accountState = [[accountStates objectForKey:[account UID]] intValue];
-			[account setPrivacyOptions:accountState];
-			AIPrivacyType privType = AIPrivacyTypeDeny;
-			if (accountState == AIPrivacyOptionAllowUsers) {
-				//convert to NSSets and use set voodoo to do our bidding
-				NSMutableSet *allContacts = [NSMutableSet setWithArray:[account contacts]];
-				NSMutableSet *disallowedContacts = [NSMutableSet setWithArray:listContents];
-				[disallowedContacts intersectSet:allContacts];
-				[allContacts minusSet:disallowedContacts];				
-				[listContents removeObjectsInArray:[disallowedContacts allObjects]];
-				[listContents addObjectsFromArray:[allContacts allObjects]];
-				privType = AIPrivacyTypePermit;
-			}
-			NSEnumerator *tmp=[[account listObjectsOnPrivacyList:privType] objectEnumerator];
-			while((contact = [tmp nextObject])) {
-				if( ![listContents containsObject:contact]) {
-					[account removeListObject:contact fromPrivacyList:privType];
-					[contact setIsBlocked:(AIPrivacyTypePermit == privType) updateList:NO];
-				}
-			}
-		}
-	}
-	
-	//"block" blocked people who aren't already
-	enumerator = [listContents objectEnumerator];
-	while ((contact = [enumerator nextObject])) {
-		account = [contact account];
-		AIPrivacyOption accountState = [[accountStates objectForKey:[account UID]] intValue];
-		AIPrivacyType privState = AIPrivacyTypeDeny;
-		if (accountState == AIPrivacyOptionAllowUsers)
-			privState = AIPrivacyTypePermit;
-		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)] &&
-			![[account listObjectsOnPrivacyList:accountState] containsObject:contact]) {
-			[account addListObject:contact toPrivacyList:privState];
-			[contact setIsBlocked:(AIPrivacyTypeDeny == privState) updateList:NO];
-		}
-	}
-	sharedInstance = nil;
-	AILog(@"Comitted blocking changes for all accounts");
 	[super windowWillClose:sender];
-	[self release];
+
+	[sharedInstance release]; sharedInstance = nil;
 }
 
-- (IBAction)configTextField:(id)sender
+- (NSString *)adiumFrameAutosaveName
 {
-	AIAccount *account = [[accounts selectedItem] representedObject];
-	NSEnumerator		*enumerator;
-    AIListContact		*contact;
-	
-	//Clear the completing strings
-	[field setCompletingStrings:nil];
-	
-	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
-    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
-    while ((contact = [enumerator nextObject])) {
-		if ([contact service] == [account service]) {
-			NSString *UID = [contact UID];
-			[field addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
-			[field addCompletionString:[contact displayName] withImpliedCompletion:UID];
-			[field addCompletionString:UID];
-		}
-    }
-	
+	return @"PrivacyWindow";
 }
 
 - (void)dealloc
 {
+	[accountCol release];
+	[accountMenu release];
 	[listContents release];
+	[listContentsAllAccounts release];
+	
 	[super dealloc];
 }
 
@@ -213,12 +106,21 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 
 - (void)setListContents:(NSArray*)newList
 {
-	[listContents release];
-	listContents = [newList mutableCopy];
+	if (newList != listContents) {
+		[listContents release];
+		listContents = [newList mutableCopy];
+	}
 }
 
+#pragma mark Adding a contact to the list
 - (IBAction)runBlockSheet:(id)sender
 {
+	[field setStringValue:@""];
+
+	sheetAccountMenu = [[AIAccountMenu accountMenuWithDelegate:self
+												   submenuType:AIAccountNoSubmenu
+												showTitleVerbs:NO] retain];
+
 	[NSApp beginSheet:sheet 
 	   modalForWindow:[self window]
 		modalDelegate:self 
@@ -226,169 +128,545 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 		  contextInfo:nil];
 }
 
-- (IBAction)cancelBlockSheet: (id)sender
+- (void)selectAccountInSheet:(AIAccount *)inAccount
 {
-	[field setStringValue:@""];
+	[popUp_sheetAccounts selectItemWithRepresentedObject:inAccount];
+	[self configureTextField];
+	
+	NSString	*userNameLabel = [[inAccount service] userNameLabel];
+	
+	[buddyText setStringValue:[(userNameLabel ? userNameLabel :
+								AILocalizedString(@"Contact ID",nil)) stringByAppendingString:@":"]];	
+}
+
+- (IBAction)cancelBlockSheet:(id)sender
+{
     [NSApp endSheet:sheet];
 }
 
-- (IBAction)didBlockSheet: (id)sender
+- (IBAction)didBlockSheet:(id)sender
 {
-	[self blockFieldUID:sender];
-	[field setStringValue:@""];
+	NSSet *contactArray = [self contactsFromTextField];
+
+	//Add the contact immediately
+	if (contactArray && [contactArray count]) {
+		NSEnumerator *enumerator;
+		AIListContact *contact;
+		
+		[self willChangeValueForKey:@"listContents"];
+
+		enumerator = [contactArray objectEnumerator];
+		while ((contact = [enumerator nextObject])) {
+			if (![listContents containsObject:contact]) {
+				[listContents addObject:contact];
+			}
+			
+			[contact setIsOnPrivacyList:YES updateList:YES privacyType:(([self selectedPrivacyOption] == AIPrivacyOptionAllowUsers) ?
+																		AIPrivacyTypePermit :
+																		AIPrivacyTypeDeny)];
+		}
+
+		[self didChangeValueForKey:@"listContents"];
+	}
+
     [NSApp endSheet:sheet];
 }
 
 
 - (void)didEndSheet:(NSWindow *)theSheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
+	[sheetAccountMenu release]; sheetAccountMenu = nil;
     [theSheet orderOut:self];
 }
 
-- (IBAction)blockFieldUID:(id)sender
-{
-	AIListContact	*contact;
-	AIAccount		*account;
-	[self willChangeValueForKey:@"listContents"];
-	account = [[accounts selectedItem] representedObject];
-	contact = [self contactFromTextField];
-	[listContents addObject:contact];
-	[self didChangeValueForKey:@"listContents"];
-}
-
-- (AIListContact *)contactFromTextField
+/*
+ * @brief Get a set of all contacts which are represented by the currently selected account and UID field
+ *
+ * @result A set of AIListContact objects
+ */
+- (NSSet *)contactsFromTextField
 {
 	AIListContact	*contact = nil;
 	NSString		*UID = nil;
-	AIAccount		*account = [[accounts selectedItem] representedObject];;
-	
-	id impliedValue = [field impliedValue];
-	if ([impliedValue isKindOfClass:[AIMetaContact class]]) {
-		contact = impliedValue;
+	AIAccount		*account = [[popUp_sheetAccounts selectedItem] representedObject];;
+	NSArray			*accountArray;
+	NSMutableSet	*contactsSet = [NSMutableSet set];
+	NSEnumerator	*enumerator;
+	id				impliedValue = [field impliedValue];
+
+	if (account) {
+		accountArray = [NSArray arrayWithObject:account];
+	} else {
+		//All accounts
+		NSMutableArray	*tempArray = [NSMutableArray array];
+		NSMenuItem		*menuItem;
 		
-	} else if ([impliedValue isKindOfClass:[AIListContact class]]) {
-		UID = [(AIListContact *)impliedValue UID];
+		enumerator = [[[popUp_sheetAccounts menu] itemArray] objectEnumerator];
+		while ((menuItem = [enumerator nextObject])) {
+			AIAccount *anAccount;
+			
+			if ((anAccount = [menuItem representedObject])) {
+				[tempArray addObject:anAccount];
+			}
+		}
 		
-	} else  if ([impliedValue isKindOfClass:[NSString class]]) {
-		UID = [[account service] filterUID:impliedValue removeIgnoredCharacters:YES];
+		accountArray = tempArray;
+	}
+
+	enumerator = [accountArray objectEnumerator];
+	while ((account = [enumerator nextObject])) {
+		if ([impliedValue isKindOfClass:[AIMetaContact class]]) {
+			AIListContact *containedContact;
+			NSEnumerator *contactEnumerator = [[(AIMetaContact *)impliedValue listContactsIncludingOfflineAccounts] objectEnumerator];
+			
+			while ((containedContact = [contactEnumerator nextObject])) {
+				/* For each contact contained my the metacontact, check if its service class matches the current account's.
+				 * If it does, add that contact to our list, using the contactController to get an AIListContact specific for the account.
+				 */
+				if ([[[containedContact service] serviceClass] isEqualToString:[[account service] serviceClass]]) {
+					contact = [[adium contactController] contactWithService:[account service]
+																	account:account
+																		UID:[containedContact UID]];
+					[contactsSet addObject:contact];
+				}
+			}
+			
+		} else {
+			if ([impliedValue isKindOfClass:[AIListContact class]]) {
+				UID = [(AIListContact *)impliedValue UID];
+			
+			} else  if ([impliedValue isKindOfClass:[NSString class]]) {
+				UID = [[account service] filterUID:impliedValue removeIgnoredCharacters:YES];
+			}
+			
+			if (UID) {
+				//Get a contact with this UID on the current account
+				contact = [[adium contactController] contactWithService:[account service]
+																account:account 
+																	UID:UID];
+				
+				[contactsSet addObject:contact];
+			}
+		}
+			
 	}
 	
-	if (!contact && UID) {
-		//Find the contact
-		contact = [[adium contactController] contactWithService:[account service]
-														account:account 
-															UID:UID];		
-	}
-	
-	return contact;
+	return contactsSet;
 }
 
-- (IBAction)setAccount:(id)sender
+- (void)configureTextField
 {
-	AIAccount<AIAccount_Privacy> *repObj = [[mainAccounts selectedItem] representedObject];
-	[self willChangeValueForKey:@"listContents"];
-	[listContents release];
-	listContents = [listContentsAllAccounts mutableCopy];
-	AIPrivacyOption currentState = AIPrivacyOptionUnknown;
-	if (repObj != nil) {
-		//clean out the listObjs for other accounts
-		AIListContact *listObj;
-		NSMutableArray *objectsToRemove = [[NSMutableArray alloc] init];
-		NSEnumerator *enumerator = [listContents objectEnumerator];
-		while ((listObj = [enumerator nextObject]))
-			if (![[listObj account] isEqual:repObj])
-				[objectsToRemove addObject:listObj];
-		[listContents removeObjectsInArray:objectsToRemove];
-		[objectsToRemove release];
-		currentState = [[accountStates objectForKey:[repObj UID]] intValue];
-	} else {
-		NSEnumerator *enumerator = [accountStates objectEnumerator];
-		NSNumber *tmpNum;
-		while((tmpNum = [enumerator nextObject])) {
-			if (currentState == AIPrivacyOptionUnknown)
-				currentState = [tmpNum intValue];
-			else if ([tmpNum intValue] != currentState)
-				currentState = AIPrivacyOptionCustom;
+	AIAccount *account = [[popUp_sheetAccounts selectedItem] representedObject];
+	NSEnumerator		*enumerator;
+    AIListContact		*contact;
+	
+	//Clear the completing strings
+	[field setCompletingStrings:nil];
+	
+	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
+    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
+    while ((contact = [enumerator nextObject])) {
+		if (!account ||
+			[contact service] == [account service]) {
+			NSString *UID = [contact UID];
+			[field addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
+			[field addCompletionString:[contact displayName] withImpliedCompletion:UID];
+			[field addCompletionString:UID];
+		}
+    }
+}
+
+#pragma mark Removing a contact from the  list
+
+- (IBAction)removeSelection:(id)sender
+{
+	int selection = [[table selectedRowIndexes] firstIndex];
+	
+	if (selection != NSNotFound) {
+		AIListContact *contact = [listContents objectAtIndex:selection];
+
+		//Remove from our list
+		[self willChangeValueForKey:@"listContents"];
+		[listContents removeObject:contact];
+		[self didChangeValueForKey:@"listContents"];	
+
+		//Update serverside
+		[contact setIsOnPrivacyList:NO updateList:YES privacyType:(([self selectedPrivacyOption] == AIPrivacyOptionAllowUsers) ?
+																   AIPrivacyTypePermit :
+																   AIPrivacyTypeDeny)];
+	}
+}
+
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
+{
+	[self removeSelection:tableView];
+}
+
+- (void)setAccountColumnsVisible:(BOOL)visible
+{
+	if (accountColumnsVisible != visible) {
+		if (visible) {
+			[table addTableColumn:accountCol];
+		} else {
+			[table removeTableColumn:accountCol];			
+		}
+
+		[table sizeToFit];
+		accountColumnsVisible = visible;
+	}
+}
+#pragma mark Privacy options menu
+
+- (NSMenu *)privacyOptionsMenu
+{
+	//build the menu of states
+	NSMenu *stateMenu = [[NSMenu alloc] init];
+
+	NSMenuItem *menuItem;
+	
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Allow anyone", nil) 
+										  action:NULL
+								   keyEquivalent:@""];
+	[menuItem setTag:AIPrivacyOptionAllowAll];
+	[stateMenu addItem:menuItem];
+	[menuItem release];
+
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Allow only contacts on my contact list", nil) 
+										  action:NULL
+								   keyEquivalent:@""];
+	[menuItem setTag:AIPrivacyOptionAllowContactList];
+	[stateMenu addItem:menuItem];
+	[menuItem release];
+
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Allow only certain contacts", nil) 
+										  action:NULL
+								   keyEquivalent:@""];
+	[menuItem setTag:AIPrivacyOptionAllowUsers];
+	[stateMenu addItem:menuItem];
+	[menuItem release];
+
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Block certain contacts", nil) 
+										  action:NULL
+								   keyEquivalent:@""];
+	[menuItem setTag:AIPrivacyOptionDenyUsers];
+	[stateMenu addItem:menuItem];
+	[menuItem release];
+
+	/*
+	tmpItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Custom settings for each account", nil) action:NULL keyEquivalent:@""];
+	[tmpItem setRepresentedObject:[NSNumber numberWithInt:AIPrivacyOptionCustom]];
+	[stateMenu addItem:[tmpItem autorelease]];
+	*/
+
+	return [stateMenu autorelease];
+}
+
+- (AIPrivacyOption)selectedPrivacyOption
+{
+	return [[stateChooser selectedItem] tag];
+}
+
+/*
+ * @brief Set a privacy option and update our view for it
+ *
+ * @param sender If nil, we update our display without attempting to change anything on our account
+ */
+- (IBAction)setPrivacyOption:(id)sender
+{
+	AIAccount<AIAccount_Privacy> *account = [self selectedAccount];
+	AIPrivacyOption privacyOption = [self selectedPrivacyOption];
+
+	//First, let's get the right tab view selected
+	switch (privacyOption) {
+		case AIPrivacyOptionAllowAll:
+		case AIPrivacyOptionAllowContactList:
+		case AIPrivacyOptionCustom:
+			if (![[[tabView_contactList selectedTabViewItem] identifier] isEqualToString:@"empty"]) {
+				[tabView_contactList selectTabViewItemWithIdentifier:@"empty"];
+				[tabView_contactList setHidden:YES];
+
+				NSRect frame = [[self window] frame];
+				float tabViewHeight = [tabView_contactList frame].size.height;
+				frame.size.height -= tabViewHeight;
+				frame.origin.y += tabViewHeight;
+				
+				//Don't resize vertically now...
+				[tabView_contactList setAutoresizingMask:NSViewWidthSizable];
+
+				[[self window] setMinSize:NSMakeSize(250, frame.size.height)];
+				[[self window] setMaxSize:NSMakeSize(FLT_MAX, frame.size.height)];
+				[[self window] setFrame:frame display:YES animate:YES];
+			}
+			break;
+			
+		case AIPrivacyOptionAllowUsers:
+		case AIPrivacyOptionDenyUsers:
+			if (![[[tabView_contactList selectedTabViewItem] identifier] isEqualToString:@"list"]) {
+				[tabView_contactList selectTabViewItemWithIdentifier:@"list"];
+
+				NSRect frame = [[self window] frame];
+				float tabViewHeight = [tabView_contactList frame].size.height;
+				frame.size.height += tabViewHeight;
+				frame.origin.y -= tabViewHeight;
+				
+				[[self window] setMinSize:NSMakeSize(250, 320)];
+				[[self window] setMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
+				
+				//Set frame after fixing our min/max size so the resize won't fail
+				[[self window] setFrame:frame display:YES animate:YES];
+
+				[tabView_contactList setHidden:NO];
+
+				//Allow resizing vertically again
+				[tabView_contactList setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
+			}
+			break;
+		case AIPrivacyOptionDenyAll:
+		case AIPrivacyOptionUnknown:
+			NSLog(@"We should never see these...");
+			break;
+	}
+	
+	if (sender) {
+		if (account) {
+			[account setPrivacyOptions:privacyOption];
+			
+		} else {
+			NSEnumerator	*enumerator = [[[popUp_accounts menu] itemArray] objectEnumerator];
+			NSMenuItem		*menuItem;
+			
+			while ((menuItem = [enumerator nextObject])) {
+				if ((account = [menuItem representedObject])) {
+					[account setPrivacyOptions:privacyOption];
+				}
+			}
 		}
 	}
-	[stateChooser selectItemWithRepresentedObject:[NSNumber numberWithInt:currentState]];
+	
+	//Now make our listContents array match the serverside arrays for the selected account(s)
+	[self willChangeValueForKey:@"listContents"];
+	[listContents removeAllObjects];
+	if ((privacyOption == AIPrivacyOptionAllowUsers) ||
+		(privacyOption == AIPrivacyOptionDenyUsers)) {
+		if (account) {
+			[listContents addObjectsFromArray:[account listObjectsOnPrivacyList:((privacyOption == AIPrivacyOptionAllowUsers) ?
+																				 AIPrivacyTypePermit :
+																				 AIPrivacyTypeDeny)]];		
+		} else {
+			NSEnumerator	*enumerator = [[[popUp_accounts menu] itemArray] objectEnumerator];
+			NSMenuItem		*menuItem;
+			
+			while ((menuItem = [enumerator nextObject])) {
+				if ((account = [menuItem representedObject])) {
+					[listContents addObjectsFromArray:[account listObjectsOnPrivacyList:((privacyOption == AIPrivacyOptionAllowUsers) ?
+																						 AIPrivacyTypePermit :
+																						 AIPrivacyTypeDeny)]];		
+				}
+			}
+		}
+	}
+
 	[self didChangeValueForKey:@"listContents"];
 }
 
-- (IBAction)setState:(id)sender
+- (void)selectPrivacyOption:(AIPrivacyOption)privacyOption
 {
-	AIPrivacyOption newState = [[[stateChooser selectedItem] representedObject] intValue];
-	if (newState == AIPrivacyOptionCustom) {
-		newState = AIPrivacyOptionUnknown;
-		NSEnumerator *enumerator = [accountStates objectEnumerator];
-		NSNumber *tmpNum;
-		while((tmpNum = [enumerator nextObject])) {
-			if (newState == AIPrivacyOptionUnknown)
-				newState = [tmpNum intValue];
-			else if ([tmpNum intValue] != newState)
-				newState = AIPrivacyOptionCustom;
+	BOOL success = [stateChooser compatibleSelectItemWithTag:privacyOption];
+	if (privacyOption == AIPrivacyOptionCustom) {
+		if (!success) {
+			NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"(Multiple privacy levels are active)", nil) 
+															  action:NULL
+													   keyEquivalent:@""];
+			[menuItem setTag:AIPrivacyOptionCustom];
+			[[stateChooser menu] addItem:menuItem];
+			[menuItem release];
+			
+			success = [stateChooser compatibleSelectItemWithTag:privacyOption];
 		}
-		if (newState != AIPrivacyOptionCustom)
-			[stateChooser selectItemWithRepresentedObject:[NSNumber numberWithInt:newState]];
+
 	} else {
-		if ([[mainAccounts selectedItem] representedObject] == nil) {
-			[self willChangeValueForKey:@"listContents"];
-			NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
-			AIAccount<AIAccount_Privacy> *account;
-			while((account = [enumerator nextObject])) {
-				if([[account statusObjectForKey:@"Online"] boolValue] &&
-				   [account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-				[accountStates setObject:[NSNumber numberWithInt: (int)newState] forKey:[account UID]];
-			}
+		//Not on custom; make sure custom isn't still in the menu
+		int customItemIndex = [stateChooser indexOfItemWithTag:AIPrivacyOptionCustom];
+		if (customItemIndex != -1) {
+			[[stateChooser menu] removeItemAtIndex:customItemIndex];
 		}
-	} else {
-		AIAccount<AIAccount_Privacy> *account = [[mainAccounts selectedItem] representedObject];
-		[accountStates setObject:[NSNumber numberWithInt: (int)newState] forKey:[account UID]];
-		[listContents release];
 	}
-	}
-	[self recomputeListContents];
+
+	//Now update our view for this privacy option
+	[self setPrivacyOption:nil];
 }
 
-- (void)recomputeListContents
+#pragma mark Account menu
+/*
+ * @brief Return the currently selected account, or nil if the 'All' item is selected
+ */
+- (AIAccount<AIAccount_Privacy> *)selectedAccount
 {
-	[self willChangeValueForKey:@"listContents"];
-	listContents = [[NSMutableArray alloc] init];
-	AIAccount <AIAccount_Privacy> *account;
-	NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
-	while((account = [enumerator nextObject])) {
-		/* we can't do much with offline accounts and their block lists... */
-		if([[account statusObjectForKey:@"Online"] boolValue] &&
-		   [account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-			AIPrivacyOption accountState = [[accountStates objectForKey:[account UID]] intValue];
-			if (accountState == AIPrivacyOptionDenyUsers) {
-				[listContents addObjectsFromArray:[account listObjectsOnPrivacyList:AIPrivacyTypeDeny]];
+	return [[popUp_accounts selectedItem] representedObject];
+}
+
+/*
+ * @brief Action called when the account selection changes
+ *
+ * Update our view and the privacy option menu to be appropriate for the newly selected account.
+ * This may be called with a sender of nil by code elsewhere to force an update
+ */
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount
+{
+	if (inAccountMenu == accountMenu) {
+		AIAccount<AIAccount_Privacy> *account = [self selectedAccount];
+		if (account) {
+			//Selected an account
+			AIPrivacyOption privacyOption = [account privacyOptions];
+			
+			//Don't need the account column when we're showing for just one account
+			[self setAccountColumnsVisible:NO];
+
+			[self selectPrivacyOption:privacyOption];			
+
+		} else {
+			//Selected 'All'. We need to determine what privacy option to display for the set of all accounts.
+			AIPrivacyOption currentState = AIPrivacyOptionUnknown;
+			NSEnumerator	*enumerator = [[[popUp_accounts menu] itemArray] objectEnumerator];
+			NSMenuItem		*menuItem;
+			
+			while ((menuItem = [enumerator nextObject])) {
+				if ((account = [menuItem representedObject])) {
+					AIPrivacyOption accountState = [account privacyOptions];
+					
+					if (currentState == AIPrivacyOptionUnknown) {
+						//We don't know the state of an account yet
+						currentState = accountState;
+					} else if (accountState != currentState) {
+						currentState = AIPrivacyOptionCustom;
+					}				
+				}
 			}
-			else if (accountState == AIPrivacyOptionAllowUsers) {
-				// if it's an allow list, we have to "invert" it so that it looks right.
-				NSArray *tmpArr = [account listObjectsOnPrivacyList:AIPrivacyTypePermit];
-				NSMutableArray *allContacts = [[account contacts] mutableCopy];
-				[allContacts removeObjectsInArray:tmpArr];
-				[listContents addObjectsFromArray:allContacts];
-			}
+			
+			[self setAccountColumnsVisible:YES];
+
+			[self selectPrivacyOption:currentState];
 		}
+
+	} else if (inAccountMenu == sheetAccountMenu) {
+		//Update our sheet for the current account
+		[self selectAccountInSheet:inAccount];
 	}
+}
+
+/*
+ * @brief The 'All' menu item for accounts was selected
+ *
+ * We simulate an AIAccountMenu delegate call, since the All item was added by RAFBLockEditorWindowController.
+ */
+- (IBAction)selectedAllAccountItem:(id)sender
+{
+	AIAccountMenu *relevantAccountMenu = (([sender menu] == [popUp_accounts menu]) ?
+										  accountMenu :
+										  sheetAccountMenu);
+
+	[self accountMenu:relevantAccountMenu didSelectAccount:nil];
+}
+
+/*
+ * @brief Select an account in our account menu, then update everything else to be appropriate for it
+ */
+- (void)selectAccount:(AIAccount *)inAccount
+{
+	[popUp_accounts selectItemWithRepresentedObject:inAccount];
 	
-	listContentsAllAccounts = [listContents mutableCopy];
-	account = [[mainAccounts selectedItem] representedObject];
-	if (account != nil) {
-		//clean out the listObjs for other accounts
-		AIListContact *listObj;
-		NSMutableArray *objectsToRemove = [[NSMutableArray alloc] init];
-		NSEnumerator *enumerator = [listContents objectEnumerator];
-		while ((listObj = [enumerator nextObject]))
-			if (![[listObj account] isEqual:account])
-				[objectsToRemove addObject:listObj];
-		[listContents removeObjectsInArray:objectsToRemove];
-		[objectsToRemove release];
-	}
-	[self didChangeValueForKey:@"listContents"];
+	[self accountMenu:accountMenu didSelectAccount:inAccount];
 }
 
+/*!
+ * @brief Add account menu items to our location
+ *
+ * Implemented as required by the AccountMenuPlugin protocol.
+ *
+ * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be added to the menu
+ */
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems
+{
+	AIAccount	 *previouslySelectedAccount = nil;
+	NSEnumerator *enumerator;
+	NSMenuItem	 *menuItem;
+	NSMenu		 *menu = [[NSMenu alloc] init];
+
+	/*
+	 * accountMenu isn't set the first time we get here as the accountMenu is created. Similarly, sheetAccountMenu isn't created its first time.
+	 * This code makes the (true) assumption that accountMenu is _always_ created before sheetAccountMenu.
+	 */	
+	BOOL isPrimaryAccountMenu = (!accountMenu || (inAccountMenu == accountMenu));
+
+	if (isPrimaryAccountMenu) {
+		if ([popUp_accounts menu]) {
+			previouslySelectedAccount = [[popUp_accounts selectedItem] representedObject];
+		}
+	} else if (inAccountMenu == sheetAccountMenu) {
+		if ([popUp_sheetAccounts menu]) {
+			previouslySelectedAccount = [[popUp_sheetAccounts selectedItem] representedObject];
+		}		
+	}
+
+	//Add the All menu item first if we have more than one account listed
+	if ([menuItems count] > 1) {
+		[menu addItemWithTitle:AILocalizedString(@"All", nll)
+						target:self
+						action:@selector(selectedAllAccountItem:)
+				 keyEquivalent:@""];
+	}
+
+	/*
+	 * As we enumerate, we:
+	 *	1) Determine what state the accounts within the menu are in
+	 *  2) Add the menu items to our menu
+	 */
+	enumerator = [menuItems objectEnumerator];
+	while ((menuItem = [enumerator nextObject])) {		
+		[menu addItem:menuItem];
+	}
+
+	if (isPrimaryAccountMenu) {
+		[popUp_accounts setMenu:menu];
+
+		/* Restore the previous account selection if there was one.
+		 * Whether there was one or not, this will cause the rest of our view update to match the new/current selection
+		 */
+		[self selectAccount:previouslySelectedAccount];
+
+	} else {
+		[popUp_sheetAccounts setMenu:menu];
+		
+		[self selectAccountInSheet:previouslySelectedAccount];
+	}
+
+	[menu release];
+}
+
+- (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount
+{
+	BOOL isPrimaryAccountMenu = (!accountMenu || (inAccountMenu == accountMenu));
+
+	if (isPrimaryAccountMenu) {
+		return ([inAccount online] &&
+				[inAccount conformsToProtocol:@protocol(AIAccount_Privacy)]);
+	} else {
+		AIAccount *selectedPrimaryAccount = [self selectedAccount];
+		if (selectedPrimaryAccount) {
+			//An account is selected in the main window; only incldue that account in our sheet
+			return (inAccount == selectedPrimaryAccount);
+
+		} else {
+			//'All' is selected in the main window; include all accounts which are online and support privacy
+			return ([inAccount online] &&
+					[inAccount conformsToProtocol:@protocol(AIAccount_Privacy)]);			
+		}
+	}
+}
+
+- (void)privacySettingsChangedExternally:(NSNotification *)inNotification
+{
+	[self accountMenu:accountMenu didSelectAccount:[self selectedAccount]];	
+}
 
 @end

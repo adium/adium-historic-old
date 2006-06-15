@@ -8,15 +8,14 @@
 
 #import "AIWindowController.h"
 #import "AIUtilities/AIAlternatingRowTableView.h"
-@class AIListContact, AIAccount, AICompletingTextField;
+@class AIListContact, AIAccount, AICompletingTextField, AIAccountMenu;
 
 @interface RAFBlockEditorWindowController : AIWindowController {
 	IBOutlet NSWindow			*window;
 	IBOutlet NSTableView		*table;
-	IBOutlet NSButton			*doneButton;
 
 	IBOutlet NSWindow			*sheet;
-	IBOutlet NSPopUpButton		*accounts;
+	IBOutlet NSPopUpButton		*popUp_sheetAccounts;
 	IBOutlet AICompletingTextField		*field;
 	IBOutlet NSButton			*blockButton;
 	IBOutlet NSButton			*cancelButton;
@@ -24,27 +23,33 @@
 	IBOutlet NSTextField		*buddyText;
 	IBOutlet NSTableColumn		*buddyCol;
 	IBOutlet NSTableColumn		*accountCol;
+	BOOL						accountColumnsVisible;
 	
 	IBOutlet NSPopUpButton		*stateChooser;
-	IBOutlet NSPopUpButton		*mainAccounts;
+	IBOutlet NSPopUpButton		*popUp_accounts;
 	IBOutlet NSTextField		*accountCaption;
+	
+	IBOutlet NSTabView			*tabView_contactList;
 	
 	NSMutableArray				*listContents;
 	NSMutableArray				*listContentsAllAccounts;
 	NSMutableDictionary			*accountStates;
+	
+	AIAccountMenu				*accountMenu;
+	AIAccountMenu				*sheetAccountMenu;
 }
 
 + (void)showWindow;
-- (IBAction)configTextField:(id)sender;
+
+- (IBAction)removeSelection:(id)sender;
+
 - (IBAction)runBlockSheet:(id)sender;
 - (IBAction)cancelBlockSheet: (id)sender;
 - (IBAction)didBlockSheet: (id)sender;
 - (void)didEndSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
-- (IBAction)blockFieldUID:(id)sender;
+
 - (NSMutableArray*)listContents;
 - (void)setListContents:(NSArray*)newList;
-- (AIListContact *)contactFromTextField;
-- (IBAction)setState:(id)sender;
-- (IBAction)setAccount:(id)sender;
-- (void)recomputeListContents;
+- (IBAction)setPrivacyOption:(id)sender;
+
 @end
