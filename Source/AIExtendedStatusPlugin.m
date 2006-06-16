@@ -101,23 +101,15 @@
 		NSString		*finalMessage = nil;
 		int				idle;
 		
-		if (showStatus) {
-			NSAttributedString	*attributedStatusMessage = [[adium contentController] filterAttributedString:[(AIListContact *)inObject contactListStatusMessage]
-																							 usingFilterType:AIFilterDisplay
-																								   direction:AIFilterIncoming
-																									 context:inObject];
-			//Convert attachments to strings so emoticons become their text equivalents, etc.
-			attributedStatusMessage = [attributedStatusMessage attributedStringByConvertingAttachmentsToStrings];
-			
-			statusMessage = [[[[attributedStatusMessage string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
-			
+		if (showStatus) {			
+			statusMessage = [[[[[(AIListContact *)inObject contactListStatusMessage] string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
+
 			//Incredibly long status messages are slow to size, so we crop them to a reasonable length
 			if ([statusMessage length] > STATUS_MAX_LENGTH) {
 				[statusMessage deleteCharactersInRange:NSMakeRange(STATUS_MAX_LENGTH,
 																   [statusMessage length] - STATUS_MAX_LENGTH)];
 			}
-			
-	
+
 			/* Linebreaks in the status message cause vertical alignment issues. */
 			[statusMessage convertNewlinesToSlashes];	
 		}
