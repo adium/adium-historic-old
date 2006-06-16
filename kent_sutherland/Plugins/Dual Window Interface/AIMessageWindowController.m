@@ -476,9 +476,12 @@
 //PSMTabBarControl Delegate -------------------------------------------------------------------------------------------------
 #pragma mark PSMTabBarControl Delegate
 
+//Handle closing a tab
 - (BOOL)tabView:(NSTabView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	[self removeTabViewItem:(AIMessageTabViewItem *)tabViewItem silent:YES];
+	//The window controller handles removing the tab as we need to dispose of tracking rects properly
+	[self removeTabViewItem:(AIMessageTabViewItem *)tabViewItem silent:NO];
+	[interface closeChat:[(AIMessageTabViewItem *)tabViewItem chat]];
 	return NO;
 }
 
