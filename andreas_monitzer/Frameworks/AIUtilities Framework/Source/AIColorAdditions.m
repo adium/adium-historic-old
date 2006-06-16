@@ -37,7 +37,7 @@ static NSDictionary *RGBColorValues = nil;
 static NSString *defaultRGBTxtLocation1 = @"/usr/share/emacs";
 static NSString *defaultRGBTxtLocation2 = @"etc/rgb.txt";
 
-@implementation NSDictionary (AIColorAdditions)
+@implementation NSDictionary (AIColorAdditions_RGBTxtFiles)
 
 //see /usr/share/emacs/(some version)/etc/rgb.txt for an example of such a file.
 //the pathname does not need to end in 'rgb.txt', but it must be a file in UTF-8 encoding.
@@ -140,68 +140,7 @@ end:
 
 @end
 
-@implementation NSString (AIColorAdditions)
-
-- (NSColor *)representedColor
-{
-    unsigned int	r, g, b;
-    unsigned int	a = 255;
-
-	const char *selfUTF8 = [self UTF8String];
-	
-	//format: r,g,b[,a]
-	//all components are decimal numbers 0..255.
-	r = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	++selfUTF8;
-	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	++selfUTF8;
-	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	if (*selfUTF8 == ',') {
-		++selfUTF8;
-		a = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	}
-
-    return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:(a/255.0)] ;
-}
-
-- (NSColor *)representedColorWithAlpha:(float)alpha
-{
-	//this is the same as above, but the alpha component is overridden.
-
-    unsigned int	r, g, b;
-
-	const char *selfUTF8 = [self UTF8String];
-	
-	//format: r,g,b
-	//all components are decimal numbers 0..255.
-	r = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	++selfUTF8;
-	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	++selfUTF8;
-	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-
-    return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:alpha];
-}
-
-@end
-
-@implementation NSColor (AIColorAdditions)
-
-//Returns the current system control tint, supporting 10.2
-+ (NSControlTint)currentControlTintSupportingJag
-{
-    if ([self respondsToSelector:@selector(currentControlTint)]) {
-		return [self currentControlTint];
-    } else {
-		NSNumber	*tintNum = [[NSUserDefaults standardUserDefaults] objectForKey:@"AppleAquaColorVariant"];
-	
-		if (!tintNum || [tintNum intValue] == 1) {
-			return NSBlueControlTint;
-		} else {
-			return NSGraphiteControlTint;
-		}
-    }
-}
+@implementation NSColor (AIColorAdditions_RGBTxtFiles)
 
 + (NSDictionary *)colorNamesDictionary
 {
@@ -242,6 +181,10 @@ end:
 	return RGBColorValues;
 }
 
+@end
+
+@implementation NSColor (AIColorAdditions_Comparison)
+
 //Returns YES if the colors are equal
 - (BOOL)equalToRGBColor:(NSColor *)inColor
 {
@@ -252,6 +195,10 @@ end:
             ([convertedA blueComponent]  == [convertedB blueComponent])  &&
             ([convertedA greenComponent] == [convertedB greenComponent]));
 }
+
+@end
+
+@implementation NSColor (AIColorAdditions_DarknessAndContrast)
 
 //Returns YES if this color is dark
 - (BOOL)colorIsDark
@@ -286,24 +233,6 @@ end:
                                      alpha:[convertedColor alphaComponent]];
 }
 
-//Linearly adjust a color
-#define cap(x) { if (x < 0) {x = 0;} else if (x > 1) {x = 1;} }
-- (NSColor *)adjustHue:(float)dHue saturation:(float)dSat brightness:(float)dBrit
-{
-    float hue, sat, brit, alpha;
-    
-    [self getHue:&hue saturation:&sat brightness:&brit alpha:&alpha];
-    hue += dHue;
-    cap(hue);
-    sat += dSat;
-    cap(sat);
-    brit += dBrit;
-    cap(brit);
-    
-    return [NSColor colorWithCalibratedHue:hue saturation:sat brightness:brit alpha:alpha];
-}
-
-
 //Inverts the luminance of this color so it looks good on selected/dark backgrounds
 - (NSColor *)colorWithInvertedLuminance
 {
@@ -335,6 +264,27 @@ end:
 	}
 }
 
+@end
+
+@implementation NSColor (AIColorAdditions_HLS)
+
+//Linearly adjust a color
+#define cap(x) { if (x < 0) {x = 0;} else if (x > 1) {x = 1;} }
+- (NSColor *)adjustHue:(float)dHue saturation:(float)dSat brightness:(float)dBrit
+{
+    float hue, sat, brit, alpha;
+    
+    [self getHue:&hue saturation:&sat brightness:&brit alpha:&alpha];
+    hue += dHue;
+    cap(hue);
+    sat += dSat;
+    cap(sat);
+    brit += dBrit;
+    cap(brit);
+    
+    return [NSColor colorWithCalibratedHue:hue saturation:sat brightness:brit alpha:alpha];
+}
+
 - (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation
 {
     NSColor	*rgbColor;
@@ -355,6 +305,10 @@ end:
 
     return [NSColor colorWithCalibratedRed:r green:g blue:b alpha:alpha];
 }
+
+@end
+
+@implementation NSColor (AIColorAdditions_RepresentingColors)
 
 - (NSString *)hexString
 {
@@ -382,9 +336,10 @@ end:
     return [NSString stringWithUTF8String:hexString];
 }
 
+//String representation: R,G,B[,A].
 - (NSString *)stringRepresentation
 {
-    NSColor	*tempColor = [self colorUsingColorSpaceName:@"NSCalibratedRGBColorSpace"];
+    NSColor	*tempColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
 	float alphaComponent = [tempColor alphaComponent];
 
 	if (alphaComponent == 1.0) {
@@ -474,19 +429,24 @@ scanFailed:
 
 @implementation NSColor (AIColorAdditions_RandomColor)
 
-+ (NSColor *)randomColor {
++ (NSColor *)randomColor
+{
 	return [NSColor colorWithCalibratedRed:(arc4random() % 65536) / 65536.0
 	                                 green:(arc4random() % 65536) / 65536.0
 	                                  blue:(arc4random() % 65536) / 65536.0
 	                                 alpha:1.0];
 }
-+ (NSColor *)randomColorWithAlpha {
++ (NSColor *)randomColorWithAlpha
+{
 	return [NSColor colorWithCalibratedRed:(arc4random() % 65536) / 65536.0
 	                                 green:(arc4random() % 65536) / 65536.0
 	                                  blue:(arc4random() % 65536) / 65536.0
 	                                 alpha:(arc4random() % 65536) / 65536.0];
 }
 
+@end
+
+@implementation NSColor (AIColorAdditions_HTMLSVGCSSColors)
 
 + (id)colorWithHTMLString:(NSString *)str
 {

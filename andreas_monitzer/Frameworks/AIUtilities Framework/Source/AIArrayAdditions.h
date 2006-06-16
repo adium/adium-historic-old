@@ -11,6 +11,7 @@
 @interface NSArray (AIArrayAdditions)
 - (BOOL)containsObjectIdenticalTo:(id)obj;
 + (NSArray *)arrayNamed:(NSString *)name forClass:(Class)inClass;
+- (NSComparisonResult)compare:(NSArray *)other;
 @end
 
 @interface NSMutableArray (ESArrayAdditions)
