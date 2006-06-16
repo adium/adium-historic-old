@@ -8,22 +8,23 @@
 
 #import "RAFBlockEditorPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
-#import "AIAccount.h"
-#import "AIAccountController.h"
+#import <AIUtilities/AIStringAdditions.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIAccountController.h>
 
-#define BLOCK_EDITOR AILocalizedString(@"Block List Editor...","Block List Editor menu item")
+#define PRIVACY_SETTINGS [AILocalizedString(@"Privacy Settings","Privacy Settings menu item") stringByAppendingEllipsis]
 
 @implementation RAFBlockEditorPlugin
 
 - (void)installPlugin
 {
 	//Install the Block menu items
-	blockEditorMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_EDITOR
+	blockEditorMenuItem = [[NSMenuItem alloc] initWithTitle:PRIVACY_SETTINGS
 													  target:self
 													  action:@selector(showEditor:)
-											   keyEquivalent:@"b"];
-	[blockEditorMenuItem setKeyEquivalentModifierMask:(NSShiftKeyMask | NSCommandKeyMask)];
-	[[adium menuController] addMenuItem:blockEditorMenuItem toLocation:LOC_Contact_NegativeAction];
+											   keyEquivalent:@"p"];
+	[blockEditorMenuItem setKeyEquivalentModifierMask:(NSAlternateKeyMask | NSCommandKeyMask)];
+	[[adium menuController] addMenuItem:blockEditorMenuItem toLocation:LOC_Adium_Preferences];
 }
 
 - (void)uninstallPlugin
@@ -33,13 +34,17 @@
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	BOOL retVal = NO;
-	AIAccount <AIAccount_Privacy> *account;
-	NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
-	while((account = [enumerator nextObject]) && !retVal)
+	BOOL		 retVal = NO;
+	AIAccount	 *account;
+	NSEnumerator *enumerator;
+
+	enumerator = [[[adium accountController] accounts] objectEnumerator];
+	while ((account = [enumerator nextObject]) && !retVal) {
 		if([[account statusObjectForKey:@"Online"] boolValue] &&
 		   [account conformsToProtocol:@protocol(AIAccount_Privacy)])
 			retVal = YES;
+	}
+
 	return retVal;
 }
 

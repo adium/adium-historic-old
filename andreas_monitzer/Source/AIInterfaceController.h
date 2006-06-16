@@ -252,6 +252,7 @@ typedef enum {
 //Custom pasting
 - (IBAction)paste:(id)sender;
 - (IBAction)pasteAndMatchStyle:(id)sender;
+- (IBAction)pasteWithImagesAndColors:(id)sender;
 
 //Custom printing
 - (IBAction)adiumPrint:(id)sender;
@@ -275,4 +276,5 @@ typedef enum {
 //Custom printing informal protocol
 @interface NSObject (AdiumPrinting)
 - (void)adiumPrint:(id)sender;
+- (BOOL)validatePrintMenuItem:(id <NSMenuItem>)menuItem;
 @end

@@ -27,6 +27,7 @@
 @interface AIWebKitMessageViewController : AIObject <AIMessageViewController> {
 	id							plugin;
 	ESWebView					*webView;
+	id							preferencesChangedDelegate;
 	AIChat						*chat;
 	BOOL						shouldReflectPreferenceChanges;
 
@@ -53,6 +54,9 @@
  *	@brief Create a new message view controller
  */
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
++ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat
+													 withPlugin:(AIWebKitMessageViewPlugin *)inPlugin 
+									 preferencesChangedDelegate:(id)inPreferencesChangedDelegate;
 
 /*!
  *	@brief Print the webview

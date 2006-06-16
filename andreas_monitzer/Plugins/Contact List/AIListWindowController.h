@@ -20,6 +20,15 @@
 
 @protocol AIContactListViewController, AIInterfaceContainer;
 
+typedef enum {
+	AIContactListWindowHidingStyleNone = 0,
+	AIContactListWindowHidingStyleBackground,
+	AIContactListWindowHidingStyleSliding
+} AIContactListWindowHidingStyle;
+
+#define KEY_CL_WINDOW_HIDING_STYLE			@"Window Hiding Style"
+#define KEY_CL_SLIDE_ONLY_IN_BACKGROUND		@"Hide By Sliding Only in Background"
+
 #define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 #define KEY_SCL_BORDERLESS					@"Borderless"
 #define KEY_DUAL_RESIZE_VERTICAL			@"Autoresize Vertical"
@@ -33,6 +42,8 @@
     IBOutlet	AIListOutlineView		*contactListView;
 	AIListController					*contactListController;
 	
+	AIContactListWindowHidingStyle		windowHidingStyle;
+	BOOL								slideOnlyInBackground;
 	// refers to the GUI preference.  Sometimes this is expressed as dock-like 
 	// sliding instead, sometimes as orderOut:-type hiding.
 	BOOL								windowShouldBeVisibleInBackground; 

@@ -339,6 +339,7 @@
 	[menuItem_cut setTitle:AILocalizedString(@"Cut",nil)];
 	[menuItem_copy setTitle:AILocalizedString(@"Copy",nil)];
 	[menuItem_paste setTitle:AILocalizedString(@"Paste",nil)];
+	[menuItem_pasteWithImagesAndColors setTitle:AILocalizedString(@"Paste with Images and Colors",nil)];
 	[menuItem_pasteAndMatchStyle setTitle:AILocalizedString(@"Paste and Match Style",nil)];
 	[menuItem_clear setTitle:AILocalizedString(@"Clear",nil)];
 	[menuItem_selectAll setTitle:AILocalizedString(@"Select All",nil)];

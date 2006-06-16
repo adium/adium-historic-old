@@ -5,8 +5,6 @@
 //  Created by Evan Schoenberg on 12/16/05.
 //
 
-#import <Cocoa/Cocoa.h>
-
 @interface AIHoveringPopUpButton : NSButton {
 	NSTrackingRectTag	trackingTag;
 	BOOL				highlightOnHoverAndClick;

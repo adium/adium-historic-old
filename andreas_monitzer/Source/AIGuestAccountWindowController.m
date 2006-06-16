@@ -31,6 +31,11 @@ static AIGuestAccountWindowController *sharedGuestAccountWindowController = nil;
 	[[sharedGuestAccountWindowController window] makeKeyAndOrderFront:nil];
 }
 
+- (NSString *)adiumFrameAutosaveName
+{
+	return @"GuestAccountWindow";
+}
+
 - (void)awakeFromNib
 {
 	[[self window] setTitle:AILocalizedString(@"Connect Guest Account",nil)];

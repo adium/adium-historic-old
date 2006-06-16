@@ -105,9 +105,6 @@
 	[checkBox_showMessageColors setState:[[prefDict objectForKey:KEY_WEBKIT_SHOW_MESSAGE_COLORS] boolValue]];	
 	[checkBox_showMessageFonts setState:[[prefDict objectForKey:KEY_WEBKIT_SHOW_MESSAGE_FONTS] boolValue]];
 
-	//Observe preference changes and set our initial preferences
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	
 	//Allow the alpha component to be set for our background color
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
 	
@@ -123,7 +120,6 @@
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
 	
 	[[adium notificationCenter] removeObserver:self];
-	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[previewListObjectsDict release]; previewListObjectsDict = nil;
 	viewIsOpen = NO;
 }
@@ -157,15 +153,16 @@
 			[popUp_styles selectItemWithRepresentedObject:style];
 		}
 
-		variant = [prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:style]];
-		if (!variant) variant = [AIWebkitMessageViewStyle defaultVariantForBundle:[plugin messageStyleBundleWithIdentifier:style]];
-		
 		//When the active style changes, rebuild our variant menu for the new style
 		if (!key || [key isEqualToString:KEY_WEBKIT_STYLE]) {
 			[popUp_variants setMenu:[self _variantsMenu]];
 		}
-		
-		[popUp_variants selectItemWithRepresentedObject:variant];
+
+		variant = [prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:style]];
+		if (!variant || ![popUp_variants selectItemWithRepresentedObject:variant]) {
+			variant = [AIWebkitMessageViewStyle defaultVariantForBundle:[plugin messageStyleBundleWithIdentifier:style]];
+			[popUp_variants selectItemWithRepresentedObject:variant];
+		}
 		
 		//Configure our style-specific controls to represent the current style
 		NSFont	*defaultFont = [NSFont cachedFontWithName:[prefDict objectForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:style]]
@@ -432,7 +429,8 @@
 	previewChat = [[AIChat chatForAccount:nil] retain];
 	[previewChat setDisplayName:AILocalizedString(@"Sample Conversation", "Title for the sample conversation")];
 	previewController = [[AIWebKitMessageViewController messageViewControllerForChat:previewChat
-																		  withPlugin:plugin] retain];
+																		  withPlugin:plugin
+														  preferencesChangedDelegate:self] retain];
 	
 	//Enable live refreshing of our preview
 	[previewController setShouldReflectPreferenceChanges:YES];

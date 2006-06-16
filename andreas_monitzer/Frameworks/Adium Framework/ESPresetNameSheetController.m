@@ -7,7 +7,6 @@
 //
 
 #import "ESPresetNameSheetController.h"
-#import <AIUtilities/AIApplicationAdditions.h>
 
 #define	PRESET_NAME_SHEET	@"PresetNameSheet"
 

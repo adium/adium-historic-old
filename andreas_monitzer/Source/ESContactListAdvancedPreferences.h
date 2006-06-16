@@ -10,8 +10,9 @@
 
 @interface ESContactListAdvancedPreferences : AIPreferencePane {
 	IBOutlet	NSPopUpButton   *popUp_windowPosition;
-    IBOutlet	NSButton		*checkBox_hide; //when in background
-	IBOutlet	NSButton		*checkBox_edgeSlide; //hide on edges whether in background or not
+	
+	IBOutlet	NSMatrix		*matrix_hiding;
+    IBOutlet	NSButton		*checkBox_hideOnScreenEdgesOnlyInBackground;
 	
 	IBOutlet	NSButton		*checkBox_flash;
 	IBOutlet	NSButton		*checkBox_showTransitions;

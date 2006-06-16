@@ -80,7 +80,16 @@ extern NSString *AIFontStyleAttributeName;
  *
  * Sets color and underline attributes for any areas with NSLinkAttributeName set
  */
-- (void)addFormattingForLinks;			
+- (void)addFormattingForLinks;
+
+/*!
+ * @brief Convert attachments to strings
+ *
+ * Generate an NSAttributedString without attachments by substituting their string value if possible
+ * (if the attachment responds to @selector(string)), and if not, substituting a characteristic string.
+ * @param inPlaceholder The string to use in place of attachments if a string value can not be found
+ */
+- (void)convertAttachmentsToStringsUsingPlaceholder:(NSString *)inPlaceholder;
 @end
 
 /*!
@@ -173,15 +182,16 @@ extern NSString *AIFontStyleAttributeName;
  */
 + (NSAttributedString *)stringWithData:(NSData *)inData;
 
-/*
+/*!
  * @brief Generate an NSAttributedString without attachments
  *
- * Generate an NSAttributedString without attachments by substituting their string value if possible (if the attachment responds to @selector(string)), and if not, substituting a characteristic string.
+ * Generate an NSAttributedString without attachments by substituting their string value if possible
+ * (if the attachment responds to @selector(string)), and if not, substituting a characteristic string.
  * @return An <tt>NSAttributedString</tt> without attachments; it may be identical to the original object.
  */
 - (NSAttributedString *)attributedStringByConvertingAttachmentsToStrings;
 
-/*
+/*!
  * @brief Generate an NSAttributedString without links
  *
  * @return An autoreleased copy of the receiver with each link expanded to its URI.
@@ -196,7 +206,13 @@ extern NSString *AIFontStyleAttributeName;
  */
 - (NSAttributedString *)stringByAddingFormattingForLinks;
 
+/*!
+ * @brief Create a new NSAttributedString from an NSString
+ *
+ * @return An autoreleased <tt>NSAttributedString</tt>.
+ */
 + (NSAttributedString *)stringWithString:(NSString *)inString;
+
 @end
 
 

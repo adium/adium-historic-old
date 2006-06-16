@@ -16,7 +16,6 @@
 
 #import "AIXtrasManager.h"
 #import "AIXtraInfo.h"
-#import "AIAdium.h"
 #import "AIPathUtilities.h"
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AIGradientCell.h>

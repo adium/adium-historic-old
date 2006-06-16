@@ -2,10 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Horizontal Autosizing</key>
-	<false/>
-	<key>Horizontal Width</key>
-	<integer>150</integer>
+	<key>Status Icon Pack</key>
+	<string>iBubble Status</string>
+	<key>Service Icon Pack</key>
+	<string>pss-2</string>
 	<key>List Layout Name</key>
 	<string>Aqualicious</string>
 	<key>List Theme Name</key>

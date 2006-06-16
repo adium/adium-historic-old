@@ -1222,13 +1222,18 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc] au
 //Paste, stripping formatting
 - (IBAction)paste:(id)sender
 {
-	[self _pasteWithPreferredSelector:@selector(pasteAsRichText:) sender:sender];
+	[self _pasteWithPreferredSelector:@selector(pasteAsPlainTextWithTraits:) sender:sender];
 }
 
 //Paste with formatting
 - (IBAction)pasteAndMatchStyle:(id)sender
 {
 	[self _pasteWithPreferredSelector:@selector(pasteAsPlainText:) sender:sender];
+}
+
+- (IBAction)pasteWithImagesAndColors:(id)sender
+{
+	[self _pasteWithPreferredSelector:@selector(pasteAsRichText:) sender:sender];	
 }
 
 /*
@@ -1380,6 +1385,9 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc] au
 	} else if (menuItem == menuItem_customizeToolbar) {
 		return [keyWindow toolbar] != nil && [[keyWindow toolbar] isVisible];
 
+	} else if (menuItem == menuItem_close) {
+		return (keyWindow && [[keyWindow standardWindowButton:NSWindowCloseButton] isEnabled]);
+		
 	} else if (menuItem == menuItem_closeChat) {
 		return activeChat != nil;
 		
@@ -1387,7 +1395,11 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc] au
 		return [[self openChats] count] > 0;
 
 	} else if (menuItem == menuItem_print) {
-		return [[keyWindow windowController] respondsToSelector:@selector(adiumPrint:)];
+		NSWindowController *windowController = [keyWindow windowController];
+
+		return ([windowController respondsToSelector:@selector(adiumPrint:)] &&
+				(![windowController respondsToSelector:@selector(validatePrintMenuItem:)] ||
+				 [windowController validatePrintMenuItem:menuItem]));
 		
 	} else {
 		return YES;
