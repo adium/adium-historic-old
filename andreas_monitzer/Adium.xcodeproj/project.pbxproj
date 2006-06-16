@@ -1663,7 +1663,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 81B4C98F0A416BE500A8ABF5 /* SmackJavaBridge */;
+			remoteGlobalIDString = 81B4C98F0A416BE500A8ABF5;
 			remoteInfo = SmackJavaBridge;
 		};
 		81F6510B0A290FC8008FC8E7 /* PBXContainerItemProxy */ = {
@@ -11500,9 +11500,8 @@
 				JAVA_ARCHIVE_CLASSES = YES;
 				JAVA_ARCHIVE_TYPE = JAR;
 				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_COMPILER_FLAGS = "";
 				JAVA_SOURCE_SUBDIR = .;
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -11527,9 +11526,8 @@
 				JAVA_ARCHIVE_CLASSES = YES;
 				JAVA_ARCHIVE_TYPE = JAR;
 				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_COMPILER_FLAGS = "";
 				JAVA_SOURCE_SUBDIR = .;
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -11552,9 +11550,8 @@
 				JAVA_ARCHIVE_CLASSES = YES;
 				JAVA_ARCHIVE_TYPE = JAR;
 				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_COMPILER_FLAGS = "";
 				JAVA_SOURCE_SUBDIR = .;
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -11576,9 +11573,8 @@
 				JAVA_ARCHIVE_CLASSES = YES;
 				JAVA_ARCHIVE_TYPE = JAR;
 				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_COMPILER_FLAGS = "";
 				JAVA_SOURCE_SUBDIR = .;
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";

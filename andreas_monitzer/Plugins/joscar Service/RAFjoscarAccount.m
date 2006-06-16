@@ -228,19 +228,22 @@
 		[self didDisconnect];
 		
 		if (errorMessageShort) {
-			BOOL shouldReconnect = YES;
+			BOOL	 shouldReconnect = YES;
+			NSString *errorMessage = nil;
 			
 			if ([errorMessageShort isEqualToString:@"Password"]) {
 				[self serverReportedInvalidPassword];
 				
 			} else if ([errorMessageShort isEqualToString:@"TooFrequently"]) {
 				shouldReconnect = NO;
-				NSLog(@"Connecting too frequently!");
+				errorMessage = AILocalizedString(@"You have been connecting too frequently. Please wait five minutes or more before trying again; trying sooner will increase the timespan of this temporary ban.", nil);
+
 				AILog(@"Connecting too frequently!");
 
 			} else if ([errorMessageShort isEqualToString:@"TemporarilyBlocked"]) {
 				shouldReconnect = NO;
-				NSLog(@"Temporarily blocked!");
+				errorMessage = AILocalizedString(@"You have been temporarily blocked by the AIM server and cannot connect at this time. Please try again later.", nil);
+				
 				AILog(@"Temporarily blocked!");
 			} else {
 				NSLog(@"Error message short is %@; code %@",errorMessageShort,
@@ -249,6 +252,10 @@
 			
 			if (shouldReconnect) {
 				[self autoReconnectAfterDelay:3.0];
+				
+			} else if (errorMessage) {
+			    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Connection Error",[self formattedUID],[[self service] shortDescription]]
+												withDescription:errorMessage];	
 			}
 		}
 		
@@ -281,6 +288,9 @@
 	
 	[self updateStatusForKey:@"TextProfile"];
 	[self updateStatusForKey:KEY_USER_ICON];
+	
+	[joscarAdapter setDisplayRecentBuddies:[[self preferenceForKey:KEY_DISPLAY_RECENT_BUDDIES
+															 group:GROUP_ACCOUNT_STATUS] boolValue]];
 }
 
 - (void)didDisconnect
@@ -594,8 +604,12 @@
 
 - (BOOL)closeChat:(AIChat*)chat
 {
-	if ([chat isGroupChat])
+	if ([chat isGroupChat]) {
 		[joscarAdapter leaveGroupChatWithName:[chat name]];
+	} else {
+		[joscarAdapter leaveChatWithUID:[[chat listObject] UID]];
+	}
+
     return YES;
 }
 
@@ -1003,41 +1017,41 @@ BOOL isHTMLContact(AIListObject *inListObject)
 }
 
 #pragma mark Privacy
-//Add a list object to the privacy list (either PRIVACY_PERMIT or PRIVACY_DENY). Return value indicates success.
--(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type
+//Add a list object to the privacy list (either AIPrivacyTypePermit or AIPrivacyTypeDeny). Return value indicates success.
+-(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(AIPrivacyType)type
 {
 	switch (type) {
-		case PRIVACY_DENY:
+		case AIPrivacyTypeDeny:
 			[joscarAdapter addToBlockList:[inObject UID]];
 			break;
-		case PRIVACY_PERMIT:
+		case AIPrivacyTypePermit:
 			[joscarAdapter addToAllowedList:[inObject UID]];
 			break;
 	}
 	return YES;
 }
-//Remove a list object from the privacy list (either PRIVACY_PERMIT or PRIVACY_DENY). Return value indicates success
--(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type
+//Remove a list object from the privacy list (either AIPrivacyTypePermit or AIPrivacyTypeDeny). Return value indicates success
+-(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(AIPrivacyType)type
 {
 	switch (type) {
-		case PRIVACY_DENY:
+		case AIPrivacyTypeDeny:
 			[joscarAdapter removeFromBlockList:[inObject UID]];
 			break;
-		case PRIVACY_PERMIT:
+		case AIPrivacyTypePermit:
 			[joscarAdapter removeFromAllowedList:[inObject UID]];
 			break;
 	}
 	return YES;
 }
 //Return an array of AIListContacts on the specified privacy list.  Returns an empty array if no contacts are on the list.
--(NSArray *)listObjectsOnPrivacyList:(PRIVACY_TYPE)type
+-(NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type
 {
 	NSArray *tmp = nil;
 	switch (type) {
-		case PRIVACY_DENY:
+		case AIPrivacyTypeDeny:
 			tmp = [joscarAdapter getBlockedBuddies];
 			break;
-		case PRIVACY_PERMIT:
+		case AIPrivacyTypePermit:
 			tmp = [joscarAdapter getAllowedBuddies];
 			break;
 	}
@@ -1050,14 +1064,14 @@ BOOL isHTMLContact(AIListObject *inListObject)
 }
 
 //Identical to the above method, except it returns an array of strings, not list objects
--(NSArray *)listObjectIDsOnPrivacyList:(PRIVACY_TYPE)type
+-(NSArray *)listObjectIDsOnPrivacyList:(AIPrivacyType)type
 {
 	NSArray *tmp = nil;
 	switch (type) {
-		case PRIVACY_DENY:
+		case AIPrivacyTypeDeny:
 			tmp = [joscarAdapter getBlockedBuddies];
 			break;
-		case PRIVACY_PERMIT:
+		case AIPrivacyTypePermit:
 			tmp = [joscarAdapter getAllowedBuddies];
 			break;
 	}
@@ -1070,13 +1084,13 @@ BOOL isHTMLContact(AIListObject *inListObject)
 	return [retArr autorelease];
 }
 //Set the privacy options
--(void)setPrivacyOptions:(PRIVACY_OPTION)option
+-(void)setPrivacyOptions:(AIPrivacyOption)option
 {
 	[joscarAdapter setPrivacyMode:option];
 }
 
 //Get the privacy options
--(PRIVACY_OPTION)privacyOptions
+-(AIPrivacyOption)privacyOptions
 {
 	return [joscarAdapter privacyMode];
 }

@@ -8,6 +8,7 @@
 #import <Adium/AIAccount.h>
 #import "ESjoscarCocoaAdapter.h"
 
+#define KEY_DISPLAY_RECENT_BUDDIES	@"Display Recent Buddies"
 @protocol ChatInvitation;
 
 @interface RAFjoscarAccount : AIAccount <AIAccount_Privacy> {

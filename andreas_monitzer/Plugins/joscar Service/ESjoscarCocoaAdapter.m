@@ -492,6 +492,17 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		 setDirectIMConnected:NO];
 }
 
+
+/*
+ * @brief We are leaving a one-on-one chat
+ *
+ * Close a direct IM if there is one
+ */
+- (void)leaveChatWithUID:(NSString *)inUID
+{
+#warning Close any existing direct IM
+}
+
 /*
  * @brief Send a message to a one-on-one chat
  */
@@ -643,7 +654,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
  * @brief Received a message in a conversation
  */
 - (void)setGotMessage:(HashMap *)userInfo
-{	
+{
 	Conversation	*conversation = [userInfo get:@"Conversation"];
 	MessageInfo		*messageInfo = [userInfo get:@"MessageInfo"];
 	Message			*message = [messageInfo getMessage];
@@ -715,7 +726,59 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[accountProxy chatWithUID:[[[sn getNormal] copy] autorelease]
 					 gotError:[NSNumber numberWithInt:errorType]];
 }
-				   
+
+- (void)setSendAutomaticallyFailed:(HashMap *)userInfo
+{
+	//This is never called as far as I can tell.... -eds
+	NSLog(@"setSendAutomaticallyFailed: %@",userInfo);	
+
+	id<Collection>	triedConversations = [userInfo get:@"Set<Conversation>"];
+	id<Iterator>	iterator = [triedConversations iterator];
+	Conversation	*conversation = ([iterator hasNext] ? [iterator next] : nil);
+
+//	Message			*message = [userInfo get:@"Message"];
+	Screenname		*sn = [conversation getBuddy];
+	AIChatErrorType errorType = AIChatMessageSendingUserNotAvailable;
+
+	[accountProxy chatWithUID:[[[sn getNormal] copy] autorelease]
+					 gotError:[NSNumber numberWithInt:errorType]];
+}
+
+- (void)setGotOtherEvent:(HashMap *)userInfo
+{
+	Conversation			*conversation = [userInfo get:@"Conversation"];
+	ConversationEventInfo	*eventInfo = [userInfo get:@"ConversationEventInfo"];
+	
+	NSLog(@"got other event: %@ - %@",eventInfo, NSStringFromClass([eventInfo class]));
+	AILog(@"got other event: %@ - %@",eventInfo, NSStringFromClass([eventInfo class]));
+
+	if ([eventInfo isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ImSendFailedEvent")]) {
+		NSLog(@"%@: error %i",eventInfo,[(ImSendFailedEvent *)eventInfo getErrorCode]);
+		AIChatErrorType errorType;
+
+		switch ([(ImSendFailedEvent *)eventInfo getErrorCode]) {
+			case 4:
+				errorType = AIChatMessageSendingUserNotAvailable;
+				break;
+			case 10:
+				errorType = AIChatMessageSendingTooLarge;
+				break;
+			default:
+				errorType = AIChatUnknownError;
+				break;
+		}
+		
+		NSLog(@"error with %@",[[[[conversation getBuddy] getNormal] copy] autorelease]);
+		[accountProxy chatWithUID:[[[[conversation getBuddy] getNormal] copy] autorelease]
+						 gotError:[NSNumber numberWithInt:errorType]];
+	}
+}
+
+- (void)setSentOtherEvent:(HashMap *)userInfo
+{
+
+}
+
 #pragma mark File transfer
 - (void)setNewIncomingFileTransfer:(HashMap *)userInfo
 {
@@ -808,7 +871,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 							   [commonPrefix lastPathComponent]);
 	[outgoingFileTransfer addFilesInHierarchy:folderName :[NewFile(commonPrefix) autorelease] :fileList];
 	[outgoingFileTransfer setDisplayName:folderName];
-	AILog(@"%@: Sending %@ with name %@ and root %@",self, fileList, folderName, commonPrefix);
+	AILog(@"%@: Sending %@ [common prefix: %@] with name %@ and root %@",self, fileList, commonPrefix, folderName, commonPrefix);
 }
 
 /*
@@ -1215,6 +1278,13 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getSsiService] requestBuddyAuthorization:sn :nil];
 }
 
+- (void)setDisplayRecentBuddies:(BOOL)inDisplayRecentBuddies
+{
+	ServerStoredSettings *serverStoredSettings = [[aimConnection getSsiService] getServerStoredSettings];
+
+	[serverStoredSettings changeRecentBuddiesUsed:inDisplayRecentBuddies];
+}
+
 #pragma mark Contact info
 /*
  * @brief Find a MutableBuddy
@@ -1336,18 +1406,18 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	return [array autorelease];
 }
 
-- (PRIVACY_OPTION)privacyMode
+- (AIPrivacyOption)privacyMode
 {	
 	NSString *mode = [[[[aimConnection getSsiService] getPermissionList] getPrivacyMode] name];
-	PRIVACY_OPTION prvType = PRIVACY_ALLOW_ALL;
+	AIPrivacyOption prvType = AIPrivacyOptionAllowAll;
 	if ([mode isEqualToString:@"ALLOW_ALLOWED"])
-		prvType = PRIVACY_ALLOW_USERS;
+		prvType = AIPrivacyOptionAllowUsers;
 	if ([mode isEqualToString:@"BLOCK_ALL"])
-		prvType = PRIVACY_DENY_ALL;
+		prvType = AIPrivacyOptionDenyAll;
 	if ([mode isEqualToString:@"BLOCK_BLOCKED"])
-		prvType = PRIVACY_DENY_USERS;
+		prvType = AIPrivacyOptionDenyUsers;
 	if ([mode isEqualToString:@"ALLOW_BUDDIES"])
-		prvType = PRIVACY_ALLOW_CONTACTLIST;
+		prvType = AIPrivacyOptionAllowContactList;
 	return prvType;
 }
 
@@ -1401,23 +1471,23 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[[aimConnection getSsiService] getPermissionList] removeFromAllowedList:NewScreenname(sn)];
 }
 
-- (void)setPrivacyMode:(PRIVACY_OPTION)mode
+- (void)setPrivacyMode:(AIPrivacyOption)mode
 {
 	NSString *modeName = nil;
 	switch(mode) {
-		case PRIVACY_ALLOW_ALL:
+		case AIPrivacyOptionAllowAll:
 			modeName = @"ALLOW_ALL";
 			break;
-		case PRIVACY_ALLOW_CONTACTLIST:
+		case AIPrivacyOptionAllowContactList:
 			modeName = @"ALLOW_BUDDIES";
 			break;
-		case PRIVACY_DENY_ALL:
+		case AIPrivacyOptionDenyAll:
 			modeName = @"BLOCK_ALL";
 			break;
-		case PRIVACY_DENY_USERS:
+		case AIPrivacyOptionDenyUsers:
 			modeName = @"BLOCK_BLOCKED";
 			break;
-		case PRIVACY_ALLOW_USERS:
+		case AIPrivacyOptionAllowUsers:
 			modeName = @"ALLOW_ALLOWED";
 			break;
 		default:
@@ -1646,7 +1716,6 @@ Date* javaDateFromDate(NSDate *date)
 	
 	AILog(@"Left %@; %@ remaining group chats",name, joscarChatsDict);
 }
-
 
 #pragma mark Utilities
 

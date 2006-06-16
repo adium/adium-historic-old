@@ -232,9 +232,20 @@
 @interface BosService : Service {}
 @end
 
+/*
+ * net.kano.joustsim.oscar.oscar.service.ssi.ServerStoredSettings
+ */
+@interface ServerStoredSettings : NSObject {}
+- (void)changeMobileDeviceShown:(BOOL)inFlag;
+- (void)changeIdleTimeShown:(BOOL)inFlag;
+- (void)changeTypingShown:(BOOL)inFlag;
+- (void)changeRecentBuddiesUsed:(BOOL)inFlag;
+@end
+
 @interface SsiService : NSObject {}
 - (MutableBuddyList *)getBuddyList;
 - (PermissionList *)getPermissionList;
+- (ServerStoredSettings *)getServerStoredSettings;
 - (void)requestBuddyAuthorization:(Screenname *)sn :(NSString *)authorizationMessage;
 @end
 
@@ -340,6 +351,19 @@
 @end
 
 @interface ConversationEventInfo : NSObject {}
+- (Screenname *)getFrom;
+- (Screenname *)getTo;
+@end
+
+@interface SendFailedEvent : ConversationEventInfo {}
+- (Message *)getMessage;
+@end
+
+/*
+ * net.kano.joustsim.oscar.oscar.service.icbm.ImSendFailedEvent
+ */
+@interface ImSendFailedEvent : SendFailedEvent {}
+- (int)getErrorCode;
 @end
 
 /*
