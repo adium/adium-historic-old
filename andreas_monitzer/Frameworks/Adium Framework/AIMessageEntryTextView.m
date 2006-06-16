@@ -58,10 +58,6 @@
 - (void)addAttachmentsFromPasteboard:(NSPasteboard *)pasteboard;
 @end
 
-@interface NSMutableAttributedString (AIMessageEntryTextViewAdditions)
-- (void)convertForPasteWithTraits;
-@end
-
 @implementation AIMessageEntryTextView
 
 - (void)_initMessageEntryTextView
@@ -374,9 +370,7 @@
 	[self setInsertionPointColor:[backgroundColor contrastingColor]];
 }
 
-#pragma mark Pasting
-
-- (BOOL)handlePasteAsRichText
+- (BOOL)handledPasteAsRichText
 {
 	NSPasteboard *generalPasteboard = [NSPasteboard generalPasteboard];
 	NSEnumerator *enumerator = [[generalPasteboard types] objectEnumerator];
@@ -409,7 +403,7 @@
 {
 	NSDictionary	*attributes = [[self typingAttributes] copy];
 
-	if (![self handlePasteAsRichText]) {
+	if (![self handledPasteAsRichText]) {
 		[super paste:sender];
 	}
 
@@ -419,72 +413,6 @@
 
 	[attributes release];
 }
-
-- (void)pasteAsPlainTextWithTraits:(id)sender
-{
-	NSDictionary	*attributes = [[self typingAttributes] copy];
-	
-	NSPasteboard *generalPasteboard = [NSPasteboard generalPasteboard];
-	NSEnumerator *enumerator = [[generalPasteboard types] objectEnumerator];
-	NSString	 *type;
-	BOOL		 handledPaste = NO;
-	
-	//Types is ordered by the preference for handling of the data; enumerating it lets us allow the sending application's hints to be followed.
-	while ((type = [enumerator nextObject]) && !handledPaste) {
-		NSLog(@"Looking at type %@",type);
-		if ([type isEqualToString:NSRTFPboardType] ||
-			[type isEqualToString:NSRTFDPboardType] ||
-			[type isEqualToString:NSHTMLPboardType]) {
-			NSData *data = [generalPasteboard dataForType:type];
-			NSMutableAttributedString *attributedString;
-			
-			if ([type isEqualToString:NSRTFPboardType]) {
-				attributedString = [[NSMutableAttributedString alloc] initWithRTF:data
-															   documentAttributes:NULL];
-			} else if ([type isEqualToString:NSRTFDPboardType]) {
-				attributedString = [[NSMutableAttributedString alloc] initWithRTFD:data
-																documentAttributes:NULL];
-			} else /* NSHTMLPboardType */ {
-				attributedString = [[NSMutableAttributedString alloc] initWithHTML:data
-																documentAttributes:NULL];
-			}
-
-			[attributedString convertForPasteWithTraits];
-			[[self textStorage] replaceCharactersInRange:[self selectedRange]
-									withAttributedString:attributedString];
-			[attributedString release];
-			
-			handledPaste = YES;
-			
-		} else if ([type isEqualToString:NSStringPboardType]) {
-			//Paste a plain text string directly
-			[super paste:sender];
-			handledPaste = YES;
-			
-		} else if ([type isEqualToString:NSFilenamesPboardType]) {
-			[self addAttachmentsFromPasteboard:generalPasteboard];
-			handledPaste = YES;
-
-		} else if ([type isEqualToString:NSURLPboardType]) {
-			//Paste a URL directly
-			[super paste:sender];
-			handledPaste = YES;
-		}
-	}
-	
-	//If we didn't handle it yet, let super try to deal with it
-	if (!handledPaste) {
-		[super paste:sender];
-	}
-	
-	if (attributes) {
-		[self setTypingAttributes:attributes];
-	}
-	
-	[attributes release];	
-}
-
-#pragma mark Deletion
 
 - (void)deleteBackward:(id)sender
 {
@@ -1074,27 +1002,4 @@
 	return attributedString;
 }
 
-@end
-
-@implementation NSMutableAttributedString (AIMessageEntryTextViewAdditions)
-- (void)convertForPasteWithTraits
-{
-	NSRange fullRange = NSMakeRange(0, [self length]);
-	
-	//Remove non-trait attributes
-	[self removeAttribute:NSBackgroundColorAttributeName range:fullRange];
-	[self removeAttribute:NSBaselineOffsetAttributeName range:fullRange];
-	[self removeAttribute:NSCursorAttributeName range:fullRange];
-	[self removeAttribute:NSExpansionAttributeName range:fullRange];
-	[self removeAttribute:NSForegroundColorAttributeName range:fullRange];
-	[self removeAttribute:NSKernAttributeName range:fullRange];
-	[self removeAttribute:NSLigatureAttributeName range:fullRange];
-	[self removeAttribute:NSObliquenessAttributeName range:fullRange];
-	[self removeAttribute:NSParagraphStyleAttributeName range:fullRange];
-	[self removeAttribute:NSShadowAttributeName range:fullRange];
-	[self removeAttribute:NSStrokeWidthAttributeName range:fullRange];
-	
-	//Replace attachments with nothing! Absolutely nothing!
-	[self convertAttachmentsToStringsUsingPlaceholder:@""];
-}
 @end

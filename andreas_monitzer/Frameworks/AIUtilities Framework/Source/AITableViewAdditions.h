@@ -15,5 +15,4 @@
 
 @interface NSTableView (AITableViewAdditions)
 - (NSArray *)arrayOfSelectedItemsUsingSourceArray:(NSArray *)sourceArray;
-- (void)selectItemsInArray:(NSArray *)selectedItems usingSourceArray:(NSArray *)sourceArray;
 @end

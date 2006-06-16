@@ -178,19 +178,6 @@
 	return result;
 }
 
-- (NSString *)CSSString
-{
-	NSMutableArray *properties = [NSMutableArray arrayWithCapacity:[self count]];
-
-	NSEnumerator *keysEnum = [self keyEnumerator];
-	NSString *key;
-	while ((key = [keysEnum nextObject])) {
-		[properties addObject:[NSString stringWithFormat:@"%@: %@;", key, [self objectForKey:key]]];
-	}
-
-	return [properties componentsJoinedByString:@" "];
-}
-
 @end
 
 @implementation NSMutableDictionary (AIDictionaryAdditions)
@@ -224,9 +211,9 @@
 {
 	//only do work if we have work to do.
 	if (translation || addition || removal) {
-		NSDictionary *selfCopy = [self copy];
-		NSEnumerator *keyEnum = [selfCopy keyEnumerator];
+		NSEnumerator *keyEnum = [self keyEnumerator];
 		NSString *key;
+		NSDictionary *selfCopy = [self copy];
 
 		while ((key = [keyEnum nextObject])) {
 			NSString *newKey = [translation objectForKey:key];

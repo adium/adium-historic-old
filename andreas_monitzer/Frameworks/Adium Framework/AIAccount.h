@@ -36,19 +36,27 @@
 #define	Adium_RequestImmediateDynamicContentUpdate	@"Adium_RequestImmediateDynamicContentUpdate"
 
 typedef enum {
-    AIPrivacyTypePermit = 0,
-    AIPrivacyTypeDeny
-}  AIPrivacyType;
+    STATUS_NA = -1,
+    STATUS_OFFLINE,
+    STATUS_CONNECTING,
+    STATUS_ONLINE,
+    STATUS_DISCONNECTING
+} ACCOUNT_STATUS;
 
 typedef enum {
-    AIPrivacyOptionAllowAll = 1,		//Anyone can conctact you
-	AIPrivacyOptionDenyAll,				//Nobody can contact you
-	AIPrivacyOptionAllowUsers,			//Only those on your allow list can contact you
-	AIPrivacyOptionDenyUsers,			//Those on your deny list can't contact you
-	AIPrivacyOptionAllowContactList,	//Only those on your contact list can contact you
-	AIPrivacyOptionUnknown,			//used by the privacy settings window, but could probably also be used by accounts
-	AIPrivacyOptionCustom				//used by the privacy settings window
-} AIPrivacyOption;
+    PRIVACY_PERMIT = 0,
+    PRIVACY_DENY
+}  PRIVACY_TYPE;
+
+typedef enum {
+    PRIVACY_ALLOW_ALL = 1,      //Anyone can conctact you
+	PRIVACY_DENY_ALL,           //Nobody can contact you
+	PRIVACY_ALLOW_USERS,        //Only those on your allow list can contact you
+	PRIVACY_DENY_USERS,         //Those on your deny list can't contact you
+	PRIVACY_ALLOW_CONTACTLIST,	//Only those on your contact list can contact you
+	PRIVACY_UNKNOWN,			//used by the privacy settings window, but could probably also be used by accounts
+	PRIVACY_CUSTOM				//used by the privacy settings window
+} PRIVACY_OPTION;
 
 //Support for file transfer
 @protocol AIAccount_Files
@@ -70,18 +78,18 @@ typedef enum {
 
 //Support for privacy settings
 @protocol AIAccount_Privacy
-    //Add a list object to the privacy list (either AIPrivacyTypePermit or AIPrivacyTypeDeny). Return value indicates success.
-    -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(AIPrivacyType)type;
-    //Remove a list object from the privacy list (either AIPrivacyTypePermit or AIPrivacyTypeDeny). Return value indicates success
-    -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(AIPrivacyType)type;
+    //Add a list object to the privacy list (either PRIVACY_PERMIT or PRIVACY_DENY). Return value indicates success.
+    -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type;
+    //Remove a list object from the privacy list (either PRIVACY_PERMIT or PRIVACY_DENY). Return value indicates success
+    -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type;
 	//Return an array of AIListContacts on the specified privacy list.  Returns an empty array if no contacts are on the list.
-	-(NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type;
+	-(NSArray *)listObjectsOnPrivacyList:(PRIVACY_TYPE)type;
 	//Identical to the above method, except it returns an array of strings, not list objects
-	-(NSArray *)listObjectIDsOnPrivacyList:(AIPrivacyType)type;
+	-(NSArray *)listObjectIDsOnPrivacyList:(PRIVACY_TYPE)type;
     //Set the privacy options
-    -(void)setPrivacyOptions:(AIPrivacyOption)option;
+    -(void)setPrivacyOptions:(PRIVACY_OPTION)option;
 	//Get the privacy options
-	-(AIPrivacyOption)privacyOptions;
+	-(PRIVACY_OPTION)privacyOptions;
 @end
 
 /*!
