@@ -25,6 +25,7 @@
 @interface AIAlternatingRowTableView (PRIVATE)
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected;
 - (void)_initAlternatingRowTableView;
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView;
 @end
 
 
@@ -88,8 +89,8 @@
 
     //Check if 'delete' was pressed
     if (pressedChar == NSDeleteFunctionKey || pressedChar == NSBackspaceCharacter || pressedChar == NSDeleteCharacter) { //Delete
-        if ([[self delegate] respondsToSelector:@selector(tableViewDeleteSelectedRows:)]) {
-			[[self delegate] tableViewDeleteSelectedRows:self]; //Delete the selection
+        if ([[self dataSource] respondsToSelector:@selector(tableViewDeleteSelectedRows:)]) {
+			[[self dataSource] tableViewDeleteSelectedRows:self]; //Delete the selection
 		}
     } else {
         [super keyDown:theEvent]; //Pass the key event on

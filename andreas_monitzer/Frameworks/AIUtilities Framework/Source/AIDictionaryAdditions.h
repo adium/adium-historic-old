@@ -33,10 +33,6 @@
 - (NSDictionary *)dictionaryWithIntersectionWithSetOfKeys:(NSSet *)keys;
 - (NSDictionary *)dictionaryWithDifferenceWithSetOfKeys:(NSSet *)keys;
 
-//Assumes that its key-value pairs (both key and value being NSStrings) are CSS properties. Generates CSS source code like this:
-//	font-family: Helvetica; font-size: 12pt; font-weight: bold; font-style: italic;
-- (NSString *)CSSString;
-
 @end
 
 @interface NSMutableDictionary (AIDictionaryAdditions)

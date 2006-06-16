@@ -32,27 +32,6 @@
     return [array autorelease];
 }
 
-- (NSComparisonResult)compare:(NSArray *)other
-{
-	NSComparisonResult result = NSOrderedSame;
-
-	NSEnumerator *selfEnum = [self objectEnumerator], *otherEnum = [other objectEnumerator];
-	id selfObj, otherObj;
-	while ((result == NSOrderedSame) && (selfObj = [selfEnum nextObject]) && (otherObj = [otherEnum nextObject])) {
-		result = [selfObj compare:otherObj];
-	}
-
-	if (result == NSOrderedSame) {
-		if (selfObj && !otherObj) {
-			result = NSOrderedDescending;
-		} else if(otherObj && !selfObj) {
-			result = NSOrderedAscending;
-		}
-	}
-
-	return result;
-}
-
 @end
 
 @implementation NSMutableArray (ESArrayAdditions)

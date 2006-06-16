@@ -21,8 +21,6 @@
 		079C113C0782FB500048E350 /* AIScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 079C113A0782FB500048E350 /* AIScannerAdditions.m */; };
 		07B87B7D0A3A7A3B00A38283 /* AISetAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B87B790A3A7A3B00A38283 /* AISetAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07B87B7E0A3A7A3B00A38283 /* AISetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 07B87B7A0A3A7A3B00A38283 /* AISetAdditions.m */; };
-		07B87B7F0A3A7A3B00A38283 /* AIShadowAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B87B7B0A3A7A3B00A38283 /* AIShadowAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		07B87B800A3A7A3B00A38283 /* AIShadowAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 07B87B7C0A3A7A3B00A38283 /* AIShadowAdditions.m */; };
 		07BB5A0D07C4833E008996A0 /* AIWiredString.m in Sources */ = {isa = PBXBuildFile; fileRef = 0795642007C3553A00F9A88F /* AIWiredString.m */; };
 		07BB5A0E07C48340008996A0 /* AIWiredData.m in Sources */ = {isa = PBXBuildFile; fileRef = 078DF8AF07C2948200831ABF /* AIWiredData.m */; };
 		07C52D4707BD2F97006BE37C /* AIHostReachabilityMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 07C52D4507BD2F97006BE37C /* AIHostReachabilityMonitor.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -248,10 +246,6 @@
 		6E03C8D307C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E03C8D107C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6E03C8D407C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E03C8D207C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
-		9E24860A0A359D310070153D /* NSCalendarDate+ISO8601Parsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2486060A359D310070153D /* NSCalendarDate+ISO8601Parsing.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9E24860B0A359D310070153D /* NSCalendarDate+ISO8601Parsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2486070A359D310070153D /* NSCalendarDate+ISO8601Parsing.m */; };
-		9E24860C0A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2486080A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9E24860D0A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2486090A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m */; };
 		EEB11D590887E5B200D0C340 /* OWAddressBookAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = EEB11D570887E5B200D0C340 /* OWAddressBookAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EEB11D5A0887E5B200D0C340 /* OWAddressBookAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB11D580887E5B200D0C340 /* OWAddressBookAdditions.m */; };
 		EEB11DD50887E67300D0C340 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEB11DD40887E67200D0C340 /* AddressBook.framework */; };
@@ -278,8 +272,6 @@
 		07B7AF9E0797A952003B71E1 /* AITree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AITree.m; path = Source/AITree.m; sourceTree = "<group>"; };
 		07B87B790A3A7A3B00A38283 /* AISetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISetAdditions.h; path = Source/AISetAdditions.h; sourceTree = "<group>"; };
 		07B87B7A0A3A7A3B00A38283 /* AISetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISetAdditions.m; path = Source/AISetAdditions.m; sourceTree = "<group>"; };
-		07B87B7B0A3A7A3B00A38283 /* AIShadowAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIShadowAdditions.h; path = Source/AIShadowAdditions.h; sourceTree = "<group>"; };
-		07B87B7C0A3A7A3B00A38283 /* AIShadowAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIShadowAdditions.m; path = Source/AIShadowAdditions.m; sourceTree = "<group>"; };
 		07C52D4507BD2F97006BE37C /* AIHostReachabilityMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIHostReachabilityMonitor.h; path = Source/AIHostReachabilityMonitor.h; sourceTree = "<group>"; };
 		07C52D4607BD2F97006BE37C /* AIHostReachabilityMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIHostReachabilityMonitor.m; path = Source/AIHostReachabilityMonitor.m; sourceTree = "<group>"; };
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -538,10 +530,6 @@
 		6E03C8D107C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITextFieldWithDraggingDelegate.h; path = Source/AITextFieldWithDraggingDelegate.h; sourceTree = "<group>"; };
 		6E03C8D207C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITextFieldWithDraggingDelegate.m; path = Source/AITextFieldWithDraggingDelegate.m; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* AIUtilities.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AIUtilities.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9E2486060A359D310070153D /* NSCalendarDate+ISO8601Parsing.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = "NSCalendarDate+ISO8601Parsing.h"; path = "Source/NSCalendarDate+ISO8601Parsing.h"; sourceTree = "<group>"; };
-		9E2486070A359D310070153D /* NSCalendarDate+ISO8601Parsing.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = "NSCalendarDate+ISO8601Parsing.m"; path = "Source/NSCalendarDate+ISO8601Parsing.m"; sourceTree = "<group>"; };
-		9E2486080A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = "NSCalendarDate+ISO8601Unparsing.h"; path = "Source/NSCalendarDate+ISO8601Unparsing.h"; sourceTree = "<group>"; };
-		9E2486090A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = "NSCalendarDate+ISO8601Unparsing.m"; path = "Source/NSCalendarDate+ISO8601Unparsing.m"; sourceTree = "<group>"; };
 		EEB11D570887E5B200D0C340 /* OWAddressBookAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWAddressBookAdditions.h; path = Source/OWAddressBookAdditions.h; sourceTree = "<group>"; };
 		EEB11D580887E5B200D0C340 /* OWAddressBookAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = OWAddressBookAdditions.m; path = Source/OWAddressBookAdditions.m; sourceTree = "<group>"; };
 		EEB11DD40887E67200D0C340 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = /System/Library/Frameworks/AddressBook.framework; sourceTree = "<absolute>"; };
@@ -895,8 +883,6 @@
 				34486BA506D1DF0300DA778C /* AIScrollViewAdditions.m */,
 				07B87B790A3A7A3B00A38283 /* AISetAdditions.h */,
 				07B87B7A0A3A7A3B00A38283 /* AISetAdditions.m */,
-				07B87B7B0A3A7A3B00A38283 /* AIShadowAdditions.h */,
-				07B87B7C0A3A7A3B00A38283 /* AIShadowAdditions.m */,
 				34486BB006D1DF0300DA778C /* AIStringAdditions.h */,
 				34486BB106D1DF0300DA778C /* AIStringAdditions.m */,
 				34486BB406D1DF0300DA778C /* AITableViewAdditions.h */,
@@ -919,10 +905,6 @@
 				34FFB272087DF0F70000A517 /* AIFontAdditions.h */,
 				EEB11D570887E5B200D0C340 /* OWAddressBookAdditions.h */,
 				EEB11D580887E5B200D0C340 /* OWAddressBookAdditions.m */,
-				9E2486060A359D310070153D /* NSCalendarDate+ISO8601Parsing.h */,
-				9E2486070A359D310070153D /* NSCalendarDate+ISO8601Parsing.m */,
-				9E2486080A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h */,
-				9E2486090A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m */,
 			);
 			name = Additions;
 			sourceTree = "<group>";
@@ -1533,10 +1515,8 @@
 				073C0D8D0939023200D6AEEA /* AIPlasticButtonCell.h in Headers */,
 				341BCFF809615D8600CF83F5 /* AITextAttachmentAdditions.h in Headers */,
 				34235A6B09D7B370009FF634 /* AICharacterSetAdditions.h in Headers */,
-				9E24860A0A359D310070153D /* NSCalendarDate+ISO8601Parsing.h in Headers */,
-				9E24860C0A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h in Headers */,
-				07B87B7D0A3A7A3B00A38283 /* AISetAdditions.h in Headers */,
 				07B87B7F0A3A7A3B00A38283 /* AIShadowAdditions.h in Headers */,
+				07B87B7D0A3A7A3B00A38283 /* AISetAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1742,10 +1722,8 @@
 				073C0D8E0939023200D6AEEA /* AIPlasticButtonCell.m in Sources */,
 				341BCFF709615D8600CF83F5 /* AITextAttachmentAdditions.m in Sources */,
 				34235A6C09D7B371009FF634 /* AICharacterSetAdditions.m in Sources */,
-				9E24860B0A359D310070153D /* NSCalendarDate+ISO8601Parsing.m in Sources */,
-				9E24860D0A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m in Sources */,
-				07B87B7E0A3A7A3B00A38283 /* AISetAdditions.m in Sources */,
 				07B87B800A3A7A3B00A38283 /* AIShadowAdditions.m in Sources */,
+				07B87B7E0A3A7A3B00A38283 /* AISetAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

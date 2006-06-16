@@ -507,12 +507,10 @@ struct message
 		
 		//Ensure that messages are delivered in the order sent, so if we have queued messages, queue this new mesage, too
 		if (queuedPortMessageTimer) {
-			@synchronized(self) {
-				if (!queuedPortMessageArray) {
-					queuedPortMessageArray = [[NSMutableArray alloc] init];
-				}
-				[queuedPortMessageArray addObject:thePortMessage];
+			if (!queuedPortMessageArray) {
+				queuedPortMessageArray = [[NSMutableArray alloc] init];
 			}
+			[queuedPortMessageArray addObject:thePortMessage];
 
 		} else {
 			NSDate	* sendBeforeDate = (messageRetryTimeout ? 
@@ -520,19 +518,18 @@ struct message
 										[NSDate distantFuture]);
 			if ( ![thePortMessage sendBeforeDate:sendBeforeDate] ) {
 				//If the message can't be sent before the timeout, add it to a queue array and ensure a timer is firing to send it later
-				@synchronized(self) {
-					if (!queuedPortMessageArray) {
-						queuedPortMessageArray = [[NSMutableArray alloc] init];
-					}
-					[queuedPortMessageArray addObject:thePortMessage];
+				if (!queuedPortMessageArray) {
+					queuedPortMessageArray = [[NSMutableArray alloc] init];
+				}
 				
-					if (!queuedPortMessageTimer) {
-						queuedPortMessageTimer = [[NSTimer scheduledTimerWithTimeInterval:messageRetry
-																				   target:self 
-																				 selector:@selector(sendQueuedDataTimer:) 
-																				 userInfo:nil 
-																				  repeats:YES] retain];
-					}
+				[queuedPortMessageArray addObject:thePortMessage];
+				
+				if (!queuedPortMessageTimer) {
+					queuedPortMessageTimer = [[NSTimer scheduledTimerWithTimeInterval:messageRetry
+																			   target:self 
+																			 selector:@selector(sendQueuedDataTimer:) 
+																			 userInfo:nil 
+																			  repeats:YES] retain];
 				}
 			}
 		}
@@ -550,38 +547,18 @@ struct message
 {
 	//If we are inside a message invocation, do nothing; we'll be given another shot when the timer fires again
 	if (!insideMessageInvocation) {
-		BOOL haveQueuedMessages;
-		@synchronized(self) {
-			 haveQueuedMessages = ([queuedPortMessageArray count] > 0);
-		}
-			
-		if (haveQueuedMessages) {
-			NSPortMessage	*thePortMessage;
-			
-			@synchronized(self) {
-				//Keep it around for us
-				thePortMessage = [[queuedPortMessageArray objectAtIndex:0] retain];
-				//And remove it from our queue array so the next dequeue will get a new NSPortMessage
+		if ([queuedPortMessageArray count]) {
+			NSPortMessage	* thePortMessage = [queuedPortMessageArray objectAtIndex:0];
+			NSDate			* sendBeforeDate = (messageRetryTimeout ? 
+												[NSDate dateWithTimeIntervalSinceNow:messageRetryTimeout] :
+												[NSDate distantFuture]);
+
+			if ( [thePortMessage sendBeforeDate:sendBeforeDate] ) {
 				[queuedPortMessageArray removeObjectAtIndex:0];
 			}
-			NSDate			*sendBeforeDate = (messageRetryTimeout ? 
-											   [NSDate dateWithTimeIntervalSinceNow:messageRetryTimeout] :
-											   [NSDate distantFuture]);
-			
-			if (![thePortMessage sendBeforeDate:sendBeforeDate]) {
-				@synchronized(self) {
-					[queuedPortMessageArray insertObject:thePortMessage
-												 atIndex:0];
-				}
-			}
-
-			[thePortMessage release];
-			
 		} else {
-			@synchronized(self) {
-				[queuedPortMessageArray release]; queuedPortMessageArray = nil;
-				[queuedPortMessageTimer invalidate]; [queuedPortMessageTimer release]; queuedPortMessageTimer = nil;
-			}
+			[queuedPortMessageArray release]; queuedPortMessageArray = nil;
+			[queuedPortMessageTimer invalidate]; [queuedPortMessageTimer release]; queuedPortMessageTimer = nil;
 		}
 	}
 }
