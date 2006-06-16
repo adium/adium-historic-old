@@ -7,7 +7,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "AIContentTyping.h"
-//for PRIVACY_OPTION
+//for AIPrivacyOption
 #import "AIAccount.h"
 
 @class RAFjoscarAccount, DefaultAppSession, AimConnection, JoscarBridge, NSJavaVirtualMachine;
@@ -69,7 +69,7 @@
 - (void)setAccountUserIconData:(NSData *)data;
 
 - (NSArray *)getBlockedBuddies;
-- (PRIVACY_OPTION)privacyMode;
+- (AIPrivacyOption)privacyMode;
 - (NSArray *)getAllowedBuddies;
 - (NSObject <Set> *)getEffectiveBlockedBuddies;
 - (NSObject <Set> *)getEffectiveAllowedBuddies;
@@ -77,7 +77,7 @@
 - (void)addToAllowedList:(NSString *)sn;
 - (void)removeFromBlockList:(NSString *)sn;
 - (void)removeFromAllowedList:(NSString *)sn;
-- (void)setPrivacyMode:(PRIVACY_OPTION)mode;
+- (void)setPrivacyMode:(AIPrivacyOption)mode;
 
 - (AIChat *)handleChatInvitation:(id<ChatInvitation>)invite withDecision:(BOOL)decision;
 - (void)leaveGroupChatWithName:(NSString *)name;

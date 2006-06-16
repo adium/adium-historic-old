@@ -967,28 +967,28 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 /* AIAccount_Privacy */
 /*********************/
 #pragma mark Privacy
-- (BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type
+- (BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(AIPrivacyType)type
 {
-    if (type == PRIVACY_PERMIT)
+    if (type == AIPrivacyTypePermit)
         return (gaim_privacy_permit_add(account,[[inObject UID] UTF8String],FALSE));
     else
         return (gaim_privacy_deny_add(account,[[inObject UID] UTF8String],FALSE));
 }
 
-- (BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type
+- (BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(AIPrivacyType)type
 {
-    if (type == PRIVACY_PERMIT)
+    if (type == AIPrivacyTypePermit)
         return (gaim_privacy_permit_remove(account,[[inObject UID] UTF8String],FALSE));
     else
         return (gaim_privacy_deny_remove(account,[[inObject UID] UTF8String],FALSE));
 }
 
-- (NSArray *)listObjectsOnPrivacyList:(PRIVACY_TYPE)type
+- (NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type
 {
-	return (type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray);
+	return (type == AIPrivacyTypePermit ? permittedContactsArray : deniedContactsArray);
 }
 
-- (NSArray *)listObjectIDsOnPrivacyList:(PRIVACY_TYPE)type
+- (NSArray *)listObjectIDsOnPrivacyList:(AIPrivacyType)type
 {
 	NSArray *listObjectArray = [self listObjectsOnPrivacyList:type];
 	NSMutableArray *idArray =  [[NSMutableArray alloc] initWithCapacity:[listObjectArray count]];
@@ -1004,36 +1004,36 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)privacyPermitListAdded:(NSString *)sourceUID
 {
-	[self accountPrivacyList:PRIVACY_PERMIT added:sourceUID];
+	[self accountPrivacyList:AIPrivacyTypePermit added:sourceUID];
 }
 
 - (void)privacyDenyListAdded:(NSString *)sourceUID
 {
-	[self accountPrivacyList:PRIVACY_DENY added:sourceUID];
+	[self accountPrivacyList:AIPrivacyTypeDeny added:sourceUID];
 }
 
-- (void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID
+- (void)accountPrivacyList:(AIPrivacyType)type added:(NSString *)sourceUID
 {
 	//Can't really trust sourceUID to not be @"" or something silly like that
 	if ([sourceUID length]) {
 		//Get our contact
 		AIListContact   *contact = [self contactWithUID:sourceUID];
 		
-		[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) addObject:contact];
+		[(type == AIPrivacyTypePermit ? permittedContactsArray : deniedContactsArray) addObject:contact];
 	}
 }
 
 - (void)privacyPermitListRemoved:(NSString *)sourceUID
 {
-	[self accountPrivacyList:PRIVACY_PERMIT removed:sourceUID];
+	[self accountPrivacyList:AIPrivacyTypePermit removed:sourceUID];
 }
 
 - (void)privacyDenyListRemoved:(NSString *)sourceUID
 {
-	[self accountPrivacyList:PRIVACY_DENY removed:sourceUID];
+	[self accountPrivacyList:AIPrivacyTypeDeny removed:sourceUID];
 }
 
-- (void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID
+- (void)accountPrivacyList:(AIPrivacyType)type removed:(NSString *)sourceUID
 {
 	//Can't really trust sourceUID to not be @"" or something silly like that
 	if ([sourceUID length]) {
@@ -1047,31 +1047,31 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 																					 UID:sourceUID];
 		
 		if (contact) {
-			[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) removeObject:contact];
+			[(type == AIPrivacyTypePermit ? permittedContactsArray : deniedContactsArray) removeObject:contact];
 		}
 	}
 }
 
-- (void)setPrivacyOptions:(PRIVACY_OPTION)option
+- (void)setPrivacyOptions:(AIPrivacyOption)option
 {
 	if (account && gaim_account_get_connection(account)) {
 		GaimPrivacyType privacyType;
 
 		switch (option) {
-			case PRIVACY_ALLOW_ALL:
+			case AIPrivacyOptionAllowAll:
 			default:
 				privacyType = GAIM_PRIVACY_ALLOW_ALL;
 				break;
-			case PRIVACY_DENY_ALL:
+			case AIPrivacyOptionDenyAll:
 				privacyType = GAIM_PRIVACY_DENY_ALL;
 				break;
-			case PRIVACY_ALLOW_USERS:
+			case AIPrivacyOptionAllowUsers:
 				privacyType = GAIM_PRIVACY_ALLOW_USERS;
 				break;
-			case PRIVACY_DENY_USERS:
+			case AIPrivacyOptionDenyUsers:
 				privacyType = GAIM_PRIVACY_DENY_USERS;
 				break;
-			case PRIVACY_ALLOW_CONTACTLIST:
+			case AIPrivacyOptionAllowContactList:
 				privacyType = GAIM_PRIVACY_ALLOW_BUDDYLIST;
 				break;
 			
@@ -1083,9 +1083,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-- (PRIVACY_OPTION)privacyOptions
+- (AIPrivacyOption)privacyOptions
 {
-	PRIVACY_OPTION privacyOption = -1;
+	AIPrivacyOption privacyOption = -1;
 	
 	if (account) {
 		GaimPrivacyType privacyType = account->perm_deny;
@@ -1093,19 +1093,19 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		switch (privacyType) {
 			case GAIM_PRIVACY_ALLOW_ALL:
 			default:
-				privacyOption = PRIVACY_ALLOW_ALL;
+				privacyOption = AIPrivacyOptionAllowAll;
 				break;
 			case GAIM_PRIVACY_DENY_ALL:
-				privacyOption = PRIVACY_DENY_ALL;
+				privacyOption = AIPrivacyOptionDenyAll;
 				break;
 			case GAIM_PRIVACY_ALLOW_USERS:
-				privacyOption = PRIVACY_ALLOW_USERS;
+				privacyOption = AIPrivacyOptionAllowUsers;
 				break;
 			case GAIM_PRIVACY_DENY_USERS:
-				privacyOption = PRIVACY_DENY_USERS;
+				privacyOption = AIPrivacyOptionDenyUsers;
 				break;
 			case GAIM_PRIVACY_ALLOW_BUDDYLIST:
-				privacyOption = PRIVACY_ALLOW_CONTACTLIST;
+				privacyOption = AIPrivacyOptionAllowContactList;
 				break;
 		}
 	}
