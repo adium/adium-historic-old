@@ -1779,6 +1779,52 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		349F83950A4375BF007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = AIUtilities.framework_Prefix.pch;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = Resources/AIUtilities_Framework.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				LIBRARY_STYLE = DYNAMIC;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0x12000000,
+				);
+				PRODUCT_NAME = AIUtilities;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wno-long-double",
+				);
+				WRAPPER_EXTENSION = framework;
+				ZERO_LINK = YES;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83960A4375BF007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				SYMROOT = ../../build;
+			};
+			name = "Development-libgaim_oscar";
+		};
 		34BAFA1109425E6800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1985,6 +2031,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DA8A805908553B3800F24BB3 /* Development */,
+				349F83950A4375BF007EA1B1 /* Development-libgaim_oscar */,
 				DA8A805A08553B3800F24BB3 /* Deployment */,
 				34C572C5093E552E00829508 /* Deployment-Debug */,
 				34BAFA1109425E6800689991 /* Deployment-Debug_PPC-Only */,
@@ -1996,6 +2043,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DA8A805D08553B3800F24BB3 /* Development */,
+				349F83960A4375BF007EA1B1 /* Development-libgaim_oscar */,
 				DA8A805E08553B3800F24BB3 /* Deployment */,
 				34C572C6093E552E00829508 /* Deployment-Debug */,
 				34BAFA1209425E6800689991 /* Deployment-Debug_PPC-Only */,

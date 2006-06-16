@@ -2825,7 +2825,7 @@
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -10600,6 +10600,492 @@
 			};
 			name = "Deployment-Debug";
 		};
+		349F83370A437476007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Setup Build Directory";
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83380A437476007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "External Frameworks";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83390A437476007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = Plists/Adium_Framework.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0x10000000,
+				);
+				PRODUCT_NAME = Adium;
+				SKIP_INSTALL = YES;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wno-long-double",
+				);
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F833A0A437476007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
+				PRODUCT_NAME = "Adium Crash Reporter";
+				WARNING_CFLAGS = "-Wall";
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F833B0A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Gaim\\ Service/Libgaim.framework/Headers";
+				INFOPLIST_FILE = Plists/AdiumLibgaim.plist;
+				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PRODUCT_NAME = AdiumLibgaim;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wno-long-double",
+				);
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F833C0A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(FRAMEWORK_SEARCH_PATHS)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Gaim\\ Service/Libgaim.framework/Headers";
+				INFOPLIST_FILE = Plists/Gaim_Service.plist;
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PRODUCT_NAME = Gaim;
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F833D0A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
+				INFOPLIST_FILE = Plists/Bonjour.plist;
+				PRODUCT_NAME = Bonjour;
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F833E0A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "WebKit Message View";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F833F0A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_MISSING_PARENTHESES = NO;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = (
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				PRODUCT_NAME = "Latex Plugin";
+				WARNING_CFLAGS = "-Wall";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83400A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PRODUCT_NAME = AdiumApplescriptRunner;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83410A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_WARN_MISSING_PARENTHESES = NO;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "Plists/joscar-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_STYLE = BUNDLE;
+				OTHER_CFLAGS = (
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
+				PRODUCT_NAME = joscar;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83420A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Plist Macros";
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83430A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
+				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
+				INFOPLIST_FILE = Plists/Adium_2.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
+				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
+				INFOPLIST_PREPROCESS = YES;
+				PRODUCT_NAME = Adium;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83440A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = SystemVersionCheck;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83450A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Adium with SystemVersionCheck";
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83460A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"Frameworks/AIUtilities Framework/build\"";
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_MISSING_PARENTHESES = NO;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = Plists/Adium_1_6_Pref_Importer.plist;
+				OTHER_CFLAGS = (
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
+				PRODUCT_NAME = "Adium 1.6 Pref Importer";
+				WARNING_CFLAGS = "-Wall";
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83470A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_MISSING_PARENTHESES = NO;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/pgsql/include;
+				INFOPLIST_FILE = Plists/SQL_Logger.plist;
+				INSTALL_PATH = /Adium.app/Contents/Plugins/;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/pgsql/lib,
+					/sw/lib,
+					/opt/local/lib,
+				);
+				OTHER_CFLAGS = (
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				OTHER_LDFLAGS = (
+					"-lpq",
+					"-lssl",
+					"-lcrypto",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "SQL Logger";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83480A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_MISSING_PARENTHESES = NO;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = Plists/Stress_Test.plist;
+				OTHER_CFLAGS = (
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				PRODUCT_NAME = "Stress Test";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83490A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service/Libgaim.framework/Headers";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gobject";
+				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(LIBRARY_SEARCH_PATHS)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
+				PRODUCT_NAME = "IRC Service";
+				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F834A0A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_MISSING_PARENTHESES = NO;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = Plists/Translator.plist;
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = (
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PRODUCT_NAME = Translator;
+				WARNING_CFLAGS = "-Wall";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F834B0A437477007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DDEBUG_BUILD",
+					"-fconstant-cfstrings",
+					"-fms-extensions",
+				);
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
+				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_STYLE = "non-global";
+				WARNING_CFLAGS = "-Wall";
+				ZERO_LINK = YES;
+			};
+			name = "Development-libgaim_oscar";
+		};
 		34B323BC09B9FEAC00029361 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -11891,6 +12377,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				11B1A56B09CE42300087442E /* Development */,
+				349F83410A437477007EA1B1 /* Development-libgaim_oscar */,
 				11B1A56C09CE42300087442E /* Deployment */,
 				11B1A56D09CE42300087442E /* Deployment-Debug */,
 				11B1A56E09CE42300087442E /* Deployment-Debug_PPC-Only */,
@@ -11902,6 +12389,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3417D25D09C332B900FC413E /* Development */,
+				349F834A0A437477007EA1B1 /* Development-libgaim_oscar */,
 				3417D25E09C332B900FC413E /* Deployment */,
 				3417D25F09C332B900FC413E /* Deployment-Debug */,
 				3417D26009C332B900FC413E /* Deployment-Debug_PPC-Only */,
@@ -11913,6 +12401,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				347A211809786B6300A30431 /* Development */,
+				349F83440A437477007EA1B1 /* Development-libgaim_oscar */,
 				347A211909786B6300A30431 /* Deployment */,
 				347A211A09786B6300A30431 /* Deployment-Debug */,
 				347A211B09786B6300A30431 /* Deployment-Debug_PPC-Only */,
@@ -11924,6 +12413,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				347A21BB09786C7300A30431 /* Development */,
+				349F83450A437477007EA1B1 /* Development-libgaim_oscar */,
 				347A21BC09786C7300A30431 /* Deployment */,
 				347A21BD09786C7300A30431 /* Deployment-Debug */,
 				347A21BE09786C7300A30431 /* Deployment-Debug_PPC-Only */,
@@ -11935,6 +12425,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3485D68309EB416500232CC4 /* Development */,
+				349F833B0A437477007EA1B1 /* Development-libgaim_oscar */,
 				3485D68409EB416500232CC4 /* Deployment */,
 				3485D68509EB416500232CC4 /* Deployment-Debug */,
 				3485D68609EB416500232CC4 /* Deployment-Debug_PPC-Only */,
@@ -11946,6 +12437,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				349C2F230867ACA9000BF883 /* Development */,
+				349F83400A437477007EA1B1 /* Development-libgaim_oscar */,
 				349C2F240867ACA9000BF883 /* Deployment */,
 				349C2F250867ACA9000BF883 /* Deployment-Debug */,
 				34BAF98B0942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -11957,6 +12449,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				34B323BC09B9FEAC00029361 /* Development */,
+				349F83490A437477007EA1B1 /* Development-libgaim_oscar */,
 				34B323BD09B9FEAC00029361 /* Deployment */,
 				34B323BE09B9FEAC00029361 /* Deployment-Debug */,
 				34B323BF09B9FEAC00029361 /* Deployment-Debug_PPC-Only */,
@@ -11968,6 +12461,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DACF3EDF085574F6006BFB18 /* Development */,
+				349F83380A437476007EA1B1 /* Development-libgaim_oscar */,
 				DACF3EE0085574F6006BFB18 /* Deployment */,
 				DACF3EE1085574F6006BFB18 /* Deployment-Debug */,
 				34BAF9840942598700689991 /* Deployment-Debug_PPC-Only */,
@@ -11979,6 +12473,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E00085507450062B664 /* Development */,
+				349F83390A437476007EA1B1 /* Development-libgaim_oscar */,
 				DADE8E01085507450062B664 /* Deployment */,
 				DADE8E02085507450062B664 /* Deployment-Debug */,
 				34BAF9850942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -11990,6 +12485,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E05085507450062B664 /* Development */,
+				349F833A0A437476007EA1B1 /* Development-libgaim_oscar */,
 				DADE8E06085507450062B664 /* Deployment */,
 				DADE8E07085507450062B664 /* Deployment-Debug */,
 				34BAF9860942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12001,6 +12497,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E0A085507450062B664 /* Development */,
+				349F833C0A437477007EA1B1 /* Development-libgaim_oscar */,
 				DADE8E0B085507450062B664 /* Deployment */,
 				DADE8E0C085507450062B664 /* Deployment-Debug */,
 				34BAF9870942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12012,6 +12509,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E0F085507450062B664 /* Development */,
+				349F833D0A437477007EA1B1 /* Development-libgaim_oscar */,
 				DADE8E10085507450062B664 /* Deployment */,
 				DADE8E11085507450062B664 /* Deployment-Debug */,
 				34BAF9880942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12023,6 +12521,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E14085507450062B664 /* Development */,
+				349F833E0A437477007EA1B1 /* Development-libgaim_oscar */,
 				DADE8E15085507450062B664 /* Deployment */,
 				DADE8E16085507450062B664 /* Deployment-Debug */,
 				34BAF9890942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12034,6 +12533,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E1E085507450062B664 /* Development */,
+				349F833F0A437477007EA1B1 /* Development-libgaim_oscar */,
 				DADE8E1F085507450062B664 /* Deployment */,
 				DADE8E20085507450062B664 /* Deployment-Debug */,
 				34BAF98A0942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12045,6 +12545,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E23085507450062B664 /* Development */,
+				349F83430A437477007EA1B1 /* Development-libgaim_oscar */,
 				DADE8E24085507450062B664 /* Deployment */,
 				DADE8E25085507450062B664 /* Deployment-Debug */,
 				34BAF98C0942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12056,6 +12557,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E28085507450062B664 /* Development */,
+				349F83460A437477007EA1B1 /* Development-libgaim_oscar */,
 				DADE8E29085507450062B664 /* Deployment */,
 				DADE8E2A085507450062B664 /* Deployment-Debug */,
 				34BAF98D0942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12067,6 +12569,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E2D085507450062B664 /* Development */,
+				349F83470A437477007EA1B1 /* Development-libgaim_oscar */,
 				DADE8E2E085507450062B664 /* Deployment */,
 				DADE8E2F085507450062B664 /* Deployment-Debug */,
 				34BAF98E0942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12078,6 +12581,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E32085507450062B664 /* Development */,
+				349F83480A437477007EA1B1 /* Development-libgaim_oscar */,
 				DADE8E33085507450062B664 /* Deployment */,
 				DADE8E34085507450062B664 /* Deployment-Debug */,
 				34BAF98F0942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12089,6 +12593,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E3B085507450062B664 /* Development */,
+				349F834B0A437477007EA1B1 /* Development-libgaim_oscar */,
 				DADE8E3C085507450062B664 /* Deployment */,
 				DADE8E3D085507450062B664 /* Deployment-Debug */,
 				34BAF9900942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12100,6 +12605,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F53C25B00A2F95F600F7B73D /* Development */,
+				349F83370A437476007EA1B1 /* Development-libgaim_oscar */,
 				F53C25B10A2F95F600F7B73D /* Deployment */,
 				F53C25B20A2F95F600F7B73D /* Deployment-Debug */,
 				F53C25B30A2F95F600F7B73D /* Deployment-Debug_PPC-Only */,
@@ -12111,6 +12617,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F5B17CD80A16C6BA004AE99E /* Development */,
+				349F83420A437477007EA1B1 /* Development-libgaim_oscar */,
 				F5B17CD90A16C6BA004AE99E /* Deployment */,
 				F5B17CDA0A16C6BA004AE99E /* Deployment-Debug */,
 				F5B17CDB0A16C6BA004AE99E /* Deployment-Debug_PPC-Only */,
