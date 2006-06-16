@@ -348,6 +348,35 @@
 			};
 			name = Deployment;
 		};
+		EE785F1B0A2700EC001FCAB0 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /Library/Spotlight;
+				LIBRARY_STYLE = Bundle;
+				PRODUCT_NAME = AdiumSpotlightImporter;
+				WRAPPER_EXTENSION = mdimporter;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		EE785F1C0A2700EC001FCAB0 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -357,10 +386,11 @@
 				70138C850896BE9A00968C2F /* Development-0link */,
 				70138C860896BE9A00968C2F /* Deployment */,
 				34611CEE09B67B4500870036 /* Deployment-Debug */,
+				EE785F1B0A2700EC001FCAB0 /* Deployment-Debug_PPC-Only */,
 				11BD7C1A09BBCD01006B26FD /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Deployment;
+			defaultConfigurationName = Development;
 		};
 		70138C880896BE9A00968C2F /* Build configuration list for PBXProject "AdiumSpotlightImporter" */ = {
 			isa = XCConfigurationList;
@@ -368,10 +398,11 @@
 				70138C890896BE9A00968C2F /* Development-0link */,
 				70138C8A0896BE9A00968C2F /* Deployment */,
 				34611CEF09B67B4500870036 /* Deployment-Debug */,
+				EE785F1C0A2700EC001FCAB0 /* Deployment-Debug_PPC-Only */,
 				11BD7C1B09BBCD01006B26FD /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Deployment;
+			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
 	};

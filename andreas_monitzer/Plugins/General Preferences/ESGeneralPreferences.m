@@ -21,15 +21,13 @@
 #import "ESGeneralPreferencesPlugin.h"
 #import "PTHotKeyCenter.h"
 #import "PTHotKey.h"
-#import "ShortcutRecorderCell.h"
+#import "SRRecorderControl.h"
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
-
-#import "ShortcutRecorder.h"
 #import "PTHotKey.h"
 
 @interface ESGeneralPreferences (PRIVATE)
@@ -173,12 +171,12 @@
 	return [menu autorelease];		
 }
 
-- (BOOL)shortcutRecorder:(ShortcutRecorder *)aRecorder isKeyCode:(signed short)keyCode andFlagsTaken:(unsigned int)flags reason:(NSString **)aReason
+- (BOOL)shortcutRecorder:(SRRecorderControl *)aRecorder isKeyCode:(signed short)keyCode andFlagsTaken:(unsigned int)flags reason:(NSString **)aReason
 {
 	return NO;
 }
 
-- (void)shortcutRecorder:(ShortcutRecorder *)aRecorder keyComboDidChange:(KeyCombo)newKeyCombo
+- (void)shortcutRecorder:(SRRecorderControl *)aRecorder keyComboDidChange:(KeyCombo)newKeyCombo
 {
 	if (aRecorder == shortcutRecorder) {
 		PTKeyCombo *keyCombo = [PTKeyCombo keyComboWithKeyCode:[shortcutRecorder keyCombo].code

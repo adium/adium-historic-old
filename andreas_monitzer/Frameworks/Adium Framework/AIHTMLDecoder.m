@@ -67,7 +67,7 @@ static NSString			*horizontalRule = nil;
 		_defaultTextDecodingAttributes = [[AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12] retain];
 	}
 
-	//Set up the horizontal rule which will be search for when encoding and inserted when decoding
+	//Set up the horizontal rule which will be searched-for when encoding and inserted when decoding
 	if (!horizontalRule) {
 #define HORIZONTAL_BAR			0x2013
 #define HORIZONTAL_RULE_LENGTH	12
@@ -112,7 +112,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		
 		thingsToInclude.allowAIMsubprofileLinks			= NO;
 	}
-
+	
 	return self;
 }
 
@@ -208,7 +208,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	//Setup the destination HTML string
 	NSMutableString *string = [NSMutableString string];
 	if (thingsToInclude.headers) {
-			[string appendString:@"<HTML>"];
+		[string appendString:@"<HTML>"];
 	}
 
 	//If the text is right-to-left, enclose all our HTML in an rtl DIV tag
@@ -311,7 +311,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			}
 
 			//Size
-			if (thingsToInclude.fontTags && !thingsToInclude.simpleTagsOnly) {
+			if (!thingsToInclude.simpleTagsOnly) {
 				[string appendString:[NSString stringWithFormat:@" ABSZ=\"%i\" SIZE=\"%i\"", (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
 				currentSize = pointSize;
 			}
@@ -371,13 +371,13 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				currentBold = YES;
 			}
         
-        if (currentStrikethrough && !hasStrikethrough) {
-           [string appendString:@"</S>"];
-           currentStrikethrough = NO;
-        } else if (!currentStrikethrough && hasStrikethrough) {
-           [string appendString:@"<S>"];
-           currentStrikethrough = YES;
-        }
+			if (currentStrikethrough && !hasStrikethrough) {
+				[string appendString:@"</S>"];
+				currentStrikethrough = NO;
+			} else if (!currentStrikethrough && hasStrikethrough) {
+				[string appendString:@"<S>"];
+				currentStrikethrough = YES;
+			}
 		}
 
 		//Link
@@ -599,10 +599,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	//Finish off the HTML
 	if (thingsToInclude.styleTags) {
-		if (currentItalic) [string appendString:@"</I>"];
-		if (currentBold) [string appendString:@"</B>"];
-		if (currentUnderline) [string appendString:@"</U>"];
-      if (currentStrikethrough) [string appendString:@"</S>"];
+		if (currentItalic)        [string appendString:@"</I>"];
+		if (currentBold)          [string appendString:@"</B>"];
+		if (currentUnderline)     [string appendString:@"</U>"];
+		if (currentStrikethrough) [string appendString:@"</S>"];
 	}
 	
 	//If we had a link on the last pass, close the link tag
@@ -611,13 +611,23 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		[string appendString:@"</a>"];
 		oldLink = nil;
 	}
-	
-	if (thingsToInclude.fontTags && thingsToInclude.closingFontTags && openFontTag) [string appendString:@"</FONT>"]; //Close any open font tag
+
+	if (thingsToInclude.fontTags && thingsToInclude.closingFontTags && openFontTag) {
+		//Close any open font tag
+		[string appendString:@"</FONT>"];
+	}
 	if (rightToLeft) {
+		//Close any open div
 		[string appendString:@"</DIV>"];
 	}
-	if (thingsToInclude.headers && pageColor) [string appendString:@"</BODY>"]; //Close the body tag
-	if (thingsToInclude.headers) [string appendString:@"</HTML>"]; //Close the HTML
+	if (thingsToInclude.headers && pageColor) {
+		//Close the body tag
+		[string appendString:@"</BODY>"];
+	}
+	if (thingsToInclude.headers) {
+		//Close the HTML
+		[string appendString:@"</HTML>"];
+	}
 	
 	//KBOTC's odd hackish body background thingy for WMV since no one else will add it
 	if (thingsToInclude.bodyBackground &&
@@ -973,6 +983,7 @@ addElementContentToTopElement_label:;
 		 * All characters before the next HTML entity are textual characters in the current textAttributes. We append
 		 * those characters to our final attributed string with the desired attributes before continuing.
 		 */
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		if ([scanner scanUpToCharactersFromSet:tagCharStart intoString:&chunkString]) {
 			id	languageValue = [textAttributes languageValue];
 			
@@ -1270,6 +1281,7 @@ addElementContentToTopElement_label:;
 				}
 			}
 		}
+		[pool release];
 	}
 	
 	/* If the string has a constant NSBackgroundColorAttributeName attribute and no AIBodyColorAttributeName,
@@ -1316,7 +1328,7 @@ addElementContentToTopElement_label:;
 				unsigned absSize = [[inArgs objectForKey:arg] intValue];
 				static int pointSizes[] = { 9, 10, 12, 14, 18, 24, 48, 72 };
 				int size = (absSize <= 8 ? pointSizes[absSize-1] : 12);
-
+				
 				[textAttributes setFontSize:size];
 			}
 

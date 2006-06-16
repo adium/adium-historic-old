@@ -65,7 +65,6 @@
 - (BOOL)shouldSlideWindowOnScreen_mousePositionStrategy;
 - (BOOL)shouldSlideWindowOnScreen_adiumActiveStrategy;
 - (BOOL)shouldSlideWindowOffScreen_adiumActiveStrategy;
-- (void)setPermitSlidingInForeground:(BOOL)flag;
 - (void)setSavedFrame:(NSRect)f;
 - (void)restoreSavedFrame;
 
@@ -164,16 +163,6 @@
 	//Preference code below assumes layout is done before theme.
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
-    
-    //Decide whether the contact list needs to hide when the app is about to deactivate
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(updateWindowHidesOnDeactivateWithNotification:) 
-												 name:NSApplicationWillResignActiveNotification 
-											   object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(updateWindowHidesOnDeactivateWithNotification:) 
-												 name:NSApplicationWillBecomeActiveNotification 
-											   object:nil];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(applicationDidUnhide:) 
@@ -218,6 +207,8 @@
 					preferenceDict:(NSDictionary *)prefDict 
 						 firstTime:(BOOL)firstTime
 {
+	BOOL shouldRevealWindowAndDelaySliding = NO;
+
     if ([group isEqualToString:PREF_GROUP_CONTACT_LIST]) {
 		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_CL_WINDOW_LEVEL] intValue];
 		int				level = NSNormalWindowLevel;
@@ -233,13 +224,16 @@
 
 		listHasShadow = [[prefDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue];
 		[[self window] setHasShadow:listHasShadow];
-		windowShouldBeVisibleInBackground = ![[prefDict objectForKey:KEY_CL_HIDE] boolValue];
-		permitSlidingInForeground = [[prefDict objectForKey:KEY_CL_EDGE_SLIDE] boolValue];
+		
+		windowHidingStyle = [[prefDict objectForKey:KEY_CL_WINDOW_HIDING_STYLE] intValue];
+		slideOnlyInBackground = [[prefDict objectForKey:KEY_CL_SLIDE_ONLY_IN_BACKGROUND] boolValue];
 		
 		//Do a slide immediately if needed (to display as per our new preferneces)
 		[self slideWindowIfNeeded:nil];
 
-		if (permitSlidingInForeground) {
+		[[self window] setHidesOnDeactivate:(windowHidingStyle == AIContactListWindowHidingStyleBackground)];
+
+		if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
 			if (!slideWindowIfNeededTimer) {
 				slideWindowIfNeededTimer = [[NSTimer scheduledTimerWithTimeInterval:DOCK_HIDING_MOUSE_POLL_INTERVAL
 																			 target:self
@@ -339,12 +333,20 @@
 		[contactListController setForcedWindowWidth:forcedWindowWidth];
 		[contactListController setMaxWindowWidth:maxWindowWidth];
 		[contactListController contactListDesiredSizeChanged];
+		
+		if (!firstTime) {
+			shouldRevealWindowAndDelaySliding = YES;
+		}
 	}
 
 	//Window opacity
 	if ([group isEqualToString:PREF_GROUP_APPEARANCE]) {
 		float opacity = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY] floatValue];		
 		[contactListController setBackgroundOpacity:opacity];
+		
+		if (!firstTime) {
+			shouldRevealWindowAndDelaySliding = YES;
+		}
 	}
 	
 	//Layout and Theme ------------
@@ -371,9 +373,18 @@
 				[contactListView setBackgroundImage:nil];
 			}
 		}
-
+		
 		//Both layout and theme
 		[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
+		
+		if (!firstTime) {
+			shouldRevealWindowAndDelaySliding = YES;
+		}
+	}
+
+	if (shouldRevealWindowAndDelaySliding) {
+		[self delayWindowSlidingForInterval:2];
+		[self slideWindowOnScreenWithAnimation:NO];
 	}
 }
 
@@ -430,7 +441,7 @@
 //
 - (void)showWindowInFront:(BOOL)inFront
 {
-	//Always show for five seconds at least if we're told to show
+	//Always show for three seconds at least if we're told to show
 	[self delayWindowSlidingForInterval:3];
 
 	NSWindow	*window = [self window];
@@ -533,18 +544,6 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 }
 
-- (void)updateWindowHidesOnDeactivateWithNotification:(NSNotification *)notification
-{
-	NSWindow	*myWindow = [self window];
-	
-    if ([[notification name] isEqualToString:NSApplicationWillResignActiveNotification]) {
-        [myWindow setHidesOnDeactivate:[self windowShouldHideOnDeactivate]];
-
-    } else {
-        [myWindow setHidesOnDeactivate:NO];
-    }
-}
-
 /*
  * @brief Adium unhid
  *
@@ -557,20 +556,9 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 }
 
-/*
- * @brief Should the window hide immediately when Adium deactivates?
- *
- * This refers to the value of [[self window] hidesOnDeactivate].
- * Hide on deactivate if the window should not be visible in the background, the window is not slid off screen,
- * and the window is not in a position to be about to slide off screen
- *
- * @result NO if we're going to do dock-like sliding instead of orderOut:-type hiding.
- */
 - (BOOL)windowShouldHideOnDeactivate
 {
-	return (!windowShouldBeVisibleInBackground &&
-			([self windowSlidOffScreenEdgeMask] == AINoEdges) &&
-			([self slidableEdgesAdjacentToWindow] == AINoEdges));
+	return (windowHidingStyle == AIContactListWindowHidingStyleBackground);
 }
 
 - (void)slideWindowIfNeeded:(id)sender
@@ -593,13 +581,20 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	BOOL shouldSlide = NO;
 	
-	if ((permitSlidingInForeground && ![NSApp isHidden]) || (![NSApp isActive] && windowShouldBeVisibleInBackground)) {
-		shouldSlide = [self shouldSlideWindowOnScreen_mousePositionStrategy];
+	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
+		if (slideOnlyInBackground && [NSApp isActive]) {
+			//We only slide while in the background, and the app is not in the background. Slide on screen.
+			shouldSlide = YES;
 
-	} else if (!permitSlidingInForeground && [NSApp isActive] && ([self windowSlidOffScreenEdgeMask] != AINoEdges)) {
-		shouldSlide = YES;
+		} else if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
+			//Slide on screen if the mouse position indicates we should
+			shouldSlide = [self shouldSlideWindowOnScreen_mousePositionStrategy];
+		} else {
+			//It's slid off-screen... and it's not supposed to be sliding at all.  Slide back on screen!
+			shouldSlide = YES;
+		}
 	}
-	
+
 	return shouldSlide;
 }
 
@@ -607,13 +602,13 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	BOOL shouldSlide = NO;
 	
-	if (!preventHiding && ![self windowSlidOffScreenEdgeMask]) {
-		if (permitSlidingInForeground ||
-			(!windowShouldBeVisibleInBackground && ![NSApp isActive] && [[self window] isVisible])) {
-			shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
-		}
+	if ((windowHidingStyle == AIContactListWindowHidingStyleSliding) &&
+		!preventHiding &&
+		![self windowSlidOffScreenEdgeMask] &&
+		(!(slideOnlyInBackground && [NSApp isActive]))) {
+		shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
 	}
-	
+
 	return shouldSlide;
 }
 

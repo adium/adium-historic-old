@@ -117,6 +117,7 @@ typedef enum {
 	IBOutlet	NSMenuItem	*menuItem_cut;
 	IBOutlet	NSMenuItem	*menuItem_copy;
 	IBOutlet	NSMenuItem	*menuItem_paste;
+	IBOutlet	NSMenuItem	*menuItem_pasteWithImagesAndColors;
 	IBOutlet	NSMenuItem	*menuItem_pasteAndMatchStyle;
 	IBOutlet	NSMenuItem	*menuItem_clear;
 	IBOutlet	NSMenuItem	*menuItem_selectAll;

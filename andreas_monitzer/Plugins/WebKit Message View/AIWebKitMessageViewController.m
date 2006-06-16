@@ -28,6 +28,7 @@
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentContext.h>
@@ -46,7 +47,7 @@
 @class AIContentMessage, AIContentStatus, AIContentObject;
 
 @interface AIWebKitMessageViewController (PRIVATE)
-- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
+- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin preferencesChangedDelegate:(id)inPreferencesChangedDelegate;
 - (void)_initWebView;
 - (void)_primeWebViewAndReprocessContent:(BOOL)reprocessContent;
 - (void)_updateWebViewForCurrentPreferences;
@@ -68,18 +69,24 @@ static NSArray *draggedTypes = nil;
 
 @implementation AIWebKitMessageViewController
 
-+ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
++ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin preferencesChangedDelegate:(id)inPreferencesChangedDelegate
 {
-    return [[[self alloc] initForChat:inChat withPlugin:inPlugin] autorelease];
+    return [[[self alloc] initForChat:inChat withPlugin:inPlugin preferencesChangedDelegate:inPreferencesChangedDelegate] autorelease];	
 }
 
-- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
++ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
+{
+    return [[[self alloc] initForChat:inChat withPlugin:inPlugin preferencesChangedDelegate:nil] autorelease];
+}
+
+- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin preferencesChangedDelegate:(id)inPreferencesChangedDelegate
 {
     //init
     if ((self = [super init]))
 	{		
 		[self _initWebView];
 
+		preferencesChangedDelegate = [inPreferencesChangedDelegate retain];
 		chat = [inChat retain];
 		plugin = [inPlugin retain];
 		contentQueue = [[NSMutableArray alloc] init];
@@ -141,6 +148,7 @@ static NSArray *draggedTypes = nil;
  */
 - (void)dealloc
 {
+	[preferencesChangedDelegate release]; preferencesChangedDelegate = nil;
 	[plugin release]; plugin = nil;
 	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
 
@@ -314,6 +322,13 @@ static NSArray *draggedTypes = nil;
 		[self _updateWebViewForCurrentPreferences];
 	}
 	
+	if (preferencesChangedDelegate) {
+		[preferencesChangedDelegate preferencesChangedForGroup:group
+														   key:key
+														object:object
+												preferenceDict:prefDict
+													 firstTime:firstTime];
+	}
 }
 
 /*!
@@ -667,6 +682,39 @@ static NSArray *draggedTypes = nil;
     }
 }
 
+- (void)openImage:(id)sender
+{
+	NSURL	*imageURL = [sender representedObject];
+	[[NSWorkspace sharedWorkspace] openFile:[imageURL path]];
+}
+
+- (void)saveImageAs:(id)sender
+{
+	NSURL		*imageURL = [sender representedObject];
+	NSString	*path = [imageURL path];
+	
+	NSSavePanel *savePanel = [NSSavePanel savePanel];
+	[savePanel beginSheetForDirectory:nil
+								 file:[path lastPathComponent]
+					   modalForWindow:[webView window]
+						modalDelegate:self
+					   didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:)
+						  contextInfo:[imageURL retain]];
+}
+
+- (void)savePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo
+{
+	NSURL	*imageURL = (NSURL *)contextInfo;
+
+	if (returnCode ==  NSOKButton) {
+		[[NSFileManager defaultManager] copyPath:[imageURL path]
+										  toPath:[sheet filename]
+										 handler:NULL];
+	}
+	
+	[imageURL release];
+}
+
 /*!
  * @brief Append our own menu items to the webview's contextual menus
  */
@@ -693,6 +741,41 @@ static NSArray *draggedTypes = nil;
 				[webViewMenuItems removeObjectIdenticalTo:menuItem];
 			}			
 		}
+	}
+	
+	NSURL	*imageURL;
+	if ((imageURL = [element objectForKey:WebElementImageURLKey])) {
+		//This is an image
+		NSMenuItem *menuItem;
+		
+		if (!webViewMenuItems) {
+			webViewMenuItems = [NSMutableArray array];
+		}
+		
+		menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Open Image", nil)
+											  target:self
+											  action:@selector(openImage:)
+									   keyEquivalent:@""
+								   representedObject:imageURL];
+		[webViewMenuItems addObject:menuItem];
+		[menuItem release];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[AILocalizedString(@"Save Image As", nil) stringByAppendingEllipsis]
+											  target:self
+											  action:@selector(saveImageAs:)
+									   keyEquivalent:@""
+								   representedObject:imageURL];
+		[webViewMenuItems addObject:menuItem];
+		[menuItem release];		
+		
+		/*
+		NSString *imgClass = [img className];
+		//being very careful to only get user icons... a better way would be to put a class "usericon" on the img, but I haven't worked out how to do that, so we test for the name of the person in the src, and that it's not an emoticon or direct connect image.
+		if([[img getAttribute:@"src"] rangeOfString:internalObjectID].location != NSNotFound &&
+		   [imgClass rangeOfString:@"emoticon"].location == NSNotFound &&
+		   [imgClass rangeOfString:@"fullSizeImage"].location == NSNotFound &&
+		   [imgClass rangeOfString:@"scaledToFitImage"].location == NSNotFound)
+		 */
+			
 	}
 	
 	if (chatListObject) {
@@ -1038,7 +1121,7 @@ static NSArray *draggedTypes = nil;
 		AIEmoticon	*emoticon = [[inNotification userInfo] objectForKey:@"AIEmoticon"];
 		NSString	*textEquivalent = [[emoticon textEquivalents] objectAtIndex:0];
 		NSString	*path = [emoticon path];
-		
+		NSLog(@"Trying to update %@ (%@)",emoticon,textEquivalent);
 		for (int i = 0; i < imagesCount; i++) {
 			DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
 			
@@ -1082,7 +1165,6 @@ static NSArray *draggedTypes = nil;
 
 - (void)handleAction:(NSString *)action forFileTransfer:(NSString *)fileName
 {
-	NSLog(@"%@ : %@", action, fileName);
 	ESFileTransferRequestPromptController *tc = [fileTransferRequestControllers objectForKey:fileName];
 
 	if (tc) {

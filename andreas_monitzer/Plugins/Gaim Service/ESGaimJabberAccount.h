@@ -16,11 +16,13 @@
 
 #import "CBGaimAccount.h"
 
-#define KEY_JABBER_CONNECT_SERVER   @"Jabber:Connect Server"
-#define KEY_JABBER_RESOURCE			@"Jabber:Resource"
-#define KEY_JABBER_USE_TLS			@"Jabber:Use TLS"
-#define KEY_JABBER_FORCE_OLD_SSL	@"Jabber:Force Old SSL"
-#define KEY_JABBER_ALLOW_PLAINTEXT  @"Jabber:Allow Plaintext Authentication"
+#define KEY_JABBER_CONNECT_SERVER		@"Jabber:Connect Server"
+#define KEY_JABBER_PRIORITY_AVAILABLE	@"Jabber:Priority when Available"
+#define KEY_JABBER_PRIORITY_AWAY		@"Jabber:Priority when Away"
+#define KEY_JABBER_RESOURCE				@"Jabber:Resource"
+#define KEY_JABBER_USE_TLS				@"Jabber:Use TLS"
+#define KEY_JABBER_FORCE_OLD_SSL		@"Jabber:Force Old SSL"
+#define KEY_JABBER_ALLOW_PLAINTEXT		@"Jabber:Allow Plaintext Authentication"
 
 @interface ESGaimJabberAccount : CBGaimAccount <AIAccount_Files> {
 

@@ -48,7 +48,7 @@
 - (NSDate *)signonDate;
 - (void)setIsBlocked:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists;
 - (void)setIsAllowed:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists;
-- (void)setIsOnPrivacyList:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists privacyType:(PRIVACY_TYPE)privType;
+- (void)setIsOnPrivacyList:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists privacyType:(AIPrivacyType)privType;
 
 - (void)setIdle:(BOOL)isIdle sinceDate:(NSDate *)idleSinceDate notify:(NotifyTiming)notify;
 - (void)setServersideIconData:(NSData *)iconData notify:(NotifyTiming)notify;

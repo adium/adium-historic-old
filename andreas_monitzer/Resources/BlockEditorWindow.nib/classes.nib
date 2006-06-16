@@ -1,6 +1,11 @@
 {
     IBClasses = (
         {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {
             CLASS = AICompletingTextField; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AITextFieldWithDraggingDelegate; 
@@ -21,16 +26,15 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
         {CLASS = NSWindow; LANGUAGE = ObjC; SUPERCLASS = NSResponder; }, 
         {
             ACTIONS = {
-                blockFieldUID = id; 
                 cancelBlockSheet = id; 
-                configTextField = id; 
                 didBlockSheet = id; 
+                removeSelection = id; 
                 runBlockSheet = id; 
-                setAccount = id; 
-                setState = id; 
+                setPrivacyOption = id; 
             }; 
             CLASS = RAFBlockEditorWindowController; 
             LANGUAGE = ObjC; 
@@ -38,16 +42,16 @@
                 accountCaption = NSTextField; 
                 accountCol = NSTableColumn; 
                 accountText = NSTextField; 
-                accounts = NSPopUpButton; 
                 blockButton = NSButton; 
                 buddyCol = NSTableColumn; 
                 buddyText = NSTextField; 
                 cancelButton = NSButton; 
-                doneButton = NSButton; 
                 field = AICompletingTextField; 
-                mainAccounts = NSPopUpButton; 
+                "popUp_accounts" = NSPopUpButton; 
+                "popUp_sheetAccounts" = NSPopUpButton; 
                 sheet = NSWindow; 
                 stateChooser = NSPopUpButton; 
+                "tabView_contactList" = NSTabView; 
                 table = NSTableView; 
                 window = NSWindow; 
             }; 

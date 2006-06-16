@@ -45,7 +45,6 @@ typedef enum {
 
 - (NSBitmapImageRep *)bitmapRep;
 
-
 @end
 
 //Defined in AppKit.framework
