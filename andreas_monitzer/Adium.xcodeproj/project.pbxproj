@@ -1355,6 +1355,8 @@
 		81B4CDA80A4181C500A8ABF5 /* signal.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDA00A4181C500A8ABF5 /* signal.c */; };
 		81B4CDA90A4181C500A8ABF5 /* sys.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDA10A4181C500A8ABF5 /* sys.c */; };
 		81B4CDE50A41857D00A8ABF5 /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDE40A41857D00A8ABF5 /* alloc.c */; };
+		81B4CE630A42449600A8ABF5 /* SmackXMPPRosterPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CE610A42449600A8ABF5 /* SmackXMPPRosterPlugin.h */; };
+		81B4CE640A42449700A8ABF5 /* SmackXMPPRosterPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CE620A42449600A8ABF5 /* SmackXMPPRosterPlugin.m */; };
 		81F651740A291004008FC8E7 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		81F651750A291004008FC8E7 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		81F651760A291004008FC8E7 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
@@ -1864,6 +1866,7 @@
 				81B4CAA70A416F8300A8ABF5 /* ruli.h in CopyFiles */,
 				81B4CDA20A4181C500A8ABF5 /* oop-read.h in CopyFiles */,
 				81B4CDA30A4181C500A8ABF5 /* oop.h in CopyFiles */,
+				81B4CE630A42449600A8ABF5 /* SmackXMPPRosterPlugin.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3649,6 +3652,8 @@
 		81B4CDA00A4181C500A8ABF5 /* signal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = signal.c; path = "Plugins/Smack Service/oop/signal.c"; sourceTree = "<group>"; };
 		81B4CDA10A4181C500A8ABF5 /* sys.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sys.c; path = "Plugins/Smack Service/oop/sys.c"; sourceTree = "<group>"; };
 		81B4CDE40A41857D00A8ABF5 /* alloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = alloc.c; path = "Plugins/Smack Service/oop/alloc.c"; sourceTree = "<group>"; };
+		81B4CE610A42449600A8ABF5 /* SmackXMPPRosterPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPRosterPlugin.h; path = "Plugins/Smack Service/SmackXMPPRosterPlugin.h"; sourceTree = "<group>"; };
+		81B4CE620A42449600A8ABF5 /* SmackXMPPRosterPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPRosterPlugin.m; path = "Plugins/Smack Service/SmackXMPPRosterPlugin.m"; sourceTree = "<group>"; };
 		81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = SmackBridge.java; path = "Plugins/Smack Service/SmackBridge.java"; sourceTree = "<group>"; };
 		81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Smack.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		81F6519A0A291145008FC8E7 /* SmackServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackServicePlugin.h; path = "Plugins/Smack Service/SmackServicePlugin.h"; sourceTree = "<group>"; };
@@ -6475,6 +6480,15 @@
 			name = liboop;
 			sourceTree = "<group>";
 		};
+		81B4CE600A42443500A8ABF5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				81B4CE610A42449600A8ABF5 /* SmackXMPPRosterPlugin.h */,
+				81B4CE620A42449600A8ABF5 /* SmackXMPPRosterPlugin.m */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 		81E2C5FD0A416AB60070CE78 /* Java-part */ = {
 			isa = PBXGroup;
 			children = (
@@ -6506,6 +6520,7 @@
 				81F6554E0A293DD0008FC8E7 /* Smack-Info.plist */,
 				81F656BC0A2A587F008FC8E7 /* SmackXMPPAccountView.nib */,
 				81F658160A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h */,
+				81B4CE600A42443500A8ABF5 /* Extensions */,
 			);
 			name = Smack;
 			sourceTree = "<group>";
@@ -9466,6 +9481,7 @@
 				81B4CDA80A4181C500A8ABF5 /* signal.c in Sources */,
 				81B4CDA90A4181C500A8ABF5 /* sys.c in Sources */,
 				81B4CDE50A41857D00A8ABF5 /* alloc.c in Sources */,
+				81B4CE640A42449700A8ABF5 /* SmackXMPPRosterPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

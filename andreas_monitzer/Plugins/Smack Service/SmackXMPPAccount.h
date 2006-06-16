@@ -16,10 +16,14 @@
     SmackXMPPConnection *connection;
     
     NSMutableDictionary *roster;
+    
+    NSArray *plugins;
 }
 
+- (AIListContact *)contactWithJID:(NSString *)inJID;
 - (NSString*)hostName;
 - (SmackConnectionConfiguration*)connectionConfiguration;
+- (SmackXMPPConnection*)connection;
 
 - (void)connected:(SmackXMPPConnection*)conn;
 - (void)disconnected:(SmackXMPPConnection*)conn;
@@ -29,5 +33,28 @@
 - (void)receiveIQPacket:(SmackIQ*)packet;
 
 - (void)setListContact:(AIListContact *)listContact toAlias:(NSString *)inAlias;
+- (void)addListContact:(AIListContact *)listContact;
+
+- (BOOL)silentAndDelayed;
+- (AIService*)service;
+
+@end
+
+/*
+ * These notifications are posted when a new packet has been received from the server.
+ * The userdict contains the packet with the key @"SmackXMPPPacket", the object is the SmackXMPPAccount.
+ */
+#define SmackXMPPMessagePacketReceivedNotification @"SmackXMPPMessagePacketReceivedNotification"
+#define SmackXMPPPresencePacketReceivedNotification @"SmackXMPPPresencePacketReceivedNotification"
+#define SmackXMPPIQPacketReceivedNotification @"SmackXMPPIQPacketReceivedNotification"
+
+#define SmackXMPPPacket @"SmackXMPPPacket"
+
+@interface NSString (JIDAdditions)
+
+- (NSString*)jidUsername;
+- (NSString*)jidHost;
+- (NSString*)jidResource;
+- (NSString*)jidUserHost;
 
 @end
