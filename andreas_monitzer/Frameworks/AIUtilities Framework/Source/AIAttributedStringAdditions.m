@@ -21,7 +21,7 @@
 #import "AIColorAdditions.h"
 #import "AITextAttributes.h"
 #import "AIApplicationAdditions.h"
-
+#import "AIStringUtilities.h"
 #import "AIExceptionHandlingUtilities.h"
 
 NSString *AIFontFamilyAttributeName = @"AIFontFamily";
@@ -285,6 +285,50 @@ NSString *AIFontStyleAttributeName  = @"AIFontStyle";
 	}
 }
 
+- (void)convertAttachmentsToStringsUsingPlaceholder:(NSString *)placeholder
+{
+    if ([self length] && [self containsAttachments]) {
+        int							currentLocation = 0;
+        NSRange						attachmentRange;
+		NSString					*attachmentCharacterString = [NSString stringWithFormat:@"%C",NSAttachmentCharacter];
+		
+        //find attachment
+        attachmentRange = [[self string] rangeOfString:attachmentCharacterString
+											   options:0 
+												 range:NSMakeRange(currentLocation,
+																   [self length] - currentLocation)];
+		
+        while (attachmentRange.length != 0) { //if we found an attachment
+			NSTextAttachment	*attachment = [self attribute:NSAttachmentAttributeName
+													  atIndex:attachmentRange.location
+											   effectiveRange:nil];
+            NSString *replacement = nil;
+			if ([attachment respondsToSelector:@selector(string)]) {
+				replacement = [attachment performSelector:@selector(string)];
+			}
+			
+            if (!replacement) {
+                replacement = placeholder;
+            }
+			
+            //remove the attachment, replacing it with the original text
+			[self removeAttribute:NSAttachmentAttributeName range:attachmentRange];
+            [self replaceCharactersInRange:attachmentRange withString:replacement];
+			
+            attachmentRange.length = [replacement length];
+			
+            currentLocation = attachmentRange.location + attachmentRange.length;
+			
+            //find the next attachment
+            attachmentRange = [[self string] rangeOfString:attachmentCharacterString
+												   options:0
+													 range:NSMakeRange(currentLocation,
+																	   [self length] - currentLocation)];
+        }
+	}	
+}
+
+
 @end
 
 @implementation NSAttributedString (AIAttributedStringAdditions)
@@ -456,47 +500,9 @@ NSString *AIFontStyleAttributeName  = @"AIFontStyle";
 {
     if ([self length] && [self containsAttachments]) {
         NSMutableAttributedString	*newAttributedString = [[self mutableCopy] autorelease];
-        int							currentLocation = 0;
-        NSRange						attachmentRange;
-		
-		NSString					*attachmentCharacterString = [NSString stringWithFormat:@"%C",NSAttachmentCharacter];
-		
-        //find attachment
-        attachmentRange = [[newAttributedString string] rangeOfString:attachmentCharacterString
-															  options:0 
-																range:NSMakeRange(currentLocation,
-																				  [newAttributedString length] - currentLocation)];
-		
-        while (attachmentRange.length != 0) { //if we found an attachment
+		[newAttributedString convertAttachmentsToStringsUsingPlaceholder:AILocalizedString(@"<<Attachment>>", nil)];
 
-			NSTextAttachment	*attachment = [newAttributedString attribute:NSAttachmentAttributeName
-																	 atIndex:attachmentRange.location
-															  effectiveRange:nil];
-            NSString *replacement = nil;
-			if ([attachment respondsToSelector:@selector(string)]) {
-				replacement = [attachment performSelector:@selector(string)];
-			}
-				
-            if (!replacement) {
-                replacement = @"<<Attachment>>";
-            }
-
-            //remove the attachment, replacing it with the original text
-			[newAttributedString removeAttribute:NSAttachmentAttributeName range:attachmentRange];
-            [newAttributedString replaceCharactersInRange:attachmentRange withString:replacement];
-
-            attachmentRange.length = [replacement length];
-
-            currentLocation = attachmentRange.location + attachmentRange.length;
-
-            //find the next attachment
-            attachmentRange = [[newAttributedString string] rangeOfString:attachmentCharacterString
-																  options:0
-																	range:NSMakeRange(currentLocation,
-																					  [newAttributedString length] - currentLocation)];
-        }
-
-        return newAttributedString;
+		return newAttributedString;
 
     } else {
         return self;
