@@ -48,28 +48,30 @@
 //init
 - (id)initWithMessageView:(AIMessageViewController *)inMessageViewController
 {
-	self = [super initWithIdentifier:nil];
+	if ( (self = [super initWithIdentifier:nil]) ) {
+		messageViewController = [inMessageViewController retain];
+		adium = [AIObject sharedAdiumInstance];
+		container = nil;
 
-    messageViewController = [inMessageViewController retain];
-    adium = [AIObject sharedAdiumInstance];
-	container = nil;
-
-    //Configure ourself for the message view
-    [[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:)
-									   name:Chat_StatusChanged
-									 object:[messageViewController chat]];
-    [[adium notificationCenter] addObserver:self selector:@selector(chatAttributesChanged:)
-									   name:Chat_AttributesChanged
-									 object:[messageViewController chat]];	
-    [[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:)
-									   name:Chat_ParticipatingListObjectsChanged
-									 object:[messageViewController chat]];
-    [self chatStatusChanged:nil];
-    [self chatParticipatingListObjectsChanged:nil];
-	
-    //Set our contents
-    [self setView:[messageViewController view]];
-	
+		//Configure ourself for the message view
+		[[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:)
+										   name:Chat_StatusChanged
+										 object:[messageViewController chat]];
+		[[adium notificationCenter] addObserver:self selector:@selector(chatAttributesChanged:)
+										   name:Chat_AttributesChanged
+										 object:[messageViewController chat]];	
+		[[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:)
+										   name:Chat_ParticipatingListObjectsChanged
+										 object:[messageViewController chat]];
+		[self chatStatusChanged:nil];
+		[self chatParticipatingListObjectsChanged:nil];
+		
+		//Set our contents
+		[self setView:[messageViewController view]];
+		
+		controller = [[NSObjectController alloc] initWithContent:self];
+		[self setIdentifier:controller];
+	}
     return self;
 }
 
@@ -82,6 +84,8 @@
 
     [messageViewController release]; messageViewController = nil;
 	[container release]; container = nil;
+	
+	[controller release]; controller = nil;
 
     [super dealloc];
 }
@@ -114,9 +118,14 @@
 	return container;
 }
 
-
+- (NSObjectController *)controller
+{
+	return controller;
+}
 
 //Message View Delegate ----------------------------------------------------------------------
+#pragma mark Message View Delegate
+
 /*
  * @brief The list objects participating in our chat changed
  */
@@ -164,9 +173,8 @@
 	//Redraw if the icon has changed
 	if (keys == nil || [keys containsObject:@"Tab State Icon"]) {
 		[[self container] updateIconForTabViewItem:self];
-		[[[self tabView] delegate] redisplayTabForTabViewItem:self];
+		[controller didChangeValueForKey:@"selection.icon"];
 	}
-		
 }
 //
 - (void)listObjectAttributesChanged:(NSNotification *)notification
@@ -179,7 +187,7 @@
 		//Redraw if the icon has changed
 		if (!keys || [keys containsObject:@"Tab Status Icon"]) {
 			[[self container] updateIconForTabViewItem:self];
-			[[[self tabView] delegate] redisplayTabForTabViewItem:self];
+			[controller didChangeValueForKey:@"selection.icon"];
 		}
 		
 		//If the list object's display name changed, we resize the tabs
@@ -190,6 +198,8 @@
 }
 
 //Interface Container ----------------------------------------------------------------------
+#pragma mark Interface Container
+
 //Make this container active
 - (void)makeActive:(id)sender
 {
@@ -213,7 +223,9 @@
 
 
 
-//Tab view item  ----------------------------------------------------------------------
+//Tab View Item  ----------------------------------------------------------------------
+#pragma mark Tab View Item
+
 //Called when our tab is selected
 - (void)tabViewItemWasSelected
 {
