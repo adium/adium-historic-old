@@ -161,13 +161,13 @@
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected
 {
 	if (colored && !selected) {
-		//Whipe any existing color
+		//Wipe any existing color
 		[[NSColor clearColor] set];
 		NSRectFill(rect); //fillRect: doesn't work here... must behave differently w/ alpha
 		
 		//Draw our grid color
 		[[self alternatingRowColor] set];
-		[NSBezierPath fillRect:rect];
+		NSRectFill(rect);
 	}
 }
 
