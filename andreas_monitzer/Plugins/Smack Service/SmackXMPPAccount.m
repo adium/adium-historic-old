@@ -23,19 +23,12 @@
 #import "AIStatusController.h"
 #import "SmackListContact.h"
 
+#import "SmackXMPPRosterPlugin.h"
+
 //#import <dns_sd.h> // for SRV lookup
 #import "ruli/ruli.h"
 
 //#define SRVDNSTimeout 2.0
-
-@interface NSString (JIDAdditions)
-
-- (NSString*)jidUsername;
-- (NSString*)jidHost;
-- (NSString*)jidResource;
-- (NSString*)jidUserHost;
-
-@end
 
 @implementation NSString (JIDAdditions)
 
@@ -86,12 +79,27 @@
         roster = [[NSMutableDictionary alloc] init];
     else
         [roster removeAllObjects];
+    
+    if(!plugins) {
+        SmackXMPPRosterPlugin *rosterplugin = [[SmackXMPPRosterPlugin alloc] initWithAccount:self];
+        plugins = [[NSArray alloc] initWithObjects:rosterplugin,nil];
+        [rosterplugin release];
+    }
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [roster release];
+    [roster release]; roster = nil;
+    [plugins release]; plugins = nil;
     [super dealloc];
+}
+
+- (BOOL)silentAndDelayed {
+    return silentAndDelayed;
+}
+
+- (AIService*)service {
+    return service;
 }
 
 - (AIListContact *)contactWithJID:(NSString *)inJID
@@ -156,6 +164,12 @@
 }
 
 - (void)receiveMessagePacket:(SmackMessage*)packet {
+    [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPMessagePacketReceivedNotification
+                                                        object:self
+                                                      userInfo:[NSDictionary dictionaryWithObject:packet forKey:SmackXMPPPacket]];
+    
+    // handle chats natively
+    
     NSString *type = [[packet getType] toString];
     NSLog(@"message type %@",type);
     if([type isEqualToString:@"normal"] || [type isEqualToString:@"chat"]) {
@@ -201,113 +215,18 @@
         [[adium contentController] receiveContentObject:messageObject];
     }
 }
+
 - (void)receivePresencePacket:(SmackPresence*)packet {
-    NSString *jidWithResource = [packet getFrom];
-    NSString *type = [[packet getType] toString];
-    NSString *status = [packet getStatus];
-    NSString *mode = [[packet getMode] toString];
-    int priority = [packet getPriority];
-    
-    AIListContact *listContact = [self contactWithJID:jidWithResource];
-    
-    SmackListContact *listEntry = (SmackListContact*)[self contactWithJID:[jidWithResource jidUserHost]];
-    
-    if(![listEntry containsObject:listContact])
-        [listEntry addObject:listContact];
-    
-    AIStatusType statustype = AIOfflineStatusType;
-    
-    if([type isEqualToString:@"available"]) {
-        if(!mode || [mode isEqualToString:@"available"] || [mode isEqualToString:@"chat"])
-            statustype = AIAvailableStatusType;
-        else if([mode isEqualToString:@"invisible"])
-            statustype = AIInvisibleStatusType;
-        else
-            statustype = AIAwayStatusType;
-    } else if([type isEqualToString:@"unavailable"])
-        statustype = AIOfflineStatusType;
-    else if([type isEqualToString:@"subscribe"]) {
-        // ###
-        return;
-    } else if([type isEqualToString:@"subscribed"]) {
-        // ###
-        return;
-    } else if([type isEqualToString:@"unsubscribe"]) {
-        // ###
-        return;
-    } else if([type isEqualToString:@"unsubscribed"]) {
-        // ###
-        return;
-    }
-    
-//    NSLog(@"jid = \"%@\", mode = \"%@\", statustype = \"%d\"", jid, mode, statustype);
-	[listContact setOnline:statustype != AIOfflineStatusType
-                    notify:NotifyLater
-                  silently:NO];
-    
-    [listContact setStatusObject:[NSNumber numberWithInt:priority] forKey:@"XMPPPriority" notify:NotifyLater];
-    
-    [listContact setStatusWithName:mode statusType:statustype notify:NotifyLater];
-    if(status) {
-        NSAttributedString *statusMessage = [[NSAttributedString alloc] initWithString:status attributes:nil];
-        [listContact setStatusMessage:statusMessage notify:NotifyLater];
-        [statusMessage release];
-    } else
-        [listContact setStatusMessage:nil notify:NotifyLater];
-    
-    //Apply the change
-	[listContact notifyOfChangedStatusSilently:silentAndDelayed];
-    [listEntry notifyOfChangedStatusSilently:NO];
-}
+    [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPPresencePacketReceivedNotification
+                                                        object:self
+                                                      userInfo:[NSDictionary dictionaryWithObject:packet forKey:SmackXMPPPacket]];
+}    
 
 - (void)receiveIQPacket:(SmackIQ*)packet {
-    if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.RosterPacket"]) {
-        SmackRosterPacket *srp =(SmackRosterPacket*)packet;
-        JavaIterator *iter = [srp getRosterItems];
-        while([iter hasNext]) {
-            SmackRosterPacketItem *srpi = [iter next];
-            NSString *name = [srpi getName];
-            NSString *jid = [srpi getUser];
-            
-//            AIListContact *listContact = [self contactWithJID:jid];
-            SmackListContact *listContact = [[SmackListContact alloc] initWithUID:jid account:self service:service];
-            NSLog(@"creating account for jid %@", jid);
-            
-            if(![[listContact formattedUID] isEqualToString:jid])
-                [listContact setFormattedUID:jid notify:NotifyLater];
-            
-            // XMPP supports contacts that are in multiple groups, Adium does not.
-            // First I'm checking if the group it's in here locally is one of the groups
-            // the contact is in on the server. If this is not the case, I set the contact
-            // to be in the first group on the list. XXX -> Adium folks, add this feature!
-            JavaIterator *iter2 = [srpi getGroupNames];
-            NSString *storedgroupname = [listContact remoteGroupName];
-            if(storedgroupname) {
-                while([iter2 hasNext]) {
-                    NSString *groupname = [iter2 next];
-                    if([storedgroupname isEqualToString:groupname])
-                        break;
-                }
-                if(![iter2 hasNext])
-                    storedgroupname = nil;
-            }
-            if(!storedgroupname) {
-                iter2 = [srpi getGroupNames];
-                if([iter2 hasNext])
-                    [listContact setRemoteGroupName:[iter2 next]];
-                else
-                    [listContact setRemoteGroupName:@"nobody knows the trouble I've seen"];
-            }
-            [self setListContact:listContact toAlias:name];
-            
-            [roster setObject:listContact forKey:jid];
-            
-            [listContact release];
-        }
-//    } else if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@""]) {
-        
-    }
-}
+    [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPIQPacketReceivedNotification
+                                                        object:self
+                                                      userInfo:[NSDictionary dictionaryWithObject:packet forKey:SmackXMPPPacket]];
+}    
 
 - (BOOL)sendMessageObject:(AIContentMessage *)inMessageObject {
     if([inMessageObject isAutoreply])
@@ -396,74 +315,6 @@
     return host;
 }
 
-NSString *decodeDNSName(const unsigned char *input, unsigned len) {
-    NSMutableString *result = [NSMutableString string];
-    unsigned pos = 0;
-    while(input[pos] && pos < len) {
-        if(pos + input[pos] > len)
-            return nil; // invalid string (buffer overflow!)
-        NSString *element = [[NSString alloc] initWithBytesNoCopy:(void*)&input[pos+1] length:input[pos] encoding:NSASCIIStringEncoding freeWhenDone:NO];
-        [result appendFormat:@"%@.",element];
-        [element release];
-        pos += input[pos]+1;
-    }
-    return result;
-}
-
-#if 0
-
-struct SmackDNSServiceQueryRecordReplyContext {
-    NSString **host;
-    int *portnum;
-    CFRunLoopSourceRef socketsource;
-    DNSServiceRef sdRef;
-};
-
-static void SmackDNSServiceQueryRecordReply(
- DNSServiceRef                       DNSServiceRef,
- DNSServiceFlags                     flags,
- uint32_t                            interfaceIndex,
- DNSServiceErrorType                 errorCode,
- const char                          *fullname,
- uint16_t                            rrtype,
- uint16_t                            rrclass,
- uint16_t                            rdlen,
- const void                          *rdata,
- uint32_t                            ttl,
- void                                *context
- ) {
-    struct SmackDNSServiceQueryRecordReplyContext *ctx = *(struct SmackDNSServiceQueryRecordReplyContext**)context;
-    ruli_srv_rdata_t srvdata;
-    
-    NSLog(@"SRV info received.");
-    
-    if(errorCode == kDNSServiceErr_NoError) {
-        if(ruli_parse_rr_srv(&srvdata, rdata, rdlen) == RULI_PARSE_RR_OK) {
-            *(ctx->host) = decodeDNSName(srvdata.target,srvdata.target_len);
-            *(ctx->portnum) = srvdata.port;
-        } else
-            *(ctx->portnum) = -1;
-    } else
-        NSLog(@"SRV record errorcode %d",errorCode);
-    
-    
-    CFRunLoopStop(CFRunLoopGetCurrent());
-}
-
-static void SmackDNSSocketCallBack(CFSocketRef s, CFSocketCallBackType type, CFDataRef address, const void *data, void *info) {
-    struct SmackDNSServiceQueryRecordReplyContext *ctx = (struct SmackDNSServiceQueryRecordReplyContext*)info;
-    NSLog(@"DNSServiceProcessResult");
-    DNSServiceProcessResult(ctx->sdRef);
-}
-
-static void SmackDNSTimerCallBack(CFRunLoopTimerRef timer, void *info) {
-//    struct SmackDNSServiceQueryRecordReplyContext *ctx = (struct SmackDNSServiceQueryRecordReplyContext*)info;
-    
-    CFRunLoopStop(CFRunLoopGetCurrent());
-}
-
-#endif
-
 - (SmackConnectionConfiguration*)connectionConfiguration {
     NSString *host = [self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS];
     int portnum = [[self preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue]?5223:5222;
@@ -499,69 +350,6 @@ static void SmackDNSTimerCallBack(CFRunLoopTimerRef timer, void *info) {
         } else
             AILog(@"XMPP: SRV resolve for host \"%@\" returned error %d", host, srv_code);
 
-#if 0
-        // do an SRV lookup
-        host = [[self explicitFormattedUID] jidHost];
-        char fullName[kDNSServiceMaxDomainName];
-        
-        DNSServiceConstructFullName(fullName,NULL,"_xmpp-client._tcp",[host cStringUsingEncoding:NSUTF8StringEncoding] /* ### punycode */);
-        
-        struct SmackDNSServiceQueryRecordReplyContext *ctx = (struct SmackDNSServiceQueryRecordReplyContext *)malloc(sizeof(struct SmackDNSServiceQueryRecordReplyContext));
-        
-        ctx->host = &host;
-        ctx->portnum = &portnum;
-        ctx->socketsource =  NULL;
-        ctx->sdRef = NULL;
-        
-        if(DNSServiceQueryRecord(&ctx->sdRef, 0, 0, fullName,
-                                 kDNSServiceType_SRV, kDNSServiceClass_IN, SmackDNSServiceQueryRecordReply, &ctx) == kDNSServiceErr_NoError) {
-            CFRunLoopRef rl = CFRunLoopGetCurrent();
-            
-            int dnssocket = DNSServiceRefSockFD(ctx->sdRef);
-            
-            CFSocketContext socketctx = {
-                0,
-                ctx,
-                NULL,
-                NULL,
-                NULL
-            };
-            
-            CFSocketRef sock = CFSocketCreateWithNative(kCFAllocatorDefault,dnssocket,kCFSocketDataCallBack,
-                                                        (CFSocketCallBack)SmackDNSSocketCallBack,&socketctx);
-            ctx->socketsource = CFSocketCreateRunLoopSource(kCFAllocatorDefault,sock,0);
-            
-            CFRunLoopTimerRef timer = CFRunLoopTimerCreate(kCFAllocatorDefault,CFAbsoluteTimeGetCurrent()+SRVDNSTimeout,
-                                                           -1.0,0,0,SmackDNSTimerCallBack,NULL);//,ctx);
-
-            CFRunLoopAddTimer(rl,timer,kCFRunLoopDefaultMode);
-            CFRunLoopAddSource(rl,ctx->socketsource,kCFRunLoopDefaultMode);
-            
-            CFRunLoopRun();
-
-            CFRunLoopRemoveSource(rl,ctx->socketsource,kCFRunLoopDefaultMode);
-            CFRunLoopRemoveTimer(rl,timer,kCFRunLoopDefaultMode);
-
-            CFRelease(ctx->socketsource);
-            CFRelease(sock);
-            CFRelease(timer);
-            DNSServiceRefDeallocate(ctx->sdRef);
-            
-            if(portnum==-1) {
-                NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
-                if(!port)
-                    portnum = [[self preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue]?5223:5222;
-                else
-                    portnum = [port intValue];
-            }
-            
-        } else {
-            NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
-            if(port)
-                portnum = [port intValue];
-        }
-        free(ctx);
-#endif
         NSLog(@"host = %@:%d",host,portnum);
     } else {
         NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
@@ -586,6 +374,10 @@ static void SmackDNSTimerCallBack(CFRunLoopTimerRef timer, void *info) {
                                            group:GROUP_ACCOUNT_STATUS] boolValue]];
     
     return conf;
+}
+
+- (SmackXMPPConnection*)connection {
+    return connection;
 }
 
 #pragma mark Properties
@@ -766,6 +558,10 @@ static void SmackDNSTimerCallBack(CFRunLoopTimerRef timer, void *info) {
 												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
 																					 forKey:@"Notify"]];
 	}
+}
+
+- (void)addListContact:(AIListContact*)listContact {
+    [roster setObject:listContact forKey:[listContact UID]];
 }
 
 @end
