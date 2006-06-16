@@ -101,7 +101,7 @@
 		NSString		*finalMessage = nil;
 		int				idle;
 		
-		if (showStatus) {			
+		if (showStatus) {
 			statusMessage = [[[[[(AIListContact *)inObject contactListStatusMessage] string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
 
 			//Incredibly long status messages are slow to size, so we crop them to a reasonable length
