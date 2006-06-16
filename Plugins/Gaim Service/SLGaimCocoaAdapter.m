@@ -1212,7 +1212,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
 			(g = gaim_buddy_get_group(buddy)) && 
 			(od = account->gc->proto_data)) {
-			aim_ssi_editcomment(od->sess, g->name, uidUTF8String, [comment UTF8String]);	
+			aim_ssi_editcomment(od, g->name, uidUTF8String, [comment UTF8String]);	
 		}
 	}
 }

@@ -195,64 +195,52 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 			return ([[inAttributedString attributedStringByConvertingLinksToStrings] string]);
 			
 		} else {
-#if 0
-			if (GAIM_DEBUG) {
-				//We have a list object and are sending both to and from an AIM account; encode to HTML and look for outgoing images
-				NSString	*returnString;
+			//We have a list object and are sending both to and from an AIM account; encode to HTML and look for outgoing images
+			NSString	*returnString;
+			
+			returnString = [encoderCloseFontTags encodeHTML:inAttributedString
+												 imagesPath:@"/tmp"];
+			
+			if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound) {
+				//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
+				//and sending after it is if one is established
 				
-				returnString = [encoderCloseFontTags encodeHTML:inAttributedString
-													 imagesPath:@"/tmp"];
+				//Check for a PeerConnection for a direct IM currently open
+				PeerConnection	*conn;
+				OscarData		*od = (OscarData *)gc->proto_data;
+				const char		*who = [[inListObject UID] UTF8String];
 				
-				if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound) {
-					//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
-					//and sending after it is if one is established
-
-					//Check for a oscar_direct_im (dim) currently open
-					struct oscar_direct_im  *dim;
-					const char				*who = [[inListObject UID] UTF8String];
+				conn = peer_connection_find_by_type(od, who, OSCAR_CAPABILITY_DIRECTIM);
+				
+				if ((conn != NULL) && (conn->ready)) {
+					//We have a connected dim already; process the string and keep the modified copy
+					returnString = [self stringByProcessingImgTagsForDirectIM:returnString];
 					
-					dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
+				} else {
+					//Either no dim, or the dim we have is no longer conected (oscar_direct_im_initiate_immediately will reconnect it)						
+					peer_connection_propose(od, OSCAR_CAPABILITY_DIRECTIM, who);
 					
-					if (dim && (dim->connected)) {
-						//We have a connected dim already; process the string and keep the modified copy
-						returnString = [self stringByProcessingImgTagsForDirectIM:returnString];
+					//Add this content message to the sending queue for this contact to be sent once a connection is established
+					if (!directIMQueue) directIMQueue = [[NSMutableDictionary alloc] init];
+					
+					NSMutableArray	*thisContactQueue = [directIMQueue objectForKey:[inListObject internalObjectID]];
+					if (!thisContactQueue) {
+						thisContactQueue = [NSMutableArray array];
 						
-					} else {
-						//Either no dim, or the dim we have is no longer conected (oscar_direct_im_initiate_immediately will reconnect it)
-						oscar_direct_im_initiate_immediately(account->gc, who);
-						
-						//Add this content message to the sending queue for this contact to be sent once a connection is established
-						if (!directIMQueue) directIMQueue = [[NSMutableDictionary alloc] init];
-						
-						NSMutableArray	*thisContactQueue = [directIMQueue objectForKey:[inListObject internalObjectID]];
-						if (!thisContactQueue) {
-							thisContactQueue = [NSMutableArray array];
-							
-							[directIMQueue setObject:thisContactQueue
-											  forKey:[inListObject internalObjectID]];
-						}
-						
-						[thisContactQueue addObject:contentMessage];
-						
-						//Return nil for now to indicate that the message should not be sent
-						returnString = nil;
+						[directIMQueue setObject:thisContactQueue
+										  forKey:[inListObject internalObjectID]];
 					}
+					
+					[thisContactQueue addObject:contentMessage];
+					
+					//Return nil for now to indicate that the message should not be sent
+					returnString = nil;
 				}
-				
-				return (returnString);
-				
-			} else {
-				//XXX - DirectIM is not ready for prime time.  Temporary.
-				return [encoderAttachmentsAsText encodeHTML:inAttributedString
-												 imagesPath:nil];
-				
 			}
-#endif /* 0 */
-			//XXX - DirectIM is not ready for prime time.  Temporary.
-			return [encoderAttachmentsAsText encodeHTML:inAttributedString
-											 imagesPath:nil];
+			
+			return (returnString);
 		}
-		
+
 	} else { //Send HTML when signed in as an AIM account and we don't know what sort of user we are sending to (most likely multiuser chat)
 		AILog(@"Encoding %@ for no contact",inAttributedString);
 		return [encoderGroupChat encodeHTML:inAttributedString
@@ -289,8 +277,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
 	if (strcmp(label, "Direct IM") == 0) {
-		//XXX
-		if (/*GAIM_DEBUG && */![[[inContact service] serviceID] isEqualToString:@"ICQ"]) {
+		if (![[[inContact service] serviceID] isEqualToString:@"ICQ"]) {
 			return [NSString stringWithFormat:AILocalizedString(@"Initiate Direct IM with %@",nil),[inContact formattedUID]];
 		} else {
 			return nil;
