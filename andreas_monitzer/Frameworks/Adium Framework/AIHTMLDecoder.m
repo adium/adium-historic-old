@@ -112,7 +112,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		
 		thingsToInclude.allowAIMsubprofileLinks			= NO;
 	}
-
+	
 	return self;
 }
 
@@ -983,6 +983,7 @@ addElementContentToTopElement_label:;
 		 * All characters before the next HTML entity are textual characters in the current textAttributes. We append
 		 * those characters to our final attributed string with the desired attributes before continuing.
 		 */
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		if ([scanner scanUpToCharactersFromSet:tagCharStart intoString:&chunkString]) {
 			id	languageValue = [textAttributes languageValue];
 			
@@ -1280,6 +1281,7 @@ addElementContentToTopElement_label:;
 				}
 			}
 		}
+		[pool release];
 	}
 	
 	/* If the string has a constant NSBackgroundColorAttributeName attribute and no AIBodyColorAttributeName,
@@ -1326,7 +1328,7 @@ addElementContentToTopElement_label:;
 				unsigned absSize = [[inArgs objectForKey:arg] intValue];
 				static int pointSizes[] = { 9, 10, 12, 14, 18, 24, 48, 72 };
 				int size = (absSize <= 8 ? pointSizes[absSize-1] : 12);
-
+				
 				[textAttributes setFontSize:size];
 			}
 
