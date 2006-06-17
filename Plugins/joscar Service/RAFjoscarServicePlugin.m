@@ -11,15 +11,16 @@
 
 @implementation RAFjoscarServicePlugin
 
-
 - (void)installPlugin
 {
+#ifdef JOSCAR_SUPERCEDE_LIBGAIM
 	joscarAIMService = [[RAFjoscarAIMService alloc] init];
 	joscarDotMacService = [[RAFjoscarDotMacService alloc] init];
 	joscarICQService = [[RAFjoscarICQService alloc] init];
-#ifdef DEBUG_BUILD
-	debugController = [[RAFjoscarDebugController alloc] init];
-	[debugController activateDebugController];
+	#ifdef DEBUG_BUILD
+		debugController = [[RAFjoscarDebugController alloc] init];
+		[debugController activateDebugController];
+	#endif
 #endif
 }
 

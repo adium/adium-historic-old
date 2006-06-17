@@ -14,17 +14,19 @@
 #import "AIContentController.h"
 #import "AIChatController.h"
 #import "AIStatusController.h"
-#import <Adium/AIContentMessage.h>
+#import "AIInterfaceController.h"
 #import <Adium/AIChat.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AIContentStatus.h>
 #import <Adium/ESDebugAILog.h>
+#import <Adium/ESFileTransfer.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
-#import <Adium/ESFileTransfer.h>
 #import <Adium/AIListGroup.h>
-#import <Adium/AIMetaContact.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIMetaContact.h>
+#import <Adium/AIService.h>
 #import <Adium/ESTextAndButtonsWindowController.h>
-#import <Adium/AIContentStatus.h>
 #import <Adium/AITextAttachmentExtension.h>
 
 #import <AIUtilities/AIApplicationAdditions.h>
@@ -32,10 +34,9 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-
-#import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringUtilities.h>
 
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
