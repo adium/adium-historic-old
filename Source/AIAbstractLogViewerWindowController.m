@@ -669,16 +669,15 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 //Displays the contents of the specified log in our window
 - (void)displayLogs:(NSArray *)logArray;
-{
+{	
     NSMutableAttributedString	*displayText = nil;
 	NSAttributedString			*finalDisplayText;
-    NSString					*logFileText = nil;
 	NSRange						scrollRange = NSMakeRange(0,0);
 	BOOL						appendedFirstLog = NO;
 
     if (![logArray isEqualToArray:displayedLogArray]) {
 		[displayedLogArray release];
-		displayedLogArray = [logArray retain];
+		displayedLogArray = [logArray copy];
 	}
 	
 	if ([logArray count] > 1) {
@@ -689,8 +688,11 @@ static int toArraySort(id itemA, id itemB, void *context);
 	AIChatLog	 *theLog;
 	
 	while ((theLog = [enumerator nextObject])) {
+		
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+		
 		//Open the log
-		logFileText = [NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];                
+		NSString *logFileText = [NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
 		
 		if (logFileText && [logFileText length]) {
 			
@@ -700,7 +702,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 					#define HORIZONTAL_BAR			0x2013
 					#define HORIZONTAL_RULE_LENGTH	18
 
-					const unichar separatorUTF16[HORIZONTAL_RULE_LENGTH] = {
+					static const unichar separatorUTF16[HORIZONTAL_RULE_LENGTH] = {
 						HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR,
 						HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR,
 						HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR
@@ -721,7 +723,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 				if (displayText) {
 					[displayText appendAttributedString:[[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]] autorelease]];
 				} else {
-					displayText = [[[NSMutableAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]] autorelease];
+					displayText = [[NSMutableAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]];
 				}
 			} else {
 				AITextAttributes *textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
@@ -730,13 +732,15 @@ static int toArraySort(id itemA, id itemB, void *context);
 					[displayText appendAttributedString:[[[NSAttributedString alloc] initWithString:logFileText 
 																						 attributes:[textAttributes dictionary]] autorelease]];
 				} else {
-					displayText = [[[NSMutableAttributedString alloc] initWithString:logFileText attributes:[textAttributes dictionary]] autorelease];
+					displayText = [[NSMutableAttributedString alloc] initWithString:logFileText attributes:[textAttributes dictionary]];
 				}
 				
 			}
 		}
 		
 		appendedFirstLog = YES;
+		
+		[pool release];
 	}
 	
 	if (displayText && [displayText length]) {
@@ -752,6 +756,8 @@ static int toArraySort(id itemA, id itemB, void *context);
 			
 			//Look for an initial quote
 			while (![scanner isAtEnd]) {
+				NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+				
 				[scanner scanUpToString:@"\"" intoString:NULL];
 				
 				//Scan past the quote
@@ -794,6 +800,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 					//Add the full quoted string
 					[searchWordsArray addObject:quotedString];
 				}
+				[pool release];
 			}
 
 			BOOL shouldScrollToWord = NO;
@@ -822,6 +829,8 @@ static int toArraySort(id itemA, id itemB, void *context);
 			[searchWordsArray release];
 		}
 		
+		[displayText autorelease];//make sure this only lives until the end of the method
+		
 		//Filter emoticons
 		if (showEmoticons) {
 			finalDisplayText = [[adium contentController] filterAttributedString:displayText
@@ -832,9 +841,9 @@ static int toArraySort(id itemA, id itemB, void *context);
 			finalDisplayText = displayText;
 		}
 	}
-
-	if (displayText) {
-		[[textView_content textStorage] setAttributedString:displayText];
+	
+	if (displayText && finalDisplayText) {
+		[[textView_content textStorage] setAttributedString:finalDisplayText];
 
 		//Set this string and scroll to the top/bottom/occurrence
 		if ((searchMode == LOG_SEARCH_CONTENT) || automaticSearch) {
