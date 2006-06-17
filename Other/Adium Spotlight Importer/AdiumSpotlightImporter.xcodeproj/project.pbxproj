@@ -290,6 +290,35 @@
 			};
 			name = "Deployment-Debug";
 		};
+		349F83E60A437EB8007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /Library/Spotlight;
+				LIBRARY_STYLE = Bundle;
+				PRODUCT_NAME = AdiumSpotlightImporter;
+				WRAPPER_EXTENSION = mdimporter;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		349F83E70A437EB8007EA1B1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
+			};
+			name = "Development-libgaim_oscar";
+		};
 		70138C850896BE9A00968C2F /* Development-0link */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -388,6 +417,7 @@
 				34611CEE09B67B4500870036 /* Deployment-Debug */,
 				EE785F1B0A2700EC001FCAB0 /* Deployment-Debug_PPC-Only */,
 				11BD7C1A09BBCD01006B26FD /* Development */,
+				349F83E60A437EB8007EA1B1 /* Development-libgaim_oscar */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
@@ -400,6 +430,7 @@
 				34611CEF09B67B4500870036 /* Deployment-Debug */,
 				EE785F1C0A2700EC001FCAB0 /* Deployment-Debug_PPC-Only */,
 				11BD7C1B09BBCD01006B26FD /* Development */,
+				349F83E70A437EB8007EA1B1 /* Development-libgaim_oscar */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
