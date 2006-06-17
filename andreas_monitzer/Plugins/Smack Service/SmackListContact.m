@@ -64,9 +64,13 @@
 - (AIStatusType)statusType
 {
 	NSNumber		*statusTypeNumber = [[self preferredContact] statusObjectForKey:@"StatusType"];
+	/* DON'T ASK why AIAvailableStatusType is right, but that fixed things
+	 * That's the same as is set in AIMetaContact. This is clearly Deep Magic.
+	 * There be dragons.
+	 */
 	AIStatusType	statusType = (statusTypeNumber ?
 								  [statusTypeNumber intValue] :
-								  AIOfflineStatusType);
+								  AIAvailableStatusType);
 	
     NSLog(@"statusType = %d",statusType);
 	return statusType;
@@ -182,17 +186,21 @@
 }
 
 - (BOOL)addObject:(AIListObject *)inObject {
-    [containedObjects addObject:inObject];
+	
+	if (inObject != self) {
+		[containedObjects addObject:inObject];
     
-    [inObject setContainingObject:self];
-    
-    [self notifyOfChangedStatusSilently:NO];
-    return YES;
+		[inObject setContainingObject:self];
+
+		return YES;
+	}
+	NSLog(@"tried to contain myself!");
+	return NO;
 }
 
 - (void)removeObject:(AIListObject*)inObject {
     [containedObjects removeObject:inObject];
-    
+
     [self notifyOfChangedStatusSilently:NO];
 }
 
