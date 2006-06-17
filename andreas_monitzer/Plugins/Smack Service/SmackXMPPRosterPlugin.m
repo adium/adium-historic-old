@@ -82,7 +82,7 @@
     
     //    NSLog(@"jid = \"%@\", mode = \"%@\", statustype = \"%d\"", jid, mode, statustype);
 	[listContact setOnline:statustype != AIOfflineStatusType
-                    notify:NotifyLater
+                    notify:NotifyNow
                   silently:NO];
     
     [listContact setStatusObject:[NSNumber numberWithInt:priority] forKey:@"XMPPPriority" notify:NotifyLater];
