@@ -137,8 +137,7 @@
 	 * Something is wrong elsewhere that this could be necessary, but this doesn't hurt I don't believe.
 	 */
 	[self setWindow:nil];
-
-    [tabView_tabBar setDelegate:nil];
+	
 	[containedChats release];
 	[toolbarItems release];
 	[containerName release];
@@ -312,7 +311,7 @@
 #pragma mark Contained Chats
 //Add a tab view item container at the end of the tabs (without changing the current selection)
 - (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem
-{    
+{
     [self addTabViewItem:inTabViewItem atIndex:-1 silent:NO];
 }
 
@@ -481,7 +480,9 @@
 {
 	//The window controller handles removing the tab as we need to dispose of tracking rects properly
 	[self removeTabViewItem:(AIMessageTabViewItem *)tabViewItem silent:NO];
-	[interface closeChat:[(AIMessageTabViewItem *)tabViewItem chat]];
+	if ([tabViewItem respondsToSelector:@selector(chat)]) {
+		[interface closeChat:[(AIMessageTabViewItem *)tabViewItem chat]];
+	}
 	return NO;
 }
 
@@ -588,9 +589,11 @@
 //Close a message tab
 - (void)tabView:(NSTabView *)aTabView didCloseTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    AIChat	*chat = [(AIMessageTabViewItem *)tabViewItem chat];
-	
-	[interface closeChat:chat];
+	if ([tabViewItem isKindOfClass:[AIMessageTabViewItem class]]) {
+		AIChat	*chat = [(AIMessageTabViewItem *)tabViewItem chat];
+		
+		[interface closeChat:chat];
+	}
 }
 
 //Get an image representation of the chat

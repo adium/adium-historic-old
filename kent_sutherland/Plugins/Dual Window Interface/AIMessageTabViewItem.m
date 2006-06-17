@@ -163,7 +163,9 @@
 		 * but good enough for now.
 		 */
         [delegate tabViewDidChangeNumberOfTabViewItems:[self tabView]];
-    }
+    } else if ([keys containsObject:@"UnviewedContent"]) {
+		[controller didChangeValueForKey:@"selection.objectCount"];
+	}
 }
 
 - (void)chatAttributesChanged:(NSNotification *)notification
@@ -267,6 +269,13 @@
 - (NSImage *)image
 {
 	return tabViewItemImage;
+}
+
+//bindings methods for PSMTabBarControl
+
+- (int)objectCount
+{
+    return [[self chat] unviewedContentCount];
 }
 
 @end
