@@ -438,10 +438,13 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	[names addObject:NSAccessibilityTitleAttribute];
 	[names addObject:NSAccessibilityRoleAttribute];
 	[names addObject:NSAccessibilityRoleDescriptionAttribute];
-    [names addObject:NSAccessibilitySubroleAttribute];
-    [names addObject:NSAccessibilityParentAttribute];
+        [names addObject:NSAccessibilitySubroleAttribute];
+        [names addObject:NSAccessibilityParentAttribute];
 	[names addObject:NSAccessibilityWindowAttribute];
 	[names addObject:NSAccessibilityDescriptionAttribute];
+	[names addObject:NSAccessibilityChildrenAttribute];
+	[names addObject:NSAccessibilityScrollBarRole];	
+	[names addObject:NSAccessibilityScrollAreaRole];	
 	[names addObject:@"ClassName"];
 	[names autorelease];
 	return names;
@@ -476,6 +479,8 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		value = [self labelString];
 	else if([attribute isEqualToString:NSAccessibilityWindowAttribute])
 		value = [controlView window];
+	else if([attribute isEqualToString:NSAccessibilityScrollAreaRole] || [attribute isEqualToString:NSAccessibilityScrollBarRole])
+		value = @"AXScrollBar";
 	else if([attribute isEqualToString:@"ClassName"])
 		value = NSStringFromClass([self class]);
 	else
