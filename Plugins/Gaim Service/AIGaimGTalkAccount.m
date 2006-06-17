@@ -22,6 +22,13 @@
 {
 	NSString	 *userNameWithGmailDotCom = nil;
 
+	/*
+	 * Gaim stores the username in the format username@server/resource.  We need to pass it a username in this format
+	 *
+	 * The user should put the username in username@server format, which is common for Jabber. If the user does
+	 * not specify the server, use jabber.org.
+	 */
+	
 	//Append @gmail.com is neither @gmail.com nor @googlemail.com are found at the end
 	if (([UID rangeOfString:@"@gmail.com"
 					options:(NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch)].location == NSNotFound) &&
@@ -32,8 +39,10 @@
 	} else {
 		userNameWithGmailDotCom = UID;
 	}
+	NSString *resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
+	NSString *completeUserName = [NSString stringWithFormat:@"%@/%@",userNameWithGmailDotCom,resource];
 
-	return [userNameWithGmailDotCom UTF8String];
+	return [completeUserName UTF8String];
 }
 
 - (NSString *)serverSuffix
