@@ -37,6 +37,12 @@
             SUPERCLASS = AIAbstractLogViewerWindowController; 
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {
+            CLASS = AISourceListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIOutlineView; 
+        }, 
         {CLASS = AISplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }, 
         {
             CLASS = AIWindowController; 

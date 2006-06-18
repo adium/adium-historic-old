@@ -60,6 +60,8 @@
 
 #define	REFRESH_RESULTS_INTERVAL		0.5 //Interval between results refreshes while searching
 
+#define ALL_CONTACTS_IDENTIFIER			[NSNumber numberWithInt:-1]
+
 @interface AIAbstractLogViewerWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
 - (void)initLogFiltering;
@@ -330,9 +332,21 @@ static int toArraySort(id itemA, id itemB, void *context);
 	//Toolbar
 	[self installToolbar];	
 
-	[splitView_contacts_results setDividerThickness:6]; //Default is 9
+	[splitView_contacts_results setDividerThickness:2];
+	/* XXX This color isn't quite right for a Mail.app-style source list background... it's not the same as what Color Picker reports for it
+	 * because _that_ isn't right, either, strangely.
+	 * hue: 215 degrees
+	 * Saturation 0.07
+	 * Brightness 0.97
+	 */
+	[outlineView_contacts setBackgroundColor:[NSColor colorWithCalibratedHue:(215.0/359.0)
+																  saturation:0.07
+																  brightness:0.98
+																	   alpha:1.0]];
 
-	[[[outlineView_contacts tableColumns] objectAtIndex:0] setDataCell:[[[AIImageTextCell alloc] init] autorelease]];
+	AIImageTextCell	*dataCell = [[AIImageTextCell alloc] init];
+	[[[outlineView_contacts tableColumns] objectAtIndex:0] setDataCell:dataCell];
+	[dataCell release];
 
 	//Localize tableView_results column headers
 	[[[tableView_results tableColumnWithIdentifier:@"To"] headerCell] setStringValue:TO];
@@ -1208,7 +1222,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	 */
 	[self rebuildContactsList];
 	
-	[outlineView_contacts selectItemsInArray:[NSArray arrayWithObject:(parentContact ? (id)parentContact : (id)AILocalizedString(@"All", nil))]];
+	[outlineView_contacts selectItemsInArray:[NSArray arrayWithObject:(parentContact ? (id)parentContact : (id)ALL_CONTACTS_IDENTIFIER)]];
 	unsigned int selectedRow = [[outlineView_contacts selectedRowIndexes] firstIndex];
 	if (selectedRow != NSNotFound) {
 		[outlineView_contacts scrollRowToVisible:selectedRow];
@@ -1559,7 +1573,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 {
 	if (!item) {
 		if (index == 0) {
-			return AILocalizedString(@"All", nil);
+			return ALL_CONTACTS_IDENTIFIER;
 
 		} else {
 			return [toArray objectAtIndex:index-1]; //-1 for the All item, which is index 0
@@ -1634,9 +1648,16 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 	} else if ([item isKindOfClass:[AILogToGroup class]]) {
 		return [(AILogToGroup *)item to];
 
+	} else if ([item isKindOfClass:[ALL_CONTACTS_IDENTIFIER class]]) {
+		int contactCount = [toArray count];
+		return [NSString stringWithFormat:AILocalizedString(@"All (%@)", nil),
+			((contactCount == 1) ?
+			 AILocalizedString(@"1 Contact", nil) :
+			 [NSString stringWithFormat:AILocalizedString(@"%i Contacts", nil), contactCount])]; 
+
 	} else if ([item isKindOfClass:[NSString class]]) {
 		return item;
-
+		
 	} else {
 		NSLog(@"%@: no idea",item);
 		return nil;
@@ -1666,7 +1687,8 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 													   type:AIServiceIconSmall
 												  direction:AIIconFlipped]];
 		
-	} else if ([item isKindOfClass:[NSString class]]) {
+	} else if ([item isKindOfClass:[ALL_CONTACTS_IDENTIFIER class]] ||
+			   [item isKindOfClass:[NSString class]]) {
 		[cell setImage:nil];
 		
 	} else {
@@ -1681,7 +1703,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
 	[acceptableContactNames removeAllObjects];
 
-	if ([selectedItems count] && ![selectedItems containsObject:AILocalizedString(@"All", nil)]) {
+	if ([selectedItems count] && ![selectedItems containsObject:ALL_CONTACTS_IDENTIFIER]) {
 		id		item;
 		NSEnumerator *enumerator;
 
