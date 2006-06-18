@@ -671,7 +671,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 - (void)displayLogs:(NSArray *)logArray;
 {	
     NSMutableAttributedString	*displayText = nil;
-	NSAttributedString			*finalDisplayText;
+	NSAttributedString			*finalDisplayText = nil;
 	NSRange						scrollRange = NSMakeRange(0,0);
 	BOOL						appendedFirstLog = NO;
 
@@ -679,25 +679,22 @@ static int toArraySort(id itemA, id itemB, void *context);
 		[displayedLogArray release];
 		displayedLogArray = [logArray copy];
 	}
-	
+
 	if ([logArray count] > 1) {
 		displayText = [[NSMutableAttributedString alloc] init];
 	}
-	
+
 	NSEnumerator *enumerator = [logArray objectEnumerator];
 	AIChatLog	 *theLog;
 	
 	while ((theLog = [enumerator nextObject])) {
-		
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		
 		//Open the log
 		NSString *logFileText = [NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
 		
 		if (logFileText && [logFileText length]) {
-			
 			if (displayText) {
-				//We already have text, from a log which is selected before this one. Add a separator and a date indicator before adding this log.
 				if (!horizontalRule) {
 					#define HORIZONTAL_BAR			0x2013
 					#define HORIZONTAL_RULE_LENGTH	18
@@ -721,10 +718,11 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 			if ([[theLog path] hasSuffix:@".AdiumHTMLLog"] || [[theLog path] hasSuffix:@".html"] || [[theLog path] hasSuffix:@".html.bak"]) {
 				if (displayText) {
-					[displayText appendAttributedString:[[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]] autorelease]];
+					[displayText appendAttributedString:[AIHTMLDecoder decodeHTML:logFileText]];
 				} else {
-					displayText = [[NSMutableAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]];
+					displayText = [[AIHTMLDecoder decodeHTML:logFileText] mutableCopy];
 				}
+
 			} else {
 				AITextAttributes *textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
 				
@@ -770,12 +768,12 @@ static int toArraySort(id itemA, id itemB, void *context);
 					//Scan past the quote
 					[scanner scanString:@"\"" intoString:NULL];
 					/* If a string within quotes is found, remove the words from the quoted string and add the full string
-					* to what we'll be highlighting.
-					*
-					* We'll use indexOfObject: and removeObjectAtIndex: so we only remove _one_ instance. Otherwise, this string:
-					* "killer attack ninja kittens" OR ninja
-					* wouldn't highlight the word ninja by itself.
-					*/
+					 * to what we'll be highlighting.
+					 *
+					 * We'll use indexOfObject: and removeObjectAtIndex: so we only remove _one_ instance. Otherwise, this string:
+					 * "killer attack ninja kittens" OR ninja
+					 * wouldn't highlight the word ninja by itself.
+					 */
 					NSArray *quotedWords = [quotedString componentsSeparatedByString:@" "];
 					int quotedWordsCount = [quotedWords count];
 					
@@ -829,8 +827,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 			[searchWordsArray release];
 		}
 		
-		[displayText autorelease];//make sure this only lives until the end of the method
-		
 		//Filter emoticons
 		if (showEmoticons) {
 			finalDisplayText = [[adium contentController] filterAttributedString:displayText
@@ -841,8 +837,8 @@ static int toArraySort(id itemA, id itemB, void *context);
 			finalDisplayText = displayText;
 		}
 	}
-	
-	if (displayText && finalDisplayText) {
+
+	if (finalDisplayText) {
 		[[textView_content textStorage] setAttributedString:finalDisplayText];
 
 		//Set this string and scroll to the top/bottom/occurrence
@@ -856,6 +852,8 @@ static int toArraySort(id itemA, id itemB, void *context);
 		//No log selected, empty the view
 		[textView_content setString:@""];
 	}
+
+	[displayText release];
 }
 
 - (void)displayLog:(AIChatLog *)theLog
