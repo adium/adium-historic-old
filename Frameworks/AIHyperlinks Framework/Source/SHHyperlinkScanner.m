@@ -151,7 +151,9 @@
 
     [preScanner scanCharactersFromSet:startSet intoString:nil];
 
-    while([preScanner scanUpToCharactersFromSet:skipSet intoString:&scanString]){
+    while([preScanner scanUpToCharactersFromSet:skipSet intoString:&scanString]) {
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+		
         unsigned int localStringLen = [scanString length];
 		unsigned int finalStringLen;
 		
@@ -218,6 +220,8 @@
 		
         //step location after scanning a string
         location = SHStringOffset;
+		
+		[pool release];
     }
 	
     // if we're here, then NSScanner hit the end of the string
