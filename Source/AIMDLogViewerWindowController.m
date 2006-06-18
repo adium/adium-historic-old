@@ -85,6 +85,9 @@
 				 * we may get a null log, so be careful.
 				 */
 				theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
+				if (!theLog) {
+					AILog(@"_logContentFilter: %x's key %@ yields %@; logAtPath:%@ gives %@",logToGroupDict,toPath,[logToGroupDict objectForKey:toPath],path,theLog);
+				}
 				[resultsLock lock];
 				if ((theLog != nil) &&
 					(![currentSearchResults containsObjectIdenticalTo:theLog]) &&
