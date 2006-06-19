@@ -703,12 +703,13 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 	NSEnumerator *enumerator = [logArray objectEnumerator];
 	AIChatLog	 *theLog;
+	NSString	 *logBasePath = [AILoggerPlugin logBasePath];
 	
 	while ((theLog = [enumerator nextObject])) {
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		
 		//Open the log
-		NSString *logFileText = [NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
+		NSString *logFileText = [NSString stringWithContentsOfFile:[logBasePath stringByAppendingPathComponent:[theLog path]]];
 		
 		if (logFileText && [logFileText length]) {
 			if (displayText) {
@@ -716,7 +717,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 					#define HORIZONTAL_BAR			0x2013
 					#define HORIZONTAL_RULE_LENGTH	18
 
-					static const unichar separatorUTF16[HORIZONTAL_RULE_LENGTH] = {
+					const unichar separatorUTF16[HORIZONTAL_RULE_LENGTH] = {
 						HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR,
 						HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR,
 						HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR
@@ -808,7 +809,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 						if (searchWordsIndex != NSNotFound) {
 							[searchWordsArray removeObjectAtIndex:searchWordsIndex];
 						} else {
-							NSLog(@"displayLog: Couldn't find %@ in %@",quotedWord,searchWordsArray);
+							NSLog(@"displayLog: Couldn't find %@ in %@", quotedWord, searchWordsArray);
 						}
 					}
 					
@@ -923,7 +924,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	//We need a little trickery here.  When we change the row, the table view will call our tableViewSelectionDidChange: method.
 	//This method will clear the automaticSearch flag, and break any scroll-to-bottom behavior we have going on for the custom
 	//search.  As a quick hack, I've added an ignoreSelectionChange flag that can be set to inform our selectionDidChange method
-	//that we instanciated this selection change, and not the user.
+	//that we instantiated this selection change, and not the user.
 	ignoreSelectionChange = YES;
 	[tableView_results selectRow:0 byExtendingSelection:NO];
 	[tableView_results scrollRowToVisible:0];
