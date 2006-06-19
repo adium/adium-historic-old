@@ -1910,7 +1910,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 		iCalFirstDayOfWeekDetermined = YES;
 	}
 
-	return ((todayDayOfWeek > firstDayOfWeek) ? (todayDayOfWeek - firstDayOfWeek) : ((todayDayOfWeek + 7) - firstDayOfWeek));
+	return ((todayDayOfWeek >= firstDayOfWeek) ? (todayDayOfWeek - firstDayOfWeek) : ((todayDayOfWeek + 7) - firstDayOfWeek));
 }
 
 /*
