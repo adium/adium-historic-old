@@ -1621,31 +1621,17 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		if ([[(AIMetaContact *)item listContactsIncludingOfflineAccounts] count] > 1) {
 			return [(AIMetaContact *)item longDisplayName];
 		} else {
-			NSString *displayName = [(AIMetaContact *)item displayName];
-			NSString *formattedUID = [(AIMetaContact *)item formattedUID];
-			
-			if ([displayName isEqualToString:formattedUID]) {
-				return displayName;
-			} else {
-				return [NSString stringWithFormat:@"%@ (%@)", displayName, formattedUID];
-			}
+			return [(AIMetaContact *)item longDisplayName];
 		}
 
 	} else if ([item isKindOfClass:[AIListContact class]]) {
 		AIListContact *parentContact = [(AIListContact *)item parentContact];
 		if (parentContact != item) {
-			//This contact is within a metacontact
+			//This contact is within a metacontact - always show its UID
 			return [(AIListContact *)item formattedUID];
 
 		} else {
-			NSString *displayName = [(AIListContact *)item displayName];
-			NSString *formattedUID = [(AIListContact *)item formattedUID];
-			
-			if ([displayName isEqualToString:formattedUID]) {
-				return displayName;
-			} else {
-				return [NSString stringWithFormat:@"%@ (%@)", displayName, formattedUID];
-			}
+			return [(AIListContact *)item longDisplayName];
 		}
 
 	} else if ([item isKindOfClass:[AILogToGroup class]]) {

@@ -104,7 +104,7 @@ typedef enum {
 	NSCalendarDate		*filterDate;
 	int					firstDayOfWeek;
 	BOOL				iCalFirstDayOfWeekDetermined;
-
+	
 	NSMutableDictionary	*logToGroupDict;
 	NSMutableDictionary	*logFromGroupDict;
 
