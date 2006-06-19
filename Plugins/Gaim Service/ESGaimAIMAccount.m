@@ -47,7 +47,10 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 - (void)initAccount
 {
 	[super initAccount];
-	
+
+	//XXX
+	[SLGaimCocoaAdapter sharedInstance];
+
 	arrayOfContactsForDelayedUpdates = nil;
 	delayedSignonUpdateTimer = nil;
 	
@@ -207,7 +210,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 				
 				//Check for a PeerConnection for a direct IM currently open
 				PeerConnection	*conn;
-				OscarData		*od = (OscarData *)gc->proto_data;
+				OscarData		*od = (OscarData *)account->gc->proto_data;
 				const char		*who = [[inListObject UID] UTF8String];
 				
 				conn = peer_connection_find_by_type(od, who, OSCAR_CAPABILITY_DIRECTIM);
@@ -231,7 +234,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 										  forKey:[inListObject internalObjectID]];
 					}
 					
-					[thisContactQueue addObject:contentMessage];
+					[thisContactQueue addObject:inContentMessage];
 					
 					//Return nil for now to indicate that the message should not be sent
 					returnString = nil;
@@ -250,27 +253,11 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 
 /*!
  * @brief Can we send images for this chat?
- *
- * @result YES if we are currently in a direct IM session or are connecting to one
  */
 - (BOOL)canSendImagesForChat:(AIChat *)inChat
 {
-	if (inChat && [inChat listObject]) {
-		//Check for a oscar_direct_im (dim) currently open
-		struct oscar_direct_im  *dim;
-		const char				*who = [[[inChat listObject] UID] UTF8String];
-
-		if (account && account->gc && who) {
-			//dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
-			dim = NULL;
-
-			if (dim) {
-				return YES;
-			}
-		}
-	}
-	
-	return NO;
+	//XXX Check against the chat's list object's capabilities for DirectIM
+	return ![inChat isGroupChat];
 }
 
 #pragma mark Contact List Menu Items
@@ -436,7 +423,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	
 	if (gaim_account_is_connected(account) &&
 		(od = account->gc->proto_data) &&
-		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))) {
+		(userinfo = aim_locate_finduserinfo(od, [[theContact UID] UTF8String]))) {
 		
 		//Update the profile if necessary - length must be greater than one since we get "" with info_len 1
 		//when attempting to retrieve the profile of an AOL member (which can't be done via AIM).
@@ -487,7 +474,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) && 
 		(theContactUID = [theContact UID]) && 
-		(userinfo = aim_locate_finduserinfo(od->sess, [theContactUID UTF8String]))) {
+		(userinfo = aim_locate_finduserinfo(od, [theContactUID UTF8String]))) {
 
 		//Client
 		NSString	*storedString = [theContact statusObjectForKey:@"Client"];
@@ -495,7 +482,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		BOOL		isMobile = NO;
 
 		if (userinfo->present & AIM_USERINFO_PRESENT_FLAGS) {
-			if (userinfo->capabilities & AIM_CAPS_HIPTOP) {
+			if (userinfo->capabilities & OSCAR_CAPABILITY_HIPTOP) {
 				client = AILocalizedString(@"AIM via Hiptop", "A 'Hiptop' is a mobile device; this phrase descibes a contact who is connected to AIM through a hiptop.");
 				isMobile = YES;
 				
