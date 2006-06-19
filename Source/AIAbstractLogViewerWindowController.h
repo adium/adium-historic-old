@@ -114,7 +114,9 @@ typedef enum {
 
 	NSMutableDictionary	*toolbarItems;
     NSImage				*blankImage;
-	
+	NSImage				*adiumIcon;
+	NSImage				*adiumIconHighlighted;
+
 	NSMutableArray		*fromArray;				//Array of account names
     NSMutableArray		*fromServiceArray;		//Array of services for accounts
     NSMutableArray		*toArray;				//Array of contacts
