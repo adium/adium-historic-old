@@ -185,7 +185,7 @@
 			
 			if ((g = gaim_buddy_get_group(buddy)) &&
 				(od = account->gc->proto_data) &&
-				(comment = aim_ssi_getcomment(od->sess->ssi.local, g->name, buddy->name))) {
+				(comment = aim_ssi_getcomment(od->ssi.local, g->name, buddy->name))) {
 				gchar		*comment_utf8;
 				
 				comment_utf8 = gaim_utf8_try_convert(comment);
@@ -241,7 +241,7 @@
 
 			if ((gaim_account_is_connected(account)) &&
 				(od = account->gc->proto_data)) {
-				aim_icq_getalias(od->sess, contactUIDUTF8String);
+				aim_icq_getalias(od, contactUIDUTF8String);
 			}
 		}
 
@@ -282,7 +282,7 @@
 /*!
 * @brief Allow a file transfer with an object?
  *
- * Only return YES if the user's capabilities include AIM_CAPS_SENDFILE indicating support for file transfer
+ * Only return YES if the user's capabilities include OSCAR_CAPABILITY_SENDFILE indicating support for file transfer
  */
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
 {
@@ -291,9 +291,9 @@
 	
 	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) &&
-		(userinfo = aim_locate_finduserinfo(od->sess, [[inListObject UID] UTF8String]))) {
+		(userinfo = aim_locate_finduserinfo(od, [[inListObject UID] UTF8String]))) {
 		
-		return (userinfo->capabilities & AIM_CAPS_SENDFILE);
+		return (userinfo->capabilities & OSCAR_CAPABILITY_SENDFILE);
 	}
 	
 	return NO;
@@ -420,69 +420,3 @@
 }
 
 @end
-
-#pragma mark Coding Notes
-
-/*if (isdigit(b->name[0])) {
-char *status;
-status = gaim_icq_status((b->uc & 0xffff0000) >> 16);
-tmp = ret;
-ret = g_strconcat(tmp, _("<b>Status:</b> "), status, "\n", NULL);
-g_free(tmp);
-g_free(status);
-}
-
-if ((bi != NULL) && (bi->ipaddr)) {
-    char *tstr =  g_strdup_printf("%hhd.%hhd.%hhd.%hhd",
-                                  (bi->ipaddr & 0xff000000) >> 24,
-                                  (bi->ipaddr & 0x00ff0000) >> 16,
-                                  (bi->ipaddr & 0x0000ff00) >> 8,
-                                  (bi->ipaddr & 0x000000ff));
-    tmp = ret;
-    ret = g_strconcat(tmp, _("<b>IP Address:</b> "), tstr, "\n", NULL);
-    g_free(tmp);
-    g_free(tstr);
-}
-
-if ((userinfo != NULL) && (userinfo->capabilities)) {
-    char *caps = caps_string(userinfo->capabilities);
-    tmp = ret;
-    ret = g_strconcat(tmp, _("<b>Capabilities:</b> "), caps, "\n", NULL);
-    g_free(tmp);
-}
-
-static void oscar_ask_direct_im(GaimBlistNode *node, gpointer ignored);
-
-*/
-
-#if 0
-//**Adium
-GaimXfer *oscar_xfer_new(GaimConnection *gc, const char *destsn) {
-	OscarData *od = (OscarData *)gc->proto_data;
-	GaimXfer *xfer;
-	struct aim_oft_info *oft_info;
-	
-	/* You want to send a file to someone else, you're so generous */
-	
-	/* Build the file transfer handle */
-	xfer = gaim_xfer_new(gaim_connection_get_account(gc), GAIM_XFER_SEND, destsn);
-	xfer->local_port = 5190;
-	
-	/* Create the oscar-specific data */
-	oft_info = aim_oft_createinfo(od->sess, NULL, destsn, xfer->local_ip, xfer->local_port, 0, 0, NULL);
-	xfer->data = oft_info;
-	
-	/* Setup our I/O op functions */
-	gaim_xfer_set_init_fnc(xfer, oscar_xfer_init);
-	gaim_xfer_set_start_fnc(xfer, oscar_xfer_start);
-	gaim_xfer_set_end_fnc(xfer, oscar_xfer_end);
-	gaim_xfer_set_cancel_send_fnc(xfer, oscar_xfer_cancel_send);
-	gaim_xfer_set_cancel_recv_fnc(xfer, oscar_xfer_cancel_recv);
-	gaim_xfer_set_ack_fnc(xfer, oscar_xfer_ack);
-	
-	/* Keep track of this transfer for later */
-	od->file_transfers = g_slist_append(od->file_transfers, xfer);
-	
-	return xfer;
-}
-#endif
