@@ -674,43 +674,36 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
 {	
-	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
-	NSAttributedString		*attributedMessage;
-	NSDate					*date;
-	
+	GaimMessageFlags	flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
+	NSAttributedString	*attributedMessage;
+	NSString			*source;
+
+	//Gaim is telling us that our message was sent successfully.
+	if (flags & GAIM_MESSAGE_SEND) return;
+
 	attributedMessage = [messageDict objectForKey:@"AttributedMessage"];
-	date = [messageDict objectForKey:@"Date"];
+	source = [messageDict objectForKey:@"Source"];
 	
-	if ((flags & GAIM_MESSAGE_SEND) != 0) {
-        //Gaim is telling us that our message was sent successfully.		
-
-		//We can now tell the other side that we're done typing
-		//[gaimThread sendTyping:AINotTyping inChat:chat];
+	//We display the message locally when it is sent.  If the protocol sends the message back to us, we should
+	//simply ignore it (MSN does this when a display name is set, for example).
+	if (![source isEqualToString:[self UID]]) {
+		AIListContact	*listContact;
 		
-	} else {
-		NSString			*source = [messageDict objectForKey:@"Source"];
-
-		//We display the message locally when it is sent.  If the protocol sends the message back to us, we should
-		//simply ignore it (MSN does this when a display name is set, for example).
-		if (![source isEqualToString:[self UID]]) {
-			AIListContact	*listContact;
+		//source may be (null) for system messages like topic changes
+		listContact = (source ? [self contactWithUID:source] : nil);
+		
+		if (listContact) {
+			[self _receivedMessage:attributedMessage
+							inChat:chat 
+				   fromListContact:listContact
+							 flags:flags
+							  date:[messageDict objectForKey:@"Date"]];
+		} else {
+			//If we didn't get a listContact, this is a gaim status message... display it as such.
+			[[adium contentController] displayStatusMessage:[attributedMessage string]
+													 ofType:@"gaim"
+													 inChat:chat];
 			
-			//source may be (null) for system messages like topic changes
-			listContact = (source ? [self contactWithUID:source] : nil);
-
-			if (listContact) {
-				[self _receivedMessage:attributedMessage
-								inChat:chat 
-					   fromListContact:listContact
-								 flags:flags
-								  date:date];
-			} else {
-				//If we didn't get a listContact, this is a gaim status message... display it as such.
-				[[adium contentController] displayStatusMessage:[attributedMessage string]
-														ofType:@"gaim"
-														inChat:chat];
-
-			}
 		}
 	}
 }
