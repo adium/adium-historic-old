@@ -119,7 +119,7 @@
 							[logDict setObject:theLog
 										forKey:relativeLogPath];
 						} else {
-							NSLog(@"Class %@: Couldn't make for %@ %@ %@ %@",NSStringFromClass([AIChatLog class]),relativeLogPath,from,to,serviceClass);
+							AILog(@"Class %@: Couldn't make for %@ %@ %@ %@",NSStringFromClass([AIChatLog class]),relativeLogPath,from,to,serviceClass);
 						}	
 						[theLog release];
 					}
@@ -146,22 +146,23 @@
 		if (logDict) {
 			//Use the full dictionary if we have it
 			theLog = [logDict objectForKey:inPath];
-			
+
 		} else {
 			//Otherwise, use the partialLog dictionary, adding to it if necessary
 			if (!partialLogDict) partialLogDict = [[NSMutableDictionary alloc] init];
 			
-			if (!(theLog = [partialLogDict objectForKey:inPath])) {
-				AIChatLog	*theLog;
-				
+			if (!(theLog = [partialLogDict objectForKey:inPath])) {				
 				theLog = [[AIChatLog alloc] initWithPath:inPath
 													from:from
 													  to:to
 											serviceClass:serviceClass];
+
 				[partialLogDict setObject:theLog
 								   forKey:inPath];
 				[theLog release];
 			}
+
+			if (!theLog) AILog(@"%@ couldn't find %@ in its partialLogDict",self,inPath);
 		}
 	}
 	return theLog;
