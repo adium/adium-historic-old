@@ -148,7 +148,7 @@ static int toArraySort(id itemA, id itemB, void *context);
     displayedLogArray = nil;
     aggregateLogIndexProgressTimer = nil;
     windowIsClosing = NO;
-	
+
     blankImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
 
     sortDirection = YES;
@@ -1883,6 +1883,29 @@ static int toArraySort(id itemA, id itemB, void *context)
 	return [dateTypeMenu autorelease];
 }
 
+- (int)daysSinceStartOfWeekGivenToday:(NSCalendarDate *)today
+{
+	int todayDayOfWeek = [today dayOfWeek];
+
+	//Try to look at the iCal preferences if possible
+	if (!iCalFirstDayOfWeekDetermined) {
+		CFPropertyListRef iCalFirstDayOfWeek = CFPreferencesCopyAppValue(CFSTR("first day of week"),CFSTR("com.apple.iCal"));
+		if (iCalFirstDayOfWeek) {
+			//This should return a CFNumberRef... we're using another app's prefs, so make sure.
+			if (CFGetTypeID(iCalFirstDayOfWeek) == CFNumberGetTypeID()) {
+				firstDayOfWeek = [(NSNumber *)iCalFirstDayOfWeek intValue];
+			}
+
+			CFRelease(iCalFirstDayOfWeek);
+		}
+
+		//Don't check again
+		iCalFirstDayOfWeekDetermined = YES;
+	}
+
+	return ((todayDayOfWeek > firstDayOfWeek) ? (todayDayOfWeek - firstDayOfWeek) : ((todayDayOfWeek + 7) - firstDayOfWeek));
+}
+
 /*
  * @brief A new date type was selected
  *
@@ -1918,7 +1941,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 			filterDateType = AIDateTypeAfter;
 			filterDate = [[today dateByAddingYears:0
 											months:0
-											  days:-[today dayOfWeek]
+											  days:-[self daysSinceStartOfWeekGivenToday:today]
 											 hours:-[today hourOfDay]
 										   minutes:-[today minuteOfHour]
 										   seconds:-([today secondOfMinute] + 1)] retain];
@@ -1970,6 +1993,9 @@ static int toArraySort(id itemA, id itemB, void *context)
 
 - (void)configureDateFilter
 {
+	firstDayOfWeek = 0; /* Sunday */
+	iCalFirstDayOfWeekDetermined = NO;
+
 	[popUp_dateFilter setMenu:[self dateTypeMenu]];
 	[popUp_dateFilter selectItemWithTag:AIDateTypeAnyDate];
 	[self selectedDateType:AIDateTypeAnyDate];
