@@ -194,6 +194,9 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 	[horizontalRule release]; horizontalRule = nil;
 
+	[adiumIcon release]; adiumIcon = nil;
+	[adiumIconHighlighted release]; adiumIconHighlighted = nil;
+	
 	//We loaded	view_DatePicker from a nib manually, so we must release it
 	[view_DatePicker release]; view_DatePicker = nil;
 
@@ -1687,8 +1690,25 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 													   type:AIServiceIconSmall
 												  direction:AIIconFlipped]];
 		
-	} else if ([item isKindOfClass:[ALL_CONTACTS_IDENTIFIER class]] ||
-			   [item isKindOfClass:[NSString class]]) {
+	} else if ([item isKindOfClass:[ALL_CONTACTS_IDENTIFIER class]]) {
+		if ([[outlineView arrayOfSelectedItems] containsObjectIdenticalTo:item]) {			
+			if (!adiumIconHighlighted) {
+				adiumIconHighlighted = [[NSImage imageNamed:@"adiumHighlight"
+												   forClass:[self class]] retain];
+			}
+
+			[cell setImage:adiumIconHighlighted];
+
+		} else {
+			if (!adiumIcon) {
+				adiumIcon = [[NSImage imageNamed:@"adium"
+										forClass:[self class]] retain];
+			}
+
+			[cell setImage:adiumIcon];
+		}
+
+	} else if ([item isKindOfClass:[NSString class]]) {
 		[cell setImage:nil];
 		
 	} else {
