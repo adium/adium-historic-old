@@ -154,7 +154,7 @@
     //If the display name changed, we resize the tabs
     if (notification == nil || [keys containsObject:@"DisplayName"]) {
 		id delegate = [[self tabView] delegate];
-		[delegate resizeTabForTabViewItem:self];
+		//[delegate resizeTabForTabViewItem:self];
 		
         /* This should really be looked at and possibly a better method found.
 		 * This works and causes an automatic update to each open tab.  But it feels like a hack.
@@ -193,9 +193,9 @@
 		}
 		
 		//If the list object's display name changed, we resize the tabs
-		if (!keys || [keys containsObject:@"Display Name"]) {
+		/*if (!keys || [keys containsObject:@"Display Name"]) {
 			[[[self tabView] delegate] resizeTabForTabViewItem:self];
-		}
+		}*/
 	}
 }
 
@@ -275,6 +275,7 @@
 
 - (int)objectCount
 {
+	//return 0 always to disable the badge
     return [[self chat] unviewedContentCount];
 }
 
