@@ -158,6 +158,10 @@
 		}
 
 		[container addTabViewItem:messageTab atIndex:index silent:YES];
+		[chat setStatusObject:messageTab
+					   forKey:@"MessageTabViewItem"
+					   notify:NotifyNever];
+		
 		[messageTab release];
 	}
 }
