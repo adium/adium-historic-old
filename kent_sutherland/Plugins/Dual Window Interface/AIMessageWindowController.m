@@ -498,7 +498,6 @@
         }
 		
         [self _updateWindowTitleAndIcon]; //Reflect change in window title
-		
 		[[adium interfaceController] chatDidBecomeVisible:chat inWindow:[self window]];
     }
 }
@@ -584,16 +583,6 @@
     if ([[pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSRTFPboardType]] isEqualToString:NSRTFPboardType]) { //got RTF data
         [[(AIMessageTabViewItem *)tabViewItem messageViewController] addToTextEntryView:[NSAttributedString stringWithData:[pasteboard dataForType:NSRTFPboardType]]];
     }
-}
-
-//Close a message tab
-- (void)tabView:(NSTabView *)aTabView didCloseTabViewItem:(NSTabViewItem *)tabViewItem
-{
-	if ([tabViewItem isKindOfClass:[AIMessageTabViewItem class]]) {
-		AIChat	*chat = [(AIMessageTabViewItem *)tabViewItem chat];
-		
-		[interface closeChat:chat];
-	}
 }
 
 //Get an image representation of the chat
