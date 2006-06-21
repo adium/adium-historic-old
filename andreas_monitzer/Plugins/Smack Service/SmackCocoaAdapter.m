@@ -199,5 +199,8 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     return [self messageTo:to type:[SmackCocoaAdapter staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.Message$Type"]];
 }
 
++ (SmackXXHTMLExtension*)XHTMLExtension {
+    return [[[NSClassFromString(@"org.jivesoftware.smackx.packet.XHTMLExtension") alloc] init] autorelease];
+}
 
 @end
