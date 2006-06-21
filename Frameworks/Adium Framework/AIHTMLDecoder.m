@@ -850,12 +850,25 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 		//Now handle attributes that have started or changed.
 		NSMutableString *elementContent = [[[inMessageString substringWithRange:runRange] mutableCopy] autorelease];
-        [elementContent replaceOccurrencesOfString:@"&" withString:@"&amp;" options:0 range:NSMakeRange(0,[elementContent length])];
-        [elementContent replaceOccurrencesOfString:@"<" withString:@"&lt;" options:0 range:NSMakeRange(0,[elementContent length])];
-        [elementContent replaceOccurrencesOfString:@">" withString:@"&gt;" options:0 range:NSMakeRange(0,[elementContent length])];
-		if (![startedKeys count]) {
-			goto addElementContentToTopElement_label;
-		} else {
+		
+		//Escape special HTML characters.
+		NSRange elementRange = NSMakeRange(0, [elementContent length]);
+		unsigned int replacements;
+		
+		replacements = [elementContent replaceOccurrencesOfString:@"&" withString:@"&amp;"
+														  options:NSLiteralSearch range:elementRange];
+		elementRange.length += (replacements * 4);
+		
+		replacements = [elementContent replaceOccurrencesOfString:@"<" withString:@"&lt;"
+														  options:NSLiteralSearch range:elementRange];
+		elementRange.length += (replacements * 3);
+		
+		replacements = [elementContent replaceOccurrencesOfString:@">" withString:@"&gt;"
+														  options:NSLiteralSearch range:elementRange];
+		elementRange.length += (replacements * 3);
+		
+		BOOL addElementContentToTopElement;
+		if ([startedKeys count]) {
 			//Sort the keys by the length of their range.
 			//First, we build a list of [length, attribute-name] arrays.
 			NSMutableArray *startedKeysArray = [[startedKeys allObjects] mutableCopy];
@@ -896,13 +909,18 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			}
 
 			//Turn each consolidated bunch of keys into an element.
-			BOOL addElementContentToTopElement = NO;
+			addElementContentToTopElement = NO;
+
 			NSEnumerator *startedKeysEnum = [startedKeysArray objectEnumerator];
 			NSArray *item;
 			while ((item = [startedKeysEnum nextObject])) {
 				NSSet *itemKeys = [item objectAtIndex:1];
 
-				AIXMLElement *thisElement = [self elementWithAppKitAttributes:attributes attributeNames:itemKeys elementContent:elementContent shouldAddElementContentToTopElement:&addElementContentToTopElement];
+				//XXX This overwrites addElementContentToTopElement for each item in startedKeysArray... so only the last value makes it out. Is that right? -eds
+				AIXMLElement *thisElement = [self elementWithAppKitAttributes:attributes
+															   attributeNames:itemKeys
+															   elementContent:elementContent
+										  shouldAddElementContentToTopElement:&addElementContentToTopElement];
 				if (thisElement) {
 					[[elementStack lastObject] addObject:thisElement];
 					[attributeNamesStack addObject:itemKeys];
@@ -913,16 +931,18 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			}
 			[startedKeysArray release];
 
-			if (addElementContentToTopElement) {
-addElementContentToTopElement_label:;
-				//Insert an empty BR element between every pair of lines.
-				AIXMLElement *brElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"br"];
-				[brElement setSelfCloses:YES];
-				NSArray *linesAndBRs = [elementContent allLinesWithSeparator:brElement];
+		} else {
+			addElementContentToTopElement = YES;
+		}
 
-				//Add these zero or more lines, with BRs between them, to the top element on the stack.
-				[[elementStack lastObject] addObjectsFromArray:linesAndBRs];
-			}
+		if (addElementContentToTopElement) {
+			//Insert an empty BR element between every pair of lines.
+			AIXMLElement *brElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"br"];
+			[brElement setSelfCloses:YES];
+			NSArray *linesAndBRs = [elementContent allLinesWithSeparator:brElement];
+			
+			//Add these zero or more lines, with BRs between them, to the top element on the stack.
+			[[elementStack lastObject] addObjectsFromArray:linesAndBRs];
 		}
 
 		searchRange.location += runRange.length;
