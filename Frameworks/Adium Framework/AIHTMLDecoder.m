@@ -849,7 +849,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		}
 
 		//Now handle attributes that have started or changed.
-		NSString *elementContent = [inMessageString substringWithRange:runRange];
+		NSMutableString *elementContent = [[[inMessageString substringWithRange:runRange] mutableCopy] autorelease];
+        [elementContent replaceOccurrencesOfString:@"&" withString:@"&amp;" options:0 range:NSMakeRange(0,[elementContent length])];
+        [elementContent replaceOccurrencesOfString:@"<" withString:@"&lt;" options:0 range:NSMakeRange(0,[elementContent length])];
+        [elementContent replaceOccurrencesOfString:@">" withString:@"&gt;" options:0 range:NSMakeRange(0,[elementContent length])];
 		if (![startedKeys count]) {
 			goto addElementContentToTopElement_label;
 		} else {
