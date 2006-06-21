@@ -1325,7 +1325,6 @@
 		81B4CA200A416C3B00A8ABF5 /* SmackBridge.java in Sources */ = {isa = PBXBuildFile; fileRef = 81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */; };
 		81B4CA210A416C4200A8ABF5 /* smack.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81F659B90A2A8C4E008FC8E7 /* smack.jar */; };
 		81B4CA220A416C4200A8ABF5 /* smackx.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81F659BA0A2A8C4E008FC8E7 /* smackx.jar */; };
-		81B4CA250A416CAF00A8ABF5 /* SmackBridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */; };
 		81B4CA7D0A416F8300A8ABF5 /* ruli_addr.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA520A416F7E00A8ABF5 /* ruli_addr.c */; };
 		81B4CA7E0A416F8300A8ABF5 /* ruli_addr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA530A416F7E00A8ABF5 /* ruli_addr.h */; };
 		81B4CA7F0A416F8300A8ABF5 /* ruli_conf.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA540A416F7F00A8ABF5 /* ruli_conf.c */; };
@@ -1880,7 +1879,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 15;
 			files = (
-				81B4CA250A416CAF00A8ABF5 /* SmackBridge.jar in CopyFiles */,
 				81F659BD0A2A8C81008FC8E7 /* smack.jar in CopyFiles */,
 				81F659BE0A2A8C81008FC8E7 /* smackx.jar in CopyFiles */,
 			);

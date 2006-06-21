@@ -22,6 +22,7 @@
 #import "AIStatusDefines.h"
 #import "AIStatusController.h"
 #import "SmackListContact.h"
+#import "AIHTMLDecoder.h"
 
 #import "SmackXMPPRosterPlugin.h"
 
@@ -29,6 +30,8 @@
 #import "ruli/ruli.h"
 
 //#define SRVDNSTimeout 2.0
+
+static AIHTMLDecoder *messageencoder = nil;
 
 @implementation NSString (JIDAdditions)
 
@@ -198,8 +201,16 @@
             NSString *htmlmsg = nil;
             if(iter && [iter hasNext])
                 htmlmsg = [iter next];
-            if([htmlmsg length] > 0)
-                inMessage = [[NSAttributedString alloc] initWithHTML:[htmlmsg dataUsingEncoding:NSUnicodeStringEncoding] options:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:NSUnicodeStringEncoding] forKey:NSCharacterEncodingDocumentOption] documentAttributes:NULL];
+            if([htmlmsg length] > 0) {
+                if(!messageencoder) {
+                    messageencoder = [[AIHTMLDecoder alloc] init];
+                    [messageencoder setGeneratesStrictXHTML:YES];
+                    [messageencoder setIncludesHeaders:NO];
+                    [messageencoder setIncludesStyleTags:YES];
+                    [messageencoder setEncodesNonASCII:NO];
+                }
+                inMessage = [[messageencoder decodeHTML:htmlmsg] retain];
+            }
         }
         if(!inMessage)
             inMessage = [[NSAttributedString alloc] initWithString:[packet getBody] attributes:nil];
@@ -253,6 +264,24 @@
     [newmsg setThread:threadid];
     [newmsg setBody:[inMessageObject messageString]];
     // ### XHTML
+    
+    NSAttributedString *attmessage = [inMessageObject message];
+    if(!messageencoder) {
+        messageencoder = [[AIHTMLDecoder alloc] init];
+        [messageencoder setGeneratesStrictXHTML:YES];
+        [messageencoder setIncludesHeaders:NO];
+        [messageencoder setIncludesStyleTags:YES];
+        [messageencoder setEncodesNonASCII:NO];
+    }
+    
+    NSString *xhtmlmessage = [messageencoder encodeHTML:attmessage imagesPath:nil];
+    // for some reason I can't specify that I don't want <html> but that I do want <body>...
+    NSString *xhtmlbody = [NSString stringWithFormat:@"<body xmlns='http://www.w3.org/1999/xhtml'>%@</body>",xhtmlmessage];
+    
+    SmackXXHTMLExtension *xhtml = [SmackCocoaAdapter XHTMLExtension];
+    [xhtml addBody:xhtmlbody];
+    
+    [newmsg addExtension:xhtml];
     
     [connection sendPacket:newmsg];
     return YES;
