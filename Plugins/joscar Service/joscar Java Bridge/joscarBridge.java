@@ -235,7 +235,7 @@ SecuridProvider
 		} else if (changedProperty.equals("iconData")) {			
 			sendDelegateMessageWithMap("IconUpdate", map);
 			
-		} else if (changedProperty.equals("statusMessage")) {
+		} else if (changedProperty.equals("statusMessage") || changedProperty.equals("itunesUrl")) {
 			//don't use just "StatusMessage" because setStatusMessage: was already taken in ESjoscarCocoaAdapter
 			sendDelegateMessageWithMap("IncomingStatusMessage", map);
 
