@@ -7,7 +7,7 @@
 //
 
 #import "SmackListContact.h"
-
+#import "SmackXMPPAccount.h"
 
 @implementation SmackListContact
 
@@ -76,48 +76,21 @@
 	return statusType;
 }
 
-/*!
-* @brief Determine the status message to be displayed in the contact list
- *
- * @result <tt>NSAttributedString</tt> which will be the message for this contact in the contact list, after modifications
- */
+//- (NSAttributedString *)statusMessage
 - (NSAttributedString *)contactListStatusMessage
 {
-/*	NSEnumerator		*enumerator;
-	NSAttributedString	*contactListStatusMessage = nil;
-	AIListContact		*listContact;
-	
-	//Try to use an actual status message first
-	enumerator = [[self containedObjects] objectEnumerator];
-	while (!contactListStatusMessage && (listContact = [enumerator nextObject])) {
-		contactListStatusMessage = [listContact statusMessage];
-	}
-    
-	if (!contactListStatusMessage) {
-		//Next go for any contact list status message, which may include a display name or the name of a status such as "BRB"
-		enumerator = [[self containedObjects] objectEnumerator];
-		while (!contactListStatusMessage && (listContact = [enumerator nextObject])) {
-			contactListStatusMessage = [listContact contactListStatusMessage];
-		}		
-	}
-    
-	if (!contactListStatusMessage) {
-		return [self statusMessage];
-	}
-    
-	return contactListStatusMessage;*/
-    
     NSMutableAttributedString *result = [[NSMutableAttributedString alloc] init];
     
     NSEnumerator *e = [[self containedObjects] objectEnumerator];
     AIListContact *contact;
     
     while((contact = [e nextObject])) {
-        NSAttributedString *temp = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: ",[contact internalUniqueObjectID]] attributes:[NSDictionary dictionaryWithObject:[NSFont boldSystemFontOfSize:[NSFont labelFontSize]] forKey:NSFontAttributeName]];
+        NSAttributedString *temp = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: ",[[contact UID] jidResource]] attributes:[NSDictionary dictionaryWithObject:[NSFont boldSystemFontOfSize:[NSFont labelFontSize]] forKey:NSFontAttributeName]];
         [result appendAttributedString:temp];
         [temp release];
         
-        [result appendAttributedString:[contact contactListStatusMessage]];
+        if([contact contactListStatusMessage])
+            [result appendAttributedString:[contact contactListStatusMessage]];
 
         temp = [[NSAttributedString alloc] initWithString:@"\n" attributes:nil];
         [result appendAttributedString:temp];
@@ -127,6 +100,19 @@
     NSLog(@"contactListStatusMessage = %@",[result string]);
     
     return [result autorelease];
+}
+
+//- (NSAttributedString *)contactListStatusMessage
+- (NSAttributedString *)statusMessage
+{
+    NSLog(@"statusMessage = %@", [[[self preferredContact] contactListStatusMessage] string]);
+    return [[self preferredContact] contactListStatusMessage];
+}
+
+- (NSString*)statusMessageString
+{
+    NSLog(@"statusMessageString = %@", [[[self preferredContact] contactListStatusMessage] string]);
+    return [[self statusMessage] string];
 }
 
 /*
