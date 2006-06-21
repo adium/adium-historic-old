@@ -206,7 +206,7 @@ static BOOL is_leap_year(unsigned year) {
 		start_of_date = ch;
 
 		unsigned segment;
-		unsigned num_leading_hyphens = 0U, num_middle_hyphens = 0U, num_digits = 0U;
+		unsigned num_leading_hyphens = 0U, num_digits = 0U;
 
 		if(*ch == 'T') {
 			//There is no date here, only a time. Set the date to now; then we'll parse the time.
@@ -432,7 +432,8 @@ static BOOL is_leap_year(unsigned year) {
 
 							if(*ch == '-')
 							{
-								month_or_week = read_segment_2digits(++ch, &ch);
+								ch++;
+								month_or_week = read_segment_2digits(ch, &ch);
 								NSLog(@"(%@) month is %u", str, month_or_week);
 							}
 
@@ -442,8 +443,10 @@ static BOOL is_leap_year(unsigned year) {
 						case 2: //--MM; --MM-DD
 							year = [now yearOfCommonEra];
 							month_or_week = segment;
-							if(*ch == '-')
-								day = read_segment_2digits(++ch, &ch);
+							if(*ch == '-') {
+								ch++;
+								day = read_segment_2digits(ch, &ch);
+							}
 							break;
 
 						case 3: //---DD
@@ -503,17 +506,20 @@ static BOOL is_leap_year(unsigned year) {
 		}
 
 		if(isValidDate) {
-			if(isspace(*ch) || (*ch == 'T')) ++ch;
+			if(isspace(*ch) || (*ch == 'T')) ch++;
 
 			if(isdigit(*ch)) {
 				hour = read_segment_2digits(ch, &ch);
 				if(*ch == ':') {
-					minute = read_double(++ch, &ch);
+					ch++;
+					minute = read_double(ch, &ch);
 					second = modf(minute, &minute);
 					if(second > DBL_EPSILON)
 						second *= 60.0; //Convert fraction (e.g. .5) into seconds (e.g. 30).
-					else if(*ch == ':')
-						second = read_double(++ch, &ch);
+					else if(*ch == ':') {
+						ch++;
+						second = read_double(ch, &ch);
+					}
 				}
 
 				switch(*ch) {
