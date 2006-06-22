@@ -98,7 +98,13 @@
 //AIXMLElement: Sub-element (e.g. span in a p).
 - (void) addObject:(id)obj
 {
-	NSParameterAssert([obj isKindOfClass:[NSString class]] || [obj isKindOfClass:[AIXMLElement class]]);
+	BOOL isString = [obj isKindOfClass:[NSString class]];
+	NSParameterAssert(isString || [obj isKindOfClass:[AIXMLElement class]]);
+
+	if(isString) {
+		obj = [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)obj, /*entitiesDictionary*/ NULL) autorelease];
+	}
+
 	[contents addObject:obj];
 }
 - (void) addObjectsFromArray:(NSArray *)array
