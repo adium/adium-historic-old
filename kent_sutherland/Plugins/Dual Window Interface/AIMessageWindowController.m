@@ -197,6 +197,7 @@
 	[tabView_tabBar setStyleNamed:@"Adium"];
 	[tabView_tabBar setCanCloseOnlyTab:YES];
 	[tabView_tabBar setUseOverflowMenu:NO];
+	[tabView_tabBar setSizeCellsToFit:YES];
 	[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
 }
 
@@ -228,7 +229,10 @@
 
 	//Hide our window now, making sure we set active chat to nil before ordering out.  When we order out, another window
 	//may become key and set itself active.  Setting active to nil after that happened would cause problems.
-	[[adium interfaceController] chatDidBecomeActive:nil];
+	//We want to set the active chat to nil only if the window being closed is the active window
+	if ([[self window] isKeyWindow]) {
+		[[adium interfaceController] chatDidBecomeActive:nil];
+	}
 	[[self window] orderOut:nil];
 
 	//Now we close our window for real.  By hiding first, we get a smoother close as the user won't see each tab closing
@@ -257,7 +261,9 @@
 
 	//Chats have all closed, set active to nil, let the interface know we closed.  We should skip this step if our
 	//window is no longer visible, since in that case another window will have already became active.
-	if ([[self window] isVisible]) [[adium interfaceController] chatDidBecomeActive:nil];
+	if ([[self window] isVisible] && [[self window] isKeyWindow]) {
+		[[adium interfaceController] chatDidBecomeActive:nil];
+	}
 	[interface containerDidClose:self];
 
     return;
@@ -627,7 +633,7 @@
 	
 	[viewImage unlockFocus];
 	
-	offset->width = [(id <PSMTabStyle>)[[tabView delegate] style] leftMarginForTabBarControl] - 1;
+	offset->width = [(id <PSMTabStyle>)[[tabView delegate] style] leftMarginForTabBarControl];
 	offset->height = contentFrame.size.height;
 	*styleMask = NSTitledWindowMask;
 	
@@ -643,8 +649,8 @@
 	id <PSMTabStyle> style = (id <PSMTabStyle>)[[tabView delegate] style];
 	[[newController tabBar] setStyle:style];
 	
-	point.x -= [style leftMarginForTabBarControl] - 1;
-	point.y -= windowFrame.size.height - [[[newController window] contentView] frame].size.height - 1;
+	point.x -= [style leftMarginForTabBarControl];
+	point.y -= windowFrame.size.height - [[[newController window] contentView] frame].size.height;
 	frame.origin = point;
 	frame.size = [[self window] frame].size;
 	[[newController window] setFrame:frame display:NO];
