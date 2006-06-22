@@ -460,5 +460,23 @@
 	[NSGraphicsContext restoreGraphicsState];
 }
 
+#pragma mark Accessibility
+
+- (NSArray *)accessibilityAttributeNames
+{
+	NSMutableArray *names = [[super accessibilityAttributeNames] mutableCopy];
+	[names addObject:NSAccessibilityTitleAttribute];
+	[names autorelease];
+	return names;
+}
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{	
+	if([attribute isEqualToString:NSAccessibilityTitleAttribute])
+		return AILocalizedString(@"Contact List Outline", nil);
+	else
+		return [super accessibilityAttributeValue:attribute];
+}
+
+
 @end
 
