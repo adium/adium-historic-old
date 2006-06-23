@@ -18,10 +18,12 @@
 
  - Alternating rows
  - A vertical column grid
+ - Gradient selection highlighting
  */
 
 #import "AIAlternatingRowOutlineView.h"
 #import "AIOutlineView.h"
+#import "AIGradient.h"
 
 @interface AIAlternatingRowOutlineView (PRIVATE)
 - (void)_initAlternatingRowOutlineView;
@@ -29,6 +31,10 @@
 - (void)_drawGridInClipRect:(NSRect)rect;
 - (BOOL)_restoreSelectionFromSavedSelection;
 - (void)_saveCurrentSelection;
+@end
+
+@interface NSOutlineView (Undocumented)
+- (id)_highlightColorForCell:(NSCell *)cell;
 @end
 
 @implementation AIAlternatingRowOutlineView
@@ -53,6 +59,7 @@
 {
     drawsAlternatingRows = NO;
 	drawsBackground = YES;
+	drawsGradientSelection = NO;
     alternatingRowColor = [[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0] retain];
 }
 
@@ -74,6 +81,12 @@
 }
 - (BOOL)drawsAlternatingRows{
 	return drawsAlternatingRows;
+}
+
+- (void)setDrawsGradientSelection:(BOOL)inDrawsGradientSelection
+{
+	drawsGradientSelection = inDrawsGradientSelection;
+	[self setNeedsDisplay:YES];
 }
 
 //Set the alternating row color
@@ -106,70 +119,136 @@
 	return ((row % 2) ? [self backgroundColor] : [self alternatingRowColor]);
 }
 
+#pragma mark Drawing
 
-// Drawing ----------------------------------------------------------------------
 //Draw the alternating colors and grid below the "bottom" of the outlineview
+- (void)drawAlternatingRowsInRect:(NSRect)rect
+{
+	if (!drawsBackground || !drawsAlternatingRows) return;
+
+	NSRect	rowRect;
+	int		rowHeight;
+	int		numberOfColumns, numberOfRows;
+	int		row;
+	int		rectNumber = 0;
+	
+	//Setup
+	numberOfRows = [self numberOfRows];
+	numberOfColumns = [self numberOfColumns];
+	rowHeight = [self rowHeight];
+	if (numberOfRows == 0) {
+		rowRect = NSMakeRect(0,0,rect.size.width,rowHeight);
+	} else {
+		rowRect = [self rectOfRow:0];
+	}
+	
+	NSRect *gridRects = (NSRect *)malloc(sizeof(NSRect) * (numberOfRows + ((int)round(((rect.size.height / rowHeight) / 2) + 0.5))));
+	for (row = 0; row < numberOfRows; row += 2) {
+		if (row < numberOfRows) {
+			NSRect	thisRect = [self rectOfRow:row];
+			if (NSIntersectsRect(thisRect, rect)) { 
+				gridRects[rectNumber++] = thisRect;
+			}
+		}
+	}
+	
+	if (rectNumber > 0) {
+		[[self alternatingRowColor] set];
+		NSRectFillList(gridRects, rectNumber);
+	}
+	free(gridRects);
+}
+
 - (void)drawRect:(NSRect)rect
 {
-	//Draw the rest of the outline view first
 	[super drawRect:rect];
-	
-    if (drawsBackground && drawsAlternatingRows) {
-		NSRect	rowRect;
-		int		rowHeight;
-		BOOL	coloredRow;
-		int		numberOfColumns, numberOfRows;
 
-		//Setup
-		numberOfRows = [self numberOfRows];
-		numberOfColumns = [self numberOfColumns];
-		rowHeight = [self rowHeight];// + [self intercellSpacing].height;
-		if (numberOfRows == 0) {
-			rowRect = NSMakeRect(0,0,rect.size.width,rowHeight);
-			coloredRow = YES;        
-		} else {
-			rowRect = NSMakeRect(0, NSMaxY([self rectOfRow:numberOfRows-1])/* - [self intercellSpacing].height*/, rect.size.width, rowHeight);
-			coloredRow = !(numberOfRows % 2);        
-		}
+	if (drawsBackground && drawsAlternatingRows && [self drawsGrid]) {
+		[self _drawGridInClipRect:rect];
+	}
+}
+
+#pragma mark Gradient selection and alternating rows
+/*
+ * @brief If we are drawing a gradient selection, returns the gradient to draw
+ */
+- (AIGradient *)selectedControlGradient
+{
+	return [AIGradient selectedControlGradientWithDirection:AIVertical];
+}
+
+- (void)highlightSelectionInClipRect:(NSRect)clipRect
+{
+	[self drawAlternatingRowsInRect:clipRect];
+
+	if (drawsGradientSelection) {
+		NSLog(@"Drawing gradient selection");
+		NSIndexSet *indices = [self selectedRowIndexes];
+		unsigned int bufSize = [indices count];
+		unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
+		unsigned int i = 0, j = 0;
 		
-		//Draw the grid
-		while (rowRect.origin.y < rect.origin.y + rect.size.height && rowHeight > 0) {
-			[self _drawRowInRect:rowRect colored:coloredRow selected:NO];
+		AIGradient *gradient = [self selectedControlGradient];
+		
+		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
+		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
+		
+		NSRect *selectionLineRects = (NSRect *)malloc(sizeof(NSRect) * bufSize);
+		NSRect gradientRect = NSZeroRect;
+		
+		while (i < bufSize) {
+			int startIndex = buf[i];
+			int lastIndex = buf[i];
+			while ((i + 1 < bufSize) &&
+				   (buf[i + 1] == lastIndex + 1)){
+				i++;
+				lastIndex++;
+			}
 			
-			//Move to the next row
-			coloredRow = !coloredRow;
-			rowRect.origin.y += rowHeight;            
+			NSRect thisRect = NSUnionRect([self rectOfRow:startIndex],
+										  [self rectOfRow:lastIndex]);
+			[gradient drawInRect:thisRect];
+			
+			//Draw a line at the light side, to make it look a lot cleaner
+			thisRect.size.height = 1;
+			selectionLineRects[j++] = gradientRect;			
+			
+			i++;		
 		}
 		
-		if ([self drawsGrid]) {
-			[self _drawGridInClipRect:rect];
-		}
-	}
-}
-
-//Draw alternating colors
-- (void)drawRow:(int)row clipRect:(NSRect)rect
-{
-    if (drawsBackground && drawsAlternatingRows) {
-		[self _drawRowInRect:[self rectOfRow:row] colored:!(row % 2) selected:[self isRowSelected:row]];
-	}
+		[[NSColor alternateSelectedControlColor] set];
+		NSRectFillListUsingOperation(selectionLineRects, j, NSCompositeSourceOver);
+		
+		free(buf);
+		free(selectionLineRects);
 	
-    [super drawRow:row clipRect:rect];
-}
-
-//Draw a row
-- (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected
-{
-	if (colored && !selected) {
-		//Wipe any existing color
-		[[NSColor clearColor] set];
-		NSRectFill(rect); //fillRect: doesn't work here... must behave differently w/ alpha
-		
-		//Draw our grid color
-		[[self alternatingRowColor] set];
-		NSRectFill(rect);
+	} else {
+		[super highlightSelectionInClipRect:clipRect];
 	}
 }
+
+//Override to prevent drawing glitches; otherwise, the cell will try to draw a highlight, too
+- (id)_highlightColorForCell:(NSCell *)cell
+{
+	if (/*drawsBackground && drawsAlternatingRows*/drawsGradientSelection) {
+		return nil;
+	} else {
+		return [super _highlightColorForCell:cell];
+	}
+}
+
+- (void)selectRowIndexes:(NSIndexSet *)indexes byExtendingSelection:(BOOL)extend
+{
+	[super selectRowIndexes:indexes byExtendingSelection:extend];
+
+	if (drawsGradientSelection) {
+		//We do fancy drawing, so we need a full redisplay when selection changes
+		[self setNeedsDisplay:YES];
+	}
+}
+
+
+#pragma mark Grid
 
 - (void)drawGridInClipRect:(NSRect)rect
 {

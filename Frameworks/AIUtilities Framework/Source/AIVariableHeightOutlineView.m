@@ -271,10 +271,44 @@
 }
 
 #pragma mark Drawing
+- (void)drawAlternatingRowsInRect:(NSRect)rect
+{
+	/* Draw the alternating rows.  If we draw alternating rows, the cell in the first column
+	 * can optionally suppress drawing.
+	 */
+	if ([self drawsAlternatingRows]) {
+		int numberOfRows = [self numberOfRows];
+		int rectNumber = 0;
+		NSTableColumn *tableColumn = [[self tableColumns] objectAtIndex:0];
+
+		NSRect *gridRects = (NSRect *)malloc(sizeof(NSRect) * numberOfRows);
+		for (int row = 0; row < numberOfRows; row += 2) {
+			if (row < numberOfRows) {
+				id 	cell = [self cellForTableColumn:tableColumn item:[self itemAtRow:row]];
+				if (![cell respondsToSelector:@selector(drawGridBehindCell)] || [cell drawGridBehindCell]) {					
+					NSRect	thisRect = [self rectOfRow:row];
+//					NSLog(@"This rect is %@ - %i",NSStringFromRect(thisRect),NSIntersectsRect(thisRect, rect));
+
+					if (NSIntersectsRect(thisRect, rect)) { 
+						gridRects[rectNumber++] = thisRect;
+					}
+				} else {
+					NSLog(@"%@ said not to draw",cell);
+				}
+			}
+		}
+		
+		if (rectNumber > 0) {
+			[[self alternatingRowColor] set];
+			NSRectFillList(gridRects, rectNumber);
+		}
+		free(gridRects);
+	}
+}
+
 - (void)drawRow:(int)row clipRect:(NSRect)rect
 {
 	if (row >= 0 && row < [self numberOfRows]) { //Somebody keeps calling this method with row = numberOfRows, which is wrong.
-
 		NSArray		*tableColumns = [self tableColumns];
 		id			item = [self itemAtRow:row];
 		unsigned	tableColumnIndex, count = [tableColumns count];
@@ -301,20 +335,6 @@
 														 byItem:item]];
 
 			cellFrame = [self frameOfCellAtColumn:tableColumnIndex row:row];
-
-			/*
-			 * Draw the alternating rows.  If we draw alternating rows, the cell in the first column
-			 * can optionally suppress drawing. We only do this before drawing the first column; that way,
-			 * we can cover the full width of the row in one stroke.
-			 */
-			if ([self drawsAlternatingRows] &&
-			   (![cell respondsToSelector:@selector(drawGridBehindCell)] || [cell drawGridBehindCell]) &&
-			   (tableColumnIndex == 0)) {
-
-				[self _drawRowInRect:[self rectOfRow:row]
-							 colored:!(row % 2)
-							selected:selected];
-			}
 
 			//Draw the cell
 			if (selected) [cell _drawHighlightWithFrame:cellFrame inView:self];
@@ -448,34 +468,10 @@
 - (void)highlightSelectionInClipRect:(NSRect)clipRect
 {
 	if (drawsSelectedRowHighlight && (!drawHighlightOnlyWhenMain || [[self window] isMainWindow])) {
-		//Apple wants us to do some pretty crazy stuff for selections in 10.3
-		NSIndexSet *indices = [self selectedRowIndexes];
-		unsigned int bufSize = [indices count];
-		unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
-		unsigned int i;
-
-		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
-		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
-
-		for (i = 0; i < bufSize; i++) {
-			[self _drawRowSelectionInRect:[self rectOfRow:buf[i]]];
-		}
-
-		free(buf);
+		[super highlightSelectionInClipRect:clipRect];
+	} else {
+		[self drawAlternatingRowsInRect:clipRect];
 	}
-}
-
-- (void)_drawRowSelectionInRect:(NSRect)rect
-{
-	//Draw the gradient
-	AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
-	[gradient drawInRect:rect];
-
-	//Draw a line at the light side, to make it look a lot cleaner
-	rect.size.height = 1;
-	[[NSColor alternateSelectedControlColor] set];
-	NSRectFillUsingOperation(rect, NSCompositeSourceOver);
-
 }
 
 @end
