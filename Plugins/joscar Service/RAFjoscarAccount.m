@@ -926,7 +926,7 @@ BOOL isHTMLContact(AIListObject *inListObject)
 #pragma mark File Transfer
 - (BOOL)supportsFolderTransfer
 {
-	return YES;
+	return /*YES*/NO;
 }
 
 - (void)newIncomingFileTransferWithUID:(NSString *)inUID
