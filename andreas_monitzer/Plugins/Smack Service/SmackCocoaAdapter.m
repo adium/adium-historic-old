@@ -203,4 +203,20 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     return [[[NSClassFromString(@"org.jivesoftware.smackx.packet.XHTMLExtension") alloc] init] autorelease];
 }
 
++ (SmackIQ*)IQ {
+    return [[[NSClassFromString(@"org.jivesoftware.smack.packet.IQ") alloc] init] autorelease];
+}
+
++ (SmackIQType*)IQType:(NSString*)type {
+    return [self staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.IQ$Type"];
+}
+
++ (SmackXMPPError*)XMPPErrorWithCode:(int)code {
+    return [[NSClassFromString(@"org.jivesoftware.smack.packet.XMPPError") newWithSignature:@"(I)",code] autorelease];
+}
+
++ (SmackXMPPError*)XMPPErrorWithCode:(int)code message:(NSString*)message {
+    return [[NSClassFromString(@"org.jivesoftware.smack.packet.XMPPError") newWithSignature:@"(ILjava/lang/String;)",code,message] autorelease];
+}
+
 @end

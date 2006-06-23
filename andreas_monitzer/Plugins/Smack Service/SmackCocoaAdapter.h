@@ -11,7 +11,7 @@
 #import "AIObject.h"
 
 @protocol AdiumSmackBridgeDelegate;
-@class SmackXMPPConnection, SmackXMPPAccount, SmackPresenceType, SmackPresenceMode, SmackMessageType, SmackConnectionConfiguration, SmackPresence, SmackMessage, SmackXXHTMLExtension;
+@class SmackXMPPConnection, SmackXMPPAccount, SmackPresenceType, SmackPresenceMode, SmackMessageType, SmackConnectionConfiguration, SmackPresence, SmackMessage, SmackXXHTMLExtension, SmackIQ, SmackIQType, SmackXMPPError;
 
 @interface SmackCocoaAdapter : AIObject <AdiumSmackBridgeDelegate> {
     SmackXMPPConnection *connection;
@@ -33,5 +33,9 @@
 + (SmackMessage*)messageTo:(NSString*)to typeString:(NSString*)type;
 
 + (SmackXXHTMLExtension*)XHTMLExtension;
++ (SmackIQ*)IQ;
++ (SmackIQType*)IQType:(NSString*)type;
++ (SmackXMPPError*)XMPPErrorWithCode:(int)code;
++ (SmackXMPPError*)XMPPErrorWithCode:(int)code message:(NSString*)message;
 
 @end
