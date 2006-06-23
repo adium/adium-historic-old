@@ -762,7 +762,6 @@ Class LogViewerWindowControllerClass = NULL;
 				
 				processed++;
 				[upgradeWindowController setProgress:(processed*100.0)/contactsToProcess];
-				NSLog(@"%f%% complete...", ((processed*100.0)/contactsToProcess));
 			}
 			
 			[upgradeWindowController close];
