@@ -76,19 +76,15 @@
 /*
  * @brief Retrieve the AIListWindowController in use
  */
-- (AIListWindowController *)contactListWindowController {
+- (AIMultiListWindowController *)contactListWindowController {
 	return contactListWindowController;
 }
 
 //Show contact list
 - (void)showContactListAndBringToFront:(BOOL)bringToFront
 {
-    if (!contactListWindowController) { //Load the window
-		if (windowStyle == WINDOW_STYLE_STANDARD) {
-			contactListWindowController = [[AIStandardListWindowController listWindowController] retain];
-		} else {
-			contactListWindowController = [[AIBorderlessListWindowController listWindowController] retain];
-		}
+	if (!contactListWindowController) { //Load the window
+		contactListWindowController = [[AIMultiListWindowController initialize:windowStyle] retain];
     }
 	
 	[contactListWindowController showWindowInFront:bringToFront];
@@ -107,7 +103,7 @@
 - (void)closeContactList
 {
     if (contactListWindowController) {
-        [[contactListWindowController window] performClose:nil];
+        [contactListWindowController performClose];
     }
 }
 

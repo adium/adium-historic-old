@@ -16,6 +16,7 @@
 
 #import <Adium/AIPlugin.h>
 #import "AIAbstractListController.h"
+#import "AIMultiListWindowController.h"
 
 #define KEY_LIST_LAYOUT_NAME			@"List Layout Name"
 #define KEY_LIST_THEME_NAME				@"List Theme Name"
@@ -26,14 +27,14 @@
 @protocol AIContactListController;
 
 @interface AISCLViewPlugin : AIPlugin <AIContactListController> {	
-	AIListWindowController				*contactListWindowController;
+	AIMultiListWindowController				*contactListWindowController;
 	AICLPreferences						*preferences;
 	ESContactListAdvancedPreferences	*advancedPreferences;
 	LIST_WINDOW_STYLE					windowStyle;
 }
 
 //Contact List Controller
-- (AIListWindowController *)contactListWindowController;
+- (AIListMultiWindowController *)contactListWindowController;
 - (void)contactListDidClose;
 - (void)showContactListAndBringToFront:(BOOL)bringToFront;
 - (BOOL)contactListIsVisibleAndMain;
