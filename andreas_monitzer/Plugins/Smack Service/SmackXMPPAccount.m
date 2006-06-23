@@ -59,7 +59,7 @@
 
 @end
 
-@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin;
+@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin;
 
 @interface NSObject (SmackXMPPPluginAddition)
 - (id)initWithAccount:(SmackXMPPAccount*)account;
@@ -86,6 +86,7 @@
             [SmackXMPPRosterPlugin class],
             [SmackXMPPMessagePlugin class],
             [SmackXMPPErrorMessagePlugin class],
+            [SmackXMPPHeadlineMessagePlugin class],
             nil
         };
         
