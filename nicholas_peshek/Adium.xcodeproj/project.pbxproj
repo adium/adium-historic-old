@@ -50,6 +50,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		017A21E70A4BDF8500A826E5 /* AIMultiListWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 017A21E50A4BDF8500A826E5 /* AIMultiListWindowController.h */; };
+		017A21E80A4BDF8500A826E5 /* AIMultiListWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 017A21E60A4BDF8500A826E5 /* AIMultiListWindowController.m */; };
 		01A348620A4BD8EE00A1D2A6 /* AISnappingWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 01A348600A4BD8EE00A1D2A6 /* AISnappingWindow.h */; };
 		01A348630A4BD8EE00A1D2A6 /* AISnappingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 01A348610A4BD8EE00A1D2A6 /* AISnappingWindow.m */; };
 		071C56330827933100399C0F /* Shared Dock Icon Images in Resources */ = {isa = PBXBuildFile; fileRef = 071C56310827933000399C0F /* Shared Dock Icon Images */; };
@@ -1728,6 +1730,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		017A21E50A4BDF8500A826E5 /* AIMultiListWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIMultiListWindowController.h; path = "Plugins/Contact List/AIMultiListWindowController.h"; sourceTree = "<group>"; };
+		017A21E60A4BDF8500A826E5 /* AIMultiListWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIMultiListWindowController.m; path = "Plugins/Contact List/AIMultiListWindowController.m"; sourceTree = "<group>"; };
 		01A348600A4BD8EE00A1D2A6 /* AISnappingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISnappingWindow.h; path = "Plugins/Contact List/AISnappingWindow.h"; sourceTree = "<group>"; };
 		01A348610A4BD8EE00A1D2A6 /* AISnappingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISnappingWindow.m; path = "Plugins/Contact List/AISnappingWindow.m"; sourceTree = "<group>"; };
 		071C56320827933000399C0F /* English */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English; path = "Resources/English.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
@@ -5897,6 +5901,8 @@
 			children = (
 				34A489F206F64359002C7C5F /* AISCLViewPlugin.h */,
 				34A489F106F64359002C7C5F /* AISCLViewPlugin.m */,
+				017A21E50A4BDF8500A826E5 /* AIMultiListWindowController.h */,
+				017A21E60A4BDF8500A826E5 /* AIMultiListWindowController.m */,
 				34A489FF06F6436D002C7C5F /* AIListWindowController.h */,
 				34A489FE06F6436D002C7C5F /* AIListWindowController.m */,
 				34A48A1306F6438F002C7C5F /* AIListController.h */,
@@ -7288,6 +7294,7 @@
 				3459CBEE0A25FFBF00ECC256 /* GetMetadataForHTMLLog.h in Headers */,
 				3459CBF00A25FFBF00ECC256 /* AdiumSpotlightImporter.h in Headers */,
 				01A348620A4BD8EE00A1D2A6 /* AISnappingWindow.h in Headers */,
+				017A21E70A4BDF8500A826E5 /* AIMultiListWindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8843,6 +8850,7 @@
 				3459CBED0A25FFBF00ECC256 /* GetMetadataForHTMLLog.m in Sources */,
 				3459CBEF0A25FFBF00ECC256 /* GetMetadataForFile.m in Sources */,
 				01A348630A4BD8EE00A1D2A6 /* AISnappingWindow.m in Sources */,
+				017A21E80A4BDF8500A826E5 /* AIMultiListWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
