@@ -1018,6 +1018,9 @@
 		34F4677B080F49C5007800AB /* Safari.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F46779080F49C5007800AB /* Safari.png */; };
 		34F46785080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46783080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m */; };
 		34F46786080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F46784080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.h */; };
+		34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F849520A4AEFA00002A017 /* LogFileUpgrade.nib */; };
+		34F849580A4AF04D0002A017 /* AILogFileUpgradeWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F849560A4AF04D0002A017 /* AILogFileUpgradeWindowController.h */; };
+		34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */; };
 		34FDD6E505632BFD00F5B30F /* ESFileTransferController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */; };
 		34FDD6E605632BFD00F5B30F /* ESFileTransferController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */; };
 		4947F5C00655E85200B791E5 /* AIStressTestAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC15BE90524CE5E00A8010A /* AIStressTestAccount.h */; };
@@ -3123,6 +3126,9 @@
 		34F52BD006E2AFF700887BE2 /* ESGaimICQAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimICQAccountViewController.m; path = "Plugins/Gaim Service/ESGaimICQAccountViewController.m"; sourceTree = "<group>"; };
 		34F52BD806E2B24100887BE2 /* ESGaimICQAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimICQAccount.h; path = "Plugins/Gaim Service/ESGaimICQAccount.h"; sourceTree = "<group>"; };
 		34F52BD906E2B24200887BE2 /* ESGaimICQAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimICQAccount.m; path = "Plugins/Gaim Service/ESGaimICQAccount.m"; sourceTree = "<group>"; };
+		34F849520A4AEFA00002A017 /* LogFileUpgrade.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LogFileUpgrade.nib; path = Resources/LogFileUpgrade.nib; sourceTree = "<group>"; };
+		34F849560A4AF04D0002A017 /* AILogFileUpgradeWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILogFileUpgradeWindowController.h; path = Source/AILogFileUpgradeWindowController.h; sourceTree = "<group>"; };
+		34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILogFileUpgradeWindowController.m; path = Source/AILogFileUpgradeWindowController.m; sourceTree = "<group>"; };
 		34FB54DD05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESWebFrameViewAdditions.m; path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.m"; sourceTree = "<group>"; };
 		34FB54DE05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESWebFrameViewAdditions.h; path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.h"; sourceTree = "<group>"; };
 		34FD5BB007F1F85B00687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
@@ -6046,6 +6052,8 @@
 				34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */,
 				34A796CA0A45EE4F00F517FB /* AISourceListOutlineView.h */,
 				34A796CB0A45EE4F00F517FB /* AISourceListOutlineView.m */,
+				34F849560A4AF04D0002A017 /* AILogFileUpgradeWindowController.h */,
+				34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */,
 			);
 			name = "Log Viewer";
 			sourceTree = "<group>";
@@ -6653,6 +6661,7 @@
 				3408268F075B5CB900703011 /* Flap.png */,
 				3474DFFF082550FD00BF30F0 /* Credits.rtf */,
 				34107B5509E992DA001CC042 /* GuestAccountWindow.nib */,
+				34F849520A4AEFA00002A017 /* LogFileUpgrade.nib */,
 			);
 			name = "About Box";
 			sourceTree = "<group>";
@@ -7369,6 +7378,7 @@
 				3456232D0A3771F400E7FC97 /* AILogFromGroup.h in Headers */,
 				345623400A3773D100E7FC97 /* AILoggerPlugin.h in Headers */,
 				34A796CC0A45EE4F00F517FB /* AISourceListOutlineView.h in Headers */,
+				34F849580A4AF04D0002A017 /* AILogFileUpgradeWindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8321,6 +8331,7 @@
 				342F88AC0A2A74BF0001DB29 /* RemoveShortcutPressed.tif in Resources */,
 				3456232F0A37723400E7FC97 /* LogViewer.nib in Resources */,
 				345623380A3773C300E7FC97 /* LoggingDefaults.plist in Resources */,
+				34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8959,6 +8970,7 @@
 				3456232C0A3771F400E7FC97 /* AILogFromGroup.m in Sources */,
 				3456233F0A3773D100E7FC97 /* AILoggerPlugin.m in Sources */,
 				34A796CD0A45EE4F00F517FB /* AISourceListOutlineView.m in Sources */,
+				34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
