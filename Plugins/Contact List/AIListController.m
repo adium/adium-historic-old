@@ -457,12 +457,12 @@ typedef enum {
 //
 - (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
-    NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
-	NSDragOperation retVal = NSDragOperationPrivate;
-	BOOL allowBetweenContactDrop = index==NSOutlineViewDropOnItemIndex;
+    NSArray	*types = [[info draggingPasteboard] types];
+	NSDragOperation retVal = NSDragOperationNone;
+	BOOL allowBetweenContactDrop = (index==NSOutlineViewDropOnItemIndex);
 	
 	//No dropping into contacts
-    if ([avaliableType isEqualToString:@"AIListObject"]) {
+    if ([types containsObject:@"AIListObject"]) {
 		if (index != NSOutlineViewDropOnItemIndex && (![[[adium contactController] activeSortController] canSortManually])) {
 			//disable drop between for non-Manual Sort.
 			return NSDragOperationNone;
@@ -486,10 +486,16 @@ typedef enum {
 			}
 			
 		}
+		
 		if (index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]) {
 			retVal = NSDragOperationCopy;
 		}
-	} else if(allowBetweenContactDrop == NO) {
+
+	} else if ([types containsObject:NSFilenamesPboardType] ||
+			   [types containsObject:NSRTFPboardType]) {
+		retVal = ((item && [item isKindOfClass:[AIListContact class]]) ? NSDragOperationLink : NSDragOperationNone);
+
+	} else if (!allowBetweenContactDrop) {
 		retVal = NSDragOperationNone;
 	}
 	
@@ -543,7 +549,7 @@ typedef enum {
 										   AILocalizedString(@"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\n\nYou may un-combine these contacts by getting info on the combined contact.","Explanation of metacontact creation"));
 		}
 
-	} else if([[[info draggingPasteboard] types] containsObject:NSFilenamesPboardType]) {
+	} else if ([[[info draggingPasteboard] types] containsObject:NSFilenamesPboardType]) {
 		//Drag and Drop file transfer for the contact list.
 		NSString		*file;
 		NSArray			*files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
@@ -555,7 +561,7 @@ typedef enum {
 			[[adium fileTransferController] sendFile:file toListContact:targetFileTransferContact];
 		}
 
-	} else if([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) {
+	} else if ([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) {
 		//Drag and drop text sending via the contact list.
 		AIListContact   *contact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
 																			  forListContact:item];
