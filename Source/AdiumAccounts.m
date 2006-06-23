@@ -99,10 +99,11 @@
 	NSMutableArray	*matchingAccounts = [NSMutableArray array];
 	NSEnumerator	*enumerator = [accounts objectEnumerator];
 	AIAccount		*account;
+	NSString		*serviceClass = [service serviceClass];
 	
 	while ((account = [enumerator nextObject])) {
 		if ([account enabled] &&
-			[[[account service] serviceClass] isEqualToString:[service serviceClass]]) {
+			[[[account service] serviceClass] isEqualToString:serviceClass]) {
 			[matchingAccounts addObject:account];
 		}
 	}
@@ -115,8 +116,8 @@
     NSEnumerator	*enumerator = [accounts objectEnumerator];
     AIAccount		*account = nil;
 
-	//XXX temporary -- is any code using passing us NSNumbers?
-	NSParameterAssert(!objectID || [objectID isKindOfClass:[NSString class]]);
+	//Some ancient preferences have NSNumbers instead of NSStrings. Work properly, silently.
+	if ([objectID isKindOfClass:[NSNumber class]]) objectID = [(NSNumber *)objectID stringValue];
 
     while (objectID && (account = [enumerator nextObject])) {
         if ([objectID isEqualToString:[account internalObjectID]]) break;
@@ -258,56 +259,41 @@
 - (NSString *)_upgradeServiceID:(NSString *)serviceID forAccountDict:(NSDictionary *)accountDict
 {
 	//Libgaim
-	if ([serviceID isEqualToString:@"AIM-LIBGAIM"]) {
-		NSString 	*uid = [accountDict objectForKey:ACCOUNT_UID];
-		if (uid && [uid length]) {
-			const char	firstCharacter = [uid characterAtIndex:0];
-			
-			if ([uid hasSuffix:@"@mac.com"]) {
-				serviceID = @"libgaim-oscar-Mac";
-			} else if (firstCharacter >= '0' && firstCharacter <= '9') {
-				serviceID = @"libgaim-oscar-ICQ";
-			} else {
-				serviceID = @"libgaim-oscar-AIM";
+	if ([serviceID rangeOfString:@"LIBGAIM" options:(NSLiteralSearch | NSAnchoredSearch | NSBackwardsSearch)].location != NSNotFound) {
+		if ([serviceID isEqualToString:@"AIM-LIBGAIM"]) {
+			NSString 	*uid = [accountDict objectForKey:ACCOUNT_UID];
+			if (uid && [uid length]) {
+				const char	firstCharacter = [uid characterAtIndex:0];
+				
+				if ([uid hasSuffix:@"@mac.com"]) {
+					serviceID = @"libgaim-oscar-Mac";
+				} else if (firstCharacter >= '0' && firstCharacter <= '9') {
+					serviceID = @"libgaim-oscar-ICQ";
+				} else {
+					serviceID = @"libgaim-oscar-AIM";
+				}
 			}
+		} else if ([serviceID isEqualToString:@"GaduGadu-LIBGAIM"]) {
+			serviceID = @"libgaim-Gadu-Gadu";
+		} else if ([serviceID isEqualToString:@"Jabber-LIBGAIM"]) {
+			serviceID = @"libgaim-Jabber";
+		} else if ([serviceID isEqualToString:@"MSN-LIBGAIM"]) {
+			serviceID = @"libgaim-MSN";
+		} else if ([serviceID isEqualToString:@"Napster-LIBGAIM"]) {
+			serviceID = @"libgaim-Napster";
+		} else if ([serviceID isEqualToString:@"Novell-LIBGAIM"]) {
+			serviceID = @"libgaim-GroupWise";
+		} else if ([serviceID isEqualToString:@"Sametime-LIBGAIM"]) {
+			serviceID = @"libgaim-Sametime";
+		} else if ([serviceID isEqualToString:@"Yahoo-LIBGAIM"]) {
+			serviceID = @"libgaim-Yahoo!";
+		} else if ([serviceID isEqualToString:@"Yahoo-Japan-LIBGAIM"]) {
+			serviceID = @"libgaim-Yahoo!-Japan";
 		}
-	} else if ([serviceID isEqualToString:@"GaduGadu-LIBGAIM"]) {
-		serviceID = @"libgaim-Gadu-Gadu";
-	} else if ([serviceID isEqualToString:@"Jabber-LIBGAIM"]) {
-		serviceID = @"libgaim-Jabber";
-	} else if ([serviceID isEqualToString:@"MSN-LIBGAIM"]) {
-		serviceID = @"libgaim-MSN";
-	} else if ([serviceID isEqualToString:@"Napster-LIBGAIM"]) {
-		serviceID = @"libgaim-Napster";
-	} else if ([serviceID isEqualToString:@"Novell-LIBGAIM"]) {
-		serviceID = @"libgaim-GroupWise";
-	} else if ([serviceID isEqualToString:@"Sametime-LIBGAIM"]) {
-		serviceID = @"libgaim-Sametime";
-	} else if ([serviceID isEqualToString:@"Yahoo-LIBGAIM"]) {
-		serviceID = @"libgaim-Yahoo!";
-	} else if ([serviceID isEqualToString:@"Yahoo-Japan-LIBGAIM"]) {
-		serviceID = @"libgaim-Yahoo!-Japan";
-	}
-	
-	//Bonjour
-	if ([serviceID isEqualToString:@"rvous-libezv"]) {
+	} else if ([serviceID isEqualToString:@"rvous-libezv"])
 		serviceID = @"bonjour-libezv";
-	}
-
-#ifndef JOSCAR_SUPERCEDE_LIBGAIM
-#warning turn this off if we switch to joscar
-	//"upgrade" joscar accounts to libgaim ones. Inserted so
-	//testing joscar doesn't break people's libgaim accounts.
-	if ([serviceID isEqualToString:@"joscar-OSCAR-AIM"])
-		serviceID = @"libgaim-oscar-AIM";
-	else if ([serviceID isEqualToString:@"joscar-OSCAR-ICQ"])
-		serviceID = @"libgaim-oscar-ICQ";
-	else if ([serviceID isEqualToString:@"joscar-OSCAR-dotMac"])
-		serviceID = @"libgaim-oscar-Mac";
-#endif
-	
 #ifdef JOSCAR_SUPERCEDE_LIBGAIM
-	if ([serviceID isEqualToString:@"libgaim-oscar-AIM"])
+	else if ([serviceID isEqualToString:@"libgaim-oscar-AIM"])
 		serviceID = @"joscar-OSCAR-AIM";
 	else if ([serviceID isEqualToString:@"libgaim-oscar-ICQ"])
 		serviceID = @"joscar-OSCAR-ICQ";
@@ -332,9 +318,9 @@
 	while ((account = [enumerator nextObject])) {
 		if (![account isTemporary]) {
 			NSMutableDictionary		*flatAccount = [NSMutableDictionary dictionary];
-			
-			[flatAccount setObject:[[account service] serviceCodeUniqueID] forKey:ACCOUNT_TYPE]; 	//Unique plugin ID
-			[flatAccount setObject:[[account service] serviceID] forKey:ACCOUNT_SERVICE];	    	//Shared service ID
+			AIService				*service = [account service];
+			[flatAccount setObject:[service serviceCodeUniqueID] forKey:ACCOUNT_TYPE]; 	//Unique plugin ID
+			[flatAccount setObject:[service serviceID] forKey:ACCOUNT_SERVICE];	    	//Shared service ID
 			[flatAccount setObject:[account UID] forKey:ACCOUNT_UID];		    					//Account UID
 			[flatAccount setObject:[account internalObjectID] forKey:ACCOUNT_OBJECT_ID];  			//Account Object ID
 			
@@ -362,7 +348,6 @@
 	
 	if (!upgradedAccounts || ![upgradedAccounts boolValue]) {
 		[userDefaults setObject:[NSNumber numberWithBool:YES] forKey:@"Adium:Account Prefs Upgraded for 1.0"];
-		[userDefaults synchronize];
 
 		AIAccount		*account;
 		NSEnumerator	*enumerator, *keyEnumerator;
@@ -371,7 +356,9 @@
 		//Adium 0.8x would store @"" in preferences which we now want to be able to inherit global values if they don't have a value.
 		NSSet	*keysWeNowUseGlobally = [NSSet setWithObjects:KEY_ACCOUNT_DISPLAY_NAME, @"TextProfile", nil];
 
-		keyEnumerator = [keysWeNowUseGlobally objectEnumerator];		
+		NSCharacterSet	*whitespaceAndNewlineCharacterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+
+		keyEnumerator = [keysWeNowUseGlobally objectEnumerator];
 		while ((key = [keyEnumerator nextObject])) {
 			NSAttributedString	*firstAttributedString = nil;
 			BOOL				allOnThisKeyAreTheSame = YES;
@@ -394,8 +381,8 @@
 						 * Only need to check if thus far they all have been the same
 						 */
 						if (allOnThisKeyAreTheSame &&
-							![[[attributedString string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:
-								[[firstAttributedString string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]] ) {
+							![[[attributedString string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] isEqualToString:
+								[[firstAttributedString string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet]]) {
 							allOnThisKeyAreTheSame = NO;
 						}
 					} else {
@@ -420,6 +407,8 @@
 				}
 			}
 		}
+
+		[userDefaults synchronize];
 	}
 }
 

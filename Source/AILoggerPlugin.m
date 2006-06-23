@@ -708,7 +708,7 @@ Class LogViewerWindowControllerClass = NULL;
 - (void)upgradeLogExtensions
 {
 	if (![[[adium preferenceController] preferenceForKey:@"Log Extensions Updated" group:PREF_GROUP_LOGGING] boolValue]) {
-		/* This could all be a simple NSDirectEnumerator call on basePath, but we wouldn't be able to show progress,
+		/* This could all be a simple NSDirectoryEnumerator call on basePath, but we wouldn't be able to show progress,
 		* and this could take a bit.
 		*/
 		NSString		*accountBasePath = [AILoggerPlugin logBasePath];
