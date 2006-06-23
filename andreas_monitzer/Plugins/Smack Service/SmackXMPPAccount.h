@@ -48,7 +48,11 @@
 #define SmackXMPPPresencePacketReceivedNotification @"SmackXMPPPresencePacketReceivedNotification"
 #define SmackXMPPIQPacketReceivedNotification @"SmackXMPPIQPacketReceivedNotification"
 
+// this notification is sent by the account when the local user tries sending a message in a chat
+#define SmackXMPPMessageSentNotification @"SmackXMPPMessageSentNotification"
+
 #define SmackXMPPPacket @"SmackXMPPPacket"
+#define AIMessageObjectKey @"AIMessageObjectKey"
 
 @interface NSString (JIDAdditions)
 
