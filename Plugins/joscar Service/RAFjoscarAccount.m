@@ -112,9 +112,27 @@
 	[joscarAdapter disconnect];
 }
 
+- (AIService *)_serviceForUID:(NSString *)contactUID
+{
+	NSString	*contactServiceID;	
+	char		firstCharacter;
+
+	//Determine service based on UID
+	if ([contactUID hasSuffix:@"@mac.com"]) {
+		contactServiceID = @"joscar-OSCAR-dotMac";
+	} else if ((firstCharacter = ([contactUID length] ? [contactUID characterAtIndex:0] : '\0')) &&
+			   (firstCharacter >= '0' && firstCharacter <= '9')) {
+		contactServiceID = @"joscar-OSCAR-ICQ";
+	} else {
+		contactServiceID = @"joscar-OSCAR-AIM";
+	}
+
+	return [[adium accountController] serviceWithUniqueID:contactServiceID];
+}
+
 - (AIListContact *)contactWithUID:(NSString *)inUID
 {
-	return ([[adium contactController] contactWithService:service
+	return ([[adium contactController] contactWithService:[self _serviceForUID:inUID]
 												  account:self
 													  UID:inUID]);
 }
