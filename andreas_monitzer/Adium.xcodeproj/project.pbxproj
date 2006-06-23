@@ -1320,6 +1320,8 @@
 		7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */; };
 		7E824CEA06387FAF00813072 /* SHLinkManagementPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */; };
 		7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */; };
+		8102A7250A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8102A7230A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.h */; };
+		8102A7260A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A7240A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m */; };
 		8156798F0A339B1F005ADC13 /* SmackListContact.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8156798D0A339B1F005ADC13 /* SmackListContact.h */; };
 		815679900A339B1F005ADC13 /* SmackListContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8156798E0A339B1F005ADC13 /* SmackListContact.m */; };
 		81B4CA200A416C3B00A8ABF5 /* SmackBridge.java in Sources */ = {isa = PBXBuildFile; fileRef = 81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */; };
@@ -1870,6 +1872,7 @@
 				81B4CDA20A4181C500A8ABF5 /* oop-read.h in CopyFiles */,
 				81B4CDA30A4181C500A8ABF5 /* oop.h in CopyFiles */,
 				81B4CE630A42449600A8ABF5 /* SmackXMPPRosterPlugin.h in CopyFiles */,
+				8102A7250A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3624,6 +3627,8 @@
 		7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkEditorWindowController.m; sourceTree = "<group>"; };
 		7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SHLinkManagementPlugin.h; sourceTree = "<group>"; };
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
+		8102A7230A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPMessagePlugin.h; path = "Plugins/Smack Service/SmackXMPPMessagePlugin.h"; sourceTree = "<group>"; };
+		8102A7240A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPMessagePlugin.m; path = "Plugins/Smack Service/SmackXMPPMessagePlugin.m"; sourceTree = "<group>"; };
 		8156798D0A339B1F005ADC13 /* SmackListContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackListContact.h; path = "Plugins/Smack Service/SmackListContact.h"; sourceTree = "<group>"; };
 		8156798E0A339B1F005ADC13 /* SmackListContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackListContact.m; path = "Plugins/Smack Service/SmackListContact.m"; sourceTree = "<group>"; };
 		81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */ = {isa = PBXFileReference; explicitFileType = archive.jar; includeInIndex = 0; path = SmackBridge.jar; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -6491,6 +6496,8 @@
 			children = (
 				81B4CE610A42449600A8ABF5 /* SmackXMPPRosterPlugin.h */,
 				81B4CE620A42449600A8ABF5 /* SmackXMPPRosterPlugin.m */,
+				8102A7230A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.h */,
+				8102A7240A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -9496,6 +9503,7 @@
 				81B4CDA90A4181C500A8ABF5 /* sys.c in Sources */,
 				81B4CDE50A41857D00A8ABF5 /* alloc.c in Sources */,
 				81B4CE640A42449700A8ABF5 /* SmackXMPPRosterPlugin.m in Sources */,
+				8102A7260A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
