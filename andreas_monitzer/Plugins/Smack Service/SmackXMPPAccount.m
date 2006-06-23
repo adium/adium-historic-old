@@ -23,9 +23,6 @@
 #import "AIStatusController.h"
 #import "SmackListContact.h"
 
-#import "SmackXMPPRosterPlugin.h"
-#import "SmackXMPPMessagePlugin.h"
-
 #import "ruli/ruli.h"
 
 @implementation NSString (JIDAdditions)
@@ -62,6 +59,12 @@
 
 @end
 
+@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin;
+
+@interface NSObject (SmackXMPPPluginAddition)
+- (id)initWithAccount:(SmackXMPPAccount*)account;
+@end
+
 @implementation SmackXMPPAccount
 
 - (void)initAccount {
@@ -79,13 +82,21 @@
         [roster removeAllObjects];
     
     if(!plugins) {
-        SmackXMPPRosterPlugin *rosterplugin = [[SmackXMPPRosterPlugin alloc] initWithAccount:self];
-        SmackXMPPMessagePlugin *messageplugin = [[SmackXMPPMessagePlugin alloc] initWithAccount:self];
-
-        plugins = [[NSArray alloc] initWithObjects:rosterplugin, messageplugin, nil];
+        Class XMPPPlugins[] = {
+            [SmackXMPPRosterPlugin class],
+            [SmackXMPPMessagePlugin class],
+            [SmackXMPPErrorMessagePlugin class],
+            nil
+        };
         
-        [rosterplugin release];
-        [messageplugin release];
+        int i;
+        plugins = [[NSMutableArray alloc] init];
+        
+        for(i = 0; XMPPPlugins[i]; i++) {
+            NSObject *plugin = [[XMPPPlugins[i] alloc] initWithAccount:self];
+            [(NSMutableArray*)plugins addObject:plugin];
+            [plugin release];
+        }
     }
 }
 

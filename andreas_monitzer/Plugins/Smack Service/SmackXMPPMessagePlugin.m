@@ -66,9 +66,18 @@ static AIHTMLDecoder *messageencoder = nil;
             if(resource)
                 [chat setStatusObject:resource forKey:@"XMPPResource" notify:NotifyLater];
             
+            if([type isEqualToString:@"chat"])
+                [chat setStatusObject:@"CHAT" forKey:@"XMPPType" notify:NotifyLater];
+            else
+                [chat setStatusObject:@"NORMAL" forKey:@"XMPPType" notify:NotifyLater];
+            
             //Apply the change
             [chat notifyOfChangedStatusSilently:[account silentAndDelayed]];
-        }
+        } else if([type isEqualToString:@"chat"]) // always update the chat type
+            [chat setStatusObject:@"CHAT" forKey:@"XMPPType" notify:NotifyNow];
+        else
+            [chat setStatusObject:@"NORMAL" forKey:@"XMPPType" notify:NotifyNow];
+        
         
         SmackXXHTMLExtension *spe = [packet getExtension:@"html" :@"http://jabber.org/protocol/xhtml-im"];
         if(spe)
@@ -114,6 +123,7 @@ static AIHTMLDecoder *messageencoder = nil;
     
     NSString *threadid = [chat statusObjectForKey:@"XMPPThreadID"];
     NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
+    NSString *type = [chat statusObjectForKey:@"XMPPType"];
     
     if(!threadid) // first message was sent by us
     {
@@ -127,7 +137,7 @@ static AIHTMLDecoder *messageencoder = nil;
     if(resource)
         jid = [NSString stringWithFormat:@"%@/%@",jid,resource];
     
-    SmackMessage *newmsg = [SmackCocoaAdapter messageTo:jid typeString:@"CHAT"];
+    SmackMessage *newmsg = [SmackCocoaAdapter messageTo:jid typeString:type];
     
     [newmsg setThread:threadid];
     [newmsg setBody:[inMessageObject messageString]];
