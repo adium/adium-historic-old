@@ -1324,6 +1324,8 @@
 		8102A7260A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A7240A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m */; };
 		8102A8200A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8102A81E0A4B6F82004DF0F5 /* SmackXMPPErrorMessagePlugin.h */; };
 		8102A8210A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A81F0A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m */; };
+		8102A8870A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8102A8850A4B7A1E004DF0F5 /* SmackXMPPHeadlineMessagePlugin.h */; };
+		8102A8880A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A8860A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m */; };
 		8156798F0A339B1F005ADC13 /* SmackListContact.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8156798D0A339B1F005ADC13 /* SmackListContact.h */; };
 		815679900A339B1F005ADC13 /* SmackListContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8156798E0A339B1F005ADC13 /* SmackListContact.m */; };
 		81B4CA200A416C3B00A8ABF5 /* SmackBridge.java in Sources */ = {isa = PBXBuildFile; fileRef = 81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */; };
@@ -1876,6 +1878,7 @@
 				81B4CE630A42449600A8ABF5 /* SmackXMPPRosterPlugin.h in CopyFiles */,
 				8102A7250A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.h in CopyFiles */,
 				8102A8200A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.h in CopyFiles */,
+				8102A8870A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3634,6 +3637,8 @@
 		8102A7240A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPMessagePlugin.m; path = "Plugins/Smack Service/SmackXMPPMessagePlugin.m"; sourceTree = "<group>"; };
 		8102A81E0A4B6F82004DF0F5 /* SmackXMPPErrorMessagePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPErrorMessagePlugin.h; path = "Plugins/Smack Service/SmackXMPPErrorMessagePlugin.h"; sourceTree = "<group>"; };
 		8102A81F0A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPErrorMessagePlugin.m; path = "Plugins/Smack Service/SmackXMPPErrorMessagePlugin.m"; sourceTree = "<group>"; };
+		8102A8850A4B7A1E004DF0F5 /* SmackXMPPHeadlineMessagePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPHeadlineMessagePlugin.h; path = "Plugins/Smack Service/SmackXMPPHeadlineMessagePlugin.h"; sourceTree = "<group>"; };
+		8102A8860A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPHeadlineMessagePlugin.m; path = "Plugins/Smack Service/SmackXMPPHeadlineMessagePlugin.m"; sourceTree = "<group>"; };
 		8156798D0A339B1F005ADC13 /* SmackListContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackListContact.h; path = "Plugins/Smack Service/SmackListContact.h"; sourceTree = "<group>"; };
 		8156798E0A339B1F005ADC13 /* SmackListContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackListContact.m; path = "Plugins/Smack Service/SmackListContact.m"; sourceTree = "<group>"; };
 		81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */ = {isa = PBXFileReference; explicitFileType = archive.jar; includeInIndex = 0; path = SmackBridge.jar; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -6505,6 +6510,8 @@
 				8102A7240A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m */,
 				8102A81E0A4B6F82004DF0F5 /* SmackXMPPErrorMessagePlugin.h */,
 				8102A81F0A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m */,
+				8102A8850A4B7A1E004DF0F5 /* SmackXMPPHeadlineMessagePlugin.h */,
+				8102A8860A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -9512,6 +9519,7 @@
 				81B4CE640A42449700A8ABF5 /* SmackXMPPRosterPlugin.m in Sources */,
 				8102A7260A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m in Sources */,
 				8102A8210A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m in Sources */,
+				8102A8880A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
