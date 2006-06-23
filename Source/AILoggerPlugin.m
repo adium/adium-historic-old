@@ -45,6 +45,8 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 
+#import "AILogFileUpgradeWindowController.h"
+
 #import "AdiumSpotlightImporter.h"
 
 #define LOG_INDEX_NAME				@"Logs.index"
@@ -733,6 +735,11 @@ Class LogViewerWindowControllerClass = NULL;
 		unsigned		processed = 0;
 		
 		if (contactsToProcess) {
+			AILogFileUpgradeWindowController *upgradeWindowController;
+			
+			upgradeWindowController = [[AILogFileUpgradeWindowController alloc] initWithWindowNibName:@"LogFileUpgrade"];
+			[[upgradeWindowController window] makeKeyAndOrderFront:nil];
+
 			NSEnumerator	*logBasePathEnumerator = [logBasePaths objectEnumerator];
 			NSString		*logBasePath;
 			while ((logBasePath = [logBasePathEnumerator nextObject])) {
@@ -753,10 +760,13 @@ Class LogViewerWindowControllerClass = NULL;
 					}
 				}
 				
-				//XXX to do - update a progress bar displayed on screen
 				processed++;
+				[upgradeWindowController setProgress:(processed*100.0)/contactsToProcess];
 				NSLog(@"%f%% complete...", ((processed*100.0)/contactsToProcess));
 			}
+			
+			[upgradeWindowController close];
+			[upgradeWindowController release];
 		}
 		
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
