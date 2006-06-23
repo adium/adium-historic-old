@@ -11,7 +11,7 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = AIListWindowController; 
         }, 
-        {CLASS = AIBorderlessWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
+        {CLASS = AIDockingWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
         {
             CLASS = AIListOutlineView; 
             LANGUAGE = ObjC; 

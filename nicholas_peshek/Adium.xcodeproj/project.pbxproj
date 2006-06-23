@@ -50,6 +50,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		01A348620A4BD8EE00A1D2A6 /* AISnappingWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 01A348600A4BD8EE00A1D2A6 /* AISnappingWindow.h */; };
+		01A348630A4BD8EE00A1D2A6 /* AISnappingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 01A348610A4BD8EE00A1D2A6 /* AISnappingWindow.m */; };
 		071C56330827933100399C0F /* Shared Dock Icon Images in Resources */ = {isa = PBXBuildFile; fileRef = 071C56310827933000399C0F /* Shared Dock Icon Images */; };
 		074DDB5D07CB413F0033AFF7 /* CBContactLastSeenPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 074DDB5C07CB413F0033AFF7 /* CBContactLastSeenPlugin.m */; };
 		07632BF30949E10B00FFABD8 /* ListThemeSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB42B080870A200E27095 /* ListThemeSheet.nib */; };
@@ -1726,6 +1728,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		01A348600A4BD8EE00A1D2A6 /* AISnappingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISnappingWindow.h; path = "Plugins/Contact List/AISnappingWindow.h"; sourceTree = "<group>"; };
+		01A348610A4BD8EE00A1D2A6 /* AISnappingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISnappingWindow.m; path = "Plugins/Contact List/AISnappingWindow.m"; sourceTree = "<group>"; };
 		071C56320827933000399C0F /* English */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English; path = "Resources/English.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		071C563E0827936500399C0F /* French */ = {isa = PBXFileReference; lastKnownFileType = folder; name = French; path = "Resources/French.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		071C56420827937400399C0F /* German */ = {isa = PBXFileReference; lastKnownFileType = folder; name = German; path = "Resources/German.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
@@ -5897,6 +5901,8 @@
 				34A489FE06F6436D002C7C5F /* AIListWindowController.m */,
 				34A48A1306F6438F002C7C5F /* AIListController.h */,
 				34A48A1506F6438F002C7C5F /* AIListController.m */,
+				01A348600A4BD8EE00A1D2A6 /* AISnappingWindow.h */,
+				01A348610A4BD8EE00A1D2A6 /* AISnappingWindow.m */,
 				34E1066A09536D7300EBE478 /* Borderless */,
 				4BF98D2906D147BB00E8781D /* Standard Window */,
 				34878F710518289B003B2F21 /* Contact List Advanced Preferences */,
@@ -7281,6 +7287,7 @@
 				F5F8CA4C0A1A9C9400154550 /* GBQuestionHandlerPlugin.h in Headers */,
 				3459CBEE0A25FFBF00ECC256 /* GetMetadataForHTMLLog.h in Headers */,
 				3459CBF00A25FFBF00ECC256 /* AdiumSpotlightImporter.h in Headers */,
+				01A348620A4BD8EE00A1D2A6 /* AISnappingWindow.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8835,6 +8842,7 @@
 				F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */,
 				3459CBED0A25FFBF00ECC256 /* GetMetadataForHTMLLog.m in Sources */,
 				3459CBEF0A25FFBF00ECC256 /* GetMetadataForFile.m in Sources */,
+				01A348630A4BD8EE00A1D2A6 /* AISnappingWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
