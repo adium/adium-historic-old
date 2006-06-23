@@ -55,6 +55,7 @@
 	backgroundColor = nil;
 	backgroundStyle = AINormalBackground;
 	
+	[self setDrawsGradientSelection:YES];
 	[self sizeLastColumnToFit];
 }
 
@@ -391,9 +392,8 @@
 	if (updateShadowsWhileDrawing) [[self window] invalidateShadow];
 }
 
-- (void)_drawRowSelectionInRect:(NSRect)rect
+- (AIGradient *)selectedControlGradient
 {
-	//Draw the gradient
 	NSColor		*myHighlightColor = [self highlightColor];
 	AIGradient 	*gradient = (myHighlightColor ?
 							 [AIGradient gradientWithFirstColor:myHighlightColor
@@ -401,7 +401,7 @@
 													  direction:AIVertical] :
 							 [AIGradient selectedControlGradientWithDirection:AIVertical]);
 
-	[gradient drawInRect:rect];
+	return gradient;
 }
 
 - (void)setUpdateShadowsWhileDrawing:(BOOL)update{
