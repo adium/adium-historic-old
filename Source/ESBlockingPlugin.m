@@ -30,10 +30,10 @@
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIChat.h>
 
-#define BLOCK_CONTACT_TOOLBAR		AILocalizedString(@"Block","Block Contact menu item")
-#define UNBLOCK_CONTACT_TOOLBAR		AILocalizedString(@"Unblock","Unblock Contact menu item")
-#define BLOCK_CONTACT				[BLOCK_CONTACT_TOOLBAR stringByAppendingEllipsis]
-#define UNBLOCK_CONTACT				[UNBLOCK_CONTACT_TOOLBAR stringByAppendingEllipsis]
+#define BLOCK						AILocalizedString(@"Block","Block Contact menu item")
+#define UNBLOCK						AILocalizedString(@"Unblock","Unblock Contact menu item")
+#define BLOCK_MENUITEM				[BLOCK stringByAppendingEllipsis]
+#define UNBLOCK_MENUITEM			[UNBLOCK stringByAppendingEllipsis]
 #define TOOLBAR_ITEM_IDENTIFIER		@"BlockParticipants"
 #define TOOLBAR_BLOCK_ICON_KEY		@"Block"
 #define TOOLBAR_UNBLOCK_ICON_KEY	@"Unblock"
@@ -66,7 +66,7 @@
 - (void)installPlugin
 {
 	//Install the Block menu items
-	blockContactMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_CONTACT
+	blockContactMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_MENUITEM
 													  target:self
 													  action:@selector(blockContact:)
 											   keyEquivalent:@"b"];
@@ -76,7 +76,7 @@
 	[[adium menuController] addMenuItem:blockContactMenuItem toLocation:LOC_Contact_NegativeAction];
 
     //Add our get info contextual menu items
-    blockContactContextualMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_CONTACT
+    blockContactContextualMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_MENUITEM
 																target:self
 																action:@selector(blockContact:)
 														 keyEquivalent:@""];
@@ -96,9 +96,9 @@
 								[NSImage imageNamed:@"unblock.png" forClass:[self class]], TOOLBAR_UNBLOCK_ICON_KEY, 
 								nil];
 	NSToolbarItem	*chatItem = [AIToolbarUtilities toolbarItemWithIdentifier:TOOLBAR_ITEM_IDENTIFIER
-																		label:BLOCK_CONTACT_TOOLBAR
-																 paletteLabel:BLOCK_CONTACT_TOOLBAR
-																	  toolTip:BLOCK_CONTACT_TOOLBAR
+																		label:BLOCK
+																 paletteLabel:BLOCK
+																	  toolTip:AILocalizedString(@"Blocking prevents a contact from contacting you or seeing your online status.", nil)
 																	   target:self
 															  settingSelector:@selector(setImage:)
 																  itemContent:[blockedToolbarIcons valueForKey:TOOLBAR_BLOCK_ICON_KEY]
@@ -161,16 +161,16 @@
 		BOOL			shouldBlock;
 		NSString		*format;
 
-		shouldBlock = [[sender title] isEqualToString:BLOCK_CONTACT];
+		shouldBlock = [[sender title] isEqualToString:BLOCK_MENUITEM];
 		format = (shouldBlock ? 
 				  AILocalizedString(@"Are you sure you want to block %@?",nil) :
 				  AILocalizedString(@"Are you sure you want to unblock %@?",nil));
 
 		if (NSRunAlertPanel([NSString stringWithFormat:format, [contact displayName]],
-						   @"",
-						   [sender title],
-						   AILocalizedString(@"Cancel", nil),
-						   nil) == NSAlertDefaultReturn) {
+							@"",
+							(shouldBlock ? BLOCK : UNBLOCK),
+							AILocalizedString(@"Cancel", nil),
+							nil) == NSAlertDefaultReturn) {
 			
 			//Handle metas
 			if ([object isKindOfClass:[AIMetaContact class]]) {
@@ -207,7 +207,7 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	AIListObject *object;
-	BOOL unblock = [[menuItem title] isEqualToString:UNBLOCK_CONTACT];
+	BOOL unblock = [[menuItem title] isEqualToString:UNBLOCK_MENUITEM];
 	BOOL anyAccount = NO;
 	
 	if (menuItem == blockContactMenuItem) {
@@ -235,11 +235,11 @@
 						//title: "Unblock"; enabled
 						if (!unblock && AIPrivacyTypePermit == privType) {
 							//removing the guy is blocking him
-							[menuItem setTitle:BLOCK_CONTACT];
+							[menuItem setTitle:BLOCK_MENUITEM];
 						}
 						else if (unblock && AIPrivacyTypeDeny == privType) {
 							//removing him is unblocking
-							[menuItem setTitle:UNBLOCK_CONTACT];
+							[menuItem setTitle:UNBLOCK_MENUITEM];
 						}
 						return YES;
 					}
@@ -249,12 +249,12 @@
 			if (anyAccount) {
 				//title: "Block"; enabled
 				if (unblock) {
-					[menuItem setTitle:BLOCK_CONTACT];
+					[menuItem setTitle:BLOCK_MENUITEM];
 				}
 				return YES;
 			} else {
 				//title: "Block"; disabled
-				[menuItem setTitle:BLOCK_CONTACT];
+				[menuItem setTitle:BLOCK_MENUITEM];
 				return NO;
 			}
 		} else {
@@ -265,23 +265,23 @@
 				if ([[acct listObjectsOnPrivacyList:privType] containsObject:contact]) {
 					//title: "Unblock"; enabled
 					if (!unblock && AIPrivacyTypePermit == privType) {
-						[menuItem setTitle:BLOCK_CONTACT];
+						[menuItem setTitle:BLOCK_MENUITEM];
 					}
 					else if (unblock && AIPrivacyTypeDeny == privType) {
-						[menuItem setTitle:UNBLOCK_CONTACT];
+						[menuItem setTitle:UNBLOCK_MENUITEM];
 					}
 					return YES;
 				} else {
 					//title: "Block"; enabled
 					if (!unblock && AIPrivacyTypePermit == privType)
-						[menuItem setTitle:UNBLOCK_CONTACT];
+						[menuItem setTitle:UNBLOCK_MENUITEM];
 					else if (unblock && AIPrivacyTypeDeny == privType)
-						[menuItem setTitle:BLOCK_CONTACT];
+						[menuItem setTitle:BLOCK_MENUITEM];
 					return YES;
 				}
 			} else {
 				//title: "Block"; disabled
-				[menuItem setTitle:BLOCK_CONTACT];
+				[menuItem setTitle:BLOCK_MENUITEM];
 				return NO;
 			}
 		}
@@ -545,13 +545,13 @@
 {
 	if ([self areAllGivenContactsBlocked:[chat participatingListObjects]]) {
 		//assume unblock appearance
-		[item setLabel:UNBLOCK_CONTACT_TOOLBAR];
-		[item setPaletteLabel:UNBLOCK_CONTACT_TOOLBAR];
+		[item setLabel:UNBLOCK];
+		[item setPaletteLabel:UNBLOCK];
 		[item setImage:[blockedToolbarIcons valueForKey:TOOLBAR_UNBLOCK_ICON_KEY]];
 	} else {
 		//assume block appearance
-		[item setLabel:BLOCK_CONTACT_TOOLBAR];
-		[item setPaletteLabel:BLOCK_CONTACT_TOOLBAR];
+		[item setLabel:BLOCK];
+		[item setPaletteLabel:BLOCK];
 		[item setImage:[blockedToolbarIcons valueForKey:TOOLBAR_BLOCK_ICON_KEY]];
 	}
 }
