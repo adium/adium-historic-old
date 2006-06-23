@@ -1425,6 +1425,8 @@
 		F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */; };
 		F51BCEEA0A15793E000FDC06 /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
+		F56E068E0A4B738B008D1EB5 /* GBFireLogImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */; };
+		F56E068F0A4B738B008D1EB5 /* GBFireLogImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */; };
 		F5F8CA4C0A1A9C9400154550 /* GBQuestionHandlerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = F5F8CA4A0A1A9C9400154550 /* GBQuestionHandlerPlugin.h */; };
 		F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8CA4B0A1A9C9400154550 /* GBQuestionHandlerPlugin.m */; };
 /* End PBXBuildFile section */
@@ -3683,6 +3685,8 @@
 		F55B415D03AB8B5601A8010A /* AIContentController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContentController.m; path = Source/AIContentController.m; sourceTree = "<group>"; };
 		F55B416603AB8BFC01A8010A /* AIPasswordPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIPasswordPromptController.m; path = Source/AIPasswordPromptController.m; sourceTree = "<group>"; };
 		F55B416E03AB8C3201A8010A /* AIPasswordPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIPasswordPromptController.h; path = Source/AIPasswordPromptController.h; sourceTree = "<group>"; };
+		F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBFireLogImporter.h; path = ../../Source/GBFireLogImporter.h; sourceTree = "<group>"; };
+		F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBFireLogImporter.m; path = ../../Source/GBFireLogImporter.m; sourceTree = "<group>"; };
 		F570A59803704B6101A8010A /* AIContactInfoWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactInfoWindowController.h; path = Source/AIContactInfoWindowController.h; sourceTree = "<group>"; };
 		F570A59903704B6101A8010A /* AIContactInfoWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactInfoWindowController.m; path = Source/AIContactInfoWindowController.m; sourceTree = "<group>"; };
 		F570A5B503704C6101A8010A /* AIMenuController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMenuController.h; path = Source/AIMenuController.h; sourceTree = "<group>"; };
@@ -6612,6 +6616,8 @@
 			children = (
 				F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */,
 				F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */,
+				F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */,
+				F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */,
 				CA25AB3307B4296C00DDBD7E /* fire2adium.php */,
 				CA25AA9F07B428C600DDBD7E /* BDFireImporter.h */,
 				CA25AAA007B428C700DDBD7E /* BDFireImporter.m */,
@@ -7379,6 +7385,7 @@
 				345623400A3773D100E7FC97 /* AILoggerPlugin.h in Headers */,
 				34A796CC0A45EE4F00F517FB /* AISourceListOutlineView.h in Headers */,
 				34F849580A4AF04D0002A017 /* AILogFileUpgradeWindowController.h in Headers */,
+				F56E068E0A4B738B008D1EB5 /* GBFireLogImporter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8971,6 +8978,7 @@
 				3456233F0A3773D100E7FC97 /* AILoggerPlugin.m in Sources */,
 				34A796CD0A45EE4F00F517FB /* AISourceListOutlineView.m in Sources */,
 				34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */,
+				F56E068F0A4B738B008D1EB5 /* GBFireLogImporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
