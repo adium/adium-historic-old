@@ -16,6 +16,7 @@
 
 #import <AIUtilities/AIMultiCellOutlineView.h>
 #import <Adium/AIAbstractListController.h>
+#import "AIContactListOutlineView.h"
 
 @protocol ContactListOutlineView;
 
@@ -28,7 +29,7 @@ typedef enum {
 	AIFillStretchBackground
 } AIBackgroundStyle;
 
-@interface AIListOutlineView : AIMultiCellOutlineView <ContactListOutlineView> {    
+@interface AIListOutlineView : AIContactListOutlineView <ContactListOutlineView> {    
 	BOOL				updateShadowsWhileDrawing;	
 
 	NSImage				*backgroundImage;
