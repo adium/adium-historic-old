@@ -45,6 +45,8 @@ public class SmackBridge implements ConnectionListener {
             }
         },new PacketTypeFilter(IQ.class));
         
+        Roster.setDefaultSubscriptionMode(Roster.SUBSCRIPTION_MANUAL);
+        
         delegate.takeValueForKey(new Boolean(true),"connection");
     }
     
