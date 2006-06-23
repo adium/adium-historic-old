@@ -3972,8 +3972,6 @@
 				34D8342B07CBE6A4006466F2 /* External Sources */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				017A280B0A4BEAF400A826E5 /* AIContactListOutlineView.h */,
-				017A280C0A4BEAF500A826E5 /* AIContactListOutlineView.m */,
 			);
 			name = CocAIMe2;
 			sourceTree = "<group>";
@@ -5913,6 +5911,8 @@
 				34A489FE06F6436D002C7C5F /* AIListWindowController.m */,
 				34A48A1306F6438F002C7C5F /* AIListController.h */,
 				34A48A1506F6438F002C7C5F /* AIListController.m */,
+				017A280B0A4BEAF400A826E5 /* AIContactListOutlineView.h */,
+				017A280C0A4BEAF500A826E5 /* AIContactListOutlineView.m */,
 				01A348600A4BD8EE00A1D2A6 /* AISnappingWindow.h */,
 				01A348610A4BD8EE00A1D2A6 /* AISnappingWindow.m */,
 				34E1066A09536D7300EBE478 /* Borderless */,
