@@ -377,6 +377,7 @@
 	[statusMenuView setTitle:(title ? title : @"")];
 	[statusMenuView setImage:[activeStatus iconOfType:AIStatusIconList
 											direction:AIIconFlipped]];
+	[statusMenuView setToolTip:[activeStatus statusMessageString]];
 
 	[self updateImagePicker];
 	[self updateNameView];
