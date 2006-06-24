@@ -27,7 +27,7 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIVariableHeightFlexibleColumnsOutlineView.h>
 #import <AIUtilities/AIArrayAdditions.h>
-#import <AIUtilities/AIGradientImageCell.h>
+#import <AIUtilities/AIScaledImageCell.h>
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 
@@ -280,19 +280,17 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
  */
 - (void)configureEventSummaryOutlineView
 {
-	AIGradientImageCell				*imageCell;
+	AIScaledImageCell				*imageCell;
 	AIImageTextCell					*imageTextCell;
 	AIVerticallyCenteredTextCell	*verticallyCenteredTextCell;
 	
-	imageCell = [[AIGradientImageCell alloc] init];
-	[imageCell setDrawsGradientHighlight:YES];
+	imageCell = [[AIScaledImageCell alloc] init];
 	[imageCell setAlignment:NSCenterTextAlignment];
 	[imageCell setMaxSize:NSMakeSize(MINIMUM_ROW_HEIGHT, MINIMUM_ROW_HEIGHT)];
 	[[outlineView_summary tableColumnWithIdentifier:@"image"] setDataCell:imageCell];
 	[imageCell release];
 
 	imageTextCell = [[AIImageTextCell alloc] init];
-	[imageTextCell setDrawsGradientHighlight:YES];
 	[imageTextCell setMaxImageWidth:MINIMUM_ROW_HEIGHT];
 	[imageTextCell setLineBreakMode:NSLineBreakByWordWrapping];
 	[[outlineView_summary tableColumnWithIdentifier:@"event"] setDataCell:imageTextCell];
@@ -300,7 +298,6 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	
 	verticallyCenteredTextCell = [[AIVerticallyCenteredTextCell alloc] init];
 	[verticallyCenteredTextCell setFont:[NSFont systemFontOfSize:10]];
-	[verticallyCenteredTextCell setDrawsGradientHighlight:YES];
 	[[outlineView_summary tableColumnWithIdentifier:@"action"] setDataCell:verticallyCenteredTextCell];
 	[verticallyCenteredTextCell release];
 

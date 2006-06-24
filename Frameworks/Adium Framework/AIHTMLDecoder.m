@@ -48,7 +48,6 @@ int HTMLEquivalentForFontSize(int fontSize);
 		   withName:(NSString *)inName 
 		 imageClass:(NSString *)imageClass
 		 imagesPath:(NSString *)imagesPath;
-- (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string;
 @end
 
 @interface NSString (AIHTMLDecoderAdditions)
@@ -1701,11 +1700,6 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	}
 
 	return success;
-}
-
-- (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string
-{
-	[string appendFormat:@"<AdiumFT src=\"%@\">", [path stringByEscapingForHTML]];	
 }
 
 #pragma mark Accessors
