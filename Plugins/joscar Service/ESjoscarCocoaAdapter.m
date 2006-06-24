@@ -500,7 +500,9 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
  */
 - (void)leaveChatWithUID:(NSString *)inUID
 {
-#warning Close any existing direct IM
+	id<Iterator> iter = [[[aimConnection getIcbmService] getDirectimConversations:NewScreenname(inUID)] iterator];
+	while ([iter hasNext])
+		[(DirectimConversation *)[iter next] close];
 }
 
 /*
