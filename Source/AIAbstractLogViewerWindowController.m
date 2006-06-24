@@ -1627,25 +1627,19 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
 	if ([item isKindOfClass:[AIMetaContact class]]) {
-		if ([[(AIMetaContact *)item listContactsIncludingOfflineAccounts] count] > 1) {
-			return [(AIMetaContact *)item longDisplayName];
-		} else {
-			return [(AIMetaContact *)item longDisplayName];
-		}
-
+		return [(AIMetaContact *)item longDisplayName];
+		
 	} else if ([item isKindOfClass:[AIListContact class]]) {
-		AIListContact *parentContact = [(AIListContact *)item parentContact];
-		if (parentContact != item) {
+		if ([(AIListContact *)item parentContact] != item) {
 			//This contact is within a metacontact - always show its UID
 			return [(AIListContact *)item formattedUID];
-
 		} else {
 			return [(AIListContact *)item longDisplayName];
-		}
-
+		} 
+		
 	} else if ([item isKindOfClass:[AILogToGroup class]]) {
 		return [(AILogToGroup *)item to];
-
+		
 	} else if ([item isKindOfClass:[ALL_CONTACTS_IDENTIFIER class]]) {
 		int contactCount = [toArray count];
 		return [NSString stringWithFormat:AILocalizedString(@"All (%@)", nil),
