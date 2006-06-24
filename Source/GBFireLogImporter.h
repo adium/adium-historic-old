@@ -17,6 +17,7 @@
 #import <Adium/AIObject.h>
 
 @interface GBFireLogImporter : AIObject {
+	IBOutlet	NSTextField			*textField_quote;
 	IBOutlet	NSProgressIndicator	*progressIndicator;
 	IBOutlet	NSWindow			*window;
 }

@@ -51,10 +51,19 @@
 	[window orderFront:self];
 }
 
+NSString *quotes[] = {
+	@"(I have gotten into the habit of recording important mettings)",
+	@"(One never knows when an inconvenient truth will fall between the cracks and vanish)",
+	@"(I have the feeling he and his associates are carving a great, dark hole in the middle of the universe)",
+	@"(and when they go down, anyone nearby will go down with them)",
+	@"(- Londo Mollari)"
+};
+
 - (void)importFireLogs
 {
 	NSAutoreleasePool *outerPool = [[NSAutoreleasePool alloc] init];
 	[progressIndicator startAnimation:nil];
+	[textField_quote setStringValue:quotes[0]];
 	NSFileManager *fm = [NSFileManager defaultManager];
 	NSString *inputLogDir = [[[fm userApplicationSupportFolder] stringByAppendingPathComponent:@"Fire"] stringByAppendingPathComponent:@"Sessions"];
 	BOOL isDir = NO;
@@ -68,11 +77,17 @@
 	
 	[progressIndicator setDoubleValue:0.0];
 	[progressIndicator setIndeterminate:NO];
-	int current, total = [subPaths count];;
+	int current, total = [subPaths count], currentQuote = 0;
 	for(current = 0; current < total; current++)
 	{
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];  //A lot of temporary memory is used here
 		[progressIndicator setDoubleValue:(double)current/(double)total];
+		int nextQuote = current*sizeof(quotes)/sizeof(NSString *)/total;
+		if(nextQuote != currentQuote)
+		{
+			currentQuote = nextQuote;
+			[textField_quote setStringValue:quotes[currentQuote]];
+		}
 		NSString *logPath = [subPaths objectAtIndex:current];
 		NSString *fullInputPath = [inputLogDir stringByAppendingPathComponent:logPath];
 		if(![fm fileExistsAtPath:fullInputPath isDirectory:&isDir] || isDir)
