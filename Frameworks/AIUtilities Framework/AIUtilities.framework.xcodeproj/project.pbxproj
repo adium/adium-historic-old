@@ -149,8 +149,6 @@
 		344870ED06D1E3DF00DA778C /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 344870EB06D1E3DF00DA778C /* AudioUnit.framework */; };
 		344870EE06D1E3DF00DA778C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 344870EC06D1E3DF00DA778C /* AudioToolbox.framework */; };
 		3448711606D1E40000DA778C /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448711506D1E40000DA778C /* QuickTime.framework */; };
-		3459C58E07E291EC005F284E /* AIGradientImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3459C58C07E291EC005F284E /* AIGradientImageCell.m */; };
-		3459C58F07E291EC005F284E /* AIGradientImageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 3459C58D07E291EC005F284E /* AIGradientImageCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34BFE58207E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BFE58007E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34BFE58307E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BFE58107E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.m */; };
 		34D18392075FC2390075A380 /* AIRolloverButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D18390075FC2390075A380 /* AIRolloverButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -416,8 +414,6 @@
 		344870EB06D1E3DF00DA778C /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = /System/Library/Frameworks/AudioUnit.framework; sourceTree = "<absolute>"; };
 		344870EC06D1E3DF00DA778C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		3448711506D1E40000DA778C /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
-		3459C58C07E291EC005F284E /* AIGradientImageCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGradientImageCell.m; path = Source/AIGradientImageCell.m; sourceTree = "<group>"; };
-		3459C58D07E291EC005F284E /* AIGradientImageCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGradientImageCell.h; path = Source/AIGradientImageCell.h; sourceTree = "<group>"; };
 		345F5CF4081AFD51001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = Resources/zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3498FEA707F489600004B79A /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Resources/Italian.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3498FEAE07F489730004B79A /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = Resources/Dutch.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1384,8 +1380,6 @@
 		4BD1F46C06D285C500B3975E /* Scaled image display */ = {
 			isa = PBXGroup;
 			children = (
-				3459C58D07E291EC005F284E /* AIGradientImageCell.h */,
-				3459C58C07E291EC005F284E /* AIGradientImageCell.m */,
 				4BD1F3D606D27F3100B3975E /* AIScaledImageCell.h */,
 				4BD1F3D706D27F3100B3975E /* AIScaledImageCell.m */,
 			);
@@ -1503,7 +1497,6 @@
 				34F2EA4A07C304C0007EAAAB /* AIArrayAdditions.h in Headers */,
 				3402D33107CB043F0044F818 /* AIUtilities.framework_Prefix.pch in Headers */,
 				34D835D007CBED06006466F2 /* pxmLib.h in Headers */,
-				3459C58F07E291EC005F284E /* AIGradientImageCell.h in Headers */,
 				34BFE58207E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.h in Headers */,
 				0798BF75086E9F6600CA8E17 /* AIDataAdditions.h in Headers */,
 				34FFB0EB087DEFD00000A517 /* AIContextImageBridge.h in Headers */,
@@ -1713,7 +1706,6 @@
 				07BB5A0E07C48340008996A0 /* AIWiredData.m in Sources */,
 				6E03C8D407C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m in Sources */,
 				34D835CF07CBED06006466F2 /* pxmLib.m in Sources */,
-				3459C58E07E291EC005F284E /* AIGradientImageCell.m in Sources */,
 				34BFE58307E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.m in Sources */,
 				0798BF76086E9F6600CA8E17 /* AIDataAdditions.m in Sources */,
 				34FFB0EC087DEFD00000A517 /* AIContextImageBridge.m in Sources */,
