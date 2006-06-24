@@ -81,6 +81,7 @@ NSString *quotes[] = {
 
 - (void)importFireLogs
 {
+	NSAutoreleasePool *outerPool = [[NSAutoreleasePool alloc] init];
 	[window orderFront:self];
 	[progressIndicator startAnimation:nil];
 	[textField_quote setStringValue:quotes[0]];
@@ -179,6 +180,7 @@ NSString *quotes[] = {
 		[pool release];
 	}
 	[window close];
+	[outerPool release];
 }
 
 @end
