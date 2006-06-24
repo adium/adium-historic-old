@@ -57,7 +57,7 @@ typedef enum {
 
 @implementation AIListController
 
-- (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate
+- (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate setContactListRoot:(AIListObject<AIContainingObject> *)newListObject
 {
 	[super initWithContactListView:inContactListView inScrollView:inScrollView_contactList delegate:inDelegate];
 	
@@ -92,10 +92,21 @@ typedef enum {
 	//Recall how the contact list was docked last time Adium was open
 	dockToBottomOfScreen = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
 																	group:PREF_GROUP_WINDOW_POSITIONS] intValue];
-
+	
+	[self setContactList:newListObject];	
 	[self contactListChanged:nil];
 
 	return self;
+}
+
+- (void)setContactList:(AIListObject<AIContainingObject> *)newListObject
+{
+	if(newListObject)
+	{
+		contactListRootVarible = newListObject;
+	} else {
+		contactListRootVarible = [[adium contactController] contactList];
+	}
 }
 
 //Setup the window after it has loaded
@@ -356,7 +367,7 @@ typedef enum {
 
 	//Redisplay and resize
 	if (!object || object == contactList) {
-		[self setContactListRoot:[[adium contactController] contactList]];
+		[self setContactListRoot:contactListRootVarible];
 	} else {
 		NSDictionary	*userInfo = [notification userInfo];
 		AIListGroup		*containingGroup = [userInfo objectForKey:@"ContainingGroup"];

@@ -7,12 +7,11 @@
 //
 
 #import "AIContactListOutlineView.h"
+#import "AICoreComponentLoader.h"
 #import "AIMultiListWindowController.h"
 #import "AISCLViewPlugin.h"
 #import <Adium/AIAdium.h>
 #import <Adium/AIContactController.h>
-#import <Adium/AIInterfaceController.h>
-
 
 @implementation AIContactListOutlineView
 
@@ -29,29 +28,32 @@
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
 	isDroppedOutOfView = NO;
+	tempDragBoard = nil;
+	
 	return [super draggingEntered:sender];
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
 	isDroppedOutOfView = YES;
+	tempDragBoard = [sender draggingPasteboard];
+	
 	[super draggingExited:sender];
 }
 
-- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
+- (void)draggedImage:(NSImage *)anImage endedAt:(NSPoint)aPoint operation:(NSDragOperation)operation
 {
-	BOOL	dragSucceeded = NO;
-	if(isDroppedOutOfView) {
-		if ([[[sender draggingPasteboard] types] containsObject:@"AIListObjectUniqueIDs"]) {
-			NSArray			*dragItemsUniqueIDs = [[sender draggingPasteboard] propertyListForType:@"AIListObjectUniqueIDs"];
+	if(isDroppedOutOfView && tempDragBoard) {
+		if ([[tempDragBoard types] containsObject:@"AIListObjectUniqueIDs"]) {
+			NSArray			*dragItemsUniqueIDs = [tempDragBoard propertyListForType:@"AIListObjectUniqueIDs"];
 			NSString		*uniqueUID;
 			NSEnumerator	*idEnumerator = [dragItemsUniqueIDs objectEnumerator];
 			BOOL			listCreated = NO;
 			while ((uniqueUID = [idEnumerator nextObject])) {
+				NSLog(uniqueUID);
 				if (([[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID] isKindOfClass:[AIListGroup class]]) && (!listCreated)) {
-					[[[[[AIObject sharedAdiumInstance] interfaceController] contactListPlugin] contactListWindowController] createNewSeparableContactListWithObject:[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID]];
+					[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] createNewSeparableContactListWithObject:[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID]];
 					listCreated = YES;
-					dragSucceeded = YES;
 				}
 #warning Come here kbotc and check this out.
 				// else if ([[[adium contactController] existingListObjectWithUniqueID:uniqueUID] isKindOfClass:[AIListObject class]]) {
@@ -59,7 +61,7 @@
 				//}
 			}
 		}
+		tempDragBoard = nil;
 	}
-	return dragSucceeded;
 }
 @end

@@ -4,12 +4,17 @@
         {
             CLASS = AIBorderlessListOutlineView; 
             LANGUAGE = ObjC; 
-            SUPERCLASS = AIStandardListOutlineView; 
+            SUPERCLASS = AIContactListOutlineView; 
         }, 
         {
             CLASS = AIBorderlessListWindowController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AIListWindowController; 
+        }, 
+        {
+            CLASS = AIContactListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIListOutlineView; 
         }, 
         {CLASS = AIDockingWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
         {
@@ -29,11 +34,7 @@
         }, 
         {CLASS = AIMultiCellOutlineView; LANGUAGE = ObjC; SUPERCLASS = AIOutlineView; }, 
         {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
-        {
-            CLASS = AIStandardListOutlineView; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIListOutlineView; 
-        }, 
+        {CLASS = AISnappingWindow; LANGUAGE = ObjC; SUPERCLASS = AIDockingWindow; }, 
         {
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 

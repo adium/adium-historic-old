@@ -34,7 +34,7 @@
 }
 
 //Contact List Controller
-- (AIListMultiWindowController *)contactListWindowController;
+- (AIMultiListWindowController *)contactListWindowController;
 - (void)contactListDidClose;
 - (void)showContactListAndBringToFront:(BOOL)bringToFront;
 - (BOOL)contactListIsVisibleAndMain;

@@ -3,12 +3,6 @@
 #import "AIBorderlessWindow.h"
 #import "AIEventAdditions.h"
 
-#define BORDERLESS_WINDOW_DOCKING_DISTANCE 	12	//Distance in pixels before the window is snapped to an edge
-
-@interface AIBorderlessWindow (PRIVATE)
-- (BOOL)dockWindowFrame:(NSRect *)inFrame toScreenFrame:(NSRect)screenFrame;
-@end
-
 @implementation AIBorderlessWindow
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {

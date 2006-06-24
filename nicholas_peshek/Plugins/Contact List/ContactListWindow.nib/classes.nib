@@ -13,6 +13,11 @@
             SUPERCLASS = AIHoveringPopUpButton; 
         }, 
         {CLASS = AIContactListNameView; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
+        {
+            CLASS = AIContactListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIListOutlineView; 
+        }, 
         {CLASS = AIDockingWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
         {CLASS = AIHoveringPopUpButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {

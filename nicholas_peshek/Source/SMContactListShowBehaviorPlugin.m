@@ -20,6 +20,7 @@
 #import "AICoreComponentLoader.h"
 #import "AISCLViewPlugin.h"
 #import "AIListWindowController.h"
+#import "AIMultiListWindowController.h"
 #import <AIUtilities/AIImageAdditions.h>
 
 #define SHOW_CONTACT_LIST_BEHAVIOR_ALERT_SHORT	AILocalizedString(@"Show the contact list window",nil)
@@ -93,7 +94,8 @@
 {
 	NSTimeInterval secondsToShow = [[details objectForKey:KEY_SECONDS_TO_SHOW_LIST] doubleValue];
 	AISCLViewPlugin *contactListViewPlugin = (AISCLViewPlugin *)[[adium componentLoader] pluginWithClassName:@"AISCLViewPlugin"];
-	AIListWindowController *windowController = [contactListViewPlugin contactListWindowController];
+#warning kbotc: this may need work.
+	AIListWindowController *windowController = [[contactListViewPlugin contactListWindowController] mostRecentContactList];
 	[windowController setPreventHiding:YES];
 	
 	if ([windowController windowShouldHideOnDeactivate]) {
@@ -116,8 +118,8 @@
  */
 - (void)hideContactList:(NSTimer *)timer {
 	AISCLViewPlugin *contactListViewPlugin = (AISCLViewPlugin *)[[adium componentLoader] pluginWithClassName:@"AISCLViewPlugin"];
-	AIListWindowController *windowController = [contactListViewPlugin contactListWindowController];
-	
+	#warning kbotc: this may need work.
+	AIListWindowController *windowController = [[contactListViewPlugin contactListWindowController] mostRecentContactList];
 	[windowController setPreventHiding:NO];
 	if ([windowController windowShouldHideOnDeactivate] && ![NSApp isActive])
 		[[windowController window] orderOut:self];

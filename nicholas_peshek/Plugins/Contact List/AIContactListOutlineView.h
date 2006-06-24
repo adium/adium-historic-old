@@ -6,10 +6,11 @@
 //  Copyright 2006 __MyCompanyName__. All rights reserved.
 //
 
-#import <AIUtilities/AIMultiCellOutlineView.h>
+#import <Adium/AIListOutlineView.h>
 
-@interface AIContactListOutlineView : AIMultiCellOutlineView {
-	BOOL	isDroppedOutOfView;
+@interface AIContactListOutlineView : AIListOutlineView {
+	BOOL			isDroppedOutOfView;
+	NSPasteboard	*tempDragBoard;
 }
 
 @end

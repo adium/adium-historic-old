@@ -50,6 +50,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		010C2A9F0A4CC9A800F44A4B /* ContactListWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 010C2A9E0A4CC9A800F44A4B /* ContactListWindow.nib */; };
+		010C2AA10A4CC9BA00F44A4B /* ContactListWindowBorderless.nib in Resources */ = {isa = PBXBuildFile; fileRef = 010C2AA00A4CC9BA00F44A4B /* ContactListWindowBorderless.nib */; };
 		017A21E70A4BDF8500A826E5 /* AIMultiListWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 017A21E50A4BDF8500A826E5 /* AIMultiListWindowController.h */; };
 		017A21E80A4BDF8500A826E5 /* AIMultiListWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 017A21E60A4BDF8500A826E5 /* AIMultiListWindowController.m */; };
 		017A280D0A4BEAF500A826E5 /* AIContactListOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 017A280B0A4BEAF400A826E5 /* AIContactListOutlineView.h */; };
@@ -612,8 +614,6 @@
 		34A48A0206F6436D002C7C5F /* AIStandardListWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A489FC06F6436D002C7C5F /* AIStandardListWindowController.h */; };
 		34A48A0406F6436D002C7C5F /* AIListWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A489FE06F6436D002C7C5F /* AIListWindowController.m */; };
 		34A48A0506F6436D002C7C5F /* AIListWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A489FF06F6436D002C7C5F /* AIListWindowController.h */; };
-		34A48A0C06F64376002C7C5F /* ContactListWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A48A0B06F64376002C7C5F /* ContactListWindow.nib */; };
-		34A48A1006F64382002C7C5F /* ContactListWindowBorderless.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A48A0F06F64381002C7C5F /* ContactListWindowBorderless.nib */; };
 		34A48A1706F6438F002C7C5F /* AIListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A48A1306F6438F002C7C5F /* AIListController.h */; };
 		34A48A1806F6438F002C7C5F /* AIBorderlessListWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A48A1406F6438F002C7C5F /* AIBorderlessListWindowController.m */; };
 		34A48A1906F6438F002C7C5F /* AIListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A48A1506F6438F002C7C5F /* AIListController.m */; };
@@ -1732,6 +1732,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		010C2A9E0A4CC9A800F44A4B /* ContactListWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ContactListWindow.nib; path = "Plugins/Contact List/ContactListWindow.nib"; sourceTree = "<group>"; };
+		010C2AA00A4CC9BA00F44A4B /* ContactListWindowBorderless.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ContactListWindowBorderless.nib; path = "Plugins/Contact List/ContactListWindowBorderless.nib"; sourceTree = "<group>"; };
 		017A21E50A4BDF8500A826E5 /* AIMultiListWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIMultiListWindowController.h; path = "Plugins/Contact List/AIMultiListWindowController.h"; sourceTree = "<group>"; };
 		017A21E60A4BDF8500A826E5 /* AIMultiListWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIMultiListWindowController.m; path = "Plugins/Contact List/AIMultiListWindowController.m"; sourceTree = "<group>"; };
 		017A280B0A4BEAF400A826E5 /* AIContactListOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContactListOutlineView.h; path = "Plugins/Contact List/AIContactListOutlineView.h"; sourceTree = "<group>"; };
@@ -2605,8 +2607,6 @@
 		34A489FC06F6436D002C7C5F /* AIStandardListWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStandardListWindowController.h; path = "Plugins/Contact List/AIStandardListWindowController.h"; sourceTree = "<group>"; };
 		34A489FE06F6436D002C7C5F /* AIListWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIListWindowController.m; path = "Plugins/Contact List/AIListWindowController.m"; sourceTree = "<group>"; };
 		34A489FF06F6436D002C7C5F /* AIListWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIListWindowController.h; path = "Plugins/Contact List/AIListWindowController.h"; sourceTree = "<group>"; };
-		34A48A0B06F64376002C7C5F /* ContactListWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ContactListWindow.nib; path = "Plugins/Contact List/ContactListWindow.nib"; sourceTree = "<group>"; };
-		34A48A0F06F64381002C7C5F /* ContactListWindowBorderless.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ContactListWindowBorderless.nib; path = "Plugins/Contact List/ContactListWindowBorderless.nib"; sourceTree = "<group>"; };
 		34A48A1306F6438F002C7C5F /* AIListController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIListController.h; path = "Plugins/Contact List/AIListController.h"; sourceTree = "<group>"; };
 		34A48A1406F6438F002C7C5F /* AIBorderlessListWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIBorderlessListWindowController.m; path = "Plugins/Contact List/AIBorderlessListWindowController.m"; sourceTree = "<group>"; };
 		34A48A1506F6438F002C7C5F /* AIListController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIListController.m; path = "Plugins/Contact List/AIListController.m"; sourceTree = "<group>"; };
@@ -5089,11 +5089,11 @@
 		34E1066A09536D7300EBE478 /* Borderless */ = {
 			isa = PBXGroup;
 			children = (
+				010C2AA00A4CC9BA00F44A4B /* ContactListWindowBorderless.nib */,
 				34A48B3706F64B27002C7C5F /* AIBorderlessListOutlineView.h */,
 				34A48B3806F64B27002C7C5F /* AIBorderlessListOutlineView.m */,
 				34A48A1606F6438F002C7C5F /* AIBorderlessListWindowController.h */,
 				34A48A1406F6438F002C7C5F /* AIBorderlessListWindowController.m */,
-				34A48A0F06F64381002C7C5F /* ContactListWindowBorderless.nib */,
 				343ECBF90971B92100349098 /* AIBorderlessListController.h */,
 				343ECBFA0971B92100349098 /* AIBorderlessListController.m */,
 			);
@@ -6038,10 +6038,10 @@
 		4BF98D2906D147BB00E8781D /* Standard Window */ = {
 			isa = PBXGroup;
 			children = (
+				010C2A9E0A4CC9A800F44A4B /* ContactListWindow.nib */,
 				34607EF209B22933000DB3D2 /* User Icon Changing */,
 				34A489FC06F6436D002C7C5F /* AIStandardListWindowController.h */,
 				34A489FB06F6436D002C7C5F /* AIStandardListWindowController.m */,
-				34A48A0B06F64376002C7C5F /* ContactListWindow.nib */,
 				34D001E50958868000DCB678 /* AIMenuItemView.h */,
 				34D001E60958868000DCB678 /* AIMenuItemView.m */,
 				34607F0C09B2296A000DB3D2 /* AIHoveringPopUpButtonCell.m */,
@@ -8100,8 +8100,6 @@
 				4BBF41E70661194A001D31E1 /* ContactProfilePane.nib in Resources */,
 				4B2DC069066F6B1200AD5AAD /* ContactSettingsPane.nib in Resources */,
 				6EC1685006C170A000F9FAD3 /* InviteToChatWindow.nib in Resources */,
-				34A48A0C06F64376002C7C5F /* ContactListWindow.nib in Resources */,
-				34A48A1006F64382002C7C5F /* ContactListWindowBorderless.nib in Resources */,
 				34F1022F0734499700890D3B /* XtraProgressWindow.nib in Resources */,
 				4BE9FFE8055981AB00359B15 /* Adium.pch in Resources */,
 				34536751059BA8EE00A83D9E /* atos in Resources */,
@@ -8246,6 +8244,8 @@
 				34107B5609E992DA001CC042 /* GuestAccountWindow.nib in Resources */,
 				34B9C7900A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib in Resources */,
 				34B9C7920A255DCE00CEA8AE /* LogViewerDateFilter.nib in Resources */,
+				010C2A9F0A4CC9A800F44A4B /* ContactListWindow.nib in Resources */,
+				010C2AA10A4CC9BA00F44A4B /* ContactListWindowBorderless.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

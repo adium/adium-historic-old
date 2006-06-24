@@ -87,9 +87,10 @@
 }
 
 //Return a new contact list window controller
-+ (AIListWindowController *)listWindowController
++ (AIListWindowController *)listWindowControllerWithContactList:(AIListObject<AIContainingObject> *)newListObject
 {
-    return [[[self alloc] initWithWindowNibName:[self nibName]] autorelease];
+	return [[[self alloc] initWithWindowNibName:[self nibName] withContactList:newListObject] autorelease];
+
 }
 
 //Our window nib name
@@ -98,19 +99,29 @@
     return @"";
 }
 
+- (void)setContactList:(AIListObject<AIContainingObject> *)newListObject
+{
+	contactListRootVarible = newListObject;
+}
+
 - (Class)listControllerClass
 {
 	return [AIListController class];
 }
 
+- (AIListController *)listController
+{
+	return contactListController;
+}
 //Init
-- (id)initWithWindowNibName:(NSString *)inNibName
+- (id)initWithWindowNibName:(NSString *)inNibName withContactList:(AIListObject<AIContainingObject> *)newListObject
 {	
     if ((self = [super initWithWindowNibName:inNibName])) {
 		preventHiding = NO;
 		previousAlpha = 0.0;
 	}
-
+	[self setContactList:newListObject];
+	
     return self;
 }
 
@@ -135,7 +146,8 @@
 
 	contactListController = [[[self listControllerClass] alloc] initWithContactListView:contactListView
 																		   inScrollView:scrollView_contactList 
-																			   delegate:self];
+																			   delegate:self
+																	 setContactListRoot:contactListRootVarible];
 	
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
