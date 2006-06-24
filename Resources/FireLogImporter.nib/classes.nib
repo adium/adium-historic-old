@@ -1,0 +1,14 @@
+{
+    IBClasses = (
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = GBFireLogImporter; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {progressIndicator = NSProgressIndicator; window = NSWindow; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = GBFireXMLLogImporter; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

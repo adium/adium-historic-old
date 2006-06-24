@@ -14,9 +14,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Cocoa/Cocoa.h>
+#import <Adium/AIObject.h>
 
-@interface GBFireLogImporter : NSObject {
+@interface GBFireLogImporter : AIObject {
+	IBOutlet	NSProgressIndicator	*progressIndicator;
+	IBOutlet	NSWindow			*window;
 }
 
 @end
@@ -45,7 +47,7 @@ typedef enum{
 }
 
 - (id)init;
-- (void)readFile:(NSString *)inFile toFile:(NSString *)outFile;
+- (NSString *)readFile:(NSString *)inFile toFile:(NSString *)outFile;
 
 - (void)startedElement:(NSString *)name info:(const CFXMLElementInfo *)info;
 - (void)endedElement:(NSString *)name;

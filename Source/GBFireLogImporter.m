@@ -15,17 +15,117 @@
  */
 
 #import "GBFireLogImporter.h"
+#import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/NSCalendarDate+ISO8601Unparsing.h>
+#import "AILoginController.h"
+#import "AILoggerPlugin.h"
 
 #define XML_MARKER @"<?xml version=\"1.0\"?>"
 
+@interface GBFireLogImporter (private)
+- (void)importFireLogs;
+@end
+
 @implementation GBFireLogImporter
 
-+ (void)test
++ (void)importLogs
 {
-	GBFireXMLLogImporter *xmlLog = [[GBFireXMLLogImporter alloc] init];
-	[xmlLog readFile:@"/Users/gbooker/Desktop/fireTestLog.xhtml" toFile:@"/Users/gbooker/Desktop/fireTestLog.chatlog"];
-	[xmlLog release];
+	GBFireLogImporter *importer = [[GBFireLogImporter alloc] init];
+	[NSThread detachNewThreadSelector:@selector(importFireLogs) toTarget:importer withObject:nil];
+	[importer release];
+}
+
+- (id)init
+{
+	self = [super init];
+	if(self == nil)
+		return nil;
+	
+	[NSBundle loadNibNamed:@"FireLogImporter" owner:self];
+	
+	return self;
+}
+
+- (void)awakeFromNib
+{
+	[window orderFront:self];
+}
+
+- (void)importFireLogs
+{
+	NSAutoreleasePool *outerPool = [[NSAutoreleasePool alloc] init];
+	[progressIndicator startAnimation:nil];
+	NSFileManager *fm = [NSFileManager defaultManager];
+	NSString *inputLogDir = [[[fm userApplicationSupportFolder] stringByAppendingPathComponent:@"Fire"] stringByAppendingPathComponent:@"Sessions"];
+	BOOL isDir = NO;
+	
+	if(![fm fileExistsAtPath:inputLogDir isDirectory:&isDir] || !isDir)
+		//Nothing to read
+		return;
+	
+	NSArray *subPaths = [fm subpathsAtPath:inputLogDir];
+	NSString *outputBasePath = [[[[adium loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath];
+	
+	[progressIndicator setDoubleValue:0.0];
+	[progressIndicator setIndeterminate:NO];
+	int current, total = [subPaths count];;
+	for(current = 0; current < total; current++)
+	{
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];  //A lot of temporary memory is used here
+		[progressIndicator setDoubleValue:(double)current/(double)total];
+		NSString *logPath = [subPaths objectAtIndex:current];
+		NSString *fullInputPath = [inputLogDir stringByAppendingPathComponent:logPath];
+		if(![fm fileExistsAtPath:fullInputPath isDirectory:&isDir] || isDir)
+		{
+			//ignore directories
+			[pool release];
+			continue;
+		}
+		NSString *extension = [logPath pathExtension];
+		NSArray *pathComponents = [logPath pathComponents];
+		if([pathComponents count] != 2)
+		{
+			//Incorrect directory structure, likely a .DS_Store or something like that
+			[pool release];
+			continue;
+		}
+		
+		NSString *userAndService = [pathComponents objectAtIndex:[pathComponents count] - 2];
+		NSRange range = [userAndService rangeOfString:@"-" options:NSBackwardsSearch];
+		NSString *user = [userAndService substringToIndex:range.location];
+		NSString *service = [userAndService substringFromIndex:range.location + 1];
+		NSDate *date = [NSDate dateWithNaturalLanguageString:[[pathComponents lastObject] stringByDeletingPathExtension]];
+				
+		if([extension isEqualToString:@"session"])
+		{
+			NSString *outputFileDir = [[outputBasePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", service, @"account"]] stringByAppendingPathComponent:user];
+			NSString *outputFile = [outputFileDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@).adiumLog", user, [date descriptionWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil locale:nil]]];
+			[fm createDirectoriesForPath:outputFileDir];
+			[fm copyPath:fullInputPath toPath:outputFile handler:self];
+		}
+		else if([extension isEqualToString:@"session2"])
+		{
+			NSString *outputFileDir = [[outputBasePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", service, @"account"]] stringByAppendingPathComponent:user];
+			NSString *outputFile = [outputFileDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@).AdiumHTMLLog", user, [date descriptionWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil locale:nil]]];
+			[fm createDirectoriesForPath:outputFileDir];
+			[fm copyPath:fullInputPath toPath:outputFile handler:self];
+		}
+		else if([extension isEqualToString:@"xhtml"])
+		{
+			NSString *outputFile = [outputBasePath stringByAppendingPathComponent:@"tempLogImport"];
+			[fm createDirectoriesForPath:outputBasePath];
+			GBFireXMLLogImporter *xmlLog = [[GBFireXMLLogImporter alloc] init];
+			NSString *account = [xmlLog readFile:fullInputPath toFile:outputFile];
+			[xmlLog release];
+			NSString *realOutputFileDir = [[outputBasePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", service, account]] stringByAppendingPathComponent:user];
+			NSString *realOutputFile = [realOutputFileDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@).chatlog", user, [date descriptionWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil locale:nil]]];
+			[fm createDirectoriesForPath:realOutputFileDir];
+			[fm movePath:outputFile toPath:realOutputFile handler:self];
+		}
+		[pool release];
+	}
+	[window close];
+	[outerPool release];
 }
 
 @end
@@ -54,7 +154,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	return self;
 }
 
-- (void)readFile:(NSString *)inFile toFile:(NSString *)outFile;
+- (NSString *)readFile:(NSString *)inFile toFile:(NSString *)outFile;
 {
 	inputFileHandle = [[NSFileHandle fileHandleForReadingAtPath:inFile] retain];
 	int outfd = open([outFile fileSystemRepresentation], O_CREAT | O_WRONLY, 0644);
@@ -85,6 +185,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	[url release];
 	[inputFileHandle closeFile];
 	[outputFileHandle closeFile];
+	
+	return [[mySN retain] autorelease];
 }
 
 - (void)dealloc
@@ -131,7 +233,17 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				{
 					NSRange range = [account rangeOfString:@"-"];
 					if(range.location != NSNotFound)
+					{
 						mySN = [[account substringFromIndex:range.location + 1] retain];
+						range = [mySN rangeOfString:@"@"];
+						NSRange revRange = [mySN rangeOfString:@"@" options:NSBackwardsSearch];
+						if(revRange.location != range.location)
+						{
+							NSString *oldMySN = mySN;
+							mySN = [[mySN substringToIndex:revRange.location] retain];
+							[oldMySN release];
+						}
+					}
 				}
 				NSMutableString *chatTag = [NSMutableString stringWithFormat:@"%@\n<chat", XML_MARKER];
 				if(mySN != nil)
