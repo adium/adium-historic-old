@@ -384,6 +384,7 @@
 - (RvConnectionManager *)getRvConnectionManager;
 - (void)sendAutomatically:(Screenname *)sn :(Message *)msg;
 - (void)sendTypingAutomatically:(Screenname *)sn :(TypingState *)msg;
+- (id<Set>)getDirectimConversations:(Screenname *)sn;
 @end
 
 #pragma mark Buddies and Groups
