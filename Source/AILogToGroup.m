@@ -168,4 +168,23 @@
 	return theLog;
 }
 
+/*
+ * @brief Partial isEqual implementation
+ *
+ * 'Partial' in the sense that it doesn't actually test equality.  If two AILogToGroup objects are for the same service/contact pair,
+ * they are considered equal by this function.  They may (and probably do) have different source accounts and therefore different
+ * contained logs.
+ *
+ * This is useful because all To groups for a service/contact pair are presented as a single To group in the Contacts source list.
+ */
+- (BOOL)isEqual:(id)inObject
+{
+	return ([inObject isMemberOfClass:[self class]] &&
+			([[(AILogToGroup *)inObject to] isEqualToString:[self to]] &&
+			 [[(AILogToGroup *)inObject serviceClass] isEqualToString:[self serviceClass]]));
+}
+- (unsigned)hash
+{
+	return [[self to] hash];
+}
 @end

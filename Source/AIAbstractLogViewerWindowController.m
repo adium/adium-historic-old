@@ -163,7 +163,7 @@ static int toArraySort(id itemA, id itemB, void *context);
     logToGroupDict = [[NSMutableDictionary alloc] init];
     resultsLock = [[NSRecursiveLock alloc] init];
     searchingLock = [[NSLock alloc] init];
-	acceptableContactNames = [[NSMutableSet alloc] initWithCapacity:1];
+	contactIDsToFilter = [[NSMutableSet alloc] initWithCapacity:1];
 
     [super initWithWindowNibName:windowNibName];
 	
@@ -185,7 +185,7 @@ static int toArraySort(id itemA, id itemB, void *context);
     [displayedLogArray release];
     [blankImage release];
     [activeSearchString release];
-	[acceptableContactNames release];
+	[contactIDsToFilter release];
     
 	[logFromGroupDict release]; logFromGroupDict = nil;
 	[logToGroupDict release]; logToGroupDict = nil;
@@ -271,7 +271,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 - (void)rebuildContactsList
 {
-	NSMutableSet	*addedToGroupNames = [NSMutableSet set];
 	NSEnumerator	*enumerator = [logFromGroupDict objectEnumerator];
 	AILogFromGroup	*logFromGroup;
 	
@@ -300,9 +299,10 @@ static int toArraySort(id itemA, id itemB, void *context);
 					}
 					
 				} else {
-					if (![addedToGroupNames containsObject:currentTo]) {
+					if (![toArray containsObject:currentToGroup]) {
 						[toArray addObject:currentToGroup];
-						[addedToGroupNames addObject:currentTo];
+					} else {
+						//NSLog(@"Didn't add %@ (%@)",currentTo,currentToGroup);
 					}
 				}
 			}
@@ -350,6 +350,8 @@ static int toArraySort(id itemA, id itemB, void *context);
 	AIImageTextCell	*dataCell = [[AIImageTextCell alloc] init];
 	[[[outlineView_contacts tableColumns] objectAtIndex:0] setDataCell:dataCell];
 	[dataCell release];
+
+	[outlineView_contacts setDrawsGradientSelection:YES];
 
 	//Localize tableView_results column headers
 	[[[tableView_results tableColumnWithIdentifier:@"To"] headerCell] setStringValue:TO];
@@ -1301,15 +1303,21 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 {
 	BOOL shouldDisplayDocument = YES;
 
-	if ([acceptableContactNames count]) {
+	if ([contactIDsToFilter count]) {
 		//Determine the path components if we weren't supplied them
 		if (!pathComponents) pathComponents = pathComponentsForDocument(inDocument);
 
 		unsigned int numPathComponents = [pathComponents count];
 		
-		NSString *contactName = [pathComponents objectAtIndex:(numPathComponents-2)];
-		shouldDisplayDocument = [acceptableContactNames containsObject:[contactName compactedString]];
+		NSArray *serviceAndFromUIDArray = [[pathComponents objectAtIndex:numPathComponents-3] componentsSeparatedByString:@"."];
+		NSString *serviceClass = (([serviceAndFromUIDArray count] >= 2) ? [serviceAndFromUIDArray objectAtIndex:0] : @"");
 
+		NSString *contactName = [pathComponents objectAtIndex:(numPathComponents-2)];
+
+		shouldDisplayDocument = [contactIDsToFilter containsObject:[[NSString stringWithFormat:@"%@.%@",serviceClass,contactName] compactedString]];
+		
+		NSLog(@"%@ --> %@? %i",contactIDsToFilter,[[NSString stringWithFormat:@"%@.%@",serviceClass,contactName] compactedString],
+			  shouldDisplayDocument);
 	} 
 	
 	if (shouldDisplayDocument && testDate && (filterDateType != AIDateTypeAnyDate)) {
@@ -1412,9 +1420,9 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 				/* When searching in LOG_SEARCH_TO, we only proceed into matching groups
 				 * For all other search modes, we always proceed here so long as either:
 				 *	a) We are not filtering for specific contact names or
-				 *	b) The contact name matches one of the names in acceptableContactNames
+				 *	b) The contact name matches one of the names in contactIDsToFilter
 				 */
-				if ((![acceptableContactNames count] || [acceptableContactNames containsObject:[[[toGroup to] compactedString] safeFilenameString]]) &&
+				if ((![contactIDsToFilter count] || [contactIDsToFilter containsObject:[[NSString stringWithFormat:@"%@.%@",[toGroup serviceClass],[toGroup to]] compactedString]]) &&
 				   ((mode != LOG_SEARCH_TO) ||
 				   (!searchString) || 
 				   ([[toGroup to] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound))) {
@@ -1708,7 +1716,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 {
 	NSArray *selectedItems = [outlineView_contacts arrayOfSelectedItems];
 
-	[acceptableContactNames removeAllObjects];
+	[contactIDsToFilter removeAllObjects];
 
 	if ([selectedItems count] && ![selectedItems containsObject:ALL_CONTACTS_IDENTIFIER]) {
 		id		item;
@@ -1722,14 +1730,16 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
 				metaEnumerator = [[(AIMetaContact *)item listContactsIncludingOfflineAccounts] objectEnumerator];
 				while ((contact = [metaEnumerator nextObject])) {
-					[acceptableContactNames addObject:[[[contact UID] compactedString] safeFilenameString]];
+					[contactIDsToFilter addObject:
+						[[[NSString stringWithFormat:@"%@.%@",[contact serviceClass],[contact UID]] compactedString] safeFilenameString]];
 				}
 
 			} else if ([item isKindOfClass:[AIListContact class]]) {
-				[acceptableContactNames addObject:[[[(AIListContact *)item UID] compactedString] safeFilenameString]];
+				[contactIDsToFilter addObject:
+					[[[NSString stringWithFormat:@"%@.%@",[(AIListContact *)item serviceClass],[(AIListContact *)item UID]] compactedString] safeFilenameString]];
 
 			} else if ([item isKindOfClass:[AILogToGroup class]]) {
-				[acceptableContactNames addObject:[[[(AILogToGroup *)item to] compactedString] safeFilenameString]];
+				[contactIDsToFilter addObject:[[NSString stringWithFormat:@"%@.%@",[(AILogToGroup *)item serviceClass],[(AILogToGroup *)item to]] compactedString]]; 
 			}
 		}
 	}
