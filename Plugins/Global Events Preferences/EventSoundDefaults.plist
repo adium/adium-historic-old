@@ -2,9 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Event Sound Set</key>
-	<string>$$BundlePath$$/Contents/Resources/Sounds/TokyoTrainStation.AdiumSoundset</string>
-	<key>Mute When Away</key>
-	<false/>
+	<key>Custom Volume Level</key>
+	<real>0.75</real>
 </dict>
 </plist>
