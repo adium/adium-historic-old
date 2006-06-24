@@ -98,7 +98,7 @@ typedef enum {
 	NSTimer				*aggregateLogIndexProgressTimer; 
 
 	NSString			*filterForAccountName;	//Account name to restrictively match content searches
-	NSMutableSet		*acceptableContactNames;
+	NSMutableSet		*contactIDsToFilter;
 	
 	AIDateType			filterDateType;
 	NSCalendarDate		*filterDate;
