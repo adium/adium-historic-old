@@ -748,8 +748,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 {
 	Conversation			*conversation = [userInfo get:@"Conversation"];
 	ConversationEventInfo	*eventInfo = [userInfo get:@"ConversationEventInfo"];
-	
-	NSLog(@"got other event: %@ - %@",eventInfo, NSStringFromClass([eventInfo class]));
+
 	AILog(@"got other event: %@ - %@",eventInfo, NSStringFromClass([eventInfo class]));
 
 	if ([eventInfo isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ImSendFailedEvent")]) {
