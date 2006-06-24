@@ -1425,6 +1425,7 @@
 		F51BCEEA0A15793E000FDC06 /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
 		F56E068E0A4B738B008D1EB5 /* GBFireLogImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */; };
 		F56E068F0A4B738B008D1EB5 /* GBFireLogImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */; };
+		F56E0DB00A4CDF9C008D1EB5 /* FireLogImporter.nib in Resources */ = {isa = PBXBuildFile; fileRef = F56E0DAF0A4CDF9C008D1EB5 /* FireLogImporter.nib */; };
 		F5F8CA4C0A1A9C9400154550 /* GBQuestionHandlerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = F5F8CA4A0A1A9C9400154550 /* GBQuestionHandlerPlugin.h */; };
 		F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8CA4B0A1A9C9400154550 /* GBQuestionHandlerPlugin.m */; };
 /* End PBXBuildFile section */
@@ -3672,8 +3673,8 @@
 		EEC461B5096D68580028632F /* OWSpellingPerContactPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWSpellingPerContactPlugin.h; path = "Plugins/Spelling Per Contact/OWSpellingPerContactPlugin.h"; sourceTree = "<group>"; };
 		F11B9621051CDB3B0000000E /* AIMessageAliasPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageAliasPlugin.h; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.h"; sourceTree = "<group>"; };
 		F11B9622051CDB3B0000000E /* AIMessageAliasPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageAliasPlugin.m; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.m"; sourceTree = "<group>"; };
-		F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GBFireImporter.h; path = ../../Source/GBFireImporter.h; sourceTree = "<group>"; };
-		F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = GBFireImporter.m; path = ../../Source/GBFireImporter.m; sourceTree = "<group>"; };
+		F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GBFireImporter.h; path = Source/GBFireImporter.h; sourceTree = "<group>"; };
+		F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = GBFireImporter.m; path = Source/GBFireImporter.m; sourceTree = "<group>"; };
 		F531836F019E40BB01A80165 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		F55B413B03AB895501A8010A /* AIAccountListPreferencesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountListPreferencesPlugin.h; path = Source/AIAccountListPreferencesPlugin.h; sourceTree = "<group>"; };
 		F55B413C03AB895501A8010A /* AIAccountListPreferencesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountListPreferencesPlugin.m; path = Source/AIAccountListPreferencesPlugin.m; sourceTree = "<group>"; };
@@ -3681,8 +3682,9 @@
 		F55B415D03AB8B5601A8010A /* AIContentController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContentController.m; path = Source/AIContentController.m; sourceTree = "<group>"; };
 		F55B416603AB8BFC01A8010A /* AIPasswordPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIPasswordPromptController.m; path = Source/AIPasswordPromptController.m; sourceTree = "<group>"; };
 		F55B416E03AB8C3201A8010A /* AIPasswordPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIPasswordPromptController.h; path = Source/AIPasswordPromptController.h; sourceTree = "<group>"; };
-		F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBFireLogImporter.h; path = ../../Source/GBFireLogImporter.h; sourceTree = "<group>"; };
-		F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBFireLogImporter.m; path = ../../Source/GBFireLogImporter.m; sourceTree = "<group>"; };
+		F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBFireLogImporter.h; path = Source/GBFireLogImporter.h; sourceTree = "<group>"; };
+		F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBFireLogImporter.m; path = Source/GBFireLogImporter.m; sourceTree = "<group>"; };
+		F56E0DAF0A4CDF9C008D1EB5 /* FireLogImporter.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FireLogImporter.nib; path = Resources/FireLogImporter.nib; sourceTree = "<group>"; };
 		F570A59803704B6101A8010A /* AIContactInfoWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactInfoWindowController.h; path = Source/AIContactInfoWindowController.h; sourceTree = "<group>"; };
 		F570A59903704B6101A8010A /* AIContactInfoWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactInfoWindowController.m; path = Source/AIContactInfoWindowController.m; sourceTree = "<group>"; };
 		F570A5B503704C6101A8010A /* AIMenuController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMenuController.h; path = Source/AIMenuController.h; sourceTree = "<group>"; };
@@ -6411,6 +6413,7 @@
 		9EB3C52304F94DB7001D1F74 /* Migration Assistant */ = {
 			isa = PBXGroup;
 			children = (
+				F56E0D200A4CDE95008D1EB5 /* Fire Importer */,
 				CA25AAA307B428C700DDBD7E /* BDImportController.h */,
 				CA25AAA407B428C700DDBD7E /* BDImportController.m */,
 				CA25AAA507B428C800DDBD7E /* BDImporter.h */,
@@ -6608,10 +6611,6 @@
 		CA25AABE07B428FD00DDBD7E /* Fire */ = {
 			isa = PBXGroup;
 			children = (
-				F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */,
-				F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */,
-				F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */,
-				F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */,
 				CA25AB3307B4296C00DDBD7E /* fire2adium.php */,
 				CA25AA9F07B428C600DDBD7E /* BDFireImporter.h */,
 				CA25AAA007B428C700DDBD7E /* BDFireImporter.m */,
@@ -6883,6 +6882,18 @@
 			);
 			name = "Message Window Interface";
 			sourceTree = "<group>";
+		};
+		F56E0D200A4CDE95008D1EB5 /* Fire Importer */ = {
+			isa = PBXGroup;
+			children = (
+				F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */,
+				F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */,
+				F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */,
+				F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */,
+				F56E0DAF0A4CDF9C008D1EB5 /* FireLogImporter.nib */,
+			);
+			name = "Fire Importer";
+			sourceTree = SOURCE_ROOT;
 		};
 		F5A3C2DD039A516E01A8010A /* Password Prompt */ = {
 			isa = PBXGroup;
@@ -8332,6 +8343,7 @@
 				3456232F0A37723400E7FC97 /* LogViewer.nib in Resources */,
 				345623380A3773C300E7FC97 /* LoggingDefaults.plist in Resources */,
 				34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */,
+				F56E0DB00A4CDF9C008D1EB5 /* FireLogImporter.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
