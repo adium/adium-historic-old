@@ -715,8 +715,6 @@
 		34A6FB8107D6FDCC00972830 /* FormattingDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */; };
 		34A6FEBB07D7E2E400972830 /* KFTypeSelectTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A6FE7907D7E06A00972830 /* KFTypeSelectTableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34A6FEBC07D7E2E500972830 /* KFTypeSelectTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A6FE7807D7E06A00972830 /* KFTypeSelectTableView.m */; };
-		34A796CC0A45EE4F00F517FB /* AISourceListOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A796CA0A45EE4F00F517FB /* AISourceListOutlineView.h */; };
-		34A796CD0A45EE4F00F517FB /* AISourceListOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A796CB0A45EE4F00F517FB /* AISourceListOutlineView.m */; };
 		34AA35DB095CCA4D003B56DB /* AdiumDisconnectionErrorController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AA35D9095CCA4D003B56DB /* AdiumDisconnectionErrorController.h */; };
 		34AA35DC095CCA4D003B56DB /* AdiumDisconnectionErrorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AA35DA095CCA4D003B56DB /* AdiumDisconnectionErrorController.m */; };
 		34AA366B095CE124003B56DB /* AIStatusDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AA366A095CE124003B56DB /* AIStatusDefines.h */; };
@@ -2725,8 +2723,6 @@
 		34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = FormattingDefaults.plist; path = Resources/FormattingDefaults.plist; sourceTree = "<group>"; };
 		34A6FE7807D7E06A00972830 /* KFTypeSelectTableView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = KFTypeSelectTableView.m; path = "Frameworks/Adium Framework/KFTypeSelectTableView.m"; sourceTree = "<group>"; };
 		34A6FE7907D7E06A00972830 /* KFTypeSelectTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KFTypeSelectTableView.h; path = "Frameworks/Adium Framework/KFTypeSelectTableView.h"; sourceTree = "<group>"; };
-		34A796CA0A45EE4F00F517FB /* AISourceListOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISourceListOutlineView.h; path = Source/AISourceListOutlineView.h; sourceTree = "<group>"; };
-		34A796CB0A45EE4F00F517FB /* AISourceListOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISourceListOutlineView.m; path = Source/AISourceListOutlineView.m; sourceTree = "<group>"; };
 		34A81DB2093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/WebKit Message View/pl.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		34A81DB3093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		34A81DB4093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
@@ -6054,8 +6050,6 @@
 				342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */,
 				34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */,
 				34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */,
-				34A796CA0A45EE4F00F517FB /* AISourceListOutlineView.h */,
-				34A796CB0A45EE4F00F517FB /* AISourceListOutlineView.m */,
 				34F849560A4AF04D0002A017 /* AILogFileUpgradeWindowController.h */,
 				34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */,
 			);
@@ -7383,7 +7377,6 @@
 				3456232B0A3771F400E7FC97 /* AILogToGroup.h in Headers */,
 				3456232D0A3771F400E7FC97 /* AILogFromGroup.h in Headers */,
 				345623400A3773D100E7FC97 /* AILoggerPlugin.h in Headers */,
-				34A796CC0A45EE4F00F517FB /* AISourceListOutlineView.h in Headers */,
 				34F849580A4AF04D0002A017 /* AILogFileUpgradeWindowController.h in Headers */,
 				F56E068E0A4B738B008D1EB5 /* GBFireLogImporter.h in Headers */,
 			);
@@ -8976,7 +8969,6 @@
 				3456232A0A3771F400E7FC97 /* AILogToGroup.m in Sources */,
 				3456232C0A3771F400E7FC97 /* AILogFromGroup.m in Sources */,
 				3456233F0A3773D100E7FC97 /* AILoggerPlugin.m in Sources */,
-				34A796CD0A45EE4F00F517FB /* AISourceListOutlineView.m in Sources */,
 				34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */,
 				F56E068F0A4B738B008D1EB5 /* GBFireLogImporter.m in Sources */,
 			);

@@ -23,7 +23,7 @@
         {
             CLASS = AIAlternatingRowOutlineView; 
             LANGUAGE = ObjC; 
-            SUPERCLASS = NSOutlineView; 
+            SUPERCLASS = AIOutlineView; 
         }, 
         {
             CLASS = AIAlternatingRowTableView; 
