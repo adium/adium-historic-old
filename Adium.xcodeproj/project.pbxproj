@@ -1228,7 +1228,6 @@
 		4BD6744406001D430049CAF7 /* AIContactStatusDockOverlaysPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B18A52B0459F8F200A8010A /* AIContactStatusDockOverlaysPlugin.h */; };
 		4BD6744506001D430049CAF7 /* AIContactStatusDockOverlaysPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B18A52C0459F8F200A8010A /* AIContactStatusDockOverlaysPlugin.m */; };
 		4BD6744906001D460049CAF7 /* DockOverlayDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BB826B504C8876C00A8010A /* DockOverlayDefaults.plist */; };
-		4BD6745506001D4E0049CAF7 /* DockBehaviorDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B68D3880463330600A8010A /* DockBehaviorDefaults.plist */; };
 		4BD6745706001D5E0049CAF7 /* AIDockUnviewedContentPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B13322B0459BAB800A8010A /* AIDockUnviewedContentPlugin.h */; };
 		4BD6745806001D5E0049CAF7 /* AIDockUnviewedContentPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B13322C0459BAB800A8010A /* AIDockUnviewedContentPlugin.m */; };
 		4BD6745D06001D730049CAF7 /* ESOpenMessageWindowContactAlertPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 344AB2C30579136900384CEE /* ESOpenMessageWindowContactAlertPlugin.h */; };
@@ -3248,7 +3247,6 @@
 		4B588C9807AC23A9001832A9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Frameworks/Adium Framework/English.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		4B588C9B07AC23B2001832A9 /* AIEditStateWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEditStateWindowController.h; path = "Frameworks/Adium Framework/AIEditStateWindowController.h"; sourceTree = "<group>"; };
 		4B588C9C07AC23B2001832A9 /* AIEditStateWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEditStateWindowController.m; path = "Frameworks/Adium Framework/AIEditStateWindowController.m"; sourceTree = "<group>"; };
-		4B68D3880463330600A8010A /* DockBehaviorDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = DockBehaviorDefaults.plist; path = "Plugins/Global Events Preferences/DockBehaviorDefaults.plist"; sourceTree = "<group>"; };
 		4B7635A507A0581D0021CCD7 /* GaimDefaultsAIM.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsAIM.plist; path = "Plugins/Gaim Service/GaimDefaultsAIM.plist"; sourceTree = "<group>"; };
 		4B7644DC07A05E7E0021CCD7 /* GaimDefaultsICQ.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsICQ.plist; path = "Plugins/Gaim Service/GaimDefaultsICQ.plist"; sourceTree = "<group>"; };
 		4B7644DD07A05E7E0021CCD7 /* GaimDefaultsMSN.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsMSN.plist; path = "Plugins/Gaim Service/GaimDefaultsMSN.plist"; sourceTree = "<group>"; };
@@ -3291,7 +3289,7 @@
 		4B970BF80535B864002F28F9 /* ESDualWindowMessageAdvancedPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESDualWindowMessageAdvancedPreferences.h; path = "Plugins/Dual Window Interface/ESDualWindowMessageAdvancedPreferences.h"; sourceTree = "<group>"; };
 		4B970BF90535B864002F28F9 /* ESDualWindowMessageAdvancedPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESDualWindowMessageAdvancedPreferences.m; path = "Plugins/Dual Window Interface/ESDualWindowMessageAdvancedPreferences.m"; sourceTree = "<group>"; };
 		4B97DB6606AC123A0003EE49 /* linkToolbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = linkToolbar.png; path = Resources/linkToolbar.png; sourceTree = SOURCE_ROOT; };
-		4BA5325D050FC5E800A8010A /* EventSoundDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = EventSoundDefaults.plist; path = "Plugins/Global Events Preferences/EventSoundDefaults.plist"; sourceTree = "<group>"; };
+		4BA5325D050FC5E800A8010A /* EventSoundDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = EventSoundDefaults.plist; path = Resources/EventSoundDefaults.plist; sourceTree = "<group>"; };
 		4BA62D7F06C51256001D6B3C /* Status Icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Status Icons"; path = "Resources/Status Icons"; sourceTree = "<group>"; };
 		4BAA1B350632ED8B00D8B92C /* AIActionDetailsPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIActionDetailsPane.h; path = "Frameworks/Adium Framework/AIActionDetailsPane.h"; sourceTree = "<group>"; };
 		4BAA1B360632ED8B00D8B92C /* AIActionDetailsPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIActionDetailsPane.m; path = "Frameworks/Adium Framework/AIActionDetailsPane.m"; sourceTree = "<group>"; };
@@ -4526,7 +4524,6 @@
 				346BA3420774C2D200628F06 /* ESGlobalEventsPreferences.h */,
 				346BA3430774C2D200628F06 /* ESGlobalEventsPreferences.m */,
 				4BA5325D050FC5E800A8010A /* EventSoundDefaults.plist */,
-				4B68D3880463330600A8010A /* DockBehaviorDefaults.plist */,
 				34C899AB07E51B18009357F6 /* BuiltInEventPresets.plist */,
 				34BFDF1607E8977D00AD984D /* SoundHigh.png */,
 				34BFDF1707E8977D00AD984D /* SoundLow.png */,
@@ -8205,7 +8202,6 @@
 				34F2BD25059CF8070005B238 /* c++filt in Resources */,
 				4BD6743106001D1E0049CAF7 /* EmoticonDefaults.plist in Resources */,
 				4BD6744906001D460049CAF7 /* DockOverlayDefaults.plist in Resources */,
-				4BD6745506001D4E0049CAF7 /* DockBehaviorDefaults.plist in Resources */,
 				4BD6755406001E1E0049CAF7 /* DualWindowDefaults.plist in Resources */,
 				4BD6756B06001E320049CAF7 /* EventSoundDefaults.plist in Resources */,
 				4B191D8A0611C10800E8A4E7 /* License.txt in Resources */,
