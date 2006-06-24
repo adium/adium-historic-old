@@ -26,6 +26,7 @@
 }
 
 + (AIMultiListWindowController *)initialize:(LIST_WINDOW_STYLE)windowStyle;
+- (AIMultiListWindowController *)createWindows:(LIST_WINDOW_STYLE)windowStyle;
 - (BOOL)createNewSeparableContactListWithObject:(AIListObject<AIContainingObject> *)newListObject;
 - (void)showWindowInFront:(BOOL)inFront;
 - (AIListWindowController *)mostRecentContactList;

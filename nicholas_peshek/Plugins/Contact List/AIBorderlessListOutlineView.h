@@ -15,8 +15,9 @@
  */
 
 #import "AIListOutlineView.h"
+#import "AIContactListOutlineView.h"
 
-@interface AIBorderlessListOutlineView : AIListOutlineView {
+@interface AIBorderlessListOutlineView : AIContactListOutlineView {
 
 }
 

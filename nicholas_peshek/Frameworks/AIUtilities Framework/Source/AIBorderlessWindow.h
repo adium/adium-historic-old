@@ -2,6 +2,8 @@
 
 #import "AIDockingWindow.h"
 
+#define BORDERLESS_WINDOW_DOCKING_DISTANCE 	12	//Distance in pixels before the window is snapped to an edge
+
 @interface AIBorderlessWindow : NSWindow
 {
     //This point is used in dragging to mark the initial click location
@@ -15,5 +17,6 @@
 }
 
 - (void)setMoveable:(BOOL)inMoveable;
+- (BOOL)dockWindowFrame:(NSRect *)inWindowFrame toScreenFrame:(NSRect)inScreenFrame;
 
 @end

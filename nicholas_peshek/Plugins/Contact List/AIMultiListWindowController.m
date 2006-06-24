@@ -24,28 +24,29 @@
 //Initialize this class and create a new Contact List.
 + (AIMultiListWindowController *)initialize:(LIST_WINDOW_STYLE)windowStyle
 {
-	[self createWindows:windowStyle];
-	return self;
+	return [[self alloc] createWindows:windowStyle];
 }
 
 //Create the initial contact list
 #warning kbotc: Check here and load up the separate contact lists when you get around to creating them.
-- (void)createWindows:(LIST_WINDOW_STYLE)windowStyle
+- (AIMultiListWindowController *)createWindows:(LIST_WINDOW_STYLE)windowStyle
 {
-	if(!windowControllerArray) {
-		windowControllerArray = [[NSMutableArray array] retain];
+	if ((self = [self init])) {
+		if(!windowControllerArray) {
+			windowControllerArray = [[NSMutableArray array] retain];
+		}
+		
+		if (windowStyle == WINDOW_STYLE_STANDARD) {
+			[windowControllerArray addObject:[AIStandardListWindowController listWindowControllerWithContactList:nil]];
+		} else {
+			[windowControllerArray addObject:[AIBorderlessListWindowController listWindowControllerWithContactList:nil]];
+		}
+		
+		if(!mostRecentContactList) {
+			mostRecentContactList = [[windowControllerArray objectAtIndex:0] retain];
+		}
 	}
-	
-	if (windowStyle == WINDOW_STYLE_STANDARD) {
-		[windowControllerArray addObject:[AIStandardListWindowController listWindowController]];
-	} else {
-		[windowControllerArray addObject:[AIBorderlessListWindowController listWindowController]];
-	}
-	
-	if(!mostRecentContactList) {
-		mostRecentContactList = [[windowControllerArray objectAtIndex:0] retain];
-	}
-	
+	return self;
 }
 
 //Deallocate the ivars when this instance is getting sent away.
@@ -60,15 +61,15 @@
 //Create the new contact list. A bit messy, but overall, it'll work. Returns a boolean saying if it worked or not.
 - (BOOL)createNewSeparableContactListWithObject:(AIListObject<AIContainingObject> *)newListObject
 {
-	AIListWindowController	*newContactList = [AIBorderlessListWindowController listWindowController];
 	BOOL					didCreationWork = NO;
 	
 	if ([newListObject isKindOfClass:[AIListGroup class]]) {
-		[[newContactList listController] setContactListRoot:newListObject];
+		AIListWindowController	*newContactList = [AIBorderlessListWindowController listWindowControllerWithContactList:newListObject];
+		mostRecentContactList = newContactList;
 		[windowControllerArray addObject:newContactList];
+		[self showWindowInFront:YES];
 		didCreationWork = YES;
 	}
-	
 	return didCreationWork;
 }
 

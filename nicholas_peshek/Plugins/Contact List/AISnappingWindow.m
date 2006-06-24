@@ -14,8 +14,6 @@
  */
 
 #import "AISnappingWindow.h"
-#import <AIUtilities/AIDockingWindow.h>
-
 
 @implementation AISnappingWindow
 

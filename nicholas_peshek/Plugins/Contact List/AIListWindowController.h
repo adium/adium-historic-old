@@ -32,6 +32,7 @@
 	IBOutlet	AIAutoScrollView		*scrollView_contactList;
     IBOutlet	AIListOutlineView		*contactListView;
 	AIListController					*contactListController;
+	AIListObject<AIContainingObject>	*contactListRootVarible;
 	
 	// refers to the GUI preference.  Sometimes this is expressed as dock-like 
 	// sliding instead, sometimes as orderOut:-type hiding.
@@ -56,8 +57,11 @@
 	float								previousAlpha;
 }
 
-+ (AIListWindowController *)listWindowController;
++ (AIListWindowController *)listWindowControllerWithContactList:(AIListObject<AIContainingObject> *)newListObject;
 + (NSString *)nibName;
+- (id)initWithWindowNibName:(NSString *)inNibName withContactList:(AIListObject<AIContainingObject> *)newListObject;
+- (AIListController *)listController;
+- (void)setContactList:(AIListObject<AIContainingObject> *)newListObject;
 - (void)close:(id)sender;
 - (void)showWindowInFront:(BOOL)inFront;
 
