@@ -22,6 +22,8 @@
 	IBOutlet	NSWindow			*window;
 }
 
++ (void)importLogs;
+
 @end
 
 typedef enum{
@@ -47,7 +49,6 @@ typedef enum{
 	NSString		*eventName;
 }
 
-- (id)init;
 - (NSString *)readFile:(NSString *)inFile toFile:(NSString *)outFile;
 
 - (void)startedElement:(NSString *)name info:(const CFXMLElementInfo *)info;

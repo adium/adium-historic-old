@@ -17,12 +17,18 @@
 #import "GBFireLogImporter.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/NSCalendarDate+ISO8601Unparsing.h>
+#import <Adium/AIAccount.h>
+#import "AIAccountController.h"
+#import "AIAdium.h"
+#import "AIInterfaceController.h"
 #import "AILoginController.h"
 #import "AILoggerPlugin.h"
+#import "ESTextAndButtonsWindowController.h"
 
 #define XML_MARKER @"<?xml version=\"1.0\"?>"
 
 @interface GBFireLogImporter (private)
+- (void)askBeforeImport;
 - (void)importFireLogs;
 @end
 
@@ -31,7 +37,7 @@
 + (void)importLogs
 {
 	GBFireLogImporter *importer = [[GBFireLogImporter alloc] init];
-	[NSThread detachNewThreadSelector:@selector(importFireLogs) toTarget:importer withObject:nil];
+	[importer askBeforeImport];
 	[importer release];
 }
 
@@ -46,9 +52,23 @@
 	return self;
 }
 
-- (void)awakeFromNib
+- (void)askBeforeImport
 {
-	[window orderFront:self];
+	[[adium interfaceController] displayQuestion:AILocalizedString(@"Import Fire Logs?",nil)
+								 withDescription:AILocalizedString(@"For some older log formats, the importer cannot properly determine which account was used for conversation.  In such cases, the importer will guess which account to use based upon the order of the accounts.  Before importing Fire's logs, arrange your account order within the Preferences.",nil)
+								 withWindowTitle:nil
+								   defaultButton:AILocalizedString(@"Import", nil)
+								 alternateButton:AILocalizedString(@"Cancel", nil)
+									 otherButton:nil
+										  target:self
+										selector:@selector(importQuestionResponse:userInfo:)
+										userInfo:nil];
+}
+
+- (void)importQuestionResponse:(NSNumber *)response userInfo:(id)info
+{
+	if([response intValue] == AITextAndButtonsDefaultReturn)
+		[NSThread detachNewThreadSelector:@selector(importFireLogs) toTarget:self withObject:nil];
 }
 
 NSString *quotes[] = {
@@ -61,7 +81,7 @@ NSString *quotes[] = {
 
 - (void)importFireLogs
 {
-	NSAutoreleasePool *outerPool = [[NSAutoreleasePool alloc] init];
+	[window orderFront:self];
 	[progressIndicator startAnimation:nil];
 	[textField_quote setStringValue:quotes[0]];
 	NSFileManager *fm = [NSFileManager defaultManager];
@@ -75,9 +95,18 @@ NSString *quotes[] = {
 	NSArray *subPaths = [fm subpathsAtPath:inputLogDir];
 	NSString *outputBasePath = [[[[adium loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath];
 	
+	NSArray *accounts = [[adium accountController] accounts];
+	int current;
+	NSMutableDictionary *defaultScreenname = [NSMutableDictionary dictionary];
+	for(current = [accounts count] - 1; current >= 0; current--)
+	{
+		AIAccount *acct = [accounts objectAtIndex:current];
+		[defaultScreenname setObject:[acct UID] forKey:[acct serviceID]];
+	}
+	
 	[progressIndicator setDoubleValue:0.0];
 	[progressIndicator setIndeterminate:NO];
-	int current, total = [subPaths count], currentQuote = 0;
+	int total = [subPaths count], currentQuote = 0;
 	for(current = 0; current < total; current++)
 	{
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];  //A lot of temporary memory is used here
@@ -113,14 +142,20 @@ NSString *quotes[] = {
 				
 		if([extension isEqualToString:@"session"])
 		{
-			NSString *outputFileDir = [[outputBasePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", service, @"account"]] stringByAppendingPathComponent:user];
+			NSString *account = [defaultScreenname objectForKey:service];
+			if(account == nil)
+				account = @"Fire";
+			NSString *outputFileDir = [[outputBasePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", service, account]] stringByAppendingPathComponent:user];
 			NSString *outputFile = [outputFileDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@).adiumLog", user, [date descriptionWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil locale:nil]]];
 			[fm createDirectoriesForPath:outputFileDir];
 			[fm copyPath:fullInputPath toPath:outputFile handler:self];
 		}
 		else if([extension isEqualToString:@"session2"])
 		{
-			NSString *outputFileDir = [[outputBasePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", service, @"account"]] stringByAppendingPathComponent:user];
+			NSString *account = [defaultScreenname objectForKey:service];
+			if(account == nil)
+				account = @"Fire";
+			NSString *outputFileDir = [[outputBasePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", service, account]] stringByAppendingPathComponent:user];
 			NSString *outputFile = [outputFileDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@).AdiumHTMLLog", user, [date descriptionWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil locale:nil]]];
 			[fm createDirectoriesForPath:outputFileDir];
 			[fm copyPath:fullInputPath toPath:outputFile handler:self];
@@ -131,6 +166,10 @@ NSString *quotes[] = {
 			[fm createDirectoriesForPath:outputBasePath];
 			GBFireXMLLogImporter *xmlLog = [[GBFireXMLLogImporter alloc] init];
 			NSString *account = [xmlLog readFile:fullInputPath toFile:outputFile];
+			if(account == nil)
+				account = [defaultScreenname objectForKey:service];
+			if(account == nil)
+				account = @"Fire";
 			[xmlLog release];
 			NSString *realOutputFileDir = [[outputBasePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", service, account]] stringByAppendingPathComponent:user];
 			NSString *realOutputFile = [realOutputFileDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@).chatlog", user, [date descriptionWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil locale:nil]]];
@@ -140,7 +179,6 @@ NSString *quotes[] = {
 		[pool release];
 	}
 	[window close];
-	[outerPool release];
 }
 
 @end
