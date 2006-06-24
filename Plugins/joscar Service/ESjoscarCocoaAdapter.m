@@ -803,7 +803,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 - (void)rejectIncomingFileTransferWithIdentifier:(NSValue *)identifier
 {
 	IncomingFileTransfer	*incomingFileTransfer = (IncomingFileTransfer *)[identifier pointerValue];
-	[incomingFileTransfer decline];
+	[incomingFileTransfer reject];
 }
 
 - (void)cancelFileTransferWithIdentifier:(NSValue *)identifier
