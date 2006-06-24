@@ -538,8 +538,8 @@
 @interface IncomingFileTransfer : FileTransfer {}
 - (void)accept;
 - (BOOL)isAccepted;
-- (void)decline;
-- (BOOL)isDeclined;
+- (void)reject;
+- (BOOL)isRejected;
 
 - (void)setFileMapper:(FileMapper *)mapper;
 - (FileMapper *)getFileMapper;
