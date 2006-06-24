@@ -261,7 +261,11 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	switch(state){
 		case XML_STATE_NONE:
 			if([name isEqualToString:@"envelope"])
+			{
+				[sender release];
+				sender = nil;
 				state = XML_STATE_ENVELOPE;
+			}
 			else if([name isEqualToString:@"event"])
 			{
 				[date release];
@@ -278,6 +282,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					eventName = [[NSString alloc] initWithString:eventStr];
 				else
 					eventName = nil;
+				[sender release];
+				sender = nil;
 				state = XML_STATE_EVENT;
 			}
 			else if([name isEqualToString:@"log"])
@@ -348,7 +354,12 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				messageStart = CFXMLParserGetLocation(parser) + 2;
 				state = XML_STATE_EVENT_MESSAGE;
 			}
+			if([name isEqualToString:@"nickname"])
+			{
+				state = XML_STATE_EVENT_NICKNAME;
+			}
 		case XML_STATE_EVENT_MESSAGE:
+		case XML_STATE_EVENT_NICKNAME:
 			break;
 	}
 }
@@ -377,10 +388,15 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				
 				NSString *message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 				//Common logging format
-				NSString *outMessage = [NSString stringWithFormat:@"<message sender=\"%@\" time=\"%@\">%@</message>\n",
-					sender,
-					[date ISO8601DateString],
-					message];
+				NSMutableString *outMessage = [NSMutableString stringWithString:@"<message"];
+				if(sender != nil)
+					[outMessage appendFormat:@"sender=\"%@\"", sender];
+				if(date != nil)
+					[outMessage appendFormat:@"time=\"%@\"", [date ISO8601DateString]];
+				if([message length])
+					[outMessage appendFormat:@">%@</message>\n", message];
+				else
+					[outMessage appendString:@"/>\n"];
 				[outputFileHandle writeData:[outMessage dataUsingEncoding:NSUTF8StringEncoding]];
 				[message release];
 				state = XML_STATE_ENVELOPE;
@@ -398,14 +414,126 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				NSData *data = [inputFileHandle readDataOfLength:end-messageStart-8];  //10 chars for </message> and -2 for index being off
 				
 				NSString *message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-				//Need to translate these
-				NSLog(@"Got an Event %@ at %@: %@",
-					  eventName,
-					  date,
-					  message);
+				if([eventName isEqualToString:@"loggedOff"] || [eventName isEqualToString:@"memberParted"])
+				{
+					NSMutableString *outMessage = [NSMutableString stringWithString:@"<status type=\"offline\""];
+					if(sender != nil)
+						[outMessage appendFormat:@" sender=\"%@\"", sender];
+					if(date != nil)
+						[outMessage appendFormat:@" time=\"%@\"", [date ISO8601DateString]];
+					[outMessage appendString:@"/>"];
+					[outputFileHandle writeData:[outMessage dataUsingEncoding:NSUTF8StringEncoding]];
+				}
+				else if([eventName isEqualToString:@"loggedOn"] || [eventName isEqualToString:@"memberJoined"])
+				{
+					NSMutableString *outMessage = [NSMutableString stringWithString:@"<status type=\"online\""];
+					if(sender != nil)
+						[outMessage appendFormat:@" sender=\"%@\"", sender];
+					if(date != nil)
+						[outMessage appendFormat:@" time=\"%@\"", [date ISO8601DateString]];
+					[outMessage appendString:@"/>"];
+					[outputFileHandle writeData:[outMessage dataUsingEncoding:NSUTF8StringEncoding]];
+				}
+				else if([eventName isEqualToString:@"StatusChanged"])
+				{
+					//now we have to parse all these
+					NSString *type = nil;
+					if(message != nil)
+					{
+						if([message rangeOfString:@"changed status to Idle"].location != NSNotFound)
+							type = @"idle";
+						else if([message rangeOfString:@"status to Available"].location != NSNotFound)
+							type = @"available";
+						else if([message rangeOfString:@"status to Away"].location != NSNotFound)
+							type = @"away";
+						else if([message rangeOfString:@"status to Busy"].location != NSNotFound)
+							type = @"busy";
+						else if([message rangeOfString:@"status to Not at Home"].location != NSNotFound)
+							type = @"notAtHome";
+						else if([message rangeOfString:@"status to On the Phone"].location != NSNotFound)
+							type = @"onThePhone";
+						else if([message rangeOfString:@"status to On Vacation"].location != NSNotFound)
+							type = @"onVacation";
+						else if([message rangeOfString:@"status to Do Not Disturb"].location != NSNotFound)
+							type = @"doNotDisturb";
+						else if([message rangeOfString:@"status to Extended Away"].location != NSNotFound)
+							type = @"extendedAway";
+						else if([message rangeOfString:@"status to Be Right Back"].location != NSNotFound)
+							type = @"beRightBack";
+						else if([message rangeOfString:@"status to Be NA"].location != NSNotFound)
+							type = @"notAvailable";
+						else if([message rangeOfString:@"status to Be Not at Home"].location != NSNotFound)
+							type = @"notAtHome";
+						else if([message rangeOfString:@"status to Not at my Desk"].location != NSNotFound)
+							type = @"notAtMyDesk";
+						else if([message rangeOfString:@"status to Not in the Office"].location != NSNotFound)
+							type = @"notInTheOffice";
+						else if([message rangeOfString:@"status to Stepped Out"].location != NSNotFound)
+							type = @"steppedOut";
+						else
+							NSLog(@"Unknown type %@", message);
+					}
+					//if the type is unknown, we can't do anything, drop it!
+					if(type != nil)
+					{
+						int colonIndex = [message rangeOfString:@":"].location;
+						
+						NSMutableString *outMessage = [NSMutableString stringWithFormat:@"<status type=\"%@\"", type];
+						if(sender != nil)
+							[outMessage appendFormat:@" sender=\"%@\"", sender];
+						if(date != nil)
+							[outMessage appendFormat:@" time=\"%@\"", [date ISO8601DateString]];
+
+						NSString *subStr = nil;
+						if(colonIndex != NSNotFound && [message length] > colonIndex + 2)
+							subStr = [message substringFromIndex:colonIndex + 2];
+						if([subStr length])
+							[outMessage appendFormat:@">%@</status>\n", subStr];
+						else
+							[outMessage appendString:@"/>\n"];
+					}
+				}
+				else if([eventName isEqualToString:@"topicChanged"] ||
+						[eventName isEqualToString:@"memberPromoted"] ||
+						[eventName isEqualToString:@"memberDemoted"] ||
+						[eventName isEqualToString:@"memberVoiced"] ||
+						[eventName isEqualToString:@"memberDevoiced"] ||
+						[eventName isEqualToString:@"memberKicked"] ||
+						[eventName isEqualToString:@"newNickname"])
+				{
+					NSMutableString *outMessage = [NSMutableString stringWithFormat:@"<status type=\"%@\"", eventName];
+					if(sender != nil)
+						[outMessage appendFormat:@" sender=\"%@\"", sender];
+					if(date != nil)
+						[outMessage appendFormat:@" time=\"%@\"", [date ISO8601DateString]];
+					
+					[outMessage appendFormat:@">%@</status>\n", message];
+				}
+				else if(eventName == nil)
+				{
+					//Generic message
+					NSMutableString *outMessage = [NSMutableString stringWithFormat:@"<event type=\"service\"", eventName];
+					if(sender != nil)
+						[outMessage appendFormat:@" sender=\"%@\"", sender];
+					if(date != nil)
+						[outMessage appendFormat:@" time=\"%@\"", [date ISO8601DateString]];
+					
+					[outMessage appendFormat:@">%@</status>\n", message];
+				}
+				else
+				{
+					//Need to translate these
+					NSLog(@"Got an Event %@ at %@: %@",
+						  eventName,
+						  date,
+						  message);
+				}
 				[message release];
 				state = XML_STATE_EVENT;
 			}
+			break;
+		case XML_STATE_EVENT_NICKNAME:
+			state = XML_STATE_EVENT;
 			break;
 		case XML_STATE_NONE:
 			break;
@@ -417,6 +545,9 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	switch(state)
 	{
 		case XML_STATE_SENDER:
+			if(sender == nil)
+				sender = [text retain];
+		case XML_STATE_EVENT_NICKNAME:
 			if(sender == nil)
 				sender = [text retain];
 		case XML_STATE_NONE:
