@@ -12,7 +12,11 @@
 #include <netdb.h>
 #include <netinet/in.h>
 
-#define CONNECTIVITY_DEBUG TRUE
+#ifdef DEBUG_BUILD
+	#define CONNECTIVITY_DEBUG TRUE
+#else
+	#define CONNECTIVITY_DEBUG FALSE
+#endif
 
 static AIHostReachabilityMonitor *singleton = nil;
 
