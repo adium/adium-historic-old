@@ -415,6 +415,23 @@ static int nextChatNumber = 0;
     //[contentObjectArray release]; contentObjectArray = [[NSMutableArray alloc] init];
 }
 
+- (BOOL)canSendMessages
+{
+	BOOL canSendMessages;
+	if ([self isGroupChat]) {
+		canSendMessages = YES;
+
+	} else {
+		AIListContact *listObject = [self listObject];
+
+		canSendMessages = ([listObject online] ||
+						   [listObject isStranger] ||
+						   [[self account] canSendOfflineMessageToContact:listObject]);
+	}
+	
+	return canSendMessages;
+}
+
 - (BOOL)canSendImages
 {
 	return [[self account] canSendImagesForChat:self];

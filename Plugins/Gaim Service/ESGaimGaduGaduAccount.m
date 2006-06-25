@@ -63,7 +63,7 @@
  *
  * Gadu-Gadu supports offline messaging.
  */
-- (BOOL)supportsOfflineMessaging
+- (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
 {
 	return YES;
 }
