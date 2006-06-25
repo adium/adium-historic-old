@@ -301,8 +301,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 				} else {
 					if (![toArray containsObject:currentToGroup]) {
 						[toArray addObject:currentToGroup];
-					} else {
-						//NSLog(@"Didn't add %@ (%@)",currentTo,currentToGroup);
 					}
 				}
 			}
@@ -324,7 +322,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 {
 	[super windowDidLoad];
 
-	[[self window] setTitle:AILocalizedString(@"Log Viewer",nil)];
+	[[self window] setTitle:AILocalizedString(@"Chat Transcripts Viewer",nil)];
 	
     //Set emoticon filtering
     showEmoticons = [[[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_EMOTICONS
@@ -1315,9 +1313,6 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		NSString *contactName = [pathComponents objectAtIndex:(numPathComponents-2)];
 
 		shouldDisplayDocument = [contactIDsToFilter containsObject:[[NSString stringWithFormat:@"%@.%@",serviceClass,contactName] compactedString]];
-		
-		NSLog(@"%@ --> %@? %i",contactIDsToFilter,[[NSString stringWithFormat:@"%@.%@",serviceClass,contactName] compactedString],
-			  shouldDisplayDocument);
 	} 
 	
 	if (shouldDisplayDocument && testDate && (filterDateType != AIDateTypeAnyDate)) {
@@ -1725,13 +1720,13 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 				metaEnumerator = [[(AIMetaContact *)item listContactsIncludingOfflineAccounts] objectEnumerator];
 				while ((contact = [metaEnumerator nextObject])) {
 					[contactIDsToFilter addObject:
-						[[[NSString stringWithFormat:@"%@.%@",[contact serviceClass],[contact UID]] compactedString] safeFilenameString]];
+						[[[NSString stringWithFormat:@"%@.%@",[contact serviceID],[contact UID]] compactedString] safeFilenameString]];
 				}
-
+				
 			} else if ([item isKindOfClass:[AIListContact class]]) {
 				[contactIDsToFilter addObject:
-					[[[NSString stringWithFormat:@"%@.%@",[(AIListContact *)item serviceClass],[(AIListContact *)item UID]] compactedString] safeFilenameString]];
-
+					[[[NSString stringWithFormat:@"%@.%@",[(AIListContact *)item serviceID],[(AIListContact *)item UID]] compactedString] safeFilenameString]];
+				
 			} else if ([item isKindOfClass:[AILogToGroup class]]) {
 				[contactIDsToFilter addObject:[[NSString stringWithFormat:@"%@.%@",[(AILogToGroup *)item serviceClass],[(AILogToGroup *)item to]] compactedString]]; 
 			}
