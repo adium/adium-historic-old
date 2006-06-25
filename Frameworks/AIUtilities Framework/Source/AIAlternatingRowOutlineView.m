@@ -61,6 +61,11 @@
 	drawsBackground = YES;
 	drawsGradientSelection = NO;
     alternatingRowColor = [[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0] retain];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(alternatingRowOutlineViewSelectionDidChange:)
+												 name:NSOutlineViewSelectionDidChangeNotification
+											   object:self];
 }
 
 - (void)dealloc
@@ -236,16 +241,13 @@
 	}
 }
 
-- (void)selectRowIndexes:(NSIndexSet *)indexes byExtendingSelection:(BOOL)extend
+- (void)alternatingRowOutlineViewSelectionDidChange:(NSNotification *)notification
 {
-	[super selectRowIndexes:indexes byExtendingSelection:extend];
-
 	if (drawsGradientSelection) {
 		//We do fancy drawing, so we need a full redisplay when selection changes
 		[self setNeedsDisplay:YES];
 	}
 }
-
 
 #pragma mark Grid
 
