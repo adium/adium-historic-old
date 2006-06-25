@@ -39,6 +39,8 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIStringUtilities.h>
 
+#import "RAFjoscarICQService.h"
+
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 
 #define CHAT_INVITE_TITLE 
@@ -858,6 +860,10 @@ BOOL isHTMLContact(AIListObject *inListObject)
 											 inChat:[[adium chatController] existingChatWithContact:sourceContact]];	
 }
 
+- (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
+{
+	return [[inContact service] isKindOfClass:[RAFjoscarICQService class]];
+}
 
 #pragma mark Contact list editing
 /*!
