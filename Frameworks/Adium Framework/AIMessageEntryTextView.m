@@ -233,6 +233,15 @@
 				[super keyDown:inEvent];
 			}
 
+		} else if (inChar == NSTabCharacter) {
+			if ([[self delegate] respondsToSelector:@selector(textViewShouldTabComplete:)] &&
+				[[self delegate] textViewShouldTabComplete:self]) {
+				[self complete:nil];
+
+			} else {
+				[super keyDown:inEvent];				
+			}
+
 		} else {
 			[super keyDown:inEvent];
 		}

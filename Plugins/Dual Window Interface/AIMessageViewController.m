@@ -97,7 +97,7 @@
 		chat = [inChat retain];
 		view_accountSelection = nil;
 		userListController = nil;
-		sendMessagesToOfflineContact = [[chat account] supportsOfflineMessaging];
+		suppressSendLaterPrompt = NO;
 		retainingScrollViewUserList = NO;
 		
 		//Load the view containing our controls
@@ -324,11 +324,8 @@
     if ([attributedString length] != 0) { 
 		AIListObject				*listObject = [chat listObject];
 		
-		if (!sendMessagesToOfflineContact &&
-			![chat isGroupChat] &&
-			![listObject online] &&
-			![listObject isStranger] &&
-			![[chat account] supportsOfflineMessaging]) {
+		if (!suppressSendLaterPrompt &&
+			![chat canSendMessages]) {
 			
 			NSString			*messageHeader;
 			NSAttributedString	*message;
@@ -390,7 +387,7 @@
 {
 	switch (returnCode) {
 		case AITextAndButtonsDefaultReturn:
-			[self setShouldSendMessagesToOfflineContacts:YES]; //don't ask again
+			suppressSendLaterPrompt = YES;
 			[self sendMessage:nil];
 			break;
 
@@ -475,16 +472,6 @@
 							 setAsNewDefaults:NO];
 	[listContact release];
 }
-
-/*!
- * @brief Offline messaging
- */
-//XXX - Offline messaging code SHOULD NOT BE IN HERE! -ai
-- (void)setShouldSendMessagesToOfflineContacts:(BOOL)should
-{
-	sendMessagesToOfflineContact = should;
-}
-
 
 //Account Selection ----------------------------------------------------------------------------------------------------
 #pragma mark Account Selection
@@ -603,7 +590,11 @@
 {	
 	//Configure the text entry view
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
-    [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
+
+	//XXX This is necessary for tab completion, but Strange Things Happen. Probably reveals a dormant bug elsewhere.
+	//[textView_outgoing setDelegate:self];
+    
+	[textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
     if ([textView_outgoing respondsToSelector:@selector(setUsesFindPanel:)]) {
 		[textView_outgoing setUsesFindPanel:YES];
     }
@@ -757,6 +748,62 @@
 	return height;
 }
 
+#pragma mark Autocompletion
+/*
+ * @brief Should the tab key cause an autocompletion if possible?
+ *
+ * We only tab to autocomplete for a group chat
+ */
+- (BOOL)textViewShouldTabComplete:(NSTextView *)inTextView
+{
+	return [[self chat] isGroupChat];
+}
+
+- (NSArray *)textView:(NSTextView *)textView completions:(NSArray *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(int *)index
+{
+	NSMutableArray	*completions;
+	
+	if ([[self chat] isGroupChat]) {
+		NSString		*partialWord = [[[textView textStorage] attributedSubstringFromRange:charRange] string];
+		NSEnumerator	*enumerator;
+		AIListContact	*listContact;
+		
+		NSString		*suffix;
+		if (charRange.location == 0) {
+			//At the start of a line, append ": "
+			suffix = @": ";
+		} else {
+			suffix = nil;
+		}
+		
+		completions = [NSMutableArray array];
+		enumerator = [[[self chat] participatingListObjects] objectEnumerator];
+		while ((listContact = [enumerator nextObject])) {
+			if ([[listContact displayName] rangeOfString:partialWord
+												 options:(NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) {
+				
+				[completions addObject:(suffix ? [[listContact displayName] stringByAppendingString:suffix] : [listContact displayName])];
+				
+			} else if ([[listContact formattedUID] rangeOfString:partialWord
+														 options:(NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) {
+				[completions addObject:(suffix ? [[listContact formattedUID] stringByAppendingString:suffix] : [listContact formattedUID])];
+				
+			} else if ([[listContact UID] rangeOfString:partialWord
+												options:(NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) {
+				[completions addObject:(suffix ? [[listContact UID] stringByAppendingString:suffix] : [listContact UID])];
+			}
+		}
+
+		if ([completions count]) {			
+			*index = 0;
+		}
+
+	} else {
+		completions = nil;
+	}
+
+	return ([completions count] ? completions : words);
+}
 
 //User List ------------------------------------------------------------------------------------------------------------
 #pragma mark User List
