@@ -6,6 +6,7 @@
 //
 
 #import <Adium/AIWindowController.h>
+#import <AIUtilities/AIAlternatingRowOutlineView.h>
 
 @class AIChatLog, AILoggerPlugin;
 
@@ -61,7 +62,7 @@ typedef enum {
 	AILoggerPlugin				*plugin;
 
 	IBOutlet	AISplitView		*splitView_contacts_results;
-	IBOutlet	NSOutlineView	*outlineView_contacts;
+	IBOutlet	AIAlternatingRowOutlineView	*outlineView_contacts;
 
     IBOutlet	NSTableView		*tableView_results;
     IBOutlet	NSTextView		*textView_content;
