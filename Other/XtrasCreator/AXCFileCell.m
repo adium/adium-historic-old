@@ -7,7 +7,6 @@
 //
 
 #import "AXCFileCell.h"
-#include <c.h>
 
 @implementation AXCFileCell
 
