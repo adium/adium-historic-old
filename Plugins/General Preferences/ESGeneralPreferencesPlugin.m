@@ -56,12 +56,12 @@
 	AIPreferenceController *preferenceController = [adium preferenceController];
 	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:TAB_DEFAULT_PREFS
 	                                                            forClass:[self class]]
-	                                                            forGroup:PREF_GROUP_INTERFACE];
+								  forGroup:PREF_GROUP_INTERFACE];
 	
 	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS
 	                                                            forClass:[self class]]
-	                                                            forGroup:PREF_GROUP_GENERAL];
-
+								  forGroup:PREF_GROUP_GENERAL];
+	
 	//Install our preference view
 	preferences = [[ESGeneralPreferences preferencePaneForPlugin:self] retain];	
 	
