@@ -20,17 +20,10 @@
 
 //Sound Controller
 #define KEY_SOUND_CUSTOM_VOLUME_LEVEL		@"Custom Volume Level"
-#define KEY_SOUND_SOUND_DEVICE_TYPE			@"Sound Device Type"
 
 @class AdiumSound, AdiumSpeech, AdiumSoundSets;
 
 @protocol AIController;
-
-typedef enum{
-	SOUND_SYTEM_OUTPUT_DEVICE = 0,
-	SOUND_SYTEM_ALERT_DEVICE
-} SoundDeviceType;
-
 
 @interface AISoundController : AIObject <AIController> {
 	AdiumSound			*adiumSound;
