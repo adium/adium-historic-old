@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Adium Updates</title>
+    <language>en</language>
+    <item>
+      <title>Adium 1.0a1 (Sparkle Test Update)</title>
+      <pubDate>Sun, 25 June 2006 17:15:01 GMT-7</pubDate>
+      <description>
+&lt;p&gt;This is a test of the sparkle updating system to make sure it works properly before we push beta 1. NOTE: Stuff may break. That's why we're doing this now, and not with beta 1. &lt;/p&gt;
+        </description>
+      <enclosure url="http://adiumx.cachefly.net/AdiumX_1.0a1.dmg" length="14405086" type="application/octet-stream"/>
+    </item>
+  </channel>
+</rss>
