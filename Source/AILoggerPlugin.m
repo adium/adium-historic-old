@@ -57,7 +57,7 @@
 #define LOG_CLEAN_SAVE_INTERVAL		500     //Number of logs to index continuously before saving the dirty array and index
 
 #define LOG_VIEWER					AILocalizedString(@"Chat Transcripts Viewer",nil)
-#define VIEW_LOGS_WITH_CONTACT		[AILocalizedString(@"View Chat Transcripts",nil) stringByAppendingEllipsis]
+#define VIEW_LOGS_WITH_CONTACT		AILocalizedString(@"View Chat Transcripts",nil)
 
 #define	CURRENT_LOG_VERSION			4       //Version of the log index.  Increase this number to reset everyones index.
 
