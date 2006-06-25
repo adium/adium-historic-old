@@ -417,11 +417,11 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>SUBetaFeedURL</key>
-	<string>http://www.adiumx.com/adiumbeta.xml</string>
+	<string>http://www.adiumx.com/sparkle/profileInfo.php</string>
 	<key>SUCheckAtStartup</key>
 	<false/>
 	<key>SUFeedURL</key>
-	<string>http://www.adiumx.com/adium.xml</string>
+	<string>http://www.adiumx.com/sparkle/profileInfo.php</string>
 	<key>SmartCrashReports_CompanyName</key>
 	<string>Adium</string>
 	<key>SmartCrashReports_EmailTicket</key>
