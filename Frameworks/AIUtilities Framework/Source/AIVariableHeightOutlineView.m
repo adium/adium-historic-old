@@ -292,9 +292,9 @@
 					if (NSIntersectsRect(thisRect, rect)) { 
 						gridRects[rectNumber++] = thisRect;
 					}
-				} else {
+				}/* else {
 					NSLog(@"%@ said not to draw",cell);
-				}
+				}*/
 			}
 		}
 		
