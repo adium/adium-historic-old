@@ -10,10 +10,6 @@
 	<string>YES</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
-    <key>SmartCrashReports_CompanyName</key>
-    <string>Adium</string>
-    <key>SmartCrashReports_EmailTicket</key>
-    <string>SCR-4C60AF7BD3</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -400,17 +396,17 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1.0svn</string>
-	<key>LSEnvironment</key>
-	<dict>
-		<key>MinimumSystemVersion</key>
-		<string>10.3.9</string>
-	</dict>
 	<key>Java</key>
 	<dict>
 		<key>JVMVersion</key>
 		<string>1.4+</string>
 		<key>VMOptions</key>
 		<string>-enableassertions</string>
+	</dict>
+	<key>LSEnvironment</key>
+	<dict>
+		<key>MinimumSystemVersion</key>
+		<string>10.3.9</string>
 	</dict>
 	<key>LSRequiresNativeExecution</key>
 	<true/>
@@ -422,10 +418,14 @@
 	<string>NSApplication</string>
 	<key>SUBetaFeedURL</key>
 	<string>http://www.adiumx.com/adiumbeta.xml</string>
+	<key>SUCheckAtStartup</key>
+	<false/>
 	<key>SUFeedURL</key>
 	<string>http://www.adiumx.com/adium.xml</string>
-	<key>SUCheckAtStartup</key>
-	<true/>
+	<key>SmartCrashReports_CompanyName</key>
+	<string>Adium</string>
+	<key>SmartCrashReports_EmailTicket</key>
+	<string>SCR-4C60AF7BD3</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -701,19 +701,14 @@
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeDescription</key>
-			<string>Adium X chat log</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.data</string>
 				<string>public.content</string>
 				<string>public.message</string>
 			</array>
-			<!---
-			<key>UTTypeIconFile</key>
-			<string>AdiumServiceIcons.icns</string>
-			-->
-
+			<key>UTTypeDescription</key>
+			<string>Adium X chat log</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.adiumx.log</string>
 			<key>UTTypeReferenceURL</key>
@@ -729,19 +724,14 @@
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeDescription</key>
-			<string>Adium X HTML chat log</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.data</string>
 				<string>public.content</string>
 				<string>public.message</string>
 			</array>
-			<!---
-			<key>UTTypeIconFile</key>
-			<string>AdiumServiceIcons.icns</string>
-			-->
-
+			<key>UTTypeDescription</key>
+			<string>Adium X HTML chat log</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.adiumx.htmllog</string>
 			<key>UTTypeReferenceURL</key>
@@ -755,7 +745,6 @@
 					<string>AdiumHTMLLog</string>
 				</array>
 			</dict>
-
 		</dict>
 	</array>
 </dict>
