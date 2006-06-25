@@ -1,13 +1,12 @@
 {
     IBClasses = (
         {
-            ACTIONS = {selectDate = id; updateSearch = id; }; 
+            ACTIONS = {selectDateType = id; updateSearch = id; }; 
             CLASS = AIAbstractLogViewerWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_deleteLogs" = NSButton; 
-                datePicker = NSDatePicker; 
-                "outlineView_contacts" = NSOutlineView; 
+                "outlineView_contacts" = AIAlternatingRowOutlineView; 
                 "popUp_dateFilter" = NSPopUpButton; 
                 progressIndicator = NSProgressIndicator; 
                 "searchField_logs" = NSSearchField; 
