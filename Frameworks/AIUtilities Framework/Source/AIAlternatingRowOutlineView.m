@@ -182,7 +182,6 @@
 	[self drawAlternatingRowsInRect:clipRect];
 
 	if (drawsGradientSelection) {
-		NSLog(@"Drawing gradient selection");
 		NSIndexSet *indices = [self selectedRowIndexes];
 		unsigned int bufSize = [indices count];
 		unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
