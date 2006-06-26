@@ -40,12 +40,15 @@ typedef enum{
 	CFXMLParserRef	parser;
 	NSFileHandle	*inputFileHandle;
 	NSFileHandle	*outputFileHandle;
+	NSDictionary	*eventTranslate;
 	
 	xmlState		state;
 	NSString		*sender;
 	NSString		*mySN;
 	NSCalendarDate	*date;
 	int				messageStart;
+	BOOL			actionMessage;
+	BOOL			autoResponse;
 	
 	NSString		*eventName;
 }
