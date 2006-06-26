@@ -108,7 +108,7 @@
 	if (context && [context count] > 0 && shouldDisplay) {
 		//Check if the history fits the date restrictions
 		
-		//Verify that the most recent message should be displayed; if it shouldn't, messages earlier shouldn't, either.
+		//The most recent message is what determines whether we have "chatted in the last X days", "not chatted in the last X days", etc.
 		NSCalendarDate *mostRecentMessage = [[(AIContentContext *)[context objectAtIndex:[context count]-1] date] dateWithCalendarFormat:nil timeZone:nil];
 		if ([self contextShouldBeDisplayed:mostRecentMessage]) {
 			NSEnumerator		*enumerator;
@@ -116,8 +116,6 @@
 
 			enumerator = [context objectEnumerator];
 			while((contextMessage = [enumerator nextObject])) {
-				if (![self contextShouldBeDisplayed:mostRecentMessage]) continue;
-
 				/* Don't display immediately, so the message view can aggregate multiple message history items.
 				 * As required, we post Content_ChatDidFinishAddingUntrackedContent when finished adding. */
 				[contextMessage setDisplayContentImmediately:NO];
