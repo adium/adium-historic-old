@@ -280,6 +280,42 @@
 		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
 		[tabView_tabBar setAllowsBackgroundTabClosing:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
 		
+		//change the frame of the tab bar according to the orientation
+		PSMTabBarOrientation orientation = [[prefDict objectForKey:KEY_TABBAR_ORIENTATION] intValue] == 0 ? PSMTabBarHorizontalOrientation : PSMTabBarVerticalOrientation;
+		if (orientation != [tabView_tabBar orientation]) {
+			NSRect tabBarFrame = [tabView_tabBar frame], tabViewFrame = [tabView_messages frame];
+			NSRect totalFrame = NSUnionRect(tabBarFrame, tabViewFrame);
+			
+			if (orientation == PSMTabBarHorizontalOrientation) {
+				tabBarFrame.size.height = 22;
+				tabBarFrame.size.width = totalFrame.size.width;
+				tabBarFrame.origin.y = 0;
+				tabViewFrame.origin.x = 0;
+				tabViewFrame.origin.y = tabBarFrame.size.height - 1;
+				tabViewFrame.size.width = totalFrame.size.width;
+				tabViewFrame.size.height = totalFrame.size.height - 21;
+				[tabView_tabBar setAutoresizingMask:NSViewMaxYMargin | NSViewWidthSizable];
+			} else {
+				tabBarFrame.size.height = totalFrame.size.height;
+				tabBarFrame.size.width = 120;
+				tabBarFrame.origin.y = totalFrame.origin.y;
+				tabViewFrame.origin.x = tabBarFrame.origin.x + tabBarFrame.size.width;
+				tabViewFrame.origin.y = totalFrame.origin.y;
+				tabViewFrame.size.width = totalFrame.size.width - tabBarFrame.size.width;
+				tabViewFrame.size.height = totalFrame.size.height;
+				[tabView_tabBar setAutoresizingMask:NSViewHeightSizable];
+			}
+			
+			tabBarFrame.origin.x = totalFrame.origin.x;
+			
+			[tabView_messages setFrame:tabViewFrame];
+			[tabView_tabBar setFrame:tabBarFrame];
+			
+			[tabView_tabBar setOrientation:orientation];
+		}
+		
+		//update the tab bar and tab view frame
+		
 		[self _updateWindowTitleAndIcon];
 
 		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_WINDOW_LEVEL] intValue];

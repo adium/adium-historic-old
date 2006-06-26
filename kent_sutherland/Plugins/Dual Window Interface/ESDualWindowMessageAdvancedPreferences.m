@@ -90,11 +90,15 @@
 											 forKey:KEY_ANIMATE_DOCK_ICON
 											  group:PREF_GROUP_APPEARANCE];
 		
-	}  else if (sender == checkBox_badgeDockIcon) {
+	} else if (sender == checkBox_badgeDockIcon) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_BADGE_DOCK_ICON
 											  group:PREF_GROUP_APPEARANCE];
 		
+	} else if (sender == popUp_orientation) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender indexOfSelectedItem]]
+											 forKey:KEY_TABBAR_ORIENTATION
+											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	}
 	
 	[self configureControlDimming];
@@ -123,6 +127,7 @@
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     [autohide_tabBar setState:![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue]];
     [checkBox_allowInactiveClosing setState:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
+	[popUp_orientation selectItemAtIndex:[[prefDict objectForKey:KEY_TABBAR_ORIENTATION] intValue]];
 
 	//Window position
 	[popUp_windowPosition setMenu:[[adium interfaceController] menuForWindowLevelsNotifyingTarget:self]];

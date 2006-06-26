@@ -31,6 +31,7 @@
 #define KEY_ENABLE_INACTIVE_TAB_CLOSE		@"Enable Inactive Tab Close"
 #define KEY_KEEP_TABS_ARRANGED				@"Keep Tabs Arranged"
 #define KEY_ARRANGE_TABS_BY_GROUP			@"Arrange Tabs By Group"
+#define KEY_TABBAR_ORIENTATION				@"Tab Bar Orientation"
 
 #define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
 #define KEY_USE_LAST_WINDOW					@"Use Last Window"
