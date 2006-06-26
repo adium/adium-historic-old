@@ -16,7 +16,8 @@
 
 #define RELATIVE_PATH_TO_CRASH_REPORTER	 @"/Contents/Resources/Adium Crash Reporter.app"
 #define EXCEPTIONS_PATH					[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
-#define CRASHES_PATH					[@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
+#define CRASHES_PATH					[[NSString stringWithFormat:@"~/Library/Logs/CrashReporter/%@.crash.log", \
+										[[NSProcessInfo processInfo] processName]] stringByExpandingTildeInPath]
 
 @class AIAutoScrollView, AITextViewWithPlaceholder;
 
