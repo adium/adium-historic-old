@@ -29,7 +29,7 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import "AIAccountController.h"
 
-/*
+/**
  * @class DCMessageContextDisplayPlugin
  * @brief Component to display in-window message history
  *
@@ -46,7 +46,7 @@
 
 @implementation DCMessageContextDisplayPlugin
 
-/*
+/**
  * @brief Install
  */
 - (void)installPlugin
@@ -65,7 +65,7 @@
 	[self setupOldSchoolHistory];
 }
 
-/*
+/**
  * @brief Uninstall
  */
 - (void)uninstallPlugin
@@ -74,7 +74,7 @@
 	[[adium notificationCenter] removeObserver:self];
 }
 
-/*
+/**
  * @brief Preferences for when to display history changed
  *
  * Only change our preferences in response to global preference notifications; specific objects use this group as well.
@@ -110,7 +110,7 @@
 	}
 }
 
-/*
+/**
  * @brief Retrieve and display in-window message history
  *
  * Called in response to the Chat_DidOpen notification
@@ -154,7 +154,7 @@
 	}
 }
 
-/*
+/**
  * @brief Does a specified date match our criteria for display?
  *
  * The date passed should be the date of the _most recent_ stored message history item
