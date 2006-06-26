@@ -108,21 +108,16 @@
 	if (context && [context count] > 0 && shouldDisplay) {
 		//Check if the history fits the date restrictions
 		
-		/*
-		NSCalendarDate *mostRecentMessage = [[(AIContentContext *)[context objectAtIndex:0] date] dateWithCalendarFormat:nil timeZone:nil];
-		
-		if ([self contextShouldBeDisplayed:mostRecentMessage]) {
-			
-			NSEnumerator * contextEnu = [context reverseObjectEnumerator];
-			*/
-		//XXXX what is going on here? :)
+		//Verify that the most recent message should be displayed; if it shouldn't, messages earlier shouldn't, either.
 		NSCalendarDate *mostRecentMessage = [[(AIContentContext *)[context objectAtIndex:[context count]-1] date] dateWithCalendarFormat:nil timeZone:nil];
 		if ([self contextShouldBeDisplayed:mostRecentMessage]) {
-			NSEnumerator * contextEnu = [context objectEnumerator];
-			
+			NSEnumerator		*enumerator;
 			AIContentContext	*contextMessage;
-			//Add messages until: we add our max (linesToDisplay) OR we run out of saved messages
-			while((contextMessage = [contextEnu nextObject])) {
+
+			enumerator = [context objectEnumerator];
+			while((contextMessage = [enumerator nextObject])) {
+				if (![self contextShouldBeDisplayed:mostRecentMessage]) continue;
+
 				/* Don't display immediately, so the message view can aggregate multiple message history items.
 				 * As required, we post Content_ChatDidFinishAddingUntrackedContent when finished adding. */
 				[contextMessage setDisplayContentImmediately:NO];
@@ -136,10 +131,9 @@
 		[[adium notificationCenter] postNotificationName:Content_ChatDidFinishAddingUntrackedContent
 												  object:chat];
 
-		} /* [self contextShouldBeDisplayed:mostRecentMessage] */
-	} /* chatDict && shouldDisplay && linesToDisplay > 0  */
+		}
+	}
 }
-
 
 - (BOOL)contextShouldBeDisplayed:(NSCalendarDate *)inDate
 {
