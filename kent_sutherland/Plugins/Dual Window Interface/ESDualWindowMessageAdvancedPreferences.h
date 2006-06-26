@@ -23,6 +23,7 @@
 
     IBOutlet	NSButton		*autohide_tabBar;
     IBOutlet    NSButton		*checkBox_allowInactiveClosing;
+	IBOutlet	NSPopUpButton	*popUp_orientation;
 	
 	IBOutlet	NSButton		*checkBox_customNameFormatting;
 	IBOutlet	NSPopUpButton   *popUp_nameFormat;
