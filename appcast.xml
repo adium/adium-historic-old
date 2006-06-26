@@ -4,12 +4,12 @@
     <title>Adium Updates</title>
     <language>en</language>
     <item>
-      <title>Adium 1.0a2</title>
-      <pubDate>Sun, 25 June 2006 20:55:00 GMT-5</pubDate>
+      <title>Adium 1.0a3</title>
+      <pubDate>Mon, 26 June 2006 9:47:00 GMT-5</pubDate>
       <description>
-&lt;p&gt;This alpha address 10.3 compatibility and a potential crash when accessing the Keychain.&lt;/p&gt;
+&lt;p&gt;Now with less zombie action and more message history!&lt;/p&gt;
         </description>
-      <enclosure url="http://adiumx.cachefly.net/AdiumX_1.0a2.dmg" length="14397540" type="application/octet-stream"/>
+      <enclosure url="http://adiumx.cachefly.net/AdiumX_1.0a3.dmg" length="14402408" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
