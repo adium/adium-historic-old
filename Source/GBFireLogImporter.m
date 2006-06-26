@@ -392,10 +392,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	{
 		case XML_STATE_ENVELOPE:
 			if([name isEqualToString:@"envelope"])
-			{
-				[outputFileHandle writeData:[[NSString stringWithString:@"</chat>"] dataUsingEncoding:NSUTF8StringEncoding]];
 				state = XML_STATE_NONE;
-			}
 			break;
 		case XML_STATE_SENDER:
 			if([name isEqualToString:@"sender"])
@@ -586,6 +583,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			state = XML_STATE_EVENT;
 			break;
 		case XML_STATE_NONE:
+			if([name isEqualToString:@"log"])
+				[outputFileHandle writeData:[[NSString stringWithString:@"</chat>"] dataUsingEncoding:NSUTF8StringEncoding]];
 			break;
 	}
 }
