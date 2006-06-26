@@ -477,17 +477,10 @@ static NSString	*prefsCategory;
 		allowQuit = NO;
 	}
 	
-	if(allowQuit) {
+	if (allowQuit) {
 		[NSApp terminate:nil];
 	}
 }
-
-- (IBAction)launchJeeves:(id)sender
-{
-    [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_IMPORTER];
-}
-
-
 
 //Other -------------------------------------------------------------------------------------------------------
 #pragma mark Other
