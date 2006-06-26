@@ -462,14 +462,16 @@
 		shouldPostContentReceivedEvents = contentReceived && [inObject trackContent];
 		
 		if (![chat isOpen]) {
-			/*
-			 Tell the interface to open the chat
-			 For incoming messages, we don't open the chat until we're sure that new content is being received.
+			/* Tell the interface to open the chat
+			 * For incoming messages, we don't open the chat until we're sure that new content is being received.
 			 */
 			[[adium interfaceController] openChat:chat];
 		}
 
 		userInfo = [NSDictionary dictionaryWithObjectsAndKeys:chat, @"AIChat", inObject, @"AIContentObject", nil];
+
+		//XXX - old school message history support: Add this content to the chat
+		[chat addContentObject:inObject];
 
 		//Notify: Content Object Added
 		[[adium notificationCenter] postNotificationName:Content_ContentObjectAdded
