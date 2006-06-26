@@ -29,6 +29,12 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import "AIAccountController.h"
 
+/*
+ * @class DCMessageContextDisplayPlugin
+ * @brief Component to display in-window message history
+ *
+ * The amount of history, and criteria of when to display history, are determined in the Advanced->Message History preferences.
+ */
 @interface DCMessageContextDisplayPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 - (BOOL)contextShouldBeDisplayed:(NSCalendarDate *)inDate;
@@ -40,6 +46,9 @@
 
 @implementation DCMessageContextDisplayPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	isObserving = NO;
@@ -56,17 +65,24 @@
 	[self setupOldSchoolHistory];
 }
 
+/*
+ * @brief Uninstall
+ */
 - (void)uninstallPlugin
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 }
 
+/*
+ * @brief Preferences for when to display history changed
+ *
+ * Only change our preferences in response to global preference notifications; specific objects use this group as well.
+ */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	//Only change our preferences in response to global preference notifications; specific objects use this group as well.
-	if (object == nil) {
+	if (!object) {
 		haveTalkedDays = [[prefDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue];
 		haveNotTalkedDays = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue];
 		displayMode = [[prefDict objectForKey:KEY_DISPLAY_MODE] intValue];
@@ -94,6 +110,11 @@
 	}
 }
 
+/*
+ * @brief Retrieve and display in-window message history
+ *
+ * Called in response to the Chat_DidOpen notification
+ */
 - (void)addContextDisplayToWindow:(NSNotification *)notification
 {
 	AIChat	*chat = (AIChat *)[notification object];
@@ -133,6 +154,13 @@
 	}
 }
 
+/*
+ * @brief Does a specified date match our criteria for display?
+ *
+ * The date passed should be the date of the _most recent_ stored message history item
+ *
+ * @result YES if the mesage history should be displayed
+ */
 - (BOOL)contextShouldBeDisplayed:(NSCalendarDate *)inDate
 {
 	BOOL dateIsGood = YES;
@@ -171,6 +199,11 @@
 }
 
 #pragma mark Old school
+/********
+ * Everything below this point is 'old school' history.
+ * It is saved when the chat closes to a per-object preference.
+ * Once XML logging is up and running, this should be removed.  The call to context:inChat: should instead be directed to the logger.
+ */
 - (void)setupOldSchoolHistory
 {
 	//Observe chats closing
