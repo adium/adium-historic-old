@@ -192,7 +192,7 @@
 
 - (void)translatedString:(NSString *)translatedString forMessageDict:(NSDictionary *)messageDict
 {
-	NSLog(@"Translated %@ for %@",translatedString, messageDict);
+	AILog(@"Translated %@ for %@",translatedString, messageDict);
 	//We're done translating a message...
 	numberTranslating--;
 
@@ -222,7 +222,7 @@
  */
 - (void)translationError:(NSString *)errorMessage forMessageDict:(NSDictionary *)messageDict
 {
-	NSLog(@"%@",[NSString stringWithFormat:NSLocalizedString(@"Translation Error: %@\nOriginal Message: \"%@\"",@"Parameters are <error msg>,<original msg>"),errorMessage,[messageDict objectForKey:TC_MESSAGE_KEY]]);
+	AILog(@"%@",[NSString stringWithFormat:NSLocalizedString(@"Translation Error: %@\nOriginal Message: \"%@\"",@"Parameters are <error msg>,<original msg>"),errorMessage,[messageDict objectForKey:TC_MESSAGE_KEY]]);
 
 	//Pass a the original string as a result
 	[self translatedString:[messageDict objectForKey:TC_MESSAGE_KEY] forMessageDict:messageDict];

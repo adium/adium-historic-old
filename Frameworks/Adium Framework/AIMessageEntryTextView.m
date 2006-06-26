@@ -440,7 +440,6 @@
 	
 	//Types is ordered by the preference for handling of the data; enumerating it lets us allow the sending application's hints to be followed.
 	while ((type = [enumerator nextObject]) && !handledPaste) {
-		NSLog(@"Looking at type %@",type);
 		if ([type isEqualToString:NSRTFPboardType] ||
 			[type isEqualToString:NSRTFDPboardType] ||
 			[type isEqualToString:NSHTMLPboardType]) {
@@ -798,7 +797,6 @@
 		NSMenuItem	*editLinkItem = nil;
 		while ((menuItem = [enumerator nextObject])) {
 			if ([[menuItem title] rangeOfString:AILocalizedString(@"Edit Link", nil)].location != NSNotFound) {
-				NSLog(@"menu item is %@",menuItem);
 				editLinkItem = menuItem;
 				break;
 			}

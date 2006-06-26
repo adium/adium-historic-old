@@ -1121,7 +1121,7 @@ static NSArray *draggedTypes = nil;
 		AIEmoticon	*emoticon = [[inNotification userInfo] objectForKey:@"AIEmoticon"];
 		NSString	*textEquivalent = [[emoticon textEquivalents] objectAtIndex:0];
 		NSString	*path = [emoticon path];
-		NSLog(@"Trying to update %@ (%@)",emoticon,textEquivalent);
+		AILog(@"Trying to update %@ (%@)",emoticon,textEquivalent);
 		for (int i = 0; i < imagesCount; i++) {
 			DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
 			
