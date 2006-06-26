@@ -159,6 +159,14 @@ static NSMutableArray	*libgaimPluginArray = nil;
 	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 }
 
+static void ZombieKiller_Signal(int i)
+{
+	int status, child_pid = 0;
+	while(child_pid != -1)
+		//Let the child tell us its status so it can go away
+		child_pid = waitpid(-1, &status, WNOHANG);
+}
+
 - (void)initLibGaim
 {	
 	//Set the gaim user directory to be within this user's directory
@@ -173,6 +181,9 @@ static NSMutableArray	*libgaimPluginArray = nil;
 		NSLog(@"*** FATAL ***: Failed to initialize gaim core");
 		GaimDebug (@"*** FATAL ***: Failed to initialize gaim core");
 	}
+	
+	//Libgaim's async DNS lookup tends to create zombies.
+	signal(SIGCHLD, ZombieKiller_Signal);
 }
 
 #pragma mark Lookup functions
