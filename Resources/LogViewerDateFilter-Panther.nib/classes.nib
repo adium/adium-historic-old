@@ -54,7 +54,6 @@
             SUPERCLASS = AIObject; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = NSDatePicker; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
         {CLASS = NSWindow; LANGUAGE = ObjC; SUPERCLASS = NSResponder; }
     ); 
     IBVersion = 1; 
