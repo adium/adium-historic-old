@@ -206,6 +206,16 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	date = nil;
 	parser = NULL;
 	
+	eventTranslate = [[NSDictionary alloc] initWithObjectsAndKeys:
+		@"formatted_user_id/changed", @"newNickname",
+		@"channeltopic/channeltopicchanged", @"topicChanged",
+		@"memberPromoted", @"memberPromoted",
+		@"memberDemoted", @"memberDemoted",
+		@"memberVoiced", @"memberVoiced",
+		@"memberDevoiced", @"memberDevoiced",
+		@"memberKicked", @"memberKicked",
+		nil];
+		
 	return self;
 }
 
@@ -248,6 +258,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 {
 	[inputFileHandle release];
 	[outputFileHandle release];
+	[eventTranslate release];
 	[sender release];
 	[mySN release];
 	[date release];
@@ -328,6 +339,17 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				
 				//Mark the location of the message...  We can copy it directly.  Anyone know why it is off by 2?
 				messageStart = CFXMLParserGetLocation(parser) + 2;
+				
+				if([attributes objectForKey:@"action"] != nil)
+					actionMessage = YES;
+				else
+					actionMessage = NO;
+				
+				if([attributes objectForKey:@"away"] != nil)
+					autoResponse = YES;
+				else
+					autoResponse = NO;
+				
 				state = XML_STATE_MESSAGE;
 			}
 			else if([name isEqualToString:@"sender"])
@@ -389,10 +411,38 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				NSString *message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 				//Common logging format
 				NSMutableString *outMessage = [NSMutableString stringWithString:@"<message"];
+				if(actionMessage)
+				{
+					[outMessage appendString:@" type=\"action\""];
+					
+					//Hmm...  there is a bug in Fire's logging format that logs action messages like <span>username </span>message
+					int cutIndex = 0;
+					int index = [message rangeOfString:@"<span>"].location;
+					if(index == 0)
+					{
+						int endIndex = [message rangeOfString:@"</span>"].location;
+						if(sender == nil)
+							sender = [[message substringWithRange:NSMakeRange(6, endIndex-7)] retain];  //6 is length of <span>.  7 is length of <span> plus trailing space
+						index = cutIndex = endIndex + 7;  //7 is length of </span>
+					}
+					else
+						index = 0;
+					while([message characterAtIndex:index] == '<')
+					{
+						NSRange searchRange = NSMakeRange(index, [message length] - index);
+						NSRange range = [message rangeOfString:@">" options:0 range:searchRange];
+						index = range.location + 1;
+					}
+					NSString *newMessage = [[NSString alloc] initWithFormat:@"%@/me %@", [message substringWithRange:NSMakeRange(cutIndex, index-cutIndex)], [message substringFromIndex:index]];
+					[message release];
+					message = newMessage;
+				}
+				if(autoResponse)
+					[outMessage appendString:@" auto=\"yes\""];
 				if(sender != nil)
-					[outMessage appendFormat:@"sender=\"%@\"", sender];
+					[outMessage appendFormat:@" sender=\"%@\"", sender];
 				if(date != nil)
-					[outMessage appendFormat:@"time=\"%@\"", [date ISO8601DateString]];
+					[outMessage appendFormat:@" time=\"%@\"", [date ISO8601DateString]];
 				if([message length])
 					[outMessage appendFormat:@">%@</message>\n", message];
 				else
@@ -501,7 +551,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 						[eventName isEqualToString:@"memberKicked"] ||
 						[eventName isEqualToString:@"newNickname"])
 				{
-					NSMutableString *outMessage = [NSMutableString stringWithFormat:@"<status type=\"%@\"", eventName];
+					NSMutableString *outMessage = [NSMutableString stringWithFormat:@"<status type=\"%@\"", [eventTranslate objectForKey:eventName]];
 					if(sender != nil)
 						[outMessage appendFormat:@" sender=\"%@\"", sender];
 					if(date != nil)
