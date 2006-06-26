@@ -125,7 +125,6 @@
 - (void)highlight:(BOOL)inFlag
 {
 	if (!inFlag || highlightOnHoverAndClick) {
-		NSLog(@"Highlight: %i",inFlag);
 		[super highlight:inFlag];
 	}
 }

@@ -350,8 +350,6 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 					themeDict, @"preferences",
 					nil]];
 				[alreadyAddedArray addObject:name];
-			} else {
-				//NSLog(@"Already added");
 			}
 		}
 	}

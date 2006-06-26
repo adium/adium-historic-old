@@ -732,7 +732,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 - (void)setSendAutomaticallyFailed:(HashMap *)userInfo
 {
 	//This is never called as far as I can tell.... -eds
-	NSLog(@"setSendAutomaticallyFailed: %@",userInfo);	
+	AILog(@"setSendAutomaticallyFailed: %@",userInfo);	
 
 	id<Collection>	triedConversations = [userInfo get:@"Set<Conversation>"];
 	id<Iterator>	iterator = [triedConversations iterator];
@@ -754,7 +754,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	AILog(@"got other event: %@ - %@",eventInfo, NSStringFromClass([eventInfo class]));
 
 	if ([eventInfo isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ImSendFailedEvent")]) {
-		NSLog(@"%@: error %i",eventInfo,[(ImSendFailedEvent *)eventInfo getErrorCode]);
+		AILog(@"%@: error %i",eventInfo,[(ImSendFailedEvent *)eventInfo getErrorCode]);
 		AIChatErrorType errorType;
 
 		switch ([(ImSendFailedEvent *)eventInfo getErrorCode]) {
@@ -769,7 +769,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 				break;
 		}
 		
-		NSLog(@"error with %@",[[[[conversation getBuddy] getNormal] copy] autorelease]);
+		AILog(@"error with %@",[[[[conversation getBuddy] getNormal] copy] autorelease]);
 		[accountProxy chatWithUID:[[[[conversation getBuddy] getNormal] copy] autorelease]
 						 gotError:[NSNumber numberWithInt:errorType]];
 	}
