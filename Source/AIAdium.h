@@ -96,7 +96,6 @@
 - (IBAction)showForums:(id)sender;
 - (IBAction)showXtras:(id)sender;
 - (IBAction)confirmQuit:(id)sender;
-- (IBAction)launchJeeves:(id)sender;
 
 - (NSString *)applicationSupportDirectory;
 - (NSString *)createResourcePathForName:(NSString *)name;
@@ -107,21 +106,6 @@
 
 @end
 
-//Crash Reporter
-#define PATH_TO_IMPORTER              [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"/Contents/Resources/Adium 1.6 Pref Importer.app"] stringByExpandingTildeInPath]
-#define EXCEPTIONS_PATH               [@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
-#define CRASHES_PATH                  [@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
-
-//Debugging
-/* Enable to automatically turn on DEBUG_BUILD for all BETA_RELEASE builds */
-#if 0
-	#if BETA_RELEASE
-		#ifndef DEBUG_BUILD
-			#define DEBUG_BUILD
-		#endif
-	#endif
-#endif
- 
 //Adium events
 #define KEY_EVENT_DISPLAY_NAME		@"DisplayName"
 #define KEY_EVENT_NOTIFICATION		@"Notification"
