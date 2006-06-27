@@ -25,7 +25,7 @@
 #import "AILoggerPlugin.h"
 #import "ESTextAndButtonsWindowController.h"
 
-#define XML_MARKER @"<?xml version=\"1.0\"?>"
+#define XML_MARKER @"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
 
 @interface GBFireLogImporter (private)
 - (void)askBeforeImport;
@@ -72,11 +72,9 @@
 }
 
 NSString *quotes[] = {
-	@"(I have gotten into the habit of recording important mettings)",
-	@"(One never knows when an inconvenient truth will fall between the cracks and vanish)",
-	@"(I have the feeling he and his associates are carving a great, dark hole in the middle of the universe)",
-	@"(and when they go down, anyone nearby will go down with them)",
-	@"(- Londo Mollari)"
+	@"\"I have gotten into the habit of recording important mettings\"",
+	@"\"One never knows when an inconvenient truth will fall between the cracks and vanish\"",
+	@"- Londo Mollari"
 };
 
 - (void)importFireLogs
@@ -166,16 +164,20 @@ NSString *quotes[] = {
 			NSString *outputFile = [outputBasePath stringByAppendingPathComponent:@"tempLogImport"];
 			[fm createDirectoriesForPath:outputBasePath];
 			GBFireXMLLogImporter *xmlLog = [[GBFireXMLLogImporter alloc] init];
-			NSString *account = [xmlLog readFile:fullInputPath toFile:outputFile];
-			if(account == nil)
-				account = [defaultScreenname objectForKey:service];
-			if(account == nil)
-				account = @"Fire";
+			NSString *account = nil;
+			if([xmlLog readFile:fullInputPath toFile:outputFile account:&account])
+			{
+				if(account == nil)
+					account = [defaultScreenname objectForKey:service];
+				if(account == nil)
+					account = @"Fire";
+
+				NSString *realOutputFileDir = [[outputBasePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", service, account]] stringByAppendingPathComponent:user];
+				NSString *realOutputFile = [realOutputFileDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@).chatlog", user, [date descriptionWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil locale:nil]]];
+				[fm createDirectoriesForPath:realOutputFileDir];
+				[fm movePath:outputFile toPath:realOutputFile handler:self];
+			}
 			[xmlLog release];
-			NSString *realOutputFileDir = [[outputBasePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", service, account]] stringByAppendingPathComponent:user];
-			NSString *realOutputFile = [realOutputFileDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@).chatlog", user, [date descriptionWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil locale:nil]]];
-			[fm createDirectoriesForPath:realOutputFileDir];
-			[fm movePath:outputFile toPath:realOutputFile handler:self];
 		}
 		[pool release];
 	}
@@ -219,8 +221,9 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	return self;
 }
 
-- (NSString *)readFile:(NSString *)inFile toFile:(NSString *)outFile;
+- (BOOL)readFile:(NSString *)inFile toFile:(NSString *)outFile account:(NSString * *)account;
 {
+	BOOL success = YES;
 	inputFileHandle = [[NSFileHandle fileHandleForReadingAtPath:inFile] retain];
 	int outfd = open([outFile fileSystemRepresentation], O_CREAT | O_WRONLY, 0644);
 	outputFileHandle = [[NSFileHandle alloc] initWithFileDescriptor:outfd closeOnDealloc:YES];
@@ -244,6 +247,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	parser = CFXMLParserCreateWithDataFromURL(NULL, (CFURLRef)url, kCFXMLParserSkipMetaData | kCFXMLParserSkipWhitespace, kCFXMLNodeCurrentVersion, &callbacks, &context);
 	if (!CFXMLParserParse(parser)) {
 		printf("parse failed\n");
+		success = NO;
 	}
 	CFRelease(parser);
 	parser = nil;
@@ -251,7 +255,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	[inputFileHandle closeFile];
 	[outputFileHandle closeFile];
 	
-	return [[mySN retain] autorelease];
+	*account = [[mySN retain] autorelease];
+	return success;
 }
 
 - (void)dealloc
