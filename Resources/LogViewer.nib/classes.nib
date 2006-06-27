@@ -6,11 +6,15 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_deleteLogs" = NSButton; 
+                "containingView_contactsSourceList" = NSView; 
+                "containingView_results" = NSView; 
                 "outlineView_contacts" = AIAlternatingRowOutlineView; 
                 "popUp_dateFilter" = NSPopUpButton; 
                 progressIndicator = NSProgressIndicator; 
                 "searchField_logs" = NSSearchField; 
+                sourceListResizer = ESSourceListResizer; 
                 "splitView_contacts_results" = AISplitView; 
+                "splitView_results" = AISplitView; 
                 "tableView_results" = NSTableView; 
                 "textField_progress" = NSTextField; 
                 "textView_content" = NSTextView; 
@@ -59,8 +63,16 @@
             }; 
             SUPERCLASS = AIObject; 
         }, 
+        {CLASS = ESSourceListBackgroundView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            CLASS = ESSourceListResizer; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = ESSourceListBackgroundView; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSDatePicker; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
         {CLASS = NSWindow; LANGUAGE = ObjC; SUPERCLASS = NSResponder; }
     ); 
     IBVersion = 1; 
