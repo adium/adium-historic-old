@@ -96,6 +96,8 @@
 - (IBAction)showForums:(id)sender;
 - (IBAction)showXtras:(id)sender;
 - (IBAction)confirmQuit:(id)sender;
+- (IBAction)contibutingToAdium:(id)sender;
+- (IBAction)donate:(id)sender;
 
 - (NSString *)applicationSupportDirectory;
 - (NSString *)createResourcePathForName:(NSString *)name;

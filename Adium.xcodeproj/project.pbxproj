@@ -255,6 +255,17 @@
 		342F88D20A2A74EB0001DB29 /* PTHotKeyCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 342F88CC0A2A74EA0001DB29 /* PTHotKeyCenter.h */; };
 		342F88D30A2A74EB0001DB29 /* PTHotKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 342F88CD0A2A74EB0001DB29 /* PTHotKey.m */; };
 		342F88D40A2A74EB0001DB29 /* PTHotKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 342F88CE0A2A74EB0001DB29 /* PTHotKey.h */; };
+		34382CE90A50386C004BF6A2 /* DCMessageContextDisplayPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 34382CE50A50386B004BF6A2 /* DCMessageContextDisplayPreferences.h */; };
+		34382CEA0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382CE60A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m */; };
+		34382CEB0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34382CE70A50386C004BF6A2 /* DCMessageContextDisplayPlugin.h */; };
+		34382CEC0A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382CE80A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m */; };
+		34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34382CEE0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist */; };
+		34382D1E0A506EF9004BF6A2 /* ESSourceListResizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 34382D1C0A506EF9004BF6A2 /* ESSourceListResizer.h */; };
+		34382D1F0A506EF9004BF6A2 /* ESSourceListResizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382D1D0A506EF9004BF6A2 /* ESSourceListResizer.m */; };
+		34382D290A506F4E004BF6A2 /* divider.png in Resources */ = {isa = PBXBuildFile; fileRef = 34382D280A506F4E004BF6A2 /* divider.png */; };
+		34382D5C0A507DF1004BF6A2 /* KFSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34382D5A0A507DF1004BF6A2 /* KFSplitView.h */; };
+		34382D5D0A507DF2004BF6A2 /* KFSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382D5B0A507DF1004BF6A2 /* KFSplitView.m */; };
+		34382E170A5093E9004BF6A2 /* sourceListBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 34382E160A5093E9004BF6A2 /* sourceListBackground.png */; };
 		3439FDA905794D0F00B2E449 /* JMSQLLoggerAdvancedPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = B799BC8105793C1300338E54 /* JMSQLLoggerAdvancedPreferences.h */; };
 		3439FDAA05794D1300B2E449 /* JMSQLLoggerAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = B799BC8005793C1200338E54 /* JMSQLLoggerAdvancedPreferences.m */; };
 		343E7718097BEFE000BCFF92 /* jsocks-klea.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 343E7716097BEFD500BCFF92 /* jsocks-klea.jar */; };
@@ -611,6 +622,8 @@
 		3486E9E3097F5FE20044C496 /* ESAuthorizationRequestWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3486E9E1097F5FE20044C496 /* ESAuthorizationRequestWindowController.h */; };
 		348862D105645EB5003C9627 /* ESFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 348862CE05645E95003C9627 /* ESFileTransfer.m */; };
 		348862D205645EB6003C9627 /* ESFileTransfer.h in Headers */ = {isa = PBXBuildFile; fileRef = 348862CD05645E94003C9627 /* ESFileTransfer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		348B250C0A50A1C900B2B972 /* ESSourceListBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 348B250A0A50A1C900B2B972 /* ESSourceListBackgroundView.h */; };
+		348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */; };
 		348E5ACB06D2A74C004C051C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348E5ACA06D2A74C004C051C /* AddressBook.framework */; };
 		348EE1B4080A57480015E0FC /* WebKitPreferencesView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348EE1B3080A57480015E0FC /* WebKitPreferencesView.nib */; };
 		348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */; };
@@ -1298,10 +1311,6 @@
 		6E4D960F06B7397A005235E9 /* JoinChatWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6E4D960A06B7397A005235E9 /* JoinChatWindow.nib */; };
 		6E4D961306B739AC005235E9 /* DCJoinChatPanelPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E4D961106B739AC005235E9 /* DCJoinChatPanelPlugin.h */; };
 		6E4D961406B739AC005235E9 /* DCJoinChatPanelPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D961206B739AC005235E9 /* DCJoinChatPanelPlugin.m */; };
-		6E5A43DF061160C60078C342 /* DCMessageContextDisplayPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E5A43DD061160C50078C342 /* DCMessageContextDisplayPlugin.h */; };
-		6E5A43E0061160C60078C342 /* DCMessageContextDisplayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A43DE061160C50078C342 /* DCMessageContextDisplayPlugin.m */; };
-		6E7C19BC0623BF80008A1C99 /* DCMessageContextDisplayPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E7C19B90623BF7F008A1C99 /* DCMessageContextDisplayPreferences.h */; };
-		6E7C19BD0623BF80008A1C99 /* DCMessageContextDisplayPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E7C19BA0623BF7F008A1C99 /* DCMessageContextDisplayPreferences.m */; };
 		6EA3689706B73FE5009CA81A /* DCStressTestJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6EA3689406B73FE5009CA81A /* DCStressTestJoinChatView.nib */; };
 		6EA3689806B73FE5009CA81A /* DCStressTestJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EA3689506B73FE5009CA81A /* DCStressTestJoinChatViewController.h */; };
 		6EA3689906B73FE5009CA81A /* DCStressTestJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA3689606B73FE5009CA81A /* DCStressTestJoinChatViewController.m */; };
@@ -1310,7 +1319,6 @@
 		6EC1684E06C170A000F9FAD3 /* DCInviteToChatWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EC1684906C170A000F9FAD3 /* DCInviteToChatWindowController.h */; };
 		6EC1684F06C170A000F9FAD3 /* DCInviteToChatWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EC1684A06C170A000F9FAD3 /* DCInviteToChatWindowController.m */; };
 		6EC1685006C170A000F9FAD3 /* InviteToChatWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6EC1684B06C170A000F9FAD3 /* InviteToChatWindow.nib */; };
-		6ECFABC50622370E001C7E93 /* MessageContextDisplayDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6ECFABC40622370D001C7E93 /* MessageContextDisplayDefaults.plist */; };
 		6ECFABC806223733001C7E93 /* AIContentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 6ECFABC606223733001C7E93 /* AIContentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6ECFABC906223733001C7E93 /* AIContentContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ECFABC706223733001C7E93 /* AIContentContext.m */; };
 		7E1E8178063A3EEC00EB00F7 /* AIContextMenuTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E1E8176063A3EEC00EB00F7 /* AIContextMenuTextView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2097,6 +2105,17 @@
 		342F88CD0A2A74EB0001DB29 /* PTHotKey.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PTHotKey.m; path = Source/PTHotKey.m; sourceTree = "<group>"; };
 		342F88CE0A2A74EB0001DB29 /* PTHotKey.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PTHotKey.h; path = Source/PTHotKey.h; sourceTree = "<group>"; };
 		34327BD6060D2FE6003D7AD9 /* GaimServiceDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = GaimServiceDefaults.plist; path = "Plugins/Gaim Service/GaimServiceDefaults.plist"; sourceTree = "<group>"; };
+		34382CE50A50386B004BF6A2 /* DCMessageContextDisplayPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCMessageContextDisplayPreferences.h; path = Source/DCMessageContextDisplayPreferences.h; sourceTree = "<group>"; };
+		34382CE60A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCMessageContextDisplayPlugin.m; path = Source/DCMessageContextDisplayPlugin.m; sourceTree = "<group>"; };
+		34382CE70A50386C004BF6A2 /* DCMessageContextDisplayPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCMessageContextDisplayPlugin.h; path = Source/DCMessageContextDisplayPlugin.h; sourceTree = "<group>"; };
+		34382CE80A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCMessageContextDisplayPreferences.m; path = Source/DCMessageContextDisplayPreferences.m; sourceTree = "<group>"; };
+		34382CEE0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = MessageContextDisplayDefaults.plist; path = Resources/MessageContextDisplayDefaults.plist; sourceTree = "<group>"; };
+		34382D1C0A506EF9004BF6A2 /* ESSourceListResizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSourceListResizer.h; path = Source/ESSourceListResizer.h; sourceTree = "<group>"; };
+		34382D1D0A506EF9004BF6A2 /* ESSourceListResizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSourceListResizer.m; path = Source/ESSourceListResizer.m; sourceTree = "<group>"; };
+		34382D280A506F4E004BF6A2 /* divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = divider.png; path = Resources/divider.png; sourceTree = "<group>"; };
+		34382D5A0A507DF1004BF6A2 /* KFSplitView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KFSplitView.h; path = Source/KFSplitView.h; sourceTree = "<group>"; };
+		34382D5B0A507DF1004BF6A2 /* KFSplitView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = KFSplitView.m; path = Source/KFSplitView.m; sourceTree = "<group>"; };
+		34382E160A5093E9004BF6A2 /* sourceListBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sourceListBackground.png; path = Resources/sourceListBackground.png; sourceTree = "<group>"; };
 		3439FD8C05794B4500B2E449 /* AlertMessageContactAlert.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AlertMessageContactAlert.nib; path = "Plugins/Error Message Handler/AlertMessageContactAlert.nib"; sourceTree = "<group>"; };
 		343A7F2606935DB600150CEC /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimMeanwhileAccountView.nib"; sourceTree = "<group>"; };
 		343A7F2A06935DC500150CEC /* ESGaimMeanwhileAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimMeanwhileAccountViewController.m; path = "Plugins/Gaim Service/ESGaimMeanwhileAccountViewController.m"; sourceTree = "<group>"; };
@@ -2540,6 +2559,8 @@
 		348862CE05645E95003C9627 /* ESFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransfer.m; path = "Frameworks/Adium Framework/ESFileTransfer.m"; sourceTree = "<group>"; };
 		348A8A190629A68C00FC6E03 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
 		348A901A062A13AB00FC6E03 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
+		348B250A0A50A1C900B2B972 /* ESSourceListBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSourceListBackgroundView.h; path = Source/ESSourceListBackgroundView.h; sourceTree = "<group>"; };
+		348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSourceListBackgroundView.m; path = Source/ESSourceListBackgroundView.m; sourceTree = "<group>"; };
 		348D8D1A06CC079F00449EBB /* ESZephyrService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESZephyrService.m; path = "Plugins/Gaim Service/ESZephyrService.m"; sourceTree = "<group>"; };
 		348D8D1B06CC079F00449EBB /* ESZephyrService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESZephyrService.h; path = "Plugins/Gaim Service/ESZephyrService.h"; sourceTree = "<group>"; };
 		348D8D2206CC07BC00449EBB /* ESGaimZephyrAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimZephyrAccountViewController.m; path = "Plugins/Gaim Service/ESGaimZephyrAccountViewController.m"; sourceTree = "<group>"; };
@@ -3455,10 +3476,6 @@
 		6E4D962D06B73C4D005235E9 /* DCGaimMSNJoinChatView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DCGaimMSNJoinChatView.nib; path = "Plugins/Gaim Service/DCGaimMSNJoinChatView.nib"; sourceTree = "<group>"; };
 		6E4D962E06B73C4D005235E9 /* DCGaimMSNJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCGaimMSNJoinChatViewController.h; path = "Plugins/Gaim Service/DCGaimMSNJoinChatViewController.h"; sourceTree = "<group>"; };
 		6E4D962F06B73C4D005235E9 /* DCGaimMSNJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCGaimMSNJoinChatViewController.m; path = "Plugins/Gaim Service/DCGaimMSNJoinChatViewController.m"; sourceTree = "<group>"; };
-		6E5A43DD061160C50078C342 /* DCMessageContextDisplayPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCMessageContextDisplayPlugin.h; path = "Plugins/Message Context Display/DCMessageContextDisplayPlugin.h"; sourceTree = "<group>"; };
-		6E5A43DE061160C50078C342 /* DCMessageContextDisplayPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCMessageContextDisplayPlugin.m; path = "Plugins/Message Context Display/DCMessageContextDisplayPlugin.m"; sourceTree = "<group>"; };
-		6E7C19B90623BF7F008A1C99 /* DCMessageContextDisplayPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCMessageContextDisplayPreferences.h; path = "Plugins/Message Context Display/DCMessageContextDisplayPreferences.h"; sourceTree = "<group>"; };
-		6E7C19BA0623BF7F008A1C99 /* DCMessageContextDisplayPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCMessageContextDisplayPreferences.m; path = "Plugins/Message Context Display/DCMessageContextDisplayPreferences.m"; sourceTree = "<group>"; };
 		6EA3688206B73E7D009CA81A /* DCGaimNovellJoinChatView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DCGaimNovellJoinChatView.nib; path = "Plugins/Gaim Service/DCGaimNovellJoinChatView.nib"; sourceTree = "<group>"; };
 		6EA3688306B73E7D009CA81A /* DCGaimNovellJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCGaimNovellJoinChatViewController.h; path = "Plugins/Gaim Service/DCGaimNovellJoinChatViewController.h"; sourceTree = "<group>"; };
 		6EA3688406B73E7D009CA81A /* DCGaimNovellJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCGaimNovellJoinChatViewController.m; path = "Plugins/Gaim Service/DCGaimNovellJoinChatViewController.m"; sourceTree = "<group>"; };
@@ -3473,7 +3490,6 @@
 		6EC1684906C170A000F9FAD3 /* DCInviteToChatWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCInviteToChatWindowController.h; path = "Plugins/Invite to Chat Plugin/DCInviteToChatWindowController.h"; sourceTree = "<group>"; };
 		6EC1684A06C170A000F9FAD3 /* DCInviteToChatWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCInviteToChatWindowController.m; path = "Plugins/Invite to Chat Plugin/DCInviteToChatWindowController.m"; sourceTree = "<group>"; };
 		6EC1684B06C170A000F9FAD3 /* InviteToChatWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = InviteToChatWindow.nib; path = "Plugins/Invite to Chat Plugin/InviteToChatWindow.nib"; sourceTree = "<group>"; };
-		6ECFABC40622370D001C7E93 /* MessageContextDisplayDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = MessageContextDisplayDefaults.plist; path = "Plugins/Message Context Display/MessageContextDisplayDefaults.plist"; sourceTree = "<group>"; };
 		6ECFABC606223733001C7E93 /* AIContentContext.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContentContext.h; path = "Frameworks/Adium Framework/AIContentContext.h"; sourceTree = "<group>"; };
 		6ECFABC706223733001C7E93 /* AIContentContext.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContentContext.m; path = "Frameworks/Adium Framework/AIContentContext.m"; sourceTree = "<group>"; };
 		7E1E8176063A3EEC00EB00F7 /* AIContextMenuTextView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContextMenuTextView.h; path = "Frameworks/Adium Framework/AIContextMenuTextView.h"; sourceTree = "<group>"; };
@@ -6021,6 +6037,14 @@
 				34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */,
 				34F849560A4AF04D0002A017 /* AILogFileUpgradeWindowController.h */,
 				34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */,
+				348B250A0A50A1C900B2B972 /* ESSourceListBackgroundView.h */,
+				348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */,
+				34382D1C0A506EF9004BF6A2 /* ESSourceListResizer.h */,
+				34382D1D0A506EF9004BF6A2 /* ESSourceListResizer.m */,
+				34382E160A5093E9004BF6A2 /* sourceListBackground.png */,
+				34382D5A0A507DF1004BF6A2 /* KFSplitView.h */,
+				34382D5B0A507DF1004BF6A2 /* KFSplitView.m */,
+				34382D280A506F4E004BF6A2 /* divider.png */,
 			);
 			name = "Log Viewer";
 			sourceTree = "<group>";
@@ -6200,11 +6224,11 @@
 		6E5A43DC0611604B0078C342 /* Message History */ = {
 			isa = PBXGroup;
 			children = (
-				6E5A43DD061160C50078C342 /* DCMessageContextDisplayPlugin.h */,
-				6E5A43DE061160C50078C342 /* DCMessageContextDisplayPlugin.m */,
-				6E7C19B90623BF7F008A1C99 /* DCMessageContextDisplayPreferences.h */,
-				6E7C19BA0623BF7F008A1C99 /* DCMessageContextDisplayPreferences.m */,
-				6ECFABC40622370D001C7E93 /* MessageContextDisplayDefaults.plist */,
+				34382CE50A50386B004BF6A2 /* DCMessageContextDisplayPreferences.h */,
+				34382CE60A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m */,
+				34382CE70A50386C004BF6A2 /* DCMessageContextDisplayPlugin.h */,
+				34382CE80A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m */,
+				34382CEE0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist */,
 				3440974207DA06FE00321BB3 /* MessageContextDisplayPrefs.nib */,
 				07AF3C5907D4897200409BC8 /* pref-messagehistory.png */,
 			);
@@ -7133,10 +7157,8 @@
 				4BD6753D06001E140049CAF7 /* AIAccountSelectionView.h in Headers */,
 				4BD6758106001E430049CAF7 /* ErrorMessageHandlerPlugin.h in Headers */,
 				4BD6758306001E440049CAF7 /* ErrorMessageWindowController.h in Headers */,
-				6E5A43DF061160C60078C342 /* DCMessageContextDisplayPlugin.h in Headers */,
 				3420E6600611D80100AE67E3 /* ESAccountPasswordPromptController.h in Headers */,
 				3420E6620611D80100AE67E3 /* ESProxyPasswordPromptController.h in Headers */,
-				6E7C19BC0623BF80008A1C99 /* DCMessageContextDisplayPreferences.h in Headers */,
 				4BAA1B540632EF0000D8B92C /* ESPanelAlertDetailPane.h in Headers */,
 				4BFF665C063693FB00308A3B /* ESSendMessageAlertDetailPane.h in Headers */,
 				7E824CE006387FAF00813072 /* SHAutoValidatingTextView.h in Headers */,
@@ -7345,6 +7367,11 @@
 				345623400A3773D100E7FC97 /* AILoggerPlugin.h in Headers */,
 				34F849580A4AF04D0002A017 /* AILogFileUpgradeWindowController.h in Headers */,
 				F56E068E0A4B738B008D1EB5 /* GBFireLogImporter.h in Headers */,
+				34382CE90A50386C004BF6A2 /* DCMessageContextDisplayPreferences.h in Headers */,
+				34382CEB0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.h in Headers */,
+				34382D1E0A506EF9004BF6A2 /* ESSourceListResizer.h in Headers */,
+				34382D5C0A507DF1004BF6A2 /* KFSplitView.h in Headers */,
+				348B250C0A50A1C900B2B972 /* ESSourceListBackgroundView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8158,7 +8185,6 @@
 				4BD6756B06001E320049CAF7 /* EventSoundDefaults.plist in Resources */,
 				4B191D8A0611C10800E8A4E7 /* License.txt in Resources */,
 				4B191D8B0611C10800E8A4E7 /* ReadMe.rtf in Resources */,
-				6ECFABC50622370E001C7E93 /* MessageContextDisplayDefaults.plist in Resources */,
 				4BAA1B530632EF0000D8B92C /* ErrorAlert.png in Resources */,
 				4BAA1B610632EFE700D8B92C /* WindowAlert.png in Resources */,
 				9E20910A06A601A100E33E27 /* adium.png in Resources */,
@@ -8292,6 +8318,9 @@
 				345623380A3773C300E7FC97 /* LoggingDefaults.plist in Resources */,
 				34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */,
 				F56E0DB00A4CDF9C008D1EB5 /* FireLogImporter.nib in Resources */,
+				34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */,
+				34382D290A506F4E004BF6A2 /* divider.png in Resources */,
+				34382E170A5093E9004BF6A2 /* sourceListBackground.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8712,10 +8741,8 @@
 				4BD6755006001E1D0049CAF7 /* ESDualWindowMessageAdvancedPreferences.m in Sources */,
 				4BD6758206001E430049CAF7 /* ErrorMessageHandlerPlugin.m in Sources */,
 				4BD6758406001E440049CAF7 /* ErrorMessageWindowController.m in Sources */,
-				6E5A43E0061160C60078C342 /* DCMessageContextDisplayPlugin.m in Sources */,
 				3420E6610611D80100AE67E3 /* ESAccountPasswordPromptController.m in Sources */,
 				3420E6630611D80100AE67E3 /* ESProxyPasswordPromptController.m in Sources */,
-				6E7C19BD0623BF80008A1C99 /* DCMessageContextDisplayPreferences.m in Sources */,
 				4BAA1B550632EF0000D8B92C /* ESPanelAlertDetailPane.m in Sources */,
 				4BFF665B063693FA00308A3B /* ESSendMessageAlertDetailPane.m in Sources */,
 				7E824CE106387FAF00813072 /* SHAutoValidatingTextView.m in Sources */,
@@ -8919,6 +8946,11 @@
 				3456233F0A3773D100E7FC97 /* AILoggerPlugin.m in Sources */,
 				34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */,
 				F56E068F0A4B738B008D1EB5 /* GBFireLogImporter.m in Sources */,
+				34382CEA0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m in Sources */,
+				34382CEC0A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m in Sources */,
+				34382D1F0A506EF9004BF6A2 /* ESSourceListResizer.m in Sources */,
+				34382D5D0A507DF2004BF6A2 /* KFSplitView.m in Sources */,
+				348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
