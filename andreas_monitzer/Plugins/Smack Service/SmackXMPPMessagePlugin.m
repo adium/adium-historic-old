@@ -96,7 +96,12 @@ static AIHTMLDecoder *messageencoder = nil;
                     [messageencoder setIncludesStyleTags:YES];
                     [messageencoder setEncodesNonASCII:NO];
                 }
-                inMessage = [[messageencoder decodeHTML:htmlmsg] retain];
+                // the AIHTMLDecoder class doesn't support decoding the XHTML required by JEP-71, so we'll just use the
+                // one by Apple, which works fine
+//                inMessage = [[messageencoder decodeHTML:htmlmsg] retain];
+                inMessage = [[NSAttributedString alloc] initWithHTML:[[NSString stringWithFormat:@"<html>%@</html>",htmlmsg] dataUsingEncoding:NSUnicodeStringEncoding]
+                                                             options:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:NSUnicodeStringEncoding] forKey:NSCharacterEncodingDocumentOption]
+                                                  documentAttributes:NULL];
             }
         }
         if(!inMessage)
@@ -124,6 +129,8 @@ static AIHTMLDecoder *messageencoder = nil;
     NSString *threadid = [chat statusObjectForKey:@"XMPPThreadID"];
     NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
     NSString *type = [chat statusObjectForKey:@"XMPPType"];
+    if(!type)
+        type = @"NORMAL";
     
     if(!threadid) // first message was sent by us
     {
