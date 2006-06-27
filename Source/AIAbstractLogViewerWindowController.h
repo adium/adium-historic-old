@@ -103,7 +103,7 @@ typedef enum {
     BOOL				sortDirection;			//Direction to sort
 
 	NSTimer				*refreshResultsTimer;
-	NSTimer				*aggregateLogIndexProgressTimer; 
+	int					searchIDToReattemptWhenComplete;
 
 	NSString			*filterForAccountName;	//Account name to restrictively match content searches
 	NSMutableSet		*contactIDsToFilter;

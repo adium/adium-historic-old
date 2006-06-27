@@ -815,7 +815,10 @@ Class LogViewerWindowControllerClass = NULL;
 	if (!dirtyLogArray) {
 		[self resetLogIndex];
 	}
-	
+
+	//Load the contentIndex immediately; this will clear dirtyLogArray if necessary
+	[self logContentIndex];
+
 	stopIndexingThreads = NO;
 	if (!dirtyLogArray) {
 		[self dirtyAllLogs];
@@ -871,9 +874,9 @@ Class LogViewerWindowControllerClass = NULL;
 - (BOOL)getIndexingProgress:(int *)indexNumber outOf:(int *)total
 {
 	//logsIndexed + 1 is the log we are currently indexing
-	*indexNumber = logsIndexed + 1;
-	*total = logsToIndex;
-	return logsToIndex != 0;
+	if (indexNumber) *indexNumber = logsIndexed + 1;
+	if (total) *total = logsToIndex;
+	return (logsToIndex > 0);
 }
 
 
@@ -907,8 +910,12 @@ Class LogViewerWindowControllerClass = NULL;
 										(CFStringRef)@"Content", 
 										kSKIndexInverted,
 										(CFDictionaryRef)textAnalysisProperties);
+
+		//Clear the dirty log array in case it was loaded (this can happen if the user mucks with the cache directory)
+		[[NSFileManager defaultManager] trashFileAtPath:[self _dirtyLogArrayPath]];
+		[dirtyLogArray release]; dirtyLogArray = nil;
     }
-	
+
 	return newIndex;
 }
 
@@ -952,7 +959,9 @@ Class LogViewerWindowControllerClass = NULL;
 
 		//If the log version has changed, we reset the index and don't load the dirty array (So all the logs are marked dirty)
 		if (logVersion >= CURRENT_LOG_VERSION) {
-			dirtyLogArray = [[NSArray arrayWithContentsOfFile:[self _dirtyLogArrayPath]] mutableCopy];
+			[dirtyLogLock lock];
+			dirtyLogArray = [[NSMutableArray alloc] initWithContentsOfFile:[self _dirtyLogArrayPath]];
+			[dirtyLogLock unlock];
 		} else {
 			[self resetLogIndex];
 			[[adium preferenceController] setPreference:[NSNumber numberWithInt:CURRENT_LOG_VERSION]
