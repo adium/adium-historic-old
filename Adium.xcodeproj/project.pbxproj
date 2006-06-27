@@ -262,7 +262,6 @@
 		34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34382CEE0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist */; };
 		34382D1E0A506EF9004BF6A2 /* ESSourceListResizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 34382D1C0A506EF9004BF6A2 /* ESSourceListResizer.h */; };
 		34382D1F0A506EF9004BF6A2 /* ESSourceListResizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382D1D0A506EF9004BF6A2 /* ESSourceListResizer.m */; };
-		34382D290A506F4E004BF6A2 /* divider.png in Resources */ = {isa = PBXBuildFile; fileRef = 34382D280A506F4E004BF6A2 /* divider.png */; };
 		34382D5C0A507DF1004BF6A2 /* KFSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34382D5A0A507DF1004BF6A2 /* KFSplitView.h */; };
 		34382D5D0A507DF2004BF6A2 /* KFSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382D5B0A507DF1004BF6A2 /* KFSplitView.m */; };
 		34382E170A5093E9004BF6A2 /* sourceListBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 34382E160A5093E9004BF6A2 /* sourceListBackground.png */; };
@@ -624,6 +623,8 @@
 		348862D205645EB6003C9627 /* ESFileTransfer.h in Headers */ = {isa = PBXBuildFile; fileRef = 348862CD05645E94003C9627 /* ESFileTransfer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		348B250C0A50A1C900B2B972 /* ESSourceListBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 348B250A0A50A1C900B2B972 /* ESSourceListBackgroundView.h */; };
 		348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */; };
+		348B25C80A50FBF300B2B972 /* KNShelfSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */; };
+		348B25C90A50FBF300B2B972 /* KNShelfSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */; };
 		348E5ACB06D2A74C004C051C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348E5ACA06D2A74C004C051C /* AddressBook.framework */; };
 		348EE1B4080A57480015E0FC /* WebKitPreferencesView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348EE1B3080A57480015E0FC /* WebKitPreferencesView.nib */; };
 		348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */; };
@@ -2112,7 +2113,6 @@
 		34382CEE0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = MessageContextDisplayDefaults.plist; path = Resources/MessageContextDisplayDefaults.plist; sourceTree = "<group>"; };
 		34382D1C0A506EF9004BF6A2 /* ESSourceListResizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSourceListResizer.h; path = Source/ESSourceListResizer.h; sourceTree = "<group>"; };
 		34382D1D0A506EF9004BF6A2 /* ESSourceListResizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSourceListResizer.m; path = Source/ESSourceListResizer.m; sourceTree = "<group>"; };
-		34382D280A506F4E004BF6A2 /* divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = divider.png; path = Resources/divider.png; sourceTree = "<group>"; };
 		34382D5A0A507DF1004BF6A2 /* KFSplitView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KFSplitView.h; path = Source/KFSplitView.h; sourceTree = "<group>"; };
 		34382D5B0A507DF1004BF6A2 /* KFSplitView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = KFSplitView.m; path = Source/KFSplitView.m; sourceTree = "<group>"; };
 		34382E160A5093E9004BF6A2 /* sourceListBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sourceListBackground.png; path = Resources/sourceListBackground.png; sourceTree = "<group>"; };
@@ -2561,6 +2561,8 @@
 		348A901A062A13AB00FC6E03 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
 		348B250A0A50A1C900B2B972 /* ESSourceListBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSourceListBackgroundView.h; path = Source/ESSourceListBackgroundView.h; sourceTree = "<group>"; };
 		348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSourceListBackgroundView.m; path = Source/ESSourceListBackgroundView.m; sourceTree = "<group>"; };
+		348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = KNShelfSplitView.m; path = Source/KNShelfSplitView.m; sourceTree = "<group>"; };
+		348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KNShelfSplitView.h; path = Source/KNShelfSplitView.h; sourceTree = "<group>"; };
 		348D8D1A06CC079F00449EBB /* ESZephyrService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESZephyrService.m; path = "Plugins/Gaim Service/ESZephyrService.m"; sourceTree = "<group>"; };
 		348D8D1B06CC079F00449EBB /* ESZephyrService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESZephyrService.h; path = "Plugins/Gaim Service/ESZephyrService.h"; sourceTree = "<group>"; };
 		348D8D2206CC07BC00449EBB /* ESGaimZephyrAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimZephyrAccountViewController.m; path = "Plugins/Gaim Service/ESGaimZephyrAccountViewController.m"; sourceTree = "<group>"; };
@@ -6041,10 +6043,11 @@
 				348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */,
 				34382D1C0A506EF9004BF6A2 /* ESSourceListResizer.h */,
 				34382D1D0A506EF9004BF6A2 /* ESSourceListResizer.m */,
+				348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */,
+				348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */,
 				34382E160A5093E9004BF6A2 /* sourceListBackground.png */,
 				34382D5A0A507DF1004BF6A2 /* KFSplitView.h */,
 				34382D5B0A507DF1004BF6A2 /* KFSplitView.m */,
-				34382D280A506F4E004BF6A2 /* divider.png */,
 			);
 			name = "Log Viewer";
 			sourceTree = "<group>";
@@ -7372,6 +7375,7 @@
 				34382D1E0A506EF9004BF6A2 /* ESSourceListResizer.h in Headers */,
 				34382D5C0A507DF1004BF6A2 /* KFSplitView.h in Headers */,
 				348B250C0A50A1C900B2B972 /* ESSourceListBackgroundView.h in Headers */,
+				348B25C90A50FBF300B2B972 /* KNShelfSplitView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8319,7 +8323,6 @@
 				34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */,
 				F56E0DB00A4CDF9C008D1EB5 /* FireLogImporter.nib in Resources */,
 				34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */,
-				34382D290A506F4E004BF6A2 /* divider.png in Resources */,
 				34382E170A5093E9004BF6A2 /* sourceListBackground.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8951,6 +8954,7 @@
 				34382D1F0A506EF9004BF6A2 /* ESSourceListResizer.m in Sources */,
 				34382D5D0A507DF2004BF6A2 /* KFSplitView.m in Sources */,
 				348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */,
+				348B25C80A50FBF300B2B972 /* KNShelfSplitView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
