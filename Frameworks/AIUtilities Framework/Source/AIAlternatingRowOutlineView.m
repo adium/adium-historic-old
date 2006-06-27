@@ -186,12 +186,12 @@
 {
 	[self drawAlternatingRowsInRect:clipRect];
 
-	if (drawsGradientSelection) {
+	if (drawsGradientSelection && [[self window] isKeyWindow] && ([[self window] firstResponder] == self)) {
 		NSIndexSet *indices = [self selectedRowIndexes];
 		unsigned int bufSize = [indices count];
 		unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
 		unsigned int i = 0, j = 0;
-		
+
 		AIGradient *gradient = [self selectedControlGradient];
 		
 		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
@@ -234,7 +234,7 @@
 //Override to prevent drawing glitches; otherwise, the cell will try to draw a highlight, too
 - (id)_highlightColorForCell:(NSCell *)cell
 {
-	if (/*drawsBackground && drawsAlternatingRows*/drawsGradientSelection) {
+	if (drawsGradientSelection && [[self window] isKeyWindow] && ([[self window] firstResponder] == self)) {
 		return nil;
 	} else {
 		return [super _highlightColorForCell:cell];
