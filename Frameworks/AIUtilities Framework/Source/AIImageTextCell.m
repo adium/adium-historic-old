@@ -274,7 +274,11 @@
 		float				stringHeight = 0.0;
 
 		//Determine the correct text color
-		if (highlighted) {
+		NSWindow			*window;
+
+		//If we don't have a control view, or we do and it's the first responder, draw the text in the alternateSelectedControl text color (white)
+		if (highlighted && ((window = [controlView window]) &&
+							([window isKeyWindow] && ([window firstResponder] == controlView)))) {
 			textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
 		} else {
 			if ([self isEnabled]) {
