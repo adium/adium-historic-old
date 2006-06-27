@@ -147,7 +147,6 @@ static int toArraySort(id itemA, id itemB, void *context);
     showEmoticons = NO;
     activeSearchString = nil;
     displayedLogArray = nil;
-    aggregateLogIndexProgressTimer = nil;
     windowIsClosing = NO;
 	desiredContactsSourceListDeltaX = 0;
 
@@ -556,10 +555,6 @@ static int toArraySort(id itemA, id itemB, void *context);
     [self stopSearching];
     [plugin cleanUpLogContentSearching];
 
-    //Clean up
-	[aggregateLogIndexProgressTimer invalidate];
-	[aggregateLogIndexProgressTimer release]; aggregateLogIndexProgressTimer = nil;
-	
 	//Reset our column widths if needed
 	[activeSearchString release]; activeSearchString = nil;
 	[self updateRankColumnVisibility];
@@ -645,31 +640,16 @@ static int toArraySort(id itemA, id itemB, void *context);
 		
 		//If we are searching by content, we should re-search without clearing our current results so the
 		//the newly-indexed logs can be added without blanking the current table contents.
-		//We set an NSNumber with our current activeSearchID so we will only refresh if we haven't done a new search
-		//between the timer being set and firing.
-		if (searchMode == LOG_SEARCH_CONTENT && (activeSearchString != nil)) {
-			if (!aggregateLogIndexProgressTimer) {
-				aggregateLogIndexProgressTimer = [[NSTimer scheduledTimerWithTimeInterval:7.0
-																				   target:self
-																				 selector:@selector(aggregatedLogIndexingProgressUpdate:)
-																				 userInfo:[NSNumber numberWithInt:activeSearchID]
-																				  repeats:NO] retain];
+		if (searchMode == LOG_SEARCH_CONTENT && (activeSearchString && [activeSearchString length])) {
+			if (searching) {
+				//We're already searching; reattempt when done
+				searchIDToReattemptWhenComplete = activeSearchID;
+			} else {
+				//We're not searching - restart the search immediately
+				[self startSearchingClearingCurrentResults:NO];
 			}
 		}
 	}
-}
-
-- (void)aggregatedLogIndexingProgressUpdate:(NSTimer *)inTimer
-{
-	NSNumber	*oldActiveSearchID = [aggregateLogIndexProgressTimer userInfo];
-
-	//If the search is still a content search and hasn't changed since the timer was made, update our results
-	if ((searchMode == LOG_SEARCH_CONTENT) && ([oldActiveSearchID intValue] == activeSearchID)) {
-		[self startSearchingClearingCurrentResults:NO];
-	}
-
-	[aggregateLogIndexProgressTimer invalidate];
-	[aggregateLogIndexProgressTimer release]; aggregateLogIndexProgressTimer = nil;
 }
 
 //Refresh the results table
@@ -702,6 +682,12 @@ static int toArraySort(id itemA, id itemB, void *context);
 			automaticSearch = oldAutomaticSearch;
 		}
     }
+	
+	if (searchIsComplete &&
+		((activeSearchID == searchIDToReattemptWhenComplete) && !windowIsClosing)) {
+		searchIDToReattemptWhenComplete = -1;
+		[self startSearchingClearingCurrentResults:NO];
+	}
 
     //Update status
     [self updateProgressDisplay];
@@ -1098,14 +1084,15 @@ static int toArraySort(id itemA, id itemB, void *context);
     
     //Stop any existing searches
     [self stopSearching];
-    	
+
     //Once all searches have exited, we can start a new one
 	if (clearCurrentResults) {
 		[resultsLock lock];
 		[currentSearchResults release]; currentSearchResults = [[NSMutableArray alloc] init];
 		[resultsLock unlock];
 	}
-	
+
+	searching = YES;
     searchDict = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSNumber numberWithInt:activeSearchID], @"ID",
 		[NSNumber numberWithInt:searchMode], @"Mode",
@@ -1132,12 +1119,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 	if (!windowIsClosing) {
 		[searchingLock lock]; [searchingLock unlock];
-	}
-	
-	//If the plugin is in the middle of indexing, and we are content searching, we could be autoupdating a search.
-	//Be sure to invalidate the timer.
-	[aggregateLogIndexProgressTimer invalidate];
-	[aggregateLogIndexProgressTimer release]; aggregateLogIndexProgressTimer = nil;
+	}	
 }
 
 //Set the active search mode (Does not invoke a search)
@@ -1358,7 +1340,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		
 		shouldDisplayDocument = [self chatLogMatchesDateFilter:theLog];
 	}
-	
+	AILog(@"Search should display %@? %i",inDocument,shouldDisplayDocument);
 	return shouldDisplayDocument;
 }
 
