@@ -267,6 +267,8 @@
 				
 				AILog(@"Temporarily blocked!");
 			} else {
+				NSLog(@"Error message short is %@; code %@",errorMessageShort,
+					  errorCode);
 				AILog(@"Error message short is %@; code %@",errorMessageShort,
 					  errorCode);
 			}
