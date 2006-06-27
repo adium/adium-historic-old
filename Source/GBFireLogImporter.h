@@ -53,7 +53,7 @@ typedef enum{
 	NSString		*eventName;
 }
 
-- (NSString *)readFile:(NSString *)inFile toFile:(NSString *)outFile;
+- (BOOL)readFile:(NSString *)inFile toFile:(NSString *)outFile account:(NSString * *)account;
 
 - (void)startedElement:(NSString *)name info:(const CFXMLElementInfo *)info;
 - (void)endedElement:(NSString *)name;
