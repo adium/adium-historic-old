@@ -327,6 +327,10 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[[self window] setTitle:AILocalizedString(@"Chat Transcripts Viewer",nil)];
     [textField_progress setStringValue:@""];
 
+	//Autosave doesn't do anything yet
+	[shelf_splitView setAutosaveName:@"LogViewer:Shelf"];
+	[shelf_splitView setFrame:[[[self window] contentView] frame]];
+
 	// Pull our main article/display split view out of the nib and position it in the shelf view
 	[containingView_results retain];
 	[containingView_results removeFromSuperview];
@@ -338,14 +342,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[containingView_contactsSourceList removeFromSuperview];
 	[shelf_splitView setShelfView:containingView_contactsSourceList];
 	[containingView_contactsSourceList release];
-	
-	// Set up our shelf view
-	//[shelf_splitView setDelegate: self];
-	//[mainShelfView setTarget: self];
-	[shelf_splitView setAutosaveName:@"LogViewer:Shelf"];
-	NSLog(@"set to %@",NSStringFromRect([[[self window] contentView] frame]));
-	[shelf_splitView setFrame:[[[self window] contentView] frame]];
-	
+
     //Set emoticon filtering
     showEmoticons = [[[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_EMOTICONS
                                                               group:PREF_GROUP_LOGGING] boolValue];

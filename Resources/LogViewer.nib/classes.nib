@@ -78,7 +78,6 @@
             OUTLETS = {contentView = NSView; shelfView = NSView; }; 
             SUPERCLASS = NSView; 
         }, 
-        {CLASS = NSDatePicker; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }, 
         {CLASS = NSWindow; LANGUAGE = ObjC; SUPERCLASS = NSResponder; }
     ); 
