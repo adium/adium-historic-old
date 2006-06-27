@@ -125,6 +125,11 @@ static BOOL							hideInBackground = NO;
 	[self setupMultistatusTable];
 
 	[self configureStatusWindow];
+	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(statusIconSetChanged:)
+									   name:AIStatusIconSetDidChangeNotification
+									 object:nil];	
 }
 
 /*!
@@ -152,7 +157,8 @@ static BOOL							hideInBackground = NO;
 - (void)dealloc
 {
 	[_awayAccounts release]; _awayAccounts = nil;
-	
+	[[adium notificationCenter] removeObserver:self];
+
 	[super dealloc];
 }
 
@@ -379,6 +385,11 @@ static BOOL							hideInBackground = NO;
 																		 @"Buttons",
 																		 [NSBundle bundleForClass:[self class]],
 																		 "Button to return from away in the away status window")];
+}
+
+- (void)statusIconSetChanged:(NSNotification *)inNotification
+{
+	[self configureStatusWindow];
 }
 
 @end
