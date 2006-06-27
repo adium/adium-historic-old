@@ -56,14 +56,19 @@ typedef enum {
 	AIDateTypeAfter
 } AIDateType;
 
-@class AIListContact, AISplitView;
+@class AIListContact, AISplitView, ESSourceListResizer;
 
 @interface AIAbstractLogViewerWindowController : AIWindowController {
 	AILoggerPlugin				*plugin;
 
-	IBOutlet	AISplitView		*splitView_contacts_results;
+	IBOutlet	AISplitView			*splitView_contacts_results;
 	IBOutlet	AIAlternatingRowOutlineView	*outlineView_contacts;
+	IBOutlet	NSView				*containingView_contactsSourceList;
+	float							desiredContactsSourceListDeltaX;
+	IBOutlet	ESSourceListResizer	*sourceListResizer;
 
+	IBOutlet	NSView			*containingView_results;
+	IBOutlet	AISplitView		*splitView_results;
     IBOutlet	NSTableView		*tableView_results;
     IBOutlet	NSTextView		*textView_content;
 

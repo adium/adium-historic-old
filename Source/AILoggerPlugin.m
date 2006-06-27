@@ -867,10 +867,11 @@ Class LogViewerWindowControllerClass = NULL;
 	}	
 }
 
-//Get the current status of indexing.  Returns NO is indexing is not occuring
-- (BOOL)getIndexingProgress:(int *)complete outOf:(int *)total
+//Get the current status of indexing.  Returns NO if indexing is not occuring
+- (BOOL)getIndexingProgress:(int *)indexNumber outOf:(int *)total
 {
-	*complete = logsIndexed;
+	//logsIndexed + 1 is the log we are currently indexing
+	*indexNumber = logsIndexed + 1;
 	*total = logsToIndex;
 	return logsToIndex != 0;
 }

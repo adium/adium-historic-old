@@ -34,6 +34,7 @@
 #import <Adium/AIUserIcons.h>
 
 #import "KFTypeSelectTableView.h"
+//#import "KFSplitView.h"
 
 #define KEY_LOG_VIEWER_WINDOW_FRAME		@"Log Viewer Frame"
 #define	PREF_GROUP_CONTACT_LIST			@"Contact List"
@@ -148,6 +149,7 @@ static int toArraySort(id itemA, id itemB, void *context);
     displayedLogArray = nil;
     aggregateLogIndexProgressTimer = nil;
     windowIsClosing = NO;
+	desiredContactsSourceListDeltaX = 0;
 
     blankImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
 
@@ -333,7 +335,9 @@ static int toArraySort(id itemA, id itemB, void *context);
 	//Toolbar
 	[self installToolbar];	
 
-	[splitView_contacts_results setDividerThickness:2];
+	[splitView_contacts_results setDividerThickness:0];
+	[splitView_contacts_results setDrawsDivider:NO];
+
 	/* XXX This color isn't quite right for a Mail.app-style source list background... it's not the same as what Color Picker reports for it
 	 * because _that_ isn't right, either, strangely.
 	 * hue: 215 degrees
@@ -347,14 +351,17 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 	AIImageTextCell	*dataCell = [[AIImageTextCell alloc] init];
 	[[[outlineView_contacts tableColumns] objectAtIndex:0] setDataCell:dataCell];
+	[dataCell setControlView:outlineView_contacts];
 	[dataCell release];
 
 	[outlineView_contacts setDrawsGradientSelection:YES];
+	[outlineView_contacts setFocusRingType:NSFocusRingTypeNone];
 
 	//Localize tableView_results column headers
 	[[[tableView_results tableColumnWithIdentifier:@"To"] headerCell] setStringValue:TO];
 	[[[tableView_results tableColumnWithIdentifier:@"From"] headerCell] setStringValue:FROM];
 	[[[tableView_results tableColumnWithIdentifier:@"Date"] headerCell] setStringValue:DATE];
+	[tableView_results setFocusRingType:NSFocusRingTypeNone];
 
     //Prepare the search controls
     [self buildSearchMenu];
@@ -552,51 +559,59 @@ static int toArraySort(id itemA, id itemB, void *context);
 //Update log viewer progress string to reflect current status
 - (void)updateProgressDisplay
 {
-    NSMutableString     *progress;
-    int					indexComplete, indexTotal;
+    NSMutableString     *progress = nil;
+    int					indexNumber, indexTotal;
     BOOL				indexing;
 
     //We always convey the number of logs being displayed
     [resultsLock lock];
+	unsigned count = [currentSearchResults count];
     if (activeSearchString && [activeSearchString length]) {
-		unsigned count = [currentSearchResults count];
-		progress = [NSMutableString stringWithFormat:((count != 1) ? 
-													  AILocalizedString(@"Found %i matches",nil) :
-													  AILocalizedString(@"Found 1 match",nil)),count];
-    } else if (searching) {
-		progress = [[AILocalizedString(@"Opening logs",nil) mutableCopy] autorelease];
-		[progress appendString:[NSString ellipsis]];
-
+		[sourceListResizer setStringValue:[NSString stringWithFormat:((count != 1) ? 
+																	  AILocalizedString(@"%i matching logs",nil) :
+																	  AILocalizedString(@"1 matching log",nil)),count]];
     } else {
-		unsigned count = [currentSearchResults count];
-		progress = [NSMutableString stringWithFormat:((count != 1) ?
-													  AILocalizedString(@"%i logs",nil) :
-													  AILocalizedString(@"1 log",nil)),count];
+		[sourceListResizer setStringValue:[NSString stringWithFormat:((count != 1) ? 
+																	  AILocalizedString(@"%i logs",nil) :
+																	  AILocalizedString(@"1 log",nil)),count]];
+		
+		//We are searching, but there is no active search  string. This indicates we're still opening logs.
+		if (searching) {
+			progress = [[AILocalizedString(@"Opening logs",nil) mutableCopy] autorelease];			
+		}
     }
     [resultsLock unlock];
-	
-	/*
-	if (filterForAccountName && [filterForAccountName length]) {
-		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" of chats on %@",nil),filterForAccountName]];
-	} else if (filterForContactName && [filterForContactName length]) {
-		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" of chats with %@",nil),filterForContactName]];
-	}
-	 */
 
     //Append search progress
     if (activeSearchString && [activeSearchString length]) {
-		if (searching) {
-			[progress appendString:[NSString stringWithFormat:AILocalizedString(@" - Searching for '%@'",nil),activeSearchString]];
+		if (progress) {
+			[progress appendString:@" - "];
 		} else {
-			[progress appendString:[NSString stringWithFormat:AILocalizedString(@" containing '%@'",nil),activeSearchString]];			
+			progress = [NSMutableString string];
+		}
+
+		if (searching) {
+			[progress appendString:[NSString stringWithFormat:AILocalizedString(@"Searching for '%@'",nil),activeSearchString]];
+		} else {
+			[progress appendString:[NSString stringWithFormat:AILocalizedString(@"Search for '%@' complete.",nil),activeSearchString]];			
 		}
 	}
 
     //Append indexing progress
-    if ((indexing = [plugin getIndexingProgress:&indexComplete outOf:&indexTotal])) {
-		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" - Indexing %i of %i",nil),indexComplete, indexTotal]];
+    if ((indexing = [plugin getIndexingProgress:&indexNumber outOf:&indexTotal])) {
+		if (progress) {
+			[progress appendString:@" - "];
+		} else {
+			progress = [NSMutableString string];
+		}
+		
+		[progress appendString:[NSString stringWithFormat:AILocalizedString(@"Indexing %i of %i",nil), indexNumber, indexTotal]];
     }
-    
+	
+	if (progress && (searching || indexing || !(activeSearchString && [activeSearchString length]))) {
+		[progress appendString:[NSString ellipsis]];	
+	}
+
     //Enable/disable the searching animation
     if (searching || indexing) {
 		[progressIndicator startAnimation:nil];
@@ -604,7 +619,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 		[progressIndicator stopAnimation:nil];
     }
     
-    [textField_progress setStringValue:progress];
+    [textField_progress setStringValue:(progress ? progress : @"")];
 }
 
 //The plugin is informing us that the log indexing changed
@@ -1675,7 +1690,8 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 												  direction:AIIconFlipped]];
 		
 	} else if ([item isKindOfClass:[ALL_CONTACTS_IDENTIFIER class]]) {
-		if ([[outlineView arrayOfSelectedItems] containsObjectIdenticalTo:item]) {			
+		if ([[outlineView arrayOfSelectedItems] containsObjectIdenticalTo:item] &&
+			([[self window] isKeyWindow] && ([[self window] firstResponder] == self))) {
 			if (!adiumIconHighlighted) {
 				adiumIconHighlighted = [[NSImage imageNamed:@"adiumHighlight"
 												   forClass:[self class]] retain];
@@ -1743,6 +1759,43 @@ static int toArraySort(id itemA, id itemB, void *context)
 
 	return [nameA caseInsensitiveCompare:nameB];
 }	
+
+- (void)draggedDividerRightBy:(float)deltaX
+{	
+	desiredContactsSourceListDeltaX = deltaX;
+	[splitView_contacts_results resizeSubviewsWithOldSize:[splitView_contacts_results frame].size];
+	desiredContactsSourceListDeltaX = 0;
+}
+
+- (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
+{
+	if ((sender == splitView_contacts_results) &&
+		desiredContactsSourceListDeltaX != 0) {
+		float dividerThickness = [sender dividerThickness];
+
+		NSRect newFrame = [sender frame];		
+		NSRect leftFrame = [containingView_contactsSourceList frame]; 
+		NSRect rightFrame = [containingView_results frame];
+
+		leftFrame.size.width += desiredContactsSourceListDeltaX; 
+		leftFrame.size.height = newFrame.size.height;
+		leftFrame.origin = NSMakePoint(0,0);
+
+		rightFrame.size.width = newFrame.size.width - leftFrame.size.width - dividerThickness;
+		rightFrame.size.height = newFrame.size.height;
+		rightFrame.origin.x = leftFrame.size.width + dividerThickness;
+
+		[containingView_contactsSourceList setFrame:leftFrame];
+		[containingView_contactsSourceList setNeedsDisplay:YES];
+		[containingView_results setFrame:rightFrame];
+		[containingView_results setNeedsDisplay:YES];
+
+	} else {
+		//Perform the default implementation
+		[sender adjustSubviews];
+	}
+}
+
 
 //Window Toolbar -------------------------------------------------------------------------------------------------------
 #pragma mark Window Toolbar
