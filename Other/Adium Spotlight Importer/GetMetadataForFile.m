@@ -28,6 +28,8 @@ This function's job is to extract useful information your file format supports
 and return it as a dictionary
 ----------------------------------------------------------------------------- */
 
+Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFile);
+
 Boolean GetMetadataForFile(void* thisInterface, 
 						   CFMutableDictionaryRef attributes, 
 						   CFStringRef contentTypeUTI,
@@ -43,6 +45,8 @@ Boolean GetMetadataForFile(void* thisInterface,
 
 	if (CFStringCompare(contentTypeUTI, (CFStringRef)@"com.adiumx.htmllog", kCFCompareBackwards) == kCFCompareEqualTo) {
 		success = GetMetadataForHTMLLog((NSMutableDictionary *)attributes, (NSString *)pathToFile);
+	} else if (CFStringCompare(contentTypeUTI, (CFStringRef)@"com.adiumx.xmllog", kCFCompareBackwards) == kCFCompareEqualTo) {
+		success = GetMetadataForXMLLog((NSMutableDictionary *)attributes, (NSString *)pathToFile);
 	} else {
 		NSLog(@"We were passed %@, of type %@, which is an unknown type",pathToFile,contentTypeUTI);
 	}
@@ -72,9 +76,13 @@ CFStringRef CopyTextContentForFile(CFStringRef contentTypeUTI,
 	//Deteremine the UTI type if we weren't passed one
 	if (contentTypeUTI == NULL) {
 		if (CFStringCompare((CFStringRef)[(NSString *)pathToFile pathExtension],
+							CFSTR("chatLog"),
+							(kCFCompareBackwards | kCFCompareCaseInsensitive)) == kCFCompareEqualTo) {
+			contentTypeUTI = CFSTR("com.adiumx.xmllog");
+		} else if (CFStringCompare((CFStringRef)[(NSString *)pathToFile pathExtension],
 							CFSTR("AdiumXMLLog"),
 							(kCFCompareBackwards | kCFCompareCaseInsensitive)) == kCFCompareEqualTo) {
-			contentTypeUTI = CFSTR("com.adiumx.log");
+			contentTypeUTI = CFSTR("com.adiumx.xmllog");
 		} else {
 			//Treat all other log extensions as HTML logs (plaintext will come out fine this way, too)
 			contentTypeUTI = CFSTR("com.adiumx.htmllog");
@@ -92,4 +100,79 @@ CFStringRef CopyTextContentForFile(CFStringRef contentTypeUTI,
 	[pool release];
 	
 	return textContent;
+}
+
+/*
+ * @brief get metadata for an XML file
+ *
+ * This function gets the metadata contained within a universal chat log format file
+ * @param attributes The dictionary in which to store the metadata
+ * @param pathToFile The path to the file to index
+ *
+ * @result true if successful, false if not
+ */
+Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFile)
+{
+	Boolean ret = YES;
+	NSXMLDocument *xmlDoc;
+	NSError *err=nil;
+	NSURL *furl = [NSURL fileURLWithPath:(NSString *)pathToFile];
+	xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:furl
+												  options:NSXMLNodePreserveCDATA
+													error:&err];    
+	
+	if (xmlDoc)
+	{        
+		NSArray *authorsArray = [xmlDoc nodesForXPath:@"//message/@sender"
+												error:&err];
+		NSSet *duplicatesRemover = [NSSet setWithArray: authorsArray];
+		authorsArray = [duplicatesRemover allObjects];
+		
+		[(NSMutableDictionary *)attributes setObject:authorsArray
+											  forKey:(NSString *)kMDItemAuthors];
+		
+		NSArray *contentArray = [xmlDoc nodesForXPath:@"//message/*/text()"
+												error:&err];
+		NSString *contentString = [contentArray componentsJoinedByString:@" "];
+		
+		[attributes setObject:contentString
+					   forKey:(NSString *)kMDItemTextContent];
+
+		NSString *serviceString = [[[xmlDoc rootElement] attributeForName:@"service"] objectValue];
+		if(serviceString != nil)
+			[attributes setObject:serviceString
+						   forKey:@"com_adiumX_service"];
+		
+#warning this will not parse properly.  We somehow need to read ISO 8601 format and I don't feel like including AIUtilities.framework
+		NSString *dateStr = [[(NSXMLElement *)[[xmlDoc rootElement] childAtIndex:0] attributeForName:@"time"] objectValue];
+		NSDate *date = [NSDate dateWithString:dateStr];
+		if(date != nil)
+			[(NSMutableDictionary *)attributes setObject:date
+												  forKey:(NSString *)kMDItemContentCreationDate];
+
+		NSString *accountString = [[[xmlDoc rootElement] attributeForName:@"account"] objectValue];
+		if(accountString != nil)
+		{
+			[attributes setObject:accountString
+						   forKey:@"com_adiumX_chatSource"];
+			NSMutableArray *otherAuthors = [authorsArray mutableCopy];
+			[otherAuthors removeObject:accountString];
+			//pick the first author for this.  likely a bad idea
+			NSString *toUID = [otherAuthors objectAtIndex:0];
+			[attributes setObject:[NSString stringWithFormat:@"%@ on %@",toUID,[date descriptionWithCalendarFormat:@"%y-%m-%d"
+																										  timeZone:nil
+																											locale:nil]]
+						   forKey:(NSString *)kMDItemDisplayName];
+			[otherAuthors release];
+			
+		}
+		[attributes setObject:@"Chat log"
+					   forKey:(NSString *)kMDItemKind];
+		
+		[xmlDoc release];
+	}
+	else
+		ret = NO;
+	
+	return ret;
 }
