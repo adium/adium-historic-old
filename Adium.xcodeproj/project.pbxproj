@@ -260,11 +260,6 @@
 		34382CEB0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34382CE70A50386C004BF6A2 /* DCMessageContextDisplayPlugin.h */; };
 		34382CEC0A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382CE80A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m */; };
 		34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34382CEE0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist */; };
-		34382D1E0A506EF9004BF6A2 /* ESSourceListResizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 34382D1C0A506EF9004BF6A2 /* ESSourceListResizer.h */; };
-		34382D1F0A506EF9004BF6A2 /* ESSourceListResizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382D1D0A506EF9004BF6A2 /* ESSourceListResizer.m */; };
-		34382D5C0A507DF1004BF6A2 /* KFSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34382D5A0A507DF1004BF6A2 /* KFSplitView.h */; };
-		34382D5D0A507DF2004BF6A2 /* KFSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382D5B0A507DF1004BF6A2 /* KFSplitView.m */; };
-		34382E170A5093E9004BF6A2 /* sourceListBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 34382E160A5093E9004BF6A2 /* sourceListBackground.png */; };
 		3439FDA905794D0F00B2E449 /* JMSQLLoggerAdvancedPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = B799BC8105793C1300338E54 /* JMSQLLoggerAdvancedPreferences.h */; };
 		3439FDAA05794D1300B2E449 /* JMSQLLoggerAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = B799BC8005793C1200338E54 /* JMSQLLoggerAdvancedPreferences.m */; };
 		343E7718097BEFE000BCFF92 /* jsocks-klea.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 343E7716097BEFD500BCFF92 /* jsocks-klea.jar */; };
@@ -2111,11 +2106,6 @@
 		34382CE70A50386C004BF6A2 /* DCMessageContextDisplayPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCMessageContextDisplayPlugin.h; path = Source/DCMessageContextDisplayPlugin.h; sourceTree = "<group>"; };
 		34382CE80A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCMessageContextDisplayPreferences.m; path = Source/DCMessageContextDisplayPreferences.m; sourceTree = "<group>"; };
 		34382CEE0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = MessageContextDisplayDefaults.plist; path = Resources/MessageContextDisplayDefaults.plist; sourceTree = "<group>"; };
-		34382D1C0A506EF9004BF6A2 /* ESSourceListResizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSourceListResizer.h; path = Source/ESSourceListResizer.h; sourceTree = "<group>"; };
-		34382D1D0A506EF9004BF6A2 /* ESSourceListResizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSourceListResizer.m; path = Source/ESSourceListResizer.m; sourceTree = "<group>"; };
-		34382D5A0A507DF1004BF6A2 /* KFSplitView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KFSplitView.h; path = Source/KFSplitView.h; sourceTree = "<group>"; };
-		34382D5B0A507DF1004BF6A2 /* KFSplitView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = KFSplitView.m; path = Source/KFSplitView.m; sourceTree = "<group>"; };
-		34382E160A5093E9004BF6A2 /* sourceListBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sourceListBackground.png; path = Resources/sourceListBackground.png; sourceTree = "<group>"; };
 		3439FD8C05794B4500B2E449 /* AlertMessageContactAlert.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AlertMessageContactAlert.nib; path = "Plugins/Error Message Handler/AlertMessageContactAlert.nib"; sourceTree = "<group>"; };
 		343A7F2606935DB600150CEC /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimMeanwhileAccountView.nib"; sourceTree = "<group>"; };
 		343A7F2A06935DC500150CEC /* ESGaimMeanwhileAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimMeanwhileAccountViewController.m; path = "Plugins/Gaim Service/ESGaimMeanwhileAccountViewController.m"; sourceTree = "<group>"; };
@@ -6041,13 +6031,8 @@
 				34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */,
 				348B250A0A50A1C900B2B972 /* ESSourceListBackgroundView.h */,
 				348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */,
-				34382D1C0A506EF9004BF6A2 /* ESSourceListResizer.h */,
-				34382D1D0A506EF9004BF6A2 /* ESSourceListResizer.m */,
 				348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */,
 				348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */,
-				34382E160A5093E9004BF6A2 /* sourceListBackground.png */,
-				34382D5A0A507DF1004BF6A2 /* KFSplitView.h */,
-				34382D5B0A507DF1004BF6A2 /* KFSplitView.m */,
 			);
 			name = "Log Viewer";
 			sourceTree = "<group>";
@@ -7372,8 +7357,6 @@
 				F56E068E0A4B738B008D1EB5 /* GBFireLogImporter.h in Headers */,
 				34382CE90A50386C004BF6A2 /* DCMessageContextDisplayPreferences.h in Headers */,
 				34382CEB0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.h in Headers */,
-				34382D1E0A506EF9004BF6A2 /* ESSourceListResizer.h in Headers */,
-				34382D5C0A507DF1004BF6A2 /* KFSplitView.h in Headers */,
 				348B250C0A50A1C900B2B972 /* ESSourceListBackgroundView.h in Headers */,
 				348B25C90A50FBF300B2B972 /* KNShelfSplitView.h in Headers */,
 			);
@@ -8323,7 +8306,6 @@
 				34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */,
 				F56E0DB00A4CDF9C008D1EB5 /* FireLogImporter.nib in Resources */,
 				34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */,
-				34382E170A5093E9004BF6A2 /* sourceListBackground.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8951,8 +8933,6 @@
 				F56E068F0A4B738B008D1EB5 /* GBFireLogImporter.m in Sources */,
 				34382CEA0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m in Sources */,
 				34382CEC0A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m in Sources */,
-				34382D1F0A506EF9004BF6A2 /* ESSourceListResizer.m in Sources */,
-				34382D5D0A507DF2004BF6A2 /* KFSplitView.m in Sources */,
 				348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */,
 				348B25C80A50FBF300B2B972 /* KNShelfSplitView.m in Sources */,
 			);

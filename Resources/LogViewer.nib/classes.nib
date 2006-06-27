@@ -12,6 +12,7 @@
                 "popUp_dateFilter" = NSPopUpButton; 
                 progressIndicator = NSProgressIndicator; 
                 "searchField_logs" = NSSearchField; 
+                "shelf_splitView" = KNShelfSplitView; 
                 sourceListResizer = ESSourceListResizer; 
                 "splitView_contacts_results" = AISplitView; 
                 "splitView_results" = AISplitView; 
@@ -71,6 +72,12 @@
             SUPERCLASS = ESSourceListBackgroundView; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = KNShelfSplitView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {contentView = NSView; shelfView = NSView; }; 
+            SUPERCLASS = NSView; 
+        }, 
         {CLASS = NSDatePicker; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }, 
         {CLASS = NSWindow; LANGUAGE = ObjC; SUPERCLASS = NSResponder; }

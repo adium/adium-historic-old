@@ -34,7 +34,7 @@
 #import <Adium/AIUserIcons.h>
 
 #import "KFTypeSelectTableView.h"
-//#import "KFSplitView.h"
+#import "KNShelfSplitView.h"
 
 #define KEY_LOG_VIEWER_WINDOW_FRAME		@"Log Viewer Frame"
 #define	PREF_GROUP_CONTACT_LIST			@"Contact List"
@@ -325,6 +325,26 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[super windowDidLoad];
 
 	[[self window] setTitle:AILocalizedString(@"Chat Transcripts Viewer",nil)];
+    [textField_progress setStringValue:@""];
+
+	// Pull our main article/display split view out of the nib and position it in the shelf view
+	[containingView_results retain];
+	[containingView_results removeFromSuperview];
+	[shelf_splitView setContentView:containingView_results];
+	[containingView_results release];
+	
+	// Pull our source view out of the nib and position it in the shelf view
+	[containingView_contactsSourceList retain];
+	[containingView_contactsSourceList removeFromSuperview];
+	[shelf_splitView setShelfView:containingView_contactsSourceList];
+	[containingView_contactsSourceList release];
+	
+	// Set up our shelf view
+	//[shelf_splitView setDelegate: self];
+	//[mainShelfView setTarget: self];
+	[shelf_splitView setAutosaveName:@"LogViewer:Shelf"];
+	NSLog(@"set to %@",NSStringFromRect([[[self window] contentView] frame]));
+	[shelf_splitView setFrame:[[[self window] contentView] frame]];
 	
     //Set emoticon filtering
     showEmoticons = [[[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_EMOTICONS
@@ -334,9 +354,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 	//Toolbar
 	[self installToolbar];	
-
-	[splitView_contacts_results setDividerThickness:0];
-	[splitView_contacts_results setDrawsDivider:NO];
 
 	/* XXX This color isn't quite right for a Mail.app-style source list background... it's not the same as what Color Picker reports for it
 	 * because _that_ isn't right, either, strangely.
@@ -567,13 +584,13 @@ static int toArraySort(id itemA, id itemB, void *context);
     [resultsLock lock];
 	unsigned count = [currentSearchResults count];
     if (activeSearchString && [activeSearchString length]) {
-		[sourceListResizer setStringValue:[NSString stringWithFormat:((count != 1) ? 
-																	  AILocalizedString(@"%i matching logs",nil) :
-																	  AILocalizedString(@"1 matching log",nil)),count]];
+		[shelf_splitView setResizeThumbStringValue:[NSString stringWithFormat:((count != 1) ? 
+																			   AILocalizedString(@"%i matching logs",nil) :
+																			   AILocalizedString(@"1 matching log",nil)),count]];
     } else {
-		[sourceListResizer setStringValue:[NSString stringWithFormat:((count != 1) ? 
-																	  AILocalizedString(@"%i logs",nil) :
-																	  AILocalizedString(@"1 log",nil)),count]];
+		[shelf_splitView setResizeThumbStringValue:[NSString stringWithFormat:((count != 1) ? 
+																			   AILocalizedString(@"%i logs",nil) :
+																			   AILocalizedString(@"1 log",nil)),count]];
 		
 		//We are searching, but there is no active search  string. This indicates we're still opening logs.
 		if (searching) {
