@@ -124,7 +124,9 @@
 	static int 		countdown = CRASH_LOG_WAIT_ATTEMPTS;
 	
 	//Kill the notification app if it's open
-	if (countdown-- == 0 || [self reportCrashForLogAtPath:CRASHES_PATH]) {
+	if (countdown-- == 0 || 
+		[self reportCrashForLogAtPath:[@"~/Library/Logs/CrashReporter/Adium.real.crash.log" stringByExpandingTildeInPath]]
+		[self reportCrashForLogAtPath:[@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]]) {
 		[inTimer invalidate];
 	}
 }
