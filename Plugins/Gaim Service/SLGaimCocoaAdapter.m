@@ -163,8 +163,11 @@ static void ZombieKiller_Signal(int i)
 {
 	int status, child_pid = 0;
 	while(child_pid != -1)
+	{
 		//Let the child tell us its status so it can go away
 		child_pid = waitpid(-1, &status, WNOHANG);
+		NSLog(@"Killed zombie with PID %d", child_pid);
+	}
 }
 
 - (void)initLibGaim
