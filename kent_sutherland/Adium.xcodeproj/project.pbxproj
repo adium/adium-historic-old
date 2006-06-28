@@ -938,7 +938,8 @@
 		34F46786080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F46784080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.h */; };
 		34FDD6E505632BFD00F5B30F /* ESFileTransferController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */; };
 		34FDD6E605632BFD00F5B30F /* ESFileTransferController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */; };
-		373977C40A3CCEED00A5F12F /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 373977A30A3CCED900A5F12F /* PSMTabBarControl.framework */; };
+		37993DB50A52E65100294E3F /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37993DB40A52E65000294E3F /* PSMTabBarControl.framework */; };
+		37993DCD0A52E67B00294E3F /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 37993DB40A52E65000294E3F /* PSMTabBarControl.framework */; };
 		4947F5C00655E85200B791E5 /* AIStressTestAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC15BE90524CE5E00A8010A /* AIStressTestAccount.h */; };
 		4947F5C10655E85200B791E5 /* AIStressTestPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC15BEB0524CE5E00A8010A /* AIStressTestPlugin.h */; };
 		4947F5C70655E85200B791E5 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
@@ -1377,6 +1378,23 @@
 		F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8CA4B0A1A9C9400154550 /* GBQuestionHandlerPlugin.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildStyle section */
+		37F1A7D50A505D7B00522490 /* Development */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Development;
+		};
+		37F1A7D60A505D7B00522490 /* Deployment */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Deployment;
+		};
+/* End PBXBuildStyle section */
+
 /* Begin PBXContainerItemProxy section */
 		11F5F42B09537E00007DCC49 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1532,27 +1550,6 @@
 			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = AIUtilities;
 		};
-		3739779E0A3CCED900A5F12F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 373977970A3CCED900A5F12F /* PSMTabBarControl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8D1AC9740486D14A00FE50C9 /* PSMTabBarControl.palette */;
-			remoteInfo = PSMTabBarControl;
-		};
-		373977A00A3CCED900A5F12F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 373977970A3CCED900A5F12F /* PSMTabBarControl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A251BEA00959BB5B0058BC7F /* TabBarControlDemo.app */;
-			remoteInfo = TabBarControlDemo;
-		};
-		373977A20A3CCED900A5F12F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 373977970A3CCED900A5F12F /* PSMTabBarControl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 53DF68FD067E5B5A0090B5B0 /* PSMTabBarControl.framework */;
-			remoteInfo = PSMTabBarControlFramework;
-		};
 		4B215DAF059896B000305B3C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1690,6 +1687,7 @@
 				F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */,
 				6383935009D4D6AA0067B9B7 /* Sparkle.framework in CopyFiles */,
 				341BDBBB0968BC9B00CF83F5 /* OTR.framework in CopyFiles */,
+				37993DCD0A52E67B00294E3F /* PSMTabBarControl.framework in CopyFiles */,
 				3419FE230531586A00C68BA3 /* Adium.framework in CopyFiles */,
 				9E12765407D38B5000AA91C5 /* Growl-WithInstaller.framework in CopyFiles */,
 			);
@@ -3058,7 +3056,7 @@
 		34FD5BEB07F1F92900687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Resources/Italian.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferController.h; path = Source/ESFileTransferController.h; sourceTree = "<group>"; };
 		34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferController.m; path = Source/ESFileTransferController.m; sourceTree = "<group>"; };
-		373977970A3CCED900A5F12F /* PSMTabBarControl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PSMTabBarControl.xcodeproj; path = ../PSMTabBarControl/PSMTabBarControl.xcodeproj; sourceTree = SOURCE_ROOT; };
+		37993DB40A52E65000294E3F /* PSMTabBarControl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PSMTabBarControl.framework; path = Frameworks/PSMTabBarControl.framework; sourceTree = "<group>"; };
 		3C73F83E04D62A2900A80106 /* AIEmoticonPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPack.h; path = Plugins/Emoticons/AIEmoticonPack.h; sourceTree = "<group>"; };
 		3C73F83F04D62A2900A80106 /* AIEmoticonPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPack.m; path = Plugins/Emoticons/AIEmoticonPack.m; sourceTree = "<group>"; };
 		40AC0EEB03B5BF1000A80202 /* ErrorMessageHandlerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ErrorMessageHandlerPlugin.h; path = "Plugins/Error Message Handler/ErrorMessageHandlerPlugin.h"; sourceTree = "<group>"; };
@@ -3772,7 +3770,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				373977C40A3CCEED00A5F12F /* PSMTabBarControl.framework in Frameworks */,
 				F51BCEEA0A15793E000FDC06 /* AIHyperlinks.framework in Frameworks */,
 				34D835D907CBED8F006466F2 /* AIUtilities.framework in Frameworks */,
 				3448758E06D1EBDF00DA778C /* Cocoa.framework in Frameworks */,
@@ -3784,6 +3781,7 @@
 				9E124DF607D34CF500AA91C5 /* Growl-WithInstaller.framework in Frameworks */,
 				07F8303509693F5E002FC851 /* OTR.framework in Frameworks */,
 				638392F809D4D67A0067B9B7 /* Sparkle.framework in Frameworks */,
+				37993DB50A52E65100294E3F /* PSMTabBarControl.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3991,7 +3989,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				373977970A3CCED900A5F12F /* PSMTabBarControl.xcodeproj */,
+				37993DB40A52E65000294E3F /* PSMTabBarControl.framework */,
 				638392F609D4D67A0067B9B7 /* Sparkle.framework */,
 				115E0E8D0952514A003218FE /* JavaVM.framework */,
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
@@ -5203,16 +5201,6 @@
 				34BFD7FC07E6A50C00AD984D /* scriptToolbar.png */,
 			);
 			name = "Applescript Filters";
-			sourceTree = "<group>";
-		};
-		373977980A3CCED900A5F12F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				3739779F0A3CCED900A5F12F /* PSMTabBarControl.palette */,
-				373977A10A3CCED900A5F12F /* TabBarControlDemo.app */,
-				373977A30A3CCED900A5F12F /* PSMTabBarControl.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		40AC0EEA03B5BEDB00A80202 /* Error Message Handler */ = {
@@ -7831,6 +7819,12 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				37F1A7D50A505D7B00522490 /* Development */,
+				37F1A7D60A505D7B00522490 /* Deployment */,
+			);
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -7872,10 +7866,6 @@
 				{
 					ProductGroup = 3423412809D1B67B009FF634 /* Products */;
 					ProjectRef = 3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */;
-				},
-				{
-					ProductGroup = 373977980A3CCED900A5F12F /* Products */;
-					ProjectRef = 373977970A3CCED900A5F12F /* PSMTabBarControl.xcodeproj */;
 				},
 			);
 			targets = (
@@ -7929,27 +7919,6 @@
 			fileType = wrapper.framework;
 			path = AIUtilities.framework;
 			remoteRef = 34D834DC07CBE7BB006466F2 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3739779F0A3CCED900A5F12F /* PSMTabBarControl.palette */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = PSMTabBarControl.palette;
-			remoteRef = 3739779E0A3CCED900A5F12F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		373977A10A3CCED900A5F12F /* TabBarControlDemo.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = TabBarControlDemo.app;
-			remoteRef = 373977A00A3CCED900A5F12F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		373977A30A3CCED900A5F12F /* PSMTabBarControl.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = PSMTabBarControl.framework;
-			remoteRef = 373977A20A3CCED900A5F12F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
