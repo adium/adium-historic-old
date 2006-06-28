@@ -1,6 +1,7 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreServices/CoreServices.h> 
 #import "GetMetadataForHTMLLog.h"
+#import "NSCalendarDate+ISO8601Parsing.h"
 
 /*
  Relevant keys from MDItem.h we use or may want to use:
@@ -143,13 +144,19 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 			[attributes setObject:serviceString
 						   forKey:@"com_adiumX_service"];
 		
-#warning this will not parse properly.  We somehow need to read ISO 8601 format and I don't feel like including AIUtilities.framework
-		NSString *dateStr = [[(NSXMLElement *)[[xmlDoc rootElement] childAtIndex:0] attributeForName:@"time"] objectValue];
-		NSDate *date = [NSDate dateWithString:dateStr];
-		if(date != nil)
-			[(NSMutableDictionary *)attributes setObject:date
+		NSArray *children = [[xmlDoc rootElement] children];
+		NSString *dateStr = [[(NSXMLElement *)[children objectAtIndex:0] attributeForName:@"time"] objectValue];
+		NSCalendarDate *startDate = [NSCalendarDate calendarDateWithString:dateStr];
+		if(startDate != nil)
+			[(NSMutableDictionary *)attributes setObject:startDate
 												  forKey:(NSString *)kMDItemContentCreationDate];
 
+		dateStr = [[(NSXMLElement *)[children objectAtIndex:0] attributeForName:@"time"] objectValue];
+		NSCalendarDate *endDate = [NSCalendarDate calendarDateWithString:dateStr];
+		if(endDate != nil)
+			[(NSMutableDictionary *)attributes setObject:[NSNumber numberWithInt:[endDate timeIntervalSinceDate:startDate]]
+												  forKey:(NSString *)kMDItemDurationSeconds];
+		
 		NSString *accountString = [[[xmlDoc rootElement] attributeForName:@"account"] objectValue];
 		if(accountString != nil)
 		{
@@ -159,9 +166,9 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 			[otherAuthors removeObject:accountString];
 			//pick the first author for this.  likely a bad idea
 			NSString *toUID = [otherAuthors objectAtIndex:0];
-			[attributes setObject:[NSString stringWithFormat:@"%@ on %@",toUID,[date descriptionWithCalendarFormat:@"%y-%m-%d"
-																										  timeZone:nil
-																											locale:nil]]
+			[attributes setObject:[NSString stringWithFormat:@"%@ on %@",toUID,[startDate descriptionWithCalendarFormat:@"%y-%m-%d"
+																											   timeZone:nil
+																												 locale:nil]]
 						   forKey:(NSString *)kMDItemDisplayName];
 			[otherAuthors release];
 			
