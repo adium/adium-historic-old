@@ -484,11 +484,14 @@ typedef enum {
 			if (allowBetweenContactDrop == YES && ![item isKindOfClass:[AIListGroup class]]) {
 				[outlineView setDropItem:item dropChildIndex:NSOutlineViewDropOnItemIndex];
 			}
-			
 		}
 		
-		if (index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]) {
+		if (index == NSOutlineViewDropOnItemIndex && [item isKindOfClass:[AIListContact class]]) {
+			//Dropping into a contact: Copy
 			retVal = NSDragOperationCopy;
+		} else {
+			//Otherwise, it's either a move into a group or a manual reordering
+			retVal = NSDragOperationPrivate;
 		}
 
 	} else if ([types containsObject:NSFilenamesPboardType] ||
