@@ -260,7 +260,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 			contextButtonRect = NSMakeRect(controlRect.size.width - (THUMB_WIDTH + availableSpace), 0, BUTTON_WIDTH, CONTROL_HEIGHT);
 		}
 	}
-	
+
 	if( shelfView ){
 		[shelfView setFrame: NSMakeRect( 0, CONTROL_HEIGHT + 1, currentShelfWidth, [self bounds].size.height - CONTROL_HEIGHT)];
 	}
@@ -268,6 +268,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	if( contentView ){
 		float contentViewX = (isShelfVisible ? currentShelfWidth : 0);
 		NSRect newRect = NSMakeRect( contentViewX + 1, 0, [self bounds].size.width - (contentViewX + 1), [self bounds].size.height);
+
 		if( ! NSEqualRects(newRect, [contentView frame]) ){
 			[contentView setFrame: newRect];
 		}
@@ -384,7 +385,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	}
 	
 	[self setNeedsDisplayInRect: controlRect];
-	NSLog(@"activeControlPart is %i",activeControlPart);
+
 	if( activeControlPart != CONTROL_PART_NONE ){
 		while( stillMouseDown ){
 			anEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
