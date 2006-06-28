@@ -69,6 +69,12 @@
 
 - (void)initAccount {
 	[super initAccount];
+
+    static BOOL beganInitializingJavaVM = NO;
+	if (!beganInitializingJavaVM && [self enabled]) {
+		[SmackCocoaAdapter initializeJavaVM];
+		beganInitializingJavaVM = YES;
+	}
     
     if(!roster)
         roster = [[NSMutableDictionary alloc] init];
