@@ -425,27 +425,78 @@
 }
 
 - (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group {
-    // ### request authorization
+    NSEnumerator *e = [objects objectEnumerator];
+    AIListContact *contact;
+    SmackRoster *smroster = [connection getRoster];
+
+    NSString *groupname = [group displayName];
+    
+    while((contact = [e nextObject]))
+        [SmackCocoaAdapter createRosterEntryInRoster:smroster withJID:[contact UID] name:[contact ownDisplayName] group:groupname];
 }
 
 - (void)removeContacts:(NSArray *)objects {
-    // ### remove authorization
+    NSEnumerator *e = [objects objectEnumerator];
+    AIListContact *contact;
+    SmackRoster *smroster = [connection getRoster];
+    
+    while((contact = [e nextObject]))
+    {
+        SmackRosterEntry *entry = [smroster getEntry:[contact UID]];
+        if(entry)
+            [smroster removeEntry:entry];
+    }
 }
 
 - (void)deleteGroup:(AIListGroup *)group {
-    
+    // as soon as there are no users in a group, the group ceases to exist
+    // so we don't have to do anything here (afaik Adium removes all people from that group first)
 }
 
 - (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group {
+    NSEnumerator *e = [objects objectEnumerator];
+    AIListContact *contact;
+    SmackRoster *smroster = [connection getRoster];
     
+    SmackRosterGroup *newgroup = [smroster getGroup:[group displayName]];
+    if(!newgroup) // if it doesn't exist, create it
+        newgroup = [smroster createGroup:[group displayName]];
+    
+    while((contact = [e nextObject]))
+    {
+        NSString *oldgroup = [[contact parentGroup] displayName];
+        SmackRosterEntry *rosterentry = [smroster getEntry:[contact UID]];
+        
+        JavaIterator *iter = [rosterentry getGroups];
+        
+        // remove entry from group if it actually belonged to the group
+        while([iter hasNext])
+        {
+            SmackRosterGroup *rostergroup = [iter next];
+            if([[rostergroup getName] isEqualToString:oldgroup]) {
+                [rostergroup removeEntry:rosterentry];
+                break;
+            }
+        }
+        // add it to the new group, even when it wasn't in the old one before
+        // Note that this whole thing might behave strangely if someone is in multiple groups,
+        // since Adium doesn't handle that case at all!
+        
+        [newgroup addEntry:rosterentry];
+    }
 }
 
 - (void)renameGroup:(AIListGroup *)group to:(NSString *)newName {
-    
+    [[[connection getRoster] getGroup:[group displayName]] setName:newName];
 }
 
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact {
-    return [super menuItemsForContact:inContact];
+    NSMutableArray *menuItems = [NSMutableArray array];
+    
+    
+    [menuItems addObject:[NSMenuItem separatorItem]];
+    [menuItems addObjectsFromArray:[super menuItemsForContact:inContact]];
+    return menuItems;
 }
 
 - (NSArray *)accountActionMenuItems {

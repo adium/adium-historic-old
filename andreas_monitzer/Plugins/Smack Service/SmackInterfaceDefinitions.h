@@ -43,7 +43,7 @@
 @interface SmackMessageType : NSObject {
 }
 
-+ (SmackMessageType*)fromString:(NSString*)type;
+- (SmackMessageType*)fromString:(NSString*)type;
 - (NSString*)toString;
 
 @end
@@ -164,7 +164,7 @@
 @interface SmackRosterPacketItemStatus : NSObject {
 }
 
-+ (SmackRosterPacketItemStatus*)fromString:(NSString*)type;
+- (SmackRosterPacketItemStatus*)fromString:(NSString*)type;
 - (NSString*)toString;
 
 @end
@@ -172,7 +172,7 @@
 @interface SmackRosterPacketItemType : NSObject {
 }
 
-+ (SmackRosterPacketItemType*)fromString:(NSString*)type;
+- (SmackRosterPacketItemType*)fromString:(NSString*)type;
 - (NSString*)toString;
 
 @end
@@ -225,7 +225,7 @@
 @interface SmackPresenceMode : NSObject {
 }
 
-+ (SmackPresenceMode*)fromString:(NSString*)type;
+- (SmackPresenceMode*)fromString:(NSString*)type;
 - (NSString*)toString;
 
 @end
@@ -233,7 +233,7 @@
 @interface SmackPresenceType : NSObject {
 }
 
-+ (SmackPresenceType*)fromString:(NSString*)type;
+- (SmackPresenceType*)fromString:(NSString*)type;
 - (NSString*)toString;
 
 @end
@@ -299,7 +299,7 @@
 @interface SmackIQType : NSObject {
 }
 
-+ (SmackIQType*)fromString:(NSString*)type;
+- (SmackIQType*)fromString:(NSString*)type;
 - (NSString*)toString;
 
 @end
@@ -345,7 +345,7 @@
 - (int)getUnfiledEntryCount;
 - (void)reload;
 - (void)removeEntry:(SmackRosterEntry*)entry;
-+ (void)setDefaultSubscriptionMode:(int)subscriptionMode;
+- (void)setDefaultSubscriptionMode:(int)subscriptionMode;
 - (void)setSubscriptionMode:(int)subscriptionMode;
 
 @end
@@ -355,7 +355,7 @@
 
 - (NSString*)authenticate:(NSString*)username :(NSString*)password :(NSString*)resource;
 - (NSString*)authentcateAnonymously;
-+ (JavaList*)getRegisterSASLMechanisms;
+- (JavaList*)getRegisterSASLMechanisms;
 - (BOOL)hasAnonymousAuthentication;
 - (BOOL)hasNonAnonymousAuthentication;
 - (BOOL)isAuthenticated;
@@ -408,7 +408,7 @@
 @interface SmackConfiguration : NSObject {
 }
 
-+ (NSString*)getVersion;
+- (NSString*)getVersion;
 
 @end
 
@@ -425,8 +425,8 @@
 @interface SmackDNSUtil : NSObject {
 }
 
-+ (SmackDNSUtilHostAddress*)resolveXMPPDomain:(NSString*)domain;
-+ (SmackDNSUtilHostAddress*)resolveXMPPServerDomain:(NSString*)domain;
+- (SmackDNSUtilHostAddress*)resolveXMPPDomain:(NSString*)domain;
+- (SmackDNSUtilHostAddress*)resolveXMPPServerDomain:(NSString*)domain;
 
 @end
 
@@ -449,8 +449,10 @@
 - (void)setDelegate:(id<AdiumSmackBridgeDelegate>)delegate;
 - (id<AdiumSmackBridgeDelegate>)delegate;
 - (void)registerConnection:(SmackXMPPConnection*)conn;
-+ (id)getStaticFieldFromClass:(NSString*)fieldname :(NSString*)classname;
-+ (BOOL)isInstanceOfClass:(id)object :(NSString*)classname;
+- (id)getStaticFieldFromClass:(NSString*)fieldname :(NSString*)classname;
+- (BOOL)isInstanceOfClass:(id)object :(NSString*)classname;
+
++ (void)createRosterEntry:(SmackRoster*)roster :(NSString*)jid :(NSString*)name :(NSString*)group;
 
 @end
 

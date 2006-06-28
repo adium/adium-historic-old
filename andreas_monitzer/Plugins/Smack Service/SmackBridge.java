@@ -14,6 +14,8 @@ import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.filter.*;
 import java.util.*;
 
+import com.apple.cocoa.foundation.NSArray;
+
 public class SmackBridge implements ConnectionListener {
     NSObject delegate;
     
@@ -66,5 +68,11 @@ public class SmackBridge implements ConnectionListener {
     }
     public static boolean isInstanceOfClass(Object instance, String classname) throws ClassNotFoundException {
         return Class.forName(classname).isInstance(instance);
+    }
+    public static void createRosterEntry(Roster roster, String jid, String name, String group) throws XMPPException {
+        String[] grouparray = new String[1];
+        grouparray[0] = group;
+        
+        roster.createEntry(jid,name,grouparray);
     }
 }
