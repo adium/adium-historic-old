@@ -268,6 +268,7 @@
 	[popUp_backgroundImageType setEnabled:customBackground];
 	[imageView_backgroundImage setEnabled:customBackground];
 	[colorWell_customBackgroundColor setEnabled:customBackground];
+	[popUp_variants setEnabled:([popUp_variants numberOfItems] > 0)];
 }
 
 /*!
