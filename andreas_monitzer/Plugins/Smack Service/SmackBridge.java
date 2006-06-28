@@ -17,7 +17,8 @@ import java.util.*;
 public class SmackBridge implements ConnectionListener {
     NSObject delegate;
     
-    public SmackBridge() {
+    public void initSubscriptionMode() {
+        Roster.setDefaultSubscriptionMode(Roster.SUBSCRIPTION_MANUAL);
     }
     
     public void setDelegate(NSObject d) {
@@ -44,8 +45,6 @@ public class SmackBridge implements ConnectionListener {
                 delegate.takeValueForKey(packet, "newIQPacket");
             }
         },new PacketTypeFilter(IQ.class));
-        
-        Roster.setDefaultSubscriptionMode(Roster.SUBSCRIPTION_MANUAL);
         
         delegate.takeValueForKey(new Boolean(true),"connection");
     }

@@ -69,12 +69,6 @@
 
 - (void)initAccount {
 	[super initAccount];
-
-	static BOOL beganInitializingJavaVM = NO;
-	if (!beganInitializingJavaVM && [self enabled]) {
-		[SmackCocoaAdapter initializeJavaVM];
-		beganInitializingJavaVM = YES;
-	}
     
     if(!roster)
         roster = [[NSMutableDictionary alloc] init];
@@ -425,11 +419,11 @@
 }
 
 - (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group {
-    
+    // ### request authorization
 }
 
 - (void)removeContacts:(NSArray *)objects {
-    
+    // ### remove authorization
 }
 
 - (void)deleteGroup:(AIListGroup *)group {
@@ -460,6 +454,10 @@
 }
 
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize {
+    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:inDidAuthorize?@"SUBSCRIBED":@"UNSUBSCRIBED"];
+    [packet setTo:[infoDict objectForKey:@"Remote Name"]];
+    
+    [connection sendPacket:packet];
 }
 
 #pragma mark Buddy list
