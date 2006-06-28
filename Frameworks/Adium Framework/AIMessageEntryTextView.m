@@ -792,7 +792,8 @@
 	NSMenuItem		*menuItem;
 	BOOL			addedOurLinkItems = NO;
 
-	if ((contextualMenu = [super menuForEvent:theEvent])) {		
+	if ((contextualMenu = [super menuForEvent:theEvent])) {
+		contextualMenu = [[contextualMenu copy] autorelease];
 		enumerator = [[contextualMenu itemArray] objectEnumerator];
 		NSMenuItem	*editLinkItem = nil;
 		while ((menuItem = [enumerator nextObject])) {
