@@ -228,4 +228,8 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     return [[NSClassFromString(@"org.jivesoftware.smack.packet.XMPPError") newWithSignature:@"(ILjava/lang/String;)",code,message] autorelease];
 }
 
++ (void)createRosterEntryInRoster:(SmackRoster*)roster withJID:(NSString*)jid name:(NSString*)name group:(NSString*)group {
+    [NSClassFromString(@"net.adium.smackBridge.SmackBridge") createRosterEntry:roster :jid :name :group];
+}
+
 @end

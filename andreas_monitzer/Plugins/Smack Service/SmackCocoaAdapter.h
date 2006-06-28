@@ -11,12 +11,14 @@
 #import "AIObject.h"
 
 @protocol AdiumSmackBridgeDelegate;
-@class SmackXMPPConnection, SmackXMPPAccount, SmackPresenceType, SmackPresenceMode, SmackMessageType, SmackConnectionConfiguration, SmackPresence, SmackMessage, SmackXXHTMLExtension, SmackIQ, SmackIQType, SmackXMPPError;
+@class SmackXMPPConnection, SmackXMPPAccount, SmackPresenceType, SmackPresenceMode, SmackMessageType, SmackConnectionConfiguration, SmackPresence, SmackMessage, SmackXXHTMLExtension, SmackIQ, SmackIQType, SmackXMPPError, SmackRoster;
 
 @interface SmackCocoaAdapter : AIObject <AdiumSmackBridgeDelegate> {
     SmackXMPPConnection *connection;
     SmackXMPPAccount *account;
 }
+
++ (void)initializeJavaVM;
 
 + (id)staticObjectField:(NSString*)fieldname inJavaClass:(NSString*)className;
 + (BOOL)object:(id)obj isInstanceOfJavaClass:(NSString*)className;
@@ -37,5 +39,6 @@
 + (SmackIQType*)IQType:(NSString*)type;
 + (SmackXMPPError*)XMPPErrorWithCode:(int)code;
 + (SmackXMPPError*)XMPPErrorWithCode:(int)code message:(NSString*)message;
++ (void)createRosterEntryInRoster:(SmackRoster*)roster withJID:(NSString*)jid name:(NSString*)name group:(NSString*)group;
 
 @end
