@@ -3367,8 +3367,6 @@
 		4BCAC4E307B59B65006641B9 /* Alias Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "Alias Defaults.plist"; path = "Resources/Alias Defaults.plist"; sourceTree = "<group>"; };
 		4BCAC4E407B59B65006641B9 /* Display Format Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "Display Format Defaults.plist"; path = "Resources/Display Format Defaults.plist"; sourceTree = "<group>"; };
 		4BCAC56C07B5A31A006641B9 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Sounds; path = Resources/Sounds; sourceTree = "<group>"; };
-		4BCAC70307B5A4FA006641B9 /* CPFVersionChecker.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CPFVersionChecker.h; path = Source/CPFVersionChecker.h; sourceTree = "<group>"; };
-		4BCAC70407B5A4FA006641B9 /* CPFVersionChecker.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CPFVersionChecker.m; path = Source/CPFVersionChecker.m; sourceTree = "<group>"; };
 		4BCAC71207B5A50F006641B9 /* VersionChecker Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "VersionChecker Defaults.plist"; path = "Resources/VersionChecker Defaults.plist"; sourceTree = "<group>"; };
 		4BCFEF4C03F59F2800A8010A /* AccountSelectionView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountSelectionView.nib; path = "Plugins/Dual Window Interface/AccountSelectionView.nib"; sourceTree = "<group>"; };
 		4BD548AE086086B5008DF3CB /* AISoundSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISoundSet.h; path = "Frameworks/Adium Framework/AISoundSet.h"; sourceTree = "<group>"; };
@@ -6291,8 +6289,6 @@
 		83DB8F21061145C400A5C28C /* Version Checker */ = {
 			isa = PBXGroup;
 			children = (
-				4BCAC70307B5A4FA006641B9 /* CPFVersionChecker.h */,
-				4BCAC70407B5A4FA006641B9 /* CPFVersionChecker.m */,
 				4BCAC71207B5A50F006641B9 /* VersionChecker Defaults.plist */,
 			);
 			name = "Version Checker";
