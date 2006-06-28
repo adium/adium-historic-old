@@ -820,7 +820,7 @@
 			addedOurLinkItems = YES;
 		}
 	} else {
-		contextualMenu = [[NSMenu alloc] init];	
+		contextualMenu = [[[NSMenu alloc] init] autorelease];
 	}
 
 	//Retrieve the items which should be added to the bottom of the default menu
