@@ -196,7 +196,8 @@ static BOOL is_leap_year(unsigned year) {
 	} else {
 		//Skip leading whitespace.
 		unsigned i = 0U;
-		for(unsigned len = strlen((const char *)ch); i < len; ++i) {
+		unsigned len;
+		for(len = strlen((const char *)ch); i < len; ++i) {
 			if(!isspace(ch[i]))
 				break;
 		}
