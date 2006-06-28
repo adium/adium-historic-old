@@ -1811,7 +1811,7 @@ static int toArraySort(id itemA, id itemB, void *context)
     [toolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
     [toolbar setSizeMode:NSToolbarSizeModeRegular];
     [toolbar setVisible:YES];
-    [toolbar setAllowsUserCustomization:NO];
+    [toolbar setAllowsUserCustomization:YES];
     [toolbar setAutosavesConfiguration:YES];
     toolbarItems = [[NSMutableDictionary alloc] init];
 
