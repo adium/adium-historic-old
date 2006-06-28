@@ -1320,62 +1320,33 @@
 		7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */; };
 		7E824CEA06387FAF00813072 /* SHLinkManagementPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */; };
 		7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */; };
-		8102A7250A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8102A7230A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.h */; };
 		8102A7260A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A7240A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m */; };
-		8102A8200A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8102A81E0A4B6F82004DF0F5 /* SmackXMPPErrorMessagePlugin.h */; };
 		8102A8210A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A81F0A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m */; };
-		8102A8870A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8102A8850A4B7A1E004DF0F5 /* SmackXMPPHeadlineMessagePlugin.h */; };
 		8102A8880A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A8860A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m */; };
-		8156798F0A339B1F005ADC13 /* SmackListContact.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8156798D0A339B1F005ADC13 /* SmackListContact.h */; };
 		815679900A339B1F005ADC13 /* SmackListContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8156798E0A339B1F005ADC13 /* SmackListContact.m */; };
 		81B4CA200A416C3B00A8ABF5 /* SmackBridge.java in Sources */ = {isa = PBXBuildFile; fileRef = 81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */; };
 		81B4CA210A416C4200A8ABF5 /* smack.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81F659B90A2A8C4E008FC8E7 /* smack.jar */; };
 		81B4CA220A416C4200A8ABF5 /* smackx.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81F659BA0A2A8C4E008FC8E7 /* smackx.jar */; };
 		81B4CA7D0A416F8300A8ABF5 /* ruli_addr.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA520A416F7E00A8ABF5 /* ruli_addr.c */; };
-		81B4CA7E0A416F8300A8ABF5 /* ruli_addr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA530A416F7E00A8ABF5 /* ruli_addr.h */; };
 		81B4CA7F0A416F8300A8ABF5 /* ruli_conf.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA540A416F7F00A8ABF5 /* ruli_conf.c */; };
-		81B4CA800A416F8300A8ABF5 /* ruli_conf.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA550A416F7F00A8ABF5 /* ruli_conf.h */; };
 		81B4CA810A416F8300A8ABF5 /* ruli_fsm.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA560A416F7F00A8ABF5 /* ruli_fsm.c */; };
-		81B4CA820A416F8300A8ABF5 /* ruli_fsm.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA570A416F7F00A8ABF5 /* ruli_fsm.h */; };
 		81B4CA830A416F8300A8ABF5 /* ruli_getaddrinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA580A416F7F00A8ABF5 /* ruli_getaddrinfo.c */; };
-		81B4CA840A416F8300A8ABF5 /* ruli_getaddrinfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA590A416F7F00A8ABF5 /* ruli_getaddrinfo.h */; };
 		81B4CA850A416F8300A8ABF5 /* ruli_host.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA5A0A416F7F00A8ABF5 /* ruli_host.c */; };
-		81B4CA860A416F8300A8ABF5 /* ruli_host.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA5B0A416F7F00A8ABF5 /* ruli_host.h */; };
 		81B4CA870A416F8300A8ABF5 /* ruli_http.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA5C0A416F7F00A8ABF5 /* ruli_http.c */; };
-		81B4CA880A416F8300A8ABF5 /* ruli_http.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA5D0A416F7F00A8ABF5 /* ruli_http.h */; };
 		81B4CA890A416F8300A8ABF5 /* ruli_isaac.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA5E0A416F7F00A8ABF5 /* ruli_isaac.c */; };
-		81B4CA8A0A416F8300A8ABF5 /* ruli_isaac.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA5F0A416F7F00A8ABF5 /* ruli_isaac.h */; };
-		81B4CA8B0A416F8300A8ABF5 /* ruli_limits.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA600A416F8000A8ABF5 /* ruli_limits.h */; };
 		81B4CA8C0A416F8300A8ABF5 /* ruli_list.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA610A416F8000A8ABF5 /* ruli_list.c */; };
-		81B4CA8D0A416F8300A8ABF5 /* ruli_list.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA620A416F8000A8ABF5 /* ruli_list.h */; };
 		81B4CA8E0A416F8300A8ABF5 /* ruli_mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA630A416F8000A8ABF5 /* ruli_mem.c */; };
-		81B4CA8F0A416F8300A8ABF5 /* ruli_mem.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA640A416F8000A8ABF5 /* ruli_mem.h */; };
 		81B4CA900A416F8300A8ABF5 /* ruli_msg.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA650A416F8000A8ABF5 /* ruli_msg.c */; };
-		81B4CA910A416F8300A8ABF5 /* ruli_msg.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA660A416F8000A8ABF5 /* ruli_msg.h */; };
-		81B4CA920A416F8300A8ABF5 /* ruli_oop.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA670A416F8000A8ABF5 /* ruli_oop.h */; };
 		81B4CA930A416F8300A8ABF5 /* ruli_parse.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA680A416F8000A8ABF5 /* ruli_parse.c */; };
-		81B4CA940A416F8300A8ABF5 /* ruli_parse.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA690A416F8100A8ABF5 /* ruli_parse.h */; };
 		81B4CA950A416F8300A8ABF5 /* ruli_rand.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA6A0A416F8100A8ABF5 /* ruli_rand.c */; };
-		81B4CA960A416F8300A8ABF5 /* ruli_rand.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA6B0A416F8100A8ABF5 /* ruli_rand.h */; };
 		81B4CA970A416F8300A8ABF5 /* ruli_res.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA6C0A416F8100A8ABF5 /* ruli_res.c */; };
-		81B4CA980A416F8300A8ABF5 /* ruli_res.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA6D0A416F8100A8ABF5 /* ruli_res.h */; };
 		81B4CA990A416F8300A8ABF5 /* ruli_search.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA6E0A416F8100A8ABF5 /* ruli_search.c */; };
-		81B4CA9A0A416F8300A8ABF5 /* ruli_search.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA6F0A416F8100A8ABF5 /* ruli_search.h */; };
 		81B4CA9B0A416F8300A8ABF5 /* ruli_smtp.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA700A416F8100A8ABF5 /* ruli_smtp.c */; };
-		81B4CA9C0A416F8300A8ABF5 /* ruli_smtp.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA710A416F8200A8ABF5 /* ruli_smtp.h */; };
 		81B4CA9D0A416F8300A8ABF5 /* ruli_sock.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA720A416F8200A8ABF5 /* ruli_sock.c */; };
-		81B4CA9E0A416F8300A8ABF5 /* ruli_sock.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA730A416F8200A8ABF5 /* ruli_sock.h */; };
 		81B4CA9F0A416F8300A8ABF5 /* ruli_srv.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA740A416F8200A8ABF5 /* ruli_srv.c */; };
-		81B4CAA00A416F8300A8ABF5 /* ruli_srv.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA750A416F8200A8ABF5 /* ruli_srv.h */; };
 		81B4CAA10A416F8300A8ABF5 /* ruli_sync.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA760A416F8200A8ABF5 /* ruli_sync.c */; };
-		81B4CAA20A416F8300A8ABF5 /* ruli_sync.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA770A416F8200A8ABF5 /* ruli_sync.h */; };
 		81B4CAA30A416F8300A8ABF5 /* ruli_txt.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA780A416F8200A8ABF5 /* ruli_txt.c */; };
-		81B4CAA40A416F8300A8ABF5 /* ruli_txt.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA790A416F8200A8ABF5 /* ruli_txt.h */; };
 		81B4CAA50A416F8300A8ABF5 /* ruli_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA7A0A416F8200A8ABF5 /* ruli_util.c */; };
-		81B4CAA60A416F8300A8ABF5 /* ruli_util.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA7B0A416F8200A8ABF5 /* ruli_util.h */; };
-		81B4CAA70A416F8300A8ABF5 /* ruli.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CA7C0A416F8200A8ABF5 /* ruli.h */; };
-		81B4CDA20A4181C500A8ABF5 /* oop-read.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CD9A0A4181C500A8ABF5 /* oop-read.h */; };
-		81B4CDA30A4181C500A8ABF5 /* oop.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CD9B0A4181C500A8ABF5 /* oop.h */; };
 		81B4CDA40A4181C500A8ABF5 /* read-fd.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CD9C0A4181C500A8ABF5 /* read-fd.c */; };
 		81B4CDA50A4181C500A8ABF5 /* read-mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CD9D0A4181C500A8ABF5 /* read-mem.c */; };
 		81B4CDA60A4181C500A8ABF5 /* read.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CD9E0A4181C500A8ABF5 /* read.c */; };
@@ -1383,25 +1354,19 @@
 		81B4CDA80A4181C500A8ABF5 /* signal.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDA00A4181C500A8ABF5 /* signal.c */; };
 		81B4CDA90A4181C500A8ABF5 /* sys.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDA10A4181C500A8ABF5 /* sys.c */; };
 		81B4CDE50A41857D00A8ABF5 /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDE40A41857D00A8ABF5 /* alloc.c */; };
-		81B4CE630A42449600A8ABF5 /* SmackXMPPRosterPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4CE610A42449600A8ABF5 /* SmackXMPPRosterPlugin.h */; };
 		81B4CE640A42449700A8ABF5 /* SmackXMPPRosterPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CE620A42449600A8ABF5 /* SmackXMPPRosterPlugin.m */; };
+		81D59B5E0A52214F0099F9B9 /* SmackBridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */; };
 		81F651740A291004008FC8E7 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		81F651750A291004008FC8E7 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		81F651760A291004008FC8E7 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
-		81F6519C0A291145008FC8E7 /* SmackServicePlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F6519A0A291145008FC8E7 /* SmackServicePlugin.h */; };
 		81F6519D0A291145008FC8E7 /* SmackServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F6519B0A291145008FC8E7 /* SmackServicePlugin.m */; };
-		81F651AC0A29123D008FC8E7 /* SmackXMPPService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F651AA0A29123C008FC8E7 /* SmackXMPPService.h */; };
 		81F651AD0A29123D008FC8E7 /* SmackXMPPService.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F651AB0A29123C008FC8E7 /* SmackXMPPService.m */; };
-		81F654B10A29339F008FC8E7 /* SmackXMPPAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F654AF0A29339F008FC8E7 /* SmackXMPPAccount.h */; };
 		81F654B20A29339F008FC8E7 /* SmackXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F654B00A29339F008FC8E7 /* SmackXMPPAccount.m */; };
-		81F654BD0A29349C008FC8E7 /* SmackCocoaAdapter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F654BB0A29349C008FC8E7 /* SmackCocoaAdapter.h */; };
 		81F654BE0A29349C008FC8E7 /* SmackCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F654BC0A29349C008FC8E7 /* SmackCocoaAdapter.m */; };
 		81F6554F0A293DD0008FC8E7 /* Smack-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 81F6554E0A293DD0008FC8E7 /* Smack-Info.plist */; };
 		81F656580A2A5315008FC8E7 /* Smack.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */; };
-		81F656710A2A5458008FC8E7 /* SmackXMPPAccountViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F6566F0A2A5457008FC8E7 /* SmackXMPPAccountViewController.h */; };
 		81F656720A2A5458008FC8E7 /* SmackXMPPAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F656700A2A5458008FC8E7 /* SmackXMPPAccountViewController.m */; };
 		81F656BE0A2A5880008FC8E7 /* SmackXMPPAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81F656BC0A2A587F008FC8E7 /* SmackXMPPAccountView.nib */; };
-		81F658170A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F658160A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h */; };
 		81F659BD0A2A8C81008FC8E7 /* smack.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F659B90A2A8C4E008FC8E7 /* smack.jar */; };
 		81F659BE0A2A8C81008FC8E7 /* smackx.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F659BA0A2A8C4E008FC8E7 /* smackx.jar */; };
 		9E124DEB07D34C7300AA91C5 /* CBGrowlAlertDetailPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */; };
@@ -1837,57 +1802,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		81F651810A29101E008FC8E7 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 15;
-			files = (
-				81F6519C0A291145008FC8E7 /* SmackServicePlugin.h in CopyFiles */,
-				81F651AC0A29123D008FC8E7 /* SmackXMPPService.h in CopyFiles */,
-				81F654B10A29339F008FC8E7 /* SmackXMPPAccount.h in CopyFiles */,
-				81F654BD0A29349C008FC8E7 /* SmackCocoaAdapter.h in CopyFiles */,
-				81F656710A2A5458008FC8E7 /* SmackXMPPAccountViewController.h in CopyFiles */,
-				81F658170A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h in CopyFiles */,
-				8156798F0A339B1F005ADC13 /* SmackListContact.h in CopyFiles */,
-				81B4CA7E0A416F8300A8ABF5 /* ruli_addr.h in CopyFiles */,
-				81B4CA800A416F8300A8ABF5 /* ruli_conf.h in CopyFiles */,
-				81B4CA820A416F8300A8ABF5 /* ruli_fsm.h in CopyFiles */,
-				81B4CA840A416F8300A8ABF5 /* ruli_getaddrinfo.h in CopyFiles */,
-				81B4CA860A416F8300A8ABF5 /* ruli_host.h in CopyFiles */,
-				81B4CA880A416F8300A8ABF5 /* ruli_http.h in CopyFiles */,
-				81B4CA8A0A416F8300A8ABF5 /* ruli_isaac.h in CopyFiles */,
-				81B4CA8B0A416F8300A8ABF5 /* ruli_limits.h in CopyFiles */,
-				81B4CA8D0A416F8300A8ABF5 /* ruli_list.h in CopyFiles */,
-				81B4CA8F0A416F8300A8ABF5 /* ruli_mem.h in CopyFiles */,
-				81B4CA910A416F8300A8ABF5 /* ruli_msg.h in CopyFiles */,
-				81B4CA920A416F8300A8ABF5 /* ruli_oop.h in CopyFiles */,
-				81B4CA940A416F8300A8ABF5 /* ruli_parse.h in CopyFiles */,
-				81B4CA960A416F8300A8ABF5 /* ruli_rand.h in CopyFiles */,
-				81B4CA980A416F8300A8ABF5 /* ruli_res.h in CopyFiles */,
-				81B4CA9A0A416F8300A8ABF5 /* ruli_search.h in CopyFiles */,
-				81B4CA9C0A416F8300A8ABF5 /* ruli_smtp.h in CopyFiles */,
-				81B4CA9E0A416F8300A8ABF5 /* ruli_sock.h in CopyFiles */,
-				81B4CAA00A416F8300A8ABF5 /* ruli_srv.h in CopyFiles */,
-				81B4CAA20A416F8300A8ABF5 /* ruli_sync.h in CopyFiles */,
-				81B4CAA40A416F8300A8ABF5 /* ruli_txt.h in CopyFiles */,
-				81B4CAA60A416F8300A8ABF5 /* ruli_util.h in CopyFiles */,
-				81B4CAA70A416F8300A8ABF5 /* ruli.h in CopyFiles */,
-				81B4CDA20A4181C500A8ABF5 /* oop-read.h in CopyFiles */,
-				81B4CDA30A4181C500A8ABF5 /* oop.h in CopyFiles */,
-				81B4CE630A42449600A8ABF5 /* SmackXMPPRosterPlugin.h in CopyFiles */,
-				8102A7250A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.h in CopyFiles */,
-				8102A8200A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.h in CopyFiles */,
-				8102A8870A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.h in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		81F659940A2A8BE4008FC8E7 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 15;
 			files = (
+				81D59B5E0A52214F0099F9B9 /* SmackBridge.jar in CopyFiles */,
 				81F659BD0A2A8C81008FC8E7 /* smack.jar in CopyFiles */,
 				81F659BE0A2A8C81008FC8E7 /* smackx.jar in CopyFiles */,
 			);
@@ -8205,7 +8126,6 @@
 				81F650890A290FB6008FC8E7 /* Resources */,
 				81F6508A0A290FB6008FC8E7 /* Sources */,
 				81F6508B0A290FB6008FC8E7 /* Frameworks */,
-				81F651810A29101E008FC8E7 /* CopyFiles */,
 				81F659940A2A8BE4008FC8E7 /* CopyFiles */,
 			);
 			buildRules = (
@@ -11536,6 +11456,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				JAVA_ARCHIVE_CLASSES = YES;
+				JAVA_ARCHIVE_COMPRESSION = YES;
 				JAVA_ARCHIVE_TYPE = JAR;
 				JAVA_COMPILER = /usr/bin/javac;
 				JAVA_SOURCE_SUBDIR = .;

@@ -13,6 +13,11 @@
 #import "SmackListContact.h"
 
 #import "AIAccount.h"
+#import "AIAdium.h"
+#import "AIContactController.h"
+#import "AIInterfaceController.h"
+
+#import <AIUtilities/AIStringUtilities.h>
 
 @implementation SmackXMPPRosterPlugin
 
@@ -43,6 +48,7 @@
     SmackPresence *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
     
     NSString *jidWithResource = [packet getFrom];
+    NSString *jid = [jidWithResource jidUserHost];
     NSString *type = [[packet getType] toString];
     NSString *status = [packet getStatus];
     NSString *mode = [[packet getMode] toString];
@@ -67,20 +73,22 @@
     } else if([type isEqualToString:@"unavailable"])
         statustype = AIOfflineStatusType;
     else if([type isEqualToString:@"subscribe"]) {
-        // ###
+        [[adium contactController] showAuthorizationRequestWithDict:[NSDictionary dictionaryWithObjectsAndKeys:
+            jid, @"Remote Name",
+            nil] forAccount:account];
+    
         return;
     } else if([type isEqualToString:@"subscribed"]) {
-        // ###
+        [[adium interfaceController] displayQuestion:AILocalizedString(@"You Were Authorized!","You Were Authorized!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has authorized you to see his/her current status.","%@ has authorized you to see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice") defaultButton:AILocalizedString(@"OK","OK") alternateButton:nil otherButton:nil target:nil selector:NULL userInfo:nil];
         return;
     } else if([type isEqualToString:@"unsubscribe"]) {
-        // ###
+        [[adium interfaceController] displayQuestion:AILocalizedString(@"Subscription Removed!","Subscription Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed you from his/her contact list. He/She will no longer see your current status.","%@ has removed you from his/her contact list. He/She will no longer see your current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice") defaultButton:AILocalizedString(@"OK","OK") alternateButton:nil otherButton:nil target:nil selector:NULL userInfo:nil];
         return;
     } else if([type isEqualToString:@"unsubscribed"]) {
-        // ###
+        [[adium interfaceController] displayQuestion:AILocalizedString(@"Authorization Removed!","Authorization Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed your authorization. You will no longer see his/her current status.","%@ has removed your authorization. You will no longer see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice") defaultButton:AILocalizedString(@"OK","OK") alternateButton:nil otherButton:nil target:nil selector:NULL userInfo:nil];
         return;
     }
     
-    //    NSLog(@"jid = \"%@\", mode = \"%@\", statustype = \"%d\"", jid, mode, statustype);
 	[listContact setOnline:statustype != AIOfflineStatusType
                     notify:NotifyNow
                   silently:NO];

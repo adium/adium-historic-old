@@ -445,6 +445,7 @@
 @interface AdiumSmackBridge : NSObject {
 }
 
+- (void)initSubscriptionMode;
 - (void)setDelegate:(id<AdiumSmackBridgeDelegate>)delegate;
 - (id<AdiumSmackBridgeDelegate>)delegate;
 - (void)registerConnection:(SmackXMPPConnection*)conn;

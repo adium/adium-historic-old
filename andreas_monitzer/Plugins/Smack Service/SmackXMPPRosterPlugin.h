@@ -7,10 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/AIObject.h>
 
 @class SmackXMPPAccount;
 
-@interface SmackXMPPRosterPlugin : NSObject {
+@interface SmackXMPPRosterPlugin : AIObject {
 }
 
 - (id)initWithAccount:(SmackXMPPAccount*)account;

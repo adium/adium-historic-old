@@ -18,8 +18,6 @@
     SmackXMPPAccount *account;
 }
 
-+ (void)initializeJavaVM;
-
 + (id)staticObjectField:(NSString*)fieldname inJavaClass:(NSString*)className;
 + (BOOL)object:(id)obj isInstanceOfJavaClass:(NSString*)className;
 
@@ -27,6 +25,8 @@
 - (SmackXMPPConnection*)connection;
 
 + (SmackConnectionConfiguration*)connectionConfigurationWithHost:(NSString*)host port:(int)port service:(NSString*)service;
++ (SmackPresence*)presenceWithType:(SmackPresenceType*)type;
++ (SmackPresence*)presenceWithTypeString:(NSString*)type;
 + (SmackPresence*)presenceWithType:(SmackPresenceType*)type status:(NSString*)status priority:(int)priority mode:(SmackPresenceMode*)mode;
 + (SmackPresence*)presenceWithTypeString:(NSString*)type status:(NSString*)status priority:(int)priority modeString:(NSString*)mode;
 + (SmackMessage*)messageTo:(NSString*)to type:(SmackMessageType*)type;

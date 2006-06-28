@@ -18,5 +18,15 @@
 	<string>1.0</string>
 	<key>NSPrincipalClass</key>
 	<string>SmackServicePlugin</string>
+        <key>NSJavaNeeded</key>
+        <string>YES</string>
+        <key>NSJavaPath</key>
+        <array>
+                <string>smack.jar</string>
+		<string>smackx.jar</string>
+		<string>SmackBridge.jar</string>
+        </array>
+        <key>NSJavaRoot</key>
+        <string>Contents/Resources/Java</string> 
 </dict>
 </plist>
