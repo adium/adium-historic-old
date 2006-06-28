@@ -20,6 +20,8 @@
 		C86B05270671AA6E00DD9006 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C86B05260671AA6E00DD9006 /* CoreServices.framework */; };
 		C88FB7D8067446EC006EBB30 /* schema.xml in Resources */ = {isa = PBXBuildFile; fileRef = C88FB7D7067446EC006EBB30 /* schema.xml */; };
 		C88FB7E40674480E006EBB30 /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = C88FB7E30674480E006EBB30 /* schema.strings */; };
+		F520600F0A53082C003BFC03 /* NSCalendarDate+ISO8601Parsing.h in Headers */ = {isa = PBXBuildFile; fileRef = F520600D0A53082C003BFC03 /* NSCalendarDate+ISO8601Parsing.h */; };
+		F52060100A53082C003BFC03 /* NSCalendarDate+ISO8601Parsing.m in Sources */ = {isa = PBXBuildFile; fileRef = F520600E0A53082C003BFC03 /* NSCalendarDate+ISO8601Parsing.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		C86B05260671AA6E00DD9006 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		C88FB7D7067446EC006EBB30 /* schema.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = schema.xml; sourceTree = "<group>"; };
 		C88FB7DB0674470F006EBB30 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/schema.strings; sourceTree = "<group>"; };
+		F520600D0A53082C003BFC03 /* NSCalendarDate+ISO8601Parsing.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = "NSCalendarDate+ISO8601Parsing.h"; path = "../../Frameworks/AIUtilities Framework/Source/NSCalendarDate+ISO8601Parsing.h"; sourceTree = SOURCE_ROOT; };
+		F520600E0A53082C003BFC03 /* NSCalendarDate+ISO8601Parsing.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = "NSCalendarDate+ISO8601Parsing.m"; path = "../../Frameworks/AIUtilities Framework/Source/NSCalendarDate+ISO8601Parsing.m"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +62,7 @@
 			isa = PBXGroup;
 			children = (
 				08FB77AFFE84173DC02AAC07 /* Source */,
+				F52060120A530838003BFC03 /* External Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
 				19C28FB6FE9D52B211CA2CBB /* Products */,
@@ -124,6 +129,15 @@
 			name = Additions;
 			sourceTree = "<group>";
 		};
+		F52060120A530838003BFC03 /* External Sources */ = {
+			isa = PBXGroup;
+			children = (
+				F520600D0A53082C003BFC03 /* NSCalendarDate+ISO8601Parsing.h */,
+				F520600E0A53082C003BFC03 /* NSCalendarDate+ISO8601Parsing.m */,
+			);
+			name = "External Sources";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -134,6 +148,7 @@
 				34611BF709B664FC00870036 /* GetMetadataForHTMLLog.h in Headers */,
 				3459CBBB0A25FC0800ECC256 /* GetMetadataForHTMLLog-Additions.h in Headers */,
 				3459CBC80A25FEA200ECC256 /* AdiumSpotlightImporter.h in Headers */,
+				F520600F0A53082C003BFC03 /* NSCalendarDate+ISO8601Parsing.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +222,7 @@
 				2C05A19C06CAA52B00D84F6F /* GetMetadataForFile.m in Sources */,
 				34611BF809B664FC00870036 /* GetMetadataForHTMLLog.m in Sources */,
 				3459CBBC0A25FC0800ECC256 /* GetMetadataForHTMLLog-Additions.m in Sources */,
+				F52060100A53082C003BFC03 /* NSCalendarDate+ISO8601Parsing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
