@@ -327,7 +327,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					[chatTag appendFormat:@" account=\"%@\"", mySN];
 				if(service != nil)
 					[chatTag appendFormat:@" service=\"%@\"", service];
-				[chatTag appendString:@">\n"];
+				[chatTag appendString:@" version=\"0.4\" xmlns=\"http://www.adiumx.com/chatlog\">\n"];
 				[outputFileHandle writeData:[chatTag dataUsingEncoding:NSUTF8StringEncoding]];
 			}
 			break;
@@ -589,7 +589,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			break;
 		case XML_STATE_NONE:
 			if([name isEqualToString:@"log"])
-				[outputFileHandle writeData:[[NSString stringWithString:@"</chat>"] dataUsingEncoding:NSUTF8StringEncoding]];
+				[outputFileHandle writeData:[[NSString stringWithString:@"\n</chat>"] dataUsingEncoding:NSUTF8StringEncoding]];
 			break;
 	}
 }
