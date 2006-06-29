@@ -30,6 +30,7 @@ and return it as a dictionary
 ----------------------------------------------------------------------------- */
 
 Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFile);
+NSString *GetTextContentForXMLLog(NSString *pathToFile);
 
 Boolean GetMetadataForFile(void* thisInterface, 
 						   CFMutableDictionaryRef attributes, 
@@ -92,6 +93,9 @@ CFStringRef CopyTextContentForFile(CFStringRef contentTypeUTI,
 		
 	if (CFStringCompare(contentTypeUTI, CFSTR("com.adiumx.htmllog"), kCFCompareBackwards) == kCFCompareEqualTo) {
 		textContent = (CFStringRef)GetTextContentForHTMLLog((NSString *)pathToFile);
+	} else if (CFStringCompare(contentTypeUTI, (CFStringRef)@"com.adiumx.xmllog", kCFCompareBackwards) == kCFCompareEqualTo) {
+		textContent = (CFStringRef)GetTextContentForXMLLog((NSString *)pathToFile);
+		
 	} else {
 		textContent = nil;
 		NSLog(@"We were passed %@, of type %@, which is an unknown type",pathToFile,contentTypeUTI);
@@ -182,4 +186,20 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 		ret = NO;
 	
 	return ret;
+}
+
+NSString *GetTextContentForXMLLog(NSString *pathToFile)
+{
+	NSXMLDocument *xmlDoc;
+	NSError *err=nil;
+	NSURL *furl = [NSURL fileURLWithPath:(NSString *)pathToFile];
+	xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:furl
+												  options:NSXMLNodePreserveCDATA
+													error:&err];    
+
+	NSArray *contentArray = [xmlDoc nodesForXPath:@"//message/*/text()"
+											error:&err];
+	NSString *contentString = [contentArray componentsJoinedByString:@" "];
+
+	return contentString;
 }
