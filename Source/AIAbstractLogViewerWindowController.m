@@ -2052,7 +2052,9 @@ static int toArraySort(id itemA, id itemB, void *context)
 	iCalFirstDayOfWeekDetermined = NO;
 
 	[popUp_dateFilter setMenu:[self dateTypeMenu]];
-	[popUp_dateFilter selectItemWithTag:AIDateTypeAnyDate];
+	int index = [popUp_dateFilter indexOfItemWithTag:AIDateTypeAnyDate];
+	if(index != NSNotFound)
+		[popUp_dateFilter selectItemAtIndex:index];
 	[self selectedDateType:AIDateTypeAnyDate];
 }
 
