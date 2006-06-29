@@ -336,6 +336,9 @@
 		34575E3507CBA7E0004A4FFF /* LoginSelect.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3407CBA7DF004A4FFF /* LoginSelect.nib */; };
 		34575E3707CBA874004A4FFF /* DebugWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3607CBA874004A4FFF /* DebugWindow.nib */; };
 		34575E3907CBA88E004A4FFF /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3807CBA88E004A4FFF /* MainMenu.nib */; };
+		3459CBED0A25FFBF00ECC256 /* GetMetadataForHTMLLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3459CBE90A25FFBE00ECC256 /* GetMetadataForHTMLLog.m */; };
+		3459CBEE0A25FFBF00ECC256 /* GetMetadataForHTMLLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 3459CBEA0A25FFBE00ECC256 /* GetMetadataForHTMLLog.h */; };
+		3459CBEF0A25FFBF00ECC256 /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 3459CBEB0A25FFBE00ECC256 /* GetMetadataForFile.m */; };
 		3459CBF00A25FFBF00ECC256 /* AdiumSpotlightImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3459CBEC0A25FFBF00ECC256 /* AdiumSpotlightImporter.h */; };
 		345ACC970811C20F008E4D22 /* AwayStatusWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 345ACC960811C20F008E4D22 /* AwayStatusWindow.nib */; };
 		345F566B08178356001F733C /* AdiumServiceIcons.icns in Resources */ = {isa = PBXBuildFile; fileRef = 345F566A08178356001F733C /* AdiumServiceIcons.icns */; };
@@ -7329,6 +7332,7 @@
 				34E1EDF50A045AA2003C14F1 /* AdiumApplescriptRunner.h in Headers */,
 				F50A75A20A0AE77A00A6D1BA /* GBFireImporter.h in Headers */,
 				F5F8CA4C0A1A9C9400154550 /* GBQuestionHandlerPlugin.h in Headers */,
+				3459CBEE0A25FFBF00ECC256 /* GetMetadataForHTMLLog.h in Headers */,
 				3459CBF00A25FFBF00ECC256 /* AdiumSpotlightImporter.h in Headers */,
 				342F88BE0A2A74D50001DB29 /* SRValidator.h in Headers */,
 				342F88BF0A2A74D50001DB29 /* SRCommon.h in Headers */,
@@ -8904,6 +8908,8 @@
 				34E1EDF60A045AA2003C14F1 /* AdiumApplescriptRunner.m in Sources */,
 				F50A75A30A0AE77A00A6D1BA /* GBFireImporter.m in Sources */,
 				F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */,
+				3459CBED0A25FFBF00ECC256 /* GetMetadataForHTMLLog.m in Sources */,
+				3459CBEF0A25FFBF00ECC256 /* GetMetadataForFile.m in Sources */,
 				342F88BC0A2A74D50001DB29 /* SRKeyCodeTransformer.m in Sources */,
 				342F88BD0A2A74D50001DB29 /* SRValidator.m in Sources */,
 				342F88C00A2A74D50001DB29 /* SRRecorderControl.m in Sources */,
