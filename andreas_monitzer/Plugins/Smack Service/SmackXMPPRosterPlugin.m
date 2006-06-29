@@ -120,41 +120,53 @@
             SmackRosterPacketItem *srpi = [iter next];
             NSString *name = [srpi getName];
             NSString *jid = [srpi getUser];
+            NSString *type = [[srpi getItemType] toString];
             
-            //            AIListContact *listContact = [self contactWithJID:jid];
-            SmackListContact *listContact = [[SmackListContact alloc] initWithUID:jid account:account service:[account service]];
-            NSLog(@"creating account for jid %@", jid);
+            NSLog(@"roster item subscription type = %@",type);
             
-            if(![[listContact formattedUID] isEqualToString:jid])
-                [listContact setFormattedUID:jid notify:NotifyLater];
-            
-            // XMPP supports contacts that are in multiple groups, Adium does not.
-            // First I'm checking if the group it's in here locally is one of the groups
-            // the contact is in on the server. If this is not the case, I set the contact
-            // to be in the first group on the list. XXX -> Adium folks, add this feature!
-            JavaIterator *iter2 = [srpi getGroupNames];
-            NSString *storedgroupname = [listContact remoteGroupName];
-            if(storedgroupname) {
-                while([iter2 hasNext]) {
-                    NSString *groupname = [iter2 next];
-                    if([storedgroupname isEqualToString:groupname])
-                        break;
+            if([type isEqualToString:@"remove"])
+            {
+                AIListContact *listContact = [account contactWithJID:jid];
+                [account removeListContact:listContact];
+                [listContact setContainingObject:nil];
+            } else {
+                //            AIListContact *listContact = [self contactWithJID:jid];
+                SmackListContact *listContact = [[SmackListContact alloc] initWithUID:jid account:account service:[account service]];
+                NSLog(@"creating account for jid %@", jid);
+                
+                if(![[listContact formattedUID] isEqualToString:jid])
+                    [listContact setFormattedUID:jid notify:NotifyLater];
+                
+                [listContact setStatusObject:type forKey:@"XMPPSubscriptionType" notify:NotifyNow];
+                
+                // XMPP supports contacts that are in multiple groups, Adium does not.
+                // First I'm checking if the group it's in here locally is one of the groups
+                // the contact is in on the server. If this is not the case, I set the contact
+                // to be in the first group on the list. XXX -> Adium folks, add this feature!
+                JavaIterator *iter2 = [srpi getGroupNames];
+                NSString *storedgroupname = [listContact remoteGroupName];
+                if(storedgroupname) {
+                    while([iter2 hasNext]) {
+                        NSString *groupname = [iter2 next];
+                        if([storedgroupname isEqualToString:groupname])
+                            break;
+                    }
+                    if(![iter2 hasNext])
+                        storedgroupname = nil;
                 }
-                if(![iter2 hasNext])
-                    storedgroupname = nil;
+                if(!storedgroupname) {
+                    iter2 = [srpi getGroupNames];
+                    if([iter2 hasNext])
+                        [listContact setRemoteGroupName:[iter2 next]];
+                    else
+                        [listContact setRemoteGroupName:@"nobody knows the trouble I've seen"];
+                }
+                [account setListContact:listContact toAlias:name];
+                
+                [account addListContact:listContact];
+                
+                [listContact release];
             }
-            if(!storedgroupname) {
-                iter2 = [srpi getGroupNames];
-                if([iter2 hasNext])
-                    [listContact setRemoteGroupName:[iter2 next]];
-                else
-                    [listContact setRemoteGroupName:@"nobody knows the trouble I've seen"];
-            }
-            [account setListContact:listContact toAlias:name];
-            
-            [account addListContact:listContact];
-            
-            [listContact release];
         }
     }
 }

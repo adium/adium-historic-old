@@ -34,6 +34,7 @@
 
 - (void)setListContact:(AIListContact *)listContact toAlias:(NSString *)inAlias;
 - (void)addListContact:(AIListContact *)listContact;
+- (void)removeListContact:(AIListContact*)listContact;
 
 - (BOOL)silentAndDelayed;
 - (AIService*)service;
