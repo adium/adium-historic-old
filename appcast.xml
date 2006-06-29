@@ -4,12 +4,12 @@
     <title>Adium Updates</title>
     <language>en</language>
     <item>
-      <title>Adium 1.0a4</title>
-      <pubDate>Wed, 28 June 2006 15:15:00 GMT-5</pubDate>
+      <title>Adium 1.0a5</title>
+      <pubDate>Wed, 28 June 2006 23:30:00 GMT-5</pubDate>
       <description>
-&lt;p&gt;Fixed some bugs, including a 10.3 log viewer crasher. Made the log viewer tons prettier. XML log spotlight importing. Fixed the crash reporter. Man, changelogs for private alpha releases are much easier to write. Fnord.&lt;/p&gt;
+&lt;p&gt;Fixed crash-on-launch on 10.3. Fixed authorization windows closing when authorization is denied.&lt;/p&gt;
         </description>
-      <enclosure url="http://adiumx.cachefly.net/AdiumX_1.0a4.dmg" length="14432559" type="application/octet-stream"/>
+      <enclosure url="http://adiumx.cachefly.net/AdiumX_1.0a5.dmg" length="14436831" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
