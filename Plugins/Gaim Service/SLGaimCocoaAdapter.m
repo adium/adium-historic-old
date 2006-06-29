@@ -150,9 +150,12 @@ static NSMutableArray	*libgaimPluginArray = nil;
     return self;
 }
 
-//Our autoreleased objects will only be released when the outermost autorelease pool is released.
-//This is handled automatically in the main thread, but we need to do it manually here.
-//Release the current pool, then create a new one.
+/*!
+ * @brief Empty and recreate the autorelease pool
+ *
+ * Our autoreleased objects will only be released when the outermost autorelease pool is released.
+ * This is handled automatically in the main thread, but we need to do it manually here.
+ */
 - (void)refreshAutoreleasePool:(NSTimer *)inTimer
 {
 	[currentAutoreleasePool release];
@@ -161,13 +164,10 @@ static NSMutableArray	*libgaimPluginArray = nil;
 
 static void ZombieKiller_Signal(int i)
 {
-	int status, child_pid = 0;
-	while(child_pid != -1)
-	{
-		//Let the child tell us its status so it can go away
-		child_pid = waitpid(-1, &status, WNOHANG);
-		NSLog(@"Killed zombie with PID %d", child_pid);
-	}
+	int status;
+	pid_t child_pid;
+
+	while ((child_pid = waitpid(-1, &status, WNOHANG)) > 0);
 }
 
 - (void)initLibGaim
@@ -186,7 +186,15 @@ static void ZombieKiller_Signal(int i)
 	}
 	
 	//Libgaim's async DNS lookup tends to create zombies.
-	signal(SIGCHLD, ZombieKiller_Signal);
+	{
+		struct sigaction act;
+		
+		act.sa_handler = ZombieKiller_Signal;		
+		//Send for terminated but not stopped children
+		act.sa_flags = SA_NOCLDWAIT;
+
+		sigaction(SIGCHLD, &act, NULL);
+	}
 }
 
 #pragma mark Lookup functions
