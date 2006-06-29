@@ -188,19 +188,70 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 	return ret;
 }
 
-#warning This needs to be able to work in some form on 10.3 for log indexing purposes
+NSString *killXMLTags(NSString *inString)
+{
+    NSScanner *scan = [NSScanner scannerWithString:inString];
+    NSString *tempString = nil;
+    NSMutableString *ret = [NSMutableString string];
+    NSRange rng;
+    
+    while(![scan isAtEnd]){
+        tempString = nil;
+        [scan scanUpToString:@"<" intoString:&tempString];
+        if(tempString != nil)
+            [ret appendString:tempString];
+        [scan scanString:@"<" intoString:nil];
+        [scan scanUpToString:@">" intoString:&tempString];
+        if([tempString hasPrefix:@"BR"])
+            [ret appendString:@"\n"];
+        [scan scanString:@">" intoString:nil];
+    }
+    rng.location = -1;
+    do {
+        NSRange searchRange = NSMakeRange(rng.location+1, [ret length]-rng.location-1);
+        rng = [ret rangeOfString:@"&lt;" options:0 range:searchRange];
+        if (rng.length > 0)
+            [ret replaceCharactersInRange: rng withString: @"<"];
+    } while (rng.length > 0);
+    rng.location = -1;
+    do {
+        NSRange searchRange = NSMakeRange(rng.location+1, [ret length]-rng.location-1);
+        rng = [ret rangeOfString:@"&gt;" options:0 range:searchRange];
+        if (rng.length > 0)
+            [ret replaceCharactersInRange: rng withString: @">"];
+    } while (rng.length > 0);
+    rng.location = -1;
+    do {
+        NSRange searchRange = NSMakeRange(rng.location+1, [ret length]-rng.location-1);
+        rng = [ret rangeOfString:@"&amp;" options:0 range:searchRange];
+        if (rng.length > 0)
+            [ret replaceCharactersInRange: rng withString: @"&"];
+    } while (rng.length > 0);
+    return ret;
+}
+
 NSString *GetTextContentForXMLLog(NSString *pathToFile)
 {
-	NSXMLDocument *xmlDoc;
 	NSError *err=nil;
 	NSURL *furl = [NSURL fileURLWithPath:(NSString *)pathToFile];
-	xmlDoc = [[NSClassFromString(@"NSXMLDocument") alloc] initWithContentsOfURL:furl
-																		options:NSXMLNodePreserveCDATA
-																		  error:&err];    
+	Class xmlClass = NSClassFromString(@"NSXMLDocument");
+	NSString *contentString;
+	if(xmlClass)
+	{
+		NSXMLDocument *xmlDoc;
+		xmlDoc = [[xmlClass alloc] initWithContentsOfURL:furl
+												 options:NSXMLNodePreserveCDATA
+												   error:&err];    
 
-	NSArray *contentArray = [xmlDoc nodesForXPath:@"//message/*/text()"
-											error:&err];
-	NSString *contentString = [contentArray componentsJoinedByString:@" "];
-
+		NSArray *contentArray = [xmlDoc nodesForXPath:@"//message/*/text()"
+												error:&err];
+		contentString = [contentArray componentsJoinedByString:@" "];
+	}
+	else
+	{	
+		//10.3 here
+		NSString *xmlContent = [NSString stringWithContentsOfFile:pathToFile];
+		contentString = killXMLTags(xmlContent);
+	}
 	return contentString;
 }
