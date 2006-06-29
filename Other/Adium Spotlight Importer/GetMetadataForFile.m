@@ -122,9 +122,9 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 	NSXMLDocument *xmlDoc;
 	NSError *err=nil;
 	NSURL *furl = [NSURL fileURLWithPath:(NSString *)pathToFile];
-	xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:furl
-												  options:NSXMLNodePreserveCDATA
-													error:&err];    
+	xmlDoc = [[NSClassFromString(@"NSXMLDocument") alloc] initWithContentsOfURL:furl
+																		options:NSXMLNodePreserveCDATA
+																		  error:&err];    
 	
 	if (xmlDoc)
 	{        
@@ -188,14 +188,15 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 	return ret;
 }
 
+#warning This needs to be able to work in some form on 10.3 for log indexing purposes
 NSString *GetTextContentForXMLLog(NSString *pathToFile)
 {
 	NSXMLDocument *xmlDoc;
 	NSError *err=nil;
 	NSURL *furl = [NSURL fileURLWithPath:(NSString *)pathToFile];
-	xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:furl
-												  options:NSXMLNodePreserveCDATA
-													error:&err];    
+	xmlDoc = [[NSClassFromString(@"NSXMLDocument") alloc] initWithContentsOfURL:furl
+																		options:NSXMLNodePreserveCDATA
+																		  error:&err];    
 
 	NSArray *contentArray = [xmlDoc nodesForXPath:@"//message/*/text()"
 											error:&err];
