@@ -460,19 +460,22 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						 objects, each of which has a label and identifier.  Each may also have is_int, with a minimum
 						 and a maximum integer value.
 						 */
-						list = (GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info(gc);
+                        if ((GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info)
+                        {
+                            list = (GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info(gc);
 
-						//Look at each proto_chat_entry in the list to verify we have it in chatCreationInfo
-						for (tmp = list; tmp; tmp = tmp->next)
-						{
-							pce = tmp->data;
-							char	*identifier = g_strdup(pce->identifier);
-							
-							NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
-							if (!value) {
-								GaimDebug (@"Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
-							}
-						}
+                            //Look at each proto_chat_entry in the list to verify we have it in chatCreationInfo
+                            for (tmp = list; tmp; tmp = tmp->next)
+                            {
+                                pce = tmp->data;
+                                char	*identifier = g_strdup(pce->identifier);
+                                
+                                NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
+                                if (!value) {
+                                    GaimDebug (@"Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+                                }
+                            }
+                        }
 					}
 
 					/*
