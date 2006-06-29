@@ -1,5 +1,5 @@
-/* 
-* Adium is the legal property of its developers, whose names are listed in the copyright file included
+/*
+ * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
  * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
@@ -211,11 +211,11 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	eventTranslate = [[NSDictionary alloc] initWithObjectsAndKeys:
 		@"formatted_user_id/changed", @"newNickname",
 		@"channeltopic/channeltopicchanged", @"topicChanged",
-		@"memberPromoted", @"memberPromoted",
-		@"memberDemoted", @"memberDemoted",
-		@"memberVoiced", @"memberVoiced",
-		@"memberDevoiced", @"memberDevoiced",
-		@"memberKicked", @"memberKicked",
+		@"userpermissions/promoted", @"memberPromoted",
+		@"userpermissions/demoted", @"memberDemoted",
+		@"userpermissions/voiced", @"memberVoiced",
+		@"userpermissions/devoiced", @"memberDevoiced",
+		@"userpermissions/kicked", @"memberKicked",
 		nil];
 		
 	return self;
@@ -391,7 +391,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	}
 }
 
-- (void)endedElement:(NSString *)name
+- (void)endedElement:(NSString *)name empty:(BOOL)empty
 {
 	switch(state)
 	{
@@ -410,7 +410,9 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				[inputFileHandle seekToFileOffset:messageStart];
 				NSData *data = [inputFileHandle readDataOfLength:end-messageStart-8];  //10 chars for </message> and -2 for index being off
 				
-				NSString *message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+				NSString *message = nil;
+				if(!empty)
+					message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 				//Common logging format
 				NSMutableString *outMessage = [NSMutableString stringWithString:@"<message"];
 				if(actionMessage)
@@ -435,7 +437,11 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 						NSRange range = [message rangeOfString:@">" options:0 range:searchRange];
 						index = range.location + 1;
 					}
-					NSString *newMessage = [[NSString alloc] initWithFormat:@"%@/me %@", [message substringWithRange:NSMakeRange(cutIndex, index-cutIndex)], [message substringFromIndex:index]];
+					NSString *newMessage = nil;
+					if(message)
+						newMessage = [[NSString alloc] initWithFormat:@"%@/me %@", [message substringWithRange:NSMakeRange(cutIndex, index-cutIndex)], [message substringFromIndex:index]];
+					else
+						newMessage = [[NSString alloc] initWithString:@"/me "];
 					[message release];
 					message = newMessage;
 				}
@@ -465,7 +471,9 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				[inputFileHandle seekToFileOffset:messageStart];
 				NSData *data = [inputFileHandle readDataOfLength:end-messageStart-8];  //10 chars for </message> and -2 for index being off
 				
-				NSString *message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+				NSString *message = nil;
+				if(!empty)
+					message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 				if([eventName isEqualToString:@"loggedOff"] || [eventName isEqualToString:@"memberParted"])
 				{
 					NSMutableString *outMessage = [NSMutableString stringWithString:@"<status type=\"offline\""];
@@ -543,6 +551,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 							[outMessage appendFormat:@">%@</status>\n", subStr];
 						else
 							[outMessage appendString:@"/>\n"];
+						[outputFileHandle writeData:[outMessage dataUsingEncoding:NSUTF8StringEncoding]];
 					}
 				}
 				else if([eventName isEqualToString:@"topicChanged"] ||
@@ -559,7 +568,11 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					if(date != nil)
 						[outMessage appendFormat:@" time=\"%@\"", [date ISO8601DateString]];
 					
-					[outMessage appendFormat:@">%@</status>\n", message];
+					if([message length])
+						[outMessage appendFormat:@">%@</status>\n", message];
+					else
+						[outMessage appendString:@"/>\n"];
+					[outputFileHandle writeData:[outMessage dataUsingEncoding:NSUTF8StringEncoding]];
 				}
 				else if(eventName == nil)
 				{
@@ -570,7 +583,11 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					if(date != nil)
 						[outMessage appendFormat:@" time=\"%@\"", [date ISO8601DateString]];
 					
-					[outMessage appendFormat:@">%@</status>\n", message];
+					if([message length])
+						[outMessage appendFormat:@">%@</status>\n", message];
+					else
+						[outMessage appendString:@"/>\n"];
+					[outputFileHandle writeData:[outMessage dataUsingEncoding:NSUTF8StringEncoding]];
 				}
 				else
 				{
@@ -593,6 +610,11 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			break;
 	}
 }
+
+typedef struct{
+	NSString	*name;
+	BOOL		empty;
+} element;
 
 - (void)text:(NSString *)text
 {
@@ -617,7 +639,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 
 void *createStructure(CFXMLParserRef parser, CFXMLNodeRef node, void *context)
 {
-	NSString *ret = nil;
+	element *ret = nil;
 	
     // Use the dataTypeID to determine what to print.
     switch (CFXMLNodeGetTypeCode(node)) {
@@ -628,7 +650,9 @@ void *createStructure(CFXMLParserRef parser, CFXMLNodeRef node, void *context)
 			NSString *name = [NSString stringWithString:(NSString *)CFXMLNodeGetString(node)];
 			const CFXMLElementInfo *info = CFXMLNodeGetInfoPtr(node);
 			[(GBFireXMLLogImporter *)context startedElement:name info:info];
-			ret = [name retain];
+			ret = (element *)malloc(sizeof(element));
+			ret->name = [name retain];
+			ret->empty = info->isEmpty;
 			break;
 		}
         case kCFXMLNodeTypeProcessingInstruction:
@@ -656,7 +680,17 @@ void addChild(CFXMLParserRef parser, void *parent, void *child, void *context)
 
 void endStructure(CFXMLParserRef parser, void *xmlType, void *context)
 {
-	NSString *name = [NSString stringWithString:(NSString *)xmlType];
-	[(GBFireXMLLogImporter *)context endedElement:name];
-	[(NSString *)xmlType release];
+	NSString *name;
+	BOOL empty = NO;
+	if(xmlType != NULL)
+	{
+		name = [NSString stringWithString:((element *)xmlType)->name];
+		empty = ((element *)xmlType)->empty;
+	}
+	[(GBFireXMLLogImporter *)context endedElement:name empty:empty];
+	if(xmlType != NULL)
+	{
+		[((element *)xmlType)->name release];
+		free(xmlType);
+	}
 }
