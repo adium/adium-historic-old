@@ -149,13 +149,16 @@
 		//Ensure our style/variant menus are showing the correct selection
 		style = [prefDict objectForKey:KEY_WEBKIT_STYLE];
 		if (!style || ![popUp_styles selectItemWithRepresentedObject:style]) {
-			style = WEBKIT_DEFAULT_STYLE;
+			style = [[plugin messageStyleBundleWithIdentifier:style] bundleIdentifier];
 			[popUp_styles selectItemWithRepresentedObject:style];
 		}
 
 		//When the active style changes, rebuild our variant menu for the new style
 		if (!key || [key isEqualToString:KEY_WEBKIT_STYLE]) {
 			[popUp_variants setMenu:[self _variantsMenu]];
+			
+			//Only enable if there are multiple variant choices
+			[popUp_variants setEnabled:([popUp_variants numberOfItems] > 1)];
 		}
 
 		variant = [prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:style]];
@@ -197,7 +200,6 @@
 		//Disable user icon toggling if the style doesn't support them
 		[checkBox_showUserIcons setEnabled:[[previewController messageStyle] allowsUserIcons]];
 	}
-	
 }
 
 /*!
@@ -268,7 +270,6 @@
 	[popUp_backgroundImageType setEnabled:customBackground];
 	[imageView_backgroundImage setEnabled:customBackground];
 	[colorWell_customBackgroundColor setEnabled:customBackground];
-	[popUp_variants setEnabled:([popUp_variants numberOfItems] > 0)];
 }
 
 /*!

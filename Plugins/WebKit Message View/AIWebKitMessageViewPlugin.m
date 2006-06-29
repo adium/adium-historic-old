@@ -109,6 +109,30 @@
 	return nil; //keep the compiler happy
 }
 
+- (NSBundle *)defaultMessageStyleBundleBasedOnFailedIdentifier:(NSString *)identifier
+{
+	NSDictionary *styles = [self availableMessageStyles];
+	NSBundle	 *defaultMessageStyleBundle = nil;
+
+	if ([identifier isEqualToString:@"com.adiumx.eclipse.style"]) {
+		defaultMessageStyleBundle = [styles objectForKey:@"com.adiumx.gonedark.style"];
+	} else if ([identifier isEqualToString:@"com.adiumx.plastic.style"]) {
+		defaultMessageStyleBundle = [styles objectForKey:@"com.adiumx.stockholm.style"];
+	} else if ([identifier isEqualToString:@"com.adiumx.minimal.style"]) {
+		defaultMessageStyleBundle = [styles objectForKey:@"com.adiumx.minimal_2.0.style"];
+	} 
+
+	if (!defaultMessageStyleBundle) {
+		defaultMessageStyleBundle = [styles objectForKey:WEBKIT_DEFAULT_STYLE];
+	}
+	
+	if (!defaultMessageStyleBundle) {
+		defaultMessageStyleBundle = [[styles allValues] lastObject];
+	}
+	
+	return defaultMessageStyleBundle;
+}
+
 - (NSBundle *)messageStyleBundleWithIdentifier:(NSString *)identifier
 {	
 	NSDictionary	*styles = [self availableMessageStyles];
@@ -116,9 +140,7 @@
 	
 	//If the style isn't available, use our default.  Or, failing that, any available style
 	if (!bundle) {
-		bundle = [styles objectForKey:WEBKIT_DEFAULT_STYLE];
-		if (!bundle)
-			bundle = [[styles allValues] lastObject];
+		bundle = [self defaultMessageStyleBundleBasedOnFailedIdentifier:identifier];
 	} 
 
 	return bundle;
