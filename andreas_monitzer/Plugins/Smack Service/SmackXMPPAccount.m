@@ -605,4 +605,8 @@
     [roster setObject:listContact forKey:[listContact UID]];
 }
 
+- (void)removeListContact:(AIListContact*)listContact {
+    [roster removeObjectForKey:[listContact UID]];
+}
+
 @end
