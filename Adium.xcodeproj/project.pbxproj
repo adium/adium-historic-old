@@ -1399,6 +1399,8 @@
 		F56E068E0A4B738B008D1EB5 /* GBFireLogImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */; };
 		F56E068F0A4B738B008D1EB5 /* GBFireLogImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */; };
 		F56E0DB00A4CDF9C008D1EB5 /* FireLogImporter.nib in Resources */ = {isa = PBXBuildFile; fileRef = F56E0DAF0A4CDF9C008D1EB5 /* FireLogImporter.nib */; };
+		F5DA8A730A546AC4004A41D0 /* GBChatlogHTMLConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DA8A710A546AC4004A41D0 /* GBChatlogHTMLConverter.h */; };
+		F5DA8A740A546AC5004A41D0 /* GBChatlogHTMLConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DA8A720A546AC4004A41D0 /* GBChatlogHTMLConverter.m */; };
 		F5F8CA4C0A1A9C9400154550 /* GBQuestionHandlerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = F5F8CA4A0A1A9C9400154550 /* GBQuestionHandlerPlugin.h */; };
 		F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8CA4B0A1A9C9400154550 /* GBQuestionHandlerPlugin.m */; };
 /* End PBXBuildFile section */
@@ -3704,6 +3706,8 @@
 		F59DB3D7033EA9CD01A8010A /* AIAdium.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAdium.m; path = Source/AIAdium.m; sourceTree = "<group>"; };
 		F59DB3E7033EB4B601A8010A /* Adium.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Adium.h; path = "Frameworks/Adium Framework/Adium.h"; sourceTree = "<group>"; };
 		F59DB6AD033EB74801A8010A /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Source/main.m; sourceTree = SOURCE_ROOT; };
+		F5DA8A710A546AC4004A41D0 /* GBChatlogHTMLConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBChatlogHTMLConverter.h; path = Source/GBChatlogHTMLConverter.h; sourceTree = "<group>"; };
+		F5DA8A720A546AC4004A41D0 /* GBChatlogHTMLConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBChatlogHTMLConverter.m; path = Source/GBChatlogHTMLConverter.m; sourceTree = "<group>"; };
 		F5F0FE9C04B12CAC01A80106 /* AIEmoticonPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPreferences.h; path = Plugins/Emoticons/AIEmoticonPreferences.h; sourceTree = "<group>"; };
 		F5F0FE9D04B12CAC01A80106 /* AIEmoticonPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPreferences.m; path = Plugins/Emoticons/AIEmoticonPreferences.m; sourceTree = "<group>"; };
 		F5F0FEA004B1336C01A80106 /* EmoticonPrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EmoticonPrefs.nib; path = Plugins/Emoticons/EmoticonPrefs.nib; sourceTree = "<group>"; };
@@ -6425,6 +6429,8 @@
 			children = (
 				9ECB03E409F2A9D800996F44 /* AIXMLAppender.h */,
 				9ECB03E509F2A9D800996F44 /* AIXMLAppender.m */,
+				F5DA8A710A546AC4004A41D0 /* GBChatlogHTMLConverter.h */,
+				F5DA8A720A546AC4004A41D0 /* GBChatlogHTMLConverter.m */,
 			);
 			name = "XML Logging";
 			sourceTree = "<group>";
@@ -7355,6 +7361,7 @@
 				34382CEB0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.h in Headers */,
 				348B250C0A50A1C900B2B972 /* ESSourceListBackgroundView.h in Headers */,
 				348B25C90A50FBF300B2B972 /* KNShelfSplitView.h in Headers */,
+				F5DA8A730A546AC4004A41D0 /* GBChatlogHTMLConverter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8931,6 +8938,7 @@
 				34382CEC0A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m in Sources */,
 				348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */,
 				348B25C80A50FBF300B2B972 /* KNShelfSplitView.m in Sources */,
+				F5DA8A740A546AC5004A41D0 /* GBChatlogHTMLConverter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,6 +15,7 @@
 #import "AILoggerPlugin.h"
 #import "AIPreferenceController.h"
 #import "ESRankingCell.h" 
+#import "GBChatlogHTMLConverter.h"
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
@@ -755,7 +756,17 @@ static int toArraySort(id itemA, id itemB, void *context);
 				} else {
 					displayText = [[AIHTMLDecoder decodeHTML:logFileText] mutableCopy];
 				}
-
+#ifdef XML_LOGGING
+			}else if ([[theLog path] hasSuffix:@".chatlog"]){
+				logFileText = [GBChatlogHTMLConverter readFile:[logBasePath stringByAppendingPathComponent:[theLog path]]];
+				if(logFileText != nil)
+				{
+					if(displayText)
+						[displayText appendAttributedString:[AIHTMLDecoder decodeHTML:logFileText]];
+					else
+						displayText = [[AIHTMLDecoder decodeHTML:logFileText] mutableCopy];
+				}
+#endif
 			} else {
 				AITextAttributes *textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
 				
