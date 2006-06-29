@@ -121,6 +121,7 @@
 							  didAuthorize:NO];	
 	
 	[infoDict release]; infoDict = nil;
+	[self closeWindow:nil];
 }
 
 @end
