@@ -365,7 +365,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 	AIImageTextCell	*dataCell = [[AIImageTextCell alloc] init];
 	[[[outlineView_contacts tableColumns] objectAtIndex:0] setDataCell:dataCell];
-	[dataCell setControlView:outlineView_contacts];
 	[dataCell release];
 
 	[outlineView_contacts setDrawsGradientSelection:YES];
