@@ -584,7 +584,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 						[outMessage appendFormat:@" time=\"%@\"", [date ISO8601DateString]];
 					
 					if([message length])
-						[outMessage appendFormat:@">%@</status>\n", message];
+						[outMessage appendFormat:@">%@</event>\n", message];
 					else
 						[outMessage appendString:@"/>\n"];
 					[outputFileHandle writeData:[outMessage dataUsingEncoding:NSUTF8StringEncoding]];
