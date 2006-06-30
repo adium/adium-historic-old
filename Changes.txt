@@ -1,10 +1,337 @@
 				Adium X Version History
 				-----------------------
+Version 1.0
+
+Selected Major Changes:
+ * Major AIM, ICQ and .Mac improvements. This includes working File Transfer, and faster sign on.
+ * Added global user profile and buddy icon settings. (Personal Preferences)
+ * General Account improvements. Accounts can now be disabled when not in in use, and friends can now sign on from your Adium without saving their information.
+ * Added an Xtras manager to better handle browsing and removing Xtras.
+ * Major improvements in privacy settings.
+ * Improvements to the default look and feel of Adium.
+ * iTunes integration is much faster, and updates as soon as the song changes.
+ * Redesigned Chat Transcript (Log) Viewer
+ * Requires Mac OS X 10.3.9 or later (Universal Binary)
+
+Xtras:
+ * A new Xtras Manager has been introduced ([#1459], [#539])
+ * New included Xtras ([#3134]):
+   * Stockholm (message view)
+   * Tokyo Train Station (soundset, now default) ([#1614])
+   * iBubble (status icons) ([#1997])
+   * Aqualicious (contact list)
+   * Chat Bubbles (status icons) ([#2084])
+ * General improvements to the Xtras website
+ * Fixed the MSN sunglasses emoticon ([#1579])
+ * Improved the preview and menu for emoticons ([#2522])
+ * Fixed installation location on case-sensitive file-systems ([#2178])
+ * Updated Eclipse message style ([#627], [#729], #999)
+ * Resolved problem where "Show Headers" would crash Adium ([#2473])
+ * Implemented graceful upgrading of existing Xtras where possible ([#3980])
+
+Events:
+ * Dock icon now stops bouncing/flashing properly ([#205], #269)
+ * Added a Contact Requests Authorization global event ([#2291])
+ * Added preferences to control dock icon movement ([#1707])
+ * Added preference to control Dock icon animation (flapping) ([#541])
+ * Removed output device preference ([#1442])
+
+Privacy ([#19]):
+ * Added Block List Editor ([#913])
+ * Whitelist Support (0.89 blocking was blacklist) ([#129])
+ * Displays a visual indication of blocked users ([#344])
+ * Block Contact Toolbar Icon ([#1117])
+ * Fixed blocking a person on only one account when you had them listed on multiple accounts ([#2051])
+ * ⌘⌥B is now a shortcut for block contact ([#3739])
+ * Closing the authorization request window will dismiss the request with no answer ([#3479])
+ * Blocking implementation is shinier ([#920])
+
+Protocol Additions and Fixes:
+ * AIM (generally includes .Mac and ICQ):
+ * Completely new AIM code (Keith Lea's joscar) (#2903 and many many others)
+ * Connection speed improvements
+ * File Transfer improvements (#4)
+ * Direct Connect improvements
+ * Fixed an Address Book related rate limiting error ([#1770])
+ * Fixed sending circumflex accents over AIM ([#1601])
+ * Added support for group chat invitation messages
+ * Fixed sending group chat invitations to iChat ([#798])
+ * Fixed "(null)" in Get Info when viewing a metacontact ([#1055])
+ * Fixed blocking ([#1136], [#2051])
+ * Fixed "malformed data message" error when sending circumflex accents ([#1601])
+ * Can view profiles again ([#2413])
+ * Fixed ability to select which account messages a non-meta contact ([#2573])
+ * Fixed "SNAC threw error: request denied" when joining a group chat ([#3155])
+ * You can now block more than one user at a time ([#536])
+ * Fixed a bug where Adium didn't view the spaces, if any, in a screenname that's not on your buddy list when you're having a conversation with them ([#2231])
+ * Properly display the online time of contacts ([#2488])
+ * Similarly named AIM and .Mac accounts now no longer confuse accounts when adding contacts ([#3157])
+
+.Mac:
+ * @mac.com is no longer required ([#2132], others)
+ * name@mac.com is no longer displayed as a link in tooltips ([#869])
+ * Fixed a bug where Adium requested for a password even when it had the correct one ([#2319])
+
+Bonjour:
+ * Login as Invisible works now ([#2296], others)
+ * Bonjour no longer disconnects when a contact sends a message with a line-break ([#48])
+ * A reasonable default name is filled in for new Bonjour accounts ([#1182])
+ * Events are squelched for awhile after connect (18 seconds, to be exact) to avoid floods of notifications ([#1996])
+
+ICQ:
+ * Improved handling of non-ASCII character sets ([#505], [#1426])
+ * Improved handling of messages coming from iChat ([#3166])
+ * IP address no longer displayed publicly ([#3740])
+
+Jabber (includes Google Talk):
+ * Fixed bug where authorized contacts couldn't see your status ([#61])
+ * Now saves the last server used in the join group chat dialog ([#802])
+ * Fixed a bug where Exodus users couldn't see the user's avatar ([#1330])
+ * Added buddy icon support for Jabber ([#1632])
+ * No longer need to restart Adium when changing resource ([#1355])
+ * Fixed sending and receiving of user icons ([#1632])
+ * Fixed group chat history missing from self ([#1881])
+ * Fixed typing notification for Talk ([#1993])
+ * Fixed a situation in which the tag <html> could appear in messages ([#3058])
+ * Fixed a bug where Adium did not disconnect from the server ([#3441])
+ * Now prompts to register the account if authentication failed ([#3752])
+ * Fixed a parsing error in sent messages where there was a <html> tag inside the <body> tag ([#3814])
+ * Added the ability to set priority ([#3882])
+ * Fixed a bug which prevented registering accounts on Wildfire-based jabber servers ([#4216])
+ * New mail notifications checkbox now disabled on Jabber, respected on GTalk ([#1301])
+
+Meanwhile/Sametime:
+ * Contact list did not keep added users ([#2060])
+
+MSN:
+ * Deleted MSN contacts remain deleted ([#1778])
+ * Adium now fetches the MSN display name from the server ([#196])
+ * Removed preference for MSN "Conversation closed" notices ([#37])
+ * Adium can now receive custom MSN emoticons 
+ * Fixed "%0D" after a URL when a newline character comes after it ([#1085])
+ * MSN display name no longer preferred over real status messages from other accounts ([#1022])
+ * Display name, rather than account name, used in message view ([#1628])
+
+Gadu-Gadu:
+ * Fixed a crash when using gadu-gadu ([#2455])
+ * Statuses work ([#3803])
+
+Yahoo!:
+ * Yahoo! users can now return from idle status ([#2453])
+ * Added support for ymsgr://im?to= links ([#3107])
+ * Added Stealth (semi-invisibility) support ([#1349], [#4006])
+ * Now able to log in as invisible ([#2296])
+ * Incoming message colors now ignored if the pref says so ([#4184])
+
+Zephyr:
+ * Added configuration notes at http://trac.adiumx.com/wiki/Zephyr ([#2079])
+
+File transfer:
+ * Folders now really do get compressed automatically ([#86])
+ * Automatically rename incoming files whose desired filename is already taken ([#734])
+
+iTunes Integration:
+ * Improved the speed of the iTunes integration ([#2352])
+ * Improved integration of iTunes with status settings
+ * Added an eighth note (&#x266b;) which functions as an iTunes music store link in statuses.
+ * iTunes scripts no longer have an impact on CPU usage ([#2352])
+
+Misc:
+ * Removed support for Mac OS 10.3.8 and earlier. Adium now only supports 10.3.9 and later.
+ * New software update system (SparklePlus, a modified version of Andy Matuschak's Sparkle by Tom Harrington)
+ * First-run Setup Assistant (#9)
+ * New logging format and Log Viewer ([#38], [#13], [#265], [#1224], [#4332], [#4334], [#4271], [#4272], [#4273], [#4274], [#4277], [#4323])
+ * Guest Login added; friends can now log in without their personal information being saved ([#3714])
+ * "Check spelling as you type" preference is saved ([#768])
+ * Added the auto-linkification of the notes:// protocol ([#3622])
+ * Added tooltip to "-" button (removes a contact from the currently-viewed metacontact) ([#201])
+ * Consulted the Vorlon.
+ * "Contact Icon" toolbar item now updates when it should ([#230])
+ * Improved support for case-sensitive HFSX filesystems ([#2178])
+ * Improved support for screen names with spaces in them ([#2231])
+ * Can now Get Info on contacts who aren't on your contact list ([#2424])
+ * Improved Insert Link From Safari to recognise other browsers ([#1099])
+ * Fixed sizing issues in the request window ([#1421], [#1471])
+ * Crash Reporter no longer submits crash reports if a newer version is available ([#65])
+ * You can now Get Info on somebody who isn't on your contact list ([#193])
+
+Dock:
+ * The dock icon now has the preference to display the number of unviewed messages ([#730])
+ * Fixed a bug with dock icons not showing up ([#3056])
+
+User Interface:
+ * Add Buddy button (#2)
+ * Disabled "New Chat" when offline ([#2265])
+ * Clarified "Add account" menu in Accounts prefs ([#421])
+ * Removed title from the About window ([#3901])
+ * Dialog box to authorize contacts now has the affirmative, not the negative, answer as the default button ([#112])
+ * Confirm quit if file transfers or unread messages are present ([#3087], [#2733], [#4231])
+ * Fixed an odd flickering issue on several scrollbars ([#2111])
+ * Improved the contrast of text entry cursors with nonstandard background colors ([#2262])
+ * Fixed the title of the Contact Info window for metacontacts ([#1055])
+ * Alert boxes no longer steal keyboard focus (but do still come to the front so that you can read them) ([#270])
+ * Added key commands like Safari's for switching tabs ([#280])
+ * Made error messages non-gender-specific ([#2623])
+ * The background color for profiles can now be changed ([#922])
+ * Background colors (just behind certain text, not document colors) can now be added and read in profiles and statuses.
+ * Improved the wording of the delete group dialog ([#2017])
+ * Fixed an overlapping button ([#2933])
+ * Added more popcorn to the general preferences.
+ * Added a contextual menu for tabs ([#1595])
+ * Added a contextual menu to make sandwiches tastier.
+ * Clarified naming for Close Chat menu item ([#759])
+ * Showing an encryption fingerprint does not open multiple windows when clicked more than once ([#2580])
+ * Added global keystroke to activate Adium ([#1958], [#3727])
+ * Added a "Show Offline Group" item to the View menu ([#2366])
+ * Contact notes can now be cleared ([#2398])
+ * Scroll bar in Info window sometimes didn't appear when it was supposed to ([#97])
+ * Reworded Send Later dialog ([#2278])
+ * File transfer Window no longer requires AppleGothic font ([#2300])
+ * Corrected spelling of emoticon name "Sticking out tongue" ([#3235])
+ * Get Info on groups no longer shows Info or Accounts tabs ([#2788])
+ * Links with .eu in them now work ([#2987])
+ * Fixed a bug when setting buddy icon and getting incorrect size ([#793])
+ * When switching the active tab by clicking on a tab's icon, we now update the icon to the close icon, since that's what a second click will do ([#2791])
+ * Display Growl notifications when invited to a group chat ([#3276])
+ * The status window now works correctly on single and dual monitor systems (#3079
+ * Can now delete own buddy picture ([#3325])
+ * Status icons in the status window now update when you change the active status icon pack ([#4325])
+ * Improved keyboard support for Join Chat dialog ([#2853])
+
+Messages:
+ * Resolved issue where the Mockie display truncated the protocol name ([#2014])
+ * Message view window can now be transparent ([#131])
+ * File transfer requests are now displayed inline in the message view. The exact appearance can be customized by the message style ([#2197])
+ * Added support for Kopete additions to the message style format such as %senderColor%, %messageDirection%, and %senderStatusIcon% ([#3132])
+ * Improved handling of /me ([#1162], [#2920])
+ * Improved automatic linking in messages ([#249])
+ * Added replacement tokens (aka keywords) for MSN display names ([#239])
+ * Dragging and dropping .textClipping files into the message view now works ([#1689])
+ * Fixed ⌘-keys for cursor movement in custom status window ([#255])
+ * Fixed an issue for when a tab inside the message window wouldn't change width to represent a changed alias ([#1056]) 
+ * Improved support for the Webdings font in messages ([#3048])
+ * Direct-IM images may now be scaled firefox-style by the message style
+ * XHTML styles now accepted from incoming messages ([#440])
+ * Message view windows won't reopen doubly when an incoming message is received at the exact moment of the close attempt ([#460])
+ * Buddy icons displayed in the message view now update when changed ([#3440])
+ * "No icon" setting ([#483])
+ * Emoticon text equivalents are not expanded to emoticon images inside of URLs (e.g. the ":/" in "http://www.adiumx.com/") ([#2761], [#721], [#2634])
+ * Now with 200% more cowbell
+ * Added client.debugLog() javascript function, logs messages to Console
+ * Template.html now uses the HTML4 strict doctype
+ * Images are now scaled down in the input area ([#611])
+ * Dragging & dropping text or a URL onto a buddy in the contact list now sends the text or URL to the buddy ([#860])
+ * We no longer auto-reply to messages sent while you were offline ([#4174])
+ * A horizontal ellipsis after a link is now separated from the link (e.g. http://www.adiumx.com...) ([#1183])
+ * Paste retains bold/italics/underline/font/size etc. but strips colors, alignment, images, etc. ([#1740], [#2880])
+ * Added a new paste item, Paste with Colors and Images, which does a traditional paste with rich text operation ([#2880])
+ * Language for spelling checker is now remembered for each contact ([#2409])
+ * Fixed a bug where the contact and account pop-ups got cut out if the window is too small ([#1015])
+ * Dragged URLs from Safari and OmniWeb now appear with the window's title ([#1739])
+ * Support messaging contacts not present on your contact list from any account ([#701])
+ * Italics are no longer sticky ([#2904])
+ * Improved the Edit Link contextual menu item on 10.4 ([#3169])
+ * You can now paste a link into the inputline, without the URL being stripped ([#532])
+
+Contact List:
+ * Fixed an issue that would cause the contact list to shrink ([#296])
+ * Group names are now truncated in the middle (e.g. “Adium users”→“Adiu…sers”) rather than the end (e.g. “Adium …”) ([#2589])
+ * Add Buddy Button In Authorization Dialog (#2)
+ * Added a dock-like autohiding ability for the contact list (many tickets)
+ * The highlight color of the contact list is now customizable ([#102])
+ * Your buddy icon and display name can now be changed via the contact list ([#543], [#1701], [#2345])
+ * Empty and new groups are now shown as intended ([#21], #26)
+ * Offline contacts are now displayed by default ([#1665])
+ * Buddy icons in the contact list are now slightly rounded ([#3460])
+ * File transfers can now be initiated by dragging folders/files onto a contact ([#1747])
+ * Made the scrollbar on the contact list narrower
+ * Fixed a bug where a custom buddy icon wasn't properly saved after quit ([#1934])
+ * Improved the appearance of dragging contacts on the contact list ([#3232])
+ * With no contacts online, borderless windows correctly hide themselves ([#296])
+ * Increased the spacing for group bubbles styles ([#2025])
+ * Selection in the contact list is now maintained when the list changes ([#2281])
+ * You can now hide the display name, buddy icon, and status selection at the top of regular styles ([#450])
+ * Keyboard focus is no longer stolen when the contact list unhides ([#612])
+ * Improved repositioning when the screen resolution changes ([#2172])
+ * Contact list was off-screen in multiple-monitor configurations ([#93])
+ * Fixed issue when showing offline contacts with auto-resize ([#1080])
+ * Borderless contact list now closes if no contact are online ([#1139])
+ * When moving a metacontact, all the contacts therein really do move now ([#2077])
+ * Fixed disappearance of the standard contact list on launch or immediately after opened when Adium was in the background ([#2320], [#1995])
+ * Adding a contact who is already in the contact list is now verboten ([#50])
+ * Fixed issue saving color opacity of theme colors ([#3316])
+ * Metacontacts no longer mess up contact list sorting ([#3751])
+ * Corrected an issue that could cause status message not to be updated in the contact list ([#665])
+ * Added ability to see yourself in the contact list ([#2887])
+ * Added a tooltip explaining that background images only work in the regular window and borderless (i.e. non-bubble) contact list styles ([#431])
+ * Searching for contacts in the contact list is easier ([#3163])
+ * Maximum contact list width now refers to the inside portion, not the entire window including scrollbars ([#640])
+
+Status:
+ * Resolved performance issues when adding or changing statuses ([#716])
+ * Statuses can now be grouped in folders and sub-folders ([#101])
+ * Standard keyboard shortcuts in the custom status window ([#255])
+ * Mute checkbox now works with all statuses ([#2449])
+ * Added the ability to mute by status, without using the status window ([#1165], [#1738], [#2509])
+ * Fixed auto-reconnection on wake ([#1420])
+ * Fixed a crash when returning from away ([#2137])
+ * The menu duck now indicates current status with a badge ([#1445], [#2015])
+ * Restored ability to keep the Away Status Window visible when Adium is in background; added other options ([#615], [#708], [#2118])
+ * Added ability to enable and disable accounts; disabled accounts won't automatically connect ([#1415], [#1641])
+ * Sound for “You connect” now won't play again after < 5 seconds since the previous time ([#2915])
+ * Fixed overlapping problem due to Apple Graphics update ([#1522])
+ * Added the ability to pick a random status ([#3336])
+ * Automatically set Idle status once the screensaver becomes active ([#577])
+
+Localization:
+ * Australian English localization added ([#2585])
+ * Improved German localization ([#2538])
+ * Improved Dutch localization ([#3584], [#2435])
+ * Improved Icelandic localization ([#164])
+ * Improved French localization ([#3052], [#2055])
+ * Improved Italian localization ([#2836])
+ * Improved Russian localization ([#3473])
+ * Improved button sizing in Italian ([#2999])
+ * Send Later dialog is now localized ([#2056])
+ * Fixed localizability of the OTR error message when attempting to message in a chat in which the other side has already ended encryption ([#2623])
+ * Allow localization of shared dock icon images ([#2843])
+ * Allow non-ASCII characters in the "insert link" dialog ([#2362])
+
+Address Book:
+ * New contextual menu items in Address Book for sending IMs with Adium. Scripts to accomplish this are automatically installed to ~/Library/Address Book Plug-Ins ([#2353])
+ * Adium now looks in the Yahoo! field of Address Book contacts for Yahoo! Japan accounts ([#2469])
+ * Clarified and explained option to consolidate buddies from Address Book ([#139])
+ * New contextual menu item on contacts: "Add To Address Book" ([#345])
+ * Don't clobber picture in My Card with some account's buddy icon ([#1683])
+ * Improved performance of Address Book updating ([#1751])
+ * Middle names are now imported ([#1118])
+ * We now set contacts' icons back to their real icons (from AB images) when “Use Address book images as contacts' icons” is unchecked ([#91])
+
+AppleScript:
+ * Applescript improved in general ([#574])
+ * Fixed a crash ([#485])
+ * Fixed lockups caused by AppleScript ([#634])
+ * Fixed typing latency caused by AppleScript ([#202])
+
+OTR:
+ * OTR now works for .Mac accounts for which the @mac.com isn't listed ([#2132])
+ * Fixed gender neutrality of the OTR error message when attempting to message in a chat in which the other side has already ended encryption ([#2623])
+ * Fixed a bug where the OTR status did not update after switching to a different contact of a meta contact ([#2895])
+
+Performance and Memory:
+ * Fixed a leak of an NSColor ([#2258])
+ * Emoticons are now preloaded in a background thread
+ * Fixed a rare threadlock on startup ([#1980])
+ * Fixed a memory leak in AIKeychain ([#692])
+ * Fixed a potential threadlock at launch ([#1980])
+ * Fixed the crash when hitting Return in the away status window when accounts are not all in the same status ([#2137], [#2420], [#2626], [#2692])
+
 Version 0.89.1 (4/10/2006)
  * Turned off the ICQ "web aware" mode to reduce authorization requests from ICQ spam bots
  * Fixed issues with Applescriptability of account status [#3423]
  * Fixed Dutch Advanced Message Preferences
  * Updated to meanwhile 1.0.1 and gaim-meanwhile 1.2.8 for improved Sametime support
+
 
 Version 0.89 (2/12/2006)
  * Fixed outgoing messages triggering "Conversation error", especially immediately after signing on, for MSN accounts ([#2834])
@@ -16,13 +343,13 @@ Version 0.89 (2/12/2006)
  * Fixed several miscellaneous localization issues
  * Updated Australian English, Japanese, and Polish translations
 
+
 Version 0.88 (1/24/2006)
  * Adium is now a Universal binary
  * Improved autoconnection when waking from sleep [#1420]
  * Fixed MSN buddy icon retrieval and updating [#31]
  * Upgraded to Growl 0.7.4
  * Enabled interserver communication for Google Talk
-
  * Fixed restoration of the contact list position when it is adjacent to a Dock on the right or left screen edges [#156]
  * Fixed issues with PortableAdium
  * Fixed a crash when playing demonstration speech text
@@ -41,6 +368,7 @@ Version 0.88 (1/24/2006)
  * Fixed localization issues with the Away Status Window [#2676]
  * Russian translation updates
  * Added Australian English translation
+
 
 Version 0.87 (12/15/2005)
  * Updated to [http://www.cypherpunks.ca/otr/ Off-the-Record 3.0.0] for OTRv2, implementing multiple usability improvements to encryption in the process [#2068] [#14] [#119] 
@@ -77,6 +405,7 @@ Version 0.87 (12/15/2005)
  * Added Canadian English translation [#2244]
  * Added Polish translation
  * Catalan, Czech, Dutch, French, German, Icelandic, Italian, Japanese, Norwegian, Russian, Simplified Chinese, Swedish, and Traditional Chinese translation updates
+
 
 Version 0.86 (10/27/2005)
  * Resolved rate limiting error with the AIM protocol [#1780]
@@ -137,6 +466,7 @@ Version 0.85 (10/12/2005)
  * Added Spanish translation
  * Updated all other translations
 
+
 Version 0.83 (23 August 2005)
  * Fixed a crash when canceling a file transfer after the remote side has already canceled [#140]
  * Fixed message display on Hebrew and Arabic systems in 10.3.9 and later [#782]
@@ -189,6 +519,7 @@ Version 0.83 (23 August 2005)
  * Updated to [http://growl.info/beta Growl 0.7.2]
  * Updated to [http://gaim.sourceforge.net/ChangeLog libgaim 1.5.0]
 
+
 Version 0.82 (17 June 2005)
  * Added OTR Encryption advanced preferences pane for fingerprint management [#5]
  * Added Ignore / Un-ignore support for all group chats
@@ -196,7 +527,7 @@ Version 0.82 (17 June 2005)
  * Added support for modifying a saved status before setting it by holding Option when selecting a status
  * Added support for adding contacts to your list when they request authorization [#2]
  * Added support for the MSN display name updating to match the last used name when you change it in another client and then sign on with Adium [#196]
- * Added support for pressing enter/return to send a 'blank' IM to reset to the default typing attributes � la old iChat
+ * Added support for pressing enter/return to send a 'blank' IM to reset to the default typing attributes á la old iChat
  * Autoreply is now enabled by default new away messages but disabled for available and invisible messages
  * Made the message window and standard contact list unified
  * Improved retrieval of AIM buddy icons
@@ -243,6 +574,7 @@ Version 0.82 (17 June 2005)
  * Updated to Growl 0.7
  * Updated to libgaim 1.3.1
 
+
 Version 0.81 (06 May 2005)
  * Added accounts back to the File menu, fixing the Actions submenus in the process
  * Added support for tooltips in the Status menu
@@ -259,6 +591,7 @@ Version 0.81 (06 May 2005)
  * (Sametime) Fixed a crash when configuring accounts in Mac OS X 10.2 Jaguar
  * (Sametime) Updated to meanwhile-0.4.1 and gaim-meanwhile-1.2.2, adding file transfer support
  * Updated Danish, Dutch, French, Italian, and Traditional Chinese translations
+
 
 Version 0.80 (02 May 2005)
  * Complete Status system rewrite, with support for all status states on all protocols (including Available messages and Invisible status)
@@ -288,6 +621,7 @@ Protocol-specific changes:
  * Many, many other bug and leak fixes, performance enchancements, and improvements.
 	 * For a full list of changes, see http://www.adiumx.com/Adium0.80-fullchanges.txt
 
+
 Version 0.77 (18 February 2005)
  * Corrected security issue wherein keychain-stored passwords were leaked in memory after retrieval
  * Corrected a security issue which could have allowed another user with root access to your
@@ -302,6 +636,7 @@ Version 0.77 (18 February 2005)
  * (AIM) Improved support for Japanese text in AIM group chats
  * Updated to libgaim 1.1.3, which corrects 2 security issues (see http://gaim.sf.net/security/)
 
+
 Version 0.76 (30 January 2005)
  * Fixed a crash on load in OS X 10.2.0 through 10.2.6 without Safari
  * Fixed a crash on quit in OS X 10.2.x
@@ -309,6 +644,7 @@ Version 0.76 (30 January 2005)
  * Fixed a crash when loading the Messages preferences in certain situations
  * Fixed a crash related to corrupt font files
  * Improved Novell GroupWise connection handling to handle invalid password and 'logged on from another workstation' errors
+
 
 Version 0.75.1 (24 January 2005)
  * Fixed a crash when joining a group chat
@@ -323,6 +659,7 @@ Version 0.75
  * Fixed an issue with Command-I performing Show Contact's Info instead of Italics in message windows in certain situations
  * Improved connection speed, particularly on AIM accounts with long buddy lists
  * Updated to libgaim 1.1.2
+
 
 Version 0.74 (05 January 2005)
  * Fixed issues causing newly added contacts to appear twice in certain situations
@@ -353,6 +690,7 @@ Version 0.73 (26 December 2004)
  * Improved logging of autoresponses
  * Updated to libgaim 1.1.1
 
+
 Version 0.72 (16 November 2004)
  * Fixed major stability issues involving Applescript filters
  * Fixed issues with erroneous autolinkification of text with multiple periods
@@ -371,6 +709,7 @@ Version 0.72 (16 November 2004)
  * (MSN) Fixed a new sporadic crash
  * Updated to libgaim 1.0.3
 
+
 Version 0.71 (01 November 2004)
  * Fixed issues with "Systemwide HTTP/SOCKS4/SOCKS5" proxy settings
  * Fixed issues with automatic reconnection of accounts after sleeping
@@ -388,6 +727,7 @@ Version 0.71 (01 November 2004)
  * Improved Rendezvous performance
  * Updated glib to avoid a potential buffer overflow
  * Updated to libgaim 1.0.2, which fixes 3 potential security problems (More information is available here: http://gaim.sf.net/security/)
+
 
 Version 0.70 (18 October 2004)
 Services
