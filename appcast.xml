@@ -4,12 +4,12 @@
     <title>Adium Updates</title>
     <language>en</language>
     <item>
-      <title>Adium 1.0a7</title>
-      <pubDate>Thur, 28 June 2006 12:45:00 GMT-5</pubDate>
+      <title>Adium 1.0a8</title>
+      <pubDate>Fri, 29 June 2006 00:16:00 GMT-4</pubDate>
       <description>
-&lt;p&gt;Spaghetti... I can't eat spaghetti, there's too many of them. No matter how hungry I am, 1000 of something is too many. I'll have 1000 pieces of noodle.&lt;/p&gt;
+&lt;p&gt;Don't test a puddle with both feet.&lt;/p&gt;
         </description>
-      <enclosure sparkle:version="1.0a7" url="http://adiumx.cachefly.net/AdiumX_1.0a7.dmg" length="14636706" type="application/octet-stream"/>
+      <enclosure sparkle:version="1.0a8" url="http://adiumx.cachefly.net/AdiumX_1.0a8.dmg" length="14422573" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
