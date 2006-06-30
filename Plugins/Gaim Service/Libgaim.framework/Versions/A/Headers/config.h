@@ -75,7 +75,7 @@ first (like Motorola and SPARC, unlike Intel and VAX). */
 #define ENABLE_NLS 1
 
 /* Define to make assertions fatal (useful for debugging). */
-#define GAIM_FATAL_ASSERTS 1
+/* #define GAIM_FATAL_ASSERTS 1 */
 
 /* Define if plugins are enabled. */
 //#define GAIM_PLUGINS 1
