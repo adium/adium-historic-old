@@ -291,17 +291,17 @@
 				tabBarFrame.size.width = totalFrame.size.width;
 				tabBarFrame.origin.y = 0;
 				tabViewFrame.origin.x = 0;
-				tabViewFrame.origin.y = tabBarFrame.size.height - 1;
+				tabViewFrame.origin.y = tabBarFrame.size.height + 5;
 				tabViewFrame.size.width = totalFrame.size.width;
-				tabViewFrame.size.height = totalFrame.size.height - 21;
+				tabViewFrame.size.height = totalFrame.size.height - 27;
 				[tabView_tabBar setAutoresizingMask:NSViewMaxYMargin | NSViewWidthSizable];
 			} else {
 				tabBarFrame.size.height = totalFrame.size.height;
 				tabBarFrame.size.width = 120;
 				tabBarFrame.origin.y = totalFrame.origin.y;
-				tabViewFrame.origin.x = tabBarFrame.origin.x + tabBarFrame.size.width;
+				tabViewFrame.origin.x = tabBarFrame.origin.x + tabBarFrame.size.width + 1;
 				tabViewFrame.origin.y = totalFrame.origin.y;
-				tabViewFrame.size.width = totalFrame.size.width - tabBarFrame.size.width;
+				tabViewFrame.size.width = totalFrame.size.width - tabBarFrame.size.width - 1;
 				tabViewFrame.size.height = totalFrame.size.height;
 				[tabView_tabBar setAutoresizingMask:NSViewHeightSizable];
 			}
@@ -669,8 +669,14 @@
 	
 	[viewImage unlockFocus];
 	
-	offset->width = [(id <PSMTabStyle>)[[tabView delegate] style] leftMarginForTabBarControl];
-	offset->height = contentFrame.size.height;
+	if ([[tabView delegate] orientation] == PSMTabBarHorizontalOrientation) {
+		offset->width = [(id <PSMTabStyle>)[[tabView delegate] style] leftMarginForTabBarControl];
+		offset->height = contentFrame.size.height;
+	} else {
+		offset->width = 0;
+		offset->height = 22 + [(id <PSMTabStyle>)[[tabView delegate] style] leftMarginForTabBarControl];
+	}
+	
 	*styleMask = NSTitledWindowMask;
 	
 	return viewImage;
@@ -685,8 +691,12 @@
 	id <PSMTabStyle> style = (id <PSMTabStyle>)[[tabView delegate] style];
 	[[newController tabBar] setStyle:style];
 	
-	point.x -= [style leftMarginForTabBarControl];
-	point.y -= windowFrame.size.height - [[[newController window] contentView] frame].size.height;
+	if ([[tabView delegate] orientation] == PSMTabBarHorizontalOrientation) {
+		point.x -= [style leftMarginForTabBarControl];
+		point.y -= windowFrame.size.height - [[[newController window] contentView] frame].size.height;
+	} else {
+		point.y -= [[[self window] contentView] frame].size.height - [style leftMarginForTabBarControl];
+	}
 	frame.origin = point;
 	frame.size = [[self window] frame].size;
 	[[newController window] setFrame:frame display:NO];
