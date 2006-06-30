@@ -1,6 +1,48 @@
 				Adium X Version History
 				-----------------------
-Version 0.87 (12/7/2005)
+Version 0.89.1 (4/10/2006)
+ * Turned off the ICQ "web aware" mode to reduce authorization requests from ICQ spam bots
+ * Fixed issues with Applescriptability of account status [#3423]
+ * Fixed Dutch Advanced Message Preferences
+ * Updated to meanwhile 1.0.1 and gaim-meanwhile 1.2.8 for improved Sametime support
+
+Version 0.89 (2/12/2006)
+ * Fixed outgoing messages triggering "Conversation error", especially immediately after signing on, for MSN accounts ([#2834])
+ * Fixed a common crash when suddenly disconnected from an SSL-using Jabber connection, including a Google Talk connection ([#1493])
+ * Fixed a crash when receiving a malformed OTRv1 packet
+ * Fixed display of Wingdings and Symbol characters originating from WinAIM and MacAIM clients
+ * Fixed keyboard navigation in the Join Group Chat window ([#2853], OS X 10.4 only)
+ * Fixed localization of Away and Idle dock icon images
+ * Fixed several miscellaneous localization issues
+ * Updated Australian English, Japanese, and Polish translations
+
+Version 0.88 (1/24/2006)
+ * Adium is now a Universal binary
+ * Improved autoconnection when waking from sleep [#1420]
+ * Fixed MSN buddy icon retrieval and updating [#31]
+ * Upgraded to Growl 0.7.4
+ * Enabled interserver communication for Google Talk
+
+ * Fixed restoration of the contact list position when it is adjacent to a Dock on the right or left screen edges [#156]
+ * Fixed issues with PortableAdium
+ * Fixed a crash when playing demonstration speech text
+ * Fixed issues with transparency in the contact list for group bubbles and contact bubbles [#96]
+ * Fixed a crash when messaging Bonjour contacts who are actually offline
+ * Fixed issues with an incorrect maximum length for Yahoo! Japan account names
+ * Fixed a warning shown when connecting with certain .Mac screennames
+ * Fixed a crash with certain message styles and Show Header enabled [#2473]
+ * Fixed a Gadu-Gadu crash [#2456]
+ * Fixed autoconnect after sleep for newly added accounts and after holding Shift during Adium's startup
+ * Improved the textual equivalents for the Halo emoticon in the default emoticon pack [#2786]
+ * Improved the Uptime script [#2734]
+
+ * Fixed away and idle indicators in the Dock icon which were broken for most non-English localizations [#2571]
+ * Fixed localized display of date information in the message window [#2537]
+ * Fixed localization issues with the Away Status Window [#2676]
+ * Russian translation updates
+ * Added Australian English translation
+
+Version 0.87 (12/15/2005)
  * Updated to [http://www.cypherpunks.ca/otr/ Off-the-Record 3.0.0] for OTRv2, implementing multiple usability improvements to encryption in the process [#2068] [#14] [#119] 
  * Improved the Eclipse message style [#627] [#729] [#999]
  * Fixed retrieval of ICQ nicknames when connecting [#1859]
