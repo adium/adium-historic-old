@@ -125,6 +125,7 @@ Class LogViewerWindowControllerClass = NULL;
 								onlyIncludeOutgoingImages:NO
 										   simpleTagsOnly:NO
 										   bodyBackground:NO];
+	[HTMLDecoder setGeneratesStrictXHTML:YES];
 	
 	#endif
 	
@@ -421,7 +422,7 @@ Class LogViewerWindowControllerClass = NULL;
 		
 		if ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
 			[appender addElementWithName:@"message" 
-								 content:[HTMLDecoder encodeHTML:[content message] imagesPath:nil]
+						  escapedContent:[HTMLDecoder encodeHTML:[content message] imagesPath:nil]
 						   attributeKeys:[NSArray arrayWithObjects:@"sender", @"time", nil]
 						 attributeValues:[NSArray arrayWithObjects:[[content source] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
 		} else if ([[content type] isEqualToString:CONTENT_STATUS_TYPE]) {
