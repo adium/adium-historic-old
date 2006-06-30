@@ -285,6 +285,10 @@ static	NSMutableDictionary	*controllerDict = nil;
     [sheet orderOut:nil];
 }
 
+- (NSString *)adiumFrameAutosaveName
+{
+	return @"EditStateWindow";
+}
 
 //Behavior -------------------------------------------------------------------------------------------------------------
 #pragma mark Behavior
