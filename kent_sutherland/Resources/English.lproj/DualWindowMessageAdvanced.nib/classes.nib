@@ -46,6 +46,7 @@
                 "checkBox_hide" = NSButton; 
                 "popUp_minimumFontSize" = NSPopUpButton; 
                 "popUp_nameFormat" = NSPopUpButton; 
+                "popUp_orientation" = NSPopUpButton; 
                 "popUp_timeStampFormat" = NSPopUpButton; 
                 "popUp_windowPosition" = NSPopUpButton; 
             }; 
