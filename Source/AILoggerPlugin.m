@@ -899,10 +899,19 @@ Class LogViewerWindowControllerClass = NULL;
 		newIndex = SKIndexOpenWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", true);
     }
     if (!newIndex) {
-		NSDictionary *textAnalysisProperties = [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithInt:0], kSKMaximumTerms,
-			kCFBooleanTrue, kSKProximityIndexing, 
-			nil];
+		NSDictionary *textAnalysisProperties;
+		
+		if ([NSApp isOnTigerOrBetter]) {
+			textAnalysisProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+				[NSNumber numberWithInt:0], kSKMaximumTerms,
+				kCFBooleanTrue, kSKProximityIndexing, 
+				nil];
+
+		} else {
+			textAnalysisProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+				[NSNumber numberWithInt:0], kSKMaximumTerms,
+				nil];			
+		}
 
 		//Create the index if one doesn't exist
 		[[NSFileManager defaultManager] createDirectoriesForPath:[logIndexPath stringByDeletingLastPathComponent]];
