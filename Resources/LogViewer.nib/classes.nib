@@ -64,6 +64,7 @@
             }; 
             SUPERCLASS = AIObject; 
         }, 
+        {CLASS = ESGlassSplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }, 
         {CLASS = ESSourceListBackgroundView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
             CLASS = ESSourceListResizer; 

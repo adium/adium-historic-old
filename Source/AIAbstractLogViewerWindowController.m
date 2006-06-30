@@ -352,19 +352,15 @@ static int toArraySort(id itemA, id itemB, void *context);
 	//Toolbar
 	[self installToolbar];	
 
-	/* XXX This color isn't quite right for a Mail.app-style source list background... it's not the same as what Color Picker reports for it
-	 * because _that_ isn't right, either, strangely.
-	 * hue: 215 degrees
-	 * Saturation 0.07
-	 * Brightness 0.97
-	 */
-	[outlineView_contacts setBackgroundColor:[NSColor colorWithCalibratedHue:(215.0/359.0)
-																  saturation:0.07
-																  brightness:0.98
+	//This is the Mail.app source list background color... which differs from the iTunes one.
+	[outlineView_contacts setBackgroundColor:[NSColor colorWithCalibratedRed:.9059
+																	   green:.9294
+																		blue:.9647
 																	   alpha:1.0]];
 
 	AIImageTextCell	*dataCell = [[AIImageTextCell alloc] init];
 	[[[outlineView_contacts tableColumns] objectAtIndex:0] setDataCell:dataCell];
+	[dataCell setFont:[NSFont fontWithName:@"Lucida Grande" size:11]];
 	[dataCell release];
 
 	[outlineView_contacts setDrawsGradientSelection:YES];
@@ -375,6 +371,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[[[tableView_results tableColumnWithIdentifier:@"From"] headerCell] setStringValue:FROM];
 	[[[tableView_results tableColumnWithIdentifier:@"Date"] headerCell] setStringValue:DATE];
 	[tableView_results setFocusRingType:NSFocusRingTypeNone];
+	[tableView_results sizeLastColumnToFit];
 
     //Prepare the search controls
     [self buildSearchMenu];
@@ -1773,6 +1770,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 	desiredContactsSourceListDeltaX = 0;
 }
 
+/*
 - (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
 {
 	if ((sender == splitView_contacts_results) &&
@@ -1801,7 +1799,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 		[sender adjustSubviews];
 	}
 }
-
+*/
 
 //Window Toolbar -------------------------------------------------------------------------------------------------------
 #pragma mark Window Toolbar
@@ -1896,7 +1894,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
     return [NSArray arrayWithObjects:DATE_ITEM_IDENTIFIER, NSToolbarFlexibleSpaceItemIdentifier,
-		@"delete", @"toggleemoticons", NSToolbarFlexibleSpaceItemIdentifier,
+		@"delete", @"toggleemoticons", NSToolbarPrintItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier,
 		@"search", nil];
 }
 
@@ -1906,7 +1904,8 @@ static int toArraySort(id itemA, id itemB, void *context)
 		[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier,
 			NSToolbarSpaceItemIdentifier,
 			NSToolbarFlexibleSpaceItemIdentifier,
-			NSToolbarCustomizeToolbarItemIdentifier, nil]];
+			NSToolbarCustomizeToolbarItemIdentifier, 
+			NSToolbarPrintItemIdentifier, nil]];
 }
 
 #pragma mark Date filter
