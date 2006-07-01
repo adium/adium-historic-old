@@ -908,9 +908,7 @@ Class LogViewerWindowControllerClass = NULL;
 				nil];
 
 		} else {
-			textAnalysisProperties = [NSDictionary dictionaryWithObjectsAndKeys:
-				[NSNumber numberWithInt:0], kSKMaximumTerms,
-				nil];			
+			textAnalysisProperties = nil;
 		}
 
 		//Create the index if one doesn't exist
