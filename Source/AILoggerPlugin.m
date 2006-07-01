@@ -431,20 +431,13 @@ Class LogViewerWindowControllerClass = NULL;
 		AIXMLAppender *appender = [self appenderForChat:chat];
 		
 		if ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
-			NSString *senderUID = [[content source] UID];
 			NSMutableArray *attributeKeys = [NSMutableArray arrayWithObjects:@"sender", @"time", nil];
-			NSMutableArray *attributeValues = [NSMutableArray arrayWithObjects:senderUID, [[NSCalendarDate date] ISO8601DateString], nil];
+			NSMutableArray *attributeValues = [NSMutableArray arrayWithObjects:[[content source] UID], [[NSCalendarDate date] ISO8601DateString], nil];
 			
 			if([content isAutoreply])
 			{
 				[attributeKeys addObject:@"auto"];
 				[attributeValues addObject:@"true"];
-			}
-			NSString *senderAlias = [[content source] displayName];
-			if(![senderAlias isEqualToString:senderUID])
-			{
-				[attributeKeys addObject:@"alias"];
-				[attributeValues addObject:senderAlias];
 			}
 			
 			[appender addElementWithName:@"message" 
