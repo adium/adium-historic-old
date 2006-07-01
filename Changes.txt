@@ -140,7 +140,7 @@ Misc:
  * Removed support for Mac OS 10.3.8 and earlier. Adium now only supports 10.3.9 and later.
  * New software update system (SparklePlus, a modified version of Andy Matuschak's Sparkle by Tom Harrington)
  * First-run Setup Assistant (#9)
- * New logging format and Log Viewer ([#38], [#13], [#265], [#1224], [#4332], [#4334], [#4271], [#4272], [#4273], [#4274], [#4277], [#4323])
+ * New logging format and Log Viewer ([#38], [#13], [#265], [#1224], [#4332], [#4334], [#4271], [#4272], [#4273], [#4274], [#4277], [#4321], [#4323])
  * Guest Login added; friends can now log in without their personal information being saved ([#3714])
  * "Check spelling as you type" preference is saved ([#768])
  * Added the auto-linkification of the notes:// protocol ([#3622])
