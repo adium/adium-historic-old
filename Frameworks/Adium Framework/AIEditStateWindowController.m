@@ -168,7 +168,8 @@ static	NSMutableDictionary	*controllerDict = nil;
 {
 //	NSNumberFormatter	*intFormatter;
 	BOOL				sendOnEnter;
-	
+	isLoading = YES;
+
 	sendOnEnter = [[[adium preferenceController] preferenceForKey:SEND_ON_ENTER
 															group:PREF_GROUP_GENERAL] boolValue];
 	
@@ -224,12 +225,14 @@ static	NSMutableDictionary	*controllerDict = nil;
 																		 caseSensitive:NO
 																		  errorMessage:nil]];
 	[noNewlinesCharacterSet release];
-	
+
 	if (!showSaveCheckbox) {
 		[checkBox_save setHidden:YES];
 	}
-	
+
 	[super windowDidLoad];
+
+	isLoading = NO;
 }
 
 /*!
@@ -424,6 +427,52 @@ static	NSMutableDictionary	*controllerDict = nil;
 
 	[self updateTitleDisplay];
 }
+
+/*
+ * @brief Override AIWindowController's stringWithSavedFrame to provide a custom saved frame
+ *
+ * We want our savedframe to match the way the window will load, which means it needs to be as if all controls were visible.
+ */
+- (NSString *)stringWithSavedFrame
+{
+	NSWindow *window = [self window];
+	NSString *stringWithSavedFrame;
+
+	NSRect frame = [window frame];
+	float delta  = 0;
+	delta += ([scrollView_autoReply isHidden] ? ([scrollView_autoReply frame].size.height + CONTROL_SPACING) : 0);
+	delta += ([checkbox_customAutoReply isHidden] ? ([checkbox_customAutoReply frame].size.height + CONTROL_SPACING) : 0);
+	delta += ([box_idle isHidden] ? ([box_idle frame].size.height + CONTROL_SPACING) : 0);
+
+	frame.size.height += delta;
+	frame.origin.y -= delta;
+
+	NSRect screenFrame = [[window screen] frame];
+	stringWithSavedFrame = [NSString stringWithFormat:@"%0f %0f %0f %0f %0f %0f %0f %0f",
+		frame.origin.x, frame.origin.y, frame.size.width, frame.size.height,
+		screenFrame.origin.x, screenFrame.origin.y, screenFrame.size.width, screenFrame.size.height];
+
+	return stringWithSavedFrame;
+}
+
+- (NSRect)savedFrameFromString:(NSString *)frameString
+{
+	NSRect savedFrame = [super savedFrameFromString:frameString];
+	
+	float delta  = 0;
+	delta += ([scrollView_autoReply isHidden] ? ([scrollView_autoReply frame].size.height + CONTROL_SPACING) : 0);
+	delta += ([checkbox_customAutoReply isHidden] ? ([checkbox_customAutoReply frame].size.height + CONTROL_SPACING) : 0);
+	delta += ([box_idle isHidden] ? ([box_idle frame].size.height + CONTROL_SPACING) : 0);	
+
+	savedFrame.size.height -= delta;
+	savedFrame.origin.y += delta;
+
+	//Magic? This is the amount our numbers are off from the nib... if the nib changes, this magic will probably change, too.
+	savedFrame.size.height += CONTROL_SPACING*3;
+
+	return savedFrame;
+}
+
 
 /*!
  * @brief Update control visibility and resize the editor window
