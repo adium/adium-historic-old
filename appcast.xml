@@ -4,12 +4,12 @@
     <title>Adium Updates</title>
     <language>en</language>
     <item>
-      <title>Adium 1.0a9</title>
+      <title>Adium 1.0a10</title>
       <pubDate>Fri, 29 June 2006 00:16:00 GMT-4</pubDate>
       <description>
-&lt;p&gt;I am a leaf on the wind.&lt;/p&gt;
+&lt;p&gt;Neo: Woah. Deja vu.&lt;/p&gt;
         </description>
-      <enclosure sparkle:version="1.0a9" url="http://adiumx.cachefly.net/AdiumX_1.0a9.dmg" length="14616175" type="application/octet-stream"/>
+      <enclosure sparkle:version="1.0a10" url="http://adiumx.cachefly.net/AdiumX_1.0a10.dmg" length="14620706" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
