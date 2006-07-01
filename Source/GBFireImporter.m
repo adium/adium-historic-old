@@ -25,6 +25,7 @@
 #import "AIListGroup.h"
 #import "AIListContact.h"
 #import "AIMetaContact.h"
+#import "GBFireLogImporter.h"
 
 #define FIRECONFIGURATION2		@"FireConfiguration2.plist"
 #define FIRECONFIGURATION		@"FireConfiguration.plist"
@@ -79,6 +80,7 @@
 		ret = NO;
 	
 	[pool release];
+	[GBFireLogImporter importLogs];
 	return ret;
 }
 

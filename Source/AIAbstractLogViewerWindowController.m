@@ -752,7 +752,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 				} else {
 					displayText = [[AIHTMLDecoder decodeHTML:logFileText] mutableCopy];
 				}
-#ifdef XML_LOGGING
 			}else if ([[theLog path] hasSuffix:@".chatlog"]){
 				logFileText = [GBChatlogHTMLConverter readFile:[logBasePath stringByAppendingPathComponent:[theLog path]]];
 				if(logFileText != nil)
@@ -762,7 +761,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 					else
 						displayText = [[AIHTMLDecoder decodeHTML:logFileText] mutableCopy];
 				}
-#endif
 			} else {
 				AITextAttributes *textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
 				
