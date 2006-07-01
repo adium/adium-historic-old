@@ -126,6 +126,15 @@ Class LogViewerWindowControllerClass = NULL;
 										   simpleTagsOnly:NO
 										   bodyBackground:NO];
 	[HTMLDecoder setGeneratesStrictXHTML:YES];
+	statusTranslation = [[NSDictionary alloc] initWithObjectsAndKeys:
+		@"away",@"away",
+		@"available",@"return_away",
+		@"online",@"online",
+		@"offline",@"offline",
+		@"idle",@"idle",
+		@"available",@"return_idle",
+		@"away",@"away_message",
+		nil];
 	
 	#endif
 	
@@ -190,6 +199,7 @@ Class LogViewerWindowControllerClass = NULL;
 	[activeAppenders release];
 	[activeTimers release];
 	[HTMLDecoder release];
+	[statusTranslation release];
 	#endif
 	[[adium preferenceController] removeObserver:self forKeyPath:PREF_KEYPATH_LOGGER_ENABLE];
 }
@@ -421,10 +431,26 @@ Class LogViewerWindowControllerClass = NULL;
 		AIXMLAppender *appender = [self appenderForChat:chat];
 		
 		if ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
+			NSString *senderUID = [[content source] UID];
+			NSMutableArray *attributeKeys = [NSMutableArray arrayWithObjects:@"sender", @"time", nil];
+			NSMutableArray *attributeValues = [NSMutableArray arrayWithObjects:senderUID, [[NSCalendarDate date] ISO8601DateString], nil];
+			
+			if([content isAutoreply])
+			{
+				[attributeKeys addObject:@"auto"];
+				[attributeValues addObject:@"true"];
+			}
+			NSString *senderAlias = [[content source] displayName];
+			if(![senderAlias isEqualToString:senderUID])
+			{
+				[attributeKeys addObject:@"alias"];
+				[attributeValues addObject:senderAlias];
+			}
+			
 			[appender addElementWithName:@"message" 
 						  escapedContent:[HTMLDecoder encodeHTML:[content message] imagesPath:nil]
-						   attributeKeys:[NSArray arrayWithObjects:@"sender", @"time", nil]
-						 attributeValues:[NSArray arrayWithObjects:[[content source] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
+						   attributeKeys:attributeKeys
+						 attributeValues:attributeValues];
 		} else if ([[content type] isEqualToString:CONTENT_STATUS_TYPE]) {
 			/*
 			 * Oh. My. God. This is the ugliest thing I have ever seen in my life. Why do we have to do this?! We are
@@ -447,10 +473,10 @@ Class LogViewerWindowControllerClass = NULL;
 			//If we can't find it for some reason, we probably shouldn't attempt logging.
 			if (actualObject) {
 				[appender addElementWithName:@"status"
-									 content:[HTMLDecoder encodeHTML:[content message] imagesPath:nil]
+							  escapedContent:[HTMLDecoder encodeHTML:[content message] imagesPath:nil]
 							   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
 							 attributeValues:[NSArray arrayWithObjects:
-								 [(AIContentStatus *)content status], 
+								 [statusTranslation objectForKey:[(AIContentStatus *)content status]], 
 								 [actualObject UID], 
 								 [[NSCalendarDate date] ISO8601DateString],
 								 nil]];

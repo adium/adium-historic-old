@@ -26,7 +26,7 @@
 #define PREF_KEYPATH_LOGGER_ENABLE		PREF_GROUP_LOGGING @"." KEY_LOGGER_ENABLE
 
 //Uncomment this to enable XML_LOGGING
-//#define XML_LOGGING
+#define XML_LOGGING
 
 @class AIAccount, AIChat, AILoggerPreferences, AILoggerAdvancedPreferences;
 
@@ -42,6 +42,7 @@
 	NSMutableDictionary					*activeTimers;
 	
 	AIHTMLDecoder						*HTMLDecoder;
+	NSDictionary						*statusTranslation;
 #endif
 	
     //Log viewer menu items
