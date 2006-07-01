@@ -417,11 +417,11 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>SUBetaFeedURL</key>
-	<string>http://trac.adiumx.com/browser/trunk/appcast.xml</string>
+	<string>http://trac.adiumx.com/browser/trunk/appcast.xml?format=raw</string>
 	<key>SUCheckAtStartup</key>
 	<false/>
 	<key>SUFeedURL</key>
-	<string>http://trac.adiumx.com/browser/trunk/appcast.xml</string>
+	<string>http://trac.adiumx.com/browser/trunk/appcast.xml?format=raw</string>
 	<key>SmartCrashReports_CompanyName</key>
 	<string>Adium</string>
 	<key>SmartCrashReports_EmailTicket</key>
