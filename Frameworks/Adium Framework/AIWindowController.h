@@ -22,6 +22,7 @@
 
 - (IBAction)closeWindow:(id)sender;
 - (NSString *)adiumFrameAutosaveName;
+- (NSRect)savedFrameFromString:(NSString *)frameString;
 - (void)windowDidLoad;
 
 @end
