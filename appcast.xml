@@ -4,12 +4,13 @@
     <title>Adium Updates</title>
     <language>en</language>
     <item>
-      <title>Adium 1.0a10</title>
+      <title>Adium 1.0a13</title>
       <pubDate>Fri, 29 June 2006 00:16:00 GMT-4</pubDate>
       <description>
 &lt;p&gt;Neo: Woah. Deja vu.&lt;/p&gt;
+&lt;p&gt;This build should work properly on 10.3. We're still testing Sparkle stuff, but it's possible that updating from a13 (which calls itself a9 because I'm lazy) to itself will work properly. If so, I will be happy.&lt;/p&gt;
         </description>
-      <enclosure sparkle:version="1.0a11" url="http://adiumx.cachefly.net/AdiumX_1.0a11.tar.bz2" length="12826789" type="application/octet-stream"/>
+      <enclosure sparkle:version="1.0a13" url="http://adiumx.cachefly.net/Adium1.0_a13.tar.bz2" length="12798991" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
