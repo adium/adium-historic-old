@@ -1,4 +1,4 @@
-upd###########
+###########
 # What to do before running this script:
 # - openUp needs to be installed.
 # - Set VERSION and BETA below
