@@ -286,18 +286,20 @@
 			NSRect tabBarFrame = [tabView_tabBar frame], tabViewFrame = [tabView_messages frame];
 			NSRect totalFrame = NSUnionRect(tabBarFrame, tabViewFrame);
 			
+			tabBarFrame.origin.x = 0;
+			
 			if (orientation == PSMTabBarHorizontalOrientation) {
-				tabBarFrame.size.height = 22;
+				tabBarFrame.size.height = [tabView_tabBar isTabBarHidden] ? 1 : 22;
 				tabBarFrame.size.width = totalFrame.size.width;
-				tabBarFrame.origin.y = 0;
-				tabViewFrame.origin.x = 0;
+				tabBarFrame.origin.y = totalFrame.origin.y;
+				tabViewFrame.origin.x = totalFrame.origin.x;
 				tabViewFrame.origin.y = tabBarFrame.size.height + 5;
 				tabViewFrame.size.width = totalFrame.size.width;
-				tabViewFrame.size.height = totalFrame.size.height - 27;
+				tabViewFrame.size.height = totalFrame.size.height - tabBarFrame.size.height - 5;
 				[tabView_tabBar setAutoresizingMask:NSViewMaxYMargin | NSViewWidthSizable];
 			} else {
-				tabBarFrame.size.height = totalFrame.size.height;
-				tabBarFrame.size.width = 120;
+				tabBarFrame.size.height = [[[self window] contentView] frame].size.height;
+				tabBarFrame.size.width = [tabView_tabBar isTabBarHidden] ? 1 : 120;
 				tabBarFrame.origin.y = totalFrame.origin.y;
 				tabViewFrame.origin.x = tabBarFrame.origin.x + tabBarFrame.size.width + 1;
 				tabViewFrame.origin.y = totalFrame.origin.y;
@@ -312,6 +314,10 @@
 			[tabView_tabBar setFrame:tabBarFrame];
 			
 			[tabView_tabBar setOrientation:orientation];
+			
+			if ([tabView_tabBar isTabBarHidden]) {
+				[self tabView:tabView_messages tabBarDidHide:tabView_tabBar];
+			}
 		}
 		
 		//update the tab bar and tab view frame
