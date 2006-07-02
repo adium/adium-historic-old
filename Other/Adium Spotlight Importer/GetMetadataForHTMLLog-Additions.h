@@ -9,6 +9,7 @@
 
 @interface NSString (AdiumSpotlightImporterAdditions)
 - (NSString *)stringByUnescapingFromHTML;
++ (NSString *)stringWithContentsOfUTF8File:(NSString *)path;
 @end
 
 @interface NSScanner (AdiumSpotlightImporterAdditions)
