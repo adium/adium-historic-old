@@ -21,6 +21,11 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
+
+#define MAX_GADU_STATUS_MESSAGE_LENGTH 70
+
 @interface ESGaimGaduGaduAccount (PRIVATE)
 - (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact;
 @end
@@ -66,6 +71,17 @@
 - (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
 {
 	return YES;
+}
+
+#pragma mark Status
+/*!
+ * @brief Encode an attributed string for a status type
+ *
+ */
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forStatusState:(AIStatus *)statusState
+{
+	NSString	*messageString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
+	return [messageString stringWithEllipsisByTruncatingToLength:MAX_GADU_STATUS_MESSAGE_LENGTH];
 }
 
 #pragma mark Contact status
