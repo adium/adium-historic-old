@@ -360,7 +360,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 	AIImageTextCell	*dataCell = [[AIImageTextCell alloc] init];
 	[[[outlineView_contacts tableColumns] objectAtIndex:0] setDataCell:dataCell];
-	[dataCell setFont:[NSFont fontWithName:@"Lucida Grande" size:11]];
+	[dataCell setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
 	[dataCell release];
 
 	[outlineView_contacts setDrawsGradientSelection:YES];
