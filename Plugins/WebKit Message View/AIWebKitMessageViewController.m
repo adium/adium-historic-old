@@ -69,11 +69,6 @@ static NSArray *draggedTypes = nil;
 
 @implementation AIWebKitMessageViewController
 
-+ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin preferencesChangedDelegate:(id)inPreferencesChangedDelegate
-{
-    return [[[self alloc] initForChat:inChat withPlugin:inPlugin preferencesChangedDelegate:inPreferencesChangedDelegate] autorelease];	
-}
-
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
     return [[[self alloc] initForChat:inChat withPlugin:inPlugin preferencesChangedDelegate:nil] autorelease];
@@ -196,6 +191,23 @@ static NSArray *draggedTypes = nil;
 	} else {
 		[storedContentObjects release]; storedContentObjects = nil;
 	}
+}
+
+- (void)setPreferencesChangedDelegate:(id)inDelegate
+{
+	preferencesChangedDelegate = inDelegate;
+	
+	[preferencesChangedDelegate preferencesChangedForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY
+													   key:nil
+													object:nil
+											preferenceDict:[[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]
+												 firstTime:YES];
+
+	[preferencesChangedDelegate preferencesChangedForGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES
+													   key:nil
+													object:nil
+											preferenceDict:[[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES]
+												 firstTime:YES];
 }
 
 - (void)adiumPrint:(id)sender
