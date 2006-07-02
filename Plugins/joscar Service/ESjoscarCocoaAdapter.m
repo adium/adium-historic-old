@@ -270,15 +270,16 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getInfoService] requestAwayMessage:sn];
 	
 	NSString	*UID = [[[sn getNormal] copy] autorelease];
-	
+	AILog(@"setStatusUpdate: %@",[sn getFormatted]);
 	[accountProxy contactWithUID:UID
-						isOnline:[NSNumber numberWithBool:[info isOnline]]
-						  isAway:[NSNumber numberWithBool:[info isAway]]
+					formattedUID:[[[sn getFormatted] copy] autorelease]
+						isOnline:[info isOnline]
+						  isAway:[info isAway]
 					   idleSince:dateFromJavaDate([info getIdleSince])
 					 onlineSince:dateFromJavaDate([info getOnlineSince])
-					warningLevel:[NSNumber numberWithInt:[info getWarningLevel]]
-						  mobile:[NSNumber numberWithBool:([info isMobile] || ([UID characterAtIndex:0] == '+'))]
-						 aolUser:[NSNumber numberWithBool:[info isAolUser]]];
+					warningLevel:[info getWarningLevel]
+						  mobile:([info isMobile] || ([UID characterAtIndex:0] == '+'))
+						 aolUser:[info isAolUser]];
 }
 
 - (void)setContactOnline:(HashMap *)userInfo
@@ -286,6 +287,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	Screenname			*sn = [userInfo get:@"Screenname"];
 	BuddyInfo			*info = [userInfo get:@"BuddyInfo"];
 
+	AILog(@"setContactOnline: %@",[sn getNormal]);
 	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 						isOnline:[NSNumber numberWithBool:[info isOnline]]];
 	
@@ -336,6 +338,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	Group			*group = [userInfo get:@"Group"];	
 	Screenname		*sn = [buddy getScreenname];
 
+	AILog(@"Buddy added: %@",[sn getFormatted]);
 	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 					formattedUID:[[[sn getFormatted] copy] autorelease]
 						   alias:[[[buddy getAlias] copy] autorelease]

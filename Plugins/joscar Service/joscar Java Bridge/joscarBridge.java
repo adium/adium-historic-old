@@ -224,21 +224,21 @@ SecuridProvider
     public void buddyInfoChanged(BuddyInfoManager manager, Screenname buddy,
 								 BuddyInfo info, PropertyChangeEvent event) {
 		String	changedProperty = event.getPropertyName();
-		
+
+		//We will also hear about this in receivedStatusUpdate() below; we'll use that to notify the delegate
+		//if (changedProperty.equals("online")) return;
+
 		HashMap map = new HashMap();
 		map.put("Screenname", buddy);
 		map.put("BuddyInfo", info);
 		
-		if (changedProperty.equals("online")) {
-			sendDelegateMessageWithMap("ContactOnline", map);
-			
-		} else if (changedProperty.equals("iconData")) {			
+		if (changedProperty.equals("iconData")) {			
 			sendDelegateMessageWithMap("IconUpdate", map);
 			
 		} else if (changedProperty.equals("statusMessage") || changedProperty.equals("itunesUrl")) {
 			//don't use just "StatusMessage" because setStatusMessage: was already taken in ESjoscarCocoaAdapter
 			sendDelegateMessageWithMap("IncomingStatusMessage", map);
-
+			
 		} else if (changedProperty.equals("awayMessage")) {
 			Object val = event.getNewValue();
 			if (val != null) {
