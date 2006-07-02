@@ -42,7 +42,6 @@ static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, cons
 	/*	AILog(@"%x: (Debug: %s) %s",[NSRunLoop currentRunLoop], category, arg_s); */
 	//Log error
 	if (!category) category = "general"; //Category can be nil
-	
 	AILog(@"(Libgaim: %s) %s",category, arg_s);
 	
 	g_free(arg_s);
