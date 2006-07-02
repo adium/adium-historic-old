@@ -370,7 +370,9 @@
 			buildUser = [[NSString stringWithFormat:@"%s", whoami] retain];
 			if ([buildUser isEqualToString:@"adamiser"] || 
 				[buildUser isEqualToString:@"evands"] || 
-				[buildUser isEqualToString:@"jmelloy"]) {
+				[buildUser isEqualToString:@"jmelloy"] ||
+				[buildUser isEqualToString:@"durin"] ||
+				[buildUser isEqualToString:@"david"]) {
 				[buildUser release];
 				buildUser = nil;
 			}
