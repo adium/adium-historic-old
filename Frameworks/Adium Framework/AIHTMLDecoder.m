@@ -850,22 +850,6 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		//Now handle attributes that have started or changed.
 		NSMutableString *elementContent = [[[inMessageString substringWithRange:runRange] mutableCopy] autorelease];
 		
-		//Escape special HTML characters.
-		NSRange elementRange = NSMakeRange(0, [elementContent length]);
-		unsigned int replacements;
-		
-		replacements = [elementContent replaceOccurrencesOfString:@"&" withString:@"&amp;"
-														  options:NSLiteralSearch range:elementRange];
-		elementRange.length += (replacements * 4);
-		
-		replacements = [elementContent replaceOccurrencesOfString:@"<" withString:@"&lt;"
-														  options:NSLiteralSearch range:elementRange];
-		elementRange.length += (replacements * 3);
-		
-		replacements = [elementContent replaceOccurrencesOfString:@">" withString:@"&gt;"
-														  options:NSLiteralSearch range:elementRange];
-		elementRange.length += (replacements * 3);
-		
 		BOOL addElementContentToTopElement;
 		if ([startedKeys count]) {
 			//Sort the keys by the length of their range.
