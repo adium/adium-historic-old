@@ -182,7 +182,7 @@ BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow)
 {
 	NSString	*string;
 	
-	if ([NSApp isOnTigerOrBetter]) {
+	if ((floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3)) {
 		NSError	*error = nil;
 		
 		string = [NSString stringWithContentsOfFile:path
