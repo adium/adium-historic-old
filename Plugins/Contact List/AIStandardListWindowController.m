@@ -86,7 +86,9 @@
 	imagePickerPosition = ContactListImagePickerOnLeft;
 
 	[super windowDidLoad];
-	
+
+	[nameView setFont:[NSFont fontWithName:@"Lucida Grande" size:12]];
+
 	//Configure the state menu
 	statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
 
@@ -113,7 +115,6 @@
 	[[self window] setMinSize:NSMakeSize(135, 60)];
 
 	[self _configureToolbar];
-	[nameView setFont:[NSFont boldSystemFontOfSize:10]];	
 }
 
 /*!
@@ -198,46 +199,32 @@
  */
 - (void)repositionImagePickerToPosition:(ContactListImagePickerPosition)desiredImagePickerPosition
 {
-	NSRect statusMenuViewFrame = [statusMenuView frame];
-	NSRect newStatusMenuViewFrame = statusMenuViewFrame;
-	
-	NSRect nameViewFrame = [nameView frame];
-	NSRect newNameViewFrame = nameViewFrame;
-	
+	NSRect nameAndStatusMenuFrame = [view_nameAndStatusMenu frame];
+	NSRect newNameAndStatusMenuFrame = nameAndStatusMenuFrame;
+		
 	NSRect imagePickerFrame = [imagePicker frame];
 	NSRect newImagePickerFrame = imagePickerFrame;
 	
 	if (desiredImagePickerPosition == ContactListImagePickerOnLeft) {
 		//Image picker is on the right but we want it on the left
 		
-		newImagePickerFrame.origin.x = nameViewFrame.origin.x;
-		
-		/* I hate a magic number, but for some reason autosizing doesn't seem to work properly for the name view on first load
-		 * so if we start off on the right and then move left, a calculated margin of NSMaxX(nameViewFrame) - NSMinX(imagePickerFrame)
-		 * wouldn't work.
-		 */
-		newNameViewFrame.origin.x = (NSMaxX(newImagePickerFrame) + 9.0);
-		newStatusMenuViewFrame.origin.x = newNameViewFrame.origin.x + (statusMenuViewFrame.origin.x - nameViewFrame.origin.x);
+		newImagePickerFrame.origin.x = nameAndStatusMenuFrame.origin.x;	
+		newNameAndStatusMenuFrame.origin.x = NSMaxX(newImagePickerFrame);
 
 		[imagePicker setAutoresizingMask:(NSViewMaxXMargin | NSViewMinYMargin)];
 
 	} else {
 		//Image picker is on the left but we want it on the right		
-		newNameViewFrame.origin.x = imagePickerFrame.origin.x;
-		newStatusMenuViewFrame.origin.x = newNameViewFrame.origin.x + (statusMenuViewFrame.origin.x - nameViewFrame.origin.x);
+		newNameAndStatusMenuFrame.origin.x = imagePickerFrame.origin.x;
 		
 		newImagePickerFrame.origin.x = ([[imagePicker superview] frame].size.width - NSMaxX(imagePickerFrame));
 
 		[imagePicker setAutoresizingMask:(NSViewMinXMargin | NSViewMinYMargin)];
 	}
-	
-	[statusMenuView setFrame:newStatusMenuViewFrame];
-	[[statusMenuView superview] setNeedsDisplayInRect:statusMenuViewFrame];
-	[statusMenuView setNeedsDisplay:YES];
-	
-	[nameView setFrame:newNameViewFrame];
-	[[nameView superview] setNeedsDisplayInRect:nameViewFrame];
-	[nameView setNeedsDisplay:YES];
+
+	[view_nameAndStatusMenu setFrame:newNameAndStatusMenuFrame];
+	[[nameView superview] setNeedsDisplayInRect:nameAndStatusMenuFrame];
+	[view_nameAndStatusMenu setNeedsDisplay:YES];
 	
 	[imagePicker setFrame:newImagePickerFrame];
 	[[imagePicker superview] setNeedsDisplayInRect:imagePickerFrame];
@@ -375,8 +362,12 @@
 	if (!title) NSLog(@"Warning: Title for %@ is (null)",activeStatus);
 
 	[statusMenuView setTitle:(title ? title : @"")];
+	/*
 	[statusMenuView setImage:[activeStatus iconOfType:AIStatusIconList
 											direction:AIIconFlipped]];
+	 */
+	[imageView_status setImage:[activeStatus iconOfType:AIStatusIconList
+											  direction:AIIconNormal]];
 	[statusMenuView setToolTip:[activeStatus statusMessageString]];
 
 	[self updateImagePicker];
@@ -635,7 +626,7 @@
 	[toolbar setAutosavesConfiguration:YES];
     [toolbar setDelegate:self];
     [toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
-    [toolbar setSizeMode:NSToolbarSizeModeRegular];
+    [toolbar setSizeMode:NSToolbarSizeModeSmall];
     [toolbar setAllowsUserCustomization:NO];
 
 	/* Seemingly randomling, setToolbar: may throw:

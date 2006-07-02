@@ -49,8 +49,10 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 imagePicker = AIContactListImagePicker; 
-                nameView = AIHoveringPopUpButton; 
+                "imageView_status" = NSImageView; 
+                nameView = AIContactListNameButton; 
                 statusMenuView = AIHoveringPopUpButton; 
+                "view_nameAndStatusMenu" = NSView; 
                 "view_statusAndImage" = NSView; 
             }; 
             SUPERCLASS = AIListWindowController; 
