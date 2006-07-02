@@ -899,7 +899,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			while ((item = [startedKeysEnum nextObject])) {
 				NSSet *itemKeys = [item objectAtIndex:1];
 
-				//XXX This overwrites addElementContentToTopElement for each item in startedKeysArray... so only the last value makes it out. Is that right? -eds
+				//Only the last value of addElementContentToTopElement matters here, since we're adding elements to the stack, and that flag relates to the top element.
 				AIXMLElement *thisElement = [self elementWithAppKitAttributes:attributes
 															   attributeNames:itemKeys
 															   elementContent:elementContent
