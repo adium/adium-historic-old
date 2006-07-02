@@ -24,13 +24,14 @@
 - (void)contactWithUID:(NSString *)inUID setStatusMessage:(NSString *)statusMessage;
 - (void)contactWithUID:(NSString *)inUID setProfile:(NSString *)profile;
 - (void)contactWithUID:(NSString *)inUID
-			  isOnline:(NSNumber *)isOnline
-				isAway:(NSNumber *)isAway
+		  formattedUID:(NSString *)inFormattedUID
+			  isOnline:(BOOL)isOnline
+				isAway:(BOOL)isAway
 			 idleSince:(NSDate *)idleSince
 		   onlineSince:(NSDate *)onlineSince
-		  warningLevel:(NSNumber *)warningLevel
-				mobile:(NSNumber *)inMobile
-			   aolUser:(NSNumber *)inAolUser;
+		  warningLevel:(int)warningLevel
+				mobile:(BOOL)inMobile
+			   aolUser:(BOOL)inAolUser;
 - (void)contactWithUID:(NSString *)inUID
 			  isOnline:(NSNumber *)isOnline;
 - (void)contactWithUID:(NSString *)inUID removedFromGroup:(NSString *)groupName;

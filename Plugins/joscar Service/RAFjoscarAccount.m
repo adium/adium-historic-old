@@ -170,28 +170,34 @@
 }
 
 - (void)contactWithUID:(NSString *)inUID
-			  isOnline:(NSNumber *)isOnline
-				isAway:(NSNumber *)isAway
+		  formattedUID:(NSString *)inFormattedUID
+			  isOnline:(BOOL)isOnline
+				isAway:(BOOL)isAway
 			 idleSince:(NSDate *)idleSince
 		   onlineSince:(NSDate *)onlineSince
-		  warningLevel:(NSNumber *)warningLevel
-				mobile:(NSNumber *)inMobile
-			   aolUser:(NSNumber *)inAolUser
+		  warningLevel:(int)warningLevel
+				mobile:(BOOL)inMobile
+			   aolUser:(BOOL)inAolUser
 {
 	AIListContact	*listContact = [self contactWithUID:inUID];
+
+	if (![[listContact formattedUID] isEqualToString:inFormattedUID]){
+		[listContact setFormattedUID:inFormattedUID
+							  notify:NotifyLater];
+	}
 	
-	if ([listContact online] != [isOnline boolValue]) {
-		[listContact setOnline:[isOnline boolValue]
+	if ([listContact online] != isOnline) {
+		[listContact setOnline:isOnline
 						notify:NotifyLater
 					  silently:silentAndDelayed];
 	}
 
 	//here we unset the away message if we're going from away to present
-	if ([listContact statusType] == AIAwayStatusType && ![isAway boolValue])
+	if ([listContact statusType] == AIAwayStatusType && !isAway)
 		[listContact setStatusMessage:nil notify:NotifyLater];
 	//here we set wether we're away or not. the Away message (if applicable) will come in via setStatusMessage in a bit.
 	[listContact setStatusWithName:nil
-						statusType:([isAway boolValue] ? AIAwayStatusType : AIAvailableStatusType)
+						statusType:(isAway ? AIAwayStatusType : AIAvailableStatusType)
 							notify:NotifyLater];
 	
 	[listContact setIdle:(idleSince != nil)
@@ -200,16 +206,13 @@
 	
 	[listContact setSignonDate:onlineSince
 						notify:NotifyLater];
-	[listContact setWarningLevel:[warningLevel intValue]
+	[listContact setWarningLevel:warningLevel
 						  notify:NotifyLater];
 	
-	[listContact setIsMobile:[inMobile boolValue]
-					  notify:NotifyLater];
-	
-	[listContact setIsMobile:[inMobile boolValue]
+	[listContact setIsMobile:inMobile
 					  notify:NotifyLater];
 
-	[listContact setStatusObject:([inAolUser boolValue] ?
+	[listContact setStatusObject:(inAolUser ?
 								 AILocalizedString(@"America Online", nil) :
 								 nil)
 						 forKey:@"Client"
@@ -219,6 +222,7 @@
 	[listContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
+//Not actually called - more thorough method above is, instead
 - (void)contactWithUID:(NSString *)inUID
 			  isOnline:(NSNumber *)isOnline
 {
