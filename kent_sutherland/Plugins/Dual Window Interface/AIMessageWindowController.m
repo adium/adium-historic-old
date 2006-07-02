@@ -704,6 +704,38 @@
 	return [newController tabBar];
 }
 
+- (void)tabView:(NSTabView *)tabView tabBarDidHide:(PSMTabBarControl *)tabBarControl
+{
+    //hide the space between the tab bar and the tab view
+    NSRect frame = [tabView frame];
+    if ([tabBarControl orientation] == PSMTabBarHorizontalOrientation) {
+        frame.origin.y -= 7;
+        frame.size.height += 7;
+    } else {
+        frame.origin.x -= 3;
+        frame.size.width += 3;
+	}
+	
+	[tabView setFrame:frame];
+	[tabView setNeedsDisplay:YES];
+}
+
+- (void)tabView:(NSTabView *)tabView tabBarDidUnhide:(PSMTabBarControl *)tabBarControl
+{
+    //show the space between the tab bar and the tab view
+    NSRect frame = [tabView frame];
+    if ([tabBarControl orientation] == PSMTabBarHorizontalOrientation) {
+        frame.origin.y += 7;
+        frame.size.height -= 7;
+    } else {
+        frame.origin.x += 3;
+        frame.size.width -= 3;
+    }
+    
+    [tabView setFrame:frame];
+    [tabView setNeedsDisplay:YES];
+}
+
 //Custom Tabs Delegate -------------------------------------------------------------------------------------------------
 #pragma mark Custom Tabs Delegate
 
