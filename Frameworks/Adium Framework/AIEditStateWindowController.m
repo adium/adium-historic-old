@@ -168,7 +168,6 @@ static	NSMutableDictionary	*controllerDict = nil;
 {
 //	NSNumberFormatter	*intFormatter;
 	BOOL				sendOnEnter;
-	isLoading = YES;
 
 	sendOnEnter = [[[adium preferenceController] preferenceForKey:SEND_ON_ENTER
 															group:PREF_GROUP_GENERAL] boolValue];
@@ -231,8 +230,6 @@ static	NSMutableDictionary	*controllerDict = nil;
 	}
 
 	[super windowDidLoad];
-
-	isLoading = NO;
 }
 
 /*!
