@@ -121,6 +121,8 @@
 						 forKey:NSFontAttributeName];
 	[self setTitle:oldTitleString];
 	[oldTitleString release];
+	
+	[super setFont:inFont];
 }
 
 -(void)setImage:(NSImage *)inImage

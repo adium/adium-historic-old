@@ -27,24 +27,24 @@
 		NSRect			editingFrame;
 		
 		editingFrame = [self frame];
-		editingFrame.origin = NSZeroPoint;
-		
-		
+		editingFrame.origin = NSMakePoint(3, 1);
+
 		NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																				lineBreakMode:NSLineBreakByTruncatingMiddle];
 		[paragraphStyle setMaximumLineHeight:editingFrame.size.height];
 		NSAttributedString		*attributedString = [[NSAttributedString alloc] initWithString:startingString
 																					 attributes:[NSDictionary dictionaryWithObjectsAndKeys:
-																						 [NSFont boldSystemFontOfSize:10], NSFontAttributeName,
+																						 [[self cell] font], NSFontAttributeName,
 																						 paragraphStyle, NSParagraphStyleAttributeName,
 																						 nil]];
 		textField_editor = [[NSTextField alloc] initWithFrame:editingFrame];
 		[textField_editor setAttributedStringValue:attributedString];
 		[attributedString release];
 	
+		[textField_editor setFocusRingType:NSFocusRingTypeNone];
 		[textField_editor setDelegate:self];
 		[textField_editor setEditable:YES];
-		[textField_editor setFont:[NSFont boldSystemFontOfSize:10]];
+		[textField_editor setFont:[[self cell] font]];
 		[textField_editor setBordered:NO];
 		[textField_editor setDrawsBackground:NO];
 		[[textField_editor cell] setDrawsBackground:NO];

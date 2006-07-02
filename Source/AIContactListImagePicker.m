@@ -72,12 +72,19 @@
 {
 	[NSGraphicsContext saveGraphicsState];
 
+//	inRect = NSInsetRect(inRect, 2, 2);
+
 	NSBezierPath	*clipPath = [NSBezierPath bezierPathWithRoundedRect:inRect radius:3];
 	//Ensure we have an even/odd winding rule in effect
 	[clipPath setWindingRule:NSEvenOddWindingRule];
 	[clipPath addClip];
-
+	
+//	NSShadow *shadow = [[NSShadow alloc] init];
+//	[NSGraphicsContext saveGraphicsState];
+//	[shadow set];
 	[super drawRect:inRect];
+//	[NSGraphicsContext restoreGraphicsState];
+//	[shadow release];
 	
 	if (hovered) {
 		[[[NSColor blackColor] colorWithAlphaComponent:0.40] set];
@@ -94,7 +101,7 @@
 		[[NSColor whiteColor] set];
 		[arrowPath fill];
 	}
-	
+
 	[NSGraphicsContext restoreGraphicsState];
 }
 
