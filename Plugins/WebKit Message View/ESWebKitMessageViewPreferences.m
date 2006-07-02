@@ -156,10 +156,10 @@
 		//When the active style changes, rebuild our variant menu for the new style
 		if (!key || [key isEqualToString:KEY_WEBKIT_STYLE]) {
 			[popUp_variants setMenu:[self _variantsMenu]];
-			
-			//Only enable if there are multiple variant choices
-			[popUp_variants setEnabled:([popUp_variants numberOfItems] > 1)];
 		}
+
+		//Only enable if there are multiple variant choices
+		[popUp_variants setEnabled:([popUp_variants numberOfItems] > 0)];
 
 		variant = [prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:style]];
 		if (!variant || ![popUp_variants selectItemWithRepresentedObject:variant]) {
@@ -378,7 +378,7 @@
 	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""];
 	NSEnumerator	*enumerator = [[[previewController messageStyle] availableVariants] objectEnumerator];
 	NSString		*variant;
-	
+
 	//Add a menu item for each variant
 	while ((variant = [enumerator nextObject])) {
 		[menu addItemWithTitle:variant
@@ -431,11 +431,11 @@
 	previewChat = [[AIChat chatForAccount:nil] retain];
 	[previewChat setDisplayName:AILocalizedString(@"Sample Conversation", "Title for the sample conversation")];
 	previewController = [[AIWebKitMessageViewController messageViewControllerForChat:previewChat
-																		  withPlugin:plugin
-														  preferencesChangedDelegate:self] retain];
-	
+																		  withPlugin:plugin] retain];
+
 	//Enable live refreshing of our preview
-	[previewController setShouldReflectPreferenceChanges:YES];
+	[previewController setShouldReflectPreferenceChanges:YES];	
+	[previewController setPreferencesChangedDelegate:self];
 
 	//Add fake users and content to our chat
 	previewFilePath = [[NSBundle bundleForClass:[self class]] pathForResource:WEBKIT_PREVIEW_CONVERSATION_FILE ofType:@"plist"];
