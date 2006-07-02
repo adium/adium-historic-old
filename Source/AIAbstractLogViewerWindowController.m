@@ -1637,10 +1637,12 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
-	if ([item isKindOfClass:[AIMetaContact class]]) {
+	Class itemClass = [item class];
+
+	if (itemClass == [AIMetaContact class]) {
 		return [(AIMetaContact *)item longDisplayName];
 		
-	} else if ([item isKindOfClass:[AIListContact class]]) {
+	} else if (itemClass == [AIListContact class]) {
 		if ([(AIListContact *)item parentContact] != item) {
 			//This contact is within a metacontact - always show its UID
 			return [(AIListContact *)item formattedUID];
@@ -1648,19 +1650,19 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 			return [(AIListContact *)item longDisplayName];
 		} 
 		
-	} else if ([item isKindOfClass:[AILogToGroup class]]) {
+	} else if (itemClass == [AILogToGroup class]) {
 		return [(AILogToGroup *)item to];
 		
-	} else if ([item isKindOfClass:[ALL_CONTACTS_IDENTIFIER class]]) {
+	} else if (itemClass == [ALL_CONTACTS_IDENTIFIER class]) {
 		int contactCount = [toArray count];
 		return [NSString stringWithFormat:AILocalizedString(@"All (%@)", nil),
 			((contactCount == 1) ?
 			 AILocalizedString(@"1 Contact", nil) :
 			 [NSString stringWithFormat:AILocalizedString(@"%i Contacts", nil), contactCount])]; 
 
-	} else if ([item isKindOfClass:[NSString class]]) {
+	} else if (itemClass == [NSString class]) {
 		return item;
-		
+
 	} else {
 		NSLog(@"%@: no idea",item);
 		return nil;
