@@ -64,6 +64,9 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	NSString	*stringValue;
 	NSAttributedString *attributedStringValue;
 	float		stringHeight;
+	
+	NSImage		*background;
+	NSSize		backgroundSize;
 }
 
 -(IBAction)toggleShelf:(id)sender;
