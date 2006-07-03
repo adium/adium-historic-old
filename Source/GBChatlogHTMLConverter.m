@@ -40,7 +40,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	
 	state = XML_STATE_NONE;
 	
-	inputFileHandle = nil;
+	inputFileString = nil;
 	sender = nil;
 	mySN = nil;
 	date = nil;
@@ -72,7 +72,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 
 - (void)dealloc
 {
-	[inputFileHandle release];
+	[inputFileString release];
 	[eventTranslate release];
 	[sender release];
 	[mySN release];
@@ -85,7 +85,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 
 - (NSString *)readFile:(NSString *)filePath
 {
-	inputFileHandle = [[NSFileHandle fileHandleForReadingAtPath:filePath] retain];
+	NSData *inputData = [NSData dataWithContentsOfFile:filePath];
+	inputFileString = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
 	NSURL *url = [[NSURL alloc] initFileURLWithPath:filePath];
 	output = [[NSMutableString alloc] init];
 	
@@ -112,7 +113,6 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	CFRelease(parser);
 	parser = nil;
 	[url release];
-	[inputFileHandle closeFile];
 	return output;
 }
 
@@ -192,14 +192,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			if([name isEqualToString:@"message"])
 			{
 				CFIndex end = CFXMLParserGetLocation(parser);
-				[inputFileHandle seekToFileOffset:messageStart];
-				NSData *data = [inputFileHandle readDataOfLength:end-messageStart-11];  //10 chars for </message> and +1 for index being off
-				
-				NSString *message;
-				if(!empty)
-					message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-				else
-					message = [[NSString alloc] init];
+				NSString *message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)];  // 10 for </message> and 1 for the index being off
 				
 				[output appendFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@%@: </span><pre class=\"message\">%@</pre></div>\n",
 					([mySN isEqualToString:sender] ? @"send" : @"receive"), 
@@ -210,7 +203,6 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					sender, 
 					(autoResponse ? AILocalizedString(@" (Autoreply)",nil) : @""),
 					message];
-				[message release];
 				state = XML_STATE_CHAT;
 			}
 			break;
@@ -218,15 +210,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			if([name isEqualToString:@"status"])
 			{
 				CFIndex end = CFXMLParserGetLocation(parser);
-				[inputFileHandle seekToFileOffset:messageStart];
-				NSData *data = [inputFileHandle readDataOfLength:end-messageStart-10];  //9 chars for </status> and +1 for index being off
-				
-				NSString *message;
-				if(!empty)
-					message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-				else
-					message = nil;
-				
+				NSString *message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 10)];  // 9 for </status> and 1 for the index being off
+								
 				NSString *displayMessage;
 				//Note: I am diverging from what the AILoggerPlugin logs in this case.  It can't handle every case we can have here
 				if([message length])
@@ -246,7 +231,6 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 																									   showingAMorPM:YES]
 												   timeZone:nil
 													 locale:nil]];
-				[message release];
 				state = XML_STATE_CHAT;
 			}			
 		case XML_STATE_CHAT:
