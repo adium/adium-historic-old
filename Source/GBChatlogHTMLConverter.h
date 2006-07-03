@@ -26,7 +26,7 @@ typedef enum{
 
 @interface GBChatlogHTMLConverter : NSObject {
 	CFXMLParserRef	parser;
-	NSFileHandle	*inputFileHandle;
+	NSString		*inputFileString;
 	NSDictionary	*eventTranslate;
 	
 	chatLogState	state;
