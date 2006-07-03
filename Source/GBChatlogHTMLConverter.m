@@ -287,7 +287,7 @@ void addChild(CFXMLParserRef parser, void *parent, void *child, void *context)
 
 void endStructure(CFXMLParserRef parser, void *xmlType, void *context)
 {
-	NSString *name;
+	NSString *name = nil;
 	BOOL empty = NO;
 	if(xmlType != NULL)
 	{
