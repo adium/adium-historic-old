@@ -644,7 +644,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	return string;
 }
 
-- (AIXMLElement *)elementWithAppKitAttributes:(NSDictionary *)attributes attributeNames:(NSSet *)attributeNames elementContent:(NSString *)elementContent shouldAddElementContentToTopElement:(out BOOL *)outAddElementContentToTopElement
+- (AIXMLElement *)elementWithAppKitAttributes:(NSDictionary *)attributes attributeNames:(NSSet *)attributeNames elementContent:(NSMutableString *)elementContent shouldAddElementContentToTopElement:(out BOOL *)outAddElementContentToTopElement
 {
 	if (!(attributes && [attributes count] && attributeNames && [attributeNames count]))
 		return nil;
@@ -663,42 +663,48 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		[thisElement setValue:linkValue forKey:@"href"];
 	}
 
-#if 0
-	/*XXX This doesn't work yet, and I have no interest in fixing it because nothing that receives the output from this method will have any use for the images.
-	 *It's not known whether any XHTML-IM clients support data: URLs, and the logs probably will not retain images either.
-	 *Feel free to hack on this if you find something that will want images.
-	 *I would recommend allocating a bit from the bitfield to control it, though.
-	 *--boredzo
-	 */
 	if (attachmentValue) {
-		AIXMLElement *imageElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"img"];
-		[imageElement setSelfCloses:YES];
-
-		NSTextAttachmentCell *cell = (NSTextAttachmentCell *)[attachmentValue attachmentCell];
-		NSSize size = [cell cellSize];
-		[imageElement setValue:[NSNumber numberWithFloat:size.width]  forKey:@"width"];
-		[imageElement setValue:[NSNumber numberWithFloat:size.height] forKey:@"height"];
-
-		NSString *path = [[attachmentValue fileWrapper] filename];
-		//XXX If !path, write the image to the save path passed to -encodeStrictXHTML:imagesPath:.
-		if (path) {
-			NSURL *fileURL = [NSURL fileURLWithPath:path];
-			[imageElement setValue:fileURL forKey:@"src"];
-		}
-
-		if (elementContent && [elementContent length]) {
-			[imageElement setValue:elementContent forKey:@"alt"];
-		}
-
-		if (thisElement) {
-			[thisElement addObject:imageElement];
+		AITextAttachmentExtension *extension = (AITextAttachmentExtension *)attachmentValue;
+		if([extension respondsToSelector:@selector(shouldAlwaysSendAsText)] && [extension shouldAlwaysSendAsText]){
+			[elementContent setString:[extension string]];
+			addElementContentToTopElement = NO;
+#if 0
 		} else {
-			thisElement = imageElement;
-		}
+			/*XXX This doesn't work yet, and I have no interest in fixing it because nothing that receives the output from this method will have any use for the images.
+			*It's not known whether any XHTML-IM clients support data: URLs, and the logs probably will not retain images either.
+			*Feel free to hack on this if you find something that will want images.
+			*I would recommend allocating a bit from the bitfield to control it, though.
+			*--boredzo
+			*/
+			AIXMLElement *imageElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"img"];
+			[imageElement setSelfCloses:YES];
 
-		addElementContentToTopElement = NO;
-	}
+			NSTextAttachmentCell *cell = (NSTextAttachmentCell *)[attachmentValue attachmentCell];
+			NSSize size = [cell cellSize];
+			[imageElement setValue:[NSNumber numberWithFloat:size.width]  forKey:@"width"];
+			[imageElement setValue:[NSNumber numberWithFloat:size.height] forKey:@"height"];
+
+			NSString *path = [[attachmentValue fileWrapper] filename];
+			//XXX If !path, write the image to the save path passed to -encodeStrictXHTML:imagesPath:.
+			if (path) {
+				NSURL *fileURL = [NSURL fileURLWithPath:path];
+				[imageElement setValue:fileURL forKey:@"src"];
+			}
+
+			if (elementContent && [elementContent length]) {
+				[imageElement setValue:elementContent forKey:@"alt"];
+			}
+
+			if (thisElement) {
+				[thisElement addObject:imageElement];
+			} else {
+				thisElement = imageElement;
+			}
+
+			addElementContentToTopElement = NO;
 #endif
+		}
+	}
 
 	NSString *CSSString = [NSAttributedString CSSStringForTextAttributes:attributes];
 	if (CSSString && [CSSString length]) {
@@ -797,6 +803,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	NSMutableSet *CSSCapableAttributes = [[NSAttributedString CSSCapableAttributesSet] mutableCopy];
 	[CSSCapableAttributes addObject:NSLinkAttributeName];
+	NSSet *CSSCapableAttributesWithNoAttachment = [NSSet setWithSet:CSSCapableAttributes];
 	[CSSCapableAttributes addObject:NSAttachmentAttributeName];
 
 	NSDictionary *prevAttributes = nil;
@@ -812,7 +819,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		                          getAddedKeys:&startedKeys
 		                        getRemovedKeys:&endedKeys
 		                    includeChangedKeys:YES];
-		prevAttributes = attributes;
+		prevAttributes = [attributes dictionaryWithIntersectionWithSetOfKeys:CSSCapableAttributesWithNoAttachment];
+		if([attributes objectForKey:NSAttachmentAttributeName] != nil)
+			runRange.length = 1;  //Encode a single image at a time
 
 		NSMutableSet *mutableEndedKeys = [endedKeys mutableCopy];
 		if (mutableEndedKeys) {
