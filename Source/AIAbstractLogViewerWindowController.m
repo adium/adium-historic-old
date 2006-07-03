@@ -1637,6 +1637,15 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
+	if (![NSApp isOnTigerOrBeter]) {
+		NSLog(@"outlineView:%@ objectValueForTableColumn:%@ byItem:%@",outlineView,tableColumn,item);
+		NSLog(@"metacontact class from string is %@",NSClassFromString(@"AIMetaContact"));
+		NSLog(@"metacontact string from class from string is %@",NSClassFromString(NSStringFromClass(@"AIMetaContact")));
+		NSLog(@"itemClass is %@",[item class]);
+		NSLog(@"metacontact class is %@",[AIMetaContact class]);
+		NSLog(@"Equal? %i",([item class] == [AIMetaContact class]));
+	}
+	
 	Class itemClass = [item class];
 
 	if (itemClass == [AIMetaContact class]) {
