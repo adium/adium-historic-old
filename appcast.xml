@@ -9,7 +9,7 @@
       <description>
 &lt;p&gt;This build is _huge_ because All debug symbols are on.  Hopefully this will help us hunt down a couple remaining issues such as the 10.3 log viewer crashes.&lt;/p&gt;
         </description>
-      <enclosure sparkle:version="1.0a15" url="http://adiumx.cachefly.net/AdiumX_1.0a15.zip" length="35442894" type="application/octet-stream"/>
+      <enclosure sparkle:version="1.0a16" url="http://adiumx.cachefly.net/AdiumX-1.0a16.zip" length="35283924" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
