@@ -1637,7 +1637,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
-	if (![NSApp isOnTigerOrBetter] && outlineView) {
+	if (![NSApp isOnTigerOrBetter]) {
 		NSLog(@"--- outlineView: objectValueForTableColumn: byItem:");
 		NSLog(@"outlineView has address 0x%08x", (unsigned long)outlineView);
 		NSLog(@"outlineView has value %@", outlineView);
