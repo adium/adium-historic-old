@@ -28,6 +28,7 @@
 #import <AIUtilities/AITableViewAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIToolbarUtilities.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
