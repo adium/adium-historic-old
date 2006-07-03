@@ -35,6 +35,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #define DEFAULT_SHELF_WIDTH 200
 #define CONTROL_HEIGHT 22
@@ -265,7 +266,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	}
 	
 	if( shelfView ){
-		[shelfView setFrame: NSMakeRect( 0, CONTROL_HEIGHT + 1, currentShelfWidth, [self bounds].size.height - (CONTROL_HEIGHT + 3) )];
+		[shelfView setFrame: NSMakeRect( 0, CONTROL_HEIGHT + 1, currentShelfWidth, [self bounds].size.height - (CONTROL_HEIGHT + 1) )];
 	}
 	
 	if( contentView ){
