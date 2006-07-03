@@ -225,9 +225,6 @@ SecuridProvider
 								 BuddyInfo info, PropertyChangeEvent event) {
 		String	changedProperty = event.getPropertyName();
 
-		//We will also hear about this in receivedStatusUpdate() below; we'll use that to notify the delegate
-		//if (changedProperty.equals("online")) return;
-
 		HashMap map = new HashMap();
 		map.put("Screenname", buddy);
 		map.put("BuddyInfo", info);
@@ -253,6 +250,10 @@ SecuridProvider
 			}
 			
 			sendDelegateMessageWithMap("Profile", map);
+		} else if (changedProperty.equals("online")) {
+			Object online = event.getNewValue();
+			if(online instanceof java.lang.Boolean && !((Boolean)online).booleanValue())
+				sendDelegateMessageWithMap("StatusUpdate", map);
 		}
 		/*else if (changedProperty.equals("mobile")) {
 			sendDelegateMessageWithMap("Mobile", map);
