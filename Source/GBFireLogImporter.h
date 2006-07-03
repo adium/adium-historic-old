@@ -38,7 +38,7 @@ typedef enum{
 
 @interface GBFireXMLLogImporter : NSObject {
 	CFXMLParserRef	parser;
-	NSFileHandle	*inputFileHandle;
+	NSString		*inputFileString;
 	NSFileHandle	*outputFileHandle;
 	NSDictionary	*eventTranslate;
 	
