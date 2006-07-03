@@ -201,7 +201,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	
 	state = XML_STATE_NONE;
 	
-	inputFileHandle = nil;
+	inputFileString = nil;
 	outputFileHandle = nil;
 	sender = nil;
 	mySN = nil;
@@ -224,7 +224,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 - (BOOL)readFile:(NSString *)inFile toFile:(NSString *)outFile account:(NSString * *)account;
 {
 	BOOL success = YES;
-	inputFileHandle = [[NSFileHandle fileHandleForReadingAtPath:inFile] retain];
+	NSData *inputData = [NSData dataWithContentsOfFile:inFile];
+	inputFileString = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
 	int outfd = open([outFile fileSystemRepresentation], O_CREAT | O_WRONLY, 0644);
 	outputFileHandle = [[NSFileHandle alloc] initWithFileDescriptor:outfd closeOnDealloc:YES];
 	NSURL *url = [[NSURL alloc] initFileURLWithPath:inFile];
@@ -252,7 +253,6 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	CFRelease(parser);
 	parser = nil;
 	[url release];
-	[inputFileHandle closeFile];
 	[outputFileHandle closeFile];
 	
 	*account = [[mySN retain] autorelease];
@@ -261,7 +261,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 
 - (void)dealloc
 {
-	[inputFileHandle release];
+	[inputFileString release];
 	[outputFileHandle release];
 	[eventTranslate release];
 	[sender release];
@@ -342,8 +342,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				else
 					date = nil;
 				
-				//Mark the location of the message...  We can copy it directly.  Anyone know why it is off by 2?
-				messageStart = CFXMLParserGetLocation(parser) + 2;
+				//Mark the location of the message...  We can copy it directly.  Anyone know why it is off by 1?
+				messageStart = CFXMLParserGetLocation(parser) - 1;
 				
 				if([attributes objectForKey:@"action"] != nil)
 					actionMessage = YES;
@@ -378,7 +378,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			if([name isEqualToString:@"message"])
 			{
 				//Mark the location of the message...  same as above
-				messageStart = CFXMLParserGetLocation(parser) + 2;
+				messageStart = CFXMLParserGetLocation(parser) - 1;
 				state = XML_STATE_EVENT_MESSAGE;
 			}
 			if([name isEqualToString:@"nickname"])
@@ -407,12 +407,10 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			if([name isEqualToString:@"message"])
 			{
 				CFIndex end = CFXMLParserGetLocation(parser);
-				[inputFileHandle seekToFileOffset:messageStart];
-				NSData *data = [inputFileHandle readDataOfLength:end-messageStart-8];  //10 chars for </message> and -2 for index being off
-				
 				NSString *message = nil;
 				if(!empty)
-					message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+					message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)];  // 10 for </message> and 1 for the index being off 
+
 				//Common logging format
 				NSMutableString *outMessage = [NSMutableString stringWithString:@"<message"];
 				if(actionMessage)
@@ -442,8 +440,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 						newMessage = [[NSString alloc] initWithFormat:@"%@/me %@", [message substringWithRange:NSMakeRange(cutIndex, index-cutIndex)], [message substringFromIndex:index]];
 					else
 						newMessage = [[NSString alloc] initWithString:@"/me "];
-					[message release];
-					message = newMessage;
+					message = [newMessage autorelease];
 				}
 				if(autoResponse)
 					[outMessage appendString:@" auto=\"yes\""];
@@ -456,7 +453,6 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				else
 					[outMessage appendString:@"/>\n"];
 				[outputFileHandle writeData:[outMessage dataUsingEncoding:NSUTF8StringEncoding]];
-				[message release];
 				state = XML_STATE_ENVELOPE;
 			}
 			break;
@@ -468,12 +464,10 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			if([name isEqualToString:@"message"])
 			{
 				CFIndex end = CFXMLParserGetLocation(parser);
-				[inputFileHandle seekToFileOffset:messageStart];
-				NSData *data = [inputFileHandle readDataOfLength:end-messageStart-8];  //10 chars for </message> and -2 for index being off
-				
 				NSString *message = nil;
 				if(!empty)
-					message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+					message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)];  // 10 for </message> and 1 for the index being off 
+
 				if([eventName isEqualToString:@"loggedOff"] || [eventName isEqualToString:@"memberParted"])
 				{
 					NSMutableString *outMessage = [NSMutableString stringWithString:@"<status type=\"offline\""];
@@ -597,7 +591,6 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 						  date,
 						  message);
 				}
-				[message release];
 				state = XML_STATE_EVENT;
 			}
 			break;
@@ -680,7 +673,7 @@ void addChild(CFXMLParserRef parser, void *parent, void *child, void *context)
 
 void endStructure(CFXMLParserRef parser, void *xmlType, void *context)
 {
-	NSString *name;
+	NSString *name = nil;
 	BOOL empty = NO;
 	if(xmlType != NULL)
 	{
