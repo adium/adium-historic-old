@@ -1265,13 +1265,19 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						[attrString appendString:@" " withAttributes:[textAttributes dictionary]];
 
 					} else if ([chunkString hasPrefix:@"#x"]) {
-						[attrString appendString:[NSString stringWithFormat:@"%C",
-							[chunkString substringFromIndex:1]]
-							withAttributes:[textAttributes dictionary]];
+						NSString *hexString = [chunkString substringFromIndex:2];
+						NSScanner *hexScanner = [NSScanner scannerWithString:hexString];
+						unsigned int character = 0;
+						if([hexScanner scanHexInt:&character])
+							[attrString appendString:[NSString stringWithFormat:@"%C", character]
+									  withAttributes:[textAttributes dictionary]];
 					} else if ([chunkString hasPrefix:@"#"]) {
-						[attrString appendString:[NSString stringWithFormat:@"%C", 
-							[[chunkString substringFromIndex:1] intValue]] 
-							withAttributes:[textAttributes dictionary]];
+						NSString *decString = [chunkString substringFromIndex:1];
+						NSScanner *decScanner = [NSScanner scannerWithString:decString];
+						int character = 0;
+						if([decScanner scanInt:&character])
+							[attrString appendString:[NSString stringWithFormat:@"%C", character]
+									  withAttributes:[textAttributes dictionary]];
 					}
 					else { //Invalid
 						validTag = NO;
