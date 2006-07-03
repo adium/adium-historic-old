@@ -192,7 +192,9 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			if([name isEqualToString:@"message"])
 			{
 				CFIndex end = CFXMLParserGetLocation(parser);
-				NSString *message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)];  // 10 for </message> and 1 for the index being off
+				NSString *message = nil;
+				if(!empty)
+					message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)];  // 10 for </message> and 1 for the index being off
 				
 				[output appendFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@%@: </span><pre class=\"message\">%@</pre></div>\n",
 					([mySN isEqualToString:sender] ? @"send" : @"receive"), 
@@ -210,7 +212,9 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			if([name isEqualToString:@"status"])
 			{
 				CFIndex end = CFXMLParserGetLocation(parser);
-				NSString *message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 10)];  // 9 for </status> and 1 for the index being off
+				NSString *message = nil;
+				if(!empty)
+					message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 10)];  // 9 for </status> and 1 for the index being off
 								
 				NSString *displayMessage;
 				//Note: I am diverging from what the AILoggerPlugin logs in this case.  It can't handle every case we can have here
