@@ -665,9 +665,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	if (attachmentValue) {
 		AITextAttachmentExtension *extension = (AITextAttachmentExtension *)attachmentValue;
-		if([extension respondsToSelector:@selector(shouldAlwaysSendAsText)] && [extension shouldAlwaysSendAsText]){
+		if(thingsToInclude.attachmentTextEquivalents || ([extension respondsToSelector:@selector(shouldAlwaysSendAsText)] && [extension shouldAlwaysSendAsText])) {
 			[elementContent setString:[extension string]];
-			addElementContentToTopElement = NO;
 #if 0
 		} else {
 			/*XXX This doesn't work yet, and I have no interest in fixing it because nothing that receives the output from this method will have any use for the images.
@@ -820,8 +819,6 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		                        getRemovedKeys:&endedKeys
 		                    includeChangedKeys:YES];
 		prevAttributes = [attributes dictionaryWithIntersectionWithSetOfKeys:CSSCapableAttributesWithNoAttachment];
-		if([attributes objectForKey:NSAttachmentAttributeName] != nil)
-			runRange.length = 1;  //Encode a single image at a time
 
 		NSMutableSet *mutableEndedKeys = [endedKeys mutableCopy];
 		if (mutableEndedKeys) {
@@ -845,7 +842,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 				if (attributesToRestore && [attributesToRestore count]) {
 					//Create a method to generate an element for a set of AppKit attributes. Use it both here and below.
-					AIXMLElement *restoreElement = [self elementWithAppKitAttributes:[attributes dictionaryWithIntersectionWithSetOfKeys:attributesToRestore] attributeNames:attributesToRestore elementContent:nil shouldAddElementContentToTopElement:NO];
+					AIXMLElement *restoreElement = [self elementWithAppKitAttributes:[attributes dictionaryWithIntersectionWithSetOfKeys:attributesToRestore]
+					                                                  attributeNames:attributesToRestore
+					                                                  elementContent:nil
+					                             shouldAddElementContentToTopElement:NULL];
 					[[elementStack lastObject] addObject:restoreElement];
 					[elementStack addObject:restoreElement];
 
@@ -917,7 +917,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					[[elementStack lastObject] addObject:thisElement];
 					[attributeNamesStack addObject:itemKeys];
 					[elementStack addObject:thisElement];
-				} else {
+				} else if(!addElementContentToTopElement) {
 					[[elementStack lastObject] addObject:elementContent];
 				}
 			}
@@ -932,7 +932,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			AIXMLElement *brElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"br"];
 			[brElement setSelfCloses:YES];
 			NSArray *linesAndBRs = [elementContent allLinesWithSeparator:brElement];
-			
+
 			//Add these zero or more lines, with BRs between them, to the top element on the stack.
 			[[elementStack lastObject] addObjectsFromArray:linesAndBRs];
 		}
