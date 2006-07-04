@@ -492,37 +492,38 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				{
 					//now we have to parse all these
 					NSString *type = nil;
+					int parseMessageIndex = 0;
 					if(message != nil)
 					{
-						if([message rangeOfString:@"changed status to Idle"].location != NSNotFound)
+						if((parseMessageIndex = [message rangeOfString:@"changed status to Idle"].location) != NSNotFound)
 							type = @"idle";
-						else if([message rangeOfString:@"status to Available"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to Available"].location) != NSNotFound)
 							type = @"available";
-						else if([message rangeOfString:@"status to Away"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to Away"].location) != NSNotFound)
 							type = @"away";
-						else if([message rangeOfString:@"status to Busy"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to Busy"].location) != NSNotFound)
 							type = @"busy";
-						else if([message rangeOfString:@"status to Not at Home"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to Not at Home"].location) != NSNotFound)
 							type = @"notAtHome";
-						else if([message rangeOfString:@"status to On the Phone"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to On the Phone"].location) != NSNotFound)
 							type = @"onThePhone";
-						else if([message rangeOfString:@"status to On Vacation"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to On Vacation"].location) != NSNotFound)
 							type = @"onVacation";
-						else if([message rangeOfString:@"status to Do Not Disturb"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to Do Not Disturb"].location) != NSNotFound)
 							type = @"doNotDisturb";
-						else if([message rangeOfString:@"status to Extended Away"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to Extended Away"].location) != NSNotFound)
 							type = @"extendedAway";
-						else if([message rangeOfString:@"status to Be Right Back"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to Be Right Back"].location) != NSNotFound)
 							type = @"beRightBack";
-						else if([message rangeOfString:@"status to Be NA"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to Be NA"].location) != NSNotFound)
 							type = @"notAvailable";
-						else if([message rangeOfString:@"status to Be Not at Home"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to Be Not at Home"].location) != NSNotFound)
 							type = @"notAtHome";
-						else if([message rangeOfString:@"status to Not at my Desk"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to Not at my Desk"].location) != NSNotFound)
 							type = @"notAtMyDesk";
-						else if([message rangeOfString:@"status to Not in the Office"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to Not in the Office"].location) != NSNotFound)
 							type = @"notInTheOffice";
-						else if([message rangeOfString:@"status to Stepped Out"].location != NSNotFound)
+						else if((parseMessageIndex = [message rangeOfString:@"status to Stepped Out"].location) != NSNotFound)
 							type = @"steppedOut";
 						else
 							NSLog(@"Unknown type %@", message);
@@ -530,7 +531,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					//if the type is unknown, we can't do anything, drop it!
 					if(type != nil)
 					{
-						int colonIndex = [message rangeOfString:@":"].location;
+						int colonIndex = [message rangeOfString:@":" options:0 range:NSMakeRange(parseMessageIndex, [message length] - parseMessageIndex)].location;
 						
 						NSMutableString *outMessage = [NSMutableString stringWithFormat:@"<status type=\"%@\"", type];
 						if(sender != nil)
