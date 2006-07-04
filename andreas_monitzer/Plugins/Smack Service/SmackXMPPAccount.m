@@ -60,7 +60,7 @@
 
 @end
 
-@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin;
+@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin;
 
 @interface NSObject (SmackXMPPPluginAddition)
 - (id)initWithAccount:(SmackXMPPAccount*)account;
@@ -88,6 +88,7 @@
             [SmackXMPPMessagePlugin class],
             [SmackXMPPErrorMessagePlugin class],
             [SmackXMPPHeadlineMessagePlugin class],
+            [SmackXMPPMultiUserChatPlugin class],
             nil
         };
         
@@ -117,14 +118,21 @@
     return service;
 }
 
-- (AIListContact *)contactWithJID:(NSString *)inJID
+- (AIListContact *)contactWithJID:(NSString *)inJID create:(BOOL)create
 {
     AIListContact *result = [roster objectForKey:inJID];
     if(result)
         return result;
-	return ([[adium contactController] contactWithService:service
-												  account:self
-													  UID:inJID]);
+    if(create)
+        return ([[adium contactController] contactWithService:service
+                                                      account:self
+                                                          UID:inJID]);
+    return nil;
+}
+
+- (AIListContact *)contactWithJID:(NSString *)inJID
+{
+    return [self contactWithJID:inJID create:YES];
 }
 
 - (void)connect {
@@ -391,19 +399,12 @@
 }
 
 - (BOOL)openChat:(AIChat *)chat {
+    [[adium interfaceController] openChat:chat];
     return YES;
 }
 
 - (BOOL)closeChat:(AIChat *)chat {
     return YES;
-}
-
-- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage {
-    return NO;
-}
-
-- (BOOL)joinGroupChatNamed:(NSString *)name {
-    return NO;
 }
 
 - (BOOL)sendTypingObject:(AIContentTyping *)inTypingObject {
@@ -585,7 +586,7 @@
 	}
 	
 	//Apply any changes
-	[listContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[listContact notifyOfChangedStatusSilently:NO];
 	
 	if (nameChanges) {
 		//Notify of display name changes

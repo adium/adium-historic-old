@@ -56,7 +56,10 @@
     
     AIListContact *listContact = [account contactWithJID:jidWithResource];
     
-    SmackListContact *listEntry = (SmackListContact*)[account contactWithJID:[jidWithResource jidUserHost]];
+    SmackListContact *listEntry = (SmackListContact*)[account contactWithJID:[jidWithResource jidUserHost] create:NO];
+    
+    if(!listEntry)
+        return; // ignore presence information for people not on our contact list
     
     if(![listEntry containsObject:listContact])
         [listEntry addObject:listContact];
@@ -137,7 +140,7 @@
                 if(![[listContact formattedUID] isEqualToString:jid])
                     [listContact setFormattedUID:jid notify:NotifyLater];
                 
-                [listContact setStatusObject:type forKey:@"XMPPSubscriptionType" notify:NotifyNow];
+                [listContact setStatusObject:type forKey:@"XMPPSubscriptionType" notify:NotifyLater];
                 
                 // XMPP supports contacts that are in multiple groups, Adium does not.
                 // First I'm checking if the group it's in here locally is one of the groups

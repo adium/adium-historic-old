@@ -1,0 +1,24 @@
+{
+    IBClasses = (
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = DCJoinChatViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = SmackXMPPJoinChatViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                chatRoomNameField = NSTextField; 
+                nicknameField = NSTextField; 
+                passwordField = NSTextField; 
+                serverField = NSTextField; 
+            }; 
+            SUPERCLASS = DCJoinChatViewController; 
+        }
+    ); 
+    IBVersion = 1; 
+}
