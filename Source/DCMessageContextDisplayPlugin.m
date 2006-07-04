@@ -225,7 +225,7 @@
 	NSEnumerator        *enumerator;
 	
 	chat = (AIChat *)[notification object];
-	
+
 	//Ensure we only save context for one-on-one chats; there must be a [chat listObject] and no name.
 	if (chat && ![chat isGroupChat]) {
 		dict = [NSMutableDictionary dictionary];
@@ -263,11 +263,10 @@
 		
 	}
 	
-	// Did we find anything useful to save? If not, leave it untouched
+	//Did we find anything useful to save? If not, leave it untouched
 	if(dict && ([dict count] > 0)) {
 		[[chat listObject] setPreference:dict forKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
-	}
-	
+	}	
 }
 
 //Returns a dictionary representation of a content object which can be written to disk
