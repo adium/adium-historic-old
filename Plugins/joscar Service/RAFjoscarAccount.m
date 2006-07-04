@@ -1291,16 +1291,9 @@ BOOL isHTMLContact(AIListObject *inListObject)
 
 - (void)chatFailed:(NSString *)name
 {	
-	AIChat *chat = [self mainThreadChatWithName:name];
-	AIContentStatus *status = [AIContentStatus statusInChat:chat 
-												 withSource:chat 
-												destination:self 
-													   date:[NSDate date] 
-													message:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"Error: A connection failure has occurred.", nil)] autorelease]
-												   withType:@"group_chat_connection_failure"];
-	NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:1];
-	[userInfo setObject:status forKey:@"AIContentObject"];
-	[[adium notificationCenter] postNotificationName:Content_ContentObjectAdded object:userInfo userInfo:[userInfo autorelease]];
+	[[adium contentController] displayStatusMessage:AILocalizedString(@"Error: A connection failure has occurred.", nil)
+											 ofType:@"group_chat_connection_failure"
+											 inChat:[self mainThreadChatWithName:name]];
 }
 
 - (void)chatClosed:(NSNotification *)notif
