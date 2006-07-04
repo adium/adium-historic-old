@@ -59,22 +59,15 @@
 #define LOG_VIEWER					AILocalizedString(@"Chat Transcripts Viewer",nil)
 #define VIEW_LOGS_WITH_CONTACT		AILocalizedString(@"View Chat Transcripts",nil)
 
-#define	CURRENT_LOG_VERSION			4       //Version of the log index.  Increase this number to reset everyones index.
+#define	CURRENT_LOG_VERSION			5       //Version of the log index.  Increase this number to reset everyone's index.
 
 #define	LOG_VIEWER_IDENTIFIER		@"LogViewer"
 
-#ifdef XML_LOGGING
 #define XML_LOGGING_VERSION			@"0.4"
 #define NEW_LOGFILE_TIMEOUT			600		//10 minutes
-#endif
 
 @interface AILoggerPlugin (PRIVATE)
-- (void)preferencesChanged:(NSNotification *)notification;
 - (void)configureMenuItems;
-- (NSString *)stringForContentMessage:(AIContentMessage *)inContent;
-- (NSString *)stringForContentStatus:(AIContentStatus *)inContent;
-- (NSString  *)_writeMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date;
-- (void)displayErrorAndDisableLogging;
 - (SKIndexRef)createLogIndex;
 - (void)closeLogIndex;
 - (void)resetLogIndex;
@@ -87,11 +80,9 @@
 
 - (void)upgradeLogExtensions;
 
-#ifdef XML_LOGGING
 - (NSString *)keyForChat:(AIChat *)chat;
 - (AIXMLAppender *)appenderForChat:(AIChat *)chat;
 - (void)closeAppenderForChat:(AIChat *)chat;
-#endif
 @end
 
 static NSString     *logBasePath = nil;     //The base directory of all logs
@@ -110,11 +101,10 @@ Class LogViewerWindowControllerClass = NULL;
 
 	AIPreferenceController *preferenceController = [adium preferenceController];
 
-	#ifdef XML_LOGGING
 	activeAppenders = [[NSMutableDictionary alloc] init];
 	activeTimers = [[NSMutableDictionary alloc] init];
 	
-	HTMLDecoder = [[AIHTMLDecoder alloc] initWithHeaders:NO
+	xhtmlDecoder = [[AIHTMLDecoder alloc] initWithHeaders:NO
 												 fontTags:YES
 											closeFontTags:YES
 												colorTags:YES
@@ -125,8 +115,8 @@ Class LogViewerWindowControllerClass = NULL;
 								onlyIncludeOutgoingImages:NO
 										   simpleTagsOnly:NO
 										   bodyBackground:NO];
-	[HTMLDecoder setGeneratesStrictXHTML:YES];
-	[HTMLDecoder setUsesAttachmentTextEquivalents:YES];
+	[xhtmlDecoder setGeneratesStrictXHTML:YES];
+	[xhtmlDecoder setUsesAttachmentTextEquivalents:YES];
 	
 	statusTranslation = [[NSDictionary alloc] initWithObjectsAndKeys:
 		@"away",@"away",
@@ -137,9 +127,7 @@ Class LogViewerWindowControllerClass = NULL;
 		@"available",@"return_idle",
 		@"away",@"away_message",
 		nil];
-	
-	#endif
-	
+
 	//Setup our preferences
 	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS 
 	                              forClass:[self class]] 
@@ -197,12 +185,11 @@ Class LogViewerWindowControllerClass = NULL;
 
 - (void)uninstallPlugin
 {
-	#ifdef XML_LOGGING
 	[activeAppenders release];
 	[activeTimers release];
-	[HTMLDecoder release];
+	[xhtmlDecoder release];
 	[statusTranslation release];
-	#endif
+
 	[[adium preferenceController] removeObserver:self forKeyPath:PREF_KEYPATH_LOGGER_ENABLE];
 }
 
@@ -220,10 +207,8 @@ Class LogViewerWindowControllerClass = NULL;
 		if (!observingContent) { //Stop Logging
 			[[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
 			
-			#ifdef XML_LOGGING
 			[[adium notificationCenter] removeObserver:self name:Chat_DidOpen object:nil];			
 			[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];			
-			#endif
 
 		} else { //Start Logging
 			[[adium notificationCenter] addObserver:self 
@@ -231,7 +216,6 @@ Class LogViewerWindowControllerClass = NULL;
 											   name:Content_ContentObjectAdded 
 											 object:nil];
 											 
-			#ifdef XML_LOGGING
 			[[adium notificationCenter] addObserver:self
 										   selector:@selector(chatOpened:)
 											   name:Chat_DidOpen
@@ -241,8 +225,6 @@ Class LogViewerWindowControllerClass = NULL;
 										   selector:@selector(chatClosed:)
 											   name:Chat_WillClose
 											 object:nil];
-			#endif	
-
 		}
 	}
 }
@@ -260,51 +242,11 @@ Class LogViewerWindowControllerClass = NULL;
 	return [NSString stringWithFormat:@"%@.%@/%@", [account serviceID], [[account UID] safeFilenameString], object];
 }
 
-+ (NSString *)imagesPathForContentObject:(AIContentObject *)contentObject
-{
-	AIChat		*chat = [contentObject chat];
-	NSString	*object = [chat name];
-	if (!object) object = [[chat listObject] UID];
-
-	//Get the log path and name
-	object = [object safeFilenameString];
-	
-	NSString *relativePath = [AILoggerPlugin relativePathForLogWithObject:object onAccount:[chat account]];
-	NSString *fullPath = [AILoggerPlugin fullPathOfLogAtRelativePath:relativePath];
-
-	NSString	*dateString = [[contentObject date] descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:nil];
-
-	return ([fullPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", object, dateString]]);
-}
-
-
-#ifdef XML_LOGGING
 + (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date
 {
 	NSString    *dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil locale:nil];
 	return [NSString stringWithFormat:@"%@ (%@).chatlog", object, dateString];
 }
-#endif
-
-//Returns the file name for the log (plaintext logging is deprecated)
-+ (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date plainText:(BOOL)plainText
-{
-#ifdef XML_LOGGING
-	return [self fileNameForLogWithObject:object onDate:date];
-#else
-	NSString	*dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:nil];
-	NSString	*extension = (plainText ? @"adiumLog" : @"AdiumHTMLLog");
-	
-	return [NSString stringWithFormat:@"%@ (%@).%@", object, dateString, extension];
-#endif
-}
-
-//Takes the RELATIVE path to a log, and returns a FULL path
-+ (NSString *)fullPathOfLogAtRelativePath:(NSString *)relativePath
-{
-	return [[self logBasePath] stringByAppendingPathComponent:relativePath];
-}
-
 
 + (NSString *)fullPathForLogOfChat:(AIChat *)chat onDate:(NSDate *)date
 {
@@ -314,13 +256,8 @@ Class LogViewerWindowControllerClass = NULL;
 	if (!objectUID) objectUID = [[chat listObject] UID];
 	objectUID = [objectUID safeFilenameString];
 
-#ifdef XML_LOGGING
 	NSString	*fileName = [self fileNameForLogWithObject:objectUID onDate:date];
-#else
-	NSString	*fileName = [self fileNameForLogWithObject:objectUID onDate:date plainText:NO];
-#endif
-	NSString	*relativePath = [self relativePathForLogWithObject:objectUID onAccount:account];
-	NSString	*absolutePath = [self fullPathOfLogAtRelativePath:relativePath];
+	NSString	*absolutePath = [logBasePath stringByAppendingPathComponent:[self relativePathForLogWithObject:objectUID onAccount:account]];
 	NSString	*fullPath = [absolutePath stringByAppendingPathComponent:fileName];
 
 	return fullPath;
@@ -422,7 +359,6 @@ Class LogViewerWindowControllerClass = NULL;
 //Log any content that is sent or received
 - (void)contentObjectAdded:(NSNotification *)notification
 {
-#ifdef XML_LOGGING	
 	AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
 	if ([content postProcessContent]) {
 		AIChat				*chat = [notification object];
@@ -443,7 +379,7 @@ Class LogViewerWindowControllerClass = NULL;
 			}
 			
 			[appender addElementWithName:@"message" 
-						  escapedContent:[HTMLDecoder encodeHTML:[content message] imagesPath:nil]
+						  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
 						   attributeKeys:attributeKeys
 						 attributeValues:attributeValues];
 		} else if ([[content type] isEqualToString:CONTENT_STATUS_TYPE]) {
@@ -468,7 +404,7 @@ Class LogViewerWindowControllerClass = NULL;
 			//If we can't find it for some reason, we probably shouldn't attempt logging.
 			if (actualObject) {
 				[appender addElementWithName:@"status"
-							  escapedContent:[HTMLDecoder encodeHTML:[content message] imagesPath:nil]
+							  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
 							   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
 							 attributeValues:[NSArray arrayWithObjects:
 								 [statusTranslation objectForKey:[(AIContentStatus *)content status]], 
@@ -477,42 +413,11 @@ Class LogViewerWindowControllerClass = NULL;
 								 nil]];
 			}
 		}
+		
+		[self markLogDirtyAtPath:[appender path] forChat:chat];
 	}
-#else
-    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
-	if ([content postProcessContent]) {
-		AIChat				*chat = [notification object];
-
-		//Don't log chats for temporary accounts
-		if ([[chat account] isTemporary]) return;
-
-		NSString			*logString = nil;
-
-		//Generate a plaintext string for this content
-		if ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
-			logString = [self stringForContentMessage:(AIContentMessage *)content];
-		} else if ([[content type] isEqualToString:CONTENT_STATUS_TYPE]) {
-			logString = [self stringForContentStatus:(AIContentStatus *)content];
-		}
-
-		//Log the string, and flag the log as dirty
-		if (logString) {
-			NSString	*relativePath;
-			NSString	*objectUID = [chat name];
-			if (!objectUID) objectUID = [[chat listObject] UID];
-
-			relativePath = [self _writeMessage:logString
-								betweenAccount:[chat account] 
-									 andObject:objectUID
-										onDate:[content date]];
-			
-			[self markLogDirtyAtPath:relativePath forChat:chat];
-		}
-	}
-#endif
 }
 
-#ifdef XML_LOGGING
 - (void)chatOpened:(NSNotification *)notification
 {
 	AIChat	*chat = [notification object];
@@ -604,114 +509,9 @@ Class LogViewerWindowControllerClass = NULL;
 	[activeTimers removeObjectForKey:[timer userInfo]];
 }
 
-#endif
-
-//Generate a plain-text string representing a content message
-#define AUTOREPLY AILocalizedString(@" (Autoreply)",nil)
-- (NSString *)stringForContentMessage:(AIContentMessage *)content
-{
-	NSString		*date = [[content date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES
-																													 showingAMorPM:YES]
-																 timeZone:nil
-																   locale:nil];
-	NSAttributedString      *message = [content message];
-	AIListObject			*source = [content source];
-	NSString				*logString = nil;
-
-	if (date && message && source) {
-		if (logHTML) {
-			logString = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@%@: </span><pre class=\"message\">%@</pre></div>\n",
-				([content isOutgoing] ? @"send" : @"receive"), 
-				date,
-				[source UID], 
-				([content isAutoreply] ? AUTOREPLY : @""),
-				[AIHTMLDecoder encodeHTML:message
-								  headers:NO 
-								 fontTags:NO 
-					   includingColorTags:NO
-							closeFontTags:NO 
-								styleTags:YES
-			   closeStyleTagsOnFontChange:YES
-						   encodeNonASCII:YES
-							 encodeSpaces:NO
-							   imagesPath:[AILoggerPlugin imagesPathForContentObject:content]
-						attachmentsAsText:NO 
-				onlyIncludeOutgoingImages:YES 
-						   simpleTagsOnly:NO
-						   bodyBackground:NO]];
-		} else {
-			logString = [NSString stringWithFormat:@"(%@) %@%@: %@\n",
-				date,
-				[source UID],
-				([content isAutoreply] ? AUTOREPLY : @""),
-				[message string]];
-		}
-	}
-
-	return logString;
-}
-
-//Generate a plain-text string representing a status message
-- (NSString *)stringForContentStatus:(AIContentStatus *)content
-{
-	NSString		*date = [[content date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES
-																													 showingAMorPM:YES]
-																 timeZone:nil
-																   locale:nil];
-	NSString		*message = [[content message] string];
-	NSString		*logString = nil;
-
-	if (date && message) {
-		if (logHTML) {
-			logString = [NSString stringWithFormat:@"<div class=\"status\">%@ (%@)</div>\n", message, date];
-		} else {
-			logString = [NSString stringWithFormat:@"<%@ (%@)>\n", message, date];
-		}
-	}
-
-	return logString;
-}
-
-//Write a plain-text string to the correct log file.  Returns a RELATIVE path to the log.
-- (NSString  *)_writeMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date
-{
-    NSString	*relativePath;
-    NSString    *fullPath;
-    NSString	*fileName;
-    FILE		*file;
-
-	//Get the log path and name
-	object = [object safeFilenameString];
-
-	fileName = [AILoggerPlugin fileNameForLogWithObject:object onDate:date plainText:!logHTML];
-	relativePath = [AILoggerPlugin relativePathForLogWithObject:object onAccount:account];
-	fullPath = [AILoggerPlugin fullPathOfLogAtRelativePath:relativePath];
-
-    //Create a directory for this log (if one doesn't exist)
-    [[NSFileManager defaultManager] createDirectoriesForPath:fullPath];
-
-    //Append the new content (We use fopen/fputs/fclose for max speed)
-    file = fopen([[fullPath stringByAppendingPathComponent:fileName] fileSystemRepresentation], "a");
-	if (file) {
-		if (ftell(file) == 0) {
-			//If we just created a new file, insert the UTF8 bom identifier so it will open properly
-			const unichar bom = 0xFEFF;
-			NSString *bomString = [[NSString alloc] initWithCharacters:&bom length:1];
-			fputs([bomString UTF8String], file);
-			[bomString release];
-		}
-		fputs([message UTF8String], file);
-		fclose(file);
-
-	} else {
-		[self displayErrorAndDisableLogging];
-	}
-
-	//Return a RELATIVE path to the log
-    return [relativePath stringByAppendingPathComponent:fileName];
-}
-
 //Display a warning to the user that logging failed, and disable logging to prevent additional warnings
+//XXX not currently used. We may want to shift these strings for use when xml logging fails, so I'm not removing them -eds
+/*
 - (void)displayErrorAndDisableLogging
 {
 	NSRunAlertPanel(AILocalizedString(@"Unable to write log", nil),
@@ -724,7 +524,7 @@ Class LogViewerWindowControllerClass = NULL;
                                              forKey:KEY_LOGGER_ENABLE
                                               group:PREF_GROUP_LOGGING];
 }
-
+*/
 
 #pragma mark Upgrade code
 - (void)upgradeLogExtensions
@@ -733,27 +533,25 @@ Class LogViewerWindowControllerClass = NULL;
 		/* This could all be a simple NSDirectoryEnumerator call on basePath, but we wouldn't be able to show progress,
 		* and this could take a bit.
 		*/
-		NSString		*accountBasePath = [AILoggerPlugin logBasePath];
 		NSFileManager	*defaultManager = [NSFileManager defaultManager];
-		NSArray			*accountFolders = [defaultManager directoryContentsAtPath:accountBasePath];
+		NSArray			*accountFolders = [defaultManager directoryContentsAtPath:logBasePath];
 		NSEnumerator	*accountFolderEnumerator = [accountFolders objectEnumerator];
 		NSString		*accountFolderName;
 		
-		NSMutableSet	*logBasePaths = [NSMutableSet set];
+		NSMutableSet	*pathsToContactFolders = [NSMutableSet set];
 		while ((accountFolderName = [accountFolderEnumerator nextObject])) {
-			NSString		*contactBasePath = [accountBasePath stringByAppendingPathComponent:accountFolderName];
+			NSString		*contactBasePath = [logBasePath stringByAppendingPathComponent:accountFolderName];
 			NSArray			*contactFolders = [defaultManager directoryContentsAtPath:contactBasePath];
 			
 			NSEnumerator	*contactFolderEnumerator = [contactFolders objectEnumerator];
 			NSString		*contactFolderName;
 			
 			while ((contactFolderName = [contactFolderEnumerator nextObject])) {
-				NSString			  *logBasePath = [contactBasePath stringByAppendingPathComponent:contactFolderName];
-				[logBasePaths addObject:logBasePath];
+				[pathsToContactFolders addObject:[contactBasePath stringByAppendingPathComponent:contactFolderName]];
 			}
 		}
 		
-		unsigned		contactsToProcess = [logBasePaths count];
+		unsigned		contactsToProcess = [pathsToContactFolders count];
 		unsigned		processed = 0;
 		
 		if (contactsToProcess) {
@@ -762,10 +560,10 @@ Class LogViewerWindowControllerClass = NULL;
 			upgradeWindowController = [[AILogFileUpgradeWindowController alloc] initWithWindowNibName:@"LogFileUpgrade"];
 			[[upgradeWindowController window] makeKeyAndOrderFront:nil];
 
-			NSEnumerator	*logBasePathEnumerator = [logBasePaths objectEnumerator];
-			NSString		*logBasePath;
-			while ((logBasePath = [logBasePathEnumerator nextObject])) {
-				NSDirectoryEnumerator *enumerator = [defaultManager enumeratorAtPath:logBasePath];
+			NSEnumerator	*pathsToContactFoldersEnumerator = [pathsToContactFolders objectEnumerator];
+			NSString		*pathToContactFolder;
+			while ((pathToContactFolder = [pathsToContactFoldersEnumerator nextObject])) {
+				NSDirectoryEnumerator *enumerator = [defaultManager enumeratorAtPath:pathToContactFolder];
 				NSString	*file;
 				
 				while ((file = [enumerator nextObject])) {
@@ -773,7 +571,7 @@ Class LogViewerWindowControllerClass = NULL;
 						([[file pathExtension] isEqualToString:@"adiumLog"]) ||
 						(([[file pathExtension] isEqualToString:@"bak"]) && ([file hasSuffix:@".html.bak"] || 
 																			 [file hasSuffix:@".adiumLog.bak"]))) {
-						NSString *fullFile = [logBasePath stringByAppendingPathComponent:file];
+						NSString *fullFile = [pathToContactFolder stringByAppendingPathComponent:file];
 						NSString *newFile = [[fullFile stringByDeletingPathExtension] stringByAppendingPathExtension:@"AdiumHTMLLog"];
 						
 						[defaultManager movePath:fullFile
@@ -977,7 +775,7 @@ Class LogViewerWindowControllerClass = NULL;
 
 
 //Dirty Log Array ------------------------------------------------------------------------------------------------------
-//Stores the relative paths of logs that need to be re-indexed
+//Stores the absolute paths of logs that need to be re-indexed
 #pragma mark Dirty Log Array
 //Load the dirty log array
 - (void)loadDirtyLogArray
@@ -1053,7 +851,7 @@ Class LogViewerWindowControllerClass = NULL;
     [dirtyLogLock unlock];
 	
     //Process each from folder
-    fromEnumerator = [[[[NSFileManager defaultManager] directoryContentsAtPath:[AILoggerPlugin logBasePath]] objectEnumerator] retain];
+    fromEnumerator = [[[[NSFileManager defaultManager] directoryContentsAtPath:logBasePath] objectEnumerator] retain];
     while ((fromName = [[fromEnumerator nextObject] retain])) {
 		fromGroup = [[AILogFromGroup alloc] initWithPath:fromName fromUID:fromName serviceClass:nil];
 
@@ -1067,7 +865,7 @@ Class LogViewerWindowControllerClass = NULL;
 				//since it will be accessed from outside this thread as well
 				[dirtyLogLock lock];
 				if (theLog != nil) {
-					[dirtyLogArray addObject:[theLog path]];
+					[dirtyLogArray addObject:[logBasePath stringByAppendingPathComponent:[theLog path]]];
 				}
 				[dirtyLogLock unlock];
 			}
@@ -1143,10 +941,7 @@ Class LogViewerWindowControllerClass = NULL;
 			if (logPath) {
 				SKDocumentRef   document;
 				
-				//Re-index the log
-				NSString            *fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:logPath];
-
-				document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:fullPath]);
+				document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:logPath]);
 				if (document) {
 					/* We _could_ use SKIndexAddDocument() and depend on our Spotlight plugin for importing.
 					 * However, this has three problems:
@@ -1155,7 +950,7 @@ Class LogViewerWindowControllerClass = NULL;
 					 *  2. Sometimes logs don't appear to be associated with the right URI type and therefore don't get indexed.
 					 *  3. On 10.3, this means that logs' markup is indexed in addition to their text, which is undesireable.
 					 */
-					CFStringRef documentText = CopyTextContentForFile(NULL, (CFStringRef)fullPath);
+					CFStringRef documentText = CopyTextContentForFile(NULL, (CFStringRef)logPath);
 					if (documentText) {
 						SKIndexAddDocumentWithText(searchIndex,
 												   document,
@@ -1165,7 +960,7 @@ Class LogViewerWindowControllerClass = NULL;
 					}
 					CFRelease(document);
 				} else {
-					NSLog(@"Could not create document for %@ [%@]",fullPath,[NSURL fileURLWithPath:fullPath]);
+					NSLog(@"Could not create document for %@ [%@]",logPath,[NSURL fileURLWithPath:logPath]);
 				}
 				
 				//Update our progress
