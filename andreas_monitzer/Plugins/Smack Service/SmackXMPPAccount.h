@@ -20,6 +20,7 @@
     NSArray *plugins;
 }
 
+- (AIListContact *)contactWithJID:(NSString *)inJID create:(BOOL)create;
 - (AIListContact *)contactWithJID:(NSString *)inJID;
 - (NSString*)hostName;
 - (SmackConnectionConfiguration*)connectionConfiguration;

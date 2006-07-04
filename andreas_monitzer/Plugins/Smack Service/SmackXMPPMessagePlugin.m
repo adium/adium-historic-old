@@ -107,10 +107,17 @@ static AIHTMLDecoder *messageencoder = nil;
         if(!inMessage)
             inMessage = [[NSAttributedString alloc] initWithString:[packet getBody] attributes:nil];
         
+        SmackXDelayInformation *delayinfo = [packet getExtension:@"x" :@"jabber:x:delay"];
+        NSDate *date = nil;
+        if(delayinfo)
+            date = [NSDate dateWithTimeIntervalSince1970:[[delayinfo getStamp] getTime]];
+        else
+            date = [NSDate date];
+        
         messageObject = [AIContentMessage messageInChat:chat
                                              withSource:sourceContact
                                             destination:account
-                                                   date:[NSDate date]
+                                                   date:date
                                                 message:inMessage
                                               autoreply:NO];
         [inMessage release];

@@ -147,6 +147,14 @@
 
 @end
 
+@interface JavaDate : NSObject {
+}
+
+// Returns the number of milliseconds since January 1, 1970, 00:00:00 GMT represented by this Date object.
+- (long)getTime;
+
+@end
+
 @interface SmackAccountManager : NSObject {
 }
 
@@ -371,6 +379,15 @@
 
 @end
 
+@interface SmackXDelayInformation : NSObject <SmackPacketExtension> {
+}
+
+- (JavaDate*)getStamp;
+- (NSString*)getFrom;
+- (NSString*)getReason;
+
+@end
+
 @interface SmackXMPPError : NSObject {
 }
 
@@ -402,6 +419,137 @@
 - (BOOL)login:(NSString*)username :(NSString*)password :(NSString*)resource :(BOOL)sendPresence;
 - (void)loginAnonymously;
 - (void)sendPacket:(SmackPacket*)packet;
+
+@end
+
+@interface SmackXOccupant : NSObject {
+}
+
+- (NSString*)getAffiliation;
+- (NSString*)getJid;
+- (NSString*)getNick;
+- (NSString*)getRole;
+
+@end
+
+@interface SmackXFormFieldOption : NSObject {
+}
+
+- (NSString*)getLabel;
+- (NSString*)getValue;
+- (NSString*)toString;
+- (NSString*)toXML;
+
+@end
+
+@interface SmackXFormField : NSObject {
+}
+
+- (NSString*)getDescription;
+- (NSString*)getLabel;
+- (JavaIterator*)getOptions;
+- (NSString*)getType;
+- (JavaIterator*)getValues;
+- (NSString*)getVariable;
+- (BOOL)isRequired;
+
+- (NSString*)toXML;
+
+@end
+
+@interface SmackXForm : NSObject {
+}
+
+- (SmackXFormField*)getField:(NSString*)variable;
+- (JavaIterator*)getFields;
+- (NSString*)getInstructions;
+- (NSString*)getTitle;
+- (NSString*)getType;
+- (void)setAnswer:(NSString*)variable :(NSNumber*)value;
+
+@end
+
+@interface SmackXDiscussionHistory : NSObject {
+}
+
+- (int)getMaxChars;
+- (int)getMaxStanzas;
+- (int)getSeconds;
+- (JavaDate*)getSince;
+- (void)setMaxChars:(int)maxChars;
+- (void)setMaxStanzas:(int)maxStanzas;
+- (void)setSeconds:(int)seconds;
+- (void)setSince:(JavaDate*)since;
+
+@end
+
+@interface SmackXMultiUserChat : NSObject {
+}
+
+- (void)banUser:(NSString*)jid :(NSString*)reason;
+- (void)banUsers:(JavaCollection*)jids;
+
+- (void)changeAvailabilityStatus:(NSString*)status :(SmackPresenceMode*)mode;
+- (void)changeNickname:(NSString*)nickname;
+- (void)changeSubject:(NSString*)subject;
+
+- (void)create:(NSString*)nickname;
+- (SmackMessage*)createMessage;
+- (SmackChat*)createPrivateChat:(NSString*)occupant;
+
+- (void)destroy:(NSString*)reason :(NSString*)alternateJID;
+
+- (JavaCollection*)getAdmins;
+- (JavaCollection*)getMembers;
+- (JavaCollection*)getModerators;
+- (NSString*)getNickname;
+- (SmackXOccupant*)getOccupant:(NSString*)user;
+- (SmackPresence*)getOccupantPresence:(NSString*)user;
+- (JavaIterator*)getOccupants;
+- (int)getOccupantsCount;
+- (JavaCollection*)getOutcasts;
+- (JavaCollection*)getOwners;
+- (JavaCollection*)getParticipants;
+- (NSString*)getReservedNickname;
+- (NSString*)getRoom;
+- (NSString*)getSubject;
+
+- (void)grantAdmin:(NSString*)jid;
+- (void)revokeAdmin:(NSString*)jid;
+
+- (void)grantMembership:(NSString*)jid;
+- (void)revokeMembership:(NSString*)jid;
+
+- (void)grantOwnership:(NSString*)jid;
+- (void)revokeOwnership:(NSString*)jid;
+
+- (void)grantModerator:(NSString*)nickname;
+- (void)revokeModerator:(NSString*)nickname;
+
+- (void)grantVoice:(NSString*)nickname;
+- (void)revokeVoice:(NSString*)nickname;
+
+- (void)kickParticipant:(NSString*)nickname :(NSString*)reason;
+
+- (void)invite:(SmackMessage*)message :(NSString*)user :(NSString*)reason;
+- (void)invite:(NSString*)user :(NSString*)reason;
+
+- (BOOL)isJoined;
+- (void)join:(NSString*)nickname;
+- (void)join:(NSString*)nickname :(NSString*)password;
+- (void)join:(NSString*)nickname :(NSString*)password :(SmackXDiscussionHistory*)history :(long)timeout;
+- (void)leave;
+
+- (SmackMessage*)nextMessage;
+- (SmackMessage*)nextMessage:(long)timeout;
+- (SmackMessage*)pollMessage;
+- (void)sendMessage:(SmackMessage*)message;
+
+- (SmackXForm*)getConfigurationForm;
+- (void)sendConfigurationForm:(SmackXForm*)form;
+
+- (SmackXForm*)getRegistrationForm;
+- (void)sendRegistrationForm:(SmackXForm*)form;
 
 @end
 

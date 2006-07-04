@@ -14,8 +14,6 @@ import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.filter.*;
 import java.util.*;
 
-import com.apple.cocoa.foundation.NSArray;
-
 public class SmackBridge implements ConnectionListener {
     NSObject delegate;
     

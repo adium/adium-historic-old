@@ -25,11 +25,6 @@
     return [SmackXMPPAccountViewController accountViewController];
 }
 
-- (DCJoinChatViewController *)joinChatView{
-//	return [SmackXMPPJoinChatViewController joinChatView];
-    return nil;
-}
-
 - (NSString *)serviceClass
 {
 	return @"XMPP";
@@ -130,10 +125,6 @@
 
 - (BOOL)caseSensitive {
 	return YES; // only parts are case-sensitive actually ([Resourceprep])
-}
-
-- (BOOL)canCreateGroupChats {
-    return YES;
 }
 
 - (BOOL)canRegisterNewAccounts {
