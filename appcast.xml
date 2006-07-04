@@ -7,7 +7,7 @@
       <title>Adium 1.0a20</title>
       <pubDate>Mon, 3 Jul 2006 21:57:00 GMT-4</pubDate>
       <description>
-&lt;p&gt;Test for dmg distribution. I think that's all that changed in this release.&lt;/p&gt;
+	<sparkle:releaseNotesLink>http://trac.adiumx.com/browser/trunk/ChangeLogs/changes1.0.txt?format=raw</sparkle:releaseNotesLink> 
         </description>
       <enclosure sparkle:version="1.0a20" url="http://adiumx.cachefly.net/AdiumX_1.0a20.dmg" length="33157249" type="application/octet-stream"/>
     </item>
