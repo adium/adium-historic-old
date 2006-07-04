@@ -19,7 +19,8 @@
 #define CONTENT_STATUS_TYPE		@"Status"		//Type ID for this content
 
 @interface AIContentStatus : AIContentObject {
-	NSString		*statusType;
+	NSString			*statusType;
+	NSAttributedString	*loggedMessage;
 }
 
 + (id)statusInChat:(AIChat *)inChat
@@ -29,5 +30,8 @@
 		   message:(NSAttributedString *)inMessage
 		  withType:(NSString *)inType;
 - (NSString *)status;
+
+- (void)setLoggedMessage:(NSAttributedString *)inLoggedMessage;
+- (NSAttributedString *)loggedMessage;
 
 @end

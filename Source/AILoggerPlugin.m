@@ -404,7 +404,7 @@ Class LogViewerWindowControllerClass = NULL;
 			//If we can't find it for some reason, we probably shouldn't attempt logging.
 			if (actualObject) {
 				[appender addElementWithName:@"status"
-							  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
+							  escapedContent:([content loggedMessage] ? [xhtmlDecoder encodeHTML:[content loggedMessage] imagesPath:nil] : nil)
 							   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
 							 attributeValues:[NSArray arrayWithObjects:
 								 [statusTranslation objectForKey:[(AIContentStatus *)content status]], 
