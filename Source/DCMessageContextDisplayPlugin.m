@@ -298,10 +298,12 @@
 	[contentDict setObject:[NSNumber numberWithBool:[content isOutgoing]] forKey:@"Outgoing"];
 	
 	// ONLY log AIContentMessage and AIContentContexts right now... no status messages
-	[contentDict setObject:[NSNumber numberWithBool:[(AIContentMessage *)content isAutoreply]] forKey:@"Autoreply"];
+	if ([(AIContentMessage *)content isAutoreply]) {
+		[contentDict setObject:[NSNumber numberWithBool:YES] forKey:@"Autoreply"];
+	}
 	[contentDict setObject:[[(AIContentMessage *)content date] description] forKey:@"Date"];
 	[contentDict setObject:[[[(AIContentMessage *)content message] attributedStringByConvertingAttachmentsToStrings] dataRepresentation] forKey:@"Message"];
-	
+
 	return(contentDict);
 }
 
