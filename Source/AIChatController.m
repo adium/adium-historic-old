@@ -67,6 +67,11 @@
 									   name:CONTENT_MESSAGE_SENT
 									 object:nil];
 	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumWillTerminate:)
+									   name:Adium_WillTerminate
+									 object:nil];
+
 	//Ignore menu item for contacts in group chats
 	menuItem_ignore = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
 																		   target:self
@@ -80,19 +85,25 @@
 
 /*!
  * @brief Controller will close
+ */
+- (void)controllerWillClose
+{
+	
+}
+
+/*!
+ * @brief Adium will terminate
  *
  * Post the Chat_WillClose for each open chat so any closing behavior can be performed
  */
-- (void)controllerWillClose
+- (void)adiumWillTerminate:(NSNotification *)inNotification
 {
 	NSEnumerator	*enumerator = [openChats objectEnumerator];
 	AIChat			*chat;
 	
 	//Every open chat is about to close.
 	while ((chat = [enumerator nextObject])) {
-		[[adium notificationCenter] postNotificationName:Chat_WillClose 
-												  object:chat
-												userInfo:nil];
+		[self closeChat:chat];
 	}
 }
 
