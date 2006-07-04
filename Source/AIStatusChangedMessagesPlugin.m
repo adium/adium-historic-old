@@ -26,6 +26,7 @@
 - (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact 
 			 withType:(NSString *)type
  phraseWithoutSubject:(NSString *)statusPhrase
+		loggedMessage:(NSString *)loggedMessage
 			  inChats:(NSSet *)inChats;
 @end
 
@@ -84,6 +85,7 @@ static	NSDictionary	*statusTypeDict = nil;
 						 forContact:contact
 						   withType:statusType
 			   phraseWithoutSubject:statusMessage
+					  loggedMessage:statusMessage
 							inChats:allChats];
 			}
 		}
@@ -117,6 +119,7 @@ static	NSDictionary	*statusTypeDict = nil;
 				 forContact:contact
 				   withType:[statusTypeDict objectForKey:name]
 	   phraseWithoutSubject:phraseWithoutSubject
+			  loggedMessage:nil
 					inChats:allChats];
 	}
 }
@@ -141,6 +144,7 @@ static	NSDictionary	*statusTypeDict = nil;
 - (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact 
 			 withType:(NSString *)type
  phraseWithoutSubject:(NSString *)statusPhrase
+		loggedMessage:(NSString *)loggedMessage
 			  inChats:(NSSet *)inChats
 {
     NSEnumerator		*enumerator;
@@ -164,6 +168,10 @@ static	NSDictionary	*statusTypeDict = nil;
 			NSDictionary	*userInfo = [NSDictionary dictionaryWithObject:statusPhrase
 																	forKey:@"Status Phrase"];
 			[content setUserInfo:userInfo];
+		}
+		
+		if (loggedMessage) {
+			[content setLoggedMessage:loggedMessage];
 		}
 
 		//Add the object
