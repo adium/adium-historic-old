@@ -819,6 +819,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		                        getRemovedKeys:&endedKeys
 		                    includeChangedKeys:YES];
 		prevAttributes = [attributes dictionaryWithIntersectionWithSetOfKeys:CSSCapableAttributesWithNoAttachment];
+		if([attributes objectForKey:NSAttachmentAttributeName] != nil)
+			runRange.length = 1;  //Encode a single image at a time
 
 		NSMutableSet *mutableEndedKeys = [endedKeys mutableCopy];
 		if (mutableEndedKeys) {

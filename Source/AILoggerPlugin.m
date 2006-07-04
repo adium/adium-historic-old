@@ -126,6 +126,8 @@ Class LogViewerWindowControllerClass = NULL;
 										   simpleTagsOnly:NO
 										   bodyBackground:NO];
 	[HTMLDecoder setGeneratesStrictXHTML:YES];
+	[HTMLDecoder setUsesAttachmentTextEquivalents:YES];
+	
 	statusTranslation = [[NSDictionary alloc] initWithObjectsAndKeys:
 		@"away",@"away",
 		@"available",@"return_away",
