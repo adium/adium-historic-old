@@ -198,7 +198,7 @@ enum { xmlMarkerLength = 21 };
 		//Create our strings
 		int closingTagLength = [rootElementName length] + 4; //</rootElementName>
 		NSString *rootElement = [self createElementWithName:rootElementName content:@"" attributeKeys:keys attributeValues:values];
-		NSString *initialDocument = [NSString stringWithFormat:@"%@\n%@\n", XML_MARKER, rootElement];
+		NSString *initialDocument = [NSString stringWithFormat:@"%@\n%@", XML_MARKER, rootElement];
 		
 		//Write the data, and then seek backwards
 		[file writeData:[initialDocument dataUsingEncoding:NSUTF8StringEncoding]];
@@ -286,9 +286,9 @@ enum { xmlMarkerLength = 21 };
 	//Format and return
 	NSString *escapedName = [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)name, NULL) autorelease];
 	if (content)
-		return [NSString stringWithFormat:@"<%@%@>%@</%@>", escapedName, attributeString, content, escapedName];
+		return [NSString stringWithFormat:@"<%@%@>%@</%@>\n", escapedName, attributeString, content, escapedName];
 	else
-		return [NSString stringWithFormat:@"<%@%@/>", escapedName, attributeString];
+		return [NSString stringWithFormat:@"<%@%@/>\n", escapedName, attributeString];
 }
 
 /*!
