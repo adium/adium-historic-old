@@ -68,7 +68,7 @@
 - (void)dealloc
 {
 	[statusType release]; statusType = nil;
-	[loggedMessage relesae]; loggedMessage = nil;
+	[loggedMessage release]; loggedMessage = nil;
 
     [super dealloc];
 }
