@@ -1647,15 +1647,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			[[NSFileManager defaultManager] createDirectoriesForPath:imagesPath];
 		}
 
+		AILog(@"inPath: %@", inPath);
 		if (inPath) {
-			NSString *localPath = [[NSFileManager defaultManager] uniquePathForPath:[imagesPath stringByAppendingPathComponent:[inPath lastPathComponent]]];
-
-			//Image already exists on disk; copy it to our images path
-			success = [[NSFileManager defaultManager] copyPath:inPath
-														toPath:localPath
-													   handler:nil];
-			success = YES;//HAX, testing
-			inPath = localPath;
+			//Just get it from the original path. This is especially good for emoticons.
+			success = YES;
 
 		} else {
 			/* If we get here, the image is not on disk. If we don't have a path at which to save images,
