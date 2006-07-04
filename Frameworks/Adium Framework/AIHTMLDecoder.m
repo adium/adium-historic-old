@@ -1647,7 +1647,6 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			[[NSFileManager defaultManager] createDirectoriesForPath:imagesPath];
 		}
 
-		AILog(@"inPath: %@", inPath);
 		if (inPath) {
 			//Just get it from the original path. This is especially good for emoticons.
 			success = YES;
