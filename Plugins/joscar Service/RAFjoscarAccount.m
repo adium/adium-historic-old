@@ -281,7 +281,8 @@
 				[self autoReconnectAfterDelay:3.0];
 				
 			} else if (errorMessage) {
-			    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Connection Error",[self formattedUID],[[self service] shortDescription]]
+			    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"%@ (%@) : Connection Error", nil),
+					[self formattedUID], [[self service] shortDescription]]
 												withDescription:errorMessage];	
 			}
 		}
@@ -1295,7 +1296,7 @@ BOOL isHTMLContact(AIListObject *inListObject)
 												 withSource:chat 
 												destination:self 
 													   date:[NSDate date] 
-													message:@"Error: A connection failure has occurred."
+													message:AILocalizedString(@"Error: A connection failure has occurred.", nil)
 												   withType:@"group_chat_connection_failure"];
 	NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:1];
 	[userInfo setObject:status forKey:@"AIContentObject"];
