@@ -63,8 +63,6 @@
 
 #define	REFRESH_RESULTS_INTERVAL		0.5 //Interval between results refreshes while searching
 
-#define ALL_CONTACTS_IDENTIFIER			[NSNumber numberWithInt:-1]
-
 @interface AIAbstractLogViewerWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
 - (void)initLogFiltering;
@@ -168,6 +166,8 @@ static int toArraySort(id itemA, id itemB, void *context);
     searchingLock = [[NSLock alloc] init];
 	contactIDsToFilter = [[NSMutableSet alloc] initWithCapacity:1];
 
+	allContactsIdentifier = [[NSNumber alloc] initWithInt:-1];
+
     [super initWithWindowNibName:windowNibName];
 	
     return self;
@@ -202,6 +202,8 @@ static int toArraySort(id itemA, id itemB, void *context);
 	
 	//We loaded	view_DatePicker from a nib manually, so we must release it
 	[view_DatePicker release]; view_DatePicker = nil;
+
+	[allContactsIdentifier release];
 
     [super dealloc];
 }
@@ -1243,7 +1245,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	 */
 	[self rebuildContactsList];
 	
-	[outlineView_contacts selectItemsInArray:[NSArray arrayWithObject:(parentContact ? (id)parentContact : (id)ALL_CONTACTS_IDENTIFIER)]];
+	[outlineView_contacts selectItemsInArray:[NSArray arrayWithObject:(parentContact ? (id)parentContact : (id)allContactsIdentifier)]];
 	unsigned int selectedRow = [[outlineView_contacts selectedRowIndexes] firstIndex];
 	if (selectedRow != NSNotFound) {
 		[outlineView_contacts scrollRowToVisible:selectedRow];
@@ -1597,7 +1599,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 {
 	if (!item) {
 		if (index == 0) {
-			return ALL_CONTACTS_IDENTIFIER;
+			return allContactsIdentifier;
 
 		} else {
 			return [toArray objectAtIndex:index-1]; //-1 for the All item, which is index 0
@@ -1671,7 +1673,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 	} else if (itemClass == [AILogToGroup class]) {
 		return [(AILogToGroup *)item to];
 		
-	} else if (itemClass == [ALL_CONTACTS_IDENTIFIER class]) {
+	} else if (itemClass == [allContactsIdentifier class]) {
 		int contactCount = [toArray count];
 		return [NSString stringWithFormat:AILocalizedString(@"All (%@)", nil),
 			((contactCount == 1) ?
@@ -1710,7 +1712,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 													   type:AIServiceIconSmall
 												  direction:AIIconFlipped]];
 		
-	} else if ([item isKindOfClass:[ALL_CONTACTS_IDENTIFIER class]]) {
+	} else if ([item isKindOfClass:[allContactsIdentifier class]]) {
 		if ([[outlineView arrayOfSelectedItems] containsObjectIdenticalTo:item] &&
 			([[self window] isKeyWindow] && ([[self window] firstResponder] == self))) {
 			if (!adiumIconHighlighted) {
@@ -1744,7 +1746,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
 	[contactIDsToFilter removeAllObjects];
 
-	if ([selectedItems count] && ![selectedItems containsObject:ALL_CONTACTS_IDENTIFIER]) {
+	if ([selectedItems count] && ![selectedItems containsObject:allContactsIdentifier]) {
 		id		item;
 		NSEnumerator *enumerator;
 
