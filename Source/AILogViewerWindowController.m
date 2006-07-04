@@ -41,14 +41,14 @@ Boolean ContentResultsFilter (SKIndexRef inIndex,
 	SKSearchResultsRef	searchResults;
 	int					resultCount;    
 	UInt32				lastUpdate = TickCount();
-	void				*indexPtr = &logSearchIndex;
 	
 	//We utilize the logIndexAccessLock so we have exclusive access to the logs
 	NSLock			*logAccessLock = [plugin logAccessLock];
 	
 	//Perform the content search
 	[logAccessLock lock];
-	indexArray = CFArrayCreate(NULL, indexPtr, 1, &kCFTypeArrayCallBacks);
+	SKIndexFlush(logSearchIndex);
+	indexArray = CFArrayCreate(NULL, &logSearchIndex, 1, &kCFTypeArrayCallBacks);
 	searchGroup = SKSearchGroupCreate(indexArray);
 	
 	/* Our logs are stored as HTML.  Non-ASCII characters are therefore HTML-encoded.  We need to have an
