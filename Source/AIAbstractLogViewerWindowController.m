@@ -451,11 +451,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 				[theLog release];
 			}
 		}
-		//Update the log index
-		[logAccessLock lock];
-
-		SKIndexFlush(logSearchIndex);
-		[logAccessLock unlock];
 		
 		//Rebuild the 'global' log indexes
 		[self rebuildIndices];
@@ -498,7 +493,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 		document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)[theLog path]);
 		SKIndexRemoveDocument(logSearchIndex, document);
 		CFRelease(document);
-		SKIndexFlush(logSearchIndex);
 		[logAccessLock unlock];
 		
 		//Rebuild the 'global' log indexes
