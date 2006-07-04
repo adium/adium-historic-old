@@ -1,7 +1,3 @@
-				Adium X Version History
-				-----------------------
-Version 1.0
-
 Selected Major Changes:
  * Major AIM, ICQ and .Mac improvements. This includes working File Transfer, and faster sign on.
  * Added global user profile and buddy icon settings. (Personal Preferences)
