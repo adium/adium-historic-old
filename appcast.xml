@@ -4,15 +4,12 @@
     <title>Adium Updates</title>
     <language>en</language>
     <item>
-      <title>Adium 1.0a18</title>
-      <pubDate>Mon, 3 Jul 2006 02:13:22 GMT-7</pubDate>
+      <title>Adium 1.0a19</title>
+      <pubDate>Mon, 3 Jul 2006 21:57:00 GMT-4</pubDate>
       <description>
-&lt;p&gt;Fixed Sparkle (we hope).&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Important: Do not install this update unless you have started Adium with the shift key down.&lt;/strong&gt; The bug that this version fixes is that you can't install an update with a connection active (on most services). So, have no accounts connected when you install this update.&lt;/p&gt;
-&lt;p&gt;If you have already begun to connect, simply click &amp;ldquo;Remind me Later&amp;&rdquo;, then quit Adium and relaunch it with the shift key down.&lt;/p&gt;
-&lt;p&gt;With any future version, you should be able to update even when connected. That's the bug we fixed in &lt;em&gt;this&lt;/em&gt; version.&lt;/p&gt;
+&lt;p&gt;Testing dmg distribution and updating to SparklePlus. Also, this provides further debug for the 10.3 crash and fixes some varied bugs.&lt;/p&gt;
         </description>
-      <enclosure sparkle:version="1.0a18" url="http://adiumx.cachefly.net/Adium_1.0a18.zip" length="35286790" type="application/octet-stream"/>
+      <enclosure sparkle:version="1.0a19" url="http://adiumx.cachefly.net/AdiumX_1.0a19.dmg" length="33173722" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
