@@ -143,22 +143,21 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 			case Adium_Proxy_Default_HTTP:
 				proxyInfo = (((password && username) || !username) ? [AimProxyInfoClass forHttp:host :port :username :password] : nil);
 				break;
-				
+
 			case Adium_Proxy_SOCKS4:
 			case Adium_Proxy_Default_SOCKS4:
-				proxyInfo = [AimProxyInfoClass forSocks4:host :port];
+				proxyInfo = [AimProxyInfoClass forSocks4:host :port :username];
 				break;
-				
+
 			case Adium_Proxy_SOCKS5:
 			case Adium_Proxy_Default_SOCKS5:
 				proxyInfo = (((password && username) || !username) ? [AimProxyInfoClass forSocks5:host :port :username :password] : nil);
 				break;
-				
+
 			case Adium_Proxy_None:
 				//Can't get here
 				break;
 		}
-
 	}
 
 	if (!proxyInfo) proxyInfo = [AimProxyInfoClass forNoProxy];

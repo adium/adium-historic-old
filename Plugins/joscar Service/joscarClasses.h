@@ -52,7 +52,7 @@
 @interface AimProxyInfo : NSObject {}
 + (AimProxyInfo *)forSocks5:(NSString *)host :(int)port :(NSString *)username :(NSString *)password;
 + (AimProxyInfo *)forHttp:(NSString *)host :(int)port :(NSString *)username :(NSString *)password;
-+ (AimProxyInfo *)forSocks4:(NSString *)host :(int)port;
++ (AimProxyInfo *)forSocks4:(NSString *)host :(int)port :(NSString *)username;
 + (AimProxyInfo *)forNoProxy;
 @end
 
