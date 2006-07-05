@@ -1,4 +1,6 @@
-Selected Major Changes:
+= Changes in Adium X 1.0 =
+
+== Selected Major Changes ==
  * Major AIM, ICQ and .Mac improvements. This includes working File Transfer, and faster sign on.
  * Added global user profile and buddy icon settings. (Personal Preferences)
  * General Account improvements. Accounts can now be disabled when not in in use, and friends can now sign on from your Adium without saving their information.
@@ -9,7 +11,7 @@ Selected Major Changes:
  * Redesigned Chat Transcript (Log) Viewer
  * Requires Mac OS X 10.3.9 or later (Universal Binary)
 
-Xtras:
+== Xtras ==
  * A new Xtras Manager has been introduced (#1459, #539)
  * New included Xtras (#3134):
    * Stockholm (message view)
@@ -25,14 +27,14 @@ Xtras:
  * Resolved problem where "Show Headers" would crash Adium (#2473)
  * Implemented graceful upgrading of existing Xtras where possible (#3980)
 
-Events:
+== Events ==
  * Dock icon now stops bouncing/flashing properly (#205, #269)
  * Added a Contact Requests Authorization global event (#2291)
  * Added preferences to control dock icon movement (#1707)
  * Added preference to control Dock icon animation (flapping) (#541)
  * Removed output device preference (#1442)
 
-Privacy (#19):
+== Privacy (#19) ==
  * Added Block List Editor (#913)
  * Whitelist Support (0.89 blocking was blacklist) (#129)
  * Displays a visual indication of blocked users (#344)
@@ -42,8 +44,8 @@ Privacy (#19):
  * Closing the authorization request window will dismiss the request with no answer (#3479)
  * Blocking implementation is shinier (#920)
 
-Protocol Additions and Fixes:
- * AIM (generally includes .Mac and ICQ):
+== Protocol Additions and Fixes ==
+=== AIM (generally includes .Mac and ICQ) ===
  * Completely new AIM code (Keith Lea's joscar) (#2903 and many many others)
  * Connection speed improvements
  * File Transfer improvements (#4)
@@ -63,23 +65,23 @@ Protocol Additions and Fixes:
  * Properly display the online time of contacts (#2488)
  * Similarly named AIM and .Mac accounts now no longer confuse accounts when adding contacts (#3157)
 
-.Mac:
+=== .Mac ===
  * @mac.com is no longer required (#2132, others)
  * name@mac.com is no longer displayed as a link in tooltips (#869)
  * Fixed a bug where Adium requested for a password even when it had the correct one (#2319)
 
-Bonjour:
+=== Bonjour ===
  * Login as Invisible works now (#2296, others)
  * Bonjour no longer disconnects when a contact sends a message with a line-break (#48)
  * A reasonable default name is filled in for new Bonjour accounts (#1182)
  * Events are squelched for awhile after connect (18 seconds, to be exact) to avoid floods of notifications (#1996)
 
-ICQ:
+=== ICQ ===
  * Improved handling of non-ASCII character sets (#505, #1426)
  * Improved handling of messages coming from iChat (#3166)
  * IP address no longer displayed publicly (#3740)
 
-Jabber (includes Google Talk):
+=== Jabber (includes Google Talk) ===
  * Fixed bug where authorized contacts couldn't see your status (#61)
  * Now saves the last server used in the join group chat dialog (#802)
  * Fixed a bug where Exodus users couldn't see the user's avatar (#1330)
@@ -96,10 +98,10 @@ Jabber (includes Google Talk):
  * Fixed a bug which prevented registering accounts on Wildfire-based jabber servers (#4216)
  * New mail notifications checkbox now disabled on Jabber, respected on GTalk (#1301)
 
-Meanwhile/Sametime:
+=== Meanwhile/Sametime ===
  * Contact list did not keep added users (#2060)
 
-MSN:
+=== MSN ===
  * Deleted MSN contacts remain deleted (#1778)
  * Adium now fetches the MSN display name from the server (#196)
  * Removed preference for MSN "Conversation closed" notices (#37)
@@ -108,31 +110,31 @@ MSN:
  * MSN display name no longer preferred over real status messages from other accounts (#1022)
  * Display name, rather than account name, used in message view (#1628)
 
-Gadu-Gadu:
+=== Gadu-Gadu ===
  * Fixed a crash when using gadu-gadu (#2455)
  * Statuses work (#3803)
 
-Yahoo!:
+=== Yahoo! ===
  * Yahoo! users can now return from idle status (#2453)
  * Added support for ymsgr://im?to= links (#3107)
  * Added Stealth (semi-invisibility) support (#1349, #4006)
  * Now able to log in as invisible (#2296)
  * Incoming message colors now ignored if the pref says so (#4184)
 
-Zephyr:
+=== Zephyr ===
  * Added configuration notes at http://trac.adiumx.com/wiki/Zephyr (#2079)
 
-File transfer:
+== File transfer ==
  * Folders now really do get compressed automatically (#86)
  * Automatically rename incoming files whose desired filename is already taken (#734)
 
-iTunes Integration:
+== iTunes Integration ==
  * Improved the speed of the iTunes integration (#2352)
  * Improved integration of iTunes with status settings
  * Added an eighth note (&#x266b;) which functions as an iTunes music store link in statuses.
  * iTunes scripts no longer have an impact on CPU usage (#2352)
 
-Misc:
+== Misc ==
  * Removed support for Mac OS 10.3.8 and earlier. Adium now only supports 10.3.9 and later.
  * New software update system (SparklePlus, a modified version of Andy Matuschak's Sparkle by Tom Harrington)
  * First-run Setup Assistant (#9)
@@ -151,11 +153,11 @@ Misc:
  * Crash Reporter no longer submits crash reports if a newer version is available (#65)
  * You can now Get Info on somebody who isn't on your contact list (#193)
 
-Dock:
+== Dock ==
  * The dock icon now has the preference to display the number of unviewed messages (#730)
  * Fixed a bug with dock icons not showing up (#3056)
 
-User Interface:
+== User Interface ==
  * Add Buddy button (#2)
  * Disabled "New Chat" when offline (#2265)
  * Clarified "Add account" menu in Accounts prefs (#421)
@@ -194,7 +196,7 @@ User Interface:
  * Status icons in the status window now update when you change the active status icon pack (#4325)
  * Improved keyboard support for Join Chat dialog (#2853)
 
-Messages:
+== Messages ==
  * Resolved issue where the Mockie display truncated the protocol name (#2014)
  * Message view window can now be transparent (#131)
  * File transfer requests are now displayed inline in the message view. The exact appearance can be customized by the message style (#2197)
@@ -229,7 +231,7 @@ Messages:
  * Improved the Edit Link contextual menu item on 10.4 (#3169)
  * You can now paste a link into the inputline, without the URL being stripped (#532)
 
-Contact List:
+== Contact List ==
  * Fixed an issue that would cause the contact list to shrink (#296)
  * Group names are now truncated in the middle (e.g. “Adium users”→“Adiu…sers”) rather than the end (e.g. “Adium …”) (#2589)
  * Add Buddy Button In Authorization Dialog (#2)
@@ -263,7 +265,7 @@ Contact List:
  * Searching for contacts in the contact list is easier (#3163)
  * Maximum contact list width now refers to the inside portion, not the entire window including scrollbars (#640)
 
-Status:
+== Status ==
  * Resolved performance issues when adding or changing statuses (#716)
  * Statuses can now be grouped in folders and sub-folders (#101)
  * Standard keyboard shortcuts in the custom status window (#255)
@@ -279,7 +281,7 @@ Status:
  * Added the ability to pick a random status (#3336)
  * Automatically set Idle status once the screensaver becomes active (#577)
 
-Localization:
+== Localization ==
  * Australian English localization added (#2585)
  * Improved German localization (#2538)
  * Improved Dutch localization (#3584, #2435)
@@ -293,7 +295,7 @@ Localization:
  * Allow localization of shared dock icon images (#2843)
  * Allow non-ASCII characters in the "insert link" dialog (#2362)
 
-Address Book:
+== Address Book ==
  * New contextual menu items in Address Book for sending IMs with Adium. Scripts to accomplish this are automatically installed to ~/Library/Address Book Plug-Ins (#2353)
  * Adium now looks in the Yahoo! field of Address Book contacts for Yahoo! Japan accounts (#2469)
  * Clarified and explained option to consolidate buddies from Address Book (#139)
@@ -303,18 +305,18 @@ Address Book:
  * Middle names are now imported (#1118)
  * We now set contacts' icons back to their real icons (from AB images) when “Use Address book images as contacts' icons” is unchecked (#91)
 
-AppleScript:
+== AppleScript ==
  * Applescript improved in general (#574)
  * Fixed a crash (#485)
  * Fixed lockups caused by AppleScript (#634)
  * Fixed typing latency caused by AppleScript (#202)
 
-OTR:
+== OTR ==
  * OTR now works for .Mac accounts for which the @mac.com isn't listed (#2132)
  * Fixed gender neutrality of the OTR error message when attempting to message in a chat in which the other side has already ended encryption (#2623)
  * Fixed a bug where the OTR status did not update after switching to a different contact of a meta contact (#2895)
 
-Performance and Memory:
+== Performance and Memory ==
  * Fixed a leak of an NSColor (#2258)
  * Emoticons are now preloaded in a background thread
  * Fixed a rare threadlock on startup (#1980)
