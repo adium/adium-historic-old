@@ -1370,8 +1370,11 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getInfoService] setAwayMessage:awayMessage];
 }
 
-- (void)setIdleSince:(NSDate*)date
+- (void)setIdleSince:(NSDate *)date
 {
+	//Sanity check: Don't allow sending a date that's in the future. This could occur if the system clock is changed.
+	if ([date timeIntervalSinceNow] > 0) date = [NSDate date];
+
 	[[aimConnection getBosService] setIdleSince:javaDateFromDate(date)];
 }
 
