@@ -137,11 +137,17 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		
 		if (![username length]) username = nil;
 		if (![password length]) password = nil;
-		
+
 		switch (proxyType) {
 			case Adium_Proxy_HTTP:
 			case Adium_Proxy_Default_HTTP:
-				proxyInfo = (((password && username) || !username) ? [AimProxyInfoClass forHttp:host :port :username :password] : nil);
+				if (!((username == nil) == (password == nil))) {
+					NSLog(@"Danger! HTTP: username and password must be both nil or neither nil! We'll proceed without authentication for the proxy.");
+				}
+
+				proxyInfo = ((password  && username) ?
+							 [AimProxyInfoClass forHttp:host :port :username :password] :
+							 [AimProxyInfoClass forHttp:host :port :nil :nil]);
 				break;
 
 			case Adium_Proxy_SOCKS4:
@@ -151,7 +157,13 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 			case Adium_Proxy_SOCKS5:
 			case Adium_Proxy_Default_SOCKS5:
-				proxyInfo = (((password && username) || !username) ? [AimProxyInfoClass forSocks5:host :port :username :password] : nil);
+				if (!((username == nil) == (password == nil))) {
+					NSLog(@"Danger! SOCKS5: username and password must be both nil or neither nil! We'll proceed without authentication for the proxy.");
+				}
+				
+				proxyInfo = ((password  && username) ?
+							 [AimProxyInfoClass forSocks5:host :port :username :password] :
+							 [AimProxyInfoClass forSocks5:host :port :nil :nil]);
 				break;
 
 			case Adium_Proxy_None:
