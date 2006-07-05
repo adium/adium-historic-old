@@ -737,7 +737,11 @@ static int toArraySort(id itemA, id itemB, void *context);
 				[displayText appendString:[NSString stringWithFormat:@"%@%@\n%@ - %@\n%@\n\n",
 					(appendedFirstLog ? @"\n" : @""),
 					horizontalRule,
-					[dateFormatter stringFromDate:[theLog date]],
+					([NSApp isOnTigerOrBetter] ? 
+					 [dateFormatter stringFromDate:[theLog date]] :
+					 [[theLog date] descriptionWithCalendarFormat:[dateFormatter dateFormat]
+														 timeZone:nil
+														   locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]),
 					[theLog to],
 					horizontalRule]
 						   withAttributes:[[AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:NSBoldFontMask size:12] dictionary]];
