@@ -18,6 +18,8 @@
 #import "ESDebugController.h"
 #include <stdarg.h>
 
+extern CFRunLoopRef CFRunLoopGetMain(void);
+
 /*!
  * @brief Adium debug log function
  *
