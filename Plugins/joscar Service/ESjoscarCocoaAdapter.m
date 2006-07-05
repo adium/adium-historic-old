@@ -159,10 +159,10 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 				break;
 		}
 
-	} else {
-		proxyInfo = [AimProxyInfoClass forNoProxy];
 	}
-	
+
+	if (!proxyInfo) proxyInfo = [AimProxyInfoClass forNoProxy];
+
 	return proxyInfo;
 }
 
