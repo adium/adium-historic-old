@@ -205,6 +205,7 @@
 {
 	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
 	
+#ifndef JOSCAR_SUPERCEDE_LIBGAIM
 	if ([group isEqualToString:PREF_GROUP_NOTES]) {
 		//If the notification object is a listContact belonging to this account, update the serverside information
 		if (account &&
@@ -220,6 +221,7 @@
 			}			
 		}
 	}
+#endif
 }
 
 
