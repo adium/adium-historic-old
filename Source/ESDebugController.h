@@ -31,6 +31,7 @@
 	- (NSArray *)debugLogArray;
 	- (NSFileHandle *)debugLogFile;
 	- (void)clearDebugLogArray;
+	- (void)addMessage:(NSString *)actualMessage;
 #endif
 
 @end

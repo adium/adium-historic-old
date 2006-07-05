@@ -216,7 +216,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				if(!empty)
 					message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 10)];  // 9 for </status> and 1 for the index being off
 								
-				NSString *displayMessage;
+				NSString *displayMessage = nil;
 				//Note: I am diverging from what the AILoggerPlugin logs in this case.  It can't handle every case we can have here
 				if([message length])
 				{
