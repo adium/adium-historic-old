@@ -133,36 +133,6 @@
 		3402E03707CB0DFB0044F818 /* PreferenceWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E03607CB0DFB0044F818 /* PreferenceWindow.nib */; };
 		3402E04207CB0E4D0044F818 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E04107CB0E4D0044F818 /* Localizable.strings */; };
 		3402E07607CB0FAA0044F818 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E07507CB0FAA0044F818 /* Localizable.strings */; };
-		34066DC80A54335B004E22AC /* CBOscarService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B919C9062DEF15004F1223 /* CBOscarService.h */; };
-		34066DC90A54335B004E22AC /* CBOscarService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B919CA062DEF15004F1223 /* CBOscarService.m */; };
-		34066DCA0A54335B004E22AC /* CBGaimOscarAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EA125EE055B633000ECF349 /* CBGaimOscarAccount.h */; };
-		34066DCB0A54335B004E22AC /* CBGaimOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA125E8055B630900ECF349 /* CBGaimOscarAccount.m */; };
-		34066DCC0A54335B004E22AC /* DCGaimOscarJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E4D961606B73A96005235E9 /* DCGaimOscarJoinChatViewController.h */; };
-		34066DCD0A54335B004E22AC /* DCGaimOscarJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D961706B73A96005235E9 /* DCGaimOscarJoinChatViewController.m */; };
-		34066DCE0A54335B004E22AC /* DCGaimOscarJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40C08086D9100E27095 /* DCGaimOscarJoinChatView.nib */; };
-		34066DCF0A54335B004E22AC /* AIGaimOscarAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B9194B062DEC29004F1223 /* AIGaimOscarAccountViewController.h */; };
-		34066DD00A54335B004E22AC /* AIGaimOscarAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B9194A062DEC29004F1223 /* AIGaimOscarAccountViewController.m */; };
-		34066DD10A54335B004E22AC /* ESGaimOscarAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41C08086D9100E27095 /* ESGaimOscarAccountView.nib */; };
-		34066DD20A54335B004E22AC /* ESDotMacService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5A306E00AD200FF7FBC /* ESDotMacService.h */; };
-		34066DD30A54335B004E22AC /* ESDotMacService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5A406E00AD200FF7FBC /* ESDotMacService.m */; };
-		34066DD40A54335B004E22AC /* ESGaimDotMacAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F101E407342B4D00890D3B /* ESGaimDotMacAccount.h */; };
-		34066DD50A54335B004E22AC /* ESGaimDotMacAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F101E307342B4D00890D3B /* ESGaimDotMacAccount.m */; };
-		34066DD60A54335B004E22AC /* ESGaimDotMacAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B387EB707199FE5004DE713 /* ESGaimDotMacAccountViewController.h */; };
-		34066DD70A54335B004E22AC /* ESGaimDotMacAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B387EB807199FE5004DE713 /* ESGaimDotMacAccountViewController.m */; };
-		34066DD80A54335B004E22AC /* GaimDefaultsMac.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76472E07A07A340021CCD7 /* GaimDefaultsMac.plist */; };
-		34066DD90A54335B004E22AC /* ESGaimAIMAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E0EB8D07CD349200A82198 /* ESGaimAIMAccount.h */; };
-		34066DDA0A54335B004E22AC /* ESGaimAIMAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0EB8E07CD349200A82198 /* ESGaimAIMAccount.m */; };
-		34066DDB0A54335B004E22AC /* ESAIMService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5A106E00AD200FF7FBC /* ESAIMService.h */; };
-		34066DDC0A54335B004E22AC /* ESAIMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5A206E00AD200FF7FBC /* ESAIMService.m */; };
-		34066DDD0A54335B004E22AC /* GaimDefaultsAIM.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B7635A507A0581D0021CCD7 /* GaimDefaultsAIM.plist */; };
-		34066DDE0A54335B004E22AC /* ESICQService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5A506E00AD200FF7FBC /* ESICQService.h */; };
-		34066DDF0A54335B004E22AC /* ESICQService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5A606E00AD200FF7FBC /* ESICQService.m */; };
-		34066DE00A54335B004E22AC /* ESGaimICQAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F52BD806E2B24100887BE2 /* ESGaimICQAccount.h */; };
-		34066DE10A54335B004E22AC /* ESGaimICQAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F52BD906E2B24200887BE2 /* ESGaimICQAccount.m */; };
-		34066DE20A54335B004E22AC /* ESGaimICQAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F52BCF06E2AFF700887BE2 /* ESGaimICQAccountViewController.h */; };
-		34066DE30A54335B004E22AC /* ESGaimICQAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F52BD006E2AFF700887BE2 /* ESGaimICQAccountViewController.m */; };
-		34066DE40A54335B004E22AC /* ESGaimICQAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41A08086D9100E27095 /* ESGaimICQAccountView.nib */; };
-		34066DE50A54335B004E22AC /* GaimDefaultsICQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B7644DC07A05E7E0021CCD7 /* GaimDefaultsICQ.plist */; };
 		3406707A0A55A044004E22AC /* sourceListBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 340670790A55A044004E22AC /* sourceListBackground.png */; };
 		340670A80A55A4B4004E22AC /* ESGlassSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 340670A60A55A4B4004E22AC /* ESGlassSplitView.h */; };
 		340670A90A55A4B4004E22AC /* ESGlassSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 340670A70A55A4B4004E22AC /* ESGlassSplitView.m */; };
@@ -2882,7 +2852,7 @@
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -7130,18 +7100,6 @@
 				3485DBC809EBCE7400232CC4 /* ESGaimFileReceiveRequestController.h in Headers */,
 				3485DBCA09EBCE7400232CC4 /* ESGaimRequestActionController.h in Headers */,
 				34C7C62809EC4E890060FB4A /* AILibgaimPlugin.h in Headers */,
-				34066DC80A54335B004E22AC /* CBOscarService.h in Headers */,
-				34066DCA0A54335B004E22AC /* CBGaimOscarAccount.h in Headers */,
-				34066DCC0A54335B004E22AC /* DCGaimOscarJoinChatViewController.h in Headers */,
-				34066DCF0A54335B004E22AC /* AIGaimOscarAccountViewController.h in Headers */,
-				34066DD20A54335B004E22AC /* ESDotMacService.h in Headers */,
-				34066DD40A54335B004E22AC /* ESGaimDotMacAccount.h in Headers */,
-				34066DD60A54335B004E22AC /* ESGaimDotMacAccountViewController.h in Headers */,
-				34066DD90A54335B004E22AC /* ESGaimAIMAccount.h in Headers */,
-				34066DDB0A54335B004E22AC /* ESAIMService.h in Headers */,
-				34066DDE0A54335B004E22AC /* ESICQService.h in Headers */,
-				34066DE00A54335B004E22AC /* ESGaimICQAccount.h in Headers */,
-				34066DE20A54335B004E22AC /* ESGaimICQAccountViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8109,12 +8067,6 @@
 				3485DBC409EBCE7400232CC4 /* GaimSinglelineRequestWindow.nib in Resources */,
 				3485DBC709EBCE7400232CC4 /* GaimMeanwhileContactAdditionWindow.nib in Resources */,
 				3485DBD009EBCE8200232CC4 /* Localizable.strings in Resources */,
-				34066DCE0A54335B004E22AC /* DCGaimOscarJoinChatView.nib in Resources */,
-				34066DD10A54335B004E22AC /* ESGaimOscarAccountView.nib in Resources */,
-				34066DD80A54335B004E22AC /* GaimDefaultsMac.plist in Resources */,
-				34066DDD0A54335B004E22AC /* GaimDefaultsAIM.plist in Resources */,
-				34066DE40A54335B004E22AC /* ESGaimICQAccountView.nib in Resources */,
-				34066DE50A54335B004E22AC /* GaimDefaultsICQ.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8723,18 +8675,6 @@
 				3485DBC609EBCE7400232CC4 /* ESGaimMeanwhileContactAdditionController.m in Sources */,
 				3485DBC909EBCE7400232CC4 /* ESGaimFileReceiveRequestController.m in Sources */,
 				3485DBCB09EBCE7400232CC4 /* ESGaimRequestActionController.m in Sources */,
-				34066DC90A54335B004E22AC /* CBOscarService.m in Sources */,
-				34066DCB0A54335B004E22AC /* CBGaimOscarAccount.m in Sources */,
-				34066DCD0A54335B004E22AC /* DCGaimOscarJoinChatViewController.m in Sources */,
-				34066DD00A54335B004E22AC /* AIGaimOscarAccountViewController.m in Sources */,
-				34066DD30A54335B004E22AC /* ESDotMacService.m in Sources */,
-				34066DD50A54335B004E22AC /* ESGaimDotMacAccount.m in Sources */,
-				34066DD70A54335B004E22AC /* ESGaimDotMacAccountViewController.m in Sources */,
-				34066DDA0A54335B004E22AC /* ESGaimAIMAccount.m in Sources */,
-				34066DDC0A54335B004E22AC /* ESAIMService.m in Sources */,
-				34066DDF0A54335B004E22AC /* ESICQService.m in Sources */,
-				34066DE10A54335B004E22AC /* ESGaimICQAccount.m in Sources */,
-				34066DE30A54335B004E22AC /* ESGaimICQAccountViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
