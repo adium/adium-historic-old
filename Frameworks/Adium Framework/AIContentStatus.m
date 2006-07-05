@@ -88,7 +88,7 @@
 - (void)setLoggedMessage:(NSAttributedString *)inLoggedMessage
 {
 	if (loggedMessage != inLoggedMessage) {
-		[inLoggedMessage release];
+		[loggedMessage release];
 		loggedMessage = [inLoggedMessage retain];
 	}
 }
