@@ -135,10 +135,13 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		username = [proxyConfig objectForKey:@"Username"];
 		password = [proxyConfig objectForKey:@"Password"];
 		
+		if (![username length]) username = nil;
+		if (![password length]) password = nil;
+		
 		switch (proxyType) {
 			case Adium_Proxy_HTTP:
 			case Adium_Proxy_Default_HTTP:
-				proxyInfo = [AimProxyInfoClass forHttp:host :port :username :password];				
+				proxyInfo = (((password && username) || !username) ? [AimProxyInfoClass forHttp:host :port :username :password] : nil);
 				break;
 				
 			case Adium_Proxy_SOCKS4:
@@ -148,7 +151,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 				
 			case Adium_Proxy_SOCKS5:
 			case Adium_Proxy_Default_SOCKS5:
-				proxyInfo = [AimProxyInfoClass forSocks5:host :port :username :password];
+				proxyInfo = (((password && username) || !username) ? [AimProxyInfoClass forSocks5:host :port :username :password] : nil);
 				break;
 				
 			case Adium_Proxy_None:
