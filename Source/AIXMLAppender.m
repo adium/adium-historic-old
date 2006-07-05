@@ -243,10 +243,13 @@ enum { xmlMarkerLength = 21 };
 		NSString *element = [self createElementWithName:name content:content attributeKeys:keys attributeValues:values];
 		NSString *closingTag = [NSString stringWithFormat:@"</%@>\n", rootElementName];
 		
-		//Write the data, and then seek backwards
-		[file writeData:[[element stringByAppendingString:closingTag] dataUsingEncoding:NSUTF8StringEncoding]];
-		[file synchronizeFile];
-		[file seekToFileOffset:([file offsetInFile] - [closingTag length])];
+		if(element != nil)
+		{
+			//Write the data, and then seek backwards
+			[file writeData:[[element stringByAppendingString:closingTag] dataUsingEncoding:NSUTF8StringEncoding]];
+			[file synchronizeFile];
+			[file seekToFileOffset:([file offsetInFile] - [closingTag length])];
+		}
 	}
 }
 
