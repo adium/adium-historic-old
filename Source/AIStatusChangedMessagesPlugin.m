@@ -26,7 +26,7 @@
 - (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact 
 			 withType:(NSString *)type
  phraseWithoutSubject:(NSString *)statusPhrase
-		loggedMessage:(NSString *)loggedMessage
+		loggedMessage:(NSAttributedString *)loggedMessage
 			  inChats:(NSSet *)inChats;
 @end
 
@@ -145,7 +145,7 @@ static	NSDictionary	*statusTypeDict = nil;
 - (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact 
 			 withType:(NSString *)type
  phraseWithoutSubject:(NSString *)statusPhrase
-		loggedMessage:(NSString *)loggedMessage
+		loggedMessage:(NSAttributedString *)loggedMessage
 			  inChats:(NSSet *)inChats
 {
     NSEnumerator		*enumerator;
