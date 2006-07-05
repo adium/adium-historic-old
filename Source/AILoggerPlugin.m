@@ -407,7 +407,7 @@ Class LogViewerWindowControllerClass = NULL;
 				if(translatedStatus == nil)
 					AILog(@"AILogger: Don't know how to translate status: %@", [(AIContentStatus *)content status]);
 				[appender addElementWithName:@"status"
-							  escapedContent:([content loggedMessage] ? [xhtmlDecoder encodeHTML:[content loggedMessage] imagesPath:nil] : nil)
+							  escapedContent:([(AIContentStatus *)content loggedMessage] ? [xhtmlDecoder encodeHTML:[(AIContentStatus *)content loggedMessage] imagesPath:nil] : nil)
 							   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
 							 attributeValues:[NSArray arrayWithObjects:
 								 translatedStatus, 
