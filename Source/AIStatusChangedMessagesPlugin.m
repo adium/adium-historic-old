@@ -77,14 +77,15 @@ static	NSDictionary	*statusTypeDict = nil;
 	AILog(@"Status message for %@ changed (%@)",contact,allChats);
 	if ([allChats count]) {	
 		if ([contact statusType] != AIAvailableStatusType) {
-			NSString		*statusMessage = [[contact statusMessage] string];
-			NSString		*statusType = [statusTypeDict objectForKey:CONTACT_STATUS_MESSAGE];
+			NSAttributedString *statusMessage = [contact statusMessage];
+			NSString			*statusMessageString = [statusMessage string];
+			NSString			*statusType = [statusTypeDict objectForKey:CONTACT_STATUS_MESSAGE];
 			
 			if (statusMessage && [statusMessage length] != 0) {
-				[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"Away Message: %@",nil),statusMessage] 
+				[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"Away Message: %@",nil),statusMessageString] 
 						 forContact:contact
 						   withType:statusType
-			   phraseWithoutSubject:statusMessage
+			   phraseWithoutSubject:statusMessageString
 					  loggedMessage:statusMessage
 							inChats:allChats];
 			}
