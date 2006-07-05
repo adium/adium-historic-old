@@ -403,11 +403,14 @@ Class LogViewerWindowControllerClass = NULL;
 			
 			//If we can't find it for some reason, we probably shouldn't attempt logging.
 			if (actualObject) {
+				NSString *translatedStatus = [statusTranslation objectForKey:[(AIContentStatus *)content status]];
+				if(translatedStatus == nil)
+					AILog(@"AILogger: Don't know how to translate status: %@", [(AIContentStatus *)content status]);
 				[appender addElementWithName:@"status"
 							  escapedContent:([content loggedMessage] ? [xhtmlDecoder encodeHTML:[content loggedMessage] imagesPath:nil] : nil)
 							   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
 							 attributeValues:[NSArray arrayWithObjects:
-								 [statusTranslation objectForKey:[(AIContentStatus *)content status]], 
+								 translatedStatus, 
 								 [actualObject UID], 
 								 [[NSCalendarDate date] ISO8601DateString],
 								 nil]];
