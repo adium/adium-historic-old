@@ -14,8 +14,15 @@
 @interface SmackXMPPFormController : NSObject {
     IBOutlet NSWindow *window;
     IBOutlet WebView *webview;
+    
+    id target;
+    SEL selector;
+    
+    SmackXForm *resultForm;
 }
 
-- (id)initWithForm:(SmackXForm*)form;
+- (id)initWithForm:(SmackXForm*)form target:(id)t selector:(SEL)s;
+
+- (SmackXForm*)resultForm;
 
 @end

@@ -232,4 +232,99 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     [NSClassFromString(@"net.adium.smackBridge.SmackBridge") createRosterEntry:roster :jid :name :group];
 }
 
++ (SmackXForm*)formWithType:(NSString*)type {
+    return [[NSClassFromString(@"org.jivesoftware.smackx.Form") newWithSignature:@"(Ljava/lang/String;)",type] autorelease];
+}
+
++ (id)invokeObject:(id)obj methodWithParamTypeAndParam:(NSString*)method, ... {
+    va_list ap;
+    va_start(ap, method);
+    
+    JavaVector *argumentTypes = [[NSClassFromString(@"java.util.Vector") alloc] init];
+    JavaVector *arguments = [[NSClassFromString(@"java.util.Vector") alloc] init];
+    NSString *typestr;
+    
+    while((typestr = va_arg(ap,id))) {
+        if([typestr isEqualToString:@"int"]) {
+            Class type = NSClassFromString(@"java.lang.Integer");
+            int value = va_arg(ap, int);
+            id javaint = [type newWithSignature:@"(I)",value];
+            
+            [argumentTypes add:type];
+            [arguments add:javaint];
+            
+            [javaint release];
+        } else if([typestr isEqualToString:@"boolean"]) {
+            Class type = NSClassFromString(@"java.lang.Boolean");
+            BOOL value = va_arg(ap, int)?YES:NO;
+            id javabool = [type newWithSignature:@"(Z)",value];
+            
+            [argumentTypes add:type];
+            [arguments add:javabool];
+            
+            [javabool release];
+        } else if([typestr isEqualToString:@"double"]) {
+            Class type = NSClassFromString(@"java.lang.Double");
+            double value = va_arg(ap, double);
+            id javadouble = [type newWithSignature:@"(D)",value];
+            
+            [argumentTypes add:type];
+            [arguments add:javadouble];
+            
+            [javadouble release];
+        } else if([typestr isEqualToString:@"float"]) {
+            Class type = NSClassFromString(@"java.lang.Float");
+            float value = (float)va_arg(ap, double);
+            id javafloat = [type newWithSignature:@"(F)",value];
+            
+            [argumentTypes add:type];
+            [arguments add:javafloat];
+            
+            [javafloat release];
+        } else if([typestr isEqualToString:@"long"]) {
+            Class type = NSClassFromString(@"java.lang.Long");
+            long value = va_arg(ap, long);
+            id javalong = [type newWithSignature:@"(J)",value];
+            
+            [argumentTypes add:type];
+            [arguments add:javalong];
+            
+            [javalong release];
+        } else if([typestr isEqualToString:@"char"]) {
+            Class type = NSClassFromString(@"java.lang.Char");
+            char value = (char)va_arg(ap, int);
+            id javachar = [type newWithSignature:@"(C)",value];
+            
+            [argumentTypes add:type];
+            [arguments add:javachar];
+            
+            [javachar release];
+        } else if([typestr isEqualToString:@"short"]) {
+            Class type = NSClassFromString(@"java.lang.Short");
+            short value = (short)va_arg(ap, int);
+            id javashort = [type newWithSignature:@"(S)",value];
+            
+            [argumentTypes add:type];
+            [arguments add:javashort];
+            
+            [javashort release];
+        } else { // assume Java class
+            Class type = NSClassFromString(typestr);
+            id value = va_arg(ap, id);
+            [argumentTypes add:type];
+            [arguments add:value];
+        }
+    }
+    
+    JavaMethod *meth = [NSClassFromString(@"net.adium.smackBridge.SmackBridge") getMethod:[obj className] :method :argumentTypes];
+    id result = [meth invoke:obj :[arguments toArray]];
+    
+    [argumentTypes release];
+    [arguments release];
+    
+    va_end(ap);
+    return result;
+}
+
+
 @end

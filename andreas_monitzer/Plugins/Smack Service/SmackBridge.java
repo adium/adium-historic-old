@@ -13,6 +13,7 @@ import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.filter.*;
 import java.util.*;
+import java.lang.reflect.Method;
 
 public class SmackBridge implements ConnectionListener {
     NSObject delegate;
@@ -67,6 +68,11 @@ public class SmackBridge implements ConnectionListener {
     public static boolean isInstanceOfClass(Object instance, String classname) throws ClassNotFoundException {
         return Class.forName(classname).isInstance(instance);
     }
+    
+    public static Method getMethod(String classname, String methodname, Vector parameterTypes) throws ClassNotFoundException, NoSuchMethodException, SecurityException {
+        return Class.forName(classname).getMethod(methodname,(Class[])parameterTypes.toArray());
+    }
+    
     public static void createRosterEntry(Roster roster, String jid, String name, String group) throws XMPPException {
         String[] grouparray = new String[1];
         grouparray[0] = group;
