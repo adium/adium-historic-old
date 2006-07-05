@@ -372,6 +372,7 @@
 				[buildUser isEqualToString:@"evands"] || 
 				[buildUser isEqualToString:@"jmelloy"] ||
 				[buildUser isEqualToString:@"durin"] ||
+				[buildUser isEqualToString:@"rfackler"] ||
 				[buildUser isEqualToString:@"david"]) {
 				[buildUser release];
 				buildUser = nil;
