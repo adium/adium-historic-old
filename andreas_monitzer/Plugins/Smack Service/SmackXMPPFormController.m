@@ -9,17 +9,25 @@
 #import "SmackXMPPFormController.h"
 #import "SmackInterfaceDefinitions.h"
 #import "SmackXMPPFormConverter.h"
+#import "SmackCocoaAdapter.h"
 
 #import <WebKit/WebKit.h>
 
 @implementation SmackXMPPFormController
 
-- (id)initWithForm:(SmackXForm*)form {
+- (id)initWithForm:(SmackXForm*)form target:(id)t selector:(SEL)s {
+    if(![[form getType] isEqualToString:@"form"]) { // we only accept forms
+        [self dealloc];
+        return nil;
+    }
     if((self = [super init])) {
+        target = [t retain];
+        selector = s;
         [NSBundle loadNibNamed:@"SmackXMPPForm" owner:self];
         [webview setHostWindow:window];
         
         SmackXMPPFormConverter *conv = [[SmackXMPPFormConverter alloc] initWithForm:form];
+        resultForm = [[form createAnswerForm] retain];
         
         [self performSelector:@selector(loadForm:) withObject:conv afterDelay:0.0];
         
@@ -28,6 +36,7 @@
 }
 
 - (void)dealloc {
+    [resultForm release];
     [super dealloc];
 }
 
@@ -50,7 +59,6 @@
             NSString *info = [[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding];
             NSArray *fields = [info componentsSeparatedByString:@"&"];
             [info release];
-            NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
             
             NSEnumerator *e = [fields objectEnumerator];
             NSString *field;
@@ -74,18 +82,34 @@
                                                                                            (CFStringRef)value,
                                                                                            (CFStringRef)@"", kCFStringEncodingUTF8);
                 
-                [result setObject:value forKey:key];
+                
+                
+                [SmackCocoaAdapter invokeObject:resultForm methodWithParamTypeAndParam:@"setAnswer",@"java.lang.String",value,nil];
+                
                 [key release];
                 [value release];
             }
-            NSLog(@"result = %@",[result description]);
-            [result release];
             
+            NSLog(@"result form = %@",[[resultForm getDataFormToSend] toXML]);
+
             [window performClose:nil];
-            [window release];
+            [target performSelector:selector withObject:self];
+            [target release];
         }
         [listener ignore];
     }
+}
+
+- (void)windowWillClose:(NSNotification *)notification {
+    [resultForm release];
+    resultForm = [[SmackCocoaAdapter formWithType:@"cancel"] retain];
+    
+    [target performSelector:selector withObject:self];
+    [target release];
+}
+
+- (SmackXForm*)resultForm {
+    return resultForm;
 }
 
 @end

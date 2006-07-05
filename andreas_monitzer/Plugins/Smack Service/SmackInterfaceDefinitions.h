@@ -104,6 +104,25 @@
 
 @end
 
+@interface JavaVector : NSObject {
+}
+
+- (BOOL)add:(id)o;
+- (void)add:(int)index :(id)element;
+- (void)addElement:(id)obj;
+- (void)clear;
+- (id)clone;
+- (BOOL)contains:(id)elem;
+- (id)elementAt:(int)index;
+- (id)get:(int)index;
+- (void)removeElementAt:(int)index;
+- (id)set:(int)index :(id)element;
+- (int)size;
+- (id)toArray; // returns Object[]
+- (NSString*)toString;
+
+@end
+
 @interface JavaMapEntry : NSObject {
 }
 
@@ -152,6 +171,15 @@
 
 // Returns the number of milliseconds since January 1, 1970, 00:00:00 GMT represented by this Date object.
 - (long)getTime;
+
+@end
+
+@interface JavaMethod : NSObject {
+}
+
+- (NSString*)getName;
+- (id)invoke:(id)obj :(id)args; // second is Object[]
+- (NSString*)toString;
 
 @end
 
@@ -466,6 +494,7 @@
 - (NSString*)getTitle;
 - (NSString*)getType;
 - (void)setAnswer:(NSString*)variable :(NSNumber*)value;
+- (SmackXForm*)getDataFormToSend;
 
 @end
 
@@ -597,10 +626,13 @@
 - (void)setDelegate:(id<AdiumSmackBridgeDelegate>)delegate;
 - (id<AdiumSmackBridgeDelegate>)delegate;
 - (void)registerConnection:(SmackXMPPConnection*)conn;
-- (id)getStaticFieldFromClass:(NSString*)fieldname :(NSString*)classname;
 - (BOOL)isInstanceOfClass:(id)object :(NSString*)classname;
+- (JavaMethod*)getMethod:(NSString*)classname :(NSString*)methodname :(JavaVector*)parameterTypes;
 
 + (void)createRosterEntry:(SmackRoster*)roster :(NSString*)jid :(NSString*)name :(NSString*)group;
++ (BOOL)isInstanceOfClass:(id)obj :(NSString*)classname;
++ (id)getStaticFieldFromClass:(NSString*)fieldname :(NSString*)classname;
++ (JavaMethod*)getMethod:(NSString*)classname :(NSString*)method :(JavaVector*)argumentTypes;
 
 @end
 
