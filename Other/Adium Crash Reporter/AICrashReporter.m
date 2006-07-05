@@ -229,7 +229,7 @@
 	   [[textField_accountIM stringValue] isEqualToString:@""]) {
 		NSBeginCriticalAlertSheet(AILocalizedString(@"Contact Information Required",nil),
 								  @"OK", nil, nil, window_MainWindow, nil, nil, nil, NULL,
-								  AILocalizedString(@"Please provide either your email address or AIM name in case we need to contact you for additional information (or to suggest a solution).",nil));
+								  AILocalizedString(@"Please provide either your email address or IM name in case we need to contact you for additional information (or to suggest a solution).",nil));
 	} else {
 		//Begin showing progress
 		[self activateProgressIndicator];
