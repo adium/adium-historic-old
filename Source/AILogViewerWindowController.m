@@ -48,7 +48,7 @@ Boolean ContentResultsFilter (SKIndexRef inIndex,
 	//Perform the content search
 	[logAccessLock lock];
 	SKIndexFlush(logSearchIndex);
-	indexArray = CFArrayCreate(NULL, &logSearchIndex, 1, &kCFTypeArrayCallBacks);
+	indexArray = CFArrayCreate(NULL, (void *)&logSearchIndex, 1, &kCFTypeArrayCallBacks);
 	searchGroup = SKSearchGroupCreate(indexArray);
 	
 	/* Our logs are stored as HTML.  Non-ASCII characters are therefore HTML-encoded.  We need to have an
@@ -146,6 +146,31 @@ Boolean ContentResultsFilter (SKIndexRef inIndex,
 	
 	//Release the logsLock so the plugin can return to regularly scheduled programming
 	[logAccessLock unlock];
+}
+
+- (void)filterLogsWithSearch:(NSDictionary *)searchInfoDict
+{
+	//Lock down new thread creation until this thread is complete
+    //We must be careful not to wait on performing any main thread selectors when this lock is set!!
+    [searchingLock lock];
+
+	[super filterLogsWithSearch:searchInfoDict];
+
+	//Re-allow thread creation
+    //We must be careful not to wait on performing any main thread selectors when this lock is set!!
+    [searchingLock unlock];	
+}
+
+//Abort any active searches
+- (void)stopSearching
+{
+    //Increase the active search ID so any existing searches stop, and then
+    //wait for any active searches to finish and release the lock
+	[super stopSearching];
+	
+	if (!windowIsClosing) {
+		[searchingLock lock]; [searchingLock unlock];
+	}	
 }
 
 - (NSString *)dateItemNibName

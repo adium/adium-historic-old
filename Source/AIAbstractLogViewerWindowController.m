@@ -417,7 +417,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	{
 		int row = [[tableView_results dataSource] numberOfRowsInTableView:tableView_results];
 		//We utilize the logIndexAccessLock so we have exclusive access to the logs
-		NSLock              *logAccessLock = [plugin logAccessLock];
+		//NSLock              *logAccessLock = [plugin logAccessLock];
 		
 		//Remember that this locks and unlocks the logAccessLock
 		SKIndexRef          logSearchIndex = [plugin logContentIndex];
@@ -442,11 +442,11 @@ static int toArraySort(id itemA, id itemB, void *context);
 				
 				[[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
 				
-				[logAccessLock lock];
-				document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)[theLog path]);
+				//[logAccessLock lock];
+				document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:[theLog path]]);
 				SKIndexRemoveDocument(logSearchIndex, document);
 				CFRelease(document);
-				[logAccessLock unlock];
+				//[logAccessLock unlock];
 				
 				[theLog release];
 			}
@@ -473,7 +473,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	
 	if (theLog) {
 		//We utilize the logIndexAccessLock so we have exclusive access to the logs
-		NSLock              *logAccessLock = [plugin logAccessLock];
+		//NSLock              *logAccessLock = [plugin logAccessLock];
 		
 		//Remember that this locks and unlocks the logAccessLock
 		SKIndexRef          logSearchIndex = [plugin logContentIndex];
@@ -489,11 +489,11 @@ static int toArraySort(id itemA, id itemB, void *context);
 		[[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
 		
 		//Update the log index
-		[logAccessLock lock];
-		document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)[theLog path]);
+		//[logAccessLock lock];
+		document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:[theLog path]]);
 		SKIndexRemoveDocument(logSearchIndex, document);
 		CFRelease(document);
-		[logAccessLock unlock];
+		//[logAccessLock unlock];
 		
 		//Rebuild the 'global' log indexes
 		[self rebuildIndices];
@@ -1087,15 +1087,18 @@ static int toArraySort(id itemA, id itemB, void *context);
 - (void)startSearchingClearingCurrentResults:(BOOL)clearCurrentResults
 {
     NSDictionary    *searchDict;
-    
-    //Stop any existing searches
-    [self stopSearching];
 
     //Once all searches have exited, we can start a new one
 	if (clearCurrentResults) {
 		[resultsLock lock];
+		//Stop any existing searches inside of resultsLock so we won't get any additions results added that we don't want
+		[self stopSearching];
+
 		[currentSearchResults release]; currentSearchResults = [[NSMutableArray alloc] init];
 		[resultsLock unlock];
+	} else {
+	    //Stop any existing searches
+		[self stopSearching];	
 	}
 
 	searching = YES;
@@ -1122,10 +1125,6 @@ static int toArraySort(id itemA, id itemB, void *context);
     //Increase the active search ID so any existing searches stop, and then
     //wait for any active searches to finish and release the lock
     activeSearchID++;
-
-	if (!windowIsClosing) {
-		[searchingLock lock]; [searchingLock unlock];
-	}	
 }
 
 //Set the active search mode (Does not invoke a search)
@@ -1360,9 +1359,6 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
     int                     searchID = [[searchInfoDict objectForKey:@"ID"] intValue];
     NSString                *searchString = [searchInfoDict objectForKey:@"String"];
 
-    //Lock down new thread creation until this thread is complete
-    //We must be careful not to wait on performing any main thread selectors when this lock is set!!
-    [searchingLock lock];
     if (searchID == activeSearchID) { //If we're still supposed to go
 		searching = YES;
 		
@@ -1393,10 +1389,6 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		[self performSelectorOnMainThread:@selector(searchComplete) withObject:nil waitUntilDone:NO];
     }
 	
-    //Re-allow thread creation
-    //We must be careful not to wait on performing any main thread selectors when this lock is set!!
-    [searchingLock unlock];	
-    
     //Cleanup
     [pool release];
 }
