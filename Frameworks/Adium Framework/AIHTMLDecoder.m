@@ -419,6 +419,12 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 																  effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
 
 				if (textAttachment) {
+					if (![textAttachment isKindOfClass:[AITextAttachmentExtension class]]) {
+						NSLog(@"Message %@ gave an NSTextAttachment %@ - why is it not an AITextAttachmentExtension?",
+							  inMessage,
+							  textAttachment);
+						continue;
+					}
 					AITextAttachmentExtension *attachment = (AITextAttachmentExtension *)textAttachment;
 					/* If we have a path to which we want to save any images and either
 					 *		the attachment should save such images OR
