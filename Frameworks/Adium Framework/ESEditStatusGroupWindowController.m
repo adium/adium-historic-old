@@ -99,7 +99,7 @@
 	[statusGroup setStatusType:[[popUp_groupWith selectedItem] tag]];
 
 	if (target && [target respondsToSelector:@selector(finishedSatusGroupEdit:)]) {
-		//Perform on a delay so the sheet can beging closing immediately.
+		//Perform on a delay so the sheet can begin closing immediately.
 		[target performSelector:@selector(finishedSatusGroupEdit:)
 				   withObject:statusGroup
 				   afterDelay:0];
