@@ -50,14 +50,14 @@ PLIST_DIR=`pwd`/../Plists
 ADIUM_PLIST=$(PLIST_DIR)/Adium_2
 CRASH_REPORTER_PLIST=$(PLIST_DIR)/Adium\ Crash\ Reporter-Info
 
-.PHONY: all update compile clean release source createfolder diskimage
+.PHONY: all update version compile clean release source createfolder diskimage
 
-all: update compile release
+all: update version compile release
 
 update:
 	svn update $(SRC_DIR)
 
-compile:
+version:
 	@# update the plists
 	defaults write $(ADIUM_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2006 The Adium Team'
 	defaults write $(ADIUM_PLIST) CFBundleVersion '$(VERSION)'
@@ -68,6 +68,7 @@ compile:
 	plutil -convert xml1 $(ADIUM_PLIST).plist
 	plutil -convert xml1 $(CRASH_REPORTER_PLIST).plist
 
+compile:
 	$(MAKE) $(BUILDFLAGS) -C $(SRC_DIR)
 
 testcompile:
