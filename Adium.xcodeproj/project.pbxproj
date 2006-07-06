@@ -1458,6 +1458,13 @@
 			remoteGlobalIDString = 112480870956271F00F69C1E;
 			remoteInfo = "joscar bridge";
 		};
+		345AF7D30A5D559B00D7DA6F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 34611C7D09B6756D00870036 /* AdiumSpotlightImporter.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 345AF7D00A5D559900D7DA6F /* AISpotlightImporterTest */;
+			remoteInfo = AISpotlightImporterTest;
+		};
 		34611C8209B6756D00870036 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 34611C7D09B6756D00870036 /* AdiumSpotlightImporter.xcodeproj */;
@@ -2298,6 +2305,23 @@
 		345A7B710954AD4D00FF3113 /* GaimDefaultsSimple.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = GaimDefaultsSimple.plist; path = "Plugins/Gaim Service/GaimDefaultsSimple.plist"; sourceTree = "<group>"; };
 		345A7B840954AEF400FF3113 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimSimpleAccountView.nib"; sourceTree = "<group>"; };
 		345ACC960811C20F008E4D22 /* AwayStatusWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AwayStatusWindow.nib; path = Resources/AwayStatusWindow.nib; sourceTree = "<group>"; };
+		345AF6BE0A5C996B00D7DA6F /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6BF0A5C997200D7DA6F /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = Resources/Danish.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6C00A5C998000D7DA6F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6C10A5C998D00D7DA6F /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6C20A5C999900D7DA6F /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6C30A5C99A600D7DA6F /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6C40A5C99AF00D7DA6F /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6C50A5C99BA00D7DA6F /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6C60A5C99C300D7DA6F /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = Resources/Russian.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6C70A5C99CE00D7DA6F /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6C80A5C99D800D7DA6F /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6C90A5C99E300D7DA6F /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6CA0A5C99F400D7DA6F /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6CB0A5C9B4200D7DA6F /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6CC0A5C9B4E00D7DA6F /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF6CD0A5C9B5A00D7DA6F /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		345AF9B50A5D67EC00D7DA6F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
 		345F566A08178356001F733C /* AdiumServiceIcons.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumServiceIcons.icns; path = Resources/AdiumServiceIcons.icns; sourceTree = "<group>"; };
 		345F573F0817FF80001F733C /* pref-contactList.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-contactList.png"; path = "Resources/pref-contactList.png"; sourceTree = "<group>"; };
 		345F583D08197E74001F733C /* AdiumStatusIcons.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumStatusIcons.icns; path = Resources/AdiumStatusIcons.icns; sourceTree = "<group>"; };
@@ -4498,6 +4522,7 @@
 			isa = PBXGroup;
 			children = (
 				34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */,
+				345AF7D40A5D559B00D7DA6F /* AISpotlightImporterTest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -6022,12 +6047,12 @@
 				3456231A0A3771D800E7FC97 /* ESRankingCell.m */,
 				3456231F0A3771E100E7FC97 /* AIChatLog.h */,
 				3456231E0A3771E100E7FC97 /* AIChatLog.m */,
-				345623230A3771F300E7FC97 /* AILogViewerWindowController.h */,
-				345623220A3771F300E7FC97 /* AILogViewerWindowController.m */,
 				345623250A3771F400E7FC97 /* AILogToGroup.h */,
 				345623240A3771F300E7FC97 /* AILogToGroup.m */,
 				345623270A3771F400E7FC97 /* AILogFromGroup.h */,
 				345623260A3771F400E7FC97 /* AILogFromGroup.m */,
+				345623230A3771F300E7FC97 /* AILogViewerWindowController.h */,
+				345623220A3771F300E7FC97 /* AILogViewerWindowController.m */,
 				3410745D09B6965600565C9E /* AIMDLogViewerWindowController.h */,
 				3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */,
 				3456232E0A37723400E7FC97 /* LogViewer.nib */,
@@ -7911,6 +7936,7 @@
 				pl,
 				en_CA,
 				en_AU,
+				Turkish,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CocAIMe2 */;
 			projectDirPath = "";
@@ -7963,6 +7989,14 @@
 			fileType = archive.jar;
 			path = "joscar bridge.jar";
 			remoteRef = 3423412D09D1B67B009FF634 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		345AF7D40A5D559B00D7DA6F /* AISpotlightImporterTest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			name = AISpotlightImporterTest;
+			path = "../../../../../../build/Development-libgaim_oscar/AISpotlightImporterTest";
+			remoteRef = 345AF7D30A5D559B00D7DA6F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */ = {
@@ -9586,6 +9620,7 @@
 				34A81DD3093CE92300B0E93D /* pl */,
 				34A81DDE093CE94300B0E93D /* en_CA */,
 				349710FF096C4D7F00699948 /* en_AU */,
+				345AF9B50A5D67EC00D7DA6F /* Dutch */,
 			);
 			name = AppearancePrefs.nib;
 			sourceTree = "<group>";
@@ -10121,6 +10156,22 @@
 				34A6F68207D65D5B00972830 /* English */,
 				34A81DC1093CE92300B0E93D /* pl */,
 				34A81DE5093CE95100B0E93D /* en_CA */,
+				345AF6BE0A5C996B00D7DA6F /* Catalan */,
+				345AF6BF0A5C997200D7DA6F /* Danish */,
+				345AF6C00A5C998000D7DA6F /* Dutch */,
+				345AF6C10A5C998D00D7DA6F /* French */,
+				345AF6C20A5C999900D7DA6F /* German */,
+				345AF6C30A5C99A600D7DA6F /* Italian */,
+				345AF6C40A5C99AF00D7DA6F /* Japanese */,
+				345AF6C50A5C99BA00D7DA6F /* Norwegian */,
+				345AF6C60A5C99C300D7DA6F /* Russian */,
+				345AF6C70A5C99CE00D7DA6F /* Spanish */,
+				345AF6C80A5C99D800D7DA6F /* Swedish */,
+				345AF6C90A5C99E300D7DA6F /* Turkish */,
+				345AF6CA0A5C99F400D7DA6F /* cs */,
+				345AF6CB0A5C9B4200D7DA6F /* is */,
+				345AF6CC0A5C9B4E00D7DA6F /* zh_CN */,
+				345AF6CD0A5C9B5A00D7DA6F /* zh_TW */,
 			);
 			name = GeneralPreferences.nib;
 			sourceTree = "<group>";
