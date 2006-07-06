@@ -287,14 +287,11 @@
 				id 	cell = [self cellForTableColumn:tableColumn item:[self itemAtRow:row]];
 				if (![cell respondsToSelector:@selector(drawGridBehindCell)] || [cell drawGridBehindCell]) {					
 					NSRect	thisRect = [self rectOfRow:row];
-//					NSLog(@"This rect is %@ - %i",NSStringFromRect(thisRect),NSIntersectsRect(thisRect, rect));
 
 					if (NSIntersectsRect(thisRect, rect)) { 
 						gridRects[rectNumber++] = thisRect;
 					}
-				}/* else {
-					NSLog(@"%@ said not to draw",cell);
-				}*/
+				}
 			}
 		}
 		
