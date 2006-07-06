@@ -665,7 +665,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	if (attachmentValue) {
 		AITextAttachmentExtension *extension = (AITextAttachmentExtension *)attachmentValue;
-		if(thingsToInclude.attachmentTextEquivalents || ([extension respondsToSelector:@selector(shouldAlwaysSendAsText)] && [extension shouldAlwaysSendAsText])) {
+		if ((thingsToInclude.attachmentTextEquivalents ||
+			([extension respondsToSelector:@selector(shouldAlwaysSendAsText)] && [extension shouldAlwaysSendAsText])) &&
+			([extension respondsToSelector:@selector(string)])) {
 			[elementContent setString:[extension string]];
 #if 0
 		} else {
@@ -674,6 +676,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			*Feel free to hack on this if you find something that will want images.
 			*I would recommend allocating a bit from the bitfield to control it, though.
 			*--boredzo
+			*
+			*The log viewer now uses the output of this method and definitely does have use for images :)
 			*/
 			AIXMLElement *imageElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"img"];
 			[imageElement setSelfCloses:YES];
