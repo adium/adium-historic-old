@@ -409,7 +409,7 @@
 		if (NSRunAlertPanel(UNABLE_TO_SEND,
 							[NSString stringWithFormat:AILocalizedString(@"Your version of Adium is out of date, so crash reporting has been disabled. Your version is %@; the current version is %@. Please update to the latest version, as your crash may have already been fixed.",nil),
 								[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],
-								versionString]
+								versionString],
 							AILocalizedString(@"Update Now",nil),
 							AILocalizedString(@"Cancel",nil),
 							nil) == NSAlertDefaultReturn) {
