@@ -300,7 +300,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 - (IBAction)okay:(id)sender
 {
 	if (target && [target respondsToSelector:@selector(customStatusState:changedTo:forAccount:)]) {
-		//Perform on a delay so the sheet can beging closing immediately.
+		//Perform on a delay so the sheet can begin closing immediately.
 		[self performSelector:@selector(notifyOfStateChange)
 				   withObject:nil
 				   afterDelay:0];
