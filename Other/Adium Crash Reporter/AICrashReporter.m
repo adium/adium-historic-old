@@ -20,6 +20,7 @@
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
+#import <Sparkle/Sparkle.h>
 
 #define CRASH_REPORT_URL				@"http://www.visualdistortion.org/crash/post.jsp"
 #define KEY_CRASH_EMAIL_ADDRESS			@"AdiumCrashReporterEmailAddress"
@@ -65,6 +66,7 @@
 	[crashLog release];
 	[slayerScript release];
 	[adiumPath release];
+	[statusChecker release];
 
 	[super dealloc];
 }
@@ -178,20 +180,24 @@
 //Display privacy information sheet
 - (IBAction)showPrivacyDetails:(id)sender
 {
-    NSDictionary		*attributes = [NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:11]
-																  forKey:NSFontAttributeName];
-    NSAttributedString	*attrLogString = [[[NSAttributedString alloc] initWithString:crashLog
-																		  attributes:attributes] autorelease];
-    
-    //Fill in crash log
-    [[textView_crashLog textStorage] setAttributedString:attrLogString];
-    
-    //Display the sheet
-    [NSApp beginSheet:panel_privacySheet
-       modalForWindow:window_MainWindow
-        modalDelegate:nil
-       didEndSelector:nil
-          contextInfo:nil];
+	if (crashLog) {
+		NSDictionary		*attributes = [NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:11]
+																	  forKey:NSFontAttributeName];
+		NSAttributedString	*attrLogString = [[[NSAttributedString alloc] initWithString:crashLog
+																			  attributes:attributes] autorelease];
+		
+		//Fill in crash log
+		[[textView_crashLog textStorage] setAttributedString:attrLogString];
+		
+		//Display the sheet
+		[NSApp beginSheet:panel_privacySheet
+		   modalForWindow:window_MainWindow
+			modalDelegate:nil
+		   didEndSelector:nil
+			  contextInfo:nil];
+	} else {
+		NSBeep();
+	}
 }
 
 //Close the privacy details sheet
@@ -390,59 +396,20 @@
 }
 
 /*!
-* @brief Invoked when version information is received
- *
- * Parse the version dictionary. Only allow crash reports to be sent for the latest release (or beta).
- * If the user is running an old version, offer the chance to go to the download site immediately.
- *
- * @param versionDict Dictionary from the web containing version numbers of the most recent releases
+ * @brief Invoked when version information is received
  */
-- (void)_versionReceived:(NSDictionary *)versionDict
+- (void)finishWithAcceptableVersion:(BOOL)allowReport newVersionString:(NSString *)versionString
 {
-	NSString	*number = [versionDict objectForKey:VERSION_PLIST_KEY];
-	NSDate		*newestDate;
-	BOOL		allowReport;
 	BOOL		shouldRelaunchAdium = YES;
-	
-	//Get the newest version date from the passed version dict
-	newestDate = ((versionDict && number) ?
-				  [NSDate dateWithTimeIntervalSince1970:[number doubleValue]] :
-				  nil);
-
-	/* If we got no version information, or this version is as new or newer than the one available on the server,
-	 * allow the report to be sent
-	 */
-	if (!newestDate ||
-		[buildDate isEqualToDate:newestDate] || [buildDate isEqualToDate:[buildDate laterDate:newestDate]]) {
-		allowReport = YES;
-		
-		// Don't allow old betas to send crash reports
-		if (BETA_RELEASE) {
-			NSString	*betaNumber = [versionDict objectForKey:VERSION_BETA_PLIST_KEY];
-			NSDate		*betaDate;
-			
-			betaDate = ((versionDict && number) ?
-						[NSDate dateWithTimeIntervalSince1970:[betaNumber doubleValue]] :
-						nil);
-			
-			//Don't allow the report if we got a beta date, and it's not the current date and it's later than our date
-			if (betaDate &&
-				![buildDate isEqualToDate:betaDate] &&
-				![buildDate isEqualToDate:[buildDate laterDate:betaDate]]) {
-				allowReport = NO;
-			}
-		}
-		
-	} else {
-		allowReport = NO;
-	}
 
 	if (allowReport) {
 		[self buildAndSendReport];
 		
 	} else {
 		if (NSRunAlertPanel(UNABLE_TO_SEND,
-							AILocalizedString(@"You are running an old version of Adium; crash reporting has been disabled. Please update to the latest version, as your crash may have already been fixed.",nil),
+							[NSString stringWithFormat:AILocalizedString(@"Your version of Adium is out of date, so crash reporting has been disabled. Your version is %@; the current version is %@. Please update to the latest version, as your crash may have already been fixed.",nil),
+								[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],
+								versionString]
 							AILocalizedString(@"Update Now",nil),
 							AILocalizedString(@"Cancel",nil),
 							nil) == NSAlertDefaultReturn) {
@@ -468,40 +435,17 @@
 
 
 /*!
-* @brief Returns the date of the most recent Adium build (contacts adiumx.com asynchronously)
+ * @brief Returns the date of the most recent Adium build (contacts adiumx.com asynchronously)
  */
 - (void)performVersionChecking
 {
-	[[NSURL URLWithString:VERSION_PLIST_URL] loadResourceDataNotifyingClient:self usingCache:NO];
+	statusChecker = [[SUStatusChecker statusCheckerForDelegate:self] retain];
 }
 
-/*!
-* @brief Invoked when the versionDict was downloaded succesfully
- *
- * In response, we parse the received version information.
- */
-- (void)URLResourceDidFinishLoading:(NSURL *)sender
+- (void)statusChecker:(SUStatusChecker *)statusChecker foundVersion:(NSString *)versionString isNewVersion:(BOOL)isNewVersion;
 {
-	NSData			*data = [sender resourceDataUsingCache:YES];
-	
-	if (data) {
-		NSDictionary	*versionDict;
-		
-		versionDict = [NSPropertyListSerialization propertyListFromData:data
-													   mutabilityOption:NSPropertyListImmutable
-																 format:nil
-													   errorDescription:nil];
-		
-		[self _versionReceived:versionDict];
-	}
-}
-
-/*!
-* @brief Invoked when the versionDict could not be loaded
- */
-- (void)URLResourceDidCancelLoading:(NSURL *)sender
-{
-	[self _versionReceived:nil];
+	//Only send the report if there is not a new version
+	[self finishWithAcceptableVersion:!isNewVersion newVersionString:versionString];
 }
 
 @end
