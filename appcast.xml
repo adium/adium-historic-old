@@ -4,10 +4,10 @@
     <title>Adium Updates</title>
     <language>en</language>
     <item>
-      <title>Adium 1.0b2</title>
-      <pubDate>Wed, 5 Jul 2006 13:34:00 GMT-4</pubDate>
-	<sparkle:releaseNotesLink>http://trac.adiumx.com/browser/trunk/ChangeLogs/changes1.0.txt?format=raw</sparkle:releaseNotesLink> 
-      <enclosure sparkle:version="1.0b2" url="http://adiumx.cachefly.net/AdiumX_1.0b2.dmg" length="21011683" type="application/octet-stream"/>
+      <title>Adium 1.0b3</title>
+      <pubDate>Thu, 6 Jul 2006 01:17:00 GMT-4</pubDate>
+	<sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0b3.html</sparkle:releaseNotesLink> 
+      <enclosure sparkle:version="1.0b3" url="http://adiumx.cachefly.net/AdiumX_1.0b3.dmg" length="20505834" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
