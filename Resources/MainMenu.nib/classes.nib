@@ -21,6 +21,7 @@
             }; 
             SUPERCLASS = NSObject; 
         }, 
+        {CLASS = AIApplication; LANGUAGE = ObjC; SUPERCLASS = NSApplication; }, 
         {
             ACTIONS = {
                 adiumPrint = id; 
