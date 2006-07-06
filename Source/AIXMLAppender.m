@@ -271,7 +271,7 @@ enum { xmlMarkerLength = 21 };
 {
 	//Check our precondition
 	if ([keys count] != [values count]) {
-		NSLog(@"Attribute key and value arrays are of differing lengths, %u and %u, respectively", [keys count], [values count]);
+		NSLog(@"Attribute %@ failed creation: key and value arrays are of differing lengths, %u and %u, respectively", name, [keys count], [values count]);
 		return nil;
 	}
 	
