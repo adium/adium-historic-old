@@ -199,7 +199,7 @@ NSString *killXMLTags(NSString *inString)
         tempString = nil;
         [scan scanUpToString:@"<" intoString:&tempString];
         if(tempString != nil)
-            [ret appendString:tempString];
+            [ret appendFormat:@"%@ ", tempString];
         [scan scanString:@"<" intoString:nil];
         [scan scanUpToString:@">" intoString:&tempString];
         if([tempString hasPrefix:@"BR"])
@@ -242,7 +242,7 @@ NSString *GetTextContentForXMLLog(NSString *pathToFile)
 		xmlDoc = [[xmlClass alloc] initWithContentsOfURL:furl
 												 options:NSXMLNodePreserveCDATA
 												   error:&err];    
-		NSArray *contentArray = [xmlDoc nodesForXPath:@"//message/*/text()"
+		NSArray *contentArray = [xmlDoc nodesForXPath:@"//*/*/text()"
 												error:&err];
 		contentString = [contentArray componentsJoinedByString:@" "];
 		[xmlDoc release];
