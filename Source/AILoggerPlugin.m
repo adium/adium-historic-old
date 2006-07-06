@@ -386,7 +386,7 @@ Class LogViewerWindowControllerClass = NULL;
 			/*
 			 * Oh. My. God. This is the ugliest thing I have ever seen in my life. Why do we have to do this?! We are
 			 * notified of status changes by meta contact, not the actual contact. We have to search the chat for the
-			 * acutal contact we're looking for. This makes me want to cry.
+			 * actual contact we're looking for. This makes me want to cry.
 			 */
 			AIListObject	*retardedMetaObject = [content source];
 			AIListObject	*actualObject = nil;
