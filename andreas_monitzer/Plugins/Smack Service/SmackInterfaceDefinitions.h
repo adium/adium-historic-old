@@ -174,12 +174,20 @@
 
 @end
 
+@interface JavaClass : NSObject {
+}
+
+- (BOOL)equals:(id)obj;
+
+@end
+
 @interface JavaMethod : NSObject {
 }
 
 - (NSString*)getName;
-- (id)invoke:(id)obj :(id)args; // second is Object[]
+- (id)invoke:(id)obj :(id)args; // second is String[]
 - (NSString*)toString;
+- (JavaClass*)getReturnType;
 
 @end
 
@@ -481,6 +489,9 @@
 - (NSString*)getVariable;
 - (BOOL)isRequired;
 
+- (void)resetValues;
+- (void)addValue:(NSString*)value;
+
 - (NSString*)toXML;
 
 @end
@@ -495,6 +506,7 @@
 - (NSString*)getType;
 - (void)setAnswer:(NSString*)variable :(NSNumber*)value;
 - (SmackXForm*)getDataFormToSend;
+- (SmackXForm*)createAnswerForm;
 
 @end
 
@@ -633,6 +645,7 @@
 + (BOOL)isInstanceOfClass:(id)obj :(NSString*)classname;
 + (id)getStaticFieldFromClass:(NSString*)fieldname :(NSString*)classname;
 + (JavaMethod*)getMethod:(NSString*)classname :(NSString*)method :(JavaVector*)argumentTypes;
++ (id)invokeMethod:(JavaMethod*)meth :(id)obj :(JavaVector*)params;
 
 @end
 

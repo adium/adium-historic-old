@@ -70,7 +70,33 @@ public class SmackBridge implements ConnectionListener {
     }
     
     public static Method getMethod(String classname, String methodname, Vector parameterTypes) throws ClassNotFoundException, NoSuchMethodException, SecurityException {
-        return Class.forName(classname).getMethod(methodname,(Class[])parameterTypes.toArray());
+        Class[] parameterClasses = new Class[parameterTypes.size()];
+        for(int i = 0; i < parameterTypes.size(); i++)
+        {
+            String name = (String)parameterTypes.get(i);
+            
+            if(name.equals("int"))
+                parameterClasses[i] = Integer.TYPE;
+            else if(name.equals("boolean"))
+                parameterClasses[i] = Boolean.TYPE;
+            else if(name.equals("double"))
+                parameterClasses[i] = Double.TYPE;
+            else if(name.equals("float"))
+                parameterClasses[i] = Float.TYPE;
+            else if(name.equals("long"))
+                parameterClasses[i] = Long.TYPE;
+            else if(name.equals("char"))
+                parameterClasses[i] = Character.TYPE;
+            else if(name.equals("short"))
+                parameterClasses[i] = Short.TYPE;
+            else
+                parameterClasses[i] = Class.forName(name);
+        }
+        
+        return Class.forName(classname).getMethod(methodname,parameterClasses);
+    }
+    public static Object invokeMethod(Method meth, Object obj, Vector arguments) throws IllegalAccessException, IllegalArgumentException, java.lang.reflect.InvocationTargetException {
+        return meth.invoke(obj, arguments.toArray());
     }
     
     public static void createRosterEntry(Roster roster, String jid, String name, String group) throws XMPPException {
