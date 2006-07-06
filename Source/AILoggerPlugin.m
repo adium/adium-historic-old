@@ -682,7 +682,7 @@ Class LogViewerWindowControllerClass = NULL;
 			[dirtyLogArray addObject:path];
 		}
 		[dirtyLogLock unlock];
-		
+
 		//Save the dirty array immedientally
 		[self _saveDirtyLogArray];
 		
@@ -749,12 +749,23 @@ Class LogViewerWindowControllerClass = NULL;
 	return newIndex;
 }
 
+- (void)releaseIndex:(SKIndexRef)inIndex
+{
+    NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
+	CFRelease(inIndex);
+	[pool release];
+}
+
 //Close the log index
 - (void)closeLogIndex
 {
 	[logAccessLock lock];
-    if (index_Content) CFRelease(index_Content);
-    index_Content = nil;
+	if (index_Content) {
+		[NSThread detachNewThreadSelector:@selector(releaseIndex:)
+								 toTarget:self
+							   withObject:(id)index_Content];
+		index_Content = nil;
+	}
 	[logAccessLock unlock];
 }
 
@@ -845,7 +856,7 @@ Class LogViewerWindowControllerClass = NULL;
     AILogToGroup		*toGroup;
     AIChatLog			*theLog;    
 
-    [indexingThreadLock lock];      //Prevent anything from closing until this thread is complete.
+    [indexingThreadLock lock];
     suspendDirtyArraySave = YES;    //Prevent saving of the dirty array until we're finished building it
     
     //Create a fresh dirty log array
@@ -922,7 +933,7 @@ Class LogViewerWindowControllerClass = NULL;
 	//Ensure log indexing (in an old thread) isn't already going on and just waiting to stop
 	[indexingThreadLock lock]; [indexingThreadLock unlock];
 	
-    [indexingThreadLock lock];     //Prevent anything from closing until this thread is complete.
+    [indexingThreadLock lock];
 
     //Start cleaning (If we're still supposed to go)
     if (!stopIndexingThreads) {

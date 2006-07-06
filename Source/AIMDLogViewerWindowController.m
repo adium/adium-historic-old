@@ -92,7 +92,8 @@
 				[resultsLock lock];
 				if ((theLog != nil) &&
 					(![currentSearchResults containsObjectIdenticalTo:theLog]) &&
-					[self chatLogMatchesDateFilter:theLog]) {
+					[self chatLogMatchesDateFilter:theLog] &&
+					(searchID == activeSearchID)) {
 					[theLog setRankingValueOnArbitraryScale:foundScores[i]];
 					
 					//SearchKit does not normalize ranking scores, so we track the largest we've found and use it as 1.0

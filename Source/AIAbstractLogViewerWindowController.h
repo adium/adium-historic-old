@@ -172,6 +172,8 @@ typedef enum {
 - (BOOL)searchShouldDisplayDocument:(SKDocumentRef)inDocument pathComponents:(NSArray *)pathComponents testDate:(BOOL)testDate;
 - (BOOL)chatLogMatchesDateFilter:(AIChatLog *)inChatLog;
 
+- (void)filterLogsWithSearch:(NSDictionary *)searchInfoDict;
+
 - (NSMenu *)dateTypeMenu;
 - (NSMenuItem *)_menuItemForDateType:(AIDateType)dateType dict:(NSDictionary *)dateTypeTitleDict;
 - (IBAction)selectDateType:(id)sender;
