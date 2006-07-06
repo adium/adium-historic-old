@@ -607,19 +607,20 @@
 						  forKey:@"Notes"
 						  notify:NotifyLater];
 	
-	//Apply any changes
 	[listContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
 - (void)contactWithUID:(NSString *)inUID iconUpdate:(NSData *)iconData
 {
-	AIListContact	*listContact = [self contactWithUID:inUID];
-	
-	[listContact setServersideIconData:iconData
-								notify:NotifyLater];
-	
-	//Apply any changes
-	[listContact notifyOfChangedStatusSilently:silentAndDelayed];
+	//Ignore null data until joscar retrieves all icons consistently; setting null will make us clear an existing icon
+	if (iconData) {
+		AIListContact	*listContact = [self contactWithUID:inUID];
+		
+		[listContact setServersideIconData:iconData
+									notify:NotifyLater];
+		
+		[listContact notifyOfChangedStatusSilently:silentAndDelayed];
+	}
 }
 
 #pragma mark Messaging
