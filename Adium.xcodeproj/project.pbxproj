@@ -344,6 +344,9 @@
 		3459CBEF0A25FFBF00ECC256 /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 3459CBEB0A25FFBE00ECC256 /* GetMetadataForFile.m */; };
 		3459CBF00A25FFBF00ECC256 /* AdiumSpotlightImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3459CBEC0A25FFBF00ECC256 /* AdiumSpotlightImporter.h */; };
 		345ACC970811C20F008E4D22 /* AwayStatusWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 345ACC960811C20F008E4D22 /* AwayStatusWindow.nib */; };
+		345AFA690A5D76B400D7DA6F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
+		345AFAED0A5D9A5F00D7DA6F /* AINoisyTableColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 345AFAEB0A5D9A5F00D7DA6F /* AINoisyTableColumn.h */; };
+		345AFAEE0A5D9A5F00D7DA6F /* AINoisyTableColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 345AFAEC0A5D9A5F00D7DA6F /* AINoisyTableColumn.m */; };
 		345F566B08178356001F733C /* AdiumServiceIcons.icns in Resources */ = {isa = PBXBuildFile; fileRef = 345F566A08178356001F733C /* AdiumServiceIcons.icns */; };
 		345F57400817FF80001F733C /* pref-contactList.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F573F0817FF80001F733C /* pref-contactList.png */; };
 		345F583E08197E74001F733C /* AdiumStatusIcons.icns in Resources */ = {isa = PBXBuildFile; fileRef = 345F583D08197E74001F733C /* AdiumStatusIcons.icns */; };
@@ -1465,6 +1468,13 @@
 			remoteGlobalIDString = 345AF7D00A5D559900D7DA6F /* AISpotlightImporterTest */;
 			remoteInfo = AISpotlightImporterTest;
 		};
+		345AFA670A5D769D00D7DA6F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 347A219D09786C1700A30431 /* Adium with SystemVersionCheck */;
+			remoteInfo = "Adium with SystemVersionCheck";
+		};
 		34611C8209B6756D00870036 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 34611C7D09B6756D00870036 /* AdiumSpotlightImporter.xcodeproj */;
@@ -2322,6 +2332,8 @@
 		345AF6CC0A5C9B4E00D7DA6F /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		345AF6CD0A5C9B5A00D7DA6F /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		345AF9B50A5D67EC00D7DA6F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
+		345AFAEB0A5D9A5F00D7DA6F /* AINoisyTableColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AINoisyTableColumn.h; path = Source/AINoisyTableColumn.h; sourceTree = "<group>"; };
+		345AFAEC0A5D9A5F00D7DA6F /* AINoisyTableColumn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AINoisyTableColumn.m; path = Source/AINoisyTableColumn.m; sourceTree = "<group>"; };
 		345F566A08178356001F733C /* AdiumServiceIcons.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumServiceIcons.icns; path = Resources/AdiumServiceIcons.icns; sourceTree = "<group>"; };
 		345F573F0817FF80001F733C /* pref-contactList.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-contactList.png"; path = "Resources/pref-contactList.png"; sourceTree = "<group>"; };
 		345F583D08197E74001F733C /* AdiumStatusIcons.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumStatusIcons.icns; path = Resources/AdiumStatusIcons.icns; sourceTree = "<group>"; };
@@ -3902,6 +3914,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				345AFA690A5D76B400D7DA6F /* Sparkle.framework in Frameworks */,
 				34E0EA4007CC55B100A82198 /* AIUtilities.framework in Frameworks */,
 				3448769906D1EF6100DA778C /* Cocoa.framework in Frameworks */,
 			);
@@ -6056,6 +6069,8 @@
 				3410745D09B6965600565C9E /* AIMDLogViewerWindowController.h */,
 				3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */,
 				3456232E0A37723400E7FC97 /* LogViewer.nib */,
+				345AFAEB0A5D9A5F00D7DA6F /* AINoisyTableColumn.h */,
+				345AFAEC0A5D9A5F00D7DA6F /* AINoisyTableColumn.m */,
 				342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */,
 				342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */,
 				34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */,
@@ -7397,6 +7412,7 @@
 				348B25C90A50FBF300B2B972 /* KNShelfSplitView.h in Headers */,
 				F5DA8A730A546AC4004A41D0 /* GBChatlogHTMLConverter.h in Headers */,
 				340670A80A55A4B4004E22AC /* ESGlassSplitView.h in Headers */,
+				345AFAED0A5D9A5F00D7DA6F /* AINoisyTableColumn.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7781,6 +7797,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				345AFA680A5D769D00D7DA6F /* PBXTargetDependency */,
 				340BAB5E09EC70F2000EC441 /* PBXTargetDependency */,
 			);
 			name = Adium.Framework;
@@ -8985,6 +9002,7 @@
 				348B25C80A50FBF300B2B972 /* KNShelfSplitView.m in Sources */,
 				F5DA8A740A546AC5004A41D0 /* GBChatlogHTMLConverter.m in Sources */,
 				340670A90A55A4B4004E22AC /* ESGlassSplitView.m in Sources */,
+				345AFAEE0A5D9A5F00D7DA6F /* AINoisyTableColumn.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9188,6 +9206,11 @@
 			isa = PBXTargetDependency;
 			target = DACF3ED3085574D0006BFB18 /* External Frameworks */;
 			targetProxy = 340BAB5D09EC70F2000EC441 /* PBXContainerItemProxy */;
+		};
+		345AFA680A5D769D00D7DA6F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 347A219D09786C1700A30431 /* Adium with SystemVersionCheck */;
+			targetProxy = 345AFA670A5D769D00D7DA6F /* PBXContainerItemProxy */;
 		};
 		34611CCF09B67ABC00870036 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -10769,6 +10792,11 @@
 		349F833A0A437476007EA1B1 /* Development-libgaim_oscar */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
 				PRODUCT_NAME = "Adium Crash Reporter";
@@ -11380,6 +11408,11 @@
 		34BAF9860942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
 				PRODUCT_NAME = "Adium Crash Reporter";
@@ -11752,6 +11785,11 @@
 		DADE8E05085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
 				PRODUCT_NAME = "Adium Crash Reporter";
@@ -11762,6 +11800,11 @@
 		DADE8E06085507450062B664 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
 				PRODUCT_NAME = "Adium Crash Reporter";
@@ -11772,6 +11815,11 @@
 		DADE8E07085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
 				PRODUCT_NAME = "Adium Crash Reporter";

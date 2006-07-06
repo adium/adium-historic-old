@@ -129,7 +129,7 @@ typedef enum {
     NSMutableArray		*fromServiceArray;		//Array of services for accounts
     NSMutableArray		*toArray;				//Array of contacts
     NSMutableArray		*toServiceArray;		//Array of services for accounts
-    NSDateFormatter		*dateFormatter;			//Format for dates displayed in the table
+    NSDateFormatter		*headerDateFormatter;	//Format for dates displayed in the content text view
 	
     int					sameSelection;
     BOOL				useSame;
