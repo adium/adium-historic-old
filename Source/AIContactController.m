@@ -252,8 +252,6 @@
 - (void)loadContactList
 {
 	//We must load all the groups before loading contacts for the ordering system to work correctly.
-	[self _loadGroupsFromArray:[[adium preferenceController] preferenceForKey:KEY_FLAT_GROUPS
-																		group:PREF_GROUP_CONTACT_LIST]];
 	[self _loadMetaContactsFromArray:[[adium preferenceController] preferenceForKey:KEY_FLAT_METACONTACTS
 																			  group:PREF_GROUP_CONTACT_LIST]];
 }
@@ -261,24 +259,13 @@
 //Save the contact list
 - (void)saveContactList
 {
-	[[adium preferenceController] setPreference:[self _arrayRepresentationOfListObjects:[groupDict allValues]]
-										 forKey:KEY_FLAT_GROUPS
-										  group:PREF_GROUP_CONTACT_LIST];
-}
-
-//List objects from flattened array
-- (void)_loadGroupsFromArray:(NSArray *)array
-{
-	NSEnumerator	*enumerator = [array objectEnumerator];
-	NSDictionary	*infoDict;
-
-	NSString	*Expanded = @"Expanded";
-
-	while ((infoDict = [enumerator nextObject])) {
-		AIListObject	*object = nil;
-
-		object = [self groupWithUID:[infoDict objectForKey:UID_KEY]];
-		[(AIListGroup *)object setExpanded:[[infoDict objectForKey:Expanded] boolValue]];
+	NSEnumerator *enumerator = [groupDict objectEnumerator];
+	AIListGroup	 *listGroup;
+	
+	while ((listGroup = [enumerator nextObject])) {
+		[listGroup setPreference:[NSNumber numberWithBool:[listGroup isExpanded]]
+						  forKey:@"IsExpanded"
+						   group:PREF_GROUP_CONTACT_LIST];
 	}
 }
 
