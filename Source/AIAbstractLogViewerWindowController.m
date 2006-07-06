@@ -154,7 +154,8 @@ static int toArraySort(id itemA, id itemB, void *context);
 
     sortDirection = YES;
     searchMode = LOG_SEARCH_CONTENT;
-    dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] allowNaturalLanguage:YES];
+    headerDateFormatter = [[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] 
+												 allowNaturalLanguage:NO];
     currentSearchResults = [[NSMutableArray alloc] init];
     fromArray = [[NSMutableArray alloc] init];
     fromServiceArray = [[NSMutableArray alloc] init];
@@ -184,7 +185,7 @@ static int toArraySort(id itemA, id itemB, void *context);
     [toServiceArray release];
     [currentSearchResults release];
     [selectedColumn release];
-    [dateFormatter release];
+    [headerDateFormatter release];
     [displayedLogArray release];
     [blankImage release];
     [activeSearchString release];
@@ -373,6 +374,8 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[[[tableView_results tableColumnWithIdentifier:@"To"] headerCell] setStringValue:TO];
 	[[[tableView_results tableColumnWithIdentifier:@"From"] headerCell] setStringValue:FROM];
 	[[[tableView_results tableColumnWithIdentifier:@"Date"] headerCell] setStringValue:DATE];
+	[self tableViewColumnDidResize:nil];
+
 	[tableView_results setFocusRingType:NSFocusRingTypeNone];
 	[tableView_results sizeLastColumnToFit];
 
@@ -738,8 +741,8 @@ static int toArraySort(id itemA, id itemB, void *context);
 					(appendedFirstLog ? @"\n" : @""),
 					horizontalRule,
 					([NSApp isOnTigerOrBetter] ? 
-					 [dateFormatter stringFromDate:[theLog date]] :
-					 [[theLog date] descriptionWithCalendarFormat:[dateFormatter dateFormat]
+					 [headerDateFormatter stringFromDate:[theLog date]] :
+					 [[theLog date] descriptionWithCalendarFormat:[headerDateFormatter dateFormat]
 														 timeZone:nil
 														   locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]),
 					[theLog to],
@@ -1516,7 +1519,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 			value = [theLog from];
 			
 		} else if ([identifier isEqualToString:@"Date"]) {
-			value = [dateFormatter stringForObjectValue:[theLog date]];
+			value = [theLog date];
 			
 		} else if ([identifier isEqualToString:@"Service"]) {
 			NSString	*serviceClass;
@@ -1572,6 +1575,52 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		[tableView setSearchWraps:YES];
 		[tableView setMatchAlgorithm:KFSubstringMatchAlgorithm];
 		[tableView setSearchColumnIdentifiers:[NSSet setWithObject:@"Contacts"]];
+	}
+}
+
+- (void)tableViewColumnDidResize:(NSNotification *)aNotification
+{
+	NSTableColumn *dateTableColumn = [tableView_results tableColumnWithIdentifier:@"Date"];
+	if (!aNotification ||
+		([[aNotification userInfo] objectForKey:@"NSTableColumn"] == dateTableColumn)) {
+		NSDateFormatter *dateFormatter;
+		NSCell			*cell = [dateTableColumn dataCell];
+
+		[cell setObjectValue:[NSDate date]];
+
+		float width = [dateTableColumn width];
+		
+		if ([NSApp isOnTigerOrBetter]) {
+			dateFormatter = [cell formatter];
+			if (!dateFormatter) {
+				dateFormatter = [[NSDateFormatter alloc] init];
+				[dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+				[cell setFormatter:dateFormatter];
+			}
+			
+			NSDateFormatterStyle formatterStyles[4] = { NSDateFormatterFullStyle, NSDateFormatterLongStyle, NSDateFormatterMediumStyle, NSDateFormatterShortStyle };
+			float requiredWidth = width + 1;
+			for (int i = 0; (i < 4) && (requiredWidth > width); i++) {
+				[dateFormatter setDateStyle:formatterStyles[i]];
+				requiredWidth = [cell cellSizeForBounds:NSMakeRect(0,0,1e6,1e6)].width;
+				//Require a bit of space so the date looks comfortable. Very long dates relative to the current date can still overflow...
+				requiredWidth += 3;
+			}
+
+		} else {
+			NSEnumerator	*enumerator = [[NSArray arrayWithObjects:
+				[[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] 
+										allowNaturalLanguage:NO] autorelease],
+				[[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString] 
+										allowNaturalLanguage:NO] autorelease],
+				nil] objectEnumerator];
+			float requiredWidth = width + 1;
+			while ((requiredWidth > width) && (dateFormatter = [enumerator nextObject])) {
+				[cell setFormatter:dateFormatter];
+				requiredWidth = [cell cellSizeForBounds:NSMakeRect(0,0,1e6,1e6)].width;
+				requiredWidth += 3;
+			}
+		}
 	}
 }
 
