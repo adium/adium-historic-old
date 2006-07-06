@@ -368,7 +368,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[dataCell release];
 
 	[outlineView_contacts setDrawsGradientSelection:YES];
-	[outlineView_contacts setFocusRingType:NSFocusRingTypeNone];
 
 	//Localize tableView_results column headers
 	[[[tableView_results tableColumnWithIdentifier:@"To"] headerCell] setStringValue:TO];
@@ -376,7 +375,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[[[tableView_results tableColumnWithIdentifier:@"Date"] headerCell] setStringValue:DATE];
 	[self tableViewColumnDidResize:nil];
 
-	[tableView_results setFocusRingType:NSFocusRingTypeNone];
 	[tableView_results sizeLastColumnToFit];
 
     //Prepare the search controls
@@ -1574,7 +1572,6 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 	} else if (tableView == (KFTypeSelectTableView *)outlineView_contacts) {
 		[tableView setSearchWraps:YES];
 		[tableView setMatchAlgorithm:KFSubstringMatchAlgorithm];
-		[tableView setSearchColumnIdentifiers:[NSSet setWithObject:@"Contacts"]];
 	}
 }
 
