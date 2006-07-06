@@ -67,11 +67,16 @@ SecuridProvider
 	private BridgeToAdiumHandler h;
 	
 	static private final Logger LOGGER = Logger.getLogger("net.adium.joscarBridge");
-	
+	static private boolean configuredLogging = false;
+
 	public joscarBridge(int	enableLogging) {
 		Logger l;
 		Handler[] handlers;
 		Level generalLevel, joscarLevel;
+
+		//We only need to configure logging once, since it applies at a class level
+		if (configuredLogging == true) return;
+		configuredLogging = true;
 
 		h = new BridgeToAdiumHandler();
 		h.setFormatter(new CoolFormatter());
