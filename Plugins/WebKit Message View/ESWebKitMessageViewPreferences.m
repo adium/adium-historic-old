@@ -118,9 +118,18 @@
 {
 	//Hide the alpha component
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
-	
+
 	[[adium notificationCenter] removeObserver:self];
 	[previewListObjectsDict release]; previewListObjectsDict = nil;
+
+	[previewController release]; previewController = nil;
+
+	[view_previewLocation setFrame:[preview frame]];
+	[[preview superview] replaceSubview:preview with:view_previewLocation];	
+	[preview release]; preview = nil;
+	//Matches the retain performed in -[ESWebKitMessageViewPreferences _configureChatPreview]
+	[view_previewLocation release];
+
 	viewIsOpen = NO;
 }
 
@@ -142,6 +151,8 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
 					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
+	if (!viewIsOpen) return;
+
 	if ([group isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]) {
 		NSString	*style;
 		NSString	*variant;
@@ -352,12 +363,13 @@
 	
 	enumerator = [availableStyles objectEnumerator];
 	while ((style = [enumerator nextObject])) {
-		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[style name]
-																		 target:nil
-																		 action:nil
-																  keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[style name]
+																		target:nil
+																		action:nil
+																 keyEquivalent:@""];
 		[menuItem setRepresentedObject:[style bundleIdentifier]];
 		[menuItemArray addObject:menuItem];
+		[menuItem release];
 	}
 	
 	[menuItemArray sortUsingSelector:@selector(titleCompare:)];
@@ -426,9 +438,9 @@
 	NSString		*previewFilePath;
 	NSString		*previewPath;
 	AIChat			*previewChat;
-	
+
 	//Create our fake chat and message controller for the live preview
-	previewChat = [[AIChat chatForAccount:nil] retain];
+	previewChat = [AIChat chatForAccount:nil];
 	[previewChat setDisplayName:AILocalizedString(@"Sample Conversation", "Title for the sample conversation")];
 	previewController = [[AIWebKitMessageViewController messageViewControllerForChat:previewChat
 																		  withPlugin:plugin] retain];
@@ -439,20 +451,23 @@
 
 	//Add fake users and content to our chat
 	previewFilePath = [[NSBundle bundleForClass:[self class]] pathForResource:WEBKIT_PREVIEW_CONVERSATION_FILE ofType:@"plist"];
-	previewDict = [[[NSDictionary alloc] initWithContentsOfFile:previewFilePath] autorelease];
+	previewDict = [[NSDictionary alloc] initWithContentsOfFile:previewFilePath];
 	previewPath = [previewFilePath stringByDeletingLastPathComponent];
 	[self _fillContentOfChat:previewChat withDictionary:previewDict fromPath:previewPath];
+	[previewDict release];
 	
 	//Place the preview chat in our view
 	preview = [[previewController messageView] retain];
 	[preview setFrame:[view_previewLocation frame]];
+	//Will be released in viewWillClose
+	[view_previewLocation retain];
 	[[view_previewLocation superview] replaceSubview:view_previewLocation with:preview];
-	
+
 	//Disable drag and drop onto the preview chat - Jeff doesn't need your porn :)
 	if ([preview respondsToSelector:@selector(setAllowsDragAndDrop:)]) {
 		[(ESWebView *)preview setAllowsDragAndDrop:NO];
 	}
-	
+
 	//Disable forwarding of events so the preferences responder chain works properly
 	if ([preview respondsToSelector:@selector(setShouldForwardEvents:)]) {
 		[(ESWebView *)preview setShouldForwardEvents:NO];		
