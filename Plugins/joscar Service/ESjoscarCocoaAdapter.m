@@ -177,7 +177,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	return proxyInfo;
 }
 
-- (void)connectWithPassword:(NSString *)password proxyConfiguration:(NSDictionary *)proxyConfiguration
+- (void)connectWithPassword:(NSString *)password proxyConfiguration:(NSDictionary *)proxyConfiguration host:(NSString *)host port:(int)port
 {
 	AimConnectionProperties	*aimConnectionProperties;
 	Screenname				*screenName;
@@ -191,7 +191,10 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	
 	//Build an aimConnectionProperties object which will specify the information we need to connect
 	aimConnectionProperties = [NewAimConnectionProperties(screenName, password) autorelease];
-	
+
+	if (host && [host length]) [aimConnectionProperties setLoginHost:host];
+	if (port > 0) [aimConnectionProperties setLoginPort:port];
+
 	//Open the aimConnection from the aimSession using the aimConnectionProperties. aimConnection is an instance variable
 	[aimConnection release];
 	aimConnection = [[aimSession openConnection:aimConnectionProperties] retain];

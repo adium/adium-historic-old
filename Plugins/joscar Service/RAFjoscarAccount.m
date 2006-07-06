@@ -104,7 +104,10 @@
 
 - (void)retrievedProxyConfiguration:(NSDictionary *)proxyConfiguration context:(id)context
 {
-	[joscarAdapter connectWithPassword:password proxyConfiguration:proxyConfiguration];
+	[joscarAdapter connectWithPassword:password 
+					proxyConfiguration:proxyConfiguration
+								  host:[self host]
+								  port:[self port]];
 }
 
 - (void)disconnect

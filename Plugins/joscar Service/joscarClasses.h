@@ -43,6 +43,8 @@
 @interface AimConnectionProperties : NSObject {}
 - (void)setScreenname:(Screenname *)sn;
 - (void)setPassword:(NSString *)password;
+- (void)setLoginHost:(NSString *)host;
+- (void)setLoginPort:(int)port;
 @end
 
 /*
