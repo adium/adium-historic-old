@@ -242,10 +242,10 @@ NSString *GetTextContentForXMLLog(NSString *pathToFile)
 		xmlDoc = [[xmlClass alloc] initWithContentsOfURL:furl
 												 options:NSXMLNodePreserveCDATA
 												   error:&err];    
-
 		NSArray *contentArray = [xmlDoc nodesForXPath:@"//message/*/text()"
 												error:&err];
 		contentString = [contentArray componentsJoinedByString:@" "];
+		[xmlDoc release];
 	}
 	else
 	{	
