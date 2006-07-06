@@ -123,7 +123,7 @@
 	[previewListObjectsDict release]; previewListObjectsDict = nil;
 
 	[previewController release]; previewController = nil;
-
+	NSLog(@"view will close...");
 	[view_previewLocation setFrame:[preview frame]];
 	[[preview superview] replaceSubview:preview with:view_previewLocation];	
 	[preview release]; preview = nil;

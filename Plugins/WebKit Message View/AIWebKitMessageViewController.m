@@ -47,7 +47,7 @@
 @class AIContentMessage, AIContentStatus, AIContentObject;
 
 @interface AIWebKitMessageViewController (PRIVATE)
-- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin preferencesChangedDelegate:(id)inPreferencesChangedDelegate;
+- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 - (void)_initWebView;
 - (void)_primeWebViewAndReprocessContent:(BOOL)reprocessContent;
 - (void)_updateWebViewForCurrentPreferences;
@@ -71,17 +71,16 @@ static NSArray *draggedTypes = nil;
 
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
-    return [[[self alloc] initForChat:inChat withPlugin:inPlugin preferencesChangedDelegate:nil] autorelease];
+    return [[[self alloc] initForChat:inChat withPlugin:inPlugin] autorelease];
 }
 
-- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin preferencesChangedDelegate:(id)inPreferencesChangedDelegate
+- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
     //init
     if ((self = [super init]))
 	{		
 		[self _initWebView];
 
-		preferencesChangedDelegate = [inPreferencesChangedDelegate retain];
 		chat = [inChat retain];
 		plugin = [inPlugin retain];
 		contentQueue = [[NSMutableArray alloc] init];
@@ -195,19 +194,22 @@ static NSArray *draggedTypes = nil;
 
 - (void)setPreferencesChangedDelegate:(id)inDelegate
 {
-	preferencesChangedDelegate = inDelegate;
-	
-	[preferencesChangedDelegate preferencesChangedForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY
-													   key:nil
-													object:nil
-											preferenceDict:[[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]
-												 firstTime:YES];
-
-	[preferencesChangedDelegate preferencesChangedForGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES
-													   key:nil
-													object:nil
-											preferenceDict:[[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES]
-												 firstTime:YES];
+	if (inDelegate != preferencesChangedDelegate) {
+		[preferencesChangedDelegate release];
+		preferencesChangedDelegate = [inDelegate retain];
+		
+		[preferencesChangedDelegate preferencesChangedForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY
+														   key:nil
+														object:nil
+												preferenceDict:[[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]
+													 firstTime:YES];
+		
+		[preferencesChangedDelegate preferencesChangedForGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES
+														   key:nil
+														object:nil
+												preferenceDict:[[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES]
+													 firstTime:YES];
+	}
 }
 
 - (void)adiumPrint:(id)sender
