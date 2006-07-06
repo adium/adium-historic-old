@@ -43,7 +43,6 @@
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <Adium/AIPathUtilities.h>
-#import <Sparkle/Sparkle.h>
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
@@ -51,10 +50,6 @@
 
 //Portable Adium prefs key
 #define PORTABLE_ADIUM_KEY					@"Preference Folder Location"
-
-//Intervals to re-check for updates after a successful update check
-#define VERSION_CHECK_INTERVAL			24		//24 hours
-#define BETA_VERSION_CHECK_INTERVAL 	1		//1 hours - Beta releases have a nice annoying refresh >:D
 
 #define ALWAYS_RUN_SETUP_WIZARD FALSE
 
@@ -319,10 +314,6 @@ static NSString	*prefsCategory;
 												 object:queuedLogPathToShow];
 		[queuedLogPathToShow release];
 	}
-	
-	[updater scheduleCheckWithInterval:(NSTimeInterval)(60 * 60 * (BETA_RELEASE ?
-																   BETA_VERSION_CHECK_INTERVAL :
-																   VERSION_CHECK_INTERVAL))];
 	
 	completedApplicationLoad = YES;
 
