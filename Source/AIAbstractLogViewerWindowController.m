@@ -1639,20 +1639,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
 	if (![NSApp isOnTigerOrBetter]) {
-		NSLog(@"--- outlineView: objectValueForTableColumn: byItem:");
-		NSLog(@"outlineView has address 0x%08x", (unsigned long)outlineView);
-		NSLog(@"outlineView has value %@", outlineView);
-		NSLog(@"tableColumn has address 0x%08x", (unsigned long)tableColumn);
-		NSLog(@"tableColumn has value %@", tableColumn);
-		NSLog(@"item has address 0x%08x", (unsigned long)item);
-		NSLog(@"item has value %@", item);
-		/*
-		NSLog(@"outlineView:%@ objectValueForTableColumn:%@ byItem:%@",outlineView,tableColumn,item);
-		NSLog(@"metacontact class from string is %@",NSClassFromString(@"AIMetaContact"));
-		NSLog(@"metacontact string from class from string is %@",NSClassFromString(NSStringFromClass(@"AIMetaContact")));
-		NSLog(@"itemClass is %@",[item class]);
-		 */
-		NSLog(@"metacontact class is %@ (equal? %i)",[AIMetaContact class],([item class] == [AIMetaContact class]));
+		NSLog(@"item has address 0x%08x [class %@]", (unsigned long)item, [item class]);
 	}
 	
 	Class itemClass = [item class];
