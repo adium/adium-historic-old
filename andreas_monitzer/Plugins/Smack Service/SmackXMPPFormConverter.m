@@ -149,7 +149,7 @@ static NSString *expandValues(JavaIterator *iter)
             JavaIterator *valiter = [field getValues];
             BOOL selected = NO;
             if([valiter hasNext])
-                selected = [[valiter next] boolValue];
+                selected = [[valiter next] intValue]?YES:NO;
             if(selected)
                 [fieldnode addAttribute:[NSXMLNode attributeWithName:@"checked" stringValue:@"checked"]];
         }

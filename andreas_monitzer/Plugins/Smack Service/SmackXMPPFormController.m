@@ -22,7 +22,7 @@
     }
     if((self = [super init])) {
         target = [t retain];
-        selector = s;
+        selector = [NSStringFromSelector(s) retain];
         [NSBundle loadNibNamed:@"SmackXMPPForm" owner:self];
         [webview setHostWindow:window];
         
@@ -37,6 +37,7 @@
 
 - (void)dealloc {
     [resultForm release];
+    [selector release];
     [super dealloc];
 }
 
@@ -82,29 +83,43 @@
                                                                                            (CFStringRef)value,
                                                                                            (CFStringRef)@"", kCFStringEncodingUTF8);
                 
+                NSString *type = [[resultForm getField:key] getType];
                 
-                
-                [SmackCocoaAdapter invokeObject:resultForm methodWithParamTypeAndParam:@"setAnswer",@"java.lang.String",value,nil];
+                if([type isEqualToString:@"boolean"])
+                    [SmackCocoaAdapter invokeObject:resultForm methodWithParamTypeAndParam:@"setAnswer",@"java.lang.String",key,@"boolean",YES,nil];
+                else if([type isEqualToString:@"jid-multi"])
+                {
+                    NSEnumerator *e_jids = [[value componentsSeparatedByString:@"\r\n"] objectEnumerator];
+                    NSString *jid;
+                    SmackXFormField *field = [resultForm getField:key];
+                    
+                    [field resetValues];
+                    while((jid = [e_jids nextObject]))
+                        [field addValue:jid];
+                } else if([type isEqualToString:@"list-multi"] || [type isEqualToString:@"list-single"])
+                    [[resultForm getField:key] addValue:value];
+                else
+                    [SmackCocoaAdapter invokeObject:resultForm methodWithParamTypeAndParam:@"setAnswer",@"java.lang.String",key,@"java.lang.String",value,nil];
                 
                 [key release];
                 [value release];
             }
             
-            NSLog(@"result form = %@",[[resultForm getDataFormToSend] toXML]);
+            wasSubmitted = YES;
 
-            [window performClose:nil];
-            [target performSelector:selector withObject:self];
-            [target release];
+            [window close];
         }
         [listener ignore];
     }
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-    [resultForm release];
-    resultForm = [[SmackCocoaAdapter formWithType:@"cancel"] retain];
-    
-    [target performSelector:selector withObject:self];
+    if(!wasSubmitted) {
+        [resultForm release];
+        resultForm = [[SmackCocoaAdapter formWithType:@"cancel"] retain];
+    }
+        
+    [target performSelector:NSSelectorFromString(selector) withObject:self];
     [target release];
 }
 

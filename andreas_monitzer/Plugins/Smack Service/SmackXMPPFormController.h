@@ -16,9 +16,11 @@
     IBOutlet WebView *webview;
     
     id target;
-    SEL selector;
+    NSString *selector;
     
     SmackXForm *resultForm;
+    
+    BOOL wasSubmitted;
 }
 
 - (id)initWithForm:(SmackXForm*)form target:(id)t selector:(SEL)s;

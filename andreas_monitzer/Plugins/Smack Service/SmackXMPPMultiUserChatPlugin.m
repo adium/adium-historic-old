@@ -169,11 +169,19 @@ static AIHTMLDecoder *messageencoder = nil;
     else
         [chat join:nickname];
     
-    [[SmackXMPPFormController alloc] initWithForm:[chat getRegistrationForm] target:self selector:@selector(sendRegistrationForm:)];
+//    [[SmackXMPPFormController alloc] initWithForm:[chat getRegistrationForm] target:self selector:@selector(sendRegistrationForm:)];
+    [[SmackXMPPFormController alloc] initWithForm:[chat getConfigurationForm] target:self selector:@selector(sendConfigurationForm:)];
 }
 
+/*
 - (void)sendRegistrationForm:(SmackXMPPFormController*)fc {
     [chat sendRegistrationForm:[fc resultForm]];
+    
+    [fc release];
+}*/
+
+- (void)sendConfigurationForm:(SmackXMPPFormController*)fc {
+    [chat sendConfigurationForm:[fc resultForm]];
     
     [fc release];
 }

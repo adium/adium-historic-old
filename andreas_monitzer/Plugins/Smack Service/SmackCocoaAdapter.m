@@ -246,78 +246,79 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     
     while((typestr = va_arg(ap,id))) {
         if([typestr isEqualToString:@"int"]) {
-            Class type = NSClassFromString(@"java.lang.Integer");
             int value = va_arg(ap, int);
-            id javaint = [type newWithSignature:@"(I)",value];
+            id javaint = [NSClassFromString(@"java.lang.Integer") newWithSignature:@"(I)",value];
             
-            [argumentTypes add:type];
+            [argumentTypes add:typestr];
             [arguments add:javaint];
             
             [javaint release];
         } else if([typestr isEqualToString:@"boolean"]) {
-            Class type = NSClassFromString(@"java.lang.Boolean");
             BOOL value = va_arg(ap, int)?YES:NO;
-            id javabool = [type newWithSignature:@"(Z)",value];
+            id javabool = [NSClassFromString(@"java.lang.Boolean") newWithSignature:@"(Z)",value];
             
-            [argumentTypes add:type];
+            [argumentTypes add:typestr];
             [arguments add:javabool];
             
             [javabool release];
         } else if([typestr isEqualToString:@"double"]) {
-            Class type = NSClassFromString(@"java.lang.Double");
             double value = va_arg(ap, double);
-            id javadouble = [type newWithSignature:@"(D)",value];
+            id javadouble = [NSClassFromString(@"java.lang.Double") newWithSignature:@"(D)",value];
             
-            [argumentTypes add:type];
+            [argumentTypes add:typestr];
             [arguments add:javadouble];
             
             [javadouble release];
         } else if([typestr isEqualToString:@"float"]) {
-            Class type = NSClassFromString(@"java.lang.Float");
             float value = (float)va_arg(ap, double);
-            id javafloat = [type newWithSignature:@"(F)",value];
+            id javafloat = [NSClassFromString(@"java.lang.Float") newWithSignature:@"(F)",value];
             
-            [argumentTypes add:type];
+            [argumentTypes add:typestr];
             [arguments add:javafloat];
             
             [javafloat release];
         } else if([typestr isEqualToString:@"long"]) {
-            Class type = NSClassFromString(@"java.lang.Long");
             long value = va_arg(ap, long);
-            id javalong = [type newWithSignature:@"(J)",value];
+            id javalong = [NSClassFromString(@"java.lang.Long") newWithSignature:@"(J)",value];
             
-            [argumentTypes add:type];
+            [argumentTypes add:typestr];
             [arguments add:javalong];
             
             [javalong release];
         } else if([typestr isEqualToString:@"char"]) {
-            Class type = NSClassFromString(@"java.lang.Char");
             char value = (char)va_arg(ap, int);
-            id javachar = [type newWithSignature:@"(C)",value];
+            id javachar = [NSClassFromString(@"java.lang.Char") newWithSignature:@"(C)",value];
             
-            [argumentTypes add:type];
+            [argumentTypes add:typestr];
             [arguments add:javachar];
             
             [javachar release];
         } else if([typestr isEqualToString:@"short"]) {
-            Class type = NSClassFromString(@"java.lang.Short");
             short value = (short)va_arg(ap, int);
-            id javashort = [type newWithSignature:@"(S)",value];
+            id javashort = [NSClassFromString(@"java.lang.Short") newWithSignature:@"(S)",value];
             
-            [argumentTypes add:type];
+            [argumentTypes add:typestr];
             [arguments add:javashort];
             
             [javashort release];
         } else { // assume Java class
-            Class type = NSClassFromString(typestr);
+            NSString *type = typestr;
             id value = va_arg(ap, id);
             [argumentTypes add:type];
             [arguments add:value];
         }
     }
     
-    JavaMethod *meth = [NSClassFromString(@"net.adium.smackBridge.SmackBridge") getMethod:[obj className] :method :argumentTypes];
-    id result = [meth invoke:obj :[arguments toArray]];
+    NSMutableString *classname = [[obj className] mutableCopy];
+    // -className returns the internal representation of the Java class (like java/lang/String), but we need the one used in the
+    // Java language itself (java.lang.String)
+    [classname replaceOccurrencesOfString:@"/" withString:@"." options:NSLiteralSearch range:NSMakeRange(0,[classname length])];
+    [classname replaceOccurrencesOfString:@"$" withString:@"." options:NSLiteralSearch range:NSMakeRange(0,[classname length])];
+    
+    JavaMethod *meth = [NSClassFromString(@"net.adium.smackBridge.SmackBridge") getMethod:classname :method :argumentTypes];
+    [classname release];
+    
+    id result = [NSClassFromString(@"net.adium.smackBridge.SmackBridge") invokeMethod:meth :obj :arguments];
     
     [argumentTypes release];
     [arguments release];
@@ -326,5 +327,8 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     return result;
 }
 
++ (JavaVector*)vector {
+    return [[[NSClassFromString(@"java.util.Vector") alloc] init] autorelease];
+}
 
 @end
