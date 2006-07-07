@@ -134,10 +134,11 @@ static AIHTMLDecoder *messageencoder = nil;
     AIChat *adiumchat;
     
     NSMutableDictionary *participants;
+    BOOL initialUpdateDone;
 }
 
 - (id)initWithMultiUserChat:(SmackXMultiUserChat*)muc account:(SmackXMPPAccount*)a;
-- (void)joinWithNickname:(NSString*)nickname password:(NSString*)password listener:(SmackXMPPMultiUserChatPluginListener*)listener;
+- (void)joinWithNickname:(NSString*)nickname password:(NSString*)password chat:(AIChat*)achat listener:(SmackXMPPMultiUserChatPluginListener*)listener;
 
 - (void)postStatusMessage:(NSString*)fmt, ...;
 
@@ -150,13 +151,24 @@ static AIHTMLDecoder *messageencoder = nil;
         account = a;
         chat = [muc retain];
         participants = [[NSMutableDictionary alloc] init];
+        
+/*        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(receivedMessagePacket:)
+                                                     name:SmackXMPPMessagePacketReceivedNotification
+                                                   object:a];*/
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(sendMessage:)
+                                                     name:SmackXMPPMessageSentNotification
+                                                   object:a];
     }
-    return self;
+    return [self retain];
 }
 
 - (void)dealloc {
     [chat release];
     [participants release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     [super dealloc];
 }
 
@@ -170,15 +182,30 @@ static AIHTMLDecoder *messageencoder = nil;
         [chat join:nickname];
     
 //    [[SmackXMPPFormController alloc] initWithForm:[chat getRegistrationForm] target:self selector:@selector(sendRegistrationForm:)];
-    [[SmackXMPPFormController alloc] initWithForm:[chat getConfigurationForm] target:self selector:@selector(sendConfigurationForm:)];
+    @try {
+        [[SmackXMPPFormController alloc] initWithForm:[chat getConfigurationForm] target:self selector:@selector(sendConfigurationForm:)];
+    } @catch (NSException *e) {
+        // not allowed to get configuration form
+        // non-cricital, so do not re-throw
+//        [[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"XMPP Error","XMPP Error")] withDescription:[e reason] withWindowTitle:AILocalizedString(@"Notice","Notice") defaultButton:AILocalizedString(@"OK","OK") alternateButton:nil otherButton:nil target:nil selector:NULL userInfo:nil];
+    }
+    [[adium notificationCenter] addObserver:self
+                                   selector:@selector(chatWillClose:)
+                                       name:Chat_WillClose
+                                     object:adiumchat];
 }
 
-/*
+- (void)chatWillClose:(NSNotification*)n
+{
+    [chat leave];
+    [self release]; // retained in -initWithMultiUserChat:account:
+}
+
 - (void)sendRegistrationForm:(SmackXMPPFormController*)fc {
     [chat sendRegistrationForm:[fc resultForm]];
     
     [fc release];
-}*/
+}
 
 - (void)sendConfigurationForm:(SmackXMPPFormController*)fc {
     [chat sendConfigurationForm:[fc resultForm]];
@@ -194,10 +221,16 @@ static AIHTMLDecoder *messageencoder = nil;
     message = [[NSString alloc] initWithFormat:fmt arguments:ap];
     va_end(ap);
     
-    AILog(@"Chat message: %@",message);
-    // XXX this is wrong -- group chat rewrite
+    [self performSelectorOnMainThread:@selector(displayStatusMessage:) withObject:message waitUntilDone:YES];
     
     [message release];
+}
+
+- (void)displayStatusMessage:(NSString*)message
+{
+    [[adium contentController] displayStatusMessage:message
+                                             ofType:@"chat-info"
+                                             inChat:adiumchat];
 }
 
 - (void)setMUCInvitationDeclined:(NSDictionary*)info {
@@ -212,10 +245,26 @@ static AIHTMLDecoder *messageencoder = nil;
     NSAttributedString  *inMessage = nil;
     NSString *from = [packet getFrom];
     NSString *nickname = [from jidResource];
-    AIListContact *user = [participants objectForKey:nickname];
     
+    if([nickname length] == 0) // server message?
+    {
+        [self postStatusMessage:@"%@",[packet getBody]];
+        return;
+    }
+    
+    if([nickname isEqualToString:[chat getNickname]])
+        return; // ignore messages from self
+    
+    AIListContact *user = [participants objectForKey:from];
+
     if(!user)
-        return; // message from unknown user
+    {
+        // this user is no longer online, just create him temporarily
+        user = [[adium contactController] contactWithService:[account service]
+                                                     account:account
+                                                         UID:from];
+        [user setDisplayName:[from jidResource]];
+    }
     
     SmackXXHTMLExtension *spe = [packet getExtension:@"html" :@"http://jabber.org/protocol/xhtml-im"];
     if(spe)
@@ -237,9 +286,11 @@ static AIHTMLDecoder *messageencoder = nil;
             // the AIHTMLDecoder class doesn't support decoding the XHTML required by JEP-71, so we'll just use the
             // one by Apple, which works fine
             //                inMessage = [[messageencoder decodeHTML:htmlmsg] retain];
-            inMessage = [[NSAttributedString alloc] initWithHTML:[[NSString stringWithFormat:@"<html>%@</html>",htmlmsg] dataUsingEncoding:NSUnicodeStringEncoding]
-                                                         options:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:NSUnicodeStringEncoding] forKey:NSCharacterEncodingDocumentOption]
-                                              documentAttributes:NULL];
+            NSMutableDictionary *param = [NSMutableDictionary dictionaryWithObject:[[NSString stringWithFormat:@"<html>%@</html>",htmlmsg] dataUsingEncoding:NSUnicodeStringEncoding]
+                                                                            forKey:@"htmldata"];
+            [self performSelectorOnMainThread:@selector(convertToAttributedString:)
+                                   withObject:param waitUntilDone:YES];
+            inMessage = [[param objectForKey:@"result"] retain];
         }
     }
     if(!inMessage)
@@ -248,7 +299,7 @@ static AIHTMLDecoder *messageencoder = nil;
     SmackXDelayInformation *delayinfo = [packet getExtension:@"x" :@"jabber:x:delay"];
     NSDate *date = nil;
     if(delayinfo)
-        date = [NSDate dateWithTimeIntervalSince1970:[[delayinfo getStamp] getTime]];
+        date = [SmackCocoaAdapter dateFromJavaDate:[delayinfo getStamp]];
     else
         date = [NSDate date];
     
@@ -260,24 +311,97 @@ static AIHTMLDecoder *messageencoder = nil;
                                           autoreply:NO];
     [inMessage release];
     
-    [[adium contentController] receiveContentObject:messageObject];
+    [[adium contentController] performSelectorOnMainThread:@selector(receiveContentObject:) withObject:messageObject waitUntilDone:NO];
 }
 
-- (void)setMUCParticipant:(SmackPacket*)packet {
-    NSLog(@"MUCParticipant:\n%@",[packet toXML]);
+- (void)convertToAttributedString:(NSMutableDictionary*)param
+{
+    [param setObject:[[[NSAttributedString alloc] initWithHTML:[param objectForKey:@"htmldata"]
+                                                 options:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:NSUnicodeStringEncoding] forKey:NSCharacterEncodingDocumentOption]
+                                           documentAttributes:NULL] autorelease] forKey:@"result"];
+}
+
+- (void)sendMessage:(NSNotification*)n
+{
+    SmackXMPPAccount *account = [n object];
+    AIContentMessage *inMessageObject = [[n userInfo] objectForKey:AIMessageObjectKey];
+    
+    if([inMessageObject chat] != adiumchat)
+        return; // ignore foreign messages
+
+    SmackMessage *newmsg = [chat createMessage];
+    
+    [newmsg setBody:[inMessageObject messageString]];
+    
+    NSAttributedString *attmessage = [inMessageObject message];
+    if(!messageencoder)
+    {
+        messageencoder = [[AIHTMLDecoder alloc] init];
+        [messageencoder setGeneratesStrictXHTML:YES];
+        [messageencoder setIncludesHeaders:NO];
+        [messageencoder setIncludesStyleTags:YES];
+        [messageencoder setEncodesNonASCII:NO];
+    }
+    
+    // add the XHTML representation
+    
+    NSString *xhtmlmessage = [messageencoder encodeHTML:attmessage imagesPath:nil];
+    // for some reason I can't specify that I don't want <html> but that I do want <body>...
+    NSString *xhtmlbody = [NSString stringWithFormat:@"<body xmlns='http://www.w3.org/1999/xhtml'>%@</body>",xhtmlmessage];
+    
+    SmackXXHTMLExtension *xhtml = [SmackCocoaAdapter XHTMLExtension];
+    [xhtml addBody:xhtmlbody];
+    
+    [newmsg addExtension:xhtml];
+    
+    [[account connection] sendPacket:newmsg];
+}
+
+- (void)setMUCParticipant:(SmackPresence*)packet {
+    [self performSelectorOnMainThread:@selector(setMUCParticipantMainThread:) withObject:packet waitUntilDone:NO];
+}
+
+- (void)setMUCParticipantMainThread:(SmackPresence*)packet {
+    if([[[packet getType] toString] isEqualToString:@"unavailable"])
+        return; // handle those in -setMUCLeft:
+    
+    NSString *participant = [packet getFrom];
+    AIListContact *contact = [participants objectForKey:participant];
+    if(!contact)
+    {
+        NSString *nick = [participant jidResource];
+        AIListContact *contact = [[adium contactController] contactWithService:[account service]
+                                                                       account:account
+                                                                           UID:participant];
+        [contact setDisplayName:nick];
+        [participants setObject:contact forKey:participant];
+        
+        [adiumchat addParticipatingListObject:contact notify:initialUpdateDone];
+
+        if(!initialUpdateDone && [nick isEqualToString:[chat getNickname]])
+            initialUpdateDone = YES;
+    }
+    SmackXOccupant *occupant = [chat getOccupant:participant];
+    
+    [contact setStatusObject:[occupant getJid] forKey:@"XMPPMUCJID" notify:NotifyLater];
+    [contact setStatusObject:[occupant getRole] forKey:@"XMPPMUCRole" notify:NotifyLater];
+    [contact setStatusObject:[occupant getAffiliation] forKey:@"XMPPMUCAffiliation" notify:NotifyLater];
+    
+    //Apply any changes
+	[contact performSelectorOnMainThread:@selector(notifyOfChangedStatusSilently:) withObject:(id)NO waitUntilDone:NO];
 }
 
 - (void)setMUCJoined:(NSString*)participant {
-    AIListContact *contact = [[adium contactController] contactWithService:[account service]
-                                                                   account:account
-                                                                       UID:[NSString stringWithFormat:@"%@/%@",[chat getRoom],participant]];
-    [contact setDisplayName:participant];
-    [participants setObject:contact forKey:participant];
-    
-    [adiumchat addParticipatingListObject:contact];
+//    NSLog(@"participant joined %@",participant);
 }
 
-- (void)setMUCLeft:(NSString*)participant {
+- (void)setMUCLeft:(NSString*)participant
+{
+    [self performSelectorOnMainThread:@selector(setMUCLeftMainThread:) withObject:participant waitUntilDone:NO];
+}
+    
+- (void)setMUCLeftMainThread:(NSString*)participant
+{
     AIListContact *contact = [participants objectForKey:participant];
     if(contact) {
         [adiumchat removeParticipatingListObject:contact];
@@ -285,9 +409,15 @@ static AIHTMLDecoder *messageencoder = nil;
     }
 }
 
-- (void)setMUCKicked:(NSDictionary*)info {
+- (void)setMUCKicked:(NSDictionary*)info
+{
+    [self performSelectorOnMainThread:@selector(setMUCKickedMainThread:) withObject:info waitUntilDone:NO];
+}
+    
+- (void)setMUCKickedMainThread:(NSDictionary*)info
+{
     NSString *participant = [info objectForKey:@"participant"];
-    [self postStatusMessage:AILocalizedString(@"%@ was kicked by %@ (%@).","%@ was kicked by %@ (%@)."), participant, [info objectForKey:@"actor"],[info objectForKey:@"reason"]];
+    [self postStatusMessage:AILocalizedString(@"%@ was kicked by %@ (%@).","%@ was kicked by %@ (%@)."), [participant jidResource], [info objectForKey:@"actor"],[info objectForKey:@"reason"]];
 
     AIListContact *contact = [participants objectForKey:participant];
     if(contact) {
@@ -297,16 +427,16 @@ static AIHTMLDecoder *messageencoder = nil;
 }
 
 - (void)setMUCVoiceGranted:(NSString*)participant {
-    [self postStatusMessage:AILocalizedString(@"%@ was granted voice.","%@ was granted voice."),participant];
+    [self postStatusMessage:AILocalizedString(@"%@ was granted voice.","%@ was granted voice."),[participant jidResource]];
 }
 
 - (void)setMUCVoiceRevoked:(NSString*)participant {
-    [self postStatusMessage:AILocalizedString(@"%@ has been silenced.","%@ has been silenced."),participant];
+    [self postStatusMessage:AILocalizedString(@"%@ has been silenced.","%@ has been silenced."),[participant jidResource]];
 }
 
 - (void)setMUCBanned:(NSDictionary*)info {
     NSString *participant = [info objectForKey:@"participant"];
-    [self postStatusMessage:AILocalizedString(@"%@ was banned by %@ (%@).","%@ was banned by %@ (%@)."), participant, [info objectForKey:@"actor"],[info objectForKey:@"reason"]];
+    [self postStatusMessage:AILocalizedString(@"%@ was banned by %@ (%@).","%@ was banned by %@ (%@)."), [participant jidResource], [info objectForKey:@"actor"],[info objectForKey:@"reason"]];
     
     AIListContact *contact = [participants objectForKey:participant];
     if(contact) {
@@ -316,47 +446,54 @@ static AIHTMLDecoder *messageencoder = nil;
 }
 
 - (void)setMUCMembershipGranted:(NSString*)participant {
-    [self postStatusMessage:AILocalizedString(@"%@ was granted membership.","%@ was granted membership."),participant];
+    [self postStatusMessage:AILocalizedString(@"%@ was granted membership.","%@ was granted membership."),[participant jidResource]];
 }
 
 - (void)setMUCMembershipRevoked:(NSString*)participant {
-    [self postStatusMessage:AILocalizedString(@"The membership of %@ was revoked.","The membership of %@ was revoked."),participant];
+    [self postStatusMessage:AILocalizedString(@"The membership of %@ was revoked.","The membership of %@ was revoked."),[participant jidResource]];
 }
 
 - (void)setMUCModeratorGranted:(NSString*)participant {
-    [self postStatusMessage:AILocalizedString(@"%@ is now moderator.","%@ is now moderator."),participant];
+    [self postStatusMessage:AILocalizedString(@"%@ is now moderator.","%@ is now moderator."),[participant jidResource]];
 }
 
 - (void)setMUCModeratorRevoked:(NSString*)participant {
-    [self postStatusMessage:AILocalizedString(@"%@ is no longer moderator.","%@ is no longer moderator."),participant];
+    [self postStatusMessage:AILocalizedString(@"%@ is no longer moderator.","%@ is no longer moderator."),[participant jidResource]];
 }
 
 - (void)setMUCOwnershipGranted:(NSString*)participant {
-    [self postStatusMessage:AILocalizedString(@"%@ is now owner of this chatroom.","%@ is now owner of this chatroom."),participant];
+    [self postStatusMessage:AILocalizedString(@"%@ is now owner of this chatroom.","%@ is now owner of this chatroom."),[participant jidResource]];
 }
 
 - (void)setMUCOwnershipRevoked:(NSString*)participant {
-    [self postStatusMessage:AILocalizedString(@"%@ is no longer owner of this chatroom.","%@ is no longer owner of this chatroom."),participant];
+    [self postStatusMessage:AILocalizedString(@"%@ is no longer owner of this chatroom.","%@ is no longer owner of this chatroom."),[participant jidResource]];
 }
 
 - (void)setMUCAdminGranted:(NSString*)participant {
-    [self postStatusMessage:AILocalizedString(@"%@ is now admin of this chatroom.","%@ is now admin of this chatroom."),participant];
+    [self postStatusMessage:AILocalizedString(@"%@ is now admin of this chatroom.","%@ is now admin of this chatroom."),[participant jidResource]];
 }
 
 - (void)setMUCAdminRevoked:(NSString*)participant {
-    [self postStatusMessage:AILocalizedString(@"%@ is no longer admin of this chatroom.","%@ is no longer admin of this chatroom."),participant];
+    [self postStatusMessage:AILocalizedString(@"%@ is no longer admin of this chatroom.","%@ is no longer admin of this chatroom."),[participant jidResource]];
 }
 
-- (void)setMUCNicknameChanged:(NSDictionary*)info {
+- (void)setMUCNicknameChanged:(NSDictionary*)info
+{
+    [self performSelectorOnMainThread:@selector(setMUCNicknameChangedMainThread:) withObject:info waitUntilDone:NO];
+}
+
+- (void)setMUCNicknameChangedMainThread:(NSDictionary*)info
+{
     NSString *participant = [info objectForKey:@"participant"];
     NSString *newNickname = [info objectForKey:@"newNickname"];
-    [self postStatusMessage:AILocalizedString(@"%@ is now known as %@.","%@ is now known as %@."),participant,newNickname];
+    [self postStatusMessage:AILocalizedString(@"%@ is now known as %@.","%@ is now known as %@."),[participant jidResource],newNickname];
 
     AIListContact *contact = [participants objectForKey:participant];
     if(contact) {
-        // XXX way to rename a contact?
+        // XXX clean way to rename a contact?
         
-        [adiumchat removeParticipatingListObject:contact];
+//        [adiumchat removeParticipatingListObject:contact];
+        [(NSMutableArray*)[adiumchat participatingListObjects] removeObject:contact]; // XXX uses a way not really recommended
         [participants removeObjectForKey:participant];
 
         contact = [[adium contactController] contactWithService:[account service]
@@ -366,63 +503,53 @@ static AIHTMLDecoder *messageencoder = nil;
         [contact setDisplayName:newNickname];
         [participants setObject:contact forKey:newNickname];
         
-        [adiumchat addParticipatingListObject:contact];
+        [adiumchat addParticipatingListObject:contact notify:NO];
     }
 }
 
 - (void)setMUCSubjectUpdated:(NSDictionary*)info {
     [self postStatusMessage:AILocalizedString(@"%@ changed the subject to \"%@\".",@"%@ changed the topic to \"%@\"."),[info objectForKey:@"from"],[info objectForKey:@"subject"]];
-    [adiumchat setDisplayName:[NSString stringWithFormat:@"%@: %@",[chat getRoom],[info objectForKey:@"subject"]]];
+    [adiumchat performSelectorOnMainThread:@selector(setDisplayName:) withObject:[NSString stringWithFormat:@"%@: %@",[chat getRoom],[info objectForKey:@"subject"]] waitUntilDone:NO];
 }
 
 - (void)setMUCUserKicked:(NSDictionary*)info {
-    [[NSAlert alertWithMessageText:[NSString stringWithFormat:AILocalizedString(@"You were kicked from the chatroom %@ by %@!","You were kicked from the chatroom %@ by %@!"), [chat getRoom],[info objectForKey:@"actor"]]
-                     defaultButton:AILocalizedString(@"OK","OK")
-                   alternateButton:nil
-                       otherButton:nil
-         informativeTextWithFormat:@"%@",[info objectForKey:@"reason"]] runModal];
-    [adiumchat setIsOpen:NO];
+    [self postStatusMessage:AILocalizedString(@"You were kicked by %@ (%@)","You were kicked by %@ (%@)"), [info objectForKey:@"actor"], [info objectForKey:@"reason"]];
 }
 
-- (void)setMUCUserVoice:(BOOL)flag {
-    if(flag)
+- (void)setMUCUserVoice:(JavaBoolean*)flag {
+    if([flag booleanValue])
         [self postStatusMessage:AILocalizedString(@"You were given voice.","You were given voice.")];
     else
         [self postStatusMessage:AILocalizedString(@"You were silenced.","You were silenced.")];
 }
 
 - (void)setMUCUserBanned:(NSDictionary*)info {
-    [[NSAlert alertWithMessageText:[NSString stringWithFormat:AILocalizedString(@"You were banned from the chatroom %@ by %@!","You were banned from the chatroom %@ by %@!"), [chat getRoom],[info objectForKey:@"actor"]]
-                     defaultButton:AILocalizedString(@"OK","OK")
-                   alternateButton:nil
-                       otherButton:nil
-         informativeTextWithFormat:@"%@",[info objectForKey:@"reason"]] runModal];
-    [adiumchat setIsOpen:NO];
+    [self postStatusMessage:AILocalizedString(@"You were banned by %@ (%@)","You were banned by %@ (%@)"), [info objectForKey:@"actor"], [info objectForKey:@"reason"]];
 }
 
-- (void)setMUCUserMembership:(BOOL)flag {
-    if(flag)
+- (void)setMUCUserMembership:(JavaBoolean*)flag {
+    if([flag booleanValue])
         [self postStatusMessage:AILocalizedString(@"You are now a member.","You are now a member.")];
     else
         [self postStatusMessage:AILocalizedString(@"You are no longer a member.","You are no longer a member.")];
 }
 
-- (void)setMUCUserModerator:(BOOL)flag {
-    if(flag)
+- (void)setMUCUserModerator:(JavaBoolean*)flag {
+    if([flag booleanValue])
         [self postStatusMessage:AILocalizedString(@"You are now a moderator.","You are now a moderator.")];
     else
         [self postStatusMessage:AILocalizedString(@"You are no longer a moderator.","You are no longer a moderator.")];
 }
 
-- (void)setMUCUserOwnership:(BOOL)flag {
-    if(flag)
+- (void)setMUCUserOwnership:(JavaBoolean*)flag {
+    if([flag booleanValue])
         [self postStatusMessage:AILocalizedString(@"You are now an owner.","You are now an owner.")];
     else
         [self postStatusMessage:AILocalizedString(@"You are no longer an owner.","You are no longer an owner.")];
 }
 
-- (void)setMUCUserAdmin:(BOOL)flag {
-    if(flag)
+- (void)setMUCUserAdmin:(JavaBoolean*)flag {
+    if([flag booleanValue])
         [self postStatusMessage:AILocalizedString(@"You are now an admin.","You are now an admin.")];
     else
         [self postStatusMessage:AILocalizedString(@"You are no longer an admin.","You are no longer an admin.")];
@@ -435,9 +562,6 @@ static AIHTMLDecoder *messageencoder = nil;
 - (id)initWithAccount:(SmackXMPPAccount*)a {
     if((self = [super init])) {
         account = a;
-        listener = [[SmackCocoaAdapter MUCPluginListenerWithConnection:[account connection]] retain];
-        [listener setDelegate:self];
-        mucs = [[NSMutableDictionary alloc] init];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(joinMultiUserChat:)
@@ -450,9 +574,21 @@ static AIHTMLDecoder *messageencoder = nil;
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [listener release];
-    [mucs release];
     
     [super dealloc];
+}
+
+- (void)connected:(SmackXMPPConnection*)conn
+{
+    [listener release];
+    listener = [[SmackCocoaAdapter MUCPluginListenerWithConnection:conn] retain];
+    [listener setDelegate:self];
+}
+
+- (void)disconnected:(SmackXMPPConnection*)conn
+{
+    [listener release];
+    listener = nil;
 }
 
 - (void)setMUCInvitation:(NSDictionary*)info {
@@ -470,11 +606,16 @@ static AIHTMLDecoder *messageencoder = nil;
     NSString *nickname = [info objectForKey:@"nickname"];
     NSString *password = [info objectForKey:@"password"];
     
-    SmackXMultiUserChat *chat = [SmackCocoaAdapter joinMultiUserChatWithName:[NSString stringWithFormat:@"%@@%@", room, server] connection:conn];
-    SmackXMPPChat *handle = [[SmackXMPPChat alloc] initWithMultiUserChat:chat account:account];
-    [mucs setObject:handle forKey:[NSValue valueWithNonretainedObject:chat]];
-
-    [handle joinWithNickname:nickname password:([password length]>0)?password:nil chat:[info objectForKey:@"chat"] listener:listener];
+    SmackXMPPChat *handle = nil;
+    @try {
+        SmackXMultiUserChat *chat = [SmackCocoaAdapter joinMultiUserChatWithName:[NSString stringWithFormat:@"%@@%@", room, server] connection:conn];
+        handle = [[SmackXMPPChat alloc] initWithMultiUserChat:chat account:account];
+        
+        [handle joinWithNickname:nickname password:([password length]>0)?password:nil chat:[info objectForKey:@"chat"] listener:listener];
+    } @catch (NSException *e) {
+        [[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"XMPP Error","XMPP Error")] withDescription:[e reason] withWindowTitle:AILocalizedString(@"Notice","Notice") defaultButton:AILocalizedString(@"OK","OK") alternateButton:nil otherButton:nil target:nil selector:NULL userInfo:nil];
+        [[info objectForKey:@"chat"] receivedError:[NSNumber numberWithInt:AIChatCommandFailed]];
+    }
     
     [handle release];
 }

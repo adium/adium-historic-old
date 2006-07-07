@@ -115,6 +115,15 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     return [NSClassFromString(@"net.adium.smackBridge.SmackBridge") isInstanceOfClass:obj :className];
 }
 
++ (NSDate*)dateFromJavaDate:(JavaDate*)date
+{
+    // [javaDate toString] format: "dow mon dd hh:mm:ss zzz yyyy"	
+	return (date ? 
+			[NSCalendarDate dateWithString:[date toString]
+							calendarFormat:@"%a %b %d %H:%M:%S %Z %Y"] :
+			nil);
+}
+
 #pragma mark Main Adapter
 
 - (id)initForAccount:(SmackXMPPAccount *)inAccount {
@@ -329,6 +338,11 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
 
 + (JavaVector*)vector {
     return [[[NSClassFromString(@"java.util.Vector") alloc] init] autorelease];
+}
+
++ (NSDictionary *)smackExceptionInfo:(NSException*)e {
+    NSLog(@"exception!\nname = %@\nreason = %@\nuserInfo = %@",[e name],[e reason],[e userInfo]);
+    return [NSDictionary dictionary];
 }
 
 @end

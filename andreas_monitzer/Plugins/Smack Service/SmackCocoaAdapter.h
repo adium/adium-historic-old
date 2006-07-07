@@ -11,7 +11,7 @@
 #import "AIObject.h"
 
 @protocol AdiumSmackBridgeDelegate;
-@class SmackXMPPConnection, SmackXMPPAccount, SmackPresenceType, SmackPresenceMode, SmackMessageType, SmackConnectionConfiguration, SmackPresence, SmackMessage, SmackXXHTMLExtension, SmackIQ, SmackIQType, SmackXMPPError, SmackRoster, SmackXForm, JavaMethod, JavaVector;
+@class SmackXMPPConnection, SmackXMPPAccount, SmackPresenceType, SmackPresenceMode, SmackMessageType, SmackConnectionConfiguration, SmackPresence, SmackMessage, SmackXXHTMLExtension, SmackIQ, SmackIQType, SmackXMPPError, SmackRoster, SmackXForm, JavaMethod, JavaVector, JavaDate;
 
 @interface SmackCocoaAdapter : AIObject <AdiumSmackBridgeDelegate> {
     SmackXMPPConnection *connection;
@@ -43,5 +43,13 @@
 + (SmackXForm*)formWithType:(NSString*)type;
 + (id)invokeObject:(id)obj methodWithParamTypeAndParam:(NSString*)method, ...;
 + (JavaVector*)vector;
+
++ (NSDate*)dateFromJavaDate:(JavaDate*)date;
+
+// the Java Bridge has the issue that it transforms Java exceptions into Objective C-exceptions (NSJavaException),
+// but the original object gets lost in the process. That way we can't retrieve the XMPPError packet that contains the real info for us.
+// However, there's some minimal info stored in the reason-field of the NSException (the toString()-info from the object apparently),
+// so we can derive some information from this one.
++ (NSDictionary *)smackExceptionInfo:(NSException*)e;
 
 @end

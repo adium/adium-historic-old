@@ -18,7 +18,6 @@
 @end
 
 @interface SmackXMPPMultiUserChatPlugin : AIObject<SmackXMPPMultiUserChatPluginListenerDelegate> {
-    NSMutableDictionary *mucs;
     SmackXMPPMultiUserChatPluginListener *listener;
     SmackXMPPAccount *account;
 }
