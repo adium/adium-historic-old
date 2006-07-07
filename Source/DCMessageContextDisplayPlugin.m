@@ -92,7 +92,7 @@
 		
 		shouldDisplay = [[prefDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue];
 		linesToDisplay = [[prefDict objectForKey:KEY_DISPLAY_LINES] intValue];
-				
+		
 		if (shouldDisplay && linesToDisplay > 0 && !isObserving) {
 			//Observe new message windows only if we aren't already observing them
 			isObserving = YES;
@@ -315,7 +315,6 @@
 	AIContentContext	*responseContent;
 	id					source;
 	id					dest;
-	BOOL				isContext = YES;
 	NSMutableArray		*context = nil;
 
 	NSDictionary	*chatDict = [[chat listObject] preferenceForKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
@@ -367,27 +366,16 @@
 				
 				// Make the message response if all is well
 				if(message && source && dest) {
-					// Make the message appear as context if isContext is true or it was a context object
-					// last time or if we should always dim recent context. Make a regular message otherwise
-					if(isContext || [type isEqualToString:CONTENT_CONTEXT_TYPE] || dimRecentContext) {
-						responseContent = [AIContentContext messageInChat:chat
-															   withSource:source
-															  destination:dest
-																	 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
-																  message:message
-																autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
-					} else {	
-						responseContent = [AIContentMessage messageInChat:chat
-															   withSource:source
-															  destination:dest
-																	 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
-																  message:message
-																autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];							
+					responseContent = [AIContentContext messageInChat:chat
+														   withSource:source
+														  destination:dest
+																 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
+															  message:message
+															autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
+					if (responseContent){
 						[responseContent setTrackContent:NO];
 						[responseContent setPostProcessContent:NO];
-					}
-					
-					if (responseContent){
+
 						[context addObject:responseContent];
 					}
 				}
