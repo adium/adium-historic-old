@@ -503,47 +503,19 @@
     [[[connection getRoster] getGroup:[group displayName]] setName:newName];
 }
 
-- (void)requestAuthorization:(NSMenuItem*)sender {
-    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:@"SUBSCRIBE"];
-    [packet setTo:[[sender representedObject] UID]];
-    
-    [connection sendPacket:packet];
-}
-
-- (void)sendAuthorization:(NSMenuItem*)sender {
-    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:@"SUBSCRIBED"];
-    [packet setTo:[[sender representedObject] UID]];
-    
-    [connection sendPacket:packet];
-}
-
-- (void)removeAuthorization:(NSMenuItem*)sender {
-    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:@"UNSUBSCRIBED"];
-    [packet setTo:[[sender representedObject] UID]];
-    
-    [connection sendPacket:packet];
-}
-
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact {
     NSMutableArray *menuItems = [NSMutableArray array];
     
-    NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Request Authorization from","Request Authorization from") action:@selector(requestAuthorization:) keyEquivalent:@""];
-    [mitem setTarget:self];
-    [mitem setRepresentedObject:inContact];
-    [menuItems addObject:mitem];
-    [mitem release];
-    
-    mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Send Authorization to","Send Authorization to") action:@selector(sendAuthorization:) keyEquivalent:@""];
-    [mitem setTarget:self];
-    [mitem setRepresentedObject:inContact];
-    [menuItems addObject:mitem];
-    [mitem release];
-    
-    mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Remove Authorization from","Remove Authorization from") action:@selector(removeAuthorization:) keyEquivalent:@""];
-    [mitem setTarget:self];
-    [mitem setRepresentedObject:inContact];
-    [menuItems addObject:mitem];
-    [mitem release];
+    // order is important here, so we can't use the NSNotification-system
+    NSEnumerator *e = [plugins objectEnumerator];
+    id plugin;
+    while((plugin = [e nextObject]))
+        if([plugin respondsToSelector:@selector(menuItemsForContact:)])
+        {
+            NSArray *pluginMenuItems = [plugin menuItemsForContact:inContact];
+            if(pluginMenuItems)
+                [menuItems addObjectsFromArray:pluginMenuItems];
+        }
     
     [menuItems addObjectsFromArray:[super menuItemsForContact:inContact]];
     return menuItems;
