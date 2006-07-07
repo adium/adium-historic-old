@@ -720,6 +720,7 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>AdiumLog</string>
+					<string>chatlog</string>
 				</array>
 			</dict>
 		</dict>
