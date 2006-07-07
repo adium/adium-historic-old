@@ -95,16 +95,15 @@
 	[listContact setOnline:statustype != AIOfflineStatusType
                     notify:NotifyNow
                   silently:NO];
+    [listContact setStatusObject:[NSNumber numberWithInt:priority] forKey:@"XMPPPriority" notify:NotifyNow];
     
-    [listContact setStatusObject:[NSNumber numberWithInt:priority] forKey:@"XMPPPriority" notify:NotifyLater];
-    
-    [listContact setStatusWithName:mode statusType:statustype notify:NotifyLater];
+    [listContact setStatusWithName:mode statusType:statustype notify:NotifyNow];
     if(status) {
         NSAttributedString *statusMessage = [[NSAttributedString alloc] initWithString:status attributes:nil];
-        [listContact setStatusMessage:statusMessage notify:NotifyLater];
+        [listContact setStatusMessage:statusMessage notify:NotifyNow];
         [statusMessage release];
     } else
-        [listContact setStatusMessage:nil notify:NotifyLater];
+        [listContact setStatusMessage:nil notify:NotifyNow];
     
     //Apply the change
 	[listContact notifyOfChangedStatusSilently:[account silentAndDelayed]];
@@ -131,7 +130,8 @@
             {
                 AIListContact *listContact = [account contactWithJID:jid];
                 [account removeListContact:listContact];
-                [listContact setContainingObject:nil];
+//                [listContact setContainingObject:nil];
+				[listContact setRemoteGroupName:nil];
             } else {
                 //            AIListContact *listContact = [self contactWithJID:jid];
                 SmackListContact *listContact = [[SmackListContact alloc] initWithUID:jid account:account service:[account service]];
