@@ -21,10 +21,11 @@
 
 @implementation SmackXMPPRosterPlugin
 
-- (id)initWithAccount:(SmackXMPPAccount*)account
+- (id)initWithAccount:(SmackXMPPAccount*)a
 {
     if((self = [super init]))
     {
+        account = a;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(receivedPresencePacket:)
                                                      name:SmackXMPPPresencePacketReceivedNotification
@@ -44,7 +45,7 @@
 
 // presence handling
 - (void)receivedPresencePacket:(NSNotification*)n {
-    SmackXMPPAccount *account = [n object];
+//    SmackXMPPAccount *account = [n object];
     SmackPresence *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
     
     NSString *jidWithResource = [packet getFrom];
@@ -112,7 +113,7 @@
 
 // roster handling
 - (void)receivedIQPacket:(NSNotification*)n {
-    SmackXMPPAccount *account = [n object];
+//    SmackXMPPAccount *account = [n object];
     SmackIQ *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
     
     if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.RosterPacket"]) {
@@ -174,5 +175,52 @@
     }
 }
 
+- (void)requestAuthorization:(NSMenuItem*)sender {
+    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:@"SUBSCRIBE"];
+    [packet setTo:[[sender representedObject] UID]];
+    
+    [[account connection] sendPacket:packet];
+}
+
+- (void)sendAuthorization:(NSMenuItem*)sender {
+    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:@"SUBSCRIBED"];
+    [packet setTo:[[sender representedObject] UID]];
+    
+    [[account connection] sendPacket:packet];
+}
+
+- (void)removeAuthorization:(NSMenuItem*)sender {
+    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:@"UNSUBSCRIBED"];
+    [packet setTo:[[sender representedObject] UID]];
+    
+    [[account connection] sendPacket:packet];
+}
+
+- (NSArray *)menuItemsForContact:(AIListContact *)inContact {
+    if(![inContact statusObjectForKey:@"XMPPSubscriptionType"])
+        return nil; // not a contact from our contact list (might be groupchat)
+    
+    NSMutableArray *menuItems = [NSMutableArray array];
+
+    NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Request Authorization from","Request Authorization from") action:@selector(requestAuthorization:) keyEquivalent:@""];
+    [mitem setTarget:self];
+    [mitem setRepresentedObject:inContact];
+    [menuItems addObject:mitem];
+    [mitem release];
+    
+    mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Send Authorization to","Send Authorization to") action:@selector(sendAuthorization:) keyEquivalent:@""];
+    [mitem setTarget:self];
+    [mitem setRepresentedObject:inContact];
+    [menuItems addObject:mitem];
+    [mitem release];
+    
+    mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Remove Authorization from","Remove Authorization from") action:@selector(removeAuthorization:) keyEquivalent:@""];
+    [mitem setTarget:self];
+    [mitem setRepresentedObject:inContact];
+    [menuItems addObject:mitem];
+    [mitem release];
+    
+    return menuItems;
+}
 
 @end

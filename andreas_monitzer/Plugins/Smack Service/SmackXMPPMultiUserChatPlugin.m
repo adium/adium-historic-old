@@ -323,7 +323,7 @@ static AIHTMLDecoder *messageencoder = nil;
 
 - (void)sendMessage:(NSNotification*)n
 {
-    SmackXMPPAccount *account = [n object];
+//    SmackXMPPAccount *account = [n object];
     AIContentMessage *inMessageObject = [[n userInfo] objectForKey:AIMessageObjectKey];
     
     if([inMessageObject chat] != adiumchat)
@@ -376,6 +376,8 @@ static AIHTMLDecoder *messageencoder = nil;
         [contact setDisplayName:nick];
         [participants setObject:contact forKey:participant];
         
+        [contact setStatusObject:chat forKey:@"XMPPMUCChat" notify:NotifyLater];
+        
         [adiumchat addParticipatingListObject:contact notify:initialUpdateDone];
 
         if(!initialUpdateDone && [nick isEqualToString:[chat getNickname]])
@@ -388,7 +390,7 @@ static AIHTMLDecoder *messageencoder = nil;
     [contact setStatusObject:[occupant getAffiliation] forKey:@"XMPPMUCAffiliation" notify:NotifyLater];
     
     //Apply any changes
-	[contact performSelectorOnMainThread:@selector(notifyOfChangedStatusSilently:) withObject:(id)NO waitUntilDone:NO];
+	[contact notifyOfChangedStatusSilently:NO];
 }
 
 - (void)setMUCJoined:(NSString*)participant {
@@ -490,7 +492,7 @@ static AIHTMLDecoder *messageencoder = nil;
 
     AIListContact *contact = [participants objectForKey:participant];
     if(contact) {
-        // XXX clean way to rename a contact?
+        // XXX clean/easy way to rename a contact?
         
 //        [adiumchat removeParticipatingListObject:contact];
         [(NSMutableArray*)[adiumchat participatingListObjects] removeObject:contact]; // XXX uses a way not really recommended
@@ -501,6 +503,14 @@ static AIHTMLDecoder *messageencoder = nil;
                                                             UID:[NSString stringWithFormat:@"%@/%@",[chat getRoom],newNickname]];
         
         [contact setDisplayName:newNickname];
+
+        SmackXOccupant *occupant = [chat getOccupant:participant];
+        
+        [contact setStatusObject:chat forKey:@"XMPPMUCChat" notify:NotifyLater];
+        [contact setStatusObject:[occupant getJid] forKey:@"XMPPMUCJID" notify:NotifyLater];
+        [contact setStatusObject:[occupant getRole] forKey:@"XMPPMUCRole" notify:NotifyLater];
+        [contact setStatusObject:[occupant getAffiliation] forKey:@"XMPPMUCAffiliation" notify:NotifyLater];
+        
         [participants setObject:contact forKey:newNickname];
         
         [adiumchat addParticipatingListObject:contact notify:NO];
@@ -618,6 +628,27 @@ static AIHTMLDecoder *messageencoder = nil;
     }
     
     [handle release];
+}
+
+- (void)kickUser:(NSMenuItem*)sender {
+    AIListContact *contact = [sender representedObject];
+    
+    [(SmackXMultiUserChat*)[contact statusObjectForKey:@"XMPPMUCChat"] kickParticipant:[contact UID] :@""];
+}
+
+- (NSArray *)menuItemsForContact:(AIListContact *)inContact {
+    if(![inContact statusObjectForKey:@"XMPPMUCChat"])
+        return nil; // not a MUC chat contact
+    
+    NSMutableArray *menuItems = [NSMutableArray array];
+    
+    NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Kick User","Kick User") action:@selector(kickUser:) keyEquivalent:@""];
+    [mitem setTarget:self];
+    [mitem setRepresentedObject:inContact];
+    [menuItems addObject:mitem];
+    [mitem release];
+    
+    return menuItems;
 }
 
 @end
