@@ -208,7 +208,7 @@ Class LogViewerWindowControllerClass = NULL;
 			[[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
 			
 			[[adium notificationCenter] removeObserver:self name:Chat_DidOpen object:nil];			
-			[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];			
+			[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];
 
 		} else { //Start Logging
 			[[adium notificationCenter] addObserver:self 
@@ -383,11 +383,7 @@ Class LogViewerWindowControllerClass = NULL;
 						   attributeKeys:attributeKeys
 						 attributeValues:attributeValues];
 		} else if ([[content type] isEqualToString:CONTENT_STATUS_TYPE]) {
-			/*
-			 * Oh. My. God. This is the ugliest thing I have ever seen in my life. Why do we have to do this?! We are
-			 * notified of status changes by meta contact, not the actual contact. We have to search the chat for the
-			 * actual contact we're looking for. This makes me want to cry.
-			 */
+			//XXX: Yucky hack.
 			AIListObject	*retardedMetaObject = [content source];
 			AIListObject	*actualObject = nil;
 			AIListContact	*participatingListObject = nil;
@@ -435,6 +431,7 @@ Class LogViewerWindowControllerClass = NULL;
 				   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
 				 attributeValues:[NSArray arrayWithObjects:@"windowOpened", [[chat account] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
 
+	[self markLogDirtyAtPath:[appender path] forChat:chat];
 }
 
 - (void)chatClosed:(NSNotification *)notification
@@ -452,6 +449,8 @@ Class LogViewerWindowControllerClass = NULL;
 				 attributeValues:[NSArray arrayWithObjects:@"windowClosed", [[chat account] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
 
 	[self closeAppenderForChat:chat];
+
+	[self markLogDirtyAtPath:[appender path] forChat:chat];
 }
 
 - (NSString *)keyForChat:(AIChat *)chat
