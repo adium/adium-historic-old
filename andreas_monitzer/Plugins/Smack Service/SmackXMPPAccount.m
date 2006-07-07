@@ -175,11 +175,22 @@
         // caused by invalid password
         [self disconnect];
     }
+    
+    NSEnumerator *e = [plugins objectEnumerator];
+    id plugin;
+    while((plugin = [e nextObject]))
+        if([plugin respondsToSelector:@selector(connected:)])
+            [plugin connected:conn];
 }
 
 - (void)disconnected:(SmackXMPPConnection*)conn {
     // waaaah
     [self didDisconnect];
+    NSEnumerator *e = [plugins objectEnumerator];
+    id plugin;
+    while((plugin = [e nextObject]))
+        if([plugin respondsToSelector:@selector(disconnected:)])
+            [plugin disconnected:conn];
 }
 
 - (void)connectionError:(NSString*)error {
@@ -607,7 +618,10 @@
 }
 
 - (void)removeListContact:(AIListContact*)listContact {
+    SmackRoster *smroster = [connection getRoster];
     [roster removeObjectForKey:[listContact UID]];
+    
+    [smroster removeEntry:[smroster getEntry:[listContact UID]]];
 }
 
 @end

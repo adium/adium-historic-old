@@ -594,10 +594,17 @@
 
 @end
 
+@interface SmackXMPPException : NSObject {
+}
+
+- (SmackXMPPError*)getXMPPError;
+
+@end
+
 @interface SmackConfiguration : NSObject {
 }
 
-- (NSString*)getVersion;
++ (NSString*)getVersion;
 
 @end
 

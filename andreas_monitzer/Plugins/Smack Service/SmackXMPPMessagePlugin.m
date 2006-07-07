@@ -99,9 +99,11 @@ static AIHTMLDecoder *messageencoder = nil;
                 // the AIHTMLDecoder class doesn't support decoding the XHTML required by JEP-71, so we'll just use the
                 // one by Apple, which works fine
 //                inMessage = [[messageencoder decodeHTML:htmlmsg] retain];
-                inMessage = [[NSAttributedString alloc] initWithHTML:[[NSString stringWithFormat:@"<html>%@</html>",htmlmsg] dataUsingEncoding:NSUnicodeStringEncoding]
-                                                             options:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:NSUnicodeStringEncoding] forKey:NSCharacterEncodingDocumentOption]
-                                                  documentAttributes:NULL];
+                NSMutableDictionary *param = [NSMutableDictionary dictionaryWithObject:[[NSString stringWithFormat:@"<html>%@</html>",htmlmsg] dataUsingEncoding:NSUnicodeStringEncoding]
+                                                                                forKey:@"htmldata"];
+                [self performSelectorOnMainThread:@selector(convertToAttributedString:)
+                                       withObject:param waitUntilDone:YES];
+                inMessage = [[param objectForKey:@"result"] retain];
             }
         }
         if(!inMessage)
@@ -110,7 +112,7 @@ static AIHTMLDecoder *messageencoder = nil;
         SmackXDelayInformation *delayinfo = [packet getExtension:@"x" :@"jabber:x:delay"];
         NSDate *date = nil;
         if(delayinfo)
-            date = [NSDate dateWithTimeIntervalSince1970:[[delayinfo getStamp] getTime]];
+            date = [SmackCocoaAdapter dateFromJavaDate:[delayinfo getStamp]];
         else
             date = [NSDate date];
         
@@ -126,12 +128,21 @@ static AIHTMLDecoder *messageencoder = nil;
     }
 }
 
+- (void)convertToAttributedString:(NSMutableDictionary*)param
+{
+    [param setObject:[[[NSAttributedString alloc] initWithHTML:[param objectForKey:@"htmldata"]
+                                                       options:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:NSUnicodeStringEncoding] forKey:NSCharacterEncodingDocumentOption]
+                                            documentAttributes:NULL] autorelease] forKey:@"result"];
+}
+
 - (void)sendMessage:(NSNotification*)n
 {
     SmackXMPPAccount *account = [n object];
     AIContentMessage *inMessageObject = [[n userInfo] objectForKey:AIMessageObjectKey];
     
     AIChat *chat = [inMessageObject chat];
+    if([chat isGroupChat])
+        return; // ignore group chat messages
     
     NSString *threadid = [chat statusObjectForKey:@"XMPPThreadID"];
     NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
@@ -147,7 +158,7 @@ static AIHTMLDecoder *messageencoder = nil;
         [chat notifyOfChangedStatusSilently:[account silentAndDelayed]];
     }
     
-    NSString *jid = [[[inMessageObject chat] listObject] UID];
+    NSString *jid = [[chat listObject] UID];
     if(resource)
         jid = [NSString stringWithFormat:@"%@/%@",jid,resource];
     
