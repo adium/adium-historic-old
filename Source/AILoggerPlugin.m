@@ -41,6 +41,7 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentStatus.h>
+#import <Adium/AIContentEvent.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
@@ -418,7 +419,7 @@ Class LogViewerWindowControllerClass = NULL;
 					[appender addElementWithName:@"event"
 								  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
 								   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
-								 attributeValues:[NSArray arrayWithObjects:[(AIContentEvent *)content eventType], [[conent source] UID], date, nil]];
+								 attributeValues:[NSArray arrayWithObjects:[(AIContentEvent *)content eventType], [[content source] UID], date, nil]];
 				}
 			}
 		}
