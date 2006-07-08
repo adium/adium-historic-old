@@ -406,14 +406,15 @@ Class LogViewerWindowControllerClass = NULL;
 					NSString *translatedStatus = [statusTranslation objectForKey:[(AIContentStatus *)content status]];
 					if(translatedStatus == nil)
 						AILog(@"AILogger: Don't know how to translate status: %@", [(AIContentStatus *)content status]);
-					[appender addElementWithName:@"status"
-								  escapedContent:([(AIContentStatus *)content loggedMessage] ? [xhtmlDecoder encodeHTML:[(AIContentStatus *)content loggedMessage] imagesPath:nil] : nil)
-								   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
-								 attributeValues:[NSArray arrayWithObjects:
-									 translatedStatus, 
-									 [actualObject UID], 
-									 date,
-									 nil]];
+					else
+						[appender addElementWithName:@"status"
+									  escapedContent:([(AIContentStatus *)content loggedMessage] ? [xhtmlDecoder encodeHTML:[(AIContentStatus *)content loggedMessage] imagesPath:nil] : nil)
+									   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
+									 attributeValues:[NSArray arrayWithObjects:
+										 translatedStatus, 
+										 [actualObject UID], 
+										 date,
+										 nil]];
 
 				} else if ([contentType isEqualToString:CONTENT_EVENT_TYPE]) {
 					[appender addElementWithName:@"event"
