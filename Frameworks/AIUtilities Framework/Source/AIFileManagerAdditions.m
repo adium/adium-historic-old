@@ -173,7 +173,7 @@
 }
 
 
-- (NSString *) findFolderOfType:(OSType)type inDomain:(short)domain createFolder:(BOOL)createFolder
+- (NSString *)findFolderOfType:(OSType)type inDomain:(short)domain createFolder:(BOOL)createFolder
 {
     CFURLRef folderURL;
     FSRef folderRef;
@@ -190,7 +190,7 @@
     return [(NSString *)CFURLCopyFileSystemPath(folderURL, kCFURLPOSIXPathStyle) autorelease];
 }
 
-- (NSString *) userApplicationSupportFolder
+- (NSString *)userApplicationSupportFolder
 {
     return [self findFolderOfType:kApplicationSupportFolderType inDomain:kUserDomain createFolder:YES];
 }
