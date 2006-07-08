@@ -17,7 +17,6 @@
 #import "AIInterfaceController.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
-#import <Adium/AIContentStatus.h>
 #import <Adium/ESDebugAILog.h>
 #import <Adium/ESFileTransfer.h>
 #import <Adium/AIHTMLDecoder.h>
@@ -273,6 +272,12 @@
 				errorMessage = AILocalizedString(@"You have been temporarily blocked by the AIM server and cannot connect at this time. Please try again later.", nil);
 				
 				AILog(@"Temporarily blocked!");
+			} else if ([errorMessageShort isEqualToString:@"TemporarilyUnavailable"]) {
+				shouldReconnect = NO;
+				errorMessage = AILocalizedString(@"The server is temporarily unavailable; you cannot connect at this time. Please try again later.", nil);
+				
+				AILog(@"Temporarily unavailable!");
+				
 			} else {
 				NSLog(@"Error message short is %@; code %@",errorMessageShort,
 					  errorCode);
@@ -864,11 +869,11 @@ BOOL isHTMLContact(AIListObject *inListObject)
 {
 	AIListContact	*sourceContact = [self contactWithUID:inUID];
 
-	[[adium contentController] displayStatusMessage:(isConnected ?
-													 AILocalizedString(@"Direct Instant Message session started","Direct IM is an AIM-specific phrase for transferring images in the message window") :
-													 AILocalizedString(@"Direct Instant Message session ended","Direct IM is an AIM-specific phrase for transferring images in the message window"))
-											 ofType:@"directIM"
-											 inChat:[[adium chatController] existingChatWithContact:sourceContact]];	
+	[[adium contentController] displayEvent:(isConnected ?
+											 AILocalizedString(@"Direct Instant Message session started","Direct IM is an AIM-specific phrase for transferring images in the message window") :
+											 AILocalizedString(@"Direct Instant Message session ended","Direct IM is an AIM-specific phrase for transferring images in the message window"))
+									 ofType:@"directIM"
+									 inChat:[[adium chatController] existingChatWithContact:sourceContact]];	
 }
 
 - (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
@@ -1295,9 +1300,9 @@ BOOL isHTMLContact(AIListObject *inListObject)
 
 - (void)chatFailed:(NSString *)name
 {	
-	[[adium contentController] displayStatusMessage:AILocalizedString(@"Error: A connection failure has occurred.", nil)
-											 ofType:@"group_chat_connection_failure"
-											 inChat:[self mainThreadChatWithName:name]];
+	[[adium contentController] displayEvent:AILocalizedString(@"Error: A connection failure has occurred.", nil)
+									 ofType:@"group_chat_connection_failure"
+									 inChat:[self mainThreadChatWithName:name]];
 }
 
 - (void)chatClosed:(NSNotification *)notif
