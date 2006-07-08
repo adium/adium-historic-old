@@ -79,6 +79,8 @@
 - (void)openLogAtPath:(NSString *)inPath;
 - (void)rebuildContactsList;
 - (void)filterForContact:(AIListContact *)inContact;
+
+- (void)deleteSelection:(id)sender;
 @end
 
 @implementation AIAbstractLogViewerWindowController
@@ -169,6 +171,8 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 	allContactsIdentifier = [[NSNumber alloc] initWithInt:-1];
 
+	undoManager = [[NSUndoManager alloc] init];
+
     [super initWithWindowNibName:windowNibName];
 	
     return self;
@@ -190,7 +194,7 @@ static int toArraySort(id itemA, id itemB, void *context);
     [blankImage release];
     [activeSearchString release];
 	[contactIDsToFilter release];
-    
+
 	[logFromGroupDict release]; logFromGroupDict = nil;
 	[logToGroupDict release]; logToGroupDict = nil;
 
@@ -205,6 +209,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[view_DatePicker release]; view_DatePicker = nil;
 
 	[allContactsIdentifier release];
+    [undoManager release]; undoManager = nil;
 
     [super dealloc];
 }
@@ -314,7 +319,9 @@ static int toArraySort(id itemA, id itemB, void *context);
 	}
 	
 	[toArray sortUsingFunction:toArraySort context:NULL];
-	[outlineView_contacts reloadData];	
+	[outlineView_contacts reloadData];
+	NSLog(@"selection rebuild: changed");
+	[self outlineViewSelectionDidChange:nil];
 }
 
 //
@@ -403,106 +410,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 
     [searchField_logs setStringValue:(activeSearchString ? activeSearchString : @"")];
     [self startSearchingClearingCurrentResults:YES];
-}
-
-
-//This is less than ideal for performance, but it's very simple and I don't see purge logs as being particularly performance critical.
-- (IBAction)deleteAllLogs:(id)sender
-{
-	NSAlert * alert = [[NSAlert alloc] init];
-	[alert setMessageText:AILocalizedString(@"Delete Logs?",nil)];
-	[alert setInformativeText:AILocalizedString(@"Warning: Are you sure you want to delete the selected logs? This operation cannot be undone.",nil)];
-	[alert addButtonWithTitle:DELETE]; 
-	[alert addButtonWithTitle:AILocalizedString(@"Cancel",nil)];
-	if ([alert runModal] == NSAlertFirstButtonReturn)
-	{
-		int row = [[tableView_results dataSource] numberOfRowsInTableView:tableView_results];
-		//We utilize the logIndexAccessLock so we have exclusive access to the logs
-		//NSLock              *logAccessLock = [plugin logAccessLock];
-		
-		//Remember that this locks and unlocks the logAccessLock
-		SKIndexRef          logSearchIndex = [plugin logContentIndex];
-		SKDocumentRef       document;
-		for (; row >= 0; row--)
-		{
-			AIChatLog   *theLog = nil;
-			[resultsLock lock];
-			if (row >= 0 && row < [currentSearchResults count]) {
-				theLog = [currentSearchResults objectAtIndex:row];
-				sameSelection = (row - 1);
-			}
-			[resultsLock unlock];
-			
-			if (theLog) {
-				useSame = YES;
-				[theLog retain];
-				
-				[resultsLock lock];
-				[currentSearchResults removeObjectAtIndex:row];
-				[resultsLock unlock];
-				
-				[[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
-				
-				//[logAccessLock lock];
-				document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:[theLog path]]);
-				SKIndexRemoveDocument(logSearchIndex, document);
-				CFRelease(document);
-				//[logAccessLock unlock];
-				
-				[theLog release];
-			}
-		}
-		
-		//Rebuild the 'global' log indexes
-		[self rebuildIndices];
-		
-		[self updateProgressDisplay];
-	}	
-}
-
-//Delete selected logs
-- (IBAction)deleteSelectedLog:(id)sender
-{
-    AIChatLog   *theLog = nil;
-	int row = [tableView_results selectedRow];
-	[resultsLock lock];
-	if (row >= 0 && row < [currentSearchResults count]) {
-		theLog = [currentSearchResults objectAtIndex:row];
-		sameSelection = (row - 1);
-	}
-	[resultsLock unlock];
-	
-	if (theLog) {
-		//We utilize the logIndexAccessLock so we have exclusive access to the logs
-		//NSLock              *logAccessLock = [plugin logAccessLock];
-		
-		//Remember that this locks and unlocks the logAccessLock
-		SKIndexRef          logSearchIndex = [plugin logContentIndex];
-		SKDocumentRef       document;
-		
-		useSame = YES;
-		[theLog retain];
-		
-		[resultsLock lock];
-		[currentSearchResults removeObjectAtIndex:row];
-		[resultsLock unlock];
-		
-		[[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
-		
-		//Update the log index
-		//[logAccessLock lock];
-		document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:[theLog path]]);
-		SKIndexRemoveDocument(logSearchIndex, document);
-		CFRelease(document);
-		//[logAccessLock unlock];
-		
-		//Rebuild the 'global' log indexes
-		[self rebuildIndices];
-		
-		[self updateProgressDisplay];
-		
-		[theLog release];
-	}
 }
 
 -(void)rebuildIndices
@@ -1561,7 +1468,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
-    [self deleteSelectedLog:nil];
+    [self deleteSelection:nil];
 }
 
 - (void)configureTypeSelectTableView:(KFTypeSelectTableView *)tableView
@@ -1763,6 +1670,11 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 	}	
 }
 
+- (void)outlineViewDeleteSelectedRows:(NSTableView *)tableView
+{
+	[self deleteSelection:nil];
+}
+
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
 	NSArray *selectedItems = [outlineView_contacts arrayOfSelectedItems];
@@ -1871,11 +1783,11 @@ static int toArraySort(id itemA, id itemB, void *context)
                                         withIdentifier:@"delete"
                                                  label:DELETE
                                           paletteLabel:DELETE
-                                               toolTip:AILocalizedString(@"Delete selected log",nil)
+                                               toolTip:AILocalizedString(@"Delete the selection",nil)
                                                 target:self
                                        settingSelector:@selector(setImage:)
                                            itemContent:[NSImage imageNamed:@"remove" forClass:[self class]]
-                                                action:@selector(deleteSelectedLog:)
+                                                action:@selector(deleteSelection:)
                                                   menu:nil];
 	
 	//Search
@@ -1949,6 +1861,15 @@ static int toArraySort(id itemA, id itemB, void *context)
 			NSToolbarFlexibleSpaceItemIdentifier,
 			NSToolbarCustomizeToolbarItemIdentifier, 
 			NSToolbarPrintItemIdentifier, nil]];
+}
+
+- (void)toolbarWillAddItem:(NSNotification *)notification
+{
+	NSToolbarItem *item = [[notification userInfo] objectForKey:@"item"];
+	if ([[item itemIdentifier] isEqualToString:NSToolbarPrintItemIdentifier]) {
+		[item setTarget:self];
+		[item setAction:@selector(adiumPrint:)];
+	}
 }
 
 #pragma mark Date filter
@@ -2179,6 +2100,295 @@ static int toArraySort(id itemA, id itemB, void *context)
 - (BOOL)validatePrintMenuItem:(id <NSMenuItem>)menuItem
 {
 	return ([displayedLogArray count] > 0);
+}
+
+- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
+{
+	if ([[theItem itemIdentifier] isEqualToString:NSToolbarPrintItemIdentifier]) {
+		return [self validatePrintMenuItem:nil];
+
+	} else {
+		return YES;
+	}
+}
+
+#pragma mark Deletion
+
+/*!
+ * @brief Get an NSAlert to request deletion of multiple logs
+ */
+- (NSAlert *)alertForDeletionOfLogCount:(int)logCount
+{
+	NSAlert *alert = [[NSAlert alloc] init];
+	[alert setMessageText:AILocalizedString(@"Delete Logs?",nil)];
+	[alert setInformativeText:[NSString stringWithFormat:
+		AILocalizedString(@"Are you sure you want to send %i logs to the Trash?",nil), logCount]];
+	[alert addButtonWithTitle:DELETE]; 
+	[alert addButtonWithTitle:AILocalizedString(@"Cancel",nil)];
+	
+	return alert;
+}
+
+/*!
+ * @brief Undo the deletion of one or more AIChatLogs
+ *
+ * The logs will be marked for readdition to the index
+ */
+- (void)restoreDeletedLogs:(NSArray *)deletedLogs
+{
+	NSEnumerator	*enumerator;
+	AIChatLog		*aLog;
+	NSFileManager	*fileManager = [NSFileManager defaultManager];
+	NSString		*trashPath = [fileManager findFolderOfType:kTrashFolderType inDomain:kUserDomain createFolder:NO];
+
+	enumerator = [deletedLogs objectEnumerator];
+	while ((aLog = [enumerator nextObject])) {
+		NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
+		
+		[fileManager createDirectoriesForPath:[logPath stringByDeletingLastPathComponent]];
+		
+		[fileManager movePath:[trashPath stringByAppendingPathComponent:[logPath lastPathComponent]]
+					   toPath:logPath 
+					  handler:NULL];
+		
+		[plugin markLogDirtyAtPath:logPath];
+	}
+	
+	[self rebuildIndices];
+}
+
+- (void)deleteLogsAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode  contextInfo:(void *)contextInfo;
+{
+	NSArray *selectedLogs = (NSArray *)contextInfo;
+	if (returnCode == NSAlertFirstButtonReturn) {
+		[resultsLock lock];
+		
+		AIChatLog		*aLog;
+		NSEnumerator	*enumerator;
+		NSMutableSet	*logPaths = [NSMutableSet set];
+		
+		enumerator = [selectedLogs objectEnumerator];
+		while ((aLog = [enumerator nextObject])) {
+			NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
+			
+			AILogToGroup	*logToGroup = [logToGroupDict objectForKey:[NSString stringWithFormat:@"%@.%@/%@",[aLog serviceClass],[aLog from],[aLog to]]];
+			[logToGroup trashLog:aLog];
+			
+			//Clear the to group out if it no longer has anything of interest
+			if ([logToGroup logCount] == 0) {
+				AILogFromGroup	*logFromGroup = [logFromGroupDict objectForKey:[NSString stringWithFormat:@"%@.%@",[aLog serviceClass],[aLog from]]];
+				[logFromGroup removeToGroup:logToGroup];
+			}
+			
+			[logPaths addObject:logPath];
+			[currentSearchResults removeObjectIdenticalTo:aLog];
+		}
+		
+		[plugin removePathsFromIndex:logPaths];
+		
+		[undoManager registerUndoWithTarget:self
+								   selector:@selector(restoreDeletedLogs:)
+									 object:selectedLogs];
+		[undoManager setActionName:DELETE];
+		
+		[resultsLock unlock];
+		
+		[tableView_results reloadData];
+		[self selectDisplayedLog];
+		
+		[self rebuildContactsList];
+		[self updateProgressDisplay];
+	}
+	[selectedLogs release];
+}
+
+/*!
+ * @brief Delete logs
+ *
+ * If two or more logs are passed, confirmation will be requested.
+ * This operation registers with the window controller's undo manager.
+ *
+ * @param selectedLogs An NSArray of logs to delete
+ */
+- (void)deleteLogs:(NSArray *)selectedLogs
+{	
+	if ([selectedLogs count] > 1) {
+		NSAlert *alert = [self alertForDeletionOfLogCount:[selectedLogs count]];
+		[alert beginSheetModalForWindow:[self window]
+						  modalDelegate:self
+						 didEndSelector:@selector(deleteLogsAlertDidEnd:returnCode:contextInfo:)
+							contextInfo:[selectedLogs retain]];
+	} else {
+		[self deleteLogsAlertDidEnd:nil
+						 returnCode:NSAlertFirstButtonReturn
+						contextInfo:[selectedLogs retain]];
+	}
+}
+
+/*!
+ * @brief Returns a set of all selected to groups on all accounts
+ *
+ * @param logCount If non-NULL, will be set to the total number of logs on return
+ */
+- (NSSet *)allSelectedToGroups:(int *)totalLogCount
+{
+    NSEnumerator        *fromEnumerator;
+    AILogFromGroup      *fromGroup;
+	NSMutableSet		*allToGroups = [NSMutableSet set];
+
+	if (totalLogCount) *totalLogCount = 0;
+
+    //Walk through every 'from' group
+    fromEnumerator = [logFromGroupDict objectEnumerator];
+    while ((fromGroup = [fromEnumerator nextObject])) {
+		NSEnumerator        *toEnumerator;
+		AILogToGroup        *toGroup;
+
+		//Walk through every 'to' group
+		toEnumerator = [[fromGroup toGroupArray] objectEnumerator];
+		while ((toGroup = [toEnumerator nextObject])) {
+			if (![contactIDsToFilter count] || [contactIDsToFilter containsObject:[[NSString stringWithFormat:@"%@.%@",[toGroup serviceClass],[toGroup to]] compactedString]]) {
+				if (totalLogCount) {
+					*totalLogCount += [toGroup logCount];
+				}
+				
+				[allToGroups addObject:toGroup];
+			}
+		}
+	}
+	
+	return allToGroups;
+}
+
+/*!
+ * @brief Undo the deletion of one or more AILogToGroups and their associated logs
+ *
+ * The logs will be marked for readdition to the index
+ */
+- (void)restoreDeletedToGroups:(NSSet *)toGroups
+{
+	NSEnumerator	*enumerator;
+	AILogToGroup	*toGroup;
+	NSFileManager	*fileManager = [NSFileManager defaultManager];
+	NSString		*trashPath = [fileManager findFolderOfType:kTrashFolderType inDomain:kUserDomain createFolder:NO];
+	NSString		*logBasePath = [AILoggerPlugin logBasePath];
+
+	enumerator = [toGroups objectEnumerator];
+	while ((toGroup = [enumerator nextObject])) {
+		NSString *toGroupPath = [logBasePath stringByAppendingPathComponent:[toGroup path]];
+
+		[fileManager createDirectoriesForPath:[toGroupPath stringByDeletingLastPathComponent]];
+		if ([fileManager fileExistsAtPath:toGroupPath]) {
+			AILog(@"Removing path %@ to make way for %@",
+				  toGroupPath,[trashPath stringByAppendingPathComponent:[toGroupPath lastPathComponent]]);
+			[fileManager removeFileAtPath:toGroupPath
+								  handler:NULL];
+		}
+		[fileManager movePath:[trashPath stringByAppendingPathComponent:[toGroupPath lastPathComponent]]
+					   toPath:toGroupPath
+					  handler:NULL];
+		
+		NSEnumerator *logEnumerator = [toGroup logEnumerator];
+		AIChatLog	 *aLog;
+	
+		while ((aLog = [logEnumerator nextObject])) {
+			[plugin markLogDirtyAtPath:[logBasePath stringByAppendingPathComponent:[aLog path]]];
+		}
+	}
+	
+	[self rebuildIndices];	
+}
+
+- (void)deleteSelectedContactsFromSourceListAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+{
+	NSSet *allSelectedToGroups = (NSSet *)contextInfo;
+	if (returnCode == NSAlertFirstButtonReturn) {
+		AILogToGroup	*logToGroup;
+		NSEnumerator	*enumerator;
+		NSMutableSet	*logPaths = [NSMutableSet set];
+		
+		enumerator = [allSelectedToGroups objectEnumerator];
+		while ((logToGroup = [enumerator nextObject])) {
+			NSEnumerator *logEnumerator;
+			AIChatLog	 *aLog;
+			
+			logEnumerator = [logToGroup logEnumerator];
+			while ((aLog = [logEnumerator nextObject])) {
+				NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
+				[logPaths addObject:logPath];
+			}
+			
+			AILogFromGroup	*logFromGroup = [logFromGroupDict objectForKey:[NSString stringWithFormat:@"%@.%@",[logToGroup serviceClass],[logToGroup from]]];
+			NSLog(@"Removing %@ from %@",logToGroup,logFromGroup);
+			[logFromGroup removeToGroup:logToGroup];
+		}
+		
+		[plugin removePathsFromIndex:logPaths];
+		
+		[undoManager registerUndoWithTarget:self
+								   selector:@selector(restoreDeletedToGroups:)
+									 object:allSelectedToGroups];
+		[undoManager setActionName:DELETE];
+		
+		[self rebuildIndices];
+		[self updateProgressDisplay];
+	}
+	
+	[allSelectedToGroups release];
+}
+
+/*!
+ * @brief Delete entirely the logs of all contacts selected in the source list
+ *
+ * Confirmation by the user will be required.
+ *
+ * Note: A single item in the source list may have multiple associated AILogToGroups.
+ */
+- (void)deleteSelectedContactsFromSourceList
+{
+	int totalLogCount;
+	NSSet *allSelectedToGroups = [self allSelectedToGroups:&totalLogCount];
+
+	if (totalLogCount > 1) {
+		NSAlert *alert = [self alertForDeletionOfLogCount:totalLogCount];
+		[alert beginSheetModalForWindow:[self window]
+						  modalDelegate:self
+						 didEndSelector:@selector(deleteSelectedContactsFromSourceListAlertDidEnd:returnCode:contextInfo:)
+							contextInfo:[allSelectedToGroups retain]];
+	} else {
+		[self deleteSelectedContactsFromSourceListAlertDidEnd:nil
+												   returnCode:NSAlertFirstButtonReturn
+												  contextInfo:[allSelectedToGroups retain]];
+	}
+}
+
+/*!
+ * @brief Delete the current selection
+ *
+ * If the contacts outline view is selected, one or more contacts' logs will be trashed.
+ * If anything else is selected, the currently selected search result logs will be trashed.
+ */
+- (void)deleteSelection:(id)sender
+{
+	if ([[self window] firstResponder] == outlineView_contacts) {
+		[self deleteSelectedContactsFromSourceList];
+		
+	} else {
+		[resultsLock lock];
+		NSArray *selectedLogs = [tableView_results arrayOfSelectedItemsUsingSourceArray:currentSearchResults];
+		[resultsLock unlock];
+		
+		[self deleteLogs:selectedLogs];
+	}
+}
+
+#pragma mark Undo
+/*
+ * @brief Supply our undo manager when we are within the responder chain
+ */
+- (NSUndoManager *)windowWillReturnUndoManager:(NSWindow *)sender
+{
+	return undoManager;
 }
 
 @end

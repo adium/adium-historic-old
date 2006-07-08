@@ -692,6 +692,16 @@ Class LogViewerWindowControllerClass = NULL;
 	}	
 }
 
+- (void)markLogDirtyAtPath:(NSString *)path
+{
+	[dirtyLogLock lock];
+	if ((path != nil) &&
+		(![dirtyLogArray containsObject:path])) {
+		[dirtyLogArray addObject:path];
+	}
+	[dirtyLogLock unlock];	
+}
+
 //Get the current status of indexing.  Returns NO if indexing is not occuring
 - (BOOL)getIndexingProgress:(int *)indexNumber outOf:(int *)total
 {
@@ -1024,6 +1034,36 @@ Class LogViewerWindowControllerClass = NULL;
 {
 	return logAccessLock;
 }
+
+- (void)_removePathsFromIndexThread:(NSDictionary *)userInfo
+{
+	NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
+
+	SKIndexRef logSearchIndex = (SKIndexRef)[userInfo objectForKey:@"SKIndexRef"];
+	NSEnumerator *enumerator = [[userInfo objectForKey:@"Paths"] objectEnumerator];
+	NSString	 *logPath;
+	
+	while ((logPath = [enumerator nextObject])) {
+		SKDocumentRef document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:logPath]);
+		if (document) {
+			SKIndexRemoveDocument(logSearchIndex, document);
+			CFRelease(document);
+		}
+	}
+	
+	[pool release];
+}
+
+- (void)removePathsFromIndex:(NSSet *)paths
+{
+	[NSThread detachNewThreadSelector:@selector(_removePathsFromIndexThread:)
+							 toTarget:self
+						   withObject:[NSDictionary dictionaryWithObjectsAndKeys:
+							   (id)[self logContentIndex], @"SKIndexRef",
+							   paths, @"Paths",
+							   nil]];
+}
+
 
 @end
 

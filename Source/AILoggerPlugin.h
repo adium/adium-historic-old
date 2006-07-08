@@ -84,6 +84,7 @@
 - (void)cleanUpLogContentSearching;
 - (SKIndexRef)logContentIndex;
 - (void)markLogDirtyAtPath:(NSString *)path forChat:(AIChat *)chat;
+- (void)markLogDirtyAtPath:(NSString *)path;
 - (BOOL)getIndexingProgress:(int *)complete outOf:(int *)total;
 
 //
@@ -92,6 +93,7 @@
 - (void)cleanDirtyLogs;
 
 - (NSLock *)logAccessLock;
+- (void)removePathsFromIndex:(NSSet *)paths;
 
 @end
 

@@ -136,6 +136,8 @@ typedef enum {
 	
 	NSString			*horizontalRule;
 
+	NSUndoManager		*undoManager;
+	
 	NSNumber			*allContactsIdentifier;
 	//Old
 	BOOL showEmoticons;
