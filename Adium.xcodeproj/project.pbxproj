@@ -107,8 +107,6 @@
 		11AD5362096349D000CA0C6F /* RAFjoscarDebugController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11AD5360096349D000CA0C6F /* RAFjoscarDebugController.h */; };
 		11AD5363096349D000CA0C6F /* RAFjoscarDebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11AD5361096349D000CA0C6F /* RAFjoscarDebugController.m */; };
 		11AD53E90963523000CA0C6F /* joscarDebugWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11AD53E80963523000CA0C6F /* joscarDebugWindow.nib */; };
-		11B648DF087C62C5008F528B /* RAFDragArrayController.h in Headers */ = {isa = PBXBuildFile; fileRef = 11B648DD087C62C5008F528B /* RAFDragArrayController.h */; };
-		11B648E0087C62C5008F528B /* RAFDragArrayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11B648DE087C62C5008F528B /* RAFDragArrayController.m */; };
 		11CBDD4309326F8100BE7961 /* RAFjoscarAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11CBDD3D09326F7F00BE7961 /* RAFjoscarAccount.h */; };
 		11CBDD4409326F8100BE7961 /* RAFjoscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CBDD3E09326F8000BE7961 /* RAFjoscarAccount.m */; };
 		11CBDD4509326F8100BE7961 /* RAFjoscarAccountViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */; };
@@ -645,6 +643,8 @@
 		3497CC0D09BA0D7900C0428E /* ESIRCAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3497CC0B09BA0D7900C0428E /* ESIRCAccountViewController.m */; };
 		3497CC1C09BA0DC100C0428E /* ESIRCAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC1B09BA0DC100C0428E /* ESIRCAccountView.nib */; };
 		3497CC2709BA0FDB00C0428E /* GaimDefaultsIRC.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC2609BA0FDB00C0428E /* GaimDefaultsIRC.plist */; };
+		349B392B0A5FB150008BE092 /* AIContentEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 349B39290A5FB150008BE092 /* AIContentEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		349B392C0A5FB150008BE092 /* AIContentEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 349B392A0A5FB150008BE092 /* AIContentEvent.m */; };
 		349C2F470867AD16000BF883 /* ApplescriptRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C2F460867AD16000BF883 /* ApplescriptRunner.m */; };
 		349C2FF00867AD65000BF883 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349C2FEF0867AD65000BF883 /* Foundation.framework */; };
 		349C30790867ADA3000BF883 /* AdiumApplescriptRunner in Resources */ = {isa = PBXBuildFile; fileRef = 349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */; };
@@ -1820,8 +1820,6 @@
 		11AD5360096349D000CA0C6F /* RAFjoscarDebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDebugController.h; path = "Plugins/joscar Service/RAFjoscarDebugController.h"; sourceTree = "<group>"; };
 		11AD5361096349D000CA0C6F /* RAFjoscarDebugController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDebugController.m; path = "Plugins/joscar Service/RAFjoscarDebugController.m"; sourceTree = "<group>"; };
 		11AD53E80963523000CA0C6F /* joscarDebugWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = joscarDebugWindow.nib; path = "Plugins/joscar Service/joscarDebugWindow.nib"; sourceTree = "<group>"; };
-		11B648DD087C62C5008F528B /* RAFDragArrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFDragArrayController.h; path = Source/RAFDragArrayController.h; sourceTree = "<group>"; };
-		11B648DE087C62C5008F528B /* RAFDragArrayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFDragArrayController.m; path = Source/RAFDragArrayController.m; sourceTree = "<group>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Source/AIEmoticonController.h; sourceTree = "<group>"; };
 		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = Source/AIEmoticonController.m; sourceTree = "<group>"; };
 		11CBDD3D09326F7F00BE7961 /* RAFjoscarAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAccount.h; path = "Plugins/joscar Service/RAFjoscarAccount.h"; sourceTree = "<group>"; };
@@ -2651,6 +2649,8 @@
 		3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WebKit Message View.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimRequestWindowController.m; path = "Plugins/Gaim Service/ESGaimRequestWindowController.m"; sourceTree = "<group>"; };
 		3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimRequestWindowController.h; path = "Plugins/Gaim Service/ESGaimRequestWindowController.h"; sourceTree = "<group>"; };
+		349B39290A5FB150008BE092 /* AIContentEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContentEvent.h; path = "Frameworks/Adium Framework/AIContentEvent.h"; sourceTree = "<group>"; };
+		349B392A0A5FB150008BE092 /* AIContentEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContentEvent.m; path = "Frameworks/Adium Framework/AIContentEvent.m"; sourceTree = "<group>"; };
 		349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AdiumApplescriptRunner; sourceTree = BUILT_PRODUCTS_DIR; };
 		349C2F460867AD16000BF883 /* ApplescriptRunner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ApplescriptRunner.m; path = Source/ApplescriptRunner.m; sourceTree = "<group>"; };
 		349C2FEF0867AD65000BF883 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -2881,7 +2881,7 @@
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4778,6 +4778,24 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		349B359E0A5F2231008BE092 /* Views and Cells */ = {
+			isa = PBXGroup;
+			children = (
+				3456231B0A3771D800E7FC97 /* ESRankingCell.h */,
+				3456231A0A3771D800E7FC97 /* ESRankingCell.m */,
+				345AFAEB0A5D9A5F00D7DA6F /* AINoisyTableColumn.h */,
+				345AFAEC0A5D9A5F00D7DA6F /* AINoisyTableColumn.m */,
+				348B250A0A50A1C900B2B972 /* ESSourceListBackgroundView.h */,
+				348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */,
+				340670A60A55A4B4004E22AC /* ESGlassSplitView.h */,
+				340670A70A55A4B4004E22AC /* ESGlassSplitView.m */,
+				348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */,
+				348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */,
+				340670790A55A044004E22AC /* sourceListBackground.png */,
+			);
+			name = "Views and Cells";
+			sourceTree = "<group>";
+		};
 		349C2F310867ACF7000BF883 /* ApplescriptRunner */ = {
 			isa = PBXGroup;
 			children = (
@@ -4960,8 +4978,6 @@
 				110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */,
 				9E125C6307D3571400AA91C5 /* ESBlockingPlugin.h */,
 				9E125C6407D3571400AA91C5 /* ESBlockingPlugin.m */,
-				11B648DD087C62C5008F528B /* RAFDragArrayController.h */,
-				11B648DE087C62C5008F528B /* RAFDragArrayController.m */,
 			);
 			name = Blocking;
 			sourceTree = "<group>";
@@ -6049,8 +6065,7 @@
 		4BE666CC0577AFA0007E115C /* Log Viewer */ = {
 			isa = PBXGroup;
 			children = (
-				3456231B0A3771D800E7FC97 /* ESRankingCell.h */,
-				3456231A0A3771D800E7FC97 /* ESRankingCell.m */,
+				349B359E0A5F2231008BE092 /* Views and Cells */,
 				3456231F0A3771E100E7FC97 /* AIChatLog.h */,
 				3456231E0A3771E100E7FC97 /* AIChatLog.m */,
 				345623250A3771F400E7FC97 /* AILogToGroup.h */,
@@ -6062,21 +6077,12 @@
 				3410745D09B6965600565C9E /* AIMDLogViewerWindowController.h */,
 				3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */,
 				3456232E0A37723400E7FC97 /* LogViewer.nib */,
-				345AFAEB0A5D9A5F00D7DA6F /* AINoisyTableColumn.h */,
-				345AFAEC0A5D9A5F00D7DA6F /* AINoisyTableColumn.m */,
 				342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */,
 				342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */,
 				34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */,
 				34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */,
 				34F849560A4AF04D0002A017 /* AILogFileUpgradeWindowController.h */,
 				34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */,
-				348B250A0A50A1C900B2B972 /* ESSourceListBackgroundView.h */,
-				348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */,
-				340670A60A55A4B4004E22AC /* ESGlassSplitView.h */,
-				340670A70A55A4B4004E22AC /* ESGlassSplitView.m */,
-				348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */,
-				348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */,
-				340670790A55A044004E22AC /* sourceListBackground.png */,
 			);
 			name = "Log Viewer";
 			sourceTree = "<group>";
@@ -6833,6 +6839,8 @@
 				4BFC5408043E509A00A8010A /* AIContentStatus.m */,
 				4BDC17720493C90E00A8010A /* AIContentTyping.h */,
 				4BDC17730493C90E00A8010A /* AIContentTyping.m */,
+				349B39290A5FB150008BE092 /* AIContentEvent.h */,
+				349B392A0A5FB150008BE092 /* AIContentEvent.m */,
 			);
 			name = Content;
 			sourceTree = "<group>";
@@ -7330,7 +7338,6 @@
 				346CFDC6087B7836009711C8 /* AdiumIdleManager.h in Headers */,
 				110763F508676CC9005987A5 /* RAFBlockEditorPlugin.h in Headers */,
 				110763F708676CC9005987A5 /* RAFBlockEditorWindowController.h in Headers */,
-				11B648DF087C62C5008F528B /* RAFDragArrayController.h in Headers */,
 				636AB7F3087E2B6700A87670 /* AIDockBadger.h in Headers */,
 				EE147A810896B33400A21377 /* OWABSearchWindowController.h in Headers */,
 				34BD0DB508D31479000BE2C0 /* AdiumChatEvents.h in Headers */,
@@ -7500,6 +7507,7 @@
 				348F50C20935317C00288E41 /* AIStatusItem.h in Headers */,
 				340BA84609EC593B000EC441 /* AICorePluginLoader.h in Headers */,
 				07B87D770A3A9FCF00A38283 /* AIStatusDefines.h in Headers */,
+				349B392B0A5FB150008BE092 /* AIContentEvent.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8923,7 +8931,6 @@
 				110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */,
 				110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */,
 				346CFDC7087B7836009711C8 /* AdiumIdleManager.m in Sources */,
-				11B648E0087C62C5008F528B /* RAFDragArrayController.m in Sources */,
 				63FBAA480887779D00026246 /* AIDockBadger.m in Sources */,
 				EE147A800896B33400A21377 /* OWABSearchWindowController.m in Sources */,
 				34BD0DB608D31479000BE2C0 /* AdiumChatEvents.m in Sources */,
@@ -9085,6 +9092,7 @@
 				348F50C30935317C00288E41 /* AIStatusItem.m in Sources */,
 				340BA84709EC593B000EC441 /* AICorePluginLoader.m in Sources */,
 				07B87BE00A3A7CB300A38283 /* AIXMLElement.m in Sources */,
+				349B392C0A5FB150008BE092 /* AIContentEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

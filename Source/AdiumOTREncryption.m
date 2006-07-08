@@ -450,9 +450,9 @@ static int display_otr_message(const char *accountname, const char *protocol,
 		//All other OTR messages should be displayed as status messages; decode the message to strip any HTML
 		message = [adiumOTREncryption localizedOTRMessage:message
 											 withUsername:formattedUID];
-		[[sharedAdium contentController] displayStatusMessage:[[AIHTMLDecoder decodeHTML:message] string]
-													   ofType:@"encryption"
-													   inChat:chat];
+		[[sharedAdium contentController] displayEvent:[[AIHTMLDecoder decodeHTML:message] string]
+											   ofType:@"encryption"
+											   inChat:chat];
 	}
 	
 	//We handled it

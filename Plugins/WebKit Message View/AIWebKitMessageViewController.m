@@ -33,7 +33,7 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIContentContext.h>
 #import <Adium/AIContentObject.h>
-#import <Adium/AIContentStatus.h>
+#import <Adium/AIContentEvent.h>
 #import <Adium/AIEmoticon.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
@@ -43,8 +43,6 @@
 #import "ESTextAndButtonsWindowController.h"
 
 #import "ESWebView.h"
-
-@class AIContentMessage, AIContentStatus, AIContentObject;
 
 @interface AIWebKitMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
@@ -609,7 +607,7 @@ static NSArray *draggedTypes = nil;
 - (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
 	NSString		*dateMessage = nil;
-	AIContentStatus *dateSeparator = nil;
+	AIContentEvent	*dateSeparator = nil;
 	
 	/*
 	 If the day has changed since our last message (or if there was no previous message and 
@@ -620,13 +618,13 @@ static NSArray *draggedTypes = nil;
 		dateMessage = [[content date] descriptionWithCalendarFormat:[[NSDateFormatter localizedDateFormatter] dateFormat]
 														   timeZone:nil
 															 locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
-		dateSeparator = [AIContentStatus statusInChat:[content chat]
-										   withSource:[[content chat] listObject]
-										  destination:[[content chat] account]
-												 date:[content date]
-											  message:[[[NSAttributedString alloc] initWithString:dateMessage
-																					   attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
-											 withType:@"date_separator"];
+		dateSeparator = [AIContentEvent statusInChat:[content chat]
+										  withSource:[[content chat] listObject]
+										 destination:[[content chat] account]
+												date:[content date]
+											 message:[[[NSAttributedString alloc] initWithString:dateMessage
+																					  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
+											withType:@"date_separator"];
 		//Add the date header
 		[self _appendContent:dateSeparator 
 					 similar:NO

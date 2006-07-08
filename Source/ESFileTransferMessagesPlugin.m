@@ -18,7 +18,7 @@
 #import "AIContentController.h"
 #import "ESFileTransferMessagesPlugin.h"
 #import <Adium/AIChat.h>
-#import <Adium/AIContentStatus.h>
+#import <Adium/AIContentEvent.h>
 #import <Adium/AIListContact.h>
 #import <Adium/ESFileTransfer.h>
 
@@ -124,15 +124,15 @@
 	
     enumerator = [[[adium chatController] allChatsWithContact:contact] objectEnumerator];
     while ((chat = [enumerator nextObject])) {
-        AIContentStatus	*content;
+        AIContentEvent	*content;
 		
         //Create our content object
-        content = [AIContentStatus statusInChat:chat
-                                     withSource:contact
-                                    destination:[chat account]
-                                           date:[NSDate date]
-                                        message:attributedMessage
-									   withType:type];
+        content = [AIContentEvent statusInChat:chat
+									withSource:contact
+								   destination:[chat account]
+										  date:[NSDate date]
+									   message:attributedMessage
+									  withType:type];
 		
         //Add the object
         [[adium contentController] receiveContentObject:content];

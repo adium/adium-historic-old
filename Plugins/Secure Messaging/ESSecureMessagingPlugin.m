@@ -246,9 +246,9 @@
 				message = CHAT_NO_LONGER_SECURE;
 			}
 
-			[[adium contentController] displayStatusMessage:message
-													 ofType:@"encryption"
-													 inChat:inChat];
+			[[adium contentController] displayEvent:message
+											 ofType:@"encryption"
+											 inChat:inChat];
 		}
 	}
 
