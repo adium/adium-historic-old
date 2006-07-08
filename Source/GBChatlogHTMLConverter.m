@@ -107,6 +107,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	};
 	parser = CFXMLParserCreateWithDataFromURL(NULL, (CFURLRef)url, kCFXMLParserSkipMetaData | kCFXMLParserSkipWhitespace, kCFXMLNodeCurrentVersion, &callbacks, &context);
 	if (!CFXMLParserParse(parser)) {
+		NSLog(@"%@: Parser %@ for inputFileString %@ returned false.",
+			  [self class], parser, inputFileString);
 		[output release];
 		output = nil;
 	}
