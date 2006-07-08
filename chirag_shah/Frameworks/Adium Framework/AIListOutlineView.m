@@ -471,10 +471,11 @@
 }
 - (id)accessibilityAttributeValue:(NSString *)attribute
 {	
-	if([attribute isEqualToString:NSAccessibilityTitleAttribute])
+	if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
 		return AILocalizedString(@"Contact List Outline", nil);
-	else
+	} else {
 		return [super accessibilityAttributeValue:attribute];
+	}
 }
 
 

@@ -96,7 +96,8 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		isGroup = [listObject isKindOfClass:[AIListGroup class]];
 	}
 }
-- (BOOL)isGroup{
+- (BOOL)isGroup
+{
 	return isGroup;
 }
 
@@ -120,7 +121,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	//Calculate and cache the height of this font
 	labelFontHeight = [NSAttributedString stringHeightForAttributes:[NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName]]; 
 }
-- (NSFont *)font{
+- (NSFont *)font {
 	return font;
 }
 
@@ -333,7 +334,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		default:
 		break;
 	}
-	
+		
 	return inRect;
 }
 
@@ -438,8 +439,8 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	[names addObject:NSAccessibilityTitleAttribute];
 	[names addObject:NSAccessibilityRoleAttribute];
 	[names addObject:NSAccessibilityRoleDescriptionAttribute];
-        [names addObject:NSAccessibilitySubroleAttribute];
-        [names addObject:NSAccessibilityParentAttribute];
+	[names addObject:NSAccessibilitySubroleAttribute];
+	[names addObject:NSAccessibilityParentAttribute];
 	[names addObject:NSAccessibilityWindowAttribute];
 	[names addObject:NSAccessibilityDescriptionAttribute];
 	[names addObject:NSAccessibilityChildrenAttribute];
@@ -449,6 +450,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	[names autorelease];
 	return names;
 }
+
 - (id)accessibilityAttributeValue:(NSString *)attribute
 {
 	id value;
@@ -456,35 +458,35 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 #define IS_GROUP [listObject isKindOfClass:[AIListGroup class]]
 #define IS_CONTACT (!IS_GROUP)
 
-	if([attribute isEqualToString:NSAccessibilityRoleAttribute] || [attribute isEqualToString:NSAccessibilitySubroleAttribute])
+	if([attribute isEqualToString:NSAccessibilityRoleAttribute] || [attribute isEqualToString:NSAccessibilitySubroleAttribute]) {
 		value = IS_CONTACT ? @"AIContactListItem": @"AIContactListGroup";
-		
-	else if([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute]){
+	} else if([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute]){
 		NSString *currentStatus = nil;
 		
-		if([listObject statusType] == AIAvailableStatusType)
+		if([listObject statusType] == AIAvailableStatusType) {
 			currentStatus = AILocalizedString(@"available contact", /*comment*/ nil);
-		else if([listObject statusType] == AIAwayStatusType)
+		} else if([listObject statusType] == AIAwayStatusType) {
 			currentStatus = AILocalizedString(@"away contact", /*comment*/ nil);
-		else if([listObject statusType] == AIIdleStatus)
+		} else if([listObject statusType] == AIIdleStatus) {
 			currentStatus = AILocalizedString(@"idle contact", /*comment*/ nil);
-		else if( ([listObject statusType] == AIIdleStatus) && ([listObject statusType]==AIAwayStatusType) )
+		} else if(([listObject statusType] == AIIdleStatus) && ([listObject statusType]==AIAwayStatusType)) {
 			currentStatus = AILocalizedString(@"idle and away contact", /*comment*/ nil);
-	
+		}
 		value = IS_CONTACT ? AILocalizedString(currentStatus, /*comment*/ nil) : AILocalizedString(@"contact list group", /*comment*/ nil);
-	
-	}else if([attribute isEqualToString:NSAccessibilityValueAttribute])
+
+	} else if([attribute isEqualToString:NSAccessibilityValueAttribute]) {
 		value = listObject;
-	else if([attribute isEqualToString:NSAccessibilityTitleAttribute])
+	} else if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
 		value = [self labelString];
-	else if([attribute isEqualToString:NSAccessibilityWindowAttribute])
+	} else if([attribute isEqualToString:NSAccessibilityWindowAttribute]) {
 		value = [controlView window];
-	else if([attribute isEqualToString:NSAccessibilityScrollAreaRole] || [attribute isEqualToString:NSAccessibilityScrollBarRole])
+	} else if([attribute isEqualToString:NSAccessibilityScrollAreaRole] || [attribute isEqualToString:NSAccessibilityScrollBarRole]) {
 		value = @"AXScrollBar";
-	else if([attribute isEqualToString:@"ClassName"])
+	} else if([attribute isEqualToString:@"ClassName"]) {
 		value = NSStringFromClass([self class]);
-	else
+	} else {
 		value = [super accessibilityAttributeValue:attribute];
+	}
 
 #undef IS_CONTACT
 #undef IS_GROUP
