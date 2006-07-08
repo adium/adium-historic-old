@@ -335,7 +335,8 @@
 			message = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:
 				AILocalizedString(@"Send Later will send the message the next time both you and %@ are online. Send Now may work if %@ is invisible or is not on your contact list and so only appears to be offline.", "Send Later dialogue explanation text"),
 				formattedUID, formattedUID, formattedUID]
-													  attributes:nil];
+													  attributes:[NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:10]
+																							 forKey:NSFontAttributeName]];
 
 			[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:nil
 																  defaultButton:AILocalizedString(@"Send Now", nil)
