@@ -366,11 +366,13 @@ Class LogViewerWindowControllerClass = NULL;
 		//Don't log chats for temporary accounts
 		if ([[chat account] isTemporary]) return;	
 							
-		AIXMLAppender *appender = [self appenderForChat:chat];
-		
-		if ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
+		AIXMLAppender	*appender = [self appenderForChat:chat];
+		NSString		*contentType = [content type];
+		NSString		*date = [[NSCalendarDate date] ISO8601DateString];
+
+		if ([contentType isEqualToString:CONTENT_MESSAGE_TYPE]) {
 			NSMutableArray *attributeKeys = [NSMutableArray arrayWithObjects:@"sender", @"time", nil];
-			NSMutableArray *attributeValues = [NSMutableArray arrayWithObjects:[[content source] UID], [[NSCalendarDate date] ISO8601DateString], nil];
+			NSMutableArray *attributeValues = [NSMutableArray arrayWithObjects:[[content source] UID], date, nil];
 			
 			if([content isAutoreply])
 			{
@@ -382,7 +384,7 @@ Class LogViewerWindowControllerClass = NULL;
 						  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
 						   attributeKeys:attributeKeys
 						 attributeValues:attributeValues];
-		} else if ([[content type] isEqualToString:CONTENT_STATUS_TYPE]) {
+		} else {
 			//XXX: Yucky hack.
 			AIListObject	*retardedMetaObject = [content source];
 			AIListObject	*actualObject = nil;
@@ -399,20 +401,28 @@ Class LogViewerWindowControllerClass = NULL;
 			
 			//If we can't find it for some reason, we probably shouldn't attempt logging.
 			if (actualObject) {
-				NSString *translatedStatus = [statusTranslation objectForKey:[(AIContentStatus *)content status]];
-				if(translatedStatus == nil)
-					AILog(@"AILogger: Don't know how to translate status: %@", [(AIContentStatus *)content status]);
-				[appender addElementWithName:@"status"
-							  escapedContent:([(AIContentStatus *)content loggedMessage] ? [xhtmlDecoder encodeHTML:[(AIContentStatus *)content loggedMessage] imagesPath:nil] : nil)
-							   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
-							 attributeValues:[NSArray arrayWithObjects:
-								 translatedStatus, 
-								 [actualObject UID], 
-								 [[NSCalendarDate date] ISO8601DateString],
-								 nil]];
+				if ([contentType isEqualToString:CONTENT_STATUS_TYPE]) {
+					NSString *translatedStatus = [statusTranslation objectForKey:[(AIContentStatus *)content status]];
+					if(translatedStatus == nil)
+						AILog(@"AILogger: Don't know how to translate status: %@", [(AIContentStatus *)content status]);
+					[appender addElementWithName:@"status"
+								  escapedContent:([(AIContentStatus *)content loggedMessage] ? [xhtmlDecoder encodeHTML:[(AIContentStatus *)content loggedMessage] imagesPath:nil] : nil)
+								   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
+								 attributeValues:[NSArray arrayWithObjects:
+									 translatedStatus, 
+									 [actualObject UID], 
+									 date,
+									 nil]];
+
+				} else if ([contentType isEqualToString:CONTENT_EVENT_TYPE]) {
+					[appender addElementWithName:@"event"
+								  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
+								   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
+								 attributeValues:[NSArray arrayWithObjects:[(AIContentEvent *)content eventType], [[conent source] UID], date, nil]];
+				}
 			}
 		}
-		
+
 		[self markLogDirtyAtPath:[appender path] forChat:chat];
 	}
 }

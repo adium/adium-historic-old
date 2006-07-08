@@ -700,9 +700,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 							  date:[messageDict objectForKey:@"Date"]];
 		} else {
 			//If we didn't get a listContact, this is a gaim status message... display it as such.
-			[[adium contentController] displayStatusMessage:[attributedMessage string]
-													 ofType:@"gaim"
-													 inChat:chat];
+			[[adium contentController] displayEvent:[attributedMessage string]
+											 ofType:@"gaim"
+											 inChat:chat];
 			
 		}
 	}

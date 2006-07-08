@@ -296,9 +296,9 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {
 	AILog(@"Direct IM Connected: %@",[theContact UID]);
 
-	[[adium contentController] displayStatusMessage:AILocalizedString(@"Direct IM connected","Direct IM is an AIM-specific phrase for transferring images in the message window")
-											 ofType:@"directIM"
-											 inChat:[[adium chatController] chatWithContact:theContact]];
+	[[adium contentController] displayEvent:AILocalizedString(@"Direct IM connected","Direct IM is an AIM-specific phrase for transferring images in the message window")
+									 ofType:@"directIM"
+									 inChat:[[adium chatController] chatWithContact:theContact]];
 	//Send any pending directIM messages for this contact
 	NSMutableArray	*thisContactQueue = [directIMQueue objectForKey:[theContact internalObjectID]];
 	if (thisContactQueue) {
@@ -322,9 +322,9 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {
 	AILog(@"Direct IM Disconnected: %@",[theContact UID]);	
 
-	[[adium contentController] displayStatusMessage:AILocalizedString(@"Direct IM disconnected","Direct IM is an AIM-specific phrase for transferring images in the message window")
-											 ofType:@"directIM"
-											 inChat:[[adium chatController] chatWithContact:theContact]];	
+	[[adium contentController] displayEvent:AILocalizedString(@"Direct IM disconnected","Direct IM is an AIM-specific phrase for transferring images in the message window")
+									 ofType:@"directIM"
+									 inChat:[[adium chatController] chatWithContact:theContact]];	
 }
 
 - (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString

@@ -143,9 +143,9 @@
 		}
 		
 		if (message) {
-			[[adium contentController] displayStatusMessage:message
-													 ofType:type
-													 inChat:inChat];
+			[[adium contentController] displayEvent:message
+											 ofType:type
+											 inChat:inChat];
 		}
 	}
 	

@@ -43,7 +43,7 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentObject.h>
-#import <Adium/AIContentStatus.h>
+#import <Adium/AIContentEvent.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
@@ -339,9 +339,9 @@
 			NSString *message = [NSString stringWithFormat:AILocalizedString(@"Could not send from %@ to %@",nil),
 				[[inObject source] formattedUID],[[inObject destination] formattedUID]];
 
-			[self displayStatusMessage:message
-								ofType:@"chat-error"
-								inChat:chat];			
+			[self displayEvent:message
+						ofType:@"chat-error"
+						inChat:chat];			
 		}
 	}
 	
@@ -722,7 +722,7 @@
 	return isReceivingContent;
 }
 
-- (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat
+- (void)displayEvent:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat
 {
 	AIContentStatus		*content;
 	NSAttributedString	*attributedMessage;
@@ -730,12 +730,12 @@
 	//Create our content object
 	attributedMessage = [[NSAttributedString alloc] initWithString:message
 														attributes:[self defaultFormattingAttributes]];
-	content = [AIContentStatus statusInChat:inChat
-								 withSource:[inChat listObject]
-								destination:[inChat account]
-									   date:[NSDate date]
-									message:attributedMessage
-								   withType:type];
+	content = [AIContentEvent statusInChat:inChat
+								withSource:[inChat listObject]
+							   destination:[inChat account]
+									  date:[NSDate date]
+								   message:attributedMessage
+								  withType:type];
 	[attributedMessage release];
 
 	//Add the object
