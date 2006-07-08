@@ -17,6 +17,7 @@
 #import "AILoggerPlugin.h"
 #import "AILogToGroup.h"
 #import "AIChatLog.h"
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 @interface AILogToGroup (PRIVATE)
 - (NSDictionary *)logDict;
@@ -59,6 +60,11 @@
     [super dealloc];
 }
 
+- (NSString *)from
+{
+	return from;
+}
+
 //
 - (NSString *)to
 {
@@ -79,6 +85,10 @@
 - (NSEnumerator *)logEnumerator
 {
 	return [[self logDict] objectEnumerator];
+}
+- (int)logCount
+{
+	return [[self logDict] count];
 }
 
 - (NSDictionary *)logDict
@@ -166,6 +176,21 @@
 		}
 	}
 	return theLog;
+}
+
+/*
+ * @brief Delete an AIChatLog within this AILogToGroup
+ *
+ * @param inPath A _relative_ path of the form SERVICE.ACCOUNT_NAME/TO_NAME/LogName.Extension
+ */
+- (void)trashLog:(AIChatLog *)aLog
+{
+	NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
+	[[NSFileManager defaultManager] trashFileAtPath:logPath];
+
+	//Remove from our dictionaries so we don't reference the removed log
+	[logDict removeObjectForKey:[aLog path]];
+	[partialLogDict removeObjectForKey:[aLog path]];
 }
 
 /*

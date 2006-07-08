@@ -17,6 +17,7 @@
 #import "AILoggerPlugin.h"
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 @implementation AILogFromGroup
 
@@ -89,6 +90,13 @@
     }
     
     return toGroupArray;
+}
+
+- (void)removeToGroup:(AILogToGroup *)toGroup
+{
+	[[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[toGroup path]]];
+
+	[toGroupArray removeObjectIdenticalTo:toGroup];
 }
 
 @end
