@@ -1640,7 +1640,9 @@ Date* javaDateFromDate(NSDate *date)
 	AIChat *chat = nil;
 	if (decision) {
 		ChatRoomSession *chatSession = [invite accept];
-		[joscarChatsDict setObject:chatSession forKey:[[chatSession getRoomInfo] getRoomName]];
+		@synchronized (joscarChatsDict) {
+			[joscarChatsDict setObject:chatSession forKey:[[chatSession getRoomInfo] getRoomName]];
+		}
 		[chatSession addListener:joscarBridge];
 		
 		chat = [account mainThreadChatWithName:[[chatSession getRoomInfo] getRoomName]];
@@ -1658,21 +1660,25 @@ Date* javaDateFromDate(NSDate *date)
 
 - (void)joinChatRoom:(NSString *)name
 {
-	ChatRoomSession *chatSession;
-	NSAssert(name != nil, @"room name is nil in ESjoscarAdapter -joinChatRoom, this should never happen");
-	AILog(@"Joining %@ - chats dict is %@",name,joscarChatsDict);
-	if (![joscarChatsDict objectForKey:name]) {
-		chatSession = [[aimConnection getChatRoomManager] joinRoom:name];
-		[chatSession addListener:joscarBridge];
-		AILog(@"Created chatSession %@ for group chat %@",chatSession,name);
-		[joscarChatsDict setObject:chatSession forKey:name];
+	@synchronized (joscarChatsDict) {
+		ChatRoomSession *chatSession;
+		NSAssert(name != nil, @"room name is nil in ESjoscarAdapter -joinChatRoom, this should never happen");
+		AILog(@"Joining %@ - chats dict is %@",name,joscarChatsDict);
+		if (![joscarChatsDict objectForKey:name]) {
+			chatSession = [[aimConnection getChatRoomManager] joinRoom:name];
+			[chatSession addListener:joscarBridge];
+			AILog(@"Created chatSession %@ for group chat %@",chatSession,name);
+			[joscarChatsDict setObject:chatSession forKey:name];
+		}
 	}
 }
 
 - (void)inviteUser:(NSString *)inUID toChat:(NSString *)chatName withMessage:(NSString *)inviteMessage
 {
 	Screenname			*sn = [NewScreenname(inUID) autorelease];
-	[(ChatRoomSession *)[joscarChatsDict objectForKey:chatName] invite:sn :inviteMessage];
+	@synchronized (joscarChatsDict) {
+		[(ChatRoomSession *)[joscarChatsDict objectForKey:chatName] invite:sn :inviteMessage];
+	}
 }
 
 - (void)setGroupChatStateChange:(HashMap *)map
@@ -1681,13 +1687,19 @@ Date* javaDateFromDate(NSDate *date)
 	NSString *chatName = [[session getRoomInfo] getRoomName];
 //	NSString *oldStateString = [map get:@"oldState"];
 	NSString *stateString = [map get:@"state"];
-//	state can be any of these: "INITIALIZING", "CONNECTING","FAILED","INROOM","CLOSED"
+
+	//stateString can be any of these: "INITIALIZING", "CONNECTING","FAILED","INROOM","CLOSED"
 	if ([stateString isEqualToString:@"FAILED"]) {
-		[joscarChatsDict removeObjectForKey:chatName];
+		@synchronized (joscarChatsDict) {
+			[joscarChatsDict removeObjectForKey:chatName];
+		}
 		[session removeListener:joscarBridge];
-		[account chatFailed:chatName];
+		[accountProxy chatFailed:chatName];
+
 	} else if([stateString isEqualToString:@"CLOSED"]) {
-		[joscarChatsDict removeObjectForKey:chatName];
+		@synchronized (joscarChatsDict) {
+			[joscarChatsDict removeObjectForKey:chatName];
+		}
 		[session removeListener:joscarBridge];
 	}
 	
@@ -1704,7 +1716,7 @@ Date* javaDateFromDate(NSDate *date)
 		NSString *tmp = [(Screenname *)[(ChatRoomUser *)[iter next] getScreenname] getNormal];
 		[joined addObject:[[tmp copy] autorelease]];
 	}
-	[account objectsJoinedChat:[joined autorelease] chatName:chatName];
+	[accountProxy objectsJoinedChat:[joined autorelease] chatName:chatName];
 }
 
 - (void)setGroupChatUsersLeft:(HashMap *)map
@@ -1715,7 +1727,7 @@ Date* javaDateFromDate(NSDate *date)
 	NSMutableArray *left = [[NSMutableArray alloc] init];
 	while ([iter hasNext])
 		[left addObject:[[[(Screenname *)[(ChatRoomUser *)[iter next] getScreenname] getNormal] copy] autorelease]];
-	[account objectsLeftChat:[left autorelease] chatName:chatName];
+	[accountProxy objectsLeftChat:[left autorelease] chatName:chatName];
 }
 
 - (void)setGroupChatIncomingMessage:(HashMap *)map
@@ -1724,21 +1736,25 @@ Date* javaDateFromDate(NSDate *date)
 	if (![uid isEqualToString:[account UID]]) {
 		NSString *name = [[(ChatRoomSession *)[map get:@"ChatRoomSession"] getRoomInfo] getRoomName];
 		NSString *message = [(ChatMessage *)[map get:@"ChatMessage"] getMessage];
-		[account gotMessage:message onGroupChatNamed:name fromUID:uid];
+		[accountProxy gotMessage:message onGroupChatNamed:name fromUID:uid];
 	}
 }
 
 - (void)groupChatWithName:(NSString *)name sendMessage:(NSString *)message isAutoReply:(BOOL)isAutoReply
 {
-	[(ChatRoomSession *)[joscarChatsDict objectForKey:name] sendMessage:message];
+	@synchronized (joscarChatsDict) {
+		[(ChatRoomSession *)[joscarChatsDict objectForKey:name] sendMessage:message];
+	}
 }
 
 - (void)leaveGroupChatWithName:(NSString *)name
 {
-	[(ChatRoomSession *)[joscarChatsDict objectForKey:name] close];
-	[joscarChatsDict removeObjectForKey:name];
-	
-	AILog(@"Left %@; %@ remaining group chats",name, joscarChatsDict);
+	@synchronized (joscarChatsDict) {
+		[(ChatRoomSession *)[joscarChatsDict objectForKey:name] close];
+		[joscarChatsDict removeObjectForKey:name];
+		
+		AILog(@"Left %@; %@ remaining group chats",name, joscarChatsDict);
+	}
 }
 
 #pragma mark Utilities
