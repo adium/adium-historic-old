@@ -40,7 +40,7 @@
 #define KEY_SPELL_CHECKING						@"Spell Checking Enabled"
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE		@"Dual Window Interface"
 
-#define ATTACHMENT_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
+#define FILES_AND_IMAGES_TYPES [NSArray arrayWithObjects: \
 	NSFilenamesPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil]
 
 #define PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
@@ -403,7 +403,7 @@
 			//When we hit a type we should let the superclass handle, break without doing anything
 			break;
 			
-		} else if ([ATTACHMENT_DRAG_TYPE_ARRAY containsObject:type]) {
+		} else if ([FILES_AND_IMAGES_TYPES containsObject:type]) {
 			[self addAttachmentsFromPasteboard:generalPasteboard];
 			handledPaste = YES;
 		}
@@ -419,7 +419,7 @@
 	NSDictionary	*attributes = [[self typingAttributes] copy];
 
 	if (![self handlePasteAsRichText]) {
-		[super paste:sender];
+		[self paste:sender];
 	}
 
 	if (attributes) {
@@ -458,31 +458,45 @@
 			}
 
 			[attributedString convertForPasteWithTraits];
-			[[self textStorage] replaceCharactersInRange:[self selectedRange]
-									withAttributedString:attributedString];
+
+			NSRange			selectedRange = [self selectedRange];
+			NSTextStorage	*textStorage = [self textStorage];
+			
+			//Prepare the undo operation
+			NSUndoManager	*undoManager = [self undoManager];
+			[[undoManager prepareWithInvocationTarget:textStorage]
+				replaceCharactersInRange:NSMakeRange(selectedRange.location, [attributedString length])
+					withAttributedString:[textStorage attributedSubstringFromRange:selectedRange]];
+			[undoManager setActionName:AILocalizedStringFromTable(@"Paste", @"AdiumFramework", nil)];
+
+			//Perform the paste
+			[textStorage replaceCharactersInRange:selectedRange
+							 withAttributedString:attributedString];
 			[attributedString release];
 			
 			handledPaste = YES;
 			
 		} else if ([type isEqualToString:NSStringPboardType]) {
 			//Paste a plain text string directly
-			[super paste:sender];
+			[self paste:sender];
 			handledPaste = YES;
-			
-		} else if ([type isEqualToString:NSFilenamesPboardType]) {
-			[self addAttachmentsFromPasteboard:generalPasteboard];
+
+		} else if ([FILES_AND_IMAGES_TYPES containsObject:type]) {
+			if (![self handlePasteAsRichText]) {
+				[self paste:sender];
+			}
 			handledPaste = YES;
 
 		} else if ([type isEqualToString:NSURLPboardType]) {
 			//Paste a URL directly
-			[super paste:sender];
+			[self paste:sender];
 			handledPaste = YES;
 		}
 	}
 	
 	//If we didn't handle it yet, let super try to deal with it
 	if (!handledPaste) {
-		[super paste:sender];
+		[self paste:sender];
 	}
 	
 	if (attributes) {
@@ -882,7 +896,7 @@
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY];
+	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 	BOOL			allowDragOperation;
 
@@ -900,7 +914,7 @@
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY];
+	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 	
 	if (!type || superclassType) {
@@ -931,7 +945,7 @@
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY];
+	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 
 	BOOL	success = NO;
