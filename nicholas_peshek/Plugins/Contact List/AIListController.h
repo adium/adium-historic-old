@@ -48,7 +48,7 @@
 - (NSRect)_desiredWindowFrameUsingDesiredWidth:(BOOL)useDesiredWidth desiredHeight:(BOOL)useDesiredHeight;
 
 - (void)setContactList:(AIListObject<AIContainingObject> *)newListObject;
-- (AIListObject<AIContainingObject> *)getContactList;
+- (AIListObject<AIContainingObject> *)contactList;
 - (void)contactOrderChanged:(NSNotification *)notification;
 
 @end

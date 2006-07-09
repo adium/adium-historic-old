@@ -36,7 +36,7 @@
 {
 	if(isDroppedOutOfView && tempDragBoard) {
 		if ([[tempDragBoard types] containsObject:@"AIListObjectUniqueIDs"]) {
-			AIListObject<AIContainingObject>	*contactList = [[self dataSource] getContactList];
+			AIListObject<AIContainingObject>	*contactList = [[self dataSource] contactList];
 			NSArray			*dragItemsUniqueIDs = [tempDragBoard propertyListForType:@"AIListObjectUniqueIDs"];
 			NSEnumerator	*idEnumerator = [dragItemsUniqueIDs objectEnumerator];
 			NSString		*uniqueUID;
