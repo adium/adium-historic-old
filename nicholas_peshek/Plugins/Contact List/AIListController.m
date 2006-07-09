@@ -99,7 +99,7 @@ typedef enum {
 	return self;
 }
 
-- (AIListObject<AIContainingObject> *)getContactList
+- (AIListObject<AIContainingObject> *)contactList
 {
 	return contactListRootVarible;
 }

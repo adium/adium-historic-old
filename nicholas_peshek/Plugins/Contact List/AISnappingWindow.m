@@ -14,6 +14,7 @@
  */
 
 #import "AISnappingWindow.h"
+#import "AIListWindowController.h";
 
 @implementation AISnappingWindow
 
@@ -32,26 +33,24 @@
 	
 	NSRect			otherWindowFrame;
 	NSWindow		*otherWindow;
-#warning KBOTC: MAKE THIS INTO A PROPER CONTROLLER THAT ONLY GETS CONTACT LIST WINDOWS
 	NSEnumerator	*windows = [[NSApp windows] objectEnumerator];
 	
 	while ((otherWindow = [windows nextObject]) && !alreadyChanged) {
 		otherWindowFrame = [otherWindow frame];
 		if (!([NSStringFromRect(([self frame])) isEqual:NSStringFromRect(otherWindowFrame)]) && [otherWindow isVisible] && [otherWindow isKindOfClass:[AISnappingWindow class]]) {
-			if (!alreadyChanged && fabs(NSMinY(otherWindowFrame) - NSMinY((*inWindowFrame))) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) {
-				(*inWindowFrame).origin.y = otherWindowFrame.origin.y;
-				alreadyChanged = YES;
-			}
-			if (!alreadyChanged && fabs(NSMinY(otherWindowFrame) - NSMaxY((*inWindowFrame))) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) {
+//			[[(AIListWindowController  *)[otherWindow windowController] listController] contactList]
+			if (!alreadyChanged && (fabs(NSMinY(otherWindowFrame) - NSMaxY((*inWindowFrame))) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) && (NSMinX(otherWindowFrame) < NSMaxX(*inWindowFrame)) && (NSMaxX(otherWindowFrame) > NSMinX(*inWindowFrame))) {
 				(*inWindowFrame).origin.y += NSMinY(otherWindowFrame) - NSMaxY((*inWindowFrame));
+				if((fabs(otherWindowFrame.origin.x - (*inWindowFrame).origin.x)) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) {
+					(*inWindowFrame).origin.x = otherWindowFrame.origin.x;
+				}
 				alreadyChanged = YES;
 			}
-			if (!alreadyChanged && fabs(NSMaxY(otherWindowFrame) - NSMinY((*inWindowFrame))) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) {
+			if (!alreadyChanged && (fabs(NSMaxY(otherWindowFrame) - NSMinY((*inWindowFrame))) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) && (NSMinX(otherWindowFrame) < NSMaxX(*inWindowFrame)) && (NSMaxX(otherWindowFrame) > NSMinX(*inWindowFrame))) {
 				(*inWindowFrame).origin.y = NSMaxY(otherWindowFrame);
-				alreadyChanged = YES;
-			}
-			if (!alreadyChanged && fabs(NSMaxY(otherWindowFrame) - NSMaxY((*inWindowFrame))) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) {
-				(*inWindowFrame).origin.y += NSMaxY(otherWindowFrame) - NSMaxY((*inWindowFrame));
+				if((fabs(otherWindowFrame.origin.x - (*inWindowFrame).origin.x)) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) {
+					(*inWindowFrame).origin.x = otherWindowFrame.origin.x;
+				}
 				alreadyChanged = YES;
 			}
 		}
