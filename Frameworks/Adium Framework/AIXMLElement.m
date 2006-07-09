@@ -23,7 +23,6 @@
 
 #import "AIXMLElement.h"
 
-#define BSD_LICENSE_ONLY 1
 #import <AIUtilities/AIStringAdditions.h>
 
 @implementation AIXMLElement
