@@ -23,6 +23,9 @@
 
 #import "AIXMLElement.h"
 
+#define BSD_LICENSE_ONLY 1
+#import <AIUtilities/AIStringAdditions.h>
+
 @implementation AIXMLElement
 
 + (id) elementWithNamespaceName:(NSString *)namespace elementName:(NSString *)newName
@@ -102,14 +105,14 @@
 	NSParameterAssert(isString || [obj isKindOfClass:[AIXMLElement class]]);
 
 	if(isString) {
-		obj = [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)obj, /*entitiesDictionary*/ NULL) autorelease];
+		obj = [(NSString *)obj stringByEscapingForXMLWithEntities:nil];
 	}
 
 	[contents addObject:obj];
 }
 - (void) addObjectsFromArray:(NSArray *)array
 {
-	//We do it this way for the assertion.
+	//We do it this way for the assertion, and to get free escaping of strings.
 	NSEnumerator *arrayEnum = [array objectEnumerator];
 	id obj;
 	while ((obj = [arrayEnum nextObject])) {
@@ -130,7 +133,7 @@
 
 - (NSString *) quotedXMLAttributeValueStringForString:(NSString *)str
 {
-	return [NSString stringWithFormat:@"\"%@\"", [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)str, /*entitiesDictionary*/ NULL) autorelease]];
+	return [NSString stringWithFormat:@"\"%@\"", [(NSString *)str stringByEscapingForXMLWithEntities:nil]];
 }
 
 - (void) appendXMLStringtoString:(NSMutableString *)string

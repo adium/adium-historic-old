@@ -38,7 +38,8 @@
 
 
 #import "AIXMLAppender.h"
-#import <AIUtilities/AIFileManagerAdditions.h>
+#define BSD_LICENSE_ONLY 1
+#import <AIUtilities/AIStringAdditions.h>
 #import <sys/stat.h>
 
 #define XML_APPENDER_BLOCK_SIZE 4096
@@ -221,7 +222,7 @@ enum { xmlMarkerLength = 21 };
 - (void)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
 	[self addElementWithName:name
-			  escapedContent:(content ? [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)content, NULL) autorelease] : nil)
+			  escapedContent:(content ? [content stringByEscapingForXMLWithEntities:nil] : nil)
 			   attributeKeys:keys
 			 attributeValues:values];
 }
@@ -282,12 +283,12 @@ enum { xmlMarkerLength = 21 };
 	NSString *key = nil, *value = nil;
 	while ((key = [attributeKeyEnumerator nextObject]) && (value = [attributeValueEnumerator nextObject])) {
 		[attributeString appendFormat:@" %@=\"%@\"", 
-			[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)key, NULL) autorelease],
-			[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)value, NULL) autorelease]];
+			[key stringByEscapingForXMLWithEntities:nil],
+			[value stringByEscapingForXMLWithEntities:nil]];
 	}
 	
 	//Format and return
-	NSString *escapedName = [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)name, NULL) autorelease];
+	NSString *escapedName = [name stringByEscapingForXMLWithEntities:nil];
 	if (content)
 		return [NSString stringWithFormat:@"<%@%@>%@</%@>\n", escapedName, attributeString, content, escapedName];
 	else
