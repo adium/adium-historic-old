@@ -662,7 +662,6 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 					 *
 					 *This includes whitespace. We escape whitespace so that it will not be collapsed by the parser.
 					 */
-					NSLog(@"buf[%u] is U+%04x; greater than 0x7e: %u; printable: %i", j, buf[j], (buf[j] > 0x7e), isprint(buf[j]));
 
 					if ((buf[j] > 0x7e) || !isprint(buf[j])) {
 						[result appendFormat:@"&#x%02x;", buf[j]];
