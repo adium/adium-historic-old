@@ -162,9 +162,13 @@
 
 - (void)imageGridViewSelectionDidChange:(NSNotification *)notification
 {
-	//Notify as if the image had been selected in the picker
-	[[picker delegate] imageViewWithImagePicker:picker
-						   didChangeToImageData:[NSData dataWithContentsOfFile:[[[NSIPRecentPicture recentPictures] objectAtIndex:[imageGridView selectedIndex]] originalImagePath]]];
+	int selectedIndex = [imageGridView selectedIndex];
+	NSArray *recentPictures = [NSIPRecentPicture recentPictures];
+	if (selectedIndex < [recentPictures count]) {
+		//Notify as if the image had been selected in the picker
+		[[picker delegate] imageViewWithImagePicker:picker
+							   didChangeToImageData:[NSData dataWithContentsOfFile:[[recentPictures objectAtIndex:selectedIndex] originalImagePath]]];
+	}
 
 	[self fadeOutAndClose];
 }
