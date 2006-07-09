@@ -80,11 +80,6 @@ typedef enum {
 {	
 	//Other list options
 	[popUp_windowStyle setMenu:[self _windowStyleMenu]];
-
-	//Localized strings
-	[label_serviceIcons setLocalizedString:AILocalizedString(@"Service icons:","Label for preference to select the icon pack to used for service (AIM, MSN, etc.)")];
-	[label_statusIcons setLocalizedString:AILocalizedString(@"Status icons:","Label for preference to select status icon pack")];
-	[label_dockIcons setLocalizedString:AILocalizedString(@"Dock icons:","Label for preference to select dock icon")];
 		
 	//Observe preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
