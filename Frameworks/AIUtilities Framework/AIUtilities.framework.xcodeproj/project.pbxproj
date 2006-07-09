@@ -1813,6 +1813,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG_BUILD;
 				SYMROOT = ../../build;
 			};
 			name = "Development-libgaim_oscar";
@@ -1858,6 +1859,7 @@
 			buildSettings = {
 				ARCHS = ppc;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG_BUILD;
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
@@ -1910,6 +1912,7 @@
 					i386,
 				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG_BUILD;
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
@@ -1996,6 +1999,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG_BUILD;
 				SYMROOT = ../../build;
 			};
 			name = Development;
