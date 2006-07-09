@@ -37,7 +37,7 @@
 	
 	while ((otherWindow = [windows nextObject]) && !alreadyChanged) {
 		otherWindowFrame = [otherWindow frame];
-		if (!([NSStringFromRect((*inWindowFrame)) isEqual:NSStringFromRect(otherWindowFrame)]) && [otherWindow isVisible] && [otherWindow isKindOfClass:[AIDockingWindow class]]) {
+		if (!([NSStringFromRect(([self frame])) isEqual:NSStringFromRect(otherWindowFrame)]) && [otherWindow isVisible] && [otherWindow isKindOfClass:[AISnappingWindow class]]) {
 			if (!alreadyChanged && fabs(NSMinY(otherWindowFrame) - NSMinY((*inWindowFrame))) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) {
 				(*inWindowFrame).origin.y = otherWindowFrame.origin.y;
 				alreadyChanged = YES;
