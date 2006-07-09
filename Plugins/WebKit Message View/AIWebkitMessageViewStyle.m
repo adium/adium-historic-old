@@ -622,7 +622,7 @@ static NSArray *validSenderColors;
 		[inString replaceKeyword:@"%senderScreenName%" 
 					  withString:[(formattedUID ?
 								   formattedUID :
-								   [contentSource displayName]) stringByEscapingForHTML]];
+								   [contentSource displayName]) stringByEscapingForXMLWithEntities:nil]];
         
 		do{
 			range = [inString rangeOfString:@"%sender%"];
@@ -662,7 +662,7 @@ static NSArray *validSenderColors;
 					senderDisplay = [NSString stringWithFormat:@"%@ %@",senderDisplay,AILocalizedString(@"(Autoreply)","Short word inserted after the sender's name when displaying a message which was an autoresponse")];
 				}
 					
-				[inString replaceCharactersInRange:range withString:[senderDisplay stringByEscapingForHTML]];
+				[inString replaceCharactersInRange:range withString:[senderDisplay stringByEscapingForXMLWithEntities:nil]];
 			}
 		} while (range.location != NSNotFound);
         
@@ -677,7 +677,7 @@ static NSArray *validSenderColors;
 				}
 				
 				[inString replaceCharactersInRange:range
-										withString:[serversideDisplayName stringByEscapingForHTML]];
+										withString:[serversideDisplayName stringByEscapingForXMLWithEntities:nil]];
 			}
 		} while (range.location != NSNotFound);
 		
@@ -755,7 +755,7 @@ static NSArray *validSenderColors;
 		if ([content isKindOfClass:[ESFileTransfer class]]) { //file transfers are an AIContentMessage subclass
 		
 			ESFileTransfer *transfer = (ESFileTransfer *)content;
-			NSString *fileName = [[transfer remoteFilename] stringByEscapingForHTML];
+			NSString *fileName = [[transfer remoteFilename] stringByEscapingForXMLWithEntities:nil];
 			do{
 				range = [inString rangeOfString:@"%fileIconPath%"];
 				NSString *iconPath = [self iconPathForFileTransfer:transfer];
@@ -792,17 +792,17 @@ static NSArray *validSenderColors;
 		BOOL		replacedStatusPhrase = NO;
 		
 		[inString replaceKeyword:@"%status%" 
-				  withString:[[(AIContentStatus *)content status] stringByEscapingForHTML]];
+				  withString:[[(AIContentStatus *)content status] stringByEscapingForXMLWithEntities:nil]];
 		
 		[inString replaceKeyword:@"%statusSender%" 
-				  withString:[[theSource displayName] stringByEscapingForHTML]];
+				  withString:[[theSource displayName] stringByEscapingForXMLWithEntities:nil]];
 
 		if ((statusPhrase = [[content userInfo] objectForKey:@"Status Phrase"])) {
 			do{
 				range = [inString rangeOfString:@"%statusPhrase%"];
 				if (range.location != NSNotFound) {
 					[inString replaceCharactersInRange:range 
-											withString:[statusPhrase stringByEscapingForHTML]];
+											withString:[statusPhrase stringByEscapingForXMLWithEntities:nil]];
 					replacedStatusPhrase = YES;
 				}
 			} while (range.location != NSNotFound);
@@ -845,9 +845,9 @@ static NSArray *validSenderColors;
 	NSRange	range;
 	
 	[inString replaceKeyword:@"%chatName%"
-				  withString:[[chat displayName] stringByEscapingForHTML]];
+				  withString:[[chat displayName] stringByEscapingForXMLWithEntities:nil]];
 
-	NSString * sourceName = [[[chat account] displayName] stringByEscapingForHTML];
+	NSString * sourceName = [[[chat account] displayName] stringByEscapingForXMLWithEntities:nil];
 	if(!sourceName) sourceName = @" ";
 	[inString replaceKeyword:@"%sourceName%"
 				  withString:sourceName];
@@ -860,7 +860,7 @@ static NSArray *validSenderColors;
 	NSString *serversideDisplayName = [[chat listObject] serversideDisplayName];
 	if (!serversideDisplayName) serversideDisplayName = [chat displayName];
 	[inString replaceKeyword:@"%destinationDisplayName%"
-				  withString:[serversideDisplayName stringByEscapingForHTML]];
+				  withString:[serversideDisplayName stringByEscapingForXMLWithEntities:nil]];
 		
 	AIListContact	*listObject = [chat listObject];
 	NSString		*iconPath = nil;

@@ -1690,8 +1690,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	}
 	
 	if (success) {
-		NSString *srcPath = [[[NSURL fileURLWithPath:inPath] absoluteString] stringByEscapingForHTML];
-		NSString *altName = (inName ? [inName stringByEscapingForHTML] : [srcPath lastPathComponent]);
+		NSString *srcPath = [[[NSURL fileURLWithPath:inPath] absoluteString] stringByEscapingForXMLWithEntities:nil];
+		NSString *altName = (inName ? [inName stringByEscapingForXMLWithEntities:nil] : [srcPath lastPathComponent]);
 
 		if (attachmentImage) {
 			//Include size information if possible
