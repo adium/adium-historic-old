@@ -9,21 +9,12 @@
 #import "AIContactListOutlineView.h"
 #import "AICoreComponentLoader.h"
 #import "AIMultiListWindowController.h"
+#import "AIListGroup.h"
 #import "AISCLViewPlugin.h"
 #import <Adium/AIAdium.h>
 #import <Adium/AIContactController.h>
 
 @implementation AIContactListOutlineView
-
-/*
- - (void)draggingEnded:(id <NSDraggingInfo>)sender
- {
-	 NSLog(@"100 Babies have been eaten to get here.");
-	 
-	 
-	 return [super draggingEnded:sender];
- }
- */
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
@@ -45,20 +36,44 @@
 {
 	if(isDroppedOutOfView && tempDragBoard) {
 		if ([[tempDragBoard types] containsObject:@"AIListObjectUniqueIDs"]) {
+			AIListObject<AIContainingObject>	*contactList = [[self dataSource] getContactList];
 			NSArray			*dragItemsUniqueIDs = [tempDragBoard propertyListForType:@"AIListObjectUniqueIDs"];
-			NSString		*uniqueUID;
 			NSEnumerator	*idEnumerator = [dragItemsUniqueIDs objectEnumerator];
-			BOOL			listCreated = NO;
+			NSString		*uniqueUID;
+			AIListGroup		*newRootObject;
+			BOOL			listShouldBeCreated = NO;
+			BOOL			rootCreated = NO;
+			
 			while ((uniqueUID = [idEnumerator nextObject])) {
-				NSLog(uniqueUID);
-				if (([[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID] isKindOfClass:[AIListGroup class]]) && (!listCreated)) {
-					[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] createNewSeparableContactListWithObject:[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID]];
-					listCreated = YES;
+				//if it's a group, let it make a new list.
+				if ([[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID] isKindOfClass:[AIListGroup class]]) {
+					listShouldBeCreated = YES;
+					if(!rootCreated) {
+						newRootObject = [[AIListGroup alloc] initWithUID:[@"Group:" stringByAppendingString:uniqueUID]];
+						rootCreated = YES;
+					}
+					
+					[newRootObject addObject:[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID]];
+					
+					//AIListObject	*containingObject;
+					//NSEnumerator	*enumerator = [[(AIListGroup *)[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID] containedObjects] objectEnumerator];
+					
+					//while((containingObject = [enumerator nextObject])) {
+					//	[contactList removeObject:containingObject];
+					//}
+					
+					[contactList removeObject:[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID]];
+					if([contactList containsObject:[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID]]) {
+						NSLog(@"OMG NOOBZ GG!");
+					}
+					[[self dataSource] setContactList:contactList];
 				}
-#warning Come here kbotc and check this out.
-				// else if ([[[adium contactController] existingListObjectWithUniqueID:uniqueUID] isKindOfClass:[AIListObject class]]) {
-				//	[[[adium interfaceController] contactListViewController] addContactToMostRecentList:[[adium contactController] existingListObjectWithUniqueID:uniqueUID]];
-				//}
+			}
+			if(listShouldBeCreated) {
+				if([newRootObject containsObject:[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID]]) {
+					NSLog(@"OMG NOOBZ GG 2!");
+				}
+				[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] createNewSeparableContactListWithObject:newRootObject];
 			}
 		}
 		tempDragBoard = nil;
