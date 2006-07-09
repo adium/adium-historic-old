@@ -99,13 +99,24 @@ typedef enum {
 	return self;
 }
 
+- (AIListObject<AIContainingObject> *)getContactList
+{
+	return contactListRootVarible;
+}
+
 - (void)setContactList:(AIListObject<AIContainingObject> *)newListObject
 {
-	if(newListObject)
-	{
+	if(contactListRootVarible) {
 		contactListRootVarible = newListObject;
+		[self contactListChanged:nil];
 	} else {
-		contactListRootVarible = [[adium contactController] contactList];
+		if(newListObject) {
+			contactListRootVarible = newListObject;
+			[self contactListChanged:nil];
+		} else {
+			contactListRootVarible = [[adium contactController] contactList];
+			[self contactListChanged:nil];
+		}
 	}
 }
 
