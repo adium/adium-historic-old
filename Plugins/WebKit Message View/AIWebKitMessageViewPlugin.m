@@ -151,7 +151,7 @@
  */
 - (void)xtrasChanged:(NSNotification *)notification
 {
-	if ([[notification object] caseInsensitiveCompare:@"AdiumMessageStyle"] == 0) {	
+	if ([[notification object] caseInsensitiveCompare:@"AdiumMessageStyle"] == NSOrderedSame) {	
 		@synchronized(self) {
 			[styleDictionary release]; styleDictionary = nil;
 		}

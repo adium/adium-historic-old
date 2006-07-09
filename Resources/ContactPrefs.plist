@@ -4,5 +4,7 @@
 <dict>
 	<key>TopMetaContactID</key>
 	<integer>1</integer>
+	<key>IsExpanded</key>
+	<true/>
 </dict>
 </plist>

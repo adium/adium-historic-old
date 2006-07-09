@@ -83,6 +83,7 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 {
 	[super windowWillClose:sender];
 
+	[[adium notificationCenter] removeObserver:self];
 	[sharedInstance release]; sharedInstance = nil;
 }
 
@@ -146,6 +147,17 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
     [NSApp endSheet:sheet];
 }
 
+- (void)addObject:(AIListContact *)inContact
+{
+	if (![listContents containsObject:inContact]) {
+		[listContents addObject:inContact];
+	}
+	
+	[inContact setIsOnPrivacyList:YES updateList:YES privacyType:(([self selectedPrivacyOption] == AIPrivacyOptionAllowUsers) ?
+																  AIPrivacyTypePermit :
+																  AIPrivacyTypeDeny)];	
+}
+
 - (IBAction)didBlockSheet:(id)sender
 {
 	NSSet *contactArray = [self contactsFromTextField];
@@ -155,20 +167,12 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 		NSEnumerator *enumerator;
 		AIListContact *contact;
 		
-		[self willChangeValueForKey:@"listContents"];
-
 		enumerator = [contactArray objectEnumerator];
 		while ((contact = [enumerator nextObject])) {
-			if (![listContents containsObject:contact]) {
-				[listContents addObject:contact];
-			}
-			
-			[contact setIsOnPrivacyList:YES updateList:YES privacyType:(([self selectedPrivacyOption] == AIPrivacyOptionAllowUsers) ?
-																		AIPrivacyTypePermit :
-																		AIPrivacyTypeDeny)];
+			[self addObject:contact];
 		}
-
-		[self didChangeValueForKey:@"listContents"];
+		
+		[table reloadData];
 	}
 
     [NSApp endSheet:sheet];
@@ -288,9 +292,8 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 		AIListContact *contact = [listContents objectAtIndex:selection];
 
 		//Remove from our list
-		[self willChangeValueForKey:@"listContents"];
 		[listContents removeObject:contact];
-		[self didChangeValueForKey:@"listContents"];	
+		[table reloadData];
 
 		//Update serverside
 		[contact setIsOnPrivacyList:NO updateList:YES privacyType:(([self selectedPrivacyOption] == AIPrivacyOptionAllowUsers) ?
@@ -446,7 +449,6 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	}
 	
 	//Now make our listContents array match the serverside arrays for the selected account(s)
-	[self willChangeValueForKey:@"listContents"];
 	[listContents removeAllObjects];
 	if ((privacyOption == AIPrivacyOptionAllowUsers) ||
 		(privacyOption == AIPrivacyOptionDenyUsers)) {
@@ -467,8 +469,8 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 			}
 		}
 	}
-
-	[self didChangeValueForKey:@"listContents"];
+	AILog(@"listContents is now %@, with an account of %@ and a privacy option %i",listContents,account,privacyOption);
+	[table reloadData];
 }
 
 - (void)selectPrivacyOption:(AIPrivacyOption)privacyOption
@@ -669,6 +671,128 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 - (void)privacySettingsChangedExternally:(NSNotification *)inNotification
 {
 	[self accountMenu:accountMenu didSelectAccount:[self selectedAccount]];	
+}
+
+#pragma mark Table view
+
+- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+	return [listContents count];
+}
+
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+{
+	NSString		*identifier = [aTableColumn identifier];
+	AIListContact	*contact = [listContents objectAtIndex:rowIndex];
+
+	if ([identifier isEqualToString:@"icon"]) {
+		return [contact menuIcon];
+		
+	} else if ([identifier isEqualToString:@"contact"]) {
+		return [contact formattedUID];
+
+	} else if ([identifier isEqualToString:@"account"]) {
+		return [[contact account] formattedUID];
+	}
+	
+	return nil;
+}
+
+//Below code is from RAFDragArrayController -- check to be sure it still applies here
+- (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
+{
+	//Begin the drag
+	if (dragItems != rows) {
+		[dragItems release];
+		dragItems = [rows retain];
+	}
+	
+	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",@"AIListObjectUniqueIDs",nil] owner:self];
+	[pboard setString:@"Private" forType:@"AIListObject"];
+	
+#warning take this debug code out when we're sure this DnD operation stuff works
+	if (dragItems) {
+		NSEnumerator	*enumerator = [dragItems objectEnumerator];
+		AIListObject	*listObject;
+		while ((listObject = [enumerator nextObject])) {
+			NSLog(@"dragging %@",[listObject internalObjectID]);
+		}
+	}
+	
+	
+	return YES;
+}
+
+- (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
+{
+	//Provide an array of internalObjectIDs which can be used to reference all the dragged contacts
+	if ([type isEqualToString:@"AIListObjectUniqueIDs"]) {
+		
+		if (dragItems) {
+			NSMutableArray	*dragItemsArray = [NSMutableArray array];
+			NSEnumerator	*enumerator = [dragItems objectEnumerator];
+			AIListObject	*listObject;
+			
+			while ((listObject = [enumerator nextObject])) {
+				[dragItemsArray addObject:[listObject internalObjectID]];
+			}
+			
+			[sender setPropertyList:dragItemsArray forType:@"AIListObjectUniqueIDs"];
+		}
+	}
+}
+
+- (NSDragOperation)tableView:(NSTableView*)tv
+				validateDrop:(id <NSDraggingInfo>)info
+				 proposedRow:(int)row
+	   proposedDropOperation:(NSTableViewDropOperation)op
+{
+    
+    NSDragOperation dragOp = NSDragOperationCopy;
+	
+    if ([info draggingSource] == table) {
+		dragOp =  NSDragOperationMove;
+    }
+    [tv setDropRow:row dropOperation:NSTableViewDropAbove];
+	
+    return dragOp;
+}
+
+- (void)addListObjectToList:(AIListObject *)listObject
+{
+	AIListObject *tmp;
+	NSEnumerator *groupEnum;
+	if ([listObject isMemberOfClass:[AIListGroup class]]) {
+		groupEnum = [[(AIListGroup *)listObject listContacts] objectEnumerator];
+		while ((tmp = [groupEnum nextObject]))
+			[self addListObjectToList:tmp];
+	} else if ([listObject isMemberOfClass:[AIMetaContact class]]) {
+		groupEnum = [[(AIMetaContact *)listObject listContacts] objectEnumerator];
+		while ((tmp = [groupEnum nextObject]))
+			[self addListObjectToList:tmp];
+	} else if ([listObject isMemberOfClass:[AIListContact class]]) {
+		//if the account for this contact is connected...
+		if ([[[(AIListContact *)listObject account] statusObjectForKey:@"Online"] boolValue])
+			[self addObject:(AIListContact *)listObject];
+	}
+}
+
+- (BOOL)tableView:(NSTableView*)tv acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)op
+{
+	BOOL accept = NO;
+    if (row < 0)
+		row = 0;
+	
+	if ([[[info draggingPasteboard] types] containsObject:@"AIListObjectUniqueIDs"]) {
+		NSArray			*dragItemsUniqueIDs = [[info draggingPasteboard] propertyListForType:@"AIListObjectUniqueIDs"];
+		NSString *uniqueUID;
+		NSEnumerator *idEnumerator = [dragItemsUniqueIDs objectEnumerator];
+		while ((uniqueUID = [idEnumerator nextObject]))
+			[self addListObjectToList:[[adium contactController] existingListObjectWithUniqueID:uniqueUID]];
+		accept = YES;
+	}
+	
+    return accept;
 }
 
 @end
