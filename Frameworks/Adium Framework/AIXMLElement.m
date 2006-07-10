@@ -50,6 +50,8 @@
 	if ((self = [super init])) {
 		name = [newName copy];
 		attributes = [[NSMutableDictionary alloc] init];
+		attributeNames  = [[NSMutableArray alloc] init];
+		attributeValues = [[NSMutableArray alloc] init];
 		contents = [[NSMutableArray alloc] init];
 	}
 	return self;
@@ -64,6 +66,8 @@
 {
 	[name release];
 	[attributes release];
+	[attributeNames  release];
+	[attributeValues release];
 	[contents release];
 
 	[super dealloc];
@@ -104,7 +108,7 @@
 	NSParameterAssert(isString || [obj isKindOfClass:[AIXMLElement class]]);
 
 	if(isString) {
-		obj = [(NSString *)obj stringByEscapingForXMLWithEntities:nil];
+		obj = [obj stringByEscapingForXMLWithEntities:nil];
 	}
 
 	[contents addObject:obj];
@@ -132,17 +136,18 @@
 
 - (NSString *) quotedXMLAttributeValueStringForString:(NSString *)str
 {
-	return [NSString stringWithFormat:@"\"%@\"", [(NSString *)str stringByEscapingForXMLWithEntities:nil]];
+	return [NSString stringWithFormat:@"\"%@\"", [str stringByEscapingForXMLWithEntities:nil]];
 }
 
 - (void) appendXMLStringtoString:(NSMutableString *)string
 {
 	[string appendFormat:@"<%@", name];
 	if ([attributes count]) {
-		NSEnumerator *keysEnum = [[[attributes allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] objectEnumerator];
+		unsigned attributeIdx = 0U;
+		NSEnumerator *keysEnum = [attributeNames objectEnumerator];
 		NSString *key;
 		while ((key = [keysEnum nextObject])) {
-			NSString *value = [attributes objectForKey:key];
+			NSString *value = [attributeValues objectAtIndex:attributeIdx++];
 			if ([value respondsToSelector:@selector(stringValue)]) {
 				value = [(NSNumber *)value stringValue];
 			} else if ([value respondsToSelector:@selector(absoluteString)]) {
@@ -181,10 +186,11 @@
 {
 	NSMutableString *startTag = [NSMutableString stringWithFormat:@"<%@", name];
 	if ([attributes count]) {
-		NSEnumerator *keysEnum = [[[attributes allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] objectEnumerator];
+		unsigned attributeIdx = 0U;
+		NSEnumerator *keysEnum = [attributeNames objectEnumerator];
 		NSString *key;
 		while ((key = [keysEnum nextObject])) {
-			NSString *value = [attributes objectForKey:key];
+			NSString *value = [attributeValues objectAtIndex:attributeIdx++];
 			if ([value respondsToSelector:@selector(stringValue)]) {
 				value = [(NSNumber *)value stringValue];
 			} else if ([value respondsToSelector:@selector(absoluteString)]) {
@@ -224,10 +230,11 @@
 {
 	NSMutableString *string = [NSMutableString stringWithFormat:@"<%@ AIXMLElement:id=\"%p\"", name, self];
 	if ([attributes count]) {
-		NSEnumerator *keysEnum = [[[attributes allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] objectEnumerator];
+		unsigned attributeIdx = 0U;
+		NSEnumerator *keysEnum = [attributeNames objectEnumerator];
 		NSString *key;
 		while ((key = [keysEnum nextObject])) {
-			NSString *value = [attributes objectForKey:key];
+			NSString *value = [attributeValues objectAtIndex:attributeIdx++];
 			if ([value respondsToSelector:@selector(stringValue)]) {
 				value = [(NSNumber *)value stringValue];
 			} else if ([value respondsToSelector:@selector(absoluteString)]) {
@@ -249,6 +256,13 @@
 	return obj;
 }
 - (void) setValue:(id)obj forKey:(NSString *)key {
+	unsigned idx = [attributeNames indexOfObject:key];
+	if(idx == NSNotFound) {
+		[attributeNames addObject:key];
+		[attributeValues addObject:obj];
+	} else {
+		[attributeValues replaceObjectAtIndex:idx withObject:obj];
+	}
 	[attributes setValue:obj forKey:key];
 }
 

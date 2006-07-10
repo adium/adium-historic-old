@@ -27,6 +27,8 @@
 @interface AIXMLElement : NSObject {
 	NSString *name;
 	NSMutableDictionary *attributes;
+	NSMutableArray *attributeNames;
+	NSMutableArray *attributeValues;
 	NSMutableArray *contents;
 	BOOL selfCloses;
 }
@@ -55,6 +57,9 @@
 
 - (NSArray *)contents;
 - (void)setContents:(NSArray *)newContents;
+
+- (NSArray *)contentsOnlyElements;
+- (NSString *)plainStringContents;
 
 #pragma mark XML representation
 
