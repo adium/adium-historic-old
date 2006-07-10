@@ -220,7 +220,7 @@
     //Tell the interface to unload our window
     NSNotificationCenter *adiumNotificationCenter = [adium notificationCenter];
     [adiumNotificationCenter postNotificationName:Interface_ContactListDidResignMain object:self];
-	[adiumNotificationCenter postNotificationName:Interface_ContactListDidClose object:self];
+	//[adiumNotificationCenter postNotificationName:Interface_ContactListDidClose object:self];
 }
 
 //Preferences have changed
