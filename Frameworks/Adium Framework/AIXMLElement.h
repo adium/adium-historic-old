@@ -58,9 +58,6 @@
 - (NSArray *)contents;
 - (void)setContents:(NSArray *)newContents;
 
-- (NSArray *)contentsOnlyElements;
-- (NSString *)plainStringContents;
-
 #pragma mark XML representation
 
 - (NSString *) XMLString;
