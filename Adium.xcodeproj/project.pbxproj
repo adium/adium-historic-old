@@ -977,6 +977,8 @@
 		34E6D3910727354600A2643A /* AIToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E6D38F0727354600A2643A /* AIToolbar.m */; };
 		34E829840766B0FE00EFB3BC /* AIAccountPlusFieldPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E829820766B0FE00EFB3BC /* AIAccountPlusFieldPromptController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E829850766B0FE00EFB3BC /* AIAccountPlusFieldPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E829830766B0FE00EFB3BC /* AIAccountPlusFieldPromptController.m */; };
+		34EA6B310A62F3420053DFEB /* AIApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 34EA6B2F0A62F3420053DFEB /* AIApplication.h */; };
+		34EA6B320A62F3420053DFEB /* AIApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 34EA6B300A62F3420053DFEB /* AIApplication.m */; };
 		34EF54A407CE8EC300A685F1 /* JVFontPreviewField.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D8344C07CBE6E2006466F2 /* JVFontPreviewField.m */; };
 		34F1022F0734499700890D3B /* XtraProgressWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F1022A0734499600890D3B /* XtraProgressWindow.nib */; };
 		34F1023B073449D500890D3B /* XtrasInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F10239073449D500890D3B /* XtrasInstaller.m */; };
@@ -3119,6 +3121,8 @@
 		34E839050583207E00F2AADB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		34EA64880A62E2DA0053DFEB /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		34EA648E0A62E2ED0053DFEB /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
+		34EA6B2F0A62F3420053DFEB /* AIApplication.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIApplication.h; path = Source/AIApplication.h; sourceTree = "<group>"; };
+		34EA6B300A62F3420053DFEB /* AIApplication.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIApplication.m; path = Source/AIApplication.m; sourceTree = "<group>"; };
 		34F101E307342B4D00890D3B /* ESGaimDotMacAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimDotMacAccount.m; path = "Plugins/Gaim Service/ESGaimDotMacAccount.m"; sourceTree = "<group>"; };
 		34F101E407342B4D00890D3B /* ESGaimDotMacAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimDotMacAccount.h; path = "Plugins/Gaim Service/ESGaimDotMacAccount.h"; sourceTree = "<group>"; };
 		34F1022A0734499600890D3B /* XtraProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtraProgressWindow.nib; path = "Plugins/URL Handling/XtraProgressWindow.nib"; sourceTree = "<group>"; };
@@ -6769,6 +6773,8 @@
 				4B191D880611C10800E8A4E7 /* License.txt */,
 				4B191D890611C10800E8A4E7 /* ReadMe.rtf */,
 				F59DB6AD033EB74801A8010A /* main.m */,
+				34EA6B2F0A62F3420053DFEB /* AIApplication.h */,
+				34EA6B300A62F3420053DFEB /* AIApplication.m */,
 				34D832A507CBD62B006466F2 /* AdiumEmoticonset.icns */,
 				34D832A607CBD62B006466F2 /* AdiumScripts.icns */,
 				34D832A707CBD62B006466F2 /* AdiumMessageStyle.icns */,
@@ -7435,6 +7441,7 @@
 				F5DA8A730A546AC4004A41D0 /* GBChatlogHTMLConverter.h in Headers */,
 				340670A80A55A4B4004E22AC /* ESGlassSplitView.h in Headers */,
 				345AFAED0A5D9A5F00D7DA6F /* AINoisyTableColumn.h in Headers */,
+				34EA6B310A62F3420053DFEB /* AIApplication.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9024,6 +9031,7 @@
 				F5DA8A740A546AC5004A41D0 /* GBChatlogHTMLConverter.m in Sources */,
 				340670A90A55A4B4004E22AC /* ESGlassSplitView.m in Sources */,
 				345AFAEE0A5D9A5F00D7DA6F /* AINoisyTableColumn.m in Sources */,
+				34EA6B320A62F3420053DFEB /* AIApplication.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
