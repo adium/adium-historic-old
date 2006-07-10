@@ -757,7 +757,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	}
 }
 
-- (NSString *)encodeStrictXHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesSavePath
+- (AIXMLElement *)rootStrictXHTMLElementForAttributedString:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesSavePath
 {
 	NSRange			 searchRange;
 
@@ -953,7 +953,12 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		searchRange.length   -= runRange.length;
 	}
 
-	NSString *output = [[elementStack objectAtIndex:0] XMLString];
+	return [elementStack objectAtIndex:0];
+}
+
+- (NSString *)encodeStrictXHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesSavePath
+{
+	NSString *output = [[self rootStrictXHTMLElementForAttributedString:inMessage imagesPath:imagesSavePath] XMLString];
 	if (thingsToInclude.headers) {
 		NSString *doctype = @"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
 		output = [doctype stringByAppendingString:output];
