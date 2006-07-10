@@ -109,6 +109,11 @@
 													 name:PSMTabDragDidEndNotification
 												   object:nil];
 		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(tabBarFrameChanged:)
+													 name:NSViewFrameDidChangeNotification
+												   object:tabView_tabBar];
+		
 		[[NSNotificationCenter defaultCenter] addObserver:self 
 												 selector:@selector(windowWillMiniaturize:)
 													 name:NSWindowWillMiniaturizeNotification
@@ -298,14 +303,21 @@
 				tabViewFrame.size.height = totalFrame.size.height - tabBarFrame.size.height - 5;
 				[tabView_tabBar setAutoresizingMask:NSViewMaxYMargin | NSViewWidthSizable];
 			} else {
+				float width = [[prefDict objectForKey:KEY_TABBAR_WIDTH] floatValue];
+				if (width < 50) {
+					width = 130;
+				}
+				
 				tabBarFrame.size.height = [[[self window] contentView] frame].size.height;
-				tabBarFrame.size.width = [tabView_tabBar isTabBarHidden] ? 1 : 120;
+				tabBarFrame.size.width = [tabView_tabBar isTabBarHidden] ? 1 : width;
 				tabBarFrame.origin.y = totalFrame.origin.y;
 				tabViewFrame.origin.x = tabBarFrame.origin.x + tabBarFrame.size.width + 1;
 				tabViewFrame.origin.y = totalFrame.origin.y;
 				tabViewFrame.size.width = totalFrame.size.width - tabBarFrame.size.width - 1;
 				tabViewFrame.size.height = totalFrame.size.height;
 				[tabView_tabBar setAutoresizingMask:NSViewHeightSizable];
+				[tabView_tabBar setCellMinWidth:50];
+				[tabView_tabBar setCellMaxWidth:200];
 			}
 			
 			tabBarFrame.origin.x = totalFrame.origin.x;
@@ -820,6 +832,15 @@
 		[tabView_tabBar setHideForSingleTab:NO];
 	} else {
 		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
+	}
+}
+
+//Save width of the vertical tabs when changed
+- (void)tabBarFrameChanged:(NSNotification *)notification {
+	if ([tabView_tabBar orientation] == PSMTabBarVerticalOrientation) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithFloat:[tabView_tabBar frame].size.width]
+											 forKey:KEY_TABBAR_WIDTH
+											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	}
 }
 
