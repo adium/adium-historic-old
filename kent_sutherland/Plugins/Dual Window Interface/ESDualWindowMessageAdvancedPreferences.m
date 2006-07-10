@@ -96,8 +96,8 @@
 											  group:PREF_GROUP_APPEARANCE];
 		
 	} else if (sender == popUp_orientation) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender indexOfSelectedItem]]
-											 forKey:KEY_TABBAR_ORIENTATION
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
+											 forKey:KEY_TABBAR_POSITION
 											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	}
 	
@@ -127,7 +127,7 @@
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     [autohide_tabBar setState:![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue]];
     [checkBox_allowInactiveClosing setState:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
-	[popUp_orientation selectItemAtIndex:[[prefDict objectForKey:KEY_TABBAR_ORIENTATION] intValue]];
+	[popUp_orientation selectItemWithTag:[[prefDict objectForKey:KEY_TABBAR_POSITION] intValue]];
 
 	//Window position
 	[popUp_windowPosition setMenu:[[adium interfaceController] menuForWindowLevelsNotifyingTarget:self]];
