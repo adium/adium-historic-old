@@ -1,6 +1,16 @@
 {
     IBClasses = (
         {
+            CLASS = AIColorSelectionPopUpButton; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIObjectSelectionPopUpButton; 
+        }, 
+        {
+            CLASS = AIFontSelectionPopUpButton; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIObjectSelectionPopUpButton; 
+        }, 
+        {
             CLASS = AILocalizationButton; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -30,28 +40,25 @@
             SUPERCLASS = AIObject; 
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = AIObjectSelectionPopUpButton; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSPopUpButton; 
+        }, 
         {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
-            ACTIONS = {selectVolume = id; }; 
             CLASS = ESGeneralPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_arrangeByGroup" = NSButton; 
-                "checkBox_arrangeTabs" = NSButton; 
-                "checkBox_enableLogging" = NSButton; 
-                "checkBox_enableMenuItem" = NSButton; 
                 "checkBox_messagesInTabs" = NSButton; 
-                "checkBox_sendOnEnter" = NSButton; 
-                "checkBox_sendOnReturn" = NSButton; 
                 "label_logging" = NSTextField; 
-                "label_menuItem" = NSTextField; 
                 "label_messagesSendOn" = NSTextField; 
                 "label_messagesTabs" = NSTextField; 
-                "label_sound" = NSTextField; 
                 "label_switchTabsWith" = NSTextField; 
-                "popUp_outputDevice" = NSPopUpButton; 
+                "popUp_sendKeys" = NSPopUpButton; 
                 "popUp_tabKeys" = NSPopUpButton; 
-                "slider_volume" = NSSlider; 
+                shortcutRecorder = SRRecorderControl; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 

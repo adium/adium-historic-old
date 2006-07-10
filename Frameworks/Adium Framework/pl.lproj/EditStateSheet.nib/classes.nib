@@ -12,6 +12,7 @@
                 "box_statusMessage" = NSBox; 
                 "box_title" = NSBox; 
                 "checkBox_cancel" = NSButton; 
+                "checkBox_muteSounds" = NSButton; 
                 "checkBox_okay" = NSButton; 
                 "checkBox_save" = NSButton; 
                 "checkbox_autoReply" = NSButton; 
