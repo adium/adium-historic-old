@@ -33,5 +33,6 @@
 - (NSWindow *)window;
 - (void)performClose;
 - (AIRectEdgeMask)windowSlidOffScreenEdgeMask;
+- (void)destroyListController:(AIListWindowController *)doneController;
 
 @end

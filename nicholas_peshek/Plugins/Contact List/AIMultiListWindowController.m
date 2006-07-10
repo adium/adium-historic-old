@@ -43,7 +43,7 @@
 		}
 		
 		if(!mostRecentContactList) {
-			mostRecentContactList = [[windowControllerArray objectAtIndex:0] retain];
+			mostRecentContactList = [windowControllerArray objectAtIndex:0];
 		}
 	}
 	return self;
@@ -62,14 +62,16 @@
 - (BOOL)createNewSeparableContactListWithObject:(AIListObject<AIContainingObject> *)newListObject
 {
 	BOOL					didCreationWork = NO;
-	
 	if ([newListObject isKindOfClass:[AIListGroup class]]) {
 		AIListWindowController	*newContactList = [AIBorderlessListWindowController listWindowControllerWithContactList:newListObject];
 		mostRecentContactList = newContactList;
 		[windowControllerArray addObject:newContactList];
 		[self showWindowInFront:YES];
 		didCreationWork = YES;
+		NSLog(@"Created");
+		NSLog(@"%@", NSStringFromRect([[[self mostRecentContactList] window] frame]));
 	}
+	
 	return didCreationWork;
 }
 
@@ -111,5 +113,24 @@
 - (AIRectEdgeMask)windowSlidOffScreenEdgeMask
 {
 	return [[self mostRecentContactList] windowSlidOffScreenEdgeMask];
+}
+
+- (void)destroyListController:(AIListWindowController *)doneController
+{
+	[doneController close:nil];
+/*	if([windowControllerArray count] >= 1) {
+		if([doneController isEqualTo:mostRecentContactList]) {
+			if(![doneController isEqualTo:[windowControllerArray objectAtIndex:0]]) {
+				mostRecentContactList = [windowControllerArray objectAtIndex:0]; */
+				[windowControllerArray removeObjectIdenticalTo:doneController];
+/*			} else {
+				[windowControllerArray removeObjectIdenticalTo:doneController];
+				mostRecentContactList = [windowControllerArray objectAtIndex:0];
+			}
+		}
+	} else {
+#warning kbotc: Come here and get this working. Needs to be hooked up properly so that if the last list is destroyed, it will close itself. Should never happen, but it's a safe fallback.
+		//[[adium notificationCenter] postNotificationName:Interface_ContactListDidClose object:self];
+	} */
 }
 @end

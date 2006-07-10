@@ -13,8 +13,18 @@
  * An AIBoderlessWindow subclass which snaps to window edges.
  */
 
+#import <Adium/AIAdium.h>
+#import "AICoreComponentLoader.h"
+#import "AIListWindowController.h"
+#import "AIListController.h"
+#import "AIListGroup.h"
+#import "AIMultiListWindowController.h"
+#import "AISCLViewPlugin.h"
 #import "AISnappingWindow.h"
-#import "AIListWindowController.h";
+
+@interface AISnappingWindow (PRIVATE)
+- (void)mergeContactListWindow:(NSWindow *)currentWindow withWindow:(NSWindow *)otherWindow;
+@end
 
 @implementation AISnappingWindow
 
@@ -38,11 +48,11 @@
 	while ((otherWindow = [windows nextObject]) && !alreadyChanged) {
 		otherWindowFrame = [otherWindow frame];
 		if (!([NSStringFromRect(([self frame])) isEqual:NSStringFromRect(otherWindowFrame)]) && [otherWindow isVisible] && [otherWindow isKindOfClass:[AISnappingWindow class]]) {
-//			[[(AIListWindowController  *)[otherWindow windowController] listController] contactList]
 			if (!alreadyChanged && (fabs(NSMinY(otherWindowFrame) - NSMaxY((*inWindowFrame))) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) && (NSMinX(otherWindowFrame) < NSMaxX(*inWindowFrame)) && (NSMaxX(otherWindowFrame) > NSMinX(*inWindowFrame))) {
 				(*inWindowFrame).origin.y += NSMinY(otherWindowFrame) - NSMaxY((*inWindowFrame));
 				if((fabs(otherWindowFrame.origin.x - (*inWindowFrame).origin.x)) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) {
 					(*inWindowFrame).origin.x = otherWindowFrame.origin.x;
+					[self mergeContactListWindow:self withWindow:otherWindow];
 				}
 				alreadyChanged = YES;
 			}
@@ -50,6 +60,7 @@
 				(*inWindowFrame).origin.y = NSMaxY(otherWindowFrame);
 				if((fabs(otherWindowFrame.origin.x - (*inWindowFrame).origin.x)) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) {
 					(*inWindowFrame).origin.x = otherWindowFrame.origin.x;
+					[self mergeContactListWindow:otherWindow withWindow:self];
 				}
 				alreadyChanged = YES;
 			}
@@ -59,4 +70,20 @@
 	//Window's all moved around, return if we moved it!
 	return alreadyChanged;
 }
+
+- (void)mergeContactListWindow:(NSWindow *)currentWindow withWindow:(NSWindow *)otherWindow
+{
+	AIListObject<AIContainingObject>	*groupToMergeWith = [[(AIListWindowController  *)[otherWindow windowController] listController] contactList];
+	
+	AIListObject<AIContainingObject>	*containingObject;
+	NSEnumerator						*enumerator = [[[[(AIListWindowController  *)[currentWindow windowController] listController] contactList] containedObjects] objectEnumerator];
+	
+	while((containingObject = [enumerator nextObject])) {
+		[groupToMergeWith addObject:containingObject];
+	}
+	
+	[[(AIListWindowController  *)[otherWindow windowController] listController] setContactList:groupToMergeWith];
+	[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] destroyListController:[currentWindow windowController]];
+}
+
 @end

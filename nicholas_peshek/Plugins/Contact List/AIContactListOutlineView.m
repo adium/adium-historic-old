@@ -20,7 +20,6 @@
 {
 	isDroppedOutOfView = NO;
 	tempDragBoard = nil;
-	
 	return [super draggingEntered:sender];
 }
 
@@ -28,7 +27,6 @@
 {
 	isDroppedOutOfView = YES;
 	tempDragBoard = [sender draggingPasteboard];
-	
 	[super draggingExited:sender];
 }
 
@@ -54,27 +52,14 @@
 					}
 					
 					[newRootObject addObject:[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID]];
-					
-					//AIListObject	*containingObject;
-					//NSEnumerator	*enumerator = [[(AIListGroup *)[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID] containedObjects] objectEnumerator];
-					
-					//while((containingObject = [enumerator nextObject])) {
-					//	[contactList removeObject:containingObject];
-					//}
-					
 					[contactList removeObject:[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID]];
-					if([contactList containsObject:[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID]]) {
-						NSLog(@"OMG NOOBZ GG!");
-					}
 					[[self dataSource] setContactList:contactList];
 				}
 			}
 			if(listShouldBeCreated) {
-				if([newRootObject containsObject:[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID]]) {
-					NSLog(@"OMG NOOBZ GG 2!");
-				}
 				[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] createNewSeparableContactListWithObject:newRootObject];
 			}
+			newRootObject = nil;
 		}
 		tempDragBoard = nil;
 	}
