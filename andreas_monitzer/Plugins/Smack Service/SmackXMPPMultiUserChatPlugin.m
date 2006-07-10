@@ -608,7 +608,7 @@ static AIHTMLDecoder *messageencoder = nil;
     @try {
         [chat destroy:nil :nil];
         
-        
+        [[adium interfaceController] closeChat:adiumchat];
     } @catch(NSException *e) {
         [[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"XMPP Error Destroying Room %@","XMPP Error Destroying Room %@"),[chat getRoom]] withDescription:[e reason] withWindowTitle:AILocalizedString(@"Notice","Notice") defaultButton:AILocalizedString(@"OK","OK") alternateButton:nil otherButton:nil target:nil selector:NULL userInfo:nil];
     }
