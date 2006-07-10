@@ -278,3 +278,7 @@ typedef enum {
 - (void)adiumPrint:(id)sender;
 - (BOOL)validatePrintMenuItem:(id <NSMenuItem>)menuItem;
 @end
+
+@interface NSWindowController (AdiumBorderlessWindowClosing)
+- (BOOL)windowPermitsClose;
+@end
