@@ -104,7 +104,6 @@ static NSArray *draggedTypes = nil;
 									   selector:@selector(sourceOrDestinationChanged:)
 										   name:Chat_DestinationChanged 
 										 object:inChat];
-		[self sourceOrDestinationChanged:nil];
 		
 		//Observe content additons
 		[[adium notificationCenter] addObserver:self 
@@ -460,7 +459,10 @@ static NSArray *draggedTypes = nil;
 	
 	NSNumber	*minSize = [prefDict objectForKey:KEY_WEBKIT_MIN_FONT_SIZE];
 	[[webView preferences] setMinimumFontSize:(minSize ? [minSize intValue] : 1)];
-	
+
+	//Update our icons before doing any loading
+	[self sourceOrDestinationChanged:nil];
+
 	//Prime the webview with the new style/variant and settings, and re-insert all our content back into the view
 	[self _primeWebViewAndReprocessContent:YES];	
 }
@@ -487,6 +489,7 @@ static NSArray *draggedTypes = nil;
 - (void)_primeWebViewAndReprocessContent:(BOOL)reprocessContent
 {
 	webViewIsReady = NO;
+
 	[webView setFrameLoadDelegate:self];
 	[[webView mainFrame] loadHTMLString:[messageStyle baseTemplateWithVariant:activeVariant chat:chat] baseURL:nil];
 
@@ -993,11 +996,12 @@ static NSArray *draggedTypes = nil;
 	}
 	
 	//Also observe our account
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(listObjectAttributesChanged:) 
-									   name:ListObject_AttributesChanged
-									 object:[chat account]];
-	
+	if ([chat account]) {
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(listObjectAttributesChanged:) 
+										   name:ListObject_AttributesChanged
+										 object:[chat account]];
+	}
 	//We've now masked every user currently in the participating list objects
 	[objectsWithUserIconsArray release]; 
 	objectsWithUserIconsArray = [participatingListObjects mutableCopy];	
@@ -1072,7 +1076,7 @@ static NSArray *draggedTypes = nil;
 		//If that's not the case, try using the UserIconPath
 		userIcon = [[[NSImage alloc] initWithContentsOfFile:[iconSourceObject statusObjectForKey:@"UserIconPath"]] autorelease];
 	}
-	
+
 	if (userIcon) {
 		if ([messageStyle userIconMask]) {
 			//Apply the mask is the style has one
@@ -1087,7 +1091,7 @@ static NSArray *draggedTypes = nil;
 			//Otherwise, just use the icon as-is
 			webKitUserIcon = userIcon;
 		}
-		
+
 		/*
 		 * Writing the icon out is necessary for webkit to be able to use it; it also guarantees that there won't be
 		 * any animation, which is good since animation in the message view is slow and annoying.
@@ -1098,7 +1102,7 @@ static NSArray *draggedTypes = nil;
 			[inObject setStatusObject:webKitUserIconPath
 							   forKey:KEY_WEBKIT_USER_ICON
 							   notify:NO];
-			
+
 			//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
 			if (![objectsWithUserIconsArray containsObjectIdenticalTo:inObject]) {
 				[objectsWithUserIconsArray addObject:inObject];

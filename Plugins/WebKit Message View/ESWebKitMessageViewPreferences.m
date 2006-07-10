@@ -54,7 +54,8 @@
 - (NSMenu *)_backgroundImageTypeMenu;
 - (void)_addBackgroundImageTypeChoice:(int)tag toMenu:(NSMenu *)menu withTitle:(NSString *)title;
 - (void)_configureChatPreview;
-- (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath;
+- (AIChat *)previewChatWithDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath listObjects:(NSDictionary **)outListObjects;
+- (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath listObjects:(NSDictionary *)listObjects;
 - (NSMutableDictionary *)_addParticipants:(NSDictionary *)participants toChat:(AIChat *)inChat fromPath:(NSString *)previewPath;
 - (void)_applySettings:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
 - (void)_addContent:(NSArray *)chatArray toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
@@ -439,8 +440,12 @@
 	AIChat			*previewChat;
 
 	//Create our fake chat and message controller for the live preview
-	previewChat = [AIChat chatForAccount:nil];
-	[previewChat setDisplayName:AILocalizedString(@"Sample Conversation", "Title for the sample conversation")];
+	previewFilePath = [[NSBundle bundleForClass:[self class]] pathForResource:WEBKIT_PREVIEW_CONVERSATION_FILE ofType:@"plist"];
+	previewDict = [[NSDictionary alloc] initWithContentsOfFile:previewFilePath];
+	previewPath = [previewFilePath stringByDeletingLastPathComponent];
+	
+	NSDictionary *listObjects;
+	previewChat = [self previewChatWithDictionary:previewDict fromPath:previewPath listObjects:&listObjects];
 	previewController = [[AIWebKitMessageViewController messageViewControllerForChat:previewChat
 																		  withPlugin:plugin] retain];
 
@@ -449,10 +454,7 @@
 	[previewController setPreferencesChangedDelegate:self];
 
 	//Add fake users and content to our chat
-	previewFilePath = [[NSBundle bundleForClass:[self class]] pathForResource:WEBKIT_PREVIEW_CONVERSATION_FILE ofType:@"plist"];
-	previewDict = [[NSDictionary alloc] initWithContentsOfFile:previewFilePath];
-	previewPath = [previewFilePath stringByDeletingLastPathComponent];
-	[self _fillContentOfChat:previewChat withDictionary:previewDict fromPath:previewPath];
+	[self _fillContentOfChat:previewChat withDictionary:previewDict fromPath:previewPath listObjects:listObjects];
 	[previewDict release];
 	
 	//Place the preview chat in our view
@@ -473,21 +475,28 @@
 	}	
 }
 
+
+- (AIChat *)previewChatWithDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath listObjects:(NSDictionary **)outListObjects
+{
+	AIChat *previewChat = [AIChat chatForAccount:nil];
+	[previewChat setDisplayName:AILocalizedString(@"Sample Conversation", "Title for the sample conversation")];
+
+	//Process and create all participants
+	*outListObjects = [self _addParticipants:[previewDict objectForKey:@"Participants"]
+									  toChat:previewChat fromPath:previewPath];
+
+	//Setup the chat, and its source/destination
+	[self _applySettings:[previewDict objectForKey:@"Chat"]
+				  toChat:previewChat withParticipants:*outListObjects];
+	
+	return previewChat;
+}
+
 /*!
  * @brief Fill the content of the specified chat using content archived in the dictionary
  */
-- (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath
+- (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath listObjects:(NSDictionary *)listObjects
 {
-	NSDictionary		*listObjects;
-
-	//Process and create all participants
-	listObjects = [self _addParticipants:[previewDict objectForKey:@"Participants"]
-								  toChat:inChat fromPath:previewPath];
-	
-	//Setup the chat, and its source/destination
-	[self _applySettings:[previewDict objectForKey:@"Chat"]
-				  toChat:inChat withParticipants:listObjects];
-	
 	//Add the archived chat content
 	[self _addContent:[previewDict objectForKey:@"Preview Messages"]
 			   toChat:inChat withParticipants:listObjects];
