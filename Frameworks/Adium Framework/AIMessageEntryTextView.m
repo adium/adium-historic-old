@@ -92,7 +92,6 @@
 	
 	[self setImportsGraphics:YES];
 	
-	//
 	[[NSNotificationCenter defaultCenter] addObserver:self 
 											 selector:@selector(textDidChange:)
 												 name:NSTextDidChangeNotification 
@@ -101,6 +100,10 @@
 											 selector:@selector(frameDidChange:) 
 												 name:NSViewFrameDidChangeNotification 
 											   object:self];
+	[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self
+															selector:@selector(toggleMessageSending:)
+																name:@"AIChatDidChangeCanSendMessagesNotification"
+															  object:chat];
 	
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];	
 }
@@ -323,6 +326,16 @@
 
 //Adium Text Entry -----------------------------------------------------------------------------------------------------
 #pragma mark Adium Text Entry
+
+/*
+ * @brief Toggle whether message sending is enabled based on a notification. The notification object is the AIChat of the appropriate message entry view
+ */
+- (void)toggleMessageSending:(NSNotification *)not
+{
+	//XXX - We really should query the AIChat about this, but AIChat's "can't send" is really designed for handling offline, not banned. Bringing up the offline messaging dialog when banned would make no sense.
+	[self setSendingEnabled:[[[not userInfo] objectForKey:@"TypingEnabled"] boolValue]];
+}
+
 /*
  * @brief Are we available for sending?
  */
