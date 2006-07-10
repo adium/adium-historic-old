@@ -3117,6 +3117,8 @@
 		34E829820766B0FE00EFB3BC /* AIAccountPlusFieldPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountPlusFieldPromptController.h; path = "Frameworks/Adium Framework/AIAccountPlusFieldPromptController.h"; sourceTree = "<group>"; };
 		34E829830766B0FE00EFB3BC /* AIAccountPlusFieldPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountPlusFieldPromptController.m; path = "Frameworks/Adium Framework/AIAccountPlusFieldPromptController.m"; sourceTree = "<group>"; };
 		34E839050583207E00F2AADB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
+		34EA64880A62E2DA0053DFEB /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
+		34EA648E0A62E2ED0053DFEB /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		34F101E307342B4D00890D3B /* ESGaimDotMacAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimDotMacAccount.m; path = "Plugins/Gaim Service/ESGaimDotMacAccount.m"; sourceTree = "<group>"; };
 		34F101E407342B4D00890D3B /* ESGaimDotMacAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimDotMacAccount.h; path = "Plugins/Gaim Service/ESGaimDotMacAccount.h"; sourceTree = "<group>"; };
 		34F1022A0734499600890D3B /* XtraProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtraProgressWindow.nib; path = "Plugins/URL Handling/XtraProgressWindow.nib"; sourceTree = "<group>"; };
@@ -10019,6 +10021,7 @@
 				34A81DBE093CE92200B0E93D /* pl */,
 				34A81DF0093CE96300B0E93D /* en_CA */,
 				34971108096C4D9C00699948 /* en_AU */,
+				34EA648E0A62E2ED0053DFEB /* Dutch */,
 			);
 			name = ListThemeSheet.nib;
 			sourceTree = "<group>";
@@ -10044,6 +10047,7 @@
 				34A81DBF093CE92200B0E93D /* pl */,
 				34A81DEA093CE95B00B0E93D /* en_CA */,
 				34971104096C4D9200699948 /* en_AU */,
+				34EA64880A62E2DA0053DFEB /* Dutch */,
 			);
 			name = ListLayoutSheet.nib;
 			sourceTree = "<group>";
