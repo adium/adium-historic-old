@@ -327,9 +327,11 @@
 		if (!suppressSendLaterPrompt &&
 			![chat canSendMessages]) {
 			
-			NSString			*messageHeader;
-			NSAttributedString	*message;
-			NSString			*formattedUID = [listObject formattedUID];
+			NSString							*messageHeader;
+			NSAttributedString					*message;
+			NSString							*formattedUID = [listObject formattedUID];
+			ESTextAndButtonsWindowController	*sendLaterWindowController;
+			
 			messageHeader = [NSString stringWithFormat:AILocalizedString(@"%@ appears to be offline. How do you want to send this message?", nil),
 				formattedUID];
 			message = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:
@@ -338,18 +340,21 @@
 													  attributes:[NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:10]
 																							 forKey:NSFontAttributeName]];
 
-			[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:nil
-																  defaultButton:AILocalizedString(@"Send Now", nil)
-																alternateButton:AILocalizedString(@"Don't Send", nil)
-																	otherButton:AILocalizedString(@"Send Later", nil)
-																	   onWindow:[view_contents window]
-															  withMessageHeader:messageHeader
-																	 andMessage:message
-																		  image:([listObject userIcon] ? [listObject userIcon] : [AIServiceIcons serviceIconForObject:listObject
-																																								 type:AIServiceIconLarge
-																																							direction:AIIconNormal])
-																		 target:self
-																	   userInfo:nil];
+			sendLaterWindowController = [ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:nil
+																							  defaultButton:AILocalizedString(@"Send Now", nil)
+																							alternateButton:AILocalizedString(@"Don't Send", nil)
+																								otherButton:AILocalizedString(@"Send Later", nil)
+																								   onWindow:[view_contents window]
+																						  withMessageHeader:messageHeader
+																								 andMessage:message
+																									  image:([listObject userIcon] ? [listObject userIcon] : [AIServiceIcons serviceIconForObject:listObject
+																																															 type:AIServiceIconLarge
+																																														direction:AIIconNormal])
+																									 target:self
+																								   userInfo:nil];
+			[sendLaterWindowController setKeyEquivalent:@"l"
+										   modifierMask:0
+											  forButton:AITextAndButtonsWindowButtonOther];
 			[message release];
 
 		} else {
