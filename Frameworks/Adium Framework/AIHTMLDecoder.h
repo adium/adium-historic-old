@@ -101,6 +101,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 #pragma mark Accessors
 
+- (NSString *)XMLNamespace;
+- (void) setXMLNamespace:(NSString *)newXMLNamespace;
+
 - (BOOL)generatesStrictXHTML;
 - (void)setGeneratesStrictXHTML:(BOOL)newValue;
 

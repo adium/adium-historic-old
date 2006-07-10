@@ -1709,6 +1709,18 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 #pragma mark Accessors
 
+- (NSString *) XMLNamespace
+{
+	return XMLNamespace;
+}
+- (void) setXMLNamespace:(NSString *)newXMLNamespace
+{
+	if(XMLNamespace != newXMLNamespace) {
+		[XMLNamespace release];
+		XMLNamespace = [newXMLNamespace copy];
+	}
+}
+
 - (BOOL)generatesStrictXHTML
 {
 	return thingsToInclude.generateStrictXHTML;
