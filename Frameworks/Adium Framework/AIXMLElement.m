@@ -73,6 +73,19 @@
 	[super dealloc];
 }
 
+- (id) copyWithZone:(NSZone *)zone {
+	AIXMLElement *other = [[AIXMLElement allocWithZone:zone] initWithName:name];
+	other->attributes      = [attributes      mutableCopy];
+	other->attributeNames  = [attributeNames  mutableCopy];
+	other->attributeValues = [attributeValues mutableCopy];
+
+	other->contents = [[NSMutableArray alloc] initWithCapacity:[contents count]];
+	NSEnumerator *contentsEnum = [contents objectEnumerator];
+	id obj;
+	while((obj = [contentsEnum nextObject]))
+		[other->contents addObject:obj];
+}
+
 #pragma mark -
 
 - (NSString *) name
