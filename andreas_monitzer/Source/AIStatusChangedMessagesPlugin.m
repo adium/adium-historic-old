@@ -26,6 +26,7 @@
 - (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact 
 			 withType:(NSString *)type
  phraseWithoutSubject:(NSString *)statusPhrase
+		loggedMessage:(NSAttributedString *)loggedMessage
 			  inChats:(NSSet *)inChats;
 @end
 
@@ -76,14 +77,16 @@ static	NSDictionary	*statusTypeDict = nil;
 	AILog(@"Status message for %@ changed (%@)",contact,allChats);
 	if ([allChats count]) {	
 		if ([contact statusType] != AIAvailableStatusType) {
-			NSString		*statusMessage = [[contact statusMessage] string];
-			NSString		*statusType = [statusTypeDict objectForKey:CONTACT_STATUS_MESSAGE];
+			NSAttributedString *statusMessage = [contact statusMessage];
+			NSString			*statusMessageString = [statusMessage string];
+			NSString			*statusType = [statusTypeDict objectForKey:CONTACT_STATUS_MESSAGE];
 			
 			if (statusMessage && [statusMessage length] != 0) {
-				[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"Away Message: %@",nil),statusMessage] 
+				[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"Away Message: %@",nil),statusMessageString] 
 						 forContact:contact
 						   withType:statusType
-			   phraseWithoutSubject:statusMessage
+			   phraseWithoutSubject:statusMessageString
+					  loggedMessage:statusMessage
 							inChats:allChats];
 			}
 		}
@@ -117,6 +120,7 @@ static	NSDictionary	*statusTypeDict = nil;
 				 forContact:contact
 				   withType:[statusTypeDict objectForKey:name]
 	   phraseWithoutSubject:phraseWithoutSubject
+			  loggedMessage:nil
 					inChats:allChats];
 	}
 }
@@ -141,6 +145,7 @@ static	NSDictionary	*statusTypeDict = nil;
 - (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact 
 			 withType:(NSString *)type
  phraseWithoutSubject:(NSString *)statusPhrase
+		loggedMessage:(NSAttributedString *)loggedMessage
 			  inChats:(NSSet *)inChats
 {
     NSEnumerator		*enumerator;
@@ -164,6 +169,10 @@ static	NSDictionary	*statusTypeDict = nil;
 			NSDictionary	*userInfo = [NSDictionary dictionaryWithObject:statusPhrase
 																	forKey:@"Status Phrase"];
 			[content setUserInfo:userInfo];
+		}
+		
+		if (loggedMessage) {
+			[content setLoggedMessage:loggedMessage];
 		}
 
 		//Add the object

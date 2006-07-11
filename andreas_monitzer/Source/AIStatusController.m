@@ -1064,7 +1064,6 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[[self rootStateGroup] containedStatusItems]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
-	NSLog(@"savedStatusChanged.");
 	[self notifyOfChangedStatusArray];
 }
 

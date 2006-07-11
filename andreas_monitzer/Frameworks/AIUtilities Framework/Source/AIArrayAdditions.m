@@ -37,7 +37,7 @@
 	NSComparisonResult result = NSOrderedSame;
 
 	NSEnumerator *selfEnum = [self objectEnumerator], *otherEnum = [other objectEnumerator];
-	id selfObj, otherObj;
+	id selfObj, otherObj = nil;
 	while ((result == NSOrderedSame) && (selfObj = [selfEnum nextObject]) && (otherObj = [otherEnum nextObject])) {
 		result = [selfObj compare:otherObj];
 	}

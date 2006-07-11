@@ -1,17 +1,21 @@
 {
     IBClasses = (
         {
-            ACTIONS = {selectDate = id; updateSearch = id; }; 
+            ACTIONS = {selectDateType = id; updateSearch = id; }; 
             CLASS = AIAbstractLogViewerWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_deleteLogs" = NSButton; 
-                datePicker = NSDatePicker; 
-                "outlineView_contacts" = NSOutlineView; 
+                "containingView_contactsSourceList" = NSView; 
+                "containingView_results" = NSView; 
+                "outlineView_contacts" = AIAlternatingRowOutlineView; 
                 "popUp_dateFilter" = NSPopUpButton; 
                 progressIndicator = NSProgressIndicator; 
                 "searchField_logs" = NSSearchField; 
+                "shelf_splitView" = KNShelfSplitView; 
+                sourceListResizer = ESSourceListResizer; 
                 "splitView_contacts_results" = AISplitView; 
+                "splitView_results" = AISplitView; 
                 "tableView_results" = NSTableView; 
                 "textField_progress" = NSTextField; 
                 "textView_content" = NSTextView; 
@@ -23,7 +27,7 @@
         {
             CLASS = AIAlternatingRowOutlineView; 
             LANGUAGE = ObjC; 
-            SUPERCLASS = NSOutlineView; 
+            SUPERCLASS = AIOutlineView; 
         }, 
         {
             CLASS = AIAlternatingRowTableView; 
@@ -36,7 +40,14 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = AIAbstractLogViewerWindowController; 
         }, 
+        {CLASS = AINoisyTableColumn; LANGUAGE = ObjC; SUPERCLASS = NSTableColumn; }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {
+            CLASS = AISourceListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIOutlineView; 
+        }, 
         {CLASS = AISplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }, 
         {
             CLASS = AIWindowController; 
@@ -54,8 +65,22 @@
             }; 
             SUPERCLASS = AIObject; 
         }, 
+        {CLASS = ESGlassSplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }, 
+        {CLASS = ESSourceListBackgroundView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            CLASS = ESSourceListResizer; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = ESSourceListBackgroundView; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = NSDatePicker; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {
+            CLASS = KNShelfSplitView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {contentView = NSView; shelfView = NSView; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
         {CLASS = NSWindow; LANGUAGE = ObjC; SUPERCLASS = NSResponder; }
     ); 
     IBVersion = 1; 

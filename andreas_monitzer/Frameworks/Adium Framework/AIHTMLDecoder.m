@@ -48,7 +48,6 @@ int HTMLEquivalentForFontSize(int fontSize);
 		   withName:(NSString *)inName 
 		 imageClass:(NSString *)imageClass
 		 imagesPath:(NSString *)imagesPath;
-- (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string;
 @end
 
 @interface NSString (AIHTMLDecoderAdditions)
@@ -420,6 +419,12 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 																  effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
 
 				if (textAttachment) {
+					if (![textAttachment isKindOfClass:[AITextAttachmentExtension class]]) {
+						NSLog(@"Message %@ gave an NSTextAttachment %@ - why is it not an AITextAttachmentExtension?",
+							  inMessage,
+							  textAttachment);
+						continue;
+					}
 					AITextAttachmentExtension *attachment = (AITextAttachmentExtension *)textAttachment;
 					/* If we have a path to which we want to save any images and either
 					 *		the attachment should save such images OR
@@ -645,7 +650,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	return string;
 }
 
-- (AIXMLElement *)elementWithAppKitAttributes:(NSDictionary *)attributes attributeNames:(NSSet *)attributeNames elementContent:(NSString *)elementContent shouldAddElementContentToTopElement:(out BOOL *)outAddElementContentToTopElement
+- (AIXMLElement *)elementWithAppKitAttributes:(NSDictionary *)attributes attributeNames:(NSSet *)attributeNames elementContent:(NSMutableString *)elementContent shouldAddElementContentToTopElement:(out BOOL *)outAddElementContentToTopElement
 {
 	if (!(attributes && [attributes count] && attributeNames && [attributeNames count]))
 		return nil;
@@ -664,42 +669,51 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		[thisElement setValue:linkValue forKey:@"href"];
 	}
 
-#if 0
-	/*XXX This doesn't work yet, and I have no interest in fixing it because nothing that receives the output from this method will have any use for the images.
-	 *It's not known whether any XHTML-IM clients support data: URLs, and the logs probably will not retain images either.
-	 *Feel free to hack on this if you find something that will want images.
-	 *I would recommend allocating a bit from the bitfield to control it, though.
-	 *--boredzo
-	 */
 	if (attachmentValue) {
-		AIXMLElement *imageElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"img"];
-		[imageElement setSelfCloses:YES];
-
-		NSTextAttachmentCell *cell = (NSTextAttachmentCell *)[attachmentValue attachmentCell];
-		NSSize size = [cell cellSize];
-		[imageElement setValue:[NSNumber numberWithFloat:size.width]  forKey:@"width"];
-		[imageElement setValue:[NSNumber numberWithFloat:size.height] forKey:@"height"];
-
-		NSString *path = [[attachmentValue fileWrapper] filename];
-		//XXX If !path, write the image to the save path passed to -encodeStrictXHTML:imagesPath:.
-		if (path) {
-			NSURL *fileURL = [NSURL fileURLWithPath:path];
-			[imageElement setValue:fileURL forKey:@"src"];
-		}
-
-		if (elementContent && [elementContent length]) {
-			[imageElement setValue:elementContent forKey:@"alt"];
-		}
-
-		if (thisElement) {
-			[thisElement addObject:imageElement];
+		AITextAttachmentExtension *extension = (AITextAttachmentExtension *)attachmentValue;
+		if ((thingsToInclude.attachmentTextEquivalents ||
+			([extension respondsToSelector:@selector(shouldAlwaysSendAsText)] && [extension shouldAlwaysSendAsText])) &&
+			([extension respondsToSelector:@selector(string)])) {
+			[elementContent setString:[extension string]];
+#if 0
 		} else {
-			thisElement = imageElement;
-		}
+			/*XXX This doesn't work yet, and I have no interest in fixing it because nothing that receives the output from this method will have any use for the images.
+			*It's not known whether any XHTML-IM clients support data: URLs, and the logs probably will not retain images either.
+			*Feel free to hack on this if you find something that will want images.
+			*I would recommend allocating a bit from the bitfield to control it, though.
+			*--boredzo
+			*
+			*The log viewer now uses the output of this method and definitely does have use for images :)
+			*/
+			AIXMLElement *imageElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"img"];
+			[imageElement setSelfCloses:YES];
 
-		addElementContentToTopElement = NO;
-	}
+			NSTextAttachmentCell *cell = (NSTextAttachmentCell *)[attachmentValue attachmentCell];
+			NSSize size = [cell cellSize];
+			[imageElement setValue:[NSNumber numberWithFloat:size.width]  forKey:@"width"];
+			[imageElement setValue:[NSNumber numberWithFloat:size.height] forKey:@"height"];
+
+			NSString *path = [[attachmentValue fileWrapper] filename];
+			//XXX If !path, write the image to the save path passed to -encodeStrictXHTML:imagesPath:.
+			if (path) {
+				NSURL *fileURL = [NSURL fileURLWithPath:path];
+				[imageElement setValue:fileURL forKey:@"src"];
+			}
+
+			if (elementContent && [elementContent length]) {
+				[imageElement setValue:elementContent forKey:@"alt"];
+			}
+
+			if (thisElement) {
+				[thisElement addObject:imageElement];
+			} else {
+				thisElement = imageElement;
+			}
+
+			addElementContentToTopElement = NO;
 #endif
+		}
+	}
 
 	NSString *CSSString = [NSAttributedString CSSStringForTextAttributes:attributes];
 	if (CSSString && [CSSString length]) {
@@ -743,7 +757,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	}
 }
 
-- (NSString *)encodeStrictXHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesSavePath
+- (AIXMLElement *)rootStrictXHTMLElementForAttributedString:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesSavePath
 {
 	NSRange			 searchRange;
 
@@ -798,6 +812,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	NSMutableSet *CSSCapableAttributes = [[NSAttributedString CSSCapableAttributesSet] mutableCopy];
 	[CSSCapableAttributes addObject:NSLinkAttributeName];
+	NSSet *CSSCapableAttributesWithNoAttachment = [NSSet setWithSet:CSSCapableAttributes];
 	[CSSCapableAttributes addObject:NSAttachmentAttributeName];
 
 	NSDictionary *prevAttributes = nil;
@@ -813,7 +828,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		                          getAddedKeys:&startedKeys
 		                        getRemovedKeys:&endedKeys
 		                    includeChangedKeys:YES];
-		prevAttributes = attributes;
+		prevAttributes = [attributes dictionaryWithIntersectionWithSetOfKeys:CSSCapableAttributesWithNoAttachment];
+		if([attributes objectForKey:NSAttachmentAttributeName] != nil)
+			runRange.length = 1;  //Encode a single image at a time
 
 		NSMutableSet *mutableEndedKeys = [endedKeys mutableCopy];
 		if (mutableEndedKeys) {
@@ -837,7 +854,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 				if (attributesToRestore && [attributesToRestore count]) {
 					//Create a method to generate an element for a set of AppKit attributes. Use it both here and below.
-					AIXMLElement *restoreElement = [self elementWithAppKitAttributes:[attributes dictionaryWithIntersectionWithSetOfKeys:attributesToRestore] attributeNames:attributesToRestore elementContent:nil shouldAddElementContentToTopElement:NO];
+					AIXMLElement *restoreElement = [self elementWithAppKitAttributes:[attributes dictionaryWithIntersectionWithSetOfKeys:attributesToRestore]
+					                                                  attributeNames:attributesToRestore
+					                                                  elementContent:nil
+					                             shouldAddElementContentToTopElement:NULL];
 					[[elementStack lastObject] addObject:restoreElement];
 					[elementStack addObject:restoreElement];
 
@@ -849,10 +869,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		}
 
 		//Now handle attributes that have started or changed.
-		NSString *elementContent = [inMessageString substringWithRange:runRange];
-		if (![startedKeys count]) {
-			goto addElementContentToTopElement_label;
-		} else {
+		NSMutableString *elementContent = [[[inMessageString substringWithRange:runRange] mutableCopy] autorelease];
+		
+		BOOL addElementContentToTopElement;
+		if ([startedKeys count]) {
 			//Sort the keys by the length of their range.
 			//First, we build a list of [length, attribute-name] arrays.
 			NSMutableArray *startedKeysArray = [[startedKeys allObjects] mutableCopy];
@@ -893,40 +913,52 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			}
 
 			//Turn each consolidated bunch of keys into an element.
-			BOOL addElementContentToTopElement = NO;
+			addElementContentToTopElement = NO;
+
 			NSEnumerator *startedKeysEnum = [startedKeysArray objectEnumerator];
 			NSArray *item;
 			while ((item = [startedKeysEnum nextObject])) {
 				NSSet *itemKeys = [item objectAtIndex:1];
 
-				AIXMLElement *thisElement = [self elementWithAppKitAttributes:attributes attributeNames:itemKeys elementContent:elementContent shouldAddElementContentToTopElement:&addElementContentToTopElement];
+				//Only the last value of addElementContentToTopElement matters here, since we're adding elements to the stack, and that flag relates to the top element.
+				AIXMLElement *thisElement = [self elementWithAppKitAttributes:attributes
+															   attributeNames:itemKeys
+															   elementContent:elementContent
+										  shouldAddElementContentToTopElement:&addElementContentToTopElement];
 				if (thisElement) {
 					[[elementStack lastObject] addObject:thisElement];
 					[attributeNamesStack addObject:itemKeys];
 					[elementStack addObject:thisElement];
-				} else {
+				} else if(!addElementContentToTopElement) {
 					[[elementStack lastObject] addObject:elementContent];
 				}
 			}
 			[startedKeysArray release];
 
-			if (addElementContentToTopElement) {
-addElementContentToTopElement_label:;
-				//Insert an empty BR element between every pair of lines.
-				AIXMLElement *brElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"br"];
-				[brElement setSelfCloses:YES];
-				NSArray *linesAndBRs = [elementContent allLinesWithSeparator:brElement];
+		} else {
+			addElementContentToTopElement = YES;
+		}
 
-				//Add these zero or more lines, with BRs between them, to the top element on the stack.
-				[[elementStack lastObject] addObjectsFromArray:linesAndBRs];
-			}
+		if (addElementContentToTopElement) {
+			//Insert an empty BR element between every pair of lines.
+			AIXMLElement *brElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"br"];
+			[brElement setSelfCloses:YES];
+			NSArray *linesAndBRs = [elementContent allLinesWithSeparator:brElement];
+
+			//Add these zero or more lines, with BRs between them, to the top element on the stack.
+			[[elementStack lastObject] addObjectsFromArray:linesAndBRs];
 		}
 
 		searchRange.location += runRange.length;
 		searchRange.length   -= runRange.length;
 	}
 
-	NSString *output = [[elementStack objectAtIndex:0] XMLString];
+	return [elementStack objectAtIndex:0];
+}
+
+- (NSString *)encodeStrictXHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesSavePath
+{
+	NSString *output = [[self rootStrictXHTMLElementForAttributedString:inMessage imagesPath:imagesSavePath] XMLString];
 	if (thingsToInclude.headers) {
 		NSString *doctype = @"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
 		output = [doctype stringByAppendingString:output];
@@ -1250,13 +1282,19 @@ addElementContentToTopElement_label:;
 						[attrString appendString:@" " withAttributes:[textAttributes dictionary]];
 
 					} else if ([chunkString hasPrefix:@"#x"]) {
-						[attrString appendString:[NSString stringWithFormat:@"%C",
-							[chunkString substringFromIndex:1]]
-							withAttributes:[textAttributes dictionary]];
+						NSString *hexString = [chunkString substringFromIndex:2];
+						NSScanner *hexScanner = [NSScanner scannerWithString:hexString];
+						unsigned int character = 0;
+						if([hexScanner scanHexInt:&character])
+							[attrString appendString:[NSString stringWithFormat:@"%C", character]
+									  withAttributes:[textAttributes dictionary]];
 					} else if ([chunkString hasPrefix:@"#"]) {
-						[attrString appendString:[NSString stringWithFormat:@"%C", 
-							[[chunkString substringFromIndex:1] intValue]] 
-							withAttributes:[textAttributes dictionary]];
+						NSString *decString = [chunkString substringFromIndex:1];
+						NSScanner *decScanner = [NSScanner scannerWithString:decString];
+						int character = 0;
+						if([decScanner scanInt:&character])
+							[attrString appendString:[NSString stringWithFormat:@"%C", character]
+									  withAttributes:[textAttributes dictionary]];
 					}
 					else { //Invalid
 						validTag = NO;
@@ -1625,14 +1663,8 @@ addElementContentToTopElement_label:;
 		}
 
 		if (inPath) {
-			NSString *localPath = [[NSFileManager defaultManager] uniquePathForPath:[imagesPath stringByAppendingPathComponent:[inPath lastPathComponent]]];
-
-			//Image already exists on disk; copy it to our images path
-			success = [[NSFileManager defaultManager] copyPath:inPath
-														toPath:localPath
-													   handler:nil];
-			success = YES;//HAX, testing
-			inPath = localPath;
+			//Just get it from the original path. This is especially good for emoticons.
+			success = YES;
 
 		} else {
 			/* If we get here, the image is not on disk. If we don't have a path at which to save images,
@@ -1663,8 +1695,8 @@ addElementContentToTopElement_label:;
 	}
 	
 	if (success) {
-		NSString *srcPath = [[[NSURL fileURLWithPath:inPath] absoluteString] stringByEscapingForHTML];
-		NSString *altName = (inName ? [inName stringByEscapingForHTML] : [srcPath lastPathComponent]);
+		NSString *srcPath = [[[NSURL fileURLWithPath:inPath] absoluteString] stringByEscapingForXMLWithEntities:nil];
+		NSString *altName = (inName ? [inName stringByEscapingForXMLWithEntities:nil] : [srcPath lastPathComponent]);
 
 		if (attachmentImage) {
 			//Include size information if possible
@@ -1680,12 +1712,19 @@ addElementContentToTopElement_label:;
 	return success;
 }
 
-- (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string
-{
-	[string appendFormat:@"<AdiumFT src=\"%@\">", [path stringByEscapingForHTML]];	
-}
-
 #pragma mark Accessors
+
+- (NSString *) XMLNamespace
+{
+	return XMLNamespace;
+}
+- (void) setXMLNamespace:(NSString *)newXMLNamespace
+{
+	if(XMLNamespace != newXMLNamespace) {
+		[XMLNamespace release];
+		XMLNamespace = [newXMLNamespace copy];
+	}
+}
 
 - (BOOL)generatesStrictXHTML
 {

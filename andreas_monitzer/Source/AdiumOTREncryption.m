@@ -450,9 +450,9 @@ static int display_otr_message(const char *accountname, const char *protocol,
 		//All other OTR messages should be displayed as status messages; decode the message to strip any HTML
 		message = [adiumOTREncryption localizedOTRMessage:message
 											 withUsername:formattedUID];
-		[[sharedAdium contentController] displayStatusMessage:[[AIHTMLDecoder decodeHTML:message] string]
-													   ofType:@"encryption"
-													   inChat:chat];
+		[[sharedAdium contentController] displayEvent:[[AIHTMLDecoder decodeHTML:message] string]
+											   ofType:@"encryption"
+											   inChat:chat];
 	}
 	
 	//We handled it
@@ -844,6 +844,12 @@ OtrlUserState otrg_get_userstate(void)
 			AILocalizedString(@"You sent an unencrypted message, but %@ was expecting encryption.", "Message when sending unencrypted messages to a contact expecting encrypted ones. %s will be a name."),
 			username];
 		
+	} else if (([message rangeOfString:@"You sent encrypted data to"].location != NSNotFound) &&
+			   ([message rangeOfString:@"who wasn't expecting it"].location != NSNotFound)) {
+		localizedOTRMessage = [NSString stringWithFormat:
+			AILocalizedString(@"You sent an encrypted message, but %@ was not expecting encryption.", "Message when sending encrypted messages to a contact expecting unencrypted ones. %s will be a name."),
+			username];
+
 	} else if ([message rangeOfString:@CLOSED_CONNECTION_MESSAGE].location != NSNotFound) {
 		localizedOTRMessage = [NSString stringWithFormat:
 			AILocalizedString(@"%@ is no longer using encryption; you should cancel encryption on your side.", "Message when the remote contact cancels his half of an encrypted conversation. %s will be a name."),

@@ -17,6 +17,7 @@
 #import "AILoggerPlugin.h"
 #import "AILogToGroup.h"
 #import "AIChatLog.h"
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 @interface AILogToGroup (PRIVATE)
 - (NSDictionary *)logDict;
@@ -59,6 +60,11 @@
     [super dealloc];
 }
 
+- (NSString *)from
+{
+	return from;
+}
+
 //
 - (NSString *)to
 {
@@ -79,6 +85,10 @@
 - (NSEnumerator *)logEnumerator
 {
 	return [[self logDict] objectEnumerator];
+}
+- (int)logCount
+{
+	return [[self logDict] count];
 }
 
 - (NSDictionary *)logDict
@@ -119,7 +129,7 @@
 							[logDict setObject:theLog
 										forKey:relativeLogPath];
 						} else {
-							NSLog(@"Class %@: Couldn't make for %@ %@ %@ %@",NSStringFromClass([AIChatLog class]),relativeLogPath,from,to,serviceClass);
+							AILog(@"Class %@: Couldn't make for %@ %@ %@ %@",NSStringFromClass([AIChatLog class]),relativeLogPath,from,to,serviceClass);
 						}	
 						[theLog release];
 					}
@@ -146,25 +156,60 @@
 		if (logDict) {
 			//Use the full dictionary if we have it
 			theLog = [logDict objectForKey:inPath];
-			
+
 		} else {
 			//Otherwise, use the partialLog dictionary, adding to it if necessary
 			if (!partialLogDict) partialLogDict = [[NSMutableDictionary alloc] init];
 			
-			if (!(theLog = [partialLogDict objectForKey:inPath])) {
-				AIChatLog	*theLog;
-				
+			if (!(theLog = [partialLogDict objectForKey:inPath])) {				
 				theLog = [[AIChatLog alloc] initWithPath:inPath
 													from:from
 													  to:to
 											serviceClass:serviceClass];
+
 				[partialLogDict setObject:theLog
 								   forKey:inPath];
 				[theLog release];
 			}
+
+			if (!theLog) AILog(@"%@ couldn't find %@ in its partialLogDict",self,inPath);
 		}
 	}
 	return theLog;
 }
 
+/*
+ * @brief Delete an AIChatLog within this AILogToGroup
+ *
+ * @param inPath A _relative_ path of the form SERVICE.ACCOUNT_NAME/TO_NAME/LogName.Extension
+ */
+- (void)trashLog:(AIChatLog *)aLog
+{
+	NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
+	[[NSFileManager defaultManager] trashFileAtPath:logPath];
+
+	//Remove from our dictionaries so we don't reference the removed log
+	[logDict removeObjectForKey:[aLog path]];
+	[partialLogDict removeObjectForKey:[aLog path]];
+}
+
+/*
+ * @brief Partial isEqual implementation
+ *
+ * 'Partial' in the sense that it doesn't actually test equality.  If two AILogToGroup objects are for the same service/contact pair,
+ * they are considered equal by this function.  They may (and probably do) have different source accounts and therefore different
+ * contained logs.
+ *
+ * This is useful because all To groups for a service/contact pair are presented as a single To group in the Contacts source list.
+ */
+- (BOOL)isEqual:(id)inObject
+{
+	return ([inObject isMemberOfClass:[self class]] &&
+			([[(AILogToGroup *)inObject to] isEqualToString:[self to]] &&
+			 [[(AILogToGroup *)inObject serviceClass] isEqualToString:[self serviceClass]]));
+}
+- (unsigned)hash
+{
+	return [[self to] hash];
+}
 @end

@@ -210,7 +210,10 @@
 
 	//Hide our window now, making sure we set active chat to nil before ordering out.  When we order out, another window
 	//may become key and set itself active.  Setting active to nil after that happened would cause problems.
-	[[adium interfaceController] chatDidBecomeActive:nil];
+	//We want to set the active chat to nil only if the window being closed is the active window
+	if ([[self window] isKeyWindow]) {
+		[[adium interfaceController] chatDidBecomeActive:nil];
+	}
 	[[self window] orderOut:nil];
 
 	//Now we close our window for real.  By hiding first, we get a smoother close as the user won't see each tab closing
@@ -239,7 +242,9 @@
 
 	//Chats have all closed, set active to nil, let the interface know we closed.  We should skip this step if our
 	//window is no longer visible, since in that case another window will have already became active.
-	if ([[self window] isVisible]) [[adium interfaceController] chatDidBecomeActive:nil];
+	if ([[self window] isVisible] && [[self window] isKeyWindow]) {
+		[[adium interfaceController] chatDidBecomeActive:nil];
+	}
 	[interface containerDidClose:self];
 
     return;
@@ -560,7 +565,7 @@
 		if (onlineAccounts >=2) {
 			includeSource = YES;
 		}
-
+		AILog(@"Displaying tooltip for %@ --> %@ (%@) --> %@ (%@)",chat,[chat account], [[chat account] formattedUID], destination,destinationFormattedUID);
 		if (includeDestination && includeSource) {
 			tooltip = [NSString stringWithFormat:AILocalizedString(@"%@ talking to %@","AccountName talking to Username"), [[chat account] formattedUID], destinationFormattedUID];
 

@@ -1386,7 +1386,9 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc] au
 		return [keyWindow toolbar] != nil && [[keyWindow toolbar] isVisible];
 
 	} else if (menuItem == menuItem_close) {
-		return (keyWindow && [[keyWindow standardWindowButton:NSWindowCloseButton] isEnabled]);
+		return (keyWindow && ([[keyWindow standardWindowButton:NSWindowCloseButton] isEnabled] ||
+							  ([[keyWindow windowController] respondsToSelector:@selector(windowPermitsClose)] &&
+							   [[keyWindow windowController] windowPermitsClose])));
 		
 	} else if (menuItem == menuItem_closeChat) {
 		return activeChat != nil;

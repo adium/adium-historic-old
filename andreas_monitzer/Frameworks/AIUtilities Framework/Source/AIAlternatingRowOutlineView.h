@@ -26,6 +26,7 @@
 	
     BOOL		drawsAlternatingRows;
 	BOOL		drawsBackground;
+	BOOL		drawsGradientSelection;
 }
 
 /*!
@@ -81,6 +82,8 @@
  * @return An <tt>NSColor</tt> used to draw the background for <b>row</b>
  */
 - (NSColor *)backgroundColorForRow:(int)row;
+
+- (void)setDrawsGradientSelection:(BOOL)inDrawsGradientSelection;
 @end
 
 @interface AIAlternatingRowOutlineView (PRIVATE_AIAlternatingRowOutlineViewAndSubclasses)

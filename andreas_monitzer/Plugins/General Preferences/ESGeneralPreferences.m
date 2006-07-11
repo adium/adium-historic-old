@@ -181,7 +181,6 @@
 	if (aRecorder == shortcutRecorder) {
 		PTKeyCombo *keyCombo = [PTKeyCombo keyComboWithKeyCode:[shortcutRecorder keyCombo].code
 													 modifiers:[shortcutRecorder cocoaToCarbonFlags:[shortcutRecorder keyCombo].flags]];
-		
 		[[adium preferenceController] setPreference:[keyCombo plistRepresentation]
 											 forKey:KEY_GENERAL_HOTKEY
 											  group:PREF_GROUP_GENERAL];

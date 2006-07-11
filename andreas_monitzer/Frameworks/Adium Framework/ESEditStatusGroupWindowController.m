@@ -10,6 +10,7 @@
 #import <Adium/AIStatusGroup.h>
 #import <Adium/AIStatusIcons.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIPopUpButtonAdditions.h>
 
 @interface ESEditStatusGroupWindowController (PRIVATE)
 - (NSMenu *)groupWithStatusMenu;
@@ -58,7 +59,7 @@
 - (void)windowDidLoad
 {
 	[popUp_groupWith setMenu:[self groupWithStatusMenu]];
-	[popUp_groupWith selectItemWithTag:[statusGroup statusType]];
+	[popUp_groupWith compatibleSelectItemWithTag:[statusGroup statusType]];
 	
 	NSString *title = [statusGroup title];
 	[textField_title setStringValue:(title ? title : @"")];
@@ -99,7 +100,7 @@
 	[statusGroup setStatusType:[[popUp_groupWith selectedItem] tag]];
 
 	if (target && [target respondsToSelector:@selector(finishedSatusGroupEdit:)]) {
-		//Perform on a delay so the sheet can beging closing immediately.
+		//Perform on a delay so the sheet can begin closing immediately.
 		[target performSelector:@selector(finishedSatusGroupEdit:)
 				   withObject:statusGroup
 				   afterDelay:0];

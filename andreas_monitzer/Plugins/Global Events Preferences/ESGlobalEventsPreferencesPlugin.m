@@ -30,33 +30,8 @@
 #define KEY_ORDER_INDEX				@"OrderIndex"
 #define KEY_NEXT_ORDER_INDEX		@"NextOrderIndex"
 
-//Sound set defines
-#define SOUND_EVENT_START			@"\nSoundset:\n"	//String marking start of event list
-#define SOUND_EVENT_QUOTE			@"\""			//Character before and after event name
-#define SOUND_NEWLINE				@"\n"			//Newline character
-#define KEY_EVENT_CUSTOM_SOUNDSET	@"Event Custom Sounds"
-#define	KEY_EVENT_SOUND_PATH		@"Path"
-#define	KEY_EVENT_SOUND_EVENT_ID	@"Notification"
-#define KEY_ALERT_SOUND_PATH		@"SoundPath"
-
 #define EVENT_SOUNDS_DEFAULT_PREFS	@"EventSoundDefaults"
-
-//Dock behavior defines
-#define DOCK_BEHAVIOR_DEFAULT_PREFS			@"DockBehaviorDefaults"
-#define DOCK_BEHAVIOR_PRESETS				@"DockBehaviorPresets"
-#define KEY_DOCK_PRESET_BEHAVIOR			@"Behavior"
-#define	KEY_DOCK_PRESET_EVENT_ID			@"Notification"
-#define KEY_DOCK_PRESET_BEHAVIOR_TYPE		@"BehaviorType"
-
-//Speech
-#define	SPEECH_PRESETS						@"SpeechPresets"
-#define KEY_SPEECH_PRESET_EVENT_ID			@"Notification"
-#define	KEY_SPEECH_PRESET_DETAILS			@"Details"
-
-//Growl
-#define GROWL_DEFAULT_PREFS					@"GrowlDefaults"
-#define	GROWL_PRESETS						@"GrowlPresets"
-#define KEY_GROWL_PRESET_EVENT_ID			@"Notification"
+#define KEY_ALERT_SOUND_PATH		@"SoundPath"
 
 @interface ESGlobalEventsPreferencesPlugin (PRIVATE)
 - (void)activateSoundSet:(NSArray *)soundSetArray;
@@ -98,6 +73,10 @@
 						   ![storedEventPresets objectForKey:activeEventSet])) {
 		[self setEventPreset:[builtInEventPresets objectForKey:@"Default Notifications"]];		
 	}
+
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_SOUNDS_DEFAULT_PREFS
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_SOUNDS];
 
 	//Install our preference view
     preferences = [[ESGlobalEventsPreferences preferencePaneForPlugin:self] retain];

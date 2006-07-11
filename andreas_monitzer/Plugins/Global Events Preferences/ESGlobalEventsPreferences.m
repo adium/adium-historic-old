@@ -28,7 +28,6 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIVariableHeightOutlineView.h>
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
-#import <AIUtilities/AIGradientImageCell.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIImageTextCell.h>

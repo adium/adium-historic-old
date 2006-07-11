@@ -131,7 +131,7 @@ typedef enum {
 - (BOOL)disconnectOnFastUserSwitch;
 - (BOOL)connectivityBasedOnNetworkReachability;
 - (BOOL)suppressTypingNotificationChangesAfterSend;
-- (BOOL)supportsOfflineMessaging;
+- (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact;
 - (BOOL)allowsNewlinesInMessages;
 - (BOOL)supportsFolderTransfer;
 

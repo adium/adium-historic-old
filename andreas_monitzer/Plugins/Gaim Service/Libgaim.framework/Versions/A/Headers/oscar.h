@@ -1144,7 +1144,7 @@ int aim_ssi_getpermdeny(struct aim_ssi_item *list);
 guint32 aim_ssi_getpresence(struct aim_ssi_item *list);
 char *aim_ssi_getalias(struct aim_ssi_item *list, const char *gn, const char *sn);
 char *aim_ssi_getcomment(struct aim_ssi_item *list, const char *gn, const char *sn);
-int aim_ssi_waitingforauth(struct aim_ssi_item *list, const char *gn, const char *sn);
+gboolean aim_ssi_waitingforauth(struct aim_ssi_item *list, const char *gn, const char *sn);
 
 /* Client functions for changing SSI data */
 int aim_ssi_addbuddy(OscarData *od, const char *name, const char *group, const char *alias, const char *comment, const char *smsnum, int needauth);
@@ -1161,7 +1161,7 @@ int aim_ssi_cleanlist(OscarData *od);
 int aim_ssi_deletelist(OscarData *od);
 int aim_ssi_setpermdeny(OscarData *od, guint8 permdeny, guint32 vismask);
 int aim_ssi_setpresence(OscarData *od, guint32 presence);
-int aim_ssi_seticon(OscarData *od, guint8 *iconsum, guint16 iconsumlen);
+int aim_ssi_seticon(OscarData *od, const guint8 *iconsum, guint16 iconsumlen);
 int aim_ssi_delicon(OscarData *od);
 
 

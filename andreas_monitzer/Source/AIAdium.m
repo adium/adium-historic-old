@@ -43,7 +43,6 @@
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <Adium/AIPathUtilities.h>
-#import <Sparkle/Sparkle.h>
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
@@ -51,10 +50,6 @@
 
 //Portable Adium prefs key
 #define PORTABLE_ADIUM_KEY					@"Preference Folder Location"
-
-//Intervals to re-check for updates after a successful update check
-#define VERSION_CHECK_INTERVAL			24		//24 hours
-#define BETA_VERSION_CHECK_INTERVAL 	1		//1 hours - Beta releases have a nice annoying refresh >:D
 
 #define ALWAYS_RUN_SETUP_WIZARD FALSE
 
@@ -320,10 +315,6 @@ static NSString	*prefsCategory;
 		[queuedLogPathToShow release];
 	}
 	
-	[updater scheduleCheckWithInterval:(NSTimeInterval)(60 * 60 * (BETA_RELEASE ?
-																   BETA_VERSION_CHECK_INTERVAL :
-																   VERSION_CHECK_INTERVAL))];
-	
 	completedApplicationLoad = YES;
 
 	[[self notificationCenter] postNotificationName:Adium_CompletedApplicationLoad object:nil];
@@ -395,6 +386,15 @@ static NSString	*prefsCategory;
 }
 - (IBAction)showXtras:(id)sender{
 	[[AIXtrasManager sharedManager] showXtras];
+}
+
+- (IBAction)contibutingToAdium:(id)sender
+{
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://trac.adiumx.com/wiki/ContributingToAdium"]];
+}
+- (IBAction)donate:(id)sender
+{
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&submit.x=57&submit.y=8&encrypted=-----BEGIN+PKCS7-----%0D%0AMIIHFgYJKoZIhvcNAQcEoIIHBzCCBwMCAQExggEwMIIBLAIBADCBlDCBjjELMAkG%0D%0AA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQw%0D%0AEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UE%0D%0AAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20CAQAwDQYJ%0D%0AKoZIhvcNAQEBBQAEgYAFR5tF%2BRKUV3BS49vJraDG%2BIoWDoZMieUT%2FJJ1Fzjsr511%0D%0Au7hS1F2piJuHuqmm%2F0r8Kf8oaycOo74K3zLmUQ6T6hUS6%2Bh6lZAoIlhI3A1YmqIP%0D%0AdrdY%2FtfKRbWfolDumJ9Mdv%2FzJxPnpdQiTN5K1PMrPYE6GgPWE9WC4V9lqstSmTEL%0D%0AMAkGBSsOAwIaBQAwgZMGCSqGSIb3DQEHATAUBggqhkiG9w0DBwQIjtd%2BN9o4ZB6A%0D%0AcIbH8ZjOLmE35xBQ%2F93chtzIcRXHhIQJVpBRCkyJkdTD3libP3F7TgkrLij1DBxg%0D%0AfFlE0V%2FGTk29Ys%2FwsPO7hNs3YSNuSz0HT5F6sa8aXwFtMCE%2FgB1Ha4qdtYY%2BNETJ%0D%0AEETwNMLefjhaBfI%2BnRxl2K2gggOHMIIDgzCCAuygAwIBAgIBADANBgkqhkiG9w0B%0D%0AAQUFADCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3Vu%0D%0AdGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9j%0D%0AZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBh%0D%0AbC5jb20wHhcNMDQwMjEzMTAxMzE1WhcNMzUwMjEzMTAxMzE1WjCBjjELMAkGA1UE%0D%0ABhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYD%0D%0AVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQI%0D%0AbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20wgZ8wDQYJKoZI%0D%0AhvcNAQEBBQADgY0AMIGJAoGBAMFHTt38RMxLXJyO2SmS%2BNdl72T7oKJ4u4uw%2B6aw%0D%0AntALWh03PewmIJuzbALScsTS4sZoS1fKciBGoh11gIfHzylvkdNe%2FhJl66%2FRGqrj%0D%0A5rFb08sAABNTzDTiqqNpJeBsYs%2Fc2aiGozptX2RlnBktH%2BSUNpAajW724Nv2Wvhi%0D%0Af6sFAgMBAAGjge4wgeswHQYDVR0OBBYEFJaffLvGbxe9WT9S1wob7BDWZJRrMIG7%0D%0ABgNVHSMEgbMwgbCAFJaffLvGbxe9WT9S1wob7BDWZJRroYGUpIGRMIGOMQswCQYD%0D%0AVQQGEwJVUzELMAkGA1UECBMCQ0ExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDAS%0D%0ABgNVBAoTC1BheVBhbCBJbmMuMRMwEQYDVQQLFApsaXZlX2NlcnRzMREwDwYDVQQD%0D%0AFAhsaXZlX2FwaTEcMBoGCSqGSIb3DQEJARYNcmVAcGF5cGFsLmNvbYIBADAMBgNV%0D%0AHRMEBTADAQH%2FMA0GCSqGSIb3DQEBBQUAA4GBAIFfOlaagFrl71%2Bjq6OKidbWFSE%2B%0D%0AQ4FqROvdgIONth%2B8kSK%2F%2FY%2F4ihuE4Ymvzn5ceE3S%2FiBSQQMjyvb%2Bs2TWbQYDwcp1%0D%0A29OPIbD9epdr4tJOUNiSojw7BHwYRiPh58S1xGlFgHFXwrEBb3dgNbMUa%2Bu4qect%0D%0AsMAXpVHnD9wIyfmHMYIBmjCCAZYCAQEwgZQwgY4xCzAJBgNVBAYTAlVTMQswCQYD%0D%0AVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFs%0D%0AIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRww%0D%0AGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tAgEAMAkGBSsOAwIaBQCgXTAYBgkq%0D%0AhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0wNDAzMjUwNDQ0%0D%0AMzRaMCMGCSqGSIb3DQEJBDEWBBRzTAS6zk5cmMeC49IorY8CM%2BkX0TANBgkqhkiG%0D%0A9w0BAQEFAASBgBsyRfMv9mSyoYq00wIB7BmUHFGq5x%2Ffnr8M24XbKjhkyeULk2NC%0D%0As4jbCgaWNg6grvccJtjbvmDskMKt%2BdS%2BEAkeWwm1Zf%2F%2B5u1fMyb5vo1NNcRIs5oq%0D%0A7SvXiLTPRzVqzQdhVs7PoZG0i0RRIb0tMeo1IssZeB2GE5Nsg0D8PwpB%0D%0A-----END+PKCS7-----"]];
 }
 
 - (void)unreadQuitQuestion:(NSNumber *)number userInfo:(id)info
@@ -477,17 +477,10 @@ static NSString	*prefsCategory;
 		allowQuit = NO;
 	}
 	
-	if(allowQuit) {
+	if (allowQuit) {
 		[NSApp terminate:nil];
 	}
 }
-
-- (IBAction)launchJeeves:(id)sender
-{
-    [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_IMPORTER];
-}
-
-
 
 //Other -------------------------------------------------------------------------------------------------------
 #pragma mark Other
@@ -959,33 +952,14 @@ static NSString	*prefsCategory;
 
 #pragma mark Sparkle Delegate Methods
 
-// Specify whether the updater should include system-profile information with update checks.
-- (BOOL)updaterShouldSendProfileInfo
-{
-	AIPreferenceController *prefs = [self preferenceController];
-	BOOL firstRun = [[prefs preferenceForKey:@"SparkleSendProfileOptOutHasRun"
-									   group:PREF_GROUP_GENERAL] boolValue];
-	if(firstRun)
-	{
-		[prefs setPreference:[NSNumber numberWithBool:YES]
-					  forKey:@"SparkleSendProfileOptOutHasRun"
-					   group:PREF_GROUP_GENERAL];
-		NSAlert *alert = [NSAlert alertWithMessageText:@"Adium can optionally submit non-personal system information such as operating system version and computer speed as it checks for new versions. This information can help the development team make decisions."
-										 defaultButton:@"Send"
-									   alternateButton:@"Don't Send"
-										   otherButton:nil
-							 informativeTextWithFormat:nil];
-		
-		[prefs setPreference:[NSNumber numberWithBool:(([alert runModal] == NSAlertDefaultReturn) ? YES : NO)]
-					  forKey:@"SparkleSendProfile"
-					   group:PREF_GROUP_GENERAL];
-	}
-
-	return [[prefs preferenceForKey:@"SparkleSendProfile" group:PREF_GROUP_GENERAL] boolValue];
-}
-
-// This method gives the delegate the opportunity to customize the information that will
-// be included with update checks.  Add or remove items from the dictionary as desired.
+/* This method gives the delegate the opportunity to customize the information that will
+ * be included with update checks.  Add or remove items from the dictionary as desired.
+ * Each entry in profileInfo is an NSDictionary with the following keys:
+ * ⁃ 	key: 		The key to be used  when reporting data to the server
+ * ⁃ 	visibleKey:	Alternate version of key to be used in UI displays of profile information
+ * ⁃ 	value:		Value to be used when reporting data to the server
+ * ⁃ 	visibleValue:	Alternate version of value to be used in UI displays of profile information.
+ */
 - (NSMutableDictionary *)updaterCustomizeProfileInfo:(NSMutableDictionary *)profileInfo
 {
 	//we can add/remove information to/from this as needed, for now we just return it intact

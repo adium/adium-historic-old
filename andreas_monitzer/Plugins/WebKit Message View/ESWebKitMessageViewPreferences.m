@@ -54,7 +54,8 @@
 - (NSMenu *)_backgroundImageTypeMenu;
 - (void)_addBackgroundImageTypeChoice:(int)tag toMenu:(NSMenu *)menu withTitle:(NSString *)title;
 - (void)_configureChatPreview;
-- (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath;
+- (AIChat *)previewChatWithDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath listObjects:(NSDictionary **)outListObjects;
+- (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath listObjects:(NSDictionary *)listObjects;
 - (NSMutableDictionary *)_addParticipants:(NSDictionary *)participants toChat:(AIChat *)inChat fromPath:(NSString *)previewPath;
 - (void)_applySettings:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
 - (void)_addContent:(NSArray *)chatArray toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
@@ -118,9 +119,17 @@
 {
 	//Hide the alpha component
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
-	
+
 	[[adium notificationCenter] removeObserver:self];
 	[previewListObjectsDict release]; previewListObjectsDict = nil;
+
+	[previewController release]; previewController = nil;
+	[view_previewLocation setFrame:[preview frame]];
+	[[preview superview] replaceSubview:preview with:view_previewLocation];	
+	[preview release]; preview = nil;
+	//Matches the retain performed in -[ESWebKitMessageViewPreferences _configureChatPreview]
+	[view_previewLocation release];
+
 	viewIsOpen = NO;
 }
 
@@ -142,6 +151,8 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
 					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
+	if (!viewIsOpen) return;
+
 	if ([group isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]) {
 		NSString	*style;
 		NSString	*variant;
@@ -149,7 +160,7 @@
 		//Ensure our style/variant menus are showing the correct selection
 		style = [prefDict objectForKey:KEY_WEBKIT_STYLE];
 		if (!style || ![popUp_styles selectItemWithRepresentedObject:style]) {
-			style = WEBKIT_DEFAULT_STYLE;
+			style = [[plugin messageStyleBundleWithIdentifier:style] bundleIdentifier];
 			[popUp_styles selectItemWithRepresentedObject:style];
 		}
 
@@ -157,6 +168,9 @@
 		if (!key || [key isEqualToString:KEY_WEBKIT_STYLE]) {
 			[popUp_variants setMenu:[self _variantsMenu]];
 		}
+
+		//Only enable if there are multiple variant choices
+		[popUp_variants setEnabled:([popUp_variants numberOfItems] > 0)];
 
 		variant = [prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:style]];
 		if (!variant || ![popUp_variants selectItemWithRepresentedObject:variant]) {
@@ -197,7 +211,6 @@
 		//Disable user icon toggling if the style doesn't support them
 		[checkBox_showUserIcons setEnabled:[[previewController messageStyle] allowsUserIcons]];
 	}
-	
 }
 
 /*!
@@ -350,12 +363,13 @@
 	
 	enumerator = [availableStyles objectEnumerator];
 	while ((style = [enumerator nextObject])) {
-		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[style name]
-																		 target:nil
-																		 action:nil
-																  keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[style name]
+																		target:nil
+																		action:nil
+																 keyEquivalent:@""];
 		[menuItem setRepresentedObject:[style bundleIdentifier]];
 		[menuItemArray addObject:menuItem];
+		[menuItem release];
 	}
 	
 	[menuItemArray sortUsingSelector:@selector(titleCompare:)];
@@ -376,7 +390,7 @@
 	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""];
 	NSEnumerator	*enumerator = [[[previewController messageStyle] availableVariants] objectEnumerator];
 	NSString		*variant;
-	
+
 	//Add a menu item for each variant
 	while ((variant = [enumerator nextObject])) {
 		[menu addItemWithTitle:variant
@@ -424,54 +438,65 @@
 	NSString		*previewFilePath;
 	NSString		*previewPath;
 	AIChat			*previewChat;
-	
+
 	//Create our fake chat and message controller for the live preview
-	previewChat = [[AIChat chatForAccount:nil] retain];
-	[previewChat setDisplayName:AILocalizedString(@"Sample Conversation", "Title for the sample conversation")];
-	previewController = [[AIWebKitMessageViewController messageViewControllerForChat:previewChat
-																		  withPlugin:plugin
-														  preferencesChangedDelegate:self] retain];
+	previewFilePath = [[NSBundle bundleForClass:[self class]] pathForResource:WEBKIT_PREVIEW_CONVERSATION_FILE ofType:@"plist"];
+	previewDict = [[NSDictionary alloc] initWithContentsOfFile:previewFilePath];
+	previewPath = [previewFilePath stringByDeletingLastPathComponent];
 	
+	NSDictionary *listObjects;
+	previewChat = [self previewChatWithDictionary:previewDict fromPath:previewPath listObjects:&listObjects];
+	previewController = [[AIWebKitMessageViewController messageViewControllerForChat:previewChat
+																		  withPlugin:plugin] retain];
+
 	//Enable live refreshing of our preview
-	[previewController setShouldReflectPreferenceChanges:YES];
+	[previewController setShouldReflectPreferenceChanges:YES];	
+	[previewController setPreferencesChangedDelegate:self];
 
 	//Add fake users and content to our chat
-	previewFilePath = [[NSBundle bundleForClass:[self class]] pathForResource:WEBKIT_PREVIEW_CONVERSATION_FILE ofType:@"plist"];
-	previewDict = [[[NSDictionary alloc] initWithContentsOfFile:previewFilePath] autorelease];
-	previewPath = [previewFilePath stringByDeletingLastPathComponent];
-	[self _fillContentOfChat:previewChat withDictionary:previewDict fromPath:previewPath];
+	[self _fillContentOfChat:previewChat withDictionary:previewDict fromPath:previewPath listObjects:listObjects];
+	[previewDict release];
 	
 	//Place the preview chat in our view
 	preview = [[previewController messageView] retain];
 	[preview setFrame:[view_previewLocation frame]];
+	//Will be released in viewWillClose
+	[view_previewLocation retain];
 	[[view_previewLocation superview] replaceSubview:view_previewLocation with:preview];
-	
+
 	//Disable drag and drop onto the preview chat - Jeff doesn't need your porn :)
 	if ([preview respondsToSelector:@selector(setAllowsDragAndDrop:)]) {
 		[(ESWebView *)preview setAllowsDragAndDrop:NO];
 	}
-	
+
 	//Disable forwarding of events so the preferences responder chain works properly
 	if ([preview respondsToSelector:@selector(setShouldForwardEvents:)]) {
 		[(ESWebView *)preview setShouldForwardEvents:NO];		
 	}	
 }
 
+
+- (AIChat *)previewChatWithDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath listObjects:(NSDictionary **)outListObjects
+{
+	AIChat *previewChat = [AIChat chatForAccount:nil];
+	[previewChat setDisplayName:AILocalizedString(@"Sample Conversation", "Title for the sample conversation")];
+
+	//Process and create all participants
+	*outListObjects = [self _addParticipants:[previewDict objectForKey:@"Participants"]
+									  toChat:previewChat fromPath:previewPath];
+
+	//Setup the chat, and its source/destination
+	[self _applySettings:[previewDict objectForKey:@"Chat"]
+				  toChat:previewChat withParticipants:*outListObjects];
+	
+	return previewChat;
+}
+
 /*!
  * @brief Fill the content of the specified chat using content archived in the dictionary
  */
-- (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath
+- (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath listObjects:(NSDictionary *)listObjects
 {
-	NSDictionary		*listObjects;
-
-	//Process and create all participants
-	listObjects = [self _addParticipants:[previewDict objectForKey:@"Participants"]
-								  toChat:inChat fromPath:previewPath];
-	
-	//Setup the chat, and its source/destination
-	[self _applySettings:[previewDict objectForKey:@"Chat"]
-				  toChat:inChat withParticipants:listObjects];
-	
 	//Add the archived chat content
 	[self _addContent:[previewDict objectForKey:@"Preview Messages"]
 			   toChat:inChat withParticipants:listObjects];

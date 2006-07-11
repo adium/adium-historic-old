@@ -17,6 +17,7 @@
 #import "ESApplescriptContactAlertPlugin.h"
 #import "ESContactAlertsController.h"
 #import "ESPanelApplescriptDetailPane.h"
+#import "ESApplescriptabilityController.h"
 #import <AIUtilities/AIImageAdditions.h>
 
 #define APPLESCRIPT_ALERT_SHORT AILocalizedString(@"Run an Applescript",nil)
@@ -87,21 +88,13 @@
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	NSString		*path = [details objectForKey:KEY_APPLESCRIPT_TO_RUN];
-	if (path) {		
-		NSString	*applescriptRunnerPath;
-		NSTask		*scriptTask;
-		
-		//Find the path to the ApplescriptRunner application
-		applescriptRunnerPath = [[NSBundle mainBundle] pathForResource:@"AdiumApplescriptRunner"
-																ofType:nil
-														   inDirectory:nil];
-		//Set up our task
-		scriptTask = [[[NSTask alloc] init] autorelease];
-		[scriptTask setLaunchPath:applescriptRunnerPath];
-		[scriptTask setArguments:[NSArray arrayWithObject:path]];
-		
-		//Launch; no need to wait for it to finish
-		[scriptTask launch];
+	if (path) {
+		[[adium applescriptabilityController] runApplescriptAtPath:path
+														  function:nil
+														 arguments:nil
+												   notifyingTarget:nil
+														  selector:NULL
+														  userInfo:nil];
 	}
 }
 

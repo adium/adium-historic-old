@@ -40,7 +40,7 @@
 #define KEY_SPELL_CHECKING						@"Spell Checking Enabled"
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE		@"Dual Window Interface"
 
-#define ATTACHMENT_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
+#define FILES_AND_IMAGES_TYPES [NSArray arrayWithObjects: \
 	NSFilenamesPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil]
 
 #define PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
@@ -92,7 +92,6 @@
 	
 	[self setImportsGraphics:YES];
 	
-	//
 	[[NSNotificationCenter defaultCenter] addObserver:self 
 											 selector:@selector(textDidChange:)
 												 name:NSTextDidChangeNotification 
@@ -101,6 +100,10 @@
 											 selector:@selector(frameDidChange:) 
 												 name:NSViewFrameDidChangeNotification 
 											   object:self];
+	[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self
+															selector:@selector(toggleMessageSending:)
+																name:@"AIChatDidChangeCanSendMessagesNotification"
+															  object:chat];
 	
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];	
 }
@@ -233,6 +236,15 @@
 				[super keyDown:inEvent];
 			}
 
+		} else if (inChar == NSTabCharacter) {
+			if ([[self delegate] respondsToSelector:@selector(textViewShouldTabComplete:)] &&
+				[[self delegate] textViewShouldTabComplete:self]) {
+				[self complete:nil];
+
+			} else {
+				[super keyDown:inEvent];				
+			}
+
 		} else {
 			[super keyDown:inEvent];
 		}
@@ -314,6 +326,16 @@
 
 //Adium Text Entry -----------------------------------------------------------------------------------------------------
 #pragma mark Adium Text Entry
+
+/*
+ * @brief Toggle whether message sending is enabled based on a notification. The notification object is the AIChat of the appropriate message entry view
+ */
+- (void)toggleMessageSending:(NSNotification *)not
+{
+	//XXX - We really should query the AIChat about this, but AIChat's "can't send" is really designed for handling offline, not banned. Bringing up the offline messaging dialog when banned would make no sense.
+	[self setSendingEnabled:[[[not userInfo] objectForKey:@"TypingEnabled"] boolValue]];
+}
+
 /*
  * @brief Are we available for sending?
  */
@@ -394,7 +416,7 @@
 			//When we hit a type we should let the superclass handle, break without doing anything
 			break;
 			
-		} else if ([ATTACHMENT_DRAG_TYPE_ARRAY containsObject:type]) {
+		} else if ([FILES_AND_IMAGES_TYPES containsObject:type]) {
 			[self addAttachmentsFromPasteboard:generalPasteboard];
 			handledPaste = YES;
 		}
@@ -410,7 +432,7 @@
 	NSDictionary	*attributes = [[self typingAttributes] copy];
 
 	if (![self handlePasteAsRichText]) {
-		[super paste:sender];
+		[self paste:sender];
 	}
 
 	if (attributes) {
@@ -431,7 +453,6 @@
 	
 	//Types is ordered by the preference for handling of the data; enumerating it lets us allow the sending application's hints to be followed.
 	while ((type = [enumerator nextObject]) && !handledPaste) {
-		NSLog(@"Looking at type %@",type);
 		if ([type isEqualToString:NSRTFPboardType] ||
 			[type isEqualToString:NSRTFDPboardType] ||
 			[type isEqualToString:NSHTMLPboardType]) {
@@ -450,31 +471,45 @@
 			}
 
 			[attributedString convertForPasteWithTraits];
-			[[self textStorage] replaceCharactersInRange:[self selectedRange]
-									withAttributedString:attributedString];
+
+			NSRange			selectedRange = [self selectedRange];
+			NSTextStorage	*textStorage = [self textStorage];
+			
+			//Prepare the undo operation
+			NSUndoManager	*undoManager = [self undoManager];
+			[[undoManager prepareWithInvocationTarget:textStorage]
+				replaceCharactersInRange:NSMakeRange(selectedRange.location, [attributedString length])
+					withAttributedString:[textStorage attributedSubstringFromRange:selectedRange]];
+			[undoManager setActionName:AILocalizedStringFromTable(@"Paste", @"AdiumFramework", nil)];
+
+			//Perform the paste
+			[textStorage replaceCharactersInRange:selectedRange
+							 withAttributedString:attributedString];
 			[attributedString release];
 			
 			handledPaste = YES;
 			
 		} else if ([type isEqualToString:NSStringPboardType]) {
 			//Paste a plain text string directly
-			[super paste:sender];
+			[self paste:sender];
 			handledPaste = YES;
-			
-		} else if ([type isEqualToString:NSFilenamesPboardType]) {
-			[self addAttachmentsFromPasteboard:generalPasteboard];
+
+		} else if ([FILES_AND_IMAGES_TYPES containsObject:type]) {
+			if (![self handlePasteAsRichText]) {
+				[self paste:sender];
+			}
 			handledPaste = YES;
 
 		} else if ([type isEqualToString:NSURLPboardType]) {
 			//Paste a URL directly
-			[super paste:sender];
+			[self paste:sender];
 			handledPaste = YES;
 		}
 	}
 	
 	//If we didn't handle it yet, let super try to deal with it
 	if (!handledPaste) {
-		[super paste:sender];
+		[self paste:sender];
 	}
 	
 	if (attributes) {
@@ -784,12 +819,12 @@
 	NSMenuItem		*menuItem;
 	BOOL			addedOurLinkItems = NO;
 
-	if ((contextualMenu = [super menuForEvent:theEvent])) {		
+	if ((contextualMenu = [super menuForEvent:theEvent])) {
+		contextualMenu = [[contextualMenu copy] autorelease];
 		enumerator = [[contextualMenu itemArray] objectEnumerator];
 		NSMenuItem	*editLinkItem = nil;
 		while ((menuItem = [enumerator nextObject])) {
 			if ([[menuItem title] rangeOfString:AILocalizedString(@"Edit Link", nil)].location != NSNotFound) {
-				NSLog(@"menu item is %@",menuItem);
 				editLinkItem = menuItem;
 				break;
 			}
@@ -812,7 +847,7 @@
 			addedOurLinkItems = YES;
 		}
 	} else {
-		contextualMenu = [[NSMenu alloc] init];	
+		contextualMenu = [[[NSMenu alloc] init] autorelease];
 	}
 
 	//Retrieve the items which should be added to the bottom of the default menu
@@ -874,7 +909,7 @@
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY];
+	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 	BOOL			allowDragOperation;
 
@@ -892,7 +927,7 @@
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY];
+	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 	
 	if (!type || superclassType) {
@@ -923,7 +958,7 @@
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY];
+	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 
 	BOOL	success = NO;

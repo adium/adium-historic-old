@@ -97,10 +97,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 				message = [[adium chatController] defaultInvitationMessageForRoom:[chat name] account:[chat account]];
 			}
 			[chat inviteListContact:(AIListContact *)contact withMessage:message];
-		} else {
-			//NSLog(@"#### Inviting %@ to a one-on-one chat?",contact);
 		}
-		
 	}	
 	
 	[self closeWindow:nil];

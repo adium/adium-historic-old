@@ -25,7 +25,7 @@
  * to the appropriate place.
  */
 typedef enum {
-    LOC_Adium_About = 0, LOC_Adium_Preferences,
+    LOC_Adium_About = 0, LOC_Adium_Preferences, LOC_Adium_Other,
     LOC_File_New, LOC_File_Close, LOC_File_Save, LOC_File_Accounts, LOC_File_Additions,
     LOC_Edit_Bottom, LOC_Edit_Links, LOC_Edit_Additions,
 	LOC_View_General, LOC_View_Sorting, LOC_View_Toggles, LOC_View_Appearance_Toggles, LOC_View_Additions, 
@@ -51,6 +51,7 @@ typedef enum {
     IBOutlet	id		nilMenuItem;
     IBOutlet	id		menu_Adium_About;
     IBOutlet	id		menu_Adium_Preferences;
+    IBOutlet	id		menu_Adium_Other;
     IBOutlet	id		menu_File_New;
     IBOutlet	id		menu_File_Close;
     IBOutlet	id		menu_File_Save;
@@ -99,6 +100,8 @@ typedef enum {
 	IBOutlet	NSMenuItem	*menuItem_aboutAdium;
 	IBOutlet	NSMenuItem	*menuItem_adiumXtras;
 	IBOutlet	NSMenuItem	*menuItem_preferences;
+	IBOutlet	NSMenuItem	*menuItem_donate;
+	IBOutlet	NSMenuItem	*menuItem_helpOut;
 	IBOutlet	NSMenuItem	*menuItem_services;
 	IBOutlet	NSMenuItem	*menuItem_hideAdium;
 	IBOutlet	NSMenuItem	*menuItem_hideOthers;

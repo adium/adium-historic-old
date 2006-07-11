@@ -81,3 +81,12 @@
 - (void)swapContent;
 
 @end
+
+@interface NSObject (AIMessageEntryTextViewDelegate)
+/*
+ * @brief Should the tab key trigger an autocomplete?
+ *
+ * Implementation is optional.
+ */
+- (BOOL)textViewShouldTabComplete:(NSTextView *)inTextView;
+@end
