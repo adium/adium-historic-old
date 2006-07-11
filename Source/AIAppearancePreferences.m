@@ -963,7 +963,8 @@ typedef enum {
 					  resourceFolderName:@"Status Icons"];
 	if (!iconPath) {
 		activePackName = [[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
-																		 group:PREF_GROUP_APPEARANCE];
+																		 group:PREF_GROUP_APPEARANCE
+																		object:nil];
 		
 		iconPath = [adium pathOfPackWithName:activePackName
 								   extension:@"AdiumStatusIcons"
@@ -989,7 +990,8 @@ typedef enum {
 	
 	if (!iconPath) {
 		activePackName = [[adium preferenceController] defaultPreferenceForKey:KEY_SERVICE_ICON_PACK
-																		 group:PREF_GROUP_APPEARANCE];
+																		 group:PREF_GROUP_APPEARANCE
+																		object:nil];
 		
 		iconPath = [adium pathOfPackWithName:activePackName
 								   extension:@"AdiumServiceIcons"
