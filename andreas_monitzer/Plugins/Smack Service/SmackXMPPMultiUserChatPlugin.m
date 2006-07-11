@@ -806,17 +806,35 @@ static AIHTMLDecoder *messageencoder = nil;
 }
 
 - (void)setMUCUserKicked:(NSDictionary*)info {
+    [[adium notificationCenter] postNotificationName:@"AIChatDidChangeCanSendMessagesNotification"
+                                              object:adiumchat
+                                            userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
+                                                                                 forKey:@"TypingEnabled"]];
     [self postStatusMessage:AILocalizedString(@"You were kicked by %@ (%@)","You were kicked by %@ (%@)"), [info objectForKey:@"actor"], [info objectForKey:@"reason"]];
 }
 
 - (void)setMUCUserVoice:(JavaBoolean*)flag {
     if([flag booleanValue])
+    {
+        [[adium notificationCenter] postNotificationName:@"AIChatDidChangeCanSendMessagesNotification"
+                                                  object:adiumchat
+                                                userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
+                                                                                     forKey:@"TypingEnabled"]];
         [self postStatusMessage:AILocalizedString(@"You were given voice.","You were given voice.")];
-    else
+    } else {
+        [[adium notificationCenter] postNotificationName:@"AIChatDidChangeCanSendMessagesNotification"
+                                                  object:adiumchat
+                                                userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+                                                                                     forKey:@"TypingEnabled"]];
         [self postStatusMessage:AILocalizedString(@"You were silenced.","You were silenced.")];
+    }
 }
 
 - (void)setMUCUserBanned:(NSDictionary*)info {
+    [[adium notificationCenter] postNotificationName:@"AIChatDidChangeCanSendMessagesNotification"
+                                              object:adiumchat
+                                            userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
+                                                                                 forKey:@"TypingEnabled"]];
     [self postStatusMessage:AILocalizedString(@"You were banned by %@ (%@)","You were banned by %@ (%@)"), [info objectForKey:@"actor"], [info objectForKey:@"reason"]];
 }
 
