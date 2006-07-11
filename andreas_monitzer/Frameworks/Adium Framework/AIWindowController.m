@@ -40,6 +40,28 @@
     return self;
 }
 
+- (NSRect)savedFrameFromString:(NSString *)frameString
+{
+	NSRect		windowFrame = NSRectFromString(frameString);
+	NSSize		minSize = [[self window] minSize];
+	NSSize		maxSize = [[self window] maxSize];
+	
+	//Respect the min and max sizes
+	if (windowFrame.size.width < minSize.width) windowFrame.size.width = minSize.width;
+	if (windowFrame.size.height < minSize.height) windowFrame.size.height = minSize.height;
+	if (windowFrame.size.width > maxSize.width) windowFrame.size.width = maxSize.width;
+	if (windowFrame.size.height > maxSize.height) windowFrame.size.height = maxSize.height;
+	
+	//Don't allow the window to shrink smaller than its toolbar
+	NSRect 		contentFrame = [NSWindow contentRectForFrameRect:windowFrame
+													   styleMask:[[self window] styleMask]];
+	if (contentFrame.size.height < [[self window] toolbarHeight]) {
+		windowFrame.size.height += [[self window] toolbarHeight] - contentFrame.size.height;
+	}
+
+	return windowFrame;
+}
+
 /*!
  * @brief Configure the window after it loads
  *
@@ -68,25 +90,8 @@
 		}
 
 		if (frameString) {
-			NSRect		windowFrame = NSRectFromString(frameString);
-			NSSize		minSize = [[self window] minSize];
-			NSSize		maxSize = [[self window] maxSize];
-			
-			//Respect the min and max sizes
-			if (windowFrame.size.width < minSize.width) windowFrame.size.width = minSize.width;
-			if (windowFrame.size.height < minSize.height) windowFrame.size.height = minSize.height;
-			if (windowFrame.size.width > maxSize.width) windowFrame.size.width = maxSize.width;
-			if (windowFrame.size.height > maxSize.height) windowFrame.size.height = maxSize.height;
-
-			//Don't allow the window to shrink smaller than its toolbar
-			NSRect 		contentFrame = [NSWindow contentRectForFrameRect:windowFrame
-															   styleMask:[[self window] styleMask]];
-			if (contentFrame.size.height < [[self window] toolbarHeight]) {
-				windowFrame.size.height += [[self window] toolbarHeight] - contentFrame.size.height;
-			}
-
 			//
-			[[self window] setFrame:windowFrame display:NO];
+			[[self window] setFrame:[self savedFrameFromString:frameString] display:NO];
 		}
 	}
 }
@@ -116,6 +121,11 @@
 	return YES;
 }
 
+- (NSString *)stringWithSavedFrame
+{
+	return [[self window] stringWithSavedFrame];
+}
+
 /*!
  * @brief Called immediately before the window closes.
  * 
@@ -130,7 +140,7 @@
 		//Unique key for each number of screens
 		int	numberOfScreens = [[NSScreen screens] count];
 
-		[[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
+		[[adium preferenceController] setPreference:[self stringWithSavedFrame]
 											 forKey:((numberOfScreens == 1) ? 
 													 key :
 													 [NSString stringWithFormat:@"%@-%i",key,numberOfScreens])

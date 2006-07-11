@@ -43,6 +43,8 @@
 @interface AimConnectionProperties : NSObject {}
 - (void)setScreenname:(Screenname *)sn;
 - (void)setPassword:(NSString *)password;
+- (void)setLoginHost:(NSString *)host;
+- (void)setLoginPort:(int)port;
 @end
 
 /*
@@ -52,7 +54,7 @@
 @interface AimProxyInfo : NSObject {}
 + (AimProxyInfo *)forSocks5:(NSString *)host :(int)port :(NSString *)username :(NSString *)password;
 + (AimProxyInfo *)forHttp:(NSString *)host :(int)port :(NSString *)username :(NSString *)password;
-+ (AimProxyInfo *)forSocks4:(NSString *)host :(int)port;
++ (AimProxyInfo *)forSocks4:(NSString *)host :(int)port :(NSString *)username;
 + (AimProxyInfo *)forNoProxy;
 @end
 
@@ -384,6 +386,7 @@
 - (RvConnectionManager *)getRvConnectionManager;
 - (void)sendAutomatically:(Screenname *)sn :(Message *)msg;
 - (void)sendTypingAutomatically:(Screenname *)sn :(TypingState *)msg;
+- (id<Set>)getDirectimConversations:(Screenname *)sn;
 @end
 
 #pragma mark Buddies and Groups
@@ -538,8 +541,8 @@
 @interface IncomingFileTransfer : FileTransfer {}
 - (void)accept;
 - (BOOL)isAccepted;
-- (void)decline;
-- (BOOL)isDeclined;
+- (void)reject;
+- (BOOL)isRejected;
 
 - (void)setFileMapper:(FileMapper *)mapper;
 - (FileMapper *)getFileMapper;

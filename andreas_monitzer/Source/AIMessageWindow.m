@@ -7,6 +7,7 @@
 
 #import "AIMessageWindow.h"
 #import "AIClickThroughThemeDocumentButton.h"
+#import <AIUtilities/AIApplicationAdditions.h>
 
 /*
  * @class AIMessageWindow
@@ -27,7 +28,8 @@
 {
 	NSButton *standardWindowButton = [super standardWindowButton:button forStyleMask:styleMask];
 
-	if (button == NSWindowDocumentIconButton) {
+	if (button == NSWindowDocumentIconButton &&
+		[NSApp isOnTigerOrBetter]) {
 		[NSKeyedArchiver setClassName:@"AIClickThroughThemeDocumentButton" forClass:[NSThemeDocumentButton class]];
 		standardWindowButton = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:standardWindowButton]];
 		

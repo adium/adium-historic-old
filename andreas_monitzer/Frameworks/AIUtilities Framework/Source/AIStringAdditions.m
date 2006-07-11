@@ -14,6 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIStringAdditions.h"
+
+#ifndef BSD_LICENSE_ONLY
+
 #import <Carbon/Carbon.h>
 #import "AIColorAdditions.h"
 #import "AIScannerAdditions.h"
@@ -23,7 +26,16 @@
 #include <unistd.h>
 #include <limits.h>
 
+#endif //ndef BSD_LICENSE_ONLY
+
+#include <wctype.h>
+
+//From LMX. Included under the BSD license. http://trac.adiumx.com/wiki/LMXParser
+static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *outHigh, unichar *outLow);
+
 @implementation NSString (AIStringAdditions)
+
+#ifndef BSD_LICENSE_ONLY
 
 //Random alphanumeric string
 + (NSString *)randomStringOfLength:(unsigned int)inLength
@@ -553,132 +565,213 @@
 	return self;
 }
 
-- (NSString *)stringByEscapingForHTML
+#endif //ndef BSD_LICENSE_ONLY
+
+//stringByEscapingForXMLWithEntities: and stringByUnescapingFromXMLWithEntities: were written by Peter Hosey and are explicitly released under the BSD license.
+/*
+ Copyright © 2006 Peter Hosey
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+ Neither the name of Peter Hosey nor the names of his contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+- (NSString *)stringByEscapingForXMLWithEntities:(NSDictionary *)entities
 {
-	NSCharacterSet *mustBeEscaped = [NSCharacterSet characterSetWithCharactersInString:@"&<>\""];
-	NSMutableString *result = [NSMutableString string];
-	NSString *lastChunk = nil;
-	NSScanner *scanner = [NSScanner scannerWithString:self];
+	static const unichar nbsp = 0xa0;
+	NSDictionary *realEntities = entities;
 
-	//We don't want to skip any characters; NSScanner skips whitespace and newlines by default
-	[scanner setCharactersToBeSkipped:[[[NSCharacterSet alloc] init] autorelease]];
-	
-	unsigned curLocation = 0, maxLocation = [self length];
-
-	while (1) {
-		if ([scanner scanUpToCharactersFromSet:mustBeEscaped intoString:&lastChunk]) {
-			[result appendString:lastChunk];
-			curLocation = [scanner scanLocation];
+	if ([NSApp isOnTigerOrBetter]) {
+		//We can use CF here.
+		if (!entities) {
+			realEntities = [NSDictionary dictionaryWithObjectsAndKeys:
+				@"amp",  @"&",
+				@"lt",   @"<",
+				@"gt",   @">",
+				@"quot", @"\"",
+				@"apos", @"'",
+				@"nbsp", [NSString stringWithCharacters:&nbsp length:1],
+				//Also escape whitespace. CF doesn't do this by default.
+				@"#x09", @"\t",
+				@"#x0a", @"\n",
+				@"#x0b", @"\v",
+				@"#x0c", @"\f",
+				@"#x0d", @"\r",
+				nil];
 		}
-		if (curLocation >= maxLocation) {
-			break;
 
+		return [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)self, (CFDictionaryRef)realEntities) autorelease];
+	} else {
+		//COMPAT 10.3
+		//CFXMLCreateStringByEscapingEntities is broken on 10.3.x. We must reinvent the wheel.
+
+		if (entities) {
+			//CF expects name=>expansion (the same as the unescape function). We do too, for compatibility with CF, but this is inconvenient to us (we look up entity names by characters, not the other way around).
+			//So, we flip the dictionary around so that keys are objects and objects are keys. This way, keys will be characters and objects will be entity names.
+			realEntities = [NSDictionary dictionaryWithObjects:[entities allKeys] forKeys:[entities allValues]];
 		} else {
-			switch ([self characterAtIndex:curLocation]) {
-				case '&':
-					[result appendString:@"&amp;"];
-					break;
-				case '"':
-					[result appendString:@"&quot;"];
-					break;
-				case '<':
-					[result appendString:@"&lt;"];
-					break;
-				case '>':
-					[result appendString:@"&gt;"];
-					break;
-				/*
-					case ' ':
-					[result appendString:@"&nbsp;"];
-					break;
-				*/
-			}
-			[scanner setScanLocation:++curLocation];
+			realEntities = [NSDictionary dictionaryWithObjectsAndKeys:
+				@"amp",  @"&",
+				@"lt",   @"<",
+				@"gt",   @">",
+				@"quot", @"\"",
+				@"apos", @"'",
+				@"nbsp", [NSString stringWithCharacters:&nbsp length:1],
+				nil];
 		}
-	}
-	
-	return result;
-}
 
-- (NSString *)stringByUnescapingFromHTML
-{
-	if ([self length] == 0) return [[self copy] autorelease]; //avoids various RangeExceptions.
-	
-	static NSString *ampersand = @"&", *semicolon = @";";
-	
-	NSString *segment = nil, *entity = nil;
-	NSScanner *scanner = [NSScanner scannerWithString:self];
-	[scanner setCaseSensitive:YES];
-	unsigned myLength = [self length];
-	NSMutableString *result = [NSMutableString string];
-	
-	do {
-		if ([scanner scanUpToString:ampersand intoString:&segment] || [self characterAtIndex:[scanner scanLocation]] == '&') {
-			if (segment) {
-				[result appendString:segment];
-				segment = nil;
-			}
-			if (![scanner isAtEnd]) {
-				[scanner setScanLocation:[scanner scanLocation]+1];
-			}
-		}
-		if ([scanner scanUpToString:semicolon intoString:&entity]) {
-			unsigned number;
-			if ([entity characterAtIndex:0] == '#') {
-				NSScanner	*numScanner;
-				unichar		secondCharacter;
-				BOOL		appendIt = NO;
+		NSMutableString *result = [NSMutableString stringWithCapacity:[self length]];
 
-				numScanner = [NSScanner scannerWithString:entity];
-				[numScanner setCaseSensitive:YES];
-				secondCharacter = [entity characterAtIndex:1];
-				
-				if (secondCharacter == 'x' || secondCharacter == 'X') {
-					//hexadecimal: "#x..." or "#X..."
-					[numScanner setScanLocation:2];
-					appendIt = [numScanner scanHexInt:&number];
-					
-				} else {
-					//decimal: "#..."
-					[numScanner setScanLocation:1];
-					appendIt = [numScanner scanUnsignedInt:&number];
+		NSZone *zone = [self zone];
+		unsigned i = 0, len = [self length];
+		unsigned bufsize = sizeof(unichar) * (len < 4096 ? len : 4096);
+		unichar *buf = NSZoneMalloc(zone, bufsize);
+		NSAssert1(buf, @"(in stringByEscapingForXMLWithEntities:) Could not allocate %u bytes", bufsize);
+		BOOL inSurrogatePair = NO;
+		unichar highSurrogateFromPrevBuf = 0;
+		while (len) {
+			if (len < bufsize)
+				bufsize = len;
+
+			[self getCharacters:buf range:(NSRange){ i, bufsize }];
+
+			if (highSurrogateFromPrevBuf) {
+				[result appendFormat:@"&#x%@;", UCGetUnicodeScalarValueForSurrogatePair(highSurrogateFromPrevBuf, buf[0])];
+			}
+
+			NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+			for (unsigned j = (highSurrogateFromPrevBuf != 0); j < bufsize; ++j) {
+				if ((!inSurrogatePair) && (UCIsSurrogateHighCharacter(buf[j]))) {
+					inSurrogatePair = YES;
+					continue;
 				}
 
-				if (appendIt) {
-					unichar chars[2] = { number, 0xffff };
-					CFIndex length = 1;
-					if (number > 0xffff) {
-						//split into surrogate pair
-						AIGetSurrogates(number, &chars[0], &chars[1]);
-						++length;
+				NSString *str = [NSString stringWithCharacters:&buf[j - inSurrogatePair] length:1 + inSurrogatePair];
+				NSString *entityName = [realEntities objectForKey:str];
+				if (entityName) {
+					[result appendFormat:@"&%@;", entityName];
+				} else if (inSurrogatePair) {
+					[result appendFormat:@"&#x%@;", UCGetUnicodeScalarValueForSurrogatePair(buf[j - 1], buf[j])];
+				} else {
+					/*A character (that doesn't require surrogates) must be escaped if it:
+					 *⁃	is 0x7f (DEL) or higher, or
+					 *⁃	is not printable.
+					 *
+					 *This includes whitespace. We escape whitespace so that it will not be collapsed by the parser.
+					 */
+
+					if ((buf[j] > 0x7e) || !isprint(buf[j])) {
+						[result appendFormat:@"&#x%02x;", buf[j]];
+					} else {
+						[result appendString:str];
 					}
-					CFStringAppendCharacters((CFMutableStringRef)result, chars, length);
+				}
+			}
+			[pool release];
+
+			if (inSurrogatePair) {
+				highSurrogateFromPrevBuf = buf[bufsize - 1];
+			} else {
+				highSurrogateFromPrevBuf = 0;
+			}
+
+			len -= bufsize;
+		}
+		NSZoneFree(zone, buf);
+
+		return [NSString stringWithString:result];
+	}
+}
+- (NSString *)stringByUnescapingFromXMLWithEntities:(NSDictionary *)entities
+{
+	if ([NSApp isOnTigerOrBetter]) {
+		return [(NSString *)CFXMLCreateStringByUnescapingEntities(kCFAllocatorDefault, (CFStringRef)self, (CFDictionaryRef)entities) autorelease];
+	} else {
+		//COMPAT 10.3
+
+		if (!entities) {
+			static const unichar nbsp = 0xa0;
+			entities = [NSDictionary dictionaryWithObjectsAndKeys:
+				@"&",  @"amp",
+				@"<",  @"lt",
+				@">",  @"gt",
+				@"\"", @"quot",
+				@"'",  @"apos",
+				[NSString stringWithCharacters:&nbsp length:1], @"nbsp",
+				nil];
+		}
+
+		unsigned len = [self length];
+		NSMutableString *result = [NSMutableString stringWithCapacity:len];
+		NSScanner *scanner = [NSScanner scannerWithString:self];
+		[scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithRange:(NSRange){ 0, 0 }]];
+
+		NSString *chunk = nil;
+		while (YES) { //Actual condition is below.
+			chunk = nil;
+			if ([scanner scanUpToString:@"&" intoString:&chunk]) {
+				[result appendString:chunk];
+			}
+			[scanner scanString:@"&" intoString:NULL];
+
+			//Condition is here.
+			if ([scanner scanLocation] >= len)
+				break;
+
+			if ([scanner scanString:@"#" intoString:NULL]) {
+				NSString *hexIdentifier = nil;
+				if ([scanner scanString:@"x" intoString:&hexIdentifier] || [scanner scanString:@"X" intoString:&hexIdentifier]) {
+					//Probably hex.
+					unsigned unichar32 = 0xffff;
+					if (![scanner scanHexInt:&unichar32]) {
+						[result appendFormat:@"&#%@", hexIdentifier];
+					} else if (![scanner scanString:@";" intoString:NULL]) {
+						[result appendFormat:@"&#%@%u", hexIdentifier, unichar32];
+					} else {
+						unichar high, low;
+						if (getSurrogatesForUnicodeScalarValue(unichar32, &high, &low)) {
+							[result appendFormat:@"%C%C", high, low];
+						} else {
+							[result appendFormat:@"%C", low];
+						}
+					}
+				} else {
+					//Not hex. Hopefully decimal.
+					int unichar32 = 65535; //== 0xffff
+					if (![scanner scanInt:&unichar32]) {
+						[result appendString:@"&#"];
+					} else if (![scanner scanString:@";" intoString:NULL]) {
+						[result appendFormat:@"&#%i", unichar32];
+					} else {
+						unichar high, low;
+						if (getSurrogatesForUnicodeScalarValue(unichar32, &high, &low)) {
+							[result appendFormat:@"%C%C", high, low];
+						} else {
+							[result appendFormat:@"%C", low];
+						}
+					}
 				}
 			} else {
-				//named entity. for now, we only support the five essential ones.
-				static NSDictionary *entityNames = nil;
-				if (entityNames == nil) {
-					entityNames = [[NSDictionary alloc] initWithObjectsAndKeys:
-						[NSNumber numberWithUnsignedInt:'"'], @"quot",
-						[NSNumber numberWithUnsignedInt:'&'], @"amp",
-						[NSNumber numberWithUnsignedInt:'<'], @"lt",
-						[NSNumber numberWithUnsignedInt:'>'], @"gt",
-						[NSNumber numberWithUnsignedInt:' '], @"nbsp",
-						nil];
-				}
-				number = [[entityNames objectForKey:[entity lowercaseString]] unsignedIntValue];
-				if (number) {
-					[result appendFormat:@"%C", (unichar)number];
+				//Not a numeric entity. Should be a named entity.
+				NSString *entityName = nil;
+				if (![scanner scanUpToString:@";" intoString:&entityName]) {
+					[result appendString:@"&"];
+				} else {
+					//Strip the semicolon.
+					[result appendString:[entities objectForKey:entityName]];
+					[scanner scanString:@";" intoString:NULL];
 				}
 			}
-			if (![scanner isAtEnd]) {
-				[scanner setScanLocation:[scanner scanLocation]+1];
-			}
-		} //if ([scanner scanUpToString:semicolon intoString:&entity])
-	} while ([scanner scanLocation] < myLength);
-//	NSLog(@"unescaped %@\ninto %@", self, result);
-	return result;
+		}
+
+		return [NSString stringWithString:result];
+	}
 }
+
+#ifndef BSD_LICENSE_ONLY
 
 enum characterNatureMask {
 	whitespaceNature = 0x1, //space + \t\n\r\f\a 
@@ -991,4 +1084,65 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 	return [self allLinesWithSeparator:nil];
 }
 
+#endif //ndef BSD_LICENSE_ONLY
+
 @end
+
+static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *outHigh, unichar *outLow) {
+	if(scalar <= 0xffff) {
+		if(outHigh)
+			*outHigh = 0x0000;
+		if(outLow)
+			*outLow  = scalar;
+		return NO;
+	}
+
+	//note: names uuuuu, wwww, and xxxxx+ are taken from the Unicode book (section 3.9, table 3-4).
+	union {
+		UTF32Char scalar;
+		struct {
+			unsigned unused:     11;
+			unsigned uuuuu:       5;
+			unsigned xxxxxx:      6;
+			unsigned xxxxxxxxxx: 10;
+		} components;
+	} componentsUnion = {
+		.scalar = scalar
+	};
+
+	if(outHigh) {
+		union {
+			struct {
+				unsigned highPrefix: 6;
+				unsigned wwww:       4;
+				unsigned xxxxxx:     6;
+			} highComponents;
+			unichar codeUnit;
+		} highUnion = {
+			.highComponents = {
+				.highPrefix = 0x36, //0b110110
+				.wwww   = componentsUnion.components.uuuuu - 1,
+				.xxxxxx = componentsUnion.components.xxxxxx,
+			}
+		};
+		*outHigh = highUnion.codeUnit;
+	}
+
+	if(outLow) {
+		union {
+			struct {
+				unsigned lowPrefix:   6;
+				unsigned xxxxxxxxxx: 10;
+			} lowComponents;
+			unichar codeUnit;
+		} lowUnion = {
+			.lowComponents = {
+				.lowPrefix = 0x37, //0b110111
+				.xxxxxxxxxx = componentsUnion.components.xxxxxxxxxx,
+			}
+		};
+		*outLow = lowUnion.codeUnit;
+	};
+
+	return YES;
+}

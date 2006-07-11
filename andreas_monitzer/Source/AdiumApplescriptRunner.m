@@ -94,12 +94,14 @@
 	
 	if (!runningApplescriptsDict) runningApplescriptsDict = [[NSMutableDictionary alloc] init];
 	
-	[runningApplescriptsDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:
-		target, @"target",
-		NSStringFromSelector(selector), @"selector",
-		userInfo, @"userInfo", nil]
-								forKey:uniqueID];
-	
+	if (target && selector) {
+		[runningApplescriptsDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:
+			target, @"target",
+			NSStringFromSelector(selector), @"selector",
+			userInfo, @"userInfo", nil]
+									forKey:uniqueID];
+	}
+
 	NSDictionary *executionDict = [NSDictionary dictionaryWithObjectsAndKeys:
 		path, @"path",
 		(function ? function : @""), @"function",
@@ -143,19 +145,25 @@
 {
 	NSDictionary *userInfo = [inNotification userInfo];
 	NSString	 *uniqueID = [userInfo objectForKey:@"uniqueID"];
-	
+
 	NSDictionary *targetDict = [runningApplescriptsDict objectForKey:uniqueID];
-	id			 target = [targetDict objectForKey:@"target"];
-	//Selector will be of the form applescriptDidRun:resultString:
-	SEL			 selector = NSSelectorFromString([targetDict objectForKey:@"selector"]);
-	
-	//Notify our target
-	[target performSelector:selector
-				 withObject:[targetDict objectForKey:@"userInfo"]
-				 withObject:[userInfo objectForKey:@"resultString"]];
-	
-	//No further need for this dictionary entry
-	[runningApplescriptsDict removeObjectForKey:uniqueID];
+	if (targetDict) {
+		id			 target = [targetDict objectForKey:@"target"];
+		//Selector will be of the form applescriptDidRun:resultString:
+		SEL			 selector = NSSelectorFromString([targetDict objectForKey:@"selector"]);
+		
+		//Notify our target
+		[target performSelector:selector
+					 withObject:[targetDict objectForKey:@"userInfo"]
+					 withObject:[userInfo objectForKey:@"resultString"]];
+		
+		//No further need for this dictionary entry
+		[runningApplescriptsDict removeObjectForKey:uniqueID];
+		
+		if (![runningApplescriptsDict count]) {
+			[runningApplescriptsDict release]; runningApplescriptsDict = nil;
+		}
+	}
 }
 
 @end

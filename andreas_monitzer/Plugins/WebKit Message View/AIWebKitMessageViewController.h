@@ -54,9 +54,6 @@
  *	@brief Create a new message view controller
  */
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
-+ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat
-													 withPlugin:(AIWebKitMessageViewPlugin *)inPlugin 
-									 preferencesChangedDelegate:(id)inPreferencesChangedDelegate;
 
 /*!
  *	@brief Print the webview
@@ -89,4 +86,5 @@
  */
 - (void)setShouldReflectPreferenceChanges:(BOOL)inValue;
 
+- (void)setPreferencesChangedDelegate:(id)inDelegate;
 @end

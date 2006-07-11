@@ -18,6 +18,8 @@
 #import "ESDebugController.h"
 #include <stdarg.h>
 
+extern CFRunLoopRef CFRunLoopGetMain(void);
+
 /*!
  * @brief Adium debug log function
  *
@@ -44,9 +46,14 @@ void AILog (NSString *format, ...) {
 	[debugMessage release];
 	
 	/* Be careful; we should only modify debugLogArray and the windowController's view on the main thread. */
-	[[NSClassFromString(@"ESDebugController") sharedDebugController] performSelectorOnMainThread:@selector(addMessage:)
-																					  withObject:actualMessage
-																				   waitUntilDone:NO];	
+	if (CFRunLoopGetCurrent() == CFRunLoopGetMain()) {
+		[[NSClassFromString(@"ESDebugController") sharedDebugController] addMessage:actualMessage];
+
+	} else {
+		[[NSClassFromString(@"ESDebugController") sharedDebugController] performSelectorOnMainThread:@selector(addMessage:)
+																						  withObject:actualMessage
+																					   waitUntilDone:NO];		
+	}
 	va_end(ap); /* clean up when done */
 }
 #else

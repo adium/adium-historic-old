@@ -97,7 +97,7 @@
 		chat = [inChat retain];
 		view_accountSelection = nil;
 		userListController = nil;
-		sendMessagesToOfflineContact = [[chat account] supportsOfflineMessaging];
+		suppressSendLaterPrompt = NO;
 		retainingScrollViewUserList = NO;
 		
 		//Load the view containing our controls
@@ -324,34 +324,37 @@
     if ([attributedString length] != 0) { 
 		AIListObject				*listObject = [chat listObject];
 		
-		if (!sendMessagesToOfflineContact &&
-			![chat isGroupChat] &&
-			![listObject online] &&
-			![listObject isStranger] &&
-			![[chat account] supportsOfflineMessaging]) {
+		if (!suppressSendLaterPrompt &&
+			![chat canSendMessages]) {
 			
-			NSString			*messageHeader;
-			NSAttributedString	*message;
-			NSString			*formattedUID = [listObject formattedUID];
+			NSString							*messageHeader;
+			NSAttributedString					*message;
+			NSString							*formattedUID = [listObject formattedUID];
+			ESTextAndButtonsWindowController	*sendLaterWindowController;
+			
 			messageHeader = [NSString stringWithFormat:AILocalizedString(@"%@ appears to be offline. How do you want to send this message?", nil),
 				formattedUID];
 			message = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:
 				AILocalizedString(@"Send Later will send the message the next time both you and %@ are online. Send Now may work if %@ is invisible or is not on your contact list and so only appears to be offline.", "Send Later dialogue explanation text"),
 				formattedUID, formattedUID, formattedUID]
-													  attributes:nil];
+													  attributes:[NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:10]
+																							 forKey:NSFontAttributeName]];
 
-			[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:nil
-																  defaultButton:AILocalizedString(@"Send Now", nil)
-																alternateButton:AILocalizedString(@"Don't Send", nil)
-																	otherButton:AILocalizedString(@"Send Later", nil)
-																	   onWindow:[view_contents window]
-															  withMessageHeader:messageHeader
-																	 andMessage:message
-																		  image:([listObject userIcon] ? [listObject userIcon] : [AIServiceIcons serviceIconForObject:listObject
-																																								 type:AIServiceIconLarge
-																																							direction:AIIconNormal])
-																		 target:self
-																	   userInfo:nil];
+			sendLaterWindowController = [ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:nil
+																							  defaultButton:AILocalizedString(@"Send Now", nil)
+																							alternateButton:AILocalizedString(@"Don't Send", nil)
+																								otherButton:AILocalizedString(@"Send Later", nil)
+																								   onWindow:[view_contents window]
+																						  withMessageHeader:messageHeader
+																								 andMessage:message
+																									  image:([listObject userIcon] ? [listObject userIcon] : [AIServiceIcons serviceIconForObject:listObject
+																																															 type:AIServiceIconLarge
+																																														direction:AIIconNormal])
+																									 target:self
+																								   userInfo:nil];
+			[sendLaterWindowController setKeyEquivalent:@"l"
+										   modifierMask:0
+											  forButton:AITextAndButtonsWindowButtonOther];
 			[message release];
 
 		} else {
@@ -390,7 +393,7 @@
 {
 	switch (returnCode) {
 		case AITextAndButtonsDefaultReturn:
-			[self setShouldSendMessagesToOfflineContacts:YES]; //don't ask again
+			suppressSendLaterPrompt = YES;
 			[self sendMessage:nil];
 			break;
 
@@ -475,16 +478,6 @@
 							 setAsNewDefaults:NO];
 	[listContact release];
 }
-
-/*!
- * @brief Offline messaging
- */
-//XXX - Offline messaging code SHOULD NOT BE IN HERE! -ai
-- (void)setShouldSendMessagesToOfflineContacts:(BOOL)should
-{
-	sendMessagesToOfflineContact = should;
-}
-
 
 //Account Selection ----------------------------------------------------------------------------------------------------
 #pragma mark Account Selection
@@ -603,7 +596,11 @@
 {	
 	//Configure the text entry view
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
-    [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
+
+	//XXX This is necessary for tab completion, but Strange Things Happen. Probably reveals a dormant bug elsewhere.
+	//[textView_outgoing setDelegate:self];
+    
+	[textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
     if ([textView_outgoing respondsToSelector:@selector(setUsesFindPanel:)]) {
 		[textView_outgoing setUsesFindPanel:YES];
     }
@@ -757,6 +754,62 @@
 	return height;
 }
 
+#pragma mark Autocompletion
+/*
+ * @brief Should the tab key cause an autocompletion if possible?
+ *
+ * We only tab to autocomplete for a group chat
+ */
+- (BOOL)textViewShouldTabComplete:(NSTextView *)inTextView
+{
+	return [[self chat] isGroupChat];
+}
+
+- (NSArray *)textView:(NSTextView *)textView completions:(NSArray *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(int *)index
+{
+	NSMutableArray	*completions;
+	
+	if ([[self chat] isGroupChat]) {
+		NSString		*partialWord = [[[textView textStorage] attributedSubstringFromRange:charRange] string];
+		NSEnumerator	*enumerator;
+		AIListContact	*listContact;
+		
+		NSString		*suffix;
+		if (charRange.location == 0) {
+			//At the start of a line, append ": "
+			suffix = @": ";
+		} else {
+			suffix = nil;
+		}
+		
+		completions = [NSMutableArray array];
+		enumerator = [[[self chat] participatingListObjects] objectEnumerator];
+		while ((listContact = [enumerator nextObject])) {
+			if ([[listContact displayName] rangeOfString:partialWord
+												 options:(NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) {
+				
+				[completions addObject:(suffix ? [[listContact displayName] stringByAppendingString:suffix] : [listContact displayName])];
+				
+			} else if ([[listContact formattedUID] rangeOfString:partialWord
+														 options:(NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) {
+				[completions addObject:(suffix ? [[listContact formattedUID] stringByAppendingString:suffix] : [listContact formattedUID])];
+				
+			} else if ([[listContact UID] rangeOfString:partialWord
+												options:(NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) {
+				[completions addObject:(suffix ? [[listContact UID] stringByAppendingString:suffix] : [listContact UID])];
+			}
+		}
+
+		if ([completions count]) {			
+			*index = 0;
+		}
+
+	} else {
+		completions = nil;
+	}
+
+	return ([completions count] ? completions : words);
+}
 
 //User List ------------------------------------------------------------------------------------------------------------
 #pragma mark User List

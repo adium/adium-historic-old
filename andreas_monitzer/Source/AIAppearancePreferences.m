@@ -80,11 +80,6 @@ typedef enum {
 {	
 	//Other list options
 	[popUp_windowStyle setMenu:[self _windowStyleMenu]];
-
-	//Localized strings
-	[label_serviceIcons setLocalizedString:AILocalizedString(@"Service icons:","Label for preference to select the icon pack to used for service (AIM, MSN, etc.)")];
-	[label_statusIcons setLocalizedString:AILocalizedString(@"Status icons:","Label for preference to select status icon pack")];
-	[label_dockIcons setLocalizedString:AILocalizedString(@"Dock icons:","Label for preference to select dock icon")];
 		
 	//Observe preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
@@ -966,7 +961,14 @@ typedef enum {
 	iconPath = [adium pathOfPackWithName:activePackName
 							   extension:@"AdiumStatusIcons"
 					  resourceFolderName:@"Status Icons"];
-	
+	if (!iconPath) {
+		activePackName = [[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
+																		 group:PREF_GROUP_APPEARANCE];
+		
+		iconPath = [adium pathOfPackWithName:activePackName
+								   extension:@"AdiumStatusIcons"
+						  resourceFolderName:@"Status Icons"];		
+	}
 	[tempMenu addItem:[self meuItemForIconPackAtPath:iconPath class:[AIStatusIcons class]]];
 	[tempMenu setDelegate:self];
 	[tempMenu setTitle:@"Temporary Status Icons Menu"];
@@ -985,12 +987,20 @@ typedef enum {
 							   extension:@"AdiumServiceIcons"
 					  resourceFolderName:@"Service Icons"];
 	
+	if (!iconPath) {
+		activePackName = [[adium preferenceController] defaultPreferenceForKey:KEY_SERVICE_ICON_PACK
+																		 group:PREF_GROUP_APPEARANCE];
+		
+		iconPath = [adium pathOfPackWithName:activePackName
+								   extension:@"AdiumServiceIcons"
+						  resourceFolderName:@"Service Icons"];		
+	}
 	[tempMenu addItem:[self meuItemForIconPackAtPath:iconPath class:[AIServiceIcons class]]];
 	[tempMenu setDelegate:self];
 	[tempMenu setTitle:@"Temporary Service Icons Menu"];
 	
 	[popUp_serviceIcons setMenu:tempMenu];
-	[popUp_serviceIcons selectItemWithRepresentedObject:activePackName];	
+	[popUp_serviceIcons selectItemWithRepresentedObject:activePackName];
 }
 
 #pragma mark Menu delegate

@@ -69,27 +69,33 @@
 {
     NSParameterAssert(fullPath != nil && [fullPath length] != 0);
 
+	NSFileManager *manager = [NSFileManager defaultManager];
     BOOL			isDir;
-    NSMutableArray	*neededFolders = [[NSMutableArray alloc] init];
-    unsigned		count;
+	unsigned		count;
 	
-    while (![[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDir] || !isDir) {
-        [neededFolders addObject:[fullPath lastPathComponent]];
-        fullPath = [fullPath stringByDeletingLastPathComponent];
-    }
-	
-	
-	count = [neededFolders count];
-	if (count) {
-		NSFileManager	*defaultManager = [NSFileManager defaultManager];
-		short			folderIndex;
-		for (folderIndex = count-1; folderIndex >= 0; folderIndex--) {
-			fullPath = [fullPath stringByAppendingPathComponent:[neededFolders objectAtIndex:folderIndex]];
-			[defaultManager createDirectoryAtPath:fullPath attributes:nil];
+	if(![manager fileExistsAtPath:fullPath isDirectory:&isDir] || !isDir)
+	{
+		NSMutableArray	*neededFolders = [[NSMutableArray alloc] init];
+		
+		do
+		{
+			[neededFolders addObject:[fullPath lastPathComponent]];
+			fullPath = [fullPath stringByDeletingLastPathComponent];
+			
 		}
+		while (![manager fileExistsAtPath:fullPath isDirectory:&isDir] || !isDir);
+		
+		count = [neededFolders count];
+		if (count > 0) {
+			short			folderIndex;
+			for (folderIndex = count-1; folderIndex >= 0; folderIndex--) {
+				fullPath = [fullPath stringByAppendingPathComponent:[neededFolders objectAtIndex:folderIndex]];
+				[manager createDirectoryAtPath:fullPath attributes:nil];
+			}
+		}
+		
+		[neededFolders release];
 	}
-	
-    [neededFolders release];
 	
 	return (count > 0);
 }
@@ -173,7 +179,7 @@
 }
 
 
-- (NSString *) findFolderOfType:(OSType)type inDomain:(short)domain createFolder:(BOOL)createFolder
+- (NSString *)findFolderOfType:(OSType)type inDomain:(short)domain createFolder:(BOOL)createFolder
 {
     CFURLRef folderURL;
     FSRef folderRef;
@@ -190,7 +196,7 @@
     return [(NSString *)CFURLCopyFileSystemPath(folderURL, kCFURLPOSIXPathStyle) autorelease];
 }
 
-- (NSString *) userApplicationSupportFolder
+- (NSString *)userApplicationSupportFolder
 {
     return [self findFolderOfType:kApplicationSupportFolderType inDomain:kUserDomain createFolder:YES];
 }

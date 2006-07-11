@@ -28,22 +28,30 @@
 	return AIServicePrimary;
 }
 
-//subclass should change this
 - (NSString *)serviceCodeUniqueID{
 	return(@"joscar-OSCAR-AIM");
 }
-//subclass should change this
+#ifdef JOSCAR_SUPERCEDE_LIBGAIM
 - (NSString *)shortDescription{
 	return @"AIM";
 }
-//subclass should change this
 - (NSString *)longDescription{
 	return @"AOL Instant Messenger";
 }
-//subclass should change this
 - (NSString *)serviceID{
 	return @"AIM";
 }
+#else
+- (NSString *)shortDescription{
+	return @"AIM-joscar";
+}
+- (NSString *)longDescription{
+	return @"AOL Instant Messenger (joscar)";
+}
+- (NSString *)serviceID{
+	return @"AIM-joscar";
+}
+#endif
 
 //subclass should change this
 //- (DCJoinChatViewController *)joinChatView{

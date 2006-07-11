@@ -68,7 +68,8 @@
 - (void)dealloc
 {
 	[statusType release]; statusType = nil;
-	
+	[loggedMessage release]; loggedMessage = nil;
+
     [super dealloc];
 }
 
@@ -82,6 +83,19 @@
 - (NSString *)status
 {
 	return statusType;
+}
+
+- (void)setLoggedMessage:(NSAttributedString *)inLoggedMessage
+{
+	if (loggedMessage != inLoggedMessage) {
+		[loggedMessage release];
+		loggedMessage = [inLoggedMessage retain];
+	}
+}
+
+- (NSAttributedString *)loggedMessage
+{
+	return loggedMessage;
 }
 
 @end

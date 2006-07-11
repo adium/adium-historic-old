@@ -28,16 +28,17 @@ typedef enum {
 
 @interface AIStandardListWindowController : AIListWindowController {
 	IBOutlet	NSView						*view_statusAndImage;
-	
+
+	IBOutlet	NSView						*view_nameAndStatusMenu;
 	IBOutlet	AIHoveringPopUpButton		*statusMenuView;
 	IBOutlet	AIContactListNameButton		*nameView;
+	IBOutlet	NSImageView					*imageView_status;
 
 	IBOutlet	AIContactListImagePicker	*imagePicker;
 	ContactListImagePickerPosition			imagePickerPosition;
 
 	NSDictionary				*toolbarItems;
-	AIStatusMenu				*statusMenu;
-	
+	AIStatusMenu				*statusMenu;	
 }
 
 - (void)updateImagePicker;

@@ -45,8 +45,8 @@
 
 - (NSString *)string;
 
-- (NSString *)stringByEscapingForHTML;
-- (NSString *)stringByUnescapingFromHTML;
+- (NSString *)stringByEscapingForXMLWithEntities:(NSDictionary *)entities;
+- (NSString *)stringByUnescapingFromXMLWithEntities:(NSDictionary *)entities;
 
 - (NSString *)stringByEscapingForShell;
 //- (BOOL)isURLEncoded;

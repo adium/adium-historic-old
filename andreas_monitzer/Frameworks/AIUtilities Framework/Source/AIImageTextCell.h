@@ -51,7 +51,6 @@
  */
 - (void)setImageTextPadding:(float)inImageTextPadding;
 
-
 - (void)setLineBreakMode:(NSLineBreakMode)inLineBreakMode;
 
 @end

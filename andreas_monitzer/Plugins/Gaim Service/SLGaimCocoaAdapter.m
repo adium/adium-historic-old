@@ -150,13 +150,24 @@ static NSMutableArray	*libgaimPluginArray = nil;
     return self;
 }
 
-//Our autoreleased objects will only be released when the outermost autorelease pool is released.
-//This is handled automatically in the main thread, but we need to do it manually here.
-//Release the current pool, then create a new one.
+/*!
+ * @brief Empty and recreate the autorelease pool
+ *
+ * Our autoreleased objects will only be released when the outermost autorelease pool is released.
+ * This is handled automatically in the main thread, but we need to do it manually here.
+ */
 - (void)refreshAutoreleasePool:(NSTimer *)inTimer
 {
 	[currentAutoreleasePool release];
 	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
+}
+
+static void ZombieKiller_Signal(int i)
+{
+	int status;
+	pid_t child_pid;
+
+	while ((child_pid = waitpid(-1, &status, WNOHANG)) > 0);
 }
 
 - (void)initLibGaim
@@ -172,6 +183,17 @@ static NSMutableArray	*libgaimPluginArray = nil;
 	if (!gaim_core_init("Adium")) {
 		NSLog(@"*** FATAL ***: Failed to initialize gaim core");
 		GaimDebug (@"*** FATAL ***: Failed to initialize gaim core");
+	}
+	
+	//Libgaim's async DNS lookup tends to create zombies.
+	{
+		struct sigaction act;
+		
+		act.sa_handler = ZombieKiller_Signal;		
+		//Send for terminated but not stopped children
+		act.sa_flags = SA_NOCLDWAIT;
+
+		sigaction(SIGCHLD, &act, NULL);
 	}
 }
 
@@ -446,17 +468,20 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						 objects, each of which has a label and identifier.  Each may also have is_int, with a minimum
 						 and a maximum integer value.
 						 */
-						list = (GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info(gc);
-
-						//Look at each proto_chat_entry in the list to verify we have it in chatCreationInfo
-						for (tmp = list; tmp; tmp = tmp->next)
+						if ((GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info)
 						{
-							pce = tmp->data;
-							char	*identifier = g_strdup(pce->identifier);
-							
-							NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
-							if (!value) {
-								GaimDebug (@"Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+							list = (GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info(gc);
+
+							//Look at each proto_chat_entry in the list to verify we have it in chatCreationInfo
+							for (tmp = list; tmp; tmp = tmp->next)
+							{
+								pce = tmp->data;
+								char	*identifier = g_strdup(pce->identifier);
+								
+								NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
+								if (!value) {
+									GaimDebug (@"Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+								}
 							}
 						}
 					}
@@ -1212,7 +1237,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
 			(g = gaim_buddy_get_group(buddy)) && 
 			(od = account->gc->proto_data)) {
-			aim_ssi_editcomment(od->sess, g->name, uidUTF8String, [comment UTF8String]);	
+			aim_ssi_editcomment(od, g->name, uidUTF8String, [comment UTF8String]);	
 		}
 	}
 }

@@ -23,6 +23,8 @@
 
 #import "AIXMLElement.h"
 
+#import <AIUtilities/AIStringAdditions.h>
+
 @implementation AIXMLElement
 
 + (id) elementWithNamespaceName:(NSString *)namespace elementName:(NSString *)newName
@@ -48,6 +50,8 @@
 	if ((self = [super init])) {
 		name = [newName copy];
 		attributes = [[NSMutableDictionary alloc] init];
+		attributeNames  = [[NSMutableArray alloc] init];
+		attributeValues = [[NSMutableArray alloc] init];
 		contents = [[NSMutableArray alloc] init];
 	}
 	return self;
@@ -62,9 +66,24 @@
 {
 	[name release];
 	[attributes release];
+	[attributeNames  release];
+	[attributeValues release];
 	[contents release];
 
 	[super dealloc];
+}
+
+- (id) copyWithZone:(NSZone *)zone {
+	AIXMLElement *other = [[AIXMLElement allocWithZone:zone] initWithName:name];
+	other->attributes      = [attributes      mutableCopy];
+	other->attributeNames  = [attributeNames  mutableCopy];
+	other->attributeValues = [attributeValues mutableCopy];
+
+	other->contents = [[NSMutableArray alloc] initWithCapacity:[contents count]];
+	NSEnumerator *contentsEnum = [contents objectEnumerator];
+	id obj;
+	while((obj = [contentsEnum nextObject]))
+		[other->contents addObject:obj];
 }
 
 #pragma mark -
@@ -102,14 +121,14 @@
 	NSParameterAssert(isString || [obj isKindOfClass:[AIXMLElement class]]);
 
 	if(isString) {
-		obj = [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)obj, /*entitiesDictionary*/ NULL) autorelease];
+		obj = [obj stringByEscapingForXMLWithEntities:nil];
 	}
 
 	[contents addObject:obj];
 }
 - (void) addObjectsFromArray:(NSArray *)array
 {
-	//We do it this way for the assertion.
+	//We do it this way for the assertion, and to get free escaping of strings.
 	NSEnumerator *arrayEnum = [array objectEnumerator];
 	id obj;
 	while ((obj = [arrayEnum nextObject])) {
@@ -130,17 +149,18 @@
 
 - (NSString *) quotedXMLAttributeValueStringForString:(NSString *)str
 {
-	return [NSString stringWithFormat:@"\"%@\"", [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)str, /*entitiesDictionary*/ NULL) autorelease]];
+	return [NSString stringWithFormat:@"\"%@\"", [str stringByEscapingForXMLWithEntities:nil]];
 }
 
 - (void) appendXMLStringtoString:(NSMutableString *)string
 {
 	[string appendFormat:@"<%@", name];
 	if ([attributes count]) {
-		NSEnumerator *keysEnum = [[[attributes allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] objectEnumerator];
+		unsigned attributeIdx = 0U;
+		NSEnumerator *keysEnum = [attributeNames objectEnumerator];
 		NSString *key;
 		while ((key = [keysEnum nextObject])) {
-			NSString *value = [attributes objectForKey:key];
+			NSString *value = [attributeValues objectAtIndex:attributeIdx++];
 			if ([value respondsToSelector:@selector(stringValue)]) {
 				value = [(NSNumber *)value stringValue];
 			} else if ([value respondsToSelector:@selector(absoluteString)]) {
@@ -179,10 +199,11 @@
 {
 	NSMutableString *startTag = [NSMutableString stringWithFormat:@"<%@", name];
 	if ([attributes count]) {
-		NSEnumerator *keysEnum = [[[attributes allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] objectEnumerator];
+		unsigned attributeIdx = 0U;
+		NSEnumerator *keysEnum = [attributeNames objectEnumerator];
 		NSString *key;
 		while ((key = [keysEnum nextObject])) {
-			NSString *value = [attributes objectForKey:key];
+			NSString *value = [attributeValues objectAtIndex:attributeIdx++];
 			if ([value respondsToSelector:@selector(stringValue)]) {
 				value = [(NSNumber *)value stringValue];
 			} else if ([value respondsToSelector:@selector(absoluteString)]) {
@@ -222,10 +243,11 @@
 {
 	NSMutableString *string = [NSMutableString stringWithFormat:@"<%@ AIXMLElement:id=\"%p\"", name, self];
 	if ([attributes count]) {
-		NSEnumerator *keysEnum = [[[attributes allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] objectEnumerator];
+		unsigned attributeIdx = 0U;
+		NSEnumerator *keysEnum = [attributeNames objectEnumerator];
 		NSString *key;
 		while ((key = [keysEnum nextObject])) {
-			NSString *value = [attributes objectForKey:key];
+			NSString *value = [attributeValues objectAtIndex:attributeIdx++];
 			if ([value respondsToSelector:@selector(stringValue)]) {
 				value = [(NSNumber *)value stringValue];
 			} else if ([value respondsToSelector:@selector(absoluteString)]) {
@@ -247,6 +269,13 @@
 	return obj;
 }
 - (void) setValue:(id)obj forKey:(NSString *)key {
+	unsigned idx = [attributeNames indexOfObject:key];
+	if(idx == NSNotFound) {
+		[attributeNames addObject:key];
+		[attributeValues addObject:obj];
+	} else {
+		[attributeValues replaceObjectAtIndex:idx withObject:obj];
+	}
 	[attributes setValue:obj forKey:key];
 }
 

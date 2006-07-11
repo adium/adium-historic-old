@@ -61,8 +61,11 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who,
 								   const char *message, GaimMessageFlags flags,
 								   time_t mtime)
 {
-	//We only care about this if it does not have the GAIM_MESSAGE_SEND flag, which is set if Gaim is sending a sent message back to us
-	if ((flags & GAIM_MESSAGE_SEND) == 0) {
+	/* We only care about this if:
+	 *	1) It does not have the GAIM_MESSAGE_SEND flag, which is set if Gaim is sending a sent message back to us -or-
+	 *  2) It is a delayed (history) message from a chat
+	 */
+	if (!(flags & GAIM_MESSAGE_SEND) || (flags & GAIM_MESSAGE_DELAYED)) {
 		NSDictionary	*messageDict;
 		NSString		*messageString;
 

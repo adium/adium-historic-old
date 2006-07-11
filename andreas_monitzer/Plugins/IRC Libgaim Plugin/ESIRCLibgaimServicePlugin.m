@@ -13,7 +13,6 @@
 - (void)installPlugin
 {
 	ircService = [[[ESIRCService alloc] init] retain];
-	NSLog(@"Init %@ and got %@",self, ircService);
 }
 
 extern BOOL gaim_init_irc_plugin(void);
@@ -26,13 +25,13 @@ extern BOOL gaim_init_irc_plugin(void);
 - (void)dealloc
 {
 	[ircService release];
-	NSLog(@"Dealloc %@",self);
+
 	[super dealloc];
 }
 
 - (void)uninstallPlugin
 {
-	NSLog(@"Uninstall");
+
 }
 
 - (NSString *)libgaimPluginPath

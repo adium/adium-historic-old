@@ -33,7 +33,7 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIContentContext.h>
 #import <Adium/AIContentObject.h>
-#import <Adium/AIContentStatus.h>
+#import <Adium/AIContentEvent.h>
 #import <Adium/AIEmoticon.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
@@ -44,10 +44,8 @@
 
 #import "ESWebView.h"
 
-@class AIContentMessage, AIContentStatus, AIContentObject;
-
 @interface AIWebKitMessageViewController (PRIVATE)
-- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin preferencesChangedDelegate:(id)inPreferencesChangedDelegate;
+- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
 - (void)_initWebView;
 - (void)_primeWebViewAndReprocessContent:(BOOL)reprocessContent;
 - (void)_updateWebViewForCurrentPreferences;
@@ -69,24 +67,18 @@ static NSArray *draggedTypes = nil;
 
 @implementation AIWebKitMessageViewController
 
-+ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin preferencesChangedDelegate:(id)inPreferencesChangedDelegate
-{
-    return [[[self alloc] initForChat:inChat withPlugin:inPlugin preferencesChangedDelegate:inPreferencesChangedDelegate] autorelease];	
-}
-
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
-    return [[[self alloc] initForChat:inChat withPlugin:inPlugin preferencesChangedDelegate:nil] autorelease];
+    return [[[self alloc] initForChat:inChat withPlugin:inPlugin] autorelease];
 }
 
-- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin preferencesChangedDelegate:(id)inPreferencesChangedDelegate
+- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
     //init
     if ((self = [super init]))
 	{		
 		[self _initWebView];
 
-		preferencesChangedDelegate = [inPreferencesChangedDelegate retain];
 		chat = [inChat retain];
 		plugin = [inPlugin retain];
 		contentQueue = [[NSMutableArray alloc] init];
@@ -112,7 +104,6 @@ static NSArray *draggedTypes = nil;
 									   selector:@selector(sourceOrDestinationChanged:)
 										   name:Chat_DestinationChanged 
 										 object:inChat];
-		[self sourceOrDestinationChanged:nil];
 		
 		//Observe content additons
 		[[adium notificationCenter] addObserver:self 
@@ -195,6 +186,26 @@ static NSArray *draggedTypes = nil;
 		}
 	} else {
 		[storedContentObjects release]; storedContentObjects = nil;
+	}
+}
+
+- (void)setPreferencesChangedDelegate:(id)inDelegate
+{
+	if (inDelegate != preferencesChangedDelegate) {
+		[preferencesChangedDelegate release];
+		preferencesChangedDelegate = [inDelegate retain];
+		
+		[preferencesChangedDelegate preferencesChangedForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY
+														   key:nil
+														object:nil
+												preferenceDict:[[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]
+													 firstTime:YES];
+		
+		[preferencesChangedDelegate preferencesChangedForGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES
+														   key:nil
+														object:nil
+												preferenceDict:[[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES]
+													 firstTime:YES];
 	}
 }
 
@@ -378,8 +389,9 @@ static NSArray *draggedTypes = nil;
 	[activeVariant release];
 	
 	//Load the message style
-	activeStyle = [[prefDict objectForKey:KEY_WEBKIT_STYLE] retain];
-	styleBundle = [plugin messageStyleBundleWithIdentifier:activeStyle];
+	styleBundle = [plugin messageStyleBundleWithIdentifier:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
+	activeStyle = [[styleBundle bundleIdentifier] retain];
+
 	messageStyle = [[AIWebkitMessageViewStyle messageViewStyleFromBundle:styleBundle] retain];
 	[webView setPreferencesIdentifier:activeStyle];
 
@@ -447,7 +459,10 @@ static NSArray *draggedTypes = nil;
 	
 	NSNumber	*minSize = [prefDict objectForKey:KEY_WEBKIT_MIN_FONT_SIZE];
 	[[webView preferences] setMinimumFontSize:(minSize ? [minSize intValue] : 1)];
-	
+
+	//Update our icons before doing any loading
+	[self sourceOrDestinationChanged:nil];
+
 	//Prime the webview with the new style/variant and settings, and re-insert all our content back into the view
 	[self _primeWebViewAndReprocessContent:YES];	
 }
@@ -474,6 +489,7 @@ static NSArray *draggedTypes = nil;
 - (void)_primeWebViewAndReprocessContent:(BOOL)reprocessContent
 {
 	webViewIsReady = NO;
+
 	[webView setFrameLoadDelegate:self];
 	[[webView mainFrame] loadHTMLString:[messageStyle baseTemplateWithVariant:activeVariant chat:chat] baseURL:nil];
 
@@ -594,7 +610,7 @@ static NSArray *draggedTypes = nil;
 - (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
 	NSString		*dateMessage = nil;
-	AIContentStatus *dateSeparator = nil;
+	AIContentEvent	*dateSeparator = nil;
 	
 	/*
 	 If the day has changed since our last message (or if there was no previous message and 
@@ -605,13 +621,13 @@ static NSArray *draggedTypes = nil;
 		dateMessage = [[content date] descriptionWithCalendarFormat:[[NSDateFormatter localizedDateFormatter] dateFormat]
 														   timeZone:nil
 															 locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
-		dateSeparator = [AIContentStatus statusInChat:[content chat]
-										   withSource:[[content chat] listObject]
-										  destination:[[content chat] account]
-												 date:[content date]
-											  message:[[[NSAttributedString alloc] initWithString:dateMessage
-																					   attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
-											 withType:@"date_separator"];
+		dateSeparator = [AIContentEvent statusInChat:[content chat]
+										  withSource:[[content chat] listObject]
+										 destination:[[content chat] account]
+												date:[content date]
+											 message:[[[NSAttributedString alloc] initWithString:dateMessage
+																					  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
+											withType:@"date_separator"];
 		//Add the date header
 		[self _appendContent:dateSeparator 
 					 similar:NO
@@ -980,11 +996,12 @@ static NSArray *draggedTypes = nil;
 	}
 	
 	//Also observe our account
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(listObjectAttributesChanged:) 
-									   name:ListObject_AttributesChanged
-									 object:[chat account]];
-	
+	if ([chat account]) {
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(listObjectAttributesChanged:) 
+										   name:ListObject_AttributesChanged
+										 object:[chat account]];
+	}
 	//We've now masked every user currently in the participating list objects
 	[objectsWithUserIconsArray release]; 
 	objectsWithUserIconsArray = [participatingListObjects mutableCopy];	
@@ -1059,7 +1076,7 @@ static NSArray *draggedTypes = nil;
 		//If that's not the case, try using the UserIconPath
 		userIcon = [[[NSImage alloc] initWithContentsOfFile:[iconSourceObject statusObjectForKey:@"UserIconPath"]] autorelease];
 	}
-	
+
 	if (userIcon) {
 		if ([messageStyle userIconMask]) {
 			//Apply the mask is the style has one
@@ -1074,7 +1091,7 @@ static NSArray *draggedTypes = nil;
 			//Otherwise, just use the icon as-is
 			webKitUserIcon = userIcon;
 		}
-		
+
 		/*
 		 * Writing the icon out is necessary for webkit to be able to use it; it also guarantees that there won't be
 		 * any animation, which is good since animation in the message view is slow and annoying.
@@ -1085,7 +1102,7 @@ static NSArray *draggedTypes = nil;
 			[inObject setStatusObject:webKitUserIconPath
 							   forKey:KEY_WEBKIT_USER_ICON
 							   notify:NO];
-			
+
 			//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
 			if (![objectsWithUserIconsArray containsObjectIdenticalTo:inObject]) {
 				[objectsWithUserIconsArray addObject:inObject];
@@ -1121,7 +1138,7 @@ static NSArray *draggedTypes = nil;
 		AIEmoticon	*emoticon = [[inNotification userInfo] objectForKey:@"AIEmoticon"];
 		NSString	*textEquivalent = [[emoticon textEquivalents] objectAtIndex:0];
 		NSString	*path = [emoticon path];
-		NSLog(@"Trying to update %@ (%@)",emoticon,textEquivalent);
+		AILog(@"Trying to update %@ (%@)",emoticon,textEquivalent);
 		for (int i = 0; i < imagesCount; i++) {
 			DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
 			

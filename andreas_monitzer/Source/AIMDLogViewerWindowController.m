@@ -34,6 +34,7 @@
 		CFRelease(currentSearch); currentSearch = NULL;
 	}
 
+	SKIndexFlush(logSearchIndex);
 	thisSearch = SKSearchCreate(logSearchIndex,
 								(CFStringRef)searchString,
 								kSKSearchOptionDefault);
@@ -85,10 +86,14 @@
 				 * we may get a null log, so be careful.
 				 */
 				theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
+				if (!theLog) {
+					AILog(@"_logContentFilter: %x's key %@ yields %@; logAtPath:%@ gives %@",logToGroupDict,toPath,[logToGroupDict objectForKey:toPath],path,theLog);
+				}
 				[resultsLock lock];
 				if ((theLog != nil) &&
 					(![currentSearchResults containsObjectIdenticalTo:theLog]) &&
-					[self chatLogMatchesDateFilter:theLog]) {
+					[self chatLogMatchesDateFilter:theLog] &&
+					(searchID == activeSearchID)) {
 					[theLog setRankingValueOnArbitraryScale:foundScores[i]];
 					
 					//SearchKit does not normalize ranking scores, so we track the largest we've found and use it as 1.0

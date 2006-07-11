@@ -21,11 +21,11 @@
 
 #import "AIWiredData.h"
 #import "AIFunctions.h"
+#include <stdlib.h>
 #include <string.h>
 #include <sys/errno.h>
 #include <sys/types.h>
 #include <sys/mman.h>
-#include <c.h>
 
 @implementation AIWiredData
 
@@ -55,7 +55,7 @@
 - (id)init
 {
 	if ((self = [self superInit])) {
-		backing = malloc(0);
+		backing = valloc(0);
 		if (!backing) {
 			[self release];
 			self = nil;
@@ -75,9 +75,9 @@
 	NSParameterAssert(inBytes != NULL);
 	if ((self = [self superInit])) {
 		length = inLength;
-		backing = malloc(length);
+		backing = valloc(length);
 		if (!backing) {
-			NSLog(@"in AIWiredData: could not malloc %llu bytes", (unsigned long long)length);
+			NSLog(@"in AIWiredData: could not valloc %llu bytes", (unsigned long long)length);
 			[self release];
 			self = nil;
 		} else {

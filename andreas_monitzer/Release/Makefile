@@ -12,7 +12,7 @@
 # - make all
 ###########
 
-VERSION=1.0svn
+VERSION=1.0b4
 BETA=TRUE
 
 ###########
@@ -46,13 +46,27 @@ else
 	TARGET_BUILD_DIR=$(PRODUCT_DIR)/$(BUILDSTYLE)
 	ADIUM_BUILD_DIR=$(TARGET_BUILD_DIR)
 endif
+PLIST_DIR=`pwd`/../Plists
+ADIUM_PLIST=$(PLIST_DIR)/Adium_2
+CRASH_REPORTER_PLIST=$(PLIST_DIR)/Adium\ Crash\ Reporter-Info
 
-.PHONY: all update compile clean release source createfolder diskimage
+.PHONY: all update version compile clean release source createfolder diskimage
 
-all: update compile release
+all: update version compile release
 
 update:
 	svn update $(SRC_DIR)
+
+version:
+	@# update the plists
+	defaults write $(ADIUM_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2006 The Adium Team'
+	defaults write $(ADIUM_PLIST) CFBundleVersion '$(VERSION)'
+	defaults write $(ADIUM_PLIST) CFBundleShortVersionString '$(VERSION)'
+	defaults write $(CRASH_REPORTER_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2006 The Adium Team'
+	defaults write $(CRASH_REPORTER_PLIST) CFBundleVersion '$(VERSION)'
+	defaults write $(CRASH_REPORTER_PLIST) CFBundleShortVersionString '$(VERSION)'
+	plutil -convert xml1 $(ADIUM_PLIST).plist
+	plutil -convert xml1 $(CRASH_REPORTER_PLIST).plist
 
 compile:
 	$(MAKE) $(BUILDFLAGS) -C $(SRC_DIR)

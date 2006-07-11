@@ -26,6 +26,7 @@
 #import "QTSoundFilePlayer.h"
 
 #import <AudioToolbox/DefaultAudioOutput.h>
+#import <AudioUnit/AUNTComponent.h>
 #import <CoreAudio/CoreAudio.h>
 #import <unistd.h>
 #import <mach/mach.h>

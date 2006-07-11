@@ -38,7 +38,7 @@
 
 
 #import "AIXMLAppender.h"
-#import <AIUtilities/AIFileManagerAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <sys/stat.h>
 
 #define XML_APPENDER_BLOCK_SIZE 4096
@@ -198,7 +198,7 @@ enum { xmlMarkerLength = 21 };
 		//Create our strings
 		int closingTagLength = [rootElementName length] + 4; //</rootElementName>
 		NSString *rootElement = [self createElementWithName:rootElementName content:@"" attributeKeys:keys attributeValues:values];
-		NSString *initialDocument = [NSString stringWithFormat:@"%@\n%@\n", XML_MARKER, rootElement];
+		NSString *initialDocument = [NSString stringWithFormat:@"%@\n%@", XML_MARKER, rootElement];
 		
 		//Write the data, and then seek backwards
 		[file writeData:[initialDocument dataUsingEncoding:NSUTF8StringEncoding]];
@@ -221,7 +221,7 @@ enum { xmlMarkerLength = 21 };
 - (void)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
 	[self addElementWithName:name
-			  escapedContent:(content ? [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)content, NULL) autorelease] : nil)
+			  escapedContent:(content ? [content stringByEscapingForXMLWithEntities:nil] : nil)
 			   attributeKeys:keys
 			 attributeValues:values];
 }
@@ -243,10 +243,13 @@ enum { xmlMarkerLength = 21 };
 		NSString *element = [self createElementWithName:name content:content attributeKeys:keys attributeValues:values];
 		NSString *closingTag = [NSString stringWithFormat:@"</%@>\n", rootElementName];
 		
-		//Write the data, and then seek backwards
-		[file writeData:[[element stringByAppendingString:closingTag] dataUsingEncoding:NSUTF8StringEncoding]];
-		[file synchronizeFile];
-		[file seekToFileOffset:([file offsetInFile] - [closingTag length])];
+		if(element != nil)
+		{
+			//Write the data, and then seek backwards
+			[file writeData:[[element stringByAppendingString:closingTag] dataUsingEncoding:NSUTF8StringEncoding]];
+			[file synchronizeFile];
+			[file seekToFileOffset:([file offsetInFile] - [closingTag length])];
+		}
 	}
 }
 
@@ -268,7 +271,7 @@ enum { xmlMarkerLength = 21 };
 {
 	//Check our precondition
 	if ([keys count] != [values count]) {
-		NSLog(@"Attribute key and value arrays are of differing lengths, %u and %u, respectively", [keys count], [values count]);
+		NSLog(@"Attribute key (%@) and value (%@) arrays for element %@ are of differing lengths, %u and %u, respectively", keys, values, name, [keys count], [values count]);
 		return nil;
 	}
 	
@@ -279,16 +282,16 @@ enum { xmlMarkerLength = 21 };
 	NSString *key = nil, *value = nil;
 	while ((key = [attributeKeyEnumerator nextObject]) && (value = [attributeValueEnumerator nextObject])) {
 		[attributeString appendFormat:@" %@=\"%@\"", 
-			[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)key, NULL) autorelease],
-			[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)value, NULL) autorelease]];
+			[key stringByEscapingForXMLWithEntities:nil],
+			[value stringByEscapingForXMLWithEntities:nil]];
 	}
 	
 	//Format and return
-	NSString *escapedName = [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)name, NULL) autorelease];
+	NSString *escapedName = [name stringByEscapingForXMLWithEntities:nil];
 	if (content)
-		return [NSString stringWithFormat:@"<%@%@>%@</%@>", escapedName, attributeString, content, escapedName];
+		return [NSString stringWithFormat:@"<%@%@>%@</%@>\n", escapedName, attributeString, content, escapedName];
 	else
-		return [NSString stringWithFormat:@"<%@%@/>", escapedName, attributeString];
+		return [NSString stringWithFormat:@"<%@%@/>\n", escapedName, attributeString];
 }
 
 /*!

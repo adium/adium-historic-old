@@ -119,8 +119,9 @@
 	[account authorizationWindowController:self
 					 authorizationWithDict:infoDict
 							  didAuthorize:NO];	
-	
+
 	[infoDict release]; infoDict = nil;
+
 	[self closeWindow:nil];
 }
 

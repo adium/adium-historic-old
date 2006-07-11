@@ -24,9 +24,11 @@
 //Get and set attribute values using -valueForKey: and -setValue:forKey:. Get and set them en masse using -attributes and -setAttributes:.
 //Note: Not KVO-compliant (at this time) for "attributes" or "contents", nor for any attribute.
 
-@interface AIXMLElement : NSObject {
+@interface AIXMLElement : NSObject <NSCopying> {
 	NSString *name;
 	NSMutableDictionary *attributes;
+	NSMutableArray *attributeNames;
+	NSMutableArray *attributeValues;
 	NSMutableArray *contents;
 	BOOL selfCloses;
 }

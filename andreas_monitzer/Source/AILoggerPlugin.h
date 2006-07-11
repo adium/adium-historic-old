@@ -14,7 +14,6 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIPlugin.h>
 
 #define PATH_LOGS                       @"/Logs"
@@ -25,10 +24,7 @@
 
 #define PREF_KEYPATH_LOGGER_ENABLE		PREF_GROUP_LOGGING @"." KEY_LOGGER_ENABLE
 
-//Uncomment this to enable XML_LOGGING
-//#define XML_LOGGING
-
-@class AIAccount, AIChat, AILoggerPreferences, AILoggerAdvancedPreferences;
+@class AIAccount, AIHTMLDecoder, AIChat, AILoggerPreferences;
 
 @interface AILoggerPlugin : AIPlugin {
     AILoggerPreferences                 *preferences;
@@ -37,12 +33,11 @@
     BOOL				observingContent;
     BOOL				logHTML;
 
-#ifdef XML_LOGGING
 	NSMutableDictionary					*activeAppenders;
 	NSMutableDictionary					*activeTimers;
 	
-	AIHTMLDecoder						*HTMLDecoder;
-#endif
+	AIHTMLDecoder						*xhtmlDecoder;
+	NSDictionary						*statusTranslation;
 	
     //Log viewer menu items
     NSMenuItem                          *logViewerMenuItem;
@@ -65,23 +60,19 @@
 	NSLock				*logAccessLock;
     
     //Array of dirty logs / Logs that need re-indexing.  (Locked access)
-    NSMutableArray                      *dirtyLogArray;
+    NSMutableArray		*dirtyLogArray;
     NSLock				*dirtyLogLock;
     
     //Indexing progress
-    int                                 logsToIndex;
-    int                                 logsIndexed;
+    int					logsToIndex;
+    int					logsIndexed;
     
 }
 
 //Paths
 + (NSString *)logBasePath;
 + (NSString *)relativePathForLogWithObject:(NSString *)object onAccount:(AIAccount *)account;
-#ifdef XML_LOGGING
 + (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date;
-#endif
-+ (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date plainText:(BOOL)plainText;
-+ (NSString *)fullPathOfLogAtRelativePath:(NSString *)relativePath;
 
 //Log viewer
 - (void)showLogViewerToSelectedContact:(id)sender;
@@ -93,6 +84,7 @@
 - (void)cleanUpLogContentSearching;
 - (SKIndexRef)logContentIndex;
 - (void)markLogDirtyAtPath:(NSString *)path forChat:(AIChat *)chat;
+- (void)markLogDirtyAtPath:(NSString *)path;
 - (BOOL)getIndexingProgress:(int *)complete outOf:(int *)total;
 
 //
@@ -101,6 +93,7 @@
 - (void)cleanDirtyLogs;
 
 - (NSLock *)logAccessLock;
+- (void)removePathsFromIndex:(NSSet *)paths;
 
 @end
 

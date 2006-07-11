@@ -43,7 +43,7 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentObject.h>
-#import <Adium/AIContentStatus.h>
+#import <Adium/AIContentEvent.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
@@ -339,9 +339,9 @@
 			NSString *message = [NSString stringWithFormat:AILocalizedString(@"Could not send from %@ to %@",nil),
 				[[inObject source] formattedUID],[[inObject destination] formattedUID]];
 
-			[self displayStatusMessage:message
-								ofType:@"chat-error"
-								inChat:chat];			
+			[self displayEvent:message
+						ofType:@"chat-error"
+						inChat:chat];			
 		}
 	}
 	
@@ -462,14 +462,16 @@
 		shouldPostContentReceivedEvents = contentReceived && [inObject trackContent];
 		
 		if (![chat isOpen]) {
-			/*
-			 Tell the interface to open the chat
-			 For incoming messages, we don't open the chat until we're sure that new content is being received.
+			/* Tell the interface to open the chat
+			 * For incoming messages, we don't open the chat until we're sure that new content is being received.
 			 */
 			[[adium interfaceController] openChat:chat];
 		}
 
 		userInfo = [NSDictionary dictionaryWithObjectsAndKeys:chat, @"AIChat", inObject, @"AIContentObject", nil];
+
+		//XXX - old school message history support: Add this content to the chat
+		[chat addContentObject:inObject];
 
 		//Notify: Content Object Added
 		[[adium notificationCenter] postNotificationName:Content_ContentObjectAdded
@@ -720,7 +722,7 @@
 	return isReceivingContent;
 }
 
-- (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat
+- (void)displayEvent:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat
 {
 	AIContentStatus		*content;
 	NSAttributedString	*attributedMessage;
@@ -728,12 +730,12 @@
 	//Create our content object
 	attributedMessage = [[NSAttributedString alloc] initWithString:message
 														attributes:[self defaultFormattingAttributes]];
-	content = [AIContentStatus statusInChat:inChat
-								 withSource:[inChat listObject]
-								destination:[inChat account]
-									   date:[NSDate date]
-									message:attributedMessage
-								   withType:type];
+	content = [AIContentEvent statusInChat:inChat
+								withSource:[inChat listObject]
+							   destination:[inChat account]
+									  date:[NSDate date]
+								   message:attributedMessage
+								  withType:type];
 	[attributedMessage release];
 
 	//Add the object

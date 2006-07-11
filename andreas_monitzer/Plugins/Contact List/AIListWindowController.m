@@ -382,7 +382,8 @@
 		}
 	}
 
-	if (shouldRevealWindowAndDelaySliding) {
+	if (shouldRevealWindowAndDelaySliding &&
+		([self windowSlidOffScreenEdgeMask] != AINoEdges)) {
 		[self delayWindowSlidingForInterval:2];
 		[self slideWindowOnScreenWithAnimation:NO];
 	}

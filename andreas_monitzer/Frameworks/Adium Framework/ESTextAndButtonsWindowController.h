@@ -23,6 +23,12 @@ typedef enum {
 	AITextAndButtonsClosedWithoutResponse	= -2
 } AITextAndButtonsReturnCode;
 
+typedef enum {
+	AITextAndButtonsWindowButtonDefault = 0,
+	AITextAndButtonsWindowButtonAlternate,
+	AITextAndButtonsWindowButtonOther
+} AITextAndButtonsWindowButton;
+
 @interface ESTextAndButtonsWindowController : AIWindowController {
     IBOutlet	NSTextView		*textView_messageHeader;
     IBOutlet	NSScrollView	*scrollView_messageHeader;
@@ -86,6 +92,7 @@ typedef enum {
 - (void)show;
 - (void)setAllowsCloseWithoutResponse:(BOOL)inAllowsCloseWithoutResponse;
 - (void)setImage:(NSImage *)image;
+- (void)setKeyEquivalent:(NSString *)keyEquivalent modifierMask:(unsigned int)mask forButton:(AITextAndButtonsWindowButton)windowButton;
 
 @end
 
