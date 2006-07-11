@@ -230,4 +230,21 @@
     return (isLocal ? NSDragOperationEvery : NSDragOperationNone);
 }
 
+#pragma mark Accessibility
+
+- (NSArray *)accessibilityAttributeNames
+{
+	return [[super accessibilityAttributeNames] mutableCopy];
+}
+
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{	
+	if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
+		return @"Outline View";
+	} else {
+		return [super accessibilityAttributeValue:attribute];
+	}
+}
+
+
 @end

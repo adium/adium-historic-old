@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAutoScrollView.h"
+#import <Adium/ESDebugAILog.h>					//Everybody needs to debug
 
 #define AUTOSCROLL_CATCH_SIZE 	20	//The distance (in pixels) that the scrollview must be within (from the bottom) for auto-scroll to kick in.
 
@@ -284,6 +285,45 @@
 		NSRectFill(rect);
 	}
 } 
+
+
+#pragma mark Accessibility
+
+- (NSArray *)accessibilityAttributeNames
+{
+	return [[super accessibilityAttributeNames] mutableCopy];
+}
+
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{	
+	if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
+		return @"Auto Scroll View";
+	} else if ([attribute isEqualToString:NSAccessibilityHelpAttribute]) {
+		return @"Automatically scrolls to bottom on new content";
+	} else if ([attribute isEqualToString:NSAccessibilityParentAttribute]) {
+		return NSAccessibilityUnignoredAncestor([self window]);
+	} else {
+		return [super accessibilityAttributeValue:attribute];
+	}
+}
+
+- (BOOL)accessibilityIsAttributeSettable:(NSString *)attribute
+{
+	if ([attribute isEqual:NSAccessibilityFocusedAttribute]) {
+		return YES;
+	}
+	return NO;
+}
+ 
+- (void)accessibilitySetValue:(id)value forAttribute:(NSString *)attribute
+{
+}
+	
+- (id)accessibilityFocusedUIElement
+{
+	return self;
+}
+
 
 @end
 
