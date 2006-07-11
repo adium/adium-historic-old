@@ -13,6 +13,7 @@
 #import "AIAdium.h"
 #import "AIAccountController.h"
 #import "AIContactController.h"
+#import "AIInterfaceController.h"
 #import "AIChat.h"
 #import "AIListContact.h"
 #import "AIContentMessage.h"
@@ -151,13 +152,16 @@
     
     [smackAdapter release];
     smackAdapter = nil;
+    
+    [self didDisconnect];
 }
 
 - (void)connected:(SmackXMPPConnection*)conn {
     connection = conn;
+    NSString *jid = [self explicitFormattedUID];
+    NSString *resource = [self preferenceForKey:@"Resource" group:GROUP_ACCOUNT_STATUS];
+    
     @try {
-        NSString *jid = [self explicitFormattedUID];
-        NSString *resource = [self preferenceForKey:@"Resource" group:GROUP_ACCOUNT_STATUS];
         
         [conn login:[jid jidUsername]
                    :[[adium accountController] passwordForAccount:self]
@@ -174,6 +178,13 @@
         NSLog(@"exception raised! name = %@, reason = %@, userInfo = %@",[e name],[e reason],[[e userInfo] description]);
         // caused by invalid password
         [self disconnect];
+        if([[e reason] isEqualToString:@"SASL authentication failed"]) // ugly ugly ugly, but no other way
+        {
+            [self serverReportedInvalidPassword];
+            [self autoReconnectAfterDelay:1.0];
+        } else
+            [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Error logging into account %@.","Error logging into account %@."),jid] withDescription:[e reason]];
+        return;
     }
     
     NSEnumerator *e = [plugins objectEnumerator];
@@ -194,7 +205,8 @@
 }
 
 - (void)connectionError:(NSString*)error {
-    AILog(@"Got connection error \"%@\"!",error);
+    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Connection error on account %@.","Connection error on account %@."),[self explicitFormattedUID]] withDescription:error];
+    [self didDisconnect];
 }
 
 - (void)receiveMessagePacket:(SmackMessage*)packet {

@@ -30,7 +30,7 @@ public class SmackBridge implements ConnectionListener {
     }
     
     public void registerConnection(XMPPConnection conn) {
-        conn.addConnectionListener(this);
+//        conn.addConnectionListener(this);
         conn.addPacketListener(new PacketListener() {
             public void processPacket(Packet packet) {
                 delegate.takeValueForKey(packet, "newMessagePacket");

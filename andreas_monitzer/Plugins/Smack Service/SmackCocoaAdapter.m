@@ -144,7 +144,14 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
         [bridge initSubscriptionMode];
         [bridge setDelegate:self];
         
-        connection = [NSClassFromString(useSSL?@"org.jivesoftware.smack.SSLXMPPConnection":@"org.jivesoftware.smack.XMPPConnection") newWithSignature:@"(Lorg/jivesoftware/smack/ConnectionConfiguration;)",conf];
+        @try {
+            connection = [NSClassFromString(useSSL?@"org.jivesoftware.smack.SSLXMPPConnection":@"org.jivesoftware.smack.XMPPConnection") newWithSignature:@"(Lorg/jivesoftware/smack/ConnectionConfiguration;Lorg/jivesoftware/smack/ConnectionListener;)",conf,bridge];
+        }@catch(NSException *e) {
+            NSLog(@"exception thrown! name = \"%@\", reason = \"%@\", userInfo = \"%@\"",[e name],[e reason],[e userInfo]);
+            [bridge release];
+            [pool release];
+            return;
+        }
         
         [bridge registerConnection:connection];
         [bridge release];
