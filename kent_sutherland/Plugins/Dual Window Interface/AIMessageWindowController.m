@@ -32,6 +32,7 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
+#import <AIUtilities/AISplitView.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
@@ -183,9 +184,6 @@
 	[super windowDidLoad];
 	
 	NSWindow	*theWindow = [self window];
-	
-    //Remember the initial tab height
-    tabBarHeight = [tabView_tabBar frame].size.height;
 
     //Exclude this window from the window menu (since we add it manually)
     [theWindow setExcludedFromWindowsMenu:YES];
@@ -202,6 +200,7 @@
 	[tabView_tabBar setStyleNamed:@"Adium"];
 	[tabView_tabBar setCanCloseOnlyTab:YES];
 	[tabView_tabBar setUseOverflowMenu:NO];
+	[tabView_tabBar setAllowsResizing:NO];
 	[tabView_tabBar setSizeCellsToFit:YES];
 	[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
 }
@@ -287,15 +286,28 @@
 		
 		//change the frame of the tab bar according to the orientation
 		if (firstTime || [key isEqualToString:KEY_TABBAR_POSITION]) {
-			int tabPosition = [[prefDict objectForKey:KEY_TABBAR_POSITION] intValue];
+			tabPosition = [[prefDict objectForKey:KEY_TABBAR_POSITION] intValue];
 			PSMTabBarOrientation orientation = (tabPosition == 0 || tabPosition == 1) ? PSMTabBarHorizontalOrientation : PSMTabBarVerticalOrientation;
 			NSRect tabBarFrame = [tabView_tabBar frame], tabViewFrame = [tabView_messages frame];
 			NSRect totalFrame = NSUnionRect(tabBarFrame, tabViewFrame);
 			
+			//remove the split view if the last orientation was vertical
+			if ([tabView_tabBar orientation] == PSMTabBarVerticalOrientation) {
+				[tabView_messages retain];
+				[tabView_messages removeFromSuperview];
+				[tabView_tabBar retain];
+				[tabView_tabBar removeFromSuperview];
+				[tabView_splitView removeFromSuperview];
+				
+				[[[self window] contentView] addSubview:tabView_messages];
+				[[[self window] contentView] addSubview:tabView_tabBar];
+				[tabView_messages release];
+				[tabView_tabBar release];
+			}
+			
 			[tabView_tabBar setOrientation:orientation];
 			
 			if (orientation == PSMTabBarHorizontalOrientation) {
-				tabBarFrame.origin.x = totalFrame.origin.x;
 				tabBarFrame.size.height = [tabView_tabBar isTabBarHidden] ? 1 : 22;
 				tabBarFrame.size.width = totalFrame.size.width;
 				
@@ -310,35 +322,54 @@
 					tabViewFrame.size.height = totalFrame.size.height - tabBarFrame.size.height;
 				}
 				
-				tabViewFrame.origin.x = totalFrame.origin.x;
+				tabViewFrame.origin.x = -1;
+				tabBarFrame.origin.x = 0;
 				tabViewFrame.size.width = totalFrame.size.width;
 				[tabView_tabBar setAutoresizingMask:NSViewMaxYMargin | NSViewWidthSizable];
 			} else {
 				float width = [[prefDict objectForKey:KEY_TABBAR_WIDTH] floatValue];
 				if (width < 50) {
-					width = 130;
+					width = 50;
 				}
 				
+				totalFrame.origin.x = 0;
 				tabBarFrame.size.height = [[[self window] contentView] frame].size.height;
 				tabBarFrame.size.width = [tabView_tabBar isTabBarHidden] ? 1 : width;
 				tabBarFrame.origin.y = totalFrame.origin.y;
 				tabViewFrame.origin.y = totalFrame.origin.y;
 				tabViewFrame.size.height = totalFrame.size.height;
-				tabViewFrame.size.width = totalFrame.size.width - tabBarFrame.size.width - 1;
+				tabViewFrame.size.width = totalFrame.size.width - tabBarFrame.size.width - 6;
 				
 				//set the position of the tab bar (left/right)
 				if (tabPosition == 2) {
 					tabBarFrame.origin.x = totalFrame.origin.x;
-					tabViewFrame.origin.x = tabBarFrame.origin.x + tabBarFrame.size.width + 1;
+					tabViewFrame.origin.x = tabBarFrame.origin.x + tabBarFrame.size.width;
 					[tabView_tabBar setAutoresizingMask:NSViewHeightSizable];
 				} else {
 					tabViewFrame.origin.x = totalFrame.origin.x;
-					tabBarFrame.origin.x = tabViewFrame.origin.x + tabViewFrame.size.width + 2;
+					tabBarFrame.origin.x = tabViewFrame.origin.x + tabViewFrame.size.width;
 					[tabView_tabBar setAutoresizingMask:NSViewHeightSizable | NSViewMinXMargin];
 				}
 				
 				[tabView_tabBar setCellMinWidth:50];
 				[tabView_tabBar setCellMaxWidth:200];
+				
+				//put the subviews into a split view
+				tabView_splitView = [[[AISplitView alloc] initWithFrame:totalFrame] autorelease];
+				[tabView_splitView setDividerThickness:6];
+				[tabView_splitView setDrawsDivider:NO];
+				[tabView_splitView setVertical:YES];
+				[tabView_splitView setDelegate:self];
+				if (tabPosition == 2) {
+					[tabView_splitView addSubview:tabView_tabBar];
+					[tabView_splitView addSubview:tabView_messages];
+				} else {
+					[tabView_splitView addSubview:tabView_messages];
+					[tabView_splitView addSubview:tabView_tabBar];
+				}
+				[tabView_splitView adjustSubviews];
+				[tabView_splitView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+				[[[self window] contentView] addSubview:tabView_splitView];
 			}
 			
 			[tabView_messages setFrame:tabViewFrame];
@@ -548,6 +579,21 @@
 - (AIChat *)activeChat
 {
 	return [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat];
+}
+
+//AISplitView Delegate -------------------------------------------------------------------------------------------------
+#pragma mark AISplitView Delegate
+
+//handles the minimum size of vertical tabs
+- (float)splitView:(NSSplitView *)sender constrainMinCoordinate:(float)proposedMin ofSubviewAt:(int)offset
+{
+	return tabPosition == 2 ? 50 : [sender frame].size.width - 250 - [sender dividerThickness];
+}
+
+//handles the maximum size of vertical tabs
+- (float)splitView:(NSSplitView *)sender constrainMaxCoordinate:(float)proposedMax ofSubviewAt:(int)offset
+{
+	return tabPosition == 2 ? 250 : proposedMax - 50;
 }
 
 //PSMTabBarControl Delegate -------------------------------------------------------------------------------------------------
