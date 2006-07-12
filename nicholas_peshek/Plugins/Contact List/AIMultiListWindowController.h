@@ -16,11 +16,11 @@
 
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIListObject.h>
-#import <Adium/AIWindowController.h>
+#import <Adium/AIObject.h>
 #import <AIUtilities/AIFunctions.h>
 #import "AIListWindowController.h"
 
-@interface AIMultiListWindowController : AIWindowController {
+@interface AIMultiListWindowController : AIObject {
 	NSMutableArray			*windowControllerArray;
 	AIListWindowController	*mostRecentContactList;
 }
