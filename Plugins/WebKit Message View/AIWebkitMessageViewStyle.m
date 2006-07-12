@@ -560,7 +560,14 @@ static NSArray *validSenderColors;
 	[inString replaceKeyword:@"%senderStatusIcon%"
 				  withString:[self statusIconPathForListObject:theSource]];
 	
-	if(!validSenderColors) validSenderColors = VALID_SENDER_COLORS_ARRAY;
+	if(!validSenderColors) {
+		NSString *path = [stylePath stringByAppendingPathComponent:@"Incoming/SenderColors.txt"];
+		if([[NSFileManager defaultManager] fileExistsAtPath:path])
+			NSString *colors = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Incoming/SenderColors.txt"]];
+			validSenderColors = [colors componentsSeparatedByString:@":"];
+		else
+			validSenderColors = VALID_SENDER_COLORS_ARRAY;
+	}
 	[inString replaceKeyword:@"%senderColor%"
 				  withString:[validSenderColors objectAtIndex:([[contentSource UID] hash] % ([validSenderColors count] - 1))]];
 	
