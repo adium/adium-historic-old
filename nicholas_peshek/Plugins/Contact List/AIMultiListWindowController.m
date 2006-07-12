@@ -61,15 +61,13 @@
 //Create the new contact list. A bit messy, but overall, it'll work. Returns a boolean saying if it worked or not.
 - (BOOL)createNewSeparableContactListWithObject:(AIListObject<AIContainingObject> *)newListObject
 {
-	BOOL					didCreationWork = NO;
+	BOOL	didCreationWork = NO;
 	if ([newListObject isKindOfClass:[AIListGroup class]]) {
 		AIListWindowController	*newContactList = [AIBorderlessListWindowController listWindowControllerWithContactList:newListObject];
 		mostRecentContactList = newContactList;
 		[windowControllerArray addObject:newContactList];
-		[self showWindowInFront:YES];
+		[newContactList showWindowInFront:YES];
 		didCreationWork = YES;
-		NSLog(@"Created");
-		NSLog(@"%@", NSStringFromRect([[[self mostRecentContactList] window] frame]));
 	}
 	
 	return didCreationWork;
