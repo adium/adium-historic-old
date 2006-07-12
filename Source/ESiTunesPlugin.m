@@ -139,7 +139,7 @@
 	NSString		*currentITunesTrackFormat = nil;
 	NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
 	NSString		*itunesPath = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"iTunes.app"];
-	
+
 	iTunesCurrentInfo = nil;
 
 	//Only install our items if a copy of iTunes which meets the minimum requirements is found
