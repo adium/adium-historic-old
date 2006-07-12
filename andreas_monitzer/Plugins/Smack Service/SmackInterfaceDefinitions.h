@@ -630,7 +630,8 @@
 
 @protocol AdiumSmackBridgeDelegate
 
-- (void)setConnection:(JavaBoolean*)state;
+- (void)setConnection:(SmackXMPPConnection*)conn;
+- (void)setDisconnection:(JavaBoolean*)blah;
 - (void)setConnectionError:(NSString*)error;
 - (void)setNewMessagePacket:(SmackPacket*)packet;
 - (void)setNewPresencePacket:(SmackPacket*)packet;
@@ -644,7 +645,9 @@
 - (void)initSubscriptionMode;
 - (void)setDelegate:(id<AdiumSmackBridgeDelegate>)delegate;
 - (id<AdiumSmackBridgeDelegate>)delegate;
-- (void)registerConnection:(SmackXMPPConnection*)conn;
+
+- (void)createConnection:(BOOL)useSSL :(SmackConnectionConfiguration*)conf;
+
 - (BOOL)isInstanceOfClass:(id)object :(NSString*)classname;
 - (JavaMethod*)getMethod:(NSString*)classname :(NSString*)methodname :(JavaVector*)parameterTypes;
 

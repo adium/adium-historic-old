@@ -31,8 +31,8 @@
 
 		[checkBox_useTLS setState:![[inAccount preferenceForKey:@"disableTLS"
                                                           group:GROUP_ACCOUNT_STATUS] boolValue]];
-		[checkBox_useSSL setState:[[inAccount preferenceForKey:@"useSSL"
-															group:GROUP_ACCOUNT_STATUS] boolValue]];
+//		[checkBox_useSSL setState:[[inAccount preferenceForKey:@"useSSL"
+//															group:GROUP_ACCOUNT_STATUS] boolValue]];
 		[checkBox_useSASL setState:![[inAccount preferenceForKey:@"disableSASL"
 															group:GROUP_ACCOUNT_STATUS] boolValue]];
 		[checkBox_allowSelfSigned setState:[[inAccount preferenceForKey:@"allowSelfSigned"
@@ -69,8 +69,11 @@
     [account setPreference:[NSNumber numberWithBool:![checkBox_useTLS state]]
 					forKey:@"disableTLS"
 					 group:GROUP_ACCOUNT_STATUS];
-    [account setPreference:[NSNumber numberWithBool:[checkBox_useSSL state]]
-					forKey:@"useTLS"
+//    [account setPreference:[NSNumber numberWithBool:[checkBox_useSSL state]]
+//					forKey:@"useSSL"
+//					 group:GROUP_ACCOUNT_STATUS];
+    [account setPreference:[NSNumber numberWithBool:NO]
+					forKey:@"useSSL"
 					 group:GROUP_ACCOUNT_STATUS];
     [account setPreference:[NSNumber numberWithBool:![checkBox_useSASL state]]
 					forKey:@"disableSASL"

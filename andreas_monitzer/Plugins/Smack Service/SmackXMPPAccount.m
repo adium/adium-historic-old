@@ -175,7 +175,6 @@
 		[[adium contactController] delayListObjectNotificationsUntilInactivity];
         
     }@catch(NSException *e) {
-        NSLog(@"exception raised! name = %@, reason = %@, userInfo = %@",[e name],[e reason],[[e userInfo] description]);
         // caused by invalid password
         [self disconnect];
         if([[e reason] isEqualToString:@"SASL authentication failed"]) // ugly ugly ugly, but no other way
