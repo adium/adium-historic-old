@@ -19,8 +19,12 @@ public class SmackXMPPMultiUserChatPluginListener implements InvitationListener 
     XMPPConnection connection;
     
     public SmackXMPPMultiUserChatPluginListener(XMPPConnection conn) {
-        connection = conn;
-        MultiUserChat.addInvitationListener(connection, this);
+        try {
+            connection = conn;
+            MultiUserChat.addInvitationListener(connection, this);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
     
     public void listenToChat(MultiUserChat chat, final NSObject d) {

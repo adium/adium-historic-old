@@ -11,7 +11,11 @@
 #import "SmackXMPPAccount.h"
 #import "ESDebugAILog.h"
 
+#import "AIAdium.h"
+#import "AIInterfaceController.h"
+
 #import <JavaVM/NSJavaVirtualMachine.h>
+#import <AIUtilities/AIStringUtilities.h>
 
 #define SMACKBRIDGE_JAR @"SmackBridge"
 #define SMACK_JAR @"smack"
@@ -43,8 +47,6 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
 		static	NSJavaVirtualMachine	*vm = nil;
 		static BOOL		attachedVmToMainRunLoop = NO;
 		BOOL			onMainRunLoop = (CFRunLoopGetCurrent() == CFRunLoopGetMain());
-        
-        NSLog(@"VM Thread = %p, main thread = %p",CFRunLoopGetCurrent(),CFRunLoopGetMain());
         
 		if (!vm) {
 			NSString	*smackJarPath, *smackxJarPath, *smackBridgeJarPath;
@@ -145,18 +147,22 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
         [bridge setDelegate:self];
         
         @try {
-            connection = [NSClassFromString(useSSL?@"org.jivesoftware.smack.SSLXMPPConnection":@"org.jivesoftware.smack.XMPPConnection") newWithSignature:@"(Lorg/jivesoftware/smack/ConnectionConfiguration;Lorg/jivesoftware/smack/ConnectionListener;)",conf,bridge];
+            [bridge createConnection:useSSL :conf];
         }@catch(NSException *e) {
-            NSLog(@"exception thrown! name = \"%@\", reason = \"%@\", userInfo = \"%@\"",[e name],[e reason],[e userInfo]);
+            [self performSelectorOnMainThread:@selector(connectionError:) withObject:e waitUntilDone:YES];
+            
             [bridge release];
             [pool release];
             return;
         }
         
-        [bridge registerConnection:connection];
         [bridge release];
     }
     [pool release];
+}
+
+- (void)connectionError:(NSException*)e {
+    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Connection error on account %@.","Connection error on account %@."),[account explicitFormattedUID]] withDescription:[e reason]];
 }
 
 - (SmackXMPPConnection*)connection {
@@ -169,14 +175,15 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     [super dealloc];
 }
 
-- (void)setConnection:(JavaBoolean*)state {
-    if([state booleanValue]) {
-        AILog(@"XMPP Connection established");
-        [account performSelectorOnMainThread:@selector(connected:) withObject:connection waitUntilDone:NO];
-    } else {
-        AILog(@"XMPP Connection closed.");
-        [account performSelectorOnMainThread:@selector(disconnected:) withObject:connection waitUntilDone:NO];
-    }
+- (void)setConnection:(SmackXMPPConnection*)conn {
+    connection = [conn retain];
+    AILog(@"XMPP Connection established");
+    [account performSelectorOnMainThread:@selector(connected:) withObject:conn waitUntilDone:NO];
+}
+
+- (void)setDisconnection:(JavaBoolean*)blah {
+    AILog(@"XMPP Connection closed.");
+    [account performSelectorOnMainThread:@selector(disconnected:) withObject:connection waitUntilDone:NO];
 }
 
 - (void)setConnectionError:(NSString*)error {

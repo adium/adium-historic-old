@@ -11754,6 +11754,7 @@
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				STRIP_INSTALLED_PRODUCT = NO;
 				STRIP_STYLE = "non-global";
+				SYMROOT = /Volumes/Incinerated/am/software;
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = YES;
 			};
@@ -12183,6 +12184,7 @@
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = /Volumes/Incinerated/am/software;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = "Deployment-Debug_PPC-Only";
@@ -13116,6 +13118,7 @@
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				STRIP_INSTALLED_PRODUCT = NO;
 				STRIP_STYLE = "non-global";
+				SYMROOT = /Volumes/Incinerated/am/software;
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = YES;
 			};
@@ -13153,6 +13156,7 @@
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				SEPARATE_STRIP = YES;
+				SYMROOT = /Volumes/Incinerated/am/software;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Deployment;
@@ -13189,6 +13193,7 @@
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = /Volumes/Incinerated/am/software;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = "Deployment-Debug";

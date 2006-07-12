@@ -29,7 +29,18 @@ public class SmackBridge implements ConnectionListener {
         return delegate;
     }
     
-    public void registerConnection(XMPPConnection conn) {
+    public void createConnection(boolean useSSL, ConnectionConfiguration conf) throws XMPPException {
+        XMPPConnection conn;
+        // ### there's no way to specify a ConnectionConfiguration for an SSLXMPPConnection, wtf?
+        
+//        if(useSSL)
+//            conn = new SSLXMPPConnection(conf, this);
+//        else
+            conn = new XMPPConnection(conf, this);
+        registerConnection(conn);
+    }
+    
+    private void registerConnection(XMPPConnection conn) {
 //        conn.addConnectionListener(this);
         conn.addPacketListener(new PacketListener() {
             public void processPacket(Packet packet) {
@@ -47,11 +58,11 @@ public class SmackBridge implements ConnectionListener {
             }
         },new PacketTypeFilter(IQ.class));
         
-        delegate.takeValueForKey(new Boolean(true),"connection");
+        delegate.takeValueForKey(conn,"connection");
     }
     
     public void connectionClosed() {
-        delegate.takeValueForKey(new Boolean(false),"connection");
+        delegate.takeValueForKey(new Boolean(true),"disconnection");
     }
     
     public void connectionClosedOnError(Exception e) {
