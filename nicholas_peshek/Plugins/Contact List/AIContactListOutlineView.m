@@ -63,5 +63,7 @@
 		}
 		tempDragBoard = nil;
 	}
+	//Apparently, I'm an idiot, and AIAbstractListController needs this as well. Pass it off to the dataSource and let that deal with it.
+	[[self dataSource] outlineView:self draggedImage:anImage endedAt:aPoint operation:operation];
 }
 @end
