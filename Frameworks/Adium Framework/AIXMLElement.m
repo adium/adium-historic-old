@@ -84,6 +84,8 @@
 	id obj;
 	while((obj = [contentsEnum nextObject]))
 		[other->contents addObject:obj];
+
+	return other;
 }
 
 #pragma mark -
