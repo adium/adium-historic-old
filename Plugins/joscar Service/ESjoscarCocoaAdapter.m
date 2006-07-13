@@ -686,6 +686,8 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 	NSString		*UID = [[[sn getNormal] copy] autorelease];
 
+	messageBody = [messageBody stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\0"]];
+
 	if ([message isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.DirectMessage")]) {
 			[accountProxy chatWithUID:UID
 				receivedDirectMessage:messageBody
