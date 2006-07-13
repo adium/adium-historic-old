@@ -686,7 +686,8 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 	NSString		*UID = [[[sn getNormal] copy] autorelease];
 
-	messageBody = [messageBody stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\0"]];
+	//Trim NULLs from the message. Some AIM clients apparently send us messages with a trailing NULL.
+	messageBody = [messageBody stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithRange:NSMakeRange(0, 1)]];
 
 	if ([message isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.DirectMessage")]) {
 			[accountProxy chatWithUID:UID
