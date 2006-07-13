@@ -31,18 +31,6 @@
 	maxSize = inMaxSize;
 }
 
-- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
-{
-	//Highlight
-	if ([self isHighlighted]) {
-		[[NSColor alternateSelectedControlColor] set];
-		[[NSBezierPath bezierPathWithRoundedRect:cellFrame radius:4] fill];
-	}
-	
-	//Draw our interior
-	[super drawWithFrame:cellFrame inView:controlView];
-}
-
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
 	NSImage	*img = [self image];
