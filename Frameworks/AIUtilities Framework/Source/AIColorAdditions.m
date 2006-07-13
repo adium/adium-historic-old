@@ -36,6 +36,12 @@ static NSDictionary *RGBColorValues = nil;
 static NSString *defaultRGBTxtLocation1 = @"/usr/share/emacs";
 static NSString *defaultRGBTxtLocation2 = @"etc/rgb.txt";
 
+#ifdef DEBUG_BUILD
+	#define COLOR_DEBUG TRUE
+#else
+	#define COLOR_DEBUG FALSE
+#endif
+
 @implementation NSDictionary (AIColorAdditions_RGBTxtFiles)
 
 //see /usr/share/emacs/(some version)/etc/rgb.txt for an example of such a file.
@@ -80,11 +86,13 @@ static NSString *defaultRGBTxtLocation2 = @"etc/rgb.txt";
 					   && (state.blueStart  != NULL)
 					   && (state.nameStart  != NULL)))
 				{
+#if COLOR_DEBUG
 					NSLog(@"Parse error reading rgb.txt file: a non-comment line was encountered that did not have all four of red (%p), green (%p), blue (%p), and name (%p) - index is %u",
 						  state.redStart,
 						  state.greenStart,
 						  state.blueStart,
 						  state.nameStart, i);
+#endif
 					goto end;
 				}
 				
@@ -151,9 +159,11 @@ end:
 		while ((!RGBColorValues) && (middlePath = [middlePathEnum nextObject])) {
 			NSString *path = [defaultRGBTxtLocation1 stringByAppendingPathComponent:[middlePath stringByAppendingPathComponent:defaultRGBTxtLocation2]];
 			RGBColorValues = [[NSDictionary dictionaryWithContentsOfRGBTxtFile:path] retain];
+#if COLOR_DEBUG
 			if (RGBColorValues) {
 				NSLog(@"Got colour values from %@", path);
 			}
+#endif
 		}
 		if (!RGBColorValues) {
 			RGBColorValues = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -464,7 +474,9 @@ scanFailed:
 		colorValue = [colorValues objectForKey:str];
 		if (!colorValue) colorValue = [colorValues objectForKey:[str lowercaseString]];
 		if (!colorValue) {
+#if COLOR_DEBUG
 			NSLog(@"+[NSColor(AIColorAdditions) colorWithHTMLString:] called with unrecognised color name (str is %@); returning %@", str, defaultColor);
+#endif
 			return defaultColor;
 		}
 	}
@@ -489,7 +501,9 @@ scanFailed:
 	if (*hexString == '#') ++hexString;
 
 	if (hexStringLength < 3) {
+#if COLOR_DEBUG
 		NSLog(@"+[%@ colorWithHTMLString:] called with a string that cannot possibly be a hexadecimal color specification (e.g. #ff0000, #00b, #cc08) (string: %@ input: %@); returning %@", NSStringFromClass(self), colorValue, str, defaultColor);
+#endif
 		return defaultColor;
 	}
 
