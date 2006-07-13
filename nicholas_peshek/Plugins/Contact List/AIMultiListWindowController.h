@@ -34,5 +34,6 @@
 - (void)performClose;
 - (AIRectEdgeMask)windowSlidOffScreenEdgeMask;
 - (void)destroyListController:(AIListWindowController *)doneController;
+- (AIListWindowController *)nextContactList;
 
 @end
