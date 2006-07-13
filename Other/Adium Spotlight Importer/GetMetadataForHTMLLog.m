@@ -205,7 +205,7 @@ static char *strndup (const char *s, int n)
 }
 
 static char *gaim_unescape_html(const char *html) {
-	return strdup([[[NSString stringWithUTF8String:html] stringByUnescapingFromHTML] UTF8String]);
+	return strdup([[[NSString stringWithUTF8String:html] stringByUnescapingFromXMLWithEntities:nil] UTF8String]);
 }
 
 /* The following are probably reasonable changes:
