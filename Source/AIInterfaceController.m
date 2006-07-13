@@ -809,7 +809,9 @@
 				 target:(id)inTarget selector:(SEL)inSelector userInfo:(id)inUserInfo
 {
 	[self displayQuestion:inTitle
-withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc] autorelease]
+withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
+														   attributes:[NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:10]
+																								  forKey:NSFontAttributeName]] autorelease]
 		  withWindowTitle:inWindowTitle
 			defaultButton:inDefaultButton
 		  alternateButton:inAlternateButton
