@@ -585,7 +585,8 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	BOOL shouldSlide = NO;
 	
-	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
+	if (([self windowSlidOffScreenEdgeMask] != AINoEdges) &&
+		![NSApp isHidden]) {
 		if (slideOnlyInBackground && [NSApp isActive]) {
 			//We only slide while in the background, and the app is not in the background. Slide on screen.
 			shouldSlide = YES;
