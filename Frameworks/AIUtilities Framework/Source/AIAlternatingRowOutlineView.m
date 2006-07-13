@@ -94,6 +94,11 @@
 	[self setNeedsDisplay:YES];
 }
 
+- (BOOL)drawsGradientSelection
+{
+	return drawsGradientSelection;
+}
+
 //Set the alternating row color
 - (void)setAlternatingRowColor:(NSColor *)color
 {
