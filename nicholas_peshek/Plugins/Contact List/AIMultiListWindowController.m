@@ -116,19 +116,35 @@
 - (void)destroyListController:(AIListWindowController *)doneController
 {
 	[doneController close:nil];
-/*	if([windowControllerArray count] >= 1) {
-		if([doneController isEqualTo:mostRecentContactList]) {
-			if(![doneController isEqualTo:[windowControllerArray objectAtIndex:0]]) {
-				mostRecentContactList = [windowControllerArray objectAtIndex:0]; */
-				[windowControllerArray removeObjectIdenticalTo:doneController];
-/*			} else {
-				[windowControllerArray removeObjectIdenticalTo:doneController];
-				mostRecentContactList = [windowControllerArray objectAtIndex:0];
-			}
+	if ([windowControllerArray count] > 1) {
+		mostRecentContactList = [self nextContactList];
+		[windowControllerArray removeObjectIdenticalTo:doneController];
+	} else {
+		[windowControllerArray removeObjectIdenticalTo:doneController];
+		//I don't know how you got here, but hey, lets just be on the safe side and kill the list controller.
+		AILog(@"Last Contact List Window Destroyed. Destroy the controller.");
+#warning kbotc: Get the Notification name here. Even if this is just safety, get on it.
+		//[[adium notificationCenter] postNotificationName:Interface_ContactListDidClose object:self];
+	}
+}
+
+- (AIListWindowController *)nextContactList
+{
+	AIListWindowController	*nextList;
+	unsigned				mostRecentContactListIndex = [windowControllerArray indexOfObject:mostRecentContactList];
+	
+	//Check if there is another contact list to switch to
+	if (([windowControllerArray count] > 1)) {
+		//Check if the current focused contact list is the last object if the array, and if it is, set the focus to the first list.
+		if (mostRecentContactListIndex == ([windowControllerArray count] - 1)) {
+			nextList = [windowControllerArray objectAtIndex:0];
+		} else {
+			nextList = [windowControllerArray objectAtIndex:(mostRecentContactListIndex + 1)];
 		}
 	} else {
-#warning kbotc: Come here and get this working. Needs to be hooked up properly so that if the last list is destroyed, it will close itself. Should never happen, but it's a safe fallback.
-		//[[adium notificationCenter] postNotificationName:Interface_ContactListDidClose object:self];
-	} */
+		nextList = mostRecentContactList;
+	}
+	
+	return nextList;
 }
 @end
