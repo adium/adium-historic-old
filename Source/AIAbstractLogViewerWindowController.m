@@ -1626,8 +1626,11 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		/* If the metacontact contains a single contact, fall through (isKindOfClass:[AIListContact class]) and allow using of a service icon.
 		 * If it has multiple contacts, use no icon unless a user icon is present.
 		 */
-		[cell setImage:[AIUserIcons listUserIconForContact:(AIListContact *)item
-													  size:NSMakeSize(16,16)]];
+		NSImage *image = [AIUserIcons listUserIconForContact:(AIListContact *)item
+														size:NSMakeSize(16,16)];
+		if (!image) image = [[[NSImage alloc] initWithSize:NSMakeSize(16, 16)] autorelease];
+
+		[cell setImage:image];
 
 	} else if ([item isKindOfClass:[AIListContact class]]) {
 		NSImage	*image = [AIUserIcons listUserIconForContact:(AIListContact *)item
