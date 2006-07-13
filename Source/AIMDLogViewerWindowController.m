@@ -16,6 +16,14 @@
 
 @implementation AIMDLogViewerWindowController
 
+- (void)windowDidLoad
+{
+	[super windowDidLoad];
+	
+	[tableView_results setAutosaveName:@"LogViewerResults"];
+	[tableView_results setAutosaveTableColumns:YES];
+}
+
 /*
  * @brief Perform a content search of the indexed logs
  *
