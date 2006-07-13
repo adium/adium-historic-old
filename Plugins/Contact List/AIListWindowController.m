@@ -228,9 +228,6 @@
 		windowHidingStyle = [[prefDict objectForKey:KEY_CL_WINDOW_HIDING_STYLE] intValue];
 		slideOnlyInBackground = [[prefDict objectForKey:KEY_CL_SLIDE_ONLY_IN_BACKGROUND] boolValue];
 		
-		//Do a slide immediately if needed (to display as per our new preferneces)
-		[self slideWindowIfNeeded:nil];
-
 		[[self window] setHidesOnDeactivate:(windowHidingStyle == AIContactListWindowHidingStyleBackground)];
 
 		if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
@@ -382,10 +379,16 @@
 		}
 	}
 
-	if (shouldRevealWindowAndDelaySliding &&
-		([self windowSlidOffScreenEdgeMask] != AINoEdges)) {
+	if (shouldRevealWindowAndDelaySliding) {
 		[self delayWindowSlidingForInterval:2];
-		[self slideWindowOnScreenWithAnimation:NO];
+
+		if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
+			[self slideWindowOnScreenWithAnimation:NO];
+		}
+
+	} else {
+		//Do a slide immediately if needed (to display as per our new preferneces)
+		[self slideWindowIfNeeded:nil];
 	}
 }
 
