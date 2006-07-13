@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAutoScrollView.h"
-#import <Adium/ESDebugAILog.h>					//Everybody needs to debug
 
 #define AUTOSCROLL_CATCH_SIZE 	20	//The distance (in pixels) that the scrollview must be within (from the bottom) for auto-scroll to kick in.
 
@@ -285,7 +284,6 @@
 		NSRectFill(rect);
 	}
 } 
-
 
 #pragma mark Accessibility
 
