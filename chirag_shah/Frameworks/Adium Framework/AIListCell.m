@@ -434,18 +434,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 
 - (NSArray *)accessibilityAttributeNames
 {
-	NSMutableArray *names = [[super accessibilityAttributeNames] mutableCopy];
-	[names addObject:NSAccessibilityValueAttribute];
-	[names addObject:NSAccessibilityTitleAttribute];
-	[names addObject:NSAccessibilityRoleAttribute];
-	[names addObject:NSAccessibilityRoleDescriptionAttribute];
-	[names addObject:NSAccessibilitySubroleAttribute];
-	[names addObject:NSAccessibilityParentAttribute];
-	[names addObject:NSAccessibilityWindowAttribute];
-	[names addObject:NSAccessibilityDescriptionAttribute];
-	[names addObject:NSAccessibilityChildrenAttribute];
-	[names addObject:NSAccessibilityScrollBarRole];	
-	[names addObject:NSAccessibilityScrollAreaRole];	
+	NSMutableArray *names = [[super accessibilityAttributeNames] mutableCopy];	
 	[names addObject:@"ClassName"];
 	[names autorelease];
 	return names;
@@ -474,14 +463,12 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		}
 		value = IS_CONTACT ? AILocalizedString(currentStatus, /*comment*/ nil) : AILocalizedString(@"contact list group", /*comment*/ nil);
 
-	} else if([attribute isEqualToString:NSAccessibilityValueAttribute]) {
-		value = listObject;
+//	} else if([attribute isEqualToString:NSAccessibilityValueAttribute]) {
+//		value = listObject;
 	} else if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
 		value = [self labelString];
 	} else if([attribute isEqualToString:NSAccessibilityWindowAttribute]) {
 		value = [controlView window];
-	} else if([attribute isEqualToString:NSAccessibilityScrollAreaRole] || [attribute isEqualToString:NSAccessibilityScrollBarRole]) {
-		value = @"AXScrollBar";
 	} else if([attribute isEqualToString:@"ClassName"]) {
 		value = NSStringFromClass([self class]);
 	} else {
