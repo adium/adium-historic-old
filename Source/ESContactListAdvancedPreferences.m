@@ -99,9 +99,14 @@
 	}
 }
 
+- (BOOL)hideOnScreenEdgesOnlyInBackgroundEnabled
+{
+	return [[matrix_hiding selectedCell] tag] == AIContactListWindowHidingStyleSliding;
+}
+
 - (void)configureControlDimming
 {
-	[checkBox_hideOnScreenEdgesOnlyInBackground setEnabled:([[matrix_hiding selectedCell] tag] == AIContactListWindowHidingStyleSliding)];
+	[checkBox_hideOnScreenEdgesOnlyInBackground setEnabled:[self hideOnScreenEdgesOnlyInBackgroundEnabled]];
 }
 
 - (void)selectedWindowLevel:(id)sender
