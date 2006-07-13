@@ -61,6 +61,7 @@
 - (void) enqueueContentObject:(AIContentObject *)contentObject;
 - (void) debugLog:(NSString *)message;
 - (void)processQueuedContent;
+- (NSString *)webviewSource;
 @end
 
 static NSArray *draggedTypes = nil;
@@ -1138,6 +1139,7 @@ static NSArray *draggedTypes = nil;
 		AIEmoticon	*emoticon = [[inNotification userInfo] objectForKey:@"AIEmoticon"];
 		NSString	*textEquivalent = [[emoticon textEquivalents] objectAtIndex:0];
 		NSString	*path = [emoticon path];
+		path = [[NSURL fileURLWithPath:path] absoluteString];
 		AILog(@"Trying to update %@ (%@)",emoticon,textEquivalent);
 		for (int i = 0; i < imagesCount; i++) {
 			DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
@@ -1249,5 +1251,11 @@ static NSArray *draggedTypes = nil;
 }
 
 - (void)debugLog:(NSString *)message { NSLog(message); }
+
+//gets the source of the html page, for debugging
+- (NSString *)webviewSource
+{
+	return [(DOMHTMLHtmlElement *)[[[[webView mainFrame] DOMDocument] getElementsByTagName:@"html"] item:0] outerHTML];
+}
 
 @end
