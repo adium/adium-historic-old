@@ -203,7 +203,6 @@
 		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
 		
 		NSRect *selectionLineRects = (NSRect *)malloc(sizeof(NSRect) * bufSize);
-		NSRect gradientRect = NSZeroRect;
 		
 		while (i < bufSize) {
 			int startIndex = buf[i];
@@ -220,12 +219,12 @@
 			
 			//Draw a line at the light side, to make it look a lot cleaner
 			thisRect.size.height = 1;
-			selectionLineRects[j++] = gradientRect;			
+			selectionLineRects[j++] = thisRect;			
 			
 			i++;		
 		}
-		
-		[[NSColor alternateSelectedControlColor] set];
+
+		[[NSColor alternateSelectedControlColor] set];		
 		NSRectFillListUsingOperation(selectionLineRects, j, NSCompositeSourceOver);
 		
 		free(buf);
