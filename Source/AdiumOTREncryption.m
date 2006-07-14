@@ -868,6 +868,11 @@ OtrlUserState otrg_get_userstate(void)
 
 	} else if ([message isEqualToString:@"The following message was <b>not encrypted</b>: "]) {
 		localizedOTRMessage = AILocalizedString(@"The following message was <b>not encrypted</b>: ", nil);
+
+	} else if ([message rangeOfString:@"received an unreadable encrypted"]) {
+		localizedOTRMessage = [NSString stringWithFormat:
+			AILocalizedString(@"An encrypted message from %@ could not be decrypted.", nil),
+			username];
 	}
 
 	return (localizedOTRMessage ? localizedOTRMessage : message);
