@@ -846,6 +846,7 @@
 		34C7C62809EC4E890060FB4A /* AILibgaimPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3244309BA003C00029361 /* AILibgaimPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34C899AC07E51B18009357F6 /* BuiltInEventPresets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34C899AB07E51B18009357F6 /* BuiltInEventPresets.plist */; };
 		34C9EC41099FA2A8007ECAB3 /* DefaultBlockedStatusIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 34C9EC40099FA2A8007ECAB3 /* DefaultBlockedStatusIcon.png */; };
+		34CA22300A671BEF00B11032 /* PersonalPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34CA222F0A671BEF00B11032 /* PersonalPreferences.nib */; };
 		34CEBE6206F117DF00A89DDE /* ESContactInfoListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */; };
 		34CEBE6306F117DF00A89DDE /* ESContactInfoListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */; };
 		34CF9DF4085B8B7900D87E37 /* ESiTunesPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */; };
@@ -862,7 +863,6 @@
 		34D0FDD20956186200DCB678 /* ESPersonalPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D0FDD00956186200DCB678 /* ESPersonalPreferencesPlugin.m */; };
 		34D0FDD70956187700DCB678 /* ESPersonalPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D0FDD50956187700DCB678 /* ESPersonalPreferences.h */; };
 		34D0FDD80956187700DCB678 /* ESPersonalPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D0FDD60956187700DCB678 /* ESPersonalPreferences.m */; };
-		34D0FE3D09561E3800DCB678 /* PersonalPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34D0FE3C09561E3800DCB678 /* PersonalPreferences.nib */; };
 		34D0FF8509569FE500DCB678 /* PersonalPreferencesDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D0FF8409569FE500DCB678 /* PersonalPreferencesDefaults.plist */; };
 		34D1897F076114C00075A380 /* AILocalizationButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D1897D076114C00075A380 /* AILocalizationButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34D18980076114C00075A380 /* AILocalizationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D1897E076114C00075A380 /* AILocalizationButton.m */; };
@@ -3000,7 +3000,7 @@
 		34D0FDD00956186200DCB678 /* ESPersonalPreferencesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESPersonalPreferencesPlugin.m; path = Source/ESPersonalPreferencesPlugin.m; sourceTree = "<group>"; };
 		34D0FDD50956187700DCB678 /* ESPersonalPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESPersonalPreferences.h; path = Source/ESPersonalPreferences.h; sourceTree = "<group>"; };
 		34D0FDD60956187700DCB678 /* ESPersonalPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESPersonalPreferences.m; path = Source/ESPersonalPreferences.m; sourceTree = "<group>"; };
-		34D0FE3C09561E3800DCB678 /* PersonalPreferences.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = PersonalPreferences.nib; path = Resources/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34D0FE3C09561E3800DCB678 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		34D0FF8409569FE500DCB678 /* PersonalPreferencesDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PersonalPreferencesDefaults.plist; path = Resources/PersonalPreferencesDefaults.plist; sourceTree = "<group>"; };
 		34D188DB0760F0F50075A380 /* AILocalizationControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationControl.m; path = "Frameworks/Adium Framework/AILocalizationControl.m"; sourceTree = "<group>"; };
 		34D1897D076114C00075A380 /* AILocalizationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButton.h; path = "Frameworks/Adium Framework/AILocalizationButton.h"; sourceTree = "<group>"; };
@@ -5082,7 +5082,7 @@
 				34D0FDD50956187700DCB678 /* ESPersonalPreferences.h */,
 				34D0FDD60956187700DCB678 /* ESPersonalPreferences.m */,
 				34D0FF8409569FE500DCB678 /* PersonalPreferencesDefaults.plist */,
-				34D0FE3C09561E3800DCB678 /* PersonalPreferences.nib */,
+				34CA222F0A671BEF00B11032 /* PersonalPreferences.nib */,
 			);
 			name = "Personal Preferences";
 			sourceTree = "<group>";
@@ -8372,7 +8372,7 @@
 				07632BF30949E10B00FFABD8 /* ListThemeSheet.nib in Resources */,
 				63336E15094AB81300970871 /* XtraInfoView.nib in Resources */,
 				63EA63DD094BB79A009C8453 /* StatusIconPreviewView.nib in Resources */,
-				34D0FE3D09561E3800DCB678 /* PersonalPreferences.nib in Resources */,
+				34CA22300A671BEF00B11032 /* PersonalPreferences.nib in Resources */,
 				34D0FF8509569FE500DCB678 /* PersonalPreferencesDefaults.plist in Resources */,
 				34D000C60957918000DCB678 /* ContactListRecentImages.nib in Resources */,
 				11669ABA09994865003CB8A1 /* joscarJoinChatView.nib in Resources */,
@@ -10249,6 +10249,14 @@
 				345AF6CD0A5C9B5A00D7DA6F /* zh_TW */,
 			);
 			name = GeneralPreferences.nib;
+			sourceTree = "<group>";
+		};
+		34CA222F0A671BEF00B11032 /* PersonalPreferences.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				34D0FE3C09561E3800DCB678 /* English */,
+			);
+			name = PersonalPreferences.nib;
 			sourceTree = "<group>";
 		};
 		34E0E9B707CC4B3600A82198 /* Localizable.strings */ = {
