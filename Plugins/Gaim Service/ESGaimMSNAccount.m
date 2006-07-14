@@ -441,21 +441,21 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {	
-	if (strcmp(label, "Set Friendly Name") == 0) {
+	if (strcmp(label, "Set Friendly Name...") == 0) {
 //		return [AILocalizedString(@"Set Display Name","Action menu item for setting the display name") stringByAppendingEllipsis];
 		return nil;
 
-	} else if (strcmp(label, "Set Home Phone Number") == 0) {
-		return AILocalizedString(@"Set Home Phone Number",nil);
+	} else if (strcmp(label, "Set Home Phone Number...") == 0) {
+		return [AILocalizedString(@"Set Home Phone Number",nil) stringByAppendingEllipsis];
 		
-	} else if (strcmp(label, "Set Work Phone Number") == 0) {
-		return AILocalizedString(@"Set Work Phone Number",nil);
+	} else if (strcmp(label, "Set Work Phone Number...") == 0) {
+		return [AILocalizedString(@"Set Work Phone Number",nil) stringByAppendingEllipsis];
 		
-	} else if (strcmp(label, "Set Mobile Phone Number") == 0) {
-		return AILocalizedString(@"Set Mobile Phone Number",nil);
+	} else if (strcmp(label, "Set Mobile Phone Number...") == 0) {
+		return [AILocalizedString(@"Set Mobile Phone Number",nil) stringByAppendingEllipsis];
 		
-	} else if (strcmp(label, "Allow/Disallow Mobile Pages") == 0) {
-		return AILocalizedString(@"Allow/Disallow Mobile Pages","Action menu item for MSN accounts to toggle whether Mobile pages [forwarding messages to a mobile device] are enabled");
+	} else if (strcmp(label, "Allow/Disallow Mobile Pages...") == 0) {
+		return [AILocalizedString(@"Allow/Disallow Mobile Pages","Action menu item for MSN accounts to toggle whether Mobile pages [forwarding messages to a mobile device] are enabled") stringByAppendingEllipsis];
 
 	} else if (strcmp(label, "Open Hotmail Inbox") == 0) {
 		return AILocalizedString(@"Open Hotmail Inbox", "Action menu item for MSN accounts to open the hotmail inbox");
