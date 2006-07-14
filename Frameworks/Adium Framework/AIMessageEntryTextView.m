@@ -59,7 +59,7 @@
 @end
 
 @interface NSMutableAttributedString (AIMessageEntryTextViewAdditions)
-- (void)convertForPasteWithTraits;
+- (void)convertForPasteWithTraitsUsingAttributes:(NSDictionary *)inAttributes;
 @end
 
 @implementation AIMessageEntryTextView
@@ -446,19 +446,29 @@
 {
 	NSDictionary	*attributes = [[self typingAttributes] copy];
 	
-	NSPasteboard *generalPasteboard = [NSPasteboard generalPasteboard];
-	NSEnumerator *enumerator = [[generalPasteboard types] objectEnumerator];
-	NSString	 *type;
-	BOOL		 handledPaste = NO;
+	NSPasteboard	*generalPasteboard = [NSPasteboard generalPasteboard];
+	NSString		*type;
+
+	NSArray *supportedTypes =
+		[NSArray arrayWithObjects:NSURLPboardType, NSRTFDPboardType, NSRTFPboardType, NSHTMLPboardType, NSStringPboardType, 
+			NSFilenamesPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil];
+
+	type = [[NSPasteboard generalPasteboard] availableTypeFromArray:supportedTypes];
 	
-	//Types is ordered by the preference for handling of the data; enumerating it lets us allow the sending application's hints to be followed.
-	while ((type = [enumerator nextObject]) && !handledPaste) {
-		if ([type isEqualToString:NSRTFPboardType] ||
-			[type isEqualToString:NSRTFDPboardType] ||
-			[type isEqualToString:NSHTMLPboardType]) {
-			NSData *data = [generalPasteboard dataForType:type];
-			NSMutableAttributedString *attributedString;
+	if ([type isEqualToString:NSRTFPboardType] ||
+		[type isEqualToString:NSRTFDPboardType] ||
+		[type isEqualToString:NSHTMLPboardType] ||
+		[type isEqualToString:NSStringPboardType]) {
+		NSData *data = [generalPasteboard dataForType:type];
+		NSMutableAttributedString *attributedString;
+		
+		if ([type isEqualToString:NSStringPboardType]) {
+			NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+			attributedString = [[NSMutableAttributedString alloc] initWithString:string
+																	  attributes:[self typingAttributes]];
+			[string release];
 			
+		} else {
 			if ([type isEqualToString:NSRTFPboardType]) {
 				attributedString = [[NSMutableAttributedString alloc] initWithRTF:data
 															   documentAttributes:NULL];
@@ -469,53 +479,43 @@
 				attributedString = [[NSMutableAttributedString alloc] initWithHTML:data
 																documentAttributes:NULL];
 			}
-
-			[attributedString convertForPasteWithTraits];
-
-			NSRange			selectedRange = [self selectedRange];
-			NSTextStorage	*textStorage = [self textStorage];
 			
-			//Prepare the undo operation
-			NSUndoManager	*undoManager = [self undoManager];
-			[[undoManager prepareWithInvocationTarget:textStorage]
+			[attributedString convertForPasteWithTraitsUsingAttributes:[self typingAttributes]];
+		}
+		
+		NSRange			selectedRange = [self selectedRange];
+		NSTextStorage	*textStorage = [self textStorage];
+		
+		//Prepare the undo operation
+		NSUndoManager	*undoManager = [self undoManager];
+		[[undoManager prepareWithInvocationTarget:textStorage]
 				replaceCharactersInRange:NSMakeRange(selectedRange.location, [attributedString length])
 					withAttributedString:[textStorage attributedSubstringFromRange:selectedRange]];
-			[undoManager setActionName:AILocalizedStringFromTable(@"Paste", @"AdiumFramework", nil)];
+		[undoManager setActionName:AILocalizedStringFromTable(@"Paste", @"AdiumFramework", nil)];
+		
+		//Perform the paste
+		[textStorage replaceCharactersInRange:selectedRange
+						 withAttributedString:attributedString];
+		[attributedString release];
 
-			//Perform the paste
-			[textStorage replaceCharactersInRange:selectedRange
-							 withAttributedString:attributedString];
-			[attributedString release];
-			
-			handledPaste = YES;
-			
-		} else if ([type isEqualToString:NSStringPboardType]) {
-			//Paste a plain text string directly
+	} else if ([FILES_AND_IMAGES_TYPES containsObject:type]) {
+		if (![self handlePasteAsRichText]) {
 			[self paste:sender];
-			handledPaste = YES;
-
-		} else if ([FILES_AND_IMAGES_TYPES containsObject:type]) {
-			if (![self handlePasteAsRichText]) {
-				[self paste:sender];
-			}
-			handledPaste = YES;
-
-		} else if ([type isEqualToString:NSURLPboardType]) {
-			//Paste a URL directly
-			[self paste:sender];
-			handledPaste = YES;
 		}
-	}
-	
-	//If we didn't handle it yet, let super try to deal with it
-	if (!handledPaste) {
+		
+	} else if ([type isEqualToString:NSURLPboardType]) {
+		//Paste a URL directly
+		[self paste:sender];
+
+	} else {		
+		//If we didn't handle it yet, let super try to deal with it
 		[self paste:sender];
 	}
-	
+
 	if (attributes) {
 		[self setTypingAttributes:attributes];
 	}
-	
+
 	[attributes release];	
 }
 
@@ -1112,10 +1112,10 @@
 @end
 
 @implementation NSMutableAttributedString (AIMessageEntryTextViewAdditions)
-- (void)convertForPasteWithTraits
+- (void)convertForPasteWithTraitsUsingAttributes:(NSDictionary *)typingAttributes;
 {
 	NSRange fullRange = NSMakeRange(0, [self length]);
-	
+
 	//Remove non-trait attributes
 	[self removeAttribute:NSBackgroundColorAttributeName range:fullRange];
 	[self removeAttribute:NSBaselineOffsetAttributeName range:fullRange];
@@ -1129,6 +1129,50 @@
 	[self removeAttribute:NSShadowAttributeName range:fullRange];
 	[self removeAttribute:NSStrokeWidthAttributeName range:fullRange];
 	
+	NSRange			searchRange = NSMakeRange(0, fullRange.length);
+	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
+	NSFont			*myFont = [typingAttributes objectForKey:NSFontAttributeName];
+
+	while (searchRange.location < fullRange.length) {
+		NSFont *font;
+		NSRange effectiveRange;
+		font = [self attribute:NSFontAttributeName 
+					   atIndex:searchRange.location
+		 longestEffectiveRange:&effectiveRange
+					   inRange:searchRange];
+
+		if (font) {
+			NSFontTraitMask thisFontTraits = [fontManager traitsOfFont:font];
+			NSFontTraitMask	traits = 0;
+			
+			if (thisFontTraits & NSBoldFontMask) {
+				traits |= NSBoldFontMask;
+			} else {
+				traits |= NSUnboldFontMask;				
+			}
+
+			if (thisFontTraits & NSItalicFontMask) {
+				traits |= NSItalicFontMask;
+			} else {
+				traits |= NSUnitalicFontMask;
+			}
+			
+			font = [fontManager fontWithFamily:[myFont familyName]
+										traits:traits
+										weight:[fontManager weightOfFont:myFont]
+										  size:[myFont pointSize]];
+			 
+			if (font) {
+				[self addAttribute:NSFontAttributeName
+							 value:font
+							 range:effectiveRange];
+			}
+		}
+
+		searchRange.location = effectiveRange.location + effectiveRange.length;
+		searchRange.length = fullRange.length - searchRange.location;
+	}
+
 	//Replace attachments with nothing! Absolutely nothing!
 	[self convertAttachmentsToStringsUsingPlaceholder:@""];
 }
