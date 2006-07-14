@@ -79,6 +79,7 @@
                 "menuItem_adiumXtras" = NSMenuItem; 
                 "menuItem_bold" = NSMenuItem; 
                 "menuItem_bringAllToFront" = NSMenuItem; 
+                "menuItem_checkForUpdates" = NSMenuItem; 
                 "menuItem_clear" = NSMenuItem; 
                 "menuItem_close" = NSMenuItem; 
                 "menuItem_closeAllChats" = NSMenuItem; 
