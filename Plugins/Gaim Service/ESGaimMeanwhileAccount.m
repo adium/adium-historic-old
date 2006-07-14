@@ -104,13 +104,14 @@
 
 	switch ([statusState statusType]) {
 		case AIAvailableStatusType:
+			statusID = "active";
 			break;
 
 		case AIAwayStatusType:
 		{
 			if (([statusName isEqualToString:STATUS_NAME_DND]) ||
 				([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
-				statusID = "busy";
+				statusID = "dnd";
 			
 			break;
 		}
