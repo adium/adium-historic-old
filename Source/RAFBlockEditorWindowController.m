@@ -438,11 +438,12 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 			
 		} else {
 			NSEnumerator	*enumerator = [[[popUp_accounts menu] itemArray] objectEnumerator];
-			NSMenuItem		*menuItem;
-			
+			NSMenuItem						*menuItem;
+			AIAccount<AIAccount_Privacy>	*representedAccount;
+
 			while ((menuItem = [enumerator nextObject])) {
-				if ((account = [menuItem representedObject])) {
-					[account setPrivacyOptions:privacyOption];
+				if ((representedAccount = [menuItem representedObject])) {
+					[representedAccount setPrivacyOptions:privacyOption];
 				}
 			}
 		}
@@ -457,19 +458,20 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 																				 AIPrivacyTypePermit :
 																				 AIPrivacyTypeDeny)]];		
 		} else {
-			NSEnumerator	*enumerator = [[[popUp_accounts menu] itemArray] objectEnumerator];
-			NSMenuItem		*menuItem;
-			
+			NSEnumerator					*enumerator = [[[popUp_accounts menu] itemArray] objectEnumerator];
+			NSMenuItem						*menuItem;
+			AIAccount<AIAccount_Privacy>	*representedAccount;
+
 			while ((menuItem = [enumerator nextObject])) {
-				if ((account = [menuItem representedObject])) {
-					[listContents addObjectsFromArray:[account listObjectsOnPrivacyList:((privacyOption == AIPrivacyOptionAllowUsers) ?
-																						 AIPrivacyTypePermit :
-																						 AIPrivacyTypeDeny)]];		
+				if ((representedAccount = [menuItem representedObject])) {
+					[listContents addObjectsFromArray:[representedAccount listObjectsOnPrivacyList:((privacyOption == AIPrivacyOptionAllowUsers) ?
+																									AIPrivacyTypePermit :
+																									AIPrivacyTypeDeny)]];		
 				}
 			}
 		}
 	}
-	AILog(@"listContents is now %@, with an account of %@ and a privacy option %i",listContents,account,privacyOption);
+
 	[table reloadData];
 }
 
