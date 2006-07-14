@@ -510,7 +510,6 @@
 		}
 
 	} else {
-		NSLog(@"just drawing alternating rows");
 		[self drawAlternatingRowsInRect:clipRect];
 	}
 }
