@@ -60,6 +60,7 @@
 			}
 			if(listShouldBeCreated) {
 				[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] createNewSeparableContactListWithObject:newRootObject];
+				[[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] window] setFrameTopLeftPoint:aPoint];
 			}
 			newRootObject = nil;
 		}
