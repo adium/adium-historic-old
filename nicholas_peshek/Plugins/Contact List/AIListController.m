@@ -656,4 +656,8 @@ typedef enum {
 	return (windowStyleNumber ? [windowStyleNumber intValue] : WINDOW_STYLE_STANDARD);
 }
 
+- (AIListOutlineView *)contactListView
+{
+	return contactListView;
+}
 @end

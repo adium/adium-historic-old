@@ -18,6 +18,7 @@
 #import "AIListWindowController.h"
 #import "AIStandardListWindowController.h"
 #import "AIBorderlessListWindowController.h"
+#import "AIContactListOutlineView.h"
 
 @implementation AIMultiListWindowController
 
@@ -155,6 +156,16 @@
 	
 	while ((windowController = [enumer nextObject])) {
 		[[windowController listController] setDragItems:draggedItems];
+	}
+}
+
+- (void)setIsDropped:(BOOL)isDropped
+{
+	NSEnumerator			*enumer = [windowControllerArray objectEnumerator];
+	AIListWindowController	*windowController;
+	
+	while ((windowController = [enumer nextObject])) {
+		[(AIContactListOutlineView *)[[windowController listController] contactListView] setIsDroppedOutOfView:isDropped];
 	}
 }
 @end
