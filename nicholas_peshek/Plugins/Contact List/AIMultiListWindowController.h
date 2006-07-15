@@ -35,5 +35,6 @@
 - (AIRectEdgeMask)windowSlidOffScreenEdgeMask;
 - (void)destroyListController:(AIListWindowController *)doneController;
 - (AIListWindowController *)nextContactList;
+- (void)setDragItems:(NSArray *)draggedItems;
 
 @end

@@ -191,6 +191,7 @@ typedef enum {
 - (void)reloadData;
 
 - (void)setBackgroundOpacity:(float)opacity;
+- (void)setDragItems:(NSArray *)draggedItems;
 
 - (IBAction)performDefaultActionOnSelectedItem:(NSOutlineView *)sender;
 
