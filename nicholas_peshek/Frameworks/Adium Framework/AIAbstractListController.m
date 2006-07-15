@@ -16,6 +16,8 @@
 
 #import "AIAbstractListController.h"
 #import "AIContactController.h"
+#import	"AICoreComponentLoader.h"
+#import "AISCLViewPlugin.h"
 #import "AIInterfaceController.h"
 #import "AIPreferenceController.h"
 #import "AIListCell.h"
@@ -32,6 +34,7 @@
 #import "AIListOutlineView.h"
 #import "AIMenuController.h"
 #import "AIMetaContact.h"
+#import "AIMultiListWindowController.h"
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
@@ -613,6 +616,7 @@
 	if (dragItems != items) {
 		[dragItems release];
 		dragItems = [items retain];
+		[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] setDragItems:dragItems];
 	}
 	
 	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",@"AIListObjectUniqueIDs",nil] owner:self];
@@ -664,6 +668,15 @@
 			
 			[sender setPropertyList:dragItemsArray forType:@"AIListObjectUniqueIDs"];
 		}
+	}
+}
+
+- (void)setDragItems:(NSArray *)draggedItems
+{
+	if (dragItems) {
+		[dragItems release]; dragItems = [draggedItems retain];
+	} else {
+		dragItems = [draggedItems retain];
 	}
 }
 

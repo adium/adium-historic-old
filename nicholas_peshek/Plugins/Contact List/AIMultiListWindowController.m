@@ -147,4 +147,14 @@
 	
 	return nextList;
 }
+
+- (void)setDragItems:(NSArray *)draggedItems
+{
+	NSEnumerator			*enumer = [windowControllerArray objectEnumerator];
+	AIListWindowController	*windowController;
+	
+	while ((windowController = [enumer nextObject])) {
+		[[windowController listController] setDragItems:draggedItems];
+	}
+}
 @end
