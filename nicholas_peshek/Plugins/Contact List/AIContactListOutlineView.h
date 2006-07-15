@@ -13,4 +13,5 @@
 	NSPasteboard	*tempDragBoard;
 }
 
+- (void)setIsDroppedOutOfView:(BOOL)droppedOn;
 @end

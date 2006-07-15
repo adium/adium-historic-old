@@ -51,4 +51,6 @@
 - (AIListObject<AIContainingObject> *)contactList;
 - (void)contactOrderChanged:(NSNotification *)notification;
 
+- (AIListOutlineView *)contactListView;
+
 @end

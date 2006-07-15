@@ -20,6 +20,7 @@
 {
 	isDroppedOutOfView = NO;
 	tempDragBoard = nil;
+	[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] setIsDropped:isDroppedOutOfView];
 	return [super draggingEntered:sender];
 }
 
@@ -27,6 +28,7 @@
 {
 	isDroppedOutOfView = YES;
 	tempDragBoard = [sender draggingPasteboard];
+	[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] setIsDropped:isDroppedOutOfView];
 	[super draggingExited:sender];
 }
 
@@ -65,5 +67,10 @@
 	}
 	//Apparently, I'm an idiot, and AIAbstractListController needs this as well. Pass it off to the dataSource and let that deal with it.
 	[[self dataSource] outlineView:self draggedImage:anImage endedAt:aPoint operation:operation];
+}
+
+- (void)setIsDroppedOutOfView:(BOOL)droppedOn
+{
+	isDroppedOutOfView = droppedOn;
 }
 @end

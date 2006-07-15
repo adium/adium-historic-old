@@ -36,5 +36,6 @@
 - (void)destroyListController:(AIListWindowController *)doneController;
 - (AIListWindowController *)nextContactList;
 - (void)setDragItems:(NSArray *)draggedItems;
+- (void)setIsDropped:(BOOL)isDropped;
 
 @end
