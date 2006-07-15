@@ -42,7 +42,6 @@
 		CFRelease(currentSearch); currentSearch = NULL;
 	}
 
-	SKIndexFlush(logSearchIndex);
 	thisSearch = SKSearchCreate(logSearchIndex,
 								(CFStringRef)searchString,
 								kSKSearchOptionDefault);

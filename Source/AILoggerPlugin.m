@@ -1028,6 +1028,8 @@ Class LogViewerWindowControllerClass = NULL;
 			[self _saveDirtyLogArray];
 		}
 
+		SKIndexFlush(searchIndex);
+
 		//Update our progress
 		if (!stopIndexingThreads) {
 			logsToIndex = 0;
