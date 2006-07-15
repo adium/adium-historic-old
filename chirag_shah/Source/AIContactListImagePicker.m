@@ -72,11 +72,18 @@
 {
 	[NSGraphicsContext saveGraphicsState];
 
+	inRect = NSInsetRect(inRect, 1, 1);
+
 	NSBezierPath	*clipPath = [NSBezierPath bezierPathWithRoundedRect:inRect radius:3];
+
+	[[NSColor windowFrameColor] set];
+	[clipPath setLineWidth:1];
+	[clipPath stroke];
+
 	//Ensure we have an even/odd winding rule in effect
 	[clipPath setWindingRule:NSEvenOddWindingRule];
 	[clipPath addClip];
-
+	
 	[super drawRect:inRect];
 	
 	if (hovered) {
@@ -94,7 +101,7 @@
 		[[NSColor whiteColor] set];
 		[arrowPath fill];
 	}
-	
+
 	[NSGraphicsContext restoreGraphicsState];
 }
 
@@ -199,9 +206,9 @@
 		}
 		
 		NSPoint	localPoint = [self convertPoint:[[self window] convertScreenToBase:[NSEvent mouseLocation]]
-									   fromView:[self superview]];
+									   fromView:nil];
 		BOOL	mouseInside = NSPointInRect(localPoint, myFrame);
-		
+
 		trackingTag = [self addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseInside];
 		if (mouseInside) [self mouseEntered:nil];
 	}

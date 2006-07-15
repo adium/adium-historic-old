@@ -38,6 +38,7 @@
 
 
 #import "AIXMLAppender.h"
+#import <AIUtilities/AIStringAdditions.h>
 #import <sys/stat.h>
 
 #define XML_APPENDER_BLOCK_SIZE 4096
@@ -89,6 +90,35 @@ enum { xmlMarkerLength = 21 };
 			//Get the root element name and set initialized
 			rootElementName = [[self rootElementNameForFileAtPath:filePath] retain];
 			initialized = (rootElementName != nil);				
+		//We may need to create the directory structure, so call this just in case
+		} else {
+			NSFileManager *mgr = [NSFileManager defaultManager];
+
+			//Save the current working directory, so we can change back to it.
+			NSString *savedWorkingDirectory = [mgr currentDirectoryPath];
+			//Change to the root.
+			[mgr changeCurrentDirectoryPath:@"/"];
+
+			/*Create each component of the path, then change into it.
+			 *E.g. /foo/bar/baz:
+			 *	cd /
+			 *	mkdir foo
+			 *	cd foo
+			 *	mkdir bar
+			 *	cd bar
+			 *	mkdir baz
+			 *	cd baz
+			 *	cd $savedWorkingDirectory
+			 */
+			NSArray *pathComponents = [[filePath stringByDeletingLastPathComponent] pathComponents];
+			NSEnumerator *pathComponentsEnum = [pathComponents objectEnumerator];
+			NSString *component;
+			while ((component = [pathComponentsEnum nextObject])) {
+				[mgr createDirectoryAtPath:component attributes:nil];
+				[mgr changeCurrentDirectoryPath:component];
+			}
+
+			[mgr changeCurrentDirectoryPath:savedWorkingDirectory];
 		}
 		
 		//Open our file handle and seek if necessary
@@ -168,7 +198,7 @@ enum { xmlMarkerLength = 21 };
 		//Create our strings
 		int closingTagLength = [rootElementName length] + 4; //</rootElementName>
 		NSString *rootElement = [self createElementWithName:rootElementName content:@"" attributeKeys:keys attributeValues:values];
-		NSString *initialDocument = [NSString stringWithFormat:@"%@\n%@\n", XML_MARKER, rootElement];
+		NSString *initialDocument = [NSString stringWithFormat:@"%@\n%@", XML_MARKER, rootElement];
 		
 		//Write the data, and then seek backwards
 		[file writeData:[initialDocument dataUsingEncoding:NSUTF8StringEncoding]];
@@ -190,16 +220,36 @@ enum { xmlMarkerLength = 21 };
 
 - (void)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
+	[self addElementWithName:name
+			  escapedContent:(content ? [content stringByEscapingForXMLWithEntities:nil] : nil)
+			   attributeKeys:keys
+			 attributeValues:values];
+}
+
+/*!
+ * @brief Adds a node to the document, performing no escaping on the content.
+ *
+ * @param name The name of the root element for this document.
+ * @param content The stuff between the open and close tags. If nil, then the tag will be self closing. No escaping will be performed on the content.
+ * @param attributeKeys An array of the attribute keys the element has.
+ * @param attributeValues An array of the attribute values the element has.
+ */
+
+- (void)addElementWithName:(NSString *)name escapedContent:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
+{
 	//Don't add if not initialized
 	if (initialized) {
 		//Create our strings
 		NSString *element = [self createElementWithName:name content:content attributeKeys:keys attributeValues:values];
 		NSString *closingTag = [NSString stringWithFormat:@"</%@>\n", rootElementName];
 		
-		//Write the data, and then seek backwards
-		[file writeData:[[element stringByAppendingString:closingTag] dataUsingEncoding:NSUTF8StringEncoding]];
-		[file synchronizeFile];
-		[file seekToFileOffset:([file offsetInFile] - [closingTag length])];
+		if(element != nil)
+		{
+			//Write the data, and then seek backwards
+			[file writeData:[[element stringByAppendingString:closingTag] dataUsingEncoding:NSUTF8StringEncoding]];
+			[file synchronizeFile];
+			[file seekToFileOffset:([file offsetInFile] - [closingTag length])];
+		}
 	}
 }
 
@@ -209,22 +259,19 @@ enum { xmlMarkerLength = 21 };
  * @brief Creates an element node.
  *
  * @param name The name of the element.
- * @param content The stuff between the open and close tags. If nil, then the tag will be self closing.
+ * @param content The stuff between the open and close tags. If nil, then the tag will be self closing. No escaping will be performed on the content.
  * @param attributeKeys An array of the attribute keys the element has.
  * @param attributeValues An array of the attribute values the element has.
  * @return An XML element, suitable for insertion into a document.
  *
  * The two attribute arrays must be of the same size, or the method will return nil.
- *
- * If an item in the attribute value array is @"", the expected output of attributeKey="" will be omitted in favor of 
- * the more succint attributeKey.
  */
 
 - (NSString *)createElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
 	//Check our precondition
 	if ([keys count] != [values count]) {
-		NSLog(@"Attribute key and value arrays are of differing lengths, %u and %u, respectively", [keys count], [values count]);
+		NSLog(@"Attribute key (%@) and value (%@) arrays for element %@ are of differing lengths, %u and %u, respectively", keys, values, name, [keys count], [values count]);
 		return nil;
 	}
 	
@@ -234,23 +281,17 @@ enum { xmlMarkerLength = 21 };
 	NSEnumerator *attributeValueEnumerator = [values objectEnumerator];
 	NSString *key = nil, *value = nil;
 	while ((key = [attributeKeyEnumerator nextObject]) && (value = [attributeValueEnumerator nextObject])) {
-		if ([value isEqualToString:@""]) {
-			[attributeString appendFormat:@" %@",
-				[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)key, NULL) autorelease]];
-		} else {
-			[attributeString appendFormat:@" %@=\"%@\"", 
-				[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)key, NULL) autorelease],
-				[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)value, NULL) autorelease]];
-		}
+		[attributeString appendFormat:@" %@=\"%@\"", 
+			[key stringByEscapingForXMLWithEntities:nil],
+			[value stringByEscapingForXMLWithEntities:nil]];
 	}
 	
 	//Format and return
-	NSString *escapedName = [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)name, NULL) autorelease];
+	NSString *escapedName = [name stringByEscapingForXMLWithEntities:nil];
 	if (content)
-		return [NSString stringWithFormat:@"<%@%@>%@</%@>", escapedName, attributeString, 
-			[(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)content, NULL) autorelease], escapedName];
+		return [NSString stringWithFormat:@"<%@%@>%@</%@>\n", escapedName, attributeString, content, escapedName];
 	else
-		return [NSString stringWithFormat:@"<%@%@/>", escapedName, attributeString];
+		return [NSString stringWithFormat:@"<%@%@/>\n", escapedName, attributeString];
 }
 
 /*!

@@ -20,7 +20,6 @@
 #import "AIPreferenceWindowController.h"
 #import "AIToolbarController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
@@ -766,7 +765,7 @@
  * For example, General.MyKey would refer to the MyKey value of the General group, as would Group:General.MyKey
  */
 - (void) setValue:(id)value forKeyPath:(NSString *)keyPath {
-	NSLog(@"AIPC setting value %@ for key path %@", value, keyPath);
+	//NSLog(@"AIPC setting value %@ for key path %@", value, keyPath);
 	unsigned periodIdx = [keyPath rangeOfString:@"." options:NSLiteralSearch].location;
 	NSString *key = [keyPath substringToIndex:periodIdx];
 	if(periodIdx == NSNotFound) {
@@ -794,7 +793,7 @@
 			keyInGroup = [keyPath substringToIndex:periodIdx];
 		}
 
-		NSLog(@"key path: %@; first key: %@; second key: %@", keyPath, key, keyInGroup);
+		//NSLog(@"key path: %@; first key: %@; second key: %@", keyPath, key, keyInGroup);
 		//Change the value.
 		NSMutableDictionary *prefDict = [self cachedPreferencesForGroup:key object:nil];
 

@@ -142,7 +142,8 @@
 		[infoDict setObject:urlString forKey:@"URL"];
 	}
 	
-	[self mainPerformSelector:@selector(showNotifyEmailWindowWithMessage:URLString:)
+	[self mainPerformSelector:@selector(showNotifyEmailWindowForAccount:withMessage:URLString:)
+				   withObject:account
 				   withObject:message
 				   withObject:(urlString ? urlString : nil)];
 
@@ -157,10 +158,11 @@
  *
  * Displays the New Mail message, optionally offerring an Open Mail button (if a URL to open the webmail is passed).
  *
+ * @param account The account which received new mail
  * @param inMessage An attributed message describing the new mail
  * @param inURLString The URL to the appropriate webmail, or nil if no webmail link is available
  */
-+ (void)showNotifyEmailWindowWithMessage:(NSAttributedString *)inMessage URLString:(NSString *)inURLString
++ (void)showNotifyEmailWindowForAccount:(AIAccount *)account withMessage:(NSAttributedString *)inMessage URLString:(NSString *)inURLString
 {	
 	[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:AILocalizedString(@"New Mail",nil)
 														  defaultButton:nil
@@ -176,8 +178,8 @@
 	
 	//XXX - Hook this to the account for listobject
 	[[[AIObject sharedAdiumInstance] contactAlertsController] generateEvent:ACCOUNT_RECEIVED_EMAIL
-															  forListObject:nil
-																   userInfo:nil
+															  forListObject:account
+																   userInfo:[inMessage string]
 											   previouslyPerformedActionIDs:nil];	
 }
 
@@ -215,17 +217,17 @@
 		CFURLRef	appURL = NULL;
 		OSStatus	err;
 		
-		//Obtain the default http:// handler
-		err = LSGetApplicationForURL((CFURLRef)[NSURL URLWithString:urlString],
+		/* Obtain the default http:// handler. We don't care what would handle _this file_ (its extension doesn't matter)
+		 * nor what normally happens when the user opens a .html file since that is, on many systems, an HTML editor.
+		 * Instead, we want to know what application to use for viewing web pages... and then open this file in it.
+		 */
+		err = LSGetApplicationForURL((CFURLRef)[NSURL URLWithString:@"http://www.adiumx.com"],
 									 kLSRolesViewer,
 									 /*outAppRef*/ NULL,
 									 &appURL);
-		
-		//Use it to open the specified file (if we just told NSWorkspace to open it, it might be opened instead
-		//by an HTML editor or other program
 		if (err == noErr) {
 			[[NSWorkspace sharedWorkspace] openFile:[urlString stringByExpandingTildeInPath]
-									withApplication:[(NSURL *)appURL path]];			
+									withApplication:[(NSURL *)appURL path]];
 		} else {
 			NSURL		*url;
 			

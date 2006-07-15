@@ -30,7 +30,8 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 
-#define DEFAULT_MSN_PASSPORT_DOMAIN @"@hotmail.com"
+#define DEFAULT_MSN_PASSPORT_DOMAIN				@"@hotmail.com"
+#define SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES	10
 
 @interface ESGaimMSNAccount (PRIVATE)
 - (void)updateFriendlyNameAfterConnect;
@@ -65,13 +66,16 @@
 - (void)initAccount
 {
 	[super initAccount];
-	currentFriendlyName = nil;
-	
+	lastFriendlyNameChange = nil;
+
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_MSN_SERVICE];
 }
 
 - (void)dealloc {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+	
+	[lastFriendlyNameChange release];
+
 	[super dealloc];
 }
 
@@ -251,6 +255,30 @@
 
 extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 
+- (void)setServersideDisplayName:(NSString *)friendlyName
+{
+	if (gaim_account_is_connected(account)) {		
+		GaimDebug (@"Updating FullNameAttr to %@",friendlyName);
+		NSDate *now = [NSDate date];
+
+		if (!lastFriendlyNameChange ||
+			[now timeIntervalSinceDate:lastFriendlyNameChange] > SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES) { 
+			msn_set_friendly_name(account->gc, [friendlyName UTF8String]);
+			
+			[lastFriendlyNameChange release];
+			lastFriendlyNameChange = [now retain];
+
+		} else {
+			[NSObject cancelPreviousPerformRequestsWithTarget:self
+													 selector:@selector(setServersideDisplayName:)
+													   object:nil];
+			[self performSelector:@selector(setServersideDisplayName:)
+					   withObject:friendlyName
+					   afterDelay:(SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES - [now timeIntervalSinceDate:lastFriendlyNameChange])];
+		}
+	}
+}
+
 /*
  * @brief Set our serverside 'friendly name'
  *
@@ -263,13 +291,8 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 {
 	NSString	*friendlyName = [attributedDisplayName string];
 	
-	if (!friendlyName || ![friendlyName isEqualToString:[self currentDisplayName]]) {
-		
-		if (gaim_account_is_connected(account)) {
-			GaimDebug (@"Updating FullNameAttr to %@",friendlyName);
-
-			msn_set_friendly_name(account->gc, [friendlyName UTF8String]);
-		}
+	if (!friendlyName || ![friendlyName isEqualToString:[self currentDisplayName]]) {		
+		[self setServersideDisplayName:friendlyName];
 	}
 	
 	[super gotFilteredDisplayName:attributedDisplayName];
@@ -418,21 +441,21 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {	
-	if (strcmp(label, "Set Friendly Name") == 0) {
+	if (strcmp(label, "Set Friendly Name...") == 0) {
 //		return [AILocalizedString(@"Set Display Name","Action menu item for setting the display name") stringByAppendingEllipsis];
 		return nil;
 
-	} else if (strcmp(label, "Set Home Phone Number") == 0) {
-		return AILocalizedString(@"Set Home Phone Number",nil);
+	} else if (strcmp(label, "Set Home Phone Number...") == 0) {
+		return [AILocalizedString(@"Set Home Phone Number",nil) stringByAppendingEllipsis];
 		
-	} else if (strcmp(label, "Set Work Phone Number") == 0) {
-		return AILocalizedString(@"Set Work Phone Number",nil);
+	} else if (strcmp(label, "Set Work Phone Number...") == 0) {
+		return [AILocalizedString(@"Set Work Phone Number",nil) stringByAppendingEllipsis];
 		
-	} else if (strcmp(label, "Set Mobile Phone Number") == 0) {
-		return AILocalizedString(@"Set Mobile Phone Number",nil);
+	} else if (strcmp(label, "Set Mobile Phone Number...") == 0) {
+		return [AILocalizedString(@"Set Mobile Phone Number",nil) stringByAppendingEllipsis];
 		
-	} else if (strcmp(label, "Allow/Disallow Mobile Pages") == 0) {
-		return AILocalizedString(@"Allow/Disallow Mobile Pages","Action menu item for MSN accounts to toggle whether Mobile pages [forwarding messages to a mobile device] are enabled");
+	} else if (strcmp(label, "Allow/Disallow Mobile Pages...") == 0) {
+		return [AILocalizedString(@"Allow/Disallow Mobile Pages","Action menu item for MSN accounts to toggle whether Mobile pages [forwarding messages to a mobile device] are enabled") stringByAppendingEllipsis];
 
 	} else if (strcmp(label, "Open Hotmail Inbox") == 0) {
 		return AILocalizedString(@"Open Hotmail Inbox", "Action menu item for MSN accounts to open the hotmail inbox");

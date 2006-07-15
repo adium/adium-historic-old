@@ -12,7 +12,6 @@
 #import "IconFamily.h"
 #import "NSFileManager+BundleBit.h"
 #import "NSMutableArrayAdditions.h"
-#include <c.h>
 
 #define THUMBNAIL_SIZE 16.0
 

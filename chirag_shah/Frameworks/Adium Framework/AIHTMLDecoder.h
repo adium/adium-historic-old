@@ -13,9 +13,15 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+@class AIXMLElement;
+
 @interface AIHTMLDecoder : NSObject {
+	NSString *XMLNamespace;
+
 	struct AIHTMLDecoderOptionsBitField {
-		unsigned reserved: 22;
+		unsigned reserved: 19;
+
+		unsigned generateStrictXHTML: 1;
 
 		//these next ten members are derived from the arguments to
 		//  +encodeHTML:::::::::::: in the old AIHTMLDecoder.
@@ -88,6 +94,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 //uses all options.
 - (NSString *)encodeHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesPath;
 
+//Turn an attributed string into the root element of a strict XHTML (1.0) document.
+//Uses options: XMLNamespace, includeHeaders, attachmentsAsText.
+- (AIXMLElement *)rootStrictXHTMLElementForAttributedString:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesSavePath;
+
 //pass a string containing all the attributes of a tag (for example,
 //  @"src=\"window.jp2\" alt=\"Window on the World\""). you will get back a
 //  dictionary containing those attributes (for example, @{ @"src" =
@@ -96,6 +106,12 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 - (NSDictionary *)parseArguments:(NSString *)arguments;
 
 #pragma mark Accessors
+
+- (NSString *)XMLNamespace;
+- (void) setXMLNamespace:(NSString *)newXMLNamespace;
+
+- (BOOL)generatesStrictXHTML;
+- (void)setGeneratesStrictXHTML:(BOOL)newValue;
 
 //meaning <HTML> and </HTML>.
 - (BOOL)includesHeaders;

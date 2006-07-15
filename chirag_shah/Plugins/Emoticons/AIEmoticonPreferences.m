@@ -293,8 +293,10 @@
 			NSImage	*image = [emoticonImageCache objectForKey:key];
 			if (!image) {
 				image = [emoticon image];
-				[emoticonImageCache setObject:image
-									   forKey:key];
+				if (image) {
+					[emoticonImageCache setObject:image
+										   forKey:key];
+				}
 			}
 			
 			return image;

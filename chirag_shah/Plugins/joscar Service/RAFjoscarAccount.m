@@ -14,17 +14,18 @@
 #import "AIContentController.h"
 #import "AIChatController.h"
 #import "AIStatusController.h"
-#import <Adium/AIContentMessage.h>
+#import "AIInterfaceController.h"
 #import <Adium/AIChat.h>
+#import <Adium/AIContentMessage.h>
 #import <Adium/ESDebugAILog.h>
+#import <Adium/ESFileTransfer.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
-#import <Adium/ESFileTransfer.h>
 #import <Adium/AIListGroup.h>
-#import <Adium/AIMetaContact.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIMetaContact.h>
+#import <Adium/AIService.h>
 #import <Adium/ESTextAndButtonsWindowController.h>
-#import <Adium/AIContentStatus.h>
 #import <Adium/AITextAttachmentExtension.h>
 
 #import <AIUtilities/AIApplicationAdditions.h>
@@ -32,11 +33,12 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-
-#import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringUtilities.h>
+
+#import "RAFjoscarICQService.h"
 
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 
@@ -101,7 +103,10 @@
 
 - (void)retrievedProxyConfiguration:(NSDictionary *)proxyConfiguration context:(id)context
 {
-	[joscarAdapter connectWithPassword:password proxyConfiguration:proxyConfiguration];
+	[joscarAdapter connectWithPassword:password 
+					proxyConfiguration:proxyConfiguration
+								  host:[self host]
+								  port:[self port]];
 }
 
 - (void)disconnect
@@ -111,9 +116,27 @@
 	[joscarAdapter disconnect];
 }
 
+- (AIService *)_serviceForUID:(NSString *)contactUID
+{
+	NSString	*contactServiceID;	
+	char		firstCharacter;
+
+	//Determine service based on UID
+	if ([contactUID hasSuffix:@"@mac.com"]) {
+		contactServiceID = @"joscar-OSCAR-dotMac";
+	} else if ((firstCharacter = ([contactUID length] ? [contactUID characterAtIndex:0] : '\0')) &&
+			   (firstCharacter >= '0' && firstCharacter <= '9')) {
+		contactServiceID = @"joscar-OSCAR-ICQ";
+	} else {
+		contactServiceID = @"joscar-OSCAR-AIM";
+	}
+
+	return [[adium accountController] serviceWithUniqueID:contactServiceID];
+}
+
 - (AIListContact *)contactWithUID:(NSString *)inUID
 {
-	return ([[adium contactController] contactWithService:service
+	return ([[adium contactController] contactWithService:[self _serviceForUID:inUID]
 												  account:self
 													  UID:inUID]);
 }
@@ -149,28 +172,34 @@
 }
 
 - (void)contactWithUID:(NSString *)inUID
-			  isOnline:(NSNumber *)isOnline
-				isAway:(NSNumber *)isAway
+		  formattedUID:(NSString *)inFormattedUID
+			  isOnline:(BOOL)isOnline
+				isAway:(BOOL)isAway
 			 idleSince:(NSDate *)idleSince
 		   onlineSince:(NSDate *)onlineSince
-		  warningLevel:(NSNumber *)warningLevel
-				mobile:(NSNumber *)inMobile
-			   aolUser:(NSNumber *)inAolUser
+		  warningLevel:(int)warningLevel
+				mobile:(BOOL)inMobile
+			   aolUser:(BOOL)inAolUser
 {
 	AIListContact	*listContact = [self contactWithUID:inUID];
+
+	if (![[listContact formattedUID] isEqualToString:inFormattedUID]){
+		[listContact setFormattedUID:inFormattedUID
+							  notify:NotifyLater];
+	}
 	
-	if ([listContact online] != [isOnline boolValue]) {
-		[listContact setOnline:[isOnline boolValue]
+	if ([listContact online] != isOnline) {
+		[listContact setOnline:isOnline
 						notify:NotifyLater
 					  silently:silentAndDelayed];
 	}
 
 	//here we unset the away message if we're going from away to present
-	if ([listContact statusType] == AIAwayStatusType && ![isAway boolValue])
+	if ([listContact statusType] == AIAwayStatusType && !isAway)
 		[listContact setStatusMessage:nil notify:NotifyLater];
 	//here we set wether we're away or not. the Away message (if applicable) will come in via setStatusMessage in a bit.
 	[listContact setStatusWithName:nil
-						statusType:([isAway boolValue] ? AIAwayStatusType : AIAvailableStatusType)
+						statusType:(isAway ? AIAwayStatusType : AIAvailableStatusType)
 							notify:NotifyLater];
 	
 	[listContact setIdle:(idleSince != nil)
@@ -179,16 +208,13 @@
 	
 	[listContact setSignonDate:onlineSince
 						notify:NotifyLater];
-	[listContact setWarningLevel:[warningLevel intValue]
+	[listContact setWarningLevel:warningLevel
 						  notify:NotifyLater];
 	
-	[listContact setIsMobile:[inMobile boolValue]
-					  notify:NotifyLater];
-	
-	[listContact setIsMobile:[inMobile boolValue]
+	[listContact setIsMobile:inMobile
 					  notify:NotifyLater];
 
-	[listContact setStatusObject:([inAolUser boolValue] ?
+	[listContact setStatusObject:(inAolUser ?
 								 AILocalizedString(@"America Online", nil) :
 								 nil)
 						 forKey:@"Client"
@@ -198,6 +224,7 @@
 	[listContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
+//Not actually called - more thorough method above is, instead
 - (void)contactWithUID:(NSString *)inUID
 			  isOnline:(NSNumber *)isOnline
 {
@@ -228,27 +255,43 @@
 		[self didDisconnect];
 		
 		if (errorMessageShort) {
-			BOOL shouldReconnect = YES;
+			BOOL	 shouldReconnect = YES;
+			NSString *errorMessage = nil;
 			
 			if ([errorMessageShort isEqualToString:@"Password"]) {
 				[self serverReportedInvalidPassword];
 				
 			} else if ([errorMessageShort isEqualToString:@"TooFrequently"]) {
 				shouldReconnect = NO;
-				NSLog(@"Connecting too frequently!");
+				errorMessage = AILocalizedString(@"You have been connecting too frequently. Please wait five minutes or more before trying again; trying sooner will increase the timespan of this temporary ban.", nil);
+
 				AILog(@"Connecting too frequently!");
 
 			} else if ([errorMessageShort isEqualToString:@"TemporarilyBlocked"]) {
 				shouldReconnect = NO;
-				NSLog(@"Temporarily blocked!");
+				errorMessage = AILocalizedString(@"You have been temporarily blocked by the AIM server and cannot connect at this time. Please try again later.", nil);
+				
 				AILog(@"Temporarily blocked!");
+			} else if ([errorMessageShort isEqualToString:@"TemporarilyUnavailable"]) {
+				shouldReconnect = NO;
+				errorMessage = AILocalizedString(@"The server is temporarily unavailable; you cannot connect at this time. Please try again later.", nil);
+				
+				AILog(@"Temporarily unavailable!");
+				
 			} else {
 				NSLog(@"Error message short is %@; code %@",errorMessageShort,
+					  errorCode);
+				AILog(@"Error message short is %@; code %@",errorMessageShort,
 					  errorCode);
 			}
 			
 			if (shouldReconnect) {
 				[self autoReconnectAfterDelay:3.0];
+				
+			} else if (errorMessage) {
+			    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"%@ (%@) : Connection Error", nil),
+					[self formattedUID], [[self service] shortDescription]]
+												withDescription:errorMessage];	
 			}
 		}
 		
@@ -281,6 +324,9 @@
 	
 	[self updateStatusForKey:@"TextProfile"];
 	[self updateStatusForKey:KEY_USER_ICON];
+	
+	[joscarAdapter setDisplayRecentBuddies:[[self preferenceForKey:KEY_DISPLAY_RECENT_BUDDIES
+															 group:GROUP_ACCOUNT_STATUS] boolValue]];
 }
 
 - (void)didDisconnect
@@ -566,19 +612,20 @@
 						  forKey:@"Notes"
 						  notify:NotifyLater];
 	
-	//Apply any changes
 	[listContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
 - (void)contactWithUID:(NSString *)inUID iconUpdate:(NSData *)iconData
 {
-	AIListContact	*listContact = [self contactWithUID:inUID];
-	
-	[listContact setServersideIconData:iconData
-								notify:NotifyLater];
-	
-	//Apply any changes
-	[listContact notifyOfChangedStatusSilently:silentAndDelayed];
+	//Ignore null data until joscar retrieves all icons consistently; setting null will make us clear an existing icon
+	if (iconData) {
+		AIListContact	*listContact = [self contactWithUID:inUID];
+		
+		[listContact setServersideIconData:iconData
+									notify:NotifyLater];
+		
+		[listContact notifyOfChangedStatusSilently:silentAndDelayed];
+	}
 }
 
 #pragma mark Messaging
@@ -594,8 +641,12 @@
 
 - (BOOL)closeChat:(AIChat*)chat
 {
-	if ([chat isGroupChat])
+	if ([chat isGroupChat]) {
 		[joscarAdapter leaveGroupChatWithName:[chat name]];
+	} else {
+		[joscarAdapter leaveChatWithUID:[[chat listObject] UID]];
+	}
+
     return YES;
 }
 
@@ -818,13 +869,17 @@ BOOL isHTMLContact(AIListObject *inListObject)
 {
 	AIListContact	*sourceContact = [self contactWithUID:inUID];
 
-	[[adium contentController] displayStatusMessage:(isConnected ?
-													 AILocalizedString(@"Direct Instant Message session started","Direct IM is an AIM-specific phrase for transferring images in the message window") :
-													 AILocalizedString(@"Direct Instant Message session ended","Direct IM is an AIM-specific phrase for transferring images in the message window"))
-											 ofType:@"directIM"
-											 inChat:[[adium chatController] existingChatWithContact:sourceContact]];	
+	[[adium contentController] displayEvent:(isConnected ?
+											 AILocalizedString(@"Direct Instant Message session started","Direct IM is an AIM-specific phrase for transferring images in the message window") :
+											 AILocalizedString(@"Direct Instant Message session ended","Direct IM is an AIM-specific phrase for transferring images in the message window"))
+									 ofType:@"directIM"
+									 inChat:[[adium chatController] existingChatWithContact:sourceContact]];	
 }
 
+- (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
+{
+	return [[inContact service] isKindOfClass:[RAFjoscarICQService class]];
+}
 
 #pragma mark Contact list editing
 /*!
@@ -893,7 +948,7 @@ BOOL isHTMLContact(AIListObject *inListObject)
 #pragma mark File Transfer
 - (BOOL)supportsFolderTransfer
 {
-	return YES;
+	return /*YES*/NO;
 }
 
 - (void)newIncomingFileTransferWithUID:(NSString *)inUID
@@ -1003,41 +1058,41 @@ BOOL isHTMLContact(AIListObject *inListObject)
 }
 
 #pragma mark Privacy
-//Add a list object to the privacy list (either PRIVACY_PERMIT or PRIVACY_DENY). Return value indicates success.
--(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type
+//Add a list object to the privacy list (either AIPrivacyTypePermit or AIPrivacyTypeDeny). Return value indicates success.
+-(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(AIPrivacyType)type
 {
 	switch (type) {
-		case PRIVACY_DENY:
+		case AIPrivacyTypeDeny:
 			[joscarAdapter addToBlockList:[inObject UID]];
 			break;
-		case PRIVACY_PERMIT:
+		case AIPrivacyTypePermit:
 			[joscarAdapter addToAllowedList:[inObject UID]];
 			break;
 	}
 	return YES;
 }
-//Remove a list object from the privacy list (either PRIVACY_PERMIT or PRIVACY_DENY). Return value indicates success
--(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type
+//Remove a list object from the privacy list (either AIPrivacyTypePermit or AIPrivacyTypeDeny). Return value indicates success
+-(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(AIPrivacyType)type
 {
 	switch (type) {
-		case PRIVACY_DENY:
+		case AIPrivacyTypeDeny:
 			[joscarAdapter removeFromBlockList:[inObject UID]];
 			break;
-		case PRIVACY_PERMIT:
+		case AIPrivacyTypePermit:
 			[joscarAdapter removeFromAllowedList:[inObject UID]];
 			break;
 	}
 	return YES;
 }
 //Return an array of AIListContacts on the specified privacy list.  Returns an empty array if no contacts are on the list.
--(NSArray *)listObjectsOnPrivacyList:(PRIVACY_TYPE)type
+-(NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type
 {
 	NSArray *tmp = nil;
 	switch (type) {
-		case PRIVACY_DENY:
+		case AIPrivacyTypeDeny:
 			tmp = [joscarAdapter getBlockedBuddies];
 			break;
-		case PRIVACY_PERMIT:
+		case AIPrivacyTypePermit:
 			tmp = [joscarAdapter getAllowedBuddies];
 			break;
 	}
@@ -1050,14 +1105,14 @@ BOOL isHTMLContact(AIListObject *inListObject)
 }
 
 //Identical to the above method, except it returns an array of strings, not list objects
--(NSArray *)listObjectIDsOnPrivacyList:(PRIVACY_TYPE)type
+-(NSArray *)listObjectIDsOnPrivacyList:(AIPrivacyType)type
 {
 	NSArray *tmp = nil;
 	switch (type) {
-		case PRIVACY_DENY:
+		case AIPrivacyTypeDeny:
 			tmp = [joscarAdapter getBlockedBuddies];
 			break;
-		case PRIVACY_PERMIT:
+		case AIPrivacyTypePermit:
 			tmp = [joscarAdapter getAllowedBuddies];
 			break;
 	}
@@ -1070,13 +1125,13 @@ BOOL isHTMLContact(AIListObject *inListObject)
 	return [retArr autorelease];
 }
 //Set the privacy options
--(void)setPrivacyOptions:(PRIVACY_OPTION)option
+-(void)setPrivacyOptions:(AIPrivacyOption)option
 {
 	[joscarAdapter setPrivacyMode:option];
 }
 
 //Get the privacy options
--(PRIVACY_OPTION)privacyOptions
+-(AIPrivacyOption)privacyOptions
 {
 	return [joscarAdapter privacyMode];
 }
@@ -1245,16 +1300,9 @@ BOOL isHTMLContact(AIListObject *inListObject)
 
 - (void)chatFailed:(NSString *)name
 {	
-	AIChat *chat = [self mainThreadChatWithName:name];
-	AIContentStatus *status = [AIContentStatus statusInChat:chat 
-												 withSource:chat 
-												destination:self 
-													   date:[NSDate date] 
-													message:@"Error: A connection failure has occurred."
-												   withType:@"group_chat_connection_failure"];
-	NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:1];
-	[userInfo setObject:status forKey:@"AIContentObject"];
-	[[adium notificationCenter] postNotificationName:Content_ContentObjectAdded object:userInfo userInfo:[userInfo autorelease]];
+	[[adium contentController] displayEvent:AILocalizedString(@"Error: A connection failure has occurred.", nil)
+									 ofType:@"group_chat_connection_failure"
+									 inChat:[self mainThreadChatWithName:name]];
 }
 
 - (void)chatClosed:(NSNotification *)notif

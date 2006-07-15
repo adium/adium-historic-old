@@ -62,9 +62,9 @@
 - (void)_beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer;
 
 	//AIAccount_Privacy
--(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type;
--(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type;
--(NSArray *)listObjectsOnPrivacyList:(PRIVACY_TYPE)type;
+-(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(AIPrivacyType)type;
+-(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(AIPrivacyType)type;
+-(NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type;
 
 	//Connectivity
 - (void)connect;
@@ -124,8 +124,8 @@
 - (void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
 - (void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat;
 
-- (void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID;
-- (void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID;
+- (void)accountPrivacyList:(AIPrivacyType)type added:(NSString *)sourceUID;
+- (void)accountPrivacyList:(AIPrivacyType)type removed:(NSString *)sourceUID;
 
 - (void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
 - (void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer 

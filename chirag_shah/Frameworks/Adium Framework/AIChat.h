@@ -105,6 +105,8 @@ typedef enum {
 	BOOL				enableTypingNotifications;
 	
 	NSMutableSet		*customEmoticons;
+	
+	NSMutableArray		*contentObjectArray;
 }
 
 + (id)chatForAccount:(AIAccount *)inAccount;
@@ -155,6 +157,7 @@ typedef enum {
 - (AIEncryptionStatus)encryptionStatus;
 - (BOOL)supportsSecureMessagingToggling;
 
+- (BOOL)canSendMessages;
 - (BOOL)canSendImages;
 
 - (BOOL)isListContactIgnored:(AIListObject *)inContact;
@@ -167,5 +170,8 @@ typedef enum {
 - (NSSet *)customEmoticons;
 
 - (void)receivedError:(NSNumber *)type;
+
+- (NSArray *)contentObjectArray;
+- (void)addContentObject:(AIContentObject *)inObject;
 
 @end

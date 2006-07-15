@@ -23,6 +23,5 @@
 }
 
 + (void *)handleNotifyEmailsForAccount:(AIAccount *)account count:(size_t)count detailed:(BOOL)detailed subjects:(const char **)subjects froms:(const char **)froms tos:(const char **)tos urls:(const char **)urls;
-+ (void)showNotifyEmailWindowWithMessage:(NSAttributedString *)inMessage URLString:(NSString *)inURLString;
 
 @end

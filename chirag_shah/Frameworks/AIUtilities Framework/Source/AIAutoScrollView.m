@@ -244,7 +244,7 @@
 }
 
 //Focus ring drawing code by Nicholas Riley, posted on cocoadev and available at:
-//http://cocoa.mamasam.com/COCOADEV/2002/03/2/29535.php
+//http://lists.apple.com/archives/cocoa-dev/2002/Mar/msg01620.html
 - (BOOL)needsDisplay
 {
 	if (alwaysDrawFocusRingIfFocused) {

@@ -43,6 +43,8 @@
 @interface AimConnectionProperties : NSObject {}
 - (void)setScreenname:(Screenname *)sn;
 - (void)setPassword:(NSString *)password;
+- (void)setLoginHost:(NSString *)host;
+- (void)setLoginPort:(int)port;
 @end
 
 /*
@@ -52,7 +54,7 @@
 @interface AimProxyInfo : NSObject {}
 + (AimProxyInfo *)forSocks5:(NSString *)host :(int)port :(NSString *)username :(NSString *)password;
 + (AimProxyInfo *)forHttp:(NSString *)host :(int)port :(NSString *)username :(NSString *)password;
-+ (AimProxyInfo *)forSocks4:(NSString *)host :(int)port;
++ (AimProxyInfo *)forSocks4:(NSString *)host :(int)port :(NSString *)username;
 + (AimProxyInfo *)forNoProxy;
 @end
 
@@ -232,9 +234,20 @@
 @interface BosService : Service {}
 @end
 
+/*
+ * net.kano.joustsim.oscar.oscar.service.ssi.ServerStoredSettings
+ */
+@interface ServerStoredSettings : NSObject {}
+- (void)changeMobileDeviceShown:(BOOL)inFlag;
+- (void)changeIdleTimeShown:(BOOL)inFlag;
+- (void)changeTypingShown:(BOOL)inFlag;
+- (void)changeRecentBuddiesUsed:(BOOL)inFlag;
+@end
+
 @interface SsiService : NSObject {}
 - (MutableBuddyList *)getBuddyList;
 - (PermissionList *)getPermissionList;
+- (ServerStoredSettings *)getServerStoredSettings;
 - (void)requestBuddyAuthorization:(Screenname *)sn :(NSString *)authorizationMessage;
 @end
 
@@ -340,6 +353,19 @@
 @end
 
 @interface ConversationEventInfo : NSObject {}
+- (Screenname *)getFrom;
+- (Screenname *)getTo;
+@end
+
+@interface SendFailedEvent : ConversationEventInfo {}
+- (Message *)getMessage;
+@end
+
+/*
+ * net.kano.joustsim.oscar.oscar.service.icbm.ImSendFailedEvent
+ */
+@interface ImSendFailedEvent : SendFailedEvent {}
+- (int)getErrorCode;
 @end
 
 /*
@@ -360,6 +386,7 @@
 - (RvConnectionManager *)getRvConnectionManager;
 - (void)sendAutomatically:(Screenname *)sn :(Message *)msg;
 - (void)sendTypingAutomatically:(Screenname *)sn :(TypingState *)msg;
+- (id<Set>)getDirectimConversations:(Screenname *)sn;
 @end
 
 #pragma mark Buddies and Groups
@@ -514,8 +541,8 @@
 @interface IncomingFileTransfer : FileTransfer {}
 - (void)accept;
 - (BOOL)isAccepted;
-- (void)decline;
-- (BOOL)isDeclined;
+- (void)reject;
+- (BOOL)isRejected;
 
 - (void)setFileMapper:(FileMapper *)mapper;
 - (FileMapper *)getFileMapper;

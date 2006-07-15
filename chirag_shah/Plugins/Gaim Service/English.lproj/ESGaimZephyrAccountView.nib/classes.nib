@@ -19,6 +19,7 @@
             }; 
             SUPERCLASS = AIObject; 
         }, 
+        {CLASS = AIDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = ESDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {

@@ -22,12 +22,6 @@
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {CLASS = AIContextMenuTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
-            CLASS = AIGaimOscarAccountViewController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {"textView_textProfile" = NSTextView; }; 
-            SUPERCLASS = AIAccountViewController; 
-        }, 
-        {
             ACTIONS = {pasteAsRichText = id; scrollPageDown = id; scrollPageUp = id; }; 
             CLASS = AIMessageEntryTextView; 
             LANGUAGE = ObjC; 
@@ -52,7 +46,7 @@
         {
             CLASS = RAFjoscarAccountViewController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"textView_textProfile" = NSTextView; }; 
+            OUTLETS = {"checkbox_recentBuddies" = NSButton; "textView_textProfile" = NSTextView; }; 
             SUPERCLASS = AIAccountViewController; 
         }
     ); 

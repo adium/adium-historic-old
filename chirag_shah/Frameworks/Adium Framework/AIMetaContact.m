@@ -48,26 +48,25 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //init
 - (id)initWithObjectID:(NSNumber *)inObjectID
 {
-	objectID = [inObjectID retain];
-	statusCacheDict = [[NSMutableDictionary alloc] init];
-	_preferredContact = nil;
-	_listContacts = nil;
-	_listContactsIncludingOfflineAccounts = nil;
-
-	[super initWithUID:[objectID stringValue] service:nil];
-	
-	containedObjects = [[NSMutableArray alloc] init];
-	
-	containsOnlyOneUniqueContact = NO;
-	containsOnlyOneService = YES;
-	expanded = YES;
-	containedObjectsNeedsSort = NO;
-	delayContainedObjectSorting = NO;
-	saveGroupingChanges = YES;
-	
-	largestOrder = 1.0;
-	smallestOrder = 1.0;
+	if ((self = [super initWithUID:[inObjectID stringValue] service:nil])) {
+		objectID = [inObjectID retain];
+		statusCacheDict = [[NSMutableDictionary alloc] init];
+		_preferredContact = nil;
+		_listContacts = nil;
+		_listContactsIncludingOfflineAccounts = nil;
 		
+		containedObjects = [[NSMutableArray alloc] init];
+		
+		containsOnlyOneUniqueContact = NO;
+		containsOnlyOneService = YES;
+		expanded = YES;
+		containedObjectsNeedsSort = NO;
+		delayContainedObjectSorting = NO;
+		saveGroupingChanges = YES;
+		
+		largestOrder = 1.0;
+		smallestOrder = 1.0;
+	}
 	return self;
 }
 
@@ -335,15 +334,15 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 - (AIListContact *)preferredContact
 {
 	if (!_preferredContact) {
-		NSArray			*theContainedObjects = [self listContacts];
+		NSArray			*listContacts = [self listContacts];
 		AIListContact   *preferredContact = nil;
 		AIListContact   *thisContact;
 		unsigned		index;
-		unsigned		count = [theContainedObjects count];
+		unsigned		count = [listContacts count];
 		
 		//Search for an available contact who is not mobile
 		for (index = 0; index < count; index++) {
-			thisContact = [theContainedObjects objectAtIndex:index];
+			thisContact = [listContacts objectAtIndex:index];
 			if (([thisContact statusSummary] == AIAvailableStatus) &&
 				(![thisContact isMobile])) {
 				preferredContact = thisContact;
@@ -354,7 +353,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		//If no available contacts, find the first online contact
 		if (!preferredContact) {
 			for (index = 0; index < count; index++) {
-				thisContact = [theContainedObjects objectAtIndex:index];
+				thisContact = [listContacts objectAtIndex:index];
 				if ([thisContact online]) {
 					preferredContact = thisContact;
 					break;
@@ -364,9 +363,16 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 		//If no online contacts, find the first contact
 		if (!preferredContact && (count != 0)) {
-			preferredContact = [theContainedObjects objectAtIndex:0];
+			preferredContact = [listContacts objectAtIndex:0];
 		}
-		
+
+		//If no list contacts at all, try contacts on offline accounts
+		if (!preferredContact) {
+			if ([[self containedObjects] count]) {
+				preferredContact = [[self containedObjects] objectAtIndex:0];
+			}
+		}
+
 		_preferredContact = preferredContact;
 	}
 	
@@ -522,7 +528,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return [[self listContacts] objectAtIndex:index];
 }
 
-/*
+/**
  * @brief Return an array of unique contained list contacts, optionally including those for offline accounts
  *
  * This is a reasonably expensive call; its return value is cached by -[self listContacts] and -[self listContactsIncludingOfflineAccounts],
@@ -740,7 +746,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 }
 
 #pragma mark Attribute arrays
-/*
+/**
  * @brief Request that Adium update our display name based on our current information
  */
 - (void)updateDisplayName
@@ -905,7 +911,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 }
 
 #pragma mark User Icon
-/* 
+/** 
  * @brief Return the user icon for this metaContact
  *
  * We always want to provide a userIcon if at all possible.
@@ -935,7 +941,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return userIcon;
 }
 
-/* @brief Return a medium-priority or better user icon from this specific meta contact's display array
+/** @brief Return a medium-priority or better user icon from this specific meta contact's display array
  *
  * If the meta contact has a medium-priority or better user icon, such as a user-specified icon or an address book
  * supplied icon with the "prefer address book icon images" preference, return it.  Otherwise, return nil, indicating
@@ -1045,7 +1051,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return contactListStatusMessage;
 }
 
-/*
+/**
  * @brief Are sounds for this contact muted?
  */
 - (BOOL)soundsAreMuted

@@ -13,36 +13,51 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Carbon/Carbon.h>
 #import "AICursorAdditions.h"
 
 @implementation NSCursor (AICursorAdditions)
 
-//these methods always use an Appearance-themed cursor.
-//first they look for the NSCursor methods that are only available on Panther and later.
-//failing that, they call Appearance Manager's SetThemeCursor function.
-+ (void)setOpenGrabHandCursor
-{
-	if ([self respondsToSelector:@selector(openHandCursor)])
-		[[NSCursor openHandCursor] set];
-	else
-		SetThemeCursor(kThemeOpenHandCursor);
-}
+/*
+arrowCursor            default
+closedHandCursor       @url
+crosshairCursor        crosshair 
+disappearingItemCursor @url
+IBeamCursor            text
+openHandCursor         move
+pointingHandCursor     pointer
+resizeDownCursor       n-resize
+resizeLeftCursor       e-resize
+resizeLeftRightCursor  @url
+resizeRightCursor      w-resize
+resizeUpCursor         s-resize
+resizeUpDownCursor     @url
 
-+ (void)setClosedGrabHandCursor
+@url = Write to cache folder, get file: URL and return @url for it.
+ */
+- (NSString *) CSSRepresentation
 {
-	if ([self respondsToSelector:@selector(closedHandCursor)])
-		[[NSCursor closedHandCursor] set];
-	else
-		SetThemeCursor(kThemeClosedHandCursor);
-}
-
-+ (void)setHandPointCursor
-{
-	if ([self respondsToSelector:@selector(pointingHandCursor)])
-		[[NSCursor pointingHandCursor] set];
-	else
-		SetThemeCursor(kThemePointingHandCursor);
+	if (self == [NSCursor arrowCursor]) {
+		return @"default";
+	} else if(self == [NSCursor crosshairCursor]) {
+		return @"crosshair";
+	} else if(self == [NSCursor IBeamCursor]) {
+		return @"text";
+	} else if(self == [NSCursor openHandCursor]) {
+		return @"move";
+	} else if(self == [NSCursor pointingHandCursor]) {
+		return @"pointer";
+	} else if(self == [NSCursor resizeDownCursor]) {
+		return @"n-resize";
+	} else if(self == [NSCursor resizeLeftCursor]) {
+		return @"e-resize";
+	} else if(self == [NSCursor resizeRightCursor]) {
+		return @"w-resize";
+	} else if(self == [NSCursor resizeUpCursor]) {
+		return @"s-resize";
+	} else {
+		//XXX
+		return nil;
+	}
 }
 
 @end

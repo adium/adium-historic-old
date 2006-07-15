@@ -130,9 +130,6 @@
 {
 	NSResponder *responder = [[NSApp mainWindow] firstResponder];
 
-	if ([responder isKindOfClass:[NSTextView class]]) {
-	NSLog(@"%@ \n\n %@",[(NSTextView *)responder typingAttributes], [self defaultFormattingAttributes]);	
-	}
 	return (([responder isKindOfClass:[NSTextView class]]) &&
 			(![[(NSTextView *)responder typingAttributes] isEqualToDictionary:[self defaultFormattingAttributes]]));
 }
