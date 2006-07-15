@@ -57,22 +57,30 @@
 	return [NSCharacterSet characterSetWithCharactersInString:@"-"];
 }
 
-//subclass should change this
 - (NSString *)serviceCodeUniqueID{
 	return(@"joscar-OSCAR-ICQ");
 }
-//subclass should change this
+#ifdef JOSCAR_SUPERCEDE_LIBGAIM
 - (NSString *)shortDescription{
 	return @"ICQ";
 }
-//subclass should change this
 - (NSString *)longDescription{
 	return @"ICQ";
 }
-//subclass should change this
 - (NSString *)serviceID{
 	return @"ICQ";
 }
+#else
+- (NSString *)shortDescription{
+	return @"ICQ-joscar";
+}
+- (NSString *)longDescription{
+	return @"ICQ-joscar";
+}
+- (NSString *)serviceID{
+	return @"ICQ-joscar";
+}
+#endif
 
 - (BOOL)caseSensitive{
 	return NO;

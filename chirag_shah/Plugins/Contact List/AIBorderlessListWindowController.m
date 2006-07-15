@@ -39,6 +39,14 @@
 }
 
 /*
+ * @brief Used by the interface controller to know that despite having no NSWindowCloseButton, our window can be closed
+ */
+- (BOOL)windowPermitsClose
+{
+	return YES;
+}
+
+/*
  * @brief Slide the window to a given point
  *
  * windowSlidOffScreenEdgeMask must already be set to the resulting offscreen mask (or 0 if the window is sliding on screen)

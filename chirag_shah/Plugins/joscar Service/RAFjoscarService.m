@@ -67,42 +67,12 @@
 	return [NSCharacterSet characterSetWithCharactersInString:@" "];
 }
 
-//subclass should change this
-- (AIServiceImportance)serviceImportance{
-	return AIServiceUnsupported;
-}
-
-//subclass should change this
-- (NSString *)serviceCodeUniqueID{
-	return(@"joscar-OSCAR");
-}
-//subclass should change this
-- (NSString *)shortDescription{
-	return @"joscar-OSCAR";
-}
-//subclass should change this
-- (NSString *)longDescription{
-	return @"joscar OSCAR Account";
-}
-//subclass should change this
-- (NSString *)serviceID{
-	return @"joscar-RAW-ACCOUNT";
-}
-
 - (BOOL)caseSensitive{
 	return NO;
 }
 
 - (NSString *)userNameLabel{
     return AILocalizedString(@"Screen Name",nil); //ScreenName
-}
-
-//subclass should change this
-- (NSImage *)defaultServiceIcon
-{
-	static NSImage	*defaultServiceIcon = nil;
-	if (!defaultServiceIcon) defaultServiceIcon = [[NSImage imageNamed:@"joscar" forClass:[self class]] retain];
-	return defaultServiceIcon;
 }
 
 #pragma mark Statuses
@@ -125,5 +95,32 @@
 									  ofType:AIInvisibleStatusType
 								  forService:self];
 }
+
+#ifndef JOSCAR_SUPERCEDE_LIBGAIM
+/*!
+* @brief Default icon
+ *
+ * Service Icon packs should always include images for all the built-in Adium services.  This method allows external
+ * service plugins to specify an image which will be used when the service icon pack does not specify one.  It will
+ * also be useful if new services are added to Adium itself after a significant number of Service Icon packs exist
+ * which do not yet have an image for this service.  If the active Service Icon pack provides an image for this service,
+ * this method will not be called.
+ *
+ * The service should _not_ cache this icon internally; multiple calls should return unique NSImage objects.
+ *
+ * @param iconType The AIServiceIconType of the icon to return. This specifies the desired size of the icon.
+ * @return NSImage to use for this service by default
+ */
+- (NSImage *)defaultServiceIconOfType:(AIServiceIconType)iconType
+{
+	NSImage *baseImage = [NSImage imageNamed:@"aim" forClass:[self class]];
+	
+	if (iconType == AIServiceIconSmall) {
+		baseImage = [baseImage imageByScalingToSize:NSMakeSize(16, 16)];
+	}
+	
+	return baseImage;
+}
+#endif
 
 @end

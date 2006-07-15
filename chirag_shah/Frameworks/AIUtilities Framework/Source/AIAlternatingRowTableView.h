@@ -49,3 +49,8 @@
 - (void)setAcceptsFirstMouse:(BOOL)acceptFirstMouse;
 
 @end
+
+@interface NSObject (AITableViewDelegateDeleteSupport)
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView;
+@end
+

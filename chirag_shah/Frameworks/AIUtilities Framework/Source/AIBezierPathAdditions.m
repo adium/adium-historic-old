@@ -20,7 +20,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIBezierPathAdditions.h"
-#include <c.h>
 
 #define ONE_THIRD  (1.0/3.0)
 #define TWO_THIRDS (2.0/3.0)

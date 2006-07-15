@@ -41,7 +41,8 @@ static AICrashController *sharedCrashController = nil;
 {
 	if ((self = [super init])) {
 		//Remove any existing crash logs
-		[[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];
+		[[NSFileManager defaultManager] trashFileAtPath:[[NSString stringWithFormat:@"~/Library/Logs/CrashReporter/%@.crash.log", \
+			[[NSProcessInfo processInfo] processName]] stringByExpandingTildeInPath]];
 
 		//Install custom handlers which properly terminate this application if one is received
 		signal(SIGILL,  CrashHandler_Signal);	/* 4:   illegal instruction (not reset when caught) */

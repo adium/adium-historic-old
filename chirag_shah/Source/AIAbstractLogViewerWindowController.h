@@ -6,6 +6,7 @@
 //
 
 #import <Adium/AIWindowController.h>
+#import <AIUtilities/AIAlternatingRowOutlineView.h>
 
 @class AIChatLog, AILoggerPlugin;
 
@@ -55,14 +56,21 @@ typedef enum {
 	AIDateTypeAfter
 } AIDateType;
 
-@class AIListContact, AISplitView;
+@class AIListContact, AISplitView, ESSourceListResizer, KNShelfSplitView;
 
 @interface AIAbstractLogViewerWindowController : AIWindowController {
 	AILoggerPlugin				*plugin;
 
-	IBOutlet	AISplitView		*splitView_contacts_results;
-	IBOutlet	NSOutlineView	*outlineView_contacts;
+	IBOutlet	KNShelfSplitView	*shelf_splitView;
+	
+	IBOutlet	AISplitView			*splitView_contacts_results;
+	IBOutlet	AIAlternatingRowOutlineView	*outlineView_contacts;
+	IBOutlet	NSView				*containingView_contactsSourceList;
+	float							desiredContactsSourceListDeltaX;
+	IBOutlet	ESSourceListResizer	*sourceListResizer;
 
+	IBOutlet	NSView			*containingView_results;
+	IBOutlet	AISplitView		*splitView_results;
     IBOutlet	NSTableView		*tableView_results;
     IBOutlet	NSTextView		*textView_content;
 
@@ -78,9 +86,9 @@ typedef enum {
 	IBOutlet	NSSearchField	*searchField_logs;
 	
 	//Array of selected / displayed logs.  (Locked access)
-    NSMutableArray		*currentSearchResults;		//Array of filtered/resulting logs
-    NSLock				*resultsLock;			//Lock before touching the array
-    AIChatLog			*displayedLog;			//Currently selected/displayed log	
+    NSMutableArray		*currentSearchResults;	//Array of filtered/resulting logs
+    NSRecursiveLock		*resultsLock;			//Lock before touching the array
+	NSArray				*displayedLogArray;		//Currently selected/displayed log(s)
 
 	LogSearchMode		searchMode;				//Currently selected search mode
 
@@ -95,14 +103,16 @@ typedef enum {
     BOOL				sortDirection;			//Direction to sort
 
 	NSTimer				*refreshResultsTimer;
-	NSTimer				*aggregateLogIndexProgressTimer; 
+	int					searchIDToReattemptWhenComplete;
 
 	NSString			*filterForAccountName;	//Account name to restrictively match content searches
-	NSMutableSet		*acceptableContactNames;
+	NSMutableSet		*contactIDsToFilter;
 	
 	AIDateType			filterDateType;
 	NSCalendarDate		*filterDate;
-
+	int					firstDayOfWeek;
+	BOOL				iCalFirstDayOfWeekDetermined;
+	
 	NSMutableDictionary	*logToGroupDict;
 	NSMutableDictionary	*logFromGroupDict;
 
@@ -112,16 +122,23 @@ typedef enum {
 
 	NSMutableDictionary	*toolbarItems;
     NSImage				*blankImage;
-	
+	NSImage				*adiumIcon;
+	NSImage				*adiumIconHighlighted;
+
 	NSMutableArray		*fromArray;				//Array of account names
     NSMutableArray		*fromServiceArray;		//Array of services for accounts
     NSMutableArray		*toArray;				//Array of contacts
     NSMutableArray		*toServiceArray;		//Array of services for accounts
-    NSDateFormatter		*dateFormatter;			//Format for dates displayed in the table
+    NSDateFormatter		*headerDateFormatter;	//Format for dates displayed in the content text view
 	
     int					sameSelection;
     BOOL				useSame;
 	
+	NSString			*horizontalRule;
+
+	NSUndoManager		*undoManager;
+	
+	NSNumber			*allContactsIdentifier;
 	//Old
 	BOOL showEmoticons;
 }
@@ -156,6 +173,8 @@ typedef enum {
 
 - (BOOL)searchShouldDisplayDocument:(SKDocumentRef)inDocument pathComponents:(NSArray *)pathComponents testDate:(BOOL)testDate;
 - (BOOL)chatLogMatchesDateFilter:(AIChatLog *)inChatLog;
+
+- (void)filterLogsWithSearch:(NSDictionary *)searchInfoDict;
 
 - (NSMenu *)dateTypeMenu;
 - (NSMenuItem *)_menuItemForDateType:(AIDateType)dateType dict:(NSDictionary *)dateTypeTitleDict;

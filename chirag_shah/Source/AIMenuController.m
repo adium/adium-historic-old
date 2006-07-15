@@ -50,7 +50,7 @@
 - (void)awakeFromNib
 {
 	//Build the array of menu locations
-	locationArray = [[NSMutableArray alloc] initWithObjects:menu_Adium_About, menu_Adium_Preferences,
+	locationArray = [[NSMutableArray alloc] initWithObjects:menu_Adium_About, menu_Adium_Preferences, menu_Adium_Other,
 		menu_File_New, menu_File_Close, menu_File_Save, menu_File_Accounts, menu_File_Additions,	
 		menu_Edit_Bottom, menu_Edit_Links, menu_Edit_Additions,
 		menu_View_General, menu_View_Sorting, menu_View_Toggles, menu_View_Appearance_Toggles, menu_View_Additions, 
@@ -320,7 +320,11 @@
 	//Adium menu
 	[menuItem_aboutAdium setTitle:AILocalizedString(@"About Adium",nil)];
 	[menuItem_adiumXtras setTitle:AILocalizedString(@"Xtras Manager",nil)];
+	[menuItem_checkForUpdates setTitle:[AILocalizedString(@"Check For Updates",nil) stringByAppendingEllipsis]];
 	[menuItem_preferences setTitle:[AILocalizedString(@"Preferences",nil) stringByAppendingEllipsis]];
+	[menuItem_donate setTitle:AILocalizedString(@"Donate",nil)];
+	[menuItem_helpOut setTitle:AILocalizedString(@"Contributing to Adium",nil)];
+
 	[menuItem_services setTitle:AILocalizedString(@"Services","Services menu item in the Adium menu")];
 	[menuItem_hideAdium setTitle:AILocalizedString(@"Hide Adium",nil)];
 	[menuItem_hideOthers setTitle:AILocalizedString(@"Hide Others",nil)];
@@ -339,6 +343,7 @@
 	[menuItem_cut setTitle:AILocalizedString(@"Cut",nil)];
 	[menuItem_copy setTitle:AILocalizedString(@"Copy",nil)];
 	[menuItem_paste setTitle:AILocalizedString(@"Paste",nil)];
+	[menuItem_pasteWithImagesAndColors setTitle:AILocalizedString(@"Paste with Images and Colors",nil)];
 	[menuItem_pasteAndMatchStyle setTitle:AILocalizedString(@"Paste and Match Style",nil)];
 	[menuItem_clear setTitle:AILocalizedString(@"Clear",nil)];
 	[menuItem_selectAll setTitle:AILocalizedString(@"Select All",nil)];

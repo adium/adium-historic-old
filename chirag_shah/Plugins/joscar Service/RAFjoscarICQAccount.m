@@ -7,14 +7,6 @@
 
 #import "RAFjoscarICQAccount.h"
 
-
 @implementation RAFjoscarICQAccount
-/*!
- * @brief ICQ supports offline messaging
- */
-- (BOOL)supportsOfflineMessaging
-{
-	return YES;
-}
 
 @end

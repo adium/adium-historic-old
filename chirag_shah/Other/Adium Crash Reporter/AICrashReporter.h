@@ -16,11 +16,13 @@
 
 #define RELATIVE_PATH_TO_CRASH_REPORTER	 @"/Contents/Resources/Adium Crash Reporter.app"
 #define EXCEPTIONS_PATH					[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
-#define CRASHES_PATH					[@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
+#define CRASHES_PATH					[[NSString stringWithFormat:@"~/Library/Logs/CrashReporter/%@.crash.log", \
+										[[NSProcessInfo processInfo] processName]] stringByExpandingTildeInPath]
 
-@class AIAutoScrollView, AITextViewWithPlaceholder;
+@class AIAutoScrollView, AITextViewWithPlaceholder, SUStatusChecker;
+@protocol SUStatusCheckerDelegate;
 
-@interface AICrashReporter : NSObject {
+@interface AICrashReporter : NSObject <SUStatusCheckerDelegate> {
 	IBOutlet	NSWindow                    *window_MainWindow;
 	IBOutlet	NSTextField                 *textField_emailAddress;
 	IBOutlet	NSTextField                 *textField_accountIM;
@@ -42,6 +44,7 @@
 	NSAppleScript                           *slayerScript;
 
     NSString                                *adiumPath;
+	SUStatusChecker							*statusChecker;
 }
 
 - (void)awakeFromNib;

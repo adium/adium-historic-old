@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIFontAdditions.h"
-
+#import "AIStringAdditions.h"
 
 @implementation NSFont (AIFontAdditions)
 
@@ -76,6 +76,21 @@
 - (NSString *)stringRepresentation
 {
     return [NSString stringWithFormat:@"%@,%i",[self fontName],(int)[self pointSize]];
+}
+- (NSString *)CSSRepresentation
+{
+	NSMutableArray *result = [NSMutableArray arrayWithCapacity:3];
+	[result addObject:[NSString stringWithFormat:@"%@pt %@", [NSString stringWithFloat:[self pointSize] maxDigits:2], [self familyName]]];
+
+	NSFontTraitMask traits = [[NSFontManager sharedFontManager] traitsOfFont:self];
+	if (traits & NSItalicFontMask) {
+		[result insertObject:@"italic" atIndex:0];
+	}
+	if (traits & NSBoldFontMask) {
+		[result insertObject:@"bold" atIndex:0];
+	}
+
+	return [result componentsJoinedByString:@" "];
 }
 
 - (BOOL)supportsBold

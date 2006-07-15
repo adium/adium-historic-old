@@ -202,6 +202,14 @@ void av_resolve_reply (struct sockaddr	*interface,
     
 	CFStringRef consoleUser = SCDynamicStoreCopyConsoleUser(NULL, NULL, NULL);
 	CFStringRef computerName = SCDynamicStoreCopyComputerName(NULL, NULL);
+	if (!computerName) {
+		/* computerName can return NULL if the computer name is not set or an error occurs */
+		CFUUIDRef	uuid;
+		
+		uuid = CFUUIDCreate(NULL);
+		computerName = CFUUIDCreateString(NULL, uuid);
+		CFRelease(uuid);		
+	}
     avInstanceName = [NSString stringWithFormat:@"%@@%@", consoleUser, computerName];
 	CFRelease(consoleUser);
 	CFRelease(computerName);

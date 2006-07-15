@@ -199,7 +199,7 @@
  *
  * Jabber supports offline messaging.
  */
-- (BOOL)supportsOfflineMessaging
+- (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
 {
 	return YES;
 }
@@ -312,7 +312,8 @@
 	
 	if (disconnectionError && *disconnectionError) {
 		if (([*disconnectionError rangeOfString:@"401"].location != NSNotFound) ||
-			([*disconnectionError rangeOfString:@"Authentication Failure"].location != NSNotFound)) {
+			([*disconnectionError rangeOfString:@"Authentication Failure"].location != NSNotFound) ||
+			([*disconnectionError rangeOfString:@"Not Authorized"].location != NSNotFound)) {
 			shouldReconnect = NO;
 
 			/* Automatic registration attempt */
@@ -521,6 +522,7 @@
 	char			*statusID = NULL;
 	NSString		*statusName = [statusState statusName];
 	NSString		*statusMessageString = [statusState statusMessageString];
+	NSNumber		*priority = nil;
 	
 	if (!statusMessageString) statusMessageString = @"";
 
@@ -530,6 +532,7 @@
 			if (([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT]) ||
 			   ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_FREE_FOR_CHAT] == NSOrderedSame))
 				statusID = "chat";
+			priority = [self preferenceForKey:KEY_JABBER_PRIORITY_AVAILABLE group:GROUP_ACCOUNT_STATUS];
 			break;
 		}
 			
@@ -541,7 +544,7 @@
 			else if (([statusName isEqualToString:STATUS_NAME_EXTENDED_AWAY]) ||
 					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_EXTENDED_AWAY] == NSOrderedSame))
 				statusID = "xa";
-			
+			priority = [self preferenceForKey:KEY_JABBER_PRIORITY_AWAY group:GROUP_ACCOUNT_STATUS];
 			break;
 		}
 			
@@ -554,9 +557,8 @@
 			break;
 	}
 
-	//Set our priority, which is actually set along with the status... Default is 0.
-#warning We can now set priority here. Add UI to the account preferences or perhaps status dialogue.
-	[arguments setObject:[NSNumber numberWithInt:0]
+	//Set our priority, which is actually set along with the status...Default is 0.
+	[arguments setObject:(priority ? priority : [NSNumber numberWithInt:0])
 				  forKey:@"priority"];
 
 	//If we didn't get a gaim status ID, request one from super

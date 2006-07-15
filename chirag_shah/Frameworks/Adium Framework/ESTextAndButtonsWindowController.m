@@ -199,6 +199,27 @@
 	}
 }
 
+- (void)setKeyEquivalent:(NSString *)keyEquivalent modifierMask:(unsigned int)mask forButton:(AITextAndButtonsWindowButton)windowButton
+{
+	NSButton *button;
+	switch (windowButton) {		
+		case AITextAndButtonsWindowButtonDefault:
+			button = button_default;
+			break;
+
+		case AITextAndButtonsWindowButtonAlternate:
+			button = button_alternate;
+			break;
+
+		case AITextAndButtonsWindowButtonOther:
+			button = button_other;
+			break;
+	}
+
+	[button setKeyEquivalent:keyEquivalent];
+	[button setKeyEquivalentModifierMask:mask];
+}
+
 /*!
  * @brief Refuse to let the window close, if allowsCloseWithoutResponse = NO
  */

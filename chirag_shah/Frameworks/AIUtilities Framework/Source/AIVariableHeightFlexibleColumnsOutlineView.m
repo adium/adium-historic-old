@@ -76,21 +76,6 @@
 			
 			cellFrame = [self frameOfCellAtColumn:tableColumnIndex row:row];
 			
-			/*
-			 * Draw the alternating rows.  If we draw alternating rows, the cell in the first column
-			 * can optionally suppress drawing. We only do this before drawing the first column; that way,
-			 * we can cover the full width of the row in one stroke.
-			 */
-			if ([self drawsAlternatingRows] && 
-			   (![cell respondsToSelector:@selector(drawGridBehindCell)] || [cell drawGridBehindCell]) &&
-			   (tableColumnIndex == 0)) {
-				
-				[self _drawRowInRect:[self rectOfRow:row]
-							 colored:!(row % 2)
-							selected:selected];
-			}
-			
-			
 			if (tableColumnIndex == 0) {
 				//Draw flippy triangle
 				if ([self isExpandable:item]) {

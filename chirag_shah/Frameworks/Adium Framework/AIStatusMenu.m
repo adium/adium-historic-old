@@ -19,7 +19,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
-#define STATUS_TITLE_CUSTOM			[AILocalizedString(@"Custom",nil) stringByAppendingEllipsis]
+#define STATUS_TITLE_CUSTOM			[AILocalizedStringFromTable(@"Custom", @"AdiumFramework",nil) stringByAppendingEllipsis]
 #define STATE_TITLE_MENU_LENGTH		30
 
 @interface AIStatusMenu (PRIVATE)
@@ -341,7 +341,7 @@
 }
 
 /*!
-* @brief Select a state menu item
+ * @brief Select a state menu item
  *
  * Invoked by a state menu item, sets the state corresponding to the menu item as the active state.
  *
@@ -359,8 +359,8 @@
 	}
 	
 	/* Random undocumented feature of the moment... hold option and select a state to bring up the custom status window
-		* for modifying and then setting it.
-		*/
+	 * for modifying and then setting it.
+	 */
 	if ([NSEvent optionKey]) {
 		[AIEditStateWindowController editCustomState:(AIStatus *)statusItem
 											 forType:[statusItem statusType]
@@ -393,7 +393,7 @@
 }
 
 /*!
-* @brief Select the custom state menu item
+ * @brief Select the custom state menu item
  *
  * Invoked by the custom state menu item, opens a custom state window.
  * If the representedObject NSDictionary has an @"AIAccount" object, configure just for the appropriate AIAccount.

@@ -157,7 +157,12 @@
 		} else if ([eventID isEqualToString:ACCOUNT_DISCONNECTED]) {
 			description = AILocalizedString(@"disconnected",nil);
 		} else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]) {
-			description = AILocalizedString(@"received new email",nil);
+			if (userInfo && [userInfo isKindOfClass:[NSString class]]) {
+				description = [[(NSString *)userInfo copy] autorelease];
+
+			} else {
+				description = AILocalizedString(@"received new email",nil);
+			}
 		}
 	}
 	

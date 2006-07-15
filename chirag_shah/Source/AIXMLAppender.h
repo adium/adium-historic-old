@@ -31,8 +31,6 @@
  */
 
 
-#import <Cocoa/Cocoa.h>
-
 @interface AIXMLAppender : NSObject {
 	NSFileHandle	*file;
 	NSString		*filePath;
@@ -52,4 +50,5 @@
 
 - (void)initializeDocumentWithRootElementName:(NSString *)name attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
 - (void)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
+- (void)addElementWithName:(NSString *)name escapedContent:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
 @end

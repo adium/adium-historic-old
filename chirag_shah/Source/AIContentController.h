@@ -118,12 +118,11 @@ typedef enum {
 - (void)receiveContentObject:(AIContentObject *)inObject;
 - (BOOL)sendContentObject:(AIContentObject *)inObject;
 - (void)sendRawMessage:(NSString *)inString toContact:(AIListContact *)inContact;
-- (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat;
 - (void)displayContentObject:(AIContentObject *)inObject;
 - (void)displayContentObject:(AIContentObject *)inObject immediately:(BOOL)immediately;
 - (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters;
 - (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters immediately:(BOOL)immediately;
-- (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat;
+- (void)displayEvent:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat;
 
 //Encryption
 - (NSAttributedString *)decodedIncomingMessage:(NSString *)inString

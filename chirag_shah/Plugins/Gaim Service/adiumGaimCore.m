@@ -30,7 +30,6 @@
 
 #import "SLGaimCocoaAdapter.h"
 #import "AILibgaimPlugin.h"
-#import <Adium/AICorePluginLoader.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 
 #pragma mark Debug
@@ -43,7 +42,6 @@ static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, cons
 	/*	AILog(@"%x: (Debug: %s) %s",[NSRunLoop currentRunLoop], category, arg_s); */
 	//Log error
 	if (!category) category = "general"; //Category can be nil
-	
 	AILog(@"(Libgaim: %s) %s",category, arg_s);
 	
 	g_free(arg_s);
@@ -66,7 +64,6 @@ extern gboolean gaim_init_ssl_openssl_plugin(void);
 extern gboolean gaim_init_gg_plugin(void);
 extern gboolean gaim_init_jabber_plugin(void);
 extern gboolean gaim_init_sametime_plugin(void);
-extern gboolean gaim_init_sametime_plugin(void);
 extern gboolean gaim_init_msn_plugin(void);
 extern gboolean gaim_init_novell_plugin(void);
 extern gboolean gaim_init_msn_plugin(void);
@@ -85,7 +82,6 @@ static void load_all_plugins()
 	gaim_init_gg_plugin();
 	gaim_init_jabber_plugin();
 	gaim_init_sametime_plugin();
-	gaim_init_sametime_plugin();
 	gaim_init_msn_plugin();
 	gaim_init_novell_plugin();
 	gaim_init_msn_plugin();
@@ -95,24 +91,11 @@ static void load_all_plugins()
 #ifndef JOSCAR_SUPERCEDE_LIBGAIM
 	gaim_init_oscar_plugin();
 #endif
-	
-	//Next, load any external AdiumLibgaimPlugin bundles. We're delibrately leaking this array to keep the plugins in memory...
-	NSMutableArray	*pluginArray = [[NSMutableArray alloc] init];
-	
-	NSEnumerator	*enumerator;
-	NSString		*libgaimPluginPath;
-	
-	enumerator = [[[AIObject sharedAdiumInstance] allResourcesForName:@"Plugins"
-													   withExtensions:@"AdiumLibgaimPlugin"] objectEnumerator];
-	while ((libgaimPluginPath = [enumerator nextObject])) {
-		[AICorePluginLoader loadPluginAtPath:libgaimPluginPath
-							  confirmLoading:YES
-								 pluginArray:pluginArray];
-	}
-	
+
 	//Load each plugin
+	NSEnumerator			*enumerator = [[SLGaimCocoaAdapter libgaimPluginArray] objectEnumerator];
 	id <AILibgaimPlugin>	plugin;
-	enumerator = [pluginArray objectEnumerator];
+
 	while ((plugin = [enumerator nextObject])) {
 		if ([plugin respondsToSelector:@selector(installLibgaimPlugin)]) {
 			[plugin installLibgaimPlugin];

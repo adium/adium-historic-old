@@ -31,6 +31,8 @@ typedef enum {
 
 	int result = [NSApp runModalForWindow:[promptWindow window]];
 
+	AILog(@"getSecuridForAccount:%@ : result = %i : %@",account,result,
+		  ((result == AISecuridPromptOK) ? [promptWindow getSecurid] : nil));
 	return ((result == AISecuridPromptOK) ? [promptWindow getSecurid] : nil);
 }
 
@@ -79,7 +81,7 @@ typedef enum {
 
 - (NSString *)getSecurid
 {
-	return [[textField_securid retain] autorelease];
+	return [[[textField_securid stringValue] retain] autorelease];
 }
 
 @end

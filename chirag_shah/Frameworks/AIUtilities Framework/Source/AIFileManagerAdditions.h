@@ -71,10 +71,12 @@
 
 - (NSString *)uniquePathForPath:(NSString *)inPath;
 
+- (NSString *)findFolderOfType:(OSType)type inDomain:(short)domain createFolder:(BOOL)createFolder;
+
 /*
  * @brief Returns the pathname of the user's application support directory
  * @result The pathname of the application support dir, or nil on error
  */
-- (NSString *) userApplicationSupportFolder;
+- (NSString *)userApplicationSupportFolder;
 
 @end
