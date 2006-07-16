@@ -692,7 +692,7 @@ BOOL isHTMLContact(AIListObject *inListObject)
 	return ((firstCharacter < '0' || firstCharacter > '9') && firstCharacter != '+');
 }
 
-BOOL isMobileContact(AIListObject *)inListObject
+BOOL isMobileContact(AIListObject *inListObject)
 {
 	return ([[inListObject UID] characterAtIndex:0] == '+');
 }
