@@ -241,7 +241,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 {
 	Screenname			*sn = [userInfo get:@"Screenname"];
 	NSString			*message = [userInfo get:@"Away message"];
-
+	AILog(@"setAwayMessage...");
 	if (message && [message length])
 		[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 					setStatusMessage:[[message copy] autorelease]];
@@ -322,7 +322,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 #define MUSICAL_NOTE [NSString stringWithUTF8String:"\xe2\x99\xab"]
 	if (iTMSLink && [iTMSLink length])
 		message = [NSString stringWithFormat:@"<a href=\"%@\">%@</a> %@", iTMSLink, MUSICAL_NOTE, message];
-
+	AILog(@"setincoming status message %@",message);
 	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 				setStatusMessage:[[message copy] autorelease]];
 }
@@ -1394,16 +1394,12 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getBosService] setVisibleStatus:visible];
 }
 
-- (void)setStatusMessage:(NSString *)msg
-{
-	msg = [msg stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH];
-
-	[[aimConnection getBosService] setStatusMessage:msg];
-}
-
 - (void)setStatusMessage:(NSString *)msg withSongURL:(NSString *)itmsURL
 {
 	msg = [msg stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH];
+
+	//Can't set a URL longer than 255 characters or joscar will throw an exception.  No sense in setting a broken URL.
+	if ([itmsURL length] > 255) itmsURL = nil;
 
 	[[aimConnection getBosService] setStatusMessageSong:msg :itmsURL];
 }
