@@ -439,11 +439,7 @@
 			 */
 			[joscarAdapter setMessageAway:encodedAway];
 
-			if (itmsURL) {
-				[joscarAdapter setStatusMessage:availableMessage withSongURL:itmsURL];
-			} else {
-				[joscarAdapter setStatusMessage:availableMessage];	
-			}
+			[joscarAdapter setStatusMessage:availableMessage withSongURL:itmsURL];
 
 		} else {
 			[self connect];
@@ -696,6 +692,10 @@ BOOL isHTMLContact(AIListObject *inListObject)
 	return ((firstCharacter < '0' || firstCharacter > '9') && firstCharacter != '+');
 }
 
+BOOL isMobileContact(AIListObject *)inListObject
+{
+	return ([[inListObject UID] characterAtIndex:0] == '+');
+}
 
 /*
  * @encode Encode a message to HTML if appropriate
@@ -798,9 +798,11 @@ BOOL isHTMLContact(AIListObject *inListObject)
 		
 		if (([decryptedIncomingMessage rangeOfString:@"ichatballooncolor"].location != NSNotFound) ||
 			([decryptedIncomingMessage rangeOfString:@"<HTML>"
-											 options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound)) {
+											 options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) ||
+			(isMobileContact(sourceContact) && [isAutoreply boolValue]) {
 			/* iChat ICQ contacts still send HTML. Decode it.
 			 * Some ICQ clients send HTML anyways; the first part of the incoming message will be <HTML>. Decode it.
+			 * The AIM service sends HTML messages as autoreplies when sending to mobile contacts, while the mobile contacts themselves send plaintext.
 			 */
 			attributedMessage = [AIHTMLDecoder decodeHTML:decryptedIncomingMessage];
 
