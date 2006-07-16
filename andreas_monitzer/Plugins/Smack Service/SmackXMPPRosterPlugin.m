@@ -12,12 +12,33 @@
 #import "SmackCocoaAdapter.h"
 #import "SmackListContact.h"
 
+#import <JavaVM/NSJavaVirtualMachine.h>
+
 #import "AIAccount.h"
 #import "AIAdium.h"
 #import "AIContactController.h"
 #import "AIInterfaceController.h"
 
 #import <AIUtilities/AIStringUtilities.h>
+
+@interface SmackXMPPRosterPluginListener : NSObject {
+}
+
+@end
+
+@interface SmackCocoaAdapter (rosterAdditions)
+
++ (SmackXMPPRosterPluginListener*)rosterPluginListenerWithDelegate:(id)delegate;
+
+@end
+
+@implementation SmackCocoaAdapter (rosterAdditions)
+
++ (SmackXMPPRosterPluginListener*)rosterPluginListenerWithDelegate:(id)delegate {
+    return [[NSClassFromString(@"net.adium.smackBridge.SmackXMPPRosterPluginListener") newWithSignature:@"(Lcom/apple/cocoa/foundation/NSObject;)",delegate] autorelease];
+}
+
+@end
 
 @implementation SmackXMPPRosterPlugin
 
@@ -26,14 +47,6 @@
     if((self = [super init]))
     {
         account = a;
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(receivedPresencePacket:)
-                                                     name:SmackXMPPPresencePacketReceivedNotification
-                                                   object:account];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(receivedIQPacket:)
-                                                     name:SmackXMPPIQPacketReceivedNotification
-                                                   object:account];
     }
     return self;
 }
@@ -43,24 +56,152 @@
     [super dealloc];
 }
 
-// presence handling
-- (void)receivedPresencePacket:(NSNotification*)n {
-//    SmackXMPPAccount *account = [n object];
-    SmackPresence *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
+#pragma mark Connection Setup
+
+- (void)connected:(SmackXMPPConnection*)conn {
+    listener = [[SmackCocoaAdapter rosterPluginListenerWithDelegate:self] retain];
+    [[conn initializeRoster] addRosterListener:listener];
+}
+
+- (void)disconnected:(SmackXMPPConnection*)conn {
+    [listener release];
+}
+
+#pragma mark Callbacks from Java
+
+- (void)setXMPPRosterEntriesAdded:(JavaCollection*)addresses {
+    SmackRoster *roster = [[account connection] getRoster];
+    if(!roster)
+        return;
+
+    JavaIterator *iter = [addresses iterator];
+
+    while([iter hasNext]) {
+        NSString *jid = [iter next];
+        SmackRosterEntry *entry = [roster getEntry:jid];
+        NSString *type = [[entry getType] toString];
+        
+        NSLog(@"add entry %@",jid);
+        
+        SmackListContact *listContact = [[SmackListContact alloc] initWithUID:jid account:account service:[account service]];
+        
+        if(![[listContact formattedUID] isEqualToString:jid])
+            [listContact setFormattedUID:jid notify:NotifyLater];
+        
+        [listContact setStatusObject:type forKey:@"XMPPSubscriptionType" notify:NotifyLater];
+        
+        // XMPP supports contacts that are in multiple groups, Adium does not.
+        // First I'm checking if the group it's in here locally is one of the groups
+        // the contact is in on the server. If this is not the case, I set the contact
+        // to be in the first group on the list. XXX -> Adium folks, add this feature!
+        JavaIterator *iter2 = [entry getGroups];
+        NSString *storedgroupname = [listContact remoteGroupName];
+        if(storedgroupname) {
+            while([iter2 hasNext]) {
+                SmackRosterGroup *group = [iter2 next];
+                if([storedgroupname isEqualToString:[group getName]])
+                    break;
+            }
+            if(![iter2 hasNext])
+                storedgroupname = nil;
+        }
+        if(!storedgroupname) {
+            iter2 = [entry getGroups];
+            if([iter2 hasNext])
+                [listContact setRemoteGroupName:[[iter2 next] getName]];
+            else
+                [listContact setRemoteGroupName:AILocalizedString(@"Unfiled Entries","group for entries without a group")];
+        }
+        [account setListContact:listContact toAlias:[entry getName]];
+        
+        [account addListContact:listContact];
+        
+        [listContact release];
+    }
+}
+
+- (void)setXMPPRosterEntriesUpdated:(JavaCollection*)addresses {
+    SmackRoster *roster = [[account connection] getRoster];
+    if(!roster)
+        return;
     
-    NSString *jidWithResource = [packet getFrom];
-    NSString *jid = [jidWithResource jidUserHost];
-    NSString *type = [[packet getType] toString];
-    NSString *status = [packet getStatus];
-    NSString *mode = [[packet getMode] toString];
-    int priority = [packet getPriority];
+    JavaIterator *iter = [addresses iterator];
     
-    AIListContact *listContact = [account contactWithJID:jidWithResource];
+    while([iter hasNext]) {
+        NSString *jid = [iter next];
+        SmackRosterEntry *entry = [roster getEntry:jid];
+        NSString *type = [[entry getType] toString];
+
+        NSLog(@"update entry %@",jid);
+
+        AIListContact *listContact = [account contactWithJID:jid];
+        
+        [listContact setStatusObject:type forKey:@"XMPPSubscriptionType" notify:NotifyLater];
+        
+        // XMPP supports contacts that are in multiple groups, Adium does not.
+        // First I'm checking if the group it's in here locally is one of the groups
+        // the contact is in on the server. If this is not the case, I set the contact
+        // to be in the first group on the list. XXX -> Adium folks, add this feature!
+        JavaIterator *iter2 = [entry getGroups];
+        NSString *storedgroupname = [listContact remoteGroupName];
+        if(storedgroupname) {
+            while([iter2 hasNext]) {
+                SmackRosterGroup *group = [iter2 next];
+                if([storedgroupname isEqualToString:[group getName]])
+                    break;
+            }
+            if(![iter2 hasNext])
+                storedgroupname = nil;
+        }
+        if(!storedgroupname) {
+            iter2 = [entry getGroups];
+            if([iter2 hasNext])
+                [listContact setRemoteGroupName:[[iter2 next] getName]];
+            else
+                [listContact setRemoteGroupName:AILocalizedString(@"Unfiled Entries","group for entries without a group")];
+        }
+        [account setListContact:listContact toAlias:[entry getName]];
+
+        [listContact notifyOfChangedStatusSilently:NO];
+    }
+}
+
+- (void)setXMPPRosterEntriesDeleted:(JavaCollection*)addresses {
+    SmackRoster *roster = [[account connection] getRoster];
+    if(!roster)
+        return;
     
-    SmackListContact *listEntry = (SmackListContact*)[account contactWithJID:[jidWithResource jidUserHost] create:NO];
+    JavaIterator *iter = [addresses iterator];
+    
+    while([iter hasNext]) {
+        NSString *jid = [iter next];
+
+        NSLog(@"delete entry %@",jid);
+
+        AIListContact *listContact = [account contactWithJID:jid];
+        [account removeListContact:listContact];
+        [listContact setRemoteGroupName:nil];
+    }
+}
+
+- (void)setXMPPRosterPresenceChanged:(NSString*)XMPPAddress {
+    SmackRoster *roster = [[account connection] getRoster];
+    SmackPresence *presence = [roster getPresenceResource:XMPPAddress];
+    
+    NSString *jid = [XMPPAddress jidUserHost];
+    NSString *type = [[presence getType] toString];
+    NSString *status = [presence getStatus];
+    NSString *mode = [[presence getMode] toString];
+    int priority = [presence getPriority];
+
+    NSLog(@"presence changed of %@",XMPPAddress);
+    
+    AIListContact *listContact = [account contactWithJID:XMPPAddress];
+    
+    SmackListContact *listEntry = (SmackListContact*)[account contactWithJID:jid create:NO];
     
     if(!listEntry)
-        return; // ignore presence information for people not on our contact list
+        return; // ignore presence information for people not on our contact list (might want to add that later for chats to people not on the contact list)
     
     if(![listEntry containsObject:listContact])
         [listEntry addObject:listContact];
@@ -80,7 +221,7 @@
         [[adium contactController] showAuthorizationRequestWithDict:[NSDictionary dictionaryWithObjectsAndKeys:
             jid, @"Remote Name",
             nil] forAccount:account];
-    
+        
         return;
     } else if([type isEqualToString:@"subscribed"]) {
         [[adium interfaceController] displayQuestion:AILocalizedString(@"You Were Authorized!","You Were Authorized!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has authorized you to see his/her current status.","%@ has authorized you to see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice") defaultButton:AILocalizedString(@"OK","OK") alternateButton:nil otherButton:nil target:nil selector:NULL userInfo:nil];
@@ -111,69 +252,7 @@
     [listEntry notifyOfChangedStatusSilently:NO];
 }
 
-// roster handling
-- (void)receivedIQPacket:(NSNotification*)n {
-//    SmackXMPPAccount *account = [n object];
-    SmackIQ *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
-    
-    if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.RosterPacket"]) {
-        SmackRosterPacket *srp =(SmackRosterPacket*)packet;
-        JavaIterator *iter = [srp getRosterItems];
-        while([iter hasNext]) {
-            SmackRosterPacketItem *srpi = [iter next];
-            NSString *name = [srpi getName];
-            NSString *jid = [srpi getUser];
-            NSString *type = [[srpi getItemType] toString];
-            
-            NSLog(@"roster item subscription type = %@",type);
-            
-            if([type isEqualToString:@"remove"])
-            {
-                AIListContact *listContact = [account contactWithJID:jid];
-                [account removeListContact:listContact];
-//                [listContact setContainingObject:nil];
-				[listContact setRemoteGroupName:nil];
-            } else {
-                //            AIListContact *listContact = [self contactWithJID:jid];
-                SmackListContact *listContact = [[SmackListContact alloc] initWithUID:jid account:account service:[account service]];
-                NSLog(@"creating account for jid %@", jid);
-                
-                if(![[listContact formattedUID] isEqualToString:jid])
-                    [listContact setFormattedUID:jid notify:NotifyLater];
-                
-                [listContact setStatusObject:type forKey:@"XMPPSubscriptionType" notify:NotifyLater];
-                
-                // XMPP supports contacts that are in multiple groups, Adium does not.
-                // First I'm checking if the group it's in here locally is one of the groups
-                // the contact is in on the server. If this is not the case, I set the contact
-                // to be in the first group on the list. XXX -> Adium folks, add this feature!
-                JavaIterator *iter2 = [srpi getGroupNames];
-                NSString *storedgroupname = [listContact remoteGroupName];
-                if(storedgroupname) {
-                    while([iter2 hasNext]) {
-                        NSString *groupname = [iter2 next];
-                        if([storedgroupname isEqualToString:groupname])
-                            break;
-                    }
-                    if(![iter2 hasNext])
-                        storedgroupname = nil;
-                }
-                if(!storedgroupname) {
-                    iter2 = [srpi getGroupNames];
-                    if([iter2 hasNext])
-                        [listContact setRemoteGroupName:[iter2 next]];
-                    else
-                        [listContact setRemoteGroupName:@"nobody knows the trouble I've seen"];
-                }
-                [account setListContact:listContact toAlias:name];
-                
-                [account addListContact:listContact];
-                
-                [listContact release];
-            }
-        }
-    }
-}
+#pragma mark User-Initiated Roster Changes
 
 - (void)requestAuthorization:(NSMenuItem*)sender {
     SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:@"SUBSCRIBE"];
@@ -195,6 +274,8 @@
     
     [[account connection] sendPacket:packet];
 }
+
+#pragma mark Context Menu for Entries
 
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact {
     if(![inContact statusObjectForKey:@"XMPPSubscriptionType"])

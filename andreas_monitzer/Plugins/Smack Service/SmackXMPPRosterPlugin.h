@@ -9,10 +9,11 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIObject.h>
 
-@class SmackXMPPAccount;
+@class SmackXMPPAccount, SmackXMPPRosterPluginListener;
 
 @interface SmackXMPPRosterPlugin : AIObject {
     SmackXMPPAccount *account;
+    SmackXMPPRosterPluginListener *listener;
 }
 
 - (id)initWithAccount:(SmackXMPPAccount*)a;

@@ -160,6 +160,12 @@
     connection = conn;
     NSString *jid = [self explicitFormattedUID];
     NSString *resource = [self preferenceForKey:@"Resource" group:GROUP_ACCOUNT_STATUS];
+
+    NSEnumerator *e = [plugins objectEnumerator];
+    id plugin;
+    while((plugin = [e nextObject]))
+        if([plugin respondsToSelector:@selector(connected:)])
+            [plugin connected:conn];
     
     @try {
         
@@ -185,12 +191,6 @@
             [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Error logging into account %@.","Error logging into account %@."),jid] withDescription:[e reason]];
         return;
     }
-    
-    NSEnumerator *e = [plugins objectEnumerator];
-    id plugin;
-    while((plugin = [e nextObject]))
-        if([plugin respondsToSelector:@selector(connected:)])
-            [plugin connected:conn];
 }
 
 - (void)disconnected:(SmackXMPPConnection*)conn {
