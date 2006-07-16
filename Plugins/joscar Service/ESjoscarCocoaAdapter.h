@@ -65,7 +65,6 @@
 									   forFiles:(NSArray *)pathArray;
 
 - (void)setVisibleStatus:(BOOL)visible;
-- (void)setStatusMessage:(NSString *)msg;
 - (void)setStatusMessage:(NSString *)msg withSongURL:(NSString *)itmsURL;
 - (void)setAccountUserIconData:(NSData *)data;
 
