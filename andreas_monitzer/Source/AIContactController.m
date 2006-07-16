@@ -1844,20 +1844,25 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Retrieving Specific Contacts -----------------------------------------------------------------------------------------
 #pragma mark Retrieving Specific Contacts
 
-//Retrieve a contact from the contact list (Creating if necessary)
 - (AIListContact *)contactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID
+{
+    return [self contactWithService:inService account:inAccount UID:inUID class:[AIListContact class]];
+}
+
+//Retrieve a contact from the contact list (Creating if necessary)
+- (AIListContact *)contactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID class:(Class)cls
 {
 	AIListContact	*contact = nil;
 
 	if (inUID && [inUID length] && inService) { //Ignore invalid requests
-		NSString		*key = [AIListContact internalUniqueObjectIDForService:inService
+		NSString		*key = [cls internalUniqueObjectIDForService:inService
 																	   account:inAccount
 																		   UID:inUID];
 
 		contact = [contactDict objectForKey:key];
 		if (!contact) {
 			//Create
-			contact = [[AIListContact alloc] initWithUID:inUID account:inAccount service:inService];
+			contact = [[cls alloc] initWithUID:inUID account:inAccount service:inService];
 
 			//Do the update thing
 			[self _updateAllAttributesOfObject:contact];

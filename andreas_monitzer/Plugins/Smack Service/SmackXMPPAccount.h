@@ -15,13 +15,9 @@
     SmackCocoaAdapter *smackAdapter;
     SmackXMPPConnection *connection;
     
-    NSMutableDictionary *roster;
-    
     NSArray *plugins;
 }
 
-- (AIListContact *)contactWithJID:(NSString *)inJID create:(BOOL)create;
-- (AIListContact *)contactWithJID:(NSString *)inJID;
 - (NSString*)hostName;
 - (SmackConnectionConfiguration*)connectionConfiguration;
 - (SmackXMPPConnection*)connection;
@@ -34,8 +30,6 @@
 - (void)receiveIQPacket:(SmackIQ*)packet;
 
 - (void)setListContact:(AIListContact *)listContact toAlias:(NSString *)inAlias;
-- (void)addListContact:(AIListContact *)listContact;
-- (void)removeListContact:(AIListContact*)listContact;
 
 - (BOOL)silentAndDelayed;
 - (AIService*)service;

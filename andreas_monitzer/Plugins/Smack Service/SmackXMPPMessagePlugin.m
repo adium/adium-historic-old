@@ -57,7 +57,7 @@ static AIHTMLDecoder *messageencoder = nil;
         NSString *resource = [from jidResource];
         NSString *thread = [packet getThread];
         
-        AIListContact *sourceContact = [account contactWithJID:[from jidUserHost]];
+        AIListContact *sourceContact = [[adium contactController] existingContactWithService:[account service] account:account UID:[from jidUserHost]];
         
         if (!(chat = [[adium chatController] existingChatWithContact:sourceContact]))
         {
