@@ -371,6 +371,8 @@
 @interface SmackRoster : NSObject {
 }
 
+- (void)addRosterListener:(id)rosterListener;
+- (void)removeRosterListener:(id)rosterListener;
 - (BOOL)contains:(NSString*)user;
 - (void)createEntry:(NSString*)user :(NSString*)name :(id)groups; // last param is String[]
 - (SmackRosterGroup*)createGroup:(NSString*)name;
@@ -440,6 +442,7 @@
 - (void)close;
 - (SmackChat*)createChat:(NSString*)participant;
 - (SmackAccountManager*)getAccountManager;
+- (SmackRoster*)initializeRoster;
 - (SmackRoster*)getRoster;
 - (SmackSASLAuthentication*)getSASLAuthentication;
 - (NSString*)getServiceName;

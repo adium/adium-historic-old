@@ -35,7 +35,7 @@
 - (AIListContact *)preferredContact {
     NSArray *contacts = [self containedObjects];
     
-    NSLog(@"contacts = %@",[contacts description]);
+//    NSLog(@"contacts = %@",[contacts description]);
     
     AIListContact *bestcontact = nil;
     int priority = -129;
@@ -49,7 +49,7 @@
             priority = c_prio;
         }
     }
-    NSLog(@"best contact = %@",[bestcontact internalUniqueObjectID]);
+//    NSLog(@"best contact = %@",[bestcontact internalUniqueObjectID]);
     
     return bestcontact;
 }
