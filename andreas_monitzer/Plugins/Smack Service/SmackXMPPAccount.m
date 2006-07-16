@@ -78,11 +78,6 @@
 		beganInitializingJavaVM = YES;
 	}
     
-    if(!roster)
-        roster = [[NSMutableDictionary alloc] init];
-    else
-        [roster removeAllObjects];
-    
     if(!plugins) {
         Class XMPPPlugins[] = {
             [SmackXMPPRosterPlugin class],
@@ -106,7 +101,6 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [roster release]; roster = nil;
     [plugins release]; plugins = nil;
     [super dealloc];
 }
@@ -117,23 +111,6 @@
 
 - (AIService*)service {
     return service;
-}
-
-- (AIListContact *)contactWithJID:(NSString *)inJID create:(BOOL)create
-{
-    AIListContact *result = [roster objectForKey:inJID];
-    if(result)
-        return result;
-    if(create)
-        return ([[adium contactController] contactWithService:service
-                                                      account:self
-                                                          UID:inJID]);
-    return nil;
-}
-
-- (AIListContact *)contactWithJID:(NSString *)inJID
-{
-    return [self contactWithJID:inJID create:YES];
 }
 
 - (void)connect {
@@ -594,17 +571,6 @@
 												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
 																					 forKey:@"Notify"]];
 	}
-}
-
-- (void)addListContact:(AIListContact*)listContact {
-    [roster setObject:listContact forKey:[listContact UID]];
-}
-
-- (void)removeListContact:(AIListContact*)listContact {
-    SmackRoster *smroster = [connection getRoster];
-    [roster removeObjectForKey:[listContact UID]];
-    
-    [smroster removeEntry:[smroster getEntry:[listContact UID]]];
 }
 
 @end

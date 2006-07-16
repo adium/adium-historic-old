@@ -83,7 +83,7 @@
         
         NSLog(@"add entry %@",jid);
         
-        SmackListContact *listContact = [[SmackListContact alloc] initWithUID:jid account:account service:[account service]];
+        SmackListContact *listContact = [[adium contactController] contactWithService:[account service] account:account UID:jid class:[SmackListContact class]];
         
         if(![[listContact formattedUID] isEqualToString:jid])
             [listContact setFormattedUID:jid notify:NotifyLater];
@@ -114,8 +114,6 @@
         }
         [account setListContact:listContact toAlias:[entry getName]];
         
-        [account addListContact:listContact];
-        
         [listContact release];
     }
 }
@@ -134,7 +132,7 @@
 
         NSLog(@"update entry %@",jid);
 
-        AIListContact *listContact = [account contactWithJID:jid];
+        AIListContact *listContact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid];
         
         [listContact setStatusObject:type forKey:@"XMPPSubscriptionType" notify:NotifyLater];
         
@@ -173,15 +171,21 @@
     
     JavaIterator *iter = [addresses iterator];
     
+    NSMutableArray *contacts = [[NSMutableArray alloc] init];
+    
+    // convert list from jid-string array to AIListContact array
     while([iter hasNext]) {
         NSString *jid = [iter next];
 
         NSLog(@"delete entry %@",jid);
 
-        AIListContact *listContact = [account contactWithJID:jid];
-        [account removeListContact:listContact];
-        [listContact setRemoteGroupName:nil];
+        AIListContact *listContact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid];
+        
+        if(listContact)
+            [contacts addObject:listContact];
     }
+    [[adium contactController] removeListObjects:contacts];
+    [contacts release];
 }
 
 - (void)setXMPPRosterPresenceChanged:(NSString*)XMPPAddress {
@@ -196,23 +200,21 @@
 
     NSLog(@"presence changed of %@",XMPPAddress);
     
-    AIListContact *listContact = [account contactWithJID:XMPPAddress];
+    AIListContact *resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:XMPPAddress];
     
-    SmackListContact *listEntry = (SmackListContact*)[account contactWithJID:jid create:NO];
+    SmackListContact *rosterContact = (SmackListContact*)[[adium contactController] existingContactWithService:[account service] account:account UID:jid];
     
-    if(!listEntry)
+    if(!rosterContact)
         return; // ignore presence information for people not on our contact list (might want to add that later for chats to people not on the contact list)
     
-    if(![listEntry containsObject:listContact])
-        [listEntry addObject:listContact];
+    if(![rosterContact containsObject:resourceObject])
+        [rosterContact addObject:resourceObject];
     
     AIStatusType statustype = AIOfflineStatusType;
     
     if([type isEqualToString:@"available"]) {
         if(!mode || [mode isEqualToString:@"available"] || [mode isEqualToString:@"chat"])
             statustype = AIAvailableStatusType;
-        else if([mode isEqualToString:@"invisible"])
-            statustype = AIInvisibleStatusType;
         else
             statustype = AIAwayStatusType;
     } else if([type isEqualToString:@"unavailable"])
@@ -234,22 +236,22 @@
         return;
     }
     
-	[listContact setOnline:statustype != AIOfflineStatusType
+	[resourceObject setOnline:statustype != AIOfflineStatusType
                     notify:NotifyNow
                   silently:NO];
-    [listContact setStatusObject:[NSNumber numberWithInt:priority] forKey:@"XMPPPriority" notify:NotifyNow];
+    [resourceObject setStatusObject:[NSNumber numberWithInt:priority] forKey:@"XMPPPriority" notify:NotifyNow];
     
-    [listContact setStatusWithName:mode statusType:statustype notify:NotifyNow];
+    [resourceObject setStatusWithName:mode statusType:statustype notify:NotifyNow];
     if(status) {
         NSAttributedString *statusMessage = [[NSAttributedString alloc] initWithString:status attributes:nil];
-        [listContact setStatusMessage:statusMessage notify:NotifyNow];
+        [resourceObject setStatusMessage:statusMessage notify:NotifyNow];
         [statusMessage release];
     } else
-        [listContact setStatusMessage:nil notify:NotifyNow];
+        [resourceObject setStatusMessage:nil notify:NotifyNow];
     
     //Apply the change
-	[listContact notifyOfChangedStatusSilently:[account silentAndDelayed]];
-    [listEntry notifyOfChangedStatusSilently:NO];
+	[resourceObject notifyOfChangedStatusSilently:[account silentAndDelayed]];
+    [rosterContact notifyOfChangedStatusSilently:NO];
 }
 
 #pragma mark User-Initiated Roster Changes
