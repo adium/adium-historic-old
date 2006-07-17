@@ -442,8 +442,9 @@
 	statusChecker = [[SUStatusChecker statusCheckerForDelegate:self] retain];
 }
 
-- (void)statusChecker:(SUStatusChecker *)statusChecker foundVersion:(NSString *)versionString isNewVersion:(BOOL)isNewVersion;
+- (void)statusChecker:(SUStatusChecker *)statusChecker foundVersion:(NSString *)versionString isNewVersion:(BOOL)isNewVersion
 {
+	NSLog(@"Crash reporter found version %@ which is %@ a new version", versionString, (isNewVersion ? @"" : @"not"));
 	//Only send the report if there is not a new version
 	[self finishWithAcceptableVersion:!isNewVersion newVersionString:versionString];
 }
