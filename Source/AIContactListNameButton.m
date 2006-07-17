@@ -32,7 +32,7 @@
 		NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																				lineBreakMode:NSLineBreakByTruncatingMiddle];
 		[paragraphStyle setMaximumLineHeight:editingFrame.size.height];
-		NSAttributedString		*attributedString = [[NSAttributedString alloc] initWithString:startingString
+		NSAttributedString		*attributedString = [[NSAttributedString alloc] initWithString:(startingString ? startingString : @"")
 																					 attributes:[NSDictionary dictionaryWithObjectsAndKeys:
 																						 [[self cell] font], NSFontAttributeName,
 																						 paragraphStyle, NSParagraphStyleAttributeName,
