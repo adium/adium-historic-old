@@ -281,7 +281,7 @@
 			<key>$classname</key>
 			<string>NSView</string>
 		</dict>
-		<string>{{0, 0}, {1280, 1002}}</string>
+		<string>{{0, 0}, {1280, 832}}</string>
 		<string>{213, 129}</string>
 		<string>{3.40282e+38, 3.40282e+38}</string>
 		<dict>
@@ -448,7 +448,7 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>10</integer>
+					<integer>16</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -456,11 +456,11 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>9</integer>
+					<integer>10</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>16</integer>
+					<integer>9</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -498,10 +498,10 @@
 				</dict>
 			</array>
 		</dict>
-		<integer>10</integer>
-		<integer>1</integer>
-		<integer>12</integer>
 		<integer>9</integer>
+		<integer>1</integer>
+		<integer>10</integer>
+		<integer>12</integer>
 		<integer>15</integer>
 		<dict>
 			<key>$class</key>
