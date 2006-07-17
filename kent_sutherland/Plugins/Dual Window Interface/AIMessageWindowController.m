@@ -37,6 +37,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <PSMTabBarControl/PSMTabBarControl.h>
+#import <PSMTabBarControl/PSMAdiumTabStyle.h>
 #import <PSMTabBarControl/PSMTabStyle.h>
 
 #define KEY_MESSAGE_WINDOW_POSITION 			@"Message Window"
@@ -197,7 +198,8 @@
     }
 	
 	//Setup the tab bar
-	[tabView_tabBar setStyleNamed:@"Adium"];
+	tabView_tabStyle = [[[PSMAdiumTabStyle alloc] init] autorelease];
+	[tabView_tabBar setStyle:tabView_tabStyle];
 	[tabView_tabBar setCanCloseOnlyTab:YES];
 	[tabView_tabBar setUseOverflowMenu:NO];
 	[tabView_tabBar setAllowsResizing:NO];
@@ -342,7 +344,7 @@
 				tabViewFrame.size.width = totalFrame.size.width - tabBarFrame.size.width - 6;
 				
 				//set the position of the tab bar (left/right)
-				if (tabPosition == 2) {
+				if (tabPosition == AdiumTabPositionLeft) {
 					tabBarFrame.origin.x = totalFrame.origin.x;
 					tabViewFrame.origin.x = tabBarFrame.origin.x + tabBarFrame.size.width;
 					[tabView_tabBar setAutoresizingMask:NSViewHeightSizable];
@@ -380,11 +382,10 @@
 		
 		if (tabPosition == AdiumTabPositionTop) {
 			[[[self window] toolbar] setShowsBaselineSeparator:NO];
-			//use an Adium-specific unified style?
-			//[tabView_tabBar setStyleNamed:@"Unified"];
+			[tabView_tabStyle setDrawsUnified:YES];
 		} else {
 			[[[self window] toolbar] setShowsBaselineSeparator:YES];
-			//[tabView_tabBar setStyleNamed:@"Adium"];
+			[tabView_tabStyle setDrawsUnified:NO];
 		}
 		
 		if ([tabView_tabBar isTabBarHidden]) {
@@ -950,6 +951,7 @@
     [toolbar setVisible:YES];
     [toolbar setAllowsUserCustomization:YES];
     [toolbar setAutosavesConfiguration:YES];
+	[toolbar setShowsBaselineSeparator:NO];
 	
     //
 	toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"TextEntry", @"MessageWindow", nil]] retain];
