@@ -392,9 +392,9 @@
 			<key>NSSize</key>
 			<real>13</real>
 			<key>NSfFlags</key>
-			<integer>16</integer>
+			<integer>1044</integer>
 		</dict>
-		<string>Helvetica</string>
+		<string>LucidaGrande</string>
 		<dict>
 			<key>$classes</key>
 			<array>
@@ -505,6 +505,7 @@
 			<key>$classes</key>
 			<array>
 				<string>NSTextField</string>
+				<string>%NSTextField</string>
 				<string>NSControl</string>
 				<string>NSView</string>
 				<string>NSResponder</string>
@@ -596,7 +597,7 @@
 			<key>NSSize</key>
 			<real>9</real>
 			<key>NSfFlags</key>
-			<integer>3600</integer>
+			<integer>3614</integer>
 		</dict>
 		<dict>
 			<key>$class</key>
@@ -680,7 +681,7 @@
 			<key>$classname</key>
 			<string>NSView</string>
 		</dict>
-		<string>{{0, 0}, {1280, 1002}}</string>
+		<string>{{0, 0}, {1680, 1028}}</string>
 		<string>{490, 129}</string>
 		<string>{3.40282e+38, 130}</string>
 		<dict>
@@ -759,11 +760,7 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>40</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>18</integer>
+					<integer>35</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -771,11 +768,15 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>35</integer>
+					<integer>40</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
 					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>18</integer>
 				</dict>
 			</array>
 		</dict>
@@ -802,10 +803,6 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>16</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>10</integer>
 				</dict>
 				<dict>
@@ -815,6 +812,10 @@
 				<dict>
 					<key>CF$UID</key>
 					<integer>2</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>16</integer>
 				</dict>
 			</array>
 		</dict>
@@ -828,6 +829,14 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
+					<integer>35</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>2</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
 					<integer>40</integer>
 				</dict>
 				<dict>
@@ -837,14 +846,6 @@
 				<dict>
 					<key>CF$UID</key>
 					<integer>18</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>35</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>2</integer>
 				</dict>
 			</array>
 		</dict>
@@ -878,11 +879,11 @@
 				</dict>
 			</array>
 		</dict>
+		<string>NSTextField111</string>
+		<string>File's Owner</string>
 		<string>1</string>
 		<string>Window</string>
 		<string>NSTextField2</string>
-		<string>NSTextField111</string>
-		<string>File's Owner</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -911,23 +912,11 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
 					<integer>18</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>35</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>9</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>54</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>56</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -939,7 +928,19 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>10</integer>
+					<integer>35</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>56</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>9</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>54</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -993,14 +994,14 @@
 				</dict>
 			</array>
 		</dict>
+		<integer>7</integer>
 		<integer>9</integer>
-		<integer>10</integer>
-		<integer>14</integer>
-		<integer>15</integer>
-		<integer>16</integer>
 		<integer>1</integer>
 		<integer>8</integer>
-		<integer>7</integer>
+		<integer>10</integer>
+		<integer>16</integer>
+		<integer>14</integer>
+		<integer>15</integer>
 		<integer>11</integer>
 		<dict>
 			<key>$class</key>

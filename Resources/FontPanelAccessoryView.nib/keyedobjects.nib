@@ -324,9 +324,9 @@
 			<key>NSSize</key>
 			<real>13</real>
 			<key>NSfFlags</key>
-			<integer>16</integer>
+			<integer>1044</integer>
 		</dict>
-		<string>Helvetica</string>
+		<string>LucidaGrande</string>
 		<dict>
 			<key>$classes</key>
 			<array>
@@ -360,6 +360,7 @@
 			<key>$classes</key>
 			<array>
 				<string>NSButtonCell</string>
+				<string>%NSButtonCell</string>
 				<string>NSActionCell</string>
 				<string>NSCell</string>
 				<string>NSObject</string>
@@ -467,7 +468,7 @@
 				<integer>12</integer>
 			</dict>
 		</dict>
-		<string>setFontPanelSettingsAsDefaultFont:</string>
+		<string>setFontPanelSettingsAsDefaultFont</string>
 		<dict>
 			<key>$classes</key>
 			<array>
@@ -598,7 +599,7 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>10</integer>
+					<integer>33</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -606,15 +607,15 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>33</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>12</integer>
+					<integer>10</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
 					<integer>9</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>12</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -656,11 +657,11 @@
 				</dict>
 			</array>
 		</dict>
-		<integer>5</integer>
-		<integer>1</integer>
 		<integer>9</integer>
-		<integer>6</integer>
+		<integer>1</integer>
+		<integer>5</integer>
 		<integer>7</integer>
+		<integer>6</integer>
 		<integer>8</integer>
 		<dict>
 			<key>$class</key>
