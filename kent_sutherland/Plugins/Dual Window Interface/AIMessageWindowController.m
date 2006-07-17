@@ -203,6 +203,7 @@
 	[tabView_tabBar setAllowsResizing:NO];
 	[tabView_tabBar setSizeCellsToFit:YES];
 	[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
+	[tabView_tabBar setSelectsTabsOnMouseDown:YES];
 }
 
 //Frames
@@ -287,7 +288,7 @@
 		//change the frame of the tab bar according to the orientation
 		if (firstTime || [key isEqualToString:KEY_TABBAR_POSITION]) {
 			tabPosition = [[prefDict objectForKey:KEY_TABBAR_POSITION] intValue];
-			PSMTabBarOrientation orientation = (tabPosition == 0 || tabPosition == 1) ? PSMTabBarHorizontalOrientation : PSMTabBarVerticalOrientation;
+			PSMTabBarOrientation orientation = (tabPosition == AdiumTabPositionBottom || tabPosition == AdiumTabPositionTop) ? PSMTabBarHorizontalOrientation : PSMTabBarVerticalOrientation;
 			NSRect tabBarFrame = [tabView_tabBar frame], tabViewFrame = [tabView_messages frame];
 			NSRect totalFrame = NSUnionRect(tabBarFrame, tabViewFrame);
 			
@@ -312,7 +313,7 @@
 				tabBarFrame.size.width = totalFrame.size.width;
 				
 				//set the position of the tab bar (top/bottom)
-				if (tabPosition == 0) {
+				if (tabPosition == AdiumTabPositionBottom) {
 					tabBarFrame.origin.y = totalFrame.origin.y;
 					tabViewFrame.origin.y = tabBarFrame.size.height + 5;
 					tabViewFrame.size.height = totalFrame.size.height - tabBarFrame.size.height - 5;
@@ -360,7 +361,7 @@
 				[tabView_splitView setDrawsDivider:NO];
 				[tabView_splitView setVertical:YES];
 				[tabView_splitView setDelegate:self];
-				if (tabPosition == 2) {
+				if (tabPosition == AdiumTabPositionLeft) {
 					[tabView_splitView addSubview:tabView_tabBar];
 					[tabView_splitView addSubview:tabView_messages];
 				} else {
@@ -375,6 +376,15 @@
 			[tabView_messages setFrame:tabViewFrame];
 			[tabView_tabBar setFrame:tabBarFrame];
 			[[self window] display];
+		}
+		
+		if (tabPosition == AdiumTabPositionTop) {
+			[[[self window] toolbar] setShowsBaselineSeparator:NO];
+			//use an Adium-specific unified style?
+			//[tabView_tabBar setStyleNamed:@"Unified"];
+		} else {
+			[[[self window] toolbar] setShowsBaselineSeparator:YES];
+			//[tabView_tabBar setStyleNamed:@"Adium"];
 		}
 		
 		if ([tabView_tabBar isTabBarHidden]) {
@@ -745,6 +755,7 @@
 	[transform scaleXBy:1.0 yBy:-1.0];
 	[transform concat];
 	tabFrame.origin.y = -tabFrame.origin.y - tabFrame.size.height;
+	tabFrame.size.width--;
 	[(id <PSMTabStyle>)[[tabView delegate] style] drawBackgroundInRect:tabFrame];
 	[transform invert];
 	[transform concat];

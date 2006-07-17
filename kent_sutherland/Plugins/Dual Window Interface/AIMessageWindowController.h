@@ -20,6 +20,14 @@
 #define AIMessageWindow_ControllerOrderChanged 		@"AIMessageWindow_ControllerOrderChanged"
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"
 
+typedef enum
+{
+	AdiumTabPositionBottom = 0,
+	AdiumTabPositionTop,
+	AdiumTabPositionLeft,
+	AdiumTabPositionRight,
+} AdiumTabPosition;
+
 @class AIMessageSendingTextView, AIMessageTabViewItem, AIMessageViewController, AIDualWindowInterfacePlugin, AISplitView;
 @class PSMTabBarControl;
 @protocol AIFlexibleToolbarItemDelegate;
@@ -37,7 +45,7 @@
     BOOL			supressHiding;		//YSE to temporarily suppress hiding of the tabs (used for dragging)
 	BOOL			alwaysShowTabs;		//YES if the tabs should always be visible, even if there is only 1
 	BOOL			tabBarIsVisible;	//YES if the tab bar is currently visible
-	int				tabPosition;
+	AdiumTabPosition tabPosition;
 	
 	NSDictionary	*toolbarItems;
 	NSMutableArray	*containedChats;
