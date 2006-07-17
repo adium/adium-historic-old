@@ -312,7 +312,7 @@
 			
 			if (orientation == PSMTabBarHorizontalOrientation) {
 				tabBarFrame.size.height = [tabView_tabBar isTabBarHidden] ? 1 : 22;
-				tabBarFrame.size.width = totalFrame.size.width;
+				tabBarFrame.size.width = totalFrame.size.width - 1;
 				
 				//set the position of the tab bar (top/bottom)
 				if (tabPosition == AdiumTabPositionBottom) {
@@ -350,10 +350,9 @@
 					[tabView_tabBar setAutoresizingMask:NSViewHeightSizable];
 				} else {
 					tabViewFrame.origin.x = totalFrame.origin.x;
-					tabBarFrame.origin.x = tabViewFrame.origin.x + tabViewFrame.size.width;
+					tabBarFrame.origin.x = totalFrame.size.width - tabBarFrame.size.width;
 					[tabView_tabBar setAutoresizingMask:NSViewHeightSizable | NSViewMinXMargin];
 				}
-				
 				[tabView_tabBar setCellMinWidth:50];
 				[tabView_tabBar setCellMaxWidth:200];
 				
@@ -380,17 +379,10 @@
 			[[self window] display];
 		}
 		
-		if (tabPosition == AdiumTabPositionTop) {
-			[[[self window] toolbar] setShowsBaselineSeparator:NO];
-			[tabView_tabStyle setDrawsUnified:YES];
-		} else {
-			[[[self window] toolbar] setShowsBaselineSeparator:YES];
-			[tabView_tabStyle setDrawsUnified:NO];
-		}
-		
-		if ([tabView_tabBar isTabBarHidden]) {
-			[self tabView:tabView_messages tabBarDidHide:tabView_tabBar];
-		}
+		//set tab style drawing attributes
+		[tabView_tabStyle setDrawsRight:(tabPosition == AdiumTabPositionRight)];
+		[tabView_tabStyle setDrawsUnified:(tabPosition == AdiumTabPositionTop)];
+		[[[self window] toolbar] setShowsBaselineSeparator:(tabPosition != AdiumTabPositionTop)];
 		
 		//update the tab bar and tab view frame
 		
@@ -774,7 +766,7 @@
 		offset->height = 21 + [style topMarginForTabBarControl];
 	} else {
 		offset->width = [tabView_tabBar frame].origin.x;
-		offset->height = 21 + [style topMarginForTabBarControl];
+		offset->height = 20 + [style topMarginForTabBarControl];
 	}
 	
 	*styleMask = NSTitledWindowMask;
@@ -936,13 +928,12 @@
 {
 	NSDragOperation tmp = NSDragOperationNone;
     NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"PSMTabBarControlItemPBType"]];
-
+	
     if (sender == nil || type) {
         if (![[self window] isKeyWindow]) {
 			[[self window] makeKeyAndOrderFront:nil];
 		}
 		
-		[tabView_tabBar setHideForSingleTab:NO];
         tmp = NSDragOperationPrivate;
     }
 	return tmp;
