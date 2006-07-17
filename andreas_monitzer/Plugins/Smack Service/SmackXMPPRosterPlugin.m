@@ -47,6 +47,10 @@
     if((self = [super init]))
     {
         account = a;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(receivedPresencePacket:)
+                                                     name:SmackXMPPPresencePacketReceivedNotification
+                                                   object:account];
     }
     return self;
 }
@@ -70,6 +74,10 @@
 #pragma mark Callbacks from Java
 
 - (void)setXMPPRosterEntriesAdded:(JavaCollection*)addresses {
+    [self performSelectorOnMainThread:@selector(XMPPRosterEntriesAddedMainThread:) withObject:addresses waitUntilDone:YES];
+}
+
+- (void)XMPPRosterEntriesAddedMainThread:(JavaCollection*)addresses {
     SmackRoster *roster = [[account connection] getRoster];
     if(!roster)
         return;
@@ -83,7 +91,7 @@
         
         NSLog(@"add entry %@",jid);
         
-        SmackListContact *listContact = [[adium contactController] contactWithService:[account service] account:account UID:jid class:[SmackListContact class]];
+        SmackListContact *listContact = (SmackListContact*)[[adium contactController] contactWithService:[account service] account:account UID:jid class:[SmackListContact class]];
         
         if(![[listContact formattedUID] isEqualToString:jid])
             [listContact setFormattedUID:jid notify:NotifyLater];
@@ -119,6 +127,10 @@
 }
 
 - (void)setXMPPRosterEntriesUpdated:(JavaCollection*)addresses {
+    [self performSelectorOnMainThread:@selector(XMPPRosterEntriesUpdatedMainThread:) withObject:addresses waitUntilDone:YES];
+}
+
+- (void)XMPPRosterEntriesUpdatedMainThread:(JavaCollection*)addresses {
     SmackRoster *roster = [[account connection] getRoster];
     if(!roster)
         return;
@@ -165,6 +177,10 @@
 }
 
 - (void)setXMPPRosterEntriesDeleted:(JavaCollection*)addresses {
+    [self performSelectorOnMainThread:@selector(XMPPRosterEntriesDeletedMainThread:) withObject:addresses waitUntilDone:YES];
+}
+
+- (void)XMPPRosterEntriesDeletedMainThread:(JavaCollection*)addresses {
     SmackRoster *roster = [[account connection] getRoster];
     if(!roster)
         return;
@@ -190,7 +206,19 @@
 
 - (void)setXMPPRosterPresenceChanged:(NSString*)XMPPAddress {
     SmackRoster *roster = [[account connection] getRoster];
-    SmackPresence *presence = [roster getPresenceResource:XMPPAddress];
+    SmackPresence *presence = [roster getPresenceResource:XMPPAddress]; // might be nil, but that's handled correctly by NSArray
+    
+    [self performSelectorOnMainThread:@selector(XMPPRosterPresenceChangedMainThread:) withObject:[NSArray arrayWithObjects:XMPPAddress,roster,presence,nil] waitUntilDone:YES];
+}
+
+- (void)XMPPRosterPresenceChangedMainThread:(NSArray*)params {
+    NSString *XMPPAddress = [params objectAtIndex:0];
+    
+    SmackPresence *presence = nil;
+    if([params count] > 2)
+        presence = [params objectAtIndex:2];
+    // otherwise the resource has gone offline
+    // XXX to Smack: I want that offline-message! There's no way to retrieve that right now.
     
     NSString *jid = [XMPPAddress jidUserHost];
     NSString *type = [[presence getType] toString];
@@ -198,42 +226,25 @@
     NSString *mode = [[presence getMode] toString];
     int priority = [presence getPriority];
 
-    NSLog(@"presence changed of %@",XMPPAddress);
-    
-    AIListContact *resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:XMPPAddress];
-    
     SmackListContact *rosterContact = (SmackListContact*)[[adium contactController] existingContactWithService:[account service] account:account UID:jid];
     
     if(!rosterContact)
         return; // ignore presence information for people not on our contact list (might want to add that later for chats to people not on the contact list)
-    
+
+    AIListContact *resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:XMPPAddress];
+
     if(![rosterContact containsObject:resourceObject])
         [rosterContact addObject:resourceObject];
     
     AIStatusType statustype = AIOfflineStatusType;
     
-    if([type isEqualToString:@"available"]) {
+    if(!presence)
+        statustype = AIOfflineStatusType;
+    else if([type isEqualToString:@"available"]) {
         if(!mode || [mode isEqualToString:@"available"] || [mode isEqualToString:@"chat"])
             statustype = AIAvailableStatusType;
         else
             statustype = AIAwayStatusType;
-    } else if([type isEqualToString:@"unavailable"])
-        statustype = AIOfflineStatusType;
-    else if([type isEqualToString:@"subscribe"]) {
-        [[adium contactController] showAuthorizationRequestWithDict:[NSDictionary dictionaryWithObjectsAndKeys:
-            jid, @"Remote Name",
-            nil] forAccount:account];
-        
-        return;
-    } else if([type isEqualToString:@"subscribed"]) {
-        [[adium interfaceController] displayQuestion:AILocalizedString(@"You Were Authorized!","You Were Authorized!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has authorized you to see his/her current status.","%@ has authorized you to see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice") defaultButton:AILocalizedString(@"OK","OK") alternateButton:nil otherButton:nil target:nil selector:NULL userInfo:nil];
-        return;
-    } else if([type isEqualToString:@"unsubscribe"]) {
-        [[adium interfaceController] displayQuestion:AILocalizedString(@"Subscription Removed!","Subscription Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed you from his/her contact list. He/She will no longer see your current status.","%@ has removed you from his/her contact list. He/She will no longer see your current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice") defaultButton:AILocalizedString(@"OK","OK") alternateButton:nil otherButton:nil target:nil selector:NULL userInfo:nil];
-        return;
-    } else if([type isEqualToString:@"unsubscribed"]) {
-        [[adium interfaceController] displayQuestion:AILocalizedString(@"Authorization Removed!","Authorization Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed your authorization. You will no longer see his/her current status.","%@ has removed your authorization. You will no longer see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice") defaultButton:AILocalizedString(@"OK","OK") alternateButton:nil otherButton:nil target:nil selector:NULL userInfo:nil];
-        return;
     }
     
 	[resourceObject setOnline:statustype != AIOfflineStatusType
@@ -252,6 +263,44 @@
     //Apply the change
 	[resourceObject notifyOfChangedStatusSilently:[account silentAndDelayed]];
     [rosterContact notifyOfChangedStatusSilently:NO];
+}
+
+// direct presence handling for authorization and offline status
+- (void)receivedPresencePacket:(NSNotification*)n {
+    [self performSelectorOnMainThread:@selector(receivedPresencePacketMainThread:) withObject:[[n userInfo] objectForKey:SmackXMPPPacket] waitUntilDone:YES];
+}
+
+- (void)receivedPresencePacketMainThread:(SmackPresence*)presence {
+    NSString *jidWithResource = [presence getFrom];
+    NSString *jid = [jidWithResource jidUserHost];
+    NSString *type = [[presence getType] toString];
+    NSString *status = [presence getStatus];
+    
+    if([type isEqualToString:@"unavailable"]) {
+        // being unavailable is handled by -XMPPRosterPresenceChangedMainThread:, so we only set the status string here
+        AIListContact *resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:jidWithResource];
+        if(resourceObject) {
+            if(status) {
+                NSAttributedString *statusMessage = [[NSAttributedString alloc] initWithString:status attributes:nil];
+                [resourceObject setStatusMessage:statusMessage notify:NotifyNow];
+                [statusMessage release];
+            } else
+                [resourceObject setStatusMessage:nil notify:NotifyNow];
+            
+            //Apply the change
+            [resourceObject notifyOfChangedStatusSilently:[account silentAndDelayed]];
+        }
+    } else if([type isEqualToString:@"subscribe"]) {
+        [[adium contactController] showAuthorizationRequestWithDict:[NSDictionary dictionaryWithObjectsAndKeys:
+            jid, @"Remote Name",
+            nil] forAccount:account];
+    } else if([type isEqualToString:@"subscribed"]) {
+        [[adium interfaceController] handleMessage:AILocalizedString(@"You Were Authorized!","You Were Authorized!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has authorized you to see his/her current status.","%@ has authorized you to see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
+    } else if([type isEqualToString:@"unsubscribe"]) {
+        [[adium interfaceController] handleMessage:AILocalizedString(@"Subscription Removed!","Subscription Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed you from his/her contact list. He/She will no longer see your current status.","%@ has removed you from his/her contact list. He/She will no longer see your current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
+    } else if([type isEqualToString:@"unsubscribed"]) {
+        [[adium interfaceController] handleMessage:AILocalizedString(@"Authorization Removed!","Authorization Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed your authorization. You will no longer see his/her current status.","%@ has removed your authorization. You will no longer see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
+    }
 }
 
 #pragma mark User-Initiated Roster Changes
