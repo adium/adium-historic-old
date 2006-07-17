@@ -15,7 +15,7 @@ BETA=TRUE
 
 ###########
 # To release!
-* Releasing requires cachefly access and adiumx.com access.
+# Releasing requires cachefly access and adiumx.com access.
 #
 # First upload to cachefly. If you don't have access and need to do a release, get with Evan or Chris (tick).
 # Triggering the version checker once the release is up:
@@ -52,9 +52,9 @@ PLIST_DIR=`pwd`/../Plists
 ADIUM_PLIST=$(PLIST_DIR)/Adium_2
 CRASH_REPORTER_PLIST=$(PLIST_DIR)/Adium\ Crash\ Reporter-Info
 
-.PHONY: all update version compile clean release source createfolder diskimage
+.PHONY: all update version compile clean release source prepare-release-bundle createfolder diskimage
 
-all: update version compile release
+all: update version clean compile release
 
 update:
 	svn update $(SRC_DIR)
@@ -78,8 +78,25 @@ testcompile:
 
 clean:
 	rm -rf $(BUILD_DIR)
+	$(MAKE) $(BUILDFLAGS) -C $(SRC_DIR) clean
 
-release: createfolder diskimage
+release: createfolder prepare-release-bundle diskimage
+
+prepare-release-bundle:
+	@# Convert all nibs to the smaller binary format
+	@echo Converting nibs to binary format...
+	find $(BUILD_DIR)/Adium.app -name keyedobjects.nib -print0 | xargs -0 plutil -convert binary1
+
+	@# delete unneeded nib files for non-beta builds
+	@echo Cleaning Adium.app for release
+	ifeq ($(BETA),FALSE)
+		find $(BUILD_DIR) \( -name classes.nib -or -name info.nib \) -type f -delete
+	endif
+	
+	@# delete svn  and backup files
+	find $(BUILD_DIR) -name ".svn" -type d -exec rm -rf {} \; -prune
+	find $(BUILD_DIR) \( -name "*~" -or -name .DS_Store \) -type f -delete
+
 
 createfolder:
 	@# clean build directory
@@ -98,15 +115,6 @@ createfolder:
 	@# symlink /Applications
 	ln -s /Applications $(ADIUM_DIR)/Applications
 
-	@# delete svn  and backup files
-	find $(BUILD_DIR) -name ".svn" -type d -exec rm -rf {} \; -prune
-	find $(BUILD_DIR) \( -name "*~" -or -name .DS_Store \) -type f -delete
-	
-	@# delete unneeded nib files for non-beta builds
-ifeq ($(BETA),FALSE)
-	find $(BUILD_DIR) \( -name classes.nib -or -name info.nib \) -type f -delete
-endif
-	
 diskimage:
 	rm "$(BUILD_DIR)/$(RELEASE_NAME).dmg" || true
 	@# make Adium disk image

@@ -25,8 +25,8 @@ SQLLogger:
 #	    cp -R build/Adium.app ~/Applications/
 #	    cp -R build/AIUtilities.framework ~/Library/Frameworks/
 
-#clean:
-#	xcodebuild -alltargets clean
+clean:
+	xcodebuild -project Adium.xcodeproj -configuration $(BUILDCONFIGURATION)  clean
 
 
 localizable-strings:
