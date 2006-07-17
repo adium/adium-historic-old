@@ -2984,6 +2984,19 @@
 		34C9A6370822930D004F912C /* ESGaimMeanwhileContactAdditionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimMeanwhileContactAdditionController.m; path = "Plugins/Gaim Service/ESGaimMeanwhileContactAdditionController.m"; sourceTree = "<group>"; };
 		34C9A64408229348004F912C /* GaimMeanwhileContactAdditionWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = GaimMeanwhileContactAdditionWindow.nib; path = "Plugins/Gaim Service/GaimMeanwhileContactAdditionWindow.nib"; sourceTree = "<group>"; };
 		34C9EC40099FA2A8007ECAB3 /* DefaultBlockedStatusIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DefaultBlockedStatusIcon.png; path = "Frameworks/Adium Framework/DefaultBlockedStatusIcon.png"; sourceTree = "<group>"; };
+		34CA23990A671E0E00B11032 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34CA239A0A671E1500B11032 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34CA239B0A671E2100B11032 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = Resources/Danish.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34CA239C0A671E2F00B11032 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34CA239D0A671E3C00B11032 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34CA239E0A671E4500B11032 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34CA239F0A671E5000B11032 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34CA23A00A671E6400B11032 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34CA23A10A671E7200B11032 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34CA23A20A671E8500B11032 /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34CA23A30A671E9000B11032 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = Resources/Russian.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34CA23A40A671E9B00B11032 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34CA23A50A6723A200B11032 /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESContactInfoListController.h; path = Source/ESContactInfoListController.h; sourceTree = "<group>"; };
 		34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESContactInfoListController.m; path = Source/ESContactInfoListController.m; sourceTree = "<group>"; };
 		34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESiTunesPlugin.h; path = Source/ESiTunesPlugin.h; sourceTree = "<group>"; };
@@ -10255,6 +10268,19 @@
 			isa = PBXVariantGroup;
 			children = (
 				34D0FE3C09561E3800DCB678 /* English */,
+				34CA23990A671E0E00B11032 /* Catalan */,
+				34CA239A0A671E1500B11032 /* cs */,
+				34CA239B0A671E2100B11032 /* Danish */,
+				34CA239C0A671E2F00B11032 /* Dutch */,
+				34CA239D0A671E3C00B11032 /* French */,
+				34CA239E0A671E4500B11032 /* German */,
+				34CA239F0A671E5000B11032 /* is */,
+				34CA23A00A671E6400B11032 /* Italian */,
+				34CA23A10A671E7200B11032 /* Japanese */,
+				34CA23A20A671E8500B11032 /* Norwegian */,
+				34CA23A30A671E9000B11032 /* Russian */,
+				34CA23A40A671E9B00B11032 /* Swedish */,
+				34CA23A50A6723A200B11032 /* pl */,
 			);
 			name = PersonalPreferences.nib;
 			sourceTree = "<group>";
