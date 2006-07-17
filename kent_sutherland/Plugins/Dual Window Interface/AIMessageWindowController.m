@@ -189,7 +189,7 @@
     //Exclude this window from the window menu (since we add it manually)
     [theWindow setExcludedFromWindowsMenu:YES];
 	[theWindow useOptimizedDrawing:YES];
-
+	
 	[self _configureToolbar];
 
     //Remove any tabs from our tab view, it needs to start out empty
@@ -282,7 +282,6 @@
 {
     if ([group isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]) {
 		NSWindow	*window = [self window];
-		
 		alwaysShowTabs = ![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
 		[tabView_tabBar setAllowsBackgroundTabClosing:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
@@ -292,7 +291,7 @@
 			tabPosition = [[prefDict objectForKey:KEY_TABBAR_POSITION] intValue];
 			PSMTabBarOrientation orientation = (tabPosition == AdiumTabPositionBottom || tabPosition == AdiumTabPositionTop) ? PSMTabBarHorizontalOrientation : PSMTabBarVerticalOrientation;
 			NSRect tabBarFrame = [tabView_tabBar frame], tabViewFrame = [tabView_messages frame];
-			NSRect totalFrame = NSUnionRect(tabBarFrame, tabViewFrame);
+			NSRect contentRect = [[[self window] contentView] frame];
 			
 			//remove the split view if the last orientation was vertical
 			if ([tabView_tabBar orientation] == PSMTabBarVerticalOrientation) {
@@ -312,52 +311,55 @@
 			
 			if (orientation == PSMTabBarHorizontalOrientation) {
 				tabBarFrame.size.height = [tabView_tabBar isTabBarHidden] ? 1 : 22;
-				tabBarFrame.size.width = totalFrame.size.width - 1;
+				tabBarFrame.size.width = contentRect.size.width + 1;
 				
 				//set the position of the tab bar (top/bottom)
 				if (tabPosition == AdiumTabPositionBottom) {
-					tabBarFrame.origin.y = totalFrame.origin.y;
-					tabViewFrame.origin.y = tabBarFrame.size.height + 5;
-					tabViewFrame.size.height = totalFrame.size.height - tabBarFrame.size.height - 5;
+					tabBarFrame.origin.y = contentRect.origin.y;
+					tabViewFrame.origin.y = tabBarFrame.size.height + 6;
+					tabViewFrame.size.height = contentRect.size.height - tabBarFrame.size.height - 5;
+					[tabView_tabBar setAutoresizingMask:NSViewMaxYMargin | NSViewWidthSizable];
 				} else {
-					tabBarFrame.origin.y = totalFrame.origin.y + totalFrame.size.height - tabBarFrame.size.height;
-					tabViewFrame.origin.y = totalFrame.origin.y;
-					tabViewFrame.size.height = totalFrame.size.height - tabBarFrame.size.height;
+					tabBarFrame.origin.y = contentRect.origin.y + contentRect.size.height - tabBarFrame.size.height + 1;
+					tabViewFrame.origin.y = contentRect.origin.y;
+					tabViewFrame.size.height = contentRect.size.height - tabBarFrame.size.height + 1;
+					[tabView_tabBar setAutoresizingMask:NSViewMinYMargin | NSViewWidthSizable];
 				}
 				
 				tabViewFrame.origin.x = -1;
 				tabBarFrame.origin.x = 0;
-				tabViewFrame.size.width = totalFrame.size.width;
-				[tabView_tabBar setAutoresizingMask:NSViewMaxYMargin | NSViewWidthSizable];
+				tabViewFrame.size.width = contentRect.size.width + 1;
 			} else {
 				float width = [[prefDict objectForKey:KEY_TABBAR_WIDTH] floatValue];
 				if (width < 50) {
 					width = 50;
 				}
 				
-				totalFrame.origin.x = 0;
 				tabBarFrame.size.height = [[[self window] contentView] frame].size.height;
-				tabBarFrame.size.width = [tabView_tabBar isTabBarHidden] ? 1 : width;
-				tabBarFrame.origin.y = totalFrame.origin.y;
-				tabViewFrame.origin.y = totalFrame.origin.y;
-				tabViewFrame.size.height = totalFrame.size.height;
-				tabViewFrame.size.width = totalFrame.size.width - tabBarFrame.size.width - 6;
+				tabBarFrame.size.width = [tabView_tabBar isTabBarHidden] ? 1 : width + 1;
+				tabBarFrame.origin.y = contentRect.origin.y;
+				tabViewFrame.origin.y = contentRect.origin.y;
+				tabViewFrame.size.height = contentRect.size.height + 1;
+				tabViewFrame.size.width = contentRect.size.width - tabBarFrame.size.width - 5;
 				
 				//set the position of the tab bar (left/right)
 				if (tabPosition == AdiumTabPositionLeft) {
-					tabBarFrame.origin.x = totalFrame.origin.x;
+					tabBarFrame.origin.x = contentRect.origin.x;
 					tabViewFrame.origin.x = tabBarFrame.origin.x + tabBarFrame.size.width;
 					[tabView_tabBar setAutoresizingMask:NSViewHeightSizable];
 				} else {
-					tabViewFrame.origin.x = totalFrame.origin.x;
-					tabBarFrame.origin.x = totalFrame.size.width - tabBarFrame.size.width;
+					tabViewFrame.origin.x = contentRect.origin.x;
+					tabBarFrame.origin.x = contentRect.size.width - tabBarFrame.size.width + 1;
 					[tabView_tabBar setAutoresizingMask:NSViewHeightSizable | NSViewMinXMargin];
 				}
 				[tabView_tabBar setCellMinWidth:50];
 				[tabView_tabBar setCellMaxWidth:200];
 				
 				//put the subviews into a split view
-				tabView_splitView = [[[AISplitView alloc] initWithFrame:totalFrame] autorelease];
+				NSRect splitViewRect = [[[self window] contentView] frame];
+				splitViewRect.size.width++;
+				splitViewRect.size.height++;
+				tabView_splitView = [[[AISplitView alloc] initWithFrame:splitViewRect] autorelease];
 				[tabView_splitView setDividerThickness:6];
 				[tabView_splitView setDrawsDivider:NO];
 				[tabView_splitView setVertical:YES];
@@ -599,6 +601,23 @@
 	return tabPosition == 2 ? 250 : proposedMax - 50;
 }
 
+- (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
+{
+	NSRect messageFrame = [tabView_messages frame], tabBarFrame = [tabView_tabBar frame];
+	messageFrame.size = NSMakeSize([sender frame].size.width - tabBarFrame.size.width - 6, [sender frame].size.height);
+	tabBarFrame.size = NSMakeSize(tabBarFrame.size.width, [sender frame].size.height);
+	
+	if (tabPosition == AdiumTabPositionLeft) {
+		messageFrame.origin.x = tabBarFrame.size.width + 6;
+	} else {
+		messageFrame.origin.x = 0;
+		tabBarFrame.origin.x = messageFrame.size.width + 6;
+	}
+	
+	[tabView_messages setFrame:messageFrame];
+	[tabView_tabBar setFrame:tabBarFrame];
+}
+
 //PSMTabBarControl Delegate -------------------------------------------------------------------------------------------------
 #pragma mark PSMTabBarControl Delegate
 
@@ -781,6 +800,11 @@
 	NSRect frame;
 	id <PSMTabStyle> style = (id <PSMTabStyle>)[[tabView delegate] style];
 	
+	//set the size of the new window
+	//set the size and origin separately so that toolbar visibility and size doesn't mess things up
+	frame.size = [[self window] frame].size;
+	[[newController window] setFrame:frame display:NO];
+	
 	if (tabPosition == AdiumTabPositionBottom) {
 		point.x -= [style leftMarginForTabBarControl];
 		point.y -= 22;
@@ -788,14 +812,14 @@
 		point.x -= [style leftMarginForTabBarControl];
 		point.y -= [[[newController window] contentView] frame].size.height + 1;
 	} else if (tabPosition == AdiumTabPositionLeft) {
-		point.y -= [[[self window] contentView] frame].size.height - [style topMarginForTabBarControl] + 1;
+		point.y -= [[[newController window] contentView] frame].size.height - [style topMarginForTabBarControl] + 1;
 	} else {
 		point.x -= [tabView_tabBar frame].origin.x;
-		point.y -= [[[self window] contentView] frame].size.height - [style topMarginForTabBarControl] + 1;
+		point.y -= [[[newController window] contentView] frame].size.height - [style topMarginForTabBarControl] + 1;
 	}
 	
+	//set the origin point of the new window
 	frame.origin = point;
-	frame.size = [[self window] frame].size;
 	[[newController window] setFrame:frame display:NO];
 	
 	return [newController tabBar];
