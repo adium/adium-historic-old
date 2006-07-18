@@ -9,9 +9,9 @@
 	<key>Contact Font</key>
 	<string>LucidaGrande,11</string>
 	<key>Contact Left Indent</key>
-	<integer>3</integer>
+	<integer>5</integer>
 	<key>Contact Right Indent</key>
-	<integer>3</integer>
+	<integer>4</integer>
 	<key>Contact Spacing</key>
 	<integer>3</integer>
 	<key>Contact Text Alignment</key>

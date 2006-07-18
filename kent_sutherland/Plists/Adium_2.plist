@@ -10,10 +10,6 @@
 	<string>YES</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
-    <key>SmartCrashReports_CompanyName</key>
-    <string>Adium</string>
-    <key>SmartCrashReports_EmailTicket</key>
-    <string>SCR-4C60AF7BD3</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -314,7 +310,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Adium</string>
 	<key>CFBundleGetInfoString</key>
-	<string>1.0svn, Copyright 2001-2005 The Adium Team</string>
+	<string>1.0b5, Copyright 2001-2006 The Adium Team</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>Adium Help</string>
 	<key>CFBundleHelpBookName</key>
@@ -330,7 +326,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0svn</string>
+	<string>1.0b5</string>
 	<key>CFBundleSignature</key>
 	<string>AdIM</string>
 	<key>CFBundleURLTypes</key>
@@ -399,18 +395,18 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0svn</string>
-	<key>LSEnvironment</key>
-	<dict>
-		<key>MinimumSystemVersion</key>
-		<string>10.3.9</string>
-	</dict>
+	<string>1.0b5</string>
 	<key>Java</key>
 	<dict>
 		<key>JVMVersion</key>
 		<string>1.4+</string>
 		<key>VMOptions</key>
 		<string>-enableassertions</string>
+	</dict>
+	<key>LSEnvironment</key>
+	<dict>
+		<key>MinimumSystemVersion</key>
+		<string>10.3.9</string>
 	</dict>
 	<key>LSRequiresNativeExecution</key>
 	<true/>
@@ -420,12 +416,16 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>SUBetaFeedURL</key>
-	<string>http://www.adiumx.com/adiumbeta.xml</string>
-	<key>SUFeedURL</key>
-	<string>http://www.adiumx.com/adium.xml</string>
 	<key>SUCheckAtStartup</key>
 	<true/>
+	<key>SUFeedURL</key>
+	<string>http://adiumx.com/sparkle/profileInfo.php</string>
+	<key>SUScheduledCheckInterval</key>
+	<integer>86400</integer>
+	<key>SmartCrashReports_CompanyName</key>
+	<string>Adium</string>
+	<key>SmartCrashReports_EmailTicket</key>
+	<string>SCR-4C60AF7BD3</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -701,19 +701,14 @@
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeDescription</key>
-			<string>Adium X chat log</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.data</string>
 				<string>public.content</string>
 				<string>public.message</string>
 			</array>
-			<!---
-			<key>UTTypeIconFile</key>
-			<string>AdiumServiceIcons.icns</string>
-			-->
-
+			<key>UTTypeDescription</key>
+			<string>Adium X chat log</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.adiumx.log</string>
 			<key>UTTypeReferenceURL</key>
@@ -725,23 +720,19 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>AdiumLog</string>
+					<string>chatlog</string>
 				</array>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeDescription</key>
-			<string>Adium X HTML chat log</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.data</string>
 				<string>public.content</string>
 				<string>public.message</string>
 			</array>
-			<!---
-			<key>UTTypeIconFile</key>
-			<string>AdiumServiceIcons.icns</string>
-			-->
-
+			<key>UTTypeDescription</key>
+			<string>Adium X HTML chat log</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.adiumx.htmllog</string>
 			<key>UTTypeReferenceURL</key>
@@ -755,7 +746,6 @@
 					<string>AdiumHTMLLog</string>
 				</array>
 			</dict>
-
 		</dict>
 	</array>
 </dict>

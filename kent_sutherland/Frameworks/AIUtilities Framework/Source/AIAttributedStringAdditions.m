@@ -21,8 +21,13 @@
 #import "AIColorAdditions.h"
 #import "AITextAttributes.h"
 #import "AIApplicationAdditions.h"
-
+#import "AIStringUtilities.h"
 #import "AIExceptionHandlingUtilities.h"
+
+NSString *AIFontFamilyAttributeName = @"AIFontFamily";
+NSString *AIFontSizeAttributeName   = @"AIFontSize";
+NSString *AIFontWeightAttributeName = @"AIFontWeight";
+NSString *AIFontStyleAttributeName  = @"AIFontStyle";
 
 @implementation NSMutableAttributedString (AIAttributedStringAdditions)
 
@@ -280,9 +285,130 @@
 	}
 }
 
+- (void)convertAttachmentsToStringsUsingPlaceholder:(NSString *)placeholder
+{
+    if ([self length] && [self containsAttachments]) {
+        int							currentLocation = 0;
+        NSRange						attachmentRange;
+		NSString					*attachmentCharacterString = [NSString stringWithFormat:@"%C",NSAttachmentCharacter];
+		
+        //find attachment
+        attachmentRange = [[self string] rangeOfString:attachmentCharacterString
+											   options:0 
+												 range:NSMakeRange(currentLocation,
+																   [self length] - currentLocation)];
+		
+        while (attachmentRange.length != 0) { //if we found an attachment
+			NSTextAttachment	*attachment = [self attribute:NSAttachmentAttributeName
+													  atIndex:attachmentRange.location
+											   effectiveRange:nil];
+            NSString *replacement = nil;
+			if ([attachment respondsToSelector:@selector(string)]) {
+				replacement = [attachment performSelector:@selector(string)];
+			}
+			
+            if (!replacement) {
+                replacement = placeholder;
+            }
+			
+            //remove the attachment, replacing it with the original text
+			[self removeAttribute:NSAttachmentAttributeName range:attachmentRange];
+            [self replaceCharactersInRange:attachmentRange withString:replacement];
+			
+            attachmentRange.length = [replacement length];
+			
+            currentLocation = attachmentRange.location + attachmentRange.length;
+			
+            //find the next attachment
+            attachmentRange = [[self string] rangeOfString:attachmentCharacterString
+												   options:0
+													 range:NSMakeRange(currentLocation,
+																	   [self length] - currentLocation)];
+        }
+	}	
+}
+
+
 @end
 
 @implementation NSAttributedString (AIAttributedStringAdditions)
+
++ (NSSet *)CSSCapableAttributesSet
+{
+	return [NSSet setWithObjects:
+		NSFontAttributeName,
+		AIFontFamilyAttributeName,
+		AIFontSizeAttributeName,
+		AIFontWeightAttributeName,
+		AIFontStyleAttributeName,
+		NSForegroundColorAttributeName,
+		NSBackgroundColorAttributeName,
+		NSShadowAttributeName,
+		NSCursorAttributeName,
+		NSUnderlineStyleAttributeName,
+		NSStrikethroughStyleAttributeName,
+		NSSuperscriptAttributeName,
+		nil];
+}
++ (NSString *)CSSStringForTextAttributes:(NSDictionary *)attrs
+{
+	static NSDictionary *attributeNamesToCSSPropertyNames = nil;
+	if (!attributeNamesToCSSPropertyNames) {
+		attributeNamesToCSSPropertyNames = [[NSDictionary alloc] initWithObjectsAndKeys:
+			@"font",             NSFontAttributeName,
+			@"font-family",      AIFontFamilyAttributeName,
+			@"font-size",        AIFontSizeAttributeName,
+			@"font-weight",      AIFontWeightAttributeName,
+			@"font-style",       AIFontStyleAttributeName,
+			@"color",            NSForegroundColorAttributeName,
+			@"background-color", NSBackgroundColorAttributeName,
+			@"text-shadow",      NSShadowAttributeName,
+			@"cursor",           NSCursorAttributeName,
+			nil];
+	}
+
+	NSMutableArray *CSSProperties = [NSMutableArray arrayWithCapacity:[attrs count]];
+
+	BOOL hasLineThrough = NO, hasUnderline = NO;
+
+	NSEnumerator *keysEnum = [attrs keyEnumerator];
+	NSString *key;
+	while ((key = [keysEnum nextObject])) {
+		if ([key isEqualToString:NSUnderlineStyleAttributeName]) {
+			hasUnderline = YES;
+		} else if ([key isEqualToString:NSStrikethroughStyleAttributeName]) {
+			hasLineThrough = YES;
+		} else if ([key isEqualToString:NSSuperscriptAttributeName]) {
+			[CSSProperties addObject:@"vertical-align: baseline;"];
+		} else {
+			NSString *CSSPropertyName = [attributeNamesToCSSPropertyNames objectForKey:key];
+			id obj = [attrs objectForKey:key];
+			if (CSSPropertyName) {
+				if ([obj respondsToSelector:@selector(CSSRepresentation)]) {
+					obj = [obj CSSRepresentation];
+				} else if ([obj respondsToSelector:@selector(stringValue)]) {
+					obj = [obj stringValue];
+				} else if ([obj respondsToSelector:@selector(absoluteString)]) {
+					obj = [obj absoluteString];
+				}
+
+				[CSSProperties addObject:[NSString stringWithFormat:@"%@: %@;", CSSPropertyName, obj]];
+			}
+		}
+	}
+
+	if (hasLineThrough && hasUnderline) {
+		[CSSProperties addObject:@"text-decoration: line-through underline;"];
+	} else if (hasLineThrough) {
+		[CSSProperties addObject:@"text-decoration: line-through;"];
+	} else if (hasUnderline) {
+		[CSSProperties addObject:@"text-decoration: underline;"];
+	}
+
+	[CSSProperties sortUsingSelector:@selector(compare:)];
+
+	return [CSSProperties componentsJoinedByString:@" "];
+}
 
 //Height of a string
 #define FONT_HEIGHT_STRING		@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()"
@@ -374,47 +500,9 @@
 {
     if ([self length] && [self containsAttachments]) {
         NSMutableAttributedString	*newAttributedString = [[self mutableCopy] autorelease];
-        int							currentLocation = 0;
-        NSRange						attachmentRange;
-		
-		NSString					*attachmentCharacterString = [NSString stringWithFormat:@"%C",NSAttachmentCharacter];
-		
-        //find attachment
-        attachmentRange = [[newAttributedString string] rangeOfString:attachmentCharacterString
-															  options:0 
-																range:NSMakeRange(currentLocation,
-																				  [newAttributedString length] - currentLocation)];
-		
-        while (attachmentRange.length != 0) { //if we found an attachment
+		[newAttributedString convertAttachmentsToStringsUsingPlaceholder:AILocalizedString(@"<<Attachment>>", nil)];
 
-			NSTextAttachment	*attachment = [newAttributedString attribute:NSAttachmentAttributeName
-																	 atIndex:attachmentRange.location
-															  effectiveRange:nil];
-            NSString *replacement = nil;
-			if ([attachment respondsToSelector:@selector(string)]) {
-				replacement = [attachment performSelector:@selector(string)];
-			}
-				
-            if (!replacement) {
-                replacement = @"<<Attachment>>";
-            }
-
-            //remove the attachment, replacing it with the original text
-			[newAttributedString removeAttribute:NSAttachmentAttributeName range:attachmentRange];
-            [newAttributedString replaceCharactersInRange:attachmentRange withString:replacement];
-
-            attachmentRange.length = [replacement length];
-
-            currentLocation = attachmentRange.location + attachmentRange.length;
-
-            //find the next attachment
-            attachmentRange = [[newAttributedString string] rangeOfString:attachmentCharacterString
-																  options:0
-																	range:NSMakeRange(currentLocation,
-																					  [newAttributedString length] - currentLocation)];
-        }
-
-        return newAttributedString;
+		return newAttributedString;
 
     } else {
         return self;

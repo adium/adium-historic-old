@@ -26,12 +26,14 @@
 #import "UndeclaredLibgaimFunctions.h"
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIAccount.h>
+#import <Adium/AICorePluginLoader.h>
 #import <Adium/AIService.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentTyping.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/NDRunLoopMessenger.h>
+
 #import <CoreFoundation/CFRunLoop.h>
 #import <CoreFoundation/CFSocket.h>
 #include <Libgaim/libgaim.h>
@@ -69,26 +71,49 @@ NSMutableDictionary *chatDict = nil;
 static NSAutoreleasePool *currentAutoreleasePool = nil;
 #define	AUTORELEASE_POOL_REFRESH	5.0
 
+static NSMutableArray	*libgaimPluginArray = nil;
+
 @implementation SLGaimCocoaAdapter
-
-/*!
- * @brief Called early in the startup process by CBGaimServicePlugin to begin initializing Gaim
- *
- * Should only be called once.
- */
-+ (void)prepareSharedInstance
-{
-	SLGaimCocoaAdapter  *gaimCocoaAdapter;
-
-    gaimCocoaAdapter = [[self alloc] init];
-}
 
 /*!
  * @brief Return the shared instance
  */
 + (SLGaimCocoaAdapter *)sharedInstance
 {	
+	@synchronized(self) {
+		if (!sharedInstance) {
+			sharedInstance = [[self alloc] init];
+		}
+	}
+
 	return sharedInstance;
+}
+
+/*
+ * @brief Plugin loaded
+ *
+ * Initialize each libgaim plugin.  These plugins should not do anything within libgaim itself; this should be done in
+ * -[plugin initLibgaimPlugin].
+ */
++ (void)pluginDidLoad
+{
+	NSEnumerator	*enumerator;
+	NSString		*libgaimPluginPath;
+
+	libgaimPluginArray = [[NSMutableArray alloc] init];
+	
+	enumerator = [[[AIObject sharedAdiumInstance] allResourcesForName:@"Plugins"
+													   withExtensions:@"AdiumLibgaimPlugin"] objectEnumerator];
+	while ((libgaimPluginPath = [enumerator nextObject])) {
+		[AICorePluginLoader loadPluginAtPath:libgaimPluginPath
+							  confirmLoading:YES
+								 pluginArray:libgaimPluginArray];
+	}
+}
+
++ (NSArray *)libgaimPluginArray
+{
+	return libgaimPluginArray;
 }
 
 //Register the account gaimside in the gaim thread
@@ -118,22 +143,31 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	if ((self = [super init])) {
 		accountDict = [[NSMutableDictionary alloc] init];
 		chatDict = [[NSMutableDictionary alloc] init];
-		
-		sharedInstance = self;
-		
+
 		[self initLibGaim];		
 	}
 	
     return self;
 }
 
-//Our autoreleased objects will only be released when the outermost autorelease pool is released.
-//This is handled automatically in the main thread, but we need to do it manually here.
-//Release the current pool, then create a new one.
+/*!
+ * @brief Empty and recreate the autorelease pool
+ *
+ * Our autoreleased objects will only be released when the outermost autorelease pool is released.
+ * This is handled automatically in the main thread, but we need to do it manually here.
+ */
 - (void)refreshAutoreleasePool:(NSTimer *)inTimer
 {
 	[currentAutoreleasePool release];
 	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
+}
+
+static void ZombieKiller_Signal(int i)
+{
+	int status;
+	pid_t child_pid;
+
+	while ((child_pid = waitpid(-1, &status, WNOHANG)) > 0);
 }
 
 - (void)initLibGaim
@@ -149,6 +183,17 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	if (!gaim_core_init("Adium")) {
 		NSLog(@"*** FATAL ***: Failed to initialize gaim core");
 		GaimDebug (@"*** FATAL ***: Failed to initialize gaim core");
+	}
+	
+	//Libgaim's async DNS lookup tends to create zombies.
+	{
+		struct sigaction act;
+		
+		act.sa_handler = ZombieKiller_Signal;		
+		//Send for terminated but not stopped children
+		act.sa_flags = SA_NOCLDWAIT;
+
+		sigaction(SIGCHLD, &act, NULL);
 	}
 }
 
@@ -423,17 +468,20 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						 objects, each of which has a label and identifier.  Each may also have is_int, with a minimum
 						 and a maximum integer value.
 						 */
-						list = (GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info(gc);
-
-						//Look at each proto_chat_entry in the list to verify we have it in chatCreationInfo
-						for (tmp = list; tmp; tmp = tmp->next)
+						if ((GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info)
 						{
-							pce = tmp->data;
-							char	*identifier = g_strdup(pce->identifier);
-							
-							NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
-							if (!value) {
-								GaimDebug (@"Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+							list = (GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info(gc);
+
+							//Look at each proto_chat_entry in the list to verify we have it in chatCreationInfo
+							for (tmp = list; tmp; tmp = tmp->next)
+							{
+								pce = tmp->data;
+								char	*identifier = g_strdup(pce->identifier);
+								
+								NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
+								if (!value) {
+									GaimDebug (@"Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+								}
 							}
 						}
 					}
@@ -1047,27 +1095,27 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		
 		enumerator = [arguments keyEnumerator];
 		while ((key = [enumerator nextObject])) {
-			const char *valueUTF8String = NULL;
-			id	 value;
+			const char *value = NULL;
+			id	 valueObject;
 
-			value = [arguments objectForKey:key];
+			valueObject = [arguments objectForKey:key];
 			
-			if ([value isKindOfClass:[NSNumber class]]) {
-				valueUTF8String = [[value stringValue] UTF8String];
-				
-			} else if ([value isKindOfClass:[NSString class]]) {
-				valueUTF8String = [value UTF8String];
+			if ([valueObject isKindOfClass:[NSNumber class]]) {
+				value = GINT_TO_POINTER([valueObject intValue]);
+
+			} else if ([valueObject isKindOfClass:[NSString class]]) {
+				value = [valueObject UTF8String];
 			}				
 			
-			if (valueUTF8String) {
+			if (value) {
 				//Append the key
-				attrs = g_list_append(attrs, (char *)[key UTF8String]);
+				attrs = g_list_append(attrs, (gpointer)[key UTF8String]);
 				
 				//Now append the value
-				attrs = g_list_append(attrs, (char *)valueUTF8String);
+				attrs = g_list_append(attrs, (gpointer)value);
 
 			} else {
-				AILog(@"Warning; could not determine value of %@ for key %@, statusID %s",value,key,statusID);
+				AILog(@"Warning; could not determine value of %@ for key %@, statusID %s",valueObject,key,statusID);
 			}
 		}
 	}
@@ -1189,7 +1237,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
 			(g = gaim_buddy_get_group(buddy)) && 
 			(od = account->gc->proto_data)) {
-			aim_ssi_editcomment(od->sess, g->name, uidUTF8String, [comment UTF8String]);	
+			aim_ssi_editcomment(od, g->name, uidUTF8String, [comment UTF8String]);	
 		}
 	}
 }

@@ -16,28 +16,36 @@
 
 @implementation AIMDLogViewerWindowController
 
+- (void)windowDidLoad
+{
+	[super windowDidLoad];
+	
+	[tableView_results setAutosaveName:@"LogViewerResults"];
+	[tableView_results setAutosaveTableColumns:YES];
+}
+
 /*
  * @brief Perform a content search of the indexed logs
  *
  * This uses the 10.4+ asynchronous search functions.
  * Google-like search syntax (phrase, prefix/suffix, boolean, etc. searching) is automatically supported.
  */
-- (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID
+- (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID onSearchIndex:(SKIndexRef)logSearchIndex
 {
-	SKIndexRef			logSearchIndex = [plugin logContentIndex];
-	float				largestRankingValue = 0;
+	float			largestRankingValue = 0;
+	SKSearchRef		thisSearch;
+    Boolean			more = true;
+    UInt32			totalCount = 0;
 
 	if (currentSearch) {
 		SKSearchCancel(currentSearch);
 		CFRelease(currentSearch); currentSearch = NULL;
 	}
 
-	currentSearch = SKSearchCreate(logSearchIndex,
-								   (CFStringRef)searchString,
-								   kSKSearchOptionDefault);
-	
-    Boolean more = true;
-    UInt32 totalCount = 0;
+	thisSearch = SKSearchCreate(logSearchIndex,
+								(CFStringRef)searchString,
+								kSKSearchOptionDefault);
+	currentSearch = (SKSearchRef)CFRetain(thisSearch);
 
 	//Retrieve matches as long as more are pending
     while (more && currentSearch) {
@@ -50,7 +58,7 @@
         CFIndex i;
 		
         more = SKSearchFindMatches (
-									currentSearch,
+									thisSearch,
 									BATCH_NUMBER,
 									foundDocIDs,
 									foundScores,
@@ -85,10 +93,14 @@
 				 * we may get a null log, so be careful.
 				 */
 				theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
+				if (!theLog) {
+					AILog(@"_logContentFilter: %x's key %@ yields %@; logAtPath:%@ gives %@",logToGroupDict,toPath,[logToGroupDict objectForKey:toPath],path,theLog);
+				}
 				[resultsLock lock];
 				if ((theLog != nil) &&
 					(![currentSearchResults containsObjectIdenticalTo:theLog]) &&
-					[self chatLogMatchesDateFilter:theLog]) {
+					[self chatLogMatchesDateFilter:theLog] &&
+					(searchID == activeSearchID)) {
 					[theLog setRankingValueOnArbitraryScale:foundScores[i]];
 					
 					//SearchKit does not normalize ranking scores, so we track the largest we've found and use it as 1.0
@@ -128,10 +140,13 @@
 		}
     }
 	
+	//Ensure current search isn't released in two places simultaneously
 	if (currentSearch) {
 		CFRelease(currentSearch);
 		currentSearch = NULL;
 	}
+	
+	CFRelease(thisSearch);
 }
 
 - (void)stopSearching
@@ -245,60 +260,11 @@
 	return @"LogViewerDateFilter";
 }
 
-#if 0
-/*
- * @brief Return a predicate for searching for a contact, given a key
- *
- * Note that this will work best when accounts are connected, since the contactController only knows about metaContacts while disconnected.
- *
- * @param inString A string which will be searched as (1) the start of a UID and (2) a fragment of a display name. Both are case insensitive
- * @param key The key, such as com_adiumX_chatSource or com_adiumX_chatDestination, on which to base the predicate
- *
- * @result An NSPredicate which ORs together each possible search term for inString, based on Adium's contact information.
- */
-- (NSPredicate *)predicateForContactString:(NSString *)inString key:(NSString *)key
+- (void)dealloc
 {
-	NSPredicate		*predicate;
-	
-	//Use a set to avoid duplicatation of query terms
-	NSMutableSet	*searchStrings = [NSMutableSet set];
-	NSString		*searchString;
-	AIListContact	*contact;
+	[filterDate release]; filterDate = nil;
 
-    NSEnumerator	*enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
-    while ((contact = [enumerator nextObject])) {
-		if ([[contact displayName] rangeOfString:inString options:NSCaseInsensitiveSearch].location  != NSNotFound) {
-			if ([contact isKindOfClass:[AIMetaContact class]]) {
-				NSEnumerator	*subEnumerator = [[(AIMetaContact *)contact containedObjects] objectEnumerator];
-				AIListContact	*containedContact;
-				while ((containedContact = [subEnumerator nextObject])) {
-					[searchStrings addObject:[[containedContact UID] compactedString]];
-				}
-			} else {
-				[searchStrings addObject:[[contact UID] compactedString]];
-			}
-		}
-	}
-	
-	[searchStrings addObject:[NSString stringWithFormat:@"%@*", [inString compactedString]]];
-
-	//NSCompoundPredicate will throw an exception if passed an array of one predicate
-	if ([searchStrings count] > 1) {
-		NSMutableArray	*predicates = [NSMutableArray array];
-
-		enumerator = [searchStrings objectEnumerator];
-		while ((searchString = [enumerator nextObject])) {
-			[predicates addObject:[NSPredicateClass predicateWithFormat:@"%K like[c] %@", key, searchString]];
-		}
-		
-		predicate = [NSCompoundPredicateClass orPredicateWithSubpredicates:predicates];
-	} else {
-		searchString = [searchStrings anyObject];
-		predicate = [NSPredicateClass predicateWithFormat:@"%K like[c] %@", key, searchString];
-	}
-	
-	return predicate;
+	[super dealloc];
 }
-#endif
 
 @end

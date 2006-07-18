@@ -22,7 +22,7 @@
 //its count must be the same as the number of rows
 - (NSArray *)arrayOfSelectedItemsUsingSourceArray:(NSArray *)sourceArray
 {
-	NSParameterAssert([sourceArray count] == [self numberOfRows]);
+	NSParameterAssert([sourceArray count] >= [self numberOfRows]);
 
 	NSMutableArray 	*itemArray = [NSMutableArray array];
 	id 				item;
@@ -30,7 +30,7 @@
 	//Apple wants us to do some pretty crazy stuff for selections in 10.3
 	NSIndexSet *indices = [self selectedRowIndexes];
 	unsigned int bufSize = [indices count];
-	unsigned int *buf = malloc(bufSize + sizeof(unsigned int));
+	unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
 	unsigned int i;
 
 	NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
@@ -45,6 +45,26 @@
 	free(buf);
 
 	return itemArray;
+}
+
+- (void)selectItemsInArray:(NSArray *)selectedItems usingSourceArray:(NSArray *)sourceArray
+{
+	if ([sourceArray count] != [self numberOfRows]) {
+		NSLog(@"SourceArray is %i; rows is %i",[sourceArray count],[self numberOfRows]);
+	}
+
+	NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
+	
+	NSEnumerator *enumerator = [selectedItems objectEnumerator];
+	id	item;
+	while ((item = [enumerator nextObject])) {
+		int i = [sourceArray indexOfObject:item];
+		if (i != NSNotFound) {
+			[indexes addIndex:i];
+		}
+	}
+	
+	[self selectRowIndexes:indexes byExtendingSelection:NO];
 }
 
 @end

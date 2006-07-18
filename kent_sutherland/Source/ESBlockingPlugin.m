@@ -22,6 +22,7 @@
 #import "AIChatController.h"
 #import "ESBlockingPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
@@ -29,14 +30,16 @@
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIChat.h>
 
-#define BLOCK_CONTACT				AILocalizedString(@"Block","Block Contact menu item")
-#define UNBLOCK_CONTACT				AILocalizedString(@"Unblock","Unblock Contact menu item")
-#define TOOLBAR_ITEM_IDENTIFIER		@"chatItem"
+#define BLOCK						AILocalizedString(@"Block","Block Contact menu item")
+#define UNBLOCK						AILocalizedString(@"Unblock","Unblock Contact menu item")
+#define BLOCK_MENUITEM				[BLOCK stringByAppendingEllipsis]
+#define UNBLOCK_MENUITEM			[UNBLOCK stringByAppendingEllipsis]
+#define TOOLBAR_ITEM_IDENTIFIER		@"BlockParticipants"
 #define TOOLBAR_BLOCK_ICON_KEY		@"Block"
 #define TOOLBAR_UNBLOCK_ICON_KEY	@"Unblock"
 
 @interface ESBlockingPlugin(PRIVATE)
-- (void)_blockContact:(AIListContact *)contact unblock:(BOOL)unblock;
+- (void)_setContact:(AIListContact *)contact isBlocked:(BOOL)isBlocked;
 - (BOOL)_searchPrivacyListsForListContact:(AIListContact *)contact withDesiredResult:(BOOL)desiredResult;
 - (void)accountConnected:(NSNotification *)notification;
 - (BOOL)areAllGivenContactsBlocked:(NSArray *)contacts;
@@ -63,7 +66,7 @@
 - (void)installPlugin
 {
 	//Install the Block menu items
-	blockContactMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_CONTACT
+	blockContactMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_MENUITEM
 													  target:self
 													  action:@selector(blockContact:)
 											   keyEquivalent:@"b"];
@@ -73,7 +76,7 @@
 	[[adium menuController] addMenuItem:blockContactMenuItem toLocation:LOC_Contact_NegativeAction];
 
     //Add our get info contextual menu items
-    blockContactContextualMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_CONTACT
+    blockContactContextualMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_MENUITEM
 																target:self
 																action:@selector(blockContact:)
 														 keyEquivalent:@""];
@@ -93,9 +96,9 @@
 								[NSImage imageNamed:@"unblock.png" forClass:[self class]], TOOLBAR_UNBLOCK_ICON_KEY, 
 								nil];
 	NSToolbarItem	*chatItem = [AIToolbarUtilities toolbarItemWithIdentifier:TOOLBAR_ITEM_IDENTIFIER
-																		label:BLOCK_CONTACT
-																 paletteLabel:BLOCK_CONTACT
-																	  toolTip:BLOCK_CONTACT
+																		label:BLOCK
+																 paletteLabel:BLOCK
+																	  toolTip:AILocalizedString(@"Blocking prevents a contact from contacting you or seeing your online status.", nil)
 																	   target:self
 															  settingSelector:@selector(setImage:)
 																  itemContent:[blockedToolbarIcons valueForKey:TOOLBAR_BLOCK_ICON_KEY]
@@ -155,19 +158,19 @@
 	//Don't do groups
 	if ([object isKindOfClass:[AIListContact class]]) {
 		AIListContact	*contact = (AIListContact *)object;
-		BOOL			unblock;
+		BOOL			shouldBlock;
 		NSString		*format;
-		
-		unblock = [[sender title] isEqualToString:UNBLOCK_CONTACT];
-		format = (unblock ? 
-				  AILocalizedString(@"Are you sure you want to unblock %@?",nil) :
-				  AILocalizedString(@"Are you sure you want to block %@?",nil));
+
+		shouldBlock = [[sender title] isEqualToString:BLOCK_MENUITEM];
+		format = (shouldBlock ? 
+				  AILocalizedString(@"Are you sure you want to block %@?",nil) :
+				  AILocalizedString(@"Are you sure you want to unblock %@?",nil));
 
 		if (NSRunAlertPanel([NSString stringWithFormat:format, [contact displayName]],
-						   @"",
-						   [sender title],
-						   AILocalizedString(@"Cancel", nil),
-						   nil) == NSAlertDefaultReturn) {
+							@"",
+							(shouldBlock ? BLOCK : UNBLOCK),
+							AILocalizedString(@"Cancel", nil),
+							nil) == NSAlertDefaultReturn) {
 			
 			//Handle metas
 			if ([object isKindOfClass:[AIMetaContact class]]) {
@@ -180,7 +183,7 @@
 				while ((containedContact = [enumerator nextObject])) {
 					AIAccount <AIAccount_Privacy> *acct = [containedContact account];
 					if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-						[self _blockContact:containedContact unblock:unblock];
+						[self _setContact:containedContact isBlocked:shouldBlock];
 					} else {
 						NSLog(@"Account %@ does not support blocking (contact %@ not blocked on this account)", acct, containedContact);
 					}
@@ -189,11 +192,14 @@
 				AIListContact *contact = (AIListContact *)object;
 				AIAccount <AIAccount_Privacy> *acct = [contact account];
 				if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-					[self _blockContact:contact unblock:unblock];
+					[self _setContact:contact isBlocked:shouldBlock];
 				} else {
 					NSLog(@"Account %@ does not support blocking (contact %@ not blocked on this account)", acct, contact);
 				}
 			}
+			
+			[[adium notificationCenter] postNotificationName:@"AIPrivacySettingsChangedOutsideOfPrivacyWindow"
+													  object:nil];		
 		}
 	}
 }
@@ -201,7 +207,7 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	AIListObject *object;
-	BOOL unblock = [[menuItem title] isEqualToString:UNBLOCK_CONTACT];
+	BOOL unblock = [[menuItem title] isEqualToString:UNBLOCK_MENUITEM];
 	BOOL anyAccount = NO;
 	
 	if (menuItem == blockContactMenuItem) {
@@ -224,16 +230,16 @@
 				AIAccount <AIAccount_Privacy> *acct = [contact account];
 				if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
 					anyAccount = YES;
-					PRIVACY_TYPE privType = [acct privacyOptions] == PRIVACY_ALLOW_USERS ? PRIVACY_PERMIT : PRIVACY_DENY;
+					AIPrivacyType privType = [acct privacyOptions] == AIPrivacyOptionAllowUsers ? AIPrivacyTypePermit : AIPrivacyTypeDeny;
 					if ([[acct listObjectsOnPrivacyList:privType] containsObject:contact]) {
 						//title: "Unblock"; enabled
-						if (!unblock && PRIVACY_PERMIT == privType) {
+						if (!unblock && AIPrivacyTypePermit == privType) {
 							//removing the guy is blocking him
-							[menuItem setTitle:BLOCK_CONTACT];
+							[menuItem setTitle:BLOCK_MENUITEM];
 						}
-						else if (unblock && PRIVACY_DENY == privType) {
+						else if (unblock && AIPrivacyTypeDeny == privType) {
 							//removing him is unblocking
-							[menuItem setTitle:UNBLOCK_CONTACT];
+							[menuItem setTitle:UNBLOCK_MENUITEM];
 						}
 						return YES;
 					}
@@ -243,39 +249,39 @@
 			if (anyAccount) {
 				//title: "Block"; enabled
 				if (unblock) {
-					[menuItem setTitle:BLOCK_CONTACT];
+					[menuItem setTitle:BLOCK_MENUITEM];
 				}
 				return YES;
 			} else {
 				//title: "Block"; disabled
-				[menuItem setTitle:BLOCK_CONTACT];
+				[menuItem setTitle:BLOCK_MENUITEM];
 				return NO;
 			}
 		} else {
 			AIListContact *contact = (AIListContact *)object;
 			AIAccount <AIAccount_Privacy> *acct = [contact account];
 			if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-				PRIVACY_TYPE privType = [acct privacyOptions] == PRIVACY_ALLOW_USERS ? PRIVACY_PERMIT : PRIVACY_DENY;
+				AIPrivacyType privType = [acct privacyOptions] == AIPrivacyOptionAllowUsers ? AIPrivacyTypePermit : AIPrivacyTypeDeny;
 				if ([[acct listObjectsOnPrivacyList:privType] containsObject:contact]) {
 					//title: "Unblock"; enabled
-					if (!unblock && PRIVACY_PERMIT == privType) {
-						[menuItem setTitle:BLOCK_CONTACT];
+					if (!unblock && AIPrivacyTypePermit == privType) {
+						[menuItem setTitle:BLOCK_MENUITEM];
 					}
-					else if (unblock && PRIVACY_DENY == privType) {
-						[menuItem setTitle:UNBLOCK_CONTACT];
+					else if (unblock && AIPrivacyTypeDeny == privType) {
+						[menuItem setTitle:UNBLOCK_MENUITEM];
 					}
 					return YES;
 				} else {
 					//title: "Block"; enabled
-					if (!unblock && PRIVACY_PERMIT == privType)
-						[menuItem setTitle:UNBLOCK_CONTACT];
-					else if (unblock && PRIVACY_DENY == privType)
-						[menuItem setTitle:BLOCK_CONTACT];
+					if (!unblock && AIPrivacyTypePermit == privType)
+						[menuItem setTitle:UNBLOCK_MENUITEM];
+					else if (unblock && AIPrivacyTypeDeny == privType)
+						[menuItem setTitle:BLOCK_MENUITEM];
 					return YES;
 				}
 			} else {
 				//title: "Block"; disabled
-				[menuItem setTitle:BLOCK_CONTACT];
+				[menuItem setTitle:BLOCK_MENUITEM];
 				return NO;
 			}
 		}
@@ -287,22 +293,37 @@
 #pragma mark Private
 //Private --------------------------------------------------------------------------------------------------------------
 
-- (void)_blockContact:(AIListContact *)contact unblock:(BOOL)unblock
+- (void)_setContact:(AIListContact *)contact isBlocked:(BOOL)isBlocked
 {
 	//We want to block on all accounts with the same service class. If you want someone gone, you want 'em GONE.
 	NSEnumerator	*enumerator = [[[adium accountController] accountsCompatibleWithService:[contact service]] objectEnumerator];
 	AIAccount<AIAccount_Privacy>	*account = nil;
 	AIListContact	*sameContact = nil;
-	
+
 	while ((account = [enumerator nextObject])) {
 		sameContact = [account contactWithUID:[contact UID]];
 		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
 			
 			if (sameContact){ 
-				if ([account privacyOptions] == PRIVACY_DENY_USERS)
-					[sameContact setIsBlocked:!unblock updateList:YES];
-				else
-					[sameContact setIsAllowed:unblock updateList:YES];
+				/* If the account is in AIPrivacyOptionAllowUsers mode, blocking a contact means removing it from the allow list.
+				 * Similarly, in allow mode, unblocking a contact means adding it to the allow list.
+				 *
+				 * In AIPrivacyOptionDenyUsers mode, blocking a contact means adding it to the block list.
+				 *
+				 * In all other modes, we can't block specific contacts... so we first switch to AIPrivacyOptionDenyUsers, the more lenient
+				 * of the two possibilities, then add the contact to the block list.
+				 */
+				AIPrivacyOption privacyOption = [account privacyOptions];
+				if (privacyOption == AIPrivacyOptionAllowUsers) {
+					[sameContact setIsAllowed:!isBlocked updateList:YES];
+
+				} else {
+					if (privacyOption != AIPrivacyOptionDenyUsers) {
+						[account setPrivacyOptions:AIPrivacyOptionDenyUsers];
+					}
+
+					[sameContact setIsBlocked:isBlocked updateList:YES];
+				}
 			}
 		}
 	}
@@ -318,7 +339,7 @@
 	while ((account = [enumerator nextObject])) {
 		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
 			AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
-			if ([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]] == desiredResult) {
+			if ([[privacyAccount listObjectIDsOnPrivacyList:AIPrivacyTypeDeny] containsObject:[contact UID]] == desiredResult) {
 				return YES;
 			}
 		}
@@ -344,7 +365,7 @@
 		while ((currentContact = [contactEnumerator nextObject])) {
 			//NSLog(@"The current contact is: %@", currentContact);
 			
-			if ([[(AIAccount <AIAccount_Privacy> *)accountConnected listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[currentContact UID]]) {
+			if ([[(AIAccount <AIAccount_Privacy> *)accountConnected listObjectIDsOnPrivacyList:AIPrivacyTypeDeny] containsObject:[currentContact UID]]) {
 				//inform the contact that they're blocked
 				[currentContact setIsBlocked:YES updateList:NO];
 				//NSLog(@"** %@ is blocked **", [currentContact formattedUID]);
@@ -524,13 +545,13 @@
 {
 	if ([self areAllGivenContactsBlocked:[chat participatingListObjects]]) {
 		//assume unblock appearance
-		[item setLabel:UNBLOCK_CONTACT];
-		[item setPaletteLabel:UNBLOCK_CONTACT];
+		[item setLabel:UNBLOCK];
+		[item setPaletteLabel:UNBLOCK];
 		[item setImage:[blockedToolbarIcons valueForKey:TOOLBAR_UNBLOCK_ICON_KEY]];
 	} else {
 		//assume block appearance
-		[item setLabel:BLOCK_CONTACT];
-		[item setPaletteLabel:BLOCK_CONTACT];
+		[item setLabel:BLOCK];
+		[item setPaletteLabel:BLOCK];
 		[item setImage:[blockedToolbarIcons valueForKey:TOOLBAR_BLOCK_ICON_KEY]];
 	}
 }

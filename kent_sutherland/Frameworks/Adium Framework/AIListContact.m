@@ -474,18 +474,18 @@
 
 - (void)setIsBlocked:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists
 {
-	[self setIsOnPrivacyList:yesOrNo updateList:addToPrivacyLists privacyType:PRIVACY_DENY];
+	[self setIsOnPrivacyList:yesOrNo updateList:addToPrivacyLists privacyType:AIPrivacyTypeDeny];
 }
 
 - (void)setIsAllowed:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists
 {
-	[self setIsOnPrivacyList:yesOrNo updateList:addToPrivacyLists privacyType:PRIVACY_PERMIT];
+	[self setIsOnPrivacyList:yesOrNo updateList:addToPrivacyLists privacyType:AIPrivacyTypePermit];
 }
 
 /*!
  * @brief Set if this contact is on the privacy list
  */
-- (void)setIsOnPrivacyList:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists privacyType:(PRIVACY_TYPE)privType
+- (void)setIsOnPrivacyList:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists privacyType:(AIPrivacyType)privType
 {
 	if (addToPrivacyLists) {
 		//caller of this method wants to block the contact
@@ -509,7 +509,7 @@
 			
 			//update status object
 			if (result) {
-				[self setStatusObject:((privType == PRIVACY_DENY) == yesOrNo) ? [NSNumber numberWithBool:YES] : nil
+				[self setStatusObject:((privType == AIPrivacyTypeDeny) == yesOrNo) ? [NSNumber numberWithBool:YES] : nil
 							   forKey:KEY_IS_BLOCKED 
 							   notify:NotifyNow];
 			}
@@ -518,7 +518,7 @@
 		}
 	} else {
 		//caller of this method just wants to update the status object
-		[self setStatusObject:((privType == PRIVACY_DENY) == yesOrNo) ? [NSNumber numberWithBool:YES] : nil
+		[self setStatusObject:((privType == AIPrivacyTypeDeny) == yesOrNo) ? [NSNumber numberWithBool:YES] : nil
 					   forKey:KEY_IS_BLOCKED 
 					   notify:NotifyNow];
 	}

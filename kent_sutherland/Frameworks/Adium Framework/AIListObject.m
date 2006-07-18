@@ -738,6 +738,12 @@
 }
 */
 
+#pragma mark Icons
+- (NSImage *)menuIcon
+{
+	return [AIUserIcons menuUserIconForObject:self];
+}
+
 #pragma mark Debugging
 - (NSString *)description
 {

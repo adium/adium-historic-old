@@ -45,8 +45,8 @@
 
 - (NSString *)string;
 
-- (NSString *)stringByEscapingForHTML;
-- (NSString *)stringByUnescapingFromHTML;
+- (NSString *)stringByEscapingForXMLWithEntities:(NSDictionary *)entities;
+- (NSString *)stringByUnescapingFromXMLWithEntities:(NSDictionary *)entities;
 
 - (NSString *)stringByEscapingForShell;
 //- (BOOL)isURLEncoded;
@@ -75,5 +75,13 @@
 + (BOOL) stringIsEmpty: (NSString *) s;
 
 + (NSString *)uuid;
+
++ (NSString *)stringWithFloat:(float)f maxDigits:(unsigned)numDigits;
+
+//If you provide a separator object, it will be recorded in the array whenever a newline is encountered.
+//Newline is any of CR, LF, CRLF, LINE SEPARATOR, or PARAGRAPH SEPARATOR.
+//If you do not provide a separator object (pass nil or use the other method), separators are not recorded; you get only the lines, with nothing between them.
+- (NSArray *)allLinesWithSeparator:(NSObject *)separatorObj;
+- (NSArray *)allLines;
 
 @end

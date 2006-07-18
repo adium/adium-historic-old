@@ -140,6 +140,7 @@ typedef enum {
 - (void)setNotes:(NSString *)notes;
 
 - (NSImage *)userIcon;
+- (NSImage *)menuIcon;
 - (NSData *)userIconData;
 - (void)setUserIconData:(NSData *)inData;
 - (NSImage *)displayUserIcon;

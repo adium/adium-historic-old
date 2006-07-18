@@ -7,6 +7,7 @@
 
 #import "GetMetadataForHTMLLog.h"
 #import "GetMetadataForHTMLLog-Additions.h"
+#import <AIUtilities/AIStringAdditions.h>
 
 static char *gaim_markup_strip_html(const char *str);
 
@@ -104,9 +105,8 @@ NSString *GetTextContentForHTMLLog(NSString *pathToFile)
 	/* Perhaps we want to decode the HTML instead of stripping it so we can process
 	 * the attributed contents to turn links into link (URL) for searching purposes...
 	 */
-	NSString	*textContent = [NSString stringWithContentsOfFile:pathToFile
-														 encoding:NSUTF8StringEncoding 
-															error:NULL];
+	NSString	*textContent = [NSString stringWithContentsOfUTF8File:pathToFile];
+
 	if (textContent) {
 		//Strip the HTML markup
 		char *plainText = gaim_markup_strip_html([textContent UTF8String]);
@@ -115,7 +115,7 @@ NSString *GetTextContentForHTMLLog(NSString *pathToFile)
 	} else {
 		textContent = nil;
 	}
-	
+
 	return textContent;
 }
 
@@ -206,7 +206,7 @@ static char *strndup (const char *s, int n)
 }
 
 static char *gaim_unescape_html(const char *html) {
-	return strdup([[[NSString stringWithUTF8String:html] stringByUnescapingFromHTML] UTF8String]);
+	return strdup([[[NSString stringWithUTF8String:html] stringByUnescapingFromXMLWithEntities:nil] UTF8String]);
 }
 
 /* The following are probably reasonable changes:

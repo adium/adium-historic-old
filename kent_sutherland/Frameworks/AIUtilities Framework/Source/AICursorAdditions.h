@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface NSCursor (AICursorAdditions)
-+ (void)setOpenGrabHandCursor;
-+ (void)setClosedGrabHandCursor;
-+ (void)setHandPointCursor;
+
+- (NSString *) CSSRepresentation;
+
 @end

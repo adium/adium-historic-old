@@ -88,4 +88,13 @@ void gaim_account_set_bool(void *account, const char *name,
 	return host;
 }
 
+- (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
+{
+	if ([[inContact UID] isEqualToString:@"nickserv"] ||
+		[[inContact UID] isEqualToString:@"chanserv"]) {
+		return YES;
+	} else {
+		return NO;
+	}
+}
 @end

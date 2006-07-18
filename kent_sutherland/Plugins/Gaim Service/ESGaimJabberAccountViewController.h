@@ -20,6 +20,8 @@
 @interface ESGaimJabberAccountViewController : AIAccountViewController {
     IBOutlet	NSTextField *textField_connectServer;
 	IBOutlet	NSTextField *textField_resource;
+	IBOutlet	NSTextField *textField_priorityAvailable;
+	IBOutlet	NSTextField *textField_priorityAway;
 	IBOutlet	NSButton	*checkBox_useTLS;
 	IBOutlet	NSButton	*checkBox_forceOldSSL;
 	IBOutlet	NSButton	*checkBox_allowPlaintext;

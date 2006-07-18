@@ -77,7 +77,7 @@
 
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
-	return [NSImage imageNamed:@"MessageAlert" forClass:[self class]];
+	return [NSImage imageNamed:@"message" forClass:[self class]];
 }
 
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID

@@ -37,6 +37,26 @@
     return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone
+{
+	AITextAttachmentExtension *ret = [[[self class] allocWithZone:zone] init];
+	
+	if(ret == nil)
+		return nil;
+	
+	[ret setAttachmentCell:[self attachmentCell]];
+	
+	[ret setString:stringRepresentation];
+	[ret setShouldSaveImageForLogging:shouldSaveImageForLogging];
+	[ret setHasAlternate:hasAlternate];
+	[ret setPath:path];
+	[ret setImage:image];
+	[ret setImageClass:imageClass];
+	[ret setShouldAlwaysSendAsText:shouldAlwaysSendAsText];
+	
+	return ret;
+}
+
 /*
  * @brief Deallocate
  */

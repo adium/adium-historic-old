@@ -27,6 +27,7 @@
 @interface AIWebKitMessageViewController : AIObject <AIMessageViewController> {
 	id							plugin;
 	ESWebView					*webView;
+	id							preferencesChangedDelegate;
 	AIChat						*chat;
 	BOOL						shouldReflectPreferenceChanges;
 
@@ -85,4 +86,5 @@
  */
 - (void)setShouldReflectPreferenceChanges:(BOOL)inValue;
 
+- (void)setPreferencesChangedDelegate:(id)inDelegate;
 @end

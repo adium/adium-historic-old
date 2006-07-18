@@ -22,6 +22,8 @@
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AISetAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
@@ -29,6 +31,7 @@
 
 #import <Adium/AITextAttachmentExtension.h>
 #import <Adium/ESFileWrapperExtension.h>
+#import <Adium/AIXMLElement.h>
 
 int HTMLEquivalentForFontSize(int fontSize);
 
@@ -45,7 +48,6 @@ int HTMLEquivalentForFontSize(int fontSize);
 		   withName:(NSString *)inName 
 		 imageClass:(NSString *)imageClass
 		 imagesPath:(NSString *)imagesPath;
-- (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string;
 @end
 
 @interface NSString (AIHTMLDecoderAdditions)
@@ -64,7 +66,7 @@ static NSString			*horizontalRule = nil;
 		_defaultTextDecodingAttributes = [[AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12] retain];
 	}
 
-	//Set up the horizontal rule which will be search for when encoding and inserted when decoding
+	//Set up the horizontal rule which will be searched-for when encoding and inserted when decoding
 	if (!horizontalRule) {
 #define HORIZONTAL_BAR			0x2013
 #define HORIZONTAL_RULE_LENGTH	12
@@ -109,7 +111,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		
 		thingsToInclude.allowAIMsubprofileLinks			= NO;
 	}
-
+	
 	return self;
 }
 
@@ -191,7 +193,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	return argDict;
 }
 
-- (NSString *)encodeHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesSavePath
+- (NSString *)encodeLooseHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesSavePath
 {
 	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
 	NSRange			 searchRange;
@@ -205,7 +207,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	//Setup the destination HTML string
 	NSMutableString *string = [NSMutableString string];
 	if (thingsToInclude.headers) {
-			[string appendString:@"<HTML>"];
+		[string appendString:@"<HTML>"];
 	}
 
 	//If the text is right-to-left, enclose all our HTML in an rtl DIV tag
@@ -308,7 +310,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			}
 
 			//Size
-			if (thingsToInclude.fontTags && !thingsToInclude.simpleTagsOnly) {
+			if (!thingsToInclude.simpleTagsOnly) {
 				[string appendString:[NSString stringWithFormat:@" ABSZ=\"%i\" SIZE=\"%i\"", (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
 				currentSize = pointSize;
 			}
@@ -368,13 +370,13 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				currentBold = YES;
 			}
         
-        if (currentStrikethrough && !hasStrikethrough) {
-           [string appendString:@"</S>"];
-           currentStrikethrough = NO;
-        } else if (!currentStrikethrough && hasStrikethrough) {
-           [string appendString:@"<S>"];
-           currentStrikethrough = YES;
-        }
+			if (currentStrikethrough && !hasStrikethrough) {
+				[string appendString:@"</S>"];
+				currentStrikethrough = NO;
+			} else if (!currentStrikethrough && hasStrikethrough) {
+				[string appendString:@"<S>"];
+				currentStrikethrough = YES;
+			}
 		}
 
 		//Link
@@ -417,6 +419,12 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 																  effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
 
 				if (textAttachment) {
+					if (![textAttachment isKindOfClass:[AITextAttachmentExtension class]]) {
+						NSLog(@"Message %@ gave an NSTextAttachment %@ - why is it not an AITextAttachmentExtension?",
+							  inMessage,
+							  textAttachment);
+						continue;
+					}
 					AITextAttachmentExtension *attachment = (AITextAttachmentExtension *)textAttachment;
 					/* If we have a path to which we want to save any images and either
 					 *		the attachment should save such images OR
@@ -596,10 +604,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	//Finish off the HTML
 	if (thingsToInclude.styleTags) {
-		if (currentItalic) [string appendString:@"</I>"];
-		if (currentBold) [string appendString:@"</B>"];
-		if (currentUnderline) [string appendString:@"</U>"];
-      if (currentStrikethrough) [string appendString:@"</S>"];
+		if (currentItalic)        [string appendString:@"</I>"];
+		if (currentBold)          [string appendString:@"</B>"];
+		if (currentUnderline)     [string appendString:@"</U>"];
+		if (currentStrikethrough) [string appendString:@"</S>"];
 	}
 	
 	//If we had a link on the last pass, close the link tag
@@ -608,13 +616,23 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		[string appendString:@"</a>"];
 		oldLink = nil;
 	}
-	
-	if (thingsToInclude.fontTags && thingsToInclude.closingFontTags && openFontTag) [string appendString:@"</FONT>"]; //Close any open font tag
+
+	if (thingsToInclude.fontTags && thingsToInclude.closingFontTags && openFontTag) {
+		//Close any open font tag
+		[string appendString:@"</FONT>"];
+	}
 	if (rightToLeft) {
+		//Close any open div
 		[string appendString:@"</DIV>"];
 	}
-	if (thingsToInclude.headers && pageColor) [string appendString:@"</BODY>"]; //Close the body tag
-	if (thingsToInclude.headers) [string appendString:@"</HTML>"]; //Close the HTML
+	if (thingsToInclude.headers && pageColor) {
+		//Close the body tag
+		[string appendString:@"</BODY>"];
+	}
+	if (thingsToInclude.headers) {
+		//Close the HTML
+		[string appendString:@"</HTML>"];
+	}
 	
 	//KBOTC's odd hackish body background thingy for WMV since no one else will add it
 	if (thingsToInclude.bodyBackground &&
@@ -630,6 +648,327 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	}
 
 	return string;
+}
+
+- (AIXMLElement *)elementWithAppKitAttributes:(NSDictionary *)attributes attributeNames:(NSSet *)attributeNames elementContent:(NSMutableString *)elementContent shouldAddElementContentToTopElement:(out BOOL *)outAddElementContentToTopElement
+{
+	if (!(attributes && [attributes count] && attributeNames && [attributeNames count]))
+		return nil;
+
+	attributes = [attributes dictionaryWithIntersectionWithSetOfKeys:attributeNames];
+
+	NSString         *linkValue       = [attributes objectForKey:NSLinkAttributeName];
+	NSTextAttachment *attachmentValue = [attributes objectForKey:NSAttachmentAttributeName];
+
+	NSString *elementName = linkValue ? @"a" : @"span";
+	BOOL moreThanJustAnImage = [attributes count] - (attachmentValue != nil);
+
+	BOOL addElementContentToTopElement = YES;
+	AIXMLElement *thisElement = moreThanJustAnImage ? [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:elementName] : nil;
+	if (linkValue) {
+		[thisElement setValue:linkValue forKey:@"href"];
+	}
+
+	if (attachmentValue) {
+		AITextAttachmentExtension *extension = (AITextAttachmentExtension *)attachmentValue;
+		if ((thingsToInclude.attachmentTextEquivalents ||
+			([extension respondsToSelector:@selector(shouldAlwaysSendAsText)] && [extension shouldAlwaysSendAsText])) &&
+			([extension respondsToSelector:@selector(string)])) {
+			[elementContent setString:[extension string]];
+#if 0
+		} else {
+			/*XXX This doesn't work yet, and I have no interest in fixing it because nothing that receives the output from this method will have any use for the images.
+			*It's not known whether any XHTML-IM clients support data: URLs, and the logs probably will not retain images either.
+			*Feel free to hack on this if you find something that will want images.
+			*I would recommend allocating a bit from the bitfield to control it, though.
+			*--boredzo
+			*
+			*The log viewer now uses the output of this method and definitely does have use for images :)
+			*/
+			AIXMLElement *imageElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"img"];
+			[imageElement setSelfCloses:YES];
+
+			NSTextAttachmentCell *cell = (NSTextAttachmentCell *)[attachmentValue attachmentCell];
+			NSSize size = [cell cellSize];
+			[imageElement setValue:[NSNumber numberWithFloat:size.width]  forKey:@"width"];
+			[imageElement setValue:[NSNumber numberWithFloat:size.height] forKey:@"height"];
+
+			NSString *path = [[attachmentValue fileWrapper] filename];
+			//XXX If !path, write the image to the save path passed to -encodeStrictXHTML:imagesPath:.
+			if (path) {
+				NSURL *fileURL = [NSURL fileURLWithPath:path];
+				[imageElement setValue:fileURL forKey:@"src"];
+			}
+
+			if (elementContent && [elementContent length]) {
+				[imageElement setValue:elementContent forKey:@"alt"];
+			}
+
+			if (thisElement) {
+				[thisElement addObject:imageElement];
+			} else {
+				thisElement = imageElement;
+			}
+
+			addElementContentToTopElement = NO;
+#endif
+		}
+	}
+
+	NSString *CSSString = [NSAttributedString CSSStringForTextAttributes:attributes];
+	if (CSSString && [CSSString length]) {
+		[thisElement setValue:CSSString forKey:@"style"];
+	}
+
+	if (outAddElementContentToTopElement) {
+		*outAddElementContentToTopElement = addElementContentToTopElement;
+	}
+
+	return thisElement;
+}
+- (NSDictionary *)attributesByReplacingNSFontAttributeNameWithAIFontAttributeNames:(NSDictionary *)attributes
+{
+	NSFont *font = [[attributes objectForKey:NSFontAttributeName] retain];
+	if (!font) {
+		return [[attributes retain] autorelease];
+	} else {
+		NSMutableDictionary *mutableAttributes = [attributes mutableCopy];
+
+		[mutableAttributes removeObjectForKey:NSFontAttributeName];
+
+		[mutableAttributes setObject:[font familyName]
+		                      forKey:AIFontFamilyAttributeName];
+		[mutableAttributes setObject:[NSString stringWithFormat:@"%@pt", [NSString stringWithFloat:[font pointSize] maxDigits:2]]
+		                      forKey:AIFontSizeAttributeName];
+
+		NSFontTraitMask traits = [[NSFontManager sharedFontManager] traitsOfFont:font];
+		if (traits & NSBoldFontMask) {
+			[mutableAttributes setObject:@"bold" forKey:AIFontWeightAttributeName];
+		}
+		if (traits & NSItalicFontMask) {
+			[mutableAttributes setObject:@"italic" forKey:AIFontStyleAttributeName];
+		}
+
+		[font release];
+
+		NSDictionary *result = [NSDictionary dictionaryWithDictionary:mutableAttributes];
+		[mutableAttributes release];
+		return result;
+	}
+}
+
+- (AIXMLElement *)rootStrictXHTMLElementForAttributedString:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesSavePath
+{
+	NSRange			 searchRange;
+
+	//Setup the incoming message as a regular string, and get its length
+	NSString		*inMessageString = [inMessage string];
+	unsigned		 messageLength = [inMessageString length];
+
+	NSSet *emptySet = [NSSet set];
+
+	//These two stacks are parallel. For every element, there should be a set of attribute names, and vice versa.
+	NSMutableArray *elementStack = [NSMutableArray array];
+	NSMutableArray *attributeNamesStack = [NSMutableArray array];
+
+	//Root element: includeHeaders ? <html> : rightToLeft ? <div> : <p>
+
+	if (thingsToInclude.headers) {
+		[elementStack addObject:[AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"html"]];
+		[attributeNamesStack addObject:emptySet];
+
+		AIXMLElement *bodyElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"body"];
+		[[elementStack lastObject] addObject:bodyElement];
+		[elementStack addObject:bodyElement];
+		[attributeNamesStack addObject:emptySet];
+
+		NSColor *pageColor;
+		if ((messageLength > 0) &&
+		   (pageColor = [inMessage attribute:AIBodyColorAttributeName
+									 atIndex:0
+							  effectiveRange:NULL]))
+		{
+			[bodyElement setValue:[@"background-color: " stringByAppendingString:[pageColor CSSRepresentation]] forKey:@"style"];
+		}
+	}
+
+	//If the text is right-to-left, enclose all our HTML in an rtl div tag
+	if ((messageLength > 0) &&
+		([[inMessage attribute:NSParagraphStyleAttributeName
+					   atIndex:0
+				effectiveRange:nil] baseWritingDirection] == NSWritingDirectionRightToLeft))
+	{
+		AIXMLElement *divElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"div"];
+		[divElement setValue:@"rtl" forKey:@"dir"];
+		[[elementStack lastObject] addObject:divElement];
+		[elementStack addObject:divElement];
+		[attributeNamesStack addObject:emptySet];
+	}
+
+	AIXMLElement *paragraphElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"p"];
+	[[elementStack lastObject] addObject:paragraphElement];
+	[elementStack addObject:paragraphElement];
+	[attributeNamesStack addObject:emptySet];
+
+	NSMutableSet *CSSCapableAttributes = [[NSAttributedString CSSCapableAttributesSet] mutableCopy];
+	[CSSCapableAttributes addObject:NSLinkAttributeName];
+	NSSet *CSSCapableAttributesWithNoAttachment = [NSSet setWithSet:CSSCapableAttributes];
+	[CSSCapableAttributes addObject:NSAttachmentAttributeName];
+
+	NSDictionary *prevAttributes = nil;
+	//Loop through the entire string, handling each attribute run.
+	searchRange = NSMakeRange(0,messageLength);
+	while (searchRange.location < messageLength) {
+		NSRange runRange;
+		NSDictionary *attributes = [self attributesByReplacingNSFontAttributeNameWithAIFontAttributeNames:[inMessage attributesAtIndex:searchRange.location longestEffectiveRange:&runRange inRange:searchRange]];
+		attributes = [attributes dictionaryWithIntersectionWithSetOfKeys:CSSCapableAttributes];
+
+		NSSet *startedKeys = nil, *endedKeys = nil;
+		[attributes compareWithPriorDictionary:prevAttributes
+		                          getAddedKeys:&startedKeys
+		                        getRemovedKeys:&endedKeys
+		                    includeChangedKeys:YES];
+		prevAttributes = [attributes dictionaryWithIntersectionWithSetOfKeys:CSSCapableAttributesWithNoAttachment];
+		if([attributes objectForKey:NSAttachmentAttributeName] != nil)
+			runRange.length = 1;  //Encode a single image at a time
+
+		NSMutableSet *mutableEndedKeys = [endedKeys mutableCopy];
+		if (mutableEndedKeys) {
+			//First handle attributes that have ended or changed.
+			if ([mutableEndedKeys count]) {
+				NSMutableSet *attributesToRestore = [NSMutableSet set];
+				NSRange popRange = { [attributeNamesStack count], 0 };
+				while ([mutableEndedKeys count]) {
+					--popRange.location; ++popRange.length;
+
+					NSMutableSet *attributeNames = [attributeNamesStack objectAtIndex:popRange.location];
+					NSSet *intersection = [attributeNames intersectionWithSet:mutableEndedKeys];
+
+					[attributeNames minusSet:intersection];
+					[attributesToRestore unionSet:attributeNames];
+
+					[mutableEndedKeys minusSet:intersection];
+				}
+				[attributeNamesStack removeObjectsInRange:popRange];
+				[elementStack removeObjectsInRange:popRange];
+
+				if (attributesToRestore && [attributesToRestore count]) {
+					//Create a method to generate an element for a set of AppKit attributes. Use it both here and below.
+					AIXMLElement *restoreElement = [self elementWithAppKitAttributes:[attributes dictionaryWithIntersectionWithSetOfKeys:attributesToRestore]
+					                                                  attributeNames:attributesToRestore
+					                                                  elementContent:nil
+					                             shouldAddElementContentToTopElement:NULL];
+					[[elementStack lastObject] addObject:restoreElement];
+					[elementStack addObject:restoreElement];
+
+					[attributeNamesStack addObject:attributesToRestore];
+				}
+			}
+
+			[mutableEndedKeys release];
+		}
+
+		//Now handle attributes that have started or changed.
+		NSMutableString *elementContent = [[[inMessageString substringWithRange:runRange] mutableCopy] autorelease];
+		
+		BOOL addElementContentToTopElement;
+		if ([startedKeys count]) {
+			//Sort the keys by the length of their range.
+			//First, we build a list of [length, attribute-name] arrays.
+			NSMutableArray *startedKeysArray = [[startedKeys allObjects] mutableCopy];
+			for (unsigned i = 0, count = [startedKeysArray count]; i < count; ++i) {
+				NSRange attributeRange;
+				NSString *attributeName = [startedKeysArray objectAtIndex:i];
+				[inMessage  attribute:attributeName
+				              atIndex:searchRange.location
+				longestEffectiveRange:&attributeRange
+				              inRange:searchRange];
+
+				NSMutableArray *item = [[NSMutableArray alloc] initWithCapacity:2];
+				[item addObject:[NSNumber numberWithUnsignedInt:attributeRange.length]];
+				[item addObject:attributeName];
+				[startedKeysArray replaceObjectAtIndex:i withObject:item];
+				[item release];
+			}
+			//Sort. Items will be sorted first by length, then by attribute name.
+			[startedKeysArray sortUsingSelector:@selector(compare:)];
+
+			//Consolidate keys by length.
+			for (unsigned i = 0, count = [startedKeysArray count]; i < count; ++i) {
+				NSMutableSet *itemKeys = [NSMutableSet setWithCapacity:1];
+				[itemKeys addObject:[[startedKeysArray objectAtIndex:i] objectAtIndex:1]];
+
+				//Eat any equal keys that follow.
+				unsigned j = i + 1;
+				while (
+					(j < count)
+				&&	([[[startedKeysArray objectAtIndex:i] objectAtIndex:0] unsignedIntValue] == [[[startedKeysArray objectAtIndex:j] objectAtIndex:0] unsignedIntValue])
+				) {
+					[itemKeys addObject:[[startedKeysArray objectAtIndex:j] objectAtIndex:1]];
+					[startedKeysArray removeObjectAtIndex:j];
+					--count;
+				}
+
+				[[startedKeysArray objectAtIndex:i] replaceObjectAtIndex:1 withObject:itemKeys];
+			}
+
+			//Turn each consolidated bunch of keys into an element.
+			addElementContentToTopElement = NO;
+
+			NSEnumerator *startedKeysEnum = [startedKeysArray objectEnumerator];
+			NSArray *item;
+			while ((item = [startedKeysEnum nextObject])) {
+				NSSet *itemKeys = [item objectAtIndex:1];
+
+				//Only the last value of addElementContentToTopElement matters here, since we're adding elements to the stack, and that flag relates to the top element.
+				AIXMLElement *thisElement = [self elementWithAppKitAttributes:attributes
+															   attributeNames:itemKeys
+															   elementContent:elementContent
+										  shouldAddElementContentToTopElement:&addElementContentToTopElement];
+				if (thisElement) {
+					[[elementStack lastObject] addObject:thisElement];
+					[attributeNamesStack addObject:itemKeys];
+					[elementStack addObject:thisElement];
+				} else if(!addElementContentToTopElement) {
+					[[elementStack lastObject] addObject:elementContent];
+				}
+			}
+			[startedKeysArray release];
+
+		} else {
+			addElementContentToTopElement = YES;
+		}
+
+		if (addElementContentToTopElement) {
+			//Insert an empty BR element between every pair of lines.
+			AIXMLElement *brElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"br"];
+			[brElement setSelfCloses:YES];
+			NSArray *linesAndBRs = [elementContent allLinesWithSeparator:brElement];
+
+			//Add these zero or more lines, with BRs between them, to the top element on the stack.
+			[[elementStack lastObject] addObjectsFromArray:linesAndBRs];
+		}
+
+		searchRange.location += runRange.length;
+		searchRange.length   -= runRange.length;
+	}
+
+	return [elementStack objectAtIndex:0];
+}
+
+- (NSString *)encodeStrictXHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesSavePath
+{
+	NSString *output = [[self rootStrictXHTMLElementForAttributedString:inMessage imagesPath:imagesSavePath] XMLString];
+	if (thingsToInclude.headers) {
+		NSString *doctype = @"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
+		output = [doctype stringByAppendingString:output];
+	}
+	return output;
+}
+
+- (NSString *)encodeHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesSavePath
+{
+	return thingsToInclude.generateStrictXHTML ? [self encodeStrictXHTML:inMessage imagesPath:imagesSavePath] : [self encodeLooseHTML:inMessage imagesPath:imagesSavePath];
 }
 
 - (NSAttributedString *)decodeHTML:(NSString *)inMessage
@@ -676,6 +1015,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		 * All characters before the next HTML entity are textual characters in the current textAttributes. We append
 		 * those characters to our final attributed string with the desired attributes before continuing.
 		 */
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		if ([scanner scanUpToCharactersFromSet:tagCharStart intoString:&chunkString]) {
 			id	languageValue = [textAttributes languageValue];
 			
@@ -942,13 +1282,19 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						[attrString appendString:@" " withAttributes:[textAttributes dictionary]];
 
 					} else if ([chunkString hasPrefix:@"#x"]) {
-						[attrString appendString:[NSString stringWithFormat:@"%C",
-							[chunkString substringFromIndex:1]]
-							withAttributes:[textAttributes dictionary]];
+						NSString *hexString = [chunkString substringFromIndex:2];
+						NSScanner *hexScanner = [NSScanner scannerWithString:hexString];
+						unsigned int character = 0;
+						if([hexScanner scanHexInt:&character])
+							[attrString appendString:[NSString stringWithFormat:@"%C", character]
+									  withAttributes:[textAttributes dictionary]];
 					} else if ([chunkString hasPrefix:@"#"]) {
-						[attrString appendString:[NSString stringWithFormat:@"%C", 
-							[[chunkString substringFromIndex:1] intValue]] 
-							withAttributes:[textAttributes dictionary]];
+						NSString *decString = [chunkString substringFromIndex:1];
+						NSScanner *decScanner = [NSScanner scannerWithString:decString];
+						int character = 0;
+						if([decScanner scanInt:&character])
+							[attrString appendString:[NSString stringWithFormat:@"%C", character]
+									  withAttributes:[textAttributes dictionary]];
 					}
 					else { //Invalid
 						validTag = NO;
@@ -973,6 +1319,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				}
 			}
 		}
+		[pool release];
 	}
 	
 	/* If the string has a constant NSBackgroundColorAttributeName attribute and no AIBodyColorAttributeName,
@@ -1019,7 +1366,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				unsigned absSize = [[inArgs objectForKey:arg] intValue];
 				static int pointSizes[] = { 9, 10, 12, 14, 18, 24, 48, 72 };
 				int size = (absSize <= 8 ? pointSizes[absSize-1] : 12);
-
+				
 				[textAttributes setFontSize:size];
 			}
 
@@ -1316,14 +1663,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		}
 
 		if (inPath) {
-			NSString *localPath = [[NSFileManager defaultManager] uniquePathForPath:[imagesPath stringByAppendingPathComponent:[inPath lastPathComponent]]];
-
-			//Image already exists on disk; copy it to our images path
-			success = [[NSFileManager defaultManager] copyPath:inPath
-														toPath:localPath
-													   handler:nil];
-			success = YES;//HAX, testing
-			inPath = localPath;
+			//Just get it from the original path. This is especially good for emoticons.
+			success = YES;
 
 		} else {
 			/* If we get here, the image is not on disk. If we don't have a path at which to save images,
@@ -1354,8 +1695,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	}
 	
 	if (success) {
-		NSString *srcPath = [[[NSURL fileURLWithPath:inPath] absoluteString] stringByEscapingForHTML];
-		NSString *altName = (inName ? [inName stringByEscapingForHTML] : [srcPath lastPathComponent]);
+		NSString *srcPath = [[[NSURL fileURLWithPath:inPath] absoluteString] stringByEscapingForXMLWithEntities:nil];
+		NSString *altName = (inName ? [inName stringByEscapingForXMLWithEntities:nil] : [srcPath lastPathComponent]);
 
 		if (attachmentImage) {
 			//Include size information if possible
@@ -1371,12 +1712,28 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	return success;
 }
 
-- (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string
+#pragma mark Accessors
+
+- (NSString *) XMLNamespace
 {
-	[string appendFormat:@"<AdiumFT src=\"%@\">", [path stringByEscapingForHTML]];	
+	return XMLNamespace;
+}
+- (void) setXMLNamespace:(NSString *)newXMLNamespace
+{
+	if(XMLNamespace != newXMLNamespace) {
+		[XMLNamespace release];
+		XMLNamespace = [newXMLNamespace copy];
+	}
 }
 
-#pragma mark Accessors
+- (BOOL)generatesStrictXHTML
+{
+	return thingsToInclude.generateStrictXHTML;
+}
+- (void)setGeneratesStrictXHTML:(BOOL)newValue
+{
+	thingsToInclude.generateStrictXHTML = newValue;
+}
 
 - (BOOL)includesHeaders
 {

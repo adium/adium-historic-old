@@ -67,11 +67,16 @@ SecuridProvider
 	private BridgeToAdiumHandler h;
 	
 	static private final Logger LOGGER = Logger.getLogger("net.adium.joscarBridge");
-	
+	static private boolean configuredLogging = false;
+
 	public joscarBridge(int	enableLogging) {
 		Logger l;
 		Handler[] handlers;
 		Level generalLevel, joscarLevel;
+
+		//We only need to configure logging once, since it applies at a class level
+		if (configuredLogging == true) return;
+		configuredLogging = true;
 
 		h = new BridgeToAdiumHandler();
 		h.setFormatter(new CoolFormatter());
@@ -224,21 +229,18 @@ SecuridProvider
     public void buddyInfoChanged(BuddyInfoManager manager, Screenname buddy,
 								 BuddyInfo info, PropertyChangeEvent event) {
 		String	changedProperty = event.getPropertyName();
-		
+
 		HashMap map = new HashMap();
 		map.put("Screenname", buddy);
 		map.put("BuddyInfo", info);
 		
-		if (changedProperty.equals("online")) {
-			sendDelegateMessageWithMap("ContactOnline", map);
-			
-		} else if (changedProperty.equals("iconData")) {			
+		if (changedProperty.equals("iconData")) {			
 			sendDelegateMessageWithMap("IconUpdate", map);
 			
-		} else if (changedProperty.equals("statusMessage")) {
+		} else if (changedProperty.equals("statusMessage") || changedProperty.equals("itunesUrl")) {
 			//don't use just "StatusMessage" because setStatusMessage: was already taken in ESjoscarCocoaAdapter
 			sendDelegateMessageWithMap("IncomingStatusMessage", map);
-
+			
 		} else if (changedProperty.equals("awayMessage")) {
 			Object val = event.getNewValue();
 			if (val != null) {
@@ -253,6 +255,10 @@ SecuridProvider
 			}
 			
 			sendDelegateMessageWithMap("Profile", map);
+		} else if (changedProperty.equals("online")) {
+			Object online = event.getNewValue();
+			if(online instanceof java.lang.Boolean && !((Boolean)online).booleanValue())
+				sendDelegateMessageWithMap("StatusUpdate", map);
 		}
 		/*else if (changedProperty.equals("mobile")) {
 			sendDelegateMessageWithMap("Mobile", map);
@@ -465,7 +471,11 @@ SecuridProvider
 	
 	public void sendAutomaticallyFailed(IcbmService service, Message message,
 										Set<Conversation> triedConversations) {
-		// this should do something
+		HashMap map = new HashMap();
+		map.put("Message", message);
+		map.put("Set<Conversation>", triedConversations);
+		
+		sendDelegateMessageWithMap("SendAutomaticallyFailed", map);		
 	}
 	
 	/* ImConversationListener (extends ConversationListener, TypingListener) */
@@ -511,11 +521,19 @@ SecuridProvider
 	}
 	
     public void gotOtherEvent(Conversation conversation, ConversationEventInfo event) {
+		HashMap map = new HashMap();
+		map.put("Conversation", conversation);
+		map.put("ConversationEventInfo", event);
 		
+		sendDelegateMessageWithMap("GotOtherEvent", map);		
 	}
 	
     public void sentOtherEvent(Conversation conversation, ConversationEventInfo event) {
+		HashMap map = new HashMap();
+		map.put("Conversation", conversation);
+		map.put("ConversationEventInfo", event);
 		
+		sendDelegateMessageWithMap("SentOtherEvent", map);
 	}
 
 	public void missedMessages(ImConversation conv, MissedImInfo info) {
