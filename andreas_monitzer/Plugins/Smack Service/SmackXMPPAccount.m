@@ -446,6 +446,7 @@
         SmackRosterEntry *entry = [smroster getEntry:[contact UID]];
         if(entry)
             [smroster removeEntry:entry];
+        [contact setRemoteGroupName:nil];
     }
 }
 

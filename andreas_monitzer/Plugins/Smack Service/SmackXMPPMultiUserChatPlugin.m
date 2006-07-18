@@ -139,6 +139,14 @@ static AIHTMLDecoder *messageencoder = nil;
     
     NSString *ownAffiliation;
     NSString *ownRole;
+    
+    IBOutlet NSPanel *changenickname_window;
+    IBOutlet NSTextField *changenickname_textfield;
+    IBOutlet NSButton *changenickname_setbutton;
+
+    IBOutlet NSPanel *changesubject_window;
+    IBOutlet NSTextView *changesubject_textview;
+    IBOutlet NSButton *changesubject_setbutton;
 }
 
 - (id)initWithMultiUserChat:(SmackXMultiUserChat*)muc account:(SmackXMPPAccount*)a;
@@ -148,6 +156,12 @@ static AIHTMLDecoder *messageencoder = nil;
 
 - (NSString*)ownAffiliation;
 - (NSString*)ownRole;
+
+- (IBAction)changeNickname_Set:(id)sender;
+- (IBAction)changeNickname_Cancel:(id)sender;
+
+- (IBAction)changeSubject_Set:(id)sender;
+- (IBAction)changeSubject_Cancel:(id)sender;
 
 @end
 
@@ -257,9 +271,9 @@ static AIHTMLDecoder *messageencoder = nil;
 
 - (void)displayStatusMessage:(NSString*)message
 {
-    [[adium contentController] displayStatusMessage:message
-                                             ofType:@"chat-info"
-                                             inChat:adiumchat];
+    [[adium contentController] displayEvent:message
+                                     ofType:@"chat-info"
+                                     inChat:adiumchat];
 }
 
 - (void)setMUCInvitationDeclined:(NSDictionary*)info {
@@ -597,13 +611,93 @@ static AIHTMLDecoder *messageencoder = nil;
 }
 
 - (void)changeSubject:(NSMenuItem*)sender {
-    NSLog(@"set subject!");
-    // ### implement
+    [NSBundle loadNibNamed:@"SmackXMPPMUCChangeSubject" owner:self];
+    if(!changesubject_window)
+    {
+        NSBeep();
+        return;
+    }
+    NSString *subject = [chat getSubject];
+    [changesubject_textview setString:subject?subject:@""];
+    
+    [NSApp beginSheet:changesubject_window
+       modalForWindow:[[adium interfaceController] windowForChat:adiumchat]
+        modalDelegate:self
+       didEndSelector:@selector(changeSubject_sheetDidEnd:returnCode:contextInfo:)
+          contextInfo:NULL];
+}
+
+- (IBAction)changeSubject_Set:(id)sender
+{
+    [NSApp endSheet:changesubject_window
+         returnCode:NSOKButton];
+}
+
+- (IBAction)changeSubject_Cancel:(id)sender
+{
+    [NSApp endSheet:changesubject_window
+         returnCode:NSCancelButton];
+}
+
+- (void)changeSubject_sheetDidEnd:(NSWindow*)sheet returnCode:(int)returnCode contextInfo:(void*)ctx
+{
+    NSString *subject = [[changesubject_textview string] retain];
+    [sheet orderOut:nil];
+    [sheet close];
+    if(returnCode == NSOKButton)
+    {
+        @try {
+            [chat changeSubject:subject];
+        } @catch(NSException *e) {
+            [self postStatusMessage:AILocalizedString(@"Error changing the subject to \"%@\": %@","Error changing the subject to \"%@\": %@"), subject, [e reason]];
+        }
+    }
+    [subject release];
 }
 
 - (void)changeNickname:(NSMenuItem*)sender {
-    NSLog(@"set nickname");
-    // ### implement
+    [NSBundle loadNibNamed:@"SmackXMPPMUCChangeNickname" owner:self];
+    if(!changenickname_window)
+    {
+        NSBeep();
+        return;
+    }
+    
+    [changenickname_textfield setStringValue:[chat getNickname]];
+    
+    [NSApp beginSheet:changenickname_window
+       modalForWindow:[[adium interfaceController] windowForChat:adiumchat]
+        modalDelegate:self
+       didEndSelector:@selector(changeNickname_sheetDidEnd:returnCode:contextInfo:)
+          contextInfo:NULL];
+}
+
+- (IBAction)changeNickname_Set:(id)sender
+{
+    [NSApp endSheet:changenickname_window
+         returnCode:NSOKButton];
+}
+
+- (IBAction)changeNickname_Cancel:(id)sender
+{
+    [NSApp endSheet:changenickname_window
+         returnCode:NSCancelButton];
+}
+
+- (void)changeNickname_sheetDidEnd:(NSWindow*)sheet returnCode:(int)returnCode contextInfo:(void*)ctx
+{
+    NSString *nickname = [[changenickname_textfield stringValue] retain];
+    [sheet orderOut:nil];
+    [sheet close];
+    if(returnCode == NSOKButton && [nickname length] > 0)
+    {
+        @try {
+            [chat changeNickname:nickname];
+        } @catch(NSException *e) {
+            [self postStatusMessage:AILocalizedString(@"Error changing your nick to \"%@\": %@","Error changing your nick to \"%@\": %@"), nickname, [e reason]];
+        }
+    }
+    [nickname release];
 }
 
 - (void)destroyRoom:(NSMenuItem*)sender {
