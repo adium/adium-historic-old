@@ -61,7 +61,7 @@
 
 @end
 
-@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin;
+@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin;
 
 @interface NSObject (SmackXMPPPluginAddition)
 - (id)initWithAccount:(SmackXMPPAccount*)account;
@@ -85,6 +85,7 @@
             [SmackXMPPErrorMessagePlugin class],
             [SmackXMPPHeadlineMessagePlugin class],
             [SmackXMPPMultiUserChatPlugin class],
+            [SmackXMPPGatewayInteractionPlugin class],
             nil
         };
         
@@ -148,7 +149,8 @@
         
         [conn login:[jid jidUsername]
                    :[[adium accountController] passwordForAccount:self]
-                   :resource?resource:@"Adium"];
+                   :resource?resource:@"Adium"
+                   :NO];
         
         [self didConnect];
         
@@ -214,7 +216,8 @@
     return YES;
 }
 
-- (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage {
+- (SmackPresence*)getUserPresenceForStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage
+{
     NSString *statusName = [statusState statusName];
     NSString *statusField = nil;
     int priority = [[self preferenceForKey:@"awayPriority" group:GROUP_ACCOUNT_STATUS] intValue];
@@ -230,17 +233,22 @@
         statusField = @"DO_NOT_DISTURB";
     else if([statusName isEqualToString:STATUS_NAME_EXTENDED_AWAY])
         statusField = @"EXTENDED_AWAY";
-    else if([statusName isEqualToString:STATUS_NAME_INVISIBLE])
-        statusField = @"INVISIBLE";
     else // shouldn't happen
         statusField = @"AVAILABLE";
     
-    SmackPresence *newPresence = [SmackCocoaAdapter presenceWithTypeString:@"AVAILABLE"
-                                                                    status:[statusMessage string]
-                                                                  priority:priority
-                                                                modeString:statusField];
-    
-    [connection sendPacket:newPresence];
+    return [SmackCocoaAdapter presenceWithTypeString:@"AVAILABLE"
+                                              status:[statusMessage string]
+                                            priority:priority
+                                          modeString:statusField];
+}
+
+- (SmackPresence*)getCurrentUserPresence
+{
+    return [self getUserPresenceForStatusState:[self statusState] usingStatusMessage:[self statusMessage]];
+}
+
+- (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage {
+    [connection sendPacket:[self getUserPresenceForStatusState:statusState usingStatusMessage:statusMessage]];
 }
 
 - (void)performRegisterWithPassword:(NSString *)inPassword {

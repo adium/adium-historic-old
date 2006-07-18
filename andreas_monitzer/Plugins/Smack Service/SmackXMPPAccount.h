@@ -29,6 +29,8 @@
 - (void)receivePresencePacket:(SmackPresence*)packet;
 - (void)receiveIQPacket:(SmackIQ*)packet;
 
+- (SmackPresence*)getCurrentUserPresence;
+
 - (void)setListContact:(AIListContact *)listContact toAlias:(NSString *)inAlias;
 
 - (BOOL)silentAndDelayed;
