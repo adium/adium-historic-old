@@ -19,7 +19,7 @@
 #import "AIContentController.h"
 #import "AIStatusController.h"
 #import "ESGaimMSNAccount.h"
-#import "Libgaim/state.h"
+#import <Libgaim/state.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIHTMLDecoder.h>
@@ -30,13 +30,14 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 
+#import <Libgaim/msn.h>
+
 #define DEFAULT_MSN_PASSPORT_DOMAIN				@"@hotmail.com"
 #define SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES	10
 
 @interface ESGaimMSNAccount (PRIVATE)
 - (void)updateFriendlyNameAfterConnect;
-- (void)gotFilteredFriendlyName:(NSAttributedString *)filteredFriendlyName context:(NSDictionary *)infoDict;
-- (void)_setFriendlyNameTo:(NSAttributedString *)inAlias;
+- (void)setServersideDisplayName:(NSString *)friendlyName;
 @end
 
 @implementation ESGaimMSNAccount
@@ -188,15 +189,16 @@
 										   ignoreInheritedValues:YES] attributedString];
 	NSAttributedString	*globalPreference = [[self preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME
 															  group:GROUP_ACCOUNT_STATUS
-											  ignoreInheritedValues:YES] attributedString];
+											  ignoreInheritedValues:NO] attributedString];
 	BOOL				accountDisplayNameChanged = NO;
+	BOOL				shouldUpdateDisplayNameImmediately= NO;
 
 	/* If the friendly name changed since the last time we connected (the user changed it while offline)
 	 * set it serverside and clear the flag.
 	 */
 	if ((accountDisplayName && (accountDisplayNameChanged = [[self preferenceForKey:KEY_MSN_DISPLAY_NAMED_CHANGED group:GROUP_ACCOUNT_STATUS] boolValue])) ||
 		(!accountDisplayName && globalPreference)) {
-		[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
+		shouldUpdateDisplayNameImmediately = YES;
 
 		if (accountDisplayNameChanged) {
 			[self setPreference:nil
@@ -205,7 +207,7 @@
 		}
 
 	} else {
-		/* If our locally set friendly name didn't change since the last time we connected but one is set for this specific account,
+		/* If our locally set friendly name didn't change since the last time we connected but one is set,
 		 * we want to update to the serverside settings as appropriate.
 		 *
 		 * An important exception is if our per-account display name is dynamic (i.e. a 'Now Playing in iTunes' name).
@@ -230,8 +232,19 @@
 															  accountDisplayName, @"accountDisplayName",
 															  [NSString stringWithUTF8String:displayName], @"displayName",
 															  nil]];
+			} else {
+				NSLog(@"Not updating the display naame; it's %s and the display name is %s, mine is %@",
+					  accountDisplayNameUTF8String,displayName, 
+					  [self displayName]);
 			}
+
+		} else {
+			shouldUpdateDisplayNameImmediately = YES;
 		}
+	}
+	
+	if (shouldUpdateDisplayNameImmediately) {
+		[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
 	}
 }
 
@@ -250,6 +263,10 @@
 		[newPreference release];
 
 		[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
+
+	} else {
+		//Set it serverside
+		[self setServersideDisplayName:[filteredFriendlyName string]];
 	}
 }
 
@@ -258,13 +275,28 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 - (void)setServersideDisplayName:(NSString *)friendlyName
 {
 	if (gaim_account_is_connected(account)) {		
-		GaimDebug (@"Updating FullNameAttr to %@",friendlyName);
+		AILog(@"%@: Updating serverside display name to %@", self, friendlyName);
 		NSDate *now = [NSDate date];
 
 		if (!lastFriendlyNameChange ||
-			[now timeIntervalSinceDate:lastFriendlyNameChange] > SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES) { 
-			msn_set_friendly_name(account->gc, [friendlyName UTF8String]);
-			
+			[now timeIntervalSinceDate:lastFriendlyNameChange] > SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES) {
+			/*
+			 * The MSN display name will be URL encoded via gaim_url_encode().  The maximum length of the _encoded_ string is
+			 * BUDDY_ALIAS_MAXLEN (387 characters as of gaim 2.0.0). We can't simply encode and truncate as we might end up with
+			 * part of an encoded character being cut off, so we instead truncate to smaller and smaller strings and encode, until it fits
+			 */
+			const char *friendlyNameUTF8String = [friendlyName UTF8String];
+			int currentMaxLength = BUDDY_ALIAS_MAXLEN;
+
+			while (friendlyNameUTF8String &&
+				   strlen(gaim_url_encode(friendlyNameUTF8String)) > currentMaxLength) {
+				friendlyName = [friendlyName stringWithEllipsisByTruncatingToLength:currentMaxLength];				
+				friendlyNameUTF8String = [friendlyName UTF8String];
+				currentMaxLength -= 10;
+			}
+
+			msn_set_friendly_name(gaim_account_get_connection(account), friendlyNameUTF8String);
+
 			[lastFriendlyNameChange release];
 			lastFriendlyNameChange = [now retain];
 
@@ -464,29 +496,5 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 	return [super titleForAccountActionMenuLabel:label];
 }
 
-/*
- //Added to msn.c
-// **ADIUM
-void msn_set_friendly_name(GaimConnection *gc, const char *entry)
-{
-	msn_act_id(gc, entry);
-}
-
-GaimXfer *msn_xfer_new(GaimConnection *gc, char *who)
-{
-	session = gc->proto_data;
-	
-	xfer = gaim_xfer_new(gc->account, GAIM_XFER_SEND, who);
-	
-	slplink = msn_session_get_slplink(session, who);
-	
-	xfer->data = slplink;
-	
-	gaim_xfer_set_init_fnc(xfer, t_msn_xfer_init);
-	
-	return xfer;
-}
-*/
- 
 @end
 
