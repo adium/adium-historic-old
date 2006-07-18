@@ -198,7 +198,10 @@
         AIListContact *listContact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid];
         
         if(listContact)
+        {
             [contacts addObject:listContact];
+            [listContact setRemoteGroupName:nil];
+        }
     }
     [[adium contactController] removeListObjects:contacts];
     [contacts release];
