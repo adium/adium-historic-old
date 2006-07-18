@@ -134,6 +134,7 @@ typedef enum {
     IBOutlet	NSMenuItem		*menuItem_paste;
     IBOutlet	NSMenuItem		*menuItem_pasteAndMatchStyle;
     
+    IBOutlet    NSMenuItem      *menuItem_showFonts;
     IBOutlet    NSMenuItem      *menuItem_bold;
     IBOutlet    NSMenuItem      *menuItem_italic;
 
@@ -258,7 +259,7 @@ typedef enum {
 - (IBAction)adiumPrint:(id)sender;
 
 //Font panel
-- (IBAction)showFontPanel:(id)sender;
+- (IBAction)toggleFontPanel:(id)sender;
 - (IBAction)setFontPanelSettingsAsDefaultFont:(id)sender;
 
 //Custom Dimming menu items

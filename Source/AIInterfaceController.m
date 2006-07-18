@@ -1293,16 +1293,22 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 }
 
 #pragma mark Font Panel
-- (IBAction)showFontPanel:(id)sender
+- (IBAction)toggleFontPanel:(id)sender
 {
-	NSFontPanel	*fontPanel = [NSFontPanel sharedFontPanel];
-	
-	if (!fontPanelAccessoryView) {
-		[NSBundle loadNibNamed:@"FontPanelAccessoryView" owner:self];
-		[fontPanel setAccessoryView:fontPanelAccessoryView];
-	}
+	if ([NSFontPanel sharedFontPanelExists] &&
+		[[NSFontPanel sharedFontPanel] isVisible]) {
+		[[NSFontPanel sharedFontPanel] close];
 
-	[fontPanel orderFront:self]; 
+	} else {
+		NSFontPanel	*fontPanel = [NSFontPanel sharedFontPanel];
+		
+		if (!fontPanelAccessoryView) {
+			[NSBundle loadNibNamed:@"FontPanelAccessoryView" owner:self];
+			[fontPanel setAccessoryView:fontPanelAccessoryView];
+		}
+		
+		[fontPanel orderFront:self]; 
+	}
 }
 
 - (IBAction)setFontPanelSettingsAsDefaultFont:(id)sender
@@ -1405,6 +1411,11 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 				(![windowController respondsToSelector:@selector(validatePrintMenuItem:)] ||
 				 [windowController validatePrintMenuItem:menuItem]));
 		
+	} else if (menuItem == menuItem_showFonts) {
+		[menuItem_showFonts setTitle:(([NSFontPanel sharedFontPanelExists] && [[NSFontPanel sharedFontPanel] isVisible]) ?
+									  AILocalizedString(@"Hide Fonts",nil) :
+									  AILocalizedString(@"Show Fonts",nil))];
+		return YES;
 	} else {
 		return YES;
 	}
