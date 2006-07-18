@@ -396,11 +396,17 @@ static NSCalendarDate *dateFromFileName(NSString *fileName)
 	unsigned long   hour = 0;
 	unsigned long   minute = 0;
 	unsigned long   second = 0;
-	  signed long   timezone = 0;
+	  signed long   timezone = NSNotFound;
 
 	if (scandate([fileName UTF8String], &year, &month, &day, &hour, &minute, &second, &timezone)) {
 		if (year && month && day) {
-			return [NSCalendarDate dateWithYear:year month:month day:day hour:hour minute:minute second:second timeZone:[NSTimeZone timeZoneForSecondsFromGMT:(timezone * 60)]];
+			return [NSCalendarDate dateWithYear:year
+										  month:month
+											day:day
+										   hour:hour
+										 minute:minute
+										 second:second
+									   timeZone:((timezone == NSNotFound) ? nil : [NSTimeZone timeZoneForSecondsFromGMT:(timezone * 60)])];
 		}
 	}
 	
