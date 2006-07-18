@@ -120,7 +120,6 @@
 		11DAEBD0092FB857007A8682 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		11DAEBD1092FB85F007A8682 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		11F5F44309537E34007DCC49 /* joscar.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */; };
-		11F5F46409538B99007DCC49 /* RAFjoscarAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11F5F46309538B99007DCC49 /* RAFjoscarAccountView.nib */; };
 		11F5F70209539C70007DCC49 /* joscarDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11F5F70109539C70007DCC49 /* joscarDefaults.plist */; };
 		11F5F72E0953A227007DCC49 /* joscarClasses.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F5F72D0953A227007DCC49 /* joscarClasses.h */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
@@ -849,6 +848,7 @@
 		34CA22300A671BEF00B11032 /* PersonalPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34CA222F0A671BEF00B11032 /* PersonalPreferences.nib */; };
 		34CEBE6206F117DF00A89DDE /* ESContactInfoListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */; };
 		34CEBE6306F117DF00A89DDE /* ESContactInfoListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */; };
+		34CF889F0A6D5D94009D9A21 /* RAFjoscarAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34CF889E0A6D5D94009D9A21 /* RAFjoscarAccountView.nib */; };
 		34CF9DF4085B8B7900D87E37 /* ESiTunesPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */; };
 		34CF9DF5085B8B7900D87E37 /* ESiTunesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CF9DF3085B8B7900D87E37 /* ESiTunesPlugin.m */; };
 		34D000C60957918000DCB678 /* ContactListRecentImages.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34D000C50957918000DCB678 /* ContactListRecentImages.nib */; };
@@ -1835,7 +1835,7 @@
 		11CC0DBA097B0AE600E1DE20 /* RAFjoscarICQService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarICQService.m; path = "Plugins/joscar Service/RAFjoscarICQService.m"; sourceTree = "<group>"; };
 		11CC0DEB097B120C00E1DE20 /* RAFjoscarICQAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarICQAccount.h; path = "Plugins/joscar Service/RAFjoscarICQAccount.h"; sourceTree = "<group>"; };
 		11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarICQAccount.m; path = "Plugins/joscar Service/RAFjoscarICQAccount.m"; sourceTree = "<group>"; };
-		11F5F46309538B99007DCC49 /* RAFjoscarAccountView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = RAFjoscarAccountView.nib; path = "Plugins/joscar Service/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		11F5F46309538B99007DCC49 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/joscar Service/English.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		11F5F70109539C70007DCC49 /* joscarDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = joscarDefaults.plist; path = "Plugins/joscar Service/joscarDefaults.plist"; sourceTree = "<group>"; };
 		11F5F72D0953A227007DCC49 /* joscarClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = joscarClasses.h; path = "Plugins/joscar Service/joscarClasses.h"; sourceTree = SOURCE_ROOT; };
 		3402E01807CB0CE40044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
@@ -2999,6 +2999,10 @@
 		34CA23A50A6723A200B11032 /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESContactInfoListController.h; path = Source/ESContactInfoListController.h; sourceTree = "<group>"; };
 		34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESContactInfoListController.m; path = Source/ESContactInfoListController.m; sourceTree = "<group>"; };
+		34CF88A20A6D5DBC009D9A21 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Plugins/joscar Service/German.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34CF88A70A6D5EC0009D9A21 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
+		34CF88AD0A6D5EF1009D9A21 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		34CF88B50A6D6005009D9A21 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
 		34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESiTunesPlugin.h; path = Source/ESiTunesPlugin.h; sourceTree = "<group>"; };
 		34CF9DF3085B8B7900D87E37 /* ESiTunesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESiTunesPlugin.m; path = Source/ESiTunesPlugin.m; sourceTree = "<group>"; };
 		34D000C50957918000DCB678 /* ContactListRecentImages.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ContactListRecentImages.nib; path = Resources/ContactListRecentImages.nib; sourceTree = "<group>"; };
@@ -3989,7 +3993,7 @@
 				3423622A09D8BCA9009FF634 /* SecuridPrompt.nib */,
 				11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */,
 				11CBDD4009326F8000BE7961 /* RAFjoscarAccountViewController.m */,
-				11F5F46309538B99007DCC49 /* RAFjoscarAccountView.nib */,
+				34CF889E0A6D5D94009D9A21 /* RAFjoscarAccountView.nib */,
 				11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */,
 				11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */,
 				11669AB109994697003CB8A1 /* joscarJoinChatView.nib */,
@@ -8085,7 +8089,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11F5F46409538B99007DCC49 /* RAFjoscarAccountView.nib in Resources */,
+				34CF889F0A6D5D94009D9A21 /* RAFjoscarAccountView.nib in Resources */,
 				11F5F70209539C70007DCC49 /* joscarDefaults.plist in Resources */,
 				11AD53E90963523000CA0C6F /* joscarDebugWindow.nib in Resources */,
 				11669AB309994697003CB8A1 /* joscarJoinChatView.nib in Resources */,
@@ -9553,6 +9557,7 @@
 				34058095087EEFA100664D64 /* Russian */,
 				34A30E7D08D8EE7900697644 /* Spanish */,
 				34A81DCD093CE92300B0E93D /* pl */,
+				34CF88A70A6D5EC0009D9A21 /* Dutch */,
 			);
 			name = DualWindowMessageAdvanced.nib;
 			sourceTree = "<group>";
@@ -9574,6 +9579,7 @@
 				341BD5890965ECC200CF83F5 /* German */,
 				341BD58A0965ECC800CF83F5 /* cs */,
 				341BD58B0965ECCD00CF83F5 /* Catalan */,
+				34CF88AD0A6D5EF1009D9A21 /* Dutch */,
 			);
 			name = OTRPrefs.nib;
 			sourceTree = "<group>";
@@ -10092,6 +10098,7 @@
 				340580A8087EEFA200664D64 /* Russian */,
 				34A30E9E08D8EE7B00697644 /* Spanish */,
 				34A81DB8093CE92200B0E93D /* pl */,
+				34CF88B50A6D6005009D9A21 /* Dutch */,
 			);
 			name = MessageContextDisplayPrefs.nib;
 			sourceTree = "<group>";
@@ -10283,6 +10290,15 @@
 				34CA23A50A6723A200B11032 /* pl */,
 			);
 			name = PersonalPreferences.nib;
+			sourceTree = "<group>";
+		};
+		34CF889E0A6D5D94009D9A21 /* RAFjoscarAccountView.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				11F5F46309538B99007DCC49 /* English */,
+				34CF88A20A6D5DBC009D9A21 /* German */,
+			);
+			name = RAFjoscarAccountView.nib;
 			sourceTree = "<group>";
 		};
 		34E0E9B707CC4B3600A82198 /* Localizable.strings */ = {
