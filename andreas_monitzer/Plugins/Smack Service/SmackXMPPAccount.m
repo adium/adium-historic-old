@@ -61,7 +61,7 @@
 
 @end
 
-@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin;
+@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin, SmackXMPPServiceDiscoveryBrowsing;
 
 @interface NSObject (SmackXMPPPluginAddition)
 - (id)initWithAccount:(SmackXMPPAccount*)account;
@@ -86,6 +86,7 @@
             [SmackXMPPHeadlineMessagePlugin class],
             [SmackXMPPMultiUserChatPlugin class],
             [SmackXMPPGatewayInteractionPlugin class],
+            [SmackXMPPServiceDiscoveryBrowsing class],
             nil
         };
         
@@ -502,6 +503,7 @@
 
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact {
     NSMutableArray *menuItems = [NSMutableArray array];
+    BOOL first = YES;
     
     // order is important here, so we can't use the NSNotification-system
     NSEnumerator *e = [plugins objectEnumerator];
@@ -511,7 +513,13 @@
         {
             NSArray *pluginMenuItems = [plugin menuItemsForContact:inContact];
             if(pluginMenuItems)
+            {
+                if(!first)
+                    [menuItems addObject:[NSMenuItem separatorItem]];
+                else
+                    first = NO;
                 [menuItems addObjectsFromArray:pluginMenuItems];
+            }
         }
     
     [menuItems addObjectsFromArray:[super menuItemsForContact:inContact]];
@@ -519,7 +527,29 @@
 }
 
 - (NSArray *)accountActionMenuItems {
-    return [super accountActionMenuItems];
+    NSMutableArray *menuItems = [NSMutableArray array];
+    BOOL first = YES;
+    
+    // order is important here, so we can't use the NSNotification-system
+    NSEnumerator *e = [plugins objectEnumerator];
+    id plugin;
+    while((plugin = [e nextObject]))
+        if([plugin respondsToSelector:@selector(accountActionMenuItems)])
+        {
+            NSArray *pluginMenuItems = [plugin accountActionMenuItems];
+            if(pluginMenuItems)
+            {
+                if(!first)
+                    [menuItems addObject:[NSMenuItem separatorItem]];
+                else
+                    first = NO;
+                [menuItems addObjectsFromArray:pluginMenuItems];
+            }
+        }
+            
+    [menuItems addObjectsFromArray:[super accountActionMenuItems]];
+    
+    return menuItems;
 }
 
 #pragma mark Secure messsaging

@@ -513,6 +513,31 @@
 
 @end
 
+@interface SmackXDiscoverItem : NSObject {
+}
+
+- (NSString*)getAction;
+- (NSString*)getEntityID;
+- (NSString*)getName;
+- (NSString*)getNode;
+- (void)setAction:(NSString*)action;
+- (void)setName:(NSString*)name;
+- (void)setNode:(NSString*)node;
+- (NSString*)toXML;
+
+@end
+
+@interface SmackXDiscoverItems : SmackIQ {
+}
+
+- (void)addItem:(SmackXDiscoverItem*)item;
+- (NSString*)getChildElementXML;
+- (JavaIterator*)getItems;
+- (NSString*)getNode;
+- (void)setNode:(NSString*)node;
+
+@end
+
 @interface SmackXDiscussionHistory : NSObject {
 }
 
