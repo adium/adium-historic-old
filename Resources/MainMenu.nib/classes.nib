@@ -39,9 +39,9 @@
                 showChatWindow = id; 
                 showContactList = id; 
                 showContactListAndBringToFront = id; 
-                showFontPanel = id; 
                 showPreferenceWindow = id; 
                 toggleContactList = id; 
+                toggleFontPanel = id; 
                 toggleFontTrait = id; 
                 toggleToolbarShown = id; 
             }; 
@@ -63,6 +63,7 @@
                 "menuItem_paste" = NSMenuItem; 
                 "menuItem_pasteAndMatchStyle" = NSMenuItem; 
                 "menuItem_print" = NSMenuItem; 
+                "menuItem_showFonts" = NSMenuItem; 
                 "menuItem_showToolbar" = NSMenuItem; 
             }; 
             SUPERCLASS = NSObject; 
@@ -180,6 +181,7 @@
             SUPERCLASS = NSObject; 
         }, 
         {ACTIONS = {adiumPrint = id; }; CLASS = NSObject; LANGUAGE = ObjC; }, 
+        {CLASS = NSWindowController; LANGUAGE = ObjC; SUPERCLASS = NSResponder; }, 
         {
             ACTIONS = {checkForUpdates = id; }; 
             CLASS = SUUpdater; 
