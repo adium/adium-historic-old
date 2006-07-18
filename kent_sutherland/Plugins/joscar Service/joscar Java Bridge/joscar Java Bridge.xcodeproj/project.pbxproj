@@ -16,23 +16,6 @@
 		340712FA09A8E214002B7464 /* JoscarFileMapper.java in Sources */ = {isa = PBXBuildFile; fileRef = 340712F909A8E214002B7464 /* JoscarFileMapper.java */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXBuildStyle section */
-		119DD0C3095637D7006ADCD2 /* Development */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-			};
-			name = Development;
-		};
-		119DD0C4095637D7006ADCD2 /* Deployment */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-			};
-			name = Deployment;
-		};
-/* End PBXBuildStyle section */
-
 /* Begin PBXContainerItemProxy section */
 		112480A6095627E900F69C1E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -109,9 +92,6 @@
 			buildConfigurationList = 112480A10956279C00F69C1E /* Build configuration list for PBXLegacyTarget "joscar retroweaver" */;
 			buildPhases = (
 			);
-			buildSettings = {
-				PRODUCT_NAME = "joscar retroweaver";
-			};
 			buildToolPath = /usr/bin/ant;
 			dependencies = (
 				112480A7095627E900F69C1E /* PBXTargetDependency */,
@@ -131,30 +111,6 @@
 				112480840956271F00F69C1E /* JavaArchive */,
 				112480850956271F00F69C1E /* Frameworks */,
 			);
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				JAVA_ARCHIVE_CLASSES = YES;
-				JAVA_ARCHIVE_TYPE = JAR;
-				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_COMPILER_FLAGS = "";
-				JAVA_SOURCE_SUBDIR = .;
-				LIBRARY_STYLE = STATIC;
-				OPTIMIZATION_CFLAGS = "";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOL_FLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = joscarBridge;
-				PURE_JAVA = YES;
-				REZ_EXECUTABLE = YES;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
 			dependencies = (
 			);
 			name = "joscar bridge";
@@ -168,12 +124,6 @@
 		112480700956269C00F69C1E /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 112480710956269C00F69C1E /* Build configuration list for PBXProject "joscar Java Bridge" */;
-			buildSettings = {
-			};
-			buildStyles = (
-				119DD0C3095637D7006ADCD2 /* Development */,
-				119DD0C4095637D7006ADCD2 /* Deployment */,
-			);
 			hasScannedForEncodings = 0;
 			mainGroup = 1124806E0956269B00F69C1E;
 			productRefGroup = 112480880956271F00F69C1E /* Products */;

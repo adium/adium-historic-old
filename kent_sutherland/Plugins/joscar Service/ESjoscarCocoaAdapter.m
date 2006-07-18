@@ -135,35 +135,49 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		username = [proxyConfig objectForKey:@"Username"];
 		password = [proxyConfig objectForKey:@"Password"];
 		
+		if (![username length]) username = nil;
+		if (![password length]) password = nil;
+
 		switch (proxyType) {
 			case Adium_Proxy_HTTP:
 			case Adium_Proxy_Default_HTTP:
-				proxyInfo = [AimProxyInfoClass forHttp:host :port :username :password];				
+				if (!((username == nil) == (password == nil))) {
+					NSLog(@"Danger! HTTP: username and password must be both nil or neither nil! We'll proceed without authentication for the proxy.");
+				}
+
+				proxyInfo = ((password  && username) ?
+							 [AimProxyInfoClass forHttp:host :port :username :password] :
+							 [AimProxyInfoClass forHttp:host :port :nil :nil]);
 				break;
-				
+
 			case Adium_Proxy_SOCKS4:
 			case Adium_Proxy_Default_SOCKS4:
-				proxyInfo = [AimProxyInfoClass forSocks4:host :port];
+				proxyInfo = [AimProxyInfoClass forSocks4:host :port :username];
 				break;
-				
+
 			case Adium_Proxy_SOCKS5:
 			case Adium_Proxy_Default_SOCKS5:
-				proxyInfo = [AimProxyInfoClass forSocks5:host :port :username :password];
-				break;
+				if (!((username == nil) == (password == nil))) {
+					NSLog(@"Danger! SOCKS5: username and password must be both nil or neither nil! We'll proceed without authentication for the proxy.");
+				}
 				
+				proxyInfo = ((password  && username) ?
+							 [AimProxyInfoClass forSocks5:host :port :username :password] :
+							 [AimProxyInfoClass forSocks5:host :port :nil :nil]);
+				break;
+
 			case Adium_Proxy_None:
 				//Can't get here
 				break;
 		}
-
-	} else {
-		proxyInfo = [AimProxyInfoClass forNoProxy];
 	}
-	
+
+	if (!proxyInfo) proxyInfo = [AimProxyInfoClass forNoProxy];
+
 	return proxyInfo;
 }
 
-- (void)connectWithPassword:(NSString *)password proxyConfiguration:(NSDictionary *)proxyConfiguration
+- (void)connectWithPassword:(NSString *)password proxyConfiguration:(NSDictionary *)proxyConfiguration host:(NSString *)host port:(int)port
 {
 	AimConnectionProperties	*aimConnectionProperties;
 	Screenname				*screenName;
@@ -177,7 +191,10 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	
 	//Build an aimConnectionProperties object which will specify the information we need to connect
 	aimConnectionProperties = [NewAimConnectionProperties(screenName, password) autorelease];
-	
+
+	if (host && [host length]) [aimConnectionProperties setLoginHost:host];
+	if (port > 0) [aimConnectionProperties setLoginPort:port];
+
 	//Open the aimConnection from the aimSession using the aimConnectionProperties. aimConnection is an instance variable
 	[aimConnection release];
 	aimConnection = [[aimSession openConnection:aimConnectionProperties] retain];
@@ -224,7 +241,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 {
 	Screenname			*sn = [userInfo get:@"Screenname"];
 	NSString			*message = [userInfo get:@"Away message"];
-
+	AILog(@"setAwayMessage...");
 	if (message && [message length])
 		[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 					setStatusMessage:[[message copy] autorelease]];
@@ -270,15 +287,16 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getInfoService] requestAwayMessage:sn];
 	
 	NSString	*UID = [[[sn getNormal] copy] autorelease];
-	
+	AILog(@"setStatusUpdate: %@",[sn getFormatted]);
 	[accountProxy contactWithUID:UID
-						isOnline:[NSNumber numberWithBool:[info isOnline]]
-						  isAway:[NSNumber numberWithBool:[info isAway]]
+					formattedUID:[[[sn getFormatted] copy] autorelease]
+						isOnline:[info isOnline]
+						  isAway:[info isAway]
 					   idleSince:dateFromJavaDate([info getIdleSince])
 					 onlineSince:dateFromJavaDate([info getOnlineSince])
-					warningLevel:[NSNumber numberWithInt:[info getWarningLevel]]
-						  mobile:[NSNumber numberWithBool:([info isMobile] || ([UID characterAtIndex:0] == '+'))]
-						 aolUser:[NSNumber numberWithBool:[info isAolUser]]];
+					warningLevel:[info getWarningLevel]
+						  mobile:([info isMobile] || ([UID characterAtIndex:0] == '+'))
+						 aolUser:[info isAolUser]];
 }
 
 - (void)setContactOnline:(HashMap *)userInfo
@@ -286,6 +304,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	Screenname			*sn = [userInfo get:@"Screenname"];
 	BuddyInfo			*info = [userInfo get:@"BuddyInfo"];
 
+	AILog(@"setContactOnline: %@",[sn getNormal]);
 	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 						isOnline:[NSNumber numberWithBool:[info isOnline]]];
 	
@@ -303,7 +322,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 #define MUSICAL_NOTE [NSString stringWithUTF8String:"\xe2\x99\xab"]
 	if (iTMSLink && [iTMSLink length])
 		message = [NSString stringWithFormat:@"<a href=\"%@\">%@</a> %@", iTMSLink, MUSICAL_NOTE, message];
-
+	AILog(@"setincoming status message %@",message);
 	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 				setStatusMessage:[[message copy] autorelease]];
 }
@@ -336,6 +355,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	Group			*group = [userInfo get:@"Group"];	
 	Screenname		*sn = [buddy getScreenname];
 
+	AILog(@"Buddy added: %@",[sn getFormatted]);
 	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 					formattedUID:[[[sn getFormatted] copy] autorelease]
 						   alias:[[[buddy getAlias] copy] autorelease]
@@ -492,6 +512,19 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		 setDirectIMConnected:NO];
 }
 
+
+/*
+ * @brief We are leaving a one-on-one chat
+ *
+ * Close a direct IM if there is one
+ */
+- (void)leaveChatWithUID:(NSString *)inUID
+{
+	id<Iterator> iter = [[[aimConnection getIcbmService] getDirectimConversations:NewScreenname(inUID)] iterator];
+	while ([iter hasNext])
+		[(DirectimConversation *)[iter next] close];
+}
+
 /*
  * @brief Send a message to a one-on-one chat
  */
@@ -643,7 +676,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
  * @brief Received a message in a conversation
  */
 - (void)setGotMessage:(HashMap *)userInfo
-{	
+{
 	Conversation	*conversation = [userInfo get:@"Conversation"];
 	MessageInfo		*messageInfo = [userInfo get:@"MessageInfo"];
 	Message			*message = [messageInfo getMessage];
@@ -652,6 +685,9 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	Screenname		*sn = [conversation getBuddy];
 
 	NSString		*UID = [[[sn getNormal] copy] autorelease];
+
+	//Trim NULLs from the message. Some AIM clients apparently send us messages with a trailing NULL.
+	messageBody = [messageBody stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithRange:NSMakeRange(0, 1)]];
 
 	if ([message isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.DirectMessage")]) {
 			[accountProxy chatWithUID:UID
@@ -715,7 +751,58 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[accountProxy chatWithUID:[[[sn getNormal] copy] autorelease]
 					 gotError:[NSNumber numberWithInt:errorType]];
 }
-				   
+
+- (void)setSendAutomaticallyFailed:(HashMap *)userInfo
+{
+	//This is never called as far as I can tell.... -eds
+	AILog(@"setSendAutomaticallyFailed: %@",userInfo);	
+
+	id<Collection>	triedConversations = [userInfo get:@"Set<Conversation>"];
+	id<Iterator>	iterator = [triedConversations iterator];
+	Conversation	*conversation = ([iterator hasNext] ? [iterator next] : nil);
+
+//	Message			*message = [userInfo get:@"Message"];
+	Screenname		*sn = [conversation getBuddy];
+	AIChatErrorType errorType = AIChatMessageSendingUserNotAvailable;
+
+	[accountProxy chatWithUID:[[[sn getNormal] copy] autorelease]
+					 gotError:[NSNumber numberWithInt:errorType]];
+}
+
+- (void)setGotOtherEvent:(HashMap *)userInfo
+{
+	Conversation			*conversation = [userInfo get:@"Conversation"];
+	ConversationEventInfo	*eventInfo = [userInfo get:@"ConversationEventInfo"];
+
+	AILog(@"got other event: %@ - %@",eventInfo, NSStringFromClass([eventInfo class]));
+
+	if ([eventInfo isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ImSendFailedEvent")]) {
+		AILog(@"%@: error %i",eventInfo,[(ImSendFailedEvent *)eventInfo getErrorCode]);
+		AIChatErrorType errorType;
+
+		switch ([(ImSendFailedEvent *)eventInfo getErrorCode]) {
+			case 4:
+				errorType = AIChatMessageSendingUserNotAvailable;
+				break;
+			case 10:
+				errorType = AIChatMessageSendingTooLarge;
+				break;
+			default:
+				errorType = AIChatUnknownError;
+				break;
+		}
+		
+		AILog(@"error with %@",[[[[conversation getBuddy] getNormal] copy] autorelease]);
+		[accountProxy chatWithUID:[[[[conversation getBuddy] getNormal] copy] autorelease]
+						 gotError:[NSNumber numberWithInt:errorType]];
+	}
+}
+
+- (void)setSentOtherEvent:(HashMap *)userInfo
+{
+
+}
+
 #pragma mark File transfer
 - (void)setNewIncomingFileTransfer:(HashMap *)userInfo
 {
@@ -740,7 +827,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 - (void)rejectIncomingFileTransferWithIdentifier:(NSValue *)identifier
 {
 	IncomingFileTransfer	*incomingFileTransfer = (IncomingFileTransfer *)[identifier pointerValue];
-	[incomingFileTransfer decline];
+	[incomingFileTransfer reject];
 }
 
 - (void)cancelFileTransferWithIdentifier:(NSValue *)identifier
@@ -808,7 +895,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 							   [commonPrefix lastPathComponent]);
 	[outgoingFileTransfer addFilesInHierarchy:folderName :[NewFile(commonPrefix) autorelease] :fileList];
 	[outgoingFileTransfer setDisplayName:folderName];
-	AILog(@"%@: Sending %@ with name %@ and root %@",self, fileList, folderName, commonPrefix);
+	AILog(@"%@: Sending %@ [common prefix: %@] with name %@ and root %@",self, fileList, commonPrefix, folderName, commonPrefix);
 }
 
 /*
@@ -1215,6 +1302,13 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getSsiService] requestBuddyAuthorization:sn :nil];
 }
 
+- (void)setDisplayRecentBuddies:(BOOL)inDisplayRecentBuddies
+{
+	ServerStoredSettings *serverStoredSettings = [[aimConnection getSsiService] getServerStoredSettings];
+
+	[serverStoredSettings changeRecentBuddiesUsed:inDisplayRecentBuddies];
+}
+
 #pragma mark Contact info
 /*
  * @brief Find a MutableBuddy
@@ -1282,8 +1376,11 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getInfoService] setAwayMessage:awayMessage];
 }
 
-- (void)setIdleSince:(NSDate*)date
+- (void)setIdleSince:(NSDate *)date
 {
+	//Sanity check: Don't allow sending a date that's in the future. This could occur if the system clock is changed.
+	if ([date timeIntervalSinceNow] > 0) date = [NSDate date];
+
 	[[aimConnection getBosService] setIdleSince:javaDateFromDate(date)];
 }
 
@@ -1297,16 +1394,12 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getBosService] setVisibleStatus:visible];
 }
 
-- (void)setStatusMessage:(NSString *)msg
-{
-	msg = [msg stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH];
-
-	[[aimConnection getBosService] setStatusMessage:msg];
-}
-
 - (void)setStatusMessage:(NSString *)msg withSongURL:(NSString *)itmsURL
 {
 	msg = [msg stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH];
+
+	//Can't set a URL longer than 255 characters or joscar will throw an exception.  No sense in setting a broken URL.
+	if ([itmsURL length] > 255) itmsURL = nil;
 
 	[[aimConnection getBosService] setStatusMessageSong:msg :itmsURL];
 }
@@ -1336,18 +1429,18 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	return [array autorelease];
 }
 
-- (PRIVACY_OPTION)privacyMode
+- (AIPrivacyOption)privacyMode
 {	
 	NSString *mode = [[[[aimConnection getSsiService] getPermissionList] getPrivacyMode] name];
-	PRIVACY_OPTION prvType = PRIVACY_ALLOW_ALL;
+	AIPrivacyOption prvType = AIPrivacyOptionAllowAll;
 	if ([mode isEqualToString:@"ALLOW_ALLOWED"])
-		prvType = PRIVACY_ALLOW_USERS;
+		prvType = AIPrivacyOptionAllowUsers;
 	if ([mode isEqualToString:@"BLOCK_ALL"])
-		prvType = PRIVACY_DENY_ALL;
+		prvType = AIPrivacyOptionDenyAll;
 	if ([mode isEqualToString:@"BLOCK_BLOCKED"])
-		prvType = PRIVACY_DENY_USERS;
+		prvType = AIPrivacyOptionDenyUsers;
 	if ([mode isEqualToString:@"ALLOW_BUDDIES"])
-		prvType = PRIVACY_ALLOW_CONTACTLIST;
+		prvType = AIPrivacyOptionAllowContactList;
 	return prvType;
 }
 
@@ -1401,23 +1494,23 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[[aimConnection getSsiService] getPermissionList] removeFromAllowedList:NewScreenname(sn)];
 }
 
-- (void)setPrivacyMode:(PRIVACY_OPTION)mode
+- (void)setPrivacyMode:(AIPrivacyOption)mode
 {
 	NSString *modeName = nil;
 	switch(mode) {
-		case PRIVACY_ALLOW_ALL:
+		case AIPrivacyOptionAllowAll:
 			modeName = @"ALLOW_ALL";
 			break;
-		case PRIVACY_ALLOW_CONTACTLIST:
+		case AIPrivacyOptionAllowContactList:
 			modeName = @"ALLOW_BUDDIES";
 			break;
-		case PRIVACY_DENY_ALL:
+		case AIPrivacyOptionDenyAll:
 			modeName = @"BLOCK_ALL";
 			break;
-		case PRIVACY_DENY_USERS:
+		case AIPrivacyOptionDenyUsers:
 			modeName = @"BLOCK_BLOCKED";
 			break;
-		case PRIVACY_ALLOW_USERS:
+		case AIPrivacyOptionAllowUsers:
 			modeName = @"ALLOW_ALLOWED";
 			break;
 		default:
@@ -1546,7 +1639,9 @@ Date* javaDateFromDate(NSDate *date)
 	AIChat *chat = nil;
 	if (decision) {
 		ChatRoomSession *chatSession = [invite accept];
-		[joscarChatsDict setObject:chatSession forKey:[[chatSession getRoomInfo] getRoomName]];
+		@synchronized (joscarChatsDict) {
+			[joscarChatsDict setObject:chatSession forKey:[[chatSession getRoomInfo] getRoomName]];
+		}
 		[chatSession addListener:joscarBridge];
 		
 		chat = [account mainThreadChatWithName:[[chatSession getRoomInfo] getRoomName]];
@@ -1564,21 +1659,25 @@ Date* javaDateFromDate(NSDate *date)
 
 - (void)joinChatRoom:(NSString *)name
 {
-	ChatRoomSession *chatSession;
-	NSAssert(name != nil, @"room name is nil in ESjoscarAdapter -joinChatRoom, this should never happen");
-	AILog(@"Joining %@ - chats dict is %@",name,joscarChatsDict);
-	if (![joscarChatsDict objectForKey:name]) {
-		chatSession = [[aimConnection getChatRoomManager] joinRoom:name];
-		[chatSession addListener:joscarBridge];
-		AILog(@"Created chatSession %@ for group chat %@",chatSession,name);
-		[joscarChatsDict setObject:chatSession forKey:name];
+	@synchronized (joscarChatsDict) {
+		ChatRoomSession *chatSession;
+		NSAssert(name != nil, @"room name is nil in ESjoscarAdapter -joinChatRoom, this should never happen");
+		AILog(@"Joining %@ - chats dict is %@",name,joscarChatsDict);
+		if (![joscarChatsDict objectForKey:name]) {
+			chatSession = [[aimConnection getChatRoomManager] joinRoom:name];
+			[chatSession addListener:joscarBridge];
+			AILog(@"Created chatSession %@ for group chat %@",chatSession,name);
+			[joscarChatsDict setObject:chatSession forKey:name];
+		}
 	}
 }
 
 - (void)inviteUser:(NSString *)inUID toChat:(NSString *)chatName withMessage:(NSString *)inviteMessage
 {
 	Screenname			*sn = [NewScreenname(inUID) autorelease];
-	[(ChatRoomSession *)[joscarChatsDict objectForKey:chatName] invite:sn :inviteMessage];
+	@synchronized (joscarChatsDict) {
+		[(ChatRoomSession *)[joscarChatsDict objectForKey:chatName] invite:sn :inviteMessage];
+	}
 }
 
 - (void)setGroupChatStateChange:(HashMap *)map
@@ -1587,13 +1686,19 @@ Date* javaDateFromDate(NSDate *date)
 	NSString *chatName = [[session getRoomInfo] getRoomName];
 //	NSString *oldStateString = [map get:@"oldState"];
 	NSString *stateString = [map get:@"state"];
-//	state can be any of these: "INITIALIZING", "CONNECTING","FAILED","INROOM","CLOSED"
+
+	//stateString can be any of these: "INITIALIZING", "CONNECTING","FAILED","INROOM","CLOSED"
 	if ([stateString isEqualToString:@"FAILED"]) {
-		[joscarChatsDict removeObjectForKey:chatName];
+		@synchronized (joscarChatsDict) {
+			[joscarChatsDict removeObjectForKey:chatName];
+		}
 		[session removeListener:joscarBridge];
-		[account chatFailed:chatName];
+		[accountProxy chatFailed:chatName];
+
 	} else if([stateString isEqualToString:@"CLOSED"]) {
-		[joscarChatsDict removeObjectForKey:chatName];
+		@synchronized (joscarChatsDict) {
+			[joscarChatsDict removeObjectForKey:chatName];
+		}
 		[session removeListener:joscarBridge];
 	}
 	
@@ -1610,7 +1715,7 @@ Date* javaDateFromDate(NSDate *date)
 		NSString *tmp = [(Screenname *)[(ChatRoomUser *)[iter next] getScreenname] getNormal];
 		[joined addObject:[[tmp copy] autorelease]];
 	}
-	[account objectsJoinedChat:[joined autorelease] chatName:chatName];
+	[accountProxy objectsJoinedChat:[joined autorelease] chatName:chatName];
 }
 
 - (void)setGroupChatUsersLeft:(HashMap *)map
@@ -1621,7 +1726,7 @@ Date* javaDateFromDate(NSDate *date)
 	NSMutableArray *left = [[NSMutableArray alloc] init];
 	while ([iter hasNext])
 		[left addObject:[[[(Screenname *)[(ChatRoomUser *)[iter next] getScreenname] getNormal] copy] autorelease]];
-	[account objectsLeftChat:[left autorelease] chatName:chatName];
+	[accountProxy objectsLeftChat:[left autorelease] chatName:chatName];
 }
 
 - (void)setGroupChatIncomingMessage:(HashMap *)map
@@ -1630,23 +1735,26 @@ Date* javaDateFromDate(NSDate *date)
 	if (![uid isEqualToString:[account UID]]) {
 		NSString *name = [[(ChatRoomSession *)[map get:@"ChatRoomSession"] getRoomInfo] getRoomName];
 		NSString *message = [(ChatMessage *)[map get:@"ChatMessage"] getMessage];
-		[account gotMessage:message onGroupChatNamed:name fromUID:uid];
+		[accountProxy gotMessage:message onGroupChatNamed:name fromUID:uid];
 	}
 }
 
 - (void)groupChatWithName:(NSString *)name sendMessage:(NSString *)message isAutoReply:(BOOL)isAutoReply
 {
-	[(ChatRoomSession *)[joscarChatsDict objectForKey:name] sendMessage:message];
+	@synchronized (joscarChatsDict) {
+		[(ChatRoomSession *)[joscarChatsDict objectForKey:name] sendMessage:message];
+	}
 }
 
 - (void)leaveGroupChatWithName:(NSString *)name
 {
-	[(ChatRoomSession *)[joscarChatsDict objectForKey:name] close];
-	[joscarChatsDict removeObjectForKey:name];
-	
-	AILog(@"Left %@; %@ remaining group chats",name, joscarChatsDict);
+	@synchronized (joscarChatsDict) {
+		[(ChatRoomSession *)[joscarChatsDict objectForKey:name] close];
+		[joscarChatsDict removeObjectForKey:name];
+		
+		AILog(@"Left %@; %@ remaining group chats",name, joscarChatsDict);
+	}
 }
-
 
 #pragma mark Utilities
 

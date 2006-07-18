@@ -22,18 +22,22 @@
 {
 	NSString	 *userNameWithGmailDotCom = nil;
 
-	//Append @gmail.com is neither @gmail.com nor @googlemail.com are found at the end
-	if (([UID rangeOfString:@"@gmail.com"
-					options:(NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch)].location == NSNotFound) &&
-		([UID rangeOfString:@"@googlemail.com"
-					options:(NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch)].location == NSNotFound)) {
+	/*
+	 * Gaim stores the username in the format username@server/resource.  We need to pass it a username in this format
+	 *
+	 * Append @gmail.com if no domain is specified.
+	 * Valid domains include gmail.com, googlemail.com, and google-hosted domains like e.co.za.
+	 */
+	if ([UID rangeOfString:@"@"].location == NSNotFound) {
 		userNameWithGmailDotCom = [UID stringByAppendingString:@"@gmail.com"];
-
 	} else {
 		userNameWithGmailDotCom = UID;
 	}
 
-	return [userNameWithGmailDotCom UTF8String];
+	NSString *resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
+	NSString *completeUserName = [NSString stringWithFormat:@"%@/%@",userNameWithGmailDotCom,resource];
+
+	return [completeUserName UTF8String];
 }
 
 - (NSString *)serverSuffix

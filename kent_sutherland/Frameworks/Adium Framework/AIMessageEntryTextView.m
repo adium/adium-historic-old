@@ -40,7 +40,7 @@
 #define KEY_SPELL_CHECKING						@"Spell Checking Enabled"
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE		@"Dual Window Interface"
 
-#define ATTACHMENT_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
+#define FILES_AND_IMAGES_TYPES [NSArray arrayWithObjects: \
 	NSFilenamesPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil]
 
 #define PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
@@ -56,6 +56,10 @@
 - (void)addAttachmentOfPath:(NSString *)inPath;
 - (void)addAttachmentOfImage:(NSImage *)inImage;
 - (void)addAttachmentsFromPasteboard:(NSPasteboard *)pasteboard;
+@end
+
+@interface NSMutableAttributedString (AIMessageEntryTextViewAdditions)
+- (void)convertForPasteWithTraitsUsingAttributes:(NSDictionary *)inAttributes;
 @end
 
 @implementation AIMessageEntryTextView
@@ -88,7 +92,6 @@
 	
 	[self setImportsGraphics:YES];
 	
-	//
 	[[NSNotificationCenter defaultCenter] addObserver:self 
 											 selector:@selector(textDidChange:)
 												 name:NSTextDidChangeNotification 
@@ -97,6 +100,10 @@
 											 selector:@selector(frameDidChange:) 
 												 name:NSViewFrameDidChangeNotification 
 											   object:self];
+	[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self
+															selector:@selector(toggleMessageSending:)
+																name:@"AIChatDidChangeCanSendMessagesNotification"
+															  object:chat];
 	
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];	
 }
@@ -229,6 +236,15 @@
 				[super keyDown:inEvent];
 			}
 
+		} else if (inChar == NSTabCharacter) {
+			if ([[self delegate] respondsToSelector:@selector(textViewShouldTabComplete:)] &&
+				[[self delegate] textViewShouldTabComplete:self]) {
+				[self complete:nil];
+
+			} else {
+				[super keyDown:inEvent];				
+			}
+
 		} else {
 			[super keyDown:inEvent];
 		}
@@ -310,6 +326,16 @@
 
 //Adium Text Entry -----------------------------------------------------------------------------------------------------
 #pragma mark Adium Text Entry
+
+/*
+ * @brief Toggle whether message sending is enabled based on a notification. The notification object is the AIChat of the appropriate message entry view
+ */
+- (void)toggleMessageSending:(NSNotification *)not
+{
+	//XXX - We really should query the AIChat about this, but AIChat's "can't send" is really designed for handling offline, not banned. Bringing up the offline messaging dialog when banned would make no sense.
+	[self setSendingEnabled:[[[not userInfo] objectForKey:@"TypingEnabled"] boolValue]];
+}
+
 /*
  * @brief Are we available for sending?
  */
@@ -370,7 +396,9 @@
 	[self setInsertionPointColor:[backgroundColor contrastingColor]];
 }
 
-- (BOOL)handledPasteAsRichText
+#pragma mark Pasting
+
+- (BOOL)handlePasteAsRichText
 {
 	NSPasteboard *generalPasteboard = [NSPasteboard generalPasteboard];
 	NSEnumerator *enumerator = [[generalPasteboard types] objectEnumerator];
@@ -388,7 +416,7 @@
 			//When we hit a type we should let the superclass handle, break without doing anything
 			break;
 			
-		} else if ([ATTACHMENT_DRAG_TYPE_ARRAY containsObject:type]) {
+		} else if ([FILES_AND_IMAGES_TYPES containsObject:type]) {
 			[self addAttachmentsFromPasteboard:generalPasteboard];
 			handledPaste = YES;
 		}
@@ -403,8 +431,8 @@
 {
 	NSDictionary	*attributes = [[self typingAttributes] copy];
 
-	if (![self handledPasteAsRichText]) {
-		[super paste:sender];
+	if (![self handlePasteAsRichText]) {
+		[self paste:sender];
 	}
 
 	if (attributes) {
@@ -413,6 +441,85 @@
 
 	[attributes release];
 }
+
+- (void)pasteAsPlainTextWithTraits:(id)sender
+{
+	NSDictionary	*attributes = [[self typingAttributes] copy];
+	
+	NSPasteboard	*generalPasteboard = [NSPasteboard generalPasteboard];
+	NSString		*type;
+
+	NSArray *supportedTypes =
+		[NSArray arrayWithObjects:NSURLPboardType, NSRTFDPboardType, NSRTFPboardType, NSHTMLPboardType, NSStringPboardType, 
+			NSFilenamesPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil];
+
+	type = [[NSPasteboard generalPasteboard] availableTypeFromArray:supportedTypes];
+	
+	if ([type isEqualToString:NSRTFPboardType] ||
+		[type isEqualToString:NSRTFDPboardType] ||
+		[type isEqualToString:NSHTMLPboardType] ||
+		[type isEqualToString:NSStringPboardType]) {
+		NSData *data = [generalPasteboard dataForType:type];
+		NSMutableAttributedString *attributedString;
+		
+		if ([type isEqualToString:NSStringPboardType]) {
+			NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+			attributedString = [[NSMutableAttributedString alloc] initWithString:string
+																	  attributes:[self typingAttributes]];
+			[string release];
+			
+		} else {
+			if ([type isEqualToString:NSRTFPboardType]) {
+				attributedString = [[NSMutableAttributedString alloc] initWithRTF:data
+															   documentAttributes:NULL];
+			} else if ([type isEqualToString:NSRTFDPboardType]) {
+				attributedString = [[NSMutableAttributedString alloc] initWithRTFD:data
+																documentAttributes:NULL];
+			} else /* NSHTMLPboardType */ {
+				attributedString = [[NSMutableAttributedString alloc] initWithHTML:data
+																documentAttributes:NULL];
+			}
+			
+			[attributedString convertForPasteWithTraitsUsingAttributes:[self typingAttributes]];
+		}
+		
+		NSRange			selectedRange = [self selectedRange];
+		NSTextStorage	*textStorage = [self textStorage];
+		
+		//Prepare the undo operation
+		NSUndoManager	*undoManager = [self undoManager];
+		[[undoManager prepareWithInvocationTarget:textStorage]
+				replaceCharactersInRange:NSMakeRange(selectedRange.location, [attributedString length])
+					withAttributedString:[textStorage attributedSubstringFromRange:selectedRange]];
+		[undoManager setActionName:AILocalizedStringFromTable(@"Paste", @"AdiumFramework", nil)];
+		
+		//Perform the paste
+		[textStorage replaceCharactersInRange:selectedRange
+						 withAttributedString:attributedString];
+		[attributedString release];
+
+	} else if ([FILES_AND_IMAGES_TYPES containsObject:type]) {
+		if (![self handlePasteAsRichText]) {
+			[self paste:sender];
+		}
+		
+	} else if ([type isEqualToString:NSURLPboardType]) {
+		//Paste a URL directly
+		[self paste:sender];
+
+	} else {		
+		//If we didn't handle it yet, let super try to deal with it
+		[self paste:sender];
+	}
+
+	if (attributes) {
+		[self setTypingAttributes:attributes];
+	}
+
+	[attributes release];	
+}
+
+#pragma mark Deletion
 
 - (void)deleteBackward:(id)sender
 {
@@ -712,12 +819,12 @@
 	NSMenuItem		*menuItem;
 	BOOL			addedOurLinkItems = NO;
 
-	if ((contextualMenu = [super menuForEvent:theEvent])) {		
+	if ((contextualMenu = [super menuForEvent:theEvent])) {
+		contextualMenu = [[contextualMenu copy] autorelease];
 		enumerator = [[contextualMenu itemArray] objectEnumerator];
 		NSMenuItem	*editLinkItem = nil;
 		while ((menuItem = [enumerator nextObject])) {
 			if ([[menuItem title] rangeOfString:AILocalizedString(@"Edit Link", nil)].location != NSNotFound) {
-				NSLog(@"menu item is %@",menuItem);
 				editLinkItem = menuItem;
 				break;
 			}
@@ -740,7 +847,7 @@
 			addedOurLinkItems = YES;
 		}
 	} else {
-		contextualMenu = [[NSMenu alloc] init];	
+		contextualMenu = [[[NSMenu alloc] init] autorelease];
 	}
 
 	//Retrieve the items which should be added to the bottom of the default menu
@@ -802,7 +909,7 @@
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY];
+	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 	BOOL			allowDragOperation;
 
@@ -820,7 +927,7 @@
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY];
+	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 	
 	if (!type || superclassType) {
@@ -851,7 +958,7 @@
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:ATTACHMENT_DRAG_TYPE_ARRAY];
+	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 
 	BOOL	success = NO;
@@ -1002,4 +1109,71 @@
 	return attributedString;
 }
 
+@end
+
+@implementation NSMutableAttributedString (AIMessageEntryTextViewAdditions)
+- (void)convertForPasteWithTraitsUsingAttributes:(NSDictionary *)typingAttributes;
+{
+	NSRange fullRange = NSMakeRange(0, [self length]);
+
+	//Remove non-trait attributes
+	[self removeAttribute:NSBackgroundColorAttributeName range:fullRange];
+	[self removeAttribute:NSBaselineOffsetAttributeName range:fullRange];
+	[self removeAttribute:NSCursorAttributeName range:fullRange];
+	[self removeAttribute:NSExpansionAttributeName range:fullRange];
+	[self removeAttribute:NSForegroundColorAttributeName range:fullRange];
+	[self removeAttribute:NSKernAttributeName range:fullRange];
+	[self removeAttribute:NSLigatureAttributeName range:fullRange];
+	[self removeAttribute:NSObliquenessAttributeName range:fullRange];
+	[self removeAttribute:NSParagraphStyleAttributeName range:fullRange];
+	[self removeAttribute:NSShadowAttributeName range:fullRange];
+	[self removeAttribute:NSStrokeWidthAttributeName range:fullRange];
+	
+	NSRange			searchRange = NSMakeRange(0, fullRange.length);
+	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
+	NSFont			*myFont = [typingAttributes objectForKey:NSFontAttributeName];
+
+	while (searchRange.location < fullRange.length) {
+		NSFont *font;
+		NSRange effectiveRange;
+		font = [self attribute:NSFontAttributeName 
+					   atIndex:searchRange.location
+		 longestEffectiveRange:&effectiveRange
+					   inRange:searchRange];
+
+		if (font) {
+			NSFontTraitMask thisFontTraits = [fontManager traitsOfFont:font];
+			NSFontTraitMask	traits = 0;
+			
+			if (thisFontTraits & NSBoldFontMask) {
+				traits |= NSBoldFontMask;
+			} else {
+				traits |= NSUnboldFontMask;				
+			}
+
+			if (thisFontTraits & NSItalicFontMask) {
+				traits |= NSItalicFontMask;
+			} else {
+				traits |= NSUnitalicFontMask;
+			}
+			
+			font = [fontManager fontWithFamily:[myFont familyName]
+										traits:traits
+										weight:[fontManager weightOfFont:myFont]
+										  size:[myFont pointSize]];
+			 
+			if (font) {
+				[self addAttribute:NSFontAttributeName
+							 value:font
+							 range:effectiveRange];
+			}
+		}
+
+		searchRange.location = effectiveRange.location + effectiveRange.length;
+		searchRange.length = fullRange.length - searchRange.location;
+	}
+
+	//Replace attachments with nothing! Absolutely nothing!
+	[self convertAttachmentsToStringsUsingPlaceholder:@""];
+}
 @end

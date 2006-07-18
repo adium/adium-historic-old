@@ -336,7 +336,7 @@
 				}
 				
 				tabBarFrame.size.height = [[[self window] contentView] frame].size.height;
-				tabBarFrame.size.width = [tabView_tabBar isTabBarHidden] ? 1 : width + 1;
+				tabBarFrame.size.width = [tabView_tabBar isTabBarHidden] ? 1 : width;
 				tabBarFrame.origin.y = contentRect.origin.y;
 				tabViewFrame.origin.y = contentRect.origin.y;
 				tabViewFrame.size.height = contentRect.size.height + 1;
@@ -384,7 +384,7 @@
 		//set tab style drawing attributes
 		[tabView_tabStyle setDrawsRight:(tabPosition == AdiumTabPositionRight)];
 		[tabView_tabStyle setDrawsUnified:(tabPosition == AdiumTabPositionTop)];
-		[[[self window] toolbar] setShowsBaselineSeparator:(tabPosition != AdiumTabPositionTop)];
+		//[[[self window] toolbar] setShowsBaselineSeparator:(tabPosition != AdiumTabPositionTop)];
 		
 		//update the tab bar and tab view frame
 		
@@ -785,7 +785,7 @@
 		offset->height = 21 + [style topMarginForTabBarControl];
 	} else {
 		offset->width = [tabView_tabBar frame].origin.x;
-		offset->height = 20 + [style topMarginForTabBarControl];
+		offset->height = 21 + [style topMarginForTabBarControl];
 	}
 	
 	*styleMask = NSTitledWindowMask;
@@ -893,7 +893,7 @@
 		if (onlineAccounts >=2) {
 			includeSource = YES;
 		}
-
+		AILog(@"Displaying tooltip for %@ --> %@ (%@) --> %@ (%@)",chat,[chat account], [[chat account] formattedUID], destination,destinationFormattedUID);
 		if (includeDestination && includeSource) {
 			tooltip = [NSString stringWithFormat:AILocalizedString(@"%@ talking to %@","AccountName talking to Username"), [[chat account] formattedUID], destinationFormattedUID];
 
@@ -977,7 +977,7 @@
     [toolbar setVisible:YES];
     [toolbar setAllowsUserCustomization:YES];
     [toolbar setAutosavesConfiguration:YES];
-	[toolbar setShowsBaselineSeparator:NO];
+	//[toolbar setShowsBaselineSeparator:NO];
 	
     //
 	toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"TextEntry", @"MessageWindow", nil]] retain];
@@ -993,7 +993,7 @@
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
     return [NSArray arrayWithObjects:@"UserIcon",@"Encryption",  NSToolbarSeparatorItemIdentifier, 
-		@"SourceDestination", @"InsertEmoticon", @"LinkEditor", @"SafariLink", NSToolbarShowColorsItemIdentifier,
+		@"SourceDestination", @"InsertEmoticon", @"BlockParticipants", @"LinkEditor", @"SafariLink", NSToolbarShowColorsItemIdentifier,
 		NSToolbarShowFontsItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, @"SendFile",
 		@"ShowInfo", @"LogViewer", nil];
 }

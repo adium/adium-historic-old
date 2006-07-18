@@ -126,7 +126,7 @@
 		if (retrievedData && [retrievedData length]) {
 			[response appendString:retrievedData];
 		} else {
-			NSLog(@"Null new data.. %@ so far...",response);
+			AILog(@"Null new data.. %@ so far...",response);
 		}
 		
         switch (state) {
@@ -192,7 +192,7 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-	NSLog(@"Translation failed: %@", [error localizedDescription]);
+	AILog(@"Translation failed: %@", [error localizedDescription]);
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection

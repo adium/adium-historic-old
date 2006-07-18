@@ -28,11 +28,12 @@
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentContext.h>
 #import <Adium/AIContentObject.h>
-#import <Adium/AIContentStatus.h>
+#import <Adium/AIContentEvent.h>
 #import <Adium/AIEmoticon.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
@@ -42,8 +43,6 @@
 #import "ESTextAndButtonsWindowController.h"
 
 #import "ESWebView.h"
-
-@class AIContentMessage, AIContentStatus, AIContentObject;
 
 @interface AIWebKitMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
@@ -62,6 +61,7 @@
 - (void) enqueueContentObject:(AIContentObject *)contentObject;
 - (void) debugLog:(NSString *)message;
 - (void)processQueuedContent;
+- (NSString *)webviewSource;
 @end
 
 static NSArray *draggedTypes = nil;
@@ -105,7 +105,6 @@ static NSArray *draggedTypes = nil;
 									   selector:@selector(sourceOrDestinationChanged:)
 										   name:Chat_DestinationChanged 
 										 object:inChat];
-		[self sourceOrDestinationChanged:nil];
 		
 		//Observe content additons
 		[[adium notificationCenter] addObserver:self 
@@ -141,6 +140,7 @@ static NSArray *draggedTypes = nil;
  */
 - (void)dealloc
 {
+	[preferencesChangedDelegate release]; preferencesChangedDelegate = nil;
 	[plugin release]; plugin = nil;
 	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
 
@@ -187,6 +187,26 @@ static NSArray *draggedTypes = nil;
 		}
 	} else {
 		[storedContentObjects release]; storedContentObjects = nil;
+	}
+}
+
+- (void)setPreferencesChangedDelegate:(id)inDelegate
+{
+	if (inDelegate != preferencesChangedDelegate) {
+		[preferencesChangedDelegate release];
+		preferencesChangedDelegate = [inDelegate retain];
+		
+		[preferencesChangedDelegate preferencesChangedForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY
+														   key:nil
+														object:nil
+												preferenceDict:[[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]
+													 firstTime:YES];
+		
+		[preferencesChangedDelegate preferencesChangedForGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES
+														   key:nil
+														object:nil
+												preferenceDict:[[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES]
+													 firstTime:YES];
 	}
 }
 
@@ -314,6 +334,13 @@ static NSArray *draggedTypes = nil;
 		[self _updateWebViewForCurrentPreferences];
 	}
 	
+	if (preferencesChangedDelegate) {
+		[preferencesChangedDelegate preferencesChangedForGroup:group
+														   key:key
+														object:object
+												preferenceDict:prefDict
+													 firstTime:firstTime];
+	}
 }
 
 /*!
@@ -363,8 +390,9 @@ static NSArray *draggedTypes = nil;
 	[activeVariant release];
 	
 	//Load the message style
-	activeStyle = [[prefDict objectForKey:KEY_WEBKIT_STYLE] retain];
-	styleBundle = [plugin messageStyleBundleWithIdentifier:activeStyle];
+	styleBundle = [plugin messageStyleBundleWithIdentifier:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
+	activeStyle = [[styleBundle bundleIdentifier] retain];
+
 	messageStyle = [[AIWebkitMessageViewStyle messageViewStyleFromBundle:styleBundle] retain];
 	[webView setPreferencesIdentifier:activeStyle];
 
@@ -432,7 +460,10 @@ static NSArray *draggedTypes = nil;
 	
 	NSNumber	*minSize = [prefDict objectForKey:KEY_WEBKIT_MIN_FONT_SIZE];
 	[[webView preferences] setMinimumFontSize:(minSize ? [minSize intValue] : 1)];
-	
+
+	//Update our icons before doing any loading
+	[self sourceOrDestinationChanged:nil];
+
 	//Prime the webview with the new style/variant and settings, and re-insert all our content back into the view
 	[self _primeWebViewAndReprocessContent:YES];	
 }
@@ -459,6 +490,7 @@ static NSArray *draggedTypes = nil;
 - (void)_primeWebViewAndReprocessContent:(BOOL)reprocessContent
 {
 	webViewIsReady = NO;
+
 	[webView setFrameLoadDelegate:self];
 	[[webView mainFrame] loadHTMLString:[messageStyle baseTemplateWithVariant:activeVariant chat:chat] baseURL:nil];
 
@@ -579,7 +611,7 @@ static NSArray *draggedTypes = nil;
 - (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
 	NSString		*dateMessage = nil;
-	AIContentStatus *dateSeparator = nil;
+	AIContentEvent	*dateSeparator = nil;
 	
 	/*
 	 If the day has changed since our last message (or if there was no previous message and 
@@ -590,13 +622,13 @@ static NSArray *draggedTypes = nil;
 		dateMessage = [[content date] descriptionWithCalendarFormat:[[NSDateFormatter localizedDateFormatter] dateFormat]
 														   timeZone:nil
 															 locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
-		dateSeparator = [AIContentStatus statusInChat:[content chat]
-										   withSource:[[content chat] listObject]
-										  destination:[[content chat] account]
-												 date:[content date]
-											  message:[[[NSAttributedString alloc] initWithString:dateMessage
-																					   attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
-											 withType:@"date_separator"];
+		dateSeparator = [AIContentEvent statusInChat:[content chat]
+										  withSource:[[content chat] listObject]
+										 destination:[[content chat] account]
+												date:[content date]
+											 message:[[[NSAttributedString alloc] initWithString:dateMessage
+																					  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
+											withType:@"date_separator"];
 		//Add the date header
 		[self _appendContent:dateSeparator 
 					 similar:NO
@@ -667,6 +699,39 @@ static NSArray *draggedTypes = nil;
     }
 }
 
+- (void)openImage:(id)sender
+{
+	NSURL	*imageURL = [sender representedObject];
+	[[NSWorkspace sharedWorkspace] openFile:[imageURL path]];
+}
+
+- (void)saveImageAs:(id)sender
+{
+	NSURL		*imageURL = [sender representedObject];
+	NSString	*path = [imageURL path];
+	
+	NSSavePanel *savePanel = [NSSavePanel savePanel];
+	[savePanel beginSheetForDirectory:nil
+								 file:[path lastPathComponent]
+					   modalForWindow:[webView window]
+						modalDelegate:self
+					   didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:)
+						  contextInfo:[imageURL retain]];
+}
+
+- (void)savePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo
+{
+	NSURL	*imageURL = (NSURL *)contextInfo;
+
+	if (returnCode ==  NSOKButton) {
+		[[NSFileManager defaultManager] copyPath:[imageURL path]
+										  toPath:[sheet filename]
+										 handler:NULL];
+	}
+	
+	[imageURL release];
+}
+
 /*!
  * @brief Append our own menu items to the webview's contextual menus
  */
@@ -693,6 +758,41 @@ static NSArray *draggedTypes = nil;
 				[webViewMenuItems removeObjectIdenticalTo:menuItem];
 			}			
 		}
+	}
+	
+	NSURL	*imageURL;
+	if ((imageURL = [element objectForKey:WebElementImageURLKey])) {
+		//This is an image
+		NSMenuItem *menuItem;
+		
+		if (!webViewMenuItems) {
+			webViewMenuItems = [NSMutableArray array];
+		}
+		
+		menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Open Image", nil)
+											  target:self
+											  action:@selector(openImage:)
+									   keyEquivalent:@""
+								   representedObject:imageURL];
+		[webViewMenuItems addObject:menuItem];
+		[menuItem release];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[AILocalizedString(@"Save Image As", nil) stringByAppendingEllipsis]
+											  target:self
+											  action:@selector(saveImageAs:)
+									   keyEquivalent:@""
+								   representedObject:imageURL];
+		[webViewMenuItems addObject:menuItem];
+		[menuItem release];		
+		
+		/*
+		NSString *imgClass = [img className];
+		//being very careful to only get user icons... a better way would be to put a class "usericon" on the img, but I haven't worked out how to do that, so we test for the name of the person in the src, and that it's not an emoticon or direct connect image.
+		if([[img getAttribute:@"src"] rangeOfString:internalObjectID].location != NSNotFound &&
+		   [imgClass rangeOfString:@"emoticon"].location == NSNotFound &&
+		   [imgClass rangeOfString:@"fullSizeImage"].location == NSNotFound &&
+		   [imgClass rangeOfString:@"scaledToFitImage"].location == NSNotFound)
+		 */
+			
 	}
 	
 	if (chatListObject) {
@@ -897,11 +997,12 @@ static NSArray *draggedTypes = nil;
 	}
 	
 	//Also observe our account
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(listObjectAttributesChanged:) 
-									   name:ListObject_AttributesChanged
-									 object:[chat account]];
-	
+	if ([chat account]) {
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(listObjectAttributesChanged:) 
+										   name:ListObject_AttributesChanged
+										 object:[chat account]];
+	}
 	//We've now masked every user currently in the participating list objects
 	[objectsWithUserIconsArray release]; 
 	objectsWithUserIconsArray = [participatingListObjects mutableCopy];	
@@ -976,7 +1077,7 @@ static NSArray *draggedTypes = nil;
 		//If that's not the case, try using the UserIconPath
 		userIcon = [[[NSImage alloc] initWithContentsOfFile:[iconSourceObject statusObjectForKey:@"UserIconPath"]] autorelease];
 	}
-	
+
 	if (userIcon) {
 		if ([messageStyle userIconMask]) {
 			//Apply the mask is the style has one
@@ -991,7 +1092,7 @@ static NSArray *draggedTypes = nil;
 			//Otherwise, just use the icon as-is
 			webKitUserIcon = userIcon;
 		}
-		
+
 		/*
 		 * Writing the icon out is necessary for webkit to be able to use it; it also guarantees that there won't be
 		 * any animation, which is good since animation in the message view is slow and annoying.
@@ -1002,7 +1103,7 @@ static NSArray *draggedTypes = nil;
 			[inObject setStatusObject:webKitUserIconPath
 							   forKey:KEY_WEBKIT_USER_ICON
 							   notify:NO];
-			
+
 			//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
 			if (![objectsWithUserIconsArray containsObjectIdenticalTo:inObject]) {
 				[objectsWithUserIconsArray addObject:inObject];
@@ -1038,7 +1139,8 @@ static NSArray *draggedTypes = nil;
 		AIEmoticon	*emoticon = [[inNotification userInfo] objectForKey:@"AIEmoticon"];
 		NSString	*textEquivalent = [[emoticon textEquivalents] objectAtIndex:0];
 		NSString	*path = [emoticon path];
-		
+		path = [[NSURL fileURLWithPath:path] absoluteString];
+		AILog(@"Trying to update %@ (%@)",emoticon,textEquivalent);
 		for (int i = 0; i < imagesCount; i++) {
 			DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
 			
@@ -1082,7 +1184,6 @@ static NSArray *draggedTypes = nil;
 
 - (void)handleAction:(NSString *)action forFileTransfer:(NSString *)fileName
 {
-	NSLog(@"%@ : %@", action, fileName);
 	ESFileTransferRequestPromptController *tc = [fileTransferRequestControllers objectForKey:fileName];
 
 	if (tc) {
@@ -1150,5 +1251,11 @@ static NSArray *draggedTypes = nil;
 }
 
 - (void)debugLog:(NSString *)message { NSLog(message); }
+
+//gets the source of the html page, for debugging
+- (NSString *)webviewSource
+{
+	return [(DOMHTMLHtmlElement *)[[[[webView mainFrame] DOMDocument] getElementsByTagName:@"html"] item:0] outerHTML];
+}
 
 @end

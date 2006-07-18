@@ -54,7 +54,7 @@
 		defaultBrowserName = [[NSFileManager defaultManager] displayNameAtPath:defaultBrowserPath];
 
 		//Is the default browser supported?
-		NSEnumerator *enumerator = [[NSArray arrayWithObjects:@"Safari", @"Firefox", @"Omniweb", @"Camino", @"NetNewsWire", nil] objectEnumerator];
+		NSEnumerator *enumerator = [[NSArray arrayWithObjects:@"Safari", @"Firefox", @"OmniWeb", @"Camino", @"Shiira", @"NetNewsWire", nil] objectEnumerator];
 		NSString	 *aSupportedBrowser;
 
 		while ((aSupportedBrowser = [enumerator nextObject])) {
@@ -101,7 +101,7 @@
 {
 	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
 	NSTextView	*earliestTextView = (NSTextView *)[keyWindow earliestResponderOfClass:[NSTextView class]];
-	
+
 	if (earliestTextView) {
 		NSArray	*arguments = [NSArray arrayWithObject:AILocalizedString(@"Multiple browsers are open. Please select one link:", "Prompt when more than one web browser is available when inserting a link from the active browser.")];
 		[[adium applescriptabilityController] runApplescriptAtPath:SAFARI_LINK_SCRIPT_PATH
@@ -121,7 +121,7 @@
 - (void)applescriptDidRun:(id)userInfo resultString:(NSString *)resultString
 {
 	NSTextView	*earliestTextView = (NSTextView *)userInfo;
-	NSLog(@"did run %@ - %@",userInfo, resultString);
+
 	//If the script returns nil or fails, do nothing
 	if (resultString && [resultString length]) {
 		//Insert the script result - it should have returned an HTML link, so process it first

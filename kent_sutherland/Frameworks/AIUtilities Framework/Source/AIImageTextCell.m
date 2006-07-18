@@ -209,14 +209,15 @@
 {
 	NSString	*title = [self stringValue];
 	NSImage		*image = [self image];
-	BOOL		highlighted;
+	BOOL		highlighted = [self isHighlighted];
 
 //	[super drawInteriorWithFrame:cellFrame inView:controlView];
 	
-	highlighted = [self isHighlighted];
+	/*
 	if (highlighted) {
 		[self _drawHighlightWithFrame:cellFrame inView:controlView];
 	}
+	 */
 
 	//Draw the cell's image
 	if (image != nil) {
@@ -274,7 +275,11 @@
 		float				stringHeight = 0.0;
 
 		//Determine the correct text color
-		if (highlighted) {
+		NSWindow			*window;
+
+		//If we don't have a control view, or we do and it's the first responder, draw the text in the alternateSelectedControl text color (white)
+		if (highlighted && ((window = [controlView window]) &&
+							([window isKeyWindow] && ([window firstResponder] == controlView)))) {
 			textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
 		} else {
 			if ([self isEnabled]) {
@@ -283,7 +288,7 @@
 				textColor = [NSColor grayColor]; //Draw the text disabled
 			}
 		}
-
+		
 		//Adjust if a substring is present
 		if (subString) cellFrame.size.height /= 2;
 

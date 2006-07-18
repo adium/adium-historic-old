@@ -22,6 +22,9 @@
 #ifndef _GAIM_JABBER_H_
 #define _GAIM_JABBER_H_
 
+#ifdef HAVE_LIBXML
+#include <libxml/parser.h>
+#endif
 #include <glib.h>
 #include "connection.h"
 #include "roomlist.h"
@@ -64,7 +67,11 @@ typedef struct _JabberStream
 {
 	int fd;
 
+#ifdef HAVE_LIBXML
+	xmlParserCtxt *context;
+#else
 	GMarkupParseContext *context;
+#endif
 	xmlnode *current;
 
 	enum {
@@ -113,6 +120,8 @@ typedef struct _JabberStream
 
 	GaimCircBuffer *write_buffer;
 	guint writeh;
+
+	gchar* last_mail_alert_time;
 
 	/* OK, this stays at the end of the struct, so plugins can depend
 	 * on the rest of the stuff being in the right place

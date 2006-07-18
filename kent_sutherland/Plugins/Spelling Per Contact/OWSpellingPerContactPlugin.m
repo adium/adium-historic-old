@@ -17,6 +17,7 @@
 #import "OWSpellingPerContactPlugin.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
+#import <AIUtilities/AIExceptionHandlingUtilities.h>
 
 #define GROUP_LAST_USED_SPELLING	@"Last Used Spelling"
 #define KEY_LAST_USED_SPELLING		@"Last Used Spelling Languge"
@@ -54,6 +55,7 @@
 
 - (void)chatBecameActive:(NSNotification *)notification
 {
+	AI_DURING
 	AIChat	 *newChat = [notification object];
 	AIChat	 *previousChat = [[notification userInfo] objectForKey:@"PreviouslyActiveChat"];
 
@@ -96,6 +98,8 @@
 			[[NSSpellChecker sharedSpellChecker] setLanguage:newChatLanguage];
 		}
 	}
+	AI_HANDLER
+	AI_ENDHANDLER
 }
 
 - (void)chatWillClose:(NSNotification *)notification

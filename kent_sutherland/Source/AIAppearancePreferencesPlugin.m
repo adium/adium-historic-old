@@ -214,6 +214,12 @@
 		NSString		*filePath = [resourcePath stringByAppendingPathComponent:fileName];
 		
 		if ([defaultManager fileExistsAtPath:filePath]) {
+			NSBundle *xtraBundle;
+			if((xtraBundle = [NSBundle bundleWithPath:filePath]) &&
+			   ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1)) {
+				filePath = [[xtraBundle resourcePath] stringByAppendingPathComponent:@"Data.plist"];
+			}
+
 			setDictionary = [NSDictionary dictionaryWithContentsOfFile:filePath];
 		}
 	}
@@ -344,8 +350,6 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 					themeDict, @"preferences",
 					nil]];
 				[alreadyAddedArray addObject:name];
-			} else {
-				//NSLog(@"Already added");
 			}
 		}
 	}

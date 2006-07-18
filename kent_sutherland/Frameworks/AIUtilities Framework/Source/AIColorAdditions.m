@@ -20,7 +20,6 @@
 #import "AIColorAdditions.h"
 #import "AIStringAdditions.h"
 #include <string.h>
-#include <c.h>
 
 static const float ONE_THIRD = 1.0/3.0;
 static const float ONE_SIXTH = 1.0/6.0;
@@ -37,7 +36,13 @@ static NSDictionary *RGBColorValues = nil;
 static NSString *defaultRGBTxtLocation1 = @"/usr/share/emacs";
 static NSString *defaultRGBTxtLocation2 = @"etc/rgb.txt";
 
-@implementation NSDictionary (AIColorAdditions)
+#ifdef DEBUG_BUILD
+	#define COLOR_DEBUG TRUE
+#else
+	#define COLOR_DEBUG FALSE
+#endif
+
+@implementation NSDictionary (AIColorAdditions_RGBTxtFiles)
 
 //see /usr/share/emacs/(some version)/etc/rgb.txt for an example of such a file.
 //the pathname does not need to end in 'rgb.txt', but it must be a file in UTF-8 encoding.
@@ -81,11 +86,13 @@ static NSString *defaultRGBTxtLocation2 = @"etc/rgb.txt";
 					   && (state.blueStart  != NULL)
 					   && (state.nameStart  != NULL)))
 				{
+#if COLOR_DEBUG
 					NSLog(@"Parse error reading rgb.txt file: a non-comment line was encountered that did not have all four of red (%p), green (%p), blue (%p), and name (%p) - index is %u",
 						  state.redStart,
 						  state.greenStart,
 						  state.blueStart,
 						  state.nameStart, i);
+#endif
 					goto end;
 				}
 				
@@ -140,68 +147,7 @@ end:
 
 @end
 
-@implementation NSString (AIColorAdditions)
-
-- (NSColor *)representedColor
-{
-    unsigned int	r, g, b;
-    unsigned int	a = 255;
-
-	const char *selfUTF8 = [self UTF8String];
-	
-	//format: r,g,b[,a]
-	//all components are decimal numbers 0..255.
-	r = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	++selfUTF8;
-	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	++selfUTF8;
-	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	if (*selfUTF8 == ',') {
-		++selfUTF8;
-		a = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	}
-
-    return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:(a/255.0)] ;
-}
-
-- (NSColor *)representedColorWithAlpha:(float)alpha
-{
-	//this is the same as above, but the alpha component is overridden.
-
-    unsigned int	r, g, b;
-
-	const char *selfUTF8 = [self UTF8String];
-	
-	//format: r,g,b
-	//all components are decimal numbers 0..255.
-	r = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	++selfUTF8;
-	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	++selfUTF8;
-	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-
-    return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:alpha];
-}
-
-@end
-
-@implementation NSColor (AIColorAdditions)
-
-//Returns the current system control tint, supporting 10.2
-+ (NSControlTint)currentControlTintSupportingJag
-{
-    if ([self respondsToSelector:@selector(currentControlTint)]) {
-		return [self currentControlTint];
-    } else {
-		NSNumber	*tintNum = [[NSUserDefaults standardUserDefaults] objectForKey:@"AppleAquaColorVariant"];
-	
-		if (!tintNum || [tintNum intValue] == 1) {
-			return NSBlueControlTint;
-		} else {
-			return NSGraphiteControlTint;
-		}
-    }
-}
+@implementation NSColor (AIColorAdditions_RGBTxtFiles)
 
 + (NSDictionary *)colorNamesDictionary
 {
@@ -213,9 +159,11 @@ end:
 		while ((!RGBColorValues) && (middlePath = [middlePathEnum nextObject])) {
 			NSString *path = [defaultRGBTxtLocation1 stringByAppendingPathComponent:[middlePath stringByAppendingPathComponent:defaultRGBTxtLocation2]];
 			RGBColorValues = [[NSDictionary dictionaryWithContentsOfRGBTxtFile:path] retain];
+#if COLOR_DEBUG
 			if (RGBColorValues) {
 				NSLog(@"Got colour values from %@", path);
 			}
+#endif
 		}
 		if (!RGBColorValues) {
 			RGBColorValues = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -242,6 +190,10 @@ end:
 	return RGBColorValues;
 }
 
+@end
+
+@implementation NSColor (AIColorAdditions_Comparison)
+
 //Returns YES if the colors are equal
 - (BOOL)equalToRGBColor:(NSColor *)inColor
 {
@@ -252,6 +204,10 @@ end:
             ([convertedA blueComponent]  == [convertedB blueComponent])  &&
             ([convertedA greenComponent] == [convertedB greenComponent]));
 }
+
+@end
+
+@implementation NSColor (AIColorAdditions_DarknessAndContrast)
 
 //Returns YES if this color is dark
 - (BOOL)colorIsDark
@@ -286,24 +242,6 @@ end:
                                      alpha:[convertedColor alphaComponent]];
 }
 
-//Linearly adjust a color
-#define cap(x) { if (x < 0) {x = 0;} else if (x > 1) {x = 1;} }
-- (NSColor *)adjustHue:(float)dHue saturation:(float)dSat brightness:(float)dBrit
-{
-    float hue, sat, brit, alpha;
-    
-    [self getHue:&hue saturation:&sat brightness:&brit alpha:&alpha];
-    hue += dHue;
-    cap(hue);
-    sat += dSat;
-    cap(sat);
-    brit += dBrit;
-    cap(brit);
-    
-    return [NSColor colorWithCalibratedHue:hue saturation:sat brightness:brit alpha:alpha];
-}
-
-
 //Inverts the luminance of this color so it looks good on selected/dark backgrounds
 - (NSColor *)colorWithInvertedLuminance
 {
@@ -335,6 +273,27 @@ end:
 	}
 }
 
+@end
+
+@implementation NSColor (AIColorAdditions_HLS)
+
+//Linearly adjust a color
+#define cap(x) { if (x < 0) {x = 0;} else if (x > 1) {x = 1;} }
+- (NSColor *)adjustHue:(float)dHue saturation:(float)dSat brightness:(float)dBrit
+{
+    float hue, sat, brit, alpha;
+    
+    [self getHue:&hue saturation:&sat brightness:&brit alpha:&alpha];
+    hue += dHue;
+    cap(hue);
+    sat += dSat;
+    cap(sat);
+    brit += dBrit;
+    cap(brit);
+    
+    return [NSColor colorWithCalibratedHue:hue saturation:sat brightness:brit alpha:alpha];
+}
+
 - (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation
 {
     NSColor	*rgbColor;
@@ -355,6 +314,10 @@ end:
 
     return [NSColor colorWithCalibratedRed:r green:g blue:b alpha:alpha];
 }
+
+@end
+
+@implementation NSColor (AIColorAdditions_RepresentingColors)
 
 - (NSString *)hexString
 {
@@ -382,9 +345,10 @@ end:
     return [NSString stringWithUTF8String:hexString];
 }
 
+//String representation: R,G,B[,A].
 - (NSString *)stringRepresentation
 {
-    NSColor	*tempColor = [self colorUsingColorSpaceName:@"NSCalibratedRGBColorSpace"];
+    NSColor	*tempColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
 	float alphaComponent = [tempColor alphaComponent];
 
 	if (alphaComponent == 1.0) {
@@ -402,19 +366,96 @@ end:
 	}
 }
 
-+ (NSColor *)randomColor {
+- (NSString *)CSSRepresentation
+{
+	float alpha = [self alphaComponent];
+	if ((1.0 - alpha) >= 0.000001) {
+		NSColor *rgb = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+		return [NSString stringWithFormat:@"rgba(%@,%@,%@,%@)",
+			[NSString stringWithFloat:[rgb redComponent]   maxDigits:6],
+			[NSString stringWithFloat:[rgb greenComponent] maxDigits:6],
+			[NSString stringWithFloat:[rgb blueComponent]  maxDigits:6],
+			[NSString stringWithFloat:alpha                maxDigits:6]];
+	} else {
+		return [@"#" stringByAppendingString:[self hexString]];
+	}
+}
+
+@end
+
+@implementation NSString (AIColorAdditions_RepresentingColors)
+
+- (NSColor *)representedColor
+{
+    unsigned int	r = 255, g = 255, b = 255;
+    unsigned int	a = 255;
+
+	const char *selfUTF8 = [self UTF8String];
+	
+	//format: r,g,b[,a]
+	//all components are decimal numbers 0..255.
+	r = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+	if(*selfUTF8 == ',') ++selfUTF8;
+	else                 goto scanFailed;
+	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+	if(*selfUTF8 == ',') ++selfUTF8;
+	else                 goto scanFailed;
+	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+	if (*selfUTF8 == ',') {
+		++selfUTF8;
+		a = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+
+		if (*selfUTF8) goto scanFailed;
+	} else if (*selfUTF8 != '\0') {
+		goto scanFailed;
+	}
+
+    return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:(a/255.0)] ;
+scanFailed:
+	return nil;
+}
+
+- (NSColor *)representedColorWithAlpha:(float)alpha
+{
+	//this is the same as above, but the alpha component is overridden.
+
+    unsigned int	r, g, b;
+
+	const char *selfUTF8 = [self UTF8String];
+	
+	//format: r,g,b
+	//all components are decimal numbers 0..255.
+	r = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+	++selfUTF8;
+	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+	++selfUTF8;
+	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+
+    return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:alpha];
+}
+
+@end
+
+@implementation NSColor (AIColorAdditions_RandomColor)
+
++ (NSColor *)randomColor
+{
 	return [NSColor colorWithCalibratedRed:(arc4random() % 65536) / 65536.0
 	                                 green:(arc4random() % 65536) / 65536.0
 	                                  blue:(arc4random() % 65536) / 65536.0
 	                                 alpha:1.0];
 }
-+ (NSColor *)randomColorWithAlpha {
++ (NSColor *)randomColorWithAlpha
+{
 	return [NSColor colorWithCalibratedRed:(arc4random() % 65536) / 65536.0
 	                                 green:(arc4random() % 65536) / 65536.0
 	                                  blue:(arc4random() % 65536) / 65536.0
 	                                 alpha:(arc4random() % 65536) / 65536.0];
 }
 
+@end
+
+@implementation NSColor (AIColorAdditions_HTMLSVGCSSColors)
 
 + (id)colorWithHTMLString:(NSString *)str
 {
@@ -433,7 +474,9 @@ end:
 		colorValue = [colorValues objectForKey:str];
 		if (!colorValue) colorValue = [colorValues objectForKey:[str lowercaseString]];
 		if (!colorValue) {
+#if COLOR_DEBUG
 			NSLog(@"+[NSColor(AIColorAdditions) colorWithHTMLString:] called with unrecognised color name (str is %@); returning %@", str, defaultColor);
+#endif
 			return defaultColor;
 		}
 	}
@@ -458,7 +501,9 @@ end:
 	if (*hexString == '#') ++hexString;
 
 	if (hexStringLength < 3) {
+#if COLOR_DEBUG
 		NSLog(@"+[%@ colorWithHTMLString:] called with a string that cannot possibly be a hexadecimal color specification (e.g. #ff0000, #00b, #cc08) (string: %@ input: %@); returning %@", NSStringFromClass(self), colorValue, str, defaultColor);
+#endif
 		return defaultColor;
 	}
 

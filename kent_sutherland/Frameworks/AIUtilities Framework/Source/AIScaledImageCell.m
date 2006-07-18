@@ -17,22 +17,24 @@
 
 @implementation AIScaledImageCell
 
-- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+- (id)init
 {
-	//Highlight
-	if ([self isHighlighted]) {
-		[[NSColor alternateSelectedControlColor] set];
-		[[NSBezierPath bezierPathWithRoundedRect:cellFrame radius:4] fill];
+	if ((self = [super init])) {
+		maxSize = NSZeroSize;
 	}
 	
-	//Draw our interior
-	[super drawWithFrame:cellFrame inView:controlView];
+	return self;
+}
+
+- (void)setMaxSize:(NSSize)inMaxSize
+{
+	maxSize = inMaxSize;
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
 	NSImage	*img = [self image];
-
+	
 	if (img) {
 		//Handle flipped axis
 		[img setFlipped:![img isFlipped]];
@@ -44,16 +46,28 @@
 		
 		//Scaling
 		NSRect	targetRect = cellFrame;
-		if ((imgSize.height > cellFrame.size.height) ||
-			(imgSize.width  >  cellFrame.size.width)) {
+		
+		//Determine the correct maximum size, taking into account maxSize and our cellFrame.
+		NSSize	ourMaxSize = cellFrame.size;
+		if ((maxSize.width != 0) && (ourMaxSize.width > maxSize.width)) {
+			ourMaxSize.width = maxSize.width;
+		}
+		if ((maxSize.height != 0) && (ourMaxSize.height > maxSize.height)) {
+			ourMaxSize.height = maxSize.height;
+		}
+		
+		if ((imgSize.height > ourMaxSize.height) ||
+			(imgSize.width  >  ourMaxSize.width)) {
 			
-			if ((imgSize.height / cellFrame.size.height) >
-				(imgSize.width / cellFrame.size.width)) {
-				targetRect.size.width  = roundf(imgSize.width  / (imgSize.height / cellFrame.size.height));
+			if (imgSize.width > imgSize.height) {
+				//Give width priority: Make the height change by the same proportion as the width will change
+				targetRect.size.width = ourMaxSize.width;
+				targetRect.size.height = imgSize.height * (targetRect.size.width / imgSize.width);
 			} else {
-				targetRect.size.height = roundf(imgSize.height / (imgSize.width  / cellFrame.size.width));
+				//Give height priority: Make the width change by the same proportion as the height will change
+				targetRect.size.height = ourMaxSize.height;
+				targetRect.size.width = imgSize.width * (targetRect.size.height / imgSize.height);
 			}
-			
 		} else {
 			targetRect.size.width = imgSize.width;
 			targetRect.size.height = imgSize.height;
@@ -61,7 +75,7 @@
 		
 		//Centering
 		targetRect = NSOffsetRect(targetRect, round((cellFrame.size.width - targetRect.size.width) / 2), round((cellFrame.size.height - targetRect.size.height) / 2));
-
+		
 		//Draw Image
 		[img drawInRect:targetRect
 			   fromRect:imgRect

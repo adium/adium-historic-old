@@ -27,6 +27,7 @@
 - (NSString *)serviceCodeUniqueID{
 	return @"joscar-OSCAR-dotMac";
 }
+#ifdef JOSCAR_SUPERCEDE_LIBGAIM
 - (NSString *)serviceID{
 	return @"Mac";
 }
@@ -36,6 +37,17 @@
 - (NSString *)longDescription{
 	return @".Mac";
 }
+#else
+- (NSString *)serviceID{
+	return @"Mac-joscar";
+}
+- (NSString *)shortDescription{
+	return @".Mac-joscar";
+}
+- (NSString *)longDescription{
+	return @".Mac-joscar";
+}
+#endif
 - (NSCharacterSet *)ignoredCharacters{
 	return [NSCharacterSet characterSetWithCharactersInString:@" "];
 }

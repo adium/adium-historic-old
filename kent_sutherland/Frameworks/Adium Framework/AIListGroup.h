@@ -23,7 +23,8 @@
 	
 	NSMutableArray		*containedObjects;	//Manually ordered array of contents
     BOOL				expanded;			//Exanded/Collapsed state of this object
-	
+	BOOL				loadedExpanded;
+
 	float				largestOrder;
 	float				smallestOrder;
 }

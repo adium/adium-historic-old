@@ -10,7 +10,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 #import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/AIStringUtilities.h>
+#import <AIUtilities/AIStringUtilities.h> 
 #import <Adium/AILocalizationAssistance.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import "AIPreferenceController.h"

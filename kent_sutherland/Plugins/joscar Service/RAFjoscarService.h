@@ -13,5 +13,4 @@
 
 }
 
-- (NSImage *)defaultServiceIcon;
 @end

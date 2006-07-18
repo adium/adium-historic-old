@@ -275,7 +275,7 @@
     if ([speechArray count] && !speaking) {
 		//Don't speak on top of other apps; instead, wait 1 second and try again
 		if (SpeechBusySystemWide() > 0) {
-			[self performSelector:@selector(speakNext)
+			[self performSelector:@selector(_speakNext)
 					   withObject:nil
 					   afterDelay:1.0];
 		} else {

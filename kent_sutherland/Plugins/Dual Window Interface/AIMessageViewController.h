@@ -46,7 +46,7 @@
 	AIAccountSelectionView				*view_accountSelection;
 
     AIChat					*chat;
-	BOOL					sendMessagesToOfflineContact;
+	BOOL					suppressSendLaterPrompt;
 	int						entryMinHeight;
 	int						userListMinWidth;
 }
@@ -67,7 +67,6 @@
 - (IBAction)sendMessage:(id)sender;
 - (IBAction)didSendMessage:(id)sender;
 - (IBAction)sendMessageLater:(id)sender;
-- (void)setShouldSendMessagesToOfflineContacts:(BOOL)should;
 
 //Account Selection
 - (void)redisplaySourceAndDestinationSelector:(NSNotification *)notification;

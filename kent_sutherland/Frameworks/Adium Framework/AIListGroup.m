@@ -261,10 +261,17 @@
 - (void)setExpanded:(BOOL)inExpanded
 {
     expanded = inExpanded;
+	loadedExpanded = YES;
 }
 //Returns the current expanded/collapsed state of this group
 - (BOOL)isExpanded
 {
+	if (!loadedExpanded) {
+		loadedExpanded = YES;
+		expanded = [[self preferenceForKey:@"IsExpanded"
+									 group:@"Contact List"] boolValue];
+	}
+
     return expanded;
 }
 

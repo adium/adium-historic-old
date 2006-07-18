@@ -15,10 +15,10 @@
         }, 
         {CLASS = AISmartStepper; LANGUAGE = ObjC; SUPERCLASS = NSStepper; }, 
         {
+            ACTIONS = {changePreference = id; }; 
             CLASS = DCMessageContextDisplayPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "checkBox_doNotDim" = NSButton; 
                 "checkBox_showContext" = NSButton; 
                 "matrix_radioButtons" = NSMatrix; 
                 "menu_haveNotTalkedUnits" = NSPopUpButton; 
@@ -26,9 +26,9 @@
                 "radioButton_always" = NSButtonCell; 
                 "radioButton_haveNotTalked" = NSButtonCell; 
                 "radioButton_haveTalked" = NSButtonCell; 
-                "stepper_haveNotTalkedDays" = AISmartStepper; 
-                "stepper_haveTalkedDays" = AISmartStepper; 
-                "stepper_linesToDisplay" = AISmartStepper; 
+                "stepper_haveNotTalkedDays" = NSStepper; 
+                "stepper_haveTalkedDays" = NSStepper; 
+                "stepper_linesToDisplay" = NSStepper; 
                 "textField_haveNotTalkedDays" = NSTextField; 
                 "textField_haveTalkedDays" = NSTextField; 
                 "textField_linesToDisplay" = NSTextField; 

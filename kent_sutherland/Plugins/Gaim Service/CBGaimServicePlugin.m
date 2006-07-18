@@ -16,6 +16,7 @@
 
 #import "CBGaimServicePlugin.h"
 #import "GaimServices.h"
+#import "SLGaimCocoaAdapter.h"
 #import "AIPreferenceController.h"
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
@@ -34,9 +35,6 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS
 																		forClass:[self class]]
 										  forGroup:GROUP_ACCOUNT_STATUS];
-	
-	//Prepare the shared instance of the gaim thread adapter
-	[SLGaimCocoaAdapter prepareSharedInstance];
 	
     //Install the services
 #ifndef JOSCAR_SUPERCEDE_LIBGAIM
@@ -58,6 +56,8 @@
 #ifndef MEANWHILE_NOT_AVAILABLE
 	MeanwhileService	= [[ESMeanwhileService alloc] init];
 #endif
+	
+	[SLGaimCocoaAdapter pluginDidLoad];
 }
 
 - (void)uninstallPlugin
