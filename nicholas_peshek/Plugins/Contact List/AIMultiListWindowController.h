@@ -18,24 +18,32 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIObject.h>
 #import <AIUtilities/AIFunctions.h>
-#import "AIListWindowController.h"
+#import "AIContactList.h"
+
+typedef enum {
+	EVERY = 0,
+    FRONT,
+    NONFRONT
+} LISTS;
 
 @interface AIMultiListWindowController : AIObject {
-	NSMutableArray			*windowControllerArray;
-	AIListWindowController	*mostRecentContactList;
+	NSMutableArray	*contactListArray;
+	AIContactList	*mostRecentContactList;
 }
 
 + (AIMultiListWindowController *)initialize:(LIST_WINDOW_STYLE)windowStyle;
 - (AIMultiListWindowController *)createWindows:(LIST_WINDOW_STYLE)windowStyle;
 - (BOOL)createNewSeparableContactListWithObject:(AIListObject<AIContainingObject> *)newListObject;
 - (void)showWindowInFront:(BOOL)inFront;
-- (AIListWindowController *)mostRecentContactList;
+- (AIContactList *)mostRecentContactList;
+- (BOOL)isVisible;
+- (BOOL)isMainWindow;
+- (BOOL)isSlidOffScreen;
 - (NSWindow *)window;
 - (void)performClose;
 - (AIRectEdgeMask)windowSlidOffScreenEdgeMask;
-- (void)destroyListController:(AIListWindowController *)doneController;
-- (AIListWindowController *)nextContactList;
-- (void)setDragItems:(NSArray *)draggedItems;
-- (void)setIsDropped:(BOOL)isDropped;
+- (void)destroyListController:(AIContactList *)doneController;
+- (AIContactList *)nextContactList;
+- (void)selector:(SEL)aSelector withArgument:(id)argument toItem:(CONTACT_LIST_ITEM)item on:(LISTS)lists;
 
 @end

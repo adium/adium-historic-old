@@ -56,6 +56,8 @@
 		017A21E80A4BDF8500A826E5 /* AIMultiListWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 017A21E60A4BDF8500A826E5 /* AIMultiListWindowController.m */; };
 		017A280D0A4BEAF500A826E5 /* AIContactListOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 017A280B0A4BEAF400A826E5 /* AIContactListOutlineView.h */; };
 		017A280E0A4BEAF500A826E5 /* AIContactListOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 017A280C0A4BEAF500A826E5 /* AIContactListOutlineView.m */; };
+		019F28320A6EFCD000889E17 /* AIContactList.h in Headers */ = {isa = PBXBuildFile; fileRef = 019F28300A6EFCCF00889E17 /* AIContactList.h */; };
+		019F28330A6EFCD000889E17 /* AIContactList.m in Sources */ = {isa = PBXBuildFile; fileRef = 019F28310A6EFCCF00889E17 /* AIContactList.m */; };
 		01A348620A4BD8EE00A1D2A6 /* AISnappingWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 01A348600A4BD8EE00A1D2A6 /* AISnappingWindow.h */; };
 		01A348630A4BD8EE00A1D2A6 /* AISnappingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 01A348610A4BD8EE00A1D2A6 /* AISnappingWindow.m */; };
 		071C56330827933100399C0F /* Shared Dock Icon Images in Resources */ = {isa = PBXBuildFile; fileRef = 071C56310827933000399C0F /* Shared Dock Icon Images */; };
@@ -1738,6 +1740,8 @@
 		017A21E60A4BDF8500A826E5 /* AIMultiListWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIMultiListWindowController.m; path = "Plugins/Contact List/AIMultiListWindowController.m"; sourceTree = "<group>"; };
 		017A280B0A4BEAF400A826E5 /* AIContactListOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContactListOutlineView.h; path = "Plugins/Contact List/AIContactListOutlineView.h"; sourceTree = "<group>"; };
 		017A280C0A4BEAF500A826E5 /* AIContactListOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContactListOutlineView.m; path = "Plugins/Contact List/AIContactListOutlineView.m"; sourceTree = "<group>"; };
+		019F28300A6EFCCF00889E17 /* AIContactList.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactList.h; path = "Plugins/Contact List/AIContactList.h"; sourceTree = "<group>"; };
+		019F28310A6EFCCF00889E17 /* AIContactList.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactList.m; path = "Plugins/Contact List/AIContactList.m"; sourceTree = "<group>"; };
 		01A348600A4BD8EE00A1D2A6 /* AISnappingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISnappingWindow.h; path = "Plugins/Contact List/AISnappingWindow.h"; sourceTree = "<group>"; };
 		01A348610A4BD8EE00A1D2A6 /* AISnappingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISnappingWindow.m; path = "Plugins/Contact List/AISnappingWindow.m"; sourceTree = "<group>"; };
 		071C56320827933000399C0F /* English */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English; path = "Resources/English.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
@@ -5915,6 +5919,8 @@
 				017A280C0A4BEAF500A826E5 /* AIContactListOutlineView.m */,
 				01A348600A4BD8EE00A1D2A6 /* AISnappingWindow.h */,
 				01A348610A4BD8EE00A1D2A6 /* AISnappingWindow.m */,
+				019F28300A6EFCCF00889E17 /* AIContactList.h */,
+				019F28310A6EFCCF00889E17 /* AIContactList.m */,
 				34E1066A09536D7300EBE478 /* Borderless */,
 				4BF98D2906D147BB00E8781D /* Standard Window */,
 				34878F710518289B003B2F21 /* Contact List Advanced Preferences */,
@@ -7302,6 +7308,7 @@
 				01A348620A4BD8EE00A1D2A6 /* AISnappingWindow.h in Headers */,
 				017A21E70A4BDF8500A826E5 /* AIMultiListWindowController.h in Headers */,
 				017A280D0A4BEAF500A826E5 /* AIContactListOutlineView.h in Headers */,
+				019F28320A6EFCD000889E17 /* AIContactList.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8859,6 +8866,7 @@
 				01A348630A4BD8EE00A1D2A6 /* AISnappingWindow.m in Sources */,
 				017A21E80A4BDF8500A826E5 /* AIMultiListWindowController.m in Sources */,
 				017A280E0A4BEAF500A826E5 /* AIContactListOutlineView.m in Sources */,
+				019F28330A6EFCD000889E17 /* AIContactList.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

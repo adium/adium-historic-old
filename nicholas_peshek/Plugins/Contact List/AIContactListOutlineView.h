@@ -9,9 +9,9 @@
 #import <Adium/AIListOutlineView.h>
 
 @interface AIContactListOutlineView : AIListOutlineView {
-	BOOL			isDroppedOutOfView;
-	NSPasteboard	*tempDragBoard;
+	NSNumber			*isDroppedOutOfView;
+	NSPasteboard		*tempDragBoard;
 }
 
-- (void)setIsDroppedOutOfView:(BOOL)droppedOn;
+- (void)setIsDroppedOutOfView:(NSNumber *)droppedOn;
 @end

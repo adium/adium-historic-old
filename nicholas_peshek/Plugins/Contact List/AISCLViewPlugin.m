@@ -94,9 +94,9 @@
 - (BOOL)contactListIsVisibleAndMain
 {
 	return (contactListWindowController &&
-			[[contactListWindowController window] isVisible] &&
-			[[contactListWindowController window] isMainWindow] &&
-			([contactListWindowController windowSlidOffScreenEdgeMask] == AINoEdges));
+			[contactListWindowController isVisible] &&
+			[contactListWindowController isMainWindow] &&
+			[contactListWindowController isSlidOffScreen]);
 }
 
 //Close contact list

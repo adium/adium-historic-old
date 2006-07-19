@@ -18,6 +18,7 @@
 #import "AIListWindowController.h"
 #import "AIListController.h"
 #import "AIListGroup.h"
+#import "AIListObject.h"
 #import "AIMultiListWindowController.h"
 #import "AISCLViewPlugin.h"
 #import "AISnappingWindow.h"
@@ -73,17 +74,17 @@
 
 - (void)mergeContactListWindow:(NSWindow *)currentWindow withWindow:(NSWindow *)otherWindow
 {
-	AIListObject<AIContainingObject>	*groupToMergeWith = [[(AIListWindowController  *)[otherWindow windowController] listController] contactList];
+	AIListObject<AIContainingObject>	*groupToMergeWith = [[(AIListWindowController  *)[otherWindow windowController] listController] contactListRoot];
 	
 	AIListObject<AIContainingObject>	*containingObject;
-	NSEnumerator						*enumerator = [[[[(AIListWindowController  *)[currentWindow windowController] listController] contactList] containedObjects] objectEnumerator];
+	NSEnumerator						*enumerator = [[[[(AIListWindowController  *)[currentWindow windowController] listController] contactListRoot] containedObjects] objectEnumerator];
 	
 	while((containingObject = [enumerator nextObject])) {
 		[groupToMergeWith addObject:containingObject];
 	}
 	
-	[[(AIListWindowController  *)[otherWindow windowController] listController] setContactList:groupToMergeWith];
-	[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] destroyListController:[currentWindow windowController]];
+	[[(AIListWindowController  *)[otherWindow windowController] master] setContactListRoot:groupToMergeWith];
+	[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] destroyListController:[[currentWindow windowController] master]];
 }
 
 @end

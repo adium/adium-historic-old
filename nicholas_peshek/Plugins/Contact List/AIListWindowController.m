@@ -23,6 +23,8 @@
 #import "AIListWindowController.h"
 #import "AIPreferenceController.h"
 #import "AIDockController.h"
+#import "AISCLViewPlugin.h"
+#import "AICoreComponentLoader.h"
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIFunctions.h>
 #import <Adium/AIListContact.h>
@@ -87,10 +89,17 @@
 }
 
 //Return a new contact list window controller
+/*
 + (AIListWindowController *)listWindowControllerWithContactList:(AIListObject<AIContainingObject> *)newListObject
 {
 	return [[[self alloc] initWithWindowNibName:[self nibName] withContactList:newListObject] autorelease];
 
+}
+*/
+
++ (AIListWindowController *)listWindowController
+{
+	return [[[self alloc] initWithWindowNibName:[self nibName]] autorelease];
 }
 
 //Our window nib name
@@ -99,9 +108,14 @@
     return @"";
 }
 
-- (void)setContactList:(AIListObject<AIContainingObject> *)newListObject
+- (void)setMaster:(AIContactList *)contactList
 {
-	contactListRootVarible = newListObject;
+	master = contactList;
+}
+
+- (AIContactList *)master
+{
+	return master;
 }
 
 - (Class)listControllerClass
@@ -114,6 +128,7 @@
 	return contactListController;
 }
 //Init
+/*
 - (id)initWithWindowNibName:(NSString *)inNibName withContactList:(AIListObject<AIContainingObject> *)newListObject
 {	
     if ((self = [super initWithWindowNibName:inNibName])) {
@@ -121,6 +136,17 @@
 		previousAlpha = 0.0;
 	}
 	[self setContactList:newListObject];
+	
+    return self;
+}
+*/
+
+- (id)initWithWindowNibName:(NSString *)inNibName
+{	
+    if ((self = [super initWithWindowNibName:inNibName])) {
+		preventHiding = NO;
+		previousAlpha = 0.0;
+	}
 	
     return self;
 }
@@ -146,8 +172,7 @@
 
 	contactListController = [[[self listControllerClass] alloc] initWithContactListView:contactListView
 																		   inScrollView:scrollView_contactList 
-																			   delegate:self
-																	 setContactListRoot:contactListRootVarible];
+																			   delegate:self];
 	
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
@@ -194,6 +219,9 @@
 	
 	//Save our frame immediately for sliding purposes
 	[self setSavedFrame:[[self window] frame]];
+	
+	//Finish loading the contact list.
+	[[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] mostRecentContactList] finishLoading];
 }
 
 //Close the contact list window

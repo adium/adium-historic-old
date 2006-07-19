@@ -56,7 +56,7 @@ typedef enum {
 @end
 
 @implementation AIListController
-
+/*
 - (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate setContactListRoot:(AIListObject<AIContainingObject> *)newListObject
 {
 	[super initWithContactListView:inContactListView inScrollView:inScrollView_contactList delegate:inDelegate];
@@ -98,7 +98,48 @@ typedef enum {
 
 	return self;
 }
-
+*/
+- (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate
+{
+	[super initWithContactListView:inContactListView inScrollView:inScrollView_contactList delegate:inDelegate];
+	
+	[contactListView setDrawHighlightOnlyWhenMain:YES];
+	
+    autoResizeVertically = NO;
+    autoResizeHorizontally = NO;
+	maxWindowWidth = 10000;
+	forcedWindowWidth = -1;
+	
+	//Observe contact list content and display changes
+	[[adium notificationCenter] addObserver:self selector:@selector(contactListChanged:) 
+									   name:Contact_ListChanged
+									 object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(contactOrderChanged:)
+									   name:Contact_OrderChanged 
+									 object:nil];
+	
+	//Observe group expansion for resizing
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(outlineViewUserDidExpandItem:)
+												 name:AIOutlineViewUserDidExpandItemNotification
+											   object:contactListView];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(outlineViewUserDidCollapseItem:)
+												 name:AIOutlineViewUserDidCollapseItemNotification
+											   object:contactListView];
+	
+	//Observe list objects for visiblity changes
+	[[adium contactController] registerListObjectObserver:self];
+	
+	//Recall how the contact list was docked last time Adium was open
+	dockToBottomOfScreen = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
+																	 group:PREF_GROUP_WINDOW_POSITIONS] intValue];
+	
+	[self contactListChanged:nil];
+	
+	return self;
+}
+/*
 - (AIListObject<AIContainingObject> *)contactList
 {
 	return contactListRootVarible;
@@ -119,6 +160,7 @@ typedef enum {
 		}
 	}
 }
+*/
 
 //Setup the window after it has loaded
 - (void)configureViewsAndTooltips
@@ -375,10 +417,15 @@ typedef enum {
 - (void)contactListChanged:(NSNotification *)notification
 {
 	id		object = [notification object];
+	
+	if(!contactList)
+	{
+		[self setContactListRoot:[[adium contactController] contactList]];
+	}
 
 	//Redisplay and resize
 	if (!object || object == contactList) {
-		[self setContactListRoot:contactListRootVarible];
+		[self setContactListRoot:contactList];
 	} else {
 		NSDictionary	*userInfo = [notification userInfo];
 		AIListGroup		*containingGroup = [userInfo objectForKey:@"ContainingGroup"];
