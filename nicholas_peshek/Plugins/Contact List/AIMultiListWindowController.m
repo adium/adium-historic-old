@@ -15,10 +15,11 @@
  */
 
 #import "AIMultiListWindowController.h"
+#import "AIContactList.h"
 #import "AIListWindowController.h"
-#import "AIStandardListWindowController.h"
-#import "AIBorderlessListWindowController.h"
-#import "AIContactListOutlineView.h"
+//#import "AIStandardListWindowController.h"
+//#import "AIBorderlessListWindowController.h"
+//#import "AIContactListOutlineView.h"
 
 @implementation AIMultiListWindowController
 
@@ -33,30 +34,19 @@
 - (AIMultiListWindowController *)createWindows:(LIST_WINDOW_STYLE)windowStyle
 {
 	if ((self = [self init])) {
-		if(!windowControllerArray) {
-			windowControllerArray = [[NSMutableArray array] retain];
+		if(!contactListArray) {
+			contactListArray = [[NSMutableArray array] retain];
 		}
+		AIContactList	*newList = [AIContactList createWithStyle:windowStyle];
+		[newList setContactListRoot:(AIListObject *)[[adium contactController] contactList]];
 		
-		if (windowStyle == WINDOW_STYLE_STANDARD) {
-			[windowControllerArray addObject:[AIStandardListWindowController listWindowControllerWithContactList:nil]];
-		} else {
-			[windowControllerArray addObject:[AIBorderlessListWindowController listWindowControllerWithContactList:nil]];
-		}
+		[contactListArray addObject:newList];
 		
 		if(!mostRecentContactList) {
-			mostRecentContactList = [windowControllerArray objectAtIndex:0];
+			mostRecentContactList = [contactListArray objectAtIndex:0];
 		}
 	}
 	return self;
-}
-
-//Deallocate the ivars when this instance is getting sent away.
-- (void)dealloc
-{
-	[windowControllerArray release];
-	[mostRecentContactList release];
-	
-	[super dealloc];
 }
 
 //Create the new contact list. A bit messy, but overall, it'll work. Returns a boolean saying if it worked or not.
@@ -64,64 +54,34 @@
 {
 	BOOL	didCreationWork = NO;
 	if ([newListObject isKindOfClass:[AIListGroup class]]) {
-		AIListWindowController	*newContactList = [AIBorderlessListWindowController listWindowControllerWithContactList:newListObject];
+		AIContactList	*newContactList = [AIContactList createWithStyle:WINDOW_STYLE_BORDERLESS];
+		[newContactList setContactListRoot:newListObject];
 		mostRecentContactList = newContactList;
-		[windowControllerArray addObject:newContactList];
-		[newContactList showWindowInFront:YES];
+		[contactListArray addObject:newContactList];
+		[[newContactList listWindowController] showWindowInFront:YES];
 		didCreationWork = YES;
 	}
 	
 	return didCreationWork;
 }
 
-//Returns the most recently clicked on contact list (Therefore, the one that should have focus and key).
-- (AIListWindowController *)mostRecentContactList
+//Deallocate the ivars when this instance is getting sent away.
+- (void)dealloc
 {
-	return mostRecentContactList;
-}
-
-//A bridging method so that you can show the contact lists. May need changing later on, based on if the event to "show contact list" calls this.
-- (void)showWindowInFront:(BOOL)inFront
-{
-	NSEnumerator			*e = [windowControllerArray objectEnumerator];
-	AIListWindowController	*windowController;
+	[contactListArray release];
+	[mostRecentContactList release];
 	
-	while ((windowController = [e nextObject])) {
-		[windowController showWindowInFront:inFront];
-	}
+	[super dealloc];
 }
 
-//A bridging method so that you can see if the key contact list has focus and such.
-- (NSWindow *)window
+- (void)destroyListController:(AIContactList *)doneController
 {
-	return [[self mostRecentContactList] window];
-}
-
-//A bridging method to close all the contact lists right off the bat. Could be rwardy.
-- (void)performClose
-{
-	NSEnumerator			*enumer = [windowControllerArray objectEnumerator];
-	AIListWindowController	*windowController;
-	
-	while ((windowController = [enumer nextObject])) {
-		[[windowController window] performClose:nil];
-	}
-}
-
-//A beidging method so that you can see if the key contact list is off screen.
-- (AIRectEdgeMask)windowSlidOffScreenEdgeMask
-{
-	return [[self mostRecentContactList] windowSlidOffScreenEdgeMask];
-}
-
-- (void)destroyListController:(AIListWindowController *)doneController
-{
-	[doneController close:nil];
-	if ([windowControllerArray count] > 1) {
+	[[doneController listWindowController] close:nil];
+	if ([contactListArray count] > 1) {
 		mostRecentContactList = [self nextContactList];
-		[windowControllerArray removeObjectIdenticalTo:doneController];
+		[contactListArray removeObjectIdenticalTo:doneController];
 	} else {
-		[windowControllerArray removeObjectIdenticalTo:doneController];
+		[contactListArray removeObjectIdenticalTo:doneController];
 		//I don't know how you got here, but hey, lets just be on the safe side and kill the list controller.
 		AILog(@"Last Contact List Window Destroyed. Destroy the controller.");
 #warning kbotc: Get the Notification name here. Even if this is just safety, get on it.
@@ -129,18 +89,97 @@
 	}
 }
 
-- (AIListWindowController *)nextContactList
+//Returns the most recently clicked on contact list (Therefore, the one that should have focus and key).
+- (AIContactList *)mostRecentContactList
 {
-	AIListWindowController	*nextList;
-	unsigned				mostRecentContactListIndex = [windowControllerArray indexOfObject:mostRecentContactList];
+	return mostRecentContactList;
+}
+
+//A bridging method so that you can show the contact lists. May need changing later on, based on if the event to "show contact list" calls this.
+- (void)showWindowInFront:(BOOL)inFront
+{
+//	[self selector:@selector(showWindowInFront:) withArgument:[NSNumber numberWithBool:inFront] toItem:CONTACT_LIST_WINDOW_CONTROLLER on:EVERY];
+	NSEnumerator			*e = [contactListArray objectEnumerator];
+	AIContactList			*contactList;
+	
+	while ((contactList = [e nextObject])) {
+		[[contactList listWindowController] showWindowInFront:inFront];
+		NSLog(@"My man ain't your babies daddy!");
+	}
+}
+
+- (BOOL)isVisible
+{
+	NSEnumerator			*e = [contactListArray objectEnumerator];
+	AIContactList			*contactList;
+	BOOL					returnVal = NO;
+	
+	while ((contactList = [e nextObject])) {
+		if([[[contactList listWindowController] window] isVisible])
+			returnVal = YES;
+	}
+	
+	return returnVal;
+}
+
+- (BOOL)isMainWindow
+{
+	NSEnumerator			*e = [contactListArray objectEnumerator];
+	AIContactList			*contactList;
+	BOOL					returnVal = NO;
+	
+	while ((contactList = [e nextObject])) {
+		if([[[contactList listWindowController] window] isMainWindow])
+			returnVal = YES;
+	}
+	
+	return returnVal;
+}
+
+- (BOOL)isSlidOffScreen
+{
+	NSEnumerator			*e = [contactListArray objectEnumerator];
+	AIContactList			*contactList;
+	BOOL					returnVal = NO;
+	
+	while ((contactList = [e nextObject])) {
+		if([[contactList listWindowController] windowSlidOffScreenEdgeMask] == AINoEdges)
+			returnVal = YES;
+	}
+	
+	return returnVal;
+}
+
+//A bridging method so that you can see if the key contact list has focus and such.
+- (NSWindow *)window
+{
+	return [[[self mostRecentContactList] listWindowController] window];
+}
+
+//A bridging method to close all the contact lists right off the bat. Could be rwardy.
+- (void)performClose
+{
+	[self selector:@selector(performClose:) withArgument:nil toItem:CONTACT_LIST_WINDOW on:EVERY];
+}
+
+//A bridging method so that you can see if the key contact list is off screen.
+- (AIRectEdgeMask)windowSlidOffScreenEdgeMask
+{
+	return [[[self mostRecentContactList] listWindowController] windowSlidOffScreenEdgeMask];
+}
+
+- (AIContactList *)nextContactList
+{
+	AIContactList	*nextList;
+	unsigned		mostRecentContactListIndex = [contactListArray indexOfObject:mostRecentContactList];
 	
 	//Check if there is another contact list to switch to
-	if (([windowControllerArray count] > 1)) {
+	if (([contactListArray count] > 1)) {
 		//Check if the current focused contact list is the last object if the array, and if it is, set the focus to the first list.
-		if (mostRecentContactListIndex == ([windowControllerArray count] - 1)) {
-			nextList = [windowControllerArray objectAtIndex:0];
+		if (mostRecentContactListIndex == ([contactListArray count] - 1)) {
+			nextList = [contactListArray objectAtIndex:0];
 		} else {
-			nextList = [windowControllerArray objectAtIndex:(mostRecentContactListIndex + 1)];
+			nextList = [contactListArray objectAtIndex:(mostRecentContactListIndex + 1)];
 		}
 	} else {
 		nextList = mostRecentContactList;
@@ -149,23 +188,34 @@
 	return nextList;
 }
 
-- (void)setDragItems:(NSArray *)draggedItems
+- (void)selector:(SEL)aSelector withArgument:(id)argument toItem:(CONTACT_LIST_ITEM)item on:(LISTS)lists
 {
-	NSEnumerator			*enumer = [windowControllerArray objectEnumerator];
-	AIListWindowController	*windowController;
-	
-	while ((windowController = [enumer nextObject])) {
-		[[windowController listController] setDragItems:draggedItems];
-	}
-}
-
-- (void)setIsDropped:(BOOL)isDropped
-{
-	NSEnumerator			*enumer = [windowControllerArray objectEnumerator];
-	AIListWindowController	*windowController;
-	
-	while ((windowController = [enumer nextObject])) {
-		[(AIContactListOutlineView *)[[windowController listController] contactListView] setIsDroppedOutOfView:isDropped];
+	switch(lists)
+	{
+		case EVERY: {
+			NSEnumerator	*enumer = [contactListArray objectEnumerator];
+			AIContactList	*contactList;
+			
+			while ((contactList = [enumer nextObject])) {
+				[contactList selector:aSelector withArgument:argument toItem:item];
+			}
+			break;
+		} 
+		case FRONT: {
+			[mostRecentContactList selector:aSelector withArgument:argument toItem:item];
+			break;
+		}
+		case NONFRONT: {
+			NSEnumerator	*enumer = [contactListArray objectEnumerator];
+			AIContactList	*contactList;
+			
+			while ((contactList = [enumer nextObject])) {
+				if (![contactList isEqual:mostRecentContactList])
+					[contactList selector:aSelector withArgument:argument toItem:item];
+			}
+			break;
+		}
+		default: break;
 	}
 }
 @end

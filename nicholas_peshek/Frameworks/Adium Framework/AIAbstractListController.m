@@ -177,7 +177,7 @@
 	[contactListView reloadData];
 }
 
-- (ESObjectWithStatus <AIContainingObject> *)contactListRoot
+- (AIListObject <AIContainingObject> *)contactListRoot
 {
 	return contactList;
 }
@@ -616,7 +616,10 @@
 	if (dragItems != items) {
 		[dragItems release];
 		dragItems = [items retain];
-		[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] setDragItems:dragItems];
+		[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] selector:@selector(setDragItems:)
+																																				withArgument:dragItems
+																																					  toItem:CONTACT_LIST_CONTROLLER
+																																						  on:EVERY];
 	}
 	
 	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",@"AIListObjectUniqueIDs",nil] owner:self];

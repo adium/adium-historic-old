@@ -10,6 +10,7 @@
 #import "AICoreComponentLoader.h"
 #import "AIMultiListWindowController.h"
 #import "AIListGroup.h"
+#import "AIContactList.h"
 #import "AISCLViewPlugin.h"
 #import <Adium/AIAdium.h>
 #import <Adium/AIContactController.h>
@@ -18,25 +19,31 @@
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
-	isDroppedOutOfView = NO;
+	isDroppedOutOfView = [NSNumber numberWithBool:NO];
 	tempDragBoard = nil;
-	[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] setIsDropped:isDroppedOutOfView];
+	[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] selector:@selector(setIsDroppedOutOfView:)
+																																			withArgument:(id)isDroppedOutOfView
+																																				  toItem:CONTACT_LIST_OUTLINE_VIEW
+																																					  on:EVERY];
 	return [super draggingEntered:sender];
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
-	isDroppedOutOfView = YES;
+	isDroppedOutOfView = [NSNumber numberWithBool:YES];
 	tempDragBoard = [sender draggingPasteboard];
-	[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] setIsDropped:isDroppedOutOfView];
+	[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] selector:@selector(setIsDroppedOutOfView:)
+																																			withArgument:(id)isDroppedOutOfView
+																																				  toItem:CONTACT_LIST_OUTLINE_VIEW
+																																					  on:EVERY];
 	[super draggingExited:sender];
 }
 
 - (void)draggedImage:(NSImage *)anImage endedAt:(NSPoint)aPoint operation:(NSDragOperation)operation
 {
-	if(isDroppedOutOfView && tempDragBoard) {
+	if([isDroppedOutOfView boolValue] && tempDragBoard) {
 		if ([[tempDragBoard types] containsObject:@"AIListObjectUniqueIDs"]) {
-			AIListObject<AIContainingObject>	*contactList = [[self dataSource] contactList];
+			AIListObject<AIContainingObject>	*contactList = [[self dataSource] contactListRoot];
 			NSArray			*dragItemsUniqueIDs = [tempDragBoard propertyListForType:@"AIListObjectUniqueIDs"];
 			NSEnumerator	*idEnumerator = [dragItemsUniqueIDs objectEnumerator];
 			NSString		*uniqueUID;
@@ -55,12 +62,13 @@
 					
 					[newRootObject addObject:[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID]];
 					[contactList removeObject:[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID]];
-					[[self dataSource] setContactList:contactList];
+					[[self dataSource] setContactListRoot:contactList];
 				}
 			}
 			if(listShouldBeCreated) {
 				[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] createNewSeparableContactListWithObject:newRootObject];
 				[[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] window] setFrameTopLeftPoint:aPoint];
+				[[self dataSource] contactListDesiredSizeChanged];
 			}
 			newRootObject = nil;
 		}
@@ -70,7 +78,7 @@
 	[[self dataSource] outlineView:self draggedImage:anImage endedAt:aPoint operation:operation];
 }
 
-- (void)setIsDroppedOutOfView:(BOOL)droppedOn
+- (void)setIsDroppedOutOfView:(NSNumber *)droppedOn
 {
 	isDroppedOutOfView = droppedOn;
 }

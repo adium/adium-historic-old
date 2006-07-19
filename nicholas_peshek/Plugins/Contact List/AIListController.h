@@ -29,13 +29,13 @@
 	int 								dockToBottomOfScreen;
 	
 	BOOL								needsAutoResize;
-	AIListObject<AIContainingObject>	*contactListRootVarible;
+//	AIListObject<AIContainingObject>	*contactListRootVarible;
 }
 
 //Call to close down and release the listController
 - (void)close;
 
-- (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate setContactListRoot:(AIListObject<AIContainingObject> *)newListObject;
+- (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate;
 
 - (void)contactListDesiredSizeChanged;
 
@@ -47,8 +47,10 @@
 
 - (NSRect)_desiredWindowFrameUsingDesiredWidth:(BOOL)useDesiredWidth desiredHeight:(BOOL)useDesiredHeight;
 
+/*
 - (void)setContactList:(AIListObject<AIContainingObject> *)newListObject;
 - (AIListObject<AIContainingObject> *)contactList;
+*/
 - (void)contactOrderChanged:(NSNotification *)notification;
 
 - (AIListOutlineView *)contactListView;

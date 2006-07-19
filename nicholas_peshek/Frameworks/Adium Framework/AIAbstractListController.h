@@ -185,7 +185,7 @@ typedef enum {
 - (void)contactListWasAddedBackToWindow;
 
 - (void)setContactListRoot:(ESObjectWithStatus<AIContainingObject> *)newContactListRoot;
-- (ESObjectWithStatus<AIContainingObject> *)contactListRoot;
+- (AIListObject<AIContainingObject> *)contactListRoot;
 
 - (void)setHideRoot:(BOOL)inHideRoot;
 - (void)reloadData;

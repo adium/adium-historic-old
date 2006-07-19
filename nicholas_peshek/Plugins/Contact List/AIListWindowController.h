@@ -20,6 +20,8 @@
 
 @protocol AIContactListViewController, AIInterfaceContainer;
 
+@class AIContactList;
+
 #define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 #define KEY_SCL_BORDERLESS					@"Borderless"
 #define KEY_DUAL_RESIZE_VERTICAL			@"Autoresize Vertical"
@@ -32,7 +34,7 @@
 	IBOutlet	AIAutoScrollView		*scrollView_contactList;
     IBOutlet	AIListOutlineView		*contactListView;
 	AIListController					*contactListController;
-	AIListObject<AIContainingObject>	*contactListRootVarible;
+	AIContactList						*master;
 	
 	// refers to the GUI preference.  Sometimes this is expressed as dock-like 
 	// sliding instead, sometimes as orderOut:-type hiding.
@@ -57,11 +59,15 @@
 	float								previousAlpha;
 }
 
-+ (AIListWindowController *)listWindowControllerWithContactList:(AIListObject<AIContainingObject> *)newListObject;
+//+ (AIListWindowController *)listWindowControllerWithContactList:(AIListObject<AIContainingObject> *)newListObject;
++ (AIListWindowController *)listWindowController;
 + (NSString *)nibName;
-- (id)initWithWindowNibName:(NSString *)inNibName withContactList:(AIListObject<AIContainingObject> *)newListObject;
+//- (id)initWithWindowNibName:(NSString *)inNibName withContactList:(AIListObject<AIContainingObject> *)newListObject;
+- (id)initWithWindowNibName:(NSString *)inNibName;
 - (AIListController *)listController;
-- (void)setContactList:(AIListObject<AIContainingObject> *)newListObject;
+//- (void)setContactList:(AIListObject<AIContainingObject> *)newListObject;
+- (void)setMaster:(AIContactList *)contactList;
+- (AIContactList *)master;
 - (void)close:(id)sender;
 - (void)showWindowInFront:(BOOL)inFront;
 
