@@ -42,12 +42,15 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 - (void)addedDebugMessage:(NSString *)aDebugString
 {
 	unsigned int aDebugStringLength = [aDebugString length];
+	if ([[textView_filter stringValue] length] == 0 || 
+		[aDebugString rangeOfString:[textView_filter stringValue] options:NSCaseInsensitiveSearch].location != NSNotFound) {
 
-	[mutableDebugString appendString:aDebugString];
-	
-	[[textView_debug textStorage] addAttribute:NSParagraphStyleAttributeName
-										 value:debugParagraphStyle
-										 range:NSMakeRange([mutableDebugString length] - aDebugStringLength, aDebugStringLength)];
+		[mutableDebugString appendString:aDebugString];
+		
+		[[textView_debug textStorage] addAttribute:NSParagraphStyleAttributeName
+											 value:debugParagraphStyle
+											 range:NSMakeRange([mutableDebugString length] - aDebugStringLength, aDebugStringLength)];
+	}
 }
 + (void)addedDebugMessage:(NSString *)aDebugString
 {
@@ -156,6 +159,24 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 	[[RAFjoscarDebugController sharedDebugController] clearDebugLogArray];
 	
 	[scrollView_debug scrollToTop];
+}
+
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+	NSEnumerator *enumerator = [[[RAFjoscarDebugController sharedDebugController] debugLogArray] objectEnumerator];
+	NSString *filter = [textView_filter stringValue];
+	[mutableDebugString setString:@""];
+	NSString *aDebugString;
+	while ((aDebugString = [enumerator nextObject])) {
+		if ([aDebugString rangeOfString:filter options:NSCaseInsensitiveSearch].location != NSNotFound) {
+			[mutableDebugString appendString:aDebugString];
+			if ((![aDebugString hasSuffix:@"\n"]) && (![aDebugString hasSuffix:@"\r"])) {
+			}
+		}
+	}
+	[[textView_debug textStorage] addAttribute:NSParagraphStyleAttributeName
+										 value:debugParagraphStyle
+										 range:NSMakeRange(0, [mutableDebugString length])];
 }
 
 #endif

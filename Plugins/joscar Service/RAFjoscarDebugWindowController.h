@@ -17,6 +17,7 @@
 
 	IBOutlet	NSButton			*checkBox_logWriting;
 	IBOutlet	NSTextField			*textView_version;
+	IBOutlet	NSTextField			*textView_filter;
 }
 
 #ifdef DEBUG_BUILD
