@@ -16,6 +16,7 @@
                 "checkBox_logWriting" = NSButton; 
                 "scrollView_debug" = AIAutoScrollView; 
                 "textView_debug" = NSTextView; 
+                "textView_filter" = NSTextField; 
                 "textView_version" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
