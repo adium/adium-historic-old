@@ -428,27 +428,35 @@
 	return statusMessage;
 }
 
-- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b
+- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)buddy
 {
 	NSString		*statusName = nil;
+	GaimPresence	*presence = gaim_buddy_get_presence(buddy);
+	GaimStatus		*status = gaim_presence_get_active_status(presence);
+	const char		*gaimStatusID = gaim_status_get_id(status);
 	
-	//If no custom status message, use the preset possibilities
-	//XXX
-	/*
-	switch (b->uc) {
-		case JABBER_STATE_CHAT:
-			statusName = STATUS_NAME_FREE_FOR_CHAT;
-			break;						
-		case JABBER_STATE_XA:
-			statusName = STATUS_NAME_EXTENDED_AWAY;
-			break;
-			
-		case JABBER_STATE_DND:
-			statusName = STATUS_NAME_DND;
-			break;
+	if (!gaimStatusID) return nil;
+
+	if (!strcmp(gaimStatusID, jabber_buddy_state_get_status_id(JABBER_BUDDY_STATE_CHAT))) {
+		statusName = STATUS_NAME_FREE_FOR_CHAT;
+		
+	} else if (!strcmp(gaimStatusID, jabber_buddy_state_get_status_id(JABBER_BUDDY_STATE_XA))) {
+		statusName = STATUS_NAME_EXTENDED_AWAY;
+		
+	} else if (!strcmp(gaimStatusID, jabber_buddy_state_get_status_id(JABBER_BUDDY_STATE_DND))) {
+		statusName = STATUS_NAME_DND;
+		
 	}
-	*/
+	
 	return statusName;
+}
+
+/*
+ * @brief Jabber status messages are plaintext
+ */
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forStatusState:(AIStatus *)statusState
+{
+	return [[inAttributedString attributedStringByConvertingLinksToStrings] string];
 }
 
 #pragma mark Menu items
