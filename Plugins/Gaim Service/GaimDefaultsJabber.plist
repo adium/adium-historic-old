@@ -4,5 +4,7 @@
 <dict>
 	<key>Jabber:Resource</key>
 	<string>Adium</string>
+	<key>Connect Port</key>
+	<integer>5222</integer>
 </dict>
 </plist>
