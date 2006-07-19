@@ -167,8 +167,9 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 	NSString *filter = [textView_filter stringValue];
 	[mutableDebugString setString:@""];
 	NSString *aDebugString;
+	unsigned len =  [filter length];
 	while ((aDebugString = [enumerator nextObject])) {
-		if ([aDebugString rangeOfString:filter options:NSCaseInsensitiveSearch].location != NSNotFound) {
+		if (!len || [aDebugString rangeOfString:filter options:NSCaseInsensitiveSearch].location != NSNotFound) {
 			[mutableDebugString appendString:aDebugString];
 			if ((![aDebugString hasSuffix:@"\n"]) && (![aDebugString hasSuffix:@"\r"])) {
 			}
