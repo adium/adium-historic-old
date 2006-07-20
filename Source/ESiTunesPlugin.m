@@ -300,7 +300,8 @@
 	[currentiTunesStatusState setTitle:CURRENT_ITUNES_TRACK];
 	[currentiTunesStatusState setMutabilityType:AISecondaryLockedStatusState];
 	[currentiTunesStatusState setUniqueStatusID:[NSNumber numberWithInt:ITUNES_STATUS_ID]];
-	
+	[currentiTunesStatusState setSpecialStatusType:AINowPlayingSpecialStatusType];
+
 	//give it to the AIStatusController
 	[[adium statusController] addStatusState:currentiTunesStatusState];
 	[currentiTunesStatusState release];
