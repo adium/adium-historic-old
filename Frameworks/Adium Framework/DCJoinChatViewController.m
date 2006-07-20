@@ -114,12 +114,12 @@
 		NSMutableDictionary	*inviteUsersDict;
 		NSString			*initialInvitationMessage = [chat statusObjectForKey:@"InitialInivitationMessage"];
 		
-		inviteUsersDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",contacts,@"ContactsToInvite",nil];
+		inviteUsersDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[contacts mutableCopy] autorelease],@"ContactsToInvite",nil];
 		if (initialInvitationMessage) {
 			[inviteUsersDict setObject:initialInvitationMessage
 								forKey:@"InitialInivitationMessage"];
 		}
-		
+		AILog(@"scheduling invitation of %@",inviteUsersDict);
 		[NSTimer scheduledTimerWithTimeInterval:0.01
 										 target:self
 									   selector:@selector(inviteUsers:)
@@ -141,17 +141,19 @@
 - (void)inviteUsers:(NSTimer *)inTimer
 {
 	NSMutableDictionary *userInfo = [inTimer userInfo];
-	
-	NSArray				*contactArray = [userInfo objectForKey:@"ContactsToInvite"];
-	int					i = [(NSNumber *)[userInfo objectForKey:@"i"] intValue];
-	int					count = [contactArray count];
-	
-	[chat inviteListContact:[contactArray objectAtIndex:i]
-				withMessage:[userInfo objectForKey:@"InitialInivitationMessage"]];
-	
-	i++;
-	[userInfo setObject:[NSNumber numberWithInt:i] forKey:@"i"];
-	if (i >= count) {
+	NSMutableArray		*contactArray = [userInfo objectForKey:@"ContactsToInvite"];
+
+	AILog(@"invite users");
+	if ([contactArray count]) {
+		AIListContact *listContact = [[contactArray objectAtIndex:0] retain];
+		[contactArray removeObjectAtIndex:0];
+		AILog(@"Inviting object %@",listContact);
+
+		[chat inviteListContact:listContact
+					withMessage:[userInfo objectForKey:@"InitialInivitationMessage"]];
+		[listContact release];
+
+	} else {
 		[inTimer invalidate];
 	}
 }
@@ -161,9 +163,9 @@
 {
 	NSMutableArray	*contactsArray = nil;
 	NSArray			*contactNames;
-	
+	AILog(@"contactsFromNamesSeparatedByCommas:%@ onAccount:%@",namesSeparatedByCommas,inAccount);
 	if ([namesSeparatedByCommas length]) {
-		
+
 		contactNames = [namesSeparatedByCommas componentsSeparatedByString:@","];
 		
 		if ([contactNames count]) {
@@ -191,7 +193,8 @@
 			}
 		}
 	}
-	
+
+	AILog(@"contactsArray is %@",contactsArray);
 	return contactsArray;
 }
 
