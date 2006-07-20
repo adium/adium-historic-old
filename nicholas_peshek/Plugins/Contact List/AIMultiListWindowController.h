@@ -34,16 +34,18 @@ typedef enum {
 + (AIMultiListWindowController *)initialize:(LIST_WINDOW_STYLE)windowStyle;
 - (AIMultiListWindowController *)createWindows:(LIST_WINDOW_STYLE)windowStyle;
 - (BOOL)createNewSeparableContactListWithObject:(AIListObject<AIContainingObject> *)newListObject;
-- (void)showWindowInFront:(BOOL)inFront;
 - (AIContactList *)mostRecentContactList;
+- (void)showWindowInFront:(BOOL)inFront;
+- (void)showNextWindowInFront;
 - (BOOL)isVisible;
 - (BOOL)isMainWindow;
-- (BOOL)isSlidOffScreen;
+- (BOOL)isNotSlidOffScreen;
 - (NSWindow *)window;
 - (void)performClose;
 - (AIRectEdgeMask)windowSlidOffScreenEdgeMask;
 - (void)destroyListController:(AIContactList *)doneController;
 - (AIContactList *)nextContactList;
+- (AIContactList *)contactListWithContact:(AIListObject *)object;
 - (void)selector:(SEL)aSelector withArgument:(id)argument toItem:(CONTACT_LIST_ITEM)item on:(LISTS)lists;
 
 @end

@@ -104,10 +104,20 @@
 	
 	while ((contactList = [e nextObject])) {
 		[[contactList listWindowController] showWindowInFront:inFront];
-		NSLog(@"My man ain't your babies daddy!");
 	}
 }
 
+- (void)showNextWindowInFront
+{
+	AIContactList	*tempList = [self mostRecentContactList];
+	AIContactList	*listToChangeTo = [self nextContactList];
+	if(tempList == listToChangeTo) {
+		[[[self mostRecentContactList] listWindowController] showWindowInFront:NO];
+	} else {
+		[[listToChangeTo listWindowController] showWindowInFront:YES];
+		mostRecentContactList = listToChangeTo;
+	}
+}
 - (BOOL)isVisible
 {
 	NSEnumerator			*e = [contactListArray objectEnumerator];
@@ -136,7 +146,7 @@
 	return returnVal;
 }
 
-- (BOOL)isSlidOffScreen
+- (BOOL)isNotSlidOffScreen
 {
 	NSEnumerator			*e = [contactListArray objectEnumerator];
 	AIContactList			*contactList;
@@ -186,6 +196,25 @@
 	}
 	
 	return nextList;
+}
+
+- (AIContactList *)contactListWithContact:(AIListObject *)object
+{
+	NSEnumerator			*e = [contactListArray objectEnumerator];
+	AIContactList			*contactList;
+	AIContactList			*returnVal = nil;
+	
+	while ((contactList = [e nextObject])) {
+		AIListGroup	*listObject;
+		
+		NSEnumerator	*contactEnumerator = [[[[[contactList contactList] containedObjects] copy] autorelease] objectEnumerator];
+		
+		while ((listObject = (AIListGroup *)[contactEnumerator nextObject])) {
+			if([listObject containsObject:object] || [listObject isEqual:object])
+				returnVal = contactList;
+		}
+	}
+	return returnVal;
 }
 
 - (void)selector:(SEL)aSelector withArgument:(id)argument toItem:(CONTACT_LIST_ITEM)item on:(LISTS)lists

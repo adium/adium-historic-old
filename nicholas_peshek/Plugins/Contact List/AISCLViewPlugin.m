@@ -96,7 +96,7 @@
 	return (contactListWindowController &&
 			[contactListWindowController isVisible] &&
 			[contactListWindowController isMainWindow] &&
-			[contactListWindowController isSlidOffScreen]);
+			[contactListWindowController isNotSlidOffScreen]);
 }
 
 //Close contact list
@@ -107,6 +107,15 @@
     }
 }
 
+//Show next contact list (or if it's the only one, it will close)
+- (void)showNextWindowInFront
+{
+    if (contactListWindowController) {
+        [contactListWindowController showNextWindowInFront];
+    } else {
+		[self showContactListAndBringToFront:YES];
+	}
+}
 //Callback when the contact list closes, clear our reference to it
 - (void)contactListDidClose
 {
