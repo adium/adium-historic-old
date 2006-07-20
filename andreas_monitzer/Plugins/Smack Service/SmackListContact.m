@@ -57,7 +57,7 @@
 #pragma mark Status
 - (NSString *)statusName
 {
-    NSLog(@"statusName = %@",[[self preferredContact] statusObjectForKey:@"StatusName"]);
+//    NSLog(@"statusName = %@",[[self preferredContact] statusObjectForKey:@"StatusName"]);
 	return [[self preferredContact] statusObjectForKey:@"StatusName"];
 }
 
@@ -72,7 +72,7 @@
 								  [statusTypeNumber intValue] :
 								  AIAvailableStatusType);
 	
-    NSLog(@"statusType = %d",statusType);
+//    NSLog(@"statusType = %d",statusType);
 	return statusType;
 }
 
@@ -105,13 +105,13 @@
 //- (NSAttributedString *)contactListStatusMessage
 - (NSAttributedString *)statusMessage
 {
-    NSLog(@"statusMessage = %@", [[[self preferredContact] contactListStatusMessage] string]);
+//    NSLog(@"statusMessage = %@", [[[self preferredContact] contactListStatusMessage] string]);
     return [[self preferredContact] contactListStatusMessage];
 }
 
 - (NSString*)statusMessageString
 {
-    NSLog(@"statusMessageString = %@", [[[self preferredContact] contactListStatusMessage] string]);
+//    NSLog(@"statusMessageString = %@", [[[self preferredContact] contactListStatusMessage] string]);
     return [[self statusMessage] string];
 }
 
