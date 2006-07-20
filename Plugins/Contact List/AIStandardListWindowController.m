@@ -510,6 +510,7 @@
 											  action:@selector(nameViewSelectedAccount:)
 									   keyEquivalent:@""];
 		[menuItem setRepresentedObject:account];
+		[menuItem setImage:[AIServiceIcons serviceIconForObject:account type:AIServiceIconSmall direction:AIIconNormal]];
 		
 		if (activeAccount == account) {
 			[menuItem setState:NSOnState];
