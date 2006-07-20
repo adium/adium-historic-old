@@ -17,7 +17,6 @@
 #import "SMContactListShowBehaviorPlugin.h"
 #import "SMContactListShowDetailsPane.h"
 #import "ESContactAlertsController.h"
-#import "AIContactList.h"
 #import "AICoreComponentLoader.h"
 #import "AISCLViewPlugin.h"
 #import "AIListWindowController.h"
@@ -96,7 +95,7 @@
 	NSTimeInterval secondsToShow = [[details objectForKey:KEY_SECONDS_TO_SHOW_LIST] doubleValue];
 	AISCLViewPlugin *contactListViewPlugin = (AISCLViewPlugin *)[[adium componentLoader] pluginWithClassName:@"AISCLViewPlugin"];
 #warning kbotc: this may need work.
-	AIListWindowController *windowController = [[[contactListViewPlugin contactListWindowController] mostRecentContactList] listWindowController];
+	AIListWindowController *windowController = [[[contactListViewPlugin contactListWindowController] contactListWithContact:listObject] listWindowController];
 	[windowController setPreventHiding:YES];
 	
 	if ([windowController windowShouldHideOnDeactivate]) {

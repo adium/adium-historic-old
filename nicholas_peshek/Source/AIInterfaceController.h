@@ -107,6 +107,7 @@
 
 @protocol AIContactListController <NSObject>
 - (void)showContactListAndBringToFront:(BOOL)bringToFront;
+- (void)showNextWindowInFront;
 - (BOOL)contactListIsVisibleAndMain;
 - (void)closeContactList;
 @end

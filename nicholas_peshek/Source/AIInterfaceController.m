@@ -275,7 +275,7 @@
 - (IBAction)toggleContactList:(id)sender
 {
     if ([contactListPlugin contactListIsVisibleAndMain]) {
-		[self closeContactList:nil];
+		[contactListPlugin showNextWindowInFront];
     } else {
 		[self showContactList:nil];
     } 
