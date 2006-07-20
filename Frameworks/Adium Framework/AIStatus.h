@@ -27,6 +27,12 @@
 #define STATUS_INVISIBLE					@"Invisible"
 #define STATUS_MUTABILITY_TYPE				@"Mutability Type"
 #define STATUS_MUTE_SOUNDS					@"Mute Sounds"
+#define STATUS_SPECIAL_TYPE					@"Special Type"
+
+typedef enum {
+	AINoSpecialStatusType = 0,
+	AINowPlayingSpecialStatusType
+} AISpecialStatusType; 
 
 @interface AIStatus : AIStatusItem {
 
@@ -62,5 +68,8 @@
 
 - (BOOL)mutesSound;
 - (void)setMutesSound:(BOOL)mutes;
+
+- (AISpecialStatusType)specialStatusType;
+- (void)setSpecialStatusType:(AISpecialStatusType)inSpecialStatusType;
 
 @end
