@@ -89,9 +89,9 @@ prepare-release-bundle:
 
 	@# delete unneeded nib files for non-beta builds
 	@echo Cleaning Adium.app for release
-	ifeq ($(BETA),FALSE)
+	if test $(BETA) = FALSE; then
 		find $(BUILD_DIR) \( -name classes.nib -or -name info.nib \) -type f -delete
-	endif
+	fi
 	
 	@# delete svn  and backup files
 	find $(BUILD_DIR) -name ".svn" -type d -exec rm -rf {} \; -prune
