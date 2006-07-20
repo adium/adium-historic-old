@@ -73,6 +73,7 @@
 
 //FUS Disconnecting
 - (void)autoReconnectAfterDelay:(NSTimeInterval)delay;
+- (void)cancelAutoReconnect;
 - (void)initFUSDisconnecting;
 
 //Temporary Accounts

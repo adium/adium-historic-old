@@ -79,7 +79,6 @@
 		autoRefreshingKeys = [[NSMutableSet alloc] init];
 		dynamicKeys = [[NSMutableSet alloc] init];
 		attributedRefreshTimer = nil;
-		reconnectTimer = nil;
 		delayedUpdateStatusTimer = nil;
 		delayedUpdateStatusTarget = nil;
 		silenceAllContactUpdatesTimer = nil;
@@ -113,7 +112,6 @@
 {
 	[delayedUpdateStatusTarget release];
 	[delayedUpdateStatusTimer invalidate]; [delayedUpdateStatusTimer release];
-	[reconnectTimer invalidate]; [reconnectTimer release];
 
 	/* Our superclass releases internalObjectID in its dealloc, so we should set it to nil when do.
 	 * We could just depend upon its implementation, but this is more robust.
@@ -985,6 +983,13 @@
 	[self updateStatusForKey:@"IdleSince"];	
 }
 
+- (void)cancelAutoReconnect
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(performAutoreconnect)
+											   object:nil];
+}
+
 /*!
  * @brief Autoreconnect after delay
  *
@@ -993,26 +998,17 @@
  */
 - (void)autoReconnectAfterDelay:(NSTimeInterval)delay
 {
-	//We could use performSelector:afterDelay here, but using a timer allows us to cancel it.
-	[reconnectTimer invalidate]; [reconnectTimer release];
-    reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:delay
-													   target:self
-													 selector:@selector(_autoReconnectTimer:)
-													 userInfo:nil
-													  repeats:NO] retain];
+	[self performSelector:@selector(performAutoreconnect)
+			   withObject:nil
+			   afterDelay:delay];
 }
-- (void)_autoReconnectTimer:(NSTimer *)inTimer
+- (void)performAutoreconnect
 {
 	//If we still want to be online, and we're not yet online, continue with the reconnect
     if ([self shouldBeOnline] &&
 	   ![self online] && ![[self statusObjectForKey:@"Connecting"] boolValue]) {
 		[self updateStatusForKey:@"Online"];
     }
-	
-	//Clean up the timer
-	[reconnectTimer invalidate];
-	[reconnectTimer release];
-	reconnectTimer = nil;
 }
 
 /*!
