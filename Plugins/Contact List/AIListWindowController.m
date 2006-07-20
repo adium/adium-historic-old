@@ -381,10 +381,7 @@
 
 	if (shouldRevealWindowAndDelaySliding) {
 		[self delayWindowSlidingForInterval:2];
-
-		if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
-			[self slideWindowOnScreenWithAnimation:NO];
-		}
+		[self slideWindowOnScreenWithAnimation:NO];
 
 	} else {
 		//Do a slide immediately if needed (to display as per our new preferneces)
@@ -510,7 +507,7 @@
 	
 	[self delayWindowSlidingForInterval:2];
 	[self slideWindowOnScreenWithAnimation:NO];
-	
+
 	[contactListController contactListDesiredSizeChanged];
 
 	currentScreen = [window screen];
@@ -865,20 +862,22 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 
 - (void)slideWindowOnScreenWithAnimation:(BOOL)animate
 {
-	NSWindow	*window = [self window];
-	NSRect		windowFrame = [window frame];
-
-	if (!NSEqualRects(windowFrame, oldFrame)) {
-		[window orderFront:nil]; 
+	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
+		NSWindow	*window = [self window];
+		NSRect		windowFrame = [window frame];
 		
-		windowSlidOffScreenEdgeMask = AINoEdges;
-		
-		[[self window] setHasShadow:listHasShadow];
-		
-		if (animate) {
-			[self slideWindowToPoint:oldFrame.origin];
-		} else {
-			[self moveWindowToPoint:oldFrame.origin];
+		if (!NSEqualRects(windowFrame, oldFrame)) {
+			[window orderFront:nil]; 
+			
+			windowSlidOffScreenEdgeMask = AINoEdges;
+			
+			[[self window] setHasShadow:listHasShadow];
+			
+			if (animate) {
+				[self slideWindowToPoint:oldFrame.origin];
+			} else {
+				[self moveWindowToPoint:oldFrame.origin];
+			}
 		}
 	}
 }
