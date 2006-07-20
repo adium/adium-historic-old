@@ -109,7 +109,7 @@
 		[hideContactListTimer invalidate];
 		[hideContactListTimer release];
 	}
-	hideContactListTimer = [[NSTimer scheduledTimerWithTimeInterval:secondsToShow target:self selector:@selector(hideContactList:) userInfo:nil repeats:NO] retain];
+	hideContactListTimer = [[NSTimer scheduledTimerWithTimeInterval:secondsToShow target:self selector:@selector(hideContactList:) userInfo:windowController repeats:NO] retain];
 }
 
 
@@ -119,7 +119,7 @@
 - (void)hideContactList:(NSTimer *)timer {
 	AISCLViewPlugin *contactListViewPlugin = (AISCLViewPlugin *)[[adium componentLoader] pluginWithClassName:@"AISCLViewPlugin"];
 	#warning kbotc: this may need work.
-	AIListWindowController *windowController = [[[contactListViewPlugin contactListWindowController] mostRecentContactList] listWindowController];
+	AIListWindowController *windowController = [timer userInfo];
 	[windowController setPreventHiding:NO];
 	if ([windowController windowShouldHideOnDeactivate] && ![NSApp isActive])
 		[[windowController window] orderOut:self];
