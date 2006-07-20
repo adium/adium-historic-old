@@ -1271,10 +1271,16 @@ BOOL isMobileContact(AIListObject *inListObject)
 																				  userInfo:invite];
 }
 
-- (void)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
+- (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
 {
-	[self addChat:[joscarAdapter handleChatInvitation:(id<ChatInvitation>)userInfo withDecision:(AITextAndButtonsDefaultReturn == returnCode)]];
-	[window orderOut:self];
+	AIChat *chat;
+	BOOL	shouldJoinChat = (AITextAndButtonsDefaultReturn == returnCode);
+
+	if ((chat = [joscarAdapter handleChatInvitation:(id<ChatInvitation>)userInfo withDecision:shouldJoinChat])) {
+		[self addChat:chat];
+	}
+
+	return YES;
 }
 
 - (void)gotMessage:(NSString *)message onGroupChatNamed:(NSString *)name fromUID:(NSString *)uid
