@@ -401,5 +401,14 @@
 	[statusDict setObject:[NSNumber numberWithBool:mutes] forKey:STATUS_MUTE_SOUNDS];
 }
 
+- (void)setSpecialStatusType:(AISpecialStatusType)inSpecialStatusType
+{
+	[statusDict setObject:[NSNumber numberWithInt:inSpecialStatusType] forKey:STATUS_SPECIAL_TYPE];
+}
+
+- (AISpecialStatusType)specialStatusType
+{
+	return [[statusDict objectForKey:STATUS_SPECIAL_TYPE] intValue];
+}
 
 @end
