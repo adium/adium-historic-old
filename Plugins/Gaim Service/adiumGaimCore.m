@@ -35,16 +35,11 @@
 #pragma mark Debug
 // Debug ------------------------------------------------------------------------------------------------------
 #if (GAIM_DEBUG)
-static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, const char *format, va_list args)
+static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, const char *debug_msg)
 {
-	gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
-	
-	/*	AILog(@"%x: (Debug: %s) %s",[NSRunLoop currentRunLoop], category, arg_s); */
 	//Log error
 	if (!category) category = "general"; //Category can be nil
-	AILog(@"(Libgaim: %s) %s",category, arg_s);
-	
-	g_free(arg_s);
+	AILog(@"(Libgaim: %s) %s",category, debug_msg);
 }
 
 static GaimDebugUiOps adiumGaimDebugOps = {
@@ -76,6 +71,8 @@ extern gboolean gaim_init_zephyr_plugin(void);
 
 static void load_all_plugins()
 {
+	AILog(@"adiumGaimCore: load_all_plugins()");
+
 	//First, initialize our built-in plugins
 	gaim_init_ssl_plugin();
 	gaim_init_ssl_openssl_plugin();
@@ -127,17 +124,18 @@ static void adiumGaimPrefsInit(void)
 	gaim_prefs_set_bool("/plugins/prpl/msn/conv_timeout_notice", TRUE);
 
 	//Ensure we are using caching
-	gaim_buddy_icons_set_caching(TRUE);
-	
-	//Load all plugins. This could be done in STATIC_PROTO_INIT in libgaim's config.h at build time, but doing it here allows easier changes.
-	load_all_plugins();
+	gaim_buddy_icons_set_caching(TRUE);	
 }
 
 static void adiumGaimCoreDebugInit(void)
 {
 #if (GAIM_DEBUG)
+	AILog(@"adiumGaimCoreDebugInit()");
     gaim_debug_set_ui_ops(adium_gaim_debug_get_ui_ops());
 #endif
+
+	//Load all plugins. This could be done in STATIC_PROTO_INIT in libgaim's config.h at build time, but doing it here allows easier changes.
+	load_all_plugins();
 }
 
 /* The core is ready... finish configuring libgaim and its plugins */
@@ -161,7 +159,7 @@ static void adiumGaimCoreUiInit(void)
 		*/	
 	//Setup the buddy list; then load the blist.
 	gaim_set_blist(gaim_blist_new());
-
+	AILog(@"adiumGaimCore: gaim_blist_load()...");
 	gaim_blist_load();
 	
 	//Configure signals for receiving gaim events
