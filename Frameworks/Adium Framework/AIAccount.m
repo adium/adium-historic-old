@@ -59,6 +59,7 @@
  */
 - (void)disconnect
 {
+	[self cancelAutoReconnect];
 	[self setStatusObject:nil forKey:@"Connecting" notify:NotifyLater];
 
 	[self notifyOfChangedStatusSilently:NO];
