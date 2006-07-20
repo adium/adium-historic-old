@@ -210,9 +210,9 @@ void av_resolve_reply (struct sockaddr	*interface,
 		computerName = CFUUIDCreateString(NULL, uuid);
 		CFRelease(uuid);		
 	}
-    avInstanceName = [NSString stringWithFormat:@"%@@%@", consoleUser, computerName];
+    avInstanceName = [NSString stringWithFormat:@"%@@%@", consoleUser, (computerName ? computerName : @"")];
 	CFRelease(consoleUser);
-	CFRelease(computerName);
+	if (computerName) CFRelease(computerName);
     myavname = [avInstanceName retain];
     
     /* register service with mDNSResponder */
