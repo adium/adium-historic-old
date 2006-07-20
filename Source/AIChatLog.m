@@ -258,19 +258,9 @@ static BOOL scandate(const char *sample,
 {
 	BOOL success = YES;
 	unsigned long component;
-    //read three numbers, starting after:
-	
-	//a space...
-	while (*sample != ' ') {
-    	if (!*sample) {
-    		success = NO;
-    		goto fail;
-		} else {
-			++sample;
-		}
-    }
-	
-	//...followed by a (
+
+    //Read a date, followed by a '('.
+	//First, find the '('.
 	while (*sample != '(') {
     	if (!*sample) {
     		success = NO;
