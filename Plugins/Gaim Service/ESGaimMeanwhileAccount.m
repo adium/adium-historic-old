@@ -108,15 +108,16 @@
 			break;
 
 		case AIAwayStatusType:
+		case AIInvisibleStatusType: //Meanwhile does not support invisibility
 		{
 			if (([statusName isEqualToString:STATUS_NAME_DND]) ||
 				([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
 				statusID = "dnd";
-			
+			else
+				statusID = "away";
 			break;
 		}
-		
-		case AIInvisibleStatusType:
+
 		case AIOfflineStatusType:
 			break;
 	}
