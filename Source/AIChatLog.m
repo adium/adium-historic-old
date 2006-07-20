@@ -337,7 +337,7 @@ static BOOL scandate(const char *sample,
 		}
 
 		/*get the time zone*/ {
-			while (*sample && ((*sample < '0' || *sample > '9') && *sample != '-')) ++sample;
+			while (*sample && ((*sample < '0' || *sample > '9') && *sample != '-' && *sample != '+')) ++sample;
 			if (!*sample) {
 				success = NO;
 				goto fail;
