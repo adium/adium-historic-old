@@ -103,9 +103,6 @@ typedef enum {
 
 	BOOL						enabled;
 	
-	//Auto-reconnect
-	NSTimer						*reconnectTimer;
-	
 	//Attributed string refreshing
     NSTimer                     *attributedRefreshTimer;
     NSMutableSet				*autoRefreshingKeys;
