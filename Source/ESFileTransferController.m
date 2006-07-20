@@ -87,7 +87,8 @@ static ESFileTransferPreferences *preferences;
 	[contactAlertsController registerEventID:FILE_TRANSFER_BEGAN withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	[contactAlertsController registerEventID:FILE_TRANSFER_CANCELLED withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	[contactAlertsController registerEventID:FILE_TRANSFER_COMPLETE withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
-	
+	[contactAlertsController registerEventID:FILE_TRANSFER_FAILED withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:NO];
+
     //Install the Send File menu item
 	menuItem_sendFile = [[NSMenuItem alloc] initWithTitle:SEND_FILE_WITH_ELLIPSIS
 												   target:self action:@selector(sendFileToSelectedContact:)
@@ -543,7 +544,18 @@ static ESFileTransferPreferences *preferences;
 
 #pragma mark AIEventHandler
 
-- (NSString *)shortDescriptionForEventID:(NSString *)eventID { return @""; }
+- (NSString *)shortDescriptionForEventID:(NSString *)eventID
+{
+	NSString *description;
+
+	if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
+		description = AILocalizedString(@"File transfer fails",nil);
+	} else {
+		description = @"";
+	}
+	
+	return description;
+}
 
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID
 {
@@ -559,6 +571,8 @@ static ESFileTransferPreferences *preferences;
 		description = AILocalizedString(@"File transfer cancelled by the other side",nil);
 	} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 		description = AILocalizedString(@"File transfer completed successfully",nil);
+	} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
+		description = AILocalizedString(@"File transfer failed",nil);
 	} else {		
 		description = @"";	
 	}
@@ -584,6 +598,8 @@ static ESFileTransferPreferences *preferences;
 		description = @"File Transfer Canceled Remotely";
 	} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 		description = @"File Transfer Complete";
+	} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
+		description = @"File transfer failed";
 	} else {		
 		description = @"";	
 	}
@@ -595,18 +611,43 @@ static ESFileTransferPreferences *preferences;
 {	
 	NSString	*description;
 	
-	if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
-		description = AILocalizedString(@"When a file transfer is requested",nil);
-	} else if ([eventID isEqualToString:FILE_TRANSFER_CHECKSUMMING]) {
-		description = AILocalizedString(@"When a file is checksummed prior to sending",nil);
-	} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
-		description = AILocalizedString(@"When a file transfer begins",nil);
-	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
-		description = AILocalizedString(@"When a file transfer is cancelled remotely",nil);
-	} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
-		description = AILocalizedString(@"When a file transfer is completed successfully",nil);
-	} else {		
-		description = @"";	
+	if (listObject) {
+		NSString *format;
+		
+		if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
+			format = AILocalizedString(@"When a file transfer with %@ fails",nil);	
+		} else {
+			format = nil;	
+		}
+		
+		if (format) {
+			NSString *name;
+			name = ([listObject isKindOfClass:[AIListGroup class]] ?
+					[NSString stringWithFormat:AILocalizedString(@"a member of %@",nil),[listObject displayName]] :
+					[listObject displayName]);
+			
+			description = [NSString stringWithFormat:format, name];
+
+		} else {
+			description = @"";
+		}
+		
+	} else {
+		if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
+			description = AILocalizedString(@"When a file transfer is requested",nil);
+		} else if ([eventID isEqualToString:FILE_TRANSFER_CHECKSUMMING]) {
+			description = AILocalizedString(@"When a file is checksummed prior to sending",nil);
+		} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
+			description = AILocalizedString(@"When a file transfer begins",nil);
+		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
+			description = AILocalizedString(@"When a file transfer is cancelled remotely",nil);
+		} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
+			description = AILocalizedString(@"When a file transfer is completed successfully",nil);
+		} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
+			description = AILocalizedString(@"When a file transfer fails",nil);
+		} else {
+			description = @"";	
+		}
 	}
 
 	return description;
@@ -648,6 +689,13 @@ static ESFileTransferPreferences *preferences;
 			} else {
 				format = AILocalizedString(@"%@ received %@",nil);	
 			}
+		} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
+			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
+				format = AILocalizedString(@"%@'s transfer of %@ failed","First placeholder is a name; second is a filename");
+
+			} else {
+				format = AILocalizedString(@"Your transfer to %@ of %@ failed","First placeholder is a name; second is a filename");				
+			}
 		}
 		
 		if (format) {
@@ -674,8 +722,14 @@ static ESFileTransferPreferences *preferences;
 			} else {
 				format = AILocalizedString(@"received %@",nil);	
 			}
+		} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
+			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
+				format = AILocalizedString(@"failed to send you %@",nil);
+			} else {
+				format = AILocalizedString(@"failed to receive %@",nil);	
+			}
 		}
-		
+
 		if (format) {
 			description = [NSString stringWithFormat:format,displayFilename];
 		}		

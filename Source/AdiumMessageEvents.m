@@ -42,7 +42,6 @@
 	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
 	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_FIRST withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
 	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_BACKGROUND withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
-	[[adium contactAlertsController] registerEventID:FILE_TRANSFER_FAILED withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
 	
 	//Observe chat changes
 	[[adium chatController] registerChatObserver:self];
@@ -165,8 +164,6 @@
 		description = AILocalizedString(@"Sends an initial message",nil);
 	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 		description = AILocalizedString(@"Sends a message in a background chat",nil);
-	} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
-		description = AILocalizedString(@"File transfer fails",nil);
 	} else {
 		description = @"";
 	}
@@ -186,8 +183,6 @@
 		description = AILocalizedString(@"Message received (Initial)",nil);
 	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 		description = AILocalizedString(@"Message received (Background chat)",nil);
-	} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
-		description = AILocalizedString(@"File transfer failed",nil);
 	} else {
 		description = @"";
 	}
@@ -209,8 +204,6 @@
 		description = @"Message Received (New)";
 	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 		description = @"Message Received (Background Chat)";
-	} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
-		description = @"File transfer failed";
 	} else {
 		description = @"";
 	}
@@ -234,8 +227,6 @@
 			format = AILocalizedString(@"When %@ sends an initial message to you",nil);
 		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 			format = AILocalizedString(@"When %@ sends a message to you in a background chat",nil);
-		} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
-			format = AILocalizedString(@"When a file transfer with %@ fails",nil);	
 		} else {
 			format = nil;
 		}
@@ -257,8 +248,8 @@
 			description = AILocalizedString(@"When you receive an initial message",nil);
 		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 			description = AILocalizedString(@"When you receive a message in a background chat",nil);
-		} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
-			description = AILocalizedString(@"When a file transfer fails",nil);
+		} else {
+			description = @"";
 		}
 	}
 	
