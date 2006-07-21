@@ -473,6 +473,11 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	return ([displayedObject userIcon]);
 }
 
+- (NSString *)fileNameForImageInImagePicker:(AIImageViewWithImagePicker *)picker
+{
+	return [[displayedObject displayName] safeFilenameString];
+}
+
 #pragma mark Contact List (metaContact)
 - (void)setupMetaContactDrawer
 {
