@@ -18,6 +18,8 @@
 #import <AIUtilities/AIStringUtilities.h>
 #import <Adium/DCJoinChatWindowController.h>
 
+#import "SmackXMPPRegistration.h"
+
 #import "SmackCocoaAdapter.h"
 #import "SmackInterfaceDefinitions.h"
 
@@ -152,6 +154,7 @@
                 [(SmackXMPPJoinChatViewController*)[jcwc joinChatViewController] setJID:[info getFrom]];
             } else if([category isEqualToString:@"gateway"])
             {
+                [[[SmackXMPPRegistration alloc] initWithAccount:account registerWith:[info getFrom]] autorelease];
             } else if([category isEqualToString:@"pubsub"])
             {
             } else {

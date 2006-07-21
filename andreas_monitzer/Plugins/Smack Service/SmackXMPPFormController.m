@@ -118,9 +118,11 @@
         [resultForm release];
         resultForm = [[SmackCocoaAdapter formWithType:@"cancel"] retain];
     }
+    
+    id t = target; // the target variable might be gone when we return!
         
-    [target performSelector:NSSelectorFromString(selector) withObject:self];
-    [target release];
+    [t performSelector:NSSelectorFromString(selector) withObject:self];
+    [t release];
 }
 
 - (SmackXForm*)resultForm {

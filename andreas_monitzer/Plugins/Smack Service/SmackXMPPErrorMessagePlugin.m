@@ -75,12 +75,8 @@ static struct
         }
         if(!errordesc)
             errordesc = [[NSNumber numberWithInt:code] stringValue];
-
-        [[NSAlert alertWithMessageText:[NSString stringWithFormat:AILocalizedString(@"XMPP Error %d \"%@\" From %@","XMPP Error %d \"%@\" From %@"), code, errordesc, [packet getFrom]]
-                         defaultButton:AILocalizedString(@"OK","OK")
-                       alternateButton:nil
-                           otherButton:nil
-             informativeTextWithFormat:@"%@",message?message:AILocalizedString(@"(no message provided)","(no message provided)")] runModal];
+        
+        [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error %d \"%@\" From %@","XMPP Error %d \"%@\" From %@"), code, errordesc, [packet getFrom]] withDescription:message?message:AILocalizedString(@"(no message provided)","(no message provided)")];
     }
 }
 

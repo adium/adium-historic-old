@@ -136,8 +136,10 @@
 @interface JavaMap : NSObject {
 }
 
+- (void)clear;
 - (BOOL)containsKey:(id)key;
 - (BOOL)containsValue:(id)value;
+- (JavaSet*)entrySet;
 - (BOOL)equals:(id)o;
 - (id)get:(id)object;
 - (int)hashCode;
@@ -358,6 +360,17 @@
 
 @end
 
+@interface SmackRegister : SmackIQ {
+}
+
+- (JavaMap*)getAttributes;
+- (NSString*)getChildElementXML;
+- (NSString*)getInstructions;
+- (void)setAttributes:(JavaMap*)atttributes;
+- (void)setInstructions:(NSString*)instructions;
+
+@end
+
 @interface SmackRosterPacket : SmackIQ {
 }
 
@@ -393,6 +406,17 @@
 - (void)removeEntry:(SmackRosterEntry*)entry;
 - (void)setDefaultSubscriptionMode:(int)subscriptionMode;
 - (void)setSubscriptionMode:(int)subscriptionMode;
+
+@end
+
+@interface SmackRegistration : SmackIQ {
+}
+
+- (JavaMap*)getAttributes;
+- (NSString*)getChildElementXML;
+- (NSString*)getInstructions;
+- (void)setAttributes:(JavaMap*)attributes;
+- (void)setInstructions:(NSString*)instructions;
 
 @end
 
@@ -495,6 +519,46 @@
 - (void)resetValues;
 - (void)addValue:(NSString*)value;
 
+- (void)setLabel:(NSString*)label;
+- (void)setType:(NSString*)type;
+
+- (NSString*)toXML;
+
+@end
+
+@interface SmackXDataFormItem : NSObject {
+}
+
+- (JavaIterator*)getFields;
+- (NSString*)toXML;
+
+@end
+
+@interface SmackXDataFormReportedData : NSObject {
+}
+
+- (JavaIterator*)getFields;
+- (NSString*)toXML;
+
+@end
+
+@interface SmackXDataForm : NSObject <SmackPacketExtension> {
+}
+
+- (void)addField:(SmackXFormField*)field;
+- (void)addInstruction:(NSString*)instruction;
+- (void)addItem:(SmackXDataFormItem*)item;
+- (NSString*)getElementName;
+- (JavaIterator*)getFields;
+- (JavaIterator*)getInstructions;
+- (JavaIterator*)getIterms;
+- (NSString*)getNamespace;
+- (SmackXDataFormReportedData*)getReportedData;
+- (NSString*)getTitle;
+- (NSString*)getType;
+- (void)setInstructions:(JavaList*)instructions;
+- (void)setReportedData:(SmackXDataFormReportedData*)reportedData;
+- (void)setTitle:(NSString*)title;
 - (NSString*)toXML;
 
 @end
@@ -508,8 +572,11 @@
 - (NSString*)getTitle;
 - (NSString*)getType;
 - (void)setAnswer:(NSString*)variable :(NSNumber*)value;
-- (SmackXForm*)getDataFormToSend;
+- (SmackXDataForm*)getDataFormToSend;
 - (SmackXForm*)createAnswerForm;
+- (void)addField:(SmackXFormField*)field;
+- (void)setInstructions:(NSString*)instructions;
+- (void)setTitle:(NSString*)title;
 
 @end
 
