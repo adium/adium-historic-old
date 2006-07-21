@@ -445,6 +445,8 @@
 	 */
 	shouldRemove = ![[adium contentController] chatIsReceivingContent:inChat];
 
+	[inChat retain];
+
 	if (mostRecentChat == inChat) {
 		[mostRecentChat release];
 		mostRecentChat = nil;
@@ -469,6 +471,7 @@
 	}
 	
 	[inChat setIsOpen:NO];
+	[inChat release];
 
 	return shouldRemove;
 }
