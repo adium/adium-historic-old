@@ -55,6 +55,15 @@
  * @return An <tt>NSImage</tt> to display in the Image Picker, or nil if the <tt>AIImageViewWithImagePicker</tt>'s own image should be used.
  */
 - (NSImage *)imageForImageViewWithImagePicker:(AIImageViewWithImagePicker *)picker;
+
+/*!
+ * fileNameForImageInImagePicker
+ * @brief Requests the name under which to save a file dragged from the image picker to the Finder or another destination
+ *
+ * The name should not have an extension and must not contain characters which are illegal in file names.
+ * Return nil to have the image picker use a default name.
+ */
+- (NSString *)fileNameForImageInImagePicker:(AIImageViewWithImagePicker *)picker;
 @end
 
 @interface AIImageViewWithImagePicker : NSImageView {

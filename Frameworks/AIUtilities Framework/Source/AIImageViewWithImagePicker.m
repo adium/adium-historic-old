@@ -246,17 +246,23 @@
 		return;
 	}
 	
-	NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
-	
-	//Add the images we can send data as (when requested)
-	[pboard declareTypes:[NSArray arrayWithObjects:NSTIFFPboardType,NSPDFPboardType,nil]
-				   owner:self];
+	//Start the drag
+	[self dragPromisedFilesOfTypes:[NSArray arrayWithObject:@"png"]
+						  fromRect:NSZeroRect
+							source:self
+						 slideBack:YES
+							 event:theEvent];
+}
+
+- (void)dragImage:(NSImage *)anImage at:(NSPoint)imageLoc offset:(NSSize)mouseOffset event:(NSEvent *)theEvent pasteboard:(NSPasteboard *)pboard source:(id)sourceObject slideBack:(BOOL)slideBack
+{
+	[pboard addTypes:[NSArray arrayWithObjects:NSTIFFPboardType,NSPDFPboardType,nil] owner:self];
 	
 	NSImage *dragImage = [[NSImage alloc] initWithSize:[[self image] size]];
 	
 	//Draw our original image as 50% transparent
 	[dragImage lockFocus];
-	[[self image] dissolveToPoint: NSZeroPoint fraction: .5];
+	[[self image] dissolveToPoint:NSZeroPoint fraction:0.5];
 	[dragImage unlockFocus];
 	
 	//We want the image to resize
@@ -264,14 +270,13 @@
 	//Change to the size we are displaying
 	[dragImage setSize:[self bounds].size];
 	
-	//Start the drag
-	[self dragImage:dragImage
-				 at:[self bounds].origin
-			 offset:NSZeroSize
-			  event:theEvent
-		 pasteboard:pboard
-			 source:self
-		  slideBack:YES];
+	[super dragImage:dragImage
+				  at:imageLoc
+			  offset:mouseOffset
+			   event:theEvent
+		  pasteboard:pboard
+			  source:sourceObject
+		   slideBack:slideBack];
 	[dragImage release];
 }
 
@@ -322,6 +327,28 @@
 	} else {
 		return [super draggingUpdated:sender];
 	}
+}
+
+- (NSArray *)namesOfPromisedFilesDroppedAtDestination:(NSURL *)inDropDestination
+{
+	NSString *name = nil;
+	if ([[self delegate] respondsToSelector:@selector(fileNameForImageInImagePicker:)]) {
+		name = [[self delegate] fileNameForImageInImagePicker:self];
+		if (![name length]) name = nil;
+	}
+	
+	if (!name)
+		name = NSLocalizedString(@"Picture", nil);
+	
+	name = [name stringByAppendingPathExtension:@"png"];
+	
+	NSString *fullPath = [[inDropDestination path] stringByAppendingPathComponent:name];
+	fullPath = [[NSFileManager defaultManager] uniquePathForPath:fullPath];
+	
+	[[[self image] PNGRepresentation] writeToFile:fullPath
+									   atomically:YES];
+	
+	return [NSArray arrayWithObject:[fullPath lastPathComponent]];
 }
 
 /*
