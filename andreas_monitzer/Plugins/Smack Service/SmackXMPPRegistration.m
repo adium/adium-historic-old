@@ -12,7 +12,7 @@
 #import "SmackXMPPFormController.h"
 #import "SmackXMPPAccount.h"
 #import "AIInterfaceController.h"
-
+#import "AIAdium.h"
 #import "SmackCocoaAdapter.h"
 
 @implementation SmackXMPPRegistration
@@ -62,58 +62,101 @@
         
         [form setTitle:[NSString stringWithFormat:AILocalizedString(@"Registration for %@","Registration for %@"),otherJID]];
         [form setInstructions:[packet getInstructions]];
-        JavaIterator *iter = [[attr keySet] iterator];
         
-        while([iter hasNext])
+        static NSArray *fielddefinitions = nil;
+
+        if(!fielddefinitions)
+            fielddefinitions = [[NSArray alloc] initWithObjects:
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"username", @"field",
+                    AILocalizedString(@"Account name associated with the user","Account name associated with the user"), @"label",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"nick", @"field",
+                    AILocalizedString(@"Familiar name of the user","Familiar name of the user"), @"label",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"password", @"field",
+                    AILocalizedString(@"Password or secret for the user","Password or secret for the user"), @"label",
+                    @"text-private", @"type",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"name", @"field",
+                    AILocalizedString(@"Full name of the user","Full name of the user"), @"label",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"first", @"field",
+                    AILocalizedString(@"First name or given name of the user","First name or given name of the user"), @"label",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"last", @"field",
+                    AILocalizedString(@"Last name, surname, or family name of the user","Last name, surname, or family name of the user"), @"label",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"email", @"field",
+                    AILocalizedString(@"Email address of the user","Email address of the user"), @"label",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"address", @"field",
+                    AILocalizedString(@"Street portion of a physical or mailing address","Street portion of a physical or mailing address"), @"label",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"city", @"field",
+                    AILocalizedString(@"Locality portion of a physical or mailing address","Locality portion of a physical or mailing address"), @"label",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"state", @"field",
+                    AILocalizedString(@"Region portion of a physical or mailing address","Region portion of a physical or mailing address"), @"label",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"zip", @"field",
+                    AILocalizedString(@"Postal code portion of a physical or mailing address","Postal code portion of a physical or mailing address"), @"label",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"phone", @"field",
+                    AILocalizedString(@"Telephone number of the user","Telephone number of the user"), @"label",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"url", @"field",
+                    AILocalizedString(@"URL to web page describing the user","URL to web page describing the user"), @"label",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"date", @"field",
+                    AILocalizedString(@"Some date (e.g., birth date, hire date, sign-up date)","Some date (e.g., birth date, hire date, sign-up date)"), @"label",
+                    nil],
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                    @"old_password", @"field",
+                    AILocalizedString(@"Old password for the user","Old password for the user"), @"label",
+                    @"text-private", @"type",
+                    nil],
+                nil];
+        
+        NSEnumerator *e = [fielddefinitions objectEnumerator];
+        NSDictionary *item;
+        
+        while((item = [e nextObject]))
         {
-            NSString *key = [iter next];
-            SmackXFormField *field;
-            if([key isEqualToString:@"registered"])
+            NSString *fieldname = [item objectForKey:@"field"];
+            if([attr containsKey:fieldname])
             {
-                field = [SmackCocoaAdapter formFieldWithVariable:@"remove"];
-                [field setType:@"boolean"];
-                [field setLabel:AILocalizedString(@"Remove registration","Remove registration")];
-            } else {
-                field = [SmackCocoaAdapter formFieldWithVariable:key];
-                [field setType:@"text-single"];
-                [field addValue:[attr get:key]];
-                if([key isEqualToString:@"username"])
-                    [field setLabel:AILocalizedString(@"Account name associated with the user","Account name associated with the user")];
-                else if([key isEqualToString:@"nick"])
-                    [field setLabel:AILocalizedString(@"Familiar name of the user","Familiar name of the user")];
-                else if([key isEqualToString:@"password"])
-                {
-                    [field setLabel:AILocalizedString(@"Password or secret for the user","Password or secret for the user")];
-                    [field setType:@"text-private"];
-                } else if([key isEqualToString:@"name"])
-                    [field setLabel:AILocalizedString(@"Full name of the user","Full name of the user")];
-                else if([key isEqualToString:@"first"])
-                    [field setLabel:AILocalizedString(@"First name or given name of the user","First name or given name of the user")];
-                else if([key isEqualToString:@"last"])
-                    [field setLabel:AILocalizedString(@"Last name, surname, or family name of the user","Last name, surname, or family name of the user")];
-                else if([key isEqualToString:@"email"])
-                    [field setLabel:AILocalizedString(@"Email address of the user","Email address of the user")];
-                else if([key isEqualToString:@"address"])
-                    [field setLabel:AILocalizedString(@"Street portion of a physical or mailing address","Street portion of a physical or mailing address")];
-                else if([key isEqualToString:@"city"])
-                    [field setLabel:AILocalizedString(@"Locality portion of a physical or mailing address","Locality portion of a physical or mailing address")];
-                else if([key isEqualToString:@"state"])
-                    [field setLabel:AILocalizedString(@"Region portion of a physical or mailing address","Region portion of a physical or mailing address")];
-                else if([key isEqualToString:@"zip"])
-                    [field setLabel:AILocalizedString(@"Postal code portion of a physical or mailing address","Postal code portion of a physical or mailing address")];
-                else if([key isEqualToString:@"phone"])
-                    [field setLabel:AILocalizedString(@"Telephone number of the user","Telephone number of the user")];
-                else if([key isEqualToString:@"url"])
-                    [field setLabel:AILocalizedString(@"URL to web page describing the user","URL to web page describing the user")];
-                else if([key isEqualToString:@"date"])
-                    [field setLabel:AILocalizedString(@"Some date (e.g., birth date, hire date, sign-up date)","Some date (e.g., birth date, hire date, sign-up date)")];
-                else if([key isEqualToString:@"old_password"])
-                {
-                    [field setLabel:AILocalizedString(@"Old password for the user","Old password for the user")];
-                    [field setType:@"text-private"];
-                } else
-                    [field setLabel:key];
+                NSString *value = [attr get:fieldname];
+                SmackXFormField *field = [SmackCocoaAdapter formFieldWithVariable:fieldname];
+                if(![item objectForKey:@"type"])
+                    [field setType:@"text-single"];
+                else
+                    [field setType:[item objectForKey:@"type"]];
+                [field addValue:value];
+                [field setLabel:[item objectForKey:@"label"]];
+
+                [form addField:field];
             }
+        }
+        
+        if([attr containsKey:@"registered"])
+        {
+            SmackXFormField *field = [SmackCocoaAdapter formFieldWithVariable:@"remove"];
+            [field setType:@"boolean"];
+            [field setLabel:AILocalizedString(@"Remove registration","Remove registration")];
             [form addField:field];
         }
     } else
@@ -141,7 +184,10 @@
         
         if([type isEqualToString:@"result"])
         {
-            [[adium interfaceController] handleMessage:AILocalizedString(@"Registration successful!", "Registration successful!") withDescription:[NSString stringWithFormat:AILocalizedString(@"Registration to %@ was completed successfully.","Registration to %@ was completed successfully."),otherJID] withWindowTitle:AILocalizedString(@"Registration", "Registration")];
+            if(didUnregister)
+                [[adium interfaceController] handleMessage:AILocalizedString(@"Unregistration successful!", "Unregistration successful!") withDescription:[NSString stringWithFormat:AILocalizedString(@"Unregistration to %@ was completed successfully.","Unregistration to %@ was completed successfully."),otherJID] withWindowTitle:AILocalizedString(@"Registration", "Registration")];
+            else
+                [[adium interfaceController] handleMessage:AILocalizedString(@"Registration successful!", "Registration successful!") withDescription:[NSString stringWithFormat:AILocalizedString(@"Registration to %@ was completed successfully.","Registration to %@ was completed successfully."),otherJID] withWindowTitle:AILocalizedString(@"Registration", "Registration")];
             [self release];
             return;
         } else if([type isEqualToString:@"error"] && [SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.Registration"])
@@ -195,9 +241,19 @@
             SmackXFormField *field = [iter next];
             if([[field getVariable] isEqualToString:@"remove"])
             {
-                NSString *value = [[field getValues] next];
-                if([value isEqualToString:@"1"])
-                    [attr put:@"remove" :@""]; // just an empty element
+                JavaIterator *fieldvalueiter = [field getValues];
+                if([fieldvalueiter hasNext])
+                {
+                    NSString *value = [[field getValues] next];
+                    if([value isEqualToString:@"1"])
+                    {
+                        // remove has to be the only element we send
+                        [attr clear];
+                        [attr put:@"remove" :@""]; // just an empty element
+                        didUnregister = YES;
+                        break;
+                    }
+                }
             } else {
                 NSString *value = [[field getValues] next];
                 [attr put:[field getVariable] :value];
@@ -205,8 +261,10 @@
         }
         [reg setAttributes:attr];
     }
-    
-    packetID = [reg getPacketID];
+    [reg setTo:otherJID];
+    [reg setType:@"set"];
+    [packetID release];
+    packetID = [[reg getPacketID] retain];
     
     [[account connection] sendPacket:reg];
     

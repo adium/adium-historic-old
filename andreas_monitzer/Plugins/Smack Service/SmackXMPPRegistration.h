@@ -20,6 +20,7 @@
     
     BOOL wasForm;
     BOOL receivedInitialForm;
+    BOOL didUnregister;
 }
 
 - (id)initWithAccount:(SmackXMPPAccount*)a registerWith:(NSString*)jid;
