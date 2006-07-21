@@ -1378,6 +1378,8 @@
 		81BE445D0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81BE445B0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.h */; };
 		81BE445E0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 81BE445C0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.m */; };
 		81BE44690A6C731900AADA28 /* SmackXMPPServiceDiscoveryBrowser.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81BE44670A6C731900AADA28 /* SmackXMPPServiceDiscoveryBrowser.nib */; };
+		81BE5F2F0A70660000AADA28 /* SmackXMPPRegistration.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81BE5F2D0A70660000AADA28 /* SmackXMPPRegistration.h */; };
+		81BE5F300A70660000AADA28 /* SmackXMPPRegistration.m in Sources */ = {isa = PBXBuildFile; fileRef = 81BE5F2E0A70660000AADA28 /* SmackXMPPRegistration.m */; };
 		81D59B5E0A52214F0099F9B9 /* SmackBridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */; };
 		81D5A15B0A5943240099F9B9 /* SmackXMPPMultiUserChatPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81D5A1590A5943230099F9B9 /* SmackXMPPMultiUserChatPlugin.h */; };
 		81D5A15C0A5943240099F9B9 /* SmackXMPPMultiUserChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81D5A15A0A5943230099F9B9 /* SmackXMPPMultiUserChatPlugin.m */; };
@@ -1861,6 +1863,7 @@
 				81D5A8630A5A14AE0099F9B9 /* SmackXMPPFormController.h in CopyFiles */,
 				815ED31D0A6C637E0024B6FE /* SmackXMPPGatewayInteractionPlugin.h in CopyFiles */,
 				81BE445D0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.h in CopyFiles */,
+				81BE5F2F0A70660000AADA28 /* SmackXMPPRegistration.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3723,6 +3726,8 @@
 		81BE445B0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPServiceDiscoveryBrowsing.h; path = "Plugins/Smack Service/SmackXMPPServiceDiscoveryBrowsing.h"; sourceTree = "<group>"; };
 		81BE445C0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPServiceDiscoveryBrowsing.m; path = "Plugins/Smack Service/SmackXMPPServiceDiscoveryBrowsing.m"; sourceTree = "<group>"; };
 		81BE44680A6C731900AADA28 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPServiceDiscoveryBrowser.nib"; sourceTree = "<group>"; };
+		81BE5F2D0A70660000AADA28 /* SmackXMPPRegistration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPRegistration.h; path = "Plugins/Smack Service/SmackXMPPRegistration.h"; sourceTree = "<group>"; };
+		81BE5F2E0A70660000AADA28 /* SmackXMPPRegistration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPRegistration.m; path = "Plugins/Smack Service/SmackXMPPRegistration.m"; sourceTree = "<group>"; };
 		81D5A1590A5943230099F9B9 /* SmackXMPPMultiUserChatPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPMultiUserChatPlugin.h; path = "Plugins/Smack Service/SmackXMPPMultiUserChatPlugin.h"; sourceTree = "<group>"; };
 		81D5A15A0A5943230099F9B9 /* SmackXMPPMultiUserChatPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPMultiUserChatPlugin.m; path = "Plugins/Smack Service/SmackXMPPMultiUserChatPlugin.m"; sourceTree = "<group>"; };
 		81D5A1680A5944320099F9B9 /* SmackXMPPMultiUserChatPluginListener.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = SmackXMPPMultiUserChatPluginListener.java; path = "Plugins/Smack Service/SmackXMPPMultiUserChatPluginListener.java"; sourceTree = "<group>"; };
@@ -6617,6 +6622,8 @@
 				81D5A8080A59F77A0099F9B9 /* SmackXMPPFormConverter.m */,
 				81D5A8610A5A14AD0099F9B9 /* SmackXMPPFormController.h */,
 				81D5A8620A5A14AE0099F9B9 /* SmackXMPPFormController.m */,
+				81BE5F2D0A70660000AADA28 /* SmackXMPPRegistration.h */,
+				81BE5F2E0A70660000AADA28 /* SmackXMPPRegistration.m */,
 				81F6554E0A293DD0008FC8E7 /* Smack-Info.plist */,
 				81F656BC0A2A587F008FC8E7 /* SmackXMPPAccountView.nib */,
 				81D5A1CA0A59710D0099F9B9 /* SmackXMPPJoinChatView.nib */,
@@ -9652,6 +9659,7 @@
 				81D5A8640A5A14AE0099F9B9 /* SmackXMPPFormController.m in Sources */,
 				815ED31E0A6C637E0024B6FE /* SmackXMPPGatewayInteractionPlugin.m in Sources */,
 				81BE445E0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.m in Sources */,
+				81BE5F300A70660000AADA28 /* SmackXMPPRegistration.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

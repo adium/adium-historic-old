@@ -50,7 +50,7 @@
     NSRange resourcerange = [self rangeOfString:@"/" options:NSLiteralSearch | NSBackwardsSearch];
     if(resourcerange.location != NSNotFound)
         return [self substringFromIndex:resourcerange.location+1];
-    return nil; // no resource
+    return @""; // no resource
 }
 - (NSString*)jidUserHost { // remove resource
     NSRange resourcerange = [self rangeOfString:@"/" options:NSLiteralSearch | NSBackwardsSearch];

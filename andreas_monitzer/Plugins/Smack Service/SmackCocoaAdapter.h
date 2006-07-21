@@ -11,7 +11,7 @@
 #import "AIObject.h"
 
 @protocol AdiumSmackBridgeDelegate;
-@class SmackXMPPConnection, SmackXMPPAccount, SmackPresenceType, SmackPresenceMode, SmackMessageType, SmackConnectionConfiguration, SmackPresence, SmackMessage, SmackXXHTMLExtension, SmackIQ, SmackIQType, SmackXMPPError, SmackRoster, SmackXForm, JavaMethod, JavaVector, JavaDate;
+@class SmackXMPPConnection, SmackXMPPAccount, SmackPresenceType, SmackPresenceMode, SmackMessageType, SmackConnectionConfiguration, SmackPresence, SmackMessage, SmackPacket, SmackXXHTMLExtension, SmackIQ, SmackIQType, SmackXMPPError, SmackRoster, SmackRegistration, SmackXForm, SmackXFormField, JavaMethod, JavaVector, JavaDate, JavaMap;
 
 @interface SmackCocoaAdapter : AIObject <AdiumSmackBridgeDelegate> {
     SmackXMPPConnection *connection;
@@ -33,6 +33,7 @@
 + (SmackPresence*)presenceWithTypeString:(NSString*)type status:(NSString*)status priority:(int)priority modeString:(NSString*)mode;
 + (SmackMessage*)messageTo:(NSString*)to type:(SmackMessageType*)type;
 + (SmackMessage*)messageTo:(NSString*)to typeString:(NSString*)type;
++ (SmackRegistration*)registration;
 
 + (SmackXXHTMLExtension*)XHTMLExtension;
 + (SmackIQ*)IQ;
@@ -41,8 +42,12 @@
 + (SmackXMPPError*)XMPPErrorWithCode:(int)code message:(NSString*)message;
 + (void)createRosterEntryInRoster:(SmackRoster*)roster withJID:(NSString*)jid name:(NSString*)name group:(NSString*)group;
 + (SmackXForm*)formWithType:(NSString*)type;
++ (SmackXForm*)formFromPacket:(SmackPacket*)packet;
++ (SmackXForm*)fixedFormField;
++ (SmackXFormField*)formFieldWithVariable:(NSString*)variable;
 + (id)invokeObject:(id)obj methodWithParamTypeAndParam:(NSString*)method, ...;
 + (JavaVector*)vector;
++ (JavaMap*)map;
 
 + (NSDate*)dateFromJavaDate:(JavaDate*)date;
 

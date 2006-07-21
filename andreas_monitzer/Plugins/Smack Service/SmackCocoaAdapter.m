@@ -231,6 +231,10 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     return [self messageTo:to type:[SmackCocoaAdapter staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.Message$Type"]];
 }
 
++ (SmackRegistration*)registration {
+    return [[[NSClassFromString(@"org.jivesoftware.smack.packet.Registration") alloc] init] autorelease];
+}
+
 + (SmackXXHTMLExtension*)XHTMLExtension {
     return [[[NSClassFromString(@"org.jivesoftware.smackx.packet.XHTMLExtension") alloc] init] autorelease];
 }
@@ -257,6 +261,18 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
 
 + (SmackXForm*)formWithType:(NSString*)type {
     return [[NSClassFromString(@"org.jivesoftware.smackx.Form") newWithSignature:@"(Ljava/lang/String;)",type] autorelease];
+}
+
++ (SmackXForm*)formFromPacket:(SmackPacket*)packet {
+    return [NSClassFromString(@"org.jivesoftware.smackx.Form") getFormFrom:packet];
+}
+
++ (SmackXForm*)fixedFormField {
+    return [[[NSClassFromString(@"org.jivesoftware.smackx.FormField") alloc] init] autorelease];
+}
+
++ (SmackXFormField*)formFieldWithVariable:(NSString*)variable {
+    return [[NSClassFromString(@"org.jivesoftware.smackx.FormField") newWithSignature:@"(Ljava/lang/String;)",variable] autorelease];
 }
 
 + (id)invokeObject:(id)obj methodWithParamTypeAndParam:(NSString*)method, ... {
@@ -352,6 +368,10 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
 
 + (JavaVector*)vector {
     return [[[NSClassFromString(@"java.util.Vector") alloc] init] autorelease];
+}
+
++ (JavaMap*)map {
+    return [[[NSClassFromString(@"java.util.HashMap") alloc] init] autorelease];
 }
 
 + (NSDictionary *)smackExceptionInfo:(NSException*)e {
