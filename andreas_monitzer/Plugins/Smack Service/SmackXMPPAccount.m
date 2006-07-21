@@ -33,12 +33,12 @@
     NSRange userrange = [self rangeOfString:@"@" options:NSLiteralSearch];
     if(userrange.location != NSNotFound)
         return [self substringToIndex:userrange.location];
-    return self;
+    return @"";
 }
 - (NSString*)jidHost {
     NSRange hoststartrange = [self rangeOfString:@"@" options:NSLiteralSearch];
     if(hoststartrange.location == NSNotFound)
-        return nil;
+        hoststartrange.location = (unsigned int)-1;
     // look for resource
     NSRange hostendrange = [self rangeOfString:@"/" options:NSLiteralSearch range:NSMakeRange(hoststartrange.location,[self length]-hoststartrange.location)];
     if(hostendrange.location != NSNotFound)

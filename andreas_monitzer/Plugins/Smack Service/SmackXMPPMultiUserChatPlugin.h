@@ -8,8 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIObject.h>
+#import <Adium/DCJoinChatViewController.h>
 
-@class SmackXMPPAccount, SmackXMPPMultiUserChatPluginListener, DCJoinChatViewController;
+@class SmackXMPPAccount, SmackXMPPMultiUserChatPluginListener;
 
 @protocol SmackXMPPMultiUserChatPluginListenerDelegate <NSObject>
 
@@ -24,5 +25,16 @@
 
 - (id)initWithAccount:(SmackXMPPAccount*)a;
 - (void)setMUCInvitation:(NSDictionary*)info;
+
+@end
+
+@interface SmackXMPPJoinChatViewController : DCJoinChatViewController {
+    IBOutlet NSTextField *chatRoomNameField;
+    IBOutlet NSTextField *serverField;
+    IBOutlet NSTextField *nicknameField;
+    IBOutlet NSTextField *passwordField;
+}
+
+- (void)setJID:(NSString*)jid; // chatroom@host/nick
 
 @end

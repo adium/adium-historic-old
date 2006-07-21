@@ -538,6 +538,29 @@
 
 @end
 
+@interface SmackXDiscoverInfoIdentity : NSObject {
+}
+
+- (NSString*)getCategory;
+- (NSString*)getName;
+- (NSString*)getType;
+- (void)setType:(NSString*)type;
+- (NSString*)toXML;
+
+@end
+
+@interface SmackXDiscoverInfo : SmackIQ {
+}
+
+- (void)addFeature:(NSString*)feature;
+- (void)addIdentity:(SmackXDiscoverInfoIdentity*)identity;
+- (BOOL)containsFeature:(NSString*)feature;
+- (JavaIterator*)getIdentities;
+- (NSString*)getNode;
+- (void)setNode:(NSString*)node;
+
+@end
+
 @interface SmackXDiscussionHistory : NSObject {
 }
 

@@ -61,16 +61,15 @@ static AIHTMLDecoder *messageencoder = nil;
 
 #define SmackXMPPJoinChatNotification @"SmackXMPPJoinChatNotification"
 
-@interface SmackXMPPJoinChatViewController : DCJoinChatViewController {
-    IBOutlet NSTextField *chatRoomNameField;
-    IBOutlet NSTextField *serverField;
-    IBOutlet NSTextField *nicknameField;
-    IBOutlet NSTextField *passwordField;
-}
-
-@end
 
 @implementation SmackXMPPJoinChatViewController
+
+- (void)setJID:(NSString*)jid
+{
+    [chatRoomNameField setStringValue:[jid jidUsername]];
+    [serverField setStringValue:[jid jidHost]];
+    [nicknameField setStringValue:[jid jidResource]];
+}
 
 - (NSString*)nibName
 {
@@ -124,7 +123,6 @@ static AIHTMLDecoder *messageencoder = nil;
 
 - (DCJoinChatViewController *)joinChatView{
     return [SmackXMPPJoinChatViewController joinChatView];
-    return nil;
 }
 
 @end
