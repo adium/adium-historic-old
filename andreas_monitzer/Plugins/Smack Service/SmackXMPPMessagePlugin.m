@@ -14,6 +14,7 @@
 
 #import "AIAdium.h"
 #import "AIChatController.h"
+#import "AIContactController.h"
 #import "AIChat.h"
 #import "AIContentController.h"
 
@@ -57,7 +58,7 @@ static AIHTMLDecoder *messageencoder = nil;
         NSString *resource = [from jidResource];
         NSString *thread = [packet getThread];
         
-        AIListContact *sourceContact = [[adium contactController] existingContactWithService:[account service] account:account UID:[from jidUserHost]];
+        AIListContact *sourceContact = [[adium contactController] contactWithService:[account service] account:account UID:[from jidUserHost]];
         
         if (!(chat = [[adium chatController] existingChatWithContact:sourceContact]))
         {
@@ -148,7 +149,7 @@ static AIHTMLDecoder *messageencoder = nil;
     NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
     NSString *type = [chat statusObjectForKey:@"XMPPType"];
     if(!type)
-        type = @"NORMAL";
+        type = @"CHAT";
     
     if(!threadid) // first message was sent by us
     {
