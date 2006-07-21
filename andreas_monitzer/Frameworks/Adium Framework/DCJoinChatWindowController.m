@@ -37,13 +37,14 @@
 static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 
 //Create a new join chat window
-+ (void)joinChatWindow
++ (DCJoinChatWindowController*)joinChatWindow
 {
     if (!sharedJoinChatInstance) {
         sharedJoinChatInstance = [[self alloc] initWithWindowNibName:JOIN_CHAT_NIB];
     }
 
     [[sharedJoinChatInstance window] makeKeyAndOrderFront:nil];
+    return sharedJoinChatInstance;
 }
 
 + (void)closeSharedInstance
@@ -51,6 +52,11 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
     if (sharedJoinChatInstance) {
         [sharedJoinChatInstance closeWindow:nil];
     }
+}
+
+- (DCJoinChatViewController*)joinChatViewController
+{
+    return controller;
 }
 
 - (IBAction)joinChat:(id)sender
