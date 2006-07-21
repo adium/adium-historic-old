@@ -354,4 +354,9 @@
 	[matrix_userIcon selectCellWithTag:0];
 }
 
+- (NSString *)fileNameForImageInImagePicker:(AIImageViewWithImagePicker *)picker
+{
+	return [[account displayName] safeFilenameString];
+}
+
 @end

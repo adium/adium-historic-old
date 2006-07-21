@@ -187,6 +187,11 @@
 	[self configureImageView];
 }
 
+- (NSString *)fileNameForImageInImagePicker:(AIImageViewWithImagePicker *)picker
+{
+	return AILocalizedString(@"Adium Icon", nil);
+}
+
 - (void)configureImageView
 {
 	NSData *imageData = [[adium preferenceController] preferenceForKey:KEY_USER_ICON
