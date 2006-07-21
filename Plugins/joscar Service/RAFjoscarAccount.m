@@ -1248,6 +1248,7 @@ BOOL isMobileContact(AIListObject *inListObject)
 
 - (void)inviteContact:(AIListContact *)inContact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage
 {
+	AILog(@"%@: inviting %@ (%@) to chat %@ (%@) with message %@",self,inContact,[inContact UID],chat,[chat name],inviteMessage);
 	[joscarAdapter inviteUser:[inContact UID] toChat:[chat name] withMessage:inviteMessage];
 }
 
