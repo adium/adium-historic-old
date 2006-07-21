@@ -195,8 +195,8 @@
 
         NSLog(@"delete entry %@",jid);
 
-        AIListContact *listContact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid];
-        
+        AIListContact *listContact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid class:[SmackListContact class]];
+        NSLog(@"%@,%d",listContact,[listContact retainCount]);
         if(listContact)
         {
             [contacts addObject:listContact];

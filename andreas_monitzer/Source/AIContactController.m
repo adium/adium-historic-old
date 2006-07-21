@@ -1893,10 +1893,18 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID
 {
+	return [self existingContactWithService:inService account:inAccount UID:inUID class:[AIListContact class]];
+}
+
+- (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID class:(Class)cls
+{
+	NSLog(@"%@",[cls internalUniqueObjectIDForService:inService
+											  account:inAccount
+												  UID:inUID]);
 	if (inService && [inUID length]) {
-		return [contactDict objectForKey:[AIListContact internalUniqueObjectIDForService:inService
-																				 account:inAccount
-																					 UID:inUID]];
+		return [contactDict objectForKey:[cls internalUniqueObjectIDForService:inService
+																	   account:inAccount
+																		   UID:inUID]];
 	} else {
 		return nil;
 	}
