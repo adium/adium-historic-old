@@ -810,7 +810,7 @@
 {
 	[self displayQuestion:inTitle
 withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
-														   attributes:[NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:10]
+														   attributes:[NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:0]
 																								  forKey:NSFontAttributeName]] autorelease]
 		  withWindowTitle:inWindowTitle
 			defaultButton:inDefaultButton
