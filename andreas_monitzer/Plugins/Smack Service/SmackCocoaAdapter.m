@@ -374,6 +374,10 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     return [[NSClassFromString(@"java.util.HashMap") newWithSignature:@"()"] autorelease];
 }
 
++ (JavaFile*)fileFromPath:(NSString*)path {
+    return [[NSClassFromString(@"java.io.File") newWithSignature:@"(Ljava/lang/String;)", path] autorelease];
+}
+
 + (NSDictionary *)smackExceptionInfo:(NSException*)e {
     NSLog(@"exception!\nname = %@\nreason = %@\nuserInfo = %@",[e name],[e reason],[e userInfo]);
     return [NSDictionary dictionary];

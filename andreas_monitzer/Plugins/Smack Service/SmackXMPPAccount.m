@@ -61,7 +61,7 @@
 
 @end
 
-@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin, SmackXMPPServiceDiscoveryBrowsing;
+@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin, SmackXMPPServiceDiscoveryBrowsing, SmackXMPPFileTransferPlugin;
 
 @interface NSObject (SmackXMPPPluginAddition)
 - (id)initWithAccount:(SmackXMPPAccount*)account;
@@ -87,6 +87,7 @@
             [SmackXMPPMultiUserChatPlugin class],
             [SmackXMPPGatewayInteractionPlugin class],
             [SmackXMPPServiceDiscoveryBrowsing class],
+            [SmackXMPPFileTransferPlugin class],
             nil
         };
         
@@ -181,6 +182,7 @@
     while((plugin = [e nextObject]))
         if([plugin respondsToSelector:@selector(disconnected:)])
             [plugin disconnected:conn];
+    [self removeAllContacts];
 }
 
 - (void)connectionError:(NSString*)error {
