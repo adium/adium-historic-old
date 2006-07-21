@@ -165,14 +165,9 @@
         }
         if(!storedgroupname) {
             iter2 = [entry getGroups];
-            if([iter2 hasNext])
-                [listContact setRemoteGroupName:[[iter2 next] getName]];
-            else
-                [listContact setRemoteGroupName:AILocalizedString(@"Unfiled Entries","group for entries without a group")];
+            AIListGroup *group = [[adium contactController] groupWithUID:[iter2 hasNext]?[[iter2 next] getName]:AILocalizedString(@"Unfiled Entries","group for entries without a group")];
+            [[adium contactController] addContacts:[NSArray arrayWithObject:listContact] toGroup:group];
         }
-        [account setListContact:listContact toAlias:[entry getName]];
-
-        [listContact notifyOfChangedStatusSilently:NO];
     }
 }
 
@@ -200,7 +195,7 @@
         if(listContact)
         {
             [contacts addObject:listContact];
-            [listContact setRemoteGroupName:nil];
+//            [listContact setRemoteGroupName:nil];
         }
     }
     [[adium contactController] removeListObjects:contacts];

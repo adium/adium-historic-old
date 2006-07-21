@@ -11,7 +11,7 @@
 #import "AIObject.h"
 
 @protocol AdiumSmackBridgeDelegate;
-@class SmackXMPPConnection, SmackXMPPAccount, SmackPresenceType, SmackPresenceMode, SmackMessageType, SmackConnectionConfiguration, SmackPresence, SmackMessage, SmackPacket, SmackXXHTMLExtension, SmackIQ, SmackIQType, SmackXMPPError, SmackRoster, SmackRegistration, SmackXForm, SmackXFormField, JavaMethod, JavaVector, JavaDate, JavaMap;
+@class SmackXMPPConnection, SmackXMPPAccount, SmackPresenceType, SmackPresenceMode, SmackMessageType, SmackConnectionConfiguration, SmackPresence, SmackMessage, SmackPacket, SmackXXHTMLExtension, SmackIQ, SmackIQType, SmackXMPPError, SmackRoster, SmackRegistration, SmackXForm, SmackXFormField, JavaMethod, JavaVector, JavaDate, JavaMap, JavaFile;
 
 @interface SmackCocoaAdapter : AIObject <AdiumSmackBridgeDelegate> {
     SmackXMPPConnection *connection;
@@ -48,6 +48,7 @@
 + (id)invokeObject:(id)obj methodWithParamTypeAndParam:(NSString*)method, ...;
 + (JavaVector*)vector;
 + (JavaMap*)map;
++ (JavaFile*)fileFromPath:(NSString*)path;
 
 + (NSDate*)dateFromJavaDate:(JavaDate*)date;
 

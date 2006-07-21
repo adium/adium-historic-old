@@ -176,6 +176,16 @@
 
 @end
 
+@interface JavaFile : NSObject {
+}
+
+- (NSString*)getPath;
+- (NSString*)getName;
+- (NSString*)getAbsoluteFile;
+- (NSString*)getAbsolutePath;
+
+@end
+
 @interface JavaClass : NSObject {
 }
 
@@ -709,6 +719,68 @@
 
 - (SmackXForm*)getRegistrationForm;
 - (void)sendRegistrationForm:(SmackXForm*)form;
+
+@end
+
+@interface SmackXFileTransferStatus : NSObject {
+}
+
+- (NSString*)toString;
+
+@end
+
+@interface SmackXFileTransferError : NSObject {
+}
+
+- (NSString*)getMessage;
+- (NSString*)toString;
+
+@end
+
+@interface SmackXFileTransfer: NSObject {
+}
+
+- (void)cancel;
+- (long)getAmountWritten;
+- (SmackXFileTransferError*)getError;
+//- (JavaException*)getException;
+- (NSString*)getFileName;
+- (NSString*)getFilePath;
+- (long)getFileSize;
+- (NSString*)getPeer;
+- (double)getProgress;
+- (SmackXFileTransferStatus*)getStatus;
+- (BOOL)isDone;
+
+@end
+
+@interface SmackXOutgoingFileTransfer : SmackXFileTransfer {
+}
+
+- (long)getBytesSent;
+- (void)sendFile:(JavaFile*)file :(NSString*)description;
+- (void)sendFile:(NSString*)filename :(long)fileSize :(NSString*)description;
+
+@end
+
+@interface SmackXIncomingFileTransfer : SmackXFileTransfer {
+}
+
+- (void)receiveFile:(JavaFile*)file;
+
+@end
+
+@interface SmackXFileTransferRequest : NSObject {
+}
+
+- (SmackXIncomingFileTransfer*)accept;
+- (NSString*)getDescription;
+- (NSString*)getFileName;
+- (long)getFileSize;
+- (NSString*)getMimeType;
+- (NSString*)getRequestor;
+- (NSString*)getStreamID;
+- (void)reject;
 
 @end
 
