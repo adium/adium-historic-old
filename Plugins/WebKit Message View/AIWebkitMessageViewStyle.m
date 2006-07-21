@@ -564,11 +564,11 @@ static NSArray *validSenderColors;
 		NSString *path = [stylePath stringByAppendingPathComponent:@"Incoming/SenderColors.txt"];
 		if([[NSFileManager defaultManager] fileExistsAtPath:path])
 			validSenderColors = [[[NSString stringWithContentsOfFile:path] componentsSeparatedByString:@":"] retain];
-		else
+		if(!validSenderColors || [validSenderColors count] == 0)
 			validSenderColors = VALID_SENDER_COLORS_ARRAY;
 	}
 	[inString replaceKeyword:@"%senderColor%"
-				  withString:[validSenderColors objectAtIndex:([[contentSource UID] hash] % ([validSenderColors count] - 1))]];
+				  withString:[validSenderColors objectAtIndex:([[contentSource UID] hash] % ([validSenderColors count]))]];
 	
 	//HAX. The odd conditional here detects the rtl html that our html parser spits out.
 	[inString replaceKeyword:@"%messageDirection%"
