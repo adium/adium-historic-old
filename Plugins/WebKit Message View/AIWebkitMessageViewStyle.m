@@ -562,10 +562,8 @@ static NSArray *validSenderColors;
 	
 	if(!validSenderColors) {
 		NSString *path = [stylePath stringByAppendingPathComponent:@"Incoming/SenderColors.txt"];
-		if([[NSFileManager defaultManager] fileExistsAtPath:path]) {
-			NSString *colors = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Incoming/SenderColors.txt"]];
-			validSenderColors = [[colors componentsSeparatedByString:@":"] retain];
-		}
+		if([[NSFileManager defaultManager] fileExistsAtPath:path])
+			validSenderColors = [[[NSString stringWithContentsOfFile:path] componentsSeparatedByString:@":"] retain];
 		else
 			validSenderColors = VALID_SENDER_COLORS_ARRAY;
 	}
