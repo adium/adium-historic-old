@@ -371,7 +371,7 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
 }
 
 + (JavaMap*)map {
-    return [[[NSClassFromString(@"java.util.HashMap") alloc] init] autorelease];
+    return [[NSClassFromString(@"java.util.HashMap") newWithSignature:@"()"] autorelease];
 }
 
 + (NSDictionary *)smackExceptionInfo:(NSException*)e {

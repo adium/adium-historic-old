@@ -10,6 +10,8 @@
 #import "SmackXMPPAccount.h"
 #import "SmackInterfaceDefinitions.h"
 
+#import "AIAdium.h"
+#import "AIInterfaceController.h"
 #import <AIUtilities/AIStringUtilities.h>
 
 static struct
@@ -58,8 +60,14 @@ static struct
     if([[[packet getType] toString] isEqualToString:@"error"])
     {
         SmackXMPPError *error = [packet getError];
+//        if(!error)
+//            return; // invalid error packet, the error-info is required
         if(!error)
-            return; // invalid error packet, the error-info is required
+        {
+            // pytransports seem to send error packets without an error tag
+            [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error From %@","XMPP Error From %@"), [packet getFrom]] withDescription:[packet getBody]];
+            return;
+        }
         NSString *message = [error getMessage];
         int code = [error getCode];
         int i;
