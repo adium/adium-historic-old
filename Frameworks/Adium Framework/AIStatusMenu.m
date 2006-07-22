@@ -197,7 +197,7 @@
 									   keyEquivalent:@""];
 		
 		if ([statusState isKindOfClass:[AIStatus class]]) {
-			[menuItem setToolTip:[statusState statusMessageString]];
+			[menuItem setToolTip:[statusState statusMessageTooltipString]];
 			
 		} else {
 			/* AIStatusGroup */
@@ -487,7 +487,7 @@
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObject:statusState
 																   forKey:@"AIStatus"]];
 		if ([statusState isKindOfClass:[AIStatus class]]) {
-			[menuItem setToolTip:[statusState statusMessageString]];
+			[menuItem setToolTip:[statusState statusMessageTooltipString]];
 			
 		} else {
 			/* AIStatusGroup */

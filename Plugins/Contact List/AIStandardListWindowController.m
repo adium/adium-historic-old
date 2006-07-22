@@ -102,6 +102,10 @@
 								   selector:@selector(updateStatusMenuSelection:)
 									   name:AIStatusIconSetDidChangeNotification
 									 object:nil];
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(updateStatusMenuSelection:)
+									   name:@"AIStatusFilteredStatusMessageChanged"
+									 object:nil];
 	[self updateStatusMenuSelection:nil];
 	
 	[[adium notificationCenter] addObserver:self
@@ -368,7 +372,7 @@
 	 */
 	[imageView_status setImage:[activeStatus iconOfType:AIStatusIconList
 											  direction:AIIconNormal]];
-	[statusMenuView setToolTip:[activeStatus statusMessageString]];
+	[statusMenuView setToolTip:[activeStatus statusMessageTooltipString]];
 
 	[self updateImagePicker];
 	[self updateNameView];

@@ -35,7 +35,7 @@ typedef enum {
 } AISpecialStatusType; 
 
 @interface AIStatus : AIStatusItem {
-
+	NSString *filteredStatusMessage;
 }
 
 + (AIStatus *)status;
@@ -47,6 +47,9 @@ typedef enum {
 
 - (NSString *)statusMessageString;
 - (void)setStatusMessageString:(NSString *)statusMessageString;
+
+- (void)setFilteredStatusMessage:(NSString *)inFilteredStatusMessage;
+- (NSString *)statusMessageTooltipString;
 
 - (NSAttributedString *)autoReply;
 - (void)setAutoReply:(NSAttributedString *)autoReply;
