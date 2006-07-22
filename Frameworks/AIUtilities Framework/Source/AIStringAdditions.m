@@ -766,8 +766,7 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 						[result appendString:entity];
 
 					} else {
-						NSLog(@"-[NSString(AIStringAdditions) stringByUnescapingFromXMLWithEntities]: Nmed entity %@ unknown.",
-							  entityName);
+						NSLog(@"-[NSString(AIStringAdditions) stringByUnescapingFromXMLWithEntities]: Named entity %@ unknown.", entityName);
 					}
 					[scanner scanString:@";" intoString:NULL];
 				}
