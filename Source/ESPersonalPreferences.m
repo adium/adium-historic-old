@@ -208,7 +208,7 @@
 {
 	[matrix_userIcon setToolTip:AILocalizedString(@"Do not use an icon to represent you.", nil)
 						forCell:[matrix_userIcon cellWithTag:0]];
-	[matrix_userIcon setToolTip:AILocalizedString(@"Use the icon below represent you.", nil)
+	[matrix_userIcon setToolTip:AILocalizedString(@"Use the icon below to represent you.", nil)
 						forCell:[matrix_userIcon cellWithTag:1]];
 
 #define DISPLAY_NAME_TOOLTIP AILocalizedString(@"Your name, which on supported services will be sent to remote contacts. Substitutions from the Edit->Scripts and Edit->iTunes menus may be used here.", nil)
