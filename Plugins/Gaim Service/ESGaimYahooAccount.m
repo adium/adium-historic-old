@@ -411,6 +411,11 @@
 	return statusID;
 }
 
+- (BOOL)shouldAddMusicalNoteToNowPlayingStatus
+{
+	return NO;
+}
+
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
