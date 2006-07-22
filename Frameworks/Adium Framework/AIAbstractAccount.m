@@ -519,6 +519,8 @@
  */
 - (void)gotFilteredStatusMessage:(NSAttributedString *)statusMessage forStatusState:(AIStatus *)statusState
 {
+	[statusState setFilteredStatusMessage:[statusMessage string]];
+	
 	[self setStatusState:statusState
 	  usingStatusMessage:statusMessage];
 }

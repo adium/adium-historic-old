@@ -73,6 +73,13 @@
 	return status;
 }
 
+- (void)dealloc
+{
+	[filteredStatusMessage release];
+
+	[super dealloc];
+}
+
 /*!
 * @brief Returns an appropriate icon for this state
  *
@@ -136,6 +143,8 @@
 	} else {
 		[statusDict removeObjectForKey:STATUS_STATUS_MESSAGE];
 	}
+	
+	[filteredStatusMessage release]; filteredStatusMessage = nil;
 }
 
 /*!
@@ -146,6 +155,22 @@
 - (void)setStatusMessageString:(NSString *)statusMessageString
 {
 	[self setStatusMessage:[AIHTMLDecoder decodeHTML:statusMessageString]];
+}
+
+- (void)setFilteredStatusMessage:(NSString *)inFilteredStatusMessage
+{
+	if (![filteredStatusMessage isEqualToString:inFilteredStatusMessage]) {
+		[filteredStatusMessage release];
+		filteredStatusMessage = [inFilteredStatusMessage retain];
+		
+		[[adium notificationCenter] postNotificationName:@"AIStatusFilteredStatusMessageChanged"
+												  object:self];
+	}
+}
+
+- (NSString *)statusMessageTooltipString
+{
+	return (filteredStatusMessage ? filteredStatusMessage : [self statusMessageString]);
 }
 
 /*!
