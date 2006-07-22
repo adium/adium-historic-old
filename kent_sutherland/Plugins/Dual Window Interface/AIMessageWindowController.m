@@ -718,17 +718,19 @@
 //Allow dragging of text
 - (NSArray *)allowedDraggedTypesForTabView:(NSTabView *)aTabView
 {
-	return [NSArray arrayWithObject:NSRTFPboardType];
+	//return [NSArray arrayWithObject:NSRTFPboardType];
+	return [NSArray arrayWithObjects:NSRTFPboardType, NSStringPboardType, NSFilenamesPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil];
 }
 
 //Accept dragged text
 - (void)tabView:(NSTabView *)aTabView acceptedDraggingInfo:(id <NSDraggingInfo>)draggingInfo onTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	NSPasteboard *pasteboard = [draggingInfo draggingPasteboard];
+	/*NSPasteboard *pasteboard = [draggingInfo draggingPasteboard];
 	
     if ([[pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSRTFPboardType]] isEqualToString:NSRTFPboardType]) { //got RTF data
         [[(AIMessageTabViewItem *)tabViewItem messageViewController] addToTextEntryView:[NSAttributedString stringWithData:[pasteboard dataForType:NSRTFPboardType]]];
-    }
+    }*/
+	[[(AIMessageTabViewItem *)tabViewItem messageViewController] addDraggedDataToTextEntryView:draggingInfo];
 }
 
 //Get an image representation of the chat
@@ -860,12 +862,6 @@
 //Custom Tabs Delegate -------------------------------------------------------------------------------------------------
 #pragma mark Custom Tabs Delegate
 
-//
-- (int)customTabView:(AICustomTabsView *)tabView indexForInsertingTabViewItem:(NSTabViewItem *)tabViewItem
-{
-	return [tabView numberOfTabViewItems];
-}
-
 - (NSString *)customTabView:(AICustomTabsView *)tabView tooltipForTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	AIChat		*chat = [(AIMessageTabViewItem *)tabViewItem chat];
@@ -907,21 +903,6 @@
 
 	return tooltip;
 }
-
-//Accept dragged text
-- (BOOL)customTabView:(AICustomTabsView *)tabView didAcceptDragPasteboard:(NSPasteboard *)pasteboard onTabViewItem:(NSTabViewItem *)tabViewItem
-{
-    NSString    *type = [pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSRTFPboardType]];
-	BOOL		handleDrag = [type isEqualToString:NSRTFPboardType];
-
-    if (handleDrag) { //got RTF data
-        [[(AIMessageTabViewItem *)tabViewItem messageViewController] addToTextEntryView:[NSAttributedString stringWithData:[pasteboard dataForType:NSRTFPboardType]]];
-    }
-
-    return handleDrag;
-}
-
-
 
 //Tab Bar Visibility --------------------------------------------------------------------------------------------------
 #pragma mark Tab Bar Visibility/Drag And Drop
