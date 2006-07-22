@@ -183,12 +183,19 @@ static NSArray *validSenderColors;
 
 - (NSString *)defaultFontFamily
 {
-	return [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_FAMILY];
+	NSString *defaultFontFamily = [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_FAMILY];
+	if (!defaultFontFamily) defaultFontFamily = [[NSFont systemFontOfSize:0] familyName];
+	
+	return defaultFontFamily;
 }
 
 - (NSNumber *)defaultFontSize
 {
-	return [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_SIZE];
+	NSNumber *defaultFontSize = [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_SIZE];
+
+	if (!defaultFontSize) defaultFontSize = [NSNumber numberWithInt:[[NSFont systemFontOfSize:0] pointSize]];
+	
+	return defaultFontSize;
 }
 
 - (BOOL)hasHeader
