@@ -1723,6 +1723,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return statusID;
 }
 
+- (BOOL)shouldAddMusicalNoteToNowPlayingStatus
+{
+	return YES;
+}
+
 /*!
  * @brief Perform the setting of a status state
  *
@@ -1748,6 +1753,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		 * away message be set appropriately.
 		 */
 		statusMessage = [NSAttributedString stringWithString:[[adium statusController] descriptionForStateOfStatus:statusState]];
+	}
+
+	if (statusMessage && ([statusState specialStatusType] == AINowPlayingSpecialStatusType) && [self shouldAddMusicalNoteToNowPlayingStatus]) {
+#define MUSICAL_NOTE_AND_SPACE [NSString stringWithUTF8String:"\xe2\x99\xab "]
+		NSMutableAttributedString *temporaryStatusMessage;
+		temporaryStatusMessage = [[[NSMutableAttributedString alloc] initWithString:MUSICAL_NOTE_AND_SPACE] autorelease];
+		[temporaryStatusMessage appendAttributedString:statusMessage];
+
+		statusMessage = temporaryStatusMessage;
 	}
 
 	//Encode the status message if we have one
