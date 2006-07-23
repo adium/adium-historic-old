@@ -24,6 +24,7 @@
 #import "AIAlternatingRowOutlineView.h"
 #import "AIOutlineView.h"
 #import "AIGradient.h"
+#import "AIColorAdditions.h"
 
 @interface AIAlternatingRowOutlineView (PRIVATE)
 - (void)_initAlternatingRowOutlineView;
@@ -224,7 +225,7 @@
 			i++;		
 		}
 
-		[[NSColor alternateSelectedControlColor] set];		
+		[[[gradient firstColor] darkenAndAdjustSaturationBy:0.1] set];
 		NSRectFillListUsingOperation(selectionLineRects, j, NSCompositeSourceOver);
 		
 		free(buf);
