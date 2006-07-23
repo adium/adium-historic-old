@@ -208,16 +208,6 @@
 {
 	windowIsClosing = YES;
 
-	//Hide our window now, making sure we set active chat to nil before ordering out.  When we order out, another window
-	//may become key and set itself active.  Setting active to nil after that happened would cause problems.
-	//We want to set the active chat to nil only if the window being closed is the active window
-	if ([[self window] isKeyWindow]) {
-		[[adium interfaceController] chatDidBecomeActive:nil];
-	}
-	[[self window] orderOut:nil];
-
-	//Now we close our window for real.  By hiding first, we get a smoother close as the user won't see each tab closing
-	//individually.  The close will also be quicker, since it avoids a lot of redrawing.
 	[[self window] performClose:nil];
 }
 
