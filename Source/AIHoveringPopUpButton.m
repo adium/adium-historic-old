@@ -231,6 +231,11 @@
 	[self resetCursorRects];
 }
 
+- (NSRect)trackingRect
+{
+	return NSMakeRect(0, 0, [[self cell] trackingWidth], [self frame].size.height);
+}
+
 //Reset our cursor tracking
 - (void)resetCursorRects
 {
@@ -243,7 +248,7 @@
 	//Add a tracking rect if our superview and window are ready
 	if ([self superview] && [self window]) {
 		NSRect	myFrame = [self frame];
-		NSRect	trackRect = NSMakeRect(0, 0, [[self cell] trackingWidth], myFrame.size.height);
+		NSRect	trackRect = [self trackingRect];
 		
 		if (trackRect.size.width > myFrame.size.width) {
 			trackRect.size.width = myFrame.size.width;
