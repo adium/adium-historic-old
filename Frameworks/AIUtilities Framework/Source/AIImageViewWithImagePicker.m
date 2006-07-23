@@ -501,9 +501,30 @@
 			[pickerController setDelegate:self];
 			
 			pickerPoint = [NSEvent mouseLocation];
-			pickerPoint.y -= [[pickerController window] frame].size.height;
+			//Determine the screen of this mouse location
+			NSScreen		*currentScreen;
+			NSEnumerator	*enumerator = [[NSScreen screens] objectEnumerator];
+			while ((currentScreen = [enumerator nextObject])) {
+				if (NSPointInRect(pickerPoint, [currentScreen frame])) {
+					break;
+				}
+			}
+			NSRect pickerControllerFrame = [[pickerController window] frame];
+			pickerPoint.y -= NSHeight(pickerControllerFrame);
 			
-			[pickerController initAtPoint:pickerPoint inWindow: nil];
+			//Constrain the picker to the screen if possible
+			if (currentScreen) {
+				NSRect targetRect = [currentScreen visibleFrame];
+				if (pickerPoint.y < NSMinY(targetRect)) pickerPoint.y = NSMinY(targetRect);
+				if ((pickerPoint.y + NSHeight(pickerControllerFrame)) > NSMaxY(targetRect))
+					pickerPoint.y = NSMaxY(targetRect) - NSHeight(pickerControllerFrame);
+				
+				if (pickerPoint.x < NSMinX(targetRect)) pickerPoint.x = NSMinX(targetRect);
+				if (pickerPoint.x + NSWidth(pickerControllerFrame) > NSMaxX(targetRect))
+					pickerPoint.x = NSMaxX(targetRect) - NSWidth(pickerControllerFrame);
+			}
+			
+			[pickerController initAtPoint:pickerPoint inWindow:nil];
 			[pickerController setHasChanged:NO];
 		}
 		
