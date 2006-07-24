@@ -556,13 +556,15 @@ static AIHTMLDecoder *messageencoder = nil;
 {
 //    SmackXMPPAccount *account = [n object];
     AIContentMessage *inMessageObject = [[n userInfo] objectForKey:AIMessageObjectKey];
+    SmackMessage *message = [[n userInfo] objectForKey:SmackXMPPPacket];
     
     if([inMessageObject chat] != adiumchat)
         return; // ignore foreign messages
 
-    SmackMessage *newmsg = [chat createMessage];
+    [message setTo:[chat getRoom]];
+    [message setType:[SmackCocoaAdapter messageTypeFromString:@"GROUP_CHAT"]];
     
-    [newmsg setBody:[inMessageObject messageString]];
+    [message setBody:[inMessageObject messageString]];
     
     NSAttributedString *attmessage = [inMessageObject message];
     if(!messageencoder)
@@ -583,9 +585,9 @@ static AIHTMLDecoder *messageencoder = nil;
     SmackXXHTMLExtension *xhtml = [SmackCocoaAdapter XHTMLExtension];
     [xhtml addBody:xhtmlbody];
     
-    [newmsg addExtension:xhtml];
+    [message addExtension:xhtml];
     
-    [[account connection] sendPacket:newmsg];
+    // sending occurs in SmackXMPPAccount
 }
 
 - (void)kickUser:(NSMenuItem*)sender {

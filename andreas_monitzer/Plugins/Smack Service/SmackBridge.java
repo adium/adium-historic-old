@@ -12,7 +12,7 @@ import com.apple.cocoa.foundation.*;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.filter.*;
-import org.jivesoftware.smack.provider.ProviderManager;
+import org.jivesoftware.smackx.ServiceDiscoveryManager;
 import java.util.*;
 import java.lang.reflect.Method;
 
@@ -20,14 +20,13 @@ public class SmackBridge implements ConnectionListener {
     NSObject delegate;
     
     static {
-        try {
-            // set up our own packet extensions and iq provider
-            ProviderManager.addExtensionProvider(OutOfBandDataExtension.getConstantElementName(),
-                                                 OutOfBandDataExtension.getConstantNamespace(),
-                                                 Class.forName("net.adium.smackBridge.OutOfBandDataExtension"));
-        } catch(ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        // set client identity and name
+        ServiceDiscoveryManager.setIdentityName("Adium (via Smack)");
+        ServiceDiscoveryManager.setIdentityType("pc");
+        
+        // set up our own packet extensions and iq provider
+        OutOfBandDataExtension.register();
+        ChatStateNotifications.register();
     }
     
     public void initSubscriptionMode() {
@@ -48,7 +47,7 @@ public class SmackBridge implements ConnectionListener {
 //        if(useSSL)
 //            conn = new SSLXMPPConnection(conf, this);
 //        else
-            conn = new XMPPConnection(conf, this);
+        conn = new XMPPConnection(conf, this);
         registerConnection(conn);
     }
     

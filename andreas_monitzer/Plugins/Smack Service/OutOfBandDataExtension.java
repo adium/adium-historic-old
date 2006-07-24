@@ -9,10 +9,17 @@
 package net.adium.smackBridge;
 
 import org.jivesoftware.smack.packet.PacketExtension;
+import org.jivesoftware.smack.provider.ProviderManager;
 
 public class OutOfBandDataExtension implements PacketExtension {
     String url;
     String desc;
+    
+    static public void register() {
+        ProviderManager.addExtensionProvider(getConstantElementName(),
+                                             getConstantNamespace(),
+                                             OutOfBandDataExtension.class);
+    }
     
     public OutOfBandDataExtension() {
         url = "";
