@@ -11,7 +11,7 @@
 #import "AIObject.h"
 
 @protocol AdiumSmackBridgeDelegate;
-@class SmackXMPPConnection, SmackXMPPAccount, SmackPresenceType, SmackPresenceMode, SmackMessageType, SmackConnectionConfiguration, SmackPresence, SmackMessage, SmackPacket, SmackXXHTMLExtension, SmackIQ, SmackIQType, SmackXMPPError, SmackRoster, SmackRegistration, SmackXForm, SmackXFormField, JavaMethod, JavaVector, JavaDate, JavaMap, JavaFile;
+@class SmackXMPPConnection, SmackXMPPAccount, SmackPresenceType, SmackPresenceMode, SmackMessageType, SmackConnectionConfiguration, SmackPresence, SmackMessage, SmackPacket, SmackXXHTMLExtension, SmackIQ, SmackIQType, SmackXMPPError, SmackRoster, SmackRegistration, SmackXForm, SmackXFormField, JavaMethod, JavaVector, JavaDate, JavaMap, JavaFile, SmackXServiceDiscoveryManager;
 
 @interface SmackCocoaAdapter : AIObject <AdiumSmackBridgeDelegate> {
     SmackXMPPConnection *connection;
@@ -31,10 +31,13 @@
 + (SmackPresence*)presenceWithTypeString:(NSString*)type;
 + (SmackPresence*)presenceWithType:(SmackPresenceType*)type status:(NSString*)status priority:(int)priority mode:(SmackPresenceMode*)mode;
 + (SmackPresence*)presenceWithTypeString:(NSString*)type status:(NSString*)status priority:(int)priority modeString:(NSString*)mode;
++ (SmackMessage*)message;
 + (SmackMessage*)messageTo:(NSString*)to type:(SmackMessageType*)type;
 + (SmackMessage*)messageTo:(NSString*)to typeString:(NSString*)type;
++ (SmackMessageType*)messageTypeFromString:(NSString*)type;
 + (SmackRegistration*)registration;
 
++ (SmackXServiceDiscoveryManager*)serviceDiscoveryManagerForConnection:(SmackXMPPConnection*)connection;
 + (SmackXXHTMLExtension*)XHTMLExtension;
 + (SmackIQ*)IQ;
 + (SmackIQType*)IQType:(NSString*)type;

@@ -223,16 +223,28 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     return [self presenceWithType:[SmackCocoaAdapter staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.Presence$Type"] status:status priority:priority mode:[SmackCocoaAdapter staticObjectField:mode inJavaClass:@"org.jivesoftware.smack.packet.Presence$Mode"]];
 }
 
++ (SmackMessage*)message {
+    return [[NSClassFromString(@"org.jivesoftware.smack.packet.Message") newWithSignature:@"()"] autorelease];
+}
+
 + (SmackMessage*)messageTo:(NSString*)to type:(SmackMessageType*)type {
     return [[NSClassFromString(@"org.jivesoftware.smack.packet.Message") newWithSignature:@"(Ljava/lang/String;Lorg/jivesoftware/smack/packet/Message$Type;)",to,type] autorelease];
 }
 
 + (SmackMessage*)messageTo:(NSString*)to typeString:(NSString*)type {
-    return [self messageTo:to type:[SmackCocoaAdapter staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.Message$Type"]];
+    return [self messageTo:to type:[self messageTypeFromString:type]];
+}
+
++ (SmackMessageType*)messageTypeFromString:(NSString*)type {
+    return [SmackCocoaAdapter staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.Message$Type"];
 }
 
 + (SmackRegistration*)registration {
     return [[[NSClassFromString(@"org.jivesoftware.smack.packet.Registration") alloc] init] autorelease];
+}
+
++ (SmackXServiceDiscoveryManager*)serviceDiscoveryManagerForConnection:(SmackXMPPConnection*)connection {
+    return [NSClassFromString(@"org.jivesoftware.smackx.ServiceDiscoveryManager") getInstanceFor:connection];
 }
 
 + (SmackXXHTMLExtension*)XHTMLExtension {

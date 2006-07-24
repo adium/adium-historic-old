@@ -62,7 +62,7 @@
 
 @end
 
-@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin, SmackXMPPServiceDiscoveryBrowsing, SmackXMPPFileTransferPlugin;
+@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin, SmackXMPPServiceDiscoveryBrowsing, SmackXMPPFileTransferPlugin, SmackXMPPChatStateNotificationsPlugin;
 
 @interface NSObject (SmackXMPPPluginAddition)
 - (id)initWithAccount:(SmackXMPPAccount*)account;
@@ -89,6 +89,7 @@
             [SmackXMPPGatewayInteractionPlugin class],
             [SmackXMPPServiceDiscoveryBrowsing class],
             [SmackXMPPFileTransferPlugin class],
+            [SmackXMPPChatStateNotificationsPlugin class],
             nil
         };
         
@@ -213,9 +214,18 @@
     if([inMessageObject isAutoreply])
         return NO; // protocol doesn't support autoreplies
     
+    SmackMessage *message = [SmackCocoaAdapter message];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPMessageSentNotification
                                                         object:self
-                                                      userInfo:[NSDictionary dictionaryWithObject:inMessageObject forKey:AIMessageObjectKey]];
+                                                      userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                           inMessageObject, AIMessageObjectKey,
+                                                           message, SmackXMPPPacket,
+                                                           nil]];
+    
+    // the message is valid only when a 'to' is set, so only send it in this case!
+    if([[message getTo] length] != 0)
+        [connection sendPacket:message];
     
     return YES;
 }
@@ -362,10 +372,6 @@
 	return YES;
 }
 
-- (BOOL)suppressTypingNotificationChangesAfterSend {
-	return NO;
-}
-
 - (BOOL)supportsOfflineMessaging {
 	return YES;
 }
@@ -415,11 +421,6 @@
 }
 
 - (BOOL)closeChat:(AIChat *)chat {
-    return YES;
-}
-
-- (BOOL)sendTypingObject:(AIContentTyping *)inTypingObject {
-    NSLog(@"typing %@",([inTypingObject typingState]==AINotTyping)?@"NO":(([inTypingObject typingState]==AITyping)?@"TYPING":@"ENTEREDTEXT"));
     return YES;
 }
 

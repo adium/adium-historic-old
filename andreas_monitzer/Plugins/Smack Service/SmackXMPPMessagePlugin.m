@@ -51,7 +51,7 @@ static AIHTMLDecoder *messageencoder = nil;
     SmackMessage *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
     NSString *type = [[packet getType] toString];
     
-    if([type isEqualToString:@"normal"] || [type isEqualToString:@"chat"])
+    if(([type isEqualToString:@"normal"] || [type isEqualToString:@"chat"]) && [packet getBody] != nil)
     {
         AIChat				*chat;
         AIContentMessage	*messageObject;
@@ -76,11 +76,14 @@ static AIHTMLDecoder *messageencoder = nil;
             
             //Apply the change
             [chat notifyOfChangedStatusSilently:[account silentAndDelayed]];
-        } else if([type isEqualToString:@"chat"]) // always update the chat type
-            [chat setStatusObject:@"CHAT" forKey:@"XMPPType" notify:NotifyNow];
-        else
-            [chat setStatusObject:@"NORMAL" forKey:@"XMPPType" notify:NotifyNow];
-        
+        } else {
+            [chat setStatusObject:thread?thread:[chat uniqueChatID] forKey:@"XMPPThreadID" notify:NotifyLater];
+            
+            if([type isEqualToString:@"chat"]) // always update the chat type
+                [chat setStatusObject:@"CHAT" forKey:@"XMPPType" notify:NotifyNow];
+            else
+                [chat setStatusObject:@"NORMAL" forKey:@"XMPPType" notify:NotifyNow];
+        }
         
         SmackXXHTMLExtension *spe = [packet getExtension:@"html" :@"http://jabber.org/protocol/xhtml-im"];
         if(spe)
@@ -160,6 +163,7 @@ static AIHTMLDecoder *messageencoder = nil;
 {
     SmackXMPPAccount *account = [n object];
     AIContentMessage *inMessageObject = [[n userInfo] objectForKey:AIMessageObjectKey];
+    SmackMessage *message = [[n userInfo] objectForKey:SmackXMPPPacket];
     
     AIChat *chat = [inMessageObject chat];
     if([chat isGroupChat])
@@ -171,9 +175,9 @@ static AIHTMLDecoder *messageencoder = nil;
     if(!type)
         type = @"CHAT";
     
-    if(!threadid) // first message was sent by us
+    if(!threadid || [threadid length] == 0) // first message was sent by us
     {
-        [chat setStatusObject:threadid = [chat uniqueChatID] forKey:@"XMPPThreadID"  notify:NotifyLater];
+        [chat setStatusObject:threadid = [chat uniqueChatID] forKey:@"XMPPThreadID" notify:NotifyLater];
         
         //Apply the change
         [chat notifyOfChangedStatusSilently:[account silentAndDelayed]];
@@ -183,10 +187,11 @@ static AIHTMLDecoder *messageencoder = nil;
     if(resource)
         jid = [NSString stringWithFormat:@"%@/%@",jid,resource];
     
-    SmackMessage *newmsg = [SmackCocoaAdapter messageTo:jid typeString:type];
+    [message setTo:jid];
+    [message setType:[SmackCocoaAdapter messageTypeFromString:type]];
     
-    [newmsg setThread:threadid];
-    [newmsg setBody:[inMessageObject messageString]];
+    [message setThread:threadid];
+    [message setBody:[inMessageObject messageString]];
     
     NSAttributedString *attmessage = [inMessageObject message];
     if(!messageencoder)
@@ -207,9 +212,9 @@ static AIHTMLDecoder *messageencoder = nil;
     SmackXXHTMLExtension *xhtml = [SmackCocoaAdapter XHTMLExtension];
     [xhtml addBody:xhtmlbody];
     
-    [newmsg addExtension:xhtml];
+    [message addExtension:xhtml];
     
-    [[account connection] sendPacket:newmsg];
+    // sending occurs in SmackXMPPAccount
 }
 
 

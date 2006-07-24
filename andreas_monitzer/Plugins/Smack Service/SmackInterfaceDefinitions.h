@@ -784,6 +784,29 @@
 
 @end
 
+@interface SmackXServiceDiscoveryManager : NSObject {
+}
+
+- (void)addFeature:(NSString*)feature;
+- (BOOL)canPublishItems:(NSString*)entityID;
+- (SmackXDiscoverInfo*)discoverInfo:(NSString*)entityID;
+- (SmackXDiscoverInfo*)discoverInfo:(NSString*)entityID :(NSString*)node;
+- (SmackXDiscoverItems*)discoverItems:(NSString*)entityID;
+- (SmackXDiscoverItems*)discoverItems:(NSString*)entityID :(NSString*)node;
+- (JavaIterator*)getFeatures;
++ (NSString*)getIdentityName;
++ (NSString*)getIdentityType;
++ (SmackXServiceDiscoveryManager*)getInstanceFor:(SmackXMPPConnection*)connection;
+- (BOOL)includesFeature:(NSString*)feature;
+- (void)publishItems:(NSString*)entityID :(SmackXDiscoverItems*)discoverItems;
+- (void)publishItems:(NSString*)entityID :(NSString*)node :(SmackXDiscoverItems*)discoverItems;
+- (void)removeFeature:(NSString*)feature;
+- (void)removeNodeInformationProvider:(NSString*)node;
++ (void)setIdentityName:(NSString*)name;
++ (void)setIdentityType:(NSString*)type;
+
+@end
+
 @interface SmackXMPPException : NSObject {
 }
 
@@ -826,6 +849,14 @@
 
 @end
 
+@interface SmackChatStateNotifications : NSObject <SmackPacketExtension> {
+}
+
++ (SmackChatStateNotifications*)getChatState:(SmackMessage*)message;
++ (SmackChatStateNotifications*)createChatState:(NSString*)type;
+
+@end
+
 #define SmackResolveXMPPDomain(domain) [NSClassFromString(@"org.jivesoftware.smack.util.DNSUtil") resolveXMPPDomain:domain]
 
 @protocol AdiumSmackBridgeDelegate
@@ -847,6 +878,7 @@
 - (id<AdiumSmackBridgeDelegate>)delegate;
 
 - (void)createConnection:(BOOL)useSSL :(SmackConnectionConfiguration*)conf;
+- (SmackXServiceDiscoveryManager*)getServiceDiscoveryManager;
 
 - (BOOL)isInstanceOfClass:(id)object :(NSString*)classname;
 - (JavaMethod*)getMethod:(NSString*)classname :(NSString*)methodname :(JavaVector*)parameterTypes;
