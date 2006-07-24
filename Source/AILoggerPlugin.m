@@ -706,9 +706,9 @@ Class LogViewerWindowControllerClass = NULL;
 
 - (void)markLogDirtyAtPath:(NSString *)path
 {
+	if(!path) return;
 	[dirtyLogLock lock];
-	if ((path != nil) &&
-		(![dirtyLogArray containsObject:path])) {
+	if (![dirtyLogArray containsObject:path]) {
 		[dirtyLogArray addObject:path];
 	}
 	[dirtyLogLock unlock];	
