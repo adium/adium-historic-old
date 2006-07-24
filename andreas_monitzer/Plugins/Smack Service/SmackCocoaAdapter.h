@@ -43,7 +43,7 @@
 + (void)createRosterEntryInRoster:(SmackRoster*)roster withJID:(NSString*)jid name:(NSString*)name group:(NSString*)group;
 + (SmackXForm*)formWithType:(NSString*)type;
 + (SmackXForm*)formFromPacket:(SmackPacket*)packet;
-+ (SmackXForm*)fixedFormField;
++ (SmackXFormField*)fixedFormField;
 + (SmackXFormField*)formFieldWithVariable:(NSString*)variable;
 + (id)invokeObject:(id)obj methodWithParamTypeAndParam:(NSString*)method, ...;
 + (JavaVector*)vector;
