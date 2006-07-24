@@ -14,13 +14,15 @@
 
 #import "AIAdium.h"
 #import "AIChatController.h"
-#import "AIContactController.h"
 #import "AIChat.h"
+#import "AIContactController.h"
 #import "AIContentController.h"
-
+#import "AIInterfaceController.h"
 #import "AIAccount.h"
 #import "AIContentMessage.h"
 #import "AIHTMLDecoder.h"
+#import "ESTextAndButtonsWindowController.h"
+#import <AIUtilities/AIStringUtilities.h>
 
 static AIHTMLDecoder *messageencoder = nil;
 
@@ -117,6 +119,18 @@ static AIHTMLDecoder *messageencoder = nil;
         else
             date = [NSDate date];
         
+        SmackOutOfBandExtension *oob = [packet getExtension:@"x" :@"jabber:x:oob"];
+        if(oob)
+            [[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"URL From %@","URL From %@"),[sourceContact displayName]]
+                                         withDescription:[NSString stringWithFormat:@"%@\n%@",[oob getDesc]?[oob getDesc]:@"",[oob getUrl]]
+                                         withWindowTitle:AILocalizedString(@"URL","URL")
+                                           defaultButton:AILocalizedString(@"Open URL","Open URL")
+                                         alternateButton:AILocalizedString(@"Cancel","Cancel")
+                                             otherButton:nil
+                                                  target:self
+                                                selector:@selector(openURLRequest:userInfo:)
+                                                userInfo:oob];
+
         messageObject = [AIContentMessage messageInChat:chat
                                              withSource:sourceContact
                                             destination:account
@@ -127,6 +141,12 @@ static AIHTMLDecoder *messageencoder = nil;
         
         [[adium contentController] receiveContentObject:messageObject];
     }
+}
+
+- (void)openURLRequest:(NSNumber*)result userInfo:(SmackOutOfBandExtension*)oob
+{
+    if([result intValue] == AITextAndButtonsDefaultReturn)
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[oob getUrl]]];
 }
 
 - (void)convertToAttributedString:(NSMutableDictionary*)param
