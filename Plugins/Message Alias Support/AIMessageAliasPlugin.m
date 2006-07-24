@@ -134,6 +134,25 @@
 													  range:NSMakeRange(0, [newAttributedString length])];
 		}
 	}
+	
+	if([str rangeOfString:@"%a"].location != NSNotFound) {
+		NSString	*replacement = nil;
+		
+		if ([context isKindOfClass:[AIContentObject class]])
+			replacement = [[context destination] displayName];
+		else if ([context isKindOfClass:[AIListContact class]])
+			replacement = [[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																				  toContact:context] displayName];
+		
+		if (replacement) {
+			if (!newAttributedString) newAttributedString = [[attributedString mutableCopy] autorelease];
+			
+			[newAttributedString replaceOccurrencesOfString:@"%a"
+												 withString:replacement
+													options:NSLiteralSearch
+													  range:NSMakeRange(0, [newAttributedString length])];
+		}
+	}
 
 	//Current Date
 	if ([str rangeOfString:@"%d"].location != NSNotFound) {
