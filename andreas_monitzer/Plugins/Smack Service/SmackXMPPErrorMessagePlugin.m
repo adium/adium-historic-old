@@ -9,6 +9,7 @@
 #import "SmackXMPPErrorMessagePlugin.h"
 #import "SmackXMPPAccount.h"
 #import "SmackInterfaceDefinitions.h"
+#import "SmackCocoaAdapter.h"
 
 #import "AIAdium.h"
 #import "AIInterfaceController.h"
@@ -46,18 +47,32 @@ static struct
     if((self = [super init]))
     {
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(receivedMessagePacket:)
+                                                 selector:@selector(receivedPacket:)
                                                      name:SmackXMPPMessagePacketReceivedNotification
+                                                   object:account];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(receivedPacket:)
+                                                     name:SmackXMPPIQPacketReceivedNotification
+                                                   object:account];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(receivedPacket:)
+                                                     name:SmackXMPPPresencePacketReceivedNotification
                                                    object:account];
     }
     return self;
 }
 
-- (void)receivedMessagePacket:(NSNotification*)n
+- (void)dealloc
 {
-    SmackMessage *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super dealloc];
+}
+
+- (void)receivedPacket:(NSNotification*)n
+{
+    SmackPacket *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
     
-    if([[[packet getType] toString] isEqualToString:@"error"])
+    if([[[(id)packet getType] toString] isEqualToString:@"error"])
     {
         SmackXMPPError *error = [packet getError];
 //        if(!error)
@@ -65,7 +80,12 @@ static struct
         if(!error)
         {
             // pytransports seem to send error packets without an error tag
-            [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error From %@","XMPP Error From %@"), [packet getFrom]] withDescription:[packet getBody]];
+            
+            if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.Message"])
+                [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error From %@","XMPP Error From %@"), [packet getFrom]] withDescription:[(SmackMessage*)packet getBody]];
+            else
+                [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error From %@","XMPP Error From %@"), [packet getFrom]] withDescription:AILocalizedString(@"(no reason provided)","(no reason provided)")];
+
             return;
         }
         NSString *message = [error getMessage];

@@ -141,7 +141,7 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     
     SmackConnectionConfiguration *conf = [inAccount connectionConfiguration];
     if(conf) {
-        BOOL useSSL = [[inAccount preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue];
+        BOOL useSSL = NO; //[[inAccount preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue];
         AdiumSmackBridge *bridge = [[NSClassFromString(@"net.adium.smackBridge.SmackBridge") alloc] init];
         [bridge initSubscriptionMode];
         [bridge setDelegate:self];

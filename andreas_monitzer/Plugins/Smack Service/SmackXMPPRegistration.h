@@ -11,12 +11,14 @@
 
 // This class implements JEP-77
 
-@class SmackXMPPAccount, SmackXMPPFormController;
+@class SmackXMPPAccount, SmackXMPPFormController, SmackXForm;
 
 @interface SmackXMPPRegistration : AIObject {
     SmackXMPPAccount *account;
     NSString *otherJID;
     NSString *packetID;
+    
+    SmackXForm *resultForm;
     
     BOOL wasForm;
     BOOL receivedInitialForm;
@@ -24,5 +26,7 @@
 }
 
 - (id)initWithAccount:(SmackXMPPAccount*)a registerWith:(NSString*)jid;
+
+- (SmackXForm*)resultForm;
 
 @end

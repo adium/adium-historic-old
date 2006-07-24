@@ -225,7 +225,7 @@ static AIHTMLDecoder *messageencoder = nil;
 - (void)registerUser:(NSMenuItem*)menuItem
 {
     @try {
-        [[SmackXMPPFormController alloc] initWithForm:[chat getRegistrationForm] target:self selector:@selector(sendRegistrationForm:)];
+        [[SmackXMPPFormController alloc] initWithForm:[chat getRegistrationForm] target:self selector:@selector(sendRegistrationForm:) webView:nil];
     } @catch (NSException *e) {
         // not allowed to get configuration form
         [self postStatusMessage:AILocalizedString(@"Error Getting the User Registration Form: %@",@"Error Getting the User Registration Form: %@"), [e reason]];
@@ -241,7 +241,7 @@ static AIHTMLDecoder *messageencoder = nil;
 - (void)configureRoom:(NSMenuItem*)menuItem
 {
     @try {
-        [[SmackXMPPFormController alloc] initWithForm:[chat getConfigurationForm] target:self selector:@selector(sendConfigurationForm:)];
+        [[SmackXMPPFormController alloc] initWithForm:[chat getConfigurationForm] target:self selector:@selector(sendConfigurationForm:) webView:nil];
     } @catch (NSException *e) {
         // not allowed to get configuration form
         [self postStatusMessage:AILocalizedString(@"Error Getting the Room Configuration Form: %@",@"Error Getting the Room Configuration Form: %@"), [e reason]];
