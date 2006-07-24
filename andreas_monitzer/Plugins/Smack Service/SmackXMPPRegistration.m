@@ -189,6 +189,10 @@
             [field setType:@"boolean"];
             [field setLabel:AILocalizedString(@"Remove registration","Remove registration")];
             [form addField:field];
+            
+            field = [SmackCocoaAdapter fixedFormField];
+            [field addValue:AILocalizedString(@"NOTE: Removing the registration cannot be undone!","NOTE: Removing the registration cannot be undone!")];
+            [form addField:field];
         }
     } else
         wasForm = YES;

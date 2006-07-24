@@ -267,7 +267,7 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
     return [NSClassFromString(@"org.jivesoftware.smackx.Form") getFormFrom:packet];
 }
 
-+ (SmackXForm*)fixedFormField {
++ (SmackXFormField*)fixedFormField {
     return [[[NSClassFromString(@"org.jivesoftware.smackx.FormField") alloc] init] autorelease];
 }
 

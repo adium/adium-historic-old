@@ -15,6 +15,7 @@
 
 #import "SmackCocoaAdapter.h"
 #import "SmackInterfaceDefinitions.h"
+#import "SmackXMPPRegistration.h"
 
 @implementation SmackXMPPGatewayInteractionPlugin
 
@@ -50,6 +51,11 @@
         [mitem setRepresentedObject:inContact];
         [menuItems addObject:mitem];
         [mitem release];
+        mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Change Registration","Change Registration (gateway)") action:@selector(changeRegistration:) keyEquivalent:@""];
+        [mitem setTarget:self];
+        [mitem setRepresentedObject:inContact];
+        [menuItems addObject:mitem];
+        [mitem release];
     }
     
     return menuItems;
@@ -73,6 +79,13 @@
     [presence setTo:[contact UID]];
     
     [[account connection] sendPacket:presence];
+}
+
+- (void)changeRegistration:(NSMenuItem*)sender
+{
+    AIListContact *contact = [sender representedObject];
+    
+    [[[SmackXMPPRegistration alloc] initWithAccount:account registerWith:[contact UID]] autorelease];
 }
 
 @end
