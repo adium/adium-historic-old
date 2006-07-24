@@ -35,4 +35,8 @@
 
 - (void)setUseSSL:(BOOL)ssl;
 
+- (IBAction)createNewAccount:(id)sender;
+
+- (void)setJID:(NSString*)jid password:(NSString*)password;
+
 @end

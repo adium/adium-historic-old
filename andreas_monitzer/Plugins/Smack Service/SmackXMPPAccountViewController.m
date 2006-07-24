@@ -8,6 +8,7 @@
 
 #import "SmackXMPPAccountViewController.h"
 #import "AIAccount.h"
+#import "SmackXMPPAccountRegistrationController.h"
 
 @implementation SmackXMPPAccountViewController
 
@@ -57,6 +58,11 @@
         
         [self setCurrentJID:[inAccount explicitFormattedUID]];
     }
+}
+
+- (void)setJID:(NSString*)jid password:(NSString*)password {
+    [textField_accountUID setStringValue:jid];
+    [textField_password setStringValue:password];
 }
 
 - (void)saveConfiguration {
@@ -114,6 +120,10 @@
 - (void)setUseSSL:(BOOL)ssl {
     useSSL = ssl;
     [[textField_connectPort cell] setPlaceholderString:ssl?@"5223":@"5222"];
+}
+
+- (IBAction)createNewAccount:(id)sender {
+    [[[SmackXMPPAccountRegistrationController alloc] initWithAccountViewController:self] autorelease];
 }
 
 @end

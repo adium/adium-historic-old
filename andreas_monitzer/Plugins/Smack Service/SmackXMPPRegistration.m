@@ -15,6 +15,13 @@
 #import "AIAdium.h"
 #import "SmackCocoaAdapter.h"
 
+@interface SmackXMPPAccount (registrationDelegate)
+
+- (void)registration:(SmackXMPPRegistration*)reg didEndWithSuccess:(BOOL)success;
+- (WebView*)webView;
+
+@end
+
 @implementation SmackXMPPRegistration
 
 - (id)initWithAccount:(SmackXMPPAccount*)a registerWith:(NSString*)jid
@@ -47,6 +54,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [otherJID release];
     [packetID release];
+    [resultForm release];
     [super dealloc];
 }
 
@@ -161,7 +169,7 @@
         }
     } else
         wasForm = YES;
-    [[SmackXMPPFormController alloc] initWithForm:form target:self selector:@selector(formDidEnd:)];
+    [[SmackXMPPFormController alloc] initWithForm:form target:self selector:@selector(formDidEnd:) webView:[account respondsToSelector:@selector(webView)]?[account webView]:nil];
 }
 
 - (void)receivedIQPacket:(NSNotification*)n
@@ -185,18 +193,23 @@
         if([type isEqualToString:@"result"])
         {
             if(didUnregister)
-                [[adium interfaceController] handleMessage:AILocalizedString(@"Unregistration successful!", "Unregistration successful!") withDescription:[NSString stringWithFormat:AILocalizedString(@"Unregistration to %@ was completed successfully.","Unregistration to %@ was completed successfully."),otherJID] withWindowTitle:AILocalizedString(@"Registration", "Registration")];
+                [[adium interfaceController] handleMessage:AILocalizedString(@"Unregistration Successful!", "Unregistration Successful!") withDescription:[NSString stringWithFormat:AILocalizedString(@"Unregistration to %@ was completed successfully.","Unregistration to %@ was completed successfully."),otherJID] withWindowTitle:AILocalizedString(@"Registration", "Registration")];
             else
-                [[adium interfaceController] handleMessage:AILocalizedString(@"Registration successful!", "Registration successful!") withDescription:[NSString stringWithFormat:AILocalizedString(@"Registration to %@ was completed successfully.","Registration to %@ was completed successfully."),otherJID] withWindowTitle:AILocalizedString(@"Registration", "Registration")];
+                [[adium interfaceController] handleMessage:AILocalizedString(@"Registration Successful!", "Registration Successful!") withDescription:[NSString stringWithFormat:AILocalizedString(@"Registration to %@ was completed successfully.","Registration to %@ was completed successfully."),otherJID] withWindowTitle:AILocalizedString(@"Registration", "Registration")];
+
+            if([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
+                [account registration:self didEndWithSuccess:YES];
             [self release];
             return;
-        } else if([type isEqualToString:@"error"] && [SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.Registration"])
+        } else if([type isEqualToString:@"error"] && [[[SmackCocoaAdapter formFromPacket:(SmackPacket*)packet] getType] isEqualToString:@"form"])
         {
             // there is another form required for this stuff
             [self handleFormFromPacket:packet];
         } else {
             // unknown state, probably error with no form
             // let SmackXMPPErrorMessagePlugin handle it
+            if([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
+                [account registration:self didEndWithSuccess:NO];
             [self release];
             return;
         }
@@ -206,6 +219,9 @@
         
         if([type isEqualToString:@"error"])
         {
+            if([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
+                [account registration:self didEndWithSuccess:NO];
+
             [self release];
             return;
             // let SmackXMPPErrorMessagePlugin handle it
@@ -217,14 +233,21 @@
     }
 }
 
+- (SmackXForm*)resultForm
+{
+    return resultForm;
+}
+
 - (void)formDidEnd:(SmackXMPPFormController*)formController
 {
-    SmackXForm *resultForm = [formController resultForm];
+    resultForm = [[formController resultForm] retain];
     
     if([[resultForm getType] isEqualToString:@"cancel"])
     {
         // user canceled, the server doesn't have to know about that
         [formController release];
+        if([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
+            [account registration:self didEndWithSuccess:NO];
         [self release];
         return;
     }

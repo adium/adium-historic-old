@@ -15,7 +15,7 @@
 
 @implementation SmackXMPPFormController
 
-- (id)initWithForm:(SmackXForm*)form target:(id)t selector:(SEL)s {
+- (id)initWithForm:(SmackXForm*)form target:(id)t selector:(SEL)s webView:(WebView*)wv {
     if(![[form getType] isEqualToString:@"form"]) { // we only accept forms
         [self dealloc];
         return nil;
@@ -23,19 +23,30 @@
     if((self = [super init])) {
         target = [t retain];
         selector = [NSStringFromSelector(s) retain];
-        [NSBundle loadNibNamed:@"SmackXMPPForm" owner:self];
-        [webview setHostWindow:window];
+        if(!wv) {
+            [NSBundle loadNibNamed:@"SmackXMPPForm" owner:self];
+            [webview setHostWindow:window];
+        } else {
+            webview = wv;
+            [webview setPolicyDelegate:self];
+        }
         
         SmackXMPPFormConverter *conv = [[SmackXMPPFormConverter alloc] initWithForm:form];
         resultForm = [[form createAnswerForm] retain];
         
         [self performSelector:@selector(loadForm:) withObject:conv afterDelay:0.0];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(webviewWindowWillClose:)
+                                                     name:NSWindowWillCloseNotification
+                                                   object:[webview window]];
     }
     return self;
 }
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [resultForm release];
     [selector release];
     [super dealloc];
@@ -46,6 +57,20 @@
     NSData *formdata = [conv toXHTML];
     [[webview mainFrame] loadData:formdata MIMEType:@"application/xhtml+xml" textEncodingName:@"UTF-8" baseURL:nil];
     [window makeKeyAndOrderFront:nil];
+}
+
+- (void)webviewWindowWillClose:(NSNotification *)notification {
+    if(!wasSubmitted) {
+        [resultForm release];
+        resultForm = [[SmackCocoaAdapter formWithType:@"cancel"] retain];
+    }
+    
+    [webview setPolicyDelegate:nil];
+    
+    id t = target; // the target variable might be gone when we return!
+    
+    [t performSelector:NSSelectorFromString(selector) withObject:self];
+    [t release];
 }
 
 - (void)webView:(WebView *)webView decidePolicyForNavigationAction:(NSDictionary *)actionInformation
@@ -107,22 +132,15 @@
             
             wasSubmitted = YES;
 
-            [window close];
+            if(window)
+                [window close];
+            else {
+                [[NSNotificationCenter defaultCenter] removeObserver:self]; // avoid double-calling our window close method
+                [self webviewWindowWillClose:nil];
+            }
         }
         [listener ignore];
     }
-}
-
-- (void)windowWillClose:(NSNotification *)notification {
-    if(!wasSubmitted) {
-        [resultForm release];
-        resultForm = [[SmackCocoaAdapter formWithType:@"cancel"] retain];
-    }
-    
-    id t = target; // the target variable might be gone when we return!
-        
-    [t performSelector:NSSelectorFromString(selector) withObject:self];
-    [t release];
 }
 
 - (SmackXForm*)resultForm {
