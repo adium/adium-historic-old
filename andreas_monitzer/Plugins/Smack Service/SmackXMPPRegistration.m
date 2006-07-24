@@ -14,6 +14,7 @@
 #import "AIInterfaceController.h"
 #import "AIAdium.h"
 #import "SmackCocoaAdapter.h"
+#import "ESTextAndButtonsWindowController.h"
 
 @interface SmackXMPPAccount (registrationDelegate)
 
@@ -65,9 +66,31 @@
     if(!form) {
         wasForm = NO;
         // convert standard form to regular form
-        form = [SmackCocoaAdapter formWithType:@"form"];
         JavaMap *attr = [packet getAttributes];
         
+        if([attr size] == 0) // no attributes supplied? might be jabber:x:oob (redirect to a URL)
+        {
+            SmackOutOfBandExtension *oob = [packet getExtension:@"x" :@"jabber:x:oob"];
+            if(oob && [[oob getUrl] length] > 0)
+                [[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"Registration For %@","Registration For %@"),[packet getFrom]]
+                                             withDescription:[packet getInstructions]
+                                             withWindowTitle:AILocalizedString(@"Registration","Registration")
+                                               defaultButton:AILocalizedString(@"Open URL","Open URL")
+                                             alternateButton:AILocalizedString(@"Cancel","Cancel")
+                                                 otherButton:nil
+                                                      target:[self class] // self doesn't exist any more when this dialog is finished
+                                                    selector:@selector(openURLRequest:userInfo:)
+                                                    userInfo:oob];
+            else
+                [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Empty Form Provided by %@","Empty Form Provided by %@"),[packet getFrom]] withDescription:AILocalizedString(@"The form supplied did not contain any fields. Cannot continue.","The form supplied did not contain any fields. Cannot continue.")];
+            
+            
+            [self release]; // no longer our job, let's resign
+            return;
+        }
+
+        form = [SmackCocoaAdapter formWithType:@"form"];
+
         [form setTitle:[NSString stringWithFormat:AILocalizedString(@"Registration for %@","Registration for %@"),otherJID]];
         [form setInstructions:[packet getInstructions]];
         
@@ -170,6 +193,12 @@
     } else
         wasForm = YES;
     [[SmackXMPPFormController alloc] initWithForm:form target:self selector:@selector(formDidEnd:) webView:[account respondsToSelector:@selector(webView)]?[account webView]:nil];
+}
+
++ (void)openURLRequest:(NSNumber*)result userInfo:(SmackOutOfBandExtension*)oob
+{
+    if([result intValue] == AITextAndButtonsDefaultReturn)
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[oob getUrl]]];
 }
 
 - (void)receivedIQPacket:(NSNotification*)n
