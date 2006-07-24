@@ -120,7 +120,7 @@ static AIHTMLDecoder *messageencoder = nil;
             date = [NSDate date];
         
         SmackOutOfBandExtension *oob = [packet getExtension:@"x" :@"jabber:x:oob"];
-        if(oob)
+        if(oob && [[oob getUrl] length] > 0)
             [[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"URL From %@","URL From %@"),[sourceContact displayName]]
                                          withDescription:[NSString stringWithFormat:@"%@\n%@",[oob getDesc]?[oob getDesc]:@"",[oob getUrl]]
                                          withWindowTitle:AILocalizedString(@"URL","URL")
