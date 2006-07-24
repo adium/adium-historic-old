@@ -61,13 +61,13 @@
 
 - (void)handleFormFromPacket:(SmackRegistration*)packet
 {
+    JavaMap *attr = [packet getAttributes];
     SmackXForm *form = [SmackCocoaAdapter formFromPacket:(SmackPacket*)packet];
+    
     receivedInitialForm = YES;
     if(!form) {
         wasForm = NO;
-        // convert standard form to regular form
-        JavaMap *attr = [packet getAttributes];
-        
+
         if([attr size] == 0) // no attributes supplied? might be jabber:x:oob (redirect to a URL)
         {
             SmackOutOfBandExtension *oob = [packet getExtension:@"x" :@"jabber:x:oob"];
@@ -89,6 +89,7 @@
             return;
         }
 
+        // convert standard form to regular form
         form = [SmackCocoaAdapter formWithType:@"form"];
 
         [form setTitle:[NSString stringWithFormat:AILocalizedString(@"Registration for %@","Registration for %@"),otherJID]];
@@ -183,20 +184,9 @@
             }
         }
         
-        if([attr containsKey:@"registered"])
-        {
-            SmackXFormField *field = [SmackCocoaAdapter formFieldWithVariable:@"remove"];
-            [field setType:@"boolean"];
-            [field setLabel:AILocalizedString(@"Remove registration","Remove registration")];
-            [form addField:field];
-            
-            field = [SmackCocoaAdapter fixedFormField];
-            [field addValue:AILocalizedString(@"NOTE: Removing the registration cannot be undone!","NOTE: Removing the registration cannot be undone!")];
-            [form addField:field];
-        }
     } else
         wasForm = YES;
-    [[SmackXMPPFormController alloc] initWithForm:form target:self selector:@selector(formDidEnd:) webView:[account respondsToSelector:@selector(webView)]?[account webView]:nil];
+    [[SmackXMPPFormController alloc] initWithForm:form target:self selector:@selector(formDidEnd:) webView:[account respondsToSelector:@selector(webView)]?[account webView]:nil registered:[attr containsKey:@"registered"]];
 }
 
 + (void)openURLRequest:(NSNumber*)result userInfo:(SmackOutOfBandExtension*)oob
@@ -286,36 +276,42 @@
     }
     
     SmackRegistration *reg = [SmackCocoaAdapter registration];
-    
-    if(wasForm)
-        [reg addExtension:[resultForm getDataFormToSend]];
-    else {
-        JavaIterator *iter = [resultForm getFields];
-        JavaMap *attr = [SmackCocoaAdapter map];
-        while([iter hasNext])
+
+    didUnregister = NO;
+
+    SmackXFormField *removefield = [resultForm getField:@"http://adiumx.com/smack/remove"];
+    if(removefield)
+    {
+        JavaIterator *fieldvalueiter = [removefield getValues];
+        if([fieldvalueiter hasNext])
         {
-            SmackXFormField *field = [iter next];
-            if([[field getVariable] isEqualToString:@"remove"])
+            NSString *value = [fieldvalueiter next];
+            if([value isEqualToString:@"1"])
             {
-                JavaIterator *fieldvalueiter = [field getValues];
-                if([fieldvalueiter hasNext])
-                {
-                    NSString *value = [[field getValues] next];
-                    if([value isEqualToString:@"1"])
-                    {
-                        // remove has to be the only element we send
-                        [attr clear];
-                        [attr put:@"remove" :@""]; // just an empty element
-                        didUnregister = YES;
-                        break;
-                    }
-                }
-            } else {
+                // remove has to be the only element we send
+                JavaMap *attr = [SmackCocoaAdapter map];
+                [attr put:@"remove" :@""]; // just an empty element
+                didUnregister = YES;
+                
+                [reg setAttributes:attr];
+            }
+        }
+    }
+    if(!didUnregister) {
+        if(wasForm)
+            [reg addExtension:[resultForm getDataFormToSend]];
+        else {
+            JavaIterator *iter = [resultForm getFields];
+            JavaMap *attr = [SmackCocoaAdapter map];
+            while([iter hasNext])
+            {
+                SmackXFormField *field = [iter next];
+                
                 NSString *value = [[field getValues] next];
                 [attr put:[field getVariable] :value];
             }
+            [reg setAttributes:attr];
         }
-        [reg setAttributes:attr];
     }
     [reg setTo:otherJID];
     [reg setType:@"set"];

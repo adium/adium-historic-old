@@ -15,7 +15,7 @@
 
 @implementation SmackXMPPFormController
 
-- (id)initWithForm:(SmackXForm*)form target:(id)t selector:(SEL)s webView:(WebView*)wv {
+- (id)initWithForm:(SmackXForm*)form target:(id)t selector:(SEL)s webView:(WebView*)wv registered:(BOOL)reg {
     if(![[form getType] isEqualToString:@"form"]) { // we only accept forms
         [self dealloc];
         return nil;
@@ -31,7 +31,7 @@
             [webview setPolicyDelegate:self];
         }
         
-        SmackXMPPFormConverter *conv = [[SmackXMPPFormConverter alloc] initWithForm:form];
+        SmackXMPPFormConverter *conv = [[SmackXMPPFormConverter alloc] initWithForm:form registered:reg];
         resultForm = [[form createAnswerForm] retain];
         
         [self performSelector:@selector(loadForm:) withObject:conv afterDelay:0.0];
@@ -108,7 +108,15 @@
                                                                                            (CFStringRef)value,
                                                                                            (CFStringRef)@"", kCFStringEncodingUTF8);
                 
-                NSString *type = [[resultForm getField:key] getType];
+                NSString *type;
+                if([key isEqualToString:@"http://adiumx.com/smack/remove"])
+                {
+                    // add our own remove field here
+                    SmackXFormField *field = [SmackCocoaAdapter formFieldWithVariable:@"http://adiumx.com/smack/remove"];
+                    [field setType:type = @"boolean"];
+                    [resultForm addField:field];
+                } else
+                    type = [[resultForm getField:key] getType];
                 
                 if([type isEqualToString:@"boolean"])
                     [SmackCocoaAdapter invokeObject:resultForm methodWithParamTypeAndParam:@"setAnswer",@"java.lang.String",key,@"boolean",YES,nil];

@@ -23,7 +23,7 @@
     BOOL wasSubmitted;
 }
 
-- (id)initWithForm:(SmackXForm*)form target:(id)t selector:(SEL)s webView:(WebView*)wv;
+- (id)initWithForm:(SmackXForm*)form target:(id)t selector:(SEL)s webView:(WebView*)wv registered:(BOOL)reg;
 
 - (SmackXForm*)resultForm;
 

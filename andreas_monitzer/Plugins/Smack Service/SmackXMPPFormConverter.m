@@ -13,8 +13,13 @@
 @implementation SmackXMPPFormConverter
 
 - (id)initWithForm:(SmackXForm*)f {
+    return [self initWithForm:f registered:NO];
+}
+
+- (id)initWithForm:(SmackXForm*)f registered:(BOOL)reg {
     if((self = [super init])) {
         form = [f retain];
+        registered = reg;
     }
     return self;
 }
@@ -179,7 +184,22 @@ static NSString *expandValues(JavaIterator *iter)
             [row addChild:[NSXMLNode elementWithName:@"td" children:[NSArray arrayWithObject:fieldnode] attributes:nil]];
     }
     
-    NSXMLElement *row = [NSXMLNode elementWithName:@"tr"];
+    NSXMLElement *row;
+    if(registered) {
+        row = [NSXMLNode elementWithName:@"tr"];
+        [row addChild:[NSXMLNode elementWithName:@"td" stringValue:AILocalizedString(@"Remove registration","Remove registration")]];
+        [row addChild:[NSXMLNode elementWithName:@"td" children:[NSArray arrayWithObject:
+            [NSXMLNode elementWithName:@"input" children:nil attributes:[NSArray arrayWithObjects:
+            [NSXMLNode attributeWithName:@"name" stringValue:@"http://adiumx.com/smack/remove"],
+                [NSXMLNode attributeWithName:@"type" stringValue:@"checkbox"],nil]]] attributes:nil]];
+        [table addChild:row];
+        row = [NSXMLNode elementWithName:@"tr"];
+        [row addChild:[NSXMLNode elementWithName:@"td" stringValue:@""]];
+        [row addChild:[NSXMLNode elementWithName:@"td" stringValue:AILocalizedString(@"NOTE: Removing the registration cannot be undone!","NOTE: Removing the registration cannot be undone!")]];
+        [table addChild:row];
+    }
+    
+    row = [NSXMLNode elementWithName:@"tr"];
     [row addChild:[NSXMLNode elementWithName:@"td" stringValue:@""]];
     [row addChild:[NSXMLNode elementWithName:@"td" children:[NSArray arrayWithObjects:
         [NSXMLNode elementWithName:@"input" children:nil attributes:[NSArray arrayWithObjects:
