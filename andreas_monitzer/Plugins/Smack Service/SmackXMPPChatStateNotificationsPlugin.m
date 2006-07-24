@@ -127,7 +127,6 @@
                                                  selector:@selector(sendMessage:)
                                                      name:SmackXMPPMessageSentNotification
                                                    object:account];
-        [[SmackCocoaAdapter serviceDiscoveryManagerForConnection:[a connection]] addFeature:@"http://jabber.org/protocol/chatstates"];
     }
     return self;
 }
@@ -136,6 +135,13 @@
     [[adium notificationCenter] removeObserver:self];
     [[SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]] removeFeature:@"http://jabber.org/protocol/chatstates"];
     [super dealloc];
+}
+
+- (void)connected:(SmackXMPPConnection*)connection
+{
+    SmackXServiceDiscoveryManager *sdm = [SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]];
+    if(![sdm includesFeature:@"http://jabber.org/protocol/chatstates"])
+        [sdm addFeature:@"http://jabber.org/protocol/chatstates"];
 }
 
 - (void)receivedMessagePacket:(NSNotification*)n
