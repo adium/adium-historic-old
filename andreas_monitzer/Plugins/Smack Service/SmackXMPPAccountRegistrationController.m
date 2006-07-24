@@ -12,6 +12,7 @@
 #import "SmackXMPPRegistration.h"
 #import "SmackXMPPAccount.h"
 #import "SmackXMPPAccountViewController.h"
+#import "SmackXMPPErrorMessagePlugin.h"
 
 #import <AIUtilities/AIStringUtilities.h>
 #import "AIAdium.h"

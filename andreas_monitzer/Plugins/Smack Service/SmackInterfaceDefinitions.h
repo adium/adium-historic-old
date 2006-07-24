@@ -816,6 +816,16 @@
 
 @end
 
+@interface SmackOutOfBandExtension : NSObject <SmackPacketExtension> {
+}
+
+- (void)setUrl:(NSString*)url;
+- (NSString*)getUrl;
+- (void)setDesc:(NSString*)desc;
+- (NSString*)getDesc;
+
+@end
+
 #define SmackResolveXMPPDomain(domain) [NSClassFromString(@"org.jivesoftware.smack.util.DNSUtil") resolveXMPPDomain:domain]
 
 @protocol AdiumSmackBridgeDelegate

@@ -12,11 +12,23 @@ import com.apple.cocoa.foundation.*;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.filter.*;
+import org.jivesoftware.smack.provider.ProviderManager;
 import java.util.*;
 import java.lang.reflect.Method;
 
 public class SmackBridge implements ConnectionListener {
     NSObject delegate;
+    
+    static {
+        try {
+            // set up our own packet extensions and iq provider
+            ProviderManager.addExtensionProvider(OutOfBandDataExtension.getConstantElementName(),
+                                                 OutOfBandDataExtension.getConstantNamespace(),
+                                                 Class.forName("net.adium.smackBridge.OutOfBandDataExtension"));
+        } catch(ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
     
     public void initSubscriptionMode() {
         Roster.setDefaultSubscriptionMode(Roster.SUBSCRIPTION_MANUAL);
