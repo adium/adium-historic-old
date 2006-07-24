@@ -23,6 +23,7 @@
 #import "AIStatusDefines.h"
 #import "AIStatusController.h"
 #import "SmackListContact.h"
+#import "SmackXMPPRegistration.h"
 
 #import "ruli/ruli.h"
 #import <AIUtilities/AIStringUtilities.h>
@@ -548,10 +549,24 @@
                 [menuItems addObjectsFromArray:pluginMenuItems];
             }
         }
-            
+
+    if(!first)
+        [menuItems addObject:[NSMenuItem separatorItem]];
+    
+    
+    NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Change Account Details...","Change Account Details...") action:@selector(changeAccountDetails:) keyEquivalent:@""];
+    [mitem setTarget:self];
+    [menuItems addObject:mitem];
+    [mitem release];
+    
     [menuItems addObjectsFromArray:[super accountActionMenuItems]];
     
     return menuItems;
+}
+
+- (void)changeAccountDetails:(id)sender
+{
+    [[[SmackXMPPRegistration alloc] initWithAccount:self registerWith:[[self explicitFormattedUID] jidHost]] autorelease];
 }
 
 #pragma mark Secure messsaging
