@@ -224,6 +224,16 @@
     [progressIndicator stopAnimation:nil];
 
     [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Connection Error While Talking to %@.","Connection Error While Talking to %@."),[serverField stringValue]] withDescription:error];
+    
+    [connection close];
+    [smackAdapter release]; smackAdapter = nil;
+    
+    [serverField setEnabled:YES];
+    [portField setEnabled:YES];
+    [serverlistTable setEnabled:YES];
+    [requestButton setEnabled:YES];
+
+    [tabview selectTabViewItemWithIdentifier:@"serverselection"];
 }
 
 - (void)receiveMessagePacket:(SmackMessage*)packet
