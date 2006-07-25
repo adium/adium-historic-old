@@ -34,7 +34,6 @@
 //This has to be done after the window loads so that the List Controller is created.
 - (void)finishLoading
 {
-	[contactListWindowController setMaster:self];
 	contactListController = [contactListWindowController listController];
 	contactListView = [contactListController contactListView];
 	groups = [[NSMutableArray array] retain];
@@ -42,11 +41,10 @@
 }
 
 - (void)dealloc
-{
+{	
 	[contactListWindowController release];
 	[contactListRoot release];
 	[groups release];
-	[name release];
 	
 	[super dealloc];
 }
@@ -68,8 +66,10 @@
 
 - (void)addContactListObject:(AIListObject *)listObject
 {
-	[contactListRoot addObject:listObject];
-	[contactListController setContactListRoot:contactListRoot];
+	AIListObject<AIContainingObject>	*tempObject = [[self listController] contactListRoot];
+	
+	[tempObject addObject:listObject];
+	[self setContactListRoot:tempObject];
 }
 
 - (AIListObject<AIContainingObject> *)contactList
@@ -90,6 +90,24 @@
 - (AIListController *)listController
 {
 	return contactListController;
+}
+
+- (NSString *)name
+{	
+	AIListObject	*listObject;
+	NSEnumerator	*contactEnumerator;
+	if (contactListController == nil) {
+		contactEnumerator = [[contactListRoot containedObjects] objectEnumerator];
+	} else {
+		contactEnumerator = [[[[self listController] contactListRoot] containedObjects] objectEnumerator];	
+	}
+	NSString		*returnString = [NSString stringWithString:@"Contacts"];
+	
+	while((listObject = [contactEnumerator nextObject])) {
+		returnString = [returnString stringByAppendingString:[NSString stringWithFormat:@":%@", [listObject UID]]];
+	}
+	
+	return returnString;
 }
 
 - (void)selector:(SEL)aSelector withArgument:(id)argument toItem:(CONTACT_LIST_ITEM)item

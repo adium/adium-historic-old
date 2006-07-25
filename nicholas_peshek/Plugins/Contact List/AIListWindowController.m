@@ -162,7 +162,7 @@
 //
 - (NSString *)adiumFrameAutosaveName
 {
-	return KEY_DUAL_CONTACT_LIST_WINDOW_FRAME;
+	return [master name];
 }
 
 //Setup the window after it has loaded
@@ -221,7 +221,7 @@
 	[self setSavedFrame:[[self window] frame]];
 	
 	//Finish loading the contact list.
-	[[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] mostRecentContactList] finishLoading];
+	[master finishLoading];
 }
 
 //Close the contact list window
