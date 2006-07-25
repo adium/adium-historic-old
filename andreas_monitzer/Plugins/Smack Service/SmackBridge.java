@@ -20,6 +20,8 @@ public class SmackBridge implements ConnectionListener {
     NSObject delegate;
     
     static {
+        System.setProperty("java.net.preferIPv6Addresses", "true");
+        
         // set client identity and name
         ServiceDiscoveryManager.setIdentityName("Adium (via Smack)");
         ServiceDiscoveryManager.setIdentityType("pc");
