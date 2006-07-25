@@ -1,0 +1,47 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = ESDualWindowMessageAdvancedPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "autohide_tabBar" = NSButton; 
+                "checkBox_allowInactiveClosing" = NSButton; 
+                "checkBox_animateDockIcon" = NSButton; 
+                "checkBox_badgeDockIcon" = NSButton; 
+                "checkBox_customNameFormatting" = NSButton; 
+                "checkBox_hide" = NSButton; 
+                "popUp_minimumFontSize" = NSPopUpButton; 
+                "popUp_nameFormat" = NSPopUpButton; 
+                "popUp_orientation" = NSPopUpButton; 
+                "popUp_timeStampFormat" = NSPopUpButton; 
+                "popUp_windowPosition" = NSPopUpButton; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = TabsAdvancedPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "autohide_tabBar" = NSButton; 
+                "checkBox_allowInactiveClosing" = NSButton; 
+                "popUp_orientation" = NSPopUpButton; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }
+    ); 
+    IBVersion = 1; 
+}
