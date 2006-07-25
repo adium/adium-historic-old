@@ -44,7 +44,7 @@
 }
 
 - (NSString *)longDescription{
-	return @"LiveJournal Jabber Messaging";
+	return @"LiveJournal Talk";
 }
 
 - (NSCharacterSet *)ignoredCharacters{
