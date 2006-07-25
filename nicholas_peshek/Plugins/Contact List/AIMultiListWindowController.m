@@ -17,9 +17,12 @@
 #import "AIMultiListWindowController.h"
 #import "AIContactList.h"
 #import "AIListWindowController.h"
+#import "AIListGroup.h"
 //#import "AIStandardListWindowController.h"
 //#import "AIBorderlessListWindowController.h"
 //#import "AIContactListOutlineView.h"
+
+#define PREF_GROUP_MULTI_CONTACT_LIST			@"Contact List Windows"
 
 @implementation AIMultiListWindowController
 
@@ -37,16 +40,55 @@
 		if(!contactListArray) {
 			contactListArray = [[NSMutableArray array] retain];
 		}
-		AIContactList	*newList = [AIContactList createWithStyle:windowStyle];
-		[newList setContactListRoot:(AIListObject *)[[adium contactController] contactList]];
 		
-		[contactListArray addObject:newList];
+		NSArray			*loadedList = [NSArray array];
+		NSMutableArray	*loadedContactLists = [[adium preferenceController] preferenceForKey:@"SavedContactLists"
+																					   group:PREF_GROUP_MULTI_CONTACT_LIST];		
+#warning kbotc: read comments
+		//You really should not do this check here, and compare the total number of lists you get to the ones loaded from the contact list, and throw the remaining groups in another contact list.
+		if (loadedContactLists == nil) {
+			NSMutableArray	*tempArray = [NSMutableArray array];
+			NSMutableArray	*groups = [NSMutableArray array];
+			NSEnumerator	*containedGroups = [[[[adium contactController] contactList] containedObjects] objectEnumerator];
+			AIListObject	*object;
+			while ((object = [containedGroups nextObject])) {
+				[groups addObject:[object UID]];
+			}
+			
+			[tempArray addObject:groups];
+			loadedContactLists = tempArray;
+		}
+		
+		NSEnumerator	*e = [loadedContactLists objectEnumerator];
+		int	indexVar = 0;
+		while ((loadedList = [e nextObject])) {
+			AIListGroup		*newRootObject = [[AIListGroup alloc] initWithUID:[NSString stringWithFormat:@"%d", indexVar]];
+			NSString		*UID;
+			NSEnumerator	*smallList = [loadedList objectEnumerator];
+			while ((UID = [smallList nextObject])) {
+				[newRootObject addObject:[[adium contactController] existingGroupWithUID:UID]];
+			}
+			BOOL stupid = [self createNewSeparableContactListWithObject:(AIListObject *)newRootObject];
+			indexVar++;
+		}
+		//		} else { 
+		//			AIContactList	*newList = [AIContactList createWithStyle:windowStyle];
+		//			[newList setContactListRoot:(AIListObject *)[[adium contactController] contactList]];
+		//			[contactListArray addObject:newList];
+		//		}
+		
+		
+		
 		
 		if(!mostRecentContactList) {
 			mostRecentContactList = [contactListArray objectAtIndex:0];
 		}
-	}
-	return self;
+		[[adium notificationCenter] addObserver:self 
+									   selector:@selector(terminate:) 
+										   name:Adium_WillTerminate
+										 object:nil];
+}
+return self;
 }
 
 //Create the new contact list. A bit messy, but overall, it'll work. Returns a boolean saying if it worked or not.
@@ -58,6 +100,7 @@
 		[newContactList setContactListRoot:newListObject];
 		mostRecentContactList = newContactList;
 		[contactListArray addObject:newContactList];
+		[[newContactList listWindowController] setMaster:newContactList];
 		[[newContactList listWindowController] showWindowInFront:YES];
 		didCreationWork = YES;
 	}
@@ -65,13 +108,42 @@
 	return didCreationWork;
 }
 
+- (void)terminate:(NSNotification *)aNotification
+{
+	[self saveContactLists];
+}
+
 //Deallocate the ivars when this instance is getting sent away.
 - (void)dealloc
-{
+{		
 	[contactListArray release];
 	[mostRecentContactList release];
 	
 	[super dealloc];
+}
+
+//Loop inside loop. Icky, but hopefully this will not need to be run that often.
+- (void)saveContactLists
+{
+	NSMutableArray	*savedLists = [NSMutableArray array];
+	NSEnumerator	*contactLists;
+	AIContactList	*list;
+	
+	contactLists = [contactListArray objectEnumerator];
+	
+	while ((list = [contactLists nextObject])) {
+		NSMutableArray	*groups = [NSMutableArray array];
+		NSEnumerator	*containedGroups = [[[[list listController] contactListRoot] containedObjects] objectEnumerator];
+		AIListObject	*object;
+		while ((object = [containedGroups nextObject])) {
+			[groups addObject:[object UID]];
+		}
+		[savedLists addObject:groups];
+	}
+	
+	[[adium preferenceController] setPreference:savedLists
+										 forKey:@"SavedContactLists"
+										  group:PREF_GROUP_MULTI_CONTACT_LIST];
 }
 
 - (void)destroyListController:(AIContactList *)doneController

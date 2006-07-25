@@ -93,9 +93,7 @@
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	NSTimeInterval secondsToShow = [[details objectForKey:KEY_SECONDS_TO_SHOW_LIST] doubleValue];
-	AISCLViewPlugin *contactListViewPlugin = (AISCLViewPlugin *)[[adium componentLoader] pluginWithClassName:@"AISCLViewPlugin"];
-#warning kbotc: this may need work.
-	AIListWindowController *windowController = [[[contactListViewPlugin contactListWindowController] contactListWithContact:listObject] listWindowController];
+	AIListWindowController *windowController = [[[(AISCLViewPlugin *)[[adium componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] contactListWithContact:listObject] listWindowController];
 	[windowController setPreventHiding:YES];
 	
 	if ([windowController windowShouldHideOnDeactivate]) {
@@ -117,14 +115,16 @@
  * @brief Show the contact list after the time specified has elapsed
  */
 - (void)hideContactList:(NSTimer *)timer {
-	AISCLViewPlugin *contactListViewPlugin = (AISCLViewPlugin *)[[adium componentLoader] pluginWithClassName:@"AISCLViewPlugin"];
-	#warning kbotc: this may need work.
 	AIListWindowController *windowController = [timer userInfo];
 	[windowController setPreventHiding:NO];
+	
 	if ([windowController windowShouldHideOnDeactivate] && ![NSApp isActive])
 		[[windowController window] orderOut:self];
 	else if ([windowController shouldSlideWindowOffScreen])
 		[windowController slideWindowOffScreenEdges:[windowController slidableEdgesAdjacentToWindow]];
+	
+	//Not sure if that setHidesOnDeactivate is always cleared. I've had a few times where the contact list would not go away, so this is a little bit of safety.
+	[[windowController window] setHidesOnDeactivate:[windowController windowShouldHideOnDeactivate]];
 	[hideContactListTimer release];
 	hideContactListTimer = nil;
 }

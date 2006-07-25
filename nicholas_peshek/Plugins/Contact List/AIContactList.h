@@ -28,7 +28,6 @@ typedef enum {
 	AIListController					*contactListController;
 	
 	NSMutableArray						*groups;
-	NSString							*name;
 
 }
 + (AIContactList *)createWithStyle:(LIST_WINDOW_STYLE)windowStyle;
@@ -41,6 +40,7 @@ typedef enum {
 - (AIOutlineView *)contactListView;
 - (AIListWindowController *)listWindowController;
 - (AIListController *)listController;
+- (NSString *)name;
 - (void)selector:(SEL)aSelector withArgument:(id)argument toItem:(CONTACT_LIST_ITEM)item;
 
 @end
