@@ -241,10 +241,12 @@
     
     //build an array of marked links.
     while([inString length] > SHStringOffset){
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         if((markedLink = [self nextURLFromString:inString])){
 			if(!rangeArray) rangeArray = [NSMutableArray array];
             [rangeArray addObject:markedLink];
         }
+		[pool release];
     }
     
 	return rangeArray;
@@ -277,8 +279,8 @@
 			NSURL *markedLinkURL;
 			
 			if((markedLinkURL = [markedLink URL])){
-				[linkifiedString addAttribute:NSLinkAttributeName
-										value:markedLinkURL 
+				[linkifiedString setAttribute:[NSDictionary dictionaryWithObject:markedLinkURL
+																		  forKey:NSLinkAttributeName]
 										range:[markedLink range]];
 			}
 		}
