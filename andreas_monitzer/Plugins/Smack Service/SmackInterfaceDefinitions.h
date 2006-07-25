@@ -807,6 +807,51 @@
 
 @end
 
+@interface SmackXVCard : SmackIQ {
+}
+
+- (BOOL)equals:(id)o;
+- (NSString*)getAddressFieldHome:(NSString*)addrField;
+- (NSString*)getAddressFieldWork:(NSString*)addrField;
+- (id)getAvatar; // byte[]
+- (NSString*)getAvatarHash;
+- (NSString*)getChildElementXML;
+- (NSString*)getEmailHome;
+- (NSString*)getEmailWork;
+- (NSString*)getField:(NSString*)field;
+- (NSString*)getFirstName;
+- (NSString*)getJabberId;
+- (NSString*)getLastName;
+- (NSString*)getMiddleName;
+- (NSString*)getNickName;
+- (NSString*)getOrganization;
+- (NSString*)getOrganizationUnit;
+- (NSString*)getPhoneHome:(NSString*)phoneType;
+- (NSString*)getPhoneWork:(NSString*)phoneType;
+- (void)load:(SmackXMPPConnection*)connection;
+- (void)load:(SmackXMPPConnection*)connection :(NSString*)user;
+- (void)save:(SmackXMPPConnection*)connection;
+- (void)setAddressFieldHome:(NSString*)addrField :(NSString*)value;
+- (void)setAddressFieldWork:(NSString*)addrField :(NSString*)value;
+- (void)setAvatar:(id)bytes; // byte[]
+- (void)getEmailHome:(NSString*)email;
+- (void)getEmailWork:(NSString*)emailWork;
+- (void)setEncodedImage:(NSString*)encodedAvatar;
+- (void)setField:(NSString*)field :(NSString*)value;
+- (void)setField:(NSString*)field :(NSString*)value :(BOOL)isUnescapable;
+- (void)setFirstName:(NSString*)firstName;
+- (void)setJabberId:(NSString*)jabberId;
+- (void)setLastName:(NSString*)lastName;
+- (void)setMiddleName:(NSString*)middleName;
+- (void)setNickName:(NSString*)nickName;
+- (void)setOrganization:(NSString*)organization;
+- (void)setOrganizationUnit:(NSString*)organizationUnit;
+- (void)setPhoneHome:(NSString*)phoneType :(NSString*)phoneNum;
+- (void)setPhoneWork:(NSString*)phoneType :(NSString*)phoneNum;
+- (NSString*)toString;
+
+@end
+
 @interface SmackXMPPException : NSObject {
 }
 
