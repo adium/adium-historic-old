@@ -1009,6 +1009,9 @@
 		34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */; };
 		34FDD6E505632BFD00F5B30F /* ESFileTransferController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */; };
 		34FDD6E605632BFD00F5B30F /* ESFileTransferController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */; };
+		3797B2E10A76DC590082EE27 /* TabsAdvanced.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3797B2E00A76DC590082EE27 /* TabsAdvanced.nib */; };
+		3797B3180A76DDA80082EE27 /* TabsAdvancedPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 3797B3160A76DDA80082EE27 /* TabsAdvancedPreferences.h */; };
+		3797B3190A76DDA80082EE27 /* TabsAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3797B3170A76DDA80082EE27 /* TabsAdvancedPreferences.m */; };
 		37993DB50A52E65100294E3F /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37993DB40A52E65000294E3F /* PSMTabBarControl.framework */; };
 		37993DCD0A52E67B00294E3F /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 37993DB40A52E65000294E3F /* PSMTabBarControl.framework */; };
 		4947F5C00655E85200B791E5 /* AIStressTestAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC15BE90524CE5E00A8010A /* AIStressTestAccount.h */; };
@@ -3198,6 +3201,9 @@
 		34FD5BEB07F1F92900687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Resources/Italian.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferController.h; path = Source/ESFileTransferController.h; sourceTree = "<group>"; };
 		34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferController.m; path = Source/ESFileTransferController.m; sourceTree = "<group>"; };
+		3797B2E00A76DC590082EE27 /* TabsAdvanced.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = TabsAdvanced.nib; path = "Plugins/Dual Window Interface/TabsAdvanced.nib"; sourceTree = "<group>"; };
+		3797B3160A76DDA80082EE27 /* TabsAdvancedPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TabsAdvancedPreferences.h; path = "Plugins/Dual Window Interface/TabsAdvancedPreferences.h"; sourceTree = "<group>"; };
+		3797B3170A76DDA80082EE27 /* TabsAdvancedPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TabsAdvancedPreferences.m; path = "Plugins/Dual Window Interface/TabsAdvancedPreferences.m"; sourceTree = "<group>"; };
 		37993DB40A52E65000294E3F /* PSMTabBarControl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PSMTabBarControl.framework; path = ../Build/Debug/PSMTabBarControl.framework; sourceTree = "<group>"; };
 		3C73F83E04D62A2900A80106 /* AIEmoticonPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPack.h; path = Plugins/Emoticons/AIEmoticonPack.h; sourceTree = "<group>"; };
 		3C73F83F04D62A2900A80106 /* AIEmoticonPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPack.m; path = Plugins/Emoticons/AIEmoticonPack.m; sourceTree = "<group>"; };
@@ -5880,7 +5886,10 @@
 			children = (
 				4B970BF80535B864002F28F9 /* ESDualWindowMessageAdvancedPreferences.h */,
 				4B970BF90535B864002F28F9 /* ESDualWindowMessageAdvancedPreferences.m */,
+				3797B3160A76DDA80082EE27 /* TabsAdvancedPreferences.h */,
+				3797B3170A76DDA80082EE27 /* TabsAdvancedPreferences.m */,
 				34167FEC081D706200E35678 /* DualWindowMessageAdvanced.nib */,
+				3797B2E00A76DC590082EE27 /* TabsAdvanced.nib */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -7461,6 +7470,7 @@
 				340670A80A55A4B4004E22AC /* ESGlassSplitView.h in Headers */,
 				345AFAED0A5D9A5F00D7DA6F /* AINoisyTableColumn.h in Headers */,
 				34EA6B310A62F3420053DFEB /* AIApplication.h in Headers */,
+				3797B3180A76DDA80082EE27 /* TabsAdvancedPreferences.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8419,6 +8429,7 @@
 				F56E0DB00A4CDF9C008D1EB5 /* FireLogImporter.nib in Resources */,
 				34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */,
 				3406707A0A55A044004E22AC /* sourceListBackground.png in Resources */,
+				3797B2E10A76DC590082EE27 /* TabsAdvanced.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9051,6 +9062,7 @@
 				340670A90A55A4B4004E22AC /* ESGlassSplitView.m in Sources */,
 				345AFAEE0A5D9A5F00D7DA6F /* AINoisyTableColumn.m in Sources */,
 				34EA6B320A62F3420053DFEB /* AIApplication.m in Sources */,
+				3797B3190A76DDA80082EE27 /* TabsAdvancedPreferences.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
