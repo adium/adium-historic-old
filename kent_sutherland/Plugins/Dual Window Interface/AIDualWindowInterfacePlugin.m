@@ -21,6 +21,7 @@
 #import "AIMessageWindowController.h"
 #import "AIChatController.h"
 #import "ESDualWindowMessageAdvancedPreferences.h"
+#import "TabsAdvancedPreferences.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <Adium/AIChat.h>
 
@@ -48,7 +49,7 @@
 										  forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
 	preferenceMessageAdvController = [[ESDualWindowMessageAdvancedPreferences preferencePane] retain];
-
+	tabsAdvController = [[TabsAdvancedPreferences preferencePane] retain];
 	
 	//Watch Adium hide and unhide (Used for better window opening behavior)
 	[[NSNotificationCenter defaultCenter] addObserver:self
@@ -73,6 +74,7 @@
 
     //Cleanup
 	[preferenceMessageAdvController release]; preferenceMessageAdvController = nil;
+	[tabsAdvController release]; tabsAdvController = nil;
     [containers release]; containers = nil;
 	[delayedContainerShowArray release]; delayedContainerShowArray = nil;
 }	
