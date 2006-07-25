@@ -14,25 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIPlugin.h>
+#import "ESJabberService.h"
 
-@interface CBGaimServicePlugin : AIPlugin{
-#ifndef JOSCAR_SUPERCEDE_LIBGAIM
-    id  AIMService;
-    id  ICQService;
-    id  DotMacService;
-#endif
-	id  GaduGaduService;
-	id  GTalkService;
-	id  LiveJournalService;
-    id  JabberService;
-	id  MeanwhileService;
-	id  MSNService;
-	id  SimpleService;
-	id  NovellService;
-    id  YahooService;
-	id  YahooJapanService;
-	id	ZephyrService;
+@interface AILiveJournalService : ESJabberService {
+
 }
 
 @end

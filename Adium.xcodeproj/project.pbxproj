@@ -1285,6 +1285,16 @@
 		632D60C0094B81AB003A9786 /* AIDockIconPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */; };
 		632D60C1094B81AB003A9786 /* AIDockIconPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */; };
 		632D801708E7E0A40032C187 /* XtrasManager.nib in Resources */ = {isa = PBXBuildFile; fileRef = 632D801608E7E0A40032C187 /* XtrasManager.nib */; };
+		633287960A769B84004D0F2B /* AIGaimLiveJournalAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63125D8D0A75EBF000303EE9 /* AIGaimLiveJournalAccount.h */; };
+		633287970A769B88004D0F2B /* AIGaimLiveJournalAccount.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63125D8E0A75EBF000303EE9 /* AIGaimLiveJournalAccount.m */; };
+		633287980A769B8C004D0F2B /* AILiveJournalService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63125D970A75ECE400303EE9 /* AILiveJournalService.h */; };
+		633287990A769B8F004D0F2B /* AILiveJournalService.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63125D980A75ECE400303EE9 /* AILiveJournalService.m */; };
+		6332879A0A769B92004D0F2B /* GaimDefaultsLiveJournal.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63125D990A75ECE400303EE9 /* GaimDefaultsLiveJournal.plist */; };
+		6332879B0A769BF3004D0F2B /* AIGaimLiveJournalAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63125D8D0A75EBF000303EE9 /* AIGaimLiveJournalAccount.h */; };
+		6332879C0A769BF3004D0F2B /* AILiveJournalService.h in Headers */ = {isa = PBXBuildFile; fileRef = 63125D970A75ECE400303EE9 /* AILiveJournalService.h */; };
+		6332879D0A769C18004D0F2B /* AIGaimLiveJournalAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63125D8E0A75EBF000303EE9 /* AIGaimLiveJournalAccount.m */; };
+		6332879E0A769C18004D0F2B /* AILiveJournalService.m in Sources */ = {isa = PBXBuildFile; fileRef = 63125D980A75ECE400303EE9 /* AILiveJournalService.m */; };
+		633287C40A769ECB004D0F2B /* GaimDefaultsLiveJournal.plist in Resources */ = {isa = PBXBuildFile; fileRef = 63125D990A75ECE400303EE9 /* GaimDefaultsLiveJournal.plist */; };
 		6333699409497DB000970871 /* EmoticonPreviewView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6333699309497DB000970871 /* EmoticonPreviewView.nib */; };
 		63336B060949908300970871 /* DockIconPreviewView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 63336B050949908300970871 /* DockIconPreviewView.nib */; };
 		63336E15094AB81300970871 /* XtraInfoView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 63336E14094AB81300970871 /* XtraInfoView.nib */; };
@@ -1706,6 +1716,11 @@
 			files = (
 				347A21B409786C6C00A30431 /* Adium.app in CopyFiles */,
 				347A21B509786C6C00A30431 /* SystemVersionCheck in CopyFiles */,
+				633287960A769B84004D0F2B /* AIGaimLiveJournalAccount.h in CopyFiles */,
+				633287970A769B88004D0F2B /* AIGaimLiveJournalAccount.m in CopyFiles */,
+				633287980A769B8C004D0F2B /* AILiveJournalService.h in CopyFiles */,
+				633287990A769B8F004D0F2B /* AILiveJournalService.m in CopyFiles */,
+				6332879A0A769B92004D0F2B /* GaimDefaultsLiveJournal.plist in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3495,6 +3510,11 @@
 		4BFE2E9F07E61A4E00C07EBE /* NewAlertNoEvents.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = NewAlertNoEvents.nib; path = "Frameworks/Adium Framework/NewAlertNoEvents.nib"; sourceTree = "<group>"; };
 		63093C2D0892143500F118D3 /* newContentThreeDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentThreeDigits.png; sourceTree = "<group>"; };
 		63093C2E0892143500F118D3 /* newContentTwoDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentTwoDigits.png; sourceTree = "<group>"; };
+		63125D8D0A75EBF000303EE9 /* AIGaimLiveJournalAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGaimLiveJournalAccount.h; path = "Plugins/Gaim Service/AIGaimLiveJournalAccount.h"; sourceTree = "<group>"; };
+		63125D8E0A75EBF000303EE9 /* AIGaimLiveJournalAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGaimLiveJournalAccount.m; path = "Plugins/Gaim Service/AIGaimLiveJournalAccount.m"; sourceTree = "<group>"; };
+		63125D970A75ECE400303EE9 /* AILiveJournalService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILiveJournalService.h; path = "Plugins/Gaim Service/AILiveJournalService.h"; sourceTree = "<group>"; };
+		63125D980A75ECE400303EE9 /* AILiveJournalService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILiveJournalService.m; path = "Plugins/Gaim Service/AILiveJournalService.m"; sourceTree = "<group>"; };
+		63125D990A75ECE400303EE9 /* GaimDefaultsLiveJournal.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsLiveJournal.plist; path = "Plugins/Gaim Service/GaimDefaultsLiveJournal.plist"; sourceTree = "<group>"; };
 		632D608D094B7EEB003A9786 /* AIXtraPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraPreviewController.h; path = Source/AIXtraPreviewController.h; sourceTree = "<group>"; };
 		632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockIconPreviewController.h; path = Source/AIDockIconPreviewController.h; sourceTree = "<group>"; };
 		632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDockIconPreviewController.m; path = Source/AIDockIconPreviewController.m; sourceTree = "<group>"; };
@@ -4421,6 +4441,7 @@
 				344160B5059FC2F50019246B /* ESGaimJabberAccountViewController.m */,
 				343EB42208086D9200E27095 /* ESGaimJabberAccountView.nib */,
 				4BB19298079EE90900DAA523 /* GaimDefaultsJabber.plist */,
+				63125D7A0A75EBBE00303EE9 /* LiveJournal */,
 				A3C0405808D744B200B48CE1 /* Google Talk */,
 			);
 			name = Jabber;
@@ -6243,6 +6264,18 @@
 			name = Growl;
 			sourceTree = "<group>";
 		};
+		63125D7A0A75EBBE00303EE9 /* LiveJournal */ = {
+			isa = PBXGroup;
+			children = (
+				63125D8D0A75EBF000303EE9 /* AIGaimLiveJournalAccount.h */,
+				63125D8E0A75EBF000303EE9 /* AIGaimLiveJournalAccount.m */,
+				63125D970A75ECE400303EE9 /* AILiveJournalService.h */,
+				63125D980A75ECE400303EE9 /* AILiveJournalService.m */,
+				63125D990A75ECE400303EE9 /* GaimDefaultsLiveJournal.plist */,
+			);
+			name = LiveJournal;
+			sourceTree = "<group>";
+		};
 		632D800908E7DE2C0032C187 /* Xtras Management */ = {
 			isa = PBXGroup;
 			children = (
@@ -7127,6 +7160,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6332879B0A769BF3004D0F2B /* AIGaimLiveJournalAccount.h in Headers */,
+				6332879C0A769BF3004D0F2B /* AILiveJournalService.h in Headers */,
 				3485DB1809EBCE6500232CC4 /* SLGaimCocoaAdapter.h in Headers */,
 				3485DB1A09EBCE6500232CC4 /* adiumGaimBlist.h in Headers */,
 				3485DB1C09EBCE6500232CC4 /* adiumGaimConnection.h in Headers */,
@@ -8138,6 +8173,7 @@
 				3485DB5F09EBCE7400232CC4 /* DCGaimGaduGaduJoinChatView.nib in Resources */,
 				3485DB6209EBCE7400232CC4 /* ESGaimGaduGaduAccountView.nib in Resources */,
 				3485DB6309EBCE7400232CC4 /* GaimDefaultsGadu-Gadu.plist in Resources */,
+				633287C40A769ECB004D0F2B /* GaimDefaultsLiveJournal.plist in Resources */,
 				3485DB6A09EBCE7400232CC4 /* DCGaimJabberJoinChatView.nib in Resources */,
 				3485DB6D09EBCE7400232CC4 /* ESGaimJabberAccountView.nib in Resources */,
 				3485DB6E09EBCE7400232CC4 /* GaimDefaultsJabber.plist in Resources */,
@@ -8717,6 +8753,8 @@
 			files = (
 				3485DB1909EBCE6500232CC4 /* SLGaimCocoaAdapter.m in Sources */,
 				3485DB1B09EBCE6500232CC4 /* adiumGaimBlist.m in Sources */,
+				6332879D0A769C18004D0F2B /* AIGaimLiveJournalAccount.m in Sources */,
+				6332879E0A769C18004D0F2B /* AILiveJournalService.m in Sources */,
 				3485DB1D09EBCE6500232CC4 /* adiumGaimConnection.m in Sources */,
 				3485DB1F09EBCE6500232CC4 /* adiumGaimConversation.m in Sources */,
 				3485DB2109EBCE6500232CC4 /* adiumGaimCore.m in Sources */,
