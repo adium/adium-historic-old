@@ -62,7 +62,7 @@
 
 @end
 
-@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin, SmackXMPPServiceDiscoveryBrowsing, SmackXMPPFileTransferPlugin, SmackXMPPChatStateNotificationsPlugin;
+@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin, SmackXMPPServiceDiscoveryBrowsing, SmackXMPPFileTransferPlugin, SmackXMPPChatStateNotificationsPlugin, SmackXMPPVCardPlugin;
 
 @interface NSObject (SmackXMPPPluginAddition)
 - (id)initWithAccount:(SmackXMPPAccount*)account;
@@ -90,6 +90,7 @@
             [SmackXMPPServiceDiscoveryBrowsing class],
             [SmackXMPPFileTransferPlugin class],
             [SmackXMPPChatStateNotificationsPlugin class],
+            [SmackXMPPVCardPlugin class],
             nil
         };
         
@@ -403,10 +404,6 @@
 	}
     
 	return supportedPropertyKeys;
-}
-
-- (void)delayedUpdateContactStatus:(AIListContact *)inContact {
-    [super delayedUpdateContactStatus:inContact];
 }
 
 #pragma mark Messaging, Chatting, Strings
