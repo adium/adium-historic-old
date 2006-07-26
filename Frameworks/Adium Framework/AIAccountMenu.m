@@ -369,7 +369,7 @@
 	NSMenu		*actionsSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
 	NSMenuItem	*menuItem;
 
-	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Edit Account", nil)
+	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedStringFromTable(@"Edit Account", @"AdiumFramework", nil)
 																	target:self
 																	action:@selector(editAccount:)
 															 keyEquivalent:@""
@@ -393,7 +393,7 @@
 		[actionsSubmenu addItem:[NSMenuItem separatorItem]];
 	}
 	
-	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Disable", nil)
+	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedStringFromTable(@"Disable", @"AdiumFramework", nil)
 																	target:self
 																	action:@selector(toggleAccountEnabled:)
 															 keyEquivalent:@""
