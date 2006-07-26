@@ -50,6 +50,14 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_TABBAR_POSITION
 											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	} else if (sender == checkBox_overflowMenu) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
+											 forKey:KEY_TABBAR_USE_OVERFLOW
+											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	} else if (sender == checkBox_unreadMessageCount) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
+											 forKey:KEY_TABBAR_SHOW_UNREAD_COUNT
+											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	}
 }
 
@@ -59,6 +67,8 @@
 	NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     [autohide_tabBar setState:![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue]];
     [checkBox_allowInactiveClosing setState:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
+	[checkBox_overflowMenu setState:[[prefDict objectForKey:KEY_TABBAR_USE_OVERFLOW] boolValue]];
+	[checkBox_unreadMessageCount setState:[[prefDict objectForKey:KEY_TABBAR_SHOW_UNREAD_COUNT] boolValue]];
 	[popUp_orientation selectItemWithTag:[[prefDict objectForKey:KEY_TABBAR_POSITION] intValue]];
 }
 
