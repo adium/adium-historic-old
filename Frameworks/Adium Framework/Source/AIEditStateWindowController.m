@@ -25,7 +25,7 @@
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
-#import <Adium/AIMessageEntryTextView.h>
+#import "AIMessageEntryTextView.h"
 
 #define CONTROL_SPACING			8
 #define WINDOW_HEIGHT_PADDING	60

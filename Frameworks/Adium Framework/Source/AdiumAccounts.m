@@ -17,8 +17,8 @@
 #import "AdiumAccounts.h"
 #import "AIAccountController.h"
 #import "AIPreferenceController.h"
-#import <Adium/AIAccount.h>
-#import <Adium/AIService.h>
+#import "AIAccount.h"
+#import "AIService.h"
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 

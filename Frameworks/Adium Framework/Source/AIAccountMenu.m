@@ -20,7 +20,7 @@
 #import "AIStatusController.h"
 #import "AIStatusMenu.h"
 #import <AIUtilities/AIMenuAdditions.h>
-#import <Adium/AIAccount.h>
+#import "AIAccount.h"
 
 //Menu titles
 #define	ACCOUNT_CONNECT_ACTION_MENU_TITLE			AILocalizedStringFromTable(@"Connect: %@", @"AdiumFramework", "Connect account prefix")

@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on 12/23/05.
 //
 
-#import <Adium/AIWindowController.h>
+#import "AIWindowController.h"
 
 @interface AdiumDisconnectionErrorController : AIWindowController {
 

@@ -6,7 +6,7 @@
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import <Adium/AIWindowController.h>
+#import "AIWindowController.h"
 
 @interface ESOTRPrivateKeyGenerationWindowController : AIWindowController {
 	IBOutlet	NSProgressIndicator	*progressIndicator;

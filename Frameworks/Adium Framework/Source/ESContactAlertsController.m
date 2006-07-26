@@ -18,7 +18,7 @@
 #import "ESContactAlertsController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
-#import <Adium/AIListObject.h>
+#import "AIListObject.h"
 
 @interface ESContactAlertsController (PRIVATE)
 - (NSMutableArray *)appendEventsForObject:(AIListObject *)listObject eventID:(NSString *)eventID toArray:(NSMutableArray *)events;

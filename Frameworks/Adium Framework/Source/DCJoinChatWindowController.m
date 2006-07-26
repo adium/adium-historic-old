@@ -22,7 +22,7 @@
 #import "AIService.h"
 #import "DCJoinChatViewController.h"
 #import "DCJoinChatWindowController.h"
-#import <Adium/AIAccountMenu.h>
+#import "AIAccountMenu.h"
 
 #define JOIN_CHAT_NIB		@"JoinChatWindow"
 

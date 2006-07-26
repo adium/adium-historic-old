@@ -18,8 +18,8 @@
 #import "ESContactAlertsController.h"
 #import "AIChatController.h"
 #import "AIContentController.h"
-#import <Adium/AIChat.h>
-#import <Adium/AIListContact.h>
+#import "AIChat.h"
+#import "AIListContact.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 

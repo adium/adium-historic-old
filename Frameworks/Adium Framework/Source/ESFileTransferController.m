@@ -31,11 +31,11 @@
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIExceptionHandlingUtilities.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIListContact.h>
-#import <Adium/AIListObject.h>
-#import <Adium/ESFileTransfer.h>
-#import <Adium/AIWindowController.h>
+#import "AIAccount.h"
+#import "AIListContact.h"
+#import "AIListObject.h"
+#import "ESFileTransfer.h"
+#import "AIWindowController.h"
 
 #define SEND_FILE					AILocalizedString(@"Send File",nil)
 #define SEND_FILE_WITH_ELLIPSIS		[SEND_FILE stringByAppendingEllipsis]

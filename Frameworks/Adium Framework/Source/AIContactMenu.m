@@ -9,8 +9,8 @@
 #import "AIContactController.h"
 #import "AIContactMenu.h"
 #import <AIUtilities/AIMenuAdditions.h>
-#import <Adium/AIListContact.h>
-#import <Adium/AIListGroup.h>
+#import "AIListContact.h"
+#import "AIListGroup.h"
 
 @interface AIContactMenu (PRIVATE)
 - (id)initWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject;

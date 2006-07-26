@@ -23,8 +23,8 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
-#import <Adium/AIIconState.h>
-#import <Adium/IconFamily.h>
+#import "AIIconState.h"
+#import "IconFamily.h"
 
 #define DOCK_DEFAULT_PREFS			@"DockPrefs"
 #define ICON_DISPLAY_DELAY			0.1

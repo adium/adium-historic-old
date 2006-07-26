@@ -15,7 +15,7 @@
  */
 
 #import "ESFileTransferController.h"
-#import <Adium/AIObject.h>
+#import "AIObject.h"
 
 @class ESFileTransfer, ESFileTransferProgressView;
 @protocol FileTransferDelegate;

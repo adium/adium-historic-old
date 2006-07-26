@@ -16,12 +16,12 @@
 
 #import "AIAccountController.h"
 #import "AdiumPreferredAccounts.h"
-#import <Adium/AIAccount.h>
-#import <Adium/AIChat.h>
-#import <Adium/AIService.h>
-#import <Adium/AIContentObject.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIListContact.h>
+#import "AIAccount.h"
+#import "AIChat.h"
+#import "AIService.h"
+#import "AIContentObject.h"
+#import "AIListObject.h"
+#import "AIListContact.h"
 
 #define PREF_GROUP_PREFERRED_ACCOUNTS   @"Preferred Accounts"
 #define KEY_PREFERRED_SOURCE_ACCOUNT	@"Preferred Account"

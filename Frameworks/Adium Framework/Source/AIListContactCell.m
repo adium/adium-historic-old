@@ -19,8 +19,8 @@
 #import "AIListObject.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
-#import <Adium/AIServiceIcons.h>
-#import <Adium/AIUserIcons.h>
+#import "AIServiceIcons.h"
+#import "AIUserIcons.h"
 
 #define NAME_STATUS_PAD			6
 

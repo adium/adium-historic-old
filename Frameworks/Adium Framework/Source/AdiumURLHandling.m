@@ -24,9 +24,9 @@
 #import "ESTextAndButtonsWindowController.h"
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIURLAdditions.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIContentMessage.h>
-#import <Adium/AIService.h>
+#import "AIAccount.h"
+#import "AIContentMessage.h"
+#import "AIService.h"
 
 #define URLHandlingGroup @"URL Handling Group"
 #define DONTPROMPTFORURL @"Don't Prompt for URL"

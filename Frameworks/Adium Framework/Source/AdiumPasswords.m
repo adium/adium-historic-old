@@ -21,8 +21,8 @@
 #import "ESProxyPasswordPromptController.h"
 #import <AIUtilities/AIKeychain.h>
 #import <AIUtilities/AIObjectAdditions.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIService.h>
+#import "AIAccount.h"
+#import "AIService.h"
 
 @interface AdiumPasswords (PRIVATE)
 - (NSString *)_accountNameForAccount:(AIAccount *)inAccount;

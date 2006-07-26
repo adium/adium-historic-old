@@ -18,7 +18,7 @@
 #import "AIPreferenceController.h"
 #import "AdiumSound.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <Adium/QTSoundFilePlayer.h>
+#import "QTSoundFilePlayer.h"
 
 #define SOUND_DEFAULT_PREFS				@"SoundPrefs"
 #define MAX_CACHED_SOUNDS				4			//Max cached sounds

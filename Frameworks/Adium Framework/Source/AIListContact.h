@@ -15,7 +15,7 @@
  */
 
 #import "AIListObject.h"
-#import <Adium/AIAccount.h>
+#import "AIAccount.h"
 
 @class AIAccount, AIContentObject, AIListContact, AIListGroup;
 

@@ -11,13 +11,13 @@
 #import "SetupWizardBackgroundView.h"
 #import "GBFireImporter.h"
 #import <AIUtilities/AIImageAdditions.h>
-#import <Adium/AIServiceMenu.h>
-#import <Adium/AIService.h>
-#import <Adium/AIAccount.h>
+#import "AIServiceMenu.h"
+#import "AIService.h"
+#import "AIAccount.h"
 #import <AIUtilities/AITextFieldAdditions.h>
 #import <AIUtilities/AIStringFormatter.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
-#import <Adium/AIHTMLDecoder.h>
+#import "AIHTMLDecoder.h"
 
 #define ACCOUNT_SETUP_IDENTIFIER	@"account_setup"
 #define IMPORT_IDENTIFIER			@"import_client"

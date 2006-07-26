@@ -24,8 +24,8 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIPreferencePane.h>
+#import "AIListObject.h"
+#import "AIPreferencePane.h"
 
 #define PREFS_DEFAULT_PREFS 	@"PrefsPrefs.plist"
 #define TITLE_OPEN_PREFERENCES	AILocalizedString(@"Open Preferences",nil)

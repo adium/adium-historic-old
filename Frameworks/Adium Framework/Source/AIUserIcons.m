@@ -18,7 +18,7 @@
 #import "AIListObject.h"
 #import "AIUserIcons.h"
 #import <AIUtilities/AIImageAdditions.h>
-#import <Adium/AIServiceIcons.h>
+#import "AIServiceIcons.h"
 
 static NSMutableDictionary	*iconCache = nil;
 static NSMutableDictionary	*menuIconCache = nil;

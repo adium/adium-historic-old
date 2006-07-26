@@ -11,11 +11,11 @@
 #import "AIInterfaceController.h"
 #import "AIMenuController.h"
 #import "AdiumChatEvents.h"
-#import <Adium/AIAccount.h>
-#import <Adium/AIChat.h>
-#import <Adium/AIContentObject.h>
-#import <Adium/AIContentMessage.h>
-#import <Adium/AIMetaContact.h>
+#import "AIAccount.h"
+#import "AIChat.h"
+#import "AIContentObject.h"
+#import "AIContentMessage.h"
+#import "AIMetaContact.h"
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 
