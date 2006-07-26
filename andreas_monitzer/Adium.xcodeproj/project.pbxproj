@@ -1345,6 +1345,7 @@
 		815D32380A7518D7009338C2 /* ChatStateNotifications.java in Sources */ = {isa = PBXBuildFile; fileRef = 815D32370A7518D7009338C2 /* ChatStateNotifications.java */; };
 		815D357E0A7585EA009338C2 /* SmackXMPPVCardPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 815D357C0A7585EA009338C2 /* SmackXMPPVCardPlugin.h */; };
 		815D357F0A7585EA009338C2 /* SmackXMPPVCardPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 815D357D0A7585EA009338C2 /* SmackXMPPVCardPlugin.m */; };
+		815D37550A765E83009338C2 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D37460A765E83009338C2 /* CoreServices.framework */; };
 		815ECFBB0A6A56540024B6FE /* SmackXMPPRosterPluginListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 815ECFBA0A6A56530024B6FE /* SmackXMPPRosterPluginListener.java */; };
 		815ED1B50A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib in Resources */ = {isa = PBXBuildFile; fileRef = 815ED1B30A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib */; };
 		815ED2920A6C5AA00024B6FE /* SmackXMPPMUCChangeSubject.nib in Resources */ = {isa = PBXBuildFile; fileRef = 815ED2900A6C5A9F0024B6FE /* SmackXMPPMUCChangeSubject.nib */; };
@@ -3685,6 +3686,7 @@
 		815D32370A7518D7009338C2 /* ChatStateNotifications.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = ChatStateNotifications.java; path = "Plugins/Smack Service/ChatStateNotifications.java"; sourceTree = "<group>"; };
 		815D357C0A7585EA009338C2 /* SmackXMPPVCardPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPVCardPlugin.h; path = "Plugins/Smack Service/SmackXMPPVCardPlugin.h"; sourceTree = "<group>"; };
 		815D357D0A7585EA009338C2 /* SmackXMPPVCardPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPVCardPlugin.m; path = "Plugins/Smack Service/SmackXMPPVCardPlugin.m"; sourceTree = "<group>"; };
+		815D37460A765E83009338C2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		815ECFBA0A6A56530024B6FE /* SmackXMPPRosterPluginListener.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = SmackXMPPRosterPluginListener.java; path = "Plugins/Smack Service/SmackXMPPRosterPluginListener.java"; sourceTree = "<group>"; };
 		815ED1B40A6C4CD80024B6FE /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPMUCChangeNickname.nib"; sourceTree = "<group>"; };
 		815ED2910A6C5A9F0024B6FE /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPMUCChangeSubject.nib"; sourceTree = "<group>"; };
@@ -4184,6 +4186,7 @@
 				81F651740A291004008FC8E7 /* Adium.framework in Frameworks */,
 				81F651750A291004008FC8E7 /* AIUtilities.framework in Frameworks */,
 				81F651760A291004008FC8E7 /* JavaVM.framework in Frameworks */,
+				815D37550A765E83009338C2 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4332,6 +4335,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				815D37460A765E83009338C2 /* CoreServices.framework */,
 				638392F609D4D67A0067B9B7 /* Sparkle.framework */,
 				115E0E8D0952514A003218FE /* JavaVM.framework */,
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,

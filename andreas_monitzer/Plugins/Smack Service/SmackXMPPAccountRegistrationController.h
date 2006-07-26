@@ -28,6 +28,8 @@
     SmackXMPPConnection *connection;
     SmackXMPPAccountViewController *accountviewcontroller;
     SmackXMPPErrorMessagePlugin *errorPlugin;
+    
+    float longitude, latitude;
 }
 
 - (id)initWithAccountViewController:(SmackXMPPAccountViewController*)avc;
