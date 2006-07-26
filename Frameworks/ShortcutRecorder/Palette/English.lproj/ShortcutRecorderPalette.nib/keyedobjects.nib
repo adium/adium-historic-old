@@ -296,8 +296,8 @@
 			<integer>2</integer>
 		</dict>
 		<string>{{58, 68}, {150, 22}}</string>
-		<string>SRRecorderControl</string>
-		<string>NSControl</string>
+		<string>ShortcutRecorder</string>
+		<string>NSView</string>
 		<dict>
 			<key>$classes</key>
 			<array>
@@ -330,7 +330,7 @@
 			<key>$classname</key>
 			<string>NSView</string>
 		</dict>
-		<string>{{0, 0}, {1280, 1002}}</string>
+		<string>{{0, 0}, {1344, 986}}</string>
 		<dict>
 			<key>$classes</key>
 			<array>
@@ -388,11 +388,11 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>10</integer>
+					<integer>17</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>17</integer>
+					<integer>10</integer>
 				</dict>
 			</array>
 		</dict>
@@ -419,11 +419,11 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>2</integer>
+					<integer>15</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>15</integer>
+					<integer>2</integer>
 				</dict>
 			</array>
 		</dict>
@@ -441,11 +441,11 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>10</integer>
+					<integer>17</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>17</integer>
+					<integer>10</integer>
 				</dict>
 			</array>
 		</dict>
@@ -472,8 +472,8 @@
 			</array>
 		</dict>
 		<string>File's Owner</string>
-		<string>Palette Window</string>
 		<string>View</string>
+		<string>Palette Window</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -502,6 +502,18 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
+					<integer>15</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>9</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
 					<integer>2</integer>
 				</dict>
 				<dict>
@@ -510,19 +522,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>9</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>15</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>17</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
 				</dict>
 			</array>
 		</dict>
@@ -560,12 +560,12 @@
 				</dict>
 			</array>
 		</dict>
+		<integer>3</integer>
+		<integer>2</integer>
+		<integer>13</integer>
 		<integer>1</integer>
 		<integer>14</integer>
-		<integer>13</integer>
-		<integer>3</integer>
 		<integer>12</integer>
-		<integer>2</integer>
 		<dict>
 			<key>$class</key>
 			<dict>
