@@ -9,12 +9,21 @@
 #import <Cocoa/Cocoa.h>
 #import "AIObject.h"
 
-@class SmackXMPPAccount;
+@class SmackXMPPAccount, SmackXVCard;
 
 @interface SmackXMPPVCardPlugin : AIObject {
     SmackXMPPAccount *account;
+    
+    IBOutlet NSWindow *editorwindow;
+    IBOutlet NSTextField *fullnameField;
+    
+    SmackXVCard *vCardPacket;
+    NSMutableDictionary *ownvCard;
 }
 
 - (id)initWithAccount:(SmackXMPPAccount*)a;
+
+- (IBAction)reloadvCard:(id)sender;
+- (IBAction)savevCard:(id)sender;
 
 @end

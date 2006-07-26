@@ -834,8 +834,8 @@
 - (void)setAddressFieldHome:(NSString*)addrField :(NSString*)value;
 - (void)setAddressFieldWork:(NSString*)addrField :(NSString*)value;
 - (void)setAvatar:(id)bytes; // byte[]
-- (void)getEmailHome:(NSString*)email;
-- (void)getEmailWork:(NSString*)emailWork;
+- (void)setEmailHome:(NSString*)email;
+- (void)setEmailWork:(NSString*)emailWork;
 - (void)setEncodedImage:(NSString*)encodedAvatar;
 - (void)setField:(NSString*)field :(NSString*)value;
 - (void)setField:(NSString*)field :(NSString*)value :(BOOL)isUnescapable;

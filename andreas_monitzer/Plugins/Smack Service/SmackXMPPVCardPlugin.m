@@ -13,6 +13,7 @@
 #import "SmackCocoaAdapter.h"
 #import "SmackInterfaceDefinitions.h"
 #import "AIListContact.h"
+#import "AIInterfaceController.h"
 
 @interface SmackCocoaAdapter (vCardPlugin)
 
@@ -57,6 +58,14 @@
                                                    object:account];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [editorwindow release];
+    [ownvCard release];
+    [vCardPacket release];
+    [super dealloc];
 }
 
 // since getting the vCard is a synchronous API, we have to move to a secondary thread, get the vCard, and then move back
@@ -133,12 +142,17 @@
     [NSXMLNode elementWithName:@"td" stringValue:content], nil] attributes:nil]]
     
     // NICKNAME, PHOTO, BDAY, JABBERID, MAILER, TZ, GEO, TITLE, ROLE, LOGO, NOTE, PRODID, REV, SORT-STRING, SOUND, UID, URL, DESC
-    row(AILocalizedString(@"First Name","vCard First Name"),[vCard getFirstName]);
+/*    row(AILocalizedString(@"First Name","vCard First Name"),[vCard getFirstName]);
     row(AILocalizedString(@"Middle Name","vCard Middle Name"),[vCard getMiddleName]);
-    row(AILocalizedString(@"Last Name","vCard Last Name"),[vCard getLastName]);
+    row(AILocalizedString(@"Last Name","vCard Last Name"),[vCard getLastName]);*/
+    row(AILocalizedString(@"Full Name","vCard Full Name"),[vCard getField:@"FN"]);
     row(AILocalizedString(@"Title","vCard Title"),[vCard getField:@"TITLE"]);
     row(AILocalizedString(@"Nickname","vCard Nickname"),[vCard getNickName]);
     row(AILocalizedString(@"Birthday","vCard Birthday"),[vCard getField:@"BDAY"]);
+    row(AILocalizedString(@"Phone (Home)","vCard Phone Home"),[vCard getPhoneHome:@"VOICE"]);
+    row(AILocalizedString(@"Phone (Work)","vCard Phone Word"),[vCard getPhoneWork:@"VOICE"]);
+    row(AILocalizedString(@"Email (Home)","vCard email Home"),[vCard getEmailHome]);
+    row(AILocalizedString(@"Email (Work)","vCard email Word"),[vCard getEmailWork]);
     row(AILocalizedString(@"Organization","vCard Organization"),[vCard getOrganization]);
     row(AILocalizedString(@"Organization Unit","vCard Organization Unit"),[vCard getOrganizationUnit]);
     
@@ -179,6 +193,91 @@
                                                        documentAttributes:NULL];
     [inContact setProfile:result notify:NotifyNow];
     [result release];
+}
+
+- (NSArray *)accountActionMenuItems
+{
+    NSMutableArray *menuItems = [NSMutableArray array];
+    
+    NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Edit Own vCard...","Edit Own vCard...") action:@selector(editvCard:) keyEquivalent:@""];
+    [mitem setTarget:self];
+    [menuItems addObject:mitem];
+    [mitem release];
+    
+    return menuItems;
+}
+
+- (void)editvCard:(NSMenuItem*)sender
+{
+    if(!editorwindow)
+        [NSBundle loadNibNamed:@"SmackXMPPVCardEditor" owner:self];
+    if(!editorwindow)
+    {
+        NSBeep();
+        NSLog(@"Error loading SmackXMPPVCardEditor.nib!");
+        return;
+    }
+    
+    if(!ownvCard)
+        [self reloadvCard:nil];
+    [editorwindow makeKeyAndOrderFront:nil];
+}
+
+- (IBAction)reloadvCard:(id)sender
+{
+    vCardPacket = [[SmackCocoaAdapter vCard] retain];
+    
+    @try {
+        [vCardPacket load:[account connection]];
+    } @catch(NSException *e) {
+        [[adium interfaceController] handleErrorMessage:AILocalizedString(@"Error Loading vCard","Error Loading vCard") withDescription:[e reason]];
+        return;
+    }
+    
+    [editorwindow makeFirstResponder:nil];
+    [self willChangeValueForKey:@"ownvCard"];
+    [ownvCard release];
+    ownvCard = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+/*                  ([vCardPacket getFirstName]?[vCardPacket getFirstName]:@""), @"firstName",
+                ([vCardPacket getMiddleName]?[vCardPacket getMiddleName]:@""), @"middleName",
+                    ([vCardPacket getLastName]?[vCardPacket getLastName]:@""), @"lastName",*/
+              ([vCardPacket getField:@"FN"]?[vCardPacket getField:@"FN"]:@""), @"fullName",
+        ([vCardPacket getField:@"TITLE"]?[vCardPacket getField:@"TITLE"]:@""), @"title",
+                    ([vCardPacket getNickName]?[vCardPacket getNickName]:@""), @"nickName",
+                  ([vCardPacket getEmailWork]?[vCardPacket getEmailWork]:@""), @"emailWork",
+                  ([vCardPacket getEmailHome]?[vCardPacket getEmailHome]:@""), @"emailHome",
+         ([vCardPacket getEmailHome]?[vCardPacket getPhoneHome:@"VOICE"]:@""), @"phoneHome",
+         ([vCardPacket getEmailHome]?[vCardPacket getPhoneWork:@"VOICE"]:@""), @"phoneWork",
+            ([vCardPacket getOrganization]?[vCardPacket getOrganization]:@""), @"organization",
+    ([vCardPacket getOrganizationUnit]?[vCardPacket getOrganizationUnit]:@""), @"organizationUnit",
+          ([vCardPacket getField:@"DESC"]?[vCardPacket getField:@"DESC"]:@""), @"description",
+          ([vCardPacket getField:@"NOTE"]?[vCardPacket getField:@"NOTE"]:@""), @"notes",
+        ([vCardPacket getField:@"BDAY"]?[NSCalendarDate dateWithString:[vCardPacket getField:@"BDAY"] calendarFormat:@"%Y-%m-%d"]:nil), @"birthday",
+        nil];
+    [self didChangeValueForKey:@"ownvCard"];
+    [editorwindow makeFirstResponder:fullnameField];
+}
+
+- (IBAction)savevCard:(id)sender
+{
+    [editorwindow makeFirstResponder:nil];
+    
+    [vCardPacket setField:@"FN" :[ownvCard objectForKey:@"fullName"]];
+    [vCardPacket setField:@"TITLE" :[ownvCard objectForKey:@"title"]];
+    [vCardPacket setNickName:[ownvCard objectForKey:@"nickName"]];
+    [vCardPacket setEmailWork:[ownvCard objectForKey:@"emailWork"]];
+    [vCardPacket setEmailHome:[ownvCard objectForKey:@"emailHome"]];
+    [vCardPacket setPhoneWork:@"VOICE" :[ownvCard objectForKey:@"phoneWork"]];
+    [vCardPacket setPhoneHome:@"VOICE" :[ownvCard objectForKey:@"phoneHome"]];
+    [vCardPacket setOrganization:[ownvCard objectForKey:@"organization"]];
+    [vCardPacket setOrganizationUnit:[ownvCard objectForKey:@"organizationUnit"]];
+    [vCardPacket setField:@"DESC" :[ownvCard objectForKey:@"description"]];
+    [vCardPacket setField:@"NOTE" :[ownvCard objectForKey:@"notes"]];
+    if([[ownvCard objectForKey:@"birthday"] timeIntervalSinceReferenceDate] != 0)
+        [vCardPacket setField:@"BDAY" :[[ownvCard objectForKey:@"birthday"] descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]];
+    [vCardPacket save:[account connection]];
+
+    [editorwindow orderOut:nil];
 }
 
 - (void)receivedPresencePacket:(NSNotification*)notification
