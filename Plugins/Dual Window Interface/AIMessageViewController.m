@@ -422,11 +422,16 @@
 /*!
  * @brief Offline messaging
  */
-//XXX - Offline messaging code SHOULD NOT BE IN HERE! -ai
 - (IBAction)sendMessageLater:(id)sender
 {
 	AIListContact	*listContact;
-	
+
+	//If the chat can _now_ send a message, send it immediately instead of waiting for "later".
+	if ([chat canSendMessages]) {
+		[self sendMessage:sender];
+		return;
+	}
+
 	//Put the alert on the metaContact containing this listContact if applicable
 	listContact = [[chat listObject] parentContact];
 
