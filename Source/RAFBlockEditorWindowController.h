@@ -19,6 +19,9 @@
 	IBOutlet AICompletingTextField		*field;
 	IBOutlet NSButton			*blockButton;
 	IBOutlet NSButton			*cancelButton;
+	IBOutlet NSTextField		*label_account;
+	IBOutlet NSTextField		*label_privacyLevel;
+	
 	IBOutlet NSTextField		*accountText;
 	IBOutlet NSTextField		*buddyText;
 	IBOutlet NSTableColumn		*buddyCol;
