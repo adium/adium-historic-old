@@ -112,8 +112,9 @@
  */
 - (void)dealloc
 {
-	[openChats release];
+	[openChats release]; openChats = nil;
 	[chatObserverArray release]; chatObserverArray = nil;
+	[[adium notificationCenter] removeObserver:self];
 
 	[super dealloc];
 }
