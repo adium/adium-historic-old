@@ -23,7 +23,7 @@
 #define		KEY_PASSWORD_WINDOW_FRAME	@"Password Prompt Frame"
 
 @implementation AIPasswordPromptController
-
+#warning Move to adium.framework
 - (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
     if ((self = [super initWithWindowNibName:windowNibName])) {

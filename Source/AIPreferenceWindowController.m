@@ -50,6 +50,8 @@
 
 static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 
+#warning move to adium.framework
+
 /*!
  * @class AIPreferenceWindowController
  * @brief Adium preference window controller
@@ -148,7 +150,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 
 	//Configure window
 	[[self window] setTitle:PREFERENCE_WINDOW_TITLE];
-	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSMakeRect(0,0,0,0)];
+	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSZeroRect];
 	[self _configureAdvancedPreferencesTable];
 	[[self window] betterCenter];
 
