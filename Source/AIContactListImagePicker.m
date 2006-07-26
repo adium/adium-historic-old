@@ -8,7 +8,7 @@
 
 #import "AIContactListImagePicker.h"
 #import <Adium/AIAccount.h>
-#import <Adium/AIAdium.h>
+#import <AIAdium.h>
 #import "AIAccountController.h"
 #import "AIContactController.h"
 #import "AIContactListRecentImagesWindowController.h"
