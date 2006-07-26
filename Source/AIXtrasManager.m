@@ -148,6 +148,12 @@ static AIXtrasManager * manager;
 	
 	[categoryNames addObject:@"Scripts"];
 	[categoryImages addObject:[NSImage imageNamed:@"AdiumScripts"]];
+	
+	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIServiceIconsDirectory]
+													  forKey:@"Directory"]];
+	
+	[categoryNames addObject:@"Service Icons"];
+	[categoryImages addObject:[NSImage imageNamed:@"AdiumServiceIcons"]];
 }
 
 - (NSArray *)arrayOfXtrasAtPaths:(NSArray *)paths
@@ -233,6 +239,9 @@ static AIXtrasManager * manager;
 			[NSBundle loadNibNamed:@"WebkitMessageStylePreviewView" owner:self];
 			else if ([xtraType isEqualToString:AIXtraTypeStatusIcons]) {
 				[NSBundle loadNibNamed:@"StatusIconPreviewView" owner:self];
+			}
+			else if ([xtraType isEqualToString:AIXtraTypeServiceIcons]) {
+				[NSBundle loadNibNamed:@"ServiceIconPreviewView" owner:self];
 			}
 			else { //catchall behavior is to just show the readme
 				[NSBundle loadNibNamed:@"XtraInfoView" owner:self];

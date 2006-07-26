@@ -26,6 +26,7 @@
 #define AIXtraTypeMessageStyle		@"adiummessagestyle"
 #define AIXtraTypeListTheme			@"listtheme"
 #define AIXtraTypeListLayout		@"listlayout"
+#define AIXtraTypeServiceIcons		@"adiumserviceicons"
 
 @interface AIXtrasManager : AIPlugin {
 	NSMutableDictionary						*disabledXtras;
