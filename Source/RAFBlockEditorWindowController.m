@@ -51,12 +51,15 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 - (void)windowDidLoad
 {
 	[[self window] setTitle:BLOCK_EDITOR_TITLE];
-	[cancelButton setTitle:BLOCK_CANCEL];
-	[blockButton setTitle:BLOCK_BLOCK];
-	[accountText setStringValue:BLOCK_ACCOUNT];
+	[cancelButton setLocalizedString:BLOCK_CANCEL];
+	[blockButton setLocalizedString:BLOCK_BLOCK];
+	[accountText setLocalizedString:BLOCK_ACCOUNT];
 	[[buddyCol headerCell] setTitle:BLOCK_BUDDY_COL];
 	[[accountCol headerCell] setTitle:BLOCK_ACCOUNT_COL];
 
+	[label_account setLocalizedString:BLOCK_ACCOUNT];
+	[label_privacyLevel setLocalizedString:AILocalizedString(@"Privacy level:", nil)];
+		
 	accountColumnsVisible = YES;
 	[accountCol retain];
 
