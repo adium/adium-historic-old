@@ -62,7 +62,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 
 		//Edit, right justified and far enough away from Remove that it can't conceivably overlap
 		oldFrame = [button_edit frame];
-		[button_edit setTitle:AILocalizedStringFromTable(@"Edit", @"AdiumFramework", nil)];
+		[button_edit setTitle:AILocalizedString(@"Edit", nil)];
 		[button_edit sizeToFit];
 		newFrame = [button_edit frame];
 		if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
@@ -70,9 +70,9 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 		[button_edit setFrame:newFrame];
 	}
 	
-	[button_add setToolTip:AILocalizedStringFromTable(@"Add an action for the selected event", @"AdiumFramework", nil)];
-	[button_delete setToolTip:AILocalizedStringFromTable(@"Remove the selected action(s)", @"AdiumFramework", nil)];
-	[button_edit setToolTip:AILocalizedStringFromTable(@"Configure the selected action", @"AdiumFramework", nil)];
+	[button_add setToolTip:AILocalizedString(@"Add an action for the selected event", nil)];
+	[button_delete setToolTip:AILocalizedString(@"Remove the selected action(s)", nil)];
+	[button_edit setToolTip:AILocalizedString(@"Configure the selected action", nil)];
 
 	//Update enable state of our buttons
 	[self outlineViewSelectionDidChange:nil];
@@ -206,16 +206,16 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 			
 			if (contactEventsCount > 1) {
 				//Warn before deleting more than one event simultaneously
-				NSBeginAlertSheet(AILocalizedStringFromTable(@"Delete Event?", @"AdiumFramework", nil),
-								  AILocalizedStringFromTable(@"OK", @"AdiumFramework", nil),
-								  AILocalizedStringFromTable(@"Cancel", @"AdiumFramework", nil),
+				NSBeginAlertSheet(AILocalizedString(@"Delete Event?", nil),
+								  AILocalizedString(@"OK", nil),
+								  AILocalizedString(@"Cancel", nil),
 								  nil, /*otherButton*/
 								  [view window],
 								  self,
 								  @selector(sheetDidEnd:returnCode:contextInfo:),
 								  NULL, /* didDismissSelector */
 								  contactEvents,
-								  AILocalizedStringFromTable(@"Remove the %i actions associated with this event?", @"AdiumFramework", nil), contactEventsCount);
+								  AILocalizedString(@"Remove the %i actions associated with this event?", nil), contactEventsCount);
 			} else {
 				//Delete a single event immediately
 				[self deleteContactActionsInArray:contactEvents];
@@ -528,7 +528,7 @@ int actionSort(id objectA, id objectB, void *context)
 							
 							//If we are on the last action, we'll want to add a conjunction to finish the compound sentence
 							if (i == (count - 1)) {
-								conjunctionIfNeeded = AILocalizedStringFromTable(@" and", @"AdiumFramework", "conjunction to end a compound sentence");
+								conjunctionIfNeeded = AILocalizedString(@" and", "conjunction to end a compound sentence");
 							} else {
 								conjunctionIfNeeded = @"";
 							}

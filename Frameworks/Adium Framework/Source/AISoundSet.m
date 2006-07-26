@@ -152,8 +152,8 @@
 				   toPath:[newFolder stringByAppendingPathComponent:[inPath lastPathComponent]]
 				  handler:nil];
 
-			NSRunAlertPanel(AILocalizedStringFromTable(@"Sound set upgrade failed", @"AdiumFramework", nil),
-							[NSString stringWithFormat:AILocalizedStringFromTable(@"This version of Adium uses a new format for sound sets. Adium was not able to update the sound set %@ located at %@. It has been disabled.", @"AdiumFramework", nil),
+			NSRunAlertPanel(AILocalizedString(@"Sound set upgrade failed", nil),
+							[NSString stringWithFormat:AILocalizedString(@"This version of Adium uses a new format for sound sets. Adium was not able to update the sound set %@ located at %@. It has been disabled.", nil),
 								[[inPath lastPathComponent] stringByDeletingPathExtension],
 								inPath],
 							nil, nil, nil);
@@ -193,8 +193,8 @@
 			}
 			
 		} else {
-			NSRunAlertPanel(AILocalizedStringFromTable(@"Cannot open sound set", @"AdiumFramework", nil),
-							AILocalizedStringFromTable(@"The sound set %@ is version %i, and this version of Adium does not know how to handle that; perhaps try a later version of Adium.", @"AdiumFramework", nil),
+			NSRunAlertPanel(AILocalizedString(@"Cannot open sound set", nil),
+							AILocalizedString(@"The sound set %@ is version %i, and this version of Adium does not know how to handle that; perhaps try a later version of Adium.", nil),
 							/*defaultButton*/ nil, /*alternateButton*/ nil, /*otherButton*/ nil,
 							[soundPlistPath lastPathComponent], version);
 			

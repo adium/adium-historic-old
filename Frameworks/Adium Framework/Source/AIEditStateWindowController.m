@@ -561,10 +561,10 @@ static	NSMutableDictionary	*controllerDict = nil;
 		if (description) {
 			[popUp_state setTitle:[NSString stringWithFormat:@"%@ (%@)",
 				description,
-				AILocalizedStringFromTable(@"No compatible accounts connected", @"AdiumFramework", nil)]];
+				AILocalizedString(@"No compatible accounts connected", nil)]];
 
 		} else {
-			[popUp_state setTitle:AILocalizedStringFromTable(@"Unknown", @"AdiumFramework", nil)];			
+			[popUp_state setTitle:AILocalizedString(@"Unknown", nil)];			
 		}
 
 		needToRebuildPopUpState = YES;

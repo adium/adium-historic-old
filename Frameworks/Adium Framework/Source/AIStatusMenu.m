@@ -19,7 +19,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
-#define STATUS_TITLE_CUSTOM			[AILocalizedStringFromTable(@"Custom", @"AdiumFramework",nil) stringByAppendingEllipsis]
+#define STATUS_TITLE_CUSTOM			[AILocalizedString(@"Custom", nil) stringByAppendingEllipsis]
 #define STATE_TITLE_MENU_LENGTH		30
 
 @interface AIStatusMenu (PRIVATE)

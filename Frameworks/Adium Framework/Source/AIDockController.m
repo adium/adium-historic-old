@@ -19,7 +19,6 @@
 #import "AIDockController.h"
 #import "AIInterfaceController.h"
 #import "AIPreferenceController.h"
-#import "ESDebugController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>

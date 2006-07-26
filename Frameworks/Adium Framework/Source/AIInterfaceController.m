@@ -22,7 +22,6 @@
 #import "AIInterfaceController.h"
 #import "AIMenuController.h"
 #import "AIPreferenceController.h"
-#import "AIStandardListWindowController.h"
 #import "AdiumDisconnectionErrorController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>

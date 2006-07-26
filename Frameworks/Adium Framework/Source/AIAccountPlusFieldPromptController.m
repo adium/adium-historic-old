@@ -128,7 +128,7 @@
 - (void)windowDidLoad
 {
 	//Controls
-	[button_cancel setLocalizedString:AILocalizedStringFromTable(@"Cancel", @"AdiumFramework", nil)];
+	[button_cancel setLocalizedString:AILocalizedString(@"Cancel", nil)];
 	[textField_handle setMinStringLength:2];
 	
 	//Account menu

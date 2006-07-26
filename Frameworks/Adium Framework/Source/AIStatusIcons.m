@@ -170,12 +170,12 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 						NSString	*errorMessage;
 						
 						errorMessage = [NSString stringWithFormat:
-							AILocalizedStringFromTable(@"The active status icon pack \"%@\" installed at \"%@\" is invalid.  It is missing the required status icon \"%@\".  If you received this pack from adiumxtras.com, please contact its author. Your status icon setting will be restored to the default.", @"AdiumFramework", nil),
+							AILocalizedString(@"The active status icon pack \"%@\" installed at \"%@\" is invalid.  It is missing the required status icon \"%@\".  If you received this pack from adiumxtras.com, please contact its author. Your status icon setting will be restored to the default.", nil),
 							[[statusIconBasePath lastPathComponent] stringByDeletingPathExtension],
 							statusIconBasePath,
 							defaultStatusName];
 						
-						NSRunCriticalAlertPanel(AILocalizedStringFromTable(@"Invalid status icon pack", @"AdiumFramework", nil),errorMessage,nil,nil,nil);
+						NSRunCriticalAlertPanel(AILocalizedString(@"Invalid status icon pack", nil),errorMessage,nil,nil,nil);
 						
 						//Post a notification so someone, somewhere can fix us :)
 						[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIStatusIconSetInvalidSetNotification

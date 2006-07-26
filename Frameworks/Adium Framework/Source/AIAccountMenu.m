@@ -23,15 +23,15 @@
 #import "AIAccount.h"
 
 //Menu titles
-#define	ACCOUNT_CONNECT_ACTION_MENU_TITLE			AILocalizedStringFromTable(@"Connect: %@", @"AdiumFramework", "Connect account prefix")
-#define	ACCOUNT_DISCONNECT_ACTION_MENU_TITLE		AILocalizedStringFromTable(@"Disconnect: %@", @"AdiumFramework", "Disconnect account prefix")
-#define	ACCOUNT_CONNECTING_ACTION_MENU_TITLE		AILocalizedStringFromTable(@"Cancel: %@", @"AdiumFramework", "Cancel current account activity prefix")
+#define	ACCOUNT_CONNECT_ACTION_MENU_TITLE			AILocalizedString(@"Connect: %@", "Connect account prefix")
+#define	ACCOUNT_DISCONNECT_ACTION_MENU_TITLE		AILocalizedString(@"Disconnect: %@", "Disconnect account prefix")
+#define	ACCOUNT_CONNECTING_ACTION_MENU_TITLE		AILocalizedString(@"Cancel: %@", "Cancel current account activity prefix")
 #define	ACCOUNT_DISCONNECTING_ACTION_MENU_TITLE		ACCOUNT_CONNECTING_ACTION_MENU_TITLE
-#define ACCOUNT_ENABLE_ACTION_MENU_TITLE			AILocalizedStringFromTable(@"Enable %@", @"AdiumFramework", "Enable account prefix")
+#define ACCOUNT_ENABLE_ACTION_MENU_TITLE			AILocalizedString(@"Enable %@", "Enable account prefix")
 
-#define ACCOUNT_CONNECT_PARENS_MENU_TITLE			AILocalizedStringFromTable(@"%@ (Connecting)", @"AdiumFramework", "Account Name (Connecting) - shown for an account while it is connecting")
+#define ACCOUNT_CONNECT_PARENS_MENU_TITLE			AILocalizedString(@"%@ (Connecting)", "Account Name (Connecting) - shown for an account while it is connecting")
 
-#define NEW_ACCOUNT_DISPLAY_TEXT			AILocalizedStringFromTable(@"<New Account>", @"AdiumFramework", "Placeholder displayed as the name of a new account")
+#define NEW_ACCOUNT_DISPLAY_TEXT			AILocalizedString(@"<New Account>", "Placeholder displayed as the name of a new account")
 
 @interface AIAccountMenu (PRIVATE)
 - (id)initWithDelegate:(id)inDelegate
@@ -369,7 +369,7 @@
 	NSMenu		*actionsSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
 	NSMenuItem	*menuItem;
 
-	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedStringFromTable(@"Edit Account", @"AdiumFramework", nil)
+	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Edit Account", nil)
 																	target:self
 																	action:@selector(editAccount:)
 															 keyEquivalent:@""
@@ -393,7 +393,7 @@
 		[actionsSubmenu addItem:[NSMenuItem separatorItem]];
 	}
 	
-	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedStringFromTable(@"Disable", @"AdiumFramework", nil)
+	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Disable", nil)
 																	target:self
 																	action:@selector(toggleAccountEnabled:)
 															 keyEquivalent:@""
