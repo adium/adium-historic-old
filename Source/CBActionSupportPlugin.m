@@ -94,7 +94,7 @@
 			lineRange.length -= lineRange.location;
 			
 			searchRange = NSMakeRange(lineRange.location, endInsertPoint - lineRange.location);
-			meRange = [str rangeOfString:@"/me " options:NSLiteralSearch range:searchRange];
+			meRange = [str rangeOfString:@"/me " options:(NSLiteralSearch | NSCaseInsensitiveSearch) range:searchRange];
 			
 			if (meRange.location == lineRange.location && meRange.length == 4) {
 				NSAttributedString *endSplat = [[NSAttributedString alloc] initWithString:endReplacement 
