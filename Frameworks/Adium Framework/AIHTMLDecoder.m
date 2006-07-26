@@ -852,8 +852,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				[attributeNamesStack removeObjectsInRange:popRange];
 				[elementStack removeObjectsInRange:popRange];
 
+				//Push a new element to restore any attributes that haven't ended.
+				//If no attributes need to be restored, then we do nothing.
+				//If there are attributes to be restored but they're not in the attributes dictionary, then they have in fact ended, and are thus excluded from restoration by the call to -dictionaryWithIntersectionWithSetOfKeys:.
 				if (attributesToRestore && [attributesToRestore count]) {
-					//Create a method to generate an element for a set of AppKit attributes. Use it both here and below.
 					AIXMLElement *restoreElement = [self elementWithAppKitAttributes:[attributes dictionaryWithIntersectionWithSetOfKeys:attributesToRestore]
 					                                                  attributeNames:attributesToRestore
 					                                                  elementContent:nil
