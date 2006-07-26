@@ -57,7 +57,10 @@
 	[super windowDidLoad];
 
 	[textField_header setStringValue:AILocalizedString(@"Authorization Requested",nil)];
-	
+	[checkBox_addToList setLocalizedString:AILocalizedString(@"Add to my Contact List", "Checkbox in the Authorizatoin Request window to add the contact to the contact list if authorization is granted")]; 
+	[button_authorize setLocalizedString:AILocalizedString(@"Authorize", nil)];
+	[button_deny setLocalizedString:AILocalizedString(@"Deny", nil)];
+
 	if ([infoDict objectForKey:@"Reason"]) {
 		message = [NSString stringWithFormat:
 			AILocalizedString(@"The contact %@ wants to add %@ to his or her contact list for the following reason:\n%@",nil),
