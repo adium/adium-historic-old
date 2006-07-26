@@ -5,7 +5,7 @@
 //  Created by Adam Iser on 5/19/05.
 //
 
-#import <Adium/AIObject.h>
+#import "AIObject.h"
 
 @interface AIServiceMenu : AIObject {
 

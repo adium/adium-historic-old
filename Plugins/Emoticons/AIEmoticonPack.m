@@ -47,6 +47,8 @@
 - (NSString *)_stringWithMacEndlines:(NSString *)inString;
 @end
 
+#warning move to adium.framework
+
 @implementation AIEmoticonPack
 
 //Create a new emoticon pack
