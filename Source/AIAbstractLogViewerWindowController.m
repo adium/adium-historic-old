@@ -2213,7 +2213,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 			[tableView_results selectRowIndexes:[NSIndexSet indexSetWithIndex:firstIndex]
 						   byExtendingSelection:NO];
 		} else {
-			if (numberOfRows) {
+			if (numberOfRows)
 				[tableView_results selectRowIndexes:[NSIndexSet indexSetWithIndex:(numberOfRows-1)]
 							   byExtendingSelection:NO];			
 		}
