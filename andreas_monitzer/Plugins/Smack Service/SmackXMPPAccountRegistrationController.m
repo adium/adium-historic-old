@@ -19,9 +19,42 @@
 #import "AIInterfaceController.h"
 #import "ESDebugAILog.h"
 
+#import <CoreServices/CoreServices.h>
+
 #import "ruli/ruli.h"
 
-#define SERVERLISTURL @"http://www.jabber.org/servers.xml"
+#define SERVERLISTURL @"http://www.xmpp.net/bycountry.shtml"
+#define SERVERLISTTRANFORM [ \
+@"<?xml version='1.0' encoding='utf-8'?>" \
+@"<xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'" \
+@"                              xmlns:g='http://jabber.org/protocol/geoloc'" \
+@"                              xmlns:o='jabber:x:oob'" \
+@"                              xmlns='http://jabber.org/protocol/disco#items'>" \
+ \
+@"<xsl:output method='xml' version='1.0' encoding='utf-8' indent='no'/>" \
+ \
+@"<xsl:template match='/'>" \
+@"<query>" \
+@"<xsl:for-each select='html//table'>" \
+@"	<xsl:for-each select='tr'>" \
+@"		<xsl:if test='td[2]/a != \"\"'>" \
+@"		<item>" \
+@"			<xsl:attribute name='jid'><xsl:value-of select='td[2]/a'/></xsl:attribute>" \
+@"			<o:x><o:url><xsl:value-of select='td[2]/a/@href'/></o:url></o:x>" \
+@"			<g:geoloc>" \
+@"				<g:description><xsl:value-of select='td[1]'/></g:description>" \
+@"				<g:lat><xsl:value-of select='td[3]'/></g:lat>" \
+@"				<g:lon><xsl:value-of select='td[4]'/></g:lon>" \
+@"			</g:geoloc>" \
+@"		</item>" \
+@"		</xsl:if>" \
+@"	</xsl:for-each>" \
+@"</xsl:for-each>" \
+@"</query>" \
+@"</xsl:template>" \
+ \
+@"</xsl:stylesheet>" dataUsingEncoding:NSUTF8StringEncoding]
+
 
 @implementation SmackXMPPAccountRegistrationController
 
@@ -31,9 +64,18 @@
     {
         accountviewcontroller = avc;
         
+        MachineLocation loc;
+        ReadLocation(&loc);
+        
+        latitude = FractToFloat(loc.latitude)*(M_PI/2.0f);
+        longitude = FractToFloat(loc.longitude)*(M_PI/2.0f);
+        
         NSURL *sourceURL = [NSURL URLWithString:SERVERLISTURL];
         NSError *error;
-        serverlist = [[NSXMLDocument alloc] initWithContentsOfURL:sourceURL options:NSXMLDocumentTidyXML error:&error];
+        NSXMLDocument *serverhtml = [[NSXMLDocument alloc] initWithContentsOfURL:sourceURL options:NSXMLDocumentTidyXML error:&error];
+        if(serverhtml)
+            serverlist = [[serverhtml objectByApplyingXSLT:SERVERLISTTRANFORM arguments:[NSDictionary dictionary] error:&error] retain];
+        [serverhtml release];
         
         if(!serverlist)
         {
@@ -74,6 +116,8 @@
     [self autorelease];
 }
 
+#pragma mark tableview
+
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
     return [[serverlist_root elementsForName:@"item"] count];
@@ -81,6 +125,36 @@
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
+    if([[tableColumn identifier] isEqualToString:@"distance"]) {
+        float latitude2, longitude2;
+        
+        NSXMLElement *item = [[serverlist_root elementsForName:@"item"] objectAtIndex:row];
+        NSXMLElement *geoloc = [[item elementsForLocalName:@"geoloc" URI:@"http://jabber.org/protocol/geoloc"] lastObject];
+        
+        if(!geoloc)
+            return AILocalizedString(@"N/A","N/A");
+        
+        NSString *latstr = [[[geoloc elementsForLocalName:@"lat" URI:@"http://jabber.org/protocol/geoloc"] lastObject] stringValue];
+        if(!latstr)
+            return AILocalizedString(@"N/A","N/A");
+        NSString *lonstr = [[[geoloc elementsForLocalName:@"lon" URI:@"http://jabber.org/protocol/geoloc"] lastObject] stringValue];
+        if(!lonstr)
+            return AILocalizedString(@"N/A","N/A");
+        
+        // Calculate the distance between the computer and the xmpp server in km
+        // Note that this assumes that the earth is a perfect sphere
+        // If it turns out to be flat or doughnut-shaped, this will not work!
+        
+        latitude2 = [latstr floatValue] * (M_PI/180.0f);
+        longitude2 = [lonstr floatValue] * (M_PI/180.0f);
+        
+        float d_lat = sinf((latitude2 - latitude)/2.0);
+        float d_long = sinf((longitude2 - longitude)/2.0);
+        float a = d_lat*d_lat + cosf(latitude)*cosf(latitude2)*d_long*d_long;
+        float c = 2*atan2f(sqrtf(a),sqrtf(1.0-a));
+        float d = 6372.797*c; // mean earth radius
+        return [NSNumber numberWithFloat:d];
+    }
     return [[[[serverlist_root elementsForName:@"item"] objectAtIndex:row] attributeForName:[tableColumn identifier]] stringValue];
 }
 
@@ -94,6 +168,8 @@
     else
         [portField setStringValue:[[active attributeForName:@"port"] stringValue]];
 }
+
+#pragma mark Connection stuff
 
 - (SmackConnectionConfiguration*)connectionConfiguration {
     NSString *host = [serverField stringValue];
