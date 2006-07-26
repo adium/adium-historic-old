@@ -96,10 +96,19 @@ static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who,
 		GaimAccount		*account = gaim_connection_get_account(gc);
 		GaimBuddy		*buddy = gaim_find_buddy(account, who);
 		CBGaimAccount	*adiumAccount = accountLookup(account);
+		AIListContact	*contact;
+
+		contact = contactLookupFromBuddy(buddy);
+		if (!contact) {
+			NSString *UID = [NSString stringWithUTF8String:gaim_normalize(account, who)];
+			
+			contact = [accountLookup(account) mainThreadContactWithUID:UID];
+		}
+		
 		
 		textString = processGaimImages([NSString stringWithUTF8String:text],
 									   adiumAccount);
-		[adiumAccount updateUserInfo:contactLookupFromBuddy(buddy)
+		[adiumAccount updateUserInfo:contact
 							withData:textString];
 	}
 	

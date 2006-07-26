@@ -17,6 +17,8 @@
 #import "CBGaimAccount.h"
 
 #define	KEY_MEANWHILE_CONTACTLIST		@"Meanwhile:ContactList"
+#define KEY_MEANWHILE_FORCE_LOGIN		@"Meanwhile:ForceLogin"
+#define KEY_MEANWHILE_FAKE_CLIENT_ID	@"Meanwhile:FakeClientID"
 
 #define MW_PRPL_OPT_BLIST_ACTION		"/plugins/prpl/meanwhile/blist_action"
 

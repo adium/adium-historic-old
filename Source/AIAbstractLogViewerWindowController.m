@@ -2206,9 +2206,18 @@ static int toArraySort(id itemA, id itemB, void *context)
 		
 		[resultsLock unlock];
 		
+		int firstIndex = [[tableView_results selectedRowIndexes] firstIndex];
 		[tableView_results reloadData];
-		[self selectDisplayedLog];
-		
+		int numberOfRows = [tableView_results numberOfRows];
+		if (firstIndex <  numberOfRows) {
+			[tableView_results selectRowIndexes:[NSIndexSet indexSetWithIndex:firstIndex]
+						   byExtendingSelection:NO];
+		} else {
+			if (numberOfRows) {
+				[tableView_results selectRowIndexes:[NSIndexSet indexSetWithIndex:(numberOfRows-1)]
+							   byExtendingSelection:NO];			
+		}
+
 		[self rebuildContactsList];
 		[self updateProgressDisplay];
 	}

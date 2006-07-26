@@ -43,8 +43,13 @@
 
 #define XML_APPENDER_BLOCK_SIZE 4096
 
-#define XML_MARKER @"<?xml version=\"1.0\"?>"
-enum { xmlMarkerLength = 21 };
+#define XML_MARKER	@"<?xml version=\"1.0\"?>"
+#define UTF_8_BOM	"\xef\xbb\xbf"
+
+enum {
+	xmlMarkerLength = 21,
+	utf8BomLength = 3
+};
 
 @interface AIXMLAppender(PRIVATE)
 - (NSString *)createElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
@@ -198,7 +203,7 @@ enum { xmlMarkerLength = 21 };
 		//Create our strings
 		int closingTagLength = [rootElementName length] + 4; //</rootElementName>
 		NSString *rootElement = [self createElementWithName:rootElementName content:@"" attributeKeys:keys attributeValues:values];
-		NSString *initialDocument = [NSString stringWithFormat:@"%@\n%@", XML_MARKER, rootElement];
+		NSString *initialDocument = [NSString stringWithFormat:@"%s%@\n%@", UTF_8_BOM, XML_MARKER, rootElement];
 		
 		//Write the data, and then seek backwards
 		[file writeData:[initialDocument dataUsingEncoding:NSUTF8StringEncoding]];
@@ -303,14 +308,17 @@ enum { xmlMarkerLength = 21 };
 {
 	//Create a temporary file handle for validation, and read the marker
 	NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:path];
-	NSString *markerString = [[[NSString alloc] initWithData:[handle readDataOfLength:xmlMarkerLength]
+	NSString *markerString = [[[NSString alloc] initWithData:[handle readDataOfLength:xmlMarkerLength + utf8BomLength]
 													encoding:NSUTF8StringEncoding] autorelease];
 
-	if (![markerString isEqualToString:XML_MARKER]) {
+	/* The file must start either with the UTF-8 BOM followed by XML_MARKER, or just with XML_MARKER. An anchored search on markerString
+	 * will find either.
+	 */
+	if ([markerString rangeOfString:XML_MARKER options:NSAnchoredSearch].location == NSNotFound) {
 		[handle closeFile];
 		return nil;
 	}
-	
+
 	NSScanner *scanner = nil;
 	do {
 		//Read a block of arbitrary size

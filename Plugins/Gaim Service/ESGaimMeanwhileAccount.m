@@ -40,6 +40,10 @@
 	[super configureGaimAccount];
 	
 	gaim_prefs_set_int(MW_PRPL_OPT_BLIST_ACTION, Meanwhile_CL_Load_And_Save);
+	gaim_prefs_set_bool("force_login", [[self preferenceForKey:KEY_MEANWHILE_FORCE_LOGIN
+														 group:GROUP_ACCOUNT_STATUS] boolValue]);
+	gaim_prefs_set_bool("fake_client_id", [[self preferenceForKey:KEY_MEANWHILE_FAKE_CLIENT_ID
+														 group:GROUP_ACCOUNT_STATUS] boolValue]);
 }
 
 #pragma mark Status Messages
