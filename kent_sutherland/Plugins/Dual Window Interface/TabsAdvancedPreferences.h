@@ -19,6 +19,8 @@
 @interface TabsAdvancedPreferences : AIPreferencePane {
 	IBOutlet	NSButton		*autohide_tabBar;
     IBOutlet    NSButton		*checkBox_allowInactiveClosing;
+	IBOutlet	NSButton		*checkBox_overflowMenu;
+	IBOutlet	NSButton		*checkBox_unreadMessageCount;
 	IBOutlet	NSPopUpButton	*popUp_orientation;
 }
 

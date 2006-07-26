@@ -285,6 +285,7 @@
 		alwaysShowTabs = ![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
 		[tabView_tabBar setAllowsBackgroundTabClosing:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
+		[tabView_tabBar setUseOverflowMenu:[[prefDict objectForKey:KEY_TABBAR_USE_OVERFLOW] boolValue]];
 		
 		//change the frame of the tab bar according to the orientation
 		if (firstTime || [key isEqualToString:KEY_TABBAR_POSITION]) {
@@ -378,6 +379,8 @@
 			
 			[tabView_messages setFrame:tabViewFrame];
 			[tabView_tabBar setFrame:tabBarFrame];
+			
+			//update the tab bar and tab view frame
 			[[self window] display];
 		}
 		
@@ -385,8 +388,6 @@
 		[tabView_tabStyle setDrawsRight:(tabPosition == AdiumTabPositionRight)];
 		[tabView_tabStyle setDrawsUnified:(tabPosition == AdiumTabPositionTop)];
 		//[[[self window] toolbar] setShowsBaselineSeparator:(tabPosition != AdiumTabPositionTop)];
-		
-		//update the tab bar and tab view frame
 		
 		[self _updateWindowTitleAndIcon];
 

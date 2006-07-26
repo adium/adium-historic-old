@@ -18,6 +18,7 @@
 #import "AIMessageTabViewItem.h"
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
+#import "AIDualWindowInterfacePlugin.h"
 #import <AIUtilities/AICustomTabsView.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
@@ -275,8 +276,9 @@
 
 - (int)objectCount
 {
-	//return 0 always to disable the badge
-    return [[self chat] unviewedContentCount];
+	//return 0 to disable the badge
+    return [[[adium preferenceController] preferenceForKey:KEY_TABBAR_SHOW_UNREAD_COUNT group:PREF_GROUP_DUAL_WINDOW_INTERFACE] boolValue] ?
+		[[self chat] unviewedContentCount] : 0;
 }
 
 @end

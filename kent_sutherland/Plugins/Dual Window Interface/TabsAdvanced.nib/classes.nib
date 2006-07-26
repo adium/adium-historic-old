@@ -38,6 +38,8 @@
             OUTLETS = {
                 "autohide_tabBar" = NSButton; 
                 "checkBox_allowInactiveClosing" = NSButton; 
+                "checkBox_overflowMenu" = NSButton; 
+                "checkBox_unreadMessageCount" = NSButton; 
                 "popUp_orientation" = NSPopUpButton; 
             }; 
             SUPERCLASS = AIPreferencePane; 
