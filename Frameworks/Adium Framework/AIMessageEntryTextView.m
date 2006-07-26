@@ -496,6 +496,9 @@
 		//Perform the paste
 		[textStorage replaceCharactersInRange:selectedRange
 						 withAttributedString:attributedString];
+		//Notify that we changed our text
+		[[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification
+															object:self];
 		[attributedString release];
 
 	} else if ([FILES_AND_IMAGES_TYPES containsObject:type]) {
