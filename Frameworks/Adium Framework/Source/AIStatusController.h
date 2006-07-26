@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIObject.h>
-#import <Adium/AIStatus.h>
+#import "AIObject.h"
+#import "AIStatus.h"
 
 @class AIService, AdiumIdleManager, AIStatusGroup;
 @protocol AIController, AIListObjectObserver;

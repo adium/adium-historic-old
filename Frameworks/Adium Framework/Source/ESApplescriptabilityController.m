@@ -24,9 +24,9 @@
 #import "ESApplescriptabilityController.h"
 #import "AdiumApplescriptRunner.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIContentMessage.h>
-#import <Adium/AIHTMLDecoder.h>
+#import "AIAccount.h"
+#import "AIContentMessage.h"
+#import "AIHTMLDecoder.h"
 
 @implementation ESApplescriptabilityController
 

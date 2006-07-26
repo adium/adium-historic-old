@@ -16,10 +16,10 @@
 
 #import "ESOTRUnknownFingerprintController.h"
 #import "ESTextAndButtonsWindowController.h"
-#import <Adium/AIAccount.h>
-#import <Adium/AIService.h>
-#import <Adium/AIHTMLDecoder.h>
-#import <Adium/AIServiceIcons.h>
+#import "AIAccount.h"
+#import "AIService.h"
+#import "AIHTMLDecoder.h"
+#import "AIServiceIcons.h"
 #import "AIAccountController.h"
 
 #import "AdiumOTREncryption.h"

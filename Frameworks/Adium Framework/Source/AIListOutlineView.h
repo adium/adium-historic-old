@@ -15,7 +15,7 @@
  */
 
 #import <AIUtilities/AIMultiCellOutlineView.h>
-#import <Adium/AIAbstractListController.h>
+#import "AIAbstractListController.h"
 
 @protocol ContactListOutlineView;
 

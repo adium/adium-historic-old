@@ -18,9 +18,9 @@
 #import "AIInterfaceController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
-#import <Adium/AIContentTyping.h>
-#import <Adium/AIChat.h>
-#import <Adium/AIAccount.h>
+#import "AIContentTyping.h"
+#import "AIChat.h"
+#import "AIAccount.h"
 
 #define OUR_TYPING_STATE						@"OurTypingState"
 #define ENTERED_TEXT_TIMER						@"EnteredTextTimer"

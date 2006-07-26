@@ -33,15 +33,15 @@
 #import <AIUtilities/AITooltipUtilities.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
-#import <Adium/AIChat.h>
-#import <Adium/AIListContact.h>
-#import <Adium/AIListGroup.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIMetaContact.h>
-#import <Adium/AIService.h>
-#import <Adium/AIServiceIcons.h>
-#import <Adium/AISortController.h>
-#import <Adium/KFTypeSelectTableView.h>
+#import "AIChat.h"
+#import "AIListContact.h"
+#import "AIListGroup.h"
+#import "AIListObject.h"
+#import "AIMetaContact.h"
+#import "AIService.h"
+#import "AIServiceIcons.h"
+#import "AISortController.h"
+#import "KFTypeSelectTableView.h"
 
 #define ERROR_MESSAGE_WINDOW_TITLE		AILocalizedString(@"Adium : Error","Error message window title")
 #define LABEL_ENTRY_SPACING				4.0

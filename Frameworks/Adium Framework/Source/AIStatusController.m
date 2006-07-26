@@ -27,11 +27,11 @@
 #import <AIUtilities/AIEventAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIService.h>
-#import <Adium/AIStatusIcons.h>
-#import <Adium/AIStatusGroup.h>
-#import <Adium/AIStatus.h>
+#import "AIAccount.h"
+#import "AIService.h"
+#import "AIStatusIcons.h"
+#import "AIStatusGroup.h"
+#import "AIStatus.h"
 
 //State menu
 #define STATUS_TITLE_OFFLINE		AILocalizedString(@"Offline",nil)

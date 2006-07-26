@@ -17,13 +17,13 @@
 #import "AIPreferenceController.h"
 #import "ESFileTransferController.h"
 #import "ESFileTransferRequestPromptController.h"
-#import <Adium/AIListContact.h>
-#import <Adium/ESFileTransfer.h>
-#import <Adium/ESTextAndButtonsWindowController.h>
+#import "AIListContact.h"
+#import "ESFileTransfer.h"
+#import "ESTextAndButtonsWindowController.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <Adium/AIChatController.h>
+#import "AIChatController.h"
 
 @interface ESFileTransferRequestPromptController (PRIVATE)
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer

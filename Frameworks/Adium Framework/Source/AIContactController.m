@@ -37,17 +37,17 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIChat.h>
-#import <Adium/AIContentMessage.h>
-#import <Adium/AIListContact.h>
-#import <Adium/AIListGroup.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIMetaContact.h>
-#import <Adium/AIService.h>
-#import <Adium/AISortController.h>
-#import <Adium/AIUserIcons.h>
-#import <Adium/AIServiceIcons.h>
+#import "AIAccount.h"
+#import "AIChat.h"
+#import "AIContentMessage.h"
+#import "AIListContact.h"
+#import "AIListGroup.h"
+#import "AIListObject.h"
+#import "AIMetaContact.h"
+#import "AIService.h"
+#import "AISortController.h"
+#import "AIUserIcons.h"
+#import "AIServiceIcons.h"
 
 #import "ESShowContactInfoPromptController.h"
 

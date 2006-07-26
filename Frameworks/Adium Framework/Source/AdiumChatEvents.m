@@ -7,9 +7,9 @@
 
 #import "AdiumChatEvents.h"
 #import "ESContactAlertsController.h"
-#import <Adium/AIChat.h>
-#import <Adium/AIListContact.h>
-#import <Adium/AIListObject.h>
+#import "AIChat.h"
+#import "AIListContact.h"
+#import "AIListObject.h"
 #import <AIUtilities/AIImageAdditions.h>
 
 @implementation AdiumChatEvents

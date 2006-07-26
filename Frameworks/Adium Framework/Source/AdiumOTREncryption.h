@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on 12/28/05.
 //
 
-#import <Adium/AIObject.h>
+#import "AIObject.h"
 #import <OTR/context.h>
 #import <OTR/userstate.h>
 

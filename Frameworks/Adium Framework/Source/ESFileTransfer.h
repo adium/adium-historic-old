@@ -15,7 +15,7 @@
  */
 
 #import "AIObject.h"
-#import <Adium/AIContentMessage.h>
+#import "AIContentMessage.h"
 #import "ESFileTransferController.h"
 
 #define CONTENT_FILE_TRANSFER_TYPE  @"File Transfer Type"

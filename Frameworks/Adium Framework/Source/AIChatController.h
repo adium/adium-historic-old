@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on 6/10/05.
 //
 
-#import <Adium/AIObject.h>
+#import "AIObject.h"
 
 @class AIChat, AIListContact, AIAccount, AdiumChatEvents;
 @protocol AIController;

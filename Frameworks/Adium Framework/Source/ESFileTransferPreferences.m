@@ -16,8 +16,8 @@
 
 #import "ESFileTransferPreferences.h"
 #import "ESFileTransferController.h"
-#import <Adium/AILocalizationButton.h>
-#import <Adium/AILocalizationTextField.h>
+#import "AILocalizationButton.h"
+#import "AILocalizationTextField.h"
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>

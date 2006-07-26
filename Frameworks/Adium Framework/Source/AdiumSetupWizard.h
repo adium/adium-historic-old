@@ -4,7 +4,7 @@
 //
 //  Created by Evan Schoenberg on 12/4/05.
 
-#import <Adium/AIWindowController.h>
+#import "AIWindowController.h"
 
 @class SetupWizardBackgroundView;
 

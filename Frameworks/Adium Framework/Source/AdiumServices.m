@@ -16,8 +16,8 @@
 
 #import "AIAccountController.h"
 #import "AdiumServices.h"
-#import <Adium/AIService.h>
-#import <Adium/AIAccount.h>
+#import "AIService.h"
+#import "AIAccount.h"
 
 @implementation AdiumServices
 

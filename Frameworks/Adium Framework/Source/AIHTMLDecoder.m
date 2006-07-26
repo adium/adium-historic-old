@@ -29,9 +29,9 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 
-#import <Adium/AITextAttachmentExtension.h>
-#import <Adium/ESFileWrapperExtension.h>
-#import <Adium/AIXMLElement.h>
+#import "AITextAttachmentExtension.h"
+#import "ESFileWrapperExtension.h"
+#import "AIXMLElement.h"
 
 int HTMLEquivalentForFontSize(int fontSize);
 

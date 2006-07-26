@@ -39,19 +39,19 @@
 #import <AIUtilities/AITextAttachmentAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIImageAdditions.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIChat.h>
-#import <Adium/AIContentMessage.h>
-#import <Adium/AIContentObject.h>
-#import <Adium/AIContentEvent.h>
-#import <Adium/AIHTMLDecoder.h>
-#import <Adium/AIListContact.h>
-#import <Adium/AIListGroup.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIMetaContact.h>
-#import <Adium/ESFileWrapperExtension.h>
-#import <Adium/NDRunLoopMessenger.h>
-#import <Adium/AITextAttachmentExtension.h>
+#import "AIAccount.h"
+#import "AIChat.h"
+#import "AIContentMessage.h"
+#import "AIContentObject.h"
+#import "AIContentEvent.h"
+#import "AIHTMLDecoder.h"
+#import "AIListContact.h"
+#import "AIListGroup.h"
+#import "AIListObject.h"
+#import "AIMetaContact.h"
+#import "ESFileWrapperExtension.h"
+#import "NDRunLoopMessenger.h"
+#import "AITextAttachmentExtension.h"
 
 @interface AIContentController (PRIVATE)
 - (void)finishReceiveContentObject:(AIContentObject *)inObject;

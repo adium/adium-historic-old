@@ -17,11 +17,11 @@
 // $Id$
 
 #import "AIMenuController.h"
-#import <Adium/AIAccount.h>
-#import <Adium/AIChat.h>
-#import <Adium/AIListContact.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIMetaContact.h>
+#import "AIAccount.h"
+#import "AIChat.h"
+#import "AIListContact.h"
+#import "AIListObject.h"
+#import "AIMetaContact.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
