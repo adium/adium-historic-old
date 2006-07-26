@@ -10,6 +10,7 @@
 #import "NSImagePicker.h"
 #import "AIImageAdditions.h"
 #import "AIStringUtilities.h"
+#import "AIFileManagerAdditions.h"
 
 #define DRAGGING_THRESHOLD 16.0
 
