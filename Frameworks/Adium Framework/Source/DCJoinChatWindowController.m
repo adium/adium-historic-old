@@ -110,11 +110,11 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 - (void)windowDidLoad
 {
 	//Localized strings
-	[[self window] setTitle:AILocalizedStringFromTable(@"Join Chat", @"AdiumFramework", nil)];
-	[label_account setLocalizedString:AILocalizedStringFromTable(@"Account:", @"AdiumFramework", nil)];
+	[[self window] setTitle:AILocalizedString(@"Join Chat", nil)];
+	[label_account setLocalizedString:AILocalizedString(@"Account:", nil)];
 
-	[button_joinChat setLocalizedString:AILocalizedStringFromTable(@"Join", @"AdiumFramework", nil)];
-	[button_cancel setLocalizedString:AILocalizedStringFromTable(@"Cancel", @"AdiumFramework", nil)];
+	[button_joinChat setLocalizedString:AILocalizedString(@"Join", nil)];
+	[button_cancel setLocalizedString:AILocalizedString(@"Cancel", nil)];
 
 	//Account menu
 	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self

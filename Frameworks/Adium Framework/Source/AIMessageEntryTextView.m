@@ -274,7 +274,7 @@
 		[undoManager registerUndoWithTarget:self
 								   selector:@selector(setAttributedString:)
 									 object:[[[self textStorage] copy] autorelease]];
-		[undoManager setActionName:AILocalizedStringFromTable(@"Clear", @"AdiumFramework", nil)];
+		[undoManager setActionName:AILocalizedString(@"Clear", nil)];
 
 		[self setString:@""];
 	}
@@ -491,7 +491,7 @@
 		[[undoManager prepareWithInvocationTarget:textStorage]
 				replaceCharactersInRange:NSMakeRange(selectedRange.location, [attributedString length])
 					withAttributedString:[textStorage attributedSubstringFromRange:selectedRange]];
-		[undoManager setActionName:AILocalizedStringFromTable(@"Paste", @"AdiumFramework", nil)];
+		[undoManager setActionName:AILocalizedString(@"Paste", nil)];
 		
 		//Perform the paste
 		[textStorage replaceCharactersInRange:selectedRange

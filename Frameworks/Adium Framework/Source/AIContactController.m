@@ -1342,6 +1342,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Prepare the contact info menu and toolbar items
 - (void)prepareContactInfo
 {
+#warning This should all be in a component. Localized strings within the contact info window are temporarily broken. -eds
 	contactInfoPanes = [[NSMutableArray alloc] init];
 
 	//Add our get info contextual menu item

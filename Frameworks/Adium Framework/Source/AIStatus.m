@@ -301,7 +301,7 @@
 
 	//If the state is simply idle, use the string "Idle"
 	if (!title && [self shouldForceInitialIdleTime]) {
-		title = AILocalizedStringFromTable(@"Idle", @"AdiumFramework", nil);
+		title = AILocalizedString(@"Idle", nil);
 	}
 
 	if (!title && (statusType == AIOfflineStatusType)) {

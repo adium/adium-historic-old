@@ -57,7 +57,7 @@ enum{
 - (void)localizeItems
 {
 	[button_goBack setLocalizedString:AILocalizedString(@"Go Back","'go back' button title")];
-	[textField_passwordLabel setLocalizedString:AILocalizedStringFromTable(@"Password:", @"AdiumFramework", "Label for the password field in the account preferences")];
+	[textField_passwordLabel setLocalizedString:AILocalizedString(@"Password:", "Label for the password field in the account preferences")];
 	[textField_serviceLabel	setLocalizedString:AILocalizedString(@"Service:",nil)];
 	
 	[button_alternate setLocalizedString:AILocalizedString(@"Skip Import","button title for skipping the import of another client in the setup wizard")];
@@ -244,7 +244,7 @@ enum{
 		[AIStringFormatter stringFormatterAllowingCharacters:[service allowedCharactersForAccountName]
 													  length:[service allowedLengthForAccountName]
 											   caseSensitive:[service caseSensitive]
-												errorMessage:AILocalizedStringFromTable(@"The characters you're entering are not valid for an account name on this service.", @"AdiumFramework", nil)]];
+												errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.", nil)]];
 	[[textField_username cell] setPlaceholderString:[service UIDPlaceholder]];
 	
 	BOOL showPasswordField = ![service requiresPassword];

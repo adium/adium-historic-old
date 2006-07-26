@@ -192,7 +192,7 @@
 			[AIStringFormatter stringFormatterAllowingCharacters:[service allowedCharactersForAccountName]
 														  length:[service allowedLengthForAccountName]
 												   caseSensitive:[service caseSensitive]
-													errorMessage:AILocalizedStringFromTable(@"The characters you're entering are not valid for an account name on this service.", @"AdiumFramework", nil)]];
+													errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.", nil)]];
 		[[textField_accountUID cell] setPlaceholderString:[service UIDPlaceholder]];
 
 		//Can't change the UID while the account is online
@@ -311,10 +311,10 @@
 #pragma mark Localization
 - (void)localizeStrings
 {
-	[label_password setLocalizedString:AILocalizedStringFromTable(@"Password:", @"AdiumFramework", "Label for the password field in the account preferences")];
-	[label_typing setLocalizedString:AILocalizedStringFromTable(@"Typing:", @"AdiumFramework", "Label beside the 'let others know when you are typing' checkbox in the account preferences")];
-	[checkBox_sendTyping setLocalizedString:AILocalizedStringFromTable(@"Let others know when you are typing", @"AdiumFramework", "Text of the typing preference checkbox in the account preferneces")];
-	[label_encryption setLocalizedString:AILocalizedStringFromTable(@"Encryption:", @"AdiumFramework", "Label besides the encryption preference menu")];
+	[label_password setLocalizedString:AILocalizedString(@"Password:", "Label for the password field in the account preferences")];
+	[label_typing setLocalizedString:AILocalizedString(@"Typing:", "Label beside the 'let others know when you are typing' checkbox in the account preferences")];
+	[checkBox_sendTyping setLocalizedString:AILocalizedString(@"Let others know when you are typing", "Text of the typing preference checkbox in the account preferneces")];
+	[label_encryption setLocalizedString:AILocalizedString(@"Encryption:", "Label besides the encryption preference menu")];
 	
 	//Already present in the main bundle from the Contact Info window
 	[label_alias setLocalizedString:AILocalizedStringFromTable(@"Alias:", nil, nil)];

@@ -171,7 +171,7 @@
  */
 - (NSString *)userNameLabel
 {
-    return AILocalizedStringFromTable(@"User Name", @"AdiumFramework", nil);    
+    return AILocalizedString(@"User Name", nil);    
 }
 
 /*!
