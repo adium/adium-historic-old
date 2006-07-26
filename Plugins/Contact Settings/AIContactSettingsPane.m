@@ -20,9 +20,9 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringFormatter.h>
-#import <Adium/AIChat.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIListContact.h>
+#import "AIChat.h"
+#import "AIListObject.h"
+#import "AIListContact.h"
 
 @interface AIContactSettingsPane (PRIVATE)
 - (void)localizeTitles;
