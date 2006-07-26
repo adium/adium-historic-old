@@ -17,10 +17,10 @@
 #import "AIContactController.h"
 #import "AIContactInfoWindowController.h"
 #import "ESContactInfoListController.h"
-#import <Adium/AIListGroup.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIListOutlineView.h>
-#import <Adium/AIMetaContact.h>
+#import "AIListGroup.h"
+#import "AIListObject.h"
+#import "AIListOutlineView.h"
+#import "AIMetaContact.h"
 
 @implementation ESContactInfoListController
 

@@ -15,7 +15,7 @@
  */
 
 #import "ESContactAlertsPane.h"
-#import <Adium/ESContactAlertsViewController.h>
+#import "ESContactAlertsViewController.h"
 
 /*!
  * @class ESContactAlertsPane

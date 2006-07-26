@@ -19,9 +19,9 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AILinkTextView.h>
 #import <AIUtilities/AITextAttributes.h>
-#import <Adium/AIListContact.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AILocalizationTextField.h>
+#import "AIListContact.h"
+#import "AIListObject.h"
+#import "AILocalizationTextField.h"
 
 /*!
  * @class AIContactProfilePane

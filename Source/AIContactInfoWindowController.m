@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContactAccountsPane.h"
 #import "AIContactInfoWindowController.h"
+#import "AIContactAccountsPane.h"
 #import "AIContactProfilePane.h"
 #import "AIContactSettingsPane.h"
 #import "AIInterfaceController.h"
@@ -31,12 +31,12 @@
 #import <AIUtilities/AIImageViewWithImagePicker.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <Adium/AIListGroup.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIListOutlineView.h>
-#import <Adium/AIMetaContact.h>
-#import <Adium/AIModularPaneCategoryView.h>
-#import <Adium/AIService.h>
+#import "AIListGroup.h"
+#import "AIListObject.h"
+#import "AIListOutlineView.h"
+#import "AIMetaContact.h"
+#import "AIModularPaneCategoryView.h"
+#import "AIService.h"
 
 #define	CONTACT_INFO_NIB				@"ContactInfoWindow"			//Filename of the contact info nib
 #define KEY_INFO_WINDOW_FRAME			@"Contact Info Window Frame"	//
