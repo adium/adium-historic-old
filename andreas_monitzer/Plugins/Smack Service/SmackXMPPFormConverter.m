@@ -39,6 +39,16 @@ static NSString *expandValues(JavaIterator *iter)
     
     NSXMLElement *head = [NSXMLNode elementWithName:@"head"];
     [root addChild:head];
+
+    [head addChild:[NSXMLNode elementWithName:@"style" children:[NSArray arrayWithObject:
+        [NSXMLNode textWithStringValue:
+            @"body { font-family:'Lucida Grande'; }"
+            @"table { width: 100%; table-layout: fixed; }"
+            @"h1 { font-size: 1.5em; }"
+            @"th { text-align: right; width: 180px; white-space: nowrap; vertical-align: top; font-weight: normal; }"
+            @"td { vertical-align: top; }"
+            ]] attributes:[NSArray arrayWithObject:
+                [NSXMLNode attributeWithName:@"type" stringValue:@"text/css"]]]];
     
     NSXMLElement *title = [NSXMLNode elementWithName:@"title" stringValue:[form getTitle]];
     [head addChild:title];
@@ -71,7 +81,7 @@ static NSString *expandValues(JavaIterator *iter)
         if([field isRequired])
             [row addAttribute:[NSXMLNode attributeWithName:@"class" stringValue:@"required"]];
         
-        [row addChild:[NSXMLNode elementWithName:@"td" stringValue:[field getLabel]]];
+        [row addChild:[NSXMLNode elementWithName:@"th" stringValue:[field getLabel]]];
         
         if([type isEqualToString:@"text-single"])
             fieldnode = [NSXMLNode elementWithName:@"input" children:nil attributes:[NSArray arrayWithObjects:
