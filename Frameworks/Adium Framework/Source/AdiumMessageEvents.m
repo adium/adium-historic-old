@@ -327,7 +327,8 @@
 - (NSImage *)imageForEventID:(NSString *)eventID
 {
 	static NSImage	*eventImage = nil;
-	if (!eventImage) eventImage = [[NSImage imageNamed:@"message" forClass:[self class]] retain];
+	//Use the message icon from the main bundle
+	if (!eventImage) eventImage = [[NSImage imageNamed:@"message"] retain];
 	return eventImage;
 }
 

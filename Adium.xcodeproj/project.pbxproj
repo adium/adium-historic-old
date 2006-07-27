@@ -6451,6 +6451,7 @@
 				34D8336707CBD807006466F2 /* pref-messages.png */,
 				347EAB2C09721D490090EA6E /* pref-personal.png */,
 				4BB5B78107D2DC4900CFE06F /* pref-status.png */,
+				4BAE6C9407CF94C4007E2820 /* message.png */,
 				34D832A507CBD62B006466F2 /* AdiumEmoticonset.icns */,
 				34D832A607CBD62B006466F2 /* AdiumScripts.icns */,
 				34D832A707CBD62B006466F2 /* AdiumMessageStyle.icns */,
@@ -6821,7 +6822,6 @@
 			children = (
 				4BAE6C8707CF94BA007E2820 /* AIStandardToolbarItemsPlugin.h */,
 				4BAE6C8807CF94BA007E2820 /* AIStandardToolbarItemsPlugin.m */,
-				4BAE6C9407CF94C4007E2820 /* message.png */,
 			);
 			name = "Standard Toolbar Items";
 			sourceTree = "<group>";
