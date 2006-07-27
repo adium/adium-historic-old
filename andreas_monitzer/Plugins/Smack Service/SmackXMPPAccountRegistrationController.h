@@ -11,11 +11,7 @@
 
 @class WebView, SmackCocoaAdapter, SmackXMPPConnection, SmackXMPPAccountViewController, SmackXMPPErrorMessagePlugin;
 
-@interface SmackXMPPAccountRegistrationController : AIObject {
-    NSXMLDocument *serverlist;
-    NSXMLElement *serverlist_root;
-    
-    IBOutlet NSWindow *window;
+@interface SmackXMPPAccountRegistrationController : NSArrayController {
     IBOutlet NSTabView *tabview;
     IBOutlet NSTableView *serverlistTable;
     IBOutlet NSTextField *serverField;
@@ -23,17 +19,17 @@
     IBOutlet NSButton *requestButton;
     IBOutlet NSProgressIndicator *progressIndicator;
     IBOutlet WebView *webview;
+    IBOutlet SmackXMPPAccountViewController *accountviewcontroller;
 
     SmackCocoaAdapter *smackAdapter;
     SmackXMPPConnection *connection;
-    SmackXMPPAccountViewController *accountviewcontroller;
     SmackXMPPErrorMessagePlugin *errorPlugin;
     
-    float longitude, latitude;
+    BOOL initialized;
 }
 
-- (id)initWithAccountViewController:(SmackXMPPAccountViewController*)avc;
-
 - (IBAction)requestAccount:(id)sender;
+
+- (void)activate;
 
 @end

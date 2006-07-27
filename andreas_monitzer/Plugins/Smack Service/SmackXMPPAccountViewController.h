@@ -9,7 +9,11 @@
 #import <Cocoa/Cocoa.h>
 #import "AIAccountViewController.h"
 
+@class SmackXMPPAccountRegistrationController;
+
 @interface SmackXMPPAccountViewController : AIAccountViewController {
+    IBOutlet NSTabView *tabview;
+    
     IBOutlet NSTextField *textField_resource;
     IBOutlet NSTextField *label_resource;
     
@@ -27,6 +31,8 @@
     IBOutlet NSTextField *textfield_availablePriority;
     IBOutlet NSTextField *textfield_awayPriority;
     
+    IBOutlet SmackXMPPAccountRegistrationController *accountregctrl;
+    
     NSString *currentJID;
     BOOL useSSL;
 }
@@ -35,8 +41,8 @@
 
 - (void)setUseSSL:(BOOL)ssl;
 
-- (IBAction)createNewAccount:(id)sender;
-
 - (void)setJID:(NSString*)jid password:(NSString*)password;
+
+- (void)setAddCreateAccount:(unsigned)index;
 
 @end

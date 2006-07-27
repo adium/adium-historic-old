@@ -34,10 +34,26 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {createNewAccount = id; }; 
+            ACTIONS = {requestAccount = id; }; 
+            CLASS = SmackXMPPAccountRegistrationController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accountviewcontroller = SmackXMPPAccountViewController; 
+                portField = NSTextField; 
+                progressIndicator = NSProgressIndicator; 
+                requestButton = NSButton; 
+                serverField = NSTextField; 
+                serverlistTable = NSTableView; 
+                tabview = NSTabView; 
+                webview = WebView; 
+            }; 
+            SUPERCLASS = NSArrayController; 
+        }, 
+        {
             CLASS = SmackXMPPAccountViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                accountregctrl = SmackXMPPAccountRegistrationController; 
                 "checkBox_allowExpired" = NSButton; 
                 "checkBox_allowNonMatchingHost" = NSButton; 
                 "checkBox_allowSelfSigned" = NSButton; 
@@ -48,6 +64,7 @@
                 "label_resource" = NSTextField; 
                 "slider_availablePriority" = NSSlider; 
                 "slider_awayPriority" = NSSlider; 
+                tabview = NSTabView; 
                 "textField_resource" = NSTextField; 
                 "textfield_availablePriority" = NSTextField; 
                 "textfield_awayPriority" = NSTextField; 
