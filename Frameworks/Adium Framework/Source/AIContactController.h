@@ -104,16 +104,6 @@ typedef enum {
 	//Sorting
     NSMutableArray			*sortControllerArray;
     AISortController	 	*activeSortController;
-
-	//Contact Info Menu Items
-	NSMenuItem				*menuItem_getInfo;
-	NSMenuItem				*menuItem_getInfoAlternate;
-	NSMenuItem				*menuItem_getInfoContextualContact;
-	NSMenuItem				*menuItem_getInfoContextualGroup;	
-	NSMenuItem				*menuItem_getInfoWithPrompt;
-
-	//Contact Info Panes
-    NSMutableArray			*contactInfoPanes;
 	
 	//Authorization
 	AdiumAuthorization		*adiumAuthorization;
@@ -177,10 +167,7 @@ typedef enum {
 - (id)showAuthorizationRequestWithDict:(NSDictionary *)inDict forAccount:(AIAccount *)inAccount;
 
 //Contact info
-- (IBAction)showContactInfo:(id)sender;
-- (void)addContactInfoPane:(AIContactInfoPane *)inPane;
 - (void)updateListContactStatus:(AIListContact *)inContact;
-- (NSArray *)contactInfoPanes;
 
 //Interface selection
 - (AIListObject *)selectedListObject;
