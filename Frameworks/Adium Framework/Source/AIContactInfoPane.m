@@ -24,17 +24,6 @@
     return [[[self alloc] init] autorelease];
 }
 
-//Init
-- (id)init
-{
-    if ((self = [super init]))
-	{
-		[[adium contactController] addContactInfoPane:self];
-	}
-    return self;
-}
-
-
 //Resizable
 - (BOOL)resizable
 {
