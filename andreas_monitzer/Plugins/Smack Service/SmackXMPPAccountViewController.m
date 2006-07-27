@@ -122,8 +122,22 @@
     [[textField_connectPort cell] setPlaceholderString:ssl?@"5223":@"5222"];
 }
 
-- (IBAction)createNewAccount:(id)sender {
-    [[[SmackXMPPAccountRegistrationController alloc] initWithAccountViewController:self] autorelease];
+- (int)addCreateAccount
+{
+    return (!tabview || [[[tabview selectedTabViewItem] identifier] isEqualToString:@"addexisting"])?0:1;
 }
+
+- (void)setAddCreateAccount:(unsigned)index
+{
+    if(index == 0)
+        [tabview selectTabViewItemWithIdentifier:@"addexisting"];
+    else
+        if([[[tabview selectedTabViewItem] identifier] isEqualToString:@"addexisting"])
+        {
+            [accountregctrl activate];
+            [tabview selectTabViewItemWithIdentifier:@"createnew1"];
+        }
+}
+
 
 @end

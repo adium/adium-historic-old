@@ -58,108 +58,106 @@
 
 @implementation SmackXMPPAccountRegistrationController
 
-- (id)initWithAccountViewController:(SmackXMPPAccountViewController*)avc
-{
-    if((self = [super init]))
-    {
-        accountviewcontroller = avc;
-        
-        MachineLocation loc;
-        ReadLocation(&loc);
-        
-        latitude = FractToFloat(loc.latitude)*(M_PI/2.0f);
-        longitude = FractToFloat(loc.longitude)*(M_PI/2.0f);
-        
-        NSURL *sourceURL = [NSURL URLWithString:SERVERLISTURL];
-        NSError *error;
-        NSXMLDocument *serverhtml = [[NSXMLDocument alloc] initWithContentsOfURL:sourceURL options:NSXMLDocumentTidyXML error:&error];
-        if(serverhtml)
-            serverlist = [[serverhtml objectByApplyingXSLT:SERVERLISTTRANFORM arguments:[NSDictionary dictionary] error:&error] retain];
-        [serverhtml release];
-        
-        if(!serverlist)
-        {
-            [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Error Parsing %@","Error Parsing %@"), SERVERLISTURL] withDescription:[error localizedDescription]];
-        } else {
-            [serverlist setCharacterEncoding:@"UTF-8"];
-            
-            serverlist_root = [serverlist rootElement];
-        }
-        
-        [NSBundle loadNibNamed:@"SmackXMPPAccountRegistration" owner:self];
-        
-        if(!window)
-        {
-            NSLog(@"Error loading SmackXMPPAccountRegistration.nib!");
-            NSBeep();
-            [self release];
-            return nil;
-        }
-        [window makeKeyAndOrderFront:self];
-        [self retain];
-    }
-    return self;
-}
-
 - (void)dealloc
 {
     [smackAdapter release];
-    [serverlist release];
     [errorPlugin release];
     errorPlugin = nil;
 
     [super dealloc];
 }
 
-- (void)windowWillClose:(NSNotification *)notification
+- (void)activate
 {
-    [self autorelease];
+    if(!initialized)
+    {
+        NSURL *sourceURL = [NSURL URLWithString:SERVERLISTURL];
+        NSError *error;
+        NSXMLDocument *serverhtml = [[NSXMLDocument alloc] initWithContentsOfURL:sourceURL options:NSXMLDocumentTidyXML error:&error];
+        NSXMLDocument *serverlist;
+        if(serverhtml)
+            serverlist = [[serverhtml objectByApplyingXSLT:SERVERLISTTRANFORM arguments:[NSDictionary dictionary] error:&error] retain];
+        [serverhtml release];
+        
+        if(!serverlist)
+        {
+            [[[AIObject sharedAdiumInstance] interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Error Parsing %@","Error Parsing %@"), SERVERLISTURL] withDescription:[error localizedDescription]];
+        } else {
+            [serverlist setCharacterEncoding:@"UTF-8"];
+            
+            NSXMLElement *serverlist_root = [serverlist rootElement];
+            
+            NSEnumerator *e = [[serverlist_root elementsForLocalName:@"item" URI:@"http://jabber.org/protocol/disco#items"] objectEnumerator];
+            NSXMLElement *elem;
+            
+            while((elem = [e nextObject]))
+            {
+                NSMutableDictionary *server = [[NSMutableDictionary alloc] init];
+                
+                float longitude, latitude;
+                float latitude2, longitude2;
+                
+                MachineLocation loc;
+                ReadLocation(&loc);
+                
+                latitude = FractToFloat(loc.latitude)*(M_PI/2.0f);
+                longitude = FractToFloat(loc.longitude)*(M_PI/2.0f);
+                
+                NSXMLElement *geoloc = [[elem elementsForLocalName:@"geoloc" URI:@"http://jabber.org/protocol/geoloc"] lastObject];
+                
+                if(geoloc)
+                {
+                    NSString *latstr = [[[geoloc elementsForLocalName:@"lat" URI:@"http://jabber.org/protocol/geoloc"] lastObject] stringValue];
+                    if(latstr)
+                    {
+                        NSString *lonstr = [[[geoloc elementsForLocalName:@"lon" URI:@"http://jabber.org/protocol/geoloc"] lastObject] stringValue];
+                        if(lonstr)
+                        {
+                            // Calculate the distance between the computer and the xmpp server in km
+                            // Note that this assumes that the earth is a perfect sphere
+                            // If it turns out to be flat or doughnut-shaped, this will not work!
+                            
+                            latitude2 = [latstr floatValue] * (M_PI/180.0f);
+                            longitude2 = [lonstr floatValue] * (M_PI/180.0f);
+                            
+                            float d_lat = sinf((latitude2 - latitude)/2.0);
+                            float d_long = sinf((longitude2 - longitude)/2.0);
+                            float a = d_lat*d_lat + cosf(latitude)*cosf(latitude2)*d_long*d_long;
+                            float c = 2*atan2f(sqrtf(a),sqrtf(1.0-a));
+                            float d = 6372.797*c; // mean earth radius
+                            
+                            [server setObject:[NSNumber numberWithFloat:d] forKey:@"distance"];
+                        }
+                    }
+                }
+                [server setObject:[[elem attributeForName:@"jid"] stringValue] forKey:@"jid"];
+                
+                NSXMLElement *url = [[[[elem elementsForLocalName:@"x" URI:@"jabber:x:oob"] lastObject] elementsForLocalName:@"url" URI:@"jabber:x:oob"] lastObject];
+                if(url)
+                    [server setObject:[NSURL URLWithString:[url stringValue]] forKey:@"url"];
+                
+                [self addObject:server];
+                [server release];
+            }
+            
+            NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:@"distance" ascending:YES];
+            [self setSortDescriptors:[NSArray arrayWithObject:sd]];
+            [sd release];
+            
+            [self setSelectionIndex:0];
+        }
+        initialized = YES;
+    }
 }
 
 #pragma mark tableview
 
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
-{
-    return [[serverlist_root elementsForName:@"item"] count];
-}
-
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
-{
-    if([[tableColumn identifier] isEqualToString:@"distance"]) {
-        float latitude2, longitude2;
-        
-        NSXMLElement *item = [[serverlist_root elementsForName:@"item"] objectAtIndex:row];
-        NSXMLElement *geoloc = [[item elementsForLocalName:@"geoloc" URI:@"http://jabber.org/protocol/geoloc"] lastObject];
-        
-        if(!geoloc)
-            return AILocalizedString(@"N/A","N/A");
-        
-        NSString *latstr = [[[geoloc elementsForLocalName:@"lat" URI:@"http://jabber.org/protocol/geoloc"] lastObject] stringValue];
-        if(!latstr)
-            return AILocalizedString(@"N/A","N/A");
-        NSString *lonstr = [[[geoloc elementsForLocalName:@"lon" URI:@"http://jabber.org/protocol/geoloc"] lastObject] stringValue];
-        if(!lonstr)
-            return AILocalizedString(@"N/A","N/A");
-        
-        // Calculate the distance between the computer and the xmpp server in km
-        // Note that this assumes that the earth is a perfect sphere
-        // If it turns out to be flat or doughnut-shaped, this will not work!
-        
-        latitude2 = [latstr floatValue] * (M_PI/180.0f);
-        longitude2 = [lonstr floatValue] * (M_PI/180.0f);
-        
-        float d_lat = sinf((latitude2 - latitude)/2.0);
-        float d_long = sinf((longitude2 - longitude)/2.0);
-        float a = d_lat*d_lat + cosf(latitude)*cosf(latitude2)*d_long*d_long;
-        float c = 2*atan2f(sqrtf(a),sqrtf(1.0-a));
-        float d = 6372.797*c; // mean earth radius
-        return [NSNumber numberWithFloat:d];
-    }
-    return [[[[serverlist_root elementsForName:@"item"] objectAtIndex:row] attributeForName:[tableColumn identifier]] stringValue];
-}
-
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
+    NSDictionary *server = [[self arrangedObjects] objectAtIndex:[[notification object] selectedRow]];
+    [serverField setStringValue:[server objectForKey:@"jid"]];
+    
+    /*
     NSXMLElement *server = [[serverlist_root elementsForName:@"item"] objectAtIndex:[[notification object] selectedRow]];
     [serverField setStringValue:[[server attributeForName:@"jid"] stringValue]];
     NSXMLElement *active = [[server elementsForName:@"active"] lastObject];
@@ -167,6 +165,7 @@
         [portField setStringValue:@""];
     else
         [portField setStringValue:[[active attributeForName:@"port"] stringValue]];
+     */
 }
 
 #pragma mark Connection stuff
@@ -222,7 +221,7 @@
 
 - (IBAction)requestAccount:(id)sender
 {
-    [window makeFirstResponder:nil];
+    [[tabview window] makeFirstResponder:nil];
     
     [serverField setEnabled:NO];
     [portField setEnabled:NO];
@@ -257,9 +256,9 @@
         
         [accountviewcontroller setJID:[NSString stringWithFormat:@"%@@%@",username,[serverField stringValue]] password:password];
         
-        [window performClose:nil];
+        [tabview selectTabViewItemWithIdentifier:@"addexisting"];
     } else {
-        [tabview selectTabViewItemWithIdentifier:@"serverselection"];
+        [tabview selectTabViewItemWithIdentifier:@"createnew1"];
         
         [connection close];
         [smackAdapter release]; smackAdapter = nil;
@@ -281,10 +280,29 @@
     [progressIndicator stopAnimation:nil];
 
     connection = [conn retain];
+
+    if(![[conn getAccountManager] supportsAccountCreation])
+    {
+        [[[AIObject sharedAdiumInstance] interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"The Server %@ Does Not Support Account Creation From Adium","The Server %@ Does Not Support Account Creation From Adium"),[conn getServiceName]] withDescription:AILocalizedString(@"You might want to visit the homepage (some servers allow account creation only from a web page) or use another server.","You might want to visit the homepage or use another server.")];
+        [conn close];
+
+        [tabview selectTabViewItemWithIdentifier:@"createnew1"];
+
+        [serverField setEnabled:YES];
+        [portField setEnabled:YES];
+        [serverlistTable setEnabled:YES];
+        [requestButton setEnabled:YES];
+        return;
+    }
     
     [[[SmackXMPPRegistration alloc] initWithAccount:(SmackXMPPAccount*)self registerWith:[serverField stringValue]] autorelease];
     
-    [tabview selectTabViewItemWithIdentifier:@"registrationform"];
+    [tabview selectTabViewItemWithIdentifier:@"createnew2"];
+
+    [serverField setEnabled:YES];
+    [portField setEnabled:YES];
+    [serverlistTable setEnabled:YES];
+    [requestButton setEnabled:YES];
 }
 
 - (void)disconnected:(SmackXMPPConnection*)conn
@@ -299,7 +317,7 @@
 {
     [progressIndicator stopAnimation:nil];
 
-    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Connection Error While Talking to %@.","Connection Error While Talking to %@."),[serverField stringValue]] withDescription:error];
+    [[[AIObject sharedAdiumInstance] interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Connection Error While Talking to %@.","Connection Error While Talking to %@."),[serverField stringValue]] withDescription:error];
     
     [connection close];
     [smackAdapter release]; smackAdapter = nil;
@@ -309,7 +327,7 @@
     [serverlistTable setEnabled:YES];
     [requestButton setEnabled:YES];
 
-    [tabview selectTabViewItemWithIdentifier:@"serverselection"];
+    [tabview selectTabViewItemWithIdentifier:@"createnew1"];
 }
 
 - (void)receiveMessagePacket:(SmackMessage*)packet
