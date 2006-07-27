@@ -14,12 +14,15 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "ESSecureMessagingPlugin.h"
+#import "AdiumOTREncryption.h"
+
 #import "AIChatController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
 #import "AIMenuController.h"
 #import "AIToolbarController.h"
-#import "ESSecureMessagingPlugin.h"
+
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
@@ -55,6 +58,9 @@
 
 - (void)installPlugin
 {
+	//Muy imporatante: Set OTR as our encryption method
+	[[adium contentController] setEncryptor:[[[AdiumOTREncryption alloc] init] autorelease]];
+
 	_secureMessagingMenu = nil;
 	lockImage_Locked = [[NSImage imageNamed:@"Lock_Locked State" forClass:[self class]] retain];
 	lockImage_Unlocked = [[NSImage imageNamed:@"Lock_Unlocked State" forClass:[self class]] retain];
