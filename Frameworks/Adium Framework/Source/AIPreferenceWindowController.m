@@ -370,7 +370,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	return [NSImage imageNamed:[NSString stringWithFormat:PREFERENCE_ICON_FORMAT, [tabViewItem identifier]] forClass:[self class]];
+	//We use images from the main bundle, not out own
+	return [NSImage imageNamed:[NSString stringWithFormat:PREFERENCE_ICON_FORMAT, [tabViewItem identifier]]];
 }
 
 /*!
