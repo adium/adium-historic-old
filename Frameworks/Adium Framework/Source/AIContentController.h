@@ -32,8 +32,9 @@
 
 @protocol AIController, AITextEntryView, AIEventHandler;
 
-@class AdiumMessageEvents, AdiumTyping, AdiumFormatting, AdiumContentFiltering, AdiumOTREncryption;
+@class AdiumMessageEvents, AdiumTyping, AdiumFormatting, AdiumContentFiltering;
 @class AIAccount, AIChat, AIListContact, AIListObject, AIContentObject, NDRunLoopMessenger;
+@class AIContentMessage;
 
 typedef enum {
 	AIFilterContent = 0,		// Changes actual message and non-message content
@@ -72,12 +73,20 @@ typedef enum {
 - (float)filterPriority;
 @end
 
+@protocol AdiumMessageEncryptor <NSObject>
+- (void)willSendContentMessage:(AIContentMessage *)inContentMessage;
+- (NSString *)decryptIncomingMessage:(NSString *)inString fromContact:(AIListContact *)inListContact onAccount:(AIAccount *)inAccount;
+
+- (void)requestSecureOTRMessaging:(BOOL)inSecureMessaging inChat:(AIChat *)inChat;
+- (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat;
+@end
+
 @interface AIContentController : AIObject <AIController> {
-	AdiumTyping				*adiumTyping;
-	AdiumFormatting			*adiumFormatting;
-	AdiumContentFiltering	*adiumContentFiltering;
-	AdiumMessageEvents		*adiumMessageEvents;
-	AdiumOTREncryption		*adiumOTREncryption;
+	AdiumTyping					*adiumTyping;
+	AdiumFormatting				*adiumFormatting;
+	AdiumContentFiltering		*adiumContentFiltering;
+	AdiumMessageEvents			*adiumMessageEvents;
+	id<AdiumMessageEncryptor>	adiumEncryptor;
 
 	NSMutableDictionary		*defaultFormattingAttributes;
 	NSMutableSet			*objectsBeingReceived;
@@ -137,6 +146,7 @@ typedef enum {
 - (BOOL)chatIsReceivingContent:(AIChat *)chat;
 
 //OTR
+- (void)setEncryptor:(id<AdiumMessageEncryptor>)inEncryptor;
 - (void)requestSecureOTRMessaging:(BOOL)inSecureMessaging inChat:(AIChat *)inChat;
 - (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat;
 
