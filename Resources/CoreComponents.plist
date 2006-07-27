@@ -16,6 +16,7 @@
 	<string>AIChatCyclingPlugin</string>
 	<string>AIContactAwayPlugin</string>
 	<string>AIContactIdlePlugin</string>
+	<string>AIContactInfoWindowPlugin</string>
 	<string>AIContactListEditorPlugin</string>
 	<string>AIContactOnlineSincePlugin</string>
 	<string>AIContactSortSelectionPlugin</string>
