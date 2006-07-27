@@ -139,7 +139,7 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	if ((menuItem == menuItem_getInfo) || (menuItem == menuItem_getInfoAlternate)) {
-		return [self selectedListObject] != nil;
+		return [[adium contactController] selectedListObject] != nil;
 		
 	} else if ((menuItem == menuItem_getInfoContextualContact) || (menuItem == menuItem_getInfoContextualGroup)) {
 		return [[adium menuController] currentContextMenuObject] != nil;
