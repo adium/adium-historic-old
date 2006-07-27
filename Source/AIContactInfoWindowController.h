@@ -45,7 +45,7 @@
 	
 	AIListObject									*displayedObject;
 	NSMutableArray									*loadedPanes;
-	
+
 	ESContactInfoListController						*contactListController;
 }
 

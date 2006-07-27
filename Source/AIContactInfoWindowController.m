@@ -48,12 +48,11 @@
 @interface AIContactInfoWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)selectionChanged:(NSNotification *)notification;
-- (NSArray *)_panesInCategory:(PREFERENCE_CATEGORY)inCategory;
 
 - (void)localizeTabViewItemTitles;
 - (void)configureDrawer;
 - (void)configureVisiblityOfTabViewItemsForListObject:(AIListObject *)inObject;
-- (void)configurePanes:(NSArray *)inPanes;
+- (void)configurePane:(AIContactInfoPane *)inPane;
 - (void)setupMetaContactDrawer;
 
 @end
@@ -65,17 +64,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //Return the shared contact info window
 + (id)showInfoWindowForListObject:(AIListObject *)listObject
 {
-	static BOOL didLoadPanes = NO;
-	if (!didLoadPanes) {
-		//Install our panes
-		[AIContactAccountsPane contactInfoPane];
-		[AIContactProfilePane contactInfoPane];
-		[AIContactSettingsPane contactInfoPane];
-		[ESContactAlertsPane contactInfoPane];
-
-		didLoadPanes = YES;
-	}
-
 	//Create the window
 	if (!sharedContactInfoInstance) {
 		sharedContactInfoInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB];
@@ -238,57 +226,47 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	if (tabView == tabView_category) {
-		int			identifier = [[tabViewItem identifier] intValue];
-		NSArray		*panes = nil;
-
+		AIContactInfoPane *pane = nil;
+		
 		//Take focus away from any textual controls to ensure that they register changes and save
 		if ([[[self window] firstResponder] isKindOfClass:[NSText class]]) {
 			[[self window] makeFirstResponder:nil];
 		}
 
-		switch (identifier) {
+		switch ([[tabViewItem identifier] intValue]) {
 			case AIInfo_Profile:
-				panes = [self _panesInCategory:AIInfo_Profile];
-				[view_Profile setPanes:panes];
+				if ([view_Profile isEmpty]) {
+					pane = [AIContactProfilePane contactInfoPane];
+					[loadedPanes addObject:pane];
+					[view_Profile setPanes:[NSArray arrayWithObject:pane]];
+				}
 				break;
 			case AIInfo_Accounts:
-				panes = [self _panesInCategory:AIInfo_Accounts];
-				[view_Accounts setPanes:panes];
+				if ([view_Accounts isEmpty]) {
+					pane = [AIContactAccountsPane contactInfoPane];
+					[loadedPanes addObject:pane];
+					[view_Accounts setPanes:[NSArray arrayWithObject:pane]];
+				}
 				break;
 			case AIInfo_Alerts:
-				panes = [self _panesInCategory:AIInfo_Alerts];
-				[view_Alerts setPanes:panes];
+				if ([view_Alerts isEmpty]) {
+					pane = [ESContactAlertsPane contactInfoPane];
+					[loadedPanes addObject:pane];
+					[view_Alerts setPanes:[NSArray arrayWithObject:pane]];
+				}
 				break;
 			case AIInfo_Settings:
-				panes = [self _panesInCategory:AIInfo_Settings];
-				[view_Settings setPanes:panes];
+				if ([view_Settings isEmpty]) {
+					pane = [AIContactSettingsPane contactInfoPane];
+					[loadedPanes addObject:pane];
+					[view_Settings setPanes:[NSArray arrayWithObject:pane]];
+				}
 				break;
 		}
 
 		//Configure the loaded panes
-		[self configurePanes:panes];
+		[self configurePane:pane];
 	}
-}
-
-//Loads, alphabetizes, and caches prefs for the speficied category
-- (NSArray *)_panesInCategory:(PREFERENCE_CATEGORY)inCategory
-{
-	NSMutableArray		*paneArray = [NSMutableArray array];
-	NSEnumerator		*enumerator = [[[adium contactController] contactInfoPanes] objectEnumerator];
-	AIContactInfoPane	*pane;
-
-	//Get the panes for this category
-	while ((pane = [enumerator nextObject])) {
-		if ([pane contactInfoCategory] == inCategory) {
-			[paneArray addObject:pane];
-			[loadedPanes addObject:pane];
-		}
-	}
-
-	//Alphabetize them
-	[paneArray sortUsingSelector:@selector(compare:)];
-
-	return paneArray;
 }
 
 //When the contact list selection changes, then configure the window for the new contact
@@ -392,15 +370,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 }
 
 //Configure our views
-- (void)configurePanes:(NSArray *)panes
+- (void)configurePane:(AIContactInfoPane *)pane
 {
 	if (displayedObject) {
-		NSEnumerator		*enumerator = [panes objectEnumerator];
-		AIContactInfoPane	*pane;
-
-		while ((pane = [enumerator nextObject])) {
-			[pane configureForListObject:displayedObject];
-		}
+		[pane configureForListObject:displayedObject];
 	}
 }
 
