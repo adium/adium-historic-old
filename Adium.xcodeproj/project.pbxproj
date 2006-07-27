@@ -3181,8 +3181,8 @@
 		34FD5BEB07F1F92900687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Resources/Italian.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferController.h; path = "Frameworks/Adium Framework/Source/ESFileTransferController.h"; sourceTree = "<group>"; };
 		34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferController.m; path = "Frameworks/Adium Framework/Source/ESFileTransferController.m"; sourceTree = "<group>"; };
-		3C73F83E04D62A2900A80106 /* AIEmoticonPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPack.h; path = Plugins/Emoticons/AIEmoticonPack.h; sourceTree = "<group>"; };
-		3C73F83F04D62A2900A80106 /* AIEmoticonPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPack.m; path = Plugins/Emoticons/AIEmoticonPack.m; sourceTree = "<group>"; };
+		3C73F83E04D62A2900A80106 /* AIEmoticonPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPack.h; path = "Frameworks/Adium Framework/Source/AIEmoticonPack.h"; sourceTree = "<group>"; };
+		3C73F83F04D62A2900A80106 /* AIEmoticonPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPack.m; path = "Frameworks/Adium Framework/Source/AIEmoticonPack.m"; sourceTree = "<group>"; };
 		40AC0EEB03B5BF1000A80202 /* ErrorMessageHandlerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ErrorMessageHandlerPlugin.h; path = "Plugins/Error Message Handler/ErrorMessageHandlerPlugin.h"; sourceTree = "<group>"; };
 		40AC0EEC03B5BF1000A80202 /* ErrorMessageHandlerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ErrorMessageHandlerPlugin.m; path = "Plugins/Error Message Handler/ErrorMessageHandlerPlugin.m"; sourceTree = "<group>"; };
 		40AC0F0F03B5C29E00A80202 /* ErrorMessageWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ErrorMessageWindowController.h; path = "Plugins/Error Message Handler/ErrorMessageWindowController.h"; sourceTree = "<group>"; };
@@ -4025,8 +4025,6 @@
 		11C157D504A88DE0008E0C76 /* Emoticons */ = {
 			isa = PBXGroup;
 			children = (
-				3C73F83E04D62A2900A80106 /* AIEmoticonPack.h */,
-				3C73F83F04D62A2900A80106 /* AIEmoticonPack.m */,
 				C4243C920638E4EA007AD2D9 /* BGEmoticonMenuPlugin.h */,
 				C4243C930638E4EA007AD2D9 /* BGEmoticonMenuPlugin.m */,
 			);
@@ -4472,8 +4470,6 @@
 			children = (
 				340BA84409EC593A000EC441 /* AICorePluginLoader.h */,
 				340BA84509EC593B000EC441 /* AICorePluginLoader.m */,
-				34503C7F058F96C400FB7AD1 /* AIEmoticon.h */,
-				34503C7E058F96C400FB7AD1 /* AIEmoticon.m */,
 				3448054F07AC5151006A7F7B /* ESDebugAILog.h */,
 				3448054E07AC5151006A7F7B /* ESDebugAILog.m */,
 				4BFC33DD058D4430008F7FA2 /* AIObject.h */,
@@ -4583,8 +4579,6 @@
 			children = (
 				346CFDC4087B7836009711C8 /* AdiumIdleManager.h */,
 				346CFDC5087B7836009711C8 /* AdiumIdleManager.m */,
-				9E44248608E11F380015D4DD /* AdiumURLHandling.h */,
-				9E44248708E11F380015D4DD /* AdiumURLHandling.m */,
 			);
 			name = "System (Idle, Connectivity, etc.)";
 			sourceTree = "<group>";
@@ -5294,6 +5288,29 @@
 			name = Preferences;
 			sourceTree = "<group>";
 		};
+		34E6CEED0A793DE40076D7F0 /* URL and Xtras Installation handling */ = {
+			isa = PBXGroup;
+			children = (
+				9E44248608E11F380015D4DD /* AdiumURLHandling.h */,
+				9E44248708E11F380015D4DD /* AdiumURLHandling.m */,
+				34F1023A073449D500890D3B /* XtrasInstaller.h */,
+				34F10239073449D500890D3B /* XtrasInstaller.m */,
+				34F1022A0734499600890D3B /* XtraProgressWindow.nib */,
+			);
+			name = "URL and Xtras Installation handling";
+			sourceTree = "<group>";
+		};
+		34E6CEFC0A793E870076D7F0 /* Emoticons */ = {
+			isa = PBXGroup;
+			children = (
+				34503C7F058F96C400FB7AD1 /* AIEmoticon.h */,
+				34503C7E058F96C400FB7AD1 /* AIEmoticon.m */,
+				3C73F83E04D62A2900A80106 /* AIEmoticonPack.h */,
+				3C73F83F04D62A2900A80106 /* AIEmoticonPack.m */,
+			);
+			name = Emoticons;
+			sourceTree = "<group>";
+		};
 		34EE35FB09C5012800C17DE1 /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
@@ -5687,6 +5704,7 @@
 			children = (
 				34BFD7ED07E6A1FB00AD984D /* Preset Manager */,
 				4B4F5B2D042D645F00A8010A /* Accounts & Services */,
+				34E6CEFC0A793E870076D7F0 /* Emoticons */,
 				4B587CAB07ABFF18001832A9 /* State & Status */,
 				4BE5AC7F07AFD46800422AD5 /* Interface */,
 				3448055407AC5203006A7F7B /* Other */,
@@ -5981,6 +5999,7 @@
 				344161B60943E0AF00BC26ED /* Setup Wizard */,
 				4B14CF1E085FBC4400C88949 /* Sound */,
 				346CFDBC087B77FB009711C8 /* System (Idle, Connectivity, etc.) */,
+				34E6CEED0A793DE40076D7F0 /* URL and Xtras Installation handling */,
 			);
 			name = "Private classes for the Public Interface";
 			sourceTree = "<group>";
@@ -6284,9 +6303,6 @@
 				633F175808F905A700C76383 /* AIXtrasManager.h */,
 				633F175908F905A700C76383 /* AIXtrasManager.m */,
 				632D801608E7E0A40032C187 /* XtrasManager.nib */,
-				34F1023A073449D500890D3B /* XtrasInstaller.h */,
-				34F10239073449D500890D3B /* XtrasInstaller.m */,
-				34F1022A0734499600890D3B /* XtraProgressWindow.nib */,
 			);
 			name = "Xtras Management";
 			sourceTree = "<group>";

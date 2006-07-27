@@ -50,8 +50,6 @@
 
 static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 
-#warning move to adium.framework
-
 /*!
  * @class AIPreferenceWindowController
  * @brief Adium preference window controller
