@@ -47,11 +47,21 @@
 - (NSString *)_stringWithMacEndlines:(NSString *)inString;
 @end
 
-#warning move to adium.framework
 
+/*!
+ * @class AIEmoticonPack
+ * @brief Class to encapsulate an emoticon pack, which is a themed collection of emoticons
+ *
+ * An emoticon pack must have a name and a set of one or more emoticons (AIEmoticon objects).
+ * It may also have a serviceClass, which indicates the class of a service upon which its emoticons are preferred.
+ * For example, a set of MSN emoticons would have a service class of @"MSN".
+ */
 @implementation AIEmoticonPack
 
-//Create a new emoticon pack
+/*
+ * @brief Create a new emoticon pack
+ * @param inPath The path to the root of a bundle of emoticons
+ */
 + (id)emoticonPackFromPath:(NSString *)inPath
 {
     return [[[self alloc] initFromPath:inPath] autorelease];
@@ -87,13 +97,17 @@
     [super dealloc];
 }
 
-//Our name
+/*!
+ * @brief Name, for display to the user
+ */
 - (NSString *)name
 {
     return name;
 }
 
-//Our path
+/*!
+ * @brief Path to this emoticon pack
+ */
 - (NSString *)path
 {
     return path;
@@ -109,7 +123,9 @@
 	return serviceClass;
 }
 
-//Our emoticons
+/*
+ * @brief An array of AIEmoticon objects
+ */
 - (NSArray *)emoticons
 {
 	if (!emoticonArray) [self loadEmoticons];
@@ -143,7 +159,10 @@
 	return [[emoticon image] imageByScalingToSize:NSMakeSize(16,16)];
 }
 
-//Set the emoticons that are disabled in this pack
+/*
+ * @brief Set the emoticons that are disabled in this pack
+ * @param inArray An NSArray of AIEmoticon objects to disable
+ */
 - (void)setDisabledEmoticons:(NSArray *)inArray
 {
     NSEnumerator    *enumerator;
@@ -156,11 +175,18 @@
     }
 }
 
-//Enable/Disable this pack
+/*
+ * @brief Enable/Disable this pack
+ * @param inEnabled Should this pack be enabled?
+ */
 - (void)setIsEnabled:(BOOL)inEnabled
 {
 	enabled = inEnabled;
 }
+
+/*
+ * @brief Is this pack enabled?
+ */
 - (BOOL)isEnabled{
 	return enabled;
 }
@@ -183,7 +209,11 @@
 
 //Loading Emoticons ----------------------------------------------------------------------------------------------------
 #pragma mark Loading Emoticons
-//Returns the emoticons in this pack
+/*
+ * @brief Load the emoticons in this pack.
+ *
+ * Called by [self emoticons] as needed
+ */
 - (void)loadEmoticons
 {
 //	NSBundle	*emoticonPackBundle;
@@ -276,7 +306,11 @@
 	[emoticonArray sortUsingSelector:@selector(compare:)];
 }
 
-//Adium version 1 emoticon pack
+/*!
+ * @brief Load an Adium version 1 emoticon pack
+ *
+ * @param emoticons A dictionary whose keys are file names and objects are themselves dictionaries with equivalent and name information.
+ */
 - (void)loadAdiumEmoticons:(NSDictionary *)emoticons
 {
 	NSEnumerator	*enumerator = [emoticons keyEnumerator];
@@ -294,7 +328,9 @@
 	}
 }
 
-//Proteus emoticon pack :)
+/*!
+ * @brief Load a Proteus emoticon pack
+ */
 - (void)loadProteusEmoticons:(NSDictionary *)emoticons
 {
 	NSEnumerator	*enumerator = [emoticons keyEnumerator];
@@ -310,7 +346,9 @@
 	}
 }
 
-//Flush any cached emoticon images (and image attachment strings)
+/*!
+ * @brief Flush any cached emoticon images (and image attachment strings)
+ */
 - (void)flushEmoticonImageCache
 {
     NSEnumerator    *enumerator;
@@ -327,7 +365,9 @@
 //Upgrading ------------------------------------------------------------------------------------------------------------
 //Methods for opening and converting old format Adium emoticon packs
 #pragma mark Upgrading
-//Upgrade an emoticon pack from the old format (where every emoticon is a separate file) to the new format
+/*!
+ * @brief Upgrade an emoticon pack from the old format (where every emoticon is a separate file) to the new format
+ */
 - (void)_upgradeEmoticonPack:(NSString *)packPath
 {
 	NSString				*packName, *workingDirectory, *tempPackName, *tempPackPath, *fileName;
@@ -396,7 +436,11 @@
 	[mgr trashFileAtPath:tempPackPath];
 }
 
-//Returns the path to our emoticon image
+/*!
+ * @brief Path to an emoticon image
+ *
+ * @param Path within which to search for a file whose name starts with "Emoticon"
+ */
 - (NSString *)_imagePathForEmoticonPath:(NSString *)inPath
 {
     NSDirectoryEnumerator   *enumerator;
@@ -411,7 +455,9 @@
     return nil;
 }
 
-//Text equivalents from a pack
+/*!
+ * @brief Retrieve the text equivalents from a pack
+ */
 - (NSArray *)_equivalentsForEmoticonPath:(NSString *)inPath
 {
 	NSString    *equivFilePath = [inPath stringByAppendingPathComponent:@"TextEquivalents.txt"];
@@ -430,7 +476,10 @@
 	return textEquivalents;
 }
 
-//Convert any unix/windows line endings to mac line endings
+/*!
+ * @brief Convert any unix/windows line endings to mac line endings
+ * @result The converted string
+ */
 - (NSString *)_stringWithMacEndlines:(NSString *)inString
 {
     NSCharacterSet      *newlineSet = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
