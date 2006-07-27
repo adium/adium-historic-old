@@ -24,6 +24,7 @@
 #import "AIPreferenceController.h"
 #import "AIToolbarController.h"
 #import "AIAccountController.h"
+#import "AIStatusIcons.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AICustomTabDragging.h>
 #import <AIUtilities/AICustomTabsView.h>
@@ -37,6 +38,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <PSMTabBarControl/PSMTabBarControl.h>
+#import <PSMTabBarControl/PSMOverflowPopUpButton.h>
 #import <PSMTabBarControl/PSMAdiumTabStyle.h>
 #import <PSMTabBarControl/PSMTabStyle.h>
 
@@ -286,6 +288,7 @@
 		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
 		[tabView_tabBar setAllowsBackgroundTabClosing:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
 		[tabView_tabBar setUseOverflowMenu:[[prefDict objectForKey:KEY_TABBAR_USE_OVERFLOW] boolValue]];
+		[[tabView_tabBar overflowPopUpButton] setAlternateImage:[AIStatusIcons statusIconForStatusName:@"content" statusType:AIAvailableStatusType iconType:AIStatusIconTab direction:AIIconNormal]];
 		
 		//change the frame of the tab bar according to the orientation
 		if (firstTime || [key isEqualToString:KEY_TABBAR_POSITION]) {
@@ -409,6 +412,10 @@
 {
 	if (tabViewItem == [tabView_messages selectedTabViewItem]) {
 		[self _updateWindowTitleAndIcon];
+	}
+	
+	if ([[tabView_tabBar representedTabViewItems] indexOfObject:tabViewItem] >= [tabView_tabBar numberOfVisibleTabs]) {
+		[[tabView_tabBar overflowPopUpButton] setShowingAlternateImage:([[tabViewItem chat] unviewedContentCount] > 0)];
 	}
 }
 
