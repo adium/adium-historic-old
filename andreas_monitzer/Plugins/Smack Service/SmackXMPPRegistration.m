@@ -101,32 +101,32 @@
             fielddefinitions = [[NSArray alloc] initWithObjects:
                 [NSDictionary dictionaryWithObjectsAndKeys:
                     @"username", @"field",
-                    AILocalizedString(@"Account name associated with the user","Account name associated with the user"), @"label",
+                    AILocalizedString(@"Account name","Account name associated with the user"), @"label",
                     nil],
                 [NSDictionary dictionaryWithObjectsAndKeys:
                     @"nick", @"field",
-                    AILocalizedString(@"Familiar name of the user","Familiar name of the user"), @"label",
+                    AILocalizedString(@"Familiar name","Familiar name of the user"), @"label",
                     nil],
                 [NSDictionary dictionaryWithObjectsAndKeys:
                     @"password", @"field",
-                    AILocalizedString(@"Password or secret for the user","Password or secret for the user"), @"label",
+                    AILocalizedString(@"Password or secret","Password or secret for the user"), @"label",
                     @"text-private", @"type",
                     nil],
                 [NSDictionary dictionaryWithObjectsAndKeys:
                     @"name", @"field",
-                    AILocalizedString(@"Full name of the user","Full name of the user"), @"label",
+                    AILocalizedString(@"Full name","Full name of the user"), @"label",
                     nil],
                 [NSDictionary dictionaryWithObjectsAndKeys:
                     @"first", @"field",
-                    AILocalizedString(@"First name or given name of the user","First name or given name of the user"), @"label",
+                    AILocalizedString(@"First name or given name","First name or given name of the user"), @"label",
                     nil],
                 [NSDictionary dictionaryWithObjectsAndKeys:
                     @"last", @"field",
-                    AILocalizedString(@"Last name, surname, or family name of the user","Last name, surname, or family name of the user"), @"label",
+                    AILocalizedString(@"Last name, surname, or family name","Last name, surname, or family name of the user"), @"label",
                     nil],
                 [NSDictionary dictionaryWithObjectsAndKeys:
                     @"email", @"field",
-                    AILocalizedString(@"Email address of the user","Email address of the user"), @"label",
+                    AILocalizedString(@"Email address","Email address of the user"), @"label",
                     nil],
                 [NSDictionary dictionaryWithObjectsAndKeys:
                     @"address", @"field",
@@ -146,11 +146,11 @@
                     nil],
                 [NSDictionary dictionaryWithObjectsAndKeys:
                     @"phone", @"field",
-                    AILocalizedString(@"Telephone number of the user","Telephone number of the user"), @"label",
+                    AILocalizedString(@"Telephone number","Telephone number of the user"), @"label",
                     nil],
                 [NSDictionary dictionaryWithObjectsAndKeys:
                     @"url", @"field",
-                    AILocalizedString(@"URL to web page describing the user","URL to web page describing the user"), @"label",
+                    AILocalizedString(@"URL to web page","URL to web page describing the user"), @"label",
                     nil],
                 [NSDictionary dictionaryWithObjectsAndKeys:
                     @"date", @"field",
@@ -158,7 +158,7 @@
                     nil],
                 [NSDictionary dictionaryWithObjectsAndKeys:
                     @"old_password", @"field",
-                    AILocalizedString(@"Old password for the user","Old password for the user"), @"label",
+                    AILocalizedString(@"Old password","Old password for the user"), @"label",
                     @"text-private", @"type",
                     nil],
                 nil];

@@ -45,7 +45,7 @@ static NSString *expandValues(JavaIterator *iter)
             @"body { font-family:'Lucida Grande'; }"
             @"table { width: 100%; table-layout: fixed; }"
             @"h1 { font-size: 1.5em; }"
-            @"th { text-align: right; width: 180px; white-space: nowrap; vertical-align: top; font-weight: normal; }"
+            @"th { text-align: right; width: 180px; vertical-align: top; font-weight: normal; }"
             @"td { vertical-align: top; }"
             ]] attributes:[NSArray arrayWithObject:
                 [NSXMLNode attributeWithName:@"type" stringValue:@"text/css"]]]];
