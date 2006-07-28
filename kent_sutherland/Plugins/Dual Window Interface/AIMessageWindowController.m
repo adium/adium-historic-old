@@ -288,7 +288,10 @@
 		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
 		[tabView_tabBar setAllowsBackgroundTabClosing:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
 		[tabView_tabBar setUseOverflowMenu:[[prefDict objectForKey:KEY_TABBAR_USE_OVERFLOW] boolValue]];
-		[[tabView_tabBar overflowPopUpButton] setAlternateImage:[AIStatusIcons statusIconForStatusName:@"content" statusType:AIAvailableStatusType iconType:AIStatusIconTab direction:AIIconNormal]];
+		//[[tabView_tabBar overflowPopUpButton] setAlternateImage:[AIStatusIcons statusIconForStatusName:@"content" statusType:AIAvailableStatusType iconType:AIStatusIconTab direction:AIIconNormal]];
+		NSImage *overflowImage = [[[NSImage alloc] initByReferencingFile:[[NSBundle mainBundle] pathForImageResource:@"overflow_overlay"]] autorelease];
+		[[tabView_tabBar overflowPopUpButton] setAlternateImage:overflowImage];
+		[[tabView_tabBar overflowPopUpButton] setAnimatingAlternateImage:YES];
 		
 		//change the frame of the tab bar according to the orientation
 		if (firstTime || [key isEqualToString:KEY_TABBAR_POSITION]) {
@@ -415,7 +418,7 @@
 	}
 	
 	if ([[tabView_tabBar representedTabViewItems] indexOfObject:tabViewItem] >= [tabView_tabBar numberOfVisibleTabs]) {
-		[[tabView_tabBar overflowPopUpButton] setShowingAlternateImage:([[tabViewItem chat] unviewedContentCount] > 0)];
+		[[tabView_tabBar overflowPopUpButton] setAnimatingAlternateImage:([[tabViewItem chat] unviewedContentCount] > 0)];
 	}
 }
 
