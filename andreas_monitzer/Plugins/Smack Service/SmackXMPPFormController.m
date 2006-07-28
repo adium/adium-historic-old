@@ -26,6 +26,8 @@
         if(!wv) {
             [NSBundle loadNibNamed:@"SmackXMPPForm" owner:self];
             [webview setHostWindow:window];
+            if([webview respondsToSelector:@selector(setDrawsBackground:)])
+                [webview setDrawsBackground:NO];
         } else {
             webview = wv;
             [webview setPolicyDelegate:self];

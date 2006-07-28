@@ -42,11 +42,12 @@ static NSString *expandValues(JavaIterator *iter)
 
     [head addChild:[NSXMLNode elementWithName:@"style" children:[NSArray arrayWithObject:
         [NSXMLNode textWithStringValue:
-            @"body { font-family:'Lucida Grande'; }"
+            @"body { font-family:'Lucida Grande'; border: 0px; padding: 0px; }"
             @"table { width: 100%; table-layout: fixed; }"
             @"h1 { font-size: 1.5em; }"
             @"th { text-align: right; width: 180px; vertical-align: top; font-weight: normal; }"
             @"td { vertical-align: top; }"
+            @"#submitbutton { position: fixed; text-align: right; bottom: 0px; right: 0px; }"
             ]] attributes:[NSArray arrayWithObject:
                 [NSXMLNode attributeWithName:@"type" stringValue:@"text/css"]]]];
     
@@ -209,7 +210,7 @@ static NSString *expandValues(JavaIterator *iter)
         [table addChild:row];
     }
     
-    row = [NSXMLNode elementWithName:@"tr"];
+/*    row = [NSXMLNode elementWithName:@"tr"];
     [row addChild:[NSXMLNode elementWithName:@"td" stringValue:@""]];
     [row addChild:[NSXMLNode elementWithName:@"td" children:[NSArray arrayWithObjects:
         [NSXMLNode elementWithName:@"input" children:nil attributes:[NSArray arrayWithObjects:
@@ -219,7 +220,13 @@ static NSString *expandValues(JavaIterator *iter)
             [NSXMLNode attributeWithName:@"type" stringValue:@"submit"],
             [NSXMLNode attributeWithName:@"value" stringValue:AILocalizedString(@"Submit","Submit")],nil]],
         nil] attributes:nil]];
-    [table addChild:row];
+    [table addChild:row];*/
+    
+    [formnode addChild:[NSXMLNode elementWithName:@"div" children:[NSArray arrayWithObject:
+        [NSXMLNode elementWithName:@"input" children:nil attributes:[NSArray arrayWithObjects:
+            [NSXMLNode attributeWithName:@"type" stringValue:@"submit"],
+            [NSXMLNode attributeWithName:@"value" stringValue:AILocalizedString(@"Submit","Submit")],nil]]
+             ] attributes:[NSArray arrayWithObject:[NSXMLElement attributeWithName:@"id" stringValue:@"submitbutton"]]]];
     
     NSXMLDocument *doc = [NSXMLNode documentWithRootElement:root];
     [doc setCharacterEncoding:@"UTF-8"];
