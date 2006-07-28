@@ -48,11 +48,11 @@
 /*
  * @brief Allow a file transfer with an object?
  *
- * As of 3/24/2006, GTalk does not allow file transfers.
+ * As of July 28th, 2006, GTalk allows transfers.
  */
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
 {
-	return NO;
+	return YES;
 }
 
 @end
