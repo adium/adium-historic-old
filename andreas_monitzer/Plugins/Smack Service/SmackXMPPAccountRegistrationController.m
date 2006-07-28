@@ -146,6 +146,9 @@
             
             [self setSelectionIndex:0];
         }
+        if([webview respondsToSelector:@selector(setDrawsBackground:)])
+            [webview setDrawsBackground:NO];
+
         initialized = YES;
     }
 }
