@@ -279,7 +279,7 @@
 	/* Ignore accounts.
 	 * Ignore meta contact children since the actual meta contact provides a better event. */
 	if ((![inObject isKindOfClass:[AIAccount class]]) &&		//Ignore accounts
-	   (![[inObject containingObject] isKindOfClass:[AIMetaContact class]])) {	
+	   (![[inObject containingObject] canContainOtherContacts])) {	
 		
 		if ([inModifiedKeys containsObject:@"Online"]) {
 			id newValue = [inObject numberStatusObjectForKey:@"Online" fromAnyContainedObject:NO];

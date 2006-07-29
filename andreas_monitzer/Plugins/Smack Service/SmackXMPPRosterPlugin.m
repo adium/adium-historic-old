@@ -231,9 +231,6 @@
 
     AIListContact *resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:XMPPAddress];
 
-    if(![rosterContact containsObject:resourceObject])
-        [rosterContact addObject:resourceObject];
-    
     AIStatusType statustype = AIOfflineStatusType;
     
     if(!presence)
@@ -245,6 +242,12 @@
             statustype = AIAwayStatusType;
     }
     
+	if (statustype != AIOfflineStatusType) {
+		if(![rosterContact containsObject:resourceObject])
+			[rosterContact addObject:resourceObject];
+	} else if([rosterContact containsObject:resourceObject])
+			[rosterContact removeObject:resourceObject];
+	
 	[resourceObject setOnline:statustype != AIOfflineStatusType
                     notify:NotifyNow
                   silently:NO];

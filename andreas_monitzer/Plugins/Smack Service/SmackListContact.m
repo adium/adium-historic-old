@@ -8,13 +8,22 @@
 
 #import "SmackListContact.h"
 #import "SmackXMPPAccount.h"
+#import "AIAdium.h"
+#import "AIContactController.h"
 
 @implementation SmackListContact
 
 - (id)initWithUID:(NSString *)inUID service:(AIService *)inService {
     if((self = [super initWithUID:inUID service:inService])) {
-        containedObjects = [[NSMutableArray alloc] init];
-        
+		bogusContact = [[adium contactController] contactWithService:inService account:[self account] UID:inUID class:[AIListContact class]];
+		[bogusContact setContainingObject:self];
+		[bogusContact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:NO];
+		[bogusContact setStatusObject:[NSNumber numberWithInt:-256] forKey:@"XMPPPriority" notify:NO];
+
+		[bogusContact retain];
+		
+        containedObjects = [[NSMutableArray alloc] initWithObjects:bogusContact,nil];
+
         largestOrder = 1.0;
         smallestOrder = 1.0;
         expanded = YES;
@@ -23,8 +32,10 @@
 }
 
 - (void)dealloc {
+	NSLog(@"deallocing %@",self);
     [containedObjects release];
-    
+    [bogusContact release];
+
     [super dealloc];
 }
 
@@ -49,12 +60,50 @@
             priority = c_prio;
         }
     }
-//    NSLog(@"best contact = %@",[bestcontact internalUniqueObjectID]);
     
     return bestcontact;
 }
 
 #pragma mark Status
+- (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
+{
+	if (inObject != bogusContact) {
+		BOOL	shouldNotify = NO;
+
+		if ([key isEqualToString:@"Online"]) {
+			shouldNotify = YES;
+		}
+		
+		if ([key isEqualToString:@"StatusType"] ||
+			[key isEqualToString:@"IdleSince"] ||
+			[key isEqualToString:@"IsIdle"] ||
+			[key isEqualToString:@"IsMobile"] ||
+			[key isEqualToString:@"StatusMessage"]) {
+			shouldNotify = YES;
+		}
+
+		if (shouldNotify) {
+			[super object:self didSetStatusObject:value forKey:key notify:notify];
+		}
+	}
+}
+
+- (id)statusObjectForKey:(NSString *)key
+{
+	id					returnValue;
+	
+	if (!(returnValue = [super statusObjectForKey:key])) {
+		returnValue = [[self preferredContact] statusObjectForKey:key];
+	}
+	
+	return returnValue;
+}
+
+- (int)integerStatusObjectForKey:(NSString *)key
+{
+	return [[self statusObjectForKey:key] intValue];
+}
+
 - (NSString *)statusName
 {
 //    NSLog(@"statusName = %@",[[self preferredContact] statusObjectForKey:@"StatusName"]);
@@ -71,8 +120,7 @@
 	AIStatusType	statusType = (statusTypeNumber ?
 								  [statusTypeNumber intValue] :
 								  AIAvailableStatusType);
-	
-//    NSLog(@"statusType = %d",statusType);
+//	NSLog(@"statusType for %@ = %d (Avail = %d, Offline = %d)",self,statusType, AIAvailableStatusType, AIOfflineStatusType);
 	return statusType;
 }
 
@@ -85,19 +133,21 @@
     AIListContact *contact;
     
     while((contact = [e nextObject])) {
-        NSAttributedString *temp = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: ",[[contact UID] jidResource]] attributes:[NSDictionary dictionaryWithObject:[NSFont boldSystemFontOfSize:[NSFont labelFontSize]] forKey:NSFontAttributeName]];
-        [result appendAttributedString:temp];
-        [temp release];
-        
-        if([contact contactListStatusMessage])
-            [result appendAttributedString:[contact contactListStatusMessage]];
+		if (contact != bogusContact) {
+			NSAttributedString *temp = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: ",[[contact UID] jidResource]] attributes:[NSDictionary dictionaryWithObject:[NSFont boldSystemFontOfSize:[NSFont labelFontSize]] forKey:NSFontAttributeName]];
+			[result appendAttributedString:temp];
+			[temp release];
+			
+			if([contact contactListStatusMessage])
+				[result appendAttributedString:[contact contactListStatusMessage]];
 
-        temp = [[NSAttributedString alloc] initWithString:@"\n" attributes:nil];
-        [result appendAttributedString:temp];
-        [temp release];
+			temp = [[NSAttributedString alloc] initWithString:@"\n" attributes:nil];
+			[result appendAttributedString:temp];
+			[temp release];
+		}
     }
     
-    NSLog(@"contactListStatusMessage = %@",[result string]);
+//    NSLog(@"contactListStatusMessage = %@",[result string]);
     
     return [result autorelease];
 }
@@ -130,7 +180,8 @@
 }
 
 - (unsigned)containedObjectsCount {
-    return [containedObjects count];
+	//never return less than 1 because we always "contain" the bogusContact
+    return [containedObjects count] > 0 ? [containedObjects count] : 1;
 }
 
 //Test for the presence of an object in our group
@@ -153,7 +204,9 @@
 
 - (void)removeAllObjects
 {
+	NSLog(@"remove everyone!");
     [containedObjects removeAllObjects];
+	[containedObjects addObject:bogusContact];
 }
 
 - (AIListObject *)objectWithService:(AIService *)inService UID:(NSString *)inUID {
@@ -174,10 +227,12 @@
 - (BOOL)addObject:(AIListObject *)inObject {
 	
 	if (inObject != self) {
+//		NSLog(@"containing %@",inObject);
 		[containedObjects addObject:inObject];
     
 		[inObject setContainingObject:self];
-
+		[self notifyOfChangedStatusSilently:NO];
+		[containedObjects removeObject:bogusContact];
 		return YES;
 	}
 	NSLog(@"tried to contain myself!");
@@ -186,6 +241,8 @@
 
 - (void)removeObject:(AIListObject*)inObject {
     [containedObjects removeObject:inObject];
+	if ([containedObjects count] == 0)
+		[containedObjects addObject:bogusContact];
 
     [self notifyOfChangedStatusSilently:NO];
 }
