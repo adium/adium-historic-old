@@ -201,7 +201,7 @@
 
 - (void)setKeyEquivalent:(NSString *)keyEquivalent modifierMask:(unsigned int)mask forButton:(AITextAndButtonsWindowButton)windowButton
 {
-	NSButton *button;
+	NSButton *button = nil;
 	switch (windowButton) {		
 		case AITextAndButtonsWindowButtonDefault:
 			button = button_default;
