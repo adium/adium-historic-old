@@ -9,7 +9,7 @@
 		<key>19</key>
 		<string>749 635 422 300 0 0 1920 1178 </string>
 		<key>5</key>
-		<string>717 586 486 398 0 0 1920 1178 </string>
+		<string>464 363 472 361 0 0 1920 1178 </string>
 	</dict>
 	<key>IBFramework Version</key>
 	<string>446.1</string>
@@ -34,7 +34,6 @@
 	<key>IBOpenObjects</key>
 	<array>
 		<integer>5</integer>
-		<integer>19</integer>
 	</array>
 	<key>IBSystem Version</key>
 	<string>8H14</string>

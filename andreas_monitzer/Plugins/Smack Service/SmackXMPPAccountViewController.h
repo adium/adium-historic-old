@@ -43,6 +43,7 @@
 
 - (void)setJID:(NSString*)jid password:(NSString*)password;
 
-- (void)setAddCreateAccount:(unsigned)index;
+- (void)createAccount:(id)sender;
+- (void)showAddAccount:(id)sender;
 
 @end

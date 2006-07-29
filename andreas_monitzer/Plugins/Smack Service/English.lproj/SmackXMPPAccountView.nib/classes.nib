@@ -50,6 +50,7 @@
             SUPERCLASS = NSArrayController; 
         }, 
         {
+            ACTIONS = {createAccount = id; showAddAccount = id; }; 
             CLASS = SmackXMPPAccountViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {

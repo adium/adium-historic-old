@@ -47,6 +47,7 @@ static NSString *expandValues(JavaIterator *iter)
             @"h1 { font-size: 1.5em; }"
             @"th { text-align: right; width: 180px; vertical-align: top; font-weight: normal; }"
             @"td { vertical-align: top; }"
+            @"#submit { font-size: 14pt; }"
             @"#submitbutton { position: fixed; text-align: right; bottom: 0px; right: 0px; }"
             ]] attributes:[NSArray arrayWithObject:
                 [NSXMLNode attributeWithName:@"type" stringValue:@"text/css"]]]];
@@ -225,7 +226,8 @@ static NSString *expandValues(JavaIterator *iter)
     [formnode addChild:[NSXMLNode elementWithName:@"div" children:[NSArray arrayWithObject:
         [NSXMLNode elementWithName:@"input" children:nil attributes:[NSArray arrayWithObjects:
             [NSXMLNode attributeWithName:@"type" stringValue:@"submit"],
-            [NSXMLNode attributeWithName:@"value" stringValue:AILocalizedString(@"Submit","Submit")],nil]]
+            [NSXMLNode attributeWithName:@"id" stringValue:@"submit"],
+            [NSXMLNode attributeWithName:@"value" stringValue:AILocalizedString(@"  Submit  ","Submit")],nil]]
              ] attributes:[NSArray arrayWithObject:[NSXMLElement attributeWithName:@"id" stringValue:@"submitbutton"]]]];
     
     NSXMLDocument *doc = [NSXMLNode documentWithRootElement:root];

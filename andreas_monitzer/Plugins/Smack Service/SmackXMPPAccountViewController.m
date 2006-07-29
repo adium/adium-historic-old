@@ -122,22 +122,15 @@
     [[textField_connectPort cell] setPlaceholderString:ssl?@"5223":@"5222"];
 }
 
-- (int)addCreateAccount
+- (void)createAccount:(id)sender
 {
-    return (!tabview || [[[tabview selectedTabViewItem] identifier] isEqualToString:@"addexisting"])?0:1;
+    [accountregctrl activate];
+    [tabview selectTabViewItemWithIdentifier:@"createnew1"];
 }
 
-- (void)setAddCreateAccount:(unsigned)index
+- (void)showAddAccount:(id)sender
 {
-    if(index == 0)
-        [tabview selectTabViewItemWithIdentifier:@"addexisting"];
-    else
-        if([[[tabview selectedTabViewItem] identifier] isEqualToString:@"addexisting"])
-        {
-            [accountregctrl activate];
-            [tabview selectTabViewItemWithIdentifier:@"createnew1"];
-        }
+    [tabview selectTabViewItemWithIdentifier:@"addexisting"];
 }
-
 
 @end
