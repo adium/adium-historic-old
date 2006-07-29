@@ -51,6 +51,7 @@
                                                  selector:@selector(receivedPresencePacket:)
                                                      name:SmackXMPPPresencePacketReceivedNotification
                                                    object:account];
+        
     }
     return self;
 }
@@ -65,10 +66,33 @@
 - (void)connected:(SmackXMPPConnection*)conn {
     listener = [[SmackCocoaAdapter rosterPluginListenerWithDelegate:self] retain];
     [[conn initializeRoster] addRosterListener:listener];
+
+    // we're a tooltip plugin for displaying resources
+    [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
 }
 
 - (void)disconnected:(SmackXMPPConnection*)conn {
+    [[adium interfaceController] unregisterContactListTooltipEntry:self secondaryEntry:YES];
     [listener release];
+}
+
+#pragma mark Tooltip Handling
+
+- (NSString *)labelForObject:(AIListObject *)inObject
+{
+    NSLog(@"label for object %@",inObject);
+	if ([inObject isKindOfClass:[SmackListContact class]]) {
+        if([(SmackListContact*)inObject preferredContact])
+            return AILocalizedString(@"Resources",nil);
+	}
+	
+    NSLog(@"nil return");
+	return nil;
+}
+
+- (NSAttributedString *)entryForObject:(AIListObject *)inObject
+{
+    return [(SmackListContact*)inObject resourceInfo];
 }
 
 #pragma mark Callbacks from Java

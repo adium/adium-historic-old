@@ -883,6 +883,15 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc] au
         [contactListTooltipEntryArray addObject:inEntry];
 }
 
+//Unregisters code to display tooltip info about a contact
+- (void)unregisterContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry secondaryEntry:(BOOL)isSecondary
+{
+    if (isSecondary)
+        [contactListTooltipSecondaryEntryArray removeObject:inEntry];
+    else
+        [contactListTooltipEntryArray removeObject:inEntry];
+}
+
 //list object tooltips
 - (void)showTooltipForListObject:(AIListObject *)object atScreenPoint:(NSPoint)point onWindow:(NSWindow *)inWindow 
 {

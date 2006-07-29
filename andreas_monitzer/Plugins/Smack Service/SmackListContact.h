@@ -18,4 +18,6 @@
     float smallestOrder;
 }
 
+- (NSAttributedString *)resourceInfo;
+
 @end
