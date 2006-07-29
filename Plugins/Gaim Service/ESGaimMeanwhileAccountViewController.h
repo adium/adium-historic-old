@@ -17,7 +17,8 @@
 #include "AIAccountViewController.h"
 
 @interface ESGaimMeanwhileAccountViewController : AIAccountViewController {
-
+	IBOutlet	NSButton	*checkBox_fakeClientId;
+	IBOutlet	NSButton	*checkBox_forceLogin;
 }
 
 @end
