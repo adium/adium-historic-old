@@ -117,7 +117,6 @@
 		3402E02407CB0D1B0044F818 /* ProxyPasswordPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02307CB0D1B0044F818 /* ProxyPasswordPrompt.nib */; };
 		3402E02607CB0D1B0044F818 /* PasswordPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02507CB0D1B0044F818 /* PasswordPrompt.nib */; };
 		3402E02E07CB0DBB0044F818 /* AboutBox.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02D07CB0DBB0044F818 /* AboutBox.nib */; };
-		3402E03707CB0DFB0044F818 /* PreferenceWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E03607CB0DFB0044F818 /* PreferenceWindow.nib */; };
 		3402E04207CB0E4D0044F818 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E04107CB0E4D0044F818 /* Localizable.strings */; };
 		3402E07607CB0FAA0044F818 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E07507CB0FAA0044F818 /* Localizable.strings */; };
 		3406707A0A55A044004E22AC /* sourceListBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 340670790A55A044004E22AC /* sourceListBackground.png */; };
@@ -158,11 +157,8 @@
 		341BDBBB0968BC9B00CF83F5 /* OTR.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		341BDF5E0969814A00CF83F5 /* BadgerDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF5D0969814900CF83F5 /* BadgerDefaults.plist */; };
 		341BDF700969829E00CF83F5 /* DockUnviewedContentDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF6F0969829E00CF83F5 /* DockUnviewedContentDefaults.plist */; };
-		3420E6610611D80100AE67E3 /* ESAccountPasswordPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3420E65C0611D80000AE67E3 /* ESAccountPasswordPromptController.m */; };
-		3420E6630611D80100AE67E3 /* ESProxyPasswordPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3420E65E0611D80000AE67E3 /* ESProxyPasswordPromptController.m */; };
 		342113CE08261FB900A3B0FB /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342113CD08261FB900A3B0FB /* MainMenu.nib */; };
 		342114B50826D37100A3B0FB /* EditStateSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342114B40826D37100A3B0FB /* EditStateSheet.nib */; };
-		3421D3AB0753EE2F00EBCF4F /* ESFileTransferProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 349FE2FE074D01D300E36B3B /* ESFileTransferProgressView.m */; };
 		342340E009D1AF58009FF634 /* RAFjoscarSecuridPromptController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */; };
 		342340E109D1AF58009FF634 /* RAFjoscarSecuridPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */; };
 		342353D709D45726009FF634 /* AIAbstractLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */; };
@@ -170,7 +166,6 @@
 		3428328907D2643F004F01C9 /* ESStatusPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3428328507D2643F004F01C9 /* ESStatusPreferences.m */; };
 		3428328B07D2643F004F01C9 /* ESStatusPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3428328707D2643F004F01C9 /* ESStatusPreferencesPlugin.m */; };
 		342838EE07D2D004004F01C9 /* Shared Dock Icon Images in Resources */ = {isa = PBXBuildFile; fileRef = 342838ED07D2D004004F01C9 /* Shared Dock Icon Images */; };
-		3428B33F0815E1FB00C0D3DC /* emoticon32.png in Resources */ = {isa = PBXBuildFile; fileRef = 3428B33E0815E1FB00C0D3DC /* emoticon32.png */; };
 		342910CD07AE228600C815F6 /* AIEmoticonPackPreviewTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 342910CB07AE228600C815F6 /* AIEmoticonPackPreviewTableView.m */; };
 		3429BB06070378F700EED705 /* ESFileTransferMessagesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3429BB04070378F700EED705 /* ESFileTransferMessagesPlugin.m */; };
 		342B77BF09C67C0700DB7AAF /* TranslatorOptions.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342B77BE09C67C0700DB7AAF /* TranslatorOptions.nib */; };
@@ -210,10 +205,6 @@
 		343ECBFC0971B92100349098 /* AIBorderlessListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 343ECBFA0971B92100349098 /* AIBorderlessListController.m */; };
 		344093AB07D9161B00321BB3 /* ESAutoAwayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 344093A907D9161B00321BB3 /* ESAutoAwayPlugin.m */; };
 		3440974307DA06FE00321BB3 /* MessageContextDisplayPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3440974207DA06FE00321BB3 /* MessageContextDisplayPrefs.nib */; };
-		344161BE0943E0D900BC26ED /* AdiumSetupWizard.m in Sources */ = {isa = PBXBuildFile; fileRef = 344161BC0943E0D800BC26ED /* AdiumSetupWizard.m */; };
-		344161D00943E20D00BC26ED /* AdiumyButler.png in Resources */ = {isa = PBXBuildFile; fileRef = 344161CF0943E20D00BC26ED /* AdiumyButler.png */; };
-		344161D40943E22F00BC26ED /* SetupWizard.nib in Resources */ = {isa = PBXBuildFile; fileRef = 344161D30943E22F00BC26ED /* SetupWizard.nib */; };
-		344162410943E76400BC26ED /* SetupWizardBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3441623F0943E76400BC26ED /* SetupWizardBackgroundView.m */; };
 		344458F0070B5BEF00D8E932 /* ESDebugWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344458EE070B5BEF00D8E932 /* ESDebugWindowController.m */; };
 		3448758E06D1EBDF00DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448761406D1EC0C00DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
@@ -225,9 +216,7 @@
 		3448769806D1EF5900DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448769906D1EF6100DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448769A06D1EF7300DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
-		344C0D5006B6D63800DA7200 /* ESApplescriptabilityController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344C0D4E06B6D63800DA7200 /* ESApplescriptabilityController.m */; };
 		344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4947F5CB0655E85200B791E5 /* Bonjour.AdiumPlugin */; };
-		3452A9F907891C8A00C3C494 /* ESFileTransferRequestPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3452A9F707891C8A00C3C494 /* ESFileTransferRequestPromptController.m */; };
 		34536751059BA8EE00A83D9E /* atos in Resources */ = {isa = PBXBuildFile; fileRef = 34536750059BA8ED00A83D9E /* atos */; };
 		3456231C0A3771D800E7FC97 /* ESRankingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231A0A3771D800E7FC97 /* ESRankingCell.m */; };
 		345623200A3771E100E7FC97 /* AIChatLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231E0A3771E100E7FC97 /* AIChatLog.m */; };
@@ -237,10 +226,6 @@
 		3456232F0A37723400E7FC97 /* LogViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3456232E0A37723400E7FC97 /* LogViewer.nib */; };
 		345623380A3773C300E7FC97 /* LoggingDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 345623370A3773C300E7FC97 /* LoggingDefaults.plist */; };
 		3456233F0A3773D100E7FC97 /* AILoggerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456233D0A3773D000E7FC97 /* AILoggerPlugin.m */; };
-		34575E2E07CBA70D004A4FFF /* FileTransferRequestPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E2A07CBA70D004A4FFF /* FileTransferRequestPrompt.nib */; };
-		34575E2F07CBA70D004A4FFF /* FileTransferProgressWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E2B07CBA70D004A4FFF /* FileTransferProgressWindow.nib */; };
-		34575E3007CBA70D004A4FFF /* FileTransferPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34575E2C07CBA70D004A4FFF /* FileTransferPrefs.plist */; };
-		34575E3107CBA70D004A4FFF /* FileTransferPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E2D07CBA70D004A4FFF /* FileTransferPrefs.nib */; };
 		34575E3307CBA7CC004A4FFF /* ContactInfoWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3207CBA7CC004A4FFF /* ContactInfoWindow.nib */; };
 		34575E3707CBA874004A4FFF /* DebugWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3607CBA874004A4FFF /* DebugWindow.nib */; };
 		34575E3907CBA88E004A4FFF /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3807CBA88E004A4FFF /* MainMenu.nib */; };
@@ -255,10 +240,6 @@
 		345F58C7081990FF001F733C /* LogViewer.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F58C6081990FF001F733C /* LogViewer.png */; };
 		345F58ED0819967A001F733C /* offlinecontacts.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F58EB0819967A001F733C /* offlinecontacts.png */; };
 		345F58EE0819967A001F733C /* offlinecontacts_transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F58EC0819967A001F733C /* offlinecontacts_transparent.png */; };
-		345F58F308199727001F733C /* togglegroups_transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F58F108199727001F733C /* togglegroups_transparent.png */; };
-		345F58F408199727001F733C /* togglegroups.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F58F208199727001F733C /* togglegroups.png */; };
-		345F590708199746001F733C /* emoticon32_transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F590608199746001F733C /* emoticon32_transparent.png */; };
-		345F5C5F081ACCB2001F733C /* remove.png in Resources */ = {isa = PBXBuildFile; fileRef = 347E787507CA975900350507 /* remove.png */; };
 		34607EE909B228FE000DB3D2 /* AIContactListNameButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 34607EE709B228FE000DB3D2 /* AIContactListNameButton.m */; };
 		34607F1009B2296A000DB3D2 /* AIHoveringPopUpButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34607F0C09B2296A000DB3D2 /* AIHoveringPopUpButtonCell.m */; };
 		34607F1209B2296A000DB3D2 /* AIHoveringPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 34607F0E09B2296A000DB3D2 /* AIHoveringPopUpButton.m */; };
@@ -281,7 +262,6 @@
 		346C9D1206004645000F5A8A /* ESWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 346C9A2305FFE3DE000F5A8A /* ESWebView.h */; };
 		346C9D1606004646000F5A8A /* ESWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346C9A2405FFE3DF000F5A8A /* ESWebView.m */; };
 		346C9D3006004650000F5A8A /* WebKitPrivateDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 346C9A4005FFE418000F5A8A /* WebKitPrivateDefinitions.h */; };
-		346CFDC7087B7836009711C8 /* AdiumIdleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 346CFDC5087B7836009711C8 /* AdiumIdleManager.m */; };
 		346F5CB408A418FB0055C610 /* iTunes.png in Resources */ = {isa = PBXBuildFile; fileRef = 346F5CB208A418FA0055C610 /* iTunes.png */; };
 		346F5D3208A43E7B0055C610 /* CurrentTunes.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 346F5CB308A418FB0055C610 /* CurrentTunes.scpt */; };
 		347065E506015DC5004F0D20 /* WebKit Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 347065E406015DC5004F0D20 /* WebKit Defaults.plist */; };
@@ -484,9 +464,6 @@
 		3485DBCB09EBCE7400232CC4 /* ESGaimRequestActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */; };
 		3485DBD009EBCE8200232CC4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E04D07CB0EB00044F818 /* Localizable.strings */; };
 		3485DBF209EBD01900232CC4 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
-		3486E8A7097F24A90044C496 /* AdiumAuthorization.m in Sources */ = {isa = PBXBuildFile; fileRef = 3486E8A5097F24A90044C496 /* AdiumAuthorization.m */; };
-		3486E9DB097F5FCE0044C496 /* AuthorizationRequestWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3486E9DA097F5FCE0044C496 /* AuthorizationRequestWindow.nib */; };
-		3486E9E2097F5FE20044C496 /* ESAuthorizationRequestWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3486E9E0097F5FE20044C496 /* ESAuthorizationRequestWindowController.m */; };
 		348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */; };
 		348B25C80A50FBF300B2B972 /* KNShelfSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */; };
 		348E5ACB06D2A74C004C051C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348E5ACA06D2A74C004C051C /* AddressBook.framework */; };
@@ -515,8 +492,6 @@
 		349C7C7A07C9AE1B005EB896 /* ContactListAdvancedPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 349C6F8A07C99D2C005EB896 /* ContactListAdvancedPrefs.nib */; };
 		349DDD5306406A7D00542726 /* stackImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 349DDD5206406A7D00542726 /* stackImage.png */; };
 		349E2E8E07A8AF0C00EAB76A /* AIEmoticonPackPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349E2E8C07A8AF0C00EAB76A /* AIEmoticonPackPreviewController.m */; };
-		349FE303074D01D300E36B3B /* ESFileTransferProgressWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349FE2FC074D01D200E36B3B /* ESFileTransferProgressWindowController.m */; };
-		349FE307074D01D300E36B3B /* ESFileTransferProgressRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 349FE300074D01D300E36B3B /* ESFileTransferProgressRow.m */; };
 		34A250B607E0F822009854E1 /* StatusDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34A250B507E0F822009854E1 /* StatusDefaults.plist */; };
 		34A29DB706ED68C000E1366C /* Contact List in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34A29D9406ED68BF00E1366C /* Contact List */; };
 		34A489F306F64359002C7C5F /* AISCLViewPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A489F106F64359002C7C5F /* AISCLViewPlugin.m */; };
@@ -537,8 +512,6 @@
 		34A6FB2607D6F97B00972830 /* EventSoundContactAlert.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB2507D6F97B00972830 /* EventSoundContactAlert.nib */; };
 		34A6FB2D07D6F98600972830 /* SoundAlert.png in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB2B07D6F98600972830 /* SoundAlert.png */; };
 		34A6FB2E07D6F98600972830 /* SoundFileIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB2C07D6F98600972830 /* SoundFileIcon.png */; };
-		34A6FB8107D6FDCC00972830 /* FormattingDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */; };
-		34AA35DC095CCA4D003B56DB /* AdiumDisconnectionErrorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AA35DA095CCA4D003B56DB /* AdiumDisconnectionErrorController.m */; };
 		34AE249E09BCCFA900A35B51 /* AIWindowDraggingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AE249C09BCCFA900A35B51 /* AIWindowDraggingView.m */; };
 		34B323B809B9FEAC00029361 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		34B3243F09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3243D09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h */; };
@@ -550,25 +523,10 @@
 		34B4B5A40708B049002C4C6D /* ESDebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B4B5A20708B049002C4C6D /* ESDebugController.m */; };
 		34B588A1058D833A00E7EF0D /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */; };
 		34B70346076EDB370016E8BA /* NewAlert.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B70341076EDB370016E8BA /* NewAlert.nib */; };
-		34B82C82085A85D800864531 /* AIChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B82C80085A85D800864531 /* AIChatController.m */; };
-		34B82C8C085A87B000864531 /* AdiumMessageEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B82C8A085A87B000864531 /* AdiumMessageEvents.m */; };
 		34B9C7900A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */; };
 		34B9C7920A255DCE00CEA8AE /* LogViewerDateFilter.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */; };
-		34BD0DB608D31479000BE2C0 /* AdiumChatEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */; };
-		34BD9D43053146CC000AB133 /* AIAccountController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938AA033E737001A8010A /* AIAccountController.m */; };
-		34BD9D44053146CC000AB133 /* AIInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938AC033E737001A8010A /* AIInterfaceController.m */; };
-		34BD9D46053146CC000AB133 /* AIPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938AF033E737001A8010A /* AIPreferenceController.m */; };
-		34BD9D47053146CC000AB133 /* AISoundController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938B0033E737001A8010A /* AISoundController.m */; };
-		34BD9D48053146CC000AB133 /* AIPreferenceWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938BB033E739101A8010A /* AIPreferenceWindowController.m */; };
-		34BD9D49053146CC000AB133 /* AILoginWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938C2033E73AC01A8010A /* AILoginWindowController.m */; };
 		34BD9D4A053146CC000AB133 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F59DB6AD033EB74801A8010A /* main.m */; };
-		34BD9D4B053146CC000AB133 /* AILoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938AD033E737001A8010A /* AILoginController.m */; };
 		34BD9D4C053146CC000AB133 /* AIContactInfoWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F570A59903704B6101A8010A /* AIContactInfoWindowController.m */; };
-		34BD9D4D053146CC000AB133 /* AIMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = F570A5B603704C6101A8010A /* AIMenuController.m */; };
-		34BD9D4E053146CC000AB133 /* AIToolbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = F570A60803704E9701A8010A /* AIToolbarController.m */; };
-		34BD9D4F053146CC000AB133 /* AIContactController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938AB033E737001A8010A /* AIContactController.m */; };
-		34BD9D50053146CC000AB133 /* AIPasswordPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = F55B416603AB8BFC01A8010A /* AIPasswordPromptController.m */; };
-		34BD9D52053146CC000AB133 /* AIDockController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E95316903C8E0C700415B22 /* AIDockController.m */; };
 		34BD9D54053146CC000AB133 /* AIAdium.m in Sources */ = {isa = PBXBuildFile; fileRef = F59DB3D7033EA9CD01A8010A /* AIAdium.m */; };
 		34BD9D56053146CC000AB133 /* LNAboutBoxController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3DA2E3E052E65DE00A8010B /* LNAboutBoxController.m */; };
 		34BD9D5A053146CC000AB133 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F531836F019E40BB01A80165 /* Carbon.framework */; };
@@ -620,29 +578,6 @@
 		34D0FDD20956186200DCB678 /* ESPersonalPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D0FDD00956186200DCB678 /* ESPersonalPreferencesPlugin.m */; };
 		34D0FDD80956187700DCB678 /* ESPersonalPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D0FDD60956187700DCB678 /* ESPersonalPreferences.m */; };
 		34D0FF8509569FE500DCB678 /* PersonalPreferencesDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D0FF8409569FE500DCB678 /* PersonalPreferencesDefaults.plist */; };
-		34D2E86A0758BB0C0054C56D /* ESFileTransferPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D2E8680758BB0B0054C56D /* ESFileTransferPreferences.m */; };
-		34D8325407CBD53B006466F2 /* FTProgressRevealRollover.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324807CBD53A006466F2 /* FTProgressRevealRollover.tif */; };
-		34D8325507CBD53B006466F2 /* FTProgressRevealRollover_Selected.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324907CBD53A006466F2 /* FTProgressRevealRollover_Selected.tif */; };
-		34D8325607CBD53B006466F2 /* FTProgressStopRollover_Selected.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324A07CBD53A006466F2 /* FTProgressStopRollover_Selected.tif */; };
-		34D8325707CBD53B006466F2 /* FTProgressStop_Selected.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324B07CBD53A006466F2 /* FTProgressStop_Selected.tif */; };
-		34D8325807CBD53B006466F2 /* FTProgressStop.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324C07CBD53A006466F2 /* FTProgressStop.tif */; };
-		34D8325907CBD53B006466F2 /* FTProgressStopRollover.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324D07CBD53B006466F2 /* FTProgressStopRollover.tif */; };
-		34D8325A07CBD53B006466F2 /* FTProgressRevealPressed.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324E07CBD53B006466F2 /* FTProgressRevealPressed.tif */; };
-		34D8325B07CBD53B006466F2 /* FTProgressReveal_Selected.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324F07CBD53B006466F2 /* FTProgressReveal_Selected.tif */; };
-		34D8325C07CBD53B006466F2 /* FTProgressReveal.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8325007CBD53B006466F2 /* FTProgressReveal.tif */; };
-		34D8325D07CBD53B006466F2 /* FTProgressStopPressed_Selected.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8325107CBD53B006466F2 /* FTProgressStopPressed_Selected.tif */; };
-		34D8325E07CBD53B006466F2 /* FTProgressStopPressed.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8325207CBD53B006466F2 /* FTProgressStopPressed.tif */; };
-		34D8325F07CBD53B006466F2 /* FTProgressRevealPressed_Selected.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8325307CBD53B006466F2 /* FTProgressRevealPressed_Selected.tif */; };
-		34D8326807CBD598006466F2 /* AccountPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8326107CBD598006466F2 /* AccountPrefs.plist */; };
-		34D8326907CBD598006466F2 /* DockPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8326207CBD598006466F2 /* DockPrefs.plist */; };
-		34D8326A07CBD598006466F2 /* sendfile.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8326307CBD598006466F2 /* sendfile.png */; };
-		34D8326B07CBD598006466F2 /* SoundPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8326407CBD598006466F2 /* SoundPrefs.plist */; };
-		34D8326C07CBD598006466F2 /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8326507CBD598006466F2 /* info.png */; };
-		34D8326D07CBD598006466F2 /* ContactPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8326607CBD598006466F2 /* ContactPrefs.plist */; };
-		34D8326E07CBD598006466F2 /* DefaultIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8326707CBD598006466F2 /* DefaultIcon.png */; };
-		34D8327707CBD5B3006466F2 /* BuiltInStatusStates.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8327507CBD5B3006466F2 /* BuiltInStatusStates.plist */; };
-		34D8327807CBD5B3006466F2 /* ToolbarPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8327607CBD5B3006466F2 /* ToolbarPrefs.plist */; };
-		34D8328907CBD5D2006466F2 /* keys.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8328807CBD5D2006466F2 /* keys.png */; };
 		34D8329007CBD5E2006466F2 /* Contact Info List Theme.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8328E07CBD5E2006466F2 /* Contact Info List Theme.plist */; };
 		34D8329107CBD5E2006466F2 /* Contact Info List Layout.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8328F07CBD5E2006466F2 /* Contact Info List Layout.plist */; };
 		34D8329907CBD609006466F2 /* AdiumSuite.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 34D8329707CBD609006466F2 /* AdiumSuite.scriptTerminology */; };
@@ -677,8 +612,6 @@
 		34D8375407CC2FA3006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34D8378307CC31B9006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34DCF0E3097A30AD0054194E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
-		34DFF53907A62EB200B92233 /* Lock_Unlocked State.png in Resources */ = {isa = PBXBuildFile; fileRef = 34DFF52607A62EB000B92233 /* Lock_Unlocked State.png */; };
-		34DFF54307A62EB200B92233 /* Lock_Locked State.png in Resources */ = {isa = PBXBuildFile; fileRef = 34DFF53007A62EB100B92233 /* Lock_Locked State.png */; };
 		34DFF5FD07A63DB400B92233 /* ESSecureMessagingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34DFF46107A5EABF00B92233 /* ESSecureMessagingPlugin.m */; };
 		34E00F8707B92B89000DF265 /* TextAndButtonsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34E00F8607B92B88000DF265 /* TextAndButtonsWindow.nib */; };
 		34E036720A75AA4F00394F11 /* CBOscarService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B919C9062DEF15004F1223 /* CBOscarService.h */; };
@@ -717,7 +650,6 @@
 		34E0EA0F07CC53FE00A82198 /* AINewMessagePanelPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0EA0B07CC53FE00A82198 /* AINewMessagePanelPlugin.m */; };
 		34E0EA1007CC53FE00A82198 /* AINewMessagePromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0EA0C07CC53FE00A82198 /* AINewMessagePromptController.m */; };
 		34E0EA4007CC55B100A82198 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
-		34E1EDF60A045AA2003C14F1 /* AdiumApplescriptRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E1EDF40A045AA2003C14F1 /* AdiumApplescriptRunner.m */; };
 		34E2A0BC07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0BA07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m */; };
 		34E2A0C307AF593B006735BC /* AIAccountMenuAccessPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0C107AF593B006735BC /* AIAccountMenuAccessPlugin.m */; };
 		34E2A1CD07AF635A006735BC /* ESFastUserSwitchingSupportPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A1CB07AF635A006735BC /* ESFastUserSwitchingSupportPlugin.m */; };
@@ -980,7 +912,6 @@
 		34E6C34B0A7815FD0076D7F0 /* AIListGroupMockieCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 340F487806DA5E440072E2FA /* AIListGroupMockieCell.m */; };
 		34E6C34C0A7815FD0076D7F0 /* ESFileTransferProgressWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349FE2FC074D01D200E36B3B /* ESFileTransferProgressWindowController.m */; };
 		34E6C34D0A7815FD0076D7F0 /* ESAuthorizationRequestWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3486E9E0097F5FE20044C496 /* ESAuthorizationRequestWindowController.m */; };
-		34E6C34E0A7815FD0076D7F0 /* SystemVersionCheck.m in Sources */ = {isa = PBXBuildFile; fileRef = 347A211C09786BA900A30431 /* SystemVersionCheck.m */; };
 		34E6C34F0A7815FD0076D7F0 /* AdiumSetupWizard.m in Sources */ = {isa = PBXBuildFile; fileRef = 344161BC0943E0D800BC26ED /* AdiumSetupWizard.m */; };
 		34E6C3500A7815FD0076D7F0 /* AIListContactBubbleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 340F486306DA5E1F0072E2FA /* AIListContactBubbleCell.m */; };
 		34E6C3510A7815FD0076D7F0 /* AIStatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B292D3107A9C8E100C5F882 /* AIStatusController.m */; };
@@ -1024,37 +955,6 @@
 		34E6C3AC0A7816B20076D7F0 /* AIPreferenceWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = F57938F0033E745F01A8010A /* AIPreferenceWindowController.h */; };
 		34E6C3AD0A7816B20076D7F0 /* AIPreferenceWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938BB033E739101A8010A /* AIPreferenceWindowController.m */; };
 		34E6C3AE0A7816B20076D7F0 /* PreferenceWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E03607CB0DFB0044F818 /* PreferenceWindow.nib */; };
-		34E6C3B00A7816B20076D7F0 /* pref-advanced.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8336E07CBD807006466F2 /* pref-advanced.png */; };
-		34E6C3B10A7816B20076D7F0 /* pref-appearance.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BF3CB4107D1771E00A8112A /* pref-appearance.png */; };
-		34E6C3B20A7816B20076D7F0 /* pref-contactList.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F573F0817FF80001F733C /* pref-contactList.png */; };
-		34E6C3B30A7816B20076D7F0 /* pref-events.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8336C07CBD807006466F2 /* pref-events.png */; };
-		34E6C3B40A7816B20076D7F0 /* pref-ft.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8336B07CBD807006466F2 /* pref-ft.png */; };
-		34E6C3B50A7816B20076D7F0 /* pref-general.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8336807CBD807006466F2 /* pref-general.png */; };
-		34E6C3B60A7816B20076D7F0 /* pref-messages.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8336707CBD807006466F2 /* pref-messages.png */; };
-		34E6C3B70A7816B20076D7F0 /* pref-personal.png in Resources */ = {isa = PBXBuildFile; fileRef = 347EAB2C09721D490090EA6E /* pref-personal.png */; };
-		34E6C3B80A7816B20076D7F0 /* pref-status.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BB5B78107D2DC4900CFE06F /* pref-status.png */; };
-		34E6C3D40A7816E30076D7F0 /* AIContactInfoWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = F570A59803704B6101A8010A /* AIContactInfoWindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34E6C3D50A7816E30076D7F0 /* AIContactInfoWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F570A59903704B6101A8010A /* AIContactInfoWindowController.m */; };
-		34E6C3D60A7816E30076D7F0 /* AIContactAccountsPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BFE25B07E8E69300AD984D /* AIContactAccountsPane.h */; };
-		34E6C3D70A7816E30076D7F0 /* AIContactAccountsPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BFE25A07E8E69300AD984D /* AIContactAccountsPane.m */; };
-		34E6C3D80A7816E30076D7F0 /* AIContactProfilePane.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBF41DD0661194A001D31E1 /* AIContactProfilePane.h */; };
-		34E6C3D90A7816E30076D7F0 /* AIContactProfilePane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF41DE0661194A001D31E1 /* AIContactProfilePane.m */; };
-		34E6C3DA0A7816E30076D7F0 /* AIContactSettingsPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B2DC06B066F705800AD5AAD /* AIContactSettingsPane.h */; };
-		34E6C3DB0A7816E30076D7F0 /* AIContactSettingsPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2DC06C066F705800AD5AAD /* AIContactSettingsPane.m */; };
-		34E6C3DC0A7816E30076D7F0 /* ESContactAlertsPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 343EC6A80809DEC700E27095 /* ESContactAlertsPane.h */; };
-		34E6C3DD0A7816E30076D7F0 /* ESContactAlertsPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 343EC6A70809DEC700E27095 /* ESContactAlertsPane.m */; };
-		34E6C3DE0A7816E30076D7F0 /* ESContactInfoListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */; };
-		34E6C3DF0A7816E30076D7F0 /* ESContactInfoListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */; };
-		34E6C3E00A7816E30076D7F0 /* Contact Info List Theme.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8328E07CBD5E2006466F2 /* Contact Info List Theme.plist */; };
-		34E6C3E10A7816E30076D7F0 /* Contact Info List Layout.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8328F07CBD5E2006466F2 /* Contact Info List Layout.plist */; };
-		34E6C3E20A7816E30076D7F0 /* ContactAccounts.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34BFE30007E8FA7800AD984D /* ContactAccounts.nib */; };
-		34E6C3E30A7816E30076D7F0 /* ESShowContactInfoPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = 343ECBE80971B18200349098 /* ESShowContactInfoPromptController.h */; };
-		34E6C3E40A7816E30076D7F0 /* ESShowContactInfoPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 343ECBE90971B18200349098 /* ESShowContactInfoPromptController.m */; };
-		34E6C3E50A7816E30076D7F0 /* ShowContactInfoPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343ECBED0971B18E00349098 /* ShowContactInfoPrompt.nib */; };
-		34E6C3E60A7816E30076D7F0 /* ContactAlerts.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EC6B20809DEEB00E27095 /* ContactAlerts.nib */; };
-		34E6C3E70A7816E30076D7F0 /* ContactInfoWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3207CBA7CC004A4FFF /* ContactInfoWindow.nib */; };
-		34E6C3E80A7816E30076D7F0 /* ContactProfilePane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BBF41E10661194A001D31E1 /* ContactProfilePane.nib */; };
-		34E6C3E90A7816E30076D7F0 /* ContactSettingsPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B2DC068066F6B1200AD5AAD /* ContactSettingsPane.nib */; };
 		34E6C3F20A7817060076D7F0 /* XtrasInstaller.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F1023A073449D500890D3B /* XtrasInstaller.h */; };
 		34E6C3F30A7817060076D7F0 /* XtrasInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F10239073449D500890D3B /* XtrasInstaller.m */; };
 		34E6C3F40A7817060076D7F0 /* XtraProgressWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F1022A0734499600890D3B /* XtraProgressWindow.nib */; };
@@ -1067,13 +967,6 @@
 		34E6C40C0A78172F0076D7F0 /* ProxyPasswordPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02307CB0D1B0044F818 /* ProxyPasswordPrompt.nib */; };
 		34E6C40D0A78172F0076D7F0 /* PasswordPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02507CB0D1B0044F818 /* PasswordPrompt.nib */; };
 		34E6C40E0A78172F0076D7F0 /* keys.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8328807CBD5D2006466F2 /* keys.png */; };
-		34E6C41F0A7817570076D7F0 /* GBFireImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */; };
-		34E6C4200A7817570076D7F0 /* GBFireImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */; };
-		34E6C4210A7817570076D7F0 /* GBFireLogImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */; };
-		34E6C4220A7817570076D7F0 /* GBFireLogImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */; };
-		34E6C4230A7817570076D7F0 /* FireLogImporter.nib in Resources */ = {isa = PBXBuildFile; fileRef = F56E0DAF0A4CDF9C008D1EB5 /* FireLogImporter.nib */; };
-		34E6C42E0A78176D0076D7F0 /* AILoginWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = F57938FA033E745F01A8010A /* AILoginWindowController.h */; };
-		34E6C42F0A78176D0076D7F0 /* AILoginWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938C2033E73AC01A8010A /* AILoginWindowController.m */; };
 		34E6C4320A7817810076D7F0 /* LoginSelect.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3407CBA7DF004A4FFF /* LoginSelect.nib */; };
 		34E6C4390A7817A50076D7F0 /* AIEmoticonPack.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C73F83F04D62A2900A80106 /* AIEmoticonPack.m */; };
 		34E6C43C0A7817AE0076D7F0 /* AIEmoticonPack.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C73F83E04D62A2900A80106 /* AIEmoticonPack.h */; };
@@ -1081,19 +974,12 @@
 		34E6C5670A791BAF0076D7F0 /* AIContactInfoWindowPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E6C5650A791BAF0076D7F0 /* AIContactInfoWindowPlugin.m */; };
 		34E6C9950A7926650076D7F0 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		34E6CA7D0A7927980076D7F0 /* AdiumOTREncryption.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BD5690965E9A500CF83F5 /* AdiumOTREncryption.h */; };
-		34E6CA7E0A7927980076D7F0 /* AdiumOTREncryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BD56A0965E9A500CF83F5 /* AdiumOTREncryption.m */; };
-		34E6CA820A7927980076D7F0 /* ESOTRPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BD5550965E97F00CF83F5 /* ESOTRPreferences.m */; };
 		34E6CA830A7927980076D7F0 /* ESOTRFingerprintDetailsWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BD5560965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.h */; };
-		34E6CA840A7927980076D7F0 /* ESOTRPrivateKeyGenerationWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BD5570965E97F00CF83F5 /* ESOTRPrivateKeyGenerationWindowController.m */; };
 		34E6CA850A7927980076D7F0 /* ESOTRPrivateKeyGenerationWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BD5580965E97F00CF83F5 /* ESOTRPrivateKeyGenerationWindowController.h */; };
-		34E6CA860A7927980076D7F0 /* ESOTRUnknownFingerprintController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BD5590965E97F00CF83F5 /* ESOTRUnknownFingerprintController.m */; };
 		34E6CA870A7927980076D7F0 /* ESOTRUnknownFingerprintController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BD55A0965E97F00CF83F5 /* ESOTRUnknownFingerprintController.h */; };
-		34E6CA880A7927980076D7F0 /* ESOTRFingerprintDetailsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BD55B0965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.m */; };
 		34E6CA890A7927980076D7F0 /* ESOTRPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BD55C0965E97F00CF83F5 /* ESOTRPreferences.h */; };
 		34E6CA8A0A7927980076D7F0 /* OTRCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 341BD5660965E99200CF83F5 /* OTRCommon.h */; };
 		34EA6B320A62F3420053DFEB /* AIApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 34EA6B300A62F3420053DFEB /* AIApplication.m */; };
-		34F1022F0734499700890D3B /* XtraProgressWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F1022A0734499600890D3B /* XtraProgressWindow.nib */; };
-		34F1023B073449D500890D3B /* XtrasInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F10239073449D500890D3B /* XtrasInstaller.m */; };
 		34F191DC09BA5F43001D6BE2 /* irc.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F191DB09BA5F43001D6BE2 /* irc.png */; };
 		34F2BD25059CF8070005B238 /* c++filt in Resources */ = {isa = PBXBuildFile; fileRef = 34F2BD24059CF8070005B238 /* c++filt */; };
 		34F4675E080F46AC007800AB /* ESBonjourAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46755080F46AB007800AB /* ESBonjourAccountViewController.m */; };
@@ -1110,7 +996,6 @@
 		34F46785080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46783080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m */; };
 		34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F849520A4AEFA00002A017 /* LogFileUpgrade.nib */; };
 		34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */; };
-		34FDD6E605632BFD00F5B30F /* ESFileTransferController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */; };
 		4947F5C00655E85200B791E5 /* AIStressTestAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC15BE90524CE5E00A8010A /* AIStressTestAccount.h */; };
 		4947F5C10655E85200B791E5 /* AIStressTestPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC15BEB0524CE5E00A8010A /* AIStressTestPlugin.h */; };
 		4947F5C70655E85200B791E5 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
@@ -1161,16 +1046,11 @@
 		4B03711606595A70008F5981 /* Template.html in Resources */ = {isa = PBXBuildFile; fileRef = 4B03711506595A70008F5981 /* Template.html */; };
 		4B08399507D2350D0034A001 /* AIDockIconSelectionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B08399307D2350D0034A001 /* AIDockIconSelectionSheet.m */; };
 		4B08399C07D235190034A001 /* DockIconSelectionSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B08399B07D235190034A001 /* DockIconSelectionSheet.nib */; };
-		4B14CF2B085FBC5900C88949 /* AdiumSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B14CF25085FBC5800C88949 /* AdiumSound.m */; };
-		4B14CF2D085FBC5900C88949 /* AdiumSoundSets.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B14CF27085FBC5900C88949 /* AdiumSoundSets.m */; };
-		4B14CF2F085FBC5900C88949 /* AdiumSpeech.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B14CF29085FBC5900C88949 /* AdiumSpeech.m */; };
 		4B191D8A0611C10800E8A4E7 /* License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4B191D880611C10800E8A4E7 /* License.txt */; };
 		4B191D8B0611C10800E8A4E7 /* ReadMe.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4B191D890611C10800E8A4E7 /* ReadMe.rtf */; };
 		4B215DBE0598A71400305B3C /* crashDuck.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B215DBD0598A71400305B3C /* crashDuck.icns */; };
-		4B292D3307A9C8E100C5F882 /* AIStatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B292D3107A9C8E100C5F882 /* AIStatusController.m */; };
 		4B2DC069066F6B1200AD5AAD /* ContactSettingsPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B2DC068066F6B1200AD5AAD /* ContactSettingsPane.nib */; };
 		4B2DC06E066F705800AD5AAD /* AIContactSettingsPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2DC06C066F705800AD5AAD /* AIContactSettingsPane.m */; };
-		4B4B60B507D39910004C5D11 /* AIContentController.m in Sources */ = {isa = PBXBuildFile; fileRef = F55B415D03AB8B5601A8010A /* AIContentController.m */; };
 		4B5323ED0747BDED0073DF4D /* AICrashController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B5323EB0747BDED0073DF4D /* AICrashController.m */; };
 		4B53245B0747C82B0073DF4D /* AIExceptionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B5324590747C82B0073DF4D /* AIExceptionController.m */; };
 		4B7A567B07A1754400BDC540 /* AIEditAccountWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7A567807A1754400BDC540 /* AIEditAccountWindowController.m */; };
@@ -1180,8 +1060,6 @@
 		4B7F78BF0597F44D00162728 /* AICrashReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7F78BD0597F44D00162728 /* AICrashReporter.h */; };
 		4B7F78C00597F44D00162728 /* AICrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F78BE0597F44D00162728 /* AICrashReporter.m */; };
 		4B7F78C40597F6F500162728 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F78C30597F6F500162728 /* main.m */; };
-		4B8741D40840D25700738987 /* AdiumServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8741D20840D25600738987 /* AdiumServices.m */; };
-		4B87424B0840E3D800738987 /* AdiumPasswords.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8742490840E3D800738987 /* AdiumPasswords.m */; };
 		4B8C3C9A0825EAF9004B9F45 /* AIAccountListPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8C3C980825EAF9004B9F45 /* AIAccountListPreferences.m */; };
 		4B8C3CE90825F60B004B9F45 /* AccountListPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B8C3CE80825F60B004B9F45 /* AccountListPreferences.nib */; };
 		4B909C8A064D75400074C9A8 /* BGEmoticonMenuPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = C4243C930638E4EA007AD2D9 /* BGEmoticonMenuPlugin.m */; };
@@ -1219,8 +1097,6 @@
 		4BB9972F083D1A74006ACD6F /* ContactListShowBehavior.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB9972E083D1A74006ACD6F /* ContactListShowBehavior.nib */; };
 		4BBF41E40661194A001D31E1 /* AIContactProfilePane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF41DE0661194A001D31E1 /* AIContactProfilePane.m */; };
 		4BBF41E70661194A001D31E1 /* ContactProfilePane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BBF41E10661194A001D31E1 /* ContactProfilePane.nib */; };
-		4BC540B908648322003CD69E /* AdiumFormatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC540B708648322003CD69E /* AdiumFormatting.m */; };
-		4BC5419108649CC6003CD69E /* AdiumContentFiltering.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5418F08649CC6003CD69E /* AdiumContentFiltering.m */; };
 		4BC5A5DC0764F75B0080ECF7 /* AILocalVideoWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5A5D70764F75B0080ECF7 /* AILocalVideoWindowController.m */; };
 		4BC5A5DE0764F75B0080ECF7 /* AIVideoChatInterfacePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5A5D90764F75B0080ECF7 /* AIVideoChatInterfacePlugin.m */; };
 		4BC5A5DF0764F75B0080ECF7 /* LocalVideoWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BC5A5DA0764F75B0080ECF7 /* LocalVideoWindow.nib */; };
@@ -1237,7 +1113,6 @@
 		4BD673B706001C5F0049CAF7 /* AIContactStatusColoringPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B31E8C104C46A9100A8010A /* AIContactStatusColoringPlugin.m */; };
 		4BD673CE06001C960049CAF7 /* AIOfflineContactHidingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5793990033E759C01A8010A /* AIOfflineContactHidingPlugin.m */; };
 		4BD6741C06001CEF0049CAF7 /* AIMessageAliasPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F11B9622051CDB3B0000000E /* AIMessageAliasPlugin.m */; };
-		4BD6742C06001D1C0049CAF7 /* AIEmoticonController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11C157D904A88E04008E0C76 /* AIEmoticonController.m */; };
 		4BD6742E06001D1D0049CAF7 /* AIEmoticonPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F0FE9D04B12CAC01A80106 /* AIEmoticonPreferences.m */; };
 		4BD6742F06001D1D0049CAF7 /* EmoticonPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5F0FEA004B1336C01A80106 /* EmoticonPrefs.nib */; };
 		4BD6743106001D1E0049CAF7 /* EmoticonDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5F0FEA204B133AB01A80106 /* EmoticonDefaults.plist */; };
@@ -1262,14 +1137,11 @@
 		4BD6758406001E440049CAF7 /* ErrorMessageWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC0F1003B5C29E00A80202 /* ErrorMessageWindowController.m */; };
 		4BD6758506001E450049CAF7 /* ErrorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 40AC0F1303B5C34800A80202 /* ErrorWindow.nib */; };
 		4BD6758806001E460049CAF7 /* AlertMessageContactAlert.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3439FD8C05794B4500B2E449 /* AlertMessageContactAlert.nib */; };
-		4BDAB9940861C662009FB73B /* AdiumTyping.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDAB9920861C661009FB73B /* AdiumTyping.m */; };
 		4BDAF69907A1561000276D68 /* AIAccountProxySettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDAF69607A1561000276D68 /* AIAccountProxySettings.m */; };
 		4BDD81EA07A0B6D30057DB2C /* AccountOptions.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDD81E707A0B6D30057DB2C /* AccountOptions.nib */; };
 		4BDD81EB07A0B6D30057DB2C /* AccountProfile.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDD81E807A0B6D30057DB2C /* AccountProfile.nib */; };
 		4BDD81EC07A0B6D30057DB2C /* AccountSetup.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDD81E907A0B6D30057DB2C /* AccountSetup.nib */; };
 		4BDF2CA5061E378400EA75C5 /* Libgaim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
-		4BE3AD1F085F3EDD005919E7 /* AdiumPreferredAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE3AD1D085F3EDD005919E7 /* AdiumPreferredAccounts.m */; };
-		4BE40C210846544000F5790F /* AdiumAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE40C1F0846544000F5790F /* AdiumAccounts.m */; };
 		4BE6175607AC67EE0049C87D /* AIAutoIdlePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE6174C07AC67ED0049C87D /* AIAutoIdlePlugin.m */; };
 		4BE6175807AC67EE0049C87D /* AIAutoReplyPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE6174E07AC67ED0049C87D /* AIAutoReplyPlugin.m */; };
 		4BE6175E07AC67EE0049C87D /* AIStateMenuPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE6175407AC67EE0049C87D /* AIStateMenuPlugin.m */; };
@@ -1312,7 +1184,6 @@
 		63EA6409094BB9A9009C8453 /* AIStatusIconPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA6407094BB9A9009C8453 /* AIStatusIconPreviewController.m */; };
 		63FBAA480887779D00026246 /* AIDockBadger.m in Sources */ = {isa = PBXBuildFile; fileRef = 636AB7F2087E2B6700A87670 /* AIDockBadger.m */; };
 		6C3E0730054471CD00A4AE2E /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
-		6CF4267A057763E200F27FAA /* ESContactAlertsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF42678057763E200F27FAA /* ESContactAlertsController.m */; };
 		6E4D960F06B7397A005235E9 /* JoinChatWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6E4D960A06B7397A005235E9 /* JoinChatWindow.nib */; };
 		6E4D961406B739AC005235E9 /* DCJoinChatPanelPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D961206B739AC005235E9 /* DCJoinChatPanelPlugin.m */; };
 		6EA3689706B73FE5009CA81A /* DCStressTestJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6EA3689406B73FE5009CA81A /* DCStressTestJoinChatView.nib */; };
@@ -1339,7 +1210,6 @@
 		9E217B7B06A74CA8002A3F27 /* StatusMenuItemDefaultPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E217B7706A74CA7002A3F27 /* StatusMenuItemDefaultPrefs.plist */; };
 		9E28FDE706ADB30D0041553E /* adiumRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E28FDE506ADB30D0041553E /* adiumRed.png */; };
 		9E28FDE806ADB30D0041553E /* adiumRedHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */; };
-		9E44248908E11F380015D4DD /* AdiumURLHandling.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E44248708E11F380015D4DD /* AdiumURLHandling.m */; };
 		9E6A9BF70732CB500032C9F6 /* adiumOfflineHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF50732CB500032C9F6 /* adiumOfflineHighlight.png */; };
 		9E6A9BF80732CB500032C9F6 /* adiumOffline.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF60732CB500032C9F6 /* adiumOffline.png */; };
 		9ECB03E709F2A9D900996F44 /* AIDictionaryDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECB03E309F2A9D800996F44 /* AIDictionaryDebug.m */; };
@@ -1377,14 +1247,18 @@
 		EE147A790896B32400A21377 /* ABSearch.nib in Resources */ = {isa = PBXBuildFile; fileRef = EE147A780896B32400A21377 /* ABSearch.nib */; };
 		EE147A800896B33400A21377 /* OWABSearchWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE147A7E0896B33400A21377 /* OWABSearchWindowController.m */; };
 		EEC461B6096D68580028632F /* OWSpellingPerContactPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */; };
-		F50A75A30A0AE77A00A6D1BA /* GBFireImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */; };
 		F51BCD3B0A156261000FDC06 /* AIHyperlinks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
 		F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */; };
 		F51BCEEA0A15793E000FDC06 /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
-		F56E068F0A4B738B008D1EB5 /* GBFireLogImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */; };
-		F56E0DB00A4CDF9C008D1EB5 /* FireLogImporter.nib in Resources */ = {isa = PBXBuildFile; fileRef = F56E0DAF0A4CDF9C008D1EB5 /* FireLogImporter.nib */; };
 		F58904F20A7828B9001F0ADC /* OTR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
+		F589067A0A7BE0BC001F0ADC /* GBFireImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */; };
+		F589067B0A7BE0BC001F0ADC /* GBFireImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */; };
+		F58906820A7BE0E5001F0ADC /* AILoginWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = F57938FA033E745F01A8010A /* AILoginWindowController.h */; };
+		F58906830A7BE0E5001F0ADC /* AILoginWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938C2033E73AC01A8010A /* AILoginWindowController.m */; };
+		F589068A0A7BE116001F0ADC /* GBFireLogImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */; };
+		F589068B0A7BE116001F0ADC /* GBFireLogImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */; };
+		F58906910A7BE182001F0ADC /* FireLogImporter.nib in Resources */ = {isa = PBXBuildFile; fileRef = F56E0DAF0A4CDF9C008D1EB5 /* FireLogImporter.nib */; };
 		F5DA8A740A546AC5004A41D0 /* GBChatlogHTMLConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DA8A720A546AC4004A41D0 /* GBChatlogHTMLConverter.m */; };
 		F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8CA4B0A1A9C9400154550 /* GBQuestionHandlerPlugin.m */; };
 /* End PBXBuildFile section */
@@ -7391,21 +7265,14 @@
 				34E6C1F80A7810020076D7F0 /* AIStatusMenu.h in Headers */,
 				34E6C2270A78111E0076D7F0 /* AICoreComponentLoader.h in Headers */,
 				34E6C3AC0A7816B20076D7F0 /* AIPreferenceWindowController.h in Headers */,
-				34E6C3D40A7816E30076D7F0 /* AIContactInfoWindowController.h in Headers */,
-				34E6C3D60A7816E30076D7F0 /* AIContactAccountsPane.h in Headers */,
-				34E6C3D80A7816E30076D7F0 /* AIContactProfilePane.h in Headers */,
-				34E6C3DA0A7816E30076D7F0 /* AIContactSettingsPane.h in Headers */,
-				34E6C3DC0A7816E30076D7F0 /* ESContactAlertsPane.h in Headers */,
-				34E6C3DE0A7816E30076D7F0 /* ESContactInfoListController.h in Headers */,
-				34E6C3E30A7816E30076D7F0 /* ESShowContactInfoPromptController.h in Headers */,
 				34E6C3F20A7817060076D7F0 /* XtrasInstaller.h in Headers */,
 				34E6C4060A78172F0076D7F0 /* AIPasswordPromptController.h in Headers */,
 				34E6C4080A78172F0076D7F0 /* ESAccountPasswordPromptController.h in Headers */,
 				34E6C40A0A78172F0076D7F0 /* ESProxyPasswordPromptController.h in Headers */,
-				34E6C41F0A7817570076D7F0 /* GBFireImporter.h in Headers */,
-				34E6C4210A7817570076D7F0 /* GBFireLogImporter.h in Headers */,
-				34E6C42E0A78176D0076D7F0 /* AILoginWindowController.h in Headers */,
 				34E6C43C0A7817AE0076D7F0 /* AIEmoticonPack.h in Headers */,
+				F589067A0A7BE0BC001F0ADC /* GBFireImporter.h in Headers */,
+				F58906820A7BE0E5001F0ADC /* AILoginWindowController.h in Headers */,
+				F589068B0A7BE116001F0ADC /* GBFireLogImporter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8063,37 +7930,10 @@
 				3402E02607CB0D1B0044F818 /* PasswordPrompt.nib in Resources */,
 				3402E02E07CB0DBB0044F818 /* AboutBox.nib in Resources */,
 				347E786B07CA972100350507 /* AddContact.nib in Resources */,
-				3402E03707CB0DFB0044F818 /* PreferenceWindow.nib in Resources */,
 				3402E04207CB0E4D0044F818 /* Localizable.strings in Resources */,
-				34575E2E07CBA70D004A4FFF /* FileTransferRequestPrompt.nib in Resources */,
-				34575E2F07CBA70D004A4FFF /* FileTransferProgressWindow.nib in Resources */,
-				34575E3007CBA70D004A4FFF /* FileTransferPrefs.plist in Resources */,
-				34575E3107CBA70D004A4FFF /* FileTransferPrefs.nib in Resources */,
 				34575E3307CBA7CC004A4FFF /* ContactInfoWindow.nib in Resources */,
 				34575E3707CBA874004A4FFF /* DebugWindow.nib in Resources */,
 				34575E3907CBA88E004A4FFF /* MainMenu.nib in Resources */,
-				34D8325407CBD53B006466F2 /* FTProgressRevealRollover.tif in Resources */,
-				34D8325507CBD53B006466F2 /* FTProgressRevealRollover_Selected.tif in Resources */,
-				34D8325607CBD53B006466F2 /* FTProgressStopRollover_Selected.tif in Resources */,
-				34D8325707CBD53B006466F2 /* FTProgressStop_Selected.tif in Resources */,
-				34D8325807CBD53B006466F2 /* FTProgressStop.tif in Resources */,
-				34D8325907CBD53B006466F2 /* FTProgressStopRollover.tif in Resources */,
-				34D8325A07CBD53B006466F2 /* FTProgressRevealPressed.tif in Resources */,
-				34D8325B07CBD53B006466F2 /* FTProgressReveal_Selected.tif in Resources */,
-				34D8325C07CBD53B006466F2 /* FTProgressReveal.tif in Resources */,
-				34D8325D07CBD53B006466F2 /* FTProgressStopPressed_Selected.tif in Resources */,
-				34D8325E07CBD53B006466F2 /* FTProgressStopPressed.tif in Resources */,
-				34D8325F07CBD53B006466F2 /* FTProgressRevealPressed_Selected.tif in Resources */,
-				34D8326807CBD598006466F2 /* AccountPrefs.plist in Resources */,
-				34D8326907CBD598006466F2 /* DockPrefs.plist in Resources */,
-				34D8326A07CBD598006466F2 /* sendfile.png in Resources */,
-				34D8326B07CBD598006466F2 /* SoundPrefs.plist in Resources */,
-				34D8326C07CBD598006466F2 /* info.png in Resources */,
-				34D8326D07CBD598006466F2 /* ContactPrefs.plist in Resources */,
-				34D8326E07CBD598006466F2 /* DefaultIcon.png in Resources */,
-				34D8327707CBD5B3006466F2 /* BuiltInStatusStates.plist in Resources */,
-				34D8327807CBD5B3006466F2 /* ToolbarPrefs.plist in Resources */,
-				34D8328907CBD5D2006466F2 /* keys.png in Resources */,
 				34D8329007CBD5E2006466F2 /* Contact Info List Theme.plist in Resources */,
 				34D8329107CBD5E2006466F2 /* Contact Info List Layout.plist in Resources */,
 				34D8329907CBD609006466F2 /* AdiumSuite.scriptTerminology in Resources */,
@@ -8130,7 +7970,6 @@
 				6EC1685006C170A000F9FAD3 /* InviteToChatWindow.nib in Resources */,
 				34A48A0C06F64376002C7C5F /* ContactListWindow.nib in Resources */,
 				34A48A1006F64382002C7C5F /* ContactListWindowBorderless.nib in Resources */,
-				34F1022F0734499700890D3B /* XtraProgressWindow.nib in Resources */,
 				4BE9FFE8055981AB00359B15 /* Adium.pch in Resources */,
 				34536751059BA8EE00A83D9E /* atos in Resources */,
 				34F2BD25059CF8070005B238 /* c++filt in Resources */,
@@ -8158,8 +7997,6 @@
 				4BC5A5DF0764F75B0080ECF7 /* LocalVideoWindow.nib in Resources */,
 				346BA3640774C35500628F06 /* GlobalEventsPreferences.nib in Resources */,
 				34C6A3BC077A8CB500EB423C /* AppearanceDefaults.plist in Resources */,
-				34DFF53907A62EB200B92233 /* Lock_Unlocked State.png in Resources */,
-				34DFF54307A62EB200B92233 /* Lock_Locked State.png in Resources */,
 				34C14D5107A8BA00003CC138 /* EmoticonPackPreview.nib in Resources */,
 				343EB3FE08086D2F00E27095 /* AccountProxy.nib in Resources */,
 				4BCAB5F307B59967006641B9 /* EditAccountSheet.nib in Resources */,
@@ -8191,7 +8028,6 @@
 				34A6FB2607D6F97B00972830 /* EventSoundContactAlert.nib in Resources */,
 				34A6FB2D07D6F98600972830 /* SoundAlert.png in Resources */,
 				34A6FB2E07D6F98600972830 /* SoundFileIcon.png in Resources */,
-				34A6FB8107D6FDCC00972830 /* FormattingDefaults.plist in Resources */,
 				34A250B607E0F822009854E1 /* StatusDefaults.plist in Resources */,
 				4BFC2E7907E357F00063D70C /* emoticonBlank.png in Resources */,
 				34C899AC07E51B18009357F6 /* BuiltInEventPresets.plist in Resources */,
@@ -8207,17 +8043,12 @@
 				34F4677A080F49C5007800AB /* Safari.scpt in Resources */,
 				34F4677B080F49C5007800AB /* Safari.png in Resources */,
 				345ACC970811C20F008E4D22 /* AwayStatusWindow.nib in Resources */,
-				3428B33F0815E1FB00C0D3DC /* emoticon32.png in Resources */,
 				345F566B08178356001F733C /* AdiumServiceIcons.icns in Resources */,
 				345F57400817FF80001F733C /* pref-contactList.png in Resources */,
 				345F583E08197E74001F733C /* AdiumStatusIcons.icns in Resources */,
 				345F58C7081990FF001F733C /* LogViewer.png in Resources */,
 				345F58ED0819967A001F733C /* offlinecontacts.png in Resources */,
 				345F58EE0819967A001F733C /* offlinecontacts_transparent.png in Resources */,
-				345F58F308199727001F733C /* togglegroups_transparent.png in Resources */,
-				345F58F408199727001F733C /* togglegroups.png in Resources */,
-				345F590708199746001F733C /* emoticon32_transparent.png in Resources */,
-				345F5C5F081ACCB2001F733C /* remove.png in Resources */,
 				34167FED081D706300E35678 /* DualWindowMessageAdvanced.nib in Resources */,
 				0779934F08221D9700F698DC /* Service Icons in Resources */,
 				3474E000082550FD00BF30F0 /* Credits.rtf in Resources */,
@@ -8233,14 +8064,12 @@
 				632D801708E7E0A40032C187 /* XtrasManager.nib in Resources */,
 				63C120750910A0DD00C9DB57 /* DefaultXtraReadme.rtf in Resources */,
 				348F579E0936FA6D00288E41 /* EditStatusGroup.nib in Resources */,
-				344161D00943E20D00BC26ED /* AdiumyButler.png in Resources */,
 				347F51810947449000CEF1FF /* AdiumAddressBookAction_Yahoo.scpt in Resources */,
 				347F51820947449000CEF1FF /* AdiumAddressBookAction_AIM.scpt in Resources */,
 				347F51830947449000CEF1FF /* AdiumAddressBookAction_ICQ.scpt in Resources */,
 				347F51840947449000CEF1FF /* AdiumAddressBookAction_MSN.scpt in Resources */,
 				347F51850947449000CEF1FF /* AdiumAddressBookAction_SMS.scpt in Resources */,
 				347F51860947449000CEF1FF /* AdiumAddressBookAction_Jabber.scpt in Resources */,
-				344161D40943E22F00BC26ED /* SetupWizard.nib in Resources */,
 				6333699409497DB000970871 /* EmoticonPreviewView.nib in Resources */,
 				63336B060949908300970871 /* DockIconPreviewView.nib in Resources */,
 				07632BF30949E10B00FFABD8 /* ListThemeSheet.nib in Resources */,
@@ -8260,7 +8089,6 @@
 				343EC9810970C29400349098 /* OfflineContactHidingDefaults.plist in Resources */,
 				343ECBEE0971B18E00349098 /* ShowContactInfoPrompt.nib in Resources */,
 				347EAB2D09721D490090EA6E /* pref-personal.png in Resources */,
-				3486E9DB097F5FCE0044C496 /* AuthorizationRequestWindow.nib in Resources */,
 				34107B5609E992DA001CC042 /* GuestAccountWindow.nib in Resources */,
 				34B9C7900A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib in Resources */,
 				34B9C7920A255DCE00CEA8AE /* LogViewerDateFilter.nib in Resources */,
@@ -8271,7 +8099,6 @@
 				3456232F0A37723400E7FC97 /* LogViewer.nib in Resources */,
 				345623380A3773C300E7FC97 /* LoggingDefaults.plist in Resources */,
 				34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */,
-				F56E0DB00A4CDF9C008D1EB5 /* FireLogImporter.nib in Resources */,
 				34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */,
 				3406707A0A55A044004E22AC /* sourceListBackground.png in Resources */,
 			);
@@ -8334,29 +8161,12 @@
 				34E6BF220A7809400076D7F0 /* emoticon32_transparent.png in Resources */,
 				34E6BF230A7809400076D7F0 /* remove.png in Resources */,
 				34E6C3AE0A7816B20076D7F0 /* PreferenceWindow.nib in Resources */,
-				34E6C3B00A7816B20076D7F0 /* pref-advanced.png in Resources */,
-				34E6C3B10A7816B20076D7F0 /* pref-appearance.png in Resources */,
-				34E6C3B20A7816B20076D7F0 /* pref-contactList.png in Resources */,
-				34E6C3B30A7816B20076D7F0 /* pref-events.png in Resources */,
-				34E6C3B40A7816B20076D7F0 /* pref-ft.png in Resources */,
-				34E6C3B50A7816B20076D7F0 /* pref-general.png in Resources */,
-				34E6C3B60A7816B20076D7F0 /* pref-messages.png in Resources */,
-				34E6C3B70A7816B20076D7F0 /* pref-personal.png in Resources */,
-				34E6C3B80A7816B20076D7F0 /* pref-status.png in Resources */,
-				34E6C3E00A7816E30076D7F0 /* Contact Info List Theme.plist in Resources */,
-				34E6C3E10A7816E30076D7F0 /* Contact Info List Layout.plist in Resources */,
-				34E6C3E20A7816E30076D7F0 /* ContactAccounts.nib in Resources */,
-				34E6C3E50A7816E30076D7F0 /* ShowContactInfoPrompt.nib in Resources */,
-				34E6C3E60A7816E30076D7F0 /* ContactAlerts.nib in Resources */,
-				34E6C3E70A7816E30076D7F0 /* ContactInfoWindow.nib in Resources */,
-				34E6C3E80A7816E30076D7F0 /* ContactProfilePane.nib in Resources */,
-				34E6C3E90A7816E30076D7F0 /* ContactSettingsPane.nib in Resources */,
 				34E6C3F40A7817060076D7F0 /* XtraProgressWindow.nib in Resources */,
 				34E6C40C0A78172F0076D7F0 /* ProxyPasswordPrompt.nib in Resources */,
 				34E6C40D0A78172F0076D7F0 /* PasswordPrompt.nib in Resources */,
 				34E6C40E0A78172F0076D7F0 /* keys.png in Resources */,
-				34E6C4230A7817570076D7F0 /* FireLogImporter.nib in Resources */,
 				34E6C4320A7817810076D7F0 /* LoginSelect.nib in Resources */,
+				F58906910A7BE182001F0ADC /* FireLogImporter.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8734,27 +8544,12 @@
 			files = (
 				34BD9D4A053146CC000AB133 /* main.m in Sources */,
 				34BD9D54053146CC000AB133 /* AIAdium.m in Sources */,
-				34BD9D43053146CC000AB133 /* AIAccountController.m in Sources */,
-				34BD9D44053146CC000AB133 /* AIInterfaceController.m in Sources */,
-				34BD9D46053146CC000AB133 /* AIPreferenceController.m in Sources */,
-				34BD9D47053146CC000AB133 /* AISoundController.m in Sources */,
-				34BD9D48053146CC000AB133 /* AIPreferenceWindowController.m in Sources */,
-				34BD9D49053146CC000AB133 /* AILoginWindowController.m in Sources */,
-				34BD9D4B053146CC000AB133 /* AILoginController.m in Sources */,
 				34BD9D4C053146CC000AB133 /* AIContactInfoWindowController.m in Sources */,
-				34BD9D4D053146CC000AB133 /* AIMenuController.m in Sources */,
-				34BD9D4E053146CC000AB133 /* AIToolbarController.m in Sources */,
-				34BD9D4F053146CC000AB133 /* AIContactController.m in Sources */,
-				34BD9D50053146CC000AB133 /* AIPasswordPromptController.m in Sources */,
-				34BD9D52053146CC000AB133 /* AIDockController.m in Sources */,
 				34BD9D56053146CC000AB133 /* LNAboutBoxController.m in Sources */,
-				34FDD6E605632BFD00F5B30F /* ESFileTransferController.m in Sources */,
-				6CF4267A057763E200F27FAA /* ESContactAlertsController.m in Sources */,
 				4BD6737406001BF00049CAF7 /* AIAccountListPreferencesPlugin.m in Sources */,
 				4BD673B706001C5F0049CAF7 /* AIContactStatusColoringPlugin.m in Sources */,
 				4BD673CE06001C960049CAF7 /* AIOfflineContactHidingPlugin.m in Sources */,
 				4BD6741C06001CEF0049CAF7 /* AIMessageAliasPlugin.m in Sources */,
-				4BD6742C06001D1C0049CAF7 /* AIEmoticonController.m in Sources */,
 				4BD6742E06001D1D0049CAF7 /* AIEmoticonPreferences.m in Sources */,
 				4BD6744506001D430049CAF7 /* AIContactStatusDockOverlaysPlugin.m in Sources */,
 				4BD6745806001D5E0049CAF7 /* AIDockUnviewedContentPlugin.m in Sources */,
@@ -8768,8 +8563,6 @@
 				4BD6755006001E1D0049CAF7 /* ESDualWindowMessageAdvancedPreferences.m in Sources */,
 				4BD6758206001E430049CAF7 /* ErrorMessageHandlerPlugin.m in Sources */,
 				4BD6758406001E440049CAF7 /* ErrorMessageWindowController.m in Sources */,
-				3420E6610611D80100AE67E3 /* ESAccountPasswordPromptController.m in Sources */,
-				3420E6630611D80100AE67E3 /* ESProxyPasswordPromptController.m in Sources */,
 				4BAA1B550632EF0000D8B92C /* ESPanelAlertDetailPane.m in Sources */,
 				4BFF665B063693FA00308A3B /* ESSendMessageAlertDetailPane.m in Sources */,
 				7E824CE106387FAF00813072 /* SHAutoValidatingTextView.m in Sources */,
@@ -8780,7 +8573,6 @@
 				4B2DC06E066F705800AD5AAD /* AIContactSettingsPane.m in Sources */,
 				9E20910E06A601AF00E33E27 /* CBStatusMenuItemController.m in Sources */,
 				9E20911006A601B200E33E27 /* CBStatusMenuItemPlugin.m in Sources */,
-				344C0D5006B6D63800DA7200 /* ESApplescriptabilityController.m in Sources */,
 				6E4D961406B739AC005235E9 /* DCJoinChatPanelPlugin.m in Sources */,
 				6EC1684D06C170A000F9FAD3 /* DCInviteToChatPlugin.m in Sources */,
 				6EC1684F06C170A000F9FAD3 /* DCInviteToChatWindowController.m in Sources */,
@@ -8799,26 +8591,19 @@
 				3429BB06070378F700EED705 /* ESFileTransferMessagesPlugin.m in Sources */,
 				34B4B5A40708B049002C4C6D /* ESDebugController.m in Sources */,
 				344458F0070B5BEF00D8E932 /* ESDebugWindowController.m in Sources */,
-				34F1023B073449D500890D3B /* XtrasInstaller.m in Sources */,
 				4B5323ED0747BDED0073DF4D /* AICrashController.m in Sources */,
 				4B53245B0747C82B0073DF4D /* AIExceptionController.m in Sources */,
-				349FE303074D01D300E36B3B /* ESFileTransferProgressWindowController.m in Sources */,
-				349FE307074D01D300E36B3B /* ESFileTransferProgressRow.m in Sources */,
-				3421D3AB0753EE2F00EBCF4F /* ESFileTransferProgressView.m in Sources */,
-				34D2E86A0758BB0C0054C56D /* ESFileTransferPreferences.m in Sources */,
 				4BC5A5DC0764F75B0080ECF7 /* AILocalVideoWindowController.m in Sources */,
 				4BC5A5DE0764F75B0080ECF7 /* AIVideoChatInterfacePlugin.m in Sources */,
 				346BA33F0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m in Sources */,
 				346BA3450774C2D200628F06 /* ESGlobalEventsPreferences.m in Sources */,
 				34C68B260778FA1300EB423C /* ESGeneralPreferencesPlugin.m in Sources */,
 				34C68B2C0778FA5C00EB423C /* ESGeneralPreferences.m in Sources */,
-				3452A9F907891C8A00C3C494 /* ESFileTransferRequestPromptController.m in Sources */,
 				4BDAF69907A1561000276D68 /* AIAccountProxySettings.m in Sources */,
 				4B7A567B07A1754400BDC540 /* AIEditAccountWindowController.m in Sources */,
 				34DFF5FD07A63DB400B92233 /* ESSecureMessagingPlugin.m in Sources */,
 				349E2E8E07A8AF0C00EAB76A /* AIEmoticonPackPreviewController.m in Sources */,
 				34C14CD307A8B1AB003CC138 /* AIEmoticonPackPreviewView.m in Sources */,
-				4B292D3307A9C8E100C5F882 /* AIStatusController.m in Sources */,
 				4BE6175607AC67EE0049C87D /* AIAutoIdlePlugin.m in Sources */,
 				4BE6175807AC67EE0049C87D /* AIAutoReplyPlugin.m in Sources */,
 				4BE6175E07AC67EE0049C87D /* AIStateMenuPlugin.m in Sources */,
@@ -8876,7 +8661,6 @@
 				9E124DEC07D34C7300AA91C5 /* CBGrowlAlertDetailPane.m in Sources */,
 				9E124DEE07D34C7400AA91C5 /* NEHGrowlPlugin.m in Sources */,
 				9E125C6607D3571400AA91C5 /* ESBlockingPlugin.m in Sources */,
-				4B4B60B507D39910004C5D11 /* AIContentController.m in Sources */,
 				34A6FAD907D6F3AA00972830 /* AIEventSoundsPlugin.m in Sources */,
 				34A6FADB07D6F3AA00972830 /* ESEventSoundAlertDetailPane.m in Sources */,
 				344093AB07D9161B00321BB3 /* ESAutoAwayPlugin.m in Sources */,
@@ -8892,31 +8676,14 @@
 				4B8C3C9A0825EAF9004B9F45 /* AIAccountListPreferences.m in Sources */,
 				4BB9972B083D1A5F006ACD6F /* SMContactListShowBehaviorPlugin.m in Sources */,
 				4BB9972D083D1A5F006ACD6F /* SMContactListShowDetailsPane.m in Sources */,
-				4B8741D40840D25700738987 /* AdiumServices.m in Sources */,
-				4B87424B0840E3D800738987 /* AdiumPasswords.m in Sources */,
-				4BE40C210846544000F5790F /* AdiumAccounts.m in Sources */,
-				34B82C82085A85D800864531 /* AIChatController.m in Sources */,
-				34B82C8C085A87B000864531 /* AdiumMessageEvents.m in Sources */,
 				34CF9DF5085B8B7900D87E37 /* ESiTunesPlugin.m in Sources */,
-				4BE3AD1F085F3EDD005919E7 /* AdiumPreferredAccounts.m in Sources */,
-				4B14CF2B085FBC5900C88949 /* AdiumSound.m in Sources */,
-				4B14CF2D085FBC5900C88949 /* AdiumSoundSets.m in Sources */,
-				4B14CF2F085FBC5900C88949 /* AdiumSpeech.m in Sources */,
-				4BDAB9940861C662009FB73B /* AdiumTyping.m in Sources */,
-				4BC540B908648322003CD69E /* AdiumFormatting.m in Sources */,
-				4BC5419108649CC6003CD69E /* AdiumContentFiltering.m in Sources */,
 				110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */,
 				110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */,
-				346CFDC7087B7836009711C8 /* AdiumIdleManager.m in Sources */,
 				63FBAA480887779D00026246 /* AIDockBadger.m in Sources */,
 				EE147A800896B33400A21377 /* OWABSearchWindowController.m in Sources */,
-				34BD0DB608D31479000BE2C0 /* AdiumChatEvents.m in Sources */,
-				9E44248908E11F380015D4DD /* AdiumURLHandling.m in Sources */,
 				633F175B08F905A700C76383 /* AIXtraInfo.m in Sources */,
 				633F175D08F905A800C76383 /* AIXtrasManager.m in Sources */,
 				348F57940936F3CC00288E41 /* ESEditStatusGroupWindowController.m in Sources */,
-				344161BE0943E0D900BC26ED /* AdiumSetupWizard.m in Sources */,
-				344162410943E76400BC26ED /* SetupWizardBackgroundView.m in Sources */,
 				632D60C1094B81AB003A9786 /* AIDockIconPreviewController.m in Sources */,
 				63EA62CA094B832D009C8453 /* AIEmoticonPreviewController.m in Sources */,
 				63EA62F0094B8705009C8453 /* AIXtraInfoController.m in Sources */,
@@ -8926,7 +8693,6 @@
 				34D0FDD80956187700DCB678 /* ESPersonalPreferences.m in Sources */,
 				34D001E80958868000DCB678 /* AIMenuItemView.m in Sources */,
 				34D007DB095966E200DCB678 /* AIContactListRecentImagesWindowController.m in Sources */,
-				34AA35DC095CCA4D003B56DB /* AdiumDisconnectionErrorController.m in Sources */,
 				341BCF850961354D00CF83F5 /* AIMessageWindow.m in Sources */,
 				341BCF870961354D00CF83F5 /* AIClickThroughThemeDocumentButton.m in Sources */,
 				341BD55D0965E97F00CF83F5 /* ESOTRPreferences.m in Sources */,
@@ -8938,8 +8704,6 @@
 				343EC6C8096F7E1700349098 /* ESStatusAdvancedPreferences.m in Sources */,
 				343ECBEB0971B18200349098 /* ESShowContactInfoPromptController.m in Sources */,
 				343ECBFC0971B92100349098 /* AIBorderlessListController.m in Sources */,
-				3486E8A7097F24A90044C496 /* AdiumAuthorization.m in Sources */,
-				3486E9E2097F5FE20044C496 /* ESAuthorizationRequestWindowController.m in Sources */,
 				34607EE909B228FE000DB3D2 /* AIContactListNameButton.m in Sources */,
 				34607F1009B2296A000DB3D2 /* AIHoveringPopUpButtonCell.m in Sources */,
 				34607F1209B2296A000DB3D2 /* AIHoveringPopUpButton.m in Sources */,
@@ -8949,8 +8713,6 @@
 				34107B4C09E9923D001CC042 /* AIGuestAccountWindowController.m in Sources */,
 				9ECB03E709F2A9D900996F44 /* AIDictionaryDebug.m in Sources */,
 				9ECB03E909F2A9D900996F44 /* AIXMLAppender.m in Sources */,
-				34E1EDF60A045AA2003C14F1 /* AdiumApplescriptRunner.m in Sources */,
-				F50A75A30A0AE77A00A6D1BA /* GBFireImporter.m in Sources */,
 				F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */,
 				3459CBED0A25FFBF00ECC256 /* GetMetadataForHTMLLog.m in Sources */,
 				3459CBEF0A25FFBF00ECC256 /* GetMetadataForFile.m in Sources */,
@@ -8970,7 +8732,6 @@
 				3456232C0A3771F400E7FC97 /* AILogFromGroup.m in Sources */,
 				3456233F0A3773D100E7FC97 /* AILoggerPlugin.m in Sources */,
 				34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */,
-				F56E068F0A4B738B008D1EB5 /* GBFireLogImporter.m in Sources */,
 				34382CEA0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m in Sources */,
 				34382CEC0A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m in Sources */,
 				348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */,
@@ -8980,11 +8741,6 @@
 				345AFAEE0A5D9A5F00D7DA6F /* AINoisyTableColumn.m in Sources */,
 				34EA6B320A62F3420053DFEB /* AIApplication.m in Sources */,
 				34E6C5670A791BAF0076D7F0 /* AIContactInfoWindowPlugin.m in Sources */,
-				34E6CA7E0A7927980076D7F0 /* AdiumOTREncryption.m in Sources */,
-				34E6CA820A7927980076D7F0 /* ESOTRPreferences.m in Sources */,
-				34E6CA840A7927980076D7F0 /* ESOTRPrivateKeyGenerationWindowController.m in Sources */,
-				34E6CA860A7927980076D7F0 /* ESOTRUnknownFingerprintController.m in Sources */,
-				34E6CA880A7927980076D7F0 /* ESOTRFingerprintDetailsWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9079,7 +8835,6 @@
 				34E6C34B0A7815FD0076D7F0 /* AIListGroupMockieCell.m in Sources */,
 				34E6C34C0A7815FD0076D7F0 /* ESFileTransferProgressWindowController.m in Sources */,
 				34E6C34D0A7815FD0076D7F0 /* ESAuthorizationRequestWindowController.m in Sources */,
-				34E6C34E0A7815FD0076D7F0 /* SystemVersionCheck.m in Sources */,
 				34E6C34F0A7815FD0076D7F0 /* AdiumSetupWizard.m in Sources */,
 				34E6C3500A7815FD0076D7F0 /* AIListContactBubbleCell.m in Sources */,
 				34E6C3510A7815FD0076D7F0 /* AIStatusController.m in Sources */,
@@ -9121,21 +8876,14 @@
 				34E6C3790A7815FD0076D7F0 /* AIPathUtilities.m in Sources */,
 				34E6C37A0A7815FD0076D7F0 /* AdiumIdleManager.m in Sources */,
 				34E6C3AD0A7816B20076D7F0 /* AIPreferenceWindowController.m in Sources */,
-				34E6C3D50A7816E30076D7F0 /* AIContactInfoWindowController.m in Sources */,
-				34E6C3D70A7816E30076D7F0 /* AIContactAccountsPane.m in Sources */,
-				34E6C3D90A7816E30076D7F0 /* AIContactProfilePane.m in Sources */,
-				34E6C3DB0A7816E30076D7F0 /* AIContactSettingsPane.m in Sources */,
-				34E6C3DD0A7816E30076D7F0 /* ESContactAlertsPane.m in Sources */,
-				34E6C3DF0A7816E30076D7F0 /* ESContactInfoListController.m in Sources */,
-				34E6C3E40A7816E30076D7F0 /* ESShowContactInfoPromptController.m in Sources */,
 				34E6C3F30A7817060076D7F0 /* XtrasInstaller.m in Sources */,
 				34E6C4070A78172F0076D7F0 /* AIPasswordPromptController.m in Sources */,
 				34E6C4090A78172F0076D7F0 /* ESAccountPasswordPromptController.m in Sources */,
 				34E6C40B0A78172F0076D7F0 /* ESProxyPasswordPromptController.m in Sources */,
-				34E6C4200A7817570076D7F0 /* GBFireImporter.m in Sources */,
-				34E6C4220A7817570076D7F0 /* GBFireLogImporter.m in Sources */,
-				34E6C42F0A78176D0076D7F0 /* AILoginWindowController.m in Sources */,
 				34E6C4390A7817A50076D7F0 /* AIEmoticonPack.m in Sources */,
+				F589067B0A7BE0BC001F0ADC /* GBFireImporter.m in Sources */,
+				F58906830A7BE0E5001F0ADC /* AILoginWindowController.m in Sources */,
+				F589068A0A7BE116001F0ADC /* GBFireLogImporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
