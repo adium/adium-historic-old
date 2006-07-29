@@ -227,7 +227,7 @@
 		if (([account online] ||
 			 [account integerStatusObjectForKey:@"Connecting"]) &&
 			![account integerStatusObjectForKey:@"Disconnecting"]) {
-			[account disconnect];
+			[account disconnectFromDroppedNetworkConnection];
 			[accountsToConnect addObject:account];
 		}
 	}
@@ -240,6 +240,7 @@
  */
 - (void)systemWillSleep:(NSNotification *)notification
 {
+	AILog(@"***** System sleeping...");
 	//Disconnect all online accounts
 	if ([self _accountsAreOnlineOrDisconnecting]) {
 		NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
@@ -305,6 +306,8 @@
 {
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
+
+	AILog(@"***** System did wake...");
 
 	//Immediately re-connect accounts which are ignoring the server reachability
 	enumerator = [[[adium accountController] accounts] objectEnumerator];	
