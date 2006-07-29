@@ -112,7 +112,7 @@ static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who,
 							withData:textString];
 	}
 	
-    return adium_gaim_get_handle();
+    return NULL;
 }
 
 static void *adiumGaimNotifyUri(const char *uri)
@@ -122,7 +122,7 @@ static void *adiumGaimNotifyUri(const char *uri)
 		[[NSWorkspace sharedWorkspace] openURL:notifyURI];
 	}
 	
-	return adium_gaim_get_handle();
+    return NULL;
 }
 
 static void adiumGaimNotifyClose(GaimNotifyType type,void *uiHandle)
