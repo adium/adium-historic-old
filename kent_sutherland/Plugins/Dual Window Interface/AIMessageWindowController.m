@@ -870,10 +870,7 @@
     [tabView setNeedsDisplay:YES];
 }
 
-//Custom Tabs Delegate -------------------------------------------------------------------------------------------------
-#pragma mark Custom Tabs Delegate
-
-- (NSString *)customTabView:(AICustomTabsView *)tabView tooltipForTabViewItem:(NSTabViewItem *)tabViewItem
+- (NSString *)tabView:(NSTabView *)tabView toolTipForTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	AIChat		*chat = [(AIMessageTabViewItem *)tabViewItem chat];
 	NSString	*tooltip = nil;
@@ -911,7 +908,7 @@
 			tooltip = [[chat account] formattedUID];
 		}
 	}
-
+	
 	return tooltip;
 }
 
