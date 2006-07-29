@@ -32,7 +32,7 @@
 
 - (const char*)protocolPlugin
 {
-    return "prpl-sametime";
+    return "prpl-meanwhile";
 }
 
 - (void)configureGaimAccount
