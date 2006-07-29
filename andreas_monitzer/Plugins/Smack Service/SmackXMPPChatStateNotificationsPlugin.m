@@ -71,7 +71,7 @@
     switch([inTypingObject typingState]) {
         case AINotTyping:
             NSLog(@"not typing");
-            csn = [SmackCocoaAdapter createChatState:@"paused"];
+            csn = [SmackCocoaAdapter createChatState:@"active"];
             break;
         case AITyping:
             NSLog(@"typing");
