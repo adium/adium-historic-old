@@ -22,4 +22,26 @@
     return @"ESGaimMeanwhileAccountView";
 }
 
+//Configure our controls
+- (void)configureForAccount:(AIAccount *)inAccount
+{
+    [super configureForAccount:inAccount];
+	
+	[checkBox_fakeClientId setState:[[account preferenceForKey:KEY_MEANWHILE_FAKE_CLIENT_ID group:GROUP_ACCOUNT_STATUS] boolValue]];
+	[checkBox_forceLogin setState:[[account preferenceForKey:KEY_MEANWHILE_FORCE_LOGIN group:GROUP_ACCOUNT_STATUS] boolValue]];	
+}
+
+//Save controls
+- (void)saveConfiguration
+{
+    [super saveConfiguration];
+	
+	//Connection security
+	[account setPreference:[NSNumber numberWithBool:[checkBox_fakeClientId state]]
+					forKey:KEY_MEANWHILE_FAKE_CLIENT_ID group:GROUP_ACCOUNT_STATUS];
+	//Connection security
+	[account setPreference:[NSNumber numberWithBool:[checkBox_forceLogin state]]
+					forKey:KEY_MEANWHILE_FORCE_LOGIN group:GROUP_ACCOUNT_STATUS];	
+}
+
 @end
