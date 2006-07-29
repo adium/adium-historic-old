@@ -9,9 +9,10 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIObject.h>
 
+@protocol AIContactListTooltipEntry;
 @class SmackXMPPAccount, SmackXMPPRosterPluginListener;
 
-@interface SmackXMPPRosterPlugin : AIObject {
+@interface SmackXMPPRosterPlugin : AIObject <AIContactListTooltipEntry> {
     SmackXMPPAccount *account;
     SmackXMPPRosterPluginListener *listener;
 }

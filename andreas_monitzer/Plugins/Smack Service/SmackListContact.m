@@ -11,6 +11,8 @@
 #import "AIAdium.h"
 #import "AIContactController.h"
 
+#import <AIUtilities/AIImageAdditions.h>
+
 @implementation SmackListContact
 
 - (id)initWithUID:(NSString *)inUID service:(AIService *)inService {
@@ -125,17 +127,22 @@
 	return statusType;
 }
 
-//- (NSAttributedString *)statusMessage
-- (NSAttributedString *)contactListStatusMessage
+#define META_TOOLTIP_ICON_SIZE NSMakeSize(11,11)
+
+- (NSAttributedString *)resourceInfo
 {
-    NSMutableAttributedString *result = [[NSMutableAttributedString alloc] init];
+    NSMutableString	*entryString;
+    BOOL			shouldAppendString = NO;
+    
+    NSMutableAttributedString *entry = [[NSMutableAttributedString alloc] init];
+    entryString = [entry mutableString];
     
     NSEnumerator *e = [[self containedObjects] objectEnumerator];
     AIListContact *contact;
     
     while((contact = [e nextObject])) {
 		if (contact != bogusContact) {
-			NSAttributedString *temp = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: ",[[contact UID] jidResource]] attributes:[NSDictionary dictionaryWithObject:[NSFont boldSystemFontOfSize:[NSFont labelFontSize]] forKey:NSFontAttributeName]];
+/*			NSAttributedString *temp = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: ",[[contact UID] jidResource]] attributes:[NSDictionary dictionaryWithObject:[NSFont boldSystemFontOfSize:[NSFont labelFontSize]] forKey:NSFontAttributeName]];
 			[result appendAttributedString:temp];
 			[temp release];
 			
@@ -144,19 +151,57 @@
 
 			temp = [[NSAttributedString alloc] initWithString:@"\n" attributes:nil];
 			[result appendAttributedString:temp];
-			[temp release];
+			[temp release];*/
+			
+            NSImage	*statusIcon;
+            
+            if (shouldAppendString) {
+                [entryString appendString:@"\r"];
+            } else {
+                shouldAppendString = YES;
+            }
+            
+            statusIcon = [[contact displayArrayObjectForKey:@"Tab Status Icon"] imageByScalingToSize:META_TOOLTIP_ICON_SIZE];
+            
+            if (statusIcon) {
+                NSTextAttachment		*attachment;
+                NSTextAttachmentCell	*cell;
+                
+                cell = [[NSTextAttachmentCell alloc] init];
+                [cell setImage:statusIcon];
+                
+                attachment = [[NSTextAttachment alloc] init];
+                [attachment setAttachmentCell:cell];
+                [cell release];
+                
+                [entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+                [attachment release];
+            }
+            
+            NSAttributedString *statusString = [contact contactListStatusMessage];
+            
+            [entryString appendString:[[contact UID] jidResource]];
+            
+            if(statusString && [statusString length] > 0)
+            {
+                [entryString appendString:@": "];
+                [entry appendAttributedString:statusString];
+            }
 		}
     }
     
 //    NSLog(@"contactListStatusMessage = %@",[result string]);
     
-    return [result autorelease];
+    return [entry autorelease];
 }
 
-//- (NSAttributedString *)contactListStatusMessage
 - (NSAttributedString *)statusMessage
 {
-//    NSLog(@"statusMessage = %@", [[[self preferredContact] contactListStatusMessage] string]);
+    return [[self preferredContact] statusMessage];
+}
+
+- (NSAttributedString *)contactListStatusMessage
+{
     return [[self preferredContact] contactListStatusMessage];
 }
 
