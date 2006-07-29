@@ -366,7 +366,17 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	NSString *firstName, *middleName, *lastName, *phoneticFirstName, *phoneticLastName;	
 	NSString *nickName;
 	NSString *displayName = nil;
+	NSNumber *flags;
 	
+	// If the record is for a company, return the company name
+	flags = [person valueForProperty:kABPersonFlags];
+	if (flags) {
+		int value = [flags intValue];
+		
+		if ((value & kABShowAsMask) == kABShowAsCompany)
+			return [person valueForProperty:kABOrganizationProperty];
+	}
+		
 	firstName = [person valueForProperty:kABFirstNameProperty];
 	middleName = [person valueForProperty:kABMiddleNameProperty];
 	lastName = [person valueForProperty:kABLastNameProperty];
