@@ -23,7 +23,6 @@
 		[bogusContact retain];
 		
         containedObjects = [[NSMutableArray alloc] initWithObjects:bogusContact,nil];
-
         largestOrder = 1.0;
         smallestOrder = 1.0;
         expanded = YES;
@@ -78,7 +77,9 @@
 			[key isEqualToString:@"IdleSince"] ||
 			[key isEqualToString:@"IsIdle"] ||
 			[key isEqualToString:@"IsMobile"] ||
-			[key isEqualToString:@"StatusMessage"]) {
+			[key isEqualToString:@"StatusMessage"] ||
+			[key isEqualToString:@"Signed On"] ||
+			[key isEqualToString:@"Signed Off"]) {
 			shouldNotify = YES;
 		}
 
