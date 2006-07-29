@@ -11,6 +11,8 @@
 
 @interface SmackListContact : AIListContact <AIContainingObject> {
     NSMutableArray *containedObjects;
+	//hack so we can message to offline smack contacts
+	AIListContact *bogusContact;
     BOOL expanded;
     float largestOrder;
     float smallestOrder;
