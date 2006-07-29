@@ -15,6 +15,7 @@
  */
 
 #import "ESGaimMeanwhileAccountViewController.h"
+#import "ESGaimMeanwhileAccount.h"
 
 @implementation ESGaimMeanwhileAccountViewController
 
