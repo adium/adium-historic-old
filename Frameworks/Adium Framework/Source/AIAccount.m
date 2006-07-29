@@ -66,6 +66,19 @@
 }
 
 /*!
+ * @brief Disconnect as a result of the network connection dropping out
+ *
+ * The default implementation is identical to [self disconect], but subclasses may want to act differently
+ * if the network connection is gone than if the user chose to disconnect.
+ *
+ * Subclasses should call super's implementation.
+ */
+- (void)disconnectFromDroppedNetworkConnection
+{
+	[self disconnect];
+}
+
+/*!
  * @brief Register an account
  *
  * Register an account on this service using the currently entered information.  This is for services which support
