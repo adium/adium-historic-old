@@ -217,7 +217,7 @@
  */
 - (void)workspaceSessionDidResignActive:(NSNotification *)notification
 {
-	[self setSoundsAreMuted:YES];
+	[self setSoundsAreMuted:NO];
 }
 
 - (void)setSoundsAreMuted:(BOOL)mute
