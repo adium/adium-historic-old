@@ -150,7 +150,7 @@
 	[centeredParagraphStyle release];
 	[message release];
 	
-	return adium_gaim_get_handle();
+	return NULL /*adium_gaim_get_handle()*/ ;
 }
 
 /*!
