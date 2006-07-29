@@ -165,7 +165,7 @@
  */
 - (int)integerStatusObjectForKey:(NSString *)key
 {
-	NSNumber *number = [statusDictionary objectForKey:key];
+	NSNumber *number = [self statusObjectForKey:key];
     return number ? [number intValue] : 0;
 }
 
