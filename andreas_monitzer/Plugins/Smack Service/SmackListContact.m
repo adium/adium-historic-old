@@ -28,6 +28,7 @@
         largestOrder = 1.0;
         smallestOrder = 1.0;
         expanded = YES;
+        NSLog(@"smack list contact UID = \"%@\"", inUID);
     }
     return self;
 }
@@ -125,6 +126,11 @@
 								  AIAvailableStatusType);
 //	NSLog(@"statusType for %@ = %d (Avail = %d, Offline = %d)",self,statusType, AIAvailableStatusType, AIOfflineStatusType);
 	return statusType;
+}
+
+- (BOOL)containsMultipleContacts
+{
+    return [containedObjects count] > 1;
 }
 
 #define META_TOOLTIP_ICON_SIZE NSMakeSize(11,11)

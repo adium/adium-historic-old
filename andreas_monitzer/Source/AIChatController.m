@@ -255,7 +255,7 @@
 	 It's a good idea for the caller to pick the preferred contact for us, since they know the content type
 	 being sent and more information - but we'll do it here as well just to be safe.
 	 */
-	if ([inContact isKindOfClass:[AIMetaContact class]]) {
+	if ([inContact containsMultipleContacts]) {
 		targetContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
 																   forListContact:inContact];
 		

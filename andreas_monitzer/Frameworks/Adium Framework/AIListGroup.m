@@ -111,6 +111,12 @@
     return [containedObjects count];
 }
 
+//Even though it *does* contain multiple contacts, it's not a meta contact
+- (BOOL)containsMultipleContacts
+{
+    return NO;
+}
+
 //Test for the presence of an object in our group
 - (BOOL)containsObject:(AIListObject *)inObject
 {

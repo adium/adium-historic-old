@@ -102,6 +102,11 @@
 	return [NSString stringWithFormat:@"%@.%@.%@", [inService serviceClass], [inAccount UID], inUID];
 }
 
+//For meta-contact-like contacts
+- (BOOL)containsMultipleContacts
+{
+    return NO;
+}
 
 //Remote Grouping ------------------------------------------------------------------------------------------------------
 #pragma mark Remote Grouping

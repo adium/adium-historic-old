@@ -54,6 +54,7 @@
 
 //YES if the metaContact has only one UID/serviceID within it - for example, three different accounts' AIListContacts for a particular screen name
 - (BOOL)containsOnlyOneUniqueContact;
+- (BOOL)containsMultipleContacts;
 
 //Similarly, YES if the metaContact has only one serviceID within it.
 - (BOOL)containsOnlyOneService;

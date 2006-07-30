@@ -92,7 +92,8 @@
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    return [(SmackListContact*)inObject resourceInfo];
+	if ([inObject isKindOfClass:[SmackListContact class]])
+        return [(SmackListContact*)inObject resourceInfo];
 }
 
 #pragma mark Callbacks from Java
@@ -145,8 +146,6 @@
                 [listContact setRemoteGroupName:AILocalizedString(@"Unfiled Entries","group for entries without a group")];
         }
         [account setListContact:listContact toAlias:[entry getName]];
-        
-        [listContact release];
     }
 }
 
