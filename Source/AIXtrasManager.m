@@ -400,8 +400,14 @@ static AIXtrasManager * manager;
 			AIXtraInfo *xtraInfo  = [AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[[selectedCategory objectAtIndex:selectedRow] path]]];
 			if ([[xtraList selectedRowIndexes] count] == 1) {
 				[previewController setXtra:xtraInfo];
+				[deleteButton setEnabled:YES];
 			}
+			else
+				[deleteButton setEnabled:NO];
 		}
+		else
+			[deleteButton setEnabled:NO]; 
+		
 	} else if ([aNotification object] == sidebar) {
 		[self setCategory:nil];
 	}
