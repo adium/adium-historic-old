@@ -366,7 +366,17 @@
 - (AIMetaContact *)_chatMetaContact
 {
 	id 	containingObject = [[chat listObject] containingObject];
-	return [containingObject containsMultipleContacts] ? containingObject : nil;
+    if(![containingObject containsMultipleContacts])
+        return nil;
+    
+    // walk the tree. take the last object that can containg other contacts
+    // this basically means that we take the thing that's actually shown in the
+    // contact list, since groups pretend to not contain other objects
+    while([[containingObject containingObject] containsMultipleContacts])
+    {
+        containingObject = [containingObject containingObject];
+    }
+	return containingObject;
 }
 
 /*!
