@@ -155,8 +155,8 @@ Class LogViewerWindowControllerClass = NULL;
 	//Toolbar item
 	NSToolbarItem	*toolbarItem;
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:LOG_VIEWER_IDENTIFIER
-														  label:AILocalizedString(@"Logs",nil)
-	                                               paletteLabel:AILocalizedString(@"View Logs",nil)
+														  label:AILocalizedString(@"Transcripts",nil)
+	                                               paletteLabel:AILocalizedString(@"View Chat Transcripts",nil)
 	                                                    toolTip:AILocalizedString(@"View previous conversations with this contact or chat",nil)
 	                                                     target:self
 	                                            settingSelector:@selector(setImage:)
