@@ -277,9 +277,9 @@
 			NSURL *markedLinkURL;
 			
 			if((markedLinkURL = [markedLink URL])){
-				[linkifiedString setAttributes:[NSDictionary dictionaryWithObject:markedLinkURL
-																		  forKey:NSLinkAttributeName]
-										 range:[markedLink range]];
+				[linkifiedString addAttribute:NSLinkAttributeName
+										value:markedLinkURL 
+										range:[markedLink range]];
 			}
 		}
 		
