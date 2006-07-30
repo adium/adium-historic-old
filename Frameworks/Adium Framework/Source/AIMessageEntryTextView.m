@@ -278,6 +278,10 @@
 
 		[self setString:@""];
 	}
+
+	if ([[self delegate] respondsToSelector:@selector(textViewDidCancel:)]) {
+		[[self delegate] textViewDidCancel:self];
+	}
 }
 
 

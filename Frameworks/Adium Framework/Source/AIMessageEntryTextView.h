@@ -89,4 +89,6 @@
  * Implementation is optional.
  */
 - (BOOL)textViewShouldTabComplete:(NSTextView *)inTextView;
+
+- (void)textViewDidCancel:(NSTextView *)inTextView;
 @end
