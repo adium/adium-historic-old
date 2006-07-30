@@ -175,7 +175,8 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[scrollView_statusMessage setAutohidesScrollers:YES];
 	[scrollView_statusMessage setAlwaysDrawFocusRingIfFocused:YES];
 	[textView_statusMessage setTarget:self action:@selector(okay:)];
-	
+	[textView_statusMessage setDelegate:self];
+
 	[textView_statusMessage setAllowsDocumentBackgroundColorChange:YES];
 	[textView_autoReply setAllowsDocumentBackgroundColorChange:YES];
 
@@ -191,6 +192,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[scrollView_autoReply setAutohidesScrollers:YES];
 	[scrollView_autoReply setAlwaysDrawFocusRingIfFocused:YES];
 	[textView_autoReply setTarget:self action:@selector(okay:)];
+	[textView_autoReply setDelegate:self];
 
 	//Return inserts a new line
 	[textView_autoReply setSendOnReturn:NO];
@@ -327,6 +329,11 @@ static	NSMutableDictionary	*controllerDict = nil;
 - (IBAction)cancel:(id)sender
 {
 	[self closeWindow:nil];
+}
+
+- (void)textViewDidCancel:(NSTextView *)inTextView
+{
+	[self cancel:inTextView];
 }
 
 /*!
