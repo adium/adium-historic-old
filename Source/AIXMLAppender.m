@@ -44,7 +44,10 @@
 #define XML_APPENDER_BLOCK_SIZE 4096
 
 #define XML_MARKER @"<?xml version=\"1.0\"?>"
-enum { xmlMarkerLength = 21 };
+enum {
+	xmlMarkerLength = 21,
+	failedUtf8BomLength = 6
+};
 
 @interface AIXMLAppender(PRIVATE)
 - (NSString *)createElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
@@ -303,8 +306,26 @@ enum { xmlMarkerLength = 21 };
 {
 	//Create a temporary file handle for validation, and read the marker
 	NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:path];
-	NSString *markerString = [[[NSString alloc] initWithData:[handle readDataOfLength:xmlMarkerLength]
-													encoding:NSUTF8StringEncoding] autorelease];
+	//Evan tried to add a UTF-8 BOM, but messed it up and ended up writing three high-ASCII characters instead (which came out as six bytes once converted from MacRoman through Unicode to UTF-8).
+	//So now we have to be ready to handle these, at least until the user opens the Transcript Viewer.
+#warning XXX This workaround should probably be removed before 1.0b8 (definitely before 1.0 final), since the bug that necessitated it was stamped out quickly and the transcript viewer will fix any broken logs. All logs in the world that were thus broken should be thereby fixed by either or both of the aforementioned versions.
+	NSMutableData *markerData = [[[handle readDataOfLength:xmlMarkerLength + failedUtf8BomLength] mutableCopy] autorelease];
+	NSRange markerRange = { 0, [markerData length] };
+	const char *markerBytes = [markerData bytes];
+	if ((markerRange.length >= failedUtf8BomLength)
+	&&  (markerBytes[0] == 0xC3)
+	&&  (markerBytes[1] == 0x94)
+	&&  (markerBytes[2] == 0xC2)
+	&&  (markerBytes[3] == 0xAA)
+	&&  (markerBytes[4] == 0xC3)
+	&&  (markerBytes[5] == 0xB8)
+	) {
+		markerRange.length = failedUtf8BomLength;
+		[markerData replaceBytesInRange:markerRange withBytes:"" length:0];
+	}
+
+	NSString *markerString = [[[NSString alloc] initWithData:markerData
+	                                                encoding:NSUTF8StringEncoding] autorelease];
 
 	if (![markerString isEqualToString:XML_MARKER]) {
 		[handle closeFile];

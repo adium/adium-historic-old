@@ -662,7 +662,39 @@ static int toArraySort(id itemA, id itemB, void *context);
 					displayText = [[AIHTMLDecoder decodeHTML:logFileText] mutableCopy];
 				}
 			}else if ([[theLog path] hasSuffix:@".chatlog"]){
-				logFileText = [GBChatlogHTMLConverter readFile:[logBasePath stringByAppendingPathComponent:[theLog path]]];
+				NSString *logFullPath = [logBasePath stringByAppendingPathComponent:[theLog path]];
+
+				//If this log begins with a malformed UTF-8 BOM (which was written out by Adium for a brief time between 1.0b7 and 1.0b8), fix it before trying to read it in.
+				enum {
+					failedUtf8BomLength = 6
+				};
+				NSData *data = [NSData dataWithContentsOfMappedFile:logFullPath];
+				const unsigned char *ptr = [data bytes];
+				unsigned len = [data length];
+				if ((len >= failedUtf8BomLength)
+				&&  (ptr[0] == 0xC3)
+				&&  (ptr[1] == 0x94)
+				&&  (ptr[2] == 0xC2)
+				&&  (ptr[3] == 0xAA)
+				&&  (ptr[4] == 0xC3)
+				&&  (ptr[5] == 0xB8)
+				) {
+					//Yup. Back up the old file, then strip it off.
+					NSLog(@"Transcript file at %@ has unwanted bytes at the front of it. (This is a bug in a previous version of Adium, not this version.) Attempting recovery.", logFullPath);
+					NSString *backupPath = [logFullPath stringByAppendingPathExtension:@"bak"];
+					if(![[NSFileManager defaultManager] movePath:logFullPath toPath:backupPath handler:nil])
+						NSLog(@"Could not back up file; recovery failed. This transcript will probably appear blank in the transcript viewer.");
+					else {
+						NSRange range = { failedUtf8BomLength, len - failedUtf8BomLength };
+						NSData *theRestOfIt = [data subdataWithRange:range];
+						if([theRestOfIt writeToFile:logFullPath atomically:YES])
+							NSLog(@"Wrote fixed version to same file. The corrupted version was renamed to %@; you may remove this file at your leisure after you are satisfied that the recovery succeeded. You can test this by viewing the transcript (%@) in the transcript viewer.", backupPath, [logFullPath lastPathComponent]);
+						else
+							NSLog(@"Could not write fix!");
+					}
+				}
+
+				logFileText = [GBChatlogHTMLConverter readFile:logFullPath];
 				if(logFileText != nil)
 				{
 					if(displayText)
