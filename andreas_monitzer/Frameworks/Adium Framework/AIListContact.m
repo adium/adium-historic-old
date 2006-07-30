@@ -105,7 +105,9 @@
 
 //Remote Grouping ------------------------------------------------------------------------------------------------------
 #pragma mark Remote Grouping
-//Set the desired group for this contact.  Pass nil to indicate this object is no longer listed.
+/**
+ * @brief Set the desired group for this contact.  Pass nil to indicate this object is no longer listed.
+ */
 - (void)setRemoteGroupName:(NSString *)inName
 {
 	if ((!remoteGroupName && inName) || ![inName isEqualToString:remoteGroupName]) {
