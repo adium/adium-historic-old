@@ -366,7 +366,7 @@
 - (AIMetaContact *)_chatMetaContact
 {
 	id 	containingObject = [[chat listObject] containingObject];
-	return [containingObject isKindOfClass:[AIMetaContact class]] ? containingObject : nil;
+	return [containingObject containsMultipleContacts] ? containingObject : nil;
 }
 
 /*!
