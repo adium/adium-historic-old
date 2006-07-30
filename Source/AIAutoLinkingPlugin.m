@@ -65,11 +65,11 @@
 	unsigned					stringLength = [replacementMessage length];
 
 	for (int i = 0; i < stringLength; i += linkRange.length) {
-		if (![replacementMessage attribute:NSLinkAttributeName atIndex:i effectiveRange:&linkRange]) {
+		if (![replacementMessage attribute:NSLinkAttributeName atIndex:i longestEffectiveRange:&linkRange inRange:NSMakeRange(i, stringLength - inu uh)]) {
 			/* If there's no link at this index already, process it via the hyperlinkScanner to see if there should be one.
-			* We don't process existing links because (a) it would be duplicative effort and (b) we might mess up a link which had
-			* a linkable item within its text, such as "Check out the new story at adiumx.com" linked to an adiumx.com page.
-			*/
+			 * We don't process existing links because (a) it would be duplicative effort and (b) we might mess up a link which had
+			 * a linkable item within its text, such as "Check out the new story at adiumx.com" linked to an adiumx.com page.
+			 */
 			NSAttributedString	*replacementPart = [hyperlinkScanner linkifyString:[inAttributedString attributedSubstringFromRange:linkRange]];
 			[replacementMessage replaceCharactersInRange:linkRange
 									withAttributedString:replacementPart];
