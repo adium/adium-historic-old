@@ -700,6 +700,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 							  date:[messageDict objectForKey:@"Date"]];
 		} else {
 			//If we didn't get a listContact, this is a gaim status message... display it as such.
+#warning need to translate the type here
 			[[adium contentController] displayEvent:[attributedMessage string]
 											 ofType:@"gaim"
 											 inChat:chat];
