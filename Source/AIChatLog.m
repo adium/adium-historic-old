@@ -17,6 +17,7 @@
 #import "AIChatLog.h"
 #import "AILogViewerWindowController.h"
 #import "AILoggerPlugin.h"
+#import "AICalendarDate.h"
 
 @implementation AIChatLog
 
@@ -88,7 +89,7 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 - (NSString *)serviceClass{
 	return serviceClass;
 }
-- (NSDate *)date{
+- (NSCalendarDate *)date{
 	//Determine the date of this log lazily
 	if (!date) {
 		date = [dateFromFileName([path lastPathComponent]) retain];
@@ -117,7 +118,7 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 
 - (BOOL)isFromSameDayAsDate:(NSCalendarDate *)inDate
 {
-	return [[[self date] dateWithCalendarFormat:nil timeZone:nil] dayOfCommonEra] == [inDate dayOfCommonEra];
+	return [[self date] dayOfCommonEra] == [inDate dayOfCommonEra];
 }
 
 #pragma mark Sort Selectors
@@ -253,7 +254,7 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 //Scan an Adium date string, supahfast C style
 static BOOL scandate(const char *sample,
 					 unsigned long *outyear, unsigned long *outmonth,  unsigned long *outdate,
-					 unsigned long *outhour, unsigned long *outminute, unsigned long *outsecond,
+					 BOOL *outHasTime, unsigned long *outhour, unsigned long *outminute, unsigned long *outsecond,
 					 signed long *outtimezone)
 {
 	BOOL success = YES;
@@ -305,7 +306,8 @@ static BOOL scandate(const char *sample,
 
     if (*sample == 'T') {
 		++sample; //start with the next character
-
+		if (outHasTime) *outHasTime = YES;
+		
 		/*get the hour*/ {
 			while (*sample && (*sample < '0' || *sample > '9')) ++sample;
 			if (!*sample) {
@@ -387,16 +389,22 @@ static NSCalendarDate *dateFromFileName(NSString *fileName)
 	unsigned long   minute = 0;
 	unsigned long   second = 0;
 	  signed long   timezone = NSNotFound;
-
-	if (scandate([fileName UTF8String], &year, &month, &day, &hour, &minute, &second, &timezone)) {
+	BOOL			hasTime = NO;
+	  
+	if (scandate([fileName UTF8String], &year, &month, &day, &hasTime, &hour, &minute, &second, &timezone)) {
 		if (year && month && day) {
-			return [NSCalendarDate dateWithYear:year
-										  month:month
-											day:day
-										   hour:hour
-										 minute:minute
-										 second:second
-									   timeZone:((timezone == NSNotFound) ? nil : [NSTimeZone timeZoneForSecondsFromGMT:(timezone * 60)])];
+			AICalendarDate *calendarDate;
+			
+			calendarDate = [AICalendarDate dateWithYear:year
+												  month:month
+													day:day
+												   hour:hour
+												 minute:minute
+												 second:second
+											   timeZone:((timezone == NSNotFound) ? nil : [NSTimeZone timeZoneForSecondsFromGMT:(timezone * 60)])];
+			[calendarDate setGranularity:(hasTime ? AISecondGranularity : AIDayGranularity)];
+
+			return calendarDate;
 		}
 	}
 	
