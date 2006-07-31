@@ -19,6 +19,11 @@
     
     SmackXVCard *vCardPacket;
     NSMutableDictionary *ownvCard;
+    
+    NSString *avatarhash;
+    BOOL avatarUpdateInProgress;
+    
+    NSMutableArray *resourcesBlockingAvatar;
 }
 
 - (id)initWithAccount:(SmackXMPPAccount*)a;

@@ -68,6 +68,10 @@
     SmackPresence *presence = [account getCurrentUserPresence];
     [presence setTo:[contact UID]];
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPPresenceSentNotification
+                                                        object:self
+                                                      userInfo:[NSDictionary dictionaryWithObject:presence forKey:SmackXMPPPacket]];
+    
     [[account connection] sendPacket:presence];
 }
 

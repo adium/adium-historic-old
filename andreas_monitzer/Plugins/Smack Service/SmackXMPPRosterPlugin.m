@@ -94,6 +94,7 @@
 {
 	if ([inObject isKindOfClass:[SmackListContact class]])
         return [(SmackListContact*)inObject resourceInfo];
+    return nil;
 }
 
 #pragma mark Callbacks from Java

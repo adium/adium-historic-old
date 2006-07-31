@@ -13,6 +13,7 @@ import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.filter.*;
 import org.jivesoftware.smackx.ServiceDiscoveryManager;
+import org.jivesoftware.smackx.packet.VCard;
 import java.util.*;
 import java.lang.reflect.Method;
 
@@ -29,6 +30,7 @@ public class SmackBridge implements ConnectionListener {
         // set up our own packet extensions and iq provider
         OutOfBandDataExtension.register();
         ChatStateNotifications.register();
+        VCardUpdateExtension.register();
     }
     
     public void initSubscriptionMode() {
@@ -128,5 +130,14 @@ public class SmackBridge implements ConnectionListener {
         grouparray[0] = group;
         
         roster.createEntry(jid,name,grouparray);
+    }
+    
+    public static void setVCardAvatar(VCard vCard, NSData avatar) {
+        vCard.setAvatar(avatar.bytes(0,avatar.length()));
+    }
+    
+    public static boolean isAvatarEmpty(VCard vCard) {
+        byte[] avatar = vCard.getAvatar();
+        return avatar == null || avatar.length == 0;
     }
 }

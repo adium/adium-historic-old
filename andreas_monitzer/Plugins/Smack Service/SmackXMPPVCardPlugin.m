@@ -10,14 +10,21 @@
 #import "SmackXMPPAccount.h"
 #import "AIAdium.h"
 #import <AIUtilities/AIStringUtilities.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import "SmackCocoaAdapter.h"
 #import "SmackInterfaceDefinitions.h"
 #import "AIListContact.h"
 #import "AIInterfaceController.h"
+#import "AIContactController.h"
+
+#import <JavaVM/NSJavaVirtualMachine.h>
 
 @interface SmackCocoaAdapter (vCardPlugin)
 
 + (SmackXVCard*)vCard;
++ (void)setAvatar:(NSData*)avatar forVCard:(SmackXVCard*)vCard;
++ (SmackVCardUpdateExtension*)VCardUpdateExtensionWithPhotoHash:(NSString*)hash;
++ (BOOL)avatarIsEmpty:(SmackXVCard*)vCard;
 
 @end
 
@@ -26,6 +33,23 @@
 + (SmackXVCard*)vCard
 {
     return [[[NSClassFromString(@"org.jivesoftware.smackx.packet.VCard") alloc] init] autorelease];
+}
+
++ (void)setAvatar:(NSData*)avatar forVCard:(SmackXVCard*)vCard
+{
+    [NSClassFromString(@"net.adium.smackBridge.SmackBridge") setVCardAvatar:vCard :avatar];
+}
+
++ (SmackVCardUpdateExtension*)VCardUpdateExtensionWithPhotoHash:(NSString*)hash
+{
+    SmackVCardUpdateExtension *ext = [NSClassFromString(@"net.adium.smackBridge.VCardUpdateExtension") newWithSignature:@"()"];
+    [ext setPhoto:hash];
+    return [ext autorelease];
+}
+
++ (BOOL)avatarIsEmpty:(SmackXVCard*)vCard
+{
+    return [NSClassFromString(@"net.adium.smackBridge.SmackBridge") isAvatarEmpty:vCard];
 }
 
 @end
@@ -56,17 +80,219 @@
                                                  selector:@selector(updateContact:)
                                                      name:@"XMPPUpdateContact"
                                                    object:account];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateStatus:)
+                                                     name:SmackXMPPUpdateStatusNotification
+                                                   object:account];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(complementPresence:)
+                                                     name:SmackXMPPPresenceSentNotification
+                                                   object:account];
     }
     return self;
 }
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [editorwindow release];
     [ownvCard release];
     [vCardPacket release];
+    [avatarhash release];
+    [resourcesBlockingAvatar release];
     [super dealloc];
 }
+
+- (void)connect:(SmackXMPPConnection*)conn
+{
+    resourcesBlockingAvatar = [[NSMutableArray alloc] init];
+}
+
+- (void)disconnect:(SmackXMPPConnection*)conn
+{
+    [resourcesBlockingAvatar release];
+    resourcesBlockingAvatar = nil;
+}
+
+#pragma mark Avatar Handling
+
+- (void)complementPresence:(NSNotification*)notification
+{
+    NSLog(@"resourcesBlockingAvatar = %@",resourcesBlockingAvatar);
+    if([resourcesBlockingAvatar count] == 0)
+    {
+        SmackPresence *presence = [[notification userInfo] objectForKey:SmackXMPPPacket];
+        
+        [presence addExtension:[SmackCocoaAdapter VCardUpdateExtensionWithPhotoHash:avatarhash]];
+        
+        NSLog(@"XMPP: Appended hash %@ to presence", avatarhash);
+    }
+}
+
+- (void)updateStatus:(NSNotification*)notification
+{
+    NSString *key = [[notification userInfo] objectForKey:SmackXMPPStatusKey];
+    // getting/setting the vCard is a blocking operation, so we'll use a secondary thread for it
+    // ignore the new avatar if the old one wasn't published yet
+    NSLog(@"updateStatus, key = %@, avatarUpdateInProgress = %@",key,avatarUpdateInProgress?@"YES":@"NO");
+    if(!avatarUpdateInProgress && [key isEqualToString:KEY_USER_ICON])
+    {
+        avatarUpdateInProgress = YES;
+        [NSThread detachNewThreadSelector:@selector(updateAvatarUploadingNewOne:) toTarget:self withObject:[NSNumber numberWithBool:YES]];
+    }
+}
+
+- (void)updateAvatarUploadingNewOne:(NSNumber*)flag
+{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    SmackXVCard *vCard = [SmackCocoaAdapter vCard];
+    [vCard load:[account connection]];
+    
+    if([flag boolValue])
+    {
+        // we don't want to upload ours, just update our own hash
+        NSLog(@"updating local hash");
+        
+        NSString *newhash = [vCard getAvatarHash];
+        
+        // using this code should eliminate race conditions
+        id old = avatarhash;
+        // "If the BINVAL is empty or missing, advertise an empty photo element in future presence broadcasts."
+        avatarhash = newhash?[newhash retain]:@"";
+        [old release];
+    } else {
+        // get avatar image and convert to JPEG
+        // The reason we aren't using png is that Smack just assumes
+        // (according to the source code) this format, even though
+        // PNG is is only format support required by the JEP, JPEG is
+        // only recommended. Oh well...
+        NSData  *data = [account preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
+        if(!data)
+        {
+            // handle the case that we don't have any avatar set
+            [SmackCocoaAdapter setAvatar:nil forVCard:vCard];
+            
+            [vCard save:[account connection]];
+            
+            // using this code should eliminate race conditions
+            id old = avatarhash;
+            avatarhash = @"";
+            [old release];
+            NSLog(@"no avatar set, updating to empty hash");
+        } else {
+            NSImage *avatarimage = [[NSImage alloc] initWithData:data];
+            NSData *jpgdata = [avatarimage JPEGRepresentation];
+            [avatarimage release];
+            
+            [SmackCocoaAdapter setAvatar:jpgdata forVCard:vCard];
+            
+            [vCard save:[account connection]];
+            
+            // using this code should eliminate race conditions
+            id old = avatarhash;
+            avatarhash = [[vCard getAvatarHash] retain];
+            [old release];
+            NSLog(@"image with size %u set, hash = %@",[jpgdata length],avatarhash);
+        }
+    }
+    
+    // let the contacts know about our new avatar
+    // this should better be handled by PEP, but that's not implemented anywhere yet
+    [account performSelectorOnMainThread:@selector(broadcastCurrentPresence) withObject:nil waitUntilDone:YES];
+    avatarUpdateInProgress = NO;
+    NSLog(@"avatar update done");
+    
+    [pool release];
+}
+
+- (void)receivedPresencePacket:(NSNotification*)notification
+{
+    // See JEP-153 section 4.3 "Multiple Resources" for a description of the magic that
+    // has to happen here.
+    
+    SmackPresence *presence = [[notification userInfo] objectForKey:SmackXMPPPacket];
+    
+    NSString *from = [presence getFrom];
+    
+    // we only care about presence packets from other resources of ourselves
+    if([[from jidUserHost] isEqualToString:[[account explicitFormattedUID] jidUserHost]])
+    {
+        NSString *resource = [from jidResource];
+        NSLog(@"presence from own account, resource %@",resource);
+        
+        if([[[presence getType] toString] isEqualToString:@"unavailable"])
+        {
+            NSLog(@"removing %@ from our blocker list",resource);
+            if([resourcesBlockingAvatar count] == 1 && [[resourcesBlockingAvatar lastObject] isEqualToString:resource])
+            {
+                NSLog(@"avatar unblocked!");
+                [resourcesBlockingAvatar removeObject:resource];
+                // now we're finally able to broadcast our avatar!
+                avatarUpdateInProgress = YES;
+                [NSThread detachNewThreadSelector:@selector(updateAvatarUploadingNewOne:) toTarget:self withObject:[NSNumber numberWithBool:NO]];
+            } else
+                [resourcesBlockingAvatar removeObject:resource];
+            return;
+        }
+        
+        SmackVCardUpdateExtension *ext = [presence getExtension:@"x" :@"vcard-temp:x:update"];
+        
+        if(!ext)
+            /* If the presence stanza received from the other resource does not contain the update child element,
+             * then the other resource does not support vCard-based avatars. That resource could modify the contents
+             * of the vCard (including the photo element); because polling for vCard updates is not allowed, the
+             * client MUST stop advertising the avatar image hash.
+             */
+        {
+            [resourcesBlockingAvatar addObject:resource];
+            NSLog(@"%@ blocks the avatar",resource);
+        }
+        else {
+            NSString *photo = [ext getPhoto];
+            /* If the update child element is empty, then the other resource supports the protocol but does not have
+             * its own avatar image. Therefore the client can ignore the other resource and continue to broadcast
+             * the existing image hash.
+             */
+            if(photo)
+            {
+                /* If the update child element contains an empty photo element, then the other resource has updated
+                 * the vCard with an empty BINVAL. Therefore the client MUST retrieve the vCard. If the retrieved
+                 * vCard contains a photo element with an empty BINVAL, then the client MUST stop advertising the
+                 * old image.
+                 */
+                if([photo length] == 0)
+                {
+                    SmackXVCard *vCard = [SmackCocoaAdapter vCard];
+                    [vCard load:[account connection]];
+                    
+                    if([SmackCocoaAdapter avatarIsEmpty:vCard])
+                    {
+                        [resourcesBlockingAvatar addObject:resource];
+                        NSLog(@"resource %@ has empty avatar, blocking us",resource);
+                    }
+                    NSLog(@"dunno what to do");
+                } else if(![photo isEqualToString:avatarhash])
+                {
+                    /* If the update child element contains a non-empty photo element, then the client MUST compare
+                     * the image hashes. If the hashes are identical, then the client can ignore the other resource
+                     * and continue to broadcast the existing image hash. If the hashes are different, then the
+                     * client MUST NOT attempt to resolve the conflict by uploading its avatar image again. Instead,
+                     * it MUST defer to the content of the retrieved vCard by resetting its image hash (see below)
+                     * and providing that hash in future presence broadcasts.
+                     */
+                    id old = avatarhash;
+                    avatarhash = [photo retain];
+                    [old release];
+                    NSLog(@"resource %@ has other avatar, setting our hash to %@",resource,avatarhash);
+                }
+            }
+        }
+    }
+
+}
+
+#pragma mark vCard Viewing And Editing
 
 // since getting the vCard is a synchronous API, we have to move to a secondary thread, get the vCard, and then move back
 // (since Adium doesn't like being talked to from a secondary thread)
@@ -278,11 +504,6 @@
     [vCardPacket save:[account connection]];
 
     [editorwindow orderOut:nil];
-}
-
-- (void)receivedPresencePacket:(NSNotification*)notification
-{
-    
 }
 
 @end
