@@ -263,7 +263,17 @@
 }
 
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage {
-    [connection sendPacket:[self getUserPresenceForStatusState:statusState usingStatusMessage:statusMessage]];
+    SmackPresence *packet = [self getUserPresenceForStatusState:statusState usingStatusMessage:statusMessage];
+    // let others add stuff to this presence packet
+    [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPPresenceSentNotification
+                                                        object:self
+                                                      userInfo:[NSDictionary dictionaryWithObject:packet forKey:SmackXMPPPacket]];
+    [connection sendPacket:packet];
+}
+
+- (void)broadcastCurrentPresence
+{
+    [self setStatusState:[self statusState] usingStatusMessage:[self statusMessage]];
 }
 
 - (void)performRegisterWithPassword:(NSString *)inPassword {
@@ -384,6 +394,15 @@
 /*- (BOOL)supportsFolderTransfer {
 	return NO;
 }*/
+
+// dynamic properties
+- (void)updateStatusForKey:(NSString *)key
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPUpdateStatusNotification
+                                                        object:self
+                                                      userInfo:[NSDictionary dictionaryWithObject:key forKey:SmackXMPPStatusKey]];
+    [super updateStatusForKey:key];
+}
 
 #pragma mark Status
 

@@ -1417,6 +1417,7 @@
 		81F656BE0A2A5880008FC8E7 /* SmackXMPPAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81F656BC0A2A587F008FC8E7 /* SmackXMPPAccountView.nib */; };
 		81F659BD0A2A8C81008FC8E7 /* smack.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F659B90A2A8C4E008FC8E7 /* smack.jar */; };
 		81F659BE0A2A8C81008FC8E7 /* smackx.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F659BA0A2A8C4E008FC8E7 /* smackx.jar */; };
+		81F9CDEA0A7D83AE004A35BD /* VCardUpdateExtension.java in Sources */ = {isa = PBXBuildFile; fileRef = 81F9CDE90A7D83AE004A35BD /* VCardUpdateExtension.java */; };
 		9E124DEB07D34C7300AA91C5 /* CBGrowlAlertDetailPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */; };
 		9E124DEC07D34C7300AA91C5 /* CBGrowlAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */; };
 		9E124DED07D34C7400AA91C5 /* NEHGrowlPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E124DE907D34C7300AA91C5 /* NEHGrowlPlugin.h */; };
@@ -3784,6 +3785,7 @@
 		81F658160A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackInterfaceDefinitions.h; path = "Plugins/Smack Service/SmackInterfaceDefinitions.h"; sourceTree = "<group>"; };
 		81F659B90A2A8C4E008FC8E7 /* smack.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = smack.jar; path = "Plugins/Smack Service/smack.jar"; sourceTree = "<group>"; };
 		81F659BA0A2A8C4E008FC8E7 /* smackx.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = smackx.jar; path = "Plugins/Smack Service/smackx.jar"; sourceTree = "<group>"; };
+		81F9CDE90A7D83AE004A35BD /* VCardUpdateExtension.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = VCardUpdateExtension.java; path = "Plugins/Smack Service/VCardUpdateExtension.java"; sourceTree = "<group>"; };
 		9C103FAE057127A500F3C158 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBGrowlAlertDetailPane.h; path = Source/CBGrowlAlertDetailPane.h; sourceTree = "<group>"; };
 		9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBGrowlAlertDetailPane.m; path = Source/CBGrowlAlertDetailPane.m; sourceTree = "<group>"; };
@@ -6634,6 +6636,7 @@
 				815ECFBA0A6A56530024B6FE /* SmackXMPPRosterPluginListener.java */,
 				81BE64790A711F6600AADA28 /* SmackXMPPFileTransferListener.java */,
 				815D2F290A74D903009338C2 /* OutOfBandDataExtension.java */,
+				81F9CDE90A7D83AE004A35BD /* VCardUpdateExtension.java */,
 				815D32370A7518D7009338C2 /* ChatStateNotifications.java */,
 				81F659B90A2A8C4E008FC8E7 /* smack.jar */,
 				81F659BA0A2A8C4E008FC8E7 /* smackx.jar */,
@@ -9658,6 +9661,7 @@
 				81BE647A0A711F6600AADA28 /* SmackXMPPFileTransferListener.java in Sources */,
 				815D2F2A0A74D903009338C2 /* OutOfBandDataExtension.java in Sources */,
 				815D32380A7518D7009338C2 /* ChatStateNotifications.java in Sources */,
+				81F9CDEA0A7D83AE004A35BD /* VCardUpdateExtension.java in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -30,6 +30,7 @@
 - (void)receiveIQPacket:(SmackIQ*)packet;
 
 - (SmackPresence*)getCurrentUserPresence;
+- (void)broadcastCurrentPresence;
 
 - (void)setListContact:(AIListContact *)listContact toAlias:(NSString *)inAlias;
 
@@ -48,9 +49,13 @@
 
 // this notification is sent by the account when the local user tries sending a message in a chat
 #define SmackXMPPMessageSentNotification @"SmackXMPPMessageSentNotification"
+#define SmackXMPPPresenceSentNotification @"SmackXMPPPresenceSentNotification"
+
+#define SmackXMPPUpdateStatusNotification @"SmackXMPPUpdateStatusNotification"
 
 #define SmackXMPPPacket @"SmackXMPPPacket"
 #define AIMessageObjectKey @"AIMessageObjectKey"
+#define SmackXMPPStatusKey @"SmackXMPPStatusKey"
 
 @interface NSString (JIDAdditions)
 

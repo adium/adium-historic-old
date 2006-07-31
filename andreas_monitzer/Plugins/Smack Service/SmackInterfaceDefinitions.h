@@ -894,6 +894,15 @@
 
 @end
 
+@interface SmackVCardUpdateExtension : NSObject <SmackPacketExtension> {
+}
+
+- (void)setPhoto:(NSString*)photo;
+- (NSString*)getPhoto;
+- (NSString*)toXML;
+
+@end
+
 @interface SmackChatStateNotifications : NSObject <SmackPacketExtension> {
 }
 
@@ -933,6 +942,8 @@
 + (id)getStaticFieldFromClass:(NSString*)fieldname :(NSString*)classname;
 + (JavaMethod*)getMethod:(NSString*)classname :(NSString*)method :(JavaVector*)argumentTypes;
 + (id)invokeMethod:(JavaMethod*)meth :(id)obj :(JavaVector*)params;
+
++ (void)setVCardAvatar:(SmackXVCard*)vCard :(NSData*)avatar;
 
 @end
 
