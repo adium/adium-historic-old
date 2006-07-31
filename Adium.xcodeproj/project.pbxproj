@@ -10089,6 +10089,7 @@
 					AppKit,
 				);
 				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
 				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = joscar;
 				SECTORDER_FLAGS = "";
@@ -10224,6 +10225,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = Plists/Translator.plist;
+				PREBINDING = NO;
 				PRODUCT_NAME = Translator;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10233,6 +10235,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = Plists/Translator.plist;
+				PREBINDING = NO;
 				PRODUCT_NAME = Translator;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10242,6 +10245,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = Plists/Translator.plist;
+				PREBINDING = NO;
 				PRODUCT_NAME = Translator;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10251,6 +10255,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = Plists/Translator.plist;
+				PREBINDING = NO;
 				PRODUCT_NAME = Translator;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10259,6 +10264,7 @@
 		347A211809786B6300A30431 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				PREBINDING = NO;
 				PRODUCT_NAME = SystemVersionCheck;
 			};
 			name = Development;
@@ -10266,6 +10272,7 @@
 		347A211909786B6300A30431 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				PREBINDING = NO;
 				PRODUCT_NAME = SystemVersionCheck;
 			};
 			name = Deployment;
@@ -10273,6 +10280,7 @@
 		347A211A09786B6300A30431 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				PREBINDING = NO;
 				PRODUCT_NAME = SystemVersionCheck;
 			};
 			name = "Deployment-Debug";
@@ -10280,6 +10288,7 @@
 		347A211B09786B6300A30431 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				PREBINDING = NO;
 				PRODUCT_NAME = SystemVersionCheck;
 			};
 			name = "Deployment-Debug_PPC-Only";
@@ -10357,6 +10366,7 @@
 					"-framework",
 					AppKit,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = AdiumLibgaim;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10616,10 +10626,7 @@
 				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x10000000,
-				);
+				PREBINDING = NO;
 				PRODUCT_NAME = Adium;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -10639,6 +10646,7 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
+				PREBINDING = NO;
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -10681,6 +10689,7 @@
 					"-framework",
 					AppKit,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = AdiumLibgaim;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10723,6 +10732,7 @@
 					"-undefined",
 					suppress,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10741,6 +10751,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
+				PREBINDING = NO;
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10761,6 +10772,7 @@
 					"-undefined",
 					dynamic_lookup,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = "WebKit Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10789,6 +10801,7 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = "Latex Plugin";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -10848,6 +10861,7 @@
 					AppKit,
 				);
 				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
 				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = joscar;
 				SECTORDER_FLAGS = "";
@@ -10895,6 +10909,7 @@
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
 				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
 				INFOPLIST_PREPROCESS = YES;
+				PREBINDING = NO;
 				PRODUCT_NAME = Adium;
 			};
 			name = "Development-libgaim_oscar";
@@ -10902,6 +10917,7 @@
 		349F83440A437477007EA1B1 /* Development-libgaim_oscar */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				PREBINDING = NO;
 				PRODUCT_NAME = SystemVersionCheck;
 			};
 			name = "Development-libgaim_oscar";
@@ -10936,6 +10952,7 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
+				PREBINDING = NO;
 				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Adium 1.6 Pref Importer";
 				WARNING_CFLAGS = "-Wall";
@@ -10975,6 +10992,7 @@
 					"-lcrypto",
 				);
 				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
 				PRODUCT_NAME = "SQL Logger";
 				WARNING_CFLAGS = "-Wmost";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -10998,6 +11016,7 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = "Stress Test";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11032,6 +11051,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
+				PREBINDING = NO;
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
@@ -11041,6 +11061,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = Plists/Translator.plist;
+				PREBINDING = NO;
 				PRODUCT_NAME = Translator;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11106,6 +11127,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
+				PREBINDING = NO;
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
@@ -11140,6 +11162,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
+				PREBINDING = NO;
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
@@ -11174,6 +11197,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
+				PREBINDING = NO;
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
@@ -11208,6 +11232,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
+				PREBINDING = NO;
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
@@ -11248,10 +11273,7 @@
 				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x10000000,
-				);
+				PREBINDING = NO;
 				PRODUCT_NAME = Adium;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -11271,6 +11293,7 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
+				PREBINDING = NO;
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -11310,6 +11333,7 @@
 					"-undefined",
 					suppress,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11328,6 +11352,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
+				PREBINDING = NO;
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11348,6 +11373,7 @@
 					"-undefined",
 					dynamic_lookup,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = "WebKit Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11372,6 +11398,7 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = "Latex Plugin";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -11423,6 +11450,7 @@
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
 				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
 				INFOPLIST_PREPROCESS = YES;
+				PREBINDING = NO;
 				PRODUCT_NAME = Adium;
 			};
 			name = "Deployment-Debug_PPC-Only";
@@ -11442,6 +11470,7 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
+				PREBINDING = NO;
 				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Adium 1.6 Pref Importer";
 				WARNING_CFLAGS = "-Wall";
@@ -11477,6 +11506,7 @@
 					"-lcrypto",
 				);
 				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
 				PRODUCT_NAME = "SQL Logger";
 				WARNING_CFLAGS = "-Wmost";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -11496,6 +11526,7 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = "Stress Test";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11603,10 +11634,7 @@
 				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x10000000,
-				);
+				PREBINDING = NO;
 				PRODUCT_NAME = Adium;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -11634,10 +11662,7 @@
 				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x10000000,
-				);
+				PREBINDING = NO;
 				PRODUCT_NAME = Adium;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -11665,10 +11690,7 @@
 				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x10000000,
-				);
+				PREBINDING = NO;
 				PRODUCT_NAME = Adium;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -11688,6 +11710,7 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
+				PREBINDING = NO;
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -11703,6 +11726,7 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
+				PREBINDING = NO;
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -11718,6 +11742,7 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
+				PREBINDING = NO;
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -11757,6 +11782,7 @@
 					"-undefined",
 					suppress,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11796,6 +11822,7 @@
 					"-undefined",
 					suppress,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11835,6 +11862,7 @@
 					"-undefined",
 					suppress,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11853,6 +11881,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
+				PREBINDING = NO;
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11871,6 +11900,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
+				PREBINDING = NO;
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11889,6 +11919,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
+				PREBINDING = NO;
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11909,6 +11940,7 @@
 					"-undefined",
 					dynamic_lookup,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = "WebKit Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11929,6 +11961,7 @@
 					"-undefined",
 					dynamic_lookup,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = "WebKit Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11949,6 +11982,7 @@
 					"-undefined",
 					dynamic_lookup,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = "WebKit Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -11977,6 +12011,7 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = "Latex Plugin";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -11995,6 +12030,7 @@
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				PREBINDING = NO;
 				PRODUCT_NAME = "Latex Plugin";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -12012,6 +12048,7 @@
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				PREBINDING = NO;
 				PRODUCT_NAME = "Latex Plugin";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -12042,6 +12079,7 @@
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
 				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
 				INFOPLIST_PREPROCESS = YES;
+				PREBINDING = NO;
 				PRODUCT_NAME = Adium;
 			};
 			name = Development;
@@ -12070,6 +12108,7 @@
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
 				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
 				INFOPLIST_PREPROCESS = YES;
+				PREBINDING = NO;
 				PRODUCT_NAME = Adium;
 			};
 			name = Deployment;
@@ -12098,6 +12137,7 @@
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
 				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
 				INFOPLIST_PREPROCESS = YES;
+				PREBINDING = NO;
 				PRODUCT_NAME = Adium;
 			};
 			name = "Deployment-Debug";
@@ -12121,6 +12161,7 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
+				PREBINDING = NO;
 				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Adium 1.6 Pref Importer";
 				WARNING_CFLAGS = "-Wall";
@@ -12139,6 +12180,7 @@
 				INFOPLIST_FILE = Plists/Adium_1_6_Pref_Importer.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-DCRASH_REPORTER";
+				PREBINDING = NO;
 				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Adium 1.6 Pref Importer";
 				WARNING_CFLAGS = "-Wall";
@@ -12161,6 +12203,7 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
+				PREBINDING = NO;
 				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Adium 1.6 Pref Importer";
 				WARNING_CFLAGS = "-Wall";
@@ -12200,6 +12243,7 @@
 					"-lcrypto",
 				);
 				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
 				PRODUCT_NAME = "SQL Logger";
 				WARNING_CFLAGS = "-Wmost";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -12226,6 +12270,7 @@
 					"-lcrypto",
 				);
 				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
 				PRODUCT_NAME = "SQL Logger";
 				WARNING_CFLAGS = "-Wmost";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -12260,6 +12305,7 @@
 					"-lcrypto",
 				);
 				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
 				PRODUCT_NAME = "SQL Logger";
 				WARNING_CFLAGS = "-Wmost";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -12283,6 +12329,7 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = "Stress Test";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -12295,6 +12342,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/Stress_Test.plist;
+				PREBINDING = NO;
 				PRODUCT_NAME = "Stress Test";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -12307,6 +12355,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/Stress_Test.plist;
+				PREBINDING = NO;
 				PRODUCT_NAME = "Stress Test";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
