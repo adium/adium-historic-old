@@ -80,19 +80,16 @@
 
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    NSLog(@"label for object %@",inObject);
-	if ([inObject isKindOfClass:[SmackListContact class]]) {
+	if ([inObject isKindOfClass:[SmackListContact class]] && [(SmackListContact*)inObject account] == account) {
         if([(SmackListContact*)inObject preferredContact])
             return AILocalizedString(@"Resources",nil);
 	}
-	
-    NSLog(@"nil return");
 	return nil;
 }
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-	if ([inObject isKindOfClass:[SmackListContact class]])
+	if ([inObject isKindOfClass:[SmackListContact class]] && [(SmackListContact*)inObject account] == account)
         return [(SmackListContact*)inObject resourceInfo];
     return nil;
 }
