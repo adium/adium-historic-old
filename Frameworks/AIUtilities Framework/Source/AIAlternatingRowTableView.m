@@ -15,6 +15,7 @@
 
 #import "AIAlternatingRowTableView.h"
 #import "AIGradient.h"
+#import "AIImageAdditions.h"
 
 /*
  A subclass of table view that adds:
@@ -28,6 +29,9 @@
 - (void)_initAlternatingRowTableView;
 @end
 
+@interface NSTableView (Undocumented)
+- (id)_highlightColorForCell:(NSCell *)cell;
+@end
 
 @implementation AIAlternatingRowTableView
 
