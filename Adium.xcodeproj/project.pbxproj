@@ -2756,7 +2756,7 @@
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = "Frameworks/Adium Framework/Source/AdiumChatEvents.h"; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = "Frameworks/Adium Framework/Source/AdiumChatEvents.m"; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3381,6 +3381,8 @@
 		63EA6406094BB9A9009C8453 /* AIStatusIconPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStatusIconPreviewController.h; path = Source/AIStatusIconPreviewController.h; sourceTree = "<group>"; };
 		63EA6407094BB9A9009C8453 /* AIStatusIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStatusIconPreviewController.m; path = Source/AIStatusIconPreviewController.m; sourceTree = "<group>"; };
 		6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumHighlight.png; path = "Plugins/Status Menu Item/adiumHighlight.png"; sourceTree = "<group>"; };
+		6C1C712F0A7E0FD500F901F1 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/joscar Service/Spanish.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		6C1C71330A7E0FE700F901F1 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/joscar Service/Spanish.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
 		6C5C3C2605F6532600490341 /* SQL Logger.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SQL Logger.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CE795BD0A6F9CEE00FF3217 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		6CF42677057763E100F27FAA /* ESContactAlertsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESContactAlertsController.h; path = "Frameworks/Adium Framework/Source/ESContactAlertsController.h"; sourceTree = "<group>"; };
@@ -9132,6 +9134,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				11669AB209994697003CB8A1 /* English */,
+				6C1C71330A7E0FE700F901F1 /* Spanish */,
 			);
 			name = joscarJoinChatView.nib;
 			sourceTree = "<group>";
@@ -10041,6 +10044,7 @@
 			children = (
 				11F5F46309538B99007DCC49 /* English */,
 				34CF88A20A6D5DBC009D9A21 /* German */,
+				6C1C712F0A7E0FD500F901F1 /* Spanish */,
 			);
 			name = RAFjoscarAccountView.nib;
 			sourceTree = "<group>";

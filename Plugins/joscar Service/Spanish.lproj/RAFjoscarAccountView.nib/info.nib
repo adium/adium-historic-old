@@ -6,14 +6,16 @@
 	<string>81 61 356 240 0 0 1440 878 </string>
 	<key>IBEditorPositions</key>
 	<dict>
-		<key>6</key>
-		<string>544 425 351 323 0 0 1440 878 </string>
+		<key>121</key>
+		<string>540 492 360 189 0 0 1440 878 </string>
+		<key>130</key>
+		<string>481 524 477 125 0 0 1440 878 </string>
 	</dict>
 	<key>IBFramework Version</key>
 	<string>446.1</string>
 	<key>IBOpenObjects</key>
 	<array>
-		<integer>6</integer>
+		<integer>130</integer>
 	</array>
 	<key>IBSystem Version</key>
 	<string>8J2135</string>
