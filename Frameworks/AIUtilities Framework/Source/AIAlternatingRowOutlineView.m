@@ -139,13 +139,12 @@
 
 	NSRect	rowRect;
 	int		rowHeight;
-	int		numberOfColumns, numberOfRows;
+	int		numberOfRows;
 	int		row;
 	int		rectNumber = 0;
 	
 	//Setup
 	numberOfRows = [self numberOfRows];
-	numberOfColumns = [self numberOfColumns];
 	rowHeight = [self rowHeight];
 	if (numberOfRows == 0) {
 		rowRect = NSMakeRect(0,0,rect.size.width,rowHeight);
