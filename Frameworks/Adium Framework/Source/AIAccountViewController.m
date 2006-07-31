@@ -17,10 +17,11 @@
 #import "AIAccount.h"
 #import "AIService.h"
 #import "AIChat.h"
-#import "AIAccountController.h"
+#import "AIAccountControllerProtocol.h"
 #import "AIAccountViewController.h"
 #import "AIContentController.h"
 #import "AIContactController.h"
+#import "AIPreferenceControllerProtocol.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>

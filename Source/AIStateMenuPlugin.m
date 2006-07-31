@@ -15,7 +15,7 @@
  */
 
 #import "AIStateMenuPlugin.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIEditStateWindowController.h"
 #import "AIMenuController.h"
 #import "AIStatusController.h"

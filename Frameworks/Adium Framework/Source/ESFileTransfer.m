@@ -17,7 +17,7 @@
 #import "AIAccount.h"
 #import "AIListContact.h"
 #import "ESFileTransfer.h"
-#import "AIChatController.h"
+#import "AIChatControllerProtocol.h"
 
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIBezierPathAdditions.h>
@@ -32,7 +32,7 @@
 
 @implementation ESFileTransfer
 //Init
-+ (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(FileTransferType)t
++ (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)t
 {
     return [[[self alloc] initWithContact:inContact forAccount:inAccount type:t] autorelease];    
 }
@@ -43,7 +43,7 @@
     return CONTENT_FILE_TRANSFER_TYPE;
 }
 
-- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(FileTransferType)t
+- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)t
 {
 	AIChat *c = [[[AIObject sharedAdiumInstance] chatController] openChatWithContact:inContact]; 
 	AIListObject *s, *d;
@@ -147,7 +147,7 @@
     return size;
 }
 
-- (void)setFileTransferType:(FileTransferType)inType
+- (void)setFileTransferType:(AIFileTransferType)inType
 {
 	//incoming file transfers should always have a non-account as the source, and outgoing ones should always have an account as the source
 	if((inType == Incoming_FileTransfer && [source isKindOfClass:[AIAccount class]]) ||
@@ -165,12 +165,12 @@
 	[self recreateMessage];
 }
 
-- (FileTransferType)fileTransferType
+- (AIFileTransferType)fileTransferType
 {
     return type;   
 }
 
-- (void)setStatus:(FileTransferStatus)inStatus
+- (void)setStatus:(AIFileTransferStatus)inStatus
 {
 	if (status != inStatus) {
 		status = inStatus;
@@ -182,7 +182,7 @@
 	}
 }
 
-- (FileTransferStatus)status
+- (AIFileTransferStatus)status
 {
 	return status;
 }

@@ -28,7 +28,7 @@
 /*!
  * @brief Category
  */
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_Advanced;
 }
 
@@ -36,7 +36,7 @@
  * @brief Label
  */
 - (NSString *)label{
-    return CONTACT_LIST_TITLE;
+    return AILocalizedString(@"Contact List","Name of the window which lists contacts");
 }
 
 /*!

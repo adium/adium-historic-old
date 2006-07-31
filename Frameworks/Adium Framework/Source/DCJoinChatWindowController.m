@@ -15,7 +15,7 @@
  */
 
 #import "AIAccount.h"
-#import "AIAccountController.h"
+#import "AIAccountControllerProtocol.h"
 #import "AIContactController.h"
 #import "AIContentMessage.h"
 #import "AILocalizationButton.h"

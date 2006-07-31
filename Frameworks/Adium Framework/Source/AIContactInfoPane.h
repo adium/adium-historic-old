@@ -23,6 +23,6 @@
 
 + (AIContactInfoPane *)contactInfoPane;
 - (void)configureForListObject:(AIListObject *)inListObject;
-- (CONTACT_INFO_CATEGORY)contactInfoCategory;
+- (AIContactInfoCategory)contactInfoCategory;
 
 @end

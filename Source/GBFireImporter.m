@@ -15,13 +15,16 @@
  */
 
 #import "GBFireImporter.h"
-#import "AIUtilities/AIFileManagerAdditions.h"
-#import "AIAccountController.h"
+#import "AIContactControllerProtocol.h"
+#import "AIPreferenceControllerProtocol.h"
+#import <Adium/AIAccountControllerProtocol.h>
+
+#import <AIUtilities/AIFileManagerAdditions.h>
 #import "AIAccount.h"
 #import "AIStatus.h"
 #import "AIHTMLDecoder.h"
 #import "AIStatusController.h"
-#import "AIContactController.h"
+
 #import "AIListGroup.h"
 #import "AIListContact.h"
 #import "AIMetaContact.h"
@@ -198,7 +201,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 
 - (void)importGroups2:(NSDictionary *)groupList
 {
-	AIContactController *contactController = [adium contactController];
+	id <AIContactController> contactController = [adium contactController];
 
 	//First itterate through the groups and create an array we can sort
 	NSEnumerator *groupEnum = [groupList keyEnumerator];
@@ -228,7 +231,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
    buddiesTranslations:(NSMutableDictionary *)buddiesToContact
 	 aliasTranslations:(NSMutableDictionary *)aliasToContacts
 {
-	AIContactController *contactController = [adium contactController];
+	id <AIContactController> contactController = [adium contactController];
 
 	NSEnumerator *buddyEnum = [buddyArray objectEnumerator];
 	NSDictionary *buddy = nil;
@@ -286,7 +289,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 - (void)importPersons2:(NSArray *)personArray
    buddiesTranslations:(NSDictionary *)buddiesToContact
 {
-	AIContactController *contactController = [adium contactController];
+	id <AIContactController> contactController = [adium contactController];
 
 	NSEnumerator *personEnum = [personArray objectEnumerator];
 	NSDictionary *person = nil;
@@ -328,7 +331,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 
 - (void)createMetaContacts:(NSMutableDictionary *)aliasToContacts
 {
-	AIContactController *contactController = [adium contactController];
+	id <AIContactController> contactController = [adium contactController];
 
 	NSEnumerator *metaContantEnum = [aliasToContacts objectEnumerator];
 	NSArray *contacts = nil;
@@ -485,7 +488,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 	 aliasTranslations:(NSMutableDictionary *)aliasToContacts
 			   toGroup:(NSString *)groupName
 {
-	AIContactController *contactController = [adium contactController];
+	id <AIContactController> contactController = [adium contactController];
 	
 	NSEnumerator *buddyEnum = [buddyArray objectEnumerator];
 	NSDictionary *buddy = nil;
@@ -550,7 +553,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
   accountTranslations:(NSMutableDictionary *)accountUIDtoAccount
 	aliasTranslations:(NSMutableDictionary *)aliasToContacts
 {
-	AIContactController *contactController = [adium contactController];
+	id <AIContactController> contactController = [adium contactController];
 	
 	//First itterate through the groups and create an array we can sort
 	NSEnumerator *groupEnum = [groupList keyEnumerator];

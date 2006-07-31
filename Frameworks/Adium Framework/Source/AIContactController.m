@@ -16,17 +16,16 @@
 
 // $Id$
 
-//#define CONTACTS_INFO_WITH_PROMPT
-
-#import "AIAccountController.h"
 #import "AIContactController.h"
+
+#import "AIAccountControllerProtocol.h"
 #import "AIInterfaceController.h"
 #import "AILoginController.h"
 #import "AIMenuController.h"
 #import "AIPreferenceController.h"
 #import "AIToolbarController.h"
 #import "AIToolbarController.h"
-#import "ESContactAlertsController.h"
+#import "AIContactAlertsControllerProtocol.h"
 #import "AdiumAuthorization.h"
 
 #import <AIUtilities/AIDictionaryAdditions.h>
@@ -86,9 +85,6 @@
 
 - (NSMenu *)menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)inGroup withTarget:(id)target firstLevel:(BOOL)firstLevel;
 - (void)_menuOfAllGroups:(NSMenu *)menu forGroup:(AIListGroup *)group withTarget:(id)target level:(int)level;
-
-- (id)_performSelectorOnFirstAvailableResponder:(SEL)selector;
-- (id)_performSelectorOnFirstAvailableResponder:(SEL)selector conformingToProtocol:(Protocol *)protocol;
 
 - (NSArray *)_arrayRepresentationOfListObjects:(NSArray *)listObjects;
 - (void)_loadGroupsFromArray:(NSArray *)array;
@@ -1294,68 +1290,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 	
 	return nil;
-}
-
-//Selected contact ------------------------------------------------
-#pragma mark Selected contact
-//Returns the "selected"(represented) contact (By finding the first responder that returns a contact)
-//If no listObject is found, try to find a list object selected in a group chat
-- (AIListObject *)selectedListObject
-{
-	AIListObject *listObject = [self _performSelectorOnFirstAvailableResponder:@selector(listObject)];
-	if ( !listObject) {
-		listObject = [self _performSelectorOnFirstAvailableResponder:@selector(preferredListObject)];
-	}
-	return listObject;
-}
-- (AIListObject *)selectedListObjectInContactList
-{
-	return [self _performSelectorOnFirstAvailableResponder:@selector(listObject) conformingToProtocol:@protocol(ContactListOutlineView)];
-}
-- (NSArray *)arrayOfSelectedListObjectsInContactList
-{
-	return [self _performSelectorOnFirstAvailableResponder:@selector(arrayOfListObjects) conformingToProtocol:@protocol(ContactListOutlineView)];
-}
-
-- (id)_performSelectorOnFirstAvailableResponder:(SEL)selector
-{
-    NSResponder	*responder = [[[NSApplication sharedApplication] mainWindow] firstResponder];
-    //Check the first responder
-    if ([responder respondsToSelector:selector]) {
-        return [responder performSelector:selector];
-    }
-
-    //Search the responder chain
-    do{
-        responder = [responder nextResponder];
-        if ([responder respondsToSelector:selector]) {
-            return [responder performSelector:selector];
-        }
-
-    } while (responder != nil);
-
-    //None found, return nil
-    return nil;
-}
-- (id)_performSelectorOnFirstAvailableResponder:(SEL)selector conformingToProtocol:(Protocol *)protocol
-{
-	NSResponder *responder = [[[NSApplication sharedApplication] mainWindow] firstResponder];
-	//Check the first responder
-	if ([responder conformsToProtocol:protocol] && [responder respondsToSelector:selector]) {
-		return [responder performSelector:selector];
-	}
-
-    //Search the responder chain
-    do{
-        responder = [responder nextResponder];
-        if ([responder conformsToProtocol:protocol] && [responder respondsToSelector:selector]) {
-            return [responder performSelector:selector];
-        }
-
-    } while (responder != nil);
-
-    //None found, return nil
-    return nil;
 }
 
 //Contact Sorting --------------------------------------------------------------------------------

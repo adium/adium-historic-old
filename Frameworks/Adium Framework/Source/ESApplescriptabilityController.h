@@ -15,19 +15,12 @@
  */
 
 #import "AIObject.h"
-
-@protocol AIController;
+#import "AIApplescriptabilityControllerProtocol.h"
 
 @class AdiumApplescriptRunner;
 
-@interface ESApplescriptabilityController : AIObject <AIController> {
+@interface ESApplescriptabilityController : AIObject <AIApplescriptabilityController> {
 	AdiumApplescriptRunner	*applescriptRunner;
 }
 
-- (void)runApplescriptAtPath:(NSString *)inPath 
-					function:(NSString *)function
-				   arguments:(NSArray *)arguments
-			 notifyingTarget:(id)target
-					selector:(SEL)selector
-					userInfo:(id)userInfo;
 @end

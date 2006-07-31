@@ -62,7 +62,7 @@
 
 //For subclasses -------------------------------------------------------------------------------
 //Preference category
-- (PREFERENCE_CATEGORY)category
+- (AIPreferenceCategory)category
 {
 	return AIPref_Advanced;
 }

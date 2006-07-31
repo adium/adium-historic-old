@@ -200,14 +200,14 @@
 //Preferences ---------------------------------------------
 #pragma mark Preferences
 
-- (LIST_WINDOW_STYLE)windowStyle
+- (AIContactListWindowStyle)windowStyle
 {
-	return WINDOW_STYLE_STANDARD;
+	return AIContactListWindowStyleStandard;
 }
 
 - (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict andThemeFromPrefDict:(NSDictionary *)themeDict
 {
-	LIST_WINDOW_STYLE	windowStyle = [self windowStyle];
+	AIContactListWindowStyle	windowStyle = [self windowStyle];
 	NSTextAlignment		contentCellAlignment;
 	BOOL				pillowsOrPillowsFittedWindowStyle;
 	
@@ -216,20 +216,20 @@
 	[contentCell release];
 
 	switch (windowStyle) {
-		case WINDOW_STYLE_STANDARD:
-		case WINDOW_STYLE_BORDERLESS:
+		case AIContactListWindowStyleStandard:
+		case AIContactListWindowStyleBorderless:
 			groupCell = [[AIListGroupCell alloc] init];
 			contentCell = [[AIListContactCell alloc] init];
 		break;
-		case WINDOW_STYLE_MOCKIE:
+		case AIContactListWindowStyleGroupBubbles:
 			groupCell = [[AIListGroupMockieCell alloc] init];
 			contentCell = [[AIListContactMockieCell alloc] init];
 		break;
-		case WINDOW_STYLE_PILLOWS:
+		case AIContactListWindowStyleContactBubbles:
 			groupCell = [[AIListGroupBubbleCell alloc] init];
 			contentCell = [[AIListContactBubbleCell alloc] init];
 		break;
-		case WINDOW_STYLE_PILLOWS_FITTED:
+		case AIContactListWindowStyleContactBubbles_Fitted:
 			groupCell = [[AIListGroupBubbleToFitCell alloc] init];
 			contentCell = [[AIListContactBubbleToFitCell alloc] init];
 		break;
@@ -250,7 +250,7 @@
 	[groupCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
 	[contentCell setUserIconSize:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
 
-	if (windowStyle != WINDOW_STYLE_PILLOWS_FITTED) {
+	if (windowStyle != AIContactListWindowStyleContactBubbles_Fitted) {
 		[contentCell setUserIconVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
 		[contentCell setExtendedStatusVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
 		[contentCell setStatusIconsVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
@@ -306,14 +306,14 @@
 	[groupCell setFont:(theFont ? theFont : GROUP_FONT_IF_FONT_NOT_FOUND)];
 
 	//Standard special cases.  Add an extra line of padding to the bottom of the standard window.
-	if (windowStyle == WINDOW_STYLE_STANDARD) {
+	if (windowStyle == AIContactListWindowStyleStandard) {
 		[contactListView setDesiredHeightPadding:3];   //1 pixel border at the top and bottom + extra line at bottom
 	} else {
 		[contactListView setDesiredHeightPadding:2];   //Accounts for the 1 pixel border at the top and bottom
 	}
 	
 	//Bubbles special cases
-	pillowsOrPillowsFittedWindowStyle = (windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED);
+	pillowsOrPillowsFittedWindowStyle = (windowStyle == AIContactListWindowStyleContactBubbles || windowStyle == AIContactListWindowStyleContactBubbles_Fitted);
 	if (pillowsOrPillowsFittedWindowStyle) {
 		//Treat the padding as spacing
 		[contentCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
@@ -327,9 +327,9 @@
 	}
 	
 	//Mockie special cases.  For all other layouts we use fixed group spacing
-	if (windowStyle == WINDOW_STYLE_MOCKIE) {
+	if (windowStyle == AIContactListWindowStyleGroupBubbles) {
 		[groupCell setTopSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
-	} else if (windowStyle == WINDOW_STYLE_STANDARD) {
+	} else if (windowStyle == AIContactListWindowStyleStandard) {
 		//Force some spacing and draw a bordeer around our groups (This doesn't look good in borderless)
 		[groupCell setTopSpacing:1];
 		[groupCell setLeftSpacing:1];
@@ -338,7 +338,7 @@
 	}
 	
 	//Disable square row highlighting for bubble lists - the bubble cells handle this on their own
-	if (windowStyle == WINDOW_STYLE_MOCKIE ||
+	if (windowStyle == AIContactListWindowStyleGroupBubbles ||
 	   pillowsOrPillowsFittedWindowStyle) {
 		[contactListView setDrawsSelectedRowHighlight:NO];
 	}
@@ -372,7 +372,7 @@
 	[contactListView setHighlightColor:highlight];
 
 	//Disable background image if we're in mockie or pillows
-	[contactListView setDrawsBackground:(windowStyle != WINDOW_STYLE_MOCKIE &&
+	[contactListView setDrawsBackground:(windowStyle != AIContactListWindowStyleGroupBubbles &&
 										 !(pillowsOrPillowsFittedWindowStyle))];
 	[contactListView setBackgroundStyle:[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_STYLE] intValue]];
 

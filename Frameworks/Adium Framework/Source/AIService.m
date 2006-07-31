@@ -16,7 +16,7 @@
 
 #import "AIAccount.h"
 #import "AIService.h"
-#import "AIAccountController.h"
+#import "AIAccountControllerProtocol.h"
 #import "AIAccountViewController.h"
 
 /*!

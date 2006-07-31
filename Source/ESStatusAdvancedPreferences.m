@@ -13,7 +13,7 @@
 
 @implementation ESStatusAdvancedPreferences
 //Preference pane properties
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_Advanced;
 }
 - (NSString *)label{

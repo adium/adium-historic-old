@@ -16,8 +16,8 @@
 
 // $Id$
 
-#import "AIAccountController.h"
-#import "AIChatController.h"
+#import "AIAccountControllerProtocol.h"
+#import "AIChatControllerProtocol.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
@@ -26,7 +26,7 @@
 #import "AdiumFormatting.h"
 #import "AdiumMessageEvents.h"
 #import "AdiumContentFiltering.h"
-#import "ESContactAlertsController.h"
+#import "AIContactAlertsControllerProtocol.h"
 #import "ESFileTransferController.h"
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
@@ -132,6 +132,14 @@
 
 
 #pragma mark Typing
+/*
+ * @brief User is currently changing the content in a chat
+ *
+ * This should  be called by a text entry control like an NSTextView.
+ *
+ * @param chat The chat
+ * @param hasEnteredText YES if there are one or more characters typed into the text entry area
+ */
 - (void)userIsTypingContentForChat:(AIChat *)chat hasEnteredText:(BOOL)hasEnteredText {
 	[adiumTyping userIsTypingContentForChat:chat hasEnteredText:hasEnteredText];
 }

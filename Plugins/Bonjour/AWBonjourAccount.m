@@ -23,7 +23,7 @@
  */
 
 #import "AIContactController.h"
-#import "AIChatController.h"
+#import <Adium/AIChatControllerProtocol.h>
 #import "AIContentController.h"
 #import "AIStatusController.h"
 #import "AWEzv.h"

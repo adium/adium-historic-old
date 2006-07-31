@@ -6,6 +6,7 @@
 //
 
 #import "AIChatController.h"
+
 #import "AIContentController.h"
 #import "AIContactController.h"
 #import "AIInterfaceController.h"
@@ -15,6 +16,7 @@
 #import "AIChat.h"
 #import "AIContentObject.h"
 #import "AIContentMessage.h"
+#import "AIListContact.h"
 #import "AIMetaContact.h"
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -101,7 +103,7 @@
 	NSEnumerator	*enumerator = [openChats objectEnumerator];
 	AIChat			*chat;
 	
-	//Every open chat is about to close.
+	//Every open chat is about to close. We perform the internal closing here rather than calling on the interface controller since the UI need not change.
 	while ((chat = [enumerator nextObject])) {
 		[self closeChat:chat];
 	}
@@ -432,6 +434,8 @@
 
 /*!
  * @brief Close a chat
+ *
+ * This should be called only by the interface controller. To close a chat programatically, use the interface controller's closeChat:.
  *
  * @result YES the chat was removed succesfully; NO if it was not
  */

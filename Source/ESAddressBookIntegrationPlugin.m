@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIContactController.h"
 #import "ESAddressBookIntegrationPlugin.h"
 #import "AIMenuController.h"
@@ -240,7 +240,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 									 object:nil];
 
     //Observe preferences changes
-    AIPreferenceController *preferenceController = [adium preferenceController];
+    id<AIPreferenceController> preferenceController = [adium preferenceController];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_ADDRESSBOOK];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_USERICONS];
 }
@@ -516,21 +516,24 @@ NSString* serviceIDForJabberUID(NSString *UID);
  */
 + (AIService *)serviceFromProperty:(NSString *)property
 {
-	AIService	*result = nil;
-	AIAccountController *accountController = [[AIObject sharedAdiumInstance] accountController];
+	NSString	*serviceID = nil;
 	
 	if ([property isEqualToString:kABAIMInstantProperty])
-		result = [accountController firstServiceWithServiceID:@"AIM"];
+		serviceID = @"AIM";
+	
 	else if ([property isEqualToString:kABICQInstantProperty])
-		result = [accountController firstServiceWithServiceID:@"ICQ"];
+		serviceID = @"ICQ";
+	
 	else if ([property isEqualToString:kABMSNInstantProperty])
-		result = [accountController firstServiceWithServiceID:@"MSN"];
+		serviceID = @"MSN";
+	
 	else if ([property isEqualToString:kABJabberInstantProperty])
-		result = [accountController firstServiceWithServiceID:@"Jabber"];
+		serviceID = @"Jabber";
+	
 	else if ([property isEqualToString:kABYahooInstantProperty])
-		result = [accountController firstServiceWithServiceID:@"Yahoo!"];
+		serviceID = @"Yahoo!";
 
-	return result;
+	return (serviceID ? [[[AIObject sharedAdiumInstance] accountController] firstServiceWithServiceID:serviceID] : nil);
 }
 
 /*!

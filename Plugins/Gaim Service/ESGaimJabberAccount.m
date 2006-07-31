@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIStatusController.h"
 #import "AIContactController.h"
 #import "ESGaimJabberAccount.h"
@@ -362,6 +362,22 @@
 	return YES;
 }
 
+- (void)disconnectFromDroppedNetworkConnection
+{
+	/* Before we disconnect from a dropped network connection, set gc->disconnect_timeout to a non-0 value.
+	 * This will let the prpl know that we are disconnecting with no backing ssl connection and that therefore
+	 * the ssl connection is has should not be messaged in the process of disconnecting.
+	 */
+	GaimConnection *gc = gaim_account_get_connection(account);
+	if (GAIM_CONNECTION_IS_VALID(gc) &&
+		!gc->disconnect_timeout) {
+		gc->disconnect_timeout = -1;
+		AILog(@"%@: Disconnecting from a dropped network connection", self);
+	}
+
+	[super disconnectFromDroppedNetworkConnection];
+}
+
 #pragma mark File transfer
 - (BOOL)canSendFolders
 {
@@ -543,7 +559,7 @@
 		case AIAvailableStatusType:
 		{
 			if (([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT]) ||
-			   ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_FREE_FOR_CHAT] == NSOrderedSame))
+			   ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_FREE_FOR_CHAT]] == NSOrderedSame))
 				statusID = "chat";
 			priority = [self preferenceForKey:KEY_JABBER_PRIORITY_AVAILABLE group:GROUP_ACCOUNT_STATUS];
 			break;
@@ -552,10 +568,10 @@
 		case AIAwayStatusType:
 		{
 			if (([statusName isEqualToString:STATUS_NAME_DND]) ||
-			   ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
+			   ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_DND]] == NSOrderedSame))
 				statusID = "dnd";
 			else if (([statusName isEqualToString:STATUS_NAME_EXTENDED_AWAY]) ||
-					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_EXTENDED_AWAY] == NSOrderedSame))
+					 ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_EXTENDED_AWAY]] == NSOrderedSame))
 				statusID = "xa";
 			priority = [self preferenceForKey:KEY_JABBER_PRIORITY_AWAY group:GROUP_ACCOUNT_STATUS];
 			break;

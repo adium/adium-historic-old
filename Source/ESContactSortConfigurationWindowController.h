@@ -16,6 +16,8 @@
 
 #import <Adium/AIWindowController.h>
 
+@class AISortController;
+
 @interface ESContactSortConfigurationWindowController : AIWindowController {
 	IBOutlet	NSView  *view_main;
 }

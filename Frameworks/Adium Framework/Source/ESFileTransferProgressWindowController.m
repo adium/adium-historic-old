@@ -366,7 +366,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	
 	enumerator = [progressRows objectEnumerator];
 	while ((aRow = [enumerator nextObject])) {
-		FileTransferType type = [aRow type];
+		AIFileTransferType type = [aRow type];
 		if (type == Incoming_FileTransfer) {
 			downloads++;
 		} else if (type == Outgoing_FileTransfer) {

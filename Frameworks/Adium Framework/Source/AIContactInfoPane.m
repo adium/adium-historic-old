@@ -30,7 +30,7 @@
 	return YES;
 }
 
-- (CONTACT_INFO_CATEGORY)contactInfoCategory
+- (AIContactInfoCategory)contactInfoCategory
 {
 	// This gets overriden by subclasses.
 	return AIInfo_Profile;

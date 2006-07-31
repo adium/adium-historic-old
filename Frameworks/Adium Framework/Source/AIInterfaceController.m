@@ -17,7 +17,7 @@
 // $Id$
 
 #import "AIContactController.h"
-#import "AIChatController.h"
+#import "AIChatControllerProtocol.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
 #import "AIMenuController.h"
@@ -57,6 +57,11 @@
 - (NSAttributedString *)_tooltipTitleForObject:(AIListObject *)object;
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
 - (void)_pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender;
+- (void)updateCloseMenuKeys;
+
+//Window Menu
+- (void)updateActiveWindowMenuItem;
+- (void)buildWindowMenu;
 
 - (AIChat *)mostRecentActiveChat;
 @end
@@ -148,19 +153,19 @@
     [self showContactList:nil];
 
 	//Contact list menu tem
-    NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CONTACT_LIST_TITLE
+    NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contact List","Name of the window which lists contacts")
 																				target:self
 																				action:@selector(toggleContactList:)
 																		 keyEquivalent:@"/"];
-	[menuController addMenuItem:menuItem toLocation:LOC_Window_Fixed];
-	[menuController addMenuItem:[[menuItem copy] autorelease] toLocation:LOC_Dock_Status];
+	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Window_Fixed];
+	[[adium menuController] addMenuItem:[[menuItem copy] autorelease] toLocation:LOC_Dock_Status];
 	[menuItem release];
 
 	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Close Chat","Title for the close chat menu item")
 																	target:self
 																	action:@selector(closeContextualChat:)
 															 keyEquivalent:@""];
-	[menuController addContextualMenuItem:menuItem toLocation:Context_Tab_Action];
+	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Tab_Action];
 	[menuItem release];
 	
 	//Observe preference changes
@@ -196,13 +201,13 @@
 }
 
 //Registers code to handle the interface
-- (void)registerInterfaceController:(id <AIInterfaceController>)inController
+- (void)registerInterfaceController:(id <AIInterfaceComponent>)inController
 {
 	if (!interfacePlugin) interfacePlugin = [inController retain];
 }
 
 //Register code to handle the contact list
-- (void)registerContactListController:(id <AIContactListController>)inController
+- (void)registerContactListController:(id <AIContactListComponent>)inController
 {
 	if (!contactListPlugin) contactListPlugin = [inController retain];
 }
@@ -355,7 +360,9 @@
 - (void)closeChat:(AIChat *)inChat
 {
 	if (inChat) {
-		[interfacePlugin closeChat:inChat];
+		if ([[adium chatController] closeChat:inChat]) {
+			[interfacePlugin closeChat:inChat];
+		}
 	}
 }
 
@@ -622,7 +629,7 @@
     //Remove any existing menus
     enumerator = [windowMenuArray objectEnumerator];
     while ((item = [enumerator nextObject])) {
-        [menuController removeMenuItem:item];
+        [[adium menuController] removeMenuItem:item];
     }
     [windowMenuArray release]; windowMenuArray = [[NSMutableArray alloc] init];
 	
@@ -680,13 +687,13 @@
 - (void)_addItemToMainMenuAndDock:(NSMenuItem *)item
 {
 	//Add to main menu first
-	[menuController addMenuItem:item toLocation:LOC_Window_Fixed];
+	[[adium menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
 	[windowMenuArray addObject:item];
 	
 	//Make a copy, and add to the dock
 	item = [item copy];
 	[item setKeyEquivalent:@""];
-	[menuController addMenuItem:item toLocation:LOC_Dock_Status];
+	[[adium menuController] addMenuItem:item toLocation:LOC_Dock_Status];
 	[windowMenuArray addObject:item];
 	[item release];
 }
@@ -695,7 +702,7 @@
 //Chat Cycling ---------------------------------------------------------------------------------------------------------
 #pragma mark Chat Cycling
 //Select the next message
-- (IBAction)nextMessage:(id)sender
+- (void)nextChat:(id)sender
 {
 	NSArray	*openChats = [self openChats];
 
@@ -710,7 +717,7 @@
 }
 
 //Select the previous message
-- (IBAction)previousMessage:(id)sender
+- (void)previousChat:(id)sender
 {
 	NSArray	*openChats = [self openChats];
 	
@@ -724,6 +731,67 @@
 	}
 }
 
+//Selected contact ------------------------------------------------
+#pragma mark Selected contact
+- (id)_performSelectorOnFirstAvailableResponder:(SEL)selector
+{
+    NSResponder	*responder = [[[NSApplication sharedApplication] mainWindow] firstResponder];
+    //Check the first responder
+    if ([responder respondsToSelector:selector]) {
+        return [responder performSelector:selector];
+    }
+	
+    //Search the responder chain
+    do{
+        responder = [responder nextResponder];
+        if ([responder respondsToSelector:selector]) {
+            return [responder performSelector:selector];
+        }
+		
+    } while (responder != nil);
+	
+    //None found, return nil
+    return nil;
+}
+- (id)_performSelectorOnFirstAvailableResponder:(SEL)selector conformingToProtocol:(Protocol *)protocol
+{
+	NSResponder *responder = [[[NSApplication sharedApplication] mainWindow] firstResponder];
+	//Check the first responder
+	if ([responder conformsToProtocol:protocol] && [responder respondsToSelector:selector]) {
+		return [responder performSelector:selector];
+	}
+	
+    //Search the responder chain
+    do{
+        responder = [responder nextResponder];
+        if ([responder conformsToProtocol:protocol] && [responder respondsToSelector:selector]) {
+            return [responder performSelector:selector];
+        }
+		
+    } while (responder != nil);
+	
+    //None found, return nil
+    return nil;
+}
+
+//Returns the "selected"(represented) contact (By finding the first responder that returns a contact)
+//If no listObject is found, try to find a list object selected in a group chat
+- (AIListObject *)selectedListObject
+{
+	AIListObject *listObject = [self _performSelectorOnFirstAvailableResponder:@selector(listObject)];
+	if ( !listObject) {
+		listObject = [self _performSelectorOnFirstAvailableResponder:@selector(preferredListObject)];
+	}
+	return listObject;
+}
+- (AIListObject *)selectedListObjectInContactList
+{
+	return [self _performSelectorOnFirstAvailableResponder:@selector(listObject) conformingToProtocol:@protocol(ContactListOutlineView)];
+}
+- (NSArray *)arrayOfSelectedListObjectsInContactList
+{
+	return [self _performSelectorOnFirstAvailableResponder:@selector(arrayOfListObjects) conformingToProtocol:@protocol(ContactListOutlineView)];
+}
 
 //Message View ---------------------------------------------------------------------------------------------------------
 //Message view is abstracted from the containing interface, since they're not directly related to eachother

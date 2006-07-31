@@ -17,7 +17,7 @@
 #import "ESSecureMessagingPlugin.h"
 #import "AdiumOTREncryption.h"
 
-#import "AIChatController.h"
+#import <Adium/AIChatControllerProtocol.h>
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
 #import "AIMenuController.h"

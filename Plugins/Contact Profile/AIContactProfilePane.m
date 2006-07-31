@@ -34,7 +34,7 @@
 /*!
  * @brief Category
  */
-- (CONTACT_INFO_CATEGORY)contactInfoCategory{
+- (AIContactInfoCategory)contactInfoCategory{
     return AIInfo_Profile;
 }
 /*!

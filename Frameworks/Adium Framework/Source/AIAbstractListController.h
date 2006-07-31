@@ -60,12 +60,12 @@
 #define	KEY_LIST_LAYOUT_OUTLINE_BUBBLE_WIDTH	@"Outline Bubble Line Width"
 
 typedef enum {
-	WINDOW_STYLE_STANDARD = 0,
-    WINDOW_STYLE_BORDERLESS,
-    WINDOW_STYLE_MOCKIE,
-    WINDOW_STYLE_PILLOWS,
-    WINDOW_STYLE_PILLOWS_FITTED
-} LIST_WINDOW_STYLE;
+	AIContactListWindowStyleStandard = 0,
+    AIContactListWindowStyleBorderless,
+    AIContactListWindowStyleGroupBubbles,
+    AIContactListWindowStyleContactBubbles,
+    AIContactListWindowStyleContactBubbles_Fitted
+} AIContactListWindowStyle;
 
 typedef enum {
 	LIST_POSITION_NA = -1,

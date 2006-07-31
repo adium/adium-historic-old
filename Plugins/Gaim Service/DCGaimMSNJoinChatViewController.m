@@ -15,7 +15,7 @@
  */
 
 #import "DCGaimMSNJoinChatViewController.h"
-#import "AIChatController.h"
+#import <Adium/AIChatControllerProtocol.h>
 #import "DCJoinChatWindowController.h"
 #import <Adium/AIAccount.h>
 

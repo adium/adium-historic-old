@@ -43,13 +43,12 @@
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
 	//Observe for preference changes, initially loading our status menu item controller
-	AIPreferenceController *prefController = [adium preferenceController];
-	[prefController addObserver:self
+	[[adium preferenceController] addObserver:self
 	                 forKeyPath:PREF_KEYPATH_STATUS_MENU_ITEM_ENABLED
 	                    options:NSKeyValueObservingOptionNew
 	                    context:NULL];
 	[self observeValueForKeyPath:PREF_KEYPATH_STATUS_MENU_ITEM_ENABLED
-	                    ofObject:prefController
+	                    ofObject:[adium preferenceController]
 	                      change:nil
 	                     context:NULL];
 

@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIStatusController.h"
@@ -432,16 +432,16 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 
 		case AIAwayStatusType:
 			if (([statusName isEqualToString:STATUS_NAME_BRB]) ||
-				([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BRB] == NSOrderedSame))
+				([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_BRB]] == NSOrderedSame))
 				statusID = "brb";
 			else if (([statusName isEqualToString:STATUS_NAME_BUSY]) ||
-					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BUSY] == NSOrderedSame))
+					 ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_BUSY]] == NSOrderedSame))
 				statusID = "busy";
 			else if (([statusName isEqualToString:STATUS_NAME_PHONE]) ||
-					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_PHONE] == NSOrderedSame))
+					 ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_PHONE]] == NSOrderedSame))
 				statusID = "phone";
 			else if (([statusName isEqualToString:STATUS_NAME_LUNCH]) ||
-					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_LUNCH] == NSOrderedSame))
+					 ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_LUNCH]] == NSOrderedSame))
 				statusID = "lunch";
 
 			break;

@@ -268,7 +268,7 @@
 }
 
 //
-- (void)setBackgroundOpacity:(float)opacity forWindowStyle:(LIST_WINDOW_STYLE)windowStyle
+- (void)setBackgroundOpacity:(float)opacity forWindowStyle:(AIContactListWindowStyle)windowStyle
 {
 	backgroundOpacity = opacity;
 
@@ -278,11 +278,11 @@
 	
 	//Turn our shadow drawing hack on if they're going to be visible through the transparency
 	[self setUpdateShadowsWhileDrawing:((backgroundOpacity < 0.9) ||
-										(windowStyle == WINDOW_STYLE_PILLOWS_FITTED))];
+										(windowStyle == AIContactListWindowStyleContactBubbles_Fitted))];
 
 	//Mockie and pillow lists always require a non-opaque window, other lists only require a non-opaque window when
 	//the user has requested transparency.
-	if (windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED) {
+	if (windowStyle == AIContactListWindowStyleGroupBubbles || windowStyle == AIContactListWindowStyleContactBubbles || windowStyle == AIContactListWindowStyleContactBubbles_Fitted) {
 		[[self window] setOpaque:NO];
 	} else {
 		[[self window] setOpaque:(backgroundOpacity == 1.0)];

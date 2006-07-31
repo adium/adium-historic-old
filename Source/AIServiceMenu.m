@@ -6,7 +6,7 @@
 //
 
 #import "AIServiceMenu.h"
-#import "AIAccountController.h"
+#import "AIAccountControllerProtocol.h"
 #import "AIService.h"
 #import "AIServiceIcons.h"
 #import <AIUtilities/AIMenuAdditions.h>
@@ -40,7 +40,7 @@ int titleSort(NSMenuItem *itemA, NSMenuItem *itemB, void *context)
 + (NSMenu *)menuOfServicesWithTarget:(id)target activeServicesOnly:(BOOL)activeServicesOnly
 					 longDescription:(BOOL)longDescription format:(NSString *)format
 {
-	AIAccountController	*accountController = [[AIObject sharedAdiumInstance] accountController];
+	id<AIAccountController> accountController = [[AIObject sharedAdiumInstance] accountController];
 	AIServiceImportance	importance;
 	unsigned			numberOfItems = 0;
 	id					serviceArray;

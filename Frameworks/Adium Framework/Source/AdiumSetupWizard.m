@@ -6,7 +6,7 @@
 //
 
 #import "AdiumSetupWizard.h"
-#import "AIAccountController.h"
+#import "AIAccountControllerProtocol.h"
 #import "AIContentController.h"
 #import "SetupWizardBackgroundView.h"
 #import "GBFireImporter.h"

@@ -6,7 +6,7 @@
 //
 
 #import "AdiumChatEvents.h"
-#import "ESContactAlertsController.h"
+#import "AIContactAlertsControllerProtocol.h"
 #import "AIChat.h"
 #import "AIListContact.h"
 #import "AIListObject.h"

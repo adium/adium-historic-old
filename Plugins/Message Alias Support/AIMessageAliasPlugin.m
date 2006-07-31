@@ -16,7 +16,7 @@
 
 #import "AIMessageAliasPlugin.h"
 #import "AIContentController.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
 #import <Adium/AIAccount.h>

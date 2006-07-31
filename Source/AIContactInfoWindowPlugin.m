@@ -9,7 +9,7 @@
 #import "AIContactInfoWindowController.h"
 #import "ESShowContactInfoPromptController.h"
 
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIContactController.h"
 #import "AIMenuController.h"
 #import "AIInterfaceController.h"
@@ -49,7 +49,7 @@
 	if ((sender == menuItem_getInfoContextualContact) || (sender == menuItem_getInfoContextualGroup)) {
 		listObject = [[adium menuController] currentContextMenuObject];
 	} else {
-		listObject = [[adium contactController] selectedListObject];
+		listObject = [[adium interfaceController] selectedListObject];
 	}
 	
 	if (listObject) {
@@ -111,7 +111,7 @@
 	//Watch changes in viewContactInfoMenuItem_alternate's menu so we can maintain its alternate status
 	//(it will expand into showing both the normal and the alternate items when the menu changes)
 	[[adium notificationCenter] addObserver:self selector:@selector(menuChanged:)
-									   name:Menu_didChange
+									   name:AIMenuDidChnge
 									 object:[menuItem_getInfoAlternate menu]];
 	
 	//Install the Get Info (prompting for a contact name) menu item
@@ -139,7 +139,7 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	if ((menuItem == menuItem_getInfo) || (menuItem == menuItem_getInfoAlternate)) {
-		return [[adium contactController] selectedListObject] != nil;
+		return [[adium interfaceController] selectedListObject] != nil;
 		
 	} else if ((menuItem == menuItem_getInfoContextualContact) || (menuItem == menuItem_getInfoContextualGroup)) {
 		return [[adium menuController] currentContextMenuObject] != nil;

@@ -19,7 +19,7 @@
 #import "AIListContact.h"
 #import "AIPreferenceController.h"
 #import "CSNewContactAlertWindowController.h"
-#import "ESContactAlertsController.h"
+#import "AIContactAlertsControllerProtocol.h"
 #import "ESContactAlertsViewController.h"
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIAutoScrollView.h>

@@ -7,7 +7,7 @@
 //
 
 #import "RAFBlockEditorWindowController.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIContactController.h"
 #import <AIUtilities/AICompletingTextField.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>

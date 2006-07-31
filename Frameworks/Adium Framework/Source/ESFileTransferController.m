@@ -14,12 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
+#import "ESFileTransferController.h"
+
+#import "AIAccountControllerProtocol.h"
 #import "AIContactController.h"
+#import "AIInterfaceController.h"
 #import "AIMenuController.h"
 #import "AIToolbarController.h"
-#import "ESContactAlertsController.h"
-#import "ESFileTransferController.h"
+#import "AIContactAlertsControllerProtocol.h"
 #import "ESFileTransferPreferences.h"
 #import "ESFileTransferProgressWindowController.h"
 #import "ESFileTransferRequestPromptController.h"
@@ -57,7 +59,6 @@ static ESFileTransferPreferences *preferences;
 - (void)_finishReceiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer localFilename:(NSString *)localFilename;
 
 - (BOOL)shouldOpenCompleteFileTransfer:(ESFileTransfer *)fileTransfer;
-- (void)_removeFileTransfer:(ESFileTransfer *)fileTransfer;
 @end
 
 @implementation ESFileTransferController
@@ -82,7 +83,7 @@ static ESFileTransferPreferences *preferences;
 	[[adium menuController] addContextualMenuItem:menuItem_sendFileContext toLocation:Context_Contact_Action];
 	
 	//Register the events we generate
-	ESContactAlertsController *contactAlertsController = [adium contactAlertsController];
+	NSObject <AIContactAlertsController> *contactAlertsController = [adium contactAlertsController];
 	[contactAlertsController registerEventID:FILE_TRANSFER_REQUEST withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	[contactAlertsController registerEventID:FILE_TRANSFER_BEGAN withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	[contactAlertsController registerEventID:FILE_TRANSFER_CANCELLED withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
@@ -109,14 +110,13 @@ static ESFileTransferPreferences *preferences;
 														   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 	
-	AIPreferenceController *preferenceController = [adium preferenceController];
     //Register our default preferences
-    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:FILE_TRANSFER_DEFAULT_PREFS
-																forClass:[self class]] 
-								  forGroup:PREF_GROUP_FILE_TRANSFER];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:FILE_TRANSFER_DEFAULT_PREFS
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_FILE_TRANSFER];
     
     //Observe pref changes
-	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_FILE_TRANSFER];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_FILE_TRANSFER];
 	preferences = [[ESFileTransferPreferences preferencePane] retain];
 	
 	//Set up the file transfer progress window
@@ -137,7 +137,7 @@ static ESFileTransferPreferences *preferences;
 }
 
 #pragma mark Access to file transfer objects
-- (ESFileTransfer *)newFileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(FileTransferType)t
+- (ESFileTransfer *)newFileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)t
 {
 	ESFileTransfer *fileTransfer;
 	
@@ -165,7 +165,7 @@ static ESFileTransferPreferences *preferences;
 	NSEnumerator * fts = [fileTransferArray objectEnumerator];
 
 	while ((t = [fts nextObject])) {
-		FileTransferStatus status = [t status];
+		AIFileTransferStatus status = [t status];
 
 		if ((status == Unknown_Status_FileTransfer) ||
 			(status == Not_Started_FileTransfer) ||
@@ -370,7 +370,7 @@ static ESFileTransferPreferences *preferences;
 	AIListObject	*selectedObject;
 	AIListContact   *listContact = nil;
 	
-	selectedObject = [[adium contactController] selectedListObject];
+	selectedObject = [[adium interfaceController] selectedListObject];
 	if ([selectedObject isKindOfClass:[AIListContact class]]) {
 		listContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																 forListContact:(AIListContact *)selectedObject];
@@ -392,7 +392,7 @@ static ESFileTransferPreferences *preferences;
 }
 
 #pragma mark Status updates
-- (void)fileTransfer:(ESFileTransfer *)fileTransfer didSetStatus:(FileTransferStatus)status
+- (void)fileTransfer:(ESFileTransfer *)fileTransfer didSetStatus:(AIFileTransferStatus)status
 {
 	switch (status) {
 		case Checksumming_Filetransfer:
@@ -466,7 +466,7 @@ static ESFileTransferPreferences *preferences;
 	AIListContact   *listContact = nil;
 	
     if (menuItem == menuItem_sendFile) {
-        AIListObject	*selectedObject = [[adium contactController] selectedListObject];
+        AIListObject	*selectedObject = [[adium interfaceController] selectedListObject];
 		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]) {
 			listContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																	 forListContact:(AIListContact *)selectedObject];
@@ -495,7 +495,7 @@ static ESFileTransferPreferences *preferences;
 {
 	AIListContact   *listContact = nil;
 	
-	AIListObject	*selectedObject = [[adium contactController] selectedListObject];
+	AIListObject	*selectedObject = [[adium interfaceController] selectedListObject];
 	if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]) {
 		listContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																 forListContact:(AIListContact *)selectedObject];

@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIChatController.h"
-#import "AIAccountController.h"
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIInterfaceController.h"
 #import "AIListLayoutWindowController.h"
 #import "AIListOutlineView.h"
@@ -154,7 +154,7 @@
 	//Show the contact list initially even if it is at a screen edge and supposed to slide out of view
 	[self delayWindowSlidingForInterval:5];
 
-	AIPreferenceController *preferenceController = [adium preferenceController];
+	id<AIPreferenceController> preferenceController = [adium preferenceController];
     //Observe preference changes
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
@@ -269,7 +269,7 @@
 			maxWindowWidth = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
 			forcedWindowWidth = -1;
 		} else {
-			if (windowStyle == WINDOW_STYLE_STANDARD/* || windowStyle == WINDOW_STYLE_BORDERLESS*/) {
+			if (windowStyle == AIContactListWindowStyleStandard/* || windowStyle == AIContactListWindowStyleBorderless*/) {
 				//In the non-transparent non-autosizing modes, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH has no meaning
 				maxWindowWidth = 10000;
 				forcedWindowWidth = -1;
@@ -320,7 +320,7 @@
 		 * A maximum width less than this can make the list autosize smaller, but if it has its druthers it'll be a sane
 		 * size.
 		 */
-		[contactListView setMinimumDesiredWidth:((windowStyle == WINDOW_STYLE_STANDARD) ? 175 : 0)];
+		[contactListView setMinimumDesiredWidth:((windowStyle == AIContactListWindowStyleStandard) ? 175 : 0)];
 
 		[[self window] setMinSize:thisMinimumSize];
 		[[self window] setMaxSize:thisMaximumSize];

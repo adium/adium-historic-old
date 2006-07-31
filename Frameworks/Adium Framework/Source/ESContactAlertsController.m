@@ -14,8 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIPreferenceController.h"
 #import "ESContactAlertsController.h"
+
+#import "AIPreferenceController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import "AIListObject.h"

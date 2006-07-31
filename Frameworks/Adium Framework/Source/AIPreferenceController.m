@@ -31,13 +31,11 @@
 #define TITLE_OPEN_PREFERENCES	AILocalizedString(@"Open Preferences",nil)
 
 @interface AIPreferenceController (PRIVATE)
-- (NSMutableDictionary *)loadPreferenceGroup:(NSString *)groupName;
-- (void)savePreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)groupName;
 - (NSDictionary *)cachedDefaultsForGroup:(NSString *)group object:(AIListObject *)object;
 - (NSDictionary *)cachedPreferencesWithDefaultsForGroup:(NSString *)group object:(AIListObject *)object;
+- (NSMutableDictionary *)cachedPreferencesForGroup:(NSString *)group object:(AIListObject *)object;
 
 - (void)updatePreferences:(NSMutableDictionary *)prefDict forKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object;
-
 @end
 
 /*!

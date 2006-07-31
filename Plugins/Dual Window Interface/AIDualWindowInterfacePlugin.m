@@ -19,7 +19,7 @@
 #import "AIMessageTabViewItem.h"
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
-#import "AIChatController.h"
+#import <Adium/AIChatControllerProtocol.h>
 #import "ESDualWindowMessageAdvancedPreferences.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <Adium/AIChat.h>
@@ -121,16 +121,14 @@
  */
 - (void)closeChat:(AIChat *)chat
 {
-	if ([[adium chatController] closeChat:chat]) {
-		AIMessageTabViewItem		*messageTab = [chat statusObjectForKey:@"MessageTabViewItem"];
-		AIMessageWindowController	*container = [messageTab container];
-		
-		//Close the chat
-		[container removeTabViewItem:messageTab silent:NO];
-		[chat setStatusObject:nil
-					   forKey:@"MessageTabViewItem"
-					   notify:NotifyNever];
-	}
+	AIMessageTabViewItem		*messageTab = [chat statusObjectForKey:@"MessageTabViewItem"];
+	AIMessageWindowController	*container = [messageTab container];
+	
+	//Close the chat
+	[container removeTabViewItem:messageTab silent:NO];
+	[chat setStatusObject:nil
+				   forKey:@"MessageTabViewItem"
+				   notify:NotifyNever];
 }
 
 //Make a chat active

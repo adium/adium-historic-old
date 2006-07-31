@@ -23,7 +23,7 @@
 #import "AIDockController.h"
 #import "AIPreferenceController.h"
 #import "AIToolbarController.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AICustomTabDragging.h>
 #import <AIUtilities/AICustomTabsView.h>
@@ -227,7 +227,7 @@
     //Close all our tabs (The array will change as we remove tabs, so we must work with a copy)
 	enumerator = [[tabView_messages tabViewItems] reverseObjectEnumerator];
     while ((tabViewItem = [enumerator nextObject])) {
-		[interface closeChat:[tabViewItem chat]];
+		[[adium interfaceController] closeChat:[tabViewItem chat]];
 	}
 
 	//Chats have all closed, set active to nil, let the interface know we closed.  We should skip this step if our
@@ -525,7 +525,7 @@
 {
 	AIChat	*chat = [(AIMessageTabViewItem *)tabViewItem chat];
 
-	[interface closeChat:chat];
+	[[adium interfaceController] closeChat:chat];
 }
 
 - (NSString *)customTabView:(AICustomTabsView *)tabView tooltipForTabViewItem:(NSTabViewItem *)tabViewItem

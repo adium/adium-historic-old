@@ -27,7 +27,7 @@
 //Old school
 #import <Adium/AIListContact.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 
 /**
  * @class DCMessageContextDisplayPlugin

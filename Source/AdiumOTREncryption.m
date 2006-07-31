@@ -7,8 +7,8 @@
 
 #import "AdiumOTREncryption.h"
 #import "AIContentMessage.h"
-#import "AIAccountController.h"
-#import "AIChatController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"

@@ -62,7 +62,7 @@
 {                
 	if (menuItem == menuItem_inviteToChat) {		
 
-		AIListObject *object = [[adium contactController] selectedListObjectInContactList];
+		AIListObject *object = [[adium interfaceController] selectedListObjectInContactList];
 
 		if ([object isKindOfClass:[AIListContact class]]) {
 			if ( shouldRebuildChatList ) {

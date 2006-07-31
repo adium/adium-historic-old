@@ -15,7 +15,7 @@
  */
 
 #import "AdiumAccounts.h"
-#import "AIAccountController.h"
+#import "AIAccountControllerProtocol.h"
 #import "AIPreferenceController.h"
 #import "AIAccount.h"
 #import "AIService.h"

@@ -15,7 +15,7 @@
  */
 
 #import "ESApplescriptContactAlertPlugin.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import "ESPanelApplescriptDetailPane.h"
 #import "ESApplescriptabilityController.h"
 #import <AIUtilities/AIImageAdditions.h>
