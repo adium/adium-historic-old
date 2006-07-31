@@ -29,7 +29,7 @@
 
 @implementation ESFileTransferPreferences
 //Preference pane properties
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_FileTransfer;
 }
 - (NSString *)label{
@@ -44,7 +44,7 @@
 {
 	if ((sender == checkBox_autoAcceptFiles) ||
 			 (sender == checkBox_autoAcceptOnlyFromCLList)) {
-		FTAutoAcceptType autoAcceptType;
+		AIFileTransferAutoAcceptType autoAcceptType;
 		
 		if ([checkBox_autoAcceptFiles state] == NSOffState) {
 			autoAcceptType = AutoAccept_None;
@@ -65,7 +65,7 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-	FTAutoAcceptType	autoAcceptType = [[[adium preferenceController] preferenceForKey:KEY_FT_AUTO_ACCEPT
+	AIFileTransferAutoAcceptType	autoAcceptType = [[[adium preferenceController] preferenceForKey:KEY_FT_AUTO_ACCEPT
 																				   group:PREF_GROUP_FILE_TRANSFER] intValue];
 	
 	[self buildDownloadLocationMenu];

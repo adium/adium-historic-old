@@ -22,7 +22,6 @@
 @interface AILogToGroup (PRIVATE)
 - (NSDictionary *)logDict;
 - (AIChatLog *)_logAtRelativeLogPath:(NSString *)relativeLogPath fileName:(NSString *)fileName;
-+ (NSCalendarDate *)dateFromFileName:(NSString *)fileName;
 @end
 
 @implementation AILogToGroup

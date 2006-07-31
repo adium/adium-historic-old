@@ -28,7 +28,7 @@
 /*!
  * @brief Preference pane properties
  */
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_Personal;
 }
 - (NSString *)label{

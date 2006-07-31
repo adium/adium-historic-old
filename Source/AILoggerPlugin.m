@@ -15,7 +15,7 @@
  */
 
 #import "AIChatLog.h"
-#import "AIContactController.h"
+#import "AIInterfaceController.h"
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 #import "AILogViewerWindowController.h"
@@ -100,8 +100,6 @@ Class LogViewerWindowControllerClass = NULL;
     //Init
 	observingContent = NO;
 
-	AIPreferenceController *preferenceController = [adium preferenceController];
-
 	activeAppenders = [[NSMutableDictionary alloc] init];
 	activeTimers = [[NSMutableDictionary alloc] init];
 	
@@ -130,9 +128,9 @@ Class LogViewerWindowControllerClass = NULL;
 		nil];
 
 	//Setup our preferences
-	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS 
-	                              forClass:[self class]] 
-	                              forGroup:PREF_GROUP_LOGGING];
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS 
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_LOGGING];
 
 	//Install the log viewer menu items
 	[self configureMenuItems];
@@ -142,13 +140,12 @@ Class LogViewerWindowControllerClass = NULL;
 	[[NSFileManager defaultManager] createDirectoriesForPath:logBasePath];
 
 	//Observe preference changes
-	AIPreferenceController *prefController = [adium preferenceController];
-	[prefController addObserver:self
-	                 forKeyPath:PREF_KEYPATH_LOGGER_ENABLE
-	                    options:NSKeyValueObservingOptionNew
-	                    context:NULL];
+	[[adium preferenceController] addObserver:self
+								   forKeyPath:PREF_KEYPATH_LOGGER_ENABLE
+									  options:NSKeyValueObservingOptionNew
+									  context:NULL];
 	[self observeValueForKeyPath:PREF_KEYPATH_LOGGER_ENABLE
-	                    ofObject:prefController
+	                    ofObject:[adium preferenceController]
 	                      change:nil
 	                     context:NULL];
 
@@ -292,7 +289,7 @@ Class LogViewerWindowControllerClass = NULL;
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     if (menuItem == viewContactLogsMenuItem) {
-        AIListObject	*selectedObject = [[adium contactController] selectedListObject];
+        AIListObject	*selectedObject = [[adium interfaceController] selectedListObject];
 		return selectedObject && [selectedObject isKindOfClass:[AIListContact class]];
 
     } else if (menuItem == viewContactLogsContextMenuItem) {
@@ -322,7 +319,7 @@ Class LogViewerWindowControllerClass = NULL;
  */
 - (void)showLogViewerToSelectedContact:(id)sender
 {
-    AIListObject   *selectedObject = [[adium contactController] selectedListObject];
+    AIListObject   *selectedObject = [[adium interfaceController] selectedListObject];
     [LogViewerWindowControllerClass openForContact:([selectedObject isKindOfClass:[AIListContact class]] ?
 												 (AIListContact *)selectedObject : 
 												 nil)  

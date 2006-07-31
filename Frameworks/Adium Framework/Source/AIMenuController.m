@@ -74,7 +74,7 @@
 }
 
 //Add a menu item
-- (void)addMenuItem:(NSMenuItem *)newItem toLocation:(MENU_LOCATION)location
+- (void)addMenuItem:(NSMenuItem *)newItem toLocation:(AIMenuLocation)location
 {
 	NSMenuItem  *menuItem;
 	NSMenu		*targetMenu = nil;
@@ -107,7 +107,7 @@
 	//update the location array
 	[locationArray replaceObjectAtIndex:location withObject:newItem];
 
-	[[adium notificationCenter] postNotificationName:Menu_didChange object:[newItem menu] userInfo:nil];
+	[[adium notificationCenter] postNotificationName:AIMenuDidChnge object:[newItem menu] userInfo:nil];
 }
 
 //Remove a menu item
@@ -145,15 +145,16 @@
 	for (loop = 0; loop < [targetMenu numberOfItems]; loop++) {
 		if (([[targetMenu itemAtIndex:loop] isSeparatorItem]) && 
 		   ((loop == [targetMenu numberOfItems] - 1) || (loop == 0) || ([[targetMenu itemAtIndex:loop-1] isSeparatorItem]))) {
+			AILog(@"Removing double divider at %i from %@", loop, targetMenu);
 			[targetMenu removeItemAtIndex:loop];
 			loop--;//re-search the location
 		}
 	}
 
-	[[adium notificationCenter] postNotificationName:Menu_didChange object:targetMenu userInfo:nil];
+	[[adium notificationCenter] postNotificationName:AIMenuDidChnge object:targetMenu userInfo:nil];
 }
 
-- (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(CONTEXT_MENU_LOCATION)location
+- (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(AIContextMenuLocation)location
 {
 	NSNumber			*key;
 	NSMutableArray		*itemArray;

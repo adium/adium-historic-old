@@ -16,7 +16,7 @@
 
 #import "AISoundController.h"
 #import "Adium/ESContactAlertsViewController.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import "ESGlobalEventsPreferences.h"
 #import "ESGlobalEventsPreferencesPlugin.h"
 #import <Adium/ESPresetManagementController.h>
@@ -69,14 +69,14 @@
 /*!
  * @brief Category
  */
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_Events;
 }
 /*!
  * @brief Label
  */
 - (NSString *)label{
-    return EVENTS_TITLE;
+    return AILocalizedString(@"Events", "Name of preferences and tab for specifying what Adium should do when events occur - for example, when display a Growl alert when John signs on.");
 }
 /*!
  * @brief Nib name

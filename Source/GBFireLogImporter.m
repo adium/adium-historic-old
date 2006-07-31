@@ -18,7 +18,7 @@
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/NSCalendarDate+ISO8601Unparsing.h>
 #import "AIAccount.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIAdium.h"
 #import "AIInterfaceController.h"
 #import "AILoginController.h"

@@ -15,7 +15,7 @@
  */
 
 #import "AIInterfaceController.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import "ESPanelAlertDetailPane.h"
 #import "ErrorMessageHandlerPlugin.h"
 #import "ErrorMessageWindowController.h"

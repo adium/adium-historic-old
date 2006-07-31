@@ -363,7 +363,7 @@
 	int				windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue];
 	
 	//Bubble to fit limitations
-	BOOL nonFitted = (windowStyle != WINDOW_STYLE_PILLOWS_FITTED);
+	BOOL nonFitted = (windowStyle != AIContactListWindowStyleContactBubbles_Fitted);
 	if (nonFitted) {
 		//For the non-fitted styles, enable and set the proper state
 		[checkBox_extendedStatusVisible setEnabled:YES];
@@ -422,8 +422,8 @@
 										([popUp_userIconPosition numberOfItems] > 0))];
 	
 	//Disable group spacing when not using mockie
-	[slider_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
-	[textField_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
+	[slider_groupTopSpacing setEnabled:(windowStyle == AIContactListWindowStyleGroupBubbles)];
+	[textField_groupTopSpacing setEnabled:(windowStyle == AIContactListWindowStyleGroupBubbles)];
 	
 	//Contact Bubbles Advanced
 	
@@ -437,7 +437,7 @@
 	BOOL			showUserIcon = [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue];
 	int				indexForFinishingChoices = 0;
 	
-	if ([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue] != WINDOW_STYLE_PILLOWS_FITTED) {
+	if ([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue] != AIContactListWindowStyleContactBubbles_Fitted) {
 		statusAndServicePositionChoices[0] = LIST_POSITION_FAR_LEFT;
 		statusAndServicePositionChoices[1] = LIST_POSITION_LEFT;
 		statusAndServicePositionChoices[2] = LIST_POSITION_RIGHT;
@@ -499,7 +499,7 @@
 {
 	int				userIconPositionChoices[3];
 	
-	if ([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue] != WINDOW_STYLE_PILLOWS_FITTED) {
+	if ([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue] != AIContactListWindowStyleContactBubbles_Fitted) {
 		userIconPositionChoices[0] = LIST_POSITION_LEFT;
 		userIconPositionChoices[1] = LIST_POSITION_RIGHT;
 		userIconPositionChoices[2] = -1;
@@ -656,14 +656,14 @@
 //Displayed Tabs
 - (void)updateDisplayedTabsFromPrefDict:(NSDictionary *)prefDict
 {
-	LIST_WINDOW_STYLE	windowStyle;
+	AIContactListWindowStyle	windowStyle;
 	BOOL				tabViewCurrentHasAdvancedContactBubbles;
 	
 	windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue];
 	tabViewCurrentHasAdvancedContactBubbles = ([[tabView_preferences tabViewItems] containsObjectIdenticalTo:tabViewItem_advancedContactBubbles]);
 	
-	if ((windowStyle == WINDOW_STYLE_PILLOWS_FITTED) ||
-		(windowStyle == WINDOW_STYLE_PILLOWS)) {
+	if ((windowStyle == AIContactListWindowStyleContactBubbles_Fitted) ||
+		(windowStyle == AIContactListWindowStyleContactBubbles)) {
 		
 		if (!tabViewCurrentHasAdvancedContactBubbles) {
 			[tabView_preferences addTabViewItem:tabViewItem_advancedContactBubbles];

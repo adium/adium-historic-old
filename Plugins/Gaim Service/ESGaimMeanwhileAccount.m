@@ -15,7 +15,7 @@
  */
 
 #import "ESGaimMeanwhileAccount.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIStatusController.h"
 #import "UndeclaredLibgaimFunctions.h"
 #import <Adium/AIListContact.h>
@@ -115,7 +115,7 @@
 		case AIInvisibleStatusType: //Meanwhile does not support invisibility
 		{
 			if (([statusName isEqualToString:STATUS_NAME_DND]) ||
-				([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
+				([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_DND]] == NSOrderedSame))
 				statusID = "dnd";
 			else
 				statusID = "away";

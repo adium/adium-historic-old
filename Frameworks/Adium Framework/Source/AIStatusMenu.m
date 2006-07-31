@@ -12,7 +12,7 @@
 #import "AIStatusController.h"
 #import "AIEditStateWindowController.h"
 #import	"AIStatusIcons.h"
-#import "AIAccountController.h"
+#import "AIAccountControllerProtocol.h"
 #import "AIPreferenceController.h"
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIEventAdditions.h>

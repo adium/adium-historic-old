@@ -154,17 +154,6 @@
     [target performSelector:selector];
 }
 
-// Switches users: logs out, provides user choosing dialog
-- (void)switchUsers
-{
-    // Log out previous user
-    [target applicationWillTerminate:nil];
-    
-    // Open login panel
-    loginWindowController = [[AILoginWindowController loginWindowControllerWithOwner:self] retain];
-    [loginWindowController showWindow:nil];
-}
-
 // Creates and returns a mutable array of the login users
 - (NSArray *)userArray
 {

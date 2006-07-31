@@ -85,7 +85,7 @@
 	
 	opacityUpdateDict = [[NSMutableDictionary alloc] init];
 
-	AIPreferenceController *preferenceController = [adium preferenceController];
+	id<AIPreferenceController> preferenceController = [adium preferenceController];
 
     //Setup our preferences
     [preferenceController registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS

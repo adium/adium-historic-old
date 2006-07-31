@@ -46,7 +46,7 @@
 /*!
  * @brief Category
  */
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_Advanced;
 }
 /*!

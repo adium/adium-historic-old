@@ -15,7 +15,7 @@
  */
 
 #import "AISoundController.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import "ESGlobalEventsPreferences.h"
 #import "ESGlobalEventsPreferencesPlugin.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
@@ -158,7 +158,7 @@
 #pragma mark Dock behavior sets
 - (void)activateDockBehaviorSet:(NSArray *)behaviorArray
 {
-	[self _activateSet:behaviorArray withActionID:DOCK_BEHAVIOR_ALERT_IDENTIFIER alertGenerationSelector:@selector(dockAlertFromPresetDictionary:)];
+	[self _activateSet:behaviorArray withActionID:AIDockBehavior_ALERT_IDENTIFIER alertGenerationSelector:@selector(dockAlertFromPresetDictionary:)];
 }
 
 #pragma mark Speech presets

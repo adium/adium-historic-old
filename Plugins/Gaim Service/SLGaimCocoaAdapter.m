@@ -16,9 +16,10 @@
 
 #import "SLGaimCocoaAdapter.h"
 
-#import "AIAccountController.h"
-#import "AIInterfaceController.h"
-#import "AILoginController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+
+#import <Adium/AIInterfaceController.h>
+#import <Adium/AILoginController.h>
 #import "CBGaimAccount.h"
 #import "CBGaimServicePlugin.h"
 #import "adiumGaimCore.h"
@@ -687,7 +688,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 							   withDescription:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
 							   withWindowTitle:titleString];
 	
-	return adium_gaim_get_handle();
+	return NULL;
 }
 
 /* XXX ugly */
@@ -731,7 +732,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 							   withDescription:(description ? description : @"")
 							   withWindowTitle:(titleString ? titleString : @"")];
 
-	return adium_gaim_get_handle();
+	return NULL;
 }
 
 

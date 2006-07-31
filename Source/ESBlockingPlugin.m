@@ -14,12 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIContactController.h"
 #import "AIMenuController.h"
 #import "AIToolbarController.h"
 #import "AIInterfaceController.h"
-#import "AIChatController.h"
+#import <Adium/AIChatControllerProtocol.h>
 #import "ESBlockingPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -152,7 +152,7 @@
 	AIListObject	*object;
 	
 	object = ((sender == blockContactMenuItem) ?
-			  [[adium contactController] selectedListObject] :
+			  [[adium interfaceController] selectedListObject] :
 			  [[adium menuController] currentContextMenuObject]);
 	
 	//Don't do groups
@@ -211,7 +211,7 @@
 	BOOL anyAccount = NO;
 	
 	if (menuItem == blockContactMenuItem) {
-		object = [[adium contactController] selectedListObject];
+		object = [[adium interfaceController] selectedListObject];
 	} else {
 		object = [[adium menuController] currentContextMenuObject];
 	}

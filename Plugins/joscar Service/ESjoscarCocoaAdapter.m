@@ -7,7 +7,7 @@
 
 #import "ESjoscarCocoaAdapter.h"
 #import "RAFjoscarAccount.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import <JavaVM/JavaVM.h>
 #import "joscarClasses.h"
 #import <Adium/NDRunLoopMessenger.h>
@@ -971,7 +971,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	NSString			*newState = [ftState toString];
 	NSDictionary		*pollingUserInfo = nil;
 	NSValue				*identifier = [NSValue valueWithPointer:fileTransfer];
-	FileTransferStatus	fileTransferStatus;
+	AIFileTransferStatus	fileTransferStatus;
 	BOOL				shouldPollForStatus = NO;
 
 	AILog(@"File transfer update: %@ -- %@",userInfo, newState);

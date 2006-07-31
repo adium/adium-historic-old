@@ -20,7 +20,7 @@
 #import "AIEmoticonPreferences.h"
 #import "AIContentObject.h"
 #import "AIContentMessage.h"
-#import "AIAccountController.h"
+#import "AIAccountControllerProtocol.h"
 #import "AIContentController.h"
 #import "AIPreferenceController.h"
 #import "AIAccount.h"

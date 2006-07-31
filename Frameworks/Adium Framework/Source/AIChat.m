@@ -25,7 +25,7 @@
 
 #import "AIContactController.h"
 #import "AIContentController.h"
-#import "AIChatController.h"
+#import "AIChatControllerProtocol.h"
 #import "AIPreferenceController.h"
 
 #import <AIUtilities/AIArrayAdditions.h>

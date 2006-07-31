@@ -18,7 +18,7 @@
 #import "AISoundController.h"
 #import "ESAnnouncerAbstractDetailPane.h"
 #import "ESAnnouncerPlugin.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <Adium/AILocalizationButton.h>
 

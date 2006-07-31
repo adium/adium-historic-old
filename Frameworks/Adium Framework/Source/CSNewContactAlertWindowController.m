@@ -18,7 +18,7 @@
 #import "AIImageTextCellView.h"
 #import "AIListObject.h"
 #import "CSNewContactAlertWindowController.h"
-#import "ESContactAlertsController.h"
+#import "AIContactAlertsControllerProtocol.h"
 #import "ESContactAlertsViewController.h"
 
 #define NEW_ALERT_NIB			@"NewAlert"

@@ -8,7 +8,7 @@
 #import "AdiumAuthorization.h"
 #import "ESAuthorizationRequestWindowController.h"
 #import "AIContactController.h"
-#import "ESContactAlertsController.h"
+#import "AIContactAlertsControllerProtocol.h"
 #import "AIAccount.h"
 #import <AIUtilities/AIImageAdditions.h>
 

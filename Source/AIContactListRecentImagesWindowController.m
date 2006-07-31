@@ -6,7 +6,7 @@
 //
 
 #import "AIContactListRecentImagesWindowController.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIContactController.h"
 #import "AIPreferenceController.h"
 #import "AIStandardListWindowController.h"

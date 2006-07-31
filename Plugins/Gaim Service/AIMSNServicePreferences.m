@@ -22,7 +22,7 @@
 @implementation AIMSNServicePreferences
 
 //Preference pane properties
-- (PREFERENCE_CATEGORY)category
+- (AIPreferenceCategory)category
 {
     return AIPref_Advanced;
 }

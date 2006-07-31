@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
-#import "AIChatController.h"
+#import "AIAccountControllerProtocol.h"
+#import "AIChatControllerProtocol.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
@@ -132,7 +132,7 @@
 }
 
 #pragma mark Controller convenience
-- (AIInterfaceController *)interfaceController{
+- (NSObject <AIInterfaceController> *)interfaceController{
     return [adium interfaceController];
 }
 

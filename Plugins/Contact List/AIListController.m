@@ -15,7 +15,7 @@
  */
 
 #import "AIChat.h"
-#import "AIChatController.h"
+#import <Adium/AIChatControllerProtocol.h>
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIContentMessage.h"
@@ -636,11 +636,11 @@ typedef enum {
 
 #pragma mark Preferences
 
-- (LIST_WINDOW_STYLE)windowStyle
+- (AIContactListWindowStyle)windowStyle
 {
 	NSNumber	*windowStyleNumber = [[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE 
 																			  group:PREF_GROUP_APPEARANCE];
-	return (windowStyleNumber ? [windowStyleNumber intValue] : WINDOW_STYLE_STANDARD);
+	return (windowStyleNumber ? [windowStyleNumber intValue] : AIContactListWindowStyleStandard);
 }
 
 @end

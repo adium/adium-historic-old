@@ -15,7 +15,7 @@
  */
 
 #import "AIAccountSelectionView.h"
-#import "AIChatController.h"
+#import <Adium/AIChatControllerProtocol.h>
 #import "AIContactController.h"
 #import "AIContactInfoWindowController.h"
 #import "AIContentController.h"
@@ -25,7 +25,7 @@
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
 #import "AIPreferenceController.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import "ESGeneralPreferencesPlugin.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>

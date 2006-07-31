@@ -15,33 +15,16 @@
  */
 
 #import "AIObject.h"
-
-#define LOGIN_PREFERENCES_FILE_NAME @"Login Preferences"	//Login preferences file name
-#define LOGIN_SHOW_WINDOW 			@"Show Login Window"	//Should hide the login window 
-#define LOGIN_LAST_USER				@"Last Login Name"		//Last logged in user
+#import "AILoginControllerProtocol.h"
 
 @class AILoginWindowController;
 
-@protocol AIController;
-
-@interface AILoginController : AIObject <AIController> {
+@interface AILoginController : AIObject <AILoginController> {
     NSString					*currentUser;			//The current logged in username
     NSString					*userDirectory;			//The current user's Adium home directory
     AILoginWindowController		*loginWindowController;	//The login select window
     id							target;					//Used to send our owner a 'login complete'
     SEL							selector;				//
 }
-
-- (NSString *)userDirectory;
-- (NSString *)currentUser;
-- (void)switchUsers;
-
-//Private
-- (void)requestUserNotifyingTarget:(id)inTarget selector:(SEL)inSelector;
-- (NSArray *)userArray;
-- (void)deleteUser:(NSString *)inUserName;
-- (void)addUser:(NSString *)inUserName;
-- (void)renameUser:(NSString *)oldName to:(NSString *)newName;
-- (void)loginAsUser:(NSString *)userName;
 
 @end

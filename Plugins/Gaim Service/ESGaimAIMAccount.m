@@ -7,7 +7,7 @@
 //
 
 #import "ESGaimAIMAccount.h"
-#import "AIChatController.h"
+#import <Adium/AIChatControllerProtocol.h>
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIPreferenceController.h"

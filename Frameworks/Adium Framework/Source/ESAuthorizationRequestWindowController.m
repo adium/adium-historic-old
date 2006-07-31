@@ -6,7 +6,7 @@
 //
 
 #import "ESAuthorizationRequestWindowController.h"
-#import "AIAccountController.h"
+#import "AIAccountControllerProtocol.h"
 #import "AIContactController.h"
 #import "AIAccount.h"
 #import <AIUtilities/AIStringAdditions.h>

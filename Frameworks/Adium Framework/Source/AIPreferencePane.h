@@ -30,7 +30,7 @@
 
 + (AIPreferencePane *)preferencePane;
 + (AIPreferencePane *)preferencePaneForPlugin:(id)inPlugin;
-- (PREFERENCE_CATEGORY)category;
+- (AIPreferenceCategory)category;
 - (NSImage *)image;
 
 @end

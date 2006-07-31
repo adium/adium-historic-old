@@ -127,6 +127,26 @@
 		340B9BD4069C735900FE1E57 /* WebKit Message View.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */; };
 		340BA8D809EC5E35000EC441 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
 		340BAB1D09EC6E53000EC441 /* libirc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 340BAB1C09EC6E53000EC441 /* libirc.a */; };
+		340D039A0A7D78FC0059A3AF /* AIAccountControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D03990A7D78FC0059A3AF /* AIAccountControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D03A90A7D798A0059A3AF /* AIControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D03A80A7D798A0059A3AF /* AIControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D08200A7DBFE40059A3AF /* AIChatControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D081F0A7DBFE40059A3AF /* AIChatControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D08400A7DC1540059A3AF /* AIContactAlertsControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D083F0A7DC1540059A3AF /* AIContactAlertsControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0A010A7DD1F40059A3AF /* AICalendarDate.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D09FF0A7DD1F40059A3AF /* AICalendarDate.h */; };
+		340D0A020A7DD1F40059A3AF /* AICalendarDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 340D0A000A7DD1F40059A3AF /* AICalendarDate.m */; };
+		340D0D5C0A7E72030059A3AF /* AIContactControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0D5B0A7E72030059A3AF /* AIContactControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0D640A7E72DA0059A3AF /* AIContentControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0D630A7E72DA0059A3AF /* AIContentControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0D730A7E750E0059A3AF /* AIDockControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0D720A7E750E0059A3AF /* AIDockControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0DAA0A7E76480059A3AF /* AIEmoticonControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0DA90A7E76480059A3AF /* AIEmoticonControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0DC60A7E76DA0059A3AF /* AIFileTransferControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0DC50A7E76DA0059A3AF /* AIFileTransferControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0E000A7E7B090059A3AF /* AIInterfaceControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0DFF0A7E7B090059A3AF /* AIInterfaceControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0E1A0A7E7DC30059A3AF /* AILoginControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0E190A7E7DC30059A3AF /* AILoginControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0E1E0A7E7E7B0059A3AF /* AIMenuControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0E1D0A7E7E7B0059A3AF /* AIMenuControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0E220A7E7F160059A3AF /* AIPreferenceControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0E210A7E7F160059A3AF /* AIPreferenceControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0E8B0A7E80000059A3AF /* AISoundControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0E8A0A7E80000059A3AF /* AISoundControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0EAA0A7E826C0059A3AF /* AIStatusControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0EA90A7E826C0059A3AF /* AIStatusControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0EB00A7E82F80059A3AF /* AIToolbarControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0EAF0A7E82F70059A3AF /* AIToolbarControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0EBA0A7E83D70059A3AF /* AIApplescriptabilityControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0EB90A7E83D70059A3AF /* AIApplescriptabilityControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		340D0EC30A7E84680059A3AF /* AIDebugControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D0EC20A7E84680059A3AF /* AIDebugControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3410746009B6965700565C9E /* AIMDLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */; };
 		34107B4C09E9923D001CC042 /* AIGuestAccountWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34107B4A09E9923D001CC042 /* AIGuestAccountWindowController.m */; };
 		34107B5609E992DA001CC042 /* GuestAccountWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34107B5509E992DA001CC042 /* GuestAccountWindow.nib */; };
@@ -522,6 +542,8 @@
 		34B3245A09BA00FB00029361 /* ESIRCService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3245809BA00FB00029361 /* ESIRCService.m */; };
 		34B4B5A40708B049002C4C6D /* ESDebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B4B5A20708B049002C4C6D /* ESDebugController.m */; };
 		34B588A1058D833A00E7EF0D /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */; };
+		34B5E25F0A7C94D3005186E6 /* AILogDateFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B5E25D0A7C94D3005186E6 /* AILogDateFormatter.h */; };
+		34B5E2600A7C94D3005186E6 /* AILogDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B5E25E0A7C94D3005186E6 /* AILogDateFormatter.m */; };
 		34B70346076EDB370016E8BA /* NewAlert.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B70341076EDB370016E8BA /* NewAlert.nib */; };
 		34B9C7900A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */; };
 		34B9C7920A255DCE00CEA8AE /* LogViewerDateFilter.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */; };
@@ -1744,6 +1766,26 @@
 		340BA84409EC593A000EC441 /* AICorePluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICorePluginLoader.h; path = "Frameworks/Adium Framework/Source/AICorePluginLoader.h"; sourceTree = "<group>"; };
 		340BA84509EC593B000EC441 /* AICorePluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICorePluginLoader.m; path = "Frameworks/Adium Framework/Source/AICorePluginLoader.m"; sourceTree = "<group>"; };
 		340BAB1C09EC6E53000EC441 /* libirc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libirc.a; path = "Plugins/IRC Libgaim Plugin/libirc.a"; sourceTree = "<group>"; };
+		340D03990A7D78FC0059A3AF /* AIAccountControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAccountControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIAccountControllerProtocol.h"; sourceTree = "<group>"; };
+		340D03A80A7D798A0059A3AF /* AIControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIControllerProtocol.h"; sourceTree = "<group>"; };
+		340D081F0A7DBFE40059A3AF /* AIChatControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIChatControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIChatControllerProtocol.h"; sourceTree = "<group>"; };
+		340D083F0A7DC1540059A3AF /* AIContactAlertsControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContactAlertsControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIContactAlertsControllerProtocol.h"; sourceTree = "<group>"; };
+		340D09FF0A7DD1F40059A3AF /* AICalendarDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICalendarDate.h; path = Source/AICalendarDate.h; sourceTree = "<group>"; };
+		340D0A000A7DD1F40059A3AF /* AICalendarDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICalendarDate.m; path = Source/AICalendarDate.m; sourceTree = "<group>"; };
+		340D0D5B0A7E72030059A3AF /* AIContactControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContactControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIContactControllerProtocol.h"; sourceTree = "<group>"; };
+		340D0D630A7E72DA0059A3AF /* AIContentControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContentControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIContentControllerProtocol.h"; sourceTree = "<group>"; };
+		340D0D720A7E750E0059A3AF /* AIDockControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDockControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIDockControllerProtocol.h"; sourceTree = "<group>"; };
+		340D0DA90A7E76480059A3AF /* AIEmoticonControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIEmoticonControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIEmoticonControllerProtocol.h"; sourceTree = "<group>"; };
+		340D0DC50A7E76DA0059A3AF /* AIFileTransferControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFileTransferControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIFileTransferControllerProtocol.h"; sourceTree = "<group>"; };
+		340D0DFF0A7E7B090059A3AF /* AIInterfaceControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIInterfaceControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIInterfaceControllerProtocol.h"; sourceTree = "<group>"; };
+		340D0E190A7E7DC30059A3AF /* AILoginControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILoginControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AILoginControllerProtocol.h"; sourceTree = "<group>"; };
+		340D0E1D0A7E7E7B0059A3AF /* AIMenuControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIMenuControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIMenuControllerProtocol.h"; sourceTree = "<group>"; };
+		340D0E210A7E7F160059A3AF /* AIPreferenceControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPreferenceControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIPreferenceControllerProtocol.h"; sourceTree = "<group>"; };
+		340D0E8A0A7E80000059A3AF /* AISoundControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISoundControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AISoundControllerProtocol.h"; sourceTree = "<group>"; };
+		340D0EA90A7E826C0059A3AF /* AIStatusControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIStatusControllerProtocol.h"; sourceTree = "<group>"; };
+		340D0EAF0A7E82F70059A3AF /* AIToolbarControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIToolbarControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIToolbarControllerProtocol.h"; sourceTree = "<group>"; };
+		340D0EB90A7E83D70059A3AF /* AIApplescriptabilityControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIApplescriptabilityControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIApplescriptabilityControllerProtocol.h"; sourceTree = "<group>"; };
+		340D0EC20A7E84680059A3AF /* AIDebugControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDebugControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIDebugControllerProtocol.h"; sourceTree = "<group>"; };
 		340F440306D8202A0072E2FA /* AIAbstractListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAbstractListController.h; path = "Frameworks/Adium Framework/Source/AIAbstractListController.h"; sourceTree = "<group>"; };
 		340F440406D8202A0072E2FA /* AIAbstractListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAbstractListController.m; path = "Frameworks/Adium Framework/Source/AIAbstractListController.m"; sourceTree = "<group>"; };
 		340F485006DA5E060072E2FA /* AIListCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIListCell.m; path = "Frameworks/Adium Framework/Source/AIListCell.m"; sourceTree = "<group>"; };
@@ -2713,6 +2755,8 @@
 		34B4B5A10708B049002C4C6D /* ESDebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESDebugController.h; path = Source/ESDebugController.h; sourceTree = "<group>"; };
 		34B4B5A20708B049002C4C6D /* ESDebugController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESDebugController.m; path = Source/ESDebugController.m; sourceTree = "<group>"; };
 		34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
+		34B5E25D0A7C94D3005186E6 /* AILogDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILogDateFormatter.h; path = Source/AILogDateFormatter.h; sourceTree = "<group>"; };
+		34B5E25E0A7C94D3005186E6 /* AILogDateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILogDateFormatter.m; path = Source/AILogDateFormatter.m; sourceTree = "<group>"; };
 		34B7033D076EDB370016E8BA /* ESContactAlertsViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESContactAlertsViewController.m; path = "Frameworks/Adium Framework/Source/ESContactAlertsViewController.m"; sourceTree = "<group>"; };
 		34B7033E076EDB370016E8BA /* ESContactAlertsViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESContactAlertsViewController.h; path = "Frameworks/Adium Framework/Source/ESContactAlertsViewController.h"; sourceTree = "<group>"; };
 		34B7033F076EDB370016E8BA /* CSNewContactAlertWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CSNewContactAlertWindowController.m; path = "Frameworks/Adium Framework/Source/CSNewContactAlertWindowController.m"; sourceTree = "<group>"; };
@@ -3985,6 +4029,31 @@
 				347E781907CA962100350507 /* userIconToolbar.png */,
 			);
 			name = "User Icon Handling";
+			sourceTree = "<group>";
+		};
+		340D0FD50A7E8B2E0059A3AF /* Controller Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				340D0EB90A7E83D70059A3AF /* AIApplescriptabilityControllerProtocol.h */,
+				340D03A80A7D798A0059A3AF /* AIControllerProtocol.h */,
+				340D03990A7D78FC0059A3AF /* AIAccountControllerProtocol.h */,
+				340D081F0A7DBFE40059A3AF /* AIChatControllerProtocol.h */,
+				340D083F0A7DC1540059A3AF /* AIContactAlertsControllerProtocol.h */,
+				340D0D5B0A7E72030059A3AF /* AIContactControllerProtocol.h */,
+				340D0D630A7E72DA0059A3AF /* AIContentControllerProtocol.h */,
+				340D0D720A7E750E0059A3AF /* AIDockControllerProtocol.h */,
+				340D0DA90A7E76480059A3AF /* AIEmoticonControllerProtocol.h */,
+				340D0DC50A7E76DA0059A3AF /* AIFileTransferControllerProtocol.h */,
+				340D0DFF0A7E7B090059A3AF /* AIInterfaceControllerProtocol.h */,
+				340D0E190A7E7DC30059A3AF /* AILoginControllerProtocol.h */,
+				340D0E1D0A7E7E7B0059A3AF /* AIMenuControllerProtocol.h */,
+				340D0E210A7E7F160059A3AF /* AIPreferenceControllerProtocol.h */,
+				340D0E8A0A7E80000059A3AF /* AISoundControllerProtocol.h */,
+				340D0EA90A7E826C0059A3AF /* AIStatusControllerProtocol.h */,
+				340D0EAF0A7E82F70059A3AF /* AIToolbarControllerProtocol.h */,
+				340D0EC20A7E84680059A3AF /* AIDebugControllerProtocol.h */,
+			);
+			name = "Controller Protocols";
 			sourceTree = "<group>";
 		};
 		340F444F06D87A830072E2FA /* Contact List */ = {
@@ -5712,6 +5781,7 @@
 		4B873F330840D14A00738987 /* Public Interface (Adium.framework) */ = {
 			isa = PBXGroup;
 			children = (
+				340D0FD50A7E8B2E0059A3AF /* Controller Protocols */,
 				344C0D4306B6D5E300DA7200 /* Applescriptability */,
 				F57938EF033E745F01A8010A /* AIAccountController.h */,
 				F57938AA033E737001A8010A /* AIAccountController.m */,
@@ -6042,6 +6112,10 @@
 				34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */,
 				34F849560A4AF04D0002A017 /* AILogFileUpgradeWindowController.h */,
 				34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */,
+				34B5E25D0A7C94D3005186E6 /* AILogDateFormatter.h */,
+				34B5E25E0A7C94D3005186E6 /* AILogDateFormatter.m */,
+				340D09FF0A7DD1F40059A3AF /* AICalendarDate.h */,
+				340D0A000A7DD1F40059A3AF /* AICalendarDate.m */,
 			);
 			name = "Log Viewer";
 			sourceTree = "<group>";
@@ -7129,6 +7203,7 @@
 				34E6CA870A7927980076D7F0 /* ESOTRUnknownFingerprintController.h in Headers */,
 				34E6CA890A7927980076D7F0 /* ESOTRPreferences.h in Headers */,
 				34E6CA8A0A7927980076D7F0 /* OTRCommon.h in Headers */,
+				34B5E25F0A7C94D3005186E6 /* AILogDateFormatter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7275,6 +7350,25 @@
 				F589067A0A7BE0BC001F0ADC /* GBFireImporter.h in Headers */,
 				F58906820A7BE0E5001F0ADC /* AILoginWindowController.h in Headers */,
 				F589068B0A7BE116001F0ADC /* GBFireLogImporter.h in Headers */,
+				340D039A0A7D78FC0059A3AF /* AIAccountControllerProtocol.h in Headers */,
+				340D03A90A7D798A0059A3AF /* AIControllerProtocol.h in Headers */,
+				340D08200A7DBFE40059A3AF /* AIChatControllerProtocol.h in Headers */,
+				340D08400A7DC1540059A3AF /* AIContactAlertsControllerProtocol.h in Headers */,
+				340D0A010A7DD1F40059A3AF /* AICalendarDate.h in Headers */,
+				340D0D5C0A7E72030059A3AF /* AIContactControllerProtocol.h in Headers */,
+				340D0D640A7E72DA0059A3AF /* AIContentControllerProtocol.h in Headers */,
+				340D0D730A7E750E0059A3AF /* AIDockControllerProtocol.h in Headers */,
+				340D0DAA0A7E76480059A3AF /* AIEmoticonControllerProtocol.h in Headers */,
+				340D0DC60A7E76DA0059A3AF /* AIFileTransferControllerProtocol.h in Headers */,
+				340D0E000A7E7B090059A3AF /* AIInterfaceControllerProtocol.h in Headers */,
+				340D0E1A0A7E7DC30059A3AF /* AILoginControllerProtocol.h in Headers */,
+				340D0E1E0A7E7E7B0059A3AF /* AIMenuControllerProtocol.h in Headers */,
+				340D0E220A7E7F160059A3AF /* AIPreferenceControllerProtocol.h in Headers */,
+				340D0E8B0A7E80000059A3AF /* AISoundControllerProtocol.h in Headers */,
+				340D0EAA0A7E826C0059A3AF /* AIStatusControllerProtocol.h in Headers */,
+				340D0EB00A7E82F80059A3AF /* AIToolbarControllerProtocol.h in Headers */,
+				340D0EBA0A7E83D70059A3AF /* AIApplescriptabilityControllerProtocol.h in Headers */,
+				340D0EC30A7E84680059A3AF /* AIDebugControllerProtocol.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8743,6 +8837,7 @@
 				345AFAEE0A5D9A5F00D7DA6F /* AINoisyTableColumn.m in Sources */,
 				34EA6B320A62F3420053DFEB /* AIApplication.m in Sources */,
 				34E6C5670A791BAF0076D7F0 /* AIContactInfoWindowPlugin.m in Sources */,
+				34B5E2600A7C94D3005186E6 /* AILogDateFormatter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8886,6 +8981,7 @@
 				F589067B0A7BE0BC001F0ADC /* GBFireImporter.m in Sources */,
 				F58906830A7BE0E5001F0ADC /* AILoginWindowController.m in Sources */,
 				F589068A0A7BE116001F0ADC /* GBFireLogImporter.m in Sources */,
+				340D0A020A7DD1F40059A3AF /* AICalendarDate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

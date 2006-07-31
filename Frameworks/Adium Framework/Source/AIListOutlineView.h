@@ -70,7 +70,7 @@ typedef enum {
 //Backgrounds
 - (void)setBackgroundImage:(NSImage *)inImage;
 - (void)setBackgroundStyle:(AIBackgroundStyle)inBackgroundStyle;
-- (void)setBackgroundOpacity:(float)opacity forWindowStyle:(LIST_WINDOW_STYLE)windowStyle;
+- (void)setBackgroundOpacity:(float)opacity forWindowStyle:(AIContactListWindowStyle)windowStyle;
 - (void)setBackgroundFade:(float)fade;
 - (void)setBackgroundColor:(NSColor *)inColor;
 - (NSColor *)backgroundColor;

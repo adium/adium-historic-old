@@ -362,6 +362,9 @@
  * Close the passed chat account-side.  Depending on the protocol, account code may need to close a connection in
  * response to this method or perhaps make no actions at all.  This method is used by both one-on-one chats and
  * multi-user chats.
+ *
+ * This method should *only* be called by a core controller.  Call [[adium interfaceController] closeChat:chat] to perform a close from other code.
+ *
  * @param chat The chat to close
  * @return YES on success
  */

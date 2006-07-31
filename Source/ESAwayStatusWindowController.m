@@ -7,7 +7,7 @@
 //
 
 #import "ESAwayStatusWindowController.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIPreferenceController.h"
 #import "AIStatusController.h"
 #import <Adium/AIAccount.h>

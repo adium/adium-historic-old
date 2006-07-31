@@ -21,10 +21,10 @@
 #import "AIInterfaceController.h"
 #import "AIListOutlineView.h"
 #import "AIPreferenceController.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "ESContactAlertsPane.h"
 #import "ESContactInfoListController.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AITabViewAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
@@ -127,7 +127,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	NSTabViewItem   *tabViewItem;
 
 	//
-	loadedPanes = [[NSMutableSet alloc] init];
+	loadedPanes = [[NSMutableDictionary alloc] init];
 
 	//Localization
 	[self localizeTabViewItemTitles];
@@ -172,10 +172,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 				label = AILocalizedString(@"Info","short form of tab view item title for Contact Info window's first tab");
 				break;
 			case AIInfo_Accounts:
-				label = ACCOUNTS_TITLE;
+				label = AILocalizedString(@"Accounts",nil);
 				break;
 			case AIInfo_Alerts:
-				label = EVENTS_TITLE;
+				label = AILocalizedString(@"Events", "Name of preferences and tab for specifying what Adium should do when events occur - for example, when display a Growl alert when John signs on.");
 				break;
 			case AIInfo_Settings:
 				label = AILocalizedString(@"Settings","tab view item title for Contact Settings (Settings)");
@@ -232,36 +232,35 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		if ([[[self window] firstResponder] isKindOfClass:[NSText class]]) {
 			[[self window] makeFirstResponder:nil];
 		}
-
-		switch ([[tabViewItem identifier] intValue]) {
-			case AIInfo_Profile:
-				if ([view_Profile isEmpty]) {
+		
+		int identifier = [[tabViewItem identifier] intValue];
+		if (!(pane = [loadedPanes objectForKey:[NSNumber numberWithInt:identifier]])) {
+			switch (identifier) {
+				case AIInfo_Profile:
 					pane = [AIContactProfilePane contactInfoPane];
-					[loadedPanes addObject:pane];
 					[view_Profile setPanes:[NSArray arrayWithObject:pane]];
-				}
-				break;
-			case AIInfo_Accounts:
-				if ([view_Accounts isEmpty]) {
+
+					break;
+				case AIInfo_Accounts:
 					pane = [AIContactAccountsPane contactInfoPane];
-					[loadedPanes addObject:pane];
 					[view_Accounts setPanes:[NSArray arrayWithObject:pane]];
-				}
-				break;
-			case AIInfo_Alerts:
-				if ([view_Alerts isEmpty]) {
+					break;
+				case AIInfo_Alerts:
 					pane = [ESContactAlertsPane contactInfoPane];
-					[loadedPanes addObject:pane];
 					[view_Alerts setPanes:[NSArray arrayWithObject:pane]];
-				}
-				break;
-			case AIInfo_Settings:
-				if ([view_Settings isEmpty]) {
+					break;
+				case AIInfo_Settings:
 					pane = [AIContactSettingsPane contactInfoPane];
-					[loadedPanes addObject:pane];
 					[view_Settings setPanes:[NSArray arrayWithObject:pane]];
-				}
-				break;
+					break;
+			}
+			
+			if (pane) {
+				[loadedPanes setObject:pane
+								forKey:[NSNumber numberWithInt:identifier]];
+			} else {
+				NSLog(@"%@: Could not load pane for identifier %i",self,identifier);
+			}
 		}
 
 		//Configure the loaded panes
@@ -272,8 +271,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //When the contact list selection changes, then configure the window for the new contact
 - (void)selectionChanged:(NSNotification *)notification
 {
-	AIListObject	*object = [[adium contactController] selectedListObject];
-	if (object) [self configureForListObject:[[adium contactController] selectedListObject]];
+	AIListObject	*object = [[adium interfaceController] selectedListObject];
+	if (object) [self configureForListObject:[[adium interfaceController] selectedListObject]];
 }
 
 //Change the list object

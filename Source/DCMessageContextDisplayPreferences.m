@@ -33,7 +33,7 @@ typedef enum {
 @implementation DCMessageContextDisplayPreferences
 
 //Preference pane properties
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_Advanced;
 }
 - (NSString *)label{

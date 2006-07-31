@@ -10,9 +10,9 @@
 #import "AIAdium.h"
 #import "AIPreferenceController.h"
 #import "AIContactController.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIContentController.h"
-#import "AIChatController.h"
+#import <Adium/AIChatControllerProtocol.h>
 #import "AIStatusController.h"
 #import "AIInterfaceController.h"
 #import <Adium/AIChat.h>
@@ -1010,7 +1010,7 @@ BOOL isMobileContact(AIListObject *inListObject)
 - (void)updateFileTransferWithIdentifier:(NSValue *)identifier toFileTransferStatus:(NSNumber *)fileTransferStatusNumber
 {
 	ESFileTransfer		*fileTransfer;
-	FileTransferStatus	fileTransferStatus = [fileTransferStatusNumber intValue];
+	AIFileTransferStatus	fileTransferStatus = [fileTransferStatusNumber intValue];
 	
 	fileTransfer = [fileTransferDict objectForKey:identifier];
 	[fileTransfer setStatus:fileTransferStatus];

@@ -16,7 +16,7 @@
 
 #import "AIContactController.h"
 #import "ESAccountEvents.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 

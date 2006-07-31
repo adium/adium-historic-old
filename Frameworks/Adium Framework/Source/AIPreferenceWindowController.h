@@ -17,7 +17,7 @@
 #import "AIWindowController.h"
 #import "AIPreferenceController.h"
 
-@class AIModularPaneCategoryView, AIAutoScrollView, AIColoredBoxView, AIPreferencePane;
+@class AIModularPaneCategoryView, AIAutoScrollView, AIColoredBoxView, AIPreferencePane, AIAlternatingRowTableView;
 
 @interface AIPreferenceWindowController : AIWindowController {
     IBOutlet	NSTabView					*tabView_category;
@@ -31,7 +31,7 @@
 	IBOutlet	AIModularPaneCategoryView	*view_Events;
     IBOutlet 	AIModularPaneCategoryView	*view_FileTransfer;
 
-    IBOutlet	NSTableView					*tableView_advanced;
+    IBOutlet	AIAlternatingRowTableView	*tableView_advanced;
 	IBOutlet	AIAutoScrollView			*scrollView_advanced;
 
     IBOutlet	AIModularPaneCategoryView   *view_Advanced;

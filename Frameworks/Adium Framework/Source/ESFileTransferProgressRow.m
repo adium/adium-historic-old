@@ -113,7 +113,7 @@
 }
 
 
-- (void)fileTransfer:(ESFileTransfer *)inFileTransfer didSetType:(FileTransferType)type
+- (void)fileTransfer:(ESFileTransfer *)inFileTransfer didSetType:(AIFileTransferType)type
 {
 	[self updateSourceAndDestination];
 	[self updateIconImage];
@@ -121,7 +121,7 @@
 	[owner progressRowDidChangeType:self];
 }
 
-- (FileTransferType)type
+- (AIFileTransferType)type
 {
 	return [fileTransfer fileTransferType];
 }
@@ -146,7 +146,7 @@
 	[self updateIconImage];
 }
 
-- (void)fileTransfer:(ESFileTransfer *)inFileTransfer didSetStatus:(FileTransferStatus)inStatus
+- (void)fileTransfer:(ESFileTransfer *)inFileTransfer didSetStatus:(AIFileTransferStatus)inStatus
 {
 	forceUpdate = YES;
 	[self gotUpdateForFileTransfer:inFileTransfer];
@@ -162,7 +162,7 @@
 - (void)gotUpdateForFileTransfer:(ESFileTransfer *)inFileTransfer
 {
 	UInt32				updateTick = TickCount();
-	FileTransferStatus	status = [inFileTransfer status];
+	AIFileTransferStatus	status = [inFileTransfer status];
 	
 	//Don't update continously; on a LAN transfer, for instance, we'll get almost constant updates
 	if (lastUpdateTick && (((updateTick - lastUpdateTick) / 60.0) < 0.2) && (status == In_Progress_FileTransfer) && !forceUpdate) {
@@ -171,7 +171,7 @@
 
 	unsigned long long	bytesSent = [inFileTransfer bytesSent];
 	NSString			*transferBytesStatus = nil, *transferSpeedStatus = nil, *transferRemainingStatus = nil;
-	FileTransferType	type = [inFileTransfer fileTransferType];
+	AIFileTransferType	type = [inFileTransfer fileTransferType];
 	
 	if (!size) {
 		size = [inFileTransfer size];

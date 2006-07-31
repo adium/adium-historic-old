@@ -17,7 +17,7 @@
 #import "AIAccount.h"
 #import "AIChat.h"
 #import "AIContactController.h"
-#import "AIChatController.h"
+#import "AIChatControllerProtocol.h"
 #import "AIService.h"
 #import "AIListContact.h"
 #import "AIMetaContact.h"

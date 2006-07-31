@@ -14,12 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIChatController.h"
+#import <Adium/AIChatControllerProtocol.h>
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
-#import "ESContactAlertsController.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import "NEHGrowlPlugin.h"
 #import "CBGrowlAlertDetailPane.h"
 #import <AIUtilities/AIApplicationAdditions.h>
@@ -295,7 +295,7 @@
  */
 - (NSDictionary *)registrationDictionaryForGrowl
 {
-	ESContactAlertsController	*contactAlertsController = [adium contactAlertsController];
+	id <AIContactAlertsController> contactAlertsController = [adium contactAlertsController];
 	NSArray						*allNotes = [contactAlertsController allEventIDs];
 	NSMutableDictionary			*humanReadableNames = [NSMutableDictionary dictionary];
 #ifdef GROWL_0_8

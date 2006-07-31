@@ -17,7 +17,7 @@
 #import "AIContactController.h"
 #import "DCGaimOscarJoinChatViewController.h"
 #import "DCJoinChatWindowController.h"
-#import "AIChatController.h"
+#import <Adium/AIChatControllerProtocol.h>
 #import <AIUtilities/AICompletingTextField.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>

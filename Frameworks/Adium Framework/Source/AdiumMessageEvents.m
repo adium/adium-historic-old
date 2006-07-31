@@ -15,8 +15,8 @@
  */
 
 #import "AdiumMessageEvents.h"
-#import "ESContactAlertsController.h"
-#import "AIChatController.h"
+#import "AIContactAlertsControllerProtocol.h"
+#import "AIChatControllerProtocol.h"
 #import "AIContentController.h"
 #import "AIChat.h"
 #import "AIListContact.h"

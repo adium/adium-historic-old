@@ -44,7 +44,7 @@
 	IBOutlet		NSButton						*button_removeContact;
 	
 	AIListObject									*displayedObject;
-	NSMutableArray									*loadedPanes;
+	NSMutableDictionary								*loadedPanes;
 
 	ESContactInfoListController						*contactListController;
 }

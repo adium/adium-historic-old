@@ -23,7 +23,7 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import "AIChatController.h"
+#import "AIChatControllerProtocol.h"
 
 @interface ESFileTransferRequestPromptController (PRIVATE)
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer

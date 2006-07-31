@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIAccountListPreferences.h"
 #import "AIContactController.h"
 #import "AIStatusController.h"
@@ -50,7 +50,7 @@
 /*!
  * @brief Preference pane properties
  */
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_Accounts;
 }
 - (NSString *)label{
@@ -439,7 +439,7 @@
 			} else if ([[account statusObjectForKey:@"Online"] boolValue]) {
 				title = AILocalizedString(@"Online",nil);
 			} else {
-				title = STATUS_DESCRIPTION_OFFLINE;
+				title = [[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_OFFLINE];
 			}
 
 		} else {

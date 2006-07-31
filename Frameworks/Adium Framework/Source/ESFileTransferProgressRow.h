@@ -49,7 +49,7 @@
 			   heightChangedFrom:(float)oldHeight
 							  to:(float)newHeight;
 
-- (FileTransferType)type;
+- (AIFileTransferType)type;
 
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent;
 

@@ -16,7 +16,7 @@
 
 #import "ESWebKitMessageViewPreferences.h"
 
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
@@ -67,7 +67,7 @@
 /*!
  * @brief Preference pane properties
  */
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_Messages;
 }
 - (NSString *)label{

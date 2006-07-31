@@ -47,7 +47,7 @@
 // This comes from http://wafflesoftware.net/shortcut/
 
 //Preference pane properties
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_General;
 }
 - (NSString *)label{

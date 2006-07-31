@@ -7,7 +7,7 @@
 
 #import "AIGuestAccountWindowController.h"
 #import "AIEditAccountWindowController.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import "AIServiceMenu.h"

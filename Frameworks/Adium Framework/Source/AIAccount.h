@@ -35,6 +35,27 @@
 
 #define	Adium_RequestImmediateDynamicContentUpdate	@"Adium_RequestImmediateDynamicContentUpdate"
 
+//Proxy
+#define KEY_ACCOUNT_PROXY_ENABLED		@"Proxy Enabled"
+#define KEY_ACCOUNT_PROXY_TYPE			@"Proxy Type"
+#define KEY_ACCOUNT_PROXY_HOST			@"Proxy Host"
+#define KEY_ACCOUNT_PROXY_PORT			@"Proxy Port"
+#define KEY_ACCOUNT_PROXY_USERNAME		@"Proxy Username"
+#define KEY_ACCOUNT_PROXY_PASSWORD		@"Proxy Password"
+
+//Proxy types
+typedef enum
+{
+	Adium_Proxy_HTTP,
+	Adium_Proxy_SOCKS4,
+	Adium_Proxy_SOCKS5,
+	Adium_Proxy_Default_HTTP,
+	Adium_Proxy_Default_SOCKS4,
+	Adium_Proxy_Default_SOCKS5,
+	Adium_Proxy_None
+} AdiumProxyType;
+
+//Privacy
 typedef enum {
     AIPrivacyTypePermit = 0,
     AIPrivacyTypeDeny

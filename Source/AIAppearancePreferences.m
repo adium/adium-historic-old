@@ -63,7 +63,7 @@ typedef enum {
 /*!
  * @brief Preference pane properties
  */
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_Appearance;
 }
 - (NSString *)label{
@@ -163,7 +163,7 @@ typedef enum {
 			int windowMode = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 			BOOL horizontalAutosize = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
 			
-			if (windowMode == WINDOW_STYLE_STANDARD) {
+			if (windowMode == AIContactListWindowStyleStandard) {
 				//In standard mode, disable the horizontal autosizing slider if horiztonal autosizing is off
 				[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum Width:",nil)];
 				[slider_horizontalWidth setEnabled:horizontalAutosize];
@@ -405,20 +405,20 @@ typedef enum {
 	NSMenu	*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
 
 	[self _addWindowStyleOption:AILocalizedString(@"Regular Window",nil)
-						withTag:WINDOW_STYLE_STANDARD
+						withTag:AIContactListWindowStyleStandard
 						 toMenu:menu];
 	[menu addItem:[NSMenuItem separatorItem]];
 	[self _addWindowStyleOption:AILocalizedString(@"Borderless Window",nil)
-						withTag:WINDOW_STYLE_BORDERLESS
+						withTag:AIContactListWindowStyleBorderless
 						 toMenu:menu];
 	[self _addWindowStyleOption:AILocalizedString(@"Group Bubbles",nil)
-						withTag:WINDOW_STYLE_MOCKIE
+						withTag:AIContactListWindowStyleGroupBubbles
 						 toMenu:menu];
 	[self _addWindowStyleOption:AILocalizedString(@"Contact Bubbles",nil)
-						withTag:WINDOW_STYLE_PILLOWS
+						withTag:AIContactListWindowStyleContactBubbles
 						 toMenu:menu];
 	[self _addWindowStyleOption:AILocalizedString(@"Contact Bubbles (To Fit)",nil)
-						withTag:WINDOW_STYLE_PILLOWS_FITTED
+						withTag:AIContactListWindowStyleContactBubbles_Fitted
 						 toMenu:menu];
 
 	return [menu autorelease];

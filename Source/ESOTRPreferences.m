@@ -15,7 +15,7 @@
  */
 
 #import "ESOTRPreferences.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import "AIAccountMenu.h"
@@ -37,7 +37,7 @@
 @implementation ESOTRPreferences
 
 //Preference pane properties
-- (PREFERENCE_CATEGORY)category
+- (AIPreferenceCategory)category
 {
     return AIPref_Advanced;
 }

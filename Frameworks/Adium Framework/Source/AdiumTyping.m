@@ -29,7 +29,6 @@
 #define DELAY_BEFORE_CLEARING_TYPING	2.0		//Wait 2 seconds before clearing the typing flag
 
 @interface AdiumTyping (PRIVATE)
-- (void)_userIsTypingContentForChat:(AIChat *)chat hasEnteredText:(NSNumber *)hasEnteredTextNumber;
 - (void)setTypingState:(AITypingState)typingState ofChat:(AIChat *)chat;
 - (void)monitorTypingInChat:(AIChat *)chat;
 - (void)stopMonitoringTypingInChat:(AIChat *)chat;
@@ -69,8 +68,8 @@
 /*!
  * @brief Update the typing status of a chat
  * 
- * @param chat AIChat where typing has occured
  * @param hasEnteredText YES if there is text entered for the chat
+ * @param chat AIChat where typing has occured
  */
 - (void)userIsTypingContentForChat:(AIChat *)chat hasEnteredText:(BOOL)hasEnteredText
 {

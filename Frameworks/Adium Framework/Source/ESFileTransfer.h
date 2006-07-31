@@ -25,8 +25,8 @@
 @class AIAccount, AIListObject, ESFileTransfer;
 
 @protocol FileTransferDelegate
--(void)fileTransfer:(ESFileTransfer *)fileTransfer didSetType:(FileTransferType)type;
--(void)fileTransfer:(ESFileTransfer *)fileTransfer didSetStatus:(FileTransferStatus)status;
+-(void)fileTransfer:(ESFileTransfer *)fileTransfer didSetType:(AIFileTransferType)type;
+-(void)fileTransfer:(ESFileTransfer *)fileTransfer didSetStatus:(AIFileTransferStatus)status;
 -(void)fileTransfer:(ESFileTransfer *)fileTransfer didSetSize:(unsigned long long)size;
 -(void)fileTransfer:(ESFileTransfer *)fileTransfer didSetLocalFilename:(NSString *)inLocalFilename;
 -(void)gotUpdateForFileTransfer:(ESFileTransfer *)fileTransfer;
@@ -40,14 +40,14 @@
     float						percentDone;
     unsigned long long			size;
     unsigned long long			bytesSent;
-    FileTransferType			type;
-	FileTransferStatus			status;
+    AIFileTransferType			type;
+	AIFileTransferStatus			status;
 	
 	id <FileTransferDelegate>   delegate;
 }
 
-+ (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(FileTransferType)t;
-- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(FileTransferType)t;
++ (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)t;
+- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)t;
 
 - (AIListContact *)contact;
 - (AIAccount<AIAccount_Files> *)account;
@@ -63,11 +63,11 @@
 - (void)setSize:(unsigned long long)inSize;
 - (unsigned long long)size;
 
-- (void)setFileTransferType:(FileTransferType)inType;
-- (FileTransferType)fileTransferType;
+- (void)setFileTransferType:(AIFileTransferType)inType;
+- (AIFileTransferType)fileTransferType;
 
-- (void)setStatus:(FileTransferStatus)inStatus;
-- (FileTransferStatus)status;
+- (void)setStatus:(AIFileTransferStatus)inStatus;
+- (AIFileTransferStatus)status;
 
 - (void)setPercentDone:(float)inPercent bytesSent:(unsigned long long)inBytesSent;
 - (float)percentDone;
