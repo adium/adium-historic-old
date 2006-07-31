@@ -43,7 +43,7 @@
 
 #define XML_APPENDER_BLOCK_SIZE 4096
 
-#define XML_MARKER @"<?xml version=\"1.0\"?>"
+#define XML_MARKER @"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
 enum {
 	xmlMarkerLength = 21,
 	failedUtf8BomLength = 6

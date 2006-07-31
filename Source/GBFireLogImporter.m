@@ -208,15 +208,18 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	mySN = nil;
 	date = nil;
 	parser = NULL;
+	encryption = nil;
 	
 	eventTranslate = [[NSDictionary alloc] initWithObjectsAndKeys:
-		@"formatted_user_id/changed", @"newNickname",
-		@"channeltopic/channeltopicchanged", @"topicChanged",
-		@"userpermissions/promoted", @"memberPromoted",
-		@"userpermissions/demoted", @"memberDemoted",
-		@"userpermissions/voiced", @"memberVoiced",
-		@"userpermissions/devoiced", @"memberDevoiced",
-		@"userpermissions/kicked", @"memberKicked",
+		@"userJoined", @"memberJoined",
+		@"userParted", @"memberParted",
+		@"userFormattedIdChanged", @"newNickname",
+		@"channelTopicChanged", @"topicChanged",
+		@"userPermissions/Promoted", @"memberPromoted",
+		@"userPermissions/Demoted", @"memberDemoted",
+		@"userPermissions/Voiced", @"memberVoiced",
+		@"userPermissions/Devoiced", @"memberDevoiced",
+		@"userKicked", @"memberKicked",
 		nil];
 		
 	return self;
@@ -268,6 +271,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	[sender release];
 	[mySN release];
 	[date release];
+	[encryption release];
 	[super dealloc];
 }
 
@@ -324,11 +328,12 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					}
 				}
 				NSMutableString *chatTag = [NSMutableString stringWithFormat:@"%@\n<chat", XML_MARKER];
+				[chatTag appendString:@" xmlns=\"http://purl.org/net/ulf/ns/0.4-02\""];
 				if(mySN != nil)
 					[chatTag appendFormat:@" account=\"%@\"", mySN];
 				if(service != nil)
 					[chatTag appendFormat:@" service=\"%@\"", service];
-				[chatTag appendString:@" version=\"0.4\" xmlns=\"http://www.adiumx.com/chatlog\">\n"];
+				[chatTag appendString:@">\n"];
 				[outputFileHandle writeData:[chatTag dataUsingEncoding:NSUTF8StringEncoding]];
 			}
 			break;
@@ -355,6 +360,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					autoResponse = YES;
 				else
 					autoResponse = NO;
+				[encryption release];
+				encryption = [[attributes objectForKey:@"security"] retain];
 				
 				state = XML_STATE_MESSAGE;
 			}
@@ -449,6 +456,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					[outMessage appendFormat:@" sender=\"%@\"", sender];
 				if(date != nil)
 					[outMessage appendFormat:@" time=\"%@\"", [date ISO8601DateString]];
+				if([encryption length])
+					[outMessage appendFormat:@" encryption=\"%@\"", encryption];
 				if([message length])
 					[outMessage appendFormat:@">%@</message>\n", message];
 				else
@@ -494,12 +503,16 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					//now we have to parse all these
 					NSString *type = nil;
 					int parseMessageIndex = 0;
+					BOOL idle = NO;
 					if(message != nil)
 					{
 						if((parseMessageIndex = [message rangeOfString:@"changed status to Idle"].location) != NSNotFound)
-							type = @"idle";
+						{
+							type = @"online";
+							idle = YES;
+						}
 						else if((parseMessageIndex = [message rangeOfString:@"status to Available"].location) != NSNotFound)
-							type = @"available";
+							type = @"online";
 						else if((parseMessageIndex = [message rangeOfString:@"status to Away"].location) != NSNotFound)
 							type = @"away";
 						else if((parseMessageIndex = [message rangeOfString:@"status to Busy"].location) != NSNotFound)
@@ -539,6 +552,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 							[outMessage appendFormat:@" sender=\"%@\"", sender];
 						if(date != nil)
 							[outMessage appendFormat:@" time=\"%@\"", [date ISO8601DateString]];
+						if(idle)
+							[outMessage appendString:@" idleTime=\"10\""];
 
 						NSString *subStr = nil;
 						if(colonIndex != NSNotFound && [message length] > colonIndex + 2)
@@ -551,6 +566,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					}
 				}
 				else if([eventName isEqualToString:@"topicChanged"] ||
+						[eventName isEqualToString:@"memberJoined"] ||
+						[eventName isEqualToString:@"memberParted"] ||
 						[eventName isEqualToString:@"memberPromoted"] ||
 						[eventName isEqualToString:@"memberDemoted"] ||
 						[eventName isEqualToString:@"memberVoiced"] ||

@@ -230,6 +230,7 @@
 		BOOL		chatIsSecure = [inChat isSecure];
 		if (!lastEncryptedNumber || (chatIsSecure != [lastEncryptedNumber boolValue])) {
 			NSString	*message;
+			NSString	*type;
 
 			[inChat setStatusObject:[NSNumber numberWithBool:chatIsSecure]
 							 forKey:@"secureMessagingLastEncryptedState"
@@ -243,17 +244,20 @@
 													[inChat displayName]);
 
 					message = [NSString stringWithFormat:CHAT_NOW_SECURE_UNVERIFIED, displayName];
+					type = @"encryptionStartedUnverified";
 
 				} else {
 					message = CHAT_NOW_SECURE;
+					type = @"encryptionStarted";
 				}
 
 			} else {
 				message = CHAT_NO_LONGER_SECURE;
+				type = @"encryptionEnded";
 			}
 
 			[[adium contentController] displayEvent:message
-											 ofType:@"encryption"
+											 ofType:type
 											 inChat:inChat];
 		}
 	}

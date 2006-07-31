@@ -85,14 +85,14 @@
 		NSString		*type = nil;
 
 		if ([notificationName isEqualToString:FILE_TRANSFER_CANCELLED]) {
-			type = @"file_transfer_cancelled";
+			type = @"fileTransferAborted";
 			message = [NSString stringWithFormat:AILocalizedString(@"%@ cancelled the transfer of %@",nil),[listContact formattedUID],filename];
 
 		} else if ([notificationName isEqualToString:FILE_TRANSFER_FAILED]) {
-			type = @"file_transfer_failed";
+			type = @"fileTransferAborted";
 			message = [NSString stringWithFormat:AILocalizedString(@"The transfer of %@ failed",nil),filename];
 		}else if ([notificationName isEqualToString:FILE_TRANSFER_COMPLETE]) {
-			type = @"file_transfer_complete";
+			type = @"fileTransferCompleted";
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
 				message = [NSString stringWithFormat:AILocalizedString(@"Successfully received %@",nil),filename];
 			} else {
@@ -100,7 +100,7 @@
 			}
 
 		} else if ([notificationName isEqualToString:FILE_TRANSFER_BEGAN]) {
-			type = @"file_transfer_began";
+			type = @"fileTransferStarted";
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
 				message = [NSString stringWithFormat:AILocalizedString(@"Began receiving %@",nil),filename];
 			} else {

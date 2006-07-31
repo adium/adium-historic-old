@@ -64,7 +64,7 @@
 
 #define	LOG_VIEWER_IDENTIFIER		@"LogViewer"
 
-#define XML_LOGGING_VERSION			@"0.4"
+#define XML_LOGGING_NAMESPACE		@"http://purl.org/net/ulf/ns/0.4-02"
 #define NEW_LOGFILE_TIMEOUT			600		//10 minutes
 
 @interface AILoggerPlugin (PRIVATE)
@@ -121,7 +121,7 @@ Class LogViewerWindowControllerClass = NULL;
 	
 	statusTranslation = [[NSDictionary alloc] initWithObjectsAndKeys:
 		@"away",@"away",
-		@"available",@"return_away",
+		@"online",@"return_away",
 		@"online",@"online",
 		@"offline",@"offline",
 		@"idle",@"idle",
@@ -490,11 +490,11 @@ Class LogViewerWindowControllerClass = NULL;
 
 		appender = [AIXMLAppender documentWithPath:fullPath];
 		[appender initializeDocumentWithRootElementName:@"chat"
-										  attributeKeys:[NSArray arrayWithObjects:@"account", @"service", @"version", nil]
+										  attributeKeys:[NSArray arrayWithObjects:@"xmlns", @"account", @"service", nil]
 										attributeValues:[NSArray arrayWithObjects:
+											XML_LOGGING_NAMESPACE,
 											[[chat account] UID],
 											[[chat account] serviceID],
-											XML_LOGGING_VERSION,
 											nil]];
 		[activeAppenders setObject:appender forKey:chatKey];
 	}
