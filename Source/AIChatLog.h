@@ -19,7 +19,7 @@
     NSString	    *from;
     NSString	    *to;
 	NSString		*serviceClass;
-    NSDate			*date;
+    NSCalendarDate	*date;
 	float			rankingPercentage;
 	float			rankingValue;
 }
@@ -32,7 +32,7 @@
 - (NSString *)from;
 - (NSString *)to;
 - (NSString *)serviceClass;
-- (NSDate *)date;
+- (NSCalendarDate *)date;
 - (float)rankingPercentage;
 - (void)setRankingPercentage:(float)inRankingPercentage;
 - (float)rankingValueOnArbitraryScale;

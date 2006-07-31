@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on 3/24/06.
 //
 
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIChatLog.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
@@ -34,6 +34,8 @@
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIUserIcons.h>
+
+#import "AILogDateFormatter.h"
 
 #import "KFTypeSelectTableView.h"
 #import "KNShelfSplitView.h"
@@ -1536,7 +1538,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
 			dateFormatter = [cell formatter];
 			if (!dateFormatter) {
-				dateFormatter = [[NSDateFormatter alloc] init];
+				dateFormatter = [[AILogDateFormatter alloc] init];
 				[dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
 				[cell setFormatter:dateFormatter];
 			}
@@ -1555,10 +1557,10 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
 		} else {
 			NSEnumerator	*enumerator = [[NSArray arrayWithObjects:
-				[[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] 
-										allowNaturalLanguage:NO] autorelease],
-				[[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString] 
-										allowNaturalLanguage:NO] autorelease],
+				[[[AILogDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] 
+										   allowNaturalLanguage:NO] autorelease],
+				[[[AILogDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString] 
+										   allowNaturalLanguage:NO] autorelease],
 				nil] objectEnumerator];
 			float requiredWidth = width + 1;
 			while ((requiredWidth > width) && (dateFormatter = [enumerator nextObject])) {
