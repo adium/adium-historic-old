@@ -13,6 +13,7 @@ import org.jivesoftware.smack.provider.ProviderManager;
 
 public class VCardUpdateExtension implements PacketExtension {
     String photo = null;
+    String nickname = null;
 
     static public void register() {
         ProviderManager.addExtensionProvider("x",
@@ -38,15 +39,22 @@ public class VCardUpdateExtension implements PacketExtension {
         return photo;
     }
     
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+    
+    public String getNickname() {
+        return nickname;
+    }
+    
     public String toXML() {
         StringBuffer buf = new StringBuffer();
-        if(photo != null) {
-            buf.append("<").append(getElementName()).append(" xmlns=\"").append(getNamespace()).append("\">");
+        buf.append("<").append(getElementName()).append(" xmlns=\"").append(getNamespace()).append("\">");
+        if(photo != null)
             buf.append("<photo>").append(photo).append("</photo>");
-            buf.append("</").append(getElementName()).append(">");
-        } else {
-            buf.append("<").append(getElementName()).append(" xmlns=\"").append(getNamespace()).append("\"/>");
-        }
+        if(nickname != null)
+            buf.append("<nickname>").append(nickname).append("</nickname>");
+        buf.append("</").append(getElementName()).append(">");
         return buf.toString();
     }
 }
