@@ -1699,8 +1699,8 @@
 		11AD5360096349D000CA0C6F /* RAFjoscarDebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDebugController.h; path = "Plugins/joscar Service/RAFjoscarDebugController.h"; sourceTree = "<group>"; };
 		11AD5361096349D000CA0C6F /* RAFjoscarDebugController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDebugController.m; path = "Plugins/joscar Service/RAFjoscarDebugController.m"; sourceTree = "<group>"; };
 		11AD53E80963523000CA0C6F /* joscarDebugWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = joscarDebugWindow.nib; path = "Plugins/joscar Service/joscarDebugWindow.nib"; sourceTree = "<group>"; };
-		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = "Frameworks/Adium Framework/Source/AIEmoticonController.h"; sourceTree = "<group>"; };
-		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = "Frameworks/Adium Framework/Source/AIEmoticonController.m"; sourceTree = "<group>"; };
+		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Source/AIEmoticonController.h; sourceTree = "<group>"; };
+		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = Source/AIEmoticonController.m; sourceTree = "<group>"; };
 		11CBDD3D09326F7F00BE7961 /* RAFjoscarAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAccount.h; path = "Plugins/joscar Service/RAFjoscarAccount.h"; sourceTree = "<group>"; };
 		11CBDD3E09326F8000BE7961 /* RAFjoscarAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAccount.m; path = "Plugins/joscar Service/RAFjoscarAccount.m"; sourceTree = "<group>"; };
 		11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAccountViewController.h; path = "Plugins/joscar Service/RAFjoscarAccountViewController.h"; sourceTree = "<group>"; };
@@ -1714,11 +1714,11 @@
 		11F5F46309538B99007DCC49 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/joscar Service/English.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		11F5F70109539C70007DCC49 /* joscarDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = joscarDefaults.plist; path = "Plugins/joscar Service/joscarDefaults.plist"; sourceTree = "<group>"; };
 		11F5F72D0953A227007DCC49 /* joscarClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = joscarClasses.h; path = "Plugins/joscar Service/joscarClasses.h"; sourceTree = SOURCE_ROOT; };
-		3402E01807CB0CE40044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Frameworks/Adium Framework/Resources/English.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
-		3402E01F07CB0D150044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Frameworks/Adium Framework/Resources/English.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
-		3402E02007CB0D150044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Frameworks/Adium Framework/Resources/English.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
+		3402E01807CB0CE40044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
+		3402E01F07CB0D150044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
+		3402E02007CB0D150044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		3402E02D07CB0DBB0044F818 /* AboutBox.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AboutBox.nib; path = Resources/AboutBox.nib; sourceTree = "<group>"; };
-		3402E03607CB0DFB0044F818 /* PreferenceWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = PreferenceWindow.nib; path = "Frameworks/Adium Framework/Resources/PreferenceWindow.nib"; sourceTree = "<group>"; };
+		3402E03607CB0DFB0044F818 /* PreferenceWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = PreferenceWindow.nib; path = Resources/PreferenceWindow.nib; sourceTree = "<group>"; };
 		3402E03F07CB0E400044F818 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3402E04B07CB0EA70044F818 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = "Plugins/Gaim Service/English.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3402E06C07CB0F9D0044F818 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = "Plugins/WebKit Message View/English.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1733,7 +1733,7 @@
 		34058094087EEFA100664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/Gaim Service/Russian.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
 		34058095087EEFA100664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = Resources/Russian.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		34058096087EEFA100664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Frameworks/Adium Framework/Resources/Russian.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
-		34058097087EEFA100664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Frameworks/Adium Framework/Resources/Russian.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
+		34058097087EEFA100664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = Resources/Russian.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34058098087EEFA100664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/Gaim Service/Russian.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		34058099087EEFA100664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/Gaim Service/Russian.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
 		3405809A087EEFA100664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/Gaim Service/Russian.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
@@ -1749,8 +1749,8 @@
 		340580A5087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Russian; path = "Plugins/WebKit Message View/Russian.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		340580A6087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Russian; path = "Plugins/Gaim Service/Russian.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		340580A8087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = Resources/Russian.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		340580A9087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Frameworks/Adium Framework/Resources/Russian.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
-		340580AA087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Frameworks/Adium Framework/Resources/Russian.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
+		340580A9087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = Resources/Russian.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		340580AA087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = Resources/Russian.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		340580AB087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = Resources/Russian.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		340580AC087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = Resources/Russian.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		340580AD087EEFA300664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/WebKit Message View/Russian.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
@@ -1855,21 +1855,21 @@
 		341BDBBA0968BC9A00CF83F5 /* OTR.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OTR.framework; path = Frameworks/OTR.framework; sourceTree = "<group>"; };
 		341BDF5D0969814900CF83F5 /* BadgerDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = BadgerDefaults.plist; path = Resources/BadgerDefaults.plist; sourceTree = SOURCE_ROOT; };
 		341BDF6F0969829E00CF83F5 /* DockUnviewedContentDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = DockUnviewedContentDefaults.plist; path = Resources/DockUnviewedContentDefaults.plist; sourceTree = "<group>"; };
-		341DE02F07FE104700EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Frameworks/Adium Framework/Resources/German.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
-		341DE03407FE105600EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = "Frameworks/Adium Framework/Resources/Japanese.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
-		341DE03507FE106400EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = "Frameworks/Adium Framework/Resources/Japanese.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
-		341DE03607FE106B00EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Frameworks/Adium Framework/Resources/German.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
-		341DE03707FE107300EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = "Frameworks/Adium Framework/Resources/Japanese.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
-		341DE03807FE107900EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Frameworks/Adium Framework/Resources/German.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
+		341DE02F07FE104700EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
+		341DE03407FE105600EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
+		341DE03507FE106400EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		341DE03607FE106B00EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		341DE03707FE107300EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
+		341DE03807FE107900EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		341DE03B07FE10B600EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = Resources/German.lproj/Localizable.strings; sourceTree = "<group>"; };
 		341DE09A07FE111100EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
 		341DE09B07FE111500EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
 		341E88680648FF1B00E0C828 /* ESGaimRequestActionController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimRequestActionController.h; path = "Plugins/Gaim Service/ESGaimRequestActionController.h"; sourceTree = "<group>"; };
 		341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimRequestActionController.m; path = "Plugins/Gaim Service/ESGaimRequestActionController.m"; sourceTree = "<group>"; };
-		3420E65B0611D80000AE67E3 /* ESAccountPasswordPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAccountPasswordPromptController.h; path = "Frameworks/Adium Framework/Source/ESAccountPasswordPromptController.h"; sourceTree = "<group>"; };
-		3420E65C0611D80000AE67E3 /* ESAccountPasswordPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAccountPasswordPromptController.m; path = "Frameworks/Adium Framework/Source/ESAccountPasswordPromptController.m"; sourceTree = "<group>"; };
-		3420E65D0611D80000AE67E3 /* ESProxyPasswordPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESProxyPasswordPromptController.h; path = "Frameworks/Adium Framework/Source/ESProxyPasswordPromptController.h"; sourceTree = "<group>"; };
-		3420E65E0611D80000AE67E3 /* ESProxyPasswordPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESProxyPasswordPromptController.m; path = "Frameworks/Adium Framework/Source/ESProxyPasswordPromptController.m"; sourceTree = "<group>"; };
+		3420E65B0611D80000AE67E3 /* ESAccountPasswordPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAccountPasswordPromptController.h; path = Source/ESAccountPasswordPromptController.h; sourceTree = "<group>"; };
+		3420E65C0611D80000AE67E3 /* ESAccountPasswordPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAccountPasswordPromptController.m; path = Source/ESAccountPasswordPromptController.m; sourceTree = "<group>"; };
+		3420E65D0611D80000AE67E3 /* ESProxyPasswordPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESProxyPasswordPromptController.h; path = Source/ESProxyPasswordPromptController.h; sourceTree = "<group>"; };
+		3420E65E0611D80000AE67E3 /* ESProxyPasswordPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESProxyPasswordPromptController.m; path = Source/ESProxyPasswordPromptController.m; sourceTree = "<group>"; };
 		34210FC0082601AE00A3B0FB /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		34210FCF082601B900A3B0FB /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		342110720826044E00A3B0FB /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
@@ -1917,7 +1917,7 @@
 		3428328707D2643F004F01C9 /* ESStatusPreferencesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESStatusPreferencesPlugin.m; path = Source/ESStatusPreferencesPlugin.m; sourceTree = "<group>"; };
 		3428328C07D2644F004F01C9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		342838ED07D2D004004F01C9 /* Shared Dock Icon Images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Shared Dock Icon Images"; path = "Resources/Shared Dock Icon Images"; sourceTree = "<group>"; };
-		3428B33E0815E1FB00C0D3DC /* emoticon32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = emoticon32.png; path = "Frameworks/Adium Framework/Resources/emoticon32.png"; sourceTree = "<group>"; };
+		3428B33E0815E1FB00C0D3DC /* emoticon32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = emoticon32.png; path = Resources/emoticon32.png; sourceTree = "<group>"; };
 		342910CA07AE228600C815F6 /* AIEmoticonPackPreviewTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPackPreviewTableView.h; path = Plugins/Emoticons/AIEmoticonPackPreviewTableView.h; sourceTree = "<group>"; };
 		342910CB07AE228600C815F6 /* AIEmoticonPackPreviewTableView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPackPreviewTableView.m; path = Plugins/Emoticons/AIEmoticonPackPreviewTableView.m; sourceTree = "<group>"; };
 		342928080628BB4200BB9217 /* ESGaimYahooAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimYahooAccountViewController.h; path = "Plugins/Gaim Service/ESGaimYahooAccountViewController.h"; sourceTree = "<group>"; };
@@ -1936,7 +1936,7 @@
 		342CE131085A089F00005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/Gaim Service/Swedish.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
 		342CE132085A089F00005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		342CE133085A089F00005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Frameworks/Adium Framework/Resources/Swedish.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
-		342CE134085A089F00005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Frameworks/Adium Framework/Resources/Swedish.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
+		342CE134085A089F00005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		342CE135085A089F00005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/Gaim Service/Swedish.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		342CE136085A089F00005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/Gaim Service/Swedish.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
 		342CE137085A089F00005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/Gaim Service/Swedish.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
@@ -1952,8 +1952,8 @@
 		342CE143085A08A100005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Swedish; path = "Plugins/Gaim Service/Swedish.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342CE144085A08A100005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Swedish; path = "Plugins/WebKit Message View/Swedish.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342CE145085A08A100005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		342CE146085A08A200005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Frameworks/Adium Framework/Resources/Swedish.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
-		342CE147085A08A200005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Frameworks/Adium Framework/Resources/Swedish.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
+		342CE146085A08A200005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		342CE147085A08A200005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		342CE148085A08A200005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		342CE149085A08A200005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		342CE14A085A08A300005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/WebKit Message View/Swedish.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
@@ -1966,7 +1966,7 @@
 		342CE15F085A08C500005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Plugins/Gaim Service/Catalan.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
 		342CE160085A08C500005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		342CE161085A08C500005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Frameworks/Adium Framework/Resources/Catalan.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
-		342CE162085A08C500005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Frameworks/Adium Framework/Resources/Catalan.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
+		342CE162085A08C500005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		342CE163085A08C600005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Plugins/Gaim Service/Catalan.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		342CE164085A08C600005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Plugins/Gaim Service/Catalan.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
 		342CE165085A08C600005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Plugins/Gaim Service/Catalan.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
@@ -1982,8 +1982,8 @@
 		342CE170085A08C700005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Catalan; path = "Plugins/Gaim Service/Catalan.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342CE171085A08C700005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Catalan; path = Resources/Catalan.lproj/Localizable.strings; sourceTree = "<group>"; };
 		342CE173085A08C700005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		342CE174085A08C700005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Frameworks/Adium Framework/Resources/Catalan.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
-		342CE175085A08C800005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Frameworks/Adium Framework/Resources/Catalan.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
+		342CE174085A08C700005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		342CE175085A08C800005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		342CE176085A08C800005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		342CE177085A08C800005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		342CE178085A08C800005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Plugins/WebKit Message View/Catalan.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
@@ -2090,13 +2090,13 @@
 		3441615A059FC5340019246B /* ESGaduGaduService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaduGaduService.m; path = "Plugins/Gaim Service/ESGaduGaduService.m"; sourceTree = "<group>"; };
 		34416171059FC55A0019246B /* ESJabberService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESJabberService.h; path = "Plugins/Gaim Service/ESJabberService.h"; sourceTree = "<group>"; };
 		34416172059FC55A0019246B /* ESJabberService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESJabberService.m; path = "Plugins/Gaim Service/ESJabberService.m"; sourceTree = "<group>"; };
-		344161BB0943E0D800BC26ED /* AdiumSetupWizard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumSetupWizard.h; path = "Frameworks/Adium Framework/Source/AdiumSetupWizard.h"; sourceTree = "<group>"; };
-		344161BC0943E0D800BC26ED /* AdiumSetupWizard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumSetupWizard.m; path = "Frameworks/Adium Framework/Source/AdiumSetupWizard.m"; sourceTree = "<group>"; };
+		344161BB0943E0D800BC26ED /* AdiumSetupWizard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumSetupWizard.h; path = Source/AdiumSetupWizard.h; sourceTree = "<group>"; };
+		344161BC0943E0D800BC26ED /* AdiumSetupWizard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumSetupWizard.m; path = Source/AdiumSetupWizard.m; sourceTree = "<group>"; };
 		344161C4059FC72E0019246B /* GaimServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GaimServices.h; path = "Plugins/Gaim Service/GaimServices.h"; sourceTree = "<group>"; };
-		344161CF0943E20D00BC26ED /* AdiumyButler.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AdiumyButler.png; path = "Frameworks/Adium Framework/Resources/AdiumyButler.png"; sourceTree = "<group>"; };
-		344161D30943E22F00BC26ED /* SetupWizard.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = SetupWizard.nib; path = "Frameworks/Adium Framework/Resources/SetupWizard.nib"; sourceTree = "<group>"; };
-		3441623E0943E76400BC26ED /* SetupWizardBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetupWizardBackgroundView.h; path = "Frameworks/Adium Framework/Source/SetupWizardBackgroundView.h"; sourceTree = "<group>"; };
-		3441623F0943E76400BC26ED /* SetupWizardBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetupWizardBackgroundView.m; path = "Frameworks/Adium Framework/Source/SetupWizardBackgroundView.m"; sourceTree = "<group>"; };
+		344161CF0943E20D00BC26ED /* AdiumyButler.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AdiumyButler.png; path = Resources/AdiumyButler.png; sourceTree = "<group>"; };
+		344161D30943E22F00BC26ED /* SetupWizard.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = SetupWizard.nib; path = Resources/SetupWizard.nib; sourceTree = "<group>"; };
+		3441623E0943E76400BC26ED /* SetupWizardBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetupWizardBackgroundView.h; path = Source/SetupWizardBackgroundView.h; sourceTree = "<group>"; };
+		3441623F0943E76400BC26ED /* SetupWizardBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetupWizardBackgroundView.m; path = Source/SetupWizardBackgroundView.m; sourceTree = "<group>"; };
 		344458ED070B5BEF00D8E932 /* ESDebugWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESDebugWindowController.h; path = Source/ESDebugWindowController.h; sourceTree = "<group>"; };
 		344458EE070B5BEF00D8E932 /* ESDebugWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESDebugWindowController.m; path = Source/ESDebugWindowController.m; sourceTree = "<group>"; };
 		3448054E07AC5151006A7F7B /* ESDebugAILog.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESDebugAILog.m; path = "Frameworks/Adium Framework/Source/ESDebugAILog.m"; sourceTree = "<group>"; };
@@ -2113,8 +2113,8 @@
 		344C0D4F06B6D63800DA7200 /* ESApplescriptabilityController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESApplescriptabilityController.h; path = "Frameworks/Adium Framework/Source/ESApplescriptabilityController.h"; sourceTree = "<group>"; };
 		34503C7E058F96C400FB7AD1 /* AIEmoticon.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticon.m; path = "Frameworks/Adium Framework/Source/AIEmoticon.m"; sourceTree = "<group>"; };
 		34503C7F058F96C400FB7AD1 /* AIEmoticon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticon.h; path = "Frameworks/Adium Framework/Source/AIEmoticon.h"; sourceTree = "<group>"; };
-		3452A9F607891C8A00C3C494 /* ESFileTransferRequestPromptController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferRequestPromptController.h; path = "Frameworks/Adium Framework/Source/ESFileTransferRequestPromptController.h"; sourceTree = "<group>"; };
-		3452A9F707891C8A00C3C494 /* ESFileTransferRequestPromptController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferRequestPromptController.m; path = "Frameworks/Adium Framework/Source/ESFileTransferRequestPromptController.m"; sourceTree = "<group>"; };
+		3452A9F607891C8A00C3C494 /* ESFileTransferRequestPromptController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferRequestPromptController.h; path = Source/ESFileTransferRequestPromptController.h; sourceTree = "<group>"; };
+		3452A9F707891C8A00C3C494 /* ESFileTransferRequestPromptController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferRequestPromptController.m; path = Source/ESFileTransferRequestPromptController.m; sourceTree = "<group>"; };
 		34536750059BA8ED00A83D9E /* atos */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = atos; sourceTree = "<group>"; };
 		3456231A0A3771D800E7FC97 /* ESRankingCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESRankingCell.m; path = Source/ESRankingCell.m; sourceTree = "<group>"; };
 		3456231B0A3771D800E7FC97 /* ESRankingCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESRankingCell.h; path = Source/ESRankingCell.h; sourceTree = "<group>"; };
@@ -2130,10 +2130,10 @@
 		345623370A3773C300E7FC97 /* LoggingDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = LoggingDefaults.plist; path = Resources/LoggingDefaults.plist; sourceTree = "<group>"; };
 		3456233D0A3773D000E7FC97 /* AILoggerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILoggerPlugin.m; path = Source/AILoggerPlugin.m; sourceTree = "<group>"; };
 		3456233E0A3773D000E7FC97 /* AILoggerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILoggerPlugin.h; path = Source/AILoggerPlugin.h; sourceTree = "<group>"; };
-		34575E2A07CBA70D004A4FFF /* FileTransferRequestPrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FileTransferRequestPrompt.nib; path = "Frameworks/Adium Framework/Resources/FileTransferRequestPrompt.nib"; sourceTree = "<group>"; };
-		34575E2B07CBA70D004A4FFF /* FileTransferProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FileTransferProgressWindow.nib; path = "Frameworks/Adium Framework/Resources/FileTransferProgressWindow.nib"; sourceTree = "<group>"; };
-		34575E2C07CBA70D004A4FFF /* FileTransferPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = FileTransferPrefs.plist; path = "Frameworks/Adium Framework/Resources/FileTransferPrefs.plist"; sourceTree = "<group>"; };
-		34575E2D07CBA70D004A4FFF /* FileTransferPrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FileTransferPrefs.nib; path = "Frameworks/Adium Framework/Resources/FileTransferPrefs.nib"; sourceTree = "<group>"; };
+		34575E2A07CBA70D004A4FFF /* FileTransferRequestPrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FileTransferRequestPrompt.nib; path = Resources/FileTransferRequestPrompt.nib; sourceTree = "<group>"; };
+		34575E2B07CBA70D004A4FFF /* FileTransferProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FileTransferProgressWindow.nib; path = Resources/FileTransferProgressWindow.nib; sourceTree = "<group>"; };
+		34575E2C07CBA70D004A4FFF /* FileTransferPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = FileTransferPrefs.plist; path = Resources/FileTransferPrefs.plist; sourceTree = "<group>"; };
+		34575E2D07CBA70D004A4FFF /* FileTransferPrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FileTransferPrefs.nib; path = Resources/FileTransferPrefs.nib; sourceTree = "<group>"; };
 		34575E3207CBA7CC004A4FFF /* ContactInfoWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ContactInfoWindow.nib; path = Resources/ContactInfoWindow.nib; sourceTree = "<group>"; };
 		34575E3407CBA7DF004A4FFF /* LoginSelect.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LoginSelect.nib; path = Resources/LoginSelect.nib; sourceTree = "<group>"; };
 		34575E3607CBA874004A4FFF /* DebugWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DebugWindow.nib; path = Resources/DebugWindow.nib; sourceTree = "<group>"; };
@@ -2171,10 +2171,10 @@
 		3458BA89082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
 		3458BA8A082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
 		3458BA8B082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
-		3458BA8C082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Frameworks/Adium Framework/Resources/Danish.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
+		3458BA8C082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = Resources/Danish.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3458BA8D082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = Resources/Danish.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		3458BA8E082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
-		3458BA8F082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Frameworks/Adium Framework/Resources/Danish.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
+		3458BA8F082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = Resources/Danish.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		3458BA90082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		3458BA91082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = Resources/Danish.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
 		3458BA92082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/DCGaimYahooJoinChatView.nib"; sourceTree = "<group>"; };
@@ -2188,7 +2188,7 @@
 		3458BA9B082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = Resources/Danish.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		3458BA9C082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = Resources/Danish.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
 		3458BA9D082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/ESGaimNovellAccountView.nib"; sourceTree = "<group>"; };
-		3458BA9E082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Frameworks/Adium Framework/Resources/Danish.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
+		3458BA9E082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = Resources/Danish.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		3458BA9F082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/DCGaimJabberJoinChatView.nib"; sourceTree = "<group>"; };
 		3458BAA0082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
 		3458BAA1082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
@@ -2236,9 +2236,9 @@
 		345F58C6081990FF001F733C /* LogViewer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LogViewer.png; path = Resources/LogViewer.png; sourceTree = "<group>"; };
 		345F58EB0819967A001F733C /* offlinecontacts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = offlinecontacts.png; path = Resources/offlinecontacts.png; sourceTree = "<group>"; };
 		345F58EC0819967A001F733C /* offlinecontacts_transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = offlinecontacts_transparent.png; path = Resources/offlinecontacts_transparent.png; sourceTree = "<group>"; };
-		345F58F108199727001F733C /* togglegroups_transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = togglegroups_transparent.png; path = "Frameworks/Adium Framework/Resources/togglegroups_transparent.png"; sourceTree = "<group>"; };
-		345F58F208199727001F733C /* togglegroups.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = togglegroups.png; path = "Frameworks/Adium Framework/Resources/togglegroups.png"; sourceTree = "<group>"; };
-		345F590608199746001F733C /* emoticon32_transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = emoticon32_transparent.png; path = "Frameworks/Adium Framework/Resources/emoticon32_transparent.png"; sourceTree = "<group>"; };
+		345F58F108199727001F733C /* togglegroups_transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = togglegroups_transparent.png; path = Resources/togglegroups_transparent.png; sourceTree = "<group>"; };
+		345F58F208199727001F733C /* togglegroups.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = togglegroups.png; path = Resources/togglegroups.png; sourceTree = "<group>"; };
+		345F590608199746001F733C /* emoticon32_transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = emoticon32_transparent.png; path = Resources/emoticon32_transparent.png; sourceTree = "<group>"; };
 		345F5B97081AC4F1001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/AccountProxy.nib; sourceTree = "<group>"; };
 		345F5B98081AC4F1001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
 		345F5B99081AC4F1001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/Gaim Service/zh_TW.lproj/DCGaimJabberJoinChatView.nib"; sourceTree = "<group>"; };
@@ -2246,7 +2246,7 @@
 		345F5B9B081AC4F1001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/Gaim Service/zh_TW.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
 		345F5B9C081AC4F1001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/Gaim Service/zh_TW.lproj/DCGaimYahooJoinChatView.nib"; sourceTree = "<group>"; };
 		345F5B9D081AC4F1001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/Gaim Service/zh_TW.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
-		345F5B9E081AC4F1001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Frameworks/Adium Framework/Resources/zh_TW.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
+		345F5B9E081AC4F1001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		345F5B9F081AC4F1001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/Gaim Service/zh_TW.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		345F5BA0081AC4F1001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/Gaim Service/zh_TW.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
 		345F5BA1081AC4F1001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/Gaim Service/zh_TW.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
@@ -2262,8 +2262,8 @@
 		345F5BAD081AC4F2001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = "Plugins/WebKit Message View/zh_TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		345F5BAF081AC4F2001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = "Plugins/Gaim Service/zh_TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		345F5BB0081AC4F2001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		345F5BB1081AC4F2001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Frameworks/Adium Framework/Resources/zh_TW.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
-		345F5BB2081AC4F3001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Frameworks/Adium Framework/Resources/zh_TW.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
+		345F5BB1081AC4F2001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		345F5BB2081AC4F3001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		345F5BB3081AC4F3001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		345F5BB4081AC4F3001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/WebKit Message View/zh_TW.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		34607EE609B228FE000DB3D2 /* AIContactListNameButton.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactListNameButton.h; path = Source/AIContactListNameButton.h; sourceTree = "<group>"; };
@@ -2278,7 +2278,7 @@
 		3461621206FB482C009181D8 /* ESChatUserListController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESChatUserListController.m; path = "Plugins/Dual Window Interface/ESChatUserListController.m"; sourceTree = "<group>"; };
 		3461621306FB482D009181D8 /* UserList Layout.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "UserList Layout.plist"; path = "Plugins/Dual Window Interface/UserList Layout.plist"; sourceTree = "<group>"; };
 		3465228E08371921009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
-		3465228F08371921009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Frameworks/Adium Framework/Resources/zh_CN.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
+		3465228F08371921009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3465229008371921009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
 		3465229108371921009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
 		3465229208371922009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
@@ -2289,14 +2289,14 @@
 		3465229808371922009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		3465229908371923009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/WebKit Message View/zh_CN.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		3465229A08371923009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/AccountProxy.nib; sourceTree = "<group>"; };
-		3465229B08371923009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Frameworks/Adium Framework/Resources/zh_CN.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
+		3465229B08371923009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		3465229C08371923009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Frameworks/Adium Framework/Resources/zh_CN.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		3465229D08371923009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
 		3465229E08371923009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		3465229F08371923009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/ESGaimMeanwhileAccountView.nib"; sourceTree = "<group>"; };
 		346522A008371923009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
 		346522A108371923009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/ESGaimNovellAccountView.nib"; sourceTree = "<group>"; };
-		346522A208371923009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Frameworks/Adium Framework/Resources/zh_CN.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
+		346522A208371923009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		346522A308371923009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		346522A408371924009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		346522A508371924009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
@@ -2316,16 +2316,16 @@
 		346522C308371997009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
 		346522C408371997009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/Gaim Service/cs.lproj/DCGaimJabberJoinChatView.nib"; sourceTree = "<group>"; };
 		346522C508371997009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
-		346522C608371997009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Frameworks/Adium Framework/Resources/cs.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
+		346522C608371997009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		346522C708371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/Gaim Service/cs.lproj/DCGaimMeanwhileJoinChatView.nib"; sourceTree = "<group>"; };
 		346522C808371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/WebKit Message View/cs.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		346522C908371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/Gaim Service/cs.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		346522CA08371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		346522CC08371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Frameworks/Adium Framework/Resources/cs.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
+		346522CC08371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		346522CD08371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Frameworks/Adium Framework/Resources/cs.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		346522CE08371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		346522CF08371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/Gaim Service/cs.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
-		346522D008371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Frameworks/Adium Framework/Resources/cs.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
+		346522D008371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		346522D108371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		346522D208371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/Gaim Service/cs.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
 		346522D308371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/Gaim Service/cs.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
@@ -2339,7 +2339,7 @@
 		346522FC083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/Gaim Service/Norwegian.lproj/DCGaimYahooJoinChatView.nib"; sourceTree = "<group>"; };
 		346522FD083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/Gaim Service/Norwegian.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
 		346522FE083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		346522FF083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Frameworks/Adium Framework/Resources/Norwegian.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
+		346522FF083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34652300083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		34652301083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/Gaim Service/Norwegian.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
 		34652302083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/AccountProxy.nib; sourceTree = "<group>"; };
@@ -2347,7 +2347,7 @@
 		34652304083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
 		34652305083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		34652306083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/Gaim Service/Norwegian.lproj/ESGaimNovellAccountView.nib"; sourceTree = "<group>"; };
-		34652308083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Frameworks/Adium Framework/Resources/Norwegian.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
+		34652308083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		34652309083719EF009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		3465230A083719EF009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/Gaim Service/Norwegian.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
 		3465230B083719EF009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/Gaim Service/Norwegian.lproj/ESGaimMeanwhileAccountView.nib"; sourceTree = "<group>"; };
@@ -2356,7 +2356,7 @@
 		3465230E083719EF009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/Gaim Service/Norwegian.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
 		3465230F083719EF009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/Gaim Service/Norwegian.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
 		34652310083719EF009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Frameworks/Adium Framework/Resources/Norwegian.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
-		34652311083719EF009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Frameworks/Adium Framework/Resources/Norwegian.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
+		34652311083719EF009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		34652312083719EF009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/Gaim Service/Norwegian.lproj/DCGaimMeanwhileJoinChatView.nib"; sourceTree = "<group>"; };
 		34652313083719EF009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		34652315083719EF009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Norwegian; path = "Plugins/Gaim Service/Norwegian.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2395,8 +2395,8 @@
 		346C9A2405FFE3DF000F5A8A /* ESWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESWebView.m; path = "Plugins/WebKit Message View/ESWebView.m"; sourceTree = "<group>"; };
 		346C9A4005FFE418000F5A8A /* WebKitPrivateDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebKitPrivateDefinitions.h; path = "Plugins/WebKit Message View/WebKitPrivateDefinitions.h"; sourceTree = "<group>"; };
 		346C9DA406004754000F5A8A /* Standard Message View.AdiumPlugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper.cfbundle; path = "Standard Message View.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
-		346CFDC4087B7836009711C8 /* AdiumIdleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumIdleManager.h; path = "Frameworks/Adium Framework/Source/AdiumIdleManager.h"; sourceTree = "<group>"; };
-		346CFDC5087B7836009711C8 /* AdiumIdleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumIdleManager.m; path = "Frameworks/Adium Framework/Source/AdiumIdleManager.m"; sourceTree = "<group>"; };
+		346CFDC4087B7836009711C8 /* AdiumIdleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumIdleManager.h; path = Source/AdiumIdleManager.h; sourceTree = "<group>"; };
+		346CFDC5087B7836009711C8 /* AdiumIdleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumIdleManager.m; path = Source/AdiumIdleManager.m; sourceTree = "<group>"; };
 		346F5CB208A418FA0055C610 /* iTunes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iTunes.png; path = Resources/iTunes.png; sourceTree = "<group>"; };
 		346F5CB308A418FB0055C610 /* CurrentTunes.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = CurrentTunes.scpt; path = Resources/CurrentTunes.scpt; sourceTree = "<group>"; };
 		347065E406015DC5004F0D20 /* WebKit Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = "WebKit Defaults.plist"; path = "Plugins/WebKit Message View/WebKit Defaults.plist"; sourceTree = "<group>"; };
@@ -2430,7 +2430,7 @@
 		347E786A07CA972100350507 /* AddGroup.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AddGroup.nib; path = Resources/AddGroup.nib; sourceTree = "<group>"; };
 		347E787207CA975900350507 /* AddContact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddContact.png; path = Resources/AddContact.png; sourceTree = "<group>"; };
 		347E787307CA975900350507 /* addGroup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = addGroup.png; path = Resources/addGroup.png; sourceTree = "<group>"; };
-		347E787507CA975900350507 /* remove.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = remove.png; path = "Frameworks/Adium Framework/Resources/remove.png"; sourceTree = "<group>"; };
+		347E787507CA975900350507 /* remove.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = remove.png; path = Resources/remove.png; sourceTree = "<group>"; };
 		347E787607CA975900350507 /* importContacts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = importContacts.png; path = Resources/importContacts.png; sourceTree = "<group>"; };
 		347E788707CA978D00350507 /* CBActionSupportPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBActionSupportPlugin.m; path = Source/CBActionSupportPlugin.m; sourceTree = "<group>"; };
 		347E788807CA978D00350507 /* CBActionSupportPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBActionSupportPlugin.h; path = Source/CBActionSupportPlugin.h; sourceTree = "<group>"; };
@@ -2474,11 +2474,11 @@
 		3483928405E68B05002BC6C0 /* AIIconState.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIIconState.m; path = "Frameworks/Adium Framework/Source/AIIconState.m"; sourceTree = "<group>"; };
 		3483928505E68B05002BC6C0 /* AIIconState.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIIconState.h; path = "Frameworks/Adium Framework/Source/AIIconState.h"; sourceTree = "<group>"; };
 		3485D68009EB416300232CC4 /* AdiumLibgaim.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AdiumLibgaim.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3486E8A4097F24A90044C496 /* AdiumAuthorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumAuthorization.h; path = "Frameworks/Adium Framework/Source/AdiumAuthorization.h"; sourceTree = "<group>"; };
-		3486E8A5097F24A90044C496 /* AdiumAuthorization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumAuthorization.m; path = "Frameworks/Adium Framework/Source/AdiumAuthorization.m"; sourceTree = "<group>"; };
-		3486E9DA097F5FCE0044C496 /* AuthorizationRequestWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AuthorizationRequestWindow.nib; path = "Frameworks/Adium Framework/Resources/AuthorizationRequestWindow.nib"; sourceTree = "<group>"; };
-		3486E9E0097F5FE20044C496 /* ESAuthorizationRequestWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAuthorizationRequestWindowController.m; path = "Frameworks/Adium Framework/Source/ESAuthorizationRequestWindowController.m"; sourceTree = "<group>"; };
-		3486E9E1097F5FE20044C496 /* ESAuthorizationRequestWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAuthorizationRequestWindowController.h; path = "Frameworks/Adium Framework/Source/ESAuthorizationRequestWindowController.h"; sourceTree = "<group>"; };
+		3486E8A4097F24A90044C496 /* AdiumAuthorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumAuthorization.h; path = Source/AdiumAuthorization.h; sourceTree = "<group>"; };
+		3486E8A5097F24A90044C496 /* AdiumAuthorization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumAuthorization.m; path = Source/AdiumAuthorization.m; sourceTree = "<group>"; };
+		3486E9DA097F5FCE0044C496 /* AuthorizationRequestWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AuthorizationRequestWindow.nib; path = Resources/AuthorizationRequestWindow.nib; sourceTree = "<group>"; };
+		3486E9E0097F5FE20044C496 /* ESAuthorizationRequestWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAuthorizationRequestWindowController.m; path = Source/ESAuthorizationRequestWindowController.m; sourceTree = "<group>"; };
+		3486E9E1097F5FE20044C496 /* ESAuthorizationRequestWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAuthorizationRequestWindowController.h; path = Source/ESAuthorizationRequestWindowController.h; sourceTree = "<group>"; };
 		348862CD05645E94003C9627 /* ESFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransfer.h; path = "Frameworks/Adium Framework/Source/ESFileTransfer.h"; sourceTree = "<group>"; };
 		348862CE05645E95003C9627 /* ESFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransfer.m; path = "Frameworks/Adium Framework/Source/ESFileTransfer.m"; sourceTree = "<group>"; };
 		348A8A190629A68C00FC6E03 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
@@ -2582,12 +2582,12 @@
 		349E2E8B07A8AF0C00EAB76A /* AIEmoticonPackPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPackPreviewController.h; path = Plugins/Emoticons/AIEmoticonPackPreviewController.h; sourceTree = "<group>"; };
 		349E2E8C07A8AF0C00EAB76A /* AIEmoticonPackPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPackPreviewController.m; path = Plugins/Emoticons/AIEmoticonPackPreviewController.m; sourceTree = "<group>"; };
 		349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Latex Plugin.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
-		349FE2FC074D01D200E36B3B /* ESFileTransferProgressWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferProgressWindowController.m; path = "Frameworks/Adium Framework/Source/ESFileTransferProgressWindowController.m"; sourceTree = "<group>"; };
-		349FE2FD074D01D300E36B3B /* ESFileTransferProgressWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileTransferProgressWindowController.h; path = "Frameworks/Adium Framework/Source/ESFileTransferProgressWindowController.h"; sourceTree = "<group>"; };
-		349FE2FE074D01D300E36B3B /* ESFileTransferProgressView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferProgressView.m; path = "Frameworks/Adium Framework/Source/ESFileTransferProgressView.m"; sourceTree = "<group>"; };
-		349FE2FF074D01D300E36B3B /* ESFileTransferProgressView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileTransferProgressView.h; path = "Frameworks/Adium Framework/Source/ESFileTransferProgressView.h"; sourceTree = "<group>"; };
-		349FE300074D01D300E36B3B /* ESFileTransferProgressRow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferProgressRow.m; path = "Frameworks/Adium Framework/Source/ESFileTransferProgressRow.m"; sourceTree = "<group>"; };
-		349FE301074D01D300E36B3B /* ESFileTransferProgressRow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileTransferProgressRow.h; path = "Frameworks/Adium Framework/Source/ESFileTransferProgressRow.h"; sourceTree = "<group>"; };
+		349FE2FC074D01D200E36B3B /* ESFileTransferProgressWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferProgressWindowController.m; path = Source/ESFileTransferProgressWindowController.m; sourceTree = "<group>"; };
+		349FE2FD074D01D300E36B3B /* ESFileTransferProgressWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileTransferProgressWindowController.h; path = Source/ESFileTransferProgressWindowController.h; sourceTree = "<group>"; };
+		349FE2FE074D01D300E36B3B /* ESFileTransferProgressView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferProgressView.m; path = Source/ESFileTransferProgressView.m; sourceTree = "<group>"; };
+		349FE2FF074D01D300E36B3B /* ESFileTransferProgressView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileTransferProgressView.h; path = Source/ESFileTransferProgressView.h; sourceTree = "<group>"; };
+		349FE300074D01D300E36B3B /* ESFileTransferProgressRow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferProgressRow.m; path = Source/ESFileTransferProgressRow.m; sourceTree = "<group>"; };
+		349FE301074D01D300E36B3B /* ESFileTransferProgressRow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileTransferProgressRow.h; path = Source/ESFileTransferProgressRow.h; sourceTree = "<group>"; };
 		34A250B507E0F822009854E1 /* StatusDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = StatusDefaults.plist; path = Resources/StatusDefaults.plist; sourceTree = "<group>"; };
 		34A29D9406ED68BF00E1366C /* Contact List */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = folder; name = "Contact List"; path = "Resources/Contact List"; sourceTree = "<group>"; };
 		34A30E7508D8EE7800697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/AccountProxy.nib; sourceTree = "<group>"; };
@@ -2600,7 +2600,7 @@
 		34A30E7C08D8EE7900697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/Gaim Service/Spanish.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
 		34A30E7D08D8EE7900697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		34A30E7E08D8EE7900697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Frameworks/Adium Framework/Resources/Spanish.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
-		34A30E7F08D8EE7900697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Frameworks/Adium Framework/Resources/Spanish.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
+		34A30E7F08D8EE7900697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34A30E8008D8EE7900697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/Gaim Service/Spanish.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		34A30E8108D8EE7900697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/Gaim Service/Spanish.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
 		34A30E8208D8EE7900697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/Gaim Service/Spanish.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
@@ -2616,8 +2616,8 @@
 		34A30E9C08D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = Resources/Spanish.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34A30E9D08D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = "Plugins/WebKit Message View/Spanish.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		34A30E9E08D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		34A30EA008D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Frameworks/Adium Framework/Resources/Spanish.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
-		34A30EA108D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Frameworks/Adium Framework/Resources/Spanish.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
+		34A30EA008D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		34A30EA108D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		34A30EA208D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Spanish; path = "Resources/Spanish.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		34A30EA308D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		34A30EA408D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
@@ -2647,8 +2647,8 @@
 		34A48B3706F64B27002C7C5F /* AIBorderlessListOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIBorderlessListOutlineView.h; path = "Plugins/Contact List/AIBorderlessListOutlineView.h"; sourceTree = "<group>"; };
 		34A48B3806F64B27002C7C5F /* AIBorderlessListOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIBorderlessListOutlineView.m; path = "Plugins/Contact List/AIBorderlessListOutlineView.m"; sourceTree = "<group>"; };
 		34A6E9AB07D635B100972830 /* French */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = French; path = Resources/French.lproj/Localizable.strings; sourceTree = "<group>"; };
-		34A6E9B807D6365000972830 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = "Frameworks/Adium Framework/Resources/French.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
-		34A6E9BA07D6365A00972830 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = "Frameworks/Adium Framework/Resources/French.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
+		34A6E9B807D6365000972830 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		34A6E9BA07D6365A00972830 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		34A6F68207D65D5B00972830 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		34A6FAD407D6F3A600972830 /* ESEventSoundAlertDetailPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESEventSoundAlertDetailPane.h; path = Source/ESEventSoundAlertDetailPane.h; sourceTree = "<group>"; };
 		34A6FAD507D6F3A600972830 /* AIEventSoundsPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEventSoundsPlugin.m; path = Source/AIEventSoundsPlugin.m; sourceTree = "<group>"; };
@@ -2657,14 +2657,14 @@
 		34A6FB2507D6F97B00972830 /* EventSoundContactAlert.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EventSoundContactAlert.nib; path = Resources/EventSoundContactAlert.nib; sourceTree = "<group>"; };
 		34A6FB2B07D6F98600972830 /* SoundAlert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SoundAlert.png; path = Resources/SoundAlert.png; sourceTree = "<group>"; };
 		34A6FB2C07D6F98600972830 /* SoundFileIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SoundFileIcon.png; path = Resources/SoundFileIcon.png; sourceTree = "<group>"; };
-		34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = FormattingDefaults.plist; path = "Frameworks/Adium Framework/Resources/FormattingDefaults.plist"; sourceTree = "<group>"; };
+		34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = FormattingDefaults.plist; path = Resources/FormattingDefaults.plist; sourceTree = "<group>"; };
 		34A6FE7807D7E06A00972830 /* KFTypeSelectTableView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = KFTypeSelectTableView.m; path = "Frameworks/Adium Framework/Source/KFTypeSelectTableView.m"; sourceTree = "<group>"; };
 		34A6FE7907D7E06A00972830 /* KFTypeSelectTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KFTypeSelectTableView.h; path = "Frameworks/Adium Framework/Source/KFTypeSelectTableView.h"; sourceTree = "<group>"; };
 		34A81DB2093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/WebKit Message View/pl.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		34A81DB3093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		34A81DB4093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
-		34A81DB5093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Frameworks/Adium Framework/Resources/pl.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
-		34A81DB6093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Frameworks/Adium Framework/Resources/pl.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
+		34A81DB5093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
+		34A81DB6093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		34A81DB8093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
 		34A81DBB093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = Resources/pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34A81DBC093CE92200B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Plugins/WebKit Message View/pl.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2682,7 +2682,7 @@
 		34A81DC8093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
 		34A81DC9093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
 		34A81DCA093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
-		34A81DCB093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Frameworks/Adium Framework/Resources/pl.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
+		34A81DCB093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34A81DCC093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Frameworks/Adium Framework/Resources/pl.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		34A81DCD093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		34A81DCE093CE92300B0E93D /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/Gaim Service/pl.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
@@ -2699,8 +2699,8 @@
 		34A81DF0093CE96300B0E93D /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_CA; path = Resources/en_CA.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		34A81DF5093CE98F00B0E93D /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_CA; path = Resources/en_CA.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34A81DFB093CE99F00B0E93D /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_CA; path = "Plugins/WebKit Message View/en_CA.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
-		34AA35D9095CCA4D003B56DB /* AdiumDisconnectionErrorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumDisconnectionErrorController.h; path = "Frameworks/Adium Framework/Source/AdiumDisconnectionErrorController.h"; sourceTree = "<group>"; };
-		34AA35DA095CCA4D003B56DB /* AdiumDisconnectionErrorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumDisconnectionErrorController.m; path = "Frameworks/Adium Framework/Source/AdiumDisconnectionErrorController.m"; sourceTree = "<group>"; };
+		34AA35D9095CCA4D003B56DB /* AdiumDisconnectionErrorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumDisconnectionErrorController.h; path = Source/AdiumDisconnectionErrorController.h; sourceTree = "<group>"; };
+		34AA35DA095CCA4D003B56DB /* AdiumDisconnectionErrorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumDisconnectionErrorController.m; path = Source/AdiumDisconnectionErrorController.m; sourceTree = "<group>"; };
 		34AA366A095CE124003B56DB /* AIStatusDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusDefines.h; path = "Frameworks/Adium Framework/Source/AIStatusDefines.h"; sourceTree = "<group>"; };
 		34AC2E9F0934FAE100393D7A /* AIStatusMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusMenu.h; path = "Frameworks/Adium Framework/Source/AIStatusMenu.h"; sourceTree = "<group>"; };
 		34AC2EA00934FAE100393D7A /* AIStatusMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStatusMenu.m; path = "Frameworks/Adium Framework/Source/AIStatusMenu.m"; sourceTree = "<group>"; };
@@ -2718,12 +2718,12 @@
 		34B271EC0839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Frameworks/Adium Framework/Resources/is.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		34B271ED0839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		34B271EE0839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
-		34B271F00839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Frameworks/Adium Framework/Resources/is.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
+		34B271F00839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		34B271F10839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
 		34B271F20839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		34B271F30839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		34B271F40839E8E40092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
-		34B271F50839E8E40092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Frameworks/Adium Framework/Resources/is.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
+		34B271F50839E8E40092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34B271F60839E8E40092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		34B271F70839E8E40092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
 		34B271F80839E8E40092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
@@ -2734,7 +2734,7 @@
 		34B271FD0839E8E40092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		34B271FE0839E8E40092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
 		34B271FF0839E8E40092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/ESGaimMeanwhileAccountView.nib"; sourceTree = "<group>"; };
-		34B272000839E8E40092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Frameworks/Adium Framework/Resources/is.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
+		34B272000839E8E40092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		34B272010839E8E40092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
 		34B272020839E8E40092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/DCGaimYahooJoinChatView.nib"; sourceTree = "<group>"; };
 		34B272030839E8E50092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/DCGaimMeanwhileJoinChatView.nib"; sourceTree = "<group>"; };
@@ -2762,16 +2762,16 @@
 		34B7033F076EDB370016E8BA /* CSNewContactAlertWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CSNewContactAlertWindowController.m; path = "Frameworks/Adium Framework/Source/CSNewContactAlertWindowController.m"; sourceTree = "<group>"; };
 		34B70340076EDB370016E8BA /* CSNewContactAlertWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CSNewContactAlertWindowController.h; path = "Frameworks/Adium Framework/Source/CSNewContactAlertWindowController.h"; sourceTree = "<group>"; };
 		34B70341076EDB370016E8BA /* NewAlert.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = NewAlert.nib; path = "Frameworks/Adium Framework/Resources/NewAlert.nib"; sourceTree = "<group>"; };
-		34B82C7F085A85D800864531 /* AIChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIChatController.h; path = "Frameworks/Adium Framework/Source/AIChatController.h"; sourceTree = "<group>"; };
-		34B82C80085A85D800864531 /* AIChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIChatController.m; path = "Frameworks/Adium Framework/Source/AIChatController.m"; sourceTree = "<group>"; };
-		34B82C89085A87B000864531 /* AdiumMessageEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumMessageEvents.h; path = "Frameworks/Adium Framework/Source/AdiumMessageEvents.h"; sourceTree = "<group>"; };
-		34B82C8A085A87B000864531 /* AdiumMessageEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumMessageEvents.m; path = "Frameworks/Adium Framework/Source/AdiumMessageEvents.m"; sourceTree = "<group>"; };
+		34B82C7F085A85D800864531 /* AIChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIChatController.h; path = Source/AIChatController.h; sourceTree = "<group>"; };
+		34B82C80085A85D800864531 /* AIChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIChatController.m; path = Source/AIChatController.m; sourceTree = "<group>"; };
+		34B82C89085A87B000864531 /* AdiumMessageEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumMessageEvents.h; path = Source/AdiumMessageEvents.h; sourceTree = "<group>"; };
+		34B82C8A085A87B000864531 /* AdiumMessageEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumMessageEvents.m; path = Source/AdiumMessageEvents.m; sourceTree = "<group>"; };
 		34B9194A062DEC29004F1223 /* AIGaimOscarAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGaimOscarAccountViewController.m; path = "Plugins/Gaim Service/AIGaimOscarAccountViewController.m"; sourceTree = "<group>"; };
 		34B9194B062DEC29004F1223 /* AIGaimOscarAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGaimOscarAccountViewController.h; path = "Plugins/Gaim Service/AIGaimOscarAccountViewController.h"; sourceTree = "<group>"; };
 		34B9197F062DEC99004F1223 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		34B919C9062DEF15004F1223 /* CBOscarService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBOscarService.h; path = "Plugins/Gaim Service/CBOscarService.h"; sourceTree = "<group>"; };
 		34B919CA062DEF15004F1223 /* CBOscarService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBOscarService.m; path = "Plugins/Gaim Service/CBOscarService.m"; sourceTree = "<group>"; };
-		34B995D9092A832700E31E91 /* FontPanelAccessoryView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FontPanelAccessoryView.nib; path = "Frameworks/Adium Framework/Resources/FontPanelAccessoryView.nib"; sourceTree = "<group>"; };
+		34B995D9092A832700E31E91 /* FontPanelAccessoryView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FontPanelAccessoryView.nib; path = Resources/FontPanelAccessoryView.nib; sourceTree = "<group>"; };
 		34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = "LogViewerDateFilter-Panther.nib"; path = "Resources/LogViewerDateFilter-Panther.nib"; sourceTree = "<group>"; };
 		34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LogViewerDateFilter.nib; path = Resources/LogViewerDateFilter.nib; sourceTree = "<group>"; };
 		34BBE0E907A2ECCF00663CC9 /* adiumGaimConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumGaimConnection.h; path = "Plugins/Gaim Service/adiumGaimConnection.h"; sourceTree = "<group>"; };
@@ -2798,8 +2798,8 @@
 		34BBE1B307A2F36400663CC9 /* adiumGaimCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimCore.m; path = "Plugins/Gaim Service/adiumGaimCore.m"; sourceTree = "<group>"; };
 		34BBE1B807A2F4C500663CC9 /* adiumGaimSignals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumGaimSignals.h; path = "Plugins/Gaim Service/adiumGaimSignals.h"; sourceTree = "<group>"; };
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
-		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = "Frameworks/Adium Framework/Source/AdiumChatEvents.h"; sourceTree = "<group>"; };
-		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = "Frameworks/Adium Framework/Source/AdiumChatEvents.m"; sourceTree = "<group>"; };
+		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
+		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
 		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2921,33 +2921,33 @@
 		34D1897D076114C00075A380 /* AILocalizationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButton.h; path = "Frameworks/Adium Framework/Source/AILocalizationButton.h"; sourceTree = "<group>"; };
 		34D1897E076114C00075A380 /* AILocalizationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButton.m; path = "Frameworks/Adium Framework/Source/AILocalizationButton.m"; sourceTree = "<group>"; };
 		34D189B1076131850075A380 /* AILocalizationAssistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationAssistance.h; path = "Frameworks/Adium Framework/Source/AILocalizationAssistance.h"; sourceTree = "<group>"; };
-		34D2E8670758BB0B0054C56D /* ESFileTransferPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferPreferences.h; path = "Frameworks/Adium Framework/Source/ESFileTransferPreferences.h"; sourceTree = "<group>"; };
-		34D2E8680758BB0B0054C56D /* ESFileTransferPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferPreferences.m; path = "Frameworks/Adium Framework/Source/ESFileTransferPreferences.m"; sourceTree = "<group>"; };
+		34D2E8670758BB0B0054C56D /* ESFileTransferPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferPreferences.h; path = Source/ESFileTransferPreferences.h; sourceTree = "<group>"; };
+		34D2E8680758BB0B0054C56D /* ESFileTransferPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferPreferences.m; path = Source/ESFileTransferPreferences.m; sourceTree = "<group>"; };
 		34D369ED08E7544D00E15E40 /* AIColorPickerSliders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIColorPickerSliders.h; path = "Frameworks/Adium Framework/Source/AIColorPickerSliders.h"; sourceTree = "<group>"; };
 		34D369EE08E7544D00E15E40 /* AIColorPickerSliders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIColorPickerSliders.m; path = "Frameworks/Adium Framework/Source/AIColorPickerSliders.m"; sourceTree = "<group>"; };
 		34D43504051ADC10003B2F21 /* DualWindowDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DualWindowDefaults.plist; path = "Plugins/Dual Window Interface/DualWindowDefaults.plist"; sourceTree = "<group>"; };
-		34D8324807CBD53A006466F2 /* FTProgressRevealRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressRevealRollover.tif; path = "Frameworks/Adium Framework/Resources/FTProgressRevealRollover.tif"; sourceTree = "<group>"; };
-		34D8324907CBD53A006466F2 /* FTProgressRevealRollover_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressRevealRollover_Selected.tif; path = "Frameworks/Adium Framework/Resources/FTProgressRevealRollover_Selected.tif"; sourceTree = "<group>"; };
-		34D8324A07CBD53A006466F2 /* FTProgressStopRollover_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressStopRollover_Selected.tif; path = "Frameworks/Adium Framework/Resources/FTProgressStopRollover_Selected.tif"; sourceTree = "<group>"; };
-		34D8324B07CBD53A006466F2 /* FTProgressStop_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressStop_Selected.tif; path = "Frameworks/Adium Framework/Resources/FTProgressStop_Selected.tif"; sourceTree = "<group>"; };
-		34D8324C07CBD53A006466F2 /* FTProgressStop.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressStop.tif; path = "Frameworks/Adium Framework/Resources/FTProgressStop.tif"; sourceTree = "<group>"; };
-		34D8324D07CBD53B006466F2 /* FTProgressStopRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressStopRollover.tif; path = "Frameworks/Adium Framework/Resources/FTProgressStopRollover.tif"; sourceTree = "<group>"; };
-		34D8324E07CBD53B006466F2 /* FTProgressRevealPressed.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressRevealPressed.tif; path = "Frameworks/Adium Framework/Resources/FTProgressRevealPressed.tif"; sourceTree = "<group>"; };
-		34D8324F07CBD53B006466F2 /* FTProgressReveal_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressReveal_Selected.tif; path = "Frameworks/Adium Framework/Resources/FTProgressReveal_Selected.tif"; sourceTree = "<group>"; };
-		34D8325007CBD53B006466F2 /* FTProgressReveal.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressReveal.tif; path = "Frameworks/Adium Framework/Resources/FTProgressReveal.tif"; sourceTree = "<group>"; };
-		34D8325107CBD53B006466F2 /* FTProgressStopPressed_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressStopPressed_Selected.tif; path = "Frameworks/Adium Framework/Resources/FTProgressStopPressed_Selected.tif"; sourceTree = "<group>"; };
-		34D8325207CBD53B006466F2 /* FTProgressStopPressed.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressStopPressed.tif; path = "Frameworks/Adium Framework/Resources/FTProgressStopPressed.tif"; sourceTree = "<group>"; };
-		34D8325307CBD53B006466F2 /* FTProgressRevealPressed_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressRevealPressed_Selected.tif; path = "Frameworks/Adium Framework/Resources/FTProgressRevealPressed_Selected.tif"; sourceTree = "<group>"; };
-		34D8326107CBD598006466F2 /* AccountPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = AccountPrefs.plist; path = "Frameworks/Adium Framework/Resources/AccountPrefs.plist"; sourceTree = "<group>"; };
-		34D8326207CBD598006466F2 /* DockPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = DockPrefs.plist; path = "Frameworks/Adium Framework/Resources/DockPrefs.plist"; sourceTree = "<group>"; };
-		34D8326307CBD598006466F2 /* sendfile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sendfile.png; path = "Frameworks/Adium Framework/Resources/sendfile.png"; sourceTree = "<group>"; };
-		34D8326407CBD598006466F2 /* SoundPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = SoundPrefs.plist; path = "Frameworks/Adium Framework/Resources/SoundPrefs.plist"; sourceTree = "<group>"; };
-		34D8326507CBD598006466F2 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = info.png; path = "Frameworks/Adium Framework/Resources/info.png"; sourceTree = "<group>"; };
-		34D8326607CBD598006466F2 /* ContactPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = ContactPrefs.plist; path = "Frameworks/Adium Framework/Resources/ContactPrefs.plist"; sourceTree = "<group>"; };
-		34D8326707CBD598006466F2 /* DefaultIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DefaultIcon.png; path = "Frameworks/Adium Framework/Resources/DefaultIcon.png"; sourceTree = "<group>"; };
-		34D8327507CBD5B3006466F2 /* BuiltInStatusStates.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = BuiltInStatusStates.plist; path = "Frameworks/Adium Framework/Resources/BuiltInStatusStates.plist"; sourceTree = "<group>"; };
-		34D8327607CBD5B3006466F2 /* ToolbarPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = ToolbarPrefs.plist; path = "Frameworks/Adium Framework/Resources/ToolbarPrefs.plist"; sourceTree = "<group>"; };
-		34D8328807CBD5D2006466F2 /* keys.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = keys.png; path = "Frameworks/Adium Framework/Resources/keys.png"; sourceTree = "<group>"; };
+		34D8324807CBD53A006466F2 /* FTProgressRevealRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressRevealRollover.tif; path = Resources/FTProgressRevealRollover.tif; sourceTree = "<group>"; };
+		34D8324907CBD53A006466F2 /* FTProgressRevealRollover_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressRevealRollover_Selected.tif; path = Resources/FTProgressRevealRollover_Selected.tif; sourceTree = "<group>"; };
+		34D8324A07CBD53A006466F2 /* FTProgressStopRollover_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressStopRollover_Selected.tif; path = Resources/FTProgressStopRollover_Selected.tif; sourceTree = "<group>"; };
+		34D8324B07CBD53A006466F2 /* FTProgressStop_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressStop_Selected.tif; path = Resources/FTProgressStop_Selected.tif; sourceTree = "<group>"; };
+		34D8324C07CBD53A006466F2 /* FTProgressStop.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressStop.tif; path = Resources/FTProgressStop.tif; sourceTree = "<group>"; };
+		34D8324D07CBD53B006466F2 /* FTProgressStopRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressStopRollover.tif; path = Resources/FTProgressStopRollover.tif; sourceTree = "<group>"; };
+		34D8324E07CBD53B006466F2 /* FTProgressRevealPressed.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressRevealPressed.tif; path = Resources/FTProgressRevealPressed.tif; sourceTree = "<group>"; };
+		34D8324F07CBD53B006466F2 /* FTProgressReveal_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressReveal_Selected.tif; path = Resources/FTProgressReveal_Selected.tif; sourceTree = "<group>"; };
+		34D8325007CBD53B006466F2 /* FTProgressReveal.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressReveal.tif; path = Resources/FTProgressReveal.tif; sourceTree = "<group>"; };
+		34D8325107CBD53B006466F2 /* FTProgressStopPressed_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressStopPressed_Selected.tif; path = Resources/FTProgressStopPressed_Selected.tif; sourceTree = "<group>"; };
+		34D8325207CBD53B006466F2 /* FTProgressStopPressed.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressStopPressed.tif; path = Resources/FTProgressStopPressed.tif; sourceTree = "<group>"; };
+		34D8325307CBD53B006466F2 /* FTProgressRevealPressed_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressRevealPressed_Selected.tif; path = Resources/FTProgressRevealPressed_Selected.tif; sourceTree = "<group>"; };
+		34D8326107CBD598006466F2 /* AccountPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = AccountPrefs.plist; path = Resources/AccountPrefs.plist; sourceTree = "<group>"; };
+		34D8326207CBD598006466F2 /* DockPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = DockPrefs.plist; path = Resources/DockPrefs.plist; sourceTree = "<group>"; };
+		34D8326307CBD598006466F2 /* sendfile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sendfile.png; path = Resources/sendfile.png; sourceTree = "<group>"; };
+		34D8326407CBD598006466F2 /* SoundPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = SoundPrefs.plist; path = Resources/SoundPrefs.plist; sourceTree = "<group>"; };
+		34D8326507CBD598006466F2 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = info.png; path = Resources/info.png; sourceTree = "<group>"; };
+		34D8326607CBD598006466F2 /* ContactPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = ContactPrefs.plist; path = Resources/ContactPrefs.plist; sourceTree = "<group>"; };
+		34D8326707CBD598006466F2 /* DefaultIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DefaultIcon.png; path = Resources/DefaultIcon.png; sourceTree = "<group>"; };
+		34D8327507CBD5B3006466F2 /* BuiltInStatusStates.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = BuiltInStatusStates.plist; path = Resources/BuiltInStatusStates.plist; sourceTree = "<group>"; };
+		34D8327607CBD5B3006466F2 /* ToolbarPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = ToolbarPrefs.plist; path = Resources/ToolbarPrefs.plist; sourceTree = "<group>"; };
+		34D8328807CBD5D2006466F2 /* keys.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = keys.png; path = Resources/keys.png; sourceTree = "<group>"; };
 		34D8328E07CBD5E2006466F2 /* Contact Info List Theme.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "Contact Info List Theme.plist"; path = "Resources/Contact Info List Theme.plist"; sourceTree = "<group>"; };
 		34D8328F07CBD5E2006466F2 /* Contact Info List Layout.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "Contact Info List Layout.plist"; path = "Resources/Contact Info List Layout.plist"; sourceTree = "<group>"; };
 		34D8329707CBD609006466F2 /* AdiumSuite.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = AdiumSuite.scriptTerminology; path = Resources/AdiumSuite.scriptTerminology; sourceTree = "<group>"; };
@@ -2992,7 +2992,7 @@
 		34D836F307CBF960006466F2 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
 		34D836FF07CBF979006466F2 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = /System/Library/Frameworks/AudioUnit.framework; sourceTree = "<absolute>"; };
 		34D8370007CBF97A006466F2 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
-		34DC84280A7EA012003E1636 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = "Frameworks/Adium Framework/Resources/Dutch.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
+		34DC84280A7EA012003E1636 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34DFF46007A5EABF00B92233 /* ESSecureMessagingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSecureMessagingPlugin.h; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.h"; sourceTree = "<group>"; };
 		34DFF46107A5EABF00B92233 /* ESSecureMessagingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSecureMessagingPlugin.m; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.m"; sourceTree = "<group>"; };
 		34DFF52607A62EB000B92233 /* Lock_Unlocked State.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Lock_Unlocked State.png"; path = "Plugins/Secure Messaging/Lock_Unlocked State.png"; sourceTree = "<group>"; };
@@ -3010,8 +3010,8 @@
 		34E0EA0E07CC53FE00A82198 /* AINewMessagePromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AINewMessagePromptController.h; path = Source/AINewMessagePromptController.h; sourceTree = "<group>"; };
 		34E0EB8D07CD349200A82198 /* ESGaimAIMAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimAIMAccount.h; path = "Plugins/Gaim Service/ESGaimAIMAccount.h"; sourceTree = "<group>"; };
 		34E0EB8E07CD349200A82198 /* ESGaimAIMAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimAIMAccount.m; path = "Plugins/Gaim Service/ESGaimAIMAccount.m"; sourceTree = "<group>"; };
-		34E1EDF30A045AA2003C14F1 /* AdiumApplescriptRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumApplescriptRunner.h; path = "Frameworks/Adium Framework/Source/AdiumApplescriptRunner.h"; sourceTree = "<group>"; };
-		34E1EDF40A045AA2003C14F1 /* AdiumApplescriptRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumApplescriptRunner.m; path = "Frameworks/Adium Framework/Source/AdiumApplescriptRunner.m"; sourceTree = "<group>"; };
+		34E1EDF30A045AA2003C14F1 /* AdiumApplescriptRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumApplescriptRunner.h; path = Source/AdiumApplescriptRunner.h; sourceTree = "<group>"; };
+		34E1EDF40A045AA2003C14F1 /* AdiumApplescriptRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumApplescriptRunner.m; path = Source/AdiumApplescriptRunner.m; sourceTree = "<group>"; };
 		34E2A0B907AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAccountNetworkConnectivityPlugin.h; path = Source/ESAccountNetworkConnectivityPlugin.h; sourceTree = "<group>"; };
 		34E2A0BA07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAccountNetworkConnectivityPlugin.m; path = Source/ESAccountNetworkConnectivityPlugin.m; sourceTree = "<group>"; };
 		34E2A0C107AF593B006735BC /* AIAccountMenuAccessPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountMenuAccessPlugin.m; path = Source/AIAccountMenuAccessPlugin.m; sourceTree = "<group>"; };
@@ -3043,9 +3043,9 @@
 		34EA6B300A62F3420053DFEB /* AIApplication.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIApplication.m; path = Source/AIApplication.m; sourceTree = "<group>"; };
 		34F101E307342B4D00890D3B /* ESGaimDotMacAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimDotMacAccount.m; path = "Plugins/Gaim Service/ESGaimDotMacAccount.m"; sourceTree = "<group>"; };
 		34F101E407342B4D00890D3B /* ESGaimDotMacAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimDotMacAccount.h; path = "Plugins/Gaim Service/ESGaimDotMacAccount.h"; sourceTree = "<group>"; };
-		34F1022A0734499600890D3B /* XtraProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtraProgressWindow.nib; path = "Frameworks/Adium Framework/Resources/XtraProgressWindow.nib"; sourceTree = "<group>"; };
-		34F10239073449D500890D3B /* XtrasInstaller.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = XtrasInstaller.m; path = "Frameworks/Adium Framework/Source/XtrasInstaller.m"; sourceTree = "<group>"; };
-		34F1023A073449D500890D3B /* XtrasInstaller.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = XtrasInstaller.h; path = "Frameworks/Adium Framework/Source/XtrasInstaller.h"; sourceTree = "<group>"; };
+		34F1022A0734499600890D3B /* XtraProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtraProgressWindow.nib; path = Resources/XtraProgressWindow.nib; sourceTree = "<group>"; };
+		34F10239073449D500890D3B /* XtrasInstaller.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = XtrasInstaller.m; path = Source/XtrasInstaller.m; sourceTree = "<group>"; };
+		34F1023A073449D500890D3B /* XtrasInstaller.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = XtrasInstaller.h; path = Source/XtrasInstaller.h; sourceTree = "<group>"; };
 		34F1529405E9FDDB00B32FD7 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
 		34F191DB09BA5F43001D6BE2 /* irc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = irc.png; path = "Plugins/IRC Libgaim Plugin/irc.png"; sourceTree = "<group>"; };
 		34F2BD24059CF8070005B238 /* c++filt */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "c++filt"; sourceTree = "<group>"; };
@@ -3092,14 +3092,14 @@
 		34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILogFileUpgradeWindowController.m; path = Source/AILogFileUpgradeWindowController.m; sourceTree = "<group>"; };
 		34FB54DD05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESWebFrameViewAdditions.m; path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.m"; sourceTree = "<group>"; };
 		34FB54DE05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESWebFrameViewAdditions.h; path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.h"; sourceTree = "<group>"; };
-		34FD5BB007F1F85B00687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = "Frameworks/Adium Framework/Resources/Italian.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
-		34FD5BBA07F1F87400687C70 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = "Frameworks/Adium Framework/Resources/French.lproj/ESFileTransferProgressView.nib"; sourceTree = "<group>"; };
+		34FD5BB007F1F85B00687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
+		34FD5BBA07F1F87400687C70 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34FD5BD407F1F8B700687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		34FD5BE307F1F90400687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = "Frameworks/Adium Framework/Resources/Italian.lproj/PasswordPrompt.nib"; sourceTree = "<group>"; };
-		34FD5BE407F1F91400687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = "Frameworks/Adium Framework/Resources/Italian.lproj/ProxyPasswordPrompt.nib"; sourceTree = "<group>"; };
+		34FD5BE307F1F90400687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		34FD5BE407F1F91400687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		34FD5BEB07F1F92900687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Resources/Italian.lproj/Localizable.strings; sourceTree = "<group>"; };
-		34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferController.h; path = "Frameworks/Adium Framework/Source/ESFileTransferController.h"; sourceTree = "<group>"; };
-		34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferController.m; path = "Frameworks/Adium Framework/Source/ESFileTransferController.m"; sourceTree = "<group>"; };
+		34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferController.h; path = Source/ESFileTransferController.h; sourceTree = "<group>"; };
+		34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferController.m; path = Source/ESFileTransferController.m; sourceTree = "<group>"; };
 		3C73F83E04D62A2900A80106 /* AIEmoticonPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPack.h; path = "Frameworks/Adium Framework/Source/AIEmoticonPack.h"; sourceTree = "<group>"; };
 		3C73F83F04D62A2900A80106 /* AIEmoticonPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPack.m; path = "Frameworks/Adium Framework/Source/AIEmoticonPack.m"; sourceTree = "<group>"; };
 		40AC0EEB03B5BF1000A80202 /* ErrorMessageHandlerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ErrorMessageHandlerPlugin.h; path = "Plugins/Error Message Handler/ErrorMessageHandlerPlugin.h"; sourceTree = "<group>"; };
@@ -3164,12 +3164,12 @@
 		4B09D5C105D5265800BC00F0 /* AIMetaContact.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMetaContact.m; path = "Frameworks/Adium Framework/Source/AIMetaContact.m"; sourceTree = "<group>"; };
 		4B13322B0459BAB800A8010A /* AIDockUnviewedContentPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDockUnviewedContentPlugin.h; path = Source/AIDockUnviewedContentPlugin.h; sourceTree = "<group>"; };
 		4B13322C0459BAB800A8010A /* AIDockUnviewedContentPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIDockUnviewedContentPlugin.m; path = Source/AIDockUnviewedContentPlugin.m; sourceTree = "<group>"; };
-		4B14CF24085FBC5800C88949 /* AdiumSound.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumSound.h; path = "Frameworks/Adium Framework/Source/AdiumSound.h"; sourceTree = "<group>"; };
-		4B14CF25085FBC5800C88949 /* AdiumSound.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumSound.m; path = "Frameworks/Adium Framework/Source/AdiumSound.m"; sourceTree = "<group>"; };
-		4B14CF26085FBC5800C88949 /* AdiumSoundSets.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumSoundSets.h; path = "Frameworks/Adium Framework/Source/AdiumSoundSets.h"; sourceTree = "<group>"; };
-		4B14CF27085FBC5900C88949 /* AdiumSoundSets.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumSoundSets.m; path = "Frameworks/Adium Framework/Source/AdiumSoundSets.m"; sourceTree = "<group>"; };
-		4B14CF28085FBC5900C88949 /* AdiumSpeech.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumSpeech.h; path = "Frameworks/Adium Framework/Source/AdiumSpeech.h"; sourceTree = "<group>"; };
-		4B14CF29085FBC5900C88949 /* AdiumSpeech.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumSpeech.m; path = "Frameworks/Adium Framework/Source/AdiumSpeech.m"; sourceTree = "<group>"; };
+		4B14CF24085FBC5800C88949 /* AdiumSound.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumSound.h; path = Source/AdiumSound.h; sourceTree = "<group>"; };
+		4B14CF25085FBC5800C88949 /* AdiumSound.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumSound.m; path = Source/AdiumSound.m; sourceTree = "<group>"; };
+		4B14CF26085FBC5800C88949 /* AdiumSoundSets.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumSoundSets.h; path = Source/AdiumSoundSets.h; sourceTree = "<group>"; };
+		4B14CF27085FBC5900C88949 /* AdiumSoundSets.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumSoundSets.m; path = Source/AdiumSoundSets.m; sourceTree = "<group>"; };
+		4B14CF28085FBC5900C88949 /* AdiumSpeech.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumSpeech.h; path = Source/AdiumSpeech.h; sourceTree = "<group>"; };
+		4B14CF29085FBC5900C88949 /* AdiumSpeech.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumSpeech.m; path = Source/AdiumSpeech.m; sourceTree = "<group>"; };
 		4B18A52B0459F8F200A8010A /* AIContactStatusDockOverlaysPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContactStatusDockOverlaysPlugin.h; path = "Plugins/Contact Status Dock Overlays/AIContactStatusDockOverlaysPlugin.h"; sourceTree = "<group>"; };
 		4B18A52C0459F8F200A8010A /* AIContactStatusDockOverlaysPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContactStatusDockOverlaysPlugin.m; path = "Plugins/Contact Status Dock Overlays/AIContactStatusDockOverlaysPlugin.m"; sourceTree = "<group>"; };
 		4B191D880611C10800E8A4E7 /* License.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = License.txt; sourceTree = "<group>"; };
@@ -3182,8 +3182,8 @@
 		4B25494703F6A32700A8010A /* AIAccountSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountSelectionView.m; path = "Plugins/Dual Window Interface/AIAccountSelectionView.m"; sourceTree = "<group>"; };
 		4B28DDAB0599FED200343093 /* AIAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountViewController.h; path = "Frameworks/Adium Framework/Source/AIAccountViewController.h"; sourceTree = "<group>"; };
 		4B28DDAC0599FED200343093 /* AIAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountViewController.m; path = "Frameworks/Adium Framework/Source/AIAccountViewController.m"; sourceTree = "<group>"; };
-		4B292D3007A9C8E100C5F882 /* AIStatusController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStatusController.h; path = "Frameworks/Adium Framework/Source/AIStatusController.h"; sourceTree = "<group>"; };
-		4B292D3107A9C8E100C5F882 /* AIStatusController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStatusController.m; path = "Frameworks/Adium Framework/Source/AIStatusController.m"; sourceTree = "<group>"; };
+		4B292D3007A9C8E100C5F882 /* AIStatusController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStatusController.h; path = Source/AIStatusController.h; sourceTree = "<group>"; };
+		4B292D3107A9C8E100C5F882 /* AIStatusController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStatusController.m; path = Source/AIStatusController.m; sourceTree = "<group>"; };
 		4B2DC068066F6B1200AD5AAD /* ContactSettingsPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ContactSettingsPane.nib; path = "Plugins/Contact Settings/ContactSettingsPane.nib"; sourceTree = SOURCE_ROOT; };
 		4B2DC06B066F705800AD5AAD /* AIContactSettingsPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactSettingsPane.h; path = "Plugins/Contact Settings/AIContactSettingsPane.h"; sourceTree = SOURCE_ROOT; };
 		4B2DC06C066F705800AD5AAD /* AIContactSettingsPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactSettingsPane.m; path = "Plugins/Contact Settings/AIContactSettingsPane.m"; sourceTree = SOURCE_ROOT; };
@@ -3236,10 +3236,10 @@
 		4B82138F049CA6CC00A8010A /* AIChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIChat.m; path = "Frameworks/Adium Framework/Source/AIChat.m"; sourceTree = "<group>"; };
 		4B82139D049CC3A000A8010A /* AIContentObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContentObject.h; path = "Frameworks/Adium Framework/Source/AIContentObject.h"; sourceTree = "<group>"; };
 		4B82139E049CC3A000A8010A /* AIContentObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContentObject.m; path = "Frameworks/Adium Framework/Source/AIContentObject.m"; sourceTree = "<group>"; };
-		4B8741D10840D25600738987 /* AdiumServices.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumServices.h; path = "Frameworks/Adium Framework/Source/AdiumServices.h"; sourceTree = "<group>"; };
-		4B8741D20840D25600738987 /* AdiumServices.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumServices.m; path = "Frameworks/Adium Framework/Source/AdiumServices.m"; sourceTree = "<group>"; };
-		4B8742480840E3D800738987 /* AdiumPasswords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumPasswords.h; path = "Frameworks/Adium Framework/Source/AdiumPasswords.h"; sourceTree = "<group>"; };
-		4B8742490840E3D800738987 /* AdiumPasswords.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumPasswords.m; path = "Frameworks/Adium Framework/Source/AdiumPasswords.m"; sourceTree = "<group>"; };
+		4B8741D10840D25600738987 /* AdiumServices.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumServices.h; path = Source/AdiumServices.h; sourceTree = "<group>"; };
+		4B8741D20840D25600738987 /* AdiumServices.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumServices.m; path = Source/AdiumServices.m; sourceTree = "<group>"; };
+		4B8742480840E3D800738987 /* AdiumPasswords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumPasswords.h; path = Source/AdiumPasswords.h; sourceTree = "<group>"; };
+		4B8742490840E3D800738987 /* AdiumPasswords.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumPasswords.m; path = Source/AdiumPasswords.m; sourceTree = "<group>"; };
 		4B8C3C970825EAF9004B9F45 /* AIAccountListPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountListPreferences.h; path = Source/AIAccountListPreferences.h; sourceTree = "<group>"; };
 		4B8C3C980825EAF9004B9F45 /* AIAccountListPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountListPreferences.m; path = Source/AIAccountListPreferences.m; sourceTree = "<group>"; };
 		4B8C3CE80825F60B004B9F45 /* AccountListPreferences.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountListPreferences.nib; path = Resources/AccountListPreferences.nib; sourceTree = "<group>"; };
@@ -3330,10 +3330,10 @@
 		4BC15BEA0524CE5E00A8010A /* AIStressTestAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStressTestAccount.m; path = "Plugins/Stress Test/AIStressTestAccount.m"; sourceTree = "<group>"; };
 		4BC15BEB0524CE5E00A8010A /* AIStressTestPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStressTestPlugin.h; path = "Plugins/Stress Test/AIStressTestPlugin.h"; sourceTree = "<group>"; };
 		4BC15BEC0524CE5E00A8010A /* AIStressTestPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStressTestPlugin.m; path = "Plugins/Stress Test/AIStressTestPlugin.m"; sourceTree = "<group>"; };
-		4BC540B608648321003CD69E /* AdiumFormatting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumFormatting.h; path = "Frameworks/Adium Framework/Source/AdiumFormatting.h"; sourceTree = "<group>"; };
-		4BC540B708648322003CD69E /* AdiumFormatting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumFormatting.m; path = "Frameworks/Adium Framework/Source/AdiumFormatting.m"; sourceTree = "<group>"; };
-		4BC5418E08649CC6003CD69E /* AdiumContentFiltering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumContentFiltering.h; path = "Frameworks/Adium Framework/Source/AdiumContentFiltering.h"; sourceTree = "<group>"; };
-		4BC5418F08649CC6003CD69E /* AdiumContentFiltering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumContentFiltering.m; path = "Frameworks/Adium Framework/Source/AdiumContentFiltering.m"; sourceTree = "<group>"; };
+		4BC540B608648321003CD69E /* AdiumFormatting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumFormatting.h; path = Source/AdiumFormatting.h; sourceTree = "<group>"; };
+		4BC540B708648322003CD69E /* AdiumFormatting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumFormatting.m; path = Source/AdiumFormatting.m; sourceTree = "<group>"; };
+		4BC5418E08649CC6003CD69E /* AdiumContentFiltering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumContentFiltering.h; path = Source/AdiumContentFiltering.h; sourceTree = "<group>"; };
+		4BC5418F08649CC6003CD69E /* AdiumContentFiltering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumContentFiltering.m; path = Source/AdiumContentFiltering.m; sourceTree = "<group>"; };
 		4BC5A5D60764F75B0080ECF7 /* AILocalVideoWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILocalVideoWindowController.h; path = "Plugins/Video Chat Interface/AILocalVideoWindowController.h"; sourceTree = "<group>"; };
 		4BC5A5D70764F75B0080ECF7 /* AILocalVideoWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILocalVideoWindowController.m; path = "Plugins/Video Chat Interface/AILocalVideoWindowController.m"; sourceTree = "<group>"; };
 		4BC5A5D80764F75B0080ECF7 /* AIVideoChatInterfacePlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIVideoChatInterfacePlugin.h; path = "Plugins/Video Chat Interface/AIVideoChatInterfacePlugin.h"; sourceTree = "<group>"; };
@@ -3353,8 +3353,8 @@
 		4BD548AF086086B5008DF3CB /* AISoundSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISoundSet.m; path = "Frameworks/Adium Framework/Source/AISoundSet.m"; sourceTree = "<group>"; };
 		4BD62D7E07CE8F240099EBA2 /* AIWebkitMessageViewStyle.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIWebkitMessageViewStyle.h; path = "Plugins/WebKit Message View/AIWebkitMessageViewStyle.h"; sourceTree = "<group>"; };
 		4BD62D7F07CE8F240099EBA2 /* AIWebkitMessageViewStyle.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIWebkitMessageViewStyle.m; path = "Plugins/WebKit Message View/AIWebkitMessageViewStyle.m"; sourceTree = "<group>"; };
-		4BDAB9910861C661009FB73B /* AdiumTyping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumTyping.h; path = "Frameworks/Adium Framework/Source/AdiumTyping.h"; sourceTree = "<group>"; };
-		4BDAB9920861C661009FB73B /* AdiumTyping.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumTyping.m; path = "Frameworks/Adium Framework/Source/AdiumTyping.m"; sourceTree = "<group>"; };
+		4BDAB9910861C661009FB73B /* AdiumTyping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumTyping.h; path = Source/AdiumTyping.h; sourceTree = "<group>"; };
+		4BDAB9920861C661009FB73B /* AdiumTyping.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumTyping.m; path = Source/AdiumTyping.m; sourceTree = "<group>"; };
 		4BDAF69507A1560F00276D68 /* AIAccountProxySettings.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountProxySettings.h; path = Source/AIAccountProxySettings.h; sourceTree = "<group>"; };
 		4BDAF69607A1561000276D68 /* AIAccountProxySettings.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountProxySettings.m; path = Source/AIAccountProxySettings.m; sourceTree = "<group>"; };
 		4BDC17720493C90E00A8010A /* AIContentTyping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContentTyping.h; path = "Frameworks/Adium Framework/Source/AIContentTyping.h"; sourceTree = "<group>"; };
@@ -3363,10 +3363,10 @@
 		4BDD81E807A0B6D30057DB2C /* AccountProfile.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountProfile.nib; path = "Frameworks/Adium Framework/Resources/AccountProfile.nib"; sourceTree = "<group>"; };
 		4BDD81E907A0B6D30057DB2C /* AccountSetup.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountSetup.nib; path = "Frameworks/Adium Framework/Resources/AccountSetup.nib"; sourceTree = "<group>"; };
 		4BDF2C91061E376C00EA75C5 /* Libgaim.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Libgaim.framework; path = "Plugins/Gaim Service/Libgaim.framework"; sourceTree = "<group>"; };
-		4BE3AD1C085F3EDD005919E7 /* AdiumPreferredAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumPreferredAccounts.h; path = "Frameworks/Adium Framework/Source/AdiumPreferredAccounts.h"; sourceTree = "<group>"; };
-		4BE3AD1D085F3EDD005919E7 /* AdiumPreferredAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumPreferredAccounts.m; path = "Frameworks/Adium Framework/Source/AdiumPreferredAccounts.m"; sourceTree = "<group>"; };
-		4BE40C1E0846544000F5790F /* AdiumAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumAccounts.h; path = "Frameworks/Adium Framework/Source/AdiumAccounts.h"; sourceTree = "<group>"; };
-		4BE40C1F0846544000F5790F /* AdiumAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumAccounts.m; path = "Frameworks/Adium Framework/Source/AdiumAccounts.m"; sourceTree = "<group>"; };
+		4BE3AD1C085F3EDD005919E7 /* AdiumPreferredAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumPreferredAccounts.h; path = Source/AdiumPreferredAccounts.h; sourceTree = "<group>"; };
+		4BE3AD1D085F3EDD005919E7 /* AdiumPreferredAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumPreferredAccounts.m; path = Source/AdiumPreferredAccounts.m; sourceTree = "<group>"; };
+		4BE40C1E0846544000F5790F /* AdiumAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumAccounts.h; path = Source/AdiumAccounts.h; sourceTree = "<group>"; };
+		4BE40C1F0846544000F5790F /* AdiumAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumAccounts.m; path = Source/AdiumAccounts.m; sourceTree = "<group>"; };
 		4BE6174B07AC67ED0049C87D /* AIAutoIdlePlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAutoIdlePlugin.h; path = Source/AIAutoIdlePlugin.h; sourceTree = SOURCE_ROOT; };
 		4BE6174C07AC67ED0049C87D /* AIAutoIdlePlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAutoIdlePlugin.m; path = Source/AIAutoIdlePlugin.m; sourceTree = SOURCE_ROOT; };
 		4BE6174D07AC67ED0049C87D /* AIAutoReplyPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAutoReplyPlugin.h; path = Source/AIAutoReplyPlugin.h; sourceTree = SOURCE_ROOT; };
@@ -3430,8 +3430,8 @@
 		6C1C71330A7E0FE700F901F1 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/joscar Service/Spanish.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
 		6C5C3C2605F6532600490341 /* SQL Logger.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SQL Logger.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CE795BD0A6F9CEE00FF3217 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
-		6CF42677057763E100F27FAA /* ESContactAlertsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESContactAlertsController.h; path = "Frameworks/Adium Framework/Source/ESContactAlertsController.h"; sourceTree = "<group>"; };
-		6CF42678057763E200F27FAA /* ESContactAlertsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESContactAlertsController.m; path = "Frameworks/Adium Framework/Source/ESContactAlertsController.m"; sourceTree = "<group>"; };
+		6CF42677057763E100F27FAA /* ESContactAlertsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESContactAlertsController.h; path = Source/ESContactAlertsController.h; sourceTree = "<group>"; };
+		6CF42678057763E200F27FAA /* ESContactAlertsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESContactAlertsController.m; path = Source/ESContactAlertsController.m; sourceTree = "<group>"; };
 		6E4D960606B73979005235E9 /* DCJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCJoinChatViewController.h; path = "Frameworks/Adium Framework/Source/DCJoinChatViewController.h"; sourceTree = "<group>"; };
 		6E4D960706B73979005235E9 /* DCJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCJoinChatViewController.m; path = "Frameworks/Adium Framework/Source/DCJoinChatViewController.m"; sourceTree = "<group>"; };
 		6E4D960806B7397A005235E9 /* DCJoinChatWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCJoinChatWindowController.h; path = "Frameworks/Adium Framework/Source/DCJoinChatWindowController.h"; sourceTree = "<group>"; };
@@ -3492,8 +3492,8 @@
 		9E217B7706A74CA7002A3F27 /* StatusMenuItemDefaultPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = StatusMenuItemDefaultPrefs.plist; path = "Plugins/Status Menu Item/StatusMenuItemDefaultPrefs.plist"; sourceTree = "<group>"; };
 		9E28FDE506ADB30D0041553E /* adiumRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumRed.png; path = "Plugins/Status Menu Item/adiumRed.png"; sourceTree = "<group>"; };
 		9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumRedHighlight.png; path = "Plugins/Status Menu Item/adiumRedHighlight.png"; sourceTree = "<group>"; };
-		9E44248608E11F380015D4DD /* AdiumURLHandling.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumURLHandling.h; path = "Frameworks/Adium Framework/Source/AdiumURLHandling.h"; sourceTree = "<group>"; };
-		9E44248708E11F380015D4DD /* AdiumURLHandling.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumURLHandling.m; path = "Frameworks/Adium Framework/Source/AdiumURLHandling.m"; sourceTree = "<group>"; };
+		9E44248608E11F380015D4DD /* AdiumURLHandling.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumURLHandling.h; path = Source/AdiumURLHandling.h; sourceTree = "<group>"; };
+		9E44248708E11F380015D4DD /* AdiumURLHandling.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumURLHandling.m; path = Source/AdiumURLHandling.m; sourceTree = "<group>"; };
 		9E6A9BF50732CB500032C9F6 /* adiumOfflineHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumOfflineHighlight.png; path = "Plugins/Status Menu Item/adiumOfflineHighlight.png"; sourceTree = "<group>"; };
 		9E6A9BF60732CB500032C9F6 /* adiumOffline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumOffline.png; path = "Plugins/Status Menu Item/adiumOffline.png"; sourceTree = "<group>"; };
 		9E791D9405768B7A00547562 /* CBStatusMenuItemPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBStatusMenuItemPlugin.h; path = "Plugins/Status Menu Item/CBStatusMenuItemPlugin.h"; sourceTree = "<group>"; };
@@ -3501,8 +3501,8 @@
 		9E791DA30577094300547562 /* CBStatusMenuItemController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBStatusMenuItemController.h; path = "Plugins/Status Menu Item/CBStatusMenuItemController.h"; sourceTree = "<group>"; };
 		9E791DA40577094400547562 /* CBStatusMenuItemController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBStatusMenuItemController.m; path = "Plugins/Status Menu Item/CBStatusMenuItemController.m"; sourceTree = "<group>"; };
 		9E791E26057746D100547562 /* adium.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adium.png; path = "Plugins/Status Menu Item/adium.png"; sourceTree = "<group>"; };
-		9E95316703C8E0BE00415B22 /* AIDockController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockController.h; path = "Frameworks/Adium Framework/Source/AIDockController.h"; sourceTree = "<group>"; };
-		9E95316903C8E0C700415B22 /* AIDockController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDockController.m; path = "Frameworks/Adium Framework/Source/AIDockController.m"; sourceTree = "<group>"; };
+		9E95316703C8E0BE00415B22 /* AIDockController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockController.h; path = Source/AIDockController.h; sourceTree = "<group>"; };
+		9E95316903C8E0C700415B22 /* AIDockController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDockController.m; path = Source/AIDockController.m; sourceTree = "<group>"; };
 		9EA125E8055B630900ECF349 /* CBGaimOscarAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBGaimOscarAccount.m; path = "Plugins/Gaim Service/CBGaimOscarAccount.m"; sourceTree = "<group>"; };
 		9EA125EE055B633000ECF349 /* CBGaimOscarAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBGaimOscarAccount.h; path = "Plugins/Gaim Service/CBGaimOscarAccount.h"; sourceTree = "<group>"; };
 		9EB3C52C04F94E84001D1F74 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -3639,38 +3639,38 @@
 		F531836F019E40BB01A80165 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		F55B413B03AB895501A8010A /* AIAccountListPreferencesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountListPreferencesPlugin.h; path = Source/AIAccountListPreferencesPlugin.h; sourceTree = "<group>"; };
 		F55B413C03AB895501A8010A /* AIAccountListPreferencesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountListPreferencesPlugin.m; path = Source/AIAccountListPreferencesPlugin.m; sourceTree = "<group>"; };
-		F55B415C03AB8B5601A8010A /* AIContentController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContentController.h; path = "Frameworks/Adium Framework/Source/AIContentController.h"; sourceTree = "<group>"; };
-		F55B415D03AB8B5601A8010A /* AIContentController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContentController.m; path = "Frameworks/Adium Framework/Source/AIContentController.m"; sourceTree = "<group>"; };
-		F55B416603AB8BFC01A8010A /* AIPasswordPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIPasswordPromptController.m; path = "Frameworks/Adium Framework/Source/AIPasswordPromptController.m"; sourceTree = "<group>"; };
-		F55B416E03AB8C3201A8010A /* AIPasswordPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIPasswordPromptController.h; path = "Frameworks/Adium Framework/Source/AIPasswordPromptController.h"; sourceTree = "<group>"; };
+		F55B415C03AB8B5601A8010A /* AIContentController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContentController.h; path = Source/AIContentController.h; sourceTree = "<group>"; };
+		F55B415D03AB8B5601A8010A /* AIContentController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContentController.m; path = Source/AIContentController.m; sourceTree = "<group>"; };
+		F55B416603AB8BFC01A8010A /* AIPasswordPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIPasswordPromptController.m; path = Source/AIPasswordPromptController.m; sourceTree = "<group>"; };
+		F55B416E03AB8C3201A8010A /* AIPasswordPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIPasswordPromptController.h; path = Source/AIPasswordPromptController.h; sourceTree = "<group>"; };
 		F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBFireLogImporter.h; path = Source/GBFireLogImporter.h; sourceTree = "<group>"; };
 		F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBFireLogImporter.m; path = Source/GBFireLogImporter.m; sourceTree = "<group>"; };
 		F56E0DAF0A4CDF9C008D1EB5 /* FireLogImporter.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FireLogImporter.nib; path = Resources/FireLogImporter.nib; sourceTree = "<group>"; };
 		F570A59803704B6101A8010A /* AIContactInfoWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactInfoWindowController.h; path = Source/AIContactInfoWindowController.h; sourceTree = "<group>"; };
 		F570A59903704B6101A8010A /* AIContactInfoWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactInfoWindowController.m; path = Source/AIContactInfoWindowController.m; sourceTree = "<group>"; };
-		F570A5B503704C6101A8010A /* AIMenuController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMenuController.h; path = "Frameworks/Adium Framework/Source/AIMenuController.h"; sourceTree = "<group>"; };
-		F570A5B603704C6101A8010A /* AIMenuController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMenuController.m; path = "Frameworks/Adium Framework/Source/AIMenuController.m"; sourceTree = "<group>"; };
+		F570A5B503704C6101A8010A /* AIMenuController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMenuController.h; path = Source/AIMenuController.h; sourceTree = "<group>"; };
+		F570A5B603704C6101A8010A /* AIMenuController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMenuController.m; path = Source/AIMenuController.m; sourceTree = "<group>"; };
 		F570A5CD03704D3D01A8010A /* AIMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageViewController.h; path = "Plugins/Dual Window Interface/AIMessageViewController.h"; sourceTree = "<group>"; };
 		F570A5CE03704D3D01A8010A /* AIMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageViewController.m; path = "Plugins/Dual Window Interface/AIMessageViewController.m"; sourceTree = "<group>"; };
 		F570A60503704E7201A8010A /* MessageWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MessageWindow.nib; path = "Plugins/Dual Window Interface/MessageWindow.nib"; sourceTree = "<group>"; };
-		F570A60703704E9701A8010A /* AIToolbarController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIToolbarController.h; path = "Frameworks/Adium Framework/Source/AIToolbarController.h"; sourceTree = "<group>"; };
-		F570A60803704E9701A8010A /* AIToolbarController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIToolbarController.m; path = "Frameworks/Adium Framework/Source/AIToolbarController.m"; sourceTree = "<group>"; };
-		F57938AA033E737001A8010A /* AIAccountController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountController.m; path = "Frameworks/Adium Framework/Source/AIAccountController.m"; sourceTree = "<group>"; };
-		F57938AB033E737001A8010A /* AIContactController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AIContactController.m; path = "Frameworks/Adium Framework/Source/AIContactController.m"; sourceTree = "<group>"; };
-		F57938AC033E737001A8010A /* AIInterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIInterfaceController.m; path = "Frameworks/Adium Framework/Source/AIInterfaceController.m"; sourceTree = "<group>"; };
-		F57938AD033E737001A8010A /* AILoginController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILoginController.m; path = "Frameworks/Adium Framework/Source/AILoginController.m"; sourceTree = "<group>"; };
-		F57938AF033E737001A8010A /* AIPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIPreferenceController.m; path = "Frameworks/Adium Framework/Source/AIPreferenceController.m"; sourceTree = "<group>"; };
-		F57938B0033E737001A8010A /* AISoundController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AISoundController.m; path = "Frameworks/Adium Framework/Source/AISoundController.m"; sourceTree = "<group>"; };
-		F57938BB033E739101A8010A /* AIPreferenceWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIPreferenceWindowController.m; path = "Frameworks/Adium Framework/Source/AIPreferenceWindowController.m"; sourceTree = "<group>"; };
+		F570A60703704E9701A8010A /* AIToolbarController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIToolbarController.h; path = Source/AIToolbarController.h; sourceTree = "<group>"; };
+		F570A60803704E9701A8010A /* AIToolbarController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIToolbarController.m; path = Source/AIToolbarController.m; sourceTree = "<group>"; };
+		F57938AA033E737001A8010A /* AIAccountController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountController.m; path = Source/AIAccountController.m; sourceTree = "<group>"; };
+		F57938AB033E737001A8010A /* AIContactController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AIContactController.m; path = Source/AIContactController.m; sourceTree = "<group>"; };
+		F57938AC033E737001A8010A /* AIInterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIInterfaceController.m; path = Source/AIInterfaceController.m; sourceTree = "<group>"; };
+		F57938AD033E737001A8010A /* AILoginController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILoginController.m; path = Source/AILoginController.m; sourceTree = "<group>"; };
+		F57938AF033E737001A8010A /* AIPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIPreferenceController.m; path = Source/AIPreferenceController.m; sourceTree = "<group>"; };
+		F57938B0033E737001A8010A /* AISoundController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AISoundController.m; path = Source/AISoundController.m; sourceTree = "<group>"; };
+		F57938BB033E739101A8010A /* AIPreferenceWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIPreferenceWindowController.m; path = Source/AIPreferenceWindowController.m; sourceTree = "<group>"; };
 		F57938C2033E73AC01A8010A /* AILoginWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILoginWindowController.m; path = Source/AILoginWindowController.m; sourceTree = "<group>"; };
-		F57938ED033E745F01A8010A /* AIPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIPreferenceController.h; path = "Frameworks/Adium Framework/Source/AIPreferenceController.h"; sourceTree = "<group>"; };
-		F57938EF033E745F01A8010A /* AIAccountController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountController.h; path = "Frameworks/Adium Framework/Source/AIAccountController.h"; sourceTree = "<group>"; };
-		F57938F0033E745F01A8010A /* AIPreferenceWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIPreferenceWindowController.h; path = "Frameworks/Adium Framework/Source/AIPreferenceWindowController.h"; sourceTree = "<group>"; };
-		F57938F3033E745F01A8010A /* AIInterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIInterfaceController.h; path = "Frameworks/Adium Framework/Source/AIInterfaceController.h"; sourceTree = "<group>"; };
-		F57938F6033E745F01A8010A /* AIContactController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactController.h; path = "Frameworks/Adium Framework/Source/AIContactController.h"; sourceTree = "<group>"; };
-		F57938F9033E745F01A8010A /* AISoundController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AISoundController.h; path = "Frameworks/Adium Framework/Source/AISoundController.h"; sourceTree = "<group>"; };
+		F57938ED033E745F01A8010A /* AIPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIPreferenceController.h; path = Source/AIPreferenceController.h; sourceTree = "<group>"; };
+		F57938EF033E745F01A8010A /* AIAccountController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountController.h; path = Source/AIAccountController.h; sourceTree = "<group>"; };
+		F57938F0033E745F01A8010A /* AIPreferenceWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIPreferenceWindowController.h; path = Source/AIPreferenceWindowController.h; sourceTree = "<group>"; };
+		F57938F3033E745F01A8010A /* AIInterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIInterfaceController.h; path = Source/AIInterfaceController.h; sourceTree = "<group>"; };
+		F57938F6033E745F01A8010A /* AIContactController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactController.h; path = Source/AIContactController.h; sourceTree = "<group>"; };
+		F57938F9033E745F01A8010A /* AISoundController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AISoundController.h; path = Source/AISoundController.h; sourceTree = "<group>"; };
 		F57938FA033E745F01A8010A /* AILoginWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILoginWindowController.h; path = Source/AILoginWindowController.h; sourceTree = "<group>"; };
-		F57938FB033E745F01A8010A /* AILoginController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILoginController.h; path = "Frameworks/Adium Framework/Source/AILoginController.h"; sourceTree = "<group>"; };
+		F57938FB033E745F01A8010A /* AILoginController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILoginController.h; path = Source/AILoginController.h; sourceTree = "<group>"; };
 		F579390B033E748F01A8010A /* AIAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccount.m; path = "Frameworks/Adium Framework/Source/AIAccount.m"; sourceTree = "<group>"; };
 		F5793911033E748F01A8010A /* AIContentMessage.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContentMessage.m; path = "Frameworks/Adium Framework/Source/AIContentMessage.m"; sourceTree = "<group>"; };
 		F5793912033E748F01A8010A /* AIPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIPlugin.m; path = "Frameworks/Adium Framework/Source/AIPlugin.m"; sourceTree = "<group>"; };
@@ -3982,9 +3982,10 @@
 				4BE9FFE7055981AB00359B15 /* Adium.pch */,
 				F59DB3D6033EA9CD01A8010A /* AIAdium.h */,
 				F59DB3D7033EA9CD01A8010A /* AIAdium.m */,
-				4B873F330840D14A00738987 /* Public Interface (Adium.framework) */,
-				4BC291FC083D9EDD0075F57D /* Components */,
+				4B873F330840D14A00738987 /* Public Interface */,
+				34DC842E0A7EA94C003E1636 /* Adium UI and Components */,
 				4BD6720906001B2C0049CAF7 /* Plugins (Built In) */,
+				34DC84380A7EAA21003E1636 /* Plugins (Not included in release) */,
 				4BF2E6BE067CB72400743318 /* Xtras (Built In) */,
 				4B7F78BA0597F42D00162728 /* Crash Reporter */,
 				344458F3070B5BF500D8E932 /* Debugging */,
@@ -4032,31 +4033,6 @@
 			name = "User Icon Handling";
 			sourceTree = "<group>";
 		};
-		340D0FD50A7E8B2E0059A3AF /* Controller Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				340D0EB90A7E83D70059A3AF /* AIApplescriptabilityControllerProtocol.h */,
-				340D03A80A7D798A0059A3AF /* AIControllerProtocol.h */,
-				340D03990A7D78FC0059A3AF /* AIAccountControllerProtocol.h */,
-				340D081F0A7DBFE40059A3AF /* AIChatControllerProtocol.h */,
-				340D083F0A7DC1540059A3AF /* AIContactAlertsControllerProtocol.h */,
-				340D0D5B0A7E72030059A3AF /* AIContactControllerProtocol.h */,
-				340D0D630A7E72DA0059A3AF /* AIContentControllerProtocol.h */,
-				340D0D720A7E750E0059A3AF /* AIDockControllerProtocol.h */,
-				340D0DA90A7E76480059A3AF /* AIEmoticonControllerProtocol.h */,
-				340D0DC50A7E76DA0059A3AF /* AIFileTransferControllerProtocol.h */,
-				340D0DFF0A7E7B090059A3AF /* AIInterfaceControllerProtocol.h */,
-				340D0E190A7E7DC30059A3AF /* AILoginControllerProtocol.h */,
-				340D0E1D0A7E7E7B0059A3AF /* AIMenuControllerProtocol.h */,
-				340D0E210A7E7F160059A3AF /* AIPreferenceControllerProtocol.h */,
-				340D0E8A0A7E80000059A3AF /* AISoundControllerProtocol.h */,
-				340D0EA90A7E826C0059A3AF /* AIStatusControllerProtocol.h */,
-				340D0EAF0A7E82F70059A3AF /* AIToolbarControllerProtocol.h */,
-				340D0EC20A7E84680059A3AF /* AIDebugControllerProtocol.h */,
-			);
-			name = "Controller Protocols";
-			sourceTree = "<group>";
-		};
 		340F444F06D87A830072E2FA /* Contact List */ = {
 			isa = PBXGroup;
 			children = (
@@ -4094,6 +4070,7 @@
 				341BD5790965EC4700CF83F5 /* OTRPrefs.nib */,
 				341BD56E0965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib */,
 				341BD56F0965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib */,
+				341BD55C0965E97F00CF83F5 /* ESOTRPreferences.h */,
 				341BD5550965E97F00CF83F5 /* ESOTRPreferences.m */,
 				341BD5560965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.h */,
 				341BD5570965E97F00CF83F5 /* ESOTRPrivateKeyGenerationWindowController.m */,
@@ -4101,7 +4078,6 @@
 				341BD5590965E97F00CF83F5 /* ESOTRUnknownFingerprintController.m */,
 				341BD55A0965E97F00CF83F5 /* ESOTRUnknownFingerprintController.h */,
 				341BD55B0965E97F00CF83F5 /* ESOTRFingerprintDetailsWindowController.m */,
-				341BD55C0965E97F00CF83F5 /* ESOTRPreferences.h */,
 				341BD5660965E99200CF83F5 /* OTRCommon.h */,
 			);
 			name = OTR;
@@ -4636,6 +4612,12 @@
 		347E778507CA825F00350507 /* Messaging */ = {
 			isa = PBXGroup;
 			children = (
+				34B82C7F085A85D800864531 /* AIChatController.h */,
+				34B82C80085A85D800864531 /* AIChatController.m */,
+				F55B415C03AB8B5601A8010A /* AIContentController.h */,
+				F55B415D03AB8B5601A8010A /* AIContentController.m */,
+				11C157D804A88E04008E0C76 /* AIEmoticonController.h */,
+				11C157D904A88E04008E0C76 /* AIEmoticonController.m */,
 				9E4CF9D104AA69B000415B22 /* Action Support */,
 				34F8A7FA05A8927F00577775 /* Applescript Filters */,
 				4BF4813B049A802E00A8010A /* Auto Linking */,
@@ -4660,6 +4642,8 @@
 		347E77A907CA909E00350507 /* Events and Actions */ = {
 			isa = PBXGroup;
 			children = (
+				6CF42677057763E100F27FAA /* ESContactAlertsController.h */,
+				6CF42678057763E200F27FAA /* ESContactAlertsController.m */,
 				34E385FF068FAA5100303451 /* Account Events */,
 				346E640C05153395003B2F21 /* Announcer */,
 				343EAB8306EF857F001CDAFF /* Applescript Contact Alert */,
@@ -5092,6 +5076,34 @@
 			name = "Sound Playing";
 			sourceTree = "<group>";
 		};
+		34DC842E0A7EA94C003E1636 /* Adium UI and Components */ = {
+			isa = PBXGroup;
+			children = (
+				DA4B5CDE080FCC080017BF17 /* CoreComponents.plist */,
+				34E29FCE07AF091C006735BC /* Accounts */,
+				34E2A2FD07B0193B006735BC /* Contacts */,
+				349C6E8207C9728B005EB896 /* Contact List */,
+				347E77A907CA909E00350507 /* Events and Actions */,
+				34E0EA1507CC541A00A82198 /* Interface */,
+				347E778507CA825F00350507 /* Messaging */,
+				4B587C3707ABFCA8001832A9 /* State & Status */,
+				4BCAC53407B59F9C006641B9 /* Other */,
+				4BC291F9083D9EDC0075F57D /* Private classes for the Controllers */,
+				34E6BBE50A78083A0076D7F0 /* Resources */,
+			);
+			name = "Adium UI and Components";
+			sourceTree = "<group>";
+		};
+		34DC84380A7EAA21003E1636 /* Plugins (Not included in release) */ = {
+			isa = PBXGroup;
+			children = (
+				3417D27109C3334900FC413E /* Translator */,
+				34B3241D09B9FF6900029361 /* IRC Libgaim Plugin */,
+				B7AE664D0465778E0051E914 /* SQL Logger */,
+			);
+			name = "Plugins (Not included in release)";
+			sourceTree = "<group>";
+		};
 		34DFF46607A5EAC800B92233 /* Secure Messaging */ = {
 			isa = PBXGroup;
 			children = (
@@ -5115,6 +5127,16 @@
 		34E0EA1507CC541A00A82198 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				9E95316703C8E0BE00415B22 /* AIDockController.h */,
+				9E95316903C8E0C700415B22 /* AIDockController.m */,
+				F57938F3033E745F01A8010A /* AIInterfaceController.h */,
+				F57938AC033E737001A8010A /* AIInterfaceController.m */,
+				F570A5B503704C6101A8010A /* AIMenuController.h */,
+				F570A5B603704C6101A8010A /* AIMenuController.m */,
+				F57938F9033E745F01A8010A /* AISoundController.h */,
+				F57938B0033E737001A8010A /* AISoundController.m */,
+				F570A60703704E9701A8010A /* AIToolbarController.h */,
+				F570A60803704E9701A8010A /* AIToolbarController.m */,
 				D3B4A920052DE51000A8010B /* About Box */,
 				4BAE6D3707CFA09F007E2820 /* Appearance Preferences */,
 				4B9A683D06AEB41C0010BF69 /* Chat Consolidation */,
@@ -5171,6 +5193,8 @@
 		34E29FCE07AF091C006735BC /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
+				F57938EF033E745F01A8010A /* AIAccountController.h */,
+				F57938AA033E737001A8010A /* AIAccountController.m */,
 				F5B53FBF0333ABA701A8010A /* Accounts Preferences */,
 				F510B76D03339ED501A8010A /* Account Menu */,
 				34C188A006CAB36400FF5FF9 /* Account Network Connectivity */,
@@ -5183,6 +5207,8 @@
 		34E2A2FD07B0193B006735BC /* Contacts */ = {
 			isa = PBXGroup;
 			children = (
+				F57938F6033E745F01A8010A /* AIContactController.h */,
+				F57938AB033E737001A8010A /* AIContactController.m */,
 				343C89B005704DEC005E0632 /* Address Book Integration */,
 				4B28907503C1D14200A8010A /* Alias Support */,
 				34C2D31006334A460018E5D2 /* Blocking */,
@@ -5625,6 +5651,8 @@
 		4B587C3707ABFCA8001832A9 /* State & Status */ = {
 			isa = PBXGroup;
 			children = (
+				4B292D3007A9C8E100C5F882 /* AIStatusController.h */,
+				4B292D3107A9C8E100C5F882 /* AIStatusController.m */,
 				347C693D080C8F0200E69674 /* Away Status Window */,
 				3440938707D915D300321BB3 /* Auto-Away */,
 				4BC32F7107AABC3500DDED66 /* Auto-Idle */,
@@ -5779,47 +5807,31 @@
 			path = Other;
 			sourceTree = "<group>";
 		};
-		4B873F330840D14A00738987 /* Public Interface (Adium.framework) */ = {
+		4B873F330840D14A00738987 /* Public Interface */ = {
 			isa = PBXGroup;
 			children = (
-				340D0FD50A7E8B2E0059A3AF /* Controller Protocols */,
-				344C0D4306B6D5E300DA7200 /* Applescriptability */,
-				F57938EF033E745F01A8010A /* AIAccountController.h */,
-				F57938AA033E737001A8010A /* AIAccountController.m */,
-				34B82C7F085A85D800864531 /* AIChatController.h */,
-				34B82C80085A85D800864531 /* AIChatController.m */,
-				6CF42677057763E100F27FAA /* ESContactAlertsController.h */,
-				6CF42678057763E200F27FAA /* ESContactAlertsController.m */,
-				F57938F6033E745F01A8010A /* AIContactController.h */,
-				F57938AB033E737001A8010A /* AIContactController.m */,
-				F55B415C03AB8B5601A8010A /* AIContentController.h */,
-				F55B415D03AB8B5601A8010A /* AIContentController.m */,
-				9E95316703C8E0BE00415B22 /* AIDockController.h */,
-				9E95316903C8E0C700415B22 /* AIDockController.m */,
-				11C157D804A88E04008E0C76 /* AIEmoticonController.h */,
-				11C157D904A88E04008E0C76 /* AIEmoticonController.m */,
-				34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */,
-				34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */,
-				F57938F3033E745F01A8010A /* AIInterfaceController.h */,
-				F57938AC033E737001A8010A /* AIInterfaceController.m */,
-				F57938FB033E745F01A8010A /* AILoginController.h */,
-				F57938AD033E737001A8010A /* AILoginController.m */,
-				F570A5B503704C6101A8010A /* AIMenuController.h */,
-				F570A5B603704C6101A8010A /* AIMenuController.m */,
-				F57938ED033E745F01A8010A /* AIPreferenceController.h */,
-				F57938AF033E737001A8010A /* AIPreferenceController.m */,
-				F57938F9033E745F01A8010A /* AISoundController.h */,
-				F57938B0033E737001A8010A /* AISoundController.m */,
-				4B292D3007A9C8E100C5F882 /* AIStatusController.h */,
-				4B292D3107A9C8E100C5F882 /* AIStatusController.m */,
-				F570A60703704E9701A8010A /* AIToolbarController.h */,
-				F570A60803704E9701A8010A /* AIToolbarController.m */,
+				340D0EB90A7E83D70059A3AF /* AIApplescriptabilityControllerProtocol.h */,
+				340D03A80A7D798A0059A3AF /* AIControllerProtocol.h */,
+				340D03990A7D78FC0059A3AF /* AIAccountControllerProtocol.h */,
+				340D081F0A7DBFE40059A3AF /* AIChatControllerProtocol.h */,
+				340D083F0A7DC1540059A3AF /* AIContactAlertsControllerProtocol.h */,
+				340D0D5B0A7E72030059A3AF /* AIContactControllerProtocol.h */,
+				340D0D630A7E72DA0059A3AF /* AIContentControllerProtocol.h */,
+				340D0D720A7E750E0059A3AF /* AIDockControllerProtocol.h */,
+				340D0DA90A7E76480059A3AF /* AIEmoticonControllerProtocol.h */,
+				340D0DC50A7E76DA0059A3AF /* AIFileTransferControllerProtocol.h */,
+				340D0DFF0A7E7B090059A3AF /* AIInterfaceControllerProtocol.h */,
+				340D0E190A7E7DC30059A3AF /* AILoginControllerProtocol.h */,
+				340D0E1D0A7E7E7B0059A3AF /* AIMenuControllerProtocol.h */,
+				340D0E210A7E7F160059A3AF /* AIPreferenceControllerProtocol.h */,
+				340D0E8A0A7E80000059A3AF /* AISoundControllerProtocol.h */,
+				340D0EA90A7E826C0059A3AF /* AIStatusControllerProtocol.h */,
+				340D0EAF0A7E82F70059A3AF /* AIToolbarControllerProtocol.h */,
+				340D0EC20A7E84680059A3AF /* AIDebugControllerProtocol.h */,
 				F53B9A1302CCEDCA01A8010A /* Adium.Framework */,
-				4BC291F9083D9EDC0075F57D /* Private classes for the Public Interface */,
 				34D8342B07CBE6A4006466F2 /* External Sources */,
-				34E6BBE50A78083A0076D7F0 /* Resources */,
 			);
-			name = "Public Interface (Adium.framework)";
+			name = "Public Interface";
 			sourceTree = "<group>";
 		};
 		4B873F370840D1FB00738987 /* Account */ = {
@@ -5931,7 +5943,7 @@
 			name = "Extended Status";
 			sourceTree = "<group>";
 		};
-		4BC291F9083D9EDC0075F57D /* Private classes for the Public Interface */ = {
+		4BC291F9083D9EDC0075F57D /* Private classes for the Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				4B0149050733D3A4001A4C57 /* AICoreComponentLoader.h */,
@@ -5948,23 +5960,7 @@
 				346CFDBC087B77FB009711C8 /* System (Idle, Connectivity, etc.) */,
 				34E6CEED0A793DE40076D7F0 /* URL and Xtras Installation handling */,
 			);
-			name = "Private classes for the Public Interface";
-			sourceTree = "<group>";
-		};
-		4BC291FC083D9EDD0075F57D /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				DA4B5CDE080FCC080017BF17 /* CoreComponents.plist */,
-				34E29FCE07AF091C006735BC /* Accounts */,
-				34E2A2FD07B0193B006735BC /* Contacts */,
-				349C6E8207C9728B005EB896 /* Contact List */,
-				347E77A907CA909E00350507 /* Events and Actions */,
-				34E0EA1507CC541A00A82198 /* Interface */,
-				347E778507CA825F00350507 /* Messaging */,
-				4B587C3707ABFCA8001832A9 /* State & Status */,
-				4BCAC53407B59F9C006641B9 /* Other */,
-			);
-			name = Components;
+			name = "Private classes for the Controllers";
 			sourceTree = "<group>";
 		};
 		4BC32F7107AABC3500DDED66 /* Auto-Idle */ = {
@@ -6009,6 +6005,13 @@
 		4BCAC53407B59F9C006641B9 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */,
+				34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */,
+				F57938FB033E745F01A8010A /* AILoginController.h */,
+				F57938AD033E737001A8010A /* AILoginController.m */,
+				F57938ED033E745F01A8010A /* AIPreferenceController.h */,
+				F57938AF033E737001A8010A /* AIPreferenceController.m */,
+				344C0D4306B6D5E300DA7200 /* Applescriptability */,
 				83DB8F21061145C400A5C28C /* Version Checker */,
 			);
 			name = Other;
@@ -6054,7 +6057,6 @@
 			isa = PBXGroup;
 			children = (
 				118C52BA091BF05B00219458 /* joscar */,
-				34B3241D09B9FF6900029361 /* IRC Libgaim Plugin */,
 				4B7F278605440C6200CDFC90 /* Gaim */,
 				4947F5BB0655E7C400B791E5 /* Bonjour */,
 				4BA88A4C0524AFD700A8010A /* Stress Test */,
@@ -6065,9 +6067,7 @@
 		4BD672C706001B560049CAF7 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				3417D27109C3334900FC413E /* Translator */,
 				B782F088058BB60B00AF4BBA /* LaTeX Plugin */,
-				B7AE664D0465778E0051E914 /* SQL Logger */,
 			);
 			name = Other;
 			sourceTree = "<group>";
