@@ -32,6 +32,7 @@
 #import "AISoundController.h"
 #import "AIStatusController.h"
 #import "AIToolbarController.h"
+#import "AIJavaController.h"
 #import "ESApplescriptabilityController.h"
 #import "ESContactAlertsController.h"
 #import "ESDebugController.h"
@@ -147,6 +148,9 @@ static NSString	*prefsCategory;
 - (AIStatusController *)statusController{
     return statusController;
 }
+- (AIJavaController *)javaController{
+    return javaController;
+}
 
 //Loaders --------------------------------------------------------------------------------------------------------
 #pragma mark Loaders
@@ -254,6 +258,7 @@ static NSString	*prefsCategory;
 	fileTransferController = [[ESFileTransferController alloc] init];
 	applescriptabilityController = [[ESApplescriptabilityController alloc] init];
 	statusController = [[AIStatusController alloc] init];
+    javaController = [[AIJavaController alloc] init];
 
 	//Finish setting up the preference controller before the components and plugins load so they can read prefs 
 	[preferenceController controllerDidLoad];
@@ -350,6 +355,7 @@ static NSString	*prefsCategory;
     [applescriptabilityController controllerWillClose];
 	[debugController controllerWillClose];
 	[toolbarController controllerWillClose];
+    [javaController controllerWillClose];
     [preferenceController controllerWillClose];			//** Last since other controllers may want to write preferences as they close
 	
 	[self deleteTemporaryFiles];

@@ -32,24 +32,24 @@
 
 + (SmackXVCard*)vCard
 {
-    return [[[NSClassFromString(@"org.jivesoftware.smackx.packet.VCard") alloc] init] autorelease];
+    return [[[[[self classLoader] loadClass:@"org.jivesoftware.smackx.packet.VCard"] alloc] init] autorelease];
 }
 
 + (void)setAvatar:(NSData*)avatar forVCard:(SmackXVCard*)vCard
 {
-    [NSClassFromString(@"net.adium.smackBridge.SmackBridge") setVCardAvatar:vCard :avatar];
+    [[[self classLoader] loadClass:@"net.adium.smackBridge.SmackBridge"] setVCardAvatar:vCard :avatar];
 }
 
 + (SmackVCardUpdateExtension*)VCardUpdateExtensionWithPhotoHash:(NSString*)hash
 {
-    SmackVCardUpdateExtension *ext = [NSClassFromString(@"net.adium.smackBridge.VCardUpdateExtension") newWithSignature:@"()"];
+    SmackVCardUpdateExtension *ext = [[[self classLoader] loadClass:@"net.adium.smackBridge.VCardUpdateExtension"] newWithSignature:@"()"];
     [ext setPhoto:hash];
     return [ext autorelease];
 }
 
 + (BOOL)avatarIsEmpty:(SmackXVCard*)vCard
 {
-    return [NSClassFromString(@"net.adium.smackBridge.SmackBridge") isAvatarEmpty:vCard];
+    return [[[self classLoader] loadClass:@"net.adium.smackBridge.SmackBridge"] isAvatarEmpty:vCard];
 }
 
 @end
@@ -131,14 +131,15 @@
 
 - (void)updateStatus:(NSNotification*)notification
 {
-    NSString *key = [[notification userInfo] objectForKey:SmackXMPPStatusKey];
-    // getting/setting the vCard is a blocking operation, so we'll use a secondary thread for it
-    // ignore the new avatar if the old one wasn't published yet
-    NSLog(@"updateStatus, key = %@, avatarUpdateInProgress = %@",key,avatarUpdateInProgress?@"YES":@"NO");
-    if(!avatarUpdateInProgress && [key isEqualToString:KEY_USER_ICON])
-    {
-        avatarUpdateInProgress = YES;
-        [NSThread detachNewThreadSelector:@selector(updateAvatarUploadingNewOne:) toTarget:self withObject:[NSNumber numberWithBool:YES]];
+    if([[account statusObjectForKey:@"Online"] boolValue]) {
+        NSString *key = [[notification userInfo] objectForKey:SmackXMPPStatusKey];
+        // getting/setting the vCard is a blocking operation, so we'll use a secondary thread for it
+        // ignore the new avatar if the old one wasn't published yet
+        if(!avatarUpdateInProgress && [key isEqualToString:KEY_USER_ICON])
+        {
+            avatarUpdateInProgress = YES;
+            [NSThread detachNewThreadSelector:@selector(updateAvatarUploadingNewOne:) toTarget:self withObject:[NSNumber numberWithBool:YES]];
+        }
     }
 }
 
@@ -149,7 +150,7 @@
     SmackXVCard *vCard = [SmackCocoaAdapter vCard];
     [vCard load:[account connection]];
     
-    if([flag boolValue])
+    if(![flag boolValue])
     {
         // we don't want to upload ours, just update our own hash
         NSLog(@"updating local hash");
@@ -167,7 +168,7 @@
         // (according to the source code) this format, even though
         // PNG is is only format support required by the JEP, JPEG is
         // only recommended. Oh well...
-        NSData  *data = [account preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
+        NSData  *data = [account userIconData];
         if(!data)
         {
             // handle the case that we don't have any avatar set
@@ -219,7 +220,11 @@
     if([[from jidUserHost] isEqualToString:[[account explicitFormattedUID] jidUserHost]])
     {
         NSString *resource = [from jidResource];
-        NSLog(@"presence from own account, resource %@",resource);
+        NSLog(@"presence from own account, resource \"%@\", own resource = \"%@\"",resource,
+              [account resource]);
+        
+        if([resource isEqualToString:[account resource]])
+            return; // ignore presences for ourselves
         
         if([[[presence getType] toString] isEqualToString:@"unavailable"])
         {

@@ -21,6 +21,7 @@
 - (NSString*)hostName;
 - (SmackConnectionConfiguration*)connectionConfiguration;
 - (SmackXMPPConnection*)connection;
+- (NSString*)resource;
 
 - (void)connected:(SmackXMPPConnection*)conn;
 - (void)disconnected:(SmackXMPPConnection*)conn;

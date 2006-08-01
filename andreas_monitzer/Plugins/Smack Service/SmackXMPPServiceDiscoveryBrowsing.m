@@ -34,12 +34,12 @@
 
 + (SmackXDiscoverItems*)discoverItems
 {
-    return [[[NSClassFromString(@"org.jivesoftware.smackx.packet.DiscoverItems") alloc] init] autorelease];
+    return [[[[[self classLoader] loadClass:@"org.jivesoftware.smackx.packet.DiscoverItems"] alloc] init] autorelease];
 }
 
 + (SmackXDiscoverInfo*)discoverInfo
 {
-    return [[[NSClassFromString(@"org.jivesoftware.smackx.packet.DiscoverInfo") alloc] init] autorelease];
+    return [[[[[self classLoader] loadClass:@"org.jivesoftware.smackx.packet.DiscoverInfo"] alloc] init] autorelease];
 }
 
 @end

@@ -38,7 +38,7 @@
 
 + (SmackXMPPFileTransferListener*)fileTransferListenerWithConnection:(SmackXMPPConnection*)conn andDelegate:(id)delegate
 {
-    return [[NSClassFromString(@"net.adium.smackBridge.SmackXMPPFileTransferListener") newWithSignature:@"(Lorg/jivesoftware/smack/XMPPConnection;Lcom/apple/cocoa/foundation/NSObject;)",conn,delegate] autorelease];
+    return [[[[self classLoader] loadClass:@"net.adium.smackBridge.SmackXMPPFileTransferListener"] newWithSignature:@"(Lorg/jivesoftware/smack/XMPPConnection;Lcom/apple/cocoa/foundation/NSObject;)",conn,delegate] autorelease];
 }
 
 @end

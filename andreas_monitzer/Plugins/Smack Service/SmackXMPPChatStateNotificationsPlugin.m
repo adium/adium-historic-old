@@ -29,11 +29,11 @@
 @implementation SmackCocoaAdapter (chatStateNotificationsAdditions)
 
 + (SmackChatStateNotifications*)getChatState:(SmackMessage*)message {
-    return [NSClassFromString(@"net.adium.smackBridge.ChatStateNotifications") getChatState:message];
+    return [[[self classLoader] loadClass:@"net.adium.smackBridge.ChatStateNotifications"] getChatState:message];
 }
 
 + (SmackChatStateNotifications*)createChatState:(NSString*)type {
-    return [NSClassFromString(@"net.adium.smackBridge.ChatStateNotifications") createChatState:type];
+    return [[[self classLoader] loadClass:@"net.adium.smackBridge.ChatStateNotifications"] createChatState:type];
 }
 
 @end

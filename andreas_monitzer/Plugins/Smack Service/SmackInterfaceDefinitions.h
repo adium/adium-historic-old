@@ -186,12 +186,7 @@
 
 @end
 
-@interface JavaClass : NSObject {
-}
-
-- (BOOL)equals:(id)obj;
-
-@end
+@class JavaClass;
 
 @interface JavaMethod : NSObject {
 }
