@@ -139,10 +139,15 @@
     [self didDisconnect];
 }
 
+- (NSString*)resource
+{
+    NSString *resource = [self preferenceForKey:@"Resource" group:GROUP_ACCOUNT_STATUS];
+    return resource?resource:@"Adium";
+}
+
 - (void)connected:(SmackXMPPConnection*)conn {
     connection = conn;
     NSString *jid = [self explicitFormattedUID];
-    NSString *resource = [self preferenceForKey:@"Resource" group:GROUP_ACCOUNT_STATUS];
 
     NSEnumerator *e = [plugins objectEnumerator];
     id plugin;
@@ -154,7 +159,7 @@
         
         [conn login:[jid jidUsername]
                    :[[adium accountController] passwordForAccount:self]
-                   :resource?resource:@"Adium"
+                   :[self resource]
                    :NO];
         
         [self didConnect];
@@ -398,6 +403,7 @@
 // dynamic properties
 - (void)updateStatusForKey:(NSString *)key
 {
+    NSLog(@"udpateStatusForKey:%@",key);
     [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPUpdateStatusNotification
                                                         object:self
                                                       userInfo:[NSDictionary dictionaryWithObject:key forKey:SmackXMPPStatusKey]];
@@ -409,7 +415,7 @@
 - (NSSet *)supportedPropertyKeys {
 	static	NSSet	*supportedPropertyKeys = nil;
 	if (!supportedPropertyKeys) {
-		supportedPropertyKeys = [[NSSet alloc] initWithObjects:
+		supportedPropertyKeys = [[NSMutableSet alloc] initWithObjects:
 			@"Online",
 			@"FormattedUID",
 			KEY_ACCOUNT_DISPLAY_NAME,
@@ -420,6 +426,7 @@
             @"TextProfile",
             @"DefaultUserIconFilename",
 			nil];
+        [supportedPropertyKeys unionSet:[super supportedPropertyKeys]];
 	}
     
 	return supportedPropertyKeys;

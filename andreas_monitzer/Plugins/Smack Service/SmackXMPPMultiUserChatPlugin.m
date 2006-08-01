@@ -50,11 +50,11 @@ static AIHTMLDecoder *messageencoder = nil;
 @implementation SmackCocoaAdapter (MultiUserChatAddons)
 
 + (SmackXMPPMultiUserChatPluginListener*)MUCPluginListenerWithConnection:(SmackXMPPConnection*)conn {
-    return [[NSClassFromString(@"net.adium.smackBridge.SmackXMPPMultiUserChatPluginListener") newWithSignature:@"(Lorg/jivesoftware/smack/XMPPConnection;)",conn] autorelease];
+    return [[[[self classLoader] loadClass:@"net.adium.smackBridge.SmackXMPPMultiUserChatPluginListener"] newWithSignature:@"(Lorg/jivesoftware/smack/XMPPConnection;)",conn] autorelease];
 }
 
 + (SmackXMultiUserChat*)joinMultiUserChatWithName:(NSString*)name connection:(SmackXMPPConnection*)conn {
-    return [[NSClassFromString(@"org.jivesoftware.smackx.muc.MultiUserChat") newWithSignature:@"(Lorg/jivesoftware/smack/XMPPConnection;Ljava/lang/String;)",conn,name] autorelease];
+    return [[[[self classLoader] loadClass:@"org.jivesoftware.smackx.muc.MultiUserChat"] newWithSignature:@"(Lorg/jivesoftware/smack/XMPPConnection;Ljava/lang/String;)",conn,name] autorelease];
 }
 
 @end

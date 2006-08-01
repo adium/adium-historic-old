@@ -277,7 +277,7 @@
 }
 
 - (BOOL)addObject:(AIListObject *)inObject {
-	
+    
 	if (inObject != self) {
 //		NSLog(@"containing %@",inObject);
 		[containedObjects addObject:inObject];

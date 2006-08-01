@@ -35,7 +35,7 @@
 @implementation SmackCocoaAdapter (rosterAdditions)
 
 + (SmackXMPPRosterPluginListener*)rosterPluginListenerWithDelegate:(id)delegate {
-    return [[NSClassFromString(@"net.adium.smackBridge.SmackXMPPRosterPluginListener") newWithSignature:@"(Lcom/apple/cocoa/foundation/NSObject;)",delegate] autorelease];
+    return [[[[self classLoader] loadClass:@"net.adium.smackBridge.SmackXMPPRosterPluginListener"] newWithSignature:@"(Lcom/apple/cocoa/foundation/NSObject;)",delegate] autorelease];
 }
 
 @end

@@ -412,6 +412,14 @@
 	<true/>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
+	<key>NSJavaNeeded</key>
+	<string>YES</string>
+	<key>NSJavaPath</key>
+	<array>
+		<string>Adium.jar</string>
+	</array>
+	<key>NSJavaRoot</key>
+	<string>Contents/Resources/Java</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
