@@ -156,6 +156,11 @@
 		3419DE820A81042F00C3FC68 /* ToolbarPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8327607CBD5B3006466F2 /* ToolbarPrefs.plist */; };
 		3419DF3A0A8119BF00C3FC68 /* AICalendarDate.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D09FF0A7DD1F40059A3AF /* AICalendarDate.h */; };
 		3419DF3B0A8119BF00C3FC68 /* AICalendarDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 340D0A000A7DD1F40059A3AF /* AICalendarDate.m */; };
+		3419E2DF0A81445800C3FC68 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3419E2DE0A81445800C3FC68 /* Localizable.strings */; };
+		3419E2F70A8145B700C3FC68 /* GBFireImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */; };
+		3419E2F80A8145B800C3FC68 /* GBFireImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */; };
+		3419E2F90A8145B800C3FC68 /* GBFireLogImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */; };
+		3419E2FA0A8145B900C3FC68 /* GBFireLogImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */; };
 		3419F3A805314BE000C68BA3 /* AISQLLoggerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B7AE664F0465778E0051E914 /* AISQLLoggerPlugin.h */; };
 		3419F3AD05314BE000C68BA3 /* AISQLLoggerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B7AE66500465778E0051E914 /* AISQLLoggerPlugin.m */; };
 		3419F6F505314E9C00C68BA3 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
@@ -1817,6 +1822,26 @@
 		3417D27809C3336900FC413E /* TranslationEngine.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = TranslationEngine.m; path = Plugins/Translation/TranslationEngine.m; sourceTree = "<group>"; };
 		3417D27909C3336900FC413E /* AITranslatorPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITranslatorPlugin.m; path = Plugins/Translation/AITranslatorPlugin.m; sourceTree = "<group>"; };
 		3417D27A09C3336900FC413E /* AITranslatorPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITranslatorPlugin.h; path = Plugins/Translation/AITranslatorPlugin.h; sourceTree = "<group>"; };
+		3419E2D90A81445200C3FC68 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = "Frameworks/Adium Framework/Resources/English.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2E00A81446800C3FC68 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Catalan; path = "Frameworks/Adium Framework/Resources/Catalan.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2E10A81446E00C3FC68 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Danish; path = "Frameworks/Adium Framework/Resources/Danish.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2E20A81447C00C3FC68 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = "Frameworks/Adium Framework/Resources/Dutch.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2E30A8144A100C3FC68 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = "Frameworks/Adium Framework/Resources/French.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2E40A8144A500C3FC68 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = "Frameworks/Adium Framework/Resources/German.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2E50A8144AF00C3FC68 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = "Frameworks/Adium Framework/Resources/Italian.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2E80A8144CE00C3FC68 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = "Frameworks/Adium Framework/Resources/Japanese.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2E90A8144D600C3FC68 /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Norwegian; path = "Frameworks/Adium Framework/Resources/Norwegian.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2EA0A8144DF00C3FC68 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Russian; path = "Frameworks/Adium Framework/Resources/Russian.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2EB0A8144E700C3FC68 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = "Frameworks/Adium Framework/Resources/Spanish.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2EC0A8144EE00C3FC68 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Swedish; path = "Frameworks/Adium Framework/Resources/Swedish.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2ED0A8144F400C3FC68 /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Turkish; path = "Frameworks/Adium Framework/Resources/Turkish.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2EE0A8144FB00C3FC68 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Frameworks/Adium Framework/Resources/cs.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2EF0A81450200C3FC68 /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = "Frameworks/Adium Framework/Resources/en_AU.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2F00A81450700C3FC68 /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_CA; path = "Frameworks/Adium Framework/Resources/en_CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2F10A81450E00C3FC68 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = "Frameworks/Adium Framework/Resources/is.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2F20A81451500C3FC68 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Frameworks/Adium Framework/Resources/pl.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2F30A81451D00C3FC68 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Frameworks/Adium Framework/Resources/zh_CN.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E2F40A81452400C3FC68 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = "Frameworks/Adium Framework/Resources/zh_TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		341BCF800961354D00CF83F5 /* AIMessageWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageWindow.h; path = Source/AIMessageWindow.h; sourceTree = "<group>"; };
 		341BCF810961354D00CF83F5 /* AIMessageWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageWindow.m; path = Source/AIMessageWindow.m; sourceTree = "<group>"; };
 		341BCF820961354D00CF83F5 /* AIClickThroughThemeDocumentButton.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIClickThroughThemeDocumentButton.h; path = Source/AIClickThroughThemeDocumentButton.h; sourceTree = "<group>"; };
@@ -6865,6 +6890,7 @@
 		F53B9A1302CCEDCA01A8010A /* Adium.Framework */ = {
 			isa = PBXGroup;
 			children = (
+				3419E2DE0A81445800C3FC68 /* Localizable.strings */,
 				F59DB3E7033EB4B601A8010A /* Adium.h */,
 				4B587CA507ABFEFD001832A9 /* Happy Framework */,
 				4B587CA807ABFF02001832A9 /* Sad Framework */,
@@ -7234,6 +7260,8 @@
 				34DC12FE0A81416500D710F3 /* ESPanelApplescriptDetailPane.h in Headers */,
 				34DC12FF0A81416700D710F3 /* GBApplescriptFiltersPlugin.h in Headers */,
 				34DC13030A81417500D710F3 /* AILoginWindowController.h in Headers */,
+				3419E2F70A8145B700C3FC68 /* GBFireImporter.h in Headers */,
+				3419E2F90A8145B800C3FC68 /* GBFireLogImporter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8238,6 +8266,7 @@
 				34DC8AB40A7EEEF7003E1636 /* DefaultBlockedStatusIcon.png in Resources */,
 				34DC8AD90A7EEEF7003E1636 /* JoinChatWindow.nib in Resources */,
 				34DC8AE40A7EEEF7003E1636 /* stackImage.png in Resources */,
+				3419E2DF0A81445800C3FC68 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8862,6 +8891,8 @@
 				3419DF3B0A8119BF00C3FC68 /* AICalendarDate.m in Sources */,
 				34DC12FC0A81415D00D710F3 /* ESApplescriptabilityController.m in Sources */,
 				34DC13040A81417600D710F3 /* AILoginWindowController.m in Sources */,
+				3419E2F80A8145B800C3FC68 /* GBFireImporter.m in Sources */,
+				3419E2FA0A8145B900C3FC68 /* GBFireLogImporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9377,6 +9408,33 @@
 				34CF88A70A6D5EC0009D9A21 /* Dutch */,
 			);
 			name = DualWindowMessageAdvanced.nib;
+			sourceTree = "<group>";
+		};
+		3419E2DE0A81445800C3FC68 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3419E2D90A81445200C3FC68 /* English */,
+				3419E2E00A81446800C3FC68 /* Catalan */,
+				3419E2E10A81446E00C3FC68 /* Danish */,
+				3419E2E20A81447C00C3FC68 /* Dutch */,
+				3419E2E30A8144A100C3FC68 /* French */,
+				3419E2E40A8144A500C3FC68 /* German */,
+				3419E2E50A8144AF00C3FC68 /* Italian */,
+				3419E2E80A8144CE00C3FC68 /* Japanese */,
+				3419E2E90A8144D600C3FC68 /* Norwegian */,
+				3419E2EA0A8144DF00C3FC68 /* Russian */,
+				3419E2EB0A8144E700C3FC68 /* Spanish */,
+				3419E2EC0A8144EE00C3FC68 /* Swedish */,
+				3419E2ED0A8144F400C3FC68 /* Turkish */,
+				3419E2EE0A8144FB00C3FC68 /* cs */,
+				3419E2EF0A81450200C3FC68 /* en_AU */,
+				3419E2F00A81450700C3FC68 /* en_CA */,
+				3419E2F10A81450E00C3FC68 /* is */,
+				3419E2F20A81451500C3FC68 /* pl */,
+				3419E2F30A81451D00C3FC68 /* zh_CN */,
+				3419E2F40A81452400C3FC68 /* zh_TW */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 		341BD5790965EC4700CF83F5 /* OTRPrefs.nib */ = {
