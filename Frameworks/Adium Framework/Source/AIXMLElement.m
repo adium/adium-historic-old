@@ -58,7 +58,9 @@
 }
 - (id) init
 {
-	NSException *exc = [NSException exceptionWithName:@"Can't init AIXMLElement" reason:AILocalizedString(@"AIXMLElement does not support the -init method; use -initWithName: instead.", /*comment*/ nil) userInfo:nil];
+	NSException *exc = [NSException exceptionWithName:@"Can't init AIXMLElement"
+											   reason:@"AIXMLElement does not support the -init method; use -initWithName: instead."
+											 userInfo:nil];
 	[exc raise];
 	return nil;
 }
