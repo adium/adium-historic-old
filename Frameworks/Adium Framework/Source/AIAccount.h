@@ -29,6 +29,7 @@
 #define KEY_CONNECT_PORT 			@"Connect Port"
 #define KEY_ACCOUNT_CHECK_MAIL		@"Check Mail"
 #define KEY_ENABLED					@"Enabled"
+#define KEY_AUTOCONNECT				@"AutoConnect"
 
 //NSData archive of an NSAttributedString
 #define KEY_ACCOUNT_DISPLAY_NAME	@"FullNameAttr"

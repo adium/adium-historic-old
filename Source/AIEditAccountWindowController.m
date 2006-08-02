@@ -113,6 +113,7 @@
 	[button_chooseIcon setLocalizedString:[AILocalizedString(@"Choose Icon",nil) stringByAppendingEllipsis]];
 	[button_OK setLocalizedString:AILocalizedString(@"OK",nil)];
 	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
+	[checkbox_autoconnect setLocalizedString:AILocalizedString(@"Connect when Adium opens", "Account preferences checkbox for automatically conencting the account when Adium opens")];
 
 	//User icon
 	if ([account preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES]) {
@@ -125,6 +126,9 @@
 	}
 
 	[imageView_userIcon setImage:[account userIcon]];
+
+	[checkbox_autoconnect setState:[[account preferenceForKey:KEY_AUTOCONNECT
+														group:GROUP_ACCOUNT_STATUS] boolValue]];
 
 	//Insert the custom controls for this account
 	[self _removeCustomViewAndTabs];
@@ -213,7 +217,11 @@
 		[account setPreference:userIconData
 						forKey:KEY_USER_ICON
 						 group:GROUP_ACCOUNT_STATUS];
-	}	
+	}
+
+	[account setPreference:[NSNumber numberWithBool:[checkbox_autoconnect state]]
+					forKey:KEY_AUTOCONNECT
+					 group:GROUP_ACCOUNT_STATUS];
 }
 
 /*!
