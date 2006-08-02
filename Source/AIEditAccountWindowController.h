@@ -28,6 +28,7 @@
     IBOutlet	NSTabView					*tabView_auxiliary;
 	IBOutlet	NSButton					*button_cancel;
 	IBOutlet	NSButton					*button_OK;
+	IBOutlet	NSButton					*checkbox_autoconnect;
 	
 	//Replacable views
 	IBOutlet	NSView						*view_accountSetup;

@@ -86,21 +86,6 @@
 	[super dealloc];
 }
 
-- (BOOL)shouldAutoconnectAllEnabled
-{
-	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
-	NSNumber		*didAutoconnectAll = [userDefaults objectForKey:@"Adium 1.0 First Time:Autoconnected All"];
-	BOOL			shouldAutoconnectAllEnabled = NO;
-	
-	if (!didAutoconnectAll) {
-		[userDefaults setObject:[NSNumber numberWithBool:YES] forKey:@"Adium 1.0 First Time:Autoconnected All"];
-		[userDefaults synchronize];
-		shouldAutoconnectAllEnabled = YES;
-	}
-	
-	return shouldAutoconnectAllEnabled;
-}
-
 /*!
  * @brief Adium finished launching
  *
@@ -110,7 +95,6 @@
 {
 	NSArray						*accounts = [[adium accountController] accounts];
 	AIHostReachabilityMonitor	*monitor = [AIHostReachabilityMonitor defaultMonitor];
-	BOOL						shouldAutoconnectAll = [self shouldAutoconnectAllEnabled];
 	BOOL						shiftHeld = [NSEvent shiftKey];
 	
 	//Start off forbidding all accounts from auto-connecting.
@@ -128,8 +112,8 @@
 	while ((account = [accountsEnum nextObject])) {
 		BOOL	connectAccount = (!shiftHeld  &&
 								  [account enabled] &&
-								  ([account shouldBeOnline] ||
-								   shouldAutoconnectAll));
+								  [[account preferenceForKey:KEY_AUTOCONNECT
+													  group:GROUP_ACCOUNT_STATUS] boolValue]);
 
 		if ([account connectivityBasedOnNetworkReachability]) {
 			NSString *host = [account host];

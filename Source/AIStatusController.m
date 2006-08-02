@@ -592,17 +592,54 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	AIAccount		*account;
 	AIStatus		*aStatusState;
 	BOOL			shouldRebuild = NO;
-
+	BOOL			noConnectedAccounts = ![[adium accountController] oneOrMoreConnectedOrConnectingAccounts];
+	BOOL			isOfflineStatus = ([statusState statusType] == AIOfflineStatusType);
 	[self setDelayActiveStatusUpdates:YES];
 	
-	enumerator = [accountArray objectEnumerator];
-	while ((account = [enumerator nextObject])) {
-		if ([account enabled]) {
-			[account setStatusState:statusState];
+	/* If we're going offline, determine what accounts are currently online, first, so that we can restore that when an online state
+	 * is chosen later.
+	 */
+	if  (isOfflineStatus && !noConnectedAccounts) {
+		[accountsToConnect removeAllObjects];
 
-		} else {
-			[account setStatusStateAndRemainOffline:statusState];			
+		enumerator = [accountArray objectEnumerator];
+		while ((account = [enumerator nextObject])) {
+			if ([account online]) [accountsToConnect addObject:account];
 		}
+	}
+
+	if (noConnectedAccounts) {
+		/* No connected accounts: Connect all enabled accounts which were set offline previously.
+		 * If we have no such list of accounts, connect 'em all.
+		 */
+		BOOL noAccountsToConnectCount = ([accountsToConnect count] == 0);
+		enumerator = [accountArray objectEnumerator];
+		while ((account = [enumerator nextObject])) {
+			if ([account enabled] &&
+				([accountsToConnect containsObject:account] || noAccountsToConnectCount)) {
+				[account setStatusState:statusState];
+
+			} else {
+				[account setStatusStateAndRemainOffline:statusState];	
+			}
+		}
+
+	} else {
+		//At least one account is online.  Just change its status without taking any other accounts online.
+		enumerator = [accountArray objectEnumerator];
+		while ((account = [enumerator nextObject])) {
+			if ([account online] || isOfflineStatus) {
+				[account setStatusState:statusState];
+				
+			} else {
+				[account setStatusStateAndRemainOffline:statusState];			
+			}
+		}
+	}
+
+	//If this is not an offline status, we've now made use of accountsToConnect and should clear it so it isn't used again.
+	if (!isOfflineStatus) {
+		[accountsToConnect removeAllObjects];
 	}
 
 	//Any objects in the temporary state array which aren't the state we just set should now be removed.
