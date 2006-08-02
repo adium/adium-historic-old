@@ -17,7 +17,7 @@
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
-#import "AIWindowController.h"
+#import <Adium/AIWindowController.h>
 
 @class AIEmoticonPack, AIAlternatingRowTableView;
 

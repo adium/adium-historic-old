@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on 11/23/05.
 //
 
-#import "AIObject.h"
+#import <Adium/AIObject.h>
 
 @class AIStatusItem;
 

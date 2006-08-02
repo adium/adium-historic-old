@@ -15,7 +15,7 @@
  */
 
 #import "AISoundController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AdiumSound.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import "QTSoundFilePlayer.h"

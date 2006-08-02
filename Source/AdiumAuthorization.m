@@ -7,9 +7,9 @@
 
 #import "AdiumAuthorization.h"
 #import "ESAuthorizationRequestWindowController.h"
-#import "AIContactController.h"
-#import "AIContactAlertsControllerProtocol.h"
-#import "AIAccount.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
+#import <Adium/AIAccount.h>
 #import <AIUtilities/AIImageAdditions.h>
 
 #define	CONTACT_REQUESTED_AUTHORIZATION @"Contact Requested Authorization"

@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on 7/8/06.
 //
 
-#import "AIContentEvent.h"
+#import <Adium/AIContentEvent.h>
 
 @implementation AIContentEvent
 

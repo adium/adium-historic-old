@@ -16,9 +16,9 @@
 
 #import "AdiumSpeech.h"
 #import "AISoundController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "SUSpeaker.h"
-#import "AIListObject.h"
+#import <Adium/AIListObject.h>
 
 #define TEXT_TO_SPEAK			@"Text"
 #define VOICE					@"Voice"

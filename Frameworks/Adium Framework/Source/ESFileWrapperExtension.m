@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on Sat Jul 10 2004.
 //
 
-#import "ESFileWrapperExtension.h"
+#import <Adium/ESFileWrapperExtension.h>
 
 @implementation ESFileWrapperExtension
 

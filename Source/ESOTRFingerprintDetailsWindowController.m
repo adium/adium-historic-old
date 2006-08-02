@@ -8,8 +8,8 @@
 
 #import "ESOTRFingerprintDetailsWindowController.h"
 #import "AdiumOTREncryption.h"
-#import "AIAccount.h"
-#import "AIServiceIcons.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIServiceIcons.h>
 #import <AIUtilities/AIImageAdditions.h>
 
 /* libotr headers */

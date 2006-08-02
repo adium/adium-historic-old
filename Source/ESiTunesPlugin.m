@@ -10,10 +10,10 @@
  */
 
 #import "ESiTunesPlugin.h"
-#import "AIContentController.h"
-#import "AIToolbarController.h"
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
 #import "AIStatusController.h"
-#import "AIMenuController.h"
+#import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>

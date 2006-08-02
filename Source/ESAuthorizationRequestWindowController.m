@@ -6,9 +6,9 @@
 //
 
 #import "ESAuthorizationRequestWindowController.h"
-#import "AIAccountControllerProtocol.h"
-#import "AIContactController.h"
-#import "AIAccount.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIAccount.h>
 #import <AIUtilities/AIStringAdditions.h>
 
 @interface ESAuthorizationRequestWindowController (PRIVATE)

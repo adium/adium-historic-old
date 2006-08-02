@@ -6,7 +6,7 @@
 //
 
 #import "AIApplication.h"
-#import "AIObject.h"
+#import <Adium/AIObject.h>
 #import "AIDockController.h"
 
 @implementation AIApplication

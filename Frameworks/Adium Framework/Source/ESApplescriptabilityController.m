@@ -14,18 +14,18 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountControllerProtocol.h"
-#import "AIChatControllerProtocol.h"
-#import "AIContactController.h"
-#import "AIContentController.h"
-#import "AIInterfaceController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AIStatusController.h"
 #import "ESApplescriptabilityController.h"
 #import "AdiumApplescriptRunner.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import "AIAccount.h"
-#import "AIContentMessage.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIContentMessage.h>
 #import "AIHTMLDecoder.h"
 
 @implementation ESApplescriptabilityController

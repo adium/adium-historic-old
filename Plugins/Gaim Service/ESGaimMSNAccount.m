@@ -15,8 +15,8 @@
  */
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIContactController.h"
-#import "AIContentController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import "AIStatusController.h"
 #import "ESGaimMSNAccount.h"
 #import <Libgaim/state.h>

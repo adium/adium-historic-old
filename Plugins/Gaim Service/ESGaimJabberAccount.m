@@ -16,7 +16,7 @@
 
 #import <Adium/AIAccountControllerProtocol.h>
 #import "AIStatusController.h"
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import "ESGaimJabberAccount.h"
 #import "ESGaimJabberAccountViewController.h"
 #import "SLGaimCocoaAdapter.h"

@@ -15,9 +15,9 @@
  */
 
 #import "AIChatCyclingPlugin.h"
-#import "AIInterfaceController.h"
-#import "AIMenuController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "ESGeneralPreferencesPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 

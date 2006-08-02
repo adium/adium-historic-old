@@ -36,7 +36,7 @@
 //  ------------------------------------------------------------------------
 
 
-#import "KFTypeSelectTableView.h"
+#import <Adium/KFTypeSelectTableView.h>
 #import <CoreServices/CoreServices.h>
 #include <mach/mach.h>
 #include <mach/mach_time.h>

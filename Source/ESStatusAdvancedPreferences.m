@@ -7,7 +7,7 @@
 
 #import "ESStatusAdvancedPreferences.h"
 #import "AIStatusController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AIPreferenceWindowController.h"
 #import <AIUtilities/AIImageAdditions.h>
 

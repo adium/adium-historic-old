@@ -8,7 +8,7 @@
 
 #import "ESContactListAdvancedPreferences.h"
 #import "AISCLViewPlugin.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIPreferenceWindowController.h"
 #import "AIListWindowController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>

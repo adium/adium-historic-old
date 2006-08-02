@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on 9/25/05.
 //
 
-#import "AIColorPickerSliders.h"
+#import <Adium/AIColorPickerSliders.h>
 
 /*!
  * @class AIColorPickerSliders

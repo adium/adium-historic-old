@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIServiceIcons.h" //For AIIconDirection
-#import "AIStatusDefines.h" //For AIStatusType
+#import <Adium/AIServiceIcons.h> //For AIIconDirection
+#import <Adium/AIStatusDefines.h> //For AIStatusType
 
 //Notifications
 #define AIStatusIconSetDidChangeNotification		@"AIStatusIconSetDidChangeNotification"

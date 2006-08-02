@@ -5,10 +5,10 @@
 //  Created by Evan Schoenberg on 11/23/05.
 //
 
-#import "AIStatusItem.h"
-#import "AIStatusGroup.h"
-#import "AIStatusIcons.h"
-#import "AIStatusController.h"
+#import <Adium/AIStatusItem.h>
+#import <Adium/AIStatusGroup.h>
+#import <Adium/AIStatusIcons.h>
+#import <Adium/AIStatusControllerProtocol.h>
 #import <AIUtilities/AIStringAdditions.h>
 
 @implementation AIStatusItem

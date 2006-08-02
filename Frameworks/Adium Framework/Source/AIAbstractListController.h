@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIWindowController.h"
-#import "AIListObject.h"
+#import <Adium/AIWindowController.h>
+#import <Adium/AIListObject.h>
 #import <AIUtilities/AISmoothTooltipTracker.h>
 
 @class AIAutoScrollView, AIListOutlineView, AIListContactCell, AIListGroupCell, ESObjectWithStatus, AIListObject, AIChat;

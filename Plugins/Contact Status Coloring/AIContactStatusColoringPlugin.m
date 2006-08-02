@@ -15,10 +15,10 @@
  */
 
 #import "AIAbstractListController.h"
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import "AIContactStatusColoringPlugin.h"
-#import "AIInterfaceController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AIListThemeWindowController.h"
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>

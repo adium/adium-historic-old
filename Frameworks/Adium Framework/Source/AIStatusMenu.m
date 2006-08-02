@@ -5,15 +5,15 @@
 //  Created by Evan Schoenberg on 11/23/05.
 //
 
-#import "AIStatusMenu.h"
-#import "AIStatus.h"
-#import "AIStatusGroup.h"
-#import "AIAccount.h"
-#import "AIStatusController.h"
-#import "AIEditStateWindowController.h"
-#import	"AIStatusIcons.h"
-#import "AIAccountControllerProtocol.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIStatusMenu.h>
+#import <Adium/AIStatus.h>
+#import <Adium/AIStatusGroup.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIEditStateWindowController.h>
+#import <Adium/AIStatusIcons.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIEventAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>

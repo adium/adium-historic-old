@@ -18,7 +18,7 @@
 #import "AIDockController.h"
 #import <Adium/AIContactAlertsControllerProtocol.h>
 #import "ESDockAlertDetailPane.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIChat.h>
 #import <AIUtilities/AIImageAdditions.h>
 

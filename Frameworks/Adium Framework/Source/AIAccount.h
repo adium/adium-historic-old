@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIListObject.h"
+#import <Adium/AIListObject.h>
 
 @class AIListContact, AIChat, AIContentObject, ESFileTransfer, AIStatus, AIContentMessage, AIContentTyping;
 
@@ -204,4 +204,4 @@ typedef enum {
 - (void)gotFilteredDisplayName:(NSAttributedString *)attributedDisplayName;
 @end
 
-#import "AIAbstractAccount.h"
+#import <Adium/AIAbstractAccount.h>

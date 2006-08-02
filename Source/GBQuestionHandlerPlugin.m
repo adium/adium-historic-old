@@ -15,7 +15,7 @@
  */
 
 #import "GBQuestionHandlerPlugin.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "ESTextAndButtonsWindowController.h"
 
 typedef enum

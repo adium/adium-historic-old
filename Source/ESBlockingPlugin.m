@@ -15,10 +15,10 @@
  */
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIContactController.h"
-#import "AIMenuController.h"
-#import "AIToolbarController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIChatControllerProtocol.h>
 #import "ESBlockingPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>

@@ -15,14 +15,14 @@
  */
 
 #import "AIContactSettingsPane.h"
-#import "AIContentController.h"
+#import <Adium/AIContentControllerProtocol.h>
 #import <AIUtilities/AIDelayedTextField.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringFormatter.h>
-#import "AIChat.h"
-#import "AIListObject.h"
-#import "AIListContact.h"
+#import <Adium/AIChat.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIListContact.h>
 
 @interface AIContactSettingsPane (PRIVATE)
 - (void)localizeTitles;

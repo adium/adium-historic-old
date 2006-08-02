@@ -14,11 +14,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountControllerProtocol.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "ESAccountPasswordPromptController.h"
-#import "AIAccount.h"
-#import "AIService.h"
-#import "AIServiceIcons.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIService.h>
+#import <Adium/AIServiceIcons.h>
 
 #define ACCOUNT_PASSWORD_PROMPT_NIB		@"PasswordPrompt"
 #define	ACCOUNT_PASSWORD_REQUIRED		AILocalizedString(@"Connecting Account","Password prompt window title")

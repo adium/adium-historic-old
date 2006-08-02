@@ -8,7 +8,7 @@
  *		by Evan Schoenberg.
  */
 
-#import "NDRunLoopMessenger.h"
+#import <Adium/NDRunLoopMessenger.h>
 
 #define DEFAULT_PORT_MESSAGE_RETRY_TIMEOUT  0.5
 #define DEFAULT_PORT_MESSAGE_RETRY			0.01

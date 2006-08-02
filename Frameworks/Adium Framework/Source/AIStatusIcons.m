@@ -14,12 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIChat.h"
-#import "AIContentTyping.h"
-#import "AIListObject.h"
-#import "AIObject.h"
-#import "AIStatusIcons.h"
-#import "AIStatusController.h"
+#import <Adium/AIChat.h>
+#import <Adium/AIContentTyping.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIObject.h>
+#import <Adium/AIStatusIcons.h>
+#import <Adium/AIStatusControllerProtocol.h>
 #import <AIUtilities/AIImageAdditions.h>
 
 @implementation AIStatusIcons

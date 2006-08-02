@@ -16,8 +16,8 @@
 
 #import <Adium/AIAccountControllerProtocol.h>
 #import "AIAccountSelectionView.h"
-#import "AIContactController.h"
-#import "AIContentController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIChatControllerProtocol.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <Adium/AIAccount.h>

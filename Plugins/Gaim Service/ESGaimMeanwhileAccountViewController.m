@@ -16,7 +16,6 @@
 
 #import "ESGaimMeanwhileAccountViewController.h"
 #import "ESGaimMeanwhileAccount.h"
-#import <Adium/AIPreferenceController.h>
 
 @implementation ESGaimMeanwhileAccountViewController
 

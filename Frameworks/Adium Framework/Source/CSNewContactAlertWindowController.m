@@ -14,12 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIActionDetailsPane.h"
-#import "AIImageTextCellView.h"
-#import "AIListObject.h"
-#import "CSNewContactAlertWindowController.h"
-#import "AIContactAlertsControllerProtocol.h"
-#import "ESContactAlertsViewController.h"
+#import <Adium/AIActionDetailsPane.h>
+#import <Adium/AIImageTextCellView.h>
+#import <Adium/AIListObject.h>
+#import <Adium/CSNewContactAlertWindowController.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
+#import <Adium/ESContactAlertsViewController.h>
 
 #define NEW_ALERT_NIB			@"NewAlert"
 #define NEW_ALERT_NO_EVENTS_NIB @"NewAlertNoEvents"

@@ -15,12 +15,12 @@
  */
 
 #import "AdiumTyping.h"
-#import "AIInterfaceController.h"
-#import "AIContactController.h"
-#import "AIContentController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import "AIContentTyping.h"
-#import "AIChat.h"
-#import "AIAccount.h"
+#import <Adium/AIChat.h>
+#import <Adium/AIAccount.h>
 
 #define OUR_TYPING_STATE						@"OurTypingState"
 #define ENTERED_TEXT_TIMER						@"EnteredTextTimer"

@@ -22,15 +22,15 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContactController.h"
-#import <Adium/AIChatControllerProtocol.h>
-#import "AIContentController.h"
-#import "AIStatusController.h"
+#import "AWBonjourAccount.h"
 #import "AWEzv.h"
 #import "AWEzvContact.h"
 #import "AWEzvDefines.h"
-#import "AWBonjourAccount.h"
 #import "AWBonjourPlugin.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentTyping.h>

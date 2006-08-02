@@ -7,7 +7,7 @@
  *
  */
 
-#import "AIControllerProtocol.h"
+#import <Adium/AIControllerProtocol.h>
 
 #define Interface_ContactSelectionChanged			@"Interface_ContactSelectionChanged"
 #define Interface_SendEnteredMessage				@"Interface_SendEnteredMessage"

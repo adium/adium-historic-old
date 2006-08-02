@@ -6,7 +6,7 @@
  *
  */
 
-#import "AIControllerProtocol.h"
+#import <Adium/AIControllerProtocol.h>
 
 #define PREF_GROUP_SOUNDS					@"Sounds"
 #define KEY_SOUND_CUSTOM_VOLUME_LEVEL		@"Custom Volume Level"

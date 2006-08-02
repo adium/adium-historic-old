@@ -23,7 +23,7 @@
 // Frank Vernon -- changes for QuickTime 4 AAC decoding (VBR)
 //
 
-#import "QTSoundFilePlayer.h"
+#import <Adium/QTSoundFilePlayer.h>
 
 #import <AudioToolbox/DefaultAudioOutput.h>
 #import <AudioUnit/AUNTComponent.h>
@@ -33,7 +33,7 @@
 #import <mach/mach_error.h>
 #import <mach/mach_time.h>
 
-#import "VirtualRingBuffer.h"
+#import <Adium/VirtualRingBuffer.h>
 
 //Adium only: use AI_(DURING|HANDLER|ENDHANDLER) instead of NS_\1
 #import <AIUtilities/AIExceptionHandlingUtilities.h>

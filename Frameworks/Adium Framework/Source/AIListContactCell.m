@@ -14,13 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIListContactCell.h"
-#import "AIListLayoutWindowController.h"
-#import "AIListObject.h"
+#import <Adium/AIListContactCell.h>
+#import <Adium/AIListObject.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
-#import "AIServiceIcons.h"
-#import "AIUserIcons.h"
+#import <Adium/AIServiceIcons.h>
+#import <Adium/AIUserIcons.h>
 
 #define NAME_STATUS_PAD			6
 

@@ -17,13 +17,13 @@
 // $Id$
 
 #import "AIDockController.h"
-#import "AIInterfaceController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
-#import "AIIconState.h"
-#import "IconFamily.h"
+#import <Adium/AIIconState.h>
+#import <Adium/IconFamily.h>
 
 #define DOCK_DEFAULT_PREFS			@"DockPrefs"
 #define ICON_DISPLAY_DELAY			0.1
@@ -74,16 +74,15 @@
 
 - (void)controllerDidLoad
 {
-	AIPreferenceController *preferenceController = [adium preferenceController];
 	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 	
     //Register our default preferences
-    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS
-																forClass:[self class]] 
-	                              forGroup:PREF_GROUP_APPEARANCE];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_APPEARANCE];
     
     //Observe pref changes
-	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 	
     //We always want to stop bouncing when Adium is made active
     [notificationCenter addObserver:self

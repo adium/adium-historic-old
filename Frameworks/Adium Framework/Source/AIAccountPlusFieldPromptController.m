@@ -14,16 +14,16 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccount.h"
-#import "AIAccountControllerProtocol.h"
-#import "AIAccountPlusFieldPromptController.h"
-#import "AIContactController.h"
-#import "AIContentMessage.h"
-#import "AIListContact.h"
-#import "AIService.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIAccountPlusFieldPromptController.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIService.h>
 #import <AIUtilities/AICompletingTextField.h>
-#import "AIAccountMenu.h"
-#import "AIMetaContact.h"
+#import <Adium/AIAccountMenu.h>
+#import <Adium/AIMetaContact.h>
 
 @interface AIAccountPlusFieldPromptController (PRIVATE)
 - (void)_configureTextFieldForAccount:(AIAccount *)account;

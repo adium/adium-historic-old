@@ -15,13 +15,13 @@
  */
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIContactController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIContactListEditorPlugin.h"
-#import "AIMenuController.h"
+#import <Adium/AIMenuControllerProtocol.h>
 #import "AINewContactWindowController.h"
 #import "AINewGroupWindowController.h"
-#import "AIToolbarController.h"
+#import <Adium/AIToolbarControllerProtocol.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>

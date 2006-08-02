@@ -7,17 +7,17 @@
 
 #import "AIChatController.h"
 
-#import "AIContentController.h"
-#import "AIContactController.h"
-#import "AIInterfaceController.h"
-#import "AIMenuController.h"
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
 #import "AdiumChatEvents.h"
-#import "AIAccount.h"
-#import "AIChat.h"
-#import "AIContentObject.h"
-#import "AIContentMessage.h"
-#import "AIListContact.h"
-#import "AIMetaContact.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIContentObject.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIMetaContact.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 

@@ -14,13 +14,13 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountControllerProtocol.h"
-#import "AIAccountMenu.h"
-#import "AIContactController.h"
-#import "AIStatusController.h"
-#import "AIStatusMenu.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIAccountMenu.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIStatusMenu.h>
 #import <AIUtilities/AIMenuAdditions.h>
-#import "AIAccount.h"
+#import <Adium/AIAccount.h>
 
 //Menu titles
 #define	ACCOUNT_CONNECT_ACTION_MENU_TITLE			AILocalizedString(@"Connect: %@", "Connect account prefix")

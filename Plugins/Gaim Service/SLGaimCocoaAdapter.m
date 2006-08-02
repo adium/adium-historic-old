@@ -18,8 +18,8 @@
 
 #import <Adium/AIAccountControllerProtocol.h>
 
-#import <Adium/AIInterfaceController.h>
-#import <Adium/AILoginController.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AILoginControllerProtocol.h>
 #import "CBGaimAccount.h"
 #import "CBGaimServicePlugin.h"
 #import "adiumGaimCore.h"

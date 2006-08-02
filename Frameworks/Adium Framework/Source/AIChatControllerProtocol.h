@@ -6,8 +6,8 @@
  *
  */
 
-#import "AIControllerProtocol.h"
-#import "AIListContact.h"
+#import <Adium/AIControllerProtocol.h>
+#import <Adium/AIListContact.h>
 
 @protocol AIChatController_Private;
 @class AIChat, AIAccount;

@@ -15,7 +15,7 @@
  */
 
 #import "AIBorderlessListWindowController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIListLayoutWindowController.h"
 #import "AIListThemeWindowController.h"
 #import "AISCLViewPlugin.h"

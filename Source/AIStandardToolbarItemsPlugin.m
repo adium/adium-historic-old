@@ -15,10 +15,10 @@
  */
 
 #import <Adium/AIChatControllerProtocol.h>
-#import "AIContactController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIStandardToolbarItemsPlugin.h"
-#import "AIToolbarController.h"
+#import <Adium/AIToolbarControllerProtocol.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIListContact.h>

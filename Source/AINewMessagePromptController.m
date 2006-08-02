@@ -16,7 +16,7 @@
 
 #import "AINewMessagePromptController.h"
 #import <Adium/AIChatControllerProtocol.h>
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 #define NEW_MESSAGE_PROMPT_NIB	@"NewMessagePrompt"
 

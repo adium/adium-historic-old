@@ -14,22 +14,22 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountControllerProtocol.h"
-#import "AIChatControllerProtocol.h"
-#import "AIPreferenceControllerProtocol.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 
-#import "AIContactController.h"
-#import "AIContentController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 #import "AdiumURLHandling.h"
 #import "XtrasInstaller.h"
 #import "ESTextAndButtonsWindowController.h"
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIURLAdditions.h>
-#import "AIAccount.h"
-#import "AIContentMessage.h"
-#import "AIService.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AIService.h>
 
 #define URLHandlingGroup @"URL Handling Group"
 #define DONTPROMPTFORURL @"Don't Prompt for URL"

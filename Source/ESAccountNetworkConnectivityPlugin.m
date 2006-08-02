@@ -15,7 +15,7 @@
  */
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import "ESAccountNetworkConnectivityPlugin.h"
 #import <AIUtilities/AIEventAdditions.h>
 #import <AIUtilities/AIHostReachabilityMonitor.h>

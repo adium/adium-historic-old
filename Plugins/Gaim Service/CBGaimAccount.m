@@ -14,24 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIAccountControllerProtocol.h>
-#import <Adium/AIChatControllerProtocol.h>
-#import "AIContactController.h"
-#import "AIContentController.h"
-#import "AIInterfaceController.h"
-#import "AIStatusController.h"
-#import "AIPreferenceController.h"
 #import "CBGaimAccount.h"
 #import "SLGaimCocoaAdapter.h"
-#import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/AIMutableOwnerArray.h>
-#import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/AIApplicationAdditions.h>
-#import <AIUtilities/AIObjectAdditions.h>
-#import <AIUtilities/AIImageAdditions.h>
-#import <AIUtilities/AISystemNetworkDefaults.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -46,6 +30,22 @@
 #import <Adium/ESFileTransfer.h>
 #import <Adium/AIWindowController.h>
 #import <Adium/AIEmoticon.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIMutableOwnerArray.h>
+#import <AIUtilities/AIStringAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AISystemNetworkDefaults.h>
 
 #import "adiumGaimRequest.h"
 

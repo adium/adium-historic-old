@@ -16,17 +16,17 @@
 
 #import <Adium/AIAccountControllerProtocol.h>
 #import "AIContactAccountsPane.h"
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
-#import "AIAccount.h"
-#import "AIListContact.h"
-#import "AIListObject.h"
-#import "AIListGroup.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIListGroup.h>
 #import "AILocalizationTextField.h"
-#import "AIMetaContact.h"
+#import <Adium/AIMetaContact.h>
 
 @interface AIContactAccountsPane (PRIVATE)
 - (void)updateAccountList;

@@ -6,7 +6,7 @@
  *
  */
 
-#import "AIControllerProtocol.h"
+#import <Adium/AIControllerProtocol.h>
 
 @protocol AIDebugController <AIController>
 #ifdef DEBUG_BUILD

@@ -15,7 +15,7 @@
  */
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIMenuController.h"
+#import <Adium/AIMenuControllerProtocol.h>
 #import "AINewMessagePanelPlugin.h"
 #import "AINewMessagePromptController.h"
 #import <AIUtilities/AIMenuAdditions.h>

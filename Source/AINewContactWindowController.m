@@ -15,8 +15,8 @@
  */
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIContactController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AINewContactWindowController.h"
 #import "AINewGroupWindowController.h"
 #import "OWABSearchWindowController.h"

@@ -18,9 +18,9 @@
 #import "AIContactAccountsPane.h"
 #import "AIContactProfilePane.h"
 #import "AIContactSettingsPane.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIListOutlineView.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import "ESContactAlertsPane.h"
 #import "ESContactInfoListController.h"
@@ -31,12 +31,12 @@
 #import <AIUtilities/AIImageViewWithImagePicker.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import "AIListGroup.h"
-#import "AIListObject.h"
+#import <Adium/AIListGroup.h>
+#import <Adium/AIListObject.h>
 #import "AIListOutlineView.h"
-#import "AIMetaContact.h"
+#import <Adium/AIMetaContact.h>
 #import "AIModularPaneCategoryView.h"
-#import "AIService.h"
+#import <Adium/AIService.h>
 
 #define	CONTACT_INFO_NIB				@"ContactInfoWindow"			//Filename of the contact info nib
 #define KEY_INFO_WINDOW_FRAME			@"Contact Info Window Frame"	//

@@ -14,13 +14,13 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIListObject.h"
-#import "AIContactController.h"
-#import "AIListContact.h"
-#import "AIListGroup.h"
-#import "AIPreferenceController.h"
-#import "AIService.h"
-#import "AIUserIcons.h"
+#import <Adium/AIListObject.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIListGroup.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIService.h>
+#import <Adium/AIUserIcons.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 
 #define ObjectStatusCache	@"Object Status Cache"

@@ -14,10 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccount.h"
-#import "AIService.h"
-#import "AIAccountControllerProtocol.h"
-#import "AIAccountViewController.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIService.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIAccountViewController.h>
 
 /*!
  * @class AIService

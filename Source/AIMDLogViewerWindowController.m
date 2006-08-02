@@ -12,7 +12,7 @@
 #import "AILogToGroup.h"
 #import "AILogFromGroup.h"
 #import "AIChatLog.h"
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 
 @implementation AIMDLogViewerWindowController
 

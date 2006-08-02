@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIWindowController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIWindowController.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 
 @class AIModularPaneCategoryView, AIAutoScrollView, AIColoredBoxView, AIPreferencePane, AIAlternatingRowTableView;
 

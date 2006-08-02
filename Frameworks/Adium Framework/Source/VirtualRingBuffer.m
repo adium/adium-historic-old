@@ -15,7 +15,7 @@
  */
 
 
-#import "VirtualRingBuffer.h"
+#import <Adium/VirtualRingBuffer.h>
 
 #include <mach/mach.h>
 #include <mach/mach_error.h>

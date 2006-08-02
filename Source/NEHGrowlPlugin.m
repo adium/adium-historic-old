@@ -15,9 +15,9 @@
  */
 
 #import <Adium/AIChatControllerProtocol.h>
-#import "AIContactController.h"
-#import "AIContentController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
 #import "NEHGrowlPlugin.h"

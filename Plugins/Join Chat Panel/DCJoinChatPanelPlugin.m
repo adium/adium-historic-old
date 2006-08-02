@@ -15,7 +15,7 @@
  */
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIMenuController.h"
+#import <Adium/AIMenuControllerProtocol.h>
 #import "DCJoinChatPanelPlugin.h"
 #import "DCJoinChatWindowController.h"
 #import <Adium/AIAccount.h>

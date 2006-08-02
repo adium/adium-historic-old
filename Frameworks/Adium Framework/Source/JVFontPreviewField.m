@@ -1,6 +1,6 @@
 // From Colloquy
 
-#import "JVFontPreviewField.h"
+#import <Adium/JVFontPreviewField.h>
 
 @implementation JVFontPreviewField
 

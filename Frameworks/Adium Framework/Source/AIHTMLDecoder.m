@@ -17,7 +17,7 @@
 	A quick and simple HTML to Attributed string converter (ha! --jmelloy)
 */
 
-#import "AIHTMLDecoder.h"
+#import <Adium/AIHTMLDecoder.h>
 
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
@@ -29,9 +29,9 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 
-#import "AITextAttachmentExtension.h"
-#import "ESFileWrapperExtension.h"
-#import "AIXMLElement.h"
+#import <Adium/AITextAttachmentExtension.h>
+#import <Adium/ESFileWrapperExtension.h>
+#import <Adium/AIXMLElement.h>
 
 int HTMLEquivalentForFontSize(int fontSize);
 

@@ -15,9 +15,9 @@
  */
 
 #import "AIEmoticonController.h"
-#import "AIMenuController.h"
-#import "AIPreferenceController.h"
-#import "AIToolbarController.h"
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
 #import "BGEmoticonMenuPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>

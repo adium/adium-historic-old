@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on 1/18/06.
 //
 
-#import "AIObject.h"
+#import <Adium/AIObject.h>
 
 @class AIAccount;
 @protocol AIEventHandler;
