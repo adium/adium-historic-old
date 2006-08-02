@@ -311,7 +311,7 @@ enum {
 #warning XXX This workaround should probably be removed before 1.0b8 (definitely before 1.0 final), since the bug that necessitated it was stamped out quickly and the transcript viewer will fix any broken logs. All logs in the world that were thus broken should be thereby fixed by either or both of the aforementioned versions.
 	NSMutableData *markerData = [[[handle readDataOfLength:xmlMarkerLength + failedUtf8BomLength] mutableCopy] autorelease];
 	NSRange markerRange = { 0, [markerData length] };
-	const char *markerBytes = [markerData bytes];
+	const unsigned char *markerBytes = [markerData bytes];
 	if ((markerRange.length >= failedUtf8BomLength)
 	&&  (markerBytes[0] == 0xC3)
 	&&  (markerBytes[1] == 0x94)
