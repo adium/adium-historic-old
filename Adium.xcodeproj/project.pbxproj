@@ -622,6 +622,14 @@
 		34D8374E07CC2F2E006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34D8375407CC2FA3006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34D8378307CC31B9006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		34DC12FB0A81415C00D710F3 /* ESApplescriptabilityController.h in Headers */ = {isa = PBXBuildFile; fileRef = 344C0D4F06B6D63800DA7200 /* ESApplescriptabilityController.h */; };
+		34DC12FC0A81415D00D710F3 /* ESApplescriptabilityController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344C0D4E06B6D63800DA7200 /* ESApplescriptabilityController.m */; };
+		34DC12FD0A81416500D710F3 /* ESApplescriptContactAlertPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D8333A07CBD758006466F2 /* ESApplescriptContactAlertPlugin.h */; };
+		34DC12FE0A81416500D710F3 /* ESPanelApplescriptDetailPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D8333907CBD758006466F2 /* ESPanelApplescriptDetailPane.h */; };
+		34DC12FF0A81416700D710F3 /* GBApplescriptFiltersPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BFD7FF07E6A51D00AD984D /* GBApplescriptFiltersPlugin.h */; };
+		34DC13030A81417500D710F3 /* AILoginWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = F57938FA033E745F01A8010A /* AILoginWindowController.h */; };
+		34DC13040A81417600D710F3 /* AILoginWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938C2033E73AC01A8010A /* AILoginWindowController.m */; };
+		34DC13050A81417700D710F3 /* LoginSelect.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34575E3407CBA7DF004A4FFF /* LoginSelect.nib */; };
 		34DC88130A7EEE2E003E1636 /* AIAccountController.h in Headers */ = {isa = PBXBuildFile; fileRef = F57938EF033E745F01A8010A /* AIAccountController.h */; };
 		34DC88140A7EEE2E003E1636 /* AIAccountController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938AA033E737001A8010A /* AIAccountController.m */; };
 		34DC88150A7EEE2E003E1636 /* AIContactController.h in Headers */ = {isa = PBXBuildFile; fileRef = F57938F6033E745F01A8010A /* AIContactController.h */; };
@@ -7221,6 +7229,11 @@
 				34DC88850A7EEE2F003E1636 /* AdiumURLHandling.h in Headers */,
 				34DC88870A7EEE2F003E1636 /* XtrasInstaller.h in Headers */,
 				3419DF3A0A8119BF00C3FC68 /* AICalendarDate.h in Headers */,
+				34DC12FB0A81415C00D710F3 /* ESApplescriptabilityController.h in Headers */,
+				34DC12FD0A81416500D710F3 /* ESApplescriptContactAlertPlugin.h in Headers */,
+				34DC12FE0A81416500D710F3 /* ESPanelApplescriptDetailPane.h in Headers */,
+				34DC12FF0A81416700D710F3 /* GBApplescriptFiltersPlugin.h in Headers */,
+				34DC13030A81417500D710F3 /* AILoginWindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8203,6 +8216,7 @@
 				3419DE800A81042F00C3FC68 /* togglegroups.png in Resources */,
 				3419DE810A81042F00C3FC68 /* togglegroups_transparent.png in Resources */,
 				3419DE820A81042F00C3FC68 /* ToolbarPrefs.plist in Resources */,
+				34DC13050A81417700D710F3 /* LoginSelect.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8846,6 +8860,8 @@
 				34DC88860A7EEE2F003E1636 /* AdiumURLHandling.m in Sources */,
 				34DC88880A7EEE2F003E1636 /* XtrasInstaller.m in Sources */,
 				3419DF3B0A8119BF00C3FC68 /* AICalendarDate.m in Sources */,
+				34DC12FC0A81415D00D710F3 /* ESApplescriptabilityController.m in Sources */,
+				34DC13040A81417600D710F3 /* AILoginWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
