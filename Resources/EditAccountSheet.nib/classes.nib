@@ -32,6 +32,7 @@
                 "button_OK" = NSButton; 
                 "button_cancel" = NSButton; 
                 "button_chooseIcon" = NSButton; 
+                "checkbox_autoconnect" = NSButton; 
                 "imageView_userIcon" = AIImageViewWithImagePicker; 
                 "matrix_userIcon" = NSMatrix; 
                 notifyTarget = id; 
