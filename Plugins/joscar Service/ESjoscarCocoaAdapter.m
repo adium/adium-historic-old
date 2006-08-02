@@ -382,10 +382,23 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	BuddyInfo			*info = [userInfo get:@"BuddyInfo"];
 	NSData				*iconData = [NSData dataWithData:[joscarBridge dataFromByteBlock:[info getIconData]]];
 
-	AILog(@"+++ Icon update for %@ is %@",[sn getNormal],[[[NSImage alloc] initWithData:iconData] autorelease]);
-
-	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
-					  iconUpdate:iconData];
+	/*
+	 //Write out the data we're receiving if it's invalid.
+	 NSImage *image = [[[NSImage alloc] initWithData:iconData] autorelease];
+	 if (!image) {
+		 AILog(@"Null image from %@ : data is %@",[sn getFormatted], iconData);
+		 static int filenumber = 0;
+		 [iconData writeToFile:[NSString stringWithFormat:@"~/%i.jpg",++filenumber] 
+					atomically:NO];
+	 }
+	 */
+	
+	if (iconData && [iconData length]) {
+		[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
+						  iconUpdate:iconData];
+	} else {	
+		AILog(@"(joscarCocoaAdapter): --- %@: Got %@ icon data (byte block was %@)", [sn getFormatted], iconData, [info getIconData]);
+	}
 }
 
 
