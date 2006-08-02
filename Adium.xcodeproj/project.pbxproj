@@ -959,7 +959,6 @@
 		34DC8B120A7EEEF7003E1636 /* NSString+CarbonFSRefCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D8343F07CBE6E1006466F2 /* NSString+CarbonFSRefCreation.m */; };
 		34DC8B130A7EEEF7003E1636 /* SUSpeaker.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D8346C07CBE6F4006466F2 /* SUSpeaker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34DC8B140A7EEEF7003E1636 /* SUSpeaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D8346B07CBE6F4006466F2 /* SUSpeaker.m */; };
-		34DC8B150A7EEEF7003E1636 /* SystemVersionCheck.m in Sources */ = {isa = PBXBuildFile; fileRef = 347A211C09786BA900A30431 /* SystemVersionCheck.m */; };
 		34DCF0E3097A30AD0054194E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		34DFF5FD07A63DB400B92233 /* ESSecureMessagingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34DFF46107A5EABF00B92233 /* ESSecureMessagingPlugin.m */; };
 		34E036720A75AA4F00394F11 /* CBOscarService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B919C9062DEF15004F1223 /* CBOscarService.h */; };
@@ -8986,7 +8985,6 @@
 				34DC8B100A7EEEF7003E1636 /* NDRunLoopMessenger.m in Sources */,
 				34DC8B120A7EEEF7003E1636 /* NSString+CarbonFSRefCreation.m in Sources */,
 				34DC8B140A7EEEF7003E1636 /* SUSpeaker.m in Sources */,
-				34DC8B150A7EEEF7003E1636 /* SystemVersionCheck.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
