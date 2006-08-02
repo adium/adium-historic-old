@@ -463,8 +463,6 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		}
 		value = IS_CONTACT ? AILocalizedString(currentStatus, /*comment*/ nil) : AILocalizedString(@"contact list group", /*comment*/ nil);
 
-//	} else if([attribute isEqualToString:NSAccessibilityValueAttribute]) {
-//		value = listObject;
 	} else if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
 		value = [self labelString];
 	} else if([attribute isEqualToString:NSAccessibilityWindowAttribute]) {

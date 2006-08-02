@@ -218,11 +218,6 @@
 
 #pragma mark Accessibility
 
-- (NSArray *)accessibilityAttributeNames
-{
-	return [[super accessibilityAttributeNames] mutableCopy];
-}
-
 - (id)accessibilityAttributeValue:(NSString *)attribute
 {	
 	if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
