@@ -939,6 +939,8 @@
 + (id)invokeMethod:(JavaMethod*)meth :(id)obj :(JavaVector*)params;
 
 + (void)setVCardAvatar:(SmackXVCard*)vCard :(NSData*)avatar;
++ (NSData*)getVCardAvatar:(SmackXVCard*)vCard;
++ (BOOL)isAvatarEmpty:(SmackXVCard*)vCard;
 
 @end
 

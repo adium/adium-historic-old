@@ -23,6 +23,7 @@
 
 + (SmackXVCard*)vCard;
 + (void)setAvatar:(NSData*)avatar forVCard:(SmackXVCard*)vCard;
++ (NSData*)getAvatarForVCard:(SmackXVCard*)vCard;
 + (SmackVCardUpdateExtension*)VCardUpdateExtensionWithPhotoHash:(NSString*)hash;
 + (BOOL)avatarIsEmpty:(SmackXVCard*)vCard;
 
@@ -38,6 +39,11 @@
 + (void)setAvatar:(NSData*)avatar forVCard:(SmackXVCard*)vCard
 {
     [[[self classLoader] loadClass:@"net.adium.smackBridge.SmackBridge"] setVCardAvatar:vCard :avatar];
+}
+
++ (NSData*)getAvatarForVCard:(SmackXVCard*)vCard
+{
+    return [[[self classLoader] loadClass:@"net.adium.smackBridge.SmackBridge"] getVCardAvatar:vCard];
 }
 
 + (SmackVCardUpdateExtension*)VCardUpdateExtensionWithPhotoHash:(NSString*)hash
@@ -209,19 +215,16 @@
 
 - (void)receivedPresencePacket:(NSNotification*)notification
 {
-    // See JEP-153 section 4.3 "Multiple Resources" for a description of the magic that
-    // has to happen here.
-    
     SmackPresence *presence = [[notification userInfo] objectForKey:SmackXMPPPacket];
     
     NSString *from = [presence getFrom];
     
-    // we only care about presence packets from other resources of ourselves
     if([[from jidUserHost] isEqualToString:[[account explicitFormattedUID] jidUserHost]])
     {
+        // See JEP-153 section 4.3 "Multiple Resources" for a description of the magic that
+        // has to happen here.
+
         NSString *resource = [from jidResource];
-        NSLog(@"presence from own account, resource \"%@\", own resource = \"%@\"",resource,
-              [account resource]);
         
         if([resource isEqualToString:[account resource]])
             return; // ignore presences for ourselves
@@ -293,8 +296,65 @@
                 }
             }
         }
-    }
+    } else
+        // don't block this thread!
+        [NSThread detachNewThreadSelector:@selector(checkVCardPhoto:) toTarget:self withObject:[presence retain]];
+}
 
+- (void)checkVCardPhoto:(SmackPresence*)presence
+{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    // somebody else's presence, check for vcard photo
+    SmackVCardUpdateExtension *ext = [presence getExtension:@"x" :@"vcard-temp:x:update"];
+    
+    if(ext)
+    {
+        NSString *uid = [[presence getFrom] jidUserHost];
+        NSString *hash = [ext getPhoto];
+        AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:uid];
+        if(contact)
+        {
+            NSString *oldhash = [contact statusObjectForKey:@"XMPPJEP153Hash"];
+            if(!oldhash || ![hash isEqualToString:oldhash])
+            {
+                NSData *avatar;
+                if(!hash || [hash isEqualToString:@""]) // empty avatar?
+                    avatar = [NSData data];
+                else {
+                    @try {
+                        SmackXVCard *vCard = [SmackCocoaAdapter vCard];
+                        [vCard load:[account connection] :uid];
+                        
+                        avatar = [SmackCocoaAdapter getAvatarForVCard:vCard];
+                    } @catch(NSException *e) {
+                        [presence release];
+                        [pool release];
+                        return;
+                    }
+                    
+                    [contact setStatusObject:hash forKey:@"XMPPJEP153Hash" notify:NO];
+                }
+                
+                if([avatar length] > 0) // don't remove the avatar
+                    [self performSelectorOnMainThread:@selector(setAvatar:) withObject:[NSArray arrayWithObjects:avatar,contact,nil] waitUntilDone:YES];
+            }
+        } else
+            NSLog(@"******* unknown contact %@",uid);
+    }
+    [presence release];// retained before forking
+    [pool release];
+}
+
+
+- (void)setAvatar:(NSArray*)params
+{
+    NSData *data = [params objectAtIndex:0];
+    
+    NSLog(@"setting avatar for %@",[params objectAtIndex:1]);
+    
+    [[params objectAtIndex:1] setServersideIconData:([data length]!=0)?data:nil notify:NotifyLater];
+
+    [[params objectAtIndex:1] notifyOfChangedStatusSilently:[account silentAndDelayed]];
 }
 
 #pragma mark vCard Viewing And Editing

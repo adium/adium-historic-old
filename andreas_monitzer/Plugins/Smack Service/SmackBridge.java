@@ -136,6 +136,13 @@ public class SmackBridge implements ConnectionListener {
         vCard.setAvatar(avatar.bytes(0,avatar.length()));
     }
     
+    public static NSData getVCardAvatar(VCard vCard) {
+        byte[] avt = vCard.getAvatar();
+        if(avt == null)
+            return null;
+        return new NSData(avt);
+    }
+    
     public static boolean isAvatarEmpty(VCard vCard) {
         byte[] avatar = vCard.getAvatar();
         return avatar == null || avatar.length == 0;

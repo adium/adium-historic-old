@@ -112,8 +112,6 @@
         SmackRosterEntry *entry = [roster getEntry:jid];
         NSString *type = [[entry getType] toString];
         
-        NSLog(@"add entry %@",jid);
-        
         SmackListContact *listContact = (SmackListContact*)[[adium contactController] contactWithService:[account service] account:account UID:jid class:[SmackListContact class]];
         
         if(![[listContact formattedUID] isEqualToString:jid])
