@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContactControllerProtocol.h"
-#import "AIListGroup.h"
-#import "AISortController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIListGroup.h>
+#import <Adium/AISortController.h>
 #import <AIUtilities/AIArrayAdditions.h>
 
 @interface AIListGroup (PRIVATE)

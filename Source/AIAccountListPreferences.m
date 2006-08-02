@@ -16,7 +16,7 @@
 
 #import <Adium/AIAccountControllerProtocol.h>
 #import "AIAccountListPreferences.h"
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import "AIStatusController.h"
 #import "AIEditAccountWindowController.h"
 #import <AIUtilities/AIAutoScrollView.h>

@@ -10,7 +10,7 @@
 #import <Adium/AIAccount.h>
 #import <AIAdium.h>
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import "AIContactListRecentImagesWindowController.h"
 #import <AIUtilities/AIBezierPathAdditions.h>
 

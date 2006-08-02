@@ -14,13 +14,13 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import "AIContactInfoWindowController.h"
 #import "ESContactInfoListController.h"
-#import "AIListGroup.h"
-#import "AIListObject.h"
+#import <Adium/AIListGroup.h>
+#import <Adium/AIListObject.h>
 #import "AIListOutlineView.h"
-#import "AIMetaContact.h"
+#import <Adium/AIMetaContact.h>
 
 @implementation ESContactInfoListController
 

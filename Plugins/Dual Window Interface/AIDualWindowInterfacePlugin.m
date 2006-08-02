@@ -15,7 +15,7 @@
  */
 
 #import "AIDualWindowInterfacePlugin.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIMessageTabViewItem.h"
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"

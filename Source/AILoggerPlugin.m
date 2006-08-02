@@ -15,17 +15,17 @@
  */
 
 #import "AIChatLog.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 #import "AILogViewerWindowController.h"
 #import "AIMDLogViewerWindowController.h"
-#import "AIContentController.h"
+#import <Adium/AIContentControllerProtocol.h>
 #import "AILoggerPlugin.h"
-#import "AILoginController.h"
-#import "AIMenuController.h"
-#import "AIPreferenceController.h"
-#import "AIToolbarController.h"
+#import <Adium/AILoginControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
 #import "AIXMLAppender.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>

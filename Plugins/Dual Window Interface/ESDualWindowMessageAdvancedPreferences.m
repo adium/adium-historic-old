@@ -23,7 +23,7 @@
 #import <AIUtilities/AIImageAdditions.h>
 
 #import "AIDockController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIPreferenceWindowController.h"
 
 @interface ESDualWindowMessageAdvancedPreferences (PRIVATE)

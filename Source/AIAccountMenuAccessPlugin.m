@@ -16,7 +16,7 @@
 
 #import <Adium/AIAccountControllerProtocol.h>
 #import "AIAccountMenuAccessPlugin.h"
-#import "AIMenuController.h"
+#import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIAccountMenu.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIStringAdditions.h>

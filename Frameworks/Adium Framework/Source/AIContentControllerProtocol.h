@@ -6,8 +6,8 @@
  *
  */
 
-#import "AIControllerProtocol.h"
-#import "AIListContact.h"
+#import <Adium/AIControllerProtocol.h>
+#import <Adium/AIListContact.h>
 
 #define Content_ContentObjectAdded					@"Content_ContentObjectAdded"
 #define Content_ChatDidFinishAddingUntrackedContent	@"Content_ChatDidFinishAddingUntrackedContent"

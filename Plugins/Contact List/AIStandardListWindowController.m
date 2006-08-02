@@ -16,10 +16,10 @@
 
 #import "AIStandardListWindowController.h"
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIContactController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AIStatusController.h"
-#import "AIToolbarController.h"
+#import <Adium/AIToolbarControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIStatusMenu.h>

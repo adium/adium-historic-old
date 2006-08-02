@@ -14,10 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIListCell.h"
-#import "AIListGroup.h"
-#import "AIListObject.h"
-#import "AIListOutlineView.h"
+#import <Adium/AIListCell.h>
+#import <Adium/AIListGroup.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIListOutlineView.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>

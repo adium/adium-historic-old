@@ -6,8 +6,8 @@
  *
  */
 
-#import "AIControllerProtocol.h"
-#import "AIListContact.h"
+#import <Adium/AIControllerProtocol.h>
+#import <Adium/AIListContact.h>
 
 #define ListObject_AttributesChanged			@"ListObject_AttributesChanged"
 #define ListObject_StatusChanged				@"ListObject_StatusChanged"

@@ -14,30 +14,30 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAbstractListController.h"
-#import "AIContactController.h"
-#import "AIInterfaceController.h"
-#import "AIPreferenceController.h"
-#import "AIListCell.h"
-#import "AIListContactBubbleCell.h"
-#import "AIListContactBubbleToFitCell.h"
-#import "AIListContactCell.h"
-#import "AIListContactMockieCell.h"
-#import "AIListGroup.h"
-#import "AIListGroupBubbleCell.h"
-#import "AIListGroupBubbleToFitCell.h"
-#import "AIListGroupCell.h"
-#import "AIListGroupMockieCell.h"
-#import "AIListObject.h"
-#import "AIListOutlineView.h"
-#import "AIMenuController.h"
-#import "AIMetaContact.h"
+#import <Adium/AIAbstractListController.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIListCell.h>
+#import <Adium/AIListContactBubbleCell.h>
+#import <Adium/AIListContactBubbleToFitCell.h>
+#import <Adium/AIListContactCell.h>
+#import <Adium/AIListContactMockieCell.h>
+#import <Adium/AIListGroup.h>
+#import <Adium/AIListGroupBubbleCell.h>
+#import <Adium/AIListGroupBubbleToFitCell.h>
+#import <Adium/AIListGroupCell.h>
+#import <Adium/AIListGroupMockieCell.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIListOutlineView.h>
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIMetaContact.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
-#import "KFTypeSelectTableView.h"
+#import <Adium/KFTypeSelectTableView.h>
 
 #define CONTENT_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 #define STATUS_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]

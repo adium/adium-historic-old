@@ -6,7 +6,7 @@
  *
  */
 
-#import "AIControllerProtocol.h"
+#import <Adium/AIControllerProtocol.h>
 
 @protocol AIToolbarController <AIController>
 - (void)registerToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type;

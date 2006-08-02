@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIListGroupMockieCell.h"
-#import "AIListOutlineView.h"
+#import <Adium/AIListGroupMockieCell.h>
+#import <Adium/AIListOutlineView.h>
 #import <AIUtilities/AIBezierPathAdditions.h>
 #import <AIUtilities/AIGradient.h>
 #import <AIUtilities/AIColorAdditions.h>

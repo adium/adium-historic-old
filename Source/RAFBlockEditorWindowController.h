@@ -6,8 +6,9 @@
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "AIWindowController.h"
-#import "AIUtilities/AIAlternatingRowTableView.h"
+#import <Adium/AIWindowController.h>
+#import <AIUtilities/AIAlternatingRowTableView.h>
+
 @class AIListContact, AIAccount, AICompletingTextField, AIAccountMenu;
 
 @interface RAFBlockEditorWindowController : AIWindowController {

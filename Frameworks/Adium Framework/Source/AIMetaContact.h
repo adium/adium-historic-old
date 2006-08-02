@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIListContact.h"
+#import <Adium/AIListContact.h>
 
 #define META_SERVICE_STRING					AILocalizedString(@"Meta", nil)
 #define	KEY_PREFERRED_DESTINATION_CONTACT	@"Preferred Destination Contact"

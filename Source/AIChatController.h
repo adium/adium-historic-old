@@ -5,8 +5,8 @@
 //  Created by Evan Schoenberg on 6/10/05.
 //
 
-#import "AIObject.h"
-#import "AIChatControllerProtocol.h"
+#import <Adium/AIObject.h>
+#import <Adium/AIChatControllerProtocol.h>
 
 @class AIChat, AdiumChatEvents;
 

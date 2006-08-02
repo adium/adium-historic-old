@@ -14,14 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccount.h"
-#import "AIChat.h"
-#import "AIContactController.h"
-#import "AIChatControllerProtocol.h"
-#import "AIService.h"
-#import "AIListContact.h"
-#import "AIMetaContact.h"
-#import "DCJoinChatViewController.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIService.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIMetaContact.h>
+#import <Adium/DCJoinChatViewController.h>
 #import <AIUtilities/AIStringAdditions.h>
 
 @interface DCJoinChatViewController (PRIVATE)

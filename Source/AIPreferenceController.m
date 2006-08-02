@@ -14,17 +14,19 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContactController.h"
-#import "AILoginController.h"
 #import "AIPreferenceController.h"
+
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AILoginControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
+
 #import "AIPreferenceWindowController.h"
-#import "AIToolbarController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
-#import "AIListObject.h"
+#import <Adium/AIListObject.h>
 #import "AIPreferencePane.h"
 
 #define PREFS_DEFAULT_PREFS 	@"PrefsPrefs.plist"

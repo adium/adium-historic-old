@@ -15,7 +15,7 @@
  */
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AISoundController.h"
 #import "AIStatusController.h"
 #import "ESFastUserSwitchingSupportPlugin.h"

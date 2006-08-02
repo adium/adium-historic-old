@@ -7,13 +7,13 @@
 
 #import <Adium/AIAccountControllerProtocol.h>
 #import "AIChatLog.h"
-#import "AIContactController.h"
-#import "AIContentController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 #import "AILogViewerWindowController.h"
 #import "AILoggerPlugin.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "ESRankingCell.h" 
 #import "GBChatlogHTMLConverter.h"
 #import <AIUtilities/AIArrayAdditions.h>

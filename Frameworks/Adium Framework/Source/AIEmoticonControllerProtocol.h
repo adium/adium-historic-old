@@ -6,7 +6,7 @@
  *
  */
 
-#import "AIControllerProtocol.h"
+#import <Adium/AIControllerProtocol.h>
 
 #define PREF_GROUP_EMOTICONS				@"Emoticons"
 #define KEY_EMOTICON_ACTIVE_PACKS			@"Active Emoticon Packs"

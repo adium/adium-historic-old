@@ -15,7 +15,7 @@
  */
 
 #import <Adium/AIChatControllerProtocol.h>
-#import "AIContentController.h"
+#import <Adium/AIContentControllerProtocol.h>
 #import "ESFileTransferMessagesPlugin.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIContentEvent.h>

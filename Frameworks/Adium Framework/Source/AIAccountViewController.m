@@ -14,14 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccount.h"
-#import "AIService.h"
-#import "AIChat.h"
-#import "AIAccountControllerProtocol.h"
-#import "AIAccountViewController.h"
-#import "AIContentController.h"
-#import "AIContactController.h"
-#import "AIPreferenceControllerProtocol.h"
+#import <Adium/AIAccountViewController.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIService.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>

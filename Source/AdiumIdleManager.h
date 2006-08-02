@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on 7/5/05.
 //
 
-#import "AIObject.h"
+#import <Adium/AIObject.h>
 
 @interface AdiumIdleManager : AIObject {
 	BOOL					machineIsIdle;

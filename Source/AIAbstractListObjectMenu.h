@@ -6,7 +6,7 @@
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "AIObject.h"
+#import <Adium/AIObject.h>
 
 @class AIListObject;
 

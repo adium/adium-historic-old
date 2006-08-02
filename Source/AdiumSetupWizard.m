@@ -6,14 +6,14 @@
 //
 
 #import "AdiumSetupWizard.h"
-#import "AIAccountControllerProtocol.h"
-#import "AIContentController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import "SetupWizardBackgroundView.h"
 #import "GBFireImporter.h"
 #import <AIUtilities/AIImageAdditions.h>
 #import "AIServiceMenu.h"
-#import "AIService.h"
-#import "AIAccount.h"
+#import <Adium/AIService.h>
+#import <Adium/AIAccount.h>
 #import <AIUtilities/AITextFieldAdditions.h>
 #import <AIUtilities/AIStringFormatter.h>
 #import <AIUtilities/AIFileManagerAdditions.h>

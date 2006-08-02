@@ -14,18 +14,18 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccount.h"
-#import "AIEditStateWindowController.h"
-#import "AIStatus.h"
-#import "AIStatusController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIEditStateWindowController.h>
+#import <Adium/AIStatus.h>
+#import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIStringFormatter.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
-#import "AIMessageEntryTextView.h"
+#import <Adium/AIMessageEntryTextView.h>
 
 #define CONTROL_SPACING			8
 #define WINDOW_HEIGHT_PADDING	60

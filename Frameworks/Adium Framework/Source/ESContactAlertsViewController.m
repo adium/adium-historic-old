@@ -14,13 +14,13 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContactController.h"
-#import "AIListObject.h"
-#import "AIListContact.h"
-#import "AIPreferenceController.h"
-#import "CSNewContactAlertWindowController.h"
-#import "AIContactAlertsControllerProtocol.h"
-#import "ESContactAlertsViewController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/CSNewContactAlertWindowController.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
+#import <Adium/ESContactAlertsViewController.h>
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIImageTextCell.h>
@@ -550,9 +550,7 @@ int actionSort(id objectA, id objectB, void *context)
 						}
 						
 						if (i == (count - 1)) {
-							[actionDescription appendString:AILocalizedStringFromTable(@".",
-																					   @"AdiumFramework",
-																					   "period at the end of the Events pane sentence describing actions taken for an event")];
+							[actionDescription appendString:AILocalizedString(@".", "period at the end of the Events pane sentence describing actions taken for an event")];
 						}
 					}
 				}

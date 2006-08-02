@@ -8,9 +8,9 @@
 
 #import "ESGaimAIMAccount.h"
 #import <Adium/AIChatControllerProtocol.h>
-#import "AIContactController.h"
-#import "AIContentController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "SLGaimCocoaAdapter.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIHTMLDecoder.h>

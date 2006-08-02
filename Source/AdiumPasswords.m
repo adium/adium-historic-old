@@ -14,15 +14,15 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountControllerProtocol.h"
-#import "AILoginControllerProtocol.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AILoginControllerProtocol.h>
 #import "AdiumPasswords.h"
 #import "ESAccountPasswordPromptController.h"
 #import "ESProxyPasswordPromptController.h"
 #import <AIUtilities/AIKeychain.h>
 #import <AIUtilities/AIObjectAdditions.h>
-#import "AIAccount.h"
-#import "AIService.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIService.h>
 
 @interface AdiumPasswords (PRIVATE)
 - (NSString *)_accountNameForAccount:(AIAccount *)inAccount;

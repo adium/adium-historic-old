@@ -19,7 +19,7 @@
 for the actions of others, following only the true, Aqua path to peace, justice, and a bigger slice of the pizza pie.
 */
 
-#import "ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h"
+#import <Adium/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h>
 
 @implementation ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow
 

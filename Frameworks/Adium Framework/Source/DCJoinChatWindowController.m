@@ -14,15 +14,15 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccount.h"
-#import "AIAccountControllerProtocol.h"
-#import "AIContactController.h"
-#import "AIContentMessage.h"
-#import "AILocalizationButton.h"
-#import "AIService.h"
-#import "DCJoinChatViewController.h"
-#import "DCJoinChatWindowController.h"
-#import "AIAccountMenu.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AILocalizationButton.h>
+#import <Adium/AIService.h>
+#import <Adium/DCJoinChatViewController.h>
+#import <Adium/DCJoinChatWindowController.h>
+#import <Adium/AIAccountMenu.h>
 
 #define JOIN_CHAT_NIB		@"JoinChatWindow"
 

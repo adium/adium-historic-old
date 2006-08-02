@@ -16,7 +16,7 @@
 
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIChatControllerProtocol.h>
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIStatusController.h"
 #import "CBStatusMenuItemController.h"
 #import <AIUtilities/AIApplicationAdditions.h>

@@ -6,7 +6,7 @@
  *
  */
 
-#import "AIControllerProtocol.h"
+#import <Adium/AIControllerProtocol.h>
 
 //Preference groups
 #define PREF_GROUP_GENERAL              @"General"

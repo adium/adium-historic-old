@@ -6,7 +6,7 @@
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "AIWindowController.h"
+#import <Adium/AIWindowController.h>
 
 @interface ESOTRFingerprintDetailsWindowController : AIWindowController {
 	IBOutlet	NSTextField	*textField_UID;

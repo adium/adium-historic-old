@@ -15,9 +15,9 @@
  */
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import "ESAddressBookIntegrationPlugin.h"
-#import "AIMenuController.h"
+#import <Adium/AIMenuControllerProtocol.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>

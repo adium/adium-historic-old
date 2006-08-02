@@ -14,10 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIListContact.h"
-#import "AIListGroup.h"
-#import "AISortController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIListContact.h>
+#import <Adium/AIListGroup.h>
+#import <Adium/AISortController.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIStringAdditions.h>
 
 #define KEY_RESOLVE_ALPHABETICALLY  @"Status:Resolve Alphabetically"

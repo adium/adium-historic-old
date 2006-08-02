@@ -8,13 +8,13 @@
 #import "RAFjoscarAccount.h"
 #import "RAFjoscarSecuridPromptController.h"
 #import "AIAdium.h"
-#import "AIPreferenceController.h"
-#import "AIContactController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIContentController.h"
+#import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIChatControllerProtocol.h>
 #import "AIStatusController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/ESDebugAILog.h>

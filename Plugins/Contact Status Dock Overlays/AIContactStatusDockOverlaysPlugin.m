@@ -16,11 +16,11 @@
 
 #import "AIContactStatusDockOverlaysPlugin.h"
 #import <Adium/AIChatControllerProtocol.h>
-#import "AIContactController.h"
-#import "AIContentController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import "AIDockController.h"
-#import "AIInterfaceController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>

@@ -14,11 +14,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIStatus.h"
-#import "AIStatusIcons.h"
+#import <Adium/AIStatus.h>
+#import <Adium/AIStatusIcons.h>
 
-#import "AIStatusController.h"
-#import "AIHTMLDecoder.h"
+#import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 

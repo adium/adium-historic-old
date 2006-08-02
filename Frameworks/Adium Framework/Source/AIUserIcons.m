@@ -14,11 +14,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIListContact.h"
-#import "AIListObject.h"
-#import "AIUserIcons.h"
+#import <Adium/AIListContact.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIUserIcons.h>
 #import <AIUtilities/AIImageAdditions.h>
-#import "AIServiceIcons.h"
+#import <Adium/AIServiceIcons.h>
 
 static NSMutableDictionary	*iconCache = nil;
 static NSMutableDictionary	*menuIconCache = nil;

@@ -5,7 +5,7 @@
 //  Based on SpeechUtilities framework by Raphael Sebbe.
 //  Optimized and expanded by Evan Schoenberg.
 
-#import "SUSpeaker.h"
+#import <Adium/SUSpeaker.h>
 #include <unistd.h>
 #include <pthread.h>
 

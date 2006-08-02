@@ -7,8 +7,8 @@
  *
  */
 
-#import "AIControllerProtocol.h"
-#import "AIStatus.h"
+#import <Adium/AIControllerProtocol.h>
+#import <Adium/AIStatus.h>
 
 @class AIStatus;
 

@@ -15,7 +15,7 @@
  */
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import "AIStatusController.h"
 #import "CBGaimOscarAccount.h"
 #import "SLGaimCocoaAdapter.h"

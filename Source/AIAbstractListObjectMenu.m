@@ -6,11 +6,11 @@
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "AIAbstractListObjectMenu.h"
+#import <Adium/AIAbstractListObjectMenu.h>
 #import <AIUtilities/AIImageAdditions.h>
-#import "AIListObject.h"
-#import "AIServiceIcons.h"
-#import "AIStatusIcons.h"
+#import <Adium/AIListObject.h>
+#import <Adium/AIServiceIcons.h>
+#import <Adium/AIStatusIcons.h>
 
 @interface AIAbstractListObjectMenu (PRIVATE)
 - (void)_destroyMenuItems;

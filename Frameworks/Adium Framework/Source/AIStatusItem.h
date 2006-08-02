@@ -5,9 +5,9 @@
 //  Created by Evan Schoenberg on 11/23/05.
 //
 
-#import "AIObject.h"
-#import "AIStatusIcons.h"
-#import "AIStatusDefines.h"
+#import <Adium/AIObject.h>
+#import <Adium/AIStatusIcons.h>
+#import <Adium/AIStatusDefines.h>
 
 @class AIStatusGroup;
 

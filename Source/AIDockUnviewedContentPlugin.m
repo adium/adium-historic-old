@@ -16,9 +16,9 @@
 
 #import "AIDockUnviewedContentPlugin.h"
 #import <Adium/AIChatControllerProtocol.h>
-#import "AIContentController.h"
+#import <Adium/AIContentControllerProtocol.h>
 #import "AIDockController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <Adium/AIChat.h>

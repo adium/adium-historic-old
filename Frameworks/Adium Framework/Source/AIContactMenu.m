@@ -6,11 +6,11 @@
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "AIContactController.h"
-#import "AIContactMenu.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContactMenu.h>
 #import <AIUtilities/AIMenuAdditions.h>
-#import "AIListContact.h"
-#import "AIListGroup.h"
+#import <Adium/AIListContact.h>
+#import <Adium/AIListGroup.h>
 
 @interface AIContactMenu (PRIVATE)
 - (id)initWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject;

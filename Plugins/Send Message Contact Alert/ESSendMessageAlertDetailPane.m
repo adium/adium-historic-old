@@ -15,7 +15,7 @@
  */
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import "ESSendMessageAlertDetailPane.h"
 #import "ESSendMessageContactAlertPlugin.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>

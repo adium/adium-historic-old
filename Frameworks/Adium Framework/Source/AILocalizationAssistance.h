@@ -27,6 +27,6 @@ typedef enum {
 - (NSControl *)viewForSizing;
 @end
 
-#import "AILocalizationButton.h"
-#import "AILocalizationButtonCell.h"
-#import "AILocalizationTextField.h"
+#import <Adium/AILocalizationButton.h>
+#import <Adium/AILocalizationButtonCell.h>
+#import <Adium/AILocalizationTextField.h>

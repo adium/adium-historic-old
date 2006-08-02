@@ -16,8 +16,8 @@
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
-#import "AIPreferenceController.h"
-#import "AIAccountControllerProtocol.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIModularPaneCategoryView.h>
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIImageAdditions.h>

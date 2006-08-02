@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIEmoticon.h"
-#import "AIEmoticonPack.h"
-#import "AITextAttachmentExtension.h"
+#import <Adium/AIEmoticon.h>
+#import <Adium/AIEmoticonPack.h>
+#import <Adium/AITextAttachmentExtension.h>
 
 @interface AIEmoticon (PRIVATE)
 - (AIEmoticon *)initWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName pack:(AIEmoticonPack *)inPack;

@@ -28,8 +28,8 @@
  it also makes it much more difficult to ensure a consistent look/feel to the preferences.
 */
 
-#import "AIContentController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "ESGeneralPreferences.h"
 #import "ESGeneralPreferencesPlugin.h"
 #import <AIUtilities/AIDictionaryAdditions.h>

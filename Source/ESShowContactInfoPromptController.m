@@ -7,7 +7,7 @@
 
 #import "ESShowContactInfoPromptController.h"
 #import "AIContactInfoWindowController.h"
-#import "AIListContact.h"
+#import <Adium/AIListContact.h>
 
 #define SHOW_CONTACT_INFO_PROMPT_NIB	@"ShowContactInfoPrompt"
 #define GET_INFO						AILocalizedString(@"Get Info",nil)

@@ -10,10 +10,10 @@
 #import "ESShowContactInfoPromptController.h"
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIContactController.h"
-#import "AIMenuController.h"
-#import "AIInterfaceController.h"
-#import "AIToolbarController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
 
 #import <Adium/AIListObject.h>
 #import <AIUtilities/AIImageAdditions.h>

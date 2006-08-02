@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIEmoticon.h"
-#import "AIEmoticonPack.h"
-#import "AIEmoticonController.h"
+#import <Adium/AIEmoticon.h>
+#import <Adium/AIEmoticonPack.h>
+#import <Adium/AIEmoticonControllerProtocol.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 

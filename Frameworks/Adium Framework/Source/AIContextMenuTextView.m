@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContextMenuTextView.h"
-#import "AIMenuController.h"
-#import "AIObject.h"
+#import <Adium/AIContextMenuTextView.h>
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIObject.h>
 #import <AIUtilities/AITextAttributes.h>
 
 @implementation AIContextMenuTextView

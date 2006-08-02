@@ -15,14 +15,14 @@
  */
 
 #import "AIDualWindowInterfacePlugin.h"
-#import "AIInterfaceController.h"
-#import "AIMenuController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
 #import "AIMessageTabViewItem.h"
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
 #import "AIDockController.h"
-#import "AIPreferenceController.h"
-#import "AIToolbarController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AICustomTabDragging.h>

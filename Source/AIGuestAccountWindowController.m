@@ -101,7 +101,7 @@ static AIGuestAccountWindowController *sharedGuestAccountWindowController = nil;
 		[AIStringFormatter stringFormatterAllowingCharacters:[service allowedCharactersForAccountName]
 													  length:[service allowedLengthForAccountName]
 											   caseSensitive:[service caseSensitive]
-												errorMessage:AILocalizedStringFromTable(@"The characters you're entering are not valid for an account name on this service.", @"AdiumFramework", nil)]];
+												errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.", nil)]];
 	
 	NSString *placeholder = [service defaultUserName];
 	if (!placeholder || ![placeholder length]) placeholder = [service UIDPlaceholder];

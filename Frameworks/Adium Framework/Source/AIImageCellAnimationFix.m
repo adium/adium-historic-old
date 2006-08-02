@@ -20,7 +20,7 @@
  until something else causes a display update.
  */
 
-#import "AIImageCellAnimationFix.h"
+#import <Adium/AIImageCellAnimationFix.h>
 #import <AIUtilities/AIImageAdditions.h>
 
 @implementation AIImageCellAnimationFix

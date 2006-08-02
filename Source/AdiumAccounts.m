@@ -15,10 +15,10 @@
  */
 
 #import "AdiumAccounts.h"
-#import "AIAccountControllerProtocol.h"
-#import "AIPreferenceController.h"
-#import "AIAccount.h"
-#import "AIService.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIService.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 

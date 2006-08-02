@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIListGroupCell.h"
+#import <Adium/AIListGroupCell.h>
 
 @interface AIListGroupBubbleCell : AIListGroupCell {
 	BOOL			outlineBubble;

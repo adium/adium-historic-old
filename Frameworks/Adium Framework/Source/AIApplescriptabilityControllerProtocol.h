@@ -6,7 +6,7 @@
  *
  */
 
-#import "AIControllerProtocol.h"
+#import <Adium/AIControllerProtocol.h>
 
 @protocol AIApplescriptabilityController <AIController>
 - (void)runApplescriptAtPath:(NSString *)inPath 

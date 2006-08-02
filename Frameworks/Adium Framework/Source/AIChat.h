@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESObjectWithStatus.h"
-#import "AIContentTyping.h"
+#import <Adium/ESObjectWithStatus.h>
+#import <Adium/AIContentTyping.h>
 
 @class AIAccount, AIListObject, AIListContact, AIContentObject, AIEmoticon;
 @protocol AIContainingObject;

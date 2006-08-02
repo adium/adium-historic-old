@@ -6,8 +6,8 @@
 //
 
 #import "ESPersonalPreferences.h"
-#import "AIPreferenceController.h"
-#import "AIContactController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIImageViewWithImagePicker.h>

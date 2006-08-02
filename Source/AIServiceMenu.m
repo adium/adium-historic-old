@@ -5,10 +5,10 @@
 //  Created by Adam Iser on 5/19/05.
 //
 
-#import "AIServiceMenu.h"
-#import "AIAccountControllerProtocol.h"
-#import "AIService.h"
-#import "AIServiceIcons.h"
+#import <Adium/AIServiceMenu.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIService.h>
+#import <Adium/AIServiceIcons.h>
 #import <AIUtilities/AIMenuAdditions.h>
 
 /*

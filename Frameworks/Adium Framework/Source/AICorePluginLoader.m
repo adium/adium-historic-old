@@ -22,11 +22,11 @@
 
  */
 
-#import "AICorePluginLoader.h"
+#import <Adium/AICorePluginLoader.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIExceptionHandlingUtilities.h>
-#import "AIPlugin.h"
+#import <Adium/AIPlugin.h>
 
 #define DIRECTORY_INTERNAL_PLUGINS		[@"Contents" stringByAppendingPathComponent:@"PlugIns"]	//Path to the internal plugins
 #define EXTERNAL_PLUGIN_FOLDER			@"PlugIns"				//Folder name of external plugins

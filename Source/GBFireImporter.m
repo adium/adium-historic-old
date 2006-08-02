@@ -15,18 +15,18 @@
  */
 
 #import "GBFireImporter.h"
-#import "AIContactControllerProtocol.h"
-#import "AIPreferenceControllerProtocol.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
 
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import "AIAccount.h"
-#import "AIStatus.h"
+#import <Adium/AIStatus.h>
 #import "AIHTMLDecoder.h"
 #import "AIStatusController.h"
 
 #import "AIListGroup.h"
-#import "AIListContact.h"
+#import <Adium/AIListContact.h>
 #import "AIMetaContact.h"
 #import "GBFireLogImporter.h"
 

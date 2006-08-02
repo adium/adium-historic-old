@@ -19,8 +19,8 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import "AIAccountMenu.h"
-#import "AIAccount.h"
-#import "AIService.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIService.h>
 
 #import "OTRCommon.h"
 

@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIObject.h"
-#import "AIEmoticonControllerProtocol.h"
+#import <Adium/AIObject.h>
+#import <Adium/AIEmoticonControllerProtocol.h>
 
 @protocol AIEmoticonController, AIContentFilter;
 @class AIEmoticonPreferences;

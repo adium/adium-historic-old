@@ -18,10 +18,10 @@
 #import "AdiumOTREncryption.h"
 
 #import <Adium/AIChatControllerProtocol.h>
-#import "AIContentController.h"
-#import "AIInterfaceController.h"
-#import "AIMenuController.h"
-#import "AIToolbarController.h"
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
 
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>

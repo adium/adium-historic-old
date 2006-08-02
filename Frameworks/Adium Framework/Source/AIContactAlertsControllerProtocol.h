@@ -6,7 +6,7 @@
  *
  */
 
-#import "AIControllerProtocol.h"
+#import <Adium/AIControllerProtocol.h>
 
 @class AIListObject, AIModularPane;
 

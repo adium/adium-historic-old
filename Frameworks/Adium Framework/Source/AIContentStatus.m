@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContentObject.h"
-#import "AIContentStatus.h"
+#import <Adium/AIContentObject.h>
+#import <Adium/AIContentStatus.h>
 
 @interface AIContentStatus (PRIVATE)
 - (id)initWithChat:(AIChat *)inChat

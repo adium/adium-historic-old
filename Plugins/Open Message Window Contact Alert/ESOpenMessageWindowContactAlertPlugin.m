@@ -15,7 +15,7 @@
  */
 
 #import <Adium/AIChatControllerProtocol.h>
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
 #import "ESOpenMessageWindowContactAlertPlugin.h"
 #import <AIUtilities/AIImageAdditions.h>

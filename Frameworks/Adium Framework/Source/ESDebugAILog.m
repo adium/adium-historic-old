@@ -14,8 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESDebugAILog.h"
-#import "ESDebugController.h"
+#import <Adium/ESDebugAILog.h>
+#import <Adium/AIObject.h>
+#import <Adium/AIDebugControllerProtocol.h>
 #include <stdarg.h>
 
 extern CFRunLoopRef CFRunLoopGetMain(void);
@@ -47,12 +48,12 @@ void AILog (NSString *format, ...) {
 	
 	/* Be careful; we should only modify debugLogArray and the windowController's view on the main thread. */
 	if (CFRunLoopGetCurrent() == CFRunLoopGetMain()) {
-		[[NSClassFromString(@"ESDebugController") sharedDebugController] addMessage:actualMessage];
+		[[[AIObject sharedAdiumInstance] debugController] addMessage:actualMessage];
 
 	} else {
-		[[NSClassFromString(@"ESDebugController") sharedDebugController] performSelectorOnMainThread:@selector(addMessage:)
-																						  withObject:actualMessage
-																					   waitUntilDone:NO];		
+		[[[AIObject sharedAdiumInstance] debugController] performSelectorOnMainThread:@selector(addMessage:)
+																		   withObject:actualMessage
+																		waitUntilDone:NO];		
 	}
 	va_end(ap); /* clean up when done */
 }

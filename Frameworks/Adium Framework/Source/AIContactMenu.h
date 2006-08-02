@@ -6,7 +6,7 @@
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "AIAbstractListObjectMenu.h"
+#import <Adium/AIAbstractListObjectMenu.h>
 
 @class AIAccount, AIListContact, AIListObject;
 

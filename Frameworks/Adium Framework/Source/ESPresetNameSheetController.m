@@ -6,7 +6,7 @@
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "ESPresetNameSheetController.h"
+#import <Adium/ESPresetNameSheetController.h>
 
 #define	PRESET_NAME_SHEET	@"PresetNameSheet"
 

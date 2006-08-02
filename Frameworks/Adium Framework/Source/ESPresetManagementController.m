@@ -6,7 +6,7 @@
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "ESPresetManagementController.h"
+#import <Adium/ESPresetManagementController.h>
 
 #define	PRESET_DRAG_TYPE @"Adium:PresetDrag"
 

@@ -16,7 +16,7 @@
 
 // User must have a working LaTeX and Equation Service installation for anything to happen.
 
-#import "AIContentController.h"
+#import <Adium/AIContentControllerProtocol.h>
 #import "AILaTeXPlugin.h"
 #import <Adium/AITextAttachmentExtension.h>
 
