@@ -1528,13 +1528,8 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
  */
 NSDate* dateFromJavaDate(Date *javaDate)
 {
-	// [javaDate toString] format: "dow mon dd hh:mm:ss zzz yyyy"	
-	AILog(@"%@ is converted to %@",[javaDate toString], 
-		  [NSCalendarDate dateWithString:[javaDate toString]
-						  calendarFormat:@"%a %b %d %H:%M:%S %Z %Y"]);
 	return (javaDate ? 
-			[NSCalendarDate dateWithString:[javaDate toString]
-							calendarFormat:@"%a %b %d %H:%M:%S %Z %Y"] :
+			[NSDate dateWithTimeIntervalSince1970:([javaDate getTime] / 1000)] :
 			nil);
 }
 
