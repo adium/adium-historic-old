@@ -16,6 +16,7 @@
 #import "AIAlternatingRowTableView.h"
 #import "AIGradient.h"
 #import "AIImageAdditions.h"
+#import "AIColorAdditions.h"
 
 /*
  A subclass of table view that adds:

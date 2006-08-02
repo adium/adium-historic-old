@@ -10,6 +10,7 @@
 
 @protocol AIDebugController <AIController>
 #ifdef DEBUG_BUILD
+	- (void)addMessage:(NSString *)actualMessage;
 	- (NSArray *)debugLogArray;
 	- (void)clearDebugLogArray;
 #endif
