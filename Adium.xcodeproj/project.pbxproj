@@ -10900,13 +10900,6 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
-				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
 				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
@@ -11071,7 +11064,10 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -11421,13 +11417,6 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
-				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
 				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
@@ -11518,7 +11507,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = ppc;
-				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_VERSION = 4.0;
@@ -12025,13 +12017,6 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
-				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
 				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
@@ -12049,13 +12034,6 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
-				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
 				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
@@ -12073,13 +12051,6 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
-				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
 				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
@@ -12347,7 +12318,10 @@
 					i386,
 				);
 				DEAD_CODE_STRIPPING = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DEBUGGING_SYMBOLS = used;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -12384,7 +12358,10 @@
 					i386,
 				);
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DEBUGGING_SYMBOLS = default;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
