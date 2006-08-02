@@ -154,6 +154,8 @@
 		3419DE800A81042F00C3FC68 /* togglegroups.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F58F208199727001F733C /* togglegroups.png */; };
 		3419DE810A81042F00C3FC68 /* togglegroups_transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F58F108199727001F733C /* togglegroups_transparent.png */; };
 		3419DE820A81042F00C3FC68 /* ToolbarPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8327607CBD5B3006466F2 /* ToolbarPrefs.plist */; };
+		3419DF3A0A8119BF00C3FC68 /* AICalendarDate.h in Headers */ = {isa = PBXBuildFile; fileRef = 340D09FF0A7DD1F40059A3AF /* AICalendarDate.h */; };
+		3419DF3B0A8119BF00C3FC68 /* AICalendarDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 340D0A000A7DD1F40059A3AF /* AICalendarDate.m */; };
 		3419F3A805314BE000C68BA3 /* AISQLLoggerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B7AE664F0465778E0051E914 /* AISQLLoggerPlugin.h */; };
 		3419F3AD05314BE000C68BA3 /* AISQLLoggerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B7AE66500465778E0051E914 /* AISQLLoggerPlugin.m */; };
 		3419F6F505314E9C00C68BA3 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
@@ -7218,6 +7220,7 @@
 				34DC88830A7EEE2F003E1636 /* AdiumIdleManager.h in Headers */,
 				34DC88850A7EEE2F003E1636 /* AdiumURLHandling.h in Headers */,
 				34DC88870A7EEE2F003E1636 /* XtrasInstaller.h in Headers */,
+				3419DF3A0A8119BF00C3FC68 /* AICalendarDate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8842,6 +8845,7 @@
 				34DC88840A7EEE2F003E1636 /* AdiumIdleManager.m in Sources */,
 				34DC88860A7EEE2F003E1636 /* AdiumURLHandling.m in Sources */,
 				34DC88880A7EEE2F003E1636 /* XtrasInstaller.m in Sources */,
+				3419DF3B0A8119BF00C3FC68 /* AICalendarDate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
