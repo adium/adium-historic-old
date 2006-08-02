@@ -337,6 +337,9 @@
 
 		} else if ([*disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound) {
 			shouldReconnect = NO;
+			
+		} else if ([*disconnectionError rangeOfString:@"Resource Conflict"].location != NSNotFound) {
+			shouldReconnect = NO;
 		}
 	}
 	
