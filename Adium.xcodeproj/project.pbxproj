@@ -10900,6 +10900,13 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
 				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
@@ -11417,6 +11424,13 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
 				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
@@ -12017,6 +12031,13 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
 				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
@@ -12034,6 +12055,13 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
 				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
@@ -12051,6 +12079,13 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
 				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
