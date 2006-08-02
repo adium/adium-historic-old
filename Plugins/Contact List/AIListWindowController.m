@@ -118,6 +118,7 @@
 - (void)dealloc
 {
 	[contactListController close];
+	[windowLastScreen release];
 
 	[super dealloc];
 }
@@ -490,16 +491,23 @@
 
 - (void)screenParametersChanged:(NSNotification *)notification
 {
-	NSWindow * window = [self window];
+	NSWindow	*window = [self window];
 	
-	NSScreen * windowScreen = [window screen];
-	if(!windowScreen) windowScreen = [NSScreen mainScreen];
+	NSScreen	*windowScreen = [window screen];
+	if (!windowScreen) {
+		if ([[NSScreen screens] containsObject:windowLastScreen]) {
+			windowScreen = windowLastScreen;
+		} else {
+			[windowLastScreen release]; windowLastScreen = nil;
+			windowScreen = [NSScreen mainScreen];
+		}
+	}
 
 	NSRect newScreenFrame = [windowScreen frame];
 	
 	if ([[NSScreen screens] count] &&
 		(windowScreen == [[NSScreen screens] objectAtIndex:0])) {
-		newScreenFrame.size.height -= [NSMenuView menuBarHeight];
+			newScreenFrame.size.height -= [NSMenuView menuBarHeight];
 	}
 
 	NSRect listFrame = [window frame];
@@ -716,13 +724,21 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 #pragma mark Dock-like hiding
 
+- (NSScreen *)windowLastScreen
+{
+	return windowLastScreen;
+}
+
 void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdgeMask windowSlidOffScreenEdgeMask, AIListController *contactListController, BOOL keepOnScreen)
 {
 	NSScreen *windowScreen = [inWindow screen];
-	if(!windowScreen) windowScreen = [NSScreen mainScreen];
+	if (!windowScreen) windowScreen = [(AIListWindowController *)[inWindow windowController] windowLastScreen];
+	if (!windowScreen) windowScreen = [NSScreen mainScreen];
+
 	BOOL	finishedX = NO, finishedY = NO;
 	NSRect	frame = [inWindow frame];
-	float yOff = (targetPoint.y + frame.size.height) - ([windowScreen frame].size.height - [NSMenuView menuBarHeight]);
+	float yOff = (targetPoint.y + frame.size.height) - [windowScreen frame].size.height;
+	if (windowScreen == [[NSScreen screens] objectAtIndex:0]) yOff -= [NSMenuView menuBarHeight];
 	if(yOff > 0) targetPoint.y -= yOff;
 	
 	do
@@ -848,6 +864,9 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 
 	[self setSavedFrame:newWindowFrame];
 
+	[windowLastScreen release];
+	windowLastScreen = [[window screen] retain];
+
 	for (edge = 0; edge < 4; edge++) {
 		if (rectEdgeMask & (1 << edge)) {
 			newWindowFrame = AIRectByAligningRect_edge_toRect_edge_(newWindowFrame, AIOppositeRectEdge_(edge), screenSlideBoundaryRect, edge);
@@ -880,6 +899,8 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 			} else {
 				[self moveWindowToPoint:oldFrame.origin];
 			}
+			
+			[windowLastScreen release];	windowLastScreen = nil;
 		}
 	}
 }
