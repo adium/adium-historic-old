@@ -28,13 +28,11 @@
         largestOrder = 1.0;
         smallestOrder = 1.0;
         expanded = YES;
-        NSLog(@"smack list contact UID = \"%@\"", inUID);
     }
     return self;
 }
 
 - (void)dealloc {
-	NSLog(@"deallocing %@",self);
     [containedObjects release];
     [bogusContact release];
 
