@@ -49,7 +49,7 @@
 //init
 - (id)initWithMessageView:(AIMessageViewController *)inMessageViewController
 {
-	if ( (self = [super initWithIdentifier:nil]) ) {
+	if ( (self = [super initWithIdentifier:self]) ) {
 		messageViewController = [inMessageViewController retain];
 		adium = [AIObject sharedAdiumInstance];
 		container = nil;
@@ -69,9 +69,6 @@
 		
 		//Set our contents
 		[self setView:[messageViewController view]];
-		
-		controller = [[NSObjectController alloc] initWithContent:self];
-		[self setIdentifier:controller];
 	}
     return self;
 }
@@ -85,8 +82,6 @@
 
     [messageViewController release]; messageViewController = nil;
 	[container release]; container = nil;
-	
-	[controller release]; controller = nil;
 
     [super dealloc];
 }
@@ -117,11 +112,6 @@
 
 - (AIMessageWindowController *)container{
 	return container;
-}
-
-- (NSObjectController *)controller
-{
-	return controller;
 }
 
 //Message View Delegate ----------------------------------------------------------------------
@@ -165,7 +155,7 @@
 		 */
         [delegate tabViewDidChangeNumberOfTabViewItems:[self tabView]];
     } else if ([keys containsObject:@"UnviewedContent"]) {
-		[controller didChangeValueForKey:@"selection.objectCount"];
+		[self didChangeValueForKey:@"objectCount"];
 	}
 }
 
@@ -176,7 +166,7 @@
 	//Redraw if the icon has changed
 	if (keys == nil || [keys containsObject:@"Tab State Icon"]) {
 		[[self container] updateIconForTabViewItem:self];
-		[controller didChangeValueForKey:@"selection.icon"];
+		[self didChangeValueForKey:@"icon"];
 	}
 }
 //
@@ -190,7 +180,7 @@
 		//Redraw if the icon has changed
 		if (!keys || [keys containsObject:@"Tab Status Icon"]) {
 			[[self container] updateIconForTabViewItem:self];
-			[controller didChangeValueForKey:@"selection.icon"];
+			[self didChangeValueForKey:@"icon"];
 		}
 		
 		//If the list object's display name changed, we resize the tabs
