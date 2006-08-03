@@ -155,7 +155,7 @@
 		 */
         [delegate tabViewDidChangeNumberOfTabViewItems:[self tabView]];
     } else if ([keys containsObject:@"UnviewedContent"]) {
-		[self didChangeValueForKey:@"objectCount"];
+		[self setValue:nil forKeyPath:@"objectCount"];
 	}
 }
 
@@ -166,7 +166,7 @@
 	//Redraw if the icon has changed
 	if (keys == nil || [keys containsObject:@"Tab State Icon"]) {
 		[[self container] updateIconForTabViewItem:self];
-		[self didChangeValueForKey:@"icon"];
+		[self setValue:nil forKeyPath:@"icon"];
 	}
 }
 //
@@ -180,7 +180,7 @@
 		//Redraw if the icon has changed
 		if (!keys || [keys containsObject:@"Tab Status Icon"]) {
 			[[self container] updateIconForTabViewItem:self];
-			[self didChangeValueForKey:@"icon"];
+			[self setValue:nil forKeyPath:@"icon"];
 		}
 		
 		//If the list object's display name changed, we resize the tabs
@@ -232,6 +232,11 @@
 	return ([[messageViewController chat] displayName]);
 }
 
+- (void)setIcon:(NSImage *)newIcon
+{
+	//method does nothing; force the tab bindings to reload -icon
+}
+
 //Return the icon to be used for our tabs.  State gets first priority, then status.
 - (NSImage *)icon
 {
@@ -263,6 +268,11 @@
 }
 
 //bindings methods for PSMTabBarControl
+
+- (void)setObjectCount:(NSNumber *)number
+{
+	//method does nothing; force the tab bindings to reload -objectCount
+}
 
 - (int)objectCount
 {
