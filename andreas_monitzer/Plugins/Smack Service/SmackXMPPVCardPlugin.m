@@ -109,12 +109,22 @@
     [super dealloc];
 }
 
-- (void)connect:(SmackXMPPConnection*)conn
+- (void)connected:(SmackXMPPConnection*)conn
 {
     resourcesBlockingAvatar = [[NSMutableArray alloc] init];
+    
+    // we're not logged in yet, defer the vcard updates until we are
+    [self performSelector:@selector(delayedConnected) withObject:nil afterDelay:0.0];
 }
 
-- (void)disconnect:(SmackXMPPConnection*)conn
+- (void)delayedConnected
+{    
+    // sync local avatar to the one on the server
+    avatarUpdateInProgress = YES;
+    [NSThread detachNewThreadSelector:@selector(updateAvatarUploadingNewOne:) toTarget:self withObject:[NSNumber numberWithBool:YES]];
+}
+
+- (void)disconnected:(SmackXMPPConnection*)conn
 {
     [resourcesBlockingAvatar release];
     resourcesBlockingAvatar = nil;
@@ -153,63 +163,78 @@
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
-    SmackXVCard *vCard = [SmackCocoaAdapter vCard];
-    [vCard load:[account connection]];
-    
-    if(![flag boolValue])
-    {
-        // we don't want to upload ours, just update our own hash
-        NSLog(@"updating local hash");
+    @try {
+        SmackXVCard *vCard = [SmackCocoaAdapter vCard];
+        [vCard load:[account connection]];
         
-        NSString *newhash = [vCard getAvatarHash];
-        
-        // using this code should eliminate race conditions
-        id old = avatarhash;
-        // "If the BINVAL is empty or missing, advertise an empty photo element in future presence broadcasts."
-        avatarhash = newhash?[newhash retain]:@"";
-        [old release];
-    } else {
-        // get avatar image and convert to JPEG
-        // The reason we aren't using png is that Smack just assumes
-        // (according to the source code) this format, even though
-        // PNG is is only format support required by the JEP, JPEG is
-        // only recommended. Oh well...
-        NSData  *data = [account userIconData];
-        if(!data)
+        if(![flag boolValue])
         {
-            // handle the case that we don't have any avatar set
-            [SmackCocoaAdapter setAvatar:nil forVCard:vCard];
-            
-            [vCard save:[account connection]];
+            // we don't want to upload ours, just update our own hash
+            NSString *newhash = [vCard getAvatarHash];
             
             // using this code should eliminate race conditions
             id old = avatarhash;
-            avatarhash = @"";
+            // "If the BINVAL is empty or missing, advertise an empty photo element in future presence broadcasts."
+            avatarhash = newhash?[newhash retain]:@"";
             [old release];
-            NSLog(@"no avatar set, updating to empty hash");
         } else {
-            NSImage *avatarimage = [[NSImage alloc] initWithData:data];
-            NSData *jpgdata = [avatarimage JPEGRepresentation];
-            [avatarimage release];
-            
-            [SmackCocoaAdapter setAvatar:jpgdata forVCard:vCard];
-            
-            [vCard save:[account connection]];
-            
-            // using this code should eliminate race conditions
-            id old = avatarhash;
-            avatarhash = [[vCard getAvatarHash] retain];
-            [old release];
-            NSLog(@"image with size %u set, hash = %@",[jpgdata length],avatarhash);
+            // check if the server side hash is equal to the local one
+            if(![[vCard getAvatarHash] isEqualToString:avatarhash])
+            {
+                NSData *data = [account userIconData];
+                
+                if(!data)
+                {
+                    // handle the case that we don't have any avatar set
+                    [SmackCocoaAdapter setAvatar:nil forVCard:vCard];
+                    
+                    [vCard save:[account connection]];
+                    
+                    // using this code should eliminate race conditions
+                    id old = avatarhash;
+                    avatarhash = @"";
+                    [old release];
+                } else {
+                    // convert to JPEG
+                    // The reason we aren't using png is that Smack just assumes
+                    // (according to the source code) this format, even though
+                    // PNG is is only format support required by the JEP, JPEG is
+                    // only recommended. Oh well...
+                    NSImage *avatarimage = [[NSImage alloc] initWithData:data];
+                    NSData *jpgdata = [avatarimage JPEGRepresentation];
+                    [avatarimage release];
+                    
+                    // cheap way to calculate SHA1 hash, just let Smack do it
+                    NSString *serverhash = [vCard getAvatarHash];
+                    [SmackCocoaAdapter setAvatar:jpgdata forVCard:vCard];
+                    NSString *localhash = [vCard getAvatarHash];
+                    
+                    // do local and server-side avatars match?
+                    if([serverhash isEqualToString:localhash])
+                    {
+                        avatarUpdateInProgress = NO;
+                        [pool release];
+                        return;
+                    }
+                    // otherwise, store on server
+                    [vCard save:[account connection]];
+                    
+                    // using this code should eliminate race conditions
+                    id old = avatarhash;
+                    avatarhash = [localhash retain];
+                    [old release];
+                }
+            }
         }
+
+        // let the contacts know about our new avatar
+        // this should better be handled by PEP, but that's not implemented anywhere yet
+        [account performSelectorOnMainThread:@selector(broadcastCurrentPresence) withObject:nil waitUntilDone:YES];
+    } @catch(NSException *e) {
+        [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Error while handling avatar image on account %@.","Error while handling avatar image on account %@."),[account explicitFormattedUID]] withDescription:[e reason]];
     }
     
-    // let the contacts know about our new avatar
-    // this should better be handled by PEP, but that's not implemented anywhere yet
-    [account performSelectorOnMainThread:@selector(broadcastCurrentPresence) withObject:nil waitUntilDone:YES];
     avatarUpdateInProgress = NO;
-    NSLog(@"avatar update done");
-    
     [pool release];
 }
 
