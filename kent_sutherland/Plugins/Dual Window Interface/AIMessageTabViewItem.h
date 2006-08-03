@@ -22,8 +22,6 @@
     AIMessageViewController 	*messageViewController;
     AIAdium						*adium;
 	NSImage						*tabViewItemImage;
-	
-	NSObjectController			*controller;
 }
 
 + (AIMessageTabViewItem *)messageTabWithView:(AIMessageViewController *)inMessageView;
@@ -36,7 +34,6 @@
 - (AIChat *)chat;
 - (NSImage *)image;
 - (AIMessageViewController *)messageViewController;
-- (NSObjectController *)controller;
 - (void)tabViewItemWasSelected;
 - (void)setContainer:(AIMessageWindowController *)inContainer;
 - (AIMessageWindowController *)container;
