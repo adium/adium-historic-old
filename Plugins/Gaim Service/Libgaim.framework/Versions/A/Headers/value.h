@@ -53,6 +53,7 @@ typedef enum
 
 } GaimType;
 
+
 /**
  * Gaim-specific subtype values.
  */
