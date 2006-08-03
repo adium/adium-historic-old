@@ -38,12 +38,12 @@
 
 + (void)setAvatar:(NSData*)avatar forVCard:(SmackXVCard*)vCard
 {
-    [[[self classLoader] loadClass:@"net.adium.smackBridge.SmackBridge"] setVCardAvatar:vCard :avatar];
+    [(Class)[[self classLoader] loadClass:@"net.adium.smackBridge.SmackBridge"] setVCardAvatar:vCard :avatar];
 }
 
 + (NSData*)getAvatarForVCard:(SmackXVCard*)vCard
 {
-    return [[[self classLoader] loadClass:@"net.adium.smackBridge.SmackBridge"] getVCardAvatar:vCard];
+    return [(Class)[[self classLoader] loadClass:@"net.adium.smackBridge.SmackBridge"] getVCardAvatar:vCard];
 }
 
 + (SmackVCardUpdateExtension*)VCardUpdateExtensionWithPhotoHash:(NSString*)hash
@@ -55,7 +55,7 @@
 
 + (BOOL)avatarIsEmpty:(SmackXVCard*)vCard
 {
-    return [[[self classLoader] loadClass:@"net.adium.smackBridge.SmackBridge"] isAvatarEmpty:vCard];
+    return [(Class)[[self classLoader] loadClass:@"net.adium.smackBridge.SmackBridge"] isAvatarEmpty:vCard];
 }
 
 @end
@@ -358,7 +358,23 @@
         if(contact)
         {
             NSString *oldhash = [contact statusObjectForKey:@"XMPPJEP153Hash"];
-            if(!oldhash || ![hash isEqualToString:oldhash])
+            if(!oldhash)
+            {
+                // reload old hash from adium database
+                NSImage *image = [contact statusObjectForKey:KEY_USER_ICON];
+                if(image)
+                {
+                    SmackXVCard *vCard = [SmackCocoaAdapter vCard];
+                    // XXX NOTE: we're just assuming JPEG here! I can't know what image format
+                    // the hash I got from the server is for! The fix for this would be to store
+                    // the hash itself along with the image in Adium.
+                    [SmackCocoaAdapter setAvatar:[image JPEGRepresentation] forVCard:vCard];
+                    oldhash = [vCard getAvatarHash];
+                } else
+                    oldhash = @"";
+            }
+            
+            if(![hash isEqualToString:oldhash])
             {
                 NSData *avatar;
                 if(!hash || [hash isEqualToString:@""]) // empty avatar?
