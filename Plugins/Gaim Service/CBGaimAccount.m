@@ -1553,12 +1553,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	//If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
 	//connectionIsSuicidal == TRUE when Gaim thinks we shouldn't attempt a reconnect.
-	if ([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]/* && lastDisconnectionError*/) {
+	if ([self shouldBeOnline] && lastDisconnectionError) {
 		if (reconnectAttemptsRemaining && 
 			[self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError] && !(connectionIsSuicidal)) {
-			GaimDebug(@"Automatically reconnecting in %1f seconds (%i attempts remaining)", AUTO_RECONNECT_DELAY, reconnectAttemptsRemaining);
+			AILog(@"%@: Disconnected (%x: \"%@\"): Automatically reconnecting in %0f seconds (%i attempts remaining)",
+				  self, (account ? account->gc : NULL), lastDisconnectionError, AUTO_RECONNECT_DELAY, reconnectAttemptsRemaining);
 			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 			reconnectAttemptsRemaining--;
+	
 		} else {
 			if (lastDisconnectionError) {
 				//Display then clear the last disconnection error
