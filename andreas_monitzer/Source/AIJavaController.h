@@ -25,6 +25,10 @@
 - (BOOL)isInstace:(id)obj;
 - (JavaField*)getField:(NSString*)name;
 
+// these are Java Bridge methods!
+- (id)alloc;
+- (id)newWithSignature:(NSString*)sig, ...;
+
 @end
 
 @interface JavaClassLoader : NSObject {
@@ -36,6 +40,7 @@
 @end
 
 @class NSJavaVirtualMachine;
+@protocol AIController;
 
 @interface AIJavaController : AIObject <AIController> {
     NSJavaVirtualMachine *vm;

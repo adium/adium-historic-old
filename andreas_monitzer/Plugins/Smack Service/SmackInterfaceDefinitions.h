@@ -6,6 +6,8 @@
 //  Copyright 2006 Andreas Monitzer. All rights reserved.
 //
 
+#import "AIJavaController.h"
+
 @interface SmackConnectionConfiguration : NSObject {
 }
 
