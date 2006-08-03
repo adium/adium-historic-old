@@ -104,7 +104,9 @@
     [editorwindow release];
     [ownvCard release];
     [vCardPacket release];
-    [avatarhash release];
+    @synchronized(self) {
+        [avatarhash release]; avatarhash = nil;
+    }
     [resourcesBlockingAvatar release];
     [super dealloc];
 }
@@ -139,9 +141,11 @@
     {
         SmackPresence *presence = [[notification userInfo] objectForKey:SmackXMPPPacket];
         
-        [presence addExtension:[SmackCocoaAdapter VCardUpdateExtensionWithPhotoHash:avatarhash]];
+        @synchronized(self) {
+            [presence addExtension:[SmackCocoaAdapter VCardUpdateExtensionWithPhotoHash:avatarhash]];
+            NSLog(@"XMPP: Appended hash %@ to presence", avatarhash);
+        }
         
-        NSLog(@"XMPP: Appended hash %@ to presence", avatarhash);
     }
 }
 
@@ -172,11 +176,11 @@
             // we don't want to upload ours, just update our own hash
             NSString *newhash = [vCard getAvatarHash];
             
-            // using this code should eliminate race conditions
-            id old = avatarhash;
-            // "If the BINVAL is empty or missing, advertise an empty photo element in future presence broadcasts."
-            avatarhash = newhash?[newhash retain]:@"";
-            [old release];
+            @synchronized(self) {
+                [avatarhash release];
+                // "If the BINVAL is empty or missing, advertise an empty photo element in future presence broadcasts."
+                avatarhash = newhash?[newhash retain]:@"";
+            }
         } else {
             // check if the server side hash is equal to the local one
             if(![[vCard getAvatarHash] isEqualToString:avatarhash])
@@ -190,10 +194,10 @@
                     
                     [vCard save:[account connection]];
                     
-                    // using this code should eliminate race conditions
-                    id old = avatarhash;
-                    avatarhash = @"";
-                    [old release];
+                    @synchronized(self) {
+                        [avatarhash release];
+                        avatarhash = @"";
+                    }
                 } else {
                     // convert to JPEG
                     // The reason we aren't using png is that Smack just assumes
@@ -201,6 +205,24 @@
                     // PNG is is only format support required by the JEP, JPEG is
                     // only recommended. Oh well...
                     NSImage *avatarimage = [[NSImage alloc] initWithData:data];
+                    NSSize avatarsize = [avatarimage size];
+                    
+                    // scale down the image if it's too large (96x96 is max according to the spec)
+                    if(avatarsize.width > 96.0 || avatarsize.height > 96.0)
+                    {
+                        NSImage *smallerimage;
+                        NSSize newsize;
+                        if(avatarsize.width > avatarsize.height)
+                            smallerimage = [[NSImage alloc] initWithSize:newsize = NSMakeSize(96.0,96.0 * (avatarsize.height / avatarsize.width))];
+                        else
+                            smallerimage = [[NSImage alloc] initWithSize:newsize = NSMakeSize(96.0 * (avatarsize.width / avatarsize.height),96.0)];
+                        [smallerimage lockFocus];
+                        [avatarimage drawInRect:NSMakeRect(0.0,0.0,newsize.width,newsize.height) fromRect:NSMakeRect(0.0,0.0,avatarsize.width,avatarsize.height) operation:NSCompositeCopy fraction:1.0];
+                        [smallerimage unlockFocus];
+                        [avatarimage release];
+                        avatarimage = smallerimage;
+                    }
+                    
                     NSData *jpgdata = [avatarimage JPEGRepresentation];
                     [avatarimage release];
                     
@@ -210,19 +232,14 @@
                     NSString *localhash = [vCard getAvatarHash];
                     
                     // do local and server-side avatars match?
-                    if([serverhash isEqualToString:localhash])
-                    {
-                        avatarUpdateInProgress = NO;
-                        [pool release];
-                        return;
-                    }
-                    // otherwise, store on server
-                    [vCard save:[account connection]];
+                    if(![serverhash isEqualToString:localhash])
+                        // otherwise, store on server
+                        [vCard save:[account connection]];
                     
-                    // using this code should eliminate race conditions
-                    id old = avatarhash;
-                    avatarhash = [localhash retain];
-                    [old release];
+                    @synchronized(self) {
+                        [avatarhash release];
+                        avatarhash = [localhash retain];
+                    }
                 }
             }
         }
@@ -305,19 +322,20 @@
                         NSLog(@"resource %@ has empty avatar, blocking us",resource);
                     }
                     NSLog(@"dunno what to do");
-                } else if(![photo isEqualToString:avatarhash])
-                {
-                    /* If the update child element contains a non-empty photo element, then the client MUST compare
-                     * the image hashes. If the hashes are identical, then the client can ignore the other resource
-                     * and continue to broadcast the existing image hash. If the hashes are different, then the
-                     * client MUST NOT attempt to resolve the conflict by uploading its avatar image again. Instead,
-                     * it MUST defer to the content of the retrieved vCard by resetting its image hash (see below)
-                     * and providing that hash in future presence broadcasts.
-                     */
-                    id old = avatarhash;
-                    avatarhash = [photo retain];
-                    [old release];
-                    NSLog(@"resource %@ has other avatar, setting our hash to %@",resource,avatarhash);
+                } else @synchronized(self) {
+                    if(![photo isEqualToString:avatarhash])
+                    {
+                        /* If the update child element contains a non-empty photo element, then the client MUST compare
+                        * the image hashes. If the hashes are identical, then the client can ignore the other resource
+                        * and continue to broadcast the existing image hash. If the hashes are different, then the
+                        * client MUST NOT attempt to resolve the conflict by uploading its avatar image again. Instead,
+                        * it MUST defer to the content of the retrieved vCard by resetting its image hash (see below)
+                        * and providing that hash in future presence broadcasts.
+                        */
+                        [avatarhash release];
+                        avatarhash = [photo retain];
+                        NSLog(@"resource %@ has other avatar, setting our hash to %@",resource,avatarhash);
+                    }
                 }
             }
         }
