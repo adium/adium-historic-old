@@ -847,6 +847,18 @@
 
 @end
 
+@interface SmackXVersion : SmackIQ {
+}
+
+- (NSString*)getName;
+- (NSString*)getOs;
+- (NSString*)getVersion;
+- (void)setName:(NSString*)name;
+- (void)setOs:(NSString*)os;
+- (void)setVersion:(NSString*)version;
+
+@end
+
 @interface SmackXMPPException : NSObject {
 }
 
