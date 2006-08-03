@@ -1423,6 +1423,8 @@
 		81F9D1E80A7F832A004A35BD /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
 		81F9D1EA0A7F8396004A35BD /* JavaCocoaAdapter.java in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D1E90A7F8395004A35BD /* JavaCocoaAdapter.java */; };
 		81F9D2010A7F8B99004A35BD /* JavaCocoaAdapter.class in Resources */ = {isa = PBXBuildFile; fileRef = 81F9D2000A7F8B99004A35BD /* JavaCocoaAdapter.class */; };
+		81F9D4970A8158EB004A35BD /* SmackXMPPVersionPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F9D4950A8158EA004A35BD /* SmackXMPPVersionPlugin.h */; };
+		81F9D4980A8158EB004A35BD /* SmackXMPPVersionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D4960A8158EA004A35BD /* SmackXMPPVersionPlugin.m */; };
 		9E124DEB07D34C7300AA91C5 /* CBGrowlAlertDetailPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */; };
 		9E124DEC07D34C7300AA91C5 /* CBGrowlAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */; };
 		9E124DED07D34C7400AA91C5 /* NEHGrowlPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E124DE907D34C7300AA91C5 /* NEHGrowlPlugin.h */; };
@@ -1900,6 +1902,7 @@
 				81BE66B70A715FB200AADA28 /* SmackXMPPAccountRegistrationController.h in CopyFiles */,
 				815D321E0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.h in CopyFiles */,
 				815D357E0A7585EA009338C2 /* SmackXMPPVCardPlugin.h in CopyFiles */,
+				81F9D4970A8158EB004A35BD /* SmackXMPPVersionPlugin.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3808,6 +3811,8 @@
 		81F9D0830A7E905B004A35BD /* AIJavaController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIJavaController.m; path = Source/AIJavaController.m; sourceTree = "<group>"; };
 		81F9D1E90A7F8395004A35BD /* JavaCocoaAdapter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = JavaCocoaAdapter.java; path = Source/JavaCocoaAdapter.java; sourceTree = "<group>"; };
 		81F9D2000A7F8B99004A35BD /* JavaCocoaAdapter.class */ = {isa = PBXFileReference; lastKnownFileType = compiled.javaclass; name = JavaCocoaAdapter.class; path = net/adium/JavaCocoaAdapter.class; sourceTree = BUILT_PRODUCTS_DIR; };
+		81F9D4950A8158EA004A35BD /* SmackXMPPVersionPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPVersionPlugin.h; path = "Plugins/Smack Service/SmackXMPPVersionPlugin.h"; sourceTree = "<group>"; };
+		81F9D4960A8158EA004A35BD /* SmackXMPPVersionPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPVersionPlugin.m; path = "Plugins/Smack Service/SmackXMPPVersionPlugin.m"; sourceTree = "<group>"; };
 		9C103FAE057127A500F3C158 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBGrowlAlertDetailPane.h; path = Source/CBGrowlAlertDetailPane.h; sourceTree = "<group>"; };
 		9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBGrowlAlertDetailPane.m; path = Source/CBGrowlAlertDetailPane.m; sourceTree = "<group>"; };
@@ -6650,6 +6655,8 @@
 				815D321D0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m */,
 				815D357C0A7585EA009338C2 /* SmackXMPPVCardPlugin.h */,
 				815D357D0A7585EA009338C2 /* SmackXMPPVCardPlugin.m */,
+				81F9D4950A8158EA004A35BD /* SmackXMPPVersionPlugin.h */,
+				81F9D4960A8158EA004A35BD /* SmackXMPPVersionPlugin.m */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -9756,6 +9763,7 @@
 				81BE66B80A715FB200AADA28 /* SmackXMPPAccountRegistrationController.m in Sources */,
 				815D321F0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m in Sources */,
 				815D357F0A7585EA009338C2 /* SmackXMPPVCardPlugin.m in Sources */,
+				81F9D4980A8158EB004A35BD /* SmackXMPPVersionPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

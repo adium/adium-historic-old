@@ -62,7 +62,7 @@
 
 @end
 
-@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin, SmackXMPPServiceDiscoveryBrowsing, SmackXMPPFileTransferPlugin, SmackXMPPChatStateNotificationsPlugin, SmackXMPPVCardPlugin;
+@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin, SmackXMPPServiceDiscoveryBrowsing, SmackXMPPFileTransferPlugin, SmackXMPPChatStateNotificationsPlugin, SmackXMPPVCardPlugin, SmackXMPPVersionPlugin;
 
 @interface NSObject (SmackXMPPPluginAddition)
 - (id)initWithAccount:(SmackXMPPAccount*)account;
@@ -91,6 +91,7 @@
             [SmackXMPPFileTransferPlugin class],
             [SmackXMPPChatStateNotificationsPlugin class],
             [SmackXMPPVCardPlugin class],
+            [SmackXMPPVersionPlugin class],
             nil
         };
         
@@ -539,7 +540,7 @@
         if([plugin respondsToSelector:@selector(menuItemsForContact:)])
         {
             NSArray *pluginMenuItems = [plugin menuItemsForContact:inContact];
-            if(pluginMenuItems)
+            if(pluginMenuItems && [pluginMenuItems count] > 0)
             {
                 if(!first)
                     [menuItems addObject:[NSMenuItem separatorItem]];
