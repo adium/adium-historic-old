@@ -1014,6 +1014,7 @@
 		3797B3190A76DDA80082EE27 /* TabsAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3797B3170A76DDA80082EE27 /* TabsAdvancedPreferences.m */; };
 		37993DB50A52E65100294E3F /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37993DB40A52E65000294E3F /* PSMTabBarControl.framework */; };
 		37993DCD0A52E67B00294E3F /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 37993DB40A52E65000294E3F /* PSMTabBarControl.framework */; };
+		37A1C0860A79AF7F0095CBB8 /* overflow_overlay.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 37A1C0850A79AF7F0095CBB8 /* overflow_overlay.tiff */; };
 		4947F5C00655E85200B791E5 /* AIStressTestAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC15BE90524CE5E00A8010A /* AIStressTestAccount.h */; };
 		4947F5C10655E85200B791E5 /* AIStressTestPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC15BEB0524CE5E00A8010A /* AIStressTestPlugin.h */; };
 		4947F5C70655E85200B791E5 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
@@ -3205,6 +3206,7 @@
 		3797B3160A76DDA80082EE27 /* TabsAdvancedPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TabsAdvancedPreferences.h; path = "Plugins/Dual Window Interface/TabsAdvancedPreferences.h"; sourceTree = "<group>"; };
 		3797B3170A76DDA80082EE27 /* TabsAdvancedPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TabsAdvancedPreferences.m; path = "Plugins/Dual Window Interface/TabsAdvancedPreferences.m"; sourceTree = "<group>"; };
 		37993DB40A52E65000294E3F /* PSMTabBarControl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PSMTabBarControl.framework; path = ../Build/Debug/PSMTabBarControl.framework; sourceTree = "<group>"; };
+		37A1C0850A79AF7F0095CBB8 /* overflow_overlay.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = overflow_overlay.tiff; path = "Plugins/Dual Window Interface/overflow_overlay.tiff"; sourceTree = "<group>"; };
 		3C73F83E04D62A2900A80106 /* AIEmoticonPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPack.h; path = Plugins/Emoticons/AIEmoticonPack.h; sourceTree = "<group>"; };
 		3C73F83F04D62A2900A80106 /* AIEmoticonPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPack.m; path = Plugins/Emoticons/AIEmoticonPack.m; sourceTree = "<group>"; };
 		40AC0EEB03B5BF1000A80202 /* ErrorMessageHandlerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ErrorMessageHandlerPlugin.h; path = "Plugins/Error Message Handler/ErrorMessageHandlerPlugin.h"; sourceTree = "<group>"; };
@@ -6953,6 +6955,7 @@
 				F570A60503704E7201A8010A /* MessageWindow.nib */,
 				3461621006FB482C009181D8 /* UserList Theme.plist */,
 				3461621306FB482D009181D8 /* UserList Layout.plist */,
+				37A1C0850A79AF7F0095CBB8 /* overflow_overlay.tiff */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -8430,6 +8433,7 @@
 				34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */,
 				3406707A0A55A044004E22AC /* sourceListBackground.png in Resources */,
 				3797B2E10A76DC590082EE27 /* TabsAdvanced.nib in Resources */,
+				37A1C0860A79AF7F0095CBB8 /* overflow_overlay.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
