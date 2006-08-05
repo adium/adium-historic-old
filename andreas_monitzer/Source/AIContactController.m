@@ -1978,7 +1978,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	AIListContact   *returnContact = nil;
 	AIAccount		*account;
 
-	if ([inContact isKindOfClass:[AIMetaContact class]]) {
+	if ([inContact containsMultipleContacts]) {
 		AIListObject	*preferredContact;
 		NSString		*internalObjectID;
 

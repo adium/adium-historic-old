@@ -51,7 +51,7 @@
     if([chat isGroupChat])
     {
         NSLog(@"typing ignored -> groupchat");
-        return NO; // ignore group chats
+        return YES; // ignore group chats
     }
 
     if(![chat statusObjectForKey:@"XMPPChatStateNotifications"])

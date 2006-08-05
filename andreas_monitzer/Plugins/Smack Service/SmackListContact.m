@@ -128,7 +128,8 @@
 
 - (BOOL)containsMultipleContacts
 {
-    return [containedObjects count] > 1;
+//    return [containedObjects count] > 1;
+    return YES;
 }
 
 #define META_TOOLTIP_ICON_SIZE NSMakeSize(11,11)

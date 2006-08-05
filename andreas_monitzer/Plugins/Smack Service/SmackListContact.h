@@ -19,5 +19,6 @@
 }
 
 - (NSAttributedString *)resourceInfo;
+- (AIListContact *)preferredContact;
 
 @end
