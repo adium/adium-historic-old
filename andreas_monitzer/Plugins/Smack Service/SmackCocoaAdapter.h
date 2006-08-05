@@ -22,6 +22,7 @@
 
 + (JavaClassLoader*)classLoader; // for categories only!
 
++ (id)enumWithType:(NSString*)type name:(NSString*)name;
 + (id)staticObjectField:(NSString*)fieldname inJavaClass:(NSString*)className;
 + (BOOL)object:(id)obj isInstanceOfJavaClass:(NSString*)className;
 

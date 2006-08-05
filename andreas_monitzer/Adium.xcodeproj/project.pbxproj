@@ -1425,6 +1425,8 @@
 		81F9D2010A7F8B99004A35BD /* JavaCocoaAdapter.class in Resources */ = {isa = PBXBuildFile; fileRef = 81F9D2000A7F8B99004A35BD /* JavaCocoaAdapter.class */; };
 		81F9D4970A8158EB004A35BD /* SmackXMPPVersionPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F9D4950A8158EA004A35BD /* SmackXMPPVersionPlugin.h */; };
 		81F9D4980A8158EB004A35BD /* SmackXMPPVersionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D4960A8158EA004A35BD /* SmackXMPPVersionPlugin.m */; };
+		81F9D8AF0A83A92F004A35BD /* SmackXMPPPrivacyPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F9D8AD0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.h */; };
+		81F9D8B00A83A92F004A35BD /* SmackXMPPPrivacyPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D8AE0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.m */; };
 		9E124DEB07D34C7300AA91C5 /* CBGrowlAlertDetailPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */; };
 		9E124DEC07D34C7300AA91C5 /* CBGrowlAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */; };
 		9E124DED07D34C7400AA91C5 /* NEHGrowlPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E124DE907D34C7300AA91C5 /* NEHGrowlPlugin.h */; };
@@ -1903,6 +1905,7 @@
 				815D321E0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.h in CopyFiles */,
 				815D357E0A7585EA009338C2 /* SmackXMPPVCardPlugin.h in CopyFiles */,
 				81F9D4970A8158EB004A35BD /* SmackXMPPVersionPlugin.h in CopyFiles */,
+				81F9D8AF0A83A92F004A35BD /* SmackXMPPPrivacyPlugin.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3813,6 +3816,8 @@
 		81F9D2000A7F8B99004A35BD /* JavaCocoaAdapter.class */ = {isa = PBXFileReference; lastKnownFileType = compiled.javaclass; name = JavaCocoaAdapter.class; path = net/adium/JavaCocoaAdapter.class; sourceTree = BUILT_PRODUCTS_DIR; };
 		81F9D4950A8158EA004A35BD /* SmackXMPPVersionPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPVersionPlugin.h; path = "Plugins/Smack Service/SmackXMPPVersionPlugin.h"; sourceTree = "<group>"; };
 		81F9D4960A8158EA004A35BD /* SmackXMPPVersionPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPVersionPlugin.m; path = "Plugins/Smack Service/SmackXMPPVersionPlugin.m"; sourceTree = "<group>"; };
+		81F9D8AD0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPPrivacyPlugin.h; path = "Plugins/Smack Service/SmackXMPPPrivacyPlugin.h"; sourceTree = "<group>"; };
+		81F9D8AE0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPPrivacyPlugin.m; path = "Plugins/Smack Service/SmackXMPPPrivacyPlugin.m"; sourceTree = "<group>"; };
 		9C103FAE057127A500F3C158 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBGrowlAlertDetailPane.h; path = Source/CBGrowlAlertDetailPane.h; sourceTree = "<group>"; };
 		9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBGrowlAlertDetailPane.m; path = Source/CBGrowlAlertDetailPane.m; sourceTree = "<group>"; };
@@ -6657,6 +6662,8 @@
 				815D357D0A7585EA009338C2 /* SmackXMPPVCardPlugin.m */,
 				81F9D4950A8158EA004A35BD /* SmackXMPPVersionPlugin.h */,
 				81F9D4960A8158EA004A35BD /* SmackXMPPVersionPlugin.m */,
+				81F9D8AD0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.h */,
+				81F9D8AE0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.m */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -9764,6 +9771,7 @@
 				815D321F0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m in Sources */,
 				815D357F0A7585EA009338C2 /* SmackXMPPVCardPlugin.m in Sources */,
 				81F9D4980A8158EB004A35BD /* SmackXMPPVersionPlugin.m in Sources */,
+				81F9D8B00A83A92F004A35BD /* SmackXMPPPrivacyPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12374,6 +12382,8 @@
 				JAVA_ARCHIVE_COMPRESSION = YES;
 				JAVA_ARCHIVE_TYPE = JAR;
 				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_COMPILER_SOURCE_VERSION = 1.5;
+				JAVA_COMPILER_TARGET_VM_VERSION = 1.5;
 				JAVA_SOURCE_SUBDIR = .;
 				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";

@@ -14,6 +14,7 @@
 
 #import "SmackInterfaceDefinitions.h"
 #import "SmackCocoaAdapter.h"
+#import "SmackListContact.h"
 
 #import <JavaVM/NSJavaVirtualMachine.h>
 #import <AIUtilities/AIStringUtilities.h>
@@ -44,6 +45,10 @@
 @end
 
 @implementation SmackXMPPAccount (fileTransferExtension)
+
+- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact {
+    return ![inContact isKindOfClass:[SmackListContact class]] && [inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE];
+}
 
 - (BOOL)canSendFolders
 {
@@ -105,6 +110,7 @@
         [fileTransfer setStatus:Complete_FileTransfer];
     } else {
         NSString *status = [[smackFileTransfer getStatus] toString];
+        NSLog(@"file transfer status = %@",status);
         if([status isEqualToString:@"Cancled"])
         {
             [fileTransfer setStatus:Cancelled_Remote_FileTransfer];
@@ -149,8 +155,18 @@
 - (void)initiateFileTransfer:(NSNotification*)n
 {
     ESFileTransfer *fileTransfer = [[n userInfo] objectForKey:@"fileTransfer"];
+    AIListContact *contact = [fileTransfer contact];
     
-    SmackXOutgoingFileTransfer *smackFileTransfer = [listener createOutgoingFileTransfer:[[fileTransfer contact] UID]];
+    NSLog(@"file transfer inital contact %@ (%p)",contact,contact);
+    
+    while([contact conformsToProtocol:@protocol(AIContainingObject)])
+        contact = [contact preferredContact];
+    if(!contact)
+        return; // not online?
+    
+    NSLog(@"file transfer file = %@, jid = %@",[fileTransfer localFilename],[fileTransfer contact]);
+    
+    SmackXOutgoingFileTransfer *smackFileTransfer = [listener createOutgoingFileTransfer:[contact UID]];
     [smackFileTransfer sendFile:[SmackCocoaAdapter fileFromPath:[fileTransfer localFilename]] :[fileTransfer displayFilename]];
     
     NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.5

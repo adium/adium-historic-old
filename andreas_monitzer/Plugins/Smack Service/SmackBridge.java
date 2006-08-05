@@ -34,7 +34,7 @@ public class SmackBridge implements ConnectionListener {
     }
     
     public void initSubscriptionMode() {
-        Roster.setDefaultSubscriptionMode(Roster.SUBSCRIPTION_MANUAL);
+        Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.manual);
     }
     
     public void setDelegate(NSObject d) {

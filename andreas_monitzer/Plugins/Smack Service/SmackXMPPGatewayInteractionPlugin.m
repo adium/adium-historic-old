@@ -79,7 +79,7 @@
 {
     AIListContact *contact = [sender representedObject];
 
-    SmackPresence *presence = [SmackCocoaAdapter presenceWithTypeString:@"UNAVAILABLE"];
+    SmackPresence *presence = [SmackCocoaAdapter presenceWithTypeString:@"unavailable"];
     [presence setTo:[contact UID]];
     
     [[account connection] sendPacket:presence];

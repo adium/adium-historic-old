@@ -134,6 +134,10 @@ static JavaClassLoader *classLoader = nil;
 */
 #pragma mark utility functions
 
++ (id)enumWithType:(NSString*)type name:(NSString*)name {
+    return [(id)[classLoader loadClass:@"java.lang.Enum"] valueOf:[classLoader loadClass:type] :name];
+}
+
 + (id)staticObjectField:(NSString*)fieldname inJavaClass:(NSString*)className {
     return [(AdiumSmackBridge*)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] getStaticFieldFromClass:fieldname :className];
 }
@@ -237,7 +241,7 @@ static JavaClassLoader *classLoader = nil;
 }
 
 + (SmackPresence*)presenceWithTypeString:(NSString*)type {
-    return [self presenceWithType:[SmackCocoaAdapter staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.Presence$Type"]];
+    return [self presenceWithType:[SmackCocoaAdapter enumWithType:@"org.jivesoftware.smack.packet.Presence$Type" name:type]];
 }
 
 + (SmackPresence*)presenceWithType:(SmackPresenceType*)type status:(NSString*)status priority:(int)priority mode:(SmackPresenceMode*)mode {
@@ -245,7 +249,7 @@ static JavaClassLoader *classLoader = nil;
 }
 
 + (SmackPresence*)presenceWithTypeString:(NSString*)type status:(NSString*)status priority:(int)priority modeString:(NSString*)mode {
-    return [self presenceWithType:[SmackCocoaAdapter staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.Presence$Type"] status:status priority:priority mode:[SmackCocoaAdapter staticObjectField:mode inJavaClass:@"org.jivesoftware.smack.packet.Presence$Mode"]];
+    return [self presenceWithType:[SmackCocoaAdapter enumWithType:@"org.jivesoftware.smack.packet.Presence$Type" name:type] status:status priority:priority mode:[SmackCocoaAdapter enumWithType:@"org.jivesoftware.smack.packet.Presence$Mode" name:mode]];
 }
 
 + (SmackMessage*)message {

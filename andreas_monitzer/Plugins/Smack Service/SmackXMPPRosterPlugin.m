@@ -114,6 +114,8 @@
         
         SmackListContact *listContact = (SmackListContact*)[[adium contactController] contactWithService:[account service] account:account UID:jid class:[SmackListContact class]];
         
+        NSLog(@"list contact %@ (%p)",listContact,listContact);
+        
         if(![[listContact formattedUID] isEqualToString:jid])
             [listContact setFormattedUID:jid notify:NotifyLater];
         
@@ -123,9 +125,10 @@
         // First I'm checking if the group it's in here locally is one of the groups
         // the contact is in on the server. If this is not the case, I set the contact
         // to be in the first group on the list. XXX -> Adium folks, add this feature!
-        JavaIterator *iter2 = [entry getGroups];
+        JavaIterator *iter2;
         NSString *storedgroupname = [listContact remoteGroupName];
         if(storedgroupname) {
+            iter2 = [[entry getGroups] iterator];
             while([iter2 hasNext]) {
                 SmackRosterGroup *group = [iter2 next];
                 if([storedgroupname isEqualToString:[group getName]])
@@ -135,7 +138,7 @@
                 storedgroupname = nil;
         }
         if(!storedgroupname) {
-            iter2 = [entry getGroups];
+            iter2 = [[entry getGroups] iterator];
             if([iter2 hasNext])
                 [listContact setRemoteGroupName:[[iter2 next] getName]];
             else
@@ -249,6 +252,8 @@
         return; // ignore presence information for people not on our contact list (might want to add that later for chats to people not on the contact list)
 
     AIListContact *resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:XMPPAddress];
+    
+    NSLog(@"resource object = %@ (%p)",resourceObject,resourceObject);
 
     AIStatusType statustype = AIOfflineStatusType;
     
@@ -326,21 +331,21 @@
 #pragma mark User-Initiated Roster Changes
 
 - (void)requestAuthorization:(NSMenuItem*)sender {
-    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:@"SUBSCRIBE"];
+    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:@"subscribe"];
     [packet setTo:[[sender representedObject] UID]];
     
     [[account connection] sendPacket:packet];
 }
 
 - (void)sendAuthorization:(NSMenuItem*)sender {
-    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:@"SUBSCRIBED"];
+    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:@"subscribed"];
     [packet setTo:[[sender representedObject] UID]];
     
     [[account connection] sendPacket:packet];
 }
 
 - (void)removeAuthorization:(NSMenuItem*)sender {
-    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:@"UNSUBSCRIBED"];
+    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:@"unsubscribed"];
     [packet setTo:[[sender representedObject] UID]];
     
     [[account connection] sendPacket:packet];

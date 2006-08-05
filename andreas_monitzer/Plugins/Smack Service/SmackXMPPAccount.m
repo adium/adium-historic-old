@@ -62,7 +62,7 @@
 
 @end
 
-@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin, SmackXMPPServiceDiscoveryBrowsing, SmackXMPPFileTransferPlugin, SmackXMPPChatStateNotificationsPlugin, SmackXMPPVCardPlugin, SmackXMPPVersionPlugin;
+@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin, SmackXMPPServiceDiscoveryBrowsing, SmackXMPPFileTransferPlugin, SmackXMPPChatStateNotificationsPlugin, SmackXMPPVCardPlugin, SmackXMPPVersionPlugin, SmackXMPPPrivacyPlugin;
 
 @interface NSObject (SmackXMPPPluginAddition)
 - (id)initWithAccount:(SmackXMPPAccount*)account;
@@ -92,6 +92,7 @@
             [SmackXMPPChatStateNotificationsPlugin class],
             [SmackXMPPVCardPlugin class],
             [SmackXMPPVersionPlugin class],
+            [SmackXMPPPrivacyPlugin class],
             nil
         };
         
@@ -110,6 +111,25 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [plugins release]; plugins = nil;
     [super dealloc];
+}
+
+// plugins might add other protocols to this class
+// so we have to ask them if they add anything
+- (BOOL)conformsToProtocol:(Protocol*)proto
+{
+    // if we support it, all is great
+    if([super conformsToProtocol:proto])
+        return YES;
+    // otherwise, ask the plugins
+    NSEnumerator *e = [plugins objectEnumerator];
+    id plugin;
+    while((plugin = [e nextObject]))
+    {
+        if([plugin respondsToSelector:@selector(addsProtocolSupport:)] && [plugin addsProtocolSupport:proto])
+            return YES;
+    }
+    // nobody likes that protocol, give up
+    return NO;
 }
 
 - (BOOL)silentAndDelayed {
@@ -244,20 +264,20 @@
     int priority = [[self preferenceForKey:@"awayPriority" group:GROUP_ACCOUNT_STATUS] intValue];
     
     if([statusName isEqualToString:STATUS_NAME_AVAILABLE]) {
-        statusField = @"AVAILABLE";
+        statusField = @"available";
         priority = [[self preferenceForKey:@"availablePriority" group:GROUP_ACCOUNT_STATUS] intValue];
     } else if([statusName isEqualToString:STATUS_NAME_AWAY])
-        statusField = @"AWAY";
+        statusField = @"away";
     else if([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT])
-        statusField = @"CHAT";
+        statusField = @"chat";
     else if([statusName isEqualToString:STATUS_NAME_DND])
-        statusField = @"DO_NOT_DISTURB";
+        statusField = @"dnd";
     else if([statusName isEqualToString:STATUS_NAME_EXTENDED_AWAY])
-        statusField = @"EXTENDED_AWAY";
+        statusField = @"xa";
     else // shouldn't happen
-        statusField = @"AVAILABLE";
+        statusField = @"available";
     
-    return [SmackCocoaAdapter presenceWithTypeString:@"AVAILABLE"
+    return [SmackCocoaAdapter presenceWithTypeString:@"available"
                                               status:[statusMessage string]
                                             priority:priority
                                           modeString:statusField];
@@ -602,7 +622,7 @@
 }
 
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize {
-    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:inDidAuthorize?@"SUBSCRIBED":@"UNSUBSCRIBED"];
+    SmackPresence *packet = [SmackCocoaAdapter presenceWithTypeString:inDidAuthorize?@"subscribed":@"unsubscribed"];
     [packet setTo:[infoDict objectForKey:@"Remote Name"]];
     
     [connection sendPacket:packet];
