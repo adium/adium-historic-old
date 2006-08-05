@@ -75,4 +75,15 @@
 	
 }
 
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	if ([attribute isEqualToString: NSAccessibilityWindowAttribute]) {
+		return [super accessibilityAttributeValue:NSAccessibilityWindowAttribute];
+	} else if ([attribute isEqualToString: NSAccessibilityTopLevelUIElementAttribute]) {
+		return [super accessibilityAttributeValue:NSAccessibilityTopLevelUIElementAttribute];
+    } else {
+        return [super accessibilityAttributeValue:attribute];
+    }
+}
+
 @end
