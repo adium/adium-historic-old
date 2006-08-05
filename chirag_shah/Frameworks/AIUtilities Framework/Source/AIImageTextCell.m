@@ -369,4 +369,27 @@
 	}
 }
 
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	if([attribute isEqualToString:NSAccessibilityRoleAttribute]) {
+		return @"button";
+		
+    } else if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
+        return [self stringValue];
+		
+    } else if([attribute isEqualToString:NSAccessibilityHelpAttribute]) {
+        return [self stringValue];
+		
+	} else if ([attribute isEqualToString: NSAccessibilityWindowAttribute]) {
+		return [super accessibilityAttributeValue:NSAccessibilityWindowAttribute];
+		
+	} else if ([attribute isEqualToString: NSAccessibilityTopLevelUIElementAttribute]) {
+		return [super accessibilityAttributeValue:NSAccessibilityTopLevelUIElementAttribute];
+		
+    } else {
+        return [super accessibilityAttributeValue:attribute];
+    }
+}
+
+
 @end
