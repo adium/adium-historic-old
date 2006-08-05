@@ -177,8 +177,8 @@ static JavaClassLoader *classLoader = nil;
     if(type == Adium_Proxy_SOCKS4 || type == Adium_Proxy_SOCKS5 || type == Adium_Proxy_Default_SOCKS4 || type == Adium_Proxy_Default_SOCKS5)
     {
         [sysprop put:@"socksProxyHost" :[proxyinfo objectForKey:@"Host"]];
-        [sysprop put:@"socksProxyPort" :[[proxyinfo objectForKey:@"Port"] stringValue]];
-        if([proxyinfo objectForKey:@"Username"])
+        [sysprop put:@"socksProxyPort" :[[proxyinfo objectForKey:@"Port"] description]];
+        if([[proxyinfo objectForKey:@"Username"] length] > 0)
         {
             [sysprop put:@"java.net.socks.username" :[proxyinfo objectForKey:@"Username"]];
             [sysprop put:@"java.net.socks.password" :[proxyinfo objectForKey:@"Password"]];
