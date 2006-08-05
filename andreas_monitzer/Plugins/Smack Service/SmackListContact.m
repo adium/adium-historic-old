@@ -80,7 +80,8 @@
 			[key isEqualToString:@"IsMobile"] ||
 			[key isEqualToString:@"StatusMessage"] ||
 			[key isEqualToString:@"Signed On"] ||
-			[key isEqualToString:@"Signed Off"]) {
+			[key isEqualToString:@"Signed Off"]||
+			[key isEqualToString:KEY_USER_ICON]) {
 			shouldNotify = YES;
 		}
 
