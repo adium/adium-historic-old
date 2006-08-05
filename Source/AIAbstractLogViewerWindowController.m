@@ -81,6 +81,7 @@
 - (void)openLogAtPath:(NSString *)inPath;
 - (void)rebuildContactsList;
 - (void)filterForContact:(AIListContact *)inContact;
+- (void)selectCachedIndex;
 
 - (void)deleteSelection:(id)sender;
 @end
@@ -592,6 +593,9 @@ static int toArraySort(id itemA, id itemB, void *context);
 		searchIDToReattemptWhenComplete = -1;
 		[self startSearchingClearingCurrentResults:NO];
 	}
+	
+	if(deleteOccurred)
+		[self selectCachedIndex];
 
     //Update status
     [self updateProgressDisplay];
@@ -2159,6 +2163,22 @@ static int toArraySort(id itemA, id itemB, void *context)
 	}
 }
 
+- (void)selectCachedIndex
+{
+	int numberOfRows = [tableView_results numberOfRows];
+	
+	if (cachedSelectionIndex <  numberOfRows) {
+		[tableView_results selectRowIndexes:[NSIndexSet indexSetWithIndex:cachedSelectionIndex]
+					   byExtendingSelection:NO];
+	} else {
+		if (numberOfRows)
+			[tableView_results selectRowIndexes:[NSIndexSet indexSetWithIndex:(numberOfRows-1)]
+						   byExtendingSelection:NO];			
+	}	
+	
+	deleteOccurred = NO;
+}
+
 #pragma mark Deletion
 
 /*!
@@ -2214,6 +2234,8 @@ static int toArraySort(id itemA, id itemB, void *context)
 		NSEnumerator	*enumerator;
 		NSMutableSet	*logPaths = [NSMutableSet set];
 		
+		cachedSelectionIndex = [[tableView_results selectedRowIndexes] firstIndex];
+		
 		enumerator = [selectedLogs objectEnumerator];
 		while ((aLog = [enumerator nextObject])) {
 			NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
@@ -2239,19 +2261,10 @@ static int toArraySort(id itemA, id itemB, void *context)
 		[undoManager setActionName:DELETE];
 		
 		[resultsLock unlock];
-		
-		int firstIndex = [[tableView_results selectedRowIndexes] firstIndex];
 		[tableView_results reloadData];
-		int numberOfRows = [tableView_results numberOfRows];
-		if (firstIndex <  numberOfRows) {
-			[tableView_results selectRowIndexes:[NSIndexSet indexSetWithIndex:firstIndex]
-						   byExtendingSelection:NO];
-		} else {
-			if (numberOfRows)
-				[tableView_results selectRowIndexes:[NSIndexSet indexSetWithIndex:(numberOfRows-1)]
-							   byExtendingSelection:NO];			
-		}
-
+		
+		deleteOccurred = YES;
+		
 		[self rebuildContactsList];
 		[self updateProgressDisplay];
 	}
