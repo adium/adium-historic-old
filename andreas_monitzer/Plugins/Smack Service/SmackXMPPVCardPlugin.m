@@ -357,29 +357,15 @@
         AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:uid];
         if(contact)
         {
-            NSString *oldhash = [contact statusObjectForKey:@"XMPPJEP153Hash"];
-            if(!oldhash)
-            {
-                // reload old hash from adium database
-                NSImage *image = [contact statusObjectForKey:KEY_USER_ICON];
-                if(image)
-                {
-                    SmackXVCard *vCard = [SmackCocoaAdapter vCard];
-                    // XXX NOTE: we're just assuming JPEG here! I can't know what image format
-                    // the hash I got from the server is for! The fix for this would be to store
-                    // the hash itself along with the image in Adium.
-                    [SmackCocoaAdapter setAvatar:[image JPEGRepresentation] forVCard:vCard];
-                    oldhash = [vCard getAvatarHash];
-                } else
-                    oldhash = @"";
-            }
+            NSString *oldhash = [contact preferenceForKey:@"XMPP:IconHash" group:@"XMPP"];
             
-            if(![hash isEqualToString:oldhash])
+            if(!oldhash || ![hash isEqualToString:oldhash])
             {
                 NSData *avatar;
                 if(!hash || [hash isEqualToString:@""]) // empty avatar?
                     avatar = [NSData data];
                 else {
+                    NSLog(@"loading avatar for %@",uid);
                     @try {
                         SmackXVCard *vCard = [SmackCocoaAdapter vCard];
                         [vCard load:[account connection] :uid];
@@ -391,7 +377,7 @@
                         return;
                     }
                     
-                    [contact setStatusObject:hash forKey:@"XMPPJEP153Hash" notify:NO];
+                    [contact setPreference:hash forKey:@"XMPP:IconHash" group:@"XMPP"];
                 }
                 
                 if([avatar length] > 0) // don't remove the avatar
