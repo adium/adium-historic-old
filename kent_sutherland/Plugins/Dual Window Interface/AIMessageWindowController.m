@@ -291,7 +291,6 @@
 		//[[tabView_tabBar overflowPopUpButton] setAlternateImage:[AIStatusIcons statusIconForStatusName:@"content" statusType:AIAvailableStatusType iconType:AIStatusIconTab direction:AIIconNormal]];
 		NSImage *overflowImage = [[[NSImage alloc] initByReferencingFile:[[NSBundle mainBundle] pathForImageResource:@"overflow_overlay"]] autorelease];
 		[[tabView_tabBar overflowPopUpButton] setAlternateImage:overflowImage];
-		[[tabView_tabBar overflowPopUpButton] setAnimatingAlternateImage:YES];
 		
 		//change the frame of the tab bar according to the orientation
 		if (firstTime || [key isEqualToString:KEY_TABBAR_POSITION]) {
