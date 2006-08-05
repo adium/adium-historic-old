@@ -13,6 +13,7 @@
 
 #import "AIAdium.h"
 #import "AIInterfaceController.h"
+#import "AIAccountController.h"
 #import "AIJavaController.h"
 
 #import <JavaVM/NSJavaVirtualMachine.h>
@@ -160,9 +161,43 @@ static JavaClassLoader *classLoader = nil;
 - (id)initForAccount:(SmackXMPPAccount *)inAccount {
     if((self=[super init])) {
         account = inAccount;
-        [NSThread detachNewThreadSelector:@selector(runConnection:) toTarget:self withObject:inAccount];
+        
+        [account getProxyConfigurationNotifyingTarget:self selector:@selector(spawnConnectionWithProxy:account:) context:inAccount];
     }
     return self;
+}
+
+- (void)spawnConnectionWithProxy:(NSDictionary*)proxyinfo account:(SmackXMPPAccount*)inAccount
+{
+    // establish Java proxy settings
+    
+    id sysprop = [(id)[classLoader loadClass:@"java.lang.System"] getProperties];
+    AdiumProxyType type = (AdiumProxyType)[[proxyinfo objectForKey:@"AdiumProxyType"] intValue];
+    
+    if(type == Adium_Proxy_SOCKS4 || type == Adium_Proxy_SOCKS5 || type == Adium_Proxy_Default_SOCKS4 || type == Adium_Proxy_Default_SOCKS5)
+    {
+        [sysprop put:@"socksProxyHost" :[proxyinfo objectForKey:@"Host"]];
+        [sysprop put:@"socksProxyPort" :[[proxyinfo objectForKey:@"Port"] stringValue]];
+        if([proxyinfo objectForKey:@"Username"])
+        {
+            [sysprop put:@"java.net.socks.username" :[proxyinfo objectForKey:@"Username"]];
+            [sysprop put:@"java.net.socks.password" :[proxyinfo objectForKey:@"Password"]];
+        } else {
+            [sysprop remove:@"java.net.socks.username"];
+            [sysprop remove:@"java.net.socks.password"];
+        }
+    } else {
+        [sysprop remove:@"socksProxyHost"];
+        [sysprop remove:@"socksProxyPort"];
+        [sysprop remove:@"java.net.socks.username"];
+        [sysprop remove:@"java.net.socks.password"];
+        
+        if(type != Adium_Proxy_None)
+            [[adium interfaceController] handleErrorMessage:AILocalizedString(@"Proxy Settings","Proxy Settings") withDescription:AILocalizedString(@"HTTP proxies are currently not supported. The connection attempt will continue without the proxy.","HTTP proxies are currently not supported. The connection attempt will continue without the proxy.")];
+    }
+    
+    // start connection
+    [NSThread detachNewThreadSelector:@selector(runConnection:) toTarget:self withObject:inAccount];
 }
 
 - (void)runConnection:(SmackXMPPAccount*)inAccount {
@@ -171,6 +206,8 @@ static JavaClassLoader *classLoader = nil;
     SmackConnectionConfiguration *conf = [inAccount connectionConfiguration];
     if(conf) {
         BOOL useSSL = NO; //[[inAccount preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue];
+        
+        // create connection
         AdiumSmackBridge *bridge = [[(Class)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] alloc] init];
         [bridge initSubscriptionMode];
         [bridge setDelegate:self];
