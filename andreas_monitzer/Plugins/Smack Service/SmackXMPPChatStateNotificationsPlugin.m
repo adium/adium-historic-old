@@ -46,6 +46,9 @@
 
 - (BOOL)sendTypingObject:(AIContentTyping *)inTypingObject {
 //    NSLog(@"typing %@",([inTypingObject typingState]==AINotTyping)?@"NO":(([inTypingObject typingState]==AITyping)?@"TYPING":@"ENTEREDTEXT"));
+    if([self currentlyInvisible])
+        return YES; // when invisible, don't send typing notifications to not reveal that we're actually here
+    
     AIChat *chat = [inTypingObject chat];
     
     if([chat isGroupChat])
@@ -198,6 +201,9 @@
 
 - (void)chatWillClose:(NSNotification*)notification
 {
+    if([account currentlyInvisible])
+        return; // when invisible, don't send typing notifications to not reveal that we're actually here
+
     AIChat *chat = [notification object];
     [[adium notificationCenter] removeObserver:self
                                           name:Chat_WillClose
@@ -227,6 +233,8 @@
 
 - (void)sendMessage:(NSNotification*)n
 {
+    if([account currentlyInvisible])
+        return; // when invisible, don't send typing notifications to not reveal that we're actually here
     AIContentMessage *inMessageObject = [[n userInfo] objectForKey:AIMessageObjectKey];
     SmackMessage *message = [[n userInfo] objectForKey:SmackXMPPPacket];
     

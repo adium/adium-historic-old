@@ -1338,6 +1338,7 @@
 		8102A7260A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A7240A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m */; };
 		8102A8210A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A81F0A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m */; };
 		8102A8880A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A8860A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m */; };
+		811DE2170A862E5900487D47 /* InvisibleCommand.java in Sources */ = {isa = PBXBuildFile; fileRef = 811DE2160A862E5900487D47 /* InvisibleCommand.java */; };
 		815679900A339B1F005ADC13 /* SmackListContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8156798E0A339B1F005ADC13 /* SmackListContact.m */; };
 		815D2F2A0A74D903009338C2 /* OutOfBandDataExtension.java in Sources */ = {isa = PBXBuildFile; fileRef = 815D2F290A74D903009338C2 /* OutOfBandDataExtension.java */; };
 		815D321E0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 815D321C0A751673009338C2 /* SmackXMPPChatStateNotificationsPlugin.h */; };
@@ -3703,6 +3704,7 @@
 		8102A81F0A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPErrorMessagePlugin.m; path = "Plugins/Smack Service/SmackXMPPErrorMessagePlugin.m"; sourceTree = "<group>"; };
 		8102A8850A4B7A1E004DF0F5 /* SmackXMPPHeadlineMessagePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPHeadlineMessagePlugin.h; path = "Plugins/Smack Service/SmackXMPPHeadlineMessagePlugin.h"; sourceTree = "<group>"; };
 		8102A8860A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPHeadlineMessagePlugin.m; path = "Plugins/Smack Service/SmackXMPPHeadlineMessagePlugin.m"; sourceTree = "<group>"; };
+		811DE2160A862E5900487D47 /* InvisibleCommand.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = InvisibleCommand.java; path = "Plugins/Smack Service/InvisibleCommand.java"; sourceTree = "<group>"; };
 		8156798D0A339B1F005ADC13 /* SmackListContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackListContact.h; path = "Plugins/Smack Service/SmackListContact.h"; sourceTree = "<group>"; };
 		8156798E0A339B1F005ADC13 /* SmackListContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackListContact.m; path = "Plugins/Smack Service/SmackListContact.m"; sourceTree = "<group>"; };
 		815D2F290A74D903009338C2 /* OutOfBandDataExtension.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = OutOfBandDataExtension.java; path = "Plugins/Smack Service/OutOfBandDataExtension.java"; sourceTree = "<group>"; };
@@ -6677,6 +6679,7 @@
 				81BE64790A711F6600AADA28 /* SmackXMPPFileTransferListener.java */,
 				815D2F290A74D903009338C2 /* OutOfBandDataExtension.java */,
 				81F9CDE90A7D83AE004A35BD /* VCardUpdateExtension.java */,
+				811DE2160A862E5900487D47 /* InvisibleCommand.java */,
 				815D32370A7518D7009338C2 /* ChatStateNotifications.java */,
 				81F659B90A2A8C4E008FC8E7 /* smack.jar */,
 				81F659BA0A2A8C4E008FC8E7 /* smackx.jar */,
@@ -9716,6 +9719,7 @@
 				815D2F2A0A74D903009338C2 /* OutOfBandDataExtension.java in Sources */,
 				815D32380A7518D7009338C2 /* ChatStateNotifications.java in Sources */,
 				81F9CDEA0A7D83AE004A35BD /* VCardUpdateExtension.java in Sources */,
+				811DE2170A862E5900487D47 /* InvisibleCommand.java in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

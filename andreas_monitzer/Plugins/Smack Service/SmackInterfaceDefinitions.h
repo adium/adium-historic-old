@@ -417,6 +417,14 @@
 
 @end
 
+@interface SmackInvisibleCommand : SmackIQ {
+}
+
+- (void)setInvisible:(BOOL)invisible;
+- (BOOL)getInvisible;
+
+@end
+
 @interface SmackRegistration : SmackIQ {
 }
 
