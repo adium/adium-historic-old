@@ -8,11 +8,15 @@
 
 #import <Cocoa/Cocoa.h>
 #import "AIObject.h"
+#import "AIAccount.h"
 
 @class SmackXMPPAccount;
 
-@interface SmackXMPPPrivacyPlugin : AIObject {
+@interface SmackXMPPPrivacyPlugin : AIObject <AIAccount_Privacy> {
     SmackXMPPAccount *account;
+    
+    NSMutableDictionary *privacyLists;
+    NSString *defaultListName;
 }
 
 - (id)initWithAccount:(SmackXMPPAccount*)a;

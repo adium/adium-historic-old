@@ -122,6 +122,7 @@
 - (int)size;
 - (id)toArray; // returns Object[]
 - (NSString*)toString;
+- (JavaIterator*)iterator;
 
 @end
 
@@ -424,6 +425,57 @@
 - (NSString*)getInstructions;
 - (void)setAttributes:(JavaMap*)attributes;
 - (void)setInstructions:(NSString*)instructions;
+
+@end
+
+@interface SmackPrivacyItem : SmackIQ {
+}
+
+- (int)getOrder;
+- (NSString*)getType;
+- (NSString*)getValue;
+- (BOOL)isAllow;
+- (BOOL)isFilterEverything;
+- (BOOL)isFilterIQ;
+- (BOOL)isFilterMessage;
+- (BOOL)isFilterPresence_in;
+- (BOOL)isFilterPresence_out;
+- (void)setFilterIQ:(BOOL)filterIQ;
+- (void)setFilterMessage:(BOOL)filterMessage;
+- (void)setFilterPresence_in:(BOOL)filterPresence_in;
+- (void)setFilterPresence_out:(BOOL)filterPresence_out;
+- (void)setValue:(NSString*)value;
+- (NSString*)toXML;
+
+@end
+
+@interface SmackPrivacyList : NSObject {
+}
+
+- (JavaVector*)getItems; // of SmackPrivacyItem
+- (BOOL)isActiveList;
+- (BOOL)isDefaultList;
+- (NSString*)toString;
+
+@end
+
+@class SmackXMPPConnection;
+
+@interface SmackPrivacyListManager : NSObject {
+}
+
+- (void)createPrivacyList:(NSString*)listname :(JavaVector*)privacyItems;
+- (void)declineActiveList;
+- (void)declineDefaultList;
+- (void)deletePrivacyList:(NSString*)listName;
+- (SmackPrivacyList*)getActiveList;
+- (SmackPrivacyList*)getDefaultList;
++ (SmackPrivacyListManager*)getInstanceFor:(SmackXMPPConnection*)connection;
+- (SmackPrivacyList*)getPrivacyList:(NSString*)listName;
+- (id)getPrivacyLists; // PrivacyList[]
+- (void)setActiveListName:(NSString*)listName;
+- (void)setDefaultListName:(NSString*)listName;
+- (void)updatePrivacyList:(NSString*)listName :(JavaVector*)privacyItems;
 
 @end
 
@@ -955,6 +1007,7 @@
 + (void)setVCardAvatar:(SmackXVCard*)vCard :(NSData*)avatar;
 + (NSData*)getVCardAvatar:(SmackXVCard*)vCard;
 + (BOOL)isAvatarEmpty:(SmackXVCard*)vCard;
++ (JavaVector*)getAllPrivacyLists:(SmackXMPPConnection*)conn;
 
 @end
 

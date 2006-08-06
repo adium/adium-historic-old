@@ -178,7 +178,7 @@
                 else
                     [field setType:[item objectForKey:@"type"]];
                 [field addValue:value];
-                // for some reason unthinkable to men, -setLabel: isn't bridged (even though all other methods are
+                // for some reason unknown by mankind, -setLabel: isn't bridged (even though all other methods are
                 // however, I can use my super-advanced method for calling overloaded Java methods, which works fine in this case
                 [SmackCocoaAdapter invokeObject:field methodWithParamTypeAndParam:@"setLabel",@"java.lang.String",[item objectForKey:@"label"],nil];
 
