@@ -110,6 +110,7 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [plugins release]; plugins = nil;
+    [serverinfo release]; serverinfo = nil;
     [super dealloc];
 }
 
@@ -157,6 +158,7 @@
     [smackAdapter release];
     smackAdapter = nil;
     
+    [serverinfo release]; serverinfo = nil;
     [self didDisconnect];
 }
 
@@ -183,13 +185,16 @@
                    :[self resource]
                    :NO];
         
+        // get features supported by server before doing anything
+        [serverinfo release]; serverinfo = nil;
+        serverinfo = [[[SmackCocoaAdapter serviceDiscoveryManagerForConnection:conn] discoverInfo:[conn getServiceName]] retain];
+
         [self didConnect];
         
-        [self setStatusState:[self statusState] usingStatusMessage:[self statusMessage]];
-        
+        // initial presence is sent automatically by Adium
+
 		[self silenceAllContactUpdatesForInterval:18.0];
 		[[adium contactController] delayListObjectNotificationsUntilInactivity];
-        
     }@catch(NSException *e) {
         // caused by invalid password
         [self disconnect];
@@ -212,6 +217,7 @@
         if([plugin respondsToSelector:@selector(disconnected:)])
             [plugin disconnected:conn];
     [self removeAllContacts];
+    [serverinfo release]; serverinfo = nil;
 }
 
 - (void)connectionError:(NSString*)error {
@@ -274,7 +280,7 @@
         statusField = @"dnd";
     else if([statusName isEqualToString:STATUS_NAME_EXTENDED_AWAY])
         statusField = @"xa";
-    else // shouldn't happen
+    else // shouldn't happen (except for invisible)
         statusField = @"available";
     
     return [SmackCocoaAdapter presenceWithTypeString:@"available"
@@ -289,12 +295,46 @@
 }
 
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage {
+    NSLog(@"new status: %@",statusState);
+    if([[statusState statusName] isEqualToString:STATUS_NAME_INVISIBLE])
+    {
+        if(currentlyInvisible)
+            return;
+        if(![serverinfo containsFeature:@"http://jabber.org/protocol/invisibility"])
+        {
+            // I can't use AIInterfaceController's questions, since this has to happen synchronously
+            // (otherwise the plugins could send presence messages while the question is still displayed)
+            if([[NSAlert alertWithMessageText:AILocalizedString(@"Invisible Status Not Supported by Server","Invisible Status Not Supported by Server")
+                             defaultButton:AILocalizedString(@"Disconnect","Disconnect")
+                           alternateButton:AILocalizedString(@"Continue","Continue")
+                               otherButton:nil
+                 informativeTextWithFormat:AILocalizedString(@"The server %@ does not support invisiblity. Disconnect?","The server %@ does not support invisiblity. Disconnect?"),[connection getServiceName]] runModal] == NSAlertDefaultReturn)
+                [self disconnect];
+            else
+                // change status to available
+                [[adium statusController] applyState:[AIStatus statusOfType:AIAvailableStatusType] toAccounts:[NSArray arrayWithObject:self]];
+                // this should trigger sending setStatusState:usingStatusMessage: again
+            return;
+        } else {
+            [connection sendPacket:[SmackCocoaAdapter invisibleCommandForInvisibility:YES]];
+            currentlyInvisible = YES;
+        }
+    } else if(currentlyInvisible) { // become visible again
+        [connection sendPacket:[SmackCocoaAdapter invisibleCommandForInvisibility:NO]];
+        currentlyInvisible = NO;
+    }
+    
     SmackPresence *packet = [self getUserPresenceForStatusState:statusState usingStatusMessage:statusMessage];
     // let others add stuff to this presence packet
     [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPPresenceSentNotification
                                                         object:self
                                                       userInfo:[NSDictionary dictionaryWithObject:packet forKey:SmackXMPPPacket]];
     [connection sendPacket:packet];
+}
+
+- (BOOL)currentlyInvisible
+{
+    return currentlyInvisible;
 }
 
 - (void)broadcastCurrentPresence

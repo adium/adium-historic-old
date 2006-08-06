@@ -9,13 +9,16 @@
 #import <Cocoa/Cocoa.h>
 #import "AIAccount.h"
 
-@class SmackCocoaAdapter, SmackConnectionConfiguration, SmackXMPPConnection, SmackMessage, SmackPresence, SmackIQ;
+@class SmackCocoaAdapter, SmackConnectionConfiguration, SmackXMPPConnection, SmackMessage, SmackPresence, SmackIQ, SmackXDiscoverInfo;
 
 @interface SmackXMPPAccount : AIAccount {
     SmackCocoaAdapter *smackAdapter;
     SmackXMPPConnection *connection;
     
     NSArray *plugins;
+    
+    SmackXDiscoverInfo *serverinfo;
+    BOOL currentlyInvisible;
 }
 
 - (NSString*)hostName;
@@ -32,6 +35,7 @@
 
 - (SmackPresence*)getCurrentUserPresence;
 - (void)broadcastCurrentPresence;
+- (BOOL)currentlyInvisible;
 
 - (void)setListContact:(AIListContact *)listContact toAlias:(NSString *)inAlias;
 

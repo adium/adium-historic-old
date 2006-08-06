@@ -325,6 +325,10 @@ static JavaClassLoader *classLoader = nil;
     return [self staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.IQ$Type"];
 }
 
++ (SmackInvisibleCommand*)invisibleCommandForInvisibility:(BOOL)invisible {
+    return [[(id)[classLoader loadClass:@"net.adium.smackBridge.InvisibleCommand"] newWithSignature:@"(Z)",invisible] autorelease];
+}
+
 + (SmackXMPPError*)XMPPErrorWithCode:(int)code {
     return [[(Class)[classLoader loadClass:@"org.jivesoftware.smack.packet.XMPPError"] newWithSignature:@"(I)",code] autorelease];
 }
