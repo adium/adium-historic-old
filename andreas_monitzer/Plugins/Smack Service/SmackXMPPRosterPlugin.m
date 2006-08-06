@@ -29,6 +29,7 @@
 @interface SmackCocoaAdapter (rosterAdditions)
 
 + (SmackXMPPRosterPluginListener*)rosterPluginListenerWithDelegate:(id)delegate;
++ (SmackXDiscoverInfo*)discoverInfo;
 
 @end
 
@@ -36,6 +37,10 @@
 
 + (SmackXMPPRosterPluginListener*)rosterPluginListenerWithDelegate:(id)delegate {
     return [[[[self classLoader] loadClass:@"net.adium.smackBridge.SmackXMPPRosterPluginListener"] newWithSignature:@"(Lcom/apple/cocoa/foundation/NSObject;)",delegate] autorelease];
+}
++ (SmackXDiscoverInfo*)discoverInfo
+{
+    return [[[[[self classLoader] loadClass:@"org.jivesoftware.smackx.packet.DiscoverInfo"] alloc] init] autorelease];
 }
 
 @end
@@ -51,7 +56,10 @@
                                                  selector:@selector(receivedPresencePacket:)
                                                      name:SmackXMPPPresencePacketReceivedNotification
                                                    object:account];
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(receivedIQPacket:)
+                                                     name:SmackXMPPIQPacketReceivedNotification
+                                                   object:account];
     }
     return self;
 }
@@ -269,9 +277,18 @@
 	if (statustype != AIOfflineStatusType) {
 		if(![rosterContact containsObject:resourceObject])
 			[rosterContact addObject:resourceObject];
+        
+        if(![[resourceObject statusObjectForKey:@"Online"] boolValue])
+        {
+            // this resource has gone online right now, let's ask it for disco#info
+            SmackXDiscoverInfo *dinfo = [SmackCocoaAdapter discoverInfo];
+            [dinfo setTo:XMPPAddress];
+            [[account connection] sendPacket:dinfo];
+        }
 	} else if([rosterContact containsObject:resourceObject])
 			[rosterContact removeObject:resourceObject];
 	
+    
 	[resourceObject setOnline:statustype != AIOfflineStatusType
                     notify:NotifyNow
                   silently:NO];
@@ -326,6 +343,34 @@
     } else if([type isEqualToString:@"unsubscribed"]) {
         [[adium interfaceController] handleMessage:AILocalizedString(@"Authorization Removed!","Authorization Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed your authorization. You will no longer see his/her current status.","%@ has removed your authorization. You will no longer see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
     }
+}
+
+- (void)receivedIQPacket:(NSNotification*)n {
+    SmackIQ *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
+    
+    if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverInfo"])
+        [self performSelectorOnMainThread:@selector(receivedIQPacketMainThread:) withObject:packet waitUntilDone:YES];
+}
+
+- (void)receivedIQPacketMainThread:(SmackXDiscoverInfo*)dinfo {
+    JavaIterator *iter = [dinfo getIdentities];
+    
+    AIListContact *resourceObject = [[adium contactController] existingContactWithService:[account service] account:account UID:[dinfo getFrom]];
+    
+    if(!resourceObject)
+        return; // unknown object, ignore
+    
+    while([iter hasNext])
+    {
+        SmackXDiscoverInfoIdentity *identity = [iter next];
+        if([[identity getCategory] isEqualToString:@"client"] && ([[identity getType] isEqualToString:@"handheld"] || [[identity getType] isEqualToString:@"phone"]))
+        {
+            [resourceObject setIsMobile:YES notify:NotifyLater];
+            break;
+        }
+    }
+    [resourceObject setStatusObject:dinfo forKey:@"XMPP:disco#info" notify:NotifyLater];
+    [resourceObject notifyOfChangedStatusSilently:NO];
 }
 
 #pragma mark User-Initiated Roster Changes
