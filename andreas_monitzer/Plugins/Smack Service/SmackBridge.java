@@ -147,4 +147,8 @@ public class SmackBridge implements ConnectionListener {
         byte[] avatar = vCard.getAvatar();
         return avatar == null || avatar.length == 0;
     }
+    
+    public static List<PrivacyList> getAllPrivacyLists(XMPPConnection connection) throws XMPPException {
+        return Arrays.asList(PrivacyListManager.getInstanceFor(connection).getPrivacyLists());
+    }
 }
