@@ -715,7 +715,7 @@ Class LogViewerWindowControllerClass = NULL;
 - (BOOL)getIndexingProgress:(int *)indexNumber outOf:(int *)total
 {
 	//logsIndexed + 1 is the log we are currently indexing
-	if (indexNumber) *indexNumber = logsIndexed + 1;
+	if (indexNumber) *indexNumber = (logsIndexed + 1 <= logsToIndex) ? logsIndexed + 1 : logsToIndex;
 	if (total) *total = logsToIndex;
 	return (logsToIndex > 0);
 }
