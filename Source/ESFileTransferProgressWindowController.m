@@ -57,7 +57,8 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	}
 
 	//Configure and show window
-	[(NSPanel *)[sharedTransferProgressInstance window] setBecomesKeyOnlyIfNeeded:YES];
+	// left for a possible fix in the future, disabled so the window behaves correctly. - bgannin
+	//[(NSPanel *)[sharedTransferProgressInstance window] setBecomesKeyOnlyIfNeeded:YES];
 	[sharedTransferProgressInstance showWindow:nil];
 
 	return (sharedTransferProgressInstance);
