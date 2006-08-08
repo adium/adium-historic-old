@@ -45,7 +45,7 @@
 	thisSearch = SKSearchCreate(logSearchIndex,
 								(CFStringRef)searchString,
 								kSKSearchOptionDefault);
-	currentSearch = (SKSearchRef)CFRetain(thisSearch);
+	currentSearch = (thisSearch ? (SKSearchRef)CFRetain(thisSearch) : NULL);
 
 	//Retrieve matches as long as more are pending
     while (more && currentSearch) {
