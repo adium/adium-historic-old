@@ -1561,10 +1561,10 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
 		} else {
 			NSEnumerator	*enumerator = [[NSArray arrayWithObjects:
-				[[[AILogDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] 
-										   allowNaturalLanguage:NO] autorelease],
-				[[[AILogDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString] 
-										   allowNaturalLanguage:NO] autorelease],
+				[[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] 
+										allowNaturalLanguage:NO] autorelease],
+				[[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString] 
+										allowNaturalLanguage:NO] autorelease],
 				nil] objectEnumerator];
 			float requiredWidth = width + 1;
 			while ((requiredWidth > width) && (dateFormatter = [enumerator nextObject])) {
