@@ -150,8 +150,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 		oldContainingObjectID = [self preferenceForKey:KEY_CONTAINING_OBJECT_ID
 												 group:OBJECT_STATUS_CACHE];
-		oldContainingObject = (oldContainingObjectID ?
-							   [[adium contactController] existingListObjectWithUniqueID:oldContainingObjectID] :
+		//Get the group's UID out of the internal object ID by taking the substring after "Group."
+		oldContainingObject = ((oldContainingObjectID  && [oldContainingObjectID hasPrefix:@"Group."]) ?
+							   [[adium contactController] groupWithUID:[oldContainingObjectID substringFromIndex:6]] :
 							   nil);
 
 		if (oldContainingObject &&
@@ -178,8 +179,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 													   toGroup:[[adium contactController] groupWithUID:bestGuessRemoteGroup]];
 			}
 		}
-	}
-	
+	}	
 }
 
 //A metaContact should never be a stranger
