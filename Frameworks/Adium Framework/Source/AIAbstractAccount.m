@@ -169,8 +169,8 @@
 
 	if ([[self preferenceForKey:KEY_USE_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:isTemporary] boolValue]) {
 		userIconData = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:isTemporary];
-		if (!userIconData) {
-			userIconData = [self preferenceForKey:KEY_DEFAULT_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:isTemporary];
+		if (!userIconData && !isTemporary) {
+			userIconData = [self preferenceForKey:KEY_DEFAULT_USER_ICON group:GROUP_ACCOUNT_STATUS];
 		}
 	}
 
