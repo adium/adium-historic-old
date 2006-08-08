@@ -14,21 +14,23 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "ESGaimMSNAccount.h"
+
+#import <Libgaim/state.h>
+
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
-#import "ESGaimMSNAccount.h"
-#import <Libgaim/state.h>
-#import <AIUtilities/AIMutableOwnerArray.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
-#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIMutableStringAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 #import <Libgaim/msn.h>
 
@@ -288,14 +290,15 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 			[now timeIntervalSinceDate:lastFriendlyNameChange] > SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES) {
 
 			//Don't allow newlines in the friendly name; convert them to slashes.
-			friendlyName = [[[friendlyName mutableCopy] autorelease] convertNewlinesToSlashes];
+			NSMutableString		*noNewlinesFriendlyName = [[friendlyName mutableCopy] autorelease];
+			[noNewlinesFriendlyName convertNewlinesToSlashes];
 
 			/*
 			 * The MSN display name will be URL encoded via gaim_url_encode().  The maximum length of the _encoded_ string is
 			 * BUDDY_ALIAS_MAXLEN (387 characters as of gaim 2.0.0). We can't simply encode and truncate as we might end up with
 			 * part of an encoded character being cut off, so we instead truncate to smaller and smaller strings and encode, until it fits
 			 */
-			const char *friendlyNameUTF8String = [[friendlyName UTF8String];
+			const char *friendlyNameUTF8String = [noNewlinesFriendlyName UTF8String];
 			int currentMaxLength = BUDDY_ALIAS_MAXLEN;
 
 			while (friendlyNameUTF8String &&
