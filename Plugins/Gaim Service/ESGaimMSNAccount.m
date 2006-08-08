@@ -286,12 +286,16 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 
 		if (!lastFriendlyNameChange ||
 			[now timeIntervalSinceDate:lastFriendlyNameChange] > SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES) {
+
+			//Don't allow newlines in the friendly name; convert them to slashes.
+			friendlyName = [[[friendlyName mutableCopy] autorelease] convertNewlinesToSlashes];
+
 			/*
 			 * The MSN display name will be URL encoded via gaim_url_encode().  The maximum length of the _encoded_ string is
 			 * BUDDY_ALIAS_MAXLEN (387 characters as of gaim 2.0.0). We can't simply encode and truncate as we might end up with
 			 * part of an encoded character being cut off, so we instead truncate to smaller and smaller strings and encode, until it fits
 			 */
-			const char *friendlyNameUTF8String = [friendlyName UTF8String];
+			const char *friendlyNameUTF8String = [[friendlyName UTF8String];
 			int currentMaxLength = BUDDY_ALIAS_MAXLEN;
 
 			while (friendlyNameUTF8String &&
