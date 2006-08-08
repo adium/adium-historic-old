@@ -388,4 +388,8 @@
 	return [sourcePath hash];
 }
 
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"<%@: %x - %@: %i sounds at %@>", NSStringFromClass([self class]), self, [self name], [[self sounds] count], [self sourcePath]];
+}
 @end
