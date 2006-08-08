@@ -223,65 +223,88 @@
 			AIMetaContact *meta = (AIMetaContact *)object;
 								
 			//Enumerate over the various list contacts contained
-			NSEnumerator *enumerator = [[meta listContacts] objectEnumerator];
-			AIListContact *contact = nil;
-			
+			NSEnumerator	*enumerator = [[meta listContacts] objectEnumerator];
+			AIListContact	*contact = nil;
+			int				votesForBlock = 0;
+			int				votesForUnblock = 0;
+
 			while ((contact = [enumerator nextObject])) {
 				AIAccount <AIAccount_Privacy> *acct = [contact account];
 				if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-					anyAccount = YES;
-					AIPrivacyType privType = [acct privacyOptions] == AIPrivacyOptionAllowUsers ? AIPrivacyTypePermit : AIPrivacyTypeDeny;
+					AIPrivacyType privType = (([acct privacyOptions] == AIPrivacyOptionAllowUsers) ? AIPrivacyTypePermit : AIPrivacyTypeDeny);
 					if ([[acct listObjectsOnPrivacyList:privType] containsObject:contact]) {
-						//title: "Unblock"; enabled
-						if (!unblock && AIPrivacyTypePermit == privType) {
-							//removing the guy is blocking him
-							[menuItem setTitle:BLOCK_MENUITEM];
+						switch (privType) {
+							case AIPrivacyTypePermit:
+								/* He's on a permit list. The action would remove him, blocking him */
+								votesForBlock++;
+								break;
+							case AIPrivacyTypeDeny:
+								/* He's on a deny list. The action would remove him, unblocking him */
+								votesForUnblock++;
+								break;
 						}
-						else if (unblock && AIPrivacyTypeDeny == privType) {
-							//removing him is unblocking
-							[menuItem setTitle:UNBLOCK_MENUITEM];
-						}
-						return YES;
+						
+					} else {
+						switch (privType) {
+							case AIPrivacyTypePermit:
+								/* He's not on the permit list. The action would add him, unblocking him */
+								votesForUnblock++;
+								break;
+							case AIPrivacyTypeDeny:
+								/* He's not on a deny list. The action would add him, blocking him */
+								votesForBlock++;
+								break;
+						}						
 					}
 				}
 			}
-#warning this next block is a bogus way to handle this, but metas are such a special condition I'm not sure what to do -durin42
-			if (anyAccount) {
-				//title: "Block"; enabled
-				if (unblock) {
+
+			if (votesForBlock || votesForUnblock) {
+				if (votesForBlock >= votesForUnblock) {
 					[menuItem setTitle:BLOCK_MENUITEM];
+				} else {
+					[menuItem setTitle:UNBLOCK_MENUITEM];	
 				}
+				
 				return YES;
+
 			} else {
-				//title: "Block"; disabled
-				[menuItem setTitle:BLOCK_MENUITEM];
 				return NO;
 			}
+
 		} else {
 			AIListContact *contact = (AIListContact *)object;
 			AIAccount <AIAccount_Privacy> *acct = [contact account];
 			if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-				AIPrivacyType privType = [acct privacyOptions] == AIPrivacyOptionAllowUsers ? AIPrivacyTypePermit : AIPrivacyTypeDeny;
+				AIPrivacyType privType = (([acct privacyOptions] == AIPrivacyOptionAllowUsers) ? AIPrivacyTypePermit : AIPrivacyTypeDeny);
 				if ([[acct listObjectsOnPrivacyList:privType] containsObject:contact]) {
-					//title: "Unblock"; enabled
-					if (!unblock && AIPrivacyTypePermit == privType) {
-						[menuItem setTitle:BLOCK_MENUITEM];
+					switch (privType) {
+						case AIPrivacyTypePermit:
+							/* He's on a permit list. The action would remove him, blocking him */
+							[menuItem setTitle:BLOCK_MENUITEM];
+							break;
+						case AIPrivacyTypeDeny:
+							/* He's on a deny list. The action would remove him, unblocking him */
+							[menuItem setTitle:UNBLOCK_MENUITEM];
+							break;
 					}
-					else if (unblock && AIPrivacyTypeDeny == privType) {
-						[menuItem setTitle:UNBLOCK_MENUITEM];
-					}
-					return YES;
+					
 				} else {
-					//title: "Block"; enabled
-					if (!unblock && AIPrivacyTypePermit == privType)
-						[menuItem setTitle:UNBLOCK_MENUITEM];
-					else if (unblock && AIPrivacyTypeDeny == privType)
-						[menuItem setTitle:BLOCK_MENUITEM];
-					return YES;
+					switch (privType) {
+						case AIPrivacyTypePermit:
+							/* He's not on the permit list. The action would add him, unblocking him */
+							[menuItem setTitle:UNBLOCK_MENUITEM];
+							break;
+						case AIPrivacyTypeDeny:
+							/* He's not on a deny list. The action would add him, blocking him */
+							[menuItem setTitle:BLOCK_MENUITEM];
+							break;
+					}						
 				}
+				
+				return YES;
+
 			} else {
-				//title: "Block"; disabled
-				[menuItem setTitle:BLOCK_MENUITEM];
 				return NO;
 			}
 		}
