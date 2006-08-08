@@ -97,6 +97,7 @@
 		}	
 		if (backgroundColor && ![backgroundColor equalToRGBColor:[NSColor textBackgroundColor]]) {
 			[_defaultAttributes setObject:backgroundColor forKey:AIBodyColorAttributeName];	
+			[_defaultAttributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];	
 		}
 	}
 	
