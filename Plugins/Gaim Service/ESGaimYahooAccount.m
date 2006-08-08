@@ -15,7 +15,7 @@
  */
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIStatusController.h"
+#import <Adium/AIStatusControllerProtocol.h>
 #import "ESGaimYahooAccount.h"
 #import "ESGaimYahooAccountViewController.h"
 #import "SLGaimCocoaAdapter.h"

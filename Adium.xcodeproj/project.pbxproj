@@ -161,6 +161,13 @@
 		3419E2F80A8145B800C3FC68 /* GBFireImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */; };
 		3419E2F90A8145B800C3FC68 /* GBFireLogImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */; };
 		3419E2FA0A8145B900C3FC68 /* GBFireLogImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */; };
+		3419E7390A880AD400C3FC68 /* ESGaimQQAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 3419E7370A880AD300C3FC68 /* ESGaimQQAccount.h */; };
+		3419E73A0A880AD400C3FC68 /* ESGaimQQAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 3419E7380A880AD400C3FC68 /* ESGaimQQAccount.m */; };
+		3419E73F0A880B2C00C3FC68 /* ESQQService.h in Headers */ = {isa = PBXBuildFile; fileRef = 3419E73D0A880B2B00C3FC68 /* ESQQService.h */; };
+		3419E7400A880B2C00C3FC68 /* ESQQService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3419E73E0A880B2C00C3FC68 /* ESQQService.m */; };
+		3419E74C0A880C0900C3FC68 /* GaimDefaultsQQ.plist in Sources */ = {isa = PBXBuildFile; fileRef = 3419E74B0A880C0900C3FC68 /* GaimDefaultsQQ.plist */; };
+		3419E7690A880CDA00C3FC68 /* ESGaimQQAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3419E7670A880CD900C3FC68 /* ESGaimQQAccountViewController.h */; };
+		3419E76A0A880CDA00C3FC68 /* ESGaimQQAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3419E7680A880CD900C3FC68 /* ESGaimQQAccountViewController.m */; };
 		3419F3A805314BE000C68BA3 /* AISQLLoggerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B7AE664F0465778E0051E914 /* AISQLLoggerPlugin.h */; };
 		3419F3AD05314BE000C68BA3 /* AISQLLoggerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B7AE66500465778E0051E914 /* AISQLLoggerPlugin.m */; };
 		3419F6F505314E9C00C68BA3 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
@@ -1841,6 +1848,16 @@
 		3419E2F20A81451500C3FC68 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Frameworks/Adium Framework/Resources/pl.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3419E2F30A81451D00C3FC68 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Frameworks/Adium Framework/Resources/zh_CN.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3419E2F40A81452400C3FC68 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = "Frameworks/Adium Framework/Resources/zh_TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E5950A86996000C3FC68 /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Turkish; path = "Plugins/WebKit Message View/Turkish.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E5960A86996200C3FC68 /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Turkish; path = Resources/Turkish.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3419E5970A86996300C3FC68 /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3419E7370A880AD300C3FC68 /* ESGaimQQAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimQQAccount.h; path = "Plugins/Gaim Service/ESGaimQQAccount.h"; sourceTree = "<group>"; };
+		3419E7380A880AD400C3FC68 /* ESGaimQQAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimQQAccount.m; path = "Plugins/Gaim Service/ESGaimQQAccount.m"; sourceTree = "<group>"; };
+		3419E73D0A880B2B00C3FC68 /* ESQQService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESQQService.h; path = "Plugins/Gaim Service/ESQQService.h"; sourceTree = "<group>"; };
+		3419E73E0A880B2C00C3FC68 /* ESQQService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESQQService.m; path = "Plugins/Gaim Service/ESQQService.m"; sourceTree = "<group>"; };
+		3419E74B0A880C0900C3FC68 /* GaimDefaultsQQ.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = GaimDefaultsQQ.plist; path = "Plugins/Gaim Service/GaimDefaultsQQ.plist"; sourceTree = "<group>"; };
+		3419E7670A880CD900C3FC68 /* ESGaimQQAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimQQAccountViewController.h; path = "Plugins/Gaim Service/ESGaimQQAccountViewController.h"; sourceTree = "<group>"; };
+		3419E7680A880CD900C3FC68 /* ESGaimQQAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimQQAccountViewController.m; path = "Plugins/Gaim Service/ESGaimQQAccountViewController.m"; sourceTree = "<group>"; };
 		341BCF800961354D00CF83F5 /* AIMessageWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageWindow.h; path = Source/AIMessageWindow.h; sourceTree = "<group>"; };
 		341BCF810961354D00CF83F5 /* AIMessageWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageWindow.m; path = Source/AIMessageWindow.m; sourceTree = "<group>"; };
 		341BCF820961354D00CF83F5 /* AIClickThroughThemeDocumentButton.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIClickThroughThemeDocumentButton.h; path = Source/AIClickThroughThemeDocumentButton.h; sourceTree = "<group>"; };
@@ -4064,6 +4081,20 @@
 			name = Translator;
 			sourceTree = "<group>";
 		};
+		3419E72D0A88086E00C3FC68 /* QQ */ = {
+			isa = PBXGroup;
+			children = (
+				3419E73D0A880B2B00C3FC68 /* ESQQService.h */,
+				3419E73E0A880B2C00C3FC68 /* ESQQService.m */,
+				3419E7370A880AD300C3FC68 /* ESGaimQQAccount.h */,
+				3419E7380A880AD400C3FC68 /* ESGaimQQAccount.m */,
+				3419E74B0A880C0900C3FC68 /* GaimDefaultsQQ.plist */,
+				3419E7670A880CD900C3FC68 /* ESGaimQQAccountViewController.h */,
+				3419E7680A880CD900C3FC68 /* ESGaimQQAccountViewController.m */,
+			);
+			name = QQ;
+			sourceTree = "<group>";
+		};
 		341BD5530965E90A00CF83F5 /* OTR */ = {
 			isa = PBXGroup;
 			children = (
@@ -4249,6 +4280,7 @@
 				343A7F2206935DAF00150CEC /* Meanwhile */,
 				344159A2059F971C0019246B /* MSN */,
 				34C2E6650634CF010018E5D2 /* Novell GroupWise */,
+				3419E72D0A88086E00C3FC68 /* QQ */,
 				345A7B560954ACD900FF3113 /* SIMPLE */,
 				34415BC3059FA95B0019246B /* Yahoo! */,
 				348D8D3206CC07C400449EBB /* Zephyr */,
@@ -7179,6 +7211,9 @@
 				34E036880A75AA4F00394F11 /* ESICQService.h in Headers */,
 				34E0368A0A75AA4F00394F11 /* ESGaimICQAccount.h in Headers */,
 				34E0368C0A75AA4F00394F11 /* ESGaimICQAccountViewController.h in Headers */,
+				3419E7390A880AD400C3FC68 /* ESGaimQQAccount.h in Headers */,
+				3419E73F0A880B2C00C3FC68 /* ESQQService.h in Headers */,
+				3419E7690A880CDA00C3FC68 /* ESGaimQQAccountViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8613,6 +8648,10 @@
 				34E036890A75AA4F00394F11 /* ESICQService.m in Sources */,
 				34E0368B0A75AA4F00394F11 /* ESGaimICQAccount.m in Sources */,
 				34E0368D0A75AA4F00394F11 /* ESGaimICQAccountViewController.m in Sources */,
+				3419E73A0A880AD400C3FC68 /* ESGaimQQAccount.m in Sources */,
+				3419E7400A880B2C00C3FC68 /* ESQQService.m in Sources */,
+				3419E74C0A880C0900C3FC68 /* GaimDefaultsQQ.plist in Sources */,
+				3419E76A0A880CDA00C3FC68 /* ESGaimQQAccountViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9330,6 +9369,7 @@
 				34A81DBB093CE92200B0E93D /* pl */,
 				34A81DF5093CE98F00B0E93D /* en_CA */,
 				349710CB096C4C2300699948 /* en_AU */,
+				3419E5960A86996200C3FC68 /* Turkish */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -9355,6 +9395,7 @@
 				34A30E9B08D8EE7B00697644 /* Spanish */,
 				34A81DBD093CE92200B0E93D /* pl */,
 				349710CA096C4C2300699948 /* en_AU */,
+				3419E5970A86996300C3FC68 /* Turkish */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -9380,6 +9421,7 @@
 				34A30E9D08D8EE7B00697644 /* Spanish */,
 				34A81DBC093CE92200B0E93D /* pl */,
 				349710CC096C4C2300699948 /* en_AU */,
+				3419E5950A86996000C3FC68 /* Turkish */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
