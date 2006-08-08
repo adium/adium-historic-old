@@ -10,8 +10,9 @@
 #import <AIUtilities/AIAlternatingRowTableView.h>
 
 @class AIListContact, AIAccount, AICompletingTextField, AIAccountMenu;
+@protocol AIListObjectObserver;
 
-@interface RAFBlockEditorWindowController : AIWindowController {
+@interface RAFBlockEditorWindowController : AIWindowController <AIListObjectObserver> {
 	IBOutlet NSWindow			*window;
 	IBOutlet NSTableView		*table;
 
