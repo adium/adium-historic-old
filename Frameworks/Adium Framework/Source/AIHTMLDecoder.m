@@ -63,7 +63,7 @@ static NSString			*horizontalRule = nil;
 + (void)initialize
 {
 	if (!_defaultTextDecodingAttributes) {
-		_defaultTextDecodingAttributes = [[AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12] retain];
+		_defaultTextDecodingAttributes = [[AITextAttributes textAttributesWithFontFamily:@"Lucida Grande" traits:0 size:12] retain];
 	}
 
 	//Set up the horizontal rule which will be searched-for when encoding and inserted when decoding
