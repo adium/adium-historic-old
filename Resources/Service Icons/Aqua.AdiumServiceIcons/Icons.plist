@@ -28,6 +28,8 @@
 		<string>dotmac.png</string>
 		<key>Napster</key>
 		<string>napster.png</string>
+		<key>QQ</key>
+		<string>qq.png</string>
 		<key>Sametime</key>
 		<string>sametime.png</string>
 		<key>Stress Test</key>
@@ -65,6 +67,8 @@
 		<string>dotmac-small.png</string>
 		<key>Napster</key>
 		<string>napster-small.png</string>
+        <key>QQ</key>
+		<string>qq-small.png</string>
 		<key>Sametime</key>
 		<string>sametime-small.png</string>
 		<key>Stress Test</key>
@@ -102,6 +106,8 @@
 		<string>dotmac-small.png</string>
 		<key>Napster</key>
 		<string>napster-small.png</string>
+        <key>QQ</key>
+		<string>qq-small.png</string>
 		<key>Sametime</key>
 		<string>sametime-small.png</string>
 		<key>Stress Test</key>
