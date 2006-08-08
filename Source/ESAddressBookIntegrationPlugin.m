@@ -994,15 +994,17 @@ NSString* serviceIDForJabberUID(NSString *UID);
 				AIAccount		*account;
 				
 				while ((account = [accountsArray nextObject])) {
-					[[account displayArrayForKey:@"Display Name"] setObject:myDisplayName
-																  withOwner:self
-															  priorityLevel:Low_Priority];
-					
-					if (myPhonetic) {
-						[[account displayArrayForKey:@"Phonetic Name"] setObject:myPhonetic
-																	   withOwner:self
-																   priorityLevel:Low_Priority];										
-					}									
+					if (![account isTemporary]) {
+						[[account displayArrayForKey:@"Display Name"] setObject:myDisplayName
+																	  withOwner:self
+																  priorityLevel:Low_Priority];
+						
+						if (myPhonetic) {
+							[[account displayArrayForKey:@"Phonetic Name"] setObject:myPhonetic
+																		   withOwner:self
+																	   priorityLevel:Low_Priority];										
+						}
+					}
 				}
 
 				[[adium preferenceController] registerDefaults:[NSDictionary dictionaryWithObject:[[NSAttributedString stringWithString:myDisplayName] dataRepresentation]
