@@ -71,12 +71,16 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 									   name:@"AIPrivacySettingsChangedOutsideOfPrivacyWindow"
 									 object:nil];
 	
+	[[adium contactController] registerListObjectObserver:self];
+
 	[super windowDidLoad];
 }
 
 - (void)windowWillClose:(id)sender
 {
 	[super windowWillClose:sender];
+
+	[[adium contactController] unregisterListObjectObserver:self];
 
 	[[adium notificationCenter] removeObserver:self];
 	[sharedInstance release]; sharedInstance = nil;
@@ -668,6 +672,15 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 - (void)privacySettingsChangedExternally:(NSNotification *)inNotification
 {
 	[self accountMenu:accountMenu didSelectAccount:[self selectedAccount]];	
+}
+
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+{
+	if ([inModifiedKeys containsObject:KEY_IS_BLOCKED]) {
+		[self privacySettingsChangedExternally:nil];
+	}
+	
+	return nil;
 }
 
 #pragma mark Table view
