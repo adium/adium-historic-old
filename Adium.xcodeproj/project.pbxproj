@@ -165,7 +165,6 @@
 		3419E73A0A880AD400C3FC68 /* ESGaimQQAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 3419E7380A880AD400C3FC68 /* ESGaimQQAccount.m */; };
 		3419E73F0A880B2C00C3FC68 /* ESQQService.h in Headers */ = {isa = PBXBuildFile; fileRef = 3419E73D0A880B2B00C3FC68 /* ESQQService.h */; };
 		3419E7400A880B2C00C3FC68 /* ESQQService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3419E73E0A880B2C00C3FC68 /* ESQQService.m */; };
-		3419E74C0A880C0900C3FC68 /* GaimDefaultsQQ.plist in Sources */ = {isa = PBXBuildFile; fileRef = 3419E74B0A880C0900C3FC68 /* GaimDefaultsQQ.plist */; };
 		3419E7690A880CDA00C3FC68 /* ESGaimQQAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3419E7670A880CD900C3FC68 /* ESGaimQQAccountViewController.h */; };
 		3419E76A0A880CDA00C3FC68 /* ESGaimQQAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3419E7680A880CD900C3FC68 /* ESGaimQQAccountViewController.m */; };
 		3419F3A805314BE000C68BA3 /* AISQLLoggerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B7AE664F0465778E0051E914 /* AISQLLoggerPlugin.h */; };
@@ -246,6 +245,7 @@
 		3448769906D1EF6100DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448769A06D1EF7300DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4947F5CB0655E85200B791E5 /* Bonjour.AdiumPlugin */; };
+		34500ED00A881F8500509225 /* GaimDefaultsQQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3419E74B0A880C0900C3FC68 /* GaimDefaultsQQ.plist */; };
 		34536751059BA8EE00A83D9E /* atos in Resources */ = {isa = PBXBuildFile; fileRef = 34536750059BA8ED00A83D9E /* atos */; };
 		3456231C0A3771D800E7FC97 /* ESRankingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231A0A3771D800E7FC97 /* ESRankingCell.m */; };
 		345623200A3771E100E7FC97 /* AIChatLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231E0A3771E100E7FC97 /* AIChatLog.m */; };
@@ -8028,6 +8028,7 @@
 				34E036870A75AA4F00394F11 /* GaimDefaultsAIM.plist in Resources */,
 				34E0368E0A75AA4F00394F11 /* ESGaimICQAccountView.nib in Resources */,
 				34E0368F0A75AA4F00394F11 /* GaimDefaultsICQ.plist in Resources */,
+				34500ED00A881F8500509225 /* GaimDefaultsQQ.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8650,7 +8651,6 @@
 				34E0368D0A75AA4F00394F11 /* ESGaimICQAccountViewController.m in Sources */,
 				3419E73A0A880AD400C3FC68 /* ESGaimQQAccount.m in Sources */,
 				3419E7400A880B2C00C3FC68 /* ESQQService.m in Sources */,
-				3419E74C0A880C0900C3FC68 /* GaimDefaultsQQ.plist in Sources */,
 				3419E76A0A880CDA00C3FC68 /* ESGaimQQAccountViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
