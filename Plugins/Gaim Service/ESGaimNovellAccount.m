@@ -15,7 +15,7 @@
  */
 
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIStatusController.h"
+#import <Adium/AIStatusControllerProtocol.h>
 #import "ESGaimNovellAccount.h"
 #import <Adium/AIStatus.h>
 

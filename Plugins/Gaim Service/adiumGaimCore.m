@@ -62,6 +62,7 @@ extern gboolean gaim_init_sametime_plugin(void);
 extern gboolean gaim_init_msn_plugin(void);
 extern gboolean gaim_init_novell_plugin(void);
 extern gboolean gaim_init_msn_plugin(void);
+extern gboolean gaim_init_qq_plugin(void);
 extern gboolean gaim_init_simple_plugin(void);
 extern gboolean gaim_init_yahoo_plugin(void);
 extern gboolean gaim_init_zephyr_plugin(void);
@@ -82,6 +83,7 @@ static void load_all_plugins()
 	gaim_init_msn_plugin();
 	gaim_init_novell_plugin();
 	gaim_init_msn_plugin();
+	gaim_init_qq_plugin();
 	gaim_init_simple_plugin();
 	gaim_init_yahoo_plugin();
 	gaim_init_zephyr_plugin();

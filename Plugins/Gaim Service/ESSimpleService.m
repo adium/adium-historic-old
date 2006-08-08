@@ -8,7 +8,7 @@
 #import "ESSimpleService.h"
 #import "ESGaimSimpleAccount.h"
 #import "ESGaimSimpleAccountViewController.h"
-#import "AIStatusController.h"
+#import <Adium/AIStatusControllerProtocol.h>
 #import <AIUtilities/AIImageAdditions.h>
 
 @implementation ESSimpleService

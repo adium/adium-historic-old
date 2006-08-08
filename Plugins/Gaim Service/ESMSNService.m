@@ -15,7 +15,7 @@
  */
 
 #import "AIMSNServicePreferences.h"
-#import "AIStatusController.h"
+#import <Adium/AIStatusControllerProtocol.h>
 #import "DCGaimMSNJoinChatViewController.h"
 #import "ESGaimMSNAccount.h"
 #import "ESGaimMSNAccountViewController.h"
