@@ -382,22 +382,9 @@
 //Set our typing format
 - (void)setTypingAttributes:(NSDictionary *)attrs
 {
-	NSColor	*backgroundColor;
 	[super setTypingAttributes:attrs];
 
-	//Correctly set our background color
-	if ((backgroundColor = [attrs objectForKey:AIBodyColorAttributeName])) {
-		[self setBackgroundColor:backgroundColor];
-	} else {
-		static NSColor	*cachedWhiteColor = nil;
-
-		//Create cachedWhiteColor first time we're called; we'll need it later, repeatedly
-		if (!cachedWhiteColor) cachedWhiteColor = [[NSColor whiteColor] retain];
-
-		[self setBackgroundColor:cachedWhiteColor];
-	}
-	
-	[self setInsertionPointColor:[backgroundColor contrastingColor]];
+	[self setInsertionPointColor:[[attrs objectForKey:NSBackgroundColorAttributeName] contrastingColor]];
 }
 
 #pragma mark Pasting
@@ -505,14 +492,11 @@
 															object:self];
 		[attributedString release];
 
-	} else if ([FILES_AND_IMAGES_TYPES containsObject:type]) {
+	} else if ([FILES_AND_IMAGES_TYPES containsObject:type] ||
+			   [type isEqualToString:NSURLPboardType]) {
 		if (![self handlePasteAsRichText]) {
 			[self paste:sender];
 		}
-		
-	} else if ([type isEqualToString:NSURLPboardType]) {
-		//Paste a URL directly
-		[self paste:sender];
 
 	} else {		
 		//If we didn't handle it yet, let super try to deal with it
@@ -1116,6 +1100,29 @@
 	return attributedString;
 }
 
+- (void)changeDocumentBackgroundColor:(id)sender
+{
+	NSColor	*backgroundColor = [sender color];
+	NSRange	selectedRange = [self selectedRange];
+
+	[[self textStorage] addAttribute:NSBackgroundColorAttributeName
+							   value:backgroundColor
+							   range:selectedRange];
+	[[self textStorage] addAttribute:AIBodyColorAttributeName
+							   value:backgroundColor
+							   range:selectedRange];
+
+	NSMutableDictionary *typingAttributes = [[self typingAttributes] mutableCopy];
+	[typingAttributes setObject:backgroundColor forKey:AIBodyColorAttributeName];
+	[typingAttributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
+	[self setTypingAttributes:typingAttributes];
+	[typingAttributes release];	
+
+	[[self textStorage] edited:NSTextStorageEditedAttributes
+						 range:selectedRange
+				changeInLength:0];
+}
+
 @end
 
 @implementation NSMutableAttributedString (AIMessageEntryTextViewAdditions)
@@ -1124,15 +1131,39 @@
 	NSRange fullRange = NSMakeRange(0, [self length]);
 
 	//Remove non-trait attributes
-	[self removeAttribute:NSBackgroundColorAttributeName range:fullRange];
+	if ([typingAttributes objectForKey:NSBackgroundColorAttributeName]) {
+		[self addAttribute:NSBackgroundColorAttributeName
+					 value:[typingAttributes objectForKey:NSBackgroundColorAttributeName]
+					 range:fullRange];
+
+	} else {
+		[self removeAttribute:NSBackgroundColorAttributeName range:fullRange];
+	}
+
+	if ([typingAttributes objectForKey:NSForegroundColorAttributeName]) {
+		[self addAttribute:NSForegroundColorAttributeName
+					 value:[typingAttributes objectForKey:NSForegroundColorAttributeName]
+					 range:fullRange];
+		
+	} else {
+		[self removeAttribute:NSForegroundColorAttributeName range:fullRange];
+	}
+
+	if ([typingAttributes objectForKey:NSParagraphStyleAttributeName]) {
+		[self addAttribute:NSParagraphStyleAttributeName
+					 value:[typingAttributes objectForKey:NSParagraphStyleAttributeName]
+					 range:fullRange];
+		
+	} else {
+		[self removeAttribute:NSParagraphStyleAttributeName range:fullRange];
+	}
+
 	[self removeAttribute:NSBaselineOffsetAttributeName range:fullRange];
 	[self removeAttribute:NSCursorAttributeName range:fullRange];
 	[self removeAttribute:NSExpansionAttributeName range:fullRange];
-	[self removeAttribute:NSForegroundColorAttributeName range:fullRange];
 	[self removeAttribute:NSKernAttributeName range:fullRange];
 	[self removeAttribute:NSLigatureAttributeName range:fullRange];
 	[self removeAttribute:NSObliquenessAttributeName range:fullRange];
-	[self removeAttribute:NSParagraphStyleAttributeName range:fullRange];
 	[self removeAttribute:NSShadowAttributeName range:fullRange];
 	[self removeAttribute:NSStrokeWidthAttributeName range:fullRange];
 	
