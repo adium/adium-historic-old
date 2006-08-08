@@ -518,8 +518,8 @@
 		}
 	} else {
 		//caller of this method just wants to update the status object
-		[self setStatusObject:((privType == AIPrivacyTypeDeny) == yesOrNo) ? [NSNumber numberWithBool:YES] : nil
-					   forKey:KEY_IS_BLOCKED 
+		[self setStatusObject:((privType == AIPrivacyTypeDeny) == yesOrNo) ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO]
+					   forKey:KEY_IS_BLOCKED
 					   notify:NotifyNow];
 	}
 }
