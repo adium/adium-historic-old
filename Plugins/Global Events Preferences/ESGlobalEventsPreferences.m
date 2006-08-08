@@ -466,6 +466,7 @@
 				soundMenuItem = nil;
 
 			} else {
+				//First, check to see if any sounds which are present within this sound set have been changed
 				enumerator = [sounds keyEnumerator];
 				while ((key = [enumerator nextObject])) {
 					NSDictionary *soundAlert = [ESGlobalEventsPreferencesPlugin soundAlertForKey:key
@@ -475,6 +476,27 @@
 						break;
 					}
 				}
+				
+				//Next, see if any sounds not present within this sound set have been added
+				if (soundMenuItem) {
+					NSDictionary	*alertDict;
+					enumerator = [alertsArray objectEnumerator];
+					while ((alertDict = [enumerator nextObject])) {
+						if ([[alertDict objectForKey:KEY_ACTION_ID] isEqualToString:SOUND_ALERT_IDENTIFIER]) {
+							NSString *englishEvent = [[[AIObject sharedAdiumInstance] contactAlertsController] eventIDForEnglishDisplayName:key];
+							/*
+							 * If the sounds dictionary has no action for this event, or it has one but
+							 * it is for a different sound than specified, the sound set has been changed
+							 */
+							if (![sounds objectForKey:englishEvent] ||
+								![[[alertDict objectForKey:KEY_ACTION_DETAILS] objectForKey:KEY_ALERT_SOUND_PATH] isEqualToString:[sounds objectForKey:englishEvent]]) {
+								soundMenuItem = nil;
+								break;
+							}
+						}
+					}
+				}
+
 			}
 		}
 
