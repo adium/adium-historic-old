@@ -209,7 +209,7 @@
  */
 - (void)workspaceSessionDidBecomeActive:(NSNotification *)notification
 {
-	[self setSoundsAreMuted:YES];
+	[self setSoundsAreMuted:NO];
 }
 
 /*!
@@ -217,16 +217,18 @@
  */
 - (void)workspaceSessionDidResignActive:(NSNotification *)notification
 {
-	[self setSoundsAreMuted:NO];
+	[self setSoundsAreMuted:YES];
 }
 
 - (void)setSoundsAreMuted:(BOOL)mute
 {
+	AILog(@"setSoundsAreMuted: %i",mute);
 	if (soundsAreMuted > 0 && !mute)
 		soundsAreMuted--;
 	else if (mute)
 		soundsAreMuted++;
-	if (soundsAreMuted == 0)
+
+	if (soundsAreMuted == 1)
 		[self _stopAndReleaseAllSounds];
 }
 
