@@ -29,6 +29,8 @@
 	
 	NSMutableDictionary		*fileTransferPollingTimersDict;
 	
+	NSTimer					*buddyAddTimer;
+	
 	ESjoscarCocoaAdapter	*selfProxy; //Sends messages to self on the main thread
 }
 

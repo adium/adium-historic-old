@@ -13,7 +13,7 @@
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIChatControllerProtocol.h>
-#import "AIStatusController.h"
+#import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -182,6 +182,8 @@
 			   aolUser:(BOOL)inAolUser
 {
 	AIListContact	*listContact = [self contactWithUID:inUID];
+
+	AILog(@"setStatusUpdate: %@",inFormattedUID);
 
 	if (![[listContact formattedUID] isEqualToString:inFormattedUID]){
 		[listContact setFormattedUID:inFormattedUID
@@ -572,18 +574,43 @@
 							  notify:NotifyLater];
 	}
 
-	if (![[listContact remoteGroupName] isEqualToString:groupName]){
-		[listContact setRemoteGroupName:groupName];
+	
+}
+
+- (void)gotBuddyAdditions:(NSSet *)inSet
+{
+	NSEnumerator *enumerator = [inSet objectEnumerator];
+	NSDictionary *dictionary;
+	
+	[[adium contactController] delayListObjectNotifications];
+
+	while ((dictionary = [enumerator nextObject])) {
+		AIListContact	*listContact = [self contactWithUID:[dictionary objectForKey:@"UID"]];
+		AILog(@"%@ -> %@",dictionary,listContact);
+		NSString *formattedUID = [dictionary objectForKey:@"FormattedUID"];
+		if (![[listContact formattedUID] isEqualToString:formattedUID]){
+			[listContact setFormattedUID:formattedUID
+								  notify:NotifyLater];
+		}
+		
+		NSString *comment = [dictionary objectForKey:@"Comment"];
+		if (comment && [comment length]) {
+			[listContact setStatusObject:comment
+								  forKey:@"Notes"
+								  notify:NotifyLater];
+		}
+		
+		//Will call [listContact notifyOfChangedStatusSilently:] for us
+		//XXX is this a speed hit?
+		[self setListContact:listContact toAlias:[dictionary objectForKey:@"Alias"]];
+		
+		NSString *groupName = [dictionary objectForKey:@"Group"];
+		if (![[listContact remoteGroupName] isEqualToString:groupName]){
+			[listContact setRemoteGroupName:groupName];
+		}
 	}
 	
-	if (comment && [comment length]) {
-		[listContact setStatusObject:comment
-							  forKey:@"Notes"
-							  notify:NotifyLater];
-	}
-	
-	//Will call [listContact notifyOfChangedStatusSilently:] for us
-	[self setListContact:listContact toAlias:alias];
+	[[adium contactController] endListObjectNotificationsDelay];
 }
 
 - (void)contactWithUID:(NSString *)inUID removedFromGroup:(NSString *)groupName
@@ -1136,6 +1163,21 @@ BOOL isMobileContact(AIListObject *inListObject)
 -(AIPrivacyOption)privacyOptions
 {
 	return [joscarAdapter privacyMode];
+}
+
+- (void)contactWithUID:(NSString *)inUID
+	   changedToStatus:(BOOL)inStatus
+		 onPrivacyList:(AIPrivacyType)privacyType
+{
+	AIListContact		*listContact = [self contactWithUID:inUID];
+	AILog(@"Privacy for %@: %@ --> %i (%@)",[self UID],inUID,inStatus, ((privacyType == AIPrivacyTypeDeny) ? @"Deny List" : @"Allow List"));
+	if ((privacyType == AIPrivacyTypeDeny) &&
+		([self privacyOptions] == AIPrivacyOptionDenyUsers)) {
+		[listContact setIsBlocked:inStatus updateList:NO];
+	} else if ((privacyType == AIPrivacyTypePermit) &&
+			   ([self privacyOptions] == AIPrivacyOptionAllowUsers)) {
+		[listContact setIsAllowed:inStatus updateList:NO];		
+	}
 }
 
 #pragma mark Preferences Observer

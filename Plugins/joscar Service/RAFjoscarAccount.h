@@ -78,4 +78,9 @@
 
 - (void)chatWithUID:(NSString *)inUID gotError:(NSNumber *)errorType;
 
+- (void)contactWithUID:(NSString *)inUID
+	   changedToStatus:(BOOL)inStatus
+		 onPrivacyList:(AIPrivacyType)privacyType;
+- (void)gotBuddyAdditions:(NSSet *)inSet;
+
 @end

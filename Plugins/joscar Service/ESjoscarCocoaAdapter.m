@@ -287,7 +287,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getInfoService] requestAwayMessage:sn];
 	
 	NSString	*UID = [[[sn getNormal] copy] autorelease];
-	AILog(@"setStatusUpdate: %@",[sn getFormatted]);
 	[accountProxy contactWithUID:UID
 					formattedUID:[[[sn getFormatted] copy] autorelease]
 						isOnline:[info isOnline]
@@ -344,6 +343,14 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 					   errorCode:[[errorCode copy] autorelease]];
 }
 
+- (void)sendBuddyAdditions:(NSTimer *)inTimer
+{
+	@synchronized(buddyAddTimer) {
+		[accountProxy gotBuddyAdditions:[buddyAddTimer userInfo]];
+		[buddyAddTimer release]; buddyAddTimer = nil;
+	}
+}
+
 /*
  * @brief A buddy was added
  *
@@ -355,12 +362,34 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	Group			*group = [userInfo get:@"Group"];	
 	Screenname		*sn = [buddy getScreenname];
 
-	AILog(@"Buddy added: %@",[sn getFormatted]);
-	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
-					formattedUID:[[[sn getFormatted] copy] autorelease]
-						   alias:[[[buddy getAlias] copy] autorelease]
-						 comment:[[[buddy getBuddyComment] copy] autorelease]
-					addedToGroup:[[[group getName] copy] autorelease]];
+	@synchronized(buddyAddTimer) {
+		if (!buddyAddTimer) {
+			buddyAddTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5
+															  target:self
+															selector:@selector(sendBuddyAdditions:)
+															userInfo:[NSMutableSet set]
+															 repeats:NO] retain];		
+		}
+		
+		NSMutableSet *buddyDictsSet = [buddyAddTimer userInfo];
+
+		NSMutableDictionary *buddyDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+			[[[sn getNormal] copy] autorelease], @"UID",
+			[[[sn getFormatted] copy] autorelease], @"FormattedUID", nil];
+	
+		NSString *alias = [buddy getAlias];
+		if (alias) [buddyDict setObject:[[alias copy] autorelease] forKey:@"Alias"];
+	
+		NSString *comment = [buddy getBuddyComment];
+		if (comment) [buddyDict setObject:[[comment copy] autorelease] forKey:@"Comment"];
+	
+		NSString *groupName = [group getName];
+		if (groupName) [buddyDict setObject:[[groupName copy] autorelease] forKey:@"Group"];
+		
+			AILog(@"%@ is %i",[sn getNormal], [[[aimConnection getBuddyInfoManager] getBuddyInfo:sn] isOnline]);
+			
+		[buddyDictsSet addObject:buddyDict];
+	}
 }
 
 /*
@@ -1533,6 +1562,42 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		[[[aimConnection getSsiService] getPermissionList] setPrivacyMode:[joscarBridge privacyModeFromString:modeName]];
 	else
 		NSLog(@"modeName was nil, and this should never be so.");
+}
+
+- (void)setBuddyBlocked:(HashMap *)userInfo
+{
+	Screenname			*sn = [userInfo get:@"Screenname"];
+	
+	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
+				 changedToStatus:YES
+				   onPrivacyList:AIPrivacyTypeDeny];
+}
+
+- (void)setBuddyUnblocked:(HashMap *)userInfo
+{
+	Screenname			*sn = [userInfo get:@"Screenname"];
+	
+	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
+				 changedToStatus:NO
+				   onPrivacyList:AIPrivacyTypeDeny];
+}
+
+- (void)setBuddyAllowed:(HashMap *)userInfo
+{
+	Screenname			*sn = [userInfo get:@"Screenname"];
+	
+	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
+				 changedToStatus:YES
+				   onPrivacyList:AIPrivacyTypePermit];
+}
+
+- (void)setBuddyUnallowed:(HashMap *)userInfo
+{
+	Screenname			*sn = [userInfo get:@"Screenname"];
+	
+	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
+				 changedToStatus:NO
+				   onPrivacyList:AIPrivacyTypePermit];
 }
 
 #pragma mark Date conversions
