@@ -23,6 +23,7 @@
 
 @interface ESGaimMSNAccount : CBGaimAccount <AIAccount_Files>{
 	NSDate		*lastFriendlyNameChange;
+	NSString	*queuedFriendlyName;
 
 	BOOL		displayNamesAsStatus;
 }

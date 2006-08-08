@@ -76,6 +76,7 @@
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	
 	[lastFriendlyNameChange release];
+	[queuedFriendlyName release];
 
 	[super dealloc];
 }
@@ -272,10 +273,15 @@
 
 extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 
+- (void)doQueuedSetServersideDisplayName
+{
+	[self setServersideDisplayName:queuedFriendlyName];
+	[queuedFriendlyName release]; queuedFriendlyName = nil;
+}
+
 - (void)setServersideDisplayName:(NSString *)friendlyName
 {
 	if (gaim_account_is_connected(account)) {		
-		AILog(@"%@: Updating serverside display name to %@", self, friendlyName);
 		NSDate *now = [NSDate date];
 
 		if (!lastFriendlyNameChange ||
@@ -294,7 +300,7 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 				friendlyNameUTF8String = [friendlyName UTF8String];
 				currentMaxLength -= 10;
 			}
-
+			AILog(@"%@: Updating serverside display name to %s", self, friendlyNameUTF8String);
 			msn_set_friendly_name(gaim_account_get_connection(account), friendlyNameUTF8String);
 
 			[lastFriendlyNameChange release];
@@ -302,11 +308,17 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 
 		} else {
 			[NSObject cancelPreviousPerformRequestsWithTarget:self
-													 selector:@selector(setServersideDisplayName:)
+													 selector:@selector(doQueuedSetServersideDisplayName)
 													   object:nil];
-			[self performSelector:@selector(setServersideDisplayName:)
-					   withObject:friendlyName
+			if (queuedFriendlyName != friendlyName) {
+				[queuedFriendlyName release];
+				queuedFriendlyName = [friendlyName retain];
+			}
+			[self performSelector:@selector(doQueuedSetServersideDisplayName)
+					   withObject:nil
 					   afterDelay:(SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES - [now timeIntervalSinceDate:lastFriendlyNameChange])];
+
+			AILog(@"%@: Queueing serverside display name change to %@ for %d seconds", self, queuedFriendlyName, (SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES - [now timeIntervalSinceDate:lastFriendlyNameChange]));
 		}
 	}
 }
