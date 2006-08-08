@@ -207,8 +207,6 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	AIListObject *object;
-	BOOL unblock = [[menuItem title] isEqualToString:UNBLOCK_MENUITEM];
-	BOOL anyAccount = NO;
 	
 	if (menuItem == blockContactMenuItem) {
 		object = [[adium interfaceController] selectedListObject];
