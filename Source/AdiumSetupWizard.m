@@ -144,16 +144,15 @@ enum{
 			if (password && [password length] != 0) {
 				[[adium accountController] setPassword:password forAccount:account];
 			}
-			
+			AILog(@"AdiumSetupWizard: Creating account %@ on service %@",account,service);
 			//New accounts need to be added to our account list once they're configured
 			[[adium accountController] addAccount:account];
 			
 			//Put new accounts online by default
-			[account setPreference:[NSNumber numberWithBool:YES]
-							forKey:@"Online"
-							 group:GROUP_ACCOUNT_STATUS];
+			[account setShouldBeOnline:YES];
 			
 			addedAnAccount = YES;
+
 		} else {
 			//Successful without having a UID entered if they already added at least one account; unsuccessful otherwise.
 			success = addedAnAccount;
@@ -284,12 +283,13 @@ enum{
 													 withDefaultAttributes:[[textView_addAccountMessage textStorage] attributesAtIndex:0
 																														effectiveRange:NULL]];
 			[[textView_addAccountMessage textStorage] setAttributedString:accountMessage];
-			
 			setupAccountTabViewItem = YES;
 		}
 
 		AIService *service = [[popUp_services selectedItem] representedObject];
 		[textField_username setStringValue:@""];
+		[[self window] makeFirstResponder:textField_username];
+
 		[textField_password setStringValue:@""];
 
 		//The continue button is only initially enabled if the user has added at least one account
