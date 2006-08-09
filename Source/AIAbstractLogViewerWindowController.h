@@ -171,6 +171,7 @@ typedef enum {
 - (void)refreshResults;
 - (void)refreshResultsSearchIsComplete:(BOOL)searchIsComplete;
 - (void)updateProgressDisplay;
+- (void)logIndexingProgressUpdate;
 
 - (void)rebuildIndices;
 

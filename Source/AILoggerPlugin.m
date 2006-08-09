@@ -14,19 +14,28 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AILoggerPlugin.h"
 #import "AIChatLog.h"
-#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 #import "AILogViewerWindowController.h"
 #import "AIMDLogViewerWindowController.h"
+#import "AIXMLAppender.h"
 #import <Adium/AIContentControllerProtocol.h>
-#import "AILoggerPlugin.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AILoginControllerProtocol.h>
 #import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIToolbarControllerProtocol.h>
-#import "AIXMLAppender.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AIContentStatus.h>
+#import <Adium/AIContentEvent.h>
+#import <Adium/AIHTMLDecoder.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIService.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
@@ -37,14 +46,6 @@
 #import <AIUtilities/AIDateFormatterAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/NSCalendarDate+ISO8601Unparsing.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIChat.h>
-#import <Adium/AIContentMessage.h>
-#import <Adium/AIContentStatus.h>
-#import <Adium/AIContentEvent.h>
-#import <Adium/AIHTMLDecoder.h>
-#import <Adium/AIListContact.h>
-#import <Adium/AIService.h>
 
 #import "AILogFileUpgradeWindowController.h"
 
@@ -60,7 +61,7 @@
 #define LOG_VIEWER					AILocalizedString(@"Chat Transcripts Viewer",nil)
 #define VIEW_LOGS_WITH_CONTACT		AILocalizedString(@"View Chat Transcripts",nil)
 
-#define	CURRENT_LOG_VERSION			5       //Version of the log index.  Increase this number to reset everyone's index.
+#define	CURRENT_LOG_VERSION			6       //Version of the log index.  Increase this number to reset everyone's index.
 
 #define	LOG_VIEWER_IDENTIFIER		@"LogViewer"
 
@@ -470,6 +471,13 @@ Class LogViewerWindowControllerClass = NULL;
 	return [NSString stringWithFormat:@"%@.%@-%@", [account serviceID], [account UID], chatID];
 }
 
+- (AIXMLAppender *)existingAppenderForChat:(AIChat *)chat
+{
+	//Look up the key for this chat and use it to try to retrieve the appender
+	NSString *chatKey = [self keyForChat:chat];
+	return [activeAppenders objectForKey:chatKey];	
+}
+
 - (AIXMLAppender *)appenderForChat:(AIChat *)chat
 {
 	//Look up the key for this chat and use it to try to retrieve the appender
@@ -683,11 +691,15 @@ Class LogViewerWindowControllerClass = NULL;
 {
 	NSString    *dirtyKey = [@"LogIsDirty_" stringByAppendingString:path];
 	
-	if (dirtyLogArray && ![chat integerStatusObjectForKey:dirtyKey]) {
+	if (![chat integerStatusObjectForKey:dirtyKey]) {
 		//Add to dirty array (Lock to ensure that no one changes its content while we are)
 		[dirtyLogLock lock];
 		if (path != nil) {
-			[dirtyLogArray addObject:path];
+			if (!dirtyLogArray) dirtyLogArray = [[NSMutableArray alloc] init];
+
+			if (![dirtyLogArray containsObject:path]) {
+				[dirtyLogArray addObject:path];
+			}
 		}
 		[dirtyLogLock unlock];
 
@@ -705,6 +717,8 @@ Class LogViewerWindowControllerClass = NULL;
 {
 	if(!path) return;
 	[dirtyLogLock lock];
+	if (!dirtyLogArray) dirtyLogArray = [[NSMutableArray alloc] init];
+
 	if (![dirtyLogArray containsObject:path]) {
 		[dirtyLogArray addObject:path];
 	}
@@ -944,6 +958,30 @@ Class LogViewerWindowControllerClass = NULL;
 
 	[NSThread detachNewThreadSelector:@selector(_cleanDirtyLogsThread:) toTarget:self withObject:(id)[self logContentIndex]];
 }
+
+- (void)didCleanDirtyLogs
+{
+	//Update our progress
+	if (!stopIndexingThreads) {
+		logsToIndex = 0;
+		[[LogViewerWindowControllerClass existingWindowController] logIndexingProgressUpdate];
+	}
+	
+	//Clear the dirty status of all open chats so they will be marked dirty if they receive another message
+	NSEnumerator *enumerator = [[[adium chatController] openChats] objectEnumerator];
+	AIChat		 *chat;
+	
+	while ((chat = [enumerator nextObject])) {
+		NSString *dirtyKey = [@"LogIsDirty_" stringByAppendingString:[[self existingAppenderForChat:chat] path]];
+		
+		if ([chat integerStatusObjectForKey:dirtyKey]) {
+			[chat setStatusObject:nil
+						   forKey:dirtyKey
+						   notify:NotifyNever];
+		}
+	}
+}
+
 - (void)_cleanDirtyLogsThread:(SKIndexRef)searchIndex
 {
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
@@ -957,6 +995,8 @@ Class LogViewerWindowControllerClass = NULL;
     if (!stopIndexingThreads) {
 		UInt32	lastUpdate = TickCount();
 		int		unsavedChanges = 0;
+
+		AILog(@"Cleaning %i dirty logs", [dirtyLogArray count]);
 
 		//Scan until we're done or told to stop
 		while (!stopIndexingThreads) {
@@ -1027,13 +1067,9 @@ Class LogViewerWindowControllerClass = NULL;
 
 		SKIndexFlush(searchIndex);
 
-		//Update our progress
-		if (!stopIndexingThreads) {
-			logsToIndex = 0;
-			[[LogViewerWindowControllerClass existingWindowController] performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
-																						withObject:nil
-																					 waitUntilDone:NO];
-		}
+		[self performSelectorOnMainThread:@selector(didCleanDirtyLogs)
+							   withObject:nil
+							waitUntilDone:NO];
     }
 
 	[indexingThreadLock unlock];
