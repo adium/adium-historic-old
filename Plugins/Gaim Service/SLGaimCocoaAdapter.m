@@ -747,8 +747,11 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 #pragma mark Thread accessors
 - (void)disconnectAccount:(id)adiumAccount
 {
-	AILog(@"Setting %x disabled...",accountLookupFromAdiumAccount(adiumAccount));
-	gaim_account_set_enabled(accountLookupFromAdiumAccount(adiumAccount), "Adium", NO);
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	AILog(@"Setting %x disabled and offline (%s)...",account,
+		  gaim_status_type_get_id(gaim_account_get_status_type_with_primitive(account, GAIM_STATUS_OFFLINE)));
+
+	gaim_account_set_enabled(account, "Adium", NO);
 }
 
 - (void)registerAccount:(id)adiumAccount
@@ -1125,9 +1128,19 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		  statusID, [isActive boolValue], arguments);
 	gaim_account_set_status_list(account, statusID, [isActive boolValue], attrs);
 
-	if (!gaim_account_get_enabled(account, "Adium")) {
-		gaim_account_set_enabled(account, "Adium", YES);
+	if (gaim_status_is_online(gaim_account_get_active_status(account)) &&
+		gaim_account_is_disconnected(account))  {
+		//This status is an online status, but the account is not connected or connecting
+
+		//Ensure the account is enabled
+		if (!gaim_account_get_enabled(account, "Adium")) {
+			gaim_account_set_enabled(account, "Adium", YES);
+		}
+
+		//Now connect the account
+		gaim_account_connect(account);
 	}
+	
 }
 
 - (void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
