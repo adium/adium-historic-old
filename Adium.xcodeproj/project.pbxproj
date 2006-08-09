@@ -2408,6 +2408,9 @@
 		3465236508371A64009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Plugins/Gaim Service/cs.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3465236608371A64009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Plugins/WebKit Message View/cs.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3465236808371A65009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = Resources/cs.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34695FA20A89BA2B00E3B0D0 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34695FA30A89BA3600E3B0D0 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		34695FA40A89BA5800E3B0D0 /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		346BA33C0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGlobalEventsPreferencesPlugin.h; path = "Plugins/Global Events Preferences/ESGlobalEventsPreferencesPlugin.h"; sourceTree = "<group>"; };
 		346BA33D0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGlobalEventsPreferencesPlugin.m; path = "Plugins/Global Events Preferences/ESGlobalEventsPreferencesPlugin.m"; sourceTree = "<group>"; };
 		346BA3420774C2D200628F06 /* ESGlobalEventsPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGlobalEventsPreferences.h; path = "Plugins/Global Events Preferences/ESGlobalEventsPreferences.h"; sourceTree = "<group>"; };
@@ -10179,6 +10182,9 @@
 				34CA23A40A671E9B00B11032 /* Swedish */,
 				34CA23A50A6723A200B11032 /* pl */,
 				6CE795BD0A6F9CEE00FF3217 /* Spanish */,
+				34695FA20A89BA2B00E3B0D0 /* zh_TW */,
+				34695FA30A89BA3600E3B0D0 /* zh_CN */,
+				34695FA40A89BA5800E3B0D0 /* Turkish */,
 			);
 			name = PersonalPreferences.nib;
 			sourceTree = "<group>";
