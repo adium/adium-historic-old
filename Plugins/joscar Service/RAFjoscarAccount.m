@@ -44,6 +44,10 @@
 
 #define CHAT_INVITE_TITLE 
 
+@interface RAFjoscarAccount (PRIVATE)
+- (void)setTypingFlagOfChat:(AIChat *)chat to:(NSNumber *)typingStateNumber;
+@end
+
 @implementation RAFjoscarAccount
 
 - (void)initAccount
@@ -198,7 +202,7 @@
 			//If the contact signed off, clear any existing typing flag
 			AIChat	*openChat = [[adium chatController] existingChatWithContact:listContact];
 			if (openChat) {
-				[self setTypingFlagOfChat:chat to:nil];
+				[self setTypingFlagOfChat:openChat to:nil];
 			}
 		}
 	}
