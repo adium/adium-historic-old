@@ -2019,8 +2019,9 @@ int HTMLEquivalentForFontSize(int fontSize)
 		"\xE2\x88\xAB", "\xE2\x8C\xA0", "\xE2\x8E\xAE", "\xE2\x8C\xA1", "\xE2\x8E\x9E", "\xE2\x8E\x9F", "\xE2\x8E\xA0",
 		"\xE2\x8E\xA4", "\xE2\x8E\xA5", "\xE2\x8E\xA6", "\xE2\x8E\xAB", "\xE2\x8E\xAC", "\xE2\x8E\xAD"};
 	
-	const char *utf8String = [self UTF8String];
-	unsigned sourceLength = strlen(utf8String);
+	NSData *utf8Data = [self dataUsingEncoding:NSUTF8StringEncoding];
+	const char *utf8String = [utf8Data bytes];
+	unsigned sourceLength = [utf8Data length];
 	
 	for (int i = 0; i < sourceLength; i++) {
 		unichar	ch = utf8String[i];
@@ -2086,8 +2087,9 @@ int HTMLEquivalentForFontSize(int fontSize)
 		"\xE2\x87\xA7", "\xE2\x87\xA9", "\xE2\xAC\x84", "\xE2\x87\xB3", "\xE2\xAC\x80", "\xE2\xAC\x81", "\xE2\xAC\x83",
 		"\xE2\xAC\x82", "\xE2\x96\xAD", "\xE2\x96\xAB", "\xE2\x9C\x97", "\xE2\x9C\x93", "\xE2\x98\x92", "\xE2\x98\x91", ""};
 	
-	const char *utf8String = [self UTF8String];
-	unsigned sourceLength = strlen(utf8String);
+	NSData *utf8Data = [self dataUsingEncoding:NSUTF8StringEncoding];
+	const char *utf8String = [utf8Data bytes];
+	unsigned sourceLength = [utf8Data length];
 	
 	for (int i = 0; i < sourceLength; i++) {
 		unichar	ch = utf8String[i];
