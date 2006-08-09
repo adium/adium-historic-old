@@ -261,7 +261,7 @@ static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *cbuddies, g
 			GaimConvChatBuddy *chatBuddy = (GaimConvChatBuddy *)l->data;
 			
 			[usersArray addObject:[NSString stringWithUTF8String:chatBuddy->name]];
-			[aliasesArray addObject:[NSString stringWithUTF8String:chatBuddy->alias]];
+			[aliasesArray addObject:(chatBuddy->alias ? [NSString stringWithUTF8String:chatBuddy->alias] : @"")];
 			[flagsArray addObject:[NSNumber numberWithInt:GPOINTER_TO_INT(chatBuddy->flags)]];
 		}
 
