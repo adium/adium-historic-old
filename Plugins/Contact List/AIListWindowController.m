@@ -551,7 +551,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		screenSlideBoundaryRect.size.height = NSMaxY([menubarScreen visibleFrame]) - NSMinY([menubarScreen frame]);
 		for (int i = 1; i < numScreens; i++) {
 			screenSlideBoundaryRect = NSUnionRect(screenSlideBoundaryRect, [[screens objectAtIndex:i] frame]);
-		}		
+		}
 	}
 }
 
@@ -737,11 +737,11 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 
 	BOOL	finishedX = NO, finishedY = NO;
 	NSRect	frame = [inWindow frame];
-	float yOff = (targetPoint.y + frame.size.height) - [windowScreen frame].size.height;
+	float yOff = (targetPoint.y + NSHeight(frame)) - NSMaxY([windowScreen frame]);
 	if (windowScreen == [[NSScreen screens] objectAtIndex:0]) yOff -= [NSMenuView menuBarHeight];
 	if(yOff > 0) targetPoint.y -= yOff;
 	
-	do
+	do 
 	{
 		frame = [inWindow frame];
 #define INCREMENT 15
