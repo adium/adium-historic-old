@@ -43,6 +43,9 @@
 	IBOutlet		NSButton						*button_addContact;
 	IBOutlet		NSButton						*button_removeContact;
 	
+	IBOutlet		NSButton						*button_clearContactIcon;
+	IBOutlet		NSButton						*button_chooseContactIcon;
+	
 	AIListObject									*displayedObject;
 	NSMutableDictionary								*loadedPanes;
 
@@ -55,6 +58,9 @@
 
 - (IBAction)addContact:(id)sender;
 - (IBAction)removeContact:(id)sender;
+
+- (IBAction)chooseContactIcon:(id)sender;
+- (IBAction)clearContactIcon:(id)sender;
 
 //Internal use
 - (float)drawerTrailingOffset;
