@@ -146,6 +146,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[tabView_category selectTabViewItem:tabViewItem];
 
 	[imageView_userIcon setAnimates:YES];
+	
+	//Set text for the icon buttons
+	[button_clearContactIcon setTitle:AILocalizedString(@"Clear",nil)];
+	[button_chooseContactIcon setTitle:AILocalizedString(@"Choose",nil)];
 
 	//Monitor the selected contact
 	[[adium notificationCenter] addObserver:self
@@ -156,6 +160,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	contactListController = [[ESContactInfoListController alloc] initWithContactListView:contactListView
 																			inScrollView:scrollView_contactList
 																				delegate:self];
+	
 	[self setupMetaContactDrawer];
 }
 
@@ -486,6 +491,18 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		[drawer_metaContact close];
 		[contactListController setContactListRoot:nil];
 	}
+}
+
+/* simple interface method that invokes the image picker */
+- (IBAction)chooseContactIcon:(id)sender
+{
+	[imageView_userIcon showImagePicker:imageView_userIcon];
+}
+
+/* simple interface method that deletes the current icon */
+- (IBAction)clearContactIcon:(id)sender
+{
+	[self deleteInImageViewWithImagePicker:imageView_userIcon];
 }
 
 - (IBAction)addContact:(id)sender
