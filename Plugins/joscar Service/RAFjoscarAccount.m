@@ -194,6 +194,13 @@
 		[listContact setOnline:isOnline
 						notify:NotifyLater
 					  silently:silentAndDelayed];
+		if (!isOnline) {
+			//If the contact signed off, clear any existing typing flag
+			AIChat	*openChat = [[adium chatController] existingChatWithContact:listContact];
+			if (openChat) {
+				[self setTypingFlagOfChat:chat to:nil];
+			}
+		}
 	}
 
 	//here we unset the away message if we're going from away to present
@@ -802,10 +809,8 @@ BOOL isMobileContact(AIListObject *inListObject)
 	
 	[[adium contentController] receiveContentObject:messageObject];
 	
-	//We received a message; clear the typing state
-	[chat setStatusObject:nil
-				   forKey:KEY_TYPING
-				   notify:NotifyNow];	
+	//Clear the typing flag of the chat since a message was just received
+	[self setTypingFlagOfChat:chat to:nil];
 }
 
 - (void)chatWithUID:(NSString *)inUID receivedMessage:(NSString *)inHTML isAutoreply:(NSNumber *)isAutoreply
@@ -1343,10 +1348,8 @@ BOOL isMobileContact(AIListObject *inListObject)
 										  autoreply:NO]; //as far as I can tell group chats shouldn't see autoreplies
 	[[adium contentController] receiveContentObject:messageObject];
 	
-	//We received a message; clear the typing state
-	[chat setStatusObject:nil
-				   forKey:KEY_TYPING
-				   notify:NotifyNow];	
+	//Clear the typing flag of the chat since a message was just received
+	[self setTypingFlagOfChat:chat to:nil];
 }
 
 - (void)chatFailed:(NSString *)name
