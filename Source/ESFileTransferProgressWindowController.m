@@ -49,27 +49,27 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 
 //Return the shared contact info window
 #pragma mark Class Methods
-+ (id)showFileTransferProgressWindow
++ (id)sharedTransferProgressWindowController
 {
-    //Create the window
+	//Create the window
     if (!sharedTransferProgressInstance) {
         sharedTransferProgressInstance = [[self alloc] initWithWindowNibName:FILE_TRANSFER_PROGRESS_NIB];
 	}
 
+	return sharedTransferProgressInstance;
+}
+
++ (id)showFileTransferProgressWindow
+{
 	//Configure and show window
-	// left for a possible fix in the future, disabled so the window behaves correctly. - bgannin
-	//[(NSPanel *)[sharedTransferProgressInstance window] setBecomesKeyOnlyIfNeeded:YES];
-	[sharedTransferProgressInstance showWindow:nil];
+	[[self sharedTransferProgressWindowController] showWindow:nil];
 
 	return (sharedTransferProgressInstance);
 }
 
 + (id)showFileTransferProgressWindowIfNotOpen
 {
-	//Create the window and show it if it is not already open
-    if (!sharedTransferProgressInstance) {
-		[self showFileTransferProgressWindow];
-	}
+	[[[self sharedTransferProgressWindowController] window] orderFront:nil];
 	
 	return (sharedTransferProgressInstance);
 }
