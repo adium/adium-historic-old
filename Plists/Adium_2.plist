@@ -188,31 +188,6 @@
 			</array>
 			<key>LSTypeIsPackage</key>
 			<true/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>ListLayout</string>
-				<string>AdiumListLayout</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>AdiumListLayout.icns</string>
-			<key>CFBundleTypeName</key>
-			<string>Adium List Layout</string>
-			<key>CFBundleTypeOSTypes</key>
-			<array>
-				<string>AILL</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.adiumx.contactlistlayout</string>
-			</array>
-			<key>LSTypeIsPackage</key>
-			<false/>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
@@ -236,31 +211,6 @@
 			</array>
 			<key>LSTypeIsPackage</key>
 			<true/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>ListTheme</string>
-				<string>AdiumListTheme</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>AdiumListTheme.icns</string>
-			<key>CFBundleTypeName</key>
-			<string>Adium List Theme</string>
-			<key>CFBundleTypeOSTypes</key>
-			<array>
-				<string>AILT</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.adiumx.contactlisttheme</string>
-			</array>
-			<key>LSTypeIsPackage</key>
-			<false/>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
