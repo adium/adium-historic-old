@@ -428,11 +428,12 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 // Convert spaces to '+'
 - (NSString *)stringByEncodingURLEscapes
 {
-	const char			*UTF8 = [self UTF8String];
+	NSData				*UTF8Data = [self dataUsingEncoding:NSUTF8StringEncoding];
+	const char			*UTF8 = [UTF8Data bytes];
 	char				*destPtr;
 	NSMutableData		*destData;
 	register unsigned	 sourceIndex = 0;
-	unsigned			 sourceLength = strlen(UTF8);
+	unsigned			 sourceLength = [UTF8Data length];
 	register unsigned	 destIndex = 0;
 
 	//this table translates plusses to spaces, and flags all characters that need hex-encoding with 0x00.
@@ -497,11 +498,12 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 // Convert '+' back to a space
 - (NSString *)stringByDecodingURLEscapes
 {
-	const char			*UTF8 = [self UTF8String];
+	NSData				*UTF8Data = [self dataUsingEncoding:NSUTF8StringEncoding];
+	const char			*UTF8 = [UTF8Data bytes];
 	char				*destPtr;
 	NSMutableData		*destData;
 	register unsigned	 sourceIndex = 0;
-	unsigned			 sourceLength = strlen(UTF8);
+	unsigned			 sourceLength = [UTF8Data length];
 	register unsigned	 destIndex = 0;
 
 	//this table translates spaces to plusses, and vice versa.
