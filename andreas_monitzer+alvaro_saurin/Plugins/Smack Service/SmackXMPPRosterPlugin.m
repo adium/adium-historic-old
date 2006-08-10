@@ -182,7 +182,7 @@
         // First I'm checking if the group it's in here locally is one of the groups
         // the contact is in on the server. If this is not the case, I set the contact
         // to be in the first group on the list. XXX -> Adium folks, add this feature!
-        JavaIterator *iter2 = [entry getGroups];
+        JavaIterator *iter2 = [[entry getGroups] iterator];
         NSString *storedgroupname = [listContact remoteGroupName];
         if(storedgroupname) {
             while([iter2 hasNext]) {

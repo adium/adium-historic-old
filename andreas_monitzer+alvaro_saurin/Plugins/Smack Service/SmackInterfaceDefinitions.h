@@ -398,7 +398,7 @@
 - (void)createEntry:(NSString*)user :(NSString*)name :(id)groups; // last param is String[]
 - (SmackRosterGroup*)createGroup:(NSString*)name;
 - (int)getDefaultSubscriptionMode;
-- (JavaIterator*)getEntries;
+- (JavaVector*)getEntries;
 - (SmackRosterEntry*)getEntry:(NSString*)user;
 - (int)getEntryCount;
 - (SmackRosterGroup*)getGroup:(NSString*)name;
@@ -1030,5 +1030,302 @@
 - (NSString*)getElementName;
 - (NSString*)getNamespace;
 - (NSString*)toXML;
+
+@end
+
+#pragma mark Jingle
+
+@class SmackXPayloadType;
+
+@interface SmackXJingleContentDescriptionJinglePayloadType : NSObject {
+}
+
+- (SmackXPayloadType*)getPayloadType;
+- (void)setPayload:(SmackXPayloadType*)payload;
+- (NSString*)toXML;
+
+@end
+
+@interface SmackXJingleContentDescriptionJinglePayloadTypeAudio : SmackXJingleContentDescriptionJinglePayloadType {
+}
+@end
+
+@interface SmackXJingleContentDescription : NSObject {
+}
+
+- (void)addAudioPlayloadTypes:(JavaVector*)pts;
+- (void)addJinglePayloadType:(SmackXJingleContentDescriptionJinglePayloadType*)pt;
+- (JavaVector*)getAudioPayloadTypesList;
+- (NSString*)getElementName;
+- (JavaIterator*)getJinglePayloadTypes;
+- (int)getJinglePayloadTypesCount;
+- (JavaVector*)getJinglePayloadTypesList;
+- (NSString*)toXML;
+
+@end
+
+@interface SmackXJingleContentDescriptionAudio : SmackXJingleContentDescription <SmackPacketExtension> {
+}
+
+@end
+
+@interface SmackXTransportCandidate : NSObject {
+}
+
+- (BOOL)equals:(id)obj;
+- (int)getGeneration;
+- (NSString*)getIP;
+- (NSString*)getName;
+- (int)getPort;
+- (BOOL)isNull;
+- (void)setGeneration:(int)generation;
+- (void)setIP:(NSString*)ip;
+- (void)setName:(NSString*)name;
+- (void)setPort:(int)port;
+
+@end
+
+@interface SmackXTransportCandidateChannel : NSObject {
+}
+
+- (BOOL)equals:(id)obj;
++ (SmackXTransportCandidateChannel*)fromString:(NSString*)value;
+- (BOOL)isNull;
+- (NSString*)toString;
+
+@end
+
+@interface SmackXTransportCandidateProtocol : NSObject {
+}
+
+- (BOOL)equals:(id)obj;
++ (SmackXTransportCandidateProtocol*)fromString:(NSString*)value;
+- (BOOL)isNull;
+- (NSString*)toString;
+
+@end
+
+@interface SmackXTransportCandidateFixed : SmackXTransportCandidate {
+}
+@end
+
+@interface SmackXTransportCandidateIce : SmackXTransportCandidate {
+}
+
+- (int)compareTo:(id)arg;
+- (SmackXTransportCandidateChannel*)getChannel;
+- (NSString*)getId;
+- (int)getNetwork;
+- (NSString*)getPassword;
+- (int)getPreference;
+- (SmackXTransportCandidateProtocol*)getProto;
+- (NSString*)getUsername;
+- (void)setChannel:(SmackXTransportCandidateChannel*)channel;
+- (void)setId:(NSString*)_id;
+- (void)setNetwork:(int)network;
+- (void)setPassword:(NSString*)password;
+- (void)setPreference:(int)preference;
+- (void)setProto:(SmackXTransportCandidateProtocol*)proto;
+- (void)setUsername:(NSString*)username;
+
+@end
+
+@interface SmackXJingleTransportJingleTransportCandidate : NSObject {
+}
+
+- (SmackXTransportCandidate*)getMediaTransport;
+- (void)setMediaTransport:(SmackXTransportCandidate*)cand;
+- (NSString*)toXML;
+
+@end
+
+@interface SmackXJingleTransport : NSObject <SmackPacketExtension> {
+}
+
+- (void)addCondidate:(SmackXJingleTransportJingleTransportCandidate*)candidate;
+- (JavaIterator*)getCandidates;
+- (NSString*)toXML;
+
+@end
+
+@interface SmackXJingleAction : NSObject {
+}
+
+- (BOOL)equals:(id)obj;
++ (SmackXJingleAction*)fromString:(NSString*)value;
+- (NSString*)toString;
+
+@end
+
+@class SmackXContentInfo;
+
+@interface SmackXJingleContentInfo : NSObject <SmackPacketExtension> {
+}
+
+- (SmackXContentInfo*)getMediaInfo;
+
+@end
+
+@interface SmackXJingleContentInfoAudio : SmackXJingleContentInfo {
+}
+@end
+
+@interface SmackXJingleContentInfoAudioBusy : SmackXJingleContentInfoAudio {
+}
+@end
+
+@interface SmackXJingleContentInfoAudioHold : SmackXJingleContentInfoAudio {
+}
+@end
+
+@interface SmackXJingleContentInfoAudioQueued : SmackXJingleContentInfoAudio {
+}
+@end
+
+@interface SmackXJingleContentInfoAudioRinging : SmackXJingleContentInfoAudio {
+}
+@end
+
+@interface SmackXJingle : SmackIQ {
+}
+
+- (void)addDescription:(SmackXJingleContentDescription*)desc;
+- (void)addDescriptions:(JavaVector*)descsList;
+- (void)addTransport:(SmackXJingleTransport*)trans;
+- (void)addTransports:(JavaVector*)transList;
+- (SmackXJingleAction*)getAction;
+- (SmackXJingleContentInfo*)getContentInfo;
+- (JavaIterator*)getDescriptions;
+- (NSString*)getInitiator;
+- (NSString*)getResponder;
++ (int)getSessionHash:(NSString*)sid :(NSString*)initiator;
+- (NSString*)getSid;
+- (JavaIterator*)getTransports;
+- (void)setAction:(SmackXJingleAction*)action;
+- (void)setContentInfo:(SmackXJingleContentInfo*)contentInfo;
+- (void)setInitiator:(NSString*)initiator;
+- (void)setResponder:(NSString*)resp;
+- (void)setSid:(NSString*)sid;
+
+@end
+
+@class SmackXJingleNegotiator;
+
+@interface SmackXJingleNegotiatorState : NSObject {
+}
+
+- (SmackIQ*)eventAccept:(SmackXJingle*)jin;
+- (SmackIQ*)eventAck:(SmackIQ*)iq;
+- (SmackIQ*)eventDecline:(SmackXJingle*)jin;
+- (void)eventEnter;
+- (void)eventError:(SmackIQ*)iq;
+- (void)eventExit;
+- (SmackIQ*)eventInfo:(SmackXJingle*)jin;
+- (SmackIQ*)eventInitiate:(SmackXJingle*)jin;
+- (SmackIQ*)eventInvite;
+- (SmackIQ*)eventModify:(SmackXJingle*)jin;
+- (SmackIQ*)eventRedirect:(SmackXJingle*)jin;
+- (SmackIQ*)eventTerminate:(SmackXJingle*)jin;
+- (SmackXJingleNegotiator*)getNegotiator;
+- (void)setNegotiator:(SmackXJingleNegotiator*)neg;
+
+@end
+
+@interface SmackXJingleNegotiator : NSObject {
+}
+
+- (void)addExpectedId:(NSString*)id;
+- (void)close;
+- (SmackIQ*)dispatchIncomingPacket:(SmackIQ*)iq :(NSString*)_id;
+- (SmackXMPPConnection*)getConnection;
+- (SmackXJingleNegotiatorState*)getState;
+- (Class)getStateClass;
+- (BOOL)invalidState;
+- (BOOL)isExpectedId:(NSString*)_id;
+- (void)removeExpectedId:(NSString*)_id;
+- (void)setConnection:(SmackXMPPConnection*)connection;
+
+@end
+
+@interface SmackXContentInfo : NSObject {
+}
+@end
+
+@interface SmackXContentInfoAudio : SmackXContentInfo {
+}
+
++ (SmackXContentInfo*)fromString:(NSString*)value;
+- (NSString*)toString;
+
+@end
+
+@class SmackXIncomingJingleSession;
+
+@interface SmackXJingleSessionRequest : NSObject {
+}
+
+- (SmackXIncomingJingleSession*)accept:(JavaVector*)pts;
+- (NSString*)getFrom;
+- (NSString*)getSessionID;
+- (void)reject;
+
+@end
+
+@interface SmackXJingleSession : SmackXJingleNegotiator {
+}
+
+- (void)close;
++ (SmackIQ*)createError:(NSString*)_id :(NSString*)to :(NSString*)from :(int)errCode :(NSString*)errStr;
++ (SmackIQ*)createIQ:(NSString*)_id :(NSString*)to :(NSString*)from :(SmackIQType*)type;
+- (SmackIQ*)dispatchIncomingPacket:(SmackIQ*)iq :(NSString*)_id;
+- (BOOL)equals:(id)obj;
+- (NSString*)getInitiator;
+- (NSString*)getResponder;
+- (NSString*)getSid;
+- (BOOL)isFullyEstablished;
+- (BOOL)isValid;
+- (SmackIQ*)respond:(SmackIQ*)iq;
+- (void)sendContentInfo:(SmackXContentInfo*)ci;
+- (void)setInitiator:(NSString*)initiator;
+- (void)setResponder:(NSString*)responder;
+- (void)start:(SmackXJingleSessionRequest*)jin;
+
+@end
+
+@interface SmackXIncomingJingleSession : SmackXJingleSession {
+}
+@end
+
+@interface SmackXOutgoingJingleSession : SmackXJingleSession {
+}
+@end
+
+@interface SmackXJingleManager : NSObject {
+}
+
+- (SmackXOutgoingJingleSession*)createOutgoingJingleSession:(NSString*)responder :(JavaVector*)payloadTypes;
+
+@end
+
+@interface SmackXPayloadType : NSObject {
+}
+
+- (BOOL)equals:(id)obj;
+- (int)getChannels;
+- (int)getId;
+- (NSString*)getName;
+- (BOOL)isNull;
+- (void)setChannels:(int)channels;
+- (void)setId:(int)_id;
+- (void)setName:(NSString*)name;
+
+@end
+
+@interface SmackXPayloadTypeAudio : SmackXPayloadType {
+}
+
+- (BOOL)equals:(id)obj;
+- (int)getClockRate;
+- (void)setClockRate:(int)clockRate;
 
 @end
