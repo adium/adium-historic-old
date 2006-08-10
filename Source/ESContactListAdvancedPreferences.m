@@ -72,7 +72,8 @@
 	[[matrix_hiding cellWithTag:AIContactListWindowHidingStyleNone] setTitle:AILocalizedString(@"Never", nil)];
 	[[matrix_hiding cellWithTag:AIContactListWindowHidingStyleBackground] setTitle:WHILE_ADIUM_IS_IN_BACKGROUND];
 	[[matrix_hiding cellWithTag:AIContactListWindowHidingStyleSliding] setTitle:AILocalizedString(@"On screen edges", "Advanced contact list: hide the contact list: On screen edges")];
-
+	[checkBox_hideOnScreenEdgesOnlyInBackground setLocalizedString:AILocalizedString(@"...only while Adium is in the background", "Checkbox under 'on screen edges' in the advanced contact list preferences")];
+		
 	[checkBox_flash setLocalizedString:AILocalizedString(@"Flash names with unviewed messages",nil)];
 	[checkBox_showTransitions setLocalizedString:AILocalizedString(@"Show transitions as contacts sign on and off","Transitions in this context means the names fading in as the contact signs on and out as the contact signs off")];
 	[checkBox_showTooltips setLocalizedString:AILocalizedString(@"Show contact information tooltips",nil)];
