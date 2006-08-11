@@ -2240,6 +2240,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 		while ((aLog = [enumerator nextObject])) {
 			NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
 			
+			[[adium notificationCenter] postNotificationName:ChatLog_WillDelete object:aLog userInfo:nil];
 			AILogToGroup	*logToGroup = [logToGroupDict objectForKey:[NSString stringWithFormat:@"%@.%@/%@",[aLog serviceClass],[aLog from],[aLog to]]];
 			[logToGroup trashLog:aLog];
 			
