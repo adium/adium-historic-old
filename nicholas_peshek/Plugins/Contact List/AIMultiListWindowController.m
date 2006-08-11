@@ -18,7 +18,7 @@
 #import "AIContactList.h"
 #import "AIListWindowController.h"
 #import "AIListGroup.h"
-//#import "AIStandardListWindowController.h"
+#import <AIUtilities/AIWindowAdditions.h>
 //#import "AIBorderlessListWindowController.h"
 //#import "AIContactListOutlineView.h"
 
@@ -43,9 +43,11 @@
 		
 		NSArray			*loadedList = [NSArray array];
 		NSMutableArray	*loadedContactLists = [[adium preferenceController] preferenceForKey:@"SavedContactLists"
-																					   group:PREF_GROUP_MULTI_CONTACT_LIST];		
+																					   group:PREF_GROUP_MULTI_CONTACT_LIST];
+		NSMutableArray	*listToCheckAgainst = [NSMutableArray array];
 #warning kbotc: read comments
 		//You really should not do this check here, and compare the total number of lists you get to the ones loaded from the contact list, and throw the remaining groups in another contact list.
+		//This check may not be needed, I may toss it soon.
 		if (loadedContactLists == nil) {
 			NSMutableArray	*tempArray = [NSMutableArray array];
 			NSMutableArray	*groups = [NSMutableArray array];
@@ -67,25 +69,45 @@
 			NSEnumerator	*smallList = [loadedList objectEnumerator];
 			while ((UID = [smallList nextObject])) {
 				[newRootObject addObject:[[adium contactController] existingGroupWithUID:UID]];
+				[listToCheckAgainst addObject:[[adium contactController] existingGroupWithUID:UID]];
 			}
-			BOOL stupid = [self createNewSeparableContactListWithObject:(AIListObject *)newRootObject];
+			[self createNewSeparableContactListWithObject:(AIListGroup *)newRootObject];
 			indexVar++;
 		}
-		//		} else { 
-		//			AIContactList	*newList = [AIContactList createWithStyle:windowStyle];
-		//			[newList setContactListRoot:(AIListObject *)[[adium contactController] contactList]];
-		//			[contactListArray addObject:newList];
-		//		}
 		
+		NSMutableArray	*fullContactList = [[[[[adium contactController] contactList] containedObjects] mutableCopy] autorelease];
+		NSEnumerator	*loadedLists = [listToCheckAgainst objectEnumerator];
 		
+		AIListObject	*listObject;
 		
+		while ((listObject = [loadedLists nextObject])) {
+			if([fullContactList indexOfObjectIdenticalTo:listObject] != NSNotFound) {
+				[fullContactList removeObjectIdenticalTo:listObject];
+			}
+		}
+		
+		if([fullContactList count] > 0) {
+			AIListGroup		*newRootObject = [[AIListGroup alloc] initWithUID:[NSString stringWithFormat:@"%d", indexVar]];
+			AIListGroup		*forgottenGroup;
+			NSEnumerator	*smallList = [fullContactList objectEnumerator];
+			while ((forgottenGroup = [smallList nextObject])) {
+				[newRootObject addObject:forgottenGroup];
+			}
+			[self createNewSeparableContactListWithObject:(AIListGroup *)newRootObject];
+		}
 		
 		if(!mostRecentContactList) {
 			mostRecentContactList = [contactListArray objectAtIndex:0];
 		}
+		
 		[[adium notificationCenter] addObserver:self 
 									   selector:@selector(terminate:) 
 										   name:Adium_WillTerminate
+										 object:nil];
+		
+		[[adium notificationCenter] addObserver:self 
+									   selector:@selector(contactListAdded:) 
+										   name:Contact_ListChanged
 										 object:nil];
 }
 return self;
@@ -179,6 +201,14 @@ return self;
 	}
 }
 
+- (void)contactListAdded:(NSNotification *)contactChanged
+{
+	if((AIListGroup *)[contactChanged userInfo] == [[adium contactController] contactList] && [[contactChanged object] isKindOfClass:[AIListGroup class]]) {
+		[[self mostRecentContactList] addContactListObject:[contactChanged object]];
+	}
+}
+
+//Show the next window
 - (void)showNextWindowInFront
 {
 	AIContactList	*tempList = [self mostRecentContactList];
@@ -186,10 +216,18 @@ return self;
 	if(tempList == listToChangeTo) {
 		[[[self mostRecentContactList] listWindowController] showWindowInFront:NO];
 	} else {
+		BOOL allAreHidden = NO;
+		while(![[[listToChangeTo listWindowController] window] isVisibleWithAlpha] && !allAreHidden) {
+			mostRecentContactList = listToChangeTo;
+			listToChangeTo = [self nextContactList];
+			if(tempList == listToChangeTo)
+				allAreHidden = YES;
+		}
 		[[listToChangeTo listWindowController] showWindowInFront:YES];
 		mostRecentContactList = listToChangeTo;
 	}
 }
+
 - (BOOL)isVisible
 {
 	NSEnumerator			*e = [contactListArray objectEnumerator];
