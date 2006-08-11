@@ -85,6 +85,17 @@
 }
 
 /*
+ * @brief Is this window hidden?
+ */
+- (BOOL)isVisibleWithAlpha
+{
+	if ([self isVisible] && ([self alphaValue] != 0.0))
+		return YES;
+	else
+		return NO;
+}
+
+/*
  * @brief Find the earliest responder which responds to a selector
  *
  * @param selector The target selector

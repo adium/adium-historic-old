@@ -18,6 +18,7 @@
 - (BOOL)isTextured;
 -(void)setIgnoresExpose:(BOOL)flag;
 - (BOOL)isBorderless;
+- (BOOL)isVisibleWithAlpha;
 - (void)betterCenter;
 - (float)toolbarHeight;
 
