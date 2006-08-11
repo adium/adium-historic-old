@@ -129,7 +129,7 @@
 																		 toolTip:TOOLTIP_SHOW_INFO
 																		  target:self
 																 settingSelector:@selector(setImage:)
-																	 itemContent:[NSImage imageNamed:@"info" forClass:[self class]]
+																	 itemContent:[NSImage imageNamed:@"pref-personal" forClass:[self class]]
 																		  action:@selector(showContactInfo:)
 																			menu:nil];
 	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
