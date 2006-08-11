@@ -224,6 +224,10 @@ Class LogViewerWindowControllerClass = NULL;
 										   selector:@selector(chatClosed:)
 											   name:Chat_WillClose
 											 object:nil];
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(chatWillDelete:)
+											   name:ChatLog_WillDelete
+											 object:nil];
 		}
 	}
 }
@@ -461,6 +465,24 @@ Class LogViewerWindowControllerClass = NULL;
 	[self closeAppenderForChat:chat];
 
 	[self markLogDirtyAtPath:[appender path] forChat:chat];
+}
+
+- (void)chatWillDelete:(NSNotification *)notification
+{
+	AIChatLog *chatLog = [notification object];
+	NSString *chatID = [NSString stringWithFormat:@"%@.%@-%@", [chatLog serviceClass], [chatLog from], [chatLog to]];
+	AIXMLAppender *appender = [activeAppenders objectForKey:chatID];
+	
+	if(appender != nil)
+	{
+		if([[appender path] hasSuffix:[chatLog path]])
+		{
+			[activeAppenders removeObjectForKey:chatID];
+			NSTimer *timer = [activeTimers objectForKey:chatID];
+			[timer invalidate];
+			[activeTimers removeObjectForKey:chatID];
+		}
+	}
 }
 
 - (NSString *)keyForChat:(AIChat *)chat
