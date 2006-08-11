@@ -23,6 +23,7 @@
 
 + (SmackChatStateNotifications*)getChatState:(SmackMessage*)message;
 + (SmackChatStateNotifications*)createChatState:(NSString*)type;
++ (SmackXMessageEvent*)messageEvent;
 
 @end
 
@@ -34,6 +35,10 @@
 
 + (SmackChatStateNotifications*)createChatState:(NSString*)type {
     return [[[self classLoader] loadClass:@"net.adium.smackBridge.ChatStateNotifications"] createChatState:type];
+}
+
++ (SmackXMessageEvent*)messageEvent {
+    return [[[[self classLoader] loadClass:@"org.jivesoftware.smackx.packet.MessageEvent"] newWithSignature:@"()"] autorelease];
 }
 
 @end
@@ -57,57 +62,74 @@
         return YES; // ignore group chats
     }
 
-    if(![chat statusObjectForKey:@"XMPPChatStateNotifications"])
-    {
-        NSLog(@"typing ignored -> other end doesn't support it");
-        return YES; // don't send extended chat state notifications, because we don't know yet if it's supported by the other client
-    }
+    BOOL useCsn = [[chat statusObjectForKey:@"XMPPChatStateNotifications"] boolValue];
+    BOOL useMessageEvent = [[chat statusObjectForKey:@"XMPPMessageEventComposingRequest"] boolValue];
     
-    if(![[chat statusObjectForKey:@"XMPPType"] isEqualToString:@"CHAT"])
+    if(!useCsn && !useMessageEvent)
+        return YES; // the other client doesn't support any of the two
+    
+    if(useCsn && ![[chat statusObjectForKey:@"XMPPType"] isEqualToString:@"chat"])
     {
         NSLog(@"typing ignored -> not a chat");
-        return NO; // only allowed in chats
+        return NO; // ChatStateNotifications only allowed in chats
     }
-    
-    SmackChatStateNotifications *csn = nil;
-    
-    switch([inTypingObject typingState]) {
-        case AINotTyping:
-            NSLog(@"not typing");
-            csn = [SmackCocoaAdapter createChatState:@"active"];
-            break;
-        case AITyping:
-            NSLog(@"typing");
-            csn = [SmackCocoaAdapter createChatState:@"composing"];
-            break;
-        case AIEnteredText:
-            csn = [SmackCocoaAdapter createChatState:@"paused"];
-            break;
-        default:
-            NSLog(@"typing ignored -> unknown typing state");
-            return NO; // ignore
-    }
-    
-    NSString *threadid = [chat statusObjectForKey:@"XMPPThreadID"];
+
     NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
     NSString *jid = [[chat listObject] UID];
     
-    if(!threadid || [threadid length] == 0) // first message was sent by us
-    {
-        [chat setStatusObject:threadid = [chat uniqueChatID] forKey:@"XMPPThreadID" notify:NotifyLater];
-        
-        //Apply the change
-        [chat notifyOfChangedStatusSilently:[self silentAndDelayed]];
-    }
-    
-    if(resource)
-        jid = [NSString stringWithFormat:@"%@/%@",jid,resource];
-    
     SmackMessage *message = [SmackCocoaAdapter messageTo:jid typeString:@"CHAT"];
-    
-    [message setThread:threadid];
-    [message addExtension:csn];
-    
+
+    if(useCsn)
+    {
+        SmackChatStateNotifications *csn = nil;
+        switch([inTypingObject typingState]) {
+            case AINotTyping:
+                csn = [SmackCocoaAdapter createChatState:@"active"];
+                break;
+            case AITyping:
+                csn = [SmackCocoaAdapter createChatState:@"composing"];
+                break;
+            case AIEnteredText:
+                csn = [SmackCocoaAdapter createChatState:@"paused"];
+                break;
+            default:
+                NSLog(@"typing ignored -> unknown typing state");
+                return NO; // ignore
+        }
+        [message addExtension:csn];
+
+        // JEP-0022 says that no other tags may be included, so we only use the thread id here
+        
+        NSString *threadid = [chat statusObjectForKey:@"XMPPThreadID"];
+
+        if(!threadid || [threadid length] == 0) // first message was sent by us
+        {
+            [chat setStatusObject:threadid = [chat uniqueChatID] forKey:@"XMPPThreadID" notify:NotifyLater];
+            
+            //Apply the change
+            [chat notifyOfChangedStatusSilently:[self silentAndDelayed]];
+        }
+        [message setThread:threadid];
+        
+    } else if(useMessageEvent)
+    {
+        SmackXMessageEvent *mevt = [SmackCocoaAdapter messageEvent];
+        [mevt setPacketID:[chat statusObjectForKey:@"XMPPMessageEventPacketID"]?[chat statusObjectForKey:@"XMPPMessageEventPacketID"]:@""];
+        switch([inTypingObject typingState]) {
+            case AINotTyping:
+            case AIEnteredText:
+                [mevt setCancelled:YES];
+                break;
+            case AITyping:
+                [mevt setComposing:YES];
+                break;
+            default:
+                NSLog(@"typing ignored -> unknown typing state");
+                return NO; // ignore
+        }
+        [message addExtension:mevt];
+    }
+        
     [connection sendPacket:message];
 
     return YES;
@@ -150,53 +172,99 @@
 - (void)receivedMessagePacket:(NSNotification*)n
 {
     SmackMessage *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
+
+    AIListContact *sourceContact = [[adium contactController] existingContactWithService:[account service] account:account UID:[packet getFrom]];
     
-    if([[[packet getType] toString] isEqualToString:@"chat"])
+    if(!sourceContact)
+        return; // if we don't know that person, we don't have a chat either
+    
+    AIChat *chat = [[adium chatController] existingChatWithContact:sourceContact];
+    if(!chat)
+        return; // no need to care about chats that aren't open
+    
+    SmackChatStateNotifications *csn = [SmackCocoaAdapter getChatState:packet];
+    
+    if(csn && [[[packet getType] toString] isEqualToString:@"chat"])
     {
-        AIListContact *sourceContact = [[adium contactController] existingContactWithService:[account service] account:account UID:[[packet getFrom] jidUserHost]];
-        
-        if(!sourceContact)
-            return; // if we don't know that person, we don't have a chat either
-        
-        AIChat *chat = [[adium chatController] existingChatWithContact:sourceContact];
-        if(!chat)
-            return; // no need to care about chats that aren't open
-        
-        SmackChatStateNotifications *csn = [SmackCocoaAdapter getChatState:packet];
-        if(csn)
+        NSString *type = [csn getElementName];
+        if([type isEqualToString:@"active"])
+            [chat setStatusObject:[NSNumber numberWithInt:AINotTyping]
+                           forKey:KEY_TYPING
+                           notify:NotifyNow];
+        else if([type isEqualToString:@"paused"])
+            [chat setStatusObject:[NSNumber numberWithInt:AIEnteredText]
+                           forKey:KEY_TYPING
+                           notify:NotifyNow];
+        else if([type isEqualToString:@"composing"])
+            [chat setStatusObject:[NSNumber numberWithInt:AITyping]
+                           forKey:KEY_TYPING
+                           notify:NotifyNow];
+        else if([type isEqualToString:@"gone"])
         {
-            NSString *type = [csn getElementName];
-            if([type isEqualToString:@"active"])
-                [chat setStatusObject:[NSNumber numberWithInt:AINotTyping]
-                               forKey:KEY_TYPING
-                               notify:NotifyNow];
-            else if([type isEqualToString:@"paused"])
-                [chat setStatusObject:[NSNumber numberWithInt:AIEnteredText]
-                               forKey:KEY_TYPING
-                               notify:NotifyNow];
-            else if([type isEqualToString:@"composing"])
-                [chat setStatusObject:[NSNumber numberWithInt:AITyping]
-                               forKey:KEY_TYPING
-                               notify:NotifyNow];
-            else if([type isEqualToString:@"gone"])
+            [[adium contentController] displayEvent:AILocalizedString(@"The user has closed the chat.","The user has closed the chat.")
+                                             ofType:@"chat-info"
+                                             inChat:chat];
+            // now remove thread id, since it's no longer valid
+            // note that there's no way to remove the status, so just set it to @""
+            [chat setStatusObject:@"" forKey:@"XMPPThreadID" notify:NotifyNow];
+        } else if([type isEqualToString:@"inactive"])
+            [[adium contentController] displayEvent:AILocalizedString(@"The user is inactive.","The user is inactive.")
+                                             ofType:@"chat-info"
+                                             inChat:chat];
+        [chat setStatusObject:[NSNumber numberWithBool:YES] forKey:@"XMPPChatStateNotifications" notify:NotifyNow];
+        [[adium notificationCenter] addObserver:self
+                                       selector:@selector(chatWillClose:)
+                                           name:Chat_WillClose
+                                         object:chat];
+    } else {
+        SmackXMessageEvent *mevt = [packet getExtension:@"x" :@"jabber:x:event"];
+        if(mevt)
+        {
+            if([mevt isMessageEventRequest])
             {
-                [[adium contentController] displayEvent:AILocalizedString(@"The user has closed the chat.","The user has closed the chat.")
-                                                 ofType:@"chat-info"
-                                                 inChat:chat];
-                // now remove thread id, since it's no longer valid
-                // note that there's no way to remove the status, so just set it to @""
-                [chat setStatusObject:@"" forKey:@"XMPPThreadID" notify:NotifyNow];
-            } else if([type isEqualToString:@"inactive"])
-                [[adium contentController] displayEvent:AILocalizedString(@"The user is inactive.","The user is inactive.")
-                                                 ofType:@"chat-info"
-                                                 inChat:chat];
-            [chat setStatusObject:[NSNumber numberWithBool:YES] forKey:@"XMPPChatStateNotifications" notify:NotifyNow];
-            [[adium notificationCenter] addObserver:self
-                                           selector:@selector(chatWillClose:)
-                                               name:Chat_WillClose
-                                             object:chat];
-        }
+                if([mevt isComposing])
+                {
+                    [chat setStatusObject:[NSNumber numberWithBool:YES] forKey:@"XMPPMessageEventComposingRequest" notify:NotifyLater];
+                    [chat setStatusObject:[packet getPacketID] forKey:@"XMPPMessageEventPacketID" notify:NotifyLater];
+                }
+                if([mevt isDelivered])
+                {
+                    SmackMessage *msg = [SmackCocoaAdapter messageTo:[packet getFrom] typeString:@"NORMAL"];
+                    SmackXMessageEvent *mevt2 = [SmackCocoaAdapter messageEvent];
+                    [mevt2 setDelivered:YES];
+                    [msg addExtension:mevt2];
+                    [[account connection] sendPacket:msg];
+                }
+                if([mevt isDisplayed])
+                {
+                    // not really correct here, but the plugin can't tell when it's actually displayed
+                    SmackMessage *msg = [SmackCocoaAdapter messageTo:[packet getFrom] typeString:@"NORMAL"];
+                    SmackXMessageEvent *mevt2 = [SmackCocoaAdapter messageEvent];
+                    [mevt2 setDisplayed:YES];
+                    [msg addExtension:mevt2];
+                    [[account connection] sendPacket:msg];
+                }
+            } else {
+                if([mevt isComposing])
+                    [chat setStatusObject:[NSNumber numberWithInt:AITyping]
+                                   forKey:KEY_TYPING
+                                   notify:NotifyNow];
+                else if([mevt isCancelled])
+                    [chat setStatusObject:[NSNumber numberWithInt:AINotTyping]
+                                   forKey:KEY_TYPING
+                                   notify:NotifyNow];
+                else if([mevt isOffline])
+                    [[adium chatController] displayEvent:AILocalizedString(@"The user is offline. The message was stored on the user's server.", "The user is offline. The message was stored on the user's server.")
+                                                  ofType:@"chat-info"
+                                                  inChat:chat];
+            }
+        } else
+            [chat setStatusObject:[NSNumber numberWithBool:NO] forKey:@"XMPPMessageEventComposingRequest" notify:NotifyLater];
     }
+    if([packet getBody])
+        [chat setStatusObject:[NSNumber numberWithInt:AINotTyping]
+                       forKey:KEY_TYPING
+                       notify:NotifyNow];
 }
 
 - (void)chatWillClose:(NSNotification*)notification
@@ -246,6 +314,17 @@
     
     if(!useCSN || [useCSN boolValue])
         [message addExtension:[SmackCocoaAdapter createChatState:@"active"]];
+    if(!useCSN || ![useCSN boolValue])
+    {
+        NSNumber *useMessageEvent = [chat statusObjectForKey:@"XMPPMessageEventNotification"];
+        if(!useMessageEvent || [useMessageEvent boolValue])
+        {
+            SmackXMessageEvent *mevt = [SmackCocoaAdapter messageEvent];
+            [mevt setComposing:YES];
+            [mevt setOffline:YES];
+            [message addExtension:mevt];
+        }
+    }
 }
 
 @end

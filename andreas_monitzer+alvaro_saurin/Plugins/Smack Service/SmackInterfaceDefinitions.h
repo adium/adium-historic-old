@@ -841,6 +841,27 @@
 
 @end
 
+@interface SmackXMessageEvent : NSObject <SmackPacketExtension> {
+}
+
+- (JavaIterator*)getEventTypes;
+- (NSString*)getPacketID;
+- (BOOL)isCancelled;
+- (BOOL)isComposing;
+- (BOOL)isDelivered;
+- (BOOL)isDisplayed;
+- (BOOL)isMessageEventRequest;
+- (BOOL)isOffline;
+- (void)setCancelled:(BOOL)cancelled;
+- (void)setComposing:(BOOL)composing;
+- (void)setDelivered:(BOOL)delivered;
+- (void)setDisplayed:(BOOL)displayed;
+- (void)setOffline:(BOOL)offline;
+- (void)setPacketID:(NSString*)packetID;
+- (NSString*)toXML;
+
+@end
+
 @interface SmackXServiceDiscoveryManager : NSObject {
 }
 
