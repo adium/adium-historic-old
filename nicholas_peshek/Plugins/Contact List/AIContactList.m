@@ -31,7 +31,7 @@
 	return self;
 }
 
-//This has to be done after the window loads so that the List Controller is created.
+//This has to be done after the window loads so that the List Controller is created (So it needs to be executed out of the "normal" load order).
 - (void)finishLoading
 {
 	contactListController = [contactListWindowController listController];
@@ -66,7 +66,7 @@
 
 - (void)addContactListObject:(AIListObject *)listObject
 {
-	AIListObject<AIContainingObject>	*tempObject = [[self listController] contactListRoot];
+	AIListObject<AIContainingObject>	*tempObject = [self contactList];
 	
 	[tempObject addObject:listObject];
 	[self setContactListRoot:tempObject];
@@ -74,7 +74,10 @@
 
 - (AIListObject<AIContainingObject> *)contactList
 {
-	return contactListRoot;
+	if(contactListController == nil)
+		return contactListRoot;
+	else
+		return [[self listController] contactListRoot];
 }
 
 - (AIOutlineView *)contactListView
@@ -95,12 +98,7 @@
 - (NSString *)name
 {	
 	AIListObject	*listObject;
-	NSEnumerator	*contactEnumerator;
-	if (contactListController == nil) {
-		contactEnumerator = [[contactListRoot containedObjects] objectEnumerator];
-	} else {
-		contactEnumerator = [[[[self listController] contactListRoot] containedObjects] objectEnumerator];	
-	}
+	NSEnumerator	*contactEnumerator = [[[self contactList] containedObjects] objectEnumerator];
 	NSString		*returnString = [NSString stringWithString:@"Contacts"];
 	
 	while((listObject = [contactEnumerator nextObject])) {
