@@ -33,10 +33,6 @@ public class SmackBridge implements ConnectionListener {
         VCardUpdateExtension.register();
     }
     
-    public void initSubscriptionMode() {
-        Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.manual);
-    }
-    
     public void setDelegate(NSObject d) {
         delegate = d;
     }

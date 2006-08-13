@@ -24,6 +24,8 @@
     IBOutlet NSButton *checkBox_allowExpired;
     IBOutlet NSButton *checkBox_allowNonMatchingHost;
     IBOutlet NSButton *checkBox_useCompression;
+    
+    IBOutlet NSPopUpButton *popup_subscriptionCheck;
 
     IBOutlet NSSlider *slider_availablePriority;
     IBOutlet NSSlider *slider_awayPriority;

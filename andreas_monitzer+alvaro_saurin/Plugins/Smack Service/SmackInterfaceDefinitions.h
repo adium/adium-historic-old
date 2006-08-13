@@ -389,6 +389,13 @@
 
 @end
 
+@interface SmackRosterSubscriptionMode : NSObject {
+}
+
++ (SmackRosterSubscriptionMode*)valueOf:(NSString*)name;
+
+@end
+
 @interface SmackRoster : NSObject {
 }
 
@@ -403,7 +410,7 @@
 - (int)getEntryCount;
 - (SmackRosterGroup*)getGroup:(NSString*)name;
 - (int)getGroupCount;
-- (JavaIterator*)getGroups;
+- (JavaVector*)getGroups;
 - (SmackPresence*)getPresence:(NSString*)user;
 - (SmackPresence*)getPresenceResource:(NSString*)userResource;
 - (JavaIterator*)getPresences:(NSString*)user;
@@ -412,8 +419,8 @@
 - (int)getUnfiledEntryCount;
 - (void)reload;
 - (void)removeEntry:(SmackRosterEntry*)entry;
-- (void)setDefaultSubscriptionMode:(int)subscriptionMode;
-- (void)setSubscriptionMode:(int)subscriptionMode;
+- (void)setDefaultSubscriptionMode:(SmackRosterSubscriptionMode*)subscriptionMode;
+- (void)setSubscriptionMode:(SmackRosterSubscriptionMode*)subscriptionMode;
 
 @end
 

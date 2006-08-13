@@ -30,6 +30,7 @@
 
 + (SmackXMPPRosterPluginListener*)rosterPluginListenerWithDelegate:(id)delegate;
 + (SmackXDiscoverInfo*)discoverInfo;
++ (SmackRosterSubscriptionMode*)rosterSubscriptionModeWithName:(NSString*)mode;
 
 @end
 
@@ -41,6 +42,10 @@
 + (SmackXDiscoverInfo*)discoverInfo
 {
     return [[[[[self classLoader] loadClass:@"org.jivesoftware.smackx.packet.DiscoverInfo"] alloc] init] autorelease];
+}
++ (SmackRosterSubscriptionMode*)rosterSubscriptionModeWithName:(NSString*)mode
+{
+    return [[(id)[self classLoader] loadClass:@"org.jivesoftware.smack.Roster$SubscriptionMode"] valueOf:mode];
 }
 
 @end
@@ -60,6 +65,10 @@
                                                  selector:@selector(receivedIQPacket:)
                                                      name:SmackXMPPIQPacketReceivedNotification
                                                    object:account];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateSubscriptionMode:)
+                                                     name:@"SmackXMPPAccountSubscriptionModeUpdated"
+                                                   object:account];
     }
     return self;
 }
@@ -73,8 +82,22 @@
 
 - (void)connected:(SmackXMPPConnection*)conn {
     listener = [[SmackCocoaAdapter rosterPluginListenerWithDelegate:self] retain];
-    [[conn initializeRoster] addRosterListener:listener];
-
+    roster = [[conn initializeRoster] retain];
+    [roster addRosterListener:listener];
+    
+    if([account preferenceForKey:@"subscriptions"
+                           group:GROUP_ACCOUNT_STATUS])
+        [self updateSubscriptionMode:[NSNotification notificationWithName:@"SmackXMPPAccountSubscriptionModeUpdated"
+                                                                   object:account
+                                                                 userInfo:[NSDictionary dictionaryWithObject:[account preferenceForKey:@"subscriptions"
+                                                                                                                                 group:GROUP_ACCOUNT_STATUS]
+                                                                                                      forKey:@"mode"]]];
+    else
+        [self updateSubscriptionMode:[NSNotification notificationWithName:@"SmackXMPPAccountSubscriptionModeUpdated"
+                                                                   object:account
+                                                                 userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:0]
+                                                                                                      forKey:@"mode"]]];
+    
     // we're a tooltip plugin for displaying resources
     [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
 }
@@ -82,6 +105,27 @@
 - (void)disconnected:(SmackXMPPConnection*)conn {
     [[adium interfaceController] unregisterContactListTooltipEntry:self secondaryEntry:YES];
     [listener release];
+    [roster release]; roster = nil;
+}
+
+- (void)updateSubscriptionMode:(NSNotification*)notification
+{
+    NSString *mode;
+    int modenum = [[[notification userInfo] objectForKey:@"mode"] intValue];
+    switch(modenum)
+    {
+        case 1:
+            mode = @"accept_all";
+            break;
+        case 2:
+            mode = @"reject_all";
+            break;
+        case 0:
+        default:
+            mode = @"manual";
+    }
+    
+    [roster setSubscriptionMode:[SmackCocoaAdapter rosterSubscriptionModeWithName:mode]];
 }
 
 #pragma mark Tooltip Handling
@@ -109,10 +153,6 @@
 }
 
 - (void)XMPPRosterEntriesAddedMainThread:(JavaCollection*)addresses {
-    SmackRoster *roster = [[account connection] getRoster];
-    if(!roster)
-        return;
-
     JavaIterator *iter = [addresses iterator];
 
     while([iter hasNext]) {
@@ -161,10 +201,6 @@
 }
 
 - (void)XMPPRosterEntriesUpdatedMainThread:(JavaCollection*)addresses {
-    SmackRoster *roster = [[account connection] getRoster];
-    if(!roster)
-        return;
-    
     JavaIterator *iter = [addresses iterator];
     
     while([iter hasNext]) {
@@ -194,7 +230,7 @@
                 storedgroupname = nil;
         }
         if(!storedgroupname) {
-            iter2 = [entry getGroups];
+            iter2 = [[entry getGroups] iterator];
             AIListGroup *group = [[adium contactController] groupWithUID:[iter2 hasNext]?[[iter2 next] getName]:AILocalizedString(@"Unfiled Entries","group for entries without a group")];
             [[adium contactController] addContacts:[NSArray arrayWithObject:listContact] toGroup:group];
         }
@@ -206,10 +242,6 @@
 }
 
 - (void)XMPPRosterEntriesDeletedMainThread:(JavaCollection*)addresses {
-    SmackRoster *roster = [[account connection] getRoster];
-    if(!roster)
-        return;
-    
     JavaIterator *iter = [addresses iterator];
     
     NSMutableArray *contacts = [[NSMutableArray alloc] init];
@@ -233,7 +265,6 @@
 }
 
 - (void)setXMPPRosterPresenceChanged:(NSString*)XMPPAddress {
-    SmackRoster *roster = [[account connection] getRoster];
     SmackPresence *presence = [roster getPresenceResource:XMPPAddress]; // might be nil, but that's handled correctly by NSArray
     
     [self performSelectorOnMainThread:@selector(XMPPRosterPresenceChangedMainThread:) withObject:[NSArray arrayWithObjects:XMPPAddress,roster,presence,nil] waitUntilDone:YES];
@@ -332,16 +363,20 @@
             //Apply the change
             [resourceObject notifyOfChangedStatusSilently:[account silentAndDelayed]];
         }
-    } else if([type isEqualToString:@"subscribe"]) {
-        [[adium contactController] showAuthorizationRequestWithDict:[NSDictionary dictionaryWithObjectsAndKeys:
-            jid, @"Remote Name",
-            nil] forAccount:account];
-    } else if([type isEqualToString:@"subscribed"]) {
-        [[adium interfaceController] handleMessage:AILocalizedString(@"You Were Authorized!","You Were Authorized!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has authorized you to see his/her current status.","%@ has authorized you to see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
-    } else if([type isEqualToString:@"unsubscribe"]) {
-        [[adium interfaceController] handleMessage:AILocalizedString(@"Subscription Removed!","Subscription Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed you from his/her contact list. He/She will no longer see your current status.","%@ has removed you from his/her contact list. He/She will no longer see your current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
-    } else if([type isEqualToString:@"unsubscribed"]) {
-        [[adium interfaceController] handleMessage:AILocalizedString(@"Authorization Removed!","Authorization Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed your authorization. You will no longer see his/her current status.","%@ has removed your authorization. You will no longer see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
+    } else if([[account preferenceForKey:@"subscriptions" group:GROUP_ACCOUNT_STATUS] intValue] == 0)
+    {
+        // we only care about the packets if the subscription is set to ask user
+        if([type isEqualToString:@"subscribe"]) {
+            [[adium contactController] showAuthorizationRequestWithDict:[NSDictionary dictionaryWithObjectsAndKeys:
+                jid, @"Remote Name",
+                nil] forAccount:account];
+        } else if([type isEqualToString:@"subscribed"]) {
+            [[adium interfaceController] handleMessage:AILocalizedString(@"You Were Authorized!","You Were Authorized!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has authorized you to see his/her current status.","%@ has authorized you to see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
+        } else if([type isEqualToString:@"unsubscribe"]) {
+            [[adium interfaceController] handleMessage:AILocalizedString(@"Subscription Removed!","Subscription Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed you from his/her contact list. He/She will no longer see your current status.","%@ has removed you from his/her contact list. He/She will no longer see your current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
+        } else if([type isEqualToString:@"unsubscribed"]) {
+            [[adium interfaceController] handleMessage:AILocalizedString(@"Authorization Removed!","Authorization Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed your authorization. You will no longer see his/her current status.","%@ has removed your authorization. You will no longer see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
+        }
     }
 }
 
