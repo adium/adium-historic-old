@@ -184,9 +184,9 @@
 		}
 		
 		//If the list object's display name changed, we resize the tabs
-		/*if (!keys || [keys containsObject:@"Display Name"]) {
-			[[[self tabView] delegate] resizeTabForTabViewItem:self];
-		}*/
+		if (!keys || [keys containsObject:@"Display Name"]) {
+			[self setLabel:[self label]];
+		}
 	}
 }
 
