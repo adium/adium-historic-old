@@ -63,6 +63,7 @@
                 "checkBox_useSSL" = NSButton; 
                 "checkBox_useTLS" = NSButton; 
                 "label_resource" = NSTextField; 
+                "popup_subscriptionCheck" = NSPopUpButton; 
                 "slider_availablePriority" = NSSlider; 
                 "slider_awayPriority" = NSSlider; 
                 tabview = NSTabView; 

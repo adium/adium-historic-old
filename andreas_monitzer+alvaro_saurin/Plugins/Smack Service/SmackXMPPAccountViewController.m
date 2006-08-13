@@ -54,7 +54,8 @@
         [textfield_awayPriority setIntValue:[[inAccount preferenceForKey:@"awayPriority"
                                                                    group:GROUP_ACCOUNT_STATUS] intValue]];
         
-        
+        [popup_subscriptionCheck selectItemWithTag:[[inAccount preferenceForKey:@"subscriptions"
+                                                                          group:GROUP_ACCOUNT_STATUS] intValue]];
         
         [self setCurrentJID:[inAccount explicitFormattedUID]];
     }
@@ -103,6 +104,19 @@
     [account setPreference:[NSNumber numberWithInt:[slider_awayPriority intValue]]
 					forKey:@"awayPriority"
 					 group:GROUP_ACCOUNT_STATUS];
+    
+    [account setPreference:[NSNumber numberWithInt:[[popup_subscriptionCheck selectedItem] tag]]
+                    forKey:@"subscriptions"
+                     group:GROUP_ACCOUNT_STATUS];
+    
+    if([[account statusObjectForKey:@"Online"] boolValue])
+    {
+        // dynamically update the settings for the subscription value
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"SmackXMPPAccountSubscriptionModeUpdated"
+                                                            object:account
+                                                          userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:[[popup_subscriptionCheck selectedItem] tag]] forKey:@"mode"]];
+    }
 }
 
 - (void)setCurrentJID:(NSString*)jid {

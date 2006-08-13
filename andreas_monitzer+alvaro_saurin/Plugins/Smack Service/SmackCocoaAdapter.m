@@ -209,7 +209,6 @@ static JavaClassLoader *classLoader = nil;
         
         // create connection
         AdiumSmackBridge *bridge = [[(Class)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] alloc] init];
-        [bridge initSubscriptionMode];
         [bridge setDelegate:self];
         
         @try {

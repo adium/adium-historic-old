@@ -10,11 +10,13 @@
 #import <Adium/AIObject.h>
 
 @protocol AIContactListTooltipEntry;
-@class SmackXMPPAccount, SmackXMPPRosterPluginListener;
+@class SmackXMPPAccount, SmackXMPPRosterPluginListener, SmackRoster;
 
 @interface SmackXMPPRosterPlugin : AIObject <AIContactListTooltipEntry> {
     SmackXMPPAccount *account;
     SmackXMPPRosterPluginListener *listener;
+    
+    SmackRoster *roster;
 }
 
 - (id)initWithAccount:(SmackXMPPAccount*)a;
