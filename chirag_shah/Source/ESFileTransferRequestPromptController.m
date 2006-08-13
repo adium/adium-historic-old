@@ -14,16 +14,16 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "ESFileTransferController.h"
 #import "ESFileTransferRequestPromptController.h"
 #import <Adium/AIListContact.h>
-#import <Adium/ESFileTransfer.h>
-#import <Adium/ESTextAndButtonsWindowController.h>
+#import "ESFileTransfer.h"
+#import "ESTextAndButtonsWindowController.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <Adium/AIChatController.h>
+#import <Adium/AIChatControllerProtocol.h>
 
 @interface ESFileTransferRequestPromptController (PRIVATE)
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer

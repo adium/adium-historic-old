@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
+<? *** This list of classes is utilized by AICoreComponentLoader to determine what components to load *** ?>
 <array>
 	<? *** Load the Address Book Plugin early so AB information is available to later components *** ?>
 	<string>ESAddressBookIntegrationPlugin</string>
@@ -15,6 +16,7 @@
 	<string>AIChatCyclingPlugin</string>
 	<string>AIContactAwayPlugin</string>
 	<string>AIContactIdlePlugin</string>
+	<string>AIContactInfoWindowPlugin</string>
 	<string>AIContactListEditorPlugin</string>
 	<string>AIContactOnlineSincePlugin</string>
 	<string>AIContactSortSelectionPlugin</string>

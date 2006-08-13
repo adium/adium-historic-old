@@ -14,11 +14,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContentController.h"
+#import <Adium/AIContentControllerProtocol.h>
 #import "CBActionSupportPlugin.h"
-#import "AIInterfaceController.h"
-#import "AIChat.h"
-#import "AIAccount.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIAccount.h>
 
 /*!
  * @class CBActionSupportPlugin
@@ -94,7 +94,7 @@
 			lineRange.length -= lineRange.location;
 			
 			searchRange = NSMakeRange(lineRange.location, endInsertPoint - lineRange.location);
-			meRange = [str rangeOfString:@"/me " options:NSLiteralSearch range:searchRange];
+			meRange = [str rangeOfString:@"/me " options:(NSLiteralSearch | NSCaseInsensitiveSearch) range:searchRange];
 			
 			if (meRange.location == lineRange.location && meRange.length == 4) {
 				NSAttributedString *endSplat = [[NSAttributedString alloc] initWithString:endReplacement 

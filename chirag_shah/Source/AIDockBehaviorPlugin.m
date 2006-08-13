@@ -16,14 +16,14 @@
 
 #import "AIDockBehaviorPlugin.h"
 #import "AIDockController.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import "ESDockAlertDetailPane.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIChat.h>
 #import <AIUtilities/AIImageAdditions.h>
 
-#define DOCK_BEHAVIOR_ALERT_SHORT	AILocalizedString(@"Bounce the dock icon",nil)
-#define DOCK_BEHAVIOR_ALERT_LONG	AILocalizedString(@"Bounce the dock icon %@",nil)
+#define AIDockBehavior_ALERT_SHORT	AILocalizedString(@"Bounce the dock icon",nil)
+#define AIDockBehavior_ALERT_LONG	AILocalizedString(@"Bounce the dock icon %@",nil)
 
 @interface AIDockBehaviorPlugin (PRIVATE)
 - (void)observeToStopBouncingForChat:(AIChat *)chat;
@@ -42,7 +42,7 @@
 - (void)installPlugin
 {
 	//Install our contact alert
-	[[adium contactAlertsController] registerActionID:DOCK_BEHAVIOR_ALERT_IDENTIFIER withHandler:self];
+	[[adium contactAlertsController] registerActionID:AIDockBehavior_ALERT_IDENTIFIER withHandler:self];
 }
 
 /*!
@@ -51,7 +51,7 @@
  */
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return DOCK_BEHAVIOR_ALERT_SHORT;
+	return AIDockBehavior_ALERT_SHORT;
 }
 
 /*!
@@ -60,8 +60,8 @@
  */
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	int behavior = [[details objectForKey:KEY_DOCK_BEHAVIOR_TYPE] intValue];
-	return [NSString stringWithFormat:DOCK_BEHAVIOR_ALERT_LONG, [[[adium dockController] descriptionForBehavior:behavior] lowercaseString]];
+	int behavior = [[details objectForKey:KEY_AIDockBehavior_TYPE] intValue];
+	return [NSString stringWithFormat:AIDockBehavior_ALERT_LONG, [[[adium dockController] descriptionForBehavior:behavior] lowercaseString]];
 }
 
 /*!
@@ -94,7 +94,7 @@
  */
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	if ([[adium dockController] performBehavior:[[details objectForKey:KEY_DOCK_BEHAVIOR_TYPE] intValue]]) {
+	if ([[adium dockController] performBehavior:[[details objectForKey:KEY_AIDockBehavior_TYPE] intValue]]) {
 		//The behavior will continue into the future
 		if ([[adium contactAlertsController] isMessageEvent:eventID]) {
 			AIChat *chat = [userInfo objectForKey:@"AIChat"];
@@ -141,7 +141,7 @@
 										  name:Chat_BecameActive
 										object:nil];
 
-	[[adium dockController] performBehavior:BOUNCE_NONE];
+	[[adium dockController] performBehavior:AIDockBehaviorStopBouncing];
 }
 
 /*!

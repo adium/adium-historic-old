@@ -6,15 +6,17 @@
 //
 
 #import "AIChatController.h"
-#import "AIContentController.h"
-#import "AIContactController.h"
-#import "AIInterfaceController.h"
-#import "AIMenuController.h"
+
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
 #import "AdiumChatEvents.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -101,7 +103,7 @@
 	NSEnumerator	*enumerator = [openChats objectEnumerator];
 	AIChat			*chat;
 	
-	//Every open chat is about to close.
+	//Every open chat is about to close. We perform the internal closing here rather than calling on the interface controller since the UI need not change.
 	while ((chat = [enumerator nextObject])) {
 		[self closeChat:chat];
 	}
@@ -112,8 +114,9 @@
  */
 - (void)dealloc
 {
-	[openChats release];
+	[openChats release]; openChats = nil;
 	[chatObserverArray release]; chatObserverArray = nil;
+	[[adium notificationCenter] removeObserver:self];
 
 	[super dealloc];
 }
@@ -432,6 +435,8 @@
 /*!
  * @brief Close a chat
  *
+ * This should be called only by the interface controller. To close a chat programatically, use the interface controller's closeChat:.
+ *
  * @result YES the chat was removed succesfully; NO if it was not
  */
 - (BOOL)closeChat:(AIChat *)inChat
@@ -444,6 +449,8 @@
 	 * chat, generating a duplicate.
 	 */
 	shouldRemove = ![[adium contentController] chatIsReceivingContent:inChat];
+
+	[inChat retain];
 
 	if (mostRecentChat == inChat) {
 		[mostRecentChat release];
@@ -469,6 +476,7 @@
 	}
 	
 	[inChat setIsOpen:NO];
+	[inChat release];
 
 	return shouldRemove;
 }

@@ -14,12 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
-#import "AIContactController.h"
-#import "AIPreferenceController.h"
 #import "AIStatusController.h"
+
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AISoundControllerProtocol.h>
+
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AdiumIdleManager.h"
-#import "AISoundController.h"
 
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
@@ -30,7 +32,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatusIcons.h>
-#import <Adium/AIStatusGroup.h>
+#import "AIStatusGroup.h"
 #import <Adium/AIStatus.h>
 
 //State menu
@@ -44,9 +46,6 @@
 - (NSArray *)builtInStateArray;
 
 - (void)_upgradeSavedAwaysToSavedStates;
-- (void)_addStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
-- (void)_removeStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
-- (NSString *)_titleForMenuDisplayOfState:(AIStatus *)statusState;
 
 - (NSArray *)_menuItemsForStatusesOfType:(AIStatusType)type forServiceCodeUniqueID:(NSString *)inServiceCodeUniqueID withTarget:(id)target;
 - (void)_addMenuItemsForStatusOfType:(AIStatusType)type
@@ -399,26 +398,26 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	static NSDictionary	*coreLocalizedStatusDescriptions = nil;
 	if(!coreLocalizedStatusDescriptions){
 		coreLocalizedStatusDescriptions = [[NSDictionary dictionaryWithObjectsAndKeys:
-			STATUS_DESCRIPTION_AVAILABLE, STATUS_NAME_AVAILABLE,
-			STATUS_DESCRIPTION_FREE_FOR_CHAT, STATUS_NAME_FREE_FOR_CHAT,
-			STATUS_DESCRIPTION_AVAILABLE_FRIENDS_ONLY, STATUS_NAME_AVAILABLE_FRIENDS_ONLY,
-			STATUS_DESCRIPTION_AWAY, STATUS_NAME_AWAY,
-			STATUS_DESCRIPTION_EXTENDED_AWAY, STATUS_NAME_EXTENDED_AWAY,
-			STATUS_DESCRIPTION_AWAY_FRIENDS_ONLY, STATUS_NAME_AWAY_FRIENDS_ONLY,
-			STATUS_DESCRIPTION_DND, STATUS_NAME_DND,
-			STATUS_DESCRIPTION_NOT_AVAILABLE, STATUS_NAME_NOT_AVAILABLE,
-			STATUS_DESCRIPTION_OCCUPIED, STATUS_NAME_OCCUPIED,
-			STATUS_DESCRIPTION_BRB, STATUS_NAME_BRB,
-			STATUS_DESCRIPTION_BUSY, STATUS_NAME_BUSY,
-			STATUS_DESCRIPTION_PHONE, STATUS_NAME_PHONE,
-			STATUS_DESCRIPTION_LUNCH, STATUS_NAME_LUNCH,
-			STATUS_DESCRIPTION_NOT_AT_HOME, STATUS_NAME_NOT_AT_HOME,
-			STATUS_DESCRIPTION_NOT_AT_DESK, STATUS_NAME_NOT_AT_DESK,
-			STATUS_DESCRIPTION_NOT_IN_OFFICE, STATUS_NAME_NOT_IN_OFFICE,
-			STATUS_DESCRIPTION_VACATION, STATUS_NAME_VACATION,
-			STATUS_DESCRIPTION_STEPPED_OUT, STATUS_NAME_STEPPED_OUT,
-			STATUS_DESCRIPTION_INVISIBLE, STATUS_NAME_INVISIBLE,
-			STATUS_DESCRIPTION_OFFLINE, STATUS_NAME_OFFLINE,
+			AILocalizedString(@"Available", nil), STATUS_NAME_AVAILABLE,
+			AILocalizedString(@"Free for chat", nil), STATUS_NAME_FREE_FOR_CHAT,
+			AILocalizedString(@"Available for friends only",nil), STATUS_NAME_AVAILABLE_FRIENDS_ONLY,
+			AILocalizedString(@"Away", nil), STATUS_NAME_AWAY,
+			AILocalizedString(@"Extended away",nil), STATUS_NAME_EXTENDED_AWAY,
+			AILocalizedString(@"Away for friends only",nil), STATUS_NAME_AWAY_FRIENDS_ONLY,
+			AILocalizedString(@"Do not disturb", nil), STATUS_NAME_DND,
+			AILocalizedString(@"Not available", nil), STATUS_NAME_NOT_AVAILABLE,
+			AILocalizedString(@"Occupied", nil), STATUS_NAME_OCCUPIED,
+			AILocalizedString(@"Be right back",nil), STATUS_NAME_BRB,
+			AILocalizedString(@"Busy",nil), STATUS_NAME_BUSY,
+			AILocalizedString(@"On the phone",nil), STATUS_NAME_PHONE,
+			AILocalizedString(@"Out to lunch",nil), STATUS_NAME_LUNCH,
+			AILocalizedString(@"Not at home",nil), STATUS_NAME_NOT_AT_HOME,
+			AILocalizedString(@"Not at my desk",nil), STATUS_NAME_NOT_AT_DESK,
+			AILocalizedString(@"Not in the office",nil), STATUS_NAME_NOT_IN_OFFICE,
+			AILocalizedString(@"On vacation",nil), STATUS_NAME_VACATION,
+			AILocalizedString(@"Stepped out",nil), STATUS_NAME_STEPPED_OUT,
+			AILocalizedString(@"Invisible",nil), STATUS_NAME_INVISIBLE,
+			AILocalizedString(@"Offline",nil), STATUS_NAME_OFFLINE,
 			nil] retain];
 	}
 	
@@ -593,17 +592,54 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	AIAccount		*account;
 	AIStatus		*aStatusState;
 	BOOL			shouldRebuild = NO;
-
+	BOOL			noConnectedAccounts = ![[adium accountController] oneOrMoreConnectedOrConnectingAccounts];
+	BOOL			isOfflineStatus = ([statusState statusType] == AIOfflineStatusType);
 	[self setDelayActiveStatusUpdates:YES];
 	
-	enumerator = [accountArray objectEnumerator];
-	while ((account = [enumerator nextObject])) {
-		if ([account enabled]) {
-			[account setStatusState:statusState];
+	/* If we're going offline, determine what accounts are currently online, first, so that we can restore that when an online state
+	 * is chosen later.
+	 */
+	if  (isOfflineStatus && !noConnectedAccounts) {
+		[accountsToConnect removeAllObjects];
 
-		} else {
-			[account setStatusStateAndRemainOffline:statusState];			
+		enumerator = [accountArray objectEnumerator];
+		while ((account = [enumerator nextObject])) {
+			if ([account online]) [accountsToConnect addObject:account];
 		}
+	}
+
+	if (noConnectedAccounts) {
+		/* No connected accounts: Connect all enabled accounts which were set offline previously.
+		 * If we have no such list of accounts, connect 'em all.
+		 */
+		BOOL noAccountsToConnectCount = ([accountsToConnect count] == 0);
+		enumerator = [accountArray objectEnumerator];
+		while ((account = [enumerator nextObject])) {
+			if ([account enabled] &&
+				([accountsToConnect containsObject:account] || noAccountsToConnectCount)) {
+				[account setStatusState:statusState];
+
+			} else {
+				[account setStatusStateAndRemainOffline:statusState];	
+			}
+		}
+
+	} else {
+		//At least one account is online.  Just change its status without taking any other accounts online.
+		enumerator = [accountArray objectEnumerator];
+		while ((account = [enumerator nextObject])) {
+			if ([account online] || isOfflineStatus) {
+				[account setStatusState:statusState];
+				
+			} else {
+				[account setStatusStateAndRemainOffline:statusState];			
+			}
+		}
+	}
+
+	//If this is not an offline status, we've now made use of accountsToConnect and should clear it so it isn't used again.
+	if (!isOfflineStatus) {
+		[accountsToConnect removeAllObjects];
 	}
 
 	//Any objects in the temporary state array which aren't the state we just set should now be removed.
@@ -698,7 +734,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	builtInStatusTypes[AIAvailableStatusType] = [[NSMutableSet alloc] init];
 	statusDict = [NSDictionary dictionaryWithObjectsAndKeys:
 		STATUS_NAME_AVAILABLE, KEY_STATUS_NAME,
-		STATUS_DESCRIPTION_AVAILABLE, KEY_STATUS_DESCRIPTION,
+		[self localizedDescriptionForCoreStatusName:STATUS_NAME_AVAILABLE], KEY_STATUS_DESCRIPTION,
 		[NSNumber numberWithInt:AIAvailableStatusType], KEY_STATUS_TYPE,
 		nil];
 	[builtInStatusTypes[AIAvailableStatusType] addObject:statusDict];
@@ -706,7 +742,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	builtInStatusTypes[AIAwayStatusType] = [[NSMutableSet alloc] init];
 	statusDict = [NSDictionary dictionaryWithObjectsAndKeys:
 		STATUS_NAME_AWAY, KEY_STATUS_NAME,
-		STATUS_DESCRIPTION_AWAY, KEY_STATUS_DESCRIPTION,
+		[self localizedDescriptionForCoreStatusName:STATUS_NAME_AWAY], KEY_STATUS_DESCRIPTION,
 		[NSNumber numberWithInt:AIAwayStatusType], KEY_STATUS_TYPE,
 		nil];
 	[builtInStatusTypes[AIAwayStatusType] addObject:statusDict];

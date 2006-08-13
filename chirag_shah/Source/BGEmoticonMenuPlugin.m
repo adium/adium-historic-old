@@ -15,9 +15,9 @@
  */
 
 #import "AIEmoticonController.h"
-#import "AIMenuController.h"
-#import "AIPreferenceController.h"
-#import "AIToolbarController.h"
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
 #import "BGEmoticonMenuPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
@@ -76,9 +76,8 @@
 	[tempMenu release];
 
     //add the items to their menus.
-    AIMenuController *menuController = [adium menuController];
-    [menuController addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_Edit];    
-    [menuController addMenuItem:quickMenuItem toLocation:LOC_Edit_Additions];
+    [[adium menuController] addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_Edit];    
+    [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Edit_Additions];
 	
 	toolbarItems = [[NSMutableSet alloc] init];
 	[self registerToolbarItem];

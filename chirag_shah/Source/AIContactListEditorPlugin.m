@@ -14,13 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
-#import "AIContactController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIContactListEditorPlugin.h"
-#import "AIMenuController.h"
+#import <Adium/AIMenuControllerProtocol.h>
 #import "AINewContactWindowController.h"
 #import "AINewGroupWindowController.h"
-#import "AIToolbarController.h"
+#import <Adium/AIToolbarControllerProtocol.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
@@ -157,7 +158,7 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	if (menuItem == menuItem_delete) {
-		return [[adium contactController] selectedListObjectInContactList] != nil;
+		return [[adium interfaceController] selectedListObjectInContactList] != nil;
 		
 	} else if (menuItem == menuItem_tabAddContact) {
 		return [[adium menuController] currentContextMenuObject] != nil;
@@ -191,7 +192,7 @@
  */
 - (IBAction)addContact:(id)sender
 {
-	[self promptForNewContactOnWindow:nil selectedListObject:[[adium contactController] selectedListObject]];
+	[self promptForNewContactOnWindow:nil selectedListObject:[[adium interfaceController] selectedListObject]];
 }
 
 /*!
@@ -255,7 +256,7 @@
  */
 - (IBAction)deleteSelection:(id)sender
 {	
-	[self deleteFromArray:[[adium contactController] arrayOfSelectedListObjectsInContactList]];
+	[self deleteFromArray:[[adium interfaceController] arrayOfSelectedListObjectsInContactList]];
 }
 
 /*!

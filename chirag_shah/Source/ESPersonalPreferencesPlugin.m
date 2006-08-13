@@ -7,7 +7,7 @@
 
 #import "ESPersonalPreferencesPlugin.h"
 #import "ESPersonalPreferences.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 

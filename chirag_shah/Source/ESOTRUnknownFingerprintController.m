@@ -18,9 +18,9 @@
 #import "ESTextAndButtonsWindowController.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
-#import <Adium/AIHTMLDecoder.h>
+#import "AIHTMLDecoder.h"
 #import <Adium/AIServiceIcons.h>
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 
 #import "AdiumOTREncryption.h"
 

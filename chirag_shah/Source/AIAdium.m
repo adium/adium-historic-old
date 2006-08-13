@@ -96,55 +96,55 @@ static NSString	*prefsCategory;
 
 //Core Controllers -----------------------------------------------------------------------------------------------------
 #pragma mark Core Controllers
-- (AILoginController *)loginController{
+- (NSObject <AILoginController> *)loginController{
     return loginController;
 }
-- (AIMenuController *)menuController{
+- (NSObject <AIMenuController> *)menuController{
     return menuController;
 }
-- (AIAccountController *)accountController{
+- (NSObject <AIAccountController> *)accountController{
     return accountController;
 }
-- (AIChatController *)chatController{
+- (NSObject <AIChatController> *)chatController{
 	return chatController;
 }
-- (AIContentController *)contentController{
+- (NSObject <AIContentController> *)contentController{
     return contentController;
 }
-- (AIContactController *)contactController{
+- (NSObject <AIContactController> *)contactController{
     return contactController;
 }
-- (AIEmoticonController *)emoticonController{
+- (NSObject <AIEmoticonController> *)emoticonController{
     return emoticonController;
 }
-- (AISoundController *)soundController{
+- (NSObject <AISoundController> *)soundController{
     return soundController;
 }
-- (AIInterfaceController *)interfaceController{
+- (NSObject <AIInterfaceController> *)interfaceController{
     return interfaceController;
 }
-- (AIPreferenceController *)preferenceController{
+- (NSObject <AIPreferenceController> *)preferenceController{
     return preferenceController;
 }
-- (AIToolbarController *)toolbarController{
+- (NSObject <AIToolbarController> *)toolbarController{
     return toolbarController;
 }
-- (AIDockController *)dockController{
+- (NSObject <AIDockController> *)dockController{
     return dockController;
 }
-- (ESFileTransferController *)fileTransferController{
+- (NSObject <AIFileTransferController> *)fileTransferController{
     return fileTransferController;    
 }
-- (ESContactAlertsController *)contactAlertsController{
+- (NSObject <AIContactAlertsController> *)contactAlertsController{
     return contactAlertsController;
 }
-- (ESApplescriptabilityController *)applescriptabilityController{
+- (NSObject <AIApplescriptabilityController> *)applescriptabilityController{
 	return applescriptabilityController;
 }
-- (ESDebugController *)debugController{
+- (NSObject <AIDebugController> *)debugController{
 	return debugController;
 }
-- (AIStatusController *)statusController{
+- (NSObject <AIStatusController> *)statusController{
     return statusController;
 }
 

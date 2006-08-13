@@ -8,9 +8,9 @@
 
 #import "AIContactListImagePicker.h"
 #import <Adium/AIAccount.h>
-#import <Adium/AIAdium.h>
-#import "AIAccountController.h"
-#import "AIContactController.h"
+#import <AIAdium.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import "AIContactListRecentImagesWindowController.h"
 #import <AIUtilities/AIBezierPathAdditions.h>
 

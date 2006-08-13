@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContentController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "DCMessageContextDisplayPlugin.h"
 #import "DCMessageContextDisplayPreferences.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
@@ -27,7 +27,7 @@
 //Old school
 #import <Adium/AIListContact.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 
 /**
  * @class DCMessageContextDisplayPlugin
