@@ -43,6 +43,8 @@
 	IBOutlet NSButton *profileMoreInfoButton;
 	IBOutlet NSTextField *checkForUpdatesText;
 	BOOL moreInfoVisible;
+	
+	NSString *currentSystemVersion;
 }
 
 // This IBAction is meant for a main menu item. Hook up any menu item to this action,

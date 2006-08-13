@@ -15,31 +15,15 @@
 
 /*!
  * @class AIAlternatingRowTableView
- * @brief An <tt>NSTableView</tt> subclass supporting alternating rows.
+ * @brief An <tt>NSTableView</tt> subclass supporting gradient selection and notificatoin of a delete keypress.
+ *
+ * The name is currently AIAlternatingRowTableView for Adium legacy regions. This class should be renamed.
  *
  */
 @interface AIAlternatingRowTableView : NSTableView {
 	BOOL	acceptFirstMouse;
-    BOOL	drawsAlternatingRows;
-    NSColor	*alternatingRowColor;
+	BOOL	drawsGradientSelection;
 }
-
-/*!
- * @brief Set if the table view draws a grid, alternating by rows
- *
- * The grid will be drawn alternating between the background color and the color specified by setAlternatingRowColor:, which has a sane, light blue default.
- * @param flag YES if the alternating rows should be drawn
- */
-- (void)setDrawsAlternatingRows:(BOOL)flag;
-
-/*!
- * @brief Set the color used for drawing alternating row backgrounds.
- *
- * Ignored if drawsAlternatingRows is NO.
- * @param color The <tt>NSColor</tt> to use for drawing alternating row backgrounds.
- */
-- (void)setAlternatingRowColor:(NSColor *)color;
-
 /*!
  * @brief Set the return value of -(BOOL)acceptsFirstMouse
  *
@@ -47,6 +31,9 @@
  * @param acceptFirstMouse The new value to return for -(BOOL)acceptsFirstMouse
  */
 - (void)setAcceptsFirstMouse:(BOOL)acceptFirstMouse;
+
+- (void)setDrawsGradientSelection:(BOOL)inDrawsGradientSelection;
+- (BOOL)drawsGradientSelection;
 
 @end
 

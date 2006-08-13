@@ -8,7 +8,7 @@
 #import "RAFjoscarICQService.h"
 #import "RAFjoscarICQAccount.h"
 #import "RAFjoscarAccountViewController.h"
-#import "AIStatusController.h"
+#import <Adium/AIStatusControllerProtocol.h>
 
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIStringUtilities.h>

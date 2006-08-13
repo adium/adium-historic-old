@@ -409,6 +409,9 @@ first (like Motorola and SPARC, unlike Intel and VAX). */
 /* Size of an int32. */
 #define ZEPHYR_INT32 long
 
+/* Size of time_t */
+#define SIZEOF_TIME_T 4
+
 /* Number of bits in a file offset, on hosts where this is settable. */
 /* #undef _FILE_OFFSET_BITS */
 

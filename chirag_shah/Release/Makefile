@@ -1,27 +1,29 @@
 ###########
 # What to do before running this script:
 # - openUp needs to be installed.
-# - Set VERSION and BETA below
+# - Set VERSION and BETA below.
+#       The Adium and Adium Crash Reporter plists will automatically
+#       updated to match these values.
 # - To enable beta, also edit Source/AIAdium.h, and set BETA_RELEASE to TRUE. Set it to FALSE when doing a final release.
-# - Edit the following plist keys in Adium_2.plist
-#		- CFBundleGetInfoString
-#		- CFBundleShortVersionString
-#		- CFBundleVersion
 #
 # How to run this script:
 # - make all
 ###########
 
-VERSION=1.0b4
+VERSION=1.0b7
 BETA=TRUE
 
 ###########
 # To release!
+# Releasing requires cachefly access and adiumx.com access.
+#
 # First upload to cachefly. If you don't have access and need to do a release, get with Evan or Chris (tick).
 # Triggering the version checker once the release is up:
 # 1) Build Adium
 # 2) Get the number out of the 'buildnum' file in Adium.app/Contents/Resources
-# 3) Paste that number into the appropriate place (adium version or adium-beta version, depending on which you're triggering) in the version.plist file in our sf.net ht_docs folder.  You should be able to ftp into shell.sf.net with your sf.net login/pass and then cd to the right directory (/home/groups/a/ad/adium/htdocs)
+# 3) Paste that number into the appropriate place (adium version or adium-beta version, depending on which you're triggering) in the version.plist file in our public_html folder.  *** (2) and (3) are to support the old version checker, in Adium 0.8x and earlier ***
+# 4) Update and commit the appcast.xml file in the adium checkout root
+# 5) Run the appcast update php script.
 ###########
 
 ###########
@@ -50,9 +52,9 @@ PLIST_DIR=`pwd`/../Plists
 ADIUM_PLIST=$(PLIST_DIR)/Adium_2
 CRASH_REPORTER_PLIST=$(PLIST_DIR)/Adium\ Crash\ Reporter-Info
 
-.PHONY: all update version compile clean release source createfolder diskimage
+.PHONY: all update version compile clean release source prepare-release-bundle createfolder diskimage
 
-all: update version compile release
+all: update version clean compile release
 
 update:
 	svn update $(SRC_DIR)
@@ -76,8 +78,25 @@ testcompile:
 
 clean:
 	rm -rf $(BUILD_DIR)
+	$(MAKE) $(BUILDFLAGS) -C $(SRC_DIR) clean
 
-release: createfolder diskimage
+release: createfolder prepare-release-bundle diskimage
+
+prepare-release-bundle:
+	@# Convert all nibs to the smaller binary format
+	@echo Converting nibs to binary format...
+	find $(BUILD_DIR)/Adium.app -name keyedobjects.nib -print0 | xargs -0 plutil -convert binary1
+
+	@# delete unneeded nib files for non-beta builds
+	@echo Cleaning Adium.app for release
+ifeq ($(BETA),FALSE)
+	find $(BUILD_DIR) \( -name classes.nib -or -name info.nib \) -type f -delete
+endif
+	
+	@# delete svn  and backup files
+	find $(BUILD_DIR) -name ".svn" -type d -exec rm -rf {} \; -prune
+	find $(BUILD_DIR) \( -name "*~" -or -name .DS_Store \) -type f -delete
+
 
 createfolder:
 	@# clean build directory
@@ -96,15 +115,6 @@ createfolder:
 	@# symlink /Applications
 	ln -s /Applications $(ADIUM_DIR)/Applications
 
-	@# delete svn  and backup files
-	find $(BUILD_DIR) -name ".svn" -type d -exec rm -rf {} \; -prune
-	find $(BUILD_DIR) \( -name "*~" -or -name .DS_Store \) -type f -delete
-	
-	@# delete unneeded nib files for non-beta builds
-ifeq ($(BETA),FALSE)
-	find $(BUILD_DIR) \( -name classes.nib -or -name info.nib \) -type f -delete
-endif
-	
 diskimage:
 	rm "$(BUILD_DIR)/$(RELEASE_NAME).dmg" || true
 	@# make Adium disk image

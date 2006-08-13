@@ -16,10 +16,10 @@
 
 #import "ESWebKitMessageViewPreferences.h"
 
-#import "AIAccountController.h"
-#import "AIContactController.h"
-#import "AIContentController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIWebKitMessageViewPlugin.h"
 #import "AIWebkitMessageViewStyle.h"
 #import "AIWebKitMessageViewController.h"
@@ -67,7 +67,7 @@
 /*!
  * @brief Preference pane properties
  */
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_Messages;
 }
 - (NSString *)label{

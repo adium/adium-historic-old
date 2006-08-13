@@ -15,7 +15,7 @@
  */
 
 #import "AIContactSettingsPane.h"
-#import "AIContentController.h"
+#import <Adium/AIContentControllerProtocol.h>
 #import <AIUtilities/AIDelayedTextField.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
@@ -31,7 +31,7 @@
 @implementation AIContactSettingsPane
 
 //Preference pane properties
-- (CONTACT_INFO_CATEGORY)contactInfoCategory{
+- (AIContactInfoCategory)contactInfoCategory{
     return AIInfo_Settings;
 }
 - (NSString *)nibName{

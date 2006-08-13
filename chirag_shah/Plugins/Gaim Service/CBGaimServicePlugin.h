@@ -24,9 +24,11 @@
 #endif
 	id  GaduGaduService;
 	id  GTalkService;
+	id  LiveJournalService;
     id  JabberService;
 	id  MeanwhileService;
 	id  MSNService;
+	id	QQService;
 	id  SimpleService;
 	id  NovellService;
     id  YahooService;

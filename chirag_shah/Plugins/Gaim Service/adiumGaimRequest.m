@@ -20,7 +20,7 @@
 #import "ESGaimRequestWindowController.h"
 #import "ESGaimFileReceiveRequestController.h"
 #import "ESGaimMeanwhileContactAdditionController.h"
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/NDRunLoopMessenger.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/ESFileTransfer.h>

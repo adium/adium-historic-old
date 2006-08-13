@@ -17,7 +17,7 @@
 #import "CBGaimServicePlugin.h"
 #import "GaimServices.h"
 #import "SLGaimCocoaAdapter.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AdiumLibgaim/SLGaimCocoaAdapter.h>
@@ -45,7 +45,9 @@
 #endif
 	GaduGaduService		= [[ESGaduGaduService alloc] init];
 	GTalkService		= [[AIGTalkService alloc] init];
+	LiveJournalService  = [[AILiveJournalService alloc] init];
 	MSNService			= [[ESMSNService alloc] init];
+	QQService			= [[ESQQService alloc] init];
 	SimpleService		= [[ESSimpleService alloc] init];
 	NovellService		= [[ESNovellService alloc] init];
 	JabberService		= [[ESJabberService alloc] init];
@@ -69,9 +71,11 @@
 #endif
 	[GaduGaduService release]; GaduGaduService = nil;
 	[GTalkService release]; GTalkService = nil;
+	[LiveJournalService release]; LiveJournalService = nil;
 	[JabberService release]; JabberService = nil;
 	[MSNService release]; MSNService = nil;
 	[SimpleService release]; SimpleService = nil;
+	[QQService release]; QQService = nil;
 	[YahooService release]; YahooService = nil;
 	[YahooJapanService release]; YahooJapanService = nil;
 	[NovellService release]; NovellService = nil;

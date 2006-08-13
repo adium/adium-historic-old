@@ -17,7 +17,7 @@
 #import "SMLoggerContact.h"
 #import <Adium/AIListObject.h>
 #import <Adium/AIServiceIcons.h>
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 
 @implementation SMLoggerContact
 - (SMLoggerContact *)initWithIdentifier:(NSString *)inIdentifier service:(NSString *)inService dbIdentifier:(int)inDbIdentifier isAccount:(BOOL)isAccount {

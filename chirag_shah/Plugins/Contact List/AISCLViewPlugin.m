@@ -15,7 +15,7 @@
  */
 
 #import "AIBorderlessListWindowController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIListLayoutWindowController.h"
 #import "AIListThemeWindowController.h"
 #import "AISCLViewPlugin.h"
@@ -53,15 +53,13 @@
 									   name:Interface_ContactListDidClose
 									 object:nil];
 
-	AIPreferenceController *preferenceController = [adium preferenceController];
-	
-	//Now register our other defaults, which are 
-    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:CONTACT_LIST_DEFAULTS
-																forClass:[self class]]
-	                              forGroup:PREF_GROUP_CONTACT_LIST];
+	//Now register our other defaults
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_LIST_DEFAULTS
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_CONTACT_LIST];
 	
 	//Observe window style changes
-	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 }
 
 - (void)uninstallPlugin
@@ -84,7 +82,7 @@
 - (void)showContactListAndBringToFront:(BOOL)bringToFront
 {
     if (!contactListWindowController) { //Load the window
-		if (windowStyle == WINDOW_STYLE_STANDARD) {
+		if (windowStyle == AIContactListWindowStyleStandard) {
 			contactListWindowController = [[AIStandardListWindowController listWindowController] retain];
 		} else {
 			contactListWindowController = [[AIBorderlessListWindowController listWindowController] retain];

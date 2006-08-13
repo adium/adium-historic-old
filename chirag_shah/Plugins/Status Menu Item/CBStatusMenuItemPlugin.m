@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "CBStatusMenuItemPlugin.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
@@ -43,13 +43,12 @@
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
 	//Observe for preference changes, initially loading our status menu item controller
-	AIPreferenceController *prefController = [adium preferenceController];
-	[prefController addObserver:self
+	[[adium preferenceController] addObserver:self
 	                 forKeyPath:PREF_KEYPATH_STATUS_MENU_ITEM_ENABLED
 	                    options:NSKeyValueObservingOptionNew
 	                    context:NULL];
 	[self observeValueForKeyPath:PREF_KEYPATH_STATUS_MENU_ITEM_ENABLED
-	                    ofObject:prefController
+	                    ofObject:[adium preferenceController]
 	                      change:nil
 	                     context:NULL];
 

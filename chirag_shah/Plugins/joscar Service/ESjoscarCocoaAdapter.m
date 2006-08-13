@@ -7,7 +7,7 @@
 
 #import "ESjoscarCocoaAdapter.h"
 #import "RAFjoscarAccount.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import <JavaVM/JavaVM.h>
 #import "joscarClasses.h"
 #import <Adium/NDRunLoopMessenger.h>
@@ -241,7 +241,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 {
 	Screenname			*sn = [userInfo get:@"Screenname"];
 	NSString			*message = [userInfo get:@"Away message"];
-
+	AILog(@"setAwayMessage...");
 	if (message && [message length])
 		[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 					setStatusMessage:[[message copy] autorelease]];
@@ -287,7 +287,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getInfoService] requestAwayMessage:sn];
 	
 	NSString	*UID = [[[sn getNormal] copy] autorelease];
-	AILog(@"setStatusUpdate: %@",[sn getFormatted]);
 	[accountProxy contactWithUID:UID
 					formattedUID:[[[sn getFormatted] copy] autorelease]
 						isOnline:[info isOnline]
@@ -322,7 +321,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 #define MUSICAL_NOTE [NSString stringWithUTF8String:"\xe2\x99\xab"]
 	if (iTMSLink && [iTMSLink length])
 		message = [NSString stringWithFormat:@"<a href=\"%@\">%@</a> %@", iTMSLink, MUSICAL_NOTE, message];
-
+	AILog(@"setincoming status message %@",message);
 	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 				setStatusMessage:[[message copy] autorelease]];
 }
@@ -344,6 +343,14 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 					   errorCode:[[errorCode copy] autorelease]];
 }
 
+- (void)sendBuddyAdditions:(NSTimer *)inTimer
+{
+	@synchronized(buddyAddTimer) {
+		[accountProxy gotBuddyAdditions:[buddyAddTimer userInfo]];
+		[buddyAddTimer release]; buddyAddTimer = nil;
+	}
+}
+
 /*
  * @brief A buddy was added
  *
@@ -355,12 +362,34 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	Group			*group = [userInfo get:@"Group"];	
 	Screenname		*sn = [buddy getScreenname];
 
-	AILog(@"Buddy added: %@",[sn getFormatted]);
-	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
-					formattedUID:[[[sn getFormatted] copy] autorelease]
-						   alias:[[[buddy getAlias] copy] autorelease]
-						 comment:[[[buddy getBuddyComment] copy] autorelease]
-					addedToGroup:[[[group getName] copy] autorelease]];
+	@synchronized(buddyAddTimer) {
+		if (!buddyAddTimer) {
+			buddyAddTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5
+															  target:self
+															selector:@selector(sendBuddyAdditions:)
+															userInfo:[NSMutableSet set]
+															 repeats:NO] retain];		
+		}
+		
+		NSMutableSet *buddyDictsSet = [buddyAddTimer userInfo];
+
+		NSMutableDictionary *buddyDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+			[[[sn getNormal] copy] autorelease], @"UID",
+			[[[sn getFormatted] copy] autorelease], @"FormattedUID", nil];
+	
+		NSString *alias = [buddy getAlias];
+		if (alias) [buddyDict setObject:[[alias copy] autorelease] forKey:@"Alias"];
+	
+		NSString *comment = [buddy getBuddyComment];
+		if (comment) [buddyDict setObject:[[comment copy] autorelease] forKey:@"Comment"];
+	
+		NSString *groupName = [group getName];
+		if (groupName) [buddyDict setObject:[[groupName copy] autorelease] forKey:@"Group"];
+		
+			AILog(@"%@ is %i",[sn getNormal], [[[aimConnection getBuddyInfoManager] getBuddyInfo:sn] isOnline]);
+			
+		[buddyDictsSet addObject:buddyDict];
+	}
 }
 
 /*
@@ -382,10 +411,23 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	BuddyInfo			*info = [userInfo get:@"BuddyInfo"];
 	NSData				*iconData = [NSData dataWithData:[joscarBridge dataFromByteBlock:[info getIconData]]];
 
-	AILog(@"+++ Icon update for %@ is %@",[sn getNormal],[[[NSImage alloc] initWithData:iconData] autorelease]);
-
-	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
-					  iconUpdate:iconData];
+	/*
+	 //Write out the data we're receiving if it's invalid.
+	 NSImage *image = [[[NSImage alloc] initWithData:iconData] autorelease];
+	 if (!image) {
+		 AILog(@"Null image from %@ : data is %@",[sn getFormatted], iconData);
+		 static int filenumber = 0;
+		 [iconData writeToFile:[NSString stringWithFormat:@"~/%i.jpg",++filenumber] 
+					atomically:NO];
+	 }
+	 */
+	
+	if (iconData && [iconData length]) {
+		[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
+						  iconUpdate:iconData];
+	} else {	
+		AILog(@"(joscarCocoaAdapter): --- %@: Got %@ icon data (byte block was %@)", [sn getFormatted], iconData, [info getIconData]);
+	}
 }
 
 
@@ -971,7 +1013,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	NSString			*newState = [ftState toString];
 	NSDictionary		*pollingUserInfo = nil;
 	NSValue				*identifier = [NSValue valueWithPointer:fileTransfer];
-	FileTransferStatus	fileTransferStatus;
+	AIFileTransferStatus	fileTransferStatus;
 	BOOL				shouldPollForStatus = NO;
 
 	AILog(@"File transfer update: %@ -- %@",userInfo, newState);
@@ -1394,16 +1436,12 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getBosService] setVisibleStatus:visible];
 }
 
-- (void)setStatusMessage:(NSString *)msg
-{
-	msg = [msg stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH];
-
-	[[aimConnection getBosService] setStatusMessage:msg];
-}
-
 - (void)setStatusMessage:(NSString *)msg withSongURL:(NSString *)itmsURL
 {
 	msg = [msg stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH];
+
+	//Can't set a URL longer than 255 characters or joscar will throw an exception.  No sense in setting a broken URL.
+	if ([itmsURL length] > 255) itmsURL = nil;
 
 	[[aimConnection getBosService] setStatusMessageSong:msg :itmsURL];
 }
@@ -1526,16 +1564,50 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		NSLog(@"modeName was nil, and this should never be so.");
 }
 
+- (void)setBuddyBlocked:(HashMap *)userInfo
+{
+	Screenname			*sn = [userInfo get:@"Screenname"];
+	
+	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
+				 changedToStatus:YES
+				   onPrivacyList:AIPrivacyTypeDeny];
+}
+
+- (void)setBuddyUnblocked:(HashMap *)userInfo
+{
+	Screenname			*sn = [userInfo get:@"Screenname"];
+	
+	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
+				 changedToStatus:NO
+				   onPrivacyList:AIPrivacyTypeDeny];
+}
+
+- (void)setBuddyAllowed:(HashMap *)userInfo
+{
+	Screenname			*sn = [userInfo get:@"Screenname"];
+	
+	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
+				 changedToStatus:YES
+				   onPrivacyList:AIPrivacyTypePermit];
+}
+
+- (void)setBuddyUnallowed:(HashMap *)userInfo
+{
+	Screenname			*sn = [userInfo get:@"Screenname"];
+	
+	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
+				 changedToStatus:NO
+				   onPrivacyList:AIPrivacyTypePermit];
+}
+
 #pragma mark Date conversions
 /*
  * @brief Convert a Java Date to an NSDate
  */
 NSDate* dateFromJavaDate(Date *javaDate)
 {
-	// [javaDate toString] format: "dow mon dd hh:mm:ss zzz yyyy"	
 	return (javaDate ? 
-			[NSCalendarDate dateWithString:[javaDate toString]
-							calendarFormat:@"%a %b %d %H:%M:%S %Z %Y"] :
+			[NSDate dateWithTimeIntervalSince1970:([javaDate getTime] / 1000)] :
 			nil);
 }
 

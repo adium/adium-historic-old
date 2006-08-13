@@ -22,6 +22,7 @@
 
 #import "ESGaduGaduService.h"
 #import "AIGTalkService.h"
+#import "AILiveJournalService.h"
 #import "ESJabberService.h"
 #import "ESMeanwhileService.h"
 #import "ESNovellService.h"
@@ -30,3 +31,4 @@
 #import "ESYahooService.h"
 #import "ESYahooJapanService.h"
 #import "ESZephyrService.h"
+#import "ESQQService.h"

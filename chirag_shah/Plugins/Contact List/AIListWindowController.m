@@ -14,15 +14,17 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIChatController.h"
-#import "AIAccountController.h"
-#import "AIInterfaceController.h"
+#import "AIListWindowController.h"
+
 #import "AIListLayoutWindowController.h"
 #import "AIListOutlineView.h"
 #import "AIListThemeWindowController.h"
-#import "AIListWindowController.h"
-#import "AIPreferenceController.h"
-#import "AIDockController.h"
+
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIDockControllerProtocol.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIFunctions.h>
 #import <Adium/AIListContact.h>
@@ -116,6 +118,7 @@
 - (void)dealloc
 {
 	[contactListController close];
+	[windowLastScreen release];
 
 	[super dealloc];
 }
@@ -154,7 +157,7 @@
 	//Show the contact list initially even if it is at a screen edge and supposed to slide out of view
 	[self delayWindowSlidingForInterval:5];
 
-	AIPreferenceController *preferenceController = [adium preferenceController];
+	id<AIPreferenceController> preferenceController = [adium preferenceController];
     //Observe preference changes
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
@@ -269,7 +272,7 @@
 			maxWindowWidth = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
 			forcedWindowWidth = -1;
 		} else {
-			if (windowStyle == WINDOW_STYLE_STANDARD/* || windowStyle == WINDOW_STYLE_BORDERLESS*/) {
+			if (windowStyle == AIContactListWindowStyleStandard/* || windowStyle == AIContactListWindowStyleBorderless*/) {
 				//In the non-transparent non-autosizing modes, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH has no meaning
 				maxWindowWidth = 10000;
 				forcedWindowWidth = -1;
@@ -320,7 +323,7 @@
 		 * A maximum width less than this can make the list autosize smaller, but if it has its druthers it'll be a sane
 		 * size.
 		 */
-		[contactListView setMinimumDesiredWidth:((windowStyle == WINDOW_STYLE_STANDARD) ? 175 : 0)];
+		[contactListView setMinimumDesiredWidth:((windowStyle == AIContactListWindowStyleStandard) ? 175 : 0)];
 
 		[[self window] setMinSize:thisMinimumSize];
 		[[self window] setMaxSize:thisMaximumSize];
@@ -381,10 +384,7 @@
 
 	if (shouldRevealWindowAndDelaySliding) {
 		[self delayWindowSlidingForInterval:2];
-
-		if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
-			[self slideWindowOnScreenWithAnimation:NO];
-		}
+		[self slideWindowOnScreenWithAnimation:NO];
 
 	} else {
 		//Do a slide immediately if needed (to display as per our new preferneces)
@@ -491,16 +491,23 @@
 
 - (void)screenParametersChanged:(NSNotification *)notification
 {
-	NSWindow * window = [self window];
+	NSWindow	*window = [self window];
 	
-	NSScreen * windowScreen = [window screen];
-	if(!windowScreen) windowScreen = [NSScreen mainScreen];
+	NSScreen	*windowScreen = [window screen];
+	if (!windowScreen) {
+		if ([[NSScreen screens] containsObject:windowLastScreen]) {
+			windowScreen = windowLastScreen;
+		} else {
+			[windowLastScreen release]; windowLastScreen = nil;
+			windowScreen = [NSScreen mainScreen];
+		}
+	}
 
 	NSRect newScreenFrame = [windowScreen frame];
 	
 	if ([[NSScreen screens] count] &&
 		(windowScreen == [[NSScreen screens] objectAtIndex:0])) {
-		newScreenFrame.size.height -= [NSMenuView menuBarHeight];
+			newScreenFrame.size.height -= [NSMenuView menuBarHeight];
 	}
 
 	NSRect listFrame = [window frame];
@@ -510,7 +517,7 @@
 	
 	[self delayWindowSlidingForInterval:2];
 	[self slideWindowOnScreenWithAnimation:NO];
-	
+
 	[contactListController contactListDesiredSizeChanged];
 
 	currentScreen = [window screen];
@@ -544,7 +551,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		screenSlideBoundaryRect.size.height = NSMaxY([menubarScreen visibleFrame]) - NSMinY([menubarScreen frame]);
 		for (int i = 1; i < numScreens; i++) {
 			screenSlideBoundaryRect = NSUnionRect(screenSlideBoundaryRect, [[screens objectAtIndex:i] frame]);
-		}		
+		}
 	}
 }
 
@@ -717,16 +724,24 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 #pragma mark Dock-like hiding
 
+- (NSScreen *)windowLastScreen
+{
+	return windowLastScreen;
+}
+
 void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdgeMask windowSlidOffScreenEdgeMask, AIListController *contactListController, BOOL keepOnScreen)
 {
 	NSScreen *windowScreen = [inWindow screen];
-	if(!windowScreen) windowScreen = [NSScreen mainScreen];
+	if (!windowScreen) windowScreen = [(AIListWindowController *)[inWindow windowController] windowLastScreen];
+	if (!windowScreen) windowScreen = [NSScreen mainScreen];
+
 	BOOL	finishedX = NO, finishedY = NO;
 	NSRect	frame = [inWindow frame];
-	float yOff = (targetPoint.y + frame.size.height) - ([windowScreen frame].size.height - [NSMenuView menuBarHeight]);
+	float yOff = (targetPoint.y + NSHeight(frame)) - NSMaxY([windowScreen frame]);
+	if (windowScreen == [[NSScreen screens] objectAtIndex:0]) yOff -= [NSMenuView menuBarHeight];
 	if(yOff > 0) targetPoint.y -= yOff;
 	
-	do
+	do 
 	{
 		frame = [inWindow frame];
 #define INCREMENT 15
@@ -849,6 +864,9 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 
 	[self setSavedFrame:newWindowFrame];
 
+	[windowLastScreen release];
+	windowLastScreen = [[window screen] retain];
+
 	for (edge = 0; edge < 4; edge++) {
 		if (rectEdgeMask & (1 << edge)) {
 			newWindowFrame = AIRectByAligningRect_edge_toRect_edge_(newWindowFrame, AIOppositeRectEdge_(edge), screenSlideBoundaryRect, edge);
@@ -865,20 +883,24 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 
 - (void)slideWindowOnScreenWithAnimation:(BOOL)animate
 {
-	NSWindow	*window = [self window];
-	NSRect		windowFrame = [window frame];
-
-	if (!NSEqualRects(windowFrame, oldFrame)) {
-		[window orderFront:nil]; 
+	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
+		NSWindow	*window = [self window];
+		NSRect		windowFrame = [window frame];
 		
-		windowSlidOffScreenEdgeMask = AINoEdges;
-		
-		[[self window] setHasShadow:listHasShadow];
-		
-		if (animate) {
-			[self slideWindowToPoint:oldFrame.origin];
-		} else {
-			[self moveWindowToPoint:oldFrame.origin];
+		if (!NSEqualRects(windowFrame, oldFrame)) {
+			[window orderFront:nil]; 
+			
+			windowSlidOffScreenEdgeMask = AINoEdges;
+			
+			[[self window] setHasShadow:listHasShadow];
+			
+			if (animate) {
+				[self slideWindowToPoint:oldFrame.origin];
+			} else {
+				[self moveWindowToPoint:oldFrame.origin];
+			}
+			
+			[windowLastScreen release];	windowLastScreen = nil;
 		}
 	}
 }

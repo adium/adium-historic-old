@@ -14,6 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAlternatingRowTableView.h"
+#import "AIGradient.h"
+#import "AIImageAdditions.h"
+#import "AIColorAdditions.h"
 
 /*
  A subclass of table view that adds:
@@ -27,6 +30,9 @@
 - (void)_initAlternatingRowTableView;
 @end
 
+@interface NSTableView (Undocumented)
+- (id)_highlightColorForCell:(NSCell *)cell;
+@end
 
 @implementation AIAlternatingRowTableView
 
@@ -48,15 +54,17 @@
 
 - (void)_initAlternatingRowTableView
 {
-    drawsAlternatingRows = NO;
 	acceptFirstMouse = NO;
-    alternatingRowColor = [[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0] retain];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(alternatingRowTableViewSelectionDidChange:)
+												 name:NSTableViewSelectionDidChangeNotification
+											   object:self];	
 }
 
 - (void)dealloc
 {
-    [alternatingRowColor release];
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
     [super dealloc];
 }
 
@@ -64,17 +72,9 @@
 //Configuring ----------------------------------------------------------------------
 - (void)setDrawsAlternatingRows:(BOOL)flag
 {
-    drawsAlternatingRows = flag;
-    [self setNeedsDisplay:YES];
-}
+	[self setUsesAlternatingRowBackgroundColors:flag];
 
-- (void)setAlternatingRowColor:(NSColor *)color
-{
-    if (color != alternatingRowColor) {
-        [alternatingRowColor release];
-        alternatingRowColor = [color retain];
-        [self setNeedsDisplay:YES];
-    }
+    [self setNeedsDisplay:YES];
 }
 
 //Filter keydowns looking for the delete key (to delete the current selection)
@@ -96,6 +96,16 @@
     }
 }
 
+- (void)setDrawsGradientSelection:(BOOL)inDrawsGradientSelection
+{
+	drawsGradientSelection = inDrawsGradientSelection;
+	[self setNeedsDisplay:YES];
+}
+
+- (BOOL)drawsGradientSelection
+{
+	return drawsGradientSelection;
+}
 
 // First mouse ----------------------------------------------------------------------
 - (void)setAcceptsFirstMouse:(BOOL)inAcceptFirstMouse
@@ -107,7 +117,6 @@
 	return acceptFirstMouse;
 }
 
-
 // Scrolling ----------------------------------------------------------------------
 - (void)tile
 {
@@ -116,64 +125,77 @@
     [[self enclosingScrollView] setVerticalLineScroll: ([self rowHeight] + [self intercellSpacing].height) ];
 }
 
-
-// Drawing ----------------------------------------------------------------------
-//Draw the alternating colors and grid below the "bottom" of the outlineview
-- (void)drawRect:(NSRect)rect
+#pragma mark Gradient selection and alternating rows
+/*
+ * @brief If we are drawing a gradient selection, returns the gradient to draw
+ */
+- (AIGradient *)selectedControlGradient
 {
-    NSRect	rowRect;
-    int		rowHeight;
-    BOOL	coloredRow;
-    int		numberOfColumns, numberOfRows;
-
-    //Draw the rest of the outline view first
-    [super drawRect:rect];
-
-    //Setup
-    numberOfRows = [self numberOfRows];
-    numberOfColumns = [self numberOfColumns];
-    rowHeight = [self rowHeight] + [self intercellSpacing].height;
-    if (numberOfRows == 0) {
-        rowRect = NSMakeRect(0,0,rect.size.width,rowHeight);
-        coloredRow = YES;        
-    } else {
-        rowRect = [self rectOfRow:numberOfRows-1];
-        rowRect.origin.y += rowHeight;
-        coloredRow = !(numberOfRows % 2);        
-    }
-
-    //Draw the grid
-    while (rowRect.origin.y < rect.origin.y + rect.size.height) {
-        [self _drawRowInRect:rowRect colored:coloredRow selected:NO];
-
-        //Move to the next row
-        coloredRow = !coloredRow;
-        rowRect.origin.y += rowHeight;            
-    }
+	return [AIGradient selectedControlGradientWithDirection:AIVertical];
 }
 
-//Draw alternating colors
-- (void)drawRow:(int)row clipRect:(NSRect)rect
+- (void)highlightSelectionInClipRect:(NSRect)clipRect
 {
-    [self _drawRowInRect:[self rectOfRow:row] colored:!(row % 2) selected:[self isRowSelected:row]];
-
-    [super drawRow:row clipRect:rect];
+	if (drawsGradientSelection && [[self window] isKeyWindow] && ([[self window] firstResponder] == self)) {
+		NSIndexSet *indices = [self selectedRowIndexes];
+		unsigned int bufSize = [indices count];
+		unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
+		unsigned int i = 0, j = 0;
+		
+		AIGradient *gradient = [self selectedControlGradient];
+		
+		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
+		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
+		
+		NSRect *selectionLineRects = (NSRect *)malloc(sizeof(NSRect) * bufSize);
+		
+		while (i < bufSize) {
+			int startIndex = buf[i];
+			int lastIndex = buf[i];
+			while ((i + 1 < bufSize) &&
+				   (buf[i + 1] == lastIndex + 1)){
+				i++;
+				lastIndex++;
+			}
+			
+			NSRect thisRect = NSUnionRect([self rectOfRow:startIndex],
+										  [self rectOfRow:lastIndex]);
+			[gradient drawInRect:thisRect];
+			
+			//Draw a line at the light side, to make it look a lot cleaner
+			thisRect.size.height = 1;
+			selectionLineRects[j++] = thisRect;			
+			
+			i++;		
+		}
+		
+		[[[gradient firstColor] darkenAndAdjustSaturationBy:0.1] set];
+		NSRectFillListUsingOperation(selectionLineRects, j, NSCompositeSourceOver);
+		
+		free(buf);
+		free(selectionLineRects);
+		
+	} else {
+		[super highlightSelectionInClipRect:clipRect];
+	}
 }
 
-//Draw a row
-- (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected
+//Override to prevent drawing glitches; otherwise, the cell will try to draw a highlight, too
+- (id)_highlightColorForCell:(NSCell *)cell
 {
-    if (drawsAlternatingRows) { //Draw alternating rows in the outline view
-        if (colored && !selected) {            
-			[alternatingRowColor set];
-            [NSBezierPath fillRect:rect/*segmentRect*/];
-        }
-    }
+	if (drawsGradientSelection && [[self window] isKeyWindow] && ([[self window] firstResponder] == self)) {
+		return nil;
+	} else {
+		return [super _highlightColorForCell:cell];
+	}
 }
 
-- (NSColor *)_highlightColorForCell
+- (void)alternatingRowTableViewSelectionDidChange:(NSNotification *)notification
 {
-	return ([NSColor clearColor]);
+	if (drawsGradientSelection) {
+		//We do fancy drawing, so we need a full redisplay when selection changes
+		[self setNeedsDisplay:YES];
+	}
 }
 
 @end

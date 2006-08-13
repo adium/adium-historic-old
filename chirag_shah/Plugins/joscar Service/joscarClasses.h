@@ -811,6 +811,7 @@
 								newWithSignature:@"(J)", \
 								(timeInterval)]
 @interface Date : NSObject {}
+- (long long)getTime;
 @end
 
 /*

@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIInterfaceController.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import "ESPanelAlertDetailPane.h"
 #import "ErrorMessageHandlerPlugin.h"
 #import "ErrorMessageWindowController.h"

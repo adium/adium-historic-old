@@ -57,6 +57,7 @@ typedef enum {
 	
 	BOOL								permitSlidingInForeground;
 	AIRectEdgeMask						windowSlidOffScreenEdgeMask;
+	NSScreen							*windowLastScreen;
 	NSTimer								*slideWindowIfNeededTimer;
 	
 	NSRect								oldFrame;
