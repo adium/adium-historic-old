@@ -447,21 +447,20 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 #define IS_GROUP [listObject isKindOfClass:[AIListGroup class]]
 #define IS_CONTACT (!IS_GROUP)
 
-	if([attribute isEqualToString:NSAccessibilityRoleAttribute] || [attribute isEqualToString:NSAccessibilitySubroleAttribute]) {
+	if([attribute isEqualToString:NSAccessibilityRoleAttribute]) {
 		value = IS_CONTACT ? @"AIContactListItem": @"AIContactListGroup";
 	} else if([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute]){
 		NSString *currentStatus = nil;
-		
-		if([listObject statusType] == AIAvailableStatusType) {
-			currentStatus = AILocalizedString(@"available contact", /*comment*/ nil);
-		} else if([listObject statusType] == AIAwayStatusType) {
-			currentStatus = AILocalizedString(@"away contact", /*comment*/ nil);
-		} else if([listObject statusType] == AIIdleStatus) {
-			currentStatus = AILocalizedString(@"idle contact", /*comment*/ nil);
-		} else if(([listObject statusType] == AIIdleStatus) && ([listObject statusType]==AIAwayStatusType)) {
-			currentStatus = AILocalizedString(@"idle and away contact", /*comment*/ nil);
-		}
-		value = IS_CONTACT ? AILocalizedString(currentStatus, /*comment*/ nil) : AILocalizedString(@"contact list group", /*comment*/ nil);
+	if([listObject statusType] == AIAvailableStatusType) {
+		currentStatus = AILocalizedString(@"available contact", /*comment*/ nil);
+	} else if([listObject statusType] == AIAwayStatusType) {
+		currentStatus = AILocalizedString(@"away contact", /*comment*/ nil);
+	} else if([listObject statusType] == AIIdleStatus) {
+		currentStatus = AILocalizedString(@"idle contact", /*comment*/ nil);
+	} else if(([listObject statusType] == AIIdleStatus) && ([listObject statusType]==AIAwayStatusType)) {
+		currentStatus = AILocalizedString(@"idle and away contact", /*comment*/ nil);
+	}
+	value = IS_CONTACT ? AILocalizedString(currentStatus, /*comment*/ nil) : AILocalizedString(@"contact list group", /*comment*/ nil);
 
 	} else if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
 		value = [self labelString];
@@ -469,6 +468,8 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		value = [controlView window];
 	} else if([attribute isEqualToString:@"ClassName"]) {
 		value = NSStringFromClass([self class]);
+	} else if([attribute isEqualToString:NSAccessibilityFocusedUIElementAttribute]) {
+		if ([self isHighlighted]) value = listObject;
 	} else {
 		value = [super accessibilityAttributeValue:attribute];
 	}
