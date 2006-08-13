@@ -15,8 +15,8 @@
  */
 
 #import "AITabStatusIconsPlugin.h"
-#import "AIContactController.h"
-#import "AIChatController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListObject.h>

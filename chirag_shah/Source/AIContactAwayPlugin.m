@@ -15,7 +15,7 @@
  */
 
 #import "AIContactAwayPlugin.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIStatusController.h"
 #import <Adium/AIListObject.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>

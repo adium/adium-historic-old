@@ -15,17 +15,12 @@
  */
 
 #import <Adium/AIObject.h>
+#import <Adium/AIEmoticonControllerProtocol.h>
 
-#define PREF_GROUP_EMOTICONS				@"Emoticons"
-#define KEY_EMOTICON_ACTIVE_PACKS			@"Active Emoticon Packs"
-#define KEY_EMOTICON_DISABLED				@"Disabled Emoticons"
-#define KEY_EMOTICON_PACK_ORDERING			@"Emoticon Pack Ordering"
-#define KEY_EMOTICON_SERVICE_APPROPRIATE	@"Service Appropriate Emoticons"
+@protocol AIEmoticonController, AIContentFilter;
+@class AIEmoticonPreferences;
 
-@protocol AIContentFilter;
-@class AIEmoticonPreferences, AIEmoticonPack, AIEmoticon;
-
-@interface AIEmoticonController : AIObject <AIController, AIContentFilter> {
+@interface AIEmoticonController : AIObject <AIEmoticonController, AIContentFilter> {
     AIEmoticonPreferences		*prefs;
     BOOL                        observingContent;
 
@@ -38,15 +33,5 @@
 	
 	BOOL						serviceAppropriateEmoticons;
 }
-
-- (NSArray *)availableEmoticonPacks;
-- (AIEmoticonPack *)emoticonPackWithName:(NSString *)inName;
-- (NSArray *)activeEmoticons;
-- (NSArray *)activeEmoticonPacks;
-- (void)moveEmoticonPacks:(NSArray *)inPacks toIndex:(int)index;
-- (void)setEmoticonPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled;
-- (void)setEmoticon:(AIEmoticon *)inEmoticon inPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled;
-- (void)flushEmoticonImageCache;
-- (void)xtrasChanged:(NSNotification *)notification;
 
 @end

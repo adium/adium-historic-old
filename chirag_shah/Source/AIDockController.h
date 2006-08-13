@@ -15,34 +15,11 @@
  */
 
 #import <Adium/AIObject.h>
+#import <Adium/AIDockControllerProtocol.h>
 
-#define Dock_IconWillChange			@"Dock_IconWillChange"
-#define Dock_IconDidChange			@"Dock_IconDidChange"
+@protocol AIDockController, AIFlashObserver;
 
-#define PREF_GROUP_APPEARANCE		@"Appearance"
-
-#define KEY_ACTIVE_DOCK_ICON		@"Dock Icon"
-#define FOLDER_DOCK_ICONS			@"Dock Icons"
-
-#define KEY_ANIMATE_DOCK_ICON	@"Animate Dock Icon on Unread Messages"
-#define KEY_BADGE_DOCK_ICON		@"Badge Dock Icon on Unread Messages"
-
-@class AIIconState;
-
-typedef enum {
-    BOUNCE_NONE = 0,
-    BOUNCE_ONCE,
-    BOUNCE_REPEAT,
-    BOUNCE_DELAY5,
-    BOUNCE_DELAY10,
-    BOUNCE_DELAY15,
-    BOUNCE_DELAY30,
-    BOUNCE_DELAY60
-} DOCK_BEHAVIOR;
-
-@protocol AIController, AIFlashObserver;
-
-@interface AIDockController: AIObject <AIController, AIFlashObserver> {
+@interface AIDockController: AIObject <AIDockController, AIFlashObserver> {
     NSTimer 				*animationTimer;
     NSTimer					*bounceTimer;
     
@@ -57,24 +34,6 @@ typedef enum {
     BOOL					needsDisplay;
 	
 	NSTimeInterval			currentBounceInterval;
-	}
-
-//Icon animation & states
-- (void)setIconStateNamed:(NSString *)inName;
-- (void)removeIconStateNamed:(NSString *)inName;
-- (void)setIconState:(AIIconState *)iconState named:(NSString *)inName;
-- (float)dockIconScale;
-- (NSImage *)baseApplicationIconImage;
-
-//Special access to icon pack loading
-- (NSArray *)availableDockIconPacks;
-- (BOOL)currentIconSupportsIconStateNamed:(NSString *)inName;;
-- (NSMutableDictionary *)iconPackAtPath:(NSString *)folderPath;
-- (void)getName:(NSString **)outName previewState:(AIIconState **)outIconState forIconPackAtPath:(NSString *)folderPath;
-- (AIIconState *)previewStateForIconPackAtPath:(NSString *)folderPath;
-
-//Bouncing & behavior
-- (BOOL)performBehavior:(DOCK_BEHAVIOR)behavior;
-- (NSString *)descriptionForBehavior:(DOCK_BEHAVIOR)behavior;
+}
 
 @end

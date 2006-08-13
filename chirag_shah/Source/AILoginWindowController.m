@@ -17,7 +17,7 @@
 // $Id$
 
 #import "AILoginWindowController.h"
-#import "AILoginController.h"
+#import <Adium/AILoginControllerProtocol.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 
 //Preference Keys

@@ -7,7 +7,8 @@
 //
 
 #import "OWABSearchWindowController.h"
-#import <Adium/AIAccountController.h>
+#import <Adium/AIAccountControllerProtocol.h>
+
 #import <Adium/AIService.h>
 #import <Adium/AIServiceMenu.h>
 #import <Adium/AIServiceIcons.h>

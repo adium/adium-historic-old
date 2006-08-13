@@ -14,11 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
-#import "AIChatController.h"
-#import "AIContactController.h"
-#import "AIContentController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+
 #import "AdiumURLHandling.h"
 #import "XtrasInstaller.h"
 #import "ESTextAndButtonsWindowController.h"
@@ -380,8 +383,7 @@
 
 - (void)promptUser
 {
-	AIPreferenceController *prefs = [adium preferenceController];
-	if(![prefs preferenceForKey:DONTPROMPTFORURL group:URLHandlingGroup])
+	if(![[adium preferenceController] preferenceForKey:DONTPROMPTFORURL group:URLHandlingGroup])
 		[[adium interfaceController] displayQuestion:AILocalizedString(@"Change default messaging client?", nil)
 									 withDescription:AILocalizedString(@"Adium is not your default Instant Messaging client. The default client is loaded when you click messaging URLs in web pages. Would you like Adium to become the default?", nil)
 									 withWindowTitle:nil

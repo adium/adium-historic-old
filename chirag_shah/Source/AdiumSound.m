@@ -15,10 +15,10 @@
  */
 
 #import "AISoundController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AdiumSound.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <Adium/QTSoundFilePlayer.h>
+#import "QTSoundFilePlayer.h"
 
 #define SOUND_DEFAULT_PREFS				@"SoundPrefs"
 #define MAX_CACHED_SOUNDS				4			//Max cached sounds
@@ -209,7 +209,7 @@
  */
 - (void)workspaceSessionDidBecomeActive:(NSNotification *)notification
 {
-	[self setSoundsAreMuted:YES];
+	[self setSoundsAreMuted:NO];
 }
 
 /*!
@@ -222,11 +222,13 @@
 
 - (void)setSoundsAreMuted:(BOOL)mute
 {
+	AILog(@"setSoundsAreMuted: %i",mute);
 	if (soundsAreMuted > 0 && !mute)
 		soundsAreMuted--;
 	else if (mute)
 		soundsAreMuted++;
-	if (soundsAreMuted == 0)
+
+	if (soundsAreMuted == 1)
 		[self _stopAndReleaseAllSounds];
 }
 

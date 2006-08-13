@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIContactAccountsPane.h"
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
@@ -25,7 +25,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListGroup.h>
-#import <Adium/AILocalizationTextField.h>
+#import "AILocalizationTextField.h"
 #import <Adium/AIMetaContact.h>
 
 @interface AIContactAccountsPane (PRIVATE)
@@ -45,7 +45,7 @@
 /*!
  * @brief Category
  */
-- (CONTACT_INFO_CATEGORY)contactInfoCategory
+- (AIContactInfoCategory)contactInfoCategory
 {
     return AIInfo_Accounts;
 }
@@ -66,8 +66,9 @@
 	[label_listedOnTheFollowingOfYourAccounts setLocalizedString:AILocalizedString(@"Listed on the following of your accounts:",nil)];
 
 	//Configure Table view
-	[tableView_accounts setDrawsAlternatingRows:YES];
+	[tableView_accounts setUsesAlternatingRowBackgroundColors:YES];
 	[tableView_accounts setAcceptsFirstMouse:YES];
+
 	[[[tableView_accounts tableColumnWithIdentifier:@"account"] headerCell] setTitle:AILocalizedString(@"On Account",nil)];
 	[[[tableView_accounts tableColumnWithIdentifier:@"group"] headerCell] setTitle:AILocalizedString(@"In Group",nil)];
 
@@ -180,7 +181,7 @@
 	if ([identifier isEqualToString:@"account"]) {
 		NSString	*accountFormattedUID = [account formattedUID];
 		
-		if ([account integerStatusObjectForKey:@"Online"]) {
+		if ([account online]) {
 			return accountFormattedUID;
 			
 		} else {

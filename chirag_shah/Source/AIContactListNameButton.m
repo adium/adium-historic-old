@@ -32,7 +32,7 @@
 		NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																				lineBreakMode:NSLineBreakByTruncatingMiddle];
 		[paragraphStyle setMaximumLineHeight:editingFrame.size.height];
-		NSAttributedString		*attributedString = [[NSAttributedString alloc] initWithString:startingString
+		NSAttributedString		*attributedString = [[NSAttributedString alloc] initWithString:(startingString ? startingString : @"")
 																					 attributes:[NSDictionary dictionaryWithObjectsAndKeys:
 																						 [[self cell] font], NSFontAttributeName,
 																						 paragraphStyle, NSParagraphStyleAttributeName,
@@ -95,6 +95,16 @@
 		[editUserInfo release];
 		editUserInfo = [inUserInfo retain];
 	}
+}
+
+- (NSRect)trackingRect
+{
+	NSRect trackingRect = [super trackingRect];
+	
+	//Don't let the bottommost part of our view qualify for highlighting; this lets it get closer to views below without leaving whitespace.
+	trackingRect.size.height -= 2;
+
+	return trackingRect;
 }
 
 @end

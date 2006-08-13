@@ -6,18 +6,18 @@
 //
 
 #import "AdiumSetupWizard.h"
-#import "AIAccountController.h"
-#import "AIContentController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import "SetupWizardBackgroundView.h"
 #import "GBFireImporter.h"
 #import <AIUtilities/AIImageAdditions.h>
-#import <Adium/AIServiceMenu.h>
+#import "AIServiceMenu.h"
 #import <Adium/AIService.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AITextFieldAdditions.h>
 #import <AIUtilities/AIStringFormatter.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
-#import <Adium/AIHTMLDecoder.h>
+#import "AIHTMLDecoder.h"
 
 #define ACCOUNT_SETUP_IDENTIFIER	@"account_setup"
 #define IMPORT_IDENTIFIER			@"import_client"
@@ -57,7 +57,7 @@ enum{
 - (void)localizeItems
 {
 	[button_goBack setLocalizedString:AILocalizedString(@"Go Back","'go back' button title")];
-	[textField_passwordLabel setLocalizedString:AILocalizedStringFromTable(@"Password:", @"AdiumFramework", "Label for the password field in the account preferences")];
+	[textField_passwordLabel setLocalizedString:AILocalizedString(@"Password:", "Label for the password field in the account preferences")];
 	[textField_serviceLabel	setLocalizedString:AILocalizedString(@"Service:",nil)];
 	
 	[button_alternate setLocalizedString:AILocalizedString(@"Skip Import","button title for skipping the import of another client in the setup wizard")];
@@ -144,16 +144,15 @@ enum{
 			if (password && [password length] != 0) {
 				[[adium accountController] setPassword:password forAccount:account];
 			}
-			
+			AILog(@"AdiumSetupWizard: Creating account %@ on service %@",account,service);
 			//New accounts need to be added to our account list once they're configured
 			[[adium accountController] addAccount:account];
 			
 			//Put new accounts online by default
-			[account setPreference:[NSNumber numberWithBool:YES]
-							forKey:@"Online"
-							 group:GROUP_ACCOUNT_STATUS];
+			[account setShouldBeOnline:YES];
 			
 			addedAnAccount = YES;
+
 		} else {
 			//Successful without having a UID entered if they already added at least one account; unsuccessful otherwise.
 			success = addedAnAccount;
@@ -244,7 +243,7 @@ enum{
 		[AIStringFormatter stringFormatterAllowingCharacters:[service allowedCharactersForAccountName]
 													  length:[service allowedLengthForAccountName]
 											   caseSensitive:[service caseSensitive]
-												errorMessage:AILocalizedStringFromTable(@"The characters you're entering are not valid for an account name on this service.", @"AdiumFramework", nil)]];
+												errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.", nil)]];
 	[[textField_username cell] setPlaceholderString:[service UIDPlaceholder]];
 	
 	BOOL showPasswordField = ![service requiresPassword];
@@ -284,12 +283,13 @@ enum{
 													 withDefaultAttributes:[[textView_addAccountMessage textStorage] attributesAtIndex:0
 																														effectiveRange:NULL]];
 			[[textView_addAccountMessage textStorage] setAttributedString:accountMessage];
-			
 			setupAccountTabViewItem = YES;
 		}
 
 		AIService *service = [[popUp_services selectedItem] representedObject];
 		[textField_username setStringValue:@""];
+		[[self window] makeFirstResponder:textField_username];
+
 		[textField_password setStringValue:@""];
 
 		//The continue button is only initially enabled if the user has added at least one account

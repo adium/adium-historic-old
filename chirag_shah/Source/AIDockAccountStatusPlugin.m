@@ -14,12 +14,13 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
-#import "AIContactController.h"
 #import "AIDockAccountStatusPlugin.h"
-#import "AIDockController.h"
-#import "AIStatusController.h"
-#import "AIPreferenceController.h"
+
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIDockControllerProtocol.h>
+#import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIStatus.h>
@@ -84,8 +85,8 @@
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if (inObject == nil || [inObject isKindOfClass:[AIAccount class]]) {
-		AIDockController	*dockController = [adium dockController];
-		BOOL				shouldUpdateStatus = NO;
+		id<AIDockController>	dockController = [adium dockController];
+		BOOL					shouldUpdateStatus = NO;
 		
 		if (inObject == nil || [inModifiedKeys containsObject:@"Online"]) {
 			if ([self _accountsWithBoolKey:@"Online"] > 0) {

@@ -7,8 +7,8 @@
 //
 
 #import "RAFBlockEditorWindowController.h"
-#import "AIAccountController.h"
-#import "AIContactController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import <AIUtilities/AICompletingTextField.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -17,14 +17,6 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIService.h>
-
-#define BLOCK_EDITOR_TITLE AILocalizedString(@"Privacy Settings","Privacy Settings window title")
-#define BLOCK_DONE	AILocalizedString(@"Done","Done button for Privacy Settings")
-#define BLOCK_BLOCK	AILocalizedString(@"Add","Add button for Privacy Settings")
-#define BLOCK_CANCEL	AILocalizedString(@"Cancel","Cancel button for Privacy Settings")
-#define BLOCK_ACCOUNT AILocalizedString(@"Account:",nil)
-#define BLOCK_BUDDY_COL AILocalizedString(@"Contact","Title of column containing user IDs of blocked contacts")
-#define BLOCK_ACCOUNT_COL AILocalizedString(@"Account","Title of column containing blocking accounts")
 
 @interface RAFBlockEditorWindowController (PRIVATE)
 - (NSMenu *)privacyOptionsMenu;
@@ -50,13 +42,16 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 
 - (void)windowDidLoad
 {
-	[[self window] setTitle:BLOCK_EDITOR_TITLE];
-	[cancelButton setTitle:BLOCK_CANCEL];
-	[blockButton setTitle:BLOCK_BLOCK];
-	[accountText setStringValue:BLOCK_ACCOUNT];
-	[[buddyCol headerCell] setTitle:BLOCK_BUDDY_COL];
-	[[accountCol headerCell] setTitle:BLOCK_ACCOUNT_COL];
+	[[self window] setTitle:AILocalizedString(@"Privacy Settings", nil)];
+	[cancelButton setLocalizedString:AILocalizedString(@"Cancel","Cancel button for Privacy Settings")];
+	[blockButton setLocalizedString:AILocalizedString(@"Add","Add button for Privacy Settings")];
+	[[buddyCol headerCell] setTitle:AILocalizedString(@"Contact","Title of column containing user IDs of blocked contacts")];
+	[[accountCol headerCell] setTitle:AILocalizedString(@"Account","Title of column containing blocking accounts")];
+	[accountText setLocalizedString:AILocalizedString(@"Account:",nil)];
 
+	[label_account setLocalizedString:AILocalizedString(@"Account:",nil)];
+	[label_privacyLevel setLocalizedString:AILocalizedString(@"Privacy level:", nil)];
+		
 	accountColumnsVisible = YES;
 	[accountCol retain];
 
@@ -76,12 +71,16 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 									   name:@"AIPrivacySettingsChangedOutsideOfPrivacyWindow"
 									 object:nil];
 	
+	[[adium contactController] registerListObjectObserver:self];
+
 	[super windowDidLoad];
 }
 
 - (void)windowWillClose:(id)sender
 {
 	[super windowWillClose:sender];
+
+	[[adium contactController] unregisterListObjectObserver:self];
 
 	[[adium notificationCenter] removeObserver:self];
 	[sharedInstance release]; sharedInstance = nil;
@@ -673,6 +672,15 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 - (void)privacySettingsChangedExternally:(NSNotification *)inNotification
 {
 	[self accountMenu:accountMenu didSelectAccount:[self selectedAccount]];	
+}
+
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+{
+	if ([inModifiedKeys containsObject:KEY_IS_BLOCKED]) {
+		[self privacySettingsChangedExternally:nil];
+	}
+	
+	return nil;
 }
 
 #pragma mark Table view

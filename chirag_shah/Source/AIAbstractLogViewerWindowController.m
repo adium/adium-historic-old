@@ -5,15 +5,15 @@
 //  Created by Evan Schoenberg on 3/24/06.
 //
 
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "AIChatLog.h"
-#import "AIContactController.h"
-#import "AIContentController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 #import "AILogViewerWindowController.h"
 #import "AILoggerPlugin.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "ESRankingCell.h" 
 #import "GBChatlogHTMLConverter.h"
 #import <AIUtilities/AIArrayAdditions.h>
@@ -34,6 +34,8 @@
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIUserIcons.h>
+
+#import "AILogDateFormatter.h"
 
 #import "KFTypeSelectTableView.h"
 #import "KNShelfSplitView.h"
@@ -79,6 +81,7 @@
 - (void)openLogAtPath:(NSString *)inPath;
 - (void)rebuildContactsList;
 - (void)filterForContact:(AIListContact *)inContact;
+- (void)selectCachedIndex;
 
 - (void)deleteSelection:(id)sender;
 @end
@@ -320,7 +323,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	
 	[toArray sortUsingFunction:toArraySort context:NULL];
 	[outlineView_contacts reloadData];
-	NSLog(@"selection rebuild: changed");
+
 	[self outlineViewSelectionDidChange:nil];
 }
 
@@ -590,6 +593,9 @@ static int toArraySort(id itemA, id itemB, void *context);
 		searchIDToReattemptWhenComplete = -1;
 		[self startSearchingClearingCurrentResults:NO];
 	}
+	
+	if(deleteOccurred)
+		[self selectCachedIndex];
 
     //Update status
     [self updateProgressDisplay];
@@ -662,7 +668,39 @@ static int toArraySort(id itemA, id itemB, void *context);
 					displayText = [[AIHTMLDecoder decodeHTML:logFileText] mutableCopy];
 				}
 			}else if ([[theLog path] hasSuffix:@".chatlog"]){
-				logFileText = [GBChatlogHTMLConverter readFile:[logBasePath stringByAppendingPathComponent:[theLog path]]];
+				NSString *logFullPath = [logBasePath stringByAppendingPathComponent:[theLog path]];
+
+				//If this log begins with a malformed UTF-8 BOM (which was written out by Adium for a brief time between 1.0b7 and 1.0b8), fix it before trying to read it in.
+				enum {
+					failedUtf8BomLength = 6
+				};
+				NSData *data = [NSData dataWithContentsOfMappedFile:logFullPath];
+				const unsigned char *ptr = [data bytes];
+				unsigned len = [data length];
+				if ((len >= failedUtf8BomLength)
+				&&  (ptr[0] == 0xC3)
+				&&  (ptr[1] == 0x94)
+				&&  (ptr[2] == 0xC2)
+				&&  (ptr[3] == 0xAA)
+				&&  (ptr[4] == 0xC3)
+				&&  (ptr[5] == 0xB8)
+				) {
+					//Yup. Back up the old file, then strip it off.
+					NSLog(@"Transcript file at %@ has unwanted bytes at the front of it. (This is a bug in a previous version of Adium, not this version.) Attempting recovery.", logFullPath);
+					NSString *backupPath = [logFullPath stringByAppendingPathExtension:@"bak"];
+					if(![[NSFileManager defaultManager] movePath:logFullPath toPath:backupPath handler:nil])
+						NSLog(@"Could not back up file; recovery failed. This transcript will probably appear blank in the transcript viewer.");
+					else {
+						NSRange range = { failedUtf8BomLength, len - failedUtf8BomLength };
+						NSData *theRestOfIt = [data subdataWithRange:range];
+						if([theRestOfIt writeToFile:logFullPath atomically:YES])
+							NSLog(@"Wrote fixed version to same file. The corrupted version was renamed to %@; you may remove this file at your leisure after you are satisfied that the recovery succeeded. You can test this by viewing the transcript (%@) in the transcript viewer.", backupPath, [logFullPath lastPathComponent]);
+						else
+							NSLog(@"Could not write fix!");
+					}
+				}
+
+				logFileText = [GBChatlogHTMLConverter readFile:logFullPath];
 				if(logFileText != nil)
 				{
 					if(displayText)
@@ -1485,6 +1523,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 - (void)tableViewColumnDidResize:(NSNotification *)aNotification
 {
 	NSTableColumn *dateTableColumn = [tableView_results tableColumnWithIdentifier:@"Date"];
+
 	if (!aNotification ||
 		([[aNotification userInfo] objectForKey:@"NSTableColumn"] == dateTableColumn)) {
 		NSDateFormatter *dateFormatter;
@@ -1493,22 +1532,31 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		[cell setObjectValue:[NSDate date]];
 
 		float width = [dateTableColumn width];
-		
+
 		if ([NSApp isOnTigerOrBetter]) {
+#define NUMBER_TIME_STYLES	2
+#define NUMBER_DATE_STYLES	4
+			NSDateFormatterStyle timeFormatterStyles[NUMBER_TIME_STYLES] = { NSDateFormatterShortStyle, NSDateFormatterNoStyle};
+			NSDateFormatterStyle formatterStyles[NUMBER_DATE_STYLES] = { NSDateFormatterFullStyle, NSDateFormatterLongStyle, NSDateFormatterMediumStyle, NSDateFormatterShortStyle };
+			float requiredWidth;
+
 			dateFormatter = [cell formatter];
 			if (!dateFormatter) {
-				dateFormatter = [[NSDateFormatter alloc] init];
+				dateFormatter = [[AILogDateFormatter alloc] init];
 				[dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
 				[cell setFormatter:dateFormatter];
 			}
 			
-			NSDateFormatterStyle formatterStyles[4] = { NSDateFormatterFullStyle, NSDateFormatterLongStyle, NSDateFormatterMediumStyle, NSDateFormatterShortStyle };
-			float requiredWidth = width + 1;
-			for (int i = 0; (i < 4) && (requiredWidth > width); i++) {
-				[dateFormatter setDateStyle:formatterStyles[i]];
-				requiredWidth = [cell cellSizeForBounds:NSMakeRect(0,0,1e6,1e6)].width;
-				//Require a bit of space so the date looks comfortable. Very long dates relative to the current date can still overflow...
-				requiredWidth += 3;
+			requiredWidth = width + 1;
+			for (int i = 0; (i < NUMBER_TIME_STYLES) && (requiredWidth > width); i++) {
+				[dateFormatter setTimeStyle:timeFormatterStyles[i]];
+
+				for (int j = 0; (j < NUMBER_DATE_STYLES) && (requiredWidth > width); j++) {
+					[dateFormatter setDateStyle:formatterStyles[j]];
+					requiredWidth = [cell cellSizeForBounds:NSMakeRect(0,0,1e6,1e6)].width;
+					//Require a bit of space so the date looks comfortable. Very long dates relative to the current date can still overflow...
+					requiredWidth += 3;					
+				}
 			}
 
 		} else {
@@ -2115,6 +2163,22 @@ static int toArraySort(id itemA, id itemB, void *context)
 	}
 }
 
+- (void)selectCachedIndex
+{
+	int numberOfRows = [tableView_results numberOfRows];
+	
+	if (cachedSelectionIndex <  numberOfRows) {
+		[tableView_results selectRowIndexes:[NSIndexSet indexSetWithIndex:cachedSelectionIndex]
+					   byExtendingSelection:NO];
+	} else {
+		if (numberOfRows)
+			[tableView_results selectRowIndexes:[NSIndexSet indexSetWithIndex:(numberOfRows-1)]
+						   byExtendingSelection:NO];			
+	}	
+	
+	deleteOccurred = NO;
+}
+
 #pragma mark Deletion
 
 /*!
@@ -2170,10 +2234,13 @@ static int toArraySort(id itemA, id itemB, void *context)
 		NSEnumerator	*enumerator;
 		NSMutableSet	*logPaths = [NSMutableSet set];
 		
+		cachedSelectionIndex = [[tableView_results selectedRowIndexes] firstIndex];
+		
 		enumerator = [selectedLogs objectEnumerator];
 		while ((aLog = [enumerator nextObject])) {
 			NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
 			
+			[[adium notificationCenter] postNotificationName:ChatLog_WillDelete object:aLog userInfo:nil];
 			AILogToGroup	*logToGroup = [logToGroupDict objectForKey:[NSString stringWithFormat:@"%@.%@/%@",[aLog serviceClass],[aLog from],[aLog to]]];
 			[logToGroup trashLog:aLog];
 			
@@ -2195,9 +2262,9 @@ static int toArraySort(id itemA, id itemB, void *context)
 		[undoManager setActionName:DELETE];
 		
 		[resultsLock unlock];
-		
 		[tableView_results reloadData];
-		[self selectDisplayedLog];
+		
+		deleteOccurred = YES;
 		
 		[self rebuildContactsList];
 		[self updateProgressDisplay];
@@ -2322,7 +2389,6 @@ static int toArraySort(id itemA, id itemB, void *context)
 			}
 			
 			AILogFromGroup	*logFromGroup = [logFromGroupDict objectForKey:[NSString stringWithFormat:@"%@.%@",[logToGroup serviceClass],[logToGroup from]]];
-			NSLog(@"Removing %@ from %@",logToGroup,logFromGroup);
 			[logFromGroup removeToGroup:logToGroup];
 		}
 		

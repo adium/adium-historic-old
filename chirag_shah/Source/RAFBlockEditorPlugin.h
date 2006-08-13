@@ -7,7 +7,7 @@
 //
 
 #import <Adium/AIPlugin.h>
-#import "AIMenuController.h"
+#import <Adium/AIMenuControllerProtocol.h>
 #import "RAFBlockEditorWindowController.h"
 #import <Cocoa/Cocoa.h>
 

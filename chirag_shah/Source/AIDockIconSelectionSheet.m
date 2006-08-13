@@ -17,7 +17,7 @@
 #import "AIDockController.h"
 #import "AIDockIconSelectionSheet.h"
 #import "AIAppearancePreferencesPlugin.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIImageGridView.h>
 #import <Adium/AIIconState.h>

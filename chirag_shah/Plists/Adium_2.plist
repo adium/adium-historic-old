@@ -188,31 +188,6 @@
 			</array>
 			<key>LSTypeIsPackage</key>
 			<true/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>ListLayout</string>
-				<string>AdiumListLayout</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>AdiumListLayout.icns</string>
-			<key>CFBundleTypeName</key>
-			<string>Adium List Layout</string>
-			<key>CFBundleTypeOSTypes</key>
-			<array>
-				<string>AILL</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.adiumx.contactlistlayout</string>
-			</array>
-			<key>LSTypeIsPackage</key>
-			<false/>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
@@ -236,31 +211,6 @@
 			</array>
 			<key>LSTypeIsPackage</key>
 			<true/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>ListTheme</string>
-				<string>AdiumListTheme</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>AdiumListTheme.icns</string>
-			<key>CFBundleTypeName</key>
-			<string>Adium List Theme</string>
-			<key>CFBundleTypeOSTypes</key>
-			<array>
-				<string>AILT</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.adiumx.contactlisttheme</string>
-			</array>
-			<key>LSTypeIsPackage</key>
-			<false/>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
@@ -310,7 +260,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Adium</string>
 	<key>CFBundleGetInfoString</key>
-	<string>1.0b4, Copyright 2001-2006 The Adium Team</string>
+	<string>1.0b8, Copyright 2001-2006 The Adium Team</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>Adium Help</string>
 	<key>CFBundleHelpBookName</key>
@@ -326,7 +276,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0b4</string>
+	<string>1.0b8</string>
 	<key>CFBundleSignature</key>
 	<string>AdIM</string>
 	<key>CFBundleURLTypes</key>
@@ -395,7 +345,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0b4</string>
+	<string>1.0b8</string>
 	<key>Java</key>
 	<dict>
 		<key>JVMVersion</key>
@@ -710,7 +660,7 @@
 			<key>UTTypeDescription</key>
 			<string>Adium X chat log</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.adiumx.log</string>
+			<string>com.adiumx.xmllog</string>
 			<key>UTTypeReferenceURL</key>
 			<string>http://www.adiumx.com</string>
 			<key>UTTypeTagSpecification</key>

@@ -17,9 +17,8 @@
 // $Id$
 
 #import "AIDockController.h"
-#import "AIInterfaceController.h"
-#import "AIPreferenceController.h"
-#import "ESDebugController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
@@ -75,16 +74,15 @@
 
 - (void)controllerDidLoad
 {
-	AIPreferenceController *preferenceController = [adium preferenceController];
 	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 	
     //Register our default preferences
-    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS
-																forClass:[self class]] 
-	                              forGroup:PREF_GROUP_APPEARANCE];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_APPEARANCE];
     
     //Observe pref changes
-	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 	
     //We always want to stop bouncing when Adium is made active
     [notificationCenter addObserver:self
@@ -555,29 +553,29 @@
  *
  * @result YES if the behavior is ongoing; NO if it isn't (because it is immediately complete or some other, faster continuous behavior is in progress)
  */
-- (BOOL)performBehavior:(DOCK_BEHAVIOR)behavior
+- (BOOL)performBehavior:(AIDockBehavior)behavior
 {
 	BOOL	ongoingBehavior = NO;
 
     //Start up the new behavior
     switch (behavior) {
-        case BOUNCE_NONE: {
+        case AIDockBehaviorStopBouncing: {
 			[self _stopBouncing];
 			break;
 		}
-        case BOUNCE_ONCE: {
+        case AIDockBehaviorBounceOnce: {
 			if (currentBounceInterval >= SINGLE_BOUNCE_INTERVAL) {
 				currentBounceInterval = SINGLE_BOUNCE_INTERVAL;
 				[self _singleBounce];
 			}
 			break;
 		}
-        case BOUNCE_REPEAT: ongoingBehavior = [self _continuousBounce]; break;
-        case BOUNCE_DELAY5: ongoingBehavior = [self _bounceWithInterval:5.0]; break;
-        case BOUNCE_DELAY10: ongoingBehavior = [self _bounceWithInterval:10.0]; break;
-        case BOUNCE_DELAY15: ongoingBehavior = [self _bounceWithInterval:15.0]; break;
-        case BOUNCE_DELAY30: ongoingBehavior = [self _bounceWithInterval:30.0]; break;
-        case BOUNCE_DELAY60: ongoingBehavior = [self _bounceWithInterval:60.0]; break;
+        case AIDockBehaviorBounceRepeatedly: ongoingBehavior = [self _continuousBounce]; break;
+        case AIDockBehaviorBounceDelay_FiveSeconds: ongoingBehavior = [self _bounceWithInterval:5.0]; break;
+        case AIDockBehaviorBounceDelay_TenSeconds: ongoingBehavior = [self _bounceWithInterval:10.0]; break;
+        case AIDockBehaviorBounceDelay_FifteenSeconds: ongoingBehavior = [self _bounceWithInterval:15.0]; break;
+        case AIDockBehaviorBounceDelay_ThirtySeconds: ongoingBehavior = [self _bounceWithInterval:30.0]; break;
+        case AIDockBehaviorBounceDelay_OneMinute: ongoingBehavior = [self _bounceWithInterval:60.0]; break;
         default: break;
     }
 	
@@ -585,19 +583,19 @@
 }
 
 //Return a string description of the bouncing behavior
-- (NSString *)descriptionForBehavior:(DOCK_BEHAVIOR)behavior
+- (NSString *)descriptionForBehavior:(AIDockBehavior)behavior
 {
 	NSString	*desc;
 	
     switch (behavior) {
-        case BOUNCE_NONE: desc = AILocalizedString(@"None",nil); break;
-        case BOUNCE_ONCE: desc = AILocalizedString(@"Once",nil); break;
-        case BOUNCE_REPEAT: desc = AILocalizedString(@"Repeatedly",nil); break;
-        case BOUNCE_DELAY5: desc = AILocalizedString(@"Every 5 Seconds",nil); break;
-        case BOUNCE_DELAY10: desc = AILocalizedString(@"Every 10 Seconds",nil); break;
-        case BOUNCE_DELAY15: desc = AILocalizedString(@"Every 15 Seconds",nil); break;
-        case BOUNCE_DELAY30: desc = AILocalizedString(@"Every 30 Seconds",nil); break;
-        case BOUNCE_DELAY60: desc = AILocalizedString(@"Every 60 Seconds",nil); break;
+        case AIDockBehaviorStopBouncing: desc = AILocalizedString(@"None",nil); break;
+        case AIDockBehaviorBounceOnce: desc = AILocalizedString(@"Once",nil); break;
+        case AIDockBehaviorBounceRepeatedly: desc = AILocalizedString(@"Repeatedly",nil); break;
+        case AIDockBehaviorBounceDelay_FiveSeconds: desc = AILocalizedString(@"Every 5 Seconds",nil); break;
+        case AIDockBehaviorBounceDelay_TenSeconds: desc = AILocalizedString(@"Every 10 Seconds",nil); break;
+        case AIDockBehaviorBounceDelay_FifteenSeconds: desc = AILocalizedString(@"Every 15 Seconds",nil); break;
+        case AIDockBehaviorBounceDelay_ThirtySeconds: desc = AILocalizedString(@"Every 30 Seconds",nil); break;
+        case AIDockBehaviorBounceDelay_OneMinute: desc = AILocalizedString(@"Every 60 Seconds",nil); break;
         default: desc=@""; break;
     }    
 

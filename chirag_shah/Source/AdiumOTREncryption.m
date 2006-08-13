@@ -7,20 +7,20 @@
 
 #import "AdiumOTREncryption.h"
 #import <Adium/AIContentMessage.h>
-#import "AIAccountController.h"
-#import "AIChatController.h"
-#import "AIContactController.h"
-#import "AIContentController.h"
-#import "AIInterfaceController.h"
-#import "AIPreferenceController.h"
-#import "AILoginController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AILoginControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIService.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListContact.h>
-#import <Adium/AIHTMLDecoder.h>
+#import "AIHTMLDecoder.h"
 
 #import <AIUtilities/AIStringAdditions.h>
 
@@ -44,6 +44,8 @@
 													  OTRL_POLICY_ERROR_START_AKE )
 
 @interface AdiumOTREncryption (PRIVATE)
+- (void)prepareEncryption;
+
 - (void)setSecurityDetails:(NSDictionary *)securityDetailsDict forChat:(AIChat *)inChat;
 - (NSString *)localizedOTRMessage:(NSString *)message withUsername:(NSString *)username;
 - (void)notifyWithTitle:(NSString *)title primary:(NSString *)primary secondary:(NSString *)secondary;
@@ -76,9 +78,8 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 	if ((self = [super init])) {
 		adiumOTREncryption = self;
 
-		/* Initialize the OTR library */
-		OTRL_INIT;
-
+		[self prepareEncryption];
+		
 		/*
 		gaim_signal_connect(conn_handle, "signed-on", otrg_plugin_handle,
 							GAIM_CALLBACK(process_connection_change), NULL);
@@ -90,8 +91,11 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 	return self;
 }
 
-- (void)controllerDidLoad
+- (void)prepareEncryption
 {
+	/* Initialize the OTR library */
+	OTRL_INIT;
+
 	[self upgradeOTRFromGaimIfNeeded];
 
 	/* Make our OtrlUserState; we'll only use the one. */
