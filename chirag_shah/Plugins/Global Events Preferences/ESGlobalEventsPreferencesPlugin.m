@@ -15,7 +15,7 @@
  */
 
 #import "AISoundController.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import "ESGlobalEventsPreferences.h"
 #import "ESGlobalEventsPreferencesPlugin.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
@@ -31,7 +31,6 @@
 #define KEY_NEXT_ORDER_INDEX		@"NextOrderIndex"
 
 #define EVENT_SOUNDS_DEFAULT_PREFS	@"EventSoundDefaults"
-#define KEY_ALERT_SOUND_PATH		@"SoundPath"
 
 @interface ESGlobalEventsPreferencesPlugin (PRIVATE)
 - (void)activateSoundSet:(NSArray *)soundSetArray;
@@ -140,8 +139,10 @@
 	
 	//Clear out old global sound alerts
 	[[adium contactAlertsController] removeAllGlobalAlertsWithActionID:SOUND_ALERT_IDENTIFIER];
-	
-	//        
+
+	AILog(@"Applying sound set %@",soundSet);
+
+	//
 	enumerator = [sounds keyEnumerator];
 	while ((key = [enumerator nextObject])) {
 		NSDictionary *soundAlert = [ESGlobalEventsPreferencesPlugin soundAlertForKey:key

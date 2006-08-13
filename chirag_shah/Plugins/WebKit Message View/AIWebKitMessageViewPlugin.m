@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIInterfaceController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AIMenuController.h"
 #import "AIWebKitMessageViewController.h"
 #import "AIWebKitMessageViewPlugin.h"

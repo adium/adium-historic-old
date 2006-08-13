@@ -14,21 +14,15 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContactController.h"
-#import "AIContentController.h"
-#import "AIMenuController.h"
 #import "AIWebKitMessageViewController.h"
 #import "AIWebKitMessageViewStyle.h"
 #import "AIWebKitMessageViewPlugin.h"
-#import "ESFileTransferController.h"
 #import "ESWebFrameViewAdditions.h"
 #import "ESWebKitMessageViewPreferences.h"
-#import <AIUtilities/AIColorAdditions.h>
-#import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/AIArrayAdditions.h>
-#import <AIUtilities/AIDateFormatterAdditions.h>
-#import <AIUtilities/AIMutableStringAdditions.h>
-#import <AIUtilities/AIMenuAdditions.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIFileTransferControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentContext.h>
@@ -38,9 +32,16 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIService.h>
-#import "ESFileTransfer.h"
+#import <Adium/ESFileTransfer.h>
+#import <Adium/ESTextAndButtonsWindowController.h>
+#import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/AIMutableStringAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
+
 #import "ESFileTransferRequestPromptController.h"
-#import "ESTextAndButtonsWindowController.h"
 
 #import "ESWebView.h"
 
@@ -651,9 +652,29 @@ static NSArray *draggedTypes = nil;
  */
 - (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
-	[webView stringByEvaluatingJavaScriptFromString:[messageStyle scriptForAppendingContent:content
-																					similar:contentIsSimilar
-																  willAddMoreContentObjects:willAddMoreContentObjects]];
+	WebScriptObject *wso = [webView windowScriptObject];
+	NSString *methodName;
+	NSArray *methodArgs;
+
+	methodName = [messageStyle methodNameToCheckIfScrollToBottomIsNeeded];
+	if (methodName) {
+		methodArgs = [messageStyle methodArgumentsToCheckIfScrollToBottomIsNeeded];
+		[wso callWebScriptMethod:methodName withArguments:methodArgs];
+	}
+
+	methodName = [messageStyle methodNameForAppendingContent:content
+	                                                 similar:contentIsSimilar
+	                               willAddMoreContentObjects:willAddMoreContentObjects];
+	methodArgs = [messageStyle methodArgumentsForAppendingContent:content
+	                                                 similar:contentIsSimilar
+	                               willAddMoreContentObjects:willAddMoreContentObjects];
+	[wso callWebScriptMethod:methodName withArguments:methodArgs];
+
+	methodName = [messageStyle methodNameToScrollToBottomIfNeeded];
+	if (methodName) {
+		methodArgs = [messageStyle methodArgumentsToScrollToBottomIfNeeded];
+		[wso callWebScriptMethod:methodName withArguments:methodArgs];
+	}
 }
 
 

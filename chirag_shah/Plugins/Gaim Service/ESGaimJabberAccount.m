@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
-#import "AIStatusController.h"
-#import "AIContactController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import "ESGaimJabberAccount.h"
 #import "ESGaimJabberAccountViewController.h"
 #import "SLGaimCocoaAdapter.h"
@@ -337,6 +337,9 @@
 
 		} else if ([*disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound) {
 			shouldReconnect = NO;
+			
+		} else if ([*disconnectionError rangeOfString:@"Resource Conflict"].location != NSNotFound) {
+			shouldReconnect = NO;
 		}
 	}
 	
@@ -360,6 +363,22 @@
 	}
 	
 	return YES;
+}
+
+- (void)disconnectFromDroppedNetworkConnection
+{
+	/* Before we disconnect from a dropped network connection, set gc->disconnect_timeout to a non-0 value.
+	 * This will let the prpl know that we are disconnecting with no backing ssl connection and that therefore
+	 * the ssl connection is has should not be messaged in the process of disconnecting.
+	 */
+	GaimConnection *gc = gaim_account_get_connection(account);
+	if (GAIM_CONNECTION_IS_VALID(gc) &&
+		!gc->disconnect_timeout) {
+		gc->disconnect_timeout = -1;
+		AILog(@"%@: Disconnecting from a dropped network connection", self);
+	}
+
+	[super disconnectFromDroppedNetworkConnection];
 }
 
 #pragma mark File transfer
@@ -391,11 +410,10 @@
 /*
  * @brief Allow a file transfer with an object?
  *
- * As of 3/24/2006, GTalk does not allow file transfers.
  */
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
 {
-	return (![[[inListObject UID] lowercaseString] hasSuffix:@"@gmail.com"]);
+	return YES; //this is broken. Not all jabber servers support it, but I don't know how to check if they do. Smack will fix.
 }
 
 
@@ -428,27 +446,35 @@
 	return statusMessage;
 }
 
-- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b
+- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)buddy
 {
 	NSString		*statusName = nil;
+	GaimPresence	*presence = gaim_buddy_get_presence(buddy);
+	GaimStatus		*status = gaim_presence_get_active_status(presence);
+	const char		*gaimStatusID = gaim_status_get_id(status);
 	
-	//If no custom status message, use the preset possibilities
-	//XXX
-	/*
-	switch (b->uc) {
-		case JABBER_STATE_CHAT:
-			statusName = STATUS_NAME_FREE_FOR_CHAT;
-			break;						
-		case JABBER_STATE_XA:
-			statusName = STATUS_NAME_EXTENDED_AWAY;
-			break;
-			
-		case JABBER_STATE_DND:
-			statusName = STATUS_NAME_DND;
-			break;
+	if (!gaimStatusID) return nil;
+
+	if (!strcmp(gaimStatusID, jabber_buddy_state_get_status_id(JABBER_BUDDY_STATE_CHAT))) {
+		statusName = STATUS_NAME_FREE_FOR_CHAT;
+		
+	} else if (!strcmp(gaimStatusID, jabber_buddy_state_get_status_id(JABBER_BUDDY_STATE_XA))) {
+		statusName = STATUS_NAME_EXTENDED_AWAY;
+		
+	} else if (!strcmp(gaimStatusID, jabber_buddy_state_get_status_id(JABBER_BUDDY_STATE_DND))) {
+		statusName = STATUS_NAME_DND;
+		
 	}
-	*/
+	
 	return statusName;
+}
+
+/*
+ * @brief Jabber status messages are plaintext
+ */
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forStatusState:(AIStatus *)statusState
+{
+	return [[inAttributedString attributedStringByConvertingLinksToStrings] string];
 }
 
 #pragma mark Menu items
@@ -456,12 +482,18 @@
 {
 	if (strcmp(label, "Un-hide From") == 0) {
 		return [NSString stringWithFormat:AILocalizedString(@"Un-hide From %@",nil),[inContact formattedUID]];
-	}if (strcmp(label, "Temporarily Hide From") == 0) {
-			return [NSString stringWithFormat:AILocalizedString(@"Temporarily Hide From %@",nil),[inContact formattedUID]];
+
+	} else if (strcmp(label, "Temporarily Hide From") == 0) {
+		return [NSString stringWithFormat:AILocalizedString(@"Temporarily Hide From %@",nil),[inContact formattedUID]];
+
 	} else if (strcmp(label, "Unsubscribe") == 0) {
 		return [NSString stringWithFormat:AILocalizedString(@"Unsubscribe %@",nil),[inContact formattedUID]];
+
 	} else if (strcmp(label, "(Re-)Request authorization") == 0) {
 		return [NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]];
+
+	} else if (strcmp(label,  "Cancel Presence Notification") == 0) {
+		return [NSString stringWithFormat:AILocalizedString(@"Cancel Presence Notification to %@",nil),[inContact formattedUID]];	
 	}
 	
 	return [super titleForContactMenuLabel:label forContact:inContact];
@@ -530,7 +562,7 @@
 		case AIAvailableStatusType:
 		{
 			if (([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT]) ||
-			   ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_FREE_FOR_CHAT] == NSOrderedSame))
+			   ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_FREE_FOR_CHAT]] == NSOrderedSame))
 				statusID = "chat";
 			priority = [self preferenceForKey:KEY_JABBER_PRIORITY_AVAILABLE group:GROUP_ACCOUNT_STATUS];
 			break;
@@ -539,10 +571,10 @@
 		case AIAwayStatusType:
 		{
 			if (([statusName isEqualToString:STATUS_NAME_DND]) ||
-			   ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
+			   ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_DND]] == NSOrderedSame))
 				statusID = "dnd";
 			else if (([statusName isEqualToString:STATUS_NAME_EXTENDED_AWAY]) ||
-					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_EXTENDED_AWAY] == NSOrderedSame))
+					 ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_EXTENDED_AWAY]] == NSOrderedSame))
 				statusID = "xa";
 			priority = [self preferenceForKey:KEY_JABBER_PRIORITY_AWAY group:GROUP_ACCOUNT_STATUS];
 			break;

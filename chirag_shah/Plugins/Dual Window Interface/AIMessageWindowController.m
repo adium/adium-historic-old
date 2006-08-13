@@ -15,15 +15,15 @@
  */
 
 #import "AIDualWindowInterfacePlugin.h"
-#import "AIInterfaceController.h"
-#import "AIMenuController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
 #import "AIMessageTabViewItem.h"
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
 #import "AIDockController.h"
-#import "AIPreferenceController.h"
-#import "AIToolbarController.h"
-#import "AIAccountController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
+#import <Adium/AIAccountControllerProtocol.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AICustomTabDragging.h>
 #import <AIUtilities/AICustomTabsView.h>
@@ -208,16 +208,6 @@
 {
 	windowIsClosing = YES;
 
-	//Hide our window now, making sure we set active chat to nil before ordering out.  When we order out, another window
-	//may become key and set itself active.  Setting active to nil after that happened would cause problems.
-	//We want to set the active chat to nil only if the window being closed is the active window
-	if ([[self window] isKeyWindow]) {
-		[[adium interfaceController] chatDidBecomeActive:nil];
-	}
-	[[self window] orderOut:nil];
-
-	//Now we close our window for real.  By hiding first, we get a smoother close as the user won't see each tab closing
-	//individually.  The close will also be quicker, since it avoids a lot of redrawing.
 	[[self window] performClose:nil];
 }
 
@@ -237,7 +227,7 @@
     //Close all our tabs (The array will change as we remove tabs, so we must work with a copy)
 	enumerator = [[tabView_messages tabViewItems] reverseObjectEnumerator];
     while ((tabViewItem = [enumerator nextObject])) {
-		[interface closeChat:[tabViewItem chat]];
+		[[adium interfaceController] closeChat:[tabViewItem chat]];
 	}
 
 	//Chats have all closed, set active to nil, let the interface know we closed.  We should skip this step if our
@@ -535,7 +525,7 @@
 {
 	AIChat	*chat = [(AIMessageTabViewItem *)tabViewItem chat];
 
-	[interface closeChat:chat];
+	[[adium interfaceController] closeChat:chat];
 }
 
 - (NSString *)customTabView:(AICustomTabsView *)tabView tooltipForTabViewItem:(NSTabViewItem *)tabViewItem

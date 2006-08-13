@@ -19,7 +19,7 @@
 @class AIContactListWindowController, AIDualWindowPreferences, AIMessageTabViewItem,
 	AIMessageWindowController, ESDualWindowMessageAdvancedPreferences, AIChat;
 
-@protocol AIInterfaceController;
+@protocol AIInterfaceComponent;
 
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
 
@@ -49,7 +49,7 @@
 - (void)close:(id)sender;	//Close the container
 @end
 
-@interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceController> {
+@interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceComponent> {
     
 	NSMutableArray			*delayedContainerShowArray;
 	NSMutableDictionary		*containers;

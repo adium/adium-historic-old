@@ -15,13 +15,13 @@
  */
 
 #import "AIContactProfilePane.h"
-#import "AIContentController.h"
+#import <Adium/AIContentControllerProtocol.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AILinkTextView.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
-#import <Adium/AILocalizationTextField.h>
+#import "AILocalizationTextField.h"
 
 /*!
  * @class AIContactProfilePane
@@ -34,7 +34,7 @@
 /*!
  * @brief Category
  */
-- (CONTACT_INFO_CATEGORY)contactInfoCategory{
+- (AIContactInfoCategory)contactInfoCategory{
     return AIInfo_Profile;
 }
 /*!

@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
-#import "AIStatusController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIStatusControllerProtocol.h>
 #import "ESGaimNovellAccount.h"
 #import <Adium/AIStatus.h>
 
@@ -74,7 +74,7 @@ gboolean gaim_init_novell_plugin(void);
 			
 		case AIAwayStatusType:
 			if (([statusName isEqualToString:STATUS_NAME_BUSY]) ||
-				([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BUSY] == NSOrderedSame))
+				([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_BUSY]] == NSOrderedSame))
 				statusID = "busy";
 			break;
 

@@ -9,7 +9,6 @@
 
 @implementation ESGaimSimpleAccount
 
-gboolean gaim_init_simple_plugin(void);
 - (const char*)protocolPlugin
 {
     return "prpl-simple";

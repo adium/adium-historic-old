@@ -4,5 +4,9 @@
 <dict>
 	<key>Meanwhile:ContactList</key>
 	<integer>2</integer>
+	<key>Meanwhile:FakeClientID</key>
+	<false/>
+	<key>Meanwhile:ForceLogin</key>
+	<false/>
 </dict>
 </plist>

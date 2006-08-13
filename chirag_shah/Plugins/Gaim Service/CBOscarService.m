@@ -15,7 +15,7 @@
  */
 
 #import "AIGaimOscarAccountViewController.h"
-#import "AIStatusController.h"
+#import <Adium/AIStatusControllerProtocol.h>
 #import "CBOscarService.h"
 #import "DCGaimOscarJoinChatViewController.h"
 

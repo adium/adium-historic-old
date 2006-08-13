@@ -24,6 +24,7 @@
 #import "AIAlternatingRowOutlineView.h"
 #import "AIOutlineView.h"
 #import "AIGradient.h"
+#import "AIColorAdditions.h"
 
 @interface AIAlternatingRowOutlineView (PRIVATE)
 - (void)_initAlternatingRowOutlineView;
@@ -138,13 +139,12 @@
 
 	NSRect	rowRect;
 	int		rowHeight;
-	int		numberOfColumns, numberOfRows;
+	int		numberOfRows;
 	int		row;
 	int		rectNumber = 0;
 	
 	//Setup
 	numberOfRows = [self numberOfRows];
-	numberOfColumns = [self numberOfColumns];
 	rowHeight = [self rowHeight];
 	if (numberOfRows == 0) {
 		rowRect = NSMakeRect(0,0,rect.size.width,rowHeight);
@@ -224,7 +224,7 @@
 			i++;		
 		}
 
-		[[NSColor alternateSelectedControlColor] set];		
+		[[[gradient firstColor] darkenAndAdjustSaturationBy:0.1] set];
 		NSRectFillListUsingOperation(selectionLineRects, j, NSCompositeSourceOver);
 		
 		free(buf);

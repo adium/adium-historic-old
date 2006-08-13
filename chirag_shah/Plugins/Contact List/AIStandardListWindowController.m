@@ -15,11 +15,11 @@
  */
 
 #import "AIStandardListWindowController.h"
-#import "AIAccountController.h"
-#import "AIContactController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AIStatusController.h"
-#import "AIToolbarController.h"
+#import <Adium/AIToolbarControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIStatusMenu.h>
@@ -101,6 +101,10 @@
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(updateStatusMenuSelection:)
 									   name:AIStatusIconSetDidChangeNotification
+									 object:nil];
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(updateStatusMenuSelection:)
+									   name:@"AIStatusFilteredStatusMessageChanged"
 									 object:nil];
 	[self updateStatusMenuSelection:nil];
 	
@@ -368,7 +372,7 @@
 	 */
 	[imageView_status setImage:[activeStatus iconOfType:AIStatusIconList
 											  direction:AIIconNormal]];
-	[statusMenuView setToolTip:[activeStatus statusMessageString]];
+	[statusMenuView setToolTip:[activeStatus statusMessageTooltipString]];
 
 	[self updateImagePicker];
 	[self updateNameView];
@@ -510,6 +514,7 @@
 											  action:@selector(nameViewSelectedAccount:)
 									   keyEquivalent:@""];
 		[menuItem setRepresentedObject:account];
+		[menuItem setImage:[AIServiceIcons serviceIconForObject:account type:AIServiceIconSmall direction:AIIconNormal]];
 		
 		if (activeAccount == account) {
 			[menuItem setState:NSOnState];

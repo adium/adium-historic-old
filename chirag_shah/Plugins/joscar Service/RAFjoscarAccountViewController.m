@@ -8,7 +8,7 @@
 #import "RAFjoscarAccountViewController.h"
 #import "RAFjoscarAccount.h"
 
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AITextAttributes.h>

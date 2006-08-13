@@ -29,6 +29,8 @@
 	
 	NSMutableDictionary		*fileTransferPollingTimersDict;
 	
+	NSTimer					*buddyAddTimer;
+	
 	ESjoscarCocoaAdapter	*selfProxy; //Sends messages to self on the main thread
 }
 
@@ -65,7 +67,6 @@
 									   forFiles:(NSArray *)pathArray;
 
 - (void)setVisibleStatus:(BOOL)visible;
-- (void)setStatusMessage:(NSString *)msg;
 - (void)setStatusMessage:(NSString *)msg withSongURL:(NSString *)itmsURL;
 - (void)setAccountUserIconData:(NSData *)data;
 

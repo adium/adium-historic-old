@@ -18,7 +18,7 @@
 #import "SLGaimCocoaAdapter.h"
 #import "GaimCommon.h"
 #import "ESTextAndButtonsWindowController.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIObjectAdditions.h>
 
@@ -150,7 +150,7 @@
 	[centeredParagraphStyle release];
 	[message release];
 	
-	return adium_gaim_get_handle();
+	return NULL /*adium_gaim_get_handle()*/ ;
 }
 
 /*!
