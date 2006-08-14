@@ -1827,11 +1827,11 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	thingsToInclude.simpleTagsOnly = newValue;
 }
 
-- (BOOL)bodyBackground
+- (BOOL)includesBodyBackground
 {
 	return thingsToInclude.bodyBackground;
 }
-- (void)bodyBackground:(BOOL)newValue
+- (void)setIncludesBodyBackground:(BOOL)newValue
 {
 	thingsToInclude.bodyBackground = newValue;
 }

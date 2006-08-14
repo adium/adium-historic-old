@@ -145,8 +145,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 - (BOOL)onlyUsesSimpleTags;
 - (void)setOnlyUsesSimpleTags:(BOOL)newValue;
 
-- (BOOL)bodyBackground;
-- (void)bodyBackground:(BOOL)bodyBackground;
+- (BOOL)includesBodyBackground;
+- (void)setIncludesBodyBackground:(BOOL)newValue;
 
 - (BOOL)allowAIMsubprofileLinks;
 - (void)setAllowAIMsubprofileLinks:(BOOL)newValue;
