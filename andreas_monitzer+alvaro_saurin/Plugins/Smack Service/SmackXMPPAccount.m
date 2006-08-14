@@ -592,7 +592,6 @@
 
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact {
     NSMutableArray *menuItems = [NSMutableArray array];
-    BOOL first = YES;
     
     // order is important here, so we can't use the NSNotification-system
     NSEnumerator *e = [plugins objectEnumerator];
@@ -601,14 +600,8 @@
         if([plugin respondsToSelector:@selector(menuItemsForContact:)])
         {
             NSArray *pluginMenuItems = [plugin menuItemsForContact:inContact];
-            if(pluginMenuItems && [pluginMenuItems count] > 0)
-            {
-                if(!first)
-                    [menuItems addObject:[NSMenuItem separatorItem]];
-                else
-                    first = NO;
+            if(pluginMenuItems)
                 [menuItems addObjectsFromArray:pluginMenuItems];
-            }
         }
     
     [menuItems addObjectsFromArray:[super menuItemsForContact:inContact]];
@@ -617,7 +610,6 @@
 
 - (NSArray *)accountActionMenuItems {
     NSMutableArray *menuItems = [NSMutableArray array];
-    BOOL first = YES;
     
     // order is important here, so we can't use the NSNotification-system
     NSEnumerator *e = [plugins objectEnumerator];
@@ -627,19 +619,9 @@
         {
             NSArray *pluginMenuItems = [plugin accountActionMenuItems];
             if(pluginMenuItems)
-            {
-                if(!first)
-                    [menuItems addObject:[NSMenuItem separatorItem]];
-                else
-                    first = NO;
                 [menuItems addObjectsFromArray:pluginMenuItems];
-            }
         }
 
-    if(!first)
-        [menuItems addObject:[NSMenuItem separatorItem]];
-    
-    
     NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Change Account Details...","Change Account Details...") action:@selector(changeAccountDetails:) keyEquivalent:@""];
     [mitem setTarget:self];
     [menuItems addObject:mitem];
