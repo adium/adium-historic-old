@@ -12,8 +12,20 @@
 @class SmackXMPPAccount;
 
 @interface SmackXMPPHeadlineMessagePlugin : AIObject {
+    IBOutlet NSWindow *window;
+    IBOutlet NSTableView *tableview;
+    IBOutlet NSDateFormatter *dateformatter;
+    IBOutlet NSArrayController *headlinescontroller;
+    IBOutlet NSTextField *lastReceived;
+    
+    NSMutableArray *headlines;
+    
+    NSDictionary *messagestyle;
+    SmackXMPPAccount *account;
 }
 
-- (id)initWithAccount:(SmackXMPPAccount*)account;
+- (id)initWithAccount:(SmackXMPPAccount*)a;
+
+- (IBAction)clear:(id)sender;
 
 @end

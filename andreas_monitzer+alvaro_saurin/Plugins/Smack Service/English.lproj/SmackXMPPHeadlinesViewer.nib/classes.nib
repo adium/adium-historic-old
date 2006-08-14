@@ -1,0 +1,20 @@
+{
+    IBClasses = (
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {clear = id; }; 
+            CLASS = SmackXMPPHeadlineMessagePlugin; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                dateformatter = NSDateFormatter; 
+                headlinescontroller = NSArrayController; 
+                lastReceived = NSTextField; 
+                tableview = NSTableView; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = AIObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
