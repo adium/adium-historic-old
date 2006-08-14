@@ -259,6 +259,7 @@ static ESFileTransferPreferences *preferences;
 	[openPanel setCanChooseDirectories:YES];
 	[openPanel setResolvesAliases:YES];
 	[openPanel setAllowsMultipleSelection:YES];
+	[openPanel setPrompt:AILocalizedStringFromTable(@"Send", @"Buttons", nil)];
 
 	if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
 		NSEnumerator *enumerator = [[openPanel filenames] objectEnumerator];
