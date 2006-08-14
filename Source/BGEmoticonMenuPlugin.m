@@ -59,21 +59,19 @@
 														 target:self
 														 action:@selector(dummyTarget:)
 												  keyEquivalent:@""];
-	needToRebuildMenus = YES;
 	
 	/* Create a submenu for these so menuNeedsUpdate will be called 
 	 * to populate them later. Don't need to check respondsToSelector:@selector(setDelegate:).
 	 */
 	NSMenu	*tempMenu;
-	tempMenu = [[NSMenu alloc] init];
+
+        tempMenu = [self emoticonMenu];
 	[tempMenu setDelegate:self];
 	[quickMenuItem setSubmenu:tempMenu];
-	[tempMenu release];
 	
-	tempMenu = [[NSMenu alloc] init];
+        tempMenu = [self emoticonMenu];
 	[tempMenu setDelegate:self];
 	[quickContextualMenuItem setSubmenu:tempMenu];
-	[tempMenu release];
 
     //add the items to their menus.
     [[adium menuController] addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_Edit];    
@@ -94,6 +92,7 @@
 
 	//Observe prefs    
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
+        needToRebuildMenus = NO;
 }
 
 /*!
