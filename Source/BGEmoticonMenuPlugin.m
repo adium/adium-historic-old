@@ -66,11 +66,11 @@
 	NSMenu	*tempMenu;
 
         tempMenu = [self emoticonMenu];
-	[tempMenu setDelegate:self];
-	[quickMenuItem setSubmenu:tempMenu];
+        if ([tempMenu respondsToSelector:@selector(setDelegate:)])
+            [tempMenu setDelegate:self];
 	
-        tempMenu = [self emoticonMenu];
-	[tempMenu setDelegate:self];
+        [quickMenuItem setSubmenu:tempMenu];
+	
 	[quickContextualMenuItem setSubmenu:tempMenu];
 
     //add the items to their menus.
