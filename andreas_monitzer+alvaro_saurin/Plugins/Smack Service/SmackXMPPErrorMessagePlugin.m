@@ -93,6 +93,9 @@ static struct
         int i;
         NSString *errordesc = nil;
         
+        if(code == 501 && [SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.IQ"]) // ignore "not implemented" iq errors, since they should be handled by the plugin that sent this request
+            return;
+        
         for(i=0;mapping[i].code;i++)
         {
             if(mapping[i].code == code)
