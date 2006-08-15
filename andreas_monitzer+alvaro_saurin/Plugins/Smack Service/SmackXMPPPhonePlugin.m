@@ -12,6 +12,8 @@
 #import <AddressBook/ABRecord.h>
 #import "AIJavaController.h"
 #import "AIAccountController.h"
+#import "AIContactController.h"
+#import "AIAdium.h"
 
 #import "SmackCocoaAdapter.h"
 #import "SmackInterfaceDefinitions.h"
@@ -21,7 +23,6 @@
 #define CONCURRENT_JAR @"backport-util-concurrent"
 
 static JavaClassLoader *classLoader = nil;
-static JavaClass *asterisklistener = nil;
 
 @interface SmackPhoneEventStatus : NSObject {
 }
@@ -90,9 +91,17 @@ static JavaClass *asterisklistener = nil;
 }
 
 - (void)dialByExtension:(NSString*)extension;
+- (void)dialByJID:(NSString*)jid;
 - (void)forward:(SmackPhoneCall*)call :(NSString*)extension;
 - (void)forwardByJID:(SmackPhoneCall*)call :(NSString*)jid;
 - (BOOL)isPhoneEnabled:(NSString*)jid;
+
+@end
+
+@interface SmackPhoneListener : NSObject {
+}
+
+- (SmackPhoneClient*)getPhoneClient;
 
 @end
 
@@ -151,12 +160,17 @@ static JavaClass *asterisklistener = nil;
                                                  selector:@selector(receivedIQPacket:)
                                                      name:SmackXMPPIQPacketReceivedNotification
                                                    object:account];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(receivedPresencePacket:)
+                                                     name:SmackXMPPPresencePacketReceivedNotification
+                                                   object:account];
     }
     return self;
 }
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [phonejid release];
     [listener release];
     [currentCall release];
@@ -187,12 +201,9 @@ static JavaClass *asterisklistener = nil;
 
 - (void)receivedIQPacket:(NSNotification*)notification
 {
-    if(!discoID)
-        return;
-    
     // try to detect if the server supports the phone service
     SmackIQ *iq = [[notification userInfo] objectForKey:SmackXMPPPacket];
-    if([SmackCocoaAdapter object:iq isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverItems"])
+    if(discoID && [SmackCocoaAdapter object:iq isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverItems"])
     {
         if([[iq getPacketID] isEqualToString:discoID])
         {
@@ -254,14 +265,57 @@ static JavaClass *asterisklistener = nil;
                 }
             }
         }
+    } else if(isSupported && [SmackCocoaAdapter object:iq isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverInfo"])
+    {
+        // check if that packet applies to us
+        if([[iq getFrom] isEqualToString:phonejid])
+            [self performSelectorOnMainThread:@selector(receivedServiceDiscoveryForPhone:) withObject:iq waitUntilDone:YES];
+    }
+}
+
+- (void)receivedServiceDiscoveryForPhone:(SmackXDiscoverInfo*)iq
+{
+    NSString *jid = [NSString stringWithFormat:@"%@@%@",[iq getNode],[[account UID] jidHost]];
+    AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid];
+    
+    if(contact)
+        [contact setStatusObject:[NSNumber numberWithBool:[iq containsFeature:@"http://jivesoftware.com/phone"]] forKey:@"XMPPPhoneSupport" notify:NotifyNow];
+}
+
+- (void)receivedPresencePacket:(NSNotification*)n
+{
+    if(!isSupported)
+        return;
+
+    SmackPresence *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
+    
+    // prefilter everything that can be done in this secondary thread to avoid blocking the main thread when possible
+
+    // this phone service only works with people on the same server
+    if([[[packet getFrom] jidHost] isEqualToString:[[account UID] jidHost]] &&
+       ![[[packet getType] toString] isEqualToString:@"unavailable"])
+        [self performSelectorOnMainThread:@selector(receivedPresencePacketMainThread:) withObject:n waitUntilDone:YES];
+}
+
+- (void)receivedPresencePacketMainThread:(NSNotification*)n
+{
+    SmackPresence *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
+    // the following line is the reason why we have to do this in the main thread
+    AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:[[packet getFrom] jidUserHost]];
+    
+    if(contact && ![contact statusObjectForKey:@"XMPPPhoneSupport"])
+    {
+        // we don't know if that user supports the phone service yet, so query the server
+        SmackXDiscoverInfo *info = [SmackCocoaAdapter discoverInfo];
+        [info setTo:phonejid];
+        [info setNode:[[packet getFrom] jidUsername]];
+        [[account connection] sendPacket:info];
     }
 }
 
 - (NSArray *)accountActionMenuItems
 {
     NSMutableArray *menuItems = [NSMutableArray array];
-    
-    NSLog(@"Smack Phone: isSupported: %@",isSupported?@"YEP":@"NOPE");
     
     if(isSupported) {
         NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Telephone System","Telephone System") action:@selector(showWindow:) keyEquivalent:@""];
@@ -276,6 +330,29 @@ static JavaClass *asterisklistener = nil;
 - (IBAction)showWindow:(id)sender
 {
     [window makeKeyAndOrderFront:nil];
+}
+
+- (NSArray *)menuItemsForContact:(AIListContact *)inContact {
+    NSMutableArray *menuItems = [NSMutableArray array];
+    
+    if(isSupported && [[inContact statusObjectForKey:@"XMPPPhoneSupport"] boolValue])
+    {
+        NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Call","Call") action:@selector(callContact:) keyEquivalent:@""];
+        [mitem setTarget:self];
+        [mitem setRepresentedObject:inContact];
+        [menuItems addObject:mitem];
+        [mitem release];
+    }
+    
+    return menuItems;
+}
+
+- (void)callContact:(NSMenuItem*)sender
+{
+    AIListContact *contact = [sender representedObject];
+    
+    [[listener getPhoneClient] dialByJID:[[contact UID] jidUserHost]];
+    // -jidUserHost wouldn't be required, but we'll do it anyways just to make sure
 }
 
 - (void)setCurrentCall:(SmackPhoneCall*)call
@@ -327,7 +404,7 @@ static JavaClass *asterisklistener = nil;
 
 - (void)peopleSelectionChanged:(NSNotification*)notification
 {
-    ABRecord *phone = [[peoplePicker selectedValues] lastObject];
+    NSString *phone = [[peoplePicker selectedValues] lastObject];
     if(phone)
         [numberfield setStringValue:phone];
 }
@@ -336,62 +413,74 @@ static JavaClass *asterisklistener = nil;
 
 - (IBAction)dial0:(id)sender
 {
-    [numberfield insertText:@"0"];
+    [window makeFirstResponder:nil];
+    [numberfield setStringValue:[[numberfield stringValue] stringByAppendingString:@"0"]];
 }
 
 - (IBAction)dial1:(id)sender
 {
-    [numberfield insertText:@"1"];
+    [window makeFirstResponder:nil];
+    [numberfield setStringValue:[[numberfield stringValue] stringByAppendingString:@"1"]];
 }
 
 - (IBAction)dial2:(id)sender
 {
-    [numberfield insertText:@"2"];
+    [window makeFirstResponder:nil];
+    [numberfield setStringValue:[[numberfield stringValue] stringByAppendingString:@"2"]];
 }
 
 - (IBAction)dial3:(id)sender
 {
-    [numberfield insertText:@"3"];
+    [window makeFirstResponder:nil];
+    [numberfield setStringValue:[[numberfield stringValue] stringByAppendingString:@"3"]];
 }
 
 - (IBAction)dial4:(id)sender
 {
-    [numberfield insertText:@"4"];
+    [window makeFirstResponder:nil];
+    [numberfield setStringValue:[[numberfield stringValue] stringByAppendingString:@"4"]];
 }
 
 - (IBAction)dial5:(id)sender
 {
-    [numberfield insertText:@"5"];
+    [window makeFirstResponder:nil];
+    [numberfield setStringValue:[[numberfield stringValue] stringByAppendingString:@"5"]];
 }
 
 - (IBAction)dial6:(id)sender
 {
-    [numberfield insertText:@"6"];
+    [window makeFirstResponder:nil];
+    [numberfield setStringValue:[[numberfield stringValue] stringByAppendingString:@"6"]];
 }
 
 - (IBAction)dial7:(id)sender
 {
-    [numberfield insertText:@"7"];
+    [window makeFirstResponder:nil];
+    [numberfield setStringValue:[[numberfield stringValue] stringByAppendingString:@"7"]];
 }
 
 - (IBAction)dial8:(id)sender
 {
-    [numberfield insertText:@"8"];
+    [window makeFirstResponder:nil];
+    [numberfield setStringValue:[[numberfield stringValue] stringByAppendingString:@"8"]];
 }
 
 - (IBAction)dial9:(id)sender
 {
-    [numberfield insertText:@"9"];
+    [window makeFirstResponder:nil];
+    [numberfield setStringValue:[[numberfield stringValue] stringByAppendingString:@"9"]];
 }
 
 - (IBAction)dialPound:(id)sender
 {
-    [numberfield insertText:@"#"];
+    [window makeFirstResponder:nil];
+    [numberfield setStringValue:[[numberfield stringValue] stringByAppendingString:@"#"]];
 }
 
 - (IBAction)dialAsterisk:(id)sender
 {
-    [numberfield insertText:@"*"];
+    [window makeFirstResponder:nil];
+    [numberfield setStringValue:[[numberfield stringValue] stringByAppendingString:@"*"]];
 }
 
 #pragma mark Actions
@@ -422,6 +511,7 @@ static JavaClass *asterisklistener = nil;
 {
     [window makeFirstResponder:nil];
     NSLog(@"invite %@",[numberfield stringValue]);
+    // this even isn't mentioned in the proto-jep and the phone client, but there's an action in the library. I'll ignore it for now.
 }
 
 @end
