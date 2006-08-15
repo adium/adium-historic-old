@@ -362,11 +362,16 @@
 {
 	NSRect	rect = inRect;
 	if (userIconVisible) {
+		NSImageInterpolation	savedIterpolation = [[NSGraphicsContext currentContext] imageInterpolation];
 		NSImage *image;
 		NSRect	drawRect;
 		
 		image = [self userIconImage];
-		if (!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
+		if (!image) {
+			// if using service icons, set the interpolation to high
+			[[NSGraphicsContext currentContext] setImageInterpolation: NSImageInterpolationHigh];
+			image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
+		}
 
 		//Rounded corners for our user images.
 		rect = [image drawRoundedInRect:rect
@@ -374,6 +379,7 @@
 							   position:position
 							   fraction:[self imageOpacityForDrawing]
 								 radius:userIconRoundingRadius];
+		[[NSGraphicsContext currentContext] setImageInterpolation: savedIterpolation];
 
 		//If we're using space on the left, shift the origin right
 		if (position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_LEFT_PAD;
