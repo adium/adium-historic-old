@@ -10,9 +10,11 @@
 #import <Adium/AIPlugin.h>
 
 #import "SmackXMPPService.h"
+#import "SmackGoogleService.h"
 
 @interface SmackServicePlugin : AIPlugin {
     SmackXMPPService *xmppService;
+    SmackGoogleService *googleService;
 }
 
 @end

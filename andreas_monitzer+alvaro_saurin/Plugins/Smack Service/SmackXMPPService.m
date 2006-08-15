@@ -27,7 +27,7 @@
 
 - (NSString *)serviceClass
 {
-	return @"XMPP";
+	return @"Jabber";
 }
 
 - (AIServiceImportance)serviceImportance{

@@ -14,11 +14,14 @@
 - (void)installPlugin
 {
 	xmppService = [[SmackXMPPService alloc] init];
+    googleService = [[SmackGoogleService alloc] init];
 }
 
 - (void)dealloc {
     [xmppService release];
     xmppService = nil;
+    [googleService release];
+    googleService = nil;
     [super dealloc];
 }
 

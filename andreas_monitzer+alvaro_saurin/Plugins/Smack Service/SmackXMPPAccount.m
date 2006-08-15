@@ -400,7 +400,7 @@
                 int dname_length;
                 
                 if(ruli_dname_decode(dname, RULI_LIMIT_DNAME_TEXT_BUFSZ, &dname_length, srventry->target, srventry->target_len) == RULI_TXT_OK) {
-                    host = [[[NSString alloc] initWithBytes:dname length:dname_length encoding:NSASCIIStringEncoding] autorelease];
+                    host = [[[NSString alloc] initWithBytes:dname length:(dname[dname_length-1] == '.')?dname_length-1:dname_length encoding:NSASCIIStringEncoding] autorelease];
                     portnum = srventry->port;
                 } else
                     AILog(@"XMPP: failed decoding SRV resolve domain name");

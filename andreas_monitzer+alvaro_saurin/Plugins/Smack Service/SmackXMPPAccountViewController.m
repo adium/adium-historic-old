@@ -15,7 +15,7 @@
 + (AIAccountViewController*)accountViewController {
     static SmackXMPPAccountViewController *avc = nil;
     if(!avc)
-        avc = [[SmackXMPPAccountViewController alloc] init];
+        avc = [[self alloc] init];
     return avc;
 }
 
@@ -73,30 +73,36 @@
                     forKey:@"Resource"
                      group:GROUP_ACCOUNT_STATUS];
     
-    [account setPreference:[NSNumber numberWithBool:![checkBox_useTLS state]]
-					forKey:@"disableTLS"
-					 group:GROUP_ACCOUNT_STATUS];
+    if(checkBox_useTLS)
+        [account setPreference:[NSNumber numberWithBool:![checkBox_useTLS state]]
+                        forKey:@"disableTLS"
+                         group:GROUP_ACCOUNT_STATUS];
 //    [account setPreference:[NSNumber numberWithBool:[checkBox_useSSL state]]
 //					forKey:@"useSSL"
 //					 group:GROUP_ACCOUNT_STATUS];
     [account setPreference:[NSNumber numberWithBool:NO]
 					forKey:@"useSSL"
 					 group:GROUP_ACCOUNT_STATUS];
-    [account setPreference:[NSNumber numberWithBool:![checkBox_useSASL state]]
-					forKey:@"disableSASL"
-					 group:GROUP_ACCOUNT_STATUS];
-    [account setPreference:[NSNumber numberWithBool:[checkBox_allowSelfSigned state]]
-					forKey:@"allowSelfSigned"
-					 group:GROUP_ACCOUNT_STATUS];
-    [account setPreference:[NSNumber numberWithBool:[checkBox_allowExpired state]]
-					forKey:@"allowExpired"
-					 group:GROUP_ACCOUNT_STATUS];
-    [account setPreference:[NSNumber numberWithBool:[checkBox_allowNonMatchingHost state]]
-					forKey:@"allowNonMatchingHost"
-					 group:GROUP_ACCOUNT_STATUS];
-    [account setPreference:[NSNumber numberWithBool:![checkBox_useCompression state]]
-					forKey:@"disableCompression"
-					 group:GROUP_ACCOUNT_STATUS];
+    if(checkBox_useSASL)
+        [account setPreference:[NSNumber numberWithBool:![checkBox_useSASL state]]
+                        forKey:@"disableSASL"
+                         group:GROUP_ACCOUNT_STATUS];
+    if(checkBox_allowSelfSigned)
+        [account setPreference:[NSNumber numberWithBool:[checkBox_allowSelfSigned state]]
+                        forKey:@"allowSelfSigned"
+                         group:GROUP_ACCOUNT_STATUS];
+    if(checkBox_allowExpired)
+        [account setPreference:[NSNumber numberWithBool:[checkBox_allowExpired state]]
+                        forKey:@"allowExpired"
+                         group:GROUP_ACCOUNT_STATUS];
+    if(checkBox_allowNonMatchingHost)
+        [account setPreference:[NSNumber numberWithBool:[checkBox_allowNonMatchingHost state]]
+                        forKey:@"allowNonMatchingHost"
+                         group:GROUP_ACCOUNT_STATUS];
+    if(checkBox_useCompression)
+        [account setPreference:[NSNumber numberWithBool:![checkBox_useCompression state]]
+                        forKey:@"disableCompression"
+                         group:GROUP_ACCOUNT_STATUS];
     
     [account setPreference:[NSNumber numberWithInt:[slider_availablePriority intValue]]
 					forKey:@"availablePriority"

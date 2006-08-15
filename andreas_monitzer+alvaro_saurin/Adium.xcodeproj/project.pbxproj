@@ -1339,6 +1339,13 @@
 		8102A8210A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A81F0A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m */; };
 		8102A8880A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A8860A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m */; };
 		811DE2170A862E5900487D47 /* InvisibleCommand.java in Sources */ = {isa = PBXBuildFile; fileRef = 811DE2160A862E5900487D47 /* InvisibleCommand.java */; };
+		81376B680A9273A000298452 /* SmackGoogleService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81376B660A9273A000298452 /* SmackGoogleService.h */; };
+		81376B690A9273A000298452 /* SmackGoogleService.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376B670A9273A000298452 /* SmackGoogleService.m */; };
+		81376B800A9274F000298452 /* SmackGoogleAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81376B7E0A9274F000298452 /* SmackGoogleAccount.h */; };
+		81376B810A9274F000298452 /* SmackGoogleAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376B7F0A9274F000298452 /* SmackGoogleAccount.m */; };
+		81376B8D0A92794F00298452 /* SmackGoogleAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81376B870A92794E00298452 /* SmackGoogleAccountView.nib */; };
+		81376B930A92797E00298452 /* SmackGoogleAccountViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81376B910A92797D00298452 /* SmackGoogleAccountViewController.h */; };
+		81376B940A92797E00298452 /* SmackGoogleAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376B920A92797D00298452 /* SmackGoogleAccountViewController.m */; };
 		815679900A339B1F005ADC13 /* SmackListContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8156798E0A339B1F005ADC13 /* SmackListContact.m */; };
 		815D2F2A0A74D903009338C2 /* OutOfBandDataExtension.java in Sources */ = {isa = PBXBuildFile; fileRef = 815D2F290A74D903009338C2 /* OutOfBandDataExtension.java */; };
 		815D321F0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 815D321D0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m */; };
@@ -1895,6 +1902,9 @@
 				81F659BE0A2A8C81008FC8E7 /* smackx.jar in CopyFiles */,
 				81C3A8FE0A91076100A575B6 /* asterisk-im-client.jar in CopyFiles */,
 				81C3AAD10A913CFA00A575B6 /* SmackBridge.jar in CopyFiles */,
+				81376B680A9273A000298452 /* SmackGoogleService.h in CopyFiles */,
+				81376B800A9274F000298452 /* SmackGoogleAccount.h in CopyFiles */,
+				81376B930A92797E00298452 /* SmackGoogleAccountViewController.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3693,6 +3703,13 @@
 		8102A8850A4B7A1E004DF0F5 /* SmackXMPPHeadlineMessagePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPHeadlineMessagePlugin.h; path = "Plugins/Smack Service/SmackXMPPHeadlineMessagePlugin.h"; sourceTree = "<group>"; };
 		8102A8860A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPHeadlineMessagePlugin.m; path = "Plugins/Smack Service/SmackXMPPHeadlineMessagePlugin.m"; sourceTree = "<group>"; };
 		811DE2160A862E5900487D47 /* InvisibleCommand.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = InvisibleCommand.java; path = "Plugins/Smack Service/InvisibleCommand.java"; sourceTree = "<group>"; };
+		81376B660A9273A000298452 /* SmackGoogleService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackGoogleService.h; path = "Plugins/Smack Service/SmackGoogleService.h"; sourceTree = "<group>"; };
+		81376B670A9273A000298452 /* SmackGoogleService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackGoogleService.m; path = "Plugins/Smack Service/SmackGoogleService.m"; sourceTree = "<group>"; };
+		81376B7E0A9274F000298452 /* SmackGoogleAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackGoogleAccount.h; path = "Plugins/Smack Service/SmackGoogleAccount.h"; sourceTree = "<group>"; };
+		81376B7F0A9274F000298452 /* SmackGoogleAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackGoogleAccount.m; path = "Plugins/Smack Service/SmackGoogleAccount.m"; sourceTree = "<group>"; };
+		81376B880A92794E00298452 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackGoogleAccountView.nib"; sourceTree = "<group>"; };
+		81376B910A92797D00298452 /* SmackGoogleAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackGoogleAccountViewController.h; path = "Plugins/Smack Service/SmackGoogleAccountViewController.h"; sourceTree = "<group>"; };
+		81376B920A92797D00298452 /* SmackGoogleAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackGoogleAccountViewController.m; path = "Plugins/Smack Service/SmackGoogleAccountViewController.m"; sourceTree = "<group>"; };
 		8156798D0A339B1F005ADC13 /* SmackListContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackListContact.h; path = "Plugins/Smack Service/SmackListContact.h"; sourceTree = "<group>"; };
 		8156798E0A339B1F005ADC13 /* SmackListContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackListContact.m; path = "Plugins/Smack Service/SmackListContact.m"; sourceTree = "<group>"; };
 		815D2F290A74D903009338C2 /* OutOfBandDataExtension.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = OutOfBandDataExtension.java; path = "Plugins/Smack Service/OutOfBandDataExtension.java"; sourceTree = "<group>"; };
@@ -6624,6 +6641,20 @@
 			path = "Plugins/Link Management";
 			sourceTree = "<group>";
 		};
+		81376B6A0A9273BD00298452 /* Google Talk */ = {
+			isa = PBXGroup;
+			children = (
+				81376B660A9273A000298452 /* SmackGoogleService.h */,
+				81376B670A9273A000298452 /* SmackGoogleService.m */,
+				81376B7E0A9274F000298452 /* SmackGoogleAccount.h */,
+				81376B7F0A9274F000298452 /* SmackGoogleAccount.m */,
+				81376B910A92797D00298452 /* SmackGoogleAccountViewController.h */,
+				81376B920A92797D00298452 /* SmackGoogleAccountViewController.m */,
+				81376B870A92794E00298452 /* SmackGoogleAccountView.nib */,
+			);
+			name = "Google Talk";
+			sourceTree = "<group>";
+		};
 		81B4CD870A4181A000A8ABF5 /* liboop */ = {
 			isa = PBXGroup;
 			children = (
@@ -6719,6 +6750,7 @@
 				81F6660B0A2FE2CF008FC8E7 /* ruli */,
 				81B4CD870A4181A000A8ABF5 /* liboop */,
 				81E2C5FD0A416AB60070CE78 /* Java-part */,
+				81376B6A0A9273BD00298452 /* Google Talk */,
 				81F6519A0A291145008FC8E7 /* SmackServicePlugin.h */,
 				81F6519B0A291145008FC8E7 /* SmackServicePlugin.m */,
 				81F651AA0A29123C008FC8E7 /* SmackXMPPService.h */,
@@ -9000,6 +9032,7 @@
 				81DA14730A779B2E00569134 /* SmackXMPPVCardEditor.nib in Resources */,
 				81C3A7060A8FE15000A575B6 /* SmackXMPPHeadlinesViewer.nib in Resources */,
 				81C3A8DA0A90F63B00A575B6 /* SmackXMPPPhoneControl.nib in Resources */,
+				81376B8D0A92794F00298452 /* SmackGoogleAccountView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9802,6 +9835,9 @@
 				81F9D8B00A83A92F004A35BD /* SmackXMPPPrivacyPlugin.m in Sources */,
 				81AB120C0A8B5F6100E32420 /* SmackJinglePlugin.m in Sources */,
 				81C3AC1D0A9171CD00A575B6 /* SmackXMPPPhonePlugin.m in Sources */,
+				81376B690A9273A000298452 /* SmackGoogleService.m in Sources */,
+				81376B810A9274F000298452 /* SmackGoogleAccount.m in Sources */,
+				81376B940A92797E00298452 /* SmackGoogleAccountViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10894,6 +10930,14 @@
 				34E0E9B007CC4B1800A82198 /* English */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		81376B870A92794E00298452 /* SmackGoogleAccountView.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				81376B880A92794E00298452 /* English */,
+			);
+			name = SmackGoogleAccountView.nib;
 			sourceTree = "<group>";
 		};
 		815ED1B30A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib */ = {
