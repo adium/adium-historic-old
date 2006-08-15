@@ -54,6 +54,7 @@
 //AIXMLElement: Sub-element (e.g. span in a p).
 - (void) addObject:(id)obj;
 - (void) addObjectsFromArray:(NSArray *)array;
+- (void) insertObject:(id)obj atIndex:(unsigned)idx;
 
 - (NSArray *)contents;
 - (void)setContents:(NSArray *)newContents;

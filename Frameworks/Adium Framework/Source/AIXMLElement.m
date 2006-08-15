@@ -139,6 +139,17 @@
 		[self addObject:obj];
 	}
 }
+- (void) insertObject:(id)obj atIndex:(unsigned)idx
+{
+	BOOL isString = [obj isKindOfClass:[NSString class]];
+	NSParameterAssert(isString || [obj isKindOfClass:[AIXMLElement class]]);
+
+	if(isString) {
+		obj = [obj stringByEscapingForXMLWithEntities:nil];
+	}
+
+	[contents insertObject:obj atIndex:idx];
+}
 
 - (NSArray *)contents
 {
