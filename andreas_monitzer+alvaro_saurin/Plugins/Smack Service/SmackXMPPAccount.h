@@ -21,6 +21,8 @@
     BOOL currentlyInvisible;
 }
 
+- (void)addPlugin:(Class)pluginclass; // for subclassers only!
+
 - (NSString*)hostName;
 - (SmackConnectionConfiguration*)connectionConfiguration;
 - (SmackXMPPConnection*)connection;

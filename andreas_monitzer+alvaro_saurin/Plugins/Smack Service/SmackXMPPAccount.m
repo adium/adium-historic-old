@@ -101,12 +101,16 @@
         int i;
         plugins = [[NSMutableArray alloc] init];
         
-        for(i = 0; XMPPPlugins[i]; i++) {
-            NSObject *plugin = [[XMPPPlugins[i] alloc] initWithAccount:self];
-            [(NSMutableArray*)plugins addObject:plugin];
-            [plugin release];
-        }
+        for(i = 0; XMPPPlugins[i]; i++)
+            [self addPlugin:XMPPPlugins[i]];
     }
+}
+
+- (void)addPlugin:(Class)pluginclass
+{
+    NSObject *plugin = [[pluginclass alloc] initWithAccount:self];
+    [(NSMutableArray*)plugins addObject:plugin];
+    [plugin release];
 }
 
 - (void)dealloc {
