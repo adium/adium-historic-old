@@ -12,7 +12,7 @@
 
 - (NSString *)stringForObjectValue:(NSDate *)date
 {
-	if ([date isKindOfClass:[AICalendarDate class]]) {
+	if ([self respondsToSelector:@selector(timeStyle)] && [date isKindOfClass:[AICalendarDate class]]) {
 		NSDateFormatterStyle timeStyle = [self timeStyle];
 		if ((timeStyle != NSDateFormatterNoStyle) &&
 			([(AICalendarDate *)date granularity] == AIDayGranularity)) {
