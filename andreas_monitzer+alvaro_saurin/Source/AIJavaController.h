@@ -47,6 +47,7 @@
     Class JavaCocoaAdapter;
 }
 
-- (JavaClassLoader*)classLoaderWithJARs:(NSArray*)jars; // NSArray of file paths (NSString)
+- (JavaClassLoader*)classLoaderWithJARs:(NSArray*)jararray; // NSArray of file paths (NSString)
+- (JavaClassLoader*)classLoaderWithJARs:(NSArray*)jararray parentClassLoader:(JavaClassLoader*)parent;
 
 @end

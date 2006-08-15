@@ -1341,18 +1341,14 @@
 		811DE2170A862E5900487D47 /* InvisibleCommand.java in Sources */ = {isa = PBXBuildFile; fileRef = 811DE2160A862E5900487D47 /* InvisibleCommand.java */; };
 		815679900A339B1F005ADC13 /* SmackListContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8156798E0A339B1F005ADC13 /* SmackListContact.m */; };
 		815D2F2A0A74D903009338C2 /* OutOfBandDataExtension.java in Sources */ = {isa = PBXBuildFile; fileRef = 815D2F290A74D903009338C2 /* OutOfBandDataExtension.java */; };
-		815D321E0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 815D321C0A751673009338C2 /* SmackXMPPChatStateNotificationsPlugin.h */; };
 		815D321F0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 815D321D0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m */; };
 		815D32380A7518D7009338C2 /* ChatStateNotifications.java in Sources */ = {isa = PBXBuildFile; fileRef = 815D32370A7518D7009338C2 /* ChatStateNotifications.java */; };
-		815D357E0A7585EA009338C2 /* SmackXMPPVCardPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 815D357C0A7585EA009338C2 /* SmackXMPPVCardPlugin.h */; };
 		815D357F0A7585EA009338C2 /* SmackXMPPVCardPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 815D357D0A7585EA009338C2 /* SmackXMPPVCardPlugin.m */; };
 		815D37550A765E83009338C2 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D37460A765E83009338C2 /* CoreServices.framework */; };
 		815ECFBB0A6A56540024B6FE /* SmackXMPPRosterPluginListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 815ECFBA0A6A56530024B6FE /* SmackXMPPRosterPluginListener.java */; };
 		815ED1B50A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib in Resources */ = {isa = PBXBuildFile; fileRef = 815ED1B30A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib */; };
 		815ED2920A6C5AA00024B6FE /* SmackXMPPMUCChangeSubject.nib in Resources */ = {isa = PBXBuildFile; fileRef = 815ED2900A6C5A9F0024B6FE /* SmackXMPPMUCChangeSubject.nib */; };
-		815ED31D0A6C637E0024B6FE /* SmackXMPPGatewayInteractionPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 815ED31B0A6C637D0024B6FE /* SmackXMPPGatewayInteractionPlugin.h */; };
 		815ED31E0A6C637E0024B6FE /* SmackXMPPGatewayInteractionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 815ED31C0A6C637D0024B6FE /* SmackXMPPGatewayInteractionPlugin.m */; };
-		81AB120B0A8B5F6100E32420 /* SmackJinglePlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81AB12090A8B5F6100E32420 /* SmackJinglePlugin.h */; };
 		81AB120C0A8B5F6100E32420 /* SmackJinglePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81AB120A0A8B5F6100E32420 /* SmackJinglePlugin.m */; };
 		81AB120E0A8B5F8A00E32420 /* JingleListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 81AB120D0A8B5F8A00E32420 /* JingleListener.java */; };
 		81B4CA200A416C3B00A8ABF5 /* SmackBridge.java in Sources */ = {isa = PBXBuildFile; fileRef = 81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */; };
@@ -1386,26 +1382,26 @@
 		81B4CDA90A4181C500A8ABF5 /* sys.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDA10A4181C500A8ABF5 /* sys.c */; };
 		81B4CDE50A41857D00A8ABF5 /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDE40A41857D00A8ABF5 /* alloc.c */; };
 		81B4CE640A42449700A8ABF5 /* SmackXMPPRosterPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CE620A42449600A8ABF5 /* SmackXMPPRosterPlugin.m */; };
-		81BE445D0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81BE445B0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.h */; };
 		81BE445E0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 81BE445C0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.m */; };
 		81BE44690A6C731900AADA28 /* SmackXMPPServiceDiscoveryBrowser.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81BE44670A6C731900AADA28 /* SmackXMPPServiceDiscoveryBrowser.nib */; };
-		81BE5F2F0A70660000AADA28 /* SmackXMPPRegistration.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81BE5F2D0A70660000AADA28 /* SmackXMPPRegistration.h */; };
 		81BE5F300A70660000AADA28 /* SmackXMPPRegistration.m in Sources */ = {isa = PBXBuildFile; fileRef = 81BE5F2E0A70660000AADA28 /* SmackXMPPRegistration.m */; };
 		81BE647A0A711F6600AADA28 /* SmackXMPPFileTransferListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 81BE64790A711F6600AADA28 /* SmackXMPPFileTransferListener.java */; };
-		81BE648A0A71220300AADA28 /* SmackXMPPFileTransferPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81BE64880A71220300AADA28 /* SmackXMPPFileTransferPlugin.h */; };
 		81BE648B0A71220300AADA28 /* SmackXMPPFileTransferPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81BE64890A71220300AADA28 /* SmackXMPPFileTransferPlugin.m */; };
-		81BE66B70A715FB200AADA28 /* SmackXMPPAccountRegistrationController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81BE66B50A715FB200AADA28 /* SmackXMPPAccountRegistrationController.h */; };
 		81BE66B80A715FB200AADA28 /* SmackXMPPAccountRegistrationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81BE66B60A715FB200AADA28 /* SmackXMPPAccountRegistrationController.m */; };
 		81C3A7060A8FE15000A575B6 /* SmackXMPPHeadlinesViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81C3A7040A8FE15000A575B6 /* SmackXMPPHeadlinesViewer.nib */; };
-		81D59B5E0A52214F0099F9B9 /* SmackBridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */; };
-		81D5A15B0A5943240099F9B9 /* SmackXMPPMultiUserChatPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81D5A1590A5943230099F9B9 /* SmackXMPPMultiUserChatPlugin.h */; };
+		81C3A8DA0A90F63B00A575B6 /* SmackXMPPPhoneControl.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81C3A8D80A90F63B00A575B6 /* SmackXMPPPhoneControl.nib */; };
+		81C3A8FD0A91072900A575B6 /* asterisk-im-client.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81C3A8FC0A91072900A575B6 /* asterisk-im-client.jar */; };
+		81C3A8FE0A91076100A575B6 /* asterisk-im-client.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81C3A8FC0A91072900A575B6 /* asterisk-im-client.jar */; };
+		81C3A94D0A910A5100A575B6 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348E5ACA06D2A74C004C051C /* AddressBook.framework */; };
+		81C3AA8B0A91393F00A575B6 /* SmackXMPPAsteriskListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 81C3A9930A91162E00A575B6 /* SmackXMPPAsteriskListener.java */; };
+		81C3AAD10A913CFA00A575B6 /* SmackBridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81C3AAC40A913CB800A575B6 /* SmackBridge.jar */; };
+		81C3AB100A914E3C00A575B6 /* backport-util-concurrent.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81C3AB0F0A914DBD00A575B6 /* backport-util-concurrent.jar */; };
+		81C3AC1D0A9171CD00A575B6 /* SmackXMPPPhonePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C3AC1C0A9171CC00A575B6 /* SmackXMPPPhonePlugin.m */; };
 		81D5A15C0A5943240099F9B9 /* SmackXMPPMultiUserChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81D5A15A0A5943230099F9B9 /* SmackXMPPMultiUserChatPlugin.m */; };
 		81D5A1690A5944320099F9B9 /* SmackXMPPMultiUserChatPluginListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 81D5A1680A5944320099F9B9 /* SmackXMPPMultiUserChatPluginListener.java */; };
 		81D5A1CC0A59710E0099F9B9 /* SmackXMPPJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81D5A1CA0A59710D0099F9B9 /* SmackXMPPJoinChatView.nib */; };
-		81D5A8090A59F77A0099F9B9 /* SmackXMPPFormConverter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81D5A8070A59F7790099F9B9 /* SmackXMPPFormConverter.h */; };
 		81D5A80A0A59F77A0099F9B9 /* SmackXMPPFormConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 81D5A8080A59F77A0099F9B9 /* SmackXMPPFormConverter.m */; };
 		81D5A8600A5A14460099F9B9 /* SmackXMPPForm.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81D5A85E0A5A14450099F9B9 /* SmackXMPPForm.nib */; };
-		81D5A8630A5A14AE0099F9B9 /* SmackXMPPFormController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81D5A8610A5A14AD0099F9B9 /* SmackXMPPFormController.h */; };
 		81D5A8640A5A14AE0099F9B9 /* SmackXMPPFormController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81D5A8620A5A14AE0099F9B9 /* SmackXMPPFormController.m */; };
 		81D5A8F50A5A15D10099F9B9 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C103FAE057127A500F3C158 /* WebKit.framework */; };
 		81DA14730A779B2E00569134 /* SmackXMPPVCardEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81DA14710A779B2E00569134 /* SmackXMPPVCardEditor.nib */; };
@@ -1428,9 +1424,7 @@
 		81F9D1E80A7F832A004A35BD /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
 		81F9D1EA0A7F8396004A35BD /* JavaCocoaAdapter.java in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D1E90A7F8395004A35BD /* JavaCocoaAdapter.java */; };
 		81F9D2010A7F8B99004A35BD /* JavaCocoaAdapter.class in Resources */ = {isa = PBXBuildFile; fileRef = 81F9D2000A7F8B99004A35BD /* JavaCocoaAdapter.class */; };
-		81F9D4970A8158EB004A35BD /* SmackXMPPVersionPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F9D4950A8158EA004A35BD /* SmackXMPPVersionPlugin.h */; };
 		81F9D4980A8158EB004A35BD /* SmackXMPPVersionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D4960A8158EA004A35BD /* SmackXMPPVersionPlugin.m */; };
-		81F9D8AF0A83A92F004A35BD /* SmackXMPPPrivacyPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F9D8AD0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.h */; };
 		81F9D8B00A83A92F004A35BD /* SmackXMPPPrivacyPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D8AE0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.m */; };
 		9E124DEB07D34C7300AA91C5 /* CBGrowlAlertDetailPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */; };
 		9E124DEC07D34C7300AA91C5 /* CBGrowlAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */; };
@@ -1896,22 +1890,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 15;
 			files = (
-				81D59B5E0A52214F0099F9B9 /* SmackBridge.jar in CopyFiles */,
+				81C3AB100A914E3C00A575B6 /* backport-util-concurrent.jar in CopyFiles */,
 				81F659BD0A2A8C81008FC8E7 /* smack.jar in CopyFiles */,
 				81F659BE0A2A8C81008FC8E7 /* smackx.jar in CopyFiles */,
-				81D5A15B0A5943240099F9B9 /* SmackXMPPMultiUserChatPlugin.h in CopyFiles */,
-				81D5A8090A59F77A0099F9B9 /* SmackXMPPFormConverter.h in CopyFiles */,
-				81D5A8630A5A14AE0099F9B9 /* SmackXMPPFormController.h in CopyFiles */,
-				815ED31D0A6C637E0024B6FE /* SmackXMPPGatewayInteractionPlugin.h in CopyFiles */,
-				81BE445D0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.h in CopyFiles */,
-				81BE5F2F0A70660000AADA28 /* SmackXMPPRegistration.h in CopyFiles */,
-				81BE648A0A71220300AADA28 /* SmackXMPPFileTransferPlugin.h in CopyFiles */,
-				81BE66B70A715FB200AADA28 /* SmackXMPPAccountRegistrationController.h in CopyFiles */,
-				815D321E0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.h in CopyFiles */,
-				815D357E0A7585EA009338C2 /* SmackXMPPVCardPlugin.h in CopyFiles */,
-				81F9D4970A8158EB004A35BD /* SmackXMPPVersionPlugin.h in CopyFiles */,
-				81F9D8AF0A83A92F004A35BD /* SmackXMPPPrivacyPlugin.h in CopyFiles */,
-				81AB120B0A8B5F6100E32420 /* SmackJinglePlugin.h in CopyFiles */,
+				81C3A8FE0A91076100A575B6 /* asterisk-im-client.jar in CopyFiles */,
+				81C3AAD10A913CFA00A575B6 /* SmackBridge.jar in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3793,6 +3776,13 @@
 		81BE66B50A715FB200AADA28 /* SmackXMPPAccountRegistrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPAccountRegistrationController.h; path = "Plugins/Smack Service/SmackXMPPAccountRegistrationController.h"; sourceTree = "<group>"; };
 		81BE66B60A715FB200AADA28 /* SmackXMPPAccountRegistrationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPAccountRegistrationController.m; path = "Plugins/Smack Service/SmackXMPPAccountRegistrationController.m"; sourceTree = "<group>"; };
 		81C3A7050A8FE15000A575B6 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPHeadlinesViewer.nib"; sourceTree = "<group>"; };
+		81C3A8D90A90F63B00A575B6 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPPhoneControl.nib"; sourceTree = "<group>"; };
+		81C3A8E20A91051F00A575B6 /* SmackXMPPPhonePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPPhonePlugin.h; path = "Plugins/Smack Service/SmackXMPPPhonePlugin.h"; sourceTree = "<group>"; };
+		81C3A8FC0A91072900A575B6 /* asterisk-im-client.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "asterisk-im-client.jar"; path = "Plugins/Smack Service/asterisk-im-client.jar"; sourceTree = "<group>"; };
+		81C3A9930A91162E00A575B6 /* SmackXMPPAsteriskListener.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = SmackXMPPAsteriskListener.java; path = "Plugins/Smack Service/SmackXMPPAsteriskListener.java"; sourceTree = "<group>"; };
+		81C3AAC40A913CB800A575B6 /* SmackBridge.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = SmackBridge.jar; sourceTree = BUILT_PRODUCTS_DIR; };
+		81C3AB0F0A914DBD00A575B6 /* backport-util-concurrent.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "backport-util-concurrent.jar"; path = "Plugins/Smack Service/backport-util-concurrent.jar"; sourceTree = "<group>"; };
+		81C3AC1C0A9171CC00A575B6 /* SmackXMPPPhonePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPPhonePlugin.m; path = "Plugins/Smack Service/SmackXMPPPhonePlugin.m"; sourceTree = SOURCE_ROOT; };
 		81D5A1590A5943230099F9B9 /* SmackXMPPMultiUserChatPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPMultiUserChatPlugin.h; path = "Plugins/Smack Service/SmackXMPPMultiUserChatPlugin.h"; sourceTree = "<group>"; };
 		81D5A15A0A5943230099F9B9 /* SmackXMPPMultiUserChatPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPMultiUserChatPlugin.m; path = "Plugins/Smack Service/SmackXMPPMultiUserChatPlugin.m"; sourceTree = "<group>"; };
 		81D5A1680A5944320099F9B9 /* SmackXMPPMultiUserChatPluginListener.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = SmackXMPPMultiUserChatPluginListener.java; path = "Plugins/Smack Service/SmackXMPPMultiUserChatPluginListener.java"; sourceTree = "<group>"; };
@@ -4221,6 +4211,7 @@
 			files = (
 				81B4CA210A416C4200A8ABF5 /* smack.jar in Frameworks */,
 				81B4CA220A416C4200A8ABF5 /* smackx.jar in Frameworks */,
+				81C3A8FD0A91072900A575B6 /* asterisk-im-client.jar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4233,6 +4224,7 @@
 				81F651750A291004008FC8E7 /* AIUtilities.framework in Frameworks */,
 				81F651760A291004008FC8E7 /* JavaVM.framework in Frameworks */,
 				815D37550A765E83009338C2 /* CoreServices.framework in Frameworks */,
+				81C3A94D0A910A5100A575B6 /* AddressBook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6677,8 +6669,26 @@
 				81F9D8AE0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.m */,
 				81AB12090A8B5F6100E32420 /* SmackJinglePlugin.h */,
 				81AB120A0A8B5F6100E32420 /* SmackJinglePlugin.m */,
+				81C3A8E20A91051F00A575B6 /* SmackXMPPPhonePlugin.h */,
+				81C3AC1C0A9171CC00A575B6 /* SmackXMPPPhonePlugin.m */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		81C3AA620A91341000A575B6 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				81F656BC0A2A587F008FC8E7 /* SmackXMPPAccountView.nib */,
+				81D5A1CA0A59710D0099F9B9 /* SmackXMPPJoinChatView.nib */,
+				81D5A85E0A5A14450099F9B9 /* SmackXMPPForm.nib */,
+				815ED1B30A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib */,
+				815ED2900A6C5A9F0024B6FE /* SmackXMPPMUCChangeSubject.nib */,
+				81BE44670A6C731900AADA28 /* SmackXMPPServiceDiscoveryBrowser.nib */,
+				81DA14710A779B2E00569134 /* SmackXMPPVCardEditor.nib */,
+				81C3A7040A8FE15000A575B6 /* SmackXMPPHeadlinesViewer.nib */,
+				81C3A8D80A90F63B00A575B6 /* SmackXMPPPhoneControl.nib */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		81E2C5FD0A416AB60070CE78 /* Java-part */ = {
@@ -6688,13 +6698,17 @@
 				81D5A1680A5944320099F9B9 /* SmackXMPPMultiUserChatPluginListener.java */,
 				815ECFBA0A6A56530024B6FE /* SmackXMPPRosterPluginListener.java */,
 				81BE64790A711F6600AADA28 /* SmackXMPPFileTransferListener.java */,
+				81C3A9930A91162E00A575B6 /* SmackXMPPAsteriskListener.java */,
 				815D2F290A74D903009338C2 /* OutOfBandDataExtension.java */,
 				81F9CDE90A7D83AE004A35BD /* VCardUpdateExtension.java */,
 				811DE2160A862E5900487D47 /* InvisibleCommand.java */,
 				815D32370A7518D7009338C2 /* ChatStateNotifications.java */,
 				81AB120D0A8B5F8A00E32420 /* JingleListener.java */,
+				81C3AAC40A913CB800A575B6 /* SmackBridge.jar */,
 				81F659B90A2A8C4E008FC8E7 /* smack.jar */,
 				81F659BA0A2A8C4E008FC8E7 /* smackx.jar */,
+				81C3A8FC0A91072900A575B6 /* asterisk-im-client.jar */,
+				81C3AB0F0A914DBD00A575B6 /* backport-util-concurrent.jar */,
 			);
 			name = "Java-part";
 			sourceTree = "<group>";
@@ -6726,16 +6740,9 @@
 				81BE66B50A715FB200AADA28 /* SmackXMPPAccountRegistrationController.h */,
 				81BE66B60A715FB200AADA28 /* SmackXMPPAccountRegistrationController.m */,
 				81F6554E0A293DD0008FC8E7 /* Smack-Info.plist */,
-				81F656BC0A2A587F008FC8E7 /* SmackXMPPAccountView.nib */,
-				81D5A1CA0A59710D0099F9B9 /* SmackXMPPJoinChatView.nib */,
-				81D5A85E0A5A14450099F9B9 /* SmackXMPPForm.nib */,
-				815ED1B30A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib */,
-				815ED2900A6C5A9F0024B6FE /* SmackXMPPMUCChangeSubject.nib */,
-				81BE44670A6C731900AADA28 /* SmackXMPPServiceDiscoveryBrowser.nib */,
-				81DA14710A779B2E00569134 /* SmackXMPPVCardEditor.nib */,
 				81F658160A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h */,
+				81C3AA620A91341000A575B6 /* Resources */,
 				81B4CE600A42443500A8ABF5 /* Extensions */,
-				81C3A7040A8FE15000A575B6 /* SmackXMPPHeadlinesViewer.nib */,
 			);
 			name = Smack;
 			sourceTree = "<group>";
@@ -8992,6 +8999,7 @@
 				81BE44690A6C731900AADA28 /* SmackXMPPServiceDiscoveryBrowser.nib in Resources */,
 				81DA14730A779B2E00569134 /* SmackXMPPVCardEditor.nib in Resources */,
 				81C3A7060A8FE15000A575B6 /* SmackXMPPHeadlinesViewer.nib in Resources */,
+				81C3A8DA0A90F63B00A575B6 /* SmackXMPPPhoneControl.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9730,6 +9738,7 @@
 				81D5A1690A5944320099F9B9 /* SmackXMPPMultiUserChatPluginListener.java in Sources */,
 				815ECFBB0A6A56540024B6FE /* SmackXMPPRosterPluginListener.java in Sources */,
 				81BE647A0A711F6600AADA28 /* SmackXMPPFileTransferListener.java in Sources */,
+				81C3AA8B0A91393F00A575B6 /* SmackXMPPAsteriskListener.java in Sources */,
 				815D2F2A0A74D903009338C2 /* OutOfBandDataExtension.java in Sources */,
 				815D32380A7518D7009338C2 /* ChatStateNotifications.java in Sources */,
 				81F9CDEA0A7D83AE004A35BD /* VCardUpdateExtension.java in Sources */,
@@ -9792,6 +9801,7 @@
 				81F9D4980A8158EB004A35BD /* SmackXMPPVersionPlugin.m in Sources */,
 				81F9D8B00A83A92F004A35BD /* SmackXMPPPrivacyPlugin.m in Sources */,
 				81AB120C0A8B5F6100E32420 /* SmackJinglePlugin.m in Sources */,
+				81C3AC1D0A9171CD00A575B6 /* SmackXMPPPhonePlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10916,6 +10926,14 @@
 				81C3A7050A8FE15000A575B6 /* English */,
 			);
 			name = SmackXMPPHeadlinesViewer.nib;
+			sourceTree = "<group>";
+		};
+		81C3A8D80A90F63B00A575B6 /* SmackXMPPPhoneControl.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				81C3A8D90A90F63B00A575B6 /* English */,
+			);
+			name = SmackXMPPPhoneControl.nib;
 			sourceTree = "<group>";
 		};
 		81D5A1CA0A59710D0099F9B9 /* SmackXMPPJoinChatView.nib */ = {
@@ -12406,7 +12424,6 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				JAVA_ARCHIVE_CLASSES = YES;
 				JAVA_ARCHIVE_COMPRESSION = YES;
 				JAVA_ARCHIVE_TYPE = JAR;
 				JAVA_COMPILER = /usr/bin/javac;

@@ -1,0 +1,36 @@
+{
+    IBClasses = (
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                dial = id; 
+                dial0 = id; 
+                dial1 = id; 
+                dial2 = id; 
+                dial3 = id; 
+                dial4 = id; 
+                dial5 = id; 
+                dial6 = id; 
+                dial7 = id; 
+                dial8 = id; 
+                dial9 = id; 
+                dialAsterisk = id; 
+                dialPound = id; 
+                forward = id; 
+                invite = id; 
+            }; 
+            CLASS = SmackXMPPAsteriskPlugin; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                eventfield = NSTextField; 
+                numberfield = NSTextField; 
+                numberfieldview = NSView; 
+                peoplePicker = ABPeoplePickerView; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = AIObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

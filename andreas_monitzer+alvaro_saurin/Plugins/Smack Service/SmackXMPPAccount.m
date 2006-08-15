@@ -62,7 +62,7 @@
 
 @end
 
-@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin, SmackXMPPServiceDiscoveryBrowsing, SmackXMPPFileTransferPlugin, SmackXMPPChatStateNotificationsPlugin, SmackXMPPVCardPlugin, SmackXMPPVersionPlugin, SmackXMPPPrivacyPlugin, SmackJinglePlugin;
+@class SmackXMPPRosterPlugin, SmackXMPPMessagePlugin, SmackXMPPErrorMessagePlugin, SmackXMPPHeadlineMessagePlugin, SmackXMPPMultiUserChatPlugin, SmackXMPPGatewayInteractionPlugin, SmackXMPPServiceDiscoveryBrowsing, SmackXMPPFileTransferPlugin, SmackXMPPChatStateNotificationsPlugin, SmackXMPPVCardPlugin, SmackXMPPVersionPlugin, SmackXMPPPrivacyPlugin, SmackJinglePlugin, SmackXMPPPhonePlugin;
 
 @interface NSObject (SmackXMPPPluginAddition)
 - (id)initWithAccount:(SmackXMPPAccount*)account;
@@ -94,6 +94,7 @@
             [SmackXMPPVersionPlugin class],
             [SmackXMPPPrivacyPlugin class],
             [SmackJinglePlugin class],
+            [SmackXMPPPhonePlugin class],
             nil
         };
         

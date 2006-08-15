@@ -14,7 +14,7 @@ import java.util.Vector;
 import java.io.File;
 
 public class JavaCocoaAdapter {
-    public static ClassLoader classLoader(Vector jars) { // Vector of String file paths
+    public static ClassLoader classLoader(Vector jars, ClassLoader parent) { // Vector of String file paths
         System.err.println(jars.toString());
         
         // convert vector of strings to array of URLs
@@ -30,6 +30,6 @@ public class JavaCocoaAdapter {
             return null;
         }
         
-        return URLClassLoader.newInstance(urls,ClassLoader.getSystemClassLoader());
+        return URLClassLoader.newInstance(urls,(parent != null)?parent:ClassLoader.getSystemClassLoader());
     }
 }
