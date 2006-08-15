@@ -18,7 +18,7 @@
 @end
 
 @protocol JavaCocoaAdapter
-- (JavaClassLoader*)classLoader:(JavaVector*)jars;
+- (JavaClassLoader*)classLoader:(JavaVector*)jars :(JavaClassLoader*)parent;
 @end
 
 @implementation AIJavaController
@@ -39,6 +39,11 @@
 
 - (JavaClassLoader*)classLoaderWithJARs:(NSArray*)jararray
 {
+    return [self classLoaderWithJARs:jararray parentClassLoader:nil];
+}
+
+- (JavaClassLoader*)classLoaderWithJARs:(NSArray*)jararray parentClassLoader:(JavaClassLoader*)parent
+{
     if(!vm)
     {
         vm = [[NSJavaVirtualMachine alloc] initWithClassPath:[NSJavaVirtualMachine defaultClassPath]];
@@ -55,7 +60,7 @@
     while((path = [e nextObject]))
         [vec add:path];
     
-    JavaClassLoader *result = [JavaCocoaAdapter classLoader:vec];
+    JavaClassLoader *result = [JavaCocoaAdapter classLoader:vec :parent];
     [vec release];
     
     return result;
