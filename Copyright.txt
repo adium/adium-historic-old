@@ -18,6 +18,7 @@ Arno Hautala
 Asher Haig
 Jasper Hauser
 Stephen Holt
+Peter Hosey
 Adam Iser
 Severin Klaus
 Ian Krieg
@@ -25,7 +26,6 @@ Thomas Kunze
 Scott Lamb
 Jack M.H. Lin
 Sam McCandlish
-Mac-arena the Bored Zo
 Nicola Del Monaco
 Jeffrey Melloy
 David Munch
