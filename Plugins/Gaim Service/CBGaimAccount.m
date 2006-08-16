@@ -889,16 +889,31 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 											   pack:nil];
 		[inChat addCustomEmoticon:emoticon];
 	}
-	
-	[[adium notificationCenter] postNotificationName:@"AICustomEmoticonUpdated"
-											  object:inChat
-											userInfo:[NSDictionary dictionaryWithObject:emoticon
-																				 forKey:@"AIEmoticon"]];
 }
 
 - (void)chat:(AIChat *)inChat closedCustomEmoticon:(NSString *)inEmoticon
 {
+	AIEmoticon	*emoticon;
+
+	//Look for an existing emoticon with this equivalent
+	NSEnumerator *enumerator = [[inChat customEmoticons] objectEnumerator];
+	while ((emoticon = [enumerator nextObject])) {
+		if ([[emoticon textEquivalents] containsObject:emoticonEquivalent]) break;
+	}
 	
+	NSString	*path = [self _emoticonCachePathForEmoticon:emoticonEquivalent inChat:inChat];
+
+	if (!emoticon) {
+		emoticon = [AIEmoticon emoticonWithIconPath:path
+										equivalents:[NSArray arrayWithObject:emoticonEquivalent]
+											   name:emoticonEquivalent
+											   pack:nil];
+		[inChat addCustomEmoticon:emoticon];
+	}
+	[[adium notificationCenter] postNotificationName:@"AICustomEmoticonUpdated"
+											  object:inChat
+											userInfo:[NSDictionary dictionaryWithObject:emoticon
+																				 forKey:@"AIEmoticon"]];
 }
 
 #pragma mark GaimConversation User Lists
