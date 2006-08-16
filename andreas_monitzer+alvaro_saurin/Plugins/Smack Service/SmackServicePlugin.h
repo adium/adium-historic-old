@@ -11,10 +11,12 @@
 
 #import "SmackXMPPService.h"
 #import "SmackGoogleService.h"
+#import "SmackLiveJournalService.h"
 
 @interface SmackServicePlugin : AIPlugin {
     SmackXMPPService *xmppService;
     SmackGoogleService *googleService;
+    SmackLiveJournalService *ljService;
 }
 
 @end
