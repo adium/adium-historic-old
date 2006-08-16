@@ -1,0 +1,25 @@
+We didn't want to touch Adium.framework precious so a lot of wheel re-invention has occurred.
+Or at least we haven't used some of the lovely components that Adium provides :(
+It's that pesky NSParameterAssert(_sharedAdium != nil); and whatnot ...
+
+SMD is as independent of Adium as such a related program can be.
+
+__Implemented__
+* SMD loads the correct icon dependant on whether Adium is running or not.
+* Offers a menu item to quit SMD.
+* Change the menu items icon to the evil duck when there is unviewed content
+* Menu option to quit Adium from the SMD
+* There is a menu item to launch Adium (if it isn't running). It however doesn't necessarily run the right version of Adium ...
+
+__To Do__
+* Load the correct icon for the users status (Plugin broadcasts status? Custom object vended via DO. Notification when contents of object change so that SMD knows to reload?!?)
+---
+* Load account & status menus
+* Initiate/activate chats
+* Connect/disconnect accounts
+* Add SMD as a startup item
+
+__Bugs__
+* Localize all strings
+* We should probably symlink or alias to the resources we "borrow" from Adium
+* "Launch Adium" doesn't launch the right Adium.
