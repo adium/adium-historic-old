@@ -33,6 +33,7 @@
 #import "AIStatusController.h"
 #import "AIToolbarController.h"
 #import "AIJavaController.h"
+#import "AIVideoConfController.h"
 #import "ESApplescriptabilityController.h"
 #import "ESContactAlertsController.h"
 #import "ESDebugController.h"
@@ -151,6 +152,9 @@ static NSString	*prefsCategory;
 - (AIJavaController *)javaController{
     return javaController;
 }
+- (AIVCController *)vcController{
+    return vcController;
+}
 
 //Loaders --------------------------------------------------------------------------------------------------------
 #pragma mark Loaders
@@ -259,6 +263,7 @@ static NSString	*prefsCategory;
 	applescriptabilityController = [[ESApplescriptabilityController alloc] init];
 	statusController = [[AIStatusController alloc] init];
     javaController = [[AIJavaController alloc] init];
+    vcController = [[AIVCController alloc] init];
 
 	//Finish setting up the preference controller before the components and plugins load so they can read prefs 
 	[preferenceController controllerDidLoad];
@@ -356,6 +361,7 @@ static NSString	*prefsCategory;
 	[debugController controllerWillClose];
 	[toolbarController controllerWillClose];
     [javaController controllerWillClose];
+    [vcController controllerWillClose];
     [preferenceController controllerWillClose];			//** Last since other controllers may want to write preferences as they close
 	
 	[self deleteTemporaryFiles];
