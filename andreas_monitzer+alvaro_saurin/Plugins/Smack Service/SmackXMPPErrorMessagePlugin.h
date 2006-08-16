@@ -9,11 +9,14 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIObject.h>
 
-@class SmackXMPPAccount;
+@class SmackXMPPAccount,SmackPacket;
 
 @interface SmackXMPPErrorMessagePlugin : AIObject {
+    SmackXMPPAccount *account;
 }
 
-- (id)initWithAccount:(SmackXMPPAccount*)account;
+- (id)initWithAccount:(SmackXMPPAccount*)a;
+
++ (void)handleXMPPErrorPacket:(SmackPacket*)packet service:(NSString*)service;
 
 @end

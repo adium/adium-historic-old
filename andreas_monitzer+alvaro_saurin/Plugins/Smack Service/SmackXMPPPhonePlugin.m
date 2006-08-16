@@ -175,6 +175,7 @@ static JavaClassLoader *classLoader = nil;
     [listener release];
     [currentCall release];
     [currentCallID release];
+    [discoID release];
     [super dealloc];
 }
 
@@ -182,8 +183,15 @@ static JavaClassLoader *classLoader = nil;
 {
     SmackXDiscoverItems *packet = [SmackCocoaAdapter discoverItems];
     discoID = [[packet getPacketID] retain];
-    [connection performSelector:@selector(sendPacket:) withObject:packet afterDelay:0.0];
+    [self performSelector:@selector(delayedSend:) withObject:packet afterDelay:0.0];
     isSupported = NO;
+}
+
+- (void)delayedSend:(SmackPacket*)packet
+{
+    SmackXMPPConnection *connection = [account connection];
+    if(connection) // only do this if the connection didn't fail
+        [connection sendPacket:packet];
 }
 
 - (void)disconnected:(SmackXMPPConnection*)connection
