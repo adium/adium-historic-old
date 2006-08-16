@@ -35,6 +35,7 @@
     //Register us as a filter
 	[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterIncoming];
 	[[adium contentController] registerContentFilter:self ofType:AIFilterAutoReplyContent direction:AIFilterOutgoing];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterTooltips direction:AIFilterIncoming];
 }
 
 - (void)uninstallPlugin
