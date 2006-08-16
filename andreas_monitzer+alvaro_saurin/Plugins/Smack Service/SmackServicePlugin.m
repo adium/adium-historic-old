@@ -15,6 +15,7 @@
 {
 	xmppService = [[SmackXMPPService alloc] init];
     googleService = [[SmackGoogleService alloc] init];
+    ljService = [[SmackLiveJournalService alloc] init];
 }
 
 - (void)dealloc {
@@ -22,6 +23,8 @@
     xmppService = nil;
     [googleService release];
     googleService = nil;
+    [SmackLiveJournalService release];
+    ljService = nil;
     [super dealloc];
 }
 
