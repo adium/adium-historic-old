@@ -494,6 +494,7 @@
 			@"Enabled",
             @"TextProfile",
             @"DefaultUserIconFilename",
+            KEY_ACCOUNT_CHECK_MAIL,
 			nil];
         [supportedPropertyKeys unionSet:[super supportedPropertyKeys]];
 	}

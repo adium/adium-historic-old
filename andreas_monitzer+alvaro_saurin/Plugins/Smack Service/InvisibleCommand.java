@@ -9,8 +9,6 @@
 package net.adium.smackBridge;
 
 import org.jivesoftware.smack.packet.IQ;
-import org.jivesoftware.smack.provider.IQProvider;
-import org.xmlpull.v1.XmlPullParser;
 
 public class InvisibleCommand extends IQ {
     boolean isInvisible;
@@ -29,7 +27,7 @@ public class InvisibleCommand extends IQ {
     
     public String getChildElementXML() {
         StringBuilder buf = new StringBuilder();
-        buf.append("<" + (isInvisible?"invisible":"visible") + " xmlns=\"http://jabber.org/protocol/invisibility\"/>");
+        buf.append("<").append(isInvisible?"invisible":"visible").append(" xmlns=\"http://jabber.org/protocol/invisibility\"/>");
         return buf.toString();
     }
     

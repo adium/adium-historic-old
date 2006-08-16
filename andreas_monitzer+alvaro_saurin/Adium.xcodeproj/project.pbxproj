@@ -1353,6 +1353,10 @@
 		81376E010A92B06B00298452 /* SmackLiveJournalAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376DFB0A92B06B00298452 /* SmackLiveJournalAccountViewController.m */; };
 		81376E020A92B06B00298452 /* SmackLiveJournalService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81376DFC0A92B06B00298452 /* SmackLiveJournalService.h */; };
 		81376E030A92B06B00298452 /* SmackLiveJournalService.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376DFD0A92B06B00298452 /* SmackLiveJournalService.m */; };
+		81376E3C0A92B66E00298452 /* SmackGoogleNewMailPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81376E3A0A92B66E00298452 /* SmackGoogleNewMailPlugin.h */; };
+		81376E3D0A92B66E00298452 /* SmackGoogleNewMailPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376E3B0A92B66E00298452 /* SmackGoogleNewMailPlugin.m */; };
+		81376E460A92B6FB00298452 /* GoogleSettings.java in Sources */ = {isa = PBXBuildFile; fileRef = 81376E450A92B6FB00298452 /* GoogleSettings.java */; };
+		81376EA10A92C11800298452 /* MailNotification.java in Sources */ = {isa = PBXBuildFile; fileRef = 81376EA00A92C11800298452 /* MailNotification.java */; };
 		815679900A339B1F005ADC13 /* SmackListContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8156798E0A339B1F005ADC13 /* SmackListContact.m */; };
 		815D2F2A0A74D903009338C2 /* OutOfBandDataExtension.java in Sources */ = {isa = PBXBuildFile; fileRef = 815D2F290A74D903009338C2 /* OutOfBandDataExtension.java */; };
 		815D321F0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 815D321D0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m */; };
@@ -1915,6 +1919,7 @@
 				81376DFE0A92B06B00298452 /* SmackLiveJournalAccount.h in CopyFiles */,
 				81376E000A92B06B00298452 /* SmackLiveJournalAccountViewController.h in CopyFiles */,
 				81376E020A92B06B00298452 /* SmackLiveJournalService.h in CopyFiles */,
+				81376E3C0A92B66E00298452 /* SmackGoogleNewMailPlugin.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3727,6 +3732,10 @@
 		81376DFB0A92B06B00298452 /* SmackLiveJournalAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackLiveJournalAccountViewController.m; path = "Plugins/Smack Service/SmackLiveJournalAccountViewController.m"; sourceTree = "<group>"; };
 		81376DFC0A92B06B00298452 /* SmackLiveJournalService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackLiveJournalService.h; path = "Plugins/Smack Service/SmackLiveJournalService.h"; sourceTree = "<group>"; };
 		81376DFD0A92B06B00298452 /* SmackLiveJournalService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackLiveJournalService.m; path = "Plugins/Smack Service/SmackLiveJournalService.m"; sourceTree = "<group>"; };
+		81376E3A0A92B66E00298452 /* SmackGoogleNewMailPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackGoogleNewMailPlugin.h; path = "Plugins/Smack Service/SmackGoogleNewMailPlugin.h"; sourceTree = "<group>"; };
+		81376E3B0A92B66E00298452 /* SmackGoogleNewMailPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackGoogleNewMailPlugin.m; path = "Plugins/Smack Service/SmackGoogleNewMailPlugin.m"; sourceTree = "<group>"; };
+		81376E450A92B6FB00298452 /* GoogleSettings.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = GoogleSettings.java; path = "Plugins/Smack Service/GoogleSettings.java"; sourceTree = "<group>"; };
+		81376EA00A92C11800298452 /* MailNotification.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = MailNotification.java; path = "Plugins/Smack Service/MailNotification.java"; sourceTree = "<group>"; };
 		8156798D0A339B1F005ADC13 /* SmackListContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackListContact.h; path = "Plugins/Smack Service/SmackListContact.h"; sourceTree = "<group>"; };
 		8156798E0A339B1F005ADC13 /* SmackListContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackListContact.m; path = "Plugins/Smack Service/SmackListContact.m"; sourceTree = "<group>"; };
 		815D2F290A74D903009338C2 /* OutOfBandDataExtension.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = OutOfBandDataExtension.java; path = "Plugins/Smack Service/OutOfBandDataExtension.java"; sourceTree = "<group>"; };
@@ -6668,6 +6677,7 @@
 				81376B910A92797D00298452 /* SmackGoogleAccountViewController.h */,
 				81376B920A92797D00298452 /* SmackGoogleAccountViewController.m */,
 				81376B870A92794E00298452 /* SmackGoogleAccountView.nib */,
+				81376E420A92B6C400298452 /* Extensions */,
 			);
 			name = "Google Talk";
 			sourceTree = "<group>";
@@ -6684,6 +6694,17 @@
 				81376DF10A92B01400298452 /* SmackLiveJournalAccountView.nib */,
 			);
 			name = LiveJournal;
+			sourceTree = "<group>";
+		};
+		81376E420A92B6C400298452 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				81376E3A0A92B66E00298452 /* SmackGoogleNewMailPlugin.h */,
+				81376E3B0A92B66E00298452 /* SmackGoogleNewMailPlugin.m */,
+				81376E450A92B6FB00298452 /* GoogleSettings.java */,
+				81376EA00A92C11800298452 /* MailNotification.java */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 		81B4CD870A4181A000A8ABF5 /* liboop */ = {
@@ -9810,6 +9831,8 @@
 				81F9CDEA0A7D83AE004A35BD /* VCardUpdateExtension.java in Sources */,
 				811DE2170A862E5900487D47 /* InvisibleCommand.java in Sources */,
 				81AB120E0A8B5F8A00E32420 /* JingleListener.java in Sources */,
+				81376E460A92B6FB00298452 /* GoogleSettings.java in Sources */,
+				81376EA10A92C11800298452 /* MailNotification.java in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9874,6 +9897,7 @@
 				81376DFF0A92B06B00298452 /* SmackLiveJournalAccount.m in Sources */,
 				81376E010A92B06B00298452 /* SmackLiveJournalAccountViewController.m in Sources */,
 				81376E030A92B06B00298452 /* SmackLiveJournalService.m in Sources */,
+				81376E3D0A92B66E00298452 /* SmackGoogleNewMailPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,13 +8,14 @@
 
 #import "SmackGoogleAccount.h"
 
+@class SmackGoogleNewMailPlugin;
 
 @implementation SmackGoogleAccount
 
 - (void)initAccount {
 	[super initAccount];
     
-    // [self addPlugin:...];
+    [self addPlugin:[SmackGoogleNewMailPlugin class]];
 }
 
 @end
