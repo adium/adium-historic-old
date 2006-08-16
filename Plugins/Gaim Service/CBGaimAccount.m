@@ -891,7 +891,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-- (void)chat:(AIChat *)inChat closedCustomEmoticon:(NSString *)inEmoticon
+- (void)chat:(AIChat *)inChat closedCustomEmoticon:(NSString *)emoticonEquivalent
 {
 	AIEmoticon	*emoticon;
 
@@ -908,7 +908,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 										equivalents:[NSArray arrayWithObject:emoticonEquivalent]
 											   name:emoticonEquivalent
 											   pack:nil];
-		[inChat addCustomEmoticon:emoticon];
 	}
 	[[adium notificationCenter] postNotificationName:@"AICustomEmoticonUpdated"
 											  object:inChat
