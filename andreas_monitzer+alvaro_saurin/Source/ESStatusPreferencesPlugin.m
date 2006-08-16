@@ -8,7 +8,7 @@
 
 #import "ESStatusPreferencesPlugin.h"
 #import "ESStatusPreferences.h"
-#import "AIMenuController.h"
+#import <Adium/AIMenuControllerProtocol.h>
 #import "AIStatusController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>

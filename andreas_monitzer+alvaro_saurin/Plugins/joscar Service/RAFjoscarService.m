@@ -6,7 +6,7 @@
 //
 
 #import "RAFjoscarService.h"
-#import "AIStatusController.h"
+#import <Adium/AIStatusControllerProtocol.h>
 #import "RAFjoscarAccount.h"
 #import "RAFjoscarAccountViewController.h"
 #import "ESjoscarJoinChatViewController.h"

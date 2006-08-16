@@ -5,6 +5,7 @@
 	<key>ADP2,1</key>		<string>Developer Transition Kit</string>
 	<key>iMac1,1</key>		<string>iMac G3 (Rev A-D)</string>
 	<key>iMac4,1</key>		<string>iMac (Core Duo)</string>
+	<key>iMac4,2</key>		<string>iMac for Education (17-inch, Core Duo)</string>
 	<key>Macmini1,1</key>		<string>Mac Mini (Core Solo/Duo)</string>
 	<key>MacBook1,1</key>		<string>MacBook</string>
 	<key>MacBookPro1,1</key>	<string>MacBook Pro (15-inch)</string>

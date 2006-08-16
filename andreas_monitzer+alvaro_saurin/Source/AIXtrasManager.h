@@ -26,6 +26,7 @@
 #define AIXtraTypeMessageStyle		@"adiummessagestyle"
 #define AIXtraTypeListTheme			@"listtheme"
 #define AIXtraTypeListLayout		@"listlayout"
+#define AIXtraTypeServiceIcons		@"adiumserviceicons"
 
 @interface AIXtrasManager : AIPlugin {
 	NSMutableDictionary						*disabledXtras;
@@ -42,6 +43,7 @@
 	IBOutlet NSView							*readmeView;
 	IBOutlet NSSegmentedControl				*showInfoControl;
 	IBOutlet NSSplitView					*splitView;
+	IBOutlet NSButton						*deleteButton;
 	NSString								*infoPath;
 	BOOL									showInfo; //YES = info, NO = preview
 }

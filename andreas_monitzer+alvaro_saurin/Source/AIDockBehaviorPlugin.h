@@ -16,8 +16,8 @@
 
 #import <Adium/AIPlugin.h>
 
-#define KEY_DOCK_BEHAVIOR_TYPE				@"BehaviorType"
-#define DOCK_BEHAVIOR_ALERT_IDENTIFIER		@"BounceDockIcon"
+#define KEY_AIDockBehavior_TYPE				@"BehaviorType"
+#define AIDockBehavior_ALERT_IDENTIFIER		@"BounceDockIcon"
 
 @protocol AIActionHandler;
 

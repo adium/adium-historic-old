@@ -28,8 +28,8 @@
  it also makes it much more difficult to ensure a consistent look/feel to the preferences.
 */
 
-#import "AIContentController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "ESGeneralPreferences.h"
 #import "ESGeneralPreferencesPlugin.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
@@ -53,14 +53,13 @@
 - (void)installPlugin
 {
 	//Defaults
-	AIPreferenceController *preferenceController = [adium preferenceController];
-	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:TAB_DEFAULT_PREFS
-	                                                            forClass:[self class]]
-								  forGroup:PREF_GROUP_INTERFACE];
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TAB_DEFAULT_PREFS
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_INTERFACE];
 	
-	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS
-	                                                            forClass:[self class]]
-								  forGroup:PREF_GROUP_GENERAL];
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_GENERAL];
 	
 	//Install our preference view
 	preferences = [[ESGeneralPreferences preferencePaneForPlugin:self] retain];	

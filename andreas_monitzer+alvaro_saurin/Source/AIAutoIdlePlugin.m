@@ -15,7 +15,7 @@
  */
 
 #import "AIAutoIdlePlugin.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AIStatusController.h"
 #import <Adium/AIAccount.h>
 

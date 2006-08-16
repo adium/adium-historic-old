@@ -14,38 +14,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#define Menu_didChange  @"Menu_didChange"
+#import <Adium/AIMenuControllerProtocol.h>
 
 @class AIListObject, AIChat;
 
-@protocol AIController;
-
-/* Each of the items in this enum must correspond to an NSMenuItem declared in the interface and connected in MainMenu.nib.
- * If the menu item isn't the first in its menu, it can be connected to the Quit Adium menu item; AIMenuController will move it
- * to the appropriate place.
- */
-typedef enum {
-    LOC_Adium_About = 0, LOC_Adium_Preferences, LOC_Adium_Other,
-    LOC_File_New, LOC_File_Close, LOC_File_Save, LOC_File_Accounts, LOC_File_Additions,
-    LOC_Edit_Bottom, LOC_Edit_Links, LOC_Edit_Additions,
-	LOC_View_General, LOC_View_Sorting, LOC_View_Toggles, LOC_View_Appearance_Toggles, LOC_View_Additions, 
-    LOC_Contact_Manage, LOC_Contact_Info, LOC_Contact_Action, LOC_Contact_NegativeAction, LOC_Contact_Additions,
-	LOC_Status_State, LOC_Status_Accounts, LOC_Status_Additions,
-    LOC_Format_Styles, LOC_Format_Palettes, LOC_Format_Additions, 
-    LOC_Window_Top, LOC_Window_Commands, LOC_Window_Auxiliary, LOC_Window_Fixed,
-    LOC_Help_Local, LOC_Help_Web, LOC_Help_Additions,
-    LOC_Dock_Status
-} MENU_LOCATION;
-
-typedef enum {
-    Context_Group_Manage,Context_Contact_Manage, Context_Contact_Action, Context_Contact_NegativeAction,
-    Context_Contact_Additions, Context_Contact_ChatAction, Context_Contact_Stranger_ChatAction, Context_Contact_ListAction,
-	Context_Contact_GroupChatAction,
-	Context_Tab_Action,
-	Context_TextView_LinkEditing, Context_TextView_Edit
-} CONTEXT_MENU_LOCATION;
-
-@interface AIMenuController : NSObject <AIController> {
+@interface AIMenuController : NSObject <AIMenuController> {
     IBOutlet	AIAdium		*adium;
 	
     IBOutlet	id		nilMenuItem;
@@ -99,6 +72,7 @@ typedef enum {
 	//Adium menu
 	IBOutlet	NSMenuItem	*menuItem_aboutAdium;
 	IBOutlet	NSMenuItem	*menuItem_adiumXtras;
+	IBOutlet	NSMenuItem	*menuItem_checkForUpdates;
 	IBOutlet	NSMenuItem	*menuItem_preferences;
 	IBOutlet	NSMenuItem	*menuItem_donate;
 	IBOutlet	NSMenuItem	*menuItem_helpOut;
@@ -165,35 +139,17 @@ typedef enum {
 	IBOutlet	NSMenuItem	*menuItem_sendFeedback;
 	IBOutlet	NSMenuItem	*menuItem_adiumForums;
 	
-    NSMenu                              *contextualMenu;
-    NSMutableDictionary					*contextualMenuItemDict;
-    AIListObject						*currentContextMenuObject;
-    AIChat								*currentContextMenuChat;
+    NSMenu					*contextualMenu;
+    NSMutableDictionary		*contextualMenuItemDict;
+    AIListObject			*currentContextMenuObject;
+    AIChat					*currentContextMenuChat;
 	
-    NSMenu                              *textViewContextualMenu;
-    NSTextView                          *contextualMenu_TextView;
+    NSMenu					*textViewContextualMenu;
+    NSTextView				*contextualMenu_TextView;
     
-    NSMutableArray                      *locationArray;
-    BOOL                                 isTracking;
+    NSMutableArray			*locationArray;
+    BOOL					isTracking;
 	
 }
-
-//Custom menu items
-- (void)addMenuItem:(NSMenuItem *)newItem toLocation:(MENU_LOCATION)location;
-- (void)removeMenuItem:(NSMenuItem *)targetItem;
-
-//Contextual menu items
-- (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(CONTEXT_MENU_LOCATION)location;
-- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject;
-- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject inChat:(AIChat *)inChat;
-- (AIListObject *)currentContextMenuObject;
-- (AIChat *)currentContextMenuChat;
-
-- (NSTextView *)contextualMenuTextView;
-- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject;
-
-//Control over the italics menu item
-- (void)removeItalicsKeyEquivalent;
-- (void)restoreItalicsKeyEquivalent;
 
 @end

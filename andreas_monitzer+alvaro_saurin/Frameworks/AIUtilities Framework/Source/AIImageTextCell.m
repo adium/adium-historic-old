@@ -209,14 +209,15 @@
 {
 	NSString	*title = [self stringValue];
 	NSImage		*image = [self image];
-	BOOL		highlighted;
+	BOOL		highlighted = [self isHighlighted];
 
 //	[super drawInteriorWithFrame:cellFrame inView:controlView];
 	
-	highlighted = [self isHighlighted];
+	/*
 	if (highlighted) {
 		[self _drawHighlightWithFrame:cellFrame inView:controlView];
 	}
+	 */
 
 	//Draw the cell's image
 	if (image != nil) {
@@ -287,7 +288,7 @@
 				textColor = [NSColor grayColor]; //Draw the text disabled
 			}
 		}
-
+		
 		//Adjust if a substring is present
 		if (subString) cellFrame.size.height /= 2;
 

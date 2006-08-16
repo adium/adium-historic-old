@@ -15,22 +15,19 @@
  */
 
 #import <Adium/AIObject.h>
+#import <Adium/AIDebugControllerProtocol.h>
 
 #define	KEY_DEBUG_WRITE_LOG		@"Write Debug Log"
 #define	GROUP_DEBUG				@"Debug Group"
 
-@protocol AIController;
-
-@interface ESDebugController : AIObject <AIController> {
+@interface ESDebugController : AIObject <AIDebugController> {
 	NSMutableArray			*debugLogArray;
 	NSFileHandle			*debugLogFile;
 }
 
 #ifdef DEBUG_BUILD
 	+ (ESDebugController *)sharedDebugController;
-	- (NSArray *)debugLogArray;
 	- (NSFileHandle *)debugLogFile;
-	- (void)clearDebugLogArray;
 	- (void)addMessage:(NSString *)actualMessage;
 #endif
 

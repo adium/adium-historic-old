@@ -15,15 +15,10 @@
  */
 
 #import <Adium/AIObject.h>
+#import <Adium/AIToolbarControllerProtocol.h>
 
-@protocol AIController;
-
-@interface AIToolbarController : AIObject <AIController> {
+@interface AIToolbarController : AIObject <AIToolbarController> {
     NSMutableDictionary		*toolbarItems;
 }
-
-- (void)registerToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type;
-- (void)unregisterToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type;
-- (NSDictionary *)toolbarItemsForToolbarTypes:(NSArray *)types;
 
 @end

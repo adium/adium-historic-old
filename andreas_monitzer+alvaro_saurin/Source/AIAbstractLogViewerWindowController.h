@@ -134,6 +134,9 @@ typedef enum {
     int					sameSelection;
     BOOL				useSame;
 	
+	int					cachedSelectionIndex;
+	BOOL				deleteOccurred;			// YES only if a delete occurs, allowing the table to preserve selection after a search begins
+	
 	NSString			*horizontalRule;
 
 	NSUndoManager		*undoManager;
@@ -168,6 +171,7 @@ typedef enum {
 - (void)refreshResults;
 - (void)refreshResultsSearchIsComplete:(BOOL)searchIsComplete;
 - (void)updateProgressDisplay;
+- (void)logIndexingProgressUpdate;
 
 - (void)rebuildIndices;
 

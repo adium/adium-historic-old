@@ -8,13 +8,13 @@
 #import "RAFjoscarAccount.h"
 #import "RAFjoscarSecuridPromptController.h"
 #import "AIAdium.h"
-#import "AIPreferenceController.h"
-#import "AIContactController.h"
-#import "AIAccountController.h"
-#import "AIContentController.h"
-#import "AIChatController.h"
-#import "AIStatusController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/ESDebugAILog.h>
@@ -43,6 +43,10 @@
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 
 #define CHAT_INVITE_TITLE 
+
+@interface RAFjoscarAccount (PRIVATE)
+- (void)setTypingFlagOfChat:(AIChat *)chat to:(NSNumber *)typingStateNumber;
+@end
 
 @implementation RAFjoscarAccount
 
@@ -183,6 +187,8 @@
 {
 	AIListContact	*listContact = [self contactWithUID:inUID];
 
+	AILog(@"setStatusUpdate: %@",inFormattedUID);
+
 	if (![[listContact formattedUID] isEqualToString:inFormattedUID]){
 		[listContact setFormattedUID:inFormattedUID
 							  notify:NotifyLater];
@@ -192,6 +198,13 @@
 		[listContact setOnline:isOnline
 						notify:NotifyLater
 					  silently:silentAndDelayed];
+		if (!isOnline) {
+			//If the contact signed off, clear any existing typing flag
+			AIChat	*openChat = [[adium chatController] existingChatWithContact:listContact];
+			if (openChat) {
+				[self setTypingFlagOfChat:openChat to:nil];
+			}
+		}
 	}
 
 	//here we unset the away message if we're going from away to present
@@ -439,11 +452,7 @@
 			 */
 			[joscarAdapter setMessageAway:encodedAway];
 
-			if (itmsURL) {
-				[joscarAdapter setStatusMessage:availableMessage withSongURL:itmsURL];
-			} else {
-				[joscarAdapter setStatusMessage:availableMessage];	
-			}
+			[joscarAdapter setStatusMessage:availableMessage withSongURL:itmsURL];
 
 		} else {
 			[self connect];
@@ -576,18 +585,43 @@
 							  notify:NotifyLater];
 	}
 
-	if (![[listContact remoteGroupName] isEqualToString:groupName]){
-		[listContact setRemoteGroupName:groupName];
+	
+}
+
+- (void)gotBuddyAdditions:(NSSet *)inSet
+{
+	NSEnumerator *enumerator = [inSet objectEnumerator];
+	NSDictionary *dictionary;
+	
+	[[adium contactController] delayListObjectNotifications];
+
+	while ((dictionary = [enumerator nextObject])) {
+		AIListContact	*listContact = [self contactWithUID:[dictionary objectForKey:@"UID"]];
+		AILog(@"%@ -> %@",dictionary,listContact);
+		NSString *formattedUID = [dictionary objectForKey:@"FormattedUID"];
+		if (![[listContact formattedUID] isEqualToString:formattedUID]){
+			[listContact setFormattedUID:formattedUID
+								  notify:NotifyLater];
+		}
+		
+		NSString *comment = [dictionary objectForKey:@"Comment"];
+		if (comment && [comment length]) {
+			[listContact setStatusObject:comment
+								  forKey:@"Notes"
+								  notify:NotifyLater];
+		}
+		
+		//Will call [listContact notifyOfChangedStatusSilently:] for us
+		//XXX is this a speed hit?
+		[self setListContact:listContact toAlias:[dictionary objectForKey:@"Alias"]];
+		
+		NSString *groupName = [dictionary objectForKey:@"Group"];
+		if (![[listContact remoteGroupName] isEqualToString:groupName]){
+			[listContact setRemoteGroupName:groupName];
+		}
 	}
 	
-	if (comment && [comment length]) {
-		[listContact setStatusObject:comment
-							  forKey:@"Notes"
-							  notify:NotifyLater];
-	}
-	
-	//Will call [listContact notifyOfChangedStatusSilently:] for us
-	[self setListContact:listContact toAlias:alias];
+	[[adium contactController] endListObjectNotificationsDelay];
 }
 
 - (void)contactWithUID:(NSString *)inUID removedFromGroup:(NSString *)groupName
@@ -696,6 +730,10 @@ BOOL isHTMLContact(AIListObject *inListObject)
 	return ((firstCharacter < '0' || firstCharacter > '9') && firstCharacter != '+');
 }
 
+BOOL isMobileContact(AIListObject *inListObject)
+{
+	return ([[inListObject UID] characterAtIndex:0] == '+');
+}
 
 /*
  * @encode Encode a message to HTML if appropriate
@@ -775,10 +813,8 @@ BOOL isHTMLContact(AIListObject *inListObject)
 	
 	[[adium contentController] receiveContentObject:messageObject];
 	
-	//We received a message; clear the typing state
-	[chat setStatusObject:nil
-				   forKey:KEY_TYPING
-				   notify:NotifyNow];	
+	//Clear the typing flag of the chat since a message was just received
+	[self setTypingFlagOfChat:chat to:nil];
 }
 
 - (void)chatWithUID:(NSString *)inUID receivedMessage:(NSString *)inHTML isAutoreply:(NSNumber *)isAutoreply
@@ -798,9 +834,11 @@ BOOL isHTMLContact(AIListObject *inListObject)
 		
 		if (([decryptedIncomingMessage rangeOfString:@"ichatballooncolor"].location != NSNotFound) ||
 			([decryptedIncomingMessage rangeOfString:@"<HTML>"
-											 options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound)) {
+											 options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) ||
+			(isMobileContact(sourceContact) && [isAutoreply boolValue])) {
 			/* iChat ICQ contacts still send HTML. Decode it.
 			 * Some ICQ clients send HTML anyways; the first part of the incoming message will be <HTML>. Decode it.
+			 * The AIM service sends HTML messages as autoreplies when sending to mobile contacts, while the mobile contacts themselves send plaintext.
 			 */
 			attributedMessage = [AIHTMLDecoder decodeHTML:decryptedIncomingMessage];
 
@@ -1008,7 +1046,7 @@ BOOL isHTMLContact(AIListObject *inListObject)
 - (void)updateFileTransferWithIdentifier:(NSValue *)identifier toFileTransferStatus:(NSNumber *)fileTransferStatusNumber
 {
 	ESFileTransfer		*fileTransfer;
-	FileTransferStatus	fileTransferStatus = [fileTransferStatusNumber intValue];
+	AIFileTransferStatus	fileTransferStatus = [fileTransferStatusNumber intValue];
 	
 	fileTransfer = [fileTransferDict objectForKey:identifier];
 	[fileTransfer setStatus:fileTransferStatus];
@@ -1136,6 +1174,21 @@ BOOL isHTMLContact(AIListObject *inListObject)
 	return [joscarAdapter privacyMode];
 }
 
+- (void)contactWithUID:(NSString *)inUID
+	   changedToStatus:(BOOL)inStatus
+		 onPrivacyList:(AIPrivacyType)privacyType
+{
+	AIListContact		*listContact = [self contactWithUID:inUID];
+	AILog(@"Privacy for %@: %@ --> %i (%@)",[self UID],inUID,inStatus, ((privacyType == AIPrivacyTypeDeny) ? @"Deny List" : @"Allow List"));
+	if ((privacyType == AIPrivacyTypeDeny) &&
+		([self privacyOptions] == AIPrivacyOptionDenyUsers)) {
+		[listContact setIsBlocked:inStatus updateList:NO];
+	} else if ((privacyType == AIPrivacyTypePermit) &&
+			   ([self privacyOptions] == AIPrivacyOptionAllowUsers)) {
+		[listContact setIsAllowed:inStatus updateList:NO];		
+	}
+}
+
 #pragma mark Preferences Observer
 /*
  * @brief Observe preference changes to store alias and notes information on the server
@@ -1246,6 +1299,7 @@ BOOL isHTMLContact(AIListObject *inListObject)
 
 - (void)inviteContact:(AIListContact *)inContact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage
 {
+	AILog(@"%@: inviting %@ (%@) to chat %@ (%@) with message %@",self,inContact,[inContact UID],chat,[chat name],inviteMessage);
 	[joscarAdapter inviteUser:[inContact UID] toChat:[chat name] withMessage:inviteMessage];
 }
 
@@ -1269,10 +1323,16 @@ BOOL isHTMLContact(AIListObject *inListObject)
 																				  userInfo:invite];
 }
 
-- (void)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
+- (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
 {
-	[self addChat:[joscarAdapter handleChatInvitation:(id<ChatInvitation>)userInfo withDecision:(AITextAndButtonsDefaultReturn == returnCode)]];
-	[window orderOut:self];
+	AIChat *chat;
+	BOOL	shouldJoinChat = (AITextAndButtonsDefaultReturn == returnCode);
+
+	if ((chat = [joscarAdapter handleChatInvitation:(id<ChatInvitation>)userInfo withDecision:shouldJoinChat])) {
+		[self addChat:chat];
+	}
+
+	return YES;
 }
 
 - (void)gotMessage:(NSString *)message onGroupChatNamed:(NSString *)name fromUID:(NSString *)uid
@@ -1292,10 +1352,8 @@ BOOL isHTMLContact(AIListObject *inListObject)
 										  autoreply:NO]; //as far as I can tell group chats shouldn't see autoreplies
 	[[adium contentController] receiveContentObject:messageObject];
 	
-	//We received a message; clear the typing state
-	[chat setStatusObject:nil
-				   forKey:KEY_TYPING
-				   notify:NotifyNow];	
+	//Clear the typing flag of the chat since a message was just received
+	[self setTypingFlagOfChat:chat to:nil];
 }
 
 - (void)chatFailed:(NSString *)name

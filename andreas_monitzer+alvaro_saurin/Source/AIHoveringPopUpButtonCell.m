@@ -135,7 +135,7 @@
 	}	
 }
 
-- (void)fadeHovered
+- (void)fadeHovered:(NSControl *)currentControlView
 {
 	if (hovered) {
 		if (hoveredFraction < 1.0) hoveredFraction += 0.05;
@@ -143,17 +143,19 @@
 		if (hoveredFraction > 0.0) hoveredFraction -= 0.05;
 	}
 
-	[[self controlView] setNeedsDisplay:YES];
+	[currentControlView setNeedsDisplay:YES];
 
 	if ((hoveredFraction > 0.0) &&
 		(hoveredFraction < 1.0)) {
+		[currentControlView retain];
 		[NSObject cancelPreviousPerformRequestsWithTarget:self
-												 selector:@selector(fadeHovered)
-												   object:nil];
+												 selector:@selector(fadeHovered:)
+												   object:currentControlView];
 		
-		[self performSelector:@selector(fadeHovered)
-				   withObject:nil
+		[self performSelector:@selector(fadeHovered:)
+				   withObject:currentControlView
 				   afterDelay:0];
+		[currentControlView release];
 	}
 }
 
@@ -165,10 +167,10 @@
 		hoveredFraction = (hovered ? 0.80 : 0.20);
 		
 		[NSObject cancelPreviousPerformRequestsWithTarget:self
-												 selector:@selector(fadeHovered)
-												   object:nil];
-		[self performSelector:@selector(fadeHovered)
-				   withObject:nil
+												 selector:@selector(fadeHovered:)
+												   object:[self controlView]];
+		[self performSelector:@selector(fadeHovered:)
+				   withObject:[self controlView]
 				   afterDelay:0];
 	} else {
 		hovered = inHovered;

@@ -13,11 +13,18 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            ACTIONS = {addContact = id; removeContact = id; }; 
+            ACTIONS = {
+                addContact = id; 
+                chooseContactIcon = id; 
+                clearContactIcon = id; 
+                removeContact = id; 
+            }; 
             CLASS = AIContactInfoWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_addContact" = NSButton; 
+                "button_chooseContactIcon" = NSButton; 
+                "button_clearContactIcon" = NSButton; 
                 "button_removeContact" = NSButton; 
                 contactListView = AIListOutlineView; 
                 "drawer_metaContact" = NSDrawer; 

@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIStatusController.h"
+#import <Adium/AIStatusControllerProtocol.h>
 #import "DCGaimJabberJoinChatViewController.h"
 #import "ESGaimJabberAccount.h"
 #import "ESGaimJabberAccountViewController.h"
@@ -77,7 +77,7 @@
 	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
 	NSCharacterSet			*returnSet;
 
-	[allowedCharacters addCharactersInString:@"._@-()[]%|\\"];
+	[allowedCharacters addCharactersInString:@"._@-()[]^%|\\"];
 	returnSet = [allowedCharacters immutableCopy];
 	[allowedCharacters release];
 
@@ -93,7 +93,7 @@
 	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
 	NSCharacterSet			*returnSet;
 
-	[allowedCharacters addCharactersInString:@"._@-()[]%|\\/+"];
+	[allowedCharacters addCharactersInString:@"._@-()[]^%|\\/+"];
 	returnSet = [allowedCharacters immutableCopy];
 	[allowedCharacters release];
 	

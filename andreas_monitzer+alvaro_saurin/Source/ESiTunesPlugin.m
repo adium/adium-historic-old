@@ -10,10 +10,10 @@
  */
 
 #import "ESiTunesPlugin.h"
-#import "AIContentController.h"
-#import "AIToolbarController.h"
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
 #import "AIStatusController.h"
-#import "AIMenuController.h"
+#import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
@@ -139,7 +139,7 @@
 	NSString		*currentITunesTrackFormat = nil;
 	NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
 	NSString		*itunesPath = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"iTunes.app"];
-	
+
 	iTunesCurrentInfo = nil;
 
 	//Only install our items if a copy of iTunes which meets the minimum requirements is found
@@ -300,7 +300,8 @@
 	[currentiTunesStatusState setTitle:CURRENT_ITUNES_TRACK];
 	[currentiTunesStatusState setMutabilityType:AISecondaryLockedStatusState];
 	[currentiTunesStatusState setUniqueStatusID:[NSNumber numberWithInt:ITUNES_STATUS_ID]];
-	
+	[currentiTunesStatusState setSpecialStatusType:AINowPlayingSpecialStatusType];
+
 	//give it to the AIStatusController
 	[[adium statusController] addStatusState:currentiTunesStatusState];
 	[currentiTunesStatusState release];

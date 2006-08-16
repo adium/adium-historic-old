@@ -15,13 +15,13 @@
  */
 
 #import "AIDockBadger.h"
-#import "AIChatController.h"
-#import "AIContactController.h"
-#import "AIContentController.h"
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import "AIDockController.h"
-#import "AIInterfaceController.h"
-#import "AIPreferenceController.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>

@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
-#import "AIContactController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import "ESAccountNetworkConnectivityPlugin.h"
 #import <AIUtilities/AIEventAdditions.h>
 #import <AIUtilities/AIHostReachabilityMonitor.h>
@@ -86,21 +86,6 @@
 	[super dealloc];
 }
 
-- (BOOL)shouldAutoconnectAllEnabled
-{
-	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
-	NSNumber		*didAutoconnectAll = [userDefaults objectForKey:@"Adium 1.0 First Time:Autoconnected All"];
-	BOOL			shouldAutoconnectAllEnabled = NO;
-	
-	if (!didAutoconnectAll) {
-		[userDefaults setObject:[NSNumber numberWithBool:YES] forKey:@"Adium 1.0 First Time:Autoconnected All"];
-		[userDefaults synchronize];
-		shouldAutoconnectAllEnabled = YES;
-	}
-	
-	return shouldAutoconnectAllEnabled;
-}
-
 /*!
  * @brief Adium finished launching
  *
@@ -110,7 +95,6 @@
 {
 	NSArray						*accounts = [[adium accountController] accounts];
 	AIHostReachabilityMonitor	*monitor = [AIHostReachabilityMonitor defaultMonitor];
-	BOOL						shouldAutoconnectAll = [self shouldAutoconnectAllEnabled];
 	BOOL						shiftHeld = [NSEvent shiftKey];
 	
 	//Start off forbidding all accounts from auto-connecting.
@@ -128,8 +112,8 @@
 	while ((account = [accountsEnum nextObject])) {
 		BOOL	connectAccount = (!shiftHeld  &&
 								  [account enabled] &&
-								  ([account shouldBeOnline] ||
-								   shouldAutoconnectAll));
+								  [[account preferenceForKey:KEY_AUTOCONNECT
+													  group:GROUP_ACCOUNT_STATUS] boolValue]);
 
 		if ([account connectivityBasedOnNetworkReachability]) {
 			NSString *host = [account host];
@@ -227,7 +211,7 @@
 		if (([account online] ||
 			 [account integerStatusObjectForKey:@"Connecting"]) &&
 			![account integerStatusObjectForKey:@"Disconnecting"]) {
-			[account disconnect];
+			[account disconnectFromDroppedNetworkConnection];
 			[accountsToConnect addObject:account];
 		}
 	}
@@ -240,6 +224,7 @@
  */
 - (void)systemWillSleep:(NSNotification *)notification
 {
+	AILog(@"***** System sleeping...");
 	//Disconnect all online accounts
 	if ([self _accountsAreOnlineOrDisconnecting]) {
 		NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
@@ -305,6 +290,8 @@
 {
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
+
+	AILog(@"***** System did wake...");
 
 	//Immediately re-connect accounts which are ignoring the server reachability
 	enumerator = [[[adium accountController] accounts] objectEnumerator];	

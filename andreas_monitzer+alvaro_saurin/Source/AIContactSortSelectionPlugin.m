@@ -14,10 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import "AIContactSortSelectionPlugin.h"
-#import "AIMenuController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "ESContactSortConfigurationWindowController.h"
 #import "AIAlphabeticalSort.h"
 #import "ESStatusSort.h"

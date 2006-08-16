@@ -49,6 +49,7 @@ typedef enum{
 	int				messageStart;
 	BOOL			actionMessage;
 	BOOL			autoResponse;
+	NSString		*encryption;
 	
 	NSString		*eventName;
 }

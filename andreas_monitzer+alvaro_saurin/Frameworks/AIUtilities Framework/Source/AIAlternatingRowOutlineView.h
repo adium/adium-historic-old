@@ -84,6 +84,7 @@
 - (NSColor *)backgroundColorForRow:(int)row;
 
 - (void)setDrawsGradientSelection:(BOOL)inDrawsGradientSelection;
+- (BOOL)drawsGradientSelection;
 @end
 
 @interface AIAlternatingRowOutlineView (PRIVATE_AIAlternatingRowOutlineViewAndSubclasses)

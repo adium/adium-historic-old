@@ -6,8 +6,8 @@
 //
 
 #import "ESPersonalPreferences.h"
-#import "AIPreferenceController.h"
-#import "AIContactController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIImageViewWithImagePicker.h>
@@ -28,7 +28,7 @@
 /*!
  * @brief Preference pane properties
  */
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_Personal;
 }
 - (NSString *)label{
@@ -187,6 +187,11 @@
 	[self configureImageView];
 }
 
+- (NSString *)fileNameForImageInImagePicker:(AIImageViewWithImagePicker *)picker
+{
+	return AILocalizedString(@"Adium Icon", nil);
+}
+
 - (void)configureImageView
 {
 	NSData *imageData = [[adium preferenceController] preferenceForKey:KEY_USER_ICON
@@ -203,7 +208,7 @@
 {
 	[matrix_userIcon setToolTip:AILocalizedString(@"Do not use an icon to represent you.", nil)
 						forCell:[matrix_userIcon cellWithTag:0]];
-	[matrix_userIcon setToolTip:AILocalizedString(@"Use the icon below represent you.", nil)
+	[matrix_userIcon setToolTip:AILocalizedString(@"Use the icon below to represent you.", nil)
 						forCell:[matrix_userIcon cellWithTag:1]];
 
 #define DISPLAY_NAME_TOOLTIP AILocalizedString(@"Your name, which on supported services will be sent to remote contacts. Substitutions from the Edit->Scripts and Edit->iTunes menus may be used here.", nil)

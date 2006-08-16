@@ -249,7 +249,7 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 	}
 }
 
-static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users, GList *flags, GList *aliases, gboolean new_arrivals)
+static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *cbuddies, gboolean new_arrivals)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_CHAT) {
 		NSMutableArray	*usersArray = [NSMutableArray array];
@@ -257,18 +257,12 @@ static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users, GLis
 		NSMutableArray	*aliasesArray = [NSMutableArray array];
 		
 		GList *l;
-		for (l = users; l != NULL; l = l->next) {
-			[usersArray addObject:[NSString stringWithUTF8String:(const char *)l->data]];
-		}
-		
-		for (l = flags; l != NULL; l = l->next) {
-			GaimConvChatBuddyFlags flags = GPOINTER_TO_INT(l->data);
-
-			[flagsArray addObject:[NSNumber numberWithInt:flags]];
-		}
-
-		for (l = aliases; l != NULL; l = l->next) {
-			[aliasesArray addObject:[NSString stringWithUTF8String:(const char *)l->data]];
+		for (l = cbuddies; l != NULL; l = l->next) {
+			GaimConvChatBuddy *chatBuddy = (GaimConvChatBuddy *)l->data;
+			
+			[usersArray addObject:[NSString stringWithUTF8String:chatBuddy->name]];
+			[aliasesArray addObject:(chatBuddy->alias ? [NSString stringWithUTF8String:chatBuddy->alias] : @"")];
+			[flagsArray addObject:[NSNumber numberWithInt:GPOINTER_TO_INT(chatBuddy->flags)]];
 		}
 
 		[accountLookup(conv->account) addUsersArray:usersArray

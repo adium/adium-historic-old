@@ -16,9 +16,10 @@
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
-#import "AIPreferenceController.h"
-#import "AIAccountController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIModularPaneCategoryView.h>
+#import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AIAutoScrollView.h>
@@ -41,7 +42,7 @@
 @interface AIPreferenceWindowController (PRIVATE)
 + (AIPreferenceWindowController *)_preferenceWindowController;
 - (id)initWithWindowNibName:(NSString *)windowNibName;
-- (NSArray *)_panesInCategory:(PREFERENCE_CATEGORY)inCategory;
+- (NSArray *)_panesInCategory:(AIPreferenceCategory)inCategory;
 - (void)_saveControlChanges;
 - (void)_configureAdvancedPreferencesTable;
 - (void)_configreTabViewItemLabels;
@@ -148,7 +149,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 
 	//Configure window
 	[[self window] setTitle:PREFERENCE_WINDOW_TITLE];
-	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSMakeRect(0,0,0,0)];
+	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSZeroRect];
 	[self _configureAdvancedPreferencesTable];
 	[[self window] betterCenter];
 
@@ -269,7 +270,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 /*!
  * @brief Loads and returns the AIPreferencePanes in the specified category
  */
-- (NSArray *)_panesInCategory:(PREFERENCE_CATEGORY)inCategory
+- (NSArray *)_panesInCategory:(AIPreferenceCategory)inCategory
 {
     NSMutableArray		*paneArray = [NSMutableArray array];
     NSEnumerator		*enumerator = [[[adium preferenceController] paneArray] objectEnumerator];
@@ -306,16 +307,16 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	static NSDictionary	*_identifierToLabelDict = nil;
 	if (!_identifierToLabelDict) {
 		_identifierToLabelDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-			ACCOUNTS_TITLE,@"accounts",
-			AILocalizedString(@"General",nil),@"general",
-			AILocalizedString(@"Personal",nil),@"personal",
-			AILocalizedString(@"Appearance",nil),@"appearance",
-			AILocalizedString(@"Messages",nil),@"messages",
-			AILocalizedString(@"Status",nil),@"status",
-			AILocalizedString(@"Events",nil),@"events",
-			AILocalizedString(@"File Transfer",nil),@"ft",
-			AILocalizedString(@"Advanced",nil),@"advanced",
-			AILocalizedString(@"Loading",nil),@"loading",
+			AILocalizedString(@"Accounts",nil), @"accounts",
+			AILocalizedString(@"General",nil), @"general",
+			AILocalizedString(@"Personal",nil), @"personal",
+			AILocalizedString(@"Appearance",nil), @"appearance",
+			AILocalizedString(@"Messages",nil), @"messages",
+			AILocalizedString(@"Status",nil), @"status",
+			AILocalizedString(@"Events",nil), @"events",
+			AILocalizedString(@"File Transfer",nil), @"ft",
+			AILocalizedString(@"Advanced",nil), @"advanced",
+			AILocalizedString(@"Loading",nil), @"loading",
 			nil];
 	}
 
@@ -368,7 +369,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	return [NSImage imageNamed:[NSString stringWithFormat:PREFERENCE_ICON_FORMAT, [tabViewItem identifier]] forClass:[self class]];
+	//We use images from the main bundle, not out own
+	return [NSImage imageNamed:[NSString stringWithFormat:PREFERENCE_ICON_FORMAT, [tabViewItem identifier]]];
 }
 
 /*!
@@ -449,12 +451,12 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     //Configure our tableView
     cell = [[AIImageTextCell alloc] init];
     [cell setFont:[NSFont systemFontOfSize:12]];
-	[cell setDrawsGradientHighlight:YES];
     [[tableView_advanced tableColumnWithIdentifier:@"description"] setDataCell:cell];
 	[cell release];
 	
     [scrollView_advanced setAutohidesScrollers:YES];
-	
+	[tableView_advanced setDrawsGradientSelection:YES];
+
 	//Select the previously selected row
 	int row = [[[adium preferenceController] preferenceForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW
 														group:PREF_GROUP_WINDOW_POSITIONS] intValue];

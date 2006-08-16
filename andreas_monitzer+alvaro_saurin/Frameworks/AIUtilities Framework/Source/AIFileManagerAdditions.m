@@ -71,10 +71,9 @@
 
 	NSFileManager *manager = [NSFileManager defaultManager];
     BOOL			isDir;
-	unsigned		count;
-	
-	if(![manager fileExistsAtPath:fullPath isDirectory:&isDir] || !isDir)
-	{
+	unsigned		count = 0;
+
+	if (![manager fileExistsAtPath:fullPath isDirectory:&isDir] || !isDir) {
 		NSMutableArray	*neededFolders = [[NSMutableArray alloc] init];
 		
 		do

@@ -15,8 +15,8 @@
  */
 
 #import "ESGaimMeanwhileAccount.h"
-#import "AIAccountController.h"
-#import "AIStatusController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIStatusControllerProtocol.h>
 #import "UndeclaredLibgaimFunctions.h"
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
@@ -32,7 +32,7 @@
 
 - (const char*)protocolPlugin
 {
-    return "prpl-sametime";
+    return "prpl-meanwhile";
 }
 
 - (void)configureGaimAccount
@@ -40,6 +40,10 @@
 	[super configureGaimAccount];
 	
 	gaim_prefs_set_int(MW_PRPL_OPT_BLIST_ACTION, Meanwhile_CL_Load_And_Save);
+	gaim_account_set_bool(account, "force_login", [[self preferenceForKey:KEY_MEANWHILE_FORCE_LOGIN
+																	group:GROUP_ACCOUNT_STATUS] boolValue]);
+	gaim_account_set_bool(account, "fake_client_id", [[self preferenceForKey:KEY_MEANWHILE_FAKE_CLIENT_ID
+																	   group:GROUP_ACCOUNT_STATUS] boolValue]);
 }
 
 #pragma mark Status Messages
@@ -104,18 +108,20 @@
 
 	switch ([statusState statusType]) {
 		case AIAvailableStatusType:
+			statusID = "active";
 			break;
 
 		case AIAwayStatusType:
+		case AIInvisibleStatusType: //Meanwhile does not support invisibility
 		{
 			if (([statusName isEqualToString:STATUS_NAME_DND]) ||
-				([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
-				statusID = "busy";
-			
+				([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_DND]] == NSOrderedSame))
+				statusID = "dnd";
+			else
+				statusID = "away";
 			break;
 		}
-		
-		case AIInvisibleStatusType:
+
 		case AIOfflineStatusType:
 			break;
 	}

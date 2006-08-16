@@ -202,7 +202,7 @@ NSString *killXMLTags(NSString *inString)
             [ret appendFormat:@"%@ ", tempString];
         [scan scanString:@"<" intoString:nil];
         [scan scanUpToString:@">" intoString:&tempString];
-        if([tempString hasPrefix:@"BR"])
+        if([tempString hasPrefix:@"br"])
             [ret appendString:@"\n"];
         [scan scanString:@">" intoString:nil];
     }

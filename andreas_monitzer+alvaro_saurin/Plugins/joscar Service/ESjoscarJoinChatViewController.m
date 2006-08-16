@@ -9,8 +9,8 @@
 #import <Adium/DCJoinChatWindowController.h>
 #import <AIUtilities/AICompletingTextField.h>
 #import "AIAdium.h"
-#import "AIChatController.h"
-#import "AIContactController.h"
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 #import "RAFjoscarAccount.h"

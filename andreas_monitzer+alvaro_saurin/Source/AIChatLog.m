@@ -17,6 +17,7 @@
 #import "AIChatLog.h"
 #import "AILogViewerWindowController.h"
 #import "AILoggerPlugin.h"
+#import "AICalendarDate.h"
 
 @implementation AIChatLog
 
@@ -88,23 +89,10 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 - (NSString *)serviceClass{
 	return serviceClass;
 }
-- (NSDate *)date{
+- (NSCalendarDate *)date{
 	//Determine the date of this log lazily
 	if (!date) {
-		date = dateFromFileName([path lastPathComponent]);
-
-		if (abs([date timeIntervalSinceDate:[NSDate date]]) <= 86400) {
-			NSDictionary	*fileAttributes = [[NSFileManager defaultManager] fileAttributesAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path]
-																					  traverseLink:NO];
-			NSDate			*fileDate = [fileAttributes fileModificationDate];
-			
-			//If the date is today, and the file mod date is also today (so can be trusted), use it for finer timing granularity
-			if (fileDate && abs([date timeIntervalSinceDate:fileDate]) <= 86400) {
-				date = fileDate;
-			}
-		}
-		
-		[date retain];
+		date = [dateFromFileName([path lastPathComponent]) retain];
 	}
 		
     return date;
@@ -130,7 +118,7 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 
 - (BOOL)isFromSameDayAsDate:(NSCalendarDate *)inDate
 {
-	return [[[self date] dateWithCalendarFormat:nil timeZone:nil] dayOfCommonEra] == [inDate dayOfCommonEra];
+	return [[self date] dayOfCommonEra] == [inDate dayOfCommonEra];
 }
 
 #pragma mark Sort Selectors
@@ -264,24 +252,16 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 #pragma mark Date utilities
 
 //Scan an Adium date string, supahfast C style
-static BOOL scandate(const char *sample, unsigned long *outyear,
-					 unsigned long *outmonth, unsigned long *outdate)
+static BOOL scandate(const char *sample,
+					 unsigned long *outyear, unsigned long *outmonth,  unsigned long *outdate,
+					 BOOL *outHasTime, unsigned long *outhour, unsigned long *outminute, unsigned long *outsecond,
+					 signed long *outtimezone)
 {
 	BOOL success = YES;
 	unsigned long component;
-    //read three numbers, starting after:
-	
-	//a space...
-	while (*sample != ' ') {
-    	if (!*sample) {
-    		success = NO;
-    		goto fail;
-		} else {
-			++sample;
-		}
-    }
-	
-	//...followed by a (
+
+    //Read a date, followed by a '('.
+	//First, find the '('.
 	while (*sample != '(') {
     	if (!*sample) {
     		success = NO;
@@ -323,9 +303,80 @@ static BOOL scandate(const char *sample, unsigned long *outyear,
 		component = strtoul(sample, (char **)&sample, 10);
 		if (outdate) *outdate = component;
     }
+
+    if (*sample == 'T') {
+		++sample; //start with the next character
+		if (outHasTime) *outHasTime = YES;
+		
+		/*get the hour*/ {
+			while (*sample && (*sample < '0' || *sample > '9')) ++sample;
+			if (!*sample) {
+				success = NO;
+				goto fail;
+			}
+			component = strtoul(sample, (char **)&sample, 10);
+			if (outhour) *outhour = component;
+		}
+
+		/*get the minute*/ {
+			while (*sample && (*sample < '0' || *sample > '9')) ++sample;
+			if (!*sample) {
+				success = NO;
+				goto fail;
+			}
+			component = strtoul(sample, (char **)&sample, 10);
+			if (outminute) *outminute = component;
+		}
+
+		/*get the second*/ {
+			while (*sample && (*sample < '0' || *sample > '9')) ++sample;
+			if (!*sample) {
+				success = NO;
+				goto fail;
+			}
+			component = strtoul(sample, (char **)&sample, 10);
+			if (outsecond) *outsecond = component;
+		}
+
+		/*get the time zone*/ {
+			while (*sample && ((*sample < '0' || *sample > '9') && *sample != '-' && *sample != '+')) ++sample;
+			if (!*sample) {
+				success = NO;
+				goto fail;
+			}
+			signed long timezone_sign = 1;
+			if(*sample == '+') {
+				++sample;
+			} else if(*sample == '-') {
+				timezone_sign = -1;
+				++sample;
+			} else if (*sample) {
+				//There's something here, but it's not a time zone. Bail.
+				success = NO;
+				goto fail;
+			}
+			signed long timezone_hr = 0;
+			if (*sample >= '0' || *sample <= '9') {
+				timezone_hr += *(sample++) - '0';
+			}
+			if (*sample >= '0' || *sample <= '9') {
+				timezone_hr *= 10;
+				timezone_hr += *(sample++) - '0';
+			}
+			signed long timezone_min = 0;
+			if (*sample >= '0' || *sample <= '9') {
+				timezone_min += *(sample++) - '0';
+			}
+			if (*sample >= '0' || *sample <= '9') {
+				timezone_min *= 10;
+				timezone_min += *(sample++) - '0';
+			}
+			if (outtimezone) *outtimezone = (timezone_hr * 60 + timezone_min) * timezone_sign;
+		}
+	}
 	
 fail:
-		return success;
+	return success;
 }
 
 //Given an Adium log file name, return an NSCalendarDate with year, month, and day specified
@@ -334,10 +385,26 @@ static NSCalendarDate *dateFromFileName(NSString *fileName)
 	unsigned long   year = 0;
 	unsigned long   month = 0;
 	unsigned long   day = 0;
-	
-	if (scandate([fileName UTF8String], &year, &month, &day)) {
+	unsigned long   hour = 0;
+	unsigned long   minute = 0;
+	unsigned long   second = 0;
+	  signed long   timezone = NSNotFound;
+	BOOL			hasTime = NO;
+	  
+	if (scandate([fileName UTF8String], &year, &month, &day, &hasTime, &hour, &minute, &second, &timezone)) {
 		if (year && month && day) {
-			return [NSCalendarDate dateWithYear:year month:month day:day hour:0 minute:0 second:0 timeZone:[NSTimeZone defaultTimeZone]];
+			AICalendarDate *calendarDate;
+			
+			calendarDate = [AICalendarDate dateWithYear:year
+												  month:month
+													day:day
+												   hour:hour
+												 minute:minute
+												 second:second
+											   timeZone:((timezone == NSNotFound) ? nil : [NSTimeZone timeZoneForSecondsFromGMT:(timezone * 60)])];
+			[calendarDate setGranularity:(hasTime ? AISecondGranularity : AIDayGranularity)];
+
+			return calendarDate;
 		}
 	}
 	

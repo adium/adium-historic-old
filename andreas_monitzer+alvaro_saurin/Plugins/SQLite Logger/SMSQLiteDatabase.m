@@ -15,7 +15,7 @@
  */
 
 #import "SMSQLiteDatabase.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 @interface SMSQLiteDatabase (PRIVATE)
 - (BOOL)errorCheck:(NSString *)query;

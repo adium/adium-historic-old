@@ -15,11 +15,11 @@
  */
 
 #import "AIAliasSupportPlugin.h"
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import "AIContactInfoWindowController.h"
 #import "AIContactListEditorPlugin.h"
-#import "AIMenuController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>

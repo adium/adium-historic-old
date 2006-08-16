@@ -465,7 +465,50 @@
 - (void)highlightSelectionInClipRect:(NSRect)clipRect
 {
 	if (drawsSelectedRowHighlight && (!drawHighlightOnlyWhenMain || [[self window] isMainWindow])) {
-		[super highlightSelectionInClipRect:clipRect];
+		if ([self drawsGradientSelection]) {
+			//We can trust super to draw the selection properly with a gradient...
+			[super highlightSelectionInClipRect:clipRect];
+
+		} else {
+			//But NSOutlineView's own handling won't deal with our variable heights properly
+			NSIndexSet *indices = [self selectedRowIndexes];
+			unsigned int bufSize = [indices count];
+			unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
+			unsigned int i = 0, j = 0;
+			
+			NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
+			[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
+			
+			NSRect *selectionRects = (NSRect *)malloc(sizeof(NSRect) * bufSize);
+			
+			while (i < bufSize) {
+				int startIndex = buf[i];
+				int lastIndex = buf[i];
+				while ((i + 1 < bufSize) &&
+					   (buf[i + 1] == lastIndex + 1)){
+					i++;
+					lastIndex++;
+				}
+				
+				NSRect highlightRect = NSUnionRect([self rectOfRow:startIndex],
+												   [self rectOfRow:lastIndex]);				
+				selectionRects[j++] = highlightRect;			
+				
+				i++;		
+			}
+
+			if ([[self window] firstResponder] != self || ![[self window] isKeyWindow]) {
+				[[NSColor secondarySelectedControlColor] set];
+			} else {
+				[[NSColor alternateSelectedControlColor] set];
+			}
+
+			NSRectFillListUsingOperation(selectionRects, j, NSCompositeSourceOver);
+
+			free(buf);
+			free(selectionRects);
+		}
+
 	} else {
 		[self drawAlternatingRowsInRect:clipRect];
 	}

@@ -15,9 +15,9 @@
  */
 
 #import "AIStatusChangedMessagesPlugin.h"
-#import "AIChatController.h"
-#import "AIContentController.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentStatus.h>

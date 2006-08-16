@@ -22,11 +22,10 @@
 #define KEY_MSN_DISPLAY_NAMED_CHANGED	@"MSN:Display Name Changed"
 
 @interface ESGaimMSNAccount : CBGaimAccount <AIAccount_Files>{
-	NSString	*currentFriendlyName;
-	
+	NSDate		*lastFriendlyNameChange;
+	NSString	*queuedFriendlyName;
+
 	BOOL		displayNamesAsStatus;
-	BOOL		displayConversationClosed;
-	BOOL		displayConversationTimedOut;
 }
 
 @end

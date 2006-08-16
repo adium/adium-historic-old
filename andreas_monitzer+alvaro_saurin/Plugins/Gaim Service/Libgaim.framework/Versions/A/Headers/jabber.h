@@ -26,10 +26,10 @@
 #include <libxml/parser.h>
 #endif
 #include <glib.h>
+#include "circbuffer.h"
 #include "connection.h"
 #include "roomlist.h"
 #include "sslconn.h"
-#include "gaim_buffer.h"
 
 #include "jutil.h"
 #include "xmlnode.h"
@@ -120,6 +120,8 @@ typedef struct _JabberStream
 
 	GaimCircBuffer *write_buffer;
 	guint writeh;
+
+	gboolean reinit;
 
 	gchar* last_mail_alert_time;
 

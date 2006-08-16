@@ -37,12 +37,10 @@
 #define KEY_WEBKIT_VERSION				@"MessageViewVersion"
 
 //BOM scripts for appending content.
-#define APPEND_MESSAGE_WITH_SCROLL		@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();"
-#define APPEND_NEXT_MESSAGE_WITH_SCROLL	@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();"
-#define APPEND_MESSAGE					@"appendMessage(\"%@\");"
-#define APPEND_NEXT_MESSAGE				@"appendNextMessage(\"%@\");"
-#define APPEND_MESSAGE_NO_SCROLL		@"appendMessageNoScroll(\"%@\");"
-#define	APPEND_NEXT_MESSAGE_NO_SCROLL	@"appendNextMessageNoScroll(\"%@\");"
+#define APPEND_MESSAGE					@"appendMessage"
+#define APPEND_NEXT_MESSAGE				@"appendNextMessage"
+#define APPEND_MESSAGE_NO_SCROLL		@"appendMessageNoScroll"
+#define APPEND_NEXT_MESSAGE_NO_SCROLL	@"appendNextMessageNoScroll"
 
 #define VALID_SENDER_COLORS_ARRAY [[NSArray alloc] initWithObjects:@"red", @"blue" , @"gray", @"magenta", @"violet", @"olive", @"yellowgreen", @"darkred", @"darkgreen", @"darksalmon", @"darkcyan", @"darkyellow", @"mediumpurple", @"peru", @"olivedrab", @"royalred", @"darkorange", @"slateblue", @"slategray", @"goldenrod", @"orangered", @"tomato", @"dogderblue", @"steelblue", @"deeppink", @"saddlebrown", @"coral", @"royalblue", nil]
 
@@ -183,12 +181,19 @@ static NSArray *validSenderColors;
 
 - (NSString *)defaultFontFamily
 {
-	return [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_FAMILY];
+	NSString *defaultFontFamily = [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_FAMILY];
+	if (!defaultFontFamily) defaultFontFamily = [[NSFont systemFontOfSize:0] familyName];
+	
+	return defaultFontFamily;
 }
 
 - (NSNumber *)defaultFontSize
 {
-	return [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_SIZE];
+	NSNumber *defaultFontSize = [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_SIZE];
+
+	if (!defaultFontSize) defaultFontSize = [NSNumber numberWithInt:[[NSFont systemFontOfSize:0] pointSize]];
+	
+	return defaultFontSize;
 }
 
 - (BOOL)hasHeader
@@ -380,33 +385,46 @@ static NSArray *validSenderColors;
 }
 
 #pragma mark Scripts
-- (NSString *)scriptForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
+
+- (NSString *)methodNameToCheckIfScrollToBottomIsNeeded
 {
-	NSMutableString	*newHTML;
-	NSString		*script;
-	
+	return styleVersion == 0 ? @"checkIfScrollToBottomIsNeeded" : nil;
+}
+- (NSArray *)methodArgumentsToCheckIfScrollToBottomIsNeeded
+{
+	return styleVersion == 0 ? [NSArray array] : nil;
+}
+
+- (NSString *)methodNameToScrollToBottomIfNeeded
+{
+	return styleVersion == 0 ? @"scrollToBottomIfNeeded" : nil;
+}
+- (NSArray *)methodArgumentsToScrollToBottomIfNeeded
+{
+	return styleVersion == 0 ? [NSArray array] : nil;
+}
+
+- (NSString *)methodNameForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects {
+	NSString *methodName = nil;
+
 	//If combining of consecutive messages has been disabled, we treat all content as non-similar
 	if (!combineConsecutive) contentIsSimilar = NO;
-	
-	//Fetch the correct template and substitute keywords for the passed content
-	newHTML = [[[self templateForContent:content similar:contentIsSimilar] mutableCopy] autorelease];
-	newHTML = [self fillKeywords:newHTML forContent:content];
 	
 	//BOM scripts vary by style version
 	if (styleVersion >= 3) {
 		if (willAddMoreContentObjects) {
-			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_NO_SCROLL : APPEND_MESSAGE_NO_SCROLL);
+			methodName = (contentIsSimilar ? APPEND_NEXT_MESSAGE_NO_SCROLL : APPEND_MESSAGE_NO_SCROLL);
 		} else {
-			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
+			methodName = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
 		}
-	} else if (styleVersion >= 1) {
-		script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
-		
 	} else {
-		script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_WITH_SCROLL : APPEND_MESSAGE_WITH_SCROLL);
+		methodName = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
 	}
-	
-	return [NSString stringWithFormat:script, [self _escapeStringForPassingToScript:newHTML]]; 
+
+	return methodName;
+}
+- (NSArray *)methodArgumentsForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects {
+	return [NSArray arrayWithObject:[self _escapeStringForInsertionIntoMessageView:[self fillKeywords:[[[self templateForContent:content similar:contentIsSimilar] mutableCopy] autorelease] forContent:content]]];
 }
 
 - (NSString *)scriptForChangingVariant:(NSString *)variant
@@ -424,20 +442,14 @@ static NSArray *validSenderColors;
 }
 
 /*!
- *	@brief Escape a string for passing to our BOM scripts
+ *	@brief Escape a string to work better in a message view
+ *
+ *	Currently deletes line feeds and replaces carriage returns with an empty br element.
  */
-- (NSMutableString *)_escapeStringForPassingToScript:(NSMutableString *)inString
+- (NSMutableString *)_escapeStringForInsertionIntoMessageView:(NSMutableString *)inString
 {
 	NSRange range = NSMakeRange(0, [inString length]);
 	unsigned delta;
-	//We need to escape a few things to get our string to the javascript without trouble
-	delta = [inString replaceOccurrencesOfString:@"\\" withString:@"\\\\" 
-										 options:NSLiteralSearch range:range];
-	range.length += delta;
-	
-	delta = [inString replaceOccurrencesOfString:@"\"" withString:@"\\\"" 
-											options:NSLiteralSearch range:range];
-	range.length += delta;
 
 	delta = [inString replaceOccurrencesOfString:@"\n" withString:@"" 
 										 options:NSLiteralSearch range:range];
@@ -445,8 +457,6 @@ static NSArray *validSenderColors;
 
 	delta = [inString replaceOccurrencesOfString:@"\r" withString:@"<br />" 
 										 options:NSLiteralSearch range:range];
-	enum { lengthOfBRString = 6 };
-	range.length += delta * lengthOfBRString;
 
 	return inString;
 }
@@ -560,9 +570,15 @@ static NSArray *validSenderColors;
 	[inString replaceKeyword:@"%senderStatusIcon%"
 				  withString:[self statusIconPathForListObject:theSource]];
 	
-	if(!validSenderColors) validSenderColors = VALID_SENDER_COLORS_ARRAY;
+	if(!validSenderColors) {
+		NSString *path = [stylePath stringByAppendingPathComponent:@"Incoming/SenderColors.txt"];
+		if([[NSFileManager defaultManager] fileExistsAtPath:path])
+			validSenderColors = [[[NSString stringWithContentsOfFile:path] componentsSeparatedByString:@":"] retain];
+		if(!validSenderColors || [validSenderColors count] == 0)
+			validSenderColors = VALID_SENDER_COLORS_ARRAY;
+	}
 	[inString replaceKeyword:@"%senderColor%"
-				  withString:[validSenderColors objectAtIndex:([[contentSource UID] hash] % ([validSenderColors count] - 1))]];
+				  withString:[validSenderColors objectAtIndex:([[contentSource UID] hash] % ([validSenderColors count]))]];
 	
 	//HAX. The odd conditional here detects the rtl html that our html parser spits out.
 	[inString replaceKeyword:@"%messageDirection%"

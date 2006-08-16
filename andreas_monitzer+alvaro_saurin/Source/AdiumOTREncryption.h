@@ -9,6 +9,7 @@
 #import <OTR/context.h>
 #import <OTR/userstate.h>
 
+@protocol AdiumMessageEncryptor;
 @class ESOTRPreferences, AIContentMessage, AIAccount, AIListContact, AIChat;
 
 typedef enum {
@@ -18,11 +19,9 @@ typedef enum {
     TRUST_FINISHED
 } TrustLevel;
 
-@interface AdiumOTREncryption : AIObject {
+@interface AdiumOTREncryption : AIObject <AdiumMessageEncryptor> {
 	ESOTRPreferences	*OTRPrefs;
 }
-
-- (void)controllerDidLoad;
 
 - (void)willSendContentMessage:(AIContentMessage *)inContentMessage;
 - (NSString *)decryptIncomingMessage:(NSString *)inString fromContact:(AIListContact *)inListContact onAccount:(AIAccount *)inAccount;

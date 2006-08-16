@@ -16,4 +16,6 @@
 - (void)setDoubleAction:(SEL)inDoubleAction;
 - (void)setHighlightOnHoverAndClick:(BOOL)inHighlightOnHoverAndClick;
 
+- (NSRect)trackingRect;
+
 @end
