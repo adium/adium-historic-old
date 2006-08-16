@@ -16,6 +16,7 @@
 				347A21AC09786C5100A30431 /* ShellScript */,
 			);
 			dependencies = (
+				0370B1270A80AB8D00F6C765 /* PBXTargetDependency */,
 				347A219F09786C1C00A30431 /* PBXTargetDependency */,
 				347A21A109786C1F00A30431 /* PBXTargetDependency */,
 			);
@@ -50,6 +51,31 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		030DD8480A8A3322005BB9AA /* Adium.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
+		030DD8AA0A8A3379005BB9AA /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		030DD8B80A8A343F005BB9AA /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		030DD8B90A8A343F005BB9AA /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
+		0370B1150A80AA7500F6C765 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
+		0370B12E0A80AC3900F6C765 /* SMD-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0370B11E0A80AA7600F6C765 /* SMD-Info.plist */; };
+		0370B2930A80E60900F6C765 /* Super Menu Duck.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0370B11C0A80AA7500F6C765 /* Super Menu Duck.app */; };
+		037F91A40A93CEBC0038D1EA /* Adium.icns in Resources */ = {isa = PBXBuildFile; fileRef = 34D832AD07CBD62C006466F2 /* Adium.icns */; };
+		03897E0A0A7FBBB3008ACDDC /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		03897E0B0A7FBBB3008ACDDC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
+		03897E0C0A7FBBB3008ACDDC /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
+		03897E160A7FBC49008ACDDC /* JLPresenceController.h in Headers */ = {isa = PBXBuildFile; fileRef = 03897C760A7FAAB4008ACDDC /* JLPresenceController.h */; };
+		03897E170A7FBC49008ACDDC /* JLPresencePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 03897C780A7FAAB4008ACDDC /* JLPresencePlugin.h */; };
+		03897E180A7FBC50008ACDDC /* JLPresenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03897C770A7FAAB4008ACDDC /* JLPresenceController.m */; };
+		03897E190A7FBC50008ACDDC /* JLPresencePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 03897C790A7FAAB5008ACDDC /* JLPresencePlugin.m */; };
+		03897EAC0A7FBD75008ACDDC /* Presence Plugin.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03897E120A7FBBB3008ACDDC /* Presence Plugin.AdiumPlugin */; };
+		03897F240A7FCC3F008ACDDC /* PresencePluginDefaultPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 03897C7A0A7FAAB5008ACDDC /* PresencePluginDefaultPrefs.plist */; };
+		03C0A4180A889EFA00FBA6D6 /* SMDMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 03C0A4160A889EFA00FBA6D6 /* SMDMenu.h */; };
+		03C0A4190A889EFA00FBA6D6 /* SMDMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 03C0A4170A889EFA00FBA6D6 /* SMDMenu.m */; };
+		03C0A4BE0A889FDD00FBA6D6 /* adiumOfflineHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF50732CB500032C9F6 /* adiumOfflineHighlight.png */; };
+		03C0A4BF0A889FDD00FBA6D6 /* adiumOffline.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF60732CB500032C9F6 /* adiumOffline.png */; };
+		03C0A4C00A889FDD00FBA6D6 /* adium.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E791E26057746D100547562 /* adium.png */; };
+		03C0A4C10A889FDD00FBA6D6 /* adiumHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */; };
+		03C0A4C20A889FDD00FBA6D6 /* adiumRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E28FDE506ADB30D0041553E /* adiumRed.png */; };
+		03C0A4C30A889FDD00FBA6D6 /* adiumRedHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */; };
 		071C56330827933100399C0F /* Shared Dock Icon Images in Resources */ = {isa = PBXBuildFile; fileRef = 071C56310827933000399C0F /* Shared Dock Icon Images */; };
 		074DDB5D07CB413F0033AFF7 /* CBContactLastSeenPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 074DDB5C07CB413F0033AFF7 /* CBContactLastSeenPlugin.m */; };
 		07632BF30949E10B00FFABD8 /* ListThemeSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB42B080870A200E27095 /* ListThemeSheet.nib */; };
@@ -1377,6 +1403,41 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		030DD8BA0A8A3449005BB9AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		030DD8BC0A8A344E005BB9AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
+		0370B1260A80AB8D00F6C765 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0370B1080A80AA7500F6C765;
+			remoteInfo = "Super Menu Duck";
+		};
+		03897E030A7FBBB3008ACDDC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		03897E1B0A7FBC90008ACDDC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 03897E010A7FBBB3008ACDDC;
+			remoteInfo = "Presence Plugin";
+		};
 		11F5F42B09537E00007DCC49 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1597,6 +1658,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		030DD8B60A8A3412005BB9AA /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				030DD8480A8A3322005BB9AA /* Adium.framework in CopyFiles */,
+				030DD8AA0A8A3379005BB9AA /* AIUtilities.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1151F1630922A7DB0081FFB2 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1643,6 +1715,7 @@
 			dstSubfolderSpec = 7;
 			files = (
 				34677B3907CC3DAF00F59F7B /* Adium Crash Reporter.app in CopyFiles */,
+				0370B2930A80E60900F6C765 /* Super Menu Duck.app in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1679,6 +1752,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				03897EAC0A7FBD75008ACDDC /* Presence Plugin.AdiumPlugin in CopyFiles */,
 				11F5F44309537E34007DCC49 /* joscar.AdiumPlugin in CopyFiles */,
 				348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */,
 				4B7F27C705440DE900CDFC90 /* Gaim.AdiumPlugin in CopyFiles */,
@@ -1726,6 +1800,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0370B11C0A80AA7500F6C765 /* Super Menu Duck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Super Menu Duck.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0370B11E0A80AA7600F6C765 /* SMD-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "SMD-Info.plist"; path = "Other/Super Menu Duck/SMD-Info.plist"; sourceTree = "<group>"; };
+		03897C760A7FAAB4008ACDDC /* JLPresenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JLPresenceController.h; path = "Plugins/Presence Plugin/JLPresenceController.h"; sourceTree = "<group>"; };
+		03897C770A7FAAB4008ACDDC /* JLPresenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JLPresenceController.m; path = "Plugins/Presence Plugin/JLPresenceController.m"; sourceTree = "<group>"; };
+		03897C780A7FAAB4008ACDDC /* JLPresencePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JLPresencePlugin.h; path = "Plugins/Presence Plugin/JLPresencePlugin.h"; sourceTree = "<group>"; };
+		03897C790A7FAAB5008ACDDC /* JLPresencePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JLPresencePlugin.m; path = "Plugins/Presence Plugin/JLPresencePlugin.m"; sourceTree = "<group>"; };
+		03897C7A0A7FAAB5008ACDDC /* PresencePluginDefaultPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PresencePluginDefaultPrefs.plist; path = "Plugins/Presence Plugin/PresencePluginDefaultPrefs.plist"; sourceTree = "<group>"; };
+		03897E120A7FBBB3008ACDDC /* Presence Plugin.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Presence Plugin.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		03C0A4160A889EFA00FBA6D6 /* SMDMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SMDMenu.h; path = "Other/Super Menu Duck/SMDMenu.h"; sourceTree = "<group>"; };
+		03C0A4170A889EFA00FBA6D6 /* SMDMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SMDMenu.m; path = "Other/Super Menu Duck/SMDMenu.m"; sourceTree = "<group>"; };
 		071C56320827933000399C0F /* English */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English; path = "Resources/English.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		071C563E0827936500399C0F /* French */ = {isa = PBXFileReference; lastKnownFileType = folder; name = French; path = "Resources/French.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		071C56420827937400399C0F /* German */ = {isa = PBXFileReference; lastKnownFileType = folder; name = German; path = "Resources/German.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
@@ -3666,6 +3750,26 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0370B1130A80AA7500F6C765 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				030DD8B80A8A343F005BB9AA /* AIUtilities.framework in Frameworks */,
+				030DD8B90A8A343F005BB9AA /* Adium.framework in Frameworks */,
+				0370B1150A80AA7500F6C765 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		03897E090A7FBBB3008ACDDC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03897E0A0A7FBBB3008ACDDC /* AIUtilities.framework in Frameworks */,
+				03897E0B0A7FBBB3008ACDDC /* Cocoa.framework in Frameworks */,
+				03897E0C0A7FBBB3008ACDDC /* Adium.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		118C52C4091BF0DB00219458 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3839,6 +3943,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0370B1070A80AA3F00F6C765 /* Super Menu Duck */ = {
+			isa = PBXGroup;
+			children = (
+				9E6A9BF50732CB500032C9F6 /* adiumOfflineHighlight.png */,
+				9E6A9BF60732CB500032C9F6 /* adiumOffline.png */,
+				9E791E26057746D100547562 /* adium.png */,
+				6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */,
+				9E28FDE506ADB30D0041553E /* adiumRed.png */,
+				9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */,
+				03C0A4160A889EFA00FBA6D6 /* SMDMenu.h */,
+				03C0A4170A889EFA00FBA6D6 /* SMDMenu.m */,
+				0370B11E0A80AA7600F6C765 /* SMD-Info.plist */,
+			);
+			name = "Super Menu Duck";
+			sourceTree = "<group>";
+		};
+		03897C720A7FAA8D008ACDDC /* Presence Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				03897C760A7FAAB4008ACDDC /* JLPresenceController.h */,
+				03897C770A7FAAB4008ACDDC /* JLPresenceController.m */,
+				03897C780A7FAAB4008ACDDC /* JLPresencePlugin.h */,
+				03897C790A7FAAB5008ACDDC /* JLPresencePlugin.m */,
+				03897C7A0A7FAAB5008ACDDC /* PresencePluginDefaultPrefs.plist */,
+			);
+			name = "Presence Plugin";
+			sourceTree = "<group>";
+		};
 		071C56390827933A00399C0F /* Localized */ = {
 			isa = PBXGroup;
 			children = (
@@ -3934,6 +4066,8 @@
 				34B323C009B9FEAC00029361 /* IRC Service.AdiumLibgaimPlugin */,
 				3417D26109C332B900FC413E /* Translator.AdiumPlugin */,
 				3485D68009EB416300232CC4 /* AdiumLibgaim.framework */,
+				03897E120A7FBBB3008ACDDC /* Presence Plugin.AdiumPlugin */,
+				0370B11C0A80AA7500F6C765 /* Super Menu Duck.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3951,6 +4085,7 @@
 				4BD6720906001B2C0049CAF7 /* Plugins (Built In) */,
 				4BF2E6BE067CB72400743318 /* Xtras (Built In) */,
 				4B7F78BA0597F42D00162728 /* Crash Reporter */,
+				0370B1070A80AA3F00F6C765 /* Super Menu Duck */,
 				344458F3070B5BF500D8E932 /* Debugging */,
 				34EE35FB09C5012800C17DE1 /* Documentation */,
 				9EB3C52304F94DB7001D1F74 /* Migration Assistant */,
@@ -5929,6 +6064,7 @@
 		4BD672C706001B560049CAF7 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				03897C720A7FAA8D008ACDDC /* Presence Plugin */,
 				3417D27109C3334900FC413E /* Translator */,
 				B782F088058BB60B00AF4BBA /* LaTeX Plugin */,
 				B7AE664D0465778E0051E914 /* SQL Logger */,
@@ -6314,12 +6450,6 @@
 		9E791D8505768A3000547562 /* Status Menu Item */ = {
 			isa = PBXGroup;
 			children = (
-				9E6A9BF50732CB500032C9F6 /* adiumOfflineHighlight.png */,
-				9E6A9BF60732CB500032C9F6 /* adiumOffline.png */,
-				9E791E26057746D100547562 /* adium.png */,
-				6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */,
-				9E28FDE506ADB30D0041553E /* adiumRed.png */,
-				9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */,
 				9E217B7706A74CA7002A3F27 /* StatusMenuItemDefaultPrefs.plist */,
 				9E791D9405768B7A00547562 /* CBStatusMenuItemPlugin.h */,
 				9E791D9505768B7A00547562 /* CBStatusMenuItemPlugin.m */,
@@ -6919,6 +7049,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		0370B1090A80AA7500F6C765 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03C0A4180A889EFA00FBA6D6 /* SMDMenu.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		03897E040A7FBBB3008ACDDC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03897E160A7FBC49008ACDDC /* JLPresenceController.h in Headers */,
+				03897E170A7FBC49008ACDDC /* JLPresencePlugin.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3417D25309C332B900FC413E /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -7466,6 +7613,47 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		0370B1080A80AA7500F6C765 /* Super Menu Duck */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0370B1170A80AA7500F6C765 /* Build configuration list for PBXNativeTarget "Super Menu Duck" */;
+			buildPhases = (
+				0370B1090A80AA7500F6C765 /* Headers */,
+				0370B10B0A80AA7500F6C765 /* Resources */,
+				0370B1100A80AA7500F6C765 /* Sources */,
+				030DD8B60A8A3412005BB9AA /* CopyFiles */,
+				0370B1130A80AA7500F6C765 /* Frameworks */,
+				0370B1160A80AA7500F6C765 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				030DD8BB0A8A3449005BB9AA /* PBXTargetDependency */,
+				030DD8BD0A8A344E005BB9AA /* PBXTargetDependency */,
+			);
+			name = "Super Menu Duck";
+			productName = "Adium Crash Reporter";
+			productReference = 0370B11C0A80AA7500F6C765 /* Super Menu Duck.app */;
+			productType = "com.apple.product-type.application";
+		};
+		03897E010A7FBBB3008ACDDC /* Presence Plugin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 03897E0D0A7FBBB3008ACDDC /* Build configuration list for PBXNativeTarget "Presence Plugin" */;
+			buildPhases = (
+				03897E040A7FBBB3008ACDDC /* Headers */,
+				03897E060A7FBBB3008ACDDC /* Resources */,
+				03897E070A7FBBB3008ACDDC /* Sources */,
+				03897E090A7FBBB3008ACDDC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				03897E020A7FBBB3008ACDDC /* PBXTargetDependency */,
+			);
+			name = "Presence Plugin";
+			productName = "Latex Plugin";
+			productReference = 03897E120A7FBBB3008ACDDC /* Presence Plugin.AdiumPlugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 		118C52C5091BF0DB00219458 /* joscar */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 11B1A56A09CE42300087442E /* Build configuration list for PBXNativeTarget "joscar" */;
@@ -7644,6 +7832,7 @@
 				349C31630867D199000BF883 /* PBXTargetDependency */,
 				11F5F42C09537E00007DCC49 /* PBXTargetDependency */,
 				F5B17CDF0A16C767004AE99E /* PBXTargetDependency */,
+				03897E1C0A7FBC90008ACDDC /* PBXTargetDependency */,
 			);
 			name = Adium;
 			productInstallPath = /;
@@ -7859,6 +8048,8 @@
 				34B322F609B9FEAC00029361 /* IRC Service Libgaim Plugin */,
 				3417D25009C332B900FC413E /* Translator */,
 				F5B17CCF0A16C6AC004AE99E /* Plist Macros */,
+				03897E010A7FBBB3008ACDDC /* Presence Plugin */,
+				0370B1080A80AA7500F6C765 /* Super Menu Duck */,
 			);
 		};
 /* End PBXProject section */
@@ -7895,6 +8086,29 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0370B10B0A80AA7500F6C765 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				037F91A40A93CEBC0038D1EA /* Adium.icns in Resources */,
+				03C0A4BE0A889FDD00FBA6D6 /* adiumOfflineHighlight.png in Resources */,
+				03C0A4BF0A889FDD00FBA6D6 /* adiumOffline.png in Resources */,
+				03C0A4C00A889FDD00FBA6D6 /* adium.png in Resources */,
+				03C0A4C10A889FDD00FBA6D6 /* adiumHighlight.png in Resources */,
+				03C0A4C20A889FDD00FBA6D6 /* adiumRed.png in Resources */,
+				03C0A4C30A889FDD00FBA6D6 /* adiumRedHighlight.png in Resources */,
+				0370B12E0A80AC3900F6C765 /* SMD-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		03897E060A7FBBB3008ACDDC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03897F240A7FCC3F008ACDDC /* PresencePluginDefaultPrefs.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		118C52C2091BF0DB00219458 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -8306,6 +8520,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0370B1160A80AA7500F6C765 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+				"${BUILT_PRODUCTS_DIR}/Adium Crash Reporter.app/Contents/Frameworks",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Create symlink to the AIUtilities framework in the main Adium application\n#\ncd \"${BUILT_PRODUCTS_DIR}/Adium Crash Reporter.app/Contents/\"\nif [ -e Frameworks ] ; then\n    rm Frameworks\nfi\n\necho \"Symlinking AIUtilities framework...\"\nln -fns \"../../../Frameworks\" \"Frameworks\"\n";
+		};
 		074949DD0978E2DE002D9D1A /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -8441,6 +8669,23 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0370B1100A80AA7500F6C765 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03C0A4190A889EFA00FBA6D6 /* SMDMenu.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		03897E070A7FBBB3008ACDDC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03897E180A7FBC50008ACDDC /* JLPresenceController.m in Sources */,
+				03897E190A7FBC50008ACDDC /* JLPresencePlugin.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		118C52C3091BF0DB00219458 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -9008,6 +9253,31 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		030DD8BB0A8A3449005BB9AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
+			targetProxy = 030DD8BA0A8A3449005BB9AA /* PBXContainerItemProxy */;
+		};
+		030DD8BD0A8A344E005BB9AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = 030DD8BC0A8A344E005BB9AA /* PBXContainerItemProxy */;
+		};
+		0370B1270A80AB8D00F6C765 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0370B1080A80AA7500F6C765 /* Super Menu Duck */;
+			targetProxy = 0370B1260A80AB8D00F6C765 /* PBXContainerItemProxy */;
+		};
+		03897E020A7FBBB3008ACDDC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
+			targetProxy = 03897E030A7FBBB3008ACDDC /* PBXContainerItemProxy */;
+		};
+		03897E1C0A7FBC90008ACDDC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 03897E010A7FBBB3008ACDDC /* Presence Plugin */;
+			targetProxy = 03897E1B0A7FBC90008ACDDC /* PBXContainerItemProxy */;
+		};
 		11F5F42C09537E00007DCC49 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 118C52C5091BF0DB00219458 /* joscar */;
@@ -10014,6 +10284,116 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		0370B1180A80AA7500F6C765 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "Other/Super Menu Duck/SMD-Info.plist";
+				PRODUCT_NAME = "Super Menu Duck";
+				WARNING_CFLAGS = "-Wall";
+				ZERO_LINK = NO;
+			};
+			name = Development;
+		};
+		0370B1190A80AA7500F6C765 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "Plists/SMD-Info.plist";
+				PRODUCT_NAME = "Adium Crash Reporter";
+				WARNING_CFLAGS = "-Wall";
+			};
+			name = Deployment;
+		};
+		0370B11A0A80AA7500F6C765 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "Plists/SMD-Info.plist";
+				PRODUCT_NAME = "Adium Crash Reporter";
+				WARNING_CFLAGS = "-Wall";
+			};
+			name = "Deployment-Debug";
+		};
+		0370B11B0A80AA7500F6C765 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "Plists/SMD-Info.plist";
+				PRODUCT_NAME = "Adium Crash Reporter";
+				WARNING_CFLAGS = "-Wall";
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		03897E0E0A7FBBB3008ACDDC /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_MISSING_PARENTHESES = NO;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "Plugins/Presence Plugin/PresencePluginDefaultPrefs.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = (
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				PRODUCT_NAME = "Presence Plugin";
+				WARNING_CFLAGS = "-Wall";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = Development;
+		};
+		03897E0F0A7FBBB3008ACDDC /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "/Users/josh/Programming/branch/Plists/Latex Plugin copy.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				PRODUCT_NAME = "Latex Plugin";
+				WARNING_CFLAGS = "-Wall";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = Deployment;
+		};
+		03897E100A7FBBB3008ACDDC /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "/Users/josh/Programming/branch/Plists/Latex Plugin copy.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				PRODUCT_NAME = "Latex Plugin";
+				WARNING_CFLAGS = "-Wall";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Deployment-Debug";
+		};
+		03897E110A7FBBB3008ACDDC /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				INFOPLIST_FILE = "/Users/josh/Programming/branch/Plists/Latex Plugin copy.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = (
+					"-DCRASH_REPORTER",
+					"-DDEBUG_BUILD",
+					"-g3",
+				);
+				PRODUCT_NAME = "Latex Plugin";
+				WARNING_CFLAGS = "-Wall";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		11B1A56B09CE42300087442E /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -11789,6 +12169,28 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0370B1170A80AA7500F6C765 /* Build configuration list for PBXNativeTarget "Super Menu Duck" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0370B1180A80AA7500F6C765 /* Development */,
+				0370B1190A80AA7500F6C765 /* Deployment */,
+				0370B11A0A80AA7500F6C765 /* Deployment-Debug */,
+				0370B11B0A80AA7500F6C765 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		03897E0D0A7FBBB3008ACDDC /* Build configuration list for PBXNativeTarget "Presence Plugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03897E0E0A7FBBB3008ACDDC /* Development */,
+				03897E0F0A7FBBB3008ACDDC /* Deployment */,
+				03897E100A7FBBB3008ACDDC /* Deployment-Debug */,
+				03897E110A7FBBB3008ACDDC /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
 		11B1A56A09CE42300087442E /* Build configuration list for PBXNativeTarget "joscar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
