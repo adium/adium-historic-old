@@ -1,5 +1,5 @@
 /* 
- * Adium is the legal property of its developers, whose names are listed in the copyright file included
+* Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
  * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
@@ -15,42 +15,18 @@
  */
 
 #import <Adium/AIObject.h>
-
-// Global for DO server name
+@protocol AIChatObserver;
 #define ADIUM_PRESENCE_BROADCAST				@"AIPresenceBroadcast"
 
-@class AIAccountMenu, AIStatusMenu;
-@protocol AIChatObserver;
-
 @interface JLPresenceController : AIObject <AIChatObserver>
-{
-	AIStatusMenu		*statusMenu;
-	AIAccountMenu		*accountMenu;
-	
-	BOOL				unviewedContent;
-	BOOL				isOnline;
-	
-	// Controller specific
-	NSMutableArray		*accountMenuItemsArray;
-	NSMutableArray		*stateMenuItemsArray;
-	NSMutableArray		*unviewedObjectsArray;
-	NSMutableArray		*openChatsArray;
-	
-	NSNotificationCenter *notificationCenter;
+{	
+	NSConnection					*vendor;
+	NSDistributedNotificationCenter *notificationCenter;
+	// We need these for our chat observer
+	NSArray							*unviewedObjectsArray;
+	NSArray							*openChatsArray;
 }
 
 + (JLPresenceController *)presenceController;
-
-- (NSArray *)accountMenuItemsArray;
-- (NSArray *)stateMenuItemsArray;
-- (NSArray *)openChatsArray;
-
-- (void) accountMenuRebuild: (NSArray *) menuItems;
-- (void) statusMenuRebuild: (NSArray *) menuItemArray;
-
-
-- (void) activateAdium: (id) sender;
-- (void) switchToChat: (id) sender;
-- (void) terminate;
 
 @end

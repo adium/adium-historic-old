@@ -16,8 +16,6 @@
 
 #import "JLPresenceController.h"
 #import <Adium/AIPlugin.h>
-// FIXME: Surely not?
-//#import "AIAdium.h"
 
 // Globals for preferences
 #define PRESENCE_PLUGIN_DEFAULT_PREFS			@"PresencePluginDefaultPrefs"
