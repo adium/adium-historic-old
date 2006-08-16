@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIStatusController.h"
+#import <Adium/AIStatusControllerProtocol.h>
 #import "ESGaimICQAccount.h"
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
@@ -88,13 +88,13 @@
 		case AIAwayStatusType:
 		{
 			if (([statusName isEqualToString:STATUS_NAME_DND]) ||
-			   ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
+			   ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_DND]]== NSOrderedSame))
 				statusID = OSCAR_STATUS_ID_DND;
 			else if (([statusName isEqualToString:STATUS_NAME_NOT_AVAILABLE]) ||
-					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_NOT_AVAILABLE] == NSOrderedSame))
+					 ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_NOT_AVAILABLE]]== NSOrderedSame))
 				statusID = OSCAR_STATUS_ID_NA;
 			else if (([statusName isEqualToString:STATUS_NAME_OCCUPIED]) ||
-					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_OCCUPIED] == NSOrderedSame))
+					 ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_OCCUPIED]]== NSOrderedSame))
 				statusID = OSCAR_STATUS_ID_OCCUPIED;
 			break;
 		}

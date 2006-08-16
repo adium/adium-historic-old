@@ -15,7 +15,7 @@
     </attributes>
 
     <types>
-        <type name="com.adiumx.log">
+        <type name="com.adiumx.xmllog">
             <note>
 		The keys that this metadata importer handles.
             </note>

@@ -15,9 +15,9 @@
  */
 
 #import "AIEmoticonController.h"
-#import "AIMenuController.h"
-#import "AIPreferenceController.h"
-#import "AIToolbarController.h"
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
 #import "BGEmoticonMenuPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
@@ -59,26 +59,23 @@
 														 target:self
 														 action:@selector(dummyTarget:)
 												  keyEquivalent:@""];
-	needToRebuildMenus = YES;
 	
 	/* Create a submenu for these so menuNeedsUpdate will be called 
 	 * to populate them later. Don't need to check respondsToSelector:@selector(setDelegate:).
 	 */
 	NSMenu	*tempMenu;
-	tempMenu = [[NSMenu alloc] init];
-	[tempMenu setDelegate:self];
-	[quickMenuItem setSubmenu:tempMenu];
-	[tempMenu release];
+
+        tempMenu = [self emoticonMenu];
+        if ([tempMenu respondsToSelector:@selector(setDelegate:)])
+            [tempMenu setDelegate:self];
 	
-	tempMenu = [[NSMenu alloc] init];
-	[tempMenu setDelegate:self];
+        [quickMenuItem setSubmenu:tempMenu];
+	
 	[quickContextualMenuItem setSubmenu:tempMenu];
-	[tempMenu release];
 
     //add the items to their menus.
-    AIMenuController *menuController = [adium menuController];
-    [menuController addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_Edit];    
-    [menuController addMenuItem:quickMenuItem toLocation:LOC_Edit_Additions];
+    [[adium menuController] addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_Edit];    
+    [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Edit_Additions];
 	
 	toolbarItems = [[NSMutableSet alloc] init];
 	[self registerToolbarItem];
@@ -95,6 +92,7 @@
 
 	//Observe prefs    
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
+        needToRebuildMenus = NO;
 }
 
 /*!

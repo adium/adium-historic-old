@@ -18,8 +18,9 @@
 
 #define SOUND_ALERT_IDENTIFIER				@"PlaySound"
 #define KEY_EVENT_SOUND_SET					@"Event Sound Set"
+#define KEY_ALERT_SOUND_PATH				@"SoundPath"
 
-#define PREF_GROUP_DOCK_BEHAVIOR			@"DockBehavior"
+#define PREF_GROUP_AIDockBehavior			@"DockBehavior"
 #define DOCK_BEHAVIOR_ALERT_IDENTIFIER		@"BounceDockIcon"
 #define KEY_DOCK_ACTIVE_BEHAVIOR_SET		@"Active Behavior Set"
 

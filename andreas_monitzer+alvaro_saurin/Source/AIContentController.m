@@ -16,18 +16,18 @@
 
 // $Id$
 
-#import "AIAccountController.h"
-#import "AIChatController.h"
-#import "AIContactController.h"
 #import "AIContentController.h"
-#import "AIInterfaceController.h"
-#import "AIPreferenceController.h"
+
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AdiumTyping.h"
 #import "AdiumFormatting.h"
 #import "AdiumMessageEvents.h"
 #import "AdiumContentFiltering.h"
-#import "AdiumOTREncryption.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import "ESFileTransferController.h"
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
@@ -43,15 +43,15 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentObject.h>
-#import <Adium/AIContentEvent.h>
-#import <Adium/AIHTMLDecoder.h>
+#import "AIContentEvent.h"
+#import "AIHTMLDecoder.h"
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
-#import <Adium/ESFileWrapperExtension.h>
-#import <Adium/NDRunLoopMessenger.h>
-#import <Adium/AITextAttachmentExtension.h>
+#import "ESFileWrapperExtension.h"
+#import "NDRunLoopMessenger.h"
+#import "AITextAttachmentExtension.h"
 
 @interface AIContentController (PRIVATE)
 - (void)finishReceiveContentObject:(AIContentObject *)inObject;
@@ -83,7 +83,6 @@
 		adiumFormatting = [[AdiumFormatting alloc] init];
 		adiumContentFiltering = [[AdiumContentFiltering alloc] init];
 		adiumMessageEvents = [[AdiumMessageEvents alloc] init];
-		adiumOTREncryption = [[AdiumOTREncryption alloc] init];
 
 		objectsBeingReceived = [[NSMutableSet alloc] init];
 	}
@@ -95,7 +94,6 @@
 {
 	[adiumFormatting controllerDidLoad];
 	[adiumMessageEvents controllerDidLoad];
-	[adiumOTREncryption controllerDidLoad];
 }
 
 /*
@@ -115,14 +113,34 @@
 	[adiumTyping release]; adiumTyping = nil;
 	[adiumFormatting release]; adiumFormatting = nil;
 	[adiumContentFiltering release]; adiumContentFiltering = nil;
+	[adiumEncryptor release];
 
     [super dealloc];
 }
 
+/*
+ * @brief Set the encryptor
+ *
+ * NB: We must _always_ have an encryptor.
+ */
+- (void)setEncryptor:(id<AdiumMessageEncryptor>)inEncryptor
+{
+	NSParameterAssert([inEncryptor conformsToProtocol:@protocol(AdiumMessageEncryptor)]);
 
+	[adiumEncryptor release];
+	adiumEncryptor = [inEncryptor retain];
+}
 
 
 #pragma mark Typing
+/*
+ * @brief User is currently changing the content in a chat
+ *
+ * This should  be called by a text entry control like an NSTextView.
+ *
+ * @param chat The chat
+ * @param hasEnteredText YES if there are one or more characters typed into the text entry area
+ */
 - (void)userIsTypingContentForChat:(AIChat *)chat hasEnteredText:(BOOL)hasEnteredText {
 	[adiumTyping userIsTypingContentForChat:chat hasEnteredText:hasEnteredText];
 }
@@ -628,7 +646,7 @@
 			
 			if (encodedOutgoingMessage && [encodedOutgoingMessage length]) {			
 				[contentMessage setEncodedMessage:encodedOutgoingMessage];
-				[adiumOTREncryption willSendContentMessage:contentMessage];
+				[adiumEncryptor willSendContentMessage:contentMessage];
 				
 				if ([contentMessage encodedMessage]) {
 					success = [sendingAccount sendMessageObject:contentMessage];
@@ -676,7 +694,7 @@
  */
 - (NSString *)decryptedIncomingMessage:(NSString *)inString fromContact:(AIListContact *)inListContact onAccount:(AIAccount *)inAccount
 {
-	return [adiumOTREncryption decryptIncomingMessage:inString fromContact:inListContact onAccount:inAccount];
+	return [adiumEncryptor decryptIncomingMessage:inString fromContact:inListContact onAccount:inAccount];
 }
 
 /*
@@ -692,12 +710,12 @@
 #pragma mark OTR
 - (void)requestSecureOTRMessaging:(BOOL)inSecureMessaging inChat:(AIChat *)inChat
 {
-	[adiumOTREncryption requestSecureOTRMessaging:inSecureMessaging inChat:inChat];
+	[adiumEncryptor requestSecureOTRMessaging:inSecureMessaging inChat:inChat];
 }
 
 - (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat
 {
-	[adiumOTREncryption promptToVerifyEncryptionIdentityInChat:inChat];
+	[adiumEncryptor promptToVerifyEncryptionIdentityInChat:inChat];
 }
 
 #pragma mark -

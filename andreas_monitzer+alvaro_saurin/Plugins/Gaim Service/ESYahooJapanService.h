@@ -16,7 +16,7 @@
 
 #import "ESYahooService.h"
 
-@interface ESYahooJapanService : GaimService {
+@interface ESYahooJapanService : ESYahooService {
 
 }
 

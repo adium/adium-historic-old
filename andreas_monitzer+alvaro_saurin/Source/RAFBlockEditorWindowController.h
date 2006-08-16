@@ -6,11 +6,13 @@
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "AIWindowController.h"
-#import "AIUtilities/AIAlternatingRowTableView.h"
-@class AIListContact, AIAccount, AICompletingTextField, AIAccountMenu;
+#import <Adium/AIWindowController.h>
+#import <AIUtilities/AIAlternatingRowTableView.h>
 
-@interface RAFBlockEditorWindowController : AIWindowController {
+@class AIListContact, AIAccount, AICompletingTextField, AIAccountMenu;
+@protocol AIListObjectObserver;
+
+@interface RAFBlockEditorWindowController : AIWindowController <AIListObjectObserver> {
 	IBOutlet NSWindow			*window;
 	IBOutlet NSTableView		*table;
 
@@ -19,6 +21,9 @@
 	IBOutlet AICompletingTextField		*field;
 	IBOutlet NSButton			*blockButton;
 	IBOutlet NSButton			*cancelButton;
+	IBOutlet NSTextField		*label_account;
+	IBOutlet NSTextField		*label_privacyLevel;
+	
 	IBOutlet NSTextField		*accountText;
 	IBOutlet NSTextField		*buddyText;
 	IBOutlet NSTableColumn		*buddyCol;

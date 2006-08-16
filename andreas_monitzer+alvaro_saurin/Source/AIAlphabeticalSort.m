@@ -15,8 +15,8 @@
  */
 
 #import "AIAlphabeticalSort.h"
-#import "AIContactController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <Adium/AIListObject.h>
 

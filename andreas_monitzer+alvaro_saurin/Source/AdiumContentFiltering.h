@@ -15,7 +15,7 @@
  */
 
 #import <Adium/AIObject.h>
-#import "AIContentController.h"
+#import <Adium/AIContentControllerProtocol.h>
 
 @interface AdiumContentFiltering : AIObject {
 	NSMutableArray			*contentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];

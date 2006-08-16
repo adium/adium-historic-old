@@ -14,30 +14,30 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContactController.h"
-#import "AILoginController.h"
 #import "AIPreferenceController.h"
+
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AILoginControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
+
 #import "AIPreferenceWindowController.h"
-#import "AIToolbarController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIListObject.h>
-#import <Adium/AIPreferencePane.h>
+#import "AIPreferencePane.h"
 
 #define PREFS_DEFAULT_PREFS 	@"PrefsPrefs.plist"
 #define TITLE_OPEN_PREFERENCES	AILocalizedString(@"Open Preferences",nil)
 
 @interface AIPreferenceController (PRIVATE)
-- (NSMutableDictionary *)loadPreferenceGroup:(NSString *)groupName;
-- (void)savePreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)groupName;
 - (NSDictionary *)cachedDefaultsForGroup:(NSString *)group object:(AIListObject *)object;
 - (NSDictionary *)cachedPreferencesWithDefaultsForGroup:(NSString *)group object:(AIListObject *)object;
+- (NSMutableDictionary *)cachedPreferencesForGroup:(NSString *)group object:(AIListObject *)object;
 
 - (void)updatePreferences:(NSMutableDictionary *)prefDict forKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object;
-
 @end
 
 /*!

@@ -7,8 +7,8 @@
 //
 
 #import "ESAutoAwayPlugin.h"
-#import "AIAccountController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AIStatusController.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIStatus.h>

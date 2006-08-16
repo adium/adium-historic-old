@@ -15,10 +15,10 @@
  */
 
 #import "ESOTRPreferences.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
-#import <Adium/AIAccountMenu.h>
+#import "AIAccountMenu.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 
@@ -37,7 +37,7 @@
 @implementation ESOTRPreferences
 
 //Preference pane properties
-- (PREFERENCE_CATEGORY)category
+- (AIPreferenceCategory)category
 {
     return AIPref_Advanced;
 }
@@ -186,7 +186,7 @@
 {
 	if (viewIsOpen) {
 		NSString		*fingerprintString = nil;
-		AIAccount		*account = [[popUp_accounts selectedItem] representedObject];
+		AIAccount		*account = ([popUp_accounts numberOfItems] ? [[popUp_accounts selectedItem] representedObject] : nil);
 		
 		if (account) {
 			const char		*accountname = [[account internalObjectID] UTF8String];
@@ -218,7 +218,7 @@
  */
 - (IBAction)generate:(id)sender
 {
-	AIAccount	*account = [[popUp_accounts selectedItem] representedObject];
+	AIAccount	*account = ([popUp_accounts numberOfItems] ? [[popUp_accounts selectedItem] representedObject] : nil);
 	
 	otrg_plugin_create_privkey([[account internalObjectID] UTF8String],
 							   [[[account service] serviceCodeUniqueID] UTF8String]);
@@ -280,6 +280,10 @@
  */ 
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
 	[popUp_accounts setMenu:[inAccountMenu menu]];
+
+	BOOL hasItems = ([[popUp_accounts menu] numberOfItems] > 0);
+	[popUp_accounts setEnabled:hasItems];
+	[button_generate setEnabled:hasItems];
 }
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
 	[self updatePrivateKeyList];

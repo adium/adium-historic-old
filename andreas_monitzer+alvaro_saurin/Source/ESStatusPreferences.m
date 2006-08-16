@@ -8,7 +8,7 @@
 
 #import "ESStatusPreferences.h"
 #import "AIStatusController.h"
-#import "AIAccountController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import "ESEditStatusGroupWindowController.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIEditStateWindowController.h>
@@ -37,7 +37,7 @@
 /*!
  * @brief Category
  */
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_Status;
 }
 /*!

@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+<dictionary>
+	<suite name="Standard Suite" code="????" description="Common classes and commands for most applications.">
+		<command name="close" code="coreclos" description="Close an object.">
+			<direct-parameter type="reference" description="the object for the command"/>
+			<parameter name="saving" code="savo" type="savo" optional="yes" description="Specifies whether changes should be saved before closing."/>
+			<parameter name="saving in" code="kfil" type="alias" optional="yes" description="The file in which to save the object."/>
+		</command>
+		<command name="count" code="corecnte" description="Return the number of elements of a particular class within an object.">
+			<direct-parameter type="reference" description="the object for the command"/>
+			<parameter name="each" code="kocl" type="type class" optional="yes" description="The class of objects to be counted."/>
+			<result type="integer"/>
+		</command>
+		<command name="delete" code="coredelo" description="Delete an object.">
+			<direct-parameter type="reference" description="the object for the command"/>
+		</command>
+		<command name="duplicate" code="coreclon" description="Copy object(s) and put the copies at a new location.">
+			<direct-parameter type="reference" description="the object for the command"/>
+			<parameter name="to" code="insh" type="location reference" description="The location for the new object(s)."/>
+			<parameter name="with properties" code="prdt" type="record" optional="yes" description="Properties to be set in the new duplicated object(s)."/>
+		</command>
+		<command name="exists" code="coredoex" description="Verify if an object exists.">
+			<direct-parameter type="reference" description="the object for the command"/>
+			<result type="boolean"/>
+		</command>
+		<command name="get" code="coregetd" description="Get the data for an object.">
+			<direct-parameter type="reference" description="the object for the command"/>
+			<result type="anything"/>
+		</command>
+		<command name="make" code="corecrel" description="Make a new object.">
+			<parameter name="new" code="kocl" type="type class" description="The class of the new object."/>
+			<parameter name="at" code="insh" type="location reference" optional="yes" description="The location at which to insert the object."/>
+			<parameter name="with data" code="data" type="anything" optional="yes" description="The initial data for the object."/>
+			<parameter name="with properties" code="prdt" type="record" optional="yes" description="The initial values for properties of the object."/>
+			<result type="reference"/>
+		</command>
+		<command name="move" code="coremove" description="Move object(s) to a new location.">
+			<direct-parameter type="reference" description="the object for the command"/>
+			<parameter name="to" code="insh" type="location reference" description="The new location for the object(s)."/>
+		</command>
+		<command name="open" code="aevtodoc" description="Open an object.">
+			<direct-parameter type="alias" description="The file(s) to be opened."/>
+		</command>
+		<command name="print" code="aevtpdoc" description="Print an object.">
+			<direct-parameter type="alias" description="The file(s) or document(s) to be printed."/>
+			<parameter name="print dialog" code="pdlg" type="boolean" optional="yes" description="Should the application show the Print dialog?"/>
+			<parameter name="with properties" code="prdt" type="print settings" optional="yes" description="the print settings"/>
+		</command>
+		<command name="quit" code="aevtquit" description="Quit an application.">
+			<direct-parameter type="reference" description="the object for the command"/>
+			<parameter name="saving" code="savo" type="savo" optional="yes" description="Specifies whether changes should be saved before quitting."/>
+		</command>
+		<command name="save" code="coresave" description="Save an object.">
+			<direct-parameter type="reference" description="the object for the command"/>
+			<parameter name="as" code="fltp" type="Unicode text" optional="yes" description="The file type in which to save the data."/>
+			<parameter name="in" code="kfil" type="alias" optional="yes" description="The file in which to save the object."/>
+		</command>
+		<command name="set" code="coresetd" description="Set an object&apos;s data.">
+			<direct-parameter type="reference" description="the object for the command"/>
+			<parameter name="to" code="data" type="anything" description="The new value."/>
+		</command>
+		<class name="application" code="capp" description="An application&apos;s top level scripting object." inherits="item" plural="applications">
+			<element type="document"/>
+			<element type="window"/>
+			<property name="frontmost" code="pisf" type="boolean" access="r" description="Is this the frontmost (active) application?"/>
+			<property name="name" code="pnam" type="Unicode text" access="r" description="The name of the application."/>
+			<property name="version" code="vers" type="Unicode text" access="r" description="The version of the application."/>
+		</class>
+		<class name="color" code="colr" description="A color." inherits="item" plural="colors"/>
+		<class name="document" code="docu" description="A document." inherits="item" plural="documents">
+			<property name="modified" code="imod" type="boolean" access="r" description="Has the document been modified since the last save?"/>
+			<property name="name" code="pnam" type="Unicode text" description="The document&apos;s name."/>
+			<property name="path" code="ppth" type="Unicode text" description="The document&apos;s path."/>
+		</class>
+		<class name="item" code="cobj" description="A scriptable object." plural="items">
+			<property name="class" code="pcls" type="type class" access="r" description="The class of the object."/>
+			<property name="properties" code="pALL" type="record" description="All of the object&apos;s properties."/>
+		</class>
+		<class name="window" code="cwin" description="A window." inherits="item" plural="windows">
+			<property name="bounds" code="pbnd" type="bounding rectangle" description="The bounding rectangle of the window."/>
+			<property name="closeable" code="hclb" type="boolean" access="r" description="Whether the window has a close box."/>
+			<property name="document" code="docu" type="document" access="r" description="The document whose contents are being displayed in the window."/>
+			<property name="floating" code="isfl" type="boolean" access="r" description="Whether the window floats."/>
+			<property name="id" code="ID  " type="integer" access="r" description="The unique identifier of the window."/>
+			<property name="index" code="pidx" type="integer" description="The index of the window, ordered front to back."/>
+			<property name="miniaturizable" code="ismn" type="boolean" access="r" description="Whether the window can be miniaturized."/>
+			<property name="miniaturized" code="pmnd" type="boolean" description="Whether the window is currently miniaturized."/>
+			<property name="modal" code="pmod" type="boolean" access="r" description="Whether the window is the application&apos;s current modal window."/>
+			<property name="name" code="pnam" type="Unicode text" description="The full title of the window."/>
+			<property name="resizable" code="prsz" type="boolean" access="r" description="Whether the window can be resized."/>
+			<property name="titled" code="ptit" type="boolean" access="r" description="Whether the window has a title bar."/>
+			<property name="visible" code="pvis" type="boolean" description="Whether the window is currently visible."/>
+			<property name="zoomable" code="iszm" type="boolean" access="r" description="Whether the window can be zoomed."/>
+			<property name="zoomed" code="pzum" type="boolean" description="Whether the window is currently zoomed."/>
+		</class>
+		<enumeration name="savo" code="savo">
+			<enumerator name="ask" code="ask " description="Ask the user whether or not to save the file."/>
+			<enumerator name="no" code="no  " description="Do not save the file."/>
+			<enumerator name="yes" code="yes " description="Save the file."/>
+		</enumeration>
+	</suite>
+	<suite name="Text Suite" code="????" description="A set of basic classes for text processing.">
+		<class name="attachment" code="atts" description="Represents an inline text attachment.  This class is used mainly for make commands." inherits="text">
+			<element type="attachment"/>
+			<element type="attribute run"/>
+			<element type="character"/>
+			<element type="paragraph"/>
+			<element type="word"/>
+			<property name="file name" code="atfn" type="Unicode text" description="The path to the file for the attachment"/>
+		</class>
+		<class name="attribute run" code="catr" description="This subdivides the text into chunks that all have the same attributes." inherits="item" plural="attribute runs">
+			<element type="attachment"/>
+			<element type="attribute run"/>
+			<element type="character"/>
+			<element type="paragraph"/>
+			<element type="word"/>
+			<property name="color" code="colr" type="color" description="The color of the first character."/>
+			<property name="font" code="font" type="Unicode text" description="The name of the font of the first character."/>
+			<property name="size" code="ptsz" type="integer" description="The size in points of the first character."/>
+		</class>
+		<class name="character" code="cha " description="This subdivides the text into characters." inherits="item" plural="characters">
+			<element type="attachment"/>
+			<element type="attribute run"/>
+			<element type="character"/>
+			<element type="paragraph"/>
+			<element type="word"/>
+			<property name="color" code="colr" type="color" description="The color of the first character."/>
+			<property name="font" code="font" type="Unicode text" description="The name of the font of the first character."/>
+			<property name="size" code="ptsz" type="integer" description="The size in points of the first character."/>
+		</class>
+		<class name="paragraph" code="cpar" description="This subdivides the text into paragraphs." inherits="item" plural="paragraphs">
+			<element type="attachment"/>
+			<element type="attribute run"/>
+			<element type="character"/>
+			<element type="paragraph"/>
+			<element type="word"/>
+			<property name="color" code="colr" type="color" description="The color of the first character."/>
+			<property name="font" code="font" type="Unicode text" description="The name of the font of the first character."/>
+			<property name="size" code="ptsz" type="integer" description="The size in points of the first character."/>
+		</class>
+		<class name="text" code="ctxt" description="Rich (styled) text" inherits="item">
+			<element type="attachment"/>
+			<element type="attribute run"/>
+			<element type="character"/>
+			<element type="paragraph"/>
+			<element type="word"/>
+			<property name="color" code="colr" type="color" description="The color of the first character."/>
+			<property name="font" code="font" type="Unicode text" description="The name of the font of the first character."/>
+			<property name="size" code="ptsz" type="integer" description="The size in points of the first character."/>
+		</class>
+		<class name="word" code="cwor" description="This subdivides the text into words." inherits="item" plural="words">
+			<element type="attachment"/>
+			<element type="attribute run"/>
+			<element type="character"/>
+			<element type="paragraph"/>
+			<element type="word"/>
+			<property name="color" code="colr" type="color" description="The color of the first character."/>
+			<property name="font" code="font" type="Unicode text" description="The name of the font of the first character."/>
+			<property name="size" code="ptsz" type="integer" description="The size in points of the first character."/>
+		</class>
+	</suite>
+	<suite name="Adium Suite" code="AdIM" description="commands and classes for Adium scripting.">
+		<command name="connect" code="AdIMcnct" description="Request that an account connect to its service. If the account password is not in the keychain the user will be prompted to enter one.">
+			<direct-parameter type="account" description="an account"/>
+		</command>
+		<command name="create chat" code="AdIMcCdM" description="Create a new chat.">
+			<direct-parameter type="reference" description="the object for the command"/>
+			<parameter name="on service" code="cCsI" type="Unicode text" description="The service ID (such as AIM, MSN, Yahoo, Jabber, ICQ) on which the chat should be initiated."/>
+			<parameter name="with UID" code="TO  " type="Unicode text" description="The screen name (UID) of the destination contact."/>
+			<result type="chat"/>
+		</command>
+		<command name="disconnect" code="AdIMdcnt" description="Disconnect an account, or all accounts if no account is specified.">
+			<direct-parameter type="account" description="an account"/>
+		</command>
+		<command name="send" code="AdIMsndM" description="Send a message or file.">
+			<direct-parameter type="item" description="a contact or chat to which to send"/>
+			<parameter name="autoreply" code="sNd2" type="boolean" optional="yes" description="YES if the message should be tagged as an autoreply (if supported by the service - valid only if sending a textual message)."/>
+			<parameter name="file" code="ASfP" type="alias" optional="yes" description="Full path to a file to send.  Sending of directories is not supported at this time."/>
+			<parameter name="message" code="TO  " type="Unicode text" optional="yes" description="The message to send, which may be HTML-encoded."/>
+			<parameter name="on account" code="sNd3" type="account" optional="yes" description="An account with which to originate the message (if no account is specified, the best available account will be automatically determined)."/>
+		</command>
+		<class name="account" code="acct" description="A messaging account. Accounts inherit all capabilities of list objects." inherits="list object" plural="accounts">
+			<element type="contact"/>
+			<property name="service image" code="AimG" type="TIFF picture" access="r" description="An image representing this account&apos;s service."/>
+		</class>
+		<class name="Adium controller" code="astC" description="Lowest-level Applescript bridge to the Adium application, and the default subcontainer." inherits="item" plural="Adium controllers">
+			<element type="account"/>
+			<element type="chat"/>
+			<element type="contact"/>
+			<property name="default image" code="AmaA" type="TIFF picture" description="The default image used for my accounts&apos; user images if no other is specified."/>
+			<property name="my idle time" code="AAtm" type="integer" description="The amount of time that I have been idle."/>
+			<property name="my status" code="AmSt" type="status" description="My status on all online accounts.  If online accounts do not all have the same status, this will return the status which a simple majority of accounts are using. This doesn&apos;t work quite properly yet for setting new information..."/>
+			<property name="my status message" code="Amms" type="Unicode text" description="My status message on all online accounts."/>
+			<property name="my status type" code="AmSy" type="AsSt" description="My status type on all online accounts."/>
+		</class>
+		<class name="application" code="capp" description="The Adium X application. To access controllers besides the default subcontainer, put &quot;the first&quot; before the controller name even though there is only one." inherits="application" plural="applications">
+			<element type="document"/>
+			<element type="window"/>
+			<property name="Adium controller" code="astC" type="Adium controller" access="r" description="Default subcontainer - automatically accessed when sending messages to the Adium application."/>
+			<property name="interface controller" code="AiCC" type="interface controller" access="r" description="The interfaceController, which manages the interface presented to the user."/>
+		</class>
+		<class name="chat" code="Acht" description="A chat." inherits="item" plural="chats">
+			<element type="contact"/>
+			<element type="content"/>
+			<property name="account" code="AchA" type="account" description="The account on owhich this chat is taking place."/>
+			<property name="chat image" code="AchI" type="TIFF picture" access="r" description="An image representing this chat."/>
+			<property name="chat name" code="AchN" type="Unicode text" access="r" description="The name of this chat (for a one-on-one chat, this is the same as the contact&apos;s display name."/>
+			<property name="contact" code="AClo" type="contact" access="r" description="The contact with which this chat is taking place.  If the chat is with multiple contacts, this will be NULL."/>
+			<property name="date opened" code="AchD" type="date" access="r" description="The date this chat was opened."/>
+			<property name="ID" code="ID  " type="Unicode text" access="r" description="A unique identifier for this chat."/>
+		</class>
+		<class name="contact" code="ltct" description="A contact (buddy).  Contacts inherit all capabilities of list objects." inherits="list object" plural="contacts">
+			<property name="owning account" code="AcAC" type="account" access="r" description="The account on which this contact resides."/>
+			<property name="visible" code="AVsB" type="boolean" description="Is this contact visible in the contact list?"/>
+		</class>
+		<class name="content" code="AcoA" description="A basic unit of content." inherits="item" plural="contents">
+			<property name="content chat" code="AcCh" type="chat" description="The chat in which this content resides."/>
+			<property name="content date" code="AcDa" type="date" access="r" description="The date this content was received."/>
+			<property name="destination" code="AcoD" type="list object" access="r" description="The destination of this content."/>
+			<property name="HTML message" code="AcMh" type="Unicode text" description="The message of this content, in HTML."/>
+			<property name="is outgoing" code="AcIO" type="boolean" access="r" description="Is this content outgoing?."/>
+			<property name="plainText message" code="AcMs" type="Unicode text" description="The message of this content, in plain text (losing all formatting and embedded information)."/>
+			<property name="should display" code="AcDC" type="boolean" description="Should this message be displayed in its chat?"/>
+			<property name="should filter" code="AcFC" type="boolean" description="Should this message be filtered by message filters?"/>
+			<property name="should send" code="AcSC" type="boolean" description="Should this message be sent? This is relevant only if it isOutgoing is TRUE."/>
+			<property name="should track" code="AcTC" type="boolean" description="Should this message be tracked? For example, should Adium alert the user if it has not been viewed?"/>
+			<property name="source" code="AcoS" type="list object" access="r" description="The source of this content."/>
+		</class>
+		<class name="content message" code="AcmA" description="A content object containing a message to or from a chat. Inherits from content." inherits="content" plural="content messages">
+			<property name="is autoreply" code="AcAR" type="boolean" description="Is this message an automatic reply?"/>
+		</class>
+		<class name="interface controller" code="AiCC" description="The interfaceController, which manages the interface presented to the user." inherits="item" plural="interface controllers">
+			<property name="active chat" code="AiAC" type="chat" description="The chat which most recently had focus."/>
+		</class>
+		<class name="list object" code="ltob" description="A contact or account." inherits="item" plural="list objects">
+			<property name="display name" code="AdpN" type="Unicode text" description="The name, potentially specified by the user or via the address book, to display for this object."/>
+			<property name="ID" code="ID  " type="Unicode text" access="r" description="A unique identifier for this object."/>
+			<property name="idle time" code="Adtm" type="integer" access="r" description="Time in seconds this contact or account has been idle."/>
+			<property name="image" code="AusI" type="TIFF picture" description="An image for this contact or account."/>
+			<property name="long display name" code="ALdN" type="Unicode text" access="r" description="A possibly longer form of the name to display for this object, which has no length restrictions and may include the UID of this object."/>
+			<property name="notes" code="AnoT" type="Unicode text" description="Notes on this object."/>
+			<property name="online" code="AcOn" type="boolean" access="r" description="Is this account or contact online?."/>
+			<property name="serviceClass" code="AsSC" type="Unicode text" access="r" description="Same as serviceID in most cases; a general class of compatible protocols.  This is curently only different for AIM, ICQ, and .Mac, all of which have different serviceIDs but the same service class, AIM-compatible.  For future compatibility, this is the re"/>
+			<property name="serviceID" code="AsID" type="Unicode text" access="r" description="Specific service (such as AIM, ICQ, or MSN) of this object. (See serviceClass)"/>
+			<property name="status message" code="Amsg" type="Unicode text" access="r" description="A message describing the status of this contact or account (&apos;away message&apos; in AIM terminology)."/>
+			<property name="status type" code="Atat" type="ACst" access="r" description="The status of this contact or account."/>
+			<property name="UID" code="AUID" type="Unicode text" access="r" description="UID (screenname, user ID, nick) of this object."/>
+		</class>
+		<class name="status" code="AISt" description="A status and all associated attributes which can be set on or retrieved from one or more accounts." inherits="item" plural="statuses">
+			<property name="autoreply is status message" code="AAiS" type="boolean" description="Does this status treat its status message as an auto reply? If YES, the value of the autoreply attribute is ignored."/>
+			<property name="autoreply string" code="AARs" type="Unicode text" description="This status&apos;s auto reply; when setting, HTML may be optionally passed."/>
+			<property name="has an auto reply" code="AhAR" type="boolean" description="Does this status send an auto reply?"/>
+			<property name="icon" code="AISi" type="TIFF picture" access="r" description="An icon which represents this status to the user."/>
+			<property name="initial idle time" code="ASFt" type="real" description="Amount of time (in seconds) to set the user as idle when entering this status. Only used if &apos;should force initial idle time&apos; is YES."/>
+			<property name="should force idle" code="ASFi" type="boolean" description="Should this status force the user into an idle state regardless of computer activity?"/>
+			<property name="status message string" code="ASms" type="Unicode text" description="This status&apos;s status message; when setting, HTML may optionally be passed."/>
+			<property name="status name" code="ASSn" type="Unicode text" description="A specific name for this status; this further refines what is specified by the type.  This will be used by protocols as appropriate. For example, for AIM, the status name is irrelevant; all away statuses are a simple Away, all available statuses are a sim"/>
+			<property name="title" code="ASti" type="Unicode text" description="The title of this status. If not explicitly set, the title is automatically determined from the other attributes."/>
+			<property name="type" code="ASSy" type="AsSt" description="The AIStatusType of this status -- available, away, invisible, or offline."/>
+			<property name="unique status ID" code="ASID" type="Unicode text" access="r" description="A unique ID for this status"/>
+		</class>
+		<enumeration name="ACst" code="ACst">
+			<enumerator name="available" code="avaL"/>
+			<enumerator name="away" code="awaY"/>
+			<enumerator name="away and idle" code="aYiE"/>
+			<enumerator name="idle" code="idlE"/>
+			<enumerator name="offline" code="offL"/>
+			<enumerator name="unknown" code="unkN"/>
+		</enumeration>
+		<enumeration name="AOst" code="AOst">
+			<enumerator name="connected" code="conn"/>
+			<enumerator name="connecting" code="cong"/>
+			<enumerator name="disconnected" code="dcon"/>
+			<enumerator name="disconnecting" code="dcng"/>
+		</enumeration>
+		<enumeration name="AsSt" code="AsSt">
+			<enumerator name="available" code="avaL"/>
+			<enumerator name="away" code="awaY"/>
+			<enumerator name="invisible" code="aSaI"/>
+			<enumerator name="offline" code="offL"/>
+		</enumeration>
+	</suite>
+	<suite name="Type Definitions" code="tpdf" description="Records used in scripting Adium">
+		<class name="print settings" code="pset">
+			<property name="copies" code="lwcp" type="integer" description="the number of copies of a document to be printed"/>
+			<property name="collating" code="lwcl" type="boolean" description="Should printed copies be collated?"/>
+			<property name="starting page" code="lwfp" type="integer" description="the first page of the document to be printed"/>
+			<property name="ending page" code="lwlp" type="integer" description="the last page of the document to be printed"/>
+			<property name="pages across" code="lwla" type="integer" description="number of logical pages laid across a physical page"/>
+			<property name="pages down" code="lwld" type="integer" description="number of logical pages laid out down a physical page"/>
+			<property name="error handling" code="lweh" type="enum" description="how errors are handled"/>
+			<property name="fax number" code="faxn" type="string" description="for fax number"/>
+			<property name="target printer" code="trpr" type="string" description="for target printer"/>
+		</class>
+		<enumeration name="enum" code="enum">
+			<enumerator name="standard" code="lwst" description="Standard PostScript error handling"/>
+			<enumerator name="detailed" code="lwdt" description="print a detailed report of PostScript errors"/>
+		</enumeration>
+	</suite>
+</dictionary>

@@ -46,8 +46,10 @@
 	NSFont				*font  = [self font];
 	NSString			*title = [self stringValue];
 	NSAttributedString	*attributedTitle = [self attributedStringValue];
-	BOOL				highlighted = [self isHighlighted];
-	
+	BOOL				highlighted = ([self isHighlighted] &&
+									   [[controlView window] firstResponder] == controlView &&
+									   [[controlView window] isKeyWindow]);
+
 	//Draw the cell's text
 	if (title != nil) {
 		NSDictionary	*attributes;
@@ -90,7 +92,11 @@
 			attributedTitle = [[NSAttributedString alloc] initWithString:title
 															  attributes:attributes];
 		}
-			//Calculate the centered rect
+
+		//Don't draw all the way to the edge of our cell frame
+		cellFrame.size.width -= 2;
+		
+		//Calculate the centered rect
 		stringHeight = [attributedTitle heightWithWidth:cellFrame.size.width];
 		if (stringHeight < cellFrame.size.height) {
 			cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;

@@ -25,9 +25,9 @@
 #import <Adium/AIHTMLDecoder.h>
 #import "AIInterfaceController.h"
 #import "AIContentController.h"
-#import "AIContentMessage.h"
+#import <Adium/AIContentMessage.h>
 #import "AIChat.h"
-#import "AIListContact.h"
+#import <Adium/AIListContact.h>
 #import "AIService.h"
 
 #define SQL_LOG_VIEWER  AILocalizedString(@"SQL Log Viewer",nil)

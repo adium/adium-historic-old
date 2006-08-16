@@ -55,7 +55,7 @@ import java.nio.channels.ReadableByteChannel;
 public class joscarBridge implements GlobalBuddyInfoListener, BuddyInfoTrackerListener,
 InfoServiceListener, StateListener,
 OpenedServiceListener, BuddyListLayoutListener,
-BuddyListener, GroupListener,
+BuddyListener, GroupListener, PermissionListListener,
 IcbmListener, RvConnectionManagerListener,
 ImConversationListener, TypingListener,
 RvConnectionEventListener, IconRequestListener, ChatRoomManagerListener, ChatRoomSessionListener,
@@ -327,10 +327,10 @@ SecuridProvider
 		for (Service service : services) {
 			if (service instanceof SsiService) {
 				SsiService ssiService = (SsiService) service;
-				MutableBuddyList buddyList = ssiService.getBuddyList(); 
 				
-				buddyList.addRetroactiveLayoutListener(this);
-				
+				ssiService.getBuddyList().addRetroactiveLayoutListener(this);
+				ssiService.getPermissionList().addPermissionListListener(this);
+
 			} else if (service instanceof IcbmService) {
 				IcbmService icbmService = (IcbmService) service;
 				//listen for new convesations
@@ -702,5 +702,46 @@ SecuridProvider
 	public String getSecurid()
 	{
 		return (String)delegate.valueForKey("securid");
+	}
+	
+	/* PermissionListListener */
+	public void handlePrivacyModeChange(PermissionList list,
+										PrivacyMode oldMode,
+										PrivacyMode newMode)
+	{
+		
+	}
+	
+    public void handleBuddyBlocked(PermissionList list, Set<Screenname> oldBlocked,
+								   Set<Screenname> newBlocked, Screenname sn)
+	{
+		HashMap map = new HashMap();
+		map.put("Screenname", sn);
+		sendDelegateMessageWithMap("BuddyBlocked", map);		
+	}
+	
+    public void handleBuddyUnblocked(PermissionList list, Set<Screenname> oldBlocked,
+							  Set<Screenname> newBlocked, Screenname sn)
+	{
+		HashMap map = new HashMap();
+		map.put("Screenname", sn);
+		sendDelegateMessageWithMap("BuddyUnblocked", map);		
+	}
+	
+    public void handleBuddyAllowed(PermissionList list, Set<Screenname> oldAllowed,
+							Set<Screenname> newAllowed, Screenname sn)
+	{
+		HashMap map = new HashMap();
+		map.put("Screenname", sn);
+		sendDelegateMessageWithMap("BuddyAllowed", map);		
+	}
+	
+	public void handleBuddyRemovedFromAllowList(PermissionList list,
+										 Set<Screenname> oldAllowed, Set<Screenname> newAllowed,
+										 Screenname sn)
+	{
+		HashMap map = new HashMap();
+		map.put("Screenname", sn);
+		sendDelegateMessageWithMap("BuddyUnallowed", map);	
 	}
 }

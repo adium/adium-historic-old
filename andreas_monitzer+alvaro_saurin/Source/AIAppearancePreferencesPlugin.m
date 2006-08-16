@@ -17,7 +17,7 @@
 #import "AIAppearancePreferencesPlugin.h"
 #import "AIAppearancePreferences.h"
 #import "AIDockController.h"
-#import "AIMenuController.h"
+#import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIStatusIcons.h>
 #import <Adium/AIServiceIcons.h>
@@ -32,7 +32,7 @@
 
 - (void)installPlugin
 {
-	AIPreferenceController *preferenceController = [adium preferenceController];
+	id<AIPreferenceController> preferenceController = [adium preferenceController];
 
 	[adium createResourcePathForName:LIST_LAYOUT_FOLDER];
 	[adium createResourcePathForName:LIST_THEME_FOLDER];

@@ -8,9 +8,9 @@
 
 #import "AIContactListImagePicker.h"
 #import <Adium/AIAccount.h>
-#import <Adium/AIAdium.h>
-#import "AIAccountController.h"
-#import "AIContactController.h"
+#import <AIAdium.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import "AIContactListRecentImagesWindowController.h"
 #import <AIUtilities/AIBezierPathAdditions.h>
 
@@ -206,9 +206,9 @@
 		}
 		
 		NSPoint	localPoint = [self convertPoint:[[self window] convertScreenToBase:[NSEvent mouseLocation]]
-									   fromView:[self superview]];
+									   fromView:nil];
 		BOOL	mouseInside = NSPointInRect(localPoint, myFrame);
-		
+
 		trackingTag = [self addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseInside];
 		if (mouseInside) [self mouseEntered:nil];
 	}

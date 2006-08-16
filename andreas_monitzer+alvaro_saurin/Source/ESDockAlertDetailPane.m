@@ -21,7 +21,7 @@
 #import <Adium/AILocalizationTextField.h>
 
 @interface ESDockAlertDetailPane (PRIVATE)
-- (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name;
+- (NSMenuItem *)menuItemForBehavior:(AIDockBehavior)behavior withName:(NSString *)name;
 - (NSMenu *)behaviorListMenu;
 @end
 
@@ -55,7 +55,7 @@
  */
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
 {
-	int behaviorIndex = [popUp_actionDetails indexOfItemWithRepresentedObject:[inDetails objectForKey:KEY_DOCK_BEHAVIOR_TYPE]];
+	int behaviorIndex = [popUp_actionDetails indexOfItemWithRepresentedObject:[inDetails objectForKey:KEY_AIDockBehavior_TYPE]];
 	if (behaviorIndex >= 0 && behaviorIndex < [popUp_actionDetails numberOfItems]) {
 		[popUp_actionDetails selectItemAtIndex:behaviorIndex];        
 	}
@@ -69,7 +69,7 @@
 	NSString	*behavior = [[popUp_actionDetails selectedItem] representedObject];
 	
 	if (behavior) {
-		return [NSDictionary dictionaryWithObject:behavior forKey:KEY_DOCK_BEHAVIOR_TYPE];
+		return [NSDictionary dictionaryWithObject:behavior forKey:KEY_AIDockBehavior_TYPE];
 	} else {
 		return nil;
 	}	
@@ -89,9 +89,9 @@
 - (NSMenu *)behaviorListMenu
 {
     NSMenu			*behaviorMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
-    DOCK_BEHAVIOR	behavior;
+    AIDockBehavior	behavior;
 
-	for (behavior = BOUNCE_ONCE; behavior < BOUNCE_DELAY60; behavior++) {
+	for (behavior = AIDockBehaviorBounceOnce; behavior <= AIDockBehaviorBounceDelay_OneMinute; behavior++) {
 		NSString *name = [[adium dockController] descriptionForBehavior:behavior];
 		[behaviorMenu addItem:[self menuItemForBehavior:behavior withName:name]];
 	}
@@ -105,7 +105,7 @@
  * @brief Convenience behaviorListMenu method
  * @result An NSMenuItem
  */
-- (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name
+- (NSMenuItem *)menuItemForBehavior:(AIDockBehavior)behavior withName:(NSString *)name
 {
     NSMenuItem		*menuItem;
     menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name

@@ -10,16 +10,14 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIAccount.h>
-#import <Adium/AIAccountController.h>
-
-#define PRIVACY_SETTINGS [AILocalizedString(@"Privacy Settings","Privacy Settings menu item") stringByAppendingEllipsis]
+#import <Adium/AIAccountControllerProtocol.h>
 
 @implementation RAFBlockEditorPlugin
 
 - (void)installPlugin
 {
 	//Install the Block menu items
-	blockEditorMenuItem = [[NSMenuItem alloc] initWithTitle:PRIVACY_SETTINGS
+	blockEditorMenuItem = [[NSMenuItem alloc] initWithTitle:[AILocalizedString(@"Privacy Settings", nil) stringByAppendingEllipsis]
 													  target:self
 													  action:@selector(showEditor:)
 											   keyEquivalent:@"p"];

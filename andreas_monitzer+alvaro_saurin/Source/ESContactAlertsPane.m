@@ -15,7 +15,7 @@
  */
 
 #import "ESContactAlertsPane.h"
-#import <Adium/ESContactAlertsViewController.h>
+#import "ESContactAlertsViewController.h"
 
 /*!
  * @class ESContactAlertsPane
@@ -26,7 +26,7 @@
 /*!
  * @brief Category
  */
-- (CONTACT_INFO_CATEGORY)contactInfoCategory{
+- (AIContactInfoCategory)contactInfoCategory{
     return AIInfo_Alerts;
 }
 /*!

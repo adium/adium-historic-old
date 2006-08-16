@@ -27,7 +27,7 @@
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
 
 #import <Adium/AIListObject.h>
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 
 #define	EMOTICON_PACK_DRAG_TYPE         @"AIEmoticonPack"
 #define EMOTICON_MIN_ROW_HEIGHT         17
@@ -72,7 +72,7 @@
 
 
 //Preference pane properties
-//- (PREFERENCE_CATEGORY)category{
+//- (AIPreferenceCategory)category{
 //    return AIPref_Advanced;
 //}
 //- (NSString *)label{
@@ -124,7 +124,7 @@
 	[[table_emoticons tableColumnWithIdentifier:@"String"] setDataCell:textCell];
 	[textCell release];
 
-    [table_emoticons setDrawsAlternatingRows:YES];
+    [table_emoticons setUsesAlternatingRowBackgroundColors:YES];
         
     //Observe prefs    
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];

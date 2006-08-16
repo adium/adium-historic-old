@@ -45,6 +45,9 @@
 typedef void (*SetObjectForKeyIMP)(id, SEL, id, id);
 SetObjectForKeyIMP	originalSetObjectForKey = nil;
 
+typedef void (*RemoveObjectForKeyIMP)(id, SEL, id);
+RemoveObjectForKeyIMP	originalRemoveObjectForKey = nil;
+
 struct objc_method
 {
 	SEL method_name;
@@ -60,6 +63,9 @@ void _objc_flush_caches(Class);
 	originalSetObjectForKey = (SetObjectForKeyIMP)[AIDictionaryDebug replaceSelector:@selector(setObject:forKey:)
 																			 ofClass:NSClassFromString(@"NSCFDictionary")
 																		   withClass:[AIDictionaryDebug class]];
+	originalRemoveObjectForKey = (RemoveObjectForKeyIMP)[AIDictionaryDebug replaceSelector:@selector(removeObjectForKey:)
+																				ofClass:NSClassFromString(@"NSCFDictionary")
+																			  withClass:[AIDictionaryDebug class]];
 }
 
 - (void)setObject:(id)object forKey:(id)key
@@ -68,6 +74,13 @@ void _objc_flush_caches(Class);
 	NSAssert3(key != nil, @"%@: Attempted to set %@ for %@",self,object,key);
 
 	originalSetObjectForKey(self, @selector(setObject:forKey:),object,key);
+}
+
+- (void)removeObjectForKey:(id)key
+{
+	NSAssert1(key != nil, @"%@: Attempted to remove a nil key",self);
+
+	originalRemoveObjectForKey(self, @selector(removeObjectForKey:),key);
 }
 
 + (IMP)replaceSelector:(SEL)sel ofClass:(Class)oldClass withClass:(Class)newClass

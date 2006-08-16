@@ -20,6 +20,7 @@
             CLASS = AIXtrasManager; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                deleteButton = NSButton; 
                 infoView = NSTextView; 
                 previewContainerView = NSScrollView; 
                 previewController = id; 

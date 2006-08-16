@@ -15,9 +15,9 @@
  */
 
 #import "AIChatCyclingPlugin.h"
-#import "AIInterfaceController.h"
-#import "AIMenuController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "ESGeneralPreferencesPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 
@@ -41,7 +41,7 @@
  */
 - (void)installPlugin
 {
-	AIMenuController *menuController = [adium menuController];
+	id<AIMenuController> menuController = [adium menuController];
 
 	//Cycling menu items
 	previousChatMenuItem = [[NSMenuItem alloc] initWithTitle:PREVIOUS_MESSAGE_MENU_TITLE
@@ -124,7 +124,7 @@
  */
 - (IBAction)nextChat:(id)sender
 {
-	[[adium interfaceController] nextMessage:nil];
+	[[adium interfaceController] nextChat:nil];
 }
 
 /*!
@@ -132,7 +132,7 @@
  */
 - (IBAction)previousChat:(id)sender
 {
-	[[adium interfaceController] previousMessage:nil];
+	[[adium interfaceController] previousChat:nil];
 }	
 
 @end

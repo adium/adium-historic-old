@@ -14,24 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountController.h"
-#import "AIChatController.h"
-#import "AIContactController.h"
-#import "AIContentController.h"
-#import "AIInterfaceController.h"
-#import "AIStatusController.h"
-#import "AIPreferenceController.h"
 #import "CBGaimAccount.h"
 #import "SLGaimCocoaAdapter.h"
-#import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/AIMutableOwnerArray.h>
-#import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/AIApplicationAdditions.h>
-#import <AIUtilities/AIObjectAdditions.h>
-#import <AIUtilities/AIImageAdditions.h>
-#import <AIUtilities/AISystemNetworkDefaults.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -46,6 +30,22 @@
 #import <Adium/ESFileTransfer.h>
 #import <Adium/AIWindowController.h>
 #import <Adium/AIEmoticon.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIMutableOwnerArray.h>
+#import <AIUtilities/AIStringAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AISystemNetworkDefaults.h>
 
 #import "adiumGaimRequest.h"
 
@@ -700,6 +700,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 							  date:[messageDict objectForKey:@"Date"]];
 		} else {
 			//If we didn't get a listContact, this is a gaim status message... display it as such.
+#warning need to translate the type here
 			[[adium contentController] displayEvent:[attributedMessage string]
 											 ofType:@"gaim"
 											 inChat:chat];
@@ -1552,12 +1553,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	//If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
 	//connectionIsSuicidal == TRUE when Gaim thinks we shouldn't attempt a reconnect.
-	if ([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]/* && lastDisconnectionError*/) {
+	if ([self shouldBeOnline] && lastDisconnectionError) {
 		if (reconnectAttemptsRemaining && 
 			[self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError] && !(connectionIsSuicidal)) {
-			GaimDebug(@"Automatically reconnecting in %1f seconds (%i attempts remaining)", AUTO_RECONNECT_DELAY, reconnectAttemptsRemaining);
+			AILog(@"%@: Disconnected (%x: \"%@\"): Automatically reconnecting in %0f seconds (%i attempts remaining)",
+				  self, (account ? account->gc : NULL), lastDisconnectionError, AUTO_RECONNECT_DELAY, reconnectAttemptsRemaining);
 			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 			reconnectAttemptsRemaining--;
+	
 		} else {
 			if (lastDisconnectionError) {
 				//Display then clear the last disconnection error
@@ -1636,8 +1639,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	if (!supportedPropertyKeys) {
 		supportedPropertyKeys = [[NSMutableSet alloc] initWithObjects:
-			@"Online",
-			@"Offline",
 			@"IdleSince",
 			@"IdleManuallySet",
 			@"TextProfile",
@@ -1723,6 +1724,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return statusID;
 }
 
+- (BOOL)shouldAddMusicalNoteToNowPlayingStatus
+{
+	return YES;
+}
+
 /*!
  * @brief Perform the setting of a status state
  *
@@ -1748,6 +1754,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		 * away message be set appropriately.
 		 */
 		statusMessage = [NSAttributedString stringWithString:[[adium statusController] descriptionForStateOfStatus:statusState]];
+	}
+
+	if (statusMessage && ([statusState specialStatusType] == AINowPlayingSpecialStatusType) && [self shouldAddMusicalNoteToNowPlayingStatus]) {
+#define MUSICAL_NOTE_AND_SPACE [NSString stringWithUTF8String:"\xe2\x99\xab "]
+		NSMutableAttributedString *temporaryStatusMessage;
+		temporaryStatusMessage = [[[NSMutableAttributedString alloc] initWithString:MUSICAL_NOTE_AND_SPACE] autorelease];
+		[temporaryStatusMessage appendAttributedString:statusMessage];
+
+		statusMessage = temporaryStatusMessage;
 	}
 
 	//Encode the status message if we have one

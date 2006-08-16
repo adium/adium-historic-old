@@ -24,6 +24,7 @@
 #import "AIAlternatingRowOutlineView.h"
 #import "AIOutlineView.h"
 #import "AIGradient.h"
+#import "AIColorAdditions.h"
 
 @interface AIAlternatingRowOutlineView (PRIVATE)
 - (void)_initAlternatingRowOutlineView;
@@ -94,6 +95,11 @@
 	[self setNeedsDisplay:YES];
 }
 
+- (BOOL)drawsGradientSelection
+{
+	return drawsGradientSelection;
+}
+
 //Set the alternating row color
 - (void)setAlternatingRowColor:(NSColor *)color
 {
@@ -133,13 +139,12 @@
 
 	NSRect	rowRect;
 	int		rowHeight;
-	int		numberOfColumns, numberOfRows;
+	int		numberOfRows;
 	int		row;
 	int		rectNumber = 0;
 	
 	//Setup
 	numberOfRows = [self numberOfRows];
-	numberOfColumns = [self numberOfColumns];
 	rowHeight = [self rowHeight];
 	if (numberOfRows == 0) {
 		rowRect = NSMakeRect(0,0,rect.size.width,rowHeight);
@@ -198,7 +203,6 @@
 		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
 		
 		NSRect *selectionLineRects = (NSRect *)malloc(sizeof(NSRect) * bufSize);
-		NSRect gradientRect = NSZeroRect;
 		
 		while (i < bufSize) {
 			int startIndex = buf[i];
@@ -215,12 +219,12 @@
 			
 			//Draw a line at the light side, to make it look a lot cleaner
 			thisRect.size.height = 1;
-			selectionLineRects[j++] = gradientRect;			
+			selectionLineRects[j++] = thisRect;			
 			
 			i++;		
 		}
-		
-		[[NSColor alternateSelectedControlColor] set];
+
+		[[[gradient firstColor] darkenAndAdjustSaturationBy:0.1] set];
 		NSRectFillListUsingOperation(selectionLineRects, j, NSCompositeSourceOver);
 		
 		free(buf);

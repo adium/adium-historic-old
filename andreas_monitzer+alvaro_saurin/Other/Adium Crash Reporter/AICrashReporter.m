@@ -442,9 +442,14 @@
 	statusChecker = [[SUStatusChecker statusCheckerForDelegate:self] retain];
 }
 
-- (void)statusChecker:(SUStatusChecker *)statusChecker foundVersion:(NSString *)versionString isNewVersion:(BOOL)isNewVersion;
+- (void)statusChecker:(SUStatusChecker *)statusChecker foundVersion:(NSString *)versionString isNewVersion:(BOOL)isNewVersion
 {
 	//Only send the report if there is not a new version
+	if (!versionString) {
+		NSLog(@"Adium Crash Reporter warning: Could not retrieve version information from the server. Perhaps it is blocked? Allowing the crash reporter anyways.");
+		isNewVersion = NO;
+	}
+
 	[self finishWithAcceptableVersion:!isNewVersion newVersionString:versionString];
 }
 

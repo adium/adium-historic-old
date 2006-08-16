@@ -14,19 +14,28 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AILoggerPlugin.h"
 #import "AIChatLog.h"
-#import "AIContactController.h"
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 #import "AILogViewerWindowController.h"
 #import "AIMDLogViewerWindowController.h"
-#import "AIContentController.h"
-#import "AILoggerPlugin.h"
-#import "AILoginController.h"
-#import "AIMenuController.h"
-#import "AIPreferenceController.h"
-#import "AIToolbarController.h"
 #import "AIXMLAppender.h"
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AILoginControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AIContentStatus.h>
+#import <Adium/AIContentEvent.h>
+#import <Adium/AIHTMLDecoder.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIService.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
@@ -37,14 +46,6 @@
 #import <AIUtilities/AIDateFormatterAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/NSCalendarDate+ISO8601Unparsing.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIChat.h>
-#import <Adium/AIContentMessage.h>
-#import <Adium/AIContentStatus.h>
-#import <Adium/AIContentEvent.h>
-#import <Adium/AIHTMLDecoder.h>
-#import <Adium/AIListContact.h>
-#import <Adium/AIService.h>
 
 #import "AILogFileUpgradeWindowController.h"
 
@@ -60,11 +61,11 @@
 #define LOG_VIEWER					AILocalizedString(@"Chat Transcripts Viewer",nil)
 #define VIEW_LOGS_WITH_CONTACT		AILocalizedString(@"View Chat Transcripts",nil)
 
-#define	CURRENT_LOG_VERSION			5       //Version of the log index.  Increase this number to reset everyone's index.
+#define	CURRENT_LOG_VERSION			6       //Version of the log index.  Increase this number to reset everyone's index.
 
 #define	LOG_VIEWER_IDENTIFIER		@"LogViewer"
 
-#define XML_LOGGING_VERSION			@"0.4"
+#define XML_LOGGING_NAMESPACE		@"http://purl.org/net/ulf/ns/0.4-02"
 #define NEW_LOGFILE_TIMEOUT			600		//10 minutes
 
 @interface AILoggerPlugin (PRIVATE)
@@ -100,8 +101,6 @@ Class LogViewerWindowControllerClass = NULL;
     //Init
 	observingContent = NO;
 
-	AIPreferenceController *preferenceController = [adium preferenceController];
-
 	activeAppenders = [[NSMutableDictionary alloc] init];
 	activeTimers = [[NSMutableDictionary alloc] init];
 	
@@ -121,7 +120,7 @@ Class LogViewerWindowControllerClass = NULL;
 	
 	statusTranslation = [[NSDictionary alloc] initWithObjectsAndKeys:
 		@"away",@"away",
-		@"available",@"return_away",
+		@"online",@"return_away",
 		@"online",@"online",
 		@"offline",@"offline",
 		@"idle",@"idle",
@@ -130,9 +129,9 @@ Class LogViewerWindowControllerClass = NULL;
 		nil];
 
 	//Setup our preferences
-	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS 
-	                              forClass:[self class]] 
-	                              forGroup:PREF_GROUP_LOGGING];
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS 
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_LOGGING];
 
 	//Install the log viewer menu items
 	[self configureMenuItems];
@@ -142,21 +141,20 @@ Class LogViewerWindowControllerClass = NULL;
 	[[NSFileManager defaultManager] createDirectoriesForPath:logBasePath];
 
 	//Observe preference changes
-	AIPreferenceController *prefController = [adium preferenceController];
-	[prefController addObserver:self
-	                 forKeyPath:PREF_KEYPATH_LOGGER_ENABLE
-	                    options:NSKeyValueObservingOptionNew
-	                    context:NULL];
+	[[adium preferenceController] addObserver:self
+								   forKeyPath:PREF_KEYPATH_LOGGER_ENABLE
+									  options:NSKeyValueObservingOptionNew
+									  context:NULL];
 	[self observeValueForKeyPath:PREF_KEYPATH_LOGGER_ENABLE
-	                    ofObject:prefController
+	                    ofObject:[adium preferenceController]
 	                      change:nil
 	                     context:NULL];
 
 	//Toolbar item
 	NSToolbarItem	*toolbarItem;
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:LOG_VIEWER_IDENTIFIER
-														  label:AILocalizedString(@"Logs",nil)
-	                                               paletteLabel:AILocalizedString(@"View Logs",nil)
+														  label:AILocalizedString(@"Transcripts",nil)
+	                                               paletteLabel:AILocalizedString(@"View Chat Transcripts",nil)
 	                                                    toolTip:AILocalizedString(@"View previous conversations with this contact or chat",nil)
 	                                                     target:self
 	                                            settingSelector:@selector(setImage:)
@@ -226,6 +224,10 @@ Class LogViewerWindowControllerClass = NULL;
 										   selector:@selector(chatClosed:)
 											   name:Chat_WillClose
 											 object:nil];
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(chatWillDelete:)
+											   name:ChatLog_WillDelete
+											 object:nil];
 		}
 	}
 }
@@ -292,7 +294,7 @@ Class LogViewerWindowControllerClass = NULL;
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     if (menuItem == viewContactLogsMenuItem) {
-        AIListObject	*selectedObject = [[adium contactController] selectedListObject];
+        AIListObject	*selectedObject = [[adium interfaceController] selectedListObject];
 		return selectedObject && [selectedObject isKindOfClass:[AIListContact class]];
 
     } else if (menuItem == viewContactLogsContextMenuItem) {
@@ -322,7 +324,7 @@ Class LogViewerWindowControllerClass = NULL;
  */
 - (void)showLogViewerToSelectedContact:(id)sender
 {
-    AIListObject   *selectedObject = [[adium contactController] selectedListObject];
+    AIListObject   *selectedObject = [[adium interfaceController] selectedListObject];
     [LogViewerWindowControllerClass openForContact:([selectedObject isKindOfClass:[AIListContact class]] ?
 												 (AIListContact *)selectedObject : 
 												 nil)  
@@ -465,12 +467,37 @@ Class LogViewerWindowControllerClass = NULL;
 	[self markLogDirtyAtPath:[appender path] forChat:chat];
 }
 
+- (void)chatWillDelete:(NSNotification *)notification
+{
+	AIChatLog *chatLog = [notification object];
+	NSString *chatID = [NSString stringWithFormat:@"%@.%@-%@", [chatLog serviceClass], [chatLog from], [chatLog to]];
+	AIXMLAppender *appender = [activeAppenders objectForKey:chatID];
+	
+	if(appender != nil)
+	{
+		if([[appender path] hasSuffix:[chatLog path]])
+		{
+			[activeAppenders removeObjectForKey:chatID];
+			NSTimer *timer = [activeTimers objectForKey:chatID];
+			[timer invalidate];
+			[activeTimers removeObjectForKey:chatID];
+		}
+	}
+}
+
 - (NSString *)keyForChat:(AIChat *)chat
 {
 	AIAccount *account = [chat account];
 	NSString *chatID = [chat isGroupChat] ? [chat name] : [[chat listObject] UID];
 	
 	return [NSString stringWithFormat:@"%@.%@-%@", [account serviceID], [account UID], chatID];
+}
+
+- (AIXMLAppender *)existingAppenderForChat:(AIChat *)chat
+{
+	//Look up the key for this chat and use it to try to retrieve the appender
+	NSString *chatKey = [self keyForChat:chat];
+	return [activeAppenders objectForKey:chatKey];	
 }
 
 - (AIXMLAppender *)appenderForChat:(AIChat *)chat
@@ -490,11 +517,11 @@ Class LogViewerWindowControllerClass = NULL;
 
 		appender = [AIXMLAppender documentWithPath:fullPath];
 		[appender initializeDocumentWithRootElementName:@"chat"
-										  attributeKeys:[NSArray arrayWithObjects:@"account", @"service", @"version", nil]
+										  attributeKeys:[NSArray arrayWithObjects:@"xmlns", @"account", @"service", nil]
 										attributeValues:[NSArray arrayWithObjects:
+											XML_LOGGING_NAMESPACE,
 											[[chat account] UID],
 											[[chat account] serviceID],
-											XML_LOGGING_VERSION,
 											nil]];
 		[activeAppenders setObject:appender forKey:chatKey];
 	}
@@ -686,11 +713,15 @@ Class LogViewerWindowControllerClass = NULL;
 {
 	NSString    *dirtyKey = [@"LogIsDirty_" stringByAppendingString:path];
 	
-	if (dirtyLogArray && ![chat integerStatusObjectForKey:dirtyKey]) {
+	if (![chat integerStatusObjectForKey:dirtyKey]) {
 		//Add to dirty array (Lock to ensure that no one changes its content while we are)
 		[dirtyLogLock lock];
 		if (path != nil) {
-			[dirtyLogArray addObject:path];
+			if (!dirtyLogArray) dirtyLogArray = [[NSMutableArray alloc] init];
+
+			if (![dirtyLogArray containsObject:path]) {
+				[dirtyLogArray addObject:path];
+			}
 		}
 		[dirtyLogLock unlock];
 
@@ -706,9 +737,11 @@ Class LogViewerWindowControllerClass = NULL;
 
 - (void)markLogDirtyAtPath:(NSString *)path
 {
+	if(!path) return;
 	[dirtyLogLock lock];
-	if ((path != nil) &&
-		(![dirtyLogArray containsObject:path])) {
+	if (!dirtyLogArray) dirtyLogArray = [[NSMutableArray alloc] init];
+
+	if (![dirtyLogArray containsObject:path]) {
 		[dirtyLogArray addObject:path];
 	}
 	[dirtyLogLock unlock];	
@@ -718,7 +751,7 @@ Class LogViewerWindowControllerClass = NULL;
 - (BOOL)getIndexingProgress:(int *)indexNumber outOf:(int *)total
 {
 	//logsIndexed + 1 is the log we are currently indexing
-	if (indexNumber) *indexNumber = logsIndexed + 1;
+	if (indexNumber) *indexNumber = (logsIndexed + 1 <= logsToIndex) ? logsIndexed + 1 : logsToIndex;
 	if (total) *total = logsToIndex;
 	return (logsToIndex > 0);
 }
@@ -947,6 +980,30 @@ Class LogViewerWindowControllerClass = NULL;
 
 	[NSThread detachNewThreadSelector:@selector(_cleanDirtyLogsThread:) toTarget:self withObject:(id)[self logContentIndex]];
 }
+
+- (void)didCleanDirtyLogs
+{
+	//Update our progress
+	if (!stopIndexingThreads) {
+		logsToIndex = 0;
+		[[LogViewerWindowControllerClass existingWindowController] logIndexingProgressUpdate];
+	}
+	
+	//Clear the dirty status of all open chats so they will be marked dirty if they receive another message
+	NSEnumerator *enumerator = [[[adium chatController] openChats] objectEnumerator];
+	AIChat		 *chat;
+	
+	while ((chat = [enumerator nextObject])) {
+		NSString *dirtyKey = [@"LogIsDirty_" stringByAppendingString:[[self existingAppenderForChat:chat] path]];
+		
+		if ([chat integerStatusObjectForKey:dirtyKey]) {
+			[chat setStatusObject:nil
+						   forKey:dirtyKey
+						   notify:NotifyNever];
+		}
+	}
+}
+
 - (void)_cleanDirtyLogsThread:(SKIndexRef)searchIndex
 {
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
@@ -960,6 +1017,8 @@ Class LogViewerWindowControllerClass = NULL;
     if (!stopIndexingThreads) {
 		UInt32	lastUpdate = TickCount();
 		int		unsavedChanges = 0;
+
+		AILog(@"Cleaning %i dirty logs", [dirtyLogArray count]);
 
 		//Scan until we're done or told to stop
 		while (!stopIndexingThreads) {
@@ -1028,13 +1087,11 @@ Class LogViewerWindowControllerClass = NULL;
 			[self _saveDirtyLogArray];
 		}
 
-		//Update our progress
-		if (!stopIndexingThreads) {
-			logsToIndex = 0;
-			[[LogViewerWindowControllerClass existingWindowController] performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
-																						withObject:nil
-																					 waitUntilDone:NO];
-		}
+		SKIndexFlush(searchIndex);
+
+		[self performSelectorOnMainThread:@selector(didCleanDirtyLogs)
+							   withObject:nil
+							waitUntilDone:NO];
     }
 
 	[indexingThreadLock unlock];

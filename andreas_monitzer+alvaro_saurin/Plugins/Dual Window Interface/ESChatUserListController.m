@@ -15,7 +15,7 @@
  */
 
 #import "ESChatUserListController.h"
-#import "AIMenuController.h"
+#import <Adium/AIMenuControllerProtocol.h>
 #import "AIMessageTabViewItem.h"
 
 @implementation ESChatUserListController

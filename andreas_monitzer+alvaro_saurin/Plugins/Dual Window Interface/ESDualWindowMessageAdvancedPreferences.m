@@ -23,7 +23,7 @@
 #import <AIUtilities/AIImageAdditions.h>
 
 #import "AIDockController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIPreferenceWindowController.h"
 
 @interface ESDualWindowMessageAdvancedPreferences (PRIVATE)
@@ -35,7 +35,7 @@
 @implementation ESDualWindowMessageAdvancedPreferences
 
 //Preference pane properties
-- (PREFERENCE_CATEGORY)category{
+- (AIPreferenceCategory)category{
     return AIPref_Advanced;
 }
 - (NSString *)label{

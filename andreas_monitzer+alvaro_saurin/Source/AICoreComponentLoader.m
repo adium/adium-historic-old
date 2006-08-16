@@ -23,7 +23,7 @@
 
 #import "AICoreComponentLoader.h"
 #import <Adium/AIObject.h>
-#import <Adium/AIPlugin.h>
+#import "AIPlugin.h"
 
 @interface AICoreComponentLoader (PRIVATE)
 - (void)loadComponents;

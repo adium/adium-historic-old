@@ -15,8 +15,8 @@
  */
 
 #import "AIChatConsolidationPlugin.h"
-#import "AIInterfaceController.h"
-#import "AIMenuController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
 #import <AIUtilities/AIMenuAdditions.h>
 
 #define CONSOLIDATE_CHATS_MENU_TITLE			AILocalizedString(@"Consolidate Chats",nil)

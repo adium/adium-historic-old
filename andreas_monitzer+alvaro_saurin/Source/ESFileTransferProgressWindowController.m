@@ -17,7 +17,7 @@
 #import "ESFileTransferProgressRow.h"
 #import "ESFileTransferProgressView.h"
 #import "ESFileTransferProgressWindowController.h"
-#import <Adium/ESFileTransfer.h>
+#import "ESFileTransfer.h"
 #import <AIUtilities/AIVariableHeightOutlineView.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIGenericViewCell.h>
@@ -49,26 +49,27 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 
 //Return the shared contact info window
 #pragma mark Class Methods
-+ (id)showFileTransferProgressWindow
++ (id)sharedTransferProgressWindowController
 {
-    //Create the window
+	//Create the window
     if (!sharedTransferProgressInstance) {
         sharedTransferProgressInstance = [[self alloc] initWithWindowNibName:FILE_TRANSFER_PROGRESS_NIB];
 	}
 
+	return sharedTransferProgressInstance;
+}
+
++ (id)showFileTransferProgressWindow
+{
 	//Configure and show window
-	[(NSPanel *)[sharedTransferProgressInstance window] setBecomesKeyOnlyIfNeeded:YES];
-	[sharedTransferProgressInstance showWindow:nil];
+	[[self sharedTransferProgressWindowController] showWindow:nil];
 
 	return (sharedTransferProgressInstance);
 }
 
 + (id)showFileTransferProgressWindowIfNotOpen
 {
-	//Create the window and show it if it is not already open
-    if (!sharedTransferProgressInstance) {
-		[self showFileTransferProgressWindow];
-	}
+	[[[self sharedTransferProgressWindowController] window] orderFront:nil];
 	
 	return (sharedTransferProgressInstance);
 }
@@ -366,7 +367,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	
 	enumerator = [progressRows objectEnumerator];
 	while ((aRow = [enumerator nextObject])) {
-		FileTransferType type = [aRow type];
+		AIFileTransferType type = [aRow type];
 		if (type == Incoming_FileTransfer) {
 			downloads++;
 		} else if (type == Outgoing_FileTransfer) {

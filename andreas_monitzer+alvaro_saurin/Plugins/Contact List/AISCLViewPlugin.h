@@ -23,13 +23,13 @@
 #define	CONTACT_LIST_DEFAULTS		@"ContactListDefaults"
 
 @class AIListWindowController, AICLPreferences, ESContactListAdvancedPreferences;
-@protocol AIContactListController;
+@protocol AIContactListComponent;
 
-@interface AISCLViewPlugin : AIPlugin <AIContactListController> {	
+@interface AISCLViewPlugin : AIPlugin <AIContactListComponent> {	
 	AIListWindowController				*contactListWindowController;
 	AICLPreferences						*preferences;
 	ESContactListAdvancedPreferences	*advancedPreferences;
-	LIST_WINDOW_STYLE					windowStyle;
+	AIContactListWindowStyle					windowStyle;
 }
 
 //Contact List Controller

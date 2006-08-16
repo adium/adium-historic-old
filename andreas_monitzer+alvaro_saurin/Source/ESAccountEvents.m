@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 #import "ESAccountEvents.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 
@@ -157,7 +157,12 @@
 		} else if ([eventID isEqualToString:ACCOUNT_DISCONNECTED]) {
 			description = AILocalizedString(@"disconnected",nil);
 		} else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]) {
-			description = AILocalizedString(@"received new email",nil);
+			if (userInfo && [userInfo isKindOfClass:[NSString class]]) {
+				description = [[(NSString *)userInfo copy] autorelease];
+
+			} else {
+				description = AILocalizedString(@"received new email",nil);
+			}
 		}
 	}
 	

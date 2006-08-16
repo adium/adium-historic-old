@@ -15,37 +15,17 @@
  */
 
 #import <Adium/AIObject.h>
-
-#define PREF_GROUP_SOUNDS					@"Sounds"
-
-//Sound Controller
-#define KEY_SOUND_CUSTOM_VOLUME_LEVEL		@"Custom Volume Level"
+#import <Adium/AISoundControllerProtocol.h>
 
 @class AdiumSound, AdiumSpeech, AdiumSoundSets;
 
 @protocol AIController;
 
-@interface AISoundController : AIObject <AIController> {
+@interface AISoundController : AIObject <AISoundController> {
 	AdiumSound			*adiumSound;
 	AdiumSpeech 		*adiumSpeech;
 	AdiumSoundSets 		*adiumSoundSets;
 }
-
-//Sound
-- (void)playSoundAtPath:(NSString *)inPath;
-
-//Speech
-- (NSArray *)voices;
-- (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(float)rate;
-- (float)defaultRate;
-- (float)defaultPitch;
-- (void)speakText:(NSString *)text;
-- (void)speakText:(NSString *)text withVoice:(NSString *)voiceString pitch:(float)pitch rate:(float)rate;
-
-//Soundsets
-- (NSArray *)soundSets;
-
-- (void)setSoundsAreMuted:(BOOL)muted;
 
 @end
 

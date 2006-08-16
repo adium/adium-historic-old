@@ -12,9 +12,17 @@
 #import "AILogToGroup.h"
 #import "AILogFromGroup.h"
 #import "AIChatLog.h"
-#import "AIContactController.h"
+#import <Adium/AIContactControllerProtocol.h>
 
 @implementation AIMDLogViewerWindowController
+
+- (void)windowDidLoad
+{
+	[super windowDidLoad];
+	
+	[tableView_results setAutosaveName:@"LogViewerResults"];
+	[tableView_results setAutosaveTableColumns:YES];
+}
 
 /*
  * @brief Perform a content search of the indexed logs
@@ -34,11 +42,10 @@
 		CFRelease(currentSearch); currentSearch = NULL;
 	}
 
-	SKIndexFlush(logSearchIndex);
 	thisSearch = SKSearchCreate(logSearchIndex,
 								(CFStringRef)searchString,
 								kSKSearchOptionDefault);
-	currentSearch = (SKSearchRef)CFRetain(thisSearch);
+	currentSearch = (thisSearch ? (SKSearchRef)CFRetain(thisSearch) : NULL);
 
 	//Retrieve matches as long as more are pending
     while (more && currentSearch) {
@@ -70,6 +77,11 @@
         for (i = 0; ((i < foundCount) && (searchID == activeSearchID)) ; i++) {
 			SKDocumentRef	document = foundDocRefs[i];
 			CFURLRef		url = SKDocumentCopyURL(document);
+			/*
+			 * Nasty implementation note: As of 10.4.7 and all previous versions, a path longer than 1024 bytes (PATH_MAX)
+			 * will cause CFURLCopyFileSystemPath() to crash [ultimately in CFGetAllocator()].  This is the case for all
+			 * Cocoa applications...
+			 */
 			CFStringRef		logPath = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
 			NSArray			*pathComponents = [(NSString *)logPath pathComponents];
 			

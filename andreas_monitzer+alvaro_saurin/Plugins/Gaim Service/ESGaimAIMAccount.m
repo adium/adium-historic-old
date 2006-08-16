@@ -7,10 +7,10 @@
 //
 
 #import "ESGaimAIMAccount.h"
-#import "AIChatController.h"
-#import "AIContactController.h"
-#import "AIContentController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "SLGaimCocoaAdapter.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIHTMLDecoder.h>
@@ -297,7 +297,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	AILog(@"Direct IM Connected: %@",[theContact UID]);
 
 	[[adium contentController] displayEvent:AILocalizedString(@"Direct IM connected","Direct IM is an AIM-specific phrase for transferring images in the message window")
-									 ofType:@"directIM"
+									 ofType:@"directIMConnected"
 									 inChat:[[adium chatController] chatWithContact:theContact]];
 	//Send any pending directIM messages for this contact
 	NSMutableArray	*thisContactQueue = [directIMQueue objectForKey:[theContact internalObjectID]];
@@ -323,7 +323,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	AILog(@"Direct IM Disconnected: %@",[theContact UID]);	
 
 	[[adium contentController] displayEvent:AILocalizedString(@"Direct IM disconnected","Direct IM is an AIM-specific phrase for transferring images in the message window")
-									 ofType:@"directIM"
+									 ofType:@"directIMDisconnected"
 									 inChat:[[adium chatController] chatWithContact:theContact]];	
 }
 

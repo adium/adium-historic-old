@@ -16,40 +16,35 @@
 
 #define	BETA_RELEASE FALSE
 
-@class  AISortController, AILoginController, AIAccountController, AIInterfaceController, AIContactController, 
-		AICorePluginLoader, AIPreferenceController, AIMenuController, AILoginWindowController,
-		AICoreComponentLoader, AIContentController, AIToolbarController, AIContactInfoViewController, 
-		AIPreferenceViewController, AISoundController, AIDockController, ESFileTransferController, 
-		ESContactAlertsController, ESApplescriptabilityController, AIStatusController, ESDebugController,
-		AIEmoticonController, AIChatController, SUUpdater, AIJavaController, AIVCController;
+@class  AICorePluginLoader, AICoreComponentLoader, SUUpdater;
 
-@protocol AIController
-- (void)controllerDidLoad;
-- (void)controllerWillClose;
-@end
+@protocol	AIAccountController, AIChatController, AIContactAlertsController, AIDebugController,
+			AIPreferenceController, AIMenuController, AIApplescriptabilityController, AIStatusController,
+			AIContentController, AIToolbarController, AISoundController, AIDockController,
+			AIFileTransferController, AILoginController, AIInterfaceController, AIContactController,
+			AIEmoticonController;
 
 @interface AIAdium : NSObject {
-    IBOutlet	AIMenuController				*menuController;
-    IBOutlet	AIInterfaceController			*interfaceController;
+    IBOutlet	NSObject <AIMenuController>			*menuController;
+    IBOutlet	NSObject <AIInterfaceController>		*interfaceController;
 	IBOutlet	SUUpdater						*updater;
 
-	AIAccountController				*accountController;
-	AIChatController				*chatController;
-	AIContactController				*contactController;
-	AIContentController				*contentController;
-	AIDockController				*dockController;
-	AIEmoticonController			*emoticonController;
-	AILoginController				*loginController;
-	AIPreferenceController			*preferenceController;
-	AISoundController				*soundController;
-	AIStatusController				*statusController;
-	AIToolbarController				*toolbarController;
-    AIJavaController                *javaController;
-	AIVCController                  *vcController;
-	ESApplescriptabilityController	*applescriptabilityController;
-	ESDebugController				*debugController;
-	ESContactAlertsController		*contactAlertsController;
-	ESFileTransferController		*fileTransferController;
+	NSObject <AIAccountController>		*accountController;
+	NSObject <AIChatController>			*chatController;
+	NSObject <AIContactController>		*contactController;
+	NSObject <AIContentController>		*contentController;
+	NSObject <AIDockController>			*dockController;
+	NSObject <AIEmoticonController>		*emoticonController;
+	NSObject <AILoginController>		*loginController;
+	NSObject <AIPreferenceController>	*preferenceController;
+	NSObject <AISoundController>		*soundController;
+	NSObject <AIStatusController>		*statusController;
+	NSObject <AIToolbarController>		*toolbarController;
+	NSObject <AIContactAlertsController>*contactAlertsController;
+	NSObject <AIFileTransferController>	*fileTransferController;
+
+	NSObject <AIApplescriptabilityController>	*applescriptabilityController;
+	NSObject <AIDebugController>				*debugController;
 
 	AICoreComponentLoader			*componentLoader;
 	AICorePluginLoader				*pluginLoader;
@@ -69,25 +64,24 @@
 + (NSString *)buildIdentifier;
 + (NSDate *)buildDate;
 
-- (AIAccountController *)accountController;
-- (AIChatController *)chatController;
-- (AIContactController *)contactController;
-- (AIContentController *)contentController;
-- (AIDockController *)dockController;
-- (AIEmoticonController *)emoticonController;
-- (AIInterfaceController *)interfaceController;
-- (AILoginController *)loginController;
-- (AIMenuController *)menuController;
-- (AIPreferenceController *)preferenceController;
-- (AISoundController *)soundController;
-- (AIStatusController *)statusController;
-- (AIToolbarController *)toolbarController;
-- (AIJavaController *)javaController;
-- (AIVCController *)vcController;
-- (ESContactAlertsController *)contactAlertsController;
-- (ESDebugController *)debugController;
-- (ESFileTransferController *)fileTransferController;
-- (ESApplescriptabilityController *)applescriptabilityController;
+- (NSObject <AIAccountController> *)accountController;
+- (NSObject <AIChatController> *)chatController;
+- (NSObject <AIContactController> *)contactController;
+- (NSObject <AIContentController> *)contentController;
+- (NSObject <AIDockController> *)dockController;
+- (NSObject <AIEmoticonController> *)emoticonController;
+- (NSObject <AIInterfaceController> *)interfaceController;
+- (NSObject <AILoginController> *)loginController;
+- (NSObject <AIMenuController> *)menuController;
+- (NSObject <AIPreferenceController> *)preferenceController;
+- (NSObject <AISoundController> *)soundController;
+- (NSObject <AIStatusController> *)statusController;
+- (NSObject <AIToolbarController> *)toolbarController;
+- (NSObject <AIContactAlertsController> *)contactAlertsController;
+- (NSObject <AIFileTransferController> *)fileTransferController;
+
+- (NSObject <AIDebugController> *)debugController;
+- (NSObject <AIApplescriptabilityController> *)applescriptabilityController;
 
 - (AICoreComponentLoader *)componentLoader;
 
@@ -147,6 +141,3 @@
 #define Adium_CompletedApplicationLoad		@"Adium_CompletedApplicationLoad"
 #define Adium_WillTerminate					@"Adium_WillTerminate"
 #define Adium_ShowLogAtPath					@"Adium_ShowLogAtPath"
-
-//#define	Adium_VersionWillBeUpgraded		@"Adium_VersionWillBeUpgraded"
-//#define	Adium_VersionUpgraded			@"Adium_VersionUpgraded"

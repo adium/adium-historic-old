@@ -89,7 +89,7 @@
 														 error:NULL];
 	
 	if (appleScript) {
-		if (functionName) {
+		if (functionName && [functionName length]) {
 			/* If we have a functionName (and potentially arguments), we build
 			* an NSAppleEvent to execute the script. */
 			

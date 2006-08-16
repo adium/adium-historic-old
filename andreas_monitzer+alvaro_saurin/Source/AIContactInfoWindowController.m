@@ -14,27 +14,28 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContactAccountsPane.h"
 #import "AIContactInfoWindowController.h"
+#import "AIContactAccountsPane.h"
 #import "AIContactProfilePane.h"
 #import "AIContactSettingsPane.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIListOutlineView.h"
-#import "AIPreferenceController.h"
-#import "AIAccountController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIAccountControllerProtocol.h>
 #import "ESContactAlertsPane.h"
 #import "ESContactInfoListController.h"
-#import "ESContactAlertsController.h"
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AITabViewAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIImageViewWithImagePicker.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
-#import <Adium/AIListOutlineView.h>
+#import "AIListOutlineView.h"
 #import <Adium/AIMetaContact.h>
-#import <Adium/AIModularPaneCategoryView.h>
+#import "AIModularPaneCategoryView.h"
 #import <Adium/AIService.h>
 
 #define	CONTACT_INFO_NIB				@"ContactInfoWindow"			//Filename of the contact info nib
@@ -47,12 +48,11 @@
 @interface AIContactInfoWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)selectionChanged:(NSNotification *)notification;
-- (NSArray *)_panesInCategory:(PREFERENCE_CATEGORY)inCategory;
 
 - (void)localizeTabViewItemTitles;
 - (void)configureDrawer;
 - (void)configureVisiblityOfTabViewItemsForListObject:(AIListObject *)inObject;
-- (void)configurePanes:(NSArray *)inPanes;
+- (void)configurePane:(AIContactInfoPane *)inPane;
 - (void)setupMetaContactDrawer;
 
 @end
@@ -64,17 +64,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //Return the shared contact info window
 + (id)showInfoWindowForListObject:(AIListObject *)listObject
 {
-	static BOOL didLoadPanes = NO;
-	if (!didLoadPanes) {
-		//Install our panes
-		[AIContactAccountsPane contactInfoPane];
-		[AIContactProfilePane contactInfoPane];
-		[AIContactSettingsPane contactInfoPane];
-		[ESContactAlertsPane contactInfoPane];
-
-		didLoadPanes = YES;
-	}
-
 	//Create the window
 	if (!sharedContactInfoInstance) {
 		sharedContactInfoInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB];
@@ -138,7 +127,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	NSTabViewItem   *tabViewItem;
 
 	//
-	loadedPanes = [[NSMutableSet alloc] init];
+	loadedPanes = [[NSMutableDictionary alloc] init];
 
 	//Localization
 	[self localizeTabViewItemTitles];
@@ -157,6 +146,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[tabView_category selectTabViewItem:tabViewItem];
 
 	[imageView_userIcon setAnimates:YES];
+	
+	//Set text for the icon buttons
+	[button_clearContactIcon setTitle:AILocalizedString(@"Clear",nil)];
+	[button_chooseContactIcon setTitle:AILocalizedString(@"Choose",nil)];
 
 	//Monitor the selected contact
 	[[adium notificationCenter] addObserver:self
@@ -167,6 +160,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	contactListController = [[ESContactInfoListController alloc] initWithContactListView:contactListView
 																			inScrollView:scrollView_contactList
 																				delegate:self];
+	
 	[self setupMetaContactDrawer];
 }
 
@@ -183,10 +177,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 				label = AILocalizedString(@"Info","short form of tab view item title for Contact Info window's first tab");
 				break;
 			case AIInfo_Accounts:
-				label = ACCOUNTS_TITLE;
+				label = AILocalizedString(@"Accounts",nil);
 				break;
 			case AIInfo_Alerts:
-				label = EVENTS_TITLE;
+				label = AILocalizedString(@"Events", "Name of preferences and tab for specifying what Adium should do when events occur - for example, when display a Growl alert when John signs on.");
 				break;
 			case AIInfo_Settings:
 				label = AILocalizedString(@"Settings","tab view item title for Contact Settings (Settings)");
@@ -237,64 +231,53 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	if (tabView == tabView_category) {
-		int			identifier = [[tabViewItem identifier] intValue];
-		NSArray		*panes = nil;
-
+		AIContactInfoPane *pane = nil;
+		
 		//Take focus away from any textual controls to ensure that they register changes and save
 		if ([[[self window] firstResponder] isKindOfClass:[NSText class]]) {
 			[[self window] makeFirstResponder:nil];
 		}
+		
+		int identifier = [[tabViewItem identifier] intValue];
+		if (!(pane = [loadedPanes objectForKey:[NSNumber numberWithInt:identifier]])) {
+			switch (identifier) {
+				case AIInfo_Profile:
+					pane = [AIContactProfilePane contactInfoPane];
+					[view_Profile setPanes:[NSArray arrayWithObject:pane]];
 
-		switch (identifier) {
-			case AIInfo_Profile:
-				panes = [self _panesInCategory:AIInfo_Profile];
-				[view_Profile setPanes:panes];
-				break;
-			case AIInfo_Accounts:
-				panes = [self _panesInCategory:AIInfo_Accounts];
-				[view_Accounts setPanes:panes];
-				break;
-			case AIInfo_Alerts:
-				panes = [self _panesInCategory:AIInfo_Alerts];
-				[view_Alerts setPanes:panes];
-				break;
-			case AIInfo_Settings:
-				panes = [self _panesInCategory:AIInfo_Settings];
-				[view_Settings setPanes:panes];
-				break;
+					break;
+				case AIInfo_Accounts:
+					pane = [AIContactAccountsPane contactInfoPane];
+					[view_Accounts setPanes:[NSArray arrayWithObject:pane]];
+					break;
+				case AIInfo_Alerts:
+					pane = [ESContactAlertsPane contactInfoPane];
+					[view_Alerts setPanes:[NSArray arrayWithObject:pane]];
+					break;
+				case AIInfo_Settings:
+					pane = [AIContactSettingsPane contactInfoPane];
+					[view_Settings setPanes:[NSArray arrayWithObject:pane]];
+					break;
+			}
+			
+			if (pane) {
+				[loadedPanes setObject:pane
+								forKey:[NSNumber numberWithInt:identifier]];
+			} else {
+				NSLog(@"%@: Could not load pane for identifier %i",self,identifier);
+			}
 		}
 
 		//Configure the loaded panes
-		[self configurePanes:panes];
+		[self configurePane:pane];
 	}
-}
-
-//Loads, alphabetizes, and caches prefs for the speficied category
-- (NSArray *)_panesInCategory:(PREFERENCE_CATEGORY)inCategory
-{
-	NSMutableArray		*paneArray = [NSMutableArray array];
-	NSEnumerator		*enumerator = [[[adium contactController] contactInfoPanes] objectEnumerator];
-	AIContactInfoPane	*pane;
-
-	//Get the panes for this category
-	while ((pane = [enumerator nextObject])) {
-		if ([pane contactInfoCategory] == inCategory) {
-			[paneArray addObject:pane];
-			[loadedPanes addObject:pane];
-		}
-	}
-
-	//Alphabetize them
-	[paneArray sortUsingSelector:@selector(compare:)];
-
-	return paneArray;
 }
 
 //When the contact list selection changes, then configure the window for the new contact
 - (void)selectionChanged:(NSNotification *)notification
 {
-	AIListObject	*object = [[adium contactController] selectedListObject];
-	if (object) [self configureForListObject:[[adium contactController] selectedListObject]];
+	AIListObject	*object = [[adium interfaceController] selectedListObject];
+	if (object) [self configureForListObject:[[adium interfaceController] selectedListObject]];
 }
 
 //Change the list object
@@ -391,15 +374,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 }
 
 //Configure our views
-- (void)configurePanes:(NSArray *)panes
+- (void)configurePane:(AIContactInfoPane *)pane
 {
 	if (displayedObject) {
-		NSEnumerator		*enumerator = [panes objectEnumerator];
-		AIContactInfoPane	*pane;
-
-		while ((pane = [enumerator nextObject])) {
-			[pane configureForListObject:displayedObject];
-		}
+		[pane configureForListObject:displayedObject];
 	}
 }
 
@@ -473,6 +451,11 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	return ([displayedObject userIcon]);
 }
 
+- (NSString *)fileNameForImageInImagePicker:(AIImageViewWithImagePicker *)picker
+{
+	return [[displayedObject displayName] safeFilenameString];
+}
+
 #pragma mark Contact List (metaContact)
 - (void)setupMetaContactDrawer
 {
@@ -508,6 +491,18 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		[drawer_metaContact close];
 		[contactListController setContactListRoot:nil];
 	}
+}
+
+/* simple interface method that invokes the image picker */
+- (IBAction)chooseContactIcon:(id)sender
+{
+	[imageView_userIcon showImagePicker:imageView_userIcon];
+}
+
+/* simple interface method that deletes the current icon */
+- (IBAction)clearContactIcon:(id)sender
+{
+	[self deleteInImageViewWithImagePicker:imageView_userIcon];
 }
 
 - (IBAction)addContact:(id)sender

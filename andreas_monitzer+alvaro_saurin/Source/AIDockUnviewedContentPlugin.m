@@ -15,10 +15,10 @@
  */
 
 #import "AIDockUnviewedContentPlugin.h"
-#import "AIChatController.h"
-#import "AIContentController.h"
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import "AIDockController.h"
-#import "AIPreferenceController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <Adium/AIChat.h>
