@@ -21,7 +21,7 @@
 		AICoreComponentLoader, AIContentController, AIToolbarController, AIContactInfoViewController, 
 		AIPreferenceViewController, AISoundController, AIDockController, ESFileTransferController, 
 		ESContactAlertsController, ESApplescriptabilityController, AIStatusController, ESDebugController,
-		AIEmoticonController, AIChatController, SUUpdater, AIJavaController;
+		AIEmoticonController, AIChatController, SUUpdater, AIJavaController, AIVCController;
 
 @protocol AIController
 - (void)controllerDidLoad;
@@ -45,6 +45,7 @@
 	AIStatusController				*statusController;
 	AIToolbarController				*toolbarController;
     AIJavaController                *javaController;
+	AIVCController                  *vcController;
 	ESApplescriptabilityController	*applescriptabilityController;
 	ESDebugController				*debugController;
 	ESContactAlertsController		*contactAlertsController;
@@ -82,6 +83,7 @@
 - (AIStatusController *)statusController;
 - (AIToolbarController *)toolbarController;
 - (AIJavaController *)javaController;
+- (AIVCController *)vcController;
 - (ESContactAlertsController *)contactAlertsController;
 - (ESDebugController *)debugController;
 - (ESFileTransferController *)fileTransferController;
