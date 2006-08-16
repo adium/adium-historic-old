@@ -10,10 +10,14 @@
 #import "AIAdium.h"
 #import <AIUtilities/AIStringUtilities.h>
 #import <JavaVM/NSJavaVirtualMachine.h>
+
+#import "ESTextAndButtonsWindowController.h"
+
 #import "SmackXMPPAccount.h"
 #import "SmackInterfaceDefinitions.h"
 #import "SmackCocoaAdapter.h"
 
+#import "AIVideoConf.h"
 
 @interface SmackJingleListener : NSObject {
 }
@@ -65,24 +69,122 @@
     listener = nil;
 }
 
-- (void)setJingleSessionRequest:(SmackXJingleSessionRequest*)request
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark                 Payloads Management
+////////////////////////////////////////////////////////////////////////////////
+
+/*!
+ * @brief	Get the list of supported audio payloads
+ */
+- (JavaVector*) getSupportedAudioPayloads
 {
-    NSLog(@"jingle session request!");
-    
-    // automatically reject for now
-    [request reject];
+    JavaVector		*payloadsJava	= [SmackCocoaAdapter vector];    
+	NSArray			*payloadsList	= [[adium vcController] getAudioPayloadsForProtocol:VC_RTP];
+	NSEnumerator	*payloadsEnum	= [payloadsList objectEnumerator];
+	VCPayload		*payload;
+	
+	// Add the list of payloads
+	while ((payload = [payloadsEnum nextObject])) {
+		[payloadsJava add:payload];
+	}
+
+	return payloadsJava;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark                 Incoming Sessions
+////////////////////////////////////////////////////////////////////////////////
+
+- (void) acceptIncomingJingleSessionQuestion:(NSNumber*) number userInfo:(id) info
+{	
+	SmackXIncomingJingleSession	*session		= nil;
+    JavaVector					*payloadTypes	= [self getSupportedAudioPayloads];
+	SmackXJingleSessionRequest	*request		= info;	
+	AITextAndButtonsReturnCode	 result			= [number intValue];
+
+	switch (result) {
+		
+		case AITextAndButtonsDefaultReturn:
+			NSLog (@"Establishing incoming Jingle session.");
+
+			@try {
+				session = [request accept:payloadTypes];
+				[session start:request];
+			} @catch (NSException *e) {
+				[[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"Jingle Error","Jingle Error")]
+											 withDescription:[e reason]
+											 withWindowTitle:AILocalizedString(@"Notice","Notice")
+											   defaultButton:AILocalizedString(@"OK","OK")
+											 alternateButton:nil
+												 otherButton:nil
+													  target:nil
+													selector:NULL
+													userInfo:nil];
+			}
+			break;
+
+		case AITextAndButtonsAlternateReturn:
+			NSLog (@"Rejecting incoming Jingle session.");
+			[request reject];
+			break;
+
+		default:
+			break;
+	}
+}
+
+/*!
+ * @brief    A session request is received
+ */
+- (void) setJingleSessionRequest:(SmackXJingleSessionRequest*) request
+{
+	NSString *question = [NSString stringWithFormat:AILocalizedString(@"Accept audio chat", nil)];
+	NSString *description = [NSString stringWithFormat:AILocalizedString(@"You have been invited to an audio chat.\nDo you want to accept this invitation?", nil)];
+
+	// Ask to the user if he/she accept the session
+	[[adium interfaceController] displayQuestion:question
+								 withDescription:description
+								 withWindowTitle:AILocalizedString(@"Audio Session",nil)
+								   defaultButton:AILocalizedString(@"Accept",nil)
+								 alternateButton:AILocalizedString(@"Reject",nil)
+									 otherButton:nil
+										  target:self
+										selector:@selector(acceptIncomingJingleSessionQuestion:userInfo:)
+										userInfo:request];
+
+	// Send a message saying that this is "ringing"
+	[[listener getManager] sendContentInfo:[SmackXContentInfoAudio fromString:@"ringing"]];
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark                     Outgoing Sessions
+////////////////////////////////////////////////////////////////////////////////
+
+/*!
+ * @brief    Start an outgoing session
+ */
 - (void)establishOutgoingJingleSessionTo:(NSString*)jid
 {
-    // just an example
-    JavaVector *payloadTypes = [SmackCocoaAdapter vector];
-    
-    // [payloadTypes add:bla];
-    
-    SmackXOutgoingJingleSession *session = [[listener getManager] createOutgoingJingleSession:jid :payloadTypes];
-    
-    [session close];
+	SmackXOutgoingJingleSession *session		= nil;
+    JavaVector					*payloadTypes	= [self getSupportedAudioPayloads];
+
+	NSLog (@"Establishing outgoing Jingle session.");
+	
+	@try {
+		session = [[listener getManager] createOutgoingJingleSession:jid :payloadTypes];
+		[session start:nil];
+    } @catch (NSException *e) {
+        [[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"Jingle Error","Jingle Error")]
+									 withDescription:[e reason]
+									 withWindowTitle:AILocalizedString(@"Notice","Notice")
+									   defaultButton:AILocalizedString(@"OK","OK")
+									 alternateButton:nil
+										 otherButton:nil
+											  target:nil
+											selector:NULL
+											userInfo:nil];
+    }
 }
 
 // add a menu item to the contact's context menu, so an outgoing session can be established
