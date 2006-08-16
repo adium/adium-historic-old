@@ -16,6 +16,8 @@
 #import "SmackCocoaAdapter.h"
 #import "ESTextAndButtonsWindowController.h"
 
+#import "SmackXMPPErrorMessagePlugin.h"
+
 @interface SmackXMPPAccount (registrationDelegate)
 
 - (void)registration:(SmackXMPPRegistration*)reg didEndWithSuccess:(BOOL)success;
@@ -232,7 +234,10 @@
             [self handleFormFromPacket:packet];
         } else {
             // unknown state, probably error with no form
-            // let SmackXMPPErrorMessagePlugin handle it
+            
+            if([type isEqualToString:@"error"])
+                [SmackXMPPErrorMessagePlugin handleXMPPErrorPacket:packet service:[[account connection] getServiceName]];
+            
             if([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
                 [account registration:self didEndWithSuccess:NO];
             [self release];
@@ -244,12 +249,14 @@
         
         if([type isEqualToString:@"error"])
         {
+            // let SmackXMPPErrorMessagePlugin handle it
+            [SmackXMPPErrorMessagePlugin handleXMPPErrorPacket:packet service:[[account connection] getServiceName]];
+
             if([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
                 [account registration:self didEndWithSuccess:NO];
 
             [self release];
             return;
-            // let SmackXMPPErrorMessagePlugin handle it
         }
         
         [self handleFormFromPacket:packet];

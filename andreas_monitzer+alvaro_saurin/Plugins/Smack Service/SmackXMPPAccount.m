@@ -156,9 +156,11 @@
 }
 
 - (void)disconnect {
+    connection = nil;
+
     AILog(@"XMPP disconnect");
     [super disconnect];
-    
+
     [[smackAdapter connection] close];
     
     [smackAdapter release];

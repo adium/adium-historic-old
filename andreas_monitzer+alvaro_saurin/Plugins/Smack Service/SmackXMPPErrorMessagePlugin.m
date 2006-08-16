@@ -42,18 +42,19 @@ static struct
 
 @implementation SmackXMPPErrorMessagePlugin
 
-- (id)initWithAccount:(SmackXMPPAccount*)account
+- (id)initWithAccount:(SmackXMPPAccount*)a
 {
     if((self = [super init]))
     {
+        account = a;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(receivedPacket:)
                                                      name:SmackXMPPMessagePacketReceivedNotification
                                                    object:account];
-        [[NSNotificationCenter defaultCenter] addObserver:self
+/*        [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(receivedPacket:)
                                                      name:SmackXMPPIQPacketReceivedNotification
-                                                   object:account];
+                                                   object:account];*/
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(receivedPacket:)
                                                      name:SmackXMPPPresencePacketReceivedNotification
@@ -68,47 +69,54 @@ static struct
     [super dealloc];
 }
 
++ (void)handleXMPPErrorPacket:(SmackPacket*)packet service:(NSString*)service
+{
+    SmackXMPPError *error = [packet getError];
+    NSString *from = [packet getFrom];
+    if(!from)
+        from = service;
+
+    if(!error)
+    {
+        // pytransports seem to send error packets without an error tag
+        
+        if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.Message"])
+            [[[AIObject sharedAdiumInstance] interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error From %@","XMPP Error From %@"), from] withDescription:[(SmackMessage*)packet getBody]];
+        else
+            [[[AIObject sharedAdiumInstance] interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error From %@","XMPP Error From %@"), from] withDescription:AILocalizedString(@"(no reason provided)","(no reason provided)")];
+        
+        return;
+    }
+    NSString *message = [error getMessage];
+    int code = [error getCode];
+    int i;
+    NSString *errordesc = nil;
+    
+    for(i=0;mapping[i].code;i++)
+    {
+        if(mapping[i].code == code)
+        {
+            errordesc = mapping[i].description;
+            break;
+        }
+    }
+    if(!errordesc)
+        errordesc = [[NSNumber numberWithInt:code] stringValue];
+    
+    [[[AIObject sharedAdiumInstance] interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error %d \"%@\" From %@","XMPP Error %d \"%@\" From %@"), code, errordesc, from] withDescription:message?message:AILocalizedString(@"(no message provided)","(no message provided)")];
+}
+
 - (void)receivedPacket:(NSNotification*)n
 {
     SmackPacket *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
     
     if([[[(id)packet getType] toString] isEqualToString:@"error"])
-    {
-        SmackXMPPError *error = [packet getError];
-//        if(!error)
-//            return; // invalid error packet, the error-info is required
-        if(!error)
-        {
-            // pytransports seem to send error packets without an error tag
-            
-            if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.Message"])
-                [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error From %@","XMPP Error From %@"), [packet getFrom]] withDescription:[(SmackMessage*)packet getBody]];
-            else
-                [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error From %@","XMPP Error From %@"), [packet getFrom]] withDescription:AILocalizedString(@"(no reason provided)","(no reason provided)")];
+        [self performSelectorOnMainThread:@selector(handleXMPPErrorPacketMainThread:) withObject:packet waitUntilDone:YES];
+}
 
-            return;
-        }
-        NSString *message = [error getMessage];
-        int code = [error getCode];
-        int i;
-        NSString *errordesc = nil;
-        
-        if(code == 501 && [SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.IQ"]) // ignore "not implemented" iq errors, since they should be handled by the plugin that sent this request
-            return;
-        
-        for(i=0;mapping[i].code;i++)
-        {
-            if(mapping[i].code == code)
-            {
-                errordesc = mapping[i].description;
-                break;
-            }
-        }
-        if(!errordesc)
-            errordesc = [[NSNumber numberWithInt:code] stringValue];
-        
-        [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error %d \"%@\" From %@","XMPP Error %d \"%@\" From %@"), code, errordesc, [packet getFrom]] withDescription:message?message:AILocalizedString(@"(no message provided)","(no message provided)")];
-    }
+- (void)handleXMPPErrorPacketMainThread:(SmackPacket*)packet
+{
+    [[self class] handleXMPPErrorPacket:packet service:[[account connection] getServiceName]];
 }
 
 @end

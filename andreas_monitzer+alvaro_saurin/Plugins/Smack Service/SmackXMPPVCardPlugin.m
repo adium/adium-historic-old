@@ -16,6 +16,7 @@
 #import "AIListContact.h"
 #import "AIInterfaceController.h"
 #import "AIContactController.h"
+#import "ESDebugAILog.h"
 
 #import <JavaVM/NSJavaVirtualMachine.h>
 
@@ -120,10 +121,12 @@
 }
 
 - (void)delayedConnected
-{    
-    // sync local avatar to the one on the server
-    avatarUpdateInProgress = YES;
-    [NSThread detachNewThreadSelector:@selector(updateAvatarUploadingNewOne:) toTarget:self withObject:[NSNumber numberWithBool:YES]];
+{   
+    if([account connection]) { // only do this if the connection hasn't failed
+        // sync local avatar to the one on the server
+        avatarUpdateInProgress = YES;
+        [NSThread detachNewThreadSelector:@selector(updateAvatarUploadingNewOne:) toTarget:self withObject:[NSNumber numberWithBool:YES]];
+    }
 }
 
 - (void)disconnected:(SmackXMPPConnection*)conn
@@ -248,7 +251,8 @@
         // this should better be handled by PEP, but that's not implemented anywhere yet
         [account performSelectorOnMainThread:@selector(broadcastCurrentPresence) withObject:nil waitUntilDone:YES];
     } @catch(NSException *e) {
-        [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Error while handling avatar image on account %@.","Error while handling avatar image on account %@."),[account explicitFormattedUID]] withDescription:[e reason]];
+//        [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Error while handling avatar image on account %@.","Error while handling avatar image on account %@."),[account explicitFormattedUID]] withDescription:[e reason]];
+        AILog(@"Error handling avatar image on account %@. Reason: %@",[account explicitFormattedUID],[e reason]);
     }
     
     avatarUpdateInProgress = NO;
