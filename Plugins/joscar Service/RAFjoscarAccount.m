@@ -391,6 +391,7 @@
 									  onlyIncludeOutgoingImages:YES 
 												 simpleTagsOnly:YES 
 												 bodyBackground:NO];
+		[profileEncoder setAllowAIMsubprofileLinks:YES];
 	}
 
 	AILog(@"%@: Setting profile %@",self, profile);
@@ -428,6 +429,7 @@
 												   onlyIncludeOutgoingImages:YES 
 															  simpleTagsOnly:YES 
 															  bodyBackground:NO];
+						[awayEncoder setAllowAIMsubprofileLinks:YES];
 					}
 
 					encodedAway = [awayEncoder encodeHTML:statusMessage imagesPath:nil];
