@@ -180,10 +180,6 @@ typedef enum {
  *	Currently simply fills keywords in the provided content, returning an array of one string.
  */
 - (NSArray *)methodArgumentsForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
-/*!
- *	@brief Returns the BOM script for appending content
- */
-- (NSString *)scriptForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
 
 /*!
  *	@brief Returns the BOM script for changing the view's variant

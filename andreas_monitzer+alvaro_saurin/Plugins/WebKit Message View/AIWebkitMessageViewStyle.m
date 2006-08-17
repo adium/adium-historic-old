@@ -65,7 +65,7 @@ static NSArray *validSenderColors;
 @interface AIWebkitMessageViewStyle (PRIVATE)
 - (id)initWithBundle:(NSBundle *)inBundle;
 - (void)_loadTemplates;
-- (NSMutableString *)_escapeStringForPassingToScript:(NSMutableString *)inString;
+- (NSMutableString *)_escapeStringForInsertionIntoMessageView:(NSMutableString *)inString;
 - (NSString *)noVariantName;
 - (NSString *)iconPathForFileTransfer:(ESFileTransfer *)inObject;
 - (NSString *)statusIconPathForListObject:(AIListObject *)inObject;
