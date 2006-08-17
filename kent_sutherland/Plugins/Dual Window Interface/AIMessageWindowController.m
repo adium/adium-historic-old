@@ -208,6 +208,7 @@
 	[tabView_tabBar setSizeCellsToFit:YES];
 	[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
 	[tabView_tabBar setSelectsTabsOnMouseDown:YES];
+	[tabView_tabBar setAutomaticallyAnimates:YES];
 }
 
 //Frames
@@ -331,6 +332,8 @@
 					tabViewFrame.size.height = contentRect.size.height - tabBarFrame.size.height + 1;
 					[tabView_tabBar setAutoresizingMask:NSViewMinYMargin | NSViewWidthSizable];
 				}
+				[tabView_tabBar setCellMinWidth:80];
+				[tabView_tabBar setCellMaxWidth:250];
 				
 				tabViewFrame.origin.x = -1;
 				tabBarFrame.origin.x = 0;
