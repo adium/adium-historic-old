@@ -395,18 +395,16 @@ static AIXtrasManager * manager;
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
 	if ([aNotification object] == xtraList) {
-		int	selectedRow = [xtraList selectedRow];
-		if ((selectedRow >= 0) && (selectedRow < [selectedCategory count])) {
-			AIXtraInfo *xtraInfo  = [AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[[selectedCategory objectAtIndex:selectedRow] path]]];
-			if ([[xtraList selectedRowIndexes] count] == 1) {
-				[previewController setXtra:xtraInfo];
+		//int	selectedRow = [xtraList selectedRow];
+		//if ((selectedRow >= 0) && (selectedRow < [selectedCategory count])) {
+			//AIXtraInfo *xtraInfo  = [AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[[selectedCategory objectAtIndex:selectedRow] path]]];
+			if ([[xtraList selectedRowIndexes] count] > 0)
 				[deleteButton setEnabled:YES];
-			}
-			else
-				[deleteButton setEnabled:NO];
-		}
-		else
-			[deleteButton setEnabled:NO]; 
+		//	if ([[xtraList selectedRowIndexes] count] == 1) {
+		//		[previewController setXtra:xtraInfo];
+		//	else
+		//		[deleteButton setEnabled:NO];
+		//}
 		
 	} else if ([aNotification object] == sidebar) {
 		[self setCategory:nil];
