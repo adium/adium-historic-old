@@ -602,6 +602,10 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return containsOnlyOneService;
 }
 
+- (BOOL)canContainOtherContacts {
+    return YES;
+}
+
 //When the listContacts array has a single member, we only contain one unique contact.
 - (void)_determineIfWeShouldAppearToContainOnlyOneContact
 {

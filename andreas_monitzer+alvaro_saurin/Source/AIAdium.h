@@ -24,6 +24,8 @@
 			AIFileTransferController, AILoginController, AIInterfaceController, AIContactController,
 			AIEmoticonController, AIJavaController;
 
+@class AIVideoConfController;
+
 @interface AIAdium : NSObject {
     IBOutlet	NSObject <AIMenuController>			*menuController;
     IBOutlet	NSObject <AIInterfaceController>		*interfaceController;
@@ -43,6 +45,7 @@
 	NSObject <AIContactAlertsController>*contactAlertsController;
 	NSObject <AIFileTransferController>	*fileTransferController;
     NSObject <AIJavaController>         *javaController;
+    AIVideoConfController               *vcController;
 
 	NSObject <AIApplescriptabilityController>	*applescriptabilityController;
 	NSObject <AIDebugController>				*debugController;
@@ -81,6 +84,7 @@
 - (NSObject <AIContactAlertsController> *)contactAlertsController;
 - (NSObject <AIFileTransferController> *)fileTransferController;
 - (NSObject <AIJavaController> *)javaController;
+- (AIVideoConfController *)vcController;
 
 - (NSObject <AIDebugController> *)debugController;
 - (NSObject <AIApplescriptabilityController> *)applescriptabilityController;

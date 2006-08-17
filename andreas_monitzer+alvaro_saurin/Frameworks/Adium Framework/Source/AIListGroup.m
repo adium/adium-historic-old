@@ -118,6 +118,10 @@
 	return [containedObjects containsObject:inObject];
 }
 
+- (BOOL)canContainOtherContacts {
+    return NO;
+}
+
 //Retrieve an object by index
 - (id)objectAtIndex:(unsigned)index
 {

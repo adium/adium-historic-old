@@ -179,6 +179,10 @@
 	return [self statusObjectForKey:@"Server Display Name"];	
 }
 
+- (BOOL)canContainOtherContacts {
+    return NO;
+}
+
 - (void)setServersideAlias:(NSString *)alias 
 		   asStatusMessage:(BOOL)useAsStatusMessage
 				  silently:(BOOL)silent

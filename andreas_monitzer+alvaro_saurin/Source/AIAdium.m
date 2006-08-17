@@ -152,7 +152,7 @@ static NSString	*prefsCategory;
 - (NSObject <AIJavaController> *)javaController{
     return javaController;
 }
-- (AIVCController *)vcController{
+- (AIVideoConfController *)vcController{
     return vcController;
 }
 
@@ -263,7 +263,7 @@ static NSString	*prefsCategory;
 	applescriptabilityController = [[ESApplescriptabilityController alloc] init];
 	statusController = [[AIStatusController alloc] init];
     javaController = [[AIJavaController alloc] init];
-    vcController = [[AIVCController alloc] init];
+    vcController = [[AIVideoConfController alloc] init];
 
 	//Finish setting up the preference controller before the components and plugins load so they can read prefs 
 	[preferenceController controllerDidLoad];
