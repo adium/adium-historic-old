@@ -2334,7 +2334,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  */
 - (NSString *)_userIconCachePath
 {    
-    NSString    *userIconCacheFilename = [NSString stringWithFormat:@"TEMP-UserIcon_%@_%@", [self internalObjectID], [NSString randomStringOfLength:4]];
+	static unsigned long long userIconID = 0;
+    NSString    *userIconCacheFilename = [NSString stringWithFormat:@"TEMP-UserIcon_%@_%qu", [self internalObjectID], userIconID];
     return [[adium cachesPath] stringByAppendingPathComponent:userIconCacheFilename];
 }
 
@@ -2346,7 +2347,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  */
 - (NSString *)_emoticonCachePathForEmoticon:(NSString *)emoticonEquivalent inChat:(AIChat *)inChat
 {
-    NSString    *filename = [NSString stringWithFormat:@"TEMP-CustomEmoticon_%@_%@.gif", [inChat uniqueChatID], emoticonEquivalent];
+	static unsigned long long emoticonID = 0;
+    NSString    *filename = [NSString stringWithFormat:@"TEMP-CustomEmoticon_%@_%@_%qu.gif", [inChat uniqueChatID], emoticonEquivalent,emoticonID++];
     return [[adium cachesPath] stringByAppendingPathComponent:[filename safeFilenameString]];	
 }
 
