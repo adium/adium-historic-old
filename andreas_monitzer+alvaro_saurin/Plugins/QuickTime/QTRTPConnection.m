@@ -62,8 +62,45 @@
 
 - (NSString*) generateSDPOutStream
 {
-	// TODO
-	return nil;
+
+	// Constants
+	const char	*strSessionName = "outrtpstream";
+	const char	*strDescription = "Audio output RTP stream";
+	const char	*strUrl			= "http://www.adiumx.com";
+	const char	*strEmail		= "none@adiumx.com";
+	
+	const int	 ipVersion		= 4;	// We only support IP version 4
+	const int	 ttl			= 126;
+
+	// Variables
+	const char	*ipDestination	= [[mRemote valueForKey:@"mIP"] cString];
+	const char	*ipSource		= [[mLocal valueForKey:@"mIP"] cString];
+	int			 port			= (int)[mLocal valueForKey:@"mPort"];
+	int			 payloadType	= (int)[((VCPayload*)[mLocal valueForKey:@"mPayload"]) valueForKey:@"mId"];
+	
+	char		*outStr;
+	
+	asprintf (&outStr,
+			  "v=0\r\n"
+			  "o=- * * IN IP%d %s\r\n"		// Source
+			  "s=%s\r\n"					// Session name
+			  "i=%s\r\n"					// Description
+			  "u=%s\r\n"					// URL
+			  "e=%s\r\n"					// Email
+			  "t=0 0\r\n"					// Duration
+			  "a=tool:Adium\r\n"			// Other
+			  "c=IN IP%d %s/%d\r\n"			// Destination
+			  "m=audio %d RTP/AVP %d\r\n",	// Content description
+			  
+			  ipVersion, ipSource,
+			  strSessionName,
+			  strDescription,
+			  strUrl,
+			  strEmail,
+			  ipVersion, ipDestination, ttl,
+			  port, payloadType);
+	
+	return [NSString stringWithCString:outStr];
 }
 
 @end
@@ -130,9 +167,9 @@ ComponentResult outAudioRTPStreamNotifHandler (ComponentResult inErr,
 	QTSPresParams		 presParams;
 	QTSMediaParams		 mediaParams;
 	QTSNotificationUPP	 sNotificationUPP;
-	unsigned char		*sdpDataPtr;
-	int					 sdpDataLength;
-	OSErr				 err = noErr;
+	const char			*sdpDataPtr			= [[self generateSDPOutStream] cString];
+	int					 sdpDataLength		= strlen(sdpDataPtr);
+	OSErr				 err				= noErr;
 	
 	// Note: this API is almost undocumented. There is only one example,
 	// called "qtbroadcast"... [as]
@@ -151,7 +188,8 @@ ComponentResult outAudioRTPStreamNotifHandler (ComponentResult inErr,
 	// mediaParams.v.width = (Fixed)(myWidth<<16);
 	// mediaParams.v.height = (Fixed)(myHeight<<16);
 	//
-	// set the window that Sequence Grabber will draw into
+	// set the window that Sequence Grabber will draw into:
+	//
 	// mediaParams.v.gWorld =  GetDialogPort(gMonitor);
 	// mediaParams.v.gdHandle = myGD;
 
@@ -160,6 +198,7 @@ ComponentResult outAudioRTPStreamNotifHandler (ComponentResult inErr,
 	mediaParams.a.rightVolume = kFullVolume;
 	
 	// Other parameters that can be set:
+	//
 	// mediaParams.a.bassLevel;
 	// mediaParams.a.trebleLevel;
 	// mediaParams.a.frequencyBandsCount;
@@ -182,14 +221,10 @@ ComponentResult outAudioRTPStreamNotifHandler (ComponentResult inErr,
 	presParams.notificationProc		= sNotificationUPP;
 	presParams.notificationRefCon	= 0L;	// no refcon yet
 	
-	// TODO: fill the SDP description with the ID and codec name...
-	sprintf (&sdpDataPtr, "%s", [[self generateSDPOutStream] cString]);
-	sdpDataLength = strlen(sdpDataPtr);
-	
 	// Create the presentation
 	err = QTSNewPresentationFromData (kQTSSDPDataType,
 									  sdpDataPtr,
-									  sdpDataLength,
+									  &sdpDataLength,
 									  &presParams,
 									  &mOutputStream);
 	if (err != noErr) {
@@ -405,5 +440,9 @@ bail:
 	return res;
 }
 
++ (NSArray*) getVideoPayloads
+{
+	return nil;
+}
 
 @end
