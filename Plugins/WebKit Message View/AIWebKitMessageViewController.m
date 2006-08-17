@@ -1160,6 +1160,8 @@ static NSArray *draggedTypes = nil;
 		AIEmoticon	*emoticon = [[inNotification userInfo] objectForKey:@"AIEmoticon"];
 		NSString	*textEquivalent = [[emoticon textEquivalents] objectAtIndex:0];
 		NSString	*path = [emoticon path];
+		NSSize		emoticonSize = [[emoticon image] size];
+
 		path = [[NSURL fileURLWithPath:path] absoluteString];
 		AILog(@"Trying to update %@ [textEquivalent is %@]",emoticon,textEquivalent);
 		for (int i = 0; i < imagesCount; i++) {
@@ -1168,7 +1170,9 @@ static NSArray *draggedTypes = nil;
 			if ([[img className] isEqualToString:@"emoticon"] &&
 				[[img getAttribute:@"alt"] isEqualToString:textEquivalent]) {
 				AILog(@"AIWebKitMessageViewController: Setting %@'s src to %@",img,path);
-				[img setSrc:path];				
+				[img setSrc:path];
+				[img setWidth:emoticonSize.width];
+				[img setHeight:emoticonSize.height];
 			} else {
 				AILog(@"Not updating: className:%@ alt:\"%@\"",[img className], [img getAttribute:@"alt"]);
 			}
