@@ -130,6 +130,10 @@
 		3410746009B6965700565C9E /* AIMDLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */; };
 		34107B4C09E9923D001CC042 /* AIGuestAccountWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34107B4A09E9923D001CC042 /* AIGuestAccountWindowController.m */; };
 		34107B5609E992DA001CC042 /* GuestAccountWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34107B5509E992DA001CC042 /* GuestAccountWindow.nib */; };
+		341548CB0A92D6D30087EB98 /* SRRemoveShortcut.tif in Resources */ = {isa = PBXBuildFile; fileRef = 341548C70A92D6D20087EB98 /* SRRemoveShortcut.tif */; };
+		341548CC0A92D6D30087EB98 /* SRRemoveShortcutPressed.tif in Resources */ = {isa = PBXBuildFile; fileRef = 341548C80A92D6D20087EB98 /* SRRemoveShortcutPressed.tif */; };
+		341548CD0A92D6D30087EB98 /* SRRemoveShortcutRollover.tif in Resources */ = {isa = PBXBuildFile; fileRef = 341548C90A92D6D20087EB98 /* SRRemoveShortcutRollover.tif */; };
+		341548CE0A92D6D30087EB98 /* SRSnapback.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 341548CA0A92D6D30087EB98 /* SRSnapback.tiff */; };
 		341591E405463DA800291275 /* SQL_Logger_Prefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341591E105463DA800291275 /* SQL_Logger_Prefs.nib */; };
 		3415F83B0A43A5B600B093B7 /* aim.png in Resources */ = {isa = PBXBuildFile; fileRef = 3415F83A0A43A5B600B093B7 /* aim.png */; };
 		34167FED081D706300E35678 /* DualWindowMessageAdvanced.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34167FEC081D706200E35678 /* DualWindowMessageAdvanced.nib */; };
@@ -200,10 +204,6 @@
 		342B785409C67F4100DB7AAF /* AITranslatorOptionsWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 342B77B309C678B700DB7AAF /* AITranslatorOptionsWindowController.h */; };
 		342B785509C67F4100DB7AAF /* AITranslatorOptionsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342B77B409C678B700DB7AAF /* AITranslatorOptionsWindowController.m */; };
 		342C2FB4082C16FC00A50DC2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
-		342F88A90A2A74BF0001DB29 /* Snapback.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 342F88A50A2A74BF0001DB29 /* Snapback.tiff */; };
-		342F88AA0A2A74BF0001DB29 /* RemoveShortcutRollover.tif in Resources */ = {isa = PBXBuildFile; fileRef = 342F88A60A2A74BF0001DB29 /* RemoveShortcutRollover.tif */; };
-		342F88AB0A2A74BF0001DB29 /* RemoveShortcut.tif in Resources */ = {isa = PBXBuildFile; fileRef = 342F88A70A2A74BF0001DB29 /* RemoveShortcut.tif */; };
-		342F88AC0A2A74BF0001DB29 /* RemoveShortcutPressed.tif in Resources */ = {isa = PBXBuildFile; fileRef = 342F88A80A2A74BF0001DB29 /* RemoveShortcutPressed.tif */; };
 		342F88BC0A2A74D50001DB29 /* SRKeyCodeTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 342F88B00A2A74D30001DB29 /* SRKeyCodeTransformer.m */; };
 		342F88BD0A2A74D50001DB29 /* SRValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 342F88B10A2A74D40001DB29 /* SRValidator.m */; };
 		342F88C00A2A74D50001DB29 /* SRRecorderControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 342F88B40A2A74D40001DB29 /* SRRecorderControl.m */; };
@@ -1820,6 +1820,10 @@
 		34107B5509E992DA001CC042 /* GuestAccountWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = GuestAccountWindow.nib; path = Resources/GuestAccountWindow.nib; sourceTree = "<group>"; };
 		34111A5D06BE1B370005AF5C /* ESObjectWithStatus.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESObjectWithStatus.h; path = "Frameworks/Adium Framework/Source/ESObjectWithStatus.h"; sourceTree = "<group>"; };
 		34111A5E06BE1B370005AF5C /* ESObjectWithStatus.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESObjectWithStatus.m; path = "Frameworks/Adium Framework/Source/ESObjectWithStatus.m"; sourceTree = "<group>"; };
+		341548C70A92D6D20087EB98 /* SRRemoveShortcut.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = SRRemoveShortcut.tif; path = Frameworks/ShortcutRecorder/Images/SRRemoveShortcut.tif; sourceTree = "<group>"; };
+		341548C80A92D6D20087EB98 /* SRRemoveShortcutPressed.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = SRRemoveShortcutPressed.tif; path = Frameworks/ShortcutRecorder/Images/SRRemoveShortcutPressed.tif; sourceTree = "<group>"; };
+		341548C90A92D6D20087EB98 /* SRRemoveShortcutRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = SRRemoveShortcutRollover.tif; path = Frameworks/ShortcutRecorder/Images/SRRemoveShortcutRollover.tif; sourceTree = "<group>"; };
+		341548CA0A92D6D30087EB98 /* SRSnapback.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = SRSnapback.tiff; path = Frameworks/ShortcutRecorder/Images/SRSnapback.tiff; sourceTree = "<group>"; };
 		341591E105463DA800291275 /* SQL_Logger_Prefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = SQL_Logger_Prefs.nib; sourceTree = "<group>"; };
 		3415F83A0A43A5B600B093B7 /* aim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = aim.png; path = "Plugins/joscar Service/aim.png"; sourceTree = "<group>"; };
 		34167FE5081D700B00E35678 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
@@ -2030,10 +2034,6 @@
 		342DC5C005783DE7000E1D83 /* ESSendMessageContactAlertPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESSendMessageContactAlertPlugin.h; path = "Plugins/Send Message Contact Alert/ESSendMessageContactAlertPlugin.h"; sourceTree = "<group>"; };
 		342DC7FE05784463000E1D83 /* SendMessageContactAlert.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = SendMessageContactAlert.nib; path = "Plugins/Send Message Contact Alert/SendMessageContactAlert.nib"; sourceTree = "<group>"; };
 		342E2B1A072976060054D77A /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
-		342F88A50A2A74BF0001DB29 /* Snapback.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Snapback.tiff; path = Frameworks/ShortcutRecorder/Images/Snapback.tiff; sourceTree = "<group>"; };
-		342F88A60A2A74BF0001DB29 /* RemoveShortcutRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = RemoveShortcutRollover.tif; path = Frameworks/ShortcutRecorder/Images/RemoveShortcutRollover.tif; sourceTree = "<group>"; };
-		342F88A70A2A74BF0001DB29 /* RemoveShortcut.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = RemoveShortcut.tif; path = Frameworks/ShortcutRecorder/Images/RemoveShortcut.tif; sourceTree = "<group>"; };
-		342F88A80A2A74BF0001DB29 /* RemoveShortcutPressed.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = RemoveShortcutPressed.tif; path = Frameworks/ShortcutRecorder/Images/RemoveShortcutPressed.tif; sourceTree = "<group>"; };
 		342F88B00A2A74D30001DB29 /* SRKeyCodeTransformer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SRKeyCodeTransformer.m; path = Frameworks/ShortcutRecorder/Source/SRKeyCodeTransformer.m; sourceTree = "<group>"; };
 		342F88B10A2A74D40001DB29 /* SRValidator.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SRValidator.m; path = Frameworks/ShortcutRecorder/Source/SRValidator.m; sourceTree = "<group>"; };
 		342F88B20A2A74D40001DB29 /* SRValidator.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SRValidator.h; path = Frameworks/ShortcutRecorder/Source/SRValidator.h; sourceTree = "<group>"; };
@@ -6410,10 +6410,10 @@
 		83C52C7309E73CE200ED2F90 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				342F88A50A2A74BF0001DB29 /* Snapback.tiff */,
-				342F88A60A2A74BF0001DB29 /* RemoveShortcutRollover.tif */,
-				342F88A70A2A74BF0001DB29 /* RemoveShortcut.tif */,
-				342F88A80A2A74BF0001DB29 /* RemoveShortcutPressed.tif */,
+				341548C70A92D6D20087EB98 /* SRRemoveShortcut.tif */,
+				341548C80A92D6D20087EB98 /* SRRemoveShortcutPressed.tif */,
+				341548C90A92D6D20087EB98 /* SRRemoveShortcutRollover.tif */,
+				341548CA0A92D6D30087EB98 /* SRSnapback.tiff */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -8233,10 +8233,6 @@
 				34107B5609E992DA001CC042 /* GuestAccountWindow.nib in Resources */,
 				34B9C7900A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib in Resources */,
 				34B9C7920A255DCE00CEA8AE /* LogViewerDateFilter.nib in Resources */,
-				342F88A90A2A74BF0001DB29 /* Snapback.tiff in Resources */,
-				342F88AA0A2A74BF0001DB29 /* RemoveShortcutRollover.tif in Resources */,
-				342F88AB0A2A74BF0001DB29 /* RemoveShortcut.tif in Resources */,
-				342F88AC0A2A74BF0001DB29 /* RemoveShortcutPressed.tif in Resources */,
 				3456232F0A37723400E7FC97 /* LogViewer.nib in Resources */,
 				345623380A3773C300E7FC97 /* LoggingDefaults.plist in Resources */,
 				34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */,
@@ -8283,6 +8279,10 @@
 				3419DE810A81042F00C3FC68 /* togglegroups_transparent.png in Resources */,
 				3419DE820A81042F00C3FC68 /* ToolbarPrefs.plist in Resources */,
 				34DC13050A81417700D710F3 /* LoginSelect.nib in Resources */,
+				341548CB0A92D6D30087EB98 /* SRRemoveShortcut.tif in Resources */,
+				341548CC0A92D6D30087EB98 /* SRRemoveShortcutPressed.tif in Resources */,
+				341548CD0A92D6D30087EB98 /* SRRemoveShortcutRollover.tif in Resources */,
+				341548CE0A92D6D30087EB98 /* SRSnapback.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
