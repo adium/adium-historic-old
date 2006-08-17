@@ -30,7 +30,7 @@
 
 - (NSString *)UIDPlaceholder
 {
-	return AILocalizedString(@"username@livejournal.com","Sample name and server for new livejournal accounts");
+	return AILocalizedString(@"username","Sample name for new livejournal accounts");
 }
 
 - (NSString *)serviceCodeUniqueID {

@@ -30,7 +30,7 @@
 
 - (NSString *)UIDPlaceholder
 {
-	return AILocalizedString(@"username@gtalk.com","Sample name and server for new gmail accounts");
+	return AILocalizedString(@"username","Sample name for new gmail accounts");
 }
 
 - (NSString *)serviceCodeUniqueID {

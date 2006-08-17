@@ -21,6 +21,7 @@
 #import <Carbon/Carbon.h>
 
 #import "ESFileTransferController.h"
+#import "AIJavaController.h"
 #import "RAFjoscarLogHandler.h"
 
 //#define JOSCAR_LOG_WARNING
@@ -33,6 +34,8 @@
 
 //Determined experimentally -- may not be the exact value
 #define MAX_AVAILABLE_MESSAGE_LENGTH	58
+
+static JavaClassLoader *classLoader = nil;
 
 static NDRunLoopMessenger	*mainThreadMessenger = nil;
 
@@ -687,7 +690,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 							   [iterator hasNext] && (attachment = (Attachment *)[iterator next])) {
 							if ([identifier isEqualToString:[attachment getId]]) {
 								//Found the right attachment
-								if ([attachment isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.dim.FileAttachment")]) {
+								if ([attachment isKindOfClass:(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.icbm.dim.FileAttachment"]]) {
 									//If it's already on disk, get the path
 									imagePath = [[(FileAttachment *)attachment getFile] getCanonicalPath];
 								} else {					
@@ -731,7 +734,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	//Trim NULLs from the message. Some AIM clients apparently send us messages with a trailing NULL.
 	messageBody = [messageBody stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithRange:NSMakeRange(0, 1)]];
 
-	if ([message isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.DirectMessage")]) {
+	if ([message isKindOfClass:(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.icbm.DirectMessage"]]) {
 			[accountProxy chatWithUID:UID
 				receivedDirectMessage:messageBody
 						  isAutoreply:isAutoResponse
@@ -818,7 +821,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 	AILog(@"got other event: %@ - %@",eventInfo, NSStringFromClass([eventInfo class]));
 
-	if ([eventInfo isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ImSendFailedEvent")]) {
+	if ([eventInfo isKindOfClass:(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.icbm.ImSendFailedEvent"]]) {
 		AILog(@"%@: error %i",eventInfo,[(ImSendFailedEvent *)eventInfo getErrorCode]);
 		AIChatErrorType errorType;
 
@@ -1033,7 +1036,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 		fileTransferStatus = In_Progress_FileTransfer;
 
-		if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.TransferringFileEvent")]) {
+		if ([ftEvent isKindOfClass:(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.TransferringFileEvent"]]) {
 			//		TransferredFileInfo		*fileInfo = [fileEvent getFileInfo];
 			ProgressStatusProvider	*progressStatusProvider = [(TransferringFileEvent *)ftEvent getProgressProvider];
 			
@@ -1055,10 +1058,10 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		RvConnectionEvent *ftEvent = [userInfo get:@"RvConnectionEvent"];
 		AILog(@"Failed event was %@",ftEvent);
 
-		if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.BuddyCancelledEvent")]) {
+		if ([ftEvent isKindOfClass:(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.BuddyCancelledEvent"]]) {
 			fileTransferStatus = Cancelled_Remote_FileTransfer;
 
-		} else if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.LocallyCancelledEvent")]) {
+		} else if ([ftEvent isKindOfClass:(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.LocallyCancelledEvent"]]) {
 			fileTransferStatus = Cancelled_Local_FileTransfer;
 
 		} else {
@@ -1152,8 +1155,8 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	while ([iterator hasNext] && (group = (Group *)[iterator next])) {
 		//Can be a MutableGroup or an SsiBuddyGroup (a subclass of MutableGroup) for us to add
 		if ([[group getName] isEqualToString:groupName]) {
-			if ([group isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.ssi.SsiBuddyGroup")] ||
-				[group isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.ssi.MutableGroup")]) {
+			if ([group isKindOfClass:(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.ssi.SsiBuddyGroup"]] ||
+				[group isKindOfClass:(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.ssi.MutableGroup"]]) {
 				targetGroup = (MutableGroup *)group;
 				break;
 
@@ -1219,8 +1222,8 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	//Look at every group
 	while ([iterator hasNext] && (group = (Group *)[iterator next])) {
 		//Can be a MutableGroup or an SsiBuddyGroup (a subclass of MutableGroup) for us to delete
-		if ([group isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.ssi.SsiBuddyGroup")] ||
-			[group isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.ssi.MutableGroup")]) {
+		if ([group isKindOfClass:(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.ssi.SsiBuddyGroup"]] ||
+			[group isKindOfClass:(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.ssi.MutableGroup"]]) {
 			id<Iterator>		iterator = [[group getBuddiesCopy] iterator];
 			Buddy				*buddy;
 			
@@ -1370,8 +1373,8 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		
 		while ([groupIterator hasNext] && (buddy = (Buddy *)[groupIterator next])) {
 			if ([[[buddy getScreenname] getNormal] isEqualToString:buddyName]) {
-				if ([buddy isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.ssi.SsiBuddy")] ||
-					[buddy isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.ssi.MutableBuddy")]) {
+				if ([buddy isKindOfClass:(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.ssi.SsiBuddy"]] ||
+					[buddy isKindOfClass:(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.ssi.MutableBuddy"]]) {
 					targetBuddy = (MutableBuddy *)buddy;
 					break;					
 				} else {
@@ -1625,15 +1628,10 @@ Date* javaDateFromDate(NSDate *date)
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	@synchronized(self) {
-		//Only one vm is needed for all accounts
-		static	NSJavaVirtualMachine	*vm = nil;
-		static BOOL		attachedVmToMainRunLoop = NO;
-		BOOL			onMainRunLoop = (CFRunLoopGetCurrent() == CFRunLoopGetMain());
-
-		if (!vm) {
+        if(!classLoader)
+        {
 			NSString	*oscarJarPath, *joscarJarPath, *joscarBridgePath, *retroweaverJarPath, *socksJarPath;
-			NSString	*classPath;
-
+            
 			oscarJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:OSCAR_JAR
 																			ofType:@"jar"
 																	   inDirectory:@"Java"];
@@ -1649,45 +1647,25 @@ Date* javaDateFromDate(NSDate *date)
 			socksJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:SOCKS_JAR
 																			ofType:@"jar"
 																	   inDirectory:@"Java"];
-			
-			classPath = [NSString stringWithFormat:@"%@:%@:%@:%@:%@:%@",
-				[NSJavaVirtualMachine defaultClassPath],
-				retroweaverJarPath, socksJarPath, oscarJarPath, joscarJarPath, joscarBridgePath];
-			
-			vm = [[NSJavaVirtualMachine alloc] initWithClassPath:classPath];
-			
-			AILog(@"-[%@ prepareJavaVM]: Java %@ ; joscar %@. Using classPath: %@",
-				  self,
-				  [NSClassFromString(@"java.lang.System") getProperty:@"java.version"],
-				  [NSClassFromString(@"net.kano.joscar.JoscarTools") getVersionString],
-				  classPath);
-			
-			if (onMainRunLoop) {
-				attachedVmToMainRunLoop = YES;
-			}
+            
+            classLoader = [[adium javaController] classLoaderWithJARs:[NSArray arrayWithObjects:
+                oscarJarPath, joscarJarPath, joscarBridgePath, retroweaverJarPath, socksJarPath, nil]];
 
-		} else {
-			if  (!attachedVmToMainRunLoop && onMainRunLoop) {
-				[vm attachCurrentThread];
-				attachedVmToMainRunLoop = YES;
-			}
-		}
-
-		if (onMainRunLoop &&
-			!NSClassFromString(@"net.kano.joscar.JoscarTools")) {
-			NSMutableString	*msg = [NSMutableString string];
-			
-			[msg appendFormat:@"Java version %@ could not load JoscarTools\n",[NSClassFromString(@"java.lang.System") getProperty:@"java.version"]];
-			[msg appendFormat:@"Retroweaver-rt.jar %@\n", ((NSClassFromString(@"com.rc.retroweaver.runtime.ClassLiteral") != NULL) ? @"loaded" : @"NOT loaded")];
-			[msg appendFormat:@"jsocks-klea.jar %@\n", ((NSClassFromString(@"socks.Proxy") != NULL) ? @"loaded" : @"NOT loaded")];
-			[msg appendFormat:@"joscar bridge.jar %@\n", ((NSClassFromString(@"net.adium.joscarBridge.joscarBridge") != NULL) ? @"loaded" : @"NOT loaded")];
-			[msg appendFormat:@"oscar.jar %@\n", ((NSClassFromString(@"net.kano.joustsim.Screenname") != NULL) ? @"loaded" : @"NOT loaded")];
-			[msg appendFormat:@"joscar-0.9.4-cvs-bin.jar %@\n", ((NSClassFromString(@"net.kano.joscar.JoscarTools") != NULL) ? @"loaded" : @"NOT loaded")];
-
-			NSRunCriticalAlertPanel(@"Fatal Java error",
-									msg,
-									nil,nil,nil);
-		}
+            if (![classLoader loadClass:@"net.kano.joscar.JoscarTools"]) {
+                NSMutableString	*msg = [NSMutableString string];
+                
+                [msg appendFormat:@"Java version %@ could not load JoscarTools\n",[(id)[classLoader loadClass:@"java.lang.System"] getProperty:@"java.version"]];
+                [msg appendFormat:@"Retroweaver-rt.jar %@\n", (((id)[classLoader loadClass:@"com.rc.retroweaver.runtime.ClassLiteral"] != NULL) ? @"loaded" : @"NOT loaded")];
+                [msg appendFormat:@"jsocks-klea.jar %@\n", (((id)[classLoader loadClass:@"socks.Proxy"] != NULL) ? @"loaded" : @"NOT loaded")];
+                [msg appendFormat:@"joscar bridge.jar %@\n", (((id)[classLoader loadClass:@"net.adium.joscarBridge.joscarBridge"] != NULL) ? @"loaded" : @"NOT loaded")];
+                [msg appendFormat:@"oscar.jar %@\n", (((id)[classLoader loadClass:@"net.kano.joustsim.Screenname"] != NULL) ? @"loaded" : @"NOT loaded")];
+                [msg appendFormat:@"joscar-0.9.4-cvs-bin.jar %@\n", (((id)[classLoader loadClass:@"net.kano.joscar.JoscarTools"] != NULL) ? @"loaded" : @"NOT loaded")];
+                
+                NSRunCriticalAlertPanel(@"Fatal Java error",
+                                        msg,
+                                        nil,nil,nil);
+            }
+        }
 		
 #ifdef DEBUG_BUILD
 		[[NSNotificationCenter defaultCenter] performSelector:@selector(postNotificationName:object:)
