@@ -11,15 +11,29 @@
 
 @implementation SmackGoogleAccountViewController
 
-+ (AIAccountViewController*)accountViewController {
++ (AIAccountViewController*)accountViewController
+{
     static SmackGoogleAccountViewController *avc = nil;
     if(!avc)
         avc = [[self alloc] init];
     return avc;
 }
 
-- (NSString*)nibName {
+- (NSString*)nibName
+{
     return @"SmackGoogleAccountView";
+}
+
+- (void)configureForAccount:(AIAccount *)inAccount
+{
+    if(account != inAccount) {
+        [super configureForAccount:inAccount];
+
+        NSString *username = [[account formattedUID] jidUsername];
+
+        // the user name field shouldn't contain @gmail.com
+        [textField_accountUID setStringValue:username?username:@""];
+    }
 }
 
 @end

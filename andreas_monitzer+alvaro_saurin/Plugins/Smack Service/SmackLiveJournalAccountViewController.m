@@ -22,4 +22,16 @@
     return @"SmackLiveJournalAccountView";
 }
 
+- (void)configureForAccount:(AIAccount *)inAccount
+{
+    if(account != inAccount) {
+        [super configureForAccount:inAccount];
+        
+        NSString *username = [[account formattedUID] jidUsername];
+        
+        // the user name field shouldn't contain @gmail.com
+        [textField_accountUID setStringValue:username?username:@""];
+    }
+}
+
 @end

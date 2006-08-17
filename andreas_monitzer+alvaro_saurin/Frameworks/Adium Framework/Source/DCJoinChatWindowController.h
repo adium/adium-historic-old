@@ -32,7 +32,7 @@
 	AIAccountMenu 					*accountMenu;
 }
 
-+ (void)joinChatWindow;
++ (DCJoinChatWindowController *)joinChatWindow;
 
 - (void)configureForAccount:(AIAccount *)inAccount;
 - (IBAction)joinChat:(id)sender;
