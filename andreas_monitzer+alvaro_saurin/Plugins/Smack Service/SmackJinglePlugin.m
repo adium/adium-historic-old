@@ -19,6 +19,9 @@
 
 #import "AIVideoConf.h"
 
+#define	DISCO_JINGLE_ID			@"http://jabber.org/protocol/jingle"
+#define	DISCO_JINGLE_AUDIO_ID	@"http://jabber.org/protocol/jingle/audio"
+
 @interface SmackJingleListener : NSObject {
 }
 
@@ -54,6 +57,7 @@
 
 - (void)dealloc
 {
+	[self removeDiscoInfo];
     [listener release];
     [super dealloc];
 }
@@ -61,12 +65,42 @@
 - (void)connected:(SmackXMPPConnection*)connection
 {
     listener = [[SmackCocoaAdapter createJingleListenerForConnection:[account connection] delegate:self] retain];
+	[self addDiscoInfo];
 }
 
 - (void)disconnected:(SmackXMPPConnection*)connection
 {
     [listener release];
     listener = nil;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark                 Discovery Information
+////////////////////////////////////////////////////////////////////////////////
+/*!
+ * @brief Add the disco features for Jingle
+ */
+- (void) addDiscoInfo
+{
+	SmackXServiceDiscoveryManager *sdm;
+	
+	sdm = [SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]];
+
+    if(![sdm includesFeature:DISCO_JINGLE_ID])
+        [sdm addFeature:DISCO_JINGLE_ID];
+	
+    if(![sdm includesFeature:DISCO_JINGLE_AUDIO_ID])
+        [sdm addFeature:DISCO_JINGLE_AUDIO_ID];	
+}
+
+/*!
+ * @brief Remove the disco features for Jingle
+ */
+- (void) removeDiscoInfo
+{
+	[[SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]] removeFeature:DISCO_JINGLE_ID];
+	[[SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]] removeFeature:DISCO_JINGLE_AUDIO_ID];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -153,7 +187,7 @@
 										userInfo:request];
 
 	// Send a message saying that this is "ringing"
-	[[listener getManager] sendContentInfo:[SmackXContentInfoAudio fromString:@"ringing"]];
+	//[[listener getManager] sendContentInfo:[SmackXContentInfoAudio fromString:@"ringing"]];
 }
 
 
@@ -187,6 +221,11 @@
     }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark                     Menu Management
+////////////////////////////////////////////////////////////////////////////////
+
 // add a menu item to the contact's context menu, so an outgoing session can be established
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact {
     SmackXDiscoverInfo *info = [inContact statusObjectForKey:@"XMPP:disco#info"];
@@ -196,6 +235,8 @@
     if(![info containsFeature:@"http://jabber.org/protocol/jingle"])
         return nil; // jingle not supported
     
+	NSLog (@"User supports Jingle.");
+	
     NSMutableArray *menuItems = [NSMutableArray array];
     
     NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Invite to Audio Chat","Invite to Audio Chat (Jingle)")
