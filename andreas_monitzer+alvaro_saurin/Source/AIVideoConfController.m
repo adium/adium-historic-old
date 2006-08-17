@@ -102,15 +102,14 @@
  */
 - (NSDictionary*) providersForProtocol:(VCProtocol)protocol
 {
-	NSMutableDictionary	*providers		= [NSMutableDictionary dictionary];	
+	NSMutableDictionary	*providersSet	= [NSMutableDictionary dictionary];	
 	NSDictionary		*availableProviders;
-	NSString			*protocolKey	= [NSNumber numberWithInt:protocol];
 	
-	if ((availableProviders = [toolbarItems objectForKey:protocolKey])) {
-		[providers addEntriesFromDictionary:availableProviders];
+	if ((availableProviders = [providers objectForKey:[NSNumber numberWithInt:protocol]])) {
+		[providersSet addEntriesFromDictionary:availableProviders];
 	}
 	
-	return providers;
+	return providersSet;
 }
 
 
