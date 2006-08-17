@@ -492,7 +492,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			//Escape special HTML characters.
 			fullRange = NSMakeRange(0, [chunk length]);
-			
+
 			replacements = [chunk replaceOccurrencesOfString:@"&" withString:@"&amp;"
 													 options:NSLiteralSearch range:fullRange];
 			fullRange.length += (replacements * 4);
@@ -1703,10 +1703,11 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		if (attachmentImage) {
 			//Include size information if possible
 			NSSize imageSize = [attachmentImage size];
-
+			AILog(@"AIHTMLDecoder: appending <img class=\"%@\" src=\"%@\" alt=\"%@\" width=\"%i\" height=\"%i\">", imageClass, srcPath, altName, (int)imageSize.width, (int)imageSize.height);
 			[string appendFormat:@"<img class=\"%@\" src=\"%@\" alt=\"%@\" width=\"%i\" height=\"%i\">", imageClass, srcPath, altName, (int)imageSize.width, (int)imageSize.height];
 
 		} else {
+			AILog(@"AIHTMLDecoder: appending <img class=\"%@\" src=\"%@\" alt=\"%@\">", imageClass, srcPath, altName);
 			[string appendFormat:@"<img class=\"%@\" src=\"%@\" alt=\"%@\">", imageClass, srcPath, altName];
 		}
 	}
