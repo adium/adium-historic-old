@@ -1284,6 +1284,7 @@
 		815ED1B50A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib in Resources */ = {isa = PBXBuildFile; fileRef = 815ED1B30A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib */; };
 		815ED2920A6C5AA00024B6FE /* SmackXMPPMUCChangeSubject.nib in Resources */ = {isa = PBXBuildFile; fileRef = 815ED2900A6C5A9F0024B6FE /* SmackXMPPMUCChangeSubject.nib */; };
 		815ED31E0A6C637E0024B6FE /* SmackXMPPGatewayInteractionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 815ED31C0A6C637D0024B6FE /* SmackXMPPGatewayInteractionPlugin.m */; };
+		8191AB1B0A94EAEE00A5A404 /* AIJavaControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */; };
 		81AB120C0A8B5F6100E32420 /* SmackJinglePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81AB120A0A8B5F6100E32420 /* SmackJinglePlugin.m */; };
 		81AB120E0A8B5F8A00E32420 /* JingleListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 81AB120D0A8B5F8A00E32420 /* JingleListener.java */; };
 		81B4CA200A416C3B00A8ABF5 /* SmackBridge.java in Sources */ = {isa = PBXBuildFile; fileRef = 81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */; };
@@ -3756,6 +3757,7 @@
 		815ED2910A6C5A9F0024B6FE /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPMUCChangeSubject.nib"; sourceTree = "<group>"; };
 		815ED31B0A6C637D0024B6FE /* SmackXMPPGatewayInteractionPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPGatewayInteractionPlugin.h; path = "Plugins/Smack Service/SmackXMPPGatewayInteractionPlugin.h"; sourceTree = "<group>"; };
 		815ED31C0A6C637D0024B6FE /* SmackXMPPGatewayInteractionPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPGatewayInteractionPlugin.m; path = "Plugins/Smack Service/SmackXMPPGatewayInteractionPlugin.m"; sourceTree = "<group>"; };
+		8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIJavaControllerProtocol.h; path = Source/AIJavaControllerProtocol.h; sourceTree = "<group>"; };
 		81AB12090A8B5F6100E32420 /* SmackJinglePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackJinglePlugin.h; path = "Plugins/Smack Service/SmackJinglePlugin.h"; sourceTree = "<group>"; };
 		81AB120A0A8B5F6100E32420 /* SmackJinglePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackJinglePlugin.m; path = "Plugins/Smack Service/SmackJinglePlugin.m"; sourceTree = "<group>"; };
 		81AB120D0A8B5F8A00E32420 /* JingleListener.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = JingleListener.java; path = "Plugins/Smack Service/JingleListener.java"; sourceTree = "<group>"; };
@@ -6298,6 +6300,9 @@
 				340D0EA90A7E826C0059A3AF /* AIStatusControllerProtocol.h */,
 				340D0EAF0A7E82F70059A3AF /* AIToolbarControllerProtocol.h */,
 				340D0EC20A7E84680059A3AF /* AIDebugControllerProtocol.h */,
+				8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */,
+				F53B9A1302CCEDCA01A8010A /* Adium.Framework */,
+				34D8342B07CBE6A4006466F2 /* External Sources */,
 				81F9D0820A7E905B004A35BD /* AIJavaController.h */,
 				81F9D0830A7E905B004A35BD /* AIJavaController.m */,
 				387226C40A8B7C83002CC4F4 /* AIVideoConfController.h */,
@@ -7978,6 +7983,7 @@
 				3419E2F90A8145B800C3FC68 /* GBFireLogImporter.h in Headers */,
 				81F9D0840A7E905B004A35BD /* AIJavaController.h in Headers */,
 				387226C80A8B7C84002CC4F4 /* AIVideoConfController.h in Headers */,
+				8191AB1B0A94EAEE00A5A404 /* AIJavaControllerProtocol.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -149,7 +149,7 @@ static NSString	*prefsCategory;
 - (NSObject <AIStatusController> *)statusController{
     return statusController;
 }
-- (AIJavaController *)javaController{
+- (NSObject <AIJavaController> *)javaController{
     return javaController;
 }
 - (AIVCController *)vcController{
