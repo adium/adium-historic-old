@@ -10,9 +10,6 @@
 //      David Dauer
 //      Jesper
 //      Jamie Kirkpatrick
-//
-//  Revisions: 
-//      2006-03-12 Created.
 
 #import "SRRecorderControl.h"
 #import "SRCommon.h"
@@ -81,9 +78,18 @@
 	return YES;
 }
 
-- (BOOL)resignFirstResponder;
+- (BOOL) becomeFirstResponder 
 {
-    return [SRCell resignFirstResponder];
+    BOOL okToChange = [SRCell becomeFirstResponder];
+    if (okToChange) [super setKeyboardFocusRingNeedsDisplayInRect:[self bounds]];
+    return okToChange;
+}
+
+- (BOOL) resignFirstResponder 
+{
+    BOOL okToChange = [SRCell resignFirstResponder];
+    if (okToChange ) [super setKeyboardFocusRingNeedsDisplayInRect:[self bounds]];
+    return okToChange;
 }
 
 #pragma mark *** Interface Stuff ***
@@ -140,7 +146,10 @@
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-	[self performKeyEquivalent: theEvent];
+	if ( [SRCell performKeyEquivalent: theEvent] )
+        return;
+    
+    [super keyDown:theEvent];
 }
 
 #pragma mark *** Key Combination Control ***
