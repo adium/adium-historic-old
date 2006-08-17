@@ -6298,12 +6298,12 @@
 				340D0EA90A7E826C0059A3AF /* AIStatusControllerProtocol.h */,
 				340D0EAF0A7E82F70059A3AF /* AIToolbarControllerProtocol.h */,
 				340D0EC20A7E84680059A3AF /* AIDebugControllerProtocol.h */,
-				F53B9A1302CCEDCA01A8010A /* Adium.Framework */,
-				34D8342B07CBE6A4006466F2 /* External Sources */,
 				81F9D0820A7E905B004A35BD /* AIJavaController.h */,
 				81F9D0830A7E905B004A35BD /* AIJavaController.m */,
 				387226C40A8B7C83002CC4F4 /* AIVideoConfController.h */,
 				387226C50A8B7C84002CC4F4 /* AIVideoConfController.m */,
+				F53B9A1302CCEDCA01A8010A /* Adium.Framework */,
+				34D8342B07CBE6A4006466F2 /* External Sources */,
 			);
 			name = "Public Interface";
 			sourceTree = "<group>";
