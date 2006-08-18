@@ -9,14 +9,17 @@ __Implemented__
 * Offers a menu item to quit SMD.
 * Change the menu items icon to the evil duck when there is unviewed content
 * Menu option to quit Adium from the SMD
-* There is a menu item to launch Adium (if it isn't running). It however doesn't necessarily run the right version of Adium ...
+* There is a menu item to launch Adium (if it isn't running). It however doesn't necessarily run the right version of Adium should multiple versions exist ...
 
 __To Do__
+* Load status menus - PARTIAL but doesn't work
+-
 * Load the correct icon for the users status (Plugin broadcasts status? Custom object vended via DO. Notification when contents of object change so that SMD knows to reload?!?)
----
-* Load account & status menus
-* Initiate/activate chats
+* Load account menus
+* Activate chats
+* Bring Adium to front
 * Connect/disconnect accounts
+
 * Add SMD as a startup item
 
 __Bugs__
