@@ -1037,6 +1037,7 @@
 		34F46785080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46783080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m */; };
 		34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F849520A4AEFA00002A017 /* LogFileUpgrade.nib */; };
 		34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */; };
+		38399DCB0A95C9CF006C8EB1 /* AIVideoConfControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */; };
 		387226C80A8B7C84002CC4F4 /* AIVideoConfController.h in Headers */ = {isa = PBXBuildFile; fileRef = 387226C40A8B7C83002CC4F4 /* AIVideoConfController.h */; };
 		387226C90A8B7C84002CC4F4 /* AIVideoConfController.m in Sources */ = {isa = PBXBuildFile; fileRef = 387226C50A8B7C84002CC4F4 /* AIVideoConfController.m */; };
 		3872285E0A8BFCA4002CC4F4 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D836F307CBF960006466F2 /* QuickTime.framework */; };
@@ -3324,6 +3325,7 @@
 		34FD5BEB07F1F92900687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Resources/Italian.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferController.h; path = Source/ESFileTransferController.h; sourceTree = "<group>"; };
 		34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferController.m; path = Source/ESFileTransferController.m; sourceTree = "<group>"; };
+		383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVideoConfControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIVideoConfControllerProtocol.h"; sourceTree = "<group>"; };
 		387226C40A8B7C83002CC4F4 /* AIVideoConfController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVideoConfController.h; path = Source/AIVideoConfController.h; sourceTree = "<group>"; };
 		387226C50A8B7C84002CC4F4 /* AIVideoConfController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIVideoConfController.m; path = Source/AIVideoConfController.m; sourceTree = "<group>"; };
 		38722C8C0A8CFFA5002CC4F4 /* AIVideoConf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVideoConf.h; path = "Frameworks/Adium Framework/Source/AIVideoConf.h"; sourceTree = "<group>"; };
@@ -5535,6 +5537,7 @@
 				4BCAC53407B59F9C006641B9 /* Other */,
 				4BC291F9083D9EDC0075F57D /* Private classes for the Controllers */,
 				34E6BBE50A78083A0076D7F0 /* Resources */,
+				3839845D0A94F2FD006C8EB1 /* VideoConf */,
 			);
 			name = "Adium UI and Components";
 			sourceTree = "<group>";
@@ -5776,6 +5779,15 @@
 				34BFD7FC07E6A50C00AD984D /* scriptToolbar.png */,
 			);
 			name = "Applescript Filters";
+			sourceTree = "<group>";
+		};
+		3839845D0A94F2FD006C8EB1 /* VideoConf */ = {
+			isa = PBXGroup;
+			children = (
+				387226C40A8B7C83002CC4F4 /* AIVideoConfController.h */,
+				387226C50A8B7C84002CC4F4 /* AIVideoConfController.m */,
+			);
+			name = VideoConf;
 			sourceTree = "<group>";
 		};
 		38722DB00A9091F4002CC4F4 /* VideoConf */ = {
@@ -6301,12 +6313,9 @@
 				340D0EAF0A7E82F70059A3AF /* AIToolbarControllerProtocol.h */,
 				340D0EC20A7E84680059A3AF /* AIDebugControllerProtocol.h */,
 				8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */,
+				383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */,
 				F53B9A1302CCEDCA01A8010A /* Adium.Framework */,
 				34D8342B07CBE6A4006466F2 /* External Sources */,
-				81F9D0820A7E905B004A35BD /* AIJavaController.h */,
-				81F9D0830A7E905B004A35BD /* AIJavaController.m */,
-				387226C40A8B7C83002CC4F4 /* AIVideoConfController.h */,
-				387226C50A8B7C84002CC4F4 /* AIVideoConfController.m */,
 				F53B9A1302CCEDCA01A8010A /* Adium.Framework */,
 				34D8342B07CBE6A4006466F2 /* External Sources */,
 			);
@@ -6487,6 +6496,8 @@
 			children = (
 				34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */,
 				34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */,
+				81F9D0820A7E905B004A35BD /* AIJavaController.h */,
+				81F9D0830A7E905B004A35BD /* AIJavaController.m */,
 				F57938FB033E745F01A8010A /* AILoginController.h */,
 				F57938AD033E737001A8010A /* AILoginController.m */,
 				F57938ED033E745F01A8010A /* AIPreferenceController.h */,
@@ -8100,6 +8111,7 @@
 				34DC8B110A7EEEF7003E1636 /* NSString+CarbonFSRefCreation.h in Headers */,
 				34DC8B130A7EEEF7003E1636 /* SUSpeaker.h in Headers */,
 				38722DC90A9093CD002CC4F4 /* AIVideoConf.h in Headers */,
+				38399DCB0A95C9CF006C8EB1 /* AIVideoConfControllerProtocol.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
