@@ -17,8 +17,8 @@
     // [self addPlugin:...];
 }
 
-- (NSString*)UID {
-    return [NSString stringWithFormat:@"%@@livejournal.com",[super UID]];
+- (NSString*)explicitFormattedUID {
+    return [NSString stringWithFormat:@"%@@livejournal.com",[super explicitFormattedUID]];
 }
 
 @end
