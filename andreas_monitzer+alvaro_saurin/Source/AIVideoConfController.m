@@ -21,6 +21,7 @@
 #import <Adium/AIPreferencePane.h>
 
 #import "AIVideoConf.h"
+#import "AIVideoConfControllerProtocol.h"
 #import "AIVideoConfController.h"
 
 
