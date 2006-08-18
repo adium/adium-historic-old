@@ -16,6 +16,8 @@
 	NSImage							*adiumRedImage;
 	NSImage							*adiumRedHighlightImage;
 	NSDistributedNotificationCenter *notificationCenter;
+	// FIXME: we should probably have a protocol for the remote?
+	id								*statusRemote;
 }
 // FIXME: any of this private API?
 - (void)adiumStarted:(NSNotification *)note;
@@ -28,5 +30,7 @@
 - (void)unviewedContentOn:(NSNotification *)note;
 - (void)unviewedContentOff:(NSNotification *)note;
 - (void)quitAdium;
+- (void)bringAdiumToFront;
+- (void)connectToStatusVend;
 
 @end

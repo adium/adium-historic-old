@@ -72,14 +72,14 @@ int main(void)
 {
 	[[NSDistributedNotificationCenter defaultCenter] removeObserver: self];
 	[[statusItem statusBar] removeStatusItem:statusItem];
-	[statusItem dealloc];
-	[theMenu dealloc];	
-	[adiumImage dealloc];
-	[adiumHighlightImage dealloc];
-	[adiumOfflineImage dealloc];
-	[adiumOfflineHighlightImage dealloc];
-	[adiumRedImage dealloc];
-	[adiumRedHighlightImage dealloc];
+	[statusItem release];
+	[theMenu release];	
+	[adiumImage release];
+	[adiumHighlightImage release];
+	[adiumOfflineImage release];
+	[adiumOfflineHighlightImage release];
+	[adiumRedImage release];
+	[adiumRedHighlightImage release];
 	
 	[super dealloc];
 }
@@ -90,6 +90,7 @@ int main(void)
 {
 	// Redraw menu with Adium's presence data
 	[self drawOnlineMenu];
+	[self connectToStatusVend];
 }
 
 - (void)adiumClosing:(NSNotification *)note
@@ -113,7 +114,6 @@ int main(void)
 	
 	[statusItem setImage:adiumOfflineImage];
 	[statusItem setAlternateImage:adiumOfflineHighlightImage];
-	[theMenu addItem:[NSMenuItem separatorItem]];
 	
 	NSMenuItem *tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:@"Launch Adium"
 															   action:@selector(launchAdium)
@@ -132,12 +132,31 @@ int main(void)
 
 - (void)drawOnlineMenu
 {
+	NSMenuItem *tmpMenuItem;
+	
 	[self removeAllMenuItems];
 	
 	[statusItem setImage:adiumImage];
 	[statusItem setAlternateImage:adiumHighlightImage];
-	[theMenu addItem:[NSMenuItem separatorItem]];
-	NSMenuItem *tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:@"Quit Adium"
+	
+	// Status menu
+	/*if (!statusRemote)
+		[self connectToStatusVend];
+	
+	NSMutableArray	*statusMenuItems = [statusRemote statusMenuItemArray];
+	// Iterate through array and add menu items
+	NSEnumerator	*statusEnumerator = [statusMenuItems objectEnumerator];
+	while ((tmpMenuItem = [statusEnumerator nextObject])) {
+		[theMenu addItem:tmpMenuItem];
+	}
+	
+	[theMenu addItem:[NSMenuItem separatorItem]];*/
+	tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:@"Bring Adium to Front"
+															   action:@selector(bringAdiumToFront)
+														keyEquivalent:@""];
+	[tmpMenuItem setTarget:self];
+	
+	tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:@"Quit Adium"
 															   action:@selector(quitAdium)
 														keyEquivalent:@""];
 	[tmpMenuItem setTarget:self];
@@ -188,6 +207,21 @@ int main(void)
 {
 	[statusItem setImage:adiumImage];
 	[statusItem setAlternateImage:adiumHighlightImage];
+}
+
+- (void)bringAdiumToFront
+{
+	[notificationCenter postNotificationName:@"JL_BringAdiumFront" object:nil];
+}
+
+- (void)connectToStatusVend
+{
+	statusRemote = (id)[NSConnection rootProxyForConnectionWithRegisteredName:ADIUM_PRESENCE_BROADCAST
+																		  host:nil];
+	if (statusRemote == nil) {
+		// FIXME: handle this error!
+		NSLog(@"JLD: statusRemote == nil after we tried to connect...");
+	}
 }
 
 @end
