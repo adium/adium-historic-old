@@ -45,4 +45,22 @@
 	
 	return self;	
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark                      Connection Protocol
+////////////////////////////////////////////////////////////////////////////////
+- (BOOL) start
+{
+	NSAssert (FALSE, @"start() connection called in abstract QTConnection.");
+	return FALSE;
+}
+
+- (BOOL) stop
+{
+	NSAssert (FALSE, @"stopt() connection called in abstract QTConnection.");
+	return FALSE;
+}
+
+
 @end
