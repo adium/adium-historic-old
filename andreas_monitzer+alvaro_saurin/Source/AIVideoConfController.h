@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include <AIVideoConf.h>
+#import <Adium/AIObject.h>
 
-@protocol AIController;
+@protocol AIVideoConfController;
 
 /*!
  * VideoConferencing controller.
@@ -25,19 +25,8 @@
  * used by other parts of Adium. For example, we can have a plugin that implements 
  * and registers the iChat video protocol or a general RTP...
  */
-@interface AIVideoConfController : AIObject <AIController> {
-	NSMutableDictionary		*providers;			// Protocols providers
+@interface AIVideoConfController : AIObject <AIVideoConfController> {
+	NSMutableDictionary		*providers;
 }
-
-// Protocol Providers Management
-- (void) registerProtocolProvider:(id)provider forProtocol:(VCProtocol)protocol;
-- (void) unregisterProtocolProvider:(id)provider;
-
-// Payload lists
-- (NSArray*) getAudioPayloadsForProtocol:(VCProtocol)protocol;
-- (NSArray*) getVideoPayloadsForProtocol:(VCProtocol)protocol;
-
-// Connection control
-- (id) createConnectionWithProtocol:(VCProtocol)protocol payload:(VCPayload*)pt from:(VCTransport*)local to:(VCTransport*)remote;
 
 @end
