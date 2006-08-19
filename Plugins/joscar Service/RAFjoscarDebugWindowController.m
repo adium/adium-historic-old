@@ -41,9 +41,9 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 
 - (void)addedDebugMessage:(NSString *)aDebugString
 {
-	unsigned int aDebugStringLength = [aDebugString length];
-	if ([[textView_filter stringValue] length] == 0 || 
-		[aDebugString rangeOfString:[textView_filter stringValue] options:NSCaseInsensitiveSearch].location != NSNotFound) {
+	if (!currentFilterString || 
+		[aDebugString rangeOfString:currentFilterString options:NSCaseInsensitiveSearch].location != NSNotFound) {
+		unsigned int aDebugStringLength = [aDebugString length];
 
 		[mutableDebugString appendString:aDebugString];
 		
@@ -72,7 +72,8 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 
 	//We store the reference to the mutableString of the textStore for efficiency
 	mutableDebugString = [[[textView_debug textStorage] mutableString] retain];
-	
+	currentFilterString = nil;
+
 	debugParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	[debugParagraphStyle setHeadIndent:12];
 	[debugParagraphStyle setFirstLineHeadIndent:2];
@@ -142,6 +143,7 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 	[mutableDebugString release]; mutableDebugString = nil;
     [self autorelease]; sharedDebugWindowInstance = nil;
 	[debugParagraphStyle release]; debugParagraphStyle = nil;
+	[currentFilterString release]; currentFilterString = nil;
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -166,6 +168,10 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 	NSEnumerator *enumerator = [[[RAFjoscarDebugController sharedDebugController] debugLogArray] objectEnumerator];
 	NSString *filter = [textView_filter stringValue];
 	[mutableDebugString setString:@""];
+
+	[currentFilterString release];
+	currentFilterString = [filter copy];
+
 	NSString *aDebugString;
 	unsigned len =  [filter length];
 	while ((aDebugString = [enumerator nextObject])) {

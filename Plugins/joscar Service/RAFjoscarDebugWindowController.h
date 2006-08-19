@@ -14,6 +14,7 @@
 	IBOutlet	AIAutoScrollView	*scrollView_debug;
 	NSMutableString					*mutableDebugString;
 	NSMutableParagraphStyle			*debugParagraphStyle;
+	NSString						*currentFilterString;
 
 	IBOutlet	NSButton			*checkBox_logWriting;
 	IBOutlet	NSTextField			*textView_version;
