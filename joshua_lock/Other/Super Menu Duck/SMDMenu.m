@@ -1,4 +1,15 @@
 #import "SMDMenu.h"
+//#import "JLAdiumDelegate.h"
+
+#import <Adium/AIAccountMenu.h>
+#import <Adium/AIStatusMenu.h>
+#import <Adium/AIAccount.h>
+
+@class AIAdium;
+
+// An attempt to satisafy Adium.frameworks NSParameterAssert(_sharedAdium != nil);
+// I'm possibly expecting statics scope to be much wider than it is :( ... 
+static AIAdium *_sharedAdium = nil;
 
 int main(void) 
 {
@@ -12,10 +23,6 @@ int main(void)
 	
 	return EXIT_SUCCESS;
 }
-
-@interface SMDMenu (PRIVATE)
-
-@end
 
 @implementation SMDMenu
 
@@ -80,6 +87,8 @@ int main(void)
 	[adiumOfflineHighlightImage release];
 	[adiumRedImage release];
 	[adiumRedHighlightImage release];
+	//[accountMenuItemsArray release];
+	//[stateMenuItemsArray release];
 	
 	[super dealloc];
 }
@@ -89,12 +98,26 @@ int main(void)
 - (void)adiumStarted:(NSNotification *)note
 {
 	// Redraw menu with Adium's presence data
-	[self drawOnlineMenu];
+	
 	[self connectToStatusVend];
+	adium = [presenceRemote sharedAdiumInstance];
+	_sharedAdium = adium;
+	statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
+	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
+											  submenuType:AIAccountStatusSubmenu
+										   showTitleVerbs:NO] retain];
+	//adiumDelegate = [[JLAdiumDelegate adiumDelegate] retain];
+	[self drawOnlineMenu];
 }
 
 - (void)adiumClosing:(NSNotification *)note
 {
+	//[adiumDelegate release];
+	_sharedAdium = nil;
+	adium = nil;
+	presenceRemote = nil;
+	[accountMenu release];
+	[statusMenu release];
 	// Draw our default offline menu
 	[self drawOfflineMenu];
 }
@@ -102,6 +125,36 @@ int main(void)
 #pragma mark Menu Delegates
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem 
+{
+	return YES;
+}
+
+#pragma mark Account Menu
+
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems
+{
+	[accountMenuItemsArray release];
+	accountMenuItemsArray = [menuItems retain];
+	
+	// FIXME: trigger update next time we're clicked
+}
+
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount
+{
+	[inAccount toggleOnline];
+}
+
+#pragma mark State Menu
+
+- (void)statusMenu:(AIStatusMenu *)inStatusMenu didRebuildStatusMenuItems:(NSArray *)menuItemArray
+{
+	[stateMenuItemsArray removeAllObjects];
+	[stateMenuItemsArray addObjectsFromArray:menuItemArray];
+	
+	// FIXME: trigger update next time we're clicked
+}
+
+- (BOOL)showStatusSubmenu
 {
 	return YES;
 }
@@ -132,7 +185,8 @@ int main(void)
 
 - (void)drawOnlineMenu
 {
-	NSMenuItem *tmpMenuItem;
+	NSMenuItem		*tmpMenuItem;
+	NSEnumerator	*enumerator;
 	
 	[self removeAllMenuItems];
 	
@@ -151,6 +205,27 @@ int main(void)
 	}
 	
 	[theMenu addItem:[NSMenuItem separatorItem]];*/
+	
+	// state menu items
+	enumerator = [stateMenuItemsArray objectEnumerator];
+	tmpMenuItem = nil;
+	while ((tmpMenuItem = [enumerator nextObject])) {
+		NSMenu		*submenu;
+		
+		[theMenu addItem:tmpMenuItem];
+		
+		// FIXME: add menu validation here
+		
+		submenu = [tmpMenuItem submenu];
+		if (submenu) {
+			NSEnumerator	*submenuEnumerator = [[submenu itemArray] objectEnumerator];
+			NSMenuItem		*submenuItem;
+			while ((submenuItem = [submenuEnumerator nextObject])) {
+				// FIXME: validate the submenu items
+			}
+		}
+	}
+	
 	tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:@"Bring Adium to Front"
 															   action:@selector(bringAdiumToFront)
 														keyEquivalent:@""];
@@ -216,11 +291,11 @@ int main(void)
 
 - (void)connectToStatusVend
 {
-	statusRemote = (id)[NSConnection rootProxyForConnectionWithRegisteredName:ADIUM_PRESENCE_BROADCAST
+	presenceRemote = (id)[NSConnection rootProxyForConnectionWithRegisteredName:ADIUM_PRESENCE_BROADCAST
 																		  host:nil];
-	if (statusRemote == nil) {
+	if (presenceRemote == nil) {
 		// FIXME: handle this error!
-		NSLog(@"JLD: statusRemote == nil after we tried to connect...");
+		NSLog(@"JLD: presenceRemote == nil after we tried to connect...");
 	}
 }
 

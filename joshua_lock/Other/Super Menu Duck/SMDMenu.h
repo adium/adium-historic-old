@@ -1,6 +1,9 @@
 #import <Cocoa/Cocoa.h>
 //#import "JLPresenceProtocol.h"
 
+@class AIAccountMenu, AIStatusMenu, AIAdium, JLPresenceRemote;
+//@class JLAdiumDelegate;
+
 // FIXME: We need this defined in a global place like AIAdium.h
 #define ADIUM_PRESENCE_BROADCAST				@"AIPresenceBroadcast"
 
@@ -17,7 +20,15 @@
 	NSImage							*adiumRedHighlightImage;
 	NSDistributedNotificationCenter *notificationCenter;
 	// FIXME: we should probably have a protocol for the remote?
-	id								*statusRemote;
+	//id								*statusRemote;
+	NSMutableArray					*accountMenuItemsArray;
+	NSMutableArray					*stateMenuItemsArray;
+	
+	AIAdium							*adium;
+	AIAccountMenu					*accountMenu;
+	AIStatusMenu					*statusMenu;
+	//JLAdiumDelegate					*adiumDelegate;
+	JLPresenceRemote				*presenceRemote;
 }
 // FIXME: any of this private API?
 - (void)adiumStarted:(NSNotification *)note;
