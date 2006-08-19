@@ -283,9 +283,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	Screenname			*sn = [userInfo get:@"Screenname"];
 	BuddyInfo			*info = [userInfo get:@"BuddyInfo"];
 	
-	//Request the away message to go with this status update
-	[[aimConnection getInfoService] requestAwayMessage:sn];
-	
 	NSString	*UID = [[[sn getNormal] copy] autorelease];
 	[accountProxy contactWithUID:UID
 					formattedUID:[[[sn getFormatted] copy] autorelease]
