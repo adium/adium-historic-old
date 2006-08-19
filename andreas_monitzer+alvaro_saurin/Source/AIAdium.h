@@ -83,7 +83,7 @@
 - (NSObject <AIContactAlertsController> *)contactAlertsController;
 - (NSObject <AIFileTransferController> *)fileTransferController;
 - (NSObject <AIJavaController> *)javaController;
-- (AIVideoConfController *)vcController;
+- (NSObject <AIVideoConfController> *)vcController;
 
 - (NSObject <AIDebugController> *)debugController;
 - (NSObject <AIApplescriptabilityController> *)applescriptabilityController;

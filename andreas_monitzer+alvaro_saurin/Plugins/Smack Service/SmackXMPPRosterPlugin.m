@@ -18,6 +18,8 @@
 #import "AIAdium.h"
 #import "AIContactController.h"
 #import "AIInterfaceController.h"
+#import "SmackXMPPErrorMessagePlugin.h"
+#import "ESTextAndButtonsWindowController.h"
 
 #import <AIUtilities/AIStringUtilities.h>
 
@@ -363,6 +365,25 @@
             //Apply the change
             [resourceObject notifyOfChangedStatusSilently:[account silentAndDelayed]];
         }
+    } else if([type isEqualToString:@"error"]) {
+        AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid];
+        if(contact) // only handle contacts we actually know
+        {
+            SmackXMPPError *error = [presence getError];
+            if(error)
+            {
+                int code = [error getCode];
+                [[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"Error for contact %@","presence type error"),jid]
+                                             withDescription:[NSString stringWithFormat:AILocalizedString(@"Received the error %d (%@). Do you want to remove this contact from your contact list?",""),code,[SmackXMPPErrorMessagePlugin errorMessageForCode:code]]
+                                                                        withWindowTitle:AILocalizedString(@"Error","Alert pane title")
+                                                                          defaultButton:AILocalizedString(@"Remove","Remove")
+                                                                        alternateButton:AILocalizedString(@"Ignore","Ignore this alert")
+                                                                            otherButton:nil
+                                                                                 target:self
+                                                                               selector:@selector(removeContactAfterError:contact:)
+                                                                               userInfo:contact];
+            }
+        }
     } else if([[account preferenceForKey:@"subscriptions" group:GROUP_ACCOUNT_STATUS] intValue] == 0)
     {
         // we only care about the packets if the subscription is set to ask user
@@ -377,6 +398,15 @@
         } else if([type isEqualToString:@"unsubscribed"]) {
             [[adium interfaceController] handleMessage:AILocalizedString(@"Authorization Removed!","Authorization Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed your authorization. You will no longer see his/her current status.","%@ has removed your authorization. You will no longer see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
         }
+    }
+}
+
+- (void)removeContactAfterError:(NSNumber*)resultCode contact:(AIListContact*)contact
+{
+    if([resultCode intValue] == AITextAndButtonsDefaultReturn)
+    {
+        [[adium contactController] removeListObjects:[NSArray arrayWithObject:contact]];
+//        [account removeContacts:[NSArray arrayWithObject:contact]];
     }
 }
 

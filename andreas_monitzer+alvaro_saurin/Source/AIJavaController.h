@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "AIObject.h"
-#import "AIJavaControllerProtocol.h"
+#import <Adium/AIJavaControllerProtocol.h>
 
 @class NSJavaVirtualMachine;
 

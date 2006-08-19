@@ -21,7 +21,7 @@
 #import <Carbon/Carbon.h>
 
 #import "ESFileTransferController.h"
-#import "AIJavaController.h"
+#import <Adium/AIJavaControllerProtocol.h>
 #import "RAFjoscarLogHandler.h"
 
 //#define JOSCAR_LOG_WARNING
@@ -55,9 +55,10 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 + (void)initializeJavaVM
 {
-	[NSThread detachNewThreadSelector:@selector(prepareJavaVM)
+/*	[NSThread detachNewThreadSelector:@selector(prepareJavaVM)
 							 toTarget:self
-						   withObject:nil];
+						   withObject:nil];*/
+    [self prepareJavaVM];
 }
 
 - (id)initForAccount:(RAFjoscarAccount *)inAccount
@@ -1648,7 +1649,7 @@ Date* javaDateFromDate(NSDate *date)
 																			ofType:@"jar"
 																	   inDirectory:@"Java"];
             
-            classLoader = [[adium javaController] classLoaderWithJARs:[NSArray arrayWithObjects:
+            classLoader = [[[self sharedAdiumInstance] javaController] classLoaderWithJARs:[NSArray arrayWithObjects:
                 oscarJarPath, joscarJarPath, joscarBridgePath, retroweaverJarPath, socksJarPath, nil]];
 
             if (![classLoader loadClass:@"net.kano.joscar.JoscarTools"]) {
