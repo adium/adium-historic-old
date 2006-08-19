@@ -1285,7 +1285,6 @@
 		815ED1B50A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib in Resources */ = {isa = PBXBuildFile; fileRef = 815ED1B30A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib */; };
 		815ED2920A6C5AA00024B6FE /* SmackXMPPMUCChangeSubject.nib in Resources */ = {isa = PBXBuildFile; fileRef = 815ED2900A6C5A9F0024B6FE /* SmackXMPPMUCChangeSubject.nib */; };
 		815ED31E0A6C637E0024B6FE /* SmackXMPPGatewayInteractionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 815ED31C0A6C637D0024B6FE /* SmackXMPPGatewayInteractionPlugin.m */; };
-		8191AB1B0A94EAEE00A5A404 /* AIJavaControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */; };
 		81AB120C0A8B5F6100E32420 /* SmackJinglePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81AB120A0A8B5F6100E32420 /* SmackJinglePlugin.m */; };
 		81AB120E0A8B5F8A00E32420 /* JingleListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 81AB120D0A8B5F8A00E32420 /* JingleListener.java */; };
 		81B4CA200A416C3B00A8ABF5 /* SmackBridge.java in Sources */ = {isa = PBXBuildFile; fileRef = 81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */; };
@@ -1363,6 +1362,7 @@
 		81F9D2010A7F8B99004A35BD /* JavaCocoaAdapter.class in Resources */ = {isa = PBXBuildFile; fileRef = 81F9D2000A7F8B99004A35BD /* JavaCocoaAdapter.class */; };
 		81F9D4980A8158EB004A35BD /* SmackXMPPVersionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D4960A8158EA004A35BD /* SmackXMPPVersionPlugin.m */; };
 		81F9D8B00A83A92F004A35BD /* SmackXMPPPrivacyPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D8AE0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.m */; };
+		81FB2B1A0A95DFB20095E77A /* AIJavaControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E124DEC07D34C7300AA91C5 /* CBGrowlAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */; };
 		9E124DEE07D34C7400AA91C5 /* NEHGrowlPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DEA07D34C7300AA91C5 /* NEHGrowlPlugin.m */; };
 		9E124DF107D34C9100AA91C5 /* GrowlAlert.nib in Resources */ = {isa = PBXBuildFile; fileRef = 9E124DEF07D34C9000AA91C5 /* GrowlAlert.nib */; };
@@ -3759,11 +3759,11 @@
 		815ED2910A6C5A9F0024B6FE /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPMUCChangeSubject.nib"; sourceTree = "<group>"; };
 		815ED31B0A6C637D0024B6FE /* SmackXMPPGatewayInteractionPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPGatewayInteractionPlugin.h; path = "Plugins/Smack Service/SmackXMPPGatewayInteractionPlugin.h"; sourceTree = "<group>"; };
 		815ED31C0A6C637D0024B6FE /* SmackXMPPGatewayInteractionPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPGatewayInteractionPlugin.m; path = "Plugins/Smack Service/SmackXMPPGatewayInteractionPlugin.m"; sourceTree = "<group>"; };
-		8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIJavaControllerProtocol.h; path = Source/AIJavaControllerProtocol.h; sourceTree = "<group>"; };
+		8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIJavaControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIJavaControllerProtocol.h"; sourceTree = "<group>"; };
 		81AB12090A8B5F6100E32420 /* SmackJinglePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackJinglePlugin.h; path = "Plugins/Smack Service/SmackJinglePlugin.h"; sourceTree = "<group>"; };
 		81AB120A0A8B5F6100E32420 /* SmackJinglePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackJinglePlugin.m; path = "Plugins/Smack Service/SmackJinglePlugin.m"; sourceTree = "<group>"; };
 		81AB120D0A8B5F8A00E32420 /* JingleListener.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = JingleListener.java; path = "Plugins/Smack Service/JingleListener.java"; sourceTree = "<group>"; };
-		81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */ = {isa = PBXFileReference; explicitFileType = archive.jar; includeInIndex = 0; path = SmackBridge.jar; sourceTree = BUILT_PRODUCTS_DIR; };
+		81B4C9900A416BE500A8ABF5 /* SmackJavaBridge.jar */ = {isa = PBXFileReference; explicitFileType = archive.jar; includeInIndex = 0; path = SmackJavaBridge.jar; sourceTree = BUILT_PRODUCTS_DIR; };
 		81B4CA520A416F7E00A8ABF5 /* ruli_addr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_addr.c; sourceTree = "<group>"; };
 		81B4CA530A416F7E00A8ABF5 /* ruli_addr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_addr.h; sourceTree = "<group>"; };
 		81B4CA540A416F7F00A8ABF5 /* ruli_conf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_conf.c; sourceTree = "<group>"; };
@@ -4401,7 +4401,7 @@
 				3417D26109C332B900FC413E /* Translator.AdiumPlugin */,
 				3485D68009EB416300232CC4 /* AdiumLibgaim.framework */,
 				81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */,
-				81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */,
+				81B4C9900A416BE500A8ABF5 /* SmackJavaBridge.jar */,
 				38D8FAE10A8A4F350078E442 /* QuickTime.AdiumPlugin */,
 			);
 			name = Products;
@@ -7994,7 +7994,6 @@
 				3419E2F90A8145B800C3FC68 /* GBFireLogImporter.h in Headers */,
 				81F9D0840A7E905B004A35BD /* AIJavaController.h in Headers */,
 				387226C80A8B7C84002CC4F4 /* AIVideoConfController.h in Headers */,
-				8191AB1B0A94EAEE00A5A404 /* AIJavaControllerProtocol.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8112,6 +8111,7 @@
 				34DC8B130A7EEEF7003E1636 /* SUSpeaker.h in Headers */,
 				38722DC90A9093CD002CC4F4 /* AIVideoConf.h in Headers */,
 				38399DCB0A95C9CF006C8EB1 /* AIVideoConfControllerProtocol.h in Headers */,
+				81FB2B1A0A95DFB20095E77A /* AIJavaControllerProtocol.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10189,7 +10189,7 @@
 			name = SmackJavaBridge;
 			productInstallPath = /usr/local/bin;
 			productName = SmackJavaBridge;
-			productReference = 81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */;
+			productReference = 81B4C9900A416BE500A8ABF5 /* SmackJavaBridge.jar */;
 		};
 /* End PBXToolTarget section */
 
@@ -12042,6 +12042,7 @@
 		349F83430A437477007EA1B1 /* Development-libgaim_oscar */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COPY_PHASE_STRIP = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
@@ -12566,6 +12567,7 @@
 		34BAF98C0942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COPY_PHASE_STRIP = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
@@ -12899,7 +12901,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INFOPLIST_FILE = "Smack-Info.plist";
+				INFOPLIST_FILE = "Plugins/Smack Service/Smack-Info.plist";
 				INSTALL_PATH = "$(HOME)/Library/Bundles";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -12922,7 +12924,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INFOPLIST_FILE = "Smack-Info.plist";
+				INFOPLIST_FILE = "Plugins/Smack Service/Smack-Info.plist";
 				INSTALL_PATH = "$(HOME)/Library/Bundles";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -12945,7 +12947,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INFOPLIST_FILE = "Smack-Info.plist";
+				INFOPLIST_FILE = "Plugins/Smack Service/Smack-Info.plist";
 				INSTALL_PATH = "$(HOME)/Library/Bundles";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -13438,6 +13440,7 @@
 		DADE8E23085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COPY_PHASE_STRIP = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
@@ -13462,6 +13465,7 @@
 		DADE8E24085507450062B664 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COPY_PHASE_STRIP = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
@@ -13486,6 +13490,7 @@
 		DADE8E25085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COPY_PHASE_STRIP = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (

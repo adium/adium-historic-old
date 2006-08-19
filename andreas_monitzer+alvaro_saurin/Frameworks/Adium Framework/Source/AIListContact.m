@@ -604,7 +604,12 @@
 
 	return parentContact;
  }
- 
+
+- (BOOL)containsObject:(AIListObject*)object
+{
+    return NO;
+}
+
 #pragma mark Equality
 /*
 - (BOOL)isEqual:(id)anObject

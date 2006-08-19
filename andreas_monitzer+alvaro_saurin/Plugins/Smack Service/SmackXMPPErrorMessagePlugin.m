@@ -54,11 +54,11 @@ static struct
 /*        [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(receivedPacket:)
                                                      name:SmackXMPPIQPacketReceivedNotification
-                                                   object:account];*/
+                                                   object:account];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(receivedPacket:)
                                                      name:SmackXMPPPresencePacketReceivedNotification
-                                                   object:account];
+                                                   object:account];*/
     }
     return self;
 }
@@ -67,6 +67,25 @@ static struct
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
+}
+
++ (NSString*)errorMessageForCode:(int)code
+{
+    NSString *errordesc = nil;
+    unsigned i;
+    
+    for(i=0;mapping[i].code;i++)
+    {
+        if(mapping[i].code == code)
+        {
+            errordesc = mapping[i].description;
+            break;
+        }
+    }
+    if(!errordesc)
+        errordesc = [[NSNumber numberWithInt:code] stringValue];
+    
+    return errordesc;
 }
 
 + (void)handleXMPPErrorPacket:(SmackPacket*)packet service:(NSString*)service
@@ -89,21 +108,8 @@ static struct
     }
     NSString *message = [error getMessage];
     int code = [error getCode];
-    int i;
-    NSString *errordesc = nil;
     
-    for(i=0;mapping[i].code;i++)
-    {
-        if(mapping[i].code == code)
-        {
-            errordesc = mapping[i].description;
-            break;
-        }
-    }
-    if(!errordesc)
-        errordesc = [[NSNumber numberWithInt:code] stringValue];
-    
-    [[[AIObject sharedAdiumInstance] interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error %d \"%@\" From %@","XMPP Error %d \"%@\" From %@"), code, errordesc, from] withDescription:message?message:AILocalizedString(@"(no message provided)","(no message provided)")];
+    [[[AIObject sharedAdiumInstance] interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error %d \"%@\" From %@","XMPP Error %d \"%@\" From %@"), code, [self errorMessageForCode:code], from] withDescription:message?message:AILocalizedString(@"(no message provided)","(no message provided)")];
 }
 
 - (void)receivedPacket:(NSNotification*)n

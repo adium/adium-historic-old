@@ -152,7 +152,7 @@ static NSString	*prefsCategory;
 - (NSObject <AIJavaController> *)javaController{
     return javaController;
 }
-- (AIVideoConfController *)vcController{
+- (NSObject <AIVideoConfController> *)vcController{
     return vcController;
 }
 
