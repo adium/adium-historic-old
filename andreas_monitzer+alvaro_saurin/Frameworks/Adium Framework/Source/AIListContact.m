@@ -610,6 +610,11 @@
     return NO;
 }
 
+- (BOOL)containsMultipleContacts
+{
+    return NO;
+}
+
 #pragma mark Equality
 /*
 - (BOOL)isEqual:(id)anObject

@@ -122,6 +122,10 @@
     return NO;
 }
 
+- (BOOL)containsMultipleContacts {
+    return NO;
+}
+
 //Retrieve an object by index
 - (id)objectAtIndex:(unsigned)index
 {

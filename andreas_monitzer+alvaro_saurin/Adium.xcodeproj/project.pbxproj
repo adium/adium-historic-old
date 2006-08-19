@@ -3763,7 +3763,7 @@
 		81AB12090A8B5F6100E32420 /* SmackJinglePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackJinglePlugin.h; path = "Plugins/Smack Service/SmackJinglePlugin.h"; sourceTree = "<group>"; };
 		81AB120A0A8B5F6100E32420 /* SmackJinglePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackJinglePlugin.m; path = "Plugins/Smack Service/SmackJinglePlugin.m"; sourceTree = "<group>"; };
 		81AB120D0A8B5F8A00E32420 /* JingleListener.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = JingleListener.java; path = "Plugins/Smack Service/JingleListener.java"; sourceTree = "<group>"; };
-		81B4C9900A416BE500A8ABF5 /* SmackJavaBridge.jar */ = {isa = PBXFileReference; explicitFileType = archive.jar; includeInIndex = 0; path = SmackJavaBridge.jar; sourceTree = BUILT_PRODUCTS_DIR; };
+		81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */ = {isa = PBXFileReference; explicitFileType = archive.jar; includeInIndex = 0; path = SmackBridge.jar; sourceTree = BUILT_PRODUCTS_DIR; };
 		81B4CA520A416F7E00A8ABF5 /* ruli_addr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_addr.c; sourceTree = "<group>"; };
 		81B4CA530A416F7E00A8ABF5 /* ruli_addr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_addr.h; sourceTree = "<group>"; };
 		81B4CA540A416F7F00A8ABF5 /* ruli_conf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_conf.c; sourceTree = "<group>"; };
@@ -4401,7 +4401,7 @@
 				3417D26109C332B900FC413E /* Translator.AdiumPlugin */,
 				3485D68009EB416300232CC4 /* AdiumLibgaim.framework */,
 				81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */,
-				81B4C9900A416BE500A8ABF5 /* SmackJavaBridge.jar */,
+				81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */,
 				38D8FAE10A8A4F350078E442 /* QuickTime.AdiumPlugin */,
 			);
 			name = Products;
@@ -10189,7 +10189,7 @@
 			name = SmackJavaBridge;
 			productInstallPath = /usr/local/bin;
 			productName = SmackJavaBridge;
-			productReference = 81B4C9900A416BE500A8ABF5 /* SmackJavaBridge.jar */;
+			productReference = 81B4C9900A416BE500A8ABF5 /* SmackBridge.jar */;
 		};
 /* End PBXToolTarget section */
 
