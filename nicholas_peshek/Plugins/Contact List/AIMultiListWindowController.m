@@ -19,8 +19,6 @@
 #import "AIListWindowController.h"
 #import "AIListGroup.h"
 #import <AIUtilities/AIWindowAdditions.h>
-//#import "AIBorderlessListWindowController.h"
-//#import "AIContactListOutlineView.h"
 
 #define PREF_GROUP_MULTI_CONTACT_LIST			@"Contact List Windows"
 
@@ -62,16 +60,24 @@
 		}
 		
 		NSEnumerator	*e = [loadedContactLists objectEnumerator];
-		int	indexVar = 0;
+		int				indexVar = 0;
+		
 		while ((loadedList = [e nextObject])) {
 			AIListGroup		*newRootObject = [[AIListGroup alloc] initWithUID:[NSString stringWithFormat:@"%d", indexVar]];
 			NSString		*UID;
 			NSEnumerator	*smallList = [loadedList objectEnumerator];
 			while ((UID = [smallList nextObject])) {
-				[newRootObject addObject:[[adium contactController] existingGroupWithUID:UID]];
-				[listToCheckAgainst addObject:[[adium contactController] existingGroupWithUID:UID]];
+				AIListGroup	*newGroup = [[adium contactController] existingGroupWithUID:UID];
+				
+				[newRootObject addObject:newGroup];
+				[listToCheckAgainst addObject:newGroup];
+				[newGroup setExpanded:[newGroup isExpanded]];
 			}
-			[self createNewSeparableContactListWithObject:(AIListGroup *)newRootObject];
+			if(indexVar == 0)
+				[self createNewSeparableContactListWithObject:(AIListGroup *)newRootObject withStyle:windowStyle];
+			else
+				[self createNewSeparableContactListWithObject:(AIListGroup *)newRootObject];
+			
 			indexVar++;
 		}
 		
@@ -109,16 +115,22 @@
 									   selector:@selector(contactListAdded:) 
 										   name:Contact_ListChanged
 										 object:nil];
-}
-return self;
+	}
+	return self;
 }
 
 //Create the new contact list. A bit messy, but overall, it'll work. Returns a boolean saying if it worked or not.
 - (BOOL)createNewSeparableContactListWithObject:(AIListObject<AIContainingObject> *)newListObject
 {
+	return [self createNewSeparableContactListWithObject:newListObject withStyle:WINDOW_STYLE_BORDERLESS];
+}
+
+- (BOOL)createNewSeparableContactListWithObject:(AIListObject<AIContainingObject> *)newListObject withStyle:(LIST_WINDOW_STYLE)windowStyle
+{
 	BOOL	didCreationWork = NO;
+	
 	if ([newListObject isKindOfClass:[AIListGroup class]]) {
-		AIContactList	*newContactList = [AIContactList createWithStyle:WINDOW_STYLE_BORDERLESS];
+		AIContactList	*newContactList = [AIContactList createWithStyle:windowStyle];
 		[newContactList setContactListRoot:newListObject];
 		mostRecentContactList = newContactList;
 		[contactListArray addObject:newContactList];
@@ -167,6 +179,7 @@ return self;
 										 forKey:@"SavedContactLists"
 										  group:PREF_GROUP_MULTI_CONTACT_LIST];
 }
+
 
 - (void)destroyListController:(AIContactList *)doneController
 {
@@ -217,7 +230,8 @@ return self;
 		[[[self mostRecentContactList] listWindowController] showWindowInFront:NO];
 	} else {
 		BOOL allAreHidden = NO;
-		while(![[[listToChangeTo listWindowController] window] isVisibleWithAlpha] && !allAreHidden) {
+		//Check if the root object is visible, if not, ignore the window and go to the next one.
+		while(![[listToChangeTo contactList] visible] && !allAreHidden) {
 			mostRecentContactList = listToChangeTo;
 			listToChangeTo = [self nextContactList];
 			if(tempList == listToChangeTo)

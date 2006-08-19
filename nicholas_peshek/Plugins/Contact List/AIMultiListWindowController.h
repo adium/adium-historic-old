@@ -34,6 +34,7 @@ typedef enum {
 + (AIMultiListWindowController *)initialize:(LIST_WINDOW_STYLE)windowStyle;
 - (AIMultiListWindowController *)createWindows:(LIST_WINDOW_STYLE)windowStyle;
 - (BOOL)createNewSeparableContactListWithObject:(AIListObject<AIContainingObject> *)newListObject;
+- (BOOL)createNewSeparableContactListWithObject:(AIListObject<AIContainingObject> *)newListObject withStyle:(LIST_WINDOW_STYLE)windowStyle;
 - (void)saveContactLists;
 - (AIContactList *)mostRecentContactList;
 - (void)showWindowInFront:(BOOL)inFront;
