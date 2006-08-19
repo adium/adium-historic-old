@@ -354,8 +354,7 @@
 		<string>-enableassertions</string>
 	</dict>
 	<key>LSMinimumSystemVersion</key>
-		<string>10.3.9</string>
-	</key>
+	<string>10.3.9</string>
 	<key>LSRequiresNativeExecution</key>
 	<true/>
 	<key>NSAppleScriptEnabled</key>
