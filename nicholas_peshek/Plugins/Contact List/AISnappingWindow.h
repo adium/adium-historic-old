@@ -9,7 +9,7 @@
 #import <AIUtilities/AIBorderlessWindow.h>
 
 @interface AISnappingWindow : AIBorderlessWindow {
-	
+	NSWindow	*windowToSnapTo;
 }
 
 @end
