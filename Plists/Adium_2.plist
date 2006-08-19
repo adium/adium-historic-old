@@ -353,11 +353,9 @@
 		<key>VMOptions</key>
 		<string>-enableassertions</string>
 	</dict>
-	<key>LSEnvironment</key>
-	<dict>
-		<key>MinimumSystemVersion</key>
+	<key>LSMinimumSystemVersion</key>
 		<string>10.3.9</string>
-	</dict>
+	</key>
 	<key>LSRequiresNativeExecution</key>
 	<true/>
 	<key>NSAppleScriptEnabled</key>

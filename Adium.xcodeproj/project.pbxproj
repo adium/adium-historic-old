@@ -7,21 +7,6 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		347A219D09786C1700A30431 /* Adium with SystemVersionCheck */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 347A21BA09786C7300A30431 /* Build configuration list for PBXAggregateTarget "Adium with SystemVersionCheck" */;
-			buildPhases = (
-				074949DD0978E2DE002D9D1A /* ShellScript */,
-				347A21A609786C3A00A30431 /* CopyFiles */,
-				347A21AC09786C5100A30431 /* ShellScript */,
-			);
-			dependencies = (
-				347A219F09786C1C00A30431 /* PBXTargetDependency */,
-				347A21A109786C1F00A30431 /* PBXTargetDependency */,
-			);
-			name = "Adium with SystemVersionCheck";
-			productName = "Adium with SystemVersionCheck";
-		};
 		DACF3ED3085574D0006BFB18 /* External Frameworks */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = DACF3EDE085574F6006BFB18 /* Build configuration list for PBXAggregateTarget "External Frameworks" */;
@@ -295,9 +280,6 @@
 		347065E506015DC5004F0D20 /* WebKit Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 347065E406015DC5004F0D20 /* WebKit Defaults.plist */; };
 		3474E000082550FD00BF30F0 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3474DFFF082550FD00BF30F0 /* Credits.rtf */; };
 		3474E0910825634300BF30F0 /* StatusPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3474E0900825634300BF30F0 /* StatusPreferences.nib */; };
-		347A211D09786BA900A30431 /* SystemVersionCheck.m in Sources */ = {isa = PBXBuildFile; fileRef = 347A211C09786BA900A30431 /* SystemVersionCheck.m */; };
-		347A21B409786C6C00A30431 /* Adium.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34BD9DA9053146CC000AB133 /* Adium.app */; };
-		347A21B509786C6C00A30431 /* SystemVersionCheck in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347A210F09786B5F00A30431 /* SystemVersionCheck */; };
 		347C6943080C8F2B00E69674 /* ESAwayStatusWindowPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 347C6941080C8F2B00E69674 /* ESAwayStatusWindowPlugin.m */; };
 		347C6949080C8F3B00E69674 /* ESAwayStatusWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 347C6947080C8F3A00E69674 /* ESAwayStatusWindowController.m */; };
 		347E77F407CA94FF00350507 /* ESAccountEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 347E77F207CA94FE00350507 /* ESAccountEvents.m */; };
@@ -1195,11 +1177,6 @@
 		63093C300892143500F118D3 /* newContentTwoDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2E0892143500F118D3 /* newContentTwoDigits.png */; };
 		632D60C1094B81AB003A9786 /* AIDockIconPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */; };
 		632D801708E7E0A40032C187 /* XtrasManager.nib in Resources */ = {isa = PBXBuildFile; fileRef = 632D801608E7E0A40032C187 /* XtrasManager.nib */; };
-		633287960A769B84004D0F2B /* AIGaimLiveJournalAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63125D8D0A75EBF000303EE9 /* AIGaimLiveJournalAccount.h */; };
-		633287970A769B88004D0F2B /* AIGaimLiveJournalAccount.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63125D8E0A75EBF000303EE9 /* AIGaimLiveJournalAccount.m */; };
-		633287980A769B8C004D0F2B /* AILiveJournalService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63125D970A75ECE400303EE9 /* AILiveJournalService.h */; };
-		633287990A769B8F004D0F2B /* AILiveJournalService.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63125D980A75ECE400303EE9 /* AILiveJournalService.m */; };
-		6332879A0A769B92004D0F2B /* GaimDefaultsLiveJournal.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63125D990A75ECE400303EE9 /* GaimDefaultsLiveJournal.plist */; };
 		6332879B0A769BF3004D0F2B /* AIGaimLiveJournalAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63125D8D0A75EBF000303EE9 /* AIGaimLiveJournalAccount.h */; };
 		6332879C0A769BF3004D0F2B /* AILiveJournalService.h in Headers */ = {isa = PBXBuildFile; fileRef = 63125D970A75ECE400303EE9 /* AILiveJournalService.h */; };
 		6332879D0A769C18004D0F2B /* AIGaimLiveJournalAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63125D8E0A75EBF000303EE9 /* AIGaimLiveJournalAccount.m */; };
@@ -1384,20 +1361,6 @@
 			remoteGlobalIDString = 346C9C5306004525000F5A8A;
 			remoteInfo = "WebKit Message View";
 		};
-		347A219E09786C1C00A30431 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9CD1053146CC000AB133;
-			remoteInfo = Adium;
-		};
-		347A21A009786C1F00A30431 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 347A210E09786B5F00A30431;
-			remoteInfo = SystemVersionCheck;
-		};
 		3485D69209EB41D700232CC4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1573,22 +1536,6 @@
 			dstSubfolderSpec = 7;
 			files = (
 				34677B3907CC3DAF00F59F7B /* Adium Crash Reporter.app in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		347A21A609786C3A00A30431 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "SystemVersionCheck-script_wd";
-			dstSubfolderSpec = 16;
-			files = (
-				347A21B409786C6C00A30431 /* Adium.app in CopyFiles */,
-				347A21B509786C6C00A30431 /* SystemVersionCheck in CopyFiles */,
-				633287960A769B84004D0F2B /* AIGaimLiveJournalAccount.h in CopyFiles */,
-				633287970A769B88004D0F2B /* AIGaimLiveJournalAccount.m in CopyFiles */,
-				633287980A769B8C004D0F2B /* AILiveJournalService.h in CopyFiles */,
-				633287990A769B8F004D0F2B /* AILiveJournalService.m in CopyFiles */,
-				6332879A0A769B92004D0F2B /* GaimDefaultsLiveJournal.plist in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2428,8 +2375,7 @@
 		3474DD6F0824699D00BF30F0 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		3474DFFC08254F3500BF30F0 /* Copyright.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Copyright.txt; sourceTree = "<group>"; };
 		3474DFFF082550FD00BF30F0 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Credits.rtf; path = Resources/Credits.rtf; sourceTree = "<group>"; };
-		347A210F09786B5F00A30431 /* SystemVersionCheck */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SystemVersionCheck; sourceTree = BUILT_PRODUCTS_DIR; };
-		347A211C09786BA900A30431 /* SystemVersionCheck.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SystemVersionCheck.m; path = Other/SystemVersionCheck.m; sourceTree = "<group>"; };
+		347A210F09786B5F00A30431 /* SystemVersionCheck */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = SystemVersionCheck; path = /Users/evands/adium/build/Development/SystemVersionCheck; sourceTree = "<absolute>"; };
 		347AC44608AAA7C70043FB94 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Catalan; path = "Resources/Catalan.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		347C6940080C8F2B00E69674 /* ESAwayStatusWindowPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESAwayStatusWindowPlugin.h; path = Source/ESAwayStatusWindowPlugin.h; sourceTree = "<group>"; };
 		347C6941080C8F2B00E69674 /* ESAwayStatusWindowPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESAwayStatusWindowPlugin.m; path = Source/ESAwayStatusWindowPlugin.m; sourceTree = "<group>"; };
@@ -3990,7 +3936,6 @@
 				349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */,
 				349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */,
 				118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */,
-				347A210F09786B5F00A30431 /* SystemVersionCheck */,
 				34B323C009B9FEAC00029361 /* IRC Service.AdiumLibgaimPlugin */,
 				3417D26109C332B900FC413E /* Translator.AdiumPlugin */,
 				3485D68009EB416300232CC4 /* AdiumLibgaim.framework */,
@@ -5080,7 +5025,6 @@
 				34D8343F07CBE6E1006466F2 /* NSString+CarbonFSRefCreation.m */,
 				34D8346C07CBE6F4006466F2 /* SUSpeaker.h */,
 				34D8346B07CBE6F4006466F2 /* SUSpeaker.m */,
-				347A211C09786BA900A30431 /* SystemVersionCheck.m */,
 			);
 			name = "External Sources";
 			sourceTree = "<group>";
@@ -7882,7 +7826,6 @@
 				},
 			);
 			targets = (
-				347A219D09786C1700A30431 /* Adium with SystemVersionCheck */,
 				34BD9CD1053146CC000AB133 /* Adium */,
 				4B7F78B40597F42400162728 /* Adium Crash Reporter */,
 				34BD9F2C0531477E000AB133 /* Adium 1.6 Pref Importer */,
@@ -8364,19 +8307,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		074949DD0978E2DE002D9D1A /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "WORK_DIRECTORY_PATH=\"${BUILT_PRODUCTS_DIR}/SystemVersionCheck-script_wd\"\n\nif [[ ! -d ${WORK_DIRECTORY_PATH} ]]; then\n\tmkdir ${WORK_DIRECTORY_PATH}\nfi";
-		};
 		07D43998084E5A4B00BFFF05 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -8423,19 +8353,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "gcc -E -P -x c -Wno-trigraphs -include \"$SCRIPT_INPUT_FILE_0\" -C \"$SCRIPT_INPUT_FILE_1\" -o \"$SCRIPT_OUTPUT_FILE_0\"\ngcc -E -P -x c -Wno-trigraphs -include \"$SCRIPT_INPUT_FILE_0\" -C \"$SCRIPT_INPUT_FILE_2\" -o \"$SCRIPT_OUTPUT_FILE_1\"";
-		};
-		347A21AC09786C5100A30431 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ ! \"$CONFIGURATION\" = \"Development\" ]; then\n\nWORK_DIRECTORY_PATH=\"${BUILT_PRODUCTS_DIR}/SystemVersionCheck-script_wd\"\nRESULTS_DIRECTORY_PATH=\"${WORK_DIRECTORY_PATH}/Results\"\nSVC_EXECUTABLE_PATH=\"${WORK_DIRECTORY_PATH}/SystemVersionCheck\"\n\nif [ ! -f \"${SVC_EXECUTABLE_PATH}\" ]; then\n    echo \"Missing SystemVersionCheck file\"\n    exit 1\nfi\n\nrm -rf \"${RESULTS_DIRECTORY_PATH}\"\n\nORIG_APP_WRAPPER_PATH=`find ${WORK_DIRECTORY_PATH} -name '*.app' | head -n 1`\n\nif [ ! -d \"${ORIG_APP_WRAPPER_PATH}\" ]; then\n    echo \"Missing application\"\n    exit 1\nfi\n\nAPP_WRAPPER_NAME=`basename \"${ORIG_APP_WRAPPER_PATH}\"`\nAPP_WRAPPER_PATH=\"${RESULTS_DIRECTORY_PATH}/${APP_WRAPPER_NAME}\"\n\nmkdir -p \"${RESULTS_DIRECTORY_PATH}\"\n\ncp -Rp \"${ORIG_APP_WRAPPER_PATH}\" \"${APP_WRAPPER_PATH}\"\n\nAPP_EXECUTABLE_NAME=`basename \"${APP_WRAPPER_NAME}\" .app`\nAPP_EXECUTABLE_PATH=\"${APP_WRAPPER_PATH}/Contents/MacOS/${APP_EXECUTABLE_NAME}\"\n\necho \"Installing SystemVersionCheck\"\nmv \"${APP_EXECUTABLE_PATH}\" \"${APP_EXECUTABLE_PATH}.real\" \ncp \"${SVC_EXECUTABLE_PATH}\" \"${APP_EXECUTABLE_PATH}\"\nchmod a+x \"${APP_EXECUTABLE_PATH}\"\n\nrm -rf \"${BUILT_PRODUCTS_DIR}/Adium.app\"\nmv \"${APP_WRAPPER_PATH}\" \"${BUILT_PRODUCTS_DIR}\"\nrm -rf \"${WORK_DIRECTORY_PATH}\"\n\nfi";
 		};
 		34CF9EEF085B98D400D87E37 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8572,7 +8489,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				347A211D09786BA900A30431 /* SystemVersionCheck.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9159,16 +9075,6 @@
 			isa = PBXTargetDependency;
 			target = 346C9C5306004525000F5A8A /* WebKit Message View */;
 			targetProxy = 346C9D45060046AB000F5A8A /* PBXContainerItemProxy */;
-		};
-		347A219F09786C1C00A30431 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 34BD9CD1053146CC000AB133 /* Adium */;
-			targetProxy = 347A219E09786C1C00A30431 /* PBXContainerItemProxy */;
-		};
-		347A21A109786C1F00A30431 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 347A210E09786B5F00A30431 /* SystemVersionCheck */;
-			targetProxy = 347A21A009786C1F00A30431 /* PBXContainerItemProxy */;
 		};
 		3485D69309EB41D700232CC4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -10435,42 +10341,6 @@
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
-		347A21BB09786C7300A30431 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = "Adium with SystemVersionCheck";
-			};
-			name = Development;
-		};
-		347A21BC09786C7300A30431 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				PRODUCT_NAME = "Adium with SystemVersionCheck";
-				ZERO_LINK = NO;
-			};
-			name = Deployment;
-		};
-		347A21BD09786C7300A30431 /* Deployment-Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "Adium with SystemVersionCheck";
-			};
-			name = "Deployment-Debug";
-		};
-		347A21BE09786C7300A30431 /* Deployment-Debug_PPC-Only */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "Adium with SystemVersionCheck";
-			};
-			name = "Deployment-Debug_PPC-Only";
-		};
 		3485D68309EB416500232CC4 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -11043,17 +10913,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = SystemVersionCheck;
-			};
-			name = "Development-libgaim_oscar";
-		};
-		349F83450A437477007EA1B1 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = "Adium with SystemVersionCheck";
 			};
 			name = "Development-libgaim_oscar";
 		};
@@ -12652,18 +12511,6 @@
 				347A211909786B6300A30431 /* Deployment */,
 				347A211A09786B6300A30431 /* Deployment-Debug */,
 				347A211B09786B6300A30431 /* Deployment-Debug_PPC-Only */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
-		};
-		347A21BA09786C7300A30431 /* Build configuration list for PBXAggregateTarget "Adium with SystemVersionCheck" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				347A21BB09786C7300A30431 /* Development */,
-				349F83450A437477007EA1B1 /* Development-libgaim_oscar */,
-				347A21BC09786C7300A30431 /* Deployment */,
-				347A21BD09786C7300A30431 /* Deployment-Debug */,
-				347A21BE09786C7300A30431 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
