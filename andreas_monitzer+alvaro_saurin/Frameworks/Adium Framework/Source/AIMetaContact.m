@@ -551,25 +551,30 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 		if (([listObject isKindOfClass:[AIListContact class]]) &&
 			([(AIListContact *)listObject remoteGroupName] || includeOfflineAccounts)) {
-			NSString	*listObjectInternalObjectID = [listObject internalObjectID];
-			unsigned int listContactIndex = [uniqueObjectIDs indexOfObject:listObjectInternalObjectID];
-			
-			if (listContactIndex == NSNotFound) {
-				//This contact isn't in the array yet, so add it
-				[listContacts addObject:listObject];
-				[uniqueObjectIDs addObject:listObjectInternalObjectID];
-				
-			} else {
-				/* If it is found, but it is offline and this contact is online, swap 'em out so our array
-				 * has the best possible listContacts (making display elsewhere more straightforward)
-				 */
-				if (![[listContacts objectAtIndex:listContactIndex] online] &&
-					[listObject online]) {
-					
-					[listContacts replaceObjectAtIndex:listContactIndex
-											withObject:listObject];
-				}
-			}
+            NSEnumerator *enumerator = [listObject containsMultipleContacts]?[[listObject listContacts] objectEnumerator]:[[NSArray arrayWithObject:listObject] objectEnumerator]; 
+            AIListObject *innerListObject; 
+            while((innerListObject = [enumerator nextObject])) 
+            { 
+                NSString        *listObjectInternalObjectID = [innerListObject internalObjectID]; 
+                unsigned int listContactIndex = [uniqueObjectIDs indexOfObject:listObjectInternalObjectID]; 
+                
+                if (listContactIndex == NSNotFound) { 
+                    //This contact isn't in the array yet, so add it 
+                    [listContacts addObject:innerListObject]; 
+                    [uniqueObjectIDs addObject:listObjectInternalObjectID]; 
+                    
+                } else { 
+                    /* If it is found, but it is offline and this contact is online, swap 'em out so our array 
+                    * has the best possible listContacts (making display elsewhere more straightforward) 
+                    */ 
+                    if (![[listContacts objectAtIndex:listContactIndex] online] && 
+                        [innerListObject online]) { 
+                        
+                        [listContacts replaceObjectAtIndex:listContactIndex 
+                                                withObject:innerListObject]; 
+                    } 
+                } 
+            }
 		}
 	}
 	
@@ -1081,6 +1086,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 - (unsigned)containedObjectsCount
 {
     return [containedObjects count];
+}
+
+- (BOOL)containsMultipleContacts
+{
+    return ([containedObjects count] > 1)?YES:[[containedObjects lastObject] containsMultipleContacts];
 }
 
 //Test for the presence of an object in our group

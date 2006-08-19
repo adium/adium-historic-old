@@ -135,7 +135,8 @@
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
 	if ([inObject isKindOfClass:[SmackListContact class]] && [(SmackListContact*)inObject account] == account) {
-        if([(SmackListContact*)inObject preferredContact])
+        AIListContact *contact = [(SmackListContact*)inObject preferredContact];
+        if(contact && [[[contact UID] jidResource] length] > 0)
             return AILocalizedString(@"Resources",nil);
 	}
 	return nil;
@@ -292,7 +293,12 @@
     if(!rosterContact)
         return; // ignore presence information for people not on our contact list (might want to add that later for chats to people not on the contact list)
 
-    AIListContact *resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:XMPPAddress];
+    AIListContact *resourceObject;
+    
+    if([jid isEqualToString:XMPPAddress])
+        resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:[XMPPAddress stringByAppendingString:@"/"]];
+    else
+        resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:XMPPAddress];
     
     NSLog(@"resource object = %@ (%p)",resourceObject,resourceObject);
 
@@ -353,7 +359,11 @@
     
     if([type isEqualToString:@"unavailable"]) {
         // being unavailable is handled by -XMPPRosterPresenceChangedMainThread:, so we only set the status string here
-        AIListContact *resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:jidWithResource];
+        AIListContact *resourceObject;
+        if([jidWithResource isEqualToString:jid])
+            resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:[jidWithResource stringByAppendingString:@"/"]];
+        else
+            resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:jidWithResource];
         if(resourceObject) {
             if(status) {
                 NSAttributedString *statusMessage = [[NSAttributedString alloc] initWithString:status attributes:nil];

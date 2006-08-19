@@ -11,6 +11,8 @@
 #import "AIAdium.h"
 #import "AIContactController.h"
 
+#import <AIUtilities/AIStringUtilities.h>
+
 #import <AIUtilities/AIImageAdditions.h>
 
 @implementation SmackListContact
@@ -186,7 +188,14 @@
             
             NSAttributedString *statusString = [contact contactListStatusMessage];
             
-            [entryString appendString:[[contact UID] jidResource]];
+            NSString *resource = [[contact UID] jidResource];
+            
+            [entryString appendString:@" "]; // some space between the icon and the text looks better
+            
+            if([resource length] > 0)
+                [entryString appendString:[[contact UID] jidResource]];
+            else
+                [entryString appendString:AILocalizedString(@"N/A","empty resource placeholder")];
             
             if(statusString && [statusString length] > 0)
             {

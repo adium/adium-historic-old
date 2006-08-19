@@ -60,7 +60,7 @@ static AIHTMLDecoder *messageencoder = nil;
         NSString *resource = [from jidResource];
         NSString *thread = [packet getThread];
         
-        AIListContact *sourceContact = [[adium contactController] contactWithService:[account service] account:account UID:[from jidUserHost]];
+        AIListContact *sourceContact = [[adium contactController] contactWithService:[account service] account:account UID:from];
         
         if (!(chat = [[adium chatController] existingChatWithContact:sourceContact]))
         {
@@ -183,11 +183,7 @@ static AIHTMLDecoder *messageencoder = nil;
         [chat notifyOfChangedStatusSilently:[account silentAndDelayed]];
     }
     
-    NSString *jid = [[chat listObject] UID];
-    if(resource)
-        jid = [NSString stringWithFormat:@"%@/%@",jid,resource];
-    
-    [message setTo:jid];
+    [message setTo:[[chat listObject] UID]];
     [message setType:[SmackCocoaAdapter messageTypeFromString:type]];
     
     [message setThread:threadid];
