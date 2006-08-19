@@ -14,23 +14,36 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIObject.h>
-@protocol	AIChatObserver;
-@class		JLPresenceRemote;
-#define ADIUM_PRESENCE_BROADCAST				@"AIPresenceBroadcast"
+#import "JLPresenceRemote.h"
 
-@interface JLPresenceController : AIObject <AIChatObserver>
-{	
-	NSConnection					*vendor;
-	NSDistributedNotificationCenter *notificationCenter;
-	// We need these for our chat observer
-	NSArray							*unviewedObjectsArray;
-	NSArray							*openChatsArray;
-	
-	//JLStatusRemote					*statusRemote;
-	JLPresenceRemote				*presenceRemote;
+/*
+ * This class exists purely to broadcast objects that we want to use remotely from SMD.
+ */
+
+@implementation JLPresenceRemote
+
++ (JLPresenceRemote *)presenceRemote
+{
+	return [[[self alloc] init] autorelease];
 }
 
-+ (JLPresenceController *)presenceController;
+- (id)init
+{
+	if ((self = [super init])) {
+		
+	}
+	
+	return self;
+}
+
+- (void) dealloc
+{
+	[super dealloc];
+}
+
+- (AIAdium *)sharedAdiumInstance
+{
+	return adium;
+}
 
 @end

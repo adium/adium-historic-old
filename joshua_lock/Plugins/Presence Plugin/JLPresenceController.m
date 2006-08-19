@@ -1,5 +1,5 @@
 /* 
-* Adium is the legal property of its developers, whose names are listed in the copyright file included
+ * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
  * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
@@ -13,23 +13,23 @@
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
+#import "JLPresenceController.h"
+#import "JLPresenceRemote.h"
 #import "AIAccountController.h"
 #import "AIChatController.h"
 #import "AIInterfaceController.h"
 #import "AIStatusController.h"
-#import "JLPresenceController.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIColorAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatusIcons.h>
 #import <Adium/AIStatusMenu.h>
 #import <Adium/AIAccountMenu.h>
-#import <AIUtilities/AIColorAdditions.h>
 
 #define STATUS_ITEM_MARGIN 8
 
@@ -50,6 +50,20 @@
 		openChatsArray = [[NSMutableArray alloc] init];
 		unviewedObjectsArray = [[NSMutableArray alloc] init];
 		
+		//statusRemote = [JLStatusRemote statusRemote];
+		presenceRemote = [JLPresenceRemote presenceRemote];
+		
+		vendor = [NSConnection defaultConnection];
+		[vendor setRootObject: presenceRemote];
+		
+		// FIXME: we need to fix the naming of the vend
+		if(![vendor registerName:ADIUM_PRESENCE_BROADCAST]) {
+			// TODO: implement some *decent* error handling here
+			AILog(@"JL_DEBUG: We are not vending :(");
+		} else {
+			AILog(@"JL_DEBUG: We *are* vending! :)");
+		}
+		
 		notificationCenter = [NSDistributedNotificationCenter defaultCenter];
 		[notificationCenter postNotificationName:@"JL_AdiumRunning" object:nil];
 		// We need to broadcast accounts being online etc...
@@ -60,6 +74,10 @@
 		[notificationCenter addObserver:self
 							   selector:@selector(killAdium:)
 								   name:@"JL_QuitAdium"
+								 object:nil];
+		[notificationCenter addObserver:self
+							   selector:@selector(bringFront:)
+								   name:@"JL_BringAdiumFront"
 								 object:nil];
 		
 		NSNotificationCenter *localNotes = [adium notificationCenter];
@@ -74,17 +92,6 @@
 		[[adium chatController] registerChatObserver:self];
 	}
 	
-	// Before we return ourselves we are going to vend
-	vendor = [NSConnection defaultConnection];
-	[vendor setRootObject: self];
-	
-	if(![vendor registerName:ADIUM_PRESENCE_BROADCAST]) {
-		// TODO: implement some *decent* error handling here
-		AILog(@"JL_DEBUG: We are not vending :(");
-	} else {
-		AILog(@"JL_DEBUG: We *are* vending! :)");
-	}
-	
 	return self;
 }
 
@@ -96,7 +103,7 @@
 	[notificationCenter removeObserver:self];
 	
 	//Release our objects
-	[vendor dealloc];
+	[vendor release];
 		
 	//To the superclass, Robin!
 	[super dealloc];
@@ -116,6 +123,12 @@
 	[notificationCenter postNotificationName:@"JL_AdiumClosing" object: nil];
 	[adium confirmQuit:self];
 	
+}
+
+- (void)bringFront:(NSNotification *)note
+{
+	[NSApp activateIgnoringOtherApps:YES];
+	[NSApp arrangeInFront:nil];
 }
 
 #pragma mark Chat Observer
