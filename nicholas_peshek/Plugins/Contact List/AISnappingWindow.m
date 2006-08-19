@@ -53,7 +53,7 @@
 				(*inWindowFrame).origin.y += NSMinY(otherWindowFrame) - NSMaxY((*inWindowFrame));
 				if((fabs(otherWindowFrame.origin.x - (*inWindowFrame).origin.x)) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) {
 					(*inWindowFrame).origin.x = otherWindowFrame.origin.x;
-					[self mergeContactListWindow:self withWindow:otherWindow];
+					windowToSnapTo = otherWindow;
 				}
 				alreadyChanged = YES;
 			}
@@ -61,7 +61,7 @@
 				(*inWindowFrame).origin.y = NSMaxY(otherWindowFrame);
 				if((fabs(otherWindowFrame.origin.x - (*inWindowFrame).origin.x)) <= BORDERLESS_WINDOW_DOCKING_DISTANCE) {
 					(*inWindowFrame).origin.x = otherWindowFrame.origin.x;
-					[self mergeContactListWindow:otherWindow withWindow:self];
+					windowToSnapTo = otherWindow;
 				}
 				alreadyChanged = YES;
 			}
@@ -70,6 +70,25 @@
 	
 	//Window's all moved around, return if we moved it!
 	return alreadyChanged;
+}
+
+- (void)mouseUp:(NSEvent *)theEvent
+{
+	//A quick efficiency check. If we didn't link to a window during the drag, don't bother doing anything.
+	if(windowToSnapTo) {
+	//Check if the x origin coordinates match, this means that they're still linked.
+		if([self frame].origin.x == [windowToSnapTo frame].origin.x) {
+		//The window was dragged to the top of another window.
+			if([self frame].origin.y == NSMaxY([windowToSnapTo frame])) {
+				[self mergeContactListWindow:windowToSnapTo withWindow:self];
+		//The window was dragged to the bottom of another window.
+			} else if ([self frame].origin.y == ([self frame].origin.y + NSMinY([windowToSnapTo frame]) - NSMaxY([self frame]))) {
+				[self mergeContactListWindow:self withWindow:windowToSnapTo];
+			}
+		}
+		windowToSnapTo = nil;
+	}
+	[super mouseUp:theEvent];
 }
 
 - (void)mergeContactListWindow:(NSWindow *)currentWindow withWindow:(NSWindow *)otherWindow
@@ -86,5 +105,4 @@
 	[[(AIListWindowController  *)[otherWindow windowController] master] setContactListRoot:groupToMergeWith];
 	[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] destroyListController:[[currentWindow windowController] master]];
 }
-
 @end
