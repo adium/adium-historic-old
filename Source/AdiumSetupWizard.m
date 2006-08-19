@@ -68,7 +68,7 @@ enum{
  */
 - (void)windowDidLoad
 {
-	[[self window] setTitle:AILocalizedString(@"Adium",nil)];
+	[[self window] setTitle:AILocalizedString(@"Adium Setup Assistant",nil)];
 
 	//Ensure the first tab view item is selected
 	[tabView selectTabViewItemAtIndex:WIZARD_TAB_WELCOME];
@@ -279,7 +279,7 @@ enum{
 			[[textView_addAccountMessage enclosingScrollView] setDrawsBackground:NO];
 			
 			NSAttributedString *accountMessage = [AIHTMLDecoder decodeHTML:
-				AILocalizedString(@"<HTML>To chat with your friends, family, and coworkers, you must have an instant messaging account on the same service they do. Specify a service, name, and password below; if you don't have an account yet, click <A HREF=\"http://trac.adiumx.com/wiki/CreatingAnAccount#Sigingupforanaccount\">here</A> for more information.\n\nAdium supports as many accounts as you want to add; you can always add more in the Accounts pane of the Adium Preferences.</HTML>", nil)
+				AILocalizedString(@"<HTML>To chat with your friends, family, and coworkers, you must have an instant messaging account on the same service they do. Choose a service, name, and password below; if you don't have an account yet, click <A HREF=\"http://trac.adiumx.com/wiki/CreatingAnAccount#Sigingupforanaccount\">here</A> for more information.\n\nAdium supports as many accounts as you want to add; you can always add more in the Accounts pane of the Adium Preferences.</HTML>", nil)
 													 withDefaultAttributes:[[textView_addAccountMessage textStorage] attributesAtIndex:0
 																														effectiveRange:NULL]];
 			[[textView_addAccountMessage textStorage] setAttributedString:accountMessage];
@@ -331,7 +331,7 @@ enum{
 	} else if ([identifier isEqualToString:DONE_IDENTIFIER]) {
 		[textView_doneMessage setDrawsBackground:NO];
 		[[textView_doneMessage enclosingScrollView] setDrawsBackground:NO];
-		[textView_doneMessage setString:AILocalizedString(@"Adium is now ready for you. \n\nThe Status indicator at the top of your Contact List and in the Status menu lets you determine whether others see you as Available or Away or, alternately, if you are Offline. Select Custom to specify a status message.\n\nDouble-click a name in your Contact List to open a chat window and begin chatting.  You can add contacts to your Contact List via the Contact menu.\n\nWant to customize your Adium experience? Check out the Adium Preferences and AdiumXtras web site via the Adium menu.\n\nEnjoy! Click Done to begin using Adium.", nil)],
+		[textView_doneMessage setString:AILocalizedString(@"Adium is now ready for you. \n\nThe Status indicator at the top of your Contact List and in the Status menu lets you determine whether others see you as Available or Away or, alternately, if you are Offline. Select Custom to type your own status message.\n\nDouble-click a name in your Contact List to begin a conversation.  You can add contacts to your Contact List via the Contact menu.\n\nWant to customize your Adium experience? Check out the Adium Preferences and AdiumXtras web site via the Adium menu.\n\nEnjoy! Click Done to begin using Adium.", nil)],
 
 		[textField_done setStringValue:AILocalizedString(@"Congratulations!","Header line in the last pane of the Adium setup wizard")];
 	}
