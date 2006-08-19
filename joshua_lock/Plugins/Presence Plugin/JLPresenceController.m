@@ -50,13 +50,10 @@
 		openChatsArray = [[NSMutableArray alloc] init];
 		unviewedObjectsArray = [[NSMutableArray alloc] init];
 		
-		//statusRemote = [JLStatusRemote statusRemote];
-		presenceRemote = [JLPresenceRemote presenceRemote];
-		
 		vendor = [NSConnection defaultConnection];
-		[vendor setRootObject: presenceRemote];
+		// FIXME: we don't really want to be broadcasting self
+		[vendor setRootObject: self];
 		
-		// FIXME: we need to fix the naming of the vend
 		if(![vendor registerName:ADIUM_PRESENCE_BROADCAST]) {
 			// TODO: implement some *decent* error handling here
 			AILog(@"JL_DEBUG: We are not vending :(");

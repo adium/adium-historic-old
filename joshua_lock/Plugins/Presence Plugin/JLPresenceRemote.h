@@ -15,14 +15,10 @@
  */
 
 #import <Adium/AIObject.h>
-
+// FIXME: subclassing AIObject or NSObject?!?
 
 @interface JLPresenceRemote : AIObject {
 
 }
-
-+ (JLPresenceRemote *)presenceRemote;
-
-- (AIAdium *)sharedAdiumInstance;
 
 @end
