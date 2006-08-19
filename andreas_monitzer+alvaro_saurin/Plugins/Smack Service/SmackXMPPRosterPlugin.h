@@ -17,6 +17,8 @@
     SmackXMPPRosterPluginListener *listener;
     
     SmackRoster *roster;
+    
+    NSMutableArray *services;
 }
 
 - (id)initWithAccount:(SmackXMPPAccount*)a;

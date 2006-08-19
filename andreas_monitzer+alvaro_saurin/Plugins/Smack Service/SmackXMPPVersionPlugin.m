@@ -100,7 +100,7 @@
     NSMutableArray *menuItems = [NSMutableArray array];
     
     NSMenuItem *mitem;
-    if([inContact isKindOfClass:[SmackListContact class]])
+    if([inContact isKindOfClass:[SmackListContact class]] || [[[inContact UID] jidResource] length] == 0)
         mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Get Client Version","Get Client Version") action:@selector(requestVersionInformation:) keyEquivalent:@""];
     else
         mitem = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:AILocalizedString(@"Get Client Version (%@)","Get Client Version (resource)"),[[inContact UID] jidResource]] action:@selector(requestVersionInformation:) keyEquivalent:@""];
