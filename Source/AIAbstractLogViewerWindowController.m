@@ -1108,8 +1108,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 - (void)updateRankColumnVisibility
 {
 	NSTableColumn	*resultsColumn = [tableView_results tableColumnWithIdentifier:@"Rank"];
-	NSArray		*tableColumns;
-	NSTableColumn	*nextDoorNeighbor;
+	NSArray			*tableColumns;
 	
 	if ((searchMode == LOG_SEARCH_CONTENT) && ([activeSearchString length])) {
 		//Add the resultsColumn and resize if it should be shown but is not at present
@@ -1126,18 +1125,26 @@ static int toArraySort(id itemA, id itemB, void *context);
 			[resultsColumn sizeToFit];
 			[resultsColumn setWidth:([resultsColumn width] * 1.5)];
 			
-			//Adjust the column to the results column's left so results is now visible
 			tableColumns = [tableView_results tableColumns];
-			nextDoorNeighbor = [tableColumns objectAtIndex:([tableColumns indexOfObject:resultsColumn] - 1)];
-			[nextDoorNeighbor setWidth:[nextDoorNeighbor width]-[resultsColumn width]];
+			if ([tableColumns indexOfObject:resultsColumn] > 0) {
+				NSTableColumn	*nextDoorNeighbor;
+
+				//Adjust the column to the results column's left so results is now visible
+				nextDoorNeighbor = [tableColumns objectAtIndex:([tableColumns indexOfObject:resultsColumn] - 1)];
+				[nextDoorNeighbor setWidth:[nextDoorNeighbor width]-[resultsColumn width]];
+			}
 		}
 	} else {
 		//Remove the resultsColumn and resize if it should not be shown but is at present
 		if (resultsColumn) {
-			//Adjust the column to the results column's left to take up the space again
-			tableColumns = [tableView_results tableColumns];
-			nextDoorNeighbor = [tableColumns objectAtIndex:([tableColumns indexOfObject:resultsColumn] - 1)];
-			[nextDoorNeighbor setWidth:[nextDoorNeighbor width]+[resultsColumn width]];
+			if ([tableColumns indexOfObject:resultsColumn] > 0) {
+				NSTableColumn	*nextDoorNeighbor;
+
+				//Adjust the column to the results column's left to take up the space again
+				tableColumns = [tableView_results tableColumns];
+				nextDoorNeighbor = [tableColumns objectAtIndex:([tableColumns indexOfObject:resultsColumn] - 1)];
+				[nextDoorNeighbor setWidth:[nextDoorNeighbor width]+[resultsColumn width]];
+			}
 
 			//Remove it
 			[tableView_results removeTableColumn:resultsColumn];
