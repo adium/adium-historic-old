@@ -16,16 +16,7 @@
 
 #import "JLPresenceRemote.h"
 
-/*
- * This class exists purely to broadcast objects that we want to use remotely from SMD.
- */
-
 @implementation JLPresenceRemote
-
-+ (JLPresenceRemote *)presenceRemote
-{
-	return [[[self alloc] init] autorelease];
-}
 
 - (id)init
 {
@@ -39,11 +30,6 @@
 - (void) dealloc
 {
 	[super dealloc];
-}
-
-- (AIAdium *)sharedAdiumInstance
-{
-	return adium;
 }
 
 @end

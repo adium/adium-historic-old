@@ -13,7 +13,7 @@ __Implemented__
 * Menu option to make Adium the frontmost app
 
 __To Do__
-* Load status menus - PARTIAL but doesn't work
+* Load status menus
 -
 * Load the correct icon for the users status (Plugin broadcasts status? Custom object vended via DO. Notification when contents of object change so that SMD knows to reload?!?)
 * Load account menus
