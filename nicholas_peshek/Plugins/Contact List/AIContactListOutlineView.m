@@ -82,4 +82,36 @@
 {
 	isDroppedOutOfView = droppedOn;
 }
+
+//Disable/enable Slideback image.
+- (void)dragImage:(NSImage *)anImage
+			   at:(NSPoint)baseLocation
+		   offset:(NSSize)initialOffset
+			event:(NSEvent *)event
+	   pasteboard:(NSPasteboard *)pboard
+		   source:(id)sourceObject
+		slideBack:(BOOL)slideFlag {
+	
+	if([isDroppedOutOfView boolValue]) {
+		if ([[pboard types] containsObject:@"AIListObjectUniqueIDs"]) {
+			NSArray			*dragItemsUniqueIDs = [pboard propertyListForType:@"AIListObjectUniqueIDs"];
+			NSEnumerator	*idEnumerator = [dragItemsUniqueIDs objectEnumerator];
+			NSString		*uniqueUID;
+			
+			while ((uniqueUID = [idEnumerator nextObject])) {
+				if ([[[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:uniqueUID] isKindOfClass:[AIListGroup class]]) {
+					slideFlag = NO;
+				}
+			}
+		}
+	}
+	
+	[super dragImage:anImage
+				  at:baseLocation
+			  offset:initialOffset
+			   event:event
+		  pasteboard:pboard
+			  source:sourceObject
+		   slideBack:slideFlag];
+}
 @end
