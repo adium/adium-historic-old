@@ -796,7 +796,7 @@ Class LogViewerWindowControllerClass = NULL;
 										(CFDictionaryRef)textAnalysisProperties);
 
 		//Clear the dirty log array in case it was loaded (this can happen if the user mucks with the cache directory)
-		[[NSFileManager defaultManager] trashFileAtPath:[self _dirtyLogArrayPath]];
+		[[NSFileManager defaultManager] removeFileAtPath:[self _dirtyLogArrayPath] handler:NULL];
 		[dirtyLogArray release]; dirtyLogArray = nil;
     }
 
@@ -827,11 +827,11 @@ Class LogViewerWindowControllerClass = NULL;
 - (void)resetLogIndex
 {
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[self _logIndexPath]]) {
-		[[NSFileManager defaultManager] trashFileAtPath:[self _logIndexPath]];
+		[[NSFileManager defaultManager] removeFileAtPath:[self _logIndexPath] handler:NULL];
 	}	
 
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[self _dirtyLogArrayPath]]) {
-		[[NSFileManager defaultManager] trashFileAtPath:[self _dirtyLogArrayPath]];
+		[[NSFileManager defaultManager] removeFileAtPath:[self _dirtyLogArrayPath] handler:NULL];
 	}
 }
 
@@ -994,12 +994,15 @@ Class LogViewerWindowControllerClass = NULL;
 	AIChat		 *chat;
 	
 	while ((chat = [enumerator nextObject])) {
-		NSString *dirtyKey = [@"LogIsDirty_" stringByAppendingString:[[self existingAppenderForChat:chat] path]];
-		
-		if ([chat integerStatusObjectForKey:dirtyKey]) {
-			[chat setStatusObject:nil
-						   forKey:dirtyKey
-						   notify:NotifyNever];
+		NSString *existingAppenderPath = [[self existingAppenderForChat:chat] path];
+		if (existingAppenderPath) {
+			NSString *dirtyKey = [@"LogIsDirty_" stringByAppendingString:existingAppenderPath];
+			
+			if ([chat integerStatusObjectForKey:dirtyKey]) {
+				[chat setStatusObject:nil
+							   forKey:dirtyKey
+							   notify:NotifyNever];
+			}
 		}
 	}
 }
