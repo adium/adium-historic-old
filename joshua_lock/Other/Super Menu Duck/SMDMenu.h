@@ -20,6 +20,7 @@
 	NSImage							*adiumRedHighlightImage;
 	NSDistributedNotificationCenter *notificationCenter;
 	
+	BOOL							adiumIsRunning;
 	JLPresenceRemote				*presenceRemote;
 }
 // FIXME: any of this private API?

@@ -11,6 +11,7 @@ __Implemented__
 * Menu option to quit Adium from the SMD
 * There is a menu item to launch Adium (if it isn't running). It however doesn't necessarily run the right version of Adium should multiple versions exist ...
 * Menu option to make Adium the frontmost app
+* SMD now supports three different *states* (Adium online / Adium running / Adium not running) and draws menus accordingly as opposed to the previous two states (Adium running / Adium not running)
 
 __To Do__
 * Load status menus - PARTIAL: there's some code to perform this but it's broken
