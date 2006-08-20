@@ -22,6 +22,10 @@
 #define	DISCO_JINGLE_ID			@"http://jabber.org/protocol/jingle"
 #define	DISCO_JINGLE_AUDIO_ID	@"http://jabber.org/protocol/jingle/audio"
 
+#define JINGLE_JAR @"smackx-jingle"
+
+static JavaClassLoader *classLoader = nil;
+
 @interface SmackJingleListener : NSObject {
 }
 
@@ -31,15 +35,28 @@
 
 @interface SmackCocoaAdapter (jinglePlugin)
 
++ (void)loadJingle;
 + (SmackJingleListener*)createJingleListenerForConnection:(SmackXMPPConnection*)conn delegate:(id)delegate;
 
 @end
 
 @implementation SmackCocoaAdapter (jinglePlugin)
 
++ (void)loadJingle
+{
+    if(!classLoader)
+    {
+        NSString *jingleJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:JINGLE_JAR
+                                                                                   ofType:@"jar"
+                                                                              inDirectory:@"Java"];
+        
+        classLoader = [[[[AIObject sharedAdiumInstance] javaController] classLoaderWithJARs:[NSArray arrayWithObject:jingleJarPath] parentClassLoader:[self classLoader]] retain];
+    }
+}
+
 + (SmackJingleListener*)createJingleListenerForConnection:(SmackXMPPConnection*)conn delegate:(id)delegate
 {
-    return [(id)[[self classLoader] loadClass:@"net.adium.smackBridge.JingleListener"] getInstance:conn :delegate];
+    return [(id)[[self classLoader] loadClass:@"net.adium.smackBridge.JingleListener"] getInstance:conn :delegate :classLoader];
 }
 
 @end
@@ -51,6 +68,7 @@
     if((self = [super init]))
     {
         account = a;
+        [SmackCocoaAdapter loadJingle];
     }
     return self;
 }

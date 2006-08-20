@@ -1257,21 +1257,14 @@
 		8102A8210A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A81F0A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m */; };
 		8102A8880A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A8860A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m */; };
 		811DE2170A862E5900487D47 /* InvisibleCommand.java in Sources */ = {isa = PBXBuildFile; fileRef = 811DE2160A862E5900487D47 /* InvisibleCommand.java */; };
-		81376B680A9273A000298452 /* SmackGoogleService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81376B660A9273A000298452 /* SmackGoogleService.h */; };
 		81376B690A9273A000298452 /* SmackGoogleService.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376B670A9273A000298452 /* SmackGoogleService.m */; };
-		81376B800A9274F000298452 /* SmackGoogleAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81376B7E0A9274F000298452 /* SmackGoogleAccount.h */; };
 		81376B810A9274F000298452 /* SmackGoogleAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376B7F0A9274F000298452 /* SmackGoogleAccount.m */; };
 		81376B8D0A92794F00298452 /* SmackGoogleAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81376B870A92794E00298452 /* SmackGoogleAccountView.nib */; };
-		81376B930A92797E00298452 /* SmackGoogleAccountViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81376B910A92797D00298452 /* SmackGoogleAccountViewController.h */; };
 		81376B940A92797E00298452 /* SmackGoogleAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376B920A92797D00298452 /* SmackGoogleAccountViewController.m */; };
 		81376DF70A92B01500298452 /* SmackLiveJournalAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81376DF10A92B01400298452 /* SmackLiveJournalAccountView.nib */; };
-		81376DFE0A92B06B00298452 /* SmackLiveJournalAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81376DF80A92B06B00298452 /* SmackLiveJournalAccount.h */; };
 		81376DFF0A92B06B00298452 /* SmackLiveJournalAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376DF90A92B06B00298452 /* SmackLiveJournalAccount.m */; };
-		81376E000A92B06B00298452 /* SmackLiveJournalAccountViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81376DFA0A92B06B00298452 /* SmackLiveJournalAccountViewController.h */; };
 		81376E010A92B06B00298452 /* SmackLiveJournalAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376DFB0A92B06B00298452 /* SmackLiveJournalAccountViewController.m */; };
-		81376E020A92B06B00298452 /* SmackLiveJournalService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81376DFC0A92B06B00298452 /* SmackLiveJournalService.h */; };
 		81376E030A92B06B00298452 /* SmackLiveJournalService.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376DFD0A92B06B00298452 /* SmackLiveJournalService.m */; };
-		81376E3C0A92B66E00298452 /* SmackGoogleNewMailPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81376E3A0A92B66E00298452 /* SmackGoogleNewMailPlugin.h */; };
 		81376E3D0A92B66E00298452 /* SmackGoogleNewMailPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376E3B0A92B66E00298452 /* SmackGoogleNewMailPlugin.m */; };
 		81376E460A92B6FB00298452 /* GoogleSettings.java in Sources */ = {isa = PBXBuildFile; fileRef = 81376E450A92B6FB00298452 /* GoogleSettings.java */; };
 		81376EA10A92C11800298452 /* MailNotification.java in Sources */ = {isa = PBXBuildFile; fileRef = 81376EA00A92C11800298452 /* MailNotification.java */; };
@@ -1340,6 +1333,7 @@
 		81D5A8640A5A14AE0099F9B9 /* SmackXMPPFormController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81D5A8620A5A14AE0099F9B9 /* SmackXMPPFormController.m */; };
 		81D5A8F50A5A15D10099F9B9 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C103FAE057127A500F3C158 /* WebKit.framework */; };
 		81DA14730A779B2E00569134 /* SmackXMPPVCardEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81DA14710A779B2E00569134 /* SmackXMPPVCardEditor.nib */; };
+		81E708820A98AAA800D9409E /* smackx-jingle.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81E708810A98AA9300D9409E /* smackx-jingle.jar */; };
 		81F651740A291004008FC8E7 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		81F651750A291004008FC8E7 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		81F651760A291004008FC8E7 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
@@ -1838,14 +1832,8 @@
 				81F659BD0A2A8C81008FC8E7 /* smack.jar in CopyFiles */,
 				81F659BE0A2A8C81008FC8E7 /* smackx.jar in CopyFiles */,
 				81C3A8FE0A91076100A575B6 /* asterisk-im-client.jar in CopyFiles */,
+				81E708820A98AAA800D9409E /* smackx-jingle.jar in CopyFiles */,
 				81C3AAD10A913CFA00A575B6 /* SmackBridge.jar in CopyFiles */,
-				81376B680A9273A000298452 /* SmackGoogleService.h in CopyFiles */,
-				81376B800A9274F000298452 /* SmackGoogleAccount.h in CopyFiles */,
-				81376B930A92797E00298452 /* SmackGoogleAccountViewController.h in CopyFiles */,
-				81376DFE0A92B06B00298452 /* SmackLiveJournalAccount.h in CopyFiles */,
-				81376E000A92B06B00298452 /* SmackLiveJournalAccountViewController.h in CopyFiles */,
-				81376E020A92B06B00298452 /* SmackLiveJournalService.h in CopyFiles */,
-				81376E3C0A92B66E00298452 /* SmackGoogleNewMailPlugin.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3844,6 +3832,7 @@
 		81D5A8620A5A14AE0099F9B9 /* SmackXMPPFormController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPFormController.m; path = "Plugins/Smack Service/SmackXMPPFormController.m"; sourceTree = "<group>"; };
 		81DA14720A779B2E00569134 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPVCardEditor.nib"; sourceTree = "<group>"; };
 		81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = SmackBridge.java; path = "Plugins/Smack Service/SmackBridge.java"; sourceTree = "<group>"; };
+		81E708810A98AA9300D9409E /* smackx-jingle.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "smackx-jingle.jar"; path = "Plugins/Smack Service/smackx-jingle.jar"; sourceTree = "<group>"; };
 		81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Smack.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		81F6519A0A291145008FC8E7 /* SmackServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackServicePlugin.h; path = "Plugins/Smack Service/SmackServicePlugin.h"; sourceTree = "<group>"; };
 		81F6519B0A291145008FC8E7 /* SmackServicePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackServicePlugin.m; path = "Plugins/Smack Service/SmackServicePlugin.m"; sourceTree = "<group>"; };
@@ -6959,6 +6948,7 @@
 				81F659B90A2A8C4E008FC8E7 /* smack.jar */,
 				81F659BA0A2A8C4E008FC8E7 /* smackx.jar */,
 				81C3A8FC0A91072900A575B6 /* asterisk-im-client.jar */,
+				81E708810A98AA9300D9409E /* smackx-jingle.jar */,
 			);
 			name = "Java-part";
 			sourceTree = "<group>";

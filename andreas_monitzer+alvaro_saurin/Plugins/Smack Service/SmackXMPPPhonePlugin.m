@@ -20,7 +20,6 @@
 #import <AIUtilities/AIStringUtilities.h>
 
 #define ASTERISKIM_JAR @"asterisk-im-client"
-#define CONCURRENT_JAR @"backport-util-concurrent"
 
 static JavaClassLoader *classLoader = nil;
 
@@ -131,7 +130,7 @@ static JavaClassLoader *classLoader = nil;
                                                                                        ofType:@"jar"
                                                                                   inDirectory:@"Java"];
         
-        classLoader = [[[AIObject sharedAdiumInstance] javaController] classLoaderWithJARs:[NSArray arrayWithObject:asteriskIMJarPath] parentClassLoader:[self classLoader]];
+        classLoader = [[[[AIObject sharedAdiumInstance] javaController] classLoaderWithJARs:[NSArray arrayWithObject:asteriskIMJarPath] parentClassLoader:[self classLoader]] retain];
     }
 }
 
