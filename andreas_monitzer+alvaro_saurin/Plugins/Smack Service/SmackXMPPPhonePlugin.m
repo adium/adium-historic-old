@@ -327,9 +327,6 @@ static BOOL registered = NO;
 
 - (void)receivedPresencePacket:(NSNotification*)n
 {
-    if(!isSupported)
-        return;
-
     SmackPresence *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
     
     // prefilter everything that can be done in this secondary thread to avoid blocking the main thread when possible
@@ -346,7 +343,7 @@ static BOOL registered = NO;
     
     if(contact)
     {
-        if([[[packet getFrom] jidHost] isEqualToString:[[account UID] jidHost]])
+        if(isSupported && [[[packet getFrom] jidHost] isEqualToString:[[account UID] jidHost]])
         {
             // this phone service only works with people on the same server
             
