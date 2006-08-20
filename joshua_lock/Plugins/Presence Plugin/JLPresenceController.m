@@ -86,6 +86,10 @@
 					   selector:@selector(chatClosed:)
 						   name:Chat_WillClose
 						 object:nil];
+		[localNotes addObserver:self
+					   selector:@selector(accountStateChanged:)
+						   name:AIStatusActiveStateChangedNotification
+						 object:nil];
 		[[adium chatController] registerChatObserver:self];
 	}
 	
@@ -112,7 +116,11 @@
 {
 	/* We receive this notification *if* SMD is started after Adium, we need to let 
 	SMD know that Adium is already running. */
-	[notificationCenter postNotificationName:@"JL_AdiumRunning" object:nil];
+	if ([[adium accountController] oneOrMoreConnectedAccounts]) {
+		[notificationCenter postNotificationName:@"JL_AdiumOnline" object:nil];
+	} else {
+		[notificationCenter postNotificationName:@"JL_AdiumRunning" object:nil];
+	}
 }
 
 - (void)killAdium:(NSNotification *)note
@@ -126,6 +134,14 @@
 {
 	[NSApp activateIgnoringOtherApps:YES];
 	[NSApp arrangeInFront:nil];
+}
+
+- (void)accountStateChanged:(NSNotification *)note
+{
+	// FIXME: this possibly needs to be a little more refined?
+	if ([[adium accountController] oneOrMoreConnectedAccounts]) {
+		[notificationCenter postNotificationName:@"JL_AdiumOnline" object:nil];
+	}
 }
 
 #pragma mark Chat Observer

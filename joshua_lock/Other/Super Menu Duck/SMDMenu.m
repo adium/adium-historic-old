@@ -20,6 +20,7 @@ int main(void)
 - (void) applicationDidFinishLaunching: (NSNotification *)notification
 {
 	presenceRemote = nil;
+	adiumIsRunning = NO;
 	
 	NSBundle *bundle = [NSBundle mainBundle];
 	adiumImage = [[NSImage alloc] initWithContentsOfFile:[bundle pathForResource:@"adium"
@@ -44,6 +45,10 @@ int main(void)
 	[notificationCenter addObserver:self
 						   selector:@selector(adiumClosing:)
 							   name:@"JL_AdiumClosing"
+							 object:nil];
+	[notificationCenter addObserver:self
+						   selector:@selector(adiumOnline:)
+							   name:@"JL_AdiumOnline"
 							 object:nil];
 	[notificationCenter addObserver:self
 						   selector:@selector(unviewedContentOn:)
@@ -88,16 +93,23 @@ int main(void)
 
 - (void)adiumStarted:(NSNotification *)note
 {
+	adiumIsRunning = YES;
 	// Redraw menu with Adium's presence data
 	[self connectToVend];
-	[self drawOnlineMenu];
+	[self drawOfflineMenu];
 }
 
 - (void)adiumClosing:(NSNotification *)note
 {
 	presenceRemote = nil;
+	adiumIsRunning = NO;
 	// Draw our default offline menu
 	[self drawOfflineMenu];
+}
+
+- (void)adiumOnline:(NSNotification *)note
+{
+	[self drawOnlineMenu];
 }
 
 #pragma mark Menu Delegates
@@ -111,17 +123,20 @@ int main(void)
 
 - (void)drawOfflineMenu
 {
+	NSMenuItem *tmpMenuItem;
 	[self removeAllMenuItems];
 	
 	[statusItem setImage:adiumOfflineImage];
 	[statusItem setAlternateImage:adiumOfflineHighlightImage];
 	
-	NSMenuItem *tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:@"Launch Adium"
-															   action:@selector(launchAdium)
-														keyEquivalent:@""];
-	[tmpMenuItem setTarget:self];
-	[tmpMenuItem setEnabled:YES];
-	[theMenu addItem:[NSMenuItem separatorItem]];
+	if (!adiumIsRunning) {
+		tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:@"Launch Adium"
+																   action:@selector(launchAdium)
+															keyEquivalent:@""];
+		[tmpMenuItem setTarget:self];
+		[tmpMenuItem setEnabled:YES];
+		[theMenu addItem:[NSMenuItem separatorItem]];
+	}
 		
 	tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:@"Quit SMD"
 															   action:@selector(quitSMD)
@@ -137,10 +152,10 @@ int main(void)
 	NSEnumerator	*enumerator;
 	JLStatusObject	*statusObject;
 	
-	[self removeAllMenuItems];
-	
 	[statusItem setImage:adiumImage];
 	[statusItem setAlternateImage:adiumHighlightImage];
+	
+	[self removeAllMenuItems];
 	
 	// Status menu
 	enumerator = [[presenceRemote statusObjectArray] objectEnumerator];
