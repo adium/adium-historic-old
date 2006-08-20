@@ -14,10 +14,10 @@ __Implemented__
 * SMD now supports three different *states* (Adium online / Adium running / Adium not running) and draws menus accordingly as opposed to the previous two states (Adium running / Adium not running)
 
 __To Do__
-* Load status menus - PARTIAL: there's some code to perform this but it's broken
+* Load status menus - PARTIAL: the status items load but have no images and no attached action
 -
-* Load the correct icon for the users status (Plugin broadcasts status? Custom object vended via DO. Notification when contents of object change so that SMD knows to reload?!?)
 * Load account menus
+* Load the correct icon for the users status (Plugin broadcasts status? Custom object vended via DO. Notification when contents of object change so that SMD knows to reload?!?)
 * Activate chats
 * Connect/disconnect accounts
 -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
@@ -27,3 +27,5 @@ __Bugs__
 * Localize all strings
 * We should probably symlink or alias to the resources we "borrow" from Adium
 * "Launch Adium" doesn't launch the right Adium.
+* Status menu items have no images. I think we need to convert the NSImage into something more suitable for sending down a DO pipe then convert back at the other end
+* If we convert status into a cString we get Super Menu Duck[6590] Conversion to encoding 30 failed for string "♫ iTunes"

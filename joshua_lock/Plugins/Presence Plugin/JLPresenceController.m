@@ -50,15 +50,16 @@
 		openChatsArray = [[NSMutableArray alloc] init];
 		unviewedObjectsArray = [[NSMutableArray alloc] init];
 		
+		presenceRemote = [JLPresenceRemote presenceRemote];
 		vendor = [NSConnection defaultConnection];
 		// FIXME: we don't really want to be broadcasting self
-		[vendor setRootObject: self];
+		[vendor setRootObject: presenceRemote];
 		
 		if(![vendor registerName:ADIUM_PRESENCE_BROADCAST]) {
 			// TODO: implement some *decent* error handling here
-			AILog(@"JL_DEBUG: We are not vending :(");
+			AILog(@"JLD: We are not vending :(");
 		} else {
-			AILog(@"JL_DEBUG: We *are* vending! :)");
+			AILog(@"JLD: We *are* vending! :)");
 		}
 		
 		notificationCenter = [NSDistributedNotificationCenter defaultCenter];
@@ -75,6 +76,10 @@
 		[notificationCenter addObserver:self
 							   selector:@selector(bringFront:)
 								   name:@"JL_BringAdiumFront"
+								 object:nil];
+		[notificationCenter addObserver:self
+							   selector:@selector(activateStatus:)
+								   name:@"JL_AdiumActivateStatus"
 								 object:nil];
 		
 		NSNotificationCenter *localNotes = [adium notificationCenter];
@@ -138,10 +143,23 @@
 
 - (void)accountStateChanged:(NSNotification *)note
 {
+	[presenceRemote populateStatusObjects];
 	// FIXME: this possibly needs to be a little more refined?
 	if ([[adium accountController] oneOrMoreConnectedAccounts]) {
 		[notificationCenter postNotificationName:@"JL_AdiumOnline" object:nil];
 	}
+}
+
+- (void)activateStatus:(NSNotification *)note
+{
+	// Deciper the dict & convert to an AIStatus
+	NSString	*title = [[note userInfo] objectForKey:@"statusTitle"];
+	NSNumber	*type = [[note userInfo] objectForKey:@"statusType"];
+	// Activate the AIStatus
+	AIStatus *statusState = [AIStatus statusOfType:(AIStatusType)[type intValue]];
+	[statusState setStatusName:title];
+	// FIXME: we would like an account sent with the note
+	//[account setStatusState:statusState];
 }
 
 #pragma mark Chat Observer

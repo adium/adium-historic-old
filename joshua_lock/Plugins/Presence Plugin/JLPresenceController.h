@@ -16,6 +16,7 @@
 
 #import <Adium/AIObject.h>
 @protocol	AIChatObserver;
+@class		JLPresenceRemote;
 #define ADIUM_PRESENCE_BROADCAST				@"AIPresenceBroadcast"
 
 @interface JLPresenceController : AIObject <AIChatObserver>
@@ -25,6 +26,8 @@
 	// We need these for our chat observer
 	NSArray							*unviewedObjectsArray;
 	NSArray							*openChatsArray;
+	
+	JLPresenceRemote				*presenceRemote;
 }
 
 + (JLPresenceController *)presenceController;
