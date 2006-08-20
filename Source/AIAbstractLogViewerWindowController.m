@@ -1108,11 +1108,12 @@ static int toArraySort(id itemA, id itemB, void *context);
 - (void)updateRankColumnVisibility
 {
 	NSTableColumn	*resultsColumn = [tableView_results tableColumnWithIdentifier:@"Rank"];
-	NSArray			*tableColumns;
 	
 	if ((searchMode == LOG_SEARCH_CONTENT) && ([activeSearchString length])) {
 		//Add the resultsColumn and resize if it should be shown but is not at present
-		if (!resultsColumn) {			
+		if (!resultsColumn) {	
+			NSArray			*tableColumns;
+
 			//Set up the results column
 			resultsColumn = [[NSTableColumn alloc] initWithIdentifier:@"Rank"];
 			[[resultsColumn headerCell] setTitle:AILocalizedString(@"Rank",nil)];
@@ -1137,6 +1138,9 @@ static int toArraySort(id itemA, id itemB, void *context);
 	} else {
 		//Remove the resultsColumn and resize if it should not be shown but is at present
 		if (resultsColumn) {
+			NSArray			*tableColumns;
+
+			tableColumns = [tableView_results tableColumns];
 			if ([tableColumns indexOfObject:resultsColumn] > 0) {
 				NSTableColumn	*nextDoorNeighbor;
 
