@@ -173,10 +173,10 @@
 {
     SmackMessage *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
 
-    AIListContact *sourceContact = [[adium contactController] existingContactWithService:[account service] account:account UID:[packet getFrom]];
+    AIListContact *sourceContact = [[adium contactController] contactWithService:[account service] account:account UID:[packet getFrom]];
     
     if(!sourceContact)
-        return; // if we don't know that person, we don't have a chat either
+        return;
     
     AIChat *chat = [[adium chatController] existingChatWithContact:sourceContact];
     if(!chat)
@@ -288,8 +288,8 @@
 
     NSString *jid = [[chat listObject] UID];
     NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
-    if(resource)
-        jid = [NSString stringWithFormat:@"%@/%@",jid,resource];
+//    if(resource)
+//        jid = [NSString stringWithFormat:@"%@/%@",jid,resource];
     
     SmackMessage *message = [SmackCocoaAdapter messageTo:jid typeString:@"CHAT"];
     

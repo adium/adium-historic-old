@@ -69,20 +69,15 @@ static AIHTMLDecoder *messageencoder = nil;
             if(resource)
                 [chat setStatusObject:resource forKey:@"XMPPResource" notify:NotifyLater];
             
-            if([type isEqualToString:@"chat"])
-                [chat setStatusObject:@"CHAT" forKey:@"XMPPType" notify:NotifyLater];
-            else
-                [chat setStatusObject:@"NORMAL" forKey:@"XMPPType" notify:NotifyLater];
+            [chat setStatusObject:type forKey:@"XMPPType" notify:NotifyLater];
             
             //Apply the change
             [chat notifyOfChangedStatusSilently:[account silentAndDelayed]];
         } else {
             [chat setStatusObject:thread?thread:[chat uniqueChatID] forKey:@"XMPPThreadID" notify:NotifyLater];
             
-            if([type isEqualToString:@"chat"]) // always update the chat type
-                [chat setStatusObject:@"CHAT" forKey:@"XMPPType" notify:NotifyNow];
-            else
-                [chat setStatusObject:@"NORMAL" forKey:@"XMPPType" notify:NotifyNow];
+            // always update the chat type
+            [chat setStatusObject:type forKey:@"XMPPType" notify:NotifyNow];
         }
         
         SmackXXHTMLExtension *spe = [packet getExtension:@"html" :@"http://jabber.org/protocol/xhtml-im"];
@@ -173,7 +168,7 @@ static AIHTMLDecoder *messageencoder = nil;
     NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
     NSString *type = [chat statusObjectForKey:@"XMPPType"];
     if(!type)
-        type = @"CHAT";
+        type = @"chat";
     
     if(!threadid || [threadid length] == 0) // first message was sent by us
     {
@@ -184,7 +179,7 @@ static AIHTMLDecoder *messageencoder = nil;
     }
     
     [message setTo:[[chat listObject] UID]];
-    [message setType:[SmackCocoaAdapter messageTypeFromString:type]];
+    [message setType:[SmackCocoaAdapter messageTypeFromString:[type uppercaseString]]]; // field names are all uppercase
     
     [message setThread:threadid];
     [message setBody:[inMessageObject messageString]];
