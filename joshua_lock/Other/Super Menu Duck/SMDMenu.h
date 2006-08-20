@@ -19,6 +19,8 @@
 	NSImage							*adiumRedImage;
 	NSImage							*adiumRedHighlightImage;
 	NSDistributedNotificationCenter *notificationCenter;
+	
+	JLPresenceRemote				*presenceRemote;
 }
 // FIXME: any of this private API?
 - (void)adiumStarted:(NSNotification *)note;
@@ -32,5 +34,6 @@
 - (void)unviewedContentOff:(NSNotification *)note;
 - (void)quitAdium;
 - (void)bringAdiumToFront;
+- (void)connectToVend;
 
 @end
