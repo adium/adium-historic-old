@@ -15,13 +15,19 @@
  */
 
 #import "JLPresenceRemote.h"
+#import "JLStatusObject.h"
+#import "AIStatus.h"
+#import "AIStatusController.h"
+#import "AIStatusMenu.h"
+#import <AIUtilities/AIArrayAdditions.h>
 
 @implementation JLPresenceRemote
 
 - (id)init
 {
 	if ((self = [super init])) {
-		
+		statusObjectArray = [[NSMutableArray alloc] init];
+		//accountObjectArray = [[NSMutableArray alloc] init];
 	}
 	
 	return self;
@@ -29,7 +35,75 @@
 
 - (void) dealloc
 {
+	[statusObjectArray release];
+	//[accountObjectArray release];
+	
 	[super dealloc];
+}
+
+- (NSMutableArray *)statusObjectArray
+{
+	return [[statusObjectArray mutableCopy] autorelease];
+}
+
+- (void)populateStatusObjects
+{
+	NSEnumerator			*enumerator;
+	AIStatus				*statusState;
+	JLStatusObject			*statusObject;
+	AIStatusType			currentStatusType = AIAvailableStatusType;
+	AIStatusMutabilityType	currentStatusMutabilityType = AILockedStatusState;
+	
+	[statusObjectArray removeAllObjects];
+	
+	// Sort states such that the same AIStatusType are grouped together
+	enumerator = [[[adium statusController] sortedFullStateArray] objectEnumerator];
+	while ((statusState = [enumerator nextObject])) {
+		AIStatusType	thisStatusType = [statusState statusType];
+		AIStatusType	thisStatusMutabilityType = [statusState mutabilityType];
+		
+		if ((currentStatusMutabilityType != AISecondaryLockedStatusState) &&
+			(thisStatusMutabilityType == AISecondaryLockedStatusState)) {
+			// FIXME: Add custom item, we are ending this group
+		}
+		
+		// As far as the SMD is concerned invisible == away
+		if (thisStatusType == AIInvisibleStatusType) 
+			thisStatusType = AIAwayStatusType;
+		
+		// FIXME: Add custom item before adding new statusType
+		if ((currentStatusType != thisStatusType) &&
+			(currentStatusType != AIOfflineStatusType)) {
+			// Don't include custom item if after secondary locked group as it's already included
+			if ((currentStatusMutabilityType != AISecondaryLockedStatusState)) {
+				
+			}
+			
+			// FIXME: adda a divider
+			
+			currentStatusType = thisStatusType;
+		}
+		
+		statusObject = [[JLStatusObject alloc] initWithTitle:[AIStatusMenu titleForMenuDisplayOfState:statusState]];
+		
+		if ([statusState isKindOfClass:[AIStatus class]]) {
+			[statusObject setToolTip:[statusState statusMessageString]];
+		} else {
+			/* AIStatusGroup */
+			[statusObject setHasSubmenu:YES];
+			// FIXME: add the submenu too! 4/12 @
+		}
+		[statusObject setType:currentStatusType];
+		[statusObject setImage:[statusState menuIcon]];
+		[statusObjectArray addObject:statusObject];
+		[statusObject release];
+		
+		currentStatusMutabilityType = thisStatusMutabilityType;
+	}
+	
+	if (currentStatusType != AIOfflineStatusType) {
+		// FIXME: Add last custom item.
+	}
 }
 
 @end
