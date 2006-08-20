@@ -25,6 +25,8 @@
 #import "SmackInterfaceDefinitions.h"
 #import "SmackXMPPFormController.h"
 
+#import "DCJoinChatWindowController.h"
+
 #import "ESDebugAILog.h"
 
 static AIHTMLDecoder *messageencoder = nil;
@@ -43,6 +45,7 @@ static AIHTMLDecoder *messageencoder = nil;
 
 + (SmackXMPPMultiUserChatPluginListener*)MUCPluginListenerWithConnection:(SmackXMPPConnection*)conn;
 
++ (Class)multiUserChatClass;
 + (SmackXMultiUserChat*)joinMultiUserChatWithName:(NSString*)name connection:(SmackXMPPConnection*)conn;
 
 @end
@@ -53,8 +56,12 @@ static AIHTMLDecoder *messageencoder = nil;
     return [[[[self classLoader] loadClass:@"net.adium.smackBridge.SmackXMPPMultiUserChatPluginListener"] newWithSignature:@"(Lorg/jivesoftware/smack/XMPPConnection;)",conn] autorelease];
 }
 
++ (Class)multiUserChatClass {
+    return [[self classLoader] loadClass:@"org.jivesoftware.smackx.muc.MultiUserChat"];
+}
+
 + (SmackXMultiUserChat*)joinMultiUserChatWithName:(NSString*)name connection:(SmackXMPPConnection*)conn {
-    return [[[[self classLoader] loadClass:@"org.jivesoftware.smackx.muc.MultiUserChat"] newWithSignature:@"(Lorg/jivesoftware/smack/XMPPConnection;Ljava/lang/String;)",conn,name] autorelease];
+    return [[[self multiUserChatClass] newWithSignature:@"(Lorg/jivesoftware/smack/XMPPConnection;Ljava/lang/String;)",conn,name] autorelease];
 }
 
 @end
@@ -69,6 +76,15 @@ static AIHTMLDecoder *messageencoder = nil;
     [chatRoomNameField setStringValue:[jid jidUsername]];
     [serverField setStringValue:[jid jidHost]];
     [nicknameField setStringValue:[jid jidResource]];
+    
+    [self controlTextDidChange:nil];
+}
+
+- (void)setPassword:(NSString*)password
+{
+    [passwordField setStringValue:password];
+    
+    [self controlTextDidChange:nil];
 }
 
 - (NSString*)nibName
@@ -81,6 +97,20 @@ static AIHTMLDecoder *messageencoder = nil;
 	[super configureForAccount:inAccount];
 	
 	[[view window] makeFirstResponder:chatRoomNameField];
+
+    [self controlTextDidChange:nil];
+}
+
+- (void)controlTextDidChange:(NSNotification *)notification
+{
+    NSString *chatroom = [chatRoomNameField stringValue];
+    NSString *servername = [serverField stringValue];
+    
+    // we could do a much better validation here, but we should let the server do that
+    [[self delegate] setJoinChatEnabled:
+        [chatroom length] > 0 && [servername length] > 0 && [[nicknameField stringValue] length] > 0 &&
+        [chatroom rangeOfString:@"@"].location == NSNotFound &&
+        [servername rangeOfString:@"@"].location == NSNotFound];
 }
 
 - (void)joinChatWithAccount:(AIAccount *)inAccount {
@@ -110,6 +140,8 @@ static AIHTMLDecoder *messageencoder = nil;
 @implementation SmackXMPPAccount (MultiUserChatAddons)
 
 - (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage {
+    if([chat statusObjectForKey:@"XMPPMUC"])
+        return [[chat statusObjectForKey:@"XMPPMUC"] inviteContact:contact toChat:chat withMessage:inviteMessage];
     return NO;
 }
 
@@ -154,6 +186,8 @@ static AIHTMLDecoder *messageencoder = nil;
 
 - (NSString*)ownAffiliation;
 - (NSString*)ownRole;
+
+
 
 - (IBAction)changeNickname_Set:(id)sender;
 - (IBAction)changeNickname_Cancel:(id)sender;
@@ -203,6 +237,8 @@ static AIHTMLDecoder *messageencoder = nil;
 
 - (void)joinWithNickname:(NSString*)nickname password:(NSString*)password chat:(AIChat*)achat listener:(SmackXMPPMultiUserChatPluginListener*)listener {
     adiumchat = achat;
+    
+    [achat setStatusObject:self forKey:@"XMPPMUC" notify:NotifyLater];
 
     [listener listenToChat:chat :self];
     if(password)
@@ -214,6 +250,11 @@ static AIHTMLDecoder *messageencoder = nil;
                                    selector:@selector(chatWillClose:)
                                        name:Chat_WillClose
                                      object:adiumchat];
+}
+
+- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)aichat withMessage:(NSString *)inviteMessage {
+    [chat invite:[contact UID] :inviteMessage];
+    return YES;
 }
 
 - (void)chatWillClose:(NSNotification*)n
@@ -782,7 +823,8 @@ static AIHTMLDecoder *messageencoder = nil;
 {
     AIListContact *contact = [participants objectForKey:participant];
     if(contact) {
-        [adiumchat removeParticipatingListObject:contact];
+        if([adiumchat isOpen])
+            [adiumchat removeParticipatingListObject:contact];
         [participants removeObjectForKey:participant];
     }
 }
@@ -996,10 +1038,40 @@ static AIHTMLDecoder *messageencoder = nil;
 }
 
 - (void)setMUCInvitation:(NSDictionary*)info {
-    SmackXMPPConnection *conn = [info objectForKey:@"connection"];
+//    SmackXMPPConnection *conn = [info objectForKey:@"connection"];
     
+    AIListContact *inviter = [[adium contactController] existingContactWithService:[account service] account:account UID:[info objectForKey:@"inviter"]];
+    NSString *displayname;
+    if(inviter)
+        displayname = [inviter displayName];
+    else
+        displayname = [info objectForKey:@"inviter"];
     
-    NSLog(@"MUC invite!");
+    [[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"%@ Invites You to %@","MUC invite"), displayname, [info objectForKey:@"room"]]
+                                 withDescription:[info objectForKey:@"reason"]
+                                 withWindowTitle:[NSString stringWithFormat:AILocalizedString(@"Chat Invite for %@","MUC invite title"), [account UID]]
+                                   defaultButton:AILocalizedString(@"Join","muc invite accept")
+                                 alternateButton:AILocalizedString(@"Decline","muc invite decline")
+                                     otherButton:nil
+                                          target:self
+                                        selector:@selector(MUCInviteAnswer:userInfo:)
+                                        userInfo:info];
+}
+
+- (void)MUCInviteAnswer:(NSNumber*)result userInfo:(NSDictionary*)info
+{
+    if([result intValue] == NSAlertDefaultReturn)
+    {
+        // XXX it would be better to query the user for the nickname, instead of just filling out the join chat window
+        DCJoinChatWindowController *jcwc = [DCJoinChatWindowController joinChatWindow];
+        [jcwc configureForAccount:account];
+        
+        [(SmackXMPPJoinChatViewController*)[jcwc joinChatViewController] setJID:[info objectForKey:@"room"]];
+        // should the user be able to see that password?
+        [(SmackXMPPJoinChatViewController*)[jcwc joinChatViewController] setPassword:[info objectForKey:@"password"]];
+    } else
+        // XXX maybe we should allow the user to provide the reason for declining in the MUC rewrite
+        [[SmackCocoaAdapter multiUserChatClass] decline:[account connection] :[info objectForKey:@"room"] :[info objectForKey:@"inviter"] :@""];
 }
 
 - (void)joinMultiUserChat:(NSNotification*)notification {

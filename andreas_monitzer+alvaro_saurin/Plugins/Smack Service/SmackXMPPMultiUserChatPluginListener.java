@@ -31,7 +31,7 @@ public class SmackXMPPMultiUserChatPluginListener implements InvitationListener 
         chat.addInvitationRejectionListener(new InvitationRejectionListener() {
             public void invitationDeclined(String invitee,
                                            String reason) {
-                d.takeValueForKey(new NSDictionary(new Object[] {invitee, reason}, new Object[] {"invitee", "reason"}), "MUCInvitationDeclined");
+                d.takeValueForKey(new NSDictionary(new Object[] {invitee, (reason == null)?"":reason}, new Object[] {"invitee", "reason"}), "MUCInvitationDeclined");
             }
         });
         chat.addMessageListener(new PacketListener() {
@@ -155,8 +155,8 @@ public class SmackXMPPMultiUserChatPluginListener implements InvitationListener 
                                    String password,
                                    Message message) {
         if(delegate != null) {
-            NSDictionary dict = new NSDictionary(new Object[] {conn,         room,   inviter,   reason,   password,   message },
-                                                 new Object[] {"connection", "room", "inviter", "reason", "password", "message"});
+            NSDictionary dict = new NSDictionary(new Object[] {conn,         room,   inviter,   (reason == null)?"":reason,   (password == null)?"":password,   message },
+                                                 new Object[] {"connection", "room", "inviter", "reason",                     "password",                       "message"});
             
             delegate.takeValueForKey(dict, "MUCInvitation");
         }
