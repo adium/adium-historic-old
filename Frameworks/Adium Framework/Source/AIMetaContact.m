@@ -1214,7 +1214,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	NSString *subobjectDescsDesc = [subobjectDescs description];
 	[subobjectDescs release];
 
-	return [NSString stringWithFormat:@"%@:%@:%@", [super description], [self internalObjectID], subobjectDescsDesc];
+	return [NSString stringWithFormat:@"<%@:%x %@: %@>",NSStringFromClass([self class]), self, [self internalObjectID], subobjectDescsDesc];
 }
 
 @end
