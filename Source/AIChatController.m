@@ -301,6 +301,10 @@
 	if (!chat) {
 		AIAccount	*account;
 		account = [targetContact account];
+		account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																		 toContact:targetContact
+																	includeOffline:NO];
+		AILog(@"chatWithContact: target contact's account is %@", account);
 		
 		//Create a new chat
 		chat = [AIChat chatForAccount:account];
