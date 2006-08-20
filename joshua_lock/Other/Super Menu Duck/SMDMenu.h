@@ -1,10 +1,9 @@
 #import <Cocoa/Cocoa.h>
-//#import "JLPresenceProtocol.h"
 
-@class AIAccountMenu, AIStatusMenu, AIAdium, JLPresenceRemote;
-//@class JLAdiumDelegate;
+@class AIAccountMenu, AIStatusMenu, AIAdium;
+@protocol JLPresenceRemoteProtocol;
 
-// FIXME: We need this defined in a global place like AIAdium.h
+// FIXME: We should probably define this in a global place like AIAdium.h
 #define ADIUM_PRESENCE_BROADCAST				@"AIPresenceBroadcast"
 
 @interface SMDMenu : NSObject 
@@ -21,7 +20,7 @@
 	NSDistributedNotificationCenter *notificationCenter;
 	
 	BOOL							adiumIsRunning;
-	JLPresenceRemote				*presenceRemote;
+	id<JLPresenceRemoteProtocol>	presenceRemote;
 }
 // FIXME: any of this private API?
 - (void)adiumStarted:(NSNotification *)note;
@@ -30,7 +29,6 @@
 - (void)drawOnlineMenu;
 - (void)removeAllMenuItems;
 - (void)quitSMD;
-- (BOOL)validateMenuItem:(NSMenuItem *)menuItem;
 - (void)unviewedContentOn:(NSNotification *)note;
 - (void)unviewedContentOff:(NSNotification *)note;
 - (void)quitAdium;

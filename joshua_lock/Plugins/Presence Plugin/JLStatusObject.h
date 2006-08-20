@@ -13,13 +13,15 @@
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-#import <Cocoa/Cocoa.h>
+#import <Adium/AIObject.h> // FIXME: !?!?!?
 
-@interface JLStatusObject : NSObject {
+@protocol JLStatusObjectProtocol;
+
+@interface JLStatusObject : AIObject <JLStatusObjectProtocol> {
 	NSString	*title;
 	NSString	*toolTip;
 	int			type;
-	NSImage		*image;
+	//NSImage		*image;
 	BOOL		isActiveStatus;
 	BOOL		hasSubmenu;
 }
@@ -35,7 +37,7 @@
 - (BOOL)hasSubmenu;
 - (void)setType: (int)aType;
 - (int)type;
-- (void)setImage: (NSImage *)image;
-- (NSImage *)image;
+/*- (void)setImage: (NSImage *)image;
+- (NSImage *)image;*/
 
 @end

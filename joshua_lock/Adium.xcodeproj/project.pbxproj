@@ -16,7 +16,6 @@
 				347A21AC09786C5100A30431 /* ShellScript */,
 			);
 			dependencies = (
-				0370B1270A80AB8D00F6C765 /* PBXTargetDependency */,
 				347A219F09786C1C00A30431 /* PBXTargetDependency */,
 				347A21A109786C1F00A30431 /* PBXTargetDependency */,
 			);
@@ -58,7 +57,6 @@
 		0319EE450A97274D003D04B7 /* JLPresenceRemote.m in Sources */ = {isa = PBXBuildFile; fileRef = 0319EE430A97274D003D04B7 /* JLPresenceRemote.m */; };
 		0370B1150A80AA7500F6C765 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		0370B12E0A80AC3900F6C765 /* SMD-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0370B11E0A80AA7600F6C765 /* SMD-Info.plist */; };
-		0370B2930A80E60900F6C765 /* Super Menu Duck.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0370B11C0A80AA7500F6C765 /* Super Menu Duck.app */; };
 		037AD8E80A978F2A004D64E0 /* JLStatusObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 037AD8E60A978F2A004D64E0 /* JLStatusObject.h */; };
 		037AD8E90A978F2B004D64E0 /* JLStatusObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 037AD8E70A978F2A004D64E0 /* JLStatusObject.m */; };
 		037F91A40A93CEBC0038D1EA /* Adium.icns in Resources */ = {isa = PBXBuildFile; fileRef = 34D832AD07CBD62C006466F2 /* Adium.icns */; };
@@ -80,9 +78,8 @@
 		03C0A4C10A889FDD00FBA6D6 /* adiumHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */; };
 		03C0A4C20A889FDD00FBA6D6 /* adiumRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E28FDE506ADB30D0041553E /* adiumRed.png */; };
 		03C0A4C30A889FDD00FBA6D6 /* adiumRedHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */; };
-		03E0155C0A97DB6300C6B9CB /* JLPresenceRemoteProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 03E0155B0A97DB6200C6B9CB /* JLPresenceRemoteProtocol.h */; };
-		03E015AC0A97E46900C6B9CB /* JLStatusObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 037AD8E70A978F2A004D64E0 /* JLStatusObject.m */; };
-		03E015AD0A97E46A00C6B9CB /* JLStatusObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 037AD8E60A978F2A004D64E0 /* JLStatusObject.h */; };
+		03E0155C0A97DB6300C6B9CB /* JLPresenceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 03E0155B0A97DB6200C6B9CB /* JLPresenceProtocol.h */; };
+		03E6620D0A98A388004B303A /* JLPresenceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 03E0155B0A97DB6200C6B9CB /* JLPresenceProtocol.h */; };
 		071C56330827933100399C0F /* Shared Dock Icon Images in Resources */ = {isa = PBXBuildFile; fileRef = 071C56310827933000399C0F /* Shared Dock Icon Images */; };
 		074DDB5D07CB413F0033AFF7 /* CBContactLastSeenPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 074DDB5C07CB413F0033AFF7 /* CBContactLastSeenPlugin.m */; };
 		07632BF30949E10B00FFABD8 /* ListThemeSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB42B080870A200E27095 /* ListThemeSheet.nib */; };
@@ -1417,13 +1414,6 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIUtilities;
 		};
-		0370B1260A80AB8D00F6C765 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0370B1080A80AA7500F6C765;
-			remoteInfo = "Super Menu Duck";
-		};
 		03897E030A7FBBB3008ACDDC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1715,7 +1705,6 @@
 			dstSubfolderSpec = 7;
 			files = (
 				34677B3907CC3DAF00F59F7B /* Adium Crash Reporter.app in CopyFiles */,
-				0370B2930A80E60900F6C765 /* Super Menu Duck.app in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1802,7 +1791,7 @@
 /* Begin PBXFileReference section */
 		0319EE420A97274D003D04B7 /* JLPresenceRemote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JLPresenceRemote.h; path = "Plugins/Presence Plugin/JLPresenceRemote.h"; sourceTree = "<group>"; };
 		0319EE430A97274D003D04B7 /* JLPresenceRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JLPresenceRemote.m; path = "Plugins/Presence Plugin/JLPresenceRemote.m"; sourceTree = "<group>"; };
-		0370B11C0A80AA7500F6C765 /* Super Menu Duck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Super Menu Duck.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0370B11C0A80AA7500F6C765 /* Super Menu Duck.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "Super Menu Duck.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0370B11E0A80AA7600F6C765 /* SMD-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "SMD-Info.plist"; path = "Other/Super Menu Duck/SMD-Info.plist"; sourceTree = "<group>"; };
 		037AD8E60A978F2A004D64E0 /* JLStatusObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JLStatusObject.h; path = "Plugins/Presence Plugin/JLStatusObject.h"; sourceTree = "<group>"; };
 		037AD8E70A978F2A004D64E0 /* JLStatusObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JLStatusObject.m; path = "Plugins/Presence Plugin/JLStatusObject.m"; sourceTree = "<group>"; };
@@ -1814,7 +1803,7 @@
 		03897E120A7FBBB3008ACDDC /* Presence Plugin.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Presence Plugin.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		03C0A4160A889EFA00FBA6D6 /* SMDMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SMDMenu.h; path = "Other/Super Menu Duck/SMDMenu.h"; sourceTree = "<group>"; };
 		03C0A4170A889EFA00FBA6D6 /* SMDMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SMDMenu.m; path = "Other/Super Menu Duck/SMDMenu.m"; sourceTree = "<group>"; };
-		03E0155B0A97DB6200C6B9CB /* JLPresenceRemoteProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JLPresenceRemoteProtocol.h; path = "Other/Super Menu Duck/JLPresenceRemoteProtocol.h"; sourceTree = "<group>"; };
+		03E0155B0A97DB6200C6B9CB /* JLPresenceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JLPresenceProtocol.h; path = "Other/Super Menu Duck/JLPresenceProtocol.h"; sourceTree = "<group>"; };
 		071C56320827933000399C0F /* English */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English; path = "Resources/English.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		071C563E0827936500399C0F /* French */ = {isa = PBXFileReference; lastKnownFileType = folder; name = French; path = "Resources/French.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		071C56420827937400399C0F /* German */ = {isa = PBXFileReference; lastKnownFileType = folder; name = German; path = "Resources/German.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
@@ -3951,8 +3940,6 @@
 		0370B1070A80AA3F00F6C765 /* Super Menu Duck */ = {
 			isa = PBXGroup;
 			children = (
-				037AD8E60A978F2A004D64E0 /* JLStatusObject.h */,
-				037AD8E70A978F2A004D64E0 /* JLStatusObject.m */,
 				9E6A9BF50732CB500032C9F6 /* adiumOfflineHighlight.png */,
 				9E6A9BF60732CB500032C9F6 /* adiumOffline.png */,
 				9E791E26057746D100547562 /* adium.png */,
@@ -3962,7 +3949,6 @@
 				03C0A4160A889EFA00FBA6D6 /* SMDMenu.h */,
 				03C0A4170A889EFA00FBA6D6 /* SMDMenu.m */,
 				0370B11E0A80AA7600F6C765 /* SMD-Info.plist */,
-				03E0155B0A97DB6200C6B9CB /* JLPresenceRemoteProtocol.h */,
 			);
 			name = "Super Menu Duck";
 			sourceTree = "<group>";
@@ -3970,6 +3956,8 @@
 		03897C720A7FAA8D008ACDDC /* Presence Plugin */ = {
 			isa = PBXGroup;
 			children = (
+				037AD8E60A978F2A004D64E0 /* JLStatusObject.h */,
+				037AD8E70A978F2A004D64E0 /* JLStatusObject.m */,
 				03897C760A7FAAB4008ACDDC /* JLPresenceController.h */,
 				03897C770A7FAAB4008ACDDC /* JLPresenceController.m */,
 				03897C780A7FAAB4008ACDDC /* JLPresencePlugin.h */,
@@ -3977,6 +3965,7 @@
 				03897C7A0A7FAAB5008ACDDC /* PresencePluginDefaultPrefs.plist */,
 				0319EE420A97274D003D04B7 /* JLPresenceRemote.h */,
 				0319EE430A97274D003D04B7 /* JLPresenceRemote.m */,
+				03E0155B0A97DB6200C6B9CB /* JLPresenceProtocol.h */,
 			);
 			name = "Presence Plugin";
 			sourceTree = "<group>";
@@ -7064,8 +7053,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				03C0A4180A889EFA00FBA6D6 /* SMDMenu.h in Headers */,
-				03E0155C0A97DB6300C6B9CB /* JLPresenceRemoteProtocol.h in Headers */,
-				03E015AD0A97E46A00C6B9CB /* JLStatusObject.h in Headers */,
+				03E0155C0A97DB6300C6B9CB /* JLPresenceProtocol.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7077,6 +7065,7 @@
 				03897E170A7FBC49008ACDDC /* JLPresencePlugin.h in Headers */,
 				0319EE440A97274D003D04B7 /* JLPresenceRemote.h in Headers */,
 				037AD8E80A978F2A004D64E0 /* JLStatusObject.h in Headers */,
+				03E6620D0A98A388004B303A /* JLPresenceProtocol.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8687,7 +8676,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				03C0A4190A889EFA00FBA6D6 /* SMDMenu.m in Sources */,
-				03E015AC0A97E46900C6B9CB /* JLStatusObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9273,11 +9261,6 @@
 			isa = PBXTargetDependency;
 			name = AIUtilities;
 			targetProxy = 030DD8BC0A8A344E005BB9AA /* PBXContainerItemProxy */;
-		};
-		0370B1270A80AB8D00F6C765 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0370B1080A80AA7500F6C765 /* Super Menu Duck */;
-			targetProxy = 0370B1260A80AB8D00F6C765 /* PBXContainerItemProxy */;
 		};
 		03897E020A7FBBB3008ACDDC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

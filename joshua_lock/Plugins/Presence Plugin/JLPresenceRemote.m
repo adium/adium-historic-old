@@ -94,7 +94,7 @@
 			// FIXME: add the submenu too! 4/12 @
 		}
 		[statusObject setType:currentStatusType];
-		[statusObject setImage:[statusState menuIcon]];
+		//[statusObject setImage:[statusState menuIcon]];
 		[statusObjectArray addObject:statusObject];
 		[statusObject release];
 		

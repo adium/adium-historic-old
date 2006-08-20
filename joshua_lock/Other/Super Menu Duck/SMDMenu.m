@@ -1,6 +1,5 @@
 #import "SMDMenu.h"
-#import "JLPresenceRemoteProtocol.h"
-#import "JLStatusObject.h"
+#import "JLPresenceProtocol.h"
 
 int main(void) 
 {
@@ -18,7 +17,7 @@ int main(void)
 @implementation SMDMenu
 
 - (void) applicationDidFinishLaunching: (NSNotification *)notification
-{
+{ // Unused notification
 	presenceRemote = nil;
 	adiumIsRunning = NO;
 	
@@ -112,12 +111,12 @@ int main(void)
 	[self drawOnlineMenu];
 }
 
-#pragma mark Menu Delegates
+/*#pragma mark Menu Delegates
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem 
 {
 	return YES;
-}
+}*/
 
 #pragma mark -
 
@@ -135,8 +134,14 @@ int main(void)
 															keyEquivalent:@""];
 		[tmpMenuItem setTarget:self];
 		[tmpMenuItem setEnabled:YES];
-		[theMenu addItem:[NSMenuItem separatorItem]];
+	} else {
+		tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:@"Adium Running"
+													   action:nil
+												keyEquivalent:@""];
+		[tmpMenuItem setTarget:nil];
+		[tmpMenuItem setEnabled:NO];
 	}
+	[theMenu addItem:[NSMenuItem separatorItem]];
 		
 	tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:@"Quit SMD"
 															   action:@selector(quitSMD)
@@ -148,9 +153,9 @@ int main(void)
 
 - (void)drawOnlineMenu
 {
-	NSMenuItem		*tmpMenuItem;
-	NSEnumerator	*enumerator;
-	JLStatusObject	*statusObject;
+	NSMenuItem					*tmpMenuItem;
+	NSEnumerator				*enumerator;
+	id<JLStatusObjectProtocol>	statusObject;
 	
 	[statusItem setImage:adiumImage];
 	[statusItem setAlternateImage:adiumHighlightImage];
@@ -158,13 +163,24 @@ int main(void)
 	[self removeAllMenuItems];
 	
 	// Status menu
-	enumerator = [[presenceRemote statusObjectArray] objectEnumerator];
-	tmpMenuItem = nil;
-	while ((statusObject = [enumerator nextObject])) {
-		tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:[statusObject title] 
-													   action:@selector(activateStatus:)
-												keyEquivalent:@""];
+	if (!presenceRemote) {
+		// Try and make presenceRemote != nil
+		[self connectToVend];
+		if (!presenceRemote) { // For whatever reason connecting to the vend isn't working!?!
+			NSLog(@"JLD: !presenceRemote :(");
+			// FIXME: report an error!
+			//exit(-1);
+		}
+	} else {
+		NSLog(@"JLD: Attempting to retrieve array of JLStatusObjects");
+		enumerator = [[presenceRemote statusObjectArray] objectEnumerator];
+		while ((statusObject = [enumerator nextObject])) {
+			tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:[statusObject title] 
+														   action:@selector(activateStatus)
+													keyEquivalent:@""];
+		}
 	}
+	
 	[theMenu addItem: [NSMenuItem separatorItem]];
 	
 	tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:@"Bring Adium to Front"
@@ -232,17 +248,19 @@ int main(void)
 
 - (void)connectToVend
 {
-	presenceRemote = (id <JLPresenceRemoteProtocol>)[NSConnection rootProxyForConnectionWithRegisteredName:ADIUM_PRESENCE_BROADCAST
-																									  host:nil];
-	if (presenceRemote == nil) {
-		NSLog(@"JLD: could not connect to vend");
-		exit(1);
-	} else {
-		NSLog(@"JLD: Connected - woot!\n");
+	if (!presenceRemote){
+		presenceRemote = (id <JLPresenceRemoteProtocol>)[NSConnection rootProxyForConnectionWithRegisteredName:ADIUM_PRESENCE_BROADCAST
+																										  host:nil];
+		if (presenceRemote == nil) {
+			NSLog(@"JLD: could not connect to vend");
+			exit(1);
+		} else {
+			NSLog(@"JLD: Connected - woot!\n");
+		}
 	}
 }
 
-- (void)activateStatus:(id)sender
+- (void)activateStatus
 {
 	
 }
