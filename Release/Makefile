@@ -85,7 +85,7 @@ release: createfolder prepare-release-bundle diskimage
 prepare-release-bundle:
 	@# Convert all nibs to the smaller binary format
 	@echo Converting nibs to binary format...
-	find $(BUILD_DIR)/Adium.app -name keyedobjects.nib -print0 | xargs -0 plutil -convert binary1
+	find $(BUILD_DIR) -name keyedobjects.nib -print0 | xargs -0 plutil -convert binary1
 
 	@# delete unneeded nib files for non-beta builds
 	@echo Cleaning Adium.app for release
