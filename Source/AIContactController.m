@@ -1782,11 +1782,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 				}
 			}
 
-			returnContact = firstAvailableContact
-			              ? firstAvailableContact
-						  : firstNotOfflineContact
-						  ? firstNotOfflineContact
-						  : [(AIMetaContact *)inContact preferredContact];
+			returnContact = (firstAvailableContact ?
+							 firstAvailableContact :
+							 (firstNotOfflineContact ? firstNotOfflineContact : [(AIMetaContact *)inContact preferredContact]);
 		}
 
 	} else {
