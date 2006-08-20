@@ -89,8 +89,6 @@ struct _GaimConnection
 	guint keepalive;             /**< Keep-alive.                        */
 
 
-	gboolean is_auto_away;       /**< Whether or not it's auto-away.     */
-
 	gboolean wants_to_die;	     /**< Wants to Die state.  This is set
 	                                  when the user chooses to log out,
 	                                  or when the protocol is
@@ -270,6 +268,10 @@ GList *gaim_connections_get_connecting(void);
  * Checks if gc is still a valid pointer to a gc.
  *
  * @return @c TRUE if gc is valid.
+ */
+/*
+ * TODO: Eventually this bad boy will be removed, because it is
+ *       a gross fix for a crashy problem.
  */
 #define GAIM_CONNECTION_IS_VALID(gc) (g_list_find(gaim_connections_get_all(), (gc)))
 

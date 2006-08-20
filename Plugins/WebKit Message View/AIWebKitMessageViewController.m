@@ -1161,22 +1161,23 @@ static NSArray *draggedTypes = nil;
 		NSString	*textEquivalent = [[emoticon textEquivalents] objectAtIndex:0];
 		NSString	*path = [emoticon path];
 		NSSize		emoticonSize = [[emoticon image] size];
-
+		BOOL		updatedImage = NO;
 		path = [[NSURL fileURLWithPath:path] absoluteString];
-		AILog(@"Trying to update %@ [textEquivalent is %@]",emoticon,textEquivalent);
 		for (int i = 0; i < imagesCount; i++) {
 			DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
 			
 			if ([[img className] isEqualToString:@"emoticon"] &&
 				[[img getAttribute:@"alt"] isEqualToString:textEquivalent]) {
-				AILog(@"AIWebKitMessageViewController: Setting %@'s src to %@",img,path);
 				[img setSrc:path];
 				[img setWidth:emoticonSize.width];
 				[img setHeight:emoticonSize.height];
-			} else {
-				AILog(@"Not updating: className:%@ alt:\"%@\"",[img className], [img getAttribute:@"alt"]);
+				updatedImage = YES;
 			}
 		}
+		NSNumber *shouldScroll = [[webView windowScriptObject] callWebScriptMethod:@"nearBottom"
+																	 withArguments:nil];
+		if (updatedImage) [[webView windowScriptObject] callWebScriptMethod:@"alignChat" 
+															  withArguments:[NSArray arrayWithObject:shouldScroll]];
 	}
 }
 

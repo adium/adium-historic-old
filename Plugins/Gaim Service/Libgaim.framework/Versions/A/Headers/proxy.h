@@ -56,6 +56,10 @@ typedef struct
 
 } GaimProxyInfo;
 
+typedef struct _GaimProxyConnectInfo GaimProxyConnectInfo;
+
+typedef void (*GaimProxyConnectFunction)(gpointer data, gint source, const gchar *error_message);
+
 
 #include "account.h"
 
@@ -67,13 +71,6 @@ extern "C" {
 /** @name Proxy structure API                                             */
 /**************************************************************************/
 /*@{*/
-
-/**
- * Get the handle for the proxy system.
- *
- * @return the handle to the proxy system
- */
-void *gaim_proxy_get_handle(void);
 
 /**
  * Creates a proxy information structure.
@@ -196,9 +193,21 @@ GaimProxyInfo *gaim_global_proxy_get_info(void);
 /*@{*/
 
 /**
+ * Returns the proxy subsystem handle.
+ *
+ * @return The proxy subsystem handle.
+ */
+void *gaim_proxy_get_handle(void);
+
+/**
  * Initializes the proxy subsystem.
  */
 void gaim_proxy_init(void);
+
+/**
+ * Uninitializes the proxy subsystem.
+ */
+void gaim_proxy_uninit(void);
 
 /**
  * Returns configuration of a proxy.
@@ -210,46 +219,58 @@ void gaim_proxy_init(void);
 GaimProxyInfo *gaim_proxy_get_setup(GaimAccount *account);
 
 /**
- * Makes a connection to the specified host and port.
+ * Makes a connection to the specified host and port.  Note that this
+ * function name can be misleading--although it is called "proxy
+ * connect," it is used for establishing any outgoing TCP connection,
+ * whether through a proxy or not.
  *
- * @param account The account making the connection.
- * @param host    The destination host.
- * @param port    The destination port.
- * @param func    The input handler function.
- * @param data    User-defined data.
+ * @param account    The account making the connection.
+ * @param host       The destination host.
+ * @param port       The destination port.
+ * @param connect_cb The function to call when the connection is
+ *                   established.  If the connection failed then
+ *                   fd will be -1 and error message will be set
+ *                   to something descriptive (hopefully).
+ * @param data       User-defined data.
  *
- * @return Zero indicates the connection is pending. Any other value indicates failure.
+ * @return NULL if there was an error, or a reference to a data
+ *         structure that can be used to cancel the pending
+ *         connection, if needed.
  */
-int gaim_proxy_connect(GaimAccount *account, const char *host, int port,
-					   GaimInputFunction func, gpointer data);
+GaimProxyConnectInfo *gaim_proxy_connect(GaimAccount *account,
+			const char *host, int port,
+			GaimProxyConnectFunction connect_cb, gpointer data);
 
 /**
  * Makes a connection through a SOCKS5 proxy.
  *
- * @param gpi     The GaimProxyInfo specifying the proxy settings
- * @param host    The destination host.
- * @param port    The destination port.
- * @param func    The input handler function.
- * @param data    User-defined data.
+ * @param gpi        The GaimProxyInfo specifying the proxy settings
+ * @param host       The destination host.
+ * @param port       The destination port.
+ * @param connect_cb The function to call when the connection is
+ *                   established.  If the connection failed then
+ *                   fd will be -1 and error message will be set
+ *                   to something descriptive (hopefully).
+ * @param data       User-defined data.
  *
- * @return Zero indicates the connection is pending. Any other value indicates failure.
+ * @return NULL if there was an error, or a reference to a data
+ *         structure that can be used to cancel the pending
+ *         connection, if needed.
  */
-int gaim_proxy_connect_socks5(GaimProxyInfo *gpi, const char *host, int port,
-					   GaimInputFunction func, gpointer data);
+GaimProxyConnectInfo *gaim_proxy_connect_socks5(GaimProxyInfo *gpi,
+			const char *host, int port,
+			GaimProxyConnectFunction connect_cb, gpointer data);
 
-typedef void (*dns_callback_t)(GSList *hosts, gpointer data,
-		const char *error_message);
 /**
- * Do an async dns query
- *
- * @param hostname The hostname to resolve
- * @param port A portnumber which is stored in the struct sockaddr
- * @param callback Callback to call after resolving
- * @param data Extra data for the callback function
- *
- * @return Zero indicates the connection is pending. Any other value indicates failure.
+ * Cancel an in-progress connection attempt.  This should be called
+ * by the PRPL if the user disables an account while it is still
+ * performing the initial sign on.  Or when establishing a file
+ * transfer, if we attempt to connect to a remote user but they
+ * are behind a firewall then the PRPL can cancel the connection
+ * attempt early rather than just letting the OS's TCP/IP stack
+ * time-out the connection.
  */
-int gaim_gethostbyname_async(const char *hostname, int port, dns_callback_t callback, gpointer data);
+void gaim_proxy_connect_cancel(GaimProxyConnectInfo *connect_info);
 
 /*@}*/
 
