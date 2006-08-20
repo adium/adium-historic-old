@@ -1,4 +1,6 @@
 #import "SMDMenu.h"
+#import "JLPresenceRemoteProtocol.h"
+#import "JLStatusObject.h"
 
 int main(void) 
 {
@@ -17,6 +19,8 @@ int main(void)
 
 - (void) applicationDidFinishLaunching: (NSNotification *)notification
 {
+	presenceRemote = nil;
+	
 	NSBundle *bundle = [NSBundle mainBundle];
 	adiumImage = [[NSImage alloc] initWithContentsOfFile:[bundle pathForResource:@"adium"
 																		  ofType:@"png"]];
@@ -85,11 +89,13 @@ int main(void)
 - (void)adiumStarted:(NSNotification *)note
 {
 	// Redraw menu with Adium's presence data
+	[self connectToVend];
 	[self drawOnlineMenu];
 }
 
 - (void)adiumClosing:(NSNotification *)note
 {
+	presenceRemote = nil;
 	// Draw our default offline menu
 	[self drawOfflineMenu];
 }
@@ -129,6 +135,7 @@ int main(void)
 {
 	NSMenuItem		*tmpMenuItem;
 	NSEnumerator	*enumerator;
+	JLStatusObject	*statusObject;
 	
 	[self removeAllMenuItems];
 	
@@ -136,10 +143,14 @@ int main(void)
 	[statusItem setAlternateImage:adiumHighlightImage];
 	
 	// Status menu
-	/*enumerator = [stateMenuItemsArray objectEnumerator];
+	enumerator = [[presenceRemote statusObjectArray] objectEnumerator];
 	tmpMenuItem = nil;
-	while ((tmpMenuItem = [enumerator nextObject])) {
-	}*/
+	while ((statusObject = [enumerator nextObject])) {
+		tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:[statusObject title] 
+													   action:@selector(activateStatus:)
+												keyEquivalent:@""];
+	}
+	[theMenu addItem: [NSMenuItem separatorItem]];
 	
 	tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:@"Bring Adium to Front"
 															   action:@selector(bringAdiumToFront)
@@ -202,6 +213,23 @@ int main(void)
 - (void)bringAdiumToFront
 {
 	[notificationCenter postNotificationName:@"JL_BringAdiumFront" object:nil];
+}
+
+- (void)connectToVend
+{
+	presenceRemote = (id <JLPresenceRemoteProtocol>)[NSConnection rootProxyForConnectionWithRegisteredName:ADIUM_PRESENCE_BROADCAST
+																									  host:nil];
+	if (presenceRemote == nil) {
+		NSLog(@"JLD: could not connect to vend");
+		exit(1);
+	} else {
+		NSLog(@"JLD: Connected - woot!\n");
+	}
+}
+
+- (void)activateStatus:(id)sender
+{
+	
 }
 
 @end
