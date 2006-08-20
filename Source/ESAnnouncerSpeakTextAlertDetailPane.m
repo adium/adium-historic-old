@@ -40,12 +40,13 @@
 	
 	[textView_textToSpeakLabel setLocalizedString:AILocalizedString(@"Text To Speak:",nil)];
 	[box_substitutions setTitle:AILocalizedString(@"Substitutions:","Title above the box in the Speak Text action's detail pane. The box contains keywords such as \%a and what they will become when spoken such as User Alias.")];
+
 	[textView_substitutions setStringValue:
-		[NSString stringWithFormat:@"\%n - %@\n\%a - %@\n\%m - %@\n\%t - %@",
-			AILocalizedString(@"User name", "Speak Text action keyword: user name"),
-			AILocalizedString(@"User alias", "Speak Text action keyword: user alias"),
-			AILocalizedString(@"Message", "Speak Text action keyword: message"),
-			AILocalizedString(@"Time", "Speak Text action keyword: time")]];
+		[NSString stringWithFormat:@"%@ - %@\n%@ - %@\n%@ - %@\n%@ - %@",
+			@"%n", AILocalizedString(@"User name", "Speak Text action keyword: user name"),
+			@"%a", AILocalizedString(@"User alias", "Speak Text action keyword: user alias"),
+			@"%m", AILocalizedString(@"Message", "Speak Text action keyword: message"),
+			@"%t", AILocalizedString(@"Time", "Speak Text action keyword: time")]];
 }
 
 /*!
