@@ -15,13 +15,14 @@
  */
 
 #import <Adium/AIObject.h>
-
-@protocol JLPresenceRemoteProtocol;
+#import "JLPresenceProtocol.h"
 
 @interface JLPresenceRemote : AIObject <JLPresenceRemoteProtocol> {
 	NSMutableArray		*statusObjectArray;
 	//NSMutableArray		*accountObjectArray;
 }
+
++ (JLPresenceRemote *)presenceRemote;
 
 - (void)populateStatusObjects;
 - (NSMutableArray *)statusObjectArray;

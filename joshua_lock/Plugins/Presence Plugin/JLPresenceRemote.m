@@ -23,13 +23,17 @@
 
 @implementation JLPresenceRemote
 
++ (JLPresenceRemote *)presenceRemote
+{
+	return [[[self alloc] init] autorelease];
+}
+
 - (id)init
 {
 	if ((self = [super init])) {
 		statusObjectArray = [[NSMutableArray alloc] init];
 		//accountObjectArray = [[NSMutableArray alloc] init];
 	}
-	
 	return self;
 }
 
@@ -43,6 +47,9 @@
 
 - (NSMutableArray *)statusObjectArray
 {
+	if ((!statusObjectArray) || ([statusObjectArray count] < 1)) {
+		[self populateStatusObjects];
+	}
 	return [[statusObjectArray mutableCopy] autorelease];
 }
 
@@ -55,6 +62,8 @@
 	AIStatusMutabilityType	currentStatusMutabilityType = AILockedStatusState;
 	
 	[statusObjectArray removeAllObjects];
+	
+	NSLog(@"JLD: Populating an array of status objects.");
 	
 	// Sort states such that the same AIStatusType are grouped together
 	enumerator = [[[adium statusController] sortedFullStateArray] objectEnumerator];
@@ -104,6 +113,7 @@
 	if (currentStatusType != AIOfflineStatusType) {
 		// FIXME: Add last custom item.
 	}
+	NSLog(@"JLD: statusObjectArray has %i items", [statusObjectArray count]);
 }
 
 @end

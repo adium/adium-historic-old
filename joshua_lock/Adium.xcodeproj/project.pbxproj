@@ -1791,7 +1791,7 @@
 /* Begin PBXFileReference section */
 		0319EE420A97274D003D04B7 /* JLPresenceRemote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JLPresenceRemote.h; path = "Plugins/Presence Plugin/JLPresenceRemote.h"; sourceTree = "<group>"; };
 		0319EE430A97274D003D04B7 /* JLPresenceRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JLPresenceRemote.m; path = "Plugins/Presence Plugin/JLPresenceRemote.m"; sourceTree = "<group>"; };
-		0370B11C0A80AA7500F6C765 /* Super Menu Duck.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "Super Menu Duck.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0370B11C0A80AA7500F6C765 /* Super Menu Duck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Super Menu Duck.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0370B11E0A80AA7600F6C765 /* SMD-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "SMD-Info.plist"; path = "Other/Super Menu Duck/SMD-Info.plist"; sourceTree = "<group>"; };
 		037AD8E60A978F2A004D64E0 /* JLStatusObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JLStatusObject.h; path = "Plugins/Presence Plugin/JLStatusObject.h"; sourceTree = "<group>"; };
 		037AD8E70A978F2A004D64E0 /* JLStatusObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JLStatusObject.m; path = "Plugins/Presence Plugin/JLStatusObject.m"; sourceTree = "<group>"; };

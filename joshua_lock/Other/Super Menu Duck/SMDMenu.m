@@ -164,21 +164,23 @@ int main(void)
 	
 	// Status menu
 	if (!presenceRemote) {
-		// Try and make presenceRemote != nil
+		NSLog(@"JLD: !presenceRemote :(");
 		[self connectToVend];
 		if (!presenceRemote) { // For whatever reason connecting to the vend isn't working!?!
-			NSLog(@"JLD: !presenceRemote :(");
+			NSLog(@"JLD: Connecting to vend busted :(");
 			// FIXME: report an error!
-			//exit(-1);
+			exit(-1);
+		} else {
+			NSLog(@"JLD: presenceRemote :)");
 		}
-	} else {
-		NSLog(@"JLD: Attempting to retrieve array of JLStatusObjects");
-		enumerator = [[presenceRemote statusObjectArray] objectEnumerator];
-		while ((statusObject = [enumerator nextObject])) {
-			tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:[statusObject title] 
-														   action:@selector(activateStatus)
-													keyEquivalent:@""];
-		}
+	}
+	NSLog(@"JLD: Attempting to retrieve array of JLStatusObjects");
+	enumerator = [[presenceRemote statusObjectArray] objectEnumerator];
+	while ((statusObject = [enumerator nextObject])) {
+		tmpMenuItem = (NSMenuItem *)[theMenu addItemWithTitle:[statusObject title] 
+													   action:@selector(activateStatus:)
+												keyEquivalent:@""];
+		[tmpMenuItem setTag:[statusObject type]];
 	}
 	
 	[theMenu addItem: [NSMenuItem separatorItem]];
@@ -251,18 +253,31 @@ int main(void)
 	if (!presenceRemote){
 		presenceRemote = (id <JLPresenceRemoteProtocol>)[NSConnection rootProxyForConnectionWithRegisteredName:ADIUM_PRESENCE_BROADCAST
 																										  host:nil];
+		//if (presenceRemote == nil || ![presenceRemote conformsToProtocol:@protocol(JLPresenceRemoteProtocol)]) {
 		if (presenceRemote == nil) {
-			NSLog(@"JLD: could not connect to vend");
-			exit(1);
+			NSLog(@"JLD: problem connecting to vend");
+			exit(-1);
 		} else {
 			NSLog(@"JLD: Connected - woot!\n");
 		}
 	}
 }
 
-- (void)activateStatus
+- (void)activateStatus:(id)sender
 {
+	NSString	*title = [sender title];
+	NSNumber	*type = [NSNumber numberWithInt:[sender tag]];
+	NSDictionary	*statusDict;
 	
+	NSLog(@"JLD: Status title = %s type = %i", [title cString], [type intValue]);
+	// Create an NSDictionary of the status so that we can send it along with the NSNotification
+	statusDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		title, @"statusTitle",
+		type, @"statusType",
+		nil];
+	[notificationCenter postNotificationName:@"JL_AdiumActivateStatus" 
+									  object:nil 
+									userInfo:statusDict];
 }
 
 @end
