@@ -306,7 +306,7 @@
 	[menu addItem:menuItem];
 	[menuItem release];
 
-	menuItem = [[NSMenuItem alloc] initWithTitle:(@"Clear Recent Pictures", nil)
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Clear Recent Pictures", nil)
 										  target:self
 										  action:@selector(clearRecentPictures:)
 								   keyEquivalent:@""];
