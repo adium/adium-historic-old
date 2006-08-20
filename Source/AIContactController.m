@@ -1738,30 +1738,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	AIAccount		*account;
 
 	if ([inContact isKindOfClass:[AIMetaContact class]]) {
-		AIListObject	*preferredContact;
-		NSString		*internalObjectID;
-
-
-		//If we've messaged this object previously, prefer the last contact we sent to if that
-		//contact is currently available
-        internalObjectID = [inContact preferenceForKey:KEY_PREFERRED_DESTINATION_CONTACT
-												 group:OBJECT_STATUS_CACHE];
-
-        if ((internalObjectID) &&
-		   (preferredContact = [self existingListObjectWithUniqueID:internalObjectID]) &&
-		   ([preferredContact isKindOfClass:[AIListContact class]]) &&
-		   ([preferredContact statusSummary] == AIAvailableStatus) &&
-			([[(AIMetaContact *)inContact containedObjects] containsObject:preferredContact])) {
-			returnContact = [self preferredContactForContentType:inType
-												  forListContact:(AIListContact *)preferredContact];
-        }
-
-		//If the last contact we sent to is not available, use the metaContact's preferredContact
-		if (!returnContact || ![returnContact online]) {
-			//Recurse into metacontacts if necessary
-			returnContact = [self preferredContactForContentType:inType
-												  forListContact:[(AIMetaContact *)inContact preferredContact]];
-		}
+		returnContact = [inContact preferredContact];
 
 	} else {
 
