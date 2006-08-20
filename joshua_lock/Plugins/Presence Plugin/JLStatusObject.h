@@ -13,15 +13,29 @@
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+#import <Cocoa/Cocoa.h>
 
-#import <Adium/AIObject.h>
-
-@interface JLPresenceRemote : AIObject {
-	NSMutableArray		*statusObjectArray;
-	//NSMutableArray		*accountObjectArray;
+@interface JLStatusObject : NSObject {
+	NSString	*title;
+	NSString	*toolTip;
+	int			type;
+	NSImage		*image;
+	BOOL		isActiveStatus;
+	BOOL		hasSubmenu;
 }
 
-- (void)populateStatusObjects;
-- (NSMutableArray *)statusObjectArray;
+- (id)initWithTitle:(NSString *)title;
+- (void)setTitle: (NSString *)title;
+- (NSString *)title;
+- (void)setIsActiveStatus: (BOOL)activeStatus;
+- (BOOL)isActiveStatus;
+- (void)setToolTip: (NSString *)tip;
+- (NSString *)toolTip;
+- (void)setHasSubmenu: (BOOL)submenu;
+- (BOOL)hasSubmenu;
+- (void)setType: (int)aType;
+- (int)type;
+- (void)setImage: (NSImage *)image;
+- (NSImage *)image;
 
 @end
