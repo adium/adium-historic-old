@@ -708,29 +708,52 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	return nil;
 }
 
-//Below code is from RAFDragArrayController -- check to be sure it still applies here
-- (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
+- (BOOL)writeListObjects:(NSArray *)inArray toPasteboard:(NSPasteboard*)pboard
 {
-	//Begin the drag
-	if (dragItems != rows) {
-		[dragItems release];
-		dragItems = [rows retain];
-	}
-	
 	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",@"AIListObjectUniqueIDs",nil] owner:self];
 	[pboard setString:@"Private" forType:@"AIListObject"];
+
+	if (dragItems != inArray) {
+		[dragItems release];
+		dragItems = [inArray retain];
+	}
 	
-#warning take this debug code out when we're sure this DnD operation stuff works
-	if (dragItems) {
-		NSEnumerator	*enumerator = [dragItems objectEnumerator];
-		AIListObject	*listObject;
-		while ((listObject = [enumerator nextObject])) {
-			NSLog(@"dragging %@",[listObject internalObjectID]);
+	return YES;
+}
+
+- (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
+{	
+	NSMutableArray 	*itemArray = [NSMutableArray array];
+	NSEnumerator	*enumerator = [rows objectEnumerator];
+	NSNumber		*rowNumber;
+	while ((rowNumber = [enumerator nextObject])) {
+		[itemArray addObject:[listContents objectAtIndex:[rowNumber intValue]]];
+	}
+
+	return [self writeListObjects:itemArray toPasteboard:pboard];
+}
+
+- (BOOL)tableView:(NSTableView *)aTableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard*)pboard
+{
+	NSMutableArray 	*itemArray = [NSMutableArray array];
+	id 				item;
+	
+	unsigned int bufSize = [rowIndexes count];
+	unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
+	unsigned int i;
+	
+	NSRange range = NSMakeRange([rowIndexes firstIndex], ([rowIndexes lastIndex]-[rowIndexes firstIndex]) + 1);
+	[rowIndexes getIndexes:buf maxCount:bufSize inIndexRange:&range];
+	
+	for (i = 0; i != bufSize; i++) {
+		if ((item = [listContents objectAtIndex:buf[i]])) {
+			[itemArray addObject:item];
 		}
 	}
 	
+	free(buf);
 	
-	return YES;
+	return [self writeListObjects:itemArray toPasteboard:pboard];
 }
 
 - (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
