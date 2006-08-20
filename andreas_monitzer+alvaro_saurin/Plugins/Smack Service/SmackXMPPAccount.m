@@ -303,7 +303,6 @@
 }
 
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage {
-    NSLog(@"new status: %@",statusState);
     if([[statusState statusName] isEqualToString:STATUS_NAME_INVISIBLE])
     {
         if(currentlyInvisible)
@@ -472,7 +471,6 @@
 // dynamic properties
 - (void)updateStatusForKey:(NSString *)key
 {
-    NSLog(@"udpateStatusForKey:%@",key);
     [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPUpdateStatusNotification
                                                         object:self
                                                       userInfo:[NSDictionary dictionaryWithObject:key forKey:SmackXMPPStatusKey]];

@@ -285,7 +285,6 @@ static AIHTMLDecoder *messageencoder = nil;
 {
     NSMutableArray *menuItems = [NSMutableArray array];
     BOOL isMe = [[[inContact UID] jidResource] isEqualToString:[chat getNickname]];
-    NSLog(@"menuItems for \"%@\" (%@)",[inContact UID],isMe?@"is me":@"not me");
     NSString *role = [inContact statusObjectForKey:@"XMPPMUCRole"];
     NSString *affiliation = [inContact statusObjectForKey:@"XMPPMUCAffiliation"];
     NSString *jid = [inContact statusObjectForKey:@"XMPPMUCJID"];

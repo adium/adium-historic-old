@@ -187,7 +187,6 @@ static NSMutableDictionary *privacyplugins;
         [[adium interfaceController] handleErrorMessage:AILocalizedString(@"Error Getting Privacy Lists","Error Getting Privacy Lists") withDescription:[e reason]];
         return;
     }
-    NSLog(@"privacy lists = %@",privacyLists);
 }
 
 - (void)uploadPrivacyList:(AIPrivacyType)type
