@@ -224,7 +224,7 @@
     while((plugin = [e nextObject]))
         if([plugin respondsToSelector:@selector(disconnected:)])
             [plugin disconnected:conn];
-    [self removeAllContacts];
+    
     [serverinfo release]; serverinfo = nil;
 }
 
