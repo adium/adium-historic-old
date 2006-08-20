@@ -193,6 +193,11 @@
 
 - (void)setFileTransferRequest:(SmackXFileTransferRequest*)request
 {
+    [self performSelectorOnMainThread:@selector(fileTransferRequestMainThread:) withObject:request waitUntilDone:YES];
+}
+
+- (void)fileTransferRequestMainThread:(SmackXFileTransferRequest*)request
+{
     ESFileTransfer *fileTransfer = [[adium fileTransferController] newFileTransferWithContact:[[adium contactController] contactWithService:[account service] account:account UID:[request getRequestor]] forAccount:account type:Incoming_FileTransfer];
     
     [fileTransfer setRemoteFilename:[request getFileName]];
