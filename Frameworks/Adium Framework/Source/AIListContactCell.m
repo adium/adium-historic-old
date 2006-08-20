@@ -362,7 +362,7 @@
 {
 	NSRect	rect = inRect;
 	if (userIconVisible) {
-		NSImageInterpolation	savedIterpolation = [[NSGraphicsContext currentContext] imageInterpolation];
+		NSImageInterpolation	savedInterpolation = [[NSGraphicsContext currentContext] imageInterpolation];
 		NSImage *image;
 		NSRect	drawRect;
 		
@@ -379,7 +379,7 @@
 							   position:position
 							   fraction:[self imageOpacityForDrawing]
 								 radius:userIconRoundingRadius];
-		[[NSGraphicsContext currentContext] setImageInterpolation: savedIterpolation];
+		[[NSGraphicsContext currentContext] setImageInterpolation: savedInterpolation];
 
 		//If we're using space on the left, shift the origin right
 		if (position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_LEFT_PAD;
