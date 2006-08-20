@@ -282,6 +282,7 @@
 		3474E0910825634300BF30F0 /* StatusPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3474E0900825634300BF30F0 /* StatusPreferences.nib */; };
 		347C6943080C8F2B00E69674 /* ESAwayStatusWindowPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 347C6941080C8F2B00E69674 /* ESAwayStatusWindowPlugin.m */; };
 		347C6949080C8F3B00E69674 /* ESAwayStatusWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 347C6947080C8F3A00E69674 /* ESAwayStatusWindowController.m */; };
+		347E39DC0A98AA4A00961B0E /* missing_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 347E39DB0A98AA4A00961B0E /* missing_image.png */; };
 		347E77F407CA94FF00350507 /* ESAccountEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 347E77F207CA94FE00350507 /* ESAccountEvents.m */; };
 		347E781407CA961300350507 /* ESUserIconHandlingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 347E781207CA961300350507 /* ESUserIconHandlingPlugin.m */; };
 		347E781A07CA962100350507 /* userIconToolbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 347E781907CA962100350507 /* userIconToolbar.png */; };
@@ -2375,12 +2376,12 @@
 		3474DD6F0824699D00BF30F0 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		3474DFFC08254F3500BF30F0 /* Copyright.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Copyright.txt; sourceTree = "<group>"; };
 		3474DFFF082550FD00BF30F0 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Credits.rtf; path = Resources/Credits.rtf; sourceTree = "<group>"; };
-		347A210F09786B5F00A30431 /* SystemVersionCheck */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = SystemVersionCheck; path = /Users/evands/adium/build/Development/SystemVersionCheck; sourceTree = "<absolute>"; };
 		347AC44608AAA7C70043FB94 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Catalan; path = "Resources/Catalan.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		347C6940080C8F2B00E69674 /* ESAwayStatusWindowPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESAwayStatusWindowPlugin.h; path = Source/ESAwayStatusWindowPlugin.h; sourceTree = "<group>"; };
 		347C6941080C8F2B00E69674 /* ESAwayStatusWindowPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESAwayStatusWindowPlugin.m; path = Source/ESAwayStatusWindowPlugin.m; sourceTree = "<group>"; };
 		347C6946080C8F3A00E69674 /* ESAwayStatusWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESAwayStatusWindowController.h; path = Source/ESAwayStatusWindowController.h; sourceTree = "<group>"; };
 		347C6947080C8F3A00E69674 /* ESAwayStatusWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESAwayStatusWindowController.m; path = Source/ESAwayStatusWindowController.m; sourceTree = "<group>"; };
+		347E39DB0A98AA4A00961B0E /* missing_image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = missing_image.png; path = "Plugins/Gaim Service/missing_image.png"; sourceTree = "<group>"; };
 		347E77F107CA94FE00350507 /* ESAccountEvents.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAccountEvents.h; path = Source/ESAccountEvents.h; sourceTree = "<group>"; };
 		347E77F207CA94FE00350507 /* ESAccountEvents.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAccountEvents.m; path = Source/ESAccountEvents.m; sourceTree = "<group>"; };
 		347E781107CA961300350507 /* ESUserIconHandlingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESUserIconHandlingPlugin.h; path = Source/ESUserIconHandlingPlugin.h; sourceTree = "<group>"; };
@@ -2960,6 +2961,7 @@
 		34D836F307CBF960006466F2 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
 		34D836FF07CBF979006466F2 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = /System/Library/Frameworks/AudioUnit.framework; sourceTree = "<absolute>"; };
 		34D8370007CBF97A006466F2 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
+		34DC50810A978EA700C75374 /* SystemVersionCheck */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SystemVersionCheck; sourceTree = BUILT_PRODUCTS_DIR; };
 		34DC84280A7EA012003E1636 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34DFF46007A5EABF00B92233 /* ESSecureMessagingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSecureMessagingPlugin.h; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.h"; sourceTree = "<group>"; };
 		34DFF46107A5EABF00B92233 /* ESSecureMessagingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSecureMessagingPlugin.m; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.m"; sourceTree = "<group>"; };
@@ -3939,6 +3941,7 @@
 				34B323C009B9FEAC00029361 /* IRC Service.AdiumLibgaimPlugin */,
 				3417D26109C332B900FC413E /* Translator.AdiumPlugin */,
 				3485D68009EB416300232CC4 /* AdiumLibgaim.framework */,
+				34DC50810A978EA700C75374 /* SystemVersionCheck */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4223,6 +4226,7 @@
 				34415A64059F9B9B0019246B /* GaimService.m */,
 				4B7F278705440C8D00CDFC90 /* CBGaimAccount.h */,
 				348FF83E09128BEB00A942A8 /* CBGaimAccount.m */,
+				347E39DB0A98AA4A00961B0E /* missing_image.png */,
 				34416060059FC2450019246B /* Gadu-Gadu */,
 				34416053059FC2270019246B /* Jabber */,
 				343A7F2206935DAF00150CEC /* Meanwhile */,
@@ -7540,7 +7544,7 @@
 			);
 			name = SystemVersionCheck;
 			productName = SystemVersionCheck;
-			productReference = 347A210F09786B5F00A30431 /* SystemVersionCheck */;
+			productReference = 34DC50810A978EA700C75374 /* SystemVersionCheck */;
 			productType = "com.apple.product-type.tool";
 		};
 		3485D67F09EB416300232CC4 /* AdiumLibgaim */ = {
@@ -7975,6 +7979,7 @@
 				34E0368E0A75AA4F00394F11 /* ESGaimICQAccountView.nib in Resources */,
 				34E0368F0A75AA4F00394F11 /* GaimDefaultsICQ.plist in Resources */,
 				34500ED00A881F8500509225 /* GaimDefaultsQQ.plist in Resources */,
+				347E39DC0A98AA4A00961B0E /* missing_image.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
