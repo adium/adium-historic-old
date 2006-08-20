@@ -31,6 +31,7 @@ public class SmackBridge implements ConnectionListener {
         OutOfBandDataExtension.register();
         ChatStateNotifications.register();
         VCardUpdateExtension.register();
+        SmackXMPPAsteriskListener.register();
     }
     
     public void setDelegate(NSObject d) {
