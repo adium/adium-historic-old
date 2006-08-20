@@ -273,7 +273,10 @@
 	}
 	
 	//If we can't get a contact, we're not going to be able to get a chat... return nil
-	if (!targetContact) return nil;
+	if (!targetContact) {
+		NSLog(@"Warning: -[AIChatController chatWithContact:%@] got a nil targetContact.",inContact);
+		return nil;
+	}
 	
 	//Search for an existing chat we can switch instead of replacing
 	enumerator = [openChats objectEnumerator];
@@ -300,10 +303,11 @@
 
 	if (!chat) {
 		AIAccount	*account;
-		account = [targetContact account];
 		account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																		 toContact:targetContact
 																	includeOffline:NO];
+		if (!account) account = [targetContact account];
+
 		AILog(@"chatWithContact: target contact's account is %@", account);
 		
 		//Create a new chat
