@@ -349,9 +349,7 @@
 	<key>Java</key>
 	<dict>
 		<key>JVMVersion</key>
-		<string>1.4+</string>
-		<key>VMOptions</key>
-		<string>-enableassertions -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n</string>
+		<string>1.5+</string>
 	</dict>
 	<key>LSEnvironment</key>
 	<dict>
@@ -364,12 +362,6 @@
 	<true/>
 	<key>NSJavaNeeded</key>
 	<string>YES</string>
-	<key>NSJavaPath</key>
-	<array>
-		<string>Adium.jar</string>
-	</array>
-	<key>NSJavaRoot</key>
-	<string>Contents/Resources/Java</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
