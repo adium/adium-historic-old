@@ -139,14 +139,12 @@
 
 - (void)complementPresence:(NSNotification*)notification
 {
-    NSLog(@"resourcesBlockingAvatar = %@",resourcesBlockingAvatar);
     if([resourcesBlockingAvatar count] == 0)
     {
         SmackPresence *presence = [[notification userInfo] objectForKey:SmackXMPPPacket];
         
         @synchronized(self) {
             [presence addExtension:[SmackCocoaAdapter VCardUpdateExtensionWithPhotoHash:avatarhash]];
-            NSLog(@"XMPP: Appended hash %@ to presence", avatarhash);
         }
         
     }
@@ -277,10 +275,8 @@
         
         if([[[presence getType] toString] isEqualToString:@"unavailable"])
         {
-            NSLog(@"removing %@ from our blocker list",resource);
             if([resourcesBlockingAvatar count] == 1 && [[resourcesBlockingAvatar lastObject] isEqualToString:resource])
             {
-                NSLog(@"avatar unblocked!");
                 [resourcesBlockingAvatar removeObject:resource];
                 // now we're finally able to broadcast our avatar!
                 avatarUpdateInProgress = YES;
@@ -300,7 +296,6 @@
              */
         {
             [resourcesBlockingAvatar addObject:resource];
-            NSLog(@"%@ blocks the avatar",resource);
         }
         else {
             NSString *photo = [ext getPhoto];
@@ -323,9 +318,7 @@
                     if([SmackCocoaAdapter avatarIsEmpty:vCard])
                     {
                         [resourcesBlockingAvatar addObject:resource];
-                        NSLog(@"resource %@ has empty avatar, blocking us",resource);
                     }
-                    NSLog(@"dunno what to do");
                 } else @synchronized(self) {
                     if(![photo isEqualToString:avatarhash])
                     {
@@ -338,7 +331,6 @@
                         */
                         [avatarhash release];
                         avatarhash = [photo retain];
-                        NSLog(@"resource %@ has other avatar, setting our hash to %@",resource,avatarhash);
                     }
                 }
             }
@@ -369,7 +361,6 @@
                 if(!hash || [hash isEqualToString:@""]) // empty avatar?
                     avatar = [NSData data];
                 else {
-                    NSLog(@"loading avatar for %@",uid);
                     @try {
                         SmackXVCard *vCard = [SmackCocoaAdapter vCard];
                         [vCard load:[account connection] :uid];
@@ -398,8 +389,6 @@
 - (void)setAvatar:(NSArray*)params
 {
     NSData *data = [params objectAtIndex:0];
-    
-    NSLog(@"setting avatar for %@",[params objectAtIndex:1]);
     
     [[params objectAtIndex:1] setServersideIconData:([data length]!=0)?data:nil notify:NotifyLater];
 

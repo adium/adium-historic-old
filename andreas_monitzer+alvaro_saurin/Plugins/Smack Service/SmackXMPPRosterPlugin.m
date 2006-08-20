@@ -183,8 +183,6 @@
         } else {
             SmackListContact *listContact = (SmackListContact*)[[adium contactController] contactWithService:[account service] account:account UID:jid class:[SmackListContact class]];
             
-            NSLog(@"list contact %@ (%p)",listContact,listContact);
-            
             if(![[listContact formattedUID] isEqualToString:jid])
                 [listContact setFormattedUID:jid notify:NotifyLater];
             
@@ -305,7 +303,6 @@
             servicechange = YES;
         } else {
             AIListContact *listContact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid class:[SmackListContact class]];
-            NSLog(@"%@,%d",listContact,[listContact retainCount]);
             if(listContact)
             {
                 [contacts addObject:listContact];
@@ -346,6 +343,33 @@
 
     SmackListContact *rosterContact = (SmackListContact*)[[adium contactController] existingContactWithService:[account service] account:account UID:jid];
     
+    NSMenuItem *mitem = [rosterContact statusObjectForKey:@"XMPPMenuItem"];
+    if(mitem)
+    {
+        // this contact is in some menu and not the contact list
+        // this means that we only need the online/offline status
+        // plus we have to update the menu item's image
+        
+        if(presence == NULL)
+            [rosterContact setOnline:NO
+                              notify:NotifyNow
+                            silently:NO];
+        else {
+            [rosterContact setStatusWithName:mode statusType:([mode isEqualToString:@"available"] || [mode isEqualToString:@"chat"])?AIAvailableStatusType:AIAwayStatusType
+                                      notify:NotifyNow];
+
+            [rosterContact setOnline:YES
+                              notify:NotifyNow
+                            silently:NO];
+        }
+        
+        [mitem setImage:[rosterContact displayArrayObjectForKey:@"Tab Status Icon"]];
+        [[adium notificationCenter] postNotificationName:Account_ListChanged
+                                                  object:nil
+                                                userInfo:nil];
+        return;
+    }
+    
     if(!rosterContact || ![rosterContact isKindOfClass:[SmackListContact class]])
         return; // ignore presence information for people not on our contact list (might want to add that later for chats to people not on the contact list)
 
@@ -355,8 +379,6 @@
         resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:[XMPPAddress stringByAppendingString:@"/"]];
     else
         resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:XMPPAddress];
-    
-    NSLog(@"resource object = %@ (%p)",resourceObject,resourceObject);
 
     AIStatusType statustype = AIOfflineStatusType;
     
@@ -537,20 +559,28 @@
     
     while((service = [e nextObject]))
     {
-        NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:[service displayName] action:nil keyEquivalent:@""];
-        NSMenu *submenu = [[NSMenu alloc] initWithTitle:[service displayName]];
-        
-        NSEnumerator *e2 = [[account menuItemsForContact:service] objectEnumerator];
-        NSMenuItem *subitem;
-        
-        while((subitem = [e2 nextObject]))
-            [submenu addItem:subitem];
-        
-        [mitem setSubmenu:submenu];
-        [submenu release];
+        // cache in list contact
+        NSMenuItem *mitem = [service statusObjectForKey:@"XMPPMenuItem"];
+        if(!mitem)
+        {
+            mitem = [[NSMenuItem alloc] initWithTitle:[service displayName] action:nil keyEquivalent:@""];
+            NSMenu *submenu = [[NSMenu alloc] initWithTitle:[service displayName]];
+            
+            NSEnumerator *e2 = [[account menuItemsForContact:service] objectEnumerator];
+            NSMenuItem *subitem;
+            
+            while((subitem = [e2 nextObject]))
+                [submenu addItem:subitem];
+            
+            [mitem setSubmenu:submenu];
+            [submenu release];
+            [mitem setImage:[service displayArrayObjectForKey:@"Tab Status Icon"]];
+
+            [service setStatusObject:mitem forKey:@"XMPPMenuItem" notify:NotifyLater];
+            [mitem autorelease];
+        }
         
         [menuItems addObject:mitem];
-        [mitem release];
     }
     
     return menuItems;
