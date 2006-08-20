@@ -56,6 +56,10 @@
  * MSN custom emoticons work again, though not without a few rough edges still (#3941).
  * “Clear Recent Pictures” menu item doesn't request further information, therefore it should not have an ellipsis (#5184).
  * Updated !ShortcutRecorder to the latest version. This fixes bugs relating to setting the hotkey to either a function key or a key combo involving the A key (the latter being #5168).
+ * Setup Assistant improvements.
+ * Dropped !SystemVersionCheck; it was causing too many problems (such as #4843, we think).
+ * New version (!r231) of joscar. Fixes [http://www.adiumx.com/blog/2006/08/adium-beta-aim-problems-resolved.php the bug that was causing AIM to kick us off].
+ * When you open a chat, we now are more sane about choosing which contact to select by default in the recipient pop-up menu (#4393).
  * Xtras Manager now lists Xtras alphabetically (#5180).
  * Xtras Manager now allows you to delete multiple Xtras at a time (#5181).
  * Localization updates:
