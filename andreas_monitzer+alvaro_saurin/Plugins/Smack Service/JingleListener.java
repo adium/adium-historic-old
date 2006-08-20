@@ -9,8 +9,6 @@
 package net.adium.smackBridge;
 
 import org.jivesoftware.smack.*;
-import org.jivesoftware.smackx.jingle.*;
-import org.jivesoftware.smackx.nat.STUNResolver;
 import com.apple.cocoa.foundation.NSObject;
 
 import java.lang.reflect.*;
