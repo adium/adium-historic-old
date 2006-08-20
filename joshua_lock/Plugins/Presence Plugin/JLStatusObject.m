@@ -25,7 +25,7 @@
 		title = nil;
 		toolTip = nil;
 		type = -1;
-		image = [[NSImage alloc] init];
+		//image = [[NSImage alloc] init];
 		isActiveStatus = NO;
 		hasSubmenu = NO;
 	}
@@ -44,7 +44,7 @@
 {
 	[title release];
 	[toolTip release];
-	[image release];
+	//[image release];
 	
 	[super dealloc];
 }
@@ -101,7 +101,7 @@
 	return type;
 }
 
-- (void)setImage: (NSImage *)newImage
+/*- (void)setImage: (NSImage *)newImage
 {
 	[newImage retain];
 	[image release];
@@ -111,7 +111,7 @@
 - (NSImage *)image
 {
 	return [[image copy] autorelease];
-}
+}*/
 
 - (AIStatusItem *)objectToStatusItem
 {

@@ -14,16 +14,9 @@
 @end
 
 @protocol JLStatusObjectProtocol
-- (void)setTitle: (NSString *)title;
 - (NSString *)title;
-- (void)setIsActiveStatus: (BOOL)activeStatus;
 - (BOOL)isActiveStatus;
-- (void)setToolTip: (NSString *)tip;
 - (NSString *)toolTip;
-- (void)setHasSubmenu: (BOOL)submenu;
 - (BOOL)hasSubmenu;
-- (void)setType: (int)aType;
 - (int)type;
-- (void)setImage: (NSImage *)image;
-- (NSImage *)image;
 @end
