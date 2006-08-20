@@ -49,7 +49,7 @@ public class SmackXMPPAsteriskListener {
             this.status = status;
         }
         protected PhoneStatusExtension(org.xmlpull.v1.XmlPullParser parser) {
-            this.status = parser.getAttributeValue(getNamespace(),getElementName());
+            this.status = parser.getAttributeValue("","status");
         }
         
         public String getStatus() {
