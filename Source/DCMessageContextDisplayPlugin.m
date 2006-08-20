@@ -280,6 +280,10 @@
 	NSString			*objectID;
 	NSString			*accountNumber;
 	
+	if (!chat || !listContact) {
+		NSLog(@"Warning: Unable to save content object %@ with chat %@ and listContact %@",content,chat,listContact);
+	}
+	
 	contentDict = [NSMutableDictionary dictionary];
 	[contentDict setObject:[content type] forKey:@"Type"];
 	
