@@ -843,20 +843,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 	
 	if (![emoticon path]) {
-		//Set some path for this emoticon so our HTML decoder will insert the img tag and we can update the img later
-		NSString	*path = [self _emoticonCachePathForEmoticon:emoticonEquivalent inChat:inChat];
-		
-		//XXX Temporary image?
-		NSImage		*image = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
-		[image lockFocus];
-		[@"?" drawInRect:NSMakeRect(0, 0, 16, 16) withAttributes:nil];
-		[image unlockFocus];
-
-		[[image TIFFRepresentation] writeToFile:path
-									 atomically:NO];
-		[image release];
-		
-		[emoticon setPath:path];
+		[emoticon setPath:[[NSBundle bundleForClass:[CBGaimAccount class]] pathForResource:@"missing_image"
+																					ofType:@"png"]];
 	}
 }
 
