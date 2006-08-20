@@ -1784,11 +1784,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 			returnContact = (firstAvailableContact ?
 							 firstAvailableContact :
-							 (firstNotOfflineContact ? firstNotOfflineContact : [(AIMetaContact *)inContact preferredContact]);
+							 (firstNotOfflineContact ? firstNotOfflineContact : [(AIMetaContact *)inContact preferredContact]));
 		}
 
 	} else {
-
 		//We have a flat contact; find the best account for talking to this contact,
 		//and return an AIListContact on that account
 		account = [[adium accountController] preferredAccountForSendingContentType:inType
