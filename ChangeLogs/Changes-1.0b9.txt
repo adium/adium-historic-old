@@ -6,7 +6,7 @@
  * New version (!r231) of joscar. Fixes [http://www.adiumx.com/blog/2006/08/adium-beta-aim-problems-resolved.php the bug that was causing AIM to kick us off].
  * MSN custom emoticons work again, though not without a few rough edges still (#3941).
  * The long-awaited QQ service (#383). Hooray for the [http://code.google.com/soc/gaim/appinfo.html?csaid=21C6A28CF6F369D6 Google Summer of Code]!
- * New service icon for the LiveJournal service. Thanks to Andy Mai of LiveJournal for providing this for us.
+ * New service icon for the !LiveJournal service. Thanks to Andy Mai of !LiveJournal for providing this for us.
  * Jabber accounts now use TLS by default, and should now connect properly without it.
  * Throttle changes to the MSN friendly name (#5020).
  * Replace newlines with slashes (/) in the MSN friendly name (#3969).
