@@ -54,6 +54,11 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
     }
 }
 
+- (DCJoinChatViewController*)joinChatViewController
+{ 
+    return controller; 
+} 
+
 - (IBAction)joinChat:(id)sender
 {
 	// If there is a controller, it handles all of the join-chat work

@@ -9,6 +9,9 @@
 package net.adium.smackBridge;
 
 import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.packet.PacketExtension;
+import org.jivesoftware.smack.provider.PacketExtensionProvider;
+import org.jivesoftware.smack.provider.ProviderManager;
 import com.apple.cocoa.foundation.NSObject;
 
 import java.lang.reflect.*;
@@ -16,6 +19,61 @@ import java.lang.reflect.*;
 public class SmackXMPPAsteriskListener {
     NSObject delegate;
     Object phoneClient;
+    
+    public static class PhoneStatusExtensionProvider implements PacketExtensionProvider {
+        public PhoneStatusExtensionProvider() {
+        }
+        
+        // we need a provider here, since the information is stored in an attribute, which isn't handled by
+        // that java beans-using method
+        public PacketExtension parseExtension(org.xmlpull.v1.XmlPullParser parser) throws Exception {
+            boolean done = false;
+            
+            // get status from attribute
+            PhoneStatusExtension result = new PhoneStatusExtension(parser);
+            
+            // move to the end of the packet
+            while(!done) {
+                int eventType = parser.next();
+                if(eventType == org.xmlpull.v1.XmlPullParser.END_TAG && parser.getName().equals("phone-status"))
+                    done = true;
+            }
+            return result;
+        }
+    }
+    
+    public static class PhoneStatusExtension implements PacketExtension {
+        String status;
+        
+        protected PhoneStatusExtension(String status) {
+            this.status = status;
+        }
+        protected PhoneStatusExtension(org.xmlpull.v1.XmlPullParser parser) {
+            this.status = parser.getAttributeValue(getNamespace(),getElementName());
+        }
+        
+        public String getStatus() {
+            return status;
+        }
+   
+        public String getElementName() {
+            return "phone-status";
+        }
+        
+        public String getNamespace() {
+            return "http://jivesoftware.com/xmlns/phone";
+        }
+        
+        public String toXML() {
+            StringBuffer buf = new StringBuffer();
+            buf.append("<phone-status xmlns=\"http://jivesoftware.com/xmlns/phone\" status=\"").append(status).append("\"/>");
+            return buf.toString();
+        }
+    }
+    
+    public static void register() {
+        ProviderManager.addExtensionProvider("phone-status","http://jivesoftware.com/xmlns/phone",new PhoneStatusExtensionProvider());
+    }
     
     public SmackXMPPAsteriskListener(XMPPConnection connection, ClassLoader classLoader, final NSObject delegate) throws Exception {
         this.delegate = delegate;

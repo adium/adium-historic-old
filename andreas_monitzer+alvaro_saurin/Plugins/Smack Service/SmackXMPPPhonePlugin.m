@@ -105,6 +105,13 @@ static JavaClassLoader *classLoader = nil;
 
 @end
 
+@interface SmackPhoneStatusExtension : NSObject <SmackPacketExtension> {
+}
+
+- (NSString*)getStatus;
+
+@end
+
 @interface SmackCocoaAdapter (AsteriskPlugin)
 
 + (void)loadAsteriskPlugin;
@@ -123,11 +130,8 @@ static JavaClassLoader *classLoader = nil;
         NSString *asteriskIMJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:ASTERISKIM_JAR
                                                                                        ofType:@"jar"
                                                                                   inDirectory:@"Java"];
-        NSString *concurrentJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:CONCURRENT_JAR
-                                                                                       ofType:@"jar"
-                                                                                  inDirectory:@"Java"];
         
-        classLoader = [[[AIObject sharedAdiumInstance] javaController] classLoaderWithJARs:[NSArray arrayWithObjects:asteriskIMJarPath, concurrentJarPath, nil] parentClassLoader:[self classLoader]];
+        classLoader = [[[AIObject sharedAdiumInstance] javaController] classLoaderWithJARs:[NSArray arrayWithObject:asteriskIMJarPath] parentClassLoader:[self classLoader]];
     }
 }
 
@@ -148,6 +152,8 @@ static JavaClassLoader *classLoader = nil;
 
 @end
 
+static BOOL registered = NO;
+
 @implementation SmackXMPPPhonePlugin
 
 - (id)initWithAccount:(SmackXMPPAccount*)a
@@ -164,6 +170,12 @@ static JavaClassLoader *classLoader = nil;
                                                  selector:@selector(receivedPresencePacket:)
                                                      name:SmackXMPPPresencePacketReceivedNotification
                                                    object:account];
+        if(!registered)
+        {
+            // our class is a tooltip plugin for displaying the phone status
+            [[adium interfaceController] registerContactListTooltipEntry:[self class] secondaryEntry:YES];
+            registered = YES;
+        }
     }
     return self;
 }
@@ -206,6 +218,29 @@ static JavaClassLoader *classLoader = nil;
     [currentCallID release];
     currentCallID = nil;
 }
+
+#pragma mark Tooltip Handling
+
++ (NSString *)labelForObject:(AIListObject *)inObject
+{
+	if ([inObject statusObjectForKey:@"XMPPPhoneStatus"])
+        return AILocalizedString(@"Phone Status","phone status tooltip entry title");
+	return nil;
+}
+
++ (NSAttributedString *)entryForObject:(AIListObject *)inObject
+{
+    NSString *status = [inObject statusObjectForKey:@"XMPPPhoneStatus"];
+    if(!status)
+        return nil;
+    if([status isEqualToString:@"ON_PHONE"])
+        return [[[NSAttributedString alloc] initWithString:AILocalizedString(@"On the phone","phone status tooltip entry on the phone")] autorelease];
+    // Just use the string as is if we don't know it. The proto-JEP doesn't mention any other
+    // status than ON_PHONE, but you never know...
+    return [[[NSAttributedString alloc] initWithString:status] autorelease];
+}
+
+#pragma mark Java Callbacks
 
 - (void)receivedIQPacket:(NSNotification*)notification
 {
@@ -299,9 +334,7 @@ static JavaClassLoader *classLoader = nil;
     
     // prefilter everything that can be done in this secondary thread to avoid blocking the main thread when possible
 
-    // this phone service only works with people on the same server
-    if([[[packet getFrom] jidHost] isEqualToString:[[account UID] jidHost]] &&
-       ![[[packet getType] toString] isEqualToString:@"unavailable"])
+    if(![[[packet getType] toString] isEqualToString:@"unavailable"])
         [self performSelectorOnMainThread:@selector(receivedPresencePacketMainThread:) withObject:n waitUntilDone:YES];
 }
 
@@ -311,13 +344,24 @@ static JavaClassLoader *classLoader = nil;
     // the following line is the reason why we have to do this in the main thread
     AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:[[packet getFrom] jidUserHost]];
     
-    if(contact && ![contact statusObjectForKey:@"XMPPPhoneSupport"])
+    if(contact)
     {
-        // we don't know if that user supports the phone service yet, so query the server
-        SmackXDiscoverInfo *info = [SmackCocoaAdapter discoverInfo];
-        [info setTo:phonejid];
-        [info setNode:[[packet getFrom] jidUsername]];
-        [[account connection] sendPacket:info];
+        if([[[packet getFrom] jidHost] isEqualToString:[[account UID] jidHost]])
+        {
+            // this phone service only works with people on the same server
+            
+            if(![contact statusObjectForKey:@"XMPPPhoneSupport"])
+            {
+                // we don't know if that user supports the phone service yet, so query the server
+                SmackXDiscoverInfo *info = [SmackCocoaAdapter discoverInfo];
+                [info setTo:phonejid];
+                [info setNode:[[packet getFrom] jidUsername]];
+                [[account connection] sendPacket:info];
+            }
+        }
+        SmackPhoneStatusExtension *phonestatus = [packet getExtension:@"phone-status" :@"http://jivesoftware.com/xmlns/phone"];
+        // the following sets to nil if there's no extension or the status is missing, which is what we want
+        [contact setStatusObject:[phonestatus getStatus] forKey:@"XMPPPhoneStatus" notify:NotifyNow];
     }
 }
 
