@@ -125,6 +125,13 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 			if (path) {
 				statusIcon = [[NSImage alloc] initByReferencingFile:path];
 				
+				if(![statusIcon isValid]) {
+					AILog(@"\"%@\" cannot be found.",path);
+					[statusIcon release];
+					statusIcon = [[NSImage alloc] initWithSize:NSMakeSize(8,8)];
+				}
+		
+				
 				if (statusIcon) {
 					if (iconDirection == AIIconFlipped) [statusIcon setFlipped:YES];
 					[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusName];
