@@ -158,7 +158,8 @@
  * only displays as many objects as are visible, so invisible objects are not shown.
  */
 - (void)setVisible:(BOOL)inVisible
-{	
+{
+	NSLog(@"List Object: %@ inVisible: %d visible: %d", [self UID], inVisible, visible);
 	if (visible != inVisible) {
 		visible = inVisible;
 

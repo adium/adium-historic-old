@@ -18,7 +18,6 @@
 #include <sys/mman.h>
 #include <malloc/malloc.h>
 #include <stdlib.h>
-#include <c.h>
 
 BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow)
 {

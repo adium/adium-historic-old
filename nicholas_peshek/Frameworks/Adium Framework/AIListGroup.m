@@ -77,7 +77,8 @@
 //Set this group as visible if it contains anything visible
 - (void)_setVisibleCount:(int)newCount
 {
-	if (visibleCount != newCount) {
+	NSLog(@"Group: %@ visibleCount: %d", [self UID], newCount);
+	if ((visibleCount != newCount) || (visibleCount == 0)) {
 		visibleCount = newCount;
 		
 		//
@@ -180,8 +181,7 @@
 			[self sortListObject:inObject
 				  sortController:[[adium contactController] activeSortController]];
 		}
-		
-		//
+
 		[self setStatusObject:[NSNumber numberWithInt:[containedObjects count]] 
 					   forKey:@"ObjectCount"
 					   notify:NotifyNow];

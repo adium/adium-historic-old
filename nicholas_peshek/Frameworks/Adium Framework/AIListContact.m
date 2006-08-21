@@ -281,6 +281,7 @@
  */
 - (void)setOnline:(BOOL)online notify:(NotifyTiming)notify silently:(BOOL)silent
 {
+	NSLog(@"Contact: %@ setOnline:%d silently:%d", [self UID], online, silent);
 	if (online != [self online]) {
 		[self setStatusObject:(online ? [NSNumber numberWithBool:YES] : nil)
 					   forKey:@"Online"

@@ -27,8 +27,9 @@ typedef enum {
 } LISTS;
 
 @interface AIMultiListWindowController : AIObject {
-	NSMutableArray	*contactListArray;
-	AIContactList	*mostRecentContactList;
+	NSMutableArray		*contactListArray;
+	AIContactList		*mostRecentContactList;
+	LIST_WINDOW_STYLE	style;
 }
 
 + (AIMultiListWindowController *)initialize:(LIST_WINDOW_STYLE)windowStyle;
@@ -48,6 +49,7 @@ typedef enum {
 - (void)destroyListController:(AIContactList *)doneController;
 - (AIContactList *)nextContactList;
 - (AIContactList *)contactListWithContact:(AIListObject *)object;
+- (void)setStyle:(LIST_WINDOW_STYLE)windowStyle;
 - (void)selector:(SEL)aSelector withArgument:(id)argument toItem:(CONTACT_LIST_ITEM)item on:(LISTS)lists;
 
 @end

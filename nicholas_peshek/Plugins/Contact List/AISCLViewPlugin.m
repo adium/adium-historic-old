@@ -135,6 +135,7 @@
 		
 		if (newWindowStyle != windowStyle) {
 			windowStyle = newWindowStyle;
+			[contactListWindowController setStyle:windowStyle];
 			
 			//If a contact list is visible and the window style has changed, update for the new window style
 			if (contactListWindowController) {

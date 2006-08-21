@@ -105,4 +105,17 @@
 	[[(AIListWindowController  *)[otherWindow windowController] master] setContactListRoot:groupToMergeWith];
 	[[(AISCLViewPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"AISCLViewPlugin"] contactListWindowController] destroyListController:[[currentWindow windowController] master]];
 }
+- (void)mouseUp:(NSEvent *)theEvent
+{
+	if(windowToSnapTo) {
+		if([self frame].origin.x == [windowToSnapTo frame].origin.x) {
+			if([self frame].origin.y == NSMaxY([windowToSnapTo frame])) {
+				[self mergeContactListWindow:windowToSnapTo withWindow:self];
+			} else if ([self frame].origin.y += NSMinY([windowToSnapTo frame]) - NSMaxY([self frame])) {
+				[self mergeContactListWindow:self withWindow:windowToSnapTo];
+			}
+		}
+	}
+	[super mouseUp:theEvent];
+}
 @end
