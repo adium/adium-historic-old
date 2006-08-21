@@ -30,9 +30,7 @@
 
 @interface AIXtrasManager : AIPlugin {
 	NSMutableDictionary						*disabledXtras;
-	NSMutableArray							*categoryNames;
 	NSMutableArray							*categories;
-	NSMutableArray							*categoryImages;
 	NSMutableArray							*selectedCategory;
 	IBOutlet NSWindow						*window;
 	IBOutlet NSTableView					*sidebar;
