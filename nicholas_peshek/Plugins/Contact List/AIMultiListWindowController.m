@@ -18,6 +18,7 @@
 #import "AIContactList.h"
 #import "AIListWindowController.h"
 #import "AIListGroup.h"
+#import "AIInterfaceController.h"
 #import <AIUtilities/AIWindowAdditions.h>
 
 #define PREF_GROUP_MULTI_CONTACT_LIST			@"Contact List Windows"
@@ -27,7 +28,7 @@
 //Initialize this class and create a new Contact List.
 + (AIMultiListWindowController *)initialize:(LIST_WINDOW_STYLE)windowStyle
 {
-	return [[self alloc] createWindows:windowStyle];
+	return [[[self alloc] createWindows:windowStyle] autorelease];
 }
 
 //Create the initial contact list
@@ -35,8 +36,9 @@
 - (AIMultiListWindowController *)createWindows:(LIST_WINDOW_STYLE)windowStyle
 {
 	if ((self = [self init])) {
+		style = windowStyle;
 		if(!contactListArray) {
-			contactListArray = [[NSMutableArray array] retain];
+			contactListArray = [[[NSMutableArray array] retain] autorelease];
 		}
 		
 		NSArray			*loadedList = [NSArray array];
@@ -71,7 +73,6 @@
 				
 				[newRootObject addObject:newGroup];
 				[listToCheckAgainst addObject:newGroup];
-				[newGroup setExpanded:[newGroup isExpanded]];
 			}
 			if(indexVar == 0)
 				[self createNewSeparableContactListWithObject:(AIListGroup *)newRootObject withStyle:windowStyle];
@@ -122,7 +123,10 @@
 //Create the new contact list. A bit messy, but overall, it'll work. Returns a boolean saying if it worked or not.
 - (BOOL)createNewSeparableContactListWithObject:(AIListObject<AIContainingObject> *)newListObject
 {
-	return [self createNewSeparableContactListWithObject:newListObject withStyle:WINDOW_STYLE_BORDERLESS];
+	if(style == WINDOW_STYLE_STANDARD)
+		return [self createNewSeparableContactListWithObject:newListObject withStyle:WINDOW_STYLE_BORDERLESS];
+	else
+		return [self createNewSeparableContactListWithObject:newListObject withStyle:style];
 }
 
 - (BOOL)createNewSeparableContactListWithObject:(AIListObject<AIContainingObject> *)newListObject withStyle:(LIST_WINDOW_STYLE)windowStyle
@@ -149,7 +153,8 @@
 
 //Deallocate the ivars when this instance is getting sent away.
 - (void)dealloc
-{		
+{
+	[self saveContactLists];
 	[contactListArray release];
 	[mostRecentContactList release];
 	
@@ -254,6 +259,13 @@
 	}
 	
 	return returnVal;
+}
+
+- (void)setStyle:(LIST_WINDOW_STYLE)windowStyle
+{
+	if(windowStyle != style) {
+		style = windowStyle;
+	}
 }
 
 - (BOOL)isMainWindow

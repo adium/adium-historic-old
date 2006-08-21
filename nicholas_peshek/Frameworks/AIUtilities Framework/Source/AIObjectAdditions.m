@@ -6,6 +6,7 @@
 //
 
 #import "AIObjectAdditions.h"
+#import </usr/include/objc/objc-class.h>
 
 /* 
  * this wonderful little thing is the creation of Mulle kybernetiK.
@@ -253,6 +254,35 @@
 - (void)handleInvocation:(NSInvocation *)anInvocation
 {
 	[anInvocation invokeWithTarget:self];
+}
+
+@end
+
+//Code created by RobinHP at http://www.cocoadev.com/index.pl?MethodSwizzling accessed on August, 13th 2006.
+//Use this method at your own risk. May be considered hackish.
+
+@implementation NSObject (Swizzle)
+
++ (void)swizzleMethod:(SEL)orig_sel withMethod:(SEL)alt_sel {
+    Method orig_method = nil, alt_method = nil;
+	
+    // First, look for the methods
+    orig_method = class_getInstanceMethod([self class], orig_sel);
+    alt_method = class_getInstanceMethod([self class], alt_sel);
+	
+    // If both are found, swizzle them
+    if ((orig_method != nil) && (alt_method != nil)) {
+        char *temp1;
+        IMP temp2;
+		
+        temp1 = orig_method->method_types;
+        orig_method->method_types = alt_method->method_types;
+        alt_method->method_types = temp1;
+		
+        temp2 = orig_method->method_imp;
+        orig_method->method_imp = alt_method->method_imp;
+        alt_method->method_imp = temp2;
+	} else NSLog(@"Attempt to swizzle nonexistent methods!");
 }
 
 @end

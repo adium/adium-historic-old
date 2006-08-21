@@ -37,3 +37,11 @@
 
 - (void)handleInvocation:(NSInvocation *)anInvocation;
 @end
+
+@interface NSObject (Swizzle)
+
+//XXX - Use this method at your own risk. hackish.
+
++ (void)swizzleMethod:(SEL)orig_sel withMethod:(SEL)alt_sel;
+
+@end

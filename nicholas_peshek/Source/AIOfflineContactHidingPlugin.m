@@ -177,12 +177,21 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
+	NSEnumerator	*e = [[inModifiedKeys allObjects] objectEnumerator];
+	NSString		*temp;
+	NSString		*keys = [NSString stringWithString:@"Modified Keys"];
+	
+	while ((temp = [e nextObject])) {
+		keys = [keys stringByAppendingString:[NSString stringWithFormat:@":%@", temp]];
+	}
+	NSLog(@"ListObject: %@ %@ Silent:%d", [inObject UID], keys, silent);
     if (inModifiedKeys == nil ||
 	   [inModifiedKeys containsObject:@"Online"] ||
 	   [inModifiedKeys containsObject:@"Signed Off"] ||
 	   [inModifiedKeys containsObject:@"New Object"] ||
 	   [inModifiedKeys containsObject:@"VisibleObjectCount"]) {
 
+		
 		if ([inObject isKindOfClass:[AIListContact class]]) {
 			BOOL	visible = (showOfflineContacts || 
 							   [inObject online] ||
@@ -197,16 +206,32 @@
 			} else {
 				[inObject setVisible:visible];
 			}
-
+			
 		} else if ([inObject isKindOfClass:[AIListGroup class]]) {
 			BOOL	newObject = [inObject integerStatusObjectForKey:@"New Object"];
-
+			
 			[inObject setVisible:((useContactListGroups) &&
 								  ([(AIListGroup *)inObject visibleCount] > 0 || newObject) &&
 								  (useOfflineGroup || ((AIListGroup *)inObject != [[adium contactController] offlineGroup])))];
 		}
+	} else if (([inObject isKindOfClass:[AIListGroup class]] || [inObject isKindOfClass:[AIMetaContact class]]) && [inModifiedKeys containsObject:@"ObjectCount"]) {
+		//For some reason, with multiple contact lists, there is a few groups and metacontacts that are set visible, but are empty.
+		//Check needed if it's stupid. Deep Magic?
+		NSLog(@"%@ got here %d", [inObject UID], [(AIListGroup *)inObject visibleCount]);
+		if(useContactListGroups) {
+			NSLog(@"CURSE 1!");
+			if (useOfflineGroup || ((AIListGroup *)inObject != [[adium contactController] offlineGroup])) {
+				NSLog(@"CURSE!");
+				if ([(AIListGroup *)inObject visibleCount] > 0) {
+					[inObject setVisible:YES];
+				} else {
+					NSLog(@"Deep Magic is a foot!");
+					[inObject setVisible:NO];
+				}
+			}
+		}
+		NSLog(@"%@ Visible?: %d", [inObject UID], [inObject visible]);
 	}
-	
     return nil;
 }
 

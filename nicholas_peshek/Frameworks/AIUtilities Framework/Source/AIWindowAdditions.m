@@ -15,6 +15,7 @@
 
 #import "AIWindowAdditions.h"
 #import "AIApplicationAdditions.h"
+#import "AIObjectAdditions.h"
 
 @implementation NSWindow (AIWindowAdditions)
 
@@ -213,5 +214,4 @@ OSStatus ChangeWindowTags(WindowRef theWindow, WindowTags setThese, WindowTags c
 					 (flag ? kWindowExposeIsStickyTag : kWindowNoTags),
 					 (!flag ? kWindowExposeIsStickyTag : kWindowNoTags)); 
 }
-
 @end

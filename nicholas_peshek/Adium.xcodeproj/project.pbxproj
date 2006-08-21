@@ -1384,6 +1384,23 @@
 		F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8CA4B0A1A9C9400154550 /* GBQuestionHandlerPlugin.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildStyle section */
+		0149BB810A9999F20012CB58 /* Development */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Development;
+		};
+		0149BB820A9999F20012CB58 /* Deployment */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Deployment;
+		};
+/* End PBXBuildStyle section */
+
 /* Begin PBXContainerItemProxy section */
 		11F5F42B09537E00007DCC49 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -7824,6 +7841,12 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				0149BB810A9999F20012CB58 /* Development */,
+				0149BB820A9999F20012CB58 /* Deployment */,
+			);
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
