@@ -26,7 +26,7 @@
 #define	DISCO_JINGLE_ID			@"http://jabber.org/protocol/jingle"
 #define	DISCO_JINGLE_AUDIO_ID	@"http://jabber.org/protocol/jingle/audio"
 
-#define JINGLE_JAR @"smackx-jingle"
+#define JINGLE_JAR				@"smackx-jingle"
 
 static JavaClassLoader *classLoader = nil;
 
@@ -66,6 +66,15 @@ static JavaClassLoader *classLoader = nil;
 @end
 
 @implementation SmackJinglePlugin
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark                 Content Info Messages
+////////////////////////////////////////////////////////////////////////////////
+- (id) contentInfoRinging
+{
+	JavaClass *classobj = [[[classLoader loadClass:@"org.jivesoftware.smackx.jingle.ContentInfo"] alloc] init];
+	return [SmackCocoaAdapter staticObjectField:@"RINGING" inJavaClassObject:classobj];
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark                 Discovery Information
@@ -172,10 +181,12 @@ static JavaClassLoader *classLoader = nil;
 				session = [request accept:payloadTypes];
 				[session start:request];
 			} @catch (NSException *e) {
-				[[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"Jingle Error","Jingle Error")]
+				NSLog (@"Jingle exception: %@ - %@ ", [e name], [e reason]);
+
+				[[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"Jingle Error",nil)]
 											 withDescription:[e reason]
-											 withWindowTitle:AILocalizedString(@"Notice","Notice")
-											   defaultButton:AILocalizedString(@"OK","OK")
+											 withWindowTitle:AILocalizedString(@"Notice",nil)
+											   defaultButton:AILocalizedString(@"OK",nil)
 											 alternateButton:nil
 												 otherButton:nil
 													  target:nil
@@ -214,7 +225,7 @@ static JavaClassLoader *classLoader = nil;
 										userInfo:request];
 
 	// Send a message saying that this is "ringing"
-	//[[listener getManager] sendContentInfo:[SmackXContentInfoAudio fromString:@"ringing"]];
+	[[listener getManager] sendContentInfo:[self contentInfoRinging]];
 }
 
 
@@ -229,23 +240,28 @@ static JavaClassLoader *classLoader = nil;
 {
 	SmackXOutgoingJingleSession *session		= nil;
     JavaVector					*payloadTypes	= [self getSupportedAudioPayloads];
-
-	NSLog (@"Establishing outgoing Jingle session.");
+	int							 payloadsCount	= [payloadTypes size];
 	
-	@try {
-		session = [[listener getManager] createOutgoingJingleSession:jid :payloadTypes];
-		[session start:nil];
-    } @catch (NSException *e) {
-        [[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"Jingle Error","Jingle Error")]
-									 withDescription:[e reason]
-									 withWindowTitle:AILocalizedString(@"Notice","Notice")
-									   defaultButton:AILocalizedString(@"OK","OK")
-									 alternateButton:nil
-										 otherButton:nil
-											  target:nil
-											selector:NULL
-											userInfo:nil];
-    }
+	NSLog (@"Establishing outgoing Jingle session to %@, offering %d payloads.", jid, payloadsCount);
+	
+	if (payloadsCount > 0) {
+		@try {
+			session = [[listener getManager] createOutgoingJingleSession:jid :payloadTypes];
+			[session start:nil];
+		} @catch (NSException *e) {
+			NSLog (@"Jingle exception: %@ - %@ ", [e name], [e reason]);
+			
+			[[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"Jingle Error",nil)]
+										 withDescription:[e reason]
+										 withWindowTitle:AILocalizedString(@"Jingle Exception",nil)
+										   defaultButton:AILocalizedString(@"OK",nil)
+										 alternateButton:nil
+											 otherButton:nil
+												  target:nil
+												selector:NULL
+												userInfo:nil];
+		}		
+	}
 }
 
 
