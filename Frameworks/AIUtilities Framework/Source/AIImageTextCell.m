@@ -258,10 +258,14 @@
 			flippedIt = YES;
 		}
 		
+		[NSGraphicsContext saveGraphicsState];
+		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
 		[image drawInRect:NSMakeRect(destPoint.x,destPoint.y,destSize.width,destSize.height)
 				 fromRect:NSMakeRect(0,0,size.width,size.height)
 				operation:NSCompositeSourceOver
 				 fraction:1.0];
+		[NSGraphicsContext restoreGraphicsState];
+
 		if (flippedIt) {
 			[image setFlipped:NO];
 		}
