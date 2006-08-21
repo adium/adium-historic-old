@@ -116,17 +116,7 @@ static NSArray *draggedTypes = nil;
 									   selector:@selector(chatDidFinishAddingUntrackedContent:)
 										   name:Content_ChatDidFinishAddingUntrackedContent 
 										 object:inChat];
-		
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(showFileTransferRequest:)
-										   name:@"FileTransferRequestReceived"
-										 object:nil];
-		
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(cancelFileTransferRequest:)
-										   name:FILE_TRANSFER_CANCELLED
-										 object:nil];
-		
+
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(customEmoticonUpdated:)
 										   name:@"AICustomEmoticonUpdated"
@@ -171,8 +161,6 @@ static NSArray *draggedTypes = nil;
 
 	//Release the chat
 	[chat release]; chat = nil;
-		
-	[fileTransferRequestControllers release]; fileTransferRequestControllers = nil;
 
 	[super dealloc];
 }
@@ -533,7 +521,7 @@ static NSArray *draggedTypes = nil;
 	[self enqueueContentObject:contentObject];
 }
 
-- (void) enqueueContentObject:(AIContentObject *)contentObject
+- (void)enqueueContentObject:(AIContentObject *)contentObject
 {
 	[contentQueue addObject:contentObject];
 	
@@ -661,7 +649,7 @@ static NSArray *draggedTypes = nil;
 		methodArgs = [messageStyle methodArgumentsToCheckIfScrollToBottomIsNeeded];
 		[wso callWebScriptMethod:methodName withArguments:methodArgs];
 	}
-
+	AILog(@"Appending %@",content);
 	methodName = [messageStyle methodNameForAppendingContent:content
 	                                                 similar:contentIsSimilar
 	                               willAddMoreContentObjects:willAddMoreContentObjects];
@@ -1176,6 +1164,8 @@ static NSArray *draggedTypes = nil;
 		}
 		NSNumber *shouldScroll = [[webView windowScriptObject] callWebScriptMethod:@"nearBottom"
 																	 withArguments:nil];
+		if (!shouldScroll) shouldScroll = [NSNumber numberWithBool:NO];
+
 		if (updatedImage) [[webView windowScriptObject] callWebScriptMethod:@"alignChat" 
 															  withArguments:[NSArray arrayWithObject:shouldScroll]];
 	}
@@ -1192,32 +1182,12 @@ static NSArray *draggedTypes = nil;
 
 #pragma mark File Transfer
 
-- (void)showFileTransferRequest:(NSNotification *)not
+- (void)handleAction:(NSString *)action forFileTransfer:(NSString *)fileTransferID
 {
-	ESFileTransferRequestPromptController *tc = (ESFileTransferRequestPromptController *)[[not userInfo] objectForKey:@"FileTransferRequestController"];
-	ESFileTransfer *transfer = [tc fileTransfer];
-
-	if (!fileTransferRequestControllers) fileTransferRequestControllers = [[NSMutableDictionary alloc] init];
-	[fileTransferRequestControllers setObject:tc forKey:[transfer remoteFilename]];
-
-	if ([transfer chat] == chat) {
-		[self enqueueContentObject:transfer];
-	}
-}
-
-- (void)cancelFileTransferRequest:(NSNotification *)not
-{
-	ESFileTransfer *e = (ESFileTransfer *)[not userInfo];
-	[fileTransferRequestControllers removeObjectForKey:[e remoteFilename]];
-}
-
-- (void)handleAction:(NSString *)action forFileTransfer:(NSString *)fileName
-{
-	ESFileTransferRequestPromptController *tc = [fileTransferRequestControllers objectForKey:fileName];
+	ESFileTransfer *fileTransfer = [ESFileTransfer existingFileTransferWithID:fileTransferID];
+	ESFileTransferRequestPromptController *tc = [fileTransfer fileTransferRequestPromptController];
 
 	if (tc) {
-		[fileTransferRequestControllers removeObjectForKey:fileName];
-		
 		AIFileTransferAction a;
 		if ([action isEqualToString:@"SaveAs"])
 			a = AISaveFileAs;

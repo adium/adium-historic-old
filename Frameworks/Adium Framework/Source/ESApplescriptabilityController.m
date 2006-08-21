@@ -151,10 +151,10 @@
 
 	if (contact) {
 		//Open the chat and set it as active
-		chat = [[adium chatController] openChatWithContact:contact];
+		chat = [[adium chatController] openChatWithContact:contact onPreferredAccount:YES];
 		[[adium interfaceController] setActiveChat:chat];
 	}
-	
+
 	return chat;
 }
 

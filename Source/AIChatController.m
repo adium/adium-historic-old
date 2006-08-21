@@ -229,14 +229,23 @@
  * @brief Opens a chat for communication with the contact, creating if necessary.
  *
  * The interface controller will then be asked to open the UI for the new chat.
+ *
+ * @param inContact The AIListContact on which to open a chat. If an AIMetaContact, an appropriate contained contact will be selected.
+ * @param onPreferredAccount If YES, Adium will determine the account on which the chat should be opened. If NO, [inContact account] will be used. Value is treated as YES for AIMetaContacts by the action of -[AIChatController chatWithContact:].
  */
-- (AIChat *)openChatWithContact:(AIListContact *)inContact
+- (AIChat *)openChatWithContact:(AIListContact *)inContact onPreferredAccount:(BOOL)onPreferredAccount
 {
-	AIChat	*chat = [self chatWithContact:inContact];
+	AIChat	*chat;
 
+	if (onPreferredAccount) {
+		inContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
+															   forListContact:inContact];
+	}
+
+	chat = [self chatWithContact:inContact];
 	if (chat) [[adium interfaceController] openChat:chat]; 
 
-	return chat;	
+	return chat;
 }
 
 /*!
@@ -246,13 +255,18 @@
  * If a chat with this contact already exists, it is returned.
  * If a chat with a contact within the same metaContact at this contact exists, it is switched to this contact
  * and then returned.
+ *
+ * The passed contact, if an AIListContact, will be used exactly -- that is, [inContact account] is the account on which the chat will be opened.
+ * If the passed contact is an AIMetaContact, an appropriate contact/account pair will be automatically selected by this method.
+ *
+ * @param inContact The contact with which to open a chat. See description above.
  */
 - (AIChat *)chatWithContact:(AIListContact *)inContact
 {
 	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
 	AIListContact	*targetContact = inContact;
-		
+
 	/*
 	 If we're dealing with a meta contact, open a chat with the preferred contact for this meta contact
 	 It's a good idea for the caller to pick the preferred contact for us, since they know the content type
@@ -274,6 +288,7 @@
 	
 	//If we can't get a contact, we're not going to be able to get a chat... return nil
 	if (!targetContact) {
+		AILog(@"Warning: -[AIChatController chatWithContact:%@] got a nil targetContact.",inContact);
 		NSLog(@"Warning: -[AIChatController chatWithContact:%@] got a nil targetContact.",inContact);
 		return nil;
 	}
@@ -302,14 +317,8 @@
 	}
 
 	if (!chat) {
-		AIAccount	*account;
-		account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																		 toContact:targetContact
-																	includeOffline:NO];
-		if (!account) account = [targetContact account];
+		AIAccount	*account = [targetContact account];
 
-		AILog(@"chatWithContact: target contact's account is %@", account);
-		
 		//Create a new chat
 		chat = [AIChat chatForAccount:account];
 		[chat addParticipatingListObject:targetContact];

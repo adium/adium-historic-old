@@ -14,16 +14,16 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIPreferenceControllerProtocol.h>
-#import "ESFileTransferController.h"
 #import "ESFileTransferRequestPromptController.h"
-#import <Adium/AIListContact.h>
+#import "ESFileTransferController.h"
 #import "ESFileTransfer.h"
 #import "ESTextAndButtonsWindowController.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <Adium/AIChatControllerProtocol.h>
 
 @interface ESFileTransferRequestPromptController (PRIVATE)
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer
@@ -44,39 +44,23 @@
 									 notifyingTarget:(id)inTarget
 											selector:(SEL)inSelector
 {	
-	[[self alloc] initForFileTransfer:inFileTransfer
-					  notifyingTarget:inTarget
-							 selector:inSelector];
+	[[[self alloc] initForFileTransfer:inFileTransfer
+					   notifyingTarget:inTarget
+							  selector:inSelector] autorelease];
 }
 
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer
 		  notifyingTarget:(id)inTarget
 				 selector:(SEL)inSelector
 {
-	if ((self = [super init])) {		
+	if ((self = [super init])) {
 		fileTransfer = [inFileTransfer retain];
 		target       = [inTarget retain];
 		selector     =  inSelector;
 		
-		NSAttributedString	*message;
-		NSString			*filenameDisplay;
-		NSString			*remoteFilename = [fileTransfer remoteFilename];
-
-		//Display the name of the file, with the file's size if available
-		unsigned long long fileSize = [fileTransfer size];
-		
-		if (fileSize) {
-			NSString	*fileSizeString;
-			
-			fileSizeString = [[adium fileTransferController] stringForSize:fileSize];
-			filenameDisplay = [NSString stringWithFormat:@"%@ (%@)",remoteFilename,fileSizeString];
-		} else {
-			filenameDisplay = remoteFilename;
-		}
-		
-		message = [fileTransfer message];
-		
-		[[adium notificationCenter] postNotificationName:@"FileTransferRequestReceived" object:nil userInfo:[NSDictionary dictionaryWithObject:self forKey:@"FileTransferRequestController"]];
+		[fileTransfer setFileTransferRequestPromptController:self];
+		AILog(@"%@: Requeseting file transfer %@", self, fileTransfer);
+		[[adium contentController] receiveContentObject:fileTransfer];
 	}
 
 	return self;
@@ -119,11 +103,8 @@
 																			   file:[fileTransfer remoteFilename]];
 			//Only need to take action if the user pressed OK; if she pressed cancel, just return to our window.
 			if (returnCode == NSOKButton) {
-				[target performSelector:selector
-							 withObject:fileTransfer
-							 withObject:[savePanel filename]];
-				
-				[self autorelease];
+				localFilename = [savePanel filename];
+				finished = YES;
 			}
 			
 			break;
@@ -137,16 +118,17 @@
 	}
 	
 	if (finished) {
+		[self retain];
 		[target performSelector:selector
 					 withObject:fileTransfer
 					 withObject:localFilename];
 		
-		//Release our instance	
-		[self autorelease];
+		[fileTransfer setFileTransferRequestPromptController:nil];
+		[self release];
 	}
 }
 
-- (ESFileTransfer *) fileTransfer
+- (ESFileTransfer *)fileTransfer
 {
 	return fileTransfer;
 }

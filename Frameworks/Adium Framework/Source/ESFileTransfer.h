@@ -22,7 +22,7 @@
 
 @protocol AIAccount_Files;
 
-@class AIAccount, AIListObject, ESFileTransfer;
+@class AIAccount, AIListObject, ESFileTransfer, ESFileTransferRequestPromptController;
 
 @protocol FileTransferDelegate
 -(void)fileTransfer:(ESFileTransfer *)fileTransfer didSetType:(AIFileTransferType)type;
@@ -44,10 +44,12 @@
 	AIFileTransferStatus			status;
 	
 	id <FileTransferDelegate>   delegate;
+	
+	ESFileTransferRequestPromptController *promptController;
 }
 
 + (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)t;
-- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)t;
++ (ESFileTransfer *)existingFileTransferWithID:(NSString *)fileTransferID;
 
 - (AIListContact *)contact;
 - (AIAccount<AIAccount_Files> *)account;
@@ -86,5 +88,10 @@
 - (void)openFile;
 
 - (NSImage *)iconImage;
+
+- (NSString *)uniqueID;
+
+- (void)setFileTransferRequestPromptController:(ESFileTransferRequestPromptController *)inPromptController;
+- (ESFileTransferRequestPromptController *)fileTransferRequestPromptController;
 
 @end

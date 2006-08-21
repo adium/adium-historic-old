@@ -286,11 +286,12 @@
 	AIAdium			*sharedAdium = [AIObject sharedAdiumInstance];
 	
 	contact = [[sharedAdium contactController] preferredContactWithUID:UID
-																			 andServiceID:serviceID 
-																	forSendingContentType:CONTENT_MESSAGE_TYPE];
+														  andServiceID:serviceID 
+												 forSendingContentType:CONTENT_MESSAGE_TYPE];
 	if (contact) {
 		//Open the chat and set it as active
-		[[sharedAdium interfaceController] setActiveChat:[[sharedAdium chatController] openChatWithContact:contact]];
+		[[sharedAdium interfaceController] setActiveChat:[[sharedAdium chatController] openChatWithContact:contact
+																						onPreferredAccount:YES]];
 		
 		//Insert the message text as if the user had typed it after opening the chat
 		NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];

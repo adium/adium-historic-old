@@ -566,19 +566,13 @@ typedef enum {
 
 	} else if ([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) {
 		//Drag and drop text sending via the contact list.
-		AIListContact   *contact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
-																			  forListContact:item];
-		
-		if (contact) {
-			//XXX
-			//This is not the best method for doing this, but I can't figure out why the Message View
-			//won't let me add the text directly into it's text entry even if I expand AIWebKitMessageView.
-			
-			//Open the chat and send the dragged text.
+		if ([item isKindOfClass:[AIListContact class]]) {
+			/* This will send the message. Alternately, we could just insert it into the text view... */
 			AIChat							*chat;
 			AIContentMessage				*messageContent;
 			
-			chat = [[adium chatController] openChatWithContact:contact];
+			chat = [[adium chatController] openChatWithContact:(AIListContact *)item
+											onPreferredAccount:YES];
 			messageContent = [AIContentMessage messageInChat:chat
 												  withSource:[chat account]
 												 destination:[chat listObject]

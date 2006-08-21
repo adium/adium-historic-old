@@ -65,8 +65,6 @@
 
 - (void)setTypingFlagOfChat:(AIChat *)inChat to:(NSNumber *)typingState;
 
-- (AIChat*)_openChatWithContact:(AIListContact *)contact andConversation:(GaimConversation*)conv;
-
 - (void)_receivedMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
 - (void)_sentMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat toDestinationListContact:(AIListContact *)destinationContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
 - (NSString *)_messageImageCachePathForID:(int)imageID;
@@ -75,8 +73,6 @@
 
 - (void)displayError:(NSString *)errorDesc;
 - (NSNumber *)shouldCheckMail;
-
-- (void)updateStatusForKey:(NSString *)key immediately:(BOOL)immediately;
 
 - (void)configureGaimAccountNotifyingTarget:(id)target selector:(SEL)selector;
 - (void)continueConnectWithConfiguredGaimAccount;
@@ -565,37 +561,18 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (AIChat *)mainThreadChatWithContact:(AIListContact *)contact
 {
-	AIChat *chat;
-
-	//First, make sure the chat is created
-	[[adium chatController] mainPerformSelector:@selector(chatWithContact:)
-									 withObject:contact
-								  waitUntilDone:YES];
-
-	//Now return the existing chat
-	chat = [[adium chatController] existingChatWithContact:contact];
-
-	return chat;
+	return [[adium chatController] mainPerformSelector:@selector(chatWithContact:)
+											withObject:contact
+										   returnValue:YES];
 }
 
 - (AIChat *)mainThreadChatWithName:(NSString *)name
 {
-	AIChat *chat;
-
-	/*
-	 First, make sure the chat is created - we will get here from a call in which Gaim has already
-	 created the GaimConversation, so there's no need for a chatCreationInfo dictionary.
-	 */
-	[[adium chatController] mainPerformSelector:@selector(chatWithName:onAccount:chatCreationInfo:)
-										withObject:name
-										withObject:self
-										withObject:nil
-									 waitUntilDone:YES];
-
-	//Now return the existing chat
-	chat = [[adium chatController] existingChatWithName:name onAccount:self];
-	
-	return chat;
+	return [[adium chatController] mainPerformSelector:@selector(chatWithName:onAccount:chatCreationInfo:)
+											withObject:name
+											withObject:self
+											withObject:nil
+										   returnValue:YES];;
 }
 
 //Typing update in an IM
