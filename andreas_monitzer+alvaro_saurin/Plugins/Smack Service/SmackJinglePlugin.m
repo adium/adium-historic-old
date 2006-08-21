@@ -8,6 +8,8 @@
 
 #import "SmackJinglePlugin.h"
 #import "AIAdium.h"
+#import "AIInterfaceController.h"
+
 #import <AIUtilities/AIStringUtilities.h>
 #import <JavaVM/NSJavaVirtualMachine.h>
 
@@ -18,6 +20,8 @@
 #import "SmackCocoaAdapter.h"
 
 #import "AIVideoConf.h"
+#import "AIVideoConfControllerProtocol.h"
+#import "AIVideoConfController.h"
 
 #define	DISCO_JINGLE_ID			@"http://jabber.org/protocol/jingle"
 #define	DISCO_JINGLE_AUDIO_ID	@"http://jabber.org/protocol/jingle/audio"
@@ -63,6 +67,38 @@ static JavaClassLoader *classLoader = nil;
 
 @implementation SmackJinglePlugin
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark                 Discovery Information
+////////////////////////////////////////////////////////////////////////////////
+/*!
+* @brief Add the disco features for Jingle
+ */
+- (void) addDiscoInfo
+{
+	SmackXServiceDiscoveryManager *sdm;
+	
+	sdm = [SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]];
+	
+    if(![sdm includesFeature:DISCO_JINGLE_ID])
+        [sdm addFeature:DISCO_JINGLE_ID];
+	
+    if(![sdm includesFeature:DISCO_JINGLE_AUDIO_ID])
+        [sdm addFeature:DISCO_JINGLE_AUDIO_ID];	
+}
+
+/*!
+* @brief Remove the disco features for Jingle
+ */
+- (void) removeDiscoInfo
+{
+	[[SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]] removeFeature:DISCO_JINGLE_ID];
+	[[SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]] removeFeature:DISCO_JINGLE_AUDIO_ID];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark                    Initialization
+////////////////////////////////////////////////////////////////////////////////
+
 - (id)initWithAccount:(SmackXMPPAccount*)a
 {
     if((self = [super init]))
@@ -93,33 +129,6 @@ static JavaClassLoader *classLoader = nil;
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark                 Discovery Information
-////////////////////////////////////////////////////////////////////////////////
-/*!
- * @brief Add the disco features for Jingle
- */
-- (void) addDiscoInfo
-{
-	SmackXServiceDiscoveryManager *sdm;
-	
-	sdm = [SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]];
-
-    if(![sdm includesFeature:DISCO_JINGLE_ID])
-        [sdm addFeature:DISCO_JINGLE_ID];
-	
-    if(![sdm includesFeature:DISCO_JINGLE_AUDIO_ID])
-        [sdm addFeature:DISCO_JINGLE_AUDIO_ID];	
-}
-
-/*!
- * @brief Remove the disco features for Jingle
- */
-- (void) removeDiscoInfo
-{
-	[[SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]] removeFeature:DISCO_JINGLE_ID];
-	[[SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]] removeFeature:DISCO_JINGLE_AUDIO_ID];
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark                 Payloads Management
