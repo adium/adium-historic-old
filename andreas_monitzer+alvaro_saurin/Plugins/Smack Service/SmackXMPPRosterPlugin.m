@@ -53,6 +53,56 @@
 
 @end
 
+@interface SmackXMPPSubscriptionTypeTooltipPlugin : AIObject <AIContactListTooltipEntry> {
+}
+@end
+
+@implementation SmackXMPPSubscriptionTypeTooltipPlugin
+
+- (id)init
+{
+    if((self = [super init]))
+    {
+        [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [[adium interfaceController] unregisterContactListTooltipEntry:self secondaryEntry:YES];
+    [super dealloc];
+}
+
+- (NSString *)labelForObject:(AIListObject *)inObject
+{
+    return AILocalizedString(@"Subscription Type","tooltip entry title");
+}
+
+- (NSAttributedString *)entryForObject:(AIListObject *)inObject
+{
+    NSString *type = [inObject statusObjectForKey:@"XMPPSubscriptionType"];
+    if(type)
+    {
+        // this may seem weird, but it's required for localization
+        if([type isEqualToString:@"none"])
+            type = AILocalizedString(@"None","subscription type");
+        else if([type isEqualToString:@"both"])
+            type = AILocalizedString(@"Both","subscription type");
+        else if([type isEqualToString:@"from"])
+            type = AILocalizedString(@"From","subscription type");
+        else if([type isEqualToString:@"to"])
+            type = AILocalizedString(@"To","subscription type");
+
+        return [[[NSAttributedString alloc] initWithString:type] autorelease];
+    }
+    return nil;
+}
+
+@end
+
+static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
+
 @implementation SmackXMPPRosterPlugin
 
 - (id)initWithAccount:(SmackXMPPAccount*)a
@@ -73,6 +123,10 @@
                                                      name:@"SmackXMPPAccountSubscriptionModeUpdated"
                                                    object:account];
         services = [[NSMutableArray alloc] init];
+        if(!subscriptiontypeplugin)
+            subscriptiontypeplugin = [[SmackXMPPSubscriptionTypeTooltipPlugin alloc] init];
+        else
+            [subscriptiontypeplugin retain];
     }
     return self;
 }
@@ -80,6 +134,7 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [services release];
+    [subscriptiontypeplugin release];
     [super dealloc];
 }
 
