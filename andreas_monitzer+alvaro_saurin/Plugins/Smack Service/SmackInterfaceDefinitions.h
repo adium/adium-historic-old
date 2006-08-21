@@ -1037,6 +1037,7 @@
 + (void)createRosterEntry:(SmackRoster*)roster :(NSString*)jid :(NSString*)name :(NSString*)group;
 + (BOOL)isInstanceOfClass:(id)obj :(NSString*)classname;
 + (id)getStaticFieldFromClass:(NSString*)fieldname :(NSString*)classname;
++ (id)getStaticFieldFromClassObject:(NSString*)fieldname :(JavaClass*)classobj;
 + (JavaMethod*)getMethod:(NSString*)classname :(NSString*)method :(JavaVector*)argumentTypes;
 + (id)invokeMethod:(JavaMethod*)meth :(id)obj :(JavaVector*)params;
 

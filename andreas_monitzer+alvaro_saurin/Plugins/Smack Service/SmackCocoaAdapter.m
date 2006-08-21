@@ -143,6 +143,10 @@ static JavaClassLoader *classLoader = nil;
     return [(AdiumSmackBridge*)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] getStaticFieldFromClass:fieldname :className];
 }
 
++ (id)staticObjectField:(NSString*)fieldname inJavaClassObject:(JavaClass*)classobj {
+    return [(AdiumSmackBridge*)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] getStaticFieldFromClassObject:fieldname :classobj];
+}
+
 + (BOOL)object:(id)obj isInstanceOfJavaClass:(NSString*)className {
     return [(AdiumSmackBridge*)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] isInstanceOfClass:obj :className];
 }
