@@ -395,7 +395,7 @@ bail:
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark                  QuickTime General Information
 ////////////////////////////////////////////////////////////////////////////////
-+ (NSArray*) getAudioPayloads
++ (NSArray*) getSupportedAudioPayloads
 {
 	// List of audio payload types supported by default by QuickTime for audio.
 	// It can be obtained from QTStreamingComponents.h
@@ -438,11 +438,6 @@ bail:
 		nil];
 	
 	return res;
-}
-
-+ (NSArray*) getVideoPayloads
-{
-	return nil;
 }
 
 @end

@@ -53,16 +53,9 @@
 - (void) setMicVolumeTo:(int)vol;
 
 /*!
- * Connection protocol
- */
-- (BOOL) start;
-- (BOOL) stop;
-
-/*!
  * General info
  */
-+ (NSArray*) getAudioPayloads;
-+ (NSArray*) getVideoPayloads;
++ (NSArray*) getSupportedAudioPayloads;
 
 @end
 
