@@ -2185,8 +2185,12 @@ static int toArraySort(id itemA, id itemB, void *context)
 		if (numberOfRows)
 			[tableView_results selectRowIndexes:[NSIndexSet indexSetWithIndex:(numberOfRows-1)]
 						   byExtendingSelection:NO];			
-	}	
-	
+	}
+
+	if (numberOfRows) {
+		[tableView_results scrollRowToVisible:[[tableView_results selectedRowIndexes] firstIndex]];
+	}
+
 	deleteOccurred = NO;
 }
 
