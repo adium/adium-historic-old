@@ -20,16 +20,18 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 
 #import <Adium/AIPlugin.h>
+#import <AIPreferenceController.h>
 
 #import <QuickTime/QuickTime.h>
 
 #import "AIVideoConf.h"
+#import "AIVideoConfControllerProtocol.h"
 #import "AIVideoConfController.h"
 
 #import "QTPlugin.h"
 #import "QTConnection.h"
 #import "QTRTPConnection.h"
-
+#import "QTAdvancedPreferences.h"
 
 /*!
  * QuickTime plugin
@@ -121,21 +123,22 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark                  QuickTime General Information
 ////////////////////////////////////////////////////////////////////////////////
-+ (NSArray*) getAudioPayloadsForProtocol:(VCProtocol)protocol
+- (NSArray*) getAudioPayloadsForProtocol:(VCProtocol)protocol
 {
 	// So far, we only support RTP audio connections: get the list of payloads
 	// from there...
 	if (protocol == VC_RTP) {
-		return [QTAudioRTPConnection getAudioPayloads];
+		return [QTAudioRTPConnection getSupportedAudioPayloads];
 	} else {
 		NSLog (@"Unsupported protocol in getAudioPayloadsForProtocol.");
 		return nil;
 	}
 }
 
-+ (NSArray*) getVideoPayloadsForProtocol:(VCProtocol)protocol
+- (NSArray*) getVideoPayloadsForProtocol:(VCProtocol)protocol
 {
 	// TODO: we dont currently support any video codec...
+	NSLog (@"Warning: asking for video payloads to QTPlugin.");
 	return nil;
 }
 

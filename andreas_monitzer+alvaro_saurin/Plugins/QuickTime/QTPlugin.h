@@ -36,30 +36,4 @@
 	int						 outVolume;	
 }
 
-/*!
- * General information from QuickTime
- */
-+ (NSArray*) getAudioPayloadsForProtocol:(VCProtocol)protocol;
-+ (NSArray*) getVideoPayloadsForProtocol:(VCProtocol)protocol;
-
-/*!
- * Create a connection between two transport points, with the specified payload
- * type. It should return the new connection, or nil if the protocol can not
- * create this connection.
- */
-- (id) createConnectionWithProtocol:(VCProtocol)protocol
-							payload:(VCPayload*)payload
-							   from:(VCTransport*)local
-								 to:(VCTransport*)remote;
-
-/*!
- * Create a set of connections between several transport points, with the
- * specified payload types. It should return "nil" if the protocol can not create
- * these connections.
- */
-- (NSArray*) createConnectionsWithProtocol:(VCProtocol)protocol
-								  payloads:(NSArray*)payload
-									  from:(NSArray*)local
-										to:(NSArray*)remote;
-
 @end
