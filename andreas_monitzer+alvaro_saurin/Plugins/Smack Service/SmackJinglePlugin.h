@@ -6,7 +6,6 @@
 //  Copyright 2006 Andreas Monitzer. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
 #import "AIObject.h"
 
 @class SmackJingleListener, SmackXMPPAccount;
