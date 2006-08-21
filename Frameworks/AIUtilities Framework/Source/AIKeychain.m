@@ -805,7 +805,7 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 				} //if (!error) (findInternetPasswordForServer:...)
 
 				[pool release];
-				[error release];
+				[error autorelease];
 			} //if (err == errSecDuplicateItem)
 		} //if (error) (addInternetPassword:...)
 	} //if (password)
