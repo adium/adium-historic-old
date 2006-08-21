@@ -75,7 +75,7 @@
 /*!
  * @brief Register a protocol provider
  */
-- (void) registerProtocolProvider:(id)provider forProtocol:(VCProtocol)protocol
+- (void) registerProvider:(id)provider forProtocol:(VCProtocol)protocol
 {
 	NSAssert([provider conformsToProtocol:@protocol(VCProtocolProvider)],
 			 @"Protocol does not conform to the VCProtocolProvider protocol.");
@@ -87,15 +87,9 @@
 /*!
  * @brief Unregister a protocol provider
  */
-- (void)unregisterProtocolProvider:(id)provider
+- (void) unregisterProviderForProtocol:(VCProtocol)protocol
 {
-	NSEnumerator	*enumerator = [providers objectEnumerator];
-	NSMutableArray	*providerArray;
-	NSValue			*providerValue = [NSValue valueWithNonretainedObject:provider];
-	
-	while ((providerArray = [enumerator nextObject])) {
-		[providerArray removeObject:providerValue];
-	}
+	[providers removeObjectForKey:[NSNumber numberWithInt:protocol]];
 }
 
 /*!

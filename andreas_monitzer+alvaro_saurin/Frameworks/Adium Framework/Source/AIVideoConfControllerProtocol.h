@@ -26,8 +26,8 @@
 @protocol AIVideoConfController <AIController>
 
 // Protocol Providers Management
-- (void) registerProtocolProvider:(id)provider forProtocol:(VCProtocol)protocol;
-- (void) unregisterProtocolProvider:(id)provider;
+- (void) registerProvider:(id)provider forProtocol:(VCProtocol)protocol;
+- (void) unregisterProviderForProtocol:(VCProtocol)protocol;
 
 // Payload lists
 - (NSArray*) getAudioPayloadsForProtocol:(VCProtocol)protocol;
