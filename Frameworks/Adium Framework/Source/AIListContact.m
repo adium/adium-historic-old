@@ -642,7 +642,8 @@
 			targetAccount = [targetMessagingContact account];	
 		}
 		
-		chat = [[adium chatController] openChatWithContact:targetMessagingContact];
+		chat = [[adium chatController] openChatWithContact:targetMessagingContact
+										onPreferredAccount:NO];
 		
 		//Take the string and turn it into an attributed string (in case we were passed HTML)
 		NSAttributedString  *attributedMessage = [AIHTMLDecoder decodeHTML:message];

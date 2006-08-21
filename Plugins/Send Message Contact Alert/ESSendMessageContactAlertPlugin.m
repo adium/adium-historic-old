@@ -149,7 +149,9 @@
 		AIChat					*chat;
 		NSAttributedString 		*message;
 		
-		chat = [[adium chatController] openChatWithContact:contact];
+		//The contact is already on the account we want to use
+		chat = [[adium chatController] openChatWithContact:contact
+										onPreferredAccount:NO];
 		[[adium interfaceController] setActiveChat:chat];
 		
 		message = [NSAttributedString stringWithData:[details objectForKey:KEY_MESSAGE_SEND_MESSAGE]];

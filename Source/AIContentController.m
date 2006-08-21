@@ -473,6 +473,7 @@
 		BOOL			contentReceived, shouldPostContentReceivedEvents;
 
 		//If the chat of the content object has been cleared, we can't do anything with it, so simply return
+		AILog(@"finishDisplayContentObject: %@ in %@",inObject,chat);
 		if (!chat) return;
 		
 		contentReceived = (([inObject isMemberOfClass:[AIContentMessage class]]) &&
@@ -619,8 +620,15 @@
 	}
 }
 
-
-
+/*
+ * @brief Handle sending a content object
+ *
+ * This method must return YES for the content to be displayed
+ *
+ * For a typing content object, the account is informed.
+ * For a message content object, the account is told to send the message; any imbedded file transfers will also be sent.
+ * For a file transfer content object, YES is always returned, as this is actually just for display purposes.
+ */
 - (BOOL)processAndSendContentObject:(AIContentObject *)inContentObject
 {
 	AIAccount	*sendingAccount = (AIAccount *)[inContentObject source];
@@ -656,6 +664,9 @@
 				[contentMessage setDisplayContent:NO];
 			}
 		}
+
+	} else if ([inContentObject isKindOfClass:[ESFileTransfer class]]) {
+		success = YES;
 
 	} else {
 		/* Eating a tasty sandwich */

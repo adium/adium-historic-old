@@ -803,8 +803,11 @@ BOOL isMobileContact(AIListObject *inListObject)
 	AIChat				*chat;
 	AIContentMessage	*messageObject;
 	
-	if (!(chat = [[adium chatController] existingChatWithContact:sourceContact]))
-		chat = [[adium chatController] openChatWithContact:sourceContact];
+	if (!(chat = [[adium chatController] existingChatWithContact:sourceContact])) {
+		//sourceContact is on the account self and should remain on it
+		chat = [[adium chatController] openChatWithContact:sourceContact
+										onPreferredAccount:NO];
+	}
 	
 	messageObject = [AIContentMessage messageInChat:chat
 										 withSource:sourceContact
@@ -1094,7 +1097,16 @@ BOOL isMobileContact(AIListObject *inListObject)
 /* Is this really necessary? */
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
-	return [self online];
+	if ([self online]) {
+		if ([inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) {
+			return [self online] && !(isMobileContact(inContact));
+		} else {
+			return YES;
+		}
+
+	} else {
+		return NO;
+	}
 }
 
 #pragma mark Privacy

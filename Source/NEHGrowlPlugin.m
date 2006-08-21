@@ -370,7 +370,8 @@
 			//First look for an existing chat to avoid changing anything
 			if (!(chat = [[adium chatController] existingChatWithContact:(AIListContact *)listObject])) {
 				//If we don't find one, create one
-				chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject];
+				chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject
+												onPreferredAccount:YES];
 			}
 		}
 	} else if ((uniqueChatID = [clickContext objectForKey:@"uniqueChatID"])) {
@@ -383,7 +384,8 @@
 			([listObject isKindOfClass:[AIListContact class]])) {
 		
 			//If the uniqueChatID led us to an existing contact, create a chat with it
-			chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject];
+			chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject
+											onPreferredAccount:YES];
 		}	
 	}
 

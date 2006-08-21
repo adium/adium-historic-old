@@ -15,7 +15,7 @@
  */
 
 #import "AIXtraInfo.h"
-
+#import <Adium/AIDockControllerProtocol.h>
 
 @implementation AIXtraInfo
 

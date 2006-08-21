@@ -767,11 +767,13 @@ static NSArray *validSenderColors;
 				}
 			}
 		} while (range.location != NSNotFound);
-		
+
 		if ([content isKindOfClass:[ESFileTransfer class]]) { //file transfers are an AIContentMessage subclass
 		
 			ESFileTransfer *transfer = (ESFileTransfer *)content;
 			NSString *fileName = [[transfer remoteFilename] stringByEscapingForXMLWithEntities:nil];
+			NSString *fileTransferID = [[transfer uniqueID] stringByEscapingForXMLWithEntities:nil];
+
 			do{
 				range = [inString rangeOfString:@"%fileIconPath%"];
 				NSString *iconPath = [self iconPathForFileTransfer:transfer];
@@ -786,17 +788,15 @@ static NSArray *validSenderColors;
 						  withString:fileName];
 			
 			[inString replaceKeyword:@"%saveFileHandler%"
-						  withString:[NSString stringWithFormat:@"client.handleFileTransfer('Save', '%@')", fileName]];
+						  withString:[NSString stringWithFormat:@"client.handleFileTransfer('Save', '%@')", fileTransferID]];
 			
 			[inString replaceKeyword:@"%saveFileAsHandler%"
-						  withString:[NSString stringWithFormat:@"client.handleFileTransfer('SaveAs', '%@')", fileName]];
+						  withString:[NSString stringWithFormat:@"client.handleFileTransfer('SaveAs', '%@')", fileTransferID]];
 			
 			[inString replaceKeyword:@"%cancelRequestHandler%"
-						  withString:[NSString stringWithFormat:@"client.handleFileTransfer('Cancel', '%@')", fileName]];
-			
+						  withString:[NSString stringWithFormat:@"client.handleFileTransfer('Cancel', '%@')", fileTransferID]];
 		}
-		
-		
+
 		//Message (must do last)
 		range = [inString rangeOfString:@"%message%"];
 		if (range.location != NSNotFound) {

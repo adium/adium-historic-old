@@ -46,9 +46,6 @@
 	//User icon masking
 	NSImage						*imageMask;
 	NSMutableArray				*objectsWithUserIconsArray;
-	
-	//for inline file transfer requests
-	NSMutableDictionary			*fileTransferRequestControllers;
 }
 
 /*!

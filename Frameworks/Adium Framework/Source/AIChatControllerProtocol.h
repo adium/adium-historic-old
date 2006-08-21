@@ -21,7 +21,7 @@
 //Chats
 - (AIChat *)mostRecentUnviewedChat;
 - (NSSet *)allChatsWithContact:(AIListContact *)inContact;
-- (AIChat *)openChatWithContact:(AIListContact *)inContact;
+- (AIChat *)openChatWithContact:(AIListContact *)inContact onPreferredAccount:(BOOL)onPreferredAccount;
 - (AIChat *)chatWithContact:(AIListContact *)inContact;
 - (AIChat *)existingChatWithContact:(AIListContact *)inContact;
 - (AIChat *)existingChatWithUniqueChatID:(NSString *)uniqueChatID;
