@@ -152,14 +152,15 @@
 
 - (void)activateStatus:(NSNotification *)note
 {
+	// FIXME: correctly handle the "Custom" items
 	// Deciper the dict & convert to an AIStatus
 	NSString	*title = [[note userInfo] objectForKey:@"statusTitle"];
 	NSNumber	*type = [[note userInfo] objectForKey:@"statusType"];
 	// Activate the AIStatus
 	AIStatus *statusState = [AIStatus statusOfType:(AIStatusType)[type intValue]];
 	[statusState setStatusName:title];
-	// FIXME: we would like an account sent with the note
-	//[account setStatusState:statusState];
+	
+	[[adium statusController] setActiveStatusState:statusState];
 }
 
 #pragma mark Chat Observer

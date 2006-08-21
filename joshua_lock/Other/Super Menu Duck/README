@@ -29,3 +29,5 @@ __Bugs__
 * "Launch Adium" doesn't launch the right Adium.
 * Status menu items have no images. I think we need to convert the NSImage into something more suitable for sending down a DO pipe then convert back at the other end
 * If we convert status into a cString we get Super Menu Duck[6590] Conversion to encoding 30 failed for string "♫ iTunes"
+* REGRESSION: Status set for *all* accounts
+* We are re-instantiating the DO connection from the SMD each time as I can't work out what's going wrong. This is bad but will be fixed

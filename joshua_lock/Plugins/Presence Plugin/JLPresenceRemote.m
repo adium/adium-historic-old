@@ -47,7 +47,7 @@
 
 - (NSMutableArray *)statusObjectArray
 {
-	if ((!statusObjectArray) || ([statusObjectArray count] < 1)) {
+	if ((!statusObjectArray)) {
 		[self populateStatusObjects];
 	}
 	return [[statusObjectArray mutableCopy] autorelease];
@@ -60,6 +60,7 @@
 	JLStatusObject			*statusObject;
 	AIStatusType			currentStatusType = AIAvailableStatusType;
 	AIStatusMutabilityType	currentStatusMutabilityType = AILockedStatusState;
+	//AIAccount				*theAccount;
 	
 	[statusObjectArray removeAllObjects];
 	
@@ -88,7 +89,7 @@
 				
 			}
 			
-			// FIXME: adda a divider
+			// FIXME: add a divider
 			
 			currentStatusType = thisStatusType;
 		}
