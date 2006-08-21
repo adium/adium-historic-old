@@ -771,7 +771,8 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 				[(NSObject *)item autorelease]; //might as well.
 
 				if (error) {
-					if (outError) *outError = error;
+					//Retain this because of the autorelease pool.
+					if (outError) *outError = [error retain];
 				} else {
 					AIWiredString *passwordStr  = [AIWiredString stringWithString:password];
 					AIWiredData   *passwordData = [passwordStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -796,13 +797,15 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 								NSFileTypeForHFSTypeCode(protocol), AIKEYCHAIN_ERROR_USERINFO_PROTOCOL,
 								NSFileTypeForHFSTypeCode(authType), AIKEYCHAIN_ERROR_USERINFO_AUTHENTICATIONTYPE,
 								nil];
-							error = [NSError errorWithDomain:AIKEYCHAIN_ERROR_DOMAIN code:err userInfo:userInfo];
+							//Retain this because of the autorelease pool.
+							error = [[NSError errorWithDomain:AIKEYCHAIN_ERROR_DOMAIN code:err userInfo:userInfo] retain];
 						}
 						*outError = error;
 					} //if (outError)
 				} //if (!error) (findInternetPasswordForServer:...)
 
 				[pool release];
+				[error release];
 			} //if (err == errSecDuplicateItem)
 		} //if (error) (addInternetPassword:...)
 	} //if (password)
