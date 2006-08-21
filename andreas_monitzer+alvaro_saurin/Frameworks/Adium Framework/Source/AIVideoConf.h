@@ -79,12 +79,12 @@ typedef enum {
 /*!
  * Provides a list of audio payloads this protocol provider supports. 
  */
-+ (NSArray*) getAudioPayloadsForProtocol:(VCProtocol)protocol;
+- (NSArray*) getAudioPayloadsForProtocol:(VCProtocol)protocol;
 
 /*!
  * Provides a list of video payloads this protocol provider supports. 
  */
-+ (NSArray*) getVideoPayloadsForProtocol:(VCProtocol)protocol;
+- (NSArray*) getVideoPayloadsForProtocol:(VCProtocol)protocol;
 
 /*!
  * Create a connection between two transport points, with the specified payload
