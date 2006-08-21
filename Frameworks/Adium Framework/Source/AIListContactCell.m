@@ -369,7 +369,7 @@
 		image = [self userIconImage];
 		if (!image) {
 			// if using service icons, set the interpolation to high
-			[[NSGraphicsContext currentContext] setImageInterpolation: NSImageInterpolationHigh];
+			[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
 			image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
 		}
 
