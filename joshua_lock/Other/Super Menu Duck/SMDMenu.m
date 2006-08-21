@@ -163,7 +163,7 @@ int main(void)
 	[self removeAllMenuItems];
 	
 	// Status menu
-	if (!presenceRemote) {
+	/*if (!presenceRemote)  {
 		NSLog(@"JLD: !presenceRemote :(");
 		[self connectToVend];
 		if (!presenceRemote) { // For whatever reason connecting to the vend isn't working!?!
@@ -173,7 +173,10 @@ int main(void)
 		} else {
 			NSLog(@"JLD: presenceRemote :)");
 		}
-	}
+	}*/
+	// FIXME: No! Use above ^^ Why is it not working?
+	[self connectToVend];
+	
 	NSLog(@"JLD: Attempting to retrieve array of JLStatusObjects");
 	enumerator = [[presenceRemote statusObjectArray] objectEnumerator];
 	while ((statusObject = [enumerator nextObject])) {
@@ -250,7 +253,8 @@ int main(void)
 
 - (void)connectToVend
 {
-	if (!presenceRemote){
+	//if (!presenceRemote) {
+		presenceRemote = nil;
 		presenceRemote = (id <JLPresenceRemoteProtocol>)[NSConnection rootProxyForConnectionWithRegisteredName:ADIUM_PRESENCE_BROADCAST
 																										  host:nil];
 		//if (presenceRemote == nil || ![presenceRemote conformsToProtocol:@protocol(JLPresenceRemoteProtocol)]) {
@@ -260,7 +264,7 @@ int main(void)
 		} else {
 			NSLog(@"JLD: Connected - woot!\n");
 		}
-	}
+	//}
 }
 
 - (void)activateStatus:(id)sender
