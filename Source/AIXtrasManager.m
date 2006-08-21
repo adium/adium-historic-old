@@ -22,6 +22,7 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
+#import <Adium/AIDockControllerProtocol.h>
 
 #import "AIXtraPreviewController.h"
 
@@ -86,8 +87,6 @@ static AIXtrasManager * manager;
 										object:nil];
 	
 	[categories release]; categories = nil;
-	[categoryNames release]; categoryNames = nil;
-	[categoryImages release]; categoryImages = nil;
 }
 
 
@@ -100,60 +99,58 @@ static AIXtrasManager * manager;
 	[self setCategory:nil];
 }
 
+int categorySort(id categoryA, id categoryB, void * context)
+{
+	return [[categoryA objectForKey:@"Name"] caseInsensitiveCompare:[categoryB objectForKey:@"Name"]];
+}
+
 - (void) loadXtras
 {
 	[categories release];
-	[categoryNames release];
-	[categoryImages release];
-
 	categories = [[NSMutableArray alloc] init];
-	categoryNames = [[NSMutableArray alloc] init];
-	categoryImages = [[NSMutableArray alloc] init];
 	
-	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIMessageStylesDirectory]
-													  forKey:@"Directory"]];	
-	[categoryNames addObject:@"Message Styles"];
-	[categoryImages addObject:[NSImage imageNamed:@"AdiumMessageStyle"]];
+	[categories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithInt:AIMessageStylesDirectory], @"Directory",
+		AILocalizedString(@"Message Styles", "AdiumXtras category name"), @"Name",
+		[NSImage imageNamed:@"AdiumMessageStyle"], @"Image", nil]];
+
+	[categories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithInt:AIContactListDirectory], @"Directory",
+		AILocalizedString(@"Contact List Themes", "AdiumXtras category name"), @"Name",
+		[NSImage imageNamed:@"AdiumListTheme"], @"Image", nil]];
 	
-	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIContactListDirectory]
-													  forKey:@"Directory"]];
-	[categoryNames addObject:@"Contact List Themes"];
-	[categoryImages addObject:[NSImage imageNamed:@"AdiumListTheme"]];
+
+	[categories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithInt:AIStatusIconsDirectory], @"Directory",
+		AILocalizedString(@"Status Icons", "AdiumXtras category name"), @"Name",
+		[NSImage imageNamed:@"AdiumStatusIcons"], @"Image", nil]];
 	
-	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIStatusIconsDirectory]
-													  forKey:@"Directory"]];
+	[categories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithInt:AISoundsDirectory], @"Directory",
+		AILocalizedString(@"Sound Sets", "AdiumXtras category name"), @"Name",
+		[NSImage imageNamed:@"AdiumSoundset"], @"Image", nil]];
 	
-	[categoryNames addObject:@"Status Icons"];
-	[categoryImages addObject:[NSImage imageNamed:@"AdiumStatusIcons"]];
+	[categories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithInt:AIDockIconsDirectory], @"Directory",
+		AILocalizedString(@"Dock Icons", "AdiumXtras category name"), @"Name",
+		[NSImage imageNamed:@"AdiumIcon"], @"Image", nil]];
 	
-	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AISoundsDirectory]
-													  forKey:@"Directory"]];
+	[categories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithInt:AIEmoticonsDirectory], @"Directory",
+		AILocalizedString(@"Emoticons", "AdiumXtras category name"), @"Name",
+		[NSImage imageNamed:@"AdiumEmoticonset"], @"Image", nil]];
 	
-	[categoryNames addObject:@"Sound Sets"];
-	[categoryImages addObject:[NSImage imageNamed:@"AdiumSoundset"]];
+	[categories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithInt:AIScriptsDirectory], @"Directory",
+		AILocalizedString(@"Scripts", "AdiumXtras category name"), @"Name",
+		[NSImage imageNamed:@"AdiumScripts"], @"Image", nil]];
+
+	[categories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithInt:AIServiceIconsDirectory], @"Directory",
+		AILocalizedString(@"Service Icons", "AdiumXtras category name"), @"Name",
+		[NSImage imageNamed:@"AdiumServiceIcons"], @"Image", nil]];
 	
-	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIDockIconsDirectory]
-													  forKey:@"Directory"]];
-	
-	[categoryNames addObject:@"Dock Icons"];
-	[categoryImages addObject:[NSImage imageNamed:@"AdiumIcon"]];
-	
-	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIEmoticonsDirectory]
-													  forKey:@"Directory"]];
-	[categoryNames addObject:@"Emoticons"];
-	[categoryImages addObject:[NSImage imageNamed:@"AdiumEmoticonset"]];
-	
-	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIScriptsDirectory]
-													  forKey:@"Directory"]];
-	
-	[categoryNames addObject:@"Scripts"];
-	[categoryImages addObject:[NSImage imageNamed:@"AdiumScripts"]];
-	
-	[categories addObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:AIServiceIconsDirectory]
-													  forKey:@"Directory"]];
-	
-	[categoryNames addObject:@"Service Icons"];
-	[categoryImages addObject:[NSImage imageNamed:@"AdiumServiceIcons"]];
+	[categories sortUsingFunction:categorySort context:NULL];
 }
 
 - (NSArray *)arrayOfXtrasAtPaths:(NSArray *)paths
@@ -178,10 +175,10 @@ static AIXtrasManager * manager;
 	return contents;
 }
 
-- (void) dealloc
+- (void)dealloc
 {
 	[categories release];
-	[categoryNames release];
+
 	[super dealloc];
 }
 
@@ -196,9 +193,11 @@ static AIXtrasManager * manager;
 		xtras = [self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains([[xtrasDict objectForKey:@"Directory"] intValue],
 																			  AIAllDomainsMask & ~AIInternalDomainMask,
 																			  YES)];
+		NSMutableDictionary *newDictionary = [xtrasDict mutableCopy];
+		[newDictionary setObject:xtras forKey:@"Xtras"];
 		[categories replaceObjectAtIndex:inIndex
-							  withObject:[NSDictionary dictionaryWithObject:xtras
-																	 forKey:@"Xtras"]];
+							  withObject:newDictionary];
+		[newDictionary release];
 	}
 	
 	return xtras;
@@ -363,7 +362,7 @@ static AIXtrasManager * manager;
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	if (tableView == sidebar) {
-		[cell setImage:[categoryImages objectAtIndex:row]];
+		[cell setImage:[[categories objectAtIndex:row] objectForKey:@"Image"]];
 		[cell setSubString:nil];
 	}
 	else {
@@ -375,7 +374,7 @@ static AIXtrasManager * manager;
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	if (tableView == sidebar) {
-		return [categoryNames count];
+		return [categories count];
 	}
 	else {
 		return [selectedCategory count];
@@ -385,7 +384,7 @@ static AIXtrasManager * manager;
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	if (tableView == sidebar) {
-		return [categoryNames objectAtIndex:row];
+		return [[categories objectAtIndex:row] objectForKey:@"Name"];
 	} else {
 		NSString * name = [[selectedCategory objectAtIndex:row] name];
 		return (name != nil) ? name : @"";
