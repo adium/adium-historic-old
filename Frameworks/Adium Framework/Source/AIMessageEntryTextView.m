@@ -857,13 +857,12 @@
 		while ((menuItem = [enumerator nextObject])) {
 			//We're going to be copying; call menu needs update now since it won't be called later.
 			NSMenu	*submenu = [menuItem submenu];
-			if (submenu &&
-			   [submenu respondsToSelector:@selector(delegate)] &&
-			   [[submenu delegate] respondsToSelector:@selector(menuNeedsUpdate:)]) {
-				[[submenu delegate] menuNeedsUpdate:submenu];
+			NSMenuItem	*menuItemCopy = [[menuItem copy] autorelease];
+			if (submenu && [submenu respondsToSelector:@selector(delegate)]) {
+				[[menuItemCopy submenu] setDelegate:[submenu delegate]];
 			}
 
-			[contextualMenu insertItem:[[menuItem copy] autorelease] atIndex:i++];
+			[contextualMenu insertItem:menuItemCopy atIndex:i++];
 		}
 	}
 	
