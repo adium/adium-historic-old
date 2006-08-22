@@ -389,7 +389,7 @@
 												   encodeSpaces:NO
 											  attachmentsAsText:NO
 									  onlyIncludeOutgoingImages:YES 
-												 simpleTagsOnly:YES 
+												 simpleTagsOnly:NO 
 												 bodyBackground:NO];
 		[profileEncoder setAllowAIMsubprofileLinks:YES];
 	}
@@ -427,7 +427,7 @@
 																encodeSpaces:NO
 														   attachmentsAsText:NO
 												   onlyIncludeOutgoingImages:YES 
-															  simpleTagsOnly:YES 
+															  simpleTagsOnly:NO 
 															  bodyBackground:NO];
 						[awayEncoder setAllowAIMsubprofileLinks:YES];
 					}
@@ -826,7 +826,8 @@ BOOL isMobileContact(AIListObject *inListObject)
 {
 	AIListContact		*sourceContact = [self contactWithUID:inUID];
 	NSAttributedString	*attributedMessage;
-	if (isHTMLContact(sourceContact)) { 
+	if (isHTMLContact(sourceContact)) {
+		AILog(@"%@: Received HTML: %@",self, inHTML);
 		attributedMessage = [[adium contentController] decodedIncomingMessage:inHTML
 																  fromContact:sourceContact
 																	onAccount:self];
