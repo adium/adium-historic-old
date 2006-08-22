@@ -14,22 +14,22 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "NEHGrowlPlugin.h"
+#import "CBGrowlAlertDetailPane.h"
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
-#import <Adium/AIContactAlertsControllerProtocol.h>
-#import "NEHGrowlPlugin.h"
-#import "CBGrowlAlertDetailPane.h"
-#import <AIUtilities/AIApplicationAdditions.h>
-#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIServiceIcons.h>
+#import <Adium/ESFileTransfer.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Growl-WithInstaller/Growl.h>
 
 //#define GROWL_DEBUG 1
