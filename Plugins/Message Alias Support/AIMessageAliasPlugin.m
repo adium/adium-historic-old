@@ -78,11 +78,12 @@
 				if (result) {
 					NSURL		*newURL;
 					NSString	*escapedLinkURLString;
+					NSString	*charactersToLeaveUnescaped = @"#";
 					
 					if (!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
 					escapedLinkURLString = (NSString *)CFURLCreateStringByAddingPercentEscapes(/* allocator */ kCFAllocatorDefault,
 																							   (CFStringRef)result,
-																							   /* characters to leave unescaped */ NULL,
+																							   (CFStringRef)charactersToLeaveUnescaped,
 																							   /* legal characters to escape */ NULL,
 																							   kCFStringEncodingUTF8);
 					newURL = [NSURL URLWithString:escapedLinkURLString];
