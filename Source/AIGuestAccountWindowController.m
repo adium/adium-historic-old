@@ -50,6 +50,11 @@ static AIGuestAccountWindowController *sharedGuestAccountWindowController = nil;
 												   longDescription:YES
 															format:nil]];
 	[self selectServiceType:nil];
+	[label_password setLocalizedString:AILocalizedString(@"Password:", nil)];
+	[label_servce setLocalizedString:AILocalizedString(@"Service:", nil)];
+	[button_okay setLocalizedString:AILocalizedString(@"Connect", nil)];
+	[button_cancel setLocalizedString:AILocalizedString(@"Cancel", nil)];
+	[button_cancel setLocalizedString:[AILocalizedString(@"Advanced", nil) stringByAppendingEllipsis]];
 }
 
 - (void)windowWillClose:(id)sender
