@@ -1745,9 +1745,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		AIListObject	*preferredContact;
 		NSString		*internalObjectID;
 
-
-		//If we've messaged this object previously, prefer the last contact we sent to if that
-		//contact is currently available
+		/* If we've messaged this object previously, prefer the last contact we sent to if that
+		 * contact is currently available
+		 */
         internalObjectID = [inContact preferenceForKey:KEY_PREFERRED_DESTINATION_CONTACT
 												 group:OBJECT_STATUS_CACHE];
 
@@ -1776,7 +1776,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 						firstNotOfflineContact = thisContact;
 					}
 
-					if (statusSummary == AIAvailableStatus) {
+					if (statusSummary == AIAvailableStatus && ![thisContact isMobile]) {
 						if (!firstAvailableContact) {
 							firstAvailableContact = thisContact;
 						}
