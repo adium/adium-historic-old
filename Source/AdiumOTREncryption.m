@@ -78,8 +78,11 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 	if ((self = [super init])) {
 		adiumOTREncryption = self;
 
-		[self prepareEncryption];
-		
+		//Wait for Adium to finish launching to prepare encryption so that accounts will be loaded
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(adiumFinishedLaunching:)
+										   name:Adium_CompletedApplicationLoad
+										 object:nil];
 		/*
 		gaim_signal_connect(conn_handle, "signed-on", otrg_plugin_handle,
 							GAIM_CALLBACK(process_connection_change), NULL);
@@ -89,6 +92,11 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 	}
 	
 	return self;
+}
+
+- (void)adiumFinishedLaunching:(NSNotification *)inNotification
+{
+	[self prepareEncryption];
 }
 
 - (void)prepareEncryption
@@ -148,7 +156,8 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 - (void)dealloc
 {
 	[OTRPrefs release];
-	
+	[[adium notificationCenter] removeObserver:self];
+
 	[super dealloc];
 }
 
@@ -977,49 +986,48 @@ OtrlUserState otrg_get_userstate(void)
 - (NSString *)upgradedPrivateKeyFromFile:(NSString *)inPath
 {
 	NSMutableString	*sourcePrivateKey = [[[NSString stringWithContentsOfUTF8File:inPath] mutableCopy] autorelease];
-	
+	AILog(@"Upgrading private keys at %@ gave %@",inPath,sourcePrivateKey);
 	if (!sourcePrivateKey || ![sourcePrivateKey length]) return nil;
 
 	/*
 	 * Gaim used the account name for the name and the prpl id for the protocol.
 	 * We will use the internalObjectID for the name and the service's uniqueID for the protocol.
 	 */
-	
+
 	/* Remove Jabber resources... from the private key list
-	* If you used a non-default resource, no upgrade for you.
-	*/
+	 * If you used a non-default resource, no upgrade for you.
+	 */
 	[sourcePrivateKey replaceOccurrencesOfString:@"/Adium"
 									  withString:@""
 										 options:NSLiteralSearch
 										   range:NSMakeRange(0, [sourcePrivateKey length])];
-	
+
 	AIAccount		*account;
 	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
-	
 	NSDictionary	*prplDict = [self prplDict];
-	
+
 	while ((account = [enumerator nextObject])) {
 		//Hit every possibile name for this account along the way
 		NSEnumerator	*accountNameEnumerator = [[NSSet setWithObjects:[account UID],[account formattedUID],[[account UID] compactedString], nil] objectEnumerator];
 		NSString		*accountName;
 		NSString		*accountInternalObjectID = [NSString stringWithFormat:@"\"%@\"",[account internalObjectID]];
-		
+
 		while ((accountName = [accountNameEnumerator nextObject])) {
 			NSRange			accountNameRange = NSMakeRange(0, 0);
 			NSRange			searchRange = NSMakeRange(0, [sourcePrivateKey length]);
-			
+
 			while (accountNameRange.location != NSNotFound &&
 				   (NSMaxRange(searchRange) <= [sourcePrivateKey length])) {
 				//Find the next place this account name is located
 				accountNameRange = [sourcePrivateKey rangeOfString:accountName
 														   options:NSLiteralSearch
 															 range:searchRange];
-				
+
 				if (accountNameRange.location != NSNotFound) {
 					//Update our search range
 					searchRange.location = NSMaxRange(accountNameRange);
 					searchRange.length = [sourcePrivateKey length] - searchRange.location;
-					
+
 					//Make sure that this account name actually begins and finishes a name; otherwise (name TekJew2) matches (name TekJew)
 					if ((![[sourcePrivateKey substringWithRange:NSMakeRange(accountNameRange.location - 6, 6)] isEqualToString:@"(name "] &&
 						 ![[sourcePrivateKey substringWithRange:NSMakeRange(accountNameRange.location - 7, 7)] isEqualToString:@"(name \""]) ||
@@ -1027,7 +1035,7 @@ OtrlUserState otrg_get_userstate(void)
 						 ![[sourcePrivateKey substringWithRange:NSMakeRange(NSMaxRange(accountNameRange), 2)] isEqualToString:@"\")"])) {
 						continue;
 					}
-					
+
 					/* Within that range, find the next "(protocol " which encloses
 						* a string of the form "(protocol protocol-name)"
 						*/
@@ -1049,20 +1057,31 @@ OtrlUserState otrg_get_userstate(void)
 						if ([[protocolName substringFromIndex:([protocolName length]-1)] isEqualToString:@"\""]) {
 							protocolName = [protocolName substringToIndex:([protocolName length]-1)];
 						}
-							
+
 						NSString *uniqueServiceID = [prplDict objectForKey:protocolName];
-						
+
 						if ([[[account service] serviceCodeUniqueID] isEqualToString:uniqueServiceID]) {
 							//Replace the protocol name first
 							[sourcePrivateKey replaceCharactersInRange:protocolNameRange
 															withString:uniqueServiceID];
-							
+
 							//Then replace the account name which was before it (so the range hasn't changed)
+							if ([sourcePrivateKey characterAtIndex:(accountNameRange.location - 1)] == '\"') {
+								accountNameRange.location -= 1;
+								accountNameRange.length += 1;
+							}
+							
+							if ([sourcePrivateKey characterAtIndex:(accountNameRange.location + accountNameRange.length + 1)] == '\"') {
+								accountNameRange.length += 1;
+							}
+							
 							[sourcePrivateKey replaceCharactersInRange:accountNameRange
 															withString:accountInternalObjectID];
 						}
 					}
 				}
+				
+				AILog(@"%@ - %@",accountName, sourcePrivateKey);
 			}
 		}			
 	}
