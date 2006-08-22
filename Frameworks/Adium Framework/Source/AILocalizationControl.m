@@ -165,12 +165,12 @@
 		/* If we have a window anchored to our right side, and we are now too close to the right side of that
 		 * window, resize the window so it is larger horizontally to compensate */
 		if (window_anchorOnRightSide) {
-			if (NSMaxX(newFrame) > (NSMaxX([window_anchorOnRightSide frame]) - 17)) {
-				float		difference =  NSMaxX(newFrame) - (NSMaxX([window_anchorOnRightSide frame]) - 17);
+			if (NSMaxX(newFrame) > (NSWidth([window_anchorOnRightSide frame]) - 17)) {
+				float		difference =  NSMaxX(newFrame) - (NSWidth([window_anchorOnRightSide frame]) - 17);
 				
 				[self _resizeWindow:window_anchorOnRightSide rightBy:difference];
 				
-				newFrame.origin.x = NSMaxX([window_anchorOnRightSide frame]) - newFrame.size.width - 17;
+				newFrame.origin.x = NSWidth([window_anchorOnRightSide frame]) - newFrame.size.width - 17;
 				
 				[TARGET_CONTROL setFrame:newFrame];
 				[TARGET_CONTROL setNeedsDisplay:YES];
@@ -335,7 +335,7 @@
 {
 	NSRect		windowFrame = [inWindow frame];
 	NSRect		screenFrame = [[inWindow screen] frame];
-	
+
 	//Shift the origin
 	windowFrame.origin.x -= difference;
 	//But keep it on the screen
@@ -355,7 +355,7 @@
 {
 	NSRect		windowFrame = [inWindow frame];
 	NSRect		screenFrame = [[inWindow screen] frame];
-	
+
 	//Increase the width
 	windowFrame.size.width += difference;
 	//But keep it on the screen
