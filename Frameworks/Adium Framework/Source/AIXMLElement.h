@@ -10,7 +10,7 @@
  * of the Adium project.
  *
  ****
- Copyright © 2006 Peter Hosey
+ Copyright © 2006 Peter Hosey, Colin Barrett
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -24,9 +24,9 @@
 //Get and set attribute values using -valueForKey: and -setValue:forKey:. Get and set them en masse using -attributes and -setAttributes:.
 //Note: Not KVO-compliant (at this time) for "attributes" or "contents", nor for any attribute.
 
+//FIXME: This class is not CodingStyle compliant.
 @interface AIXMLElement : NSObject <NSCopying> {
 	NSString *name;
-	NSMutableDictionary *attributes;
 	NSMutableArray *attributeNames;
 	NSMutableArray *attributeValues;
 	NSMutableArray *contents;
@@ -42,8 +42,9 @@
 
 - (NSString *) name;
 
-- (NSDictionary *) attributes;
-- (void) setAttributes:(NSDictionary *)newAttrs;
+- (unsigned)numberOfAttributes;
+- (NSDictionary *)attributes;
+- (void)setAttributeNames:(NSArray *)newAttrNames andValues:(NSArray *)newAttrVals;
 
 - (BOOL) selfCloses;
 - (void) setSelfCloses:(BOOL)flag;

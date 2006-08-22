@@ -49,7 +49,6 @@
 
 	if ((self = [super init])) {
 		name = [newName copy];
-		attributes = [[NSMutableDictionary alloc] init];
 		attributeNames  = [[NSMutableArray alloc] init];
 		attributeValues = [[NSMutableArray alloc] init];
 		contents = [[NSMutableArray alloc] init];
@@ -67,7 +66,6 @@
 - (void) dealloc
 {
 	[name release];
-	[attributes release];
 	[attributeNames  release];
 	[attributeValues release];
 	[contents release];
@@ -77,7 +75,6 @@
 
 - (id) copyWithZone:(NSZone *)zone {
 	AIXMLElement *other = [[AIXMLElement allocWithZone:zone] initWithName:name];
-	other->attributes      = [attributes      mutableCopy];
 	other->attributeNames  = [attributeNames  mutableCopy];
 	other->attributeValues = [attributeValues mutableCopy];
 
@@ -97,13 +94,22 @@
 	return name;
 }
 
-- (NSDictionary *) attributes
+- (unsigned)numberOfAttributes
 {
-	return attributes;
+	return [attributeNames count];
 }
-- (void) setAttributes:(NSDictionary *)newAttrs
+- (NSDictionary *)attributes
 {
-	[attributes setDictionary:newAttrs];
+	return [NSDictionary dictionaryWithObjects:attributeValues forKeys:attributeNames];
+}
+- (void)setAttributeNames:(NSArray *)newAttrNames andValues:(NSArray *)newAttrVals
+{
+	NSAssert2([newAttrNames count] == [newAttrVals count], @"Attribute names and values have different lengths, %ui and %ui respectively", [newAttrNames count], [newAttrVals count]);
+	unsigned numberOfDuplicates = [newAttrNames count] - [[NSSet setWithArray:newAttrNames] count];
+	NSAssert1(numberOfDuplicates == 0, @"Duplicate attributes are not allowed; found %ui duplicate(s)",  numberOfDuplicates);
+	
+	[attributeNames setArray:newAttrNames];
+	[attributeValues setArray:newAttrVals];
 }
 
 - (BOOL) selfCloses
@@ -170,7 +176,7 @@
 - (void) appendXMLStringtoString:(NSMutableString *)string
 {
 	[string appendFormat:@"<%@", name];
-	if ([attributes count]) {
+	if ([attributeNames count]) {
 		unsigned attributeIdx = 0U;
 		NSEnumerator *keysEnum = [attributeNames objectEnumerator];
 		NSString *key;
@@ -213,7 +219,7 @@
 - (void) appendUTF8XMLBytesToData:(NSMutableData *)data
 {
 	NSMutableString *startTag = [NSMutableString stringWithFormat:@"<%@", name];
-	if ([attributes count]) {
+	if ([self numberOfAttributes]) {
 		unsigned attributeIdx = 0U;
 		NSEnumerator *keysEnum = [attributeNames objectEnumerator];
 		NSString *key;
@@ -257,7 +263,7 @@
 - (NSString *)description
 {
 	NSMutableString *string = [NSMutableString stringWithFormat:@"<%@ AIXMLElement:id=\"%p\"", name, self];
-	if ([attributes count]) {
+	if ([attributeNames count] && [attributeValues count]) { //there's no way these could be different values, but whatever
 		unsigned attributeIdx = 0U;
 		NSEnumerator *keysEnum = [attributeNames objectEnumerator];
 		NSString *key;
@@ -278,11 +284,12 @@
 
 #pragma mark KVC
 
+
 - (id) valueForKey:(NSString *)key {
-	id obj = [attributes objectForKey:key];
-	if(!obj) obj = [super valueForKey:key];
-	return obj;
+	unsigned idx = [attributeNames indexOfObject:key];	
+	return (idx != NSNotFound) ? [attributeValues objectAtIndex:idx] : [super valueForKey:key];
 }
+//FIXME: this shouldn't clobber setObject:forKey: on NSObject.
 - (void) setValue:(id)obj forKey:(NSString *)key {
 	unsigned idx = [attributeNames indexOfObject:key];
 	if(idx == NSNotFound) {
@@ -291,7 +298,6 @@
 	} else {
 		[attributeValues replaceObjectAtIndex:idx withObject:obj];
 	}
-	[attributes setValue:obj forKey:key];
 }
 
 @end
