@@ -477,10 +477,12 @@
 		 */
 		if (![containingObject containingObject] && [remoteGroupName length]) {
 			//If no similar objects exist, we add this contact directly to the list
-			AIListGroup *targetGroup;
+			//Create a group for the contact even if contact list groups aren't on,
+			//otherwise requests for all the contact list groups will return nothing
+			AIListGroup *targetGroup, *contactGroup = [self groupWithUID:remoteGroupName];
 
 			targetGroup = (useContactListGroups ?
-						   ((useOfflineGroup && ![inContact online]) ? [self offlineGroup] : [self groupWithUID:remoteGroupName]) :
+						   ((useOfflineGroup && ![inContact online]) ? [self offlineGroup] : contactGroup) :
 						   contactList);
 
 			[targetGroup addObject:containingObject];
@@ -490,10 +492,12 @@
 	} else {
 		//If we have a remoteGroupName, add the contact locally to the list
 		if (remoteGroupName) {
-			AIListGroup *localGroup;
+			//Create a group for the contact even if contact list groups aren't on,
+			//otherwise requests for all the contact list groups will return nothing
+			AIListGroup *localGroup, *contactGroup = [self groupWithUID:remoteGroupName];
 
 			localGroup = (useContactListGroups ?
-						  ((useOfflineGroup && ![inContact online]) ? [self offlineGroup] : [self groupWithUID:remoteGroupName]) :
+						  ((useOfflineGroup && ![inContact online]) ? [self offlineGroup] : contactGroup) :
 						  contactList);
 
 			[self _moveContactLocally:inContact
@@ -1534,7 +1538,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	//Enumerate this group and process all groups we find within it
 	enumerator = [[group containedObjects] objectEnumerator];
 	while ((object = [enumerator nextObject])) {
-		if ([object isKindOfClass:[AIListGroup class]]) {
+		if ([object isKindOfClass:[AIListGroup class]] && object != [self offlineGroup]) {
 			NSMenuItem	*menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[object displayName]
 																						 target:target
 																						 action:@selector(selectGroup:)
