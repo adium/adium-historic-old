@@ -1892,7 +1892,8 @@ static AIHTMLDecoder *classMethodInstance = nil;
 // encodeSpaces: YES to preserve spacing when displaying the HTML in a web browser by converting multiple spaces and tabs to &nbsp codes.
 // attachmentsAsText: YES to convert all attachments to their text equivalent if possible; NO to imbed <IMG SRC="...> tags
 // onlyIncludeOutgoingImages: YES to only convert attachments to <IMG SRC="...> tags which should be sent to another user. Only relevant if attachmentsAsText is NO.
-// simpleTagsOnly: YES to separate out FONT tags and include only the most basic HTML elements
+// simpleTagsOnly: YES to separate out FONT tags and include only the most basic HTML elements. Intended for protocols with minimal formatting support such as MSN
+// bodyBackground: YES to set an Adium-internal attribute, AIBodyColorAttributeName, if there's a background. Used only for the message view.
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage
 				 headers:(BOOL)includeHeaders 
 				fontTags:(BOOL)includeFontTags
