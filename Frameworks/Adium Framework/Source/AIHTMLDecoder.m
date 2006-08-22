@@ -311,7 +311,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			//Size
 			if (!thingsToInclude.simpleTagsOnly) {
-				[string appendString:[NSString stringWithFormat:@" ABSZ=\"%i\" SIZE=\"%i\"", (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
+				[string appendString:[NSString stringWithFormat:@" ABSZ=%i SIZE=%i", (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
 				currentSize = pointSize;
 			}
 
