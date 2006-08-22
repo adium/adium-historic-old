@@ -10,8 +10,8 @@
 @class AIAccount;
 
 @interface AIGuestAccountWindowController : AIWindowController {
-	IBOutlet	NSImageView		*imageView_service;
 	IBOutlet	NSPopUpButton	*popUp_service;
+	IBOutlet	NSTextField		*label_service;
 	
 	IBOutlet	NSTextField		*textField_name;
 	IBOutlet	NSTextField		*label_name;
