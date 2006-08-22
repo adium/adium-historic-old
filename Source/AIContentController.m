@@ -473,7 +473,6 @@
 		BOOL			contentReceived, shouldPostContentReceivedEvents;
 
 		//If the chat of the content object has been cleared, we can't do anything with it, so simply return
-		AILog(@"finishDisplayContentObject: %@ in %@",inObject,chat);
 		if (!chat) return;
 		
 		contentReceived = (([inObject isMemberOfClass:[AIContentMessage class]]) &&
