@@ -37,6 +37,7 @@ Evan Schoenberg
 Chris Serino
 David Smith
 Greg Smith
+Kent Sutherland
 Vinay Venkatesh
 Wesley Underwood
 Ofri Wolfus
