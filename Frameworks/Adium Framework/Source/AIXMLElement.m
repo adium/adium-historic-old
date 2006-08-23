@@ -298,7 +298,13 @@
 
 #pragma mark KVC
 
+/*
+These aren't working. I recommend calling -objectForKey on the return value of -attributes.
 
+Adium[302:117] The following unhandled exception was ignored: NSUnknownKeyException ([<AIXMLElement 0xce582b0> valueForUndefinedKey:]: this class is not key value coding-compliant for the key auto.)
+
+*/
+/*
 - (id) valueForKey:(NSString *)key {
 	unsigned idx = [attributeNames indexOfObject:key];	
 	return (idx != NSNotFound) ? [attributeValues objectAtIndex:idx] : [super valueForKey:key];
@@ -313,5 +319,7 @@
 		[attributeValues replaceObjectAtIndex:idx withObject:obj];
 	}
 }
+
+*/
 
 @end
