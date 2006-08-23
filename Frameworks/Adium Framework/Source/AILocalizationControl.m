@@ -107,26 +107,26 @@
 	
 	//Only use integral widths to keep alignment correct;
 	//round up as an extra pixel of whitespace never hurt anybody
-	newFrame.size.width = round(newFrame.size.width + 0.5);
+	newFrame.size.width = round(NSWidth(newFrame) + 0.5);
 	
 	//Enforce a minimum width of the original frame width
 //	NSLog(@"%@: new is %@; original is %@",inStringValue,NSStringFromRect(newFrame),NSStringFromRect(originalFrame));
-	if (newFrame.size.width < originalFrame.size.width) {
-		newFrame.size.width = originalFrame.size.width;
+	if (NSWidth(newFrame) < NSWidth(originalFrame)) {
+		newFrame.size.width = NSWidth(originalFrame);
 	}
 
 	textAlignment = [self alignment];
 	switch (textAlignment) {
 		case NSRightTextAlignment:
 			//Keep the right edge in the same place at all times if we are right aligned
-			newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
+			newFrame.origin.x = NSMaxX(oldFrame) - NSWidth(newFrame);
 			break;
 		case NSCenterTextAlignment:
 		{
 			//Keep the center in the same place
 			float windowMaxX = NSMaxX([[TARGET_CONTROL superview] frame]);
 			
-			newFrame.origin.x = oldFrame.origin.x + (oldFrame.size.width - newFrame.size.width)/2;
+			newFrame.origin.x = NSMinX(oldFrame) + (NSWidth(oldFrame) - NSWidth(newFrame))/2;
 			
 			if (NSMaxX(newFrame) + 17 > windowMaxX) {
 				newFrame.origin.x -= ((NSMaxX(newFrame) + 17) - windowMaxX);
@@ -142,16 +142,20 @@
 			break;
 	}
 	
+	float distanceToRightAnchoredView = 0;
+	if (view_anchorToRightSide) {
+		distanceToRightAnchoredView = NSMaxX([view_anchorToRightSide frame]) - NSMaxX(oldFrame);
+	}
+	
 	[TARGET_CONTROL setFrame:newFrame];
 	[TARGET_CONTROL setNeedsDisplay:YES];
 	
 	//Resize the window to fit the contactNameLabel if the current size is not correct
-	
-	if (newFrame.size.width != oldFrame.size.width) {
+	if (NSWidth(newFrame) != NSWidth(oldFrame)) {
 		
 		//Too close on left; need to expand window left
-		if (window_anchorOnLeftSide && newFrame.origin.x < 17) {
-			float		difference = 17 - newFrame.origin.x;
+		if (window_anchorOnLeftSide && NSMinX(newFrame) < 17) {
+			float		difference = 17 - NSMinX(newFrame);
 			
 			[self _resizeWindow:window_anchorOnLeftSide leftBy:difference];				
 			
@@ -187,11 +191,11 @@
 			 * If we are outside our superview's frame, we should try moving our origin left.  If we can do
 			 * that without exiting our superview, it's probably better. */
 			if (NSMaxX(newFrame) > [[TARGET_CONTROL superview] frame].size.width) {
-				float	overshoot = (NSMaxX(newFrame) - [[TARGET_CONTROL superview] frame].size.width);
+				float	overshoot = (NSMaxX(newFrame) - NSWidth([[TARGET_CONTROL superview] frame]));
 
 				//Correct for the overshoot, but don't let it go outside the superview.
 				newFrame.origin.x -= overshoot;
-				if (newFrame.origin.x < 0) {
+				if (NSMinX(newFrame) < 0) {
 					newFrame.origin.x = 0;
 					NSLog(@"*** Localization warning: \"%@\"",inStringValue);
 				}
@@ -205,12 +209,12 @@
 			//Shifted further left than it used to be
 			if (view_anchorToLeftSide) {
 				NSRect		leftAnchorFrame = [view_anchorToLeftSide frame];
-				float		difference = (oldFrame.origin.x - newFrame.origin.x);
+				float		difference = (NSMinX(oldFrame) - NSMinX(newFrame));
 	
 				leftAnchorFrame.origin.x -= difference;
 				
 				if (leftAnchorFrame.origin.x < 0) {
-					float	overshoot = -leftAnchorFrame.origin.x;
+					float	overshoot = -NSMinX(leftAnchorFrame);
 
 					/* We needed to move our left anchored object to the left, but that put it outside its
 					 * superview. Use a 0 X origin. */
@@ -240,42 +244,54 @@
 			/* newFrame.origin.x >= oldFrame.origin.x */
 			if (view_anchorToRightSide) {
 				NSRect		rightAnchorFrame = [view_anchorToRightSide frame];
-
-				if (rightAnchorMovementType == AILOCALIZATION_MOVE_ANCHOR) {
-					//Move our anchor with us
-					float		difference = newFrame.size.width - oldFrame.size.width;
-					rightAnchorFrame.origin.x += difference;
+				if (window_anchorOnLeftSide) {
+					float newDistanceToRightAnchoredView = NSMaxX(rightAnchorFrame) - NSMaxX(newFrame);
 					
-					//If this would put us outside the view, reduce the width of the anchored view
-					//XXX could add a window_anchorOnRightSide and have a window expansion behavior instead.
-					//XXX needs to be optional via a setting
-					/*
-					if ((rightAnchorFrame.origin.x + rightAnchorFrame.size.width) > newFrame.size.width) {
-						rightAnchorFrame.size.width = newFrame.size.width - rightAnchorFrame.origin.x;
+					if (distanceToRightAnchoredView < newDistanceToRightAnchoredView) {
+						/* The right-anchored view is now too close to our right side -
+						* expand the window left again if needed to keep it the same.
+						*/
+						float amountToExpandWindow = (newDistanceToRightAnchoredView - distanceToRightAnchoredView);
+						newFrame.origin.x -= amountToExpandWindow;
+						if (newFrame.origin.x < 17) {
+							amountToExpandWindow += 17 - NSMinX(newFrame);
+							newFrame.origin.x = 17;
+						}
+						
+						[self _resizeWindow:window_anchorOnLeftSide leftBy:amountToExpandWindow];				
+						
+						[TARGET_CONTROL setFrame:newFrame];
+						[TARGET_CONTROL setNeedsDisplay:YES];
 					}
-					*/
 					
-					[view_anchorToRightSide setFrame:rightAnchorFrame];
-					[view_anchorToRightSide setNeedsDisplay:YES];
+				} else {
+					if (rightAnchorMovementType == AILOCALIZATION_MOVE_ANCHOR) {
+						//Move our anchor with us
+						float		difference = NSWidth(newFrame) - NSWidth(oldFrame);
+						rightAnchorFrame.origin.x += difference;
+						
+						//If this would put us outside the view, reduce the width of the anchored view
+						//XXX could add a window_anchorOnRightSide and have a window expansion behavior instead.
+						//XXX needs to be optional via a setting
+						/*
+						 if ((rightAnchorFrame.origin.x + rightAnchorFrame.size.width) > newFrame.size.width) {
+							 rightAnchorFrame.size.width = newFrame.size.width - rightAnchorFrame.origin.x;
+						 }
+						 */
+						
+						[view_anchorToRightSide setFrame:rightAnchorFrame];
+						[view_anchorToRightSide setNeedsDisplay:YES];
+						
+					} else { /*rightAnchorMovementType == AILOCALIZATION_MOVE_SELF */
+						
+						//Move us left to keep our distance from our anchor view to the right
+						newFrame.origin.x = rightAnchorFrame.origin.x - newFrame.size.width - 10;
+						
+						[TARGET_CONTROL setFrame:newFrame];
+						[TARGET_CONTROL setNeedsDisplay:YES];
+					}
 					
-				} else { /*rightAnchorMovementType == AILOCALIZATION_MOVE_SELF */
-					
-					//Move us left to keep our distance from our anchor view to the right
-					newFrame.origin.x = rightAnchorFrame.origin.x - newFrame.size.width - 10;
-					
-					[TARGET_CONTROL setFrame:newFrame];
-					[TARGET_CONTROL setNeedsDisplay:YES];
 				}
-				
-				//Adjust window somehow if needed?
-				/*
-				 if (viewFrame.origin.x < 0) {
-					 float	overshoot = -viewFrame.origin.x;
-					 viewFrame.origin.x = 0;
-					 
-					 [self _resizeWindow:[self window] leftBy:overshoot];
-				 }
-				 */
 			}
 			
 			if (view_anchorToLeftSide) {
