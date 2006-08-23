@@ -22,13 +22,17 @@
 #define GROUP_LAST_USED_SPELLING	@"Last Used Spelling"
 #define KEY_LAST_USED_SPELLING		@"Last Used Spelling Languge"
 
-@interface OWSpellingPerContactPlugin (private)
-- (void)chatDidBecomeVisible:(NSNotification *)notification;
-- (void)chatWillClose:(NSNotification *)notification;
-@end
-
+/*!
+ * @class OWSpellingPerContactPlugin
+ * @brief Component to save and restore spelling dictionary language preferences on a per-contact basis for chats
+ *
+ * Language settings on a group chat basis are not currently saved.
+ */
 @implementation OWSpellingPerContactPlugin
 
+/*!
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	NSNotificationCenter *notificationCenter = [adium notificationCenter];
@@ -46,6 +50,9 @@
 	languageDict = [[NSMutableDictionary alloc] init];
 }
 
+/*!
+ * @brief Uninstall
+ */
 - (void)uninstallPlugin
 {
 	[languageDict release]; languageDict = nil;
@@ -53,6 +60,12 @@
 	[[adium notificationCenter] removeObserver:self];
 }
 
+/*!
+ * @brief A chat became active; set the spelling language preference appropriately
+ *
+ * If a chat was previously active, as indicated by the PreviouslyActiveChat key in the notification's userInfo,
+ * its language preference is stored before switching.
+ */
 - (void)chatBecameActive:(NSNotification *)notification
 {
 	AI_DURING
@@ -102,6 +115,9 @@
 	AI_ENDHANDLER
 }
 
+/*
+ * @brief Chat will close; save the language preference for its contact before it closes
+ */
 - (void)chatWillClose:(NSNotification *)notification
 {
 	AIChat		 *chat = [notification object];
