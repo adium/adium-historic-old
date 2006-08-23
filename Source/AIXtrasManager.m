@@ -30,19 +30,19 @@
 
 @implementation AIXtrasManager
 
-static AIXtrasManager * manager;
+static AIXtrasManager *manager;
 
 + (AIXtrasManager *) sharedManager
 {
 	return manager;
 }
 
-- (void) installPlugin
+- (void)installPlugin
 {
 	manager = self;
 }
 
-- (void) showXtras
+- (void)showXtras
 {
 	[self loadXtras];
 
@@ -72,10 +72,12 @@ static AIXtrasManager * manager;
 		[previewContainerView setHasVerticalScroller:YES];
 		[previewContainerView setAutohidesScrollers:YES];
 		[previewContainerView setBorderType:NSBezelBorder];
-		
+
+		[deleteButton setLocalizedString:AILocalizedStringFromTable(@"Delete", @"Buttons", nil)];
+		[button_getMoreXtras setLocalizedString:AILocalizedStringFromTable(@"Get More Xtras", @"Buttons", "Button in the Xtras Manager to go to adiumxtras.com to get more adiumxtras")];
+
 		[self setCategory:nil];
 	}
-	[self setCategory:nil];//Hax. This shouldn't be needed, but it is.
 		
 	[window makeKeyAndOrderFront:nil];
 }
@@ -90,7 +92,7 @@ static AIXtrasManager * manager;
 }
 
 
-- (void) xtrasChanged:(NSNotification *)not
+- (void)xtrasChanged:(NSNotification *)not
 {
 	//Clear our cache of loaded Xtras
 	[self loadXtras];
@@ -104,7 +106,7 @@ int categorySort(id categoryA, id categoryB, void * context)
 	return [[categoryA objectForKey:@"Name"] caseInsensitiveCompare:[categoryB objectForKey:@"Name"]];
 }
 
-- (void) loadXtras
+- (void)loadXtras
 {
 	[categories release];
 	categories = [[NSMutableArray alloc] init];
@@ -203,7 +205,7 @@ int categorySort(id categoryA, id categoryB, void * context)
 	return xtras;
 }
 
-- (IBAction) setCategory:(id)sender
+- (IBAction)setCategory:(id)sender
 {
 	[selectedCategory autorelease];
 	selectedCategory = [[self xtrasForCategoryAtIndex:[sidebar selectedRow]] retain];
@@ -214,7 +216,7 @@ int categorySort(id categoryA, id categoryB, void * context)
 	[self updatePreview];
 }
 
-- (void) updatePreview
+- (void)updatePreview
 {
 	AIXtraInfo *xtra = nil;
 

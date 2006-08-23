@@ -42,6 +42,9 @@
 	IBOutlet NSSegmentedControl				*showInfoControl;
 	IBOutlet NSSplitView					*splitView;
 	IBOutlet NSButton						*deleteButton;
+
+	IBOutlet NSButton						*button_getMoreXtras;
+
 	NSString								*infoPath;
 	BOOL									showInfo; //YES = info, NO = preview
 }
