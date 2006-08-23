@@ -452,12 +452,18 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 										nil);
 						imageName = [attachment string];
 						
-						if ([attachment respondsToSelector:@selector(image)]) {
-							image = [attachment performSelector:@selector(image)];
-						} else if ([[attachment attachmentCell] respondsToSelector:@selector(image)]) {
-							image = [[attachment attachmentCell] performSelector:@selector(image)];
-						} else {
-							image = nil;
+						image = nil;
+
+						/*
+							Although PDFs are treated as images on OSX, they can cause issues on other platforms.
+							Also, moreso than most other images, they can be too large to display inline.
+						 */
+						if(!existingPath || ![[existingPath pathExtension] isEqualToString:@"pdf"])
+						{
+							if ([attachment respondsToSelector:@selector(image)])
+								image = [attachment performSelector:@selector(image)];
+							else if ([[attachment attachmentCell] respondsToSelector:@selector(image)])
+								image = [[attachment attachmentCell] performSelector:@selector(image)];
 						}
 
 						if (existingPath || image) {
