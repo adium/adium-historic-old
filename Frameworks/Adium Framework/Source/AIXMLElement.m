@@ -10,7 +10,7 @@
  * of the Adium project.
  *
  ****
- Copyright © 2006 Peter Hosey
+ Copyright © 2006 Peter Hosey, Colin Barrett
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -102,13 +102,13 @@
 {
 	return [NSDictionary dictionaryWithObjects:attributeValues forKeys:attributeNames];
 }
-- (void) setAttributeNames:(NSArray *)newAttrNames values:(NSArray *)newAttrValues
+- (void) setAttributeNames:(NSArray *)newAttrNames values:(NSArray *)newAttrVals
 {
 	NSAssert2([newAttrNames count] == [newAttrVals count], @"Attribute names and values have different lengths, %ui and %ui respectively", [newAttrNames count], [newAttrVals count]);
 	unsigned numberOfDuplicates = [newAttrNames count] - [[NSSet setWithArray:newAttrNames] count];
 	NSAssert1(numberOfDuplicates == 0, @"Duplicate attributes are not allowed; found %ui duplicate(s)",  numberOfDuplicates);
 	
-	[attributeNames  setArray:newAttrNames];
+	[attributeNames setArray:newAttrNames];
 	[attributeValues setArray:newAttrVals];
 }
 
@@ -164,6 +164,20 @@
 - (void)setContents:(NSArray *)newContents
 {
 	[contents setArray:newContents];
+}
+
+- (NSString *)contentsAsXMLString
+{
+	NSMutableString *contentString = [NSMutableString string];
+	NSEnumerator *contentsEnumerator = [contents objectEnumerator];
+	id obj = nil;
+	while ((obj = [contentsEnumerator nextObject])) {
+		if ([obj isKindOfClass:[NSString class]])
+			[contentString appendString:obj];
+		else if ([obj isKindOfClass:[AIXMLElement class]])
+			[contentString appendString:[obj XMLString]];
+	}
+	return contentString;
 }
 
 #pragma mark -
