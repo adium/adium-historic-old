@@ -2001,6 +2001,35 @@
 		342F88CD0A2A74EB0001DB29 /* PTHotKey.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PTHotKey.m; path = Source/PTHotKey.m; sourceTree = "<group>"; };
 		342F88CE0A2A74EB0001DB29 /* PTHotKey.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PTHotKey.h; path = Source/PTHotKey.h; sourceTree = "<group>"; };
 		34327BD6060D2FE6003D7AD9 /* GaimServiceDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = GaimServiceDefaults.plist; path = "Plugins/Gaim Service/GaimServiceDefaults.plist"; sourceTree = "<group>"; };
+		3437FF410A9BF0A50028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/WebKit Message View/Turkish.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
+		3437FF420A9BF0A50028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
+		3437FF430A9BF0A50028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
+		3437FF440A9BF0A50028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
+		3437FF450A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		3437FF460A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		3437FF470A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
+		3437FF480A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
+		3437FF490A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
+		3437FF4A0A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
+		3437FF4B0A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
+		3437FF4C0A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
+		3437FF4D0A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/ESGaimNovellAccountView.nib"; sourceTree = "<group>"; };
+		3437FF4E0A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
+		3437FF4F0A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/ESGaimMeanwhileAccountView.nib"; sourceTree = "<group>"; };
+		3437FF500A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
+		3437FF510A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
+		3437FF520A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
+		3437FF530A9BF0A60028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
+		3437FF540A9BF0A70028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Frameworks/Adium Framework/Resources/Turkish.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
+		3437FF550A9BF0A70028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
+		3437FF560A9BF0A70028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
+		3437FF570A9BF0A70028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/DCGaimYahooJoinChatView.nib"; sourceTree = "<group>"; };
+		3437FF580A9BF0A70028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
+		3437FF590A9BF0A70028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/DCGaimMeanwhileJoinChatView.nib"; sourceTree = "<group>"; };
+		3437FF5A0A9BF0A70028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/Gaim Service/Turkish.lproj/DCGaimJabberJoinChatView.nib"; sourceTree = "<group>"; };
+		3437FF5B0A9BF0A70028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Turkish; path = Resources/Turkish.lproj/Buttons.strings; sourceTree = "<group>"; };
+		3437FF5C0A9BF0A70028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
+		3437FF5D0A9BF0A70028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/AccountProxy.nib; sourceTree = "<group>"; };
 		34382CE50A50386B004BF6A2 /* DCMessageContextDisplayPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCMessageContextDisplayPreferences.h; path = Source/DCMessageContextDisplayPreferences.h; sourceTree = "<group>"; };
 		34382CE60A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCMessageContextDisplayPlugin.m; path = Source/DCMessageContextDisplayPlugin.m; sourceTree = "<group>"; };
 		34382CE70A50386C004BF6A2 /* DCMessageContextDisplayPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCMessageContextDisplayPlugin.h; path = Source/DCMessageContextDisplayPlugin.h; sourceTree = "<group>"; };
@@ -9211,6 +9240,7 @@
 				34A30E7F08D8EE7900697644 /* Spanish */,
 				34A81DCB093CE92300B0E93D /* pl */,
 				34DC84280A7EA012003E1636 /* Dutch */,
+				3437FF530A9BF0A60028604E /* Turkish */,
 			);
 			name = ESFileTransferProgressView.nib;
 			sourceTree = "<group>";
@@ -9234,6 +9264,7 @@
 				340580AA087EEFA200664D64 /* Russian */,
 				34A30EA108D8EE7B00697644 /* Spanish */,
 				34A81DB5093CE92200B0E93D /* pl */,
+				3437FF440A9BF0A50028604E /* Turkish */,
 			);
 			name = ProxyPasswordPrompt.nib;
 			sourceTree = "<group>";
@@ -9257,6 +9288,7 @@
 				340580A9087EEFA200664D64 /* Russian */,
 				34A30EA008D8EE7B00697644 /* Spanish */,
 				34A81DB6093CE92200B0E93D /* pl */,
+				3437FF450A9BF0A60028604E /* Turkish */,
 			);
 			name = PasswordPrompt.nib;
 			sourceTree = "<group>";
@@ -9360,6 +9392,7 @@
 				34A30E7D08D8EE7900697644 /* Spanish */,
 				34A81DCD093CE92300B0E93D /* pl */,
 				34CF88A70A6D5EC0009D9A21 /* Dutch */,
+				3437FF550A9BF0A70028604E /* Turkish */,
 			);
 			name = DualWindowMessageAdvanced.nib;
 			sourceTree = "<group>";
@@ -9409,6 +9442,7 @@
 				341BD58A0965ECC800CF83F5 /* cs */,
 				341BD58B0965ECCD00CF83F5 /* Catalan */,
 				34CF88AD0A6D5EF1009D9A21 /* Dutch */,
+				3437FF460A9BF0A60028604E /* Turkish */,
 			);
 			name = OTRPrefs.nib;
 			sourceTree = "<group>";
@@ -9443,6 +9477,7 @@
 				34058096087EEFA100664D64 /* Russian */,
 				34A30E7E08D8EE7900697644 /* Spanish */,
 				34A81DCC093CE92300B0E93D /* pl */,
+				3437FF540A9BF0A70028604E /* Turkish */,
 			);
 			name = EditStateSheet.nib;
 			sourceTree = "<group>";
@@ -9467,6 +9502,7 @@
 				3405808E087EEFA000664D64 /* Russian */,
 				34A30E7508D8EE7800697644 /* Spanish */,
 				34A81DD5093CE92400B0E93D /* pl */,
+				3437FF5D0A9BF0A70028604E /* Turkish */,
 			);
 			name = AccountProxy.nib;
 			sourceTree = "<group>";
@@ -9491,6 +9527,7 @@
 				3405809D087EEFA100664D64 /* Russian */,
 				34A30E8508D8EE7900697644 /* Spanish */,
 				34A81DC5093CE92300B0E93D /* pl */,
+				3437FF4D0A9BF0A60028604E /* Turkish */,
 			);
 			name = ESGaimNovellAccountView.nib;
 			sourceTree = "<group>";
@@ -9517,6 +9554,7 @@
 				34A81DDE093CE94300B0E93D /* en_CA */,
 				349710FF096C4D7F00699948 /* en_AU */,
 				345AF9B50A5D67EC00D7DA6F /* Dutch */,
+				3437FF5C0A9BF0A70028604E /* Turkish */,
 			);
 			name = AppearancePrefs.nib;
 			sourceTree = "<group>";
@@ -9541,6 +9579,7 @@
 				34058098087EEFA100664D64 /* Russian */,
 				34A30E8008D8EE7900697644 /* Spanish */,
 				34A81DCA093CE92300B0E93D /* pl */,
+				3437FF520A9BF0A60028604E /* Turkish */,
 			);
 			name = ESGaimGaduGaduAccountView.nib;
 			sourceTree = "<group>";
@@ -9565,6 +9604,7 @@
 				3405809C087EEFA100664D64 /* Russian */,
 				34A30E8408D8EE7900697644 /* Spanish */,
 				34A81DC6093CE92300B0E93D /* pl */,
+				3437FF4E0A9BF0A60028604E /* Turkish */,
 			);
 			name = ESGaimMSNAccountView.nib;
 			sourceTree = "<group>";
@@ -9589,6 +9629,7 @@
 				34058094087EEFA100664D64 /* Russian */,
 				34A30E7C08D8EE7900697644 /* Spanish */,
 				34A81DCE093CE92300B0E93D /* pl */,
+				3437FF560A9BF0A70028604E /* Turkish */,
 			);
 			name = DCGaimZephyrJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9613,6 +9654,7 @@
 				34058092087EEFA100664D64 /* Russian */,
 				34A30E7A08D8EE7800697644 /* Spanish */,
 				34A81DD0093CE92300B0E93D /* pl */,
+				3437FF580A9BF0A70028604E /* Turkish */,
 			);
 			name = DCGaimOscarJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9637,6 +9679,7 @@
 				34058093087EEFA100664D64 /* Russian */,
 				34A30E7B08D8EE7900697644 /* Spanish */,
 				34A81DCF093CE92300B0E93D /* pl */,
+				3437FF570A9BF0A70028604E /* Turkish */,
 			);
 			name = DCGaimYahooJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9661,6 +9704,7 @@
 				340580A0087EEFA200664D64 /* Russian */,
 				34A30E8E08D8EE7A00697644 /* Spanish */,
 				34A81DC2093CE92300B0E93D /* pl */,
+				3437FF4A0A9BF0A60028604E /* Turkish */,
 			);
 			name = ESGaimZephyrAccountView.nib;
 			sourceTree = "<group>";
@@ -9685,6 +9729,7 @@
 				34058091087EEFA100664D64 /* Russian */,
 				34A30E7908D8EE7800697644 /* Spanish */,
 				34A81DD1093CE92300B0E93D /* pl */,
+				3437FF590A9BF0A70028604E /* Turkish */,
 			);
 			name = DCGaimMeanwhileJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9708,6 +9753,7 @@
 				340580AC087EEFA200664D64 /* Russian */,
 				34A30EA408D8EE7B00697644 /* Spanish */,
 				34A81DB3093CE92200B0E93D /* pl */,
+				3437FF420A9BF0A50028604E /* Turkish */,
 			);
 			name = StatusSortConfiguration.nib;
 			sourceTree = "<group>";
@@ -9732,6 +9778,7 @@
 				34058090087EEFA100664D64 /* Russian */,
 				34A30E7808D8EE7800697644 /* Spanish */,
 				34A81DD2093CE92300B0E93D /* pl */,
+				3437FF5A0A9BF0A70028604E /* Turkish */,
 			);
 			name = DCGaimJabberJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9756,6 +9803,7 @@
 				34058099087EEFA100664D64 /* Russian */,
 				34A30E8108D8EE7900697644 /* Spanish */,
 				34A81DC9093CE92300B0E93D /* pl */,
+				3437FF510A9BF0A60028604E /* Turkish */,
 			);
 			name = ESGaimICQAccountView.nib;
 			sourceTree = "<group>";
@@ -9780,6 +9828,7 @@
 				3405809E087EEFA100664D64 /* Russian */,
 				34A30E8608D8EE7900697644 /* Spanish */,
 				34A81DC4093CE92300B0E93D /* pl */,
+				3437FF4C0A9BF0A60028604E /* Turkish */,
 			);
 			name = ESGaimOscarAccountView.nib;
 			sourceTree = "<group>";
@@ -9804,6 +9853,7 @@
 				3405809B087EEFA100664D64 /* Russian */,
 				34A30E8308D8EE7900697644 /* Spanish */,
 				34A81DC7093CE92300B0E93D /* pl */,
+				3437FF4F0A9BF0A60028604E /* Turkish */,
 			);
 			name = ESGaimMeanwhileAccountView.nib;
 			sourceTree = "<group>";
@@ -9828,6 +9878,7 @@
 				3405809F087EEFA200664D64 /* Russian */,
 				34A30E8708D8EE7900697644 /* Spanish */,
 				34A81DC3093CE92300B0E93D /* pl */,
+				3437FF4B0A9BF0A60028604E /* Turkish */,
 			);
 			name = ESGaimYahooAccountView.nib;
 			sourceTree = "<group>";
@@ -9852,6 +9903,7 @@
 				3405809A087EEFA100664D64 /* Russian */,
 				34A30E8208D8EE7900697644 /* Spanish */,
 				34A81DC8093CE92300B0E93D /* pl */,
+				3437FF500A9BF0A60028604E /* Turkish */,
 			);
 			name = ESGaimJabberAccountView.nib;
 			sourceTree = "<group>";
@@ -9878,6 +9930,7 @@
 				34A81DF0093CE96300B0E93D /* en_CA */,
 				34971108096C4D9C00699948 /* en_AU */,
 				34EA648E0A62E2ED0053DFEB /* Dutch */,
+				3437FF480A9BF0A60028604E /* Turkish */,
 			);
 			name = ListThemeSheet.nib;
 			sourceTree = "<group>";
@@ -9904,6 +9957,7 @@
 				34A81DEA093CE95B00B0E93D /* en_CA */,
 				34971104096C4D9200699948 /* en_AU */,
 				34EA64880A62E2DA0053DFEB /* Dutch */,
+				3437FF490A9BF0A60028604E /* Turkish */,
 			);
 			name = ListLayoutSheet.nib;
 			sourceTree = "<group>";
@@ -9928,6 +9982,7 @@
 				34A30E9E08D8EE7B00697644 /* Spanish */,
 				34A81DB8093CE92200B0E93D /* pl */,
 				34CF88B50A6D6005009D9A21 /* Dutch */,
+				3437FF470A9BF0A60028604E /* Turkish */,
 			);
 			name = MessageContextDisplayPrefs.nib;
 			sourceTree = "<group>";
@@ -9960,6 +10015,7 @@
 				340580AB087EEFA200664D64 /* Russian */,
 				34A30EA308D8EE7B00697644 /* Spanish */,
 				34A81DB4093CE92200B0E93D /* pl */,
+				3437FF430A9BF0A50028604E /* Turkish */,
 			);
 			name = StatusPreferences.nib;
 			sourceTree = "<group>";
@@ -9986,6 +10042,7 @@
 				34A81DB2093CE92200B0E93D /* pl */,
 				34A81DFB093CE99F00B0E93D /* en_CA */,
 				349710F9096C4D4F00699948 /* en_AU */,
+				3437FF410A9BF0A50028604E /* Turkish */,
 			);
 			name = WebKitPreferencesView.nib;
 			sourceTree = "<group>";
@@ -10020,6 +10077,7 @@
 				349710F0096C4CDB00699948 /* pl */,
 				349710F1096C4CE000699948 /* zh_CN */,
 				349710F2096C4CE500699948 /* zh_TW */,
+				3437FF5B0A9BF0A70028604E /* Turkish */,
 			);
 			name = Buttons.strings;
 			sourceTree = "<group>";
