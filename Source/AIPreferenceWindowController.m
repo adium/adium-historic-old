@@ -47,6 +47,7 @@
 - (void)_configureAdvancedPreferencesTable;
 - (void)_configreTabViewItemLabels;
 - (NSString *)tabView:(NSTabView *)tabView labelForTabViewItem:(NSTabViewItem *)tabViewItem;
+- (void)sizeWindowForToolbar;
 @end
 
 static AIPreferenceWindowController *sharedPreferenceInstance = nil;
@@ -153,6 +154,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[self _configureAdvancedPreferencesTable];
 	[[self window] betterCenter];
 
+	[self sizeWindowForToolbar];
+	
 	//Prepare our array of preference views.  We place these in an array to cut down on a ton of duplicate code.
 	viewArray = [[NSArray alloc] initWithObjects:
 		view_General,
@@ -400,6 +403,22 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	}
 }
 
+- (void)sizeWindowForToolbar
+{
+	NSWindow	*myWindow = [self window];
+	NSToolbar	*windowToolbar = [myWindow toolbar];
+	NSRect		windowFrame = [myWindow frame];
+
+	while ([[windowToolbar visibleItems] count] < [[windowToolbar items] count]) {
+		//Each toolbar item is 32x32; we expand by one toolbar item width repeatedly until they all fit
+		windowFrame.origin.x -= 16;
+		windowFrame.size.width += 16;
+
+		[myWindow setFrame:windowFrame display:NO];
+	}
+
+	[myWindow displayIfNeeded];
+}
 
 //Advanced Preferences -------------------------------------------------------------------------------------------------
 #pragma mark Advanced Preferences
