@@ -7,7 +7,19 @@
         }, 
         {CLASS = AIGradientCell; LANGUAGE = ObjC; SUPERCLASS = NSCell; }, 
         {CLASS = AIImageTextCell; LANGUAGE = ObjC; SUPERCLASS = AIGradientCell; }, 
+        {
+            CLASS = AILocalizationButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSButton; 
+        }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIPlugin; LANGUAGE = ObjC; SUPERCLASS = AIObject; }, 
         {CLASS = AIXtraInfo; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {
@@ -20,6 +32,7 @@
             CLASS = AIXtrasManager; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_getMoreXtras" = NSButton; 
                 deleteButton = NSButton; 
                 infoView = NSTextView; 
                 previewContainerView = NSScrollView; 
@@ -27,12 +40,14 @@
                 readmeView = NSView; 
                 showInfoControl = NSSegmentedControl; 
                 sidebar = NSTableView; 
+                splitView = NSSplitView; 
                 window = NSWindow; 
                 xtraList = NSTableView; 
             }; 
-            SUPERCLASS = AIObject; 
+            SUPERCLASS = AIPlugin; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
         {CLASS = NSSegmentedControl; LANGUAGE = ObjC; SUPERCLASS = NSControl; }
     ); 
     IBVersion = 1; 
