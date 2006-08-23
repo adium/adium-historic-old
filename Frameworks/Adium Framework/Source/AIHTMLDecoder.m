@@ -33,6 +33,8 @@
 #import <Adium/ESFileWrapperExtension.h>
 #import <Adium/AIXMLElement.h>
 
+#import <FriBidi/NSString-FBAdditions.h>
+
 int HTMLEquivalentForFontSize(int fontSize);
 
 @interface AIHTMLDecoder (PRIVATE)
@@ -213,12 +215,26 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	//If the text is right-to-left, enclose all our HTML in an rtl DIV tag
 	BOOL	rightToLeft = NO;
 	if (!thingsToInclude.simpleTagsOnly) {
-		if ((messageLength > 0) &&
-			([[inMessage attribute:NSParagraphStyleAttributeName
-						   atIndex:0
-					effectiveRange:nil] baseWritingDirection] == NSWritingDirectionRightToLeft)) {
-			[string appendString:@"<DIV dir=\"rtl\">"];
-			rightToLeft = YES;
+		if (messageLength > 0) {
+			//First, attempt to figure the base writing direction of our message based on its content
+			NSWritingDirection	dir = [[inMessage string] baseWritingDirection];
+			
+			//If that doesn't work, try using the writing direction of the input field
+			if (dir == NSWritingDirectionNatural) {
+				dir = [[inMessage attribute:NSParagraphStyleAttributeName
+									atIndex:0
+							 effectiveRange:nil] baseWritingDirection];
+				
+				//If the input field's writing direction is NSWritingDirectionNatural, we shall figure what it really means.
+				//The natural writing direction is determined by the system based on the current active localization of the app.
+				if (dir == NSWritingDirectionNatural)
+					dir = [NSParagraphStyle defaultWritingDirectionForLanguage:nil];
+			}
+			
+			if (dir == NSWritingDirectionRightToLeft) {
+				[string appendString:@"<DIV dir=\"rtl\">"];
+				rightToLeft = YES;
+			}
 		}
 	}	
 	
