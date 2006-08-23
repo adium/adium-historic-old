@@ -21,7 +21,6 @@
 {
 	NSMenuItem			*quickMenuItem;
 	NSMenuItem			*quickContextualMenuItem;
-	BOOL				needToRebuildMenus;
 	
 	NSMutableSet		*toolbarItems;
 }

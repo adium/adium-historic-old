@@ -59,7 +59,6 @@
 														 target:self
 														 action:@selector(dummyTarget:)
 												  keyEquivalent:@""];
-	needToRebuildMenus = YES;
 	
 	/* Create a submenu for these so menu:updateItem:atIndex:shouldCancel: will be called 
 	 * to populate them later. Don't need to check respondsToSelector:@selector(setDelegate:).
@@ -91,9 +90,6 @@
 											 selector:@selector(toolbarDidRemoveItem:)
 												 name:NSToolbarDidRemoveItemNotification
 											   object:nil];
-
-	//Observe prefs    
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
 }
 
 /*!
@@ -149,16 +145,6 @@
 	if ([[item itemIdentifier] isEqualToString:TOOLBAR_EMOTICON_IDENTIFIER]) {
 		[toolbarItems removeObject:item];
 	}
-}
-
-/*!
- * @brief Emoticons changed
- */
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
-{	
-	//Flag our menus as dirty
-	needToRebuildMenus = YES;
 }
 
 /*!
@@ -315,6 +301,7 @@
 	while ((toolbar = [enumerator nextObject])) {
 		if (([[[toolbar menuFormRepresentation] submenu] isEqualTo:menu] && index == 0)) {
 			item = [[NSMenuItem alloc] init];
+			return YES;
 		} else if (([[[toolbar menuFormRepresentation] submenu] isEqualTo:menu])) {
 			--index;
 		}
@@ -323,7 +310,7 @@
 	// Add in flat emoticon menu
 	if ([activePacks count] == 1) {
 		AIEmoticon	*emoticon = [[pack emoticons] objectAtIndex:index];
-		if ([emoticon isEnabled]) {
+		if ([emoticon isEnabled] && ![[item representedObject] isEqualTo:emoticon]) {
 			[item setTitle:[emoticon name]];
 			[item setTarget:self];
 			[item setAction:@selector(insertEmoticon:)];
@@ -335,7 +322,7 @@
 	// Add in multi-pack menu
 	} else {
 		pack = [activePacks objectAtIndex:index];
-		if (![[[item submenu] title] isEqualToString:[pack name]]){
+		if (![[item title] isEqualToString:[pack name]]){
 			[item setTitle:[pack name]];
 			[item setTarget:nil];
 			[item setAction:nil];
@@ -361,12 +348,13 @@
 {	
 	NSToolbarItem	*item;
 	NSEnumerator	*enumerator = [toolbarItems objectEnumerator];
-	int itemCounts = -1;
+	NSArray			*activePacks = [[adium emoticonController] activeEmoticonPacks];
+	int				 itemCounts = -1;
 	
-	itemCounts = [[[adium emoticonController] activeEmoticonPacks] count];
+	itemCounts = [activePacks count];
 	
 	if (itemCounts == 1)
-		itemCounts = [[[[[adium emoticonController] activeEmoticonPacks] objectAtIndex:0] emoticons] count];
+		itemCounts = [[[activePacks objectAtIndex:0] emoticons] count];
 	
 	#warning earthmkii: There has *got* to be a better way to see if a menu is attached to a toolbar
 	while ((item = [enumerator nextObject])) {
