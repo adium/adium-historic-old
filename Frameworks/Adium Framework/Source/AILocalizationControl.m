@@ -240,6 +240,23 @@
 					[view_anchorToLeftSide setNeedsDisplay:YES];
 				}
 			}
+			
+			if (NSMinX(newFrame) < 0) {
+				float difference = 0 - NSMinX(newFrame);
+				newFrame.origin.x = 0;
+
+				if (view_anchorToRightSide) {
+					NSRect anchorToRightSideFrame = [view_anchorToRightSide frame];
+					anchorToRightSideFrame.origin.x += difference;
+					[view_anchorToRightSide setFrame:anchorToRightSideFrame];
+					[view_anchorToRightSide setNeedsDisplay:YES];
+				}
+
+				[TARGET_CONTROL setFrame:newFrame];
+				[TARGET_CONTROL setNeedsDisplay:YES];
+
+			}
+			
 		} else {
 			/* newFrame.origin.x >= oldFrame.origin.x */
 			if (view_anchorToRightSide) {
