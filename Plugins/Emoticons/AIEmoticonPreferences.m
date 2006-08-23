@@ -70,18 +70,6 @@
     [sheet orderOut:nil];
 }
 
-
-//Preference pane properties
-//- (AIPreferenceCategory)category{
-//    return AIPref_Advanced;
-//}
-//- (NSString *)label{
-//    return AILocalizedString(@"Emoticons","Emoticons/Smilies");
-//}
-//- (NSString *)nibName{
-//    return @"EmoticonPrefs";
-//}
-
 //Configure the preference view
 //- (void)viewDidLoad
 - (void)windowDidLoad
