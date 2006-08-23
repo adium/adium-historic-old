@@ -33,6 +33,7 @@
 
 #define PLAYER_STATE				@"Player State"
 #define	KEY_PLAYING					@"Playing"
+#define	KEY_PAUSED					@"Paused"
 #define	KEY_STOPPED					@"Stopped"
 #define CURRENT_TRACK_FORMAT_KEY	@"Current Track Format"
 #define ITMS_SEARCH_URL				@"itms://itunes.com/link?"
@@ -101,6 +102,26 @@
 	iTunesIsStopped = yesOrNo;
 }
 
+/*!
+* @brief Is iTunes paused?
+ */
+- (BOOL)iTunesIsPaused
+{
+	//Get the info if we don't already have it
+	if (!iTunesCurrentInfo) [self loadiTunesCurrentInfoViaApplescript];
+	
+	return iTunesIsPaused;
+}
+
+/*
+ * @brief Set if iTunes is paused
+ */
+- (void)setiTunesIsPaused:(BOOL)yesOrNo
+{
+  iTunesIsPaused = yesOrNo;
+}
+
+
 /*
  * @brief Get current iTunes info dictionary
  */
@@ -121,6 +142,9 @@
 		iTunesCurrentInfo = [newInfo retain];
 		
 		[self setiTunesIsStopped:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_STOPPED]];
+		[self setiTunesIsPaused:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_PAUSED]];
+
+		AILog(@"iTunesCurrentInfo: %@",newInfo);
 
 		[[adium notificationCenter] postNotificationName:Adium_RequestImmediateDynamicContentUpdate object:nil];
 	}
@@ -342,7 +366,7 @@
 				replacementDict = [phraseSubstitutionDict objectForKey:trigger];
 								
 				//replacement of phrase should reflect iTunes player state
-				if (![self iTunesIsStopped]) {
+				if (![self iTunesIsStopped] && ![self iTunesIsPaused]) {
 					replacement = [replacementDict objectForKey:KEY_PLAYING];
 					
 					/* If the trigger is the trigger used for the Current iTunes Track status, we'll want to add a subtext of the store link
@@ -435,7 +459,7 @@
 - (void)iTunesUpdate:(NSNotification *)aNotification
 {
 	NSDictionary *newInfo = [aNotification userInfo];
-	
+
 	[self setiTunesCurrentInfo:newInfo];
 }
 
@@ -589,7 +613,7 @@
 	if (![url length]) {
 		
 		//if iTunes is playing or paused something
-		if (![self iTunesIsStopped]) {
+		if (![self iTunesIsStopped] || ![self iTunesIsPaused]) {
 			[url appendString:ITMS_SEARCH_URL];
 			
 			//if there is a name given to this song put it in the url
@@ -822,7 +846,7 @@
 	if (responder && [responder isKindOfClass:[NSTextView class]]) {
 		
 		//some menu items are only enabled if itunes is playing something
-		if (([self iTunesIsStopped] && (tag == ENABLED_IF_ITUNES_PLAYING)) || (tag == RESPONDER_IS_WEBVIEW)) {
+		if ((([self iTunesIsStopped] || [self iTunesIsPaused]) && (tag == ENABLED_IF_ITUNES_PLAYING)) || (tag == RESPONDER_IS_WEBVIEW)) {
 			enable = NO;
 		} else {
 			enable = [(NSTextView *)responder isEditable];

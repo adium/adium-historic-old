@@ -21,6 +21,7 @@ typedef enum {
 	NSDictionary *substitutionDict;
 	NSDictionary *phraseSubstitutionDict;
 	BOOL iTunesIsStopped;
+	BOOL iTunesIsPaused;
 }
 
 @end
