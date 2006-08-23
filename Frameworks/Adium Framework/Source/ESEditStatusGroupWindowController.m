@@ -64,6 +64,9 @@
 	NSString *title = [statusGroup title];
 	[textField_title setStringValue:(title ? title : @"")];
 
+	[label_title setLocalizedString:AILocalizedString(@"Title:", nil)];
+	[label_groupWith setLocalizedString:AILocalizedString(@"Group with:", "The popup button after this lists status types; it will determine the status type with which a status group will be listed in status menus")];
+	
 	[super windowDidLoad];
 }
 
