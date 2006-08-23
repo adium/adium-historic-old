@@ -26,6 +26,8 @@
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIPreferenceWindowController.h"
 
+#import "AIWebKitMessageViewPlugin.h"
+
 @interface ESDualWindowMessageAdvancedPreferences (PRIVATE)
 - (NSMenu *)_fontSizeMenu;
 - (NSMenu *)_timeStampMenu;

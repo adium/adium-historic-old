@@ -14,10 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIPreferencePane.h>
-#import "AIWebKitMessageViewPlugin.h"
+#import <Adium/AIAdvancedPreferencePane.h>
 
-@interface ESDualWindowMessageAdvancedPreferences : AIPreferencePane {
+@interface ESDualWindowMessageAdvancedPreferences : AIAdvancedPreferencePane {
     IBOutlet	NSButton		*checkBox_animateDockIcon;
     IBOutlet    NSButton		*checkBox_badgeDockIcon;
 

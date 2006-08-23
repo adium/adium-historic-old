@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIPreferencePane.h>
+#import <Adium/AIAdvancedPreferencePane.h>
 
-@interface AIMSNServicePreferences : AIPreferencePane {
+@interface AIMSNServicePreferences : AIAdvancedPreferencePane {
 	IBOutlet		NSButton		*checkBox_treatDisplayNamesAsStatus;
 
 	IBOutlet		NSTextField		*label_displayNames;
