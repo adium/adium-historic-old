@@ -44,7 +44,7 @@
 
 - (unsigned)numberOfAttributes;
 - (NSDictionary *)attributes;
-- (void) setAttributeNames:(NSArray *)newAttrNames values:(NSArray *)newAttrValues;
+- (void) setAttributeNames:(NSArray *)newAttrNames values:(NSArray *)newAttrVals;
 
 - (BOOL) selfCloses;
 - (void) setSelfCloses:(BOOL)flag;
@@ -59,6 +59,7 @@
 
 - (NSArray *)contents;
 - (void)setContents:(NSArray *)newContents;
+- (NSString *)contentsAsXMLString;
 
 #pragma mark XML representation
 
