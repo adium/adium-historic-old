@@ -28,7 +28,6 @@
 
 @interface BGEmoticonMenuPlugin(PRIVATE)
 - (void)registerToolbarItem;
-- (void)menuNeedsUpdate:(NSMenu *)inMenu;
 @end
 
 /*!
@@ -81,11 +80,10 @@
 	toolbarItems = [[NSMutableSet alloc] init];
 	[self registerToolbarItem];
 	
-	//
 	[[NSNotificationCenter defaultCenter] addObserver:self
-                                                selector:@selector(toolbarWillAddItem:)
-                                                    name:NSToolbarWillAddItemNotification
-                                                  object:nil];
+											 selector:@selector(toolbarWillAddItem:)
+												 name:NSToolbarWillAddItemNotification
+											   object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(toolbarDidRemoveItem:)
 												 name:NSToolbarDidRemoveItemNotification
@@ -283,7 +281,8 @@
 /*!
  * @brief Update our menus if necessary
  *
- * Called each time before any of our menus are displayed.  This rebuilds menus incrimentially, in place.
+ * Called each time before any of our menus are displayed.
+ * This rebuilds menus incrementally, in place, and only updating items that need it.
  *
  */
 - (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel
@@ -295,7 +294,7 @@
 	
 	#warning earthmkii: There has *got* to be a better way to see if a menu is attached to a toolbar
    /* We need special voodoo here to identify if the menu belongs to a toolbar,
-	* adds the necessary pad item, and then adjusts the index accordingly.
+	* add the necessary pad item, and then adjust the index accordingly.
 	* this shouldn't be necessary, but NSToolbar is evil.
 	*/
 	while ((toolbar = [enumerator nextObject])) {
@@ -305,7 +304,7 @@
 		} else if (([[[toolbar menuFormRepresentation] submenu] isEqualTo:menu])) {
 			--index;
 		}
-	} 
+	}
 	
 	// Add in flat emoticon menu
 	if ([activePacks count] == 1) {
@@ -331,9 +330,8 @@
 			[item setRepresentedObject:nil];
 			[item setSubmenu:[self flatEmoticonMenuForPack:pack]];
 		}
-		
 	}
-	
+
 	return YES;
 }
 
@@ -361,6 +359,7 @@
 		if ([[[item menuFormRepresentation] submenu] isEqualTo:menu])
 			++itemCounts;
 	}
+
 	return itemCounts;
 }
 
