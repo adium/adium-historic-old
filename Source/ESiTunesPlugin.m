@@ -144,8 +144,6 @@
 		[self setiTunesIsStopped:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_STOPPED]];
 		[self setiTunesIsPaused:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_PAUSED]];
 
-		AILog(@"iTunesCurrentInfo: %@",newInfo);
-
 		[[adium notificationCenter] postNotificationName:Adium_RequestImmediateDynamicContentUpdate object:nil];
 	}
 }

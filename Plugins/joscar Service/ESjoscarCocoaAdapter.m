@@ -318,7 +318,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 #define MUSICAL_NOTE [NSString stringWithUTF8String:"\xe2\x99\xab"]
 	if (iTMSLink && [iTMSLink length])
 		message = [NSString stringWithFormat:@"<a href=\"%@\">%@</a> %@", iTMSLink, MUSICAL_NOTE, message];
-	AILog(@"setincoming status message %@",message);
+
 	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 				setStatusMessage:[[message copy] autorelease]];
 }
@@ -382,8 +382,6 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	
 		NSString *groupName = [group getName];
 		if (groupName) [buddyDict setObject:[[groupName copy] autorelease] forKey:@"Group"];
-		
-			AILog(@"%@ is %i",[sn getNormal], [[[aimConnection getBuddyInfoManager] getBuddyInfo:sn] isOnline]);
 			
 		[buddyDictsSet addObject:buddyDict];
 	}
@@ -423,7 +421,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 						  iconUpdate:iconData];
 	} else {	
-		AILog(@"(joscarCocoaAdapter): --- %@: Got %@ icon data (byte block was %@)", [sn getFormatted], iconData, [info getIconData]);
+		//AILog(@"(joscarCocoaAdapter): --- %@: Got %@ icon data (byte block was %@)", [sn getFormatted], iconData, [info getIconData]);
 	}
 }
 
@@ -813,10 +811,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	Conversation			*conversation = [userInfo get:@"Conversation"];
 	ConversationEventInfo	*eventInfo = [userInfo get:@"ConversationEventInfo"];
 
-	AILog(@"got other event: %@ - %@",eventInfo, NSStringFromClass([eventInfo class]));
-
 	if ([eventInfo isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ImSendFailedEvent")]) {
-		AILog(@"%@: error %i",eventInfo,[(ImSendFailedEvent *)eventInfo getErrorCode]);
 		AIChatErrorType errorType;
 
 		switch ([(ImSendFailedEvent *)eventInfo getErrorCode]) {
@@ -831,7 +826,9 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 				break;
 		}
 		
-		AILog(@"error with %@",[[[[conversation getBuddy] getNormal] copy] autorelease]);
+		AILog(@"(joscarCocoaAdapter): %@ error (%i) with %@",
+			  eventInfo,[(ImSendFailedEvent *)eventInfo getErrorCode],
+			  [[[[conversation getBuddy] getNormal] copy] autorelease]);
 		[accountProxy chatWithUID:[[[[conversation getBuddy] getNormal] copy] autorelease]
 						 gotError:[NSNumber numberWithInt:errorType]];
 	}
