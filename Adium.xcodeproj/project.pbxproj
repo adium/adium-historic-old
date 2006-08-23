@@ -198,6 +198,10 @@
 		342F88CF0A2A74EB0001DB29 /* PTKeyCombo.m in Sources */ = {isa = PBXBuildFile; fileRef = 342F88C90A2A74EA0001DB29 /* PTKeyCombo.m */; };
 		342F88D10A2A74EB0001DB29 /* PTHotKeyCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 342F88CB0A2A74EA0001DB29 /* PTHotKeyCenter.m */; };
 		342F88D30A2A74EB0001DB29 /* PTHotKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 342F88CD0A2A74EB0001DB29 /* PTHotKey.m */; };
+		343700A70A9C1E170028604E /* AIAdvancedPreferencePane.h in Headers */ = {isa = PBXBuildFile; fileRef = 343700A50A9C1E170028604E /* AIAdvancedPreferencePane.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		343700A80A9C1E170028604E /* AIAdvancedPreferencePane.m in Sources */ = {isa = PBXBuildFile; fileRef = 343700A60A9C1E170028604E /* AIAdvancedPreferencePane.m */; };
+		343700A90A9C1E170028604E /* AIAdvancedPreferencePane.h in Headers */ = {isa = PBXBuildFile; fileRef = 343700A50A9C1E170028604E /* AIAdvancedPreferencePane.h */; };
+		343700AA0A9C1E170028604E /* AIAdvancedPreferencePane.m in Sources */ = {isa = PBXBuildFile; fileRef = 343700A60A9C1E170028604E /* AIAdvancedPreferencePane.m */; };
 		34382CEA0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382CE60A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m */; };
 		34382CEC0A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382CE80A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m */; };
 		34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34382CEE0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist */; };
@@ -2001,6 +2005,8 @@
 		342F88CD0A2A74EB0001DB29 /* PTHotKey.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PTHotKey.m; path = Source/PTHotKey.m; sourceTree = "<group>"; };
 		342F88CE0A2A74EB0001DB29 /* PTHotKey.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PTHotKey.h; path = Source/PTHotKey.h; sourceTree = "<group>"; };
 		34327BD6060D2FE6003D7AD9 /* GaimServiceDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = GaimServiceDefaults.plist; path = "Plugins/Gaim Service/GaimServiceDefaults.plist"; sourceTree = "<group>"; };
+		343700A50A9C1E170028604E /* AIAdvancedPreferencePane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAdvancedPreferencePane.h; path = "Frameworks/Adium Framework/Source/AIAdvancedPreferencePane.h"; sourceTree = "<group>"; };
+		343700A60A9C1E170028604E /* AIAdvancedPreferencePane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAdvancedPreferencePane.m; path = "Frameworks/Adium Framework/Source/AIAdvancedPreferencePane.m"; sourceTree = "<group>"; };
 		3437FF410A9BF0A50028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/WebKit Message View/Turkish.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		3437FF420A9BF0A50028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		3437FF430A9BF0A50028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = Resources/Turkish.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
@@ -7030,6 +7036,8 @@
 				4BAA1B360632ED8B00D8B92C /* AIActionDetailsPane.m */,
 				F5793923033E74C301A8010A /* AIPreferencePane.h */,
 				F5793913033E748F01A8010A /* AIPreferencePane.m */,
+				343700A50A9C1E170028604E /* AIAdvancedPreferencePane.h */,
+				343700A60A9C1E170028604E /* AIAdvancedPreferencePane.m */,
 				4BAD188C066A83550002008E /* AIModularPaneCategoryView.h */,
 				4BAD188D066A83550002008E /* AIModularPaneCategoryView.m */,
 			);
@@ -7194,6 +7202,7 @@
 				3419E7390A880AD400C3FC68 /* ESGaimQQAccount.h in Headers */,
 				3419E73F0A880B2C00C3FC68 /* ESQQService.h in Headers */,
 				3419E7690A880CDA00C3FC68 /* ESGaimQQAccountViewController.h in Headers */,
+				343700A90A9C1E170028604E /* AIAdvancedPreferencePane.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7391,6 +7400,7 @@
 				34DC8B0F0A7EEEF7003E1636 /* NDRunLoopMessenger.h in Headers */,
 				34DC8B110A7EEEF7003E1636 /* NSString+CarbonFSRefCreation.h in Headers */,
 				34DC8B130A7EEEF7003E1636 /* SUSpeaker.h in Headers */,
+				343700A70A9C1E170028604E /* AIAdvancedPreferencePane.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8605,6 +8615,7 @@
 				3419E73A0A880AD400C3FC68 /* ESGaimQQAccount.m in Sources */,
 				3419E7400A880B2C00C3FC68 /* ESQQService.m in Sources */,
 				3419E76A0A880CDA00C3FC68 /* ESGaimQQAccountViewController.m in Sources */,
+				343700AA0A9C1E170028604E /* AIAdvancedPreferencePane.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8977,6 +8988,7 @@
 				34DC8B100A7EEEF7003E1636 /* NDRunLoopMessenger.m in Sources */,
 				34DC8B120A7EEEF7003E1636 /* NSString+CarbonFSRefCreation.m in Sources */,
 				34DC8B140A7EEEF7003E1636 /* SUSpeaker.m in Sources */,
+				343700A80A9C1E170028604E /* AIAdvancedPreferencePane.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
