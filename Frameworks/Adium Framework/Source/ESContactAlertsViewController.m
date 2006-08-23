@@ -520,8 +520,8 @@ int actionSort(id objectA, id objectB, void *context)
 							NSString	*commaAndSpaceIfNeeded;
 
 							//If we have more than 2 actions, we'll be combining them with commas
-							if (count > 2) {
-								commaAndSpaceIfNeeded = @",";
+							if ((count > 2) && (i != (count - 1))) {
+								commaAndSpaceIfNeeded = AILocalizedString(@",", "comma between actions in the events list");
 							} else {
 								commaAndSpaceIfNeeded = @"";
 							}
@@ -533,18 +533,29 @@ int actionSort(id objectA, id objectB, void *context)
 								conjunctionIfNeeded = @"";
 							}
 							
-							//Construct the string to append, then append it
-							[actionDescription appendString:[NSString stringWithFormat:@"%@%@ %@%@",
-								commaAndSpaceIfNeeded,
-								conjunctionIfNeeded,
-								[[thisDescription substringToIndex:1] lowercaseString],
-								[thisDescription substringFromIndex:1]]];
+							/* Silly Localization hack: if Growl begins this phrase, don't make it lowercase, since it's
+							 * a proper noun.
+							 */
+							if ([thisDescription rangeOfString:@"Growl" options:(NSLiteralSearch | NSAnchoredSearch)].location == 0) {
+								[actionDescription appendString:[NSString stringWithFormat:@"%@%@ %@",
+									commaAndSpaceIfNeeded,
+									conjunctionIfNeeded,
+									thisDescription]];
+	
+							} else {
+								//Construct the string to append, then append it
+								[actionDescription appendString:[NSString stringWithFormat:@"%@%@ %@%@",
+									commaAndSpaceIfNeeded,
+									conjunctionIfNeeded,
+									[[thisDescription substringToIndex:1] lowercaseString],
+									[thisDescription substringFromIndex:1]]];
+							}
 							
 						} else {
 							/* We are on the first action.
-							*
-							* This is easy; just append the description.
-							*/
+							 *
+							 * This is easy; just append the description.
+							 */
 							[actionDescription appendString:thisDescription];
 							appended = YES;
 						}
