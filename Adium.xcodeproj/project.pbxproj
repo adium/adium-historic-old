@@ -1264,7 +1264,9 @@
 		EE147A6D0896B18800A21377 /* ABSearch.png in Resources */ = {isa = PBXBuildFile; fileRef = EE147A6C0896B18700A21377 /* ABSearch.png */; };
 		EE147A790896B32400A21377 /* ABSearch.nib in Resources */ = {isa = PBXBuildFile; fileRef = EE147A780896B32400A21377 /* ABSearch.nib */; };
 		EE147A800896B33400A21377 /* OWABSearchWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE147A7E0896B33400A21377 /* OWABSearchWindowController.m */; };
+		EE96A3CC0A9C5E4000C47A57 /* FriBidi.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		EEC461B6096D68580028632F /* OWSpellingPerContactPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */; };
+		EEF71BA60A9C76AB00284E7E /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		F51BCD3B0A156261000FDC06 /* AIHyperlinks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
 		F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */; };
@@ -1551,6 +1553,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				EE96A3CC0A9C5E4000C47A57 /* FriBidi.framework in CopyFiles */,
 				F51BCD3B0A156261000FDC06 /* AIHyperlinks.framework in CopyFiles */,
 				F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */,
 				6383935009D4D6AA0067B9B7 /* Sparkle.framework in CopyFiles */,
@@ -3635,6 +3638,7 @@
 		EE147A780896B32400A21377 /* ABSearch.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ABSearch.nib; path = Resources/ABSearch.nib; sourceTree = "<group>"; };
 		EE147A7E0896B33400A21377 /* OWABSearchWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = OWABSearchWindowController.m; path = Source/OWABSearchWindowController.m; sourceTree = "<group>"; };
 		EE147A7F0896B33400A21377 /* OWABSearchWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWABSearchWindowController.h; path = Source/OWABSearchWindowController.h; sourceTree = "<group>"; };
+		EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FriBidi.framework; path = Frameworks/FriBidi.framework; sourceTree = "<group>"; };
 		EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = OWSpellingPerContactPlugin.m; path = Source/OWSpellingPerContactPlugin.m; sourceTree = "<group>"; };
 		EEC461B5096D68580028632F /* OWSpellingPerContactPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWSpellingPerContactPlugin.h; path = Source/OWSpellingPerContactPlugin.h; sourceTree = "<group>"; };
 		F11B9621051CDB3B0000000E /* AIMessageAliasPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageAliasPlugin.h; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.h"; sourceTree = "<group>"; };
@@ -3809,6 +3813,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EEF71BA60A9C76AB00284E7E /* FriBidi.framework in Frameworks */,
 				34D836E507CBF593006466F2 /* Carbon.framework in Frameworks */,
 				3448761406D1EC0C00DA778C /* Cocoa.framework in Frameworks */,
 				34D835D807CBED81006466F2 /* AIUtilities.framework in Frameworks */,
@@ -4008,6 +4013,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */,
 				638392F609D4D67A0067B9B7 /* Sparkle.framework */,
 				115E0E8D0952514A003218FE /* JavaVM.framework */,
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
@@ -10700,8 +10706,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
@@ -10963,6 +10971,11 @@
 		349F83430A437477007EA1B1 /* Development-libgaim_oscar */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
@@ -11316,8 +11329,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -11476,6 +11491,11 @@
 		34BAF98C0942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
@@ -11668,8 +11688,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
@@ -11694,8 +11716,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -11721,8 +11745,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -12083,6 +12109,11 @@
 		DADE8E23085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
@@ -12107,6 +12138,11 @@
 		DADE8E24085507450062B664 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
@@ -12131,6 +12167,11 @@
 		DADE8E25085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
