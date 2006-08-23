@@ -305,7 +305,7 @@
 			
 			if (rate > 0) {
 				unsigned long long secsRemaining = ((size - bytesSent) / rate);
-				transferRemainingStatus = [NSString stringWithFormat:AILocalizedString(@"%@ remaining",nil),[self readableTimeForSecs:secsRemaining inLongFormat:YES]];
+				transferRemainingStatus = [NSString stringWithFormat:AILocalizedString(@"%@ remaining","Time remaining for a file transfer to be completed phrase. %@ will be replaced by an amount of time such as '5 seconds' or '4 minutes and 30 seconds'.),[self readableTimeForSecs:secsRemaining inLongFormat:YES]];
 			} else {
 				transferRemainingStatus = AILocalizedString(@"Stalled","file transfer is stalled status message");
 			}
