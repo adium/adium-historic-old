@@ -6,9 +6,9 @@
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import <Adium/AIPreferencePane.h>
+#import <Adium/AIAdvancedPreferencePane.h>
 
-@interface ESContactListAdvancedPreferences : AIPreferencePane {
+@interface ESContactListAdvancedPreferences : AIAdvancedPreferencePane {
 	IBOutlet	NSPopUpButton   *popUp_windowPosition;
 	
 	IBOutlet	NSMatrix		*matrix_hiding;
