@@ -7,7 +7,7 @@
 
 #import "AIApplication.h"
 #import <Adium/AIObject.h>
-#import "AIDockController.h"
+#import <Adium/AIDockControllerProtocol.h>
 
 @implementation AIApplication
 /*!
@@ -18,7 +18,7 @@
 - (NSImage *)applicationIconImage
 {
 	NSImage *applicationIconImage = [[[AIObject sharedAdiumInstance] dockController] baseApplicationIconImage];
-	
+
 	return (applicationIconImage ? applicationIconImage : [super applicationIconImage]);
 }
 
