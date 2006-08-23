@@ -30,22 +30,33 @@
 
 static JavaClassLoader *classLoader = nil;
 
+
 @interface SmackJingleListener : NSObject {
 }
-
 - (SmackXJingleManager*)getManager;
-
 @end
+
+
+////////////////////////////////////////////////////////////////////////////////
+//                           Jingle plugin category
+////////////////////////////////////////////////////////////////////////////////
 
 @interface SmackCocoaAdapter (jinglePlugin)
 
 + (void)loadJingle;
 + (SmackJingleListener*)createJingleListenerForConnection:(SmackXMPPConnection*)conn delegate:(id)delegate;
 
++ (SmackXPayloadType*)payloadTypeWithId:(int)ident name:(NSString*)name channels:(int)channels;
++ (SmackXPayloadTypeAudio*)payloadTypeAudioWithId:(int)ident name:(NSString*)name channels:(int)channels clockRate:(int)clockRate;
+
 @end
+
 
 @implementation SmackCocoaAdapter (jinglePlugin)
 
+/*!
+ * @brief	Load the Jingle extension
+ */
 + (void)loadJingle
 {
     if(!classLoader)
@@ -53,17 +64,38 @@ static JavaClassLoader *classLoader = nil;
         NSString *jingleJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:JINGLE_JAR
                                                                                    ofType:@"jar"
                                                                               inDirectory:@"Java"];
-        
         classLoader = [[[[AIObject sharedAdiumInstance] javaController] classLoaderWithJARs:[NSArray arrayWithObject:jingleJarPath] parentClassLoader:[self classLoader]] retain];
     }
 }
 
+/*!
+ * @brief	Create a jingle session listener
+ */
 + (SmackJingleListener*)createJingleListenerForConnection:(SmackXMPPConnection*)conn delegate:(id)delegate
 {
     return [(id)[[self classLoader] loadClass:@"net.adium.smackBridge.JingleListener"] getInstance:conn :delegate :classLoader];
 }
 
+/*!
+ * @brief	Create a payload type
+ */
++ (SmackXPayloadType*)payloadTypeWithId:(int)ident name:(NSString*)name channels:(int)channels {
+    return [[(Class)[classLoader loadClass:@"org.jivesoftware.smackx.jingle.PayloadType"]
+		newWithSignature:@"(ILjava/lang/String;I)",ident,name,channels] autorelease];
+}
+
+/*!
+ * @brief	Create an audio payload type
+ */
++ (SmackXPayloadTypeAudio*)payloadTypeAudioWithId:(int)ident name:(NSString*)name channels:(int)channels clockRate:(int)clockRate {
+    return [[(Class)[classLoader loadClass:@"org.jivesoftware.smackx.jingle.PayloadType$Audio"]
+		newWithSignature:@"(ILjava/lang/String;II)",ident,name,channels,clockRate] autorelease];
+}
+
 @end
+
+
+
 
 @implementation SmackJinglePlugin
 
@@ -148,14 +180,23 @@ static JavaClassLoader *classLoader = nil;
  */
 - (JavaVector*) getSupportedAudioPayloads
 {
-    JavaVector		*payloadsJava	= [SmackCocoaAdapter vector];    
-	NSArray			*payloadsList	= [[adium vcController] getAudioPayloadsForProtocol:VC_RTP];
-	NSEnumerator	*payloadsEnum	= [payloadsList objectEnumerator];
-	VCPayload		*payload;
+    JavaVector				*payloadsJava	= [SmackCocoaAdapter vector];
+	NSArray					*payloadsList	= [[adium vcController] getAudioPayloadsForProtocol:VC_RTP];
+	NSEnumerator			*payloadsEnum	= [payloadsList objectEnumerator];
+	VCAudioPayload			*payload;
+	SmackXPayloadTypeAudio	*smackPayload;
 	
 	// Add the list of payloads
 	while ((payload = [payloadsEnum nextObject])) {
-		[payloadsJava add:payload];
+
+		// Create the Smack payload
+		smackPayload = [SmackCocoaAdapter payloadTypeAudioWithId:[payload valueForKey:@"mId"]
+															name:[payload valueForKey:@"mName"]
+														channels:[payload valueForKey:@"mChannels"]
+													   clockRate:[payload valueForKey:@"mClockrate"]];
+		
+		// Add it to the list
+		[payloadsJava add:smackPayload];
 	}
 
 	return payloadsJava;
@@ -166,14 +207,14 @@ static JavaClassLoader *classLoader = nil;
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void) acceptIncomingJingleSessionQuestion:(NSNumber*) number userInfo:(id) info
-{	
+{
 	SmackXIncomingJingleSession	*session		= nil;
-    JavaVector					*payloadTypes	= [self getSupportedAudioPayloads];
+	JavaVector					*payloadTypes	= [self getSupportedAudioPayloads];
 	SmackXJingleSessionRequest	*request		= info;	
 	AITextAndButtonsReturnCode	 result			= [number intValue];
 
 	switch (result) {
-		
+
 		case AITextAndButtonsDefaultReturn:
 			NSLog (@"Establishing incoming Jingle session.");
 
@@ -236,14 +277,14 @@ static JavaClassLoader *classLoader = nil;
 /*!
  * @brief    Start an outgoing session
  */
-- (void)establishOutgoingJingleSessionTo:(NSString*)jid
+- (void) establishOutgoingJingleSessionTo:(NSString*)jid
 {
 	SmackXOutgoingJingleSession *session		= nil;
     JavaVector					*payloadTypes	= [self getSupportedAudioPayloads];
 	int							 payloadsCount	= [payloadTypes size];
 	
 	NSLog (@"Establishing outgoing Jingle session to %@, offering %d payloads.", jid, payloadsCount);
-	
+
 	if (payloadsCount > 0) {
 		@try {
 			session = [[listener getManager] createOutgoingJingleSession:jid :payloadTypes];
@@ -261,6 +302,8 @@ static JavaClassLoader *classLoader = nil;
 												selector:NULL
 												userInfo:nil];
 		}		
+	} else {
+		NSLog (@"Jingle error: no payloads available.");		
 	}
 }
 
@@ -271,24 +314,33 @@ static JavaClassLoader *classLoader = nil;
 
 // add a menu item to the contact's context menu, so an outgoing session can be established
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact {
-    SmackXDiscoverInfo *info = [inContact statusObjectForKey:@"XMPP:disco#info"];
+    NSMutableArray		*menuItems	= [NSMutableArray array];
+    SmackXDiscoverInfo	*info		= [inContact statusObjectForKey:@"XMPP:disco#info"];
     if(!info)
         return nil; // no info available, so we don't know if this account supports Jingle (we assume no)
     
-    if(![info containsFeature:@"http://jabber.org/protocol/jingle"])
-        return nil; // jingle not supported
-    
-	NSLog (@"User supports Jingle.");
+    if([info containsFeature:@"http://jabber.org/protocol/jingle/audio"]) {
+		NSLog (@"User supports Jingle/audio.");		
+
+		NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Invite to Audio Chat","Invite to Audio Chat (Jingle)")
+													   action:@selector(inviteToAudioChat:) keyEquivalent:@""];
+		[mitem setTarget:self];
+		[mitem setRepresentedObject:inContact];
+		[menuItems addObject:mitem];
+		[mitem release];		
+	}
+
+	if([info containsFeature:@"http://jabber.org/protocol/jingle/video"]) {
+		NSLog (@"User supports Jingle/video.");
+		
+//		NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Invite to Audio Chat","Invite to Video Chat (Jingle)")
+//													   action:@selector(inviteToVideoChat:) keyEquivalent:@""];
+//		[mitem setTarget:self];
+//		[mitem setRepresentedObject:inContact];
+//		[menuItems addObject:mitem];
+//		[mitem release];		
+	}	
 	
-    NSMutableArray *menuItems = [NSMutableArray array];
-    
-    NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Invite to Audio Chat","Invite to Audio Chat (Jingle)")
-                                                   action:@selector(inviteToAudioChat:) keyEquivalent:@""];
-    [mitem setTarget:self];
-    [mitem setRepresentedObject:inContact];
-    [menuItems addObject:mitem];
-    [mitem release];
-    
     return menuItems;
 }
 
