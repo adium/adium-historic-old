@@ -595,13 +595,17 @@ static NSArray *validSenderColors;
 					NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
 					NSDateFormatter	*dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeFormat 
 																			allowNaturalLanguage:NO];
-					[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
-											withString:[dateFormatter stringForObjectValue:date]];
+					NSString *timeString = [dateFormatter stringForObjectValue:date];
+					if(timeString) {
+						[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
+												withString:timeString];
+					} else
+						[inString deleteCharactersInRange:NSUnionRange(range, endRange)];
+					
 					[dateFormatter release];
 					
-				} else {
+				} else
 					[inString deleteCharactersInRange:NSUnionRange(range, endRange)];
-				}
 				
 			}
 		}
