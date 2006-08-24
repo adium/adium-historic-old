@@ -41,7 +41,14 @@
 	return @"QQ";
 }
 - (NSCharacterSet *)allowedCharacters{
-	return [NSCharacterSet alphanumericCharacterSet];
+	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
+	NSCharacterSet			*returnSet;
+
+	[allowedCharacters addCharactersInString:@"-"];
+	returnSet = [allowedCharacters immutableCopy];
+	[allowedCharacters release];
+
+	return [returnSet autorelease];
 }
 - (NSCharacterSet *)ignoredCharacters{
 	return [NSCharacterSet characterSetWithCharactersInString:@""];
