@@ -565,10 +565,7 @@
  */
 - (void)configureTypeSelectTableView:(KFTypeSelectTableView *)tableView
 {
-    [tableView setSearchWraps:YES]; 
-
-	//Use substring matching so that last names and screen names (if displayed) can be search targets
-	[tableView setMatchAlgorithm:KFSubstringMatchAlgorithm];
+    [tableView setSearchWraps:YES];
 }
 
 /*!
