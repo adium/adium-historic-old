@@ -23,6 +23,8 @@
 /* Define to 1 if you have the `poll' function. */
 /* #define HAVE_POLL 1 */
 
+#define SIZEOF_TIME_T 4
+
 /* Define to the version of this package. */
 #define PACKAGE_VERSION VERSION
 
