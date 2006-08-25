@@ -43,7 +43,7 @@
 #ifdef ENABLE_NLS
 #  include <locale.h>
 #  include <libintl.h>
-#  define _(x) ((const char *)gettext(x))
+#  define _(String) ((const char *)gettext(String))
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
@@ -53,7 +53,7 @@
 #  include <locale.h>
 #  define N_(String) (String)
 #  ifndef _
-#    define _(x) ((const char *)x)
+#    define _(String) ((const char *)String)
 #  endif
 #  define ngettext(Singular, Plural, Number) ((Number == 1) ? ((const char *)Singular) : ((const char *)Plural))
 #endif
@@ -70,9 +70,9 @@
 #define BUF_LONG BUF_LEN * 2
 
 #include <sys/stat.h>
-#include <sys/time.h>
 #include <sys/types.h>
 #ifndef _WIN32
+#include <sys/time.h>
 #include <sys/wait.h>
 #endif
 #include <ctype.h>
