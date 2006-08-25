@@ -10,7 +10,7 @@
 # - make all
 ###########
 
-VERSION=1.0b9
+VERSION=1.0b10
 BETA=TRUE
 
 ###########
@@ -123,4 +123,5 @@ diskimage:
 
 	./make-diskimage.sh $(BUILD_DIR)/$(RELEASE_NAME).dmg $(ADIUM_DIR) "Adium X $(VERSION)" dmg_adium.scpt
 	
-	@echo Build finished
+	@echo Build finished. `md5 $(BUILD_DIR)/$(RELEASE_NAME).dmg`
+
