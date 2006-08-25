@@ -29,6 +29,9 @@
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
 
+#define KEY_BASE_WRITING_DIRECTION		@"Base Writing Direction"
+#define PREF_GROUP_WRITING_DIRECTION	@"Writing Direction"
+
 @implementation AIListContact
 
 //Init with an account
@@ -673,6 +676,22 @@
 	}
 		
 	return nil;
+}
+
+//Writing Direction ----------------------------------------------------------------------------------------------------------
+#pragma mark Writing Direction
+
+- (NSWritingDirection)baseWritingDirection {
+	NSNumber	*dir = [self preferenceForKey:KEY_BASE_WRITING_DIRECTION group:PREF_GROUP_WRITING_DIRECTION];
+	
+	//If we have a saved base direction, we'll return that.
+	//Otherwise, we'll try to be smart and use the default writing direction of the language of the user's locale
+	//(and not the language of the active localization). By that, we assume most users are mostly talking to their local friends.
+	return dir ? [dir intValue] : [NSParagraphStyle defaultWritingDirectionForLanguage:[[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode]];
+}
+
+- (void)setBaseWritingDirection:(NSWritingDirection)direction {
+	[self setPreference:[NSNumber numberWithInt:direction] forKey:KEY_BASE_WRITING_DIRECTION group:PREF_GROUP_WRITING_DIRECTION];
 }
 
 @end
