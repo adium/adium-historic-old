@@ -65,4 +65,7 @@
 
 - (NSAttributedString *)contactListStatusMessage;
 
+- (NSWritingDirection)baseWritingDirection;
+- (void)setBaseWritingDirection:(NSWritingDirection)direction;
+
 @end

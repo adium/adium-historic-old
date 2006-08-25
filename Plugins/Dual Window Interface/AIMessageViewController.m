@@ -93,8 +93,11 @@
 {
     if ((self = [super init]))
 	{
+		AIListContact	*contact;
+		
 		//Init
 		chat = [inChat retain];
+		contact = [chat listObject];
 		view_accountSelection = nil;
 		userListController = nil;
 		suppressSendLaterPrompt = NO;
@@ -142,6 +145,10 @@
 		[self chatStatusChanged:nil];
 		[self chatParticipatingListObjectsChanged:nil];
 		
+		//Set our base writing direction
+		if (contact)
+			[textView_outgoing setBaseWritingDirection:[contact baseWritingDirection]];
+		
 		//Observe general preferences for sending keys
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
 	}
@@ -154,6 +161,8 @@
  */
 - (void)dealloc
 {   
+	AIListContact	*contact = [chat listObject];
+	
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 
 	//Store our minimum height for the text entry area, and minimim width for the user list
@@ -163,6 +172,10 @@
 	if (userListController) {
 		[self saveUserListMinimumSize];
 	}
+	
+	//Save the base writing direction
+	if (contact)
+		[contact setBaseWritingDirection:[textView_outgoing baseWritingDirection]];
 
 	[chat release]; chat = nil;
 
