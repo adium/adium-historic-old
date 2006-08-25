@@ -640,29 +640,9 @@ static NSArray *draggedTypes = nil;
  */
 - (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
-	WebScriptObject *wso = [webView windowScriptObject];
-	NSString *methodName;
-	NSArray *methodArgs;
-
-	methodName = [messageStyle methodNameToCheckIfScrollToBottomIsNeeded];
-	if (methodName) {
-		methodArgs = [messageStyle methodArgumentsToCheckIfScrollToBottomIsNeeded];
-		[wso callWebScriptMethod:methodName withArguments:methodArgs];
-	}
-	AILog(@"Appending %@",content);
-	methodName = [messageStyle methodNameForAppendingContent:content
-	                                                 similar:contentIsSimilar
-	                               willAddMoreContentObjects:willAddMoreContentObjects];
-	methodArgs = [messageStyle methodArgumentsForAppendingContent:content
-	                                                 similar:contentIsSimilar
-	                               willAddMoreContentObjects:willAddMoreContentObjects];
-	[wso callWebScriptMethod:methodName withArguments:methodArgs];
-
-	methodName = [messageStyle methodNameToScrollToBottomIfNeeded];
-	if (methodName) {
-		methodArgs = [messageStyle methodArgumentsToScrollToBottomIfNeeded];
-		[wso callWebScriptMethod:methodName withArguments:methodArgs];
-	}
+	[webView stringByEvaluatingJavaScriptFromString:[messageStyle scriptForAppendingContent:content
+																					similar:contentIsSimilar
+																  willAddMoreContentObjects:willAddMoreContentObjects]];
 }
 
 
