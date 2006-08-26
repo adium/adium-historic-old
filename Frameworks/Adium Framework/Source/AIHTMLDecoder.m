@@ -688,7 +688,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	BOOL addElementContentToTopElement = YES;
 	AIXMLElement *thisElement = moreThanJustAnImage ? [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:elementName] : nil;
 	if (linkValue) {
-		[thisElement setValue:linkValue forKey:@"href"];
+		[thisElement setValue:linkValue forAttribute:@"href"];
 	}
 
 	if (attachmentValue) {
@@ -712,18 +712,18 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			NSTextAttachmentCell *cell = (NSTextAttachmentCell *)[attachmentValue attachmentCell];
 			NSSize size = [cell cellSize];
-			[imageElement setValue:[NSNumber numberWithFloat:size.width]  forKey:@"width"];
-			[imageElement setValue:[NSNumber numberWithFloat:size.height] forKey:@"height"];
+			[imageElement setValue:[NSNumber numberWithFloat:size.width] forAttribute:@"width"];
+			[imageElement setValue:[NSNumber numberWithFloat:size.height] forAttribute:@"height"];
 
 			NSString *path = [[attachmentValue fileWrapper] filename];
 			//XXX If !path, write the image to the save path passed to -encodeStrictXHTML:imagesPath:.
 			if (path) {
 				NSURL *fileURL = [NSURL fileURLWithPath:path];
-				[imageElement setValue:fileURL forKey:@"src"];
+				[imageElement setValue:fileURL forAttribute:@"src"];
 			}
 
 			if (elementContent && [elementContent length]) {
-				[imageElement setValue:elementContent forKey:@"alt"];
+				[imageElement setValue:elementContent forAttribute:@"alt"];
 			}
 
 			if (thisElement) {
@@ -739,7 +739,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	NSString *CSSString = [NSAttributedString CSSStringForTextAttributes:attributes];
 	if (CSSString && [CSSString length]) {
-		[thisElement setValue:CSSString forKey:@"style"];
+		[thisElement setValue:CSSString forAttribute:@"style"];
 	}
 
 	if (outAddElementContentToTopElement) {
@@ -810,7 +810,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 									 atIndex:0
 							  effectiveRange:NULL]))
 		{
-			[bodyElement setValue:[@"background-color: " stringByAppendingString:[pageColor CSSRepresentation]] forKey:@"style"];
+			[bodyElement setValue:[@"background-color: " stringByAppendingString:[pageColor CSSRepresentation]] forAttribute:@"style"];
 		}
 	}
 
@@ -821,7 +821,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				effectiveRange:nil] baseWritingDirection] == NSWritingDirectionRightToLeft))
 	{
 		AIXMLElement *divElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"div"];
-		[divElement setValue:@"rtl" forKey:@"dir"];
+		[divElement setValue:@"rtl" forAttribute:@"dir"];
 		[[elementStack lastObject] addObject:divElement];
 		[elementStack addObject:divElement];
 		[attributeNamesStack addObject:emptySet];

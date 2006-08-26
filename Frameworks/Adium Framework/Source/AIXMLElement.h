@@ -21,9 +21,6 @@
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//Get and set attribute values using -valueForKey: and -setValue:forKey:. Get and set them en masse using -attributes and -setAttributes:. (Note that using -setAttributes: will destroy any previously-recorded order to the attributes; use -setValue:forKey: or -setAttributeNames:values: to add attributes in order.)
-//Note: Not KVO-compliant (at this time) for "attributes" or "contents", nor for any attribute.
-
 //FIXME: This class is not CodingStyle compliant.
 @interface AIXMLElement : NSObject <NSCopying> {
 	NSString *name;
@@ -45,6 +42,9 @@
 - (unsigned)numberOfAttributes;
 - (NSDictionary *)attributes;
 - (void) setAttributeNames:(NSArray *)newAttrNames values:(NSArray *)newAttrVals;
+
+- (void)setValue:(NSString *)attrVal forAttribute:(NSString *)attrName;
+- (NSString *)valueForAttribute:(NSString *)attrName;
 
 - (BOOL) selfCloses;
 - (void) setSelfCloses:(BOOL)flag;

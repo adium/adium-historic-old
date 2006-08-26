@@ -112,6 +112,24 @@
 	[attributeValues setArray:newAttrVals];
 }
 
+- (void)setValue:(NSString *)attrVal forAttribute:(NSString *)attrName
+{
+	unsigned index = [attributeNames indexOfObject:attrName];
+	if (index != NSNotFound) {
+		[attributeValues replaceObjectAtIndex:index withObject:attrVal];
+	} else {
+		[attributeNames addObject:attrName];
+		[attributeValues addObject:attrVal];
+	}
+}
+- (NSString *)valueForAttribute:(NSString *)attrName
+{
+	unsigned index = [attributeNames indexOfObject:attrName];
+	if (index != NSNotFound)
+		return [attributeValues objectAtIndex:index];
+	return nil;
+}
+
 - (BOOL) selfCloses
 {
 	return selfCloses;
@@ -295,6 +313,8 @@
 
 	return [NSString stringWithString:string];
 }
+
+
 
 #pragma mark KVC
 
