@@ -278,6 +278,45 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 					  setProfile:[[profile copy] autorelease]];
 }
 
+- (void)setDirInfo:(HashMap *)userInfo
+{
+	Screenname			*sn = [userInfo get:@"Screenname"];
+	DirInfo				*dirInfo = [userInfo get:@"DirInfo"];
+	
+	NSString *info;
+	NSMutableString *profile = [NSMutableString string];
+	info = [dirInfo getScreenname];
+	if (info) [profile appendFormat:@"Screenname: %@", info];
+    info = [dirInfo getEmail];
+	if (info) [profile appendFormat:@"Email: %@", info];
+    info = [dirInfo getFirstname];
+	if (info) [profile appendFormat:@"First name: %@", info];
+    info = [dirInfo getMiddlename];
+	if (info) [profile appendFormat:@"Middle name: %@", info];
+    info = [dirInfo getLastname];
+	if (info) [profile appendFormat:@"Lat name: %@", info];
+    info = [dirInfo getMaiden];
+	if (info) [profile appendFormat:@"Maiden name: %@", info];
+    info = [dirInfo getNickname];
+	if (info) [profile appendFormat:@"Nickname: %@", info];
+    info = [dirInfo getStreetAddress];
+	if (info) [profile appendFormat:@"Street address: %@", info];
+    info = [dirInfo getCity];
+	if (info) [profile appendFormat:@"City: %@", info];
+    info = [dirInfo getState]; 
+	if (info) [profile appendFormat:@"State: %@", info];
+    info = [dirInfo getZip];
+	if (info) [profile appendFormat:@"ZIP code: %@", info];
+    info = [dirInfo getCountryCode];
+	if (info) [profile appendFormat:@"Country: %@", info];
+    info = [dirInfo getLanguageCode];
+	if (info) [profile appendFormat:@"Language: %@", info];
+	
+	NSLog(@"Profile; %@",profile);
+	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
+					  setProfile:profile];
+}
+
 - (void)setStatusUpdate:(HashMap *)userInfo
 {
 	Screenname			*sn = [userInfo get:@"Screenname"];
@@ -831,6 +870,8 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 			  [[[[conversation getBuddy] getNormal] copy] autorelease]);
 		[accountProxy chatWithUID:[[[[conversation getBuddy] getNormal] copy] autorelease]
 						 gotError:[NSNumber numberWithInt:errorType]];
+	} else {
+		AILog(@"Event: %@",eventInfo);
 	}
 }
 
@@ -1386,6 +1427,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 	//Request the profile
 	[[aimConnection getInfoService] requestUserProfile:sn];	
+	[[aimConnection getInfoService] requestDirectoryInfo:sn];
 }
 
 - (void)setAlias:(NSString *)inAlias forContactWithUID:(NSString *)UID
