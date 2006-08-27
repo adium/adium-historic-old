@@ -683,11 +683,15 @@
 
 - (NSWritingDirection)baseWritingDirection {
 	NSNumber	*dir = [self preferenceForKey:KEY_BASE_WRITING_DIRECTION group:PREF_GROUP_WRITING_DIRECTION];
+	CFLocaleRef	currentLocale = CFLocaleCopyCurrent();
+	NSString	*lang = (NSString *)CFLocaleGetValue(currentLocale, kCFLocaleLanguageCode);
+	
+	CFRelease(currentLocale);
 	
 	//If we have a saved base direction, we'll return that.
 	//Otherwise, we'll try to be smart and use the default writing direction of the language of the user's locale
 	//(and not the language of the active localization). By that, we assume most users are mostly talking to their local friends.
-	return dir ? [dir intValue] : [NSParagraphStyle defaultWritingDirectionForLanguage:[[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode]];
+	return dir ? [dir intValue] : [NSParagraphStyle defaultWritingDirectionForLanguage:lang];
 }
 
 - (void)setBaseWritingDirection:(NSWritingDirection)direction {
