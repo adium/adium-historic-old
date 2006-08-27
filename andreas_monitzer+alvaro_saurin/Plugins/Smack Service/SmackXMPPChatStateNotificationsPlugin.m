@@ -172,13 +172,18 @@
 - (void)receivedMessagePacket:(NSNotification*)n
 {
     SmackMessage *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
+    
+    NSString *uid = [packet getFrom];
+    if([[uid jidResource] length] == 0)
+        uid = [uid stringByAppendingString:@"/"];
 
-    AIListContact *sourceContact = [[adium contactController] contactWithService:[account service] account:account UID:[packet getFrom]];
+    AIListContact *chatContact = [[adium contactController] contactWithService:[account service] account:account UID:[uid jidUserHost]];
+    AIListContact *sourceContact = [[adium contactController] contactWithService:[account service] account:account UID:uid];
     
     if(!sourceContact)
         return;
     
-    AIChat *chat = [[adium chatController] existingChatWithContact:sourceContact];
+    AIChat *chat = [[adium chatController] existingChatWithContact:chatContact];
     if(!chat)
         return; // no need to care about chats that aren't open
     
