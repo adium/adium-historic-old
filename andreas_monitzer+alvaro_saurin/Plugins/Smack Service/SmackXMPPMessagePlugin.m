@@ -60,14 +60,13 @@ static AIHTMLDecoder *messageencoder = nil;
         NSString *resource = [from jidResource];
         NSString *thread = [packet getThread];
         
+        AIListContact *chatContact = [[adium contactController] contactWithService:[account service] account:account UID:[from jidUserHost]];
         AIListContact *sourceContact = [[adium contactController] contactWithService:[account service] account:account UID:from];
         
-        if (!(chat = [[adium chatController] existingChatWithContact:sourceContact]))
+        if (!(chat = [[adium chatController] existingChatWithContact:chatContact]))
         {
-            chat = [[adium chatController] openChatWithContact:sourceContact];
+            chat = [[adium chatController] openChatWithContact:chatContact];
             [chat setStatusObject:thread?thread:[chat uniqueChatID] forKey:@"XMPPThreadID" notify:NotifyLater];
-            if(resource)
-                [chat setStatusObject:resource forKey:@"XMPPResource" notify:NotifyLater];
             
             [chat setStatusObject:type forKey:@"XMPPType" notify:NotifyLater];
             
@@ -79,7 +78,11 @@ static AIHTMLDecoder *messageencoder = nil;
             // always update the chat type
             [chat setStatusObject:type forKey:@"XMPPType" notify:NotifyNow];
         }
-        
+
+        // always update the resource (so we send messages to the one we most recently got a message from)
+        if(resource)
+            [chat setStatusObject:resource forKey:@"XMPPResource" notify:NotifyLater];
+
         SmackXXHTMLExtension *spe = [packet getExtension:@"html" :@"http://jabber.org/protocol/xhtml-im"];
         if(spe)
         {
@@ -178,7 +181,12 @@ static AIHTMLDecoder *messageencoder = nil;
         [chat notifyOfChangedStatusSilently:[account silentAndDelayed]];
     }
     
-    [message setTo:[[chat listObject] UID]];
+    NSString *to = [[chat listObject] UID];
+    
+    if(resource && [[to jidResource] length] == 0)
+        to = [NSString stringWithFormat:@"%@/%@",to,resource];
+    
+    [message setTo:to];
     [message setType:[SmackCocoaAdapter messageTypeFromString:[type uppercaseString]]]; // field names are all uppercase
     
     [message setThread:threadid];
