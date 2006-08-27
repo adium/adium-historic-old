@@ -234,31 +234,39 @@ SecuridProvider
 		map.put("Screenname", buddy);
 		map.put("BuddyInfo", info);
 		
-		if (changedProperty.equals("iconData")) {			
+		if (changedProperty.equals(BuddyInfo.PROP_ICON_DATA)) {			
 			sendDelegateMessageWithMap("IconUpdate", map);
 			
-		} else if (changedProperty.equals("statusMessage") || changedProperty.equals("itunesUrl")) {
+		} else if (changedProperty.equals(BuddyInfo.PROP_STATUS_MESSAGE) || changedProperty.equals(BuddyInfo.PROP_ITUNES_URL)) {
 			//don't use just "StatusMessage" because setStatusMessage: was already taken in ESjoscarCocoaAdapter
 			sendDelegateMessageWithMap("IncomingStatusMessage", map);
 			
-		} else if (changedProperty.equals("awayMessage")) {
+		} else if (changedProperty.equals(BuddyInfo.PROP_AWAY_MESSAGE)) {
 			Object val = event.getNewValue();
 			if (val != null) {
 				map.put("Away message", val);
 			}
 			sendDelegateMessageWithMap("AwayMessage", map);
 			
-		} else if (changedProperty.equals("userProfile")) {
+		} else if (changedProperty.equals(BuddyInfo.PROP_USER_PROFILE)) {
 			Object userInfo = event.getNewValue();
 			if (userInfo != null) {
 				map.put("Profile", userInfo);
 			}
 			
 			sendDelegateMessageWithMap("Profile", map);
-		} else if (changedProperty.equals("online")) {
+		} else if (changedProperty.equals(BuddyInfo.PROP_ONLINE)) {
 			Object online = event.getNewValue();
 			if(online instanceof java.lang.Boolean && !((Boolean)online).booleanValue())
 				sendDelegateMessageWithMap("StatusUpdate", map);
+			
+		} else if (changedProperty.equals(BuddyInfo.PROP_DIRECTORY_INFO)) {
+			Object dirInfo = event.getNewValue();
+			if (dirInfo != null) {
+				map.put("DirInfo", dirInfo);
+			}
+			
+			sendDelegateMessageWithMap("DirInfo", map);
 		}
 		/*else if (changedProperty.equals("mobile")) {
 			sendDelegateMessageWithMap("Mobile", map);
@@ -294,7 +302,14 @@ SecuridProvider
 	}
     public void handleDirectoryInfo(InfoService service, Screenname buddy,
 									DirInfo dirInfo) {
+		HashMap map = new HashMap();
+		map.put("Screenname", buddy);
 		
+		if (dirInfo != null) {
+			map.put("DirInfo", dirInfo);
+		}
+		
+		sendDelegateMessageWithMap("DirInfo", map);
 	}
 	
 	/* StateListener */
@@ -347,6 +362,10 @@ SecuridProvider
 
 			} else if (service instanceof LoginService) {
 				sendDelegateMessageWithMap("LoginServiceOpened", null);
+		
+			} else if (service instanceof InfoService) {
+				InfoService infoService = (InfoService) service;
+				infoService.addInfoListener(this);
 			}
 		}
 	}
