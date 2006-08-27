@@ -605,6 +605,10 @@ static	NSMutableDictionary	*controllerDict = nil;
 			[textView_statusMessage setBackgroundColor:[statusMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil]];
 	}
 	
+	//Disallow an undo to before this point
+	[[textView_autoReply undoManager] removeAllActions];
+	[[textView_statusMessage undoManager] removeAllActions];
+
 	//Idle start
 	double	idleStart = [statusState forcedInitialIdleTime];
 	[textField_idleMinutes setIntValue:(int)((((int)idleStart)%3600)/60)];
