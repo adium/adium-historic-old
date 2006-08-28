@@ -40,7 +40,7 @@
 		3459CBB90A25FC0800ECC256 /* GetMetadataForHTMLLog-Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GetMetadataForHTMLLog-Additions.h"; sourceTree = "<group>"; };
 		3459CBBA0A25FC0800ECC256 /* GetMetadataForHTMLLog-Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GetMetadataForHTMLLog-Additions.m"; sourceTree = "<group>"; };
 		3459CBC70A25FEA200ECC256 /* AdiumSpotlightImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdiumSpotlightImporter.h; sourceTree = "<group>"; };
-		345AF7D00A5D559900D7DA6F /* AISpotlightImporterTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AISpotlightImporterTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		345AF7D00A5D559900D7DA6F /* AISpotlightImporterTest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "compiled.mach-o.executable"; path = AISpotlightImporterTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		345AF91F0A5D560600D7DA6F /* maintest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = maintest.m; sourceTree = "<group>"; };
 		34611BEF09B662FF00870036 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		34611BF509B664FC00870036 /* GetMetadataForHTMLLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetMetadataForHTMLLog.h; sourceTree = "<group>"; };
@@ -321,6 +321,7 @@
 		11BD7C1B09BBCD01006B26FD /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
@@ -483,6 +484,7 @@
 		34611CEF09B67B4500870036 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
@@ -513,6 +515,7 @@
 		349F83E70A437EB8007EA1B1 /* Development-libgaim_oscar */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
@@ -562,6 +565,7 @@
 		70138C890896BE9A00968C2F /* Development-0link */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
@@ -573,6 +577,7 @@
 		70138C8A0896BE9A00968C2F /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
@@ -603,6 +608,7 @@
 		EE785F1C0A2700EC001FCAB0 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;

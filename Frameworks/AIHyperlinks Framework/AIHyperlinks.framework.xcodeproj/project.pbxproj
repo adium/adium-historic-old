@@ -245,6 +245,7 @@
 		349F83A40A4375CF007EA1B1 /* Development-libgaim_oscar */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				SYMROOT = ../../build;
 			};
 			name = "Development-libgaim_oscar";
@@ -281,6 +282,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = ppc;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
@@ -325,6 +327,7 @@
 					ppc,
 					i386,
 				);
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
@@ -395,6 +398,7 @@
 		DA8A8088085549EE00F24BB3 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				SYMROOT = ../../build;
 			};
 			name = Development;
@@ -406,6 +410,7 @@
 					ppc,
 					i386,
 				);
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
