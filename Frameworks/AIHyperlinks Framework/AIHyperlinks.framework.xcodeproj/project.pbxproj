@@ -246,6 +246,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
 				SYMROOT = ../../build;
 			};
 			name = "Development-libgaim_oscar";
@@ -283,6 +284,7 @@
 			buildSettings = {
 				ARCHS = ppc;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
@@ -328,6 +330,7 @@
 					i386,
 				);
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
@@ -399,6 +402,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
 				SYMROOT = ../../build;
 			};
 			name = Development;
@@ -411,6 +415,7 @@
 					i386,
 				);
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
