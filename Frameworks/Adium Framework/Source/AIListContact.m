@@ -683,10 +683,10 @@
 
 - (NSWritingDirection)baseWritingDirection {
 	NSNumber	*dir = [self preferenceForKey:KEY_BASE_WRITING_DIRECTION group:PREF_GROUP_WRITING_DIRECTION];
-	CFLocaleRef	currentLocale = CFLocaleCopyCurrent();
-	NSString	*lang = (NSString *)CFLocaleGetValue(currentLocale, kCFLocaleLanguageCode);
-	
-	CFRelease(currentLocale);
+	//Since NSLocale is not available in 10.3, we get its class at runtime.
+	//In 10.3 NSClassFromString() will return nil, and since messages sent to nil returns nil (that is, only if they return an object)
+	//our lang's value will be set to nil. This means we'll actually be using the language of the active localization (see next comment).
+	NSString	*lang = [[NSClassFromString(@"NSLocale") currentLocale] objectForKey:NSLocaleLanguageCode];
 	
 	//If we have a saved base direction, we'll return that.
 	//Otherwise, we'll try to be smart and use the default writing direction of the language of the user's locale
