@@ -1815,6 +1815,7 @@
 		349F83960A4375BF007EA1B1 /* Development-libgaim_oscar */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG_BUILD;
 				PREBINDING = NO;
@@ -1862,6 +1863,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = ppc;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG_BUILD;
 				GCC_VERSION = 4.0;
@@ -1916,6 +1918,7 @@
 					ppc,
 					i386,
 				);
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG_BUILD;
 				GCC_VERSION = 4.0;
@@ -2004,6 +2007,7 @@
 		DA8A805D08553B3800F24BB3 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG_BUILD;
 				PREBINDING = NO;
@@ -2018,6 +2022,7 @@
 					ppc,
 					i386,
 				);
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
