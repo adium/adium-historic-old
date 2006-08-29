@@ -67,9 +67,7 @@ extern gboolean gaim_init_qq_plugin(void);
 extern gboolean gaim_init_simple_plugin(void);
 extern gboolean gaim_init_yahoo_plugin(void);
 extern gboolean gaim_init_zephyr_plugin(void);
-#ifndef JOSCAR_SUPERCEDE_LIBGAIM
-	extern gboolean gaim_init_oscar_plugin(void);
-#endif
+extern gboolean gaim_init_oscar_plugin(void);
 
 static void load_all_plugins()
 {
@@ -89,9 +87,7 @@ static void load_all_plugins()
 	gaim_init_simple_plugin();
 	gaim_init_yahoo_plugin();
 	gaim_init_zephyr_plugin();
-#ifndef JOSCAR_SUPERCEDE_LIBGAIM
 	gaim_init_oscar_plugin();
-#endif
 
 	//Load each plugin
 	NSEnumerator			*enumerator = [[SLGaimCocoaAdapter libgaimPluginArray] objectEnumerator];

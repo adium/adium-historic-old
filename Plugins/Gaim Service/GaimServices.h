@@ -16,9 +16,10 @@
 
 #ifndef JOSCAR_SUPERCEDE_LIBGAIM
 	#import "ESAIMService.h"
-	#import "ESICQService.h"
 	#import "ESDotMacService.h"
 #endif
+
+#import "ESICQService.h"
 
 #import "ESGaduGaduService.h"
 #import "AIGTalkService.h"

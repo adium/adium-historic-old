@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Augie Fackler on 11/18/05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
 //
 
 #import "RAFjoscarServicePlugin.h"
@@ -15,7 +14,7 @@
 {
 	joscarAIMService = [[RAFjoscarAIMService alloc] init];
 	joscarDotMacService = [[RAFjoscarDotMacService alloc] init];
-	joscarICQService = [[RAFjoscarICQService alloc] init];
+//	joscarICQService = [[RAFjoscarICQService alloc] init];
 	#ifdef DEBUG_BUILD
 		debugController = [[RAFjoscarDebugController alloc] init];
 		[debugController activateDebugController];
@@ -31,7 +30,7 @@
 {
 	[joscarAIMService release]; joscarAIMService = nil;
 	[joscarDotMacService release]; joscarDotMacService = nil;
-	[joscarICQService release]; joscarICQService = nil;
+//	[joscarICQService release]; joscarICQService = nil;
 	[super dealloc];
 }
 
