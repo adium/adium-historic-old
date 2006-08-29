@@ -201,7 +201,6 @@
 		343700A70A9C1E170028604E /* AIAdvancedPreferencePane.h in Headers */ = {isa = PBXBuildFile; fileRef = 343700A50A9C1E170028604E /* AIAdvancedPreferencePane.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		343700A80A9C1E170028604E /* AIAdvancedPreferencePane.m in Sources */ = {isa = PBXBuildFile; fileRef = 343700A60A9C1E170028604E /* AIAdvancedPreferencePane.m */; };
 		343700A90A9C1E170028604E /* AIAdvancedPreferencePane.h in Headers */ = {isa = PBXBuildFile; fileRef = 343700A50A9C1E170028604E /* AIAdvancedPreferencePane.h */; };
-		343700AA0A9C1E170028604E /* AIAdvancedPreferencePane.m in Sources */ = {isa = PBXBuildFile; fileRef = 343700A60A9C1E170028604E /* AIAdvancedPreferencePane.m */; };
 		34382CEA0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382CE60A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m */; };
 		34382CEC0A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382CE80A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m */; };
 		34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34382CEE0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist */; };
@@ -964,19 +963,6 @@
 		34E036780A75AA4F00394F11 /* DCGaimOscarJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40C08086D9100E27095 /* DCGaimOscarJoinChatView.nib */; };
 		34E036790A75AA4F00394F11 /* AIGaimOscarAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B9194B062DEC29004F1223 /* AIGaimOscarAccountViewController.h */; };
 		34E0367A0A75AA4F00394F11 /* AIGaimOscarAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B9194A062DEC29004F1223 /* AIGaimOscarAccountViewController.m */; };
-		34E0367B0A75AA4F00394F11 /* ESGaimOscarAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41C08086D9100E27095 /* ESGaimOscarAccountView.nib */; };
-		34E0367C0A75AA4F00394F11 /* ESDotMacService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5A306E00AD200FF7FBC /* ESDotMacService.h */; };
-		34E0367D0A75AA4F00394F11 /* ESDotMacService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5A406E00AD200FF7FBC /* ESDotMacService.m */; };
-		34E0367E0A75AA4F00394F11 /* ESGaimDotMacAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F101E407342B4D00890D3B /* ESGaimDotMacAccount.h */; };
-		34E0367F0A75AA4F00394F11 /* ESGaimDotMacAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F101E307342B4D00890D3B /* ESGaimDotMacAccount.m */; };
-		34E036800A75AA4F00394F11 /* ESGaimDotMacAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B387EB707199FE5004DE713 /* ESGaimDotMacAccountViewController.h */; };
-		34E036810A75AA4F00394F11 /* ESGaimDotMacAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B387EB807199FE5004DE713 /* ESGaimDotMacAccountViewController.m */; };
-		34E036820A75AA4F00394F11 /* GaimDefaultsMac.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76472E07A07A340021CCD7 /* GaimDefaultsMac.plist */; };
-		34E036830A75AA4F00394F11 /* ESGaimAIMAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E0EB8D07CD349200A82198 /* ESGaimAIMAccount.h */; };
-		34E036840A75AA4F00394F11 /* ESGaimAIMAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0EB8E07CD349200A82198 /* ESGaimAIMAccount.m */; };
-		34E036850A75AA4F00394F11 /* ESAIMService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5A106E00AD200FF7FBC /* ESAIMService.h */; };
-		34E036860A75AA4F00394F11 /* ESAIMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5A206E00AD200FF7FBC /* ESAIMService.m */; };
-		34E036870A75AA4F00394F11 /* GaimDefaultsAIM.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B7635A507A0581D0021CCD7 /* GaimDefaultsAIM.plist */; };
 		34E036880A75AA4F00394F11 /* ESICQService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5A506E00AD200FF7FBC /* ESICQService.h */; };
 		34E036890A75AA4F00394F11 /* ESICQService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5A606E00AD200FF7FBC /* ESICQService.m */; };
 		34E0368A0A75AA4F00394F11 /* ESGaimICQAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F52BD806E2B24100887BE2 /* ESGaimICQAccount.h */; };
@@ -2411,6 +2397,21 @@
 		346F5CB208A418FA0055C610 /* iTunes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iTunes.png; path = Resources/iTunes.png; sourceTree = "<group>"; };
 		346F5CB308A418FB0055C610 /* CurrentTunes.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = CurrentTunes.scpt; path = Resources/CurrentTunes.scpt; sourceTree = "<group>"; };
 		347065E406015DC5004F0D20 /* WebKit Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = "WebKit Defaults.plist"; path = "Plugins/WebKit Message View/WebKit Defaults.plist"; sourceTree = "<group>"; };
+		34739BA50AA4F131007BF788 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Plugins/joscar Service/Catalan.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BA60AA4F136007BF788 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/joscar Service/cs.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BA70AA4F13C007BF788 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/joscar Service/Danish.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BA80AA4F142007BF788 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = "Plugins/joscar Service/Dutch.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BA90AA4F14A007BF788 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = "Plugins/joscar Service/French.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BAA0AA4F15B007BF788 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/joscar Service/is.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BAB0AA4F162007BF788 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = "Plugins/joscar Service/Italian.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BAC0AA4F17D007BF788 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = "Plugins/joscar Service/Japanese.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BAD0AA4F189007BF788 /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/joscar Service/Norwegian.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BAE0AA4F191007BF788 /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/joscar Service/pl.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BAF0AA4F199007BF788 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/joscar Service/Russian.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BB00AA4F1A0007BF788 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/joscar Service/Swedish.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BB10AA4F1A8007BF788 /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/joscar Service/Turkish.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BB20AA4F1AF007BF788 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/joscar Service/zh_CN.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		34739BB30AA4F1B6007BF788 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/joscar Service/zh_TW.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		3474DD6F0824699D00BF30F0 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		3474DFFC08254F3500BF30F0 /* Copyright.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Copyright.txt; sourceTree = "<group>"; };
 		3474DFFF082550FD00BF30F0 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Credits.rtf; path = Resources/Credits.rtf; sourceTree = "<group>"; };
@@ -2509,8 +2510,8 @@
 		348E5ACA06D2A74C004C051C /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = /System/Library/Frameworks/AddressBook.framework; sourceTree = "<absolute>"; };
 		348F50C00935317C00288E41 /* AIStatusItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusItem.h; path = "Frameworks/Adium Framework/Source/AIStatusItem.h"; sourceTree = "<group>"; };
 		348F50C10935317C00288E41 /* AIStatusItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStatusItem.m; path = "Frameworks/Adium Framework/Source/AIStatusItem.m"; sourceTree = "<group>"; };
-		348F57910936F3CC00288E41 /* ESEditStatusGroupWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESEditStatusGroupWindowController.h; path = "Frameworks/Adium Framework/Source/ESEditStatusGroupWindowController.h"; sourceTree = "<group>"; };
-		348F57920936F3CC00288E41 /* ESEditStatusGroupWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESEditStatusGroupWindowController.m; path = "Frameworks/Adium Framework/Source/ESEditStatusGroupWindowController.m"; sourceTree = "<group>"; };
+		348F57910936F3CC00288E41 /* ESEditStatusGroupWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESEditStatusGroupWindowController.h; path = Source/ESEditStatusGroupWindowController.h; sourceTree = "<group>"; };
+		348F57920936F3CC00288E41 /* ESEditStatusGroupWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESEditStatusGroupWindowController.m; path = Source/ESEditStatusGroupWindowController.m; sourceTree = "<group>"; };
 		348F579D0936FA6D00288E41 /* EditStatusGroup.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EditStatusGroup.nib; path = Resources/EditStatusGroup.nib; sourceTree = "<group>"; };
 		348FF83E09128BEB00A942A8 /* CBGaimAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBGaimAccount.m; path = "Plugins/Gaim Service/CBGaimAccount.m"; sourceTree = "<group>"; };
 		348FF84909128D6300A942A8 /* AccountDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = AccountDefaults.plist; path = "Frameworks/Adium Framework/AccountDefaults.plist"; sourceTree = "<group>"; };
@@ -7197,11 +7198,6 @@
 				34E036740A75AA4F00394F11 /* CBGaimOscarAccount.h in Headers */,
 				34E036760A75AA4F00394F11 /* DCGaimOscarJoinChatViewController.h in Headers */,
 				34E036790A75AA4F00394F11 /* AIGaimOscarAccountViewController.h in Headers */,
-				34E0367C0A75AA4F00394F11 /* ESDotMacService.h in Headers */,
-				34E0367E0A75AA4F00394F11 /* ESGaimDotMacAccount.h in Headers */,
-				34E036800A75AA4F00394F11 /* ESGaimDotMacAccountViewController.h in Headers */,
-				34E036830A75AA4F00394F11 /* ESGaimAIMAccount.h in Headers */,
-				34E036850A75AA4F00394F11 /* ESAIMService.h in Headers */,
 				34E036880A75AA4F00394F11 /* ESICQService.h in Headers */,
 				34E0368A0A75AA4F00394F11 /* ESGaimICQAccount.h in Headers */,
 				34E0368C0A75AA4F00394F11 /* ESGaimICQAccountViewController.h in Headers */,
@@ -8018,9 +8014,6 @@
 				3485DBC709EBCE7400232CC4 /* GaimMeanwhileContactAdditionWindow.nib in Resources */,
 				3485DBD009EBCE8200232CC4 /* Localizable.strings in Resources */,
 				34E036780A75AA4F00394F11 /* DCGaimOscarJoinChatView.nib in Resources */,
-				34E0367B0A75AA4F00394F11 /* ESGaimOscarAccountView.nib in Resources */,
-				34E036820A75AA4F00394F11 /* GaimDefaultsMac.plist in Resources */,
-				34E036870A75AA4F00394F11 /* GaimDefaultsAIM.plist in Resources */,
 				34E0368E0A75AA4F00394F11 /* ESGaimICQAccountView.nib in Resources */,
 				34E0368F0A75AA4F00394F11 /* GaimDefaultsICQ.plist in Resources */,
 				34500ED00A881F8500509225 /* GaimDefaultsQQ.plist in Resources */,
@@ -8610,18 +8603,12 @@
 				34E036750A75AA4F00394F11 /* CBGaimOscarAccount.m in Sources */,
 				34E036770A75AA4F00394F11 /* DCGaimOscarJoinChatViewController.m in Sources */,
 				34E0367A0A75AA4F00394F11 /* AIGaimOscarAccountViewController.m in Sources */,
-				34E0367D0A75AA4F00394F11 /* ESDotMacService.m in Sources */,
-				34E0367F0A75AA4F00394F11 /* ESGaimDotMacAccount.m in Sources */,
-				34E036810A75AA4F00394F11 /* ESGaimDotMacAccountViewController.m in Sources */,
-				34E036840A75AA4F00394F11 /* ESGaimAIMAccount.m in Sources */,
-				34E036860A75AA4F00394F11 /* ESAIMService.m in Sources */,
 				34E036890A75AA4F00394F11 /* ESICQService.m in Sources */,
 				34E0368B0A75AA4F00394F11 /* ESGaimICQAccount.m in Sources */,
 				34E0368D0A75AA4F00394F11 /* ESGaimICQAccountViewController.m in Sources */,
 				3419E73A0A880AD400C3FC68 /* ESGaimQQAccount.m in Sources */,
 				3419E7400A880B2C00C3FC68 /* ESQQService.m in Sources */,
 				3419E76A0A880CDA00C3FC68 /* ESGaimQQAccountViewController.m in Sources */,
-				343700AA0A9C1E170028604E /* AIAdvancedPreferencePane.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10182,6 +10169,21 @@
 				11F5F46309538B99007DCC49 /* English */,
 				34CF88A20A6D5DBC009D9A21 /* German */,
 				6C1C712F0A7E0FD500F901F1 /* Spanish */,
+				34739BA50AA4F131007BF788 /* Catalan */,
+				34739BA60AA4F136007BF788 /* cs */,
+				34739BA70AA4F13C007BF788 /* Danish */,
+				34739BA80AA4F142007BF788 /* Dutch */,
+				34739BA90AA4F14A007BF788 /* French */,
+				34739BAA0AA4F15B007BF788 /* is */,
+				34739BAB0AA4F162007BF788 /* Italian */,
+				34739BAC0AA4F17D007BF788 /* Japanese */,
+				34739BAD0AA4F189007BF788 /* Norwegian */,
+				34739BAE0AA4F191007BF788 /* pl */,
+				34739BAF0AA4F199007BF788 /* Russian */,
+				34739BB00AA4F1A0007BF788 /* Swedish */,
+				34739BB10AA4F1A8007BF788 /* Turkish */,
+				34739BB20AA4F1AF007BF788 /* zh_CN */,
+				34739BB30AA4F1B6007BF788 /* zh_TW */,
 			);
 			name = RAFjoscarAccountView.nib;
 			sourceTree = "<group>";
