@@ -110,11 +110,15 @@
 	//Account Overview
 	[textField_serviceName setStringValue:[[account service] longDescription]];
 	[textField_accountDescription setStringValue:[account UID]];
+
 	[button_chooseIcon setLocalizedString:[AILocalizedString(@"Choose Icon",nil) stringByAppendingEllipsis]];
 	[button_OK setLocalizedString:AILocalizedString(@"OK",nil)];
 	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 	[checkbox_autoconnect setLocalizedString:AILocalizedString(@"Connect when Adium opens", "Account preferences checkbox for automatically conencting the account when Adium opens")];
 
+	[[matrix_userIcon cellWithTag:0] setTitle:AILocalizedString(@"Use global icon", "Radio button in the Personal tab of Account preferences.  This -must- be a short string of 20 characters or less.")];
+	[[matrix_userIcon cellWithTag:1] setTitle:AILocalizedString(@"Use this icon:", "Radio button in the Personal tab of Account preferences; an image is shown beneath it to select the account's icon.  This -must- be a short string of 20 characters or less.")];
+	
 	//User icon
 	if ([account preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES]) {
 		//If this account has a icon set directly on it, then it has its own icon
