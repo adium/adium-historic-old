@@ -38,8 +38,7 @@ struct SourceInfo {
     guint write_tag;
 
     CFRunLoopTimerRef timer;
-    CFSocketRef read_socket;
-    CFSocketRef write_socket;
+    CFSocketRef socket;
 
 	GSourceFunc sourceFunction;
 	GaimInputFunction read_ioFunction;
@@ -61,8 +60,7 @@ struct SourceInfo *newSourceInfo(void)
 	info->write_tag = 0;
 
 	info->timer = NULL;
-	info->read_socket = NULL;
-	info->write_socket = NULL;
+	info->socket = NULL;
 
 	info->sourceFunction = NULL;
 	info->read_ioFunction = NULL;
@@ -104,14 +102,9 @@ guint adium_source_remove(guint tag) {
 				CFRelease(sourceInfo->timer);
 			}
 			
-			if (sourceInfo->read_socket) {
-				CFSocketInvalidate(sourceInfo->read_socket);
-				CFRelease(sourceInfo->read_socket);
-			}
-			
-			if (sourceInfo->write_socket) {
-				CFSocketInvalidate(sourceInfo->write_socket);
-				CFRelease(sourceInfo->write_socket);
+			if (sourceInfo->socket) {
+				CFSocketInvalidate(sourceInfo->socket);
+				CFRelease(sourceInfo->socket);
 			}
 			
 			free(sourceInfo);
@@ -123,14 +116,12 @@ guint adium_source_remove(guint tag) {
 			}
 			
 			//Disable the callback on the socket which is no longer active
-			if ((sourceInfo->read_tag == 0) && (sourceInfo->read_socket)) {
-				CFSocketDisableCallBacks(sourceInfo->read_socket, kCFSocketReadCallBack);
-				sourceInfo->read_socket = NULL;
+			if ((sourceInfo->read_tag == 0) && (sourceInfo->socket)) {
+				CFSocketDisableCallBacks(sourceInfo->socket, kCFSocketReadCallBack);
 			}
 
-			if ((sourceInfo->write_tag == 0) && (sourceInfo->write_socket)) {
-				CFSocketDisableCallBacks(sourceInfo->write_socket, kCFSocketWriteCallBack);
-				sourceInfo->write_socket = NULL;
+			if ((sourceInfo->write_tag == 0) && (sourceInfo->socket)) {
+				CFSocketDisableCallBacks(sourceInfo->socket, kCFSocketWriteCallBack);
 			}
 		}
 
@@ -257,9 +248,9 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	}
 
 	info->fd = fd;
+	info->socket = socket;
 
     if ((condition & GAIM_INPUT_READ)) {
-		info->read_socket = socket;
 		info->read_tag = ++sourceId;
 		info->read_ioFunction = func;
 		info->read_user_data = user_data;
@@ -268,7 +259,6 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 						   forKey:[NSNumber numberWithUnsignedInt:info->read_tag]];
 		
 	} else {
-		info->write_socket = socket;
 		info->write_tag = ++sourceId;
 		info->write_ioFunction = func;
 		info->write_user_data = user_data;
@@ -298,7 +288,7 @@ static void socketCallback(CFSocketRef s,
 		c = GAIM_INPUT_READ;
 		ioFunction = sourceInfo->read_ioFunction;
 
-	} else if ((callbackType & kCFSocketWriteCallBack)) {
+	} else /* if ((callbackType & kCFSocketWriteCallBack)) */ {
 		user_data = sourceInfo->write_user_data;
 		c = GAIM_INPUT_WRITE;	
 		ioFunction = sourceInfo->write_ioFunction;
