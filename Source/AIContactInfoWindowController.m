@@ -304,7 +304,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 			NSString	*displayServiceID;
 			if ([inObject isKindOfClass:[AIMetaContact class]]) {
 				if ([[(AIMetaContact *)inObject listContacts] count] > 1) {
-					displayServiceID = META_SERVICE_STRING;
+					displayServiceID = AILocalizedString(@"Meta", "Short string used to identify the 'service' of a multiple-service meta contact");
 					useDisplayName = YES;
 				} else {
 					displayServiceID = [[[(AIMetaContact *)inObject preferredContact] service] shortDescription];
