@@ -33,17 +33,49 @@ static void socketCallback(CFSocketRef s,
 
 // The structure of values of sourceInfoDict
 struct SourceInfo {
-    guint tag;
+    guint timer_tag;
+    guint read_tag;
+    guint write_tag;
+
     CFRunLoopTimerRef timer;
-    CFSocketRef socket;
-    CFRunLoopSourceRef rls;
-    union {
-        GSourceFunc sourceFunction;
-        GaimInputFunction ioFunction;
-    };
+    CFSocketRef read_socket;
+    CFSocketRef write_socket;
+
+	GSourceFunc sourceFunction;
+	GaimInputFunction read_ioFunction;
+	GaimInputFunction write_ioFunction;
+
     int fd;
-    gpointer user_data;
+
+	gpointer timer_user_data;
+    gpointer read_user_data;
+    gpointer write_user_data;
 };
+
+struct SourceInfo *newSourceInfo(void)
+{
+	struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
+
+	info->timer_tag = 0;
+	info->read_tag = 0;
+	info->write_tag = 0;
+
+	info->timer = NULL;
+	info->read_socket = NULL;
+	info->write_socket = NULL;
+
+	info->sourceFunction = NULL;
+	info->read_ioFunction = NULL;
+	info->write_ioFunction = NULL;
+
+	info->fd = 0;
+
+	info->timer_user_data = NULL;
+	info->read_user_data = NULL;
+	info->write_user_data = NULL;
+	
+	return info;
+}
 
 #pragma mark Remove
 
@@ -51,24 +83,57 @@ guint adium_source_remove(guint tag) {
     struct SourceInfo *sourceInfo = (struct SourceInfo*)
 	[[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
 	
-	//	GaimDebug (@"***SOURCE REMOVE : %i",tag);
     if (sourceInfo) {
-		if (sourceInfo->timer != NULL) { 
-			//Got a timer; invalidate and release
-			CFRunLoopTimerInvalidate(sourceInfo->timer);
-			CFRelease(sourceInfo->timer);
-			
-		} else if (sourceInfo->rls != NULL) {
-			//Got a file handle; invalidate and release the source and the socket
-			CFRunLoopSourceInvalidate(sourceInfo->rls);
-			CFRelease(sourceInfo->rls);
-			CFSocketInvalidate(sourceInfo->socket);
-			CFRelease(sourceInfo->socket);
+		if (sourceInfo->timer_tag == tag) {
+			sourceInfo->timer_tag = 0;
+
+		} else if (sourceInfo->read_tag == tag) {
+			sourceInfo->read_tag = 0;
+
+		} else if (sourceInfo->write_tag == tag) {
+			sourceInfo->write_tag = 0;
+
 		}
 		
 		[sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:tag]];
-		free(sourceInfo);
 		
+		if (sourceInfo->timer_tag == 0 && sourceInfo->read_tag == 0 && sourceInfo->write_tag == 0) {
+			//It's done
+			if (sourceInfo->timer) { 
+				CFRunLoopTimerInvalidate(sourceInfo->timer);
+				CFRelease(sourceInfo->timer);
+			}
+			
+			if (sourceInfo->read_socket) {
+				CFSocketInvalidate(sourceInfo->read_socket);
+				CFRelease(sourceInfo->read_socket);
+			}
+			
+			if (sourceInfo->write_socket) {
+				CFSocketInvalidate(sourceInfo->write_socket);
+				CFRelease(sourceInfo->write_socket);
+			}
+			
+			free(sourceInfo);
+		} else {
+			if ((sourceInfo->timer_tag == 0) && (sourceInfo->timer)) {
+				CFRunLoopTimerInvalidate(sourceInfo->timer);
+				CFRelease(sourceInfo->timer);
+				sourceInfo->timer = NULL;
+			}
+			
+			//Disable the callback on the socket which is no longer active
+			if ((sourceInfo->read_tag == 0) && (sourceInfo->read_socket)) {
+				CFSocketDisableCallBacks(sourceInfo->read_socket, kCFSocketReadCallBack);
+				sourceInfo->read_socket = NULL;
+			}
+
+			if ((sourceInfo->write_tag == 0) && (sourceInfo->write_socket)) {
+				CFSocketDisableCallBacks(sourceInfo->write_socket, kCFSocketWriteCallBack);
+				sourceInfo->write_socket = NULL;
+			}
+		}
+
 		return TRUE;
 	}
 	
@@ -87,88 +152,130 @@ void callTimerFunc(CFRunLoopTimerRef timer, void *info)
 	struct SourceInfo *sourceInfo = info;
 
 	if (!sourceInfo->sourceFunction ||
-		!sourceInfo->sourceFunction(sourceInfo->user_data)) {
-        adium_source_remove(sourceInfo->tag);
+		!sourceInfo->sourceFunction(sourceInfo->timer_user_data)) {
+        adium_source_remove(sourceInfo->timer_tag);
 	}
 }
 
 guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 {
-    struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
+    struct SourceInfo *info = newSourceInfo();
 	
-	sourceId++;
 	NSTimeInterval intervalInSec = (NSTimeInterval)interval/1000;
 	CFRunLoopTimerContext runLoopTimerContext = { 0, info, NULL, NULL, NULL };
-	CFRunLoopTimerRef runLoopTimer = CFRunLoopTimerCreate(kCFAllocatorDefault, /* default allocator */
-		(CFAbsoluteTimeGetCurrent() + intervalInSec), /* The time at which the timer should first fire */
-		intervalInSec, /* firing interval */
-		0, /* flags, currently ignored */
-		0, /* order, currently ignored */
-		callTimerFunc, /* CFRunLoopTimerCallBack callout */
-		&runLoopTimerContext /* context */
-		);
-
+	CFRunLoopTimerRef runLoopTimer = CFRunLoopTimerCreate(
+														  kCFAllocatorDefault, /* default allocator */
+														  (CFAbsoluteTimeGetCurrent() + intervalInSec), /* The time at which the timer should first fire */
+														  intervalInSec, /* firing interval */
+														  0, /* flags, currently ignored */
+														  0, /* order, currently ignored */
+														  callTimerFunc, /* CFRunLoopTimerCallBack callout */
+														  &runLoopTimerContext /* context */
+														  );
+	CFRunLoopAddTimer(gaimRunLoop, runLoopTimer, kCFRunLoopCommonModes);
+	
 	info->sourceFunction = function;
 	info->timer = runLoopTimer;
-	info->socket = NULL;
-	info->rls = NULL;
-	info->user_data = data;
-
-	CFRunLoopAddTimer(gaimRunLoop, runLoopTimer, kCFRunLoopCommonModes);
-
-	NSNumber	*key = [NSNumber numberWithUnsignedInt:sourceId];
-	//Make sure we end up with a valid source id
-	while ([sourceInfoDict objectForKey:key]) {
-		sourceId++;
-		key = [NSNumber numberWithUnsignedInt:sourceId];
-	}
-	info->tag = sourceId;
+	info->timer_user_data = data;	
+	info->timer_tag = ++sourceId;
 
 	[sourceInfoDict setObject:[NSValue valueWithPointer:info]
-					   forKey:key];
+					   forKey:[NSNumber numberWithUnsignedInt:info->timer_tag]];
 
-	return sourceId;
+	return info->timer_tag;
 }
 
 guint adium_input_add(int fd, GaimInputCondition condition,
 					  GaimInputFunction func, gpointer user_data)
-{
-    struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
-	
-    // Build the CFSocket-style callback flags to use from the gaim ones
-    CFOptionFlags callBackTypes = 0;
-    if ((condition & GAIM_INPUT_READ ) != 0) callBackTypes |= kCFSocketReadCallBack;
-    if ((condition & GAIM_INPUT_WRITE) != 0) callBackTypes |= kCFSocketWriteCallBack;	
+{	
+	if (fd < 0) {
+		NSLog(@"fd was %i; returning %i",fd,sourceId+1);
+		return ++sourceId;
+	}
+
+    struct SourceInfo *info = newSourceInfo();
 	
     // And likewise the entire CFSocket
-    CFSocketContext context = { 0, info, NULL, NULL, NULL };
-    CFSocketRef socket = CFSocketCreateWithNative(NULL, fd, callBackTypes, socketCallback, &context);
-    NSCAssert(socket != NULL, @"CFSocket creation failed");
-    info->socket = socket;
-	
-    //Re-enable callbacks automatically and _don't_ close the socket on invalidate
-	CFSocketSetSocketFlags(socket, kCFSocketAutomaticallyReenableReadCallBack | 
-						   kCFSocketAutomaticallyReenableDataCallBack |
-						   kCFSocketAutomaticallyReenableWriteCallBack);
-	
-    //Add it to our run loop
-    CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(NULL, socket, 0);
+    CFSocketContext context = { 0, info, /* CFAllocatorRetainCallBack */ NULL, /* CFAllocatorReleaseCallBack */ NULL, /* CFAllocatorCopyDescriptionCallBack */ NULL };	
+
+    // Build the CFSocket callback flags to use from the libgaim ones
+    CFOptionFlags callBackTypes = 0;
+    if ((condition & GAIM_INPUT_READ)) callBackTypes |= kCFSocketReadCallBack;
+    if ((condition & GAIM_INPUT_WRITE)) callBackTypes |= kCFSocketWriteCallBack;	
+
+	/*
+	 * From CFSocketCreateWithNative:
+	 * If a socket already exists on this fd, CFSocketCreateWithNative() will return that existing socket, and the other parameters
+	 * will be ignored.
+	 */
+    CFSocketRef socket = CFSocketCreateWithNative(kCFAllocatorDefault,
+												  fd,
+												  callBackTypes,
+												  socketCallback,
+												  &context);
+	NSCAssert(socket != NULL, @"CFSocket creation failed");
+
+	/*
+	 * If an existing socket was returned by CFSocketCreateWithNative(), its context will not have been changed to match the context
+	 * we made above.  We should then invalidate and release that socket and its information, then create a new one.
+	 */
+	CFSocketContext actualSocketContext;
+	CFSocketGetContext(socket, &actualSocketContext);
+	if (actualSocketContext.info != info) {
+		free(info);
+		context.info = actualSocketContext.info;
+		info = context.info;
+
+		CFSocketInvalidate(socket);
+		CFRelease(socket);
+		
+		if (info->read_tag) {
+			callBackTypes |= kCFSocketReadCallBack;
+		}
+		if (info->write_tag) {
+			callBackTypes |= kCFSocketWriteCallBack;			
+		}
+
+		socket = CFSocketCreateWithNative(kCFAllocatorDefault,
+										  fd,
+										  callBackTypes,
+										  socketCallback,
+										  &context);
+	}
+		
+	//Re-enable callbacks automatically and _don't_ close the socket on invalidate
+	CFSocketSetSocketFlags(socket, (kCFSocketAutomaticallyReenableReadCallBack | 
+									kCFSocketAutomaticallyReenableDataCallBack |
+									kCFSocketAutomaticallyReenableWriteCallBack));
+
+	//Add it to our run loop
+	CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(kCFAllocatorDefault, socket, 0);
 	
 	if (rls) {
 		CFRunLoopAddSource(gaimRunLoop, rls, kCFRunLoopCommonModes);
+		CFRelease(rls);
 	}
 
-	sourceId++;
+	info->fd = fd;
 
-	info->rls = rls;
-	info->timer = NULL;
-    info->tag = sourceId;
-    info->ioFunction = func;
-    info->user_data = user_data;
-    info->fd = fd;
-
-    [sourceInfoDict setObject:[NSValue valueWithPointer:info]
-					   forKey:[NSNumber numberWithUnsignedInt:sourceId]];
+    if ((condition & GAIM_INPUT_READ)) {
+		info->read_socket = socket;
+		info->read_tag = ++sourceId;
+		info->read_ioFunction = func;
+		info->read_user_data = user_data;
+		
+		[sourceInfoDict setObject:[NSValue valueWithPointer:info]
+						   forKey:[NSNumber numberWithUnsignedInt:info->read_tag]];
+		
+	} else {
+		info->write_socket = socket;
+		info->write_tag = ++sourceId;
+		info->write_ioFunction = func;
+		info->write_user_data = user_data;
+		
+		[sourceInfoDict setObject:[NSValue valueWithPointer:info]
+						   forKey:[NSNumber numberWithUnsignedInt:info->write_tag]];		
+	}
 	
     return sourceId;
 }
@@ -181,25 +288,23 @@ static void socketCallback(CFSocketRef s,
 						   void *infoVoid)
 {
     struct SourceInfo *sourceInfo = (struct SourceInfo*) infoVoid;
-	
-    GaimInputCondition c = 0;
-    if ((callbackType & kCFSocketReadCallBack) != 0)  c |= GAIM_INPUT_READ;
-    if ((callbackType & kCFSocketWriteCallBack) != 0) c |= GAIM_INPUT_WRITE;
-	
-	if ((callbackType & kCFSocketConnectCallBack) != 0) {
-		//Got a file handle; invalidate and release the source and the socket
-		CFRunLoopSourceInvalidate(sourceInfo->rls);
-		CFRelease(sourceInfo->rls);
-		CFSocketInvalidate(sourceInfo->socket);
-		CFRelease(sourceInfo->socket);
-		
-		[sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:sourceInfo->tag]];
-		sourceInfo->ioFunction(sourceInfo->user_data, sourceInfo->fd, c);
-		free(sourceInfo);
-		
-	} else {
-		sourceInfo->ioFunction(sourceInfo->user_data, sourceInfo->fd, c);
-	}	
+	gpointer user_data;
+    GaimInputCondition c;
+	GaimInputFunction ioFunction;
+	gint	 fd = sourceInfo->fd;
+
+    if ((callbackType & kCFSocketReadCallBack)) {
+		user_data = sourceInfo->read_user_data;
+		c = GAIM_INPUT_READ;
+		ioFunction = sourceInfo->read_ioFunction;
+
+	} else if ((callbackType & kCFSocketWriteCallBack)) {
+		user_data = sourceInfo->write_user_data;
+		c = GAIM_INPUT_WRITE;	
+		ioFunction = sourceInfo->write_ioFunction;
+	}
+
+	ioFunction(user_data, fd, c);
 }
 
 

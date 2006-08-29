@@ -56,6 +56,7 @@ GaimDebugUiOps *adium_gaim_debug_get_ui_ops(void)
 
 extern gboolean gaim_init_ssl_plugin(void);
 extern gboolean gaim_init_ssl_openssl_plugin(void);
+//extern gboolean gaim_init_ssl_gnutls_plugin();
 extern gboolean gaim_init_gg_plugin(void);
 extern gboolean gaim_init_jabber_plugin(void);
 extern gboolean gaim_init_sametime_plugin(void);
@@ -77,6 +78,7 @@ static void load_all_plugins()
 	//First, initialize our built-in plugins
 	gaim_init_ssl_plugin();
 	gaim_init_ssl_openssl_plugin();
+//	gaim_init_ssl_gnutls_plugin();
 	gaim_init_gg_plugin();
 	gaim_init_jabber_plugin();
 	gaim_init_sametime_plugin();

@@ -10,6 +10,8 @@
 /* OTR version */
 #define GAIM_OTR_VERSION "3.0.0"
 
+#define DATADIR ""
+
 /* MEANWHILE plugin */
 #define MW_PLUGIN_DEFAULT_ACTIVE_MSG ""
 #define MW_PLUGIN_DEFAULT_AWAY_MSG "Away"
@@ -122,7 +124,7 @@ first (like Motorola and SPARC, unlike Intel and VAX). */
 /* #undef HAVE_EVOLUTION_ADDRESSBOOK */
 
 /* Define to 1 if you have the <EXTERN.h> header file. */
-/* #undef HAVE_EXTERN_H */
+#define HAVE_EXTERN_H 1
 
 /* Define to 1 if you have the <fcntl.h> header file. */
 #define HAVE_FCNTL_H 1
@@ -143,7 +145,7 @@ first (like Motorola and SPARC, unlike Intel and VAX). */
 #define HAVE_GNUTLS 1
 
 /* Define to 1 if you have the <gnutls/gnutls.h> header file. */
-#define HAVE_GNUTLS_GNUTLS_H 1
+//#define HAVE_GNUTLS_GNUTLS_H 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
