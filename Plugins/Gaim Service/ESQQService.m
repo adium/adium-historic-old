@@ -9,6 +9,7 @@
 #import "ESGaimQQAccount.h"
 #import "ESGaimQQAccountViewController.h"
 #import <Adium/AIStatusControllerProtocol.h>
+#import <AIUtilities/AICharacterSetAdditions.h>
 
 @implementation ESQQService
 //Account Creation
