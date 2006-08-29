@@ -288,26 +288,24 @@
 - (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel
 {
 	NSArray			*activePacks = [[adium emoticonController] activeEmoticonPacks];
-	AIEmoticonPack	*pack = [activePacks objectAtIndex:0];
-	NSToolbarItem	*toolbar;
-	NSEnumerator	*enumerator = [toolbarItems objectEnumerator];
-	
-	#warning earthmkii: There has *got* to be a better way to see if a menu is attached to a toolbar
+	AIEmoticonPack	*pack;
+		
    /* We need special voodoo here to identify if the menu belongs to a toolbar,
 	* add the necessary pad item, and then adjust the index accordingly.
 	* this shouldn't be necessary, but NSToolbar is evil.
 	*/
-	while ((toolbar = [enumerator nextObject])) {
-		if (([[[toolbar menuFormRepresentation] submenu] isEqualTo:menu] && index == 0)) {
+	if ([[[menu itemAtIndex:0] title] isEqualToString:TITLE_EMOTICON]) {
+		if (index == 0) {
 			item = [[NSMenuItem alloc] init];
 			return YES;
-		} else if (([[[toolbar menuFormRepresentation] submenu] isEqualTo:menu])) {
+		} else {
 			--index;
 		}
 	}
 	
 	// Add in flat emoticon menu
 	if ([activePacks count] == 1) {
+		pack = [activePacks objectAtIndex:0];
 		AIEmoticon	*emoticon = [[pack emoticons] objectAtIndex:index];
 		if ([emoticon isEnabled] && ![[item representedObject] isEqualTo:emoticon]) {
 			[item setTitle:[emoticon name]];
@@ -319,7 +317,7 @@
 			[item setSubmenu:nil];
 		}
 	// Add in multi-pack menu
-	} else {
+	} else if ([activePacks count] > 1) {
 		pack = [activePacks objectAtIndex:index];
 		if (![[item title] isEqualToString:[pack name]]){
 			[item setTitle:[pack name]];
@@ -344,8 +342,6 @@
  */
 - (int)numberOfItemsInMenu:(NSMenu *)menu
 {	
-	NSToolbarItem	*item;
-	NSEnumerator	*enumerator = [toolbarItems objectEnumerator];
 	NSArray			*activePacks = [[adium emoticonController] activeEmoticonPacks];
 	int				 itemCounts = -1;
 	
@@ -354,10 +350,11 @@
 	if (itemCounts == 1)
 		itemCounts = [[[activePacks objectAtIndex:0] emoticons] count];
 	
-	#warning earthmkii: There has *got* to be a better way to see if a menu is attached to a toolbar
-	while ((item = [enumerator nextObject])) {
-		if ([[[item menuFormRepresentation] submenu] isEqualTo:menu])
+
+	if ([menu numberOfItems] > 0) {
+		if ([[[menu itemAtIndex:0] title] isEqualToString:TITLE_EMOTICON]) {
 			++itemCounts;
+		}
 	}
 
 	return itemCounts;
