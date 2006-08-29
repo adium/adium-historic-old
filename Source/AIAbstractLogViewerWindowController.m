@@ -1524,10 +1524,10 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 {
 	if (tableView == tableView_results) {
 		[tableView setSearchColumnIdentifiers:[NSSet setWithObjects:@"To", @"From", nil]];
+		[tableView setSearchWraps:YES];
 
 	} else if (tableView == (KFTypeSelectTableView *)outlineView_contacts) {
 		[tableView setSearchWraps:YES];
-		[tableView setMatchAlgorithm:KFSubstringMatchAlgorithm];
 	}
 }
 
