@@ -210,8 +210,8 @@ void av_resolve_reply (struct sockaddr	*interface,
 		computerName = CFUUIDCreateString(NULL, uuid);
 		CFRelease(uuid);		
 	}
-    avInstanceName = [NSString stringWithFormat:@"%@@%@", consoleUser, (computerName ? computerName : @"")];
-	CFRelease(consoleUser);
+    avInstanceName = [NSString stringWithFormat:@"%@@%@", (consoleUser ? consoleUser : @""), (computerName ? computerName : @"")];
+	if (consoleUser) CFRelease(consoleUser);
 	if (computerName) CFRelease(computerName);
     myavname = [avInstanceName retain];
     
