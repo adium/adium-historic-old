@@ -1114,6 +1114,24 @@
 
 @end
 
+@interface SmackXJingleTransportJingleTransportCandidate : NSObject {
+}
+
+- (SmackXTransportCandidate*)getMediaTransport;
+- (void)setMediaTransport:(SmackXTransportCandidate*)cand;
+- (NSString*)toXML;
+
+@end
+
+@interface SmackXJingleTransport : NSObject <SmackPacketExtension> {
+}
+
+- (void)addCondidate:(SmackXJingleTransportJingleTransportCandidate*)candidate;
+- (JavaIterator*)getCandidates;
+- (NSString*)toXML;
+
+@end
+
 @interface SmackXTransportCandidateChannel : NSObject {
 }
 
@@ -1156,24 +1174,6 @@
 - (void)setPreference:(int)preference;
 - (void)setProto:(SmackXTransportCandidateProtocol*)proto;
 - (void)setUsername:(NSString*)username;
-
-@end
-
-@interface SmackXJingleTransportJingleTransportCandidate : NSObject {
-}
-
-- (SmackXTransportCandidate*)getMediaTransport;
-- (void)setMediaTransport:(SmackXTransportCandidate*)cand;
-- (NSString*)toXML;
-
-@end
-
-@interface SmackXJingleTransport : NSObject <SmackPacketExtension> {
-}
-
-- (void)addCondidate:(SmackXJingleTransportJingleTransportCandidate*)candidate;
-- (JavaIterator*)getCandidates;
-- (NSString*)toXML;
 
 @end
 
@@ -1240,21 +1240,14 @@
 
 @class SmackXJingleNegotiator;
 
+@interface SmackXJingleListener : NSObject {
+}
+@end
+
+
 @interface SmackXJingleNegotiatorState : NSObject {
 }
 
-- (SmackIQ*)eventAccept:(SmackXJingle*)jin;
-- (SmackIQ*)eventAck:(SmackIQ*)iq;
-- (SmackIQ*)eventDecline:(SmackXJingle*)jin;
-- (void)eventEnter;
-- (void)eventError:(SmackIQ*)iq;
-- (void)eventExit;
-- (SmackIQ*)eventInfo:(SmackXJingle*)jin;
-- (SmackIQ*)eventInitiate:(SmackXJingle*)jin;
-- (SmackIQ*)eventInvite;
-- (SmackIQ*)eventModify:(SmackXJingle*)jin;
-- (SmackIQ*)eventRedirect:(SmackXJingle*)jin;
-- (SmackIQ*)eventTerminate:(SmackXJingle*)jin;
 - (SmackXJingleNegotiator*)getNegotiator;
 - (void)setNegotiator:(SmackXJingleNegotiator*)neg;
 
@@ -1265,6 +1258,8 @@
 
 - (void)addExpectedId:(NSString*)id;
 - (void)close;
+- (void)addListener:(SmackXJingleListener*)listener;
+- (void)removeListener:(SmackXJingleListener*)listener;
 - (SmackIQ*)dispatchIncomingPacket:(SmackIQ*)iq :(NSString*)_id;
 - (SmackXMPPConnection*)getConnection;
 - (SmackXJingleNegotiatorState*)getState;
