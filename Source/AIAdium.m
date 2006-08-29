@@ -960,9 +960,22 @@ static NSString	*prefsCategory;
  * ⁃ 	value:		Value to be used when reporting data to the server
  * ⁃ 	visibleValue:	Alternate version of value to be used in UI displays of profile information.
  */
-- (NSMutableDictionary *)updaterCustomizeProfileInfo:(NSMutableDictionary *)profileInfo
+- (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo
 {
-	//we can add/remove information to/from this as needed, for now we just return it intact
+	NSMutableString *accountInfo = [NSMutableString string];
+	NSEnumerator *accountEnu = [[[self accountController] accounts] objectEnumerator];
+	AIAccount *account = nil;
+	while((account = [accountEnu nextObject]))
+	{
+		[accountInfo appendFormat:@"%@, ", [account serviceID]];
+	}
+	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
+								@"IMServicesUsed", @"key", 
+								@"IM Services Used", @"visibleKey",
+								accountInfo, @"value",
+								accountInfo, @"visibleValue",
+								nil];
+	[profileInfo addObject:entry];
 	return profileInfo;
 }
 
