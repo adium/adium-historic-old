@@ -50,14 +50,14 @@ static void adiumGaimCancelLocal(GaimXfer *xfer)
 {
 	GaimDebug (@"adiumGaimCancelLocal");
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
-    [accountLookup(xfer->account) fileTransfercancelledLocally:fileTransfer];
+    [accountLookup(xfer->account) fileTransferCancelledLocally:fileTransfer];
 }
 
 static void adiumGaimCancelRemote(GaimXfer *xfer)
 {
 	GaimDebug (@"adiumGaimCancelRemote");
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
-    [accountLookup(xfer->account) fileTransfercancelledRemotely:fileTransfer];
+    [accountLookup(xfer->account) fileTransferCancelledRemotely:fileTransfer];
 }
 
 static GaimXferUiOps adiumGaimFileTransferOps = {
