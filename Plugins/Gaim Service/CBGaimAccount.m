@@ -1170,15 +1170,19 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 //The local side cancelled the transfer.  We probably already have this status set, but set it just in case.
-- (void)fileTransfercancelledLocally:(ESFileTransfer *)fileTransfer
+- (void)fileTransferCancelledLocally:(ESFileTransfer *)fileTransfer
 {
-	[fileTransfer setStatus:Cancelled_Local_FileTransfer];
+	if (![fileTransfer isStopped]) {
+		[fileTransfer setStatus:Cancelled_Local_FileTransfer];
+	}
 }
 
 //The remote side cancelled the transfer, the fool. Update our status.
-- (void)fileTransfercancelledRemotely:(ESFileTransfer *)fileTransfer
+- (void)fileTransferCancelledRemotely:(ESFileTransfer *)fileTransfer
 {
-	[fileTransfer setStatus:Cancelled_Remote_FileTransfer];
+	if (![fileTransfer isStopped]) {
+		[fileTransfer setStatus:Cancelled_Remote_FileTransfer];
+	}
 }
 
 - (void)destroyFileTransfer:(ESFileTransfer *)fileTransfer
