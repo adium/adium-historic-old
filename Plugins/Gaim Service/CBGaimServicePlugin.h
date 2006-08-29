@@ -19,9 +19,9 @@
 @interface CBGaimServicePlugin : AIPlugin{
 #ifndef JOSCAR_SUPERCEDE_LIBGAIM
     id  AIMService;
-    id  ICQService;
     id  DotMacService;
 #endif
+    id  ICQService;
 	id  GaduGaduService;
 	id  GTalkService;
 	id  LiveJournalService;
