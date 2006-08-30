@@ -208,7 +208,8 @@
 - (NSArray *)contextForChat:(AIChat *)chat
 {
 	//If there's no log there, there's no message history. Bail out.
-	if(![AILoggerPlugin pathToNewestLogFileForChat:chat]) return nil;
+	NSString *logPath = [AILoggerPlugin pathToNewestLogFileForChat:chat];
+	if(!logPath) return nil;
 	
 	//Create the parser and set ourselves as the delegate
 	LMXParser *parser = [LMXParser parser];
