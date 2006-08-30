@@ -100,12 +100,12 @@
 // Send a content object
 - (void)sendMessageObject:(AIContentMessage *)inContentMessage
 {
-    if (![object isAutoreply]) {
+    if (![inContentMessage isAutoreply]) {
         NSString	*message;
         NSArray		*commands;
         NSString	*type = 
         
-		message = [[object messageString];
+		message = [inContentMessage messageString];
 		AILog(@"Stress Test: Sending %@",message);
 
 		commands = [message componentsSeparatedByString:@" "];
@@ -260,12 +260,10 @@
 																			  forKey:KEY_TYPING
 																			  notify:NotifyNow];
 			
-		} else if ([object destination] == commandContact) {
+		} else if ([inContentMessage destination] == commandContact) {
             [self echo:[NSString stringWithFormat:@"Unknown command %@",type]];
         }
     }
-
-	return YES;
 }
 
 - (void)timer_online:(NSTimer *)inTimer
