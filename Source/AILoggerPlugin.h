@@ -34,7 +34,8 @@
     BOOL				logHTML;
 
 	NSMutableDictionary					*activeAppenders;
-	NSMutableDictionary					*activeTimers;
+	NSMutableDictionary					*appenderCloseTimers;
+	NSMutableDictionary					*chatStartDates;
 	
 	AIHTMLDecoder						*xhtmlDecoder;
 	NSDictionary						*statusTranslation;
@@ -73,6 +74,9 @@
 + (NSString *)logBasePath;
 + (NSString *)relativePathForLogWithObject:(NSString *)object onAccount:(AIAccount *)account;
 + (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date;
+
+//Message History
++ (NSString *)pathToNewestLogFileForChat:(AIChat *)chat;
 
 //Log viewer
 - (void)showLogViewerToSelectedContact:(id)sender;
