@@ -295,8 +295,11 @@
 #ifdef JOSCAR_SUPERCEDE_LIBGAIM
 	else if ([serviceID isEqualToString:@"libgaim-oscar-AIM"])
 		serviceID = @"joscar-OSCAR-AIM";
+	/*
+	 //Reenable if joscar takes over ICQ again
 	else if ([serviceID isEqualToString:@"libgaim-oscar-ICQ"])
 		serviceID = @"joscar-OSCAR-ICQ";
+	*/
 	else if ([serviceID isEqualToString:@"libgaim-oscar-Mac"])
 		serviceID = @"joscar-OSCAR-dotMac";
 #endif
