@@ -43,9 +43,7 @@
 
 @class DCMessageContextDisplayPreferences, SMSQLiteLoggerPlugin;
 
-@interface DCMessageContextDisplayPlugin : AIPlugin {
-	SMSQLiteLoggerPlugin			*logger;
-	
+@interface DCMessageContextDisplayPlugin : AIPlugin {	
 	BOOL							isObserving;
 	BOOL							shouldDisplay;
 	BOOL							dimRecentContext;
@@ -59,6 +57,9 @@
 	int								haveNotTalkedUnits;
 	
 	DCMessageContextDisplayPreferences  *preferences;
+	
+	NSMutableArray	*foundElements;
+	NSMutableArray	*elementStack;
 }
 
 @end

@@ -46,6 +46,7 @@
 #import <AIUtilities/AIDateFormatterAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/NSCalendarDate+ISO8601Unparsing.h>
+#import <AIUtilities/NSCalendarDate+ISO8601Parsing.h>
 
 #import "AILogFileUpgradeWindowController.h"
 
@@ -83,6 +84,7 @@
 - (void)upgradeLogExtensions;
 
 - (NSString *)keyForChat:(AIChat *)chat;
+- (AIXMLAppender *)existingAppenderForChat:(AIChat *)chat;
 - (AIXMLAppender *)appenderForChat:(AIChat *)chat;
 - (void)closeAppenderForChat:(AIChat *)chat;
 @end
@@ -102,7 +104,8 @@ Class LogViewerWindowControllerClass = NULL;
 	observingContent = NO;
 
 	activeAppenders = [[NSMutableDictionary alloc] init];
-	activeTimers = [[NSMutableDictionary alloc] init];
+	appenderCloseTimers = [[NSMutableDictionary alloc] init];
+	chatStartDates = [[NSMutableDictionary alloc] init];
 	
 	xhtmlDecoder = [[AIHTMLDecoder alloc] initWithHeaders:NO
 												 fontTags:YES
@@ -185,7 +188,7 @@ Class LogViewerWindowControllerClass = NULL;
 - (void)uninstallPlugin
 {
 	[activeAppenders release];
-	[activeTimers release];
+	[appenderCloseTimers release];
 	[xhtmlDecoder release];
 	[statusTranslation release];
 
@@ -438,14 +441,8 @@ Class LogViewerWindowControllerClass = NULL;
 	//Don't log chats for temporary accounts
 	if ([[chat account] isTemporary]) return;
 	
-	AIXMLAppender *appender = [self appenderForChat:chat];
-
-	[appender addElementWithName:@"event"
-						 content:nil
-				   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
-				 attributeValues:[NSArray arrayWithObjects:@"windowOpened", [[chat account] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
-
-	[self markLogDirtyAtPath:[appender path] forChat:chat];
+	//Note the time that this chat was opened for later use
+	[chatStartDates setObject:[NSCalendarDate date] forKey:[self keyForChat:chat]];
 }
 
 - (void)chatClosed:(NSNotification *)notification
@@ -454,33 +451,35 @@ Class LogViewerWindowControllerClass = NULL;
 
 	//Don't log chats for temporary accounts
 	if ([[chat account] isTemporary]) return;
+	
+	//Use this method so we don't create a new appender for chat close events
+	AIXMLAppender *appender = [self existingAppenderForChat:chat];
+	
+	//If there is an appender, add the windowClose event
+	if (appender) {
+		[appender addElementWithName:@"event"
+							 content:nil
+					   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
+					 attributeValues:[NSArray arrayWithObjects:@"windowClosed", [[chat account] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
 
-	AIXMLAppender *appender = [self appenderForChat:chat];
+		[self closeAppenderForChat:chat];
 
-	[appender addElementWithName:@"event"
-						 content:nil
-				   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
-				 attributeValues:[NSArray arrayWithObjects:@"windowClosed", [[chat account] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
-
-	[self closeAppenderForChat:chat];
-
-	[self markLogDirtyAtPath:[appender path] forChat:chat];
+		[self markLogDirtyAtPath:[appender path] forChat:chat];
+	}
 }
 
+//Ugly method. Shouldn't this notification post an AIChat, not an AIChatLog?
 - (void)chatWillDelete:(NSNotification *)notification
 {
 	AIChatLog *chatLog = [notification object];
 	NSString *chatID = [NSString stringWithFormat:@"%@.%@-%@", [chatLog serviceClass], [chatLog from], [chatLog to]];
 	AIXMLAppender *appender = [activeAppenders objectForKey:chatID];
 	
-	if(appender != nil)
-	{
-		if([[appender path] hasSuffix:[chatLog path]])
-		{
+	if (appender != nil) {
+		if ([[appender path] hasSuffix:[chatLog path]]) {
 			[activeAppenders removeObjectForKey:chatID];
-			NSTimer *timer = [activeTimers objectForKey:chatID];
-			[timer invalidate];
-			[activeTimers removeObjectForKey:chatID];
+			[[appenderCloseTimers objectForKey:chatID] invalidate];
+			[appenderCloseTimers removeObjectForKey:chatID];
 		}
 	}
 }
@@ -502,18 +501,18 @@ Class LogViewerWindowControllerClass = NULL;
 
 - (AIXMLAppender *)appenderForChat:(AIChat *)chat
 {
-	//Look up the key for this chat and use it to try to retrieve the appender
+	//Check if there is already an appender for this chat
+	AIXMLAppender *appender = [self existingAppenderForChat:chat];
 	NSString *chatKey = [self keyForChat:chat];
-	AIXMLAppender *appender = [activeAppenders objectForKey:chatKey];
-	
-	//If there's already an appender for this chat, we need to invalidate the timer to close it, since we're using it now
-	if (appender) {
-		[[activeTimers objectForKey:chatKey] invalidate];
-		[activeTimers removeObjectForKey:chatKey];
-	//Otherwise, create a new appender and add it to the dictionary
-	} else {
-		NSDate		*date = [chat dateOpened];
-		NSString	*fullPath = [AILoggerPlugin fullPathForLogOfChat:chat onDate:date];
+
+	//If there's an appender scheduled to be closed for this chat, invalidate the timer, since we're using it now
+	if (appender && [appenderCloseTimers objectForKey:chatKey]) {
+		[[appenderCloseTimers objectForKey:chatKey] invalidate];
+		[appenderCloseTimers removeObjectForKey:chatKey];
+	//If there isn't already an appender, create a new one and add it to the dictionary
+	} else if (!appender) {
+		NSCalendarDate	*date = [chatStartDates objectForKey:chatKey];
+		NSString		*fullPath = [AILoggerPlugin fullPathForLogOfChat:chat onDate:date];
 
 		appender = [AIXMLAppender documentWithPath:fullPath];
 		[appender initializeDocumentWithRootElementName:@"chat"
@@ -523,7 +522,19 @@ Class LogViewerWindowControllerClass = NULL;
 											[[chat account] UID],
 											[[chat account] serviceID],
 											nil]];
+		
+		//Add the window opened event now
+		[appender addElementWithName:@"event"
+					 content:nil
+			   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
+			 attributeValues:[NSArray arrayWithObjects:@"windowOpened", [[chat account] UID], [date ISO8601DateString], nil]];
+		
+		//Remove this chat's entry from the start date dictionary, since it's not used anymore
+		[chatStartDates removeObjectForKey:chatKey];
+		
 		[activeAppenders setObject:appender forKey:chatKey];
+		
+		[self markLogDirtyAtPath:[appender path] forChat:chat];
 	}
 	
 	return appender;
@@ -538,8 +549,8 @@ Class LogViewerWindowControllerClass = NULL;
 													selector:@selector(finishClosingAppender:) 
 													userInfo:chatKey
 													 repeats:NO];
-	//Add it to the activeTimers dictionary
-	[activeTimers setObject:timer forKey:chatKey];
+	//Add it to the appenderCloseTimers dictionary
+	[appenderCloseTimers setObject:timer forKey:chatKey];
 }
 
 - (void)finishClosingAppender:(NSTimer *)timer
@@ -547,8 +558,9 @@ Class LogViewerWindowControllerClass = NULL;
 	//Remove the appender, closing its file descriptor upon dealloc
 	[activeAppenders removeObjectForKey:[timer userInfo]];
 	//Remove the timer, it's invalid anyway and not very useful
-	[activeTimers removeObjectForKey:[timer userInfo]];
+	[appenderCloseTimers removeObjectForKey:[timer userInfo]];
 }
+
 
 //Display a warning to the user that logging failed, and disable logging to prevent additional warnings
 //XXX not currently used. We may want to shift these strings for use when xml logging fails, so I'm not removing them -eds
@@ -566,6 +578,40 @@ Class LogViewerWindowControllerClass = NULL;
                                               group:PREF_GROUP_LOGGING];
 }
 */
+
+#pragma mark Message History
+
++ (NSString *)pathToNewestLogFileForChat:(AIChat *)chat
+{
+	NSString *baseLogPath = [[self fullPathForLogOfChat:chat onDate:[NSDate date]] stringByDeletingLastPathComponent];
+	NSCalendarDate *newestLogDate = [NSDate distantPast];
+	NSString *newestLogPath = nil;
+
+	NSArray *files = [[NSFileManager defaultManager] directoryContentsAtPath:baseLogPath];	
+	if (files) {
+		NSEnumerator *enumerator = [files objectEnumerator];
+		NSString *path = nil;
+		while ((path = [enumerator nextObject])) {
+			NSRange openParenRange, closeParenRange;
+			if ([path hasSuffix:@".chatlog"]) {
+				if ((openParenRange = [path rangeOfString:@"(" options:NSBackwardsSearch]).location != NSNotFound) {
+					openParenRange = NSMakeRange(openParenRange.location, [path length] - openParenRange.location);
+					if ((closeParenRange = [path rangeOfString:@")" options:0 range:openParenRange]).location != NSNotFound) {
+						//Add and subtract one to remove the parenthesis
+						NSString *dateString = [path substringWithRange:NSMakeRange(openParenRange.location + 1, (closeParenRange.location - openParenRange.location))];
+						NSCalendarDate *date = [NSCalendarDate calendarDateWithString:dateString];
+						if ([date compare:newestLogDate] == NSOrderedDescending) {
+							newestLogDate = date;
+							newestLogPath = path;
+						}
+					}
+				}
+			}
+		}
+		return [baseLogPath stringByAppendingPathComponent:newestLogPath];
+	}
+	return nil;
+}
 
 #pragma mark Upgrade code
 - (void)upgradeLogExtensions

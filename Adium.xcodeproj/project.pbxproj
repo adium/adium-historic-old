@@ -1207,6 +1207,8 @@
 		9E124DF607D34CF500AA91C5 /* Growl-WithInstaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E124DF507D34CF500AA91C5 /* Growl-WithInstaller.framework */; };
 		9E125C6607D3571400AA91C5 /* ESBlockingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E125C6407D3571400AA91C5 /* ESBlockingPlugin.m */; };
 		9E12765407D38B5000AA91C5 /* Growl-WithInstaller.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9E124DF507D34CF500AA91C5 /* Growl-WithInstaller.framework */; };
+		9E1E1DFD0A96741500E16DFC /* LMX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E1E1DFC0A96741500E16DFC /* LMX.framework */; };
+		9E1E1E270A96770C00E16DFC /* LMX.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9E1E1DFC0A96741500E16DFC /* LMX.framework */; };
 		9E20910A06A601A100E33E27 /* adium.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E791E26057746D100547562 /* adium.png */; };
 		9E20910D06A601AD00E33E27 /* adiumHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */; };
 		9E20910E06A601AF00E33E27 /* CBStatusMenuItemController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E791DA40577094400547562 /* CBStatusMenuItemController.m */; };
@@ -1539,6 +1541,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				9E1E1E270A96770C00E16DFC /* LMX.framework in CopyFiles */,
 				EE96A3CC0A9C5E4000C47A57 /* FriBidi.framework in CopyFiles */,
 				F51BCD3B0A156261000FDC06 /* AIHyperlinks.framework in CopyFiles */,
 				F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */,
@@ -3498,6 +3501,7 @@
 		9E124DF507D34CF500AA91C5 /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "Growl-WithInstaller.framework"; path = "Frameworks/Growl-WithInstaller.framework"; sourceTree = "<group>"; };
 		9E125C6307D3571400AA91C5 /* ESBlockingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESBlockingPlugin.h; path = Source/ESBlockingPlugin.h; sourceTree = "<group>"; };
 		9E125C6407D3571400AA91C5 /* ESBlockingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESBlockingPlugin.m; path = Source/ESBlockingPlugin.m; sourceTree = "<group>"; };
+		9E1E1DFC0A96741500E16DFC /* LMX.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LMX.framework; path = Frameworks/LMX.framework; sourceTree = "<group>"; };
 		9E217B7706A74CA7002A3F27 /* StatusMenuItemDefaultPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = StatusMenuItemDefaultPrefs.plist; path = "Plugins/Status Menu Item/StatusMenuItemDefaultPrefs.plist"; sourceTree = "<group>"; };
 		9E28FDE506ADB30D0041553E /* adiumRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumRed.png; path = "Plugins/Status Menu Item/adiumRed.png"; sourceTree = "<group>"; };
 		9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumRedHighlight.png; path = "Plugins/Status Menu Item/adiumRedHighlight.png"; sourceTree = "<group>"; };
@@ -3807,6 +3811,7 @@
 				9E124DF607D34CF500AA91C5 /* Growl-WithInstaller.framework in Frameworks */,
 				638392F809D4D67A0067B9B7 /* Sparkle.framework in Frameworks */,
 				F58904F20A7828B9001F0ADC /* OTR.framework in Frameworks */,
+				9E1E1DFD0A96741500E16DFC /* LMX.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4014,6 +4019,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9E1E1DFC0A96741500E16DFC /* LMX.framework */,
 				EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */,
 				638392F609D4D67A0067B9B7 /* Sparkle.framework */,
 				115E0E8D0952514A003218FE /* JavaVM.framework */,
@@ -7826,6 +7832,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -7870,6 +7877,8 @@
 					ProjectRef = 3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */;
 				},
 			);
+			projectRoot = "";
+			shouldCheckCompatibility = 1;
 			targets = (
 				34BD9CD1053146CC000AB133 /* Adium */,
 				4B7F78B40597F42400162728 /* Adium Crash Reporter */,
