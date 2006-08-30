@@ -52,6 +52,7 @@
 		attributeNames  = [[NSMutableArray alloc] init];
 		attributeValues = [[NSMutableArray alloc] init];
 		contents = [[NSMutableArray alloc] init];
+		selfCloses = NO;
 	}
 	return self;
 }
@@ -77,7 +78,7 @@
 	AIXMLElement *other = [[AIXMLElement allocWithZone:zone] initWithName:name];
 	other->attributeNames  = [attributeNames  mutableCopy];
 	other->attributeValues = [attributeValues mutableCopy];
-
+	other->selfCloses = selfCloses;
 	other->contents = [[NSMutableArray alloc] initWithCapacity:[contents count]];
 	NSEnumerator *contentsEnum = [contents objectEnumerator];
 	id obj;
