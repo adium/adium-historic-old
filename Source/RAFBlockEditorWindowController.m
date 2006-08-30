@@ -49,9 +49,18 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	[[accountCol headerCell] setTitle:AILocalizedString(@"Account","Title of column containing blocking accounts")];
 	[accountText setLocalizedString:AILocalizedString(@"Account:",nil)];
 
-	[label_account setLocalizedString:AILocalizedString(@"Account:",nil)];
-	[label_privacyLevel setLocalizedString:AILocalizedString(@"Privacy level:", nil)];
+	{
+		//Let the min X margin be resizeable while label_account and label_privacyLevel localize in case the window moves
+		[stateChooser setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin | NSViewMinXMargin)];
+		[popUp_accounts setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin | NSViewMinXMargin)];
 		
+		[label_account setLocalizedString:AILocalizedString(@"Account:",nil)];
+		[label_privacyLevel setLocalizedString:AILocalizedString(@"Privacy level:", nil)];
+		
+		[stateChooser setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin)];
+		[popUp_accounts setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin)];
+	}
+
 	accountColumnsVisible = YES;
 	[accountCol retain];
 
