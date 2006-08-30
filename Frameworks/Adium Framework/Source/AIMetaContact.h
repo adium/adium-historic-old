@@ -16,7 +16,6 @@
 
 #import <Adium/AIListContact.h>
 
-#define META_SERVICE_STRING					AILocalizedString(@"Meta", nil)
 #define	KEY_PREFERRED_DESTINATION_CONTACT	@"Preferred Destination Contact"
 
 @interface AIMetaContact : AIListContact <AIContainingObject> {
