@@ -29,6 +29,8 @@
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
 
+#include <AvailabilityMacros.h>
+
 #define KEY_BASE_WRITING_DIRECTION		@"Base Writing Direction"
 #define PREF_GROUP_WRITING_DIRECTION	@"Writing Direction"
 
@@ -682,17 +684,30 @@
 #pragma mark Writing Direction
 
 - (NSWritingDirection)baseWritingDirection {
-	NSNumber	*dir = [self preferenceForKey:KEY_BASE_WRITING_DIRECTION group:PREF_GROUP_WRITING_DIRECTION];
-	NSString	*lang = nil;
-	
-#if MAC_OS_X_VERSION_10_4 <= MAC_OS_X_VERSION_MAX_ALLOWED
-	lang = [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode];
+	NSNumber	*dir;
+
+	if ((dir = [self preferenceForKey:KEY_BASE_WRITING_DIRECTION group:PREF_GROUP_WRITING_DIRECTION])) {
+		//If we have a saved base direction, we'll return that.
+		return [dir intValue];
+
+	} else {
+		//Otherwise, we'll try to be smart and use the default writing direction of the language of the user's locale
+		//(and not the language of the active localization). By that, we assume most users are mostly talking to their local friends.
+		NSString	*lang = nil;
+
+#ifdef __LITTLE_ENDIAN__
+		//An Intel build need not care about anything before 10.4
+		lang = [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode];
+#else
+		/* Rather than manually loading this symbol from the appkit bundle, we'll just hard code its value.
+		 * Worst case is we nil or irrelevant data back, at which point NSParagraphStyle will return the default locale's direction
+		 * anyways.
+		 */
+		lang = [[NSClassFromString(@"NSLocale") currentLocale] objectForKey:@"locale:language code"];
 #endif
-	
-	//If we have a saved base direction, we'll return that.
-	//Otherwise, we'll try to be smart and use the default writing direction of the language of the user's locale
-	//(and not the language of the active localization). By that, we assume most users are mostly talking to their local friends.
-	return dir ? [dir intValue] : [NSParagraphStyle defaultWritingDirectionForLanguage:lang];
+
+		return [NSParagraphStyle defaultWritingDirectionForLanguage:lang];
+	}
 }
 
 - (void)setBaseWritingDirection:(NSWritingDirection)direction {
