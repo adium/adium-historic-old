@@ -577,7 +577,7 @@
 - (NSString *)aboutEncryption
 {
 	return [NSString stringWithFormat:
-		AILocalizedString(@"Adium provides encryption, authentication, deniability, and perfect forward secrecy over %@ via Off-the-Record Messaging (OTR). If your contact is not using an OTR-compatible messaging system, your contact will be sent a link to the OTR web site when you attempt to connect. For more information on OTR, visit http://www.cypherpunks.ca/otr/.",nil),
+		AILocalizedStringFromTableInBundle(@"Adium provides encryption, authentication, deniability, and perfect forward secrecy over %@ via Off-the-Record Messaging (OTR). If your contact is not using an OTR-compatible messaging system, your contact will be sent a link to the OTR web site when you attempt to connect. For more information on OTR, visit http://www.cypherpunks.ca/otr/.", nil, [NSBundle bundleForClass:[AIAccount class]], nil),
 		[[self service] shortDescription]];
 }
 

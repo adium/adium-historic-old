@@ -171,7 +171,7 @@
  */
 - (NSString *)userNameLabel
 {
-    return AILocalizedString(@"User Name", nil);    
+    return AILocalizedStringFromTableInBundle(@"User Name", nil, [NSBundle bundleForClass:[AIService class]], nil);    
 }
 
 /*!
