@@ -708,8 +708,8 @@
 	
 	if (windowSlidOffScreenEdgeMask == AINoEdges) {
 		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
-		* it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
-		*/
+		 * it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
+		 */
 		[contactListController contactListDesiredSizeChanged];			
 	} else {
 		//After sliding off screen, go to an alpha value of 0 to hide our 1 px remaining on screen
