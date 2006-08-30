@@ -207,6 +207,9 @@
  */
 - (NSArray *)contextForChat:(AIChat *)chat
 {
+	//If there's no log there, there's no message history. Bail out.
+	if(![AILoggerPlugin pathToNewestLogFileForChat:chat]) return nil;
+	
 	//Create the parser and set ourselves as the delegate
 	LMXParser *parser = [LMXParser parser];
 	[parser setDelegate:self];
@@ -214,62 +217,56 @@
 	//Initialize the found messages array for us-as-delegate
 	foundElements = [NSMutableArray arrayWithCapacity:linesToDisplay];
 	elementStack = [NSMutableArray array];
+
+	//Open up the file we need to read from, and seek to the end (this is a *backwards* parser, after all :)
+	NSFileHandle *file = [NSFileHandle fileHandleForReadingAtPath:logPath];
+	[file seekToEndOfFile];
+	NSLog(@"Log path: %@", logPath);
 	
-	//If there's no log there, there's no message history. Bail out.
-	NSString *logPath = [AILoggerPlugin pathToNewestLogFileForChat:chat];
-	if (!logPath)
-		return nil;
-	else {
-		//Open up the file we need to read from, and seek to the end (this is a *backwards* parser, after all :)
-		NSFileHandle *file = [NSFileHandle fileHandleForReadingAtPath:logPath];
-		[file seekToEndOfFile];
-		NSLog(@"Log path: %@", logPath);
+	//Set up some more doohickeys and then start the parse loop
+	int pageSize = getpagesize();
+	unsigned long long offset = [file offsetInFile];
+	enum LMXParseResult result = LMXParsedIncomplete;
+	int omglooping = 0; //for debugging
+	do {
+		if (omglooping++) NSLog(@"OMG LOOPING!!!1");
+		NSLog(@"Initial offset: %d", offset);
+		//Calculate the new offset
+		offset = (offset <= pageSize) ? 0 : offset - pageSize;
+		NSLog(@"Start reading from offset: %ull", offset);
 		
-		//Set up some more doohickeys and then start the parse loop
-		int pageSize = getpagesize();
-		unsigned long long offset = [file offsetInFile];
-		enum LMXParseResult result = LMXParsedIncomplete;
-		int omglooping = 0; //for debugging
-		do {
-			if (omglooping++) NSLog(@"OMG LOOPING!!!1");
-			NSLog(@"Initial offset: %d", offset);
-			//Calculate the new offset
-			offset = (offset <= pageSize) ? 0 : offset - pageSize;
-			NSLog(@"Start reading from offset: %ull", offset);
-			
-			//Seek to it and read
-			[file seekToFileOffset:offset]; 
-			NSData *chunk = [file readDataOfLength:pageSize];
-			NSLog(@"Chunk as parse (as string): %@", [NSString stringWithData:chunk encoding:NSUTF8StringEncoding]);
-			
-			//Parse
-			result = [parser parseChunk:chunk];
-			
-			NSLog(@"Done parsing.");
-			
-		//Continue to parse as long as we need more elements, we have data to read, and LMX doesn't think we're done.
-		} while ([foundElements count] < linesToDisplay && offset > 0 && result != LMXParsedCompletely);
+		//Seek to it and read
+		[file seekToFileOffset:offset]; 
+		NSData *chunk = [file readDataOfLength:pageSize];
+		NSLog(@"Chunk as parse (as string): %@", [NSString stringWithData:chunk encoding:NSUTF8StringEncoding]);
 		
-		NSString *serviceName = [[[[[logPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] lastPathComponent] componentsSeparatedByString:@"."] objectAtIndex:0U];
+		//Parse
+		result = [parser parseChunk:chunk];
 		
-		NSMutableArray *foundContentContexts = [NSMutableArray arrayWithCapacity:linesToDisplay]; 
-		NSEnumerator *enumerator = [foundElements objectEnumerator];
-		AIXMLElement *element = nil;
-		while ((element = [enumerator nextObject])) {
-			NSDictionary *attributesDictionary = [element attributes];
-			NSString *autoreplyAttribute = [[element name] isEqualToString:@"message"] ? [attributesDictionary objectForKey:@"auto"] : nil;
-			NSString *sender = [NSString stringWithFormat:@"%@.%@", serviceName, [attributesDictionary objectForKey:@"sender"]];
-			AIAccount *account = [chat account];
-			NSString *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
-			BOOL sentByMe = ([sender isEqualToString:accountID] == NSOrderedSame);
-			AIContentContext *message = [AIContentContext messageInChat:chat 
-															 withSource:(sentByMe ? account : [[adium contactController] existingListObjectWithUniqueID:sender])
-															destination:(sentByMe ? [[adium contactController] existingListObjectWithUniqueID:sender] : account)
-																   date:[NSCalendarDate calendarDateWithString:[attributesDictionary objectForKey:@"time"]]
-																message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
-															  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"yes"] == NSOrderedSame)];
-			[foundContentContexts addObject:message];
-		}
+		NSLog(@"Done parsing.");
+		
+	//Continue to parse as long as we need more elements, we have data to read, and LMX doesn't think we're done.
+	} while ([foundElements count] < linesToDisplay && offset > 0 && result != LMXParsedCompletely);
+	
+	NSString *serviceName = [[[[[logPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] lastPathComponent] componentsSeparatedByString:@"."] objectAtIndex:0U];
+	
+	NSMutableArray *foundContentContexts = [NSMutableArray arrayWithCapacity:linesToDisplay]; 
+	NSEnumerator *enumerator = [foundElements objectEnumerator];
+	AIXMLElement *element = nil;
+	while ((element = [enumerator nextObject])) {
+		NSDictionary *attributesDictionary = [element attributes];
+		NSString *autoreplyAttribute = [[element name] isEqualToString:@"message"] ? [attributesDictionary objectForKey:@"auto"] : nil;
+		NSString *sender = [NSString stringWithFormat:@"%@.%@", serviceName, [attributesDictionary objectForKey:@"sender"]];
+		AIAccount *account = [chat account];
+		NSString *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
+		BOOL sentByMe = ([sender isEqualToString:accountID] == NSOrderedSame);
+		AIContentContext *message = [AIContentContext messageInChat:chat 
+														 withSource:(sentByMe ? account : [[adium contactController] existingListObjectWithUniqueID:sender])
+														destination:(sentByMe ? [[adium contactController] existingListObjectWithUniqueID:sender] : account)
+															   date:[NSCalendarDate calendarDateWithString:[attributesDictionary objectForKey:@"time"]]
+															message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
+														  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"yes"] == NSOrderedSame)];
+		[foundContentContexts addObject:message];
 
 		return foundContentContexts;
 		//return nil;
