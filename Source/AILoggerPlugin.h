@@ -76,7 +76,7 @@
 + (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date;
 
 //Message History
-+ (NSString *)pathToNewestLogFileForChat:(AIChat *)chat;
++ (NSArray *)sortedArrayOfLogFilesForChat:(AIChat *)chat;
 
 //Log viewer
 - (void)showLogViewerToSelectedContact:(id)sender;

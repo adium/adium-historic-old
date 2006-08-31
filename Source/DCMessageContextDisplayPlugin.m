@@ -208,73 +208,109 @@
 - (NSArray *)contextForChat:(AIChat *)chat
 {
 	//If there's no log there, there's no message history. Bail out.
-	NSString *logPath = [AILoggerPlugin pathToNewestLogFileForChat:chat];
-	if(!logPath) return nil;
+	NSArray *logPaths = [AILoggerPlugin sortedArrayOfLogFilesForChat:chat];
+	if(!logPaths) return nil;
 	
-	//Create the parser and set ourselves as the delegate
-	LMXParser *parser = [LMXParser parser];
-	[parser setDelegate:self];
+	NSLog(@"logPaths = %@", logPaths);
 	
-	//Initialize the found messages array for us-as-delegate
-	foundElements = [NSMutableArray arrayWithCapacity:linesToDisplay];
-	elementStack = [NSMutableArray array];
+	NSString *logObjectUID = [chat name];
+	if (!logObjectUID) logObjectUID = [[chat listObject] UID];
+	logObjectUID = [logObjectUID safeFilenameString];
 
-	//Open up the file we need to read from, and seek to the end (this is a *backwards* parser, after all :)
-	NSFileHandle *file = [NSFileHandle fileHandleForReadingAtPath:logPath];
-	[file seekToEndOfFile];
-	NSLog(@"Log path: %@", logPath);
+	NSString *baseLogPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:
+		[AILoggerPlugin relativePathForLogWithObject:logObjectUID onAccount:[chat account]]];
 	
-	//Set up some more doohickeys and then start the parse loop
-	int pageSize = getpagesize();
-	unsigned long long offset = [file offsetInFile];
-	enum LMXParseResult result = LMXParsedIncomplete;
-	int omglooping = 0; //for debugging
-	do {
-		if (omglooping++) NSLog(@"OMG LOOPING!!!1");
-		NSLog(@"Initial offset: %d", offset);
-		//Calculate the new offset
-		offset = (offset <= pageSize) ? 0 : offset - pageSize;
-		NSLog(@"Start reading from offset: %ull", offset);
+	NSLog(@"baseLogPath = %@", baseLogPath);
 		
-		//Seek to it and read
-		[file seekToFileOffset:offset]; 
-		NSData *chunk = [file readDataOfLength:pageSize];
-		NSLog(@"Chunk as parse (as string): %@", [NSString stringWithData:chunk encoding:NSUTF8StringEncoding]);
+	//Initialize a place to store found messages
+	NSMutableArray *outerFoundContentContexts = [NSMutableArray arrayWithCapacity:linesToDisplay]; 
+
+	//Iterate over the elements of the log path array.
+	NSEnumerator *pathsEnumerator = [logPaths objectEnumerator];
+	NSString *logPath = nil;
+	while ((logPath = [pathsEnumerator nextObject])) {
+		//Stick the base path on to the beginning
+		logPath = [baseLogPath stringByAppendingPathComponent:logPath];
 		
-		//Parse
-		result = [parser parseChunk:chunk];
+		//Initialize the found messages array and element stack for us-as-delegate
+		foundElements = [NSMutableArray arrayWithCapacity:linesToDisplay];
+		elementStack = [NSMutableArray array];
+
+		//Initialize a place to store found messages, locally
+		NSMutableArray *innerFoundContentContexts = [NSMutableArray arrayWithCapacity:linesToDisplay]; 
+
+		//Create the parser and set ourselves as the delegate
+		LMXParser *parser = [LMXParser parser];
+		[parser setDelegate:self];
+
+		//Open up the file we need to read from, and seek to the end (this is a *backwards* parser, after all :)
+		NSFileHandle *file = [NSFileHandle fileHandleForReadingAtPath:logPath];
+		[file seekToEndOfFile];
+		NSLog(@"Log path: %@", logPath);
 		
-		NSLog(@"Done parsing.");
+		//Set up some more doohickeys and then start the parse loop
+		int pageSize = getpagesize();
+		unsigned long long offset = [file offsetInFile];
+		enum LMXParseResult result = LMXParsedIncomplete;
+		int omglooping = 0; //for debugging
+		do {
+			if (omglooping++) NSLog(@"OMG LOOPING!!!1");
+			NSLog(@"Initial offset: %d", offset);
+			//Calculate the new offset
+			offset = (offset <= pageSize) ? 0 : offset - pageSize;
+			NSLog(@"Start reading from offset: %ull", offset);
+			
+			//Seek to it and read
+			[file seekToFileOffset:offset]; 
+			NSData *chunk = [file readDataOfLength:pageSize];
+			NSLog(@"Chunk to parse (as string): %@", [NSString stringWithData:chunk encoding:NSUTF8StringEncoding]);
+			
+			//Parse
+			result = [parser parseChunk:chunk];
+			
+			NSLog(@"Done parsing.");
+			
+		//Continue to parse as long as we need more elements, we have data to read, and LMX doesn't think we're done.
+		} while ([foundElements count] < linesToDisplay && offset > 0 && result != LMXParsedCompletely);
+		//Be a good citizen and close the file
+		[file closeFile];
 		
-	//Continue to parse as long as we need more elements, we have data to read, and LMX doesn't think we're done.
-	} while ([foundElements count] < linesToDisplay && offset > 0 && result != LMXParsedCompletely);
-	
-	NSLog(@"foundElements: %@", foundElements);
-	
-	NSString *serviceName = [[[[[logPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] lastPathComponent] componentsSeparatedByString:@"."] objectAtIndex:0U];
-	
-	NSMutableArray *foundContentContexts = [NSMutableArray arrayWithCapacity:linesToDisplay]; 
-	NSEnumerator *enumerator = [foundElements objectEnumerator];
-	AIXMLElement *element = nil;
-	while ((element = [enumerator nextObject])) {
-		NSDictionary *attributesDictionary = [element attributes];
-		NSString *sender = [NSString stringWithFormat:@"%@.%@", serviceName, [attributesDictionary objectForKey:@"sender"]];
-		AIListObject *account = [chat account];
-		NSString *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
-		BOOL sentByMe = ([sender isEqualToString:accountID]);
-		NSLog(@"sender = %@, accountID = %@, sentByMe = %@", sender, accountID, sentByMe?@"YES":@"NO");
-		if ([[element name] isEqualToString:@"message"]) {
+		NSLog(@"foundElements: %@", foundElements);
+		
+		//Get the service name from the path name
+		NSString *serviceName = [[[[[logPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] lastPathComponent] componentsSeparatedByString:@"."] objectAtIndex:0U];
+		
+		//Enumerate over the found elements
+		NSEnumerator *enumerator = [foundElements objectEnumerator];
+		AIXMLElement *element = nil;
+		while ((element = [enumerator nextObject])) {
+			//Set up some doohickers.
+			NSDictionary *attributesDictionary = [element attributes];
+			NSString *sender = [NSString stringWithFormat:@"%@.%@", serviceName, [attributesDictionary objectForKey:@"sender"]];
+			AIListObject *account = [chat account];
+			NSString *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
+			BOOL sentByMe = ([sender isEqualToString:accountID]);
 			NSString *autoreplyAttribute = [attributesDictionary objectForKey:@"auto"];
+			//Create the context object
 			AIContentContext *message = [AIContentContext messageInChat:chat 
 															 withSource:(sentByMe ? account : [chat listObject])
 															destination:(sentByMe ? [chat listObject] : account)
 																   date:[NSCalendarDate calendarDateWithString:[attributesDictionary objectForKey:@"time"]]
 																message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
 															  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"true"] == NSOrderedSame)];
-			[foundContentContexts addObject:message];
+			//Add it to the array
+			[innerFoundContentContexts addObject:message];
+			
+			//If we've found enough, stop drop and roll!
+			if ([innerFoundContentContexts count] + [outerFoundContentContexts count] >= linesToDisplay) {
+				[outerFoundContentContexts setArray:[innerFoundContentContexts arrayByAddingObjectsFromArray:outerFoundContentContexts]];
+				return outerFoundContentContexts;
+			}
 		}
+		//Add our locals to the outer array; we're probably looping again.
+		[outerFoundContentContexts setArray:[innerFoundContentContexts arrayByAddingObjectsFromArray:outerFoundContentContexts]];
 	}
-	return foundContentContexts;
+	return outerFoundContentContexts;
 }
 
 #pragma mark LMX delegate

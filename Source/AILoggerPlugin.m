@@ -587,37 +587,41 @@ Class LogViewerWindowControllerClass = NULL;
 
 #pragma mark Message History
 
-+ (NSString *)pathToNewestLogFileForChat:(AIChat *)chat
+id getDateFromPath(id path)
+{
+	NSRange openParenRange, closeParenRange;
+
+	if ([path hasSuffix:@".chatlog"] && (openParenRange = [path rangeOfString:@"(" options:NSBackwardsSearch]).location != NSNotFound) {
+		openParenRange = NSMakeRange(openParenRange.location, [path length] - openParenRange.location);
+		if ((closeParenRange = [path rangeOfString:@")" options:0 range:openParenRange]).location != NSNotFound) {
+			//Add and subtract one to remove the parenthesis
+			NSString *dateString = [path substringWithRange:NSMakeRange(openParenRange.location + 1, (closeParenRange.location - openParenRange.location))];
+			NSCalendarDate *date = [NSCalendarDate calendarDateWithString:dateString timeSeparator:'.'];
+			return date;
+		}
+	}
+	return nil;
+}
+
+int sortPaths(id path1, id path2, void *context)
+{
+	id date1 = getDateFromPath(path1);
+	id date2 = getDateFromPath(path2);
+	if (date1 == date2)
+		return NSOrderedSame;
+	else if (date1 && date2)
+		return [date2 compare:date1];
+	else
+		return date2 ? NSOrderedAscending : NSOrderedDescending;
+}
+
++ (NSArray *)sortedArrayOfLogFilesForChat:(AIChat *)chat
 {
 	NSString *baseLogPath = [[self fullPathForLogOfChat:chat onDate:[NSDate date]] stringByDeletingLastPathComponent];
-	NSCalendarDate *newestLogDate = [NSDate distantPast];
-	NSString *newestLogPath = nil;
-
 	NSArray *files = [[NSFileManager defaultManager] directoryContentsAtPath:baseLogPath];	
 	NSLog(@"files: %@", files);
 	if (files) {
-		NSEnumerator *enumerator = [files objectEnumerator];
-		NSString *path = nil;
-		while ((path = [enumerator nextObject])) {
-			NSLog(@"path: %@", path);
-			NSRange openParenRange, closeParenRange;
-			if ([path hasSuffix:@".chatlog"]) {
-				if ((openParenRange = [path rangeOfString:@"(" options:NSBackwardsSearch]).location != NSNotFound) {
-					openParenRange = NSMakeRange(openParenRange.location, [path length] - openParenRange.location);
-					if ((closeParenRange = [path rangeOfString:@")" options:0 range:openParenRange]).location != NSNotFound) {
-						//Add and subtract one to remove the parenthesis
-						NSString *dateString = [path substringWithRange:NSMakeRange(openParenRange.location + 1, (closeParenRange.location - openParenRange.location))];
-						NSCalendarDate *date = [NSCalendarDate calendarDateWithString:dateString timeSeparator:'.'];
-						NSLog(@"date = %@, newestLogDate = %@", date, newestLogDate);
-						if ([date compare:newestLogDate] == NSOrderedDescending) {
-							newestLogDate = date;
-							newestLogPath = path;
-						}
-					}
-				}
-			}
-		}
-		return [baseLogPath stringByAppendingPathComponent:newestLogPath];
+		return [files sortedArrayUsingFunction:&sortPaths context:NULL];
 	}
 	return nil;
 }
