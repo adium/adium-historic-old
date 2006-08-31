@@ -237,6 +237,10 @@
 	if (!orderIndex) {
 		[self setOrderIndex:([[self containingObject] largestOrder] + 1)];
 	}
+	
+	if (!orderIndex) {
+		AILog(@"WARNING: %@ could not determine its order index. Containing object: %@; preference yields %@",self,[self containingObject],orderIndexNumber);
+	}
 }
 
 /*!
