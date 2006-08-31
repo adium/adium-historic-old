@@ -371,8 +371,8 @@ Class LogViewerWindowControllerClass = NULL;
 
 		//Don't log chats for temporary accounts
 		if ([[chat account] isTemporary]) return;	
-							
-		AIXMLAppender	*appender = [self appenderForChat:chat];
+		
+		BOOL			dirty = NO;
 		NSString		*contentType = [content type];
 		NSString		*date = [[NSCalendarDate date] ISO8601DateString];
 
@@ -386,10 +386,11 @@ Class LogViewerWindowControllerClass = NULL;
 				[attributeValues addObject:@"true"];
 			}
 			
-			[appender addElementWithName:@"message" 
+			[[self appenderForChat:chat] addElementWithName:@"message" 
 						  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
 						   attributeKeys:attributeKeys
 						 attributeValues:attributeValues];
+			dirty = YES;
 		} else {
 			//XXX: Yucky hack.
 			AIListObject	*retardedMetaObject = [content source];
@@ -411,8 +412,8 @@ Class LogViewerWindowControllerClass = NULL;
 					NSString *translatedStatus = [statusTranslation objectForKey:[(AIContentStatus *)content status]];
 					if(translatedStatus == nil)
 						AILog(@"AILogger: Don't know how to translate status: %@", [(AIContentStatus *)content status]);
-					else
-						[appender addElementWithName:@"status"
+					else {
+						[[self appenderForChat:chat] addElementWithName:@"status"
 									  escapedContent:([(AIContentStatus *)content loggedMessage] ? [xhtmlDecoder encodeHTML:[(AIContentStatus *)content loggedMessage] imagesPath:nil] : nil)
 									   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
 									 attributeValues:[NSArray arrayWithObjects:
@@ -420,17 +421,22 @@ Class LogViewerWindowControllerClass = NULL;
 										 [actualObject UID], 
 										 date,
 										 nil]];
+						dirty = YES;
+					}
 
 				} else if ([contentType isEqualToString:CONTENT_EVENT_TYPE]) {
-					[appender addElementWithName:@"event"
+					[[self appenderForChat:chat] addElementWithName:@"event"
 								  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
 								   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
 								 attributeValues:[NSArray arrayWithObjects:[(AIContentEvent *)content eventType], [[content source] UID], date, nil]];
+					dirty = YES;
 				}
 			}
 		}
-
-		[self markLogDirtyAtPath:[appender path] forChat:chat];
+		//Don't create a new one if not needed
+		AIXMLAppender *appender = [self existingAppenderForChat:chat];
+		if (dirty && appender)
+			[self markLogDirtyAtPath:[appender path] forChat:chat];
 	}
 }
 
@@ -588,10 +594,12 @@ Class LogViewerWindowControllerClass = NULL;
 	NSString *newestLogPath = nil;
 
 	NSArray *files = [[NSFileManager defaultManager] directoryContentsAtPath:baseLogPath];	
+	NSLog(@"files: %@", files);
 	if (files) {
 		NSEnumerator *enumerator = [files objectEnumerator];
 		NSString *path = nil;
 		while ((path = [enumerator nextObject])) {
+			NSLog(@"path: %@", path);
 			NSRange openParenRange, closeParenRange;
 			if ([path hasSuffix:@".chatlog"]) {
 				if ((openParenRange = [path rangeOfString:@"(" options:NSBackwardsSearch]).location != NSNotFound) {
@@ -600,6 +608,7 @@ Class LogViewerWindowControllerClass = NULL;
 						//Add and subtract one to remove the parenthesis
 						NSString *dateString = [path substringWithRange:NSMakeRange(openParenRange.location + 1, (closeParenRange.location - openParenRange.location))];
 						NSCalendarDate *date = [NSCalendarDate calendarDateWithString:dateString];
+						NSLog(@"date = %@, newestLogDate = %@", date, newestLogDate);
 						if ([date compare:newestLogDate] == NSOrderedDescending) {
 							newestLogDate = date;
 							newestLogPath = path;

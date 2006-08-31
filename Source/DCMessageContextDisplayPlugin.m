@@ -249,6 +249,8 @@
 	//Continue to parse as long as we need more elements, we have data to read, and LMX doesn't think we're done.
 	} while ([foundElements count] < linesToDisplay && offset > 0 && result != LMXParsedCompletely);
 	
+	NSLog(@"foundElements: %@", foundElements);
+	
 	NSString *serviceName = [[[[[logPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] lastPathComponent] componentsSeparatedByString:@"."] objectAtIndex:0U];
 	
 	NSMutableArray *foundContentContexts = [NSMutableArray arrayWithCapacity:linesToDisplay]; 
@@ -256,18 +258,21 @@
 	AIXMLElement *element = nil;
 	while ((element = [enumerator nextObject])) {
 		NSDictionary *attributesDictionary = [element attributes];
-		NSString *autoreplyAttribute = [[element name] isEqualToString:@"message"] ? [attributesDictionary objectForKey:@"auto"] : nil;
 		NSString *sender = [NSString stringWithFormat:@"%@.%@", serviceName, [attributesDictionary objectForKey:@"sender"]];
 		AIAccount *account = [chat account];
 		NSString *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
-		BOOL sentByMe = ([sender isEqualToString:accountID] == NSOrderedSame);
-		AIContentContext *message = [AIContentContext messageInChat:chat 
-														 withSource:(sentByMe ? account : [[adium contactController] existingListObjectWithUniqueID:sender])
-														destination:(sentByMe ? [[adium contactController] existingListObjectWithUniqueID:sender] : account)
-															   date:[NSCalendarDate calendarDateWithString:[attributesDictionary objectForKey:@"time"]]
-															message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
-														  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"yes"] == NSOrderedSame)];
-		[foundContentContexts addObject:message];
+		BOOL sentByMe = ([sender isEqualToString:accountID]);
+		NSLog(@"sender = %@, accountID = %@, sentByMe = %@", sender, accountID, sentByMe?@"YES":@"NO");
+		if ([[element name] isEqualToString:@"message"]) {
+			NSString *autoreplyAttribute = [attributesDictionary objectForKey:@"auto"];
+			AIContentContext *message = [AIContentContext messageInChat:chat 
+															 withSource:(sentByMe ? account : [chat listObject])
+															destination:(sentByMe ? [chat listObject] : account)
+																   date:[NSCalendarDate calendarDateWithString:[attributesDictionary objectForKey:@"time"]]
+																message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
+															  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"true"] == NSOrderedSame)];
+			[foundContentContexts addObject:message];
+		}
 	}
 	return foundContentContexts;
 }
