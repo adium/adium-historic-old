@@ -392,7 +392,7 @@ Class LogViewerWindowControllerClass = NULL;
 						 attributeValues:attributeValues];
 			dirty = YES;
 		} else {
-			//XXX: Yucky hack.
+			//XXX: Yucky hack. This is here because we get status and event updates for metas, not for individual contacts. Or something like that.
 			AIListObject	*retardedMetaObject = [content source];
 			AIListObject	*actualObject = nil;
 			AIListContact	*participatingListObject = nil;
