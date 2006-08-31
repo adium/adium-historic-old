@@ -259,7 +259,7 @@
 	while ((element = [enumerator nextObject])) {
 		NSDictionary *attributesDictionary = [element attributes];
 		NSString *sender = [NSString stringWithFormat:@"%@.%@", serviceName, [attributesDictionary objectForKey:@"sender"]];
-		AIAccount *account = [chat account];
+		AIListObject *account = [chat account];
 		NSString *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
 		BOOL sentByMe = ([sender isEqualToString:accountID]);
 		NSLog(@"sender = %@, accountID = %@, sentByMe = %@", sender, accountID, sentByMe?@"YES":@"NO");
