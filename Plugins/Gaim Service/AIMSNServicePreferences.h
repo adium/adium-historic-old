@@ -21,6 +21,7 @@
 
 	IBOutlet		NSTextField		*label_displayNames;
 	IBOutlet		NSTextField		*label_displayNamesWarning;
+	IBOutlet		NSButton		*checkBox_displayCustomEmoticons;
 }
 
 @end
