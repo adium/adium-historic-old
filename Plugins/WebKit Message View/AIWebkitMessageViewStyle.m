@@ -534,7 +534,7 @@ static NSArray *validSenderColors;
 	AIListObject	*theSource = ([contentSource isKindOfClass:[AIListContact class]] ?
 								  [(AIListContact *)contentSource parentContact] :
 								  contentSource);
-
+	
 	/*
 		htmlEncodedMessage is only encoded correctly for AIContentMessages
 		but we do it up here so that we can check for RTL/LTR text below without
@@ -640,20 +640,18 @@ static NSArray *validSenderColors;
 		
 		//Use [content source] directly rather than the potentially-metaContact theSource
 		NSString *formattedUID = [contentSource formattedUID];
+		NSString *displayName = [contentSource displayName];
 		[inString replaceKeyword:@"%senderScreenName%" 
 					  withString:[(formattedUID ?
 								   formattedUID :
-								   [contentSource displayName]) stringByEscapingForXMLWithEntities:nil]];
+								   displayName) stringByEscapingForXMLWithEntities:nil]];
         
 		do{
 			range = [inString rangeOfString:@"%sender%"];
 			if (range.location != NSNotFound) {
 				NSString		*senderDisplay = nil;
 				if (useCustomNameFormat) {
-					NSString		*displayName = [theSource displayName];
-					NSString		*formattedUID = [theSource formattedUID];
-					
-					if (formattedUID && ![displayName isEqualToString:formattedUID]) {
+			 		if (formattedUID && ![displayName isEqualToString:formattedUID]) {
 						switch (nameFormat) {
 							case Display_Name_Screen_Name: {
 								senderDisplay = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
