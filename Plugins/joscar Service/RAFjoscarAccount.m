@@ -1149,11 +1149,13 @@ BOOL isMobileContact(AIListObject *inListObject)
 			tmp = [joscarAdapter getAllowedBuddies];
 			break;
 	}
-	NSEnumerator *enumerator = [tmp objectEnumerator];
-	NSString *listObj;
-	NSMutableArray *retArr=[[NSMutableArray alloc] init];
-	while ((listObj = [enumerator nextObject]))
-		[retArr addObject:[[adium contactController] contactWithService:[self service] account:self UID:listObj]];
+	NSEnumerator	*enumerator = [tmp objectEnumerator];
+	NSString		*contactUID;
+	NSMutableArray	*retArr=[[NSMutableArray alloc] init];
+
+	while ((contactUID = [enumerator nextObject]))
+		[retArr addObject:[self contactWithUID:contactUID]];
+	
 	return [retArr autorelease];
 }
 
@@ -1170,11 +1172,13 @@ BOOL isMobileContact(AIListObject *inListObject)
 			break;
 	}
 
-	NSEnumerator *enumerator = [tmp objectEnumerator];
-	NSString *listObj;
-	NSMutableArray *retArr=[[NSMutableArray alloc] init];
-	while ((listObj = [enumerator nextObject]))
-		[retArr addObject:[[[adium contactController] contactWithService:[self service] account:self UID:listObj] internalObjectID]];
+	NSEnumerator	*enumerator = [tmp objectEnumerator];
+	NSString		*contactUID;
+	NSMutableArray	*retArr=[[NSMutableArray alloc] init];
+
+	while ((contactUID = [enumerator nextObject]))
+		[retArr addObject:[[self contactWithUID:contactUID] internalObjectID]];
+
 	return [retArr autorelease];
 }
 //Set the privacy options
