@@ -793,7 +793,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	NSMutableArray *elementStack = [NSMutableArray array];
 	NSMutableArray *attributeNamesStack = [NSMutableArray array];
 
-	//Root element: includeHeaders ? <html> : rightToLeft ? <div> : <p>
+	//Root element: includeHeaders ? <html> : <div>
 
 	if (thingsToInclude.headers) {
 		[elementStack addObject:[AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"html"]];
@@ -814,22 +814,17 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		}
 	}
 
+	AIXMLElement *divElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"div"];
 	//If the text is right-to-left, enclose all our HTML in an rtl div tag
 	if ((messageLength > 0) &&
 		([[inMessage attribute:NSParagraphStyleAttributeName
 					   atIndex:0
 				effectiveRange:nil] baseWritingDirection] == NSWritingDirectionRightToLeft))
 	{
-		AIXMLElement *divElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"div"];
 		[divElement setValue:@"rtl" forAttribute:@"dir"];
-		[[elementStack lastObject] addObject:divElement];
-		[elementStack addObject:divElement];
-		[attributeNamesStack addObject:emptySet];
 	}
-
-	AIXMLElement *paragraphElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"p"];
-	[[elementStack lastObject] addObject:paragraphElement];
-	[elementStack addObject:paragraphElement];
+	[[elementStack lastObject] addObject:divElement];
+	[elementStack addObject:divElement];
 	[attributeNamesStack addObject:emptySet];
 
 	NSMutableSet *CSSCapableAttributes = [[NSAttributedString CSSCapableAttributesSet] mutableCopy];
