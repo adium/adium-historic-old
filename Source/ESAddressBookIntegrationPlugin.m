@@ -1063,9 +1063,8 @@ NSString* serviceIDForOscarUID(NSString *UID)
 /*!
  * @brief Service ID for a Jabber UID
  *
- * If we are on the Jabber server, we need to distinguish between Google Talk (GTalk) and the
- * rest of the Jabber world. serviceID is already Jabber, so we only need to change if we
- * have a GTalk UID.
+ * If we are on the Jabber server, we need to distinguish between Google Talk (GTalk), LiveJournal, and the rest of the
+ * Jabber world. serviceID is already Jabber, so we only need to change if we have a special UID.
  */
 NSString* serviceIDForJabberUID(NSString *UID)
 {
@@ -1074,7 +1073,8 @@ NSString* serviceIDForJabberUID(NSString *UID)
 	if ([UID hasSuffix:@"@gmail.com"] ||
 		[UID hasSuffix:@"@googlemail.com"]) {
 		serviceID = @"GTalk";
-
+	} else if ([UID hasSuffix:@"@livejournal.com"]) {
+		serviceID = @"LiveJournal";
 	} else {
 		serviceID = @"Jabber";
 	}
