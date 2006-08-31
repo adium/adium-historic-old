@@ -297,7 +297,7 @@
 - (void)parser:(LMXParser *)parser foundCharacters:(NSString *)string
 {
 	if ([elementStack count])
-		[(AIXMLElement *)[elementStack objectAtIndex:0U] addObject:string];
+		[(AIXMLElement *)[elementStack objectAtIndex:0U] insertObject:string atIndex:0U];
 }
 
 - (void)parser:(LMXParser *)parser elementStarted:(NSString *)elementName attributes:(NSDictionary *)attributes
