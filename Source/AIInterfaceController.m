@@ -1450,7 +1450,7 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 		return NO;
 		
 	} else if (menuItem == menuItem_paste || menuItem == menuItem_pasteAndMatchStyle) {
-		return [[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType, NSPICTPboardType, NSPDFPboardType, nil]] != nil;
+		return [[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType, NSPICTPboardType, NSPDFPboardType, NSURLPboardType, NSFilenamesPboardType, NSFilesPromisePboardType, NSRTFDPboardType, nil]] != nil;
 	
 	} else if (menuItem == menuItem_showToolbar) {
 		[menuItem_showToolbar setTitle:([[keyWindow toolbar] isVisible] ? 

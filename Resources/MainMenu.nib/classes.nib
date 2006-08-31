@@ -27,17 +27,12 @@
                 adiumPrint = id; 
                 closeAllChats = id; 
                 closeChatMenu = id; 
-                closeContactList = id; 
                 closeMenu = id; 
-                nextMessage = id; 
                 paste = id; 
                 pasteAndMatchStyle = id; 
                 pasteWithImagesAndColors = id; 
-                previousMessage = id; 
                 runToolbarCustomizationPalette = id; 
                 setFontPanelSettingsAsDefaultFont = id; 
-                showChatWindow = id; 
-                showContactList = id; 
                 showContactListAndBringToFront = id; 
                 showPreferenceWindow = id; 
                 toggleContactList = id; 
@@ -53,7 +48,6 @@
                 contactListPlugin = id; 
                 fontPanelAccessoryView = NSView; 
                 interfacePlugin = id; 
-                menuController = AIMenuController; 
                 "menuItem_bold" = NSMenuItem; 
                 "menuItem_close" = NSMenuItem; 
                 "menuItem_closeAllChats" = NSMenuItem; 
@@ -62,6 +56,7 @@
                 "menuItem_italic" = NSMenuItem; 
                 "menuItem_paste" = NSMenuItem; 
                 "menuItem_pasteAndMatchStyle" = NSMenuItem; 
+                "menuItem_pasteWithImagesAndColors" = NSMenuItem; 
                 "menuItem_print" = NSMenuItem; 
                 "menuItem_showFonts" = NSMenuItem; 
                 "menuItem_showToolbar" = NSMenuItem; 
