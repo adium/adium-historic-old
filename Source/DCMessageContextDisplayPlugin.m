@@ -132,7 +132,7 @@
 		//Check if the history fits the date restrictions
 		
 		//The most recent message is what determines whether we have "chatted in the last X days", "not chatted in the last X days", etc.
-		NSCalendarDate *mostRecentMessage = [[(AIContentContext *)[context objectAtIndex:[context count]-1] date] dateWithCalendarFormat:nil timeZone:nil];
+		NSCalendarDate *mostRecentMessage = [[(AIContentContext *)[context lastObject] date] dateWithCalendarFormat:nil timeZone:nil];
 		if ([self contextShouldBeDisplayed:mostRecentMessage]) {
 			NSEnumerator		*enumerator;
 			AIContentContext	*contextMessage;
