@@ -1623,40 +1623,38 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Retrieve a contact from the contact list (Creating if necessary)
 - (AIListContact *)contactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID
 {
+	if (!(inUID && [inUID length] && inService)) return nil; //Ignore invalid requests
+	
 	AIListContact	*contact = nil;
+	NSString		*key = [AIListContact internalUniqueObjectIDForService:inService
+																   account:inAccount
+																	   UID:inUID];
+	contact = [contactDict objectForKey:key];
+	if (!contact) {
+		//Create
+		contact = [[AIListContact alloc] initWithUID:inUID account:inAccount service:inService];
 
-	if (inUID && [inUID length] && inService) { //Ignore invalid requests
-		NSString		*key = [AIListContact internalUniqueObjectIDForService:inService
-																	   account:inAccount
-																		   UID:inUID];
+		//Do the update thing
+		[self _updateAllAttributesOfObject:contact];
 
-		contact = [contactDict objectForKey:key];
-		if (!contact) {
-			//Create
-			contact = [[AIListContact alloc] initWithUID:inUID account:inAccount service:inService];
-
-			//Do the update thing
-			[self _updateAllAttributesOfObject:contact];
-
-			//Check to see if we should add to a metaContact
-			AIMetaContact *metaContact = [contactToMetaContactLookupDict objectForKey:[contact internalObjectID]];
-			if (metaContact) {
-				/* We already know to add this object to the metaContact, since we did it before with another object,
-				   but this particular listContact is new and needs to be added directly to the metaContact
-				   (on future launches, the metaContact will obtain it automatically since all contacts matching this UID
-				   and serviceID should be included). */
-				[self _performAddListObject:contact toMetaContact:metaContact];
-			}
-			
-			//Set the contact as mobile if it is a phone number
-			if ([inUID characterAtIndex:0] == '+') {
-				[contact setIsMobile:YES notify:NotifyNever];
-			}
-
-			//Add
-			[contactDict setObject:contact forKey:key];
-			[contact release];
+		//Check to see if we should add to a metaContact
+		AIMetaContact *metaContact = [contactToMetaContactLookupDict objectForKey:[contact internalObjectID]];
+		if (metaContact) {
+			/* We already know to add this object to the metaContact, since we did it before with another object,
+			   but this particular listContact is new and needs to be added directly to the metaContact
+			   (on future launches, the metaContact will obtain it automatically since all contacts matching this UID
+			   and serviceID should be included). */
+			[self _performAddListObject:contact toMetaContact:metaContact];
 		}
+		
+		//Set the contact as mobile if it is a phone number
+		if ([inUID characterAtIndex:0] == '+') {
+			[contact setIsMobile:YES notify:NotifyNever];
+		}
+
+		//Add
+		[contactDict setObject:contact forKey:key];
+		[contact release];
 	}
 
 	return contact;
