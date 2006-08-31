@@ -281,7 +281,7 @@
 
 - (void)parser:(LMXParser *)parser elementEnded:(NSString *)elementName
 {
-	if ([elementName isEqualToString:@"message"] || [elementName isEqualToString:@"status"] || [elementName isEqualToString:@"event"]) {
+	if ([elementName isEqualToString:@"message"]) {
 		[elementStack insertObject:[AIXMLElement elementWithName:elementName] atIndex:0U];
 		NSLog(@"inserted %@ to stack. stack is now: %@", elementName, elementStack);
 	}
@@ -310,14 +310,9 @@
 			NSLog(@"Set!");
 		}
 		
-		if ([elementName isEqualToString:@"message"] || 
-			[elementName isEqualToString:@"status"] || 
-			([elementName isEqualToString:@"event"] &&
-				![[attributes objectForKey:@"type"] isEqualToString:@"windowOpened"] && 
-				![[attributes objectForKey:@"type"] isEqualToString:@"windowClosed"]))
-		{
+		if ([elementName isEqualToString:@"message"])
 			[foundElements insertObject:element atIndex:0U];
-		}
+
 		NSLog(@"stack before remove: %@", elementStack);
 		[elementStack removeObjectAtIndex:0U];
 		NSLog(@"stack after remove: %@", elementStack);
