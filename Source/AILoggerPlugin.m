@@ -587,7 +587,7 @@ Class LogViewerWindowControllerClass = NULL;
 
 #pragma mark Message History
 
-id getDateFromPath(id path)
+NSCalendarDate* getDateFromPath(NSString *path)
 {
 	NSRange openParenRange, closeParenRange;
 
@@ -603,10 +603,10 @@ id getDateFromPath(id path)
 	return nil;
 }
 
-int sortPaths(id path1, id path2, void *context)
+int sortPaths(NSString *path1, NSString *path2, void *context)
 {
-	id date1 = getDateFromPath(path1);
-	id date2 = getDateFromPath(path2);
+	NSCalendarDate *date1 = getDateFromPath(path1);
+	NSCalendarDate *date2 = getDateFromPath(path2);
 	if (date1 == date2)
 		return NSOrderedSame;
 	else if (date1 && date2)
