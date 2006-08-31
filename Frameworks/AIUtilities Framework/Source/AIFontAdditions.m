@@ -98,7 +98,7 @@
 	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
 
 	if (self != [fontManager convertFont:self toHaveTrait:NSBoldFontMask] || 
-	   self != [fontManager convertFont:self toHaveTrait:NSUnboldFontMask]) {
+	   self != [fontManager convertFont:self toNotHaveTrait:NSBoldFontMask]) {
 		return YES;
 	}
 	
@@ -110,7 +110,7 @@
 	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
 	
 	if (self != [fontManager convertFont:self toHaveTrait:NSItalicFontMask] || 
-	   self != [fontManager convertFont:self toHaveTrait:NSUnitalicFontMask]) {
+	   self != [fontManager convertFont:self toNotHaveTrait:NSItalicFontMask]) {
 		return YES;
 	}
 	
