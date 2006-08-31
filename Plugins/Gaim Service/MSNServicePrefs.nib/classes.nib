@@ -1,6 +1,11 @@
 {
     IBClasses = (
         {
+            CLASS = AIAdvancedPreferencePane; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
             CLASS = AILocalizationButton; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -26,14 +31,12 @@
             CLASS = AIMSNServicePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "checkBox_conversationClosed" = NSButton; 
-                "checkBox_conversationTimedOut" = NSButton; 
+                "checkBox_displayCustomEmoticons" = NSButton; 
                 "checkBox_treatDisplayNamesAsStatus" = NSButton; 
-                "label_conversationNotices" = NSTextField; 
                 "label_displayNames" = NSTextField; 
                 "label_displayNamesWarning" = NSTextField; 
             }; 
-            SUPERCLASS = AIPreferencePane; 
+            SUPERCLASS = AIAdvancedPreferencePane; 
         }, 
         {
             ACTIONS = {changePreference = id; }; 

@@ -14,5 +14,7 @@
 	<true/>	
 	<key>MSN:Conversation Timed Out</key>
 	<false/>
+	<key>MSN:Display Custom Emoticons</key>
+	<true/>
 </dict>
 </plist>
