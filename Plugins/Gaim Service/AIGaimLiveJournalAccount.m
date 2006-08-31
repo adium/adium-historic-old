@@ -50,8 +50,7 @@
  */
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
 {
-#warning Test whether LJ allows file transfers
-	return YES;
+	return NO;
 }
 
 @end
