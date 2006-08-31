@@ -21,7 +21,7 @@
 @implementation AILiveJournalService
 
 //Account Creation
-- (Class)accountClass{
+- (Class)accountClass {
 	return [AIGaimLiveJournalAccount class];
 }
 
