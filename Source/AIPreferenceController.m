@@ -624,6 +624,9 @@
  */
 - (void)updatePreferences:(NSMutableDictionary *)prefDict forKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object
 {
+	//Upgrade code; message context isn't needed now that we draw from logs. This should be removed eventually.
+	[prefDict removeObjectForKey:@"Message Context"];
+	
 	NSString	*path = (object ? [userDirectory stringByAppendingPathComponent:[object pathToPreferences]] : userDirectory);
 	NSString	*name = (object ? [[object internalObjectID] safeFilenameString] : group);
 
