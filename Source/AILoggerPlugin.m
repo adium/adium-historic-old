@@ -607,7 +607,7 @@ Class LogViewerWindowControllerClass = NULL;
 					if ((closeParenRange = [path rangeOfString:@")" options:0 range:openParenRange]).location != NSNotFound) {
 						//Add and subtract one to remove the parenthesis
 						NSString *dateString = [path substringWithRange:NSMakeRange(openParenRange.location + 1, (closeParenRange.location - openParenRange.location))];
-						NSCalendarDate *date = [NSCalendarDate calendarDateWithString:dateString];
+						NSCalendarDate *date = [NSCalendarDate calendarDateWithString:dateString timeSeparator:'.'];
 						NSLog(@"date = %@, newestLogDate = %@", date, newestLogDate);
 						if ([date compare:newestLogDate] == NSOrderedDescending) {
 							newestLogDate = date;
