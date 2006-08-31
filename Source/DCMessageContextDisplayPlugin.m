@@ -302,7 +302,7 @@
 
 - (void)parser:(LMXParser *)parser elementStarted:(NSString *)elementName attributes:(NSDictionary *)attributes
 {
-	if (![elementName isEqualToString:@"chat"]) {
+	if ([elementStack count]) {
 		AIXMLElement *element = [elementStack objectAtIndex:0U];
 		if (attributes) {
 			NSLog(@"Setting element %@ to have attributes %@", element, attributes);
