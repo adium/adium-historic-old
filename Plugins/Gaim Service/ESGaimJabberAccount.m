@@ -229,6 +229,9 @@
 		[contactUID hasSuffix:@"@googlemail.com"]) {
 		contactServiceID = @"libgaim-jabber-gtalk";
 
+	} else if([contactUID hasSuffix:@"@livejournal.com"]){
+		contactServiceID = @"libgaim-jabber-livejournal";
+		
 	} else {
 		contactServiceID = @"libgaim-Jabber";
 	}
