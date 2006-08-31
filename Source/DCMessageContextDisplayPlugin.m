@@ -268,10 +268,8 @@
 															message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
 														  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"yes"] == NSOrderedSame)];
 		[foundContentContexts addObject:message];
-
-		return foundContentContexts;
-		//return nil;
 	}
+	return foundContentContexts;
 }
 
 #pragma mark LMX delegate
