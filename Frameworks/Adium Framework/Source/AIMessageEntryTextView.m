@@ -25,6 +25,7 @@
 #import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIContentContext.h>
 
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
@@ -106,7 +107,11 @@
 															selector:@selector(toggleMessageSending:)
 																name:@"AIChatDidChangeCanSendMessagesNotification"
 															  object:chat];
-	
+	[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self 
+															selector:@selector(contentObjectAdded:) 
+																name:Content_ContentObjectAdded 
+															  object:nil];
+
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];	
 }
 
@@ -133,7 +138,8 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
-
+	[[[AIObject sharedAdiumInstance] notificationCenter] removeObserver:self];
+	
     [chat release];
     [associatedView release];
     [historyArray release]; historyArray = nil;
@@ -708,6 +714,18 @@
 	[[self undoManager] removeAllActions];
 }
 
+//Populate the history with messages from the message history
+- (void)contentObjectAdded:(NSNotification *)notification
+{
+	AIContentObject *content = [[notification userInfo] objectForKey:@"AIContentObject"];
+	if ([[content type] compare:CONTENT_CONTEXT_TYPE] == NSOrderedSame && [content isOutgoing]) {
+		//Populate the history with messages from us
+		[historyArray insertObject:[content message] atIndex:1];
+		if ([historyArray count] > MAX_HISTORY) {
+			[historyArray removeLastObject];
+		}
+	}
+}
 
 //Push and Pop ---------------------------------------------------------------------------------------------------------
 #pragma mark Push and Pop
