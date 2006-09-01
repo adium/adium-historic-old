@@ -1111,9 +1111,6 @@
 		4BB9972F083D1A74006ACD6F /* ContactListShowBehavior.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB9972E083D1A74006ACD6F /* ContactListShowBehavior.nib */; };
 		4BBF41E40661194A001D31E1 /* AIContactProfilePane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF41DE0661194A001D31E1 /* AIContactProfilePane.m */; };
 		4BBF41E70661194A001D31E1 /* ContactProfilePane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BBF41E10661194A001D31E1 /* ContactProfilePane.nib */; };
-		4BC5A5DC0764F75B0080ECF7 /* AILocalVideoWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5A5D70764F75B0080ECF7 /* AILocalVideoWindowController.m */; };
-		4BC5A5DE0764F75B0080ECF7 /* AIVideoChatInterfacePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5A5D90764F75B0080ECF7 /* AIVideoChatInterfacePlugin.m */; };
-		4BC5A5DF0764F75B0080ECF7 /* LocalVideoWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BC5A5DA0764F75B0080ECF7 /* LocalVideoWindow.nib */; };
 		4BCAB5F307B59967006641B9 /* EditAccountSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAB5F007B59967006641B9 /* EditAccountSheet.nib */; };
 		4BCAC4CF07B59AFE006641B9 /* AddressBookPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC4CE07B59AFE006641B9 /* AddressBookPrefs.nib */; };
 		4BCAC4D907B59B2E006641B9 /* AddressBook.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC4D807B59B2E006641B9 /* AddressBook.png */; };
@@ -8232,7 +8229,6 @@
 				9E6A9BF80732CB500032C9F6 /* adiumOffline.png in Resources */,
 				34082690075B5CB900703011 /* Awake.png in Resources */,
 				34082691075B5CB900703011 /* Flap.png in Resources */,
-				4BC5A5DF0764F75B0080ECF7 /* LocalVideoWindow.nib in Resources */,
 				346BA3640774C35500628F06 /* GlobalEventsPreferences.nib in Resources */,
 				34C6A3BC077A8CB500EB423C /* AppearanceDefaults.plist in Resources */,
 				34C14D5107A8BA00003CC138 /* EmoticonPackPreview.nib in Resources */,
@@ -8798,8 +8794,6 @@
 				344458F0070B5BEF00D8E932 /* ESDebugWindowController.m in Sources */,
 				4B5323ED0747BDED0073DF4D /* AICrashController.m in Sources */,
 				4B53245B0747C82B0073DF4D /* AIExceptionController.m in Sources */,
-				4BC5A5DC0764F75B0080ECF7 /* AILocalVideoWindowController.m in Sources */,
-				4BC5A5DE0764F75B0080ECF7 /* AIVideoChatInterfacePlugin.m in Sources */,
 				346BA33F0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m in Sources */,
 				346BA3450774C2D200628F06 /* ESGlobalEventsPreferences.m in Sources */,
 				34C68B260778FA1300EB423C /* ESGeneralPreferencesPlugin.m in Sources */,
