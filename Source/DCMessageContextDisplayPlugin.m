@@ -232,11 +232,11 @@ static int linesLeftToFind = 0;
 	//Iterate over the elements of the log path array.
 	NSEnumerator *pathsEnumerator = [logPaths objectEnumerator];
 	NSString *logPath = nil;
-	while ((logPath = [pathsEnumerator nextObject]) && linesLeftToFind > 0) {
+	while (linesLeftToFind > 0 && (logPath = [pathsEnumerator nextObject])) {
 		//If it's not a .chatlog, ignore it.
 		if (![logPath hasSuffix:@".chatlog"]) {
 			NSLog(@"Ignoring path %@", logPath);
-			continue; //XXX: note we might be able to just END here, because of the way the date sorting works.
+			continue;
 		}
 				
 		//Stick the base path on to the beginning
@@ -313,7 +313,7 @@ static int linesLeftToFind = 0;
 			
 			//If we've found enough, stop drop and roll!
 			if ([innerFoundContentContexts count] >= linesLeftToFind) {
-				NSLog(@"Do we ever get here?");
+				NSLog(@"Hooray, we've found everything.");
 				break;
 			}
 		}
@@ -365,7 +365,6 @@ static int linesLeftToFind = 0;
 		if ([elementName isEqualToString:@"message"])
 			[foundElements insertObject:element atIndex:0U];
 
-		NSLog(@"stack before remove: %@", elementStack);
 		[elementStack removeObjectAtIndex:0U];
 		NSLog(@"stack after remove: %@", elementStack);
 		if ([foundElements count] == linesLeftToFind) {
