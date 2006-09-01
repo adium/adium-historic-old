@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIExtendedStatusPlugin.h"
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
-#import "AIExtendedStatusPlugin.h"
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
@@ -102,7 +102,13 @@
 		int				idle;
 		
 		if (showStatus) {
-			statusMessage = [[[[[(AIListContact *)inObject contactListStatusMessage] string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
+			NSAttributedString *filteredMessage;
+
+			filteredMessage = [[adium contentController] filterAttributedString:[(AIListContact *)inObject contactListStatusMessage]
+																usingFilterType:AIFilterContactList
+																	  direction:AIFilterIncoming
+																		context:inObject];
+			statusMessage = [[[[filteredMessage string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
 
 			//Incredibly long status messages are slow to size, so we crop them to a reasonable length
 			if ([statusMessage length] > STATUS_MAX_LENGTH) {
