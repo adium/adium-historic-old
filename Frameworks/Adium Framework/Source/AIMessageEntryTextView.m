@@ -26,11 +26,13 @@
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
+#import <AIUtilities/AIExceptionHandlingUtilities.h>
 
 #define MAX_HISTORY					25		//Number of messages to remember in history
 #define ENTRY_TEXTVIEW_PADDING		6		//Padding for auto-sizing
@@ -460,6 +462,7 @@
 			[string release];
 			
 		} else {
+			AI_DURING
 			if ([type isEqualToString:NSRTFPboardType]) {
 				attributedString = [[NSMutableAttributedString alloc] initWithRTF:data
 															   documentAttributes:NULL];
@@ -470,7 +473,24 @@
 				attributedString = [[NSMutableAttributedString alloc] initWithHTML:data
 																documentAttributes:NULL];
 			}
+			AI_HANDLER
+			//Error while reading the RTF or HTML data, which can happen. Fall back on plain text
+			if ([[[NSPasteboard generalPasteboard] types] containsObject:NSStringPboardType]) {
+				data = [generalPasteboard dataForType:NSStringPboardType];
+				NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+				attributedString = [[NSMutableAttributedString alloc] initWithString:string
+																		  attributes:[self typingAttributes]];
+				[string release];
+			} else {
+				attributedString = nil;
+			}
+			AI_ENDHANDLER
 			
+			if (!attributedString) {
+				NSBeep();
+				return;
+			}
+
 			[attributedString convertForPasteWithTraitsUsingAttributes:[self typingAttributes]];
 		}
 		
@@ -978,6 +998,24 @@
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[self isContinuousSpellCheckingEnabled]]
 										 forKey:KEY_SPELL_CHECKING
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+}
+
+#pragma mark Writing Direction
+- (void)toggleBaseWritingDirection:(id)sender
+{
+	if ([NSApp isOnTigerOrBetter]) {
+		if ([self baseWritingDirection] == NSWritingDirectionRightToLeft) {
+			[self setBaseWritingDirection:NSWritingDirectionLeftToRight];
+		} else {
+			[self setBaseWritingDirection:NSWritingDirectionRightToLeft];			
+		}
+		
+		//Apply it immediately
+		[self setBaseWritingDirection:[self baseWritingDirection]
+								range:NSMakeRange(0, [[self textStorage] length])];
+	} else {
+		[super toggleBaseWritingDirection:sender];
+	}
 }
 
 #pragma mark Attachments
