@@ -124,6 +124,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	//Save the change of containing object so it can be restored on launch next time if we are using groups.
 	//We don't save if we are not using groups as this set will be for the contact list root and probably not desired permanently.
 	if ([[adium contactController] useContactListGroups] &&
+		inGroupInternalObjectID &&
 		![inGroupInternalObjectID isEqualToString:[self preferenceForKey:KEY_CONTAINING_OBJECT_ID
 																   group:OBJECT_STATUS_CACHE
 												   ignoreInheritedValues:YES]] &&
@@ -314,6 +315,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 		//Remove all references to the object from our status cache; notifying of the changes as appropriate
 		[self _removeCachedStatusOfObject:inObject];
+
+		//If we remove our list object, don't continue to show up in the contact list
+		if ([containedObjects count] == 0) {
+			[self setContainingObject:nil];
+		}
 
 		[inObject release];
 	}
