@@ -18,8 +18,6 @@
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListOutlineView.h>
-#import <Adium/AIContentControllerProtocol.h>
-
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
@@ -351,30 +349,20 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 				 [rightText stringByAppendingFormat:@" %f",[listObject orderIndex]] :
 				 [NSString stringWithFormat:@" %f",[listObject orderIndex]]); 
 #endif
-	
-	NSString *returnString = nil;
+
 	if (!leftText && !rightText) {
-		returnString = (useAliasesAsRequested ? 
-			[listObject longDisplayName] :
-			([listObject formattedUID] ? [listObject formattedUID] : [listObject longDisplayName]));
+		return (useAliasesAsRequested ? 
+				[listObject longDisplayName] :
+				([listObject formattedUID] ? [listObject formattedUID] : [listObject longDisplayName]));
 	} else {
 		//Combine left text, the object name, and right text
-		returnString = [NSString stringWithFormat:@"%@%@%@",
+		return [NSString stringWithFormat:@"%@%@%@",
 			(leftText ? leftText : @""),
 			(useAliasesAsRequested ? [listObject longDisplayName] : ([listObject formattedUID] ?
 																	 [listObject formattedUID] :
 																	 [listObject longDisplayName])),
 			(rightText ? rightText : @"")];
 	}
-	
-	//Apply Filters
-	NSAttributedString *attributedReturnString = [[[NSAttributedString alloc] initWithString:returnString] autorelease];
-	attributedReturnString = [[[AIObject sharedAdiumInstance] contentController] filterAttributedString:attributedReturnString
-																						usingFilterType:AIFilterDisplay
-																							  direction:AIFilterIncoming
-																								context:nil];
-	
-	return [attributedReturnString string];
 }
 
 - (void)setUseAliasesAsRequested:(BOOL)inFlag
