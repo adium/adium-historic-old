@@ -130,7 +130,11 @@
 		contactServiceID = @"joscar-OSCAR-dotMac";
 	} else if ((firstCharacter = ([contactUID length] ? [contactUID characterAtIndex:0] : '\0')) &&
 			   (firstCharacter >= '0' && firstCharacter <= '9')) {
-		contactServiceID = @"joscar-OSCAR-ICQ";
+		/* We use the libgaim ICQ service for now.... so we need to retrun that as the service for this contact.
+		 * I feverently hope code elsewhere isn't making assumptions that ([contact service] == [[contact account] service])...
+		 * I can't find anywhere that is.
+		 */
+		contactServiceID = /*@"joscar-OSCAR-ICQ"*/ @"libgaim-oscar-ICQ";
 	} else {
 		contactServiceID = @"joscar-OSCAR-AIM";
 	}
@@ -1176,9 +1180,10 @@ BOOL isMobileContact(AIListObject *inListObject)
 	NSString		*contactUID;
 	NSMutableArray	*retArr=[[NSMutableArray alloc] init];
 
-	while ((contactUID = [enumerator nextObject]))
+	while ((contactUID = [enumerator nextObject])) {
 		[retArr addObject:[[self contactWithUID:contactUID] internalObjectID]];
-
+	}
+	
 	return [retArr autorelease];
 }
 //Set the privacy options
