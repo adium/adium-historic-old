@@ -35,7 +35,7 @@ typedef enum {
 	AIFilterAutoReplyContent
 	
 } AIFilterType;
-#define FILTER_TYPE_COUNT 5
+#define FILTER_TYPE_COUNT 6
 
 typedef enum {
 	AIFilterIncoming = 0,   // Content we are receiving
