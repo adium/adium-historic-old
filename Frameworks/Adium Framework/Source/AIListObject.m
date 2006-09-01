@@ -199,8 +199,7 @@
 	   [containingObject release];
 	   containingObject = [inGroup retain];
 
-	   //Always set the current orderIndex in the containingObject.  The above block may be clearing data after a 
-	   //disconnect/reconnect cycle?
+	   //Always set the current orderIndex in the containingObject.
 	   [(AIListObject<AIContainingObject> *)containingObject listObject:self 
 													   didSetOrderIndex:[self orderIndex]];
 	}
