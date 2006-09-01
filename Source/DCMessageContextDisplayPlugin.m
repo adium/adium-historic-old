@@ -308,6 +308,9 @@ static int linesLeftToFind = 0;
 																   date:[NSCalendarDate calendarDateWithString:[attributesDictionary objectForKey:@"time"]]
 																message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
 															  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"true"] == NSOrderedSame)];
+			//Don't log this object
+			[message setPostProcessContent:NO];
+			
 			//Add it to the array
 			[innerFoundContentContexts addObject:message];
 			
