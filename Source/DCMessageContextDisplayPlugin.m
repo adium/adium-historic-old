@@ -200,6 +200,7 @@
 	return dateIsGood;
 }
 
+static int linesLeftToFind = 0;
 /*!
  * @brief Retrieve the message history for a particular chat
  *
@@ -225,10 +226,19 @@
 	//Initialize a place to store found messages
 	NSMutableArray *outerFoundContentContexts = [NSMutableArray arrayWithCapacity:linesToDisplay]; 
 
+	//Set up the counter variable
+	linesLeftToFind = linesToDisplay;
+
 	//Iterate over the elements of the log path array.
 	NSEnumerator *pathsEnumerator = [logPaths objectEnumerator];
 	NSString *logPath = nil;
-	while ((logPath = [pathsEnumerator nextObject])) {
+	while ((logPath = [pathsEnumerator nextObject]) && linesLeftToFind > 0) {
+		//If it's not a .chatlog, ignore it.
+		if (![logPath hasSuffix:@".chatlog"]) {
+			NSLog(@"Ignoring path %@", logPath);
+			continue; //XXX: note we might be able to just END here, because of the way the date sorting works.
+		}
+				
 		//Stick the base path on to the beginning
 		logPath = [baseLogPath stringByAppendingPathComponent:logPath];
 		
@@ -237,7 +247,7 @@
 		elementStack = [NSMutableArray array];
 
 		//Initialize a place to store found messages, locally
-		NSMutableArray *innerFoundContentContexts = [NSMutableArray arrayWithCapacity:linesToDisplay]; 
+		NSMutableArray *innerFoundContentContexts = [NSMutableArray arrayWithCapacity:linesLeftToFind]; 
 
 		//Create the parser and set ourselves as the delegate
 		LMXParser *parser = [LMXParser parser];
@@ -271,7 +281,7 @@
 			NSLog(@"Done parsing.");
 			
 		//Continue to parse as long as we need more elements, we have data to read, and LMX doesn't think we're done.
-		} while ([foundElements count] < linesToDisplay && offset > 0 && result != LMXParsedCompletely);
+		} while ([foundElements count] < linesLeftToFind && offset > 0 && result != LMXParsedCompletely);
 		//Be a good citizen and close the file
 		[file closeFile];
 		
@@ -302,13 +312,19 @@
 			[innerFoundContentContexts addObject:message];
 			
 			//If we've found enough, stop drop and roll!
-			if ([innerFoundContentContexts count] + [outerFoundContentContexts count] >= linesToDisplay) {
-				[outerFoundContentContexts setArray:[innerFoundContentContexts arrayByAddingObjectsFromArray:outerFoundContentContexts]];
-				return outerFoundContentContexts;
+			if ([innerFoundContentContexts count] >= linesLeftToFind) {
+				NSLog(@"Do we ever get here?");
+				break;
 			}
 		}
+		
+		//Do some logging, maybe this will help?
+		NSLog(@"outerFoundContentContexts = %@", outerFoundContentContexts);
+		NSLog(@"innerFoundContentContexts = %@", innerFoundContentContexts);
+
 		//Add our locals to the outer array; we're probably looping again.
 		[outerFoundContentContexts setArray:[innerFoundContentContexts arrayByAddingObjectsFromArray:outerFoundContentContexts]];
+		linesLeftToFind -= [outerFoundContentContexts count];
 	}
 	return outerFoundContentContexts;
 }
@@ -352,7 +368,7 @@
 		NSLog(@"stack before remove: %@", elementStack);
 		[elementStack removeObjectAtIndex:0U];
 		NSLog(@"stack after remove: %@", elementStack);
-		if ([foundElements count] == linesToDisplay) {
+		if ([foundElements count] == linesLeftToFind) {
 			if ([elementStack count]) [elementStack removeAllObjects];
 			[parser abortParsing];
 		}
