@@ -1589,6 +1589,7 @@
 			mainGroup = 0867D691FE84028FC02AAC07 /* AIUtilities.framework */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
+			projectRoot = "";
 			shouldCheckCompatibility = 1;
 			targets = (
 				8DC2EF4F0486A6940098B216 /* AIUtilities */,
