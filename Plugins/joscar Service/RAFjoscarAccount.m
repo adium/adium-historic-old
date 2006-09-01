@@ -1181,7 +1181,9 @@ BOOL isMobileContact(AIListObject *inListObject)
 	NSMutableArray	*retArr=[[NSMutableArray alloc] init];
 
 	while ((contactUID = [enumerator nextObject])) {
-		[retArr addObject:[[self contactWithUID:contactUID] internalObjectID]];
+		id contact = [[self contactWithUID:contactUID] internalObjectID];
+		if(contact)
+			[retArr addObject:contact];
 	}
 	
 	return [retArr autorelease];
