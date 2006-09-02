@@ -281,6 +281,7 @@
 		346F5CB408A418FB0055C610 /* iTunes.png in Resources */ = {isa = PBXBuildFile; fileRef = 346F5CB208A418FA0055C610 /* iTunes.png */; };
 		346F5D3208A43E7B0055C610 /* CurrentTunes.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 346F5CB308A418FB0055C610 /* CurrentTunes.scpt */; };
 		347065E506015DC5004F0D20 /* WebKit Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 347065E406015DC5004F0D20 /* WebKit Defaults.plist */; };
+		347374BD0AA9206B00AD18E3 /* ShortcutRecorder.strings in Resources */ = {isa = PBXBuildFile; fileRef = 347374BB0AA9206B00AD18E3 /* ShortcutRecorder.strings */; };
 		3474E000082550FD00BF30F0 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3474DFFF082550FD00BF30F0 /* Credits.rtf */; };
 		3474E0910825634300BF30F0 /* StatusPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3474E0900825634300BF30F0 /* StatusPreferences.nib */; };
 		347C6943080C8F2B00E69674 /* ESAwayStatusWindowPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 347C6941080C8F2B00E69674 /* ESAwayStatusWindowPlugin.m */; };
@@ -2448,6 +2449,24 @@
 		346F5CB208A418FA0055C610 /* iTunes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iTunes.png; path = Resources/iTunes.png; sourceTree = "<group>"; };
 		346F5CB308A418FB0055C610 /* CurrentTunes.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = CurrentTunes.scpt; path = Resources/CurrentTunes.scpt; sourceTree = "<group>"; };
 		347065E406015DC5004F0D20 /* WebKit Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = "WebKit Defaults.plist"; path = "Plugins/WebKit Message View/WebKit Defaults.plist"; sourceTree = "<group>"; };
+		347374BC0AA9206B00AD18E3 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374F00AA920F300AD18E3 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Catalan; path = Resources/Catalan.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374F10AA920F700AD18E3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = Resources/cs.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374F20AA920FD00AD18E3 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Danish; path = Resources/Danish.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374F30AA9210400AD18E3 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = Resources/Dutch.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374F40AA9210D00AD18E3 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = Resources/French.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374F50AA9211400AD18E3 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = Resources/German.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374F60AA9211B00AD18E3 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = Resources/is.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374F70AA9212200AD18E3 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Resources/Italian.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374F80AA9212900AD18E3 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Resources/Japanese.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374F90AA9213300AD18E3 /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Norwegian; path = Resources/Norwegian.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374FA0AA9213A00AD18E3 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = Resources/pl.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374FB0AA9214100AD18E3 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Russian; path = Resources/Russian.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374FC0AA9214A00AD18E3 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = Resources/Spanish.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374FD0AA9215100AD18E3 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Swedish; path = Resources/Swedish.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374FE0AA9215800AD18E3 /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Turkish; path = Resources/Turkish.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347374FF0AA9215F00AD18E3 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = Resources/zh_CN.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		347375000AA9216700AD18E3 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = Resources/zh_TW.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
 		34739BA50AA4F131007BF788 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Plugins/joscar Service/Catalan.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		34739BA60AA4F136007BF788 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/joscar Service/cs.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		34739BA70AA4F13C007BF788 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/joscar Service/Danish.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
@@ -6489,6 +6508,7 @@
 				342F88C90A2A74EA0001DB29 /* PTKeyCombo.m */,
 				342F88B30A2A74D40001DB29 /* SRCommon.h */,
 				342F88B60A2A74D40001DB29 /* SRCommon.m */,
+				347374BB0AA9206B00AD18E3 /* ShortcutRecorder.strings */,
 				342F88B70A2A74D40001DB29 /* SRKeyCodeTransformer.h */,
 				342F88B00A2A74D30001DB29 /* SRKeyCodeTransformer.m */,
 				342F88B90A2A74D40001DB29 /* SRRecorderCell.h */,
@@ -8375,6 +8395,7 @@
 				341548CC0A92D6D30087EB98 /* SRRemoveShortcutPressed.tif in Resources */,
 				341548CD0A92D6D30087EB98 /* SRRemoveShortcutRollover.tif in Resources */,
 				341548CE0A92D6D30087EB98 /* SRSnapback.tiff in Resources */,
+				347374BD0AA9206B00AD18E3 /* ShortcutRecorder.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10102,6 +10123,31 @@
 				345A7B840954AEF400FF3113 /* English */,
 			);
 			name = ESGaimSimpleAccountView.nib;
+			sourceTree = "<group>";
+		};
+		347374BB0AA9206B00AD18E3 /* ShortcutRecorder.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				347374BC0AA9206B00AD18E3 /* English */,
+				347374F00AA920F300AD18E3 /* Catalan */,
+				347374F10AA920F700AD18E3 /* cs */,
+				347374F20AA920FD00AD18E3 /* Danish */,
+				347374F30AA9210400AD18E3 /* Dutch */,
+				347374F40AA9210D00AD18E3 /* French */,
+				347374F50AA9211400AD18E3 /* German */,
+				347374F60AA9211B00AD18E3 /* is */,
+				347374F70AA9212200AD18E3 /* Italian */,
+				347374F80AA9212900AD18E3 /* Japanese */,
+				347374F90AA9213300AD18E3 /* Norwegian */,
+				347374FA0AA9213A00AD18E3 /* pl */,
+				347374FB0AA9214100AD18E3 /* Russian */,
+				347374FC0AA9214A00AD18E3 /* Spanish */,
+				347374FD0AA9215100AD18E3 /* Swedish */,
+				347374FE0AA9215800AD18E3 /* Turkish */,
+				347374FF0AA9215F00AD18E3 /* zh_CN */,
+				347375000AA9216700AD18E3 /* zh_TW */,
+			);
+			name = ShortcutRecorder.strings;
 			sourceTree = "<group>";
 		};
 		3474E0900825634300BF30F0 /* StatusPreferences.nib */ = {
