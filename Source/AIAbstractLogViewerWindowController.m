@@ -1193,7 +1193,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 {
 	AIListContact *parentContact = [inContact parentContact];
 	
-	/* Ensure the contacts list includes this contact, since only existing AIListContacts are be used
+	/* Ensure the contacts list includes this contact, since only existing AIListContacts are to be used
 	 * (with AILogToGroup objects used if an AIListContact isn't available) but that situation may have changed
 	 * with regard to inContact since the log viewer opened.
 	 */
