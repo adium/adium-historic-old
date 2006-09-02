@@ -265,7 +265,7 @@
 															 allowNaturalLanguage:NO] autorelease];
 	NSString		*buildDateAndInfo = [NSString stringWithFormat:@"%@	(%@)",
 		[dateFormatter stringForObjectValue:buildDate],
-		(buildUser ? buildUser : buildNumber)];
+		(buildUser ? [NSString stringWithFormat:@"%@.%@",buildNumber,buildUser] : buildNumber)];
 	
 	NSDictionary	*crashReport = [NSDictionary dictionaryWithObjectsAndKeys:
 		buildDateAndInfo, @"build",
