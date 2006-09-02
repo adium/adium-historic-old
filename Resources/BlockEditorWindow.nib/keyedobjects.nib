@@ -368,7 +368,7 @@
 				<integer>16</integer>
 			</dict>
 		</dict>
-		<string>{{268, 381}, {390, 320}}</string>
+		<string>{{268, 379}, {390, 322}}</string>
 		<string>Window</string>
 		<dict>
 			<key>$class</key>
@@ -481,7 +481,7 @@
 			<key>NSvFlags</key>
 			<integer>266</integer>
 		</dict>
-		<string>{{77, 276}, {296, 26}}</string>
+		<string>{{77, 278}, {296, 26}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -907,7 +907,7 @@
 			<key>NSvFlags</key>
 			<integer>266</integer>
 		</dict>
-		<string>{{102, 246}, {271, 26}}</string>
+		<string>{{102, 248}, {271, 26}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -1213,7 +1213,7 @@
 		</dict>
 		<string>AILocalizationTextField</string>
 		<string>NSTextField</string>
-		<string>{{15, 282}, {60, 17}}</string>
+		<string>{{15, 284}, {60, 17}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -2439,7 +2439,7 @@
 			</array>
 		</dict>
 		<string>{{1, 0}, {350, 17}}</string>
-		<string>{{0, 37}, {352, 182}}</string>
+		<string>{{0, 30}, {352, 182}}</string>
 		<dict>
 			<key>$classes</key>
 			<array>
@@ -2485,7 +2485,7 @@
 			<key>NSvFlags</key>
 			<integer>36</integer>
 		</dict>
-		<string>{{22, 0}, {23, 22}}</string>
+		<string>{{20, 0}, {23, 22}}</string>
 		<string>AIPlasticMinusButton</string>
 		<string>NSButton</string>
 		<dict>
@@ -2535,7 +2535,7 @@
 		</dict>
 		<string>{23, 22}</string>
 		<string>AIPlasticPlusButton</string>
-		<string>{352, 219}</string>
+		<string>{352, 212}</string>
 		<dict>
 			<key>$classes</key>
 			<array>
@@ -2546,7 +2546,7 @@
 			<key>$classname</key>
 			<string>NSView</string>
 		</dict>
-		<string>{{18, 20}, {352, 219}}</string>
+		<string>{{18, 20}, {352, 212}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -2713,7 +2713,7 @@
 			<integer>268</integer>
 		</dict>
 		<string>NSTextField</string>
-		<string>{{15, 252}, {85, 17}}</string>
+		<string>{{15, 254}, {85, 17}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -2751,7 +2751,7 @@
 			</dict>
 		</dict>
 		<string>Privacy level:</string>
-		<string>{{1, 9}, {390, 320}}</string>
+		<string>{{1, 9}, {390, 322}}</string>
 		<string>{{0, 0}, {1280, 832}}</string>
 		<string>{300, 117}</string>
 		<string>{3.40282e+38, 3.40282e+38}</string>
