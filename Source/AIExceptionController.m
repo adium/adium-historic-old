@@ -71,6 +71,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		safeExceptionNames = [[NSSet alloc] initWithObjects:
 			@"GIFReadingException", //GIF reader sucks
 			@"NSPortTimeoutException", //Harmless - it timed out for a reason
+			@"NSInvalidReceivePortException", //Same story as NSPortTimeoutException
 			@"NSAccessibilityException", //Harmless - one day we should figure out how we aren't accessible, but not today
 			@"NSImageCacheException", //NSImage is silly
 			@"NSArchiverArchiveInconsistency", //Odd system hacks can lead to this one
