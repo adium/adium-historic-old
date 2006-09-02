@@ -206,7 +206,11 @@ static char *strndup (const char *s, int n)
 }
 
 static char *gaim_unescape_html(const char *html) {
-	return strdup([[[NSString stringWithUTF8String:html] stringByUnescapingFromXMLWithEntities:nil] UTF8String]);
+	NSString *unescapedString = [[NSString stringWithUTF8String:html] stringByUnescapingFromXMLWithEntities:nil];
+	const char *unescapedStringUTF8String = [unescapedString UTF8String];
+	if (!unescapedStringUTF8String) NSLog(@"Warning: Could not unescape %s, or could not make a UTF8 string out of %@",html,unescapedString);
+
+	return (unescapedStringUTF8String ? strdup(unescapedStringUTF8String) : nil);
 }
 
 /* The following are probably reasonable changes:
