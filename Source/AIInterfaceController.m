@@ -1090,13 +1090,15 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 	//Get the user's display name as an attributed string
     NSAttributedString                  *displayName = [[NSAttributedString alloc] initWithString:[object displayName]
 																					   attributes:titleDict];
-	NSAttributedString					*filtedDisplayName = [[adium contentController] filterAttributedString:displayName
-																							   usingFilterType:AIFilterTooltips
-																									 direction:AIFilterIncoming
-																									   context:nil];
+	NSAttributedString					*filteredDisplayName = [[adium contentController] filterAttributedString:displayName
+																								 usingFilterType:AIFilterTooltips
+																									   direction:AIFilterIncoming
+																										 context:nil];
 	
 	//Append the user's display name
-	[titleString appendAttributedString:filtedDisplayName];
+	if (filteredDisplayName) {
+		[titleString appendAttributedString:filteredDisplayName];
+	}
 	
 	//Append the user's formatted UID if there is one that's different to the display name
 	if (formattedUID && (!([[[displayName string] compactedString] isEqualToString:[formattedUID compactedString]]))) {
