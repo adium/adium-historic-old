@@ -197,7 +197,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				NSString *message = nil;
 				if(!empty)
 					message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)];  // 10 for </message> and 1 for the index being off
-				
+				//NSLog(@"%i: %i, %i - %i - 11 = %i; %@",empty,messageStart,end,messageStart, end - messageStart - 11,message);
 				[output appendFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@%@: </span><pre class=\"message\">%@</pre></div>\n",
 					([mySN isEqualToString:sender] ? @"send" : @"receive"), 
 					[date descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES
@@ -223,12 +223,12 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				if([message length])
 				{
 					if([status length])
-						displayMessage = [NSString stringWithFormat:@"Changed status to %@: %@", [statusLookup objectForKey:status], message];
+						displayMessage = [NSString stringWithFormat:AILocalizedString(@"Changed status to %@: %@", nil), [statusLookup objectForKey:status], message];
 					else
-						displayMessage = [NSString stringWithFormat:@"Changed status to %@", message];
+						displayMessage = [NSString stringWithFormat:AILocalizedString(@"Changed status to %@", nil), message];
 				}
 				else if([status length])
-					displayMessage = [NSString stringWithFormat:@"Changed status to %@", [statusLookup objectForKey:status]];
+					displayMessage = [NSString stringWithFormat:AILocalizedString(@"Changed status to %@", nil), [statusLookup objectForKey:status]];
 
 				if([displayMessage length])
 					[output appendFormat:@"<div class=\"status\">%@ (%@)</div>\n",
