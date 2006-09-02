@@ -733,6 +733,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdgeMask windowSlidOffScreenEdgeMask, AIListController *contactListController, BOOL keepOnScreen)
 {
 	NSScreen *windowScreen = [inWindow screen];
+	int counter = 10000;
 	if (!windowScreen) windowScreen = [(AIListWindowController *)[inWindow windowController] windowLastScreen];
 	if (!windowScreen) windowScreen = [NSScreen mainScreen];
 
@@ -744,6 +745,10 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 	
 	do 
 	{
+		//this is dumb, but I've seen situations where we get into an infinite loop here. 10k is probably enough, if it's not, up it a bit.
+		if(counter <= 0) return;
+		else counter--;
+		
 		frame = [inWindow frame];
 #define INCREMENT 15
 		if (abs(targetPoint.x - frame.origin.x) <= INCREMENT) {
