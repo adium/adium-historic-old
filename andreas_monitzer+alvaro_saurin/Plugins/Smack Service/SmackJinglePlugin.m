@@ -1,10 +1,4 @@
-//
-//  SmackJinglePlugin.m
-//  Adium
-//
-//  Created by Andreas Monitzer on 2006-08-10.
-//  Copyright 2006 Andreas Monitzer. All rights reserved.
-//
+
 
 #import "SmackJinglePlugin.h"
 #import "AIAdium.h"
@@ -28,13 +22,13 @@
 
 #define CLASSNAME_JINGLE_SESSION_LISTENER		@"net.adium.smackBridge.SmackXMPPJingleListener$Session"
 #define CLASSNAME_JINGLE_SESSION_REQ_LISTENER	@"net.adium.smackBridge.SmackXMPPJingleListener$SessionRequest"
-#define CLASSNAME_JINGLESESSION					@"org.jivesoftware.smackx.jingle.JingleSession"
+
 #define CLASSNAME_PAYLOADTYPE					@"org.jivesoftware.smackx.jingle.PayloadType"
 #define CLASSNAME_PAYLOADTYPE_AUDIO				@"org.jivesoftware.smackx.jingle.PayloadType$Audio"
 #define CLASSNAME_CONTENTINFO_AUDIO				@"org.jivesoftware.smackx.jingle.ContentInfo$Audio"
 
 
-#define JINGLE_JAR					@"smackx-jingle"
+#define JINGLE_JAR								@"smackx-jingle"
 
 static JavaClassLoader *classLoader = nil;
 
@@ -42,16 +36,18 @@ static JavaClassLoader *classLoader = nil;
 //                           Jingle Listeners
 ////////////////////////////////////////////////////////////////////////////////
 
-@interface SmackJingleSessionReqListener : NSObject {
+@interface SmackXJingleSessionReqListener : NSObject {
 }
++ (SmackXJingleSessionReqListener*) getInstance;
 
 - (SmackXJingleManager*) getManager;
 @end
 
-@interface SmackJingleSessionListener : SmackJingleSessionReqListener {
-}
-@end
 
+@interface SmackXJingleSessionListener : NSObject {
+}
++ (SmackXJingleSessionListener*) getInstance;
+@end
 
 ////////////////////////////////////////////////////////////////////////////////
 //                           Jingle plugin category
@@ -61,16 +57,11 @@ static JavaClassLoader *classLoader = nil;
 
 + (void) loadJingle;
 
-+ (SmackJingleSessionListener*) createJingleSessionListenerForSession:(SmackXJingleSession*)session
++ (SmackXJingleSessionListener*) createJingleSessionListenerForSession:(SmackXJingleSession*)session
 															 delegate:(id)delegate;
 
-+ (SmackJingleSessionReqListener*) createJingleSessionReqListenerForConnection:(SmackXMPPConnection*)conn
-																	  delegate:(id)delegate;
-
-+ (SmackXJingleSession*) jingleSessionWithConnection:(SmackXMPPConnection*)connection
-										   initiator:(NSString*)ini
-										   responder:(NSString*)res
-										   sessionId:(NSString*)sessId;
++ (SmackXJingleSessionReqListener*) createJingleSessionReqListenerForConnection:(SmackXMPPConnection*)conn
+																	   delegate:(id)delegate;
 
 + (SmackXJingleContentInfoAudio*) contentInfoAudioWithName:(NSString*)name;
 
@@ -97,44 +88,31 @@ static JavaClassLoader *classLoader = nil;
         NSString *jingleJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:JINGLE_JAR
                                                                                    ofType:@"jar"
                                                                               inDirectory:@"Java"];
-        classLoader = [[[[AIObject sharedAdiumInstance] javaController] classLoaderWithJARs:[NSArray arrayWithObject:jingleJarPath] parentClassLoader:[self classLoader]] retain];
+        classLoader = [[[[AIObject sharedAdiumInstance] javaController] classLoaderWithJARs:[NSArray arrayWithObject:jingleJarPath]
+																		  parentClassLoader:[self classLoader]] retain];
     }
 }
 
 /*!
  *	@brief	Create a jingle session listener
  */
-+ (SmackJingleSessionListener*) createJingleSessionListenerForSession:(SmackXJingleSession*)session
-															 delegate:(id)delegate
++ (SmackXJingleSessionListener*) createJingleSessionListenerForSession:(SmackXJingleSession*)session
+															  delegate:(id)delegate
 {
     return [(id)[[self classLoader] loadClass:CLASSNAME_JINGLE_SESSION_LISTENER]
-		getInstance:session :delegate :classLoader];	
+			getInstance:session :delegate :classLoader];	
 }
 
 
 /*!
  *	@brief	Create a jingle session request listener
  */
-+ (SmackJingleSessionReqListener*) createJingleSessionReqListenerForConnection:(SmackXMPPConnection*)conn
-																	  delegate:(id) delegate
++ (SmackXJingleSessionReqListener*) createJingleSessionReqListenerForConnection:(SmackXMPPConnection*)conn
+																	   delegate:(id) delegate
 {
     return [(id)[[self classLoader] loadClass:CLASSNAME_JINGLE_SESSION_REQ_LISTENER]
 		getInstance:conn :delegate :classLoader];
 }
-
-/*!
- *	@brief	Create a jingle session
- */
-+ (SmackXJingleSession*) jingleSessionWithConnection:(SmackXMPPConnection*)connection
-										   initiator:(NSString*)ini
-										   responder:(NSString*)res
-										   sessionId:(NSString*)sessId
-{
-	return [[(Class)[classLoader loadClass:CLASSNAME_JINGLESESSION]
-		newWithSignature:@"(Lorg/jivesoftware/smack/XMPPConnection;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)",
-		connection,ini,res,sessId] autorelease];
-}
-
 
 /*!
  *	@brief	Create an audio content info message
@@ -312,7 +290,7 @@ static NSDictionary	*audioSessions;
 			@try {
 				if (payloadsCount > 0) {
 					session = [request accept:payloadTypes];
-					[session start:request];					
+					[session start:request];
 				} else {
 					NSLog (@"Jingle: no payloads to offer!.");					
 				}
@@ -379,7 +357,7 @@ static NSDictionary	*audioSessions;
 	SmackXOutgoingJingleSession *session		= nil;
     JavaVector					*payloadTypes	= [self getSupportedAudioPayloads];
 	int							 payloadsCount	= [payloadTypes size];
-	SmackJingleSessionListener	*sessionListener;
+	SmackXJingleSessionListener	*sessionListener;
 
 	NSLog (@"Jingle: establishing outgoing session to %@, offering %d payloads.", jid, payloadsCount);
 
@@ -392,6 +370,7 @@ static NSDictionary	*audioSessions;
 			sessionListener = [[SmackCocoaAdapter createJingleSessionListenerForSession:session
 																			   delegate:self] retain];
 
+			NSLog (@"Jingle: starting session.");
 			[session start:nil];
 		
 			// Register the session
