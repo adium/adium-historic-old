@@ -26,6 +26,7 @@
 	IBOutlet	NSMenuItem		*menuItem_closeAllChats;
 
     IBOutlet	NSMenuItem		*menuItem_paste;
+	IBOutlet	NSMenuItem		*menuItem_pasteWithImagesAndColors;
     IBOutlet	NSMenuItem		*menuItem_pasteAndMatchStyle;
     
     IBOutlet    NSMenuItem      *menuItem_showFonts;
