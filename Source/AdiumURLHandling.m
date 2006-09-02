@@ -31,10 +31,12 @@
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIService.h>
 
-#define URLHandlingGroup @"URL Handling Group"
-#define DONTPROMPTFORURL @"Don't Prompt for URL"
+#define GROUP_URL_HANDLING			@"URL Handling Group"
+#define KEY_DONT_PROMPT_FOR_URL		@"Don't Prompt for URL"
+#define KEY_COMPLETED_FIRST_LAUNCH	@"AdiumURLHandling:CompletedFirstLaunch"
 
 @interface AdiumURLHandling(PRIVATE)
++ (void)registerAsDefaultIMClient;
 + (void)_setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
 + (BOOL)_checkHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
 + (void)_openChatToContactWithName:(NSString *)name onService:(NSString *)serviceIdentifier withMessage:(NSString *)body;
@@ -81,6 +83,44 @@
 		//End whatever it was that ICBegin() began
 		ICEnd(ICInst);
 
+		//We're done with Internet Config, so stop it
+		Err = ICStop(ICInst);
+		
+		//How there could be an error stopping Internet Config, I don't know.
+		if (Err != noErr) {
+			NSLog(@"Error stopping InternetConfig. Error code: %d", Err);
+		}
+	} else {
+		NSLog(@"Error starting InternetConfig. Error code: %d", Err);
+	}
+}
+
++ (void)registerAsDefaultIMClient
+{
+				ICInstance ICInst;
+	OSErr Err = noErr;
+	
+	//Start Internet Config, passing it Adium's creator code
+	Err = ICStart(&ICInst, 'AdiM');
+	if (Err == noErr) {
+		//Bracket multiple calls with ICBegin() for efficiency as per documentation
+		ICBegin(ICInst, icReadWritePerm);
+		
+		//Configure the protocols we want.
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "aim") withInstance:ICInst]; //AIM, official
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "ymsgr") withInstance:ICInst]; //Yahoo!, official
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "yahoo") withInstance:ICInst]; //Yahoo!, unofficial
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "xmpp") withInstance:ICInst]; //Jabber, official
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "msn") withInstance:ICInst]; //MSN, unofficial
+		
+		//Adium xtras
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "adiumxtra") withInstance:ICInst];
+		
+		//End whatever it was that ICBegin() began
+		ICEnd(ICInst);
+		
 		//We're done with Internet Config, so stop it
 		Err = ICStop(ICInst);
 		
@@ -337,46 +377,12 @@
 	switch(ret)
 	{
 		case AITextAndButtonsOtherReturn:
-			[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES] forKey:DONTPROMPTFORURL group:URLHandlingGroup];
+			[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES] forKey:KEY_DONT_PROMPT_FOR_URL group:GROUP_URL_HANDLING];
 			break;
 		case AITextAndButtonsDefaultReturn:
-		{
-			ICInstance ICInst;
-			OSErr Err = noErr;
-			
-			//Start Internet Config, passing it Adium's creator code
-			Err = ICStart(&ICInst, 'AdiM');
-			if (Err == noErr) {
-				//Bracket multiple calls with ICBegin() for efficiency as per documentation
-				ICBegin(ICInst, icReadWritePerm);
-				
-				//Configure the protocols we want.
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "aim") withInstance:ICInst]; //AIM, official
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "ymsgr") withInstance:ICInst]; //Yahoo!, official
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "yahoo") withInstance:ICInst]; //Yahoo!, unofficial
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "xmpp") withInstance:ICInst]; //Jabber, official
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "msn") withInstance:ICInst]; //MSN, unofficial
-				
-				//Adium xtras
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "adiumxtra") withInstance:ICInst];
-				
-				//End whatever it was that ICBegin() began
-				ICEnd(ICInst);
-				
-				//We're done with Internet Config, so stop it
-				Err = ICStop(ICInst);
-				
-				//How there could be an error stopping Internet Config, I don't know.
-				if (Err != noErr) {
-					NSLog(@"Error stopping InternetConfig. Error code: %d", Err);
-				}
-			} else {
-				NSLog(@"Error starting InternetConfig. Error code: %d", Err);
-			}
+			[AdiumURLHandling registerAsDefaultIMClient];
 			break;
-		}
+		case AITextAndButtonsAlternateReturn:
 		default:
 			break;
 	}
@@ -384,16 +390,25 @@
 
 - (void)promptUser
 {
-	if(![[adium preferenceController] preferenceForKey:DONTPROMPTFORURL group:URLHandlingGroup])
-		[[adium interfaceController] displayQuestion:AILocalizedString(@"Change default messaging client?", nil)
-									 withDescription:AILocalizedString(@"Adium is not your default Instant Messaging client. The default client is loaded when you click messaging URLs in web pages. Would you like Adium to become the default?", nil)
-									 withWindowTitle:nil
-									   defaultButton:AILocalizedString(@"Yes", nil)
-									 alternateButton:AILocalizedString(@"No", nil)
-										 otherButton:AILocalizedString(@"Never", nil)
-											  target:self
-											selector:@selector(URLQuestion:info:)
-											userInfo:nil];
+	if ([[[adium preferenceController] preferenceForKey:KEY_COMPLETED_FIRST_LAUNCH group:GROUP_URL_HANDLING] boolValue]) {
+		if(![[adium preferenceController] preferenceForKey:KEY_DONT_PROMPT_FOR_URL group:GROUP_URL_HANDLING])
+			[[adium interfaceController] displayQuestion:AILocalizedString(@"Change default messaging client?", nil)
+										 withDescription:AILocalizedString(@"Adium is not your default Instant Messaging client. The default client is loaded when you click messaging URLs in web pages. Would you like Adium to become the default?", nil)
+										 withWindowTitle:nil
+										   defaultButton:AILocalizedString(@"Yes", nil)
+										 alternateButton:AILocalizedString(@"No", nil)
+											 otherButton:AILocalizedString(@"Never", nil)
+												  target:self
+												selector:@selector(URLQuestion:info:)
+												userInfo:nil];
+	} else {
+		//On the first launch, simply register. If the user uses another IM client which takes control of the protocols again, we'll prompt for what to do.
+		[AdiumURLHandling registerAsDefaultIMClient];
+		
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
+											 forKey:KEY_COMPLETED_FIRST_LAUNCH
+											  group:GROUP_URL_HANDLING];
+	}
 }
 
 @end
