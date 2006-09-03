@@ -170,13 +170,15 @@
     //Cache this attachment for ourself
     if (!_cachedAttributedString) {
         AITextAttachmentExtension   *emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
-		NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:[self image]];
+		if(!path) {
+			NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:[self image]];
+			[emoticonAttachment setAttachmentCell:cell];
+			[cell release];
+		} 
 
 		[emoticonAttachment setPath:path];
 		[emoticonAttachment setHasAlternate:YES];
-		[emoticonAttachment setAttachmentCell:cell];
 		[emoticonAttachment setImageClass:@"emoticon"];
-		[cell release];
 
 		//Emoticons should not ever be sent out as images
 		[emoticonAttachment setShouldAlwaysSendAsText:YES];
