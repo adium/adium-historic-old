@@ -75,7 +75,8 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who,
 			  gaim_conversation_get_name(conv),
 			  gaim_conv_chat_get_nick(GAIM_CONV_CHAT(conv)),
 			  messageString);
-		if (!who || (flags & GAIM_MESSAGE_DELAYED) || strcmp(who, gaim_conv_chat_get_nick(GAIM_CONV_CHAT(conv)))) {
+		if (!who || (flags & GAIM_MESSAGE_DELAYED) || (strcmp(who, gaim_conv_chat_get_nick(GAIM_CONV_CHAT(conv))) &&
+													   strcmp(who, gaim_account_get_username(conv->account)))) {
 			NSAttributedString	*attributedMessage = [AIHTMLDecoder decodeHTML:messageString];
 			NSNumber			*gaimMessageFlags = [NSNumber numberWithInt:flags];
 			NSDate				*date = [NSDate dateWithTimeIntervalSince1970:mtime];
