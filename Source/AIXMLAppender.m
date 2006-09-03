@@ -306,8 +306,6 @@ enum {
 {
 	//Create a temporary file handle for validation, and read the marker
 	NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:path];
-	//Evan tried to add a UTF-8 BOM, but messed it up and ended up writing three high-ASCII characters instead (which came out as six bytes once converted from MacRoman through Unicode to UTF-8).
-	//So now we have to be ready to handle these, at least until the user opens the Transcript Viewer.
 	
 	NSScanner *scanner = nil;
 	do {
