@@ -69,7 +69,7 @@ static NSMutableDictionary *instanceCountDict = nil;
 #ifdef COUNT_AIOBJECT_INSTANCES
 		NSString *className = NSStringFromClass([self class]);
 		if( [@"All" isEqualToString:COUNT_AIOBJECT_INSTANCES] || [className isEqualToString:COUNT_AIOBJECT_INSTANCES]) {
-			@synchronized(self) {
+			@synchronized(instanceCountDict) {
 				NSNumber *instanceCount = [instanceCountDict objectForKey:className];
 				if(!instanceCount) instanceCount = [NSNumber numberWithInt:0];
 				instanceCount = [NSNumber numberWithInt:[instanceCount intValue] + 1];
@@ -86,7 +86,7 @@ static NSMutableDictionary *instanceCountDict = nil;
 #ifdef COUNT_AIOBJECT_INSTANCES
 - (void) dealloc
 {
-	@synchronized(self) {
+	@synchronized(instanceCountDict) {
 		NSString *className = NSStringFromClass([self class]);
 		if([@"All" isEqualToString:COUNT_AIOBJECT_INSTANCES] || [className isEqualToString:COUNT_AIOBJECT_INSTANCES]) {
 			NSNumber *count = [instanceCountDict objectForKey:className];
