@@ -25,9 +25,14 @@
  */
 @implementation AIObject
 
+//define to @"All" for all AIObjects, or @"ClassName" for ClassName
+//#define COUNT_AIOBJECT_INSTANCES @"All"
 //
 static AIAdium *_sharedAdium = nil;
 
+#ifdef COUNT_AIOBJECT_INSTANCES
+static NSMutableDictionary *instanceCountDict = nil;
+#endif
 /*
  * @brief Set the shared AIAdium instance
  *
@@ -37,6 +42,9 @@ static AIAdium *_sharedAdium = nil;
 {
     NSParameterAssert(_sharedAdium == nil);
     _sharedAdium = [shared retain];
+#ifdef COUNT_AIOBJECT_INSTANCES
+	instanceCountDict = [[NSMutableDictionary alloc] init];
+#endif
 }
 
 /*
@@ -57,9 +65,38 @@ static AIAdium *_sharedAdium = nil;
 	{
 		NSParameterAssert(_sharedAdium != nil);
 		adium = _sharedAdium;
+		
+#ifdef COUNT_AIOBJECT_INSTANCES
+		NSString *className = NSStringFromClass([self class]);
+		if( [@"All" isEqualToString:COUNT_AIOBJECT_INSTANCES] || [className isEqualToString:COUNT_AIOBJECT_INSTANCES]) {
+			@synchronized(self) {
+				NSNumber *instanceCount = [instanceCountDict objectForKey:className];
+				if(!instanceCount) instanceCount = [NSNumber numberWithInt:0];
+				instanceCount = [NSNumber numberWithInt:[instanceCount intValue] + 1];
+				[instanceCountDict setObject:instanceCount forKey:className];
+				NSLog(@"Instance Counter: Initializing object of class %@, there are now %@ of them", className, [instanceCount stringValue]);
+			}
+		}
+#endif
 	}
 
     return self;
 }
+
+#ifdef COUNT_AIOBJECT_INSTANCES
+- (void) dealloc
+{
+	@synchronized(self) {
+		NSString *className = NSStringFromClass([self class]);
+		if([@"All" isEqualToString:COUNT_AIOBJECT_INSTANCES] || [className isEqualToString:COUNT_AIOBJECT_INSTANCES]) {
+			NSNumber *count = [instanceCountDict objectForKey:className];
+			[instanceCountDict setObject:[NSNumber numberWithInt:[count intValue] - 1] forKey:className];
+			NSLog(@"Instance Counter: Deallocating object of class %@, there are now %d of them", className, [count intValue] - 1);
+		}
+
+	}
+		[super dealloc];
+}
+#endif
 
 @end
