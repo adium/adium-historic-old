@@ -63,8 +63,6 @@ static int nextChatNumber = 0;
 
 		pendingOutgoingContentObjects = [[NSMutableArray alloc] init];
 		
-		//contentObjectArray = [[NSMutableArray alloc] init];
-
 		AILog(@"[AIChat: %x initForAccount]",self);
 	}
 
@@ -85,8 +83,6 @@ static int nextChatNumber = 0;
 	[pendingOutgoingContentObjects release];
 	[uniqueChatID release]; uniqueChatID = nil;
 	[customEmoticons release]; customEmoticons = nil;
-
-	//[contentObjectArray release]; contentObjectArray = nil;
 
 	[super dealloc];
 }
@@ -411,12 +407,6 @@ static int nextChatNumber = 0;
 	}
 }
 
-//
-/*- (void)removeAllContent
-{
-    [contentObjectArray release]; contentObjectArray = [[NSMutableArray alloc] init];
-}*/
-
 - (BOOL)canSendMessages
 {
 	BOOL canSendMessages;
@@ -683,16 +673,5 @@ static int nextChatNumber = 0;
 	//No need to continue to store the NSNumber
 	[self setStatusObject:nil forKey:KEY_CHAT_ERROR notify:NotifyNever];
 }
-
-#pragma mark Content array (deprecated?)
-/*- (NSArray *)contentObjectArray
-{
-    return(contentObjectArray);
-}
-
-- (void)addContentObject:(AIContentObject *)inObject
-{
-	[contentObjectArray insertObject:inObject atIndex:0];
-}*/
 
 @end
