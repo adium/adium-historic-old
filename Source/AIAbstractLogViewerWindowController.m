@@ -1553,7 +1553,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
 			dateFormatter = [cell formatter];
 			if (!dateFormatter) {
-				dateFormatter = [[AILogDateFormatter alloc] init];
+				dateFormatter = [[[AILogDateFormatter alloc] init] autorelease];
 				[dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
 				[cell setFormatter:dateFormatter];
 			}
