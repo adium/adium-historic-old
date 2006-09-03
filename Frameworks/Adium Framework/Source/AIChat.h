@@ -105,8 +105,6 @@ typedef enum {
 	BOOL				enableTypingNotifications;
 	
 	NSMutableSet		*customEmoticons;
-	
-	//NSMutableArray		*contentObjectArray;
 }
 
 + (id)chatForAccount:(AIAccount *)inAccount;
@@ -141,7 +139,6 @@ typedef enum {
 
 - (BOOL)willBeginSendingContentObject:(AIContentObject *)inObject;
 - (void)finishedSendingContentObject:(AIContentObject *)inObject;
-//- (void)removeAllContent;
 
 - (NSString *)name;
 - (void)setName:(NSString *)inName;
@@ -170,8 +167,5 @@ typedef enum {
 - (NSSet *)customEmoticons;
 
 - (void)receivedError:(NSNumber *)type;
-
-/*- (NSArray *)contentObjectArray;
-- (void)addContentObject:(AIContentObject *)inObject;*/
 
 @end
