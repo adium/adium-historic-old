@@ -488,9 +488,6 @@
 
 		userInfo = [NSDictionary dictionaryWithObjectsAndKeys:chat, @"AIChat", inObject, @"AIContentObject", nil];
 
-		//XXX - old school message history support: Add this content to the chat
-		[chat addContentObject:inObject];
-
 		//Notify: Content Object Added
 		[[adium notificationCenter] postNotificationName:Content_ContentObjectAdded
 												  object:chat

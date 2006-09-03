@@ -63,7 +63,7 @@ static int nextChatNumber = 0;
 
 		pendingOutgoingContentObjects = [[NSMutableArray alloc] init];
 		
-		contentObjectArray = [[NSMutableArray alloc] init];
+		//contentObjectArray = [[NSMutableArray alloc] init];
 
 		AILog(@"[AIChat: %x initForAccount]",self);
 	}
@@ -86,7 +86,7 @@ static int nextChatNumber = 0;
 	[uniqueChatID release]; uniqueChatID = nil;
 	[customEmoticons release]; customEmoticons = nil;
 
-	[contentObjectArray release]; contentObjectArray = nil;
+	//[contentObjectArray release]; contentObjectArray = nil;
 
 	[super dealloc];
 }
@@ -412,10 +412,10 @@ static int nextChatNumber = 0;
 }
 
 //
-- (void)removeAllContent
+/*- (void)removeAllContent
 {
     [contentObjectArray release]; contentObjectArray = [[NSMutableArray alloc] init];
-}
+}*/
 
 - (BOOL)canSendMessages
 {
@@ -685,7 +685,7 @@ static int nextChatNumber = 0;
 }
 
 #pragma mark Content array (deprecated?)
-- (NSArray *)contentObjectArray
+/*- (NSArray *)contentObjectArray
 {
     return(contentObjectArray);
 }
@@ -693,6 +693,6 @@ static int nextChatNumber = 0;
 - (void)addContentObject:(AIContentObject *)inObject
 {
 	[contentObjectArray insertObject:inObject atIndex:0];
-}
+}*/
 
 @end
