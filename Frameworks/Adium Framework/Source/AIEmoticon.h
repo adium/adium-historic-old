@@ -29,7 +29,6 @@
     BOOL                    enabled;
     
     NSAttributedString      *_cachedAttributedString;
-    NSImage                 *_cachedImage;
 }
 
 + (id)emoticonWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName pack:(AIEmoticonPack *)inPack;

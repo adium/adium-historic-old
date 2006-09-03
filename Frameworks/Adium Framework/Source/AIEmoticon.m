@@ -67,7 +67,6 @@
     [textEquivalents release];
 	[pack release];
     [_cachedAttributedString release];
-    [_cachedImage release];
 
 	[super dealloc];
 }
@@ -85,14 +84,13 @@
 /*!
  * @brief Flush any cached data
  *
- * This releases emoticon images (and image attachment strings) which were cached by the emoticon. It is primarily used
+ * This releases image attachment strings which were cached by the emoticon. It is primarily used
  * after display previews of emoticon packs which are not enabled, since there is no reason to maintain a cache that
  * will not be used.
  */
 - (void)flushEmoticonImageCache
 {
     [_cachedAttributedString release]; _cachedAttributedString = nil;
-    [_cachedImage release]; _cachedImage = nil;
 }
 
 /*!
