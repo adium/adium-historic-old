@@ -418,15 +418,6 @@
 					<key>Type</key>
 					<string>AdiumSuite.AIListContact</string>
 				</dict>
-				<key>contentObjectArray</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>AcoA</string>
-					<key>ReadOnly</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>AdiumSuite.AIContentObject</string>
-				</dict>
 			</dict>
 			<key>SupportedCommands</key>
 			<dict>
