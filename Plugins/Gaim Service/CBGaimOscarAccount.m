@@ -67,13 +67,19 @@
 
 	//Determine service based on UID
 	if ([contactUID hasSuffix:@"@mac.com"]) {
+#ifdef JOSCAR_SUPERCEDE_LIBGAIM
+		contactServiceID = @"joscar-OSCAR-dotMac";
+#else
 		contactServiceID = @"libgaim-oscar-Mac";
+#endif
 	} else if (firstCharacter && (firstCharacter >= '0' && firstCharacter <= '9')) {
 		contactServiceID = @"libgaim-oscar-ICQ";
-	//		} else if (isMobile = (firstCharacter == '+')) {
-	//			contactServiceID = @"libgaim-oscar-AIM";
 	} else {
+#ifdef JOSCAR_SUPERCEDE_LIBGAIM
+		contactServiceID = @"joscar-OSCAR-AIM";
+#else
 		contactServiceID = @"libgaim-oscar-AIM";
+#endif
 	}
 
 	contactService = [[adium accountController] serviceWithUniqueID:contactServiceID];
