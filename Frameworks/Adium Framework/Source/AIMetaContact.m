@@ -157,8 +157,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 							   nil);
 
 		if (oldContainingObject &&
-			[oldContainingObject isKindOfClass:[AIListGroup class]]) {
-			//A previous grouping is saved; restore it
+			[oldContainingObject isKindOfClass:[AIListGroup class]] &&
+			oldContainingObject != [[adium contactController] contactList]) {
+			//A previous grouping (to a non-root group) is saved; restore it
 			[[adium contactController] _moveContactLocally:self
 												   toGroup:(AIListGroup *)oldContainingObject];
 		} else {
@@ -634,6 +635,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	//When a contact has its remote grouping changed, this may mean it is now listed on an online account.
 	//We therefore update our containsOnlyOneContact boolean.
 	[self _determineIfWeShouldAppearToContainOnlyOneContact];
+	
+	//It's possible we didn't know to be in a group before if all our contained contacts were also groupless.
+	if (![self containingObject]) {
+		[self restoreGrouping];
+	}
 }
 
 //Status Object Handling -----------------------------------------------------------------------------------------------
@@ -768,7 +774,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	if ((listObject != self) &&
 		(inArray == [listObject displayArrayForKey:@"Display Name" create:NO]) &&
 		(!anObject || ([anObject isEqualToString:[inArray objectValue]]))) {
-		/* One of our contained objects changed itself display name in such a  way that its Display Name array's objectValue changed. 
+		/* One of our contained objects changed its display name in such a  way that its Display Name array's objectValue changed. 
 		 * Our own display name may need to change in turn.
 		 * We used isEqualToString above because the Display Name array contains NSString objects.
 		 * 
