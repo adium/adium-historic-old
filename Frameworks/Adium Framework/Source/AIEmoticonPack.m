@@ -78,6 +78,7 @@
 			path = [xtraBundle resourcePath]; //new style xtras store the same info, but it's in Contents/Resources/ so that we can have an info.plist file and use NSBundle
 		}
 		emoticonArray = nil;
+		enabledEmoticonArray = nil;
 		emoticonLocation = [path retain];
 		enabled = NO;
 	}
@@ -91,6 +92,7 @@
     [path release];
     [name release];
     [emoticonArray release];
+	[enabledEmoticonArray release];
     [emoticonLocation release];
 	[serviceClass release];
 
@@ -130,6 +132,26 @@
 {
 	if (!emoticonArray) [self loadEmoticons];
 	return emoticonArray;
+}
+
+/*
+ * @brief An array of enabled AIEmoticon objects
+ */
+- (NSArray *)enabledEmoticons
+{
+	NSEnumerator	*enumerator;
+	AIEmoticon		*emo;
+	
+	if (!enabledEmoticonArray) {
+		enabledEmoticonArray = [[NSMutableArray alloc] init];
+		enumerator = [[self emoticons] objectEnumerator];
+		while ((emo = [enumerator nextObject])) {
+			if ([emo isEnabled])
+				[enabledEmoticonArray addObject:emo];
+		}
+	}
+	
+	return enabledEmoticonArray;
 }
 
 /*
@@ -173,6 +195,12 @@
     while ((emoticon = [enumerator nextObject])) {
         [emoticon setEnabled:(![inArray containsObject:[emoticon name]])];
     }
+	
+	//reset the emabled emoticon list
+	if (enabledEmoticonArray) {
+		[enabledEmoticonArray release];
+		enabledEmoticonArray = nil;
+	}
 }
 
 /*

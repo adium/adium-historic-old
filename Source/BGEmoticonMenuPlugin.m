@@ -306,7 +306,7 @@
 	// Add in flat emoticon menu
 	if ([activePacks count] == 1) {
 		pack = [activePacks objectAtIndex:0];
-		AIEmoticon	*emoticon = [[pack emoticons] objectAtIndex:index];
+		AIEmoticon	*emoticon = [[pack enabledEmoticons] objectAtIndex:index];
 		if ([emoticon isEnabled] && ![[item representedObject] isEqualTo:emoticon]) {
 			[item setTitle:[emoticon name]];
 			[item setTarget:self];
@@ -348,7 +348,7 @@
 	itemCounts = [activePacks count];
 	
 	if (itemCounts == 1)
-		itemCounts = [[[activePacks objectAtIndex:0] emoticons] count];
+		itemCounts = [[[activePacks objectAtIndex:0] enabledEmoticons] count];
 	
 
 	if ([menu numberOfItems] > 0) {
