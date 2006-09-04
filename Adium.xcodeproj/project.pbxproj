@@ -10721,6 +10721,7 @@
 					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+					"$(SDK_ROOT)/usr/include/libxml2",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
