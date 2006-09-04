@@ -18,6 +18,7 @@
 #import "adiumGaimNotify.h"
 #import "SLGaimCocoaAdapter.h"
 #import <AIUtilities/AIObjectAdditions.h>
+#import "ESGaimMeanwhileContactAdditionController.h"
 
 static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, const char *primary, const char *secondary)
 {
@@ -78,6 +79,37 @@ static void *adiumGaimNotifySearchResults(GaimConnection *gc, const char *title,
 										  const char *primary, const char *secondary,
 										  GaimNotifySearchResults *results, gpointer user_data)
 {
+	NSString *primaryString = (primary ? [NSString stringWithUTF8String:primary] : nil);
+	if (primaryString &&
+		[primaryString rangeOfString:@"An ambiguous user ID was entered"].location != NSNotFound) {
+		/* Meanwhile ambiguous ID... hack implementation until a full search results UI exists */
+		NSDictionary			*infoDict;
+
+		/* secondary is 
+		 * ("The identifier '%s' may possibly refer to any of the following"
+		 * " users. Please select the correct user from the list below to"
+		 * " add them to your buddy list.");
+		 */
+		NSString	*secondaryString = [NSString stringWithUTF8String:secondary];
+		NSString	*originalName;
+		NSRange		preRange,postRange;
+		preRange = [secondaryString rangeOfString:@"The identifier '"];
+		postRange = [secondaryString rangeOfString:@"' may possibly refer to any of the following"];
+		originalName = [secondaryString substringWithRange:NSMakeRange(preRange.location+preRange.length,
+																	   postRange.location - (preRange.location+preRange.length))];		
+		
+		infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+			[NSValue valueWithPointer:gc], @"GaimConnection",
+			[NSValue valueWithPointer:user_data],@"userData",
+			[NSValue valueWithPointer:results], @"GaimNotifySearchResultsValue",
+			originalName, @"Original Name",
+			nil];
+		
+		ESGaimMeanwhileContactAdditionController *requestController = [ESGaimMeanwhileContactAdditionController showContactAdditionListWithDict:infoDict];
+		
+		return requestController;
+	}
+		
 	return adium_gaim_get_handle();
 }
 
