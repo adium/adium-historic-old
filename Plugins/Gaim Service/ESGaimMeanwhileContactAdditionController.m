@@ -11,11 +11,8 @@
 #import <Adium/AIServiceIcons.h>
 #import <Adium/NDRunLoopMessenger.h>
 
-/* resolved id for Meanwhile */
-struct resolved_id {
-	char *id;
-	char *name;
-};
+
+//XXX This is close to a generic implementation.... this should be expanded to work for any search results.
 
 @interface ESGaimMeanwhileContactAdditionController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)inInfoDict;
@@ -70,6 +67,8 @@ struct resolved_id {
 	[button_OK setLocalizedString:AILocalizedString(@"OK",nil)];
 	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 	
+	[[[tableView_choices tableColumnWithIdentifier:@"name"] headerCell] setStringValue:AILocalizedString(@"Name", nil)];
+	[[[tableView_choices tableColumnWithIdentifier:@"id"] headerCell] setStringValue:AILocalizedString(@"Sametime ID", nil)];
 	[tableView_choices reloadData];
 	[tableView_choices setTarget:self];
 	[tableView_choices setDoubleAction:@selector(doubleClickInTableView:)];
@@ -78,14 +77,28 @@ struct resolved_id {
 
 - (int)numberOfRowsInTableView:(NSTableView *)aTableView
 {
-	return [[infoDict objectForKey:@"Possible Users"] count];
+	GaimNotifySearchResults *results = [[infoDict objectForKey:@"GaimNotifySearchResultsValue"] pointerValue];
+	return gaim_notify_searchresults_get_rows_count(results);
 }
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
-	struct resolved_id	*res = (struct resolved_id	*)([[[infoDict objectForKey:@"Possible Users"] objectAtIndex:rowIndex] pointerValue]);
-	
-	return [NSString stringWithUTF8String:res->name];	
+	GaimNotifySearchResults *results = [[infoDict objectForKey:@"GaimNotifySearchResultsValue"] pointerValue];
+	GList *rowList = gaim_notify_searchresults_row_get(results, rowIndex);
+
+	NSString *identifier = [aTableColumn identifier];
+
+	if ([identifier isEqualToString:@"name"]) {
+		const char *name = g_list_nth_data(rowList, 0);
+		return [NSString stringWithUTF8String:name];
+
+	} else if ([identifier isEqualToString:@"id"]) {
+		const char *sametimeID = g_list_nth_data(rowList, 1);
+		return [NSString stringWithUTF8String:sametimeID];
+
+	} else {
+		return @"";
+	}
 }
 
 /*!
@@ -100,34 +113,30 @@ struct resolved_id {
 - (IBAction)pressedButton:(id)sender
 {
 	if (sender == button_OK) {
-		struct resolved_id		*res;
-		int						selectedRow = [tableView_choices selectedRow];
-		GaimRequestField		*field = [[infoDict objectForKey:@"listFieldValue"] pointerValue];
-		char					*label;
+		GaimNotifySearchResults		*results = [[infoDict objectForKey:@"GaimNotifySearchResultsValue"] pointerValue];
+		int							selectedRow = [tableView_choices selectedRow];
+		GList						*rowList = gaim_notify_searchresults_row_get(results, selectedRow);
+		GList						*buttons = results->buttons;
+
+		GaimNotifySearchButton		*button;
+
+		//IM is first; Add is 2nd
+		button = g_list_nth_data(buttons, 1);
 		
-		res = (struct resolved_id *)([[[infoDict objectForKey:@"Possible Users"] objectAtIndex:selectedRow] pointerValue]);
-		
-		//Clear the selection
-		gaim_request_field_list_clear_selected(field);
-		
-		/* Now set the selection
-			*
-			* label format is from multi_resolved_query() in mwgaim.c
-			*/
-		label = g_strdup_printf("%s (%s)", res->name, res->id);
-		gaim_request_field_list_add_selected(field, label);
-		g_free(label);
-		
-		[self doRequestFieldsCbValue:[infoDict objectForKey:@"OK Callback"]
-				   withUserDataValue:[infoDict objectForKey:@"userData"]
-						 fieldsValue:[infoDict objectForKey:@"fieldsValue"]];
+		button->callback([[infoDict objectForKey:@"GaimConnection"] pointerValue], rowList, [[infoDict objectForKey:@"userData"] pointerValue]);
 
 		[infoDict release]; infoDict = nil;
 		[[self window] close];
 
 	} else if (sender == button_cancel) {
+		gaim_notify_close(GAIM_NOTIFY_SEARCHRESULTS, self);
 		[[self window] performClose:nil];
 	}
+}
+
+- (void)windowWillClose:(id)sender
+{
+	gaim_notify_close(GAIM_NOTIFY_SEARCHRESULTS, self);
 }
 
 /*!
@@ -137,32 +146,6 @@ struct resolved_id {
 {
 	if ([tableView_choices selectedRow] != -1) {
 		[self pressedButton:button_OK];
-	}
-}
-
-/*!
- * @brief Call the gaim callback to finish up the window
- *
- * @param inCallBackValue The cb to use
- * @param inUserDataValue Original user data
- * @param inFieldsValue The entire GaimRequestFields pointer originally passed
- */
-- (oneway void)doRequestFieldsCbValue:(NSValue *)inCallBackValue
-					withUserDataValue:(NSValue *)inUserDataValue 
-						  fieldsValue:(NSValue *)inFieldsValue
-{	
-	GaimRequestFieldsCb callBack = [inCallBackValue pointerValue];
-	if (callBack) {
-		callBack([inUserDataValue pointerValue], [inFieldsValue pointerValue]);
-	}	
-}
-
-- (void)doWindowWillClose
-{
-	if (infoDict) {
-		[self doRequestFieldsCbValue:[infoDict objectForKey:@"Cancel Callback"]
-				   withUserDataValue:[infoDict objectForKey:@"userData"]
-						 fieldsValue:[infoDict objectForKey:@"fieldsValue"]];
 	}
 }
 
