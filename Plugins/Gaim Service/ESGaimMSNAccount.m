@@ -292,22 +292,22 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 			//Don't allow newlines in the friendly name; convert them to slashes.
 			NSMutableString		*noNewlinesFriendlyName = [[friendlyName mutableCopy] autorelease];
 			[noNewlinesFriendlyName convertNewlinesToSlashes];
+			friendlyName = noNewlinesFriendlyName;
 
 			/*
 			 * The MSN display name will be URL encoded via gaim_url_encode().  The maximum length of the _encoded_ string is
 			 * BUDDY_ALIAS_MAXLEN (387 characters as of gaim 2.0.0). We can't simply encode and truncate as we might end up with
 			 * part of an encoded character being cut off, so we instead truncate to smaller and smaller strings and encode, until it fits
 			 */
-			const char *friendlyNameUTF8String = [noNewlinesFriendlyName UTF8String];
+			const char *friendlyNameUTF8String = [friendlyName UTF8String];
 			int currentMaxLength = BUDDY_ALIAS_MAXLEN;
 
 			while (friendlyNameUTF8String &&
 				   strlen(gaim_url_encode(friendlyNameUTF8String)) > currentMaxLength) {
-				friendlyName = [friendlyName stringWithEllipsisByTruncatingToLength:currentMaxLength];				
+				friendlyName = [noNewlinesFriendlyName stringWithEllipsisByTruncatingToLength:currentMaxLength];				
 				friendlyNameUTF8String = [friendlyName UTF8String];
 				currentMaxLength -= 10;
 			}
-			AILog(@"%@: Updating serverside display name to %s", self, friendlyNameUTF8String);
 			msn_set_friendly_name(gaim_account_get_connection(account), friendlyNameUTF8String);
 
 			[lastFriendlyNameChange release];
@@ -325,7 +325,7 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 					   withObject:nil
 					   afterDelay:(SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES - [now timeIntervalSinceDate:lastFriendlyNameChange])];
 
-			AILog(@"%@: Queueing serverside display name change to %@ for %d seconds", self, queuedFriendlyName, (SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES - [now timeIntervalSinceDate:lastFriendlyNameChange]));
+			AILog(@"%@: Queueing serverside display name change to %@ for %0f seconds", self, queuedFriendlyName, (SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES - [now timeIntervalSinceDate:lastFriendlyNameChange]));
 		}
 	}
 }
@@ -341,7 +341,8 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 - (void)gotFilteredDisplayName:(NSAttributedString *)attributedDisplayName
 {
 	NSString	*friendlyName = [attributedDisplayName string];
-	
+	AILog(@"%@: gotFilteredDisplayName: %@ (I am currently %@)",self,friendlyName,[self currentDisplayName]);
+
 	if (!friendlyName || ![friendlyName isEqualToString:[self currentDisplayName]]) {		
 		[self setServersideDisplayName:friendlyName];
 	}
