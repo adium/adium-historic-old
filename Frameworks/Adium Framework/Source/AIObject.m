@@ -25,7 +25,7 @@
  */
 @implementation AIObject
 
-#define NONE 0 //Don't compile instance counting code
+#define COUNT_NONE 0 //Don't compile instance counting code
 #define COUNT_INCLUDE 1 //Only count instances for subclasses of AIObject in CLASS_LIST
 #define COUNT_EXCLUDE 2 //Count instances for subclasses of AIObject *not* in CLASS_LIST
 #define COUNT_ALL 3 //Count instance for all subclasses of AIObject
@@ -33,9 +33,9 @@
 #define CLASS_LIST [[NSArray alloc] initWithObjects:@"AIContentMessage", @"AIContentTyping", @"AIContentContext", nil]
 
 //set to one of the constants above to change instance counting behavior
-#define INSTANCE_COUNT_STYLE NONE
+#define INSTANCE_COUNT_STYLE COUNT_NONE
 
-#if INSTANCE_COUNT_STYLE != NONE
+#if INSTANCE_COUNT_STYLE != COUNT_NONE
 static NSMutableDictionary *instanceCountDict = nil;
 static NSArray *classList = nil;
 
@@ -51,6 +51,20 @@ BOOL loggableClass(NSString *className)
 			return YES;
 	}
 }
+
+void modifyInstanceCount(int delta, NSString *className)
+{
+	@synchronized(instanceCountDict) {
+		NSNumber *count = [instanceCountDict objectForKey:className];
+		if(!count) count = [NSNumber numberWithInt:0];
+		count = [NSNumber numberWithInt:[count intValue] + delta];
+		[instanceCountDict setObject:count forKey:className];
+		NSLog(@"Instance Counter: %@ a class %@, there are now %@ of them", 
+			  ((delta >= 0) ? @"Created" : @"Destroyed"), 
+			  className, 
+			  count);
+	}
+}
 #endif
 
 static AIAdium *_sharedAdium = nil;
@@ -64,7 +78,7 @@ static AIAdium *_sharedAdium = nil;
 {
     NSParameterAssert(_sharedAdium == nil);
     _sharedAdium = [shared retain];
-#if INSTANCE_COUNT_STYLE != NONE
+#if INSTANCE_COUNT_STYLE != COUNT_NONE
 	instanceCountDict = [[NSMutableDictionary alloc] init];
 	classList = CLASS_LIST;
 #endif
@@ -89,36 +103,23 @@ static AIAdium *_sharedAdium = nil;
 		NSParameterAssert(_sharedAdium != nil);
 		adium = _sharedAdium;
 		
-#if INSTANCE_COUNT_STYLE != NONE
+#if INSTANCE_COUNT_STYLE != COUNT_NONE
 		NSString *className = NSStringFromClass([self class]);
-		if(loggableClass(className)) {
-			@synchronized(instanceCountDict) {
-				NSNumber *instanceCount = [instanceCountDict objectForKey:className];
-				if(!instanceCount) instanceCount = [NSNumber numberWithInt:0];
-				instanceCount = [NSNumber numberWithInt:[instanceCount intValue] + 1];
-				[instanceCountDict setObject:instanceCount forKey:className];
-				NSLog(@"Instance Counter: Initializing object of class %@, there are now %@ of them", className, [instanceCount stringValue]);
-			}
-		}
+		if(loggableClass(className)) 
+			modifyInstanceCount(1, className);
 #endif
 	}
 
     return self;
 }
 
-#if INSTANCE_COUNT_STYLE != NONE
+#if INSTANCE_COUNT_STYLE != COUNT_NONE
 - (void) dealloc
 {
-	@synchronized(instanceCountDict) {
-		NSString *className = NSStringFromClass([self class]);
-		if(loggableClass(className)) {
-			NSNumber *count = [instanceCountDict objectForKey:className];
-			[instanceCountDict setObject:[NSNumber numberWithInt:[count intValue] - 1] forKey:className];
-			NSLog(@"Instance Counter: Deallocating object of class %@, there are now %d of them", className, [count intValue] - 1);
-		}
-
-	}
-		[super dealloc];
+	NSString *className = NSStringFromClass([self class]);
+	if(loggableClass(className)) 
+		modifyInstanceCount(-1, className);
+	[super dealloc];
 }
 #endif
 
