@@ -718,7 +718,8 @@
 - (void)contentObjectAdded:(NSNotification *)notification
 {
 	AIContentObject *content = [[notification userInfo] objectForKey:@"AIContentObject"];
-	if ([self chat] == [content chat] && [[content type] compare:CONTENT_CONTEXT_TYPE] == NSOrderedSame && [content isOutgoing]) {
+
+	if (([self chat] == [content chat]) && ([[content type] isEqualToString:CONTENT_CONTEXT_TYPE]) && [content isOutgoing]) {
 		//Populate the history with messages from us
 		[historyArray insertObject:[content message] atIndex:1];
 		if ([historyArray count] > MAX_HISTORY) {
