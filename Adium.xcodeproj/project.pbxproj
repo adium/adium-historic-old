@@ -3120,6 +3120,22 @@
 		34EA648E0A62E2ED0053DFEB /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		34EA6B2F0A62F3420053DFEB /* AIApplication.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIApplication.h; path = Source/AIApplication.h; sourceTree = "<group>"; };
 		34EA6B300A62F3420053DFEB /* AIApplication.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIApplication.m; path = Source/AIApplication.m; sourceTree = "<group>"; };
+		34EFC22E0AAC6B590086AC43 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Plugins/joscar Service/Catalan.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC22F0AAC6B5F0086AC43 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/joscar Service/Danish.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC2300AAC6B690086AC43 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = "Plugins/joscar Service/Dutch.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC2310AAC6B740086AC43 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = "Plugins/joscar Service/French.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC2320AAC6B850086AC43 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Plugins/joscar Service/German.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC2330AAC6B920086AC43 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = "Plugins/joscar Service/Italian.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC2340AAC6B9A0086AC43 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = "Plugins/joscar Service/Japanese.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC2350AAC6BA20086AC43 /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/joscar Service/Norwegian.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC2360AAC6BAA0086AC43 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/joscar Service/Russian.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC2370AAC6BB70086AC43 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/joscar Service/Swedish.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC2380AAC6BC00086AC43 /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/joscar Service/Turkish.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC2390AAC6BC80086AC43 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/joscar Service/cs.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC23A0AAC6BCE0086AC43 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/joscar Service/is.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC23B0AAC6BD50086AC43 /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/joscar Service/pl.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC23C0AAC6BDD0086AC43 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/joscar Service/zh_CN.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34EFC23D0AAC6BE50086AC43 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/joscar Service/zh_TW.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
 		34F101E307342B4D00890D3B /* ESGaimDotMacAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimDotMacAccount.m; path = "Plugins/Gaim Service/ESGaimDotMacAccount.m"; sourceTree = "<group>"; };
 		34F101E407342B4D00890D3B /* ESGaimDotMacAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimDotMacAccount.h; path = "Plugins/Gaim Service/ESGaimDotMacAccount.h"; sourceTree = "<group>"; };
 		34F1022A0734499600890D3B /* XtraProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtraProgressWindow.nib; path = Resources/XtraProgressWindow.nib; sourceTree = "<group>"; };
@@ -9346,6 +9362,22 @@
 			children = (
 				11669AB209994697003CB8A1 /* English */,
 				6C1C71330A7E0FE700F901F1 /* Spanish */,
+				34EFC22E0AAC6B590086AC43 /* Catalan */,
+				34EFC22F0AAC6B5F0086AC43 /* Danish */,
+				34EFC2300AAC6B690086AC43 /* Dutch */,
+				34EFC2310AAC6B740086AC43 /* French */,
+				34EFC2320AAC6B850086AC43 /* German */,
+				34EFC2330AAC6B920086AC43 /* Italian */,
+				34EFC2340AAC6B9A0086AC43 /* Japanese */,
+				34EFC2350AAC6BA20086AC43 /* Norwegian */,
+				34EFC2360AAC6BAA0086AC43 /* Russian */,
+				34EFC2370AAC6BB70086AC43 /* Swedish */,
+				34EFC2380AAC6BC00086AC43 /* Turkish */,
+				34EFC2390AAC6BC80086AC43 /* cs */,
+				34EFC23A0AAC6BCE0086AC43 /* is */,
+				34EFC23B0AAC6BD50086AC43 /* pl */,
+				34EFC23C0AAC6BDD0086AC43 /* zh_CN */,
+				34EFC23D0AAC6BE50086AC43 /* zh_TW */,
 			);
 			name = joscarJoinChatView.nib;
 			sourceTree = "<group>";
