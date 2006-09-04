@@ -607,12 +607,10 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 {
 	NSCalendarDate *date1 = getDateFromPath(path1);
 	NSCalendarDate *date2 = getDateFromPath(path2);
-	if (date1 == date2)
-		return NSOrderedSame;
-	else if (date1 && date2)
+	if (date1 && date2)
 		return [date2 compare:date1];
 	else
-		return date2 ? NSOrderedAscending : NSOrderedDescending;
+		return date2 ? NSOrderedDescending : NSOrderedAscending;
 }
 
 + (NSArray *)sortedArrayOfLogFilesForChat:(AIChat *)chat
