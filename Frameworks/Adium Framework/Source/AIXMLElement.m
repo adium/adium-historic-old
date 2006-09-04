@@ -147,7 +147,7 @@
 - (void) addObject:(id)obj
 {
 	BOOL isString = [obj isKindOfClass:[NSString class]];
-	NSParameterAssert(isString || [obj isKindOfClass:[AIXMLElement class]]);
+	NSAssert2((isString || [obj isKindOfClass:[AIXMLElement class]]), @"%@: addObject: %@ is of incorrect class",self,obj);
 
 	if(isString) {
 		obj = [obj stringByEscapingForXMLWithEntities:nil];
