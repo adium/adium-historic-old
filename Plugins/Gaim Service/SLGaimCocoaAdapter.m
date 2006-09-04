@@ -1333,4 +1333,32 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	[super dealloc];
 }
 
+/*
+ //This doesn't work for several reasons.  The biggest: libgaim expects strings to be translated immediately;
+ //substitutions have already occurred, as of concatenations, because we see them.
+#pragma mark Translation
+
+- (NSString *)localizedGaimString:(NSString *)inString
+{
+	static BOOL configuredGettext = NO;
+	if (!configuredGettext) {
+		bindtextdomain("libgaim", [[[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"potfiles"] UTF8String]);
+		bind_textdomain_codeset("libgaim", "UTF-8");
+		
+		//Change language.
+		NSString	*preferredLocalization = [[[NSBundle mainBundle] preferredLocalizations] objectAtIndex:0];
+		setenv("LANGUAGE", [preferredLocalization UTF8String], 1);
+		AILog(@"Gaim translation using %s",[preferredLocalization UTF8String]);
+
+		//Make change known. _nl_msg_cat_cntr is an external defined in gettext's loadmsgcat.c
+		{
+			extern int  _nl_msg_cat_cntr;
+			++_nl_msg_cat_cntr;
+		}
+	}
+	
+	return [NSString stringWithUTF8String:dgettext("libgaim", [inString UTF8String])];
+}
+*/
+
 @end
