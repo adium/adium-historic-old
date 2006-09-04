@@ -265,10 +265,12 @@ end:
 			return [NSColor whiteColor];
 		else
 			return [NSColor blackColor];
+
 	} else {
-		return [NSColor colorWithCalibratedRed:1.0 - [self redComponent]
-							   green:1.0 - [self greenComponent]
-							    blue:1.0 - [self blueComponent]
+		NSColor *rgbColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+		return [NSColor colorWithCalibratedRed:1.0 - [rgbColor redComponent]
+							   green:1.0 - [rgbColor greenComponent]
+							    blue:1.0 - [rgbColor blueComponent]
 							   alpha:1.0];
 	}
 }
