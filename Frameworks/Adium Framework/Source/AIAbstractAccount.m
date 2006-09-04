@@ -89,12 +89,17 @@
 									   selector:@selector(requestImmediateDynamicContentUpdate:)
 										   name:Adium_RequestImmediateDynamicContentUpdate
 										 object:nil];	
-		
+
+		//Some actions must wait until Adium is finished loading so that all plugins are available
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(adiumDidLoad:)
+										   name:Adium_CompletedApplicationLoad
+										 object:nil];
+
 		//Handle the preference changed monitoring (for account status) for our subclass
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
 		
 		//Update our display name and formattedUID immediately
-		[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
 		[self updateStatusForKey:@"FormattedUID"];
 		
 		//Init the account
@@ -126,6 +131,16 @@
 	
     [super dealloc];
 }
+
+- (void)adiumDidLoad:(NSNotification *)inNotification
+{
+	[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
+
+	[[adium notificationCenter] removeObserver:self 
+										  name:Adium_CompletedApplicationLoad
+										object:nil];
+}
+   
 
 /*!
  * @brief Use our account number as internalObjectID
@@ -659,7 +674,7 @@
 													  usingFilterType:AIFilterContent
 															direction:AIFilterOutgoing
 															  context:self];
-	
+
 	//Refresh periodically if the filtered string is different from the original one
 	if (originalValue && (![originalValueString isEqualToString:[filteredValue string]])) {
 		[self startAutoRefreshingStatusKey:key forOriginalValueString:originalValueString];
