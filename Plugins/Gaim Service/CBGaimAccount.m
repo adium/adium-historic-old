@@ -1546,6 +1546,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //				[[adium interfaceController] account:self disconnectedWithError:lastDisconnectionError];
 
 				[self displayError:lastDisconnectionError];
+
 				[lastDisconnectionError release]; lastDisconnectionError = nil;
 			}
 			
