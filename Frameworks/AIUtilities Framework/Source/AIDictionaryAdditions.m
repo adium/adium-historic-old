@@ -248,12 +248,17 @@
 
 - (void)intersectSetOfKeys:(NSSet *)keys
 {
+	NSMutableArray *keysToRemove = [NSMutableArray array];
 	NSEnumerator *myKeysEnum = [self keyEnumerator];
 	NSString *key;
 	while ((key = [myKeysEnum nextObject])) {
 		if (![keys containsObject:key]) {
-			[self removeObjectForKey:key];
+			[keysToRemove addObject:key];
 		}
+	}
+	NSEnumerator *deadKeysEnum = [keysToRemove objectEnumerator];
+	while ((key = [deadKeysEnum nextObject])) {
+		[self removeObjectForKey:key];
 	}
 }
 - (void)minusSetOfKeys:(NSSet *)keys
