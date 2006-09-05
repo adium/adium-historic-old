@@ -30,10 +30,10 @@
 #define COUNT_EXCLUDE 2 //Count instances for subclasses of AIObject *not* in CLASS_LIST
 #define COUNT_ALL 3 //Count instance for all subclasses of AIObject
 
-#define CLASS_LIST [[NSArray alloc] initWithObjects:@"AIContentMessage", @"AIContentTyping", @"AIContentContext", nil]
+#define CLASS_LIST [[NSArray alloc] initWithObjects:@"AIContentMessage", @"AIContentTyping", @"AIContentContext", @"AIIconState", nil]
 
 //set to one of the constants above to change instance counting behavior
-#define INSTANCE_COUNT_STYLE COUNT_EXCLUDE
+#define INSTANCE_COUNT_STYLE COUNT_NONE
 
 #if INSTANCE_COUNT_STYLE != COUNT_NONE
 static NSMutableDictionary *instanceCountDict = nil;
