@@ -33,8 +33,7 @@
 		userNameWithLiveJournalDotCom = UID;
 	}
 
-	NSString *resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
-	NSString *completeUserName = [NSString stringWithFormat:@"%@/%@", userNameWithLiveJournalDotCom, resource];
+	NSString *completeUserName = [NSString stringWithFormat:@"%@/%@", userNameWithLiveJournalDotCom, [self resourceName]];
 
 	return [completeUserName UTF8String];
 }
