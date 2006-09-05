@@ -162,7 +162,7 @@
  * @param textEquivalent The text equivalent for this attributed string 
  * @result The attributed string with the emoticon
  */
-- (NSMutableAttributedString *)attributedStringWithTextEquivalent:(NSString *)textEquivalent
+- (NSMutableAttributedString *)attributedStringWithTextEquivalent:(NSString *)textEquivalent attachImages:(BOOL)attach
 {
     NSMutableAttributedString   *attributedString;
     AITextAttachmentExtension   *attachment;
@@ -170,7 +170,7 @@
     //Cache this attachment for ourself
     if (!_cachedAttributedString) {
         AITextAttachmentExtension   *emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
-		if(!path) {
+		if(!path || attach) {
 			NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:[self image]];
 			[emoticonAttachment setAttachmentCell:cell];
 			[cell release];

@@ -175,6 +175,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 								serviceClassContext:(id)serviceClassContext
 						  emoticonStartCharacterSet:(NSCharacterSet *)emoticonStartCharacterSet
 									  emoticonIndex:(NSDictionary *)emoticonIndex
+										  isMessage:(BOOL)isMessage
 {
 	unsigned int	originalEmoticonLocation = NSNotFound;
 
@@ -310,7 +311,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 															  callingRecursively:YES
 															 serviceClassContext:serviceClassContext
 													   emoticonStartCharacterSet:emoticonStartCharacterSet
-																   emoticonIndex:emoticonIndex];
+																   emoticonIndex:emoticonIndex
+																	   isMessage:isMessage];
 				if (nextEmoticonLocation != NSNotFound) {
 					if (nextEmoticonLocation == (*currentLocation + textLength)) {
 						/* The next emoticon is immediately after the candidate we're looking at right now. That means
@@ -333,7 +335,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 			}
 
 			if (acceptable) {
-				replacement = [emoticon attributedStringWithTextEquivalent:replacementString];
+				replacement = [emoticon attributedStringWithTextEquivalent:replacementString attachImages:isMessage];
 				
 				//grab the original attributes, to ensure that the background is not lost in a message consisting only of an emoticon
 				[replacement addAttributes:[originalAttributedString attributesAtIndex:originalEmoticonLocation
@@ -376,9 +378,12 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     unsigned					currentLocation = 0, messageStringLength;
 	NSCharacterSet				*emoticonStartCharacterSet = [self emoticonStartCharacterSet];
 	NSDictionary				*emoticonIndex = [self emoticonIndex];
+	//we can avoid loading images if the emoticon is headed for the wkmv, since it will just load from the original path anyway
+	BOOL						isMessage = NO;  
 
 	//Determine our service class context
 	if ([context isKindOfClass:[AIContentObject class]]) {
+		isMessage = YES;
 		serviceClassContext = [[[(AIContentObject *)context destination] service] serviceClass];
 		//If there's no destination, try to use the source for context
 		if (!serviceClassContext) {
@@ -455,7 +460,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 							   callingRecursively:NO
 							  serviceClassContext:serviceClassContext
 						emoticonStartCharacterSet:emoticonStartCharacterSet
-									emoticonIndex:emoticonIndex];
+									emoticonIndex:emoticonIndex
+										isMessage:isMessage];
     }
 
     return (newMessage ? [newMessage autorelease] : inMessage);

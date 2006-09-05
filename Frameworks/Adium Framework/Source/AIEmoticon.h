@@ -33,7 +33,7 @@
 
 + (id)emoticonWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName pack:(AIEmoticonPack *)inPack;
 - (NSArray *)textEquivalents;
-- (NSMutableAttributedString *)attributedStringWithTextEquivalent:(NSString *)textEquivalent;
+- (NSMutableAttributedString *)attributedStringWithTextEquivalent:(NSString *)textEquivalent attachImages:(BOOL)attach;
 - (BOOL)isAppropriateForServiceClass:(NSString *)inServiceClass;
 - (NSImage *)image;
 - (void)setPath:(NSString *)inPath;
