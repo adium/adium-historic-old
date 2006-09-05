@@ -33,7 +33,7 @@
 #define CLASS_LIST [[NSArray alloc] initWithObjects:@"AIContentMessage", @"AIContentTyping", @"AIContentContext", nil]
 
 //set to one of the constants above to change instance counting behavior
-#define INSTANCE_COUNT_STYLE COUNT_NONE
+#define INSTANCE_COUNT_STYLE COUNT_EXCLUDE
 
 #if INSTANCE_COUNT_STYLE != COUNT_NONE
 static NSMutableDictionary *instanceCountDict = nil;
@@ -59,7 +59,7 @@ void modifyInstanceCount(int delta, NSString *className)
 		if(!count) count = [NSNumber numberWithInt:0];
 		count = [NSNumber numberWithInt:[count intValue] + delta];
 		[instanceCountDict setObject:count forKey:className];
-		NSLog(@"Instance Counter: %@ a class %@, there are now %@ of them", 
+		NSLog(@"Instance Counter: %@ a(n) %@, there are now %@ of them", 
 			  ((delta >= 0) ? @"Created" : @"Destroyed"), 
 			  className, 
 			  count);
