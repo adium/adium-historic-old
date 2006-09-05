@@ -146,7 +146,7 @@
 		[self chatParticipatingListObjectsChanged:nil];
 		
 		//Set our base writing direction
-		if (contact)
+		if (contact && [NSApp isOnTigerOrBetter])
 			[textView_outgoing setBaseWritingDirection:[contact baseWritingDirection]];
 		
 		//Observe general preferences for sending keys
