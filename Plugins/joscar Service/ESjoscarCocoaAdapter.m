@@ -185,7 +185,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 	//Create a Screenname
 	screenName = [NewScreenname([account serversideUID]) autorelease];
-		
+
 	//Open an aimSession with the screenName; this returns an aimSession object
 	aimSession = [appSession openAimSession:screenName];
 	
@@ -1498,7 +1498,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 - (NSArray *)getBlockedBuddies
 {
-	id<Iterator> iter = [[[[aimConnection getSsiService] getPermissionList] getBlockedBuddies] iterator];
+	id <Iterator> iter = [[[[aimConnection getSsiService] getPermissionList] getBlockedBuddies] iterator];
 	NSMutableArray *array = [[NSMutableArray alloc] init];
 	while ([iter hasNext]) {
 		Screenname *name = (Screenname *) [iter next];

@@ -151,7 +151,7 @@
 
 - (NSString *)serversideUID
 {
-	return [self UID];
+	return [self formattedUID];
 }
 
 #pragma mark Contact status and info
