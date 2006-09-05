@@ -452,17 +452,18 @@ NSString* serviceIDForJabberUID(NSString *UID);
 {
     if ([group isEqualToString:PREF_GROUP_ADDRESSBOOK]) {
 		BOOL			oldCreateMetaContacts = createMetaContacts;
+		NSNumber		*value;
 		
         //load new displayFormat
-		enableImport = [[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue];
-        displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
-        automaticSync = [[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue];
-        useNickName = [[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue];
-		useMiddleName = [[prefDict objectForKey:KEY_AB_USE_MIDDLE] boolValue];
-		preferAddressBookImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];
-		useABImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
+		if ((value = [prefDict objectForKey:KEY_AB_ENABLE_IMPORT])) enableImport = [value boolValue];
+        if ((value = [prefDict objectForKey:KEY_AB_DISPLAYFORMAT]))  displayFormat = [value intValue];
+        if ((value = [prefDict objectForKey:KEY_AB_IMAGE_SYNC])) automaticSync = [value boolValue];
+        if ((value = [prefDict objectForKey:KEY_AB_USE_NICKNAME])) useNickName = [value boolValue];
+		if ((value = [prefDict objectForKey:KEY_AB_USE_MIDDLE])) useMiddleName = [value boolValue];
+		if ((value = [prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES])) preferAddressBookImages = [value boolValue];
+		if ((value = [prefDict objectForKey:KEY_AB_USE_IMAGES])) useABImages = [value boolValue];
 
-		createMetaContacts = [[prefDict objectForKey:KEY_AB_CREATE_METACONTACTS] boolValue];
+		if ((value = [prefDict objectForKey:KEY_AB_CREATE_METACONTACTS])) createMetaContacts = [value boolValue];
 		
 		if (firstTime) {
 			//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
