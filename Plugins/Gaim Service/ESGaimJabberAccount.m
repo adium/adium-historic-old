@@ -30,6 +30,7 @@
 #include <Libgaim/buddy.h>
 #include <Libgaim/presence.h>
 #include <Libgaim/si.h>
+#include <unistd.h>
 
 #define DEFAULT_JABBER_HOST @"@jabber.org"
 
@@ -129,9 +130,20 @@
 	return DEFAULT_JABBER_HOST;
 }
 
+/*!	@brief	Obtain the resource name for this Jabber account.
+ *
+ *	This could be extended in the future to perform keyword substitution (e.g. s/%computerName%/CSCopyMachineName()/).
+ *
+ *	@return	The resource name for the account.
+ */
+- (NSString *)resourceName
+{
+	return [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
+}
+
 - (const char *)gaimAccountName
 {
-	NSString	*resource, *userNameWithHost = nil, *completeUserName = nil;
+	NSString	*userNameWithHost = nil, *completeUserName = nil;
 	BOOL		serverAppendedToUID;
 	
 	/*
@@ -148,9 +160,8 @@
 	} else {
 		userNameWithHost = [UID stringByAppendingString:[self serverSuffix]];
 	}
-	
-	resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
-	completeUserName = [NSString stringWithFormat:@"%@/%@",userNameWithHost,resource];
+
+	completeUserName = [NSString stringWithFormat:@"%@/%@" ,userNameWithHost, [self resourceName]];
 
 	return [completeUserName UTF8String];
 }

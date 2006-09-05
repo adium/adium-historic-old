@@ -34,8 +34,7 @@
 		userNameWithGmailDotCom = UID;
 	}
 
-	NSString *resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
-	NSString *completeUserName = [NSString stringWithFormat:@"%@/%@",userNameWithGmailDotCom,resource];
+	NSString *completeUserName = [NSString stringWithFormat:@"%@/%@",userNameWithGmailDotCom, [self resourceName]];
 
 	return [completeUserName UTF8String];
 }
