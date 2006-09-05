@@ -61,6 +61,11 @@
 	if ((self = [super initWithWindowNibName:inWindowNibName])) {
 		picker = [inPicker retain];
 		recentPictureSelector = inRecentPictureSelector;
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(parentWindowWillClose:)
+													 name:NSWindowWillCloseNotification
+												   object:[picker window]];
 	}
 	
 	return self;
@@ -68,6 +73,7 @@
 
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[picker release];
 	
 	[super dealloc];
@@ -206,6 +212,12 @@
 - (void)windowDidResignKey:(NSNotification *)aNotification
 {
 	[self fadeOutAndClose];		
+}
+
+- (void)parentWindowWillClose:(NSNotification *)aNotification
+{
+	//Close, no fade, when our parent window closes
+	[self close];
 }
 
 #pragma mark Fading
