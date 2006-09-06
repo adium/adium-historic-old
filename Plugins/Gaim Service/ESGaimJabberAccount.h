@@ -29,5 +29,6 @@
 }
 
 - (NSString *)serverSuffix;
+- (NSString *)resourceName;
 
 @end
