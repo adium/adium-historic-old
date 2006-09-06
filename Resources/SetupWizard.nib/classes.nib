@@ -62,6 +62,11 @@
         {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
         {CLASS = NSTextField; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
         {
+            CLASS = SetupAssistantBoxBackgroundView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSView; 
+        }, 
+        {
             CLASS = SetupWizardBackgroundView; 
             LANGUAGE = ObjC; 
             OUTLETS = {contentView = NSView; }; 
