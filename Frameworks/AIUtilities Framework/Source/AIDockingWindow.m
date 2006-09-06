@@ -164,6 +164,9 @@
 		[[self delegate] performSelector:@selector(windowDidToggleToolbarShown:)
 							  withObject:self];
 	}
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:AIWindowToolbarDidToggleVisibility
+														object:self];
 }
 
 - (void)_toolbarPillButtonClicked:(id)sender
@@ -174,6 +177,9 @@
 		[[self delegate] performSelector:@selector(windowDidToggleToolbarShown:)
 							  withObject:self];
 	}
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:AIWindowToolbarDidToggleVisibility
+														object:self];
 }
 
 @end

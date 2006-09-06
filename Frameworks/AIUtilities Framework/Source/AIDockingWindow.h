@@ -10,8 +10,12 @@
  * @class AIDockingWindow
  * @brief An NSWindow subclass which docks to screen edges
  *
- * An NSWindow subclass which docks to screen edges.
+ * An NSWindow subclass which docks to screen edges. It also posts AIWindowToolbarDidToggleVisibility to the default notification center
+ * when its toolbar visibility is toggled with an object of the window.
  */
+
+#define AIWindowToolbarDidToggleVisibility @"AIWindowToolbarDidToggleVisibility"
+
 #import <Cocoa/Cocoa.h>
 
 @interface AIDockingWindow : NSWindow {
