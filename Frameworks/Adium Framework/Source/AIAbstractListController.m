@@ -442,7 +442,13 @@
     AIListObject	*object = [notification object];
 	
 	//Redraw the modified object (or the whole list, if object is nil)
-	[contactListView redisplayItem:object];	
+	[contactListView redisplayItem:object];
+	
+	/* Also redraw the modified object's parent contact if it exists and isn't the same
+	 * For example, when a contact changes, redraw the metacontact which represents it if appropriate.
+	 */
+	if (object && [object isKindOfClass:[AIListContact class]] && ([(AIListContact *)object parentContact] != object))
+		[contactListView redisplayItem:[(AIListContact *)object parentContact]];
 }
 
 
