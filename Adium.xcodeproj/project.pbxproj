@@ -1247,6 +1247,8 @@
 		B747E986058D144C00A9F037 /* AILaTeXPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B747E984058D144C00A9F037 /* AILaTeXPlugin.h */; };
 		B747E987058D144C00A9F037 /* AILaTeXPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B747E985058D144C00A9F037 /* AILaTeXPlugin.m */; };
 		B7FD6C170596550F000C4D9D /* SQLLogging.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7FD6C160596550F000C4D9D /* SQLLogging.plist */; };
+		C44BA7820AAB696400C7504F /* SetupAssistantBoxBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = C44BA7800AAB696300C7504F /* SetupAssistantBoxBackgroundView.h */; };
+		C44BA7830AAB696400C7504F /* SetupAssistantBoxBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C44BA7810AAB696400C7504F /* SetupAssistantBoxBackgroundView.m */; };
 		CA25AAA907B428C800DDBD7E /* BDFireImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = CA25AA9F07B428C600DDBD7E /* BDFireImporter.h */; };
 		CA25AAAA07B428C800DDBD7E /* BDFireImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CA25AAA007B428C700DDBD7E /* BDFireImporter.m */; };
 		CA25AAAB07B428C800DDBD7E /* BDiChatImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = CA25AAA107B428C700DDBD7E /* BDiChatImporter.h */; };
@@ -3718,6 +3720,8 @@
 		B7FD6C160596550F000C4D9D /* SQLLogging.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = SQLLogging.plist; sourceTree = "<group>"; };
 		C4243C920638E4EA007AD2D9 /* BGEmoticonMenuPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = BGEmoticonMenuPlugin.h; path = Source/BGEmoticonMenuPlugin.h; sourceTree = "<group>"; };
 		C4243C930638E4EA007AD2D9 /* BGEmoticonMenuPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = BGEmoticonMenuPlugin.m; path = Source/BGEmoticonMenuPlugin.m; sourceTree = "<group>"; };
+		C44BA7800AAB696300C7504F /* SetupAssistantBoxBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SetupAssistantBoxBackgroundView.h; path = Source/SetupAssistantBoxBackgroundView.h; sourceTree = "<group>"; };
+		C44BA7810AAB696400C7504F /* SetupAssistantBoxBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SetupAssistantBoxBackgroundView.m; path = Source/SetupAssistantBoxBackgroundView.m; sourceTree = "<group>"; };
 		CA25AA9F07B428C600DDBD7E /* BDFireImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BDFireImporter.h; sourceTree = "<group>"; };
 		CA25AAA007B428C700DDBD7E /* BDFireImporter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = BDFireImporter.m; sourceTree = "<group>"; };
 		CA25AAA107B428C700DDBD7E /* BDiChatImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BDiChatImporter.h; sourceTree = "<group>"; };
@@ -4492,6 +4496,8 @@
 		344161B60943E0AF00BC26ED /* Setup Wizard */ = {
 			isa = PBXGroup;
 			children = (
+				C44BA7800AAB696300C7504F /* SetupAssistantBoxBackgroundView.h */,
+				C44BA7810AAB696400C7504F /* SetupAssistantBoxBackgroundView.m */,
 				344161BB0943E0D800BC26ED /* AdiumSetupWizard.h */,
 				344161BC0943E0D800BC26ED /* AdiumSetupWizard.m */,
 				344161CF0943E20D00BC26ED /* AdiumyButler.png */,
@@ -7430,6 +7436,7 @@
 				34DC13030A81417500D710F3 /* AILoginWindowController.h in Headers */,
 				3419E2F70A8145B700C3FC68 /* GBFireImporter.h in Headers */,
 				3419E2F90A8145B800C3FC68 /* GBFireLogImporter.h in Headers */,
+				C44BA7820AAB696400C7504F /* SetupAssistantBoxBackgroundView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9031,6 +9038,7 @@
 				34DC13040A81417600D710F3 /* AILoginWindowController.m in Sources */,
 				3419E2F80A8145B800C3FC68 /* GBFireImporter.m in Sources */,
 				3419E2FA0A8145B900C3FC68 /* GBFireLogImporter.m in Sources */,
+				C44BA7830AAB696400C7504F /* SetupAssistantBoxBackgroundView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
