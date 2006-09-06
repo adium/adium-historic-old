@@ -18,6 +18,7 @@
 #import <Adium/AIEditStateWindowController.h>
 #import <Adium/AIStatus.h>
 #import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
@@ -217,6 +218,9 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[textField_idleMinutes setFormatter:intFormatter];
 	[intFormatter release];
 	*/
+	
+	[textView_statusMessage setTypingAttributes:[[adium contentController] defaultFormattingAttributes]];
+	[textView_autoReply setTypingAttributes:[[adium contentController] defaultFormattingAttributes]];
 
 	NSMutableCharacterSet *noNewlinesCharacterSet;
 	noNewlinesCharacterSet = [[[NSCharacterSet characterSetWithCharactersInString:@""] invertedSet] mutableCopy];
