@@ -335,7 +335,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 			}
 
 			if (acceptable) {
-				replacement = [emoticon attributedStringWithTextEquivalent:replacementString attachImages:isMessage];
+				replacement = [emoticon attributedStringWithTextEquivalent:replacementString attachImages:!isMessage];
 				
 				//grab the original attributes, to ensure that the background is not lost in a message consisting only of an emoticon
 				[replacement addAttributes:[originalAttributedString attributesAtIndex:originalEmoticonLocation
