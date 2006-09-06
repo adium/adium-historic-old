@@ -43,8 +43,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
     [exceptionHandler setExceptionHandlingMask:(NSHandleUncaughtExceptionMask |
 												NSHandleUncaughtSystemExceptionMask | 
 												NSHandleUncaughtRuntimeErrorMask |
-												NSHandleTopLevelExceptionMask |
-												NSHandleOtherExceptionMask)];
+												NSHandleTopLevelExceptionMask)];
 	[exceptionHandler setDelegate:self];
 
 	catchExceptions = YES;
