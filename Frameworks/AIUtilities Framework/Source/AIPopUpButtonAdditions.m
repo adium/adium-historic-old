@@ -32,7 +32,9 @@
 }
 - (BOOL)compatibleSelectItemWithTag:(int)tag
 {
-	if ([self numberOfItems] > 0) {
+	if([NSApp isOnTigerOrBetter])
+		return [self selectItemWithTag:tag];
+	else if ([self numberOfItems] > 0) {
 		int	index = [self indexOfItemWithTag:tag];
 		if (index != -1) {
 			[self selectItemAtIndex:index];
