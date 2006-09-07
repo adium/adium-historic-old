@@ -20,6 +20,7 @@
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
@@ -1079,7 +1080,7 @@
 	
 	if (!_contactStatusObjectKeys)
 		_contactStatusObjectKeys = [[NSSet alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",
-			@"Idle",@"IsIdle",@"Signon Date",@"StatusName",@"StatusType",@"StatusMessage",@"Client",nil];
+			@"Idle",@"IsIdle",@"Signon Date",@"StatusName",@"StatusType",@"StatusMessage",@"Client",KEY_TYPING,nil];
 	
 	return _contactStatusObjectKeys;
 }
