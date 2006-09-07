@@ -148,8 +148,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[imageView_userIcon setAnimates:YES];
 	
 	//Set text for the icon buttons
-	[button_clearContactIcon setTitle:AILocalizedString(@"Clear",nil)];
-	[button_chooseContactIcon setTitle:AILocalizedString(@"Choose",nil)];
+	[button_clearContactIcon setTitle:AILocalizedString(@"Clear", @"The title of the button for removing an icon on the Contact Info window.")];
+	[button_chooseContactIcon setTitle:AILocalizedString(@"Choose", @"The title of the button for selecting an icon on the Contact Info window.")];
 
 	//Monitor the selected contact
 	[[adium notificationCenter] addObserver:self
