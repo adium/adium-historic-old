@@ -317,6 +317,8 @@
 	[checkBox_sendTyping setLocalizedString:AILocalizedStringFromTableInBundle(@"Let others know when you are typing", nil, [NSBundle bundleForClass:[AIAccountViewController class]], "Text of the typing preference checkbox in the account preferneces")];
 	[label_encryption setLocalizedString:AILocalizedStringFromTableInBundle(@"Encryption:", nil, [NSBundle bundleForClass:[AIAccountViewController class]], "Label besides the encryption preference menu")];
 	[label_alias setLocalizedString:AILocalizedStringFromTableInBundle(@"Alias:", nil, [NSBundle bundleForClass:[AIAccountViewController class]], nil)];
+	[label_port setLocalizedString:AILocalizedStringFromTableInBundle(@"Port:", nil, [NSBundle bundleForClass:[AIAccountViewController class]], "Label for the port field in the account preferences")];
+	[label_server setLocalizedString:AILocalizedStringFromTableInBundle(@"Login Server:", nil, [NSBundle bundleForClass:[AIAccountViewController class]], "Label for the login server field in the account preferences")];
 }
 
 @end
