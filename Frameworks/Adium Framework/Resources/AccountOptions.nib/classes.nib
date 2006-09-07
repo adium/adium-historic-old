@@ -10,6 +10,8 @@
                 "label_alias" = NSTextField; 
                 "label_encryption" = NSTextField; 
                 "label_password" = NSTextField; 
+                "label_port" = NSTextField; 
+                "label_server" = NSTextField; 
                 "label_typing" = NSTextField; 
                 "popUp_encryption" = NSPopUpButton; 
                 "textField_accountUID" = NSTextField; 

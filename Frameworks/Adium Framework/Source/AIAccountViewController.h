@@ -42,7 +42,10 @@
 	IBOutlet	NSTextField		*label_alias;					//Label for the alias field
 	IBOutlet	NSButton		*checkBox_checkMail;			//Check for new mail
 	
-	IBOutlet	NSTextField		*label_typing;					//Label for the typing rpeference
+	IBOutlet	NSTextField		*label_port;					//Label for the port field
+	IBOutlet	NSTextField		*label_server;					//Label for the login server field
+	
+	IBOutlet	NSTextField		*label_typing;					//Label for the typing preference
 	IBOutlet	NSButton		*checkBox_sendTyping;			//Send the user's typing state
 	
 	IBOutlet	NSTextField		*label_encryption;				//Label for the encryption preference
