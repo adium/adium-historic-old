@@ -436,14 +436,6 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	return NO;
 }
 
-- (NSArray *)accessibilityAttributeNames
-{
-	NSMutableArray *names = [[super accessibilityAttributeNames] mutableCopy];	
-	[names addObject:@"ClassName"];
-	[names autorelease];
-	return names;
-}
-
 - (id)accessibilityAttributeValue:(NSString *)attribute
 {
 	id value;
@@ -474,10 +466,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		
 	} else if([attribute isEqualToString:NSAccessibilityWindowAttribute]) {
 		value = [controlView window];
-		
-	} else if([attribute isEqualToString:@"ClassName"]) {
-		value = NSStringFromClass([self class]);
-	
+                
 	} else {
 		value = [super accessibilityAttributeValue:attribute];
 	}
@@ -494,7 +483,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 
 - (NSArray *)accessibilityActionNames
 {
-	static NSArray *actions;
+	static NSArray *actions = nil;
 	
 	if (!actions) actions = [[NSArray alloc] initWithObjects: NSAccessibilityPressAction, nil];
 	return actions;
