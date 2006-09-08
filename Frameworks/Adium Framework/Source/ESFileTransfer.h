@@ -41,8 +41,9 @@
     unsigned long long			size;
     unsigned long long			bytesSent;
     AIFileTransferType			type;
-	AIFileTransferStatus			status;
+	AIFileTransferStatus		status;
 	
+	NSString					*uniqueID;
 	id <FileTransferDelegate>   delegate;
 	
 	ESFileTransferRequestPromptController *promptController;

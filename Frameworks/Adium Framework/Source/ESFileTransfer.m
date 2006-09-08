@@ -91,7 +91,8 @@ static NSMutableDictionary *fileTransferDict = nil;
 
 - (void)dealloc
 {
-	[fileTransferDict removeObjectForKey:[self uniqueID]];
+	[fileTransferDict removeObjectForKey:uniqueID];
+	[uniqueID release];
 
     [remoteFilename release];
     [localFilename release];
@@ -429,9 +430,13 @@ static NSMutableDictionary *fileTransferDict = nil;
 
 - (NSString *)uniqueID
 {
-	static unsigned long long fileTranfserID = 0;
-    
-	return [NSString stringWithFormat:@"FileTransfer-%qu",fileTranfserID];
+	if (!uniqueID) {
+		static unsigned long long fileTranfserID = 0;
+
+		uniqueID = [[NSString alloc] initWithFormat:@"FileTransfer-%qu",fileTranfserID++];
+	}
+
+	return uniqueID;
 }
 
 #pragma mark AIContentObject
