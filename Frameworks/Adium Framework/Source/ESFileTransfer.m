@@ -431,9 +431,9 @@ static NSMutableDictionary *fileTransferDict = nil;
 - (NSString *)uniqueID
 {
 	if (!uniqueID) {
-		static unsigned long long fileTranfserID = 0;
+		static unsigned long long fileTransferID = 0;
 
-		uniqueID = [[NSString alloc] initWithFormat:@"FileTransfer-%qu",fileTranfserID++];
+		uniqueID = [[NSString alloc] initWithFormat:@"FileTransfer-%qu",fileTransferID++];
 	}
 
 	return uniqueID;
