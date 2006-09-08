@@ -8,6 +8,7 @@
 
 #import "AIImageButton.h"
 #import "AIFloater.h"
+#import "AIStringUtilities.h"
 
 @implementation AIImageButton
 
@@ -108,9 +109,9 @@
 - (id)accessibilityAttributeValue:(NSString *)attribute
 {	
 	if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
-		return "Buddy's icon";
+		return AILocalizedString(@"Buddy's icon", /*comment*/ nil);
 	} else if ([attribute isEqualToString:NSAccessibilityHelpAttribute]) {
-		return @"Shows buddy's icon";
+		return AILocalizedString(@"Shows buddy's icon", /*comment*/ nil);;
 	} else {
 		return [super accessibilityAttributeValue:attribute];
 	}

@@ -15,6 +15,7 @@
 
 #import "AIOutlineView.h"
 #import "AIOutlineViewAdditions.h"
+#import "AIStringUtilities.h"
 
 @interface AIOutlineView (PRIVATE)
 - (void)_initOutlineView;
@@ -232,15 +233,10 @@
 
 #pragma mark Accessibility
 
-- (NSArray *)accessibilityAttributeNames
-{
-	return [[super accessibilityAttributeNames] mutableCopy];
-}
-
 - (id)accessibilityAttributeValue:(NSString *)attribute
 {	
 	if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
-		return @"Outline View";
+		return AILocalizedString(@"Outline View", /*comment*/);
 	} else {
 		return [super accessibilityAttributeValue:attribute];
 	}
