@@ -290,8 +290,8 @@
 
 - (id)accessibilityAttributeValue:(NSString *)attribute
 {	
-	if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
-		return AILocalizedString(@"Auto Scroll View", /*comment*/);
+	if([attribute isEqualToString:NSAccessibilityRoleAttribute]) {
+		return @"AIAutoScrollView";
 	} else if ([attribute isEqualToString:NSAccessibilityHelpAttribute]) {
 		return AILocalizedString(@"Automatically scrolls to bottom on new content", /*comment*/ nil);
 	} else if ([attribute isEqualToString:NSAccessibilityParentAttribute]) {
