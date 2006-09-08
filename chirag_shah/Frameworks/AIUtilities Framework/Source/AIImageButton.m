@@ -103,4 +103,17 @@
 	}
 }
 
+#pragma mark Accessibility
+
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{	
+	if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
+		return "Buddy's icon";
+	} else if ([attribute isEqualToString:NSAccessibilityHelpAttribute]) {
+		return @"Shows buddy's icon";
+	} else {
+		return [super accessibilityAttributeValue:attribute];
+	}
+}
+
 @end
