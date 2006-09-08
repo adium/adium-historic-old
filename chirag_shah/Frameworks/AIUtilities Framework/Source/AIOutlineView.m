@@ -235,11 +235,7 @@
 
 - (id)accessibilityAttributeValue:(NSString *)attribute
 {	
-	if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
-		return AILocalizedString(@"Outline View", /*comment*/);
-	} else {
-		return [super accessibilityAttributeValue:attribute];
-	}
+	return [super accessibilityAttributeValue:attribute];
 }
 
 

@@ -107,11 +107,9 @@
 #pragma mark Accessibility
 
 - (id)accessibilityAttributeValue:(NSString *)attribute
-{	
-	if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
-		return AILocalizedString(@"Buddy's icon", /*comment*/ nil);
-	} else if ([attribute isEqualToString:NSAccessibilityHelpAttribute]) {
-		return AILocalizedString(@"Shows buddy's icon", /*comment*/ nil);;
+{
+	if([attribute isEqualToString:NSAccessibilityRoleAttribute]) {
+		return @"AIImageButton";
 	} else {
 		return [super accessibilityAttributeValue:attribute];
 	}
