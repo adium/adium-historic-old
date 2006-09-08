@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAutoScrollView.h"
+#import "AIStringUtilities.h"
 
 #define AUTOSCROLL_CATCH_SIZE 	20	//The distance (in pixels) that the scrollview must be within (from the bottom) for auto-scroll to kick in.
 
@@ -290,9 +291,9 @@
 - (id)accessibilityAttributeValue:(NSString *)attribute
 {	
 	if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
-		return @"Auto Scroll View";
+		return AILocalizedString(@"Auto Scroll View", /*comment*/);
 	} else if ([attribute isEqualToString:NSAccessibilityHelpAttribute]) {
-		return @"Automatically scrolls to bottom on new content";
+		return AILocalizedString(@"Automatically scrolls to bottom on new content", /*comment*/ nil);
 	} else if ([attribute isEqualToString:NSAccessibilityParentAttribute]) {
 		return NSAccessibilityUnignoredAncestor([self window]);
 	} else {
@@ -302,10 +303,7 @@
 
 - (BOOL)accessibilityIsAttributeSettable:(NSString *)attribute
 {
-	if ([attribute isEqual:NSAccessibilityFocusedAttribute]) {
-		return YES;
-	}
-	return NO;
+	return [attribute isEqual:NSAccessibilityFocusedAttribute];
 }
  
 - (void)accessibilitySetValue:(id)value forAttribute:(NSString *)attribute

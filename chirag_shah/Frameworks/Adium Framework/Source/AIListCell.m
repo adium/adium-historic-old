@@ -483,10 +483,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 
 - (NSArray *)accessibilityActionNames
 {
-	static NSArray *actions = nil;
-	
-	if (!actions) actions = [[NSArray alloc] initWithObjects: NSAccessibilityPressAction, nil];
-	return actions;
+	return [[NSArray alloc] initWithObjects: NSAccessibilityPressAction, nil];
 }
 
 - (NSString *)accessibilityActionDescription:(NSString *)action

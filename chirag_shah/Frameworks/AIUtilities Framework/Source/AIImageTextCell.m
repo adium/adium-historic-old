@@ -372,7 +372,7 @@
 - (id)accessibilityAttributeValue:(NSString *)attribute
 {
 	if([attribute isEqualToString:NSAccessibilityRoleAttribute]) {
-		return @"button";
+		return NSAccessibilityButtonRole;
 		
     } else if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
         return [self stringValue];
