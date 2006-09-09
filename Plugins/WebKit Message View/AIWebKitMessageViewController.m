@@ -388,7 +388,16 @@ static NSArray *draggedTypes = nil;
 	//Get the prefered variant (or the default if a prefered is not available)
 	activeVariant = [[prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]] retain];
 	if (!activeVariant) activeVariant = [[messageStyle defaultVariant] retain];
-	
+	if (!activeVariant) {
+		/* If the message style doesn't specify a default variant, choose the first one.
+		 * Note: Old styles (styleVersion < 3) will always report a variant for defaultVariant.
+		 */
+		NSArray *availableVariants = [messageStyle availableVariants];
+		if ([availableVariants count]) {
+			activeVariant = [[availableVariants objectAtIndex:0] retain];
+		}
+	}
+
 	//Update message style behavior
 	[messageStyle setShowUserIcons:[[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue]];
 	[messageStyle setShowHeader:[[prefDict objectForKey:KEY_WEBKIT_SHOW_HEADER] boolValue]];
