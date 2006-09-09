@@ -876,7 +876,9 @@
     NSEnumerator    *keyEnumerator = [autoRefreshingKeys objectEnumerator];
     NSString        *key;
     while ((key = [keyEnumerator nextObject])) {
-		[self updateStatusForKey:key];
+		if ([self shouldUpdateAutorefreshingAttributedStringForKey:key]) {
+			[self updateStatusForKey:key];
+		}
     }
 }
 
