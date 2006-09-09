@@ -22,7 +22,7 @@
 
 #import "ESFileTransferController.h"
 #import "RAFjoscarLogHandler.h"
-
+ 
 //#define JOSCAR_LOG_WARNING
 
 #define OSCAR_JAR			@"oscar"
@@ -280,7 +280,10 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 - (void)setDirInfo:(HashMap *)userInfo
 {
+	AILog(@"setDirInfo: %@:",userInfo);
+	/*
 	Screenname			*sn = [userInfo get:@"Screenname"];
+
 	DirInfo				*dirInfo = [userInfo get:@"DirInfo"];
 	
 	NSString *info;
@@ -315,6 +318,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	NSLog(@"Profile; %@",profile);
 	[accountProxy contactWithUID:[[[sn getNormal] copy] autorelease]
 					  setProfile:profile];
+	 */
 }
 
 - (void)setStatusUpdate:(HashMap *)userInfo
