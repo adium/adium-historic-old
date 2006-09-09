@@ -328,6 +328,18 @@
 	
 }
 
+/*!
+ * @brief Should the autorefreshing attributed string associated with a key be updated at the moment?
+ *
+ * The default implementation causes all dynamic strings which need updating to be updated if the account is
+ * online.  Subclasses may choose to implement more complex logic; for example, a nickname seen only in a chat
+ * might be updated only if a chat is open.
+ */
+- (BOOL)shouldUpdateAutorefreshingAttributedStringForKey:(NSString *)inKey
+{
+	return [self online];
+}
+
 //Messaging, Chatting, Strings -----------------------------------------------------------------------------------------
 #pragma mark Messaging, Chatting, Strings
 /*!

@@ -162,6 +162,7 @@ typedef enum {
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact;
 - (float)delayedUpdateStatusInterval;
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage;
+- (BOOL)shouldUpdateAutorefreshingAttributedStringForKey:(NSString *)inKey;
 
 //Messaging, Chatting, Strings
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
