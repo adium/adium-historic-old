@@ -34,7 +34,7 @@ SRC_DIR=..
 BUILD_DIR=build
 ART_DIR=Artwork
 ADIUM_DIR=$(BUILD_DIR)/Adium
-RELEASE_NAME=AdiumX_$(VERSION)
+RELEASE_NAME=Adium_$(VERSION)
 ifeq ($(BETA),TRUE)
     BUILDSTYLE=Deployment-Debug
 else
