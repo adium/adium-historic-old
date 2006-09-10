@@ -139,7 +139,6 @@
 		//Configure our views
 		[self _configureMessageDisplay];
 		[self _configureTextEntryView];
-		[self setAccountSelectionMenuVisibleIfNeeded:NO];
 		
 		//Update chat status and participating list objects to configure the user list if necessary
 		[self chatStatusChanged:nil];
@@ -665,7 +664,7 @@
 	if (tigerOrBetter) {
 		writingDirection = [textView_outgoing baseWritingDirection];
 	} else {
-		//Just silencing gcc; this will
+		//Just silencing gcc; this will not be used
 		writingDirection = NSWritingDirectionLeftToRight;
 	}
 	
