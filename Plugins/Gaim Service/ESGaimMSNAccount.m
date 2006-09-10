@@ -520,5 +520,13 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 	return [super titleForAccountActionMenuLabel:label];
 }
 
+#pragma mark temporary
+#warning Remove when libgaim's msn get info does not crash.
+- (void)delayedUpdateContactStatus:(AIListContact *)inContact
+{
+	NSLog(@"MSN profiles are currently broken in libgaim.  Escalator temporarily stairs.");
+	AILog(@"MSN profiles are currently broken in libgaim.  Escalator temporarily stairs.");
+}
+
 @end
 
