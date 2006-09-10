@@ -446,10 +446,6 @@ static NSArray *validSenderColors;
 											options:NSLiteralSearch range:range];
 	range.length += delta;
 
-	delta = [inString replaceOccurrencesOfString:@"\0" withString:@"\\0" 
-										 options:NSLiteralSearch range:range];
-	range.length += delta;
-
 	delta = [inString replaceOccurrencesOfString:@"\n" withString:@"" 
 										 options:NSLiteralSearch range:range];
 	range.length -= delta;
