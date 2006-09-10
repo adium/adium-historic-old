@@ -658,13 +658,12 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 				} else if (inSurrogatePair) {
 					[result appendFormat:@"&#x%@;", UCGetUnicodeScalarValueForSurrogatePair(buf[j - 1], buf[j])];
 				} else {
-					/*A character (that doesn't require surrogates) must be escaped if it:
-					 *⁃	is 0x7f (DEL) or higher, or
-					 *⁃	is not printable.
+					/* A character that doesn't require surrogates must be escaped if it:
+					 *		- is 0x7f (DEL) or higher, or
+					 *		- is not printable.
 					 *
-					 *This includes whitespace. We escape whitespace so that it will not be collapsed by the parser.
+					 * This includes whitespace. We escape whitespace so that it will not be collapsed by the parser.
 					 */
-
 					if ((buf[j] > 0x7e) || !isprint(buf[j])) {
 						[result appendFormat:@"&#x%02x;", buf[j]];
 					} else {
