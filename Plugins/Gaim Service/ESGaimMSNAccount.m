@@ -300,13 +300,17 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 			 * part of an encoded character being cut off, so we instead truncate to smaller and smaller strings and encode, until it fits
 			 */
 			const char *friendlyNameUTF8String = [friendlyName UTF8String];
-			int currentMaxLength = BUDDY_ALIAS_MAXLEN;
+			int currentMaxNumberOfPreEncodedCharacters = BUDDY_ALIAS_MAXLEN;
 
 			while (friendlyNameUTF8String &&
-				   strlen(gaim_url_encode(friendlyNameUTF8String)) > currentMaxLength) {
-				friendlyName = [noNewlinesFriendlyName stringWithEllipsisByTruncatingToLength:currentMaxLength];				
+				   strlen(gaim_url_encode(friendlyNameUTF8String)) > BUDDY_ALIAS_MAXLEN) {
+				AILog(@"Shortening because %s (max len %i) [%s] len (%i) > %i",
+					  friendlyNameUTF8String, currentMaxNumberOfPreEncodedCharacters,
+					  gaim_url_encode(friendlyNameUTF8String),strlen(gaim_url_encode(friendlyNameUTF8String)),
+					  BUDDY_ALIAS_MAXLEN);
+				friendlyName = [noNewlinesFriendlyName stringWithEllipsisByTruncatingToLength:currentMaxNumberOfPreEncodedCharacters];				
 				friendlyNameUTF8String = [friendlyName UTF8String];
-				currentMaxLength -= 10;
+				currentMaxNumberOfPreEncodedCharacters -= 10;
 			}
 			msn_set_friendly_name(gaim_account_get_connection(account), friendlyNameUTF8String);
 
