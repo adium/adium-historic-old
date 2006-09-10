@@ -82,5 +82,6 @@
 	<string>AIXtrasManager</string>
 	<string>OWSpellingPerContactPlugin</string>
 	<string>GBQuestionHandlerPlugin</string>
+	<string>AINulRemovalPlugin</string>
 </array>
 </plist>
