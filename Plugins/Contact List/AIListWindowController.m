@@ -617,7 +617,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	
 	if ((windowHidingStyle == AIContactListWindowHidingStyleSliding) &&
 		!preventHiding &&
-		![self windowSlidOffScreenEdgeMask] &&
+		([self windowSlidOffScreenEdgeMask] == AINoEdges) &&
 		(!(slideOnlyInBackground && [NSApp isActive]))) {
 		shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
 	}
@@ -734,15 +734,16 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 {
 	NSScreen *windowScreen = [inWindow screen];
 	int counter = 10000;
-	if (!windowScreen) windowScreen = [(AIListWindowController *)[inWindow windowController] windowLastScreen];
+	AIListWindowController *windowController = (AIListWindowController *)[inWindow windowController];
+	if (!windowScreen) windowScreen = [windowController windowLastScreen];
 	if (!windowScreen) windowScreen = [NSScreen mainScreen];
 
 	BOOL	finishedX = NO, finishedY = NO;
 	NSRect	frame = [inWindow frame];
 	float yOff = (targetPoint.y + NSHeight(frame)) - NSMaxY([windowScreen frame]);
 	if (windowScreen == [[NSScreen screens] objectAtIndex:0]) yOff -= [NSMenuView menuBarHeight];
-	if(yOff > 0) targetPoint.y -= yOff;
-	
+	if (yOff > 0) targetPoint.y -= yOff;
+
 	do 
 	{
 		//this is dumb, but I've seen situations where we get into an infinite loop here. 10k is probably enough, if it's not, up it a bit.
@@ -751,55 +752,71 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 		
 		frame = [inWindow frame];
 #define INCREMENT 15
-		if (abs(targetPoint.x - frame.origin.x) <= INCREMENT) {
-			//Our target point is within INCREMENT of the current point on the x axis
-			
-			if (windowSlidOffScreenEdgeMask != AINoEdges) {
-				//If the window is sliding off screen, keep one pixel onscreen to avoid crashing (moving a titled window offscreen is a crash)
-				if (targetPoint.x < frame.origin.x) {
-					frame.origin.x = (keepOnScreen ? (targetPoint.x + 1) : targetPoint.x);
-				} else if (targetPoint.x > frame.origin.x) {
-					frame.origin.x = (keepOnScreen ? (targetPoint.x - 1) : targetPoint.x);
+		if (!finishedX) {
+			if (abs(targetPoint.x - frame.origin.x) <= INCREMENT) {
+				//Our target point is within INCREMENT of the current point on the x axis
+				
+				if (windowSlidOffScreenEdgeMask != AINoEdges) {
+					//If the window is sliding off screen, keep one pixel onscreen to avoid crashing (moving a titled window offscreen is a crash)
+					if (targetPoint.x < frame.origin.x) {
+						frame.origin.x = (keepOnScreen ? (targetPoint.x + 1) : targetPoint.x);
+					} else if (targetPoint.x > frame.origin.x) {
+						frame.origin.x = (keepOnScreen ? (targetPoint.x - 1) : targetPoint.x);
+					}
+					
+				} else {
+					//If the window is sliding on screen, go to the exact desired point
+					frame.origin.x = targetPoint.x;
 				}
 				
-			} else {
-				//If the window is sliding on screen, go to the exact desired point
-				frame.origin.x = targetPoint.x;
+				finishedX = YES;
+				
+			} else if (targetPoint.x < frame.origin.x) {
+				frame.origin.x -= INCREMENT;
+			} else if (targetPoint.x > frame.origin.x) {
+				frame.origin.x += INCREMENT;		
 			}
-			
+		}
+		
+		if (!finishedY) {
+			if (abs(targetPoint.y - frame.origin.y) <= INCREMENT) {
+				//Our target point is within INCREMENT of the current point on the y axis
+				if (windowSlidOffScreenEdgeMask != AINoEdges) {
+					//If the window is sliding off screen, keep one pixel onscreen to avoid crashing (moving a titled window offscreen is a crash)
+					if (targetPoint.y < frame.origin.y) {
+						frame.origin.y = (keepOnScreen ? (targetPoint.y + 1) : targetPoint.y);
+					} else if (targetPoint.y > frame.origin.y) {
+						frame.origin.y = (keepOnScreen ? (targetPoint.y - 1) : targetPoint.y);
+					}
+					
+				} else {
+					//If the window is sliding on screen, go to the exact desired point
+					frame.origin.y = targetPoint.y;
+					
+				}
+				
+				finishedY = YES;
+				
+			} else if (targetPoint.y < frame.origin.y) {
+				frame.origin.y -= INCREMENT;
+			} else if (targetPoint.y > frame.origin.y) {
+				frame.origin.y += INCREMENT;		
+			}
+		}
+
+		/*
+		 //This seems like a good idea, but I think it needs tweaking, as it doesn't work at present
+		if ((windowSlidOffScreenEdgeMask == AINoEdges) &&
+			(counter % 4 == 0) &&
+			[windowController shouldSlideWindowOffScreen]) {
+			//Ensure that we should continue sliding -- that is, the mouse hasn't moved away
+			AILog(@"Should slide off screen..");
 			finishedX = YES;
-			
-		} else if (targetPoint.x < frame.origin.x) {
-			frame.origin.x -= INCREMENT;
-		} else if (targetPoint.x > frame.origin.x) {
-			frame.origin.x += INCREMENT;		
-		}
-		
-		if (abs(targetPoint.y - frame.origin.y) <= INCREMENT) {
-			//Our target point is within INCREMENT of the current point on the y axis
-			if (windowSlidOffScreenEdgeMask != AINoEdges) {
-				//If the window is sliding off screen, keep one pixel onscreen to avoid crashing (moving a titled window offscreen is a crash)
-				if (targetPoint.y < frame.origin.y) {
-					frame.origin.y = (keepOnScreen ? (targetPoint.y + 1) : targetPoint.y);
-				} else if (targetPoint.y > frame.origin.y) {
-					frame.origin.y = (keepOnScreen ? (targetPoint.y - 1) : targetPoint.y);
-				}
-				
-			} else {
-				//If the window is sliding on screen, go to the exact desired point
-				frame.origin.y = targetPoint.y;
-				
-			}
-			
 			finishedY = YES;
-			
-		} else if (targetPoint.y < frame.origin.y) {
-			frame.origin.y -= INCREMENT;
-		} else if (targetPoint.y > frame.origin.y) {
-			frame.origin.y += INCREMENT;		
+
+		} else */ {
+			[inWindow setFrame:frame display:YES animate:NO];
 		}
-		
-		[inWindow setFrame:frame display:YES animate:NO];
 	}
 	while(!finishedX || !finishedY);
 }
