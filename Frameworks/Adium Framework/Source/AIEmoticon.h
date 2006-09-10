@@ -20,13 +20,13 @@
 
 @interface AIEmoticon : AIObject {
     NSString                *path;
-	NSImage					*image;
     NSString                *name;
     NSArray                 *textEquivalents;
 	AIEmoticonPack			*pack;
 	NSString				*serviceClass;
 	
     BOOL                    enabled;
+	BOOL					imageLoaded;
     
     NSAttributedString      *_cachedAttributedString;
 }

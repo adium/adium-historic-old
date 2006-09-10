@@ -52,6 +52,7 @@
 		name = [inName retain];
 		textEquivalents = [inTextEquivalents retain];
 		pack = [inPack retain];
+		imageLoaded = NO;
 		_cachedAttributedString = nil;	
     }
 
@@ -62,7 +63,6 @@
 - (void)dealloc
 {
     [path release];
-	[image release];
 	[name release];
     [textEquivalents release];
 	[pack release];
@@ -90,6 +90,7 @@
  */
 - (void)flushEmoticonImageCache
 {
+	imageLoaded = NO;
     [_cachedAttributedString release]; _cachedAttributedString = nil;
 }
 
@@ -155,9 +156,9 @@
 /*!
  * @brief Returns an attributed string containing this emoticon
  *
- * The attributed string contains an <tt>AITextAttachmntExtension</tt> which has both the emoticon image
+ * The attributed string contains an <tt>AITextAttachmentExtension</tt> which has both the emoticon image
  * and the passed text equivalent available.  The hard work is cached, although each call results in a new
- * NSMutableAttribtedString being returned.
+ * NSMutableAttributedString being returned.
  *
  * @param textEquivalent The text equivalent for this attributed string 
  * @result The attributed string with the emoticon
@@ -167,13 +168,15 @@
     NSMutableAttributedString   *attributedString;
     AITextAttachmentExtension   *attachment;
     
-    //Cache this attachment for ourself
-    if (!_cachedAttributedString) {
+    //Cache this attachment for ourself if we don't already have a cache, or if our cache needs to have an image attached
+    if (!_cachedAttributedString || (!imageLoaded && attach)) {
+		[_cachedAttributedString release]; //for the second half of the conditional
         AITextAttachmentExtension   *emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
 		if(!path || attach) {
 			NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:[self image]];
 			[emoticonAttachment setAttachmentCell:cell];
 			[cell release];
+			imageLoaded = YES;
 		} 
 
 		[emoticonAttachment setPath:path];
