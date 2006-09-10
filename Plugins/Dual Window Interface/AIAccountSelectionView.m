@@ -165,7 +165,7 @@
 
 	[self _destroyAccountMenu];
 	//Rebuild 'From' account menu
-	if([self choicesAvailableForAccount]){
+	if ([self choicesAvailableForAccount]){
 		[self _createAccountMenu];
 	}
 
@@ -258,7 +258,7 @@
 - (BOOL)_accountIsAvailable:(AIAccount *)inAccount
 {
 	return ([[[[chat listObject] service] serviceClass] isEqualToString:[[inAccount service] serviceClass]] &&
-		   [inAccount integerStatusObjectForKey:@"Online"]);
+			[inAccount online]);
 }
 
 /*
@@ -273,7 +273,7 @@
 		popUp_accounts = [[self _popUpButtonWithFrame:POPUP_RECT] retain];
 		[box_accounts addSubview:popUp_accounts];
 		
-		label_accounts = [[self _textFieldLabelWithValue:@"From:" frame:LABEL_RECT] retain];
+		label_accounts = [[self _textFieldLabelWithValue:AILocalizedString(@"From:", "Label in front of the dropdown of accounts from which to send a message") frame:LABEL_RECT] retain];
 		[box_accounts addSubview:label_accounts];
 		
 		//Resize the contact box to fit our view and insert it
@@ -331,7 +331,7 @@
 		popUp_contacts = [[self _popUpButtonWithFrame:POPUP_RECT] retain];
 		[box_contacts addSubview:popUp_contacts];
 		
-		label_contacts = [[self _textFieldLabelWithValue:@"To:" frame:LABEL_RECT] retain];
+		label_contacts = [[self _textFieldLabelWithValue:AILocalizedString(@"To:", "Label in front of the dropdown for picking which contact to send a message to in the message window") frame:LABEL_RECT] retain];
 		[box_contacts addSubview:label_contacts];
 
 		//Resize the contact box to fit our view and insert it
