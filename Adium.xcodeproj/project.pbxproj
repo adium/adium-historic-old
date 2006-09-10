@@ -198,6 +198,8 @@
 		342F88CF0A2A74EB0001DB29 /* PTKeyCombo.m in Sources */ = {isa = PBXBuildFile; fileRef = 342F88C90A2A74EA0001DB29 /* PTKeyCombo.m */; };
 		342F88D10A2A74EB0001DB29 /* PTHotKeyCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 342F88CB0A2A74EA0001DB29 /* PTHotKeyCenter.m */; };
 		342F88D30A2A74EB0001DB29 /* PTHotKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 342F88CD0A2A74EB0001DB29 /* PTHotKey.m */; };
+		343022290AB4766E0082CF7C /* AINulRemovalPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 343022270AB4766E0082CF7C /* AINulRemovalPlugin.h */; };
+		3430222A0AB4766E0082CF7C /* AINulRemovalPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 343022280AB4766E0082CF7C /* AINulRemovalPlugin.m */; };
 		343700A70A9C1E170028604E /* AIAdvancedPreferencePane.h in Headers */ = {isa = PBXBuildFile; fileRef = 343700A50A9C1E170028604E /* AIAdvancedPreferencePane.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		343700A80A9C1E170028604E /* AIAdvancedPreferencePane.m in Sources */ = {isa = PBXBuildFile; fileRef = 343700A60A9C1E170028604E /* AIAdvancedPreferencePane.m */; };
 		343700A90A9C1E170028604E /* AIAdvancedPreferencePane.h in Headers */ = {isa = PBXBuildFile; fileRef = 343700A50A9C1E170028604E /* AIAdvancedPreferencePane.h */; };
@@ -2048,6 +2050,8 @@
 		342F88CC0A2A74EA0001DB29 /* PTHotKeyCenter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PTHotKeyCenter.h; path = Source/PTHotKeyCenter.h; sourceTree = "<group>"; };
 		342F88CD0A2A74EB0001DB29 /* PTHotKey.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PTHotKey.m; path = Source/PTHotKey.m; sourceTree = "<group>"; };
 		342F88CE0A2A74EB0001DB29 /* PTHotKey.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PTHotKey.h; path = Source/PTHotKey.h; sourceTree = "<group>"; };
+		343022270AB4766E0082CF7C /* AINulRemovalPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AINulRemovalPlugin.h; path = Source/AINulRemovalPlugin.h; sourceTree = "<group>"; };
+		343022280AB4766E0082CF7C /* AINulRemovalPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AINulRemovalPlugin.m; path = Source/AINulRemovalPlugin.m; sourceTree = "<group>"; };
 		34327BD6060D2FE6003D7AD9 /* GaimServiceDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = GaimServiceDefaults.plist; path = "Plugins/Gaim Service/GaimServiceDefaults.plist"; sourceTree = "<group>"; };
 		343700A50A9C1E170028604E /* AIAdvancedPreferencePane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAdvancedPreferencePane.h; path = "Frameworks/Adium Framework/Source/AIAdvancedPreferencePane.h"; sourceTree = "<group>"; };
 		343700A60A9C1E170028604E /* AIAdvancedPreferencePane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAdvancedPreferencePane.m; path = "Frameworks/Adium Framework/Source/AIAdvancedPreferencePane.m"; sourceTree = "<group>"; };
@@ -4317,6 +4321,15 @@
 			name = "Send Message Contact Alert";
 			sourceTree = "<group>";
 		};
+		343022240AB4763D0082CF7C /* Removal of NULs in Messages */ = {
+			isa = PBXGroup;
+			children = (
+				343022270AB4766E0082CF7C /* AINulRemovalPlugin.h */,
+				343022280AB4766E0082CF7C /* AINulRemovalPlugin.m */,
+			);
+			name = "Removal of NULs in Messages";
+			sourceTree = "<group>";
+		};
 		343A7F2206935DAF00150CEC /* Meanwhile */ = {
 			isa = PBXGroup;
 			children = (
@@ -4777,6 +4790,7 @@
 				F1D0C631051AC2380000000E /* Message Alias Support */,
 				6E5A43DC0611604B0078C342 /* Message History */,
 				F569E38102CA876501A8010A /* Message Window Interface */,
+				343022240AB4763D0082CF7C /* Removal of NULs in Messages */,
 				34A65AF606A5A0C400898470 /* Safari Link Toolbar Item */,
 				34DFF46607A5EAC800B92233 /* Secure Messaging */,
 				B023552808CBE84F008CDDDA /* SQLite Logger */,
@@ -7437,6 +7451,7 @@
 				3419E2F70A8145B700C3FC68 /* GBFireImporter.h in Headers */,
 				3419E2F90A8145B800C3FC68 /* GBFireLogImporter.h in Headers */,
 				C44BA7820AAB696400C7504F /* SetupAssistantBoxBackgroundView.h in Headers */,
+				343022290AB4766E0082CF7C /* AINulRemovalPlugin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9039,6 +9054,7 @@
 				3419E2F80A8145B800C3FC68 /* GBFireImporter.m in Sources */,
 				3419E2FA0A8145B900C3FC68 /* GBFireLogImporter.m in Sources */,
 				C44BA7830AAB696400C7504F /* SetupAssistantBoxBackgroundView.m in Sources */,
+				3430222A0AB4766E0082CF7C /* AINulRemovalPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
