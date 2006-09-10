@@ -174,27 +174,11 @@ void configureAdiumGaimSignals(void)
 	gaim_signal_connect(blist_handle, "buddy-status-changed",
 						handle, GAIM_CALLBACK(buddy_status_changed_cb),
 						GINT_TO_POINTER(0));
-	
-	//Info updated
-	gaim_signal_connect(blist_handle, "buddy-info",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_INFO_UPDATED));
-	
+
 	//Icon
 	gaim_signal_connect(blist_handle, "buddy-icon-changed",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_ICON));
-	
-	//Evil
-	gaim_signal_connect(blist_handle, "buddy-evil",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_EVIL));
-	
-	
-	//Miscellaneous
-	gaim_signal_connect(blist_handle, "buddy-miscellaneous",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_MISCELLANEOUS));
 	
 	//Signon / Signoff
 	gaim_signal_connect(blist_handle, "buddy-signed-on",
@@ -202,18 +186,5 @@ void configureAdiumGaimSignals(void)
 						GINT_TO_POINTER(GAIM_BUDDY_SIGNON));
 	gaim_signal_connect(blist_handle, "buddy-signed-off",
 						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_SIGNOFF));
-	
-	//DirectIM
-	gaim_signal_connect(blist_handle, "buddy-direct-im-connected",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_DIRECTIM_CONNECTED));
-	//DirectIM
-	gaim_signal_connect(blist_handle, "buddy-direct-im-disconnected",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_DIRECTIM_DISCONNECTED));
-
-	gaim_signal_connect(blist_handle, "buddy-renamed",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_NAME));
+						GINT_TO_POINTER(GAIM_BUDDY_SIGNOFF));	
 }
