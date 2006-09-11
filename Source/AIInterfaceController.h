@@ -16,10 +16,11 @@
 
 #import <Adium/AIInterfaceControllerProtocol.h>
 
-@class AIMenuController , AIChat, AIListObject;
+@class AIMenuController, AIChat, AIListObject;
+@protocol AIAdium;
 
 @interface AIInterfaceController : NSObject <AIInterfaceController> {
-    IBOutlet	AIAdium			*adium;
+    IBOutlet	NSObject<AIAdium>	*adium;
 	
     IBOutlet	NSMenuItem		*menuItem_close;
     IBOutlet	NSMenuItem		*menuItem_closeChat;

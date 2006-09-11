@@ -418,11 +418,11 @@ static void inject_message_cb(void *opdata, const char *accountname,
 static int display_otr_message(const char *accountname, const char *protocol,
 							   const char *username, const char *msg)
 {
-	NSString		 *message;
-	AIAdium			 *sharedAdium = [AIObject sharedAdiumInstance];
-	AIListContact	 *listContact = contactFromInfo(accountname, protocol, username);
-	AIChat			 *chat;
-	AIContentMessage *messageObject;
+	NSString			*message;
+	NSObject<AIAdium>	 *sharedAdium = [AIObject sharedAdiumInstance];
+	AIListContact		*listContact = contactFromInfo(accountname, protocol, username);
+	AIChat				*chat;
+	AIContentMessage	*messageObject;
 	
 	if (!(chat = [[sharedAdium chatController] existingChatWithContact:listContact])) {
 		chat = [[sharedAdium chatController] chatWithContact:listContact];

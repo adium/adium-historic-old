@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIAdium.h"
 #import "AdiumURLHandling.h"
 #import "AIAccountController.h"
 #import "AIChatController.h"
@@ -40,10 +41,11 @@
 #import "AIXtrasManager.h"
 #import "AdiumSetupWizard.h"
 #import "ESTextAndButtonsWindowController.h"
+#import "AIAppearancePreferences.h"
+#import <Adium/AIAdiumProtocol.h>
+#import <Adium/AIPathUtilities.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
-#import <Adium/AIPathUtilities.h>
-#import "AIAppearancePreferences.h"
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
@@ -75,25 +77,6 @@ static NSString	*prefsCategory;
 
 	return self;
 }
-
-/*!
- * @brief Returns the identifier of this build
- */
-+ (NSString *)buildIdentifier
-{
-	return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AIBuildIdentifier"];
-}
-
-/*!
- * @brief Returns the date of this build
- */
-+ (NSDate *)buildDate
-{
-	NSTimeInterval date = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"AIBuildDate"] doubleValue];
-	
-	return [NSDate dateWithTimeIntervalSince1970:date];
-}
-
 
 //Core Controllers -----------------------------------------------------------------------------------------------------
 #pragma mark Core Controllers
