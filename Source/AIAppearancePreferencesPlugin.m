@@ -234,16 +234,14 @@
 {
 	NSString		*path;
 	NSString		*fileName = [[setName safeFilenameString] stringByAppendingPathExtension:extension];
-	AIAdium			*sharedAdiumInstance = adium;
 	
 	//If we don't find one, create a path to a bundle in the application support directory
 	path = [[[adium applicationSupportDirectory] stringByAppendingPathComponent:folder] stringByAppendingPathComponent:fileName];
 	if ([AIXtrasManager createXtraBundleAtPath:path])
 		path = [path stringByAppendingPathComponent:@"Contents/Resources/Data.plist"];
 	
-	if ([[[sharedAdiumInstance preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]) {
-		
-		[[sharedAdiumInstance notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+	if ([[[adium preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]) {
+		[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
 		
 		return YES;
 	} else {

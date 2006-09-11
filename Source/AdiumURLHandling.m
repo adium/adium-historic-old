@@ -135,8 +135,8 @@
 
 + (void)handleURLEvent:(NSString *)eventString
 {
-	NSURL	*url = [NSURL URLWithString:eventString];
-	AIAdium *sharedAdium = [AIObject sharedAdiumInstance];
+	NSURL				*url = [NSURL URLWithString:eventString];
+	NSObject<AIAdium>	*sharedAdium = [AIObject sharedAdiumInstance];
 
 	if (url) {
 		NSString	*scheme, *newScheme;
@@ -322,8 +322,8 @@
 
 + (void)_openChatToContactWithName:(NSString *)UID onService:(NSString *)serviceID withMessage:(NSString *)message
 {
-	AIListContact   *contact;
-	AIAdium			*sharedAdium = [AIObject sharedAdiumInstance];
+	AIListContact		*contact;
+	NSObject<AIAdium>	*sharedAdium = [AIObject sharedAdiumInstance];
 	
 	contact = [[sharedAdium contactController] preferredContactWithUID:UID
 														  andServiceID:serviceID 

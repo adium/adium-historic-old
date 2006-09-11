@@ -17,9 +17,10 @@
 #import <Adium/AIMenuControllerProtocol.h>
 
 @class AIListObject, AIChat;
+@protocol AIAdium;
 
 @interface AIMenuController : NSObject <AIMenuController> {
-    IBOutlet	AIAdium		*adium;
+    IBOutlet	NSObject<AIAdium>	*adium;
 	
     IBOutlet	id		nilMenuItem;
     IBOutlet	id		menu_Adium_About;
