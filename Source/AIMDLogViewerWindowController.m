@@ -123,9 +123,9 @@
 				totalCount--;
 			}
 			
-			CFRelease(logPath);
-			CFRelease(url);
-			CFRelease(document);
+			if (logPath) CFRelease(logPath);
+			if (url) CFRelease(url);
+			if (document) CFRelease(document);
         }
 		
 		//Scale all logs' ranking values to the largest ranking value we've seen thus far
