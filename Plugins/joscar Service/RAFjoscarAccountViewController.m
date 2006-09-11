@@ -8,15 +8,15 @@
 #import "RAFjoscarAccountViewController.h"
 #import "RAFjoscarAccount.h"
 
+#import <Adium/AIAdiumProtocol.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIMessageEntryTextView.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AITextViewWithPlaceholder.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIMessageEntryTextView.h>
-#import "AIAdium.h"
 
 @implementation RAFjoscarAccountViewController
 

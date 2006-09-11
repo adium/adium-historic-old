@@ -8,7 +8,7 @@
 #import "RAFjoscarDebugWindowController.h"
 #import "RAFjoscarDebugController.h"
 #import <Adium/AIPreferenceControllerProtocol.h>
-#import "AIAdium.h"
+#import <Adium/AIAdiumProtocol.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIStringUtilities.h>
 #import "joscarClasses.h"

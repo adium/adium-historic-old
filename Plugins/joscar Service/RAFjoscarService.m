@@ -6,16 +6,15 @@
 //
 
 #import "RAFjoscarService.h"
-#import <Adium/AIStatusControllerProtocol.h>
 #import "RAFjoscarAccount.h"
 #import "RAFjoscarAccountViewController.h"
 #import "ESjoscarJoinChatViewController.h"
+#import <Adium/AIAdiumProtocol.h>
+#import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/DCJoinChatViewController.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIStringUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
-#import <Adium/AIObject.h>
-#import "AIAdium.h"
 
 @implementation RAFjoscarService
 

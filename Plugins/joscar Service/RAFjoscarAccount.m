@@ -7,7 +7,7 @@
 
 #import "RAFjoscarAccount.h"
 #import "RAFjoscarSecuridPromptController.h"
-#import "AIAdium.h"
+#import <Adium/AIAdiumProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
