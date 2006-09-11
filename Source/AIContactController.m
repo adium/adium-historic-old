@@ -479,14 +479,15 @@
 			//If no similar objects exist, we add this contact directly to the list
 			//Create a group for the contact even if contact list groups aren't on,
 			//otherwise requests for all the contact list groups will return nothing
-			AIListGroup *targetGroup, *contactGroup = [self groupWithUID:remoteGroupName];
+			AIListGroup *localGroup, *contactGroup = [self groupWithUID:remoteGroupName];
 
-			targetGroup = (useContactListGroups ?
-						   ((useOfflineGroup && ![inContact online]) ? [self offlineGroup] : contactGroup) :
-						   contactList);
+			localGroup = (useContactListGroups ?
+						  ((useOfflineGroup && ![inContact online]) ? [self offlineGroup] : contactGroup) :
+						  contactList);
 
-			[targetGroup addObject:containingObject];
-			[self _listChangedGroup:targetGroup object:containingObject];
+			[localGroup addObject:containingObject];
+			[self _listChangedGroup:localGroup object:containingObject];
+			AILog(@"listObjectRemoteGroupingChanged: %@ is in %@, which was moved to %@",inContact,containingObject,localGroup);
 		}
 
 	} else {
@@ -500,6 +501,8 @@
 						  ((useOfflineGroup && ![inContact online]) ? [self offlineGroup] : contactGroup) :
 						  contactList);
 
+			AILog(@"listObjectRemoteGroupingChanged: %@: remoteGroupName %@ --> %@",inContact,remoteGroupName,localGroup);
+
 			[self _moveContactLocally:inContact
 							  toGroup:localGroup];
 
@@ -510,6 +513,8 @@
 				[(AIListGroup *)containingObject removeObject:inContact];
 
 				[self _listChangedGroup:(AIListGroup *)containingObject object:inContact];
+				
+				AILog(@"listObjectRemoteGroupingChanged: %@: -- !remoteGroupName so removed from %@",inContact,containingObject);
 			}
 		}
 	}
@@ -535,6 +540,9 @@
 	//Protect with a retain while we are removing and adding the contact to our arrays
 	[listContact retain];
 
+	//XXX
+	AILog(@"Moving %@ to %@",listContact,localGroup);
+	
 	//Remove this object from any local groups we have it in currently
 	if ((containingObject = [listContact containingObject]) &&
 	   ([containingObject isKindOfClass:[AIListGroup class]])) {
@@ -556,6 +564,9 @@
 		//a MetaContact holding a matching ListContact, since we should include this contact in it
 		//If we found a metaContact to which we should add, do it.
 		if ((metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalObjectID]])) {
+			//XXX
+			AILog(@"Found an existing metacontact; adding %@ to %@",listContact,metaContact);
+
 			[self addListObject:listContact toMetaContact:metaContact];
 			performedGrouping = YES;
 		}
