@@ -347,11 +347,24 @@
  *
  * Returns YES if the contact is available for receiving content of the specified type.  If contact is nil, instead
  * check for the availiability to send any content of the given type.
+ *
+ * The default implementation indicates the account, if online, can send messages to any online contact.
+ * It can also send files to any online contact if the account subclass conforms to the AIAccount_Files protocol.
+ *
  * @param inType A string content type
  * @param inContact The destination contact, or nil to check global availability
  */
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
+	if (([self online] && (!inContact || [inContact online])) {
+		if ([inType isEqualToString:CONTENT_MESSAGE_TYPE]) {
+			return YES;
+
+		} else if ([inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) {
+			return [self conformsToProtocol:@protocol(AIAccount_Files)];
+		}
+	}
+
 	return NO;
 }
 
