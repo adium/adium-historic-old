@@ -60,8 +60,6 @@
 	NSString						*advancedPrefsName;	
 }
 
-- (AICoreComponentLoader *)componentLoader;
-
 - (IBAction)showAboutBox:(id)sender;
 - (IBAction)showHelp:(id)sender;
 - (IBAction)reportABug:(id)sender;
