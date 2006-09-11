@@ -415,17 +415,6 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 					  bodyBackground:NO];
 }
 
-//Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
-- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
-{
-	BOOL retVal = NO;
-    if ([inType isEqualToString:CONTENT_MESSAGE_TYPE] && [self online]) {
-		retVal = YES;
-    }
-    
-    return retVal;
-}
-
 //Initiate a new chat
 - (BOOL)openChat:(AIChat *)chat
 {
