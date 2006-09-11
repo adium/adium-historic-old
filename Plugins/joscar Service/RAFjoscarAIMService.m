@@ -8,7 +8,7 @@
 
 #import "RAFjoscarAIMService.h"
 #import "RAFjoscarAIMAccount.h"
-#import "AIAdium.h"
+#import <Adium/AIAdiumProtocol.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import "RAFjoscarAccountViewController.h"
 
