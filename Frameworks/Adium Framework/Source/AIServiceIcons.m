@@ -206,10 +206,10 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 
 + (NSImage *)defaultServiceIconForType:(AIServiceIconType)type serviceID:(NSString *)serviceID
 {
-	AIAdium			*adium = [AIObject sharedAdiumInstance];
-	NSString		*defaultName, *defaultPath;
-	NSDictionary	*serviceIconDict;
-	NSImage			*defaultServiceIcon = nil;
+	NSObject<AIAdium>	*adium = [AIObject sharedAdiumInstance];
+	NSString			*defaultName, *defaultPath;
+	NSDictionary		*serviceIconDict;
+	NSImage				*defaultServiceIcon = nil;
 	
 	defaultName = [[adium preferenceController] defaultPreferenceForKey:KEY_SERVICE_ICON_PACK
 																   group:PREF_GROUP_APPEARANCE

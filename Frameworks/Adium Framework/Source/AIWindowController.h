@@ -16,8 +16,10 @@
  
 #import <Adium/AIObject.h>
 
+@protocol AIAdium;
+
 @interface AIWindowController : NSWindowController {
-    AIAdium		*adium;
+	NSObject<AIAdium>		*adium;
 }
 
 - (IBAction)closeWindow:(id)sender;

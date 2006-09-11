@@ -14,13 +14,13 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@class AIAdium;
+@protocol AIAdium;
 
 @interface AIObject : NSObject {
-    AIAdium     *adium;
+    NSObject<AIAdium>     *adium;
 }
 
-+ (void)_setSharedAdiumInstance:(AIAdium *)shared;
-+ (AIAdium *)sharedAdiumInstance;
++ (void)_setSharedAdiumInstance:(NSObject<AIAdium> *)shared;
++ (NSObject<AIAdium> *)sharedAdiumInstance;
 
 @end

@@ -15,6 +15,7 @@
  */
 
 #import <Adium/AIObject.h>
+#import <Adium/AIAdiumProtocol.h>
 
 /*
  * @class AIObject
@@ -67,14 +68,14 @@ void modifyInstanceCount(int delta, NSString *className)
 }
 #endif
 
-static AIAdium *_sharedAdium = nil;
+static NSObject<AIAdium> *_sharedAdium = nil;
 
 /*
  * @brief Set the shared AIAdium instance
  *
  * Called once, after AIAdium loads
  */
-+ (void)_setSharedAdiumInstance:(AIAdium *)shared
++ (void)_setSharedAdiumInstance:(NSObject<AIAdium> *)shared
 {
     NSParameterAssert(_sharedAdium == nil);
     _sharedAdium = [shared retain];
@@ -87,7 +88,7 @@ static AIAdium *_sharedAdium = nil;
 /*
  * @brief Return the shared AIAdium instance
  */
-+ (AIAdium *)sharedAdiumInstance
++ (NSObject<AIAdium> *)sharedAdiumInstance
 {
     NSParameterAssert(_sharedAdium != nil);
     return _sharedAdium;
