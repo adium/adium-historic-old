@@ -18,12 +18,12 @@
 
 #define	AIContinuousSpellCheckingWasToggledNotification	@"AIContinuousSpellCheckingWasToggledNotification"
 
-@class AIListContact, AIAdium, AIAccount, AIChat;
-@protocol AITextEntryView;
+@class AIListContact, AIAccount, AIChat;
+@protocol AITextEntryView, AIAdium;
 
 @interface AIMessageEntryTextView : AISendingTextView <AITextEntryView> {
-    AIAdium             *adium;
-    AIChat              *chat;
+    NSObject<AIAdium>	*adium;
+    AIChat				*chat;
     
     BOOL                 clearOnEscape;
 	BOOL				 historyEnabled;
