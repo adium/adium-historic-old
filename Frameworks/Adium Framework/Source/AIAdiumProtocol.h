@@ -5,10 +5,11 @@
  *  Created by Evan Schoenberg on 9/10/06.
  */
 
+#import <Cocoa/Cocoa.h>
+
 #define	BETA_RELEASE TRUE
 
-@class NSObject;
-@protocol NSObject;
+@class AICoreComponentLoader;
 
 @protocol AIAccountController, AIChatController, AIContactAlertsController, AIDebugController,
 		  AIPreferenceController, AIMenuController, AIApplescriptabilityController, AIStatusController,
