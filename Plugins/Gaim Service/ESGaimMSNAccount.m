@@ -214,8 +214,13 @@
 		 * we want to update to the serverside settings as appropriate.
 		 *
 		 * An important exception is if our per-account display name is dynamic (i.e. a 'Now Playing in iTunes' name).
+		 *
+		 * We explicitly ignore any display name starting with "<msnobj" because gaim_connection_get_display_name() occassionaly (rarely)
+		 * returns invalid data starting with that string.  The user can still set this as an MSN display name if she is really that weird, but
+		 * we won't update to match other clients setting it.
 		 */
 		if (displayName &&
+			strncmp(displayName, "<msnobj", 7),
 			strcmp(displayName, [[self UID] UTF8String]) &&
 			strcmp(displayName, [[self formattedUID] UTF8String])) {
 			/* There is a serverside display name, and it's not the same as our UID. */
