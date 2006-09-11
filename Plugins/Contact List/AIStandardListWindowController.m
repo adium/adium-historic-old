@@ -247,12 +247,12 @@
  */
 + (AIAccount *)activeAccountForIconsGettingOnlineAccounts:(NSMutableSet *)onlineAccounts ownIconAccounts:(NSMutableSet *)ownIconAccounts
 {
-	AIAdium		  *sharedAdium = [AIObject sharedAdiumInstance];
-	AIAccount	  *account;
-	AIAccount	  *activeAccount = nil;
-	NSEnumerator  *enumerator;
-	BOOL		  atLeastOneOwnIconAccount = NO;
-	NSArray		  *accounts = [[sharedAdium accountController] accounts];
+	NSObject<AIAdium>	*sharedAdium = [AIObject sharedAdiumInstance];
+	AIAccount			*account;
+	AIAccount			*activeAccount = nil;
+	NSEnumerator		*enumerator;
+	BOOL				atLeastOneOwnIconAccount = NO;
+	NSArray				*accounts = [[sharedAdium accountController] accounts];
 
 	if (!onlineAccounts) onlineAccounts = [NSMutableSet set];
 	if (!ownIconAccounts) ownIconAccounts = [NSMutableSet set];
@@ -390,12 +390,12 @@
  */
 + (AIAccount *)activeAccountForDisplayNameGettingOnlineAccounts:(NSMutableSet *)onlineAccounts ownDisplayNameAccounts:(NSMutableSet *)ownDisplayNameAccounts
 {
-	AIAdium		  *sharedAdium = [AIObject sharedAdiumInstance];
-	AIAccount	  *account;
-	AIAccount	  *activeAccount = nil;
-	NSEnumerator  *enumerator;
-	BOOL		  atLeastOneOwnDisplayNameAccount = NO;
-	NSArray		  *accounts = [[sharedAdium accountController] accounts];
+	NSObject<AIAdium>	*sharedAdium = [AIObject sharedAdiumInstance];
+	AIAccount			*account;
+	AIAccount			*activeAccount = nil;
+	NSEnumerator		*enumerator;
+	BOOL				atLeastOneOwnDisplayNameAccount = NO;
+	NSArray				*accounts = [[sharedAdium accountController] accounts];
 	
 	if (!onlineAccounts) onlineAccounts = [NSMutableSet set];
 	if (!ownDisplayNameAccounts) ownDisplayNameAccounts = [NSMutableSet set];
