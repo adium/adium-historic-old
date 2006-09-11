@@ -15,12 +15,12 @@
  */
 
 @class AIChat, AIMessageViewController, AIMessageWindowController;
-@protocol AIInterfaceContainer, AICustomTabViewItem;
+@protocol AIAdium, AIInterfaceContainer, AICustomTabViewItem;
 
 @interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer, AICustomTabViewItem> {
 	AIMessageWindowController	*container;
     AIMessageViewController 	*messageViewController;
-    AIAdium						*adium;
+    NSObject<AIAdium>			*adium;
 	NSImage						*tabViewItemImage;
 }
 

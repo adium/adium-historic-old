@@ -15,6 +15,7 @@
  */
 
 @class AIChat, AIAccountMenu, AIContactMenu;
+@protocol AIAdium;
 
 #define AIViewFrameDidChangeNotification	@"AIViewFrameDidChangeNotification"
 
@@ -29,7 +30,7 @@
 	
 	AIAccountMenu		*accountMenu;	
 	AIContactMenu		*contactMenu;	
-    AIAdium				*adium;
+    NSObject<AIAdium>	*adium;
 	AIChat				*chat;
 }
 
