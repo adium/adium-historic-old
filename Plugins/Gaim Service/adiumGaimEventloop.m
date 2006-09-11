@@ -75,12 +75,43 @@ struct SourceInfo *newSourceInfo(void)
 	return info;
 }
 
+CFSocketRef socketInRunLoop(int fd, CFOptionFlags callBackTypes, CFSocketContext *context)
+{
+	CFSocketRef socket = CFSocketCreateWithNative(kCFAllocatorDefault,
+												  fd,
+												  callBackTypes,
+												  socketCallback,
+												  context);				
+
+	/* If we created a new socket (versus returning a cached one -- see the CFSocketCreateWithNative() documentation), have it
+	 * reenable callbacks automatically, and add it to the run loop.
+	 */
+	CFSocketContext actualSocketContext;
+	CFSocketGetContext(socket, &actualSocketContext);
+	if (actualSocketContext.info == context->info) {		
+		//Re-enable callbacks automatically and _don't_ close the socket on invalidate
+		CFSocketSetSocketFlags(socket, (kCFSocketAutomaticallyReenableReadCallBack | 
+										kCFSocketAutomaticallyReenableDataCallBack |
+										kCFSocketAutomaticallyReenableWriteCallBack));
+		
+		//Add it to our run loop
+		CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(kCFAllocatorDefault, socket, 0);
+		
+		if (rls) {
+			CFRunLoopAddSource(gaimRunLoop, rls, kCFRunLoopCommonModes);
+			CFRelease(rls);
+		}
+	}
+
+	return socket;
+}
+
 #pragma mark Remove
 
 guint adium_source_remove(guint tag) {
     struct SourceInfo *sourceInfo = (struct SourceInfo*)
 	[[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
-	
+
     if (sourceInfo) {
 		if (sourceInfo->timer_tag == tag) {
 			sourceInfo->timer_tag = 0;
@@ -115,13 +146,23 @@ guint adium_source_remove(guint tag) {
 				sourceInfo->timer = NULL;
 			}
 			
-			//Disable the callback on the socket which is no longer active
-			if ((sourceInfo->read_tag == 0) && (sourceInfo->socket)) {
-				CFSocketDisableCallBacks(sourceInfo->socket, kCFSocketReadCallBack);
-			}
-
-			if ((sourceInfo->write_tag == 0) && (sourceInfo->socket)) {
-				CFSocketDisableCallBacks(sourceInfo->socket, kCFSocketWriteCallBack);
+			if (sourceInfo->socket && (sourceInfo->read_tag || sourceInfo->write_tag)) {
+				//We have a socket, and we still have either a read_tag or a write_tag
+				CFOptionFlags callBackTypes = 0;
+				if (sourceInfo->read_tag) callBackTypes |= kCFSocketReadCallBack;
+				if (sourceInfo->write_tag) callBackTypes |= kCFSocketWriteCallBack;	
+			
+				//Create a context using the same sourceInfo
+				CFSocketContext context = { 0, sourceInfo, /* CFAllocatorRetainCallBack */ NULL, /* CFAllocatorReleaseCallBack */ NULL, /* CFAllocatorCopyDescriptionCallBack */ NULL };
+				
+				//Invalidate the old socket, which was for both reading and writing
+				CFSocketInvalidate(sourceInfo->socket);
+				CFRelease(sourceInfo->socket);
+				
+				//Create a new socket which will be for just reading or just writing; associate it with the info
+				sourceInfo->socket = socketInRunLoop(sourceInfo->fd, callBackTypes, &context);
+				
+				/* All other aspects of the sourceInfo are still right, so leave them as-is */
 			}
 		}
 
@@ -180,7 +221,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 					  GaimInputFunction func, gpointer user_data)
 {	
 	if (fd < 0) {
-		NSLog(@"fd was %i; returning %i",fd,sourceId+1);
+		NSLog(@"INVALID: fd was %i; returning tag %i",fd,sourceId+1);
 		return ++sourceId;
 	}
 
@@ -199,11 +240,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	 * If a socket already exists on this fd, CFSocketCreateWithNative() will return that existing socket, and the other parameters
 	 * will be ignored.
 	 */
-    CFSocketRef socket = CFSocketCreateWithNative(kCFAllocatorDefault,
-												  fd,
-												  callBackTypes,
-												  socketCallback,
-												  &context);
+    CFSocketRef socket = socketInRunLoop(fd, callBackTypes, &context);
 	NSCAssert(socket != NULL, @"CFSocket creation failed");
 
 	/*
@@ -227,24 +264,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 			callBackTypes |= kCFSocketWriteCallBack;			
 		}
 
-		socket = CFSocketCreateWithNative(kCFAllocatorDefault,
-										  fd,
-										  callBackTypes,
-										  socketCallback,
-										  &context);
-	}
-		
-	//Re-enable callbacks automatically and _don't_ close the socket on invalidate
-	CFSocketSetSocketFlags(socket, (kCFSocketAutomaticallyReenableReadCallBack | 
-									kCFSocketAutomaticallyReenableDataCallBack |
-									kCFSocketAutomaticallyReenableWriteCallBack));
-
-	//Add it to our run loop
-	CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(kCFAllocatorDefault, socket, 0);
-	
-	if (rls) {
-		CFRunLoopAddSource(gaimRunLoop, rls, kCFRunLoopCommonModes);
-		CFRelease(rls);
+		socket = socketInRunLoop(fd, callBackTypes, &context);
 	}
 
 	info->fd = fd;
@@ -294,7 +314,9 @@ static void socketCallback(CFSocketRef s,
 		ioFunction = sourceInfo->write_ioFunction;
 	}
 
-	ioFunction(user_data, fd, c);
+	if (ioFunction) {
+		ioFunction(user_data, fd, c);
+	}
 }
 
 
