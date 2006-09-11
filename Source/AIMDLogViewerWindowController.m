@@ -151,7 +151,7 @@
 		currentSearch = NULL;
 	}
 	
-	CFRelease(thisSearch);
+	if (thisSearch) CFRelease(thisSearch);
 }
 
 - (void)stopSearching
