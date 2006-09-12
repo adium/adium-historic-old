@@ -15,15 +15,13 @@
  */
 
 #import "GBFireLogImporter.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AILoginControllerProtocol.h>
+#import <Adium/ESTextAndButtonsWindowController.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/NSCalendarDate+ISO8601Unparsing.h>
-#import "AIAccount.h"
-#import <Adium/AIAccountControllerProtocol.h>
-#import <Adium/AIAdiumProtocol.h>
-#import "AIInterfaceController.h"
-#import "AILoginController.h"
-//#import "AILoggerPlugin.h"
-#import "ESTextAndButtonsWindowController.h"
 
 #define PATH_LOGS                       @"/Logs"
 #define XML_MARKER @"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
