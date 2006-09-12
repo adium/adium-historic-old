@@ -836,9 +836,15 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 
 - (void)moveWindowToPoint:(NSPoint)inOrigin
 {
-	[[self window] setFrameOrigin:inOrigin];
+	NSWindow *win = [self window];
+	[win setFrameOrigin:inOrigin];
 
 	if (windowSlidOffScreenEdgeMask == AINoEdges) {
+		if(previousAlpha > 0.0) {
+			[win setAlphaValue:previousAlpha];
+			previousAlpha = 0.0;
+		}
+		
 		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
 		* it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
 		*/
