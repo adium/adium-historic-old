@@ -851,8 +851,8 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 		[contactListController contactListDesiredSizeChanged];
 	} else {
 		//After sliding off screen, go to an alpha value of 0 to hide our 1 px remaining on screen
-		previousAlpha = [myWindow alphaValue];
-		[myWindow setAlphaValue:0.0];
+		previousAlpha = [win alphaValue];
+		[win setAlphaValue:0.0];
 	}
 }
 
