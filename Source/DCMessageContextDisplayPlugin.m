@@ -211,18 +211,14 @@ static int linesLeftToFind = 0;
 	//If there's no log there, there's no message history. Bail out.
 	NSArray *logPaths = [AILoggerPlugin sortedArrayOfLogFilesForChat:chat];
 	if(!logPaths) return nil;
-	
-	NSLog(@"logPaths = %@", logPaths);
-	
+		
 	NSString *logObjectUID = [chat name];
 	if (!logObjectUID) logObjectUID = [[chat listObject] UID];
 	logObjectUID = [logObjectUID safeFilenameString];
 
 	NSString *baseLogPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:
 		[AILoggerPlugin relativePathForLogWithObject:logObjectUID onAccount:[chat account]]];
-	
-	NSLog(@"baseLogPath = %@", baseLogPath);
-		
+			
 	//Initialize a place to store found messages
 	NSMutableArray *outerFoundContentContexts = [NSMutableArray arrayWithCapacity:linesToDisplay]; 
 
@@ -234,10 +230,8 @@ static int linesLeftToFind = 0;
 	NSString *logPath = nil;
 	while (linesLeftToFind > 0 && (logPath = [pathsEnumerator nextObject])) {
 		//If it's not a .chatlog, ignore it.
-		if (![logPath hasSuffix:@".chatlog"]) {
-			NSLog(@"Ignoring path %@", logPath);
+		if (![logPath hasSuffix:@".chatlog"])
 			continue;
-		}
 				
 		//Stick the base path on to the beginning
 		logPath = [baseLogPath stringByAppendingPathComponent:logPath];
@@ -256,37 +250,27 @@ static int linesLeftToFind = 0;
 		//Open up the file we need to read from, and seek to the end (this is a *backwards* parser, after all :)
 		NSFileHandle *file = [NSFileHandle fileHandleForReadingAtPath:logPath];
 		[file seekToEndOfFile];
-		NSLog(@"Log path: %@", logPath);
 		
 		//Set up some more doohickeys and then start the parse loop
 		int pageSize = getpagesize();
 		unsigned long long offset = [file offsetInFile];
 		enum LMXParseResult result = LMXParsedIncomplete;
-		int omglooping = 0; //for debugging
 		do {
-			if (omglooping++) NSLog(@"OMG LOOPING!!!1");
-			NSLog(@"Initial offset: %d", offset);
 			//Calculate the new offset
 			offset = (offset <= pageSize) ? 0 : offset - pageSize;
-			NSLog(@"Start reading from offset: %ull", offset);
 			
 			//Seek to it and read
 			[file seekToFileOffset:offset]; 
 			NSData *chunk = [file readDataOfLength:pageSize];
-			NSLog(@"Chunk to parse (as string): %@", [NSString stringWithData:chunk encoding:NSUTF8StringEncoding]);
 			
 			//Parse
 			result = [parser parseChunk:chunk];
-			
-			NSLog(@"Done parsing.");
 			
 		//Continue to parse as long as we need more elements, we have data to read, and LMX doesn't think we're done.
 		} while ([foundElements count] < linesLeftToFind && offset > 0 && result != LMXParsedCompletely);
 		//Be a good citizen and close the file
 		[file closeFile];
-		
-		NSLog(@"foundElements: %@", foundElements);
-		
+				
 		//Get the service name from the path name
 		NSString *serviceName = [[[[[logPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] lastPathComponent] componentsSeparatedByString:@"."] objectAtIndex:0U];
 		
@@ -315,15 +299,9 @@ static int linesLeftToFind = 0;
 			[innerFoundContentContexts addObject:message];
 			
 			//If we've found enough, stop drop and roll!
-			if ([innerFoundContentContexts count] >= linesLeftToFind) {
-				NSLog(@"Hooray, we've found everything.");
+			if ([innerFoundContentContexts count] >= linesLeftToFind)
 				break;
-			}
 		}
-		
-		//Do some logging, maybe this will help?
-		NSLog(@"outerFoundContentContexts = %@", outerFoundContentContexts);
-		NSLog(@"innerFoundContentContexts = %@", innerFoundContentContexts);
 
 		//Add our locals to the outer array; we're probably looping again.
 		[outerFoundContentContexts setArray:[innerFoundContentContexts arrayByAddingObjectsFromArray:outerFoundContentContexts]];
@@ -338,14 +316,11 @@ static int linesLeftToFind = 0;
 {
 	if ([elementName isEqualToString:@"message"]) {
 		[elementStack insertObject:[AIXMLElement elementWithName:elementName] atIndex:0U];
-		NSLog(@"inserted %@ to stack. stack is now: %@", elementName, elementStack);
 	}
 	else if ([elementStack count]) {
 		AIXMLElement *element = [AIXMLElement elementWithName:elementName];
 		[(AIXMLElement *)[elementStack objectAtIndex:0U] insertObject:element atIndex:0U];
 		[elementStack insertObject:element atIndex:0U];
-		NSLog(@"inserted %@ to stack. stack is now: %@", elementName, elementStack);
-
 	}
 }
 
@@ -360,16 +335,13 @@ static int linesLeftToFind = 0;
 	if ([elementStack count]) {
 		AIXMLElement *element = [elementStack objectAtIndex:0U];
 		if (attributes) {
-			NSLog(@"Setting element %@ to have attributes %@", element, attributes);
 			[element setAttributeNames:[attributes allKeys] values:[attributes allValues]];
-			NSLog(@"Set!");
 		}
 		
 		if ([elementName isEqualToString:@"message"])
 			[foundElements insertObject:element atIndex:0U];
 
 		[elementStack removeObjectAtIndex:0U];
-		NSLog(@"stack after remove: %@", elementStack);
 		if ([foundElements count] == linesLeftToFind) {
 			if ([elementStack count]) [elementStack removeAllObjects];
 			[parser abortParsing];
