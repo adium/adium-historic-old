@@ -50,6 +50,7 @@ static NSArray *validSenderColors;
 
 @interface NSMutableString (AIKeywordReplacementAdditions)
 - (void) replaceKeyword:(NSString *)word withString:(NSString *)newWord;
+- (void) safeReplaceCharactersInRange:(NSRange)range withString:(NSString *)newWord;
 @end
 
 @implementation NSMutableString (AIKeywordReplacementAdditions)
@@ -60,7 +61,14 @@ static NSArray *validSenderColors;
 	[self replaceOccurrencesOfString:keyWord
 						  withString:newWord
 							 options:NSLiteralSearch
-							   range:NSMakeRange(0, [self length])];
+							   range:NSMakeRange(0.0, [self length])];
+}
+
+- (void) safeReplaceCharactersInRange:(NSRange)range withString:(NSString *)newWord
+{
+	if (range.location == NSNotFound || range.length == 0) return;
+	if (!newWord) [self deleteCharactersInRange:range];
+	else [self replaceCharactersInRange:range withString:newWord];
 }
 @end
 
@@ -592,12 +600,8 @@ static NSArray *validSenderColors;
 					NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
 					NSDateFormatter	*dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeFormat 
 																			allowNaturalLanguage:NO];
-					NSString *timeString = [dateFormatter stringForObjectValue:date];
-					if(timeString) {
-						[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
-												withString:timeString];
-					} else
-						[inString deleteCharactersInRange:NSUnionRange(range, endRange)];
+					[inString safeReplaceCharactersInRange:NSUnionRange(range, endRange) 
+												withString:[dateFormatter stringForObjectValue:date]];
 					
 					[dateFormatter release];
 					
@@ -630,7 +634,7 @@ static NSArray *validSenderColors;
 										 : @"Incoming/buddy_icon.png");
 				}
 				
-				[inString replaceCharactersInRange:range withString:replacementString];
+				[inString safeReplaceCharactersInRange:range withString:replacementString];
 			}
 		} while (range.location != NSNotFound);
 		
@@ -677,7 +681,7 @@ static NSArray *validSenderColors;
 					senderDisplay = [NSString stringWithFormat:@"%@ %@",senderDisplay,AILocalizedString(@"(Autoreply)","Short word inserted after the sender's name when displaying a message which was an autoresponse")];
 				}
 					
-				[inString replaceCharactersInRange:range withString:[senderDisplay stringByEscapingForXMLWithEntities:nil]];
+				[inString safeReplaceCharactersInRange:range withString:[senderDisplay stringByEscapingForXMLWithEntities:nil]];
 			}
 		} while (range.location != NSNotFound);
         
@@ -691,8 +695,8 @@ static NSArray *validSenderColors;
 					serversideDisplayName = [theSource displayName];
 				}
 				
-				[inString replaceCharactersInRange:range
-										withString:[serversideDisplayName stringByEscapingForXMLWithEntities:nil]];
+				[inString safeReplaceCharactersInRange:range
+											withString:[serversideDisplayName stringByEscapingForXMLWithEntities:nil]];
 			}
 		} while (range.location != NSNotFound);
 		
@@ -729,16 +733,16 @@ static NSArray *validSenderColors;
 						hexcode = [NSScanner scannerWithString:thisIsATemporaryString];
 						[hexcode  scanHexInt:&rgb];
 						if (![thisIsATemporaryString length] && rgb == 0) {
-							[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
+							[inString deleteCharactersInRange:NSUnionRange(range, endRange)];
 						} else {
 							red = (rgb & 0xff0000) >> 16;
 							green = (rgb & 0x00ff00) >> 8;
 							blue = rgb & 0x0000ff;
-							[inString replaceCharactersInRange:NSUnionRange(range, endRange)
-													withString:[NSString stringWithFormat:@"rgba(%d, %d, %d, %@)", red, green, blue, transparency]];
+							[inString safeReplaceCharactersInRange:NSUnionRange(range, endRange)
+														withString:[NSString stringWithFormat:@"rgba(%d, %d, %d, %@)", red, green, blue, transparency]];
 						}
 					} else {
-						[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
+						[inString deleteCharactersInRange:NSUnionRange(range, endRange)];
 					}
 				} else if (endRange.location == NSMaxRange(range)) {
 					if (allowTextBackgrounds && showIncomingColors) {
@@ -757,11 +761,10 @@ static NSArray *validSenderColors;
 												 onlyIncludeOutgoingImages:NO
 															simpleTagsOnly:NO
 															bodyBackground:YES];
-						[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
-												withString:[NSString stringWithFormat:@"#%@", thisIsATemporaryString]];
+						[inString safeReplaceCharactersInRange:NSUnionRange(range, endRange) 
+													withString:[NSString stringWithFormat:@"#%@", thisIsATemporaryString]];
 					} else {
-						[inString replaceCharactersInRange:NSUnionRange(range, endRange)
-												withString:@""];
+						[inString deleteCharactersInRange:NSUnionRange(range, endRange)];
 					}	
 				}
 			}
@@ -778,9 +781,7 @@ static NSArray *validSenderColors;
 				NSString *iconPath = [self iconPathForFileTransfer:transfer];
 				NSImage *icon = [transfer iconImage];
 				[[icon TIFFRepresentation] writeToFile:iconPath atomically:YES];
-				if (range.location != NSNotFound) {
-					[inString replaceCharactersInRange:range withString:iconPath];
-				}
+				[inString safeReplaceCharactersInRange:range withString:iconPath];
 			} while (range.location != NSNotFound);
 			
 			[inString replaceKeyword:@"%fileName%"
@@ -799,7 +800,7 @@ static NSArray *validSenderColors;
 		//Message (must do last)
 		range = [inString rangeOfString:@"%message%"];
 		if (range.location != NSNotFound) {
-			[inString replaceCharactersInRange:range withString:htmlEncodedMessage];
+			[inString safeReplaceCharactersInRange:range withString:htmlEncodedMessage];
 		}
 		
 	} else if ([content isKindOfClass:[AIContentStatus class]]) {
@@ -816,8 +817,8 @@ static NSArray *validSenderColors;
 			do{
 				range = [inString rangeOfString:@"%statusPhrase%"];
 				if (range.location != NSNotFound) {
-					[inString replaceCharactersInRange:range 
-											withString:[statusPhrase stringByEscapingForXMLWithEntities:nil]];
+					[inString safeReplaceCharactersInRange:range 
+												withString:[statusPhrase stringByEscapingForXMLWithEntities:nil]];
 					replacedStatusPhrase = YES;
 				}
 			} while (range.location != NSNotFound);
@@ -848,7 +849,7 @@ static NSArray *validSenderColors;
 										   bodyBackground:NO];
 			}
 			
-			[inString replaceCharactersInRange:range withString:messageString];
+			[inString safeReplaceCharactersInRange:range withString:messageString];
 		}
 	}
 
@@ -916,8 +917,8 @@ static NSArray *validSenderColors;
 				NSDateFormatter	*dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeFormat 
 																		allowNaturalLanguage:NO];
 
-				[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
-										withString:[dateFormatter stringForObjectValue:[chat dateOpened]]];
+				[inString safeReplaceCharactersInRange:NSUnionRange(range, endRange) 
+												withString:[dateFormatter stringForObjectValue:[chat dateOpened]]];
 				[dateFormatter release];
 				
 			}
@@ -959,7 +960,7 @@ static NSArray *validSenderColors;
  			}
 			
 			//Replace the body background tag
- 			[inString replaceCharactersInRange:range withString:(bodyTag ? (NSString *)bodyTag : @"")];
+ 			[inString safeReplaceCharactersInRange:range withString:(bodyTag ? (NSString *)bodyTag : @"")];
  		}
  	}
 
