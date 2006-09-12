@@ -849,7 +849,11 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 		* it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
 		*/
 		[contactListController contactListDesiredSizeChanged];
-	}	
+	} else {
+		//After sliding off screen, go to an alpha value of 0 to hide our 1 px remaining on screen
+		previousAlpha = [myWindow alphaValue];
+		[myWindow setAlphaValue:0.0];
+	}
 }
 
 /*
