@@ -42,6 +42,9 @@ typedef enum {
 - (void)addMenuItem:(NSMenuItem *)newItem toLocation:(AIMenuLocation)location;
 - (void)removeMenuItem:(NSMenuItem *)targetItem;
 
+- (void)delayMenuItemPostProcessing;
+- (void)endDelayMenuItemPostProcessing;
+
 //Contextual menu items
 - (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(AIContextMenuLocation)location;
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject;
