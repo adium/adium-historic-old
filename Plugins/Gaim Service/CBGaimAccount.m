@@ -1282,7 +1282,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 	//Set our current status state after filtering its statusMessage as appropriate. This will take us online in the process.
 	AIStatus	*statusState = [self statusObjectForKey:@"StatusState"];
-	if (!statusState) {
+	if (!statusState || ([statusState statusType] == AIOfflineStatusType)) {
 		statusState = [[adium statusController] defaultInitialStatusState];
 	}
 
