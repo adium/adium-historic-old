@@ -85,8 +85,6 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who,
 				messageDict = [NSDictionary dictionaryWithObjectsAndKeys:attributedMessage, @"AttributedMessage",
 					[NSString stringWithUTF8String:who], @"Source",
 					gaimMessageFlags, @"GaimMessageFlags",
-					[NSString stringWithUTF8String:who], @"Source",
-					[NSNumber numberWithInt:flags], @"GaimMessageFlags",
 					date, @"Date",nil];
 				
 			} else {
