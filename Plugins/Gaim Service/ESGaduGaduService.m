@@ -95,6 +95,11 @@
 							 withDescription:AILocalizedString(@"Blocked", nil)
 									  ofType:AIInvisibleStatusType
 								  forService:self];
+
+	[[adium statusController] registerStatus:STATUS_NAME_OFFLINE
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_OFFLINE]
+									  ofType:AIOfflineStatusType
+								  forService:self];	
 }
 
 @end
