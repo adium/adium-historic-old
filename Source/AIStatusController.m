@@ -287,9 +287,6 @@ static 	NSMutableSet			*temporaryStateArray = nil;
  */
 - (NSArray *)_menuItemsForStatusesOfType:(AIStatusType)type forServiceCodeUniqueID:(NSString *)inServiceCodeUniqueID withTarget:(id)target
 {
-	//Quick efficiency: If asked for the offline status type, just return nil as we have no offline statuses at present.
-	if (type == AIOfflineStatusType) return nil;
-
 	NSMutableArray  *menuItems = [[NSMutableArray alloc] init];
 	NSMutableSet	*alreadyAddedTitles = [NSMutableSet set];
 
@@ -903,7 +900,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 /*!
  * @brief All active status states
  *
- * A status state is active if any online account is currently in that state.
+ * A status state is active if any enabled account is currently in that state.
  *
  * The return value of this method is cached.
  *
@@ -917,8 +914,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		AIAccount			*account;
 
 		while ((account = [enumerator nextObject])) {
-			if ([account enabled] &&
-				([account online] || [account integerStatusObjectForKey:@"Connecting"])) {
+			if ([account enabled]) {
 				[_allActiveStatusStates addObject:[account statusState]];
 			}
 		}
@@ -1128,7 +1124,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 - (BOOL)removeIfNecessaryTemporaryStatusState:(AIStatus *)originalState
 {
 	BOOL didRemove = NO;
-	
+
 	/* If the original (old) status state is in our temporary array and is not being used in more than 1 account, 
 	* then we should remove it.
 	*/
@@ -1143,7 +1139,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 				if (++count > 1) break;
 			}
 		}
-		
+
 		if (count <= 1) {
 			[temporaryStateArray removeObject:originalState];
 			didRemove = YES;
