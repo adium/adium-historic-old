@@ -13,6 +13,7 @@
 #import <Adium/AIEditStateWindowController.h>
 #import <Adium/AIStatusIcons.h>
 #import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIEventAdditions.h>
@@ -147,6 +148,8 @@
 	AIStatusType			currentStatusType = AIAvailableStatusType;
 	AIStatusMutabilityType	currentStatusMutabilityType = AILockedStatusState;
 
+	[[adium menuController] delayMenuItemPostProcessing];
+	
 	if ([delegate respondsToSelector:@selector(statusMenu:willRemoveStatusMenuItems:)]) {
 		[delegate statusMenu:self willRemoveStatusMenuItems:menuItemArray];
 	}
@@ -224,6 +227,8 @@
 	
 	//Now that we are done creating the menu items, tell the plugin about them
 	[delegate statusMenu:self didRebuildStatusMenuItems:menuItemArray];
+	
+	[[adium menuController] endDelayMenuItemPostProcessing];
 }
 
 /*!
@@ -240,96 +245,75 @@
 {
 	if (![stateMenuItemsAlreadyValidated containsObject:menuItem]) {
 		NSDictionary	*dict = [menuItem representedObject];
-		AIAccount		*account;
-		AIStatus		*menuItemStatusState;
-		BOOL			shouldSelectOffline;
+		AIAccount		*account = [dict objectForKey:@"AIAccount"];
+		AIStatus		*menuItemStatusState = [dict objectForKey:@"AIStatus"];
 		
-		/* Search for the account or global status state as appropriate for this menu item.
-		 * Also, determine if we are looking to select the Offline menu item
-		 */
-		if ((account = [dict objectForKey:@"AIAccount"])) {
-			shouldSelectOffline = ![account online];
-		} else {
-			shouldSelectOffline = ![[adium accountController] oneOrMoreConnectedAccounts];
-		}
-		menuItemStatusState = [dict objectForKey:@"AIStatus"];
-		
-		if (shouldSelectOffline) {
-			//If we should select offline, set all menu items which don't have the AIOfflineStatusType tag to be off.
-			if ([menuItem tag] == AIOfflineStatusType) {
-				if ([menuItem state] != NSOnState) [menuItem setState:NSOnState];
-			} else {
-				if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
-			}
+		if (account) {
+			/* Account-specific menu items */
+			AIStatus		*appropiateActiveStatusState;
+			appropiateActiveStatusState = [account statusState];
 			
-		} else {
-			if (account) {
-				/* Account-specific menu items */
-				AIStatus		*appropiateActiveStatusState;
-				appropiateActiveStatusState = [account statusState];
-				
-				/* Our "Custom..." menu choice has a nil represented object.  If the appropriate active search state is
-					* in our array of states from which we made menu items, we'll be searching to match it.  If it isn't,
-					* we have a custom state and will be searching for the custom item of the right type, switching all other
-					* menu items to NSOffState.
-					*/
-				if ([[[adium statusController] flatStatusSet] containsObject:appropiateActiveStatusState]) {
-					//If the search state is in the array so is a saved state, search for the match
-					if ((menuItemStatusState == appropiateActiveStatusState) ||
-						([menuItemStatusState isKindOfClass:[AIStatusGroup class]] &&
-						 [(AIStatusGroup *)menuItemStatusState enclosesStatusState:appropiateActiveStatusState])) {
+			/* Our "Custom..." menu choice has a nil represented object.  If the appropriate active search state is
+				* in our array of states from which we made menu items, we'll be searching to match it.  If it isn't,
+				* we have a custom state and will be searching for the custom item of the right type, switching all other
+				* menu items to NSOffState.
+				*/
+			if ([[[adium statusController] flatStatusSet] containsObject:appropiateActiveStatusState]) {
+				//If the search state is in the array so is a saved state, search for the match
+				if ((menuItemStatusState == appropiateActiveStatusState) ||
+					([menuItemStatusState isKindOfClass:[AIStatusGroup class]] &&
+					 [(AIStatusGroup *)menuItemStatusState enclosesStatusState:appropiateActiveStatusState])) {
+					if ([menuItem state] != NSOnState) [menuItem setState:NSOnState];
+				} else {
+					if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+				}
+			} else {
+				//If there is not a status state, we are in a Custom state. Search for the correct Custom item.
+				if (menuItemStatusState) {
+					//If the menu item has an associated state, it's always off.
+					if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+				} else {
+					//If it doesn't, check the tag to see if it should be on or off.
+					if ([menuItem tag] == [appropiateActiveStatusState statusType]) {
 						if ([menuItem state] != NSOnState) [menuItem setState:NSOnState];
 					} else {
 						if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
 					}
+				}
+			}
+		} else {
+			/* General menu items */
+			NSSet	*allActiveStatusStates = [[adium statusController] allActiveStatusStates];
+			int		onState = (([allActiveStatusStates count] == 1) ? NSOnState : NSMixedState);
+			
+			if (menuItemStatusState) {
+				//If this menu item has a status state, set it to the right on state if that state is active
+				if ([allActiveStatusStates containsObject:menuItemStatusState] ||
+					([menuItemStatusState isKindOfClass:[AIStatusGroup class]] &&
+					 [(AIStatusGroup *)menuItemStatusState enclosesStatusStateInSet:allActiveStatusStates])) {
+					if ([menuItem state] != onState) [menuItem setState:onState];
 				} else {
-					//If there is not a status state, we are in a Custom state. Search for the correct Custom item.
-					if (menuItemStatusState) {
-						//If the menu item has an associated state, it's always off.
-						if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
-					} else {
-						//If it doesn't, check the tag to see if it should be on or off.
-						if ([menuItem tag] == [appropiateActiveStatusState statusType]) {
-							if ([menuItem state] != NSOnState) [menuItem setState:NSOnState];
-						} else {
-							if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
-						}
-					}
+					if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
 				}
 			} else {
-				/* General menu items */
-				NSSet	*allActiveStatusStates = [[adium statusController] allActiveStatusStates];
-				int		onState = (([allActiveStatusStates count] == 1) ? NSOnState : NSMixedState);
+				//If it doesn't, check the tag to see if it should be on or off by looking for a matching custom state
+				NSEnumerator	*activeStatusStatesEnumerator = [allActiveStatusStates objectEnumerator];
+				NSArray			*flatStatusSet = [[adium statusController] flatStatusSet];
+				AIStatus		*statusState;
+				BOOL			foundCorrectStatusState = NO;
 				
-				if (menuItemStatusState) {
-					//If this menu item has a status state, set it to the right on state if that state is active
-					if ([allActiveStatusStates containsObject:menuItemStatusState] ||
-						([menuItemStatusState isKindOfClass:[AIStatusGroup class]] &&
-						 [(AIStatusGroup *)menuItemStatusState enclosesStatusStateInSet:allActiveStatusStates])) {
-						if ([menuItem state] != onState) [menuItem setState:onState];
-					} else {
-						if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
-					}
+				while (!foundCorrectStatusState && (statusState = [activeStatusStatesEnumerator nextObject])) {
+					/* We found a custom match if our array of menu item states doesn't contain this state and
+					* its statusType matches the menuItem's tag.
+					*/
+					foundCorrectStatusState = (![flatStatusSet containsObject:statusState] &&
+											   ([menuItem tag] == [statusState statusType]));
+				}
+				
+				if (foundCorrectStatusState) {
+					if ([menuItem state] != NSOnState) [menuItem setState:onState];
 				} else {
-					//If it doesn't, check the tag to see if it should be on or off by looking for a matching custom state
-					NSEnumerator	*activeStatusStatesEnumerator = [allActiveStatusStates objectEnumerator];
-					NSArray			*flatStatusSet = [[adium statusController] flatStatusSet];
-					AIStatus		*statusState;
-					BOOL			foundCorrectStatusState = NO;
-					
-					while (!foundCorrectStatusState && (statusState = [activeStatusStatesEnumerator nextObject])) {
-						/* We found a custom match if our array of menu item states doesn't contain this state and
-						* its statusType matches the menuItem's tag.
-						*/
-						foundCorrectStatusState = (![flatStatusSet containsObject:statusState] &&
-												   ([menuItem tag] == [statusState statusType]));
-					}
-					
-					if (foundCorrectStatusState) {
-						if ([menuItem state] != NSOnState) [menuItem setState:onState];
-					} else {
-						if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
-					}
+					if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
 				}
 			}
 		}
