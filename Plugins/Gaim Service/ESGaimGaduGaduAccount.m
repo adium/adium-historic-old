@@ -84,6 +84,11 @@
 	return [messageString stringWithEllipsisByTruncatingToLength:MAX_GADU_STATUS_MESSAGE_LENGTH];
 }
 
+- (BOOL)handleOfflineAsStatusChange
+{
+	return YES;
+}
+
 #pragma mark Contact status
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
