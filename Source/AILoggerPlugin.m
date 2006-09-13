@@ -620,7 +620,6 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 {
 	NSString *baseLogPath = [[self fullPathForLogOfChat:chat onDate:[NSDate date]] stringByDeletingLastPathComponent];
 	NSArray *files = [[NSFileManager defaultManager] directoryContentsAtPath:baseLogPath];	
-	NSLog(@"files: %@", files);
 	if (files) {
 		return [files sortedArrayUsingFunction:&sortPaths context:NULL];
 	}
