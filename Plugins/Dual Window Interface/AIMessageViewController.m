@@ -173,7 +173,7 @@
 	}
 	
 	//Save the base writing direction
-	if (contact)
+	if (contact && [NSApp isOnTigerOrBetter])
 		[contact setBaseWritingDirection:[textView_outgoing baseWritingDirection]];
 
 	[chat release]; chat = nil;
