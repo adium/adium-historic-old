@@ -468,6 +468,11 @@
 
 #pragma mark Status States
 
+- (BOOL)handleOfflineAsStatusChange
+{
+	return NO;
+}
+
 /*!
  * @brief Set the account to a specified statusState
  *
@@ -475,7 +480,8 @@
  */
 - (void)setStatusState:(AIStatus *)statusState
 {
-	if ([statusState statusType] == AIOfflineStatusType) {
+	if (([statusState statusType] == AIOfflineStatusType) &&
+		![self handleOfflineAsStatusChange]) {
 		[self setShouldBeOnline:NO];
 		
 	} else {
@@ -576,7 +582,14 @@
 		
 		return statusState;
 	} else {
-		return [[adium statusController] offlineStatusState];
+		AIStatus	*statusState = [self statusObjectForKey:@"StatusState"];
+		if (statusState && [statusState statusType] == AIOfflineStatusType) {
+			//We're in an actual offline status; return it
+			return statusState;
+		} else {
+			//We're offline, but our status is keeping track of what we'll be when we sign back on. Return the generic offline status.
+			return [[adium statusController] offlineStatusState];
+		}
 	}
 }
 
@@ -990,16 +1003,29 @@
 - (void)didConnect
 {
     //We are now online
-    [self setStatusObject:nil forKey:@"Connecting" notify:NO];
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
-	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NO];
-	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NO];	
+    [self setStatusObject:nil forKey:@"Connecting" notify:NotifyLater];
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NotifyLater];
+	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NotifyLater];
+	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NotifyLater];	
 
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
 
 	//Update our status and idle status to ensure our newly connected account is in the states we want it to be
-	[self updateStatusForKey:@"StatusState"];
+	if ([[self statusState] statusType] == AIOfflineStatusType) {
+		/* If our account thinks it's still in an offline status, that means it went offline previously via an offline status.
+		 * Set to the status being used by other accounts if possible; otherwise, set to our default initiate status.
+		 */
+		AIStatus *newStatus = [[adium statusController] activeStatusState];
+		if ([newStatus statusType] == AIOfflineStatusType) {
+			newStatus = [[adium statusController] defaultInitialStatusState];
+		}
+		
+		[self setStatusState:newStatus];
+
+	} else {
+		[self updateStatusForKey:@"StatusState"];
+	}
 	[self updateStatusForKey:@"IdleSince"];	
 }
 
