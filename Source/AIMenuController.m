@@ -141,17 +141,33 @@
 	//Remove the item
 	[targetMenu removeItem:targetItem];
 
-	//Remove any double dividers by removing the upper divier. Also, remove dividers at the top or bottom of the menu
-	for (loop = 0; loop < [targetMenu numberOfItems]; loop++) {
-		if (([[targetMenu itemAtIndex:loop] isSeparatorItem]) && 
-		   ((loop == [targetMenu numberOfItems] - 1) || (loop == 0) || ([[targetMenu itemAtIndex:loop-1] isSeparatorItem]))) {
-			AILog(@"(menuController): Removing double divider at %i from %@", loop, targetMenu);
-			[targetMenu removeItemAtIndex:loop];
-			loop--;//re-search the location
+	if (!menuItemProcessingDelays) {
+		//Remove any double dividers by removing the upper divier. Also, remove dividers at the top or bottom of the menu
+		for (loop = 0; loop < [targetMenu numberOfItems]; loop++) {
+			if (([[targetMenu itemAtIndex:loop] isSeparatorItem]) && 
+				((loop == [targetMenu numberOfItems] - 1) || (loop == 0) || ([[targetMenu itemAtIndex:loop-1] isSeparatorItem]))) {
+				AILog(@"(menuController): Removing double divider at %i from %@", loop, targetMenu);
+				[targetMenu removeItemAtIndex:loop];
+				loop--;//re-search the location
+			}
 		}
+		
+		/* XXX Note that this notification isn't being posted if triggerred while in menuItemProcessingDelays.
+		 * It's not currently needed in that situation so this is a very small performance hack... it could move outside the
+		 * conditional if necessary. -evands
+		 */
+		[[adium notificationCenter] postNotificationName:AIMenuDidChnge object:targetMenu userInfo:nil];
 	}
+}
 
-	[[adium notificationCenter] postNotificationName:AIMenuDidChnge object:targetMenu userInfo:nil];
+- (void)delayMenuItemPostProcessing
+{
+	menuItemProcessingDelays++;
+}
+
+- (void)endDelayMenuItemPostProcessing
+{
+	menuItemProcessingDelays--;	
 }
 
 - (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(AIContextMenuLocation)location
