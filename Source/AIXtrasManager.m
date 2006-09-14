@@ -401,7 +401,7 @@ int categorySort(id categoryA, id categoryB, void * context)
 			//AIXtraInfo *xtraInfo  = [AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[[selectedCategory objectAtIndex:selectedRow] path]]];
 			if ([[xtraList selectedRowIndexes] count] > 0)
 				[deleteButton setEnabled:YES];
-		//	if ([[xtraList selectedRowIndexes] count] == 1) {
+		//	if ([[xtraList selectedRowIndexes] count] == 1)
 		//		[previewController setXtra:xtraInfo];
 		//	else
 		//		[deleteButton setEnabled:NO];
