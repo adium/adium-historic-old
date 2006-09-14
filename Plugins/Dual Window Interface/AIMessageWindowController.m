@@ -185,12 +185,26 @@
 //Frames
 - (NSString *)_frameSaveKey
 {
-	return [NSString stringWithFormat:@"%@ %@",KEY_MESSAGE_WINDOW_POSITION, containerID];
+	if ([[[adium preferenceController] preferenceForKey:KEY_TABBED_CHATTING
+												  group:PREF_GROUP_INTERFACE] boolValue]) {
+		return KEY_MESSAGE_WINDOW_POSITION;
+
+	} else {
+		//Not using tabbed chatting: Save the window position on a per-container basis
+		return [NSString stringWithFormat:@"%@ %@",KEY_MESSAGE_WINDOW_POSITION, containerID];	
+	}
 }
 - (BOOL)shouldCascadeWindows
 {
-	//Cascade if we have no frame
-	return ([[adium preferenceController] preferenceForKey:[self _frameSaveKey] group:PREF_GROUP_WINDOW_POSITIONS] == nil);
+	if ([[[adium preferenceController] preferenceForKey:KEY_TABBED_CHATTING
+												  group:PREF_GROUP_INTERFACE] boolValue]) {
+		return YES;
+
+	} else {
+		//Not using tabbed chatting: Cascade if we have no frame
+		return ([[adium preferenceController] preferenceForKey:[self _frameSaveKey]
+														 group:PREF_GROUP_WINDOW_POSITIONS] == nil);
+	}
 }
 
 //
