@@ -853,7 +853,8 @@ BOOL isMobileContact(AIListObject *inListObject)
 			attributedMessage = [AIHTMLDecoder decodeHTML:decryptedIncomingMessage];
 
 		} else {
-			attributedMessage = [[[NSAttributedString alloc] initWithString:decryptedIncomingMessage] autorelease];
+			attributedMessage = [[[NSAttributedString alloc] initWithString:decryptedIncomingMessage
+																 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease];
 		}
 	}
 
