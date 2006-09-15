@@ -303,6 +303,12 @@
 	int index = [theMenu indexOfItemWithRepresentedObject:chat];
 	if (index != -1) {
 		[theMenu removeItemAtIndex:index];
+		/* Check to see if we have no openChats left, in which case we
+		 * need to remove the extra menu seperator, which is now in the index'th spot.
+		 */
+		if (([openChatsArray count] == 0) && [[theMenu itemAtIndex:index] isSeparatorItem]) {
+			[theMenu removeItemAtIndex:index];
+		}
 	}
 }
 
