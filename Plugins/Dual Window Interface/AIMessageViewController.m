@@ -772,7 +772,7 @@
 }
 
 #pragma mark Autocompletion
-/*
+/*!
  * @brief Should the tab key cause an autocompletion if possible?
  *
  * We only tab to autocomplete for a group chat

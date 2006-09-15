@@ -112,7 +112,7 @@
 	return messageTab;
 }
 
-/*
+/*!
  * @brief Close a chat
  *
  * First, tell the chatController to close the chat. If it returns YES, remove our interface to the chat.
@@ -213,7 +213,7 @@
 	return [[containers objectForKey:containerID] containedChats];
 }
 
-/*
+/*!
  * @brief Find the window currently displaying a chat
  *
  * If the chat is not in any window, or is not visible in any window, returns nil
@@ -227,7 +227,7 @@
 			nil);
 }
 
-/*
+/*!
  * @brief Find the chat active in a window
  *
  * If the window does not have an active chat, nil is returned

@@ -690,7 +690,7 @@
     return YES;
 }
 
-/*
+/*!
  * @brief Send a message
  */
 - (BOOL)sendMessageObject:(AIContentMessage *)inContentMessage
@@ -710,7 +710,7 @@
 	return YES;
 }
 
-/*
+/*!
  * @brief Send a typing notification
  */
 - (BOOL)sendTypingObject:(AIContentTyping *)inContentTyping
@@ -724,7 +724,7 @@
 	return YES;
 }
 
-/*
+/*!
  * @brief Should HTML be sent in messages to this contact?
  *
  * We don't want to send HTML to ICQ users or mobile phone users
@@ -741,7 +741,7 @@ BOOL isMobileContact(AIListObject *inListObject)
 	return ([[inListObject UID] characterAtIndex:0] == '+');
 }
 
-/*
+/*!
  * @encode Encode a message to HTML if appropriate
  *
  * We take this opportunity to process the HTML message, looking for IMG tags to send via DirectIM
@@ -841,7 +841,7 @@ BOOL isMobileContact(AIListObject *inListObject)
 		decryptedIncomingMessage = [[adium contentController] decryptedIncomingMessage:inHTML
 																		   fromContact:sourceContact
 																			 onAccount:self];
-		
+
 		if (([decryptedIncomingMessage rangeOfString:@"ichatballooncolor"].location != NSNotFound) ||
 			([decryptedIncomingMessage rangeOfString:@"<HTML>"
 											 options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) ||
@@ -880,7 +880,7 @@ BOOL isMobileContact(AIListObject *inListObject)
 	[self chatWithContact:sourceContact receivedAttributedMessage:attributedMessage isAutoreply:isAutoreply];	
 }
 	
-/*
+/*!
  * @brief Got a typing state
  *
  * @param inUID The UID of the contact with which the chat is taking palce
@@ -1217,7 +1217,7 @@ BOOL isMobileContact(AIListObject *inListObject)
 }
 
 #pragma mark Preferences Observer
-/*
+/*!
  * @brief Observe preference changes to store alias and notes information on the server
  */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key

@@ -151,7 +151,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-/*
+/*!
  * @brief Change the UID of a contact
  *
  * If we're just passed a formatted version of the current UID, don't change the UID but instead use the information
@@ -509,7 +509,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Chats ------------------------------------------------------------
 #pragma mark Chats
 
-/*
+/*!
  * @brief Called by Gaim code when a chat should be opened by the interface
  *
  * If the user sent an initial message, this will be triggered and have no effect.
@@ -716,7 +716,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return YES;
 }
 
-/*
+/*!
  * @brief Return the string encoded for sending to a remote contact
  *
  * We return nil if the string turns out to have been a / command.
@@ -735,7 +735,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return encodedString;
 }
 
-/*
+/*!
  * @brief Allow newlines in messages
  *
  * Only IRC doesn't allow newlines out of the built-in prpls... and we don't even support it yet.
@@ -1341,7 +1341,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     [self updateStatusForKey:KEY_USER_ICON];
 }
 
-/*
+/*!
  * @brief Configure libgaim's proxy settings using the current system values
  *
  * target/selector are used rather than a hardcoded callback (or getProxyConfigurationNotifyingTarget: directly) because this allows code reuse
@@ -1361,7 +1361,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 									   context:invocation];
 }
 
-/*
+/*!
  * @brief Callback for -[self getProxyConfigurationNotifyingTarget:selector:context:]
  */
 - (void)retrievedProxyConfiguration:(NSDictionary *)proxyConfig context:(NSInvocation *)invocation
@@ -1443,7 +1443,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	AILog(@"************ %@ --step-- %i",[self UID],[step intValue]);
 }
 
-/*
+/*!
  * @brief Name to use when creating a GaimAccount for this CBGaimAccount
  *
  * By default, we just use the formattedUID.  Subclasses can override this to provide other handling,
@@ -1972,7 +1972,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[gaimThread performContactMenuActionFromDict:dict];
 }
 
-/*
+/*!
  * @brief Utility method when generating buddy-specific menu items
  *
  * Adds the menu item for act to a growing array of NSMenuItems.  If act has children (a submenu), this method is used recursively
@@ -2293,7 +2293,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
                                     withDescription:errorDesc];
 }
 
-/*
+/*!
  * @brief Return the path at which to save our own user icon
  *
  * Gaim expects a file path, not data
@@ -2305,7 +2305,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     return [[adium cachesPath] stringByAppendingPathComponent:userIconCacheFilename];
 }
 
-/*
+/*!
  * @brief Return the path at which to save an emoticon
  *
  * We may have data of some type other than JPEG, but providing _some_ file extension means the cached file can easily be opened

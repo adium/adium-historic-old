@@ -90,7 +90,7 @@ static NSMutableArray	*libgaimPluginArray = nil;
 	return sharedInstance;
 }
 
-/*
+/*!
  * @brief Plugin loaded
  *
  * Initialize each libgaim plugin.  These plugins should not do anything within libgaim itself; this should be done in
@@ -805,7 +805,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	return didCommand;
 }
 
-/*
+/*!
  * @brief Check a message for gaim / commands=
  *
  * @result YES if a command was performed; NO if it was not

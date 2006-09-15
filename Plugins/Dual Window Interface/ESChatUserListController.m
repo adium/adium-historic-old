@@ -31,7 +31,7 @@
 	return NO;
 }
 
-/*
+/*!
  * @brief Return the contextual menu for a passed list object
  *
  * Assumption: Our delegate is an AIMessageTabViewItem (which responds to chat)

@@ -117,7 +117,7 @@
 
 
 //Message View Delegate ----------------------------------------------------------------------
-/*
+/*!
  * @brief The list objects participating in our chat changed
  */
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification

@@ -556,7 +556,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 }
 
-/*
+/*!
  * @brief Adium unhid
  *
  * If the contact list is open but not visible when we unhide, we should always display it; it should not, however, steal focus.
@@ -821,7 +821,7 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 	while(!finishedX || !finishedY);
 }
 
-/*
+/*!
  * @brief Slide the window to a given point
  *
  * windowSlidOffScreenEdgeMask must already be set to the resulting offscreen mask (or 0 if the window is sliding on screen)
@@ -856,7 +856,7 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 	}
 }
 
-/*
+/*!
  * @brief Find the mask specifying what edges are potentially slidable for our window
  *
  * @result AIRectEdgeMask, which is 0 if no edges are slidable

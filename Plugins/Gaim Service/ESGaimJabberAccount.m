@@ -421,7 +421,7 @@
 	[super cancelFileTransfer:fileTransfer];
 }
 
-/*
+/*!
  * @brief Allow a file transfer with an object?
  *
  */
@@ -483,7 +483,7 @@
 	return statusName;
 }
 
-/*
+/*!
  * @brief Jabber status messages are plaintext
  */
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forStatusState:(AIStatus *)statusState

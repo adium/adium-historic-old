@@ -71,7 +71,7 @@
 //Contact List Controller ----------------------------------------------------------------------------------------------
 #pragma mark Contact List Controller
 
-/*
+/*!
  * @brief Retrieve the AIListWindowController in use
  */
 - (AIListWindowController *)contactListWindowController {

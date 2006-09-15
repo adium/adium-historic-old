@@ -162,7 +162,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 	[self closeWindow:nil];
 }
 
-/*
+/*!
  * @brief Contact menu delegate
  */
 - (void)contactMenu:(AIContactMenu *)inContactMenu didRebuildMenuItems:(NSArray *)menuItems {

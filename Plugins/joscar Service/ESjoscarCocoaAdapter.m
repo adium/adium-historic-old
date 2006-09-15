@@ -224,7 +224,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 							returnValue:YES];
 }
 
-/*
+/*!
  * @brief Login service opened
  *
  * Once the login service is open, we can set the securID provider.
@@ -234,7 +234,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getLoginService] setSecuridProvider:joscarBridge];	
 }
 
-/*
+/*!
  * @brief Profile update for a contact
  */
 - (void)setAwayMessage:(HashMap *)userInfo
@@ -266,7 +266,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 }
 
 
-/*
+/*!
  * @brief Profile update for a contact
  */
 - (void)setProfile:(HashMap *)userInfo
@@ -366,7 +366,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 				setStatusMessage:[[message copy] autorelease]];
 }
 
-/*
+/*!
  * @brief The connectivity state of our account changed (DISCONNECTED, ONLINE, etc.)
  *
  * The userInfo's ErrorMessage key will have a one-word code for the error which occured. If
@@ -391,7 +391,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	}
 }
 
-/*
+/*!
  * @brief A buddy was added
  *
  * Called retroactively for each buddy in our list after we connect
@@ -430,7 +430,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	}
 }
 
-/*
+/*!
  * @brief A buddy was removed
  */
 - (void)setBuddyRemoved:(HashMap *)userInfo
@@ -566,7 +566,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	return [processedString autorelease];
 }
 
-/*
+/*!
  * @brief A directIM conversation was established
  */
 - (void)setOpenedDirectIMConversation:(HashMap *)userInfo
@@ -579,7 +579,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		 setDirectIMConnected:YES];
 }
 
-/*
+/*!
  * @brief A directIM conversation was closed
  */
 - (void)setClosedDirectIMConversation:(HashMap *)userInfo
@@ -593,7 +593,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 }
 
 
-/*
+/*!
  * @brief We are leaving a one-on-one chat
  *
  * Close a direct IM if there is one
@@ -605,7 +605,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		[(DirectimConversation *)[iter next] close];
 }
 
-/*
+/*!
  * @brief Send a message to a one-on-one chat
  */
 - (BOOL)chatWithUID:(NSString *)inUID sendMessage:(NSString *)message isAutoreply:(BOOL)isAutoreply joscarData:(NSSet *)attachmentsSet
@@ -639,7 +639,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	return YES;
 }
 
-/*
+/*!
  * @brief Send a typing state to a one-on-one chat
  */
 - (void)chatWithUID:(NSString *)inUID setTypingState:(AITypingState)typingState
@@ -664,7 +664,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[aimConnection getIcbmService] sendTypingAutomatically:sn :joscarTypingState];
 }
 
-/*
+/*!
  * @brief Process an incoming DirectIM message for its embedded img tags
  *
  * Such tags should have the Attachments handled with an end result of an image file on disk and the <img>
@@ -752,7 +752,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	return ([processedString autorelease]);
 }
 
-/*
+/*!
  * @brief Received a message in a conversation
  */
 - (void)setGotMessage:(HashMap *)userInfo
@@ -779,7 +779,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	}		
 }
 
-/*
+/*!
  * @brief Received a typing update for a conversation
  */
 - (void)setGotTypingState:(HashMap *)userInfo
@@ -976,7 +976,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	AILog(@"%@: Sending %@ [common prefix: %@] with name %@ and root %@",self, fileList, commonPrefix, folderName, commonPrefix);
 }
 
-/*
+/*!
  * @brief Begin an outgoing file transfer
  *
  * @result The identifier for the joscar outgoing file transfer
@@ -1150,7 +1150,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	}
 }
 
-/*
+/*!
  * @brief Add a timer on the main run loop
  */
 - (void)addTimer:(NSTimer *)inTimer
@@ -1158,7 +1158,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	[[NSRunLoop currentRunLoop] addTimer:inTimer forMode:NSDefaultRunLoopMode];
 }
 
-/*
+/*!
  * @brief Called periodically (on the main thread) to update file transfer status
  */
 - (void)fileTransferPoll:(NSTimer *)inTimer
@@ -1173,7 +1173,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 }
 
 #pragma mark Buddy list editing
-/*
+/*!
  * @brief Find a MutableGroup
  *
  * @param groupName The name of the group
@@ -1204,7 +1204,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	return targetGroup;
 }
 
-/*
+/*!
  * @brief Add contacts to a group
  */
 - (void)addContactsWithUIDs:(NSArray *)UIDs toGroup:(NSString *)groupName
@@ -1243,7 +1243,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	}
 }
 
-/*
+/*!
  * @brief Remove contacts from the buddy list
  */
 - (void)removeContactsWithUIDs:(NSArray *)UIDs
@@ -1271,7 +1271,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	}
 }
 
-/*
+/*!
  * @brief Move contacts into a group
  */
 - (void)moveContactsWithUIDs:(NSArray *)UIDs toGroup:(NSString *)groupName
@@ -1322,7 +1322,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	}
 }
 
-/*
+/*!
  * @brief A Group was added
  *
  * We only care about this notification when the group was added in response to moving or adding a buddy
@@ -1388,7 +1388,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 }
 
 #pragma mark Contact info
-/*
+/*!
  * @brief Find a MutableBuddy
  *
  * @param buddyName The name of the buddy
@@ -1638,7 +1638,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 }
 
 #pragma mark Date conversions
-/*
+/*!
  * @brief Convert a Java Date to an NSDate
  */
 NSDate* dateFromJavaDate(Date *javaDate)
@@ -1648,7 +1648,7 @@ NSDate* dateFromJavaDate(Date *javaDate)
 			nil);
 }
 
-/*
+/*!
  * @brief Make a Java Date from an NSDate.
  */
 Date* javaDateFromDate(NSDate *date)

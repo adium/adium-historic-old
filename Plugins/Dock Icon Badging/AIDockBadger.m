@@ -57,7 +57,7 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 }
 
-/*
+/*!
  * @brief Uninstall
  */
 - (void)uninstallPlugin
@@ -69,7 +69,7 @@
 
 #pragma mark Signals to update
 
-/*
+/*!
  * @brief Update our overlay when a chat updates with a relevant key
  */
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
@@ -83,7 +83,7 @@
 	return nil;
 }
 
-/*
+/*!
  * @brief Update our overlay when a chat closes
  */
 - (void)chatClosed:(NSNotification *)notification
@@ -169,7 +169,7 @@
 	return [badge autorelease];
 }
 
-/*
+/*!
  * @brief Remove any existing dock overlay
  */
 - (void)removeOverlay
@@ -180,7 +180,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Update our overlay to the current unviewed content count
  */
 - (void)_setOverlay

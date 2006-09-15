@@ -212,7 +212,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Translate the strings in the info dictionary
  *
  * The following declarations let genstrings know about what translations we want

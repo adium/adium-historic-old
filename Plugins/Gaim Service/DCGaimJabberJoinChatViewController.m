@@ -41,7 +41,7 @@
 	return self;
 }
 
-/*
+/*!
  * @brief Find the default conference server
  *
  * Assumption: The account ivar is non-nil
@@ -59,7 +59,7 @@
 	return defaultConferenceServer;
 }
 
-/*
+/*!
  * @brief Store a nwe default conference server
  */
 - (void)setDefaultConferenceServer:(NSString *)inDefaultConferenceServer

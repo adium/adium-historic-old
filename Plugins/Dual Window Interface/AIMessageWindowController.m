@@ -764,7 +764,7 @@
 }
 
 #pragma mark Miniaturization
-/*
+/*!
  * @brief Our window is about to minimize
  *
  * Set our miniwindow image, which will display in the dock, appropriately.
