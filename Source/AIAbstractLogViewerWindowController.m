@@ -1184,7 +1184,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[[searchField_logs cell] setSearchMenuTemplate:cellMenu];
 }
 
-/*
+/*!
  * @brief Focus the log viewer on a particular contact
  *
  * If the contact is within a metacontact, the metacontact will be focused.
@@ -1216,7 +1216,7 @@ static int toArraySort(id itemA, id itemB, void *context);
     [self startSearchingClearingCurrentResults:YES];
 }
 
-/*
+/*!
  * @brief Returns a menu item for the search mode menu
  */
 - (NSMenuItem *)_menuItemWithTitle:(NSString *)title forSearchMode:(LogSearchMode)mode
@@ -1267,7 +1267,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 	return pathComponents;
 }
 
-/*
+/*!
  * @brief Should a search display a document with the given information?
  */
 - (BOOL)searchShouldDisplayDocument:(SKDocumentRef)inDocument pathComponents:(NSArray *)pathComponents testDate:(BOOL)testDate
@@ -1936,7 +1936,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 
 #pragma mark Date filter
 
-/*
+/*!
  * @brief Returns a menu item for the date type filter menu
  */
 - (NSMenuItem *)_menuItemForDateType:(AIDateType)dateType dict:(NSDictionary *)dateTypeTitleDict
@@ -1996,7 +1996,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 	return ((todayDayOfWeek >= firstDayOfWeek) ? (todayDayOfWeek - firstDayOfWeek) : ((todayDayOfWeek + 7) - firstDayOfWeek));
 }
 
-/*
+/*!
  * @brief A new date type was selected
  *
  * This does not start a search
@@ -2072,7 +2072,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 	}	
 }
 
-/*
+/*!
  * @brief Select the date type
  */
 - (void)selectDateType:(id)sender
@@ -2467,7 +2467,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 }
 
 #pragma mark Undo
-/*
+/*!
  * @brief Supply our undo manager when we are within the responder chain
  */
 - (NSUndoManager *)windowWillReturnUndoManager:(NSWindow *)sender

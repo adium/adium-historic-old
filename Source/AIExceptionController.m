@@ -21,7 +21,7 @@
 #import <ExceptionHandling/NSExceptionHandler.h>
 #include <unistd.h>
 
-/*
+/*!
  * @class AIExceptionController
  * @brief Catches application exceptions and forwards them to the crash reporter application
  *

@@ -24,7 +24,7 @@
 	[tableView_results setAutosaveTableColumns:YES];
 }
 
-/*
+/*!
  * @brief Perform a content search of the indexed logs
  *
  * This uses the 10.4+ asynchronous search functions.
@@ -200,7 +200,7 @@
 	return dateTypeMenu;
 }
 
-/*
+/*!
  * @brief A new date type was selected
  *
  * The date picker will be hidden/revealed as appropriate.

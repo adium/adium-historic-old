@@ -298,7 +298,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Confirmed a status item deletion operation
  */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo

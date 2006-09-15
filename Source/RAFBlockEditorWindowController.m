@@ -193,7 +193,7 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
     [theSheet orderOut:self];
 }
 
-/*
+/*!
  * @brief Get a set of all contacts which are represented by the currently selected account and UID field
  *
  * @result A set of AIListContact objects
@@ -379,7 +379,7 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	return [[stateChooser selectedItem] tag];
 }
 
-/*
+/*!
  * @brief Set a privacy option and update our view for it
  *
  * @param sender If nil, we update our display without attempting to change anything on our account
@@ -511,7 +511,7 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 }
 
 #pragma mark Account menu
-/*
+/*!
  * @brief Return the currently selected account, or nil if the 'All' item is selected
  */
 - (AIAccount<AIAccount_Privacy> *)selectedAccount
@@ -519,7 +519,7 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	return [[popUp_accounts selectedItem] representedObject];
 }
 
-/*
+/*!
  * @brief Action called when the account selection changes
  *
  * Update our view and the privacy option menu to be appropriate for the newly selected account.
@@ -568,7 +568,7 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	}
 }
 
-/*
+/*!
  * @brief The 'All' menu item for accounts was selected
  *
  * We simulate an AIAccountMenu delegate call, since the All item was added by RAFBLockEditorWindowController.
@@ -582,7 +582,7 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	[self accountMenu:relevantAccountMenu didSelectAccount:nil];
 }
 
-/*
+/*!
  * @brief Select an account in our account menu, then update everything else to be appropriate for it
  */
 - (void)selectAccount:(AIAccount *)inAccount

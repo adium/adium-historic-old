@@ -218,7 +218,7 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
     }
 }
 
-/*
+/*!
  * @brief Sort event IDs by group and then by global short description
  */
 int eventIDSort(id objectA, id objectB, void *context) {
@@ -260,7 +260,7 @@ int eventIDSort(id objectA, id objectB, void *context) {
 	}
 }
 
-/*
+/*!
  * @brief Sort an array of event IDs
  *
  * @brief inArray The array of eventIDs to sort

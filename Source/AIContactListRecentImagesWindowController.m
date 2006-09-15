@@ -32,7 +32,7 @@
 @end
 
 @implementation AIContactListRecentImagesWindowController
-/*
+/*!
  * @brief Show the widow
  *
  * @param inPoint The bottom-right corner of our parent view

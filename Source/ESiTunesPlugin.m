@@ -94,7 +94,7 @@
 	return iTunesIsStopped;
 }
 
-/*
+/*!
  * @brief Set if iTunes is stopped
  */
 - (void)setiTunesIsStopped:(BOOL)yesOrNo
@@ -113,7 +113,7 @@
 	return iTunesIsPaused;
 }
 
-/*
+/*!
  * @brief Set if iTunes is paused
  */
 - (void)setiTunesIsPaused:(BOOL)yesOrNo
@@ -122,7 +122,7 @@
 }
 
 
-/*
+/*!
  * @brief Get current iTunes info dictionary
  */
 - (NSDictionary *)iTunesCurrentInfo

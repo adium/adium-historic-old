@@ -877,7 +877,7 @@ typedef enum {
 	[AIDockIconSelectionSheet showDockIconSelectorOnWindow:[[self view] window]];
 }
 
-/*
+/*!
  * @brief Return the menu item for a dock icon
  */
 - (NSMenuItem *)meuItemForDockIconPackAtPath:(NSString *)packPath
@@ -924,7 +924,7 @@ typedef enum {
 	return menuItemArray;
 }
 
-/*
+/*!
  * @brief Configure the dock icon meu initially or after the xtras change
  *
  * Initially, the dock icon menu just has the currently selected icon; the others will be generated lazily if the icon is displayed, in menuNeedsUpdate:

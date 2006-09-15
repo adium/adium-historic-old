@@ -33,9 +33,6 @@
 	return self;
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {
 	[services release]; services = nil;

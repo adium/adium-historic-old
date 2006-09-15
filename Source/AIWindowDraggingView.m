@@ -7,7 +7,7 @@
 
 #import "AIWindowDraggingView.h"
 
-/*
+/*!
  * @class AIClickThroughThemeDocumentButton
  * @brief This NSView subclass makes the window move when it is dragged by the view itself (but not by subviews).
  *
@@ -17,7 +17,7 @@
  * own movements.
  */
 @implementation AIWindowDraggingView
-/*
+/*!
  * @brief Mouse dragged
  */
 - (void)mouseDragged:(NSEvent *)theEvent
@@ -51,7 +51,7 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:NSWindowDidMoveNotification object:window];		
 }
 
-/*
+/*!
  * @brief Mouse down
  *
  * We start tracking the a drag operation here when the user first clicks the mouse without command presed
@@ -67,7 +67,7 @@
 	inLeftMouseEvent = YES;
 }
 
-/*
+/*!
  * @brief Mouse up
  */
 - (void)mouseUp:(NSEvent *)theEvent

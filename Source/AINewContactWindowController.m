@@ -421,7 +421,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Prompt the user to add a new group immediately
  */
 - (void)newGroup:(id)sender

@@ -152,7 +152,7 @@
 	}
 }
 
-/*
+/*!
  * @brief An invalid status set was activated
  *
  * Reset to the default by clearing our preference

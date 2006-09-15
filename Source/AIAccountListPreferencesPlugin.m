@@ -46,7 +46,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Edit an account
  *
  * @param inNotification An AIEditAccount notification whose object is the AIAccount to edit

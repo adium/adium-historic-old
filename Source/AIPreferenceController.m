@@ -535,7 +535,7 @@
 	return [sourceDefaultsDict objectForKey:cacheKey];
 }
 
-/*
+/*!
  * @brief Locally update our cached prefrences, including defaults
  *
  * Must be called before preferences are accessed after preferences change for changes to be visible to the rest of Adium
@@ -727,7 +727,7 @@
 	return [self cachedPreferencesWithDefaultsForGroup:key object:nil];
 }
 
-/*
+/*!
  * @brief Set a dictionary of preferences for a group
  *
  * Note that while setPreferences:inGroup: adds the passed dictionary to the current one, this method replaces the dictionary entirely

@@ -63,9 +63,6 @@
 	[menuItem release];
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {
 	[[adium notificationCenter] removeObserver:self];
@@ -74,7 +71,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Returns the default formatting attributes
  *
  * These attributes should be used for new text entry views, messages, etc.
@@ -122,7 +119,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Enable/disable our restore default formatting menu item
  *
  * The item should only be enabled if the current responder has typing attributes and those typing attributes are not the default attributes

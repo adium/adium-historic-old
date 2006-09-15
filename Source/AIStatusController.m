@@ -786,7 +786,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	return _sortedFullStateArray;
 }
 
-/*
+/*!
  * @brief Generate and return an array of AIStatus objects which are all known saved, temporary, and built-in statuses
  */
 - (NSArray *)flatStatusSet
@@ -854,7 +854,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	return _activeStatusState;
 }
 
-/*
+/*!
  * @brief Find the 'active' AIStatusType
  *
  * The active type is the one used by the largest number of accounts.  In case of a tie, the order of the AIStatusType

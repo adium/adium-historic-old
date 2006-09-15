@@ -39,9 +39,6 @@
 	return self;
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {
 	[[adium notificationCenter] removeObserver:self name:AIStatusIconSetDidChangeNotification object:nil];

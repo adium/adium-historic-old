@@ -22,7 +22,7 @@
 	return self;
 }
 
-/*
+/*!
  * @brief When the contact order changes, check to ensure we have 1 or more visible rows
  *
  * If we have no rows visible, hide the contact list, redisplaying it when rows are visible again.

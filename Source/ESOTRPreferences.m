@@ -88,7 +88,7 @@
 										object:nil];
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -99,7 +99,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Update the fingerprint display
  *
  * Called by the OTR adapter when -otr informs us the fingerprint list changed
@@ -177,7 +177,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Update the key list
  *
  * Called by the OTR adapter when -otr informs us the private key list changed
@@ -213,7 +213,7 @@
 	}	
 }
 
-/*
+/*!
  * @brief Generate a new private key for the currently selected account
  */
 - (IBAction)generate:(id)sender
@@ -224,7 +224,7 @@
 							   [[[account service] serviceCodeUniqueID] UTF8String]);
 }
 
-/*
+/*!
  * @brief Show the fingerprint for the contact selected in the fingerprints NSTableView
  */
 - (IBAction)showFingerprint:(id)sender
@@ -275,7 +275,7 @@
 
 //Account menu ---------------------------------------------------------------------------------------------------------
 #pragma mark Account menu
-/*
+/*!
  * @brief Account menu delegate
  */ 
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {

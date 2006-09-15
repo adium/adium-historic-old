@@ -61,7 +61,7 @@
 - (BOOL)processAndSendContentObject:(AIContentObject *)inContentObject;
 @end
 
-/*
+/*!
  * @class AIContentController
  * @brief Controller to manage incoming and outgoing content and chats.
  *
@@ -73,7 +73,7 @@
  */
 @implementation AIContentController
 
-/*
+/*!
  * @brief Initialize the controller
  */
 - (id)init
@@ -96,7 +96,7 @@
 	[adiumMessageEvents controllerDidLoad];
 }
 
-/*
+/*!
  * @brief Close the controller
  */
 - (void)controllerWillClose
@@ -104,7 +104,7 @@
 
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -118,7 +118,7 @@
     [super dealloc];
 }
 
-/*
+/*!
  * @brief Set the encryptor
  *
  * NB: We must _always_ have an encryptor.
@@ -133,7 +133,7 @@
 
 
 #pragma mark Typing
-/*
+/*!
  * @brief User is currently changing the content in a chat
  *
  * This should  be called by a text entry control like an NSTextView.
@@ -253,7 +253,7 @@
 }
 
 //Sending step 1: Entry point for any method in Adium which sends content
-/*
+/*!
  * @brief Send a content object
  *
  * Sending step 1: Public method to send a content object.
@@ -527,7 +527,7 @@
 
 #pragma mark -
 
-/*
+/*!
  * @brief Send any NSTextAttachments embedded in inContentMessage's message
  *
  * This method will remove such attachments after requesting their files being sent.
@@ -616,7 +616,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Handle sending a content object
  *
  * This method must return YES for the content to be displayed
@@ -672,7 +672,7 @@
 	return success;
 }
 
-/*
+/*!
  * @brief Send a message as-specified without going through any filters or notifications
  */
 - (void)sendRawMessage:(NSString *)inString toContact:(AIListContact *)inContact
@@ -696,7 +696,7 @@
 	[account sendMessageObject:contentMessage];
 }
 
-/*
+/*!
  * @brief Given an incoming message, decrypt it.  It is likely not yet ready for display when returned, as it may still include HTML.
  */
 - (NSString *)decryptedIncomingMessage:(NSString *)inString fromContact:(AIListContact *)inListContact onAccount:(AIAccount *)inAccount
@@ -704,7 +704,7 @@
 	return [adiumEncryptor decryptIncomingMessage:inString fromContact:inListContact onAccount:inAccount];
 }
 
-/*
+/*!
  * @brief Given an incoming message, decrypt it if necessary then convert it to an NSAttributedString, processing HTML if possible
  */
 - (NSAttributedString *)decodedIncomingMessage:(NSString *)inString fromContact:(AIListContact *)inListContact onAccount:(AIAccount *)inAccount
@@ -726,7 +726,7 @@
 }
 
 #pragma mark -
-/*
+/*!
  * @brief Is the passed chat currently receiving content?
  *
  * Note: This may be irrelevent if threaded filtering is removed.

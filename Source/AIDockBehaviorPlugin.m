@@ -110,7 +110,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Begin watching for this chat to close or become active so we'll know to stop bouncing
  */
 - (void)observeToStopBouncingForChat:(AIChat *)chat
@@ -126,7 +126,7 @@
 									 object:chat];
 }
 
-/*
+/*!
  * @brief Remove our observers and stop bouncing
  *
  * We remove all observers because no matter how many chats we were watching, we will stop bouncing; subsequently, stopping a bounce

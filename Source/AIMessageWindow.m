@@ -9,7 +9,7 @@
 #import "AIClickThroughThemeDocumentButton.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 
-/*
+/*!
  * @class AIMessageWindow
  * @brief This AIDockingWindow subclass serves message windows.
  *
@@ -18,7 +18,7 @@
  */
 @implementation AIMessageWindow
 
-/*
+/*!
  * @brief Return the standard window button for a mask
  *
  * We return AIClickThroughThemeDocumentButton instead of NSThemeDocumentButton to provide

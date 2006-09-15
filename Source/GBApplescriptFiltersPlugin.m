@@ -601,7 +601,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 													  userInfo:userInfo];
 }
 
-/*
+/*!
  * @brief A script finished running
  */
 - (void)applescriptDidRun:(id)userInfo resultString:(NSString *)resultString
