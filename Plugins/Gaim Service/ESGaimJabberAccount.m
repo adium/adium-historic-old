@@ -577,7 +577,7 @@
 		{
 			if (([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT]) ||
 			   ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_FREE_FOR_CHAT]] == NSOrderedSame))
-				statusID = "chat";
+				statusID = jabber_buddy_state_get_status_id(JABBER_BUDDY_STATE_CHAT);
 			priority = [self preferenceForKey:KEY_JABBER_PRIORITY_AVAILABLE group:GROUP_ACCOUNT_STATUS];
 			break;
 		}
@@ -586,17 +586,19 @@
 		{
 			if (([statusName isEqualToString:STATUS_NAME_DND]) ||
 			   ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_DND]] == NSOrderedSame))
-				statusID = "dnd";
+				statusID = jabber_buddy_state_get_status_id(JABBER_BUDDY_STATE_DND);
 			else if (([statusName isEqualToString:STATUS_NAME_EXTENDED_AWAY]) ||
 					 ([statusMessageString caseInsensitiveCompare:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_EXTENDED_AWAY]] == NSOrderedSame))
-				statusID = "xa";
+				statusID = jabber_buddy_state_get_status_id(JABBER_BUDDY_STATE_XA);
 			priority = [self preferenceForKey:KEY_JABBER_PRIORITY_AWAY group:GROUP_ACCOUNT_STATUS];
 			break;
 		}
 			
 		case AIInvisibleStatusType:
-			NSLog(@"Warning: Invisibility is not yet supported in libgaim 2.0.0 jabber");
-//			gaimStatusType = "Invisible";
+			AILog(@"Warning: Invisibility is not yet supported in libgaim 2.0.0 jabber");
+			priority = [self preferenceForKey:KEY_JABBER_PRIORITY_AWAY group:GROUP_ACCOUNT_STATUS];
+			statusID = jabber_buddy_state_get_status_id(JABBER_BUDDY_STATE_AWAY);
+//			statusID = "Invisible";
 			break;
 			
 		case AIOfflineStatusType:
