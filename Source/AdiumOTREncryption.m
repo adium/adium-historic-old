@@ -47,7 +47,7 @@
 - (void)prepareEncryption;
 
 - (void)setSecurityDetails:(NSDictionary *)securityDetailsDict forChat:(AIChat *)inChat;
-- (NSString *)localizedOTRMessage:(NSString *)message withUsername:(NSString *)username;
+- (NSString *)localizedOTRMessage:(NSString *)message withUsername:(NSString *)username isWorthOpeningANewChat:(BOOL *)isWorthOpeningANewChat;
 - (void)notifyWithTitle:(NSString *)title primary:(NSString *)primary secondary:(NSString *)secondary;
 
 - (void)upgradeOTRFromGaimIfNeeded;
@@ -424,13 +424,11 @@ static int display_otr_message(const char *accountname, const char *protocol,
 	AIChat				*chat;
 	AIContentMessage	*messageObject;
 	
-	if (!(chat = [[sharedAdium chatController] existingChatWithContact:listContact])) {
-		chat = [[sharedAdium chatController] chatWithContact:listContact];
-	}
+	//We couldn't determine a listContact, so return that we didn't handle the message
+	if (!listContact) return 1;
 	
-	//If we can't get a chat for some reason, we can't handle displayed this error message, so return 1
-	if (!chat) return 1;
-
+	chat = [[sharedAdium chatController] existingChatWithContact:listContact];
+	
 	message = [NSString stringWithUTF8String:msg];
 	AILog(@"display_otr_message: %s %s %s: %s",accountname,protocol,username, msg);
 	 
@@ -445,9 +443,16 @@ static int display_otr_message(const char *accountname, const char *protocol,
 		/* The message will be formatted as:
 		 * <b>The following message received from tekjew was <i>not</i> encrypted: [</b>MESSAGE_HERE - POTENTIALLY HTML<b>]</b>
 		 */
-		message = [[adiumOTREncryption localizedOTRMessage:@"The following message was <b>not encrypted</b>: " withUsername:nil] stringByAppendingString:
-			[message substringWithRange:NSMakeRange(NSMaxRange(endRange), [message length] - NSMaxRange(endRange) - [@"<b>]</b>" length])]];
+		NSString *OTRMessage = [adiumOTREncryption localizedOTRMessage:@"The following message was <b>not encrypted</b>: "
+														  withUsername:nil
+												isWorthOpeningANewChat:NULL];
+		message = [OTRMessage stringByAppendingString:
+			[message substringWithRange:NSMakeRange(NSMaxRange(endRange),
+													([message length] - NSMaxRange(endRange) - [@"<b>]</b>" length]))]];
 	
+		//Create a new chat if necessary
+		if (!chat) chat = [[sharedAdium chatController] chatWithContact:listContact];
+
 		messageObject = [AIContentMessage messageInChat:chat
 											 withSource:listContact
 											destination:[chat account]
@@ -459,13 +464,23 @@ static int display_otr_message(const char *accountname, const char *protocol,
 		
 	} else {
 		NSString	*formattedUID = [listContact formattedUID];
+		BOOL		isWorthOpeningANewChat = NO;
 
 		//All other OTR messages should be displayed as status messages; decode the message to strip any HTML
 		message = [adiumOTREncryption localizedOTRMessage:message
-											 withUsername:formattedUID];
-		[[sharedAdium contentController] displayEvent:[[AIHTMLDecoder decodeHTML:message] string]
-											   ofType:@"encryption"
-											   inChat:chat];
+											 withUsername:formattedUID
+								   isWorthOpeningANewChat:&isWorthOpeningANewChat];
+
+		//Create a new chat if necessary
+		if (isWorthOpeningANewChat && !chat) {
+			chat = [[sharedAdium chatController] chatWithContact:listContact];
+		}
+
+		if (chat) {
+			[[sharedAdium contentController] displayEvent:[[AIHTMLDecoder decodeHTML:message] string]
+												   ofType:@"encryption"
+												   inChat:chat];
+		}
 	}
 	
 	//We handled it
@@ -480,11 +495,14 @@ static void notify_cb(void *opdata, OtrlNotifyLevel level,
 	NSString		*formattedUID = [listContact formattedUID];
 
 	[adiumOTREncryption notifyWithTitle:[adiumOTREncryption localizedOTRMessage:[NSString stringWithUTF8String:title]
-																   withUsername:formattedUID]
+																   withUsername:formattedUID
+														 isWorthOpeningANewChat:NULL]
 								primary:[adiumOTREncryption localizedOTRMessage:[NSString stringWithUTF8String:primary]
-																   withUsername:formattedUID]
+																   withUsername:formattedUID
+														 isWorthOpeningANewChat:NULL]
 							  secondary:[adiumOTREncryption localizedOTRMessage:[NSString stringWithUTF8String:secondary]
-																   withUsername:formattedUID]];
+																   withUsername:formattedUID
+																 isWorthOpeningANewChat:NULL]];
 }
 
 static int display_otr_message_cb(void *opdata, const char *accountname,
@@ -847,10 +865,18 @@ OtrlUserState otrg_get_userstate(void)
 
 #pragma mark Localization
 
-- (NSString *)localizedOTRMessage:(NSString *)message withUsername:(NSString *)username
+/*!
+ * @brief Given an English message from libotr, construct a localized version
+ *
+ * @param message The original message, which was sent by libotr in English
+ * @param username A username (screenname) for substitution purposes as appropriate. May be nil.
+ * @param isWorthOpeningANewChat On return, YES if display of this message should open a chat if one doesn't exist. Pass NULL if you don't care.
+ */
+- (NSString *)localizedOTRMessage:(NSString *)message withUsername:(NSString *)username isWorthOpeningANewChat:(BOOL *)isWorthOpeningANewChat
 {
 	NSString	*localizedOTRMessage = nil;
-	
+	if (isWorthOpeningANewChat) *isWorthOpeningANewChat = NO;
+
 	if (([message rangeOfString:@"You sent unencrypted data to"].location != NSNotFound) &&
 		([message rangeOfString:@"who wasn't expecting it"].location != NSNotFound)) {
 		localizedOTRMessage = [NSString stringWithFormat:
@@ -862,6 +888,7 @@ OtrlUserState otrg_get_userstate(void)
 		localizedOTRMessage = [NSString stringWithFormat:
 			AILocalizedString(@"You sent an encrypted message, but %@ was not expecting encryption.", "Message when sending encrypted messages to a contact expecting unencrypted ones. %s will be a name."),
 			username];
+		if (isWorthOpeningANewChat) *isWorthOpeningANewChat = YES;
 
 	} else if ([message rangeOfString:@CLOSED_CONNECTION_MESSAGE].location != NSNotFound) {
 		localizedOTRMessage = [NSString stringWithFormat:
@@ -878,20 +905,29 @@ OtrlUserState otrg_get_userstate(void)
 
 	} else if ([message isEqualToString:@"Your message was not sent.  Either close your private connection to him, or refresh it."]) {
 		localizedOTRMessage = AILocalizedString(@"Your message was not sent. You should end the encrypted chat on your side or re-request encryption.", nil);
+		if (isWorthOpeningANewChat) *isWorthOpeningANewChat = YES;
 
 	} else if ([message isEqualToString:@"The following message was <b>not encrypted</b>: "]) {
 		localizedOTRMessage = AILocalizedString(@"The following message was <b>not encrypted</b>: ", nil);
+		if (isWorthOpeningANewChat) *isWorthOpeningANewChat = YES;
 
 	} else if ([message rangeOfString:@"received an unreadable encrypted"].location != NSNotFound) {
 		localizedOTRMessage = [NSString stringWithFormat:
 			AILocalizedString(@"An encrypted message from %@ could not be decrypted.", nil),
 			username];
+		if (isWorthOpeningANewChat) *isWorthOpeningANewChat = YES;
 	}
 
 	return (localizedOTRMessage ? localizedOTRMessage : message);
 }
 
-
+/*!
+ * @brief Display a message (independent of a chat)
+ *
+ * @param title The window title
+ * @param primary The main information for the message
+ * @param secondary Additional information for the message
+ */
 - (void)notifyWithTitle:(NSString *)title primary:(NSString *)primary secondary:(NSString *)secondary
 {
 	//XXX todo: search on ops->notify in message.c in libotr and handle / localize the error messages
@@ -901,6 +937,9 @@ OtrlUserState otrg_get_userstate(void)
 }
 
 #pragma mark Upgrading gaim-otr --> Adium-otr
+/*!
+ * @bref Construct a dictionary converting libgaim prpl names to Adium serviceIDs for the purpose of fingerprint upgrading
+ */
 - (NSDictionary *)prplDict
 {
 	return [NSDictionary dictionaryWithObjectsAndKeys:
