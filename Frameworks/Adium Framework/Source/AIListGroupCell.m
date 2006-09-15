@@ -206,7 +206,7 @@
 	return [self textColor];
 }
 
-/*
+/*!
  * @brief Additional label attributes
  *
  * We override the paragraph style to be truncating middle.

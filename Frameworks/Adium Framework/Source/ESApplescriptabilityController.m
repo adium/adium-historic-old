@@ -160,7 +160,7 @@
 
 #pragma mark Running applescripts
 
-/*
+/*!
  * @brief Run an AppleScript, optionally calling a function with arguments, and notifying a target/selector with its output when it is done.
  */
 - (void)runApplescriptAtPath:(NSString *)path function:(NSString *)function arguments:(NSArray *)arguments notifyingTarget:(id)target selector:(SEL)selector userInfo:(id)userInfo

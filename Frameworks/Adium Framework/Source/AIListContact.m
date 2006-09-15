@@ -74,7 +74,7 @@
 	return account;
 }
 
-/*
+/*!
  * @brief Set the UID of this contact
  *
  * The UID for an AIListContact generally shouldn't change... if the contact is actually renamed serverside, however,
@@ -174,7 +174,7 @@
 	return [super displayName];
 }
 
-/*
+/*!
  * @brief This contact's serverside display name, which is generally specificed by the contact remotely
  *
  * @result The serverside display name, or nil if none is set
@@ -411,7 +411,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Warning level
  *
  * @result The warning level, an integer between 0 and 100
@@ -421,7 +421,7 @@
 	return [self integerStatusObjectForKey:@"Warning"];
 }
 
-/*
+/*!
  * @brief Set the profile
  */
 - (void)setProfile:(NSAttributedString *)profile notify:(NotifyTiming)notify
@@ -431,7 +431,7 @@
 				   notify:notify];
 }
 
-/*
+/*!
  * @brief Profile
  */
 - (NSAttributedString *)profile
@@ -562,7 +562,7 @@
 	return contactListStatusMessage;	
 }
 
-/*
+/*!
  * @brief Are sounds for this contact muted?
  */
 - (BOOL)soundsAreMuted
@@ -571,7 +571,7 @@
 }
 
 #pragma mark Parents
-/*
+/*!
  * @brief This object's parent AIListGroup
  *
  * @result An AIListGroup which contains this object or the object containing this object, or nil if it is not in an AIListGroup.
@@ -587,7 +587,7 @@
 	}
 }
 
-/*
+/*!
  * @brief This object's parent AIListContact
  *
  * The parent AIListContact is the appropriate place to apply preferences specific to this contact so that such

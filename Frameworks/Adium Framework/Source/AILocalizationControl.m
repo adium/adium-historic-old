@@ -48,7 +48,7 @@
 	rightAnchorMovementType = inType;
 }
 
-/*
+/*!
  * @brief Set if resizing of this control should always resize its right-anchored window
  *
  * The default is NO.  If YES, resizing the control will maintain distance to the right side of the window

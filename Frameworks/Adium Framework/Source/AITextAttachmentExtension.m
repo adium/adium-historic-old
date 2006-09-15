@@ -57,7 +57,7 @@
 	return ret;
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -118,7 +118,7 @@
 	return self;
 }
 
-/*
+/*!
  * @brief Set the path represented by this text attachment
  *
  * If an image has not been set, and this path points to an image, [self image] will return the image, loading it from this path
@@ -136,7 +136,7 @@
 	return path;
 }
 
-/*
+/*!
  * @brief Set the image represented by this text attachment
  */
 - (void)setImage:(NSImage *)inImage
@@ -147,7 +147,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Returns YES if this attachment is for an image
  */
 - (BOOL)attachesAnImage
@@ -175,7 +175,7 @@
 	return image;
 }
 
-/*
+/*!
  * @brief Return a 32x32 image representing this attachment
  */
 - (NSImage *)iconImage
@@ -207,7 +207,7 @@
     }
 }
 
-/*
+/*!
  * @brief Return a fileWrapper for the file/image we represent, creating and caching it if necessary
  *
  * @result An NSFileWrapper

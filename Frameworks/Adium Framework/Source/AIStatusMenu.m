@@ -76,7 +76,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief The delegate is just too good for the menu items we've created; it will create all of the ones it wants on its own
  */
 - (void)delegateWillReplaceAllMenuItems
@@ -112,7 +112,7 @@
 	[self rebuildMenu];	
 }
 
-/*
+/*!
  * @brief Generate the custom menu item for a status type
  */
 - (NSMenuItem *)customMenuItemForStatusType:(AIStatusType)statusType

@@ -58,7 +58,7 @@
  */
 @implementation AIEmoticonPack
 
-/*
+/*!
  * @brief Create a new emoticon pack
  * @param inPath The path to the root of a bundle of emoticons
  */
@@ -125,7 +125,7 @@
 	return serviceClass;
 }
 
-/*
+/*!
  * @brief An array of AIEmoticon objects
  */
 - (NSArray *)emoticons
@@ -134,7 +134,7 @@
 	return emoticonArray;
 }
 
-/*
+/*!
  * @brief An array of enabled AIEmoticon objects
  */
 - (NSArray *)enabledEmoticons
@@ -154,7 +154,7 @@
 	return enabledEmoticonArray;
 }
 
-/*
+/*!
  * @brief Return the preview image to use within a menu for this emoticon
  *
  * It tries to be the emoticon for text equivalent :) or :-). Failing that, any emoticon will do.
@@ -181,7 +181,7 @@
 	return [[emoticon image] imageByScalingToSize:NSMakeSize(16,16)];
 }
 
-/*
+/*!
  * @brief Set the emoticons that are disabled in this pack
  * @param inArray An NSArray of AIEmoticon objects to disable
  */
@@ -203,7 +203,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Enable/Disable this pack
  * @param inEnabled Should this pack be enabled?
  */
@@ -212,7 +212,7 @@
 	enabled = inEnabled;
 }
 
-/*
+/*!
  * @brief Is this pack enabled?
  */
 - (BOOL)isEnabled{
@@ -237,7 +237,7 @@
 
 //Loading Emoticons ----------------------------------------------------------------------------------------------------
 #pragma mark Loading Emoticons
-/*
+/*!
  * @brief Load the emoticons in this pack.
  *
  * Called by [self emoticons] as needed

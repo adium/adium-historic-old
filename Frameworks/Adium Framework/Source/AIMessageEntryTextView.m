@@ -339,7 +339,7 @@
 //Adium Text Entry -----------------------------------------------------------------------------------------------------
 #pragma mark Adium Text Entry
 
-/*
+/*!
  * @brief Toggle whether message sending is enabled based on a notification. The notification object is the AIChat of the appropriate message entry view
  */
 - (void)toggleMessageSending:(NSNotification *)not
@@ -348,7 +348,7 @@
 	[self setSendingEnabled:[[[not userInfo] objectForKey:@"TypingEnabled"] boolValue]];
 }
 
-/*
+/*!
  * @brief Are we available for sending?
  */
 - (BOOL)availableForSending
@@ -1038,7 +1038,7 @@
 }
 
 #pragma mark Attachments
-/*
+/*!
  * @brief Add an attachment of the file at inPath at the current insertion point
  *
  * @param inPath The full path, whose contents will not be loaded into memory at this time
@@ -1055,7 +1055,7 @@
 	[attachment release];
 }
 
-/*
+/*!
  * @brief Add an attachment of inImage at the current insertion point
  */
 - (void)addAttachmentOfImage:(NSImage *)inImage
@@ -1071,7 +1071,7 @@
 	[attachment release];
 }
 
-/*
+/*!
  * @brief Generate an NSAttributedString which contains attachment and displays it using attachment's iconImage
  */
 - (NSAttributedString *)attributedStringWithTextAttachmentExtension:(AITextAttachmentExtension *)attachment
@@ -1085,7 +1085,7 @@
 	return [NSAttributedString attributedStringWithAttachment:attachment];
 }
 
-/*
+/*!
  * @brief Given RTFD data, return an NSAttributedString whose attachments are all AITextAttachmentExtension objects
  */
 - (NSAttributedString *)attributedStringWithAITextAttachmentExtensionsFromRTFDData:(NSData *)data

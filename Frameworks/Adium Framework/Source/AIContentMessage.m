@@ -66,7 +66,7 @@
     return isAutoreply;
 }
 
-/*
+/*!
  * @brief The AIAccount-generated contents of the message as a simple string
  *
  * This will often be an HTML string. It is the form in which the account wishes to send data to the other side.
@@ -85,7 +85,7 @@
 	}
 }
 
-/*
+/*!
  * @brief For AIAccount internal use: data associated with this message
  */
 - (id)encodedMessageAccountData
@@ -93,7 +93,7 @@
 	return encodedMessageAccountData;
 }
 
-/*
+/*!
  * @brief For AIAccount internal use: set data associated with this message
  */
 - (void)setEncodedMessageAccountData:(id)inEncodedMessageAccountData

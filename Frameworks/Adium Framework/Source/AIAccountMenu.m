@@ -97,9 +97,6 @@
 	return self;
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {
 	if (submenuType == AIAccountStatusSubmenu) {
@@ -158,7 +155,7 @@
 	[delegate accountMenu:self didRebuildMenuItems:[self menuItems]];
 }	
 
-/*
+/*!
  * @brief Inform our delegate of menu selections
  */
 - (void)selectAccountMenuItem:(NSMenuItem *)menuItem
@@ -404,7 +401,7 @@
 	return actionsSubmenu;
 }	
 
-/*
+/*!
  * @brief Edit an account
  *
  * @param sender An NSMenuItem whose representedObject is an AIAccount
@@ -415,7 +412,7 @@
 											  object:[sender representedObject]];
 }
 
-/*
+/*!
  * @brief Disable an account
  *
  * @param sender An NSMenuItem whose representedObject is an AIAccount

@@ -48,9 +48,6 @@
 	return self;
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {
 	[[adium contactController] unregisterListObjectObserver:self];
@@ -101,7 +98,7 @@
 	[delegate contactMenu:self didRebuildMenuItems:[self menuItems]];
 }	
 
-/*
+/*!
  * @brief Inform our delegate of menu selections
  */
 - (void)selectContactMenuItem:(NSMenuItem *)menuItem

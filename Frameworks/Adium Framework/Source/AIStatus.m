@@ -214,7 +214,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Set the autoreply as a string
  *
  * @param autoReplyString The autoreply as a string; HTML may be passed if desired

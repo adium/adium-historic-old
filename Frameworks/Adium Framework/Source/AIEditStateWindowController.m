@@ -436,7 +436,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[self updateTitleDisplay];
 }
 
-/*
+/*!
  * @brief Override AIWindowController's stringWithSavedFrame to provide a custom saved frame
  *
  * We want our savedframe to match the way the window will load, which means it needs to be as if all controls were visible.

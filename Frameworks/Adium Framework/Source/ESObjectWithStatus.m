@@ -31,7 +31,7 @@
  */
 @implementation ESObjectWithStatus
 
-/*
+/*!
  * @brief Initialize
  */
 - (id)init
@@ -44,7 +44,7 @@
 	return self;
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -59,7 +59,7 @@
 //Setting status objects -----------------------------------------------------------------------------------------------
 #pragma mark Setting Status
 
-/*
+/*!
  * @brief Set a status object
  *
  * @param value The value
@@ -88,7 +88,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Set a status object after a delay
  *
  * @param value The value
@@ -105,7 +105,7 @@
 			   afterDelay:delay];
 }
 
-/*
+/*!
  * @brief Perform a delayed status object change
  *
  * Called as a result of -[ESObjectWithStatus setStatusObject:forKey:afterDelay:]
@@ -118,7 +118,7 @@
 	[self setStatusObject:object forKey:key notify:NotifyNow];
 }
 
-/*
+/*!
  * @brief Notify of any status object changes made with a NotifyTiming of NotifyLater
  *
  * @param silent YES if the notification should be marked as silent
@@ -140,7 +140,7 @@
 
 //Getting status objects ----------------------------------------------------------------------------------------------
 #pragma mark Getting Status
-/*
+/*!
  * @brief Status key enumeartor
  *
  * @result NSEnumerator of all status keys
@@ -150,7 +150,7 @@
 	return [statusDictionary keyEnumerator];
 }
 
-/*
+/*!
  * @brief Status object for key
  */
 - (id)statusObjectForKey:(NSString *)key
@@ -158,7 +158,7 @@
     return [statusDictionary objectForKey:key];
 }
 
-/*
+/*!
  * @brief Integer status object for key
  *
  * @result int value for key, or 0 if no object is set for key
@@ -169,7 +169,7 @@
     return number ? [number intValue] : 0;
 }
 
-/*
+/*!
  * @brief Earliest date status object for key
  *
  * @result The earliest NSDate associated with this key. There can only be one NSDate for the base class, so it returns this one.
@@ -180,7 +180,7 @@
 	return ((obj && [obj isKindOfClass:[NSDate class]]) ? obj : nil);
 }
 
-/*
+/*!
  * @brief Number status object for key
  *
  * @result The NSNumber for this key, or nil if no such key is set or the value is not an NSNumber
@@ -191,7 +191,7 @@
 	return ((obj && [obj isKindOfClass:[NSNumber class]]) ? obj : nil);
 }
 
-/*
+/*!
  * @brief String from a key which stores an attributed string
  *
  * @result The NSString contents of an NSAttributedString for this key
