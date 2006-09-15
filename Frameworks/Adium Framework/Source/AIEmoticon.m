@@ -135,7 +135,7 @@
     return [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
 }
 
-/*
+/*!
  * @brief Change the path to the image for this emoticon
  */
 - (void)setPath:(NSString *)inPath

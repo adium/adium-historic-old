@@ -83,7 +83,7 @@
 @end
 
 @interface NSObject (AIMessageEntryTextViewDelegate)
-/*
+/*!
  * @brief Should the tab key trigger an autocomplete?
  *
  * Implementation is optional.

@@ -48,7 +48,7 @@
 @end
 
 @implementation AIAbstractListController
-/*
+/*!
  * @brief Initialize
  *
  * Designated initializer for AIAbstractListController
@@ -84,7 +84,7 @@
 	return self;
 }
 
-/*
+/*!
  * @brief Delegate
  */
 - (id)delegate
@@ -92,7 +92,7 @@
 	return delegate;
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -116,7 +116,7 @@
     [super dealloc];
 }
 
-/*
+/*!
  * @brief If the contact list will be removed but the window won't go away, call this before releasing.
  *
  * Note that for this to be useful for preventing Cocoa tracking rect oddity, it must be called

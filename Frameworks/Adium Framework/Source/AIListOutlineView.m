@@ -426,7 +426,7 @@
 	return [self arrayOfSelectedItems];
 }
 #pragma mark Drag & Drop Drawing
-/*
+/*!
  * @brief Called by NSOutineView to draw a drop highight
  *
  * Note: We are overriding a private method

@@ -367,7 +367,7 @@ static int nextChatNumber = 0;
 //Content --------------------------------------------------------------------------------------------------------------
 #pragma mark Content
 
-/*
+/*!
  * @brief Informs the chat that the core and the account are ready to begin filtering and sending a content object
  *
  * If there is only one object in pendingOutgoingContentObjects after adding inObject, we should send immedaitely.
@@ -390,7 +390,7 @@ static int nextChatNumber = 0;
 			(currentIndex == 0));
 }
 
-/*
+/*!
  * @brief Informs the chat that an outgoing content object was sent and dispalyed.
  *
  * It is no longer pending, so we remove it from that array.
@@ -449,7 +449,7 @@ static int nextChatNumber = 0;
 
 //Applescript ----------------------------------------------------------------------------------------------------------
 #pragma mark Applescript
-/*
+/*!
  * @brief Applescript command to send a message in this chat
  */
 - (id)sendScriptCommand:(NSScriptCommand *)command {
@@ -608,7 +608,7 @@ static int nextChatNumber = 0;
 	}	
 }
 
-/*
+/*!
  * @brief Is the passed object ignored?
  *
  * @param inContact The contact to check
@@ -660,7 +660,7 @@ static int nextChatNumber = 0;
 
 #pragma mark Errors
 
-/*
+/*!
  * @brief Inform the chat that an error occurred
  *
  * @param type An NSNumber containing an AIChatErrorType

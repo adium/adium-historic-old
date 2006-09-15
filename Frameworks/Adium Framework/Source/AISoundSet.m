@@ -65,9 +65,6 @@
 	return self;
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {
 	[name release]; name = nil;
@@ -371,7 +368,7 @@
 
 #pragma mark Dictionary storage
 
-/*
+/*!
  * @brief Two sound sets are considered equal if they are pointing to the same .AdiumSoundset bundle
  */
 - (BOOL)isEqual:(id)otherObject
@@ -380,7 +377,7 @@
 			[[(AISoundSet *)otherObject sourcePath] isEqualToString:sourcePath]);
 }
 
-/*
+/*!
  * @brief Because we defined equality based on our sourcePath, the sourcePath's hash is an easy hash for us to use
  */
 - (unsigned)hash

@@ -113,7 +113,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Load plugins from the specified path
  *
  * @param pluginPath The path to the plugin bundle

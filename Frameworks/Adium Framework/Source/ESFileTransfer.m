@@ -210,7 +210,7 @@ static NSMutableDictionary *fileTransferDict = nil;
 	return status;
 }
 
-/*
+/*!
  * @brief Report a progress update on the file transfer
  *
  * @param inPercent The percentage complete.  If 0, inBytesSent will be used to calculate the percent complete if possible.

@@ -111,9 +111,6 @@
     return self;
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {
 	[delayedUpdateStatusTarget release];
@@ -385,7 +382,7 @@
 											  modifiedKeys:[NSSet setWithObject:@"Display Name"]];	
 }
 
-/*
+/*!
  * @brief Current display name, post filtering
  *
  * This might be used to see if a new display name needs to be sent to the server or if it is the same as the old one.
@@ -616,7 +613,7 @@
 	return [[self statusState] statusMessage];
 }
 
-/*
+/*!
  * @brief Are sounds for this acount muted?
  */
 - (BOOL)soundsAreMuted
@@ -626,7 +623,7 @@
 
 #pragma mark Passwords
 
-/*
+/*!
  * @brief Store in memory (but nowhere else) the password for this account
  */
 - (void)setPasswordTemporarily:(NSString *)inPassword
@@ -1218,7 +1215,7 @@
 
 #pragma mark Proxy Configuration Retrieval
 
-/*
+/*!
  * @brief Retrieve the proxy configuration information for this account
  *
  * This should be used by the AIAccount subclass before initiating its connect process if it supports proxies.
@@ -1327,7 +1324,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Callback for the accountController's passwordForProxyServer:... method
  *
  * @param inPassword The retrieved password

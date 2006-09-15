@@ -71,7 +71,7 @@
 	return YES;
 }
 
-/*
+/*!
  * @brief Take no action on mouse down
  * 
  * We return YES for isEditable, but we don't actually want the user to be able to edit us.
@@ -81,7 +81,7 @@
 	[[self window] makeFirstResponder:self];
 }
 
-/*
+/*!
  * @brief We want to say we are editable so that the font panel talks to us properly
  *
  * For example, if isEditable returns NO, typing a font size into the size text area and hitting enter has no effect.

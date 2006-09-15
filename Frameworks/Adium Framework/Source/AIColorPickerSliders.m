@@ -34,7 +34,7 @@
     [self poseAsClass:[NSColorPickerSliders class]];
 }
 
-/*
+/*!
  * @brief Called to finish setting up the UI
  *
  * sliderModePopUp's menu is populated sometime before this but after initWithPickerMask:colorPanel:

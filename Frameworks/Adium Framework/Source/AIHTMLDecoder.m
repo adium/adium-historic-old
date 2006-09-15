@@ -144,7 +144,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 #pragma mark Work methods
 
-/*
+/*!
  * @brief Parse arguments in a string
  *
  * The arguments are returned in an NSDictionary whose keys are all-lowercase
@@ -2067,7 +2067,7 @@ int HTMLEquivalentForFontSize(int fontSize)
 	return decodedString;	
 }
 
-/*
+/*!
  * @brief Convert Wingdings characters to their Unicode equivalents if possible
  *
  * This table extracted from http://www.alanwood.net/demos/wingdings.html attempts to convert

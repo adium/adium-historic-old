@@ -17,7 +17,7 @@
 #import <Adium/AIObject.h>
 #import <Adium/AIAdiumProtocol.h>
 
-/*
+/*!
  * @class AIObject
  * @brief Superclass for all objects within Adium
  *
@@ -70,7 +70,7 @@ void modifyInstanceCount(int delta, NSString *className)
 
 static NSObject<AIAdium> *_sharedAdium = nil;
 
-/*
+/*!
  * @brief Set the shared AIAdium instance
  *
  * Called once, after AIAdium loads
@@ -85,7 +85,7 @@ static NSObject<AIAdium> *_sharedAdium = nil;
 #endif
 }
 
-/*
+/*!
  * @brief Return the shared AIAdium instance
  */
 + (NSObject<AIAdium> *)sharedAdiumInstance
@@ -94,7 +94,7 @@ static NSObject<AIAdium> *_sharedAdium = nil;
     return _sharedAdium;
 }
 
-/*
+/*!
  * @brief Initialize
  */
 - (id)init

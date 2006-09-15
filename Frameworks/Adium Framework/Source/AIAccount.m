@@ -125,7 +125,7 @@
 	[self removeAllContacts];
 }
 
-/*
+/*!
  * @brief A formatted UID which may include additional necessary identifying information.
  *
  * For example, an AIM account (tekjew) and a .Mac account (tekjew@mac.com, entered only as tekjew) may appear identical
@@ -218,7 +218,7 @@
 	return NO;
 }
 
-/*
+/*!
  * @brief Called once the display name has been properly filtered
  *
  * Subclasses may override to pass this name on to the server if appropriate.
@@ -430,7 +430,7 @@
 	return NO;
 }
 
-/*
+/*!
  * @brief Send a typing object
  *
  * The content object contains all the necessary information for sending,
@@ -441,7 +441,7 @@
 	return NO;
 }
 
-/*
+/*!
  * @brief Send a message
  *
  * The content object contains all the necessary information for sending,
@@ -641,7 +641,7 @@
 }
 
 #pragma mark Authorization
-/*
+/*!
  * @brief An authorization prompt closed, granting or denying a contact's request for authorization
  *
  * @param inWindowController The window controller which closed; an account may have kept track of what windows were showing its authorization prompts
