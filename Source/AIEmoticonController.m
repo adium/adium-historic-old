@@ -158,7 +158,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	return LOW_FILTER_PRIORITY;
 }
 
-/*
+/*!
  * @brief Perform a single emoticon replacement
  *
  * This method may call itself recursively to perform additional adjacent emoticon replacements

@@ -408,7 +408,7 @@ static void inject_message_cb(void *opdata, const char *accountname,
 															 toContact:contactFromInfo(accountname, protocol, recipient)];
 }
 
-/*
+/*!
  * @brief Display an OTR message
  *
  * This should be displayed within the relevant chat.
@@ -676,7 +676,7 @@ static OtrlMessageAppOps ui_ops = {
 	[ESOTRUnknownFingerprintController showVerifyFingerprintPromptWithResponseInfo:responseInfo];	
 }
 
-/*
+/*!
  * @brief Adium will begin terminating
  *
  * Send the OTRL_TLV_DISCONNECTED packets when we're about to quit before we disconnect
@@ -694,7 +694,7 @@ static OtrlMessageAppOps ui_ops = {
 	}
 }
 
-/*
+/*!
  * @brief A chat notification was posted after which we should update our security details
  *
  * @param inNotification A notification whose object is the AIChat in question
@@ -829,7 +829,7 @@ OtrlUserState otrg_get_userstate(void)
 	[ESOTRUnknownFingerprintController showUnknownFingerprintPromptWithResponseInfo:responseInfo];
 }
 
-/*
+/*!
  * @brief Call this function when our DSA key is updated; it will redraw the Encryption preferences item, if visible.
  */
 - (void)prefsShouldUpdatePrivateKeyList
@@ -837,7 +837,7 @@ OtrlUserState otrg_get_userstate(void)
 	[OTRPrefs updatePrivateKeyList];
 }
 
-/*
+/*!
  * @brief Update the list of other users' fingerprints, if it's visible
  */
 - (void)prefsShouldUpdateFingerprintsList

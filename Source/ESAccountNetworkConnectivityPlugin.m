@@ -304,7 +304,7 @@
 }
 
 #pragma mark Changes to the account list
-/*
+/*!
  * @brief When the account list changes, ensure we're monitoring for each account
  */
 - (void)accountListChanged:(NSNotification *)notification

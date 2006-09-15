@@ -37,7 +37,7 @@
 	[self setNeedsDisplay:YES];
 }
 
-/*
+/*!
  * @brief Draw our background image
  *
  * The image is drawn faded behind our content view and solid elsewhere.

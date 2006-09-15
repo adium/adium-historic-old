@@ -37,7 +37,7 @@ enum{
  */
 @implementation AdiumSetupWizard
 
-/*
+/*!
  * @brief Run the wizard
  */
 + (void)runWizard
@@ -51,7 +51,7 @@ enum{
 	[[setupWizardWindowController window] orderFront:nil];
 }
 
-/*
+/*!
  * @brief Localized some common items' titles
  */
 - (void)localizeItems
@@ -63,7 +63,7 @@ enum{
 	[button_alternate setLocalizedString:AILocalizedString(@"Skip Import","button title for skipping the import of another client in the setup wizard")];
 }
 
-/*
+/*!
  * @brief The window loaded
  */
 - (void)windowDidLoad
@@ -111,7 +111,7 @@ enum{
 	[self autorelease];
 }
 
-/*
+/*!
  * @brief Start the progress indicator to let the user we are processing
  */
 - (void)activateProgressIndicator
@@ -123,7 +123,7 @@ enum{
 	[progress_processing startAnimation:nil];
 }
 
-/*
+/*!
  * @brief A tab view item was completed; post-process any entered data
  */
 - (BOOL)didCompleteTabViewItemWithIdentifier:(NSString *)identifier
@@ -168,7 +168,7 @@ enum{
 	return success;
 }
 
-/*
+/*!
  * @brief The Continue button, which is also the Done button, was pressed
  */
 - (IBAction)nextTab:(id)sender
@@ -196,7 +196,7 @@ enum{
 	}
 }
 
-/*
+/*!
  * @brief The Back button was pressed
  */
 - (IBAction)previousTab:(id)sender
@@ -208,7 +208,7 @@ enum{
 		[tabView selectPreviousTabViewItem:self];
 }
 
-/*
+/*!
  * @brief The alternate (third) button was pressed; its behavior will vary by tab view item
  */
 - (IBAction)pressedAlternateButton:(id)sender
@@ -230,7 +230,7 @@ enum{
 	}
 }
 
-/*
+/*!
  * @brief Set up the Account Setup tab for a given service
  */
 - (void)configureAccountSetupForService:(AIService *)service
@@ -256,7 +256,7 @@ enum{
 	return [identifier isEqualToString:ACCOUNT_SETUP_IDENTIFIER] || [identifier isEqualToString:IMPORT_IDENTIFIER];	
 }
 
-/*
+/*!
  * @brief The tab view is about to select a tab view item
  */
 - (void)tabView:(NSTabView *)inTabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
@@ -350,7 +350,7 @@ enum{
 	}
 }
 
-/*
+/*!
  * @brief The selected service in the account configuration tab view item was changed
  */
 - (void)selectServiceType:(id)sender

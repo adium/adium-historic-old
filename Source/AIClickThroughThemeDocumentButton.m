@@ -7,7 +7,7 @@
 
 #import "AIClickThroughThemeDocumentButton.h"
 
-/*
+/*!
  * @class AIClickThroughThemeDocumentButton
  * @brief This NSThemeDocumentButton subclass makes the window move when it is dragged.
  *
@@ -23,7 +23,7 @@
  */
 @implementation AIClickThroughThemeDocumentButton
 
-/*
+/*!
  * @brief Mouse dragged
  */
 - (void)mouseDragged:(NSEvent *)theEvent
@@ -57,7 +57,7 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:NSWindowDidMoveNotification object:window];		
 }
 
-/*
+/*!
  * @brief Mouse down
  *
  * We start tracking the a drag operation here when the user first clicks the mouse without command presed
@@ -73,7 +73,7 @@
 	inLeftMouseEvent = YES;
 }
 
-/*
+/*!
  * @brief Mouse up
  */
 - (void)mouseUp:(NSEvent *)theEvent
@@ -81,7 +81,7 @@
 	inLeftMouseEvent = NO;
 }
 
-/*
+/*!
  * @brief HACK: When deallocing, we crash in setRepresentedFilename presumably because of an NSCoder failure in AIMesageWindow
  */
 - (void)setRepresentedFilename:(NSString *)inFilename

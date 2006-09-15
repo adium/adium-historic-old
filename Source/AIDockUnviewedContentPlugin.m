@@ -27,13 +27,13 @@
 - (void)removeAlert;
 @end
 
-/*
+/*!
  * @class AIDockUnviewedContentPlugin
  * @brief Component responsible for triggering and removing the Alert dock icon state for unviewed content
  */
 @implementation AIDockUnviewedContentPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -51,7 +51,7 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 }
 
-/*
+/*!
  * @brief Uninstall
  */
 - (void)uninstallPlugin
@@ -87,7 +87,7 @@
 		}
 	}
 }
-/*
+/*!
  * @brief Chat was updated
  *
  * Check for whether inModifiedKeys contains a change to unviewed content. If so, put the dock in the Alert state

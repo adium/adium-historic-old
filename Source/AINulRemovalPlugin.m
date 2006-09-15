@@ -52,7 +52,7 @@
 	return nulFreeAttributedString;
 }
 
-/*
+/*!
  * @brief When should this filter run?
  *
  * Run this filter as early as possible to remove NULs in case other filters want to use the UTF8String of the filtered string.

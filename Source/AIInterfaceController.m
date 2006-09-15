@@ -353,7 +353,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Close the interface for a chat
  *
  * Tell the interface plugin to close the chat.
@@ -497,7 +497,7 @@
 																				 forKey:@"NSWindow"]];
 }
 
-/*
+/*!
  * @brief Find the window currently displaying a chat
  *
  * If the chat is not in any window, or is not visible in any window, returns nil
@@ -507,7 +507,7 @@
 	return [interfacePlugin windowForChat:inChat];
 }
 
-/*
+/*!
  * @brief Find the chat active in a window
  *
  * If the window does not have an active chat, nil is returned
@@ -1308,7 +1308,7 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 	[self _pasteWithPreferredSelector:@selector(pasteAsRichText:) sender:sender];	
 }
 
-/*
+/*!
  * @brief Send a paste message, using preferredSelector if possible and paste: if not
  *
  * Walks the responder chain looking for a responder which can handle pasting, skipping instances of

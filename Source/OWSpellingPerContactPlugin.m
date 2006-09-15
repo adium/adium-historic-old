@@ -115,7 +115,7 @@
 	AI_ENDHANDLER
 }
 
-/*
+/*!
  * @brief Chat will close; save the language preference for its contact before it closes
  */
 - (void)chatWillClose:(NSNotification *)notification

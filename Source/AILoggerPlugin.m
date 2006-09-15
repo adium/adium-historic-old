@@ -712,7 +712,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
  *		- When the log viewer is opened, re-index all the logs in the array
  */
 
-/*
+/*!
  * @brief Initialize log indexing
  */
 - (void)initLogIndexing
@@ -721,7 +721,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 	[self loadDirtyLogArray];
 }
 
-/*
+/*!
  * @brief Prepare the log index for searching.
  *
  * Must call before attempting to use the logSearchIndex.
@@ -819,7 +819,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 //Log index ------------------------------------------------------------------------------------------------------------
 //Search kit index used to searching log content
 #pragma mark Log Index
-/*
+/*!
  * @brief Create the log index
  *
  * Should be called within logAccessLock being locked
@@ -1024,7 +1024,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
     [pool release];
 }
 
-/*
+/*!
  * @brief Index all dirty logs
  *
  * Indexing will occur on a thread

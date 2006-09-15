@@ -58,7 +58,7 @@
 
 #pragma mark Menu
 
-/*
+/*!
  * @brief Set the menu we display
  */
 - (void)setMenu:(NSMenu *)inMenu
@@ -83,7 +83,7 @@
 	return menu;
 }
 
-/*
+/*!
  * @brief Set our delegate
  */
 - (void)setDelegate:(id)inDelegate
@@ -93,7 +93,7 @@
 
 #pragma mark Index and Point/Rect Correlation
 
-/*
+/*!
  * @brief Return the index at a point
  *
  * @param inPoint The point in our local coordinates
@@ -110,7 +110,7 @@
 	return index;
 }
 
-/*
+/*!
  * @brief Return the rect (in local coordinates) for a menu item by index
  */
 - (NSRect)rectForIndex:(int)index
@@ -279,7 +279,7 @@
 
 #pragma mark Hovering tracking
 
-/*
+/*!
  * @brief The mouse is hovering over a point
  *
  * @param inPoint The point in our local coordinates, or NULL if we are no longer hovering
@@ -326,7 +326,7 @@
 
 #pragma mark Tracking rects
 
-/*
+/*!
  * @brief Remove all our tracking rects
  */
 - (void)removeTrackingRects

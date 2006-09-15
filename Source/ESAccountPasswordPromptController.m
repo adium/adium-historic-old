@@ -27,7 +27,7 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 @end
 
-/*
+/*!
  * @class ESAccountPasswordPromptController
  * @brief Account password prompt window controller
  * 
@@ -84,7 +84,7 @@ static NSMutableDictionary	*passwordPromptControllerDict = nil;
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Our window will close
  *
  * Remove this controller from our dictionary of controllers
@@ -98,7 +98,7 @@ static NSMutableDictionary	*passwordPromptControllerDict = nil;
 	[super windowWillClose:sender];
 }
 
-/*
+/*!
  * @brief Window laoded
  *
  * Perform initial configuration
@@ -118,7 +118,7 @@ static NSMutableDictionary	*passwordPromptControllerDict = nil;
 	[super windowDidLoad];
 }
 
-/*
+/*!
  * @brief The key 
  */
 - (NSString *)savedPasswordKey

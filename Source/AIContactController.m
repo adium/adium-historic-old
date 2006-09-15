@@ -756,7 +756,7 @@
 
 #pragma mark Meta Contacts
 //Meta Contacts --------------------------------------------------------------------------------------------------------
-/*
+/*!
  * @brief Create or load a metaContact
  *
  * @param inObjectID The objectID of an existing but unloaded metaContact, or nil to create and save a new metaContact
@@ -818,7 +818,7 @@
 	return (metaContact);
 }
 
-/*
+/*!
  * @brief Associate the appropriate internal IDs for contained contacts with a metaContact
  *
  * @result YES if one or more contacts was associated with the metaContact; NO if none were.
@@ -843,7 +843,7 @@
 	return restoredContacts;
 }
 
-/*
+/*!
  * @brief Associate the internal IDs for an array of contacts with a specific metaContact
  *
  * This does not actually place any AIListContacts within the metaContact.  Instead, it updates the contactToMetaContactLookupDict
@@ -1379,7 +1379,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 
 
-/*
+/*!
  * @brief Update all contacts for an observer, notifying the observer of each one in turn
  *
  * @param contacts The contacts to update, or nil to update all contacts
@@ -1682,7 +1682,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 }
 
-/*
+/*!
  * @brief Return a set of all contacts with a specified UID and service
  *
  * @param service The AIService in question
@@ -1845,7 +1845,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 
 
-/*
+/*!
  * @brief Watch outgoing content, remembering the user's choice of destination contact for contacts within metaContacts
  *
  * If the destination contact's parent contact differs from the destination contact itself, the chat is with a metaContact.

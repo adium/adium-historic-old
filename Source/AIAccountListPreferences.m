@@ -175,7 +175,7 @@
     }
 }
 
-/*
+/*!
  * @brief Handle a double click within our table
  *
  * Ignore double clicks on the enable/disable checkbox

@@ -54,7 +54,7 @@
 	return [adiumSpeech voices];
 }
 
-/*
+/*!
  * @brief Speak the demonstration text for a voice
  *
  * @param pitch The pitch to use, or 0.0 to use the default pitch

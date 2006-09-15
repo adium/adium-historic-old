@@ -36,9 +36,6 @@
 	return self;
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {	
 	[stringsRequiringPolling release];
@@ -50,7 +47,7 @@
 
 //Content Filtering ----------------------------------------------------------------------------------------------------
 #pragma mark Content Filtering
-/*
+/*!
  * @brief Register a content filter.
  *
  * If the particular filter wants to apply to multiple types or directions, it should register multiple times.
@@ -70,7 +67,7 @@
 					 filterArray:contentFilter[type][direction]];
 }
 
-/*
+/*!
  * @brief Register a delayed content filter
  *
  * Delayed content filters return YES or NO from their filter method; YES means they began a filtering process.
@@ -99,7 +96,7 @@
 	[delayedContentFilters[type][direction] addObject:inFilter];
 }
 
-/*
+/*!
  * @brief Unregister a filter.
  *
  * Looks in both contentFilter and delayedContentFilter, for all types and directions
@@ -116,7 +113,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Register a string to be filtered which requires polling to be updated
  */
 - (void)registerFilterStringWhichRequiresPolling:(NSString *)inPollString
@@ -124,7 +121,7 @@
 	[stringsRequiringPolling addObject:inPollString];
 }
 
-/*
+/*!
  * @brief Is polling required to update the passed string?
  */
 - (BOOL)shouldPollToUpdateString:(NSString *)inString
@@ -144,7 +141,7 @@
 	return shouldPoll;
 }
 
-/*
+/*!
  * @brief Perform the filtering of an attributedString on the specified content filter.
  *
  * @param attributedString A pointer to the NSAttributedString to filter
@@ -196,7 +193,7 @@
 	return beganDelayedFiltering;
 }
 
-/*
+/*!
  * @brief Filter an attributed string immediately
  *
  * This does not perform delayed filters (it passes the delayed content filters as filtersToSkip).
@@ -222,7 +219,7 @@
 	return attributedString;
 }
 
-/*
+/*!
  * @brief Filter an attributed string, notifying a target when complete
  *
  * This performs delayed filters, which means there may be a non-blocking delay before the filtered attributed string
@@ -305,7 +302,7 @@
 	}
 }
 
-/*
+/*!
  * @brief A delayed filter finished filtering
  *
  * After this filter finishes, run it through the delayed filter system again
@@ -368,7 +365,7 @@ static int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, 
 		return NSOrderedSame;
 }
 
-/*
+/*!
  * @brief Add a content filter to the specified array
  *
  * Adds, then sorts by priority

@@ -34,7 +34,7 @@
 
 @implementation ESFileTransferRequestPromptController
 
-/*
+/*!
  * @brief Display a prompt for a file transfer to save, save as, or cancel
  *
  * @param inFileTransfer The file transfer

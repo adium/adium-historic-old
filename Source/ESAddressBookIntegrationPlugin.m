@@ -1037,7 +1037,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 }
 
 
-/*
+/*!
  * @brief Service ID for an OSCAR UID
  *
  * If we are on an OSCAR service we need to resolve our serviceID into the appropriate string

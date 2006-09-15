@@ -115,7 +115,7 @@
 	}
 }
 
-/*
+/*!
  * @brief A script finished running
  */
 - (void)applescriptDidRun:(id)userInfo resultString:(NSString *)resultString

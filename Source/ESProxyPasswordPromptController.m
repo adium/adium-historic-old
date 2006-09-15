@@ -79,7 +79,7 @@ static NSMutableDictionary	*proxyPasswordPromptControllerDict = nil;
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Our window will close
  *
  * Remove this controller from our dictionary of controllers
@@ -103,7 +103,7 @@ static NSMutableDictionary	*proxyPasswordPromptControllerDict = nil;
 	[super windowDidLoad];
 }
 
-/*
+/*!
  * @brief Not actually used... do we need this?
  */
 - (NSString *)savedPasswordKey
@@ -111,7 +111,7 @@ static NSMutableDictionary	*proxyPasswordPromptControllerDict = nil;
 	return @"SavedProxyPassword";
 }
 
-/*
+/*!
  * @brief Save a password; pass nil to forget the password
  *
  * Called with nil when Save Password becomes unchecked, or called with the password when it is checked as the window

@@ -21,7 +21,7 @@ extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (void)screenSaverDidStop;
 @end
 
-/*
+/*!
  * @class AdiumIdleManager
  * @brief Core class to manage sending notifications when the system is idle or no longe ridle
  *

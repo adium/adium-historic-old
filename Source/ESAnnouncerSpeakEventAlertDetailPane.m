@@ -18,8 +18,8 @@
 #import "ESAnnouncerPlugin.h"
 
 /*!
- * @brief ESAnnouncerSpeakEventAlertDetailPane
- * @class Speak Event action details pane
+ * @class ESAnnouncerSpeakEventAlertDetailPane
+ * @brief Speak Event action details pane
  */
 @implementation ESAnnouncerSpeakEventAlertDetailPane
 

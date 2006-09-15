@@ -74,9 +74,6 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];

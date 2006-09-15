@@ -55,9 +55,6 @@
 	return self;
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {
 	[[adium notificationCenter] removeObserver:self];
