@@ -173,7 +173,7 @@
 	[self updateFriendlyNameAfterConnect];
 }	
 
-/*
+/*!
  * @brief Update our friendly name to match the server friendly name if appropriate
  *
  * Well behaved MSN clients respect the serverside display name so that an update on one client is reflected on another.
@@ -339,7 +339,7 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 	}
 }
 
-/*
+/*!
  * @brief Set our serverside 'friendly name'
  *
  * There is a rate limit on how quickly we can set our friendly name.

@@ -19,7 +19,7 @@
 	return self;
 }
 
-/*
+/*!
  * @brief This is where subclasses should generally perform actions they would normally do in windowWillClose:
  *
  * ESGaimRequestAbstractWindowController calls this method only when windowWillClose: is triggered by user action
@@ -40,7 +40,7 @@
 	}
 }	
 
-/*
+/*!
  * @brief libgaim has been made aware we closed or has informed us we should close
  *
  * Close our requestController's window if it's open; then release (we returned without autoreleasing initially).

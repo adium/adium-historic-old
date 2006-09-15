@@ -318,7 +318,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 				   withObject:((typingStatus == AWEzvIsTyping) ? [NSNumber numberWithInt:AITyping] : nil)];
 }
 
-/*
+/*!
  * @brief A message could not be sent
  *
  * @param inContactUniqueID Unique ID of the contact to whom the message could not be sent
@@ -392,7 +392,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	return YES;
 }
 
-/*
+/*!
  * @brief Return the string encoded for sending to a remote contact
  *
  * We return nil if the string turns out to have been a / command.
@@ -582,7 +582,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
 }
 
-/*
+/*!
  * @brief The bonjour thread is about to exit for some reason...
  *
  * I have no idea why the thread might exit, but it does.  Messaging the libezvThreadProxy after it exits throws an

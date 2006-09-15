@@ -44,7 +44,7 @@
 	return @"@gmail.com";
 }
 
-/*
+/*!
  * @brief Allow a file transfer with an object?
  *
  * As of July 28th, 2006, GTalk allows transfers.

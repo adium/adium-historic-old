@@ -40,7 +40,7 @@
  */
 - (void)setFormattedUID {};
 
-/*
+/*!
  * @brief A formatted UID which may include additional necessary identifying information.
  *
  * For example, an AIM account (tekjew) and a .Mac account (tekjew@mac.com, entered only as tekjew) may appear identical

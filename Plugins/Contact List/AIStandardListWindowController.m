@@ -46,7 +46,7 @@
 
 @implementation AIStandardListWindowController
 
-/*
+/*!
  * @brief Initialize
  */
 - (id)initWithWindowNibName:(NSString *)inNibName
@@ -58,7 +58,7 @@
 	return self;
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -69,7 +69,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Nib name
  */
 + (NSString *)nibName
@@ -77,7 +77,7 @@
     return @"ContactListWindow";
 }
 
-/*
+/*!
  * @brief Window loaded
  */
 - (void)windowDidLoad
@@ -196,7 +196,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Reposition the image picker to a desireed position
  *
  * This shifts the status picker view and the name view in the opposite direction, maintaining the same relative spacing relationships
@@ -240,7 +240,7 @@
 
 #pragma mark User icon changing
 
-/*
+/*!
  * @brief Determine the account which will be modified by a change to the image picker
  *
  * @result The 'active' account for image purposes, or nil if the global icon is active
@@ -313,7 +313,7 @@
 	[imagePicker setImage:image];
 }
 
-/*
+/*!
  * @brief The image picker changed images
  */
 - (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)picker didChangeToImageData:(NSData *)imageData
@@ -380,7 +380,7 @@
 
 #pragma mark Name view
 
-/*
+/*!
  * @brief Determine the account which will be displayed / modified by the name view
  *
  * @param onlineAccounts If non-nil, the NSMutableSet will have all online accounts
@@ -681,7 +681,7 @@
 														 desiredHeight:YES];
 }
 
-/*
+/*!
  * @brief Slide the window to a given point
  *
  * windowSlidOffScreenEdgeMask must already be set to the resulting offscreen mask (or 0 if the window is sliding on screen)

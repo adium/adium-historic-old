@@ -42,7 +42,7 @@ struct resolved_id {
 	char *name;
 };
 
-/*
+/*!
  * @brief Process button text, removing gtk+ accelerator underscores
  *
  * Textual underscores are indicated by "__"
@@ -521,7 +521,7 @@ static void *adiumGaimRequestFile(const char *title, const char *filename,
 	return (requestController ? requestController : [NSNull null]);
 }
 
-/*
+/*!
  * @brief Gaim requests that we close a request window
  *
  * This is not sent after user interaction with the window.  Instead, it is sent when the window is no longer valid;

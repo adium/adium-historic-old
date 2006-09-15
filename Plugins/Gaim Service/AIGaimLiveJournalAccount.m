@@ -43,7 +43,7 @@
 	return @"@livejournal.com";
 }
 
-/*
+/*!
  * @brief Allow a file transfer with an object?
  *
  */

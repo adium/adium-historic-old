@@ -88,9 +88,6 @@
 	return self;
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {
 	[self setChat:nil];
@@ -217,7 +214,7 @@
 
 //Account Menu ---------------------------------------------------------------------------------------------------------
 #pragma mark Account Menu
-/*
+/*!
  * @brief Returns YES if a choice of source account is available
  */
 - (BOOL)choicesAvailableForAccount
@@ -235,7 +232,7 @@
 	return NO;
 }
 
-/*
+/*!
  * @brief Account Menu Delegate
  */
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
@@ -248,7 +245,7 @@
 	return [self _accountIsAvailable:inAccount];
 }
 
-/*
+/*!
  * @brief Check if an account is available for sending content
  *
  * An account is considered available if it's of the right service class and is currently online.
@@ -261,7 +258,7 @@
 			[inAccount online]);
 }
 
-/*
+/*!
  * @brief Create the account menu and add it to our view
  */
 - (void)_createAccountMenu
@@ -285,7 +282,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Destroy the account menu, removing it from our view
  */
 - (void)_destroyAccountMenu
@@ -302,14 +299,14 @@
 
 //Contact Menu ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact Menu
-/*
+/*!
  * @brief Returns YES if a choice of destination contact is available
  */
 - (BOOL)choicesAvailableForContact{
 	return [[[self _chatMetaContact] listContacts] count] > 1;
 }
 
-/*
+/*!
  * @brief Contact menu delegate
  */
 - (void)contactMenu:(AIContactMenu *)inContactMenu didRebuildMenuItems:(NSArray *)menuItems {
@@ -319,7 +316,7 @@
 	[[adium chatController] switchChat:chat toListContact:inContact usingContactAccount:YES];
 }
 
-/*
+/*!
  * @brief Create the contact menu and add it to our view
  */
 - (void)_createContactMenu
@@ -343,7 +340,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Destroy the contact menu, remove it from our view
  */
 - (void)_destroyContactMenu

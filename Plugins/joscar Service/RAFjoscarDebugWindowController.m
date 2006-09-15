@@ -114,7 +114,7 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 	}
 }
 
-/*
+/*!
  * @brief Java VM was attached
  *
  * Update our displayed version info
@@ -167,13 +167,15 @@ static RAFjoscarDebugWindowController *sharedDebugWindowInstance = nil;
 {
 	NSEnumerator *enumerator = [[[RAFjoscarDebugController sharedDebugController] debugLogArray] objectEnumerator];
 	NSString *filter = [textView_filter stringValue];
+	unsigned len =  [filter length];
+	if (!len) filter = nil;
+
 	[mutableDebugString setString:@""];
 
 	[currentFilterString release];
 	currentFilterString = [filter copy];
 
 	NSString *aDebugString;
-	unsigned len =  [filter length];
 	while ((aDebugString = [enumerator nextObject])) {
 		if (!len || [aDebugString rangeOfString:filter options:NSCaseInsensitiveSearch].location != NSNotFound) {
 			[mutableDebugString appendString:aDebugString];

@@ -47,7 +47,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief libgaim has been made aware we closed or has informed us we should close
  *
  * release (we returned without autoreleasing initially).
@@ -57,7 +57,7 @@
 	[self release];
 }
 
-/*
+/*!
  * @brief Our file transfer was cancelled
  */
 - (void)cancel:(NSNotification *)inNotification

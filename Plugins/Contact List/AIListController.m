@@ -344,7 +344,7 @@ typedef enum {
 
 //Content Updating -----------------------------------------------------------------------------------------------------
 #pragma mark Content Updating
-/*
+/*!
  * @brief The entire contact list, or an entire group, changed
  *
  * This indicates that an entire group changed -- the contact list is just a giant group, so that includes the entire
@@ -375,7 +375,7 @@ typedef enum {
 	[self contactListDesiredSizeChanged];
 }
 
-/*
+/*!
  * @brief Update auto-resizing when object visibility changes
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
@@ -393,7 +393,7 @@ typedef enum {
 	return nil;
 }
 
-/*
+/*!
  * @brief Order of contacts changed
  *
  * The notification's object is the contact whose order changed.  
@@ -417,7 +417,7 @@ typedef enum {
 	}
 }
 
-/*
+/*!
  * @brief List object attributes changed
  *
  * Resize horizontally if desired and the display name changed
@@ -438,7 +438,7 @@ typedef enum {
     }
 }
 
-/*
+/*!
  * @brief The outline view selection changed
  *
  * On the next run loop, post Interface_ContactSelectionChanged.  Why wait for the next run loop?

@@ -32,7 +32,7 @@
 
 @implementation ESGaimRequestActionController
 
-/*
+/*!
  * @brief Show an action request window
  *
  * @param infoDict Dictionary of information to display, including callbacks for the buttons
@@ -155,7 +155,7 @@
 	}
 }
 
-/*
+/*!
  * @brief libgaim has been made aware we closed or has informed us we should close
  *
  * Close our requestController's window if it's open; then release (we returned without autoreleasing initially).
@@ -170,7 +170,7 @@
 	[self release];
 }
 
-/*
+/*!
  * @brief Translate the strings in the info dictionary
  *
  * The following declarations let genstrings know about what translations we want
