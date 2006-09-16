@@ -33,6 +33,7 @@
 #import <AIUtilities/AITooltipUtilities.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
+#import <AIUtilities/AIWindowControllerAdditions.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
@@ -1461,7 +1462,7 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 		return [keyWindow toolbar] != nil;
 	
 	} else if (menuItem == menuItem_customizeToolbar) {
-		return [keyWindow toolbar] != nil && [[keyWindow toolbar] isVisible];
+		return ([keyWindow toolbar] != nil && [[keyWindow toolbar] isVisible] && [[keyWindow windowController] canCustomizeToolbar]);
 
 	} else if (menuItem == menuItem_close) {
 		return (keyWindow && ([[keyWindow standardWindowButton:NSWindowCloseButton] isEnabled] ||

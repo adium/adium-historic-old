@@ -25,6 +25,7 @@
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIViewAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
+#import <AIUtilities/AIWindowControllerAdditions.h>
 
 //Preferences
 #define KEY_PREFERENCE_SELECTED_CATEGORY		@"Preference Selected Category Name"
@@ -216,6 +217,10 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     [sharedPreferenceInstance autorelease]; sharedPreferenceInstance = nil;
 }
 
+- (BOOL) canCustomizeToolbar
+{
+	return NO;
+}
 
 //Panes ---------------------------------------------------------------------------------------------------------------
 #pragma mark Panes 
