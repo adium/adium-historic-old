@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		013F80C408E685B8000F31B2 /* AITextViewAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 013F80C208E685B8000F31B2 /* AITextViewAdditions.h */; };
+		013F80C408E685B8000F31B2 /* AITextViewAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 013F80C208E685B8000F31B2 /* AITextViewAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		013F80C508E685B8000F31B2 /* AITextViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 013F80C308E685B8000F31B2 /* AITextViewAdditions.m */; };
-		073C0D8D0939023200D6AEEA /* AIPlasticButtonCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 073C0D8B0939023200D6AEEA /* AIPlasticButtonCell.h */; };
+		073C0D8D0939023200D6AEEA /* AIPlasticButtonCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 073C0D8B0939023200D6AEEA /* AIPlasticButtonCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		073C0D8E0939023200D6AEEA /* AIPlasticButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 073C0D8C0939023200D6AEEA /* AIPlasticButtonCell.m */; };
 		076CAD6D0785B62900250504 /* AIFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 076CAD6C0785B62900250504 /* AIFunctions.m */; };
 		076CAD6F0785B64000250504 /* AIFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 076CAD6E0785B64000250504 /* AIFunctions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -243,6 +243,8 @@
 		4BD1F5D106D28D2E00B3975E /* AIColoredBoxView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B4C06D1DF0300DA778C /* AIColoredBoxView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BD1F5D206D28D2E00B3975E /* AIColoredBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B4D06D1DF0300DA778C /* AIColoredBoxView.m */; };
 		4BFDF29707D2D36E008E4B91 /* Aqua_Tab_Background.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BFDF29607D2D36E008E4B91 /* Aqua_Tab_Background.png */; };
+		639B3CA80ABC708700D618E9 /* AIWindowControllerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 639B3CA60ABC708700D618E9 /* AIWindowControllerAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		639B3CA90ABC708700D618E9 /* AIWindowControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 639B3CA70ABC708700D618E9 /* AIWindowControllerAdditions.m */; };
 		6E03C8D307C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E03C8D107C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6E03C8D407C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E03C8D207C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
@@ -532,6 +534,8 @@
 		636D3D6808D267F500EFFD69 /* AILinkedListObject.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILinkedListObject.m; path = Source/AILinkedListObject.m; sourceTree = "<group>"; };
 		636D3D6908D267F500EFFD69 /* AIQueue.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIQueue.h; path = Source/AIQueue.h; sourceTree = "<group>"; };
 		636D3D6A08D267F500EFFD69 /* AIQueue.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIQueue.m; path = Source/AIQueue.m; sourceTree = "<group>"; };
+		639B3CA60ABC708700D618E9 /* AIWindowControllerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIWindowControllerAdditions.h; path = Source/AIWindowControllerAdditions.h; sourceTree = "<group>"; };
+		639B3CA70ABC708700D618E9 /* AIWindowControllerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIWindowControllerAdditions.m; path = Source/AIWindowControllerAdditions.m; sourceTree = "<group>"; };
 		6E03C8D107C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITextFieldWithDraggingDelegate.h; path = Source/AITextFieldWithDraggingDelegate.h; sourceTree = "<group>"; };
 		6E03C8D207C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITextFieldWithDraggingDelegate.m; path = Source/AITextFieldWithDraggingDelegate.m; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* AIUtilities.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AIUtilities.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -920,6 +924,8 @@
 				9E2486070A359D310070153D /* NSCalendarDate+ISO8601Parsing.m */,
 				9E2486080A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h */,
 				9E2486090A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m */,
+				639B3CA60ABC708700D618E9 /* AIWindowControllerAdditions.h */,
+				639B3CA70ABC708700D618E9 /* AIWindowControllerAdditions.m */,
 			);
 			name = Additions;
 			sourceTree = "<group>";
@@ -1531,6 +1537,7 @@
 				9E24860C0A359D310070153D /* NSCalendarDate+ISO8601Unparsing.h in Headers */,
 				07B87B7D0A3A7A3B00A38283 /* AISetAdditions.h in Headers */,
 				07B87B7F0A3A7A3B00A38283 /* AIShadowAdditions.h in Headers */,
+				639B3CA80ABC708700D618E9 /* AIWindowControllerAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1741,6 +1748,7 @@
 				9E24860D0A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m in Sources */,
 				07B87B7E0A3A7A3B00A38283 /* AISetAdditions.m in Sources */,
 				07B87B800A3A7A3B00A38283 /* AIShadowAdditions.m in Sources */,
+				639B3CA90ABC708700D618E9 /* AIWindowControllerAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

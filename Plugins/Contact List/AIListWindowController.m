@@ -27,6 +27,7 @@
 #import <Adium/AIDockControllerProtocol.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIFunctions.h>
+#import <AIUtilities/AIWindowControllerAdditions.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
@@ -413,6 +414,10 @@
     }
 }
 
+- (BOOL) canCustomizeToolbar
+{
+	return NO;
+}
 
 //Interface Container --------------------------------------------------------------------------------------------------
 #pragma mark Interface Container
