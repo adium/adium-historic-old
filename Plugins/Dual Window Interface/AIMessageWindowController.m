@@ -196,15 +196,11 @@
 }
 - (BOOL)shouldCascadeWindows
 {
-	if ([[[adium preferenceController] preferenceForKey:KEY_TABBED_CHATTING
-												  group:PREF_GROUP_INTERFACE] boolValue]) {
-		return YES;
-
-	} else {
-		//Not using tabbed chatting: Cascade if we have no frame
+	if ([[[adium preferenceController] preferenceForKey:KEY_TABBED_CHATTING  group:PREF_GROUP_INTERFACE] boolValue])
+		return NO;
+	else //Not using tabbed chatting: Cascade if we have no frame
 		return ([[adium preferenceController] preferenceForKey:[self _frameSaveKey]
 														 group:PREF_GROUP_WINDOW_POSITIONS] == nil);
-	}
 }
 
 //
