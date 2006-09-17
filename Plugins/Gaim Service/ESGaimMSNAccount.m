@@ -449,7 +449,7 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 - (const char *)gaimStatusIDForStatus:(AIStatus *)statusState
 							arguments:(NSMutableDictionary *)arguments
 {
-	char			*statusID = NULL;
+	const char		*statusID = NULL;
 	NSString		*statusName = [statusState statusName];
 	NSString		*statusMessageString = [statusState statusMessageString];
 
