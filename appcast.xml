@@ -6,8 +6,8 @@
     <item>
       <title>Adium 1.0b11</title>
       <pubDate>Sun, 20 Aug 2006 14:47:00 GMT-5</pubDate>
-	<sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0b11.html</sparkle:releaseNotesLink> 
-      <enclosure sparkle:md5Sum="cd8e885a46f13c74865f12929c1cfe19" sparkle:version="1.0b11" url="http://adiumx.cachefly.net/AdiumX_1.0b11.dmg" length="21934832" type="application/octet-stream"/>
+	<sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0b12.html</sparkle:releaseNotesLink> 
+      <enclosure sparkle:md5Sum="db920c8a106bd6b1eb3bf290f4ebbcaf" sparkle:version="1.0b12" url="http://adiumx.cachefly.net/Adium_1.0b12.dmg" length="18873930" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
