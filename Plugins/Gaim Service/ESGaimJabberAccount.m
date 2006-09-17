@@ -14,12 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "ESGaimJabberAccount.h"
+#import "SLGaimCocoaAdapter.h"
 #import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
-#import "ESGaimJabberAccount.h"
-#import "ESGaimJabberAccountViewController.h"
-#import "SLGaimCocoaAdapter.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
@@ -30,7 +30,6 @@
 #include <Libgaim/buddy.h>
 #include <Libgaim/presence.h>
 #include <Libgaim/si.h>
-#include <unistd.h>
 
 #define DEFAULT_JABBER_HOST @"@jabber.org"
 
@@ -335,16 +334,15 @@
 			[*disconnectionError release];
 			*disconnectionError = nil;
 
-			[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:AILocalizedString(@"Invalid Jabber ID or Password",nil)
-																  defaultButton:AILocalizedString(@"Register",nil)
-																alternateButton:AILocalizedString(@"Cancel",nil)
-																	otherButton:nil
-																	   onWindow:nil
-															  withMessageHeader:nil
-																	 andMessage:[NSAttributedString stringWithString:
-																		 AILocalizedString(@"Jabber was unable to connect due to an invalid Jabber ID or password.  This may be because you do not yet have an account on this Jabber server.  Would you like to register now?",nil)]
-																		 target:self
-																	   userInfo:nil];
+			[[adium interfaceController] displayQuestion:AILocalizedString(@"Would you like to register a new Jabber account?", nil)
+										 withDescription:AILocalizedString(@"Jabber was unable to connect due to an invalid Jabber ID or password.  This may be because you do not yet have an account on this Jabber server.  Would you like to register now?",nil)
+										 withWindowTitle:AILocalizedString(@"Invalid Jabber ID or Password",nil)
+										   defaultButton:AILocalizedString(@"Register",nil)
+										 alternateButton:AILocalizedString(@"Cancel",nil)
+											 otherButton:nil
+												  target:self
+												selector:@selector(answeredShouldReigsterNewJabberAccount:userInfo:)
+												userInfo:nil];
 
 		} else if ([*disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound) {
 			shouldReconnect = NO;
@@ -360,8 +358,10 @@
 	return shouldReconnect;
 }
 
-- (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
+- (BOOL)answeredShouldReigsterNewJabberAccount:(NSNumber *)returnCodeNumber userInfo:(id)userInfo
 {
+	AITextAndButtonsReturnCode returnCode = [returnCodeNumber intValue];
+
 	switch (returnCode) {
 		case AITextAndButtonsDefaultReturn:
 			[self performSelector:@selector(performRegisterWithPassword:)
