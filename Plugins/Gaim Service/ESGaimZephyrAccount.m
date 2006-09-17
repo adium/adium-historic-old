@@ -67,7 +67,7 @@ gboolean gaim_init_zephyr_plugin(void);
  *
  * @result The gaim status ID
  */
-- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+- (const char *)gaimStatusIDForStatus:(AIStatus *)statusState
 							arguments:(NSMutableDictionary *)arguments
 {
 	char			*statusID = NULL;
