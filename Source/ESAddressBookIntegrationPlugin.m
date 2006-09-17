@@ -552,6 +552,8 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	if (!result) {
 		if ([serviceID isEqualToString:@"GTalk"]) {
 			result = kABJabberInstantProperty;
+		} else if ([serviceID isEqualToString:@"LiveJournal"]) {
+			result = kABJabberInstantProperty;
 		} else if ([serviceID isEqualToString:@"Mac"]) {
 			result = kABAIMInstantProperty;
 		}
@@ -773,6 +775,9 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	} else if ([serviceID isEqualToString:@"GTalk"]) {
 		dict = [addressBookDict objectForKey:@"Jabber"];
 
+	} else if ([serviceID isEqualToString:@"LiveJournal"]) {
+		dict = [addressBookDict objectForKey:@"Jabber"];
+		
 	} else if ([serviceID isEqualToString:@"Yahoo! Japan"]) {
 		dict = [addressBookDict objectForKey:@"Yahoo!"];
 		
