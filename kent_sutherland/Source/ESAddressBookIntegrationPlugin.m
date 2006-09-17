@@ -1059,6 +1059,9 @@ NSString* serviceIDForJabberUID(NSString *UID)
 		[UID hasSuffix:@"@googlemail.com"]) {
 		serviceID = @"GTalk";
 
+	} else if([UID hasSuffix:@"livejournal.com"]) {
+		seviceID = @"LiveJournal";
+		
 	} else {
 		serviceID = @"Jabber";
 	}
