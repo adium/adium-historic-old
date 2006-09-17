@@ -69,7 +69,7 @@
 
 #pragma mark Contact updates
 
-- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+- (const char *)gaimStatusIDForStatus:(AIStatus *)statusState
 							arguments:(NSMutableDictionary *)arguments
 {
 	char			*statusID = NULL;

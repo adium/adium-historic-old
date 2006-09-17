@@ -80,7 +80,7 @@
 - (void)setAccountIdleSinceTo:(NSDate *)idleSince;
 
 - (void)setStatusState:(AIStatus *)statusState statusID:(const char *)statusID isActive:(NSNumber *)isActive arguments:(NSMutableDictionary *)arguments;
-- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+- (const char *)gaimStatusIDForStatus:(AIStatus *)statusState
 							arguments:(NSMutableDictionary *)arguments;
 
 - (void)setAccountProfileTo:(NSAttributedString *)profile;
