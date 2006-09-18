@@ -547,12 +547,6 @@
 	}
 }
 
-- (NSComparisonResult)compare:(id)otherObject
-{
-	return ([otherObject isKindOfClass:[self class]] &&
-			[[self internalObjectID] caseInsensitiveCompare:[otherObject internalObjectID]]);
-}
-
 #pragma mark Status states
 
 /*!
@@ -744,7 +738,7 @@
 
 - (NSComparisonResult)compare:(id)other {
 	NSParameterAssert([other isKindOfClass:[AIListObject class]]);
-	return [[self internalObjectID] compare:[other internalObjectID]];
+	return [[self internalObjectID] caseInsensitiveCompare:[other internalObjectID]];
 }
 
 #pragma mark Icons
