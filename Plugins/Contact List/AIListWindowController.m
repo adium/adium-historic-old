@@ -449,17 +449,15 @@
 }
 
 //
-- (void)showWindowInFront:(BOOL)inFront
+- (void)showWindowInFrontIfAllowed:(BOOL)inFront
 {
 	//Always show for three seconds at least if we're told to show
 	[self delayWindowSlidingForInterval:3];
 
+	//Call super to actually do the showing
+	[super showWindowInFrontIfAllowed:inFront];
+	
 	NSWindow	*window = [self window];
-	if (inFront) {
-		[self showWindow:nil];
-	} else {
-		[window orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
-	}
 	
 	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
 		//Restore shadow and frame if we're appearing from having slide off-screen
@@ -569,7 +567,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 - (void)applicationDidUnhide:(NSNotification *)notification
 {
 	if (![[self window] isVisible]) {
-		[self showWindowInFront:NO];
+		[self showWindowInFrontIfAllowed:NO];
 	}
 }
 

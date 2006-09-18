@@ -203,16 +203,6 @@
 														 group:PREF_GROUP_WINDOW_POSITIONS] == nil);
 }
 
-//
-- (void)showWindowInFront:(BOOL)inFront
-{
-	if (inFront) {
-		[self showWindow:nil];
-	} else {
-		[[self window] orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
-	}
-}
-
 //Close the message window
 - (IBAction)closeWindow:(id)sender
 {
