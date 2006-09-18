@@ -1256,7 +1256,12 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					}
 				}
 
-				if (validTag) { //Skip over the end tag character '>'
+				//Skip over the end tag character '>' and any other characters we want to skip
+				if (validTag) {
+					//Get to the > if we're not there already, as will happen with XML namespacing...
+					[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:NULL];
+
+					//And skip it
 					if (![scanner isAtEnd]) {
 						[scanner setScanLocation:[scanner scanLocation]+1];
 						
@@ -1266,7 +1271,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 							
 							charSetToSkip = [NSCharacterSet characterSetWithCharactersInString:charactersToSkipAfterThisTag];
 							[scanner scanCharactersFromSet:charSetToSkip
-												intoString:nil];
+												intoString:NULL];
 						}
 					}
 					
