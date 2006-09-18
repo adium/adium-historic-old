@@ -105,7 +105,6 @@ Class LogViewerWindowControllerClass = NULL;
 
 	activeAppenders = [[NSMutableDictionary alloc] init];
 	appenderCloseTimers = [[NSMutableDictionary alloc] init];
-	chatStartDates = [[NSMutableDictionary alloc] init];
 	
 	xhtmlDecoder = [[AIHTMLDecoder alloc] initWithHeaders:NO
 												 fontTags:YES
@@ -374,7 +373,7 @@ Class LogViewerWindowControllerClass = NULL;
 		
 		BOOL			dirty = NO;
 		NSString		*contentType = [content type];
-		NSString		*date = [[NSCalendarDate date] ISO8601DateString];
+		NSString		*date = [[[content date] dateWithCalendarFormat:nil timeZone:nil] ISO8601DateString];
 
 		if ([contentType isEqualToString:CONTENT_MESSAGE_TYPE]) {
 			NSMutableArray *attributeKeys = [NSMutableArray arrayWithObjects:@"sender", @"time", nil];
@@ -445,10 +444,7 @@ Class LogViewerWindowControllerClass = NULL;
 	AIChat	*chat = [notification object];
 
 	//Don't log chats for temporary accounts
-	if ([[chat account] isTemporary]) return;
-	
-	//Note the time that this chat was opened for later use
-	[chatStartDates setObject:[NSCalendarDate date] forKey:[self keyForChat:chat]];
+	if ([[chat account] isTemporary]) return;	
 }
 
 - (void)chatClosed:(NSNotification *)notification
@@ -466,7 +462,7 @@ Class LogViewerWindowControllerClass = NULL;
 		[appender addElementWithName:@"event"
 							 content:nil
 					   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
-					 attributeValues:[NSArray arrayWithObjects:@"windowClosed", [[chat account] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
+					 attributeValues:[NSArray arrayWithObjects:@"windowClosed", [[chat account] UID], [[[chat dateOpened] dateWithCalendarFormat:nil timeZone:nil] ISO8601DateString], nil]];
 
 		[self closeAppenderForChat:chat];
 
@@ -508,8 +504,9 @@ Class LogViewerWindowControllerClass = NULL;
 - (AIXMLAppender *)appenderForChat:(AIChat *)chat
 {
 	//Check if there is already an appender for this chat
-	AIXMLAppender *appender = [self existingAppenderForChat:chat];
-	NSString *chatKey = [self keyForChat:chat];
+	AIXMLAppender	*appender = [self existingAppenderForChat:chat];
+	NSString		*chatKey = [self keyForChat:chat];
+	NSDate			*chatDate = [chat dateOpened];
 
 	//If there's an appender scheduled to be closed for this chat, invalidate the timer, since we're using it now
 	if (appender && [appenderCloseTimers objectForKey:chatKey]) {
@@ -517,8 +514,7 @@ Class LogViewerWindowControllerClass = NULL;
 		[appenderCloseTimers removeObjectForKey:chatKey];
 	//If there isn't already an appender, create a new one and add it to the dictionary
 	} else if (!appender) {
-		NSCalendarDate	*date = [chatStartDates objectForKey:chatKey];
-		NSString		*fullPath = [AILoggerPlugin fullPathForLogOfChat:chat onDate:date];
+		NSString		*fullPath = [AILoggerPlugin fullPathForLogOfChat:chat onDate:chatDate];
 
 		appender = [AIXMLAppender documentWithPath:fullPath];
 		[appender initializeDocumentWithRootElementName:@"chat"
@@ -533,11 +529,8 @@ Class LogViewerWindowControllerClass = NULL;
 		[appender addElementWithName:@"event"
 					 content:nil
 			   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
-			 attributeValues:[NSArray arrayWithObjects:@"windowOpened", [[chat account] UID], [date ISO8601DateString], nil]];
-		
-		//Remove this chat's entry from the start date dictionary, since it's not used anymore
-		[chatStartDates removeObjectForKey:chatKey];
-		
+			 attributeValues:[NSArray arrayWithObjects:@"windowOpened", [[chat account] UID], [[chatDate dateWithCalendarFormat:nil timeZone:nil] ISO8601DateString], nil]];
+
 		[activeAppenders setObject:appender forKey:chatKey];
 		
 		[self markLogDirtyAtPath:[appender path] forChat:chat];
