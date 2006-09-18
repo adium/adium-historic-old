@@ -733,6 +733,7 @@
 	return NO;
 }
 
+#pragma mark Comparison
 /*
 - (BOOL)isEqual:(id)anObject
 {
@@ -740,6 +741,11 @@
 			[[(AIListObject *)anObject internalObjectID] isEqualToString:[self internalObjectID]]);
 }
 */
+
+- (NSComparisonResult)compare:(id)other {
+	NSParameterAssert([other isKindOfClass:[AIListObject class]]);
+	return [[self internalObjectID] compare:[other internalObjectID]];
+}
 
 #pragma mark Icons
 - (NSImage *)menuIcon
