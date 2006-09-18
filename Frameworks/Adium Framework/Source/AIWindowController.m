@@ -17,6 +17,7 @@
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIWindowController.h>
 #import <AIUtilities/AIWindowAdditions.h>
+#import <AIUtilities/AIWindowControllerAdditions.h>
 
 /*!
  * @class AIWindowController
@@ -95,6 +96,29 @@
 		}
 	}
 }
+
+/*!
+ * @brief Show the window, possibly in front of other windows if inFront is YES
+ *
+ * Will not show the window in front if the currently-key window controller returns
+ * NO to <code>shouldResignKeyWindowWithoutUserInput</code>. 
+ * @see AIWindowControllerAdditions::shouldResignKeyWindowWithoutUserInput
+ */
+- (void)showWindowInFrontIfAllowed:(BOOL)inFront
+{
+	id currentKeyWindowController = [[NSApp keyWindow] windowController];
+	if (currentKeyWindowController && ![currentKeyWindowController shouldResignKeyWindowWithoutUserInput]) {
+		//Prevent window from showing in front if key window controller disallows it
+		inFront = NO;
+	}
+	if (inFront) {
+		[self showWindow:nil];
+	} else {
+		[[self window] orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
+	}
+}
+
+
 
 /*!
  * @brief Close the window
