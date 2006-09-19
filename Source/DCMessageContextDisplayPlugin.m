@@ -286,6 +286,7 @@ static int linesLeftToFind = 0;
 			BOOL sentByMe = ([sender isEqualToString:accountID]);
 			NSString *autoreplyAttribute = [attributesDictionary objectForKey:@"auto"];
 			//Create the context object
+			NSLog(@"Message Context Display: Parsing message time attribute %@", [attributesDictionary objectForKey:@"time"]);
 			AIContentContext *message = [AIContentContext messageInChat:chat 
 															 withSource:(sentByMe ? account : [chat listObject])
 															destination:(sentByMe ? [chat listObject] : account)
