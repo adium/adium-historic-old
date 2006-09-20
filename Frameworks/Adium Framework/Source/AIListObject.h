@@ -150,4 +150,7 @@ typedef enum {
 //mutableOwnerArray delegate and methods
 - (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(AIListObject *)inOwner priorityLevel:(float)priority;
 
+//Comparison
+- (NSComparisonResult)compare:(AIListObject *)other;
+
 @end
