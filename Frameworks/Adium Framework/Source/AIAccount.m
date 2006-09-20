@@ -607,8 +607,6 @@
 		[[self service] shortDescription]];
 }
 
-/* Secure messaging */
-#pragma mark Secure Messaging
 /*!
  * @brief Start or stop secure messaging in a chat
  *
