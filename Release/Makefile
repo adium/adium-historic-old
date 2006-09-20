@@ -61,10 +61,10 @@ update:
 
 version:
 	@# update the plists
-	defaults write $(ADIUM_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2006 The Adium Team'
+	defaults write $(ADIUM_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2007 The Adium Team'
 	defaults write $(ADIUM_PLIST) CFBundleVersion '$(VERSION)'
 	defaults write $(ADIUM_PLIST) CFBundleShortVersionString '$(VERSION)'
-	defaults write $(CRASH_REPORTER_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2006 The Adium Team'
+	defaults write $(CRASH_REPORTER_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2007 The Adium Team'
 	defaults write $(CRASH_REPORTER_PLIST) CFBundleVersion '$(VERSION)'
 	defaults write $(CRASH_REPORTER_PLIST) CFBundleShortVersionString '$(VERSION)'
 	plutil -convert xml1 $(ADIUM_PLIST).plist
