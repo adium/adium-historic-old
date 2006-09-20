@@ -108,7 +108,7 @@
 
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	if(strcmp(label, "Download buddylist from Server") == 0) return nil;
+	if(strcmp(label, "Download buddylist from Server") == 0) return nil; //this crashes as of Sept. 19th, 2006. See ticket #3953.
 	return [super titleForContactMenuLabel:label forContact:inContact];
 }
 
