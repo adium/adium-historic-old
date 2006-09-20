@@ -797,6 +797,8 @@
 		localizedTitle = AILocalizedString(@"Default Notifications",nil);
 	else if ([englishTitle isEqualToString:@"Visual Notifications"])
 		localizedTitle = AILocalizedString(@"Visual Notifications",nil);
+	else if ([englishTitle isEqualToString:@"Audio Notifications"])
+		localizedTitle = AILocalizedString(@"Audio Notifications",nil);
 
 	return (localizedTitle ? localizedTitle : englishTitle);
 }
