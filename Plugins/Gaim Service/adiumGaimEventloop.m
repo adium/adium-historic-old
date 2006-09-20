@@ -304,9 +304,21 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 		CFRelease(socket);
 		
 		if (info->read_tag) {
+			if (callBackTypes & kCFSocketReadCallBack) {
+				/* If we already have a socket looking for a read, clear it, since we've invalidated and are recreating it.
+				 * Really, this double gaim_input_add() call libgaimside is a bug, but we shouldn't crash in the situation.
+				 */
+				[sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:info->read_tag]];
+			}
 			callBackTypes |= kCFSocketReadCallBack;
 		}
 		if (info->write_tag) {
+			if (callBackTypes & kCFSocketWriteCallBack) {
+				/* If we already have a socket looking for a write, clear it, since we've invalidated and are recreating it.
+				* Really, this double gaim_input_add() call libgaimside is a bug, but we shouldn't crash in the situation.
+				*/
+				[sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:info->write_tag]];
+			}			
 			callBackTypes |= kCFSocketWriteCallBack;			
 		}
 
