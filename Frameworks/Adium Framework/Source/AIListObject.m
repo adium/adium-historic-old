@@ -736,7 +736,7 @@
 }
 */
 
-- (NSComparisonResult)compare:(id)other {
+- (NSComparisonResult)compare:(AIListObject *)other {
 	NSParameterAssert([other isKindOfClass:[AIListObject class]]);
 	return [[self internalObjectID] caseInsensitiveCompare:[other internalObjectID]];
 }
