@@ -127,6 +127,8 @@
 		3417D27C09C3336A00FC413E /* TranslationEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 3417D27809C3336900FC413E /* TranslationEngine.m */; };
 		3417D27D09C3336A00FC413E /* AITranslatorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3417D27909C3336900FC413E /* AITranslatorPlugin.m */; };
 		3417D27E09C3336A00FC413E /* AITranslatorPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 3417D27A09C3336900FC413E /* AITranslatorPlugin.h */; };
+		34182F4A0AC2CA3C0067DEF3 /* AIPreviewChat.h in Headers */ = {isa = PBXBuildFile; fileRef = 34182F480AC2CA3B0067DEF3 /* AIPreviewChat.h */; };
+		34182F4B0AC2CA3C0067DEF3 /* AIPreviewChat.m in Sources */ = {isa = PBXBuildFile; fileRef = 34182F490AC2CA3C0067DEF3 /* AIPreviewChat.m */; };
 		3419DE730A81042F00C3FC68 /* AccountPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8326107CBD598006466F2 /* AccountPrefs.plist */; };
 		3419DE740A81042F00C3FC68 /* BuiltInStatusStates.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8327507CBD5B3006466F2 /* BuiltInStatusStates.plist */; };
 		3419DE750A81042F00C3FC68 /* ContactPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8326607CBD598006466F2 /* ContactPrefs.plist */; };
@@ -1831,6 +1833,8 @@
 		3417D27809C3336900FC413E /* TranslationEngine.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = TranslationEngine.m; path = Plugins/Translation/TranslationEngine.m; sourceTree = "<group>"; };
 		3417D27909C3336900FC413E /* AITranslatorPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITranslatorPlugin.m; path = Plugins/Translation/AITranslatorPlugin.m; sourceTree = "<group>"; };
 		3417D27A09C3336900FC413E /* AITranslatorPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITranslatorPlugin.h; path = Plugins/Translation/AITranslatorPlugin.h; sourceTree = "<group>"; };
+		34182F480AC2CA3B0067DEF3 /* AIPreviewChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPreviewChat.h; path = "Plugins/WebKit Message View/AIPreviewChat.h"; sourceTree = "<group>"; };
+		34182F490AC2CA3C0067DEF3 /* AIPreviewChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIPreviewChat.m; path = "Plugins/WebKit Message View/AIPreviewChat.m"; sourceTree = "<group>"; };
 		3419E2D90A81445200C3FC68 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = "Frameworks/Adium Framework/Resources/English.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3419E2E00A81446800C3FC68 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Catalan; path = "Frameworks/Adium Framework/Resources/Catalan.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3419E2E10A81446E00C3FC68 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Danish; path = "Frameworks/Adium Framework/Resources/Danish.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -6642,6 +6646,8 @@
 				4B03711506595A70008F5981 /* Template.html */,
 				3402E07507CB0FAA0044F818 /* Localizable.strings */,
 				3470663806015FB6004F0D20 /* WebKit Additions */,
+				34182F480AC2CA3B0067DEF3 /* AIPreviewChat.h */,
+				34182F490AC2CA3C0067DEF3 /* AIPreviewChat.m */,
 			);
 			name = "WebKit Message View";
 			sourceTree = "<group>";
@@ -7291,6 +7297,7 @@
 				346C9D3006004650000F5A8A /* WebKitPrivateDefinitions.h in Headers */,
 				34C2D70506338E2E0018E5D2 /* ESWebKitMessageViewPreferences.h in Headers */,
 				4BD62D8007CE8F240099EBA2 /* AIWebkitMessageViewStyle.h in Headers */,
+				34182F4A0AC2CA3C0067DEF3 /* AIPreviewChat.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8696,6 +8703,7 @@
 				346C9D1606004646000F5A8A /* ESWebView.m in Sources */,
 				34C2D70606338E2E0018E5D2 /* ESWebKitMessageViewPreferences.m in Sources */,
 				4BD62D8107CE8F240099EBA2 /* AIWebkitMessageViewStyle.m in Sources */,
+				34182F4B0AC2CA3C0067DEF3 /* AIPreviewChat.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

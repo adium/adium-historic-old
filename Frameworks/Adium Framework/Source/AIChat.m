@@ -141,14 +141,6 @@ static int nextChatNumber = 0;
 	return dateOpened;
 }
 
-- (void)setDateOpened:(NSDate *)inDate
-{
-	if (dateOpened != inDate) {
-	   [dateOpened release]; 
-	   dateOpened = [inDate retain];
-    }
-}
-
 - (BOOL)isOpen
 {
 	return isOpen;
