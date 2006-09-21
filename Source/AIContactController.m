@@ -1795,9 +1795,11 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 				}
 			}
 
+			NSLog(@"firstAvailableContact: %@; firstNotOfflineContact: %@", firstAvailableContact, firstNotOfflineContact);
 			returnContact = (firstAvailableContact ?
 							 firstAvailableContact :
 							 (firstNotOfflineContact ? firstNotOfflineContact : [(AIMetaContact *)inContact preferredContact]));
+			NSLog(@"returnContact: %@", returnContact);
 		}
 
 	} else {
