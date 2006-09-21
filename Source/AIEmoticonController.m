@@ -269,12 +269,14 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 				if ((callingRecursively || (previousCharacter == ' ') || (previousCharacter == '\t') ||
 					 (previousCharacter == '\n') || (previousCharacter == '\r') || (previousCharacter == '.') || (previousCharacter == '?') || (previousCharacter == '!') ||
 					 (previousCharacter == '\"') || (previousCharacter == '\'') ||
+					 (previousCharacter == '(') ||
 					 (*newMessage && [*newMessage attribute:NSAttachmentAttributeName
 													atIndex:(emoticonRangeInNewMessage.location - 1) 
 											 effectiveRange:NULL])) &&
 
 					((nextCharacter == ' ') || (nextCharacter == '\t') || (nextCharacter == '\n') || 
 					 (nextCharacter == '\r') || (nextCharacter == '.') || (nextCharacter == '?') || (nextCharacter == '!') ||
+					 (nextCharacter == ')') ||
 					 (nextCharacter == '\"') || (nextCharacter == '\''))) {
 					acceptable = YES;
 				}
