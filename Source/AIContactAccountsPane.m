@@ -175,6 +175,8 @@
  */
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
+	id result = @"";
+
 	NSString		*identifier = [tableColumn identifier];
 	AIAccount		*account = [accounts objectAtIndex:row];
 
@@ -182,18 +184,18 @@
 		NSString	*accountFormattedUID = [account formattedUID];
 		
 		if ([account online]) {
-			return accountFormattedUID;
+			result = accountFormattedUID;
 			
 		} else {
 			//Gray the names of offline accounts
 			NSDictionary		*attributes = [NSDictionary dictionaryWithObject:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
 			NSAttributedString	*string = [[NSAttributedString alloc] initWithString:accountFormattedUID attributes:attributes];
-			return [string autorelease];
+			result = [string autorelease];
 		}
 		
 	}
 	
-	return @"";
+	return result;
 }
 
 /*!
