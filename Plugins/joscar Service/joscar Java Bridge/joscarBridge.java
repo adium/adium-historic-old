@@ -511,7 +511,7 @@ SecuridProvider
 			sendDelegateMessageWithMap("OpenedDirectIMConversation", map);
 			
 			DirectimConnection connection = directConversation.getDirectimConnection();
-			connection.addEventListener(self);
+			connection.addEventListener(this);
 		}
 	}
     /** This may be called without ever calling conversationOpened */
