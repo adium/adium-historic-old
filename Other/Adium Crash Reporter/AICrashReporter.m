@@ -209,7 +209,7 @@
 
 #pragma mark Report sending
 
-/*
+/*!
  * @brief Disable the close button and begin spinning the indeterminate progress indicator
  */
 - (void)activateProgressIndicator
@@ -226,7 +226,7 @@
 	[progress_sending startAnimation:nil];
 }	
 
-/*
+/*!
  * @brief User wants to send the report
  */
 - (IBAction)send:(id)sender
@@ -248,7 +248,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Build the crash report and associated information, then pass it to sendReport:
  */
 - (void)buildAndSendReport
@@ -280,7 +280,7 @@
 	[self sendReport:crashReport];
 }
 
-/*
+/*!
  * @brief Send a crash report to the crash reporter web site
  */
 - (void)sendReport:(NSDictionary *)crashReport
