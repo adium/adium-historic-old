@@ -941,10 +941,10 @@ static NSString	*prefsCategory;
 /* This method gives the delegate the opportunity to customize the information that will
  * be included with update checks.  Add or remove items from the dictionary as desired.
  * Each entry in profileInfo is an NSDictionary with the following keys:
- * ⁃ 	key: 		The key to be used  when reporting data to the server
- * ⁃ 	visibleKey:	Alternate version of key to be used in UI displays of profile information
- * ⁃ 	value:		Value to be used when reporting data to the server
- * ⁃ 	visibleValue:	Alternate version of value to be used in UI displays of profile information.
+ *		key: 		The key to be used  when reporting data to the server
+ *		visibleKey:	Alternate version of key to be used in UI displays of profile information
+ *		value:		Value to be used when reporting data to the server
+ *		visibleValue:	Alternate version of value to be used in UI displays of profile information.
  */
 - (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo
 {
