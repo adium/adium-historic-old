@@ -108,7 +108,7 @@ static NSComparisonResult compareContactsByTheirAccounts(id firstContact, id sec
 - (void)configureForListObject:(AIListObject *)inObject
 {
 	if (listObject != inObject) {
-		//Update the table view to have or not have the “Individual Contact” column, as appropriate.
+		//Update the table view to have or not have the "Individual Contact" column, as appropriate.
 		//It should have the column when our list object is a metacontact.
 		if ([inObject isKindOfClass:[AIMetaContact class]]) {
 			if (!contactsColumnIsInAccountsTableView) {
