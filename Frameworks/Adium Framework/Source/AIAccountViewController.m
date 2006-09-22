@@ -184,7 +184,7 @@
 		service = [account service];
 
 		//UID Label
-		[textField_accountUIDLabel setStringValue:[[service userNameLabel] stringByAppendingString:@":"]];
+		[textField_accountUIDLabel setStringValue:[[service userNameLabel] stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];
 
 		//UID
 		NSString	*formattedUID = [account formattedUID];
