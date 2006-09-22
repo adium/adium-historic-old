@@ -504,10 +504,14 @@ SecuridProvider
 		conversation.addConversationListener(this);
 		
 		if (conversation instanceof DirectimConversation) {
+			DirectimConversation directConversation = (DirectimConversation)conversation;
 			HashMap map = new HashMap();
-			map.put("DirectimConversation", conversation);
+			map.put("DirectimConversation", directConversation);
 			
-			sendDelegateMessageWithMap("OpenedDirectIMConversation", map);			
+			sendDelegateMessageWithMap("OpenedDirectIMConversation", map);
+			
+			DirectimConnection connection = directConversation.getDirectimConnection();
+			connection.addEventListener(self);
 		}
 	}
     /** This may be called without ever calling conversationOpened */
@@ -596,22 +600,22 @@ SecuridProvider
 		}
 	}
 	
-	/* FileTransferListener */
-	public void handleEventWithStateChange(RvConnection ft, RvConnectionState ftState, RvConnectionEvent ftEvent) {
+	/* RvConnectionEventListener - connection may be a file transfer or a direct IM connection */
+	public void handleEventWithStateChange(RvConnection connection, RvConnectionState state, RvConnectionEvent event) {
 		HashMap map = new HashMap();
-		map.put("RvConnection", ft);
-		map.put("RvConnectionState", ftState);
-		map.put("RvConnectionEvent", ftEvent);
+		map.put("RvConnection", connection);
+		map.put("RvConnectionState", state);
+		map.put("RvConnectionEvent", event);
 		
-		sendDelegateMessageWithMap("FileTransferUpdate", map);
+		sendDelegateMessageWithMap("RvConnectionUpdate", map);
 	}
 		
-	public void handleEvent(RvConnection ft, RvConnectionEvent ftEvent) {
+	public void handleEvent(RvConnection connection, RvConnectionEvent event) {
 		HashMap map = new HashMap();
-		map.put("RvConnection", ft);
-		map.put("RvConnectionEvent", ftEvent);
+		map.put("RvConnection", connection);
+		map.put("RvConnectionEvent", event);
 		
-		sendDelegateMessageWithMap("FileTransferUpdate", map);
+		sendDelegateMessageWithMap("RvConnectionUpdate", map);
 	}
 
 	/* IconRequestListener */

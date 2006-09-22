@@ -925,6 +925,15 @@ BOOL isMobileContact(AIListObject *inListObject)
 									 inChat:[[adium chatController] existingChatWithContact:sourceContact]];	
 }
 
+- (void)chatWithUID:(NSString *)inUID updateDirectIMStatus:(NSString *)inStatus
+{
+	AIListContact	*sourceContact = [self contactWithUID:inUID];
+	
+	[[adium contentController] displayEvent:inStatus
+									 ofType:@"directIM"
+									 inChat:[[adium chatController] existingChatWithContact:sourceContact]];	
+}
+
 - (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
 {
 	return [[inContact service] isKindOfClass:[RAFjoscarICQService class]];
