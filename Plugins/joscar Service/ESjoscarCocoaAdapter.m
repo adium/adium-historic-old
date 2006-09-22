@@ -1042,17 +1042,12 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	}
 }
 
-- (void)setFileTransferUpdate:(HashMap *)userInfo
+- (void)setRvConnectionUpdate:(HashMap *)userInfo
 {
-	RvConnection		*fileTransfer = [userInfo get:@"RvConnection"];
-	RvConnectionState	*ftState = [userInfo get:@"RvConnectionState"];
-	NSString			*newState = [ftState toString];
-	NSDictionary		*pollingUserInfo = nil;
-	NSValue				*identifier = [NSValue valueWithPointer:fileTransfer];
+	RvConnection		*rvConnection = [userInfo get:@"RvConnection"];
+	RvConnectionState	*connectionState = [userInfo get:@"RvConnectionState"];
+	NSString			*newState = [connectionState toString];
 	AIFileTransferStatus	fileTransferStatus;
-	BOOL				shouldPollForStatus = NO;
-
-	AILog(@"File transfer update: %@ -- %@",userInfo, newState);
 
 	if ([newState isEqualToString:@"WAITING"]) {
 		fileTransferStatus = Waiting_on_Remote_User_FileTransfer;
@@ -1065,88 +1060,108 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		fileTransferStatus = Accepted_FileTransfer;
 		
 	} else if ([newState isEqualToString:@"TRANSFERRING"]) {
-		RvConnectionEvent	*ftEvent = [userInfo get:@"RvConnectionEvent"];
-
 		fileTransferStatus = In_Progress_FileTransfer;
-
-		if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.TransferringFileEvent")]) {
-			//		TransferredFileInfo		*fileInfo = [fileEvent getFileInfo];
-			ProgressStatusProvider	*progressStatusProvider = [(TransferringFileEvent *)ftEvent getProgressProvider];
-			
-			shouldPollForStatus = YES;
-			
-			pollingUserInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-				identifier, @"FileTransferValue",
-				progressStatusProvider, @"ProgressStatusProvider",
-				nil];
-		}
-
+		
 	} else if ([newState isEqualToString:@"FINISHED"]) {
 		fileTransferStatus = Complete_FileTransfer;
-
-		//Ensure the update timer fires so we know how much we transferred; changes since the last firing won't be shown otherwise.
-		[[fileTransferPollingTimersDict objectForKey:identifier] fire];
 
 	} else if ([newState isEqualToString:@"FAILED"]) {
 		RvConnectionEvent *ftEvent = [userInfo get:@"RvConnectionEvent"];
 		AILog(@"Failed event was %@",ftEvent);
-
+		
 		if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.BuddyCancelledEvent")]) {
 			fileTransferStatus = Cancelled_Remote_FileTransfer;
-
+			
 		} else if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.LocallyCancelledEvent")]) {
 			fileTransferStatus = Cancelled_Local_FileTransfer;
-
+			
 		} else {
 			fileTransferStatus = Failed_FileTransfer;
 		}
-
+		
 	} else if ([newState isEqualToString:@"PREPARING"]) {
 		fileTransferStatus = Checksumming_Filetransfer;
 	} else {
 		fileTransferStatus = Unknown_Status_FileTransfer;
 	}
-
-	if (shouldPollForStatus) {
-		NSTimer	*ftPollingTimer;
-		
-		if (!fileTransferPollingTimersDict) fileTransferPollingTimersDict = [[NSMutableDictionary alloc] init];
 	
-		if (!(ftPollingTimer = [fileTransferPollingTimersDict objectForKey:identifier])) {
-			//Create a repeating timer if necessary
-			ftPollingTimer = [NSTimer timerWithTimeInterval:0.5
-													 target:self 
-												   selector:@selector(fileTransferPoll:) 
-												   userInfo:pollingUserInfo
-													repeats:YES];
-			//Add iton the main run loop
-			[selfProxy addTimer:ftPollingTimer];
-			
-			//Keep track of it for later removal
-			[fileTransferPollingTimersDict setObject:ftPollingTimer
-											  forKey:identifier];
-		}
+	AILog(@"setRvConnectionUpdate: %@ (%@) - %i",rvConnection, NSStringFromClass([rvConnection class]), fileTransferStatus);
+
+	if ([NSStringFromClass([rvConnection class]) rangeOfString:@"net.kano.joustsim.oscar.oscar.service.icbm.dim"
+													   options:(NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) {
+		//Any subclass of a dim (may be incoming or outgoing)
+//		[accountProxy chatWithUID:(NSString *)inUID updateDirectIMStatus:(NSString *)inStatus
+
 	} else {
-		if (fileTransferPollingTimersDict) {
+		//File transfer
+		RvConnection			*fileTransfer = rvConnection;
+		NSDictionary			*pollingUserInfo = nil;
+		NSValue					*identifier = [NSValue valueWithPointer:fileTransfer];
+		BOOL					shouldPollForStatus = NO;
+		
+		AILog(@"File transfer update: %@ -- %@",userInfo, newState);
+		
+		if (fileTransferStatus == In_Progress_FileTransfer) {
+			RvConnectionEvent	*ftEvent = [userInfo get:@"RvConnectionEvent"];
+			
+			if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.TransferringFileEvent")]) {
+				//		TransferredFileInfo		*fileInfo = [fileEvent getFileInfo];
+				ProgressStatusProvider	*progressStatusProvider = [(TransferringFileEvent *)ftEvent getProgressProvider];
+				
+				shouldPollForStatus = YES;
+				
+				pollingUserInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+					identifier, @"FileTransferValue",
+					progressStatusProvider, @"ProgressStatusProvider",
+					nil];
+			}
+			
+		} else if (fileTransferStatus == Complete_FileTransfer) {
+			//Ensure the update timer fires so we know how much we transferred; changes since the last firing won't be shown otherwise.
+			[[fileTransferPollingTimersDict objectForKey:identifier] fire];
+		}
+
+		if (shouldPollForStatus) {
 			NSTimer	*ftPollingTimer;
 			
-			if ((ftPollingTimer = [fileTransferPollingTimersDict objectForKey:identifier])) {
-				//Remove our current polling timer
-				[ftPollingTimer invalidate];
-				[fileTransferPollingTimersDict removeObjectForKey:identifier];
+			if (!fileTransferPollingTimersDict) fileTransferPollingTimersDict = [[NSMutableDictionary alloc] init];
+			
+			if (!(ftPollingTimer = [fileTransferPollingTimersDict objectForKey:identifier])) {
+				//Create a repeating timer if necessary
+				ftPollingTimer = [NSTimer timerWithTimeInterval:0.5
+														 target:self 
+													   selector:@selector(fileTransferPoll:) 
+													   userInfo:pollingUserInfo
+														repeats:YES];
+				//Add iton the main run loop
+				[selfProxy addTimer:ftPollingTimer];
 				
-				//If the tracking dict is now clear, release it
-				if (![fileTransferPollingTimersDict count]) {
-					[fileTransferPollingTimersDict release]; fileTransferPollingTimersDict = nil;
+				//Keep track of it for later removal
+				[fileTransferPollingTimersDict setObject:ftPollingTimer
+												  forKey:identifier];
+			}
+		} else {
+			if (fileTransferPollingTimersDict) {
+				NSTimer	*ftPollingTimer;
+				
+				if ((ftPollingTimer = [fileTransferPollingTimersDict objectForKey:identifier])) {
+					//Remove our current polling timer
+					[ftPollingTimer invalidate];
+					[fileTransferPollingTimersDict removeObjectForKey:identifier];
+					
+					//If the tracking dict is now clear, release it
+					if (![fileTransferPollingTimersDict count]) {
+						[fileTransferPollingTimersDict release]; fileTransferPollingTimersDict = nil;
+					}
 				}
 			}
 		}
-	}
-	
-	//Inform the account of the status update
-	if (fileTransferStatus != Unknown_Status_FileTransfer) {
-		[accountProxy updateFileTransferWithIdentifier:identifier
-								  toFileTransferStatus:[NSNumber numberWithInt:fileTransferStatus]];
+		
+		//Inform the account of the status update
+		if (fileTransferStatus != Unknown_Status_FileTransfer) {
+			[accountProxy updateFileTransferWithIdentifier:identifier
+									  toFileTransferStatus:[NSNumber numberWithInt:fileTransferStatus]];
+		}
 	}
 }
 
