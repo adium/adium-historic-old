@@ -185,6 +185,9 @@
 		if (!userIconData && !isTemporary) {
 			userIconData = [self preferenceForKey:KEY_DEFAULT_USER_ICON group:GROUP_ACCOUNT_STATUS];
 		}
+	} else {
+		//Globally, we're not using an icon; however, the account may specify its own, overriding that.
+		userIconData = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES];		
 	}
 
 	return userIconData;
