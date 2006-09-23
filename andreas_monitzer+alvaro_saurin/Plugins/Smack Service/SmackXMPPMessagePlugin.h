@@ -12,9 +12,9 @@
 @class SmackXMPPAccount;
 
 @interface SmackXMPPMessagePlugin : AIObject {
-
+    SmackXMPPAccount *account;
 }
 
-- (id)initWithAccount:(SmackXMPPAccount*)account;
+- (id)initWithAccount:(SmackXMPPAccount*)a;
 
 @end

@@ -606,7 +606,7 @@ static AIHTMLDecoder *messageencoder = nil;
     
     [message setBody:[inMessageObject messageString]];
     
-    NSAttributedString *attmessage = [inMessageObject message];
+/*    NSAttributedString *attmessage = [inMessageObject message];
     if(!messageencoder)
     {
         messageencoder = [[AIHTMLDecoder alloc] init];
@@ -621,6 +621,8 @@ static AIHTMLDecoder *messageencoder = nil;
     NSString *xhtmlmessage = [messageencoder encodeHTML:attmessage imagesPath:nil];
     // for some reason I can't specify that I don't want <html> but that I do want <body>...
     NSString *xhtmlbody = [NSString stringWithFormat:@"<body xmlns='http://www.w3.org/1999/xhtml'>%@</body>",xhtmlmessage];
+*/
+    NSString *xhtmlbody = [inMessageObject encodedMessage];
     
     SmackXXHTMLExtension *xhtml = [SmackCocoaAdapter XHTMLExtension];
     [xhtml addBody:xhtmlbody];

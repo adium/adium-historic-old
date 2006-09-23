@@ -24,6 +24,8 @@
 #import "AIStatusController.h"
 #import "SmackListContact.h"
 #import "SmackXMPPRegistration.h"
+#import "AIHTMLDecoder.h"
+#import "AIXMLElement.h"
 
 #import "ruli/ruli.h"
 #import <AIUtilities/AIStringUtilities.h>
@@ -519,8 +521,34 @@
     return [super encodedAttributedString:inAttributedString forListObject:inListObject];
 }
 
+static AIHTMLDecoder *messageencoder = nil;
+
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage {
-    return [super encodedAttributedStringForSendingContentMessage:inContentMessage];
+    NSAttributedString *attmessage = [inContentMessage message];
+    if(!messageencoder)
+    {
+        messageencoder = [[AIHTMLDecoder alloc] init];
+        [messageencoder setGeneratesStrictXHTML:YES];
+        [messageencoder setIncludesHeaders:YES];
+        [messageencoder setIncludesStyleTags:YES];
+        [messageencoder setEncodesNonASCII:NO];
+    }
+    
+//    NSString *xhtmlmessage = [messageencoder encodeHTML:attmessage imagesPath:nil];
+    
+    AIXMLElement *xhtmlroot = [messageencoder rootStrictXHTMLElementForAttributedString:attmessage imagesPath:nil];
+    NSEnumerator *e = [[xhtmlroot contents] objectEnumerator];
+    AIXMLElement *body;
+    
+    while((body = [e nextObject]) && ![[body name] isEqualToString:@"body"]);
+    
+    if(!body)
+        return nil;
+    
+    // add the namespace declaration (not really an attribute...)
+    [body setValue:@"http://www.w3.org/1999/xhtml" forKey:@"xmlns"];
+    
+    return [body XMLString];
 }
 
 #pragma mark Presence Tracking

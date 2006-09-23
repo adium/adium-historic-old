@@ -19,7 +19,7 @@
 #import <JavaVM/NSJavaVirtualMachine.h>
 #import <AIUtilities/AIStringUtilities.h>
 
-#define SMACKBRIDGE_JAR @"SmackBridge"
+#define SMACKBRIDGE_JAR @"SmackJavaBridge"
 #define SMACK_JAR @"smack"
 #define SMACKX_JAR @"smackx"
 

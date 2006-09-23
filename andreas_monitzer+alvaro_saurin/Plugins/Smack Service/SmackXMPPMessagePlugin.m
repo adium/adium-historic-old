@@ -24,14 +24,13 @@
 #import "ESTextAndButtonsWindowController.h"
 #import <AIUtilities/AIStringUtilities.h>
 
-static AIHTMLDecoder *messageencoder = nil;
-
 @implementation SmackXMPPMessagePlugin
 
-- (id)initWithAccount:(SmackXMPPAccount*)account
+- (id)initWithAccount:(SmackXMPPAccount*)a
 {
     if((self = [super init]))
     {
+        account = a;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(receivedMessagePacket:)
                                                      name:SmackXMPPMessagePacketReceivedNotification
@@ -44,10 +43,16 @@ static AIHTMLDecoder *messageencoder = nil;
     return self;
 }
 
+- (void)connected:(SmackXMPPConnection*)conn
+{
+    SmackXServiceDiscoveryManager *sdm = [SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]];
+    if(![sdm includesFeature:@"http://jabber.org/protocol/xhtml-im"])
+        [sdm addFeature:@"http://jabber.org/protocol/xhtml-im"];
+}
 
 - (void)receivedMessagePacket:(NSNotification*)n
 {
-    SmackXMPPAccount *account = [n object];
+//    SmackXMPPAccount *account = [n object];
     SmackMessage *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
     NSString *type = [[packet getType] toString];
     
@@ -92,14 +97,14 @@ static AIHTMLDecoder *messageencoder = nil;
                 htmlmsg = [iter next];
             if([htmlmsg length] > 0)
             {
-                if(!messageencoder)
+/*                if(!messageencoder)
                 {
                     messageencoder = [[AIHTMLDecoder alloc] init];
                     [messageencoder setGeneratesStrictXHTML:YES];
                     [messageencoder setIncludesHeaders:NO];
                     [messageencoder setIncludesStyleTags:YES];
                     [messageencoder setEncodesNonASCII:NO];
-                }
+                }*/
                 // the AIHTMLDecoder class doesn't support decoding the XHTML required by JEP-71, so we'll just use the
                 // one by Apple, which works fine
 //                inMessage = [[messageencoder decodeHTML:htmlmsg] retain];
@@ -159,7 +164,7 @@ static AIHTMLDecoder *messageencoder = nil;
 
 - (void)sendMessage:(NSNotification*)n
 {
-    SmackXMPPAccount *account = [n object];
+//    SmackXMPPAccount *account = [n object];
     AIContentMessage *inMessageObject = [[n userInfo] objectForKey:AIMessageObjectKey];
     SmackMessage *message = [[n userInfo] objectForKey:SmackXMPPPacket];
     
@@ -192,26 +197,17 @@ static AIHTMLDecoder *messageencoder = nil;
     [message setThread:threadid];
     [message setBody:[inMessageObject messageString]];
     
-    NSAttributedString *attmessage = [inMessageObject message];
-    if(!messageencoder)
-    {
-        messageencoder = [[AIHTMLDecoder alloc] init];
-        [messageencoder setGeneratesStrictXHTML:YES];
-        [messageencoder setIncludesHeaders:NO];
-        [messageencoder setIncludesStyleTags:YES];
-        [messageencoder setEncodesNonASCII:NO];
+    // add the XHTML representation if the other party supports it
+
+    SmackXDiscoverInfo *discoinfo = [[chat listObject] statusObjectForKey:@"XMPP:disco#info"];
+    if(discoinfo && [discoinfo containsFeature:@"http://jabber.org/protocol/xhtml-im"]) {
+        NSString *xhtmlbody = [inMessageObject encodedMessage];
+        
+        SmackXXHTMLExtension *xhtml = [SmackCocoaAdapter XHTMLExtension];
+        [xhtml addBody:xhtmlbody];
+        
+        [message addExtension:xhtml];
     }
-    
-    // add the XHTML representation
-    
-    NSString *xhtmlmessage = [messageencoder encodeHTML:attmessage imagesPath:nil];
-    // for some reason I can't specify that I don't want <html> but that I do want <body>...
-    NSString *xhtmlbody = [NSString stringWithFormat:@"<body xmlns='http://www.w3.org/1999/xhtml'>%@</body>",xhtmlmessage];
-    
-    SmackXXHTMLExtension *xhtml = [SmackCocoaAdapter XHTMLExtension];
-    [xhtml addBody:xhtmlbody];
-    
-    [message addExtension:xhtml];
     
     // sending occurs in SmackXMPPAccount
 }
