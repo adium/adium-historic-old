@@ -277,31 +277,35 @@ static int linesLeftToFind = 0;
 		//Enumerate over the found elements
 		NSEnumerator *enumerator = [foundElements objectEnumerator];
 		AIXMLElement *element = nil;
+		AIListObject *account = [chat account];
+		NSString	 *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
+
 		while ((element = [enumerator nextObject])) {
 			//Set up some doohickers.
-			NSDictionary *attributesDictionary = [element attributes];
-			NSString *sender = [NSString stringWithFormat:@"%@.%@", serviceName, [attributesDictionary objectForKey:@"sender"]];
-			AIListObject *account = [chat account];
-			NSString *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
-			BOOL sentByMe = ([sender isEqualToString:accountID]);
-			NSString *autoreplyAttribute = [attributesDictionary objectForKey:@"auto"];
+			NSDictionary	*attributesDictionary = [element attributes];
+			NSString		*sender = [NSString stringWithFormat:@"%@.%@", serviceName, [attributesDictionary objectForKey:@"sender"]];
+			BOOL			sentByMe = ([sender isEqualToString:accountID]);
+			NSString		*autoreplyAttribute = [attributesDictionary objectForKey:@"auto"];
+			NSString		*timeString = [attributesDictionary objectForKey:@"time"];
 			//Create the context object
-			NSLog(@"Message Context Display: Parsing message time attribute %@", [attributesDictionary objectForKey:@"time"]);
-			AIContentContext *message = [AIContentContext messageInChat:chat 
-															 withSource:(sentByMe ? account : [chat listObject])
-															destination:(sentByMe ? [chat listObject] : account)
-																   date:[NSCalendarDate calendarDateWithString:[attributesDictionary objectForKey:@"time"]]
-																message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
-															  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"true"] == NSOrderedSame)];
-			//Don't log this object
-			[message setPostProcessContent:NO];
-			
-			//Add it to the array
-			[innerFoundContentContexts addObject:message];
-			
-			//If we've found enough, stop drop and roll!
-			if ([innerFoundContentContexts count] >= linesLeftToFind)
-				break;
+			if (timeString) {
+				NSLog(@"Message Context Display: Parsing message time attribute %@", timeString);
+				AIContentContext *message = [AIContentContext messageInChat:chat 
+																 withSource:(sentByMe ? account : [chat listObject])
+																destination:(sentByMe ? [chat listObject] : account)
+																	   date:[NSCalendarDate calendarDateWithString:timeString]
+																	message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
+																  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"true"] == NSOrderedSame)];
+				//Don't log this object
+				[message setPostProcessContent:NO];
+				
+				//Add it to the array
+				[innerFoundContentContexts addObject:message];
+				
+				//If we've found enough, stop drop and roll!
+				if ([innerFoundContentContexts count] >= linesLeftToFind)
+					break;
+			}
 		}
 
 		//Add our locals to the outer array; we're probably looping again.
