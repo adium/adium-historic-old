@@ -336,6 +336,12 @@
     if ([attributedString length] != 0) { 
 		AIListObject				*listObject = [chat listObject];
 		
+		if ([chat isGroupChat] && ![[chat account] online]) {
+			//Refuse to do anything with a group chat for an offline account.
+			NSBeep();
+			return;
+		}
+		
 		if (!suppressSendLaterPrompt &&
 			![chat canSendMessages]) {
 			

@@ -403,14 +403,19 @@ static int nextChatNumber = 0;
 {
 	BOOL canSendMessages;
 	if ([self isGroupChat]) {
+		//XXX Liar!
 		canSendMessages = YES;
 
 	} else {
-		AIListContact *listObject = [self listObject];
-
-		canSendMessages = ([listObject online] ||
-						   [listObject isStranger] ||
-						   [[self account] canSendOfflineMessageToContact:listObject]);
+		if ([[self account] online]) {
+			AIListContact *listObject = [self listObject];
+			
+			canSendMessages = ([listObject online] ||
+							   [listObject isStranger] ||
+							   [[self account] canSendOfflineMessageToContact:listObject]);
+		} else {
+			canSendMessages = NO;
+		}
 	}
 	
 	return canSendMessages;
