@@ -289,6 +289,7 @@ static int linesLeftToFind = 0;
 			NSString		*timeString = [attributesDictionary objectForKey:@"time"];
 			//Create the context object
 			if (timeString) {
+				//http://www.visualdistortion.org/crash/view.jsp?crash=211821
 				NSLog(@"Message Context Display: Parsing message time attribute %@", timeString);
 				AIContentContext *message = [AIContentContext messageInChat:chat 
 																 withSource:(sentByMe ? account : [chat listObject])
