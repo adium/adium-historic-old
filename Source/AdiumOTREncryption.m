@@ -973,7 +973,7 @@ OtrlUserState otrg_get_userstate(void)
 	while (![scanner isAtEnd]) {
 		//username     accountname  protocol      key	trusted\n
 		NSString		*chunk;
-		NSString		*username, *accountname, *protocol, *key, *trusted;
+		NSString		*username = nil, *accountname = nil, *protocol = nil, *key = nil, *trusted = nil;
 		
 		//username
 		[scanner scanUpToCharactersFromSet:tabAndNewlineSet intoString:&username];
@@ -1000,20 +1000,22 @@ OtrlUserState otrg_get_userstate(void)
 			trusted = nil;
 		}
 		
-		AIAccount		*account;
-		NSEnumerator	*enumerator = [adiumAccounts objectEnumerator];
-		
-		while ((account = [enumerator nextObject])) {
-			//Hit every possibile name for this account along the way
-			if ([[NSSet setWithObjects:[account UID],[account formattedUID],[[account UID] compactedString], nil] containsObject:accountname]) {
-				if ([[[account service] serviceCodeUniqueID] isEqualToString:[prplDict objectForKey:protocol]]) {
-					[outFingerprints appendString:
-						[NSString stringWithFormat:@"%@\t%@\t%@\t%@", username, [account internalObjectID], [[account service] serviceCodeUniqueID], key]];
-					if (trusted) {
-						[outFingerprints appendString:@"\t"];
-						[outFingerprints appendString:trusted];
+		if (username && accountname && protocol && key) {
+			AIAccount		*account;
+			NSEnumerator	*enumerator = [adiumAccounts objectEnumerator];
+			
+			while ((account = [enumerator nextObject])) {
+				//Hit every possibile name for this account along the way
+				if ([[NSSet setWithObjects:[account UID],[account formattedUID],[[account UID] compactedString], nil] containsObject:accountname]) {
+					if ([[[account service] serviceCodeUniqueID] isEqualToString:[prplDict objectForKey:protocol]]) {
+						[outFingerprints appendString:
+							[NSString stringWithFormat:@"%@\t%@\t%@\t%@", username, [account internalObjectID], [[account service] serviceCodeUniqueID], key]];
+						if (trusted) {
+							[outFingerprints appendString:@"\t"];
+							[outFingerprints appendString:trusted];
+						}
+						[outFingerprints appendString:@"\n"];
 					}
-					[outFingerprints appendString:@"\n"];
 				}
 			}
 		}
