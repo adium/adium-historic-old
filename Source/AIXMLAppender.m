@@ -38,6 +38,7 @@
 
 
 #import "AIXMLAppender.h"
+#import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <sys/stat.h>
 
@@ -87,42 +88,16 @@ enum {
 		initialized = NO;
 		rootElementName = nil;
 		filePath = [path copy];
+		NSFileManager *manager = [NSFileManager defaultManager];
 		
 		//Check if the file already exists
-		if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+		if ([manager fileExistsAtPath:filePath]) {
 			//Get the root element name and set initialized
 			rootElementName = [[self rootElementNameForFileAtPath:filePath] retain];
 			initialized = (rootElementName != nil);				
 		//We may need to create the directory structure, so call this just in case
-		} else {
-			NSFileManager *mgr = [NSFileManager defaultManager];
-
-			//Save the current working directory, so we can change back to it.
-			NSString *savedWorkingDirectory = [mgr currentDirectoryPath];
-			//Change to the root.
-			[mgr changeCurrentDirectoryPath:@"/"];
-
-			/*Create each component of the path, then change into it.
-			 *E.g. /foo/bar/baz:
-			 *	cd /
-			 *	mkdir foo
-			 *	cd foo
-			 *	mkdir bar
-			 *	cd bar
-			 *	mkdir baz
-			 *	cd baz
-			 *	cd $savedWorkingDirectory
-			 */
-			NSArray *pathComponents = [[filePath stringByDeletingLastPathComponent] pathComponents];
-			NSEnumerator *pathComponentsEnum = [pathComponents objectEnumerator];
-			NSString *component;
-			while ((component = [pathComponentsEnum nextObject])) {
-				[mgr createDirectoryAtPath:component attributes:nil];
-				[mgr changeCurrentDirectoryPath:component];
-			}
-
-			[mgr changeCurrentDirectoryPath:savedWorkingDirectory];
-		}
+		} else
+			[manager createDirectoriesForPath:[filePath stringByDeletingLastPathComponent]];
 		
 		//Open our file handle and seek if necessary
 		const char *pathCString = [filePath fileSystemRepresentation];
