@@ -702,13 +702,13 @@ void resolveHSV(float *color1, float *color2);
 	colorspace = CGColorSpaceCreateDeviceRGB();
 #endif
 	  
-	  CGShadingRef myCGShading = CGShadingCreateAxial(colorspace, startPoint, endPoint, gradientFunction, false, false);
-	  
-	  CGContextClipToRect(currentContext , *(CGRect *)&rect);	//This is where the action happens
-	  CGContextDrawShading(currentContext, myCGShading);
-	  
-	  CGShadingRelease   (myCGShading);
-	  CGColorSpaceRelease(colorspace );
+  CGShadingRef myCGShading = CGShadingCreateAxial(colorspace, startPoint, endPoint, gradientFunction, false, false);
+  
+  CGContextClipToRect(currentContext , *(CGRect *)&rect);	//This is where the action happens
+  CGContextDrawShading(currentContext, myCGShading);
+  
+  CGShadingRelease   (myCGShading);
+  CGColorSpaceRelease(colorspace );
   CGContextRestoreGState(currentContext);
   }
 
@@ -741,13 +741,13 @@ void resolveHSV(float *color1, float *color2);
   colorspace = CGColorSpaceCreateDeviceRGB();
 #endif
 
-	  CGShadingRef myCGShading = CGShadingCreateRadial(colorspace, startPoint, startRadius, endPoint, endRadius, gradientFunction, true, true);
-	  
-	  CGContextClipToRect (currentContext , *(CGRect *)&rect);
-	  CGContextDrawShading(currentContext , myCGShading);		//This is where the action happens
-	  
-	  CGShadingRelease    (myCGShading);
-	  CGColorSpaceRelease (colorspace);
+  CGShadingRef myCGShading = CGShadingCreateRadial(colorspace, startPoint, startRadius, endPoint, endRadius, gradientFunction, true, true);
+  
+  CGContextClipToRect (currentContext , *(CGRect *)&rect);
+  CGContextDrawShading(currentContext , myCGShading);		//This is where the action happens
+  
+  CGShadingRelease    (myCGShading);
+  CGColorSpaceRelease (colorspace);
   CGContextRestoreGState(currentContext);
   }
 
