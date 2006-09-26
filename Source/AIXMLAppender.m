@@ -102,12 +102,16 @@ enum {
 		//Open our file handle and seek if necessary
 		const char *pathCString = [filePath fileSystemRepresentation];
 		int fd = open(pathCString, O_CREAT | O_WRONLY, 0644);
-		file = [[NSFileHandle alloc] initWithFileDescriptor:fd closeOnDealloc:YES];
-		if (initialized) {
-			struct stat sb;
-			fstat(fd, &sb);
-			int closingTagLength = [rootElementName length] + 4; //</rootElementName>
-			[file seekToFileOffset:sb.st_size - closingTagLength];
+		if(fd == -1) {
+			AILog(@"Couldn't open log file for writing!");
+		} else {
+			file = [[NSFileHandle alloc] initWithFileDescriptor:fd closeOnDealloc:YES];
+			if (initialized) {
+				struct stat sb;
+				fstat(fd, &sb);
+				int closingTagLength = [rootElementName length] + 4; //</rootElementName>
+				[file seekToFileOffset:sb.st_size - closingTagLength];
+			}
 		}
 	}
 
@@ -169,7 +173,7 @@ enum {
 - (void)initializeDocumentWithRootElementName:(NSString *)name attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
 	//Don't initialize twice
-	if (!initialized) {
+	if (!initialized && file) {
 		//Keep track of this for later
 		rootElementName = [name retain];
 
@@ -215,8 +219,8 @@ enum {
 
 - (void)addElementWithName:(NSString *)name escapedContent:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
-	//Don't add if not initialized
-	if (initialized) {
+	//Don't add if not initialized, or if we couldn't open the file
+	if (initialized && file) {
 		//Create our strings
 		NSString *element = [self createElementWithName:name content:content attributeKeys:keys attributeValues:values];
 		NSString *closingTag = [NSString stringWithFormat:@"</%@>\n", rootElementName];
@@ -281,6 +285,8 @@ enum {
 {
 	//Create a temporary file handle for validation, and read the marker
 	NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:path];
+	
+	if(!handle) return nil;
 	
 	NSScanner *scanner = nil;
 	do {
