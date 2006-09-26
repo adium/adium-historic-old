@@ -99,7 +99,7 @@
 	[super configureGaimAccount];
 	
 	NSString	*connectServer;
-	BOOL		forceOldSSL, useTLS, allowPlaintext;
+	BOOL		forceOldSSL, allowPlaintext;
 
 	gaim_account_set_username(account, [self gaimAccountName]);
 
@@ -113,10 +113,6 @@
 	//Force old SSL usage? (off by default)
 	forceOldSSL = [[self preferenceForKey:KEY_JABBER_FORCE_OLD_SSL group:GROUP_ACCOUNT_STATUS] boolValue];
 	gaim_account_set_bool(account, "old_ssl", forceOldSSL);
-
-	//Allow TLS usage? (on by default)
-	useTLS = [[self preferenceForKey:KEY_JABBER_USE_TLS group:GROUP_ACCOUNT_STATUS] boolValue];
-	gaim_account_set_bool(account, "use_tls", useTLS);
 
 	//Allow plaintext authorization over an unencrypted connection? Gaim will prompt if this is NO and is needed.
 	allowPlaintext = [[self preferenceForKey:KEY_JABBER_ALLOW_PLAINTEXT group:GROUP_ACCOUNT_STATUS] boolValue];
