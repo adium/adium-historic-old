@@ -372,6 +372,22 @@ SecuridProvider
 	public void closedServices(AimConnection conn, Collection<? extends Service> services) {
     }
 	
+	/* ServiceListener */
+	/*
+	public void handleServiceReady(Service service) {
+		if (service instanceof ChatRoomService) {
+			ChatRoomService chatService = (ChatRoomService) service;
+			HashMap map = new HashMap();
+			map.put("ChatRoomService", chatService);
+			
+			sendDelegateMessageWithMap("chatRoomReady", map);			
+		}
+	}
+    public void handleServiceFinished(Service service) {
+		
+	}
+	 */
+
 	/* BuddyListLayoutListener */
 	public void groupsReordered(BuddyList list, List<? extends Group> oldOrder,
 								List<? extends Group> newOrder) {

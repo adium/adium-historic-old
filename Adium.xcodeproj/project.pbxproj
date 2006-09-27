@@ -61,8 +61,6 @@
 		11247EF409561A8500F69C1E /* RAFjoscarAIMAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11247EF209561A8500F69C1E /* RAFjoscarAIMAccount.h */; };
 		11247EF509561A8500F69C1E /* RAFjoscarAIMAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */; };
 		1124816C09562C9D00F69C1E /* joscar bridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124816909562C9500F69C1E /* joscar bridge.jar */; };
-		1124816D09562C9D00F69C1E /* joscar-0.9.4-cvs-bin.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124816A09562C9500F69C1E /* joscar-0.9.4-cvs-bin.jar */; };
-		1124816E09562C9D00F69C1E /* oscar.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124816B09562C9A00F69C1E /* oscar.jar */; };
 		1124817409562CDB00F69C1E /* retroweaver-rt.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124817309562CDB00F69C1E /* retroweaver-rt.jar */; };
 		112FC2B309393926001FB00D /* ESjoscarCocoaAdapter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */; };
 		112FC2B409393926001FB00D /* ESjoscarCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */; };
@@ -543,6 +541,11 @@
 		34B5E2600A7C94D3005186E6 /* AILogDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B5E25E0A7C94D3005186E6 /* AILogDateFormatter.m */; };
 		34B9C7900A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */; };
 		34B9C7920A255DCE00CEA8AE /* LogViewerDateFilter.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */; };
+		34BC8F7A0ACA3AAC00562745 /* AIScannerDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BC8F780ACA3AAC00562745 /* AIScannerDebug.h */; };
+		34BC8F7B0ACA3AAC00562745 /* AIScannerDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */; };
+		34BCB1A30ACB099D00562745 /* joscar-protocol.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34BCB1A00ACB099B00562745 /* joscar-protocol.jar */; };
+		34BCB1A40ACB099D00562745 /* joscar-client.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34BCB1A10ACB099C00562745 /* joscar-client.jar */; };
+		34BCB1A50ACB099D00562745 /* joscar-common.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34BCB1A20ACB099D00562745 /* joscar-common.jar */; };
 		34BD9D4A053146CC000AB133 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F59DB6AD033EB74801A8010A /* main.m */; };
 		34BD9D4C053146CC000AB133 /* AIContactInfoWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F570A59903704B6101A8010A /* AIContactInfoWindowController.m */; };
 		34BD9D54053146CC000AB133 /* AIAdium.m in Sources */ = {isa = PBXBuildFile; fileRef = F59DB3D7033EA9CD01A8010A /* AIAdium.m */; };
@@ -1543,10 +1546,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 15;
 			files = (
+				34BCB1A30ACB099D00562745 /* joscar-protocol.jar in CopyFiles */,
+				34BCB1A40ACB099D00562745 /* joscar-client.jar in CopyFiles */,
+				34BCB1A50ACB099D00562745 /* joscar-common.jar in CopyFiles */,
 				343E7718097BEFE000BCFF92 /* jsocks-klea.jar in CopyFiles */,
 				1124816C09562C9D00F69C1E /* joscar bridge.jar in CopyFiles */,
-				1124816D09562C9D00F69C1E /* joscar-0.9.4-cvs-bin.jar in CopyFiles */,
-				1124816E09562C9D00F69C1E /* oscar.jar in CopyFiles */,
 				1124817409562CDB00F69C1E /* retroweaver-rt.jar in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1685,8 +1689,6 @@
 		11247EF209561A8500F69C1E /* RAFjoscarAIMAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAIMAccount.h; path = "Plugins/joscar Service/RAFjoscarAIMAccount.h"; sourceTree = "<group>"; };
 		11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAIMAccount.m; path = "Plugins/joscar Service/RAFjoscarAIMAccount.m"; sourceTree = "<group>"; };
 		1124816909562C9500F69C1E /* joscar bridge.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar bridge.jar"; path = "Plugins/joscar Service/joscar bridge.jar"; sourceTree = SOURCE_ROOT; };
-		1124816A09562C9500F69C1E /* joscar-0.9.4-cvs-bin.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-0.9.4-cvs-bin.jar"; path = "Plugins/joscar Service/joscar-0.9.4-cvs-bin.jar"; sourceTree = SOURCE_ROOT; };
-		1124816B09562C9A00F69C1E /* oscar.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = oscar.jar; path = "Plugins/joscar Service/oscar.jar"; sourceTree = SOURCE_ROOT; };
 		1124817309562CDB00F69C1E /* retroweaver-rt.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "retroweaver-rt.jar"; path = "Plugins/joscar Service/joscar Java Bridge/Utilities/Retroweave/release/retroweaver-rt.jar"; sourceTree = SOURCE_ROOT; };
 		112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESjoscarCocoaAdapter.h; path = "Plugins/joscar Service/ESjoscarCocoaAdapter.h"; sourceTree = "<group>"; };
 		112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESjoscarCocoaAdapter.m; path = "Plugins/joscar Service/ESjoscarCocoaAdapter.m"; sourceTree = "<group>"; };
@@ -2889,6 +2891,11 @@
 		34BBE1B307A2F36400663CC9 /* adiumGaimCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimCore.m; path = "Plugins/Gaim Service/adiumGaimCore.m"; sourceTree = "<group>"; };
 		34BBE1B807A2F4C500663CC9 /* adiumGaimSignals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumGaimSignals.h; path = "Plugins/Gaim Service/adiumGaimSignals.h"; sourceTree = "<group>"; };
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
+		34BC8F780ACA3AAC00562745 /* AIScannerDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIScannerDebug.h; path = Source/AIScannerDebug.h; sourceTree = "<group>"; };
+		34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScannerDebug.m; path = Source/AIScannerDebug.m; sourceTree = "<group>"; };
+		34BCB1A00ACB099B00562745 /* joscar-protocol.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-protocol.jar"; path = "Plugins/joscar Service/joscar-protocol.jar"; sourceTree = "<group>"; };
+		34BCB1A10ACB099C00562745 /* joscar-client.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-client.jar"; path = "Plugins/joscar Service/joscar-client.jar"; sourceTree = "<group>"; };
+		34BCB1A20ACB099D00562745 /* joscar-common.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-common.jar"; path = "Plugins/joscar Service/joscar-common.jar"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
 		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4059,8 +4066,9 @@
 				110C121709608C5A003FAD0A /* RAFjoscarLogHandler.m */,
 				1124817309562CDB00F69C1E /* retroweaver-rt.jar */,
 				1124816909562C9500F69C1E /* joscar bridge.jar */,
-				1124816A09562C9500F69C1E /* joscar-0.9.4-cvs-bin.jar */,
-				1124816B09562C9A00F69C1E /* oscar.jar */,
+				34BCB1A00ACB099B00562745 /* joscar-protocol.jar */,
+				34BCB1A10ACB099C00562745 /* joscar-client.jar */,
+				34BCB1A20ACB099D00562745 /* joscar-common.jar */,
 				343E7716097BEFD500BCFF92 /* jsocks-klea.jar */,
 				3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */,
 			);
@@ -4537,6 +4545,8 @@
 				34B4B5A10708B049002C4C6D /* ESDebugController.h */,
 				34B4B5A20708B049002C4C6D /* ESDebugController.m */,
 				34575E3607CBA874004A4FFF /* DebugWindow.nib */,
+				34BC8F780ACA3AAC00562745 /* AIScannerDebug.h */,
+				34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */,
 			);
 			name = Debugging;
 			sourceTree = "<group>";
@@ -7462,6 +7472,7 @@
 				3419E2F90A8145B800C3FC68 /* GBFireLogImporter.h in Headers */,
 				C44BA7820AAB696400C7504F /* SetupAssistantBoxBackgroundView.h in Headers */,
 				343022290AB4766E0082CF7C /* AINulRemovalPlugin.h in Headers */,
+				34BC8F7A0ACA3AAC00562745 /* AIScannerDebug.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9067,6 +9078,7 @@
 				3419E2FA0A8145B900C3FC68 /* GBFireLogImporter.m in Sources */,
 				C44BA7830AAB696400C7504F /* SetupAssistantBoxBackgroundView.m in Sources */,
 				3430222A0AB4766E0082CF7C /* AINulRemovalPlugin.m in Sources */,
+				34BC8F7B0ACA3AAC00562745 /* AIScannerDebug.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
