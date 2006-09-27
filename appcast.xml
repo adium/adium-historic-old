@@ -4,10 +4,10 @@
     <title>Adium Updates</title>
     <language>en</language>
     <item>
-      <title>Adium 1.0b13</title>
-      <pubDate>Saturday September 23rd, 2006 00:30:00 GMT-5</pubDate>
-	<sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0b13.html</sparkle:releaseNotesLink> 
-      <enclosure sparkle:md5Sum="0ce3b9a716b7fc9e34d8a1041897913a" sparkle:version="1.0b13" url="http://adiumx.cachefly.net/Adium_1.0b13.dmg" length="18817965" type="application/octet-stream"/>
+      <title>Adium 1.0b14</title>
+      <pubDate>Wednesday, September 27th, 2006 17:45:00 GMT-5</pubDate>
+	<sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0b14.html</sparkle:releaseNotesLink> 
+      <enclosure sparkle:md5Sum="8d95cf0a12a5f7733450c0eea3a26769" sparkle:version="1.0b14" url="http://adiumx.cachefly.net/Adium_1.0b14.dmg" length="18743803" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
