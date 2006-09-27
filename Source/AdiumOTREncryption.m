@@ -148,7 +148,11 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 								   selector:@selector(updateSecurityDetails:) 
 									   name:Chat_DestinationChanged
 									 object:nil];
-	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(updateSecurityDetails:) 
+									   name:Chat_DidOpen
+									 object:nil];
+
 	//Add the Encryption preferences
 	OTRPrefs = [[ESOTRPreferences preferencePane] retain];
 }
@@ -719,6 +723,7 @@ static OtrlMessageAppOps ui_ops = {
  */
 - (void)updateSecurityDetails:(NSNotification *)inNotification
 {
+	AILog(@"Updating security details for %@",[inNotification object]);
 	update_security_details_for_chat([inNotification object]);
 }
 
