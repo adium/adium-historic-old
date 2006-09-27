@@ -25,8 +25,9 @@
  
 //#define JOSCAR_LOG_WARNING
 
-#define OSCAR_JAR			@"oscar"
-#define JOSCAR_JAR			@"joscar-0.9.4-cvs-bin"
+#define CLIENT_JAR			@"joscar-client"
+#define PROTOCOL_JAR		@"joscar-protocol"
+#define COMMON_JAR			@"joscar-common"
 #define JOSCAR_BRIDGE_JAR	@"joscar bridge"
 #define RETROWEAVER_JAR		@"retroweaver-rt"
 #define SOCKS_JAR			@"jsocks-klea"
@@ -1683,15 +1684,19 @@ Date* javaDateFromDate(NSDate *date)
 		BOOL			onMainRunLoop = (CFRunLoopGetCurrent() == CFRunLoopGetMain());
 
 		if (!vm) {
-			NSString	*oscarJarPath, *joscarJarPath, *joscarBridgePath, *retroweaverJarPath, *socksJarPath;
+			NSString	*clientJarPath, *protocolJarPath, *commonJarPath, *joscarBridgePath, *retroweaverJarPath, *socksJarPath;
 			NSString	*classPath;
-
-			oscarJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:OSCAR_JAR
-																			ofType:@"jar"
-																	   inDirectory:@"Java"];
-			joscarJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:JOSCAR_JAR
+			
+			clientJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:CLIENT_JAR
 																			 ofType:@"jar"
 																		inDirectory:@"Java"];
+			protocolJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:PROTOCOL_JAR
+																			   ofType:@"jar"
+																		  inDirectory:@"Java"];
+			commonJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:COMMON_JAR
+																			 ofType:@"jar"
+																		inDirectory:@"Java"];
+			
 			joscarBridgePath = [[NSBundle bundleForClass:[self class]] pathForResource:JOSCAR_BRIDGE_JAR
 																				ofType:@"jar"
 																		   inDirectory:@"Java"];
@@ -1702,9 +1707,9 @@ Date* javaDateFromDate(NSDate *date)
 																			ofType:@"jar"
 																	   inDirectory:@"Java"];
 			
-			classPath = [NSString stringWithFormat:@"%@:%@:%@:%@:%@:%@",
+			classPath = [NSString stringWithFormat:@"%@:%@:%@:%@:%@:%@:%@",
 				[NSJavaVirtualMachine defaultClassPath],
-				retroweaverJarPath, socksJarPath, oscarJarPath, joscarJarPath, joscarBridgePath];
+				retroweaverJarPath, socksJarPath, clientJarPath, protocolJarPath, commonJarPath, joscarBridgePath];
 			
 			vm = [[NSJavaVirtualMachine alloc] initWithClassPath:classPath];
 			
@@ -1772,16 +1777,19 @@ Date* javaDateFromDate(NSDate *date)
 		}
 		[chatSession addListener:joscarBridge];
 		
-		chat = [account mainThreadChatWithName:[[chatSession getRoomInfo] getRoomName]];
+		chat = [account chatWithName:[[chatSession getRoomInfo] getRoomName]];
 		
 		id<Iterator> iter = [[chatSession getUsers] iterator];
 		while ([iter hasNext]) {
 			NSString *tmp = [(Screenname *)[iter next] getNormal];
 			AILog(@"found contact %@ to be part of chat %@", tmp, [chat name]);
 			[chat addParticipatingListObject:[account contactWithUID:[(Screenname *)[iter next] getNormal]]];
-		}	
-	} else
+		}
+
+	} else {
 		[invite reject];
+	}
+
 	return chat;
 }
 
@@ -1814,9 +1822,13 @@ Date* javaDateFromDate(NSDate *date)
 	NSString *chatName = [[session getRoomInfo] getRoomName];
 //	NSString *oldStateString = [map get:@"oldState"];
 	NSString *stateString = [map get:@"state"];
+	AILog(@"(joscar) setGroupChatStateChange: %@ --> %@ [%@]",chatName,stateString,map);
 
 	//stateString can be any of these: "INITIALIZING", "CONNECTING","FAILED","INROOM","CLOSED"
-	if ([stateString isEqualToString:@"FAILED"]) {
+	if ([stateString isEqualToString:@"INROOM"]) {
+		[accountProxy groupChatReadyWithName:chatName];
+
+	} else if ([stateString isEqualToString:@"FAILED"]) {
 		@synchronized (joscarChatsDict) {
 			[joscarChatsDict removeObjectForKey:chatName];
 		}
@@ -1834,15 +1846,18 @@ Date* javaDateFromDate(NSDate *date)
 
 - (void)setGroupChatUsersJoined:(HashMap *)map
 {
-	ChatRoomSession *session = [map get:@"ChatRoomSession"];
-	NSString *chatName = [[session getRoomInfo] getRoomName];
-	id<Set> theSet = (id<Set>)[map get:@"Set"];
-	id<Iterator> iter = [theSet iterator];
-	NSMutableArray *joined = [[NSMutableArray alloc] init];
-	while ([iter hasNext]) {
-		NSString *tmp = [(Screenname *)[(ChatRoomUser *)[iter next] getScreenname] getNormal];
-		[joined addObject:[[tmp copy] autorelease]];
+	ChatRoomSession	*session = [map get:@"ChatRoomSession"];
+	NSString		*chatName = [[session getRoomInfo] getRoomName];
+	id<Set>			theSet = (id<Set>)[map get:@"Set"];
+	id<Iterator>	iter = [theSet iterator];
+	NSMutableArray	*joined = [[NSMutableArray alloc] init];
+	ChatRoomUser	*user;
+
+	while ([iter hasNext] && (user = [iter next])) {
+		NSString *tmp = [[[[user getScreenname] getNormal] copy] autorelease];
+		[joined addObject:tmp];
 	}
+
 	[accountProxy objectsJoinedChat:[joined autorelease] chatName:chatName];
 }
 

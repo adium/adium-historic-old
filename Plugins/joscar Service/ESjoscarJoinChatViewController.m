@@ -91,8 +91,6 @@
 				chatCreationInfo:chatCreationInfo
 				invitingContacts:[self contactsFromNamesSeparatedByCommas:[textField_inviteUsers stringValue] onAccount:inAccount]
 		   withInvitationMessage:invitationMessage];
-		AIChat *tmpChat = [[adium chatController] existingChatWithName:room onAccount:account];
-		[(RAFjoscarAccount *)account addChat:tmpChat];
 
 	} else {
 		NSLog(@"Error: No room specified.");
@@ -144,7 +142,6 @@
 }
 
 #pragma mark Dragging Delegate
-
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {

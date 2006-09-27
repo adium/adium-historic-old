@@ -672,9 +672,11 @@
 //Open a chat for Adium
 - (BOOL)openChat:(AIChat *)chat
 {
-	if ([chat isGroupChat])
+	if ([chat isGroupChat]) {
+		AILog(@"Joining the chat room %@ for %@",[chat name], chat);
 		[joscarAdapter joinChatRoom:[chat name]];
-	
+	}
+
 	//Created the chat successfully
 	return YES;
 }
@@ -1285,40 +1287,25 @@ BOOL isMobileContact(AIListObject *inListObject)
 	}
 }
 
-- (AIChat *)mainThreadChatWithName:(NSString *)name
+- (AIChat *)chatWithName:(NSString *)name
 {
-	AIChat *chat;
-
-/*	[[adium chatController] mainPerformSelector:@selector(chatWithName:onAccount:chatCreationInfo:)
-									 withObject:name
-									 withObject:self
-									 withObject:nil
-								  waitUntilDone:YES];*/
-	[[adium chatController] chatWithName:name onAccount:self chatCreationInfo:nil];
-	
-	//Now return the existing chat
-	chat = [[adium chatController] existingChatWithName:name onAccount:self];
-	
-	return chat;
+	return [[adium chatController] chatWithName:name onAccount:self chatCreationInfo:nil];
 }
 
 #pragma mark Group Chat
-/*
- * If the user sent an initial message, this will be triggered and have no effect.
- *
- * If a remote user sent an initial message, however, a chat will be created without being opened.  This call is our
- * cue to actually open chat.
- *
- * Another situation in which this is relevant is when we request joining a group chat; the chat should only be actually
- * opened once the server notifies us that we are in the room.
- *
- * This will ultimately call -[CBGaimAccount openChat:] below if the chat was not previously open.
+/*!
+ * @brief A group chat is now ready; open it
  */
-- (void)addChat:(AIChat *)chat
+- (void)groupChatReady:(AIChat *)chat
 {
-	[[adium notificationCenter] addObserver:self selector:@selector(chatClosed:) name:Chat_WillClose object:chat];
 	//Open the chat
+	AILog(@"%@: addGroupChat: %@", self, chat);
 	[[adium interfaceController] openChat:chat]; 
+}
+
+- (void)groupChatReadyWithName:(NSString *)inChatName
+{
+	[self groupChatReady:[self chatWithName:inChatName]];
 }
 
 - (void)setTypingFlagOfChat:(AIChat *)chat to:(NSNumber *)typingStateNumber
@@ -1365,7 +1352,7 @@ BOOL isMobileContact(AIListObject *inListObject)
 	BOOL	shouldJoinChat = (AITextAndButtonsDefaultReturn == returnCode);
 
 	if ((chat = [joscarAdapter handleChatInvitation:(id<ChatInvitation>)userInfo withDecision:shouldJoinChat])) {
-		[self addChat:chat];
+		[self groupChatReady:chat];
 	}
 
 	return YES;
@@ -1373,10 +1360,10 @@ BOOL isMobileContact(AIListObject *inListObject)
 
 - (void)gotMessage:(NSString *)message onGroupChatNamed:(NSString *)name fromUID:(NSString *)uid
 {
-	AIChat				*chat = [self mainThreadChatWithName:name];
+	AIChat				*chat = [self chatWithName:name];
 	AIContentMessage	*messageObject;
 	AIListContact		*sourceContact = [self contactWithUID:uid];
-	NSAttributedString *attributedMessage = [[adium contentController] decodedIncomingMessage:message
+	NSAttributedString	*attributedMessage = [[adium contentController] decodedIncomingMessage:message
 																				  fromContact:sourceContact
 																					onAccount:self];
 	
@@ -1396,17 +1383,12 @@ BOOL isMobileContact(AIListObject *inListObject)
 {	
 	[[adium contentController] displayEvent:AILocalizedString(@"Error: A connection failure has occurred.", nil)
 									 ofType:@"group_chat_connection_failure"
-									 inChat:[self mainThreadChatWithName:name]];
-}
-
-- (void)chatClosed:(NSNotification *)notif
-{
-	[joscarAdapter leaveGroupChatWithName:[(AIChat*)[notif object] name]];
+									 inChat:[self chatWithName:name]];
 }
 
 - (void)objectsLeftChat:(NSArray *)objects chatName:(NSString *)name
 {
-	AIChat *chat = [self mainThreadChatWithName:name];
+	AIChat *chat = [self chatWithName:name];
 	NSEnumerator *iter = [objects objectEnumerator];
 	NSString *uid;
 	while ((uid = [iter nextObject]))
@@ -1415,7 +1397,7 @@ BOOL isMobileContact(AIListObject *inListObject)
 
 - (void)objectsJoinedChat:(NSArray *)objects chatName:(NSString *)name
 {
-	AIChat *chat = [self mainThreadChatWithName:name];
+	AIChat *chat = [self chatWithName:name];
 	NSEnumerator *iter = [objects objectEnumerator];
 	NSString *uid;
 	while ((uid = [iter nextObject]))

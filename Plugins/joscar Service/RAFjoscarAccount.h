@@ -69,11 +69,11 @@
 - (void)inviteToChat:(NSString *)name fromContact:(NSString *)uid withMessage:(NSString *)message inviteObject:(id)invite;
 
 - (void)gotMessage:(NSString *)message onGroupChatNamed:(NSString *)name fromUID:(NSString *)uid;
-- (AIChat *)mainThreadChatWithName:(NSString *)name;
+- (AIChat *)chatWithName:(NSString *)name;
 - (void)chatFailed:(NSString *)name;
 - (void)objectsLeftChat:(NSArray *)objects chatName:(NSString *)name;
 - (void)objectsJoinedChat:(NSArray *)objects chatName:(NSString *)name;
-- (void)addChat:(AIChat *)chat;
+- (void)groupChatReadyWithName:(NSString *)inChatName;
 
 - (NSString *)getSecurid;
 
