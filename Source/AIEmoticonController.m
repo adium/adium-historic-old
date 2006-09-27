@@ -282,12 +282,20 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 				}
 			}
 			if (!acceptable) {
-				/* If the emoticon would end the string except for whitespace or newlines at the end, or it begins the string after removing
-				 * whitespace or newlines at the beginning, it is acceptable even if the previous conditions weren't met.
+				/* If the emoticon would end the string except for whitespace, newlines, or punctionation at the end, or it begins the string after removing
+				 * whitespace, newlines, or punctuation at the beginning, it is acceptable even if the previous conditions weren't met.
 				 */
-				NSString	*trimmedString = [messageString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+				static NSCharacterSet *endingTrimSet = nil;
+				if (!endingTrimSet) {
+					NSMutableCharacterSet *tempSet = [[NSCharacterSet punctuationCharacterSet] mutableCopy];
+					[tempSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+					endingTrimSet = [tempSet immutableCopy];
+					[tempSet release];
+				}
+
+				NSString	*trimmedString = [messageString stringByTrimmingCharactersInSet:endingTrimSet];
 				unsigned int trimmedLength = [trimmedString length];
-				if ([trimmedString length] == (originalEmoticonLocation + textLength)) {
+				if (trimmedLength == (originalEmoticonLocation + textLength)) {
 					acceptable = YES;
 				} else if ((originalEmoticonLocation - (messageStringLength - trimmedLength)) == 0) {
 					acceptable = YES;					
