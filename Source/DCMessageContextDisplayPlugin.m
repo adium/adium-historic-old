@@ -235,6 +235,7 @@ static int linesLeftToFind = 0;
 				
 		//Stick the base path on to the beginning
 		logPath = [baseLogPath stringByAppendingPathComponent:logPath];
+		NSLog(@"Message History: Loading log file: %@", logPath);
 		
 		//Initialize the found messages array and element stack for us-as-delegate
 		foundElements = [NSMutableArray arrayWithCapacity:linesToDisplay];
