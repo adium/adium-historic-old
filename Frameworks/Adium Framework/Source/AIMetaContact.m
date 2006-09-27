@@ -275,7 +275,12 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		
 		//Add the object from our status cache, notifying of the changes (silently) as appropriate
 		[self _updateCachedStatusOfObject:inObject];
-		
+
+		if ([inObject isKindOfClass:[AIListContact class]] && [(AIListContact *)inObject remoteGroupName]) {
+			//Force an immediate update of our listContacts list, which will also update our visible count
+			[self listContacts];
+		}
+
 		success = YES;
 	}
 	
