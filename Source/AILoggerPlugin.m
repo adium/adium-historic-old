@@ -253,7 +253,7 @@ Class LogViewerWindowControllerClass = NULL;
 	NSParameterAssert(object != nil);
 	NSString    *dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil locale:nil];
 	
-	NSAssert(dateString != nil);
+	NSAssert2(dateString != nil, @"Date string was invalid for the chatlog for %@ on %@", object, date);
 		
 	return [NSString stringWithFormat:@"%@ (%@).chatlog", object, dateString];
 }
