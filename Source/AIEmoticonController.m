@@ -274,8 +274,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 													atIndex:(emoticonRangeInNewMessage.location - 1) 
 											 effectiveRange:NULL])) &&
 
-					((nextCharacter == ' ') || (nextCharacter == '\t') || (nextCharacter == '\n') || 
-					 (nextCharacter == '\r') || (nextCharacter == '.') || (nextCharacter == '?') || (nextCharacter == '!') ||
+					((nextCharacter == ' ') || (nextCharacter == '\t') || (nextCharacter == '\n') || (nextCharacter == '\r') ||
+					 (nextCharacter == '.') || (nextCharacter == ',') || (nextCharacter == '?') || (nextCharacter == '!') ||
 					 (nextCharacter == ')') ||
 					 (nextCharacter == '\"') || (nextCharacter == '\''))) {
 					acceptable = YES;
