@@ -148,9 +148,9 @@
 													immediately:YES];
 			}
 
-		//We finished adding untracked content
-		[[adium notificationCenter] postNotificationName:Content_ChatDidFinishAddingUntrackedContent
-												  object:chat];
+			//We finished adding untracked content
+			[[adium notificationCenter] postNotificationName:Content_ChatDidFinishAddingUntrackedContent
+												  	  object:chat];
 
 		}
 	}
