@@ -7,7 +7,7 @@
       <title>Adium 1.0b14</title>
       <pubDate>Wednesday, September 27th, 2006 17:45:00 GMT-5</pubDate>
 	<sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0b14.html</sparkle:releaseNotesLink> 
-      <enclosure sparkle:md5Sum="8d95cf0a12a5f7733450c0eea3a26769" sparkle:version="1.0b14" url="http://adiumx.cachefly.net/Adium_1.0b14.dmg" length="18743803" type="application/octet-stream"/>
+      <enclosure sparkle:md5Sum="8d95cf0a12a5f7733450c0eea3a26769" sparkle:version="1.0b13" url="http://adiumx.cachefly.net/Adium_1.0b14.dmg" length="18743803" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
