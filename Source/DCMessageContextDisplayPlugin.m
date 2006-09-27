@@ -288,8 +288,8 @@ static int linesLeftToFind = 0;
 			NSString		*autoreplyAttribute = [attributesDictionary objectForKey:@"auto"];
 			NSString		*timeString = [attributesDictionary objectForKey:@"time"];
 			//Create the context object
+			//http://www.visualdistortion.org/crash/view.jsp?crash=211821
 			if (timeString) {
-				//http://www.visualdistortion.org/crash/view.jsp?crash=211821
 				NSLog(@"Message Context Display: Parsing message time attribute %@", timeString);
 				AIContentContext *message = [AIContentContext messageInChat:chat 
 																 withSource:(sentByMe ? account : [chat listObject])
@@ -306,6 +306,8 @@ static int linesLeftToFind = 0;
 				//If we've found enough, stop drop and roll!
 				if ([innerFoundContentContexts count] >= linesLeftToFind)
 					break;
+			} else {
+				NSLog(@"Null message context display time for %@",element);
 			}
 		}
 
