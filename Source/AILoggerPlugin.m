@@ -249,7 +249,12 @@ Class LogViewerWindowControllerClass = NULL;
 
 + (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date
 {
+	NSParameterAssert(date != nil);
+	NSParameterAssert(object != nil);
 	NSString    *dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil locale:nil];
+	
+	NSAssert(dateString != nil);
+		
 	return [NSString stringWithFormat:@"%@ (%@).chatlog", object, dateString];
 }
 
