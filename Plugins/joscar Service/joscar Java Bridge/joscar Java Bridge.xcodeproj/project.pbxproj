@@ -12,9 +12,9 @@
 		112480940956272E00F69C1E /* JoscarStateInfo.java in Sources */ = {isa = PBXBuildFile; fileRef = 1124808F0956272E00F69C1E /* JoscarStateInfo.java */; };
 		1124815E09562BC400F69C1E /* retroweaver-rt.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 1124815D09562BC300F69C1E /* retroweaver-rt.jar */; };
 		340712FA09A8E214002B7464 /* JoscarFileMapper.java in Sources */ = {isa = PBXBuildFile; fileRef = 340712F909A8E214002B7464 /* JoscarFileMapper.java */; };
-		347EB76A0AC72C1C00C716B2 /* protocol.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 347EB7670AC72C1900C716B2 /* protocol.jar */; };
-		347EB76B0AC72C1C00C716B2 /* client.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 347EB7680AC72C1A00C716B2 /* client.jar */; };
-		347EB76C0AC72C1C00C716B2 /* common.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 347EB7690AC72C1B00C716B2 /* common.jar */; };
+		34DD9A8B0ACB6A0A0027C4F5 /* joscar-protocol.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 34DD9A880ACB6A070027C4F5 /* joscar-protocol.jar */; };
+		34DD9A8C0ACB6A0A0027C4F5 /* joscar-client.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 34DD9A890ACB6A080027C4F5 /* joscar-client.jar */; };
+		34DD9A8D0ACB6A0A0027C4F5 /* joscar-common.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 34DD9A8A0ACB6A0A0027C4F5 /* joscar-common.jar */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,9 +34,9 @@
 		1124808F0956272E00F69C1E /* JoscarStateInfo.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = JoscarStateInfo.java; sourceTree = "<group>"; };
 		1124815D09562BC300F69C1E /* retroweaver-rt.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "retroweaver-rt.jar"; path = "Utilities/Retroweave/release/retroweaver-rt.jar"; sourceTree = SOURCE_ROOT; };
 		340712F909A8E214002B7464 /* JoscarFileMapper.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = JoscarFileMapper.java; sourceTree = "<group>"; };
-		347EB7670AC72C1900C716B2 /* protocol.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = protocol.jar; path = ../protocol.jar; sourceTree = SOURCE_ROOT; };
-		347EB7680AC72C1A00C716B2 /* client.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = client.jar; path = ../client.jar; sourceTree = SOURCE_ROOT; };
-		347EB7690AC72C1B00C716B2 /* common.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = common.jar; path = ../common.jar; sourceTree = SOURCE_ROOT; };
+		34DD9A880ACB6A070027C4F5 /* joscar-protocol.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-protocol.jar"; path = "../joscar-protocol.jar"; sourceTree = SOURCE_ROOT; };
+		34DD9A890ACB6A080027C4F5 /* joscar-client.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-client.jar"; path = "../joscar-client.jar"; sourceTree = SOURCE_ROOT; };
+		34DD9A8A0ACB6A0A0027C4F5 /* joscar-common.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-common.jar"; path = "../joscar-common.jar"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,9 +45,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1124815E09562BC400F69C1E /* retroweaver-rt.jar in Frameworks */,
-				347EB76A0AC72C1C00C716B2 /* protocol.jar in Frameworks */,
-				347EB76B0AC72C1C00C716B2 /* client.jar in Frameworks */,
-				347EB76C0AC72C1C00C716B2 /* common.jar in Frameworks */,
+				34DD9A8B0ACB6A0A0027C4F5 /* joscar-protocol.jar in Frameworks */,
+				34DD9A8C0ACB6A0A0027C4F5 /* joscar-client.jar in Frameworks */,
+				34DD9A8D0ACB6A0A0027C4F5 /* joscar-common.jar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,9 +62,9 @@
 				1124815D09562BC300F69C1E /* retroweaver-rt.jar */,
 				1124808E0956272E00F69C1E /* joscarBridge.java */,
 				1124808F0956272E00F69C1E /* JoscarStateInfo.java */,
-				347EB7670AC72C1900C716B2 /* protocol.jar */,
-				347EB7680AC72C1A00C716B2 /* client.jar */,
-				347EB7690AC72C1B00C716B2 /* common.jar */,
+				34DD9A880ACB6A070027C4F5 /* joscar-protocol.jar */,
+				34DD9A890ACB6A080027C4F5 /* joscar-client.jar */,
+				34DD9A8A0ACB6A0A0027C4F5 /* joscar-common.jar */,
 				112480880956271F00F69C1E /* Products */,
 			);
 			sourceTree = "<group>";
