@@ -136,12 +136,6 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
     [self autorelease]; //Close the shared instance
 }
 
-//Dealloc
-- (void)dealloc
-{    
-	[super dealloc];
-}
-
 #pragma mark DCJoinChatViewController delegate
 - (void)setJoinChatEnabled:(BOOL)enabled
 {
