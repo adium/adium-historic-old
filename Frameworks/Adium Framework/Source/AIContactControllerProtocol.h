@@ -58,6 +58,7 @@ typedef enum {
 - (NSMenu *)menuOfAllGroupsInGroup:(AIListGroup *)inGroup withTarget:(id)target;
 - (NSSet *)allContactsWithService:(AIService *)service UID:(NSString *)inUID existingOnly:(BOOL)existingOnly;
 - (AIListGroup *)offlineGroup;
+- (BOOL)useOfflineGroup;
 
 - (AIMetaContact *)groupUIDs:(NSArray *)UIDsArray forServices:(NSArray *)servicesArray;
 - (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray;
