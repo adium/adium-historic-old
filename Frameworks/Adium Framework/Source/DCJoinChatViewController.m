@@ -68,8 +68,13 @@
 }
 
 //Stubs for subclasses
-- (NSString *)nibName { return nil; };
-- (void)joinChatWithAccount:(AIAccount *)inAccount { };
+- (NSString *)nibName {
+	return nil;
+};
+- (void)joinChatWithAccount:(AIAccount *)inAccount
+{
+	
+};
 
 - (void)configureForAccount:(AIAccount *)inAccount
 { 
@@ -79,10 +84,21 @@
 	}
 }
 
-- (NSString *)impliedCompletion:(NSString *)aString {return aString;}
+- (NSString *)impliedCompletion:(NSString *)aString
+{
+	return aString;
+}
 
 
-//General methods for joining chats and inviting users
+/*!
+ * @brief Join a group chat with given information
+ *
+ * @param inName The name of the chat
+ * @param inAccount The account on which to join
+ * @param inInfo Account-specific information which can be used by the account while joining or creating the chat
+ * @param contactsToInvite An array of AIListContacts which will be invited to the chat once Chat_DidOpen is posted for it (once it is open)
+ * @param invitationMessage A message sent to contactsToInvite. Ignored if contactsToInvite is nil.
+ */
 - (void)doJoinChatWithName:(NSString *)inName
 				 onAccount:(AIAccount *)inAccount
 		  chatCreationInfo:(NSDictionary *)inInfo 
@@ -136,18 +152,21 @@
 	[[adium notificationCenter] removeObserver:self name:Chat_DidOpen object:chat];
 }
 
-//Called repeatedly by the scheduled timer until all users have been invited to the chat (we do this incrementally
-//instead of all at once to prevent beachballing if the process is slow and a large number of users are invited)
+/*!
+ * @brief Timer method to invite contacts to a chat
+ * 
+ * This is called repeatedly by the scheduled timer until all users have been invited to the chat.
+ * This is done incrementally to prevent beachballing if the process is slow and a large number of users are invited.
+ */
 - (void)inviteUsers:(NSTimer *)inTimer
 {
 	NSMutableDictionary *userInfo = [inTimer userInfo];
 	NSMutableArray		*contactArray = [userInfo objectForKey:@"ContactsToInvite"];
 
-	AILog(@"invite users");
 	if ([contactArray count]) {
 		AIListContact *listContact = [[contactArray objectAtIndex:0] retain];
 		[contactArray removeObjectAtIndex:0];
-		AILog(@"Inviting object %@",listContact);
+		AILog(@"Inviting %@ to %@", listContact, chat);
 
 		[chat inviteListContact:listContact
 					withMessage:[userInfo objectForKey:@"InitialInivitationMessage"]];
@@ -158,7 +177,12 @@
 	}
 }
 
-//Return an array of AIListContact objects given a string in the form @"Contact1,Another Contact,A Third Contact"
+/*!
+ * @brief Generate an array of AIListContacts given a string and an account
+ * 
+ * @param namesSeparatedByCommas A string in the form @"Contact1,Another Contact,A Third Contact"
+ * @param inAccount The account on which the contacts should be created
+ */
 - (NSArray *)contactsFromNamesSeparatedByCommas:(NSString *)namesSeparatedByCommas onAccount:(AIAccount *)inAccount;
 {
 	NSMutableArray	*contactsArray = nil;
@@ -200,7 +224,11 @@
 
 #pragma mark Drag delegate convenience
 
-// Returns an online contact with the required service, from the unique ID. Returns nil if none.
+/*!
+ * @brief Find an online contact with the specified service from a unique ID
+ *
+ * @result An online AIListContact on service, or nil.
+ */
 - (AIListContact *)validContact:(NSString *)uniqueID withService:(AIService *)service
 {
 	AIListContact *listContact = nil;
