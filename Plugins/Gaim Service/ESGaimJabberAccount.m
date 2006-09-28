@@ -48,6 +48,7 @@
  */
 - (NSString *)accountWillSetUID:(NSString *)proposedUID
 {
+	proposedUID = [proposedUID lowercaseString];
 	NSString	*correctUID;
 	
 	if ((proposedUID && ([proposedUID length] > 0)) && 
