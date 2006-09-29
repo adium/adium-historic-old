@@ -12,35 +12,33 @@
 
 \f0\b Improved Jabber Support via Smack
 \f1\b0 \
-	The Jabber instant messaging protocol is arguably the future of IM. It's one of the few open standards for IM, has highly advanced features unmatched by any other protocol, and is backed by widely known groups including Apple, Google, and LiveJournal. \
-	Andreas Monitzer and his mentor, Augie Fackler, ended up producing twelve thousand lines of code, written in two different languages, and involving changes to two completely separate codebases. As a result of this, Adium 1.1 will likely be among the most advanced jabber clients in the world. This was generally considered to be the highest priority project of the initial SoC ideas, and its completion is a big step forward for open instant messaging on the Mac.\
+	The Jabber instant messaging protocol is undoubtedly rising as a big player in IM. It's one of the few openly standardized protocols, has unmatched features, and is backed by widely known groups including Apple, Google, and LiveJournal. \
+	Andreas Monitzer and his mentor, Augie Fackler, ended up producing twelve thousand lines of code, written in two different languages, and involving changes to two completely separate codebases. As a result of this, Adium 1.1 will likely be among the most advanced Jabber clients in the world. This was generally considered to be the highest priority project of the initial SoC ideas, and its completion is a big step forward for open instant messaging on the Mac.\
 \
 
 \f0\b Improved Disability Support
 \f1\b0 \
-	Accessibility to people with disabilities such as blindness or cerebral palsy is an area of software development that has been sadly neglected by many projects, Adium included. Chirag Shah's hard work with his mentor Peter Hosey on improving accessibility support brings us improvements in both interacting with system accessibility features like VoiceOver (which previously would often crash Adium!), and new features such as sensible descriptions of Adium's custom controls, and text zooming in the message view. \
-	As well as the obvious improvements for many people using Adium, this should also bring us in line with US government section 508 regulations, which could increase the use of Adium in schools and government offices.\
+	Accessibility to people with disabilities such as blindness or cerebral palsy is an area of software development that has been deplorably neglected in many programs, Adium included. Chirag Shah's hard work with his mentor Peter Hosey on bolstering accessibility support brings us improvements in interacting with system accessibility features like VoiceOver, as well as new features such as sensible descriptions of Adium's custom controls, and text zooming in the message view. \
+	Besides opening Adium to more users, this should also bring us in line with US government section 508 regulations, which could increase the use of Adium in schools and government offices.\
 \
 
 \f0\b Super Menu Duck (aka Improved Status Menu)
 \f1\b0 \
 	A common request we've received is for Adium's "menuling" (the status menu icon that can appear on the right side of the menubar) to be able to stay active even when Adium is not running; Apple's iChat IM application can do this, and it's often considered to be one of its remaining advantages over Adium. Joshua Lock worked with mentor Colin Barrett on rewriting the menuling from scratch.\
-	Sadly, this project was not finished, although Joshua made a tremendous effort to learn Cocoa, Objective-C, and the Adium codebase simultaneously in time to finish the project. However, progress has been made on it, and Joshua intends to continue working on both his project and the rest of Adium.\
-\
-	(Note from Chris) I think this project in itself has completely succeeded. Joshua will remain on as a developer, finishing the SMD, and he learned Cocoa. Could probably emphasize this more.\
+	Sadly, this project was not finished, although Joshua made a tremendous effort to learn Cocoa, Objective-C, and the Adium codebase simultaneously in time to finish the project. This is not to say that the project was not fruitful: great progress has been made on the menuling, and Joshua intends to continue working on both his project and the rest of Adium.\
 \
 
 \f0\b New Tabs via PSMTabBarControl
 \f1\b0 \
-	After Apple changed the visual appearance of their NSTabView control in the release of Mac OS X 10.2, many third party developers scrambled to develop their own custom tabs. Adium's implementation was among the most advanced of these, but due to its complexity, and due to the somewhat restrictive GPL license, few if any projects other than Adium used it. Some years later, John Pannel of Positive Spin Media began working on yet another new tab implementation, but this one was designed to be easy to use, and usable in both commercial and OSS projects (by using the BSD license).\
-	One of the Adium developers looked into replacing Adium's tab implementation with it, but it lacked several advanced features that were required.  Kent Sutherland (with design input from his mentor, David Smith) brought PSMTabBarControl up to match, and then exceed, the requirements for using it in Adium. This included tear off tabs, vertical tabs similar to the upcoming version of iChat in Mac OS X 10.5, and improvement to tab overflow handling. Because of his work, there is now a freely available highly advanced tab implementation for any OSX app to use. As of this writing I know of three projects using it, and hopefully more will in the future. One of these projects is Kent's own program Chax, which made him an ideal person to work on this task.\
+	After Apple changed the visual appearance of their NSTabView control in the release of Mac OS X 10.2, the Adium team had to scramble to implement their own custom tabs to continue supporting tabbed messaging. Years later, John Pannel of Positive Spin Media wrote his own tab implementation designed to be easier to use than Adium's and licensed in a more flexible license.\
+	Summer-of-Coder Kent Sutherland (with design input from his mentor, David Smith) updated PSMTabBarControl to match Adium's, and then exceed, the functionality requirements for Adium's tabbed messaging. This included tear off tabs, vertical tabs, and improved tab overflow handling. Because of his work, this highly advanced tab implementation is freely available for any Mac OS X application to use. (As of this writing, at least three other projects using it, including Kent's own program Chax, which made him the ideal developer for this task!)\
 \
 
-\f0\b Jingle AV Support
+\f0\b Jingle AV Support\
+
 \f1\b0 \
-	When Google released their Google Talk instant messaging service, a number of people in the Jabber community noted that it included new extensions to Jabber called Jingle and Jingle-Audio. These extensions provided the capability to initiate streaming data transfers with Jabber, which can be used for important tasks such as voice chat (Jingle-Audio), video chat (Jingle-Video), and transferring files.\
-	Alvaro Saurin Parra and his mentor, Adium lead developer Evan Schoenberg, worked on first adding Jingle capability to the Smack jabber library, and then began work on integrating the new capabilities into Adium. Unfortunately, the project proved too large to accomplish completely in the time frame of Summer of Code, but the framework is now in place. Alvaro plans to continue his work in collaboration with another developer at Jive Software (makers of the Smack library), with the eventual goal of bringing full Google Talk compatible voice chat to Adium.\
-	One additional concern is that the Google Talk client application does not use the official Jingle-Audio specification yet, but this is expected to change in the relatively near future.\
+	When Google released their Google Talk instant messaging service, they included an important new technology known as Jingle. Jingle adds the capability to send streaming data across a Jabber network, which can be used for voice chat (Jingle-Audio), video chat (Jingle-Video), and file transfers.\
+	Alvaro Saurin Parra and his mentor, Adium lead developer Evan Schoenberg, added Jingle support to the Smack Jabber library, and then began integrating these features into Adium. Unfortunately, this project proved too much to complete within the Summer of Code timeframe, but the framework for this is now in place. Alvaro plans to continue his work in collaboration with developers at Jive Software (makers of the Smack Library), which the eventual goal of bringing full Google Talk-compatible voice chat to Adium.\
 \
 
 \f0\b Contact List Splitting
