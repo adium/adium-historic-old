@@ -151,17 +151,19 @@
 	} else {
 		rowRect = [self rectOfRow:0];
 	}
-	
+
 	NSRect *gridRects = (NSRect *)malloc(sizeof(NSRect) * (numberOfRows + ((int)round(((rect.size.height / rowHeight) / 2) + 0.5))));
 	for (row = 0; row < numberOfRows; row += 2) {
 		if (row < numberOfRows) {
 			NSRect	thisRect = [self rectOfRow:row];
 			if (NSIntersectsRect(thisRect, rect)) { 
 				gridRects[rectNumber++] = thisRect;
+			} else {
+				NSLog(@"Not drawing because %@ is not in %@",NSStringFromRect(thisRect),NSStringFromRect(rect));
 			}
 		}
 	}
-	
+
 	if (rectNumber > 0) {
 		[[self alternatingRowColor] set];
 		NSRectFillList(gridRects, rectNumber);
@@ -207,20 +209,30 @@
 		while (i < bufSize) {
 			int startIndex = buf[i];
 			int lastIndex = buf[i];
+
 			while ((i + 1 < bufSize) &&
 				   (buf[i + 1] == lastIndex + 1)){
 				i++;
 				lastIndex++;
 			}
-			
-			NSRect thisRect = NSUnionRect([self rectOfRow:startIndex],
-										  [self rectOfRow:lastIndex]);
-			[gradient drawInRect:thisRect];
-			
-			//Draw a line at the light side, to make it look a lot cleaner
-			thisRect.size.height = 1;
-			selectionLineRects[j++] = thisRect;			
-			
+
+			NSRect startRow = [self rectOfRow:startIndex];
+			NSRect endRow = [self rectOfRow:lastIndex];
+			if (!NSIsEmptyRect(startRow)) {
+				NSRect thisRect;
+				if (!NSIsEmptyRect(endRow)) {
+					thisRect = NSUnionRect(startRow, endRow);
+				} else {
+					thisRect = startRow;
+				}
+
+				[gradient drawInRect:thisRect];
+				
+				//Draw a line at the light side, to make it look a lot cleaner
+				thisRect.size.height = 1;
+				selectionLineRects[j++] = thisRect;			
+			}
+
 			i++;		
 		}
 
