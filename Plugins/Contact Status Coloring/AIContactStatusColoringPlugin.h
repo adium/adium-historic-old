@@ -19,7 +19,7 @@
 @protocol AIListObjectObserver, AIFlashObserver;
 
 @interface AIContactStatusColoringPlugin : AIPlugin <AIListObjectObserver, AIFlashObserver> {
-    NSMutableArray	*flashingListObjectArray;
+    NSMutableSet	*flashingListObjects;
 
     BOOL		awayEnabled;
     BOOL		idleEnabled;

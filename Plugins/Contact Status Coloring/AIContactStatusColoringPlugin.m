@@ -30,8 +30,8 @@
 #import <Adium/AIMetaContact.h>
 
 @interface AIContactStatusColoringPlugin (PRIVATE)
-- (void)addToFlashArray:(AIListObject *)inObject;
-- (void)removeFromFlashArray:(AIListObject *)inObject;
+- (void)addToFlashSet:(AIListObject *)inObject;
+- (void)removeFromFlashSet:(AIListObject *)inObject;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_applyColorToContact:(AIListContact *)inObject;
 
@@ -50,7 +50,7 @@
 - (void)installPlugin
 {
     //init
-    flashingListObjectArray = [[NSMutableArray alloc] init];
+    flashingListObjects = [[NSMutableSet alloc] init];
     awayColor = nil;
     idleColor = nil;
     signedOffColor = nil;
@@ -110,7 +110,7 @@
 
 - (void)dealloc
 {
-	[flashingListObjectArray release]; flashingListObjectArray = nil;
+	[flashingListObjects release]; flashingListObjects = nil;
 	[opacityUpdateDict release]; opacityUpdateDict = nil;
 
 	[super dealloc];
@@ -136,15 +136,15 @@
 			modifiedAttributes = [NSSet setWithObjects:@"Text Color", @"Inverted Text Color", @"Label Color", nil];
 		}
 		
-		//Update our flash array
+		//Update our flash set
 		if ((inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) && 
 		   flashUnviewedContentEnabled) {
 			int unviewedContent = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
 			
-			if (unviewedContent && ![flashingListObjectArray containsObject:inObject]) { //Start flashing
-				[self addToFlashArray:inObject];
-			} else if (!unviewedContent && [flashingListObjectArray containsObject:inObject]) { //Stop flashing
-				[self removeFromFlashArray:inObject];
+			if (unviewedContent && ![flashingListObjects containsObject:inObject]) { //Start flashing
+				[self addToFlashSet:inObject];
+			} else if (!unviewedContent && [flashingListObjects containsObject:inObject]) { //Stop flashing
+				[self removeFromFlashSet:inObject];
 			}
 		}
 	}
@@ -270,7 +270,7 @@
     NSEnumerator	*enumerator;
     AIListContact	*object;
 
-    enumerator = [flashingListObjectArray objectEnumerator];
+    enumerator = [flashingListObjects objectEnumerator];
     while ((object = [enumerator nextObject])) {
         [self _applyColorToContact:object];
         
@@ -282,30 +282,30 @@
 }
 
 /*!
- * @brief Add a handle to the flash array
+ * @brief Add a handle to the flash set
  */
-- (void)addToFlashArray:(AIListObject *)inObject
+- (void)addToFlashSet:(AIListObject *)inObject
 {
     //Ensure that we're observing the flashing
-    if ([flashingListObjectArray count] == 0) {
+    if ([flashingListObjects count] == 0) {
         [[adium interfaceController] registerFlashObserver:self];
     }
 
-    //Add the contact to our flash array
-    [flashingListObjectArray addObject:inObject];
+    //Add the contact to our flash set
+    [flashingListObjects addObject:inObject];
     [self flash:[[adium interfaceController] flashState]];
 }
 
 /*!
- * @brief Remove a contact from the flash array
+ * @brief Remove a contact from the flash set
  */
-- (void)removeFromFlashArray:(AIListObject *)inObject
+- (void)removeFromFlashSet:(AIListObject *)inObject
 {
-    //Remove the contact from our flash array
-    [flashingListObjectArray removeObject:inObject];
+    //Remove the contact from our flash set
+    [flashingListObjects removeObject:inObject];
 
     //If we have no more flashing contacts, stop observing the flashes
-    if ([flashingListObjectArray count] == 0) {
+    if ([flashingListObjects count] == 0) {
         [[adium interfaceController] unregisterFlashObserver:self];
     }
 }
@@ -525,12 +525,12 @@
 		flashUnviewedContentEnabled = [[prefDict objectForKey:KEY_CL_FLASH_UNVIEWED_CONTENT] boolValue];
 
 		if (oldFlashUnviewedContentEnabled && !flashUnviewedContentEnabled) {
-			//Clear our flash array if we aren't flashing for unviewed content now but we were before
-			NSEnumerator	*enumerator = [[[flashingListObjectArray copy] autorelease] objectEnumerator];
+			//Clear our flash set if we aren't flashing for unviewed content now but we were before
+			NSEnumerator	*enumerator = [[[flashingListObjects copy] autorelease] objectEnumerator];
 			AIListContact	*listContact;
 
 			while ((listContact = [enumerator nextObject])) {
-				[self removeFromFlashArray:listContact];
+				[self removeFromFlashSet:listContact];
 			}
 			
 			//Make our colors end up right (if we were on an off-flash) by updating all list objects
