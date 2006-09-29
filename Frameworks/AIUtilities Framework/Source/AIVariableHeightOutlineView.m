@@ -141,7 +141,11 @@
 - (NSRect)rectOfRow:(int)row
 {
 	[self updateRowHeightCache];
-	return NSMakeRect(0, rowOriginCache[row], [self frame].size.width, rowHeightCache[row]);
+	if (row > entriesInCache) {
+		return NSZeroRect;
+	} else {
+		return NSMakeRect(0, rowOriginCache[row], [self frame].size.width, rowHeightCache[row]);
+	}
 }
 
 - (int)rowAtPoint:(NSPoint)point
