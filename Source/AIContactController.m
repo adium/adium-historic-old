@@ -259,8 +259,10 @@
 	NSString		*identifier;
 
 	while ((identifier = [enumerator nextObject])) {
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		NSNumber *objectID = [NSNumber numberWithInt:[[[identifier componentsSeparatedByString:@"-"] objectAtIndex:1] intValue]];
 		[self metaContactWithObjectID:objectID];
+		[pool release];
 	}
 }
 
@@ -1453,14 +1455,16 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	//Let our observers know
 	enumerator = [contactObservers objectEnumerator];
 	while ((observerValue = [enumerator nextObject])) {
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		id <AIListObjectObserver>	observer;
 		NSSet						*newKeys;
 
 		observer = [observerValue nonretainedObjectValue];
 		if ((newKeys = [observer updateListObject:inObject keys:modifiedKeys silent:silent])) {
-			if (!attrChange) attrChange = [NSMutableSet set];
+			if (!attrChange) attrChange = [[NSMutableSet alloc] init];
 			[attrChange unionSet:newKeys];
 		}
+		[pool release];
 	}
 
 	//Send out the notification for other observers
@@ -1469,7 +1473,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys
 																								 forKey:@"Keys"] : nil)];
 
-	return attrChange;
+	return [attrChange autorelease];
 }
 
 //Command all observers to apply their attributes to an object
