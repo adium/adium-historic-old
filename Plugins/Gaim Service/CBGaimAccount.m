@@ -1728,10 +1728,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	const char *statusID = [self gaimStatusIDForStatus:statusState
 											 arguments:arguments];
 
-	if (!statusMessage && ([statusState statusType] == AIAwayStatusType)) {
-		/* If we don't have a status message, and  the status type is away, get a default description of this away state
-		 * This allows, for example, an AIM user to set  the "Do Not Disturb" type provided by her ICQ account and have the
-		 * away message be set appropriately.
+	if (!statusMessage &&
+		([statusState statusType] == AIAwayStatusType) &&
+		([statusState statusName] && ![[statusState statusName] isEqualToString:STATUS_NAME_AWAY])) {
+		/* If we don't have a status message, and the status type is away for a non-default away such as "Do Not Disturb", get a default
+		 * description of this away state. This allows, for example, an AIM user to set the "Do Not Disturb" type provided by her ICQ account
+		 * and have the away message be set appropriately.
 		 */
 		statusMessage = [NSAttributedString stringWithString:[[adium statusController] descriptionForStateOfStatus:statusState]];
 	}
