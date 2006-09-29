@@ -1278,6 +1278,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 }
 
+/*!
+ * @brief Move contacts to and from the offline group as necessary as their online state changes.
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if (!inModifiedKeys ||
