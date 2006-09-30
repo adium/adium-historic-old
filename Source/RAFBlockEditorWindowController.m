@@ -281,7 +281,7 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	[field setCompletingStrings:nil];
 	
 	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
-    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
+    enumerator = [[[adium contactController] allContacts] objectEnumerator];
     while ((contact = [enumerator nextObject])) {
 		if (!account ||
 			[contact service] == [account service]) {

@@ -1401,6 +1401,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	
 	enumerator = (contacts ? [contacts objectEnumerator] : [contactDict objectEnumerator]);
 	while ((listObject = [enumerator nextObject])) {
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		NSSet	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
 		if (attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
 		
@@ -1413,6 +1414,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			if (attributes) [self listObjectAttributesChanged:containingObject
 												 modifiedKeys:attributes];
 		}
+		[pool release];
 	}
 	
 	[self endListObjectNotificationsDelay];
@@ -1504,29 +1506,36 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
     return contactList;
 }
 
+//Returns a flat array of all contacts (by calling through to -allContactsInObject:recurse:onAccount:)
+- (NSMutableArray *)allContacts
+{
+	return [self allContactsInObject:contactList recurse:YES onAccount:nil];
+}
+
+//Returns a flat array of all contacts on a given account (by calling through to -allContactsInObject:recurse:onAccount:)
+- (NSMutableArray *)allContactsOnAccount:(AIAccount *)inAccount
+{
+	return [self allContactsInObject:contactList recurse:YES onAccount:inAccount];
+}
+
 //Return a flat array of all the objects in a group on an account (and all subgroups, if desired)
-- (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups onAccount:(AIAccount *)inAccount
+- (NSMutableArray *)allContactsInObject:(id<AIContainingObject>)inGroup recurse:(BOOL)recurse onAccount:(AIAccount *)inAccount
 {
 	NSMutableArray	*contactArray = [NSMutableArray array];
 	NSEnumerator	*enumerator;
     AIListObject	*object;
 
-	if (inGroup == nil) inGroup = contactList;  //Passing nil scans the entire contact list
+	NSParameterAssert(inGroup != nil);
 
 	enumerator = [[inGroup containedObjects] objectEnumerator];
     while ((object = [enumerator nextObject])) {
-        if ([object isMemberOfClass:[AIMetaContact class]] || [object isMemberOfClass:[AIListGroup class]]) {
-            if (subGroups) {
-				[contactArray addObjectsFromArray:[self allContactsInGroup:(AIListGroup *)object
-																 subgroups:subGroups
-																 onAccount:inAccount]];
-			}
-		} else if ([object isMemberOfClass:[AIListContact class]]) {
-			if (!inAccount ||
-			   ([(AIListContact *)object account] == inAccount)) {
-				[contactArray addObject:object];
-			}
-		}
+        if (recurse && [object conformsToProtocol:@protocol(AIContainingObject)]) {
+			[contactArray addObjectsFromArray:[self allContactsInObject:(id<AIContainingObject>)object
+																recurse:recurse
+															  onAccount:inAccount]];
+		} 
+		else if ([object isMemberOfClass:[AIListContact class]] && (!inAccount || ([(AIListContact *)object account] == inAccount)))
+			[contactArray addObject:object];
 	}
 
 	return contactArray;

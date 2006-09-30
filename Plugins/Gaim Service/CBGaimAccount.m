@@ -462,7 +462,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[gaimThread renameGroup:groupName onAccount:self to:newName];
 
 	//We must also update the remote grouping of all our contacts in that group
-	NSEnumerator	*enumerator = [[[adium contactController] allContactsInGroup:inGroup subgroups:YES onAccount:self] objectEnumerator];
+	NSEnumerator	*enumerator = [[[adium contactController] allContactsInObject:inGroup recurse:YES onAccount:self] objectEnumerator];
 	AIListContact	*contact;
 	
 	while ((contact = [enumerator nextObject])) {
