@@ -962,7 +962,10 @@ static NSString	*prefsCategory;
 								accountInfo, @"visibleValue",
 								nil];
 	[profileInfo addObject:entry];*/
-	return profileInfo;
+	if ([[[NSUserDefaults standardUserDefaults] objectForKey:SUSendProfileInfoKey] boolValue])
+		return profileInfo;
+	else
+		return [NSDictionary dictionary];
 }
 
 @end
