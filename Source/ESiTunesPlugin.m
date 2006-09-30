@@ -475,7 +475,14 @@
 	MVMenuButton  *button = [[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)];
 
 	//configure the popup button and it's menu
-	[button setImage:[NSImage imageNamed:@"iTunes" forClass:[self class]]];
+	NSWorkspace *sharedWorkspace = [NSWorkspace sharedWorkspace];
+	NSString *iTunesPath = [sharedWorkspace fullPathForApplication:@"iTunes"];
+	NSImage *iTunesIcon = nil;
+	if(iTunesPath)
+		iTunesIcon = [sharedWorkspace iconForFile:iTunesPath];
+	else
+		iTunesIcon = [NSImage imageNamed:@"iTunes" forClass:[self class]];
+	[button setImage:iTunesIcon];
 	[self createiTunesToolbarItemMenuItems:menu];
 	
 	NSToolbarItem * iTunesItem = [AIToolbarUtilities toolbarItemWithIdentifier:ITUNES_TOOLBAR_ITEM
