@@ -280,7 +280,6 @@
 		346C9D1206004645000F5A8A /* ESWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 346C9A2305FFE3DE000F5A8A /* ESWebView.h */; };
 		346C9D1606004646000F5A8A /* ESWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346C9A2405FFE3DF000F5A8A /* ESWebView.m */; };
 		346C9D3006004650000F5A8A /* WebKitPrivateDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 346C9A4005FFE418000F5A8A /* WebKitPrivateDefinitions.h */; };
-		346F5CB408A418FB0055C610 /* iTunes.png in Resources */ = {isa = PBXBuildFile; fileRef = 346F5CB208A418FA0055C610 /* iTunes.png */; };
 		346F5D3208A43E7B0055C610 /* CurrentTunes.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 346F5CB308A418FB0055C610 /* CurrentTunes.scpt */; };
 		347065E506015DC5004F0D20 /* WebKit Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 347065E406015DC5004F0D20 /* WebKit Defaults.plist */; };
 		347374BD0AA9206B00AD18E3 /* ShortcutRecorder.strings in Resources */ = {isa = PBXBuildFile; fileRef = 347374BB0AA9206B00AD18E3 /* ShortcutRecorder.strings */; };
@@ -8227,7 +8226,6 @@
 			files = (
 				9EF0DBFA09D944C200FBCC1E /* Resources/block.png in Resources */,
 				9EF0DBFB09D944C200FBCC1E /* Resources/unblock.png in Resources */,
-				346F5CB408A418FB0055C610 /* iTunes.png in Resources */,
 				346F5D3208A43E7B0055C610 /* CurrentTunes.scpt in Resources */,
 				349C30790867ADA3000BF883 /* AdiumApplescriptRunner in Resources */,
 				DA4B5CDF080FCC080017BF17 /* CoreComponents.plist in Resources */,
