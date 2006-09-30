@@ -280,6 +280,8 @@ static int linesLeftToFind = 0;
 		AIXMLElement *element = nil;
 		AIListObject *account = [chat account];
 		NSString	 *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
+		
+		Class messageClass = nil;
 
 		while ((element = [enumerator nextObject])) {
 			//Set up some doohickers.
@@ -292,12 +294,24 @@ static int linesLeftToFind = 0;
 			//http://www.visualdistortion.org/crash/view.jsp?crash=211821
 			if (timeString) {
 				NSLog(@"Message Context Display: Parsing message time attribute %@", timeString);
-				AIContentContext *message = [AIContentContext messageInChat:chat 
-																 withSource:(sentByMe ? account : [chat listObject])
-																destination:(sentByMe ? [chat listObject] : account)
-																	   date:[NSCalendarDate calendarDateWithString:timeString]
-																	message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
-																  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"true"] == NSOrderedSame)];
+				
+				NSCalendarDate *time = [NSCalendarDate calendarDateWithString:timeString];
+				
+				//only change message classes when we change log files, so only on the first iteration of this loop
+				if(!messageClass)
+					messageClass = (-[time timeIntervalSinceNow] > 300) ? [AIContentContext class] : [AIContentMessage class];
+				
+				/*don't fade the messages if they're within the last 5 minutes
+				 *since that will be resuming a conversation, not starting a new one.
+				 *Why the class trickery? Less code duplication, clearer what is actually different between the two cases.
+				 */
+				AIContentMessage *message = [messageClass messageInChat:chat 
+															 withSource:(sentByMe ? account : [chat listObject])
+															destination:(sentByMe ? [chat listObject] : account)
+																   date:time
+																message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
+															  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"true"] == NSOrderedSame)];
+				
 				//Don't log this object
 				[message setPostProcessContent:NO];
 				
@@ -311,6 +325,8 @@ static int linesLeftToFind = 0;
 				NSLog(@"Null message context display time for %@",element);
 			}
 		}
+		
+		messageClass = nil; //reset this for the next file
 
 		//Add our locals to the outer array; we're probably looping again.
 		[outerFoundContentContexts setArray:[innerFoundContentContexts arrayByAddingObjectsFromArray:outerFoundContentContexts]];
