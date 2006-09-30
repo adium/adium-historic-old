@@ -1487,10 +1487,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	NSEnumerator	*enumerator = [contactObservers objectEnumerator];
 	NSValue			*observerValue;
 
-	while ((observerValue = [enumerator nextObject])) {
-		id <AIListObjectObserver>	observer;
-		
-		observer = [observerValue nonretainedObjectValue];
+	while ((observerValue = [enumerator nextObject])) {		
+		id <AIListObjectObserver> observer = [observerValue nonretainedObjectValue];
 
 		[observer updateListObject:inObject keys:nil silent:YES];
 	}
@@ -1521,13 +1519,12 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Return a flat array of all the objects in a group on an account (and all subgroups, if desired)
 - (NSMutableArray *)allContactsInObject:(id<AIContainingObject>)inGroup recurse:(BOOL)recurse onAccount:(AIAccount *)inAccount
 {
-	NSMutableArray	*contactArray = [NSMutableArray array];
-	NSEnumerator	*enumerator;
-    AIListObject	*object;
-
 	NSParameterAssert(inGroup != nil);
+	
+	NSMutableArray	*contactArray = [NSMutableArray array];    
 
-	enumerator = [[inGroup containedObjects] objectEnumerator];
+	NSEnumerator *enumerator = [[inGroup containedObjects] objectEnumerator];
+	AIListObject *object;
     while ((object = [enumerator nextObject])) {
         if (recurse && [object conformsToProtocol:@protocol(AIContainingObject)]) {
 			[contactArray addObjectsFromArray:[self allContactsInObject:(id<AIContainingObject>)object
