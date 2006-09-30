@@ -924,9 +924,7 @@
  */
 - (NSArray *)contacts
 {
-	return [[adium contactController] allContactsInGroup:nil
-												subgroups:YES
-												onAccount:self];
+	return [[adium contactController] allContactsOnAccount:self];
 }
 
 /*!
@@ -1079,19 +1077,17 @@
 * @brief Remove all contacts owned by this account and clear their status objects set by this account
  */
 - (void)removeAllContacts
-{
-	NSEnumerator    *enumerator;
-	AIListContact	*listContact;
-	
+{	
 	[[adium contactController] delayListObjectNotifications];
 	
 	//Clear status flags on all contacts for this account, and set their remote group to nil
-	enumerator = [[[adium contactController] allContactsInGroup:nil
-													  subgroups:YES 
-													  onAccount:self] objectEnumerator];
+	NSEnumerator *enumerator = [[[adium contactController] allContactsOnAccount:self] objectEnumerator];
+	AIListContact	*listContact;
 	while ((listContact = [enumerator nextObject])) {
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		[listContact setRemoteGroupName:nil];
 		[self removeStatusObjectsFromContact:listContact silently:YES];
+		[pool release];
 	}
 	
 	[[adium contactController] endListObjectNotificationsDelay];

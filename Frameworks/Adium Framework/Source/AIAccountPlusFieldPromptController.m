@@ -96,7 +96,7 @@
 	/* Configure the auto-complete view to autocomplete for contacts matching the selected account's service
 	 * Don't include meta contacts which don't currently contain any valid contacts
 	 */
-    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
+    enumerator = [[[adium contactController] allContacts] objectEnumerator];
     while ((contact = [enumerator nextObject])) {
 		if ([contact service] == [account service] &&
 			(![contact isKindOfClass:[AIMetaContact class]] || [[(AIMetaContact *)contact listContacts] count])) {

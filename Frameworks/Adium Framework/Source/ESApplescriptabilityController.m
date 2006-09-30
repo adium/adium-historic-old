@@ -49,9 +49,7 @@
 }
 - (NSArray *)contacts
 {
-	return ([[adium contactController] allContactsInGroup:nil
-												subgroups:YES
-												onAccount:nil]);
+	return ([[adium contactController] allContacts]);
 }
 - (NSArray *)chats
 {

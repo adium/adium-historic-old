@@ -53,7 +53,9 @@ typedef enum {
 - (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID;
 - (AIListGroup *)groupWithUID:(NSString *)groupUID;
 - (AIListGroup *)existingGroupWithUID:(NSString *)groupUID;
-- (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups onAccount:(AIAccount *)inAccount;
+- (NSMutableArray *)allContacts;
+- (NSMutableArray *)allContactsOnAccount:(AIAccount *)inAccount;
+- (NSMutableArray *)allContactsInObject:(id<AIContainingObject>)inGroup recurse:(BOOL)recurse onAccount:(AIAccount *)inAccount;
 - (NSMenu *)menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)inGroup withTarget:(id)target;
 - (NSMenu *)menuOfAllGroupsInGroup:(AIListGroup *)inGroup withTarget:(id)target;
 - (NSSet *)allContactsWithService:(AIService *)service UID:(NSString *)inUID existingOnly:(BOOL)existingOnly;
