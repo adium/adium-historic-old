@@ -947,7 +947,7 @@ static NSString	*prefsCategory;
  *		visibleValue:	Alternate version of value to be used in UI displays of profile information.
  */
 - (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo
-{
+{/*
 	NSMutableString *accountInfo = [NSMutableString string];
 	NSEnumerator *accountEnu = [[[self accountController] accounts] objectEnumerator];
 	AIAccount *account = nil;
@@ -961,7 +961,7 @@ static NSString	*prefsCategory;
 								accountInfo, @"value",
 								accountInfo, @"visibleValue",
 								nil];
-	[profileInfo addObject:entry];
+	[profileInfo addObject:entry];*/
 	return profileInfo;
 }
 
