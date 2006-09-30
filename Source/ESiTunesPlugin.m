@@ -140,7 +140,7 @@
 	if (newInfo != iTunesCurrentInfo) {
 		[iTunesCurrentInfo release];
 		iTunesCurrentInfo = [newInfo retain];
-		
+
 		[self setiTunesIsStopped:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_STOPPED]];
 		[self setiTunesIsPaused:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_PAUSED]];
 
@@ -160,7 +160,7 @@
 	NSDictionary	*conditionalArtistTrackDict = nil;
 	NSString		*currentITunesTrackFormat = nil;
 	NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
-	NSString		*itunesPath = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"iTunes.app"];
+	NSString		*itunesPath = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:@"com.apple.iTunes"];
 
 	iTunesCurrentInfo = nil;
 
@@ -230,7 +230,7 @@
 		[self createiTunesCurrentTrackStatusState];
 		
 		//Create the toolbar item
-		[self createiTunesToolbarItem];
+		[self createiTunesToolbarItemWithPath:itunesPath];
 		
 		//Create the Edit > Insert and contextual menus
 		[self createTriggersMenu];
@@ -469,22 +469,15 @@
  *
  * Create toolbar item and it's menu
  */
-- (void)createiTunesToolbarItem
+- (void)createiTunesToolbarItemWithPath:(NSString *)iTunesPath
 {
 	NSMenu		  *menu = [[NSMenu alloc] init];
 	MVMenuButton  *button = [[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)];
 
 	//configure the popup button and it's menu
-	NSWorkspace *sharedWorkspace = [NSWorkspace sharedWorkspace];
-	NSString *iTunesPath = [sharedWorkspace fullPathForApplication:@"iTunes"];
-	NSImage *iTunesIcon = nil;
-	if(iTunesPath)
-		iTunesIcon = [sharedWorkspace iconForFile:iTunesPath];
-	else
-		iTunesIcon = [NSImage imageNamed:@"iTunes" forClass:[self class]];
-	[button setImage:iTunesIcon];
+	[button setImage:[[NSWorkspace sharedWorkspace] iconForFile:iTunesPath]];
 	[self createiTunesToolbarItemMenuItems:menu];
-	
+
 	NSToolbarItem * iTunesItem = [AIToolbarUtilities toolbarItemWithIdentifier:ITUNES_TOOLBAR_ITEM
 																		 label:TOOLBAR_LABEL
 																  paletteLabel:TOOLBAR_LABEL
