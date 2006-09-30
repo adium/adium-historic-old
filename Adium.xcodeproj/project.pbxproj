@@ -11409,7 +11409,7 @@
 				STRIP_INSTALLED_PRODUCT = NO;
 				STRIP_STYLE = "non-global";
 				WARNING_CFLAGS = "-Wall";
-				ZERO_LINK = YES;
+				ZERO_LINK = NO;
 			};
 			name = "Development-libgaim_oscar";
 		};
@@ -11877,6 +11877,7 @@
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WARNING_CFLAGS = "-Wall";
+				ZERO_LINK = NO;
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
@@ -12704,7 +12705,7 @@
 				STRIP_INSTALLED_PRODUCT = NO;
 				STRIP_STYLE = "non-global";
 				WARNING_CFLAGS = "-Wall";
-				ZERO_LINK = YES;
+				ZERO_LINK = NO;
 			};
 			name = Development;
 		};
@@ -12747,6 +12748,7 @@
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				SEPARATE_STRIP = YES;
 				WARNING_CFLAGS = "-Wall";
+				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
@@ -12789,6 +12791,7 @@
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = "-Wall";
+				ZERO_LINK = NO;
 			};
 			name = "Deployment-Debug";
 		};
