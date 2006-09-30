@@ -46,6 +46,7 @@
 #import <Adium/AIPathUtilities.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
+#import <Sparkle/SUConstants.h>
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
@@ -962,7 +963,7 @@ static NSString	*prefsCategory;
 								accountInfo, @"visibleValue",
 								nil];
 	[profileInfo addObject:entry];*/
-	if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"SUIncludeProfile"] boolValue])
+	if ([[[NSUserDefaults standardUserDefaults] objectForKey:SUSendProfileInfoKey] boolValue])
 		return profileInfo;
 	else
 		return [NSDictionary dictionary];

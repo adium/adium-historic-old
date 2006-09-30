@@ -65,7 +65,7 @@
 @interface ESiTunesPlugin (PRIVATE)
 - (NSMenuItem *)menuItemWithTitle:(NSString *)title action:(SEL)action representedObject:(id)representedObject kind:(KGiTunesPluginMenuItemKind)itemKind;
 - (void)createiTunesCurrentTrackStatusState;
-- (void)createiTunesToolbarItem;
+- (void)createiTunesToolbarItemWithPath:(NSString *)path;
 - (void)createiTunesToolbarItemMenuItems:(NSMenu *)iTunesMenu;
 - (void)createTriggersMenu;
 - (void)filterAndInsertString:(NSString *)inString;
