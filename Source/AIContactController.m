@@ -862,7 +862,7 @@
 
 	while ((containedContactDict = [enumerator nextObject])) {
 		/* Before Adium 0.80, metaContacts could be created within metaContacts. Simply ignore any attempt to restore
-		* such irroneous data, which will have a YES boolValue for KEY_IS_METACONTACT. */
+		* such erroneous data, which will have a YES boolValue for KEY_IS_METACONTACT. */
 		if (![[containedContactDict objectForKey:KEY_IS_METACONTACT] boolValue]) {
 			/* Assign this metaContact to the appropriate internalObjectID for containedContact's represented listObject.
 			 *
@@ -913,6 +913,9 @@
 
 - (void)_storeListObject:(AIListObject *)listObject inMetaContact:(AIMetaContact *)metaContact
 {
+	//we only allow group->meta->contact, not group->meta->meta->contact
+	NSParameterAssert(![listObject conformsToProtocol:@protocol(AIContainingObject)]);
+	
 	AILog(@"MetaContacts: Storing %@ in %@",listObject, metaContact);
 	NSDictionary		*containedContactDict;
 	NSMutableDictionary	*allMetaContactsDict;
@@ -933,16 +936,9 @@
 	containedContactDict = nil;
 
 	//Create the dictionary describing this list object
-	if ([listObject isKindOfClass:[AIMetaContact class]]) {
-		containedContactDict = [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithBool:YES],KEY_IS_METACONTACT,
-			[(AIMetaContact *)listObject objectID],KEY_OBJECTID,nil];
-
-	} else if ([listObject isKindOfClass:[AIListContact class]]) {
-		containedContactDict = [NSDictionary dictionaryWithObjectsAndKeys:
-			[[listObject service] serviceID],SERVICE_ID_KEY,
-			[listObject UID],UID_KEY,nil];
-	}
+	containedContactDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		[[listObject service] serviceID],SERVICE_ID_KEY,
+		[listObject UID],UID_KEY,nil];
 
 	//Only add if this dict isn't already in the array
 	if (containedContactDict && ([containedContactsArray indexOfObject:containedContactDict] == NSNotFound)) {
@@ -965,7 +961,8 @@
 //for quick lookup of the MetaContact given a AIListContact uniqueObjectID if successful.
 - (BOOL)_performAddListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact
 {
-	AIListObject<AIContainingObject>	*localGroup;
+	//we only allow group->meta->contact, not group->meta->meta->contact
+	NSParameterAssert(![listObject conformsToProtocol:@protocol(AIContainingObject)]);	AIListObject<AIContainingObject>	*localGroup;
 	BOOL								success;
 
 	localGroup = [listObject containingObject];
@@ -1013,6 +1010,9 @@
 
 - (void)removeListObject:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact
 {
+	//we only allow group->meta->contact, not group->meta->meta->contact
+	NSParameterAssert(![listObject conformsToProtocol:@protocol(AIContainingObject)]);
+	
 	NSEnumerator		*enumerator;
 	NSArray				*containedContactsArray;
 	NSDictionary		*containedContactDict = nil;
@@ -1029,27 +1029,13 @@
 	//Enumerate it, looking only for the appropriate type of containedContactDict
 	enumerator = [containedContactsArray objectEnumerator];
 
-	if ([listObject isKindOfClass:[AIMetaContact class]]) {
-		NSAssert(NO, @"wtf, why is this code even being called. Removing a meta from a meta? (AIContactController.m, -removeListObject:fromMetaContact:)");
-		NSNumber	*listObjectObjectID = [(AIMetaContact *)listObject objectID];
+	NSString	*listObjectUID = [listObject UID];
+	NSString	*listObjectServiceID = [[listObject service] serviceID];
 
-		while ((containedContactDict = [enumerator nextObject])) {
-			if (([[containedContactDict objectForKey:KEY_IS_METACONTACT] boolValue]) &&
-				(([(NSNumber *)[containedContactDict objectForKey:KEY_OBJECTID] compare:listObjectObjectID]) == 0)) {
-				break;
-			}
-		}
-
-	} else if ([listObject isKindOfClass:[AIListContact class]]) {
-
-		NSString	*listObjectUID = [listObject UID];
-		NSString	*listObjectServiceID = [[listObject service] serviceID];
-
-		while ((containedContactDict = [enumerator nextObject])) {
-			if ([[containedContactDict objectForKey:UID_KEY] isEqualToString:listObjectUID] &&
-				[[containedContactDict objectForKey:SERVICE_ID_KEY] isEqualToString:listObjectServiceID]) {
-				break;
-			}
+	while ((containedContactDict = [enumerator nextObject])) {
+		if ([[containedContactDict objectForKey:UID_KEY] isEqualToString:listObjectUID] &&
+			[[containedContactDict objectForKey:SERVICE_ID_KEY] isEqualToString:listObjectServiceID]) {
+			break;
 		}
 	}
 
@@ -1403,7 +1389,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		if (attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
 		
 		//If this contact is within a meta contact, update the meta contact too
-		AIListObject	*containingObject = [listObject containingObject];
+		AIListObject<AIContainingObject>	*containingObject = [listObject containingObject];
 		if (containingObject && [containingObject isKindOfClass:[AIMetaContact class]]) {
 			NSSet	*attributes = [inObserver updateListObject:containingObject
 														  keys:nil
