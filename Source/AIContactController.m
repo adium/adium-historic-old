@@ -1877,25 +1877,24 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Retrieve a group from the contact list (Creating if necessary)
 - (AIListGroup *)groupWithUID:(NSString *)groupUID
 {
-	AIListGroup		*group;
+	//Return our root group if it is requested. 
+	//XXX: is this a good idea? it might semi-mask bugs where we accidentally pass nil
+	if (!groupUID || ![groupUID length] || [groupUID isEqualToString:ADIUM_ROOT_GROUP_NAME])
+		return [self contactList];
 
-	if (!groupUID || ![groupUID length] || [groupUID isEqualToString:ADIUM_ROOT_GROUP_NAME]) {
-		//Return our root group if it is requested
-		group = contactList;
-	} else {
-		if (!(group = [groupDict objectForKey:groupUID])) {
-			//Create
-			group = [[AIListGroup alloc] initWithUID:groupUID];
+	AIListGroup		*group = nil;
+	if (!(group = [groupDict objectForKey:groupUID])) {
+		//Create
+		group = [[AIListGroup alloc] initWithUID:groupUID];
 
-			//Add
-			[self _updateAllAttributesOfObject:group];
-			[groupDict setObject:group forKey:groupUID];
+		//Add
+		[self _updateAllAttributesOfObject:group];
+		[groupDict setObject:group forKey:groupUID];
 
-			//Add to the contact list
-			[contactList addObject:group];
-			[self _listChangedGroup:contactList object:group];
-			[group release];
-		}
+		//Add to the contact list
+		[contactList addObject:group];
+		[self _listChangedGroup:contactList object:group];
+		[group release];
 	}
 
 	return group;
@@ -1903,16 +1902,12 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (AIListGroup *)existingGroupWithUID:(NSString *)groupUID
 {
-	AIListGroup		*group;
-
-	if (!groupUID || ![groupUID length] || [groupUID isEqualToString:ADIUM_ROOT_GROUP_NAME]) {
-		//Return our root group if it is requested
-		group = contactList;
-	} else {
-		group = [groupDict objectForKey:groupUID];
-	}
+	//Return our root group if it is requested
+	//XXX: is this a good idea? it might semi-mask bugs where we accidentally pass nil
+	if (!groupUID || ![groupUID length] || [groupUID isEqualToString:ADIUM_ROOT_GROUP_NAME])
+		return [self contactList];
 	
-	return group;
+	return [groupDict objectForKey:groupUID];
 }
 
 //Contact list editing -------------------------------------------------------------------------------------------------
