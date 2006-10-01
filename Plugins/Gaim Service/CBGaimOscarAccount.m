@@ -349,6 +349,15 @@
 {
 	if (strcmp(label, "Edit Buddy Comment") == 0) {
 		return nil;
+
+	} else if (strcmp(label, "Re-request Authorization") == 0) {
+		return [NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]];
+		
+	} else 	if (strcmp(label, "Get AIM Info") == 0) {
+		return [NSString stringWithFormat:AILocalizedString(@"Get AIM information for %@",nil),[inContact formattedUID]];
+
+	} else if (strcmp(label, "Direct IM") == 0) {
+		return [NSString stringWithFormat:AILocalizedString(@"Initiate Direct IM with %@",nil),[inContact formattedUID]];
 	}
 
 	return [super titleForContactMenuLabel:label forContact:inContact];
