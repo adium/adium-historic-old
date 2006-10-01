@@ -1856,19 +1856,20 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
     AIChat			*chat = [[notification userInfo] objectForKey:@"AIChat"];
     AIListContact	*destContact = [chat listObject];
-    AIListContact	*metaContact;
+    AIListContact	*metaContact = [destContact parentContact];
 
-    if (((metaContact = [destContact parentContact]) != destContact)) {
-		NSString	*destinationInternalObjectID = [destContact internalObjectID];
-		NSString	*currentPreferredDestination = [metaContact preferenceForKey:KEY_PREFERRED_DESTINATION_CONTACT
-																		   group:OBJECT_STATUS_CACHE];
+	//it's not particularly obvious from the name, but -parentContact can return self
+    if (metaContact == destContact) return;
+	
+	NSString	*destinationInternalObjectID = [destContact internalObjectID];
+	NSString	*currentPreferredDestination = [metaContact preferenceForKey:KEY_PREFERRED_DESTINATION_CONTACT
+																	   group:OBJECT_STATUS_CACHE];
 
-		if (![destinationInternalObjectID isEqualToString:currentPreferredDestination]) {
-			[metaContact setPreference:destinationInternalObjectID
-								forKey:KEY_PREFERRED_DESTINATION_CONTACT
-								 group:OBJECT_STATUS_CACHE];
-		}
-    }
+	if (![destinationInternalObjectID isEqualToString:currentPreferredDestination]) {
+		[metaContact setPreference:destinationInternalObjectID
+							forKey:KEY_PREFERRED_DESTINATION_CONTACT
+							 group:OBJECT_STATUS_CACHE];
+	}
 }
 
 //Retrieving Groups ----------------------------------------------------------------------------------------------------
