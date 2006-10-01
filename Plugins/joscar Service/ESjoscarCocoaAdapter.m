@@ -1781,8 +1781,6 @@ Date* javaDateFromDate(NSDate *date)
 		
 		id<Iterator> iter = [[chatSession getUsers] iterator];
 		while ([iter hasNext]) {
-			NSString *tmp = [(Screenname *)[iter next] getNormal];
-			AILog(@"found contact %@ to be part of chat %@", tmp, [chat name]);
 			[chat addParticipatingListObject:[account contactWithUID:[(Screenname *)[iter next] getNormal]]];
 		}
 
