@@ -169,9 +169,9 @@ static BOOL is_leap_year(unsigned year) {
 	NSCalendarDate *now = [NSCalendarDate calendarDate];
 	unsigned
 		//Date
-		year,
-		month_or_week,
-		day,
+		year = 0U,
+		month_or_week = 0U,
+		day = 0U,
 		//Time
 		hour = 0U;
 	NSTimeInterval
@@ -197,8 +197,8 @@ static BOOL is_leap_year(unsigned year) {
 	const unsigned char *ch = (const unsigned char *)[str UTF8String];
 
 	NSRange range = { 0U, 0U };
-	const unsigned char *start_of_date;
-	if(strict && isspace(*ch)) {
+	const unsigned char *start_of_date = 0;
+	if (strict && isspace(*ch)) {
 		range.location = NSNotFound;
 		isValidDate = NO;
 	} else {
@@ -216,7 +216,7 @@ static BOOL is_leap_year(unsigned year) {
 		unsigned segment;
 		unsigned num_leading_hyphens = 0U, num_digits = 0U;
 
-		if(*ch == 'T') {
+		if (*ch == 'T') {
 			//There is no date here, only a time. Set the date to now; then we'll parse the time.
 			isValidDate = isdigit(*++ch);
 
@@ -232,7 +232,7 @@ static BOOL is_leap_year(unsigned year) {
 			}
 
 			segment = read_segment(ch, &ch, &num_digits);
-			switch(num_digits) {
+			switch (num_digits) {
 				case 0:
 					if(*ch == 'W') {
 						if((ch[1] == '-') && isdigit(ch[2]) && ((num_leading_hyphens == 1U) || ((num_leading_hyphens == 2U) && !strict))) {
@@ -495,10 +495,10 @@ static BOOL is_leap_year(unsigned year) {
 			}
 		}
 
-		if(isValidDate) {
-			if(isspace(*ch) || (*ch == 'T')) ++ch;
+		if (isValidDate) {
+			if (isspace(*ch) || (*ch == 'T')) ++ch;
 
-			if(isdigit(*ch)) {
+			if (isdigit(*ch)) {
 				hour = read_segment_2digits(ch, &ch);
 				if(*ch == timeSep) {
 					++ch;
@@ -563,8 +563,8 @@ static BOOL is_leap_year(unsigned year) {
 			}
 		}
 
-		if(isValidDate) {
-			switch(dateSpecification) {
+		if (isValidDate) {
+			switch (dateSpecification) {
 				case monthAndDate:
 					date = [NSCalendarDate dateWithYear:year
 												  month:month_or_week
@@ -604,7 +604,7 @@ static BOOL is_leap_year(unsigned year) {
 					break;
 			}
 		}
-	} //if(!(strict && isdigit(ch[0])))
+	} //if (!(strict && isdigit(ch[0])))
 
 	if(outRange) {
 		if(isValidDate)
@@ -614,6 +614,7 @@ static BOOL is_leap_year(unsigned year) {
 
 		*outRange = range;
 	}
+
 	return date;
 }
 
