@@ -948,25 +948,75 @@ static NSString	*prefsCategory;
  *		visibleValue:	Alternate version of value to be used in UI displays of profile information.
  */
 - (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo
-{/*
+{
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	if (![[defaults objectForKey:SUSendProfileInfoKey] boolValue])
+		return [NSArray array]; 
+	
+	NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+	if ([[defaults objectForKey:@"AILastSubmittedProfileVersion"] isEqualToString:version]) {
+		return [NSArray array];
+	}	
+	
+	[defaults setObject:version forKey:@"AILastSubmittedProfileVersion"];
+	
+	/*************** Include info about what IM services are used ************/
 	NSMutableString *accountInfo = [NSMutableString string];
-	NSEnumerator *accountEnu = [[[self accountController] accounts] objectEnumerator];
+	NSCountedSet *condensedAccountInfo = [NSCountedSet set];
+	NSArray *sortDescriptor = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"serviceID" ascending:YES]];
+	NSEnumerator *accountEnu = [[[[self accountController] accounts] sortedArrayUsingDescriptors:sortDescriptor] objectEnumerator];
 	AIAccount *account = nil;
 	while((account = [accountEnu nextObject]))
 	{
-		[accountInfo appendFormat:@"%@, ", [account serviceID]];
+		NSString *serviceID = [account serviceID];
+		[accountInfo appendFormat:@"%@, ", serviceID];
+		//FIXME: Yahoo Japan will look like Yahoo. Don't send the whole string for DB field size reasons.
+		[condensedAccountInfo addObject:[NSString stringWithFormat:@"%@", [serviceID substringToIndex:2]]]; 	
+	}
+	NSMutableString *accountInfoString = [NSMutableString string];
+	NSEnumerator *infoEnu = [condensedAccountInfo objectEnumerator];
+	NSString *value;
+	while((value = [infoEnu nextObject]))
+	{
+		[accountInfoString appendFormat:@"%@%d", value, [condensedAccountInfo countForObject:value]];
 	}
 	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
 								@"IMServicesUsed", @"key", 
 								@"IM Services Used", @"visibleKey",
-								accountInfo, @"value",
+								accountInfoString, @"value",
 								accountInfo, @"visibleValue",
 								nil];
-	[profileInfo addObject:entry];*/
-	if ([[[NSUserDefaults standardUserDefaults] objectForKey:SUSendProfileInfoKey] boolValue])
-		return profileInfo;
-	else
-		return [NSDictionary dictionary];
+	[profileInfo addObject:entry];
+	
+	/***************** JVM Version ****************/
+	
+	//This is ridiculous, but we can't load java inside adium without bloating memory usage for non-AIM users unnecessarily
+	NSTask *java = [[[NSTask alloc] init] autorelease];
+	[java setLaunchPath:@"/usr/bin/java"];
+	[java setArguments:[NSArray arrayWithObject:@"-version"]];
+	NSPipe *readPipe = [NSPipe pipe];
+	[java setStandardError:readPipe];
+	NSFileHandle *readHandle = [readPipe fileHandleForReading];
+	[java launch];
+	[java waitUntilExit];
+	NSData *d = [readHandle readDataToEndOfFile];
+	NSMutableString *output = [[NSMutableString alloc] initWithData:d
+														   encoding:NSUTF8StringEncoding];
+	[output deleteCharactersInRange:NSMakeRange(0, [output rangeOfString:@"\""].location)];
+	unsigned loc = [output rangeOfString:@"\""].location;
+	[output deleteCharactersInRange:NSMakeRange(loc, [output length] - loc)];
+	
+	
+	entry = [NSDictionary dictionaryWithObjectsAndKeys:
+								@"JVMVersion", @"key", 
+								@"Java Version", @"visibleKey",
+								output, @"value",
+								output, @"visibleValue",
+								nil];
+	
+	
+	[profileInfo addObject:entry];
+	return profileInfo;
 }
 
 @end
