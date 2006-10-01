@@ -260,20 +260,6 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	return ![inChat isGroupChat];
 }
 
-#pragma mark Contact List Menu Items
-- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
-{
-	if (strcmp(label, "Direct IM") == 0) {
-		if (![[[inContact service] serviceID] isEqualToString:@"ICQ"]) {
-			return [NSString stringWithFormat:AILocalizedString(@"Initiate Direct IM with %@",nil),[inContact formattedUID]];
-		} else {
-			return nil;
-		}
-	}
-
-	return [super titleForContactMenuLabel:label forContact:inContact];
-}
-
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
