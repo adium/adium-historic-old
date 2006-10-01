@@ -331,9 +331,9 @@
 //automatically, such as their profile.
 - (void)updateListContactStatus:(AIListContact *)inContact
 {
-	//If we're dealing with a meta contact, update the status of the contacts contained within it
-	if ([inContact isKindOfClass:[AIMetaContact class]]) {
-		NSEnumerator	*enumerator = [[(AIMetaContact *)inContact listContacts] objectEnumerator];
+	//If we're handed something that can contain other contacts, update the status of the contacts contained within it
+	if ([inContact conformsToProtocol:@protocol(AIContainingObject)]) {
+		NSEnumerator	*enumerator = [[(AIListObject<AIContainingObject> *)inContact listContacts] objectEnumerator];
 		AIListContact	*contact;
 
 		while ((contact = [enumerator nextObject])) {
