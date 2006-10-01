@@ -319,7 +319,7 @@ static NSComparisonResult compareContactsByTheirAccounts(id firstContact, id sec
 					if (exactContact && ([exactContact containingObject] ||
 										 [exactContact isKindOfClass:[AIMetaContact class]])) {
 						//Move contact
-						[[adium contactController] moveContact:exactContact toGroup:group];
+						[[adium contactController] moveContact:exactContact intoObject:group];
 						
 					} else {
 						//Add contact

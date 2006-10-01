@@ -520,7 +520,7 @@ typedef enum {
 		//Move the list object to its new location
 		if ([item isKindOfClass:[AIListGroup class]]) {
 			if (item != [[adium contactController] offlineGroup]) {
-				[[adium contactController] moveListObjects:dragItems toGroup:item index:index];
+				[[adium contactController] moveListObjects:dragItems intoObject:item index:index];
 			} else {
 				success = NO;
 			}
@@ -608,7 +608,7 @@ typedef enum {
 		
 		//Position the metaContact in the group & index the drop point was before
 		[[adium contactController] moveListObjects:[NSArray arrayWithObject:metaContact]
-										   toGroup:oldContainingObject
+										intoObject:oldContainingObject
 											 index:oldIndex];
 		
 		[oldContainingObject release];

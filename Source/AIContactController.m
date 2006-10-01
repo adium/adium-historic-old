@@ -94,7 +94,7 @@
 - (void)prepareShowHideGroups;
 - (void)_performChangeOfUseContactListGroups;
 
-- (void)_positionObject:(AIListObject *)listObject atIndex:(int)index inGroup:(AIListObject<AIContainingObject> *)group;
+- (void)_positionObject:(AIListObject *)listObject atIndex:(int)index inObject:(AIListObject<AIContainingObject> *)group;
 - (void)_moveObjectServerside:(AIListObject *)listObject toGroup:(AIListGroup *)group;
 - (void)_renameGroup:(AIListGroup *)listGroup to:(NSString *)newName;
 
@@ -888,7 +888,7 @@
 
 	//If listObject contains other contacts, perform addListObject:toMetaContact: recursively
 	if ([listObject conformsToProtocol:@protocol(AIContainingObject)]) {
-		NSEnumerator	*enumerator = [[[[(id<AIContainingObject>)listObject containedObjects] copy] autorelease] objectEnumerator];
+		NSEnumerator	*enumerator = [[[[(AIListObject<AIContainingObject> *)listObject containedObjects] copy] autorelease] objectEnumerator];
 		AIListObject	*someObject;
 
 		while ((someObject = [enumerator nextObject]))
@@ -1500,7 +1500,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 
 //Return a flat array of all the objects in a group on an account (and all subgroups, if desired)
-- (NSMutableArray *)allContactsInObject:(id<AIContainingObject>)inGroup recurse:(BOOL)recurse onAccount:(AIAccount *)inAccount
+- (NSMutableArray *)allContactsInObject:(AIListObject<AIContainingObject> *)inGroup recurse:(BOOL)recurse onAccount:(AIAccount *)inAccount
 {
 	NSParameterAssert(inGroup != nil);
 	
@@ -1510,7 +1510,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	AIListObject *object;
     while ((object = [enumerator nextObject])) {
         if (recurse && [object conformsToProtocol:@protocol(AIContainingObject)]) {
-			[contactArray addObjectsFromArray:[self allContactsInObject:(id<AIContainingObject>)object
+			[contactArray addObjectsFromArray:[self allContactsInObject:(AIListObject<AIContainingObject> *)object
 																recurse:recurse
 															  onAccount:inAccount]];
 		} 
@@ -1995,7 +1995,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 											userInfo:userInfo];
 }
 
-- (void)moveListObjects:(NSArray *)objectArray toGroup:(AIListObject<AIContainingObject> *)group index:(int)index
+- (void)moveListObjects:(NSArray *)objectArray intoObject:(AIListObject<AIContainingObject> *)group index:(int)index
 {
 	NSEnumerator	*enumerator;
 	AIListContact	*listContact;
@@ -2008,10 +2008,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 	enumerator = [objectArray objectEnumerator];
 	while ((listContact = [enumerator nextObject])) {
-		[self moveContact:listContact toGroup:group];
+		[self moveContact:listContact intoObject:group];
 
 		//Set the new index / position of the object
-		[self _positionObject:listContact atIndex:index inGroup:group];
+		[self _positionObject:listContact atIndex:index inObject:group];
 	}
 
 	[self endListObjectNotificationsDelay];
@@ -2024,42 +2024,41 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	 Resort the entire list if we are moving within or between AIListGroup objects
 	 (other containing objects such as metaContacts will handle their own sorting).
 	*/
-	if ([group isKindOfClass:[AIListGroup class]]) {
+	if ([group isKindOfClass:[AIListGroup class]])
 		[self sortContactList];
-	}
 }
 
-- (void)moveContact:(AIListContact *)listContact toGroup:(AIListObject<AIContainingObject> *)group
+- (void)moveContact:(AIListContact *)listContact intoObject:(AIListObject<AIContainingObject> *)group
 {
 	//Move the object to the new group only if necessary
-	if (group != [listContact containingObject]) {
-		if ([group isKindOfClass:[AIListGroup class]]) {
-			//Move a contact into a new group
-			if ([listContact isKindOfClass:[AIMetaContact class]]) {
-				//Move the meta contact to this new group
-				[self _moveContactLocally:listContact toGroup:(AIListGroup *)group];
+	if (group == [listContact containingObject]) return;
+	
+	if ([group isKindOfClass:[AIListGroup class]]) {
+		//Move a contact into a new group
+		if ([listContact isKindOfClass:[AIMetaContact class]]) {
+			//Move the meta contact to this new group
+			[self _moveContactLocally:listContact toGroup:(AIListGroup *)group];
 
-				NSEnumerator	*enumerator;
-				AIListContact	*actualListContact;
+			NSEnumerator	*enumerator;
+			AIListContact	*actualListContact;
 
-				//This is a meta contact, move the objects within it.  listContacts will give us a flat array of AIListContacts.
-				enumerator = [[(AIMetaContact *)listContact listContacts] objectEnumerator];
-				while ((actualListContact = [enumerator nextObject])) {
-					//Only move the contact if it is actually listed on the account in question
-					if (![actualListContact isStranger]) {
-						[self _moveObjectServerside:actualListContact toGroup:(AIListGroup *)group];
-					}
+			//This is a meta contact, move the objects within it.  listContacts will give us a flat array of AIListContacts.
+			enumerator = [[(AIMetaContact *)listContact listContacts] objectEnumerator];
+			while ((actualListContact = [enumerator nextObject])) {
+				//Only move the contact if it is actually listed on the account in question
+				if (![actualListContact isStranger]) {
+					[self _moveObjectServerside:actualListContact toGroup:(AIListGroup *)group];
 				}
-
-			} else if ([listContact isKindOfClass:[AIListContact class]]) {
-				//Move the object
-				[self _moveObjectServerside:listContact toGroup:(AIListGroup *)group];
 			}
 
-		} else if ([group isKindOfClass:[AIMetaContact class]]) {
-			//Moving a contact into a meta contact
-			[self addListObject:listContact toMetaContact:(AIMetaContact *)group];
+		} else if ([listContact isKindOfClass:[AIListContact class]]) {
+			//Move the object
+			[self _moveObjectServerside:listContact toGroup:(AIListGroup *)group];
 		}
+
+	} else if ([group isKindOfClass:[AIMetaContact class]]) {
+		//Moving a contact into a meta contact
+		[self addListObject:listContact toMetaContact:(AIMetaContact *)group];
 	}
 }
 
@@ -2091,7 +2090,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 
 //Position a list object within a group
-- (void)_positionObject:(AIListObject *)listObject atIndex:(int)index inGroup:(AIListObject<AIContainingObject> *)group
+- (void)_positionObject:(AIListObject *)listObject atIndex:(int)index inObject:(AIListObject<AIContainingObject> *)group
 {
 	if (index == 0) {
 		//Moved to the top of a group.  New index is between 0 and the lowest current index
