@@ -882,34 +882,30 @@
 //so the association is lasting across program launches.
 - (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact
 {
-	if (listObject != metaContact) {
+	//I can't think of why one would want to add an entire group to a metacontact. Let's say you can't.
+	NSParameterAssert(listObject != nil && ![listObject isKindOfClass:[AIListGroup class]]);
+	if (listObject == metaContact) return;
 
-		//If listObject is a metaContact, perform addListObject:toMetaContact: recursively
-		if ([listObject isKindOfClass:[AIMetaContact class]]) {
-			NSEnumerator	*enumerator = [[[[(AIMetaContact *)listObject containedObjects] copy] autorelease] objectEnumerator];
-			AIListObject	*someObject;
+	//If listObject contains other contacts, perform addListObject:toMetaContact: recursively
+	if ([listObject conformsToProtocol:@protocol(AIContainingObject)]) {
+		NSEnumerator	*enumerator = [[[[(id<AIContainingObject>)listObject containedObjects] copy] autorelease] objectEnumerator];
+		AIListObject	*someObject;
 
-			while ((someObject = [enumerator nextObject])) {
+		while ((someObject = [enumerator nextObject]))
+			[self addListObject:someObject toMetaContact:metaContact];
 
-				[self addListObject:someObject toMetaContact:metaContact];
-			}
+	} else {
+		//Obtain any metaContact this listObject is currently within, so we can remove it later
+		AIMetaContact *oldMetaContact = [contactToMetaContactLookupDict objectForKey:[listObject internalObjectID]];
 
-		} else {
-			AIMetaContact		*oldMetaContact;
+		if ([self _performAddListObject:listObject toMetaContact:metaContact]) {
+			//If this listObject was not in this metaContact in any form before, store the change
+			if (metaContact != oldMetaContact) {
+				//Remove the list object from any other metaContact it is in at present
+				if (oldMetaContact)
+					[self removeListObject:listObject fromMetaContact:oldMetaContact];
 
-			//Obtain any metaContact this listObject is currently within, so we can remove it later
-			oldMetaContact = [contactToMetaContactLookupDict objectForKey:[listObject internalObjectID]];
-
-			if ([self _performAddListObject:listObject toMetaContact:metaContact]) {
-				//If this listObject was not in this metaContact in any form before, store the change
-				if (metaContact != oldMetaContact) {
-					//Remove the list object from any other metaContact it is in at present
-					if (oldMetaContact) {
-						[self removeListObject:listObject fromMetaContact:oldMetaContact];
-					}
-
-					[self _storeListObject:listObject inMetaContact:metaContact];
-				}
+				[self _storeListObject:listObject inMetaContact:metaContact];
 			}
 		}
 	}
@@ -1034,6 +1030,7 @@
 	enumerator = [containedContactsArray objectEnumerator];
 
 	if ([listObject isKindOfClass:[AIMetaContact class]]) {
+		NSAssert(NO, @"wtf, why is this code even being called. Removing a meta from a meta? (AIContactController.m, -removeListObject:fromMetaContact:)");
 		NSNumber	*listObjectObjectID = [(AIMetaContact *)listObject objectID];
 
 		while ((containedContactDict = [enumerator nextObject])) {
