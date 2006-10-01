@@ -185,7 +185,7 @@
  */
 - (AIListObject<AIContainingObject> *)containingObject
 {
-    return (AIListObject<AIContainingObject> *)containingObject;
+    return containingObject;
 }
 
 /*!
