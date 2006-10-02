@@ -954,34 +954,33 @@ static NSString	*prefsCategory;
 		return [NSArray array]; 
 	
 	NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-	if ([[defaults objectForKey:@"AILastSubmittedProfileVersion"] isEqualToString:version]) {
-		return [NSArray array];
-	}	
+//	if ([[defaults objectForKey:@"AILastSubmittedProfileVersion"] isEqualToString:version]) {
+//		return [NSArray array];
+//	}	
 	
 	[defaults setObject:version forKey:@"AILastSubmittedProfileVersion"];
 	
 	/*************** Include info about what IM services are used ************/
 	NSMutableString *accountInfo = [NSMutableString string];
 	NSCountedSet *condensedAccountInfo = [NSCountedSet set];
-	NSArray *sortDescriptor = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"serviceID" ascending:YES]];
-	NSEnumerator *accountEnu = [[[[self accountController] accounts] sortedArrayUsingDescriptors:sortDescriptor] objectEnumerator];
+	NSEnumerator *accountEnu = [[[self accountController] accounts] objectEnumerator];
 	AIAccount *account = nil;
 	while((account = [accountEnu nextObject]))
 	{
 		NSString *serviceID = [account serviceID];
 		[accountInfo appendFormat:@"%@, ", serviceID];
 		//FIXME: Yahoo Japan will look like Yahoo. Don't send the whole string for DB field size reasons.
-		[condensedAccountInfo addObject:[NSString stringWithFormat:@"%@", [serviceID substringToIndex:2]]]; 	
+		[condensedAccountInfo addObject:[NSString stringWithFormat:@"%@", [serviceID substringToIndex:2]]]; 
 	}
+	
 	NSMutableString *accountInfoString = [NSMutableString string];
-	NSEnumerator *infoEnu = [condensedAccountInfo objectEnumerator];
 	NSString *value;
+	NSEnumerator *infoEnu = [[[condensedAccountInfo allObjects] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
 	while((value = [infoEnu nextObject]))
-	{
 		[accountInfoString appendFormat:@"%@%d", value, [condensedAccountInfo countForObject:value]];
-	}
+	
 	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
-								@"IMServicesUsed", @"key", 
+								@"IMServices", @"key", 
 								@"IM Services Used", @"visibleKey",
 								accountInfoString, @"value",
 								accountInfo, @"visibleValue",
@@ -995,7 +994,7 @@ static NSString	*prefsCategory;
 	[java setLaunchPath:@"/usr/bin/java"];
 	[java setArguments:[NSArray arrayWithObject:@"-version"]];
 	NSPipe *readPipe = [NSPipe pipe];
-	[java setStandardError:readPipe];
+	[java setStandardOutput:readPipe];
 	NSFileHandle *readHandle = [readPipe fileHandleForReading];
 	[java launch];
 	[java waitUntilExit];
