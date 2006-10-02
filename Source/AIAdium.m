@@ -954,9 +954,9 @@ static NSString	*prefsCategory;
 		return [NSArray array]; 
 	
 	NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-//	if ([[defaults objectForKey:@"AILastSubmittedProfileVersion"] isEqualToString:version]) {
-//		return [NSArray array];
-//	}	
+	if ([[defaults objectForKey:@"AILastSubmittedProfileVersion"] isEqualToString:version]) {
+		return [NSArray array];
+	}	
 	
 	[defaults setObject:version forKey:@"AILastSubmittedProfileVersion"];
 	
@@ -990,7 +990,7 @@ static NSString	*prefsCategory;
 	/***************** JVM Version ****************/
 	
 	//This is ridiculous, but we can't load java inside adium without bloating memory usage for non-AIM users unnecessarily
-	NSTask *java = [[[NSTask alloc] init] autorelease];
+	/*NSTask *java = [[[NSTask alloc] init] autorelease];
 	[java setLaunchPath:@"/usr/bin/java"];
 	[java setArguments:[NSArray arrayWithObject:@"-version"]];
 	NSPipe *readPipe = [NSPipe pipe];
@@ -1003,18 +1003,20 @@ static NSString	*prefsCategory;
 														   encoding:NSUTF8StringEncoding];
 	[output deleteCharactersInRange:NSMakeRange(0, [output rangeOfString:@"\""].location)];
 	unsigned loc = [output rangeOfString:@"\""].location;
-	[output deleteCharactersInRange:NSMakeRange(loc, [output length] - loc)];
+	[output deleteCharactersInRange:NSMakeRange(loc, [output length] - loc)];*/
 	
+	NSString	*output = [NSClassFromString(@"java.lang.System") getProperty:@"java.version"];
+	if(output) {
+		entry = [NSDictionary dictionaryWithObjectsAndKeys:
+			@"JVMVersion", @"key", 
+			@"Java Version", @"visibleKey",
+			output, @"value",
+			output, @"visibleValue",
+			nil];
+		
+		[profileInfo addObject:entry];
+	}
 	
-	entry = [NSDictionary dictionaryWithObjectsAndKeys:
-								@"JVMVersion", @"key", 
-								@"Java Version", @"visibleKey",
-								output, @"value",
-								output, @"visibleValue",
-								nil];
-	
-	
-	[profileInfo addObject:entry];
 	return profileInfo;
 }
 
