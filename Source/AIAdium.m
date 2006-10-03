@@ -951,8 +951,8 @@ static NSString	*prefsCategory;
 - (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo
 {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//	if (![[defaults objectForKey:SUSendProfileInfoKey] boolValue])
-//		return [NSArray array]; 
+	if (![[defaults objectForKey:SUSendProfileInfoKey] boolValue])
+		return [NSArray array]; 
 	
 	NSCalendarDate *lastCheckDate = [NSCalendarDate dateWithString:[defaults stringForKey:@"AILastSubmittedProfileDate"]];
 	if (lastCheckDate && [lastCheckDate isFromSameWeekAsDate:[NSCalendarDate date]]) {
