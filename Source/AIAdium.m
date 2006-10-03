@@ -46,6 +46,7 @@
 #import <Adium/AIPathUtilities.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AICalendarDateAdditions.h>
 #import <Sparkle/SUConstants.h>
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
@@ -950,15 +951,15 @@ static NSString	*prefsCategory;
 - (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo
 {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	if (![[defaults objectForKey:SUSendProfileInfoKey] boolValue])
-		return [NSArray array]; 
+//	if (![[defaults objectForKey:SUSendProfileInfoKey] boolValue])
+//		return [NSArray array]; 
 	
-	NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-	if ([[defaults objectForKey:@"AILastSubmittedProfileVersion"] isEqualToString:version]) {
+	NSCalendarDate *lastCheckDate = [NSCalendarDate dateWithString:[defaults stringForKey:@"AILastSubmittedProfileDate"]];
+	if (lastCheckDate && [lastCheckDate isFromSameWeekAsDate:[NSCalendarDate date]]) {
 		return [NSArray array];
 	}	
 	
-	[defaults setObject:version forKey:@"AILastSubmittedProfileVersion"];
+	[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
 	
 	/*************** Include info about what IM services are used ************/
 	NSMutableString *accountInfo = [NSMutableString string];
