@@ -970,7 +970,7 @@ static NSString	*prefsCategory;
 	{
 		NSString *serviceID = [account serviceID];
 		[accountInfo appendFormat:@"%@, ", serviceID];
-		//FIXME: Yahoo Japan will look like Yahoo. Don't send the whole string for DB field size reasons.
+		if([serviceID isEqualToString:@"Yahoo! Japan"]) serviceID = @"YJ";
 		[condensedAccountInfo addObject:[NSString stringWithFormat:@"%@", [serviceID substringToIndex:2]]]; 
 	}
 	
