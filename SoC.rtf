@@ -4,22 +4,28 @@
 \margl1440\margr1440\vieww17060\viewh12980\viewkind0
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
 
-\f0\b\fs24 \cf0 Top Title (Synopsis or About or something like that)
+\f0\b\fs24 \cf0 Adium: Google Summer of Code 2006
 \f1\b0 \
 \
-	Now that Summer of Code is over, it seems like it would be a good time to look at what went right, what went wrong, and what we all got done. Here's a look at each of the projects in turn.\
+	This was our first year to participate in the Google Summer of Code.  35 applications were submitted, of which 18 were voted qualified and interesting by one or more of our 8 potential mentors.  6 applications were ultimately accepted.  Here's a look at each of the projects in turn.\
 \
 
 \f0\b Improved Jabber Support via Smack
 \f1\b0 \
 	The Jabber instant messaging protocol is undoubtedly rising as a big player in IM. It's one of the few openly standardized protocols, has unmatched features, and is backed by widely known groups including Apple, Google, and LiveJournal. \
-	Andreas Monitzer and his mentor, Augie Fackler, ended up producing twelve thousand lines of code, written in two different languages, and involving changes to two completely separate codebases. As a result of this, Adium 1.1 will likely be among the most advanced Jabber clients in the world. This was generally considered to be the highest priority project of the initial SoC ideas, and its completion is a big step forward for open instant messaging on the Mac.\
+	Andreas Monitzer, mentored by Augie Fackler, produced twelve thousand lines of code, written in two different languages and involving changes to two distinct codebases -- Adium itself and the Jive Smack Jabber library itself.  The project was a resounding success; some work is still required to prepare the results for a release, but we expect to do so in our next release cycle.  Adium 1.1 will likely be one of the most advanced Jabber clients in the world. This was generally considered to be the highest priority project of the initial SoC ideas, and its completion is a big step forward for open instant messaging on the Mac.\
+\
+
+\f0\b Jingle Audio Support via Smack\
+
+\f1\b0 \
+	When Google released their Google Talk instant messaging service, they included an important new technology known as Jingle. Jingle adds the capability to send streaming data across a Jabber network, which can be used for voice chat (Jingle-Audio), video chat (Jingle-Video), and file transfers.\
+	Alvaro Saurin, mentored by Evan Schoenberg, undertook the herculean task of first implementing Jingle support to the Smack Jabber library and then creating an audio-visual Quicktime framework for multimedia in Adium, necessary since Adium previously has had no audio or video support.  The Smack side of the project was wholly successful, and other developers at Jive Software plan to continue development of the results.  This means that Jingle will be available not only to Adium but also to other clients using smack.  The Adium side is still in progress; Alvaro has laid much of the groundwork, and he will be continuing to work on the project as time allows; his work on the Adium multimedia framework should allow future development of audio and video support on other protocols in addition to Jabber.\
 \
 
 \f0\b Improved Disability Support
 \f1\b0 \
-	Accessibility to people with disabilities such as blindness or cerebral palsy is an area of software development that has been deplorably neglected in many programs, Adium included. Chirag Shah's hard work with his mentor Peter Hosey on bolstering accessibility support brings us improvements in interacting with system accessibility features like VoiceOver, as well as new features such as sensible descriptions of Adium's custom controls, and text zooming in the message view. \
-	Besides opening Adium to more users, this should also bring us in line with US government section 508 regulations, which could increase the use of Adium in schools and government offices.\
+	Adium is translated into 21 languages, but until this summer it was not well prepared to speak the language of disability.  Chirag Shah, mentored by Peter Hosey, rectified this situation, making Adium highly compliant with OS X's accessibility capabilities for text-to-speech throughout the UI via VoiceOver, text zooming for messages, and more.  	Besides opening Adium to more users, this should also bring us in line with US Government Section 508 regulations, which could increase the use of Adium in schools and government offices.\
 \
 
 \f0\b Super Menu Duck (aka Improved Status Menu)
@@ -33,12 +39,6 @@
 	After Apple changed the visual appearance of their NSTabView control in the release of Mac OS X 10.2, the Adium team had to scramble to implement their own custom tabs to continue supporting tabbed messaging. Years later, John Pannel of Positive Spin Media wrote his own tab implementation designed to be easier to use than Adium's and licensed in a more flexible license.\
 	Summer-of-Coder Kent Sutherland (with design input from his mentor, David Smith) updated PSMTabBarControl to match Adium's, and then exceed, the functionality requirements for Adium's tabbed messaging. This included tear off tabs, vertical tabs, and improved tab overflow handling. Because of his work, this highly advanced tab implementation is freely available for any Mac OS X application to use. (As of this writing, at least three other projects using it, including Kent's own program Chax, which made him the ideal developer for this task!)\
 \
-
-\f0\b Jingle AV Support\
-
-\f1\b0 \
-	When Google released their Google Talk instant messaging service, they included an important new technology known as Jingle. Jingle adds the capability to send streaming data across a Jabber network, which can be used for voice chat (Jingle-Audio), video chat (Jingle-Video), and file transfers.\
-	Alvaro Saurin Parra and his mentor, Adium lead developer Evan Schoenberg, added Jingle support to the Smack Jabber library, and then began integrating these features into Adium. Unfortunately, this project proved too much to complete within the Summer of Code timeframe, but the framework for this is now in place. Alvaro plans to continue his work in collaboration with developers at Jive Software (makers of the Smack Library), which the eventual goal of bringing full Google Talk-compatible voice chat to Adium.\
 \
 
 \f0\b Contact List Splitting
