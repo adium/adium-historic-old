@@ -32,6 +32,7 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
+#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
@@ -722,7 +723,20 @@
     //
 	toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"TextEntry", @"MessageWindow", nil]] retain];
 
-	[[self window] setToolbar:toolbar];
+	/* Seemingly randomly, setToolbar: may throw:
+	 * Exception:	NSInternalInconsistencyException
+	 * Reason:		Uninitialized rectangle passed to [View initWithFrame:].
+	 *
+	 * With the same window positioning information as a user for whom this happens consistently, I can't reproduce. Let's
+	 * fail to set the toolbar gracefully.
+	 */
+	AI_DURING
+		[[self window] setToolbar:toolbar];
+	AI_HANDLER
+		NSLog(@"Warning: While setting the message window's toolbar, exception %@ (%@) was thrown.",
+			  [localException name],
+			  [localException reason]);
+	AI_ENDHANDLER
 }
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
