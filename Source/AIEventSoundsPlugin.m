@@ -100,12 +100,15 @@
  * @param eventID The eventID which triggered this action
  * @param userInfo Additional information associated with the event; userInfo's type will vary with the actionID.
  */
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+- (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	if (![listObject soundsAreMuted]) {
+	BOOL shouldPlay = ![listObject soundsAreMuted];
+	if (shouldPlay) {
 		NSString	*soundPath = [[details objectForKey:KEY_ALERT_SOUND_PATH] stringByExpandingBundlePath];
 		[[adium soundController] playSoundAtPath:soundPath];
 	}
+	
+	return shouldPlay;
 }
 
 /*!

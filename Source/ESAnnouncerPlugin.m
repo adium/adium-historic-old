@@ -120,7 +120,7 @@
  * @param eventID The eventID which triggered this action
  * @param userInfo Additional information associated with the event; userInfo's type will vary with the actionID.
  */
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+- (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	NSString			*textToSpeak = nil;
 
@@ -294,6 +294,8 @@
 									 pitch:(pitchNumber ? [pitchNumber floatValue] : 0.0)
 									  rate:(rateNumber ? [rateNumber floatValue] : 0.0)];
 	}
+	
+	return (textToSpeak != nil);
 }
 
 /*!
