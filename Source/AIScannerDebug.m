@@ -19,7 +19,8 @@
 - (id)initWithString:(NSString *)aString
 {
 	NSParameterAssert(aString != nil);
-	
+	AILog(@"String is %@",aString);
+
 	return [super initWithString:aString];
 }
 

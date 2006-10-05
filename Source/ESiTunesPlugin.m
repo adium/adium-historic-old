@@ -474,7 +474,7 @@
 	NSMenu		  *menu = [[NSMenu alloc] init];
 	MVMenuButton  *button = [[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)];
 
-	//configure the popup button and it's menu
+	//configure the popup button and its menu
 	[button setImage:[[NSWorkspace sharedWorkspace] iconForFile:iTunesPath]];
 	[self createiTunesToolbarItemMenuItems:menu];
 

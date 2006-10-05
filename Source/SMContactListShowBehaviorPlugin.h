@@ -23,7 +23,7 @@
 @protocol AIActionHandler;
 
 @interface SMContactListShowBehaviorPlugin : AIPlugin <AIActionHandler> {
-	NSTimer *hideContactListTimer;
+
 }
 
 @end

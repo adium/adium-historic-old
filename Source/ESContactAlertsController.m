@@ -319,19 +319,20 @@ int eventIDSort(id objectA, id objectB, void *context) {
 			actionHandler = [actionHandlers objectForKey:actionID];		
 			
 			if ((![performedActionIDs containsObject:actionID]) || ([actionHandler allowMultipleActionsWithID:actionID])) {
-				[actionHandler performActionID:actionID
-								 forListObject:listObject
-								   withDetails:[alert objectForKey:KEY_ACTION_DETAILS] 
-							 triggeringEventID:eventID
-									  userInfo:userInfo];
-				
-				//If this alert was a single-fire alert, we can delete it now
-				if ([[alert objectForKey:KEY_ONE_TIME_ALERT] intValue]) {
-					[self removeAlert:alert fromListObject:listObject];
+				if ([actionHandler performActionID:actionID
+											 forListObject:listObject
+											   withDetails:[alert objectForKey:KEY_ACTION_DETAILS] 
+										 triggeringEventID:eventID
+										  userInfo:userInfo]) {
+					
+					//If this alert was a single-fire alert, we can delete it now
+					if ([[alert objectForKey:KEY_ONE_TIME_ALERT] intValue]) {
+						[self removeAlert:alert fromListObject:listObject];
+					}
+					
+					//We don't want to perform this action again for this event
+					[performedActionIDs addObject:actionID];
 				}
-				
-				//We don't want to perform this action again for this event
-				[performedActionIDs addObject:actionID];
 			}
 		}
 	}
