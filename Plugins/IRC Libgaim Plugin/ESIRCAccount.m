@@ -22,8 +22,6 @@ void gaim_account_set_bool(void *account, const char *name,
 
 - (void)dealloc
 {
-	NSLog(@"Dealloc %@",self);
-	
 	[super dealloc];
 }
 
@@ -34,30 +32,18 @@ void gaim_account_set_bool(void *account, const char *name,
 
 - (const char *)gaimAccountName
 {
-	return [super gaimAccountName];
-
-	NSString	*userNameWithHost = nil;
-	BOOL		serverAppendedToUID;
 	NSString	*myUID = [self UID];
+	BOOL		serverAppendedToUID  = ([myUID rangeOfString:@"@"].location != NSNotFound);
 
-	serverAppendedToUID = ([myUID rangeOfString:@"@"].location != NSNotFound);
-	
-	if (serverAppendedToUID) {
-		userNameWithHost = myUID;
-	} else {
-		userNameWithHost = [myUID stringByAppendingString:[self serverSuffix]];
-	}
-
-	return [myUID UTF8String];
+	return [(serverAppendedToUID ? myUID : [myUID stringByAppendingString:[self serverSuffix]]) UTF8String];
 }
 
 - (void)configureGaimAccount
 {
 	[super configureGaimAccount];
-	
+
 	gaim_account_set_username([self gaimAccount], [self gaimAccountName]);
 	
-	//'Connect via' server (nil by default)
 	BOOL useSSL = [[self preferenceForKey:KEY_IRC_USE_SSL group:GROUP_ACCOUNT_STATUS] boolValue];
 	
 	gaim_account_set_bool([self gaimAccount], "ssl", useSSL);
@@ -90,11 +76,8 @@ void gaim_account_set_bool(void *account, const char *name,
 
 - (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
 {
-	if ([[inContact UID] isEqualToString:@"nickserv"] ||
-		[[inContact UID] isEqualToString:@"chanserv"]) {
-		return YES;
-	} else {
-		return NO;
-	}
+	return ([[inContact UID] isEqualToString:@"nickserv"] ||
+			[[inContact UID] isEqualToString:@"chanserv"])
 }
+
 @end
