@@ -85,14 +85,14 @@
 	return [ESSendMessageAlertDetailPane actionDetailsPane];
 }
 
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+- (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	BOOL					success = NO;
 	AIAccount				*account;
 	NSString				*destUniqueID;
 	AIListContact			*contact = nil;
 	BOOL					useAnotherAccount;
-		
+	BOOL					success = NO;
+
 	//Intended source and dest
 	id accountID = [details objectForKey:KEY_MESSAGE_SEND_FROM];
 	if (![accountID isKindOfClass:[NSString class]]) {
@@ -148,7 +148,7 @@
 		//Create and open a chat with this contact
 		AIChat					*chat;
 		NSAttributedString 		*message;
-		
+
 		//The contact is already on the account we want to use
 		chat = [[adium chatController] openChatWithContact:contact
 										onPreferredAccount:NO];
@@ -163,17 +163,19 @@
 																  date:nil
 															   message:message
 															 autoreply:NO];
-		
+
 		//Send the content
 		success = [[adium contentController] sendContentObject:content];
+
+		//Display an error message if the message was not delivered
+		if (!success) {
+			[[adium interfaceController] handleMessage:AILocalizedString(@"Contact Alert Error",nil)
+									   withDescription:[NSString stringWithFormat:AILocalizedString(@"Unable to send message to %@.",nil), [contact displayName]]
+									   withWindowTitle:@""];
+		}
 	}
 	
-	//Display an error message if the message was not delivered
-	if (!success && contact) {
-        [[adium interfaceController] handleMessage:AILocalizedString(@"Contact Alert Error",nil)
-								   withDescription:[NSString stringWithFormat:AILocalizedString(@"Unable to send message to %@.",nil), [contact displayName]]
-								   withWindowTitle:@""];
-	}
+	return success;
 }
 
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
