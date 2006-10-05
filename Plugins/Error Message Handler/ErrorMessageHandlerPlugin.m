@@ -106,7 +106,7 @@
 	return [ESPanelAlertDetailPane actionDetailsPane];
 }
 
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+- (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
     NSString    *dateString = [[NSCalendarDate calendarDate] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES]];
 	NSString	*alertText = [[details objectForKey:KEY_ALERT_TEXT] lastPathComponent];
@@ -115,6 +115,8 @@
     [[ErrorMessageWindowController errorMessageWindowController] displayError:[listObject displayName] 
 															  withDescription:(alertText ? [NSString stringWithFormat:@"%@: %@", dateString, alertText] : @"")
 																	withTitle:AILocalizedString(@"Contact Alert",nil)];
+	
+	return YES;
 }
 
 

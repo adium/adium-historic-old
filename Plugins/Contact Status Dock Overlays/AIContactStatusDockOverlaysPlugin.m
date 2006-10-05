@@ -132,7 +132,7 @@
  * @param eventID The eventID which triggered this action
  * @param userInfo Additional information associated with the event; userInfo's type will vary with the actionID.
  */
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+- (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	BOOL isMessageEvent = [[adium contactAlertsController] isMessageEvent:eventID];
 	
@@ -177,6 +177,8 @@
 				   withObject:nil
 				   afterDelay:0];
 	}
+	
+	return YES;
 }
 
 - (void)removeDockOverlay:(NSTimer *)removeTimer

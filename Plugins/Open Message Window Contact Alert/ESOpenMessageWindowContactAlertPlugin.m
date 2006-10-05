@@ -55,12 +55,14 @@
 	return nil;
 }
 
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+- (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	if ([listObject isKindOfClass:[AIListContact class]]) {
 		[[adium chatController] openChatWithContact:(AIListContact *)listObject
 								 onPreferredAccount:YES];
 	}
+	
+	return YES;
 }
 
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
