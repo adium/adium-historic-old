@@ -139,6 +139,8 @@ typedef enum {
 - (NSString *)notes;
 - (void)setNotes:(NSString *)notes;
 
+- (NSNumber *)idleTime;
+
 - (NSImage *)userIcon;
 - (NSImage *)menuIcon;
 - (NSData *)userIconData;
