@@ -145,7 +145,7 @@
 		[self chatParticipatingListObjectsChanged:nil];
 		
 		//Set our base writing direction
-		if (contact && [NSApp isOnTigerOrBetter])
+		if (contact)
 			[textView_outgoing setBaseWritingDirection:[contact baseWritingDirection]];
 		
 		//Observe general preferences for sending keys
@@ -173,7 +173,7 @@
 	}
 	
 	//Save the base writing direction
-	if (contact && [NSApp isOnTigerOrBetter])
+	if (contact)
 		[contact setBaseWritingDirection:[textView_outgoing baseWritingDirection]];
 
 	[chat release]; chat = nil;
@@ -665,21 +665,13 @@
 - (void)clearTextEntryView
 {
 	NSWritingDirection	writingDirection;
-	BOOL				tigerOrBetter = [NSApp isOnTigerOrBetter];
 
-	if (tigerOrBetter) {
-		writingDirection = [textView_outgoing baseWritingDirection];
-	} else {
-		//Just silencing gcc; this will not be used
-		writingDirection = NSWritingDirectionLeftToRight;
-	}
+	writingDirection = [textView_outgoing baseWritingDirection];
 	
 	[textView_outgoing setString:@""];
 	[textView_outgoing setTypingAttributes:[[adium contentController] defaultFormattingAttributes]];
 	
-	if (tigerOrBetter) {
-		[textView_outgoing setBaseWritingDirection:writingDirection];	//Preserve the writing diraction
-	}
+	[textView_outgoing setBaseWritingDirection:writingDirection];	//Preserve the writing diraction
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification
 														object:textView_outgoing];
