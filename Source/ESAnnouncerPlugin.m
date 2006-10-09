@@ -125,7 +125,7 @@
 	NSString			*textToSpeak = nil;
 
 	//Do nothing if sounds are muted for this object
-	if ([listObject soundsAreMuted]) return;
+	if ([listObject soundsAreMuted]) return NO;
 
 	if ([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]) {
 		NSMutableString	*userText = [[[details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK] mutableCopy] autorelease];
