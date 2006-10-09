@@ -484,7 +484,8 @@ static NSString	*prefsCategory;
 	int					buttonPressed;
 	
 	if (([extension caseInsensitiveCompare:@"AdiumLog"] == NSOrderedSame) ||
-		([extension caseInsensitiveCompare:@"AdiumHtmlLog"] == NSOrderedSame)) {
+		([extension caseInsensitiveCompare:@"AdiumHtmlLog"] == NSOrderedSame) ||
+		([extension caseInsensitiveCompare:@"chatlog"] == NSOrderedSame)) {
 		if (completedApplicationLoad) {
 			//Request display of the log immediately if Adium is ready
 			[[self notificationCenter] postNotificationName:Adium_ShowLogAtPath
