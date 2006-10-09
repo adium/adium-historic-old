@@ -647,11 +647,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 			[displayText appendString:[NSString stringWithFormat:@"%@%@\n%@ - %@\n%@\n\n",
 				(appendedFirstLog ? @"\n" : @""),
 				horizontalRule,
-				([NSApp isOnTigerOrBetter] ? 
-				 [headerDateFormatter stringFromDate:[theLog date]] :
-				 [[theLog date] descriptionWithCalendarFormat:[headerDateFormatter dateFormat]
-													 timeZone:nil
-													   locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]),
+				[headerDateFormatter stringFromDate:[theLog date]],
 				[theLog to],
 				horizontalRule]
 					   withAttributes:[[AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:NSBoldFontMask size:12] dictionary]];
@@ -1547,44 +1543,28 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
 		float width = [dateTableColumn width];
 
-		if ([NSApp isOnTigerOrBetter]) {
 #define NUMBER_TIME_STYLES	2
 #define NUMBER_DATE_STYLES	4
-			NSDateFormatterStyle timeFormatterStyles[NUMBER_TIME_STYLES] = { NSDateFormatterShortStyle, NSDateFormatterNoStyle};
-			NSDateFormatterStyle formatterStyles[NUMBER_DATE_STYLES] = { NSDateFormatterFullStyle, NSDateFormatterLongStyle, NSDateFormatterMediumStyle, NSDateFormatterShortStyle };
-			float requiredWidth;
+		NSDateFormatterStyle timeFormatterStyles[NUMBER_TIME_STYLES] = { NSDateFormatterShortStyle, NSDateFormatterNoStyle};
+		NSDateFormatterStyle formatterStyles[NUMBER_DATE_STYLES] = { NSDateFormatterFullStyle, NSDateFormatterLongStyle, NSDateFormatterMediumStyle, NSDateFormatterShortStyle };
+		float requiredWidth;
 
-			dateFormatter = [cell formatter];
-			if (!dateFormatter) {
-				dateFormatter = [[[AILogDateFormatter alloc] init] autorelease];
-				[dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
-				[cell setFormatter:dateFormatter];
-			}
-			
-			requiredWidth = width + 1;
-			for (int i = 0; (i < NUMBER_TIME_STYLES) && (requiredWidth > width); i++) {
-				[dateFormatter setTimeStyle:timeFormatterStyles[i]];
+		dateFormatter = [cell formatter];
+		if (!dateFormatter) {
+			dateFormatter = [[[AILogDateFormatter alloc] init] autorelease];
+			[dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+			[cell setFormatter:dateFormatter];
+		}
+		
+		requiredWidth = width + 1;
+		for (int i = 0; (i < NUMBER_TIME_STYLES) && (requiredWidth > width); i++) {
+			[dateFormatter setTimeStyle:timeFormatterStyles[i]];
 
-				for (int j = 0; (j < NUMBER_DATE_STYLES) && (requiredWidth > width); j++) {
-					[dateFormatter setDateStyle:formatterStyles[j]];
-					requiredWidth = [cell cellSizeForBounds:NSMakeRect(0,0,1e6,1e6)].width;
-					//Require a bit of space so the date looks comfortable. Very long dates relative to the current date can still overflow...
-					requiredWidth += 3;					
-				}
-			}
-
-		} else {
-			NSEnumerator	*enumerator = [[NSArray arrayWithObjects:
-				[[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] 
-										allowNaturalLanguage:NO] autorelease],
-				[[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString] 
-										allowNaturalLanguage:NO] autorelease],
-				nil] objectEnumerator];
-			float requiredWidth = width + 1;
-			while ((requiredWidth > width) && (dateFormatter = [enumerator nextObject])) {
-				[cell setFormatter:dateFormatter];
+			for (int j = 0; (j < NUMBER_DATE_STYLES) && (requiredWidth > width); j++) {
+				[dateFormatter setDateStyle:formatterStyles[j]];
 				requiredWidth = [cell cellSizeForBounds:NSMakeRect(0,0,1e6,1e6)].width;
-				requiredWidth += 3;
+				//Require a bit of space so the date looks comfortable. Very long dates relative to the current date can still overflow...
+				requiredWidth += 3;					
 			}
 		}
 	}
@@ -1644,11 +1624,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
-{
-	if (![NSApp isOnTigerOrBetter]) {
-		NSLog(@"item has address 0x%08x [class %@]", (unsigned long)item, [item class]);
-	}
-	
+{	
 	Class itemClass = [item class];
 
 	if (itemClass == [AIMetaContact class]) {
