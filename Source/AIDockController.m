@@ -183,21 +183,9 @@
 	
 	image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"Base"] image];
 	if (image) {
-		if ([NSApp isOnTigerOrBetter]) {
-			[[NSWorkspace sharedWorkspace] setIcon:image 
-										   forFile:[[NSBundle mainBundle] bundlePath]
-										   options:0];
-			
-		} else {
-			NSString		*icnsPath = [[NSBundle mainBundle] pathForResource:@"Adium" ofType:@"icns"];
-			IconFamily		*iconFamily;
-	
-			iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:image
-											 usingImageInterpolation:NSImageInterpolationLow];
-			[iconFamily setAsCustomIconForFile:[[NSBundle mainBundle] bundlePath]];
-			[iconFamily writeToFile:icnsPath];
-
-		}
+		[[NSWorkspace sharedWorkspace] setIcon:image 
+									   forFile:[[NSBundle mainBundle] bundlePath]
+									   options:0];
 		
 		//Finder won't update Adium's icon to match the new one until it is restarted if we don't
 		//tell NSWorkspace to note the change.

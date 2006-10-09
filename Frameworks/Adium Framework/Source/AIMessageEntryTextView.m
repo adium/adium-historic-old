@@ -1022,19 +1022,15 @@
 #pragma mark Writing Direction
 - (void)toggleBaseWritingDirection:(id)sender
 {
-	if ([NSApp isOnTigerOrBetter]) {
-		if ([self baseWritingDirection] == NSWritingDirectionRightToLeft) {
-			[self setBaseWritingDirection:NSWritingDirectionLeftToRight];
-		} else {
-			[self setBaseWritingDirection:NSWritingDirectionRightToLeft];			
-		}
-		
-		//Apply it immediately
-		[self setBaseWritingDirection:[self baseWritingDirection]
-								range:NSMakeRange(0, [[self textStorage] length])];
+	if ([self baseWritingDirection] == NSWritingDirectionRightToLeft) {
+		[self setBaseWritingDirection:NSWritingDirectionLeftToRight];
 	} else {
-		[super toggleBaseWritingDirection:sender];
+		[self setBaseWritingDirection:NSWritingDirectionRightToLeft];			
 	}
+	
+	//Apply it immediately
+	[self setBaseWritingDirection:[self baseWritingDirection]
+							range:NSMakeRange(0, [[self textStorage] length])];
 }
 
 #pragma mark Attachments
