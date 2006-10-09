@@ -234,24 +234,14 @@ NSString *GetTextContentForXMLLog(NSString *pathToFile)
 {
 	NSError *err=nil;
 	NSURL *furl = [NSURL fileURLWithPath:(NSString *)pathToFile];
-	Class xmlClass = NSClassFromString(@"NSXMLDocument");
 	NSString *contentString;
-	if(xmlClass)
-	{
-		NSXMLDocument *xmlDoc;
-		xmlDoc = [[xmlClass alloc] initWithContentsOfURL:furl
-												 options:NSXMLNodePreserveCDATA
-												   error:&err];    
-		NSArray *contentArray = [xmlDoc nodesForXPath:@"//*/*/text()"
-												error:&err];
-		contentString = [contentArray componentsJoinedByString:@" "];
-		[xmlDoc release];
-	}
-	else
-	{	
-		//10.3 here
-		NSString *xmlContent = [NSString stringWithContentsOfFile:pathToFile];
-		contentString = killXMLTags(xmlContent);
-	}
+	NSXMLDocument *xmlDoc;
+	xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:furl
+												  options:NSXMLNodePreserveCDATA
+													error:&err];    
+	NSArray *contentArray = [xmlDoc nodesForXPath:@"//*/*/text()"
+											error:&err];
+	contentString = [contentArray componentsJoinedByString:@" "];
+	[xmlDoc release];
 	return contentString;
 }
