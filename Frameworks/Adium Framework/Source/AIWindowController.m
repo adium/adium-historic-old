@@ -41,6 +41,13 @@
     return self;
 }
 
+/*!
+ * @brief Create a frame from a saved string, taking into account the window's properties
+ *
+ * Maximum and minimum sizes are respected, the toolbar is taken into account, and the result has all integer values.
+ *
+ * @result The rect. If frameString would create an invalid rect (width <= 0 or height <= 0), NSZeroRect is returned.
+ */
 - (NSRect)savedFrameFromString:(NSString *)frameString
 {
 	NSRect		windowFrame = NSRectFromString(frameString);
@@ -60,7 +67,26 @@
 		windowFrame.size.height += [[self window] toolbarHeight] - contentFrame.size.height;
 	}
 
-	return windowFrame;
+	return NSIntegralRect(windowFrame);
+}
+
+/*!
+ * @brief Create a key which is specific for our current screen configuration
+ *
+ * The resulting key includes the starting key plus the size/orientation layout of all screens.
+ * This allows saving a separate, unique saved frame for each new combination of monitor resolutions and relative positions.
+ */
+- (NSString *)multiscreenKeyWithAutosaveName:(NSString *)key
+{
+	NSEnumerator	*enumerator = [[NSScreen screens] objectEnumerator];
+	NSMutableString	*multiscreenKey = [key mutableCopy];
+	NSScreen		*screen;
+	
+	while ((screen = [enumerator nextObject])) {
+		[multiscreenKey appendFormat:@"-%@", NSStringFromRect([screen frame])];
+	}
+	
+	return [multiscreenKey autorelease];
 }
 
 /*!
@@ -77,22 +103,31 @@
 		int			numberOfScreens;
 
 		//Unique key for each number of screens
-		numberOfScreens = [[NSScreen screens] count];
-		
-		frameString = [[adium preferenceController] preferenceForKey:((numberOfScreens == 1) ? 
-																	  key :
-																	  [NSString stringWithFormat:@"%@-%i",key,numberOfScreens])
-															   group:PREF_GROUP_WINDOW_POSITIONS];
-
-		if (!frameString && (numberOfScreens > 1)) {
-			//Fall back on the single screen preference if necessary (this is effectively a preference upgrade).
-			frameString = [[adium preferenceController] preferenceForKey:key
+		if ([[NSScreen screens] count] > 1) {
+			frameString = [[adium preferenceController] preferenceForKey:[self multiscreenKeyWithAutosaveName:key]
 																   group:PREF_GROUP_WINDOW_POSITIONS];
-		}
 
+			if (!frameString) {
+				//Fall back on the old number-of-screens key
+				frameString = [[adium preferenceController] preferenceForKey:[NSString stringWithFormat:@"%@-%i",key,numberOfScreens]
+																	   group:PREF_GROUP_WINDOW_POSITIONS];
+				if (!frameString) {
+					//Fall back on the single screen preference if necessary (this is effectively a preference upgrade).
+					frameString = [[adium preferenceController] preferenceForKey:key
+																		   group:PREF_GROUP_WINDOW_POSITIONS];
+				}
+			}
+			
+		} else {
+			frameString = [[adium preferenceController] preferenceForKey:key
+																   group:PREF_GROUP_WINDOW_POSITIONS];			
+		}
+		
 		if (frameString) {
-			//
-			[[self window] setFrame:[self savedFrameFromString:frameString] display:NO];
+			NSRect savedFrame = [self savedFrameFromString:frameString];
+			if (!NSIsEmptyRect(savedFrame)) {
+				[[self window] setFrame:savedFrame display:NO];
+			}
 		}
 	}
 }
