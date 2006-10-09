@@ -955,7 +955,7 @@ static NSString	*prefsCategory;
 		return [NSArray array]; 
 	
 	NSCalendarDate *lastCheckDate = [NSCalendarDate dateWithString:[defaults stringForKey:@"AILastSubmittedProfileDate"]];
-	if (lastCheckDate && [lastCheckDate isFromSameWeekAsDate:[NSCalendarDate date]]) {
+	if (lastCheckDate && [lastCheckDate php4CompatibleIsFromSameWeekAsDate:[NSCalendarDate date]]) {
 		return [NSArray array];
 	}	
 	
