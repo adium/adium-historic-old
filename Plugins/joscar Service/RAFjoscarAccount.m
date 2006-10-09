@@ -518,9 +518,7 @@
 			 * means larger file sizes... which for AIM, means the buddy icon doesn't get sent.
 			 * AIM max is 8 kilobytes; 10.4 produces 12 kb images.  0.90 is largely indistinguishable from 1.0 anyways.
 			 */
-			float compressionFactor = ([NSApp isOnTigerOrBetter] ?
-									   0.9 :
-									   1.0);
+			float compressionFactor = 0.9;
 
 			buddyIconData = [image JPEGRepresentationWithCompressionFactor:compressionFactor];
 		}
