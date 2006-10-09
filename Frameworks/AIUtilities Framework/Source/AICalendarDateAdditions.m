@@ -48,4 +48,15 @@
 	return [date dayOfCommonEra] == [self dayOfCommonEra];
 }
 
+- (BOOL) php4CompatibleIsFromSameWeekAsDate:(NSCalendarDate *)date //PHP4 starts weeks on Monday. Hurrah!
+{
+	if(abs([date dayOfCommonEra] - [self dayOfCommonEra]) > 7) return NO;
+	date = [date dateByAddingYears:0
+							months:0
+							  days:([self dayOfWeek] - [date dayOfWeek]) + 1
+							 hours:0
+						   minutes:0
+						   seconds:0];
+	return [date dayOfCommonEra] == [self dayOfCommonEra];
+}
 @end
