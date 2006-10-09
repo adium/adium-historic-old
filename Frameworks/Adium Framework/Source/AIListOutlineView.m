@@ -382,12 +382,12 @@
 	[super drawRect:rect];
 
 	/*	#################### Crappy Code ###################
-	 *	10.3 compatibility:  10.3 does NOT invalidate the shadow
+	 *	10.4 compatibility:  10.4 does NOT invalidate the shadow
 	 *	of a transparent window correctly, forcing us to do it manually each
 	 *	time the window content is changed.  This is absolutely horrible for
-	 *	performance, but the only way to avoid shadow ghosting in 10.3 :(
+	 *	performance, but the only way to avoid shadow ghosting in 10.4 :(
 	 *
-	 *  XXX - ToDo: Check if this is still a problem in 10.4
+	 *  XXX - ToDo: Check if this is still a problem in 10.5
 	 */
 	if (updateShadowsWhileDrawing) [[self window] invalidateShadow];
 }
