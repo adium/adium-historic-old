@@ -187,11 +187,13 @@
 - (NSString *)_frameSaveKey
 {
 	if ([[[adium preferenceController] preferenceForKey:KEY_TABBED_CHATTING
-												  group:PREF_GROUP_INTERFACE] boolValue]) {
+												  group:PREF_GROUP_INTERFACE] boolValue] &&
+		![[[adium preferenceController] preferenceForKey:KEY_GROUP_CHATS_BY_GROUP
+												   group:PREF_GROUP_INTERFACE] boolValue]) {
 		return KEY_MESSAGE_WINDOW_POSITION;
 
 	} else {
-		//Not using tabbed chatting: Save the window position on a per-container basis
+		//Not using tabbed chatting, or we're tabbing by groups: Save the window position on a per-container basis
 		return [NSString stringWithFormat:@"%@ %@",KEY_MESSAGE_WINDOW_POSITION, containerID];	
 	}
 }
