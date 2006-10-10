@@ -147,7 +147,7 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	NSString	*userNameLabel = [[inAccount service] userNameLabel];
 	
 	[buddyText setStringValue:[(userNameLabel ? userNameLabel :
-								AILocalizedString(@"Contact ID",nil)) stringByAppendingString:@":"]];	
+								AILocalizedString(@"Contact ID",nil)) stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];	
 }
 
 - (IBAction)cancelBlockSheet:(id)sender

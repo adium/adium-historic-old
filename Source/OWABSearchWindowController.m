@@ -508,7 +508,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	NSString	*userNameLabel = [service userNameLabel];
 	
 	[label_contactID setStringValue:[(userNameLabel ? userNameLabel :
-									  AILocalizedString(@"Contact ID",nil)) stringByAppendingString:@":"]];
+									  AILocalizedString(@"Contact ID",nil)) stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];
 }
 
 /*!
