@@ -38,6 +38,8 @@
                 readmeView = NSView; 
                 showInfoControl = NSSegmentedControl; 
                 "tableView_categories" = AIAlternatingRowTableView; 
+                "view_content" = NSView; 
+                "view_shelf" = NSView; 
                 window = NSWindow; 
                 xtraList = NSTableView; 
             }; 
