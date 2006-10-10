@@ -23,7 +23,10 @@
         {
             CLASS = ESGaimMeanwhileAccountViewController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_fakeClientId" = NSButton; "checkBox_forceLogin" = NSButton; }; 
+            OUTLETS = {
+                "popUp_contactList" = NSPopUpButton; 
+                "textField_contactListWarning" = NSTextField; 
+            }; 
             SUPERCLASS = AIAccountViewController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
