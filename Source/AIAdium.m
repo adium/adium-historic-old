@@ -68,6 +68,10 @@ static NSString	*prefsCategory;
 - (void)deleteTemporaryFiles;
 @end
 
+@interface NSObject (JavaObject)
++ (NSString *)getProperty:(NSString *)propertyName;
+@end
+
 @implementation AIAdium
 
 //Init
@@ -967,8 +971,7 @@ static NSString	*prefsCategory;
 	NSCountedSet *condensedAccountInfo = [NSCountedSet set];
 	NSEnumerator *accountEnu = [[[self accountController] accounts] objectEnumerator];
 	AIAccount *account = nil;
-	while((account = [accountEnu nextObject]))
-	{
+	while ((account = [accountEnu nextObject])) {
 		NSString *serviceID = [account serviceID];
 		[accountInfo appendFormat:@"%@, ", serviceID];
 		if([serviceID isEqualToString:@"Yahoo! Japan"]) serviceID = @"YJ";
@@ -978,7 +981,7 @@ static NSString	*prefsCategory;
 	NSMutableString *accountInfoString = [NSMutableString string];
 	NSString *value;
 	NSEnumerator *infoEnu = [[[condensedAccountInfo allObjects] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
-	while((value = [infoEnu nextObject]))
+	while ((value = [infoEnu nextObject]))
 		[accountInfoString appendFormat:@"%@%d", value, [condensedAccountInfo countForObject:value]];
 	
 	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -1007,13 +1010,13 @@ static NSString	*prefsCategory;
 	unsigned loc = [output rangeOfString:@"\""].location;
 	[output deleteCharactersInRange:NSMakeRange(loc, [output length] - loc)];*/
 	
-	NSString	*output = [NSClassFromString(@"java.lang.System") getProperty:@"java.version"];
-	if(output) {
+	NSString	*javaVersion = [NSClassFromString(@"java.lang.System") getProperty:@"java.version"];
+	if (javaVersion) {
 		entry = [NSDictionary dictionaryWithObjectsAndKeys:
 			@"JVMVersion", @"key", 
 			@"Java Version", @"visibleKey",
-			output, @"value",
-			output, @"visibleValue",
+			javaVersion, @"value",
+			javaVersion, @"visibleValue",
 			nil];
 		
 		[profileInfo addObject:entry];
