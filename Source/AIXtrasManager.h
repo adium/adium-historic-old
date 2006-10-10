@@ -54,7 +54,6 @@
 + (AIXtrasManager *) sharedManager;
 - (void) showXtras;
 - (void) loadXtras;
-- (IBAction) setCategory:(id)sender;
 - (NSArray *) arrayOfXtrasAtPaths:(NSArray *)paths;
 - (IBAction) browseXtras:(id)sender;
 - (IBAction) deleteXtra:(id)sender;

@@ -35,6 +35,7 @@
 
 @interface AIXtrasManager (PRIVATE)
 - (void)installToolbar;
+- (void)updateForSelectedCategory;
 @end
 
 @implementation AIXtrasManager
@@ -78,8 +79,8 @@ static AIXtrasManager *manager;
 	[previewContainerView setHasVerticalScroller:YES];
 	[previewContainerView setAutohidesScrollers:YES];
 	[previewContainerView setBorderType:NSBezelBorder];
-	
-	[self setCategory:nil];	
+
+	[tableView_categories selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
 }
 
 - (void)showXtras
@@ -124,7 +125,7 @@ static AIXtrasManager *manager;
 	[self loadXtras];
 	
 	//Now redisplay our current category, in case it changed
-	[self setCategory:nil];
+	[self updateForSelectedCategory];
 }
 
 int categorySort(id categoryA, id categoryB, void * context)
@@ -231,13 +232,15 @@ int categorySort(id categoryA, id categoryB, void * context)
 	return xtras;
 }
 
-- (IBAction)setCategory:(id)sender
+- (void)updateForSelectedCategory
 {
 	[selectedCategory autorelease];
 	selectedCategory = [[self xtrasForCategoryAtIndex:[tableView_categories selectedRow]] retain];
 
-	[xtraList selectRow:0 byExtendingSelection:NO];
 	[xtraList reloadData];
+	if ([xtraList numberOfRows]) {
+		[xtraList selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+	}
 
 	[self updatePreview];
 }
@@ -430,7 +433,7 @@ int categorySort(id categoryA, id categoryB, void * context)
 		//}
 		
 	} else if ([aNotification object] == tableView_categories) {
-		[self setCategory:nil];
+		[self updateForSelectedCategory];
 	}
 }
 
