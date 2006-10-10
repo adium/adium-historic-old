@@ -22,11 +22,20 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
+#import <AIUtilities/AIToolbarUtilities.h>
+#import <AIUtilities/AIAlternatingRowTableView.h>
+
 #import <Adium/AIDockControllerProtocol.h>
 
 #import "AIXtraPreviewController.h"
 
-#define ADIUM_XTRAS_PAGE					AILocalizedString(@"http://www.adiumxtras.com/","Adium xtras page. Localized only if a translated version exists.")
+#define ADIUM_XTRAS_PAGE		AILocalizedString(@"http://www.adiumxtras.com/","Adium xtras page. Localized only if a translated version exists.")
+#define DELETE					AILocalizedStringFromTable(@"Delete", @"Buttons", nil)
+#define GET_MORE_XTRAS			AILocalizedStringFromTable(@"Get More Xtras", @"Buttons", "Button in the Xtras Manager to go to adiumxtras.com to get more adiumxtras")
+
+@interface AIXtrasManager (PRIVATE)
+- (void)installToolbar;
+@end
 
 @implementation AIXtrasManager
 
@@ -42,6 +51,37 @@ static AIXtrasManager *manager;
 	manager = self;
 }
 
+- (void)windowDidLoad
+{
+	[self installToolbar];
+	
+	//This is the Mail.app source list background color... which differs from the iTunes one.
+	[tableView_categories setBackgroundColor:[NSColor colorWithCalibratedRed:.9059
+																	   green:.9294
+																		blue:.9647
+																	   alpha:1.0]];
+	[tableView_categories setDrawsGradientSelection:YES];
+	
+	AIImageTextCell			*cell;
+	//Configure our tableViews
+	cell = [[AIImageTextCell alloc] init];
+	[cell setFont:[NSFont systemFontOfSize:12]];
+	[[tableView_categories tableColumnWithIdentifier:@"name"] setDataCell:cell];
+	[cell release];
+	
+	cell = [[AIImageTextCell alloc] init];
+	[cell setFont:[NSFont systemFontOfSize:12]];
+	[[xtraList tableColumnWithIdentifier:@"xtras"] setDataCell:cell];
+	[cell release];
+	
+	//XXX ???
+	[previewContainerView setHasVerticalScroller:YES];
+	[previewContainerView setAutohidesScrollers:YES];
+	[previewContainerView setBorderType:NSBezelBorder];
+	
+	[self setCategory:nil];	
+}
+
 - (void)showXtras
 {
 	[self loadXtras];
@@ -54,29 +94,7 @@ static AIXtrasManager *manager;
 										   name:Adium_Xtras_Changed
 										 object:nil];
 		[NSBundle loadNibNamed:@"XtrasManager" owner:self];
-		
-		AIImageTextCell			*cell;
-		//Configure our tableViews
-		cell = [[AIImageTextCell alloc] init];
-		[cell setFont:[NSFont systemFontOfSize:12]];
-		[cell setDrawsGradientHighlight:YES];
-		[[sidebar tableColumnWithIdentifier:@"name"] setDataCell:cell];
-		[cell release];
-		
-		cell = [[AIImageTextCell alloc] init];
-		[cell setFont:[NSFont systemFontOfSize:12]];
-		[cell setDrawsGradientHighlight:YES];
-		[[xtraList tableColumnWithIdentifier:@"xtras"] setDataCell:cell];
-		[cell release];
-		
-		[previewContainerView setHasVerticalScroller:YES];
-		[previewContainerView setAutohidesScrollers:YES];
-		[previewContainerView setBorderType:NSBezelBorder];
-
-		[deleteButton setLocalizedString:AILocalizedStringFromTable(@"Delete", @"Buttons", nil)];
-		[button_getMoreXtras setLocalizedString:AILocalizedStringFromTable(@"Get More Xtras", @"Buttons", "Button in the Xtras Manager to go to adiumxtras.com to get more adiumxtras")];
-
-		[self setCategory:nil];
+		[self windowDidLoad];
 	}
 		
 	[window makeKeyAndOrderFront:nil];
@@ -89,6 +107,7 @@ static AIXtrasManager *manager;
 										object:nil];
 	
 	[categories release]; categories = nil;
+	[toolbarItems release]; toolbarItems = nil;
 }
 
 
@@ -208,7 +227,7 @@ int categorySort(id categoryA, id categoryB, void * context)
 - (IBAction)setCategory:(id)sender
 {
 	[selectedCategory autorelease];
-	selectedCategory = [[self xtrasForCategoryAtIndex:[sidebar selectedRow]] retain];
+	selectedCategory = [[self xtrasForCategoryAtIndex:[tableView_categories selectedRow]] retain];
 
 	[xtraList selectRow:0 byExtendingSelection:NO];
 	[xtraList reloadData];
@@ -318,17 +337,17 @@ int categorySort(id categoryA, id categoryB, void * context)
 						  contextInfo:nil];
 }
 
-- (IBAction) browseXtras:(id)sender
+- (IBAction)browseXtras:(id)sender
 {
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_XTRAS_PAGE]];
 }
 
-- (IBAction) checkForUpdates:(id)sender
+- (IBAction)checkForUpdates:(id)sender
 {
 	
 }
 
-+ (BOOL) createXtraBundleAtPath:(NSString *)path 
++ (BOOL)createXtraBundleAtPath:(NSString *)path 
 {
 	NSString *contentsPath  = [path stringByAppendingPathComponent:@"Contents"];
 	NSString *resourcesPath = [contentsPath stringByAppendingPathComponent:@"Resources"];
@@ -363,7 +382,7 @@ int categorySort(id categoryA, id categoryB, void * context)
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	if (tableView == sidebar) {
+	if (tableView == tableView_categories) {
 		[cell setImage:[[categories objectAtIndex:row] objectForKey:@"Image"]];
 		[cell setSubString:nil];
 	}
@@ -375,7 +394,7 @@ int categorySort(id categoryA, id categoryB, void * context)
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	if (tableView == sidebar) {
+	if (tableView == tableView_categories) {
 		return [categories count];
 	}
 	else {
@@ -385,7 +404,7 @@ int categorySort(id categoryA, id categoryB, void * context)
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	if (tableView == sidebar) {
+	if (tableView == tableView_categories) {
 		return [[categories objectAtIndex:row] objectForKey:@"Name"];
 	} else {
 		NSString * name = [[selectedCategory objectAtIndex:row] name];
@@ -399,15 +418,11 @@ int categorySort(id categoryA, id categoryB, void * context)
 		//int	selectedRow = [xtraList selectedRow];
 		//if ((selectedRow >= 0) && (selectedRow < [selectedCategory count])) {
 			//AIXtraInfo *xtraInfo  = [AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[[selectedCategory objectAtIndex:selectedRow] path]]];
-			if ([[xtraList selectedRowIndexes] count] > 0)
-				[deleteButton setEnabled:YES];
 		//	if ([[xtraList selectedRowIndexes] count] == 1)
 		//		[previewController setXtra:xtraInfo];
-		//	else
-		//		[deleteButton setEnabled:NO];
 		//}
 		
-	} else if ([aNotification object] == sidebar) {
+	} else if ([aNotification object] == tableView_categories) {
 		[self setCategory:nil];
 	}
 }
@@ -415,6 +430,81 @@ int categorySort(id categoryA, id categoryB, void * context)
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
 	[self deleteXtra:tableView];
+}
+
+#pragma mark Placeholder until this is a window controller
+- (NSWindow *)window
+{
+	return window;
+}
+
+#pragma mark Toolbar
+
+- (void)installToolbar
+{	
+    NSToolbar 		*toolbar = [[[NSToolbar alloc] initWithIdentifier:@"XtrasManager:Toolbar"] autorelease];
+	
+    [toolbar setDelegate:self];
+    [toolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
+    [toolbar setSizeMode:NSToolbarSizeModeRegular];
+    [toolbar setVisible:YES];
+    [toolbar setAllowsUserCustomization:YES];
+    [toolbar setAutosavesConfiguration:YES];
+    toolbarItems = [[NSMutableDictionary alloc] init];
+	
+	//Delete Logs
+	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+									withIdentifier:@"delete"
+											 label:DELETE
+									  paletteLabel:DELETE
+										   toolTip:AILocalizedString(@"Delete the selection",nil)
+											target:self
+								   settingSelector:@selector(setImage:)
+									   itemContent:[NSImage imageNamed:@"remove" forClass:[self class]]
+											action:@selector(deleteXtra:)
+											  menu:nil];
+
+	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+									withIdentifier:@"getmoreXtras"
+											 label:GET_MORE_XTRAS
+									  paletteLabel:GET_MORE_XTRAS
+										   toolTip:GET_MORE_XTRAS
+											target:self
+								   settingSelector:@selector(setImage:)
+									   itemContent:[NSImage imageNamed:@"xtras_duck" forClass:[self class]]
+											action:@selector(browseXtras:)
+											  menu:nil];
+	
+	[[self window] setToolbar:toolbar];
+}	
+
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
+{
+    return [AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier];
+}
+
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
+{
+    return [NSArray arrayWithObjects:@"getmoreXtras", NSToolbarFlexibleSpaceItemIdentifier, @"delete", nil];
+}
+
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
+{
+    return [[toolbarItems allKeys] arrayByAddingObjectsFromArray:
+		[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier,
+			NSToolbarSpaceItemIdentifier,
+			NSToolbarFlexibleSpaceItemIdentifier,
+			NSToolbarCustomizeToolbarItemIdentifier, nil]];
+}
+
+- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
+{
+	if ([[theItem itemIdentifier] isEqualToString:@"delete"]) {
+		return ([[xtraList selectedRowIndexes] count] > 0);
+
+	} else {
+		return YES;
+	}
 }
 
 @end
