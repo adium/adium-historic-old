@@ -414,7 +414,7 @@ int categorySort(id categoryA, id categoryB, void * context)
 
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
-	
+	[self deleteXtra:tableView];
 }
 
 @end
