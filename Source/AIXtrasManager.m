@@ -84,9 +84,9 @@ static AIXtrasManager *manager;
 
 - (void)showXtras
 {
-	[self loadXtras];
-
-	if(![window isVisible]) {
+	if (!window) {
+		[self loadXtras];
+		
 		showInfo = NO;
 		
 		[[adium notificationCenter] addObserver:self
@@ -108,6 +108,13 @@ static AIXtrasManager *manager;
 	
 	[categories release]; categories = nil;
 	[toolbarItems release]; toolbarItems = nil;
+
+	//Release top-level nib objects besides the window
+	[view_content release]; view_content = nil;
+	[view_shelf release]; view_shelf = nil;	
+
+	//XXX don't need to do this when this is a window controller
+	window = nil;
 }
 
 
