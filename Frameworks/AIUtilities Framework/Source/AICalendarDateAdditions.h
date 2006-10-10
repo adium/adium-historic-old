@@ -37,6 +37,6 @@
 @interface NSCalendarDate (AICalendarDateAdditions)
 
 - (BOOL) isFromSameWeekAsDate:(NSCalendarDate *)date;
-- (BOOL) php4CompatibleIsFromSameWeekAsDate:(NSCalendarDate *)date //PHP4 starts weeks on Monday. Hurrah!
+- (BOOL) php4CompatibleIsFromSameWeekAsDate:(NSCalendarDate *)date; //PHP4 starts weeks on Monday. Hurrah!
 
 @end
