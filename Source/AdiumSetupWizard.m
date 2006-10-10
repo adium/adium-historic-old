@@ -236,7 +236,7 @@ enum{
 - (void)configureAccountSetupForService:(AIService *)service
 {
 	//UID Label
-	[textField_usernameLabel setStringValue:[[service userNameLabel] stringByAppendingString:@":"]];
+	[textField_usernameLabel setStringValue:[[service userNameLabel] stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];
 
 	//UID formatter and placeholder
 	[textField_username setFormatter:

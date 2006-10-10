@@ -101,7 +101,7 @@ static AIGuestAccountWindowController *sharedGuestAccountWindowController = nil;
 - (void)selectServiceType:(id)sender
 {
 	AIService *service = [self service];
-	[label_name setStringValue:[[service userNameLabel] stringByAppendingString:@":"]];
+	[label_name setStringValue:[[service userNameLabel] stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];
 	
 	[textField_name setFormatter:
 		[AIStringFormatter stringFormatterAllowingCharacters:[service allowedCharactersForAccountName]
