@@ -253,6 +253,8 @@
 		345ACC970811C20F008E4D22 /* AwayStatusWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 345ACC960811C20F008E4D22 /* AwayStatusWindow.nib */; };
 		345AFA690A5D76B400D7DA6F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		345AFAEE0A5D9A5F00D7DA6F /* AINoisyTableColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 345AFAEC0A5D9A5F00D7DA6F /* AINoisyTableColumn.m */; };
+		345EE2DE0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 345EE2DC0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.h */; };
+		345EE2DF0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 345EE2DD0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m */; };
 		345F566B08178356001F733C /* AdiumServiceIcons.icns in Resources */ = {isa = PBXBuildFile; fileRef = 345F566A08178356001F733C /* AdiumServiceIcons.icns */; };
 		345F57400817FF80001F733C /* pref-contactList.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F573F0817FF80001F733C /* pref-contactList.png */; };
 		345F583E08197E74001F733C /* AdiumStatusIcons.icns in Resources */ = {isa = PBXBuildFile; fileRef = 345F583D08197E74001F733C /* AdiumStatusIcons.icns */; };
@@ -1005,6 +1007,9 @@
 		34EFC46C0AACC4CD0086AC43 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		34F191DC09BA5F43001D6BE2 /* irc.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F191DB09BA5F43001D6BE2 /* irc.png */; };
 		34F2BD25059CF8070005B238 /* c++filt in Resources */ = {isa = PBXBuildFile; fileRef = 34F2BD24059CF8070005B238 /* c++filt */; };
+		34F312930ADC3FE800A4310E /* KNShelfSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */; };
+		34F312BD0ADC43CA00A4310E /* xtras_duck.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F312BC0ADC43CA00A4310E /* xtras_duck.png */; };
+		34F312F00ADC476300A4310E /* KNShelfSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */; };
 		34F4675E080F46AC007800AB /* ESBonjourAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46755080F46AB007800AB /* ESBonjourAccountViewController.m */; };
 		34F4675F080F46AC007800AB /* ESBonjourAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F46756080F46AB007800AB /* ESBonjourAccountViewController.h */; };
 		34F46760080F46AC007800AB /* AWBonjourPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46757080F46AB007800AB /* AWBonjourPlugin.m */; };
@@ -2303,6 +2308,8 @@
 		345AF9B50A5D67EC00D7DA6F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
 		345AFAEB0A5D9A5F00D7DA6F /* AINoisyTableColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AINoisyTableColumn.h; path = Source/AINoisyTableColumn.h; sourceTree = "<group>"; };
 		345AFAEC0A5D9A5F00D7DA6F /* AINoisyTableColumn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AINoisyTableColumn.m; path = Source/AINoisyTableColumn.m; sourceTree = "<group>"; };
+		345EE2DC0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContactInfoImageViewWithImagePicker.h; path = Source/AIContactInfoImageViewWithImagePicker.h; sourceTree = "<group>"; };
+		345EE2DD0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContactInfoImageViewWithImagePicker.m; path = Source/AIContactInfoImageViewWithImagePicker.m; sourceTree = "<group>"; };
 		345F566A08178356001F733C /* AdiumServiceIcons.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumServiceIcons.icns; path = Resources/AdiumServiceIcons.icns; sourceTree = "<group>"; };
 		345F573F0817FF80001F733C /* pref-contactList.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-contactList.png"; path = "Resources/pref-contactList.png"; sourceTree = "<group>"; };
 		345F583D08197E74001F733C /* AdiumStatusIcons.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumStatusIcons.icns; path = Resources/AdiumStatusIcons.icns; sourceTree = "<group>"; };
@@ -3173,6 +3180,7 @@
 		34F2E81907C2CD6C007EAAAB /* AITextAttachmentExtension.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITextAttachmentExtension.m; path = "Frameworks/Adium Framework/Source/AITextAttachmentExtension.m"; sourceTree = "<group>"; };
 		34F2E83807C2CDBD007EAAAB /* ESFileWrapperExtension.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESFileWrapperExtension.m; path = "Frameworks/Adium Framework/Source/ESFileWrapperExtension.m"; sourceTree = "<group>"; };
 		34F2E83907C2CDBD007EAAAB /* ESFileWrapperExtension.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileWrapperExtension.h; path = "Frameworks/Adium Framework/Source/ESFileWrapperExtension.h"; sourceTree = "<group>"; };
+		34F312BC0ADC43CA00A4310E /* xtras_duck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = xtras_duck.png; path = Resources/xtras_duck.png; sourceTree = "<group>"; };
 		34F46755080F46AB007800AB /* ESBonjourAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ESBonjourAccountViewController.m; sourceTree = "<group>"; };
 		34F46756080F46AB007800AB /* ESBonjourAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ESBonjourAccountViewController.h; sourceTree = "<group>"; };
 		34F46757080F46AB007800AB /* AWBonjourPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AWBonjourPlugin.m; sourceTree = "<group>"; };
@@ -4926,8 +4934,6 @@
 				348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */,
 				340670A60A55A4B4004E22AC /* ESGlassSplitView.h */,
 				340670A70A55A4B4004E22AC /* ESGlassSplitView.m */,
-				348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */,
-				348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */,
 				340670790A55A044004E22AC /* sourceListBackground.png */,
 			);
 			name = "Views and Cells";
@@ -5223,6 +5229,8 @@
 				34D8343F07CBE6E1006466F2 /* NSString+CarbonFSRefCreation.m */,
 				34D8346C07CBE6F4006466F2 /* SUSpeaker.h */,
 				34D8346B07CBE6F4006466F2 /* SUSpeaker.m */,
+				348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */,
+				348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */,
 			);
 			name = "External Sources";
 			sourceTree = "<group>";
@@ -6435,6 +6443,7 @@
 				633F175708F905A700C76383 /* AIXtraInfo.m */,
 				633F175808F905A700C76383 /* AIXtrasManager.h */,
 				633F175908F905A700C76383 /* AIXtrasManager.m */,
+				34F312BC0ADC43CA00A4310E /* xtras_duck.png */,
 				632D801608E7E0A40032C187 /* XtrasManager.nib */,
 			);
 			name = "Xtras Management";
@@ -7267,6 +7276,8 @@
 				34575E3207CBA7CC004A4FFF /* ContactInfoWindow.nib */,
 				4BBF41E10661194A001D31E1 /* ContactProfilePane.nib */,
 				4B2DC068066F6B1200AD5AAD /* ContactSettingsPane.nib */,
+				345EE2DC0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.h */,
+				345EE2DD0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m */,
 			);
 			name = "Contact Info Window";
 			sourceTree = "<group>";
@@ -7480,6 +7491,7 @@
 				C44BA7820AAB696400C7504F /* SetupAssistantBoxBackgroundView.h in Headers */,
 				343022290AB4766E0082CF7C /* AINulRemovalPlugin.h in Headers */,
 				34BC8F7A0ACA3AAC00562745 /* AIScannerDebug.h in Headers */,
+				345EE2DE0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7597,6 +7609,7 @@
 				34DC8B130A7EEEF7003E1636 /* SUSpeaker.h in Headers */,
 				343700A70A9C1E170028604E /* AIAdvancedPreferencePane.h in Headers */,
 				3482E0F50AB5064E00471992 /* AIAdiumProtocol.h in Headers */,
+				34F312930ADC3FE800A4310E /* KNShelfSplitView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8464,6 +8477,7 @@
 				341548CD0A92D6D30087EB98 /* SRRemoveShortcutRollover.tif in Resources */,
 				341548CE0A92D6D30087EB98 /* SRSnapback.tiff in Resources */,
 				347374BD0AA9206B00AD18E3 /* ShortcutRecorder.strings in Resources */,
+				34F312BD0ADC43CA00A4310E /* xtras_duck.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9085,6 +9099,7 @@
 				C44BA7830AAB696400C7504F /* SetupAssistantBoxBackgroundView.m in Sources */,
 				3430222A0AB4766E0082CF7C /* AINulRemovalPlugin.m in Sources */,
 				34BC8F7B0ACA3AAC00562745 /* AIScannerDebug.m in Sources */,
+				345EE2DF0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9179,6 +9194,7 @@
 				34DC8B120A7EEEF7003E1636 /* NSString+CarbonFSRefCreation.m in Sources */,
 				34DC8B140A7EEEF7003E1636 /* SUSpeaker.m in Sources */,
 				343700A80A9C1E170028604E /* AIAdvancedPreferencePane.m in Sources */,
+				34F312F00ADC476300A4310E /* KNShelfSplitView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

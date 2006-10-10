@@ -17,7 +17,7 @@
 #import <Adium/AIPlugin.h>
 #import "AIXtraPreviewController.h"
 
-@class AIXtraInfo;
+@class AIXtraInfo, AIAlternatingRowTableView;
 
 #define AIXtraTypeDockIcon			@"adiumicon"
 #define AIXtraTypeStatusIcons		@"adiumstatusicons"
@@ -33,20 +33,18 @@
 	NSMutableArray							*categories;
 	NSMutableArray							*selectedCategory;
 	IBOutlet NSWindow						*window;
-	IBOutlet NSTableView					*sidebar;
+	IBOutlet AIAlternatingRowTableView		*tableView_categories;;
 	IBOutlet NSTableView					*xtraList;
 	IBOutlet NSTextView						*infoView;
 	IBOutlet NSScrollView					*previewContainerView;
 	IBOutlet id<AIXtraPreviewController>	previewController;
 	IBOutlet NSView							*readmeView;
 	IBOutlet NSSegmentedControl				*showInfoControl;
-	IBOutlet NSSplitView					*splitView;
-	IBOutlet NSButton						*deleteButton;
-
-	IBOutlet NSButton						*button_getMoreXtras;
 
 	NSString								*infoPath;
 	BOOL									showInfo; //YES = info, NO = preview
+	
+	NSMutableDictionary						*toolbarItems;
 }
 
 + (AIXtrasManager *) sharedManager;
@@ -63,7 +61,4 @@
 
 + (BOOL) createXtraBundleAtPath:(NSString *)path;
 
-- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row;
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row;
-- (int)numberOfRowsInTableView:(NSTableView *)tableView;
 @end
