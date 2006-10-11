@@ -194,12 +194,12 @@ static void deallocateVirtualBuffer(void *buffer, UInt32 bufferLength);
 
 void *allocateVirtualBuffer(UInt32 bufferLength)
 {
-    kern_return_t error = 0;
-    vm_address_t originalAddress = 0;
-    vm_address_t realAddress = 0;
+    kern_return_t error;
+    vm_address_t originalAddress = (vm_address_t)NULL;
+    vm_address_t realAddress = (vm_address_t)NULL;
     mach_port_t memoryEntry;
     vm_size_t memoryEntryLength;
-    vm_address_t virtualAddress = 0;
+    vm_address_t virtualAddress = (vm_address_t)NULL;
 
     // We want to find where we can get 2 * bufferLength bytes of contiguous address space.
     // So let's just allocate that space, remember its address, and deallocate it.
@@ -238,7 +238,7 @@ void *allocateVirtualBuffer(UInt32 bufferLength)
 
     // Then make a memory entry for the area we just allocated.
     memoryEntryLength = bufferLength;
-    error = mach_make_memory_entry(mach_task_self(), &memoryEntryLength, realAddress, VM_PROT_READ | VM_PROT_WRITE, &memoryEntry, 0);
+    error = mach_make_memory_entry(mach_task_self(), &memoryEntryLength, realAddress, VM_PROT_READ | VM_PROT_WRITE, &memoryEntry, (mem_entry_name_port_t)NULL);
     if (error) {
 #if DEBUG
         mach_error("mach_make_memory_entry", error);
@@ -267,7 +267,7 @@ void *allocateVirtualBuffer(UInt32 bufferLength)
 #endif
         // TODO Retry from the beginning, instead of failing completely. There is a tiny (but > 0) probability that someone
         // will allocate this space out from under us.
-        virtualAddress = 0;
+        virtualAddress = (vm_address_t)NULL;
         goto errorReturn;
     }
     if (virtualAddress != realAddress + bufferLength) {

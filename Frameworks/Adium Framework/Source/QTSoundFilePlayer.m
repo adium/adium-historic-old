@@ -21,17 +21,28 @@
 // Ben Haller -- threading bug fixes
 // Steven Frank -- bug fixes
 // Frank Vernon -- changes for QuickTime 4 AAC decoding (VBR)
+// Justin Drury -- bug fix
+// Evan Schoenberg -- adding functionality for Adium
+// Ryan Govostes -- removing deprecated code
 //
+
+#define USE_NEW_CORE_AUDIO_CODE 1
 
 #import <Adium/QTSoundFilePlayer.h>
 
 #import <AudioToolbox/DefaultAudioOutput.h>
-#import <AudioUnit/AUNTComponent.h>
 #import <CoreAudio/CoreAudio.h>
 #import <unistd.h>
 #import <mach/mach.h>
 #import <mach/mach_error.h>
 #import <mach/mach_time.h>
+
+#if USE_NEW_CORE_AUDIO_CODE
+#import <AudioUnit/AUComponent.h>
+#else
+#warning We're using deprecated CoreAudio code
+#import <AudioUnit/AUNTComponent.h>
+#endif
 
 #import <Adium/VirtualRingBuffer.h>
 
@@ -93,7 +104,7 @@
 // Too big and we cause writes to take too long (and the buffer may run dry while we are writing).
 // Too small and we waste CPU by waking up and writing too often.
 
-#define FILE_SAMPLE_BUFFER_SIZE (64 * 1024)
+#define FILE_SAMPLE_BUFFER_SIZE (128 * 1024)
 // Size (in bytes) of chunks of sample data to read from the file at one time. This is uncompressed, unconverted data.
 // This is the amount we pass to GetMediaSample(), but that doesn't mean that the actual filesystem reads will necessarily be this size.
 
@@ -133,8 +144,13 @@ static UnsignedFixed ConvertFloat64ToUnsignedFixed(Float64 float64Value);
 - (void)convertIntoRingBuffer;
 
 // Audio playback thread
+#if USE_NEW_CORE_AUDIO_CODE
+static OSStatus renderCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData);
+- (void)renderWithFlags:(AudioUnitRenderActionFlags*)ioRenderFlags timeStamp:(const AudioTimeStamp *)timeStamp bus:(UInt32)busNumber frames:(UInt32)numberFrames bufferList:(AudioBufferList *)ioData;
+#else
 static OSStatus renderCallback(void *inRefCon, AudioUnitRenderActionFlags inActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, AudioBuffer *ioData);
-- (void)renderWithFlags:(AudioUnitRenderActionFlags)flags timeStamp:(const AudioTimeStamp *)timeStamp bus:(UInt32)busNumber buffer:(AudioBuffer *)ioData;
+- (void)renderWithFlags:(AudioUnitRenderActionFlags)inActionFlags timeStamp:(const AudioTimeStamp *)timeStamp bus:(UInt32)busNumber buffer:(AudioBuffer *)ioData;
+#endif
 
 // Control thread (finishing)
 - (BOOL)checkIfInControllingThreadWithSelector:(SEL)selector;
@@ -741,35 +757,28 @@ Boolean fillSoundConverterBuffer(SoundComponentDataPtr *data, void *refCon)
 - (BOOL)setUpAudioOutputUsingSystemAlertDevice:(BOOL)useSystemAlertDevice;
 {
     OSStatus err;
-    struct AudioUnitInputCallback inputCallbackStruct;
-
-    // Note: This is what we call "sophisticated error handling".
-#if 0
- //Doesn't work.. gets an outputAudioUnit but fails in AudioUnitSetProperty below. Why?
-	ComponentDescription cd;
-
-	cd.componentType = kAudioUnitType_Output;
-    cd.componentSubType = (useSystemAlertDevice ?
-						   kAudioUnitSubType_SystemOutput :
-						   kAudioUnitSubType_DefaultOutput);
-	cd.componentManufacturer = 0;
-	cd.componentFlags = 0;
-	cd.componentFlagsMask = 0;
-
-	Component theComponent = FindNextComponent(/* start at the beginning */ NULL,
-											   &cd);
 	
-	err = OpenAComponent(theComponent, &outputAudioUnit);
-    if (err) {
-		NSLog(@"Failed to open a acomponent");
-        return NO;
+#if USE_NEW_CORE_AUDIO_CODE
+	err = OpenADefaultComponent(kAudioUnitType_Output,
+								(useSystemAlertDevice ? kAudioUnitSubType_SystemOutput : kAudioUnitSubType_DefaultOutput),
+								&outputAudioUnit);
+	
+	if (err) {
+		NSLog(@"Failed to open a component the right way");
+		return NO;
 	}
+	
 #else
 	if (useSystemAlertDevice) {
-		err = OpenSystemSoundAudioOutput(&outputAudioUnit);	
+		err = OpenSystemSoundAudioOutput(&outputAudioUnit);    
 	} else {
 		err = OpenDefaultAudioOutput(&outputAudioUnit);
-	}	
+	}
+	
+	if (err)  {
+		NSLog(@"Failed to open a component the deprecated way");
+		return NO;
+	}
 #endif
 											   
     err = AudioUnitInitialize(outputAudioUnit);
@@ -779,16 +788,26 @@ Boolean fillSoundConverterBuffer(SoundComponentDataPtr *data, void *refCon)
 	}
     
     // Set up our callback to feed data to the AU.
+#if USE_NEW_CORE_AUDIO_CODE
+	struct AURenderCallbackStruct inputCallbackStruct;
+	AudioUnitPropertyID propid = kAudioUnitProperty_SetRenderCallback;
+#else
+	struct AudioUnitInputCallback inputCallbackStruct;
+	AudioUnitPropertyID propid = kAudioUnitProperty_SetInputCallback;
+#endif
+	
     inputCallbackStruct.inputProc = renderCallback;
     inputCallbackStruct.inputProcRefCon = self;
+	
     err = AudioUnitSetProperty(outputAudioUnit, 
-							   kAudioUnitProperty_SetInputCallback,
+							   propid,
 							   kAudioUnitScope_Input,
 							   0,
 							   &inputCallbackStruct,
 							   sizeof(inputCallbackStruct));
+	
     if (err) {
-		NSLog(@"Failed to set property");
+		NSLog(@"Failed to set property with error %ld", err);
         return NO;
 	}
 		
@@ -797,29 +816,39 @@ Boolean fillSoundConverterBuffer(SoundComponentDataPtr *data, void *refCon)
 
 - (BOOL)getOutputSoundConverterFormat:(SoundComponentData *)outputSoundConverterFormat
 {
-    OSErr err;
+    OSErr status;
     AudioStreamBasicDescription outputCoreAudioFormat;
     UInt32 size;
 
     // Get the format that the AudioUnit expects us to give it
     size = sizeof(AudioStreamBasicDescription);
-    err = AudioUnitGetProperty(outputAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &outputCoreAudioFormat, &size);
-    if (err)
+    status = AudioUnitGetProperty(outputAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &outputCoreAudioFormat, &size);
+    if (status)
         return NO;
+	
+	// we will always pass in interleaved data, but that probably isn't what the AU wants by default.
+    if (outputCoreAudioFormat.mFormatFlags & kAudioFormatFlagIsNonInterleaved)
+    {
+        outputCoreAudioFormat.mFormatFlags &= ~kAudioFormatFlagIsNonInterleaved;                                            
+        outputCoreAudioFormat.mBytesPerFrame *= outputCoreAudioFormat.mChannelsPerFrame;
+        outputCoreAudioFormat.mBytesPerPacket = outputCoreAudioFormat.mBytesPerFrame * outputCoreAudioFormat.mFramesPerPacket;
+    }
 
     // If it wants float but little-endian, change it to big-endian.  We have to do this because the SoundConverter
     // can only output big-endian floats (sadly).  The output AU will do the swapping necessary to get the data to the hardware.
     if ((outputCoreAudioFormat.mFormatFlags & kLinearPCMFormatFlagIsFloat) && !(outputCoreAudioFormat.mFormatFlags & kLinearPCMFormatFlagIsBigEndian))
     {
         outputCoreAudioFormat.mFormatFlags |= kLinearPCMFormatFlagIsBigEndian;
-
-        err = AudioUnitSetProperty(outputAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &outputCoreAudioFormat, size);
-        if (err)
-        {
-            NSLog(@"couldn't set AU to be big-endian float");
-            return NO;
-        }   
     }
+	
+	status = AudioUnitSetProperty(outputAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &outputCoreAudioFormat, size);
+    if (status)
+        return NO;
+	
+#if USE_NEW_CORE_AUDIO_CODE
+	// Tell the AU to suck it up and deal with interleaved streams
+	outputCoreAudioFormat.mFormatFlags &= ~kAudioFormatFlagIsNonInterleaved;
+#endif
 
     // Translate the format to a SoundComponentData for the sound converter. Yuck.
     outputSoundConverterFormat->flags = 0;
@@ -1031,28 +1060,117 @@ UnsignedFixed ConvertFloat64ToUnsignedFixed(Float64 float64Value)
 // (time-constraint, managed by CoreAudio)
 //
 
-static OSStatus renderCallback(void *inRefCon, AudioUnitRenderActionFlags inActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, AudioBuffer *ioData)
+
+#if USE_NEW_CORE_AUDIO_CODE
+static OSStatus renderCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)
 {
     // Thunk over to the Objective-C object
-    [(QTSoundFilePlayer *)inRefCon renderWithFlags:inActionFlags timeStamp:inTimeStamp bus:inBusNumber buffer:ioData];
-
+	[(QTSoundFilePlayer *)inRefCon renderWithFlags:ioActionFlags timeStamp:inTimeStamp bus:inBusNumber frames:inNumberFrames bufferList:ioData];
+	
     return noErr;
 }
 
-- (void)renderWithFlags:(AudioUnitRenderActionFlags)renderFlags timeStamp:(const AudioTimeStamp *)timeStamp bus:(UInt32)busNumber buffer:(AudioBuffer *)ioData;
+- (void)renderWithFlags:(AudioUnitRenderActionFlags*)ioRenderFlags timeStamp:(const AudioTimeStamp *)timeStamp bus:(UInt32)busNumber frames:(UInt32)numberFrames bufferList:(AudioBufferList *)ioData
 {
     UInt32 bytesAvailable, bytesToRead;
     void *readPointer;
     id capturedDelegate;
+	
+	// we're feeding the AU interleaved data so there should only be one buffer in the list
+	if (ioData->mNumberBuffers != 1)
+		return;
+	   
+	AudioBuffer* bufferPtr = &(ioData->mBuffers[0]);
 
+	   
+    // If we're stopping early, short-circuit through a lot of work
+    if (flags.isStopping && playbackStatus != statusDonePlaying) {
+        // Play silence
+        bzero(bufferPtr->mData, bufferPtr->mDataByteSize);
+        *ioRenderFlags |= kAudioUnitRenderAction_OutputIsSilence;
+		
+		// Tell the feeder thread that it's finished
+        playbackStatus = statusDonePlaying;
+        semaphore_signal(semaphore);
+		
+		// and that's all
+        return;
+    }
+    
+    // If playback is stopped, or if we have played all the sound there is to play, just play silence
+    if (playbackStatus == statusStopped || playbackStatus == statusDonePlaying) {
+        bzero(bufferPtr->mData, bufferPtr->mDataByteSize);
+        *ioRenderFlags |= kAudioUnitRenderAction_OutputIsSilence;
+        return;
+    }
+	
+    // Normal case: we want to read some audio data from the ring buffer.
+    // How much is available?
+    bytesAvailable = [ringBuffer lengthAvailableToReadReturningPointer:&readPointer];
+    if (bytesAvailable >= bufferPtr->mDataByteSize) {
+        bytesToRead = bufferPtr->mDataByteSize;
+    } else {
+        // The ring buffer has run dry.  This happens normally when we get to the end of the file's data, and
+        // also often happens after the audio has been started but before the feeder thread has run yet.
+        // If neither condition is the case, then the filler thread did not keep up for some reason, and we are
+        // forced to play a dropout.
+        
+        // Just read as much as possible from the ring buffer, and fill the result of the audio buffer with zero.
+        bytesToRead = bytesAvailable;
+        bzero(bufferPtr->mData + bytesToRead, bufferPtr->mDataByteSize - bytesToRead);
+		
+        // We may change playbackStatus later (see below).
+    }
+	
+    if (bytesToRead > 0) {
+        // Finally read from the ring buffer.
+        memcpy(bufferPtr->mData, readPointer, bytesToRead);            
+        [ringBuffer didReadLength:bytesToRead];
+    }
+	
+    // Someone could be changing the delegate in another thread,
+    // so make sure we grab the value of the variable 'nonretainedDelegate' exactly once
+    capturedDelegate = nonretainedDelegate;
+    if ([capturedDelegate respondsToSelector:@selector(qtSoundFilePlayer:didPlayAudioBuffer:)])
+        [capturedDelegate qtSoundFilePlayer:self didPlayAudioBuffer:bufferPtr];
+	
+	// If there is no more data to be read, tell the feeder thread that we are done playing.
+    if (bytesAvailable == 0 && playbackStatus == statusDoneReadingFromFile)
+        playbackStatus = statusDonePlaying;
+	
+    // If there is now enough space available to write into the ring buffer, wake up the feeder thread.
+    if (bytesAvailable < (RING_BUFFER_SIZE - RING_BUFFER_WRITE_CHUNK_SIZE))
+        semaphore_signal(semaphore);
+	
+	// We're done, see if we have to do more
+	return;
+}
+
+#else
+static OSStatus renderCallback(void *inRefCon, AudioUnitRenderActionFlags inActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, AudioBuffer *ioData)
+{
+	// Thunk over to the Objective-C object
+	[(QTSoundFilePlayer *)inRefCon renderWithFlags:inActionFlags timeStamp:inTimeStamp bus:inBusNumber buffer:ioData];
+	
+	return noErr;
+}
+
+- (void)renderWithFlags:(AudioUnitRenderActionFlags)inActionFlags timeStamp:(const AudioTimeStamp *)timeStamp bus:(UInt32)busNumber buffer:(AudioBuffer *)ioData
+{
+    UInt32 bytesAvailable, bytesToRead;
+    void *readPointer;
+    id capturedDelegate;
+	
     // If we're stopping early, short-circuit through a lot of work
     if (flags.isStopping && playbackStatus != statusDonePlaying) {
         // Play silence
         bzero(ioData->mData, ioData->mDataByteSize);
-        // Tell the feeder thread that it's finished
+		
+		// Tell the feeder thread that it's finished
         playbackStatus = statusDonePlaying;
         semaphore_signal(semaphore);
-        // and that's all
+		
+		// and that's all
         return;
     }
     
@@ -1061,7 +1179,7 @@ static OSStatus renderCallback(void *inRefCon, AudioUnitRenderActionFlags inActi
         bzero(ioData->mData, ioData->mDataByteSize);
         return;
     }
-
+	
     // Normal case: we want to read some audio data from the ring buffer.
     // How much is available?
     bytesAvailable = [ringBuffer lengthAvailableToReadReturningPointer:&readPointer];
@@ -1076,30 +1194,34 @@ static OSStatus renderCallback(void *inRefCon, AudioUnitRenderActionFlags inActi
         // Just read as much as possible from the ring buffer, and fill the result of the audio buffer with zero.
         bytesToRead = bytesAvailable;
         bzero(ioData->mData + bytesToRead, ioData->mDataByteSize - bytesToRead);
-
+		
         // We may change playbackStatus later (see below).
     }
-
+	
     if (bytesToRead > 0) {
         // Finally read from the ring buffer.
         memcpy(ioData->mData, readPointer, bytesToRead);            
         [ringBuffer didReadLength:bytesToRead];
     }
-
+	
     // Someone could be changing the delegate in another thread,
     // so make sure we grab the value of the variable 'nonretainedDelegate' exactly once
     capturedDelegate = nonretainedDelegate;
     if ([capturedDelegate respondsToSelector:@selector(qtSoundFilePlayer:didPlayAudioBuffer:)])
         [capturedDelegate qtSoundFilePlayer:self didPlayAudioBuffer:ioData];
-
-    // If there is no more data to be read, tell the feeder thread that we are done playing.
+	
+	// If there is no more data to be read, tell the feeder thread that we are done playing.
     if (bytesAvailable == 0 && playbackStatus == statusDoneReadingFromFile)
         playbackStatus = statusDonePlaying;
-
+	
     // If there is now enough space available to write into the ring buffer, wake up the feeder thread.
     if (bytesAvailable < (RING_BUFFER_SIZE - RING_BUFFER_WRITE_CHUNK_SIZE))
         semaphore_signal(semaphore);
+	
+	// We're done, see if we have to do more
+	return;
 }
+#endif
 
 //
 // Control thread (finishing up)
