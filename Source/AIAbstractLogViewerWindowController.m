@@ -496,6 +496,8 @@ static int toArraySort(id itemA, id itemB, void *context);
     }
     [resultsLock unlock];
 
+	indexing = [plugin getIndexingProgress:&indexNumber outOf:&indexTotal];
+
     //Append search progress
     if (activeSearchString && [activeSearchString length]) {
 		if (progress) {
@@ -504,7 +506,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 			progress = [NSMutableString string];
 		}
 
-		if (searching) {
+		if (searching || indexing) {
 			[progress appendString:[NSString stringWithFormat:AILocalizedString(@"Searching for '%@'",nil),activeSearchString]];
 		} else {
 			[progress appendString:[NSString stringWithFormat:AILocalizedString(@"Search for '%@' complete.",nil),activeSearchString]];			
@@ -512,7 +514,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	}
 
     //Append indexing progress
-    if ((indexing = [plugin getIndexingProgress:&indexNumber outOf:&indexTotal])) {
+    if (indexing) {
 		if (progress) {
 			[progress appendString:@" - "];
 		} else {
@@ -1305,7 +1307,7 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		
 		shouldDisplayDocument = [self chatLogMatchesDateFilter:theLog];
 	}
-	AILog(@"Search should display %@? %i",inDocument,shouldDisplayDocument);
+
 	return shouldDisplayDocument;
 }
 

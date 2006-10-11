@@ -62,12 +62,14 @@
 #define LOG_VIEWER					AILocalizedString(@"Chat Transcripts Viewer",nil)
 #define VIEW_LOGS_WITH_CONTACT		AILocalizedString(@"View Chat Transcripts",nil)
 
-#define	CURRENT_LOG_VERSION			6       //Version of the log index.  Increase this number to reset everyone's index.
+#define	CURRENT_LOG_VERSION			7       //Version of the log index.  Increase this number to reset everyone's index.
 
 #define	LOG_VIEWER_IDENTIFIER		@"LogViewer"
 
 #define XML_LOGGING_NAMESPACE		@"http://purl.org/net/ulf/ns/0.4-02"
 #define NEW_LOGFILE_TIMEOUT			600		//10 minutes
+
+#define ENABLE_PROXIMITY_SEARCH		TRUE
 
 @interface AILoggerPlugin (PRIVATE)
 - (void)configureMenuItems;
@@ -830,6 +832,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 
     if ([[NSFileManager defaultManager] fileExistsAtPath:logIndexPath]) {
 		newIndex = SKIndexOpenWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", true);
+		AILog(@"Opened index %x from %@",newIndex,logIndexPathURL);
     }
     if (!newIndex) {
 		NSDictionary *textAnalysisProperties;
@@ -837,7 +840,9 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		if ([NSApp isOnTigerOrBetter]) {
 			textAnalysisProperties = [NSDictionary dictionaryWithObjectsAndKeys:
 				[NSNumber numberWithInt:0], kSKMaximumTerms,
+#if ENABLE_PROXIMITY_SEARCH
 				kCFBooleanTrue, kSKProximityIndexing, 
+#endif
 				nil];
 
 		} else {
@@ -851,7 +856,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 										(CFStringRef)@"Content", 
 										kSKIndexInverted,
 										(CFDictionaryRef)textAnalysisProperties);
-
+		AILog(@"Created a new log index %x at %@ with textAnalysisProperties %@",newIndex,logIndexPathURL,textAnalysisProperties);
 		//Clear the dirty log array in case it was loaded (this can happen if the user mucks with the cache directory)
 		[[NSFileManager defaultManager] removeFileAtPath:[self _dirtyLogArrayPath] handler:NULL];
 		[dirtyLogArray release]; dirtyLogArray = nil;
@@ -1168,6 +1173,8 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 {
 	NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
 
+	[indexingThreadLock lock];
+
 	SKIndexRef logSearchIndex = (SKIndexRef)[userInfo objectForKey:@"SKIndexRef"];
 	NSEnumerator *enumerator = [[userInfo objectForKey:@"Paths"] objectEnumerator];
 	NSString	 *logPath;
@@ -1179,7 +1186,9 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 			CFRelease(document);
 		}
 	}
-	
+
+	[indexingThreadLock unlock];
+
 	[pool release];
 }
 
