@@ -6,12 +6,13 @@
 //
 
 #import "ESGlassSplitView.h"
+#import <Adium/KNShelfSplitView.h>
 #import <AIUtilities/AIImageAdditions.h>
 
 @implementation ESGlassSplitView
 - (void)_initGlassSplitView
 {
-	background = [[NSImage imageNamed:@"sourceListBackground" forClass:[self class]] retain];
+	background = [[NSImage imageNamed:@"sourceListBackground" forClass:[KNShelfSplitView class]] retain];
 	backgroundSize = [background size];
 	
 	[self setNeedsDisplay:YES];
@@ -61,12 +62,12 @@
         destRect.origin.x += NSWidth(destRect);
     }
 	
-	// Draw the borders
+	//Draw the borders
 	[[NSColor windowFrameColor] set];
 	NSRectFill(NSMakeRect(aRect.origin.x, aRect.origin.y, aRect.size.width, 1.0));
 	NSRectFill(NSMakeRect(aRect.origin.x, aRect.origin.y + aRect.size.height - 1, aRect.size.width, 1.0));
 	
-	// Draw the thumb
+	//Draw the thumb
 	//[[NSColor blackColor] set];
 	NSBezierPath *ovalPath = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(aRect.origin.x + (aRect.size.width / 2.0) - 2,
 																			   aRect.origin.y + (aRect.size.height / 2.0) - 2,
