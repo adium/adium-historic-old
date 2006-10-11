@@ -6,13 +6,14 @@
 //
 
 #import "ESSourceListBackgroundView.h"
+#import <Adium/KNShelfSplitView.h>
 #import <AIUtilities/AIImageAdditions.h>
 
 @implementation ESSourceListBackgroundView
 
 - (void)_initSourceListBackgroundView
 {
-	background = [[NSImage imageNamed:@"sourceListBackground" forClass:[self class]] retain];
+	background = [[NSImage imageNamed:@"sourceListBackground" forClass:[KNShelfSplitView class]] retain];
 	backgroundSize = [background size];
 	
 	[self setNeedsDisplay:YES];
