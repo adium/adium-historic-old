@@ -16,22 +16,23 @@
 
 #import "AIXtrasManager.h"
 #import "AIXtraInfo.h"
-#import "AIPathUtilities.h"
-#import <AIUtilities/AIImageTextCell.h>
-#import <AIUtilities/AIGradientCell.h>
-#import <AIUtilities/AIImageAdditions.h>
-#import <AIUtilities/AIArrayAdditions.h>
-#import <AIUtilities/AIFileManagerAdditions.h>
-#import <AIUtilities/AIToolbarUtilities.h>
-#import <AIUtilities/AIAlternatingRowTableView.h>
-
-#import <Adium/AIDockControllerProtocol.h>
-
 #import "AIXtraPreviewController.h"
+#import <Adium/AIDockControllerProtocol.h>
+#import <Adium/AIPathUtilities.h>
+#import <Adium/KNShelfSplitView.h>
+#import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIAlternatingRowTableView.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
+#import <AIUtilities/AIGradientCell.h>
+#import <AIUtilities/AIImageTextCell.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIToolbarUtilities.h>
 
 #define ADIUM_XTRAS_PAGE		AILocalizedString(@"http://www.adiumxtras.com/","Adium xtras page. Localized only if a translated version exists.")
 #define DELETE					AILocalizedStringFromTable(@"Delete", @"Buttons", nil)
 #define GET_MORE_XTRAS			AILocalizedStringFromTable(@"Get More Xtras", @"Buttons", "Button in the Xtras Manager to go to adiumxtras.com to get more adiumxtras")
+
+#define MINIMUM_SOURCE_LIST_WIDTH 40
 
 @interface AIXtrasManager (PRIVATE)
 - (void)installToolbar;
@@ -515,6 +516,11 @@ int categorySort(id categoryA, id categoryB, void * context)
 	} else {
 		return YES;
 	}
+}
+
+- (float)shelfSplitView:(KNShelfSplitView *)shelfSplitView validateWidth:(float)proposedWidth
+{
+	return ((proposedWidth > MINIMUM_SOURCE_LIST_WIDTH) ? proposedWidth : MINIMUM_SOURCE_LIST_WIDTH);
 }
 
 @end

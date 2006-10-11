@@ -31,6 +31,10 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 */
 
+/*
+ * Modified to have a glass-style background; this requires the sourceListBackground image.
+ */
+
 #import "KNShelfSplitView.h"
 
 #import <AIUtilities/AIAttributedStringAdditions.h>
