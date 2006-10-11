@@ -102,7 +102,6 @@
 		3402E02E07CB0DBB0044F818 /* AboutBox.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02D07CB0DBB0044F818 /* AboutBox.nib */; };
 		3402E04207CB0E4D0044F818 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E04107CB0E4D0044F818 /* Localizable.strings */; };
 		3402E07607CB0FAA0044F818 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E07507CB0FAA0044F818 /* Localizable.strings */; };
-		3406707A0A55A044004E22AC /* sourceListBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 340670790A55A044004E22AC /* sourceListBackground.png */; };
 		340670A90A55A4B4004E22AC /* ESGlassSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 340670A70A55A4B4004E22AC /* ESGlassSplitView.m */; };
 		34082675075B079800703011 /* Dock Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3408254D075B078B00703011 /* Dock Icons */; };
 		34082690075B5CB900703011 /* Awake.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268E075B5CB900703011 /* Awake.png */; };
@@ -110,6 +109,7 @@
 		340B9BD4069C735900FE1E57 /* WebKit Message View.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */; };
 		340BA8D809EC5E35000EC441 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
 		340BAB1D09EC6E53000EC441 /* libirc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 340BAB1C09EC6E53000EC441 /* libirc.a */; };
+		340D859B0ADC82D100D05B3F /* sourceListBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 340670790A55A044004E22AC /* sourceListBackground.png */; };
 		3410746009B6965700565C9E /* AIMDLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */; };
 		34107B4C09E9923D001CC042 /* AIGuestAccountWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34107B4A09E9923D001CC042 /* AIGuestAccountWindowController.m */; };
 		34107B5609E992DA001CC042 /* GuestAccountWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34107B5509E992DA001CC042 /* GuestAccountWindow.nib */; };
@@ -1007,7 +1007,7 @@
 		34EFC46C0AACC4CD0086AC43 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		34F191DC09BA5F43001D6BE2 /* irc.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F191DB09BA5F43001D6BE2 /* irc.png */; };
 		34F2BD25059CF8070005B238 /* c++filt in Resources */ = {isa = PBXBuildFile; fileRef = 34F2BD24059CF8070005B238 /* c++filt */; };
-		34F312930ADC3FE800A4310E /* KNShelfSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */; };
+		34F312930ADC3FE800A4310E /* KNShelfSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34F312BD0ADC43CA00A4310E /* xtras_duck.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F312BC0ADC43CA00A4310E /* xtras_duck.png */; };
 		34F312F00ADC476300A4310E /* KNShelfSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */; };
 		34F4675E080F46AC007800AB /* ESBonjourAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46755080F46AB007800AB /* ESBonjourAccountViewController.m */; };
@@ -4934,7 +4934,6 @@
 				348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */,
 				340670A60A55A4B4004E22AC /* ESGlassSplitView.h */,
 				340670A70A55A4B4004E22AC /* ESGlassSplitView.m */,
-				340670790A55A044004E22AC /* sourceListBackground.png */,
 			);
 			name = "Views and Cells";
 			sourceTree = "<group>";
@@ -5229,8 +5228,9 @@
 				34D8343F07CBE6E1006466F2 /* NSString+CarbonFSRefCreation.m */,
 				34D8346C07CBE6F4006466F2 /* SUSpeaker.h */,
 				34D8346B07CBE6F4006466F2 /* SUSpeaker.m */,
-				348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */,
 				348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */,
+				348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */,
+				340670790A55A044004E22AC /* sourceListBackground.png */,
 			);
 			name = "External Sources";
 			sourceTree = "<group>";
@@ -8430,7 +8430,6 @@
 				345623380A3773C300E7FC97 /* LoggingDefaults.plist in Resources */,
 				34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */,
 				34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */,
-				3406707A0A55A044004E22AC /* sourceListBackground.png in Resources */,
 				34DC883F0A7EEE2E003E1636 /* keys.png in Resources */,
 				34DC884A0A7EEE2E003E1636 /* AuthorizationRequestWindow.nib in Resources */,
 				34DC884F0A7EEE2E003E1636 /* FormattingDefaults.plist in Resources */,
@@ -8500,6 +8499,7 @@
 				34DC8AD90A7EEEF7003E1636 /* JoinChatWindow.nib in Resources */,
 				34DC8AE40A7EEEF7003E1636 /* stackImage.png in Resources */,
 				3419E2DF0A81445800C3FC68 /* Localizable.strings in Resources */,
+				340D859B0ADC82D100D05B3F /* sourceListBackground.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
