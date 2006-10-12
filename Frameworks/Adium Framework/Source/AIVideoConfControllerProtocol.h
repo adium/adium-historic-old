@@ -15,6 +15,7 @@
  */
 
 #import <Adium/AIControllerProtocol.h>
+#import <Adium/AIVideoConf.h>
 
 /*!
  * VideoConferencing controller.
@@ -26,15 +27,15 @@
 @protocol AIVideoConfController <AIController>
 
 // Protocol Providers Management
-- (void) registerProvider:(id)provider forProtocol:(VCProtocol)protocol;
-- (void) unregisterProviderForProtocol:(VCProtocol)protocol;
+- (void)registerProvider:(id)provider forProtocol:(VCProtocol)protocol;
+- (void)unregisterProviderForProtocol:(VCProtocol)protocol;
 
 // Payload lists
-- (NSArray*) getAudioPayloadsForProtocol:(VCProtocol)protocol;
-- (NSArray*) getVideoPayloadsForProtocol:(VCProtocol)protocol;
+- (NSArray*)getAudioPayloadsForProtocol:(VCProtocol)protocol;
+- (NSArray*)getVideoPayloadsForProtocol:(VCProtocol)protocol;
 
 // Connection control
-- (id) createConnectionWithProtocol:(VCProtocol)protocol
-							payload:(VCPayload*)pt
-							   from:(VCTransport*)local to:(VCTransport*)remote;
+- (id)createConnectionWithProtocol:(VCProtocol)protocol
+						   payload:(VCPayload *)payload
+							  from:(VCTransport *)local to:(VCTransport *)remote;
 @end
