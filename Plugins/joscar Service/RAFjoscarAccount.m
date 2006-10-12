@@ -88,6 +88,26 @@
 	[super dealloc];
 }
 
+/*!
+* @brief The UID will be changed. The account has a chance to perform modifications
+ *
+ * Remove @aol.com if included in the screen name as a "do the right thing" service to AOL newbs.
+ *
+ * @param proposedUID The proposed, pre-filtered UID (filtered means it has no characters invalid for this servce)
+ * @result The UID to use; the default implementation just returns proposedUID.
+ */
+- (NSString *)accountWillSetUID:(NSString *)proposedUID
+{
+	if (proposedUID && ([proposedUID length] > 0)) {
+		NSRange aolRange = [proposedUID rangeOfString:@"@aol.com" options:(NSAnchoredSearch | NSBackwardsSearch | NSCaseInsensitiveSearch)];
+		if (aolRange.location != NSNotFound) {
+			proposedUID = [proposedUID substringToIndex:aolRange.location];
+		}
+	}
+	
+	return proposedUID;
+}
+		
 #pragma mark Account connectivity
 
 - (void)connect
