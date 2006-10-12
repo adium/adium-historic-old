@@ -577,10 +577,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 		if (([listObject isKindOfClass:[AIListContact class]]) &&
 			([(AIListContact *)listObject remoteGroupName] || includeOfflineAccounts)) {
-            NSEnumerator *enumerator = [listObject containsMultipleContacts]?[[listObject listContacts] objectEnumerator]:[[NSArray arrayWithObject:listObject] objectEnumerator]; 
+			//We want to offer up a completely flat list, so recurse into each contact we contain which also contains contacts
+            NSEnumerator *enumerator = (([listObject conformsToProtocol:@protocol(AIContainingObject)] && [(AIListContact <AIContainingObject> *)listObject containsMultipleContacts]) ?
+										[[(AIListContact <AIContainingObject> *)listObject listContacts] objectEnumerator] :
+										[[NSArray arrayWithObject:listObject] objectEnumerator]); 
             AIListObject *innerListObject; 
-            while((innerListObject = [enumerator nextObject])) 
-            { 
+
+            while ((innerListObject = [enumerator nextObject])) { 
                 NSString        *listObjectInternalObjectID = [innerListObject internalObjectID]; 
                 unsigned int listContactIndex = [uniqueObjectIDs indexOfObject:listObjectInternalObjectID]; 
                 
@@ -1122,9 +1125,18 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
     return [containedObjects count];
 }
 
+/*!
+ * @brief Are multiple contacts represented by this metacontact?
+ *
+ * A metacontact might represent only a single contact (waiting around for more contacts to be added to it, such as when another account connects).
+ * Alternately, it might represent multiple contacts (the usual case).
+ *
+ * If containedObjects only contains one AIListContact but that AIListContact then has multiple contacts within it -- for example, it's a SmackContact -- our
+ * metacontact actually *does* contain multiple contacts.  This is why [[self containedObjects] count] alone is not an accurate assessment.
+ */
 - (BOOL)containsMultipleContacts
 {
-    return ([containedObjects count] > 1)?YES:[[containedObjects lastObject] containsMultipleContacts];
+    return (([containedObjects count] > 1) ? YES : [[containedObjects lastObject] containsMultipleContacts]);
 }
 
 //Test for the presence of an object in our group
