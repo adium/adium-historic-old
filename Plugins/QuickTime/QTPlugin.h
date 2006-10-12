@@ -14,14 +14,13 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <Adium/AIPlugin.h>
 
 #define QUICKTIME_PREFS			@"QuickTime"
 
 // Sound Controller
 #define KEY_MIC_VOLUME			@"Mic Volume Level"
 #define KEY_OUT_VOLUME			@"Output Volume Level"
-
-@class AIPlugin;
 
 @class QTAdvancedPreferences;
 @protocol VCProtocolProvider;
