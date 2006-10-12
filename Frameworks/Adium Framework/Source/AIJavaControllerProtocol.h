@@ -15,32 +15,40 @@
 
 @end
 
-@interface JavaClass : NSObject {
-}
+@protocol JavaObject <NSObject>
++ (BOOL)equals:(id)obj;
++ (id)newInstance;
++ (NSString*)toString;
++ (BOOL)isInstace:(id)obj;
++ (JavaField *)getField:(NSString*)name;
++ (NSString *)getProperty:(NSString *)propertyName;
 
-- (BOOL)equals:(id)obj;
-- (id)newInstance;
-- (NSString*)toString;
-- (BOOL)isInstace:(id)obj;
-- (JavaField*)getField:(NSString*)name;
-
-    // these are Java Bridge methods!
-- (id)alloc;
-- (id)newWithSignature:(NSString*)sig, ...;
-
+// these are Java Bridge methods!
++ (id)alloc;
++ (id)newWithSignature:(NSString*)sig, ...;
 @end
 
+@interface JavaObject : NSObject <JavaObject> {
+	
+}
+@end
+
+/*!
+ * @brief A JavaClassLoader loads classes from jars; it is initialized for one or more jars.
+ *
+ * It is actually a java object; loadClass is therefore never implemented in Objective C code.
+ */
 @interface JavaClassLoader : NSObject {
 }
 
 // param format: http://java.sun.com/j2se/1.5.0/docs/api/java/lang/ClassLoader.html#name
-- (JavaClass*)loadClass:(NSString*)classname;
-
+- (Class <JavaObject>)loadClass:(NSString *)classname;
 @end
 
+/*!
+ * @brief The JavaController itself
+ */
 @protocol AIJavaController <AIController>
-
-- (JavaClassLoader*)classLoaderWithJARs:(NSArray*)jararray;
-- (JavaClassLoader*)classLoaderWithJARs:(NSArray*)jararray parentClassLoader:(JavaClassLoader*)parent;
-
+- (JavaClassLoader *)classLoaderWithJARs:(NSArray *)jararray;
+- (JavaClassLoader *)classLoaderWithJARs:(NSArray *)jararray parentClassLoader:(JavaClassLoader *)parent;
 @end
