@@ -1025,7 +1025,7 @@
 		34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F849520A4AEFA00002A017 /* LogFileUpgrade.nib */; };
 		34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */; };
 		38238C610A9B5CF4005EBAEE /* smackx-jingle.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81E708810A98AA9300D9409E /* smackx-jingle.jar */; };
-		38399DCB0A95C9CF006C8EB1 /* AIVideoConfControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */; };
+		38399DCB0A95C9CF006C8EB1 /* AIVideoConfControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		387226C80A8B7C84002CC4F4 /* AIVideoConfController.h in Headers */ = {isa = PBXBuildFile; fileRef = 387226C40A8B7C83002CC4F4 /* AIVideoConfController.h */; };
 		387226C90A8B7C84002CC4F4 /* AIVideoConfController.m in Sources */ = {isa = PBXBuildFile; fileRef = 387226C50A8B7C84002CC4F4 /* AIVideoConfController.m */; };
 		3872285E0A8BFCA4002CC4F4 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D836F307CBF960006466F2 /* QuickTime.framework */; };
