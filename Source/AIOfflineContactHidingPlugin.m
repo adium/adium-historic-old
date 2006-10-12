@@ -189,10 +189,10 @@
 							   [inObject integerStatusObjectForKey:@"Signed Off"] ||
 							   [inObject integerStatusObjectForKey:@"New Object"]);
 
-			if ([inObject isKindOfClass:[AIMetaContact class]]) {
+			if ([inObject canContainOtherContacts]) {
 				//A metaContact must meet the criteria for a contact to be visible and also have at least 1 contained contact
 				[inObject setVisible:(visible &&
-									  ([(AIMetaContact *)inObject visibleCount] > 0))];
+									  ([(AIListContact<AIContainingObject> *)inObject visibleCount] > 0))];
 				
 			} else {
 				[inObject setVisible:visible];

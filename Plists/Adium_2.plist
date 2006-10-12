@@ -350,8 +350,6 @@
 	<dict>
 		<key>JVMVersion</key>
 		<string>1.4+</string>
-		<key>VMOptions</key>
-		<string>-enableassertions</string>
 	</dict>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.4.0</string>
@@ -359,6 +357,8 @@
 	<true/>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
+	<key>NSJavaNeeded</key>
+	<string>YES</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
