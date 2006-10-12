@@ -597,14 +597,14 @@
  * The parent AIListContact is the appropriate place to apply preferences specific to this contact so that such
  * preferences are also applied to other AIListContacts in the same meta contact, if necessary.
  *
- * @result Either this contact, if it is not in a metaContact, or the AIMetaContact which contains it.
+ * @result Either this contact or some more-encompassing contact which ultimately contains it.
  */
  - (AIListContact *)parentContact
  {
 	AIListContact	*parentContact = self;
 
-	if (containingObject && [containingObject isKindOfClass:[AIMetaContact class]]) {
-		parentContact = (AIMetaContact *)containingObject;		
+	while ([[parentContact containingObject] isKindOfClass:[AIListContact class]]) {
+		parentContact = (AIListContact *)[parentContact containingObject];
 	}
 
 	return parentContact;
