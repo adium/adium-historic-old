@@ -1631,29 +1631,26 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (AIListContact *)contactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID
 {
-    return [self contactWithService:inService account:inAccount UID:inUID class:[AIListContact class]];
+    return [self contactWithService:inService account:inAccount UID:inUID usingClass:[AIListContact class]];
 }
 
 //Retrieve a contact from the contact list (Creating if necessary)
-- (AIListContact *)contactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID class:(Class)cls
+- (AIListContact *)contactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID usingClass:(Class)ContactClass
 {
 	if (!(inUID && [inUID length] && inService)) return nil; //Ignore invalid requests
 
 	AIListContact	*contact = nil;
-	NSString		*key = [AIListContact internalUniqueObjectIDForService:inService
-																   account:inAccount
-																	   UID:inUID];
+	NSString		*key = [ContactClass internalUniqueObjectIDForService:inService
+																  account:inAccount
+																	  UID:inUID];
 	contact = [contactDict objectForKey:key];
 	if (!contact) {
 		//Create
-		contact = [[cls alloc] initWithUID:inUID account:inAccount service:inService];
+		contact = [[ContactClass alloc] initWithUID:inUID account:inAccount service:inService];
 
 		//Do the update thing
 		[self _updateAllAttributesOfObject:contact];
-		NSString		*key = [cls internalUniqueObjectIDForService:inService
-														 account:inAccount
-															 UID:inUID];
-
+		
 		//Check to see if we should add to a metaContact
 		AIMetaContact *metaContact = [contactToMetaContactLookupDict objectForKey:[contact internalObjectID]];
 		if (metaContact) {
@@ -1677,23 +1674,21 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	return contact;
 }
 
-- (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID
+#warning If this is necessary, SmackContacts should probably have their own implementatino of internalUniqueObjectIDForService:account:UID
+- (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID class:(Class)ContactClass
 {
-	return [self existingContactWithService:inService account:inAccount UID:inUID class:[AIListContact class]];
-}
-
-- (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID class:(Class)cls
-{
-	NSLog(@"%@",[cls internalUniqueObjectIDForService:inService
-											  account:inAccount
-												  UID:inUID]);
 	if (inService && [inUID length]) {
-		return [contactDict objectForKey:[cls internalUniqueObjectIDForService:inService
-																	   account:inAccount
-																		   UID:inUID]];
+		return [contactDict objectForKey:[ContactClass internalUniqueObjectIDForService:inService
+																				account:inAccount
+																					UID:inUID]];
 	} else {
 		return nil;
 	}
+}
+
+- (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID
+{
+	return [self existingContactWithService:inService account:inAccount UID:inUID class:[AIListContact class]];
 }
 
 /*!

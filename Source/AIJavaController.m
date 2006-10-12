@@ -37,32 +37,37 @@
 {
 }
 
-- (JavaClassLoader*)classLoaderWithJARs:(NSArray*)jararray
+- (JavaClassLoader *)classLoaderWithJARs:(NSArray *)jars
 {
-    return [self classLoaderWithJARs:jararray parentClassLoader:nil];
+    return [self classLoaderWithJARs:jars parentClassLoader:nil];
 }
 
-- (JavaClassLoader*)classLoaderWithJARs:(NSArray*)jararray parentClassLoader:(JavaClassLoader*)parent
+/*!
+ * @brief XXX
+ *
+ * @result a JavaClassLoader which loads classes from the indicated jars
+ */
+- (JavaClassLoader*)classLoaderWithJARs:(NSArray*)jars parentClassLoader:(JavaClassLoader*)parent
 {
-    if(!vm)
-    {
+    if (!vm) {
         vm = [[NSJavaVirtualMachine alloc] initWithClassPath:[NSJavaVirtualMachine defaultClassPath]];
-        // dynamically load class file
+        //Dynamically load class file
         JavaCocoaAdapter = [vm defineClass:[NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"JavaCocoaAdapter" ofType:@"class"]] withName:@"net/adium/JavaCocoaAdapter"];
         NSLog(@"JavaCocoaAdapter = %@", JavaCocoaAdapter);
     }
     
-    // conver NSArray to java.util.Vector
-    JavaVector *vec = [[vm findClass:@"java.util.Vector"] newWithSignature:@"(I)",[jararray count]];
+    //Convert NSArray to java.util.Vector
+    JavaVector *vec = [[vm findClass:@"java.util.Vector"] newWithSignature:@"(I)",[jars count]];
     
-    NSEnumerator *e = [jararray objectEnumerator];
-    NSString *path;
-    while((path = [e nextObject]))
+    NSEnumerator *enumerator = [jars objectEnumerator];
+    NSString	 *path;
+    while ((path = [enumerator nextObject])) {
         [vec add:path];
-    
+	}
+
     JavaClassLoader *result = [JavaCocoaAdapter classLoader:vec :parent];
     [vec release];
-    
+
     return result;
 }
 
