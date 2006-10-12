@@ -18,3 +18,4 @@
 - (id)initWithAccount:(SmackXMPPAccount*)a;
 
 @end
+

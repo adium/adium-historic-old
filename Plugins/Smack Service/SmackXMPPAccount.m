@@ -122,22 +122,28 @@
     [super dealloc];
 }
 
-// plugins might add other protocols to this class
-// so we have to ask them if they add anything
-- (BOOL)conformsToProtocol:(Protocol*)proto
+/*!
+ * @brief Conforms to protocol
+ *
+ * Plugins might add other protocols to this class so we have to ask them if they add anything.
+ */
+- (BOOL)conformsToProtocol:(Protocol *)protocol
 {
-    // if we support it, all is great
-    if([super conformsToProtocol:proto])
+    //If we support it, all is great
+    if ([super conformsToProtocol:protocol])
         return YES;
-    // otherwise, ask the plugins
-    NSEnumerator *e = [plugins objectEnumerator];
+
+    //Otherwise, ask the plugins
+    NSEnumerator *enumerator = [plugins objectEnumerator];
     id plugin;
-    while((plugin = [e nextObject]))
-    {
-        if([plugin respondsToSelector:@selector(addsProtocolSupport:)] && [plugin addsProtocolSupport:proto])
+	
+    while ((plugin = [enumerator nextObject])) {
+        if ([plugin conformsToProtocol:protocol]) {
             return YES;
+		}
     }
-    // nobody likes that protocol, give up
+
+    //Nobody likes that protocol, so give up
     return NO;
 }
 

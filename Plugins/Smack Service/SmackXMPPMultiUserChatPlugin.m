@@ -509,7 +509,7 @@ static AIHTMLDecoder *messageencoder = nil;
 
 #pragma mark Receiving Chat Messages
 
-- (void)setMUCMessage:(SmackPacket*)packet {
+- (void)setMUCMessage:(SmackPacket *)packet {
     AIContentMessage	*messageObject;
     NSAttributedString  *inMessage = nil;
     NSString *from = [packet getFrom];
@@ -1062,8 +1062,7 @@ static AIHTMLDecoder *messageencoder = nil;
 
 - (void)MUCInviteAnswer:(NSNumber*)result userInfo:(NSDictionary*)info
 {
-    if([result intValue] == NSAlertDefaultReturn)
-    {
+    if ([result intValue] == NSAlertDefaultReturn) {
         // XXX it would be better to query the user for the nickname, instead of just filling out the join chat window
         DCJoinChatWindowController *jcwc = [DCJoinChatWindowController joinChatWindow];
         [jcwc configureForAccount:account];
@@ -1071,9 +1070,11 @@ static AIHTMLDecoder *messageencoder = nil;
         [(SmackXMPPJoinChatViewController*)[jcwc joinChatViewController] setJID:[info objectForKey:@"room"]];
         // should the user be able to see that password?
         [(SmackXMPPJoinChatViewController*)[jcwc joinChatViewController] setPassword:[info objectForKey:@"password"]];
-    } else
+
+    } else {
         // XXX maybe we should allow the user to provide the reason for declining in the MUC rewrite
         [[SmackCocoaAdapter multiUserChatClass] decline:[account connection] :[info objectForKey:@"room"] :[info objectForKey:@"inviter"] :@""];
+	}
 }
 
 - (void)joinMultiUserChat:(NSNotification*)notification {

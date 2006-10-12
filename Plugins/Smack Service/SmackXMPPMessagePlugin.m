@@ -68,9 +68,8 @@
         AIListContact *chatContact = [[adium contactController] contactWithService:[account service] account:account UID:[from jidUserHost]];
         AIListContact *sourceContact = [[adium contactController] contactWithService:[account service] account:account UID:from];
         
-        if (!(chat = [[adium chatController] existingChatWithContact:chatContact]))
-        {
-            chat = [[adium chatController] openChatWithContact:chatContact];
+        if (!(chat = [[adium chatController] existingChatWithContact:chatContact])) {
+            chat = [[adium chatController] openChatWithContact:chatContact onPreferredAccount:NO];
             [chat setStatusObject:thread?thread:[chat uniqueChatID] forKey:@"XMPPThreadID" notify:NotifyLater];
             
             [chat setStatusObject:type forKey:@"XMPPType" notify:NotifyLater];

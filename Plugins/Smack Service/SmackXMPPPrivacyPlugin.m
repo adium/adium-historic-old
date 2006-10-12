@@ -148,9 +148,10 @@ static NSMutableDictionary *privacyplugins;
     [super dealloc];
 }
 
-- (BOOL)addsProtocolSupport:(Protocol*)proto
+#warning XXX remove
+- (BOOL)addsProtocolSupport:(Protocol *)proto
 {
-    return [[NSString stringWithUTF8String:[proto name]] isEqualToString:@"AIAccount_Privacy"];
+    return  [[NSString stringWithUTF8String:[proto name]] isEqualToString:@"AIAccount_Privacy"];
 }
 
 // loads the permit and deny lists from the server

@@ -23,21 +23,24 @@
 - (BOOL)getAutoAcceptRequests;
 - (void)setMailNotifications:(BOOL)mn;
 - (BOOL)getMailNotifications;
-- (NSString*)getChildElementXML;
-
+- (NSString *)getChildElementXML;
 @end
 
 @interface SmackGoogleMailNotification : SmackIQ {
 }
 
 + (void)registerIQ;
-- (NSString*)getChildElementXML;
+- (NSString *)getChildElementXML;
+@end
 
+@interface SmackCocoaAdapter (GoogleNewMailPlugin)
++ (void)registerGoogleNewMailExtension;
++ (SmackGoogleSettings *)googleSettings;
 @end
 
 @implementation SmackCocoaAdapter (GoogleNewMailPlugin)
 
-+ (SmackGoogleSettings*)googleSettings
++ (SmackGoogleSettings *)googleSettings
 {
     return [[(id)[[self classLoader] loadClass:@"net.adium.smackBridge.google.GoogleSettings"] newWithSignature:@"()"] autorelease];
 }
@@ -51,11 +54,11 @@
 
 @implementation SmackGoogleNewMailPlugin
 
-- (id)initWithAccount:(SmackXMPPAccount*)a
+- (id)initWithAccount:(SmackXMPPAccount*)inAccount
 {
-    if((self = [super init]))
+    if ((self = [super init]))
     {
-        account = a;
+        account = inAccount;
         [SmackCocoaAdapter registerGoogleNewMailExtension];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(receivedIQPacket:)
@@ -77,8 +80,7 @@
 - (void)updateSettings:(NSNotification*)notification
 {
     NSString *key = [[notification userInfo] objectForKey:SmackXMPPStatusKey];
-    if([key isEqualToString:KEY_ACCOUNT_CHECK_MAIL])
-    {
+    if ([key isEqualToString:KEY_ACCOUNT_CHECK_MAIL]) {
         SmackGoogleSettings *settings = [SmackCocoaAdapter googleSettings];
         [settings setMailNotifications:[[account preferenceForKey:KEY_ACCOUNT_CHECK_MAIL
                                                             group:GROUP_ACCOUNT_STATUS] boolValue]];
@@ -105,8 +107,7 @@
     
     NSLog(@"packet = %@",[packet toXML]);
     
-    if([[[packet getType] toString] isEqualToString:@"set"] && [SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"net.adium.smackBridge.google.MailNotification"])
-    {
+    if ([[[packet getType] toString] isEqualToString:@"set"] && [SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"net.adium.smackBridge.google.MailNotification"]) {
         // tell the server that we have received it
         SmackIQ *result = [SmackCocoaAdapter IQ];
         [result setType:[SmackCocoaAdapter IQType:@"RESULT"]];

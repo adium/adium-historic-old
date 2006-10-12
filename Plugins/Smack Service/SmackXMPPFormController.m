@@ -20,14 +20,18 @@
         [self dealloc];
         return nil;
     }
+
     if((self = [super init])) {
         target = [t retain];
         selector = [NSStringFromSelector(s) retain];
         if(!wv) {
             [NSBundle loadNibNamed:@"SmackXMPPForm" owner:self];
             [webview setHostWindow:window];
-            if([webview respondsToSelector:@selector(setDrawsBackground:)])
-                [webview setDrawsBackground:NO];
+
+            if ([webview respondsToSelector:@selector(setDrawsBackground:)]) {
+                [(id)webview setDrawsBackground:NO];
+			}
+			
         } else {
             webview = wv;
             [webview setPolicyDelegate:self];
