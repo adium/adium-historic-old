@@ -14,21 +14,17 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "QTPlugin.h"
 
-#import <AIListObject.h>
+#import <Adium/AIVideoConfControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIVideoConf.h>
+#import <Adium/AIListObject.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 
-#import <Adium/AIPlugin.h>
-#import <AIPreferenceController.h>
-
 #import <QuickTime/QuickTime.h>
 
-#import "AIVideoConf.h"
-#import "AIVideoConfControllerProtocol.h"
-#import "AIVideoConfController.h"
-
-#import "QTPlugin.h"
 #import "QTConnection.h"
 #import "QTRTPConnection.h"
 #import "QTAdvancedPreferences.h"
@@ -203,7 +199,7 @@
 /*!
  * Install the plugin
  */
-- (void) installPlugin
+- (void)installPlugin
 {
 	// Observe workspace activity changes so we can mute sounds as necessary
 	NSNotificationCenter	*workspaceCenter;

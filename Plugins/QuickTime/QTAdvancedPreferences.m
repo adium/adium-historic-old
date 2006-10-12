@@ -66,13 +66,14 @@
 }
 
 // Reflect new preferences in view
-- (void) preferencesChangedForGroup:(NSString*) group
-								key:(NSString*) key
-							 object:(AIListObject*) object
-					 preferenceDict:(NSDictionary*) prefDict firstTime:(BOOL)firstTime
+- (void) preferencesChangedForGroup:(NSString *)group
+								key:(NSString *)key
+							 object:(AIListObject *)object
+					 preferenceDict:(NSDictionary *)prefDict
+						  firstTime:(BOOL)firstTime
 {
-	[micDefaultVolume setIntValue:[prefDict objectForKey:KEY_MIC_VOLUME]];
-	[outDefaultVolume setIntValue:[prefDict objectForKey:KEY_OUT_VOLUME]];
+	[micDefaultVolume setIntValue:[[prefDict objectForKey:KEY_MIC_VOLUME] intValue]];
+	[outDefaultVolume setIntValue:[[prefDict objectForKey:KEY_OUT_VOLUME] intValue]];
 }
 
 
