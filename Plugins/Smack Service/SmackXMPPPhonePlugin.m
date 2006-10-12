@@ -8,15 +8,15 @@
 
 #import "SmackXMPPPhonePlugin.h"
 #import "SmackXMPPAccount.h"
-#import <AddressBook/ABPeoplePickerView.h>
-#import <AddressBook/ABRecord.h>
-#import "AIJavaController.h"
-#import "AIAccountController.h"
-#import "AIContactController.h"
-#import "AIAdium.h"
-
 #import "SmackCocoaAdapter.h"
 #import "SmackInterfaceDefinitions.h"
+
+#import <AddressBook/ABPeoplePickerView.h>
+#import <AddressBook/ABRecord.h>
+#import <Adium/AIJavaControllerProtocol.h>
+#import <AIAccountControllerProtocol.h>
+#import <AIContactControllerProtocol.h>
+#import <AIInterfaceControllerProtocol.h>
 #import <AIUtilities/AIStringUtilities.h>
 
 #define ASTERISKIM_JAR @"asterisk-im-client"
@@ -124,8 +124,7 @@ static JavaClassLoader *classLoader = nil;
 
 + (void)loadAsteriskPlugin
 {
-    if(!classLoader)
-    {
+    if (!classLoader) {
         NSString *asteriskIMJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:ASTERISKIM_JAR
                                                                                        ofType:@"jar"
                                                                                   inDirectory:@"Java"];
@@ -146,7 +145,7 @@ static JavaClassLoader *classLoader = nil;
 
 + (SmackPhoneClient*)phoneListenerForConnection:(SmackXMPPConnection*)connection delegate:(id)delegate
 {
-    return [[(id)[classLoader loadClass:@"net.adium.smackBridge.SmackXMPPAsteriskListener"] newWithSignature:@"(Lorg/jivesoftware/smack/XMPPConnection;Ljava/lang/ClassLoader;Lcom/apple/cocoa/foundation/NSObject;)",connection,classLoader,delegate] autorelease];
+    return [[[classLoader loadClass:@"net.adium.smackBridge.SmackXMPPAsteriskListener"] newWithSignature:@"(Lorg/jivesoftware/smack/XMPPConnection;Ljava/lang/ClassLoader;Lcom/apple/cocoa/foundation/NSObject;)",connection,classLoader,delegate] autorelease];
 }
 
 @end
@@ -169,10 +168,9 @@ static BOOL registered = NO;
                                                  selector:@selector(receivedPresencePacket:)
                                                      name:SmackXMPPPresencePacketReceivedNotification
                                                    object:account];
-        if(!registered)
-        {
+        if (!registered) {
             // our class is a tooltip plugin for displaying the phone status
-            [[adium interfaceController] registerContactListTooltipEntry:[self class] secondaryEntry:YES];
+            [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
             registered = YES;
         }
     }

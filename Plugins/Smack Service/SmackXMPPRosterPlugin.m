@@ -14,13 +14,13 @@
 
 #import <JavaVM/NSJavaVirtualMachine.h>
 
-#import "AIAccount.h"
-#import "AIAdium.h"
-#import "AIContactControllerProtocol.h"
-#import "AIAccountControllerProtocol.h"
-#import "AIInterfaceControllerProtocol.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/ESTextAndButtonsWindowController.h>
+
 #import "SmackXMPPErrorMessagePlugin.h"
-#import "ESTextAndButtonsWindowController.h"
 
 #import <AIUtilities/AIStringUtilities.h>
 
@@ -30,11 +30,9 @@
 @end
 
 @interface SmackCocoaAdapter (rosterAdditions)
-
-+ (SmackXMPPRosterPluginListener*)rosterPluginListenerWithDelegate:(id)delegate;
++ (SmackXMPPRosterPluginListener *)rosterPluginListenerWithDelegate:(id)delegate;
 + (SmackXDiscoverInfo*)discoverInfo;
 + (SmackRosterSubscriptionMode*)rosterSubscriptionModeWithName:(NSString*)mode;
-
 @end
 
 @implementation SmackCocoaAdapter (rosterAdditions)
@@ -42,13 +40,15 @@
 + (SmackXMPPRosterPluginListener*)rosterPluginListenerWithDelegate:(id)delegate {
     return [[[[self classLoader] loadClass:@"net.adium.smackBridge.SmackXMPPRosterPluginListener"] newWithSignature:@"(Lcom/apple/cocoa/foundation/NSObject;)",delegate] autorelease];
 }
+
 + (SmackXDiscoverInfo*)discoverInfo
 {
     return [[[[[self classLoader] loadClass:@"org.jivesoftware.smackx.packet.DiscoverInfo"] alloc] init] autorelease];
 }
-+ (SmackRosterSubscriptionMode*)rosterSubscriptionModeWithName:(NSString*)mode
+
++ (SmackRosterSubscriptionMode *)rosterSubscriptionModeWithName:(NSString*)mode
 {
-    return [[(id)[self classLoader] loadClass:@"org.jivesoftware.smack.Roster$SubscriptionMode"] valueOf:mode];
+    return [(Class <SmackRosterSubscriptionMode>)[[self classLoader] loadClass:@"org.jivesoftware.smack.Roster$SubscriptionMode"] valueOf:mode];
 }
 
 @end
@@ -61,16 +61,17 @@
 
 - (id)init
 {
-    if((self = [super init]))
-    {
+    if ((self = [super init])) {
         [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
     }
+
     return self;
 }
 
 - (void)dealloc
 {
     [[adium interfaceController] unregisterContactListTooltipEntry:self secondaryEntry:YES];
+	
     [super dealloc];
 }
 
@@ -102,6 +103,10 @@
 @end
 
 static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
+
+@interface SmackXMPPRosterPlugin (PRIVATE)
+- (void)updateToSubscriptionMode:(int)subscriptionMode;
+@end
 
 @implementation SmackXMPPRosterPlugin
 
@@ -144,21 +149,12 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
     listener = [[SmackCocoaAdapter rosterPluginListenerWithDelegate:self] retain];
     roster = [[conn initializeRoster] retain];
     [roster addRosterListener:listener];
-    
-    if([account preferenceForKey:@"subscriptions"
-                           group:GROUP_ACCOUNT_STATUS])
-        [self updateSubscriptionMode:[NSNotification notificationWithName:@"SmackXMPPAccountSubscriptionModeUpdated"
-                                                                   object:account
-                                                                 userInfo:[NSDictionary dictionaryWithObject:[account preferenceForKey:@"subscriptions"
-                                                                                                                                 group:GROUP_ACCOUNT_STATUS]
-                                                                                                      forKey:@"mode"]]];
-    else
-        [self updateSubscriptionMode:[NSNotification notificationWithName:@"SmackXMPPAccountSubscriptionModeUpdated"
-                                                                   object:account
-                                                                 userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:0]
-                                                                                                      forKey:@"mode"]]];
-    
-    // we're a tooltip plugin for displaying resources
+
+    //XXX should register a default instead of falling through like this
+	NSNumber *subscriptionMode = [account preferenceForKey:@"subscriptions" group:GROUP_ACCOUNT_STATUS];
+	[self updateToSubscriptionMode:(subscriptionMode ? [subscriptionMode intValue] : 0)];
+	
+    //We're a tooltip plugin for displaying resources
     [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
 }
 
@@ -168,12 +164,11 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
     [roster release]; roster = nil;
 }
 
-- (void)updateSubscriptionMode:(NSNotification*)notification
+- (void)updateToSubscriptionMode:(int)subscriptionMode
 {
-    NSString *mode;
-    int modenum = [[[notification userInfo] objectForKey:@"mode"] intValue];
-    switch(modenum)
-    {
+	NSString *mode;
+
+	switch (subscriptionMode) {
         case 1:
             mode = @"accept_all";
             break;
@@ -185,7 +180,12 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
             mode = @"manual";
     }
     
-    [roster setSubscriptionMode:[SmackCocoaAdapter rosterSubscriptionModeWithName:mode]];
+    [roster setSubscriptionMode:[SmackCocoaAdapter rosterSubscriptionModeWithName:mode]];	
+}
+
+- (void)updateSubscriptionMode:(NSNotification*)notification
+{
+	[self updateToSubscriptionMode:[[[notification userInfo] objectForKey:@"mode"] intValue]];
 }
 
 #pragma mark Tooltip Handling
@@ -236,7 +236,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
             [services addObject:contact];
             servicechange = YES;
         } else {
-            SmackListContact *listContact = (SmackListContact*)[[adium contactController] contactWithService:[account service] account:account UID:jid class:[SmackListContact class]];
+            SmackListContact *listContact = (SmackListContact*)[[adium contactController] contactWithService:[account service] account:account UID:jid usingClass:[SmackListContact class]];
             
             if(![[listContact formattedUID] isEqualToString:jid])
                 [listContact setFormattedUID:jid notify:NotifyLater];
@@ -347,32 +347,39 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
     while([iter hasNext]) {
         NSString *jid = [iter next];
         
-        if([jid rangeOfString:@"@"].location == NSNotFound)
-        {
-            // it's a service!
+        if([jid rangeOfString:@"@"].location == NSNotFound) {
+            //It's a service!
+            AIListContact *contact;
             
-            AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid];
-            
-            if(contact)
+            if ((contact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid])) {
                 [services removeObject:contact];
+			}
+
             servicechange = YES;
+
         } else {
-            AIListContact *listContact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid class:[SmackListContact class]];
-            if(listContact)
-            {
+            AIListContact *listContact = [[adium contactController] existingContactWithService:[account service]
+																					   account:account
+																						   UID:jid
+																						 class:[SmackListContact class]];
+            if (listContact) {
                 [contacts addObject:listContact];
-                //            [listContact setRemoteGroupName:nil];
+                //[listContact setRemoteGroupName:nil];
             }
         }
     }
+
+#warning Does this not lead to some sort of recursivity? removeListObjects: is normally triggerred by user action and calls back on the account to remove them serverside...
     [[adium contactController] removeListObjects:contacts];
     [contacts release];
 
-    if(servicechange)
-        // reload accounts menu
+    if (servicechange) {
+        //Reload accounts menu
+		//XXX Why? -evands
         [[adium notificationCenter] postNotificationName:Account_ListChanged
                                                   object:nil
                                                 userInfo:nil];
+	}
 }
 
 - (void)setXMPPRosterPresenceChanged:(NSString*)XMPPAddress {

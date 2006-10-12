@@ -8,9 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import "AIObject.h"
+#import <Adium/AIObject.h>
 
-@protocol AdiumSmackBridgeDelegate;
+@protocol AdiumSmackBridgeDelegate, JavaObject;
 @class SmackXMPPConnection, SmackXMPPAccount, SmackPresenceType, SmackPresenceMode, SmackMessageType, SmackConnectionConfiguration, SmackPresence, SmackMessage, SmackPacket, SmackXXHTMLExtension, SmackIQ, SmackIQType, SmackXMPPError, SmackRoster, SmackRegistration, SmackXForm, SmackXFormField, JavaMethod, JavaVector, JavaDate, JavaMap, JavaFile, SmackXServiceDiscoveryManager, JavaClassLoader, SmackInvisibleCommand, JavaClass;
 
 @interface SmackCocoaAdapter : AIObject <AdiumSmackBridgeDelegate> {
@@ -24,7 +24,7 @@
 
 + (id)enumWithType:(NSString*)type name:(NSString*)name;
 + (id)staticObjectField:(NSString*)fieldname inJavaClass:(NSString*)className;
-+ (id)staticObjectField:(NSString*)fieldname inJavaClassObject:(JavaClass*)classobj;
++ (id)staticObjectField:(NSString*)fieldname inJavaClassObject:(Class <JavaObject>)classobj;
 + (BOOL)object:(id)obj isInstanceOfJavaClass:(NSString*)className;
 
 - (id)initForAccount:(SmackXMPPAccount *)inAccount;

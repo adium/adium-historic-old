@@ -158,9 +158,12 @@
     AIListContact *contact = [fileTransfer contact];
     
     NSLog(@"file transfer inital contact %@ (%p)",contact,contact);
-    
-    while([contact conformsToProtocol:@protocol(AIContainingObject)])
+
+    //XXX This is ugly. It was checking for AIContainingObject protocol conformity before, which is also bad. -evands
+    while ([contact respondsToSelector:@selector(preferredContact)]) {
         contact = [contact preferredContact];
+	}
+
     if(!contact)
         return; // not online?
     

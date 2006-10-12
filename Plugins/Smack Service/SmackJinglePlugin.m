@@ -99,8 +99,7 @@ static JavaClassLoader *classLoader = nil;
 + (SmackXJingleSessionListener*) createJingleSessionListenerForSession:(SmackXJingleSession*)session
 															  delegate:(id)delegate
 {
-    return [(id)[[self classLoader] loadClass:CLASSNAME_JINGLE_SESSION_LISTENER]
-			getInstance:session :delegate :classLoader];	
+    return [[[self classLoader] loadClass:CLASSNAME_JINGLE_SESSION_LISTENER] getInstance:session :delegate :classLoader];	
 }
 
 
@@ -110,8 +109,7 @@ static JavaClassLoader *classLoader = nil;
 + (SmackXJingleSessionReqListener*) createJingleSessionReqListenerForConnection:(SmackXMPPConnection*)conn
 																	   delegate:(id) delegate
 {
-    return [(id)[[self classLoader] loadClass:CLASSNAME_JINGLE_SESSION_REQ_LISTENER]
-		getInstance:conn :delegate :classLoader];
+    return [[[self classLoader] loadClass:CLASSNAME_JINGLE_SESSION_REQ_LISTENER] getInstance:conn :delegate :classLoader];
 }
 
 /*!
@@ -119,8 +117,7 @@ static JavaClassLoader *classLoader = nil;
  */
 + (SmackXJingleContentInfoAudio*) contentInfoAudioWithName:(NSString*)name
 {
-    return [[(Class)[classLoader loadClass:CLASSNAME_CONTENTINFO_AUDIO]
-		newWithSignature:@"(Ljava/lang/String;)",name] autorelease];	
+    return [[[classLoader loadClass:CLASSNAME_CONTENTINFO_AUDIO] newWithSignature:@"(Ljava/lang/String;)",name] autorelease];	
 }
 
 /*!
@@ -130,8 +127,7 @@ static JavaClassLoader *classLoader = nil;
 									name:(NSString*) name
 								channels:(int) channels
 {
-	return [[(Class)[classLoader loadClass:CLASSNAME_PAYLOADTYPE]
-		newWithSignature:@"(ILjava/lang/String;I)",ident,name,channels] autorelease];
+	return [[[classLoader loadClass:CLASSNAME_PAYLOADTYPE] newWithSignature:@"(ILjava/lang/String;I)",ident,name,channels] autorelease];
 }
 
 /*!
@@ -142,8 +138,7 @@ static JavaClassLoader *classLoader = nil;
 										  channels:(int) channels
 										 clockRate:(int) clockRate
 {	
-	return [[(Class)[classLoader loadClass:CLASSNAME_PAYLOADTYPE_AUDIO]
-		newWithSignature:@"(ILjava/lang/String;II)",ident,name,channels,clockRate] autorelease];
+	return [[[classLoader loadClass:CLASSNAME_PAYLOADTYPE_AUDIO] newWithSignature:@"(ILjava/lang/String;II)",ident,name,channels,clockRate] autorelease];
 }
 
 @end
@@ -427,6 +422,9 @@ static NSDictionary	*audioSessions;
 											   payload:pt
 												  from:lc
 													to:rc];
+	
+	//XXX added blindly by evands - matches setSessionDeclined, though.
+	return self;
 }
 
 /*!
@@ -514,8 +512,12 @@ static NSDictionary	*audioSessions;
     AIListContact *contact = [sender representedObject];
 
     // meta contact magic, will hopefully be fixed before 1.1 is released
+	//XXX it just happens to be true that contacts which conform to AIContainingObject also implement preferredContact...
     while([contact conformsToProtocol:@protocol(AIContainingObject)])
         contact = [contact preferredContact];
+
+	AILog(@"@: inviting %@ to an audio chat",self, contact);
+	
     if(!contact)
         return; // not online?
 

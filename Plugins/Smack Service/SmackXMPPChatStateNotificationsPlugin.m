@@ -7,17 +7,16 @@
 //
 
 #import "SmackXMPPChatStateNotificationsPlugin.h"
-#import "AIAccount.h"
 #import "SmackXMPPAccount.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIStringUtilities.h>
 #import "SmackCocoaAdapter.h"
 #import "SmackInterfaceDefinitions.h"
-#import "AIContentController.h"
-#import "AIContentTyping.h"
-#import "AIChat.h"
-#import "AIContactController.h"
-#import "AIChatController.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIContentTyping.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import <AIUtilities/AIStringUtilities.h>
 
 @interface SmackCocoaAdapter (chatStateNotificationsAdditions)
 
@@ -30,11 +29,11 @@
 @implementation SmackCocoaAdapter (chatStateNotificationsAdditions)
 
 + (SmackChatStateNotifications*)getChatState:(SmackMessage*)message {
-    return [[[self classLoader] loadClass:@"net.adium.smackBridge.ChatStateNotifications"] getChatState:message];
+    return [(Class <SmackChatStateNotifications>)[[self classLoader] loadClass:@"net.adium.smackBridge.ChatStateNotifications"] getChatState:message];
 }
 
 + (SmackChatStateNotifications*)createChatState:(NSString*)type {
-    return [[[self classLoader] loadClass:@"net.adium.smackBridge.ChatStateNotifications"] createChatState:type];
+    return [(Class <SmackChatStateNotifications>)[[self classLoader] loadClass:@"net.adium.smackBridge.ChatStateNotifications"] createChatState:type];
 }
 
 + (SmackXMessageEvent*)messageEvent {
@@ -206,14 +205,14 @@
                            notify:NotifyNow];
         else if([type isEqualToString:@"gone"])
         {
-            [[adium contentController] displayEvent:AILocalizedString(@"The user has closed the chat.","The user has closed the chat.")
+            [[adium contentController] displayEvent:AILocalizedString(@"The user has closed the chat.", nil)
                                              ofType:@"chat-info"
                                              inChat:chat];
             // now remove thread id, since it's no longer valid
             // note that there's no way to remove the status, so just set it to @""
             [chat setStatusObject:@"" forKey:@"XMPPThreadID" notify:NotifyNow];
         } else if([type isEqualToString:@"inactive"])
-            [[adium contentController] displayEvent:AILocalizedString(@"The user is inactive.","The user is inactive.")
+            [[adium contentController] displayEvent:AILocalizedString(@"The user is inactive.", nil)
                                              ofType:@"chat-info"
                                              inChat:chat];
         [chat setStatusObject:[NSNumber numberWithBool:YES] forKey:@"XMPPChatStateNotifications" notify:NotifyNow];
@@ -259,7 +258,7 @@
                                    forKey:KEY_TYPING
                                    notify:NotifyNow];
                 else if([mevt isOffline])
-                    [[adium chatController] displayEvent:AILocalizedString(@"The user is offline. The message was stored on the user's server.", "The user is offline. The message was stored on the user's server.")
+                    [[adium chatController] displayEvent:AILocalizedString(@"The user is offline. The message was stored on the user's server.", nil)
                                                   ofType:@"chat-info"
                                                   inChat:chat];
             }

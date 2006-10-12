@@ -6,9 +6,9 @@
 //  Copyright 2006 Andreas Monitzer. All rights reserved.
 //
 
-#import "AIJavaController.h"
+#import <Adium/AIJavaControllerProtocol.h>
 
-@interface SmackConnectionConfiguration : NSObject {
+@interface SmackConnectionConfiguration : JavaObject {
 }
 
 - (NSString*)getHost;
@@ -42,7 +42,7 @@
 
 @end
 
-@interface SmackMessageType : NSObject {
+@interface SmackMessageType : JavaObject {
 }
 
 - (SmackMessageType*)fromString:(NSString*)type;
@@ -52,7 +52,7 @@
 
 @class SmackMessage;
 
-@interface SmackChat : NSObject {
+@interface SmackChat : JavaObject {
 }
 
 - (SmackMessage*)createMessage;
@@ -66,14 +66,14 @@
 
 @end
 
-@interface JavaBoolean : NSObject {
+@interface JavaBoolean : JavaObject {
 }
 
 - (BOOL)booleanValue;
 
 @end
 
-@interface JavaIterator : NSObject {
+@interface JavaIterator : JavaObject {
 }
 
 - (BOOL)hasNext;
@@ -82,7 +82,7 @@
 
 @end
 
-@interface JavaCollection : NSObject {
+@interface JavaCollection : JavaObject {
 }
 
 - (BOOL)contains:(id)o;
@@ -94,7 +94,7 @@
 
 @end
 
-@interface JavaSet : NSObject {
+@interface JavaSet : JavaObject {
 }
 
 - (BOOL)contains:(id)o;
@@ -106,7 +106,7 @@
 
 @end
 
-@interface JavaVector : NSObject {
+@interface JavaVector : JavaObject {
 }
 
 - (BOOL)add:(id)o;
@@ -126,7 +126,7 @@
 
 @end
 
-@interface JavaMapEntry : NSObject {
+@interface JavaMapEntry : JavaObject {
 }
 
 - (BOOL)equals:(id)o;
@@ -136,7 +136,7 @@
 
 @end
 
-@interface JavaMap : NSObject {
+@interface JavaMap : JavaObject {
 }
 
 - (void)clear;
@@ -157,7 +157,7 @@
 
 @end
 
-@interface JavaList : NSObject {
+@interface JavaList : JavaObject {
 }
 
 - (BOOL)contains:(id)o;
@@ -171,7 +171,7 @@
 
 @end
 
-@interface JavaDate : NSObject {
+@interface JavaDate : JavaObject {
 }
 
 // Returns the number of milliseconds since January 1, 1970, 00:00:00 GMT represented by this Date object.
@@ -179,7 +179,7 @@
 
 @end
 
-@interface JavaFile : NSObject {
+@interface JavaFile : JavaObject {
 }
 
 - (NSString*)getPath;
@@ -189,19 +189,33 @@
 
 @end
 
-@class JavaClass;
-
-@interface JavaMethod : NSObject {
+@interface JavaMethod : JavaObject {
 }
 
 - (NSString*)getName;
 - (id)invoke:(id)obj :(id)args; // second is String[]
 - (NSString*)toString;
-- (JavaClass*)getReturnType;
+- (Class <JavaObject>)getReturnType;
 
 @end
 
-@interface SmackAccountManager : NSObject {
+@interface JavaProperties : JavaMap {
+}
+
+@end
+
+/*
+ * java.lang.System
+ */
+@protocol JavaSystem
++ (JavaProperties *)getProperties;
+@end
+
+@protocol JavaEnum
++ (id)valueOf:(Class)classType :(NSString *)name;
+@end
+
+@interface SmackAccountManager : JavaObject {
 }
 
 - (void)changePassword:(NSString*)newPassword;
@@ -215,7 +229,7 @@
 
 @end
 
-@interface SmackRosterPacketItemStatus : NSObject {
+@interface SmackRosterPacketItemStatus : JavaObject {
 }
 
 - (SmackRosterPacketItemStatus*)fromString:(NSString*)type;
@@ -223,7 +237,7 @@
 
 @end
 
-@interface SmackRosterPacketItemType : NSObject {
+@interface SmackRosterPacketItemType : JavaObject {
 }
 
 - (SmackRosterPacketItemType*)fromString:(NSString*)type;
@@ -231,7 +245,7 @@
 
 @end
 
-@interface SmackRosterEntry : NSObject {
+@interface SmackRosterEntry : JavaObject {
 }
 
 - (BOOL)equals:(id)object;
@@ -245,7 +259,7 @@
 
 @end
 
-@interface SmackRosterPacketItem : NSObject {
+@interface SmackRosterPacketItem : JavaObject {
 }
 
 - (void)addGroupName:(NSString*)groupName;
@@ -261,7 +275,7 @@
 
 @end
 
-@interface SmackRosterGroup : NSObject {
+@interface SmackRosterGroup : JavaObject {
 }
 
 - (void)addEntry:(SmackRosterEntry*)entry;
@@ -276,7 +290,7 @@
 
 @end
 
-@interface SmackPresenceMode : NSObject {
+@interface SmackPresenceMode : JavaObject {
 }
 
 - (SmackPresenceMode*)fromString:(NSString*)type;
@@ -284,7 +298,7 @@
 
 @end
 
-@interface SmackPresenceType : NSObject {
+@interface SmackPresenceType : JavaObject {
 }
 
 - (SmackPresenceType*)fromString:(NSString*)type;
@@ -295,13 +309,13 @@
 @class SmackXMPPError;
 @protocol SmackPacketExtension;
 
-@interface SmackPacket : NSObject {
+@interface SmackPacket : JavaObject {
 }
 
 - (void)addExtension:(id<SmackPacketExtension,NSObject>)extension;
 - (void)deleteProperty:(NSString*)name;
 - (SmackXMPPError*)getError;
-- (id<SmackPacketExtension,NSObject>)getExtension:(NSString*)elementName :(NSString*)namespace;
+- (id<SmackPacketExtension, JavaObject>)getExtension:(NSString*)elementName :(NSString*)namespace;
 - (JavaIterator*)getExtensions;
 - (NSString*)getFrom;
 - (NSString*)getPacketID;
@@ -350,7 +364,7 @@
 
 @end
 
-@interface SmackIQType : NSObject {
+@interface SmackIQType : JavaObject {
 }
 
 - (SmackIQType*)fromString:(NSString*)type;
@@ -389,14 +403,18 @@
 
 @end
 
-@interface SmackRosterSubscriptionMode : NSObject {
-}
+@class SmackRosterSubscriptionMode;
 
-+ (SmackRosterSubscriptionMode*)valueOf:(NSString*)name;
+@protocol SmackRosterSubscriptionMode <JavaObject>
++ (SmackRosterSubscriptionMode *)valueOf:(NSString *)name;
+@end
+
+@interface SmackRosterSubscriptionMode : JavaObject <SmackRosterSubscriptionMode> {
+}
 
 @end
 
-@interface SmackRoster : NSObject {
+@interface SmackRoster : JavaObject {
 }
 
 - (void)addRosterListener:(id)rosterListener;
@@ -464,7 +482,7 @@
 
 @end
 
-@interface SmackPrivacyList : NSObject {
+@interface SmackPrivacyList : JavaObject {
 }
 
 - (JavaVector*)getItems; // of SmackPrivacyItem
@@ -476,7 +494,7 @@
 
 @class SmackXMPPConnection;
 
-@interface SmackPrivacyListManager : NSObject {
+@interface SmackPrivacyListManager : JavaObject {
 }
 
 - (void)createPrivacyList:(NSString*)listname :(JavaVector*)privacyItems;
@@ -494,7 +512,7 @@
 
 @end
 
-@interface SmackSASLAuthentication : NSObject {
+@interface SmackSASLAuthentication : JavaObject {
 }
 
 - (NSString*)authenticate:(NSString*)username :(NSString*)password :(NSString*)resource;
@@ -515,7 +533,7 @@
 
 @end
 
-@interface SmackXDelayInformation : NSObject <SmackPacketExtension> {
+@interface SmackXDelayInformation : JavaObject <SmackPacketExtension> {
 }
 
 - (JavaDate*)getStamp;
@@ -524,7 +542,7 @@
 
 @end
 
-@interface SmackXMPPError : NSObject {
+@interface SmackXMPPError : JavaObject {
 }
 
 - (int)getCode;
@@ -534,7 +552,7 @@
 
 @end
 
-@interface SmackXMPPConnection : NSObject {
+@interface SmackXMPPConnection : JavaObject {
 }
 
 - (void)close;
@@ -559,7 +577,7 @@
 
 @end
 
-@interface SmackXOccupant : NSObject {
+@interface SmackXOccupant : JavaObject {
 }
 
 - (NSString*)getAffiliation;
@@ -569,7 +587,7 @@
 
 @end
 
-@interface SmackXFormFieldOption : NSObject {
+@interface SmackXFormFieldOption : JavaObject {
 }
 
 - (NSString*)getLabel;
@@ -579,7 +597,7 @@
 
 @end
 
-@interface SmackXFormField : NSObject {
+@interface SmackXFormField : JavaObject {
 }
 
 - (NSString*)getDescription;
@@ -600,7 +618,7 @@
 
 @end
 
-@interface SmackXDataFormItem : NSObject {
+@interface SmackXDataFormItem : JavaObject {
 }
 
 - (JavaIterator*)getFields;
@@ -608,7 +626,7 @@
 
 @end
 
-@interface SmackXDataFormReportedData : NSObject {
+@interface SmackXDataFormReportedData : JavaObject {
 }
 
 - (JavaIterator*)getFields;
@@ -616,7 +634,7 @@
 
 @end
 
-@interface SmackXDataForm : NSObject <SmackPacketExtension> {
+@interface SmackXDataForm : JavaObject <SmackPacketExtension> {
 }
 
 - (void)addField:(SmackXFormField*)field;
@@ -637,24 +655,29 @@
 
 @end
 
-@interface SmackXForm : NSObject {
-}
+@class SmackXForm, SmackPacket;
 
-- (SmackXFormField*)getField:(NSString*)variable;
-- (JavaIterator*)getFields;
-- (NSString*)getInstructions;
-- (NSString*)getTitle;
-- (NSString*)getType;
-- (void)setAnswer:(NSString*)variable :(NSNumber*)value;
-- (SmackXDataForm*)getDataFormToSend;
-- (SmackXForm*)createAnswerForm;
-- (void)addField:(SmackXFormField*)field;
-- (void)setInstructions:(NSString*)instructions;
-- (void)setTitle:(NSString*)title;
+@protocol SmackXForm <JavaObject>
++ (SmackXForm *)getFormFrom:(SmackPacket *)packet;
+@end
+
+@interface SmackXForm : JavaObject <SmackXForm> {
+}
+- (SmackXFormField *)getField:(NSString *)variable;
+- (JavaIterator *)getFields;
+- (NSString *)getInstructions;
+- (NSString *)getTitle;
+- (NSString *)getType;
+- (void)setAnswer:(NSString *)variable :(NSNumber *)value;
+- (SmackXDataForm *)getDataFormToSend;
+- (SmackXForm *)createAnswerForm;
+- (void)addField:(SmackXFormField *)field;
+- (void)setInstructions:(NSString *)instructions;
+- (void)setTitle:(NSString *)title;
 
 @end
 
-@interface SmackXDiscoverItem : NSObject {
+@interface SmackXDiscoverItem : JavaObject {
 }
 
 - (NSString*)getAction;
@@ -679,7 +702,7 @@
 
 @end
 
-@interface SmackXDiscoverInfoIdentity : NSObject {
+@interface SmackXDiscoverInfoIdentity : JavaObject {
 }
 
 - (NSString*)getCategory;
@@ -702,7 +725,7 @@
 
 @end
 
-@interface SmackXDiscussionHistory : NSObject {
+@interface SmackXDiscussionHistory : JavaObject {
 }
 
 - (int)getMaxChars;
@@ -716,7 +739,7 @@
 
 @end
 
-@interface SmackXMultiUserChat : NSObject {
+@interface SmackXMultiUserChat : JavaObject {
 }
 
 - (void)banUser:(NSString*)jid :(NSString*)reason;
@@ -786,14 +809,14 @@
 
 @end
 
-@interface SmackXFileTransferStatus : NSObject {
+@interface SmackXFileTransferStatus : JavaObject {
 }
 
 - (NSString*)toString;
 
 @end
 
-@interface SmackXFileTransferError : NSObject {
+@interface SmackXFileTransferError : JavaObject {
 }
 
 - (NSString*)getMessage;
@@ -801,7 +824,7 @@
 
 @end
 
-@interface SmackXFileTransfer: NSObject {
+@interface SmackXFileTransfer: JavaObject {
 }
 
 - (void)cancel;
@@ -834,7 +857,7 @@
 
 @end
 
-@interface SmackXFileTransferRequest : NSObject {
+@interface SmackXFileTransferRequest : JavaObject {
 }
 
 - (SmackXIncomingFileTransfer*)accept;
@@ -848,7 +871,7 @@
 
 @end
 
-@interface SmackXMessageEvent : NSObject <SmackPacketExtension> {
+@interface SmackXMessageEvent : JavaObject <SmackPacketExtension> {
 }
 
 - (JavaIterator*)getEventTypes;
@@ -869,7 +892,17 @@
 
 @end
 
-@interface SmackXServiceDiscoveryManager : NSObject {
+@class SmackXServiceDiscoveryManager;
+
+@protocol SmackXServiceDiscoveryManager <JavaObject>
++ (SmackXServiceDiscoveryManager *)getInstanceFor:(SmackXMPPConnection*)connection;
++ (NSString*)getIdentityName;
++ (NSString*)getIdentityType;
++ (void)setIdentityName:(NSString*)name;
++ (void)setIdentityType:(NSString*)type;
+@end
+
+@interface SmackXServiceDiscoveryManager : JavaObject <SmackXServiceDiscoveryManager> {
 }
 
 - (void)addFeature:(NSString*)feature;
@@ -879,16 +912,11 @@
 - (SmackXDiscoverItems*)discoverItems:(NSString*)entityID;
 - (SmackXDiscoverItems*)discoverItems:(NSString*)entityID :(NSString*)node;
 - (JavaIterator*)getFeatures;
-+ (NSString*)getIdentityName;
-+ (NSString*)getIdentityType;
-+ (SmackXServiceDiscoveryManager*)getInstanceFor:(SmackXMPPConnection*)connection;
 - (BOOL)includesFeature:(NSString*)feature;
 - (void)publishItems:(NSString*)entityID :(SmackXDiscoverItems*)discoverItems;
 - (void)publishItems:(NSString*)entityID :(NSString*)node :(SmackXDiscoverItems*)discoverItems;
 - (void)removeFeature:(NSString*)feature;
 - (void)removeNodeInformationProvider:(NSString*)node;
-+ (void)setIdentityName:(NSString*)name;
-+ (void)setIdentityType:(NSString*)type;
 
 @end
 
@@ -949,21 +977,21 @@
 
 @end
 
-@interface SmackXMPPException : NSObject {
+@interface SmackXMPPException : JavaObject {
 }
 
 - (SmackXMPPError*)getXMPPError;
 
 @end
 
-@interface SmackConfiguration : NSObject {
+@interface SmackConfiguration : JavaObject {
 }
 
 + (NSString*)getVersion;
 
 @end
 
-@interface SmackDNSUtilHostAddress : NSObject {
+@interface SmackDNSUtilHostAddress : JavaObject {
 }
 
 - (NSString*)getHost;
@@ -973,7 +1001,7 @@
 
 @end
 
-@interface SmackDNSUtil : NSObject {
+@interface SmackDNSUtil : JavaObject {
 }
 
 - (SmackDNSUtilHostAddress*)resolveXMPPDomain:(NSString*)domain;
@@ -981,7 +1009,7 @@
 
 @end
 
-@interface SmackOutOfBandExtension : NSObject <SmackPacketExtension> {
+@interface SmackOutOfBandExtension : JavaObject <SmackPacketExtension> {
 }
 
 - (void)setUrl:(NSString*)url;
@@ -991,7 +1019,7 @@
 
 @end
 
-@interface SmackVCardUpdateExtension : NSObject <SmackPacketExtension> {
+@interface SmackVCardUpdateExtension : JavaObject <SmackPacketExtension> {
 }
 
 - (void)setPhoto:(NSString*)photo;
@@ -1000,11 +1028,15 @@
 
 @end
 
-@interface SmackChatStateNotifications : NSObject <SmackPacketExtension> {
-}
+@class SmackChatStateNotifications;
 
+@protocol SmackChatStateNotifications
 + (SmackChatStateNotifications*)getChatState:(SmackMessage*)message;
 + (SmackChatStateNotifications*)createChatState:(NSString*)type;
+@end
+
+@interface SmackChatStateNotifications : JavaObject <SmackChatStateNotifications, SmackPacketExtension> {
+}
 
 @end
 
@@ -1021,7 +1053,21 @@
 
 @end
 
-@interface AdiumSmackBridge : NSObject {
+@protocol AdiumSmackBridge <JavaObject>
++ (void)createRosterEntry:(SmackRoster*)roster :(NSString*)jid :(NSString*)name :(NSString*)group;
++ (BOOL)isInstanceOfClass:(id)obj :(NSString*)classname;
++ (id)getStaticFieldFromClass:(NSString*)fieldname :(NSString*)classname;
++ (id)getStaticFieldFromClassObject:(NSString*)fieldname :(Class <JavaObject>)classobj;
++ (JavaMethod*)getMethod:(NSString*)classname :(NSString*)method :(JavaVector*)argumentTypes;
++ (id)invokeMethod:(JavaMethod*)meth :(id)obj :(JavaVector*)params;
+
++ (void)setVCardAvatar:(SmackXVCard*)vCard :(NSData*)avatar;
++ (NSData*)getVCardAvatar:(SmackXVCard*)vCard;
++ (BOOL)isAvatarEmpty:(SmackXVCard*)vCard;
++ (JavaVector*)getAllPrivacyLists:(SmackXMPPConnection*)conn;
+@end
+
+@interface AdiumSmackBridge : JavaObject <AdiumSmackBridge> {
 }
 
 - (void)initSubscriptionMode;
@@ -1034,23 +1080,11 @@
 - (BOOL)isInstanceOfClass:(id)object :(NSString*)classname;
 - (JavaMethod*)getMethod:(NSString*)classname :(NSString*)methodname :(JavaVector*)parameterTypes;
 
-+ (void)createRosterEntry:(SmackRoster*)roster :(NSString*)jid :(NSString*)name :(NSString*)group;
-+ (BOOL)isInstanceOfClass:(id)obj :(NSString*)classname;
-+ (id)getStaticFieldFromClass:(NSString*)fieldname :(NSString*)classname;
-+ (id)getStaticFieldFromClassObject:(NSString*)fieldname :(JavaClass*)classobj;
-+ (JavaMethod*)getMethod:(NSString*)classname :(NSString*)method :(JavaVector*)argumentTypes;
-+ (id)invokeMethod:(JavaMethod*)meth :(id)obj :(JavaVector*)params;
-
-+ (void)setVCardAvatar:(SmackXVCard*)vCard :(NSData*)avatar;
-+ (NSData*)getVCardAvatar:(SmackXVCard*)vCard;
-+ (BOOL)isAvatarEmpty:(SmackXVCard*)vCard;
-+ (JavaVector*)getAllPrivacyLists:(SmackXMPPConnection*)conn;
-
 @end
 
 #pragma mark Extensions
 
-@interface SmackXXHTMLExtension : NSObject <SmackPacketExtension> {
+@interface SmackXXHTMLExtension : JavaObject <SmackPacketExtension> {
 }
 
 - (void)addBody:(NSString*)body;
@@ -1066,7 +1100,7 @@
 
 @class SmackXPayloadType;
 
-@interface SmackXJingleContentDescriptionJinglePayloadType : NSObject {
+@interface SmackXJingleContentDescriptionJinglePayloadType : JavaObject {
 }
 
 - (SmackXPayloadType*)getPayloadType;
@@ -1079,7 +1113,7 @@
 }
 @end
 
-@interface SmackXJingleContentDescription : NSObject {
+@interface SmackXJingleContentDescription : JavaObject {
 }
 
 - (void)addAudioPlayloadTypes:(JavaVector*)pts;
@@ -1098,7 +1132,7 @@
 
 @end
 
-@interface SmackXTransportCandidate : NSObject {
+@interface SmackXTransportCandidate : JavaObject {
 }
 
 - (BOOL)equals:(id)obj;
@@ -1114,7 +1148,7 @@
 
 @end
 
-@interface SmackXJingleTransportJingleTransportCandidate : NSObject {
+@interface SmackXJingleTransportJingleTransportCandidate : JavaObject {
 }
 
 - (SmackXTransportCandidate*)getMediaTransport;
@@ -1123,7 +1157,7 @@
 
 @end
 
-@interface SmackXJingleTransport : NSObject <SmackPacketExtension> {
+@interface SmackXJingleTransport : JavaObject <SmackPacketExtension> {
 }
 
 - (void)addCondidate:(SmackXJingleTransportJingleTransportCandidate*)candidate;
@@ -1132,7 +1166,7 @@
 
 @end
 
-@interface SmackXTransportCandidateChannel : NSObject {
+@interface SmackXTransportCandidateChannel : JavaObject {
 }
 
 - (BOOL)equals:(id)obj;
@@ -1142,7 +1176,7 @@
 
 @end
 
-@interface SmackXTransportCandidateProtocol : NSObject {
+@interface SmackXTransportCandidateProtocol : JavaObject {
 }
 
 - (BOOL)equals:(id)obj;
@@ -1177,7 +1211,7 @@
 
 @end
 
-@interface SmackXJingleAction : NSObject {
+@interface SmackXJingleAction : JavaObject {
 }
 
 - (BOOL)equals:(id)obj;
@@ -1188,7 +1222,7 @@
 
 @class SmackXContentInfo;
 
-@interface SmackXJingleContentInfo : NSObject <SmackPacketExtension> {
+@interface SmackXJingleContentInfo : JavaObject <SmackPacketExtension> {
 }
 
 - (SmackXContentInfo*)getMediaInfo;
@@ -1240,12 +1274,12 @@
 
 @class SmackXJingleNegotiator;
 
-@interface SmackXJingleListener : NSObject {
+@interface SmackXJingleListener : JavaObject {
 }
 @end
 
 
-@interface SmackXJingleNegotiatorState : NSObject {
+@interface SmackXJingleNegotiatorState : JavaObject {
 }
 
 - (SmackXJingleNegotiator*)getNegotiator;
@@ -1253,7 +1287,7 @@
 
 @end
 
-@interface SmackXJingleNegotiator : NSObject {
+@interface SmackXJingleNegotiator : JavaObject {
 }
 
 - (void)addExpectedId:(NSString*)id;
@@ -1271,7 +1305,7 @@
 
 @end
 
-@interface SmackXContentInfo : NSObject {
+@interface SmackXContentInfo : JavaObject {
 }
 @end
 
@@ -1285,7 +1319,7 @@
 
 @class SmackXIncomingJingleSession;
 
-@interface SmackXJingleSessionRequest : NSObject {
+@interface SmackXJingleSessionRequest : JavaObject {
 }
 
 - (SmackXIncomingJingleSession*)accept:(JavaVector*)pts;
@@ -1324,14 +1358,14 @@
 }
 @end
 
-@interface SmackXJingleManager : NSObject {
+@interface SmackXJingleManager : JavaObject {
 }
 
 - (SmackXOutgoingJingleSession*)createOutgoingJingleSession:(NSString*)responder :(JavaVector*)payloadTypes;
 
 @end
 
-@interface SmackXPayloadType : NSObject {
+@interface SmackXPayloadType : JavaObject {
 }
 
 - (BOOL)equals:(id)obj;

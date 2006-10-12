@@ -20,8 +20,8 @@
 #import <AIUtilities/AIStringUtilities.h>
 
 #define SMACKBRIDGE_JAR @"SmackJavaBridge"
-#define SMACK_JAR @"smack"
-#define SMACKX_JAR @"smackx"
+#define SMACK_JAR		@"smack"
+#define SMACKX_JAR		@"smackx"
 
 extern CFRunLoopRef CFRunLoopGetMain(void);
 /* java.lang.Object */
@@ -34,7 +34,7 @@ static JavaClassLoader *classLoader = nil;
 
 @implementation SmackCocoaAdapter
 
-+ (JavaClassLoader*)classLoader
++ (JavaClassLoader *)classLoader
 {
     return classLoader;
 }
@@ -136,19 +136,19 @@ static JavaClassLoader *classLoader = nil;
 #pragma mark utility functions
 
 + (id)enumWithType:(NSString*)type name:(NSString*)name {
-    return [(id)[classLoader loadClass:@"java.lang.Enum"] valueOf:[classLoader loadClass:type] :name];
+    return [(Class <JavaEnum>)[classLoader loadClass:@"java.lang.Enum"] valueOf:[classLoader loadClass:type] :name];
 }
 
 + (id)staticObjectField:(NSString*)fieldname inJavaClass:(NSString*)className {
-    return [(AdiumSmackBridge*)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] getStaticFieldFromClass:fieldname :className];
+    return [(Class <AdiumSmackBridge>)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] getStaticFieldFromClass:fieldname :className];
 }
 
-+ (id)staticObjectField:(NSString*)fieldname inJavaClassObject:(JavaClass*)classobj {
-    return [(AdiumSmackBridge*)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] getStaticFieldFromClassObject:fieldname :classobj];
++ (id)staticObjectField:(NSString*)fieldname inJavaClassObject:(Class <JavaObject>)classobj {
+    return [(Class <AdiumSmackBridge>)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] getStaticFieldFromClassObject:fieldname :classobj];
 }
 
 + (BOOL)object:(id)obj isInstanceOfJavaClass:(NSString*)className {
-    return [(AdiumSmackBridge*)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] isInstanceOfClass:obj :className];
+    return [(Class <AdiumSmackBridge>)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] isInstanceOfClass:obj :className];
 }
 
 + (NSDate*)dateFromJavaDate:(JavaDate*)date
@@ -174,30 +174,30 @@ static JavaClassLoader *classLoader = nil;
 - (void)spawnConnectionWithProxy:(NSDictionary*)proxyinfo account:(SmackXMPPAccount*)inAccount
 {
     // establish Java proxy settings
-    
-    id sysprop = [(id)[classLoader loadClass:@"java.lang.System"] getProperties];
+    JavaProperties *systemProperties = [(Class <JavaSystem>)[classLoader loadClass:@"java.lang.System"] getProperties];
     AdiumProxyType type = (AdiumProxyType)[[proxyinfo objectForKey:@"AdiumProxyType"] intValue];
     
-    if(type == Adium_Proxy_SOCKS4 || type == Adium_Proxy_SOCKS5 || type == Adium_Proxy_Default_SOCKS4 || type == Adium_Proxy_Default_SOCKS5)
-    {
-        [sysprop put:@"socksProxyHost" :[proxyinfo objectForKey:@"Host"]];
-        [sysprop put:@"socksProxyPort" :[[proxyinfo objectForKey:@"Port"] description]];
+    if ((type == Adium_Proxy_SOCKS4) || (type == Adium_Proxy_SOCKS5) || (type == Adium_Proxy_Default_SOCKS4) || (type == Adium_Proxy_Default_SOCKS5)) {
+        [systemProperties put:@"socksProxyHost" :[proxyinfo objectForKey:@"Host"]];
+        [systemProperties put:@"socksProxyPort" :[[proxyinfo objectForKey:@"Port"] description]];
         if([[proxyinfo objectForKey:@"Username"] length] > 0)
         {
-            [sysprop put:@"java.net.socks.username" :[proxyinfo objectForKey:@"Username"]];
-            [sysprop put:@"java.net.socks.password" :[proxyinfo objectForKey:@"Password"]];
+            [systemProperties put:@"java.net.socks.username" :[proxyinfo objectForKey:@"Username"]];
+            [systemProperties put:@"java.net.socks.password" :[proxyinfo objectForKey:@"Password"]];
         } else {
-            [sysprop remove:@"java.net.socks.username"];
-            [sysprop remove:@"java.net.socks.password"];
+            [systemProperties remove:@"java.net.socks.username"];
+            [systemProperties remove:@"java.net.socks.password"];
         }
+
     } else {
-        [sysprop remove:@"socksProxyHost"];
-        [sysprop remove:@"socksProxyPort"];
-        [sysprop remove:@"java.net.socks.username"];
-        [sysprop remove:@"java.net.socks.password"];
+        [systemProperties remove:@"socksProxyHost"];
+        [systemProperties remove:@"socksProxyPort"];
+        [systemProperties remove:@"java.net.socks.username"];
+        [systemProperties remove:@"java.net.socks.password"];
         
-        if(type != Adium_Proxy_None)
-            [[adium interfaceController] handleErrorMessage:AILocalizedString(@"Proxy Settings","Proxy Settings") withDescription:AILocalizedString(@"HTTP proxies are currently not supported. The connection attempt will continue without the proxy.","HTTP proxies are currently not supported. The connection attempt will continue without the proxy.")];
+        if (type != Adium_Proxy_None)
+            [[adium interfaceController] handleErrorMessage:AILocalizedString(@"Proxy Settings", nil)
+											withDescription:AILocalizedString(@"HTTP proxies are currently not supported. The connection attempt will continue without the proxy.", nil)];
     }
     
     // start connection
@@ -212,7 +212,7 @@ static JavaClassLoader *classLoader = nil;
         BOOL useSSL = NO; //[[inAccount preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue];
         
         // create connection
-        AdiumSmackBridge *bridge = [[(Class)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] alloc] init];
+        AdiumSmackBridge *bridge = [[[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] alloc] init];
         [bridge setDelegate:self];
         
         @try {
@@ -231,7 +231,7 @@ static JavaClassLoader *classLoader = nil;
 }
 
 - (void)connectionError:(NSException*)e {
-    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Connection error on account %@.","Connection error on account %@."),[account explicitFormattedUID]] withDescription:[e reason]];
+    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Connection error on account %@.", nil),[account explicitFormattedUID]] withDescription:[e reason]];
 }
 
 - (SmackXMPPConnection*)connection {
@@ -273,11 +273,11 @@ static JavaClassLoader *classLoader = nil;
 #pragma mark Bridged Object Creation
 
 + (SmackConnectionConfiguration*)connectionConfigurationWithHost:(NSString*)host port:(int)port service:(NSString*)service {
-    return [[(Class)[classLoader loadClass:@"org.jivesoftware.smack.ConnectionConfiguration"] newWithSignature:@"(Ljava/lang/String;ILjava/lang/String;)",host,port,service] autorelease];
+    return [[[classLoader loadClass:@"org.jivesoftware.smack.ConnectionConfiguration"] newWithSignature:@"(Ljava/lang/String;ILjava/lang/String;)",host,port,service] autorelease];
 }
 
 + (SmackPresence*)presenceWithType:(SmackPresenceType*)type {
-    return [[(Class)[classLoader loadClass:@"org.jivesoftware.smack.packet.Presence"] newWithSignature:@"(Lorg/jivesoftware/smack/packet/Presence$Type;)",type] autorelease];
+    return [[[classLoader loadClass:@"org.jivesoftware.smack.packet.Presence"] newWithSignature:@"(Lorg/jivesoftware/smack/packet/Presence$Type;)",type] autorelease];
 }
 
 + (SmackPresence*)presenceWithTypeString:(NSString*)type {
@@ -285,7 +285,7 @@ static JavaClassLoader *classLoader = nil;
 }
 
 + (SmackPresence*)presenceWithType:(SmackPresenceType*)type status:(NSString*)status priority:(int)priority mode:(SmackPresenceMode*)mode {
-    return [[(Class)[classLoader loadClass:@"org.jivesoftware.smack.packet.Presence"] newWithSignature:@"(Lorg/jivesoftware/smack/packet/Presence$Type;Ljava/lang/String;ILorg/jivesoftware/smack/packet/Presence$Mode;)",type,status,priority,mode] autorelease];
+    return [[[classLoader loadClass:@"org.jivesoftware.smack.packet.Presence"] newWithSignature:@"(Lorg/jivesoftware/smack/packet/Presence$Type;Ljava/lang/String;ILorg/jivesoftware/smack/packet/Presence$Mode;)",type,status,priority,mode] autorelease];
 }
 
 + (SmackPresence*)presenceWithTypeString:(NSString*)type status:(NSString*)status priority:(int)priority modeString:(NSString*)mode {
@@ -293,11 +293,11 @@ static JavaClassLoader *classLoader = nil;
 }
 
 + (SmackMessage*)message {
-    return [[(Class)[classLoader loadClass:@"org.jivesoftware.smack.packet.Message"] newWithSignature:@"()"] autorelease];
+    return [[[classLoader loadClass:@"org.jivesoftware.smack.packet.Message"] newWithSignature:@"()"] autorelease];
 }
 
 + (SmackMessage*)messageTo:(NSString*)to type:(SmackMessageType*)type {
-    return [[(Class)[classLoader loadClass:@"org.jivesoftware.smack.packet.Message"] newWithSignature:@"(Ljava/lang/String;Lorg/jivesoftware/smack/packet/Message$Type;)",to,type] autorelease];
+    return [[[classLoader loadClass:@"org.jivesoftware.smack.packet.Message"] newWithSignature:@"(Ljava/lang/String;Lorg/jivesoftware/smack/packet/Message$Type;)",to,type] autorelease];
 }
 
 + (SmackMessage*)messageTo:(NSString*)to typeString:(NSString*)type {
@@ -309,19 +309,19 @@ static JavaClassLoader *classLoader = nil;
 }
 
 + (SmackRegistration*)registration {
-    return [[[(Class)[classLoader loadClass:@"org.jivesoftware.smack.packet.Registration"] alloc] init] autorelease];
+    return [[[[classLoader loadClass:@"org.jivesoftware.smack.packet.Registration"] alloc] init] autorelease];
 }
 
 + (SmackXServiceDiscoveryManager*)serviceDiscoveryManagerForConnection:(SmackXMPPConnection*)connection {
-    return [(SmackXServiceDiscoveryManager*)[classLoader loadClass:@"org.jivesoftware.smackx.ServiceDiscoveryManager"] getInstanceFor:connection];
+    return [(Class <SmackXServiceDiscoveryManager>)[classLoader loadClass:@"org.jivesoftware.smackx.ServiceDiscoveryManager"] getInstanceFor:connection];
 }
 
 + (SmackXXHTMLExtension*)XHTMLExtension {
-    return [[[(Class)[classLoader loadClass:@"org.jivesoftware.smackx.packet.XHTMLExtension"] alloc] init] autorelease];
+    return [[[[classLoader loadClass:@"org.jivesoftware.smackx.packet.XHTMLExtension"] alloc] init] autorelease];
 }
 
 + (SmackIQ*)IQ {
-    return [[[(Class)[classLoader loadClass:@"org.jivesoftware.smack.packet.IQ"] alloc] init] autorelease];
+    return [[[[classLoader loadClass:@"org.jivesoftware.smack.packet.IQ"] alloc] init] autorelease];
 }
 
 + (SmackIQType*)IQType:(NSString*)type {
@@ -333,45 +333,45 @@ static JavaClassLoader *classLoader = nil;
 }
 
 + (SmackXMPPError*)XMPPErrorWithCode:(int)code {
-    return [[(Class)[classLoader loadClass:@"org.jivesoftware.smack.packet.XMPPError"] newWithSignature:@"(I)",code] autorelease];
+    return [[[classLoader loadClass:@"org.jivesoftware.smack.packet.XMPPError"] newWithSignature:@"(I)",code] autorelease];
 }
 
 + (SmackXMPPError*)XMPPErrorWithCode:(int)code message:(NSString*)message {
-    return [[(Class)[classLoader loadClass:@"org.jivesoftware.smack.packet.XMPPError"] newWithSignature:@"(ILjava/lang/String;)",code,message] autorelease];
+    return [[[classLoader loadClass:@"org.jivesoftware.smack.packet.XMPPError"] newWithSignature:@"(ILjava/lang/String;)",code,message] autorelease];
 }
 
 + (void)createRosterEntryInRoster:(SmackRoster*)roster withJID:(NSString*)jid name:(NSString*)name group:(NSString*)group {
-    [(AdiumSmackBridge*)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] createRosterEntry:roster :jid :name :group];
+    [(Class <AdiumSmackBridge>)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] createRosterEntry:roster :jid :name :group];
 }
 
 + (SmackXForm*)formWithType:(NSString*)type {
-    return [[(Class)[classLoader loadClass:@"org.jivesoftware.smackx.Form"] newWithSignature:@"(Ljava/lang/String;)",type] autorelease];
+    return [[[classLoader loadClass:@"org.jivesoftware.smackx.Form"] newWithSignature:@"(Ljava/lang/String;)",type] autorelease];
 }
 
 + (SmackXForm*)formFromPacket:(SmackPacket*)packet {
-    return [(SmackXForm*)[classLoader loadClass:@"org.jivesoftware.smackx.Form"] getFormFrom:packet];
+    return [(Class <SmackXForm>)[classLoader loadClass:@"org.jivesoftware.smackx.Form"] getFormFrom:packet];
 }
 
 + (SmackXFormField*)fixedFormField {
-    return [[[(Class)[classLoader loadClass:@"org.jivesoftware.smackx.FormField"] alloc] init] autorelease];
+    return [[[[classLoader loadClass:@"org.jivesoftware.smackx.FormField"] alloc] init] autorelease];
 }
 
 + (SmackXFormField*)formFieldWithVariable:(NSString*)variable {
-    return [[(Class)[classLoader loadClass:@"org.jivesoftware.smackx.FormField"] newWithSignature:@"(Ljava/lang/String;)",variable] autorelease];
+    return [[[classLoader loadClass:@"org.jivesoftware.smackx.FormField"] newWithSignature:@"(Ljava/lang/String;)",variable] autorelease];
 }
 
 + (id)invokeObject:(id)obj methodWithParamTypeAndParam:(NSString*)method, ... {
     va_list ap;
     va_start(ap, method);
     
-    JavaVector *argumentTypes = [[(Class)[classLoader loadClass:@"java.util.Vector"] alloc] init];
-    JavaVector *arguments = [[(Class)[classLoader loadClass:@"java.util.Vector"] alloc] init];
+    JavaVector *argumentTypes = [[[classLoader loadClass:@"java.util.Vector"] alloc] init];
+    JavaVector *arguments = [[[classLoader loadClass:@"java.util.Vector"] alloc] init];
     NSString *typestr;
     
     while((typestr = va_arg(ap,id))) {
         if([typestr isEqualToString:@"int"]) {
             int value = va_arg(ap, int);
-            id javaint = [(Class)[classLoader loadClass:@"java.lang.Integer"] newWithSignature:@"(I)",value];
+            id javaint = [[classLoader loadClass:@"java.lang.Integer"] newWithSignature:@"(I)",value];
             
             [argumentTypes add:typestr];
             [arguments add:javaint];
@@ -379,7 +379,7 @@ static JavaClassLoader *classLoader = nil;
             [javaint release];
         } else if([typestr isEqualToString:@"boolean"]) {
             BOOL value = va_arg(ap, int)?YES:NO;
-            id javabool = [(Class)[classLoader loadClass:@"java.lang.Boolean"] newWithSignature:@"(Z)",value];
+            id javabool = [[classLoader loadClass:@"java.lang.Boolean"] newWithSignature:@"(Z)",value];
             
             [argumentTypes add:typestr];
             [arguments add:javabool];
@@ -387,7 +387,7 @@ static JavaClassLoader *classLoader = nil;
             [javabool release];
         } else if([typestr isEqualToString:@"double"]) {
             double value = va_arg(ap, double);
-            id javadouble = [(Class)[classLoader loadClass:@"java.lang.Double"] newWithSignature:@"(D)",value];
+            id javadouble = [[classLoader loadClass:@"java.lang.Double"] newWithSignature:@"(D)",value];
             
             [argumentTypes add:typestr];
             [arguments add:javadouble];
@@ -395,7 +395,7 @@ static JavaClassLoader *classLoader = nil;
             [javadouble release];
         } else if([typestr isEqualToString:@"float"]) {
             float value = (float)va_arg(ap, double);
-            id javafloat = [(Class)[classLoader loadClass:@"java.lang.Float"] newWithSignature:@"(F)",value];
+            id javafloat = [[classLoader loadClass:@"java.lang.Float"] newWithSignature:@"(F)",value];
             
             [argumentTypes add:typestr];
             [arguments add:javafloat];
@@ -403,7 +403,7 @@ static JavaClassLoader *classLoader = nil;
             [javafloat release];
         } else if([typestr isEqualToString:@"long"]) {
             long value = va_arg(ap, long);
-            id javalong = [(Class)[classLoader loadClass:@"java.lang.Long"] newWithSignature:@"(J)",value];
+            id javalong = [[classLoader loadClass:@"java.lang.Long"] newWithSignature:@"(J)",value];
             
             [argumentTypes add:typestr];
             [arguments add:javalong];
@@ -411,7 +411,7 @@ static JavaClassLoader *classLoader = nil;
             [javalong release];
         } else if([typestr isEqualToString:@"char"]) {
             char value = (char)va_arg(ap, int);
-            id javachar = [(Class)[classLoader loadClass:@"java.lang.Char"] newWithSignature:@"(C)",value];
+            id javachar = [[classLoader loadClass:@"java.lang.Char"] newWithSignature:@"(C)",value];
             
             [argumentTypes add:typestr];
             [arguments add:javachar];
@@ -419,7 +419,7 @@ static JavaClassLoader *classLoader = nil;
             [javachar release];
         } else if([typestr isEqualToString:@"short"]) {
             short value = (short)va_arg(ap, int);
-            id javashort = [(Class)[classLoader loadClass:@"java.lang.Short"] newWithSignature:@"(S)",value];
+            id javashort = [[classLoader loadClass:@"java.lang.Short"] newWithSignature:@"(S)",value];
             
             [argumentTypes add:typestr];
             [arguments add:javashort];
@@ -439,10 +439,10 @@ static JavaClassLoader *classLoader = nil;
     [classname replaceOccurrencesOfString:@"/" withString:@"." options:NSLiteralSearch range:NSMakeRange(0,[classname length])];
     [classname replaceOccurrencesOfString:@"$" withString:@"." options:NSLiteralSearch range:NSMakeRange(0,[classname length])];
     
-    JavaMethod *meth = [(AdiumSmackBridge*)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] getMethod:classname :method :argumentTypes];
+    JavaMethod *meth = [(Class <AdiumSmackBridge>)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] getMethod:classname :method :argumentTypes];
     [classname release];
     
-    id result = [(AdiumSmackBridge*)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] invokeMethod:meth :obj :arguments];
+    id result = [(Class <AdiumSmackBridge>)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] invokeMethod:meth :obj :arguments];
     
     [argumentTypes release];
     [arguments release];
@@ -452,15 +452,15 @@ static JavaClassLoader *classLoader = nil;
 }
 
 + (JavaVector*)vector {
-    return [[[(Class)[classLoader loadClass:@"java.util.Vector"] alloc] init] autorelease];
+    return [[[[classLoader loadClass:@"java.util.Vector"] alloc] init] autorelease];
 }
 
 + (JavaMap*)map {
-    return [[(Class)[classLoader loadClass:@"java.util.HashMap"] newWithSignature:@"()"] autorelease];
+    return [[[classLoader loadClass:@"java.util.HashMap"] newWithSignature:@"()"] autorelease];
 }
 
 + (JavaFile*)fileFromPath:(NSString*)path {
-    return [[(Class)[classLoader loadClass:@"java.io.File"] newWithSignature:@"(Ljava/lang/String;)", path] autorelease];
+    return [[[classLoader loadClass:@"java.io.File"] newWithSignature:@"(Ljava/lang/String;)", path] autorelease];
 }
 
 + (NSDictionary *)smackExceptionInfo:(NSException*)e {
