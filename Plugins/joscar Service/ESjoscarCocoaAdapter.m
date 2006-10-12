@@ -7,9 +7,11 @@
 
 #import "ESjoscarCocoaAdapter.h"
 #import "RAFjoscarAccount.h"
-#import <Adium/AIAccountControllerProtocol.h>
-#import <JavaVM/JavaVM.h>
 #import "joscarClasses.h"
+#import <Adium/AIAdiumProtocol.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIFileTransferControllerProtocol.h>
+#import <Adium/AIJavaControllerProtocol.h>
 #import <Adium/NDRunLoopMessenger.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
@@ -18,10 +20,11 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
+
+
+#import <JavaVM/JavaVM.h>
 #import <Carbon/Carbon.h>
 
-#import "ESFileTransferController.h"
-#import <Adium/AIJavaControllerProtocol.h>
 #import "RAFjoscarLogHandler.h"
  
 //#define JOSCAR_LOG_WARNING
