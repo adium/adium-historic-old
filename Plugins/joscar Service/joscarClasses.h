@@ -25,7 +25,7 @@
  *
  * Constructor: String formattedUID == @"(Ljava/lang/String;)"
  */
-#define NewScreenname(screenname)	[NSClassFromString(@"net.kano.joustsim.Screenname") \
+#define NewScreenname(screenname)	[(id)[classLoader loadClass:@"net.kano.joustsim.Screenname"] \
 									newWithSignature:@"(Ljava/lang/String;)", \
 									(screenname)]
 @interface Screenname : NSObject {}
@@ -37,7 +37,7 @@
  * net.kano.joustsim.oscar.AimConnectionProperties
  * Constructor: (Screenname sn, String password) == @"(Lnet/kano/joustsim/Screenname;Ljava/lang/String;)"
  */
-#define NewAimConnectionProperties(sn, pass)	[NSClassFromString(@"net.kano.joustsim.oscar.AimConnectionProperties") \
+#define NewAimConnectionProperties(sn, pass)	[(id)[classLoader loadClass:@"net.kano.joustsim.oscar.AimConnectionProperties"] \
 												newWithSignature:@"(Lnet/kano/joustsim/Screenname;Ljava/lang/String;)", \
 												(sn), (pass)]
 @interface AimConnectionProperties : NSObject {}
@@ -50,7 +50,7 @@
 /*
  * net.kano.joustsim.oscar.proxy.AimProxyInfo
  */
-#define AimProxyInfoClass NSClassFromString(@"net.kano.joustsim.oscar.proxy.AimProxyInfo")
+#define AimProxyInfoClass (id)[classLoader loadClass:@"net.kano.joustsim.oscar.proxy.AimProxyInfo"]
 @interface AimProxyInfo : NSObject {}
 + (AimProxyInfo *)forSocks5:(NSString *)host :(int)port :(NSString *)username :(NSString *)password;
 + (AimProxyInfo *)forHttp:(NSString *)host :(int)port :(NSString *)username :(NSString *)password;
@@ -132,7 +132,7 @@
  * Constructor: (AppSession appSession, Screenname sn)
  * Constructor: (AppSession appSession,  Screenname sn, TrustPreferences trustPreferences)
  */
-#define NewDefaultAimSession(sn, pass)	[NSClassFromString(@"net.kano.joustsim.oscar.DefaultAimSession") \
+#define NewDefaultAimSession(sn, pass)	[(id)[classLoader loadClass:@"net.kano.joustsim.oscar.DefaultAimSession"] \
 										newWithSignature:@"(Lnet/kano/joustsim/Screenname;)", \
 										(sn)]
 @interface DefaultAimSession : AimSession {}
@@ -149,7 +149,7 @@
 /*
  * net.kano.joustsim.oscar.DefaultAppSession
  */
-#define NewDefaultAppSession()		[[NSClassFromString(@"net.kano.joustsim.oscar.DefaultAppSession") alloc] init]
+#define NewDefaultAppSession()		[[(id)[classLoader loadClass:@"net.kano.joustsim.oscar.DefaultAppSession"] alloc] init]
 @interface DefaultAppSession : AppSession {}
 - (AimSession *)openAimSession:(Screenname *)sn;
 @end
@@ -306,7 +306,7 @@
  * Constructor: (String messageBody, boolean autoResponse)
  * Constructor: (String msg, boolean ar, String aimexp)
  */
-#define NewBasicInstantMessage(msg, ar)	[NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.BasicInstantMessage") \
+#define NewBasicInstantMessage(msg, ar)	[(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.icbm.BasicInstantMessage"] \
 										newWithSignature:@"(Ljava/lang/String;Z)", \
 										(msg), (ar)]
 @interface BasicInstantMessage : SimpleMessage {}
@@ -316,7 +316,7 @@
  * net.kano.joustsim.oscar.oscar.service.icbm.DirectMessage
  * Constructor: (String messageBody, boolean autoResponse, Set<Attachment> set)
  */
-#define NewDirectMessage(msg, ar, set)	[NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.DirectMessage") \
+#define NewDirectMessage(msg, ar, set)	[(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.icbm.DirectMessage"] \
 										newWithSignature:@"(Ljava/lang/String;ZLjava/util/Set;)", \
 										(msg), (ar), (set)]
 @interface DirectMessage : Message {}
@@ -531,7 +531,7 @@
 /*
  * net.adium.joscarBridge.JoscarFileMapper
  */
-#define NewJoscarFileMapper(shouldUseIndicatedNames, path)	[NSClassFromString(@"net.adium.joscarBridge.JoscarFileMapper") \
+#define NewJoscarFileMapper(shouldUseIndicatedNames, path)	[(id)[classLoader loadClass:@"net.adium.joscarBridge.JoscarFileMapper"] \
 															newWithSignature:@"(ZLjava/lang/String;)", \
 															(shouldUseIndicatedNames), (path)]
 @interface JoscarFileMapper : FileMapper {}
@@ -577,7 +577,7 @@
 /*
  * net.kano.joscar.rvcmd.InvitationMessage
  */
-#define NewInvitationMessage(msg)	[NSClassFromString(@"net.kano.joscar.rvcmd.InvitationMessage") \
+#define NewInvitationMessage(msg)	[(id)[classLoader loadClass:@"net.kano.joscar.rvcmd.InvitationMessage"] \
 										newWithSignature:@"(Ljava/lang/String;)", \
 										(msg)]
 @interface InvitationMessage : NSObject {}
@@ -740,7 +740,7 @@
 /*
  * net.kano.joustsim.oscar.oscar.service.icbm.dim.FileAttachment
  */
-#define NewFileAttachment(file, identifier, length)	[NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.dim.FileAttachment") \
+#define NewFileAttachment(file, identifier, length)	[(id)[classLoader loadClass:@"net.kano.joustsim.oscar.oscar.service.icbm.dim.FileAttachment"] \
 													newWithSignature:@"(Ljava/io/File;Ljava/lang/String;J)", \
 													(file), (identifier), (length)]
 @interface FileAttachment : Attachment {}
@@ -780,7 +780,7 @@
 /*
  * java.util.HashMap
  */
-#define NewHashMap()	[[NSClassFromString(@"java.util.HashMap") alloc] init]
+#define NewHashMap()	[[(id)[classLoader loadClass:@"java.util.HashMap"] alloc] init]
 //#define NewSynchronizedHashMap()	[Collections synchronizedMap:NewHashMap()]
 @interface HashMap : Map
 @end
@@ -788,7 +788,7 @@
 /*
  * java.util.HashSet
  */
-#define NewHashSet(initialCapacity)	[NSClassFromString(@"java.util.HashSet") newWithSignature:@"(I)", \
+#define NewHashSet(initialCapacity)	[(id)[classLoader loadClass:@"java.util.HashSet"] newWithSignature:@"(I)", \
 									(initialCapacity)]
 @interface HashSet : NSObject <Set> {}
 @end
@@ -796,7 +796,7 @@
 /*
  * java.util.ArrayList
  */
-#define NewArrayList()		[[NSClassFromString(@"java.util.ArrayList") alloc] init]
+#define NewArrayList()		[[(id)[classLoader loadClass:@"java.util.ArrayList"] alloc] init]
 @interface ArrayList : NSObject <Collection> {}
 @end
 
@@ -809,7 +809,7 @@
 /*
  * java.util.Date
  */
-#define NewDate(timeInterval)	[NSClassFromString(@"java.util.Date") \
+#define NewDate(timeInterval)	[(id)[classLoader loadClass:@"java.util.Date"] \
 								newWithSignature:@"(J)", \
 								(timeInterval)]
 @interface Date : NSObject {}
@@ -834,7 +834,7 @@
 /*
  * java.io.File
  */
-#define NewFile(path)	[NSClassFromString(@"java.io.File") \
+#define NewFile(path)	[(id)[classLoader loadClass:@"java.io.File"] \
 						newWithSignature:@"(Ljava/lang/String;)", \
 						(path)]
 @interface File : NSObject {}
@@ -856,7 +856,7 @@
 
 
 #pragma mark Joscar Bridge
-#define NewJoscarBridge(logLevel)	[NSClassFromString(@"net.adium.joscarBridge.joscarBridge") \
+#define NewJoscarBridge(logLevel)	[(id)[classLoader loadClass:@"net.adium.joscarBridge.joscarBridge"] \
 									newWithSignature:@"(I)", \
 									(logLevel)]
 @interface JoscarBridge : NSObject <GlobalBuddyInfoListener, StateListener, OpenedServiceListener,

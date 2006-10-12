@@ -42,6 +42,8 @@
 - (NSString *)ownPhoneticName;
 - (NSString *)serversideDisplayName;
 
+- (BOOL)canContainOtherContacts;
+
 - (void)setIsMobile:(BOOL)isMobile notify:(NotifyTiming)notify;
 - (void)setOnline:(BOOL)online notify:(NotifyTiming)notify silently:(BOOL)silent;
 - (void)setSignonDate:(NSDate *)signonDate notify:(NotifyTiming)notify;

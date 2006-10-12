@@ -184,6 +184,10 @@
 	return [self statusObjectForKey:@"Server Display Name"];	
 }
 
+- (BOOL)canContainOtherContacts {
+    return NO;
+}
+
 - (void)setServersideAlias:(NSString *)alias 
 		   asStatusMessage:(BOOL)useAsStatusMessage
 				  silently:(BOOL)silent
@@ -605,7 +609,17 @@
 
 	return parentContact;
  }
- 
+
+- (BOOL)containsObject:(AIListObject*)object
+{
+    return NO;
+}
+
+- (BOOL)containsMultipleContacts
+{
+    return NO;
+}
+
 #pragma mark Equality
 /*
 - (BOOL)isEqual:(id)anObject

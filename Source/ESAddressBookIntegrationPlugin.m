@@ -841,7 +841,8 @@ NSString* serviceIDForJabberUID(NSString *UID);
 		
 		BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
 										   [serviceID isEqualToString:@"ICQ"]);
-		BOOL					isJabber = [serviceID isEqualToString:@"Jabber"];
+		BOOL					isJabber = [serviceID isEqualToString:@"Jabber"] ||
+                                           [serviceID isEqualToString:@"XMPP"];
 		
 		for (i = 0 ; i < nameCount ; i++) {
 			NSString	*UID = [[names valueAtIndex:i] compactedString];
@@ -1168,7 +1169,8 @@ NSString* serviceIDForJabberUID(NSString *UID)
 
 			BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
 											   [serviceID isEqualToString:@"ICQ"]);
-			BOOL					isJabber = [serviceID isEqualToString:@"Jabber"];
+			BOOL					isJabber = [serviceID isEqualToString:@"Jabber"] ||
+                                               [serviceID isEqualToString:@"XMPP"];
 
 			for (i = 0 ; i < nameCount ; i++) {
 				NSString	*UID = [[names valueAtIndex:i] compactedString];
