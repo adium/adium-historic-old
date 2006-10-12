@@ -15,8 +15,7 @@
  */
 
 #import <Adium/AIObject.h>
-
-@protocol AIVideoConfController;
+#import <Adium/AIVideoConfControllerProtocol.h>
 
 /*!
  * VideoConferencing controller.
