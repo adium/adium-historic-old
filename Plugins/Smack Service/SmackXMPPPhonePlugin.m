@@ -15,7 +15,7 @@
 #import <AddressBook/ABRecord.h>
 
 #import <Adium/AIAccount.h>
-#import <Adium/AIListObject.h>
+#import <Adium/AIListContact.h>
 #import <Adium/AIJavaControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
@@ -225,17 +225,21 @@ static BOOL registered = NO;
 {
 	if ([inObject statusObjectForKey:@"XMPPPhoneStatus"])
         return AILocalizedString(@"Phone Status","phone status tooltip entry title");
+
 	return nil;
 }
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    if ([inObject account] != account)
+    if ((![inObject isKindOfClass:[AIListContact class]]) ||
+		([(AIListContact *)inObject account] != account)) {
         return nil;
+	}
 
     NSString *status = [inObject statusObjectForKey:@"XMPPPhoneStatus"];
     if (!status)
         return nil;
+
     if ([status isEqualToString:@"ON_PHONE"])
         return [[[NSAttributedString alloc] initWithString:AILocalizedString(@"On the phone","phone status tooltip entry on the phone")] autorelease];
 
