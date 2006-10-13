@@ -7,7 +7,8 @@
 //
 
 #import "SmackLiveJournalAccountViewController.h"
-
+#import "SmackXMPPAccount.h"
+#import <Adium/AIAccount.h>
 
 @implementation SmackLiveJournalAccountViewController
 

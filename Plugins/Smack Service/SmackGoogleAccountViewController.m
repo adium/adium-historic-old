@@ -7,7 +7,8 @@
 //
 
 #import "SmackGoogleAccountViewController.h"
-
+#import "SmackXMPPAccount.h"
+#import <Adium/AIAccount.h>
 
 @implementation SmackGoogleAccountViewController
 
