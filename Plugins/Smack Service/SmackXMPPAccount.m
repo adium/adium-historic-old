@@ -552,7 +552,7 @@ static AIHTMLDecoder *messageencoder = nil;
         return nil;
     
     // add the namespace declaration (not really an attribute...)
-    [body setValue:@"http://www.w3.org/1999/xhtml" forKey:@"xmlns"];
+    [body setValue:@"http://www.w3.org/1999/xhtml" forAttribute:@"xmlns"];
     
     return [body XMLString];
 }
