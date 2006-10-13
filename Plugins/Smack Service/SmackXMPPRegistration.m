@@ -61,7 +61,7 @@
     [super dealloc];
 }
 
-- (void)handleFormFromPacket:(SmackRegistration*)packet
+- (void)handleFormFromPacket:(SmackRegistration *)packet
 {
     JavaMap *attr = [packet getAttributes];
     SmackXForm *form = [SmackCocoaAdapter formFromPacket:(SmackPacket*)packet];
@@ -211,7 +211,7 @@
                             waitUntilDone:YES];
 }
 
-- (void)receivedIQPacketMainThread:(SmackRegistration*)packet
+- (void)receivedIQPacketMainThread:(SmackRegistration *)packet
 {
     if (receivedInitialForm)
     {
@@ -265,7 +265,7 @@
     }
 }
 
-- (SmackXForm*)resultForm
+- (SmackXForm *)resultForm
 {
     return resultForm;
 }

@@ -15,8 +15,8 @@
     BOOL registered;
 }
 
-- (id)initWithForm:(SmackXForm*)f;
-- (id)initWithForm:(SmackXForm*)f registered:(BOOL)reg;
+- (id)initWithForm:(SmackXForm *)f;
+- (id)initWithForm:(SmackXForm *)f registered:(BOOL)reg;
 
 - (NSData*)toXHTML;
 

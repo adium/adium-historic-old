@@ -288,13 +288,11 @@ static NSMutableDictionary *privacyplugins = nil;
 
     NSMutableArray *list;
     [defaultListName release];
-    switch(option)
-    {
+    switch (option) {
         case AIPrivacyOptionDenyAll:
             list = [privacyLists objectForKey:SmackAdiumPrivacyAIPrivacyOptionDenyAll];
             
-            if (!list)
-            {
+            if (!list) {
                 JavaVector *vector = [SmackCocoaAdapter vector];
                 [vector add:[SmackCocoaAdapter privacyItemWithType:nil allow:NO order:1]];
                 [listManager updatePrivacyList:SmackAdiumPrivacyAIPrivacyOptionDenyAll :vector];
@@ -304,11 +302,11 @@ static NSMutableDictionary *privacyplugins = nil;
             [listManager setDefaultListName:SmackAdiumPrivacyAIPrivacyOptionDenyAll];
             defaultListName = SmackAdiumPrivacyAIPrivacyOptionDenyAll;
             break;
+
         case AIPrivacyOptionAllowUsers:
             list = [privacyLists objectForKey:SmackAdiumPrivacyAIPrivacyOptionAllowUsers];
             
-            if (!list)
-            {
+            if (!list) {
                 JavaVector *vector = [SmackCocoaAdapter vector];
                 
                 // default list: don't allow anybody
@@ -320,11 +318,11 @@ static NSMutableDictionary *privacyplugins = nil;
             [listManager setDefaultListName:SmackAdiumPrivacyAIPrivacyOptionAllowUsers];
             defaultListName = SmackAdiumPrivacyAIPrivacyOptionAllowUsers;
             break;
+
         case AIPrivacyOptionDenyUsers:
             list = [privacyLists objectForKey:SmackAdiumPrivacyAIPrivacyOptionDenyUsers];
             
-            if (!list)
-            {
+            if (!list) {
                 JavaVector *vector = [SmackCocoaAdapter vector];
                 
                 // default list: allow everybody
@@ -336,11 +334,11 @@ static NSMutableDictionary *privacyplugins = nil;
             [listManager setDefaultListName:SmackAdiumPrivacyAIPrivacyOptionDenyUsers];
             defaultListName = SmackAdiumPrivacyAIPrivacyOptionDenyUsers;
             break;
+
         case AIPrivacyOptionAllowContactList:
             list = [privacyLists objectForKey:SmackAdiumPrivacyAIPrivacyOptionAllowContactList];
             
-            if (!list)
-            {
+            if (!list) {
                 JavaVector *vector = [SmackCocoaAdapter vector];
                 
                 // deny all users with subscription none
@@ -356,7 +354,8 @@ static NSMutableDictionary *privacyplugins = nil;
             [listManager setDefaultListName:SmackAdiumPrivacyAIPrivacyOptionAllowContactList];
             defaultListName = SmackAdiumPrivacyAIPrivacyOptionAllowContactList;
             break;
-//        case AIPrivacyOptionAllowAll:
+
+//      case AIPrivacyOptionAllowAll:
         default:
             // remove the default list, which means that everything is coming through
             [listManager declineDefaultList];

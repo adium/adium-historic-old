@@ -15,7 +15,7 @@
 
 @implementation SmackXMPPFormController
 
-- (id)initWithForm:(SmackXForm*)form target:(id)t selector:(SEL)s webView:(WebView*)wv registered:(BOOL)reg {
+- (id)initWithForm:(SmackXForm *)form target:(id)t selector:(SEL)s webView:(WebView*)wv registered:(BOOL)reg {
     if (![[form getType] isEqualToString:@"form"]) { // we only accept forms
         [self dealloc];
         return nil;
@@ -157,7 +157,7 @@
     }
 }
 
-- (SmackXForm*)resultForm {
+- (SmackXForm *)resultForm {
     return resultForm;
 }
 

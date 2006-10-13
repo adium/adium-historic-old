@@ -12,11 +12,11 @@
 
 @implementation SmackXMPPFormConverter
 
-- (id)initWithForm:(SmackXForm*)f {
+- (id)initWithForm:(SmackXForm *)f {
     return [self initWithForm:f registered:NO];
 }
 
-- (id)initWithForm:(SmackXForm*)f registered:(BOOL)reg {
+- (id)initWithForm:(SmackXForm *)f registered:(BOOL)reg {
     if ((self = [super init])) {
         form = [f retain];
         registered = reg;
