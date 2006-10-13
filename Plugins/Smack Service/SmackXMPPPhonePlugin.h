@@ -6,12 +6,12 @@
 //  Copyright 2006 Andreas Monitzer. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import "AIObject.h"
+#import <Adium/AIObject.h>
 
 @class SmackXMPPAccount, ABPeoplePickerView, SmackPhoneListener, SmackPhoneCall;
+@protocol AIContactListTooltipEntry;
 
-@interface SmackXMPPPhonePlugin : AIObject {
+@interface SmackXMPPPhonePlugin : AIObject <AIContactListTooltipEntry> {
     SmackXMPPAccount *account;
     
     IBOutlet NSWindow *window;
