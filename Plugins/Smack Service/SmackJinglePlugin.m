@@ -454,7 +454,7 @@ static NSDictionary	*audioSessions;
 /*!
  *	@brief	The session has been closed with an error
  */
-- (id) setSessionClosedOnError:(NSException*) exc
+- (id) setSessionClosedOnError:(NSException *) exc
 {
 	NSLog (@"Jingle: session closed on error with reason %@", [exc reason]);
 

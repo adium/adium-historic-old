@@ -230,7 +230,7 @@ static JavaClassLoader *classLoader = nil;
     [pool release];
 }
 
-- (void)connectionError:(NSException*)e {
+- (void)connectionError:(NSException *)e {
     [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Connection error on account %@.", nil),[account explicitFormattedUID]] withDescription:[e reason]];
 }
 
@@ -308,7 +308,7 @@ static JavaClassLoader *classLoader = nil;
     return [SmackCocoaAdapter staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.Message$Type"];
 }
 
-+ (SmackRegistration*)registration {
++ (SmackRegistration *)registration {
     return [[[[classLoader loadClass:@"org.jivesoftware.smack.packet.Registration"] alloc] init] autorelease];
 }
 
@@ -344,19 +344,19 @@ static JavaClassLoader *classLoader = nil;
     [(Class <AdiumSmackBridge>)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] createRosterEntry:roster :jid :name :group];
 }
 
-+ (SmackXForm*)formWithType:(NSString *)type {
++ (SmackXForm *)formWithType:(NSString *)type {
     return [[[classLoader loadClass:@"org.jivesoftware.smackx.Form"] newWithSignature:@"(Ljava/lang/String;)",type] autorelease];
 }
 
-+ (SmackXForm*)formFromPacket:(SmackPacket*)packet {
++ (SmackXForm *)formFromPacket:(SmackPacket*)packet {
     return [(Class <SmackXForm>)[classLoader loadClass:@"org.jivesoftware.smackx.Form"] getFormFrom:packet];
 }
 
-+ (SmackXFormField*)fixedFormField {
++ (SmackXFormField *)fixedFormField {
     return [[[[classLoader loadClass:@"org.jivesoftware.smackx.FormField"] alloc] init] autorelease];
 }
 
-+ (SmackXFormField*)formFieldWithVariable:(NSString *)variable {
++ (SmackXFormField *)formFieldWithVariable:(NSString *)variable {
     return [[[classLoader loadClass:@"org.jivesoftware.smackx.FormField"] newWithSignature:@"(Ljava/lang/String;)",variable] autorelease];
 }
 
@@ -463,7 +463,7 @@ static JavaClassLoader *classLoader = nil;
     return [[[classLoader loadClass:@"java.io.File"] newWithSignature:@"(Ljava/lang/String;)", path] autorelease];
 }
 
-+ (NSDictionary *)smackExceptionInfo:(NSException*)e {
++ (NSDictionary *)smackExceptionInfo:(NSException *)e {
     NSLog(@"exception!\nname = %@\nreason = %@\nuserInfo = %@",[e name],[e reason],[e userInfo]);
     return [NSDictionary dictionary];
 }

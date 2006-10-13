@@ -640,7 +640,7 @@
 @interface SmackXDataForm : JavaObject <SmackPacketExtension> {
 }
 
-- (void)addField:(SmackXFormField*)field;
+- (void)addField:(SmackXFormField *)field;
 - (void)addInstruction:(NSString *)instruction;
 - (void)addItem:(SmackXDataFormItem*)item;
 - (NSString *)getElementName;
@@ -804,11 +804,11 @@
 - (SmackMessage *)pollMessage;
 - (void)sendMessage:(SmackMessage *)message;
 
-- (SmackXForm*)getConfigurationForm;
-- (void)sendConfigurationForm:(SmackXForm*)form;
+- (SmackXForm *)getConfigurationForm;
+- (void)sendConfigurationForm:(SmackXForm *)form;
 
-- (SmackXForm*)getRegistrationForm;
-- (void)sendRegistrationForm:(SmackXForm*)form;
+- (SmackXForm *)getRegistrationForm;
+- (void)sendRegistrationForm:(SmackXForm *)form;
 
 @end
 

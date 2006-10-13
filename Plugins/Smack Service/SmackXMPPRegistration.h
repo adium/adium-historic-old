@@ -27,6 +27,6 @@
 
 - (id)initWithAccount:(SmackXMPPAccount*)a registerWith:(NSString *)jid;
 
-- (SmackXForm*)resultForm;
+- (SmackXForm *)resultForm;
 
 @end

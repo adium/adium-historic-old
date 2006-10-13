@@ -39,7 +39,7 @@
 + (SmackMessage *)messageTo:(NSString *)to type:(SmackMessageType *)type;
 + (SmackMessage *)messageTo:(NSString *)to typeString:(NSString *)type;
 + (SmackMessageType *)messageTypeFromString:(NSString *)type;
-+ (SmackRegistration*)registration;
++ (SmackRegistration *)registration;
 
 + (SmackXServiceDiscoveryManager *)serviceDiscoveryManagerForConnection:(SmackXMPPConnection *)connection;
 + (SmackXXHTMLExtension *)XHTMLExtension;
@@ -49,10 +49,10 @@
 + (SmackXMPPError *)XMPPErrorWithCode:(int)code;
 + (SmackXMPPError *)XMPPErrorWithCode:(int)code message:(NSString *)message;
 + (void)createRosterEntryInRoster:(SmackRoster *)roster withJID:(NSString *)jid name:(NSString *)name group:(NSString *)group;
-+ (SmackXForm*)formWithType:(NSString *)type;
-+ (SmackXForm*)formFromPacket:(SmackPacket*)packet;
-+ (SmackXFormField*)fixedFormField;
-+ (SmackXFormField*)formFieldWithVariable:(NSString *)variable;
++ (SmackXForm *)formWithType:(NSString *)type;
++ (SmackXForm *)formFromPacket:(SmackPacket*)packet;
++ (SmackXFormField *)fixedFormField;
++ (SmackXFormField *)formFieldWithVariable:(NSString *)variable;
 + (id)invokeObject:(id)obj methodWithParamTypeAndParam:(NSString *)method, ...;
 + (JavaVector *)vector;
 + (JavaMap *)map;
@@ -64,6 +64,6 @@
 // but the original object gets lost in the process. That way we can't retrieve the XMPPError packet that contains the real info for us.
 // However, there's some minimal info stored in the reason-field of the NSException (the toString()-info from the object apparently),
 // so we can derive some information from this one.
-+ (NSDictionary *)smackExceptionInfo:(NSException*)e;
++ (NSDictionary *)smackExceptionInfo:(NSException *)e;
 
 @end
