@@ -361,7 +361,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
             AIListContact *listContact = [[adium contactController] existingContactWithService:[account service]
 																					   account:account
 																						   UID:jid
-																						 class:[SmackListContact class]];
+																					usingClass:[SmackListContact class]];
             if (listContact) {
                 [contacts addObject:listContact];
                 //[listContact setRemoteGroupName:nil];
