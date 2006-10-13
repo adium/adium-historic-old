@@ -27,9 +27,9 @@
 
 @implementation SmackXMPPRegistration
 
-- (id)initWithAccount:(SmackXMPPAccount*)a registerWith:(NSString*)jid
+- (id)initWithAccount:(SmackXMPPAccount*)a registerWith:(NSString *)jid
 {
-    if((self = [super init]))
+    if ((self = [super init]))
     {
         account = a;
         otherJID = [jid copy];
@@ -67,13 +67,13 @@
     SmackXForm *form = [SmackCocoaAdapter formFromPacket:(SmackPacket*)packet];
     
     receivedInitialForm = YES;
-    if(!form) {
+    if (!form) {
         wasForm = NO;
 
-        if([attr size] == 0) // no attributes supplied? might be jabber:x:oob (redirect to a URL)
+        if ([attr size] == 0) // no attributes supplied? might be jabber:x:oob (redirect to a URL)
         {
             SmackOutOfBandExtension *oob = [packet getExtension:@"x" :@"jabber:x:oob"];
-            if(oob && [[oob getUrl] length] > 0)
+            if (oob && [[oob getUrl] length] > 0)
                 [[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"Registration For %@","Registration For %@"),[packet getFrom]]
                                              withDescription:[packet getInstructions]
                                              withWindowTitle:AILocalizedString(@"Registration","Registration")
@@ -99,7 +99,7 @@
         
         static NSArray *fielddefinitions = nil;
 
-        if(!fielddefinitions)
+        if (!fielddefinitions)
             fielddefinitions = [[NSArray alloc] initWithObjects:
                 [NSDictionary dictionaryWithObjectsAndKeys:
                     @"username", @"field",
@@ -171,11 +171,11 @@
         while((item = [e nextObject]))
         {
             NSString *fieldname = [item objectForKey:@"field"];
-            if([attr containsKey:fieldname])
+            if ([attr containsKey:fieldname])
             {
                 NSString *value = [attr get:fieldname];
                 SmackXFormField *field = [SmackCocoaAdapter formFieldWithVariable:fieldname];
-                if(![item objectForKey:@"type"])
+                if (![item objectForKey:@"type"])
                     [field setType:@"text-single"];
                 else
                     [field setType:[item objectForKey:@"type"]];
@@ -195,7 +195,7 @@
 
 + (void)openURLRequest:(NSNumber*)result userInfo:(SmackOutOfBandExtension*)oob
 {
-    if([result intValue] == AITextAndButtonsDefaultReturn)
+    if ([result intValue] == AITextAndButtonsDefaultReturn)
         [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[oob getUrl]]];
 }
 
@@ -205,7 +205,7 @@
     
     // let's filter this one out before moving to the main thread
     // in order to avoid blocking it with things that are thread safe anyways
-    if([[packet getPacketID] isEqualToString:packetID])
+    if ([[packet getPacketID] isEqualToString:packetID])
         [self performSelectorOnMainThread:@selector(receivedIQPacketMainThread:)
                                withObject:packet
                             waitUntilDone:YES];
@@ -213,46 +213,46 @@
 
 - (void)receivedIQPacketMainThread:(SmackRegistration*)packet
 {
-    if(receivedInitialForm)
+    if (receivedInitialForm)
     {
         NSString *type = [[packet getType] toString];
         
-        if([type isEqualToString:@"result"])
+        if ([type isEqualToString:@"result"])
         {
-            if(didUnregister)
+            if (didUnregister)
                 [[adium interfaceController] handleMessage:AILocalizedString(@"Unregistration Successful!", "Unregistration Successful!") withDescription:[NSString stringWithFormat:AILocalizedString(@"Unregistration to %@ was completed successfully.","Unregistration to %@ was completed successfully."),otherJID] withWindowTitle:AILocalizedString(@"Registration", "Registration")];
             else
                 [[adium interfaceController] handleMessage:AILocalizedString(@"Registration Successful!", "Registration Successful!") withDescription:[NSString stringWithFormat:AILocalizedString(@"Registration to %@ was completed successfully.","Registration to %@ was completed successfully."),otherJID] withWindowTitle:AILocalizedString(@"Registration", "Registration")];
 
-            if([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
+            if ([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
                 [account registration:self didEndWithSuccess:YES];
             [self release];
             return;
-        } else if([type isEqualToString:@"error"] && [[[SmackCocoaAdapter formFromPacket:(SmackPacket*)packet] getType] isEqualToString:@"form"])
+        } else if ([type isEqualToString:@"error"] && [[[SmackCocoaAdapter formFromPacket:(SmackPacket*)packet] getType] isEqualToString:@"form"])
         {
             // there is another form required for this stuff
             [self handleFormFromPacket:packet];
         } else {
             // unknown state, probably error with no form
             
-            if([type isEqualToString:@"error"])
+            if ([type isEqualToString:@"error"])
                 [SmackXMPPErrorMessagePlugin handleXMPPErrorPacket:packet service:[[account connection] getServiceName]];
             
-            if([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
+            if ([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
                 [account registration:self didEndWithSuccess:NO];
             [self release];
             return;
         }
-    } else if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.Registration"])
+    } else if ([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.Registration"])
     {
         NSString *type = [[packet getType] toString];
         
-        if([type isEqualToString:@"error"])
+        if ([type isEqualToString:@"error"])
         {
             // let SmackXMPPErrorMessagePlugin handle it
             [SmackXMPPErrorMessagePlugin handleXMPPErrorPacket:packet service:[[account connection] getServiceName]];
 
-            if([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
+            if ([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
                 [account registration:self didEndWithSuccess:NO];
 
             [self release];
@@ -274,11 +274,11 @@
 {
     resultForm = [[formController resultForm] retain];
     
-    if([[resultForm getType] isEqualToString:@"cancel"])
+    if ([[resultForm getType] isEqualToString:@"cancel"])
     {
         // user canceled, the server doesn't have to know about that
         [formController release];
-        if([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
+        if ([account respondsToSelector:@selector(registration:didEndWithSuccess:)])
             [account registration:self didEndWithSuccess:NO];
         [self release];
         return;
@@ -289,13 +289,13 @@
     didUnregister = NO;
 
     SmackXFormField *removefield = [resultForm getField:@"http://adiumx.com/smack/remove"];
-    if(removefield)
+    if (removefield)
     {
         JavaIterator *fieldvalueiter = [removefield getValues];
-        if([fieldvalueiter hasNext])
+        if ([fieldvalueiter hasNext])
         {
             NSString *value = [fieldvalueiter next];
-            if([value isEqualToString:@"1"])
+            if ([value isEqualToString:@"1"])
             {
                 // remove has to be the only element we send
                 JavaMap *attr = [SmackCocoaAdapter map];
@@ -306,8 +306,8 @@
             }
         }
     }
-    if(!didUnregister) {
-        if(wasForm)
+    if (!didUnregister) {
+        if (wasForm)
             [reg addExtension:[resultForm getDataFormToSend]];
         else {
             JavaIterator *iter = [resultForm getFields];

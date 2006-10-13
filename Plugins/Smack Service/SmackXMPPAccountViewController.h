@@ -39,11 +39,11 @@
     BOOL useSSL;
 }
 
-- (void)setCurrentJID:(NSString*)jid;
+- (void)setCurrentJID:(NSString *)jid;
 
 - (void)setUseSSL:(BOOL)ssl;
 
-- (void)setJID:(NSString*)jid password:(NSString*)password;
+- (void)setJID:(NSString *)jid password:(NSString *)password;
 
 - (void)createAccount:(id)sender;
 - (void)showAddAccount:(id)sender;

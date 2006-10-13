@@ -64,7 +64,7 @@
     NSMutableDictionary *packetRequest;
 }
 
-- (id)initWithAccount:(SmackXMPPAccount*)a serviceName:(NSString*)s;
+- (id)initWithAccount:(SmackXMPPAccount*)a serviceName:(NSString *)s;
 
 - (IBAction)changeServiceName:(id)sender;
 - (IBAction)openService:(id)sender;
@@ -76,13 +76,13 @@
 
 @implementation SmackXMPPServiceDiscoveryBrowserController
 
-- (id)initWithAccount:(SmackXMPPAccount*)a serviceName:(NSString*)s
+- (id)initWithAccount:(SmackXMPPAccount*)a serviceName:(NSString *)s
 {
-    if((self = [super init]))
+    if ((self = [super init]))
     {
         account = a;
         [NSBundle loadNibNamed:@"SmackXMPPServiceDiscoveryBrowser" owner:self];
-        if(!window) {
+        if (!window) {
             NSLog(@"error loading SmackXMPPServiceDiscoveryBrowser.nib!");
             [self release];
             return nil;
@@ -123,12 +123,12 @@
 - (IBAction)openService:(id)sender
 {
     int row = [outlineview clickedRow];
-    if(row != -1)
+    if (row != -1)
     {
         SmackXDiscoverItem *item = [outlineview itemAtRow:row];
         
         SmackXDiscoverInfo *info = [discoveredItemInfo objectForKey:[NSValue valueWithNonretainedObject:item]];
-        if(!info)
+        if (!info)
         {
             // this shouldn't happen, as we don't allow double-clicking items without info
             NSBeep();
@@ -146,16 +146,16 @@
             NSString *category = [ident getCategory];
             // NSString *type = [ident getType];
             
-            if([category isEqualToString:@"conference"])
+            if ([category isEqualToString:@"conference"])
             {
                 DCJoinChatWindowController *jcwc = [DCJoinChatWindowController joinChatWindow];
                 [jcwc configureForAccount:account];
                 
                 [(SmackXMPPJoinChatViewController*)[jcwc joinChatViewController] setJID:[info getFrom]];
-            } else if([category isEqualToString:@"gateway"])
+            } else if ([category isEqualToString:@"gateway"])
             {
                 [[[SmackXMPPRegistration alloc] initWithAccount:account registerWith:[info getFrom]] autorelease];
-            } else if([category isEqualToString:@"pubsub"])
+            } else if ([category isEqualToString:@"pubsub"])
             {
             } else {
                 // just open a chat with that service, it might actually do something useful :)
@@ -181,7 +181,7 @@
     service = [[servicename stringValue] copy];
     [old release];
     old = node;
-    if([[nodename stringValue] length] > 0)
+    if ([[nodename stringValue] length] > 0)
         node = [[nodename stringValue] copy];
     else
         node = nil;
@@ -199,7 +199,7 @@
     SmackXDiscoverInfo *packet = [SmackCocoaAdapter discoverInfo];
     [packet setTo:((id)item!=(id)[NSNull null])?[item getEntityID]:service];
     NSString *querynode = ((id)item!=(id)[NSNull null])?[item getNode]:node;
-    if(querynode)
+    if (querynode)
         [packet setNode:querynode];
     
     [packetRequest setObject:item forKey:[packet getPacketID]];
@@ -214,7 +214,7 @@
     SmackXDiscoverItems *packet = [SmackCocoaAdapter discoverItems];
     [packet setTo:((id)item!=(id)[NSNull null])?[item getEntityID]:service];
     NSString *querynode = ((id)item!=(id)[NSNull null])?[item getNode]:node;
-    if(querynode)
+    if (querynode)
         [packet setNode:querynode];
     
     [packetRequest setObject:item forKey:[packet getPacketID]];
@@ -227,10 +227,10 @@
 - (void)receivedIQPacket:(NSNotification*)n
 {
     SmackIQ *iq = [[n userInfo] objectForKey:SmackXMPPPacket];
-    if([SmackCocoaAdapter object:iq isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverItems"])
+    if ([SmackCocoaAdapter object:iq isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverItems"])
     {
         SmackXDiscoverItem *baseitem = [packetRequest objectForKey:[iq getPacketID]];
-        if(!baseitem)
+        if (!baseitem)
             return; // we didn't request that node
 
         SmackXDiscoverItems *items = (SmackXDiscoverItems *)iq;
@@ -249,10 +249,10 @@
         [itemarray release];
         
         [packetRequest removeObjectForKey:[iq getPacketID]];
-    } else if([SmackCocoaAdapter object:iq isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverInfo"])
+    } else if ([SmackCocoaAdapter object:iq isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverInfo"])
     {
         SmackXDiscoverItem *baseitem = [packetRequest objectForKey:[iq getPacketID]];
-        if(!baseitem)
+        if (!baseitem)
             return; // we didn't request that node
         
         SmackXDiscoverInfo *info = (SmackXDiscoverInfo*)iq;
@@ -265,7 +265,7 @@
     
     [outlineview reloadData];
     
-    if([packetRequest count] == 0)
+    if ([packetRequest count] == 0)
         [progressindicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:nil waitUntilDone:YES];
 }
 
@@ -277,7 +277,7 @@
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
     SmackXDiscoverInfo *info = [discoveredItemInfo objectForKey:[NSValue valueWithNonretainedObject:item]];
-    if(!info)
+    if (!info)
         return NO;
     return [info containsFeature:@"http://jabber.org/protocol/disco#items"];
 }
@@ -308,24 +308,24 @@
     NSDictionary *style = [NSDictionary dictionaryWithObject:info?[NSColor blackColor]:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
     
     NSString *identifier = [tableColumn identifier];
-    if([identifier isEqualToString:@"name"])
+    if ([identifier isEqualToString:@"name"])
     {
         // there are two names: the one we got while getting the items list, and the one we got from
         // the info discovery. We try to pick the latter if it exists, otherwise the former.
         // It should be the same for all identities, so we just pick the first one.
-        if(!info)
+        if (!info)
             return [[[NSAttributedString alloc] initWithString:[item getName] attributes:style] autorelease];
         JavaIterator *iter = [info getIdentities];
-        if([iter hasNext])
+        if ([iter hasNext])
             return [[[NSAttributedString alloc] initWithString:[[iter next] getName] attributes:style] autorelease];
         return [item getName];
-    } else if([identifier isEqualToString:@"jid"])
+    } else if ([identifier isEqualToString:@"jid"])
         return [[[NSAttributedString alloc] initWithString:[item getEntityID] attributes:style] autorelease];
-    else if([identifier isEqualToString:@"node"])
+    else if ([identifier isEqualToString:@"node"])
         return [[[NSAttributedString alloc] initWithString:[item getNode]?[item getNode]:@"" attributes:style] autorelease];
-    else if([identifier isEqualToString:@"category"])
+    else if ([identifier isEqualToString:@"category"])
     {
-        if(!info)
+        if (!info)
             return [[[NSAttributedString alloc] initWithString:@"N/A" attributes:style] autorelease];
         else
         {
@@ -353,7 +353,7 @@
 
 - (id)initWithAccount:(SmackXMPPAccount*)a
 {
-    if((self = [super init]))
+    if ((self = [super init]))
     {
         account = a;
     }

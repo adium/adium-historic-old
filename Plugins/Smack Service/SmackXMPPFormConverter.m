@@ -17,7 +17,7 @@
 }
 
 - (id)initWithForm:(SmackXForm*)f registered:(BOOL)reg {
-    if((self = [super init])) {
+    if ((self = [super init])) {
         form = [f retain];
         registered = reg;
     }
@@ -80,31 +80,31 @@ static NSString *expandValues(JavaIterator *iter)
         
         NSXMLElement *row = [NSXMLNode elementWithName:@"tr"];
         [table addChild:row];
-        if([field isRequired])
+        if ([field isRequired])
             [row addAttribute:[NSXMLNode attributeWithName:@"class" stringValue:@"required"]];
         
         [row addChild:[NSXMLNode elementWithName:@"th" stringValue:[field getLabel]]];
         
-        if([type isEqualToString:@"text-single"])
+        if ([type isEqualToString:@"text-single"])
             fieldnode = [NSXMLNode elementWithName:@"input" children:nil attributes:[NSArray arrayWithObjects:
                 [NSXMLNode attributeWithName:@"name" stringValue:[field getVariable]],
                 [NSXMLNode attributeWithName:@"title" stringValue:[field getDescription]],
                 [NSXMLNode attributeWithName:@"value" stringValue:expandValues([field getValues])],
                 [NSXMLNode attributeWithName:@"type" stringValue:@"text"],nil]];
-        else if([type isEqualToString:@"text-private"])
+        else if ([type isEqualToString:@"text-private"])
             fieldnode = [NSXMLNode elementWithName:@"input" children:nil attributes:[NSArray arrayWithObjects:
                 [NSXMLNode attributeWithName:@"name" stringValue:[field getVariable]],
                 [NSXMLNode attributeWithName:@"title" stringValue:[field getDescription]],
                 [NSXMLNode attributeWithName:@"value" stringValue:expandValues([field getValues])],
                 [NSXMLNode attributeWithName:@"type" stringValue:@"password"],nil]];
-        else if([type isEqualToString:@"text-multi"])
+        else if ([type isEqualToString:@"text-multi"])
             fieldnode = [NSXMLNode elementWithName:@"textarea" children:[NSArray arrayWithObject:[NSXMLNode textWithStringValue:expandValues([field getValues])]] attributes:[NSArray arrayWithObjects:
                 [NSXMLNode attributeWithName:@"name" stringValue:[field getVariable]],
                 [NSXMLNode attributeWithName:@"cols" stringValue:@"80"],
                 [NSXMLNode attributeWithName:@"rows" stringValue:@"4"],
                 [NSXMLNode attributeWithName:@"title" stringValue:[field getDescription]],
                 nil]];
-        else if([type isEqualToString:@"list-single"])
+        else if ([type isEqualToString:@"list-single"])
         {
             fieldnode = [NSXMLNode elementWithName:@"select" children:nil attributes:[NSArray arrayWithObjects:
                 [NSXMLNode attributeWithName:@"name" stringValue:[field getVariable]],
@@ -114,19 +114,19 @@ static NSString *expandValues(JavaIterator *iter)
             JavaIterator *iter = [field getOptions];
             JavaIterator *valiter = [field getValues];
             NSString *selected = nil;
-            if([valiter hasNext])
+            if ([valiter hasNext])
                 selected = [valiter next];
             
             while([iter hasNext]) {
                 SmackXFormFieldOption *ffo = [iter next];
                 NSXMLElement *option = [NSXMLNode elementWithName:@"option" stringValue:[ffo getLabel]];
                 [option addAttribute:[NSXMLNode attributeWithName:@"value" stringValue:[ffo getValue]]];
-                if([selected isEqualToString:[ffo getValue]])
+                if ([selected isEqualToString:[ffo getValue]])
                     [option addAttribute:[NSXMLNode attributeWithName:@"selected" stringValue:@"selected"]];
                 [fieldnode addChild:option];
             }
         }
-        else if([type isEqualToString:@"list-multi"])
+        else if ([type isEqualToString:@"list-multi"])
         {
             fieldnode = [NSXMLNode elementWithName:@"select" children:nil attributes:[NSArray arrayWithObjects:
                 [NSXMLNode attributeWithName:@"name" stringValue:[field getVariable]],
@@ -145,19 +145,19 @@ static NSString *expandValues(JavaIterator *iter)
                 SmackXFormFieldOption *ffo = [iter next];
                 NSXMLElement *option = [NSXMLNode elementWithName:@"option" stringValue:[ffo getLabel]];
                 [option addAttribute:[NSXMLNode attributeWithName:@"value" stringValue:[ffo getValue]]];
-                if([selected containsObject:[ffo getValue]])
+                if ([selected containsObject:[ffo getValue]])
                     [option addAttribute:[NSXMLNode attributeWithName:@"selected" stringValue:@"selected"]];
                 [fieldnode addChild:option];
                 counter++;
             }
             
             // we only allow a maximum of 10 visible items at the same time
-            if(counter > 10)
+            if (counter > 10)
                 [fieldnode addAttribute:[NSXMLNode attributeWithName:@"size" stringValue:@"10"]];
             else
                 [fieldnode addAttribute:[NSXMLNode attributeWithName:@"size" stringValue:[[NSNumber numberWithInt:counter] stringValue]]];
         }
-        else if([type isEqualToString:@"boolean"])
+        else if ([type isEqualToString:@"boolean"])
         {
             fieldnode = [NSXMLNode elementWithName:@"input" children:nil attributes:[NSArray arrayWithObjects:
                 [NSXMLNode attributeWithName:@"name" stringValue:[field getVariable]],
@@ -165,25 +165,25 @@ static NSString *expandValues(JavaIterator *iter)
                 [NSXMLNode attributeWithName:@"type" stringValue:@"checkbox"],nil]];
             JavaIterator *valiter = [field getValues];
             BOOL selected = NO;
-            if([valiter hasNext])
+            if ([valiter hasNext])
                 selected = [[valiter next] intValue]?YES:NO;
-            if(selected)
+            if (selected)
                 [fieldnode addAttribute:[NSXMLNode attributeWithName:@"checked" stringValue:@"checked"]];
         }
-        else if([type isEqualToString:@"fixed"])
+        else if ([type isEqualToString:@"fixed"])
             fieldnode = [NSXMLNode elementWithName:@"span" stringValue:expandValues([field getValues])];
-        else if([type isEqualToString:@"hidden"])
+        else if ([type isEqualToString:@"hidden"])
             fieldnode = [NSXMLNode elementWithName:@"input" children:nil attributes:[NSArray arrayWithObjects:
                 [NSXMLNode attributeWithName:@"name" stringValue:[field getVariable]],
                 [NSXMLNode attributeWithName:@"value" stringValue:expandValues([field getValues])],
                 [NSXMLNode attributeWithName:@"type" stringValue:@"hidden"],nil]];
-        else if([type isEqualToString:@"jid-single"]) // ### should be some kind of combobox, allowing entering of jabber ids from the local contact list
+        else if ([type isEqualToString:@"jid-single"]) // ### should be some kind of combobox, allowing entering of jabber ids from the local contact list
             fieldnode = [NSXMLNode elementWithName:@"input" children:nil attributes:[NSArray arrayWithObjects:
                 [NSXMLNode attributeWithName:@"name" stringValue:[field getVariable]],
                 [NSXMLNode attributeWithName:@"title" stringValue:[field getDescription]],
                 [NSXMLNode attributeWithName:@"value" stringValue:expandValues([field getValues])],
                 [NSXMLNode attributeWithName:@"type" stringValue:@"text"],nil]];
-        else if([type isEqualToString:@"jid-multi"]) // ### should be some kind of multi-line combobox, allowing entering of jabber ids from the local contact list
+        else if ([type isEqualToString:@"jid-multi"]) // ### should be some kind of multi-line combobox, allowing entering of jabber ids from the local contact list
             fieldnode = [NSXMLNode elementWithName:@"textarea" children:[NSArray arrayWithObject:[NSXMLNode textWithStringValue:expandValues([field getValues])]] attributes:[NSArray arrayWithObjects:
                 [NSXMLNode attributeWithName:@"name" stringValue:[field getVariable]],
                 [NSXMLNode attributeWithName:@"type" stringValue:@"password"],
@@ -192,12 +192,12 @@ static NSString *expandValues(JavaIterator *iter)
                 [NSXMLNode attributeWithName:@"title" stringValue:[field getDescription]],
                 nil]];
 
-        if(fieldnode)
+        if (fieldnode)
             [row addChild:[NSXMLNode elementWithName:@"td" children:[NSArray arrayWithObject:fieldnode] attributes:nil]];
     }
     
     NSXMLElement *row;
-    if(registered) {
+    if (registered) {
         row = [NSXMLNode elementWithName:@"tr"];
         [row addChild:[NSXMLNode elementWithName:@"td" stringValue:AILocalizedString(@"Remove registration","Remove registration")]];
         [row addChild:[NSXMLNode elementWithName:@"td" children:[NSArray arrayWithObject:

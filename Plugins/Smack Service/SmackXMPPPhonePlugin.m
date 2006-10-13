@@ -27,14 +27,14 @@ static JavaClassLoader *classLoader = nil;
 }
 
 - (BOOL)equals:(id)o;
-- (NSString*)name;
+- (NSString *)name;
 
 @end
 
 @protocol SmackPhoneEvent
 
-- (NSString*)getCallID;
-- (NSString*)getDevice;
+- (NSString *)getCallID;
+- (NSString *)getDevice;
 - (SmackPhoneEventStatus*)getEventStatus;
 
 @end
@@ -42,7 +42,7 @@ static JavaClassLoader *classLoader = nil;
 @interface SmackPhoneCall : NSObject {
 }
 
-- (NSString*)getId;
+- (NSString *)getId;
 - (BOOL)isActive;
 
 @end
@@ -58,8 +58,8 @@ static JavaClassLoader *classLoader = nil;
 }
 
 - (SmackPhoneCall*)getCall;
-- (NSString*)getCallerID;
-- (NSString*)getCallerIDName;
+- (NSString *)getCallerID;
+- (NSString *)getCallerIDName;
 - (void)initCall:(SmackPhoneEventDispatcher*)dispatcher;
 
 @end
@@ -76,8 +76,8 @@ static JavaClassLoader *classLoader = nil;
 }
 
 - (SmackPhoneCall*)getCall;
-- (NSString*)getCallerID;
-- (NSString*)getCallerIDName;
+- (NSString *)getCallerID;
+- (NSString *)getCallerIDName;
 - (void)initCall:(SmackPhoneEventDispatcher*)dispatcher;
 
 @end
@@ -89,11 +89,11 @@ static JavaClassLoader *classLoader = nil;
 @interface SmackPhoneClient : NSObject {
 }
 
-- (void)dialByExtension:(NSString*)extension;
-- (void)dialByJID:(NSString*)jid;
-- (void)forward:(SmackPhoneCall*)call :(NSString*)extension;
-- (void)forwardByJID:(SmackPhoneCall*)call :(NSString*)jid;
-- (BOOL)isPhoneEnabled:(NSString*)jid;
+- (void)dialByExtension:(NSString *)extension;
+- (void)dialByJID:(NSString *)jid;
+- (void)forward:(SmackPhoneCall*)call :(NSString *)extension;
+- (void)forwardByJID:(SmackPhoneCall*)call :(NSString *)jid;
+- (BOOL)isPhoneEnabled:(NSString *)jid;
 
 @end
 
@@ -107,7 +107,7 @@ static JavaClassLoader *classLoader = nil;
 @interface SmackPhoneStatusExtension : NSObject <SmackPacketExtension> {
 }
 
-- (NSString*)getStatus;
+- (NSString *)getStatus;
 
 @end
 
@@ -156,7 +156,7 @@ static BOOL registered = NO;
 
 - (id)initWithAccount:(SmackXMPPAccount*)a
 {
-    if((self = [super init]))
+    if ((self = [super init]))
     {
         account = a;
         
@@ -199,7 +199,7 @@ static BOOL registered = NO;
 - (void)delayedSend:(SmackPacket*)packet
 {
     SmackXMPPConnection *connection = [account connection];
-    if(connection) // only do this if the connection didn't fail
+    if (connection) // only do this if the connection didn't fail
         [connection sendPacket:packet];
 }
 
@@ -227,12 +227,12 @@ static BOOL registered = NO;
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    if([inObject account] != account)
+    if ([inObject account] != account)
         return nil;
     NSString *status = [inObject statusObjectForKey:@"XMPPPhoneStatus"];
-    if(!status)
+    if (!status)
         return nil;
-    if([status isEqualToString:@"ON_PHONE"])
+    if ([status isEqualToString:@"ON_PHONE"])
         return [[[NSAttributedString alloc] initWithString:AILocalizedString(@"On the phone","phone status tooltip entry on the phone")] autorelease];
     // Just use the string as is if we don't know it. The proto-JEP doesn't mention any other
     // status than ON_PHONE, but you never know...
@@ -245,9 +245,9 @@ static BOOL registered = NO;
 {
     // try to detect if the server supports the phone service
     SmackIQ *iq = [[notification userInfo] objectForKey:SmackXMPPPacket];
-    if(discoID && [SmackCocoaAdapter object:iq isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverItems"])
+    if (discoID && [SmackCocoaAdapter object:iq isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverItems"])
     {
-        if([[iq getPacketID] isEqualToString:discoID])
+        if ([[iq getPacketID] isEqualToString:discoID])
         {
             [discoID release];
             discoID = nil;
@@ -256,7 +256,7 @@ static BOOL registered = NO;
             while([iter hasNext])
             {
                 SmackXDiscoverItem *item = [iter next];
-                if([[item getName] isEqualToString:@"phone"])
+                if ([[item getName] isEqualToString:@"phone"])
                 {
                     @try {
                         listener = [[SmackCocoaAdapter phoneListenerForConnection:[account connection] delegate:self] retain];
@@ -264,7 +264,7 @@ static BOOL registered = NO;
                         NSLog(@"%@",e);
                         return;
                     }
-                    if(!listener)
+                    if (!listener)
                     {
                         NSLog(@"Smack: Failed creating Phone Listener, phone service disabled.");
                         return;
@@ -273,7 +273,7 @@ static BOOL registered = NO;
                     // the server has phone support, so load the library and GUI for it
                     // this is done that way in order to avoid loading the library and nib when it's not needed
                     [NSBundle loadNibNamed:@"SmackXMPPPhoneControl" owner:self];
-                    if(!window)
+                    if (!window)
                     {
                         NSLog(@"Failed loading SmackXMPPPhoneControl.nib!");
                         [listener release];
@@ -307,10 +307,10 @@ static BOOL registered = NO;
                 }
             }
         }
-    } else if(isSupported && [SmackCocoaAdapter object:iq isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverInfo"])
+    } else if (isSupported && [SmackCocoaAdapter object:iq isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverInfo"])
     {
         // check if that packet applies to us
-        if([[iq getFrom] isEqualToString:phonejid])
+        if ([[iq getFrom] isEqualToString:phonejid])
             [self performSelectorOnMainThread:@selector(receivedServiceDiscoveryForPhone:) withObject:iq waitUntilDone:YES];
     }
 }
@@ -320,7 +320,7 @@ static BOOL registered = NO;
     NSString *jid = [NSString stringWithFormat:@"%@@%@",[iq getNode],[[account UID] jidHost]];
     AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid];
     
-    if(contact)
+    if (contact)
         [contact setStatusObject:[NSNumber numberWithBool:[iq containsFeature:@"http://jivesoftware.com/phone"]] forKey:@"XMPPPhoneSupport" notify:NotifyNow];
 }
 
@@ -330,7 +330,7 @@ static BOOL registered = NO;
     
     // prefilter everything that can be done in this secondary thread to avoid blocking the main thread when possible
 
-    if(![[[packet getType] toString] isEqualToString:@"unavailable"])
+    if (![[[packet getType] toString] isEqualToString:@"unavailable"])
         [self performSelectorOnMainThread:@selector(receivedPresencePacketMainThread:) withObject:n waitUntilDone:YES];
 }
 
@@ -340,13 +340,13 @@ static BOOL registered = NO;
     // the following line is the reason why we have to do this in the main thread
     AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:[[packet getFrom] jidUserHost]];
     
-    if(contact)
+    if (contact)
     {
-        if(isSupported && [[[packet getFrom] jidHost] isEqualToString:[[account UID] jidHost]])
+        if (isSupported && [[[packet getFrom] jidHost] isEqualToString:[[account UID] jidHost]])
         {
             // this phone service only works with people on the same server
             
-            if(![contact statusObjectForKey:@"XMPPPhoneSupport"])
+            if (![contact statusObjectForKey:@"XMPPPhoneSupport"])
             {
                 // we don't know if that user supports the phone service yet, so query the server
                 SmackXDiscoverInfo *info = [SmackCocoaAdapter discoverInfo];
@@ -365,7 +365,7 @@ static BOOL registered = NO;
 {
     NSMutableArray *menuItems = [NSMutableArray array];
     
-    if(isSupported) {
+    if (isSupported) {
         NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Telephone System","Telephone System") action:@selector(showWindow:) keyEquivalent:@""];
         [mitem setTarget:self];
         [menuItems addObject:mitem];
@@ -383,7 +383,7 @@ static BOOL registered = NO;
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact {
     NSMutableArray *menuItems = [NSMutableArray array];
     
-    if(isSupported && [[inContact statusObjectForKey:@"XMPPPhoneSupport"] boolValue])
+    if (isSupported && [[inContact statusObjectForKey:@"XMPPPhoneSupport"] boolValue])
     {
         NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Call","Call") action:@selector(callContact:) keyEquivalent:@""];
         [mitem setTarget:self];
@@ -416,7 +416,7 @@ static BOOL registered = NO;
     [currentCallID release];
     currentCallID = [[event getCallID] retain];
     
-    if([status isEqualToString:@"RING"])
+    if ([status isEqualToString:@"RING"])
     {
         SmackPhoneRingEvent *ringevent = (SmackPhoneRingEvent*)event;
         
@@ -425,7 +425,7 @@ static BOOL registered = NO;
         [eventfield setHidden:NO];
         
         [numberfield setStringValue:[ringevent getCallerID]];
-    } else if([status isEqualToString:@"ON_PHONE"])
+    } else if ([status isEqualToString:@"ON_PHONE"])
     {
         SmackPhoneOnPhoneEvent *onphoneevent = (SmackPhoneOnPhoneEvent*)event;
         
@@ -434,13 +434,13 @@ static BOOL registered = NO;
         [eventfield setHidden:NO];
 
         [numberfield setStringValue:[onphoneevent getCallerID]];
-    } else if([status isEqualToString:@"HANG_UP"])
+    } else if ([status isEqualToString:@"HANG_UP"])
     {
 //        SmackPhoneHangUpEvent *hangupevent = (SmackPhoneHangUpEvent*)event;
         
         [self setCurrentCall:nil];
         [eventfield setHidden:YES];
-    } else if([status isEqualToString:@"DIALED"])
+    } else if ([status isEqualToString:@"DIALED"])
     {
         SmackPhoneDialedEvent *dialedevent = (SmackPhoneDialedEvent*)event;
         
@@ -453,7 +453,7 @@ static BOOL registered = NO;
 - (void)peopleSelectionChanged:(NSNotification*)notification
 {
     NSString *phone = [[peoplePicker selectedValues] lastObject];
-    if(phone)
+    if (phone)
         [numberfield setStringValue:phone];
 }
 
@@ -538,7 +538,7 @@ static BOOL registered = NO;
     [window makeFirstResponder:nil];
     NSString *number = [numberfield stringValue];
     
-    if([number rangeOfString:@"@"].location == NSNotFound)
+    if ([number rangeOfString:@"@"].location == NSNotFound)
         [[listener getPhoneClient] dialByExtension:number];
     else
         [[listener getPhoneClient] dialByJID:number];
@@ -549,7 +549,7 @@ static BOOL registered = NO;
     [window makeFirstResponder:nil];
     NSString *number = [numberfield stringValue];
 
-    if([number rangeOfString:@"@"].location == NSNotFound)
+    if ([number rangeOfString:@"@"].location == NSNotFound)
         [[listener getPhoneClient] dialByExtension:number];
     else
         [[listener getPhoneClient] dialByJID:number];

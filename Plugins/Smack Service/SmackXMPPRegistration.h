@@ -25,7 +25,7 @@
     BOOL didUnregister;
 }
 
-- (id)initWithAccount:(SmackXMPPAccount*)a registerWith:(NSString*)jid;
+- (id)initWithAccount:(SmackXMPPAccount*)a registerWith:(NSString *)jid;
 
 - (SmackXForm*)resultForm;
 

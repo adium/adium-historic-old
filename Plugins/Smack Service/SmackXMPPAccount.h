@@ -23,19 +23,19 @@
 
 - (void)addPlugin:(Class)pluginclass; // for subclassers only!
 
-- (NSString*)hostName;
-- (SmackConnectionConfiguration*)connectionConfiguration;
+- (NSString *)hostName;
+- (SmackConnectionConfiguration *)connectionConfiguration;
 - (SmackXMPPConnection*)connection;
-- (NSString*)resource;
+- (NSString *)resource;
 
 - (void)connected:(SmackXMPPConnection*)conn;
 - (void)disconnected:(SmackXMPPConnection*)conn;
-- (void)connectionError:(NSString*)error;
-- (void)receiveMessagePacket:(SmackMessage*)packet;
-- (void)receivePresencePacket:(SmackPresence*)packet;
+- (void)connectionError:(NSString *)error;
+- (void)receiveMessagePacket:(SmackMessage *)packet;
+- (void)receivePresencePacket:(SmackPresence *)packet;
 - (void)receiveIQPacket:(SmackIQ*)packet;
 
-- (SmackPresence*)getCurrentUserPresence;
+- (SmackPresence *)getCurrentUserPresence;
 - (void)broadcastCurrentPresence;
 - (BOOL)currentlyInvisible;
 
@@ -66,9 +66,9 @@
 
 @interface NSString (JIDAdditions)
 
-- (NSString*)jidUsername;
-- (NSString*)jidHost;
-- (NSString*)jidResource;
-- (NSString*)jidUserHost;
+- (NSString *)jidUsername;
+- (NSString *)jidHost;
+- (NSString *)jidResource;
+- (NSString *)jidUserHost;
 
 @end

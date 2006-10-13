@@ -10,29 +10,9 @@
 #import "SmackXMPPAccount.h"
 #import "SmackCocoaAdapter.h"
 #import "SmackInterfaceDefinitions.h"
-#import "AIAdium.h"
-#import "AIContactController.h"
-#import "AIInterfaceController.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <AIUtilities/AIStringUtilities.h>
-
-#import <objc/Protocol.h>
-
-@interface SmackXMPPAccount (PrivacyPlugin)
-
-//Add a list object to the privacy list (either AIPrivacyTypePermit or AIPrivacyTypeDeny). Return value indicates success.
--(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(AIPrivacyType)type;
-    //Remove a list object from the privacy list (either AIPrivacyTypePermit or AIPrivacyTypeDeny). Return value indicates success
--(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(AIPrivacyType)type;
-	//Return an array of AIListContacts on the specified privacy list.  Returns an empty array if no contacts are on the list.
--(NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type;
-	//Identical to the above method, except it returns an array of strings, not list objects
--(NSArray *)listObjectIDsOnPrivacyList:(AIPrivacyType)type;
-    //Set the privacy options
--(void)setPrivacyOptions:(AIPrivacyOption)option;
-	//Get the privacy options
--(AIPrivacyOption)privacyOptions;
-
-@end
 
 //#define SmackAdiumPrivacyAIPrivacyOptionAllowAll @"http://adiumx.com/plugins/xmpp/AIPrivacyOptionAllowAll"
 #define SmackAdiumPrivacyAIPrivacyOptionDenyAll @"http://adiumx.com/plugins/xmpp/AIPrivacyOptionDenyAll"
@@ -40,31 +20,31 @@
 #define SmackAdiumPrivacyAIPrivacyOptionDenyUsers @"http://adiumx.com/plugins/xmpp/AIPrivacyOptionDenyUsers"
 #define SmackAdiumPrivacyAIPrivacyOptionAllowContactList @"http://adiumx.com/plugins/xmpp/AIPrivacyOptionAllowContactList"
 
-static NSMutableDictionary *privacyplugins;
+static NSMutableDictionary *privacyplugins = nil;
 
 @interface SmackCocoaAdapter (PrivacyPlugin)
 
 + (SmackPrivacyListManager*)privacyListManagerForConnection:(SmackXMPPConnection*)conn;
-+ (SmackPrivacyItem*)privacyItemWithType:(NSString*)type allow:(BOOL)allow order:(int)order;
-+ (JavaVector*)getAllPrivacyListsForConnection:(SmackXMPPConnection*)conn;
++ (SmackPrivacyItem*)privacyItemWithType:(NSString *)type allow:(BOOL)allow order:(int)order;
++ (JavaVector *)getAllPrivacyListsForConnection:(SmackXMPPConnection*)conn;
 
 @end
 
 @implementation SmackCocoaAdapter (PrivacyPlugin)
 
-+ (SmackPrivacyListManager*)privacyListManagerForConnection:(SmackXMPPConnection*)conn
++ (SmackPrivacyListManager *)privacyListManagerForConnection:(SmackXMPPConnection *)conn
 {
-    return [(id)[[self classLoader] loadClass:@"org.jivesoftware.smack.PrivacyListManager"] getInstanceFor:conn];
+    return [(Class <SmackPrivacyListManager>)[[self classLoader] loadClass:@"org.jivesoftware.smack.PrivacyListManager"] getInstanceFor:conn];
 }
 
-+ (SmackPrivacyItem*)privacyItemWithType:(NSString*)type allow:(BOOL)allow order:(int)order
++ (SmackPrivacyItem *)privacyItemWithType:(NSString *)type allow:(BOOL)allow order:(int)order
 {
-    return [[(id)[[self classLoader] loadClass:@"org.jivesoftware.smack.packet.PrivacyItem"] newWithSignature:@"(Ljava/lang/String;ZI)",type,allow,order] autorelease];
+    return [[[[self classLoader] loadClass:@"org.jivesoftware.smack.packet.PrivacyItem"] newWithSignature:@"(Ljava/lang/String;ZI)",type,allow,order] autorelease];
 }
 
-+ (JavaVector*)getAllPrivacyListsForConnection:(SmackXMPPConnection*)conn
++ (JavaVector *)getAllPrivacyListsForConnection:(SmackXMPPConnection *)conn
 {
-    return [(id)[[self classLoader] loadClass:@"net.adium.smackBridge.SmackBridge"] getAllPrivacyLists:conn];
+    return [(Class <AdiumSmackBridge>)[[self classLoader] loadClass:@"net.adium.smackBridge.SmackBridge"] getAllPrivacyLists:conn];
 }
 
 @end
@@ -76,7 +56,7 @@ static NSMutableDictionary *privacyplugins;
 -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(AIPrivacyType)type
 {
     SmackXMPPPrivacyPlugin *plugin = [privacyplugins objectForKey:[NSValue valueWithNonretainedObject:self]];
-    if(plugin)
+    if (plugin)
         return [plugin addListObject:inObject toPrivacyList:type];
     return NO;
 }
@@ -84,7 +64,7 @@ static NSMutableDictionary *privacyplugins;
 -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(AIPrivacyType)type
 {
     SmackXMPPPrivacyPlugin *plugin = [privacyplugins objectForKey:[NSValue valueWithNonretainedObject:self]];
-    if(plugin)
+    if (plugin)
         return [plugin removeListObject:inObject fromPrivacyList:type];
     return NO;
 }
@@ -92,7 +72,7 @@ static NSMutableDictionary *privacyplugins;
 -(NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type
 {
     SmackXMPPPrivacyPlugin *plugin = [privacyplugins objectForKey:[NSValue valueWithNonretainedObject:self]];
-    if(plugin)
+    if (plugin)
         return [plugin listObjectsOnPrivacyList:type];
     return nil;
 }
@@ -100,7 +80,7 @@ static NSMutableDictionary *privacyplugins;
 -(NSArray *)listObjectIDsOnPrivacyList:(AIPrivacyType)type
 {
     SmackXMPPPrivacyPlugin *plugin = [privacyplugins objectForKey:[NSValue valueWithNonretainedObject:self]];
-    if(plugin)
+    if (plugin)
         return [plugin listObjectIDsOnPrivacyList:type];
     return nil;
 }
@@ -108,14 +88,14 @@ static NSMutableDictionary *privacyplugins;
 -(void)setPrivacyOptions:(AIPrivacyOption)option
 {
     SmackXMPPPrivacyPlugin *plugin = [privacyplugins objectForKey:[NSValue valueWithNonretainedObject:self]];
-    if(plugin)
+    if (plugin)
         [plugin setPrivacyOptions:option];
 }
 
 -(AIPrivacyOption)privacyOptions
 {
     SmackXMPPPrivacyPlugin *plugin = [privacyplugins objectForKey:[NSValue valueWithNonretainedObject:self]];
-    if(plugin)
+    if (plugin)
         return [plugin privacyOptions];
     return AIPrivacyOptionUnknown;
 }
@@ -125,9 +105,9 @@ static NSMutableDictionary *privacyplugins;
 @implementation SmackXMPPPrivacyPlugin
 
 - (id)initWithAccount:(SmackXMPPAccount*)a {
-    if((self = [super init])) {
+    if ((self = [super init])) {
         account = a;
-        if(!privacyplugins)
+        if (!privacyplugins)
             privacyplugins = [[NSMutableDictionary alloc] init];
         
         [privacyplugins setObject:self forKey:[NSValue valueWithNonretainedObject:account]];
@@ -138,13 +118,13 @@ static NSMutableDictionary *privacyplugins;
 - (void)dealloc
 {
     [privacyplugins removeObjectForKey:[NSValue valueWithNonretainedObject:account]];
-    if([privacyplugins count] == 0)
-    {
+    if ([privacyplugins count] == 0) {
         [privacyplugins release];
         privacyplugins = nil;
     }
     [privacyLists release];
     [defaultListName release];
+
     [super dealloc];
 }
 
@@ -154,74 +134,81 @@ static NSMutableDictionary *privacyplugins;
     privacyLists = [[NSMutableDictionary alloc] init];
     
     @try {
-        // look for the two permit and deny lists
-        JavaVector *lists = [SmackCocoaAdapter getAllPrivacyListsForConnection:[account connection]];
-        JavaIterator *iter = [lists iterator];
-        
-        while([iter hasNext])
-        {
-            SmackPrivacyList *list = [iter next];
-            if([list isDefaultList])
+        //Look for the two permit and deny lists
+        JavaVector		 *lists = [SmackCocoaAdapter getAllPrivacyListsForConnection:[account connection]];
+        JavaIterator	 *privacyListsIterator = [lists iterator];
+        SmackPrivacyList *list;
+        while (([privacyListsIterator hasNext]) && (list = [privacyListsIterator next])) {
+            if ([list isDefaultList]) {
+				//XXX Woah, scary random retain.  This needs to be documented or fixed. -evands
                 defaultListName = [[list description] retain];
-            
+            }
+
             NSMutableArray *locallist = [[NSMutableArray alloc] init];
 
             // convert to a list of AIListContacts
-            JavaIterator *iter = [[list getItems] iterator];
-            
-            while([iter hasNext])
-            {
-                SmackPrivacyItem *item = [iter next];
-                if(![[item getType] isEqualToString:@"jid"])
+            JavaIterator	 *thisListIterator = [[list getItems] iterator];
+            SmackPrivacyItem *item;
+			
+            while (([thisListIterator hasNext]) && (item = [thisListIterator next])) {
+                if (![[item getType] isEqualToString:@"jid"]) {
                     continue; // ignore all non-jid entries
-                [locallist addObject:[[adium contactController] contactWithService:[account service] account:account UID:[item getValue]]];
+				}
+	
+                [locallist addObject:[[adium contactController] contactWithService:[account service] 
+																		   account:account
+																			   UID:[item getValue]]];
             }
+
             [privacyLists setObject:locallist forKey:[list description]];
+			[locallist release];
         }
+
     } @catch(NSException *e) {
-        [[adium interfaceController] handleErrorMessage:AILocalizedString(@"Error Getting Privacy Lists","Error Getting Privacy Lists") withDescription:[e reason]];
+		//XXX Ugly error message, and it shouldn't be all caps. Fix long before localization occurs!
+        [[adium interfaceController] handleErrorMessage:AILocalizedString(@"Error Getting Privacy Lists", nil) withDescription:[e reason]];
         return;
     }
 }
 
 - (void)uploadPrivacyList:(AIPrivacyType)type
 {
-    if(!privacyLists)
+    if (!privacyLists) {
         [self initializeLists];
+	}
+
     SmackPrivacyListManager *listManager = [SmackCocoaAdapter privacyListManagerForConnection:[account connection]];
 
-    if(type == AIPrivacyTypePermit)
-    {
+    if (type == AIPrivacyTypePermit) {
         JavaVector *list = [SmackCocoaAdapter vector];
 
-        // regenerate permit list from scratch
-        NSEnumerator *e = [[privacyLists objectForKey:SmackAdiumPrivacyAIPrivacyOptionAllowUsers] objectEnumerator];
+        //Regenerate permit list from scratch
+        NSEnumerator *enumerator = [[privacyLists objectForKey:SmackAdiumPrivacyAIPrivacyOptionAllowUsers] objectEnumerator];
         AIListObject *contact;
         int index = 1;
         
-        while((contact = [e nextObject]))
-        {
+        while ((contact = [enumerator nextObject])) {
             SmackPrivacyItem *item = [SmackCocoaAdapter privacyItemWithType:@"jid" allow:YES order:index];
-//            [item setValue:[contact UID]];
             [SmackCocoaAdapter invokeObject:item methodWithParamTypeAndParam:@"setValue",@"java.lang.String",[contact UID],nil];
             [list add:item];
             
             index++;
         }
-        // the fallthrough rule is deny
+
+        //The fallthrough rule is deny
         [list add:[SmackCocoaAdapter privacyItemWithType:nil allow:NO order:index]];
         
         [listManager updatePrivacyList:SmackAdiumPrivacyAIPrivacyOptionAllowUsers :list];
+
     } else {
         JavaVector *list = [SmackCocoaAdapter vector];
         
         // regenerate deny list from scratch
-        NSEnumerator *e = [[privacyLists objectForKey:SmackAdiumPrivacyAIPrivacyOptionDenyUsers] objectEnumerator];
+        NSEnumerator *enumerator = [[privacyLists objectForKey:SmackAdiumPrivacyAIPrivacyOptionDenyUsers] objectEnumerator];
         AIListObject *contact;
         int index = 1;
         
-        while((contact = [e nextObject]))
-        {
+        while ((contact = [enumerator nextObject])) {
             SmackPrivacyItem *item = [SmackCocoaAdapter privacyItemWithType:@"jid" allow:NO order:index];
 //            [item setValue:[contact UID]];
             [SmackCocoaAdapter invokeObject:item methodWithParamTypeAndParam:@"setValue",@"java.lang.String",[contact UID],nil];
@@ -238,8 +225,9 @@ static NSMutableDictionary *privacyplugins;
 //Add a list object to the privacy list (either AIPrivacyTypePermit or AIPrivacyTypeDeny). Return value indicates success.
 -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(AIPrivacyType)type
 {
+#warning Holy busted encapsulation, Batman. What is the story here?
     NSMutableArray *array = (NSMutableArray*)[self listObjectsOnPrivacyList:type];
-    if(![array containsObject:inObject]) {
+    if (![array containsObject:inObject]) {
         [array addObject:inObject];
         @try {
             [self uploadPrivacyList:type];
@@ -256,8 +244,9 @@ static NSMutableDictionary *privacyplugins;
 //Remove a list object from the privacy list (either AIPrivacyTypePermit or AIPrivacyTypeDeny). Return value indicates success
 -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(AIPrivacyType)type
 {
+//XXX As above.
     NSMutableArray *array = (NSMutableArray*)[self listObjectsOnPrivacyList:type];
-    if([array containsObject:inObject]) {
+    if ([array containsObject:inObject]) {
         [array removeObject:inObject];
         @try {
             [self uploadPrivacyList:type];
@@ -274,16 +263,18 @@ static NSMutableDictionary *privacyplugins;
 //Return an array of AIListContacts on the specified privacy list.  Returns an empty array if no contacts are on the list.
 -(NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type
 {
-    if(!privacyLists)
+    if (!privacyLists)
         [self initializeLists];
-    return [privacyLists objectForKey:
-        (type == AIPrivacyTypePermit)?SmackAdiumPrivacyAIPrivacyOptionAllowUsers:SmackAdiumPrivacyAIPrivacyOptionDenyUsers];
+
+    return [privacyLists objectForKey:((type == AIPrivacyTypePermit) ? 
+									   SmackAdiumPrivacyAIPrivacyOptionAllowUsers :
+									   SmackAdiumPrivacyAIPrivacyOptionDenyUsers)];
 }
 
 //Identical to the above method, except it returns an array of strings, not list objects
 -(NSArray *)listObjectIDsOnPrivacyList:(AIPrivacyType)type
 {
-    if(!privacyLists)
+    if (!privacyLists)
         [self initializeLists];
     return [[self listObjectsOnPrivacyList:type] valueForKey:@"UID"];
 }
@@ -291,7 +282,7 @@ static NSMutableDictionary *privacyplugins;
 //Set the privacy options
 -(void)setPrivacyOptions:(AIPrivacyOption)option
 {
-    if(!privacyLists)
+    if (!privacyLists)
         [self initializeLists];
     SmackPrivacyListManager *listManager = [SmackCocoaAdapter privacyListManagerForConnection:[account connection]];
 
@@ -302,7 +293,7 @@ static NSMutableDictionary *privacyplugins;
         case AIPrivacyOptionDenyAll:
             list = [privacyLists objectForKey:SmackAdiumPrivacyAIPrivacyOptionDenyAll];
             
-            if(!list)
+            if (!list)
             {
                 JavaVector *vector = [SmackCocoaAdapter vector];
                 [vector add:[SmackCocoaAdapter privacyItemWithType:nil allow:NO order:1]];
@@ -316,7 +307,7 @@ static NSMutableDictionary *privacyplugins;
         case AIPrivacyOptionAllowUsers:
             list = [privacyLists objectForKey:SmackAdiumPrivacyAIPrivacyOptionAllowUsers];
             
-            if(!list)
+            if (!list)
             {
                 JavaVector *vector = [SmackCocoaAdapter vector];
                 
@@ -332,7 +323,7 @@ static NSMutableDictionary *privacyplugins;
         case AIPrivacyOptionDenyUsers:
             list = [privacyLists objectForKey:SmackAdiumPrivacyAIPrivacyOptionDenyUsers];
             
-            if(!list)
+            if (!list)
             {
                 JavaVector *vector = [SmackCocoaAdapter vector];
                 
@@ -348,7 +339,7 @@ static NSMutableDictionary *privacyplugins;
         case AIPrivacyOptionAllowContactList:
             list = [privacyLists objectForKey:SmackAdiumPrivacyAIPrivacyOptionAllowContactList];
             
-            if(!list)
+            if (!list)
             {
                 JavaVector *vector = [SmackCocoaAdapter vector];
                 
@@ -376,17 +367,17 @@ static NSMutableDictionary *privacyplugins;
 //Get the privacy options
 -(AIPrivacyOption)privacyOptions
 {
-    if(!privacyLists)
+    if (!privacyLists)
         [self initializeLists];
-    if(defaultListName == nil)
+    if (defaultListName == nil)
         return AIPrivacyOptionAllowAll;
-    if([defaultListName isEqualToString:SmackAdiumPrivacyAIPrivacyOptionDenyAll])
+    if ([defaultListName isEqualToString:SmackAdiumPrivacyAIPrivacyOptionDenyAll])
         return AIPrivacyOptionDenyAll;
-    if([defaultListName isEqualToString:SmackAdiumPrivacyAIPrivacyOptionAllowUsers])
+    if ([defaultListName isEqualToString:SmackAdiumPrivacyAIPrivacyOptionAllowUsers])
         return AIPrivacyOptionAllowUsers;
-    if([defaultListName isEqualToString:SmackAdiumPrivacyAIPrivacyOptionDenyUsers])
+    if ([defaultListName isEqualToString:SmackAdiumPrivacyAIPrivacyOptionDenyUsers])
         return AIPrivacyOptionDenyUsers;
-    if([defaultListName isEqualToString:SmackAdiumPrivacyAIPrivacyOptionAllowContactList])
+    if ([defaultListName isEqualToString:SmackAdiumPrivacyAIPrivacyOptionAllowContactList])
         return AIPrivacyOptionAllowContactList;
     
     // might be set by another client?

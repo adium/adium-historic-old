@@ -25,7 +25,7 @@
 + (SmackXVCard*)vCard;
 + (void)setAvatar:(NSData*)avatar forVCard:(SmackXVCard*)vCard;
 + (NSData*)getAvatarForVCard:(SmackXVCard*)vCard;
-+ (SmackVCardUpdateExtension*)VCardUpdateExtensionWithPhotoHash:(NSString*)hash;
++ (SmackVCardUpdateExtension*)VCardUpdateExtensionWithPhotoHash:(NSString *)hash;
 + (BOOL)avatarIsEmpty:(SmackXVCard*)vCard;
 
 @end
@@ -47,7 +47,7 @@
     return [(Class)[[self classLoader] loadClass:@"net.adium.smackBridge.SmackBridge"] getVCardAvatar:vCard];
 }
 
-+ (SmackVCardUpdateExtension*)VCardUpdateExtensionWithPhotoHash:(NSString*)hash
++ (SmackVCardUpdateExtension*)VCardUpdateExtensionWithPhotoHash:(NSString *)hash
 {
     SmackVCardUpdateExtension *ext = [[[self classLoader] loadClass:@"net.adium.smackBridge.VCardUpdateExtension"] newWithSignature:@"()"];
     [ext setPhoto:hash];
@@ -76,7 +76,7 @@
 
 - (id)initWithAccount:(SmackXMPPAccount*)a
 {
-    if((self = [super init]))
+    if ((self = [super init]))
     {
         account = a;
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -122,7 +122,7 @@
 
 - (void)delayedConnected
 {   
-    if([account connection]) { // only do this if the connection hasn't failed
+    if ([account connection]) { // only do this if the connection hasn't failed
         // sync local avatar to the one on the server
         avatarUpdateInProgress = YES;
         [NSThread detachNewThreadSelector:@selector(updateAvatarUploadingNewOne:) toTarget:self withObject:[NSNumber numberWithBool:YES]];
@@ -139,7 +139,7 @@
 
 - (void)complementPresence:(NSNotification*)notification
 {
-    if([resourcesBlockingAvatar count] == 0)
+    if ([resourcesBlockingAvatar count] == 0)
     {
         SmackPresence *presence = [[notification userInfo] objectForKey:SmackXMPPPacket];
         
@@ -152,11 +152,11 @@
 
 - (void)updateStatus:(NSNotification*)notification
 {
-    if([[account statusObjectForKey:@"Online"] boolValue]) {
+    if ([[account statusObjectForKey:@"Online"] boolValue]) {
         NSString *key = [[notification userInfo] objectForKey:SmackXMPPStatusKey];
         // getting/setting the vCard is a blocking operation, so we'll use a secondary thread for it
         // ignore the new avatar if the old one wasn't published yet
-        if(!avatarUpdateInProgress && [key isEqualToString:KEY_USER_ICON])
+        if (!avatarUpdateInProgress && [key isEqualToString:KEY_USER_ICON])
         {
             avatarUpdateInProgress = YES;
             [NSThread detachNewThreadSelector:@selector(updateAvatarUploadingNewOne:) toTarget:self withObject:[NSNumber numberWithBool:YES]];
@@ -172,7 +172,7 @@
         SmackXVCard *vCard = [SmackCocoaAdapter vCard];
         [vCard load:[account connection]];
         
-        if(![flag boolValue])
+        if (![flag boolValue])
         {
             // we don't want to upload ours, just update our own hash
             NSString *newhash = [vCard getAvatarHash];
@@ -184,11 +184,11 @@
             }
         } else {
             // check if the server side hash is equal to the local one
-            if(![[vCard getAvatarHash] isEqualToString:avatarhash])
+            if (![[vCard getAvatarHash] isEqualToString:avatarhash])
             {
                 NSData *data = [account userIconData];
                 
-                if(!data)
+                if (!data)
                 {
                     // handle the case that we don't have any avatar set
                     [SmackCocoaAdapter setAvatar:nil forVCard:vCard];
@@ -209,11 +209,11 @@
                     NSSize avatarsize = [avatarimage size];
                     
                     // scale down the image if it's too large (96x96 is max according to the spec)
-                    if(avatarsize.width > 96.0 || avatarsize.height > 96.0)
+                    if (avatarsize.width > 96.0 || avatarsize.height > 96.0)
                     {
                         NSImage *smallerimage;
                         NSSize newsize;
-                        if(avatarsize.width > avatarsize.height)
+                        if (avatarsize.width > avatarsize.height)
                             smallerimage = [[NSImage alloc] initWithSize:newsize = NSMakeSize(96.0,96.0 * (avatarsize.height / avatarsize.width))];
                         else
                             smallerimage = [[NSImage alloc] initWithSize:newsize = NSMakeSize(96.0 * (avatarsize.width / avatarsize.height),96.0)];
@@ -233,7 +233,7 @@
                     NSString *localhash = [vCard getAvatarHash];
                     
                     // do local and server-side avatars match?
-                    if(![serverhash isEqualToString:localhash])
+                    if (![serverhash isEqualToString:localhash])
                         // otherwise, store on server
                         [vCard save:[account connection]];
                     
@@ -263,19 +263,19 @@
     
     NSString *from = [presence getFrom];
     
-    if([[from jidUserHost] isEqualToString:[[account explicitFormattedUID] jidUserHost]])
+    if ([[from jidUserHost] isEqualToString:[[account explicitFormattedUID] jidUserHost]])
     {
         // See JEP-153 section 4.3 "Multiple Resources" for a description of the magic that
         // has to happen here.
 
         NSString *resource = [from jidResource];
         
-        if([resource isEqualToString:[account resource]])
+        if ([resource isEqualToString:[account resource]])
             return; // ignore presences for ourselves
         
-        if([[[presence getType] toString] isEqualToString:@"unavailable"])
+        if ([[[presence getType] toString] isEqualToString:@"unavailable"])
         {
-            if([resourcesBlockingAvatar count] == 1 && [[resourcesBlockingAvatar lastObject] isEqualToString:resource])
+            if ([resourcesBlockingAvatar count] == 1 && [[resourcesBlockingAvatar lastObject] isEqualToString:resource])
             {
                 [resourcesBlockingAvatar removeObject:resource];
                 // now we're finally able to broadcast our avatar!
@@ -288,7 +288,7 @@
         
         SmackVCardUpdateExtension *ext = [presence getExtension:@"x" :@"vcard-temp:x:update"];
         
-        if(!ext)
+        if (!ext)
             /* If the presence stanza received from the other resource does not contain the update child element,
              * then the other resource does not support vCard-based avatars. That resource could modify the contents
              * of the vCard (including the photo element); because polling for vCard updates is not allowed, the
@@ -303,24 +303,24 @@
              * its own avatar image. Therefore the client can ignore the other resource and continue to broadcast
              * the existing image hash.
              */
-            if(photo)
+            if (photo)
             {
                 /* If the update child element contains an empty photo element, then the other resource has updated
                  * the vCard with an empty BINVAL. Therefore the client MUST retrieve the vCard. If the retrieved
                  * vCard contains a photo element with an empty BINVAL, then the client MUST stop advertising the
                  * old image.
                  */
-                if([photo length] == 0)
+                if ([photo length] == 0)
                 {
                     SmackXVCard *vCard = [SmackCocoaAdapter vCard];
                     [vCard load:[account connection]];
                     
-                    if([SmackCocoaAdapter avatarIsEmpty:vCard])
+                    if ([SmackCocoaAdapter avatarIsEmpty:vCard])
                     {
                         [resourcesBlockingAvatar addObject:resource];
                     }
                 } else @synchronized(self) {
-                    if(![photo isEqualToString:avatarhash])
+                    if (![photo isEqualToString:avatarhash])
                     {
                         /* If the update child element contains a non-empty photo element, then the client MUST compare
                         * the image hashes. If the hashes are identical, then the client can ignore the other resource
@@ -340,25 +340,25 @@
         [NSThread detachNewThreadSelector:@selector(checkVCardPhoto:) toTarget:self withObject:[presence retain]];
 }
 
-- (void)checkVCardPhoto:(SmackPresence*)presence
+- (void)checkVCardPhoto:(SmackPresence *)presence
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     // somebody else's presence, check for vcard photo
     SmackVCardUpdateExtension *ext = [presence getExtension:@"x" :@"vcard-temp:x:update"];
     
-    if(ext)
+    if (ext)
     {
         NSString *uid = [[presence getFrom] jidUserHost];
         NSString *hash = [ext getPhoto];
         AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:uid];
-        if(contact)
+        if (contact)
         {
             NSString *oldhash = [contact preferenceForKey:@"XMPP:IconHash" group:@"XMPP"];
             
-            if(!oldhash || ![hash isEqualToString:oldhash])
+            if (!oldhash || ![hash isEqualToString:oldhash])
             {
                 NSData *avatar;
-                if(!hash || [hash isEqualToString:@""]) // empty avatar?
+                if (!hash || [hash isEqualToString:@""]) // empty avatar?
                     avatar = [NSData data];
                 else {
                     @try {
@@ -375,7 +375,7 @@
                     [contact setPreference:hash forKey:@"XMPP:IconHash" group:@"XMPP"];
                 }
                 
-                if([avatar length] > 0) // don't remove the avatar
+                if ([avatar length] > 0) // don't remove the avatar
                     [self performSelectorOnMainThread:@selector(setAvatar:) withObject:[NSArray arrayWithObjects:avatar,contact,nil] waitUntilDone:YES];
             }
         } else
@@ -538,16 +538,16 @@
 
 - (void)editvCard:(NSMenuItem*)sender
 {
-    if(!editorwindow)
+    if (!editorwindow)
         [NSBundle loadNibNamed:@"SmackXMPPVCardEditor" owner:self];
-    if(!editorwindow)
+    if (!editorwindow)
     {
         NSBeep();
         NSLog(@"Error loading SmackXMPPVCardEditor.nib!");
         return;
     }
     
-    if(!ownvCard)
+    if (!ownvCard)
         [self reloadvCard:nil];
     [editorwindow makeKeyAndOrderFront:nil];
 }
@@ -602,7 +602,7 @@
     [vCardPacket setOrganizationUnit:[ownvCard objectForKey:@"organizationUnit"]];
     [vCardPacket setField:@"DESC" :[ownvCard objectForKey:@"description"]];
     [vCardPacket setField:@"NOTE" :[ownvCard objectForKey:@"notes"]];
-    if([[ownvCard objectForKey:@"birthday"] timeIntervalSinceReferenceDate] != 0)
+    if ([[ownvCard objectForKey:@"birthday"] timeIntervalSinceReferenceDate] != 0)
         [vCardPacket setField:@"BDAY" :[[ownvCard objectForKey:@"birthday"] descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]];
     [vCardPacket save:[account connection]];
 

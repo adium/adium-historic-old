@@ -18,7 +18,7 @@
     [self addPlugin:[SmackGoogleNewMailPlugin class]];
 }
 
-- (NSString*)explicitFormattedUID {
+- (NSString *)explicitFormattedUID {
     return [NSString stringWithFormat:@"%@@gmail.com",[super explicitFormattedUID]];
 }
 

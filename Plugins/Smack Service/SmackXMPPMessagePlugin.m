@@ -28,7 +28,7 @@
 
 - (id)initWithAccount:(SmackXMPPAccount*)a
 {
-    if((self = [super init]))
+    if ((self = [super init]))
     {
         account = a;
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -46,7 +46,7 @@
 - (void)connected:(SmackXMPPConnection*)conn
 {
     SmackXServiceDiscoveryManager *sdm = [SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]];
-    if(![sdm includesFeature:@"http://jabber.org/protocol/xhtml-im"])
+    if (![sdm includesFeature:@"http://jabber.org/protocol/xhtml-im"])
         [sdm addFeature:@"http://jabber.org/protocol/xhtml-im"];
 }
 
@@ -56,7 +56,7 @@
     SmackMessage *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
     NSString *type = [[packet getType] toString];
     
-    if(([type isEqualToString:@"normal"] || [type isEqualToString:@"chat"]) && [packet getBody] != nil)
+    if (([type isEqualToString:@"normal"] || [type isEqualToString:@"chat"]) && [packet getBody] != nil)
     {
         AIChat				*chat;
         AIContentMessage	*messageObject;
@@ -84,19 +84,19 @@
         }
 
         // always update the resource (so we send messages to the one we most recently got a message from)
-        if(resource)
+        if (resource)
             [chat setStatusObject:resource forKey:@"XMPPResource" notify:NotifyLater];
 
         SmackXXHTMLExtension *spe = [packet getExtension:@"html" :@"http://jabber.org/protocol/xhtml-im"];
-        if(spe)
+        if (spe)
         {
             JavaIterator *iter = [spe getBodies];
             NSString *htmlmsg = nil;
-            if(iter && [iter hasNext])
+            if (iter && [iter hasNext])
                 htmlmsg = [iter next];
-            if([htmlmsg length] > 0)
+            if ([htmlmsg length] > 0)
             {
-/*                if(!messageencoder)
+/*                if (!messageencoder)
                 {
                     messageencoder = [[AIHTMLDecoder alloc] init];
                     [messageencoder setGeneratesStrictXHTML:YES];
@@ -114,18 +114,18 @@
                 inMessage = [[param objectForKey:@"result"] retain];
             }
         }
-        if(!inMessage)
+        if (!inMessage)
             inMessage = [[NSAttributedString alloc] initWithString:[packet getBody] attributes:nil];
         
         SmackXDelayInformation *delayinfo = [packet getExtension:@"x" :@"jabber:x:delay"];
         NSDate *date = nil;
-        if(delayinfo)
+        if (delayinfo)
             date = [SmackCocoaAdapter dateFromJavaDate:[delayinfo getStamp]];
         else
             date = [NSDate date];
         
         SmackOutOfBandExtension *oob = [packet getExtension:@"x" :@"jabber:x:oob"];
-        if(oob && [[oob getUrl] length] > 0)
+        if (oob && [[oob getUrl] length] > 0)
             [[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"URL From %@","URL From %@"),[sourceContact displayName]]
                                          withDescription:[NSString stringWithFormat:@"%@\n%@",[oob getDesc]?[oob getDesc]:@"",[oob getUrl]]
                                          withWindowTitle:AILocalizedString(@"URL","URL")
@@ -150,7 +150,7 @@
 
 - (void)openURLRequest:(NSNumber*)result userInfo:(SmackOutOfBandExtension*)oob
 {
-    if([result intValue] == AITextAndButtonsDefaultReturn)
+    if ([result intValue] == AITextAndButtonsDefaultReturn)
         [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[oob getUrl]]];
 }
 
@@ -168,16 +168,16 @@
     SmackMessage *message = [[n userInfo] objectForKey:SmackXMPPPacket];
     
     AIChat *chat = [inMessageObject chat];
-    if([chat isGroupChat])
+    if ([chat isGroupChat])
         return; // ignore group chat messages
     
     NSString *threadid = [chat statusObjectForKey:@"XMPPThreadID"];
     NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
     NSString *type = [chat statusObjectForKey:@"XMPPType"];
-    if(!type)
+    if (!type)
         type = @"chat";
     
-    if(!threadid || [threadid length] == 0) // first message was sent by us
+    if (!threadid || [threadid length] == 0) // first message was sent by us
     {
         [chat setStatusObject:threadid = [chat uniqueChatID] forKey:@"XMPPThreadID" notify:NotifyLater];
         
@@ -187,7 +187,7 @@
     
     NSString *to = [[chat listObject] UID];
     
-    if(resource && [[to jidResource] length] == 0)
+    if (resource && [[to jidResource] length] == 0)
         to = [NSString stringWithFormat:@"%@/%@",to,resource];
     
     [message setTo:to];
@@ -199,7 +199,7 @@
     // add the XHTML representation if the other party supports it
 
     SmackXDiscoverInfo *discoinfo = [[chat listObject] statusObjectForKey:@"XMPP:disco#info"];
-    if(discoinfo && [discoinfo containsFeature:@"http://jabber.org/protocol/xhtml-im"]) {
+    if (discoinfo && [discoinfo containsFeature:@"http://jabber.org/protocol/xhtml-im"]) {
         NSString *xhtmlbody = [inMessageObject encodedMessage];
         
         SmackXXHTMLExtension *xhtml = [SmackCocoaAdapter XHTMLExtension];

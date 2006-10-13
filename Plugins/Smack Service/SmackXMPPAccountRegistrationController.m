@@ -69,17 +69,17 @@
 
 - (void)activate
 {
-    if(!initialized)
+    if (!initialized)
     {
         NSURL *sourceURL = [NSURL URLWithString:SERVERLISTURL];
         NSError *error;
         NSXMLDocument *serverhtml = [[NSXMLDocument alloc] initWithContentsOfURL:sourceURL options:NSXMLDocumentTidyXML error:&error];
         NSXMLDocument *serverlist;
-        if(serverhtml)
+        if (serverhtml)
             serverlist = [[serverhtml objectByApplyingXSLT:SERVERLISTTRANFORM arguments:[NSDictionary dictionary] error:&error] retain];
         [serverhtml release];
         
-        if(!serverlist)
+        if (!serverlist)
         {
             [[[AIObject sharedAdiumInstance] interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Error Parsing %@","Error Parsing %@"), SERVERLISTURL] withDescription:[error localizedDescription]];
         } else {
@@ -105,13 +105,13 @@
                 
                 NSXMLElement *geoloc = [[elem elementsForLocalName:@"geoloc" URI:@"http://jabber.org/protocol/geoloc"] lastObject];
                 
-                if(geoloc)
+                if (geoloc)
                 {
                     NSString *latstr = [[[geoloc elementsForLocalName:@"lat" URI:@"http://jabber.org/protocol/geoloc"] lastObject] stringValue];
-                    if(latstr)
+                    if (latstr)
                     {
                         NSString *lonstr = [[[geoloc elementsForLocalName:@"lon" URI:@"http://jabber.org/protocol/geoloc"] lastObject] stringValue];
-                        if(lonstr)
+                        if (lonstr)
                         {
                             // Calculate the distance between the computer and the xmpp server in km
                             // Note that this assumes that the earth is a perfect sphere
@@ -133,7 +133,7 @@
                 [server setObject:[[elem attributeForName:@"jid"] stringValue] forKey:@"jid"];
                 
                 NSXMLElement *url = [[[[elem elementsForLocalName:@"x" URI:@"jabber:x:oob"] lastObject] elementsForLocalName:@"url" URI:@"jabber:x:oob"] lastObject];
-                if(url)
+                if (url)
                     [server setObject:[NSURL URLWithString:[url stringValue]] forKey:@"url"];
                 
                 [self addObject:server];
@@ -146,7 +146,7 @@
             
             [self setSelectionIndex:0];
         }
-        if([webview respondsToSelector:@selector(setDrawsBackground:)])
+        if ([webview respondsToSelector:@selector(setDrawsBackground:)])
             [webview setDrawsBackground:NO];
 
         initialized = YES;
@@ -164,7 +164,7 @@
     NSXMLElement *server = [[serverlist_root elementsForName:@"item"] objectAtIndex:[[notification object] selectedRow]];
     [serverField setStringValue:[[server attributeForName:@"jid"] stringValue]];
     NSXMLElement *active = [[server elementsForName:@"active"] lastObject];
-    if(!active)
+    if (!active)
         [portField setStringValue:@""];
     else
         [portField setStringValue:[[active attributeForName:@"port"] stringValue]];
@@ -173,7 +173,7 @@
 
 #pragma mark Connection stuff
 
-- (SmackConnectionConfiguration*)connectionConfiguration {
+- (SmackConnectionConfiguration *)connectionConfiguration {
     NSString *host = [serverField stringValue];
     int portnum = ([[portField stringValue] length]==0)?5222:[portField intValue];
     
@@ -183,17 +183,17 @@
     
     int srv_code;
     
-    if(query != NULL && (srv_code = ruli_sync_srv_code(query)) == 0) {
+    if (query != NULL && (srv_code = ruli_sync_srv_code(query)) == 0) {
         ruli_list_t *list = ruli_sync_srv_list(query);
         // we should use some kind of round-robbin to try the other results from this query
         
-        if(ruli_list_size(list) > 0) {
+        if (ruli_list_size(list) > 0) {
             ruli_srv_entry_t *srventry = ruli_list_get(list,0);
             
             char dname[RULI_LIMIT_DNAME_TEXT_BUFSZ];
             int dname_length;
             
-            if(ruli_dname_decode(dname, RULI_LIMIT_DNAME_TEXT_BUFSZ, &dname_length, srventry->target, srventry->target_len) == RULI_TXT_OK) {
+            if (ruli_dname_decode(dname, RULI_LIMIT_DNAME_TEXT_BUFSZ, &dname_length, srventry->target, srventry->target_len) == RULI_TXT_OK) {
                 host = [[[NSString alloc] initWithBytes:dname length:dname_length encoding:NSASCIIStringEncoding] autorelease];
                 portnum = srventry->port;
             } else
@@ -251,7 +251,7 @@
 
 - (void)registration:(SmackXMPPRegistration*)reg didEndWithSuccess:(BOOL)success
 {
-    if(success)
+    if (success)
     {
         SmackXForm *resultForm = [reg resultForm];
         NSString *username = [[[resultForm getField:@"username"] getValues] next];
@@ -273,7 +273,7 @@
     }
 }
 
-- (NSString*)explicitFormattedUID
+- (NSString *)explicitFormattedUID
 {
     return [NSString stringWithFormat:AILocalizedString(@"<Server %@>","<Server %@>"),[serverField stringValue]];
 }
@@ -284,7 +284,7 @@
 
     connection = [conn retain];
 
-    if(![[conn getAccountManager] supportsAccountCreation])
+    if (![[conn getAccountManager] supportsAccountCreation])
     {
         [[[AIObject sharedAdiumInstance] interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"The Server %@ Does Not Support Account Creation From Adium","The Server %@ Does Not Support Account Creation From Adium"),[conn getServiceName]] withDescription:AILocalizedString(@"You might want to visit the homepage (some servers allow account creation only from a web page) or use another server.","You might want to visit the homepage or use another server.")];
         [conn close];
@@ -316,7 +316,7 @@
     errorPlugin = nil;
 }
 
-- (void)connectionError:(NSString*)error
+- (void)connectionError:(NSString *)error
 {
     [progressIndicator stopAnimation:nil];
 
@@ -333,14 +333,14 @@
     [tabview selectTabViewItemWithIdentifier:@"createnew1"];
 }
 
-- (void)receiveMessagePacket:(SmackMessage*)packet
+- (void)receiveMessagePacket:(SmackMessage *)packet
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPMessagePacketReceivedNotification
                                                         object:self
                                                       userInfo:[NSDictionary dictionaryWithObject:packet forKey:SmackXMPPPacket]];
 }
 
-- (void)receivePresencePacket:(SmackPresence*)packet
+- (void)receivePresencePacket:(SmackPresence *)packet
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPPresencePacketReceivedNotification
                                                         object:self

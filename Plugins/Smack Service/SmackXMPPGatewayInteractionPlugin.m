@@ -21,7 +21,7 @@
 
 - (id)initWithAccount:(SmackXMPPAccount*)a
 {
-    if((self = [super init]))
+    if ((self = [super init]))
     {
         account = a;
     }
@@ -30,7 +30,7 @@
 
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact
 {
-    if(![inContact statusObjectForKey:@"XMPPSubscriptionType"])
+    if (![inContact statusObjectForKey:@"XMPPSubscriptionType"])
         return nil; // not a contact from our contact list (might be groupchat)
 
     NSMutableArray *menuItems = [NSMutableArray array];
@@ -38,7 +38,7 @@
     // we assume that gateways are contacts on the list that don't contain an '@' sign
     // the JEP doesn't specify it, but I can't see any other way to find them when they're
     // offline
-    if([[inContact UID] rangeOfString:@"@" options:NSLiteralSearch].location == NSNotFound)
+    if ([[inContact UID] rangeOfString:@"@" options:NSLiteralSearch].location == NSNotFound)
     {
         
         NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Log In","Log In (gateway)") action:@selector(logIn:) keyEquivalent:@""];

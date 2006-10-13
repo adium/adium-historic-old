@@ -32,7 +32,7 @@
 @interface SmackCocoaAdapter (rosterAdditions)
 + (SmackXMPPRosterPluginListener *)rosterPluginListenerWithDelegate:(id)delegate;
 + (SmackXDiscoverInfo*)discoverInfo;
-+ (SmackRosterSubscriptionMode*)rosterSubscriptionModeWithName:(NSString*)mode;
++ (SmackRosterSubscriptionMode*)rosterSubscriptionModeWithName:(NSString *)mode;
 @end
 
 @implementation SmackCocoaAdapter (rosterAdditions)
@@ -46,7 +46,7 @@
     return [[[[[self classLoader] loadClass:@"org.jivesoftware.smackx.packet.DiscoverInfo"] alloc] init] autorelease];
 }
 
-+ (SmackRosterSubscriptionMode *)rosterSubscriptionModeWithName:(NSString*)mode
++ (SmackRosterSubscriptionMode *)rosterSubscriptionModeWithName:(NSString *)mode
 {
     return [(Class <SmackRosterSubscriptionMode>)[[self classLoader] loadClass:@"org.jivesoftware.smack.Roster$SubscriptionMode"] valueOf:mode];
 }
@@ -83,16 +83,16 @@
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
     NSString *type = [inObject statusObjectForKey:@"XMPPSubscriptionType"];
-    if(type)
+    if (type)
     {
         // this may seem weird, but it's required for localization
-        if([type isEqualToString:@"none"])
+        if ([type isEqualToString:@"none"])
             type = AILocalizedString(@"None","subscription type");
-        else if([type isEqualToString:@"both"])
+        else if ([type isEqualToString:@"both"])
             type = AILocalizedString(@"Both","subscription type");
-        else if([type isEqualToString:@"from"])
+        else if ([type isEqualToString:@"from"])
             type = AILocalizedString(@"From","subscription type");
-        else if([type isEqualToString:@"to"])
+        else if ([type isEqualToString:@"to"])
             type = AILocalizedString(@"To","subscription type");
 
         return [[[NSAttributedString alloc] initWithString:type] autorelease];
@@ -112,7 +112,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
 
 - (id)initWithAccount:(SmackXMPPAccount*)a
 {
-    if((self = [super init]))
+    if ((self = [super init]))
     {
         account = a;
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -128,7 +128,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
                                                      name:@"SmackXMPPAccountSubscriptionModeUpdated"
                                                    object:account];
         services = [[NSMutableArray alloc] init];
-        if(!subscriptiontypeplugin)
+        if (!subscriptiontypeplugin)
             subscriptiontypeplugin = [[SmackXMPPSubscriptionTypeTooltipPlugin alloc] init];
         else
             [subscriptiontypeplugin retain];
@@ -194,7 +194,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
 {
 	if ([inObject isKindOfClass:[SmackListContact class]] && [(SmackListContact*)inObject account] == account) {
         AIListContact *contact = [(SmackListContact*)inObject preferredContact];
-        if(contact && [[[contact UID] jidResource] length] > 0)
+        if (contact && [[[contact UID] jidResource] length] > 0)
             return AILocalizedString(@"Resources",nil);
 	}
 	return nil;
@@ -226,7 +226,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
         // this is not really a valid assumption, but stpeter confirmed that there's no
         // "proper" way to handle that for services that are offline (and thus don't
         // respond to disco#info).
-        if([jid rangeOfString:@"@"].location == NSNotFound)
+        if ([jid rangeOfString:@"@"].location == NSNotFound)
         {
             AIListContact *contact = [[adium contactController] contactWithService:[account service] account:account UID:jid];
             [contact setDisplayName:[entry getName]];
@@ -238,7 +238,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
         } else {
             SmackListContact *listContact = (SmackListContact*)[[adium contactController] contactWithService:[account service] account:account UID:jid usingClass:[SmackListContact class]];
             
-            if(![[listContact formattedUID] isEqualToString:jid])
+            if (![[listContact formattedUID] isEqualToString:jid])
                 [listContact setFormattedUID:jid notify:NotifyLater];
             
             [listContact setStatusObject:type forKey:@"XMPPSubscriptionType" notify:NotifyLater];
@@ -249,19 +249,19 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
             // to be in the first group on the list. XXX -> Adium folks, add this feature!
             JavaIterator *iter2;
             NSString *storedgroupname = [listContact remoteGroupName];
-            if(storedgroupname) {
+            if (storedgroupname) {
                 iter2 = [[entry getGroups] iterator];
                 while([iter2 hasNext]) {
                     SmackRosterGroup *group = [iter2 next];
-                    if([storedgroupname isEqualToString:[group getName]])
+                    if ([storedgroupname isEqualToString:[group getName]])
                         break;
                 }
-                if(![iter2 hasNext])
+                if (![iter2 hasNext])
                     storedgroupname = nil;
             }
-            if(!storedgroupname) {
+            if (!storedgroupname) {
                 iter2 = [[entry getGroups] iterator];
-                if([iter2 hasNext])
+                if ([iter2 hasNext])
                     [listContact setRemoteGroupName:[[iter2 next] getName]];
                 else
                     [listContact setRemoteGroupName:AILocalizedString(@"Unfiled Entries","group for entries without a group")];
@@ -269,7 +269,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
             [account setListContact:listContact toAlias:[entry getName]];
         }
     }
-    if(servicechange)
+    if (servicechange)
         // reload accounts menu
         [[adium notificationCenter] postNotificationName:Account_ListChanged
                                                   object:nil
@@ -289,7 +289,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
         SmackRosterEntry *entry = [roster getEntry:jid];
         NSString *type = [[entry getType] toString];
         
-        if([jid rangeOfString:@"@"].location == NSNotFound)
+        if ([jid rangeOfString:@"@"].location == NSNotFound)
         {
             // it's a service!
             AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid];
@@ -310,23 +310,23 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
             // to be in the first group on the list. XXX -> Adium folks, add this feature!
             JavaIterator *iter2 = [[entry getGroups] iterator];
             NSString *storedgroupname = [listContact remoteGroupName];
-            if(storedgroupname) {
+            if (storedgroupname) {
                 while([iter2 hasNext]) {
                     SmackRosterGroup *group = [iter2 next];
-                    if([storedgroupname isEqualToString:[group getName]])
+                    if ([storedgroupname isEqualToString:[group getName]])
                         break;
                 }
-                if(![iter2 hasNext])
+                if (![iter2 hasNext])
                     storedgroupname = nil;
             }
-            if(!storedgroupname) {
+            if (!storedgroupname) {
                 iter2 = [[entry getGroups] iterator];
                 AIListGroup *group = [[adium contactController] groupWithUID:[iter2 hasNext]?[[iter2 next] getName]:AILocalizedString(@"Unfiled Entries","group for entries without a group")];
                 [[adium contactController] addContacts:[NSArray arrayWithObject:listContact] toGroup:group];
             }
         }
     }
-    if(servicechange)
+    if (servicechange)
         // reload accounts menu
         [[adium notificationCenter] postNotificationName:Account_ListChanged
                                                   object:nil
@@ -347,7 +347,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
     while([iter hasNext]) {
         NSString *jid = [iter next];
         
-        if([jid rangeOfString:@"@"].location == NSNotFound) {
+        if ([jid rangeOfString:@"@"].location == NSNotFound) {
             //It's a service!
             AIListContact *contact;
             
@@ -382,7 +382,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
 	}
 }
 
-- (void)setXMPPRosterPresenceChanged:(NSString*)XMPPAddress {
+- (void)setXMPPRosterPresenceChanged:(NSString *)XMPPAddress {
     SmackPresence *presence = [roster getPresenceResource:XMPPAddress]; // might be nil, but that's handled correctly by NSArray
     
     [self performSelectorOnMainThread:@selector(XMPPRosterPresenceChangedMainThread:) withObject:[NSArray arrayWithObjects:XMPPAddress,roster,presence,nil] waitUntilDone:YES];
@@ -392,7 +392,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
     NSString *XMPPAddress = [params objectAtIndex:0];
     
     SmackPresence *presence = nil;
-    if([params count] > 2)
+    if ([params count] > 2)
         presence = [params objectAtIndex:2];
     // otherwise the resource has gone offline
     // XXX to Smack: I want that offline-message! There's no way to retrieve that right now.
@@ -406,13 +406,13 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
     SmackListContact *rosterContact = (SmackListContact*)[[adium contactController] existingContactWithService:[account service] account:account UID:jid];
     
     NSMenuItem *mitem = [rosterContact statusObjectForKey:@"XMPPMenuItem"];
-    if(mitem)
+    if (mitem)
     {
         // this contact is in some menu and not the contact list
         // this means that we only need the online/offline status
         // plus we have to update the menu item's image
         
-        if(presence == NULL)
+        if (presence == NULL)
             [rosterContact setOnline:NO
                               notify:NotifyNow
                             silently:NO];
@@ -432,39 +432,39 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
         return;
     }
     
-    if(!rosterContact || ![rosterContact isKindOfClass:[SmackListContact class]])
+    if (!rosterContact || ![rosterContact isKindOfClass:[SmackListContact class]])
         return; // ignore presence information for people not on our contact list (might want to add that later for chats to people not on the contact list)
 
     AIListContact *resourceObject;
     
-    if([jid isEqualToString:XMPPAddress])
+    if ([jid isEqualToString:XMPPAddress])
         resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:[XMPPAddress stringByAppendingString:@"/"]];
     else
         resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:XMPPAddress];
 
     AIStatusType statustype = AIOfflineStatusType;
     
-    if(!presence)
+    if (!presence)
         statustype = AIOfflineStatusType;
-    else if([type isEqualToString:@"available"]) {
-        if(!mode || [mode isEqualToString:@"available"] || [mode isEqualToString:@"chat"])
+    else if ([type isEqualToString:@"available"]) {
+        if (!mode || [mode isEqualToString:@"available"] || [mode isEqualToString:@"chat"])
             statustype = AIAvailableStatusType;
         else
             statustype = AIAwayStatusType;
     }
     
 	if (statustype != AIOfflineStatusType) {
-		if(![rosterContact containsObject:resourceObject])
+		if (![rosterContact containsObject:resourceObject])
 			[rosterContact addObject:resourceObject];
         
-        if(![[resourceObject statusObjectForKey:@"Online"] boolValue])
+        if (![[resourceObject statusObjectForKey:@"Online"] boolValue])
         {
             // this resource has gone online right now, let's ask it for disco#info
             SmackXDiscoverInfo *dinfo = [SmackCocoaAdapter discoverInfo];
             [dinfo setTo:XMPPAddress];
             [[account connection] sendPacket:dinfo];
         }
-	} else if([rosterContact containsObject:resourceObject])
+	} else if ([rosterContact containsObject:resourceObject])
 			[rosterContact removeObject:resourceObject];
 	
     
@@ -474,7 +474,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
     [resourceObject setStatusObject:[NSNumber numberWithInt:priority] forKey:@"XMPPPriority" notify:NotifyNow];
     
     [resourceObject setStatusWithName:mode statusType:statustype notify:NotifyNow];
-    if(status) {
+    if (status) {
         NSAttributedString *statusMessage = [[NSAttributedString alloc] initWithString:status attributes:nil];
         [resourceObject setStatusMessage:statusMessage notify:NotifyNow];
         [statusMessage release];
@@ -491,21 +491,21 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
     [self performSelectorOnMainThread:@selector(receivedPresencePacketMainThread:) withObject:[[n userInfo] objectForKey:SmackXMPPPacket] waitUntilDone:YES];
 }
 
-- (void)receivedPresencePacketMainThread:(SmackPresence*)presence {
+- (void)receivedPresencePacketMainThread:(SmackPresence *)presence {
     NSString *jidWithResource = [presence getFrom];
     NSString *jid = [jidWithResource jidUserHost];
     NSString *type = [[presence getType] toString];
     NSString *status = [presence getStatus];
     
-    if([type isEqualToString:@"unavailable"]) {
+    if ([type isEqualToString:@"unavailable"]) {
         // being unavailable is handled by -XMPPRosterPresenceChangedMainThread:, so we only set the status string here
         AIListContact *resourceObject;
-        if([jidWithResource isEqualToString:jid])
+        if ([jidWithResource isEqualToString:jid])
             resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:[jidWithResource stringByAppendingString:@"/"]];
         else
             resourceObject = [[adium contactController] contactWithService:[account service] account:account UID:jidWithResource];
-        if(resourceObject) {
-            if(status) {
+        if (resourceObject) {
+            if (status) {
                 NSAttributedString *statusMessage = [[NSAttributedString alloc] initWithString:status attributes:nil];
                 [resourceObject setStatusMessage:statusMessage notify:NotifyNow];
                 [statusMessage release];
@@ -515,12 +515,12 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
             //Apply the change
             [resourceObject notifyOfChangedStatusSilently:[account silentAndDelayed]];
         }
-    } else if([type isEqualToString:@"error"]) {
+    } else if ([type isEqualToString:@"error"]) {
         AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:jid];
-        if(contact) // only handle contacts we actually know
+        if (contact) // only handle contacts we actually know
         {
             SmackXMPPError *error = [presence getError];
-            if(error)
+            if (error)
             {
                 int code = [error getCode];
                 [[adium interfaceController] displayQuestion:[NSString stringWithFormat:AILocalizedString(@"Error for contact %@","presence type error"),jid]
@@ -534,18 +534,18 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
                                                                                userInfo:contact];
             }
         }
-    } else if([[account preferenceForKey:@"subscriptions" group:GROUP_ACCOUNT_STATUS] intValue] == 0)
+    } else if ([[account preferenceForKey:@"subscriptions" group:GROUP_ACCOUNT_STATUS] intValue] == 0)
     {
         // we only care about the packets if the subscription is set to ask user
-        if([type isEqualToString:@"subscribe"]) {
+        if ([type isEqualToString:@"subscribe"]) {
             [[adium contactController] showAuthorizationRequestWithDict:[NSDictionary dictionaryWithObjectsAndKeys:
                 jid, @"Remote Name",
                 nil] forAccount:account];
-        } else if([type isEqualToString:@"subscribed"]) {
+        } else if ([type isEqualToString:@"subscribed"]) {
             [[adium interfaceController] handleMessage:AILocalizedString(@"You Were Authorized!","You Were Authorized!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has authorized you to see his/her current status.","%@ has authorized you to see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
-        } else if([type isEqualToString:@"unsubscribe"]) {
+        } else if ([type isEqualToString:@"unsubscribe"]) {
             [[adium interfaceController] handleMessage:AILocalizedString(@"Subscription Removed!","Subscription Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed you from his/her contact list. He/She will no longer see your current status.","%@ has removed you from his/her contact list. He/She will no longer see your current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
-        } else if([type isEqualToString:@"unsubscribed"]) {
+        } else if ([type isEqualToString:@"unsubscribed"]) {
             [[adium interfaceController] handleMessage:AILocalizedString(@"Authorization Removed!","Authorization Removed!") withDescription:[NSString stringWithFormat:AILocalizedString(@"%@ has removed your authorization. You will no longer see his/her current status.","%@ has removed your authorization. You will no longer see his/her current status."),jid] withWindowTitle:AILocalizedString(@"Notice","Notice")];
         }
     }
@@ -553,7 +553,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
 
 - (void)removeContactAfterError:(NSNumber*)resultCode contact:(AIListContact*)contact
 {
-    if([resultCode intValue] == AITextAndButtonsDefaultReturn)
+    if ([resultCode intValue] == AITextAndButtonsDefaultReturn)
     {
         [[adium contactController] removeListObjects:[NSArray arrayWithObject:contact]];
 //        [account removeContacts:[NSArray arrayWithObject:contact]];
@@ -563,7 +563,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
 - (void)receivedIQPacket:(NSNotification*)n {
     SmackIQ *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
     
-    if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverInfo"])
+    if ([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smackx.packet.DiscoverInfo"])
         [self performSelectorOnMainThread:@selector(receivedIQPacketMainThread:) withObject:packet waitUntilDone:YES];
 }
 
@@ -572,13 +572,13 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
     
     AIListContact *resourceObject = [[adium contactController] existingContactWithService:[account service] account:account UID:[dinfo getFrom]];
     
-    if(!resourceObject)
+    if (!resourceObject)
         return; // unknown object, ignore
     
     while([iter hasNext])
     {
         SmackXDiscoverInfoIdentity *identity = [iter next];
-        if([[identity getCategory] isEqualToString:@"client"] && ([[identity getType] isEqualToString:@"handheld"] || [[identity getType] isEqualToString:@"phone"]))
+        if ([[identity getCategory] isEqualToString:@"client"] && ([[identity getType] isEqualToString:@"handheld"] || [[identity getType] isEqualToString:@"phone"]))
         {
             [resourceObject setIsMobile:YES notify:NotifyLater];
             break;
@@ -623,7 +623,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
     {
         // cache in list contact
         NSMenuItem *mitem = [service statusObjectForKey:@"XMPPMenuItem"];
-        if(!mitem)
+        if (!mitem)
         {
             mitem = [[NSMenuItem alloc] initWithTitle:[service displayName] action:nil keyEquivalent:@""];
             NSMenu *submenu = [[NSMenu alloc] initWithTitle:[service displayName]];
@@ -651,7 +651,7 @@ static SmackXMPPSubscriptionTypeTooltipPlugin *subscriptiontypeplugin = nil;
 #pragma mark Context Menu for Entries
 
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact {
-    if(![inContact statusObjectForKey:@"XMPPSubscriptionType"])
+    if (![inContact statusObjectForKey:@"XMPPSubscriptionType"])
         return nil; // not a contact from our contact list (might be groupchat)
     
     NSMutableArray *menuItems = [NSMutableArray array];

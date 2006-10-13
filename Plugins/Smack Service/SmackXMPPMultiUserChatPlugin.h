@@ -35,6 +35,6 @@
     IBOutlet NSTextField *passwordField;
 }
 
-- (void)setJID:(NSString*)jid; // chatroom@host/nick
+- (void)setJID:(NSString *)jid; // chatroom@host/nick
 
 @end

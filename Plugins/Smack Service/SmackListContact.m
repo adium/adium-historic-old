@@ -18,7 +18,7 @@
 @implementation SmackListContact
 
 - (id)initWithUID:(NSString *)inUID service:(AIService *)inService {
-    if((self = [super initWithUID:inUID service:inService])) {
+    if ((self = [super initWithUID:inUID service:inService])) {
 		bogusContact = [[adium contactController] contactWithService:inService account:[self account] UID:inUID usingClass:[AIListContact class]];
 		[bogusContact setContainingObject:self];
 		[bogusContact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:NO];
@@ -57,7 +57,7 @@
     AIListContact *contact;
     while((contact = [e nextObject])) {
         int c_prio = [[contact statusObjectForKey:@"XMPPPriority"] intValue];
-        if(priority < c_prio) {
+        if (priority < c_prio) {
             bestcontact = contact;
             priority = c_prio;
         }
@@ -154,7 +154,7 @@
 			[result appendAttributedString:temp];
 			[temp release];
 			
-			if([contact contactListStatusMessage])
+			if ([contact contactListStatusMessage])
 				[result appendAttributedString:[contact contactListStatusMessage]];
 
 			temp = [[NSAttributedString alloc] initWithString:@"\n" attributes:nil];
@@ -192,12 +192,12 @@
             
             [entryString appendString:@" "]; // some space between the icon and the text looks better
             
-            if([resource length] > 0)
+            if ([resource length] > 0)
                 [entryString appendString:[[contact UID] jidResource]];
             else
                 [entryString appendString:AILocalizedString(@"N/A","empty resource placeholder")];
             
-            if(statusString && [statusString length] > 0)
+            if (statusString && [statusString length] > 0)
             {
                 [entryString appendString:@": "];
                 [entry appendAttributedString:statusString];
@@ -220,7 +220,7 @@
     return [[self preferredContact] contactListStatusMessage];
 }
 
-- (NSString*)statusMessageString
+- (NSString *)statusMessageString
 {
 //    NSLog(@"statusMessageString = %@", [[[self preferredContact] contactListStatusMessage] string]);
     return [[self statusMessage] string];

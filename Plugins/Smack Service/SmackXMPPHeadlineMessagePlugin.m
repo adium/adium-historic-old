@@ -21,13 +21,13 @@
 
 - (id)initWithAccount:(SmackXMPPAccount*)a
 {
-    if((self = [super init]))
+    if ((self = [super init]))
     {
         account = a;
         
         headlines = [[NSMutableArray alloc] init];
         [NSBundle loadNibNamed:@"SmackXMPPHeadlinesViewer" owner:self];
-        if(!window)
+        if (!window)
         {
             NSLog(@"Failed loading SmackXMPPHeadlinesViewer.nib!");
             [self release];
@@ -69,16 +69,16 @@
 {
     SmackMessage *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
     
-    if([[[packet getType] toString] isEqualToString:@"headline"])
+    if ([[[packet getType] toString] isEqualToString:@"headline"])
         [self performSelectorOnMainThread:@selector(receivedHeadlinePacket:) withObject:packet waitUntilDone:NO];
 }
 
-- (void)receivedHeadlinePacket:(SmackMessage*)packet
+- (void)receivedHeadlinePacket:(SmackMessage *)packet
 {
     // date
     SmackXDelayInformation *delayinfo = [packet getExtension:@"x" :@"jabber:x:delay"];
     NSDate *date = nil;
-    if(delayinfo)
+    if (delayinfo)
         date = [SmackCocoaAdapter dateFromJavaDate:[delayinfo getStamp]];
     else
         date = [NSDate date];
@@ -86,13 +86,13 @@
     // text
     NSAttributedString  *inMessage = nil;
     SmackXXHTMLExtension *spe = [packet getExtension:@"html" :@"http://jabber.org/protocol/xhtml-im"];
-    if(spe)
+    if (spe)
     {
         JavaIterator *iter = [spe getBodies];
         NSString *htmlmsg = nil;
-        if(iter && [iter hasNext])
+        if (iter && [iter hasNext])
             htmlmsg = [iter next];
-        if([htmlmsg length] > 0)
+        if ([htmlmsg length] > 0)
         {
             inMessage = [[NSMutableAttributedString alloc] initWithHTML:[[NSString stringWithFormat:@"<html>%@</html>",htmlmsg] dataUsingEncoding:NSUnicodeStringEncoding]
                                                                 options:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:NSUnicodeStringEncoding] forKey:NSCharacterEncodingDocumentOption]
@@ -101,7 +101,7 @@
             // ignore font settings, since that might mess with the formatting of the HTML (bold, italics, etc)
         }
     }
-    if(!inMessage)
+    if (!inMessage)
         inMessage = [[NSAttributedString alloc] initWithString:[packet getBody] attributes:messagestyle];
     
     AIListContact *contact = [[adium contactController] contactWithService:[account service] account:account UID:[packet getFrom]];
@@ -149,26 +149,26 @@
     // automatically set the row height to the height of the message
     NSTableColumn *col = [tableView tableColumnWithIdentifier:@"body"];
     NSMutableDictionary *line = [[headlinescontroller arrangedObjects] objectAtIndex:row];
-    if(!line)
+    if (!line)
         return 17.0;
     
     NSValue *sizeval = [line objectForKey:@"size"];
-    if(sizeval)
+    if (sizeval)
     {
         NSSize size = [sizeval sizeValue];
-        if(fabs(size.width - [col width]) < 0.1) // is the width unchanged?
+        if (fabs(size.width - [col width]) < 0.1) // is the width unchanged?
             return size.height; // use cached value
     }
 
     // otherwise, recalculate and store
     NSAttributedString *body = [line objectForKey:@"body"];
-    if(body)
+    if (body)
     {
         NSCell *cell = [col dataCellForRow:row];
         [cell setObjectValue:body];
         [cell setWraps:YES];
         float height = [cell cellSizeForBounds:NSMakeRect(0.0,0.0,[col width],FLT_MAX)].height;
-        if(height < 17.0) // ensure minimum height
+        if (height < 17.0) // ensure minimum height
             height = 17.0;
         
         // cache in row dictionary

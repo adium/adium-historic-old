@@ -14,17 +14,17 @@
 
 + (AIAccountViewController*)accountViewController {
     static SmackXMPPAccountViewController *avc = nil;
-    if(!avc)
+    if (!avc)
         avc = [[self alloc] init];
     return avc;
 }
 
-- (NSString*)nibName {
+- (NSString *)nibName {
     return @"SmackXMPPAccountView";
 }
 
 - (void)configureForAccount:(AIAccount *)inAccount {
-    if(account != inAccount) {
+    if (account != inAccount) {
         [super configureForAccount:inAccount];
         
         NSString *resource = [account preferenceForKey:@"Resource" group:GROUP_ACCOUNT_STATUS];
@@ -61,7 +61,7 @@
     }
 }
 
-- (void)setJID:(NSString*)jid password:(NSString*)password {
+- (void)setJID:(NSString *)jid password:(NSString *)password {
     [textField_accountUID setStringValue:jid];
     [textField_password setStringValue:password];
 }
@@ -73,7 +73,7 @@
                     forKey:@"Resource"
                      group:GROUP_ACCOUNT_STATUS];
     
-    if(checkBox_useTLS)
+    if (checkBox_useTLS)
         [account setPreference:[NSNumber numberWithBool:![checkBox_useTLS state]]
                         forKey:@"disableTLS"
                          group:GROUP_ACCOUNT_STATUS];
@@ -83,23 +83,23 @@
     [account setPreference:[NSNumber numberWithBool:NO]
 					forKey:@"useSSL"
 					 group:GROUP_ACCOUNT_STATUS];
-    if(checkBox_useSASL)
+    if (checkBox_useSASL)
         [account setPreference:[NSNumber numberWithBool:![checkBox_useSASL state]]
                         forKey:@"disableSASL"
                          group:GROUP_ACCOUNT_STATUS];
-    if(checkBox_allowSelfSigned)
+    if (checkBox_allowSelfSigned)
         [account setPreference:[NSNumber numberWithBool:[checkBox_allowSelfSigned state]]
                         forKey:@"allowSelfSigned"
                          group:GROUP_ACCOUNT_STATUS];
-    if(checkBox_allowExpired)
+    if (checkBox_allowExpired)
         [account setPreference:[NSNumber numberWithBool:[checkBox_allowExpired state]]
                         forKey:@"allowExpired"
                          group:GROUP_ACCOUNT_STATUS];
-    if(checkBox_allowNonMatchingHost)
+    if (checkBox_allowNonMatchingHost)
         [account setPreference:[NSNumber numberWithBool:[checkBox_allowNonMatchingHost state]]
                         forKey:@"allowNonMatchingHost"
                          group:GROUP_ACCOUNT_STATUS];
-    if(checkBox_useCompression)
+    if (checkBox_useCompression)
         [account setPreference:[NSNumber numberWithBool:![checkBox_useCompression state]]
                         forKey:@"disableCompression"
                          group:GROUP_ACCOUNT_STATUS];
@@ -115,7 +115,7 @@
                     forKey:@"subscriptions"
                      group:GROUP_ACCOUNT_STATUS];
     
-    if([[account statusObjectForKey:@"Online"] boolValue])
+    if ([[account statusObjectForKey:@"Online"] boolValue])
     {
         // dynamically update the settings for the subscription value
         
@@ -125,13 +125,13 @@
     }
 }
 
-- (void)setCurrentJID:(NSString*)jid {
+- (void)setCurrentJID:(NSString *)jid {
     id old = currentJID;
     currentJID = [jid retain];
     [old release];
 
     NSRange hostrange = [jid rangeOfString:@"@" options:NSLiteralSearch | NSBackwardsSearch];
-    if(hostrange.location != NSNotFound)
+    if (hostrange.location != NSNotFound)
         [[textField_connectHost cell] setPlaceholderString:[jid substringFromIndex:hostrange.location + 1]];
     else
         [[textField_connectHost cell] setPlaceholderString:@""];
