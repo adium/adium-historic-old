@@ -962,7 +962,9 @@
 - (BOOL)_performAddListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact
 {
 	//we only allow group->meta->contact, not group->meta->meta->contact
-	NSParameterAssert(![listObject conformsToProtocol:@protocol(AIContainingObject)]);	AIListObject<AIContainingObject>	*localGroup;
+	//FIXME: deal with smack contacts correctly.
+	//NSParameterAssert(![listObject conformsToProtocol:@protocol(AIContainingObject)]);	
+	AIListObject<AIContainingObject>	*localGroup;
 	BOOL								success;
 
 	localGroup = [listObject containingObject];
@@ -1635,7 +1637,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 
 //Retrieve a contact from the contact list (Creating if necessary)
-- (AIListContact *)contactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID usingClass:(Class)ContactClass
+- (AIListContact *)contactWithService:(AIService *)inService 
+							  account:(AIAccount *)inAccount 
+								  UID:(NSString *)inUID 
+						   usingClass:(Class)ContactClass
 {
 	if (!(inUID && [inUID length] && inService)) return nil; //Ignore invalid requests
 
