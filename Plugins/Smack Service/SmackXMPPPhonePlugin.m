@@ -218,15 +218,17 @@ static BOOL registered = NO;
 
 #pragma mark Tooltip Handling
 
-+ (NSString *)labelForObject:(AIListObject *)inObject
+- (NSString *)labelForObject:(AIListObject *)inObject
 {
 	if ([inObject statusObjectForKey:@"XMPPPhoneStatus"])
         return AILocalizedString(@"Phone Status","phone status tooltip entry title");
 	return nil;
 }
 
-+ (NSAttributedString *)entryForObject:(AIListObject *)inObject
+- (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
+    if([inObject account] != account)
+        return nil;
     NSString *status = [inObject statusObjectForKey:@"XMPPPhoneStatus"];
     if(!status)
         return nil;
