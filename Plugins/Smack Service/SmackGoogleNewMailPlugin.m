@@ -93,7 +93,7 @@
 - (void)afterLoginConnected
 {
     SmackXMPPConnection *connection = [account connection];
-    if(!connection)
+    if (!connection)
         return; // seems to have failed
     
     [self updateSettings:[NSNotification notificationWithName:SmackXMPPUpdateStatusNotification
@@ -128,7 +128,7 @@
 
 - (void)showGoogleMailWebpage:(int)returncode userInfo:(NSDictionary*)userInfo
 {
-    if(returncode == NSAlertDefaultReturn)
+    if (returncode == NSAlertDefaultReturn)
         [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://mail.google.com"]];
 }
 

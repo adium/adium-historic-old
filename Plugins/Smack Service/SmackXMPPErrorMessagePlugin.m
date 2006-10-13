@@ -44,7 +44,7 @@ static struct
 
 - (id)initWithAccount:(SmackXMPPAccount*)a
 {
-    if((self = [super init]))
+    if ((self = [super init]))
     {
         account = a;
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -69,38 +69,38 @@ static struct
     [super dealloc];
 }
 
-+ (NSString*)errorMessageForCode:(int)code
++ (NSString *)errorMessageForCode:(int)code
 {
     NSString *errordesc = nil;
     unsigned i;
     
     for(i=0;mapping[i].code;i++)
     {
-        if(mapping[i].code == code)
+        if (mapping[i].code == code)
         {
             errordesc = mapping[i].description;
             break;
         }
     }
-    if(!errordesc)
+    if (!errordesc)
         errordesc = [[NSNumber numberWithInt:code] stringValue];
     
     return errordesc;
 }
 
-+ (void)handleXMPPErrorPacket:(SmackPacket*)packet service:(NSString*)service
++ (void)handleXMPPErrorPacket:(SmackPacket*)packet service:(NSString *)service
 {
     SmackXMPPError *error = [packet getError];
     NSString *from = [packet getFrom];
-    if(!from)
+    if (!from)
         from = service;
 
-    if(!error)
+    if (!error)
     {
         // pytransports seem to send error packets without an error tag
         
-        if([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.Message"])
-            [[[AIObject sharedAdiumInstance] interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error From %@","XMPP Error From %@"), from] withDescription:[(SmackMessage*)packet getBody]];
+        if ([SmackCocoaAdapter object:packet isInstanceOfJavaClass:@"org.jivesoftware.smack.packet.Message"])
+            [[[AIObject sharedAdiumInstance] interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error From %@","XMPP Error From %@"), from] withDescription:[(SmackMessage *)packet getBody]];
         else
             [[[AIObject sharedAdiumInstance] interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"XMPP Error From %@","XMPP Error From %@"), from] withDescription:AILocalizedString(@"(no reason provided)","(no reason provided)")];
         
@@ -116,7 +116,7 @@ static struct
 {
     SmackPacket *packet = [[n userInfo] objectForKey:SmackXMPPPacket];
     
-    if([[[(id)packet getType] toString] isEqualToString:@"error"])
+    if ([[[(id)packet getType] toString] isEqualToString:@"error"])
         [self performSelectorOnMainThread:@selector(handleXMPPErrorPacketMainThread:) withObject:packet waitUntilDone:YES];
 }
 

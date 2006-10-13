@@ -14,19 +14,19 @@
 + (AIAccountViewController*)accountViewController
 {
     static SmackGoogleAccountViewController *avc = nil;
-    if(!avc)
+    if (!avc)
         avc = [[self alloc] init];
     return avc;
 }
 
-- (NSString*)nibName
+- (NSString *)nibName
 {
     return @"SmackGoogleAccountView";
 }
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-    if(account != inAccount) {
+    if (account != inAccount) {
         [super configureForAccount:inAccount];
 
         NSString *username = [[account formattedUID] jidUsername];

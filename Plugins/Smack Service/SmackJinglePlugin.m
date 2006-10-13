@@ -63,14 +63,14 @@ static JavaClassLoader *classLoader = nil;
 + (SmackXJingleSessionReqListener*) createJingleSessionReqListenerForConnection:(SmackXMPPConnection*)conn
 																	   delegate:(id)delegate;
 
-+ (SmackXJingleContentInfoAudio*) contentInfoAudioWithName:(NSString*)name;
++ (SmackXJingleContentInfoAudio*) contentInfoAudioWithName:(NSString *)name;
 
 + (SmackXPayloadType*) payloadTypeWithId:(int) ident
-									name:(NSString*) name
+									name:(NSString *) name
 								channels:(int) channels;
 
 + (SmackXPayloadTypeAudio*) payloadTypeAudioWithId:(int) ident
-											  name:(NSString*) name
+											  name:(NSString *) name
 										  channels:(int) channels
 										 clockRate:(int) clockRate;
 
@@ -115,7 +115,7 @@ static JavaClassLoader *classLoader = nil;
 /*!
  *	@brief	Create an audio content info message
  */
-+ (SmackXJingleContentInfoAudio*) contentInfoAudioWithName:(NSString*)name
++ (SmackXJingleContentInfoAudio*) contentInfoAudioWithName:(NSString *)name
 {
     return [[[classLoader loadClass:CLASSNAME_CONTENTINFO_AUDIO] newWithSignature:@"(Ljava/lang/String;)",name] autorelease];	
 }
@@ -124,7 +124,7 @@ static JavaClassLoader *classLoader = nil;
  *	@brief	Create a payload type
  */
 + (SmackXPayloadType*) payloadTypeWithId:(int) ident
-									name:(NSString*) name
+									name:(NSString *) name
 								channels:(int) channels
 {
 	return [[[classLoader loadClass:CLASSNAME_PAYLOADTYPE] newWithSignature:@"(ILjava/lang/String;I)",ident,name,channels] autorelease];
@@ -134,7 +134,7 @@ static JavaClassLoader *classLoader = nil;
  *	@brief	Create an audio payload type
  */
 + (SmackXPayloadTypeAudio*) payloadTypeAudioWithId:(int) ident
-											  name:(NSString*) name
+											  name:(NSString *) name
 										  channels:(int) channels
 										 clockRate:(int) clockRate
 {	
@@ -169,10 +169,10 @@ static NSDictionary	*audioSessions;
 	
 	sdm = [SmackCocoaAdapter serviceDiscoveryManagerForConnection:[account connection]];
 	
-    if(![sdm includesFeature:DISCO_JINGLE_ID])
+    if (![sdm includesFeature:DISCO_JINGLE_ID])
         [sdm addFeature:DISCO_JINGLE_ID];
 	
-    if(![sdm includesFeature:DISCO_JINGLE_AUDIO_ID])
+    if (![sdm includesFeature:DISCO_JINGLE_AUDIO_ID])
         [sdm addFeature:DISCO_JINGLE_AUDIO_ID];
 }
 
@@ -191,7 +191,7 @@ static NSDictionary	*audioSessions;
 
 - (id) initWithAccount:(SmackXMPPAccount*) acc
 {
-    if((self = [super init])) {
+    if ((self = [super init])) {
         account = acc;
 
         [SmackCocoaAdapter loadJingle];
@@ -240,7 +240,7 @@ static NSDictionary	*audioSessions;
 /*!
  * @brief	Get the list of supported audio payloads
  */
-- (JavaVector*) getSupportedAudioPayloads
+- (JavaVector *) getSupportedAudioPayloads
 {
     JavaVector				*payloadsJava	= [SmackCocoaAdapter vector];
 	NSArray					*payloadsList	= [[adium vcController] getAudioPayloadsForProtocol:VC_RTP];
@@ -347,7 +347,7 @@ static NSDictionary	*audioSessions;
 /*!
  * @brief    Start an outgoing session
  */
-- (void) establishOutgoingJingleSessionTo:(NSString*)jid
+- (void) establishOutgoingJingleSessionTo:(NSString *)jid
 {
 	SmackXOutgoingJingleSession *session		= nil;
     JavaVector					*payloadTypes	= [self getSupportedAudioPayloads];
@@ -430,7 +430,7 @@ static NSDictionary	*audioSessions;
 /*!
  *	@brief	The session has been declined
  */
-- (id) setSessionDeclined:(NSString*) reason
+- (id) setSessionDeclined:(NSString *) reason
 {
 	NSLog (@"Jingle: session declined with reason %@", reason);
 
@@ -444,7 +444,7 @@ static NSDictionary	*audioSessions;
 /*!
  *	@brief	The session has been closed
  */
-- (id) setSessionClosed:(NSString*) reason
+- (id) setSessionClosed:(NSString *) reason
 {
 	NSLog (@"Jingle: session closed with reason %@", reason);
 
@@ -518,7 +518,7 @@ static NSDictionary	*audioSessions;
 
 	AILog(@"@: inviting %@ to an audio chat",self, contact);
 	
-    if(!contact)
+    if (!contact)
         return; // not online?
 
     [self establishOutgoingJingleSessionTo:[contact UID]];

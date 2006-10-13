@@ -32,32 +32,32 @@
 
 @implementation NSString (JIDAdditions)
 
-- (NSString*)jidUsername {
+- (NSString *)jidUsername {
     NSRange userrange = [self rangeOfString:@"@" options:NSLiteralSearch];
-    if(userrange.location != NSNotFound)
+    if (userrange.location != NSNotFound)
         return [self substringToIndex:userrange.location];
     return @"";
 }
-- (NSString*)jidHost {
+- (NSString *)jidHost {
     NSRange hoststartrange = [self rangeOfString:@"@" options:NSLiteralSearch];
-    if(hoststartrange.location == NSNotFound)
+    if (hoststartrange.location == NSNotFound)
         hoststartrange.location = (unsigned int)-1;
     // look for resource
     NSRange hostendrange = [self rangeOfString:@"/" options:NSLiteralSearch range:NSMakeRange(hoststartrange.location,[self length]-hoststartrange.location)];
-    if(hostendrange.location != NSNotFound)
+    if (hostendrange.location != NSNotFound)
         return [self substringWithRange:NSMakeRange(hoststartrange.location+1,hostendrange.location-hoststartrange.location-1)];
     // no resource
     return [self substringFromIndex:hoststartrange.location+1];
 }
-- (NSString*)jidResource {
+- (NSString *)jidResource {
     NSRange resourcerange = [self rangeOfString:@"/" options:NSLiteralSearch | NSBackwardsSearch];
-    if(resourcerange.location != NSNotFound)
+    if (resourcerange.location != NSNotFound)
         return [self substringFromIndex:resourcerange.location+1];
     return @""; // no resource
 }
-- (NSString*)jidUserHost { // remove resource
+- (NSString *)jidUserHost { // remove resource
     NSRange resourcerange = [self rangeOfString:@"/" options:NSLiteralSearch | NSBackwardsSearch];
-    if(resourcerange.location != NSNotFound)
+    if (resourcerange.location != NSNotFound)
         return [self substringToIndex:resourcerange.location];
     return self; // no resource
 }
@@ -81,7 +81,7 @@
 		beganInitializingJavaVM = YES;
 	}
     
-    if(!plugins) {
+    if (!plugins) {
         Class XMPPPlugins[] = {
             [SmackXMPPRosterPlugin class],
             [SmackXMPPMessagePlugin class],
@@ -159,7 +159,7 @@
     [super connect];
     AILog(@"XMPP connect");
     
-    if(!smackAdapter)
+    if (!smackAdapter)
         smackAdapter = [[SmackCocoaAdapter alloc] initForAccount:self];
 }
 
@@ -178,7 +178,7 @@
     [self didDisconnect];
 }
 
-- (NSString*)resource
+- (NSString *)resource
 {
     NSString *resource = [self preferenceForKey:@"Resource" group:GROUP_ACCOUNT_STATUS];
     return resource?resource:@"Adium";
@@ -191,7 +191,7 @@
     NSEnumerator *e = [plugins objectEnumerator];
     id plugin;
     while((plugin = [e nextObject]))
-        if([plugin respondsToSelector:@selector(connected:)])
+        if ([plugin respondsToSelector:@selector(connected:)])
             [plugin connected:conn];
     
     @try {
@@ -214,7 +214,7 @@
     }@catch(NSException *e) {
         // caused by invalid password
         [self disconnect];
-        if([[e reason] isEqualToString:@"SASL authentication failed"]) // ugly ugly ugly, but no other way
+        if ([[e reason] isEqualToString:@"SASL authentication failed"]) // ugly ugly ugly, but no other way
         {
             [self serverReportedInvalidPassword];
             [self autoReconnectAfterDelay:1.0];
@@ -230,24 +230,24 @@
     NSEnumerator *e = [plugins objectEnumerator];
     id plugin;
     while((plugin = [e nextObject]))
-        if([plugin respondsToSelector:@selector(disconnected:)])
+        if ([plugin respondsToSelector:@selector(disconnected:)])
             [plugin disconnected:conn];
     
     [serverinfo release]; serverinfo = nil;
 }
 
-- (void)connectionError:(NSString*)error {
+- (void)connectionError:(NSString *)error {
     [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"Connection error on account %@.","Connection error on account %@."),[self explicitFormattedUID]] withDescription:error];
     [self didDisconnect];
 }
 
-- (void)receiveMessagePacket:(SmackMessage*)packet {
+- (void)receiveMessagePacket:(SmackMessage *)packet {
     [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPMessagePacketReceivedNotification
                                                         object:self
                                                       userInfo:[NSDictionary dictionaryWithObject:packet forKey:SmackXMPPPacket]];
 }
 
-- (void)receivePresencePacket:(SmackPresence*)packet {
+- (void)receivePresencePacket:(SmackPresence *)packet {
     [[NSNotificationCenter defaultCenter] postNotificationName:SmackXMPPPresencePacketReceivedNotification
                                                         object:self
                                                       userInfo:[NSDictionary dictionaryWithObject:packet forKey:SmackXMPPPacket]];
@@ -260,7 +260,7 @@
 }    
 
 - (BOOL)sendMessageObject:(AIContentMessage *)inMessageObject {
-    if([inMessageObject isAutoreply])
+    if ([inMessageObject isAutoreply])
         return NO; // protocol doesn't support autoreplies
     
     SmackMessage *message = [SmackCocoaAdapter message];
@@ -273,28 +273,28 @@
                                                            nil]];
     
     // the message is valid only when a 'to' is set, so only send it in this case!
-    if([[message getTo] length] != 0)
+    if ([[message getTo] length] != 0)
         [connection sendPacket:message];
     
     return YES;
 }
 
-- (SmackPresence*)getUserPresenceForStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage
+- (SmackPresence *)getUserPresenceForStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage
 {
     NSString *statusName = [statusState statusName];
     NSString *statusField = nil;
     int priority = [[self preferenceForKey:@"awayPriority" group:GROUP_ACCOUNT_STATUS] intValue];
     
-    if([statusName isEqualToString:STATUS_NAME_AVAILABLE]) {
+    if ([statusName isEqualToString:STATUS_NAME_AVAILABLE]) {
         statusField = @"available";
         priority = [[self preferenceForKey:@"availablePriority" group:GROUP_ACCOUNT_STATUS] intValue];
-    } else if([statusName isEqualToString:STATUS_NAME_AWAY])
+    } else if ([statusName isEqualToString:STATUS_NAME_AWAY])
         statusField = @"away";
-    else if([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT])
+    else if ([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT])
         statusField = @"chat";
-    else if([statusName isEqualToString:STATUS_NAME_DND])
+    else if ([statusName isEqualToString:STATUS_NAME_DND])
         statusField = @"dnd";
-    else if([statusName isEqualToString:STATUS_NAME_EXTENDED_AWAY])
+    else if ([statusName isEqualToString:STATUS_NAME_EXTENDED_AWAY])
         statusField = @"xa";
     else // shouldn't happen (except for invisible)
         statusField = @"available";
@@ -305,21 +305,21 @@
                                           modeString:statusField];
 }
 
-- (SmackPresence*)getCurrentUserPresence
+- (SmackPresence *)getCurrentUserPresence
 {
     return [self getUserPresenceForStatusState:[self statusState] usingStatusMessage:[self statusMessage]];
 }
 
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage {
-    if([[statusState statusName] isEqualToString:STATUS_NAME_INVISIBLE])
+    if ([[statusState statusName] isEqualToString:STATUS_NAME_INVISIBLE])
     {
-        if(currentlyInvisible)
+        if (currentlyInvisible)
             return;
-        if(![serverinfo containsFeature:@"http://jabber.org/protocol/invisibility"])
+        if (![serverinfo containsFeature:@"http://jabber.org/protocol/invisibility"])
         {
             // I can't use AIInterfaceController's questions, since this has to happen synchronously
             // (otherwise the plugins could send presence messages while the question is still displayed)
-            if([[NSAlert alertWithMessageText:AILocalizedString(@"Invisible Status Not Supported by Server","Invisible Status Not Supported by Server")
+            if ([[NSAlert alertWithMessageText:AILocalizedString(@"Invisible Status Not Supported by Server","Invisible Status Not Supported by Server")
                              defaultButton:AILocalizedString(@"Disconnect","Disconnect")
                            alternateButton:AILocalizedString(@"Continue","Continue")
                                otherButton:nil
@@ -334,7 +334,7 @@
             [connection sendPacket:[SmackCocoaAdapter invisibleCommandForInvisibility:YES]];
             currentlyInvisible = YES;
         }
-    } else if(currentlyInvisible) { // become visible again
+    } else if (currentlyInvisible) { // become visible again
         [connection sendPacket:[SmackCocoaAdapter invisibleCommandForInvisibility:NO]];
         currentlyInvisible = NO;
     }
@@ -377,19 +377,19 @@
 	return [super explicitFormattedUID];
 }
 
-- (NSString*)hostName {
+- (NSString *)hostName {
     NSString *host = [self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS];
-    if(!host || [host length] == 0) {
+    if (!host || [host length] == 0) {
         return [[self explicitFormattedUID] jidHost];
     }
     return host;
 }
 
-- (SmackConnectionConfiguration*)connectionConfiguration {
+- (SmackConnectionConfiguration *)connectionConfiguration {
     NSString *host = [self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS];
     int portnum = [[self preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue]?5223:5222;
     
-    if(!host || [host length] == 0) { // did the user not supply a host?
+    if (!host || [host length] == 0) { // did the user not supply a host?
  
         // do an SRV lookup
         
@@ -398,17 +398,17 @@
         
         int srv_code;
         
-        if(query != NULL && (srv_code = ruli_sync_srv_code(query)) == 0) {
+        if (query != NULL && (srv_code = ruli_sync_srv_code(query)) == 0) {
             ruli_list_t *list = ruli_sync_srv_list(query);
             // we should use some kind of round-robbin to try the other results from this query
             
-            if(ruli_list_size(list) > 0) {
+            if (ruli_list_size(list) > 0) {
                 ruli_srv_entry_t *srventry = ruli_list_get(list,0);
                 
                 char dname[RULI_LIMIT_DNAME_TEXT_BUFSZ];
                 int dname_length;
                 
-                if(ruli_dname_decode(dname, RULI_LIMIT_DNAME_TEXT_BUFSZ, &dname_length, srventry->target, srventry->target_len) == RULI_TXT_OK) {
+                if (ruli_dname_decode(dname, RULI_LIMIT_DNAME_TEXT_BUFSZ, &dname_length, srventry->target, srventry->target_len) == RULI_TXT_OK) {
                     host = [[[NSString alloc] initWithBytes:dname length:(dname[dname_length-1] == '.')?dname_length-1:dname_length encoding:NSASCIIStringEncoding] autorelease];
                     portnum = srventry->port;
                 } else
@@ -423,7 +423,7 @@
         NSLog(@"host = %@:%d",host,portnum);
     } else {
         NSNumber *port = [self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
-        if(port)
+        if (port)
             portnum = [port intValue];
     }
     
@@ -531,7 +531,7 @@ static AIHTMLDecoder *messageencoder = nil;
 
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage {
     NSAttributedString *attmessage = [inContentMessage message];
-    if(!messageencoder)
+    if (!messageencoder)
     {
         messageencoder = [[AIHTMLDecoder alloc] init];
         [messageencoder setGeneratesStrictXHTML:YES];
@@ -548,7 +548,7 @@ static AIHTMLDecoder *messageencoder = nil;
     
     while((body = [e nextObject]) && ![[body name] isEqualToString:@"body"]);
     
-    if(!body)
+    if (!body)
         return nil;
     
     // add the namespace declaration (not really an attribute...)
@@ -582,7 +582,7 @@ static AIHTMLDecoder *messageencoder = nil;
     while((contact = [e nextObject]))
     {
         SmackRosterEntry *entry = [smroster getEntry:[contact UID]];
-        if(entry)
+        if (entry)
             [smroster removeEntry:entry];
         [contact setRemoteGroupName:nil];
     }
@@ -599,7 +599,7 @@ static AIHTMLDecoder *messageencoder = nil;
     SmackRoster *smroster = [connection getRoster];
     
     SmackRosterGroup *newgroup = [smroster getGroup:[group displayName]];
-    if(!newgroup) // if it doesn't exist, create it
+    if (!newgroup) // if it doesn't exist, create it
         newgroup = [smroster createGroup:[group displayName]];
     
     while((contact = [e nextObject]))
@@ -613,7 +613,7 @@ static AIHTMLDecoder *messageencoder = nil;
         while([iter hasNext])
         {
             SmackRosterGroup *rostergroup = [iter next];
-            if([[rostergroup getName] isEqualToString:oldgroup]) {
+            if ([[rostergroup getName] isEqualToString:oldgroup]) {
                 [rostergroup removeEntry:rosterentry];
                 break;
             }
@@ -637,10 +637,10 @@ static AIHTMLDecoder *messageencoder = nil;
     NSEnumerator *e = [plugins objectEnumerator];
     id plugin;
     while((plugin = [e nextObject]))
-        if([plugin respondsToSelector:@selector(menuItemsForContact:)])
+        if ([plugin respondsToSelector:@selector(menuItemsForContact:)])
         {
             NSArray *pluginMenuItems = [plugin menuItemsForContact:inContact];
-            if(pluginMenuItems)
+            if (pluginMenuItems)
                 [menuItems addObjectsFromArray:pluginMenuItems];
         }
     
@@ -655,10 +655,10 @@ static AIHTMLDecoder *messageencoder = nil;
     NSEnumerator *e = [plugins objectEnumerator];
     id plugin;
     while((plugin = [e nextObject]))
-        if([plugin respondsToSelector:@selector(accountActionMenuItems)])
+        if ([plugin respondsToSelector:@selector(accountActionMenuItems)])
         {
             NSArray *pluginMenuItems = [plugin accountActionMenuItems];
-            if(pluginMenuItems)
+            if (pluginMenuItems)
                 [menuItems addObjectsFromArray:pluginMenuItems];
         }
 

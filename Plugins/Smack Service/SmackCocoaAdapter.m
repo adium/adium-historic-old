@@ -135,23 +135,23 @@ static JavaClassLoader *classLoader = nil;
 */
 #pragma mark utility functions
 
-+ (id)enumWithType:(NSString*)type name:(NSString*)name {
++ (id)enumWithType:(NSString *)type name:(NSString *)name {
     return [(Class <JavaEnum>)[classLoader loadClass:@"java.lang.Enum"] valueOf:[classLoader loadClass:type] :name];
 }
 
-+ (id)staticObjectField:(NSString*)fieldname inJavaClass:(NSString*)className {
++ (id)staticObjectField:(NSString *)fieldname inJavaClass:(NSString *)className {
     return [(Class <AdiumSmackBridge>)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] getStaticFieldFromClass:fieldname :className];
 }
 
-+ (id)staticObjectField:(NSString*)fieldname inJavaClassObject:(Class <JavaObject>)classobj {
++ (id)staticObjectField:(NSString *)fieldname inJavaClassObject:(Class <JavaObject>)classobj {
     return [(Class <AdiumSmackBridge>)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] getStaticFieldFromClassObject:fieldname :classobj];
 }
 
-+ (BOOL)object:(id)obj isInstanceOfJavaClass:(NSString*)className {
++ (BOOL)object:(id)obj isInstanceOfJavaClass:(NSString *)className {
     return [(Class <AdiumSmackBridge>)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] isInstanceOfClass:obj :className];
 }
 
-+ (NSDate*)dateFromJavaDate:(JavaDate*)date
++ (NSDate*)dateFromJavaDate:(JavaDate *)date
 {
     // [javaDate toString] format: "dow mon dd hh:mm:ss zzz yyyy"	
 	return (date ? 
@@ -163,7 +163,7 @@ static JavaClassLoader *classLoader = nil;
 #pragma mark Main Adapter
 
 - (id)initForAccount:(SmackXMPPAccount *)inAccount {
-    if((self=[super init])) {
+    if ((self=[super init])) {
         account = inAccount;
         
         [account getProxyConfigurationNotifyingTarget:self selector:@selector(spawnConnectionWithProxy:account:) context:inAccount];
@@ -180,7 +180,7 @@ static JavaClassLoader *classLoader = nil;
     if ((type == Adium_Proxy_SOCKS4) || (type == Adium_Proxy_SOCKS5) || (type == Adium_Proxy_Default_SOCKS4) || (type == Adium_Proxy_Default_SOCKS5)) {
         [systemProperties put:@"socksProxyHost" :[proxyinfo objectForKey:@"Host"]];
         [systemProperties put:@"socksProxyPort" :[[proxyinfo objectForKey:@"Port"] description]];
-        if([[proxyinfo objectForKey:@"Username"] length] > 0)
+        if ([[proxyinfo objectForKey:@"Username"] length] > 0)
         {
             [systemProperties put:@"java.net.socks.username" :[proxyinfo objectForKey:@"Username"]];
             [systemProperties put:@"java.net.socks.password" :[proxyinfo objectForKey:@"Password"]];
@@ -208,7 +208,7 @@ static JavaClassLoader *classLoader = nil;
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
     SmackConnectionConfiguration *conf = [inAccount connectionConfiguration];
-    if(conf) {
+    if (conf) {
         BOOL useSSL = NO; //[[inAccount preferenceForKey:@"useSSL" group:GROUP_ACCOUNT_STATUS] boolValue];
         
         // create connection
@@ -255,7 +255,7 @@ static JavaClassLoader *classLoader = nil;
     [account performSelectorOnMainThread:@selector(disconnected:) withObject:connection waitUntilDone:NO];
 }
 
-- (void)setConnectionError:(NSString*)error {
+- (void)setConnectionError:(NSString *)error {
     AILog(@"XMPP Connection Error: %@",error);
     [account performSelectorOnMainThread:@selector(connectionError:) withObject:error waitUntilDone:NO];
 }
@@ -272,39 +272,39 @@ static JavaClassLoader *classLoader = nil;
 
 #pragma mark Bridged Object Creation
 
-+ (SmackConnectionConfiguration*)connectionConfigurationWithHost:(NSString*)host port:(int)port service:(NSString*)service {
++ (SmackConnectionConfiguration *)connectionConfigurationWithHost:(NSString *)host port:(int)port service:(NSString *)service {
     return [[[classLoader loadClass:@"org.jivesoftware.smack.ConnectionConfiguration"] newWithSignature:@"(Ljava/lang/String;ILjava/lang/String;)",host,port,service] autorelease];
 }
 
-+ (SmackPresence*)presenceWithType:(SmackPresenceType*)type {
++ (SmackPresence *)presenceWithType:(SmackPresenceType*)type {
     return [[[classLoader loadClass:@"org.jivesoftware.smack.packet.Presence"] newWithSignature:@"(Lorg/jivesoftware/smack/packet/Presence$Type;)",type] autorelease];
 }
 
-+ (SmackPresence*)presenceWithTypeString:(NSString*)type {
++ (SmackPresence *)presenceWithTypeString:(NSString *)type {
     return [self presenceWithType:[SmackCocoaAdapter enumWithType:@"org.jivesoftware.smack.packet.Presence$Type" name:type]];
 }
 
-+ (SmackPresence*)presenceWithType:(SmackPresenceType*)type status:(NSString*)status priority:(int)priority mode:(SmackPresenceMode*)mode {
++ (SmackPresence *)presenceWithType:(SmackPresenceType*)type status:(NSString *)status priority:(int)priority mode:(SmackPresenceMode *)mode {
     return [[[classLoader loadClass:@"org.jivesoftware.smack.packet.Presence"] newWithSignature:@"(Lorg/jivesoftware/smack/packet/Presence$Type;Ljava/lang/String;ILorg/jivesoftware/smack/packet/Presence$Mode;)",type,status,priority,mode] autorelease];
 }
 
-+ (SmackPresence*)presenceWithTypeString:(NSString*)type status:(NSString*)status priority:(int)priority modeString:(NSString*)mode {
++ (SmackPresence *)presenceWithTypeString:(NSString *)type status:(NSString *)status priority:(int)priority modeString:(NSString *)mode {
     return [self presenceWithType:[SmackCocoaAdapter enumWithType:@"org.jivesoftware.smack.packet.Presence$Type" name:type] status:status priority:priority mode:[SmackCocoaAdapter enumWithType:@"org.jivesoftware.smack.packet.Presence$Mode" name:mode]];
 }
 
-+ (SmackMessage*)message {
++ (SmackMessage *)message {
     return [[[classLoader loadClass:@"org.jivesoftware.smack.packet.Message"] newWithSignature:@"()"] autorelease];
 }
 
-+ (SmackMessage*)messageTo:(NSString*)to type:(SmackMessageType*)type {
++ (SmackMessage *)messageTo:(NSString *)to type:(SmackMessageType *)type {
     return [[[classLoader loadClass:@"org.jivesoftware.smack.packet.Message"] newWithSignature:@"(Ljava/lang/String;Lorg/jivesoftware/smack/packet/Message$Type;)",to,type] autorelease];
 }
 
-+ (SmackMessage*)messageTo:(NSString*)to typeString:(NSString*)type {
++ (SmackMessage *)messageTo:(NSString *)to typeString:(NSString *)type {
     return [self messageTo:to type:[self messageTypeFromString:type]];
 }
 
-+ (SmackMessageType*)messageTypeFromString:(NSString*)type {
++ (SmackMessageType *)messageTypeFromString:(NSString *)type {
     return [SmackCocoaAdapter staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.Message$Type"];
 }
 
@@ -324,7 +324,7 @@ static JavaClassLoader *classLoader = nil;
     return [[[[classLoader loadClass:@"org.jivesoftware.smack.packet.IQ"] alloc] init] autorelease];
 }
 
-+ (SmackIQType*)IQType:(NSString*)type {
++ (SmackIQType*)IQType:(NSString *)type {
     return [self staticObjectField:type inJavaClass:@"org.jivesoftware.smack.packet.IQ$Type"];
 }
 
@@ -336,15 +336,15 @@ static JavaClassLoader *classLoader = nil;
     return [[[classLoader loadClass:@"org.jivesoftware.smack.packet.XMPPError"] newWithSignature:@"(I)",code] autorelease];
 }
 
-+ (SmackXMPPError*)XMPPErrorWithCode:(int)code message:(NSString*)message {
++ (SmackXMPPError*)XMPPErrorWithCode:(int)code message:(NSString *)message {
     return [[[classLoader loadClass:@"org.jivesoftware.smack.packet.XMPPError"] newWithSignature:@"(ILjava/lang/String;)",code,message] autorelease];
 }
 
-+ (void)createRosterEntryInRoster:(SmackRoster*)roster withJID:(NSString*)jid name:(NSString*)name group:(NSString*)group {
++ (void)createRosterEntryInRoster:(SmackRoster*)roster withJID:(NSString *)jid name:(NSString *)name group:(NSString *)group {
     [(Class <AdiumSmackBridge>)[classLoader loadClass:@"net.adium.smackBridge.SmackBridge"] createRosterEntry:roster :jid :name :group];
 }
 
-+ (SmackXForm*)formWithType:(NSString*)type {
++ (SmackXForm*)formWithType:(NSString *)type {
     return [[[classLoader loadClass:@"org.jivesoftware.smackx.Form"] newWithSignature:@"(Ljava/lang/String;)",type] autorelease];
 }
 
@@ -356,11 +356,11 @@ static JavaClassLoader *classLoader = nil;
     return [[[[classLoader loadClass:@"org.jivesoftware.smackx.FormField"] alloc] init] autorelease];
 }
 
-+ (SmackXFormField*)formFieldWithVariable:(NSString*)variable {
++ (SmackXFormField*)formFieldWithVariable:(NSString *)variable {
     return [[[classLoader loadClass:@"org.jivesoftware.smackx.FormField"] newWithSignature:@"(Ljava/lang/String;)",variable] autorelease];
 }
 
-+ (id)invokeObject:(id)obj methodWithParamTypeAndParam:(NSString*)method, ... {
++ (id)invokeObject:(id)obj methodWithParamTypeAndParam:(NSString *)method, ... {
     va_list ap;
     va_start(ap, method);
     
@@ -369,7 +369,7 @@ static JavaClassLoader *classLoader = nil;
     NSString *typestr;
     
     while((typestr = va_arg(ap,id))) {
-        if([typestr isEqualToString:@"int"]) {
+        if ([typestr isEqualToString:@"int"]) {
             int value = va_arg(ap, int);
             id javaint = [[classLoader loadClass:@"java.lang.Integer"] newWithSignature:@"(I)",value];
             
@@ -377,7 +377,7 @@ static JavaClassLoader *classLoader = nil;
             [arguments add:javaint];
             
             [javaint release];
-        } else if([typestr isEqualToString:@"boolean"]) {
+        } else if ([typestr isEqualToString:@"boolean"]) {
             BOOL value = va_arg(ap, int)?YES:NO;
             id javabool = [[classLoader loadClass:@"java.lang.Boolean"] newWithSignature:@"(Z)",value];
             
@@ -385,7 +385,7 @@ static JavaClassLoader *classLoader = nil;
             [arguments add:javabool];
             
             [javabool release];
-        } else if([typestr isEqualToString:@"double"]) {
+        } else if ([typestr isEqualToString:@"double"]) {
             double value = va_arg(ap, double);
             id javadouble = [[classLoader loadClass:@"java.lang.Double"] newWithSignature:@"(D)",value];
             
@@ -393,7 +393,7 @@ static JavaClassLoader *classLoader = nil;
             [arguments add:javadouble];
             
             [javadouble release];
-        } else if([typestr isEqualToString:@"float"]) {
+        } else if ([typestr isEqualToString:@"float"]) {
             float value = (float)va_arg(ap, double);
             id javafloat = [[classLoader loadClass:@"java.lang.Float"] newWithSignature:@"(F)",value];
             
@@ -401,7 +401,7 @@ static JavaClassLoader *classLoader = nil;
             [arguments add:javafloat];
             
             [javafloat release];
-        } else if([typestr isEqualToString:@"long"]) {
+        } else if ([typestr isEqualToString:@"long"]) {
             long value = va_arg(ap, long);
             id javalong = [[classLoader loadClass:@"java.lang.Long"] newWithSignature:@"(J)",value];
             
@@ -409,7 +409,7 @@ static JavaClassLoader *classLoader = nil;
             [arguments add:javalong];
             
             [javalong release];
-        } else if([typestr isEqualToString:@"char"]) {
+        } else if ([typestr isEqualToString:@"char"]) {
             char value = (char)va_arg(ap, int);
             id javachar = [[classLoader loadClass:@"java.lang.Char"] newWithSignature:@"(C)",value];
             
@@ -417,7 +417,7 @@ static JavaClassLoader *classLoader = nil;
             [arguments add:javachar];
             
             [javachar release];
-        } else if([typestr isEqualToString:@"short"]) {
+        } else if ([typestr isEqualToString:@"short"]) {
             short value = (short)va_arg(ap, int);
             id javashort = [[classLoader loadClass:@"java.lang.Short"] newWithSignature:@"(S)",value];
             
@@ -451,15 +451,15 @@ static JavaClassLoader *classLoader = nil;
     return result;
 }
 
-+ (JavaVector*)vector {
++ (JavaVector *)vector {
     return [[[[classLoader loadClass:@"java.util.Vector"] alloc] init] autorelease];
 }
 
-+ (JavaMap*)map {
++ (JavaMap *)map {
     return [[[classLoader loadClass:@"java.util.HashMap"] newWithSignature:@"()"] autorelease];
 }
 
-+ (JavaFile*)fileFromPath:(NSString*)path {
++ (JavaFile *)fileFromPath:(NSString *)path {
     return [[[classLoader loadClass:@"java.io.File"] newWithSignature:@"(Ljava/lang/String;)", path] autorelease];
 }
 

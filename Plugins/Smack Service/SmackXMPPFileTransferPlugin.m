@@ -25,7 +25,7 @@
 @interface SmackXMPPFileTransferListener : NSObject {
 }
 
-- (SmackXOutgoingFileTransfer*)createOutgoingFileTransfer:(NSString*)userID;
+- (SmackXOutgoingFileTransfer*)createOutgoingFileTransfer:(NSString *)userID;
 
 @end
 
@@ -104,32 +104,32 @@
     
     [fileTransfer setPercentDone:[smackFileTransfer getProgress]*100.0 bytesSent:[smackFileTransfer getAmountWritten]];
     
-    if([smackFileTransfer isDone])
+    if ([smackFileTransfer isDone])
     {
         [timer invalidate];
         [fileTransfer setStatus:Complete_FileTransfer];
     } else {
         NSString *status = [[smackFileTransfer getStatus] toString];
         NSLog(@"file transfer status = %@",status);
-        if([status isEqualToString:@"Cancled"])
+        if ([status isEqualToString:@"Cancled"])
         {
             [fileTransfer setStatus:Cancelled_Remote_FileTransfer];
             [timer invalidate];
-        } else if([status isEqualToString:@"Error"])
+        } else if ([status isEqualToString:@"Error"])
         {
             [fileTransfer setStatus:Failed_FileTransfer];
             [timer invalidate];
-        } else if([status isEqualToString:@"In Progress"])
+        } else if ([status isEqualToString:@"In Progress"])
             [fileTransfer setStatus:In_Progress_FileTransfer];
-        else if([status isEqualToString:@"Initial"])
+        else if ([status isEqualToString:@"Initial"])
             [fileTransfer setStatus:Not_Started_FileTransfer];
-        else if([status isEqualToString:@"Negotiated"])
+        else if ([status isEqualToString:@"Negotiated"])
             [fileTransfer setStatus:Accepted_FileTransfer];
-        else if([status isEqualToString:@"Negotiating Stream"])
+        else if ([status isEqualToString:@"Negotiating Stream"])
             [fileTransfer setStatus:Connecting_FileTransfer];
-        else if([status isEqualToString:@"Negotiating Transfer"])
+        else if ([status isEqualToString:@"Negotiating Transfer"])
             [fileTransfer setStatus:Connecting_FileTransfer];
-        else if([status isEqualToString:@"Refused"])
+        else if ([status isEqualToString:@"Refused"])
             [fileTransfer setStatus:Cancelled_Remote_FileTransfer];
         else
             [fileTransfer setStatus:Unknown_Status_FileTransfer];
@@ -141,7 +141,7 @@
 @implementation SmackXMPPFileTransferPlugin
 
 - (id)initWithAccount:(SmackXMPPAccount*)a {
-    if((self = [super init])) {
+    if ((self = [super init])) {
         account = a;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -164,7 +164,7 @@
         contact = [contact preferredContact];
 	}
 
-    if(!contact)
+    if (!contact)
         return; // not online?
     
     NSLog(@"file transfer file = %@, jid = %@",[fileTransfer localFilename],[fileTransfer contact]);

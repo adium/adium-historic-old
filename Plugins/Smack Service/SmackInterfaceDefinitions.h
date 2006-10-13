@@ -11,12 +11,12 @@
 @interface SmackConnectionConfiguration : JavaObject {
 }
 
-- (NSString*)getHost;
+- (NSString *)getHost;
 - (int)getPort;
-- (NSString*)getServiceName;
-- (NSString*)getTruststorePassword;
-- (NSString*)getTruststorePath;
-- (NSString*)getTruststoreType;
+- (NSString *)getServiceName;
+- (NSString *)getTruststorePassword;
+- (NSString *)getTruststorePath;
+- (NSString *)getTruststoreType;
 - (BOOL)isCompressionEnabled;
 - (BOOL)isDebuggerEnabled;
 - (BOOL)isExpiredCertificatesCheckEnabled;
@@ -34,9 +34,9 @@
 - (void)setSASLAuthenticationEnabled:(BOOL)saslAuthenticationEnabled;
 - (void)setSelfSignedCertificateEnabled:(BOOL)selfSignedCertificateEnabled;
 - (void)setTLSEnabled:(BOOL)tlsEnabled;
-- (void)setTruststorePassword:(NSString*)truststorePassword;
-- (void)setTruststorePath:(NSString*)truststorePath;
-- (void)setTruststoreType:(NSString*)truststoreType;
+- (void)setTruststorePassword:(NSString *)truststorePassword;
+- (void)setTruststorePath:(NSString *)truststorePath;
+- (void)setTruststoreType:(NSString *)truststoreType;
 - (void)setVerifyChainEnabled:(BOOL)verifyChainEnabled;
 - (void)setVerifyRootCAEnabled:(BOOL)verifyRootCAEnabled;
 
@@ -45,8 +45,8 @@
 @interface SmackMessageType : JavaObject {
 }
 
-- (SmackMessageType*)fromString:(NSString*)type;
-- (NSString*)toString;
+- (SmackMessageType *)fromString:(NSString *)type;
+- (NSString *)toString;
 
 @end
 
@@ -55,14 +55,14 @@
 @interface SmackChat : JavaObject {
 }
 
-- (SmackMessage*)createMessage;
-- (NSString*)getParticipant;
-- (NSString*)getThreadID;
-- (SmackMessage*)nextMessage;
-- (SmackMessage*)nextMessage:(long)timeout;
-- (SmackMessage*)pollMessage;
-- (void)sendMessage:(SmackMessage*)message;
-//- (void)sendMessage:(NSString*)message; // I wonder which one gets called there
+- (SmackMessage *)createMessage;
+- (NSString *)getParticipant;
+- (NSString *)getThreadID;
+- (SmackMessage *)nextMessage;
+- (SmackMessage *)nextMessage:(long)timeout;
+- (SmackMessage *)pollMessage;
+- (void)sendMessage:(SmackMessage *)message;
+//- (void)sendMessage:(NSString *)message; // I wonder which one gets called there
 
 @end
 
@@ -121,7 +121,7 @@
 - (id)set:(int)index :(id)element;
 - (int)size;
 - (id)toArray; // returns Object[]
-- (NSString*)toString;
+- (NSString *)toString;
 - (JavaIterator*)iterator;
 
 @end
@@ -148,7 +148,7 @@
 - (int)hashCode;
 - (BOOL)isEmpty;
 - (id)put:(id)key :(id)value;
-- (void)putAll:(JavaMap*)t;
+- (void)putAll:(JavaMap *)t;
 - (id)remove:(id)key;
 - (int)size;
 - (JavaSet*)entrySet;
@@ -182,19 +182,19 @@
 @interface JavaFile : JavaObject {
 }
 
-- (NSString*)getPath;
-- (NSString*)getName;
-- (NSString*)getAbsoluteFile;
-- (NSString*)getAbsolutePath;
+- (NSString *)getPath;
+- (NSString *)getName;
+- (NSString *)getAbsoluteFile;
+- (NSString *)getAbsolutePath;
 
 @end
 
 @interface JavaMethod : JavaObject {
 }
 
-- (NSString*)getName;
+- (NSString *)getName;
 - (id)invoke:(id)obj :(id)args; // second is String[]
-- (NSString*)toString;
+- (NSString *)toString;
 - (Class <JavaObject>)getReturnType;
 
 @end
@@ -218,13 +218,13 @@
 @interface SmackAccountManager : JavaObject {
 }
 
-- (void)changePassword:(NSString*)newPassword;
-- (void)createAccount:(NSString*)username :(NSString*)password;
-- (void)createAccount:(NSString*)username :(NSString*)password :(JavaMap*)attributes;
+- (void)changePassword:(NSString *)newPassword;
+- (void)createAccount:(NSString *)username :(NSString *)password;
+- (void)createAccount:(NSString *)username :(NSString *)password :(JavaMap *)attributes;
 - (void)deleteAccount;
-- (NSString*)getAccountAttribute:(NSString*)name;
+- (NSString *)getAccountAttribute:(NSString *)name;
 - (JavaIterator*)getAccountAttributes;
-- (NSString*)getAccountInstructions;
+- (NSString *)getAccountInstructions;
 - (BOOL)supportsAccountCreation;
 
 @end
@@ -232,16 +232,16 @@
 @interface SmackRosterPacketItemStatus : JavaObject {
 }
 
-- (SmackRosterPacketItemStatus*)fromString:(NSString*)type;
-- (NSString*)toString;
+- (SmackRosterPacketItemStatus*)fromString:(NSString *)type;
+- (NSString *)toString;
 
 @end
 
 @interface SmackRosterPacketItemType : JavaObject {
 }
 
-- (SmackRosterPacketItemType*)fromString:(NSString*)type;
-- (NSString*)toString;
+- (SmackRosterPacketItemType*)fromString:(NSString *)type;
+- (NSString *)toString;
 
 @end
 
@@ -250,28 +250,28 @@
 
 - (BOOL)equals:(id)object;
 - (JavaIterator*)getGroups;
-- (NSString*)getName;
+- (NSString *)getName;
 - (SmackRosterPacketItemStatus*)getStatus;
 - (SmackRosterPacketItemType*)getType;
-- (NSString*)getUser;
-- (void)setName:(NSString*)name;
-- (NSString*)toString;
+- (NSString *)getUser;
+- (void)setName:(NSString *)name;
+- (NSString *)toString;
 
 @end
 
 @interface SmackRosterPacketItem : JavaObject {
 }
 
-- (void)addGroupName:(NSString*)groupName;
+- (void)addGroupName:(NSString *)groupName;
 - (JavaIterator*)getGroupNames;
 - (SmackRosterPacketItemStatus*)getItemsStatus;
 - (SmackRosterPacketItemType*)getItemType;
-- (NSString*)getName;
-- (NSString*)getUser;
-- (void)removeGroupName:(NSString*)groupName;
+- (NSString *)getName;
+- (NSString *)getUser;
+- (void)removeGroupName:(NSString *)groupName;
 - (void)setItemType:(SmackRosterPacketItemType*)itemType;
-- (void)setName:(NSString*)name;
-- (NSString*)toXML;
+- (void)setName:(NSString *)name;
+- (NSString *)toXML;
 
 @end
 
@@ -280,29 +280,29 @@
 
 - (void)addEntry:(SmackRosterEntry*)entry;
 - (BOOL)contains:(SmackRosterEntry*)entry;
-//- (BOOL)contains:(NSString*)user;
+//- (BOOL)contains:(NSString *)user;
 - (JavaIterator*)getEntries;
-- (SmackRosterEntry*)getEntry:(NSString*)user;
+- (SmackRosterEntry*)getEntry:(NSString *)user;
 - (int)getEntryCount;
-- (NSString*)getName;
+- (NSString *)getName;
 - (void)removeEntry:(SmackRosterEntry*)entry;
-- (void)setName:(NSString*)name;
+- (void)setName:(NSString *)name;
 
 @end
 
 @interface SmackPresenceMode : JavaObject {
 }
 
-- (SmackPresenceMode*)fromString:(NSString*)type;
-- (NSString*)toString;
+- (SmackPresenceMode *)fromString:(NSString *)type;
+- (NSString *)toString;
 
 @end
 
 @interface SmackPresenceType : JavaObject {
 }
 
-- (SmackPresenceType*)fromString:(NSString*)type;
-- (NSString*)toString;
+- (SmackPresenceType*)fromString:(NSString *)type;
+- (NSString *)toString;
 
 @end
 
@@ -313,83 +313,83 @@
 }
 
 - (void)addExtension:(id<SmackPacketExtension,NSObject>)extension;
-- (void)deleteProperty:(NSString*)name;
+- (void)deleteProperty:(NSString *)name;
 - (SmackXMPPError*)getError;
-- (id<SmackPacketExtension, JavaObject>)getExtension:(NSString*)elementName :(NSString*)namespace;
+- (id<SmackPacketExtension, JavaObject>)getExtension:(NSString *)elementName :(NSString *)namespace;
 - (JavaIterator*)getExtensions;
-- (NSString*)getFrom;
-- (NSString*)getPacketID;
-- (id)getProperty:(NSString*)name;
+- (NSString *)getFrom;
+- (NSString *)getPacketID;
+- (id)getProperty:(NSString *)name;
 - (JavaIterator*)getPropertyNames;
-- (NSString*)getTo;
+- (NSString *)getTo;
 - (void)removeExtension:(id<SmackPacketExtension,NSObject>)extension;
 
 - (void)setError:(SmackXMPPError*)error;
-- (void)setFrom:(NSString*)from;
-- (void)setPacketID:(NSString*)packetID;
-- (void)setProperty:(NSString*)name :(id)value; // some collisions!
-- (void)setTo:(NSString*)to;
-- (NSString*)toXML;
+- (void)setFrom:(NSString *)from;
+- (void)setPacketID:(NSString *)packetID;
+- (void)setProperty:(NSString *)name :(id)value; // some collisions!
+- (void)setTo:(NSString *)to;
+- (NSString *)toXML;
 
 @end
 
 @interface SmackMessage : SmackPacket {
 }
 
-- (NSString*)getBody;
-- (NSString*)getSubject;
-- (NSString*)getThread;
-- (SmackMessageType*)getType;
-- (void)setBody:(NSString*)body;
-- (void)setSubject:(NSString*)subject;
-- (void)setThread:(NSString*)thread;
-- (void)setType:(SmackMessageType*)type;
-- (NSString*)toXML;
+- (NSString *)getBody;
+- (NSString *)getSubject;
+- (NSString *)getThread;
+- (SmackMessageType *)getType;
+- (void)setBody:(NSString *)body;
+- (void)setSubject:(NSString *)subject;
+- (void)setThread:(NSString *)thread;
+- (void)setType:(SmackMessageType *)type;
+- (NSString *)toXML;
 
 @end
 
 @interface SmackPresence : SmackPacket {
 }
 
-- (SmackPresenceMode*)getMode;
+- (SmackPresenceMode *)getMode;
 - (int)getPriority;
-- (NSString*)getStatus;
+- (NSString *)getStatus;
 - (SmackPresenceType*)getType;
-- (void)setMode:(SmackPresenceMode*)mode;
+- (void)setMode:(SmackPresenceMode *)mode;
 - (void)setPriority:(int)priority;
-- (void)setStatus:(NSString*)status;
+- (void)setStatus:(NSString *)status;
 - (void)setType:(SmackPresenceType*)type;
-- (NSString*)toString;
-- (NSString*)toXML;
+- (NSString *)toString;
+- (NSString *)toXML;
 
 @end
 
 @interface SmackIQType : JavaObject {
 }
 
-- (SmackIQType*)fromString:(NSString*)type;
-- (NSString*)toString;
+- (SmackIQType*)fromString:(NSString *)type;
+- (NSString *)toString;
 
 @end
 
 @interface SmackIQ : SmackPacket {
 }
 
-- (NSString*)getChildElementXML;
+- (NSString *)getChildElementXML;
 - (SmackIQType*)getType;
 - (void)setType:(SmackIQType*)type;
-- (NSString*)toXML;
+- (NSString *)toXML;
 
 @end
 
 @interface SmackRegister : SmackIQ {
 }
 
-- (JavaMap*)getAttributes;
-- (NSString*)getChildElementXML;
-- (NSString*)getInstructions;
-- (void)setAttributes:(JavaMap*)atttributes;
-- (void)setInstructions:(NSString*)instructions;
+- (JavaMap *)getAttributes;
+- (NSString *)getChildElementXML;
+- (NSString *)getInstructions;
+- (void)setAttributes:(JavaMap *)atttributes;
+- (void)setInstructions:(NSString *)instructions;
 
 @end
 
@@ -397,7 +397,7 @@
 }
 
 - (void)addRosterItem:(SmackRosterPacketItem*)item;
-- (NSString*)getChildElementXML;
+- (NSString *)getChildElementXML;
 - (int)getRosterItemCount;
 - (JavaIterator*)getRosterItems;
 
@@ -419,19 +419,19 @@
 
 - (void)addRosterListener:(id)rosterListener;
 - (void)removeRosterListener:(id)rosterListener;
-- (BOOL)contains:(NSString*)user;
-- (void)createEntry:(NSString*)user :(NSString*)name :(id)groups; // last param is String[]
-- (SmackRosterGroup*)createGroup:(NSString*)name;
+- (BOOL)contains:(NSString *)user;
+- (void)createEntry:(NSString *)user :(NSString *)name :(id)groups; // last param is String[]
+- (SmackRosterGroup*)createGroup:(NSString *)name;
 - (int)getDefaultSubscriptionMode;
-- (JavaVector*)getEntries;
-- (SmackRosterEntry*)getEntry:(NSString*)user;
+- (JavaVector *)getEntries;
+- (SmackRosterEntry*)getEntry:(NSString *)user;
 - (int)getEntryCount;
-- (SmackRosterGroup*)getGroup:(NSString*)name;
+- (SmackRosterGroup*)getGroup:(NSString *)name;
 - (int)getGroupCount;
-- (JavaVector*)getGroups;
-- (SmackPresence*)getPresence:(NSString*)user;
-- (SmackPresence*)getPresenceResource:(NSString*)userResource;
-- (JavaIterator*)getPresences:(NSString*)user;
+- (JavaVector *)getGroups;
+- (SmackPresence *)getPresence:(NSString *)user;
+- (SmackPresence *)getPresenceResource:(NSString *)userResource;
+- (JavaIterator*)getPresences:(NSString *)user;
 - (int)getSubscriptionMode;
 - (JavaIterator*)getUnfiledEntries;
 - (int)getUnfiledEntryCount;
@@ -453,11 +453,11 @@
 @interface SmackRegistration : SmackIQ {
 }
 
-- (JavaMap*)getAttributes;
-- (NSString*)getChildElementXML;
-- (NSString*)getInstructions;
-- (void)setAttributes:(JavaMap*)attributes;
-- (void)setInstructions:(NSString*)instructions;
+- (JavaMap *)getAttributes;
+- (NSString *)getChildElementXML;
+- (NSString *)getInstructions;
+- (void)setAttributes:(JavaMap *)attributes;
+- (void)setInstructions:(NSString *)instructions;
 
 @end
 
@@ -465,8 +465,8 @@
 }
 
 - (int)getOrder;
-- (NSString*)getType;
-- (NSString*)getValue;
+- (NSString *)getType;
+- (NSString *)getValue;
 - (BOOL)isAllow;
 - (BOOL)isFilterEverything;
 - (BOOL)isFilterIQ;
@@ -477,68 +477,71 @@
 - (void)setFilterMessage:(BOOL)filterMessage;
 - (void)setFilterPresence_in:(BOOL)filterPresence_in;
 - (void)setFilterPresence_out:(BOOL)filterPresence_out;
-- (void)setValue:(NSString*)value;
-- (NSString*)toXML;
+- (void)setValue:(NSString *)value;
+- (NSString *)toXML;
 
 @end
 
 @interface SmackPrivacyList : JavaObject {
 }
 
-- (JavaVector*)getItems; // of SmackPrivacyItem
+- (JavaVector *)getItems; // of SmackPrivacyItem
 - (BOOL)isActiveList;
 - (BOOL)isDefaultList;
-- (NSString*)toString;
+- (NSString *)toString;
 
 @end
 
-@class SmackXMPPConnection;
+@class SmackXMPPConnection, SmackPrivacyListManager;
 
-@interface SmackPrivacyListManager : JavaObject {
+@protocol SmackPrivacyListManager
++ (SmackPrivacyListManager *)getInstanceFor:(SmackXMPPConnection *)connection;
+@end
+
+@interface SmackPrivacyListManager : JavaObject <SmackPrivacyListManager> {
 }
 
-- (void)createPrivacyList:(NSString*)listname :(JavaVector*)privacyItems;
+- (void)createPrivacyList:(NSString *)listname :(JavaVector *)privacyItems;
 - (void)declineActiveList;
 - (void)declineDefaultList;
-- (void)deletePrivacyList:(NSString*)listName;
+- (void)deletePrivacyList:(NSString *)listName;
 - (SmackPrivacyList*)getActiveList;
 - (SmackPrivacyList*)getDefaultList;
-+ (SmackPrivacyListManager*)getInstanceFor:(SmackXMPPConnection*)connection;
-- (SmackPrivacyList*)getPrivacyList:(NSString*)listName;
+- (SmackPrivacyList*)getPrivacyList:(NSString *)listName;
 - (id)getPrivacyLists; // PrivacyList[]
-- (void)setActiveListName:(NSString*)listName;
-- (void)setDefaultListName:(NSString*)listName;
-- (void)updatePrivacyList:(NSString*)listName :(JavaVector*)privacyItems;
+- (void)setActiveListName:(NSString *)listName;
+- (void)setDefaultListName:(NSString *)listName;
+- (void)updatePrivacyList:(NSString *)listName :(JavaVector *)privacyItems;
 
 @end
 
 @interface SmackSASLAuthentication : JavaObject {
 }
 
-- (NSString*)authenticate:(NSString*)username :(NSString*)password :(NSString*)resource;
-- (NSString*)authentcateAnonymously;
+- (NSString *)authenticate:(NSString *)username :(NSString *)password :(NSString *)resource;
+- (NSString *)authentcateAnonymously;
 - (JavaList*)getRegisterSASLMechanisms;
 - (BOOL)hasAnonymousAuthentication;
 - (BOOL)hasNonAnonymousAuthentication;
 - (BOOL)isAuthenticated;
-- (void)send:(NSString*)stanza;
+- (void)send:(NSString *)stanza;
 
 @end
 
 @protocol SmackPacketExtension
 
-- (NSString*)getElementName;
-- (NSString*)getNamespace;
-- (NSString*)toXML;
+- (NSString *)getElementName;
+- (NSString *)getNamespace;
+- (NSString *)toXML;
 
 @end
 
 @interface SmackXDelayInformation : JavaObject <SmackPacketExtension> {
 }
 
-- (JavaDate*)getStamp;
-- (NSString*)getFrom;
-- (NSString*)getReason;
+- (JavaDate *)getStamp;
+- (NSString *)getFrom;
+- (NSString *)getReason;
 
 @end
 
@@ -546,9 +549,9 @@
 }
 
 - (int)getCode;
-- (NSString*)getMessage;
-- (NSString*)toString;
-- (NSString*)toXML;
+- (NSString *)getMessage;
+- (NSString *)toString;
+- (NSString *)toXML;
 
 @end
 
@@ -556,22 +559,22 @@
 }
 
 - (void)close;
-- (SmackChat*)createChat:(NSString*)participant;
+- (SmackChat*)createChat:(NSString *)participant;
 - (SmackAccountManager*)getAccountManager;
 - (SmackRoster*)initializeRoster;
 - (SmackRoster*)getRoster;
 - (SmackSASLAuthentication*)getSASLAuthentication;
-- (NSString*)getServiceName;
-- (NSString*)getUser;
+- (NSString *)getServiceName;
+- (NSString *)getUser;
 - (BOOL)isAnonymous;
 - (BOOL)isAuthenticated;
 - (BOOL)isConnected;
 - (BOOL)isSecureConnection;
 - (BOOL)isUsingCompression;
 - (BOOL)isUsingTLS;
-- (BOOL)login:(NSString*)username :(NSString*)password;
-- (BOOL)login:(NSString*)username :(NSString*)password :(NSString*)resource;
-- (BOOL)login:(NSString*)username :(NSString*)password :(NSString*)resource :(BOOL)sendPresence;
+- (BOOL)login:(NSString *)username :(NSString *)password;
+- (BOOL)login:(NSString *)username :(NSString *)password :(NSString *)resource;
+- (BOOL)login:(NSString *)username :(NSString *)password :(NSString *)resource :(BOOL)sendPresence;
 - (void)loginAnonymously;
 - (void)sendPacket:(SmackPacket*)packet;
 
@@ -580,41 +583,41 @@
 @interface SmackXOccupant : JavaObject {
 }
 
-- (NSString*)getAffiliation;
-- (NSString*)getJid;
-- (NSString*)getNick;
-- (NSString*)getRole;
+- (NSString *)getAffiliation;
+- (NSString *)getJid;
+- (NSString *)getNick;
+- (NSString *)getRole;
 
 @end
 
 @interface SmackXFormFieldOption : JavaObject {
 }
 
-- (NSString*)getLabel;
-- (NSString*)getValue;
-- (NSString*)toString;
-- (NSString*)toXML;
+- (NSString *)getLabel;
+- (NSString *)getValue;
+- (NSString *)toString;
+- (NSString *)toXML;
 
 @end
 
 @interface SmackXFormField : JavaObject {
 }
 
-- (NSString*)getDescription;
-- (NSString*)getLabel;
+- (NSString *)getDescription;
+- (NSString *)getLabel;
 - (JavaIterator*)getOptions;
-- (NSString*)getType;
+- (NSString *)getType;
 - (JavaIterator*)getValues;
-- (NSString*)getVariable;
+- (NSString *)getVariable;
 - (BOOL)isRequired;
 
 - (void)resetValues;
-- (void)addValue:(NSString*)value;
+- (void)addValue:(NSString *)value;
 
-- (void)setLabel:(NSString*)label;
-- (void)setType:(NSString*)type;
+- (void)setLabel:(NSString *)label;
+- (void)setType:(NSString *)type;
 
-- (NSString*)toXML;
+- (NSString *)toXML;
 
 @end
 
@@ -622,7 +625,7 @@
 }
 
 - (JavaIterator*)getFields;
-- (NSString*)toXML;
+- (NSString *)toXML;
 
 @end
 
@@ -630,7 +633,7 @@
 }
 
 - (JavaIterator*)getFields;
-- (NSString*)toXML;
+- (NSString *)toXML;
 
 @end
 
@@ -638,20 +641,20 @@
 }
 
 - (void)addField:(SmackXFormField*)field;
-- (void)addInstruction:(NSString*)instruction;
+- (void)addInstruction:(NSString *)instruction;
 - (void)addItem:(SmackXDataFormItem*)item;
-- (NSString*)getElementName;
+- (NSString *)getElementName;
 - (JavaIterator*)getFields;
 - (JavaIterator*)getInstructions;
 - (JavaIterator*)getIterms;
-- (NSString*)getNamespace;
+- (NSString *)getNamespace;
 - (SmackXDataFormReportedData*)getReportedData;
-- (NSString*)getTitle;
-- (NSString*)getType;
+- (NSString *)getTitle;
+- (NSString *)getType;
 - (void)setInstructions:(JavaList*)instructions;
 - (void)setReportedData:(SmackXDataFormReportedData*)reportedData;
-- (void)setTitle:(NSString*)title;
-- (NSString*)toXML;
+- (void)setTitle:(NSString *)title;
+- (NSString *)toXML;
 
 @end
 
@@ -680,14 +683,14 @@
 @interface SmackXDiscoverItem : JavaObject {
 }
 
-- (NSString*)getAction;
-- (NSString*)getEntityID;
-- (NSString*)getName;
-- (NSString*)getNode;
-- (void)setAction:(NSString*)action;
-- (void)setName:(NSString*)name;
-- (void)setNode:(NSString*)node;
-- (NSString*)toXML;
+- (NSString *)getAction;
+- (NSString *)getEntityID;
+- (NSString *)getName;
+- (NSString *)getNode;
+- (void)setAction:(NSString *)action;
+- (void)setName:(NSString *)name;
+- (void)setNode:(NSString *)node;
+- (NSString *)toXML;
 
 @end
 
@@ -695,33 +698,33 @@
 }
 
 - (void)addItem:(SmackXDiscoverItem*)item;
-- (NSString*)getChildElementXML;
+- (NSString *)getChildElementXML;
 - (JavaIterator*)getItems;
-- (NSString*)getNode;
-- (void)setNode:(NSString*)node;
+- (NSString *)getNode;
+- (void)setNode:(NSString *)node;
 
 @end
 
 @interface SmackXDiscoverInfoIdentity : JavaObject {
 }
 
-- (NSString*)getCategory;
-- (NSString*)getName;
-- (NSString*)getType;
-- (void)setType:(NSString*)type;
-- (NSString*)toXML;
+- (NSString *)getCategory;
+- (NSString *)getName;
+- (NSString *)getType;
+- (void)setType:(NSString *)type;
+- (NSString *)toXML;
 
 @end
 
 @interface SmackXDiscoverInfo : SmackIQ {
 }
 
-- (void)addFeature:(NSString*)feature;
+- (void)addFeature:(NSString *)feature;
 - (void)addIdentity:(SmackXDiscoverInfoIdentity*)identity;
-- (BOOL)containsFeature:(NSString*)feature;
+- (BOOL)containsFeature:(NSString *)feature;
 - (JavaIterator*)getIdentities;
-- (NSString*)getNode;
-- (void)setNode:(NSString*)node;
+- (NSString *)getNode;
+- (void)setNode:(NSString *)node;
 
 @end
 
@@ -731,75 +734,75 @@
 - (int)getMaxChars;
 - (int)getMaxStanzas;
 - (int)getSeconds;
-- (JavaDate*)getSince;
+- (JavaDate *)getSince;
 - (void)setMaxChars:(int)maxChars;
 - (void)setMaxStanzas:(int)maxStanzas;
 - (void)setSeconds:(int)seconds;
-- (void)setSince:(JavaDate*)since;
+- (void)setSince:(JavaDate *)since;
 
 @end
 
 @interface SmackXMultiUserChat : JavaObject {
 }
 
-- (void)banUser:(NSString*)jid :(NSString*)reason;
+- (void)banUser:(NSString *)jid :(NSString *)reason;
 - (void)banUsers:(JavaCollection*)jids;
 
-- (void)changeAvailabilityStatus:(NSString*)status :(SmackPresenceMode*)mode;
-- (void)changeNickname:(NSString*)nickname;
-- (void)changeSubject:(NSString*)subject;
+- (void)changeAvailabilityStatus:(NSString *)status :(SmackPresenceMode *)mode;
+- (void)changeNickname:(NSString *)nickname;
+- (void)changeSubject:(NSString *)subject;
 
-- (void)create:(NSString*)nickname;
-- (SmackMessage*)createMessage;
-- (SmackChat*)createPrivateChat:(NSString*)occupant;
+- (void)create:(NSString *)nickname;
+- (SmackMessage *)createMessage;
+- (SmackChat*)createPrivateChat:(NSString *)occupant;
 
-- (void)destroy:(NSString*)reason :(NSString*)alternateJID;
+- (void)destroy:(NSString *)reason :(NSString *)alternateJID;
 
 - (JavaCollection*)getAdmins;
 - (JavaCollection*)getMembers;
 - (JavaCollection*)getModerators;
-- (NSString*)getNickname;
-- (SmackXOccupant*)getOccupant:(NSString*)user;
-- (SmackPresence*)getOccupantPresence:(NSString*)user;
+- (NSString *)getNickname;
+- (SmackXOccupant*)getOccupant:(NSString *)user;
+- (SmackPresence *)getOccupantPresence:(NSString *)user;
 - (JavaIterator*)getOccupants;
 - (int)getOccupantsCount;
 - (JavaCollection*)getOutcasts;
 - (JavaCollection*)getOwners;
 - (JavaCollection*)getParticipants;
-- (NSString*)getReservedNickname;
-- (NSString*)getRoom;
-- (NSString*)getSubject;
+- (NSString *)getReservedNickname;
+- (NSString *)getRoom;
+- (NSString *)getSubject;
 
-- (void)grantAdmin:(NSString*)jid;
-- (void)revokeAdmin:(NSString*)jid;
+- (void)grantAdmin:(NSString *)jid;
+- (void)revokeAdmin:(NSString *)jid;
 
-- (void)grantMembership:(NSString*)jid;
-- (void)revokeMembership:(NSString*)jid;
+- (void)grantMembership:(NSString *)jid;
+- (void)revokeMembership:(NSString *)jid;
 
-- (void)grantOwnership:(NSString*)jid;
-- (void)revokeOwnership:(NSString*)jid;
+- (void)grantOwnership:(NSString *)jid;
+- (void)revokeOwnership:(NSString *)jid;
 
-- (void)grantModerator:(NSString*)nickname;
-- (void)revokeModerator:(NSString*)nickname;
+- (void)grantModerator:(NSString *)nickname;
+- (void)revokeModerator:(NSString *)nickname;
 
-- (void)grantVoice:(NSString*)nickname;
-- (void)revokeVoice:(NSString*)nickname;
+- (void)grantVoice:(NSString *)nickname;
+- (void)revokeVoice:(NSString *)nickname;
 
-- (void)kickParticipant:(NSString*)nickname :(NSString*)reason;
+- (void)kickParticipant:(NSString *)nickname :(NSString *)reason;
 
-- (void)invite:(SmackMessage*)message :(NSString*)user :(NSString*)reason;
-- (void)invite:(NSString*)user :(NSString*)reason;
+- (void)invite:(SmackMessage *)message :(NSString *)user :(NSString *)reason;
+- (void)invite:(NSString *)user :(NSString *)reason;
 
 - (BOOL)isJoined;
-- (void)join:(NSString*)nickname;
-- (void)join:(NSString*)nickname :(NSString*)password;
-- (void)join:(NSString*)nickname :(NSString*)password :(SmackXDiscussionHistory*)history :(long)timeout;
+- (void)join:(NSString *)nickname;
+- (void)join:(NSString *)nickname :(NSString *)password;
+- (void)join:(NSString *)nickname :(NSString *)password :(SmackXDiscussionHistory*)history :(long)timeout;
 - (void)leave;
 
-- (SmackMessage*)nextMessage;
-- (SmackMessage*)nextMessage:(long)timeout;
-- (SmackMessage*)pollMessage;
-- (void)sendMessage:(SmackMessage*)message;
+- (SmackMessage *)nextMessage;
+- (SmackMessage *)nextMessage:(long)timeout;
+- (SmackMessage *)pollMessage;
+- (void)sendMessage:(SmackMessage *)message;
 
 - (SmackXForm*)getConfigurationForm;
 - (void)sendConfigurationForm:(SmackXForm*)form;
@@ -812,15 +815,15 @@
 @interface SmackXFileTransferStatus : JavaObject {
 }
 
-- (NSString*)toString;
+- (NSString *)toString;
 
 @end
 
 @interface SmackXFileTransferError : JavaObject {
 }
 
-- (NSString*)getMessage;
-- (NSString*)toString;
+- (NSString *)getMessage;
+- (NSString *)toString;
 
 @end
 
@@ -831,10 +834,10 @@
 - (long)getAmountWritten;
 - (SmackXFileTransferError*)getError;
 //- (JavaException*)getException;
-- (NSString*)getFileName;
-- (NSString*)getFilePath;
+- (NSString *)getFileName;
+- (NSString *)getFilePath;
 - (long)getFileSize;
-- (NSString*)getPeer;
+- (NSString *)getPeer;
 - (double)getProgress;
 - (SmackXFileTransferStatus*)getStatus;
 - (BOOL)isDone;
@@ -845,15 +848,15 @@
 }
 
 - (long)getBytesSent;
-- (void)sendFile:(JavaFile*)file :(NSString*)description;
-- (void)sendFile:(NSString*)filename :(long)fileSize :(NSString*)description;
+- (void)sendFile:(JavaFile *)file :(NSString *)description;
+- (void)sendFile:(NSString *)filename :(long)fileSize :(NSString *)description;
 
 @end
 
 @interface SmackXIncomingFileTransfer : SmackXFileTransfer {
 }
 
-- (void)receiveFile:(JavaFile*)file;
+- (void)receiveFile:(JavaFile *)file;
 
 @end
 
@@ -861,12 +864,12 @@
 }
 
 - (SmackXIncomingFileTransfer*)accept;
-- (NSString*)getDescription;
-- (NSString*)getFileName;
+- (NSString *)getDescription;
+- (NSString *)getFileName;
 - (long)getFileSize;
-- (NSString*)getMimeType;
-- (NSString*)getRequestor;
-- (NSString*)getStreamID;
+- (NSString *)getMimeType;
+- (NSString *)getRequestor;
+- (NSString *)getStreamID;
 - (void)reject;
 
 @end
@@ -875,7 +878,7 @@
 }
 
 - (JavaIterator*)getEventTypes;
-- (NSString*)getPacketID;
+- (NSString *)getPacketID;
 - (BOOL)isCancelled;
 - (BOOL)isComposing;
 - (BOOL)isDelivered;
@@ -887,8 +890,8 @@
 - (void)setDelivered:(BOOL)delivered;
 - (void)setDisplayed:(BOOL)displayed;
 - (void)setOffline:(BOOL)offline;
-- (void)setPacketID:(NSString*)packetID;
-- (NSString*)toXML;
+- (void)setPacketID:(NSString *)packetID;
+- (NSString *)toXML;
 
 @end
 
@@ -896,27 +899,27 @@
 
 @protocol SmackXServiceDiscoveryManager <JavaObject>
 + (SmackXServiceDiscoveryManager *)getInstanceFor:(SmackXMPPConnection*)connection;
-+ (NSString*)getIdentityName;
-+ (NSString*)getIdentityType;
-+ (void)setIdentityName:(NSString*)name;
-+ (void)setIdentityType:(NSString*)type;
++ (NSString *)getIdentityName;
++ (NSString *)getIdentityType;
++ (void)setIdentityName:(NSString *)name;
++ (void)setIdentityType:(NSString *)type;
 @end
 
 @interface SmackXServiceDiscoveryManager : JavaObject <SmackXServiceDiscoveryManager> {
 }
 
-- (void)addFeature:(NSString*)feature;
-- (BOOL)canPublishItems:(NSString*)entityID;
-- (SmackXDiscoverInfo*)discoverInfo:(NSString*)entityID;
-- (SmackXDiscoverInfo*)discoverInfo:(NSString*)entityID :(NSString*)node;
-- (SmackXDiscoverItems*)discoverItems:(NSString*)entityID;
-- (SmackXDiscoverItems*)discoverItems:(NSString*)entityID :(NSString*)node;
+- (void)addFeature:(NSString *)feature;
+- (BOOL)canPublishItems:(NSString *)entityID;
+- (SmackXDiscoverInfo*)discoverInfo:(NSString *)entityID;
+- (SmackXDiscoverInfo*)discoverInfo:(NSString *)entityID :(NSString *)node;
+- (SmackXDiscoverItems*)discoverItems:(NSString *)entityID;
+- (SmackXDiscoverItems*)discoverItems:(NSString *)entityID :(NSString *)node;
 - (JavaIterator*)getFeatures;
-- (BOOL)includesFeature:(NSString*)feature;
-- (void)publishItems:(NSString*)entityID :(SmackXDiscoverItems*)discoverItems;
-- (void)publishItems:(NSString*)entityID :(NSString*)node :(SmackXDiscoverItems*)discoverItems;
-- (void)removeFeature:(NSString*)feature;
-- (void)removeNodeInformationProvider:(NSString*)node;
+- (BOOL)includesFeature:(NSString *)feature;
+- (void)publishItems:(NSString *)entityID :(SmackXDiscoverItems*)discoverItems;
+- (void)publishItems:(NSString *)entityID :(NSString *)node :(SmackXDiscoverItems*)discoverItems;
+- (void)removeFeature:(NSString *)feature;
+- (void)removeNodeInformationProvider:(NSString *)node;
 
 @end
 
@@ -924,56 +927,56 @@
 }
 
 - (BOOL)equals:(id)o;
-- (NSString*)getAddressFieldHome:(NSString*)addrField;
-- (NSString*)getAddressFieldWork:(NSString*)addrField;
+- (NSString *)getAddressFieldHome:(NSString *)addrField;
+- (NSString *)getAddressFieldWork:(NSString *)addrField;
 - (id)getAvatar; // byte[]
-- (NSString*)getAvatarHash;
-- (NSString*)getChildElementXML;
-- (NSString*)getEmailHome;
-- (NSString*)getEmailWork;
-- (NSString*)getField:(NSString*)field;
-- (NSString*)getFirstName;
-- (NSString*)getJabberId;
-- (NSString*)getLastName;
-- (NSString*)getMiddleName;
-- (NSString*)getNickName;
-- (NSString*)getOrganization;
-- (NSString*)getOrganizationUnit;
-- (NSString*)getPhoneHome:(NSString*)phoneType;
-- (NSString*)getPhoneWork:(NSString*)phoneType;
+- (NSString *)getAvatarHash;
+- (NSString *)getChildElementXML;
+- (NSString *)getEmailHome;
+- (NSString *)getEmailWork;
+- (NSString *)getField:(NSString *)field;
+- (NSString *)getFirstName;
+- (NSString *)getJabberId;
+- (NSString *)getLastName;
+- (NSString *)getMiddleName;
+- (NSString *)getNickName;
+- (NSString *)getOrganization;
+- (NSString *)getOrganizationUnit;
+- (NSString *)getPhoneHome:(NSString *)phoneType;
+- (NSString *)getPhoneWork:(NSString *)phoneType;
 - (void)load:(SmackXMPPConnection*)connection;
-- (void)load:(SmackXMPPConnection*)connection :(NSString*)user;
+- (void)load:(SmackXMPPConnection*)connection :(NSString *)user;
 - (void)save:(SmackXMPPConnection*)connection;
-- (void)setAddressFieldHome:(NSString*)addrField :(NSString*)value;
-- (void)setAddressFieldWork:(NSString*)addrField :(NSString*)value;
+- (void)setAddressFieldHome:(NSString *)addrField :(NSString *)value;
+- (void)setAddressFieldWork:(NSString *)addrField :(NSString *)value;
 - (void)setAvatar:(id)bytes; // byte[]
-- (void)setEmailHome:(NSString*)email;
-- (void)setEmailWork:(NSString*)emailWork;
-- (void)setEncodedImage:(NSString*)encodedAvatar;
-- (void)setField:(NSString*)field :(NSString*)value;
-- (void)setField:(NSString*)field :(NSString*)value :(BOOL)isUnescapable;
-- (void)setFirstName:(NSString*)firstName;
-- (void)setJabberId:(NSString*)jabberId;
-- (void)setLastName:(NSString*)lastName;
-- (void)setMiddleName:(NSString*)middleName;
-- (void)setNickName:(NSString*)nickName;
-- (void)setOrganization:(NSString*)organization;
-- (void)setOrganizationUnit:(NSString*)organizationUnit;
-- (void)setPhoneHome:(NSString*)phoneType :(NSString*)phoneNum;
-- (void)setPhoneWork:(NSString*)phoneType :(NSString*)phoneNum;
-- (NSString*)toString;
+- (void)setEmailHome:(NSString *)email;
+- (void)setEmailWork:(NSString *)emailWork;
+- (void)setEncodedImage:(NSString *)encodedAvatar;
+- (void)setField:(NSString *)field :(NSString *)value;
+- (void)setField:(NSString *)field :(NSString *)value :(BOOL)isUnescapable;
+- (void)setFirstName:(NSString *)firstName;
+- (void)setJabberId:(NSString *)jabberId;
+- (void)setLastName:(NSString *)lastName;
+- (void)setMiddleName:(NSString *)middleName;
+- (void)setNickName:(NSString *)nickName;
+- (void)setOrganization:(NSString *)organization;
+- (void)setOrganizationUnit:(NSString *)organizationUnit;
+- (void)setPhoneHome:(NSString *)phoneType :(NSString *)phoneNum;
+- (void)setPhoneWork:(NSString *)phoneType :(NSString *)phoneNum;
+- (NSString *)toString;
 
 @end
 
 @interface SmackXVersion : SmackIQ {
 }
 
-- (NSString*)getName;
-- (NSString*)getOs;
-- (NSString*)getVersion;
-- (void)setName:(NSString*)name;
-- (void)setOs:(NSString*)os;
-- (void)setVersion:(NSString*)version;
+- (NSString *)getName;
+- (NSString *)getOs;
+- (NSString *)getVersion;
+- (void)setName:(NSString *)name;
+- (void)setOs:(NSString *)os;
+- (void)setVersion:(NSString *)version;
 
 @end
 
@@ -987,16 +990,16 @@
 @interface SmackConfiguration : JavaObject {
 }
 
-+ (NSString*)getVersion;
++ (NSString *)getVersion;
 
 @end
 
 @interface SmackDNSUtilHostAddress : JavaObject {
 }
 
-- (NSString*)getHost;
+- (NSString *)getHost;
 - (int)getPort;
-- (NSString*)toString;
+- (NSString *)toString;
 - (BOOL)equals:(id)o;
 
 @end
@@ -1004,35 +1007,35 @@
 @interface SmackDNSUtil : JavaObject {
 }
 
-- (SmackDNSUtilHostAddress*)resolveXMPPDomain:(NSString*)domain;
-- (SmackDNSUtilHostAddress*)resolveXMPPServerDomain:(NSString*)domain;
+- (SmackDNSUtilHostAddress*)resolveXMPPDomain:(NSString *)domain;
+- (SmackDNSUtilHostAddress*)resolveXMPPServerDomain:(NSString *)domain;
 
 @end
 
 @interface SmackOutOfBandExtension : JavaObject <SmackPacketExtension> {
 }
 
-- (void)setUrl:(NSString*)url;
-- (NSString*)getUrl;
-- (void)setDesc:(NSString*)desc;
-- (NSString*)getDesc;
+- (void)setUrl:(NSString *)url;
+- (NSString *)getUrl;
+- (void)setDesc:(NSString *)desc;
+- (NSString *)getDesc;
 
 @end
 
 @interface SmackVCardUpdateExtension : JavaObject <SmackPacketExtension> {
 }
 
-- (void)setPhoto:(NSString*)photo;
-- (NSString*)getPhoto;
-- (NSString*)toXML;
+- (void)setPhoto:(NSString *)photo;
+- (NSString *)getPhoto;
+- (NSString *)toXML;
 
 @end
 
 @class SmackChatStateNotifications;
 
 @protocol SmackChatStateNotifications
-+ (SmackChatStateNotifications*)getChatState:(SmackMessage*)message;
-+ (SmackChatStateNotifications*)createChatState:(NSString*)type;
++ (SmackChatStateNotifications*)getChatState:(SmackMessage *)message;
++ (SmackChatStateNotifications*)createChatState:(NSString *)type;
 @end
 
 @interface SmackChatStateNotifications : JavaObject <SmackChatStateNotifications, SmackPacketExtension> {
@@ -1046,7 +1049,7 @@
 
 - (void)setConnection:(SmackXMPPConnection*)conn;
 - (void)setDisconnection:(JavaBoolean*)blah;
-- (void)setConnectionError:(NSString*)error;
+- (void)setConnectionError:(NSString *)error;
 - (void)setNewMessagePacket:(SmackPacket*)packet;
 - (void)setNewPresencePacket:(SmackPacket*)packet;
 - (void)setNewIQPacket:(SmackPacket*)packet;
@@ -1054,17 +1057,17 @@
 @end
 
 @protocol AdiumSmackBridge <JavaObject>
-+ (void)createRosterEntry:(SmackRoster*)roster :(NSString*)jid :(NSString*)name :(NSString*)group;
-+ (BOOL)isInstanceOfClass:(id)obj :(NSString*)classname;
-+ (id)getStaticFieldFromClass:(NSString*)fieldname :(NSString*)classname;
-+ (id)getStaticFieldFromClassObject:(NSString*)fieldname :(Class <JavaObject>)classobj;
-+ (JavaMethod*)getMethod:(NSString*)classname :(NSString*)method :(JavaVector*)argumentTypes;
-+ (id)invokeMethod:(JavaMethod*)meth :(id)obj :(JavaVector*)params;
++ (void)createRosterEntry:(SmackRoster*)roster :(NSString *)jid :(NSString *)name :(NSString *)group;
++ (BOOL)isInstanceOfClass:(id)obj :(NSString *)classname;
++ (id)getStaticFieldFromClass:(NSString *)fieldname :(NSString *)classname;
++ (id)getStaticFieldFromClassObject:(NSString *)fieldname :(Class <JavaObject>)classobj;
++ (JavaMethod*)getMethod:(NSString *)classname :(NSString *)method :(JavaVector *)argumentTypes;
++ (id)invokeMethod:(JavaMethod*)meth :(id)obj :(JavaVector *)params;
 
 + (void)setVCardAvatar:(SmackXVCard*)vCard :(NSData*)avatar;
 + (NSData*)getVCardAvatar:(SmackXVCard*)vCard;
 + (BOOL)isAvatarEmpty:(SmackXVCard*)vCard;
-+ (JavaVector*)getAllPrivacyLists:(SmackXMPPConnection*)conn;
++ (JavaVector *)getAllPrivacyLists:(SmackXMPPConnection*)conn;
 @end
 
 @interface AdiumSmackBridge : JavaObject <AdiumSmackBridge> {
@@ -1074,11 +1077,11 @@
 - (void)setDelegate:(id<AdiumSmackBridgeDelegate>)delegate;
 - (id<AdiumSmackBridgeDelegate>)delegate;
 
-- (void)createConnection:(BOOL)useSSL :(SmackConnectionConfiguration*)conf;
+- (void)createConnection:(BOOL)useSSL :(SmackConnectionConfiguration *)conf;
 - (SmackXServiceDiscoveryManager*)getServiceDiscoveryManager;
 
-- (BOOL)isInstanceOfClass:(id)object :(NSString*)classname;
-- (JavaMethod*)getMethod:(NSString*)classname :(NSString*)methodname :(JavaVector*)parameterTypes;
+- (BOOL)isInstanceOfClass:(id)object :(NSString *)classname;
+- (JavaMethod*)getMethod:(NSString *)classname :(NSString *)methodname :(JavaVector *)parameterTypes;
 
 @end
 
@@ -1087,12 +1090,12 @@
 @interface SmackXXHTMLExtension : JavaObject <SmackPacketExtension> {
 }
 
-- (void)addBody:(NSString*)body;
+- (void)addBody:(NSString *)body;
 - (JavaIterator*)getBodies;
 - (int)getBodyCount;
-- (NSString*)getElementName;
-- (NSString*)getNamespace;
-- (NSString*)toXML;
+- (NSString *)getElementName;
+- (NSString *)getNamespace;
+- (NSString *)toXML;
 
 @end
 
@@ -1105,7 +1108,7 @@
 
 - (SmackXPayloadType*)getPayloadType;
 - (void)setPayload:(SmackXPayloadType*)payload;
-- (NSString*)toXML;
+- (NSString *)toXML;
 
 @end
 
@@ -1116,14 +1119,14 @@
 @interface SmackXJingleContentDescription : JavaObject {
 }
 
-- (void)addAudioPlayloadTypes:(JavaVector*)pts;
+- (void)addAudioPlayloadTypes:(JavaVector *)pts;
 - (void)addJinglePayloadType:(SmackXJingleContentDescriptionJinglePayloadType*)pt;
-- (JavaVector*)getAudioPayloadTypesList;
-- (NSString*)getElementName;
+- (JavaVector *)getAudioPayloadTypesList;
+- (NSString *)getElementName;
 - (JavaIterator*)getJinglePayloadTypes;
 - (int)getJinglePayloadTypesCount;
-- (JavaVector*)getJinglePayloadTypesList;
-- (NSString*)toXML;
+- (JavaVector *)getJinglePayloadTypesList;
+- (NSString *)toXML;
 
 @end
 
@@ -1137,13 +1140,13 @@
 
 - (BOOL)equals:(id)obj;
 - (int)getGeneration;
-- (NSString*)getIP;
-- (NSString*)getName;
+- (NSString *)getIP;
+- (NSString *)getName;
 - (int)getPort;
 - (BOOL)isNull;
 - (void)setGeneration:(int)generation;
-- (void)setIP:(NSString*)ip;
-- (void)setName:(NSString*)name;
+- (void)setIP:(NSString *)ip;
+- (void)setName:(NSString *)name;
 - (void)setPort:(int)port;
 
 @end
@@ -1153,7 +1156,7 @@
 
 - (SmackXTransportCandidate*)getMediaTransport;
 - (void)setMediaTransport:(SmackXTransportCandidate*)cand;
-- (NSString*)toXML;
+- (NSString *)toXML;
 
 @end
 
@@ -1162,7 +1165,7 @@
 
 - (void)addCondidate:(SmackXJingleTransportJingleTransportCandidate*)candidate;
 - (JavaIterator*)getCandidates;
-- (NSString*)toXML;
+- (NSString *)toXML;
 
 @end
 
@@ -1170,9 +1173,9 @@
 }
 
 - (BOOL)equals:(id)obj;
-+ (SmackXTransportCandidateChannel*)fromString:(NSString*)value;
++ (SmackXTransportCandidateChannel*)fromString:(NSString *)value;
 - (BOOL)isNull;
-- (NSString*)toString;
+- (NSString *)toString;
 
 @end
 
@@ -1180,9 +1183,9 @@
 }
 
 - (BOOL)equals:(id)obj;
-+ (SmackXTransportCandidateProtocol*)fromString:(NSString*)value;
++ (SmackXTransportCandidateProtocol*)fromString:(NSString *)value;
 - (BOOL)isNull;
-- (NSString*)toString;
+- (NSString *)toString;
 
 @end
 
@@ -1195,19 +1198,19 @@
 
 - (int)compareTo:(id)arg;
 - (SmackXTransportCandidateChannel*)getChannel;
-- (NSString*)getId;
+- (NSString *)getId;
 - (int)getNetwork;
-- (NSString*)getPassword;
+- (NSString *)getPassword;
 - (int)getPreference;
 - (SmackXTransportCandidateProtocol*)getProto;
-- (NSString*)getUsername;
+- (NSString *)getUsername;
 - (void)setChannel:(SmackXTransportCandidateChannel*)channel;
-- (void)setId:(NSString*)_id;
+- (void)setId:(NSString *)_id;
 - (void)setNetwork:(int)network;
-- (void)setPassword:(NSString*)password;
+- (void)setPassword:(NSString *)password;
 - (void)setPreference:(int)preference;
 - (void)setProto:(SmackXTransportCandidateProtocol*)proto;
-- (void)setUsername:(NSString*)username;
+- (void)setUsername:(NSString *)username;
 
 @end
 
@@ -1215,8 +1218,8 @@
 }
 
 - (BOOL)equals:(id)obj;
-+ (SmackXJingleAction*)fromString:(NSString*)value;
-- (NSString*)toString;
++ (SmackXJingleAction*)fromString:(NSString *)value;
+- (NSString *)toString;
 
 @end
 
@@ -1253,22 +1256,22 @@
 }
 
 - (void)addDescription:(SmackXJingleContentDescription*)desc;
-- (void)addDescriptions:(JavaVector*)descsList;
+- (void)addDescriptions:(JavaVector *)descsList;
 - (void)addTransport:(SmackXJingleTransport*)trans;
-- (void)addTransports:(JavaVector*)transList;
+- (void)addTransports:(JavaVector *)transList;
 - (SmackXJingleAction*)getAction;
 - (SmackXJingleContentInfo*)getContentInfo;
 - (JavaIterator*)getDescriptions;
-- (NSString*)getInitiator;
-- (NSString*)getResponder;
-+ (int)getSessionHash:(NSString*)sid :(NSString*)initiator;
-- (NSString*)getSid;
+- (NSString *)getInitiator;
+- (NSString *)getResponder;
++ (int)getSessionHash:(NSString *)sid :(NSString *)initiator;
+- (NSString *)getSid;
 - (JavaIterator*)getTransports;
 - (void)setAction:(SmackXJingleAction*)action;
 - (void)setContentInfo:(SmackXJingleContentInfo*)contentInfo;
-- (void)setInitiator:(NSString*)initiator;
-- (void)setResponder:(NSString*)resp;
-- (void)setSid:(NSString*)sid;
+- (void)setInitiator:(NSString *)initiator;
+- (void)setResponder:(NSString *)resp;
+- (void)setSid:(NSString *)sid;
 
 @end
 
@@ -1290,17 +1293,17 @@
 @interface SmackXJingleNegotiator : JavaObject {
 }
 
-- (void)addExpectedId:(NSString*)id;
+- (void)addExpectedId:(NSString *)id;
 - (void)close;
 - (void)addListener:(SmackXJingleListener*)listener;
 - (void)removeListener:(SmackXJingleListener*)listener;
-- (SmackIQ*)dispatchIncomingPacket:(SmackIQ*)iq :(NSString*)_id;
+- (SmackIQ*)dispatchIncomingPacket:(SmackIQ*)iq :(NSString *)_id;
 - (SmackXMPPConnection*)getConnection;
 - (SmackXJingleNegotiatorState*)getState;
 - (Class)getStateClass;
 - (BOOL)invalidState;
-- (BOOL)isExpectedId:(NSString*)_id;
-- (void)removeExpectedId:(NSString*)_id;
+- (BOOL)isExpectedId:(NSString *)_id;
+- (void)removeExpectedId:(NSString *)_id;
 - (void)setConnection:(SmackXMPPConnection*)connection;
 
 @end
@@ -1312,8 +1315,8 @@
 @interface SmackXContentInfoAudio : SmackXContentInfo {
 }
 
-+ (SmackXContentInfo*)fromString:(NSString*)value;
-- (NSString*)toString;
++ (SmackXContentInfo*)fromString:(NSString *)value;
+- (NSString *)toString;
 
 @end
 
@@ -1322,9 +1325,9 @@
 @interface SmackXJingleSessionRequest : JavaObject {
 }
 
-- (SmackXIncomingJingleSession*)accept:(JavaVector*)pts;
-- (NSString*)getFrom;
-- (NSString*)getSessionID;
+- (SmackXIncomingJingleSession*)accept:(JavaVector *)pts;
+- (NSString *)getFrom;
+- (NSString *)getSessionID;
 - (void)reject;
 
 @end
@@ -1333,19 +1336,19 @@
 }
 
 - (void)close;
-+ (SmackIQ*)createError:(NSString*)_id :(NSString*)to :(NSString*)from :(int)errCode :(NSString*)errStr;
-+ (SmackIQ*)createIQ:(NSString*)_id :(NSString*)to :(NSString*)from :(SmackIQType*)type;
-- (SmackIQ*)dispatchIncomingPacket:(SmackIQ*)iq :(NSString*)_id;
++ (SmackIQ*)createError:(NSString *)_id :(NSString *)to :(NSString *)from :(int)errCode :(NSString *)errStr;
++ (SmackIQ*)createIQ:(NSString *)_id :(NSString *)to :(NSString *)from :(SmackIQType*)type;
+- (SmackIQ*)dispatchIncomingPacket:(SmackIQ*)iq :(NSString *)_id;
 - (BOOL)equals:(id)obj;
-- (NSString*)getInitiator;
-- (NSString*)getResponder;
-- (NSString*)getSid;
+- (NSString *)getInitiator;
+- (NSString *)getResponder;
+- (NSString *)getSid;
 - (BOOL)isFullyEstablished;
 - (BOOL)isValid;
 - (SmackIQ*)respond:(SmackIQ*)iq;
 - (void)sendContentInfo:(SmackXContentInfo*)ci;
-- (void)setInitiator:(NSString*)initiator;
-- (void)setResponder:(NSString*)responder;
+- (void)setInitiator:(NSString *)initiator;
+- (void)setResponder:(NSString *)responder;
 - (void)start:(SmackXJingleSessionRequest*)jin;
 
 @end
@@ -1361,7 +1364,7 @@
 @interface SmackXJingleManager : JavaObject {
 }
 
-- (SmackXOutgoingJingleSession*)createOutgoingJingleSession:(NSString*)responder :(JavaVector*)payloadTypes;
+- (SmackXOutgoingJingleSession*)createOutgoingJingleSession:(NSString *)responder :(JavaVector *)payloadTypes;
 
 @end
 
@@ -1371,11 +1374,11 @@
 - (BOOL)equals:(id)obj;
 - (int)getChannels;
 - (int)getId;
-- (NSString*)getName;
+- (NSString *)getName;
 - (BOOL)isNull;
 - (void)setChannels:(int)channels;
 - (void)setId:(int)_id;
-- (void)setName:(NSString*)name;
+- (void)setName:(NSString *)name;
 
 @end
 

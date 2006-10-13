@@ -46,7 +46,7 @@ static AIHTMLDecoder *messageencoder = nil;
 + (SmackXMPPMultiUserChatPluginListener*)MUCPluginListenerWithConnection:(SmackXMPPConnection*)conn;
 
 + (Class)multiUserChatClass;
-+ (SmackXMultiUserChat*)joinMultiUserChatWithName:(NSString*)name connection:(SmackXMPPConnection*)conn;
++ (SmackXMultiUserChat*)joinMultiUserChatWithName:(NSString *)name connection:(SmackXMPPConnection*)conn;
 
 @end
 
@@ -60,7 +60,7 @@ static AIHTMLDecoder *messageencoder = nil;
     return [[self classLoader] loadClass:@"org.jivesoftware.smackx.muc.MultiUserChat"];
 }
 
-+ (SmackXMultiUserChat*)joinMultiUserChatWithName:(NSString*)name connection:(SmackXMPPConnection*)conn {
++ (SmackXMultiUserChat*)joinMultiUserChatWithName:(NSString *)name connection:(SmackXMPPConnection*)conn {
     return [[[self multiUserChatClass] newWithSignature:@"(Lorg/jivesoftware/smack/XMPPConnection;Ljava/lang/String;)",conn,name] autorelease];
 }
 
@@ -71,7 +71,7 @@ static AIHTMLDecoder *messageencoder = nil;
 
 @implementation SmackXMPPJoinChatViewController
 
-- (void)setJID:(NSString*)jid
+- (void)setJID:(NSString *)jid
 {
     [chatRoomNameField setStringValue:[jid jidUsername]];
     [serverField setStringValue:[jid jidHost]];
@@ -80,14 +80,14 @@ static AIHTMLDecoder *messageencoder = nil;
     [self controlTextDidChange:nil];
 }
 
-- (void)setPassword:(NSString*)password
+- (void)setPassword:(NSString *)password
 {
     [passwordField setStringValue:password];
     
     [self controlTextDidChange:nil];
 }
 
-- (NSString*)nibName
+- (NSString *)nibName
 {
     return @"SmackXMPPJoinChatView";
 }
@@ -140,7 +140,7 @@ static AIHTMLDecoder *messageencoder = nil;
 @implementation SmackXMPPAccount (MultiUserChatAddons)
 
 - (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage {
-    if([chat statusObjectForKey:@"XMPPMUC"])
+    if ([chat statusObjectForKey:@"XMPPMUC"])
         return [[chat statusObjectForKey:@"XMPPMUC"] inviteContact:contact toChat:chat withMessage:inviteMessage];
     return NO;
 }
@@ -180,12 +180,12 @@ static AIHTMLDecoder *messageencoder = nil;
 }
 
 - (id)initWithMultiUserChat:(SmackXMultiUserChat*)muc account:(SmackXMPPAccount*)a;
-- (void)joinWithNickname:(NSString*)nickname password:(NSString*)password chat:(AIChat*)achat listener:(SmackXMPPMultiUserChatPluginListener*)listener;
+- (void)joinWithNickname:(NSString *)nickname password:(NSString *)password chat:(AIChat*)achat listener:(SmackXMPPMultiUserChatPluginListener*)listener;
 
-- (void)postStatusMessage:(NSString*)fmt, ...;
+- (void)postStatusMessage:(NSString *)fmt, ...;
 
-- (NSString*)ownAffiliation;
-- (NSString*)ownRole;
+- (NSString *)ownAffiliation;
+- (NSString *)ownRole;
 
 
 
@@ -200,7 +200,7 @@ static AIHTMLDecoder *messageencoder = nil;
 @implementation SmackXMPPChat
 
 - (id)initWithMultiUserChat:(SmackXMultiUserChat*)muc account:(SmackXMPPAccount*)a {
-    if((self = [super init])) {
+    if ((self = [super init])) {
         account = a;
         chat = [muc retain];
         participants = [[NSMutableDictionary alloc] init];
@@ -227,21 +227,21 @@ static AIHTMLDecoder *messageencoder = nil;
     [super dealloc];
 }
 
-- (NSString*)ownAffiliation {
+- (NSString *)ownAffiliation {
     return ownAffiliation;
 }
 
-- (NSString*)ownRole {
+- (NSString *)ownRole {
     return ownRole;
 }
 
-- (void)joinWithNickname:(NSString*)nickname password:(NSString*)password chat:(AIChat*)achat listener:(SmackXMPPMultiUserChatPluginListener*)listener {
+- (void)joinWithNickname:(NSString *)nickname password:(NSString *)password chat:(AIChat*)achat listener:(SmackXMPPMultiUserChatPluginListener*)listener {
     adiumchat = achat;
     
     [achat setStatusObject:self forKey:@"XMPPMUC" notify:NotifyLater];
 
     [listener listenToChat:chat :self];
-    if(password)
+    if (password)
         [chat join:nickname :password];
     else
         [chat join:nickname];
@@ -295,7 +295,7 @@ static AIHTMLDecoder *messageencoder = nil;
     [fc release];
 }
 
-- (void)postStatusMessage:(NSString*)fmt, ... {
+- (void)postStatusMessage:(NSString *)fmt, ... {
     va_list ap;
     NSString *message;
     
@@ -308,7 +308,7 @@ static AIHTMLDecoder *messageencoder = nil;
     [message release];
 }
 
-- (void)displayStatusMessage:(NSString*)message
+- (void)displayStatusMessage:(NSString *)message
 {
     [[adium contentController] displayEvent:message
                                      ofType:@"chat-info"
@@ -316,7 +316,7 @@ static AIHTMLDecoder *messageencoder = nil;
 }
 
 - (void)setMUCInvitationDeclined:(NSDictionary*)info {
-    if([info objectForKey:@"reason"] && [[info objectForKey:@"reason"] length] > 0)
+    if ([info objectForKey:@"reason"] && [[info objectForKey:@"reason"] length] > 0)
         [self postStatusMessage:AILocalizedString(@"%@ declined your invitation with the reason \"%@\".","%@ declined your invitation with the reason \"%@\"."),[info objectForKey:@"invitee"],[info objectForKey:@"reason"]];
     else
         [self postStatusMessage:AILocalizedString(@"%@ declined your invitation.","%@ declined your invitation."),[info objectForKey:@"invitee"]];
@@ -341,9 +341,9 @@ static AIHTMLDecoder *messageencoder = nil;
     
     [menuItems addObject:[NSMenuItem separatorItem]];
     
-    if([ownRole isEqualToString:@"moderator"])
+    if ([ownRole isEqualToString:@"moderator"])
     {
-        if(!isMe)
+        if (!isMe)
         {
             mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Kick User","Kick User") action:@selector(kickUser:) keyEquivalent:@""];
             [mitem setTarget:self];
@@ -351,7 +351,7 @@ static AIHTMLDecoder *messageencoder = nil;
             [menuItems addObject:mitem];
             [mitem release];
 
-            if([role isEqualToString:@"visitor"])
+            if ([role isEqualToString:@"visitor"])
             {
                 mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Grant Voice","Grant Voice") action:@selector(changeUserState:) keyEquivalent:@""];
                 [mitem setTarget:self];
@@ -374,7 +374,7 @@ static AIHTMLDecoder *messageencoder = nil;
 
         }
     }
-    if(isMe)
+    if (isMe)
     {
         mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Change Nickname...","Change Nickname...") action:@selector(changeNickname:) keyEquivalent:@""];
         [mitem setTarget:self];
@@ -401,9 +401,9 @@ static AIHTMLDecoder *messageencoder = nil;
         [menuItems addObject:mitem];
         [mitem release];
     }
-    if([ownAffiliation isEqualToString:@"admin"] || [ownAffiliation isEqualToString:@"owner"])
+    if ([ownAffiliation isEqualToString:@"admin"] || [ownAffiliation isEqualToString:@"owner"])
     {
-        if(!isMe)
+        if (!isMe)
         {
             mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Ban User","Ban User") action:@selector(banUser:) keyEquivalent:@""];
             [mitem setTarget:self];
@@ -411,7 +411,7 @@ static AIHTMLDecoder *messageencoder = nil;
             [menuItems addObject:mitem];
             [mitem release];
             
-            if([role isEqualToString:@"moderator"]) {
+            if ([role isEqualToString:@"moderator"]) {
                 mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Revoke Moderator Privileges","Revoke Moderator Privileges") action:@selector(changeUserState:) keyEquivalent:@""];
                 [mitem setTarget:self];
                 [mitem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -430,7 +430,7 @@ static AIHTMLDecoder *messageencoder = nil;
                 [menuItems addObject:mitem];
                 [mitem release];
             }
-            if([affiliation isEqualToString:@"none"] || ([ownAffiliation isEqualToString:@"owner"] && !([affiliation isEqualToString:@"owner"] && [affiliation isEqualToString:@"member"])))
+            if ([affiliation isEqualToString:@"none"] || ([ownAffiliation isEqualToString:@"owner"] && !([affiliation isEqualToString:@"owner"] && [affiliation isEqualToString:@"member"])))
             {
                 mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Grant Membership","Grant Membership") action:@selector(changeUserState:) keyEquivalent:@""];
                 [mitem setTarget:self];
@@ -440,7 +440,7 @@ static AIHTMLDecoder *messageencoder = nil;
                     nil]];
                 [menuItems addObject:mitem];
                 [mitem release];
-            } else if([affiliation isEqualToString:@"member"])
+            } else if ([affiliation isEqualToString:@"member"])
             {
                 mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Revoke Membership","Revoke Membership") action:@selector(changeUserState:) keyEquivalent:@""];
                 [mitem setTarget:self];
@@ -451,9 +451,9 @@ static AIHTMLDecoder *messageencoder = nil;
                 [menuItems addObject:mitem];
                 [mitem release];
             }
-            if([ownAffiliation isEqualToString:@"owner"])
+            if ([ownAffiliation isEqualToString:@"owner"])
             {
-                if([affiliation isEqualToString:@"admin"])
+                if ([affiliation isEqualToString:@"admin"])
                 {
                     mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Revoke Admin Privileges","Revoke Admin Privileges") action:@selector(changeUserState:) keyEquivalent:@""];
                     [mitem setTarget:self];
@@ -463,7 +463,7 @@ static AIHTMLDecoder *messageencoder = nil;
                         nil]];
                     [menuItems addObject:mitem];
                     [mitem release];
-                } else if(![affiliation isEqualToString:@"owner"]) {
+                } else if (![affiliation isEqualToString:@"owner"]) {
                     mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Grant Admin Privileges","Grant Admin Privileges") action:@selector(changeUserState:) keyEquivalent:@""];
                     [mitem setTarget:self];
                     [mitem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -473,7 +473,7 @@ static AIHTMLDecoder *messageencoder = nil;
                     [menuItems addObject:mitem];
                     [mitem release];
                 }
-                if([affiliation isEqualToString:@"owner"])
+                if ([affiliation isEqualToString:@"owner"])
                 {
                     mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Revoke Ownership","Revoke Ownership") action:@selector(changeUserState:) keyEquivalent:@""];
                     [mitem setTarget:self];
@@ -495,7 +495,7 @@ static AIHTMLDecoder *messageencoder = nil;
                 }
             }
         } else {
-            if([ownAffiliation isEqualToString:@"owner"]) {
+            if ([ownAffiliation isEqualToString:@"owner"]) {
                 mitem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Destroy Room","Destroy Room") action:@selector(destroyRoom:) keyEquivalent:@""];
                 [mitem setTarget:self];
                 [menuItems addObject:mitem];
@@ -515,18 +515,18 @@ static AIHTMLDecoder *messageencoder = nil;
     NSString *from = [packet getFrom];
     NSString *nickname = [from jidResource];
     
-    if([nickname length] == 0) // server message?
+    if ([nickname length] == 0) // server message?
     {
         [self postStatusMessage:@"%@",[packet getBody]];
         return;
     }
     
-    if([nickname isEqualToString:[chat getNickname]])
+    if ([nickname isEqualToString:[chat getNickname]])
         return; // ignore messages from self
     
     AIListContact *user = [participants objectForKey:from];
 
-    if(!user)
+    if (!user)
     {
         // this user is no longer online, just create him temporarily
         user = [[adium contactController] contactWithService:[account service]
@@ -536,15 +536,15 @@ static AIHTMLDecoder *messageencoder = nil;
     }
     
     SmackXXHTMLExtension *spe = [packet getExtension:@"html" :@"http://jabber.org/protocol/xhtml-im"];
-    if(spe)
+    if (spe)
     {
         JavaIterator *iter = [spe getBodies];
         NSString *htmlmsg = nil;
-        if(iter && [iter hasNext])
+        if (iter && [iter hasNext])
             htmlmsg = [iter next];
-        if([htmlmsg length] > 0)
+        if ([htmlmsg length] > 0)
         {
-            if(!messageencoder)
+            if (!messageencoder)
             {
                 messageencoder = [[AIHTMLDecoder alloc] init];
                 [messageencoder setGeneratesStrictXHTML:YES];
@@ -562,12 +562,12 @@ static AIHTMLDecoder *messageencoder = nil;
             inMessage = [[param objectForKey:@"result"] retain];
         }
     }
-    if(!inMessage)
+    if (!inMessage)
         inMessage = [[NSAttributedString alloc] initWithString:[packet getBody] attributes:nil];
     
     SmackXDelayInformation *delayinfo = [packet getExtension:@"x" :@"jabber:x:delay"];
     NSDate *date = nil;
-    if(delayinfo)
+    if (delayinfo)
         date = [SmackCocoaAdapter dateFromJavaDate:[delayinfo getStamp]];
     else
         date = [NSDate date];
@@ -598,7 +598,7 @@ static AIHTMLDecoder *messageencoder = nil;
     AIContentMessage *inMessageObject = [[n userInfo] objectForKey:AIMessageObjectKey];
     SmackMessage *message = [[n userInfo] objectForKey:SmackXMPPPacket];
     
-    if([inMessageObject chat] != adiumchat)
+    if ([inMessageObject chat] != adiumchat)
         return; // ignore foreign messages
 
     [message setTo:[chat getRoom]];
@@ -607,7 +607,7 @@ static AIHTMLDecoder *messageencoder = nil;
     [message setBody:[inMessageObject messageString]];
     
 /*    NSAttributedString *attmessage = [inMessageObject message];
-    if(!messageencoder)
+    if (!messageencoder)
     {
         messageencoder = [[AIHTMLDecoder alloc] init];
         [messageencoder setGeneratesStrictXHTML:YES];
@@ -654,7 +654,7 @@ static AIHTMLDecoder *messageencoder = nil;
 
 - (void)changeSubject:(NSMenuItem*)sender {
     [NSBundle loadNibNamed:@"SmackXMPPMUCChangeSubject" owner:self];
-    if(!changesubject_window)
+    if (!changesubject_window)
     {
         NSBeep();
         return;
@@ -686,7 +686,7 @@ static AIHTMLDecoder *messageencoder = nil;
     NSString *subject = [[changesubject_textview string] retain];
     [sheet orderOut:nil];
     [sheet close];
-    if(returnCode == NSOKButton)
+    if (returnCode == NSOKButton)
     {
         @try {
             [chat changeSubject:subject];
@@ -699,7 +699,7 @@ static AIHTMLDecoder *messageencoder = nil;
 
 - (void)changeNickname:(NSMenuItem*)sender {
     [NSBundle loadNibNamed:@"SmackXMPPMUCChangeNickname" owner:self];
-    if(!changenickname_window)
+    if (!changenickname_window)
     {
         NSBeep();
         return;
@@ -731,7 +731,7 @@ static AIHTMLDecoder *messageencoder = nil;
     NSString *nickname = [[changenickname_textfield stringValue] retain];
     [sheet orderOut:nil];
     [sheet close];
-    if(returnCode == NSOKButton && [nickname length] > 0)
+    if (returnCode == NSOKButton && [nickname length] > 0)
     {
         @try {
             [chat changeNickname:nickname];
@@ -769,18 +769,18 @@ static AIHTMLDecoder *messageencoder = nil;
 
 #pragma mark Smack Callbacks
 
-- (void)setMUCParticipant:(SmackPresence*)packet {
+- (void)setMUCParticipant:(SmackPresence *)packet {
     [self performSelectorOnMainThread:@selector(setMUCParticipantMainThread:) withObject:packet waitUntilDone:NO];
 }
 
-- (void)setMUCParticipantMainThread:(SmackPresence*)packet {
-    if([[[packet getType] toString] isEqualToString:@"unavailable"])
+- (void)setMUCParticipantMainThread:(SmackPresence *)packet {
+    if ([[[packet getType] toString] isEqualToString:@"unavailable"])
         return; // handle those in -setMUCLeft:
     
     NSString *participant = [packet getFrom];
     AIListContact *contact = [participants objectForKey:participant];
     NSString *nick = [participant jidResource];
-    if(!contact)
+    if (!contact)
     {
         contact = [[adium contactController] contactWithService:[account service]
                                                         account:account
@@ -792,7 +792,7 @@ static AIHTMLDecoder *messageencoder = nil;
         
         [adiumchat addParticipatingListObject:contact notify:initialUpdateDone];
 
-        if(!initialUpdateDone && [nick isEqualToString:[chat getNickname]])
+        if (!initialUpdateDone && [nick isEqualToString:[chat getNickname]])
             initialUpdateDone = YES;
     }
     SmackXOccupant *occupant = [chat getOccupant:participant];
@@ -801,7 +801,7 @@ static AIHTMLDecoder *messageencoder = nil;
     [contact setStatusObject:[occupant getRole] forKey:@"XMPPMUCRole" notify:NotifyLater];
     [contact setStatusObject:[occupant getAffiliation] forKey:@"XMPPMUCAffiliation" notify:NotifyLater];
     
-    if([nick isEqualToString:[chat getNickname]]) { // is it us?
+    if ([nick isEqualToString:[chat getNickname]]) { // is it us?
         [ownAffiliation release];
         [ownRole release];
         ownAffiliation = [[occupant getAffiliation] copy];
@@ -812,20 +812,20 @@ static AIHTMLDecoder *messageencoder = nil;
 	[contact notifyOfChangedStatusSilently:NO];
 }
 
-- (void)setMUCJoined:(NSString*)participant {
+- (void)setMUCJoined:(NSString *)participant {
 //    NSLog(@"participant joined %@",participant);
 }
 
-- (void)setMUCLeft:(NSString*)participant
+- (void)setMUCLeft:(NSString *)participant
 {
     [self performSelectorOnMainThread:@selector(setMUCLeftMainThread:) withObject:participant waitUntilDone:NO];
 }
     
-- (void)setMUCLeftMainThread:(NSString*)participant
+- (void)setMUCLeftMainThread:(NSString *)participant
 {
     AIListContact *contact = [participants objectForKey:participant];
-    if(contact) {
-        if([adiumchat isOpen])
+    if (contact) {
+        if ([adiumchat isOpen])
             [adiumchat removeParticipatingListObject:contact];
         [participants removeObjectForKey:participant];
     }
@@ -842,17 +842,17 @@ static AIHTMLDecoder *messageencoder = nil;
     [self postStatusMessage:AILocalizedString(@"%@ was kicked by %@ (%@).","%@ was kicked by %@ (%@)."), [participant jidResource], [info objectForKey:@"actor"],[info objectForKey:@"reason"]];
 
     AIListContact *contact = [participants objectForKey:participant];
-    if(contact) {
+    if (contact) {
         [adiumchat removeParticipatingListObject:contact];
         [participants removeObjectForKey:participant];
     }
 }
 
-- (void)setMUCVoiceGranted:(NSString*)participant {
+- (void)setMUCVoiceGranted:(NSString *)participant {
     [self postStatusMessage:AILocalizedString(@"%@ was granted voice.","%@ was granted voice."),[participant jidResource]];
 }
 
-- (void)setMUCVoiceRevoked:(NSString*)participant {
+- (void)setMUCVoiceRevoked:(NSString *)participant {
     [self postStatusMessage:AILocalizedString(@"%@ has been silenced.","%@ has been silenced."),[participant jidResource]];
 }
 
@@ -861,41 +861,41 @@ static AIHTMLDecoder *messageencoder = nil;
     [self postStatusMessage:AILocalizedString(@"%@ was banned by %@ (%@).","%@ was banned by %@ (%@)."), [participant jidResource], [info objectForKey:@"actor"],[info objectForKey:@"reason"]];
     
     AIListContact *contact = [participants objectForKey:participant];
-    if(contact) {
+    if (contact) {
         [adiumchat removeParticipatingListObject:contact];
         [participants removeObjectForKey:participant];
     }
 }
 
-- (void)setMUCMembershipGranted:(NSString*)participant {
+- (void)setMUCMembershipGranted:(NSString *)participant {
     [self postStatusMessage:AILocalizedString(@"%@ was granted membership.","%@ was granted membership."),[participant jidResource]];
 }
 
-- (void)setMUCMembershipRevoked:(NSString*)participant {
+- (void)setMUCMembershipRevoked:(NSString *)participant {
     [self postStatusMessage:AILocalizedString(@"The membership of %@ was revoked.","The membership of %@ was revoked."),[participant jidResource]];
 }
 
-- (void)setMUCModeratorGranted:(NSString*)participant {
+- (void)setMUCModeratorGranted:(NSString *)participant {
     [self postStatusMessage:AILocalizedString(@"%@ is now moderator.","%@ is now moderator."),[participant jidResource]];
 }
 
-- (void)setMUCModeratorRevoked:(NSString*)participant {
+- (void)setMUCModeratorRevoked:(NSString *)participant {
     [self postStatusMessage:AILocalizedString(@"%@ is no longer moderator.","%@ is no longer moderator."),[participant jidResource]];
 }
 
-- (void)setMUCOwnershipGranted:(NSString*)participant {
+- (void)setMUCOwnershipGranted:(NSString *)participant {
     [self postStatusMessage:AILocalizedString(@"%@ is now owner of this chatroom.","%@ is now owner of this chatroom."),[participant jidResource]];
 }
 
-- (void)setMUCOwnershipRevoked:(NSString*)participant {
+- (void)setMUCOwnershipRevoked:(NSString *)participant {
     [self postStatusMessage:AILocalizedString(@"%@ is no longer owner of this chatroom.","%@ is no longer owner of this chatroom."),[participant jidResource]];
 }
 
-- (void)setMUCAdminGranted:(NSString*)participant {
+- (void)setMUCAdminGranted:(NSString *)participant {
     [self postStatusMessage:AILocalizedString(@"%@ is now admin of this chatroom.","%@ is now admin of this chatroom."),[participant jidResource]];
 }
 
-- (void)setMUCAdminRevoked:(NSString*)participant {
+- (void)setMUCAdminRevoked:(NSString *)participant {
     [self postStatusMessage:AILocalizedString(@"%@ is no longer admin of this chatroom.","%@ is no longer admin of this chatroom."),[participant jidResource]];
 }
 
@@ -911,7 +911,7 @@ static AIHTMLDecoder *messageencoder = nil;
     [self postStatusMessage:AILocalizedString(@"%@ is now known as %@.","%@ is now known as %@."),[participant jidResource],newNickname];
 
     AIListContact *contact = [participants objectForKey:participant];
-    if(contact) {
+    if (contact) {
         // XXX clean/easy way to rename a contact?
         
 //        [adiumchat removeParticipatingListObject:contact];
@@ -951,7 +951,7 @@ static AIHTMLDecoder *messageencoder = nil;
 }
 
 - (void)setMUCUserVoice:(JavaBoolean*)flag {
-    if([flag booleanValue])
+    if ([flag booleanValue])
     {
         [[adium notificationCenter] postNotificationName:@"AIChatDidChangeCanSendMessagesNotification"
                                                   object:adiumchat
@@ -976,28 +976,28 @@ static AIHTMLDecoder *messageencoder = nil;
 }
 
 - (void)setMUCUserMembership:(JavaBoolean*)flag {
-    if([flag booleanValue])
+    if ([flag booleanValue])
         [self postStatusMessage:AILocalizedString(@"You are now a member.","You are now a member.")];
     else
         [self postStatusMessage:AILocalizedString(@"You are no longer a member.","You are no longer a member.")];
 }
 
 - (void)setMUCUserModerator:(JavaBoolean*)flag {
-    if([flag booleanValue])
+    if ([flag booleanValue])
         [self postStatusMessage:AILocalizedString(@"You are now a moderator.","You are now a moderator.")];
     else
         [self postStatusMessage:AILocalizedString(@"You are no longer a moderator.","You are no longer a moderator.")];
 }
 
 - (void)setMUCUserOwnership:(JavaBoolean*)flag {
-    if([flag booleanValue])
+    if ([flag booleanValue])
         [self postStatusMessage:AILocalizedString(@"You are now an owner.","You are now an owner.")];
     else
         [self postStatusMessage:AILocalizedString(@"You are no longer an owner.","You are no longer an owner.")];
 }
 
 - (void)setMUCUserAdmin:(JavaBoolean*)flag {
-    if([flag booleanValue])
+    if ([flag booleanValue])
         [self postStatusMessage:AILocalizedString(@"You are now an admin.","You are now an admin.")];
     else
         [self postStatusMessage:AILocalizedString(@"You are no longer an admin.","You are no longer an admin.")];
@@ -1008,7 +1008,7 @@ static AIHTMLDecoder *messageencoder = nil;
 @implementation SmackXMPPMultiUserChatPlugin
 
 - (id)initWithAccount:(SmackXMPPAccount*)a {
-    if((self = [super init])) {
+    if ((self = [super init])) {
         account = a;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -1044,7 +1044,7 @@ static AIHTMLDecoder *messageencoder = nil;
     
     AIListContact *inviter = [[adium contactController] existingContactWithService:[account service] account:account UID:[info objectForKey:@"inviter"]];
     NSString *displayname;
-    if(inviter)
+    if (inviter)
         displayname = [inviter displayName];
     else
         displayname = [info objectForKey:@"inviter"];
