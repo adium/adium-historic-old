@@ -1256,7 +1256,6 @@
 		8102A7260A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A7240A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m */; };
 		8102A8210A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A81F0A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m */; };
 		8102A8880A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A8860A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m */; };
-		8109A5900ABF68AB00D5F669 /* SmackJavaBridge.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81B4C9900A416BE500A8ABF5 /* SmackJavaBridge.jar */; };
 		8109A5910ABF68BB00D5F669 /* SmackJavaBridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4C9900A416BE500A8ABF5 /* SmackJavaBridge.jar */; };
 		811DE2170A862E5900487D47 /* InvisibleCommand.java in Sources */ = {isa = PBXBuildFile; fileRef = 811DE2160A862E5900487D47 /* InvisibleCommand.java */; };
 		81376B690A9273A000298452 /* SmackGoogleService.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376B670A9273A000298452 /* SmackGoogleService.m */; };
@@ -4411,7 +4410,6 @@
 				81F651760A291004008FC8E7 /* JavaVM.framework in Frameworks */,
 				815D37550A765E83009338C2 /* CoreServices.framework in Frameworks */,
 				81C3A94D0A910A5100A575B6 /* AddressBook.framework in Frameworks */,
-				8109A5900ABF68AB00D5F669 /* SmackJavaBridge.jar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
