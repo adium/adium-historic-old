@@ -19,7 +19,7 @@
 
 - (id)initWithUID:(NSString *)inUID service:(AIService *)inService {
     if((self = [super initWithUID:inUID service:inService])) {
-		bogusContact = [[adium contactController] contactWithService:inService account:[self account] UID:inUID class:[AIListContact class]];
+		bogusContact = [[adium contactController] contactWithService:inService account:[self account] UID:inUID usingClass:[AIListContact class]];
 		[bogusContact setContainingObject:self];
 		[bogusContact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:NO];
 		[bogusContact setStatusObject:[NSNumber numberWithInt:-256] forKey:@"XMPPPriority" notify:NO];
