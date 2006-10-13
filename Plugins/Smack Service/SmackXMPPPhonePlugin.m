@@ -13,10 +13,12 @@
 
 #import <AddressBook/ABPeoplePickerView.h>
 #import <AddressBook/ABRecord.h>
+
+#import <Adium/AIAccount.h>
 #import <Adium/AIJavaControllerProtocol.h>
-#import <AIAccountControllerProtocol.h>
-#import <AIContactControllerProtocol.h>
-#import <AIInterfaceControllerProtocol.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <AIUtilities/AIStringUtilities.h>
 
 #define ASTERISKIM_JAR @"asterisk-im-client"
@@ -229,13 +231,16 @@ static BOOL registered = NO;
 {
     if ([inObject account] != account)
         return nil;
+
     NSString *status = [inObject statusObjectForKey:@"XMPPPhoneStatus"];
     if (!status)
         return nil;
     if ([status isEqualToString:@"ON_PHONE"])
         return [[[NSAttributedString alloc] initWithString:AILocalizedString(@"On the phone","phone status tooltip entry on the phone")] autorelease];
-    // Just use the string as is if we don't know it. The proto-JEP doesn't mention any other
-    // status than ON_PHONE, but you never know...
+
+    /* Just use the string as is if we don't know it. The proto-JEP doesn't mention any other
+     * status than ON_PHONE, but you never know...
+	 */
     return [[[NSAttributedString alloc] initWithString:status] autorelease];
 }
 

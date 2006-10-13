@@ -15,8 +15,8 @@
 #import <JavaVM/NSJavaVirtualMachine.h>
 
 #import <Adium/AIAccount.h>
-#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/ESTextAndButtonsWindowController.h>
 
