@@ -15,6 +15,7 @@
 #import <AddressBook/ABRecord.h>
 
 #import <Adium/AIAccount.h>
+#import <Adium/AIListObject.h>
 #import <Adium/AIJavaControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
