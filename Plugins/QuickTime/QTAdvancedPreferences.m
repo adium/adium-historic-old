@@ -83,11 +83,12 @@
 - (IBAction) changePreference:(id)sender
 {
     if (sender == micDefaultVolume) {
-		[[adium preferenceController] setPreference:[sender intValue]
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_MIC_VOLUME
                                               group:QUICKTIME_PREFS];
+
 	} else if (sender == outDefaultVolume) {
-		[[adium preferenceController] setPreference:[sender intValue]
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_OUT_VOLUME
                                               group:QUICKTIME_PREFS];
 	}
