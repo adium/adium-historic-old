@@ -9391,14 +9391,12 @@
 			files = (
 			);
 			inputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/net/adium/JavaCocoaAdapter.class",
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Adium.app/Contents/Resources/JavaCocoaAdapter.class",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp \"$SCRIPT_INPUT_FILE_0\" \"$SCRIPT_OUTPUT_FILE_0\"\n";
+			shellScript = "CLASS_FILE=$BUILT_PRODUCTS_DIR/net/adium/JavaCocoaAdapter.class\nDESTINATION=$BUILT_PRODUCTS_DIR/Adium.app/Contents/Resources/JavaCocoaAdapter.class\n\ncp \"$CLASS_FILE\" \"$DESTINATION\"\n";
 		};
 		34CF9EEF085B98D400D87E37 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -12594,12 +12592,15 @@
 				GCC_ENABLE_SYMBOL_SEPARATION = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				GCC_WARN_MISSING_PARENTHESES = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				OTHER_CFLAGS = (
 					"-DCRASH_REPORTER",
 					"-DDEBUG_BUILD",
@@ -12610,6 +12611,7 @@
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PREBINDING = NO;
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = NO;
