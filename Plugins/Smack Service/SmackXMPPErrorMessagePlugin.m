@@ -88,7 +88,7 @@ static struct
     return errordesc;
 }
 
-+ (void)handleXMPPErrorPacket:(SmackPacket*)packet service:(NSString *)service
++ (void)handleXMPPErrorPacket:(SmackPacket *)packet service:(NSString *)service
 {
     SmackXMPPError *error = [packet getError];
     NSString *from = [packet getFrom];
@@ -120,7 +120,7 @@ static struct
         [self performSelectorOnMainThread:@selector(handleXMPPErrorPacketMainThread:) withObject:packet waitUntilDone:YES];
 }
 
-- (void)handleXMPPErrorPacketMainThread:(SmackPacket*)packet
+- (void)handleXMPPErrorPacketMainThread:(SmackPacket *)packet
 {
     [[self class] handleXMPPErrorPacket:packet service:[[account connection] getServiceName]];
 }

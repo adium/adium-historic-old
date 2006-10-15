@@ -576,7 +576,7 @@
 - (BOOL)login:(NSString *)username :(NSString *)password :(NSString *)resource;
 - (BOOL)login:(NSString *)username :(NSString *)password :(NSString *)resource :(BOOL)sendPresence;
 - (void)loginAnonymously;
-- (void)sendPacket:(SmackPacket*)packet;
+- (void)sendPacket:(SmackPacket *)packet;
 
 @end
 
@@ -1050,9 +1050,9 @@
 - (void)setConnection:(SmackXMPPConnection*)conn;
 - (void)setDisconnection:(JavaBoolean*)blah;
 - (void)setConnectionError:(NSString *)error;
-- (void)setNewMessagePacket:(SmackPacket*)packet;
-- (void)setNewPresencePacket:(SmackPacket*)packet;
-- (void)setNewIQPacket:(SmackPacket*)packet;
+- (void)setNewMessagePacket:(SmackPacket *)packet;
+- (void)setNewPresencePacket:(SmackPacket *)packet;
+- (void)setNewIQPacket:(SmackPacket *)packet;
 
 @end
 

@@ -260,13 +260,13 @@ static JavaClassLoader *classLoader = nil;
     [account performSelectorOnMainThread:@selector(connectionError:) withObject:error waitUntilDone:NO];
 }
 
-- (void)setNewMessagePacket:(SmackPacket*)packet {
+- (void)setNewMessagePacket:(SmackPacket *)packet {
     [account performSelectorOnMainThread:@selector(receiveMessagePacket:) withObject:packet waitUntilDone:NO];
 }
-- (void)setNewPresencePacket:(SmackPacket*)packet {
+- (void)setNewPresencePacket:(SmackPacket *)packet {
     [account performSelectorOnMainThread:@selector(receivePresencePacket:) withObject:packet waitUntilDone:NO];
 }
-- (void)setNewIQPacket:(SmackPacket*)packet {
+- (void)setNewIQPacket:(SmackPacket *)packet {
     [account performSelectorOnMainThread:@selector(receiveIQPacket:) withObject:packet waitUntilDone:NO];
 }
 
@@ -348,7 +348,7 @@ static JavaClassLoader *classLoader = nil;
     return [[[classLoader loadClass:@"org.jivesoftware.smackx.Form"] newWithSignature:@"(Ljava/lang/String;)",type] autorelease];
 }
 
-+ (SmackXForm *)formFromPacket:(SmackPacket*)packet {
++ (SmackXForm *)formFromPacket:(SmackPacket *)packet {
     return [(Class <SmackXForm>)[classLoader loadClass:@"org.jivesoftware.smackx.Form"] getFormFrom:packet];
 }
 
