@@ -135,6 +135,8 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	[addContactCancelButton setLocalizedString:AILocalizedString(@"Cancel", nil)];
 	
 	[self _configurePeoplePicker];
+
+	[[self window] selectKeyViewFollowingView:peoplePicker];
 }
 
 /*!

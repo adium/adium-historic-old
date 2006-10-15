@@ -1,6 +1,17 @@
 {
     IBClasses = (
         {
+            ACTIONS = {
+                clearSearchField = id; 
+                deselectAll = id; 
+                editInAddressBook = id; 
+                selectInAddressBook = id; 
+            }; 
+            CLASS = ABPeoplePickerView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSView; 
+        }, 
+        {
             ACTIONS = {showImagePicker = id; }; 
             CLASS = AIImageViewWithImagePicker; 
             LANGUAGE = ObjC; 
