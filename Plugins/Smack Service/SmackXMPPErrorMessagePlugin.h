@@ -17,7 +17,7 @@
 
 - (id)initWithAccount:(SmackXMPPAccount*)a;
 
-+ (void)handleXMPPErrorPacket:(SmackPacket*)packet service:(NSString *)service;
++ (void)handleXMPPErrorPacket:(SmackPacket *)packet service:(NSString *)service;
 + (NSString *)errorMessageForCode:(int)code;
 
 @end

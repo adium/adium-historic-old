@@ -64,7 +64,7 @@
 - (void)handleFormFromPacket:(SmackRegistration *)packet
 {
     JavaMap *attr = [packet getAttributes];
-    SmackXForm *form = [SmackCocoaAdapter formFromPacket:(SmackPacket*)packet];
+    SmackXForm *form = [SmackCocoaAdapter formFromPacket:(SmackPacket *)packet];
     
     receivedInitialForm = YES;
     if (!form) {
@@ -228,7 +228,7 @@
                 [account registration:self didEndWithSuccess:YES];
             [self release];
             return;
-        } else if ([type isEqualToString:@"error"] && [[[SmackCocoaAdapter formFromPacket:(SmackPacket*)packet] getType] isEqualToString:@"form"])
+        } else if ([type isEqualToString:@"error"] && [[[SmackCocoaAdapter formFromPacket:(SmackPacket *)packet] getType] isEqualToString:@"form"])
         {
             // there is another form required for this stuff
             [self handleFormFromPacket:packet];

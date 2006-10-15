@@ -199,7 +199,7 @@ static BOOL registered = NO;
     isSupported = NO;
 }
 
-- (void)delayedSend:(SmackPacket*)packet
+- (void)delayedSend:(SmackPacket *)packet
 {
     SmackXMPPConnection *connection = [account connection];
     if (connection) // only do this if the connection didn't fail
