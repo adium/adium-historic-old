@@ -42,7 +42,8 @@
 
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 
-#define CHAT_INVITE_TITLE 
+#define RECONNECTION_ATTEMPTS		4
+#define AUTO_RECONNECT_DELAY		3.0	//Delay in seconds
 
 @interface RAFjoscarAccount (PRIVATE)
 - (void)setTypingFlagOfChat:(AIChat *)chat to:(NSNumber *)typingStateNumber;
@@ -302,19 +303,19 @@
 				shouldReconnect = NO;
 				errorMessage = AILocalizedString(@"You have been connecting too frequently. Please wait five minutes or more before trying again; trying sooner will increase the timespan of this temporary ban.", nil);
 
-				AILog(@"Connecting too frequently!");
-
 			} else if ([errorMessageShort isEqualToString:@"TemporarilyBlocked"]) {
 				shouldReconnect = NO;
 				errorMessage = AILocalizedString(@"You have been temporarily blocked by the AIM server and cannot connect at this time. Please try again later.", nil);
-				
-				AILog(@"Temporarily blocked!");
+
 			} else if ([errorMessageShort isEqualToString:@"TemporarilyUnavailable"]) {
 				shouldReconnect = NO;
 				errorMessage = AILocalizedString(@"The server is temporarily unavailable; you cannot connect at this time. Please try again later.", nil);
 				
-				AILog(@"Temporarily unavailable!");
-				
+			} else if ([errorMessageShort isEqualToString:@"Timeout"]) {
+				errorMessage = [NSString stringWithFormat:
+					AILocalizedString(@"Adium is unable to connect to the %@ server; the attempt timed out. Please check your network connection and try again.", nil),
+					[[self service] shortDescription]];
+
 			} else {
 				NSLog(@"Error message short is %@; code %@",errorMessageShort,
 					  errorCode);
@@ -322,13 +323,19 @@
 					  errorCode);
 			}
 			
-			if (shouldReconnect) {
+			AILog(@"%@: connect error: %@", self, errorMessage);
+			
+			if (shouldReconnect && reconnectAttemptsRemaining > 0) {
 				[self autoReconnectAfterDelay:3.0];
-				
+				reconnectAttemptsRemaining--;
+
 			} else if (errorMessage) {
 			    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"%@ (%@) : Connection Error", nil),
 					[self formattedUID], [[self service] shortDescription]]
-												withDescription:errorMessage];	
+												withDescription:errorMessage];
+
+				//Reset reconnection attempts since we're not trying again immediately
+				reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 			}
 		}
 		
@@ -364,6 +371,9 @@
 	
 	[joscarAdapter setDisplayRecentBuddies:[[self preferenceForKey:KEY_DISPLAY_RECENT_BUDDIES
 															 group:GROUP_ACCOUNT_STATUS] boolValue]];
+	
+	//Reset reconnection attempts
+    reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 }
 
 - (void)didDisconnect

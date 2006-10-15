@@ -16,6 +16,7 @@
 	NSMutableDictionary		*fileTransferDict;
 	
 	BOOL					inSignOnDelay;
+	int						reconnectAttemptsRemaining;
 }
 
 - (NSString *)serversideUID;
