@@ -484,7 +484,6 @@
 		3485DBD009EBCE8200232CC4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E04D07CB0EB00044F818 /* Localizable.strings */; };
 		3485DBF209EBD01900232CC4 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
 		348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */; };
-		348B25C80A50FBF300B2B972 /* KNShelfSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */; };
 		348E5ACB06D2A74C004C051C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348E5ACA06D2A74C004C051C /* AddressBook.framework */; };
 		348EE1B4080A57480015E0FC /* WebKitPreferencesView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348EE1B3080A57480015E0FC /* WebKitPreferencesView.nib */; };
 		348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */; };
@@ -1352,7 +1351,6 @@
 		81F9D0850A7E905B004A35BD /* AIJavaController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D0830A7E905B004A35BD /* AIJavaController.m */; };
 		81F9D1E80A7F832A004A35BD /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
 		81F9D1EA0A7F8396004A35BD /* JavaCocoaAdapter.java in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D1E90A7F8395004A35BD /* JavaCocoaAdapter.java */; };
-		81F9D2010A7F8B99004A35BD /* JavaCocoaAdapter.class in Resources */ = {isa = PBXBuildFile; fileRef = 81F9D2000A7F8B99004A35BD /* JavaCocoaAdapter.class */; };
 		81F9D4980A8158EB004A35BD /* SmackXMPPVersionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D4960A8158EA004A35BD /* SmackXMPPVersionPlugin.m */; };
 		81F9D8B00A83A92F004A35BD /* SmackXMPPPrivacyPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D8AE0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.m */; };
 		81FB2B1A0A95DFB20095E77A /* AIJavaControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -8571,6 +8569,7 @@
 				34677B3607CC3D6200F59F7B /* CopyFiles */,
 				6C15E63106DF3BB600E5A50E /* ShellScript */,
 				345DFF4A05564DB200CEE7B3 /* ShellScript */,
+				34C9456E0AE1EE280094E504 /* ShellScript */,
 			);
 			buildRules = (
 				81F9D1DF0A7F81A5004A35BD /* PBXBuildRule */,
@@ -9179,7 +9178,6 @@
 				345623380A3773C300E7FC97 /* LoggingDefaults.plist in Resources */,
 				34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */,
 				34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */,
-				81F9D2010A7F8B99004A35BD /* JavaCocoaAdapter.class in Resources */,
 				34DC883F0A7EEE2E003E1636 /* keys.png in Resources */,
 				34DC884A0A7EEE2E003E1636 /* AuthorizationRequestWindow.nib in Resources */,
 				34DC884F0A7EEE2E003E1636 /* FormattingDefaults.plist in Resources */,
@@ -9383,6 +9381,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "gcc -E -P -x c -Wno-trigraphs -include \"$SCRIPT_INPUT_FILE_0\" -C \"$SCRIPT_INPUT_FILE_1\" -o \"$SCRIPT_OUTPUT_FILE_0\"\ngcc -E -P -x c -Wno-trigraphs -include \"$SCRIPT_INPUT_FILE_0\" -C \"$SCRIPT_INPUT_FILE_2\" -o \"$SCRIPT_OUTPUT_FILE_1\"";
+		};
+		34C9456E0AE1EE280094E504 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			comments = "The Strip Copy Files option will fail miserably:\n/usr/bin/strip: fat file: adium/build/Deployment/net/adium/JavaCocoaAdapter.class truncated or malformed (offset plus size of cputype (4983296) cpusubtype (301996809) extends past the end of the file)\npbxcp: warning: couldn't strip: adium/build/Deployment/Adium.app/Contents/Resources/JavaCocoaAdapter.class: No such file or directory\n}}}";
+			files = (
+			);
+			inputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/net/adium/JavaCocoaAdapter.class",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Adium.app/Contents/Resources/JavaCocoaAdapter.class",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp \"$SCRIPT_INPUT_FILE_0\" \"$SCRIPT_OUTPUT_FILE_0\"\n";
 		};
 		34CF9EEF085B98D400D87E37 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -9816,7 +9830,6 @@
 				34382CEA0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m in Sources */,
 				34382CEC0A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m in Sources */,
 				348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */,
-				348B25C80A50FBF300B2B972 /* KNShelfSplitView.m in Sources */,
 				F5DA8A740A546AC5004A41D0 /* GBChatlogHTMLConverter.m in Sources */,
 				340670A90A55A4B4004E22AC /* ESGlassSplitView.m in Sources */,
 				345AFAEE0A5D9A5F00D7DA6F /* AINoisyTableColumn.m in Sources */,
