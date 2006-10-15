@@ -277,10 +277,10 @@
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	/* Ignore accounts.
-	 * Ignore meta contact children since the actual meta contact provides a better event. */
-	if ((![inObject isKindOfClass:[AIAccount class]]) &&		//Ignore accounts
-	   (![[inObject containingObject] canContainOtherContacts])) {	
-		
+	 * Ignore meta contact children since the actual meta contact provides a better event. The best way to check this is to verify that the contact's parentContact is itself.*/
+	if (([inObject isKindOfClass:[AIListContact class]]) &&
+		([(AIListContact *)inObject parentContact] == (AIListContact *)inObject)) {
+
 		if ([inModifiedKeys containsObject:@"Online"]) {
 			id newValue = [inObject numberStatusObjectForKey:@"Online" fromAnyContainedObject:NO];
 			if ([self updateCache:onlineCache
