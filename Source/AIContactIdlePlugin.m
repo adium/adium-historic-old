@@ -18,6 +18,7 @@
 #import "AIContactIdlePlugin.h"
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
 #import <Adium/AIListObject.h>
 
 #define IDLE_UPDATE_INTERVAL	60.0
@@ -194,29 +195,13 @@
     int 				idle = [inObject integerStatusObjectForKey:@"Idle"];
     NSAttributedString	*entry = nil;
 	
-    if ((idle > 599400) || (idle == -1)) { //Cap idle at 999 Hours (999*60*60 seconds)
+    if ((idle > 599400) || (idle == -1)) { //Cap idle at 999 Hours (999*60 minutes)
 		entry = [[NSAttributedString alloc] initWithString:AILocalizedString(@"Yes",nil)];
 		
     } else if (idle != 0) {
-		int	hours = (int)(idle / 60);
-		int	minutes = (int)((int)idle % 60);
-		
-		NSString	*hoursString = nil, *minutesString;
-		
-		minutesString = ((minutes == 1) ? 
-						 AILocalizedString(@"1 minute",nil) :
-						 [NSString stringWithFormat:AILocalizedString(@"%i minutes",nil),minutes]);
-		if (hours) {
-			hoursString = ((hours == 1) ? 
-						   AILocalizedString(@"1 hour",nil) :
-						   [NSString stringWithFormat:AILocalizedString(@"%i hours",nil),hours]);
-		}
-		
-		entry = [[NSAttributedString alloc] initWithString:
-			(hoursString ?
-			 [NSString stringWithFormat:@"%@, %@",hoursString, minutesString] :
-			 minutesString)];
-    }
+		entry = [[NSAttributedString alloc] 
+			initWithString:[NSDateFormatter stringForTimeInterval:idle*60]];    
+	}
 	
     return [entry autorelease];
 }

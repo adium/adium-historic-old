@@ -106,165 +106,180 @@ typedef enum {
     return [localizedDateFormatString autorelease];
 }
 
+
+
+
 + (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate
 {
     return ([self stringForTimeIntervalSinceDate:inDate showingSeconds:YES abbreviated:NO]);
 }
 
+/*!
+ *@brief format time for the interval since the given date
+ *
+ *@param inDate Date which starts the interval
+ *@param showSeconds switch to determine if seconds should be shown
+ *@param abbreviate switch to chose if w/d/h/ or weeks/days/hours/minutes is used to indicate the unit
+ *
+ *@result a localized NSString conaining the Interval in weeks, days, hours or minutes (the largest usable)
+ */
+ 
 + (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate showingSeconds:(BOOL)showSeconds abbreviated:(BOOL)abbreviate;
 {
     NSMutableString *theString = [[[NSMutableString alloc] init] autorelease];
-    
-    double seconds = [[NSDate date] timeIntervalSinceDate:inDate];
-    int days = 0, hours = 0, minutes = 0; 
-	
-	//Days
-    days = (int)(seconds / 86400);
-    seconds -= days * 86400;
-	
-	//Hours
-    if (seconds) {
-        hours = (int)(seconds / 3600);
-        seconds -= hours * 3600;
-    }
-	
-	//Minutes
-    if (seconds) {
-        minutes = (int)(seconds / 60);
-        seconds -= minutes * 60;
-    }
-		
-    if (abbreviate) {
-        if (days)
-            [theString appendString:[NSString stringWithFormat:@"%id ",days]];
-        if (hours)
-            [theString appendString:[NSString stringWithFormat:@"%ih ",hours]];
-        if (minutes)
-            [theString appendString:[NSString stringWithFormat:@"%im ",minutes]];
-        if (showSeconds && seconds)
-            [theString appendString:[NSString stringWithFormat:@"%%lfs ",seconds]];
-        
-        //Return the string without the final space
-        if ([theString length] > 1) {
-            [theString deleteCharactersInRange:NSMakeRange(([theString length]-1), 1)];
-		}
-
-    } else {
-        if (days >= 1) {
-			if (days == 1) {
-				[theString appendString:ONE_DAY];
-			} else {
-				[theString appendString:[NSString stringWithFormat:MULTIPLE_DAYS, days]];
-			}
-			
-			[theString appendString:@", "];
-		}
-
-		if (hours >= 1) {
-			if (hours == 1) {
-				[theString appendString:ONE_HOUR];
-			} else {
-				[theString appendString:[NSString stringWithFormat:MULTIPLE_HOURS, hours]];
-			}
-			
-			[theString appendString:@", "];
-		}
-
-		if (minutes >= 1) {
-			if (minutes == 1) {
-				[theString appendString:ONE_MINUTE];
-			} else {
-				[theString appendString:[NSString stringWithFormat:MULTIPLE_MINUTES, minutes]];
-			}
-			
-			[theString appendString:@", "];
-		}
-
-		//Don't show seconds if we showed days; that's just ridiculous.
-		if (showSeconds && (seconds >= 1) && (days == 0)) {
-			if (seconds == 1) {
-				[theString appendString:ONE_SECOND];
-			} else {
-				[theString appendString:[NSString stringWithFormat:MULTIPLE_SECONDS, seconds]];
-			}
-
-			[theString appendString:@", "];
-		}
-
-        //Return the string without the final comma and space
-        if ([theString length] > 2) {
-            [theString deleteCharactersInRange:NSMakeRange(([theString length]-2), 2)];
-		}
-    }
-    
+	[theString setString:
+		[self stringForTimeInterval:[[NSDate date] timeIntervalSinceDate:inDate]
+					 showingSeconds:showSeconds
+						abbreviated:abbreviate
+					   approximated:NO]];
     return theString;
 }
 
 
-//Returns a string representation of the interval between two dates
+/*!
+ *@brief format time for the interval between two dates
+ *
+ *@param firstDate first date of the interval
+ *@param secondDate second date of the interval
+ *
+ *@result a localized NSString conaining the Interval in weeks, days, hours or minutes (the largest usable)
+ */
+ 
 + (NSString *)stringForApproximateTimeIntervalBetweenDate:(NSDate *)firstDate andDate:(NSDate *)secondDate
 {
-	NSString	*timeString = nil;
-	double		seconds = [firstDate timeIntervalSinceDate:secondDate];
-    int			weeks = 0, days = 0, hours = 0, minutes = 0; 
+	return  [self stringForTimeInterval:[firstDate timeIntervalSinceDate:secondDate]
+						 showingSeconds:NO
+							abbreviated:NO
+						   approximated:YES];
+}
+
+/*!
+ *@brief format time for an interval
+ *
+ *@param interval NSTimeInterval to format
+ *@param abbreviate switch to chose if w/d/h/ or weeks/days/hours/minutes is used to indicate the unit
+ *
+ *@result a localized NSString conaining the Interval in weeks, days, hours or minutes (the largest usable)
+ */
+ 
++ (NSString *)stringForApproximateTimeInterval:(NSTimeInterval)interval abbreviated:(BOOL)abbreviate
+{
+	return  [self stringForTimeInterval:interval
+						 showingSeconds:NO
+							abbreviated:abbreviate
+						   approximated:YES];
+}
+
+/*!
+ *@brief format time for an interval
+ *
+ *@param interval NSTimeInterval to format
+ *
+ *@result a localized NSString conaining the interval in weeks, days, hours and minutes
+ */
+ 
++ (NSString *)stringForTimeInterval:(NSTimeInterval)interval
+{
+	return  [self stringForTimeInterval:interval
+						 showingSeconds:NO
+							abbreviated:NO
+						   approximated:NO];
+}
+
+/*!
+ *@brief format time for an interval
+ *
+ *
+ *
+ *@param interval NSTimeInterval to format
+ *@param showSeconds switch to determine if seconds should be shown
+ *@param abbreviate switch to chose if w/d/h/ or weeks/days/hours/minutes is used to indicate the unit
+ *@param approximate switch to chose if all parts should be shown or only the largest available part
+ *
+ *@result a localized NSString conaining the Interval formated according to the switches
+ */ 
+
++ (NSString *)stringForTimeInterval:(NSTimeInterval)interval showingSeconds:(BOOL)showSeconds abbreviated:(BOOL)abbreviate approximated:(BOOL)approximate
+{
+	NSString		*timeString = nil;
+	NSTimeInterval	workInterval = interval;
+    int				weeks = 0, days = 0, hours = 0, minutes = 0, seconds = 0; 
+	NSString		*weeksString = nil, *daysString = nil, *hoursString = nil, *minutesString = nil, *secondsString = nil;
 
 	//Weeks
-	weeks = (int)((seconds / 86400) / 7);
-	seconds -= (weeks * 86400 * 7);
+	weeks = (int)((workInterval / 86400) / 7);
+	workInterval -= weeks * 86400 * 7;
 
 	//Days
-	if (seconds) {
-		days = (int)(seconds / 86400);
-		seconds -= days * 86400;
+	if (workInterval) {
+		days = (int)(workInterval / 86400);
+		workInterval -= days * 86400;
 	}
 	
 	//Hours
-    if (seconds) {
-        hours = (int)(seconds / 3600);
-        seconds -= hours * 3600;
+    if (workInterval) {
+        hours = (int)(workInterval / 3600);
+        workInterval -= hours * 3600;
     }
 	
 	//Minutes
-    if (seconds) {
-        minutes = (int)(seconds / 60);
-        seconds -= minutes * 60;
+    if (workInterval) {
+        minutes = (int)(workInterval / 60);
+        workInterval -= minutes * 60;
     }
-
-	if (weeks >= 1) {
-		if (weeks == 1) {
-			timeString = ONE_WEEK;
-		} else {
-			timeString = [NSString stringWithFormat:MULTIPLE_WEEKS, weeks];
+	
+	//Seconds
+    if (workInterval) {
+        seconds = (int)(interval / 60);
+    }
+	
+	//build the strings for the parts
+	if (abbreviate) {
+		//Note: after checking with a linguistics student, it appears that we're fine leaving it as w, h, etc... rather than localizing.
+		weeksString		= [NSString stringWithFormat: @"%iw",weeks];
+		daysString		= [NSString stringWithFormat: @"%id",days];
+		hoursString		= [NSString stringWithFormat: @"%ih",hours];
+		minutesString	= [NSString stringWithFormat: @"%im",minutes];
+		secondsString	= [NSString stringWithFormat: @"%im",seconds];
+	} else {
+		weeksString		= (weeks == 1)		? ONE_WEEK		: [NSString stringWithFormat:MULTIPLE_WEEKS, weeks];
+		daysString		= (days == 1)		? ONE_DAY		: [NSString stringWithFormat:MULTIPLE_DAYS, days];
+		hoursString		= (hours == 1)		? ONE_HOUR		: [NSString stringWithFormat:MULTIPLE_HOURS, hours];
+		minutesString	= (minutes == 1)	? ONE_MINUTE	: [NSString stringWithFormat:MULTIPLE_MINUTES, minutes];
+		secondsString	= (seconds == 1)	? ONE_SECOND	: [NSString stringWithFormat:MULTIPLE_SECONDS, seconds];
+	}
+	
+	//assamble the parts
+	if (approximate) {
+		if (weeks)
+			timeString = weeksString;
+		else if (days)
+			timeString = daysString;
+		else if (hours)
+			timeString = hoursString;
+		else if (minutes)
+			timeString = minutesString;
+		else if (seconds && showSeconds)
+			timeString = secondsString;
+	} else {
+		if (weeks)
+			timeString = [NSString stringWithFormat: @"%@ %@ %@ %@", weeksString, daysString, hoursString, minutesString];
+		else if (days)
+			timeString = [NSString stringWithFormat: @"%@ %@ %@", daysString, hoursString, minutesString];
+		else if (hours)
+			timeString = [NSString stringWithFormat: @"%@ %@ ", hoursString, minutesString];
+		else if (minutes)
+			timeString = minutesString;
+		
+		if (showSeconds) {
+			if (timeString)
+				timeString = [timeString stringByAppendingFormat: @" %@", secondsString];
+			else if (seconds)
+				timeString = secondsString;
 		}
 	}
 	
-	if (!timeString && (days >= 1)) {
-		if (days == 1) {
-			timeString = ONE_DAY;
-		} else {
-			timeString = [NSString stringWithFormat:MULTIPLE_DAYS, days];
-		}
-	}
-	
-	if (!timeString && (hours >= 1)) {
-		if (hours == 1) {
-			timeString = ONE_HOUR;
-		} else {
-			timeString = [NSString stringWithFormat:MULTIPLE_HOURS, hours];
-		}
-	}
-
-	//If we get here, display either 1 minute or some number of minutes (approximate, we don't want to go into seconds)
-	if (!timeString) {
-		if (minutes > 1) {
-			timeString = [NSString stringWithFormat:MULTIPLE_MINUTES, minutes];
-		} else {
-			timeString = ONE_MINUTE;
-		}
-	}
-
-	return (timeString ? timeString : @"");
+	return timeString ? timeString : @"";
 }
-
 
 @end
