@@ -25,6 +25,6 @@
 	NSCharacterSet	*whitespaceAndNewlineCharacterSet;
 }
 
-- (NSString *)idleStringForSeconds:(int)seconds;
+- (NSString *)idleStringForMinutes:(int)minutes;
 
 @end

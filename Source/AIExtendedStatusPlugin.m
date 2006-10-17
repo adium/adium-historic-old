@@ -21,6 +21,7 @@
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListContact.h>
@@ -129,9 +130,9 @@
 
 		//
 		if (idle > 0 && statusMessage) {
-			finalMessage = [NSString stringWithFormat:@"(%@) %@",[self idleStringForSeconds:idle], statusMessage];
+			finalMessage = [NSString stringWithFormat:@"(%@) %@",[self idleStringForMinutes:idle], statusMessage];
 		} else if (idle > 0) {
-			finalMessage = [NSString stringWithFormat:@"(%@)",[self idleStringForSeconds:idle]];
+			finalMessage = [NSString stringWithFormat:@"(%@)",[self idleStringForMinutes:idle]];
 		} else {
 			finalMessage = statusMessage;
 		}
@@ -147,25 +148,15 @@
 /*!
  * @brief Determine the idle string
  *
- * @param seconds Number of seconds idle
+ * @param minutes Number of minutes idle
  * @result A localized string to display for the idle time
  */
-- (NSString *)idleStringForSeconds:(int)seconds
+- (NSString *)idleStringForMinutes:(int)minutes //input is actualy minutes
 {
-	NSString	*idleString;
-	
-	//Create the idle string
-	if (seconds > 599400) {//Cap idle at 999 Hours (999*60*60 seconds)
-		idleString = AILocalizedString(@"Idle",nil);
-	} else if (seconds >= 600) {
-		idleString = [NSString stringWithFormat:@"%ih",seconds / 60];
-	} else if (seconds >= 60) {
-		idleString = [NSString stringWithFormat:@"%i:%02i",seconds / 60, seconds % 60];
-	} else {
-		idleString = [NSString stringWithFormat:@"%i",seconds];
-	}
-	
-	return idleString;
+	// Cap Idletime at 599400 minutes (999 hours)
+	return (minutes > 599400)?
+		AILocalizedString(@"Idle",nil) :
+		[NSDateFormatter stringForApproximateTimeInterval:minutes*60 abbreviated:YES];
 }
 
 @end
