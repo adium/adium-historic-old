@@ -317,21 +317,30 @@
 	NSString	*containerID = nil;
 	
 	//Determine the correct container for this chat
-	if (groupChatsByContactGroup) {
-		AIListObject	*group = [[[inChat listObject] parentContact] containingObject];
-
-		//If the contact is in the contact list root, we don't have a group
-		if (group && (group != [[adium contactController] contactList])) {
-			containerID = [group displayName];
-		}
-	} 
 	
-	//XXX - Temporary setup for multiple windows
 	if (!tabbedChatting) {
+		//We're not using tabs; each chat starts in its own container, based on the destination object or the chat name
 		if ([inChat listObject]) {
 			containerID = [[inChat listObject] internalObjectID];
 		} else {
 			containerID = [inChat name];
+		}
+		
+	} else if (groupChatsByContactGroup) {
+		if ([chat isGroupChat]) {
+			containerID = AILocalizedString(@"Group Chat",nil);
+			
+		} else {
+			AIListObject	*listObject = [inChat listObject];
+			if (listObject) {
+				AIListObject	*group = [[listObject parentContact] containingObject];
+				
+				//If the contact is in the contact list root, we don't have a group
+				if (group && (group != [[adium contactController] contactList])) {
+					containerID = [group displayName];
+				}
+				
+			}
 		}
 	}
 	
