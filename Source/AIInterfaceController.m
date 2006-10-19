@@ -327,7 +327,7 @@
 		}
 		
 	} else if (groupChatsByContactGroup) {
-		if ([chat isGroupChat]) {
+		if ([inChat isGroupChat]) {
 			containerID = AILocalizedString(@"Group Chat",nil);
 			
 		} else {
