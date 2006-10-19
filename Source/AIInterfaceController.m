@@ -331,15 +331,11 @@
 			containerID = AILocalizedString(@"Group Chat",nil);
 			
 		} else {
-			AIListObject	*listObject = [inChat listObject];
-			if (listObject) {
-				AIListObject	*group = [[listObject parentContact] containingObject];
-				
-				//If the contact is in the contact list root, we don't have a group
-				if (group && (group != [[adium contactController] contactList])) {
-					containerID = [group displayName];
-				}
-				
+			AIListObject	*group = [[[inChat listObject] parentContact] containingObject];
+			
+			//If the contact is in the contact list root, we don't have a group
+			if (group && (group != [[adium contactController] contactList])) {
+				containerID = [group displayName];
 			}
 		}
 	}
