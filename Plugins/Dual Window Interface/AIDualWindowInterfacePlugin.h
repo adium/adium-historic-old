@@ -31,6 +31,10 @@
 #define KEY_ENABLE_INACTIVE_TAB_CLOSE		@"Enable Inactive Tab Close"
 #define KEY_KEEP_TABS_ARRANGED				@"Keep Tabs Arranged"
 #define KEY_ARRANGE_TABS_BY_GROUP			@"Arrange Tabs By Group"
+#define KEY_TABBAR_POSITION					@"Tab Bar Position"
+#define KEY_TABBAR_WIDTH					@"Tab Bar Width"
+#define KEY_TABBAR_USE_OVERFLOW				@"Use Overflow Menu"
+#define KEY_TABBAR_SHOW_UNREAD_COUNT		@"Show Unread Message Count in Tabs"
 
 #define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
 #define KEY_USE_LAST_WINDOW					@"Use Last Window"
@@ -93,5 +97,6 @@
 - (void)closeContainer:(AIMessageWindowController *)container;
 - (void)containerDidClose:(AIMessageWindowController *)container;
 - (void)transferMessageTab:(AIMessageTabViewItem *)tabViewItem toContainer:(id)newMessageWindow atIndex:(int)index withTabBarAtPoint:(NSPoint)screenPoint;
+- (id)openNewContainer;
 
 @end

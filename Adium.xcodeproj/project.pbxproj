@@ -1024,6 +1024,8 @@
 		34F46785080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46783080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m */; };
 		34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F849520A4AEFA00002A017 /* LogFileUpgrade.nib */; };
 		34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */; };
+		377EC8940AE9525B00CB7BDF /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */; };
+		377ED0220AE95D7D00CB7BDF /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */; };
 		38238C610A9B5CF4005EBAEE /* smackx-jingle.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81E708810A98AA9300D9409E /* smackx-jingle.jar */; };
 		38399DCB0A95C9CF006C8EB1 /* AIVideoConfControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		387226C80A8B7C84002CC4F4 /* AIVideoConfController.h in Headers */ = {isa = PBXBuildFile; fileRef = 387226C40A8B7C83002CC4F4 /* AIVideoConfController.h */; };
@@ -1752,6 +1754,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				377ED0220AE95D7D00CB7BDF /* PSMTabBarControl.framework in CopyFiles */,
 				9E1E1E270A96770C00E16DFC /* LMX.framework in CopyFiles */,
 				EE96A3CC0A9C5E4000C47A57 /* FriBidi.framework in CopyFiles */,
 				F51BCD3B0A156261000FDC06 /* AIHyperlinks.framework in CopyFiles */,
@@ -3412,6 +3415,7 @@
 		34FD5BEB07F1F92900687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Resources/Italian.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferController.h; path = Source/ESFileTransferController.h; sourceTree = "<group>"; };
 		34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferController.m; path = Source/ESFileTransferController.m; sourceTree = "<group>"; };
+		377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PSMTabBarControl.framework; path = Frameworks/PSMTabBarControl.framework; sourceTree = "<group>"; };
 		383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVideoConfControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIVideoConfControllerProtocol.h"; sourceTree = "<group>"; };
 		387226C40A8B7C83002CC4F4 /* AIVideoConfController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVideoConfController.h; path = Source/AIVideoConfController.h; sourceTree = "<group>"; };
 		387226C50A8B7C84002CC4F4 /* AIVideoConfController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIVideoConfController.m; path = Source/AIVideoConfController.m; sourceTree = "<group>"; };
@@ -4309,6 +4313,7 @@
 				F58904F20A7828B9001F0ADC /* OTR.framework in Frameworks */,
 				9E1E1DFD0A96741500E16DFC /* LMX.framework in Frameworks */,
 				34EFC46C0AACC4CD0086AC43 /* FriBidi.framework in Frameworks */,
+				377EC8940AE9525B00CB7BDF /* PSMTabBarControl.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4556,6 +4561,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */,
 				9E1E1DFC0A96741500E16DFC /* LMX.framework */,
 				EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */,
 				815D37460A765E83009338C2 /* CoreServices.framework */,
@@ -12036,9 +12042,11 @@
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
@@ -12500,9 +12508,11 @@
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
@@ -13260,9 +13270,11 @@
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
@@ -13290,9 +13302,11 @@
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
@@ -13320,9 +13334,11 @@
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
