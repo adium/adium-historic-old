@@ -260,4 +260,14 @@
 	[self setDefaultOutVolumeTo: [[prefDict objectForKey:KEY_OUT_VOLUME] intValue]];
 }
 
+- (void)workspaceSessionDidBecomeActive:(NSNotification *)inNotification
+{
+	
+}
+
+- (void)workspaceSessionDidResignActive:(NSNotification *)inNotification
+{
+	
+}
+
 @end
