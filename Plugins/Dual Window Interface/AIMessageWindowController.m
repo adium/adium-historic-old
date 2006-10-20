@@ -33,9 +33,14 @@
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIExceptionHandlingUtilities.h>
+#import <AIUtilities/AISplitView.h>B
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
+#import <PSMTabBarControl/PSMTabBarControl.h>
+#import <PSMTabBarControl/PSMOverflowPopUpButton.h>
+#import <PSMTabBarControl/PSMAdiumTabStyle.h>
+#import <PSMTabBarControl/PSMTabStyle.h>
 
 #define KEY_MESSAGE_WINDOW_POSITION 			@"Message Window"
 
@@ -50,10 +55,9 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName interface:(AIDualWindowInterfacePlugin *)inInterface containerID:(NSString *)inContainerID containerName:(NSString *)inName;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureToolbar;
-- (BOOL)_resizeTabBarAbsolute:(NSNumber *)absolute;
-- (void)_suppressTabHiding:(BOOL)suppress;
 - (void)_updateWindowTitleAndIcon;
 - (NSString *)_frameSaveKey;
+- (void)_reloadContainedChats;
 @end
 
 //Used to squelch compiler warnings on this private call
@@ -94,14 +98,21 @@
 
 		//Disable the optimization for opaque windows since ours might not be
 		[myWindow setOpaque:NO];
-
-		//Tab hiding suppression (used to force tab bars visible when a drag is occuring)
-		tabBarIsVisible = YES;
-		supressHiding = NO;
-		[[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(tabDraggingEnded:)
-													 name:AICustomTabDragDidComplete
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(tabDraggingNotificationReceived:)
+													 name:PSMTabDragDidBeginNotification
 												   object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(tabDraggingNotificationReceived:)
+													 name:PSMTabDragDidEndNotification
+												   object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(tabBarFrameChanged:)
+													 name:NSViewFrameDidChangeNotification
+												   object:tabView_tabBar];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self 
 												 selector:@selector(windowWillMiniaturize:)
@@ -111,7 +122,7 @@
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 		
 		//Register as a tab drag observer so we know when tabs are dragged over our window and can show our tab bar
-		[myWindow registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
+		[myWindow registerForDraggedTypes:[NSArray arrayWithObject:@"PSMTabBarControlItemPBType"]];
 	}
 
     return self;
@@ -132,7 +143,7 @@
 	 */
 	[self setWindow:nil];
 
-    [tabView_customTabs setDelegate:nil];
+    [tabView_tabBar setDelegate:nil];
 	[containedChats release];
 	[toolbarItems release];
 	[containerName release];
@@ -155,6 +166,12 @@
 	return containerID;
 }
 
+//PSMTabBarControl accessor
+- (PSMTabBarControl *)tabBar
+{
+	return tabView_tabBar;
+}
+
 //
 - (NSString *)adiumFrameAutosaveName
 {
@@ -167,9 +184,6 @@
 	[super windowDidLoad];
 	
 	NSWindow	*theWindow = [self window];
-	
-    //Remember the initial tab height
-    tabBarHeight = [tabView_customTabs frame].size.height;
 
     //Exclude this window from the window menu (since we add it manually)
     [theWindow setExcludedFromWindowsMenu:YES];
@@ -181,6 +195,17 @@
     while ([tabView_messages numberOfTabViewItems] > 0) {
         [tabView_messages removeTabViewItem:[tabView_messages tabViewItemAtIndex:0]];
     }
+	
+	//Setup the tab bar
+	tabView_tabStyle = [[[PSMAdiumTabStyle alloc] init] autorelease];
+	[tabView_tabBar setStyle:tabView_tabStyle];
+	[tabView_tabBar setCanCloseOnlyTab:YES];
+	[tabView_tabBar setUseOverflowMenu:NO];
+	[tabView_tabBar setAllowsResizing:NO];
+	[tabView_tabBar setSizeCellsToFit:YES];
+	[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
+	[tabView_tabBar setSelectsTabsOnMouseDown:YES];
+	[tabView_tabBar setAutomaticallyAnimates:NO];
 }
 
 //Frames
@@ -249,12 +274,118 @@
 {
     if ([group isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]) {
 		NSWindow	*window = [self window];
-		
 		alwaysShowTabs = ![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
-		[tabView_customTabs setAllowsInactiveTabClosing:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
-		[tabView_customTabs setAllowsTabRearranging:YES];
+		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
+		[tabView_tabBar setAllowsBackgroundTabClosing:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
+		[tabView_tabBar setUseOverflowMenu:[[prefDict objectForKey:KEY_TABBAR_USE_OVERFLOW] boolValue]];
+		//[[tabView_tabBar overflowPopUpButton] setAlternateImage:[AIStatusIcons statusIconForStatusName:@"content" statusType:AIAvailableStatusType iconType:AIStatusIconTab direction:AIIconNormal]];
+		NSImage *overflowImage = [[[NSImage alloc] initByReferencingFile:[[NSBundle mainBundle] pathForImageResource:@"overflow_overlay"]] autorelease];
+		[[tabView_tabBar overflowPopUpButton] setAlternateImage:overflowImage];
 		
-		[self updateTabBarVisibilityAndAnimate:!firstTime];
+		//change the frame of the tab bar according to the orientation
+		if (firstTime || [key isEqualToString:KEY_TABBAR_POSITION]) {
+			tabPosition = [[prefDict objectForKey:KEY_TABBAR_POSITION] intValue];
+			PSMTabBarOrientation orientation = (tabPosition == AdiumTabPositionBottom || tabPosition == AdiumTabPositionTop) ? PSMTabBarHorizontalOrientation : PSMTabBarVerticalOrientation;
+			NSRect tabBarFrame = [tabView_tabBar frame], tabViewFrame = [tabView_messages frame];
+			NSRect contentRect = [[[self window] contentView] frame];
+			
+			//remove the split view if the last orientation was vertical
+			if ([tabView_tabBar orientation] == PSMTabBarVerticalOrientation) {
+				[tabView_messages retain];
+				[tabView_messages removeFromSuperview];
+				[tabView_tabBar retain];
+				[tabView_tabBar removeFromSuperview];
+				[tabView_splitView removeFromSuperview];
+				
+				[[[self window] contentView] addSubview:tabView_messages];
+				[[[self window] contentView] addSubview:tabView_tabBar];
+				[tabView_messages release];
+				[tabView_tabBar release];
+			}
+			
+			[tabView_tabBar setOrientation:orientation];
+			
+			if (orientation == PSMTabBarHorizontalOrientation) {
+				tabBarFrame.size.height = [tabView_tabBar isTabBarHidden] ? 1 : 22;
+				tabBarFrame.size.width = contentRect.size.width + 1;
+				
+				//set the position of the tab bar (top/bottom)
+				if (tabPosition == AdiumTabPositionBottom) {
+					tabBarFrame.origin.y = contentRect.origin.y;
+					tabViewFrame.origin.y = tabBarFrame.size.height + 6;
+					tabViewFrame.size.height = contentRect.size.height - tabBarFrame.size.height - 5;
+					[tabView_tabBar setAutoresizingMask:NSViewMaxYMargin | NSViewWidthSizable];
+				} else {
+					tabBarFrame.origin.y = contentRect.origin.y + contentRect.size.height - tabBarFrame.size.height + 1;
+					tabViewFrame.origin.y = contentRect.origin.y;
+					tabViewFrame.size.height = contentRect.size.height - tabBarFrame.size.height + 1;
+					[tabView_tabBar setAutoresizingMask:NSViewMinYMargin | NSViewWidthSizable];
+				}
+				[tabView_tabBar setCellMinWidth:80];
+				[tabView_tabBar setCellMaxWidth:250];
+				
+				tabViewFrame.origin.x = -1;
+				tabBarFrame.origin.x = 0;
+				tabViewFrame.size.width = contentRect.size.width + 1;
+			} else {
+				float width = [[prefDict objectForKey:KEY_TABBAR_WIDTH] floatValue];
+				if (width < 50) {
+					width = 50;
+				}
+				
+				tabBarFrame.size.height = [[[self window] contentView] frame].size.height;
+				tabBarFrame.size.width = [tabView_tabBar isTabBarHidden] ? 1 : width;
+				tabBarFrame.origin.y = contentRect.origin.y;
+				tabViewFrame.origin.y = contentRect.origin.y;
+				tabViewFrame.size.height = contentRect.size.height + 1;
+				tabViewFrame.size.width = contentRect.size.width - tabBarFrame.size.width - 5;
+				
+				//set the position of the tab bar (left/right)
+				if (tabPosition == AdiumTabPositionLeft) {
+					tabBarFrame.origin.x = contentRect.origin.x;
+					tabViewFrame.origin.x = tabBarFrame.origin.x + tabBarFrame.size.width;
+					[tabView_tabBar setAutoresizingMask:NSViewHeightSizable];
+				} else {
+					tabViewFrame.origin.x = contentRect.origin.x;
+					tabBarFrame.origin.x = contentRect.size.width - tabBarFrame.size.width + 1;
+					[tabView_tabBar setAutoresizingMask:NSViewHeightSizable | NSViewMinXMargin];
+				}
+				[tabView_tabBar setCellMinWidth:50];
+				[tabView_tabBar setCellMaxWidth:200];
+				
+				//put the subviews into a split view
+				NSRect splitViewRect = [[[self window] contentView] frame];
+				splitViewRect.size.width++;
+				splitViewRect.size.height++;
+				tabView_splitView = [[[AISplitView alloc] initWithFrame:splitViewRect] autorelease];
+				[tabView_splitView setDividerThickness:6];
+				[tabView_splitView setDrawsDivider:NO];
+				[tabView_splitView setVertical:YES];
+				[tabView_splitView setDelegate:self];
+				if (tabPosition == AdiumTabPositionLeft) {
+					[tabView_splitView addSubview:tabView_tabBar];
+					[tabView_splitView addSubview:tabView_messages];
+				} else {
+					[tabView_splitView addSubview:tabView_messages];
+					[tabView_splitView addSubview:tabView_tabBar];
+				}
+				[tabView_splitView adjustSubviews];
+				[tabView_splitView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+				[[[self window] contentView] addSubview:tabView_splitView];
+			}
+			
+			[tabView_messages setFrame:tabViewFrame];
+			[tabView_tabBar setFrame:tabBarFrame];
+			
+			//update the tab bar and tab view frame
+			[[self window] display];
+		}
+		
+		//set tab style drawing attributes
+		[tabView_tabStyle setDrawsRight:(tabPosition == AdiumTabPositionRight)];
+		[tabView_tabStyle setDrawsUnified:(tabPosition == AdiumTabPositionTop)];
+		//[[[self window] toolbar] setShowsBaselineSeparator:(tabPosition != AdiumTabPositionTop)];
+		
 		[self _updateWindowTitleAndIcon];
 
 		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_WINDOW_LEVEL] intValue];
@@ -276,6 +407,10 @@
 	if (tabViewItem == [tabView_messages selectedTabViewItem]) {
 		[self _updateWindowTitleAndIcon];
 	}
+	
+	if ([[tabView_tabBar representedTabViewItems] indexOfObject:tabViewItem] >= [tabView_tabBar numberOfVisibleTabs]) {
+		[[tabView_tabBar overflowPopUpButton] setAnimatingAlternateImage:([[tabViewItem chat] unviewedContentCount] > 0)];
+	}
 }
 
 
@@ -293,13 +428,9 @@
 {
 	if (index == -1) {
 		[tabView_messages addTabViewItem:inTabViewItem];
-		[containedChats addObject:[inTabViewItem chat]];
 	} else {
 		[tabView_messages insertTabViewItem:inTabViewItem atIndex:index];
-		[containedChats insertObject:[inTabViewItem chat] atIndex:index];
 	}
-	
-	[inTabViewItem setContainer:self];
 	
 	if (!silent) [[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
 }
@@ -343,7 +474,7 @@
 	//close if we're empty
 	if (!windowIsClosing && [containedChats count] == 0) {
 		[self closeWindow:nil];
-	}	
+	}
 }
 
 //
@@ -352,7 +483,10 @@
 	AIChat	*chat = [inTabViewItem chat];
 
 	if ([containedChats indexOfObject:chat] != index) {
-		[tabView_customTabs moveTab:inTabViewItem toIndex:index];
+		NSMutableArray *cells = [tabView_tabBar cells];
+		
+		[cells moveObject:[cells objectAtIndex:[[tabView_tabBar representedTabViewItems] indexOfObject:inTabViewItem]] toIndex:index];
+		[tabView_tabBar setNeedsDisplay:YES];
 		[containedChats moveObject:chat toIndex:index];
 		
 		[[adium interfaceController] chatOrderDidChange];
@@ -371,6 +505,20 @@
     return containedChats;
 }
 
+- (void)_reloadContainedChats
+{
+	NSEnumerator			*enumerator;
+	AIMessageTabViewItem	*tabViewItem;
+
+	//Update our contained chats array to mirror the order of the tabs
+	[containedChats release]; containedChats = [[NSMutableArray alloc] init];
+	enumerator = [[tabView_messages tabViewItems] objectEnumerator];
+	
+	while ((tabViewItem = [enumerator nextObject])) {
+		[tabViewItem setContainer:self];
+		[containedChats addObject:[tabViewItem chat]];
+	}
+}
 
 //Active Chat Tracking -------------------------------------------------------------------------------------------------
 #pragma mark Active Chat Tracking
@@ -384,23 +532,6 @@
 - (void)windowDidResignKey:(NSNotification *)notification
 {
 	[[adium interfaceController] chatDidBecomeActive:nil];
-}
-
-//Our selected tab has changed, update the active chat
-- (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
-{
-    if (tabViewItem != nil) {
-		AIChat	*chat = [(AIMessageTabViewItem *)tabViewItem chat];
-        [(AIMessageTabViewItem *)tabViewItem tabViewItemWasSelected]; //Let the tab know it was selected
-		
-        if ([[self window] isMainWindow]) { //If our window is main, set the newly selected container as active
-			[[adium interfaceController] chatDidBecomeActive:chat];
-        }
-		
-        [self _updateWindowTitleAndIcon]; //Reflect change in window title
-		
-		[[adium interfaceController] chatDidBecomeVisible:chat inWindow:[self window]];
-    }
 }
 
 //Update our window title
@@ -428,7 +559,7 @@
 	}
 	
 	button = [window standardWindowButton:NSWindowDocumentIconButton];
-	if (!tabBarIsVisible) {
+	if ([tabView_tabBar isTabBarHidden]) {
 		NSImage *image = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] stateIcon];
 		if (image != [button image]) {
 			[button setImage:image];
@@ -446,7 +577,340 @@
 	return [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat];
 }
 
-//Custom Tabs Delegate -------------------------------------------------------------------------------------------------
+//AISplitView Delegate -------------------------------------------------------------------------------------------------
+#pragma mark AISplitView Delegate
+
+//handles the minimum size of vertical tabs
+- (float)splitView:(NSSplitView *)sender constrainMinCoordinate:(float)proposedMin ofSubviewAt:(int)offset
+{
+	return tabPosition == 2 ? 50 : [sender frame].size.width - 250 - [sender dividerThickness];
+}
+
+//handles the maximum size of vertical tabs
+- (float)splitView:(NSSplitView *)sender constrainMaxCoordinate:(float)proposedMax ofSubviewAt:(int)offset
+{
+	return tabPosition == 2 ? 250 : proposedMax - 50;
+}
+
+- (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
+{
+	NSRect messageFrame = [tabView_messages frame], tabBarFrame = [tabView_tabBar frame];
+	messageFrame.size = NSMakeSize([sender frame].size.width - tabBarFrame.size.width - 6, [sender frame].size.height);
+	tabBarFrame.size = NSMakeSize(tabBarFrame.size.width, [sender frame].size.height);
+	
+	if (tabPosition == AdiumTabPositionLeft) {
+		messageFrame.origin.x = tabBarFrame.size.width + 6;
+	} else {
+		messageFrame.origin.x = 0;
+		tabBarFrame.origin.x = messageFrame.size.width + 6;
+	}
+	
+	[tabView_messages setFrame:messageFrame];
+	[tabView_tabBar setFrame:tabBarFrame];
+}
+
+//PSMTabBarControl Delegate -------------------------------------------------------------------------------------------------
+#pragma mark PSMTabBarControl Delegate
+
+//Handle closing a tab
+- (BOOL)tabView:(NSTabView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	//The window controller handles removing the tab as we need to dispose of tracking rects properly
+	[self removeTabViewItem:(AIMessageTabViewItem *)tabViewItem silent:NO];
+	if ([tabViewItem respondsToSelector:@selector(chat)]) {
+		[interface closeChat:[(AIMessageTabViewItem *)tabViewItem chat]];
+	}
+	return NO;
+}
+
+//Our selected tab has changed, update the active chat
+- (void)tabView:(NSTabView *)aTabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	if (tabViewItem != nil) {
+		AIChat	*chat = [(AIMessageTabViewItem *)tabViewItem chat];
+        [(AIMessageTabViewItem *)tabViewItem tabViewItemWasSelected]; //Let the tab know it was selected
+		
+        if ([[self window] isMainWindow]) { //If our window is main, set the newly selected container as active
+			[[adium interfaceController] chatDidBecomeActive:chat];
+        }
+		
+        [self _updateWindowTitleAndIcon]; //Reflect change in window title
+		[[adium interfaceController] chatDidBecomeVisible:chat inWindow:[self window]];
+    }
+}
+
+- (BOOL)tabView:(NSTabView*)tabView shouldDragTabViewItem:(NSTabViewItem *)tabViewItem fromTabBar:(PSMTabBarControl *)tabBarControl
+{
+	return YES;
+}
+
+- (BOOL)tabView:(NSTabView*)tabView shouldDropTabViewItem:(NSTabViewItem *)tabViewItem inTabBar:(PSMTabBarControl *)tabBarControl
+{
+	return YES;
+}
+
+- (void)tabView:(NSTabView *)tabView closeWindowForLastTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	[self closeWindow:self];
+}
+
+//Contextual menu for tabs
+- (NSMenu *)tabView:(NSTabView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	AIChat			*chat = [(AIMessageTabViewItem *)tabViewItem chat];
+    AIListContact	*selectedObject = [chat listObject];
+    NSMenu			*tmp = nil;
+
+    if (selectedObject) {
+		NSMutableArray *locations;
+		if ([selectedObject isStranger]) {
+			locations = [NSMutableArray arrayWithObjects:
+				[NSNumber numberWithInt:Context_Contact_Manage],
+				[NSNumber numberWithInt:Context_Contact_Action],
+				[NSNumber numberWithInt:Context_Contact_NegativeAction],
+				[NSNumber numberWithInt:Context_Contact_ChatAction],
+				[NSNumber numberWithInt:Context_Contact_Stranger_ChatAction],
+				[NSNumber numberWithInt:Context_Contact_Additions], nil];
+		} else {
+			locations = [NSMutableArray arrayWithObjects:
+				[NSNumber numberWithInt:Context_Contact_Manage],
+				[NSNumber numberWithInt:Context_Contact_Action],
+				[NSNumber numberWithInt:Context_Contact_NegativeAction],
+				[NSNumber numberWithInt:Context_Contact_ChatAction],
+				[NSNumber numberWithInt:Context_Contact_Additions], nil];
+		}
+		
+		[locations addObject:[NSNumber numberWithInt:Context_Tab_Action]];
+
+		tmp = [[adium menuController] contextualMenuWithLocations:locations
+													 forListObject:selectedObject
+														   inChat:chat];
+        
+    }
+	
+	return tmp;
+}
+
+//Tab count changed
+- (void)tabViewDidChangeNumberOfTabViewItems:(NSTabView *)tabView
+{
+    [self _updateWindowTitleAndIcon];
+	[self _reloadContainedChats];
+	[[adium interfaceController] chatOrderDidChange];
+}
+
+//Tabs reordered
+- (void)tabView:(NSTabView*)aTabView didDropTabViewItem:(NSTabViewItem *)tabViewItem inTabBar:(PSMTabBarControl *)tabBarControl;
+{
+	[self _reloadContainedChats];
+	[[adium interfaceController] chatOrderDidChange];
+}
+
+//Allow dragging of text
+- (NSArray *)allowedDraggedTypesForTabView:(NSTabView *)aTabView
+{
+	return [NSArray arrayWithObjects:NSRTFPboardType, NSStringPboardType, NSFilenamesPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil];
+}
+
+//Accept dragged text
+- (void)tabView:(NSTabView *)aTabView acceptedDraggingInfo:(id <NSDraggingInfo>)draggingInfo onTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	[[(AIMessageTabViewItem *)tabViewItem messageViewController] addDraggedDataToTextEntryView:draggingInfo];
+}
+
+//Get an image representation of the chat
+- (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem offset:(NSSize *)offset styleMask:(unsigned int *)styleMask
+{
+	// grabs whole window image
+	NSImage *viewImage = [[[NSImage alloc] init] autorelease];
+	NSRect contentFrame = [[[self window] contentView] frame];
+	[[[self window] contentView] lockFocus];
+	NSBitmapImageRep *viewRep = [[[NSBitmapImageRep alloc] initWithFocusedViewRect:contentFrame] autorelease];
+	[viewImage addRepresentation:viewRep];
+	[[[self window] contentView] unlockFocus];
+	
+    // grabs snapshot of dragged tabViewItem's view (represents content being dragged)
+	NSView *viewForImage = [tabViewItem view];
+	NSRect viewRect = [viewForImage frame];
+	NSImage *tabViewImage = [[[NSImage alloc] initWithSize:viewRect.size] autorelease];
+	[tabViewImage lockFocus];
+	[viewForImage drawRect:[viewForImage bounds]];
+	[tabViewImage unlockFocus];
+	
+	[viewImage lockFocus];
+	NSPoint tabOrigin = [tabView frame].origin;
+	tabOrigin.x += 10;
+	tabOrigin.y += 13;
+	[tabViewImage compositeToPoint:tabOrigin operation:NSCompositeSourceOver];
+	[viewImage unlockFocus];
+	
+	//draw over where the tab bar would usually be
+	NSRect tabFrame = [tabView_tabBar frame];
+	[viewImage lockFocus];
+	[[NSColor windowBackgroundColor] set];
+	NSRectFill(tabFrame);
+	//draw the background flipped, which is actually the right way up
+	NSAffineTransform *transform = [NSAffineTransform transform];
+	[transform scaleXBy:1.0 yBy:-1.0];
+	[transform concat];
+	tabFrame.origin.y = -tabFrame.origin.y - tabFrame.size.height;
+	[(id <PSMTabStyle>)[[tabView delegate] style] drawBackgroundInRect:tabFrame];
+	[transform invert];
+	[transform concat];
+	
+	[viewImage unlockFocus];
+	
+	id <PSMTabStyle> style = (id <PSMTabStyle>)[[tabView delegate] style];
+	if (tabPosition == AdiumTabPositionBottom) {
+		offset->width = [style leftMarginForTabBarControl];
+		offset->height = contentFrame.size.height;
+	} else if (tabPosition == AdiumTabPositionTop) {
+		offset->width = [style leftMarginForTabBarControl];
+		offset->height = 21;
+	} else if (tabPosition == AdiumTabPositionLeft) {
+		offset->width = 0;
+		offset->height = 21 + [style topMarginForTabBarControl];
+	} else {
+		offset->width = [tabView_tabBar frame].origin.x;
+		offset->height = 21 + [style topMarginForTabBarControl];
+	}
+	
+	*styleMask = NSTitledWindowMask;
+	
+	return viewImage;
+}
+
+//Create a new tab window
+- (PSMTabBarControl *)tabView:(NSTabView *)tabView newTabBarForDraggedTabViewItem:(NSTabViewItem *)tabViewItem atPoint:(NSPoint)point
+{
+	id newController = [interface openNewContainer];
+	NSRect frame;
+	id <PSMTabStyle> style = (id <PSMTabStyle>)[[tabView delegate] style];
+	
+	//set the size of the new window
+	//set the size and origin separately so that toolbar visibility and size doesn't mess things up
+	frame.size = [[self window] frame].size;
+	[[newController window] setFrame:frame display:NO];
+	
+	if (tabPosition == AdiumTabPositionBottom) {
+		point.x -= [style leftMarginForTabBarControl];
+		point.y -= 22;
+	} else if (tabPosition == AdiumTabPositionTop) {
+		point.x -= [style leftMarginForTabBarControl];
+		point.y -= [[[newController window] contentView] frame].size.height + 1;
+	} else if (tabPosition == AdiumTabPositionLeft) {
+		point.y -= [[[newController window] contentView] frame].size.height - [style topMarginForTabBarControl] + 1;
+	} else {
+		point.x -= [tabView_tabBar frame].origin.x;
+		point.y -= [[[newController window] contentView] frame].size.height - [style topMarginForTabBarControl] + 1;
+	}
+	
+	//set the origin point of the new window
+	frame.origin = point;
+	[[newController window] setFrame:frame display:NO];
+	
+	return [newController tabBar];
+}
+
+- (void)tabView:(NSTabView *)tabView tabBarDidHide:(PSMTabBarControl *)tabBarControl
+{
+    //hide the space between the tab bar and the tab view
+    NSRect frame = [tabView frame];
+    if ([tabBarControl orientation] == PSMTabBarHorizontalOrientation) {
+        frame.origin.y -= 7;
+        frame.size.height += 7;
+    } else {
+        frame.origin.x -= 3;
+        frame.size.width += 3;
+	}
+	
+	[tabView setFrame:frame];
+	[tabView setNeedsDisplay:YES];
+}
+
+- (void)tabView:(NSTabView *)tabView tabBarDidUnhide:(PSMTabBarControl *)tabBarControl
+{
+    //show the space between the tab bar and the tab view
+    NSRect frame = [tabView frame];
+    if ([tabBarControl orientation] == PSMTabBarHorizontalOrientation) {
+        frame.origin.y += 7;
+        frame.size.height -= 7;
+    } else {
+        frame.origin.x += 3;
+        frame.size.width -= 3;
+    }
+    
+    [tabView setFrame:frame];
+    [tabView setNeedsDisplay:YES];
+}
+
+- (NSString *)tabView:(NSTabView *)tabView toolTipForTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	AIChat		*chat = [(AIMessageTabViewItem *)tabViewItem chat];
+	NSString	*tooltip = nil;
+
+	if ([chat isGroupChat]) {
+		tooltip = [NSString stringWithFormat:AILocalizedString(@"%@ in %@","AccountName on ChatRoomName"), [[chat account] formattedUID], [chat name]];
+	} else {
+		AIListObject	*destination = [chat listObject];
+		NSString		*destinationFormattedUID = [destination formattedUID];
+		BOOL			includeDestination = NO;
+		BOOL			includeSource = NO;
+
+		if (![[[destination displayName] compactedString] isEqualToString:[destinationFormattedUID compactedString]]) {
+			includeDestination = YES;
+		}
+		
+		AIAccount	*account;
+		NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
+		int onlineAccounts = 0;
+		while ((account = [enumerator nextObject]) && onlineAccounts < 2) {
+			if ([account online]) onlineAccounts++;
+		}
+
+		if (onlineAccounts >=2) {
+			includeSource = YES;
+		}
+		AILog(@"Displaying tooltip for %@ --> %@ (%@) --> %@ (%@)",chat,[chat account], [[chat account] formattedUID], destination,destinationFormattedUID);
+		if (includeDestination && includeSource) {
+			tooltip = [NSString stringWithFormat:AILocalizedString(@"%@ talking to %@","AccountName talking to Username"), [[chat account] formattedUID], destinationFormattedUID];
+
+		} else if (includeDestination) {
+			tooltip = destinationFormattedUID;
+			
+		} else if (includeSource) {
+			tooltip = [[chat account] formattedUID];
+		}
+	}
+	
+	return tooltip;
+}
+
+//Tab Bar Visibility --------------------------------------------------------------------------------------------------
+#pragma mark Tab Bar Visibility/Drag And Drop
+
+//Replaced by PSMTabBarControl
+
+//Make sure auto-hide suppression is off after a drag completes
+- (void)tabDraggingNotificationReceived:(NSNotification *)notification
+{
+	if ([[notification name] isEqualToString:PSMTabDragDidBeginNotification]) {
+		[tabView_tabBar setHideForSingleTab:NO];
+	} else {
+		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
+	}
+}
+
+//Save width of the vertical tabs when changed
+- (void)tabBarFrameChanged:(NSNotification *)notification {
+	if ([tabView_tabBar orientation] == PSMTabBarVerticalOrientation) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithFloat:[tabView_tabBar frame].size.width]
+											 forKey:KEY_TABBAR_WIDTH
+											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	}
+}
+
+/*//Custom Tabs Delegate -------------------------------------------------------------------------------------------------
 #pragma mark Custom Tabs Delegate
 //Contextual menu for tabs
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem
@@ -705,7 +1169,7 @@
 	if ([controller respondsToSelector:@selector(adiumPrint:)]) {
 		[controller adiumPrint:sender];
 	}
-}
+}*/
 
 //Toolbar --------------------------------------------------------------------------------------------------------------
 #pragma mark Toolbar

@@ -76,6 +76,7 @@
 - (void)makeTextEntryViewFirstResponder;
 - (void)clearTextEntryView;
 - (void)addToTextEntryView:(NSAttributedString *)inString;
+- (void)addDraggedDataToTextEntryView:(id <NSDraggingInfo>)draggingInfo;
 
 //User List
 - (void)setUserListVisible:(BOOL)inVisible;

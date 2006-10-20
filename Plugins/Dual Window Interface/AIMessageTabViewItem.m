@@ -18,11 +18,14 @@
 #import "AIMessageTabViewItem.h"
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
+#import "AIContactController.h"
+#import "AIDualWindowInterfacePlugin.h"
 #import <AIUtilities/AICustomTabsView.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 
 #define BACK_CELL_LEFT_INDENT	-1
 #define BACK_CELL_RIGHT_INDENT	3
@@ -48,28 +51,27 @@
 //init
 - (id)initWithMessageView:(AIMessageViewController *)inMessageViewController
 {
-	self = [super initWithIdentifier:nil];
+	if ( (self = [super initWithIdentifier:self]) ) {
+		messageViewController = [inMessageViewController retain];
+		adium = [AIObject sharedAdiumInstance];
+		container = nil;
 
-    messageViewController = [inMessageViewController retain];
-    adium = [AIObject sharedAdiumInstance];
-	container = nil;
-
-    //Configure ourself for the message view
-    [[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:)
-									   name:Chat_StatusChanged
-									 object:[messageViewController chat]];
-    [[adium notificationCenter] addObserver:self selector:@selector(chatAttributesChanged:)
-									   name:Chat_AttributesChanged
-									 object:[messageViewController chat]];	
-    [[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:)
-									   name:Chat_ParticipatingListObjectsChanged
-									 object:[messageViewController chat]];
-    [self chatStatusChanged:nil];
-    [self chatParticipatingListObjectsChanged:nil];
-	
-    //Set our contents
-    [self setView:[messageViewController view]];
-	
+		//Configure ourself for the message view
+		[[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:)
+										   name:Chat_StatusChanged
+										 object:[messageViewController chat]];
+		[[adium notificationCenter] addObserver:self selector:@selector(chatAttributesChanged:)
+										   name:Chat_AttributesChanged
+										 object:[messageViewController chat]];	
+		[[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:)
+										   name:Chat_ParticipatingListObjectsChanged
+										 object:[messageViewController chat]];
+		[self chatStatusChanged:nil];
+		[self chatParticipatingListObjectsChanged:nil];
+		
+		//Set our contents
+		[self setView:[messageViewController view]];
+	}
     return self;
 }
 
@@ -114,9 +116,9 @@
 	return container;
 }
 
-
-
 //Message View Delegate ----------------------------------------------------------------------
+#pragma mark Message View Delegate
+
 /*!
  * @brief The list objects participating in our chat changed
  */
@@ -145,7 +147,7 @@
     //If the display name changed, we resize the tabs
     if (notification == nil || [keys containsObject:@"DisplayName"]) {
 		id delegate = [[self tabView] delegate];
-		[delegate resizeTabForTabViewItem:self];
+		//[delegate resizeTabForTabViewItem:self];
 		
         /* This should really be looked at and possibly a better method found.
 		 * This works and causes an automatic update to each open tab.  But it feels like a hack.
@@ -154,7 +156,9 @@
 		 * but good enough for now.
 		 */
         [delegate tabViewDidChangeNumberOfTabViewItems:[self tabView]];
-    }
+    } else if ([keys containsObject:@"UnviewedContent"]) {
+		[self setValue:nil forKeyPath:@"objectCount"];
+	}
 }
 
 - (void)chatAttributesChanged:(NSNotification *)notification
@@ -164,9 +168,8 @@
 	//Redraw if the icon has changed
 	if (keys == nil || [keys containsObject:@"Tab State Icon"]) {
 		[[self container] updateIconForTabViewItem:self];
-		[[[self tabView] delegate] redisplayTabForTabViewItem:self];
+		[self setValue:nil forKeyPath:@"icon"];
 	}
-		
 }
 //
 - (void)listObjectAttributesChanged:(NSNotification *)notification
@@ -179,17 +182,19 @@
 		//Redraw if the icon has changed
 		if (!keys || [keys containsObject:@"Tab Status Icon"]) {
 			[[self container] updateIconForTabViewItem:self];
-			[[[self tabView] delegate] redisplayTabForTabViewItem:self];
+			[self setValue:nil forKeyPath:@"icon"];
 		}
 		
 		//If the list object's display name changed, we resize the tabs
 		if (!keys || [keys containsObject:@"Display Name"]) {
-			[[[self tabView] delegate] resizeTabForTabViewItem:self];
+			[self setLabel:[self label]];
 		}
 	}
 }
 
 //Interface Container ----------------------------------------------------------------------
+#pragma mark Interface Container
+
 //Make this container active
 - (void)makeActive:(id)sender
 {
@@ -214,6 +219,8 @@
 
 
 //Tab view item  ----------------------------------------------------------------------
+#pragma mark Tab view item
+
 //Called when our tab is selected
 - (void)tabViewItemWasSelected
 {
@@ -225,6 +232,11 @@
 - (NSString *)label
 {
 	return ([[messageViewController chat] displayName]);
+}
+
+- (void)setIcon:(NSImage *)newIcon
+{
+	//method does nothing; force the tab bindings to reload -icon
 }
 
 //Return the icon to be used for our tabs.  State gets first priority, then status.
@@ -255,6 +267,20 @@
 - (NSImage *)image
 {
 	return tabViewItemImage;
+}
+
+//bindings methods for PSMTabBarControl
+
+- (void)setObjectCount:(NSNumber *)number
+{
+	//method does nothing; force the tab bindings to reload -objectCount
+}
+
+- (int)objectCount
+{
+	//return 0 to disable the badge
+    return [[[adium preferenceController] preferenceForKey:KEY_TABBAR_SHOW_UNREAD_COUNT group:PREF_GROUP_DUAL_WINDOW_INTERFACE] boolValue] ?
+		[[self chat] unviewedContentCount] : 0;
 }
 
 @end

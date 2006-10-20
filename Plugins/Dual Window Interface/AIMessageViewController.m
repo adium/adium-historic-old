@@ -690,6 +690,18 @@
 }
 
 /*!
+ * @brief Add data to the message entry text view 
+ *
+ * Adds the passed pasteboard data to the entry text view at the insertion point.  If there is selected text in the
+ * view, it will be replaced.
+ */
+- (void)addDraggedDataToTextEntryView:(id <NSDraggingInfo>)draggingInfo
+{
+    [textView_outgoing performDragOperation:draggingInfo];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
+}
+
+/*!
  * @brief Update the text entry view's height when its desired size changes
  */
 - (void)outgoingTextViewDesiredSizeDidChange:(NSNotification *)notification
