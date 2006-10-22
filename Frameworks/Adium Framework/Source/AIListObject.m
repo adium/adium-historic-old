@@ -259,6 +259,10 @@
 //	[[adium contactController] sortListObject:self];
 }
 
+- (BOOL)containsMultipleContacts
+{
+	return NO;
+}
 
 //Status objects ------------------------------------------------------------------------------------------------------
 #pragma mark Status objects

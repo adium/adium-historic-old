@@ -73,7 +73,7 @@
         return NO; // ChatStateNotifications only allowed in chats
     }
 
-    NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
+   // NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
     NSString *jid = [[chat listObject] UID];
     
     SmackMessage *message = [SmackCocoaAdapter messageTo:jid typeString:@"CHAT"];
