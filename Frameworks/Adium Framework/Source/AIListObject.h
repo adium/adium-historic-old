@@ -94,6 +94,7 @@ typedef enum {
 //Grouping
 - (AIListObject <AIContainingObject> *)containingObject;
 - (float)orderIndex;
+- (BOOL)containsMultipleContacts;
 
 //Display
 - (NSString *)formattedUID;
