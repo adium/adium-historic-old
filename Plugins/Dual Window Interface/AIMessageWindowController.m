@@ -433,6 +433,11 @@
 	}
 	
 	if (!silent) [[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
+	
+	//This will enable animations when the time to enable animations has arrived. That time is not now, unless you want ugly to happen.
+	/*if ([tabView_messages numberOfTabViewItems] > 0) {
+		[tabView_tabBar setAutomaticallyAnimates:YES];
+	}*/
 }
 
 //Remove a tab view item container
@@ -616,10 +621,12 @@
 - (BOOL)tabView:(NSTabView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	//The window controller handles removing the tab as we need to dispose of tracking rects properly
-	[self removeTabViewItem:(AIMessageTabViewItem *)tabViewItem silent:NO];
 	if ([tabViewItem respondsToSelector:@selector(chat)]) {
-		[interface closeChat:[(AIMessageTabViewItem *)tabViewItem chat]];
+		AIChat	*chat = [(AIMessageTabViewItem *)tabViewItem chat];
+		
+		[[adium interfaceController] closeChat:chat];
 	}
+	
 	return NO;
 }
 
