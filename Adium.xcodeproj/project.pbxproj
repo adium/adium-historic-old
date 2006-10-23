@@ -1026,6 +1026,9 @@
 		34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */; };
 		377EC8940AE9525B00CB7BDF /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */; };
 		377ED0220AE95D7D00CB7BDF /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */; };
+		377ED2660AED59E600CB7BDF /* TabsAdvancedPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 377ED2630AED59E600CB7BDF /* TabsAdvancedPreferences.h */; };
+		377ED2670AED59E600CB7BDF /* TabsAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 377ED2640AED59E600CB7BDF /* TabsAdvancedPreferences.m */; };
+		377ED2680AED59E600CB7BDF /* TabsAdvanced.nib in Resources */ = {isa = PBXBuildFile; fileRef = 377ED2650AED59E600CB7BDF /* TabsAdvanced.nib */; };
 		38238C610A9B5CF4005EBAEE /* smackx-jingle.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81E708810A98AA9300D9409E /* smackx-jingle.jar */; };
 		38399DCB0A95C9CF006C8EB1 /* AIVideoConfControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		387226C80A8B7C84002CC4F4 /* AIVideoConfController.h in Headers */ = {isa = PBXBuildFile; fileRef = 387226C40A8B7C83002CC4F4 /* AIVideoConfController.h */; };
@@ -3416,6 +3419,9 @@
 		34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferController.h; path = Source/ESFileTransferController.h; sourceTree = "<group>"; };
 		34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferController.m; path = Source/ESFileTransferController.m; sourceTree = "<group>"; };
 		377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PSMTabBarControl.framework; path = Frameworks/PSMTabBarControl.framework; sourceTree = "<group>"; };
+		377ED2630AED59E600CB7BDF /* TabsAdvancedPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TabsAdvancedPreferences.h; path = "Plugins/Dual Window Interface/TabsAdvancedPreferences.h"; sourceTree = "<group>"; };
+		377ED2640AED59E600CB7BDF /* TabsAdvancedPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = TabsAdvancedPreferences.m; path = "Plugins/Dual Window Interface/TabsAdvancedPreferences.m"; sourceTree = "<group>"; };
+		377ED2650AED59E600CB7BDF /* TabsAdvanced.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = TabsAdvanced.nib; path = "Plugins/Dual Window Interface/TabsAdvanced.nib"; sourceTree = "<group>"; };
 		383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVideoConfControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIVideoConfControllerProtocol.h"; sourceTree = "<group>"; };
 		387226C40A8B7C83002CC4F4 /* AIVideoConfController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVideoConfController.h; path = Source/AIVideoConfController.h; sourceTree = "<group>"; };
 		387226C50A8B7C84002CC4F4 /* AIVideoConfController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIVideoConfController.m; path = Source/AIVideoConfController.m; sourceTree = "<group>"; };
@@ -5924,6 +5930,16 @@
 			name = "Applescript Filters";
 			sourceTree = "<group>";
 		};
+		377ED2590AED59BD00CB7BDF /* Tab Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				377ED2630AED59E600CB7BDF /* TabsAdvancedPreferences.h */,
+				377ED2640AED59E600CB7BDF /* TabsAdvancedPreferences.m */,
+				377ED2650AED59E600CB7BDF /* TabsAdvanced.nib */,
+			);
+			name = "Tab Preferences";
+			sourceTree = "<group>";
+		};
 		3839845D0A94F2FD006C8EB1 /* VideoConf */ = {
 			isa = PBXGroup;
 			children = (
@@ -7834,6 +7850,7 @@
 				F570A60503704E7201A8010A /* MessageWindow.nib */,
 				3461621006FB482C009181D8 /* UserList Theme.plist */,
 				3461621306FB482D009181D8 /* UserList Layout.plist */,
+				377ED2590AED59BD00CB7BDF /* Tab Preferences */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -8177,6 +8194,7 @@
 				345EE2DE0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.h in Headers */,
 				81F9D0840A7E905B004A35BD /* AIJavaController.h in Headers */,
 				387226C80A8B7C84002CC4F4 /* AIVideoConfController.h in Headers */,
+				377ED2660AED59E600CB7BDF /* TabsAdvancedPreferences.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9234,6 +9252,7 @@
 				347374BD0AA9206B00AD18E3 /* ShortcutRecorder.strings in Resources */,
 				34F312BD0ADC43CA00A4310E /* xtras_duck.png in Resources */,
 				38BADCC60A921B1F00D41C08 /* pref-quicktime.png in Resources */,
+				377ED2680AED59E600CB7BDF /* TabsAdvanced.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9900,6 +9919,7 @@
 				34BC8F7B0ACA3AAC00562745 /* AIScannerDebug.m in Sources */,
 				345EE2DF0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m in Sources */,
 				387226C90A8B7C84002CC4F4 /* AIVideoConfController.m in Sources */,
+				377ED2670AED59E600CB7BDF /* TabsAdvancedPreferences.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
