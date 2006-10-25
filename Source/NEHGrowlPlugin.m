@@ -408,10 +408,10 @@
 	if (chat) {
 		//Make the chat active
 		[[adium interfaceController] setActiveChat:chat];
-		
-		//And make Adium active (needed if, for example, our notification was clicked with another app active)
-		[NSApp activateIgnoringOtherApps:YES];
 	}
+
+	//Make Adium active (needed if, for example, our notification was clicked with another app active)
+	[NSApp activateIgnoringOtherApps:YES];	
 }
 
 /*!
