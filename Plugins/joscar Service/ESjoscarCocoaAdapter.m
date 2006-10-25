@@ -74,7 +74,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		[[self class] prepareJavaVM];
 
 		//Pass in 0 for SEVERE logging only, 1 for FINE level logging, 2 for WARNING level logging, and -1 for no logging whatsoever
-		int logLevel = 0;
+		int logLevel = -1;
 
 		//Do fine debugging for all debug builds
 #ifdef DEBUG_BUILD
@@ -223,6 +223,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 {
 	AILog(@"*** %@ disconnecting %@",appSession, [account serversideUID]);
 	[aimConnection disconnect];
+	[aimConnection release]; aimConnection = nil;
 }
 
 - (NSString *)getSecurid
@@ -739,6 +740,10 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 								} else {					
 									//If it is not on disk, write it out so we can use it
 									imagePath = [NSTemporaryDirectory() stringByAppendingPathComponent:name];
+									/* It may not actually be a jpg, but most AIM images are, and there's no quick way to find out for sure.
+									 * This will ensure that it will open in Preview, Finder, etc., properly as an image of some sort.
+									 */
+									if (![imagePath pathExtension]) imagePath = [imagePath stringByAppendingPathExtension:@"jpg"];
 									imagePath = [[NSFileManager defaultManager] uniquePathForPath:imagePath];
 									[[joscarBridge dataFromAttachment:attachment] writeToFile:imagePath atomically:YES];
 								}
