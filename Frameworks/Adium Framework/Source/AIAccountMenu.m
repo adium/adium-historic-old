@@ -425,6 +425,39 @@
 
 //Account Status Submenu -----------------------------------------------------------------------------------------------
 #pragma mark Account Status Submenu
+void updateRepresentedObjectForSubmenusOfMenuItem(NSMenuItem *menuItem, AIAccount *account)
+{
+	NSMenu *submenu;
+	if ((submenu = [menuItem submenu])) {
+		NSEnumerator *enumerator = [[submenu itemArray] objectEnumerator];
+		NSMenuItem *submenuItem;
+		
+		while ((submenuItem = [enumerator nextObject])) {
+			AIStatus	 *status;
+			NSDictionary *newRepresentedObject;
+
+			//Set the represented object to indicate both the right status and the right account
+			if ((status = [[submenuItem representedObject] objectForKey:@"AIStatus"])) {
+				newRepresentedObject = [[NSDictionary alloc] initWithObjectsAndKeys:
+					status, @"AIStatus",
+					account, @"AIAccount",
+					nil];
+			} else {
+				//Custom status items don't have an associated AIStatus.
+				newRepresentedObject = [[NSDictionary alloc] initWithObjectsAndKeys:
+																	 account, @"AIAccount",
+																	 nil];
+			}
+			
+			[submenuItem setRepresentedObject:newRepresentedObject];
+			[newRepresentedObject release];
+
+			//Recurse into any submenu on this menu item
+			updateRepresentedObjectForSubmenusOfMenuItem(submenuItem, account);
+		}
+	}
+}
+
 NSMenu *statusMenuForAccountMenuItem(NSArray *menuItemArray, NSMenuItem *accountMenuItem, BOOL addOriginalItems, id self)
 {
 	AIAccount			*account = [accountMenuItem representedObject];
@@ -439,31 +472,40 @@ NSMenu *statusMenuForAccountMenuItem(NSArray *menuItemArray, NSMenuItem *account
 	while ((statusMenuItem = [menuItemEnumerator nextObject])) {
 		AIStatus		*status;
 		NSDictionary	*newRepresentedObject;
-		
+		NSMenuItem		*actualMenuItem;
+
 		//Set the represented object to indicate both the right status and the right account
 		if ((status = [[statusMenuItem representedObject] objectForKey:@"AIStatus"])) {
-			newRepresentedObject = [NSDictionary dictionaryWithObjectsAndKeys:
+			newRepresentedObject = [[NSDictionary alloc] initWithObjectsAndKeys:
 				status, @"AIStatus",
 				account, @"AIAccount",
 				nil];
 		} else {
 			//Custom status items don't have an associated AIStatus.
-			newRepresentedObject = [NSDictionary dictionaryWithObject:account
-															   forKey:@"AIAccount"];
+			newRepresentedObject = [[NSDictionary alloc] initWithObjectsAndKeys:
+				account, @"AIAccount",
+				nil];
 		}
 		
 		if (addOriginalItems) {
 			//The last time, we can use the original menu item rather than creating a copy
-			[statusMenuItem setRepresentedObject:newRepresentedObject];
+			actualMenuItem = statusMenuItem;
 			[accountSubmenu addItem:statusMenuItem];
-			
+
 		} else {
-			//Create a copy of the item for this account and add it to our status menu
+			/* Create a copy of the item for this account and add it to our status menu
+			 * (which retains it, so we can release and continue to use the variable)
+			 */
 			NSMenuItem *newItem = [statusMenuItem copy];
-			[newItem setRepresentedObject:newRepresentedObject];
+			actualMenuItem = newItem;
 			[accountSubmenu addItem:newItem];
 			[newItem release];				
 		}
+		
+		[actualMenuItem setRepresentedObject:newRepresentedObject];
+		[newRepresentedObject release];
+
+		updateRepresentedObjectForSubmenusOfMenuItem(actualMenuItem, account);
 	}
 	
 	if ([account enabled]) {
