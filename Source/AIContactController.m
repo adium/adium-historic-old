@@ -1680,7 +1680,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 
 #warning If this is necessary, SmackContacts should probably have their own implementatino of internalUniqueObjectIDForService:account:UID
-- (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID class:(Class)ContactClass
+- (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID usingClass:(Class)ContactClass
 {
 	if (inService && [inUID length]) {
 		return [contactDict objectForKey:[ContactClass internalUniqueObjectIDForService:inService
@@ -1693,7 +1693,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID
 {
-	return [self existingContactWithService:inService account:inAccount UID:inUID class:[AIListContact class]];
+	return [self existingContactWithService:inService account:inAccount UID:inUID usingClass:[AIListContact class]];
 }
 
 /*!
