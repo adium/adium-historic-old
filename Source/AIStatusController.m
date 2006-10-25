@@ -536,7 +536,8 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	if ([inObject isKindOfClass:[AIAccount class]]) {
 		if ([inModifiedKeys containsObject:@"Online"] ||
 			[inModifiedKeys containsObject:@"IdleSince"] ||
-			[inModifiedKeys containsObject:@"StatusState"]) {
+			[inModifiedKeys containsObject:@"StatusState"] ||
+			[inModifiedKeys containsObject:KEY_ENABLED]) {
 			
 			[self _resetActiveStatusState];
 		}
