@@ -74,10 +74,13 @@
  * When the idleSince status key changes, we start or stop tracking the object as appropriate.
  * We track in order to have a simple number associated with the contact, updated once per minute, rather
  * than calculating the time from IdleSince until Now whenever we want to display the idle time.
+ *
+ * Don't calculate an idle time for a metacontact; its "idle time" should be determined dynamically based on its contained contacts.
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-    if (	inModifiedKeys == nil || [inModifiedKeys containsObject:@"IdleSince"]) {
+    if ((inModifiedKeys == nil || [inModifiedKeys containsObject:@"IdleSince"]) &&
+		![inObject isKindOfClass:[AIMetaContact class]]) {
 
         if ([inObject statusObjectForKey:@"IdleSince"] != nil) {
             //Track the handle
@@ -154,7 +157,7 @@
 
 		idleNumber = [NSNumber numberWithInt:idle];
 	}
-
+	AILog(@"contactIdlePlugin: *** Updating idle for %@ to %@",inObject,idleNumber);
 	[inObject setStatusObject:idleNumber
 					   forKey:@"Idle"
 					   notify:NotifyLater];
@@ -192,17 +195,16 @@
  */
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    int 				idle = [inObject integerStatusObjectForKey:@"Idle"];
+    int 				idleMinutes = [inObject integerStatusObjectForKey:@"Idle"];
     NSAttributedString	*entry = nil;
-	
-    if ((idle > 599400) || (idle == -1)) { //Cap idle at 999 Hours (999*60 minutes)
+
+    if ((idleMinutes > 599400) || (idleMinutes == -1)) { //Cap idle at 999 Hours (999*60 minutes)
 		entry = [[NSAttributedString alloc] initWithString:AILocalizedString(@"Yes",nil)];
 		
-    } else if (idle != 0) {
-		entry = [[NSAttributedString alloc] 
-			initWithString:[NSDateFormatter stringForTimeInterval:idle*60]];    
+    } else if (idleMinutes != 0) {
+		entry = [[NSAttributedString alloc] initWithString:[NSDateFormatter stringForTimeInterval:(idleMinutes * 60.0)]];    
 	}
-	
+
     return [entry autorelease];
 }
 
