@@ -91,21 +91,22 @@
 {
 	NSSet		*modifiedAttributes = nil;
 
-	//Idle time
+	/* Work at the parent contact (metacontact, etc.) level for extended status, since that's what's displayed in the contact list.
+	 * We completely ignore status updates sent for an object which isn't the highest-level up (e.g. is within a metacontact).
+	 */
     if ((inModifiedKeys == nil || 
 		 (showIdle && [inModifiedKeys containsObject:@"Idle"]) ||
 		 (showStatus && ([inModifiedKeys containsObject:@"StatusMessage"] ||
 						 [inModifiedKeys containsObject:@"ContactListDisplayName"] ||
 						 [inModifiedKeys containsObject:@"StatusName"]))) &&
-		[inObject isKindOfClass:[AIListContact class]]){
+		[inObject isKindOfClass:[AIListContact class]] &&
+		([(AIListContact *)inObject parentContact] == inObject)) {
 		NSMutableString	*statusMessage = nil;
 		NSString		*finalMessage = nil;
 		int				idle;
 
-		//Work at the parent contact (metacontact, etc.) level for extended status, since that's what's displayed in the contact list
-		AILog(@"Updating extended status for %@ - parent is %@",inObject, [(AIListContact *)inObject parentContact]);
-
-		inObject = [(AIListContact *)inObject parentContact];
+		AILog(@"Updating extended status for %@ - parent is %@; triggerred by %@",inObject, [(AIListContact *)inObject parentContact],
+			  inModifiedKeys);
 
 		if (showStatus) {
 			NSAttributedString *filteredMessage;
@@ -154,9 +155,7 @@
 - (NSString *)idleStringForMinutes:(int)minutes //input is actualy minutes
 {
 	// Cap Idletime at 599400 minutes (999 hours)
-	return (minutes > 599400)?
-		AILocalizedString(@"Idle",nil) :
-		[NSDateFormatter stringForApproximateTimeInterval:minutes*60 abbreviated:YES];
+	return ((minutes > 599400) ? AILocalizedString(@"Idle",nil) : [NSDateFormatter stringForApproximateTimeInterval:(minutes * 60) abbreviated:YES]);
 }
 
 @end
