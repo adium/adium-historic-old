@@ -78,9 +78,6 @@ SecuridProvider
 		if (configuredLogging == true) return;
 		configuredLogging = true;
 
-		h = new BridgeToAdiumHandler();
-		h.setFormatter(new CoolFormatter());
-
 		if (enableLogging == 0) {
 			generalLevel = Level.SEVERE;
 			joscarLevel = Level.SEVERE;
@@ -98,21 +95,31 @@ SecuridProvider
 			joscarLevel = Level.OFF;	
 		}
 		
-		h.setLevel(generalLevel);
+		if (enableLogging != -1) {
+			h = new BridgeToAdiumHandler();
+			h.setFormatter(new CoolFormatter());
+			h.setLevel(generalLevel);
+		}		
 		
 		l = Logger.getLogger("net.kano.joustsim");
 		l.setLevel(generalLevel);
 		l.setUseParentHandlers(false);
-		l.addHandler(h);
+		if (enableLogging != -1) {
+			l.addHandler(h);
+		}
 		
 		l = Logger.getLogger("net.kano.joscar");
 		l.setLevel(joscarLevel);
 		l.setUseParentHandlers(false);
-		l.addHandler(h);
+		if (enableLogging != -1) {
+			l.addHandler(h);
+		}
 		
 		LOGGER.setLevel(generalLevel);
 		LOGGER.setUseParentHandlers(false);
-		LOGGER.addHandler(h);		
+		if (enableLogging != -1) {
+			LOGGER.addHandler(h);
+		}
     }
 	
 	public BridgeToAdiumHandler getAdiumHandler() {
