@@ -978,6 +978,18 @@ static NSString	*prefsCategory;
 	
 	[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
 	
+	NSString *value = [[defaults objectForKey:@"AIHasSentProfileInfo"] stringValue];
+	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
+		@"FirstSubmission", @"key", 
+		@"First Time Submitting Profile Information", @"visibleKey",
+		@"yes", @"value",
+		@"yes", @"visibleValue",
+		nil];
+	
+	[profileInfo addObject:entry];
+	
+	[defaults setObject:[NSNumber numberWithBool:YES] forKey:@"AIHasSentProfileInfo"];
+	
 	/*************** Include info about what IM services are used ************/
 	NSMutableString *accountInfo = [NSMutableString string];
 	NSCountedSet *condensedAccountInfo = [NSCountedSet set];
@@ -991,12 +1003,11 @@ static NSString	*prefsCategory;
 	}
 	
 	NSMutableString *accountInfoString = [NSMutableString string];
-	NSString *value;
 	NSEnumerator *infoEnu = [[[condensedAccountInfo allObjects] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
 	while ((value = [infoEnu nextObject]))
 		[accountInfoString appendFormat:@"%@%d", value, [condensedAccountInfo countForObject:value]];
 	
-	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
+	entry = [NSDictionary dictionaryWithObjectsAndKeys:
 								@"IMServices", @"key", 
 								@"IM Services Used", @"visibleKey",
 								accountInfoString, @"value",
