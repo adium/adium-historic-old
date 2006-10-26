@@ -314,6 +314,7 @@ static int linesLeftToFind = 0;
 				
 				//Don't log this object
 				[message setPostProcessContent:NO];
+				[message setTrackContent:NO];
 				
 				//Add it to the array
 				[innerFoundContentContexts addObject:message];
