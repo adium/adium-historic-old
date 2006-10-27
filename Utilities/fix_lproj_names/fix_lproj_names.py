@@ -12,7 +12,7 @@ Requires Python 2.3 or later.
 # http://developer.apple.com/documentation/MacOSX/Conceptual/BPInternational/Articles/LanguageDesignations.html
 # http://loc.gov/standards/iso639-2/php/English_list.php
 mappings = {
-	'Catalan:':	'ca',
+	'Catalan':	'ca',
 	'Chinese':	'zh',
 	'English':	'en',
 	'French':	'fr',
