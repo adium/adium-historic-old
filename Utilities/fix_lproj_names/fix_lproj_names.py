@@ -192,6 +192,8 @@ def svn_rename(dirpath, old_name, new_name):
 		print >>stderr, 'svn mv returned exit status 1 for %r in %r; trying plain rename' % (old_name, dirpath)
 		rename(dirpath, old_name, new_name)
 
+# THE RECURSION LOOP!
+
 for topdir in args:
 	for dirpath, dirnames, filenames in os.walk(topdir):
 		# See if there's a .svn directory.
