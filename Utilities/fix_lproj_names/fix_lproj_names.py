@@ -140,7 +140,7 @@ exceptions = [
 	'Growl-WithInstaller.framework',
 	'LMX.framework',
 	'OTR.framework',
-	'PSMTabBarControl.framework'
+	'PSMTabBarControl.framework',
 	'ShortcutRecorder',
 	'Sparkle.framework',
 ]
