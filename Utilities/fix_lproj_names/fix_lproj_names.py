@@ -147,9 +147,14 @@ exceptions = [
 
 #-------------------------------------------------------------------------------
 
-# Ahead of time, append .lproj to all of these.
+# Things to do ahead of time to the settings above.
+# Append .lproj to all of the keys and values in the mappings dict.
 lproj = '.lproj'
 mappings_precached = dict((k + lproj, v + lproj) for k, v in mappings.iteritems())
+# Create a set that we can use for set intersection with the list of lprojs in each subdirectory.
+mappings_keys = set(mappings)
+# Also convert the exceptions list to a set, so that we can do set differencing upon the dirnames list in the os.walk loop.
+exceptions = set(exceptions)
 
 import optparse
 # Use our docstring as the --help.
@@ -159,8 +164,61 @@ options, args = parser.parse_args()
 if not args:
 	args = ['.']
 
-for target in args:
-	# Walk each directory.
-	# Remove known exceptions from the directories list.
-	# For each item in mappings, rename it from (for example) "English.lproj" to "en.lproj".
-	# Use svn mv if there is a .svn directory; otherwise, use plain mv.
+# Get the utilities that we need. We do this up front rather than in the loop for obvious reasons.
+import os
+from os import path
+from sys import stderr # For warning messages.
+try:
+	from glob import iglob as glob
+except ImportError:
+	# NO iglob FOR YOU! (You need Python 2.5 or later for that).
+	from glob import glob
+import fnmatch
+dot_lproj_pattern = '*.lproj'
+import subprocess
+
+# Plain rename, for renaming in non-versioned directories.
+def rename(dirpath, old_name, new_name):
+	old_cwd = os.getcwd()
+	os.chdir(dirpath)
+	os.rename(old_name, new_name)
+	os.chdir(old_cwd)
+# svn rename, for renaming in versioned directories.
+def svn_rename(dirpath, old_name, new_name):
+	status = subprocess.call(['svn', 'mv', old_name, new_name],
+	                         cwd=dirpath)
+	if status == 1:
+		# Assume it's not versioned (dirpath is a WC, but old_name isn't versioned in it). Try plain rename.
+		print >>stderr, 'svn mv returned exit status 1 for %r in %r; trying plain rename' % (old_name, dirpath)
+		rename(dirpath, old_name, new_name)
+
+for topdir in args:
+	for dirpath, dirnames, filenames in os.walk(topdir):
+		# See if there's a .svn directory.
+		# If there is, we should use svn mv, and we also shouldn't descend into that directory.
+		# If there isn't, we should use regular mv, and we don't need to worry about descending into it.
+		try:
+			i = dirnames.index('.svn')
+		except ValueError:
+			versioned = False
+		else:
+			del dirnames[i]
+			versioned = True
+
+		# Remove the exceptions from the dirnames array. This not only keeps us from descending into them (which is the idea), but also saves fnmatch.filter some work.
+		dirnames_set = set(dirnames)
+		dirnames_set.difference_update(exceptions)
+		dirnames[:] = dirnames_set
+
+		# Map the old-style lprojs in this directory to new-style names.
+		# A side effect of using set intersection rather than a simple glob is that existing new-style names are ignored for free.
+		lprojs = set(dirnames)
+		lprojs.intersection_update(mappings_keys)
+
+		for old_name in lprojs:
+			new_name = mappings[old_name]
+
+			if versioned:
+				svn_rename(old_name, new_name)
+			else:
+				rename(old_name, new_name)
