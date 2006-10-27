@@ -14,6 +14,7 @@ Requires Python 2.3 or later.
 mappings = {
 	'Catalan':	'ca',
 	'Chinese':	'zh',
+	'Dutch':	'nl',
 	'English':	'en',
 	'French':	'fr',
 	'German':	'de',
