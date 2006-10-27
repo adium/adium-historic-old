@@ -150,7 +150,7 @@ exceptions = [
 # Things to do ahead of time to the settings above.
 # Append .lproj to all of the keys and values in the mappings dict.
 lproj = '.lproj'
-mappings_precached = dict((k + lproj, v + lproj) for k, v in mappings.iteritems())
+mappings = dict((k + lproj, v + lproj) for k, v in mappings.iteritems())
 # Create a set that we can use for set intersection with the list of lprojs in each subdirectory.
 mappings_keys = set(mappings)
 # Also convert the exceptions list to a set, so that we can do set differencing upon the dirnames list in the os.walk loop.
@@ -221,6 +221,6 @@ for topdir in args:
 			new_name = mappings[old_name]
 
 			if versioned:
-				svn_rename(old_name, new_name)
+				svn_rename(dirpath, old_name, new_name)
 			else:
-				rename(old_name, new_name)
+				rename(dirpath, old_name, new_name)
