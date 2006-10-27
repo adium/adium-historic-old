@@ -6,7 +6,7 @@ Converts old-style lproj names (e.g. "English.lproj") to ISO 639-1 names (e.g. "
 
 "targets" are pathnames to directories to recursively search for .lproj directories. If no targets are specified, . is used.
 
-Requires Python 2.3 or later.
+Requires Python 2.3 or later.\
 """
 
 # http://developer.apple.com/documentation/MacOSX/Conceptual/BPInternational/Articles/LanguageDesignations.html
@@ -158,7 +158,7 @@ exceptions = set(exceptions)
 
 import optparse
 # Use our docstring as the --help.
-parser = optparse.OptionParser(help=__doc__.replace('fix_lproj_name', '%prog'))
+parser = optparse.OptionParser(usage=__doc__.replace('fix_lproj_name', '%prog'))
 options, args = parser.parse_args()
 
 if not args:
