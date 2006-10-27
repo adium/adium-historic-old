@@ -178,19 +178,18 @@ dot_lproj_pattern = '*.lproj'
 import subprocess
 
 # Plain rename, for renaming in non-versioned directories.
-def rename(dirpath, old_name, new_name):
+def rename(old_name, new_name):
 	old_cwd = os.getcwd()
 	os.chdir(dirpath)
 	os.rename(old_name, new_name)
 	os.chdir(old_cwd)
 # svn rename, for renaming in versioned directories.
-def svn_rename(dirpath, old_name, new_name):
-	status = subprocess.call(['svn', 'mv', old_name, new_name],
-	                         cwd=dirpath)
+def svn_rename(old_name, new_name):
+	status = subprocess.call(['svn', 'mv', old_name, new_name])
 	if status == 1:
 		# Assume it's not versioned (dirpath is a WC, but old_name isn't versioned in it). Try plain rename.
 		print >>stderr, 'svn mv returned exit status 1 for %r in %r; trying plain rename' % (old_name, dirpath)
-		rename(dirpath, old_name, new_name)
+		rename(old_name, new_name)
 
 # THE RECURSION LOOP!
 
@@ -220,7 +219,11 @@ for topdir in args:
 		for old_name in lprojs:
 			new_name = mappings[old_name]
 
+			# Change old_name and new_name to be relative to cwd (or absolute), rather than relative to dirpath.
+			old_name = path.join(dirpath, old_name)
+			new_name = path.join(dirpath, new_name)
+
 			if versioned:
-				svn_rename(dirpath, old_name, new_name)
+				svn_rename(old_name, new_name)
 			else:
-				rename(dirpath, old_name, new_name)
+				rename(old_name, new_name)
