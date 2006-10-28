@@ -33,16 +33,15 @@
 			name = "Setup Build Directory";
 			productName = "Setup Build Directory";
 		};
-		F5B17CCF0A16C6AC004AE99E /* Version information */ = {
+		F5B17CCF0A16C6AC004AE99E /* Plist Macros */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = F5B17CD70A16C6BA004AE99E /* Build configuration list for PBXAggregateTarget "Version information" */;
+			buildConfigurationList = F5B17CD70A16C6BA004AE99E /* Build configuration list for PBXAggregateTarget "Plist Macros" */;
 			buildPhases = (
 				F5B17CCE0A16C6AC004AE99E /* ShellScript */,
 			);
-			comments = "Generates VersionInformation.xcconfig.";
 			dependencies = (
 			);
-			name = "Version information";
+			name = "Plist Macros";
 			productName = "Plist Macros";
 		};
 /* End PBXAggregateTarget section */
@@ -1927,7 +1926,6 @@
 		11F5F46309538B99007DCC49 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/joscar Service/en.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		11F5F70109539C70007DCC49 /* joscarDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = joscarDefaults.plist; path = "Plugins/joscar Service/joscarDefaults.plist"; sourceTree = "<group>"; };
 		11F5F72D0953A227007DCC49 /* joscarClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = joscarClasses.h; path = "Plugins/joscar Service/joscarClasses.h"; sourceTree = SOURCE_ROOT; };
-		310CCFF30AF36798007E1220 /* VersionInformation.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = VersionInformation.xcconfig; sourceTree = "<group>"; };
 		3402E01807CB0CE40044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		3402E01F07CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3402E02007CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -4561,7 +4559,6 @@
 				34611C7D09B6756D00870036 /* AdiumSpotlightImporter.xcodeproj */,
 				349C2F310867ACF7000BF883 /* ApplescriptRunner */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
-				310CCFF30AF36798007E1220 /* VersionInformation.xcconfig */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
 			name = CocAIMe2;
@@ -8597,13 +8594,13 @@
 				34BD9D6A053146CC000AB133 /* CopyFiles */,
 				34677B3607CC3D6200F59F7B /* CopyFiles */,
 				6C15E63106DF3BB600E5A50E /* ShellScript */,
+				345DFF4A05564DB200CEE7B3 /* ShellScript */,
 				34C9456E0AE1EE280094E504 /* ShellScript */,
 			);
 			buildRules = (
 				81F9D1DF0A7F81A5004A35BD /* PBXBuildRule */,
 			);
 			dependencies = (
-				F5B17CDF0A16C767004AE99E /* PBXTargetDependency */,
 				34B9E665085B7C74006216DF /* PBXTargetDependency */,
 				34BD9CD2053146CC000AB133 /* PBXTargetDependency */,
 				4B215DB0059896B000305B3C /* PBXTargetDependency */,
@@ -8613,6 +8610,7 @@
 				34677B3F07CC3E8400F59F7B /* PBXTargetDependency */,
 				349C31630867D199000BF883 /* PBXTargetDependency */,
 				11F5F42C09537E00007DCC49 /* PBXTargetDependency */,
+				F5B17CDF0A16C767004AE99E /* PBXTargetDependency */,
 				81F6510C0A290FC8008FC8E7 /* PBXTargetDependency */,
 				38722C2D0A8CEC51002CC4F4 /* PBXTargetDependency */,
 			);
@@ -8870,7 +8868,7 @@
 				347A210E09786B5F00A30431 /* SystemVersionCheck */,
 				34B322F609B9FEAC00029361 /* IRC Service Libgaim Plugin */,
 				3417D25009C332B900FC413E /* Translator */,
-				F5B17CCF0A16C6AC004AE99E /* Version information */,
+				F5B17CCF0A16C6AC004AE99E /* Plist Macros */,
 				38D8FA9A0A8A4F350078E442 /* QuickTime Plugin */,
 				81F6508C0A290FB6008FC8E7 /* Smack */,
 				F53C25AE0A2F95F100F7B73D /* Setup Build Directory */,
@@ -9393,6 +9391,24 @@
 			shellPath = /bin/sh;
 			shellScript = "ranlib \"${SCRIPT_INPUT_FILE_0}\"";
 		};
+		345DFF4A05564DB200CEE7B3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				$TARGET_BUILD_DIR/include/PlistMacros.h,
+				"$(SRCROOT)/Plists/version.plist",
+				"$(SRCROOT)/Plists/buildnum",
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/version.plist",
+				"$(BUILT_PRODUCTS_DIR)/Adium.app/Contents/Resources/buildnum",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "gcc -E -P -x c -Wno-trigraphs -include \"$SCRIPT_INPUT_FILE_0\" -C \"$SCRIPT_INPUT_FILE_1\" -o \"$SCRIPT_OUTPUT_FILE_0\"\ngcc -E -P -x c -Wno-trigraphs -include \"$SCRIPT_INPUT_FILE_0\" -C \"$SCRIPT_INPUT_FILE_2\" -o \"$SCRIPT_OUTPUT_FILE_1\"";
+		};
 		34C9456E0AE1EE280094E504 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -9472,13 +9488,12 @@
 			inputPaths = (
 			);
 			outputPaths = (
-				VersionInformation.xcconfig,
-				buildnum,
+				"$(TARGET_BUILD_DIR)/include/PlistMacros.h",
 				"$(TARGET_BUILD_DIR)/include/DummyFileToForceScriptToRunEveryTimeWithoutBeingCreated",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "PATH=$PATH:/usr/local/bin:/usr/bin:/sw/bin:/opt/local/bin\nbuildid=\"r`svn info | awk '/^Revision:/ {print $2}'`\"\n\nif [[ $buildid == \"r\" ]]; then\n\tbuildid=\"r`perl Utilities/svkRevNum.pl .`\"\nfi\n\n# Generate VersionInformation.xcconfig so that Xcode can keyword-substitute the information into Info.plist.\necho \"BUILDID = $buildid\" > $SCRIPT_OUTPUT_FILE_0\necho \"BUILDDATE = `date +%s`\" >> $SCRIPT_OUTPUT_FILE_0\n\n# Generate the buildnum file for Crash Reporter.\necho \"$buildid\" > $SCRIPT_OUTPUT_FILE_1";
+			shellScript = "PATH=$PATH:/usr/local/bin:/usr/bin:/sw/bin:/opt/local/bin\nbuildid=\"r`svn info | grep -F Revision | awk '{print $2}'`\"\n\nif [[ $buildid == \"r\" ]]; then\n\tbuildid=\"r`perl Utilities/svkRevNum.pl .`\"\nfi\n\necho \"#define BUILDID $buildid\" > $SCRIPT_OUTPUT_FILE_0\necho \"#define BUILDDATE `date +%s`\" >> $SCRIPT_OUTPUT_FILE_0\necho \"#define WHOAMI `whoami`\" >> $SCRIPT_OUTPUT_FILE_0";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -10336,7 +10351,7 @@
 		};
 		F5B17CDF0A16C767004AE99E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F5B17CCF0A16C6AC004AE99E /* Version information */;
+			target = F5B17CCF0A16C6AC004AE99E /* Plist Macros */;
 			targetProxy = F5B17CDE0A16C767004AE99E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -12066,8 +12081,6 @@
 				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
-				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
-				INFOPLIST_PREPROCESS = YES;
 				PRODUCT_NAME = Adium;
 			};
 			name = "Development-libgaim_oscar";
@@ -12180,7 +12193,6 @@
 		};
 		349F834B0A437477007EA1B1 /* Development-libgaim_oscar */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 310CCFF30AF36798007E1220 /* VersionInformation.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -12533,8 +12545,6 @@
 				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
-				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
-				INFOPLIST_PREPROCESS = YES;
 				PRODUCT_NAME = Adium;
 			};
 			name = "Deployment-Debug_PPC-Only";
@@ -12594,7 +12604,6 @@
 		};
 		34BAF9900942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 310CCFF30AF36798007E1220 /* VersionInformation.xcconfig */;
 			buildSettings = {
 				ARCHS = ppc;
 				COPY_PHASE_STRIP = NO;
@@ -13297,8 +13306,6 @@
 				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
-				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
-				INFOPLIST_PREPROCESS = YES;
 				PRODUCT_NAME = Adium;
 			};
 			name = Development;
@@ -13329,8 +13336,6 @@
 				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
-				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
-				INFOPLIST_PREPROCESS = YES;
 				PRODUCT_NAME = Adium;
 			};
 			name = Deployment;
@@ -13361,8 +13366,6 @@
 				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
-				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
-				INFOPLIST_PREPROCESS = YES;
 				PRODUCT_NAME = Adium;
 			};
 			name = "Deployment-Debug";
@@ -13524,7 +13527,6 @@
 		};
 		DADE8E3B085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 310CCFF30AF36798007E1220 /* VersionInformation.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -13565,7 +13567,6 @@
 		};
 		DADE8E3C085507450062B664 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 310CCFF30AF36798007E1220 /* VersionInformation.xcconfig */;
 			buildSettings = {
 				ARCHS = (
 					ppc,
@@ -13612,7 +13613,6 @@
 		};
 		DADE8E3D085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 310CCFF30AF36798007E1220 /* VersionInformation.xcconfig */;
 			buildSettings = {
 				ARCHS = (
 					ppc,
@@ -13994,7 +13994,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		F5B17CD70A16C6BA004AE99E /* Build configuration list for PBXAggregateTarget "Version information" */ = {
+		F5B17CD70A16C6BA004AE99E /* Build configuration list for PBXAggregateTarget "Plist Macros" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F5B17CD80A16C6BA004AE99E /* Development */,

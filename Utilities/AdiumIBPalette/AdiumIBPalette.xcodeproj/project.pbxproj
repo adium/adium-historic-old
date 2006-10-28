@@ -27,8 +27,8 @@
 		0259C578FE90428111CA0C5A /* AdiumIBPalette.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AdiumIBPalette.m; sourceTree = "<group>"; };
 		0259C57BFE90428111CA0C5A /* AITextColorPreviewViewInspector.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AITextColorPreviewViewInspector.h; sourceTree = "<group>"; };
 		0259C57CFE90428111CA0C5A /* AdiumIBPalette.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AdiumIBPalette.h; sourceTree = "<group>"; };
-		0259C57FFE90428111CA0C5A /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/AITextColorPreviewViewInspector.nib; sourceTree = "<group>"; };
-		0259C581FE90428111CA0C5A /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/AdiumIBPalette.nib; sourceTree = "<group>"; };
+		0259C57FFE90428111CA0C5A /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/AITextColorPreviewViewInspector.nib; sourceTree = "<group>"; };
+		0259C581FE90428111CA0C5A /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/AdiumIBPalette.nib; sourceTree = "<group>"; };
 		0259C583FE90428111CA0C5A /* palette.table */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = palette.table; sourceTree = "<group>"; };
 		0711CA150A147ED20046A860 /* AIUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AIUtilities.framework; path = "../../Frameworks/AIUtilities Framework/build/Deployment/AIUtilities.framework"; sourceTree = SOURCE_ROOT; };
 		0711CA1A0A147EDC0046A860 /* Adium.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Adium.framework; path = ../../build/Deployment/Adium.framework; sourceTree = SOURCE_ROOT; };
@@ -43,7 +43,7 @@
 		54D33B2806778E3300C9C163 /* AdiumIBPalette.ibclassdescription */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AdiumIBPalette.ibclassdescription; sourceTree = "<group>"; };
 		8D1AC9730486D14A00FE50C9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1AC9740486D14A00FE50C9 /* AdiumIBPalette.palette */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdiumIBPalette.palette; sourceTree = BUILT_PRODUCTS_DIR; };
-		8D1AC97B0486D23100FE50C9 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		8D1AC97B0486D23100FE50C9 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DD92D38A0106425D02CA0E72 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -272,7 +272,7 @@
 		0259C57EFE90428111CA0C5A /* AITextColorPreviewViewInspector.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				0259C57FFE90428111CA0C5A /* en */,
+				0259C57FFE90428111CA0C5A /* English */,
 			);
 			name = AITextColorPreviewViewInspector.nib;
 			sourceTree = "<group>";
@@ -280,7 +280,7 @@
 		0259C580FE90428111CA0C5A /* AdiumIBPalette.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				0259C581FE90428111CA0C5A /* en */,
+				0259C581FE90428111CA0C5A /* English */,
 			);
 			name = AdiumIBPalette.nib;
 			sourceTree = "<group>";
@@ -288,7 +288,7 @@
 		8D1AC97F0486D23B00FE50C9 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				8D1AC97B0486D23100FE50C9 /* en */,
+				8D1AC97B0486D23100FE50C9 /* English */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
