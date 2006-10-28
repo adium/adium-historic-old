@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>AIBuildDate</key>
-	<string>BUILDDATE</string>
+	<string>${BUILDDATE}</string>
 	<key>AIBuildIdentifier</key>
-	<string>BUILDID</string>
+	<string>${BUILDID}</string>
 	<key>AppleDockIconEnabled</key>
 	<string>YES</string>
 	<key>CFBundleDevelopmentRegion</key>
