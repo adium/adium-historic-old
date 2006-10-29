@@ -16,7 +16,6 @@
 
 #import "AIAppearancePreferences.h"
 #import "AIAppearancePreferencesPlugin.h"
-#import "AIDockController.h"
 #import "AIDockIconSelectionSheet.h"
 #import "AIEmoticonPack.h"
 #import "AIEmoticonPreferences.h"
@@ -27,7 +26,8 @@
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIAbstractListController.h>
-#import <Adium/AIEmoticonController.h>
+#import <Adium/AIDockControllerProtocol.h>
+#import <Adium/AIEmoticonControllerProtocol.h>
 #import <Adium/AIIconState.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
