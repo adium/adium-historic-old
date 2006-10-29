@@ -202,9 +202,8 @@
 		[[adium preferenceController] setPreference:[self stringWithSavedFrame]
 											 forKey:((numberOfScreens == 1) ? 
 													 key :
-													 [NSString stringWithFormat:@"%@-%i",key,numberOfScreens])
-											  group:PREF_GROUP_WINDOW_POSITIONS];
-		
+													 [self multiscreenKeyWithAutosaveName:key])
+											  group:PREF_GROUP_WINDOW_POSITIONS];		
 	}
 }
 
