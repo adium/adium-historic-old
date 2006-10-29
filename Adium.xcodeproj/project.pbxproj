@@ -9460,7 +9460,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo $SYMROOT\nSOURCE=\"$SRCROOT/build\"\nif [ \"$SOURCE\" != \"$SYMROOT\" ] ; then\n\tif [ -e \"$SOURCE\" ] ; then\n\t\tif [ -L \"$SOURCE\" ] ; then\n\t\t\trm \"$SOURCE\"\n\t\telse\n\t\t\trm -Rf \"$SOURCE\"\n\t\tfi\n\tfi\n\tln -s \"$SYMROOT\" \"$SOURCE\"\nfi";
+			shellScript = "SOURCE=\"$SRCROOT/build\"\nif [ \"$SOURCE\" != \"$SYMROOT\" ] ; then\n\tif [ -d \"$SOURCE\" ] ; then\n\t\trm -Rf \"$SOURCE\"\n\tfi\n\tln -fs \"$SYMROOT\" \"$SOURCE\"\nfi";
 		};
 		F5B17CCE0A16C6AC004AE99E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
