@@ -477,7 +477,7 @@ SecuridProvider
 		HashMap map = new HashMap();
 		map.put("Buddy", buddy);
 		map.put("Old Comment", oldComment);
-		map.put("New Comment", oldComment);
+		map.put("New Comment", newComment);
 		
 		sendDelegateMessageWithMap("BuddyCommentChanged", map);
 	}
