@@ -5,7 +5,7 @@
 //  Created by Andy Matuschak on 1/4/06.
 //  Copyright 2006 Andy Matuschak. All rights reserved.
 //
-// $Id: SUUpdater.h 56 2006-07-29 21:49:55Z atomicbird $
+// $Id: SUUpdater.h 27 2006-06-16 22:53:50Z atomicbird $
 // $HeadURL: http://ironcoder.org/svn/SparklePlus/trunk/SUUpdater.h $
 
 #import <Cocoa/Cocoa.h>
@@ -79,7 +79,4 @@
 // This method gives the delegate the opportunity to customize the information that will
 // be included with update checks.  Add or remove items from the dictionary as desired.
 - (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo;
-//This method gives the delegate the opportunity to customize how versions are compared. 
-//It will be called once for each item in the appcast.
-- (NSComparisonResult)compareVersion:(NSString *)appcastItemVersion toVersion:(NSString *)appVersion;
 @end
