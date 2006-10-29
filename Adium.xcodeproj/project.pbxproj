@@ -9374,8 +9374,8 @@
 				"Plugins/Gaim Service/Libgaim.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/zsh\n\n#we use Xcode's dependency-resolution to determine when this script should be run.\ntouch \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellPath = /bin/zsh;
+			shellScript = "#we use Xcode's dependency-resolution to determine when this script should be run.\ntouch \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 		};
 		340BABD409EC8C6C000EC441 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
