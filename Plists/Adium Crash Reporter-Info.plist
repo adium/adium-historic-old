@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Adium Crash Reporter</string>
 	<key>CFBundleGetInfoString</key>
-	<string>1.0b14, Copyright 2001-2007 The Adium Team</string>
+	<string>1.0b15, Copyright 2001-2007 The Adium Team</string>
 	<key>CFBundleIconFile</key>
 	<string>crashDuck.icns</string>
 	<key>CFBundleIdentifier</key>
