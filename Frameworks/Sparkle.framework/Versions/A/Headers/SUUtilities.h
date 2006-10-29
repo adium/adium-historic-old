@@ -9,7 +9,6 @@
 #import <Cocoa/Cocoa.h>
 
 id SUInfoValueForKey(NSString *key);
-id SUUnlocalizedInfoValueForKey(NSString *key);
 NSString *SUHostAppName();
 NSString *SUHostAppDisplayName();
 NSString *SUHostAppVersion();
