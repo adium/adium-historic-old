@@ -79,7 +79,6 @@
 		11DAEBD1092FB85F007A8682 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		11F5F44309537E34007DCC49 /* joscar.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */; };
 		11F5F70209539C70007DCC49 /* joscarDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11F5F70109539C70007DCC49 /* joscarDefaults.plist */; };
-		311AC6D20AF4BA5B0007F952 /* JavaCocoaAdapter.class in CopyFiles */ = {isa = PBXBuildFile; fileRef = 311AC6CD0AF4BA140007F952 /* JavaCocoaAdapter.class */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
 		3402E01B07CB0CED0044F818 /* ESFileTransferProgressView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */; };
 		3402E02407CB0D1B0044F818 /* ProxyPasswordPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02307CB0D1B0044F818 /* ProxyPasswordPrompt.nib */; };
@@ -1567,17 +1566,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		311AC6D00AF4BA410007F952 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
-			comments = "The Strip Copy Files option will fail miserably:\n/usr/bin/strip: fat file: adium/build/Deployment/net/adium/JavaCocoaAdapter.class truncated or malformed (offset plus size of cputype (4983296) cpusubtype (301996809) extends past the end of the file)\npbxcp: warning: couldn't strip: adium/build/Deployment/Adium.app/Contents/Resources/JavaCocoaAdapter.class: No such file or directory\n\nhttp://trac.adiumx.com/ticket/5703\n";
-			dstPath = "";
-			dstSubfolderSpec = 7;
-			files = (
-				311AC6D20AF4BA5B0007F952 /* JavaCocoaAdapter.class in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		34677B3607CC3D6200F59F7B /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1764,7 +1752,6 @@
 		11F5F46309538B99007DCC49 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/joscar Service/en.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		11F5F70109539C70007DCC49 /* joscarDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = joscarDefaults.plist; path = "Plugins/joscar Service/joscarDefaults.plist"; sourceTree = "<group>"; };
 		11F5F72D0953A227007DCC49 /* joscarClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = joscarClasses.h; path = "Plugins/joscar Service/joscarClasses.h"; sourceTree = SOURCE_ROOT; };
-		311AC6CD0AF4BA140007F952 /* JavaCocoaAdapter.class */ = {isa = PBXFileReference; lastKnownFileType = compiled.javaclass; name = JavaCocoaAdapter.class; path = net/adium/JavaCocoaAdapter.class; sourceTree = BUILT_PRODUCTS_DIR; };
 		3402E01807CB0CE40044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		3402E01F07CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3402E02007CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -7076,7 +7063,6 @@
 			isa = PBXGroup;
 			children = (
 				81F9D1E90A7F8395004A35BD /* JavaCocoaAdapter.java */,
-				311AC6CD0AF4BA140007F952 /* JavaCocoaAdapter.class */,
 			);
 			name = "Java Bridge Stuff";
 			sourceTree = "<group>";
@@ -8200,9 +8186,9 @@
 				4BF2E91F067CB76300743318 /* CopyFiles */,
 				34BD9D6A053146CC000AB133 /* CopyFiles */,
 				34677B3607CC3D6200F59F7B /* CopyFiles */,
-				311AC6D00AF4BA410007F952 /* CopyFiles */,
 				6C15E63106DF3BB600E5A50E /* ShellScript */,
 				345DFF4A05564DB200CEE7B3 /* ShellScript */,
+				34C9456E0AE1EE280094E504 /* ShellScript */,
 			);
 			buildRules = (
 				81F9D1DF0A7F81A5004A35BD /* PBXBuildRule */,
@@ -8991,6 +8977,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "gcc -E -P -x c -Wno-trigraphs -include \"$SCRIPT_INPUT_FILE_0\" -C \"$SCRIPT_INPUT_FILE_1\" -o \"$SCRIPT_OUTPUT_FILE_0\"";
+		};
+		34C9456E0AE1EE280094E504 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			comments = "The Strip Copy Files option will fail miserably:\n/usr/bin/strip: fat file: adium/build/Deployment/net/adium/JavaCocoaAdapter.class truncated or malformed (offset plus size of cputype (4983296) cpusubtype (301996809) extends past the end of the file)\npbxcp: warning: couldn't strip: adium/build/Deployment/Adium.app/Contents/Resources/JavaCocoaAdapter.class: No such file or directory\n}}}";
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "CLASS_FILE=$BUILT_PRODUCTS_DIR/net/adium/JavaCocoaAdapter.class\nDESTINATION=$BUILT_PRODUCTS_DIR/Adium.app/Contents/Resources/JavaCocoaAdapter.class\n\ncp \"$CLASS_FILE\" \"$DESTINATION\"\n";
 		};
 		4BC8AABA059A33B400F940E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
