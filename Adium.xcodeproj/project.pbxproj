@@ -1366,13 +1366,6 @@
 			remoteGlobalIDString = 8D57630D048677EA00EA77CD;
 			remoteInfo = AdiumSpotlightImporter;
 		};
-		34677B3E07CC3E8400F59F7B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B72537BB058C4577004BA969;
-			remoteInfo = "Latex Plugin";
-		};
 		346C9C9A06004585000F5A8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -8200,7 +8193,6 @@
 				4B7845EC059B50820048A8BA /* PBXTargetDependency */,
 				DA70F2B2080CAE8200C72D8B /* PBXTargetDependency */,
 				346C9D46060046AB000F5A8A /* PBXTargetDependency */,
-				34677B3F07CC3E8400F59F7B /* PBXTargetDependency */,
 				349C31630867D199000BF883 /* PBXTargetDependency */,
 				11F5F42C09537E00007DCC49 /* PBXTargetDependency */,
 				F5B17CDF0A16C767004AE99E /* PBXTargetDependency */,
@@ -9773,11 +9765,6 @@
 			isa = PBXTargetDependency;
 			name = AdiumSpotlightImporter;
 			targetProxy = 34611CCE09B67ABC00870036 /* PBXContainerItemProxy */;
-		};
-		34677B3F07CC3E8400F59F7B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B72537BB058C4577004BA969 /* Latex Plugin */;
-			targetProxy = 34677B3E07CC3E8400F59F7B /* PBXContainerItemProxy */;
 		};
 		346C9C9B06004585000F5A8A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
