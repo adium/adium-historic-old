@@ -224,6 +224,11 @@ GaimProxyInfo *gaim_proxy_get_setup(GaimAccount *account);
  * connect," it is used for establishing any outgoing TCP connection,
  * whether through a proxy or not.
  *
+ * @param handle     A handle that should be associated with this
+ *                   connection attempt.  The handle can be used
+ *                   to cancel the connection attempt using the
+ *                   gaim_proxy_connect_cancel_with_handle()
+ *                   function.
  * @param account    The account making the connection.
  * @param host       The destination host.
  * @param port       The destination port.
@@ -237,7 +242,8 @@ GaimProxyInfo *gaim_proxy_get_setup(GaimAccount *account);
  *         structure that can be used to cancel the pending
  *         connection, if needed.
  */
-GaimProxyConnectData *gaim_proxy_connect(GaimAccount *account,
+GaimProxyConnectData *gaim_proxy_connect(void *handle,
+			GaimAccount *account,
 			const char *host, int port,
 			GaimProxyConnectFunction connect_cb, gpointer data);
 
@@ -257,7 +263,8 @@ GaimProxyConnectData *gaim_proxy_connect(GaimAccount *account,
  *         structure that can be used to cancel the pending
  *         connection, if needed.
  */
-GaimProxyConnectData *gaim_proxy_connect_socks5(GaimProxyInfo *gpi,
+GaimProxyConnectData *gaim_proxy_connect_socks5(void *handle,
+			GaimProxyInfo *gpi,
 			const char *host, int port,
 			GaimProxyConnectFunction connect_cb, gpointer data);
 
@@ -271,6 +278,13 @@ GaimProxyConnectData *gaim_proxy_connect_socks5(GaimProxyInfo *gpi,
  * time-out the connection.
  */
 void gaim_proxy_connect_cancel(GaimProxyConnectData *connect_data);
+
+/*
+ * Closes all proxy connections registered with the specified handle.
+ *
+ * @param handle The handle.
+ */
+void gaim_proxy_connect_cancel_with_handle(void *handle);
 
 /*@}*/
 
