@@ -256,6 +256,54 @@
 			<key>LSTypeIsPackage</key>
 			<true/>
 		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>AdiumHTMLLog</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>Adium.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Adium Chat Log</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AILh</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.htmllog</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>chatlog</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>Adium.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Adium Chat Log</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AILo</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.xmllog</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>Adium</string>
@@ -350,6 +398,8 @@
 	<dict>
 		<key>JVMVersion</key>
 		<string>1.4+</string>
+		<key>VMOptions</key>
+		<string>-agentlib:yjpagent</string>
 	</dict>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.4.0</string>
@@ -357,8 +407,6 @@
 	<true/>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
-	<key>NSJavaNeeded</key>
-	<string>YES</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
