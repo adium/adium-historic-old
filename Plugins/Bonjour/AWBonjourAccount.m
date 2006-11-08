@@ -371,7 +371,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 #pragma mark AIAccount Messaging
 // AIAccount_Messaging ---------------------------------------------------------------------------
 // Send a content object
-- (BOOL)sendTypingObject:(AIContentTyping *)inContentTyping
+- (void)sendTypingObject:(AIContentTyping *)inContentTyping
 {
 	AIChat			*chat = [inContentTyping chat];
 	AIListObject    *listObject = [chat listObject];
@@ -379,8 +379,6 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	
 	[[self libezvThreadProxy] sendTypingNotification:(([inContentTyping typingState] == AITyping) ? AWEzvIsTyping : AWEzvNotTyping)
 												  to:to];
-	
-	return YES;
 }
 
 - (BOOL)sendMessageObject:(AIContentMessage *)inContentMessage
