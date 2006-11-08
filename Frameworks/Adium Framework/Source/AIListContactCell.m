@@ -592,12 +592,6 @@
 	return [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconList direction:AIIconFlipped];
 }
 
-//No need to the grid if we have a status color to draw
-- (BOOL)drawGridBehindCell
-{
-	return [self labelColor] == nil;
-}
-
 //
 - (float)imageOpacityForDrawing
 {
