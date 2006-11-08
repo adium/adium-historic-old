@@ -40,7 +40,6 @@
 - (void)chatMetaContactChanged;
 - (void)chatDestinationChanged:(NSNotification *)notification;
 - (void)chatSourceChanged:(NSNotification *)notification;
-- (AIMetaContact *)_chatMetaContact;
 - (BOOL)_accountIsAvailable:(AIAccount *)inAccount;
 - (void)_createAccountMenu;
 - (void)_createContactMenu;
@@ -303,7 +302,12 @@
  * @brief Returns YES if a choice of destination contact is available
  */
 - (BOOL)choicesAvailableForContact{
-	return [[[self _chatMetaContact] listContacts] count] > 1;
+	AIListContact *parentContact = [[chat listObject] parentContact];
+	if ([parentContact conformsToProtocol:@protocol(AIContainingObject)]) {
+		return [[(AIListContact <AIContainingObject> *)parentContact listContacts] count] > 1;
+	} else {
+		return NO;
+	}
 }
 
 /*!
@@ -336,7 +340,7 @@
 		[self addSubview:box_contacts];
 
 		//Configure the contact menu
-		contactMenu = [[AIContactMenu contactMenuWithDelegate:self forContactsInObject:[self _chatMetaContact]] retain];
+		contactMenu = [[AIContactMenu contactMenuWithDelegate:self forContactsInObject:[[chat listObject] parentContact]] retain];
 	}
 }
 
@@ -357,25 +361,6 @@
 
 //Misc -----------------------------------------------------------------------------------------------------------------
 #pragma mark Misc
-/*!
- * @brief Returns the meta contact containing our current destination contact (If one exists)
- */
-- (AIMetaContact *)_chatMetaContact
-{
-	id 	containingObject = [[chat listObject] containingObject];
-    if(![containingObject containsMultipleContacts])
-        return nil;
-    
-    // walk the tree. take the last object that can containg other contacts
-    // this basically means that we take the thing that's actually shown in the
-    // contact list, since groups pretend to not contain other objects
-    while([[containingObject containingObject] containsMultipleContacts])
-    {
-        containingObject = [containingObject containingObject];
-    }
-	return containingObject;
-}
-
 /*!
  * @brief
  */
