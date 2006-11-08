@@ -1783,7 +1783,14 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 												  forListContact:(AIListContact *)preferredContact];
         }
 
-		//If the last contact we sent to is not appropriate, use the metaContact's preferredContact
+		/* If the last contact we sent to is not appropriate, use the following algorithm, which differs from -[AIMetaContact preferredContact]
+		 * in that it doesn't "like" mobile contacts.
+		 *
+		 *  1) Prefer available contacts who are not mobile
+		 *  2) If no available non-mobile contacts, use the first online contact
+		 *  3) If no online contacts, use the metacontact's preferredContact
+		 */
+#warning This is a casting mess... define a protocol for metacontact-like AIListContact subclasses
 		if (!returnContact) {
 			//Recurse into metacontacts if necessary
 			AIListContact *firstAvailableContact = nil;
@@ -1809,15 +1816,17 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 				}
 			}
 
-			NSLog(@"firstAvailableContact: %@; firstNotOfflineContact: %@", firstAvailableContact, firstNotOfflineContact);
 			returnContact = (firstAvailableContact ?
 							 firstAvailableContact :
 							 (firstNotOfflineContact ? firstNotOfflineContact : [(AIMetaContact *)inContact preferredContact]));
-			NSLog(@"returnContact: %@", returnContact);
 		}
 
 	} else {
-		//We have a flat contact; find the best account for talking to this contact,
+		//This contact doesn't contain multiple contacts... but it might still be a metacontact. Do NOT proceed with a metacontact.
+		if ([inContact respondsToSelector:@selector(preferredContact)])
+			inContact = [inContact preferredContact];
+		
+		//find the best account for talking to this contact,
 		//and return an AIListContact on that account
 		account = [[adium accountController] preferredAccountForSendingContentType:inType
 																		 toContact:inContact];
