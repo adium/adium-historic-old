@@ -112,7 +112,7 @@ static AIHostReachabilityMonitor *singleton = nil;
 
 	NSString	*hostCopy = [host copy];
 	[self scheduleReachabilityMonitoringForHost:hostCopy
-								   observer:newObserver];
+									   observer:newObserver];
 	[hostCopy release];
 }
 
@@ -448,37 +448,43 @@ static void hostResolvedCallback(CFHostRef theHost, CFHostInfoType typeInfo,  co
  */
 - (void)addUnconfiguredHost:(NSString *)host observer:(id)observer
 {
-	[hostAndObserverListLock lock];
-	
-	[unconfiguredHostsAndObservers addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+	NSDictionary *unconfiguredHostDict = [NSDictionary dictionaryWithObjectsAndKeys:
 		observer, @"observer",
 		host, @"host",
-		nil]];
+		nil];
+	BOOL addedNewUnconfiguredHost;
+	[hostAndObserverListLock lock];
+	if (![unconfiguredHostsAndObservers containsObject:unconfiguredHostDict]) {
+		addedNewUnconfiguredHost = YES;
+		[unconfiguredHostsAndObservers addObject:unconfiguredHostDict];
+	}
 	[hostAndObserverListLock unlock];
 	
-	/* If this is the first unconfigured host, begin monitoring IP changes so we can try to set it (and any others)
-	 * up at the earliest possible time.
-	 */
-	if ([unconfiguredHostsAndObservers count] == 1) {
-		[self beginMonitorngIPChanges];
-	}
+	if (addedNewUnconfiguredHost) {
+		/* If this is the first unconfigured host, begin monitoring IP changes so we can try to set it (and any others)
+		* up at the earliest possible time.
+		*/
+		if ([unconfiguredHostsAndObservers count] == 1) {
+			[self beginMonitorngIPChanges];
+		}
 
 #if CONNECTIVITY_DEBUG
-	NSLog(@"Unable to resolve %@. Now monitoring IP changes for %@",host,unconfiguredHostsAndObservers);
+		NSLog(@"Unable to resolve %@. Now monitoring IP changes for %@",host,unconfiguredHostsAndObservers);
 #endif
-	
-	/*
-	 * There are various ways we can get here when we already have an IP, such as when other network conditions
-	 * need to be negotiated at the router-level before we're actually connected.  In such a case, IPs aren't going to
-	 * change... so we'll check one more time, 5 seconds from the last time we get an unconfigured host call,
-	 * for connectivity.
-	 */
-	[NSObject cancelPreviousPerformRequestsWithTarget:self
-											 selector:@selector(queryUnconfiguredHosts)
-											   object:nil];
-	[self performSelector:@selector(queryUnconfiguredHosts)
-			   withObject:nil
-			   afterDelay:5.0];
+
+		/*
+		 * There are various ways we can get here when we already have an IP, such as when other network conditions
+		 * need to be negotiated at the router-level before we're actually connected.  In such a case, IPs aren't going to
+		 * change... so we'll check one more time, 10 seconds from the last time we get an unconfigured host call,
+		 * for connectivity.
+		 */
+		[NSObject cancelPreviousPerformRequestsWithTarget:self
+												 selector:@selector(queryUnconfiguredHosts)
+												   object:nil];
+		[self performSelector:@selector(queryUnconfiguredHosts)
+				   withObject:nil
+				   afterDelay:10.0];
+	}
 }
 
 /*
