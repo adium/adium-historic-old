@@ -632,7 +632,7 @@
 
 	if ([inContentObject isKindOfClass:[AIContentTyping class]]) {
 		/* Typing */
-		success = [sendingAccount sendTypingObject:(AIContentTyping *)inContentObject];
+		[sendingAccount sendTypingObject:(AIContentTyping *)inContentObject];
 	
 	} else if ([inContentObject isKindOfClass:[AIContentMessage class]]) {
 		/* Sending a message */
@@ -668,6 +668,8 @@
 		/* Eating a tasty sandwich */
 		success = NO;
 	}
+
+	if (!success) AILog(@"Failed to send %@ (sendingAccount %@)",inContentObject,sendingAccount);
 
 	return success;
 }
