@@ -170,7 +170,7 @@ typedef enum {
 - (BOOL)closeChat:(AIChat *)chat;
 - (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 - (BOOL)joinGroupChatNamed:(NSString *)name;
-- (BOOL)sendTypingObject:(AIContentTyping *)inTypingObject;
+- (void)sendTypingObject:(AIContentTyping *)inTypingObject;
 - (BOOL)sendMessageObject:(AIContentMessage *)inMessageObject;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage;
