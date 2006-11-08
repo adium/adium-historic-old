@@ -390,10 +390,11 @@
 
 - (void)updateStatusForKey:(NSString *)key
 {    
-	AILog(@"%@: Updating status for %@",self,key);
 	[super updateStatusForKey:key];
 
 	if ([self online]) {
+		AILog(@"%@: Updating status for %@",self,key);
+
 		if ([key isEqualToString:@"IdleSince"]) {
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			[self setAccountIdleSinceTo:idleSince];
@@ -743,15 +744,13 @@
 /*!
  * @brief Send a typing notification
  */
-- (BOOL)sendTypingObject:(AIContentTyping *)inContentTyping
+- (void)sendTypingObject:(AIContentTyping *)inContentTyping
 {
 	AITypingState	typingState = [inContentTyping typingState];
 	if (![[inContentTyping chat] isGroupChat]) {
 		[joscarAdapter chatWithUID:[[[inContentTyping chat] listObject] UID]
 					setTypingState:typingState];
 	}
-
-	return YES;
 }
 
 /*!
