@@ -126,13 +126,10 @@ typedef enum {
  
 + (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate showingSeconds:(BOOL)showSeconds abbreviated:(BOOL)abbreviate;
 {
-    NSMutableString *theString = [[[NSMutableString alloc] init] autorelease];
-	[theString setString:
-		[self stringForTimeInterval:[[NSDate date] timeIntervalSinceDate:inDate]
-					 showingSeconds:showSeconds
-						abbreviated:abbreviate
-					   approximated:NO]];
-    return theString;
+    return [self stringForTimeInterval:[[NSDate date] timeIntervalSinceDate:inDate]
+						showingSeconds:showSeconds
+						   abbreviated:abbreviate
+						  approximated:NO];
 }
 
 
@@ -278,7 +275,7 @@ typedef enum {
 				timeString = secondsString;
 		}
 	}
-	
+
 	return timeString ? timeString : @"";
 }
 
