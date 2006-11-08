@@ -436,9 +436,9 @@
  * The content object contains all the necessary information for sending,
  * including the destination contact.
  */
-- (BOOL)sendTypingObject:(AIContentTyping *)inTypingObject
+- (void)sendTypingObject:(AIContentTyping *)inTypingObject
 {
-	return NO;
+
 }
 
 /*!
