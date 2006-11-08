@@ -17,8 +17,6 @@
 #import <Adium/AIAccount.h>
 
 @interface AIStressTestAccount : AIAccount {
-    NSMutableDictionary	*chatDict;
-
     AIChat			*commandChat;
 	AIChat			*groupChat;
     AIListContact	*commandContact;
