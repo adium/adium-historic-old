@@ -105,9 +105,6 @@
 		NSString		*finalMessage = nil;
 		int				idle;
 
-		AILog(@"Updating extended status for %@ - parent is %@; triggerred by %@",inObject, [(AIListContact *)inObject parentContact],
-			  inModifiedKeys);
-
 		if (showStatus) {
 			NSAttributedString *filteredMessage;
 
