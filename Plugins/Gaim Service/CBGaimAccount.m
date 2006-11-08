@@ -689,15 +689,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 /* AIAccount_Content */
 /*********************/
 #pragma mark Content
-- (BOOL)sendTypingObject:(AIContentTyping *)inContentTyping
+- (void)sendTypingObject:(AIContentTyping *)inContentTyping
 {
 	AIChat *chat = [inContentTyping chat];
 
 	if (![chat isGroupChat]) {
 		[gaimThread sendTyping:[inContentTyping typingState] inChat:chat];
 	}
-
-	return YES;
 }
 
 - (BOOL)sendMessageObject:(AIContentMessage *)inContentMessage
