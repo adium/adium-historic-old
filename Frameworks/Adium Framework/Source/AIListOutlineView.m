@@ -178,7 +178,7 @@
 
 			switch (backgroundStyle) {
 				
-				case AINormalBackground:{
+				case AINormalBackground: {
 					//Background image normal
 					[backgroundImage drawInRect:NSMakeRect(visRect.origin.x, visRect.origin.y, imageSize.width, imageSize.height)
 									   fromRect:imageRect
@@ -186,7 +186,7 @@
 									   fraction:backgroundFade];
 					break;
 				}
-				case AIFillProportionatelyBackground:{
+				case AIFillProportionatelyBackground: {
 					//Background image proportional stretch
 					
 					//Make the width change by the same proportion as the height will change
@@ -202,7 +202,7 @@
 									   fraction:backgroundFade];
 					break;
 				}
-				case AIFillStretchBackground:{
+				case AIFillStretchBackground: {
 					//Background image stretch
 					[backgroundImage drawInRect:visRect
 									   fromRect:imageRect
@@ -210,7 +210,7 @@
 									   fraction:backgroundFade];
 					break;
 				}
-				case AITileBackground:{
+				case AITileBackground: {
 					//Tiling
 					NSPoint	currentOrigin;
 					currentOrigin = visRect.origin;
@@ -222,12 +222,15 @@
 						
 						//Draw as long as our origin is within the visible rect
 						while (currentOrigin.x < (visRect.origin.x + visRect.size.width)) {
-							//Draw at the current x and y at least once with the original size
-							[backgroundImage drawInRect:NSMakeRect(currentOrigin.x, currentOrigin.y, imageSize.width, imageSize.height)
-											   fromRect:imageRect
-											  operation:NSCompositeSourceOver
-											   fraction:backgroundFade];
-							
+							NSRect drawingRect = NSMakeRect(currentOrigin.x, currentOrigin.y, imageSize.width, imageSize.height);
+							if (NSIntersectsRect(drawingRect, clipRect)) {
+								//Draw at the current x and y at least once with the original size
+								[backgroundImage drawInRect:drawingRect
+												   fromRect:imageRect
+												  operation:NSCompositeSourceOver
+												   fraction:backgroundFade];
+							}
+
 							//Shift right for the next iteration
 							currentOrigin.x += imageSize.width;
 						}
