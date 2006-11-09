@@ -1449,6 +1449,8 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 	//Request the profile
 	[[aimConnection getInfoService] requestUserProfile:sn];	
+	[[aimConnection getInfoService] requestAwayMessage:sn];	
+
 	//[[aimConnection getInfoService] requestDirectoryInfo:sn];
 }
 
