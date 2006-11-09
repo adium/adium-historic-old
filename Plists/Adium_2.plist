@@ -398,8 +398,6 @@
 	<dict>
 		<key>JVMVersion</key>
 		<string>1.4+</string>
-		<key>VMOptions</key>
-		<string>-agentlib:yjpagent</string>
 	</dict>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.4.0</string>
