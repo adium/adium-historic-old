@@ -255,9 +255,6 @@
 
 /*
  * net.kano.joustsim.oscar.oscar.service.info.InfoService
- *
- * XXX - Probably lower-level than we should actually be going. Would be needed for profiles it looks like 
- * since BuddyInfoTracker can handle updating away messages. -eds
  */
 @protocol InfoServiceListener;
 @interface InfoService : Service {}
