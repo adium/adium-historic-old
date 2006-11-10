@@ -215,7 +215,12 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 - (void)disconnect
 {
 	AILog(@"*** %@ disconnecting %@",appSession, [account serversideUID]);
-	[aimConnection disconnect];
+	@try {
+		[aimConnection disconnect];
+	} @catch(NSException *e) {
+		AILog(@"While disconnecting %@, caught exception %@",account,aimConnection);
+	}
+
 	[aimConnection release]; aimConnection = nil;
 }
 
