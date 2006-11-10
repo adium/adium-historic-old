@@ -121,7 +121,8 @@ diskimage:
 	mkdir -p $(ADIUM_DIR)/.background
 	cp $(ART_DIR)/dmgBackground.png $(ADIUM_DIR)/.background
 
-	./make-diskimage.sh $(BUILD_DIR)/$(RELEASE_NAME).dmg $(ADIUM_DIR) "Adium X $(VERSION)" dmg_adium.scpt
+	./ensureCustomIconsExtracted $(ART_DIR)
+	./make-diskimage.sh $(BUILD_DIR)/$(RELEASE_NAME).dmg $(ADIUM_DIR) "Adium X $(VERSION)" dmg_adium.scpt $(ART_DIR)
 	
 	@echo Build finished. `md5 $(BUILD_DIR)/$(RELEASE_NAME).dmg`
 
