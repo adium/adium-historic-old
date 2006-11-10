@@ -493,6 +493,12 @@
 	[iTunesItem setMaxSize:NSMakeSize(32,32)];
 	[button setToolbarItem:iTunesItem];
 	
+	//Add menu to toolbar item (for text mode)
+	NSMenuItem	*mItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
+	[mItem setSubmenu:menu];
+	[mItem setTitle:TOOLBAR_LABEL];
+	[iTunesItem setMenuFormRepresentation:mItem];
+	
 	//give it to adium to use
 	[[adium toolbarController] registerToolbarItem:iTunesItem forToolbarType:@"TextEntry"];
 	[button release];
@@ -580,6 +586,7 @@
 	[item setTarget:self];
 	[item setTag:itemKind];
 	[item setRepresentedObject:representedObject];
+	[item setEnabled:YES];
 
 	return [item autorelease];
 }
