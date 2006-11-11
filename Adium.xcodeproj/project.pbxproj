@@ -1378,6 +1378,8 @@
 		9E28FDE806ADB30D0041553E /* adiumRedHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */; };
 		9E6A9BF70732CB500032C9F6 /* adiumOfflineHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF50732CB500032C9F6 /* adiumOfflineHighlight.png */; };
 		9E6A9BF80732CB500032C9F6 /* adiumOffline.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF60732CB500032C9F6 /* adiumOffline.png */; };
+		9E799EE40AF674D900B77FE6 /* AIListScroller.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E799EE20AF674D900B77FE6 /* AIListScroller.h */; };
+		9E799EE50AF674D900B77FE6 /* AIListScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E799EE30AF674D900B77FE6 /* AIListScroller.m */; };
 		9ECB03E709F2A9D900996F44 /* AIDictionaryDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECB03E309F2A9D800996F44 /* AIDictionaryDebug.m */; };
 		9ECB03E909F2A9D900996F44 /* AIXMLAppender.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECB03E509F2A9D800996F44 /* AIXMLAppender.m */; };
 		9EF0DBFA09D944C200FBCC1E /* Resources/block.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EF0DBF309D944A300FBCC1E /* Resources/block.png */; };
@@ -4013,6 +4015,8 @@
 		9E791DA30577094300547562 /* CBStatusMenuItemController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBStatusMenuItemController.h; path = "Plugins/Status Menu Item/CBStatusMenuItemController.h"; sourceTree = "<group>"; };
 		9E791DA40577094400547562 /* CBStatusMenuItemController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBStatusMenuItemController.m; path = "Plugins/Status Menu Item/CBStatusMenuItemController.m"; sourceTree = "<group>"; };
 		9E791E26057746D100547562 /* adium.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adium.png; path = "Plugins/Status Menu Item/adium.png"; sourceTree = "<group>"; };
+		9E799EE20AF674D900B77FE6 /* AIListScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIListScroller.h; path = Source/AIListScroller.h; sourceTree = "<group>"; };
+		9E799EE30AF674D900B77FE6 /* AIListScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIListScroller.m; path = Source/AIListScroller.m; sourceTree = "<group>"; };
 		9E95316703C8E0BE00415B22 /* AIDockController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockController.h; path = Source/AIDockController.h; sourceTree = "<group>"; };
 		9E95316903C8E0C700415B22 /* AIDockController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDockController.m; path = Source/AIDockController.m; sourceTree = "<group>"; };
 		9EA125E8055B630900ECF349 /* CBGaimOscarAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBGaimOscarAccount.m; path = "Plugins/Gaim Service/CBGaimOscarAccount.m"; sourceTree = "<group>"; };
@@ -5771,6 +5775,8 @@
 				34A48A0F06F64381002C7C5F /* ContactListWindowBorderless.nib */,
 				343ECBF90971B92100349098 /* AIBorderlessListController.h */,
 				343ECBFA0971B92100349098 /* AIBorderlessListController.m */,
+				9E799EE20AF674D900B77FE6 /* AIListScroller.h */,
+				9E799EE30AF674D900B77FE6 /* AIListScroller.m */,
 			);
 			name = Borderless;
 			sourceTree = "<group>";
@@ -8195,6 +8201,7 @@
 				81F9D0840A7E905B004A35BD /* AIJavaController.h in Headers */,
 				387226C80A8B7C84002CC4F4 /* AIVideoConfController.h in Headers */,
 				377ED2660AED59E600CB7BDF /* TabsAdvancedPreferences.h in Headers */,
+				9E799EE40AF674D900B77FE6 /* AIListScroller.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8805,6 +8812,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -8850,6 +8858,7 @@
 				},
 			);
 			projectRoot = "";
+			shouldCheckCompatibility = 1;
 			targets = (
 				34BD9CD1053146CC000AB133 /* Adium */,
 				4B7F78B40597F42400162728 /* Adium Crash Reporter */,
@@ -9920,6 +9929,7 @@
 				345EE2DF0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m in Sources */,
 				387226C90A8B7C84002CC4F4 /* AIVideoConfController.m in Sources */,
 				377ED2670AED59E600CB7BDF /* TabsAdvancedPreferences.m in Sources */,
+				9E799EE50AF674D900B77FE6 /* AIListScroller.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,9 +15,10 @@
  */
 
 #import "AIListWindowController.h"
+#import "AIListScroller.h"
 
 @interface AIBorderlessListWindowController : AIListWindowController {
-
+	AIListScroller *scroller;
 }
 
 @end
