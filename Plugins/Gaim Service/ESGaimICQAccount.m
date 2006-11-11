@@ -37,6 +37,12 @@
 	if ((encoding = [self preferenceForKey:KEY_ICQ_ENCODING group:GROUP_ACCOUNT_STATUS])) {
 		gaim_account_set_string(account, "encoding", [encoding UTF8String]);
 	}
+	
+	//Defaults to YES
+	gaim_account_set_bool(account, "authorization", [[self preferenceForKey:KEY_ICQ_REQUIRE_AUTH group:GROUP_ACCOUNT_STATUS] boolValue]);
+	
+	//Defaults to NO - web_aware will cause lots of spam for many users!
+	gaim_account_set_bool(account, "web_aware", [[self preferenceForKey:KEY_ICQ_WEB_AWARE group:GROUP_ACCOUNT_STATUS] boolValue]);
 }
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
