@@ -8,5 +8,9 @@
 	<integer>5190</integer>
 	<key>ICQ:Encoding</key>
 	<string>ISO-8859-1</string>
+	<key>ICQ:RequireAuthorization</key>
+	<true/>
+	<key>ICQ:WebAware</key>
+	<false/>
 </dict>
 </plist>
