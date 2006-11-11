@@ -34,8 +34,20 @@
 {
 	//Clear the minimum size before our window restores its position and size; a borderless window can be any size it wants
 	[[self window] setMinSize:NSZeroSize];
+	
+	//Set the custom scroller
+	scroller = [[AIListScroller alloc] init];
+	[scroller setControlSize:NSSmallControlSize];
+	[scrollView_contactList setVerticalScroller:scroller];
 
 	[super windowDidLoad];
+}
+
+- (void)dealloc
+{
+	[scroller release];
+	
+	[super dealloc];
 }
 
 /*!
