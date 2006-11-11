@@ -26,7 +26,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import "AIXtrasManager.h"
 
-#define APPEARANCE_DEFAUT_PREFS 	@"AppearanceDefaults"
+#define APPEARANCE_DEFAULT_PREFS 	@"AppearanceDefaults"
 
 @implementation AIAppearancePreferencesPlugin
 
@@ -38,7 +38,7 @@
 	[adium createResourcePathForName:LIST_THEME_FOLDER];
 
 	//Prepare our preferences
-	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:APPEARANCE_DEFAUT_PREFS
+	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:APPEARANCE_DEFAULT_PREFS
 																forClass:[self class]] 
 	                              forGroup:PREF_GROUP_APPEARANCE];
 
