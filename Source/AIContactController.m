@@ -1965,7 +1965,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			[self breakdownAndRemoveMetaContact:(AIMetaContact *)listObject];				
 
 		} else if ([listObject isKindOfClass:[AIListGroup class]]) {
-			AIListObject	*containingObject = [listObject containingObject];
+			AIListObject <AIContainingObject>	*containingObject = [listObject containingObject];
 			NSEnumerator	*enumerator;
 			AIAccount		*account;
 
@@ -1982,7 +1982,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 			//Then, procede to delete the group
 			[listObject retain];
-			[(AIMetaContact *)containingObject removeObject:listObject];
+			[containingObject removeObject:listObject];
 			[groupDict removeObjectForKey:[listObject UID]];
 			[self _listChangedGroup:containingObject object:listObject];
 			[listObject release];
