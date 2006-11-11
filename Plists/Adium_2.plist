@@ -256,7 +256,7 @@
 			<key>LSTypeIsPackage</key>
 			<true/>
 		</dict>
-    	<dict>
+		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>AdiumHTMLLog</string>

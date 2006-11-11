@@ -56,6 +56,8 @@ CRASH_REPORTER_PLIST=$(PLIST_DIR)/Adium\ Crash\ Reporter-Info
 
 all: update version clean compile release
 
+all-noclean: update version compile release
+
 update:
 	svn update $(SRC_DIR)
 
