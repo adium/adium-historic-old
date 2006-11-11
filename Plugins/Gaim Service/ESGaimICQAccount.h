@@ -16,7 +16,9 @@
 
 #import "CBGaimOscarAccount.h"
 
-#define	KEY_ICQ_ENCODING	@"ICQ:Encoding"
+#define	KEY_ICQ_ENCODING		@"ICQ:Encoding"
+#define KEY_ICQ_REQUIRE_AUTH	@"ICQ:RequireAuthorization"
+#define KEY_ICQ_WEB_AWARE		@"ICQ:WebAware"
 
 @interface ESGaimICQAccount : CBGaimOscarAccount {
 
