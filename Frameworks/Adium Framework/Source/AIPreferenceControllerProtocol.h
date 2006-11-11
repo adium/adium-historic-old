@@ -23,11 +23,11 @@ typedef enum {
 	AIPref_Accounts,
 	AIPref_Personal,
 	AIPref_Appearance,
-    AIPref_Messages,
+	AIPref_Messages,
 	AIPref_Status,
 	AIPref_Events,
 	AIPref_FileTransfer,
-    AIPref_Advanced
+	AIPref_Advanced
 } AIPreferenceCategory;
 
 @class AIPreferencePane, AIAdium, AIListObject;
