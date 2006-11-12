@@ -139,7 +139,10 @@ static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who,
 		
 		
 		textString = processGaimImages([NSString stringWithUTF8String:text],
-									   adiumAccount);
+										adiumAccount);
+		//Post-process textString to make any changes needed to the incoming information
+		textString = [[SLGaimCocoaAdapter sharedInstance] processedIncomingUserInfo:textString];
+		
 		[adiumAccount updateUserInfo:contact
 							withData:textString];
 	}
