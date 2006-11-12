@@ -292,7 +292,7 @@
         return; // no active thread? The other user might have gone before us, so he/she doesn't care about us closing the window
 
     NSString *jid = [[chat listObject] UID];
-    NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
+//    NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
 //    if (resource)
 //        jid = [NSString stringWithFormat:@"%@/%@",jid,resource];
     
