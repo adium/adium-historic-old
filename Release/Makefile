@@ -115,7 +115,7 @@ createfolder:
 	cp $(SRC_DIR)/License.txt $(ADIUM_DIR)
 	
 	@# symlink /Applications
-	./mkalias /Applications $(ADIUM_DIR)/Applications
+	./mkalias -r /Applications $(ADIUM_DIR)/Applications
 
 diskimage:
 	rm "$(BUILD_DIR)/$(RELEASE_NAME).dmg" || true
