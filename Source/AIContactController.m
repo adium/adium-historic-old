@@ -2132,6 +2132,19 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		float nextLowest = [previousObject orderIndex];
 		float nextHighest = [nextObject orderIndex];
 
+		/* XXX - Fixme as per below
+		 * It's possible that nextLowest > nextHighest if ordering is not strictly based on the ordering indexes themselves.
+		 * For example, a group sorted by status then manually could look like (status - ordering index):
+		 *
+		 * Away Contact - 100
+		 * Away Contact - 120
+		 * Offline Contact - 110
+		 * Offline Contact - 113
+		 * Offline Contact - 125
+		 * 
+		 * Dropping between Away Contact and Offline Contact should make an Away Contact be > 120 but an Offline Contact be < 110.
+		 * Only the sort controller knows the answer as to where this contact should be positioned in the end.
+		 */
 		//
 		[listObject setOrderIndex:((nextHighest + nextLowest) / 2.0)];
 	}
