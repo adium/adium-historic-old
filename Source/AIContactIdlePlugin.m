@@ -157,7 +157,7 @@
 
 		idleNumber = [NSNumber numberWithInt:idle];
 	}
-	AILog(@"contactIdlePlugin: *** Updating idle for %@ to %@",inObject,idleNumber);
+
 	[inObject setStatusObject:idleNumber
 					   forKey:@"Idle"
 					   notify:NotifyLater];
