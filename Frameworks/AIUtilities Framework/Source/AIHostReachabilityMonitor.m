@@ -206,13 +206,15 @@ static AIHostReachabilityMonitor *singleton = nil;
 	[hostAndObserverListLock lock];
 
 	unsigned i = [reachabilities indexOfObjectIdenticalTo:(id)reachability];
-	NSString *host = [hosts objectAtIndex:i];
-	id <AIHostReachabilityObserver> observer = [observers objectAtIndex:i];
-
-	if (isReachable) {
-		[observer hostReachabilityMonitor:self hostIsReachable:host];
-	} else {
-		[observer hostReachabilityMonitor:self hostIsNotReachable:host];
+	if (i != NSNotFound) {
+		NSString *host = [hosts objectAtIndex:i];
+		id <AIHostReachabilityObserver> observer = [observers objectAtIndex:i];
+		
+		if (isReachable) {
+			[observer hostReachabilityMonitor:self hostIsReachable:host];
+		} else {
+			[observer hostReachabilityMonitor:self hostIsNotReachable:host];
+		}
 	}
 
 	[hostAndObserverListLock unlock];
