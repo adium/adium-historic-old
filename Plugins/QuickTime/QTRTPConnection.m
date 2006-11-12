@@ -168,7 +168,7 @@ ComponentResult outAudioRTPStreamNotifHandler (ComponentResult inErr,
 	QTSMediaParams		 mediaParams;
 	QTSNotificationUPP	 sNotificationUPP;
 	const char			*sdpDataPtr			= [[self generateSDPOutStream] cString];
-	int					 sdpDataLength		= strlen(sdpDataPtr);
+	SInt64				 sdpDataLength		= (SInt64)strlen(sdpDataPtr);
 	OSErr				 err				= noErr;
 	
 	// Note: this API is almost undocumented. There is only one example,
