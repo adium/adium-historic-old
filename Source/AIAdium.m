@@ -48,6 +48,7 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AICalendarDateAdditions.h>
 #import <Sparkle/SUConstants.h>
+#import <Sparkle/SUUtilities.h>
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
@@ -1034,6 +1035,18 @@ static NSString	*prefsCategory;
 	}
 	
 	return profileInfo;
+}
+
+- (NSComparisonResult) compareVersion:(NSString *)newVersion toVersion:(NSString *)currentVersion
+{
+	//Allow updating from betas to anything, and anything to non-betas
+	//Careful! a15 is fine, but A15 is not, because it would hit the A in Adium.
+	NSCharacterSet *guardCharacters = [NSCharacterSet characterSetWithCharactersInString:@"abBrcRC"];
+	if([currentVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound || !([newVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound))
+		NSLog(@"Passed guard check. New Version is %@, Old is %@", newVersion, currentVersion);
+		return SUStandardVersionComparison(newVersion, currentVersion);
+	else 
+		return NSOrderedSame;
 }
 
 @end
