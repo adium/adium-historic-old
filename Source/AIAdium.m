@@ -967,7 +967,8 @@ static NSString	*prefsCategory;
 	
 	[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
 	
-	NSString *value = [[defaults objectForKey:@"AIHasSentProfileInfo"] stringValue];
+	NSString *value = [[NSNumber numberWithBool:![[defaults objectForKey:@"AIHasSentProfileInfo"] boolValue]] stringValue];
+
 	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
 		@"FirstSubmission", @"key", 
 		@"First Time Submitting Profile Information", @"visibleKey",
