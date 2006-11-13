@@ -967,7 +967,7 @@ static NSString	*prefsCategory;
 	
 	[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
 	
-	NSString *value = [[NSNumber numberWithBool:![[defaults objectForKey:@"AIHasSentProfileInfo"] boolValue]] stringValue];
+	NSString *value = [[defaults objectForKey:@"AIFirstUpdateCheck"] stringValue];
 
 	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
 		@"FirstSubmission", @"key", 
@@ -978,7 +978,7 @@ static NSString	*prefsCategory;
 	
 	[profileInfo addObject:entry];
 	
-	[defaults setObject:[NSNumber numberWithBool:YES] forKey:@"AIHasSentProfileInfo"];
+	[defaults setObject:[NSNumber numberWithBool:NO] forKey:@"AIFirstUpdateCheck"];
 	
 	/*************** Include info about what IM services are used ************/
 	NSMutableString *accountInfo = [NSMutableString string];
