@@ -1043,7 +1043,6 @@ static NSString	*prefsCategory;
 	//Careful! a15 is fine, but A15 is not, because it would hit the A in Adium.
 	NSCharacterSet *guardCharacters = [NSCharacterSet characterSetWithCharactersInString:@"abBrcRC"];
 	if([currentVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound || !([newVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound))
-		NSLog(@"Passed guard check. New Version is %@, Old is %@", newVersion, currentVersion);
 		return SUStandardVersionComparison(newVersion, currentVersion);
 	else 
 		return NSOrderedSame;
