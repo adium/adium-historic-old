@@ -182,8 +182,6 @@
 		34D835A707CBEBEF006466F2 /* PopUpRollover_Middle.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8359B07CBEBEF006466F2 /* PopUpRollover_Middle.png */; };
 		34D835A807CBEBEF006466F2 /* PopUpRollover_Caps.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8359C07CBEBEF006466F2 /* PopUpRollover_Caps.png */; };
 		34D835A907CBEBEF006466F2 /* PopUpArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8359D07CBEBEF006466F2 /* PopUpArrow.png */; };
-		34D835CF07CBED06006466F2 /* pxmLib.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D835CD07CBED06006466F2 /* pxmLib.m */; };
-		34D835D007CBED06006466F2 /* pxmLib.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D835CE07CBED06006466F2 /* pxmLib.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34DCE28A08A68E180073319F /* AIExceptionHandlingUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 34DCE28908A68E180073319F /* AIExceptionHandlingUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E4692A075681AE004C3A42 /* AIVariableHeightOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E46928075681AE004C3A42 /* AIVariableHeightOutlineView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E4692B075681AE004C3A42 /* AIVariableHeightOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E46929075681AE004C3A42 /* AIVariableHeightOutlineView.m */; };
@@ -467,8 +465,6 @@
 		34D8359B07CBEBEF006466F2 /* PopUpRollover_Middle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PopUpRollover_Middle.png; path = Resources/PopUpRollover_Middle.png; sourceTree = "<group>"; };
 		34D8359C07CBEBEF006466F2 /* PopUpRollover_Caps.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PopUpRollover_Caps.png; path = Resources/PopUpRollover_Caps.png; sourceTree = "<group>"; };
 		34D8359D07CBEBEF006466F2 /* PopUpArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PopUpArrow.png; path = Resources/PopUpArrow.png; sourceTree = "<group>"; };
-		34D835CD07CBED06006466F2 /* pxmLib.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = pxmLib.m; path = Source/pxmLib.m; sourceTree = "<group>"; };
-		34D835CE07CBED06006466F2 /* pxmLib.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pxmLib.h; path = Source/pxmLib.h; sourceTree = "<group>"; };
 		34DCE28908A68E180073319F /* AIExceptionHandlingUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIExceptionHandlingUtilities.h; path = Source/AIExceptionHandlingUtilities.h; sourceTree = "<group>"; };
 		34E46928075681AE004C3A42 /* AIVariableHeightOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVariableHeightOutlineView.h; path = Source/AIVariableHeightOutlineView.h; sourceTree = "<group>"; };
 		34E46929075681AE004C3A42 /* AIVariableHeightOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIVariableHeightOutlineView.m; path = Source/AIVariableHeightOutlineView.m; sourceTree = "<group>"; };
@@ -760,8 +756,6 @@
 		34D835C807CBECEB006466F2 /* External Sources */ = {
 			isa = PBXGroup;
 			children = (
-				34D835CD07CBED06006466F2 /* pxmLib.m */,
-				34D835CE07CBED06006466F2 /* pxmLib.h */,
 			);
 			name = "External Sources";
 			sourceTree = "<group>";
@@ -1509,7 +1503,6 @@
 				34F2E94107C2D264007EAAAB /* AITooltipUtilities.h in Headers */,
 				34F2EA4A07C304C0007EAAAB /* AIArrayAdditions.h in Headers */,
 				3402D33107CB043F0044F818 /* AIUtilities.framework_Prefix.pch in Headers */,
-				34D835D007CBED06006466F2 /* pxmLib.h in Headers */,
 				34BFE58207E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.h in Headers */,
 				0798BF75086E9F6600CA8E17 /* AIDataAdditions.h in Headers */,
 				34FFB0EB087DEFD00000A517 /* AIContextImageBridge.h in Headers */,
@@ -1722,7 +1715,6 @@
 				07BB5A0D07C4833E008996A0 /* AIWiredString.m in Sources */,
 				07BB5A0E07C48340008996A0 /* AIWiredData.m in Sources */,
 				6E03C8D407C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m in Sources */,
-				34D835CF07CBED06006466F2 /* pxmLib.m in Sources */,
 				34BFE58307E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.m in Sources */,
 				0798BF76086E9F6600CA8E17 /* AIDataAdditions.m in Sources */,
 				34FFB0EC087DEFD00000A517 /* AIContextImageBridge.m in Sources */,
