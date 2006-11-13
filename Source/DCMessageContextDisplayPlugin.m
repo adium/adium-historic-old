@@ -253,16 +253,16 @@ static int linesLeftToFind = 0;
 		[file seekToEndOfFile];
 		
 		//Set up some more doohickeys and then start the parse loop
-		int pageSize = getpagesize();
+		int readSize = 4 * getpagesize(); //Read 4 pages at a time.
 		unsigned long long offset = [file offsetInFile];
 		enum LMXParseResult result = LMXParsedIncomplete;
 		do {
 			//Calculate the new offset
-			offset = (offset <= pageSize) ? 0 : offset - pageSize;
+			offset = (offset <= readSize) ? 0 : offset - readSize;
 			
 			//Seek to it and read
 			[file seekToFileOffset:offset]; 
-			NSData *chunk = [file readDataOfLength:pageSize];
+			NSData *chunk = [file readDataOfLength:readSize];
 			
 			//Parse
 			result = [parser parseChunk:chunk];
