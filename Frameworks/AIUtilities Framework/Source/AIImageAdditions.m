@@ -6,15 +6,9 @@
 //
 
 #import "AIImageAdditions.h"
-#import "pxmLib.h"
 
 #import "AIExceptionHandlingUtilities.h"
 #import "AIBezierPathAdditions.h"
-
-#define RESOURCE_ID_CLOSE_BUTTON_AQUA       201
-#define RESOURCE_ID_CLOSE_BUTTON_GRAPHITE   10191
-#define RESOURCE_TYPE_CLOSE_BUTTON			'pxm#'
-#define RESOURCE_ID_CHECKMARK				260
 
 @interface NSImage (AIImageAdditions_PRIVATE)
 - (NSBitmapImageRep *)bitmapRep;
@@ -314,88 +308,6 @@
         return image;
     }
     return nil;
-}
-
-//Returns the current theme's miniature panel close button
-+ (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state controlTint:(NSControlTint)inTint
-{
-    NSString    *theFilePath = @"/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Resources/Extras.rsrc";
-    FSRef       ref;
-    NSImage     *closeImage = nil;
-    
-    if (FSPathMakeRef((unsigned char *)[theFilePath fileSystemRepresentation], &ref, NULL) == noErr) {
-		HFSUniStr255    forkName;
-		SInt16			refNum;
-		Handle			resource;
-		pxmRef			pixmap;
-		GWorldPtr       gWorld;
-		int				resourceID;
-		
-		if (inTint == NSBlueControlTint) {
-			resourceID = RESOURCE_ID_CLOSE_BUTTON_AQUA;
-		} else { //inTint == NSGraphiteControlTint
-			resourceID = RESOURCE_ID_CLOSE_BUTTON_GRAPHITE;
-		}
-		
-		//Extract the close button's pxm# resource for the close button
-		FSGetDataForkName(&forkName);
-		FSOpenResourceFile(&ref, forkName.length, forkName.unicode, fsRdPerm, &refNum);
-		resource = GetResource(RESOURCE_TYPE_CLOSE_BUTTON,resourceID);
-		
-		//Use the Sprocket pxm# code to extract the correct close button image
-		HLock(resource);
-		pixmap = pxmCreate(*resource, GetHandleSize(resource));
-		HUnlock(resource);
-		pxmMakeGWorld(pixmap, &gWorld);
-		pxmRenderImage(pixmap, state, gWorld);
-		
-		//Place this image into an NSImage, and return
-		closeImage = [NSImage imageFromGWorld:gWorld];
-		
-		//Close up
-		pxmDispose(pixmap);
-		CloseResFile(refNum);
-    }
-    
-    return closeImage;
-}
-
-//Returns the system check mark
-+ (NSImage *)systemCheckmark
-{
-    NSString    *theFilePath = @"/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Resources/Extras.rsrc";
-    FSRef       ref;
-    NSImage     *closeImage = nil;
-    
-    if (FSPathMakeRef((unsigned char *)[theFilePath fileSystemRepresentation], &ref, NULL) == noErr) {
-		HFSUniStr255    forkName;
-		SInt16			refNum;
-		Handle			resource;
-		pxmRef			pixmap;
-		GWorldPtr       gWorld;
-		int				resourceID = RESOURCE_ID_CHECKMARK;
-		
-		//Extract the close button's pxm# resource for the close button
-		FSGetDataForkName(&forkName);
-		FSOpenResourceFile(&ref, forkName.length, forkName.unicode, fsRdPerm, &refNum);
-		resource = GetResource(RESOURCE_TYPE_CLOSE_BUTTON,resourceID);
-		
-		//Use the Sprocket pxm# code to extract the correct close button image
-		HLock(resource);
-		pixmap = pxmCreate(*resource, GetHandleSize(resource));
-		HUnlock(resource);
-		pxmMakeGWorld(pixmap, &gWorld);
-		pxmRenderImage(pixmap, 0, gWorld);
-		
-		//Place this image into an NSImage, and return
-		closeImage = [NSImage imageFromGWorld:gWorld];
-		
-		//Close up
-		pxmDispose(pixmap);
-		CloseResFile(refNum);
-    }
-    
-    return closeImage;
 }
 
 //Fun drawing toys
