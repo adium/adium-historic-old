@@ -265,9 +265,9 @@ static int linesLeftToFind = 0;
 			
 			//Seek to it and read greedily until we hit readSize or run out of file.
 			int idx = 0;
-			ssize_t amountRead = 0;
-			while((idx < readSize) && ((amountRead = pread(fd, buf + idx, readSize, offset + idx)) > 0)) {
-				idx    += amountRead;
+			for (ssize_t amountRead = 0; idx < readSize; idx += amountRead) { 
+				amountRead = pread(fd, buf + idx, readSize, offset + idx); 
+			   if (amountRead <= 0) break;
 			}
 			offset -= idx;
 			
