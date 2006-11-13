@@ -281,6 +281,7 @@ static int linesLeftToFind = 0;
 		AIListObject *account = [chat account];
 		NSString	 *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
 		
+		//See below for an explanation
 		Class messageClass = nil;
 
 		while ((element = [enumerator nextObject])) {
