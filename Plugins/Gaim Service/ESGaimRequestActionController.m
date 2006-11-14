@@ -180,6 +180,7 @@
  * AILocalizedString(@"Disallow", "Button title to prevent an action")
  * AILocalizedString(@"Connect",nil)
  * AILocalizedString(@"Cancel", nil)
+ * AILocalizedString(@"Send", nil)
  */
 
 - (void)processBuddyListSynchronizationForTitle:(NSString **)title message:(NSString **)message
@@ -211,7 +212,7 @@
 	NSString		*buttonName;
 	NSEnumerator	*enumerator;
 
-	if ([title rangeOfString:@"Buddy list synchronization issue in"].location != NSNotFound) {
+	if (title && [title rangeOfString:@"Buddy list synchronization issue in"].location != NSNotFound) {
 		[self processBuddyListSynchronizationForTitle:&title message:&message];
 		[translatedDict setObject:title
 						   forKey:@"TitleString"];
