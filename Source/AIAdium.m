@@ -50,6 +50,7 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AICalendarDateAdditions.h>
 #import <Sparkle/SUConstants.h>
+#import <Sparkle/SUUtilities.h>
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
@@ -957,6 +958,14 @@ static NSString	*prefsCategory;
 
 #pragma mark Sparkle Delegate Methods
 
+- (NSComparisonResult) compareVersion:(NSString *)newVersion toVersion:(NSString *)oldVersion
+{
+#if BETA_RELEASE == FALSE
+	if([newVersion rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"dbarctest"]].location != NSNotFound) return NSOrderedDescending;
+#endif
+	return SUStandardVersionComparison(newVersion, oldVersion);
+}
+
 /* This method gives the delegate the opportunity to customize the information that will
  * be included with update checks.  Add or remove items from the dictionary as desired.
  * Each entry in profileInfo is an NSDictionary with the following keys:
@@ -978,7 +987,8 @@ static NSString	*prefsCategory;
 	
 	[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
 	
-	NSString *value = [[defaults objectForKey:@"AIHasSentProfileInfo"] stringValue];
+	NSString *value = [[NSNumber numberWithBool:![[defaults objectForKey:@"AIHasSentProfileInfo"] boolValue]] stringValue];
+
 	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
 		@"FirstSubmission", @"key", 
 		@"First Time Submitting Profile Information", @"visibleKey",
@@ -1046,6 +1056,17 @@ static NSString	*prefsCategory;
 	}
 	
 	return profileInfo;
+}
+
+- (NSComparisonResult) compareVersion:(NSString *)newVersion toVersion:(NSString *)currentVersion
+{
+	//Allow updating from betas to anything, and anything to non-betas
+	//Careful! a15 is fine, but A15 is not, because it would hit the A in Adium.
+	NSCharacterSet *guardCharacters = [NSCharacterSet characterSetWithCharactersInString:@"abBrcRC"];
+	if([currentVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound || !([newVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound))
+		return SUStandardVersionComparison(newVersion, currentVersion);
+	else 
+		return NSOrderedSame;
 }
 
 @end
