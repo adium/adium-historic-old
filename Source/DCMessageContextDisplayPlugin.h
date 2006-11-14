@@ -58,7 +58,7 @@
 	
 	DCMessageContextDisplayPreferences  *preferences;
 	
-	NSMutableArray	*foundElements;
+	NSMutableArray	*foundMessages;
 	NSMutableArray	*elementStack;
 }
 
