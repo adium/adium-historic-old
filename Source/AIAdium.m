@@ -958,14 +958,6 @@ static NSString	*prefsCategory;
 
 #pragma mark Sparkle Delegate Methods
 
-- (NSComparisonResult) compareVersion:(NSString *)newVersion toVersion:(NSString *)oldVersion
-{
-#if BETA_RELEASE == FALSE
-	if([newVersion rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"dbarctest"]].location != NSNotFound) return NSOrderedDescending;
-#endif
-	return SUStandardVersionComparison(newVersion, oldVersion);
-}
-
 /* This method gives the delegate the opportunity to customize the information that will
  * be included with update checks.  Add or remove items from the dictionary as desired.
  * Each entry in profileInfo is an NSDictionary with the following keys:
