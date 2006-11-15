@@ -58,7 +58,7 @@ Boolean GetMetadataForFile(void* thisInterface,
     return success;
 }
 
-/*
+/*!
  * @brief Copy the text content for a file
  *
  * This is the text which would be the kMDItemTextContent for the file in Spotlight.
@@ -107,7 +107,7 @@ CFStringRef CopyTextContentForFile(CFStringRef contentTypeUTI,
 	return textContent;
 }
 
-/*
+/*!
  * @brief get metadata for an XML file
  *
  * This function gets the metadata contained within a universal chat log format file
