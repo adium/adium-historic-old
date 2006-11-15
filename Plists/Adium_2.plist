@@ -700,7 +700,9 @@
 			<array>
 				<string>public.data</string>
 				<string>public.content</string>
+				<string>public.text</string>
 				<string>public.message</string>
+				<string>public.xml</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Adium X chat log</string>
@@ -723,6 +725,8 @@
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.data</string>
+				<string>public.html</string>
+				<string>public.text</string>
 				<string>public.content</string>
 				<string>public.message</string>
 			</array>
