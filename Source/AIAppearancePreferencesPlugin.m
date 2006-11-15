@@ -107,7 +107,7 @@
 									   extension:@"AdiumStatusIcons"
 							  resourceFolderName:@"Status Icons"];
 				
-				[AIStatusIcons setActiveStatusIconsFromPath:path]
+				[AIStatusIcons setActiveStatusIconsFromPath:path];
 			}
 		}
 		
@@ -131,7 +131,7 @@
 									   extension:@"AdiumServiceIcons"
 							  resourceFolderName:@"Service Icons"];
 
-				[AIServiceIcons setActiveServiceIconsFromPath:path]
+				[AIServiceIcons setActiveServiceIconsFromPath:path];
 			}
 		}
 		
