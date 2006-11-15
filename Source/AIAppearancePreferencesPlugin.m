@@ -92,18 +92,23 @@
 			NSString *path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_STATUS_ICON_PACK]
 											 extension:@"AdiumStatusIcons"
 									resourceFolderName:@"Status Icons"];
+			BOOL success = NO;
 			
+			if (path) {
+				success = [AIStatusIcons setActiveStatusIconsFromPath:path];
+			}
+
 			//If the preferred pack isn't found (it was probably deleted while active), use the default one
-			if (!path) {
+			if (!success) {
 				NSString *name = [[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
 																				 group:PREF_GROUP_APPEARANCE
 																				object:nil];
 				path = [adium pathOfPackWithName:name
 									   extension:@"AdiumStatusIcons"
 							  resourceFolderName:@"Status Icons"];
+				
+				[AIStatusIcons setActiveStatusIconsFromPath:path]
 			}
-			
-			[AIStatusIcons setActiveStatusIconsFromPath:path];
 		}
 		
 		//Service icons
@@ -111,18 +116,23 @@
 			NSString *path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]
 											 extension:@"AdiumServiceIcons"
 									resourceFolderName:@"Service Icons"];
+			BOOL success = NO;
+			
+			if (path) {
+				success = [AIServiceIcons setActiveServiceIconsFromPath:path];
+			}
 			
 			//If the preferred pack isn't found (it was probably deleted while active), use the default one
-			if (!path) {
+			if (!success) {
 				NSString *name = [[adium preferenceController] defaultPreferenceForKey:KEY_SERVICE_ICON_PACK
 																				 group:PREF_GROUP_APPEARANCE
 																				object:nil];
 				path = [adium pathOfPackWithName:name
 									   extension:@"AdiumServiceIcons"
 							  resourceFolderName:@"Service Icons"];
+
+				[AIServiceIcons setActiveServiceIconsFromPath:path]
 			}
-			
-			[AIServiceIcons setActiveServiceIconsFromPath:path];
 		}
 		
 		//Theme
@@ -225,8 +235,10 @@
 	}
 	
 	//Apply its values
-	[[adium preferenceController] setPreferences:setDictionary
-										 inGroup:preferenceGroup];
+	if (setDictionary) {
+		[[adium preferenceController] setPreferences:setDictionary
+											 inGroup:preferenceGroup];
+	}
 }
 
 //Create a layout or theme set
