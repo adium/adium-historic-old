@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Status Icon Pack</key>
+	<string>iBubble Status</string>
+	<key>Service Icon Pack</key>
+	<string>Aqua</string>
+	<key>List Layout Name</key>
+	<string>Aqualicious</string>
+	<key>List Theme Name</key>
+	<string>Aqualicious</string>
+	<key>Window Style</key>
+	<integer>0</integer>
+	<key>Window Opacity</key>
+	<real>1.0</real>
+	<key>Vertical Autosizing</key>
+	<false/>
+	<key>Horizontal Autosizing</key>
+	<false/>
+	<key>Horizontal Width</key>
+	<integer>150</integer>
+</dict>
+</plist>
