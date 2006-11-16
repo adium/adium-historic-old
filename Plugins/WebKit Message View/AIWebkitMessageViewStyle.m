@@ -594,7 +594,7 @@ static NSArray *validSenderColors;
 		range = [inString rangeOfString:@"%time{"];
 		if (range.location != NSNotFound) {
 			NSRange endRange;
-			endRange = [inString rangeOfString:@"}%"];
+			endRange = [inString rangeOfString:@"}%" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(range), [inString length] - NSMaxRange(range))];
 			if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
 				if (date) {
 					NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
@@ -708,7 +708,7 @@ static NSArray *validSenderColors;
 			range = [inString rangeOfString:@"%textbackgroundcolor{"];
 			if (range.location != NSNotFound) {
 				NSRange endRange;
-				endRange = [inString rangeOfString:@"}%"];
+				endRange = [inString rangeOfString:@"}%" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(range), [inString length] - NSMaxRange(range))];
 				if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
 					NSString *transparency = [inString substringWithRange:NSMakeRange(NSMaxRange(range),
 																					  (endRange.location - NSMaxRange(range)))];
@@ -910,7 +910,7 @@ static NSArray *validSenderColors;
 		range = [inString rangeOfString:@"%timeOpened{"];
 		if (range.location != NSNotFound) {
 			NSRange endRange;
-			endRange = [inString rangeOfString:@"}%"];
+			endRange = [inString rangeOfString:@"}%" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(range), [inString length] - NSMaxRange(range))];
 
 			if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {				
 				NSString		*timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
