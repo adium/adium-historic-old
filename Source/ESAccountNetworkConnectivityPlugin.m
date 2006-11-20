@@ -245,7 +245,9 @@
 	//these accounts we'll want to hold system sleep until they are ready.  We monitor account status changes
 	//and will lift the hold once all accounts are finished.
 	if ([self _accountsAreOnlineOrDisconnecting]) {
+		AILog(@"Posting AISystemHoldSleep_Notification...");
 		[[NSNotificationCenter defaultCenter] postNotificationName:AISystemHoldSleep_Notification object:nil];
+		waitingToSleep = YES;
 	}
 }
 
@@ -257,9 +259,15 @@
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if ([inObject isKindOfClass:[AIAccount class]]) {
-		if ([inModifiedKeys containsObject:@"Online"]) {
+		if (waitingToSleep &&
+			[inModifiedKeys containsObject:@"Online"]) {
 			if (![self _accountsAreOnlineOrDisconnecting]) {
+				AILog(@"Posting AISystemContinueSleep_Notification...");
 				[[NSNotificationCenter defaultCenter] postNotificationName:AISystemContinueSleep_Notification object:nil];
+				waitingToSleep = NO;
+
+			} else {
+				AILog(@"Continuing to wait to sleep...");
 			}
 		}
 		if ([inModifiedKeys containsObject:@"Enabled"]) {
@@ -318,6 +326,7 @@
 	while ((account = [enumerator nextObject])) {
 		if ([account online] ||
 		   [[account statusObjectForKey:@"Disconnecting"] boolValue]) {
+			AILog(@"%@ (and possibly others) is still %@",account, ([account online] ? @"online" : @"disconnecting"));
 			return YES;
 		}
 	}
@@ -334,6 +343,11 @@
 	AIAccount		*account;
 
 	AILog(@"***** System did wake...");
+
+	/* We could have been waiting to sleep but then timed out and slept anyways; clear the flag if that happened and it wasn't cleared
+	 * in updateListObject::: above.
+	 */
+	waitingToSleep = NO;
 
 	//Immediately re-connect accounts which are ignoring the server reachability
 	enumerator = [[[adium accountController] accounts] objectEnumerator];	
