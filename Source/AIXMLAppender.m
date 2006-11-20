@@ -41,6 +41,7 @@
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <sys/stat.h>
+#import <fcntl.h>
 
 #define XML_APPENDER_BLOCK_SIZE 4096
 
@@ -185,7 +186,7 @@ enum {
 		
 		//Write the data, and then seek backwards
 		[file writeData:[initialDocument dataUsingEncoding:NSUTF8StringEncoding]];
-		[file synchronizeFile];
+		fcntl([file fileDescriptor], F_FULLFSYNC, /*arg*/ 0);
 		[file seekToFileOffset:([file offsetInFile] - closingTagLength)];
 		
 		initialized = YES;
@@ -230,7 +231,7 @@ enum {
 		{
 			//Write the data, and then seek backwards
 			[file writeData:[[element stringByAppendingString:closingTag] dataUsingEncoding:NSUTF8StringEncoding]];
-			[file synchronizeFile];
+			fcntl([file fileDescriptor], F_FULLFSYNC, /*arg*/ 0);
 			[file seekToFileOffset:([file offsetInFile] - [closingTag length])];
 		}
 	}
