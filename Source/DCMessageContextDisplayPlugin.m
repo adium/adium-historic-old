@@ -254,21 +254,29 @@ static int linesLeftToFind = 0;
 		
 		//Set up some more doohickeys and then start the parse loop
 		int readSize = 4 * getpagesize(); //Read 4 pages at a time.
-		unsigned long long offset = [file offsetInFile];
+		NSMutableData *chunk = [NSMutableData dataWithLength:readSize];
+		int fd = [file fileDescriptor];
+		char *buf = [chunk mutableBytes];
+		off_t offset = [file offsetInFile];
 		enum LMXParseResult result = LMXParsedIncomplete;
 		do {
 			//Calculate the new offset
 			offset = (offset <= readSize) ? 0 : offset - readSize;
 			
-			//Seek to it and read
-			[file seekToFileOffset:offset]; 
-			NSData *chunk = [file readDataOfLength:readSize];
+			//Seek to it and read greedily until we hit readSize or run out of file.
+			int idx = 0;
+			for (ssize_t amountRead = 0; idx < readSize; idx += amountRead) { 
+				amountRead = pread(fd, buf + idx, readSize, offset + idx); 
+			   if (amountRead <= 0) break;
+			}
+			offset -= idx;
 			
 			//Parse
 			result = [parser parseChunk:chunk];
 			
 		//Continue to parse as long as we need more elements, we have data to read, and LMX doesn't think we're done.
 		} while ([foundElements count] < linesLeftToFind && offset > 0 && result != LMXParsedCompletely);
+
 		//Be a good citizen and close the file
 		[file closeFile];
 				
@@ -364,8 +372,9 @@ static int linesLeftToFind = 0;
 			[element setAttributeNames:[attributes allKeys] values:[attributes allValues]];
 		}
 		
-		if ([elementName isEqualToString:@"message"])
+		if ([elementName isEqualToString:@"message"]) {
 			[foundElements insertObject:element atIndex:0U];
+		}
 
 		[elementStack removeObjectAtIndex:0U];
 		if ([foundElements count] == linesLeftToFind) {
