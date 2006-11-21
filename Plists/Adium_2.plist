@@ -294,7 +294,7 @@
 				<string>AILo</string>
 			</array>
 			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+			<string>None</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.adiumx.xmllog</string>
