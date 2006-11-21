@@ -8724,7 +8724,6 @@
 			buildConfigurationList = DADE8E09085507450062B664 /* Build configuration list for PBXNativeTarget "Gaim" */;
 			buildPhases = (
 				4B7F277E05440C0800CDFC90 /* Headers */,
-				07D43998084E5A4B00BFFF05 /* ShellScript */,
 				4BDF2C97061E377E00EA75C5 /* CopyFiles */,
 				4B7F278005440C0800CDFC90 /* Sources */,
 				4B7F278105440C0800CDFC90 /* Frameworks */,
@@ -9362,21 +9361,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		07D43998084E5A4B00BFFF05 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"Plugins/Gaim Service/Libgaim.framework/Versions/A/libgaim",
-			);
-			outputPaths = (
-				"Plugins/Gaim Service/Libgaim.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/zsh;
-			shellScript = "#we use Xcode's dependency-resolution to determine when this script should be run.\ntouch \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-		};
 		340BABD409EC8C6C000EC441 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
