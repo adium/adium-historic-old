@@ -9465,7 +9465,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Delete .svn, .DS_Store, and .h files\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' \\;\n\n####\n\n# Move English.lproj folders to en.lproj folders...\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -depth -type d -name 'English.lproj' -exec ditto \"{}\" \"{}/../en.lproj\" \\;\n\n# And delete the old English.lproj folders\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -depth -type d -name 'English.lproj' -exec rm -rf \"{}\" \\;";
+			shellScript = "# Delete .h files\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -name '*.h' -print0 | xargs -0 rm\n";
 		};
 		F53C25AD0A2F95F100F7B73D /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
