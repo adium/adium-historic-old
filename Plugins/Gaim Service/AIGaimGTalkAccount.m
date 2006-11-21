@@ -47,11 +47,11 @@
 /*!
  * @brief Allow a file transfer with an object?
  *
- * As of July 28th, 2006, GTalk allows transfers.
+ * As of July 28th, 2006, GTalk allows transfers. But we don't support them.
  */
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
 {
-	return YES;
+	return NO;
 }
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError

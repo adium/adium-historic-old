@@ -424,7 +424,7 @@
  */
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
 {
-	return NO; //this is broken. Not all jabber servers support it, but I don't know how to check if they do. Smack will fix.
+	return YES; //this is broken. Not all jabber servers support it, but I don't know how to check if they do. Smack will fix.
 }
 
 
