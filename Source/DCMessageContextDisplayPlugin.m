@@ -238,15 +238,30 @@ static int linesLeftToFind = 0;
 		NSLog(@"Message History: Loading log file: %@", logPath);
 		
 		//Initialize the found messages array and element stack for us-as-delegate
-		foundElements = [NSMutableArray arrayWithCapacity:linesToDisplay];
+		foundMessages = [NSMutableArray arrayWithCapacity:linesLeftToFind];
 		elementStack = [NSMutableArray array];
-
-		//Initialize a place to store found messages, locally
-		NSMutableArray *innerFoundContentContexts = [NSMutableArray arrayWithCapacity:linesLeftToFind]; 
 
 		//Create the parser and set ourselves as the delegate
 		LMXParser *parser = [LMXParser parser];
 		[parser setDelegate:self];
+
+		//Set up info needed by elementStarted to create content objects.
+		NSMutableDictionary *contextInfo = nil;
+		{
+			//Get the service name from the path name
+			NSString *serviceName = [[[[[logPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] lastPathComponent] componentsSeparatedByString:@"."] objectAtIndex:0U];
+
+			AIListObject *account = [chat account];
+			NSString	 *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
+
+			contextInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+				serviceName, @"Service name",
+				account, @"Account",
+				accountID, @"Account ID",
+				chat, @"Chat",
+				nil];
+			[parser setContextInfo:(void *)contextInfo];
+		}
 
 		//Open up the file we need to read from, and seek to the end (this is a *backwards* parser, after all :)
 		NSFileHandle *file = [NSFileHandle fileHandleForReadingAtPath:logPath];
@@ -259,6 +274,12 @@ static int linesLeftToFind = 0;
 		char *buf = [chunk mutableBytes];
 		off_t offset = [file offsetInFile];
 		enum LMXParseResult result = LMXParsedIncomplete;
+
+		//We use NSValue because autorelease pools cannot be retained.
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+		NSValue *value = [NSValue valueWithNonretainedObject:pool];
+		[contextInfo setObject:value forKey:@"Autorelease pool"];
+
 		do {
 			//Calculate the new offset
 			offset = (offset <= readSize) ? 0 : offset - readSize;
@@ -275,70 +296,18 @@ static int linesLeftToFind = 0;
 			result = [parser parseChunk:chunk];
 			
 		//Continue to parse as long as we need more elements, we have data to read, and LMX doesn't think we're done.
-		} while ([foundElements count] < linesLeftToFind && offset > 0 && result != LMXParsedCompletely);
+		} while ([foundMessages count] < linesLeftToFind && offset > 0 && result != LMXParsedCompletely);
+
+		//Pop our autorelease pool.
+		//It may be a different one from the one we started with, so get it from the dictionary.
+		value = [contextInfo objectForKey:@"Autorelease pool"];
+		[[value nonretainedObjectValue] release];
 
 		//Be a good citizen and close the file
 		[file closeFile];
-				
-		//Get the service name from the path name
-		NSString *serviceName = [[[[[logPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] lastPathComponent] componentsSeparatedByString:@"."] objectAtIndex:0U];
-		
-		//Enumerate over the found elements
-		NSEnumerator *enumerator = [foundElements objectEnumerator];
-		AIXMLElement *element = nil;
-		AIListObject *account = [chat account];
-		NSString	 *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
-		
-		Class messageClass = nil;
-
-		while ((element = [enumerator nextObject])) {
-			//Set up some doohickers.
-			NSDictionary	*attributesDictionary = [element attributes];
-			NSString		*sender = [NSString stringWithFormat:@"%@.%@", serviceName, [attributesDictionary objectForKey:@"sender"]];
-			BOOL			sentByMe = ([sender isEqualToString:accountID]);
-			NSString		*autoreplyAttribute = [attributesDictionary objectForKey:@"auto"];
-			NSString		*timeString = [attributesDictionary objectForKey:@"time"];
-			//Create the context object
-			//http://www.visualdistortion.org/crash/view.jsp?crash=211821
-			if (timeString) {
-				NSLog(@"Message Context Display: Parsing message time attribute %@", timeString);
-				
-				NSCalendarDate *time = [NSCalendarDate calendarDateWithString:timeString];
-				
-				//only change message classes when we change log files, so only on the first iteration of this loop
-				if(!messageClass)
-					messageClass = (-[time timeIntervalSinceNow] > 300) ? [AIContentContext class] : [AIContentMessage class];
-				
-				/*don't fade the messages if they're within the last 5 minutes
-				 *since that will be resuming a conversation, not starting a new one.
-				 *Why the class trickery? Less code duplication, clearer what is actually different between the two cases.
-				 */
-				AIContentMessage *message = [messageClass messageInChat:chat 
-															 withSource:(sentByMe ? account : [chat listObject])
-															destination:(sentByMe ? [chat listObject] : account)
-																   date:time
-																message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
-															  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"true"] == NSOrderedSame)];
-				
-				//Don't log this object
-				[message setPostProcessContent:NO];
-				[message setTrackContent:NO];
-				
-				//Add it to the array
-				[innerFoundContentContexts addObject:message];
-				
-				//If we've found enough, stop drop and roll!
-				if ([innerFoundContentContexts count] >= linesLeftToFind)
-					break;
-			} else {
-				NSLog(@"Null message context display time for %@",element);
-			}
-		}
-		
-		messageClass = nil; //reset this for the next file
 
 		//Add our locals to the outer array; we're probably looping again.
-		[outerFoundContentContexts setArray:[innerFoundContentContexts arrayByAddingObjectsFromArray:outerFoundContentContexts]];
+		[outerFoundContentContexts replaceObjectsInRange:NSMakeRange(0, 0) withObjectsFromArray:foundMessages];
 		linesLeftToFind -= [outerFoundContentContexts count];
 	}
 	return outerFoundContentContexts;
@@ -372,14 +341,69 @@ static int linesLeftToFind = 0;
 			[element setAttributeNames:[attributes allKeys] values:[attributes allValues]];
 		}
 		
+		NSMutableDictionary *contextInfo = [parser contextInfo];
+
 		if ([elementName isEqualToString:@"message"]) {
-			[foundElements insertObject:element atIndex:0U];
+			//A message element has started!
+			//This means that we have all of this message now, and therefore can create a single content object from the AIXMLElement tree and then throw away that tree.
+			//This saves memory when a message element contains many elements (since each one is represented by an AIXMLElement sub-tree in the AIXMLElement tree, as opposed to a simple NSAttributeRun in the NSAttributedString of the content object).
+
+			NSString     *serviceName = [contextInfo objectForKey:@"Service name"];
+			AIListObject *account     = [contextInfo objectForKey:@"Account"];
+			NSString     *accountID   = [contextInfo objectForKey:@"Account ID"];
+			AIChat       *chat        = [contextInfo objectForKey:@"Chat"];
+
+			//Set up some doohickers.
+			NSDictionary	*attributes = [element attributes];
+			NSString		*timeString = [attributes objectForKey:@"time"];
+			//Create the context object
+			//http://www.visualdistortion.org/crash/view.jsp?crash=211821
+			if (timeString) {
+				NSLog(@"Message Context Display: Parsing message time attribute %@", timeString);
+				
+				NSCalendarDate *time = [NSCalendarDate calendarDateWithString:timeString];
+
+				NSString		*autoreplyAttribute = [attributes objectForKey:@"auto"];
+				NSString		*sender = [NSString stringWithFormat:@"%@.%@", serviceName, [attributes objectForKey:@"sender"]];
+				BOOL			sentByMe = ([sender isEqualToString:accountID]);
+				
+				/*don't fade the messages if they're within the last 5 minutes
+				 *since that will be resuming a conversation, not starting a new one.
+				 *Why the class trickery? Less code duplication, clearer what is actually different between the two cases.
+				 */
+				Class messageClass = (-[time timeIntervalSinceNow] > 300.0) ? [AIContentContext class] : [AIContentMessage class];
+				AIContentMessage *message = [messageClass messageInChat:chat 
+															 withSource:(sentByMe ? account : [chat listObject])
+															destination:(sentByMe ? [chat listObject] : account)
+																   date:time
+																message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
+															  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"true"] == NSOrderedSame)];
+				
+				//Don't log this object
+				[message setPostProcessContent:NO];
+				[message setTrackContent:NO];
+				
+				//Add it to the array (in front, since we're working backwards, and we want the array in forward order)
+				[foundMessages insertObject:message atIndex:0];
+			} else {
+				NSLog(@"Null message context display time for %@",element);
+			}
 		}
 
 		[elementStack removeObjectAtIndex:0U];
-		if ([foundElements count] == linesLeftToFind) {
+		if ([foundMessages count] == linesLeftToFind) {
 			if ([elementStack count]) [elementStack removeAllObjects];
 			[parser abortParsing];
+		} else {
+			//We're still looking for more messages in this file.
+			//Pop the current autorelease pool and start a new one.
+			//This frees the most recent tree of autoreleased AIXMLElements.
+			//We use NSValue because autorelease pools cannot be retained.
+			NSValue *value = [contextInfo objectForKey:@"Autorelease pool"];
+			[[value nonretainedObjectValue] release];
+			NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+			value = [NSValue valueWithNonretainedObject:pool];
+			[contextInfo setObject:value forKey:@"Autorelease pool"];
 		}
 	}
 }
