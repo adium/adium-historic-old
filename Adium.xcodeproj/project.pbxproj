@@ -9398,16 +9398,14 @@
 			);
 			inputPaths = (
 				$TARGET_BUILD_DIR/include/PlistMacros.h,
-				"$(SRCROOT)/Plists/version.plist",
 				"$(SRCROOT)/Plists/buildnum",
 			);
 			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/version.plist",
 				"$(BUILT_PRODUCTS_DIR)/Adium.app/Contents/Resources/buildnum",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "gcc -E -P -x c -Wno-trigraphs -include \"$SCRIPT_INPUT_FILE_0\" -C \"$SCRIPT_INPUT_FILE_1\" -o \"$SCRIPT_OUTPUT_FILE_0\"\ngcc -E -P -x c -Wno-trigraphs -include \"$SCRIPT_INPUT_FILE_0\" -C \"$SCRIPT_INPUT_FILE_2\" -o \"$SCRIPT_OUTPUT_FILE_1\"";
+			shellScript = "gcc -E -P -x c -Wno-trigraphs -include \"$SCRIPT_INPUT_FILE_0\" -C \"$SCRIPT_INPUT_FILE_1\" -o \"$SCRIPT_OUTPUT_FILE_0\"";
 		};
 		34C9456E0AE1EE280094E504 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
