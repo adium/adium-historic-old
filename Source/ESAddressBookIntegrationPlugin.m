@@ -254,9 +254,10 @@ NSString* serviceIDForJabberUID(NSString *UID);
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	//Just stop here if we don't have an address book dict to work with
-	if (!addressBookDict) {
-		return nil;
-	}
+	if (!addressBookDict) return nil;
+	
+	//We handle accounts separately; doing updates here causes chaos in addition to being inefficient.
+	if ([inObject isKindOfClass:[AIAccount class]]) return nil;
 	
 	NSSet		*modifiedAttributes = nil;
 	
