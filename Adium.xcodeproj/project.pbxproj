@@ -454,7 +454,6 @@
 		348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */; };
 		348E5ACB06D2A74C004C051C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348E5ACA06D2A74C004C051C /* AddressBook.framework */; };
 		348EE1B4080A57480015E0FC /* WebKitPreferencesView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348EE1B3080A57480015E0FC /* WebKitPreferencesView.nib */; };
-		348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */; };
 		348F57940936F3CC00288E41 /* ESEditStatusGroupWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348F57920936F3CC00288E41 /* ESEditStatusGroupWindowController.m */; };
 		348F579E0936FA6D00288E41 /* EditStatusGroup.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348F579D0936FA6D00288E41 /* EditStatusGroup.nib */; };
 		3496A8C207CE6B880055BBAB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3496A8C107CE6B880055BBAB /* InfoPlist.strings */; };
@@ -1367,13 +1366,6 @@
 			remoteGlobalIDString = 8D57630D048677EA00EA77CD;
 			remoteInfo = AdiumSpotlightImporter;
 		};
-		34677B3E07CC3E8400F59F7B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B72537BB058C4577004BA969;
-			remoteInfo = "Latex Plugin";
-		};
 		346C9C9A06004585000F5A8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1616,7 +1608,6 @@
 				38722C410A8CEE75002CC4F4 /* QuickTime.AdiumPlugin in CopyFiles */,
 				81F656580A2A5315008FC8E7 /* Smack.AdiumPlugin in CopyFiles */,
 				11F5F44309537E34007DCC49 /* joscar.AdiumPlugin in CopyFiles */,
-				348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */,
 				4B7F27C705440DE900CDFC90 /* Gaim.AdiumPlugin in CopyFiles */,
 				344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */,
 				340B9BD4069C735900FE1E57 /* WebKit Message View.AdiumPlugin in CopyFiles */,
@@ -8214,7 +8205,6 @@
 				4B7845EC059B50820048A8BA /* PBXTargetDependency */,
 				DA70F2B2080CAE8200C72D8B /* PBXTargetDependency */,
 				346C9D46060046AB000F5A8A /* PBXTargetDependency */,
-				34677B3F07CC3E8400F59F7B /* PBXTargetDependency */,
 				349C31630867D199000BF883 /* PBXTargetDependency */,
 				11F5F42C09537E00007DCC49 /* PBXTargetDependency */,
 				F5B17CDF0A16C767004AE99E /* PBXTargetDependency */,
@@ -9773,11 +9763,6 @@
 			isa = PBXTargetDependency;
 			name = AdiumSpotlightImporter;
 			targetProxy = 34611CCE09B67ABC00870036 /* PBXContainerItemProxy */;
-		};
-		34677B3F07CC3E8400F59F7B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B72537BB058C4577004BA969 /* Latex Plugin */;
-			targetProxy = 34677B3E07CC3E8400F59F7B /* PBXContainerItemProxy */;
 		};
 		346C9C9B06004585000F5A8A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
