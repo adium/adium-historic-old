@@ -56,45 +56,30 @@
 		110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */; };
 		110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 110763F908676D04005987A5 /* BlockEditorWindow.nib */; };
 		110C125909608F6C003FAD0A /* RAFjoscarLogHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 110C121709608C5A003FAD0A /* RAFjoscarLogHandler.m */; };
-		11247EC60956177D00F69C1E /* RAFjoscarAIMService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11247EC40956177D00F69C1E /* RAFjoscarAIMService.h */; };
 		11247EC70956177D00F69C1E /* RAFjoscarAIMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 11247EC50956177D00F69C1E /* RAFjoscarAIMService.m */; };
-		11247EF409561A8500F69C1E /* RAFjoscarAIMAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11247EF209561A8500F69C1E /* RAFjoscarAIMAccount.h */; };
 		11247EF509561A8500F69C1E /* RAFjoscarAIMAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */; };
 		1124816C09562C9D00F69C1E /* joscar bridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124816909562C9500F69C1E /* joscar bridge.jar */; };
 		1124817409562CDB00F69C1E /* retroweaver-rt.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124817309562CDB00F69C1E /* retroweaver-rt.jar */; };
-		112FC2B309393926001FB00D /* ESjoscarCocoaAdapter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */; };
 		112FC2B409393926001FB00D /* ESjoscarCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */; };
 		115E0E8E0952514A003218FE /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
-		11669A2D0999395D003CB8A1 /* ESjoscarJoinChatViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */; };
 		11669A2E0999395D003CB8A1 /* ESjoscarJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */; };
 		11669AB309994697003CB8A1 /* joscarJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11669AB109994697003CB8A1 /* joscarJoinChatView.nib */; };
 		11669ABA09994865003CB8A1 /* joscarJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11669AB109994697003CB8A1 /* joscarJoinChatView.nib */; };
-		117481E0092E68DD00CFE3FF /* RAFjoscarServicePlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 117481DE092E68DC00CFE3FF /* RAFjoscarServicePlugin.h */; };
 		117481E1092E68DD00CFE3FF /* RAFjoscarServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 117481DF092E68DC00CFE3FF /* RAFjoscarServicePlugin.m */; };
-		11A00DD209742D9700768128 /* RAFjoscarDotMacAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11A00DCC09742D8600768128 /* RAFjoscarDotMacAccount.h */; };
 		11A00DD309742D9700768128 /* RAFjoscarDotMacAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11A00DCD09742D8600768128 /* RAFjoscarDotMacAccount.m */; };
-		11A00DD409742D9700768128 /* RAFjoscarDotMacService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11A00DAC09742B9E00768128 /* RAFjoscarDotMacService.h */; };
 		11A00DD509742D9700768128 /* RAFjoscarDotMacService.m in Sources */ = {isa = PBXBuildFile; fileRef = 11A00DAD09742B9E00768128 /* RAFjoscarDotMacService.m */; };
-		11AD534C0963492D00CA0C6F /* RAFjoscarDebugWindowController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11AD534A0963492D00CA0C6F /* RAFjoscarDebugWindowController.h */; };
 		11AD534D0963492D00CA0C6F /* RAFjoscarDebugWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11AD534B0963492D00CA0C6F /* RAFjoscarDebugWindowController.m */; };
-		11AD5362096349D000CA0C6F /* RAFjoscarDebugController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11AD5360096349D000CA0C6F /* RAFjoscarDebugController.h */; };
 		11AD5363096349D000CA0C6F /* RAFjoscarDebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11AD5361096349D000CA0C6F /* RAFjoscarDebugController.m */; };
 		11AD53E90963523000CA0C6F /* joscarDebugWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11AD53E80963523000CA0C6F /* joscarDebugWindow.nib */; };
-		11CBDD4309326F8100BE7961 /* RAFjoscarAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11CBDD3D09326F7F00BE7961 /* RAFjoscarAccount.h */; };
 		11CBDD4409326F8100BE7961 /* RAFjoscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CBDD3E09326F8000BE7961 /* RAFjoscarAccount.m */; };
-		11CBDD4509326F8100BE7961 /* RAFjoscarAccountViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */; };
 		11CBDD4609326F8100BE7961 /* RAFjoscarAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CBDD4009326F8000BE7961 /* RAFjoscarAccountViewController.m */; };
-		11CBDD4709326F8100BE7961 /* RAFjoscarService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11CBDD4109326F8100BE7961 /* RAFjoscarService.h */; };
 		11CBDD4809326F8100BE7961 /* RAFjoscarService.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CBDD4209326F8100BE7961 /* RAFjoscarService.m */; };
-		11CC0DBB097B0AE600E1DE20 /* RAFjoscarICQService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11CC0DB9097B0AE600E1DE20 /* RAFjoscarICQService.h */; };
 		11CC0DBC097B0AE700E1DE20 /* RAFjoscarICQService.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CC0DBA097B0AE600E1DE20 /* RAFjoscarICQService.m */; };
-		11CC0DED097B120D00E1DE20 /* RAFjoscarICQAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11CC0DEB097B120C00E1DE20 /* RAFjoscarICQAccount.h */; };
 		11CC0DEE097B120D00E1DE20 /* RAFjoscarICQAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */; };
 		11DAEBD0092FB857007A8682 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		11DAEBD1092FB85F007A8682 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		11F5F44309537E34007DCC49 /* joscar.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */; };
 		11F5F70209539C70007DCC49 /* joscarDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11F5F70109539C70007DCC49 /* joscarDefaults.plist */; };
-		11F5F72E0953A227007DCC49 /* joscarClasses.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F5F72D0953A227007DCC49 /* joscarClasses.h */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
 		3402E01B07CB0CED0044F818 /* ESFileTransferProgressView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */; };
 		3402E02407CB0D1B0044F818 /* ProxyPasswordPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02307CB0D1B0044F818 /* ProxyPasswordPrompt.nib */; };
@@ -121,11 +106,8 @@
 		3415F83B0A43A5B600B093B7 /* aim.png in Resources */ = {isa = PBXBuildFile; fileRef = 3415F83A0A43A5B600B093B7 /* aim.png */; };
 		34167FED081D706300E35678 /* DualWindowMessageAdvanced.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34167FEC081D706200E35678 /* DualWindowMessageAdvanced.nib */; };
 		3417D25A09C332B900FC413E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
-		3417D27B09C3336A00FC413E /* TranslationEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 3417D27709C3336900FC413E /* TranslationEngine.h */; };
 		3417D27C09C3336A00FC413E /* TranslationEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 3417D27809C3336900FC413E /* TranslationEngine.m */; };
 		3417D27D09C3336A00FC413E /* AITranslatorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3417D27909C3336900FC413E /* AITranslatorPlugin.m */; };
-		3417D27E09C3336A00FC413E /* AITranslatorPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 3417D27A09C3336900FC413E /* AITranslatorPlugin.h */; };
-		34182F4A0AC2CA3C0067DEF3 /* AIPreviewChat.h in Headers */ = {isa = PBXBuildFile; fileRef = 34182F480AC2CA3B0067DEF3 /* AIPreviewChat.h */; };
 		34182F4B0AC2CA3C0067DEF3 /* AIPreviewChat.m in Sources */ = {isa = PBXBuildFile; fileRef = 34182F490AC2CA3C0067DEF3 /* AIPreviewChat.m */; };
 		3419DE730A81042F00C3FC68 /* AccountPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8326107CBD598006466F2 /* AccountPrefs.plist */; };
 		3419DE740A81042F00C3FC68 /* BuiltInStatusStates.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8327507CBD5B3006466F2 /* BuiltInStatusStates.plist */; };
@@ -156,7 +138,6 @@
 		3419E7400A880B2C00C3FC68 /* ESQQService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3419E73E0A880B2C00C3FC68 /* ESQQService.m */; };
 		3419E7690A880CDA00C3FC68 /* ESGaimQQAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3419E7670A880CD900C3FC68 /* ESGaimQQAccountViewController.h */; };
 		3419E76A0A880CDA00C3FC68 /* ESGaimQQAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3419E7680A880CD900C3FC68 /* ESGaimQQAccountViewController.m */; };
-		3419F3A805314BE000C68BA3 /* AISQLLoggerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B7AE664F0465778E0051E914 /* AISQLLoggerPlugin.h */; };
 		3419F3AD05314BE000C68BA3 /* AISQLLoggerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B7AE66500465778E0051E914 /* AISQLLoggerPlugin.m */; };
 		3419F6F505314E9C00C68BA3 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		3419F75C05314FED00C68BA3 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
@@ -176,7 +157,6 @@
 		341BDF5E0969814A00CF83F5 /* BadgerDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF5D0969814900CF83F5 /* BadgerDefaults.plist */; };
 		341BDF700969829E00CF83F5 /* DockUnviewedContentDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF6F0969829E00CF83F5 /* DockUnviewedContentDefaults.plist */; };
 		342113CE08261FB900A3B0FB /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342113CD08261FB900A3B0FB /* MainMenu.nib */; };
-		342340E009D1AF58009FF634 /* RAFjoscarSecuridPromptController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */; };
 		342340E109D1AF58009FF634 /* RAFjoscarSecuridPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */; };
 		342353D709D45726009FF634 /* AIAbstractLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */; };
 		3423622B09D8BCAA009FF634 /* SecuridPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3423622A09D8BCA9009FF634 /* SecuridPrompt.nib */; };
@@ -186,7 +166,6 @@
 		342910CD07AE228600C815F6 /* AIEmoticonPackPreviewTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 342910CB07AE228600C815F6 /* AIEmoticonPackPreviewTableView.m */; };
 		3429BB06070378F700EED705 /* ESFileTransferMessagesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3429BB04070378F700EED705 /* ESFileTransferMessagesPlugin.m */; };
 		342B77BF09C67C0700DB7AAF /* TranslatorOptions.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342B77BE09C67C0700DB7AAF /* TranslatorOptions.nib */; };
-		342B785409C67F4100DB7AAF /* AITranslatorOptionsWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 342B77B309C678B700DB7AAF /* AITranslatorOptionsWindowController.h */; };
 		342B785509C67F4100DB7AAF /* AITranslatorOptionsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342B77B409C678B700DB7AAF /* AITranslatorOptionsWindowController.m */; };
 		342C2FB4082C16FC00A50DC2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		342F88BC0A2A74D50001DB29 /* SRKeyCodeTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 342F88B00A2A74D30001DB29 /* SRKeyCodeTransformer.m */; };
@@ -206,7 +185,6 @@
 		34382CEA0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382CE60A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m */; };
 		34382CEC0A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382CE80A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m */; };
 		34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34382CEE0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist */; };
-		3439FDA905794D0F00B2E449 /* JMSQLLoggerAdvancedPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = B799BC8105793C1300338E54 /* JMSQLLoggerAdvancedPreferences.h */; };
 		3439FDAA05794D1300B2E449 /* JMSQLLoggerAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = B799BC8005793C1200338E54 /* JMSQLLoggerAdvancedPreferences.m */; };
 		343E7718097BEFE000BCFF92 /* jsocks-klea.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 343E7716097BEFD500BCFF92 /* jsocks-klea.jar */; };
 		343EB3FE08086D2F00E27095 /* AccountProxy.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB3FD08086D2F00E27095 /* AccountProxy.nib */; };
@@ -273,15 +251,10 @@
 		346BA3640774C35500628F06 /* GlobalEventsPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 346BA3630774C35400628F06 /* GlobalEventsPreferences.nib */; };
 		346C9C700600453C000F5A8A /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		346C9C7C06004560000F5A8A /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C103FAE057127A500F3C158 /* WebKit.framework */; };
-		346C9D010600463D000F5A8A /* AIWebKitMessageViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B539C5105EFD6FA00E5921A /* AIWebKitMessageViewController.h */; };
 		346C9D020600463D000F5A8A /* AIWebKitMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B539C5205EFD6FB00E5921A /* AIWebKitMessageViewController.m */; };
-		346C9D040600463E000F5A8A /* AIWebKitMessageViewPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B539C4B05EFD6CD00E5921A /* AIWebKitMessageViewPlugin.h */; };
 		346C9D060600463F000F5A8A /* AIWebKitMessageViewPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B539C4C05EFD6CD00E5921A /* AIWebKitMessageViewPlugin.m */; };
-		346C9D0A06004640000F5A8A /* ESWebFrameViewAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34FB54DE05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.h */; };
 		346C9D1006004644000F5A8A /* ESWebFrameViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB54DD05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.m */; };
-		346C9D1206004645000F5A8A /* ESWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 346C9A2305FFE3DE000F5A8A /* ESWebView.h */; };
 		346C9D1606004646000F5A8A /* ESWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346C9A2405FFE3DF000F5A8A /* ESWebView.m */; };
-		346C9D3006004650000F5A8A /* WebKitPrivateDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 346C9A4005FFE418000F5A8A /* WebKitPrivateDefinitions.h */; };
 		346F5D3208A43E7B0055C610 /* CurrentTunes.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 346F5CB308A418FB0055C610 /* CurrentTunes.scpt */; };
 		347065E506015DC5004F0D20 /* WebKit Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 347065E406015DC5004F0D20 /* WebKit Defaults.plist */; };
 		347374BD0AA9206B00AD18E3 /* ShortcutRecorder.strings in Resources */ = {isa = PBXBuildFile; fileRef = 347374BB0AA9206B00AD18E3 /* ShortcutRecorder.strings */; };
@@ -491,10 +464,8 @@
 		348F579E0936FA6D00288E41 /* EditStatusGroup.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348F579D0936FA6D00288E41 /* EditStatusGroup.nib */; };
 		3496A8C207CE6B880055BBAB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3496A8C107CE6B880055BBAB /* InfoPlist.strings */; };
 		349710DD096C4C7700699948 /* Buttons.strings in Resources */ = {isa = PBXBuildFile; fileRef = 349710DB096C4C7700699948 /* Buttons.strings */; };
-		3497CBAF09BA0B5D00C0428E /* ESIRCJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CBAD09BA0B5D00C0428E /* ESIRCJoinChatViewController.h */; };
 		3497CBB009BA0B5D00C0428E /* ESIRCJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3497CBAE09BA0B5D00C0428E /* ESIRCJoinChatViewController.m */; };
 		3497CBDE09BA0C0900C0428E /* ESIRCJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3497CBDD09BA0C0900C0428E /* ESIRCJoinChatView.nib */; };
-		3497CC0C09BA0D7900C0428E /* ESIRCAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3497CC0A09BA0D7900C0428E /* ESIRCAccountViewController.h */; };
 		3497CC0D09BA0D7900C0428E /* ESIRCAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3497CC0B09BA0D7900C0428E /* ESIRCAccountViewController.m */; };
 		3497CC1C09BA0DC100C0428E /* ESIRCAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC1B09BA0DC100C0428E /* ESIRCAccountView.nib */; };
 		3497CC2709BA0FDB00C0428E /* GaimDefaultsIRC.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC2609BA0FDB00C0428E /* GaimDefaultsIRC.plist */; };
@@ -529,11 +500,8 @@
 		34A6FB2E07D6F98600972830 /* SoundFileIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB2C07D6F98600972830 /* SoundFileIcon.png */; };
 		34AE249E09BCCFA900A35B51 /* AIWindowDraggingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AE249C09BCCFA900A35B51 /* AIWindowDraggingView.m */; };
 		34B323B809B9FEAC00029361 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
-		34B3243F09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3243D09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h */; };
 		34B3244009B9FFE800029361 /* ESIRCLibgaimServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3243E09B9FFE800029361 /* ESIRCLibgaimServicePlugin.m */; };
-		34B3245309BA00E700029361 /* ESIRCAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3245109BA00E700029361 /* ESIRCAccount.h */; };
 		34B3245409BA00E700029361 /* ESIRCAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3245209BA00E700029361 /* ESIRCAccount.m */; };
-		34B3245909BA00FB00029361 /* ESIRCService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B3245709BA00FA00029361 /* ESIRCService.h */; };
 		34B3245A09BA00FB00029361 /* ESIRCService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3245809BA00FB00029361 /* ESIRCService.m */; };
 		34B4B5A40708B049002C4C6D /* ESDebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B4B5A20708B049002C4C6D /* ESDebugController.m */; };
 		34B588A1058D833A00E7EF0D /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */; };
@@ -551,14 +519,11 @@
 		34BD9D54053146CC000AB133 /* AIAdium.m in Sources */ = {isa = PBXBuildFile; fileRef = F59DB3D7033EA9CD01A8010A /* AIAdium.m */; };
 		34BD9D56053146CC000AB133 /* LNAboutBoxController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3DA2E3E052E65DE00A8010B /* LNAboutBoxController.m */; };
 		34BD9D5A053146CC000AB133 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F531836F019E40BB01A80165 /* Carbon.framework */; };
-		34BD9EE40531476D000AB133 /* AIStressTestAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC15BE90524CE5E00A8010A /* AIStressTestAccount.h */; };
-		34BD9EE50531476D000AB133 /* AIStressTestPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC15BEB0524CE5E00A8010A /* AIStressTestPlugin.h */; };
 		34BD9EE80531476D000AB133 /* AIStressTestAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC15BEA0524CE5E00A8010A /* AIStressTestAccount.m */; };
 		34BD9EE90531476D000AB133 /* AIStressTestPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC15BEC0524CE5E00A8010A /* AIStressTestPlugin.m */; };
 		34BD9F2E0531477E000AB133 /* CBOldPrefsImporterAppController.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EB3C53304F94FAE001D1F74 /* CBOldPrefsImporterAppController.h */; };
 		34BD9F320531477E000AB133 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EB3C52C04F94E84001D1F74 /* main.m */; };
 		34BD9F330531477E000AB133 /* CBOldPrefsImporterAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EB3C53404F94FAE001D1F74 /* CBOldPrefsImporterAppController.m */; };
-		34BEA0F309C4A481000787E4 /* AITranslatorRequestDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BEA0F109C4A481000787E4 /* AITranslatorRequestDelegate.h */; };
 		34BEA0F409C4A481000787E4 /* AITranslatorRequestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BEA0F209C4A481000787E4 /* AITranslatorRequestDelegate.m */; };
 		34BFD7FD07E6A50C00AD984D /* scriptToolbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 34BFD7FC07E6A50C00AD984D /* scriptToolbar.png */; };
 		34BFD80007E6A51D00AD984D /* GBApplescriptFiltersPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BFD7FE07E6A51D00AD984D /* GBApplescriptFiltersPlugin.m */; };
@@ -574,7 +539,6 @@
 		34C14CD307A8B1AB003CC138 /* AIEmoticonPackPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C14CD107A8B1AB003CC138 /* AIEmoticonPackPreviewView.m */; };
 		34C14D5107A8BA00003CC138 /* EmoticonPackPreview.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C14D5007A8BA00003CC138 /* EmoticonPackPreview.nib */; };
 		34C18B0D06CAC95400FF5FF9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E839050583207E00F2AADB /* SystemConfiguration.framework */; };
-		34C2D70506338E2E0018E5D2 /* ESWebKitMessageViewPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C2D70306338E2E0018E5D2 /* ESWebKitMessageViewPreferences.h */; };
 		34C2D70606338E2E0018E5D2 /* ESWebKitMessageViewPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C2D70406338E2E0018E5D2 /* ESWebKitMessageViewPreferences.m */; };
 		34C2DBE6063449AF0018E5D2 /* Preview.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34C2DBE5063449AF0018E5D2 /* Preview.plist */; };
 		34C2DF02063498ED0018E5D2 /* SoulEdge.png in Resources */ = {isa = PBXBuildFile; fileRef = 34C2DF00063498ED0018E5D2 /* SoulEdge.png */; };
@@ -1010,14 +974,10 @@
 		34F312BD0ADC43CA00A4310E /* xtras_duck.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F312BC0ADC43CA00A4310E /* xtras_duck.png */; };
 		34F312F00ADC476300A4310E /* KNShelfSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */; };
 		34F4675E080F46AC007800AB /* ESBonjourAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46755080F46AB007800AB /* ESBonjourAccountViewController.m */; };
-		34F4675F080F46AC007800AB /* ESBonjourAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F46756080F46AB007800AB /* ESBonjourAccountViewController.h */; };
 		34F46760080F46AC007800AB /* AWBonjourPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46757080F46AB007800AB /* AWBonjourPlugin.m */; };
-		34F46761080F46AC007800AB /* AWBonjourPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F46758080F46AB007800AB /* AWBonjourPlugin.h */; };
 		34F46762080F46AC007800AB /* AWBonjourAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46759080F46AB007800AB /* AWBonjourAccount.m */; };
-		34F46763080F46AC007800AB /* AWBonjourAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F4675A080F46AB007800AB /* AWBonjourAccount.h */; };
 		34F46764080F46AC007800AB /* ESBonjourAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F4675B080F46AC007800AB /* ESBonjourAccountView.nib */; };
 		34F46765080F46AC007800AB /* AWBonjourService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F4675C080F46AC007800AB /* AWBonjourService.m */; };
-		34F46766080F46AC007800AB /* AWBonjourService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F4675D080F46AC007800AB /* AWBonjourService.h */; };
 		34F4677A080F49C5007800AB /* Safari.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 34F46778080F49C5007800AB /* Safari.scpt */; };
 		34F4677B080F49C5007800AB /* Safari.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F46779080F49C5007800AB /* Safari.png */; };
 		34F46785080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46783080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m */; };
@@ -1037,64 +997,32 @@
 		38722C790A8CF682002CC4F4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		38722DC90A9093CD002CC4F4 /* AIVideoConf.h in Headers */ = {isa = PBXBuildFile; fileRef = 38722C8C0A8CFFA5002CC4F4 /* AIVideoConf.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		38722DCA0A9093CD002CC4F4 /* AIVideoConf.m in Sources */ = {isa = PBXBuildFile; fileRef = 38722C8D0A8CFFA5002CC4F4 /* AIVideoConf.m */; };
-		38725B570A912770002CC4F4 /* QTRTPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 38725B550A91276F002CC4F4 /* QTRTPConnection.h */; };
 		38725B580A912770002CC4F4 /* QTRTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 38725B560A91276F002CC4F4 /* QTRTPConnection.m */; };
-		38725B5B0A912800002CC4F4 /* QTConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 38725B590A912800002CC4F4 /* QTConnection.h */; };
 		38725B5C0A912800002CC4F4 /* QTConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 38725B5A0A912800002CC4F4 /* QTConnection.m */; };
 		38BADCC60A921B1F00D41C08 /* pref-quicktime.png in Resources */ = {isa = PBXBuildFile; fileRef = 38BADCBE0A921ADB00D41C08 /* pref-quicktime.png */; };
 		38D8FAD70A8A4F350078E442 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		38D8FAD80A8A4F350078E442 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		38D8FAF40A8A4FCC0078E442 /* QTPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D8FA2A0A8A46600078E442 /* QTPlugin.m */; };
-		38D8FAFC0A8A50160078E442 /* QTPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 38D8FA290A8A46600078E442 /* QTPlugin.h */; };
-		38D8FB8C0A8A5E520078E442 /* QTAdvancedPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 38D8FB8A0A8A5E520078E442 /* QTAdvancedPreferences.h */; };
 		38D8FB8D0A8A5E520078E442 /* QTAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D8FB8B0A8A5E520078E442 /* QTAdvancedPreferences.m */; };
 		38D8FB950A8A603C0078E442 /* QT_Prefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 38D8FB940A8A603C0078E442 /* QT_Prefs.nib */; };
-		4947F5C00655E85200B791E5 /* AIStressTestAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC15BE90524CE5E00A8010A /* AIStressTestAccount.h */; };
-		4947F5C10655E85200B791E5 /* AIStressTestPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC15BEB0524CE5E00A8010A /* AIStressTestPlugin.h */; };
 		4947F5C70655E85200B791E5 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
-		4947F60A0655E90D00B791E5 /* AWEzv.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5D20655E90C00B791E5 /* AWEzv.h */; };
 		4947F60B0655E90D00B791E5 /* AWEzv.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947F5D30655E90C00B791E5 /* AWEzv.m */; };
-		4947F60C0655E90D00B791E5 /* AWEzvContact.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5D40655E90C00B791E5 /* AWEzvContact.h */; };
 		4947F60D0655E90D00B791E5 /* AWEzvContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947F5D50655E90C00B791E5 /* AWEzvContact.m */; };
 		4947F60E0655E90D00B791E5 /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 4947F5D70655E90C00B791E5 /* COPYING */; };
-		4947F60F0655E90D00B791E5 /* expat_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5D80655E90C00B791E5 /* expat_config.h */; };
-		4947F6100655E90D00B791E5 /* ascii.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5DA0655E90C00B791E5 /* ascii.h */; };
-		4947F6110655E90D00B791E5 /* asciitab.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5DB0655E90C00B791E5 /* asciitab.h */; };
-		4947F6120655E90D00B791E5 /* expat.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5DC0655E90C00B791E5 /* expat.h */; };
-		4947F6130655E90D00B791E5 /* iasciitab.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5DD0655E90C00B791E5 /* iasciitab.h */; };
-		4947F6140655E90D00B791E5 /* internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5DE0655E90C00B791E5 /* internal.h */; };
-		4947F6150655E90D00B791E5 /* latin1tab.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5DF0655E90C00B791E5 /* latin1tab.h */; };
-		4947F6160655E90D00B791E5 /* nametab.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5E00655E90C00B791E5 /* nametab.h */; };
-		4947F6170655E90D00B791E5 /* utf8tab.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5E10655E90C00B791E5 /* utf8tab.h */; };
 		4947F6180655E90D00B791E5 /* xmlparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 4947F5E20655E90C00B791E5 /* xmlparse.c */; };
 		4947F6190655E90D00B791E5 /* xmlrole.c in Sources */ = {isa = PBXBuildFile; fileRef = 4947F5E30655E90C00B791E5 /* xmlrole.c */; };
-		4947F61A0655E90D00B791E5 /* xmlrole.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5E40655E90C00B791E5 /* xmlrole.h */; };
 		4947F61B0655E90D00B791E5 /* xmltok.c in Sources */ = {isa = PBXBuildFile; fileRef = 4947F5E50655E90C00B791E5 /* xmltok.c */; };
-		4947F61C0655E90D00B791E5 /* xmltok.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5E60655E90C00B791E5 /* xmltok.h */; };
-		4947F6200655E90D00B791E5 /* AWEzvDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5ED0655E90C00B791E5 /* AWEzvDefines.h */; };
-		4947F6210655E90D00B791E5 /* AWEzvSupportRoutines.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5EE0655E90C00B791E5 /* AWEzvSupportRoutines.h */; };
 		4947F6220655E90D00B791E5 /* AWEzvSupportRoutines.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947F5EF0655E90D00B791E5 /* AWEzvSupportRoutines.m */; };
-		4947F6230655E90D00B791E5 /* libezv_Prefix.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5F00655E90D00B791E5 /* libezv_Prefix.h */; };
-		4947F6240655E90D00B791E5 /* AWEzvContactManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5F20655E90D00B791E5 /* AWEzvContactManager.h */; };
 		4947F6250655E90D00B791E5 /* AWEzvContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947F5F30655E90D00B791E5 /* AWEzvContactManager.m */; };
-		4947F6260655E90D00B791E5 /* AWEzvContactManagerListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5F40655E90D00B791E5 /* AWEzvContactManagerListener.h */; };
 		4947F6270655E90D00B791E5 /* AWEzvContactManagerListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947F5F50655E90D00B791E5 /* AWEzvContactManagerListener.m */; };
-		4947F6280655E90D00B791E5 /* AWEzvContactManagerRendezvous.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5F60655E90D00B791E5 /* AWEzvContactManagerRendezvous.h */; };
 		4947F6290655E90D00B791E5 /* AWEzvContactManagerRendezvous.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947F5F70655E90D00B791E5 /* AWEzvContactManagerRendezvous.m */; };
-		4947F62A0655E90D00B791E5 /* AWEzvContactPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5F80655E90D00B791E5 /* AWEzvContactPrivate.h */; };
 		4947F62B0655E90D00B791E5 /* AWEzvContactPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947F5F90655E90D00B791E5 /* AWEzvContactPrivate.m */; };
-		4947F62C0655E90D00B791E5 /* AWEzvPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5FA0655E90D00B791E5 /* AWEzvPrivate.h */; };
 		4947F62D0655E90D00B791E5 /* AWEzvPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947F5FB0655E90D00B791E5 /* AWEzvPrivate.m */; };
-		4947F62E0655E90D00B791E5 /* AWEzvRendezvousData.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5FC0655E90D00B791E5 /* AWEzvRendezvousData.h */; };
 		4947F62F0655E90D00B791E5 /* AWEzvRendezvousData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947F5FD0655E90D00B791E5 /* AWEzvRendezvousData.m */; };
-		4947F6300655E90D00B791E5 /* AWEzvStack.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F5FE0655E90D00B791E5 /* AWEzvStack.h */; };
 		4947F6310655E90D00B791E5 /* AWEzvStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947F5FF0655E90D00B791E5 /* AWEzvStack.m */; };
-		4947F6320655E90D00B791E5 /* AWEzvXMLNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F6000655E90D00B791E5 /* AWEzvXMLNode.h */; };
 		4947F6330655E90D00B791E5 /* AWEzvXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947F6010655E90D00B791E5 /* AWEzvXMLNode.m */; };
-		4947F6340655E90D00B791E5 /* AWEzvXMLStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F6020655E90D00B791E5 /* AWEzvXMLStream.h */; };
 		4947F6350655E90D00B791E5 /* AWEzvXMLStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947F6030655E90D00B791E5 /* AWEzvXMLStream.m */; };
 		4947F6360655E90D00B791E5 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = 4947F6040655E90D00B791E5 /* sha1.c */; };
-		4947F6370655E90D00B791E5 /* sha1.h in Headers */ = {isa = PBXBuildFile; fileRef = 4947F6050655E90D00B791E5 /* sha1.h */; };
 		49778165067F558700401CC7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E839050583207E00F2AADB /* SystemConfiguration.framework */; };
 		4B03711606595A70008F5981 /* Template.html in Resources */ = {isa = PBXBuildFile; fileRef = 4B03711506595A70008F5981 /* Template.html */; };
 		4B08399507D2350D0034A001 /* AIDockIconSelectionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B08399307D2350D0034A001 /* AIDockIconSelectionSheet.m */; };
@@ -1107,7 +1035,6 @@
 		4B5323ED0747BDED0073DF4D /* AICrashController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B5323EB0747BDED0073DF4D /* AICrashController.m */; };
 		4B53245B0747C82B0073DF4D /* AIExceptionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B5324590747C82B0073DF4D /* AIExceptionController.m */; };
 		4B7A567B07A1754400BDC540 /* AIEditAccountWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7A567807A1754400BDC540 /* AIEditAccountWindowController.m */; };
-		4B7F278D05440C8D00CDFC90 /* CBGaimServicePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7F278905440C8D00CDFC90 /* CBGaimServicePlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B7F278E05440C8D00CDFC90 /* CBGaimServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F278A05440C8D00CDFC90 /* CBGaimServicePlugin.m */; settings = {COMPILER_FLAGS = "-fconstant-cfstrings"; }; };
 		4B7F27C705440DE900CDFC90 /* Gaim.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B7F278305440C0800CDFC90 /* Gaim.AdiumPlugin */; };
 		4B7F78BF0597F44D00162728 /* AICrashReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7F78BD0597F44D00162728 /* AICrashReporter.h */; };
@@ -1140,7 +1067,6 @@
 		4BAE6C9507CF94C4007E2820 /* message.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BAE6C9407CF94C4007E2820 /* message.png */; };
 		4BAE6D3D07CFA0BC007E2820 /* AIAppearancePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAE6D3B07CFA0BC007E2820 /* AIAppearancePreferences.m */; };
 		4BAE6D4307CFA0CB007E2820 /* AIAppearancePreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAE6D4107CFA0CB007E2820 /* AIAppearancePreferencesPlugin.m */; };
-		4BAFD5CA06E00B7C00FF7FBC /* AIStressTestService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5C806E00B7C00FF7FBC /* AIStressTestService.h */; };
 		4BAFD5CB06E00B7C00FF7FBC /* AIStressTestService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5C906E00B7C00FF7FBC /* AIStressTestService.m */; };
 		4BB1E493067F2EAC00D1DB86 /* Scripts in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1E47D067F2E9F00D1DB86 /* Scripts */; };
 		4BB5B78207D2DC4900CFE06F /* pref-status.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BB5B78107D2DC4900CFE06F /* pref-status.png */; };
@@ -1157,7 +1083,6 @@
 		4BCAC4E607B59B65006641B9 /* Alias Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC4E307B59B65006641B9 /* Alias Defaults.plist */; };
 		4BCAC4E707B59B65006641B9 /* Display Format Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC4E407B59B65006641B9 /* Display Format Defaults.plist */; };
 		4BCAC56D07B5A31A006641B9 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC56C07B5A31A006641B9 /* Sounds */; };
-		4BD62D8007CE8F240099EBA2 /* AIWebkitMessageViewStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD62D7E07CE8F240099EBA2 /* AIWebkitMessageViewStyle.h */; };
 		4BD62D8107CE8F240099EBA2 /* AIWebkitMessageViewStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD62D7F07CE8F240099EBA2 /* AIWebkitMessageViewStyle.m */; };
 		4BD6737406001BF00049CAF7 /* AIAccountListPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F55B413C03AB895501A8010A /* AIAccountListPreferencesPlugin.m */; };
 		4BD673B706001C5F0049CAF7 /* AIContactStatusColoringPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B31E8C104C46A9100A8010A /* AIContactStatusColoringPlugin.m */; };
@@ -1238,7 +1163,6 @@
 		63AF932D0AA81E2300B88299 /* Tiny (with user icons).ListLayout in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91DC0AA8102900B88299 /* Tiny (with user icons).ListLayout */; };
 		63AF932E0AA81E2300B88299 /* Tiny.ListLayout in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91DD0AA8102A00B88299 /* Tiny.ListLayout */; };
 		63C120750910A0DD00C9DB57 /* DefaultXtraReadme.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 63C120740910A0DD00C9DB57 /* DefaultXtraReadme.rtf */; };
-		63DEB88F09BD3FEC0026DC69 /* AIXtraPreviewImageController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63DEB88D09BD3FEC0026DC69 /* AIXtraPreviewImageController.h */; };
 		63DEB89009BD3FEC0026DC69 /* AIXtraPreviewImageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEB88E09BD3FEC0026DC69 /* AIXtraPreviewImageController.m */; };
 		63EA62CA094B832D009C8453 /* AIEmoticonPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA62C8094B832D009C8453 /* AIEmoticonPreviewController.m */; };
 		63EA62F0094B8705009C8453 /* AIXtraInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA62EE094B8705009C8453 /* AIXtraInfoController.m */; };
@@ -1248,7 +1172,6 @@
 		6C3E0730054471CD00A4AE2E /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		6E4D961406B739AC005235E9 /* DCJoinChatPanelPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D961206B739AC005235E9 /* DCJoinChatPanelPlugin.m */; };
 		6EA3689706B73FE5009CA81A /* DCStressTestJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6EA3689406B73FE5009CA81A /* DCStressTestJoinChatView.nib */; };
-		6EA3689806B73FE5009CA81A /* DCStressTestJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EA3689506B73FE5009CA81A /* DCStressTestJoinChatViewController.h */; };
 		6EA3689906B73FE5009CA81A /* DCStressTestJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA3689606B73FE5009CA81A /* DCStressTestJoinChatViewController.m */; };
 		6EC1684D06C170A000F9FAD3 /* DCInviteToChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EC1684806C170A000F9FAD3 /* DCInviteToChatPlugin.m */; };
 		6EC1684F06C170A000F9FAD3 /* DCInviteToChatWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EC1684A06C170A000F9FAD3 /* DCInviteToChatWindowController.m */; };
@@ -1383,7 +1306,6 @@
 		9EF0DBFB09D944C200FBCC1E /* Resources/unblock.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EF0DBF409D944A300FBCC1E /* Resources/unblock.png */; };
 		B72537C4058C45EF004BA969 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		B73E464307DB5F9200D9129E /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
-		B747E986058D144C00A9F037 /* AILaTeXPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B747E984058D144C00A9F037 /* AILaTeXPlugin.h */; };
 		B747E987058D144C00A9F037 /* AILaTeXPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B747E985058D144C00A9F037 /* AILaTeXPlugin.m */; };
 		B7FD6C170596550F000C4D9D /* SQLLogging.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7FD6C160596550F000C4D9D /* SQLLogging.plist */; };
 		C44BA7820AAB696400C7504F /* SetupAssistantBoxBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = C44BA7800AAB696300C7504F /* SetupAssistantBoxBackgroundView.h */; };
@@ -1699,31 +1621,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		1151F1630922A7DB0081FFB2 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 15;
-			files = (
-				117481E0092E68DD00CFE3FF /* RAFjoscarServicePlugin.h in CopyFiles */,
-				11CBDD4309326F8100BE7961 /* RAFjoscarAccount.h in CopyFiles */,
-				11CBDD4509326F8100BE7961 /* RAFjoscarAccountViewController.h in CopyFiles */,
-				11CBDD4709326F8100BE7961 /* RAFjoscarService.h in CopyFiles */,
-				112FC2B309393926001FB00D /* ESjoscarCocoaAdapter.h in CopyFiles */,
-				11F5F72E0953A227007DCC49 /* joscarClasses.h in CopyFiles */,
-				11247EC60956177D00F69C1E /* RAFjoscarAIMService.h in CopyFiles */,
-				11247EF409561A8500F69C1E /* RAFjoscarAIMAccount.h in CopyFiles */,
-				11AD534C0963492D00CA0C6F /* RAFjoscarDebugWindowController.h in CopyFiles */,
-				11AD5362096349D000CA0C6F /* RAFjoscarDebugController.h in CopyFiles */,
-				11A00DD209742D9700768128 /* RAFjoscarDotMacAccount.h in CopyFiles */,
-				11A00DD409742D9700768128 /* RAFjoscarDotMacService.h in CopyFiles */,
-				11CC0DBB097B0AE600E1DE20 /* RAFjoscarICQService.h in CopyFiles */,
-				11CC0DED097B120D00E1DE20 /* RAFjoscarICQAccount.h in CopyFiles */,
-				11669A2D0999395D003CB8A1 /* ESjoscarJoinChatViewController.h in CopyFiles */,
-				342340E009D1AF58009FF634 /* RAFjoscarSecuridPromptController.h in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		11C0F96C09562DE100619216 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -7983,41 +7880,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		3417D25309C332B900FC413E /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3417D27B09C3336A00FC413E /* TranslationEngine.h in Headers */,
-				3417D27E09C3336A00FC413E /* AITranslatorPlugin.h in Headers */,
-				34BEA0F309C4A481000787E4 /* AITranslatorRequestDelegate.h in Headers */,
-				342B785409C67F4100DB7AAF /* AITranslatorOptionsWindowController.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F3A705314BE000C68BA3 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3419F3A805314BE000C68BA3 /* AISQLLoggerPlugin.h in Headers */,
-				3439FDA905794D0F00B2E449 /* JMSQLLoggerAdvancedPreferences.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		346C9C4F06004525000F5A8A /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				346C9D010600463D000F5A8A /* AIWebKitMessageViewController.h in Headers */,
-				346C9D040600463E000F5A8A /* AIWebKitMessageViewPlugin.h in Headers */,
-				346C9D0A06004640000F5A8A /* ESWebFrameViewAdditions.h in Headers */,
-				346C9D1206004645000F5A8A /* ESWebView.h in Headers */,
-				346C9D3006004650000F5A8A /* WebKitPrivateDefinitions.h in Headers */,
-				34C2D70506338E2E0018E5D2 /* ESWebKitMessageViewPreferences.h in Headers */,
-				4BD62D8007CE8F240099EBA2 /* AIWebkitMessageViewStyle.h in Headers */,
-				34182F4A0AC2CA3C0067DEF3 /* AIPreviewChat.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		3485DB1209EBCE4000232CC4 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -8095,19 +7957,6 @@
 				3419E73F0A880B2C00C3FC68 /* ESQQService.h in Headers */,
 				3419E7690A880CDA00C3FC68 /* ESGaimQQAccountViewController.h in Headers */,
 				343700A90A9C1E170028604E /* AIAdvancedPreferencePane.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34B322F909B9FEAC00029361 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				34B3243F09B9FFE800029361 /* ESIRCLibgaimServicePlugin.h in Headers */,
-				34B3245309BA00E700029361 /* ESIRCAccount.h in Headers */,
-				34B3245909BA00FB00029361 /* ESIRCService.h in Headers */,
-				3497CBAF09BA0B5D00C0428E /* ESIRCJoinChatViewController.h in Headers */,
-				3497CC0C09BA0D7900C0428E /* ESIRCAccountViewController.h in Headers */,
-				63DEB88F09BD3FEC0026DC69 /* AIXtraPreviewImageController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8308,17 +8157,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34BD9EE30531476D000AB133 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				34BD9EE40531476D000AB133 /* AIStressTestAccount.h in Headers */,
-				34BD9EE50531476D000AB133 /* AIStressTestPlugin.h in Headers */,
-				6EA3689806B73FE5009CA81A /* DCStressTestJoinChatViewController.h in Headers */,
-				4BAFD5CA06E00B7C00FF7FBC /* AIStressTestService.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		34BD9F2D0531477E000AB133 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -8332,77 +8170,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		38D8FA9D0A8A4F350078E442 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				38D8FAFC0A8A50160078E442 /* QTPlugin.h in Headers */,
-				38D8FB8C0A8A5E520078E442 /* QTAdvancedPreferences.h in Headers */,
-				38725B570A912770002CC4F4 /* QTRTPConnection.h in Headers */,
-				38725B5B0A912800002CC4F4 /* QTConnection.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4947F5BF0655E85200B791E5 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4947F5C00655E85200B791E5 /* AIStressTestAccount.h in Headers */,
-				4947F5C10655E85200B791E5 /* AIStressTestPlugin.h in Headers */,
-				4947F60A0655E90D00B791E5 /* AWEzv.h in Headers */,
-				4947F60C0655E90D00B791E5 /* AWEzvContact.h in Headers */,
-				4947F60F0655E90D00B791E5 /* expat_config.h in Headers */,
-				4947F6100655E90D00B791E5 /* ascii.h in Headers */,
-				4947F6110655E90D00B791E5 /* asciitab.h in Headers */,
-				4947F6120655E90D00B791E5 /* expat.h in Headers */,
-				4947F6130655E90D00B791E5 /* iasciitab.h in Headers */,
-				4947F6140655E90D00B791E5 /* internal.h in Headers */,
-				4947F6150655E90D00B791E5 /* latin1tab.h in Headers */,
-				4947F6160655E90D00B791E5 /* nametab.h in Headers */,
-				4947F6170655E90D00B791E5 /* utf8tab.h in Headers */,
-				4947F61A0655E90D00B791E5 /* xmlrole.h in Headers */,
-				4947F61C0655E90D00B791E5 /* xmltok.h in Headers */,
-				4947F6200655E90D00B791E5 /* AWEzvDefines.h in Headers */,
-				4947F6210655E90D00B791E5 /* AWEzvSupportRoutines.h in Headers */,
-				4947F6230655E90D00B791E5 /* libezv_Prefix.h in Headers */,
-				4947F6240655E90D00B791E5 /* AWEzvContactManager.h in Headers */,
-				4947F6260655E90D00B791E5 /* AWEzvContactManagerListener.h in Headers */,
-				4947F6280655E90D00B791E5 /* AWEzvContactManagerRendezvous.h in Headers */,
-				4947F62A0655E90D00B791E5 /* AWEzvContactPrivate.h in Headers */,
-				4947F62C0655E90D00B791E5 /* AWEzvPrivate.h in Headers */,
-				4947F62E0655E90D00B791E5 /* AWEzvRendezvousData.h in Headers */,
-				4947F6300655E90D00B791E5 /* AWEzvStack.h in Headers */,
-				4947F6320655E90D00B791E5 /* AWEzvXMLNode.h in Headers */,
-				4947F6340655E90D00B791E5 /* AWEzvXMLStream.h in Headers */,
-				4947F6370655E90D00B791E5 /* sha1.h in Headers */,
-				34F4675F080F46AC007800AB /* ESBonjourAccountViewController.h in Headers */,
-				34F46761080F46AC007800AB /* AWBonjourPlugin.h in Headers */,
-				34F46763080F46AC007800AB /* AWBonjourAccount.h in Headers */,
-				34F46766080F46AC007800AB /* AWBonjourService.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B7F277E05440C0800CDFC90 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4B7F278D05440C8D00CDFC90 /* CBGaimServicePlugin.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4B7F78B00597F42400162728 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				4B7F78BF0597F44D00162728 /* AICrashReporter.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B72537B6058C4577004BA969 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B747E986058D144C00A9F037 /* AILaTeXPlugin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8426,7 +8198,6 @@
 				118C52C2091BF0DB00219458 /* Resources */,
 				118C52C3091BF0DB00219458 /* Sources */,
 				118C52C4091BF0DB00219458 /* Frameworks */,
-				1151F1630922A7DB0081FFB2 /* CopyFiles */,
 				11C0F96C09562DE100619216 /* CopyFiles */,
 			);
 			buildRules = (
@@ -8442,7 +8213,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3417D25C09C332B900FC413E /* Build configuration list for PBXNativeTarget "Translator" */;
 			buildPhases = (
-				3417D25309C332B900FC413E /* Headers */,
 				3417D25509C332B900FC413E /* Resources */,
 				3417D25609C332B900FC413E /* Sources */,
 				3417D25809C332B900FC413E /* Frameworks */,
@@ -8460,7 +8230,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E2C085507450062B664 /* Build configuration list for PBXNativeTarget "SQL Logger" */;
 			buildPhases = (
-				3419F3A705314BE000C68BA3 /* Headers */,
 				3419F3AB05314BE000C68BA3 /* Resources */,
 				3419F3AC05314BE000C68BA3 /* Sources */,
 				3419F3AE05314BE000C68BA3 /* Frameworks */,
@@ -8480,7 +8249,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E13085507450062B664 /* Build configuration list for PBXNativeTarget "WebKit Message View" */;
 			buildPhases = (
-				346C9C4F06004525000F5A8A /* Headers */,
 				346C9C5006004525000F5A8A /* Resources */,
 				346C9C5106004525000F5A8A /* Sources */,
 				346C9C5206004525000F5A8A /* Frameworks */,
@@ -8535,7 +8303,6 @@
 			buildConfigurationList = 34B323BB09B9FEAC00029361 /* Build configuration list for PBXNativeTarget "IRC Service Libgaim Plugin" */;
 			buildPhases = (
 				340BABD409EC8C6C000EC441 /* ShellScript */,
-				34B322F909B9FEAC00029361 /* Headers */,
 				34B3234409B9FEAC00029361 /* Resources */,
 				34B3236E09B9FEAC00029361 /* Sources */,
 				34B323B609B9FEAC00029361 /* Frameworks */,
@@ -8617,7 +8384,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E31085507450062B664 /* Build configuration list for PBXNativeTarget "Stress Test" */;
 			buildPhases = (
-				34BD9EE30531476D000AB133 /* Headers */,
 				34BD9EE60531476D000AB133 /* Resources */,
 				34BD9EE70531476D000AB133 /* Sources */,
 				34BD9EEA0531476D000AB133 /* Frameworks */,
@@ -8656,7 +8422,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 38D8FADB0A8A4F350078E442 /* Build configuration list for PBXNativeTarget "QuickTime Plugin" */;
 			buildPhases = (
-				38D8FA9D0A8A4F350078E442 /* Headers */,
 				38D8FABE0A8A4F350078E442 /* Resources */,
 				38D8FAC10A8A4F350078E442 /* Sources */,
 				38D8FAD60A8A4F350078E442 /* Frameworks */,
@@ -8676,7 +8441,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E0E085507450062B664 /* Build configuration list for PBXNativeTarget "Bonjour" */;
 			buildPhases = (
-				4947F5BF0655E85200B791E5 /* Headers */,
 				4947F5C20655E85200B791E5 /* Resources */,
 				4947F5C30655E85200B791E5 /* Sources */,
 				4947F5C60655E85200B791E5 /* Frameworks */,
@@ -8696,7 +8460,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E09085507450062B664 /* Build configuration list for PBXNativeTarget "Gaim" */;
 			buildPhases = (
-				4B7F277E05440C0800CDFC90 /* Headers */,
 				4BDF2C97061E377E00EA75C5 /* CopyFiles */,
 				4B7F278005440C0800CDFC90 /* Sources */,
 				4B7F278105440C0800CDFC90 /* Frameworks */,
@@ -8756,7 +8519,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E1D085507450062B664 /* Build configuration list for PBXNativeTarget "Latex Plugin" */;
 			buildPhases = (
-				B72537B6058C4577004BA969 /* Headers */,
 				B72537B7058C4577004BA969 /* Resources */,
 				B72537B8058C4577004BA969 /* Sources */,
 				B72537BA058C4577004BA969 /* Frameworks */,
