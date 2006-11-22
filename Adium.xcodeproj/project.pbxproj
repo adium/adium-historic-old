@@ -11,7 +11,6 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = DACF3EDE085574F6006BFB18 /* Build configuration list for PBXAggregateTarget "External Frameworks" */;
 			buildPhases = (
-				34CF9EEF085B98D400D87E37 /* ShellScript */,
 			);
 			dependencies = (
 				F53C25E20A2F997700F7B73D /* PBXTargetDependency */,
@@ -9138,23 +9137,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "CLASS_FILE=$BUILT_PRODUCTS_DIR/net/adium/JavaCocoaAdapter.class\nDESTINATION=$BUILT_PRODUCTS_DIR/Adium.app/Contents/Resources/JavaCocoaAdapter.class\n\ncp \"$CLASS_FILE\" \"$DESTINATION\"\n";
-		};
-		34CF9EEF085B98D400D87E37 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-				"$SRCROOT/Frameworks/Growl-WithInstaller.framework/Versions/Current",
-				"$SRCROOT/Frameworks/Growl-WithInstaller.framework/Headers",
-				"$SRCROOT/Frameworks/Growl-WithInstaller.framework/Growl-WithInstaller",
-				"$SRCROOT/Frameworks/Growl-WithInstaller.framework/Resources",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\n#Versions\ncd \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\n\ncd Versions\nif ( ! [ -e Current ]); then\n\tln -sf $FRAMEWORK_VERSION Current\nfi\ncd \"$OLDPWD\"\n\n#Root\nif ( ! [ -e Headers ]); then\n\tln -sf Versions/Current/Headers   Headers\nfi\n\n\nif ( ! [ -e Growl-WithInstaller ]); then\n\tln -sf Versions/Current/Growl-WithInstaller   Growl-WithInstaller\nfi\n\nif ( ! [ -e Resources ]); then\n\tln -sf Versions/Current/Resources Resources\nfi\n";
 		};
 		4BC8AABA059A33B400F940E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
