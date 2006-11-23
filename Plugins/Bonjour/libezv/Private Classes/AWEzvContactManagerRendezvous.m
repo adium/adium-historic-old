@@ -136,7 +136,13 @@ void av_resolve_reply (struct sockaddr	*interface,
     [self setStatus:[client status] withMessage:nil];
     
     /* calculate instance name */
-    currentHost = [NSHost currentHost];
+	@try {
+		currentHost = [NSHost currentHost];
+	} @catch(NSException *e) {
+		currentHost = nil;
+		NSLog(@"Could not obtain current host...");
+	}
+
     enumerator = [[currentHost addresses] objectEnumerator];
     while ((instanceName = [enumerator nextObject])) {
 		/* skip 127.0.0.1 */
