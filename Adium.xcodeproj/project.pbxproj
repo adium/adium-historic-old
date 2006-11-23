@@ -64,7 +64,6 @@
 		1124817409562CDB00F69C1E /* retroweaver-rt.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124817309562CDB00F69C1E /* retroweaver-rt.jar */; };
 		112FC2B309393926001FB00D /* ESjoscarCocoaAdapter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */; };
 		112FC2B409393926001FB00D /* ESjoscarCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */; };
-		115E0E8E0952514A003218FE /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
 		11669A2D0999395D003CB8A1 /* ESjoscarJoinChatViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */; };
 		11669A2E0999395D003CB8A1 /* ESjoscarJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */; };
 		11669AB309994697003CB8A1 /* joscarJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11669AB109994697003CB8A1 /* joscarJoinChatView.nib */; };
@@ -92,7 +91,6 @@
 		11CC0DEE097B120D00E1DE20 /* RAFjoscarICQAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */; };
 		11DAEBD0092FB857007A8682 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		11DAEBD1092FB85F007A8682 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
-		11F5F44309537E34007DCC49 /* joscar.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */; };
 		11F5F70209539C70007DCC49 /* joscarDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11F5F70109539C70007DCC49 /* joscarDefaults.plist */; };
 		11F5F72E0953A227007DCC49 /* joscarClasses.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F5F72D0953A227007DCC49 /* joscarClasses.h */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
@@ -150,11 +148,11 @@
 		3419E2F80A8145B800C3FC68 /* GBFireImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */; };
 		3419E2F90A8145B800C3FC68 /* GBFireLogImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F56E068C0A4B738B008D1EB5 /* GBFireLogImporter.h */; };
 		3419E2FA0A8145B900C3FC68 /* GBFireLogImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F56E068D0A4B738B008D1EB5 /* GBFireLogImporter.m */; };
-		3419E7390A880AD400C3FC68 /* ESGaimQQAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 3419E7370A880AD300C3FC68 /* ESGaimQQAccount.h */; };
+		3419E7390A880AD400C3FC68 /* ESGaimQQAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 3419E7370A880AD300C3FC68 /* ESGaimQQAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3419E73A0A880AD400C3FC68 /* ESGaimQQAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 3419E7380A880AD400C3FC68 /* ESGaimQQAccount.m */; };
-		3419E73F0A880B2C00C3FC68 /* ESQQService.h in Headers */ = {isa = PBXBuildFile; fileRef = 3419E73D0A880B2B00C3FC68 /* ESQQService.h */; };
+		3419E73F0A880B2C00C3FC68 /* ESQQService.h in Headers */ = {isa = PBXBuildFile; fileRef = 3419E73D0A880B2B00C3FC68 /* ESQQService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3419E7400A880B2C00C3FC68 /* ESQQService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3419E73E0A880B2C00C3FC68 /* ESQQService.m */; };
-		3419E7690A880CDA00C3FC68 /* ESGaimQQAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3419E7670A880CD900C3FC68 /* ESGaimQQAccountViewController.h */; };
+		3419E7690A880CDA00C3FC68 /* ESGaimQQAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3419E7670A880CD900C3FC68 /* ESGaimQQAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3419E76A0A880CDA00C3FC68 /* ESGaimQQAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3419E7680A880CD900C3FC68 /* ESGaimQQAccountViewController.m */; };
 		3419F3A805314BE000C68BA3 /* AISQLLoggerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B7AE664F0465778E0051E914 /* AISQLLoggerPlugin.h */; };
 		3419F3AD05314BE000C68BA3 /* AISQLLoggerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B7AE66500465778E0051E914 /* AISQLLoggerPlugin.m */; };
@@ -963,20 +961,20 @@
 		34DC8B140A7EEEF7003E1636 /* SUSpeaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D8346B07CBE6F4006466F2 /* SUSpeaker.m */; };
 		34DCF0E3097A30AD0054194E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		34DFF5FD07A63DB400B92233 /* ESSecureMessagingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34DFF46107A5EABF00B92233 /* ESSecureMessagingPlugin.m */; };
-		34E036720A75AA4F00394F11 /* CBOscarService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B919C9062DEF15004F1223 /* CBOscarService.h */; };
+		34E036720A75AA4F00394F11 /* CBOscarService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B919C9062DEF15004F1223 /* CBOscarService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E036730A75AA4F00394F11 /* CBOscarService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B919CA062DEF15004F1223 /* CBOscarService.m */; };
-		34E036740A75AA4F00394F11 /* CBGaimOscarAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EA125EE055B633000ECF349 /* CBGaimOscarAccount.h */; };
+		34E036740A75AA4F00394F11 /* CBGaimOscarAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EA125EE055B633000ECF349 /* CBGaimOscarAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E036750A75AA4F00394F11 /* CBGaimOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA125E8055B630900ECF349 /* CBGaimOscarAccount.m */; };
-		34E036760A75AA4F00394F11 /* DCGaimOscarJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E4D961606B73A96005235E9 /* DCGaimOscarJoinChatViewController.h */; };
+		34E036760A75AA4F00394F11 /* DCGaimOscarJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E4D961606B73A96005235E9 /* DCGaimOscarJoinChatViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E036770A75AA4F00394F11 /* DCGaimOscarJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D961706B73A96005235E9 /* DCGaimOscarJoinChatViewController.m */; };
 		34E036780A75AA4F00394F11 /* DCGaimOscarJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40C08086D9100E27095 /* DCGaimOscarJoinChatView.nib */; };
-		34E036790A75AA4F00394F11 /* AIGaimOscarAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B9194B062DEC29004F1223 /* AIGaimOscarAccountViewController.h */; };
+		34E036790A75AA4F00394F11 /* AIGaimOscarAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B9194B062DEC29004F1223 /* AIGaimOscarAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E0367A0A75AA4F00394F11 /* AIGaimOscarAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B9194A062DEC29004F1223 /* AIGaimOscarAccountViewController.m */; };
-		34E036880A75AA4F00394F11 /* ESICQService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5A506E00AD200FF7FBC /* ESICQService.h */; };
+		34E036880A75AA4F00394F11 /* ESICQService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5A506E00AD200FF7FBC /* ESICQService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E036890A75AA4F00394F11 /* ESICQService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5A606E00AD200FF7FBC /* ESICQService.m */; };
-		34E0368A0A75AA4F00394F11 /* ESGaimICQAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F52BD806E2B24100887BE2 /* ESGaimICQAccount.h */; };
+		34E0368A0A75AA4F00394F11 /* ESGaimICQAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F52BD806E2B24100887BE2 /* ESGaimICQAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E0368B0A75AA4F00394F11 /* ESGaimICQAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F52BD906E2B24200887BE2 /* ESGaimICQAccount.m */; };
-		34E0368C0A75AA4F00394F11 /* ESGaimICQAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F52BCF06E2AFF700887BE2 /* ESGaimICQAccountViewController.h */; };
+		34E0368C0A75AA4F00394F11 /* ESGaimICQAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F52BCF06E2AFF700887BE2 /* ESGaimICQAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E0368D0A75AA4F00394F11 /* ESGaimICQAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F52BD006E2AFF700887BE2 /* ESGaimICQAccountViewController.m */; };
 		34E0368E0A75AA4F00394F11 /* ESGaimICQAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41A08086D9100E27095 /* ESGaimICQAccountView.nib */; };
 		34E0368F0A75AA4F00394F11 /* GaimDefaultsICQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B7644DC07A05E7E0021CCD7 /* GaimDefaultsICQ.plist */; };
@@ -1178,8 +1176,8 @@
 		63093C300892143500F118D3 /* newContentTwoDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2E0892143500F118D3 /* newContentTwoDigits.png */; };
 		632D60C1094B81AB003A9786 /* AIDockIconPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */; };
 		632D801708E7E0A40032C187 /* XtrasManager.nib in Resources */ = {isa = PBXBuildFile; fileRef = 632D801608E7E0A40032C187 /* XtrasManager.nib */; };
-		6332879B0A769BF3004D0F2B /* AIGaimLiveJournalAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63125D8D0A75EBF000303EE9 /* AIGaimLiveJournalAccount.h */; };
-		6332879C0A769BF3004D0F2B /* AILiveJournalService.h in Headers */ = {isa = PBXBuildFile; fileRef = 63125D970A75ECE400303EE9 /* AILiveJournalService.h */; };
+		6332879B0A769BF3004D0F2B /* AIGaimLiveJournalAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63125D8D0A75EBF000303EE9 /* AIGaimLiveJournalAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6332879C0A769BF3004D0F2B /* AILiveJournalService.h in Headers */ = {isa = PBXBuildFile; fileRef = 63125D970A75ECE400303EE9 /* AILiveJournalService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6332879D0A769C18004D0F2B /* AIGaimLiveJournalAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63125D8E0A75EBF000303EE9 /* AIGaimLiveJournalAccount.m */; };
 		6332879E0A769C18004D0F2B /* AILiveJournalService.m in Sources */ = {isa = PBXBuildFile; fileRef = 63125D980A75ECE400303EE9 /* AILiveJournalService.m */; };
 		633287C40A769ECB004D0F2B /* GaimDefaultsLiveJournal.plist in Resources */ = {isa = PBXBuildFile; fileRef = 63125D990A75ECE400303EE9 /* GaimDefaultsLiveJournal.plist */; };
@@ -1211,6 +1209,16 @@
 		63AF932C0AA81E2300B88299 /* Pure White.ListTheme in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91DB0AA8102900B88299 /* Pure White.ListTheme */; };
 		63AF932D0AA81E2300B88299 /* Tiny (with user icons).ListLayout in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91DC0AA8102900B88299 /* Tiny (with user icons).ListLayout */; };
 		63AF932E0AA81E2300B88299 /* Tiny.ListLayout in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91DD0AA8102A00B88299 /* Tiny.ListLayout */; };
+		63BEFB010B1651EE00822A70 /* ESAIMService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5A106E00AD200FF7FBC /* ESAIMService.h */; };
+		63BEFB020B1651F200822A70 /* ESAIMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5A206E00AD200FF7FBC /* ESAIMService.m */; };
+		63BEFB060B16521300822A70 /* ESGaimDotMacAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B387EB807199FE5004DE713 /* ESGaimDotMacAccountViewController.m */; };
+		63BEFB070B16521400822A70 /* ESGaimDotMacAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B387EB707199FE5004DE713 /* ESGaimDotMacAccountViewController.h */; };
+		63BEFB080B16521500822A70 /* ESGaimDotMacAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F101E307342B4D00890D3B /* ESGaimDotMacAccount.m */; };
+		63BEFB090B16521600822A70 /* ESGaimDotMacAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F101E407342B4D00890D3B /* ESGaimDotMacAccount.h */; };
+		63BEFB0A0B16521800822A70 /* ESDotMacService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5A406E00AD200FF7FBC /* ESDotMacService.m */; };
+		63BEFB0B0B16521900822A70 /* ESDotMacService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5A306E00AD200FF7FBC /* ESDotMacService.h */; };
+		63BEFB0F0B16522400822A70 /* ESGaimAIMAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E0EB8D07CD349200A82198 /* ESGaimAIMAccount.h */; };
+		63BEFB100B16522500822A70 /* ESGaimAIMAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0EB8E07CD349200A82198 /* ESGaimAIMAccount.m */; };
 		63C120750910A0DD00C9DB57 /* DefaultXtraReadme.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 63C120740910A0DD00C9DB57 /* DefaultXtraReadme.rtf */; };
 		63DEB88F09BD3FEC0026DC69 /* AIXtraPreviewImageController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63DEB88D09BD3FEC0026DC69 /* AIXtraPreviewImageController.h */; };
 		63DEB89009BD3FEC0026DC69 /* AIXtraPreviewImageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEB88E09BD3FEC0026DC69 /* AIXtraPreviewImageController.m */; };
@@ -1303,13 +1311,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		11F5F42B09537E00007DCC49 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 118C52C5091BF0DB00219458;
-			remoteInfo = joscar;
-		};
 		340BA85509EC59AF000EC441 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1597,7 +1598,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				11F5F44309537E34007DCC49 /* joscar.AdiumPlugin in CopyFiles */,
 				348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */,
 				4B7F27C705440DE900CDFC90 /* Gaim.AdiumPlugin in CopyFiles */,
 				344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */,
@@ -1700,7 +1700,6 @@
 		1124817309562CDB00F69C1E /* retroweaver-rt.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "retroweaver-rt.jar"; path = "Plugins/joscar Service/joscar Java Bridge/Utilities/Retroweave/release/retroweaver-rt.jar"; sourceTree = SOURCE_ROOT; };
 		112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESjoscarCocoaAdapter.h; path = "Plugins/joscar Service/ESjoscarCocoaAdapter.h"; sourceTree = "<group>"; };
 		112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESjoscarCocoaAdapter.m; path = "Plugins/joscar Service/ESjoscarCocoaAdapter.m"; sourceTree = "<group>"; };
-		115E0E8D0952514A003218FE /* JavaVM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaVM.framework; path = /System/Library/Frameworks/JavaVM.framework; sourceTree = "<absolute>"; };
 		11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESjoscarJoinChatViewController.h; path = "Plugins/joscar Service/ESjoscarJoinChatViewController.h"; sourceTree = "<group>"; };
 		11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESjoscarJoinChatViewController.m; path = "Plugins/joscar Service/ESjoscarJoinChatViewController.m"; sourceTree = "<group>"; };
 		11669AB209994697003CB8A1 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/joscar Service/English.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
@@ -3858,7 +3857,6 @@
 			files = (
 				11DAEBD0092FB857007A8682 /* Adium.framework in Frameworks */,
 				11DAEBD1092FB85F007A8682 /* AIUtilities.framework in Frameworks */,
-				115E0E8E0952514A003218FE /* JavaVM.framework in Frameworks */,
 				F4D9BBFB0ACF5BD000615461 /* FriBidi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4165,7 +4163,6 @@
 				9E1E1DFC0A96741500E16DFC /* LMX.framework */,
 				EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */,
 				638392F609D4D67A0067B9B7 /* Sparkle.framework */,
-				115E0E8D0952514A003218FE /* JavaVM.framework */,
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
 				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
 				341BDBBA0968BC9A00CF83F5 /* OTR.framework */,
@@ -7332,6 +7329,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34E036790A75AA4F00394F11 /* AIGaimOscarAccountViewController.h in Headers */,
+				34E036740A75AA4F00394F11 /* CBGaimOscarAccount.h in Headers */,
+				34E036720A75AA4F00394F11 /* CBOscarService.h in Headers */,
+				34E036760A75AA4F00394F11 /* DCGaimOscarJoinChatViewController.h in Headers */,
 				6332879B0A769BF3004D0F2B /* AIGaimLiveJournalAccount.h in Headers */,
 				6332879C0A769BF3004D0F2B /* AILiveJournalService.h in Headers */,
 				3485DB1809EBCE6500232CC4 /* SLGaimCocoaAdapter.h in Headers */,
@@ -7394,10 +7395,6 @@
 				3485DBC809EBCE7400232CC4 /* ESGaimFileReceiveRequestController.h in Headers */,
 				3485DBCA09EBCE7400232CC4 /* ESGaimRequestActionController.h in Headers */,
 				34C7C62809EC4E890060FB4A /* AILibgaimPlugin.h in Headers */,
-				34E036720A75AA4F00394F11 /* CBOscarService.h in Headers */,
-				34E036740A75AA4F00394F11 /* CBGaimOscarAccount.h in Headers */,
-				34E036760A75AA4F00394F11 /* DCGaimOscarJoinChatViewController.h in Headers */,
-				34E036790A75AA4F00394F11 /* AIGaimOscarAccountViewController.h in Headers */,
 				34E036880A75AA4F00394F11 /* ESICQService.h in Headers */,
 				34E0368A0A75AA4F00394F11 /* ESGaimICQAccount.h in Headers */,
 				34E0368C0A75AA4F00394F11 /* ESGaimICQAccountViewController.h in Headers */,
@@ -7405,6 +7402,11 @@
 				3419E73F0A880B2C00C3FC68 /* ESQQService.h in Headers */,
 				3419E7690A880CDA00C3FC68 /* ESGaimQQAccountViewController.h in Headers */,
 				343700A90A9C1E170028604E /* AIAdvancedPreferencePane.h in Headers */,
+				63BEFB010B1651EE00822A70 /* ESAIMService.h in Headers */,
+				63BEFB070B16521400822A70 /* ESGaimDotMacAccountViewController.h in Headers */,
+				63BEFB090B16521600822A70 /* ESGaimDotMacAccount.h in Headers */,
+				63BEFB0B0B16521900822A70 /* ESDotMacService.h in Headers */,
+				63BEFB0F0B16522400822A70 /* ESGaimAIMAccount.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7879,7 +7881,6 @@
 				346C9D46060046AB000F5A8A /* PBXTargetDependency */,
 				34677B3F07CC3E8400F59F7B /* PBXTargetDependency */,
 				349C31630867D199000BF883 /* PBXTargetDependency */,
-				11F5F42C09537E00007DCC49 /* PBXTargetDependency */,
 				F5B17CDF0A16C767004AE99E /* PBXTargetDependency */,
 			);
 			name = Adium;
@@ -8748,6 +8749,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34E0367A0A75AA4F00394F11 /* AIGaimOscarAccountViewController.m in Sources */,
+				34E036750A75AA4F00394F11 /* CBGaimOscarAccount.m in Sources */,
+				34E036730A75AA4F00394F11 /* CBOscarService.m in Sources */,
+				34E036770A75AA4F00394F11 /* DCGaimOscarJoinChatViewController.m in Sources */,
 				3485DB1909EBCE6500232CC4 /* SLGaimCocoaAdapter.m in Sources */,
 				3485DB1B09EBCE6500232CC4 /* adiumGaimBlist.m in Sources */,
 				6332879D0A769C18004D0F2B /* AIGaimLiveJournalAccount.m in Sources */,
@@ -8808,16 +8813,17 @@
 				3485DBC609EBCE7400232CC4 /* ESGaimMeanwhileContactAdditionController.m in Sources */,
 				3485DBC909EBCE7400232CC4 /* ESGaimFileReceiveRequestController.m in Sources */,
 				3485DBCB09EBCE7400232CC4 /* ESGaimRequestActionController.m in Sources */,
-				34E036730A75AA4F00394F11 /* CBOscarService.m in Sources */,
-				34E036750A75AA4F00394F11 /* CBGaimOscarAccount.m in Sources */,
-				34E036770A75AA4F00394F11 /* DCGaimOscarJoinChatViewController.m in Sources */,
-				34E0367A0A75AA4F00394F11 /* AIGaimOscarAccountViewController.m in Sources */,
 				34E036890A75AA4F00394F11 /* ESICQService.m in Sources */,
 				34E0368B0A75AA4F00394F11 /* ESGaimICQAccount.m in Sources */,
 				34E0368D0A75AA4F00394F11 /* ESGaimICQAccountViewController.m in Sources */,
 				3419E73A0A880AD400C3FC68 /* ESGaimQQAccount.m in Sources */,
 				3419E7400A880B2C00C3FC68 /* ESQQService.m in Sources */,
 				3419E76A0A880CDA00C3FC68 /* ESGaimQQAccountViewController.m in Sources */,
+				63BEFB020B1651F200822A70 /* ESAIMService.m in Sources */,
+				63BEFB060B16521300822A70 /* ESGaimDotMacAccountViewController.m in Sources */,
+				63BEFB080B16521500822A70 /* ESGaimDotMacAccount.m in Sources */,
+				63BEFB0A0B16521800822A70 /* ESDotMacService.m in Sources */,
+				63BEFB100B16522500822A70 /* ESGaimAIMAccount.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9276,11 +9282,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		11F5F42C09537E00007DCC49 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 118C52C5091BF0DB00219458 /* joscar */;
-			targetProxy = 11F5F42B09537E00007DCC49 /* PBXContainerItemProxy */;
-		};
 		340BA85609EC59AF000EC441 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
@@ -11920,7 +11921,6 @@
 				OTHER_CFLAGS = (
 					"-DCRASH_REPORTER",
 					"-DDEBUG_BUILD",
-					"-DJOSCAR_SUPERCEDE_LIBGAIM",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
 				);
@@ -12765,7 +12765,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = (
 					"-DDEBUG_BUILD",
-					"-DJOSCAR_SUPERCEDE_LIBGAIM",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
 				);
@@ -12808,7 +12807,6 @@
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				OTHER_CFLAGS = (
 					"-DCRASH_REPORTER",
-					"-DJOSCAR_SUPERCEDE_LIBGAIM",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
 				);
@@ -12851,7 +12849,6 @@
 				OTHER_CFLAGS = (
 					"-DCRASH_REPORTER",
 					"-DDEBUG_BUILD",
-					"-DJOSCAR_SUPERCEDE_LIBGAIM",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
 				);
