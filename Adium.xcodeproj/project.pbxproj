@@ -1267,6 +1267,7 @@
 		EE147A800896B33400A21377 /* OWABSearchWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE147A7E0896B33400A21377 /* OWABSearchWindowController.m */; };
 		EE96A3CC0A9C5E4000C47A57 /* FriBidi.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		EEC461B6096D68580028632F /* OWSpellingPerContactPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */; };
+		EEE0AB750B15E99C00C496A1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		EEF71BA60A9C76AB00284E7E /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		F4D9BBF70ACF5B5300615461 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		F4D9BBF80ACF5B9400615461 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
@@ -2931,7 +2932,7 @@
 		34BCB1A20ACB099D00562745 /* joscar-common.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-common.jar"; path = "Plugins/joscar Service/joscar-common.jar"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4236,6 +4237,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EEE0AB750B15E99C00C496A1 /* Cocoa.framework in Frameworks */,
 				81D5A8F50A5A15D10099F9B9 /* WebKit.framework in Frameworks */,
 				81F651740A291004008FC8E7 /* Adium.framework in Frameworks */,
 				81F651750A291004008FC8E7 /* AIUtilities.framework in Frameworks */,
