@@ -9009,7 +9009,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Delete .h files\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -name '*.h' -print0 | xargs -0 rm\n";
+			shellScript = "# Delete .h files\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -name '*.h' -print0 | xargs -0 rm -f\n";
 		};
 		F53C25AD0A2F95F100F7B73D /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
