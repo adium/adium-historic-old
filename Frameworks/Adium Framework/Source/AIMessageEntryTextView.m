@@ -458,7 +458,36 @@
 		[type isEqualToString:NSRTFDPboardType] ||
 		[type isEqualToString:NSHTMLPboardType] ||
 		[type isEqualToString:NSStringPboardType]) {
-		NSData *data = [generalPasteboard dataForType:type];
+		NSData *data;
+		
+		@try {
+			data = [generalPasteboard dataForType:type];
+		} @catch (NSException *localException) {
+			data = nil;
+		}
+		
+		//Failed. Try again with the string type.
+		if (!data && ![type isEqualToString:NSStringPboardType]) {
+			if ([[[NSPasteboard generalPasteboard] types] containsObject:NSStringPboardType]) {
+				type = NSStringPboardType;
+				@try {
+					data = [generalPasteboard dataForType:type];
+				} @catch (NSException *localException) {
+					data = nil;
+				}
+			}
+		}
+		
+		if (!data) {
+			//We still didn't get valid data... maybe super can handle it
+			@try {
+				[self paste:sender];
+			} @catch (NSException *localException) {
+				NSBeep();
+				return;
+			}
+		}
+		
 		NSMutableAttributedString *attributedString;
 		
 		if ([type isEqualToString:NSStringPboardType]) {
@@ -468,30 +497,30 @@
 			[string release];
 			
 		} else {
-			AI_DURING
-			if ([type isEqualToString:NSRTFPboardType]) {
-				attributedString = [[NSMutableAttributedString alloc] initWithRTF:data
-															   documentAttributes:NULL];
-			} else if ([type isEqualToString:NSRTFDPboardType]) {
-				attributedString = [[NSMutableAttributedString alloc] initWithRTFD:data
-																documentAttributes:NULL];
-			} else /* NSHTMLPboardType */ {
-				attributedString = [[NSMutableAttributedString alloc] initWithHTML:data
-																documentAttributes:NULL];
+			@try {
+				if ([type isEqualToString:NSRTFPboardType]) {
+					attributedString = [[NSMutableAttributedString alloc] initWithRTF:data
+																   documentAttributes:NULL];
+				} else if ([type isEqualToString:NSRTFDPboardType]) {
+					attributedString = [[NSMutableAttributedString alloc] initWithRTFD:data
+																	documentAttributes:NULL];
+				} else /* NSHTMLPboardType */ {
+					attributedString = [[NSMutableAttributedString alloc] initWithHTML:data
+																	documentAttributes:NULL];
+				}
+			} @catch (NSException *localException) {
+				//Error while reading the RTF or HTML data, which can happen. Fall back on plain text
+				if ([[[NSPasteboard generalPasteboard] types] containsObject:NSStringPboardType]) {
+					data = [generalPasteboard dataForType:NSStringPboardType];
+					NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+					attributedString = [[NSMutableAttributedString alloc] initWithString:string
+																			  attributes:[self typingAttributes]];
+					[string release];
+				} else {
+					attributedString = nil;
+				}
 			}
-			AI_HANDLER
-			//Error while reading the RTF or HTML data, which can happen. Fall back on plain text
-			if ([[[NSPasteboard generalPasteboard] types] containsObject:NSStringPboardType]) {
-				data = [generalPasteboard dataForType:NSStringPboardType];
-				NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-				attributedString = [[NSMutableAttributedString alloc] initWithString:string
-																		  attributes:[self typingAttributes]];
-				[string release];
-			} else {
-				attributedString = nil;
-			}
-			AI_ENDHANDLER
-			
+
 			if (!attributedString) {
 				NSBeep();
 				return;
