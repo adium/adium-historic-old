@@ -48,29 +48,26 @@
 	return YES;
 }
 
-- (BOOL)sendTypingObject:(AIContentTyping *)inTypingObject {
+- (void)sendTypingObject:(AIContentTyping *)inTypingObject {
 //    NSLog(@"typing %@",([inTypingObject typingState]==AINotTyping)?@"NO":(([inTypingObject typingState]==AITyping)?@"TYPING":@"ENTEREDTEXT"));
+#warning I disagree with disabling typing objects while invisible. Others? -evands
     if ([self currentlyInvisible])
-        return YES; // when invisible, don't send typing notifications to not reveal that we're actually here
+        return; // when invisible, don't send typing notifications to not reveal that we're actually here
     
     AIChat *chat = [inTypingObject chat];
     
     if ([chat isGroupChat])
-    {
-        NSLog(@"typing ignored -> groupchat");
-        return YES; // ignore group chats
-    }
+		return;  // ignore group chats
 
     BOOL useCsn = [[chat statusObjectForKey:@"XMPPChatStateNotifications"] boolValue];
     BOOL useMessageEvent = [[chat statusObjectForKey:@"XMPPMessageEventComposingRequest"] boolValue];
     
     if (!useCsn && !useMessageEvent)
-        return YES; // the other client doesn't support any of the two
+        return; // the other client doesn't support any of the two
     
-    if (useCsn && ![[chat statusObjectForKey:@"XMPPType"] isEqualToString:@"chat"])
-    {
+    if (useCsn && ![[chat statusObjectForKey:@"XMPPType"] isEqualToString:@"chat"]) {
         NSLog(@"typing ignored -> not a chat");
-        return NO; // ChatStateNotifications only allowed in chats
+        return; // ChatStateNotifications only allowed in chats
     }
 
    // NSString *resource = [chat statusObjectForKey:@"XMPPResource"];
@@ -78,10 +75,9 @@
     
     SmackMessage *message = [SmackCocoaAdapter messageTo:jid typeString:@"CHAT"];
 
-    if (useCsn)
-    {
+    if (useCsn) {
         SmackChatStateNotifications *csn = nil;
-        switch([inTypingObject typingState]) {
+        switch ([inTypingObject typingState]) {
             case AINotTyping:
                 csn = [SmackCocoaAdapter createChatState:@"active"];
                 break;
@@ -91,9 +87,6 @@
             case AIEnteredText:
                 csn = [SmackCocoaAdapter createChatState:@"paused"];
                 break;
-            default:
-                NSLog(@"typing ignored -> unknown typing state");
-                return NO; // ignore
         }
         [message addExtension:csn];
 
@@ -110,11 +103,10 @@
         }
         [message setThread:threadid];
         
-    } else if (useMessageEvent)
-    {
+    } else if (useMessageEvent) {
         SmackXMessageEvent *mevt = [SmackCocoaAdapter messageEvent];
         [mevt setPacketID:[chat statusObjectForKey:@"XMPPMessageEventPacketID"]?[chat statusObjectForKey:@"XMPPMessageEventPacketID"]:@""];
-        switch([inTypingObject typingState]) {
+        switch ([inTypingObject typingState]) {
             case AINotTyping:
             case AIEnteredText:
                 [mevt setCancelled:YES];
@@ -122,16 +114,11 @@
             case AITyping:
                 [mevt setComposing:YES];
                 break;
-            default:
-                NSLog(@"typing ignored -> unknown typing state");
-                return NO; // ignore
         }
         [message addExtension:mevt];
     }
         
     [connection sendPacket:message];
-
-    return YES;
 }
 
 @end
