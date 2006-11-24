@@ -66,11 +66,14 @@
 
 	[self configureControlDimming];
 
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+
 	[super viewDidLoad];
 }
 
 - (void)viewWillClose
 {
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[self fireProfileChangesImmediately];
 
 	[[NSFontPanel sharedFontPanel] setDelegate:nil];
@@ -118,6 +121,20 @@
 
 	[button_chooseIcon setEnabled:enableUserIcon];
 	[imageView_userIcon setEnabled:enableUserIcon];	
+}
+
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if (object) return;
+	
+	if ([key isEqualToString:KEY_ACCOUNT_DISPLAY_NAME]) {
+		NSString *displayName = [textField_displayName stringValue];
+		NSString *newDisplayName = [[[prefDict objectForKey:KEY_ACCOUNT_DISPLAY_NAME] attributedString] string];
+		if (![displayName isEqualToString:newDisplayName]) {
+			[textField_displayName setStringValue:newDisplayName];
+		}
+	}
 }
 
 #pragma mark Profile
