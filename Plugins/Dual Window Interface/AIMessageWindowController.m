@@ -797,6 +797,7 @@
 	//set the size of the new window
 	//set the size and origin separately so that toolbar visibility and size doesn't mess things up
 	frame.size = [[self window] frame].size;
+	frame.origin = NSZeroPoint;
 	[[newController window] setFrame:frame display:NO];
 	
 	if (tabPosition == AdiumTabPositionBottom) {
