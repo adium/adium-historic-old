@@ -625,6 +625,9 @@
 
 - (void)gotBuddyAdditions:(NSSet *)inSet
 {
+	//Do nothing if we're not online; this can happen if a threaded buddy additions notification is sent as we disconnect
+	if (![self online]) return;
+
 	NSEnumerator *enumerator = [inSet objectEnumerator];
 	NSDictionary *dictionary;
 	
