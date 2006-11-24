@@ -374,7 +374,7 @@
 	//Apply the display name for local display
 	[[self displayArrayForKey:@"Display Name"] setObject:displayName
 											   withOwner:self];
-	
+
 	//Note the actual value we've set in CurrentDisplayName so we can compare against it later
 	[self setStatusObject:displayName
 				   forKey:@"CurrentDisplayName"
@@ -1119,9 +1119,9 @@
 	[self removeAllContacts];
 	
 	//We are now offline
-    [self setStatusObject:nil forKey:@"Disconnecting" notify:NO];
-    [self setStatusObject:nil forKey:@"Connecting" notify:NO];
-    [self setStatusObject:nil forKey:@"Online" notify:NO];
+    [self setStatusObject:nil forKey:@"Disconnecting" notify:NotifyLater];
+    [self setStatusObject:nil forKey:@"Connecting" notify:NotifyLater];
+    [self setStatusObject:nil forKey:@"Online" notify:NotifyLater];
 	
 	//Stop all autorefreshing keys
 	[self stopAutoRefreshingStatusKey:nil];
