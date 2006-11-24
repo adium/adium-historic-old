@@ -75,8 +75,10 @@
         NSError *error;
         NSXMLDocument *serverhtml = [[NSXMLDocument alloc] initWithContentsOfURL:sourceURL options:NSXMLDocumentTidyXML error:&error];
         NSXMLDocument *serverlist;
-        if (serverhtml)
-            serverlist = [[serverhtml objectByApplyingXSLT:SERVERLISTTRANFORM arguments:[NSDictionary dictionary] error:&error] retain];
+        
+		serverlist = (serverhtml ? 
+					  [[serverhtml objectByApplyingXSLT:SERVERLISTTRANFORM arguments:[NSDictionary dictionary] error:&error] retain] :
+					  nil);
         [serverhtml release];
         
         if (!serverlist)
