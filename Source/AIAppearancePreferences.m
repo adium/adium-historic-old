@@ -150,7 +150,7 @@ typedef enum {
 					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Emoticons
-	if ([group isEqualToString:PREF_GROUP_EMOTICONS]) {
+	if ([group isEqualToString:PREF_GROUP_EMOTICONS] && !firstTime) {
 		[self _rebuildEmoticonMenuAndSelectActivePack];
 	}
 	
@@ -391,6 +391,7 @@ typedef enum {
 		[menuItem setRepresentedObject:pack];
 		[menuItem setImage:[pack menuPreviewImage]];
 		[menu addItem:menuItem];
+		NSLog(@"%@: %@",menuItem,[menuItem image]);
 	}
 
 	return [menu autorelease];
@@ -900,7 +901,7 @@ typedef enum {
 																	 action:nil
 															  keyEquivalent:@""] autorelease];
 	[menuItem setRepresentedObject:packName];
-	[menuItem setImage:[[preview image] imageByScalingToSize:NSMakeSize(18, 18)]];
+	[menuItem setImage:[[preview image] imageByScalingForMenuItem]];
 	
 	return menuItem;
 }

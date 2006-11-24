@@ -533,7 +533,7 @@ int eventIDSort(id objectA, id objectB, void *context) {
 																		action:@selector(selectAction:) 
 																 keyEquivalent:@""];
         [menuItem setRepresentedObject:actionID];
-		[menuItem setImage:[[actionHandler imageForActionID:actionID] imageByScalingToSize:NSMakeSize(16,16)]];
+		[menuItem setImage:[[actionHandler imageForActionID:actionID] imageByScalingForMenuItem]];
 		
         [menuItemArray addObject:menuItem];
 		[menuItem release];
