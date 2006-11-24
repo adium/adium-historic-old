@@ -1268,6 +1268,8 @@
 		EE96A3CC0A9C5E4000C47A57 /* FriBidi.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		EEC461B6096D68580028632F /* OWSpellingPerContactPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */; };
 		EEE0AB750B15E99C00C496A1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
+		EEE0ABC50B15EADB00C496A1 /* HigherOrderMessaging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE0ABC40B15EADB00C496A1 /* HigherOrderMessaging.framework */; };
+		EEE0ABC60B15EADB00C496A1 /* HigherOrderMessaging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE0ABC40B15EADB00C496A1 /* HigherOrderMessaging.framework */; };
 		EEF71BA60A9C76AB00284E7E /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		F4D9BBF70ACF5B5300615461 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		F4D9BBF80ACF5B9400615461 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
@@ -3977,6 +3979,7 @@
 		EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FriBidi.framework; path = Frameworks/FriBidi.framework; sourceTree = "<group>"; };
 		EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = OWSpellingPerContactPlugin.m; path = Source/OWSpellingPerContactPlugin.m; sourceTree = "<group>"; };
 		EEC461B5096D68580028632F /* OWSpellingPerContactPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWSpellingPerContactPlugin.h; path = Source/OWSpellingPerContactPlugin.h; sourceTree = "<group>"; };
+		EEE0ABC40B15EADB00C496A1 /* HigherOrderMessaging.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HigherOrderMessaging.framework; path = Frameworks/HigherOrderMessaging.framework; sourceTree = "<group>"; };
 		F11B9621051CDB3B0000000E /* AIMessageAliasPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageAliasPlugin.h; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.h"; sourceTree = "<group>"; };
 		F11B9622051CDB3B0000000E /* AIMessageAliasPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageAliasPlugin.m; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.m"; sourceTree = "<group>"; };
 		F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GBFireImporter.h; path = Source/GBFireImporter.h; sourceTree = "<group>"; };
@@ -4142,6 +4145,7 @@
 				9E1E1DFD0A96741500E16DFC /* LMX.framework in Frameworks */,
 				34EFC46C0AACC4CD0086AC43 /* FriBidi.framework in Frameworks */,
 				377EC8940AE9525B00CB7BDF /* PSMTabBarControl.framework in Frameworks */,
+				EEE0ABC50B15EADB00C496A1 /* HigherOrderMessaging.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4156,6 +4160,7 @@
 				34D836F407CBF960006466F2 /* QuickTime.framework in Frameworks */,
 				34D8370107CBF97A006466F2 /* AudioUnit.framework in Frameworks */,
 				34D8370207CBF97A006466F2 /* AudioToolbox.framework in Frameworks */,
+				EEE0ABC60B15EADB00C496A1 /* HigherOrderMessaging.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4389,6 +4394,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EEE0ABC40B15EADB00C496A1 /* HigherOrderMessaging.framework */,
 				377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */,
 				9E1E1DFC0A96741500E16DFC /* LMX.framework */,
 				EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */,
@@ -11368,9 +11374,11 @@
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED_4)";
 				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
@@ -11567,10 +11575,12 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)/Frameworks\"";
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
@@ -11886,9 +11896,11 @@
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED_4)";
@@ -12026,10 +12038,12 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)/Frameworks\"";
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
@@ -12438,9 +12452,11 @@
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED_4)";
 				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
@@ -12464,9 +12480,11 @@
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED_4)";
@@ -12491,9 +12509,11 @@
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED_4)";
@@ -12789,10 +12809,12 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)/Frameworks\"";
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
@@ -12821,10 +12843,12 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)/Frameworks\"";
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
@@ -12853,10 +12877,12 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)/Frameworks\"";
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
