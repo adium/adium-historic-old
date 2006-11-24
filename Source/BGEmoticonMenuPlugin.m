@@ -196,9 +196,7 @@
                                                              action:@selector(insertEmoticon:)
                                                       keyEquivalent:@""];
 
-			//We need to make a copy of the emoticons for our menu, otherwise the menu flips them in an unpredictable
-			//way, causing problems in the emoticon preferences
-            [newItem setImage:[[anEmoticon image] imageByScalingToSize:NSMakeSize(16, 16)]];
+            [newItem setImage:[[anEmoticon image] imageByScalingForMenuItem]];
 			[newItem setRepresentedObject:anEmoticon];
 			[packMenu addItem:newItem];
 			[newItem release];
@@ -312,7 +310,7 @@
 			[item setTarget:self];
 			[item setAction:@selector(insertEmoticon:)];
 			[item setKeyEquivalent:@""];
-			[item setImage:[[emoticon image] imageByScalingToSize:NSMakeSize(16, 16)]];
+			[item setImage:[[emoticon image] imageByScalingForMenuItem]];
 			[item setRepresentedObject:emoticon];
 			[item setSubmenu:nil];
 		}
@@ -324,7 +322,7 @@
 			[item setTarget:nil];
 			[item setAction:nil];
 			[item setKeyEquivalent:@""];
-			[item setImage:[[pack menuPreviewImage] imageByScalingToSize:NSMakeSize(16, 16)]];
+			[item setImage:[[pack menuPreviewImage] imageByScalingForMenuItem]];
 			[item setRepresentedObject:nil];
 			[item setSubmenu:[self flatEmoticonMenuForPack:pack]];
 		}

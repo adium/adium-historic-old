@@ -23,7 +23,6 @@
 static NSMutableDictionary	*iconCache = nil;
 static NSMutableDictionary	*menuIconCache = nil;
 static NSSize				iconCacheSize;
-static NSSize				menuIconCacheSize;
 
 @implementation AIUserIcons
 
@@ -32,7 +31,6 @@ static NSSize				menuIconCacheSize;
 	if (self == [AIUserIcons class]) {
 		iconCache = [[NSMutableDictionary alloc] init];
 		menuIconCache = [[NSMutableDictionary alloc] init];
-		menuIconCacheSize = NSMakeSize(16,16);		
 	}
 }
 
@@ -50,7 +48,8 @@ static NSSize				menuIconCacheSize;
 		userIcon = [[inContact userIcon] imageByScalingToSize:size 
 													 fraction:1.0
 													flipImage:YES
-											   proportionally:YES];
+											   proportionally:YES
+											   allowAnimation:YES];
 		if (userIcon && cache) [iconCache setObject:userIcon forKey:[inContact internalObjectID]];
 	}
 	
@@ -67,10 +66,7 @@ static NSSize				menuIconCacheSize;
 	
 	//Render the icon if it's not cached
 	if (!userIcon) {
-		userIcon = [[inObject userIcon] imageByScalingToSize:menuIconCacheSize
-													fraction:1.0
-												   flipImage:NO
-											  proportionally:YES];
+		userIcon = [[inObject userIcon] imageByScalingForMenuItem];
 		if (userIcon) [menuIconCache setObject:userIcon
 									   forKey:[inObject internalObjectID]];
 	}
