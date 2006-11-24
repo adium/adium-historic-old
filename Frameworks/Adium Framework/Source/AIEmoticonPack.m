@@ -178,7 +178,7 @@
 		emoticon = [myEmoticons objectAtIndex:0];
 	}
 
-	return [[emoticon image] imageByScalingToSize:NSMakeSize(16,16)];
+	return [[emoticon image] imageByScalingForMenuItem];
 }
 
 /*!
@@ -529,7 +529,7 @@
 
 - (NSString *)description
 {
-	return ([NSString stringWithFormat:@"[%@: ServiceClass %@]",[super description],serviceClass]);
+	return ([NSString stringWithFormat:@"[%@: %@, ServiceClass %@]",[super description], [self name], [self serviceClass]]);
 }
 
 @end
