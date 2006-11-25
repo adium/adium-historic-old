@@ -459,12 +459,16 @@
 {
     if (item == nil) {
 		if (hideRoot) {
-			return (index >= 0 && index < [contactList containedObjectsCount]) ? [contactList objectAtIndex:index] : nil;
+			//it should never be asking us for items we don't have, due to - (int)outlineView:numberOfChildrenOfItem:
+			NSParameterAssert(index >= 0 && index < [contactList containedObjectsCount]);
+			return [contactList objectAtIndex:index];
 		} else {
 			return contactList;
 		}
     } else {
-        return (index >= 0 && index < [item containedObjectsCount]) ? [item objectAtIndex:index] : nil;
+		//it should never be asking us for items we don't have, due to - (int)outlineView:numberOfChildrenOfItem:
+		NSParameterAssert(index >= 0 && index < [item containedObjectsCount]);
+        return [item objectAtIndex:index];
     }
 }
 
