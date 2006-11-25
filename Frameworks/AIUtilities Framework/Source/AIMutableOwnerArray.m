@@ -116,8 +116,8 @@
 {
     int	ownerIndex;
 	//Keep priority in bounds
-	if (priority < Highest_Priority || priority > Lowest_Priority) priority = Medium_Priority;
-	
+	if ((priority < Highest_Priority) || (priority > Lowest_Priority)) priority = Medium_Priority;
+
 	//Remove any existing objects from this owner
 	ownerIndex = [ownerArray indexOfObject:inOwner];
 	if (ownerArray && (ownerIndex != NSNotFound)) {
