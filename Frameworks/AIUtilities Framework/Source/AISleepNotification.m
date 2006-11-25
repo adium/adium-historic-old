@@ -92,15 +92,18 @@ static void powerServiceInterestCallback(void *refcon, io_service_t y, natural_t
  * @brief Continue sleep notification
  *
  * If this balances the last AISystemHoldSleep_Notification notification, we will sleep immediately.
+ * If this is sent without a preceeding AISystemHoldSleep_Notification, it is ignored.
  */
 + (void)continueSleep:(NSNotification *)notification
 {
-    holdSleep--;
-
-    if (holdSleep == 0) {
-        //Permit sleep now
-        IOAllowPowerChange(root_port, (long)waitingSleepArgument);
-    }
+	if (holdSleep > 0) {
+		holdSleep--;
+		
+		if (holdSleep == 0) {
+			//Permit sleep now
+			IOAllowPowerChange(root_port, (long)waitingSleepArgument);
+		}
+	}
 }
 
 /*
