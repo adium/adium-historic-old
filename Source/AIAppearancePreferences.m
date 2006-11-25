@@ -391,7 +391,6 @@ typedef enum {
 		[menuItem setRepresentedObject:pack];
 		[menuItem setImage:[pack menuPreviewImage]];
 		[menu addItem:menuItem];
-		NSLog(@"%@: %@",menuItem,[menuItem image]);
 	}
 
 	return [menu autorelease];
