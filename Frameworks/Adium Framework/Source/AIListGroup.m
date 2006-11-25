@@ -164,10 +164,6 @@
 	BOOL success = NO;
 	
 	if (![containedObjects containsObjectIdenticalTo:inObject]) {
-		//Update our visible count
-		if ([inObject visible]) {
-			[self _setVisibleCount:visibleCount+1];
-		}
 		
 		//Add the object
 		[inObject setContainingObject:self];
@@ -179,6 +175,11 @@
 		if ([inObject visible]) {
 			[self sortListObject:inObject
 				  sortController:[[adium contactController] activeSortController]];
+		}
+		
+		//Update our visible count
+		if ([inObject visible]) {
+			[self _setVisibleCount:visibleCount+1];
 		}
 		
 		//
