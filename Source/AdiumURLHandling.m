@@ -253,6 +253,24 @@
 										   onService:serviceID
 										 withMessage:nil];
 				}
+			} else if ([host caseInsensitiveCompare:@"BuddyIcon"] == NSOrderedSame) {
+				//aim:BuddyIcon?src=http://www.nbc.com//Heroes/images/wallpapers/heroes-downloads-icon-single-48x48-07.gif
+				NSString *urlString = [url queryArgumentForKey:@"src"];
+				if ([urlString length]) {
+					NSURL *urlToDownload = [[NSURL alloc] initWithString:urlString];
+					NSData *imageData = (urlToDownload ? [NSData dataWithContentsOfURL:urlToDownload] : nil);
+					[urlToDownload release];
+					
+					//Should prompt for where to apply the icon?
+					if (imageData &&
+						[[[NSImage alloc] initWithData:imageData] autorelease]) {
+						//If we successfully got image data, and that data makes a valid NSImage, set it as our global buddy icon
+						[[[AIObject sharedAdiumInstance] preferenceController] setPreference:imageData
+																					  forKey:KEY_USER_ICON
+																					   group:GROUP_ACCOUNT_STATUS];
+					}
+				}
+				
 			} else {
 				//Default to opening the host as a name.
 
