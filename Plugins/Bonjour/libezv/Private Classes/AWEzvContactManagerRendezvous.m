@@ -106,6 +106,11 @@ void av_resolve_reply (struct sockaddr	*interface,
 
 @implementation AWEzvContactManager (Rendezvous)
 #pragma mark Announcing Functions
+- (NSArray *)currentHostAddresses
+{
+	return [[NSHost currentHost] addresses];
+}
+
 - (void) login {
     /* used for Mach messaging version */
     CFRunLoopSourceRef	rls;
@@ -116,11 +121,11 @@ void av_resolve_reply (struct sockaddr	*interface,
     mach_port_t		mach_port;
     
     /* used for any version */
-    NSHost		*currentHost;
+    NSArray			*currentHostAddresses;
     NSMutableString	*instanceName;
     NSString		*avInstanceName;
-    NSEnumerator        *enumerator;
-    NSRange             range;
+    NSEnumerator	*enumerator;
+    NSRange			range;
     
     regCount = 0;
     
@@ -137,13 +142,15 @@ void av_resolve_reply (struct sockaddr	*interface,
     
     /* calculate instance name */
 	@try {
-		currentHost = [NSHost currentHost];
+		//NSHost is not threadsafe; call it only from the main thread
+		currentHostAddresses = [self mainPerformSelector:@selector(currentHostAddresses)
+											 returnValue:YES];		
 	} @catch(NSException *e) {
-		currentHost = nil;
-		NSLog(@"Could not obtain current host...");
+		currentHostAddresses = nil;
+		NSLog(@"Could not obtain current host addresses...");
 	}
 
-    enumerator = [[currentHost addresses] objectEnumerator];
+    enumerator = [currentHostAddresses objectEnumerator];
     while ((instanceName = [enumerator nextObject])) {
 		/* skip 127.0.0.1 */
         if ([instanceName isEqualToString:@"127.0.0.1"])
