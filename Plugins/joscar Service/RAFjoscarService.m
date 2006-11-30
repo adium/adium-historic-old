@@ -53,15 +53,6 @@
 	return [NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._- "];	
 }
 
-- (int)allowedLength
-{
-	return(28);
-}
-- (int)allowedLengthForUIDs
-{
-	return(28);
-}
-
 - (NSCharacterSet *)ignoredCharacters{
 	return [NSCharacterSet characterSetWithCharactersInString:@" "];
 }
