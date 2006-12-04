@@ -16,6 +16,7 @@
 
 #import "adiumGaimCore.h"
 
+#import "adiumGaimAccounts.h"
 #import "adiumGaimBlist.h"
 #import "adiumGaimConnection.h"
 #import "adiumGaimConversation.h"
@@ -67,7 +68,8 @@ extern gboolean gaim_init_qq_plugin(void);
 extern gboolean gaim_init_simple_plugin(void);
 extern gboolean gaim_init_yahoo_plugin(void);
 extern gboolean gaim_init_zephyr_plugin(void);
-extern gboolean gaim_init_oscar_plugin(void);
+extern gboolean gaim_init_aim_plugin(void);
+extern gboolean gaim_init_icq_plugin(void);
 
 static void load_all_plugins()
 {
@@ -147,6 +149,7 @@ static void adiumGaimCoreUiInit(void)
     gaim_blist_set_ui_ops(adium_gaim_blist_get_ui_ops());
     gaim_connections_set_ui_ops(adium_gaim_connection_get_ui_ops());
     gaim_privacy_set_ui_ops (adium_gaim_privacy_get_ui_ops());	
+	gaim_accounts_set_ui_ops(adium_gaim_accounts_get_ui_ops());
 
 	/* Why use Gaim's accounts and blist list when we have the information locally?
 		*		- Faster account connection: Gaim doesn't have to recreate the local list
