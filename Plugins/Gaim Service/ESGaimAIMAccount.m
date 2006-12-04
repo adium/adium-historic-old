@@ -44,6 +44,12 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 static AIHTMLDecoder	*encoderGroupChat = nil;
 
 #pragma mark Initialization and setup
+
+- (const char *)protocolPlugin
+{
+    return "prpl-aim";
+}
+
 - (void)initAccount
 {
 	[super initAccount];

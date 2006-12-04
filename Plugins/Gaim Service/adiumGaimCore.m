@@ -87,7 +87,8 @@ static void load_all_plugins()
 	gaim_init_simple_plugin();
 	gaim_init_yahoo_plugin();
 	gaim_init_zephyr_plugin();
-	gaim_init_oscar_plugin();
+	gaim_init_aim_plugin();
+	gaim_init_icq_plugin();
 
 	//Load each plugin
 	NSEnumerator			*enumerator = [[SLGaimCocoaAdapter libgaimPluginArray] objectEnumerator];

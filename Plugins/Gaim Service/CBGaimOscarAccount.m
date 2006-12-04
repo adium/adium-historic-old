@@ -33,7 +33,8 @@
 
 - (const char*)protocolPlugin
 {
-    return "prpl-oscar";
+	NSLog(@"WARNING: Subclass must override");
+    return "";
 }
 
 #pragma mark AIListContact and AIService special cases for OSCAR
