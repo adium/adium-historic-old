@@ -222,6 +222,8 @@
 		344093AB07D9161B00321BB3 /* ESAutoAwayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 344093A907D9161B00321BB3 /* ESAutoAwayPlugin.m */; };
 		3440974307DA06FE00321BB3 /* MessageContextDisplayPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3440974207DA06FE00321BB3 /* MessageContextDisplayPrefs.nib */; };
 		344458F0070B5BEF00D8E932 /* ESDebugWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344458EE070B5BEF00D8E932 /* ESDebugWindowController.m */; };
+		344499E90B23CA5D0054B761 /* adiumGaimAccounts.h in Headers */ = {isa = PBXBuildFile; fileRef = 344499E70B23CA5D0054B761 /* adiumGaimAccounts.h */; };
+		344499EA0B23CA5D0054B761 /* adiumGaimAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = 344499E80B23CA5D0054B761 /* adiumGaimAccounts.m */; };
 		3448758E06D1EBDF00DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448761406D1EC0C00DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448761606D1EC3000DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
@@ -2181,6 +2183,8 @@
 		3441623F0943E76400BC26ED /* SetupWizardBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetupWizardBackgroundView.m; path = Source/SetupWizardBackgroundView.m; sourceTree = "<group>"; };
 		344458ED070B5BEF00D8E932 /* ESDebugWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESDebugWindowController.h; path = Source/ESDebugWindowController.h; sourceTree = "<group>"; };
 		344458EE070B5BEF00D8E932 /* ESDebugWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESDebugWindowController.m; path = Source/ESDebugWindowController.m; sourceTree = "<group>"; };
+		344499E70B23CA5D0054B761 /* adiumGaimAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumGaimAccounts.h; path = "Plugins/Gaim Service/adiumGaimAccounts.h"; sourceTree = "<group>"; };
+		344499E80B23CA5D0054B761 /* adiumGaimAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimAccounts.m; path = "Plugins/Gaim Service/adiumGaimAccounts.m"; sourceTree = "<group>"; };
 		3448054E07AC5151006A7F7B /* ESDebugAILog.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESDebugAILog.m; path = "Frameworks/Adium Framework/Source/ESDebugAILog.m"; sourceTree = "<group>"; };
 		3448054F07AC5151006A7F7B /* ESDebugAILog.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESDebugAILog.h; path = "Frameworks/Adium Framework/Source/ESDebugAILog.h"; sourceTree = "<group>"; };
 		3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */ = {isa = PBXFileReference; explicitFileType = "wrapper.pb-project"; name = AIUtilities.framework.xcodeproj; path = "Frameworks/AIUtilities Framework/AIUtilities.framework.xcodeproj"; sourceTree = "<group>"; };
@@ -2906,7 +2910,7 @@
 		34BCB1A20ACB099D00562745 /* joscar-common.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-common.jar"; path = "Plugins/joscar Service/joscar-common.jar"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -5071,6 +5075,8 @@
 				3402E04D07CB0EB00044F818 /* Localizable.strings */,
 				34048AC50617CB4C004D0B7E /* SLGaimCocoaAdapter.h */,
 				34048AC60617CB4C004D0B7E /* SLGaimCocoaAdapter.m */,
+				344499E70B23CA5D0054B761 /* adiumGaimAccounts.h */,
+				344499E80B23CA5D0054B761 /* adiumGaimAccounts.m */,
 				34BBE10907A2EE3700663CC9 /* adiumGaimBlist.h */,
 				34BBE10A07A2EE3700663CC9 /* adiumGaimBlist.m */,
 				34BBE0E907A2ECCF00663CC9 /* adiumGaimConnection.h */,
@@ -7407,6 +7413,7 @@
 				63BEFB090B16521600822A70 /* ESGaimDotMacAccount.h in Headers */,
 				63BEFB0B0B16521900822A70 /* ESDotMacService.h in Headers */,
 				63BEFB0F0B16522400822A70 /* ESGaimAIMAccount.h in Headers */,
+				344499E90B23CA5D0054B761 /* adiumGaimAccounts.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8824,6 +8831,7 @@
 				63BEFB080B16521500822A70 /* ESGaimDotMacAccount.m in Sources */,
 				63BEFB0A0B16521800822A70 /* ESDotMacService.m in Sources */,
 				63BEFB100B16522500822A70 /* ESGaimAIMAccount.m in Sources */,
+				344499EA0B23CA5D0054B761 /* adiumGaimAccounts.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

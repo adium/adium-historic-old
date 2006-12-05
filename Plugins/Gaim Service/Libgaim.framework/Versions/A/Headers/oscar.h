@@ -56,11 +56,12 @@
 
 typedef struct _ByteStream         ByteStream;
 typedef struct _ClientInfo         ClientInfo;
-typedef struct _FlapFrame          FlapFrame;
-typedef struct _IcbmCookie         IcbmCookie;
 typedef struct _FlapConnection     FlapConnection;
-typedef struct _OscarData          OscarData;
+typedef struct _FlapFrame          FlapFrame;
 typedef struct _IcbmArgsCh2        IcbmArgsCh2;
+typedef struct _IcbmCookie         IcbmCookie;
+typedef struct _OscarData          OscarData;
+typedef struct _QueuedSnac         QueuedSnac;
 
 typedef guint32 aim_snacid_t;
 
@@ -351,6 +352,13 @@ struct _ByteStream
 	guint32 offset;
 };
 
+struct _QueuedSnac
+{
+	guint16 family;
+	guint16 subtype;
+	FlapFrame *frame;
+};
+
 struct _FlapFrame
 {
 	guint8 channel;
@@ -381,10 +389,13 @@ struct _FlapConnection
 
 	guint16 type;
 	guint16 subtype;
-	guint16 seqnum; /**< The sequence number of most recent outgoing packet. */
+	guint16 seqnum_out; /**< The sequence number of most recently sent packet. */
+	guint16 seqnum_in; /**< The sequence number of most recently received packet. */
 	GSList *groups;
-	GSList *rateclasses; /* Contains nodes of struct rateclass */
-	/* TODO: Maybe use a GHashTable for rateclasses */
+	GSList *rateclasses; /* Contains nodes of struct rateclass. */
+
+	GQueue *queued_snacs; /**< Contains QueuedSnacs. */
+	guint queued_timeout;
 
 	void *internal; /* internal conn-specific libfaim data */
 };
@@ -492,8 +503,8 @@ struct _OscarData
 		gboolean in_transaction;
 	} ssi;
 
-	/* TODO: Implement this as a HashTable for HUGE speed improvement! */
-	GSList *handlerlist;
+	/** Contains pointers to handler functions for each family/subtype. */
+	GHashTable *handlerlist;
 
 	/** A linked list containing FlapConnections. */
 	GSList *oscar_connections;
@@ -566,8 +577,8 @@ int aim_send_login(OscarData *, FlapConnection *, const char *, const char *, Cl
 
 void aim_cleansnacs(OscarData *, int maxage);
 
-int oscar_data_addhandler(OscarData *od, guint16 family, guint16 type, aim_rxcallback_t newhandler, guint16 flags);
-void aim_clearhandlers(OscarData *od);
+void oscar_data_addhandler(OscarData *od, guint16 family, guint16 subtype, aim_rxcallback_t newhandler, guint16 flags);
+aim_rxcallback_t aim_callhandler(OscarData *od, guint16 family, guint16 subtype);
 
 /* flap_connection.c */
 FlapConnection *flap_connection_new(OscarData *, int type);
@@ -1530,9 +1541,6 @@ int byte_stream_putstr(ByteStream *bs, const char *str);
 int byte_stream_putbs(ByteStream *bs, ByteStream *srcbs, int len);
 int byte_stream_putcaps(ByteStream *bs, guint32 caps);
 
-/* rxhandlers.c */
-aim_rxcallback_t aim_callhandler(OscarData *od, guint16 family, guint16 type);
-
 /*
  * Generic SNAC structure.  Rarely if ever used.
  */
@@ -1559,11 +1567,6 @@ struct chatsnacinfo {
 	guint16 instance;
 };
 
-struct snacpair {
-	guint16 group;
-	guint16 subtype;
-};
-
 struct rateclass {
 	guint16 classid;
 	guint32 windowsize;
@@ -1574,8 +1577,7 @@ struct rateclass {
 	guint32 current;
 	guint32 max;
 	guint8 unknown[5]; /* only present in versions >= 3 */
-	GSList *members; /* Contains node of struct snacpair */
-	/* TODO: Maybe use a GHashTable for members */
+	GHashTable *members; /* Key is family and subtype, value is TRUE. */
 
 	struct timeval last; /**< The time when we last sent a SNAC of this rate class. */
 };
