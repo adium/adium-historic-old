@@ -2189,7 +2189,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 	[alert addButtonWithTitle:DELETE]; 
 	[alert addButtonWithTitle:AILocalizedString(@"Cancel",nil)];
 	
-	return alert;
+	return [alert autorelease];
 }
 
 /*!
