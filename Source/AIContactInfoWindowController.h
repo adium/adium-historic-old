@@ -43,9 +43,6 @@
 	IBOutlet		NSButton						*button_addContact;
 	IBOutlet		NSButton						*button_removeContact;
 	
-	IBOutlet		NSButton						*button_clearContactIcon;
-	IBOutlet		NSButton						*button_chooseContactIcon;
-	
 	AIListObject									*displayedObject;
 	NSMutableDictionary								*loadedPanes;
 
