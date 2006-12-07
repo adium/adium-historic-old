@@ -399,8 +399,8 @@
 	}
 	
 	/* If we are going to a custom state of a different type, we don't want to prefill with baseStatusState as it stands.
-		* Instead, we load the last used status of that type.
-		*/
+	 * Instead, we load the last used status of that type.
+	 */
 	if (([baseStatusState statusType] != statusType)) {
 		NSDictionary *lastStatusStates = [[adium preferenceController] preferenceForKey:@"LastStatusStates"
 																				  group:PREF_GROUP_STATUS_PREFERENCES];
@@ -414,8 +414,8 @@
 	}
 	
 	/* Don't use the current status state as a base, and when going from Away to Available, don't autofill the Available
-		* status message with the old away message.
-		*/
+	 * status message with the old away message.
+	 */
 	if ([baseStatusState statusType] != statusType) {
 		baseStatusState = nil;
 	}
