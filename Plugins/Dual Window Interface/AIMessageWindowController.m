@@ -540,14 +540,16 @@
 		tooltip = [NSString stringWithFormat:AILocalizedString(@"%@ in %@","AccountName on ChatRoomName"), [[chat account] formattedUID], [chat name]];
 	} else {
 		AIListObject	*destination = [chat listObject];
+		NSString		*destinationDisplayName = [destination displayName];
 		NSString		*destinationFormattedUID = [destination formattedUID];
 		BOOL			includeDestination = NO;
 		BOOL			includeSource = NO;
 
-		if (![[[destination displayName] compactedString] isEqualToString:[destinationFormattedUID compactedString]]) {
+		if (destinationFormattedUID && destinationDisplayName &&
+			![[destinationDisplayName compactedString] isEqualToString:[destinationFormattedUID compactedString]]) {
 			includeDestination = YES;
 		}
-		
+
 		AIAccount	*account;
 		NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
 		int onlineAccounts = 0;
