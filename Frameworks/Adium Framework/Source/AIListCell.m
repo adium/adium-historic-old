@@ -431,15 +431,6 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 
 #pragma mark Accessibility
 
-- (NSArray *)accessibilityAttributeNames
-{
-	NSMutableArray *names = [[super accessibilityAttributeNames] mutableCopy];
-	[names addObject:NSAccessibilityValueAttribute];
-	[names addObject:NSAccessibilityTitleAttribute];
-	[names addObject:@"ClassName"];
-	[names autorelease];
-	return names;
-}
 - (id)accessibilityAttributeValue:(NSString *)attribute
 {
 	id value;
@@ -447,23 +438,60 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 #define IS_GROUP [listObject isKindOfClass:[AIListGroup class]]
 #define IS_CONTACT (!IS_GROUP)
 
-	if([attribute isEqualToString:NSAccessibilityRoleAttribute])
+	if([attribute isEqualToString:NSAccessibilityRoleAttribute]) {
 		value = IS_CONTACT ? @"AIContactListItem": @"AIContactListGroup";
-	else if([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute])
-		value = IS_CONTACT ? AILocalizedString(@"contact list item", /*comment*/ nil) : AILocalizedString(@"contact list group", /*comment*/ nil);
-	else if([attribute isEqualToString:NSAccessibilityValueAttribute])
-		value = listObject;
-	else if([attribute isEqualToString:NSAccessibilityTitleAttribute])
+		
+	} else if([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute]) {
+		NSString *currentStatus = nil;
+		
+		if([listObject statusType] == AIAvailableStatusType) {
+			currentStatus = AILocalizedString(@"available contact", /*comment*/ nil);
+			
+		} else if([listObject statusType] == AIAwayStatusType) {
+			currentStatus = AILocalizedString(@"away contact", /*comment*/ nil);
+			
+		} else if([listObject statusType] == AIIdleStatus) {
+			currentStatus = AILocalizedString(@"idle contact", /*comment*/ nil);
+		}
+		
+		value = IS_CONTACT ? AILocalizedString(currentStatus, /*comment*/ nil) : AILocalizedString(@"contact list group", /*comment*/ nil);
+		
+	} else if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
 		value = [self labelString];
-	else if([attribute isEqualToString:@"ClassName"])
-		value = NSStringFromClass([self class]);
-	else
+		
+	} else if([attribute isEqualToString:NSAccessibilityWindowAttribute]) {
+		value = [controlView window];
+                
+	} else {
 		value = [super accessibilityAttributeValue:attribute];
+	}
 
 #undef IS_CONTACT
 #undef IS_GROUP
 
 	return value;
+}
+
+- (id)accessibilityFocusedUIElement:(NSPoint)point 
+{
+	return NSAccessibilityUnignoredAncestor(self);
+}
+
+- (NSArray *)accessibilityActionNames
+{
+	return [NSArray arrayWithObjects: NSAccessibilityPressAction, nil];
+}
+
+- (NSString *)accessibilityActionDescription:(NSString *)action
+{
+	return NSAccessibilityActionDescription(action);
+}
+	
+- (void)accessibilityPerformAction:(NSString *)action {
+	if ([action isEqualToString:NSAccessibilityPressAction]) {
+		// perform action on this cell
+		[controlView performSelector:@selector(performDefaultActionOnSelectedItem:)];
+	}
 }
 
 @end
