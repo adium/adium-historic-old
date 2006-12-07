@@ -244,7 +244,7 @@ struct _GaimPluginProtocolInfo
 	void (*reject_chat)(GaimConnection *, GHashTable *components);
 	char *(*get_chat_name)(GHashTable *components);
 	void (*chat_invite)(GaimConnection *, int id,
-						const char *who, const char *message);
+						const char *message, const char *who);
 	void (*chat_leave)(GaimConnection *, int id);
 	void (*chat_whisper)(GaimConnection *, int id,
 						 const char *who, const char *message);
@@ -276,7 +276,7 @@ struct _GaimPluginProtocolInfo
 
 	const char *(*normalize)(const GaimAccount *, const char *);
 
-	void (*set_buddy_icon)(GaimConnection *, const char *filename);
+	void (*set_buddy_icon)(GaimConnection *, const char *cached_path);
 
 	void (*remove_group)(GaimConnection *gc, GaimGroup *group);
 
@@ -301,6 +301,9 @@ struct _GaimPluginProtocolInfo
 
 	/* For use in plugins that may understand the underlying protocol */
 	int (*send_raw)(GaimConnection *gc, const char *buf, int len);
+
+	/* room list serialize */
+	char *(*roomlist_room_serialize)(GaimRoomlistRoom *room);
 };
 
 #define GAIM_IS_PROTOCOL_PLUGIN(plugin) \

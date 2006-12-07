@@ -26,6 +26,10 @@
 @end
 
 @implementation ESGaimICQAccount
+- (const char *)protocolPlugin
+{
+    return "prpl-icq";
+}
 
 - (void)configureGaimAccount
 {
