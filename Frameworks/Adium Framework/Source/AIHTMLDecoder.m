@@ -19,6 +19,7 @@
 
 #import <Adium/AIHTMLDecoder.h>
 
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
@@ -217,7 +218,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	if (!thingsToInclude.simpleTagsOnly) {
 		if (messageLength > 0) {
 			//First, attempt to figure the base writing direction of our message based on its content
-			NSWritingDirection	dir = [[inMessage string] baseWritingDirection];
+			NSWritingDirection	dir = [inMessageString baseWritingDirection];
 
 			if ([NSApp isOnTigerOrBetter]) {
 				//If that doesn't work, try using the writing direction of the input field
