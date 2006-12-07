@@ -216,4 +216,19 @@
 	//Empty
 }
 
+#pragma mark Accessibility 
+
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
+		return [toolbarItem label];
+	} else if([attribute isEqualToString:NSAccessibilityHelpAttribute]) { 
+		return [toolbarItem toolTip]; 
+	} else if([attribute isEqualToString:NSAccessibilityToolbarButtonAttribute]) { 
+		return [self toolbarItem]; 
+	} else { 
+		return [super accessibilityAttributeValue:attribute]; 
+	}
+}
+
 @end
