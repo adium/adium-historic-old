@@ -218,17 +218,21 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		if (messageLength > 0) {
 			//First, attempt to figure the base writing direction of our message based on its content
 			NSWritingDirection	dir = [[inMessage string] baseWritingDirection];
-			
-			//If that doesn't work, try using the writing direction of the input field
-			if (dir == NSWritingDirectionNatural) {
-				dir = [[inMessage attribute:NSParagraphStyleAttributeName
-									atIndex:0
-							 effectiveRange:nil] baseWritingDirection];
-				
-				//If the input field's writing direction is NSWritingDirectionNatural, we shall figure what it really means.
-				//The natural writing direction is determined by the system based on the current active localization of the app.
-				if (dir == NSWritingDirectionNatural)
-					dir = [NSParagraphStyle defaultWritingDirectionForLanguage:nil];
+
+			if ([NSApp isOnTigerOrBetter]) {
+				//If that doesn't work, try using the writing direction of the input field
+				if (dir == NSWritingDirectionNatural) {
+					dir = [[inMessage attribute:NSParagraphStyleAttributeName
+										atIndex:0
+								 effectiveRange:nil] baseWritingDirection];
+					
+					//If the input field's writing direction is NSWritingDirectionNatural, we shall figure what it really means.
+					//The natural writing direction is determined by the system based on the current active localization of the app.
+					if (dir == NSWritingDirectionNatural)
+						dir = [NSParagraphStyle defaultWritingDirectionForLanguage:nil];
+				}
+			} else {
+				dir = [NSParagraphStyle defaultWritingDirectionForLanguage:nil];				
 			}
 			
 			if (dir == NSWritingDirectionRightToLeft) {
