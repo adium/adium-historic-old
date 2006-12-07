@@ -56,14 +56,14 @@
 
 typedef struct _ByteStream         ByteStream;
 typedef struct _ClientInfo         ClientInfo;
-typedef struct _FlapFrame          FlapFrame;
-typedef struct _IcbmCookie         IcbmCookie;
 typedef struct _FlapConnection     FlapConnection;
-typedef struct _OscarData          OscarData;
+typedef struct _FlapFrame          FlapFrame;
 typedef struct _IcbmArgsCh2        IcbmArgsCh2;
+typedef struct _IcbmCookie         IcbmCookie;
+typedef struct _OscarData          OscarData;
+typedef struct _QueuedSnac         QueuedSnac;
 
 typedef guint32 aim_snacid_t;
-typedef guint16 flap_seqnum_t;
 
 #include "snactypes.h"
 
@@ -352,10 +352,17 @@ struct _ByteStream
 	guint32 offset;
 };
 
+struct _QueuedSnac
+{
+	guint16 family;
+	guint16 subtype;
+	FlapFrame *frame;
+};
+
 struct _FlapFrame
 {
 	guint8 channel;
-	flap_seqnum_t seqnum;
+	guint16 seqnum;
 	ByteStream data;        /* payload stream */
 };
 
@@ -382,10 +389,13 @@ struct _FlapConnection
 
 	guint16 type;
 	guint16 subtype;
-	flap_seqnum_t seqnum;
-	guint32 status;
+	guint16 seqnum_out; /**< The sequence number of most recently sent packet. */
+	guint16 seqnum_in; /**< The sequence number of most recently received packet. */
 	GSList *groups;
-	struct rateclass *rates;
+	GSList *rateclasses; /* Contains nodes of struct rateclass. */
+
+	GQueue *queued_snacs; /**< Contains QueuedSnacs. */
+	guint queued_timeout;
 
 	void *internal; /* internal conn-specific libfaim data */
 };
@@ -493,8 +503,8 @@ struct _OscarData
 		gboolean in_transaction;
 	} ssi;
 
-	/* TODO: Implement this as a HashTable for HUGE speed improvement! */
-	GSList *handlerlist;
+	/** Contains pointers to handler functions for each family/subtype. */
+	GHashTable *handlerlist;
 
 	/** A linked list containing FlapConnections. */
 	GSList *oscar_connections;
@@ -567,8 +577,8 @@ int aim_send_login(OscarData *, FlapConnection *, const char *, const char *, Cl
 
 void aim_cleansnacs(OscarData *, int maxage);
 
-int oscar_data_addhandler(OscarData *od, guint16 family, guint16 type, aim_rxcallback_t newhandler, guint16 flags);
-void aim_clearhandlers(OscarData *od);
+void oscar_data_addhandler(OscarData *od, guint16 family, guint16 subtype, aim_rxcallback_t newhandler, guint16 flags);
+aim_rxcallback_t aim_callhandler(OscarData *od, guint16 family, guint16 subtype);
 
 /* flap_connection.c */
 FlapConnection *flap_connection_new(OscarData *, int type);
@@ -582,19 +592,14 @@ void flap_connection_recv_cb(gpointer data, gint source, GaimInputCondition cond
 void flap_connection_send(FlapConnection *conn, FlapFrame *frame);
 void flap_connection_send_version(OscarData *od, FlapConnection *conn);
 void flap_connection_send_version_with_cookie(OscarData *od, FlapConnection *conn, guint16 length, const guint8 *chipsahoy);
+void flap_connection_send_snac(OscarData *od, FlapConnection *conn, guint16 family, const guint16 subtype, guint16 flags, aim_snacid_t snacid, ByteStream *data);
 void flap_connection_send_keepalive(OscarData *od, FlapConnection *conn);
 FlapFrame *flap_frame_new(OscarData *od, guint16 channel, int datalen);
-
 
 OscarData *oscar_data_new(void);
 void oscar_data_destroy(OscarData *);
 
-/* 0x0001 - family_oservice.c */
-int aim_srv_setstatusmsg(OscarData *od, const char *msg);
-int aim_srv_setidle(OscarData *od, guint32 idletime);
-
 /* misc.c */
-
 #define AIM_VISIBILITYCHANGE_PERMITADD    0x05
 #define AIM_VISIBILITYCHANGE_PERMITREMOVE 0x06
 #define AIM_VISIBILITYCHANGE_DENYADD      0x07
@@ -605,14 +610,28 @@ int aim_srv_setidle(OscarData *od, guint32 idletime);
 
 #define AIM_WARN_ANON                     0x01
 
-int aim_nop(OscarData *, FlapConnection *);
-int aim_bos_changevisibility(OscarData *, FlapConnection *, int, const char *);
-int aim_bos_setgroupperm(OscarData *, FlapConnection *, guint32 mask);
-int aim_bos_setprivacyflags(OscarData *, FlapConnection *, guint32);
-void aim_reqpersonalinfo(OscarData *, FlapConnection *);
-int aim_reqservice(OscarData *, guint16);
-void aim_bos_reqrights(OscarData *, FlapConnection *);
-int aim_setextstatus(OscarData *od, guint32 status);
+
+
+/* 0x0001 - family_oservice.c */
+/* 0x0004 */ void aim_srv_requestnew(OscarData *od, guint16 serviceid);
+/* 0x0006 */ void aim_srv_reqrates(OscarData *od, FlapConnection *conn);
+/* 0x0008 */ void aim_srv_rates_addparam(OscarData *od, FlapConnection *conn);
+/* 0x0009 */ void aim_srv_rates_delparam(OscarData *od, FlapConnection *conn);
+/* 0x000c */ void aim_srv_sendpauseack(OscarData *od, FlapConnection *conn);
+/* 0x000e */ void aim_srv_reqpersonalinfo(OscarData *od, FlapConnection *conn);
+/* 0x0011 */ void aim_srv_setidle(OscarData *od, guint32 idletime);
+/* 0x0014 */ void aim_srv_setprivacyflags(OscarData *od, FlapConnection *conn, guint32);
+/* 0x0016 */ void aim_srv_nop(OscarData *od, FlapConnection *conn);
+/* 0x0017 */ void aim_srv_setversions(OscarData *od, FlapConnection *conn);
+/* 0x001e */ int aim_srv_setstatusmsg(OscarData *od, const char *msg);
+/* 0x001e */ int aim_srv_setextstatus(OscarData *od, guint32 status);
+
+
+void aim_bos_reqrights(OscarData *od, FlapConnection *conn);
+int aim_bos_changevisibility(OscarData *od, FlapConnection *conn, int, const char *);
+void aim_bos_setgroupperm(OscarData *od, FlapConnection *conn, guint32 mask);
+
+
 
 #define AIM_CLIENTTYPE_UNKNOWN  0x0000
 #define AIM_CLIENTTYPE_MC       0x0001
@@ -625,7 +644,7 @@ guint16 aim_im_fingerprint(const guint8 *msghdr, int len);
 #define AIM_RATE_CODE_WARNING    0x0002
 #define AIM_RATE_CODE_LIMIT      0x0003
 #define AIM_RATE_CODE_CLEARLIMIT 0x0004
-int aim_ads_requestads(OscarData *od, FlapConnection *conn);
+void aim_ads_requestads(OscarData *od, FlapConnection *conn);
 
 
 
@@ -1292,7 +1311,7 @@ int aim_icq_getallinfo(OscarData *od, const char *uin);
 /* 0x0017 - family_auth.c */
 void aim_sendcookie(OscarData *, FlapConnection *, const guint16 length, const guint8 *);
 int aim_admin_changepasswd(OscarData *, FlapConnection *, const char *newpw, const char *curpw);
-int aim_admin_reqconfirm(OscarData *od, FlapConnection *conn);
+void aim_admin_reqconfirm(OscarData *od, FlapConnection *conn);
 int aim_admin_getinfo(OscarData *od, FlapConnection *conn, guint16 info);
 int aim_admin_setemail(OscarData *od, FlapConnection *conn, const char *newemail);
 int aim_admin_setnick(OscarData *od, FlapConnection *conn, const char *newnick);
@@ -1489,12 +1508,13 @@ int ssi_modfirst(OscarData *od, aim_module_t *mod);
 int icq_modfirst(OscarData *od, aim_module_t *mod);
 int email_modfirst(OscarData *od, aim_module_t *mod);
 
-int aim_genericreq_n(OscarData *, FlapConnection *conn, guint16 family, guint16 subtype);
-void aim_genericreq_n_snacid(OscarData *, FlapConnection *conn, guint16 family, guint16 subtype);
-int aim_genericreq_l(OscarData *, FlapConnection *conn, guint16 family, guint16 subtype, guint32 *);
-int aim_genericreq_s(OscarData *, FlapConnection *conn, guint16 family, guint16 subtype, guint16 *);
+void aim_genericreq_n(OscarData *od, FlapConnection *conn, guint16 family, guint16 subtype);
+void aim_genericreq_n_snacid(OscarData *od, FlapConnection *conn, guint16 family, guint16 subtype);
+void aim_genericreq_l(OscarData *od, FlapConnection *conn, guint16 family, guint16 subtype, guint32 *);
+void aim_genericreq_s(OscarData *od, FlapConnection *conn, guint16 family, guint16 subtype, guint16 *);
 
 /* bstream.c */
+int byte_stream_new(ByteStream *bs, guint32 len);
 int byte_stream_init(ByteStream *bs, guint8 *data, int len);
 int byte_stream_empty(ByteStream *bs);
 int byte_stream_curpos(ByteStream *bs);
@@ -1520,9 +1540,6 @@ int byte_stream_putraw(ByteStream *bs, const guint8 *v, int len);
 int byte_stream_putstr(ByteStream *bs, const char *str);
 int byte_stream_putbs(ByteStream *bs, ByteStream *srcbs, int len);
 int byte_stream_putcaps(ByteStream *bs, guint32 caps);
-
-/* rxhandlers.c */
-aim_rxcallback_t aim_callhandler(OscarData *od, guint16 family, guint16 type);
 
 /*
  * Generic SNAC structure.  Rarely if ever used.
@@ -1550,12 +1567,6 @@ struct chatsnacinfo {
 	guint16 instance;
 };
 
-struct snacpair {
-	guint16 group;
-	guint16 subtype;
-	struct snacpair *next;
-};
-
 struct rateclass {
 	guint16 classid;
 	guint32 windowsize;
@@ -1566,8 +1577,9 @@ struct rateclass {
 	guint32 current;
 	guint32 max;
 	guint8 unknown[5]; /* only present in versions >= 3 */
-	struct snacpair *members;
-	struct rateclass *next;
+	GHashTable *members; /* Key is family and subtype, value is TRUE. */
+
+	struct timeval last; /**< The time when we last sent a SNAC of this rate class. */
 };
 
 int aim_cachecookie(OscarData *od, IcbmCookie *cookie);
@@ -1581,17 +1593,6 @@ int aim_cookie_free(OscarData *od, IcbmCookie *cookie);
 int aim_chat_readroominfo(ByteStream *bs, struct aim_chat_roominfo *outinfo);
 
 void flap_connection_destroy_chat(OscarData *od, FlapConnection *conn);
-
-/* These are all handled internally now. */
-void aim_setversions(OscarData *od, FlapConnection *conn);
-void aim_reqrates(OscarData *, FlapConnection *);
-void aim_rates_addparam(OscarData *, FlapConnection *);
-void aim_rates_delparam(OscarData *, FlapConnection *);
-void aim_sendpauseack(OscarData *od, FlapConnection *conn);
-
-
-
-
 
 #ifdef __cplusplus
 }

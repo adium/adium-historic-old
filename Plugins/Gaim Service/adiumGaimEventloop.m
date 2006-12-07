@@ -85,8 +85,10 @@ CFSocketRef socketInRunLoop(int fd, CFOptionFlags callBackTypes, CFSocketContext
 	if (!socket) AILog(@"CFSocket creation failed for fd %i", fd);
 	NSCAssert1(socket != NULL, @"CFSocket creation failed for fd %i", fd);
 
+#ifdef GAIM_SOCKET_DEBUG
 	AILog(@"Ccreating socket for callbacktypes %i gave %x",callBackTypes,socket);
-
+#endif
+	
 	/* If we created a new socket (versus returning a cached one -- see the CFSocketCreateWithNative() documentation), have it
 	 * reenable callbacks automatically, and add it to the run loop.
 	 */
@@ -103,7 +105,11 @@ CFSocketRef socketInRunLoop(int fd, CFOptionFlags callBackTypes, CFSocketContext
 		if (callBackTypes & kCFSocketWriteCallBack) {
 			flags |= kCFSocketAutomaticallyReenableWriteCallBack;
 		}
+		
+#ifdef GAIM_SOCKET_DEBUG
 		AILog(@"socket %x created with flags %i",socket,flags);
+#endif
+
 		CFSocketSetSocketFlags(socket, flags);
 
 		//Add it to our run loop
@@ -151,16 +157,19 @@ void updateSocketForSourceInfo(struct SourceInfo *sourceInfo)
 	CFSocketContext context = { 0, sourceInfo, /* CFAllocatorRetainCallBack */ NULL, /* CFAllocatorReleaseCallBack */ NULL, /* CFAllocatorCopyDescriptionCallBack */ NULL };
 
 	//Invalidate the old socket, which was for both reading and writing
-	AILog(@"updateSocketForSourceInfo(): Invalidating %x",sourceInfo->socket);
-		  
-	AILog(@"Its socket flags are %i (retain: %i)",CFSocketGetSocketFlags(sourceInfo->socket),CFGetRetainCount(sourceInfo->socket));
+	#ifdef GAIM_SOCKET_DEBUG
+		AILog(@"updateSocketForSourceInfo(): Invalidating %x",sourceInfo->socket);
+		AILog(@"Its socket flags are %i (retain: %i)",CFSocketGetSocketFlags(sourceInfo->socket),CFGetRetainCount(sourceInfo->socket));
+	#endif
 	CFSocketInvalidate(sourceInfo->socket);
 	CFRelease(sourceInfo->socket);
 	sourceInfo->socket = NULL;
 
 	//Create a new socket which will be for just reading or just writing; associate it with the info
 	sourceInfo->socket = socketInRunLoop(sourceInfo->fd, callBackTypes, &context);
-	AILog(@"updateSocketForSourceInfo(): Got %x (%i) after reassignment...", sourceInfo->socket, CFSocketGetSocketFlags(sourceInfo->socket));
+	#ifdef GAIM_SOCKET_DEBUG
+		AILog(@"updateSocketForSourceInfo(): Got %x (%i) after reassignment...", sourceInfo->socket, CFSocketGetSocketFlags(sourceInfo->socket));
+	#endif
 #endif
 	/* All other aspects of the sourceInfo are still right, so leave them as-is */
 }
@@ -170,8 +179,10 @@ guint adium_source_remove(guint tag) {
 	[[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
 
     if (sourceInfo) {
+#ifdef GAIM_SOCKET_DEBUG
 		AILog(@"adium_source_remove(): Removing for fd %i [sourceInfo %x]: tag is %i (timer %i, read %i, write %i)",sourceInfo->fd,
 			  sourceInfo, tag, sourceInfo->timer_tag, sourceInfo->read_tag, sourceInfo->write_tag);
+#endif
 		if (sourceInfo->timer_tag == tag) {
 			sourceInfo->timer_tag = 0;
 
@@ -193,7 +204,9 @@ guint adium_source_remove(guint tag) {
 			}
 			
 			if (sourceInfo->socket) {
+#ifdef GAIM_SOCKET_DEBUG
 				AILog(@"adium_source_remove(): Done with a socket %x, so invalidating it",sourceInfo->socket);
+#endif
 				CFSocketInvalidate(sourceInfo->socket);
 				CFRelease(sourceInfo->socket);
 				sourceInfo->socket = NULL;
@@ -286,7 +299,9 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	 * If a socket already exists on this fd, CFSocketCreateWithNative() will return that existing socket, and the other parameters
 	 * will be ignored.
 	 */
+#ifdef GAIM_SOCKET_DEBUG
 	AILog(@"adium_input_add(): We want to add an input on fd %i for callbacktypes %i",fd,callBackTypes);
+#endif
     CFSocketRef socket = socketInRunLoop(fd, callBackTypes, &context);
 
 	/*
@@ -299,7 +314,9 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 		free(info);
 		context.info = actualSocketContext.info;
 		info = context.info;
+#ifdef GAIM_SOCKET_DEBUG
 		AILog(@"adium_input_add(): We need to recreate the socket for fd %i. Invalidating and releasing %x",fd,socket);
+#endif
 		CFSocketInvalidate(socket);
 		CFRelease(socket);
 		
@@ -322,7 +339,9 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 			callBackTypes |= kCFSocketWriteCallBack;			
 		}
 
+#ifdef GAIM_SOCKET_DEBUG
 		AILog(@"adium_input_add(): An input on fd %i already existed; we're reassigning it callbacktypes %i",fd,callBackTypes);
+#endif
 		socket = socketInRunLoop(fd, callBackTypes, &context);
 	}
 
@@ -370,7 +389,6 @@ static void socketCallback(CFSocketRef s,
 		} else {
 			AILog(@"Called read with no read_tag (read_tag %i write_tag %i) for %x",
 				  sourceInfo->read_tag, sourceInfo->write_tag, sourceInfo->socket);
-
 		}
 
 	} else /* if ((callbackType & kCFSocketWriteCallBack)) */ {
@@ -385,9 +403,11 @@ static void socketCallback(CFSocketRef s,
 	}
 
 	if (ioFunction) {
+#ifdef GAIM_SOCKET_DEBUG
 		AILog(@"socketCallback(): Calling the ioFunction for %x, callback type %i (%s: tag is %i)",s,callbackType,
 			  ((callbackType & kCFSocketReadCallBack) ? "reading" : "writing"),
 			  ((callbackType & kCFSocketReadCallBack) ? sourceInfo->read_tag : sourceInfo->write_tag));
+#endif
 		ioFunction(user_data, fd, c);
 	}
 }
