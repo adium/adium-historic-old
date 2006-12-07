@@ -29,6 +29,8 @@
 
 #define DELAYED_UPDATE_INTERVAL			2.0
 
+extern gchar *oscar_encoding_extract(const char *encoding);
+
 @implementation CBGaimOscarAccount
 
 - (const char*)protocolPlugin
@@ -138,14 +140,33 @@
 
 - (oneway void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString
 {
-	//For AIM contacts, we get profiles by themselves and don't want this userInfo with all its fields, so
-	//we override this method to prevent the information from reaching the rest of Adium.
-	
-	//For ICQ contacts, however, we want to pass this data on as the profile
-	const char	firstCharacter = [[theContact UID] characterAtIndex:0];
-	
-	if ((firstCharacter >= '0' && firstCharacter <= '9') || [theContact isStranger]) {
+	NSString	*contactUID = [theContact UID];
+	const char	firstCharacter = [contactUID characterAtIndex:0];
+
+	if ((firstCharacter >= '0' && firstCharacter <= '9')) {
+		//For ICQ contacts, however, we want to pass this data on as the profile
 		[super updateUserInfo:theContact withData:userInfoString];
+
+	} else {
+		//For AIM contacts, get the profile directly and pass it on rather than using the libgaim-formatted string
+		OscarData *od = ((account && account->gc) ? account->gc->proto_data : NULL);
+
+		if (od) {
+			aim_userinfo_t *userinfo;
+			userinfo = aim_locate_finduserinfo(od, [contactUID UTF8String]);
+			if (userinfo &&
+				(userinfo->info_len > 0) && (userinfo->info) && (userinfo->info_encoding)) {
+				gchar *tmp, *info_utf8;
+				
+				tmp = oscar_encoding_extract(userinfo->info_encoding);
+				info_utf8 = oscar_encoding_to_utf8(tmp, userinfo->info, userinfo->info_len);
+				g_free(tmp);
+				if (info_utf8) {
+					[super updateUserInfo:theContact withData:[NSString stringWithUTF8String:info_utf8]];
+					g_free(info_utf8);
+				}
+			}				
+		}
 	}
 }
 
@@ -287,26 +308,6 @@
 }
 
 #pragma mark File transfer
-
-/*!
-* @brief Allow a file transfer with an object?
- *
- * Only return YES if the user's capabilities include OSCAR_CAPABILITY_SENDFILE indicating support for file transfer
- */
-- (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
-{
-	OscarData			*od;
-	aim_userinfo_t		*userinfo;
-	
-	if ((gaim_account_is_connected(account)) &&
-		(od = account->gc->proto_data) &&
-		(userinfo = aim_locate_finduserinfo(od, [[inListObject UID] UTF8String]))) {
-		
-		return (userinfo->capabilities & OSCAR_CAPABILITY_SENDFILE);
-	}
-	
-	return NO;
-}
 
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
