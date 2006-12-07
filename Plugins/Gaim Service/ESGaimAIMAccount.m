@@ -261,9 +261,27 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
  * @brief Can we send images for this chat?
  */
 - (BOOL)canSendImagesForChat:(AIChat *)inChat
-{
-	//XXX Check against the chat's list object's capabilities for DirectIM
-	return ![inChat isGroupChat];
+{	
+	if ([inChat isGroupChat]) return NO;
+
+	OscarData *od = ((account && account->gc) ? account->gc->proto_data : NULL);
+	if (od) {
+		AIListObject *listObject = [inChat listObject];
+		const char *contactUID = [[listObject UID] UTF8String];
+		aim_userinfo_t *userinfo = aim_locate_finduserinfo(od, contactUID);
+		
+		if (userinfo &&
+			aim_sncmp(gaim_account_get_username(account), contactUID) &&
+			[listObject online]) {
+			return (userinfo->capabilities & OSCAR_CAPABILITY_DIRECTIM);
+
+		} else {
+			return NO;
+		}
+
+	} else {
+		return NO;
+	}
 }
 
 #pragma mark Account Action Menu Items
