@@ -772,7 +772,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
 {
-	return YES;
+	GaimPluginProtocolInfo *prpl_info = NULL;
+
+	if (account && account->gc && account->gc->prpl)
+		prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(account->gc->prpl);
+	
+	if (prpl_info && prpl_info->send_file)
+		return (!prpl_info->can_receive_file || prpl_info->can_receive_file(account->gc, [[inListObject UID] UTF8String]));
+	else
+		return NO;
 }
 
 // **XXX** Not used at present. Do we want to?
