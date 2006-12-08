@@ -75,4 +75,9 @@
 	
 }
 
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	return [super accessibilityAttributeValue:attribute];
+}
+
 @end

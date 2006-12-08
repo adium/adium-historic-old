@@ -230,4 +230,13 @@
     return (isLocal ? NSDragOperationEvery : NSDragOperationNone);
 }
 
+#pragma mark Accessibility
+
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{	
+	return [super accessibilityAttributeValue:attribute];
+}
+
+
 @end
+

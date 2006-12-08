@@ -103,4 +103,15 @@
 	}
 }
 
+#pragma mark Accessibility
+
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	if([attribute isEqualToString:NSAccessibilityRoleAttribute]) {
+		return @"AIImageButton";
+	} else {
+		return [super accessibilityAttributeValue:attribute];
+	}
+}
+
 @end
