@@ -578,7 +578,10 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			//Get the image, then write it out as a png
 			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
 			if (gaimImage) {
-				NSString			*imagePath = _messageImageCachePath(imageID, adiumAccount);
+				NSString		*filename = (gaim_imgstore_get_filename(gaimImage) ?
+											 [NSString stringWithUTF8String:gaim_imgstore_get_filename(gaimImage)] :
+											 @"Image");
+				NSString		*imagePath = _messageImageCachePath(imageID, adiumAccount);
 				
 				//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
 				//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
@@ -589,7 +592,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 				
 				//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string; the 'scaledToFitImage' class lets us apply CSS to directIM images only
 				if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]) {
-					[newString appendString:[NSString stringWithFormat:@"<IMG CLASS=\"scaledToFitImage\" SRC=\"%@\">",imagePath]];
+					[newString appendString:[NSString stringWithFormat:@"<IMG CLASS=\"scaledToFitImage\" SRC=\"%@\" ALT=\"%@\">",
+						imagePath, filename]];
 				}
 				
 				[image release];
