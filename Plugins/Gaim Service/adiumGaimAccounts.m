@@ -31,13 +31,24 @@ static void adiumGaimAccountRequestAdd(GaimAccount *account, const char *remote_
 	[accountLookup(account) requestAddContactWithUID:[NSString stringWithUTF8String:remote_user]];
 }
 
-static void adiumGaimAccountRequestAuthorize(GaimAccount *account, const char *remote_user, const char *accountId,
+/*
+ * @brief A contact requests authorization to add us to her list
+ *
+ * @param account GaimAccount being added
+ * @param remote_user The UID of the contact
+ * @param anId May be NULL; an ID associated with the authorization request (?)
+ * @param alias The contact's alias. May be NULL.
+ * @param mess A message accompanying the request. May be NULL.
+ * @param authorize_cb Call if authorization granted
+ * @param deny_cb Call if authroization denied
+ * @param user_data Data for the process; be sure to return it in the callback
+ */
+static void adiumGaimAccountRequestAuthorize(GaimAccount *account, const char *remote_user, const char *anId,
 									   const char *alias, const char *message, 
 									   GCallback authorize_cb, GCallback deny_cb, void *user_data)
 {
 	NSMutableDictionary	*infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[NSString stringWithUTF8String:remote_user], @"Remote Name",
-		[NSString stringWithUTF8String:accountId], @"Account Name",
 		[NSValue valueWithPointer:authorize_cb], @"authorizeCB",
 		[NSValue valueWithPointer:deny_cb], @"denyCB",
 		[NSValue valueWithPointer:user_data], @"userData",
