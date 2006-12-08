@@ -510,6 +510,18 @@
 		349E2E8E07A8AF0C00EAB76A /* AIEmoticonPackPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349E2E8C07A8AF0C00EAB76A /* AIEmoticonPackPreviewController.m */; };
 		34A250B607E0F822009854E1 /* StatusDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34A250B507E0F822009854E1 /* StatusDefaults.plist */; };
 		34A29DB706ED68C000E1366C /* Contact List in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34A29D9406ED68BF00E1366C /* Contact List */; };
+		34A3CA930B293248001147FB /* ESGaimAIMAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0EB8E07CD349200A82198 /* ESGaimAIMAccount.m */; };
+		34A3CA940B293249001147FB /* GaimDefaultsMac.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76472E07A07A340021CCD7 /* GaimDefaultsMac.plist */; };
+		34A3CA950B293251001147FB /* ESDotMacService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5A406E00AD200FF7FBC /* ESDotMacService.m */; };
+		34A3CA960B293253001147FB /* ESDotMacService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5A306E00AD200FF7FBC /* ESDotMacService.h */; };
+		34A3CA970B293254001147FB /* ESGaimAIMAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E0EB8D07CD349200A82198 /* ESGaimAIMAccount.h */; };
+		34A3CA980B293257001147FB /* ESGaimDotMacAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B387EB707199FE5004DE713 /* ESGaimDotMacAccountViewController.h */; };
+		34A3CA990B29325A001147FB /* ESAIMService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BAFD5A106E00AD200FF7FBC /* ESAIMService.h */; };
+		34A3CA9A0B293262001147FB /* ESGaimDotMacAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F101E407342B4D00890D3B /* ESGaimDotMacAccount.h */; };
+		34A3CA9B0B293264001147FB /* ESGaimDotMacAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F101E307342B4D00890D3B /* ESGaimDotMacAccount.m */; };
+		34A3CA9C0B293267001147FB /* ESGaimDotMacAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B387EB807199FE5004DE713 /* ESGaimDotMacAccountViewController.m */; };
+		34A3CA9D0B293268001147FB /* ESAIMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5A206E00AD200FF7FBC /* ESAIMService.m */; };
+		34A3CA9E0B293285001147FB /* GaimDefaultsAIM.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B7635A507A0581D0021CCD7 /* GaimDefaultsAIM.plist */; };
 		34A489F306F64359002C7C5F /* AISCLViewPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A489F106F64359002C7C5F /* AISCLViewPlugin.m */; };
 		34A48A0106F6436D002C7C5F /* AIStandardListWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A489FB06F6436D002C7C5F /* AIStandardListWindowController.m */; };
 		34A48A0406F6436D002C7C5F /* AIListWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A489FE06F6436D002C7C5F /* AIListWindowController.m */; };
@@ -4426,6 +4438,7 @@
 				34416053059FC2270019246B /* Jabber */,
 				343A7F2206935DAF00150CEC /* Meanwhile */,
 				344159A2059F971C0019246B /* MSN */,
+				34415960059F94F80019246B /* Oscar */,
 				34C2E6650634CF010018E5D2 /* Novell GroupWise */,
 				3419E72D0A88086E00C3FC68 /* QQ */,
 				345A7B560954ACD900FF3113 /* SIMPLE */,
@@ -5154,7 +5167,6 @@
 		34C7C62009EC4E140060FB4A /* Services (Disabled) */ = {
 			isa = PBXGroup;
 			children = (
-				34415960059F94F80019246B /* Oscar */,
 			);
 			name = "Services (Disabled)";
 			sourceTree = "<group>";
@@ -7403,6 +7415,11 @@
 				3419E7690A880CDA00C3FC68 /* ESGaimQQAccountViewController.h in Headers */,
 				343700A90A9C1E170028604E /* AIAdvancedPreferencePane.h in Headers */,
 				344499E90B23CA5D0054B761 /* adiumGaimAccounts.h in Headers */,
+				34A3CA960B293253001147FB /* ESDotMacService.h in Headers */,
+				34A3CA970B293254001147FB /* ESGaimAIMAccount.h in Headers */,
+				34A3CA980B293257001147FB /* ESGaimDotMacAccountViewController.h in Headers */,
+				34A3CA990B29325A001147FB /* ESAIMService.h in Headers */,
+				34A3CA9A0B293262001147FB /* ESGaimDotMacAccount.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8223,6 +8240,8 @@
 				34E0368F0A75AA4F00394F11 /* GaimDefaultsICQ.plist in Resources */,
 				34500ED00A881F8500509225 /* GaimDefaultsQQ.plist in Resources */,
 				347E39DC0A98AA4A00961B0E /* missing_image.png in Resources */,
+				34A3CA940B293249001147FB /* GaimDefaultsMac.plist in Resources */,
+				34A3CA9E0B293285001147FB /* GaimDefaultsAIM.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8816,6 +8835,11 @@
 				3419E7400A880B2C00C3FC68 /* ESQQService.m in Sources */,
 				3419E76A0A880CDA00C3FC68 /* ESGaimQQAccountViewController.m in Sources */,
 				344499EA0B23CA5D0054B761 /* adiumGaimAccounts.m in Sources */,
+				34A3CA930B293248001147FB /* ESGaimAIMAccount.m in Sources */,
+				34A3CA950B293251001147FB /* ESDotMacService.m in Sources */,
+				34A3CA9B0B293264001147FB /* ESGaimDotMacAccount.m in Sources */,
+				34A3CA9C0B293267001147FB /* ESGaimDotMacAccountViewController.m in Sources */,
+				34A3CA9D0B293268001147FB /* ESAIMService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
