@@ -237,48 +237,8 @@ static void *adiumGaimRequestFields(const char *title, const char *primary,
 
     if (titleString && 
 		[titleString rangeOfString:@"new jabber"].location != NSNotFound) {
-		/* Jabber registration request. Instead of displaying a request dialogue, we fill in the information automatically. */
-		GList					*gl, *fl, *field_list;
-		GaimRequestField		*field;
-		GaimRequestFieldGroup	*group;
-		JabberStream			*js = (JabberStream *)userData;
-		GaimAccount				*account = js->gc->account;
-		
-		//Look through each group, processing each field, searching for username and password fields
-		for (gl = gaim_request_fields_get_groups(fields);
-			 gl != NULL;
-			 gl = gl->next) {
-			
-			group = gl->data;
-			field_list = gaim_request_field_group_get_fields(group);
-			
-			for (fl = field_list; fl != NULL; fl = fl->next) {
-				GaimRequestFieldType type;
-				
-				field = (GaimRequestField *)fl->data;
-				type = gaim_request_field_get_type(field);
-				if (type == GAIM_REQUEST_FIELD_STRING) {
-					if (strcasecmp("username", gaim_request_field_get_label(field)) == 0) {
-						const char	*username;
-						NSString	*usernameString;
-						NSRange		serverAndResourceBeginningRange;
-						
-						//Process the username to remove the server and the resource
-						username = gaim_account_get_username(account);
-						usernameString = [NSString stringWithUTF8String:username];
-						serverAndResourceBeginningRange = [usernameString rangeOfString:@"@"];
-						if (serverAndResourceBeginningRange.location != NSNotFound) {
-							usernameString = [usernameString substringToIndex:serverAndResourceBeginningRange.location];
-						}
-						
-						gaim_request_field_string_set_value(field, [usernameString UTF8String]);
-					} else if (strcasecmp("password", gaim_request_field_get_label(field)) == 0) {
-						gaim_request_field_string_set_value(field, gaim_account_get_password(account));
-					}
-				}
-			}
-			
-		}
+		/* Jabber registration request. Instead of displaying a request dialogue, we fill in the information automatically.
+		 * And by that, I mean that we accept all the default empty values, since the username and password are preset for us. */
 		((GaimRequestFieldsCb)okCb)(userData, fields);
 		
 	} else {		
