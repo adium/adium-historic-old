@@ -303,6 +303,12 @@
 	*/
 	else if ([serviceID isEqualToString:@"libgaim-oscar-Mac"])
 		serviceID = @"joscar-OSCAR-dotMac";
+#else
+	else if ([serviceID isEqualToString:@"joscar-OSCAR-AIM"])
+		serviceID = @"libgaim-oscar-AIM";
+	else if ([serviceID isEqualToString:@"joscar-OSCAR-dotMac"])
+		serviceID = @"libgaim-oscar-Mac";
+
 #endif
 	
 	return serviceID;
