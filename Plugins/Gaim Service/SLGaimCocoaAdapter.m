@@ -502,7 +502,7 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					}
 					*/
 
-					//Join the chat serverside - the GHsahTable components, couple with the originating GaimConnect,
+					//Join the chat serverside - the GHashTable components, couple with the originating GaimConnect,
 					//now contains all the information the prpl will need to process our request.
 					GaimDebug (@"In the event of an emergency, your GHashTable may be used as a flotation device...");
 					serv_join_chat(gc, components);
@@ -544,7 +544,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	NSScanner			*scanner;
     NSString			*chunkString = nil;
     NSMutableString		*newString;
-	NSString			*targetString = @"<IMG ID='";
+	NSString			*targetString = @"<IMG ID=\"";
     int imageID;
 
 	if ([inString rangeOfString:targetString options:NSCaseInsensitiveSearch].location == NSNotFound) {
