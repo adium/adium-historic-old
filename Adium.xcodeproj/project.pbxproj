@@ -522,6 +522,7 @@
 		34A3CA9C0B293267001147FB /* ESGaimDotMacAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B387EB807199FE5004DE713 /* ESGaimDotMacAccountViewController.m */; };
 		34A3CA9D0B293268001147FB /* ESAIMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5A206E00AD200FF7FBC /* ESAIMService.m */; };
 		34A3CA9E0B293285001147FB /* GaimDefaultsAIM.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B7635A507A0581D0021CCD7 /* GaimDefaultsAIM.plist */; };
+		34A3D2E60B2B1BEB001147FB /* ESGaimOscarAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41C08086D9100E27095 /* ESGaimOscarAccountView.nib */; };
 		34A489F306F64359002C7C5F /* AISCLViewPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A489F106F64359002C7C5F /* AISCLViewPlugin.m */; };
 		34A48A0106F6436D002C7C5F /* AIStandardListWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A489FB06F6436D002C7C5F /* AIStandardListWindowController.m */; };
 		34A48A0406F6436D002C7C5F /* AIListWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A489FE06F6436D002C7C5F /* AIListWindowController.m */; };
@@ -8242,6 +8243,7 @@
 				347E39DC0A98AA4A00961B0E /* missing_image.png in Resources */,
 				34A3CA940B293249001147FB /* GaimDefaultsMac.plist in Resources */,
 				34A3CA9E0B293285001147FB /* GaimDefaultsAIM.plist in Resources */,
+				34A3D2E60B2B1BEB001147FB /* ESGaimOscarAccountView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
