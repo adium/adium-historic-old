@@ -403,7 +403,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 						//Store the src image's data gaimside
 						int				imgstore = gaim_imgstore_add([imageData bytes], [imageData length], (alt ? [alt UTF8String] : [source UTF8String]));
 						
-						NSString		*newTag = [NSString stringWithFormat:@"<IMG ID=\"%i\">",imgstore];
+						NSString		*newTag = [NSString stringWithFormat:@"<IMG ID=\"%i\" CLASS=\"scaledToFitImage\">",imgstore];
 						[processedString appendString:newTag];
 					}
 				}
