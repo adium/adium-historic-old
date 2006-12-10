@@ -1298,24 +1298,12 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
  *
  * @param inCallBackValue The cb to use
  * @param inUserDataValue Original user data
- * @param inFieldsValue The entire GaimRequestFields pointer originally passed
  */
-- (void)doAuthRequestCbValue:(NSValue *)inCallBackValue
-		   withUserDataValue:(NSValue *)inUserDataValue 
-		 callBackIndexNumber:(NSNumber *)inIndexNumber
-			 isInputCallback:(NSNumber *)isInputCallback
+- (void)doAuthRequestCbValue:(NSValue *)inCallBackValue withUserDataValue:(NSValue *)inUserDataValue 
 {	
-	if ([isInputCallback boolValue]) {
-		GaimRequestInputCb callBack = [inCallBackValue pointerValue];
-		if (callBack) {
-			callBack([inUserDataValue pointerValue], "");
-		}
-		
-	} else {		
-		GaimRequestActionCb callBack = [inCallBackValue pointerValue];
-		if (callBack) {
-			callBack([inUserDataValue pointerValue], [inIndexNumber intValue]);
-		}
+	GaimRequestInputCb callBack = [inCallBackValue pointerValue];
+	if (callBack) {
+		callBack([inUserDataValue pointerValue]);
 	}
 }
 

@@ -514,16 +514,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 	if (inDidAuthorize) {
 		callback = [[[infoDict objectForKey:@"authorizeCB"] retain] autorelease];
-		indexNumber = [NSNumber numberWithInt:0];
 	} else {
 		callback = [[[infoDict objectForKey:@"denyCB"] retain] autorelease];
-		indexNumber = [NSNumber numberWithInt:1];		
 	}
 
-	[gaimThread doAuthRequestCbValue:callback
-				   withUserDataValue:[[[infoDict objectForKey:@"userData"] retain] autorelease]
-				 callBackIndexNumber:indexNumber
-					 isInputCallback:[[[infoDict objectForKey:@"isInputCallback"] retain] autorelease]];
+	[gaimThread doAuthRequestCbValue:callback withUserDataValue:[[[infoDict objectForKey:@"userData"] retain] autorelease]];
 }
 
 //Chats ------------------------------------------------------------
