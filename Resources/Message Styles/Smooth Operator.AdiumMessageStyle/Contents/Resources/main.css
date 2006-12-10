@@ -139,6 +139,8 @@ IMG {
         top:-3px;
 }
 
+img.scaledToFitImage{ width:auto; }
+
 #Chat {
 	overflow: hidden;
 	margin-bottom: -8px;
