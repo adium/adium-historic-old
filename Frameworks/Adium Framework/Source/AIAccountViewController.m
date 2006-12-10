@@ -27,6 +27,7 @@
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringFormatter.h>
 #import <AIUtilities/AITextFieldAdditions.h>
+#import <AIUtilities/AIStringUtilities.h>
 
 #define KEY_DISABLE_TYPING_NOTIFICATIONS		@"Disable Typing Notifications"
 
@@ -184,7 +185,7 @@
 		service = [account service];
 
 		//UID Label
-		[textField_accountUIDLabel setStringValue:[[service userNameLabel] stringByAppendingString:AILocalizedStringFromTableInBundle(@":", "Colon which will be appended after a label such as 'User Name', before an input field", nil, [NSBundle bundleForClass:[AIAccountViewController class]], nil)]];
+		[textField_accountUIDLabel setStringValue:[[service userNameLabel] stringByAppendingString:AILocalizedStringFromTableInBundle(@":", nil, [NSBundle bundleForClass:[AIAccountViewController class]], "Colon which will be appended after a label such as 'User Name', before an input field")]];
 
 		//UID
 		NSString	*formattedUID = [account formattedUID];
