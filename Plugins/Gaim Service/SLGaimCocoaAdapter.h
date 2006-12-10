@@ -91,8 +91,6 @@
 		   withUserDataValue:(NSValue *)inUserDataValue 
 		 callBackIndexNumber:(NSNumber *)inIndexNumber
 			 isInputCallback:(NSNumber *)isInputCallback;
-
-- (NSString *)processedIncomingUserInfo:(NSString *)inString;
 @end
 
 //Lookup functions

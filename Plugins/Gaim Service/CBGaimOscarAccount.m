@@ -138,34 +138,31 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 	return nil;
 }
 
-- (oneway void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString
+- (oneway void)updateUserInfo:(AIListContact *)theContact withData:(GaimNotifyUserInfo *)user_info
 {
 	NSString	*contactUID = [theContact UID];
 	const char	firstCharacter = [contactUID characterAtIndex:0];
 
 	if ((firstCharacter >= '0' && firstCharacter <= '9')) {
 		//For ICQ contacts, however, we want to pass this data on as the profile
-		[super updateUserInfo:theContact withData:userInfoString];
+		[super updateUserInfo:theContact withData:user_info];
 
 	} else {
-		//For AIM contacts, get the profile directly and pass it on rather than using the libgaim-formatted string
-		OscarData *od = ((account && account->gc) ? account->gc->proto_data : NULL);
+		GList *l;
+		
+		for (l = gaim_notify_user_info_get_entries(user_info); l != NULL; l = l->next) {
+			GaimNotifyUserInfoEntry *user_info_entry = l->data;
+			if (gaim_notify_user_info_entry_get_label(user_info_entry) &&
+				strcmp(gaim_notify_user_info_entry_get_label(user_info_entry), "Profile") == 0) {
 
-		if (od) {
-			aim_userinfo_t *userinfo;
-			userinfo = aim_locate_finduserinfo(od, [contactUID UTF8String]);
-			if (userinfo &&
-				(userinfo->info_len > 0) && (userinfo->info) && (userinfo->info_encoding)) {
-				gchar *tmp, *info_utf8;
+				[theContact setProfile:[AIHTMLDecoder decodeHTML:(gaim_notify_user_info_entry_get_value(user_info_entry) ?
+																  [NSString stringWithUTF8String:gaim_notify_user_info_entry_get_value(user_info_entry)] :
+																  nil)]
+								notify:NotifyLater];
 				
-				tmp = oscar_encoding_extract(userinfo->info_encoding);
-				info_utf8 = oscar_encoding_to_utf8(tmp, userinfo->info, userinfo->info_len);
-				g_free(tmp);
-				if (info_utf8) {
-					[super updateUserInfo:theContact withData:[NSString stringWithUTF8String:info_utf8]];
-					g_free(info_utf8);
-				}
-			}				
+				//Apply any changes
+				[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+			}
 		}
 	}
 }

@@ -1190,20 +1190,6 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	}
 }
 
-- (NSString *)processedIncomingUserInfo:(NSString *)inString
-{
-	NSMutableString *returnString = nil;
-	if ([inString rangeOfString:@"Gaim could not find any information in the user's profile. The user most likely does not exist."].location != NSNotFound) {
-		returnString = [[inString mutableCopy] autorelease];
-		[returnString replaceOccurrencesOfString:@"Gaim could not find any information in the user's profile. The user most likely does not exist."
-									  withString:AILocalizedString(@"Adium could not find any information in the user's profile. This may not be a registered name.", "Message shown when a contact's profile can't be found")
-										 options:NSLiteralSearch
-										   range:NSMakeRange(0, [returnString length])];
-	}
-
-	return (returnString ? returnString : inString);
-}
-
 #pragma mark Xfer
 - (void)xferRequest:(GaimXfer *)xfer
 {

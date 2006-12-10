@@ -324,11 +324,31 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
-- (void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString
+- (NSString *)processedIncomingUserInfo:(NSString *)inString
 {
-	[theContact setProfile:[AIHTMLDecoder decodeHTML:userInfoString]
-					notify:NotifyLater];
+	NSMutableString *returnString = nil;
+	if ([inString rangeOfString:@"Gaim could not find any information in the user's profile. The user most likely does not exist."].location != NSNotFound) {
+		returnString = [[inString mutableCopy] autorelease];
+		[returnString replaceOccurrencesOfString:@"Gaim could not find any information in the user's profile. The user most likely does not exist."
+									  withString:AILocalizedString(@"Adium could not find any information in the user's profile. This may not be a registered name.", "Message shown when a contact's profile can't be found")
+										 options:NSLiteralSearch
+										   range:NSMakeRange(0, [returnString length])];
+	}
 	
+	return (returnString ? returnString : inString);
+}
+
+- (void)updateUserInfo:(AIListContact *)theContact withData:(GaimNotifyUserInfo *)user_info
+{
+	const char *user_info_text = gaim_notify_user_info_get_text_with_newline(user_info, "<BR />");
+	NSString *gaimUserInfo = (user_info_text ? [NSString stringWithUTF8String:user_info_text] : nil);
+
+	gaimUserInfo = processGaimImages(gaimUserInfo, self);
+	gaimUserInfo = [self processedIncomingUserInfo:gaimUserInfo];
+
+	[theContact setProfile:[AIHTMLDecoder decodeHTML:gaimUserInfo]
+					notify:NotifyLater];
+
 	//Apply any changes
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }

@@ -50,6 +50,8 @@
 
 #define SYSCONFDIR "~/Library/Application Support/Adium 2.0/"
 
+#define QQ_BUDDY_ICON_DIR ""
+
 /* Define to 1 if your processor stores words with the most significant byte
 first (like Motorola and SPARC, unlike Intel and VAX). */
 //If compiling for 10.4, we're little endian since we are Intel. < 10.4, we are Mac. 
