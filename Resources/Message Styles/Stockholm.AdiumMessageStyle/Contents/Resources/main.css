@@ -22,6 +22,8 @@ img {
 	border:	none;
 }
 
+img.scaledToFitImage{ width:auto; }
+
 .container, .ctx_container {
 	margin: 0 2px 0 6px;
 	padding-bottom:4px;
