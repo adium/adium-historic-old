@@ -87,10 +87,7 @@
 - (void)performContactMenuActionFromDict:(NSDictionary *)dict;
 - (void)performAccountMenuActionFromDict:(NSDictionary *)dict;
 
-- (void)doAuthRequestCbValue:(NSValue *)inCallBackValue
-		   withUserDataValue:(NSValue *)inUserDataValue 
-		 callBackIndexNumber:(NSNumber *)inIndexNumber
-			 isInputCallback:(NSNumber *)isInputCallback;
+- (void)doAuthRequestCbValue:(NSValue *)inCallBackValue withUserDataValue:(NSValue *)inUserDataValue;
 @end
 
 //Lookup functions
