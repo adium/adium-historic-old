@@ -1301,7 +1301,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
  */
 - (void)doAuthRequestCbValue:(NSValue *)inCallBackValue withUserDataValue:(NSValue *)inUserDataValue 
 {	
-	GaimRequestInputCb callBack = [inCallBackValue pointerValue];
+	GaimAccountRequestAuthorizationCb callBack = [inCallBackValue pointerValue];
 	if (callBack) {
 		callBack([inUserDataValue pointerValue]);
 	}
