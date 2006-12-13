@@ -20,7 +20,6 @@
 #import <AIUtilities/AIArrayAdditions.h>
 
 @interface AIListGroup (PRIVATE)
-#warning XXX This method was modified in revision 18419 with a patch that is likely suboptimal (submitter says they don't fully understand the code involved). Someone with time should review it more carefully, but it appears to be a good enough bandaid to use.
 - (void)_recomputeVisibleCount;
 @end
 
