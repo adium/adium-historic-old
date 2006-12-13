@@ -20,7 +20,8 @@
 #import <AIUtilities/AIArrayAdditions.h>
 
 @interface AIListGroup (PRIVATE)
-- (void)_setVisibleCount:(int)newCount;
+#warning XXX This method was modified in revision 18418 with a patch that is likely suboptimal (submitter says they don't fully understand the code involved). Someone with time should review it more carefully, but it appears to be a good enough bandaid to use.
+- (void)_recomputeVisibleCount;
 @end
 
 @implementation AIListGroup
@@ -74,24 +75,28 @@
     return visibleCount;
 }
 
-//Set this group as visible if it contains anything visible
-- (void)_setVisibleCount:(int)newCount
+//Cache the number of contained objects that are visible
+- (void)_recomputeVisibleCount
 {
-	if (visibleCount != newCount) {
-		visibleCount = newCount;
-		
-		//
-		[self setStatusObject:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
-					   forKey:@"VisibleObjectCount"
-					   notify:NotifyNow];
-	}
+	visibleCount = 0;
+	
+	NSEnumerator *containedObjectEnumerator = [[self containedObjects] objectEnumerator];
+	AIListObject *containedObject = nil;
+	
+	while (containedObject = [containedObjectEnumerator nextObject])
+		if ([containedObject visible])
+			visibleCount++;
+	
+	[self setStatusObject:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
+				   forKey:@"VisibleObjectCount"
+				   notify:NotifyNow];
 }
 
 //Called when the visibility of an object in this group changes
 - (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible
 {
 	//Update our visibility as a result of this change
-	[self _setVisibleCount:(inVisible ? visibleCount + 1 : visibleCount - 1)];
+	[self _recomputeVisibleCount];
 	
 	//Sort the contained object to or from the bottom (invisible section) of the group
 	[[adium contactController] sortListObject:inObject];
@@ -169,17 +174,15 @@
 		[inObject setContainingObject:self];
 		[containedObjects addObject:inObject];
 		
+		//Update our visible count
+		[self _recomputeVisibleCount];
+		
 		//Sort this object on our own.  This always comes along with a content change, so calling contact controller's
 		//sort code would invoke an extra update that we don't need.  We can skip sorting if this object is not visible,
 		//since it will add to the bottom/non-visible section of our array.
 		if ([inObject visible]) {
 			[self sortListObject:inObject
 				  sortController:[[adium contactController] activeSortController]];
-		}
-		
-		//Update our visible count
-		if ([inObject visible]) {
-			[self _setVisibleCount:visibleCount+1];
 		}
 		
 		//
@@ -198,9 +201,7 @@
 {	
 	if ([containedObjects containsObject:inObject]) {
 		//Update our visible count
-		if ([inObject visible]) {
-			[self _setVisibleCount:visibleCount-1];
-		}
+		[self _recomputeVisibleCount];
 		
 		//Remove the object
 		[inObject setContainingObject:nil];
