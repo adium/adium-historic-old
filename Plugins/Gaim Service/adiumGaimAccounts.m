@@ -45,7 +45,7 @@ static void adiumGaimAccountRequestAdd(GaimAccount *account, const char *remote_
  */
 static void adiumGaimAccountRequestAuthorize(GaimAccount *account, const char *remote_user, const char *anId,
 									   const char *alias, const char *message, 
-									   GCallback authorize_cb, GCallback deny_cb, void *user_data)
+									   gboolean on_list, GCallback authorize_cb, GCallback deny_cb, void *user_data)
 {
 	NSMutableDictionary	*infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[NSString stringWithUTF8String:remote_user], @"Remote Name",
