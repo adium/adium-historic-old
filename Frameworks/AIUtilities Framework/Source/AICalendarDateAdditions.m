@@ -38,25 +38,35 @@
 
 - (BOOL) isFromSameWeekAsDate:(NSCalendarDate *)date
 {
-	if(abs([date dayOfCommonEra] - [self dayOfCommonEra]) > 7) return NO;
-	date = [date dateByAddingYears:0
-							months:0
-							  days:[self dayOfWeek] - [date dayOfWeek]
-							 hours:0
-						   minutes:0
-						   seconds:0];
-	return [date dayOfCommonEra] == [self dayOfCommonEra];
+	int dayOne = [self dayOfCommonEra];
+	int dayTwo = [date dayOfCommonEra];
+	
+	if(abs(dayOne - dayTwo) > 7) return NO;
+	
+	dayOne -= [self dayOfWeek];
+	dayTwo -= [date dayOfWeek];
+	
+	return dayOne == dayTwo;
 }
 
 - (BOOL) php4CompatibleIsFromSameWeekAsDate:(NSCalendarDate *)date //PHP4 starts weeks on Monday. Hurrah!
 {
-	if(abs([date dayOfCommonEra] - [self dayOfCommonEra]) > 7) return NO;
-	date = [date dateByAddingYears:0
-							months:0
-							  days:([self dayOfWeek] - [date dayOfWeek]) + 1
-							 hours:0
-						   minutes:0
-						   seconds:0];
-	return [date dayOfCommonEra] == [self dayOfCommonEra];
+	int dayOne = [self dayOfCommonEra];
+	int dayTwo = [date dayOfCommonEra];
+	
+	if(abs(dayOne - dayTwo) > 7) return NO;
+	
+	//find Sunday of this week.
+	if([self dayOfWeek] != 0) {
+		dayOne -= [self dayOfWeek];
+		dayOne += 7;
+	}
+	
+	if([date dayOfWeek] != 0) {
+		dayTwo -= [date dayOfWeek];
+		dayTwo += 7;
+	}
+	
+	return dayOne == dayTwo;
 }
 @end
