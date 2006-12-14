@@ -507,7 +507,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize
 {
 	id		 callback;
-	NSNumber *indexNumber;
+//	NSNumber *indexNumber;
 	
 	//Inform libgaim that the request window closed
 	[ESGaimRequestAdapter requestCloseWithHandle:inWindowController];
