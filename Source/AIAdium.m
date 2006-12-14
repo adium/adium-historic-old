@@ -1022,7 +1022,7 @@ static NSString	*prefsCategory;
 	[output deleteCharactersInRange:NSMakeRange(0, [output rangeOfString:@"\""].location)];
 	unsigned loc = [output rangeOfString:@"\""].location;
 	[output deleteCharactersInRange:NSMakeRange(loc, [output length] - loc)];*/
-	
+/*	
 	NSString	*javaVersion = [NSClassFromString(@"java.lang.System") getProperty:@"java.version"];
 	if (javaVersion) {
 		entry = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -1034,7 +1034,7 @@ static NSString	*prefsCategory;
 		
 		[profileInfo addObject:entry];
 	}
-	
+	*/
 	return profileInfo;
 }
 
