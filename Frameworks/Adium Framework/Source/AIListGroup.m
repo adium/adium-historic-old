@@ -82,7 +82,7 @@
 	NSEnumerator *containedObjectEnumerator = [[self containedObjects] objectEnumerator];
 	AIListObject *containedObject = nil;
 	
-	while (containedObject = [containedObjectEnumerator nextObject])
+	while ((containedObject = [containedObjectEnumerator nextObject]))
 		if ([containedObject visible])
 			visibleCount++;
 	

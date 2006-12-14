@@ -972,8 +972,8 @@ static NSString	*prefsCategory;
 	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
 		@"FirstSubmission", @"key", 
 		@"First Time Submitting Profile Information", @"visibleKey",
-		@"yes", @"value",
-		@"yes", @"visibleValue",
+		value, @"value",
+		value, @"visibleValue",
 		nil];
 	
 	[profileInfo addObject:entry];
