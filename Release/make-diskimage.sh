@@ -4,6 +4,7 @@
 #                       <src_folder>
 #                       <volume_name>
 #                       <applescript>
+#                       <artpath>
 #                       <eula_resource_file>
 
 set -e;
@@ -17,7 +18,8 @@ VOLUME_NAME=$3
 
 # optional arguments
 APPLESCRIPT=$4
-EULA_RSRC=$5
+ART_PATH=$5
+EULA_RSRC=$6
 
 # Create the image
 echo "Creating disk image..."
@@ -32,11 +34,16 @@ DEV_NAME=`hdiutil attach -readwrite -noverify -noautoopen "${DMG_TEMP_NAME}" | e
 # run applescript
 if [ ! -z "${APPLESCRIPT}" -a "${APPLESCRIPT}" != "-null-" ]; then
 #	osascript "${APPLESCRIPT}"
-    #   pass the applescript a single parameter, our volume name, to its process_disk_image function
+    #   pass the applescript our volume name and our artwork path, to its process_disk_image function
     echo "Running Applescript: ./AdiumApplescriptRunner \"${APPLESCRIPT}\" process_disk_image \"${VOLUME_NAME}\""
-    ./AdiumApplescriptRunner "${APPLESCRIPT}" process_disk_image "${VOLUME_NAME}" || true
+    ./AdiumApplescriptRunner "${APPLESCRIPT}" process_disk_image "${VOLUME_NAME}" "${ART_PATH}" || true
     echo "Done running the applescript..."
 fi
+
+# run shell script
+# if [ ! -z "${SHELLSCRIPT}" -a "${SHELLSCRIPT}" != "-null-" ]; then
+#   ./${SHELLSCRIPT} \"${VOLUME_NAME}\"
+# fi
 
 # make sure it's not world writeable
 echo "Fixing permissions..."

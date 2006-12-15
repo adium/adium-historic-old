@@ -59,10 +59,10 @@ gboolean gaim_init_novell_plugin(void);
  *
  * @result The gaim status ID
  */
-- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+- (const char *)gaimStatusIDForStatus:(AIStatus *)statusState
 							arguments:(NSMutableDictionary *)arguments
 {
-	char			*statusID = NULL;
+	const char		*statusID = NULL;
 	NSString		*statusName = [statusState statusName];
 	NSString		*statusMessageString = [statusState statusMessageString];
 	

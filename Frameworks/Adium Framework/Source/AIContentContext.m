@@ -30,4 +30,9 @@
     return CONTENT_CONTEXT_TYPE;
 }
 
+- (NSString *)displayType
+{
+	return [[super displayType] stringByAppendingFormat:@" %@", CONTENT_CONTEXT_TYPE];
+}
+
 @end

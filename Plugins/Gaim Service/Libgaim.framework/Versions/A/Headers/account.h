@@ -27,12 +27,14 @@
 #ifndef _GAIM_ACCOUNT_H_
 #define _GAIM_ACCOUNT_H_
 
+#include <glib-object.h>
 #include <glib.h>
 
 typedef struct _GaimAccountUiOps GaimAccountUiOps;
 typedef struct _GaimAccount      GaimAccount;
 
 typedef gboolean (*GaimFilterAccountFunc)(GaimAccount *account);
+typedef void (*GaimAccountRequestAuthorizationCb)(void *);
 
 #include "connection.h"
 #include "log.h"
@@ -44,13 +46,16 @@ struct _GaimAccountUiOps
 {
 	/* A buddy we already have added us to their buddy list. */
 	void (*notify_added)(GaimAccount *account, const char *remote_user,
-	                     const char *id, const char *alias,
+	                    const char *id, const char *alias,
 	                     const char *message);
 	void (*status_changed)(GaimAccount *account, GaimStatus *status);
 	/* Someone we don't have on our list added us. Will prompt to add them. */
 	void (*request_add)(GaimAccount *account, const char *remote_user,
 	                    const char *id, const char *alias,
 	                    const char *message);
+	void (*request_authorize)(GaimAccount *account, const char *remote_user, const char *id,
+				 const char *alias, const char *message, gboolean on_list, 
+				 GCallback authorize_cb, GCallback deny_cb, void *user_data);
 };
 
 struct _GaimAccount
@@ -60,7 +65,8 @@ struct _GaimAccount
 	char *password;             /**< The account password.                  */
 	char *user_info;            /**< User information.                      */
 
-	char *buddy_icon;           /**< The buddy icon.                        */
+	char *buddy_icon;           /**< The buddy icon's cached path.          */
+	char *buddy_icon_path;      /**< The buddy icon's non-cached path.      */
 
 	gboolean remember_pass;     /**< Remember the password.                 */
 
@@ -170,6 +176,27 @@ void gaim_account_notify_added(GaimAccount *account, const char *remote_user,
 void gaim_account_request_add(GaimAccount *account, const char *remote_user,
                               const char *id, const char *alias,
                               const char *message);
+
+/**
+ * Notifies the user that a remote user has wants to add the local user
+ * to his or her buddy list and requires authorization to d oso.
+ *
+ * This will present a dialog informing the user of this and ask if the 
+ * user authorizes or denies the remote user from adding him.
+ *
+ * @param account      The account that was added
+ * @param remote_user  The name of the usre that added this account.
+ * @param id           The optional ID of the local account. Rarely used.
+ * @param alias        The optional alias of the remote user.
+ * @param message      The optional message sent from the uer requesting you
+ * @param auth_cb      The callback called when the local user accepts
+ * @param deny_cb      The callback called when the local user rejects
+ * @param user_data    Data to be passed back to the above callbacks
+ */
+void gaim_account_request_authorization(GaimAccount *account, const char *remote_user,
+					const char *id, const char *alias, const char *message, gboolean on_list,
+					GCallback auth_cb, GCallback deny_cb, void *user_data);
+
 /**
  * Requests information from the user to change the account's password.
  *
@@ -224,6 +251,14 @@ void gaim_account_set_user_info(GaimAccount *account, const char *user_info);
  * @param icon    The buddy icon file.
  */
 void gaim_account_set_buddy_icon(GaimAccount *account, const char *icon);
+
+/**
+ * Sets the account's buddy icon path.
+ *
+ * @param account The account.
+ * @param info	  The buddy icon non-cached path.
+ */
+void gaim_account_set_buddy_icon_path(GaimAccount *account, const char *path);
 
 /**
  * Sets the account's protocol ID.
@@ -287,8 +322,7 @@ void gaim_account_set_status_types(GaimAccount *account, GList *status_types);
 
 /**
  * Activates or deactivates a status.  All changes to the statuses of
- * an account go through this function or gaim_account_set_status_vargs
- * or gaim_account_set_status_list.
+ * an account go through this function or gaim_account_set_status_list.
  *
  * Only independent statuses can be deactivated with this. To deactivate
  * an exclusive status, activate a different (and exclusive?) status.
@@ -296,8 +330,8 @@ void gaim_account_set_status_types(GaimAccount *account, GList *status_types);
  * @param account   The account.
  * @param status_id The ID of the status.
  * @param active    The active state.
- * @param ...       Optional NULL-terminated attributes passed for the
- *                  new status, in an id, value pair.
+ * @param ...       Pairs of attributes for the new status passed in
+ *                  as a NULL-terminated list of id/value pairs.
  */
 void gaim_account_set_status(GaimAccount *account, const char *status_id,
 							 gboolean active, ...);
@@ -305,25 +339,7 @@ void gaim_account_set_status(GaimAccount *account, const char *status_id,
 
 /**
  * Activates or deactivates a status.  All changes to the statuses of
- * an account go through this function or gaim_account_set_status or
- * gaim_account_set_status_list.
- *
- * Only independent statuses can be deactivated with this. To deactivate
- * an exclusive status, activate a different (and exclusive?) status.
- *
- * @param account   The account.
- * @param status_id The ID of the status.
- * @param active    The active state.
- * @param args      The va_list of attributes.
- */
-void gaim_account_set_status_vargs(GaimAccount *account,
-								   const char *status_id,
-								   gboolean active, va_list args);
-
-/**
- * Activates or deactivates a status.  All changes to the statuses of
- * an account go through this function or gaim_account_set_status or
- * gaim_account_set_status_vargs.
+ * an account go through this function or gaim_account_set_status.
  *
  * Only independent statuses can be deactivated with this. To deactivate
  * an exclusive status, activate a different (and exclusive?) status.
@@ -477,6 +493,15 @@ const char *gaim_account_get_user_info(const GaimAccount *account);
  * @return The buddy icon filename.
  */
 const char *gaim_account_get_buddy_icon(const GaimAccount *account);
+
+/**
+ * Gets the account's buddy icon path.
+ *
+ * @param account The account.
+ *
+ * @return The buddy icon's non-cached path.
+ */
+const char *gaim_account_get_buddy_icon_path(const GaimAccount *account);
 
 /**
  * Returns the account's protocol ID.

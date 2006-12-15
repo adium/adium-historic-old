@@ -170,7 +170,7 @@
  * @param eventID The ID of the event (e.g. new message, contact went away, etc)
  * @param userInfo Any additional information
  */
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+- (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	NSString				*title, *description;
 	NSMutableDictionary		*clickContext = [NSMutableDictionary dictionary];
@@ -266,6 +266,8 @@
 								   priority:0
 								   isSticky:[[details objectForKey:KEY_GROWL_ALERT_STICKY] boolValue]
 							   clickContext:clickContext];
+
+	return YES;
 }
 
 /*!

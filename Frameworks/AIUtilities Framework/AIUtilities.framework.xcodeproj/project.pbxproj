@@ -243,6 +243,8 @@
 		4BD1F5D106D28D2E00B3975E /* AIColoredBoxView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B4C06D1DF0300DA778C /* AIColoredBoxView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BD1F5D206D28D2E00B3975E /* AIColoredBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B4D06D1DF0300DA778C /* AIColoredBoxView.m */; };
 		4BFDF29707D2D36E008E4B91 /* Aqua_Tab_Background.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BFDF29607D2D36E008E4B91 /* Aqua_Tab_Background.png */; };
+		631BE7CF0AD2C56700F3B896 /* AICalendarDateAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 631BE7CD0AD2C56700F3B896 /* AICalendarDateAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		631BE7D00AD2C56700F3B896 /* AICalendarDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 631BE7CE0AD2C56700F3B896 /* AICalendarDateAdditions.m */; };
 		639B3CA80ABC708700D618E9 /* AIWindowControllerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 639B3CA60ABC708700D618E9 /* AIWindowControllerAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		639B3CA90ABC708700D618E9 /* AIWindowControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 639B3CA70ABC708700D618E9 /* AIWindowControllerAdditions.m */; };
 		6E03C8D307C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E03C8D107C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -528,6 +530,8 @@
 		4BD1F3D606D27F3100B3975E /* AIScaledImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIScaledImageCell.h; path = Source/AIScaledImageCell.h; sourceTree = "<group>"; };
 		4BD1F3D706D27F3100B3975E /* AIScaledImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScaledImageCell.m; path = Source/AIScaledImageCell.m; sourceTree = "<group>"; };
 		4BFDF29607D2D36E008E4B91 /* Aqua_Tab_Background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Aqua_Tab_Background.png; path = Resources/Aqua_Tab_Background.png; sourceTree = "<group>"; };
+		631BE7CD0AD2C56700F3B896 /* AICalendarDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICalendarDateAdditions.h; path = Source/AICalendarDateAdditions.h; sourceTree = "<group>"; };
+		631BE7CE0AD2C56700F3B896 /* AICalendarDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICalendarDateAdditions.m; path = Source/AICalendarDateAdditions.m; sourceTree = "<group>"; };
 		636D3D6508D267F500EFFD69 /* AILinkedList.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILinkedList.h; path = Source/AILinkedList.h; sourceTree = "<group>"; };
 		636D3D6608D267F500EFFD69 /* AILinkedList.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILinkedList.m; path = Source/AILinkedList.m; sourceTree = "<group>"; };
 		636D3D6708D267F500EFFD69 /* AILinkedListObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILinkedListObject.h; path = Source/AILinkedListObject.h; sourceTree = "<group>"; };
@@ -926,6 +930,8 @@
 				9E2486090A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m */,
 				639B3CA60ABC708700D618E9 /* AIWindowControllerAdditions.h */,
 				639B3CA70ABC708700D618E9 /* AIWindowControllerAdditions.m */,
+				631BE7CD0AD2C56700F3B896 /* AICalendarDateAdditions.h */,
+				631BE7CE0AD2C56700F3B896 /* AICalendarDateAdditions.m */,
 			);
 			name = Additions;
 			sourceTree = "<group>";
@@ -1538,6 +1544,7 @@
 				07B87B7D0A3A7A3B00A38283 /* AISetAdditions.h in Headers */,
 				07B87B7F0A3A7A3B00A38283 /* AIShadowAdditions.h in Headers */,
 				639B3CA80ABC708700D618E9 /* AIWindowControllerAdditions.h in Headers */,
+				631BE7CF0AD2C56700F3B896 /* AICalendarDateAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1749,6 +1756,7 @@
 				07B87B7E0A3A7A3B00A38283 /* AISetAdditions.m in Sources */,
 				07B87B800A3A7A3B00A38283 /* AIShadowAdditions.m in Sources */,
 				639B3CA90ABC708700D618E9 /* AIWindowControllerAdditions.m in Sources */,
+				631BE7D00AD2C56700F3B896 /* AICalendarDateAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -121,7 +121,7 @@
 																	 action:nil
 															  keyEquivalent:@""] autorelease];
 	[menuItem setRepresentedObject:userPreferredDownloadFolder];
-	[menuItem setImage:[[[NSWorkspace sharedWorkspace] iconForFile:userPreferredDownloadFolder] imageByScalingToSize:NSMakeSize(16,16)]];
+	[menuItem setImage:[[[NSWorkspace sharedWorkspace] iconForFile:userPreferredDownloadFolder] imageByScalingForMenuItem]];
 	[menu addItem:menuItem];
 	
 	[menu addItem:[NSMenuItem separatorItem]];

@@ -20,7 +20,6 @@
 #import "ESGaimRequestWindowController.h"
 #import "ESGaimFileReceiveRequestController.h"
 #import "ESGaimMeanwhileContactAdditionController.h"
-#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/NDRunLoopMessenger.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/ESFileTransfer.h>
@@ -74,94 +73,6 @@ NSString *processButtonText(NSString *inButtonText)
 	
 }
 
-static id processAuthorizationRequest(NSString *primaryString, GCallback authorizeCB, GCallback denyCB, void *userData, BOOL isInputCallback)
-{
-	NSString	*remoteName;
-	NSString	*accountName;
-	NSString	*reason = nil;
-	NSRange		wantsToAddRange, secondSearchRange;
-	unsigned	remoteNameStartingLocation, accountNameStartingLocation;	
-	id			requestController = nil;
-	
-	AILog(@"Authorization request: %@",primaryString);
-	
-	/* "The user %s wants to add %s to" where the first is the remote contact and the second is the account name.
-		* MSN, Jabber: "The user %s wants to add %s to his or her buddy list."
-		* OSCAR: The user %s wants to add %s to their buddy list for the following reason:\n%s
-		*		The reason may be passed as "No reason given."
-		*/
-	NSRange	remoteNameRange;
-	wantsToAddRange = [primaryString rangeOfString:@" wants to add "];
-	remoteNameStartingLocation = [@"The user " length];
-	remoteNameRange = NSMakeRange(remoteNameStartingLocation,
-								  (wantsToAddRange.location - remoteNameStartingLocation));
-	remoteName = [primaryString substringWithRange:remoteNameRange];
-	AILog(@"Authorization request: Remote name is %@ (Range was %@)",remoteName, NSStringFromRange(remoteNameRange));
-	
-	secondSearchRange = [primaryString rangeOfString:@" to his or her buddy list."];
-	if (secondSearchRange.location == NSNotFound) {
-		secondSearchRange = [primaryString rangeOfString:@" to their buddy list for the following reason:\n"];
-	}
-	
-	//ICQ and MSN may have the friendly name or alias after the name; we want just the screen name
-	NSRange	aliasBeginRange = [remoteName rangeOfString:@" ("];
-	if (aliasBeginRange.location != NSNotFound) {
-		remoteName = [remoteName substringToIndex:aliasBeginRange.location];
-	}
-	AILog(@"Authorization request: After postprocessing, remote name is %@",remoteName);
-	
-	//Extract the account name
-	{
-		NSRange accountNameRange;
-		
-		//Start after the space after the 'wants to add' phrase (the max of wantsToAddRange)
-		accountNameStartingLocation = NSMaxRange(wantsToAddRange);
-		
-		//Stop before the space before the second search range
-		accountNameRange = NSMakeRange(accountNameStartingLocation,
-									   secondSearchRange.location - accountNameStartingLocation);
-		if (NSMaxRange(accountNameRange) <= [primaryString length]) {
-			accountName = [primaryString substringWithRange:accountNameRange];
-		} else {
-			accountName = nil;
-			AILog(@"Authorization request: Could not find account name within %@",primaryString);
-		}
-		
-		//Remove jabber resource if necessary.  Check for the @ symbol, which is present in all Jabber names, then truncate to the /
-		if ([accountName rangeOfString:@"@"].location != NSNotFound &&
-			[accountName rangeOfString:@"/"].location != NSNotFound) {
-			accountName = [accountName substringToIndex:[accountName rangeOfString:@"/"].location];
-		}
-		AILog(@"Authorization request: Account name is %@",accountName);
-	}
-	
-	if ((NSMaxRange(secondSearchRange) < [primaryString length]) &&
-		[primaryString rangeOfString:@"No reason given."].location == NSNotFound) {
-		reason = [primaryString substringFromIndex:NSMaxRange(secondSearchRange)];
-	}
-	
-	NSMutableDictionary	*infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-		[NSNumber numberWithInt:isInputCallback], @"isInputCallback",
-		remoteName, @"Remote Name",
-//		accountName, @"Account Name",
-		[NSValue valueWithPointer:authorizeCB], @"authorizeCB",
-		[NSValue valueWithPointer:denyCB], @"denyCB",
-		[NSValue valueWithPointer:userData], @"userData",
-		nil];
-	
-	if (reason && [reason length]) [infoDict setObject:reason forKey:@"Reason"];
-	
-	//We depend on the GaimConnection being the first item in the userData struct we were passed. This is a temporary hack :)
-	struct fake_struct {
-		GaimConnection *gc;
-	};
-	
-	requestController = [[[AIObject sharedAdiumInstance] contactController] showAuthorizationRequestWithDict:infoDict
-																								  forAccount:accountLookup(gaim_connection_get_account(((struct fake_struct *)userData)->gc))];
-
-	return requestController;
-}
-
 static void *adiumGaimRequestInput(
 								   const char *title, const char *primary,
 								   const char *secondary, const char *defaultValue,
@@ -181,39 +92,28 @@ static void *adiumGaimRequestInput(
 	//Ignore gaim trying to get an account's password; we'll feed it the password and reconnect if it gets here, somehow.
 	if ([primaryString rangeOfString:@"Enter password for "].location != NSNotFound) return [NSNull null];
 	
-	if (([primaryString rangeOfString:@"wants to add"].location != NSNotFound) &&
-		([primaryString rangeOfString:@"to his or her buddy list"].location != NSNotFound)) {
-		//This is the bizarre Yahoo authorization dialogue which allows a message. Messages are dumb.
-		requestController = processAuthorizationRequest(primaryString,
-														okCb,
-														cancelCb,
-														userData,
-														/* isInputCallback */ YES);
-
-	} else {
-		NSMutableDictionary *infoDict;
-		NSString			*okButtonText = processButtonText([NSString stringWithUTF8String:okText]);
-		NSString			*cancelButtonText = processButtonText([NSString stringWithUTF8String:cancelText]);
-		
-		infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:okButtonText,@"OK Text",
-			cancelButtonText,@"Cancel Text",
-			[NSValue valueWithPointer:okCb],@"OK Callback",
-			[NSValue valueWithPointer:cancelCb],@"Cancel Callback",
-			[NSValue valueWithPointer:userData],@"userData",nil];
-		
-		
-		if (primaryString) [infoDict setObject:primaryString forKey:@"Primary Text"];
-		if (title) [infoDict setObject:[NSString stringWithUTF8String:title] forKey:@"Title"];	
-		if (defaultValue) [infoDict setObject:[NSString stringWithUTF8String:defaultValue] forKey:@"Default Value"];
-		if (secondary) [infoDict setObject:[NSString stringWithUTF8String:secondary] forKey:@"Secondary Text"];
-		
-		[infoDict setObject:[NSNumber numberWithBool:multiline] forKey:@"Multiline"];
-		[infoDict setObject:[NSNumber numberWithBool:masked] forKey:@"Masked"];
-		
-		GaimDebug (@"adiumGaimRequestInput: %@",infoDict);
-		
-		requestController = [ESGaimRequestWindowController showInputWindowWithDict:infoDict];
-	}
+	NSMutableDictionary *infoDict;
+	NSString			*okButtonText = processButtonText([NSString stringWithUTF8String:okText]);
+	NSString			*cancelButtonText = processButtonText([NSString stringWithUTF8String:cancelText]);
+	
+	infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:okButtonText,@"OK Text",
+		cancelButtonText,@"Cancel Text",
+		[NSValue valueWithPointer:okCb],@"OK Callback",
+		[NSValue valueWithPointer:cancelCb],@"Cancel Callback",
+		[NSValue valueWithPointer:userData],@"userData",nil];
+	
+	
+	if (primaryString) [infoDict setObject:primaryString forKey:@"Primary Text"];
+	if (title) [infoDict setObject:[NSString stringWithUTF8String:title] forKey:@"Title"];	
+	if (defaultValue) [infoDict setObject:[NSString stringWithUTF8String:defaultValue] forKey:@"Default Value"];
+	if (secondary) [infoDict setObject:[NSString stringWithUTF8String:secondary] forKey:@"Secondary Text"];
+	
+	[infoDict setObject:[NSNumber numberWithBool:multiline] forKey:@"Multiline"];
+	[infoDict setObject:[NSNumber numberWithBool:masked] forKey:@"Masked"];
+	
+	GaimDebug (@"adiumGaimRequestInput: %@",infoDict);
+	
+	requestController = [ESGaimRequestWindowController showInputWindowWithDict:infoDict];
 	
 	return (requestController ? requestController : [NSNull null]);
 }
@@ -252,24 +152,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary,
 		//Redirect a "wants to send you" action request to our file choosing method so we handle it as a normal file transfer
 		((GaimRequestActionCb)ok_cb)(userData, default_action);
 		
-    } else if (primaryString && ([primaryString rangeOfString:@"wants to add"].location != NSNotFound)) {
-		GCallback	authorizeCB, denyCB;
-    	
-		//Get the callback for Authorize, skipping over the title
-		va_arg(actions, char *);
-		authorizeCB = va_arg(actions, GCallback);
-
-		//Get the callback for Deny, skipping over the title
-		va_arg(actions, char *);
-		denyCB = va_arg(actions, GCallback);
-
-		requestController = processAuthorizationRequest(primaryString,
-														authorizeCB,
-														denyCB,
-														userData,
-														/* isInputCallback */ NO);
-
-	} else if (primaryString && ([primaryString rangeOfString:@"Add buddy to your list?"].location != NSNotFound)) {
+    } else if (primaryString && ([primaryString rangeOfString:@"Add buddy to your list?"].location != NSNotFound)) {
 		/* This is Jabber doing inelegantly what we elegantly handle in the authorization request window for all
 		 * services, asking if the user wants to add a contact which just added him.  We just ignore this request, as
 		 * the authorization window let the user do this if he wanted.
@@ -354,48 +237,8 @@ static void *adiumGaimRequestFields(const char *title, const char *primary,
 
     if (titleString && 
 		[titleString rangeOfString:@"new jabber"].location != NSNotFound) {
-		/* Jabber registration request. Instead of displaying a request dialogue, we fill in the information automatically. */
-		GList					*gl, *fl, *field_list;
-		GaimRequestField		*field;
-		GaimRequestFieldGroup	*group;
-		JabberStream			*js = (JabberStream *)userData;
-		GaimAccount				*account = js->gc->account;
-		
-		//Look through each group, processing each field, searching for username and password fields
-		for (gl = gaim_request_fields_get_groups(fields);
-			 gl != NULL;
-			 gl = gl->next) {
-			
-			group = gl->data;
-			field_list = gaim_request_field_group_get_fields(group);
-			
-			for (fl = field_list; fl != NULL; fl = fl->next) {
-				GaimRequestFieldType type;
-				
-				field = (GaimRequestField *)fl->data;
-				type = gaim_request_field_get_type(field);
-				if (type == GAIM_REQUEST_FIELD_STRING) {
-					if (strcasecmp("username", gaim_request_field_get_label(field)) == 0) {
-						const char	*username;
-						NSString	*usernameString;
-						NSRange		serverAndResourceBeginningRange;
-						
-						//Process the username to remove the server and the resource
-						username = gaim_account_get_username(account);
-						usernameString = [NSString stringWithUTF8String:username];
-						serverAndResourceBeginningRange = [usernameString rangeOfString:@"@"];
-						if (serverAndResourceBeginningRange.location != NSNotFound) {
-							usernameString = [usernameString substringToIndex:serverAndResourceBeginningRange.location];
-						}
-						
-						gaim_request_field_string_set_value(field, [usernameString UTF8String]);
-					} else if (strcasecmp("password", gaim_request_field_get_label(field)) == 0) {
-						gaim_request_field_string_set_value(field, gaim_account_get_password(account));
-					}
-				}
-			}
-			
-		}
+		/* Jabber registration request. Instead of displaying a request dialogue, we fill in the information automatically.
+		 * And by that, I mean that we accept all the default empty values, since the username and password are preset for us. */
 		((GaimRequestFieldsCb)okCb)(userData, fields);
 		
 	} else {		

@@ -46,6 +46,9 @@
 #import <Adium/AIPathUtilities.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AICalendarDateAdditions.h>
+#import <Sparkle/SUConstants.h>
+#import <Sparkle/SUUtilities.h>
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
@@ -64,6 +67,10 @@ static NSString	*prefsCategory;
 - (void)openAppropriatePreferencesIfNeeded;
 
 - (void)deleteTemporaryFiles;
+@end
+
+@interface NSObject (JavaObject)
++ (NSString *)getProperty:(NSString *)propertyName;
 @end
 
 @implementation AIAdium
@@ -482,7 +489,8 @@ static NSString	*prefsCategory;
 	int					buttonPressed;
 	
 	if (([extension caseInsensitiveCompare:@"AdiumLog"] == NSOrderedSame) ||
-		([extension caseInsensitiveCompare:@"AdiumHtmlLog"] == NSOrderedSame)) {
+		([extension caseInsensitiveCompare:@"AdiumHtmlLog"] == NSOrderedSame) ||
+		([extension caseInsensitiveCompare:@"chatlog"] == NSOrderedSame)) {
 		if (completedApplicationLoad) {
 			//Request display of the log immediately if Adium is ready
 			[[self notificationCenter] postNotificationName:Adium_ShowLogAtPath
@@ -941,28 +949,104 @@ static NSString	*prefsCategory;
 /* This method gives the delegate the opportunity to customize the information that will
  * be included with update checks.  Add or remove items from the dictionary as desired.
  * Each entry in profileInfo is an NSDictionary with the following keys:
- * ⁃ 	key: 		The key to be used  when reporting data to the server
- * ⁃ 	visibleKey:	Alternate version of key to be used in UI displays of profile information
- * ⁃ 	value:		Value to be used when reporting data to the server
- * ⁃ 	visibleValue:	Alternate version of value to be used in UI displays of profile information.
+ *		key: 		The key to be used  when reporting data to the server
+ *		visibleKey:	Alternate version of key to be used in UI displays of profile information
+ *		value:		Value to be used when reporting data to the server
+ *		visibleValue:	Alternate version of value to be used in UI displays of profile information.
  */
 - (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo
 {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	if (![[defaults objectForKey:SUSendProfileInfoKey] boolValue])
+		return [NSArray array]; 
+	
+	NSCalendarDate *lastCheckDate = [NSCalendarDate dateWithString:[defaults stringForKey:@"AILastSubmittedProfileDate"]];
+	if (lastCheckDate && [lastCheckDate php4CompatibleIsFromSameWeekAsDate:[NSCalendarDate date]]) {
+		return [NSArray array];
+	}	
+	
+	[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
+	
+	NSString *value = [[NSNumber numberWithBool:![[defaults objectForKey:@"AIHasSentProfileInfo"] boolValue]] stringValue];
+
+	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
+		@"FirstSubmission", @"key", 
+		@"First Time Submitting Profile Information", @"visibleKey",
+		value, @"value",
+		value, @"visibleValue",
+		nil];
+	
+	[profileInfo addObject:entry];
+	
+	[defaults setObject:[NSNumber numberWithBool:YES] forKey:@"AIHasSentProfileInfo"];
+	
+	/*************** Include info about what IM services are used ************/
 	NSMutableString *accountInfo = [NSMutableString string];
+	NSCountedSet *condensedAccountInfo = [NSCountedSet set];
 	NSEnumerator *accountEnu = [[[self accountController] accounts] objectEnumerator];
 	AIAccount *account = nil;
-	while((account = [accountEnu nextObject]))
-	{
-		[accountInfo appendFormat:@"%@, ", [account serviceID]];
+	while ((account = [accountEnu nextObject])) {
+		NSString *serviceID = [account serviceID];
+		[accountInfo appendFormat:@"%@, ", serviceID];
+		if([serviceID isEqualToString:@"Yahoo! Japan"]) serviceID = @"YJ";
+		[condensedAccountInfo addObject:[NSString stringWithFormat:@"%@", [serviceID substringToIndex:2]]]; 
 	}
-	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
-								@"IMServicesUsed", @"key", 
+	
+	NSMutableString *accountInfoString = [NSMutableString string];
+	NSEnumerator *infoEnu = [[[condensedAccountInfo allObjects] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
+	while ((value = [infoEnu nextObject]))
+		[accountInfoString appendFormat:@"%@%d", value, [condensedAccountInfo countForObject:value]];
+	
+	entry = [NSDictionary dictionaryWithObjectsAndKeys:
+								@"IMServices", @"key", 
 								@"IM Services Used", @"visibleKey",
-								accountInfo, @"value",
+								accountInfoString, @"value",
 								accountInfo, @"visibleValue",
 								nil];
 	[profileInfo addObject:entry];
+	
+	/***************** JVM Version ****************/
+	
+	//This is ridiculous, but we can't load java inside adium without bloating memory usage for non-AIM users unnecessarily
+	/*NSTask *java = [[[NSTask alloc] init] autorelease];
+	[java setLaunchPath:@"/usr/bin/java"];
+	[java setArguments:[NSArray arrayWithObject:@"-version"]];
+	NSPipe *readPipe = [NSPipe pipe];
+	[java setStandardOutput:readPipe];
+	NSFileHandle *readHandle = [readPipe fileHandleForReading];
+	[java launch];
+	[java waitUntilExit];
+	NSData *d = [readHandle readDataToEndOfFile];
+	NSMutableString *output = [[NSMutableString alloc] initWithData:d
+														   encoding:NSUTF8StringEncoding];
+	[output deleteCharactersInRange:NSMakeRange(0, [output rangeOfString:@"\""].location)];
+	unsigned loc = [output rangeOfString:@"\""].location;
+	[output deleteCharactersInRange:NSMakeRange(loc, [output length] - loc)];*/
+/*	
+	NSString	*javaVersion = [NSClassFromString(@"java.lang.System") getProperty:@"java.version"];
+	if (javaVersion) {
+		entry = [NSDictionary dictionaryWithObjectsAndKeys:
+			@"JVMVersion", @"key", 
+			@"Java Version", @"visibleKey",
+			javaVersion, @"value",
+			javaVersion, @"visibleValue",
+			nil];
+		
+		[profileInfo addObject:entry];
+	}
+	*/
 	return profileInfo;
+}
+
+- (NSComparisonResult) compareVersion:(NSString *)newVersion toVersion:(NSString *)currentVersion
+{
+	//Allow updating from betas to anything, and anything to non-betas
+	//Careful! a15 is fine, but A15 is not, because it would hit the A in Adium.
+	NSCharacterSet *guardCharacters = [NSCharacterSet characterSetWithCharactersInString:@"abBrcRC"];
+	if([currentVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound || !([newVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound))
+		return SUStandardVersionComparison(newVersion, currentVersion);
+	else 
+		return NSOrderedSame;
 }
 
 @end

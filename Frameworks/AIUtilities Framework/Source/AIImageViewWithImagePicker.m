@@ -219,9 +219,10 @@
  */
 - (void)keyDown:(NSEvent *)theEvent
 {
-	unichar key = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
+	NSString *characters = [theEvent charactersIgnoringModifiers];
+	unichar key = ([characters length] ? [characters characterAtIndex:0] : 0);
 	
-	if (key == NSDeleteCharacter || key == NSBackspaceCharacter) {
+	if ((key == NSBackspaceCharacter) || (key == NSDeleteCharacter) || (key == NSDeleteFunctionKey) || (key == NSDeleteCharFunctionKey)) {
 		[self delete];
 	} else if (key == NSEnterCharacter || key == NSCarriageReturnCharacter) {
 		[self showPickerController];

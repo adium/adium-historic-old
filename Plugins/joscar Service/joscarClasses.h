@@ -65,7 +65,7 @@
  * Constructor: (AimSession aimSession, AimConnectionProperties props)
  * Constructor: (AimSession aimSession, TrustPreferences prefs, AimConnectionPropertiese props)
  */
-@protocol StateListener, OpenedServiceListener;
+@protocol StateListener, OpenedServiceListener, ServiceListener;
 @interface AimConnection : NSObject {}
 - (AppSession *)getAppSession;
 - (AimSession *)getAimSession;
@@ -91,6 +91,8 @@
 
 - (void)addOpenedServiceListener:(id<OpenedServiceListener>)listener;
 - (void)removeOpenedServiceListener:(id<OpenedServiceListener>)listener;
+
+- (void)addGlobalServiceListener:(id<ServiceListener>)listener;
 
 - (void)setProxy:(AimProxyInfo *)proxyInfo;
 @end
@@ -253,9 +255,6 @@
 
 /*
  * net.kano.joustsim.oscar.oscar.service.info.InfoService
- *
- * XXX - Probably lower-level than we should actually be going. Would be needed for profiles it looks like 
- * since BuddyInfoTracker can handle updating away messages. -eds
  */
 @protocol InfoServiceListener;
 @interface InfoService : Service {}

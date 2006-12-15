@@ -26,6 +26,7 @@ extern enum LMXParseResult LMXParseResultFromString(NSString *result);
 	NSMutableArray *elementStack;
 
 	id delegate;
+	void *contextInfo;
 
 	//parser state
 	NSMutableString *characters;
@@ -91,6 +92,9 @@ extern enum LMXParseResult LMXParseResultFromString(NSString *result);
 
 - delegate;
 - setDelegate:newDelegate; //returns old delegate.
+
+- (void *)contextInfo;
+- (void)setContextInfo:(void *)newContextInfo;
 
 @end
 

@@ -60,7 +60,7 @@
  */
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	int behavior = [[details objectForKey:KEY_AIDockBehavior_TYPE] intValue];
+	int behavior = [[details objectForKey:KEY_DOCK_BEHAVIOR_TYPE] intValue];
 	return [NSString stringWithFormat:AIDockBehavior_ALERT_LONG, [[[adium dockController] descriptionForBehavior:behavior] lowercaseString]];
 }
 
@@ -92,9 +92,9 @@
  * @param eventID The eventID which triggered this action
  * @param userInfo Additional information associated with the event; userInfo's type will vary with the actionID.
  */
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+- (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	if ([[adium dockController] performBehavior:[[details objectForKey:KEY_AIDockBehavior_TYPE] intValue]]) {
+	if ([[adium dockController] performBehavior:[[details objectForKey:KEY_DOCK_BEHAVIOR_TYPE] intValue]]) {
 		//The behavior will continue into the future
 		if ([[adium contactAlertsController] isMessageEvent:eventID]) {
 			AIChat *chat = [userInfo objectForKey:@"AIChat"];
@@ -108,6 +108,8 @@
 			}
 		}
 	}
+	
+	return YES;
 }
 
 /*!

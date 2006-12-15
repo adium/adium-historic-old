@@ -290,6 +290,24 @@
 	return postProcessContent;
 }
 
+/*!
+ * @brief The display type is used by message styles; it's roughly equivalent to -type, but may contain more detailed info, 
+ * and should be considered public API.
+ *
+ * For example, this could be @"nextmessage" for an AIContentMessage coming immediately after another from the same sender.
+ */
+- (void)setDisplayType:(NSString *)type
+{
+	[displayType autorelease];
+	displayType = [type retain];
+}
+
+- (NSString *)displayType
+{
+	if(!displayType) displayType = @"";
+	return displayType;
+}
+
 #pragma mark Debug
 - (NSString *)description
 {

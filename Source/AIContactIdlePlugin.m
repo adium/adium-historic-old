@@ -127,7 +127,9 @@
 	//Update everyone's idle time
     enumerator = [idleObjectArray objectEnumerator];
     while ((object = [enumerator nextObject])) {
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         [self setIdleForObject:object silent:YES];
+		[pool release];
     }
 	
 	[[adium contactController] endListObjectNotificationsDelay];

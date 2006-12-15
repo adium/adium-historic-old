@@ -349,6 +349,7 @@ static  NSImage			*tabDivider = nil;
 - (void)ownFrameChanged:(NSNotification *)inNotification
 {
     [self arrangeTabs];
+	[self resetCursorRects];
 }
 
 //Rebuild the tab cells for this view

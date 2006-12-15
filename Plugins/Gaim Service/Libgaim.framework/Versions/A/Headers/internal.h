@@ -121,12 +121,12 @@
 #define PATHSIZE 1024
 
 #include <glib.h>
-#if GLIB_CHECK_VERSION(2,6,0)
-#	include <glib/gstdio.h>
+#if !GLIB_CHECK_VERSION(2,4,0)
+#	define G_MAXUINT32 ((guint32) 0xffffffff)
 #endif
 
-#ifdef _WIN32
-#include "win32dep.h"
+#if GLIB_CHECK_VERSION(2,6,0)
+#	include <glib/gstdio.h>
 #endif
 
 #if !GLIB_CHECK_VERSION(2,6,0)
@@ -142,10 +142,18 @@
 #	define g_open open
 #endif
 
+#if !GLIB_CHECK_VERSION(2,8,0) && !defined _WIN32
+#	define g_access access
+#endif
+
 #if !GLIB_CHECK_VERSION(2,10,0)
 #	define g_slice_new(type) g_new(type, 1)
 #	define g_slice_new0(type) g_new0(type, 1)
 #	define g_slice_free(type, mem) g_free(mem)
+#endif
+
+#ifdef _WIN32
+#include "win32dep.h"
 #endif
 
 /* ugly ugly ugly */

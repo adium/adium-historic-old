@@ -314,7 +314,9 @@ void gaim_blist_rename_group(GaimGroup *group, const char *name);
  *
  * @param account    The account this chat will get added to
  * @param alias      The alias of the new chat
- * @param components The info the prpl needs to join the chat
+ * @param components The info the prpl needs to join the chat.  The
+ *                   hash function should be g_str_hash() and the
+ *                   equal function should be g_str_equal().
  * @return           A newly allocated chat
  */
 GaimChat *gaim_chat_new(GaimAccount *account, const char *alias, GHashTable *components);
@@ -616,7 +618,7 @@ GaimBuddy *gaim_find_buddy_in_group(GaimAccount *account, const char *name,
  * Finds all GaimBuddy structs given a screenname and an account
  *
  * @param account The account this buddy belongs to
- * @param name    The buddy's screenname
+ * @param name    The buddy's screenname (or NULL to return all buddies in the account)
  *
  * @return        A GSList of buddies (which must be freed), or NULL if the buddy doesn't exist
  */

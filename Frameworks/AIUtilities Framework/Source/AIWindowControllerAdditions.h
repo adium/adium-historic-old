@@ -12,5 +12,6 @@
 @interface NSWindowController (AIWindowControllerAdditions) 
 
 - (BOOL) canCustomizeToolbar;
+- (BOOL) shouldResignKeyWindowWithoutUserInput;
 
 @end

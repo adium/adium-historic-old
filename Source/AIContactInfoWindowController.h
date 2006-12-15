@@ -16,7 +16,7 @@
  
 #import <Adium/AIWindowController.h>
 
-@class ESContactInfoListController, AIModularPaneCategoryView, AIImageViewWithImagePicker, AIAutoScrollView,
+@class ESContactInfoListController, AIModularPaneCategoryView, AIContactInfoImageViewWithImagePicker, AIAutoScrollView,
 	   AIListOutlineView, AIListObject;
 @protocol AIListControllerDelegate;
 
@@ -27,9 +27,9 @@
 	IBOutlet		NSTabViewItem					*tabViewItem_accounts;
 	NSTabViewItem									*tabViewItem_lastSelectedForListContacts;
 
-	IBOutlet		AIImageViewWithImagePicker		*imageView_userIcon;
-	IBOutlet		NSTextField						*textField_accountName;
-	IBOutlet		NSTextField						*textField_service;
+	IBOutlet		AIContactInfoImageViewWithImagePicker	*imageView_userIcon;
+	IBOutlet		NSTextField								*textField_accountName;
+	IBOutlet		NSTextField								*textField_service;
 	
 	IBOutlet		AIModularPaneCategoryView		*view_Profile;
 	IBOutlet		AIModularPaneCategoryView		*view_Accounts;
@@ -42,9 +42,6 @@
     IBOutlet		AIListOutlineView				*contactListView;
 	IBOutlet		NSButton						*button_addContact;
 	IBOutlet		NSButton						*button_removeContact;
-	
-	IBOutlet		NSButton						*button_clearContactIcon;
-	IBOutlet		NSButton						*button_chooseContactIcon;
 	
 	AIListObject									*displayedObject;
 	NSMutableDictionary								*loadedPanes;

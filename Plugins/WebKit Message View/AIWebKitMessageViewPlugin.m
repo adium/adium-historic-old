@@ -22,6 +22,7 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIBundleAdditions.h>
+#import <Adium/AIChat.h>
 
 #define NEW_CONTENT_RETRY_DELAY					0.01
 #define MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT @"Message Styles"
@@ -64,7 +65,7 @@
 
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
 {
-    return [AIWebKitMessageViewController messageViewControllerForChat:inChat withPlugin:self];
+	return [AIWebKitMessageViewController messageViewControllerForChat:inChat withPlugin:self];
 }
 
 /*!
@@ -104,7 +105,7 @@
 			NSAssert([styleDictionary count] > 0, @"No message styles available"); //Abort if we have no message styles
 		}
 		
-		return [NSDictionary dictionaryWithDictionary:styleDictionary]; //returning mutable private variables == nuh uh
+		return [styleDictionary copy]; //returning mutable private variables == nuh uh
 	}
 	return nil; //keep the compiler happy
 }

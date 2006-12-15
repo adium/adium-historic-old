@@ -324,11 +324,31 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
-- (void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString
+- (NSString *)processedIncomingUserInfo:(NSString *)inString
 {
-	[theContact setProfile:[AIHTMLDecoder decodeHTML:userInfoString]
-					notify:NotifyLater];
+	NSMutableString *returnString = nil;
+	if ([inString rangeOfString:@"Gaim could not find any information in the user's profile. The user most likely does not exist."].location != NSNotFound) {
+		returnString = [[inString mutableCopy] autorelease];
+		[returnString replaceOccurrencesOfString:@"Gaim could not find any information in the user's profile. The user most likely does not exist."
+									  withString:AILocalizedString(@"Adium could not find any information in the user's profile. This may not be a registered name.", "Message shown when a contact's profile can't be found")
+										 options:NSLiteralSearch
+										   range:NSMakeRange(0, [returnString length])];
+	}
 	
+	return (returnString ? returnString : inString);
+}
+
+- (void)updateUserInfo:(AIListContact *)theContact withData:(GaimNotifyUserInfo *)user_info
+{
+	const char *user_info_text = gaim_notify_user_info_get_text_with_newline(user_info, "<BR />");
+	NSString *gaimUserInfo = (user_info_text ? [NSString stringWithUTF8String:user_info_text] : nil);
+
+	gaimUserInfo = processGaimImages(gaimUserInfo, self);
+	gaimUserInfo = [self processedIncomingUserInfo:gaimUserInfo];
+
+	[theContact setProfile:[AIHTMLDecoder decodeHTML:gaimUserInfo]
+					notify:NotifyLater];
+
 	//Apply any changes
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
@@ -462,7 +482,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[gaimThread renameGroup:groupName onAccount:self to:newName];
 
 	//We must also update the remote grouping of all our contacts in that group
-	NSEnumerator	*enumerator = [[[adium contactController] allContactsInGroup:inGroup subgroups:YES onAccount:self] objectEnumerator];
+	NSEnumerator	*enumerator = [[[adium contactController] allContactsInObject:inGroup recurse:YES onAccount:self] objectEnumerator];
 	AIListContact	*contact;
 	
 	while ((contact = [enumerator nextObject])) {
@@ -487,23 +507,18 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize
 {
 	id		 callback;
-	NSNumber *indexNumber;
+//	NSNumber *indexNumber;
 	
 	//Inform libgaim that the request window closed
 	[ESGaimRequestAdapter requestCloseWithHandle:inWindowController];
 
 	if (inDidAuthorize) {
 		callback = [[[infoDict objectForKey:@"authorizeCB"] retain] autorelease];
-		indexNumber = [NSNumber numberWithInt:0];
 	} else {
 		callback = [[[infoDict objectForKey:@"denyCB"] retain] autorelease];
-		indexNumber = [NSNumber numberWithInt:1];		
 	}
 
-	[gaimThread doAuthRequestCbValue:callback
-				   withUserDataValue:[[[infoDict objectForKey:@"userData"] retain] autorelease]
-				 callBackIndexNumber:indexNumber
-					 isInputCallback:[[[infoDict objectForKey:@"isInputCallback"] retain] autorelease]];
+	[gaimThread doAuthRequestCbValue:callback withUserDataValue:[[[infoDict objectForKey:@"userData"] retain] autorelease]];
 }
 
 //Chats ------------------------------------------------------------
@@ -774,7 +789,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
 {
-	return YES;
+	GaimPluginProtocolInfo *prpl_info = NULL;
+
+	if (account && account->gc && account->gc->prpl)
+		prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(account->gc->prpl);
+	
+	if (prpl_info && prpl_info->send_file)
+		return (!prpl_info->can_receive_file || prpl_info->can_receive_file(account->gc, [[inListObject UID] UTF8String]));
+	else
+		return NO;
 }
 
 // **XXX** Not used at present. Do we want to?
@@ -1679,7 +1702,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  *
  * @result The gaim status ID
  */
-- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+- (const char *)gaimStatusIDForStatus:(AIStatus *)statusState
 							arguments:(NSMutableDictionary *)arguments
 {
 	char	*statusID = NULL;
@@ -1728,10 +1751,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	const char *statusID = [self gaimStatusIDForStatus:statusState
 											 arguments:arguments];
 
-	if (!statusMessage && ([statusState statusType] == AIAwayStatusType)) {
-		/* If we don't have a status message, and  the status type is away, get a default description of this away state
-		 * This allows, for example, an AIM user to set  the "Do Not Disturb" type provided by her ICQ account and have the
-		 * away message be set appropriately.
+	if (!statusMessage &&
+		([statusState statusType] == AIAwayStatusType) &&
+		([statusState statusName] && ![[statusState statusName] isEqualToString:STATUS_NAME_AWAY])) {
+		/* If we don't have a status message, and the status type is away for a non-default away such as "Do Not Disturb", get a default
+		 * description of this away state. This allows, for example, an AIM user to set the "Do Not Disturb" type provided by her ICQ account
+		 * and have the away message be set appropriately.
 		 */
 		statusMessage = [NSAttributedString stringWithString:[[adium statusController] descriptionForStateOfStatus:statusState]];
 	}

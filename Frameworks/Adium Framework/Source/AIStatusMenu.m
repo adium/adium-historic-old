@@ -162,6 +162,7 @@
 		*/
 	enumerator = [[[adium statusController] sortedFullStateArray] objectEnumerator];
 	while ((statusState = [enumerator nextObject])) {
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		AIStatusType thisStatusType = [statusState statusType];
 		AIStatusType thisStatusMutabilityType = [statusState mutabilityType];
 		
@@ -215,6 +216,7 @@
 		[menuItem release];
 		
 		currentStatusMutabilityType = thisStatusMutabilityType;
+		[pool release];
 	}
 	
 	if (currentStatusType != AIOfflineStatusType) {

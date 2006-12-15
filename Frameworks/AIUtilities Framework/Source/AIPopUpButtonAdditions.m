@@ -33,16 +33,17 @@
 }
 - (BOOL)compatibleSelectItemWithTag:(int)tag
 {
-	if([NSApp isOnTigerOrBetter])
-		return [self selectItemWithTag:tag];
-	else if ([self numberOfItems] > 0) {
+	if ([self numberOfItems] > 0) {
+		/* As of 10.4.8, -[NSPopUpButton selectItemWithTag:] always returns YES. We therefore use our own implementation.
+		 * I reported this in radar #4854601 -evands
+		 */
 		int	index = [self indexOfItemWithTag:tag];
 		if (index != -1) {
 			[self selectItemAtIndex:index];
 			return YES;
 		}
 	}
-	
+
 	return NO;
 }
 - (void)autosizeAndCenterHorizontally

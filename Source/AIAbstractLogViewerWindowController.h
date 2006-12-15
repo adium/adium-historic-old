@@ -56,7 +56,7 @@ typedef enum {
 	AIDateTypeAfter
 } AIDateType;
 
-@class AIListContact, AISplitView, ESSourceListResizer, KNShelfSplitView;
+@class AIListContact, AISplitView, KNShelfSplitView;
 
 @interface AIAbstractLogViewerWindowController : AIWindowController {
 	AILoggerPlugin				*plugin;
@@ -67,7 +67,6 @@ typedef enum {
 	IBOutlet	AIAlternatingRowOutlineView	*outlineView_contacts;
 	IBOutlet	NSView				*containingView_contactsSourceList;
 	float							desiredContactsSourceListDeltaX;
-	IBOutlet	ESSourceListResizer	*sourceListResizer;
 
 	IBOutlet	NSView			*containingView_results;
 	IBOutlet	AISplitView		*splitView_results;

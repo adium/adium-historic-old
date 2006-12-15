@@ -15,23 +15,15 @@
  */
 
 #import "ESWebKitMessageViewPreferences.h"
-
+#import "AIWebKitMessageViewPlugin.h"
+#import "AIWebkitMessageViewStyle.h"
+#import "AIWebKitMessageViewController.h"
+#import "AIPreviewChat.h"
+#import "ESWebView.h"
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
-#import "AIWebKitMessageViewPlugin.h"
-#import "AIWebkitMessageViewStyle.h"
-#import "AIWebKitMessageViewController.h"
-#import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIColorAdditions.h>
-#import <AIUtilities/AIFontAdditions.h>
-#import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/AIPopUpButtonAdditions.h>
-#import <AIUtilities/AIBundleAdditions.h>
-#import <AIUtilities/AIDateFormatterAdditions.h>
-#import <AIUtilities/AIImageAdditions.h>
-#import <AIUtilities/AIImageViewWithImagePicker.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -41,8 +33,15 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIService.h>
 #import <Adium/JVFontPreviewField.h>
-
-#import "ESWebView.h"
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIFontAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <AIUtilities/AIBundleAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageViewWithImagePicker.h>
 
 #define WEBKIT_PREVIEW_CONVERSATION_FILE	@"Preview"
 #define	PREF_GROUP_DISPLAYFORMAT			@"Display Format"  //To watch when the contact name display format changes
@@ -57,10 +56,12 @@
 - (AIChat *)previewChatWithDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath listObjects:(NSDictionary **)outListObjects;
 - (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath listObjects:(NSDictionary *)listObjects;
 - (NSMutableDictionary *)_addParticipants:(NSDictionary *)participants toChat:(AIChat *)inChat fromPath:(NSString *)previewPath;
-- (void)_applySettings:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
+- (void)_applySettings:(NSDictionary *)chatDict toChat:(AIPreviewChat *)inChat withParticipants:(NSDictionary *)participants;
 - (void)_addContent:(NSArray *)chatArray toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
 - (void)_setDisplayFontFace:(NSString *)face size:(NSNumber *)size;
 @end
+
+@class AIPreviewChat;
 
 @implementation ESWebKitMessageViewPreferences
 
@@ -446,8 +447,7 @@
 	
 	NSDictionary *listObjects;
 	previewChat = [self previewChatWithDictionary:previewDict fromPath:previewPath listObjects:&listObjects];
-	previewController = [[AIWebKitMessageViewController messageViewControllerForChat:previewChat
-																		  withPlugin:plugin] retain];
+	previewController = [[plugin messageViewControllerForChat:previewChat] retain];
 
 	//Enable live refreshing of our preview
 	[previewController setShouldReflectPreferenceChanges:YES];	
@@ -478,7 +478,7 @@
 
 - (AIChat *)previewChatWithDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath listObjects:(NSDictionary **)outListObjects
 {
-	AIChat *previewChat = [AIChat chatForAccount:nil];
+	AIPreviewChat *previewChat = [AIPreviewChat previewChat];
 	[previewChat setDisplayName:AILocalizedString(@"Sample Conversation", "Title for the sample conversation")];
 
 	//Process and create all participants
@@ -544,7 +544,7 @@
 /*!
  * @brief Chat settings
  */
-- (void)_applySettings:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants
+- (void)_applySettings:(NSDictionary *)chatDict toChat:(AIPreviewChat *)inChat withParticipants:(NSDictionary *)participants
 {
 	NSString			*dateOpened, *type, *name, *UID;
 	

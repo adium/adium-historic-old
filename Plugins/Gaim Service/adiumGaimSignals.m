@@ -18,6 +18,7 @@
 #import <AIUtilities/AIObjectAdditions.h>
 
 static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, GaimStatus *status, GaimBuddyEvent event);
+static void buddy_idle_changed_cb(GaimBuddy *buddy, gboolean old_idle, gboolean idle, GaimBuddyEvent event);
 
 static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 {
@@ -39,7 +40,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 			}
 			case GAIM_BUDDY_SIGNON_TIME: {
 				GaimPresence	*presence = gaim_buddy_get_presence(buddy);
-				time_t			loginTime = gaim_presence_get_login_time(presence);;
+				time_t			loginTime = gaim_presence_get_login_time(presence);
 				
 				updateSelector = @selector(updateSignonTime:withData:);
 				data = (loginTime ? [NSDate dateWithTimeIntervalSince1970:loginTime] : nil);
@@ -99,11 +100,12 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 			}
 		}
 		
-		//Update the contact's status if the event was a signon or signoff event, since the status changed event may not be sent.
+		//Update the contact's status and idle if the event was a signon or signoff event, since the status changed event may not be sent.
 		if (event == GAIM_BUDDY_SIGNON || event == GAIM_BUDDY_SIGNOFF) {
 			GaimPresence	*presence = gaim_buddy_get_presence(buddy);
 			GaimStatus		*status = gaim_presence_get_active_status(presence);
 			buddy_status_changed_cb(buddy, NULL, status, event);
+			buddy_idle_changed_cb(buddy, FALSE, gaim_presence_is_idle(presence), event);
 		}
 	}
 }
@@ -179,7 +181,7 @@ void configureAdiumGaimSignals(void)
 	gaim_signal_connect(blist_handle, "buddy-icon-changed",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_ICON));
-	
+
 	//Signon / Signoff
 	gaim_signal_connect(blist_handle, "buddy-signed-on",
 						handle, GAIM_CALLBACK(buddy_event_cb),
@@ -187,4 +189,12 @@ void configureAdiumGaimSignals(void)
 	gaim_signal_connect(blist_handle, "buddy-signed-off",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_SIGNOFF));	
+	gaim_signal_connect(blist_handle, "buddy-got-login-time",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_SIGNON_TIME));	
+
+	//Miscellaneous - I'm not thrilled about this existence of this one...
+	gaim_signal_connect(blist_handle, "buddy-miscellaneous-changed",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_MISCELLANEOUS));		
 }

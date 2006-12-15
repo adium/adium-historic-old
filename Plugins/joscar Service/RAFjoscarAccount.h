@@ -16,6 +16,7 @@
 	NSMutableDictionary		*fileTransferDict;
 	
 	BOOL					inSignOnDelay;
+	int						reconnectAttemptsRemaining;
 }
 
 - (NSString *)serversideUID;
@@ -43,6 +44,7 @@
 - (void)chatWithUID:(NSString *)inUID receivedDirectMessage:(NSString *)inHTML isAutoreply:(NSNumber *)isAutoreply joscarData:(id)joscarData;
 - (void)chatWithUID:(NSString *)inUID gotTypingState:(NSNumber *)typingState;
 - (void)chatWithUID:(NSString *)inUID setDirectIMConnected:(BOOL)isConnected;
+- (void)chatWithUID:(NSString *)inUID updateDirectIMStatus:(NSString *)inStatus;
 
 - (void)newIncomingFileTransferWithUID:(NSString *)inUID
 							  fileName:(NSString *)fileName
@@ -68,11 +70,11 @@
 - (void)inviteToChat:(NSString *)name fromContact:(NSString *)uid withMessage:(NSString *)message inviteObject:(id)invite;
 
 - (void)gotMessage:(NSString *)message onGroupChatNamed:(NSString *)name fromUID:(NSString *)uid;
-- (AIChat *)mainThreadChatWithName:(NSString *)name;
+- (AIChat *)chatWithName:(NSString *)name;
 - (void)chatFailed:(NSString *)name;
 - (void)objectsLeftChat:(NSArray *)objects chatName:(NSString *)name;
 - (void)objectsJoinedChat:(NSArray *)objects chatName:(NSString *)name;
-- (void)addChat:(AIChat *)chat;
+- (void)groupChatReadyWithName:(NSString *)inChatName;
 
 - (NSString *)getSecurid;
 

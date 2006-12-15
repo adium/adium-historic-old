@@ -308,26 +308,27 @@ static NSArray *validSenderColors;
 	return [self fillKeywordsForBaseTemplate:templateHTML chat:chat];
 }
 
-- (NSString *)templateForContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar
+- (NSString *)templateForContent:(AIContentObject *)content
 {
 	NSString	*template;
 	
-	//Get the correct template for what we're inserting
-	if ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
-		if ([content isOutgoing]) {
-			template = (contentIsSimilar ? nextContentOutHTML : contentOutHTML);
-		} else {
-			template = (contentIsSimilar ? nextContentInHTML : contentInHTML);
-		}
+	NSString *type = [[content displayType] lowercaseString];
+	BOOL isOutgoing = [content isOutgoing];
+	BOOL contentIsSimilar = [type rangeOfString:@"next"].location != NSNotFound;
 	
-	} else if ([[content type] isEqualToString:CONTENT_CONTEXT_TYPE]) {
-		if ([content isOutgoing]) {
+	//Get the correct template for what we're inserting
+	if ([type rangeOfString:@"context"].location != NSNotFound) {
+		if (isOutgoing) {
 			template = (contentIsSimilar ? nextContextOutHTML : contextOutHTML);
 		} else {
 			template = (contentIsSimilar ? nextContextInHTML : contextInHTML);
 		}
-
-	} else if([[content type] isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) {
+	} else if ([type rangeOfString:@"message"].location != NSNotFound) {
+		if (isOutgoing)
+			template = (contentIsSimilar ? nextContentOutHTML : contentOutHTML);
+		else
+			template = (contentIsSimilar ? nextContentInHTML : contentInHTML);
+	} else if([type rangeOfString:@"filetransfer"].location != NSNotFound) {
 		template = [[fileTransferHTML mutableCopy] autorelease];
 	}
 	else {
@@ -353,13 +354,18 @@ static NSArray *validSenderColors;
 
 	//Starting with version 1, styles can choose to not include template.html.  If the template is not included 
 	//Adium's default will be used.  This is preferred since any future template updates will apply to the style
+	NSBundle *wkPlugin = [NSBundle bundleForClass:[self class]];
 	if ((!baseHTML || [baseHTML length] == 0) && styleVersion >= 1) {		
-		baseHTML = [NSString stringWithContentsOfUTF8File:[[NSBundle bundleForClass:[self class]] pathForResource:@"Template" ofType:@"html"]];
+		baseHTML = [NSString stringWithContentsOfUTF8File:[wkPlugin pathForResource:@"Template" ofType:@"html"]];
 		usingCustomBaseHTML = NO;
 	} else {
 		usingCustomBaseHTML = YES;
 	}
-	[baseHTML retain];	
+	[baseHTML retain];
+	
+	jsPath = [stylePath stringByAppendingPathComponent:@"Template.js"];
+	if(![[NSFileManager defaultManager] fileExistsAtPath:jsPath])
+		jsPath = [wkPlugin pathForResource:@"Template" ofType:@"js"];
 
 	//Content Templates
 	contentInHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Incoming/Content.html"]] retain];
@@ -430,9 +436,6 @@ static NSArray *validSenderColors;
 	}
 
 	return methodName;
-}
-- (NSArray *)methodArgumentsForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects {
-	return [NSArray arrayWithObject:[self _escapeStringForInsertionIntoMessageView:[self fillKeywords:[[[self templateForContent:content similar:contentIsSimilar] mutableCopy] autorelease] forContent:content]]];
 }
 
 - (NSString *)scriptForChangingVariant:(NSString *)variant
@@ -533,6 +536,12 @@ static NSArray *validSenderColors;
 
 #pragma mark Keyword replacement
 
+- (NSString *) htmlForContentObject:(AIContentObject *)content
+{
+	NSString *template = [[[self templateForContent:content] mutableCopy] autorelease];
+	return [self _escapeStringForInsertionIntoMessageView:[self fillKeywords:template forContent:content]];
+}
+
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content
 {
 	NSDate			*date = nil;
@@ -597,7 +606,7 @@ static NSArray *validSenderColors;
 		range = [inString rangeOfString:@"%time{"];
 		if (range.location != NSNotFound) {
 			NSRange endRange;
-			endRange = [inString rangeOfString:@"}%"];
+			endRange = [inString rangeOfString:@"}%" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(range), [inString length] - NSMaxRange(range))];
 			if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
 				if (date) {
 					NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
@@ -711,7 +720,7 @@ static NSArray *validSenderColors;
 			range = [inString rangeOfString:@"%textbackgroundcolor{"];
 			if (range.location != NSNotFound) {
 				NSRange endRange;
-				endRange = [inString rangeOfString:@"}%"];
+				endRange = [inString rangeOfString:@"}%" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(range), [inString length] - NSMaxRange(range))];
 				if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
 					NSString *transparency = [inString substringWithRange:NSMakeRange(NSMaxRange(range),
 																					  (endRange.location - NSMaxRange(range)))];
@@ -913,7 +922,7 @@ static NSArray *validSenderColors;
 		range = [inString rangeOfString:@"%timeOpened{"];
 		if (range.location != NSNotFound) {
 			NSRange endRange;
-			endRange = [inString rangeOfString:@"}%"];
+			endRange = [inString rangeOfString:@"}%" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(range), [inString length] - NSMaxRange(range))];
 
 			if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {				
 				NSString		*timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];

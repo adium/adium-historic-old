@@ -42,7 +42,8 @@
 
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 
-#define CHAT_INVITE_TITLE 
+#define RECONNECTION_ATTEMPTS		4
+#define AUTO_RECONNECT_DELAY		3.0	//Delay in seconds
 
 @interface RAFjoscarAccount (PRIVATE)
 - (void)setTypingFlagOfChat:(AIChat *)chat to:(NSNumber *)typingStateNumber;
@@ -88,6 +89,26 @@
 	[super dealloc];
 }
 
+/*!
+* @brief The UID will be changed. The account has a chance to perform modifications
+ *
+ * Remove @aol.com if included in the screen name as a "do the right thing" service to AOL newbs.
+ *
+ * @param proposedUID The proposed, pre-filtered UID (filtered means it has no characters invalid for this servce)
+ * @result The UID to use; the default implementation just returns proposedUID.
+ */
+- (NSString *)accountWillSetUID:(NSString *)proposedUID
+{
+	if (proposedUID && ([proposedUID length] > 0)) {
+		NSRange aolRange = [proposedUID rangeOfString:@"@aol.com" options:(NSAnchoredSearch | NSBackwardsSearch | NSCaseInsensitiveSearch)];
+		if (aolRange.location != NSNotFound) {
+			proposedUID = [proposedUID substringToIndex:aolRange.location];
+		}
+	}
+	
+	return proposedUID;
+}
+		
 #pragma mark Account connectivity
 
 - (void)connect
@@ -282,19 +303,19 @@
 				shouldReconnect = NO;
 				errorMessage = AILocalizedString(@"You have been connecting too frequently. Please wait five minutes or more before trying again; trying sooner will increase the timespan of this temporary ban.", nil);
 
-				AILog(@"Connecting too frequently!");
-
 			} else if ([errorMessageShort isEqualToString:@"TemporarilyBlocked"]) {
 				shouldReconnect = NO;
 				errorMessage = AILocalizedString(@"You have been temporarily blocked by the AIM server and cannot connect at this time. Please try again later.", nil);
-				
-				AILog(@"Temporarily blocked!");
+
 			} else if ([errorMessageShort isEqualToString:@"TemporarilyUnavailable"]) {
 				shouldReconnect = NO;
 				errorMessage = AILocalizedString(@"The server is temporarily unavailable; you cannot connect at this time. Please try again later.", nil);
 				
-				AILog(@"Temporarily unavailable!");
-				
+			} else if ([errorMessageShort isEqualToString:@"Timeout"]) {
+				errorMessage = [NSString stringWithFormat:
+					AILocalizedString(@"Adium is unable to connect to the %@ server; the attempt timed out. Please check your network connection and try again.", nil),
+					[[self service] shortDescription]];
+
 			} else {
 				NSLog(@"Error message short is %@; code %@",errorMessageShort,
 					  errorCode);
@@ -302,13 +323,19 @@
 					  errorCode);
 			}
 			
-			if (shouldReconnect) {
+			AILog(@"%@: connect error: %@", self, errorMessage);
+			
+			if (shouldReconnect && reconnectAttemptsRemaining > 0) {
 				[self autoReconnectAfterDelay:3.0];
-				
+				reconnectAttemptsRemaining--;
+
 			} else if (errorMessage) {
 			    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"%@ (%@) : Connection Error", nil),
 					[self formattedUID], [[self service] shortDescription]]
-												withDescription:errorMessage];	
+												withDescription:errorMessage];
+
+				//Reset reconnection attempts since we're not trying again immediately
+				reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 			}
 		}
 		
@@ -344,6 +371,9 @@
 	
 	[joscarAdapter setDisplayRecentBuddies:[[self preferenceForKey:KEY_DISPLAY_RECENT_BUDDIES
 															 group:GROUP_ACCOUNT_STATUS] boolValue]];
+	
+	//Reset reconnection attempts
+    reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 }
 
 - (void)didDisconnect
@@ -596,6 +626,9 @@
 
 - (void)gotBuddyAdditions:(NSSet *)inSet
 {
+	//Do nothing if we're not online; this can happen if a threaded buddy additions notification is sent as we disconnect
+	if (![self online]) return;
+
 	NSEnumerator *enumerator = [inSet objectEnumerator];
 	NSDictionary *dictionary;
 	
@@ -672,9 +705,11 @@
 //Open a chat for Adium
 - (BOOL)openChat:(AIChat *)chat
 {
-	if ([chat isGroupChat])
+	if ([chat isGroupChat]) {
+		AILog(@"Joining the chat room %@ for %@",[chat name], chat);
 		[joscarAdapter joinChatRoom:[chat name]];
-	
+	}
+
 	//Created the chat successfully
 	return YES;
 }
@@ -921,6 +956,15 @@ BOOL isMobileContact(AIListObject *inListObject)
 	[[adium contentController] displayEvent:(isConnected ?
 											 AILocalizedString(@"Direct Instant Message session started","Direct IM is an AIM-specific phrase for transferring images in the message window") :
 											 AILocalizedString(@"Direct Instant Message session ended","Direct IM is an AIM-specific phrase for transferring images in the message window"))
+									 ofType:@"directIM"
+									 inChat:[[adium chatController] existingChatWithContact:sourceContact]];	
+}
+
+- (void)chatWithUID:(NSString *)inUID updateDirectIMStatus:(NSString *)inStatus
+{
+	AIListContact	*sourceContact = [self contactWithUID:inUID];
+	
+	[[adium contentController] displayEvent:inStatus
 									 ofType:@"directIM"
 									 inChat:[[adium chatController] existingChatWithContact:sourceContact]];	
 }
@@ -1276,40 +1320,25 @@ BOOL isMobileContact(AIListObject *inListObject)
 	}
 }
 
-- (AIChat *)mainThreadChatWithName:(NSString *)name
+- (AIChat *)chatWithName:(NSString *)name
 {
-	AIChat *chat;
-
-/*	[[adium chatController] mainPerformSelector:@selector(chatWithName:onAccount:chatCreationInfo:)
-									 withObject:name
-									 withObject:self
-									 withObject:nil
-								  waitUntilDone:YES];*/
-	[[adium chatController] chatWithName:name onAccount:self chatCreationInfo:nil];
-	
-	//Now return the existing chat
-	chat = [[adium chatController] existingChatWithName:name onAccount:self];
-	
-	return chat;
+	return [[adium chatController] chatWithName:name onAccount:self chatCreationInfo:nil];
 }
 
 #pragma mark Group Chat
-/*
- * If the user sent an initial message, this will be triggered and have no effect.
- *
- * If a remote user sent an initial message, however, a chat will be created without being opened.  This call is our
- * cue to actually open chat.
- *
- * Another situation in which this is relevant is when we request joining a group chat; the chat should only be actually
- * opened once the server notifies us that we are in the room.
- *
- * This will ultimately call -[CBGaimAccount openChat:] below if the chat was not previously open.
+/*!
+ * @brief A group chat is now ready; open it
  */
-- (void)addChat:(AIChat *)chat
+- (void)groupChatReady:(AIChat *)chat
 {
-	[[adium notificationCenter] addObserver:self selector:@selector(chatClosed:) name:Chat_WillClose object:chat];
 	//Open the chat
+	AILog(@"%@: addGroupChat: %@", self, chat);
 	[[adium interfaceController] openChat:chat]; 
+}
+
+- (void)groupChatReadyWithName:(NSString *)inChatName
+{
+	[self groupChatReady:[self chatWithName:inChatName]];
 }
 
 - (void)setTypingFlagOfChat:(AIChat *)chat to:(NSNumber *)typingStateNumber
@@ -1356,7 +1385,7 @@ BOOL isMobileContact(AIListObject *inListObject)
 	BOOL	shouldJoinChat = (AITextAndButtonsDefaultReturn == returnCode);
 
 	if ((chat = [joscarAdapter handleChatInvitation:(id<ChatInvitation>)userInfo withDecision:shouldJoinChat])) {
-		[self addChat:chat];
+		[self groupChatReady:chat];
 	}
 
 	return YES;
@@ -1364,10 +1393,10 @@ BOOL isMobileContact(AIListObject *inListObject)
 
 - (void)gotMessage:(NSString *)message onGroupChatNamed:(NSString *)name fromUID:(NSString *)uid
 {
-	AIChat				*chat = [self mainThreadChatWithName:name];
+	AIChat				*chat = [self chatWithName:name];
 	AIContentMessage	*messageObject;
 	AIListContact		*sourceContact = [self contactWithUID:uid];
-	NSAttributedString *attributedMessage = [[adium contentController] decodedIncomingMessage:message
+	NSAttributedString	*attributedMessage = [[adium contentController] decodedIncomingMessage:message
 																				  fromContact:sourceContact
 																					onAccount:self];
 	
@@ -1387,17 +1416,12 @@ BOOL isMobileContact(AIListObject *inListObject)
 {	
 	[[adium contentController] displayEvent:AILocalizedString(@"Error: A connection failure has occurred.", nil)
 									 ofType:@"group_chat_connection_failure"
-									 inChat:[self mainThreadChatWithName:name]];
-}
-
-- (void)chatClosed:(NSNotification *)notif
-{
-	[joscarAdapter leaveGroupChatWithName:[(AIChat*)[notif object] name]];
+									 inChat:[self chatWithName:name]];
 }
 
 - (void)objectsLeftChat:(NSArray *)objects chatName:(NSString *)name
 {
-	AIChat *chat = [self mainThreadChatWithName:name];
+	AIChat *chat = [self chatWithName:name];
 	NSEnumerator *iter = [objects objectEnumerator];
 	NSString *uid;
 	while ((uid = [iter nextObject]))
@@ -1406,7 +1430,7 @@ BOOL isMobileContact(AIListObject *inListObject)
 
 - (void)objectsJoinedChat:(NSArray *)objects chatName:(NSString *)name
 {
-	AIChat *chat = [self mainThreadChatWithName:name];
+	AIChat *chat = [self chatWithName:name];
 	NSEnumerator *iter = [objects objectEnumerator];
 	NSString *uid;
 	while ((uid = [iter nextObject]))

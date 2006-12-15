@@ -15,6 +15,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import <WebKit/WebKit.h>
 
 @class AIChat, AIContentObject;
 
@@ -65,6 +66,8 @@ typedef enum {
  *	@see AIWebKitMessageViewController
  */
 @interface AIWebkitMessageViewStyle : NSObject {
+	WebView				*view;
+	
 	int					styleVersion;
 	NSBundle			*styleBundle;
 	NSString			*stylePath;
@@ -72,6 +75,7 @@ typedef enum {
 	//Templates
 	NSString			*headerHTML;
 	NSString			*footerHTML;
+	NSString			*jsPath;
 	NSString			*baseHTML;
 	NSString			*contentInHTML;
 	NSString			*nextContentInHTML;
@@ -134,7 +138,7 @@ typedef enum {
  * 
  *	Templates may be different for different content types and for content objects similar to the one preceding them.
  */
-- (NSString *)templateForContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar;
+- (NSString *)templateForContent:(AIContentObject *)content;
 
 /*!
  *	@brief The name of the JavaScript method to record whether we will need to scroll to bottom.
@@ -174,16 +178,6 @@ typedef enum {
  *	@brief Returns the BOM method name for appending content
  */
 - (NSString *)methodNameForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
-/*!
- *	@brief Returns the BOM method arguments for appending content
- *
- *	Currently simply fills keywords in the provided content, returning an array of one string.
- */
-- (NSArray *)methodArgumentsForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
-/*!
- *	@brief Returns the BOM script for appending content
- */
-- (NSString *)scriptForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
 
 /*!
  *	@brief Returns the BOM script for changing the view's variant

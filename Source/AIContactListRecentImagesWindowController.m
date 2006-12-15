@@ -121,7 +121,7 @@
 {
 	NSImage		 *displayImage;
 
-	if (index < [[NSIPRecentPicture recentPictures] count]) {
+	if (index < [[NSIPRecentPicture recentSmallIcons] count]) {
 		NSImage		 *image = [[NSIPRecentPicture recentSmallIcons] objectAtIndex:index];
 		NSSize		size = [image size];
 		NSBezierPath *fullPath = [NSBezierPath bezierPathWithRect:NSMakeRect(0, 0, size.width, size.height)];

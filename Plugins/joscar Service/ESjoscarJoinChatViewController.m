@@ -91,8 +91,6 @@
 				chatCreationInfo:chatCreationInfo
 				invitingContacts:[self contactsFromNamesSeparatedByCommas:[textField_inviteUsers stringValue] onAccount:inAccount]
 		   withInvitationMessage:invitationMessage];
-		AIChat *tmpChat = [[adium chatController] existingChatWithName:room onAccount:account];
-		[(RAFjoscarAccount *)account addChat:tmpChat];
 
 	} else {
 		NSLog(@"Error: No room specified.");
@@ -131,7 +129,7 @@
 	[textField_inviteUsers setCompletingStrings:nil];
 	
 	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
-    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
+    enumerator = [[[adium contactController] allContacts] objectEnumerator];
     while ((contact = [enumerator nextObject])) {
 		if ([contact service] == [account service]) {
 			NSString *UID = [contact UID];
@@ -144,7 +142,6 @@
 }
 
 #pragma mark Dragging Delegate
-
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {

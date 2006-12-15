@@ -14,6 +14,7 @@ Augie Fackler
 Ken Ferry
 Christopher Forsythe
 Brian Ganninger
+Ryan Govostes
 Arno Hautala
 Asher Haig
 Mohammed A. Haque
@@ -34,6 +35,7 @@ Roeland Nas
 Laura Natcher
 Daisuke Okada
 Stephen Poprocki
+Jesse Rusak
 Evan Schoenberg
 Chris Serino
 David Smith
@@ -42,6 +44,5 @@ Kent Sutherland
 Vinay Venkatesh
 Wesley Underwood
 Ofri Wolfus
-Jesse Rusak
 
 If you have contributed to Adium and are not on this list, please contact us.

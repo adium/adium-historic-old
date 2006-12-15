@@ -22,6 +22,8 @@
 	NSMutableSet			*knownHosts;
 	NSMutableSet			*accountsToConnect;
 	NSMutableSet			*accountsToNotConnect;
+	
+	BOOL					waitingToSleep;
 }
 
 @end

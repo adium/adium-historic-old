@@ -121,10 +121,9 @@ static void adiumGaimNotifySearchResultsNewRows(GaimConnection *gc,
 }
 
 static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who,
-									 const char *text)
+									 GaimNotifyUserInfo *user_info)
 {	
 	if (GAIM_CONNECTION_IS_VALID(gc)) {
-		NSString		*textString;
 		GaimAccount		*account = gaim_connection_get_account(gc);
 		GaimBuddy		*buddy = gaim_find_buddy(account, who);
 		CBGaimAccount	*adiumAccount = accountLookup(account);
@@ -137,11 +136,8 @@ static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who,
 			contact = [accountLookup(account) mainThreadContactWithUID:UID];
 		}
 		
-		
-		textString = processGaimImages([NSString stringWithUTF8String:text],
-									   adiumAccount);
 		[adiumAccount updateUserInfo:contact
-							withData:textString];
+							withData:user_info];
 	}
 	
     return NULL;

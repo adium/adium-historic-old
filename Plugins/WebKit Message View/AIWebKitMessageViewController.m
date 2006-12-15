@@ -52,10 +52,9 @@
 - (void)_updateWebViewForCurrentPreferences;
 - (void)_updateVariantWithoutPrimingView;
 - (void)processQueuedContent;
-- (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
 - (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
 - (void)_updateUserIconForObject:(AIListObject *)inObject;
-- (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject;
+- (NSString *)webKitUserIconPathForObject:(AIListObject *)inObject;
 - (void)participatingListObjectsChanged:(NSNotification *)notification;
 - (void)sourceOrDestinationChanged:(NSNotification *)notification;
 - (BOOL)shouldHandleDragWithPasteboard:(NSPasteboard *)pasteboard;
@@ -69,9 +68,18 @@ static NSArray *draggedTypes = nil;
 
 @implementation AIWebKitMessageViewController
 
+static NSMutableDictionary *wkmvControllers = nil;
+
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
-    return [[[self alloc] initForChat:inChat withPlugin:inPlugin] autorelease];
+	if(!wkmvControllers) wkmvControllers = [[NSMutableDictionary alloc] init];
+	NSString *chatID = [inChat uniqueChatID];
+	id controller = [wkmvControllers objectForKey:chatID];
+	if(!controller) {
+		controller = [[[self alloc] initForChat:inChat withPlugin:inPlugin] autorelease];
+		[wkmvControllers setObject:controller forKey:chatID];
+	}
+    return controller;
 }
 
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
@@ -121,9 +129,19 @@ static NSArray *draggedTypes = nil;
 									   selector:@selector(customEmoticonUpdated:)
 										   name:@"AICustomEmoticonUpdated"
 										 object:inChat];
+		
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(chatWillClose:)
+										   name:Chat_WillClose
+										 object:inChat];
 	}
 	
     return self;
+}
+
+- (void) chatWillClose:(NSNotification *)not
+{
+	[wkmvControllers removeObjectForKey:[[not object] uniqueChatID]];
 }
 
 /*!
@@ -370,6 +388,7 @@ static NSArray *draggedTypes = nil;
  */
 - (void)_updateWebViewForCurrentPreferences
 {
+	NSLog(@"Updating prefs!");
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	NSBundle		*styleBundle;
 	
@@ -526,8 +545,7 @@ static NSArray *draggedTypes = nil;
  */
 - (void)contentObjectAdded:(NSNotification *)notification
 {
-	AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"AIContentObject"];
-	[self enqueueContentObject:contentObject];
+	[self enqueueContentObject:[[notification userInfo] objectForKey:@"AIContentObject"]];
 }
 
 - (void)enqueueContentObject:(AIContentObject *)contentObject
@@ -555,125 +573,59 @@ static NSArray *draggedTypes = nil;
  * @brief Append new content to our processing queueProcess any content in the queuee
  */
 - (void)processQueuedContent
-{
-	unsigned	contentQueueCount, objectsAdded = 0;
-	BOOL		willAddMoreContentObjects = NO;
-	
+{	
 	if (webViewIsReady) {
-		contentQueueCount = [contentQueue count];
+		unsigned contentQueueCount = [contentQueue count];
 
-		while (contentQueueCount > 0) {
+		for (int i = 0; i < contentQueueCount; i++) {
 			AIContentObject *content;
-
-			willAddMoreContentObjects = (contentQueueCount > 1);
 			
-			//Display the content
-			content = [contentQueue objectAtIndex:0];
-			[self _processContentObject:content willAddMoreContentObjects:willAddMoreContentObjects];
+			//Prepare the content
+			content = [contentQueue objectAtIndex:i];
+			
+			/*
+			 If the day has changed since our last message (or if there was no previous message and 
+															we are about to display context), insert a date line.
+			 */
+			
+			if ((!previousContent && [content isKindOfClass:[AIContentContext class]]) ||
+				(![content isFromSameDayAsContent:previousContent])) {
+				NSString *dateMessage = [[content date] descriptionWithCalendarFormat:[[NSDateFormatter localizedDateFormatter] dateFormat]
+																   timeZone:nil
+																	 locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+				AIContentEvent *dateSeparator = [AIContentEvent statusInChat:[content chat]
+												  withSource:[[content chat] listObject]
+												 destination:[[content chat] account]
+														date:[content date]
+													 message:[[[NSAttributedString alloc] initWithString:dateMessage
+																							  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
+													withType:@"date_separator"];
+				//Add the date header
+				[contentQueue insertObject:dateSeparator atIndex:i];
+				++i;
+				++contentQueueCount; //we just made it one longer
+				[previousContent release]; previousContent = [dateSeparator retain];
+			}
+			
+			BOOL similar = (previousContent && [content isSimilarToContent:previousContent] && ![content isKindOfClass:[ESFileTransfer class]]);
+			
+			if(similar)
+				[content setDisplayType:[[content displayType] stringByAppendingString:@" next"]];
+			
+			[previousContent release]; previousContent = [content retain];
 
 			//If we are going to reflect preference changes, store this content object
-			if (shouldReflectPreferenceChanges) {
-				[storedContentObjects addObject:content];
-			}
-
-			//Remove the content we just displayed from the queue
-			[contentQueue removeObjectAtIndex:0];
-			objectsAdded++;
-			contentQueueCount--;
+		//	if (shouldReflectPreferenceChanges)
+		//		[storedContentObjects addObject:content];
 		}
+		[[webView windowScriptObject] callWebScriptMethod:@"appendMessages"
+											withArguments:contentQueue];
+		[contentQueue removeAllObjects];
 	} else {
 		/* If the webview isn't ready, assume we have at least one piece of content left to display */
-		contentQueueCount = 1;
-	}
-	
-	/* If we added multiple objects, we may want to scroll to the bottom now, having not done it as each object
-	 * was added.
-	 */
-	if (objectsAdded > 1) {
-		NSString	*scrollToBottomScript;
-		
-		if ((scrollToBottomScript = [messageStyle scriptForScrollingAfterAddingMultipleContentObjects])) {
-			[webView stringByEvaluatingJavaScriptFromString:scrollToBottomScript];
-		}
-	}
-	
-	//If there is still content to process (the webview wasn't ready), we'll try again after a brief delay
-	if (contentQueueCount) {
 		[self performSelector:@selector(processQueuedContent) withObject:nil afterDelay:NEW_CONTENT_RETRY_DELAY];
 	}
 }
-
-/*!
- * @brief Process and then append a content object
- */
-- (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
-{
-	NSString		*dateMessage = nil;
-	AIContentEvent	*dateSeparator = nil;
-	
-	/*
-	 If the day has changed since our last message (or if there was no previous message and 
-	 we are about to display context), insert a date line.
-	 */
-	if ((!previousContent && [content isKindOfClass:[AIContentContext class]]) ||
-	   (![content isFromSameDayAsContent:previousContent])) {
-		dateMessage = [[content date] descriptionWithCalendarFormat:[[NSDateFormatter localizedDateFormatter] dateFormat]
-														   timeZone:nil
-															 locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
-		dateSeparator = [AIContentEvent statusInChat:[content chat]
-										  withSource:[[content chat] listObject]
-										 destination:[[content chat] account]
-												date:[content date]
-											 message:[[[NSAttributedString alloc] initWithString:dateMessage
-																					  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
-											withType:@"date_separator"];
-		//Add the date header
-		[self _appendContent:dateSeparator 
-					 similar:NO
-			willAddMoreContentObjects:YES];
-		[previousContent release]; previousContent = [dateSeparator retain];
-	}
-	
-	BOOL similar = (previousContent && [content isSimilarToContent:previousContent] && ![content isKindOfClass:[ESFileTransfer class]]);
-	
-	//Add the content object
-	[self _appendContent:content 
-				 similar:similar
-	willAddMoreContentObjects:willAddMoreContentObjects];
-		
-	[previousContent release]; previousContent = [content retain];
-}
-
-/*!
- * @brief Append a content object
- */
-- (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
-{
-	WebScriptObject *wso = [webView windowScriptObject];
-	NSString *methodName;
-	NSArray *methodArgs;
-
-	methodName = [messageStyle methodNameToCheckIfScrollToBottomIsNeeded];
-	if (methodName) {
-		methodArgs = [messageStyle methodArgumentsToCheckIfScrollToBottomIsNeeded];
-		[wso callWebScriptMethod:methodName withArguments:methodArgs];
-	}
-
-	methodName = [messageStyle methodNameForAppendingContent:content
-	                                                 similar:contentIsSimilar
-	                               willAddMoreContentObjects:willAddMoreContentObjects];
-	methodArgs = [messageStyle methodArgumentsForAppendingContent:content
-	                                                 similar:contentIsSimilar
-	                               willAddMoreContentObjects:willAddMoreContentObjects];
-	[wso callWebScriptMethod:methodName withArguments:methodArgs];
-
-	methodName = [messageStyle methodNameToScrollToBottomIfNeeded];
-	if (methodName) {
-		methodArgs = [messageStyle methodArgumentsToScrollToBottomIfNeeded];
-		[wso callWebScriptMethod:methodName withArguments:methodArgs];
-	}
-}
-
 
 //WebView Delegates ----------------------------------------------------------------------------------------------------
 #pragma mark Webview delegates
@@ -1115,7 +1067,7 @@ static NSArray *draggedTypes = nil;
 		 * Writing the icon out is necessary for webkit to be able to use it; it also guarantees that there won't be
 		 * any animation, which is good since animation in the message view is slow and annoying.
 		 */
-		webKitUserIconPath = [self _webKitUserIconPathForObject:inObject];
+		webKitUserIconPath = [self webKitUserIconPathForObject:inObject];
 		if ([[webKitUserIcon TIFFRepresentation] writeToFile:webKitUserIconPath
 												  atomically:YES]) {
 			[inObject setStatusObject:webKitUserIconPath
@@ -1183,7 +1135,7 @@ static NSArray *draggedTypes = nil;
 /*!
  * @brief Returns the path to the list object's masked user icon
  */
-- (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject
+- (NSString *)webKitUserIconPathForObject:(AIListObject *)inObject
 {
 	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff", [inObject internalObjectID], [NSString randomStringOfLength:5]];
 	return [[adium cachesPath] stringByAppendingPathComponent:filename];
@@ -1217,7 +1169,7 @@ static NSArray *draggedTypes = nil;
 {
 	if(aSelector == @selector(handleAction:forFileTransfer:)) return NO;
 	if(aSelector == @selector(debugLog:)) return NO;
-	if(aSelector == @selector(zoomImage:)) return NO;
+	if(aSelector == @selector(getMessageHTML)) return NO;
 	return YES;
 }
 
@@ -1234,28 +1186,7 @@ static NSArray *draggedTypes = nil;
 {
 	if(aSelector == @selector(handleAction:forFileTransfer:)) return @"handleFileTransfer";
 	if(aSelector == @selector(debugLog:)) return @"debugLog";
-	if(aSelector == @selector(zoomImage:)) return @"zoomImage";
 	return @"";
-}
-
-- (BOOL)zoomImage:(DOMHTMLImageElement *)img
-{
-	NSMutableString *className = [[img className]mutableCopy];
-	if([className rangeOfString:@"fullSizeImage"].location != NSNotFound)
-		[className replaceOccurrencesOfString:@"fullSizeImage"
-								   withString:@"scaledToFitImage"
-									  options:NSLiteralSearch
-										range:NSMakeRange(0, [className length])];
-	else if([className rangeOfString:@"scaledToFitImage"].location != NSNotFound)
-		[className replaceOccurrencesOfString:@"scaledToFitImage"
-								   withString:@"fullSizeImage"
-									  options:NSLiteralSearch
-										range:NSMakeRange(0, [className length])];
-	else return NO;
-	
-	[img setClassName:className];
-	[[webView windowScriptObject] callWebScriptMethod:@"alignChat" withArguments:[NSArray arrayWithObject:[NSNumber numberWithBool:YES]]];
-	return YES;
 }
 
 - (void)debugLog:(NSString *)message { NSLog(message); }
@@ -1264,6 +1195,50 @@ static NSArray *draggedTypes = nil;
 - (NSString *)webviewSource
 {
 	return [(DOMHTMLHtmlElement *)[[[[webView mainFrame] DOMDocument] getElementsByTagName:@"html"] item:0] outerHTML];
+}
+
+@end
+
+@interface AIContentObject (JSBridging)
+
+@end
+
+@implementation AIContentObject (JSBridging)
+
+- (NSString *) HTMLForWebKitMessageView
+{
+	//XXX cache the current message style?
+	return [[[[adium interfaceController] messageViewControllerForChat:[self chat]] messageStyle] htmlForContentObject:self];
+}
+
+- (NSString *) direction
+{
+	return [self isOutgoing] ? @"outgoing" : @"incoming";
+}
+
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
+{
+	if(aSelector == @selector(HTMLForWebKitMessageView)) return NO;
+	if(aSelector == @selector(direction)) return NO;
+	if(aSelector == @selector(displayType)) return NO;
+	return YES;
+}
+
+/*
+ * This method returns the name to be used in the scripting environment for the selector specified by aSelector.
+ * It is your responsibility to ensure that the returned name is unique to the script invoking this method.
+ * If this method returns nil or you do not implement it, the default name for the selector will be constructed as follows:
+ *
+ * Any colon (“:”)in the Objective-C selector is replaced by an underscore (“_”).
+ * Any underscore in the Objective-C selector is prefixed with a dollar sign (“$”).
+ * Any dollar sign in the Objective-C selector is prefixed with another dollar sign.
+ */
++ (NSString *)webScriptNameForSelector:(SEL)aSelector
+{
+	if(aSelector == @selector(HTMLForWebKitMessageView)) return @"getMessageHTML";
+	if(aSelector == @selector(direction)) return @"getIsOutgoing";
+	if(aSelector == @selector(displayType)) return @"getMessageType";
+	return @"";
 }
 
 @end

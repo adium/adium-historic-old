@@ -67,7 +67,6 @@ typedef struct _JabberStream
 	int fd;
 
 	GaimSrvQueryData *srv_query_data;
-	GaimProxyConnectData *connect_data;
 
 	xmlParserCtxt *context;
 	xmlnode *current;
@@ -120,6 +119,9 @@ typedef struct _JabberStream
 	guint writeh;
 
 	gboolean reinit;
+
+	gboolean googletalk;
+	char *server_name;
 
 	gchar* last_mail_alert_time;
 

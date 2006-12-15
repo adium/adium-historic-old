@@ -137,6 +137,7 @@ struct yahoo_data {
 	/* ew. we have to check the icon before we connect,
 	 * but can't upload it til we're connected. */
 	struct yahoo_buddy_icon_upload_data *picture_upload_todo;
+	GaimProxyConnectData *buddy_icon_connect_data;
 
 	struct _YchtConn *ycht;
 
@@ -198,7 +199,7 @@ char *yahoo_string_encode(GaimConnection *gc, const char *str, gboolean *utf8);
 char *yahoo_string_decode(GaimConnection *gc, const char *str, gboolean utf8);
 
 /* previously-static functions, now needed for yahoo_profile.c */
-void yahoo_tooltip_text(GaimBuddy *b, GString *str, gboolean full);
+void yahoo_tooltip_text(GaimBuddy *b, GaimNotifyUserInfo *user_info, gboolean full);
 
 /* yahoo_profile.c */
 void yahoo_get_info(GaimConnection *gc, const char *name);

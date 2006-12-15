@@ -79,6 +79,11 @@
     return CONTENT_STATUS_TYPE;
 }
 
+- (NSString *)displayType
+{
+	return [[super displayType] stringByAppendingFormat:@" %@", CONTENT_STATUS_TYPE];
+}
+
 //The type of status change this is
 - (NSString *)status
 {

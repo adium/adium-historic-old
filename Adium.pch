@@ -16,8 +16,7 @@
 
 #ifdef __OBJC__
 	#import <Cocoa/Cocoa.h>							//Everybody needs cocoa
-	#import "AIAdium.h"								//Everybody needs the core
-	#import <Adium/AIAdiumProtocol.h>
+	#import <Adium/AIAdiumProtocol.h>				//Everybody needs the core
 	#import <Adium/ESDebugAILog.h>					//Everybody needs to debug
 	#import <AIUtilities/AIStringUtilities.h>		//Everybody should be localizing their strings
 	#import <Adium/AILocalizationAssistance.h>		//Everybody should be localizing their strings

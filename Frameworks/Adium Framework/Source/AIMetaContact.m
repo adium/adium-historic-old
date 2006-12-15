@@ -30,7 +30,7 @@
 @interface AIMetaContact (PRIVATE)
 - (void)_updateCachedStatusOfObject:(AIListObject *)inObject;
 - (void)_removeCachedStatusOfObject:(AIListObject *)inObject;
-- (BOOL)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key notify:(BOOL)notify;
+- (BOOL)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key notify:(BOOL)notify determineIfChanged:(BOOL)determineIfChanged;
 
 - (id)_statusObjectForKey:(NSString *)key containedObjectSelector:(SEL)containedObjectSelector;
 - (void)_determineIfWeShouldAppearToContainOnlyOneContact;
@@ -138,50 +138,64 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	[super setContainingObject:inGroup];
 }
 
-//Restore the AIListGroup grouping into which this object was last manually placed
+/*!
+ * @brief Restore the AIListGroup grouping into which this object was last manually placed
+ *
+ * If the contact is offline and we are using the offline group, place it there.
+ * If no manual placement has been performed previously, use the first remote grouping of a contained contact.
+ */
 - (void)restoreGrouping
 {
-	BOOL			useContactListGroups;
-	
-	useContactListGroups = [[adium contactController] useContactListGroups];
+	if ([[adium contactController] useContactListGroups]) {
+		AIListGroup		*targetGroup = nil;
 
-	if (useContactListGroups) {
-		NSString		*oldContainingObjectID;
-		AIListObject	*oldContainingObject;
+		if (![self online] &&
+			[[adium contactController] useOfflineGroup]) {
+			targetGroup = [[adium contactController] offlineGroup];
 
-		oldContainingObjectID = [self preferenceForKey:KEY_CONTAINING_OBJECT_ID
-												 group:OBJECT_STATUS_CACHE];
-		//Get the group's UID out of the internal object ID by taking the substring after "Group."
-		oldContainingObject = ((oldContainingObjectID  && [oldContainingObjectID hasPrefix:@"Group."]) ?
-							   [[adium contactController] groupWithUID:[oldContainingObjectID substringFromIndex:6]] :
-							   nil);
-
-		if (oldContainingObject &&
-			[oldContainingObject isKindOfClass:[AIListGroup class]] &&
-			oldContainingObject != [[adium contactController] contactList]) {
-			//A previous grouping (to a non-root group) is saved; restore it
-			[[adium contactController] _moveContactLocally:self
-												   toGroup:(AIListGroup *)oldContainingObject];
 		} else {
-			/* This metaContact doesn't have a group assigned to it... if any contained object has a group,
-			 * use that group as a best-guess for the proper destination.
-			 */
-			NSString		*bestGuessRemoteGroup = nil;
-			AIListContact	*containedContact;
-			NSEnumerator	*enumerator;
+			NSString		*oldContainingObjectID;
+			AIListObject	*oldContainingObject;
+
+			oldContainingObjectID = [self preferenceForKey:KEY_CONTAINING_OBJECT_ID
+													 group:OBJECT_STATUS_CACHE];
+			//Get the group's UID out of the internal object ID by taking the substring after "Group."
+			oldContainingObject = ((oldContainingObjectID  && [oldContainingObjectID hasPrefix:@"Group."]) ?
+								   [[adium contactController] groupWithUID:[oldContainingObjectID substringFromIndex:6]] :
+								   nil);
 			
-			enumerator = [[self listContacts] objectEnumerator];
-			
-			//Find the first contact with a group
-			while ((containedContact = [enumerator nextObject]) &&
-				   !(bestGuessRemoteGroup = [containedContact remoteGroupName]));
-			//Put this metacontact in that group
-			if (bestGuessRemoteGroup) {
-				[[adium contactController] _moveContactLocally:self
-													   toGroup:[[adium contactController] groupWithUID:bestGuessRemoteGroup]];
+			if (oldContainingObject &&
+				[oldContainingObject isKindOfClass:[AIListGroup class]] &&
+				oldContainingObject != [[adium contactController] contactList]) {
+				//A previous grouping (to a non-root group) is saved; restore it
+				targetGroup = (AIListGroup *)oldContainingObject;
+
+			} else {
+				/* This metaContact doesn't have a group assigned to it... if any contained object has a group,
+				* use that group as a best-guess for the proper destination.
+				*/
+				NSString		*bestGuessRemoteGroup = nil;
+				AIListContact	*containedContact;
+				NSEnumerator	*enumerator;
+				
+				enumerator = [[self listContacts] objectEnumerator];
+				
+				//Find the first contact with a group
+				while ((containedContact = [enumerator nextObject]) &&
+					   !(bestGuessRemoteGroup = [containedContact remoteGroupName]));
+				
+				//Put this metacontact in that group
+				if (bestGuessRemoteGroup) {
+					targetGroup = [[adium contactController] groupWithUID:bestGuessRemoteGroup];
+				}
 			}
 		}
-	}	
+
+		if (targetGroup) {
+			[[adium contactController] _moveContactLocally:self
+												   toGroup:targetGroup];
+		}
+	}
 }
 
 //A metaContact should never be a stranger
@@ -275,7 +289,12 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		
 		//Add the object from our status cache, notifying of the changes (silently) as appropriate
 		[self _updateCachedStatusOfObject:inObject];
-		
+
+		if ([inObject isKindOfClass:[AIListContact class]] && [(AIListContact *)inObject remoteGroupName]) {
+			//Force an immediate update of our listContacts list, which will also update our visible count
+			[self listContacts];
+		}
+
 		success = YES;
 	}
 	
@@ -667,8 +686,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	}
 	
 	/* Only tell super that we changed if _cacheStatusValue returns YES indicating we did or if our
-	 * preferred contact changed. */
-	if ([self _cacheStatusValue:value forObject:inObject key:key notify:notify] ||
+	 * preferred contact changed. Only deteremine if the cache changed if we're not already planning to notify. */
+	if ([self _cacheStatusValue:value forObject:inObject key:key notify:notify determineIfChanged:!shouldNotify] ||
 	   shouldNotify) {
 		[super object:self didSetStatusObject:value forKey:key notify:notify];
 	}
@@ -809,7 +828,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		id value = [inObject statusObjectForKey:key];
 
 		//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
-		if ([self _cacheStatusValue:value forObject:inObject key:key notify:NotifyLater]) {
+		if ([self _cacheStatusValue:value forObject:inObject key:key notify:NotifyLater determineIfChanged:YES]) {
 			[super object:self didSetStatusObject:value forKey:key notify:NotifyLater];
 		}
 	}
@@ -825,7 +844,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	
 	while ((key = [enumerator nextObject])) {
 		//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
-		if ([self _cacheStatusValue:nil forObject:inObject key:key notify:NotifyLater]) {
+		if ([self _cacheStatusValue:nil forObject:inObject key:key notify:NotifyLater determineIfChanged:YES]) {
 			[super object:self didSetStatusObject:[self statusObjectForKey:key] forKey:key notify:NotifyLater];
 		}
 	}
@@ -834,7 +853,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 }
 
 //Update a value in our status cache
-- (BOOL)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key notify:(BOOL)notify
+- (BOOL)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key notify:(BOOL)notify determineIfChanged:(BOOL)determineIfChanged
 {
 	AIMutableOwnerArray *array = [statusCacheDict objectForKey:key];
 	id					previousObjectValue;
@@ -854,10 +873,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	[array setObject:inObject withOwner:inOwner];
 	
 	//Retrieve the new object value
-	newObjectValue = [array objectValue];
+	if (determineIfChanged) {
+		newObjectValue = [array objectWithOwner:[self preferredContact]];
+		if (!newObjectValue) newObjectValue = [array objectValue];
 
-	if (newObjectValue != previousObjectValue) {
-		changed = YES;
+		if (newObjectValue != previousObjectValue) {
+			changed = YES;
+		}
 	}
 	
 	[previousObjectValue release];

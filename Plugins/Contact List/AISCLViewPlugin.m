@@ -89,7 +89,7 @@
 		}
     }
 	
-	[contactListWindowController showWindowInFront:bringToFront];
+	[contactListWindowController showWindowInFrontIfAllowed:bringToFront];
 }
 
 //Returns YES if the contact list is visible and in front

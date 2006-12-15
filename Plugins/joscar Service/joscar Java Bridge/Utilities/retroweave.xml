@@ -18,14 +18,19 @@
 		<jar destfile="${buildDir}/joscar bridge.jar" basedir="${unzipDir}" includes="**/*.class" />
 		<delete dir="${unzipDir}" />
 		
-		<unzip src="${basedir}/../joscar-0.9.4-cvs-bin.jar" dest="${unzipDir}" />
+		<unzip src="${basedir}/../joscar-client.jar" dest="${unzipDir}" />
 		<retroweave srcdir="${unzipDir}"/>
-		<jar destfile="${buildDir}/../joscar-0.9.4-cvs-bin.jar" basedir="${unzipDir}" includes="**/*.class" />
+		<jar destfile="${buildDir}/../joscar-client.jar" basedir="${unzipDir}" includes="**/*.class" />
 		<delete dir="${unzipDir}" />
-		
-		<unzip src="${basedir}/../oscar.jar" dest="${unzipDir}" />
+
+		<unzip src="${basedir}/../joscar-protocol.jar" dest="${unzipDir}" />
 		<retroweave srcdir="${unzipDir}"/>
-		<jar destfile="${buildDir}/../oscar.jar" basedir="${unzipDir}" includes="**/*.class" />
+		<jar destfile="${buildDir}/../joscar-protocol.jar" basedir="${unzipDir}" includes="**/*.class" />
+		<delete dir="${unzipDir}" />
+
+		<unzip src="${basedir}/../joscar-common.jar" dest="${unzipDir}" />
+		<retroweave srcdir="${unzipDir}"/>
+		<jar destfile="${buildDir}/../joscar-common.jar" basedir="${unzipDir}" includes="**/*.class" />
 		<delete dir="${unzipDir}" />
 		
 		<unzip src="${basedir}/../jsocks-klea.jar" dest="${unzipDir}" />

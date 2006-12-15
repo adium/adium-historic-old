@@ -10,7 +10,7 @@
 # - make all
 ###########
 
-VERSION=1.0b12
+VERSION=1.0b17
 BETA=TRUE
 
 ###########
@@ -56,15 +56,17 @@ CRASH_REPORTER_PLIST=$(PLIST_DIR)/Adium\ Crash\ Reporter-Info
 
 all: update version clean compile release
 
+all-noclean: update version compile release
+
 update:
 	svn update $(SRC_DIR)
 
 version:
 	@# update the plists
-	defaults write $(ADIUM_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2006 The Adium Team'
+	defaults write $(ADIUM_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2007 The Adium Team'
 	defaults write $(ADIUM_PLIST) CFBundleVersion '$(VERSION)'
 	defaults write $(ADIUM_PLIST) CFBundleShortVersionString '$(VERSION)'
-	defaults write $(CRASH_REPORTER_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2006 The Adium Team'
+	defaults write $(CRASH_REPORTER_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2007 The Adium Team'
 	defaults write $(CRASH_REPORTER_PLIST) CFBundleVersion '$(VERSION)'
 	defaults write $(CRASH_REPORTER_PLIST) CFBundleShortVersionString '$(VERSION)'
 	plutil -convert xml1 $(ADIUM_PLIST).plist
@@ -113,7 +115,7 @@ createfolder:
 	cp $(SRC_DIR)/License.txt $(ADIUM_DIR)
 	
 	@# symlink /Applications
-	ln -s /Applications $(ADIUM_DIR)/Applications
+	./mkalias -r /Applications $(ADIUM_DIR)/Applications
 
 diskimage:
 	rm "$(BUILD_DIR)/$(RELEASE_NAME).dmg" || true
@@ -121,7 +123,8 @@ diskimage:
 	mkdir -p $(ADIUM_DIR)/.background
 	cp $(ART_DIR)/dmgBackground.png $(ADIUM_DIR)/.background
 
-	./make-diskimage.sh $(BUILD_DIR)/$(RELEASE_NAME).dmg $(ADIUM_DIR) "Adium X $(VERSION)" dmg_adium.scpt
+	./ensureCustomIconsExtracted $(ART_DIR)
+	./make-diskimage.sh $(BUILD_DIR)/$(RELEASE_NAME).dmg $(ADIUM_DIR) "Adium X $(VERSION)" dmg_adium.scpt $(ART_DIR)
 	
 	@echo Build finished. `md5 $(BUILD_DIR)/$(RELEASE_NAME).dmg`
 

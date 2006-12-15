@@ -26,5 +26,6 @@
 - (NSString *)adiumFrameAutosaveName;
 - (NSRect)savedFrameFromString:(NSString *)frameString;
 - (void)windowDidLoad;
+- (void)showWindowInFrontIfAllowed:(BOOL)inFront;
 
 @end

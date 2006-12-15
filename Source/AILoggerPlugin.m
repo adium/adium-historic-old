@@ -62,12 +62,14 @@
 #define LOG_VIEWER					AILocalizedString(@"Chat Transcripts Viewer",nil)
 #define VIEW_LOGS_WITH_CONTACT		AILocalizedString(@"View Chat Transcripts",nil)
 
-#define	CURRENT_LOG_VERSION			6       //Version of the log index.  Increase this number to reset everyone's index.
+#define	CURRENT_LOG_VERSION			7       //Version of the log index.  Increase this number to reset everyone's index.
 
 #define	LOG_VIEWER_IDENTIFIER		@"LogViewer"
 
 #define XML_LOGGING_NAMESPACE		@"http://purl.org/net/ulf/ns/0.4-02"
 #define NEW_LOGFILE_TIMEOUT			600		//10 minutes
+
+#define ENABLE_PROXIMITY_SEARCH		TRUE
 
 @interface AILoggerPlugin (PRIVATE)
 - (void)configureMenuItems;
@@ -105,7 +107,6 @@ Class LogViewerWindowControllerClass = NULL;
 
 	activeAppenders = [[NSMutableDictionary alloc] init];
 	appenderCloseTimers = [[NSMutableDictionary alloc] init];
-	chatStartDates = [[NSMutableDictionary alloc] init];
 	
 	xhtmlDecoder = [[AIHTMLDecoder alloc] initWithHeaders:NO
 												 fontTags:YES
@@ -250,7 +251,12 @@ Class LogViewerWindowControllerClass = NULL;
 
 + (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date
 {
+	NSParameterAssert(date != nil);
+	NSParameterAssert(object != nil);
 	NSString    *dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil locale:nil];
+	
+	NSAssert2(dateString != nil, @"Date string was invalid for the chatlog for %@ on %@", object, date);
+		
 	return [NSString stringWithFormat:@"%@ (%@).chatlog", object, dateString];
 }
 
@@ -374,7 +380,7 @@ Class LogViewerWindowControllerClass = NULL;
 		
 		BOOL			dirty = NO;
 		NSString		*contentType = [content type];
-		NSString		*date = [[NSCalendarDate date] ISO8601DateString];
+		NSString		*date = [[[content date] dateWithCalendarFormat:nil timeZone:nil] ISO8601DateString];
 
 		if ([contentType isEqualToString:CONTENT_MESSAGE_TYPE]) {
 			NSMutableArray *attributeKeys = [NSMutableArray arrayWithObjects:@"sender", @"time", nil];
@@ -445,10 +451,7 @@ Class LogViewerWindowControllerClass = NULL;
 	AIChat	*chat = [notification object];
 
 	//Don't log chats for temporary accounts
-	if ([[chat account] isTemporary]) return;
-	
-	//Note the time that this chat was opened for later use
-	[chatStartDates setObject:[NSCalendarDate date] forKey:[self keyForChat:chat]];
+	if ([[chat account] isTemporary]) return;	
 }
 
 - (void)chatClosed:(NSNotification *)notification
@@ -466,7 +469,7 @@ Class LogViewerWindowControllerClass = NULL;
 		[appender addElementWithName:@"event"
 							 content:nil
 					   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
-					 attributeValues:[NSArray arrayWithObjects:@"windowClosed", [[chat account] UID], [[NSCalendarDate date] ISO8601DateString], nil]];
+					 attributeValues:[NSArray arrayWithObjects:@"windowClosed", [[chat account] UID], [[[chat dateOpened] dateWithCalendarFormat:nil timeZone:nil] ISO8601DateString], nil]];
 
 		[self closeAppenderForChat:chat];
 
@@ -508,8 +511,9 @@ Class LogViewerWindowControllerClass = NULL;
 - (AIXMLAppender *)appenderForChat:(AIChat *)chat
 {
 	//Check if there is already an appender for this chat
-	AIXMLAppender *appender = [self existingAppenderForChat:chat];
-	NSString *chatKey = [self keyForChat:chat];
+	AIXMLAppender	*appender = [self existingAppenderForChat:chat];
+	NSString		*chatKey = [self keyForChat:chat];
+	NSDate			*chatDate = [chat dateOpened];
 
 	//If there's an appender scheduled to be closed for this chat, invalidate the timer, since we're using it now
 	if (appender && [appenderCloseTimers objectForKey:chatKey]) {
@@ -517,8 +521,7 @@ Class LogViewerWindowControllerClass = NULL;
 		[appenderCloseTimers removeObjectForKey:chatKey];
 	//If there isn't already an appender, create a new one and add it to the dictionary
 	} else if (!appender) {
-		NSCalendarDate	*date = [chatStartDates objectForKey:chatKey];
-		NSString		*fullPath = [AILoggerPlugin fullPathForLogOfChat:chat onDate:date];
+		NSString		*fullPath = [AILoggerPlugin fullPathForLogOfChat:chat onDate:chatDate];
 
 		appender = [AIXMLAppender documentWithPath:fullPath];
 		[appender initializeDocumentWithRootElementName:@"chat"
@@ -533,11 +536,8 @@ Class LogViewerWindowControllerClass = NULL;
 		[appender addElementWithName:@"event"
 					 content:nil
 			   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
-			 attributeValues:[NSArray arrayWithObjects:@"windowOpened", [[chat account] UID], [date ISO8601DateString], nil]];
-		
-		//Remove this chat's entry from the start date dictionary, since it's not used anymore
-		[chatStartDates removeObjectForKey:chatKey];
-		
+			 attributeValues:[NSArray arrayWithObjects:@"windowOpened", [[chat account] UID], [[chatDate dateWithCalendarFormat:nil timeZone:nil] ISO8601DateString], nil]];
+
 		[activeAppenders setObject:appender forKey:chatKey];
 		
 		[self markLogDirtyAtPath:[appender path] forChat:chat];
@@ -832,6 +832,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 
     if ([[NSFileManager defaultManager] fileExistsAtPath:logIndexPath]) {
 		newIndex = SKIndexOpenWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", true);
+		AILog(@"Opened index %x from %@",newIndex,logIndexPathURL);
     }
     if (!newIndex) {
 		NSDictionary *textAnalysisProperties;
@@ -839,7 +840,9 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		if ([NSApp isOnTigerOrBetter]) {
 			textAnalysisProperties = [NSDictionary dictionaryWithObjectsAndKeys:
 				[NSNumber numberWithInt:0], kSKMaximumTerms,
+#if ENABLE_PROXIMITY_SEARCH
 				kCFBooleanTrue, kSKProximityIndexing, 
+#endif
 				nil];
 
 		} else {
@@ -853,7 +856,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 										(CFStringRef)@"Content", 
 										kSKIndexInverted,
 										(CFDictionaryRef)textAnalysisProperties);
-
+		AILog(@"Created a new log index %x at %@ with textAnalysisProperties %@",newIndex,logIndexPathURL,textAnalysisProperties);
 		//Clear the dirty log array in case it was loaded (this can happen if the user mucks with the cache directory)
 		[[NSFileManager defaultManager] removeFileAtPath:[self _dirtyLogArrayPath] handler:NULL];
 		[dirtyLogArray release]; dirtyLogArray = nil;
@@ -1170,6 +1173,8 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 {
 	NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
 
+	[indexingThreadLock lock];
+
 	SKIndexRef logSearchIndex = (SKIndexRef)[userInfo objectForKey:@"SKIndexRef"];
 	NSEnumerator *enumerator = [[userInfo objectForKey:@"Paths"] objectEnumerator];
 	NSString	 *logPath;
@@ -1181,7 +1186,9 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 			CFRelease(document);
 		}
 	}
-	
+
+	[indexingThreadLock unlock];
+
 	[pool release];
 }
 
