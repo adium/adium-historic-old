@@ -1,0 +1,20 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {sendMessage = id; }; 
+            CLASS = AIWKMVTestWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {view = WebView; }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = AIWebkitMessageViewStyle; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = ESWebView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {draggingDelegate = id; }; 
+            SUPERCLASS = WebView; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

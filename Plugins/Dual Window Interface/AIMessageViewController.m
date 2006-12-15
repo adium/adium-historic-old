@@ -83,7 +83,7 @@
  */
 + (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat
 {
-    return [[[self alloc] initForChat:inChat] autorelease];
+	return [[[self alloc] initForChat:inChat] autorelease];
 }
 
 /*!
@@ -176,6 +176,8 @@
 	if (contact && [NSApp isOnTigerOrBetter])
 		[contact setBaseWritingDirection:[textView_outgoing baseWritingDirection]];
 
+	NSString *chatID = [chat uniqueChatID];
+	
 	[chat release]; chat = nil;
 
     //remove observers
@@ -198,6 +200,8 @@
 	if (retainingScrollViewUserList) {
 		[scrollView_userList release];
 	}
+	
+	//[controllers removeObjectForKey:chatID];
 	
     [super dealloc];
 }
@@ -335,6 +339,12 @@
 	//Only send if we have a non-zero-length string
     if ([attributedString length] != 0) { 
 		AIListObject				*listObject = [chat listObject];
+		
+		if ([chat isGroupChat] && ![[chat account] online]) {
+			//Refuse to do anything with a group chat for an offline account.
+			NSBeep();
+			return;
+		}
 		
 		if (!suppressSendLaterPrompt &&
 			![chat canSendMessages]) {

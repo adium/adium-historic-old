@@ -147,7 +147,7 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	NSString	*userNameLabel = [[inAccount service] userNameLabel];
 	
 	[buddyText setStringValue:[(userNameLabel ? userNameLabel :
-								AILocalizedString(@"Contact ID",nil)) stringByAppendingString:@":"]];	
+								AILocalizedString(@"Contact ID",nil)) stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];	
 }
 
 - (IBAction)cancelBlockSheet:(id)sender
@@ -157,13 +157,15 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 
 - (void)addObject:(AIListContact *)inContact
 {
-	if (![listContents containsObject:inContact]) {
-		[listContents addObject:inContact];
+	if (inContact) {
+		if (![listContents containsObject:inContact]) {
+			[listContents addObject:inContact];
+		}
+		
+		[inContact setIsOnPrivacyList:YES updateList:YES privacyType:(([self selectedPrivacyOption] == AIPrivacyOptionAllowUsers) ?
+																	  AIPrivacyTypePermit :
+																	  AIPrivacyTypeDeny)];	
 	}
-	
-	[inContact setIsOnPrivacyList:YES updateList:YES privacyType:(([self selectedPrivacyOption] == AIPrivacyOptionAllowUsers) ?
-																  AIPrivacyTypePermit :
-																  AIPrivacyTypeDeny)];	
 }
 
 - (IBAction)didBlockSheet:(id)sender
@@ -238,10 +240,11 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 				 * If it does, add that contact to our list, using the contactController to get an AIListContact specific for the account.
 				 */
 				if ([[[containedContact service] serviceClass] isEqualToString:[[account service] serviceClass]]) {
-					contact = [[adium contactController] contactWithService:[account service]
-																	account:account
-																		UID:[containedContact UID]];
-					[contactsSet addObject:contact];
+					if ((contact = [[adium contactController] contactWithService:[account service]
+																		 account:account
+																			 UID:[containedContact UID]])) {
+						[contactsSet addObject:contact];
+					}
 				}
 			}
 			
@@ -255,11 +258,11 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 			
 			if (UID) {
 				//Get a contact with this UID on the current account
-				contact = [[adium contactController] contactWithService:[account service]
-																account:account 
-																	UID:UID];
-				
-				[contactsSet addObject:contact];
+				if ((contact = [[adium contactController] contactWithService:[account service]
+																	 account:account 
+																		 UID:UID])) {
+					[contactsSet addObject:contact];
+				}
 			}
 		}
 			
@@ -278,7 +281,7 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	[field setCompletingStrings:nil];
 	
 	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
-    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
+    enumerator = [[[adium contactController] allContacts] objectEnumerator];
     while ((contact = [enumerator nextObject])) {
 		if (!account ||
 			[contact service] == [account service]) {
@@ -802,20 +805,26 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 
 - (void)addListObjectToList:(AIListObject *)listObject
 {
-	AIListObject *tmp;
-	NSEnumerator *groupEnum;
-	if ([listObject isMemberOfClass:[AIListGroup class]]) {
-		groupEnum = [[(AIListGroup *)listObject listContacts] objectEnumerator];
-		while ((tmp = [groupEnum nextObject]))
-			[self addListObjectToList:tmp];
-	} else if ([listObject isMemberOfClass:[AIMetaContact class]]) {
-		groupEnum = [[(AIMetaContact *)listObject listContacts] objectEnumerator];
-		while ((tmp = [groupEnum nextObject]))
-			[self addListObjectToList:tmp];
-	} else if ([listObject isMemberOfClass:[AIListContact class]]) {
+	AIListObject *containedObject;
+	NSEnumerator *enumerator;
+
+	if ([listObject isKindOfClass:[AIListGroup class]]) {
+		enumerator = [[(AIListGroup *)listObject listContacts] objectEnumerator];
+		while ((containedObject = [enumerator nextObject])) {
+			[self addListObjectToList:containedObject];
+		}
+
+	} else if ([listObject isKindOfClass:[AIMetaContact class]]) {
+		enumerator = [[(AIMetaContact *)listObject listContacts] objectEnumerator];
+		while ((containedObject = [enumerator nextObject])) {
+			[self addListObjectToList:containedObject];
+		}
+
+	} else if ([listObject isKindOfClass:[AIListContact class]]) {
 		//if the account for this contact is connected...
-		if ([[[(AIListContact *)listObject account] statusObjectForKey:@"Online"] boolValue])
+		if ([[(AIListContact *)listObject account] online]) {
 			[self addObject:(AIListContact *)listObject];
+		}
 	}
 }
 

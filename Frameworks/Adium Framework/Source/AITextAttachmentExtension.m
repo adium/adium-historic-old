@@ -193,7 +193,11 @@
 		}
 
 	} else {
-		iconImage = [[NSWorkspace sharedWorkspace] iconForFile:[self path]];
+		if ([self path]) {
+			iconImage = [[NSWorkspace sharedWorkspace] iconForFile:[self path]];
+		} else {
+			NSLog(@"-[%@ iconImage]: Warning, no path available", self);
+		}
 	}
 	
 	return iconImage;

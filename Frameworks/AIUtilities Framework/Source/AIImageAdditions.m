@@ -173,20 +173,29 @@
 
 - (NSImage *)imageByScalingToSize:(NSSize)size
 {
-	return ([self imageByScalingToSize:size fraction:1.0 flipImage:NO proportionally:YES]);
+	return ([self imageByScalingToSize:size fraction:1.0 flipImage:NO proportionally:YES allowAnimation:YES]);
 }
 
 - (NSImage *)imageByFadingToFraction:(float)delta
 {
-	return [self imageByScalingToSize:[self size] fraction:delta flipImage:NO proportionally:NO];
+	return [self imageByScalingToSize:[self size] fraction:delta flipImage:NO proportionally:NO allowAnimation:YES];
 }
 
 - (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta
 {
-	return [self imageByScalingToSize:size fraction:delta flipImage:NO proportionally:YES];
+	return [self imageByScalingToSize:size fraction:delta flipImage:NO proportionally:YES allowAnimation:YES];
 }
 
-- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta flipImage:(BOOL)flipImage proportionally:(BOOL)proportionally
+- (NSImage *)imageByScalingForMenuItem
+{
+	return [self imageByScalingToSize:NSMakeSize(16,16)
+							 fraction:1.0
+							flipImage:NO
+					   proportionally:YES
+					   allowAnimation:NO];	
+}
+
+- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta flipImage:(BOOL)flipImage proportionally:(BOOL)proportionally allowAnimation:(BOOL)allowAnimation
 {
 	NSSize  originalSize = [self size];
 	
@@ -214,8 +223,10 @@
 
 		if (flipImage) [newImage setFlipped:YES];		
 
-		NSImageRep	*bestRep = [self bestRepresentationForDevice:nil];
-		if ([bestRep isKindOfClass:[NSBitmapImageRep class]] && 
+		NSImageRep	*bestRep;
+		if (allowAnimation &&
+			(bestRep = [self bestRepresentationForDevice:nil]) &&
+			[bestRep isKindOfClass:[NSBitmapImageRep class]] && 
 			(delta == 1.0) &&
 			([[(NSBitmapImageRep *)bestRep valueForProperty:NSImageFrameCount] intValue] > 1) ) {
 			//We've got an animating file, and the current alpha is fine.  Just copy the representation.

@@ -44,6 +44,12 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 static AIHTMLDecoder	*encoderGroupChat = nil;
 
 #pragma mark Initialization and setup
+
+- (const char *)protocolPlugin
+{
+    return "prpl-aim";
+}
+
 - (void)initAccount
 {
 	[super initAccount];
@@ -215,9 +221,10 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 				
 				conn = peer_connection_find_by_type(od, who, OSCAR_CAPABILITY_DIRECTIM);
 				
+				returnString = [self stringByProcessingImgTagsForDirectIM:returnString];
+
 				if ((conn != NULL) && (conn->ready)) {
-					//We have a connected dim already; process the string and keep the modified copy
-					returnString = [self stringByProcessingImgTagsForDirectIM:returnString];
+					//We have a connected dim already; simply continue, and we'll be told to send it in a moment
 					
 				} else {
 					//Either no dim, or the dim we have is no longer conected (oscar_direct_im_initiate_immediately will reconnect it)						
@@ -235,9 +242,6 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 					}
 					
 					[thisContactQueue addObject:inContentMessage];
-					
-					//Return nil for now to indicate that the message should not be sent
-					returnString = nil;
 				}
 			}
 			
@@ -255,23 +259,53 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
  * @brief Can we send images for this chat?
  */
 - (BOOL)canSendImagesForChat:(AIChat *)inChat
-{
-	//XXX Check against the chat's list object's capabilities for DirectIM
-	return ![inChat isGroupChat];
+{	
+	if ([inChat isGroupChat]) return NO;
+
+	OscarData *od = ((account && account->gc) ? account->gc->proto_data : NULL);
+	if (od) {
+		AIListObject *listObject = [inChat listObject];
+		const char *contactUID = [[listObject UID] UTF8String];
+		aim_userinfo_t *userinfo = aim_locate_finduserinfo(od, contactUID);
+		
+		if (userinfo &&
+			aim_sncmp(gaim_account_get_username(account), contactUID) &&
+			[listObject online]) {
+			return (userinfo->capabilities & OSCAR_CAPABILITY_DIRECTIM);
+
+		} else {
+			return NO;
+		}
+
+	} else {
+		return NO;
+	}
 }
 
-#pragma mark Contact List Menu Items
-- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
+- (BOOL)sendMessageObject:(AIContentMessage *)inContentMessage
 {
-	if (strcmp(label, "Direct IM") == 0) {
-		if (![[[inContact service] serviceID] isEqualToString:@"ICQ"]) {
-			return [NSString stringWithFormat:AILocalizedString(@"Initiate Direct IM with %@",nil),[inContact formattedUID]];
-		} else {
-			return nil;
+	if (directIMQueue) {
+		NSMutableArray	*thisContactQueue = [directIMQueue objectForKey:[[inContentMessage destination] internalObjectID]];
+		if ([thisContactQueue containsObject:inContentMessage]) {
+			//This message is in our queue of messages to send...
+			PeerConnection	*conn;
+			OscarData		*od = (OscarData *)account->gc->proto_data;
+			const char		*who = [[[inContentMessage destination] UID] UTF8String];
+			
+			conn = peer_connection_find_by_type(od, who, OSCAR_CAPABILITY_DIRECTIM);
+			
+			if ((conn != NULL) && (conn->ready)) {
+				//We have a connected dim ready; send it!  We already displayed it, though, so don't do that.
+				[inContentMessage setDisplayContent:NO];
+				return [super sendMessageObject:inContentMessage];
+			} else {
+				//Don't send now, as we'll do the actual send when the dim is connected, in directIMConnected: above, and return here.
+				return YES;				
+			}
 		}
 	}
 
-	return [super titleForContactMenuLabel:label forContact:inContact];
+	return [super sendMessageObject:inContentMessage];
 }
 
 #pragma mark Account Action Menu Items
@@ -369,7 +403,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 						//Store the src image's data gaimside
 						int				imgstore = gaim_imgstore_add([imageData bytes], [imageData length], (alt ? [alt UTF8String] : [source UTF8String]));
 						
-						NSString		*newTag = [NSString stringWithFormat:@"<IMG ID=\"%i\">",imgstore];
+						NSString		*newTag = [NSString stringWithFormat:@"<IMG ID=\"%i\" CLASS=\"scaledToFitImage\">",imgstore];
 						[processedString appendString:newTag];
 					}
 				}

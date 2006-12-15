@@ -65,7 +65,7 @@
 @interface ESiTunesPlugin (PRIVATE)
 - (NSMenuItem *)menuItemWithTitle:(NSString *)title action:(SEL)action representedObject:(id)representedObject kind:(KGiTunesPluginMenuItemKind)itemKind;
 - (void)createiTunesCurrentTrackStatusState;
-- (void)createiTunesToolbarItem;
+- (void)createiTunesToolbarItemWithPath:(NSString *)path;
 - (void)createiTunesToolbarItemMenuItems:(NSMenu *)iTunesMenu;
 - (void)createTriggersMenu;
 - (void)filterAndInsertString:(NSString *)inString;
@@ -140,7 +140,7 @@
 	if (newInfo != iTunesCurrentInfo) {
 		[iTunesCurrentInfo release];
 		iTunesCurrentInfo = [newInfo retain];
-		
+
 		[self setiTunesIsStopped:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_STOPPED]];
 		[self setiTunesIsPaused:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_PAUSED]];
 
@@ -160,7 +160,7 @@
 	NSDictionary	*conditionalArtistTrackDict = nil;
 	NSString		*currentITunesTrackFormat = nil;
 	NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
-	NSString		*itunesPath = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"iTunes.app"];
+	NSString		*itunesPath = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:@"com.apple.iTunes"];
 
 	iTunesCurrentInfo = nil;
 
@@ -230,7 +230,7 @@
 		[self createiTunesCurrentTrackStatusState];
 		
 		//Create the toolbar item
-		[self createiTunesToolbarItem];
+		[self createiTunesToolbarItemWithPath:itunesPath];
 		
 		//Create the Edit > Insert and contextual menus
 		[self createTriggersMenu];
@@ -469,15 +469,15 @@
  *
  * Create toolbar item and it's menu
  */
-- (void)createiTunesToolbarItem
+- (void)createiTunesToolbarItemWithPath:(NSString *)iTunesPath
 {
 	NSMenu		  *menu = [[NSMenu alloc] init];
 	MVMenuButton  *button = [[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)];
 
-	//configure the popup button and it's menu
-	[button setImage:[NSImage imageNamed:@"iTunes" forClass:[self class]]];
+	//configure the popup button and its menu
+	[button setImage:[[NSWorkspace sharedWorkspace] iconForFile:iTunesPath]];
 	[self createiTunesToolbarItemMenuItems:menu];
-	
+
 	NSToolbarItem * iTunesItem = [AIToolbarUtilities toolbarItemWithIdentifier:ITUNES_TOOLBAR_ITEM
 																		 label:TOOLBAR_LABEL
 																  paletteLabel:TOOLBAR_LABEL
@@ -492,6 +492,12 @@
 	[iTunesItem setMinSize:NSMakeSize(32,32)];
 	[iTunesItem setMaxSize:NSMakeSize(32,32)];
 	[button setToolbarItem:iTunesItem];
+	
+	//Add menu to toolbar item (for text mode)
+	NSMenuItem	*mItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
+	[mItem setSubmenu:menu];
+	[mItem setTitle:TOOLBAR_LABEL];
+	[iTunesItem setMenuFormRepresentation:mItem];
 	
 	//give it to adium to use
 	[[adium toolbarController] registerToolbarItem:iTunesItem forToolbarType:@"TextEntry"];
@@ -580,6 +586,7 @@
 	[item setTarget:self];
 	[item setTag:itemKind];
 	[item setRepresentedObject:representedObject];
+	[item setEnabled:YES];
 
 	return [item autorelease];
 }

@@ -118,7 +118,7 @@
 {
 	showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
 	useContactListGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
-	useOfflineGroup = [[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue];
+	useOfflineGroup = (useContactListGroups && [[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue]);
 
 	if (firstTime) {
 		//Observe contact and preference changes

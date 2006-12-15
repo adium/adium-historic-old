@@ -35,6 +35,8 @@
 	BOOL				postProcessContent;
 	
 	NSDictionary		*userInfo;
+	
+	NSString			*displayType;
 }
 
 - (id)initWithChat:(AIChat *)inChat
@@ -63,6 +65,8 @@
 - (void)setMessage:(NSAttributedString *)inMessage;
 - (NSAttributedString *)message;
 - (NSString *)messageString;
+- (void)setDisplayType:(NSString *)type;
+- (NSString *)displayType;
 
 - (id)userInfo;
 - (void)setUserInfo:(id)inUserInfo;

@@ -226,6 +226,7 @@
     //Create an instance of every saved account
 	enumerator = [accountList objectEnumerator];
 	while ((accountDict = [enumerator nextObject])) {
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		NSString		*serviceID = [self _upgradeServiceID:[accountDict objectForKey:ACCOUNT_TYPE] forAccountDict:accountDict];
         AIAccount		*newAccount;
 
@@ -242,6 +243,7 @@
 				[unloadableAccounts addObject:accountDict];
 			}
         }
+		[pool release];
     }
 
 	//Broadcast an account list changed notification
@@ -301,6 +303,12 @@
 	*/
 	else if ([serviceID isEqualToString:@"libgaim-oscar-Mac"])
 		serviceID = @"joscar-OSCAR-dotMac";
+#else
+	else if ([serviceID isEqualToString:@"joscar-OSCAR-AIM"])
+		serviceID = @"libgaim-oscar-AIM";
+	else if ([serviceID isEqualToString:@"joscar-OSCAR-dotMac"])
+		serviceID = @"libgaim-oscar-Mac";
+
 #endif
 	
 	return serviceID;

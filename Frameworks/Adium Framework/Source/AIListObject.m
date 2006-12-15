@@ -185,7 +185,7 @@
  */
 - (AIListObject<AIContainingObject> *)containingObject
 {
-    return (AIListObject<AIContainingObject> *)containingObject;
+    return containingObject;
 }
 
 /*!
@@ -547,12 +547,6 @@
 	}
 }
 
-- (NSComparisonResult)compare:(id)otherObject
-{
-	return ([otherObject isKindOfClass:[self class]] &&
-			[[self internalObjectID] caseInsensitiveCompare:[otherObject internalObjectID]]);
-}
-
 #pragma mark Status states
 
 /*!
@@ -733,6 +727,7 @@
 	return NO;
 }
 
+#pragma mark Comparison
 /*
 - (BOOL)isEqual:(id)anObject
 {
@@ -740,6 +735,11 @@
 			[[(AIListObject *)anObject internalObjectID] isEqualToString:[self internalObjectID]]);
 }
 */
+
+- (NSComparisonResult)compare:(AIListObject *)other {
+	NSParameterAssert([other isKindOfClass:[AIListObject class]]);
+	return [[self internalObjectID] caseInsensitiveCompare:[other internalObjectID]];
+}
 
 #pragma mark Icons
 - (NSImage *)menuIcon

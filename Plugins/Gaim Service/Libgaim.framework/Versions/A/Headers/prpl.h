@@ -48,8 +48,8 @@ typedef enum {
  */
 typedef struct {
 	char *format;                       /**< This is a comma-delimited list of image formats or NULL if icons are not supported.
-					     * The core nor the prpl will actually check to see if the data it's given matches this, it's entirely
-					     * up to the UI to do what it wants */
+					     * Neither the core nor the prpl will actually check to see if the data it's given matches this; it's
+					     * entirely up to the UI to do what it wants */
 	int min_width;                          /**< The minimum width of this icon  */
 	int min_height;                         /**< The minimum height of this icon */
 	int max_width;                          /**< The maximum width of this icon  */
@@ -66,6 +66,7 @@ typedef struct {
 #include "blist.h"
 #include "conversation.h"
 #include "ft.h"
+#include "notify.h"
 #include "proxy.h"
 #include "plugin.h"
 #include "roomlist.h"
@@ -190,7 +191,7 @@ struct _GaimPluginProtocolInfo
 	/**
 	 * Allows the prpl to add text to a buddy's tooltip.
 	 */
-	void (*tooltip_text)(GaimBuddy *buddy, GString *str, gboolean full);
+	void (*tooltip_text)(GaimBuddy *buddy, GaimNotifyUserInfo *user_info, gboolean full);
 
 	/**
 	 * This must be implemented, and must add at least the offline
@@ -244,7 +245,7 @@ struct _GaimPluginProtocolInfo
 	void (*reject_chat)(GaimConnection *, GHashTable *components);
 	char *(*get_chat_name)(GHashTable *components);
 	void (*chat_invite)(GaimConnection *, int id,
-						const char *who, const char *message);
+						const char *message, const char *who);
 	void (*chat_leave)(GaimConnection *, int id);
 	void (*chat_whisper)(GaimConnection *, int id,
 						 const char *who, const char *message);
@@ -276,7 +277,7 @@ struct _GaimPluginProtocolInfo
 
 	const char *(*normalize)(const GaimAccount *, const char *);
 
-	void (*set_buddy_icon)(GaimConnection *, const char *filename);
+	void (*set_buddy_icon)(GaimConnection *, const char *cached_path);
 
 	void (*remove_group)(GaimConnection *gc, GaimGroup *group);
 
@@ -301,6 +302,9 @@ struct _GaimPluginProtocolInfo
 
 	/* For use in plugins that may understand the underlying protocol */
 	int (*send_raw)(GaimConnection *gc, const char *buf, int len);
+
+	/* room list serialize */
+	char *(*roomlist_room_serialize)(GaimRoomlistRoom *room);
 };
 
 #define GAIM_IS_PROTOCOL_PLUGIN(plugin) \

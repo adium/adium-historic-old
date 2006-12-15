@@ -87,7 +87,7 @@
 
 #define NEW_CONTENT_RETRY_DELAY					0.01 
 
-@class ESWebKitMessageViewPreferences;
+@class ESWebKitMessageViewPreferences, AIChat;
 
 @protocol AIMessageViewPlugin, AIMessageViewController;
 

@@ -71,7 +71,6 @@ typedef enum {
 + (AIListWindowController *)listWindowController;
 + (NSString *)nibName;
 - (void)close:(id)sender;
-- (void)showWindowInFront:(BOOL)inFront;
 
 // Dock-like hiding
 - (void)slideWindowOnScreenWithAnimation:(BOOL)flag;

@@ -502,7 +502,7 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					}
 					*/
 
-					//Join the chat serverside - the GHsahTable components, couple with the originating GaimConnect,
+					//Join the chat serverside - the GHashTable components, couple with the originating GaimConnect,
 					//now contains all the information the prpl will need to process our request.
 					GaimDebug (@"In the event of an emergency, your GHashTable may be used as a flotation device...");
 					serv_join_chat(gc, components);
@@ -544,7 +544,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	NSScanner			*scanner;
     NSString			*chunkString = nil;
     NSMutableString		*newString;
-	NSString			*targetString = @"<IMG ID='";
+	NSString			*targetString = @"<IMG ID=\"";
     int imageID;
 
 	if ([inString rangeOfString:targetString options:NSCaseInsensitiveSearch].location == NSNotFound) {
@@ -578,7 +578,10 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			//Get the image, then write it out as a png
 			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
 			if (gaimImage) {
-				NSString			*imagePath = _messageImageCachePath(imageID, adiumAccount);
+				NSString		*filename = (gaim_imgstore_get_filename(gaimImage) ?
+											 [NSString stringWithUTF8String:gaim_imgstore_get_filename(gaimImage)] :
+											 @"Image");
+				NSString		*imagePath = _messageImageCachePath(imageID, adiumAccount);
 				
 				//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
 				//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
@@ -589,7 +592,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 				
 				//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string; the 'scaledToFitImage' class lets us apply CSS to directIM images only
 				if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]) {
-					[newString appendString:[NSString stringWithFormat:@"<IMG CLASS=\"scaledToFitImage\" SRC=\"%@\">",imagePath]];
+					[newString appendString:[NSString stringWithFormat:@"<IMG CLASS=\"scaledToFitImage\" SRC=\"%@\" ALT=\"%@\">",
+						imagePath, filename]];
 				}
 				
 				[image release];
@@ -1294,24 +1298,12 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
  *
  * @param inCallBackValue The cb to use
  * @param inUserDataValue Original user data
- * @param inFieldsValue The entire GaimRequestFields pointer originally passed
  */
-- (void)doAuthRequestCbValue:(NSValue *)inCallBackValue
-		   withUserDataValue:(NSValue *)inUserDataValue 
-		 callBackIndexNumber:(NSNumber *)inIndexNumber
-			 isInputCallback:(NSNumber *)isInputCallback
+- (void)doAuthRequestCbValue:(NSValue *)inCallBackValue withUserDataValue:(NSValue *)inUserDataValue 
 {	
-	if ([isInputCallback boolValue]) {
-		GaimRequestInputCb callBack = [inCallBackValue pointerValue];
-		if (callBack) {
-			callBack([inUserDataValue pointerValue], "");
-		}
-		
-	} else {		
-		GaimRequestActionCb callBack = [inCallBackValue pointerValue];
-		if (callBack) {
-			callBack([inUserDataValue pointerValue], [inIndexNumber intValue]);
-		}
+	GaimAccountRequestAuthorizationCb callBack = [inCallBackValue pointerValue];
+	if (callBack) {
+		callBack([inUserDataValue pointerValue]);
 	}
 }
 

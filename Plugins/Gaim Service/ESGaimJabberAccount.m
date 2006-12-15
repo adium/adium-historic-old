@@ -14,12 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "ESGaimJabberAccount.h"
+#import "SLGaimCocoaAdapter.h"
 #import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
-#import "ESGaimJabberAccount.h"
-#import "ESGaimJabberAccountViewController.h"
-#import "SLGaimCocoaAdapter.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
@@ -30,7 +30,6 @@
 #include <Libgaim/buddy.h>
 #include <Libgaim/presence.h>
 #include <Libgaim/si.h>
-#include <unistd.h>
 
 #define DEFAULT_JABBER_HOST @"@jabber.org"
 
@@ -49,6 +48,7 @@
  */
 - (NSString *)accountWillSetUID:(NSString *)proposedUID
 {
+	proposedUID = [proposedUID lowercaseString];
 	NSString	*correctUID;
 	
 	if ((proposedUID && ([proposedUID length] > 0)) && 
@@ -100,7 +100,7 @@
 	[super configureGaimAccount];
 	
 	NSString	*connectServer;
-	BOOL		forceOldSSL, useTLS, allowPlaintext;
+	BOOL		forceOldSSL, allowPlaintext;
 
 	gaim_account_set_username(account, [self gaimAccountName]);
 
@@ -114,10 +114,6 @@
 	//Force old SSL usage? (off by default)
 	forceOldSSL = [[self preferenceForKey:KEY_JABBER_FORCE_OLD_SSL group:GROUP_ACCOUNT_STATUS] boolValue];
 	gaim_account_set_bool(account, "old_ssl", forceOldSSL);
-
-	//Allow TLS usage? (on by default)
-	useTLS = [[self preferenceForKey:KEY_JABBER_USE_TLS group:GROUP_ACCOUNT_STATUS] boolValue];
-	gaim_account_set_bool(account, "use_tls", useTLS);
 
 	//Allow plaintext authorization over an unencrypted connection? Gaim will prompt if this is NO and is needed.
 	allowPlaintext = [[self preferenceForKey:KEY_JABBER_ALLOW_PLAINTEXT group:GROUP_ACCOUNT_STATUS] boolValue];
@@ -335,16 +331,15 @@
 			[*disconnectionError release];
 			*disconnectionError = nil;
 
-			[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:AILocalizedString(@"Invalid Jabber ID or Password",nil)
-																  defaultButton:AILocalizedString(@"Register",nil)
-																alternateButton:AILocalizedString(@"Cancel",nil)
-																	otherButton:nil
-																	   onWindow:nil
-															  withMessageHeader:nil
-																	 andMessage:[NSAttributedString stringWithString:
-																		 AILocalizedString(@"Jabber was unable to connect due to an invalid Jabber ID or password.  This may be because you do not yet have an account on this Jabber server.  Would you like to register now?",nil)]
-																		 target:self
-																	   userInfo:nil];
+			[[adium interfaceController] displayQuestion:AILocalizedString(@"Would you like to register a new Jabber account?", nil)
+										 withDescription:AILocalizedString(@"Jabber was unable to connect due to an invalid Jabber ID or password.  This may be because you do not yet have an account on this Jabber server.  Would you like to register now?",nil)
+										 withWindowTitle:AILocalizedString(@"Invalid Jabber ID or Password",nil)
+										   defaultButton:AILocalizedString(@"Register",nil)
+										 alternateButton:AILocalizedString(@"Cancel",nil)
+											 otherButton:nil
+												  target:self
+												selector:@selector(answeredShouldReigsterNewJabberAccount:userInfo:)
+												userInfo:nil];
 
 		} else if ([*disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound) {
 			shouldReconnect = NO;
@@ -360,8 +355,10 @@
 	return shouldReconnect;
 }
 
-- (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
+- (BOOL)answeredShouldReigsterNewJabberAccount:(NSNumber *)returnCodeNumber userInfo:(id)userInfo
 {
+	AITextAndButtonsReturnCode returnCode = [returnCodeNumber intValue];
+
 	switch (returnCode) {
 		case AITextAndButtonsDefaultReturn:
 			[self performSelector:@selector(performRegisterWithPassword:)
@@ -420,16 +417,6 @@
 {
 	[super cancelFileTransfer:fileTransfer];
 }
-
-/*!
- * @brief Allow a file transfer with an object?
- *
- */
-- (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
-{
-	return YES; //this is broken. Not all jabber servers support it, but I don't know how to check if they do. Smack will fix.
-}
-
 
 #pragma mark Status Messages
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
@@ -562,10 +549,10 @@
  *
  * @result The gaim status ID
  */
-- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+- (const char *)gaimStatusIDForStatus:(AIStatus *)statusState
 							arguments:(NSMutableDictionary *)arguments
 {
-	char			*statusID = NULL;
+	const char		*statusID = NULL;
 	NSString		*statusName = [statusState statusName];
 	NSString		*statusMessageString = [statusState statusMessageString];
 	NSNumber		*priority = nil;

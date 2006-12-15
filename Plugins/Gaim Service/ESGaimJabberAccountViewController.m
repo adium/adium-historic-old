@@ -36,7 +36,6 @@
     [super configureForAccount:inAccount];
 	
 	//Connection security
-	[checkBox_useTLS setState:[[account preferenceForKey:KEY_JABBER_USE_TLS group:GROUP_ACCOUNT_STATUS] boolValue]];
 	[checkBox_forceOldSSL setState:[[account preferenceForKey:KEY_JABBER_FORCE_OLD_SSL group:GROUP_ACCOUNT_STATUS] boolValue]];
 	[checkBox_allowPlaintext setState:[[account preferenceForKey:KEY_JABBER_ALLOW_PLAINTEXT group:GROUP_ACCOUNT_STATUS] boolValue]];
 	
@@ -60,8 +59,6 @@
     [super saveConfiguration];
 	
 	//Connection security
-	[account setPreference:[NSNumber numberWithBool:[checkBox_useTLS state]]
-					forKey:KEY_JABBER_USE_TLS group:GROUP_ACCOUNT_STATUS];
 	[account setPreference:[NSNumber numberWithBool:[checkBox_forceOldSSL state]]
 					forKey:KEY_JABBER_FORCE_OLD_SSL group:GROUP_ACCOUNT_STATUS];
 	[account setPreference:[NSNumber numberWithBool:[checkBox_allowPlaintext state]]

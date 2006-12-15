@@ -102,6 +102,8 @@
 		int				idle;
 
 		//Work at the parent contact (metacontact, etc.) level for extended status, since that's what's displayed in the contact list
+		AILog(@"Updating extended status for %@ - parent is %@",inObject, [(AIListContact *)inObject parentContact]);
+
 		inObject = [(AIListContact *)inObject parentContact];
 
 		if (showStatus) {
@@ -134,7 +136,6 @@
 			finalMessage = statusMessage;
 		}
 
-		AILog(@"Setting %@ for %@",finalMessage,inObject);
 		[[inObject displayArrayForKey:@"ExtendedStatus"] setObject:finalMessage withOwner:self];
 		modifiedAttributes = [NSSet setWithObject:@"ExtendedStatus"];
 	}

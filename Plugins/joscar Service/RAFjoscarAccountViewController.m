@@ -78,7 +78,7 @@
 }
 
 /*!
-* @brief Save controls
+ * @brief Save controls
  */
 - (void)saveConfiguration
 {

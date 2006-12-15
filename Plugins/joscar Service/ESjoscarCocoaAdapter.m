@@ -25,8 +25,9 @@
  
 //#define JOSCAR_LOG_WARNING
 
-#define OSCAR_JAR			@"oscar"
-#define JOSCAR_JAR			@"joscar-0.9.4-cvs-bin"
+#define CLIENT_JAR			@"joscar-client"
+#define PROTOCOL_JAR		@"joscar-protocol"
+#define COMMON_JAR			@"joscar-common"
 #define JOSCAR_BRIDGE_JAR	@"joscar bridge"
 #define RETROWEAVER_JAR		@"retroweaver-rt"
 #define SOCKS_JAR			@"jsocks-klea"
@@ -66,7 +67,7 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		[[self class] prepareJavaVM];
 
 		//Pass in 0 for SEVERE logging only, 1 for FINE level logging, 2 for WARNING level logging, and -1 for no logging whatsoever
-		int logLevel = 0;
+		int logLevel = -1;
 
 		//Do fine debugging for all debug builds
 #ifdef DEBUG_BUILD
@@ -214,7 +215,13 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 - (void)disconnect
 {
 	AILog(@"*** %@ disconnecting %@",appSession, [account serversideUID]);
-	[aimConnection disconnect];
+	@try {
+		[aimConnection disconnect];
+	} @catch(NSException *e) {
+		AILog(@"While disconnecting %@, caught exception %@",account,aimConnection);
+	}
+
+	[aimConnection release]; aimConnection = nil;
 }
 
 - (NSString *)getSecurid
@@ -731,6 +738,10 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 								} else {					
 									//If it is not on disk, write it out so we can use it
 									imagePath = [NSTemporaryDirectory() stringByAppendingPathComponent:name];
+									/* It may not actually be a jpg, but most AIM images are, and there's no quick way to find out for sure.
+									 * This will ensure that it will open in Preview, Finder, etc., properly as an image of some sort.
+									 */
+									if (![imagePath pathExtension]) imagePath = [imagePath stringByAppendingPathExtension:@"jpg"];
 									imagePath = [[NSFileManager defaultManager] uniquePathForPath:imagePath];
 									[[joscarBridge dataFromAttachment:attachment] writeToFile:imagePath atomically:YES];
 								}
@@ -1042,17 +1053,12 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 	}
 }
 
-- (void)setFileTransferUpdate:(HashMap *)userInfo
+- (void)setRvConnectionUpdate:(HashMap *)userInfo
 {
-	RvConnection		*fileTransfer = [userInfo get:@"RvConnection"];
-	RvConnectionState	*ftState = [userInfo get:@"RvConnectionState"];
-	NSString			*newState = [ftState toString];
-	NSDictionary		*pollingUserInfo = nil;
-	NSValue				*identifier = [NSValue valueWithPointer:fileTransfer];
+	RvConnection		*rvConnection = [userInfo get:@"RvConnection"];
+	RvConnectionState	*connectionState = [userInfo get:@"RvConnectionState"];
+	NSString			*newState = [connectionState toString];
 	AIFileTransferStatus	fileTransferStatus;
-	BOOL				shouldPollForStatus = NO;
-
-	AILog(@"File transfer update: %@ -- %@",userInfo, newState);
 
 	if ([newState isEqualToString:@"WAITING"]) {
 		fileTransferStatus = Waiting_on_Remote_User_FileTransfer;
@@ -1065,88 +1071,108 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 		fileTransferStatus = Accepted_FileTransfer;
 		
 	} else if ([newState isEqualToString:@"TRANSFERRING"]) {
-		RvConnectionEvent	*ftEvent = [userInfo get:@"RvConnectionEvent"];
-
 		fileTransferStatus = In_Progress_FileTransfer;
-
-		if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.TransferringFileEvent")]) {
-			//		TransferredFileInfo		*fileInfo = [fileEvent getFileInfo];
-			ProgressStatusProvider	*progressStatusProvider = [(TransferringFileEvent *)ftEvent getProgressProvider];
-			
-			shouldPollForStatus = YES;
-			
-			pollingUserInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-				identifier, @"FileTransferValue",
-				progressStatusProvider, @"ProgressStatusProvider",
-				nil];
-		}
-
+		
 	} else if ([newState isEqualToString:@"FINISHED"]) {
 		fileTransferStatus = Complete_FileTransfer;
-
-		//Ensure the update timer fires so we know how much we transferred; changes since the last firing won't be shown otherwise.
-		[[fileTransferPollingTimersDict objectForKey:identifier] fire];
 
 	} else if ([newState isEqualToString:@"FAILED"]) {
 		RvConnectionEvent *ftEvent = [userInfo get:@"RvConnectionEvent"];
 		AILog(@"Failed event was %@",ftEvent);
-
+		
 		if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.BuddyCancelledEvent")]) {
 			fileTransferStatus = Cancelled_Remote_FileTransfer;
-
+			
 		} else if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.LocallyCancelledEvent")]) {
 			fileTransferStatus = Cancelled_Local_FileTransfer;
-
+			
 		} else {
 			fileTransferStatus = Failed_FileTransfer;
 		}
-
+		
 	} else if ([newState isEqualToString:@"PREPARING"]) {
 		fileTransferStatus = Checksumming_Filetransfer;
 	} else {
 		fileTransferStatus = Unknown_Status_FileTransfer;
 	}
-
-	if (shouldPollForStatus) {
-		NSTimer	*ftPollingTimer;
-		
-		if (!fileTransferPollingTimersDict) fileTransferPollingTimersDict = [[NSMutableDictionary alloc] init];
 	
-		if (!(ftPollingTimer = [fileTransferPollingTimersDict objectForKey:identifier])) {
-			//Create a repeating timer if necessary
-			ftPollingTimer = [NSTimer timerWithTimeInterval:0.5
-													 target:self 
-												   selector:@selector(fileTransferPoll:) 
-												   userInfo:pollingUserInfo
-													repeats:YES];
-			//Add iton the main run loop
-			[selfProxy addTimer:ftPollingTimer];
-			
-			//Keep track of it for later removal
-			[fileTransferPollingTimersDict setObject:ftPollingTimer
-											  forKey:identifier];
-		}
+	AILog(@"setRvConnectionUpdate: %@ (%@) - %i",rvConnection, NSStringFromClass([rvConnection class]), fileTransferStatus);
+
+	if ([NSStringFromClass([rvConnection class]) rangeOfString:@"net.kano.joustsim.oscar.oscar.service.icbm.dim"
+													   options:(NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) {
+		//Any subclass of a dim (may be incoming or outgoing)
+//		[accountProxy chatWithUID:(NSString *)inUID updateDirectIMStatus:(NSString *)inStatus
+
 	} else {
-		if (fileTransferPollingTimersDict) {
+		//File transfer
+		RvConnection			*fileTransfer = rvConnection;
+		NSDictionary			*pollingUserInfo = nil;
+		NSValue					*identifier = [NSValue valueWithPointer:fileTransfer];
+		BOOL					shouldPollForStatus = NO;
+		
+		AILog(@"File transfer update: %@ -- %@",userInfo, newState);
+		
+		if (fileTransferStatus == In_Progress_FileTransfer) {
+			RvConnectionEvent	*ftEvent = [userInfo get:@"RvConnectionEvent"];
+			
+			if ([ftEvent isKindOfClass:NSClassFromString(@"net.kano.joustsim.oscar.oscar.service.icbm.ft.events.TransferringFileEvent")]) {
+				//		TransferredFileInfo		*fileInfo = [fileEvent getFileInfo];
+				ProgressStatusProvider	*progressStatusProvider = [(TransferringFileEvent *)ftEvent getProgressProvider];
+				
+				shouldPollForStatus = YES;
+				
+				pollingUserInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+					identifier, @"FileTransferValue",
+					progressStatusProvider, @"ProgressStatusProvider",
+					nil];
+			}
+			
+		} else if (fileTransferStatus == Complete_FileTransfer) {
+			//Ensure the update timer fires so we know how much we transferred; changes since the last firing won't be shown otherwise.
+			[[fileTransferPollingTimersDict objectForKey:identifier] fire];
+		}
+
+		if (shouldPollForStatus) {
 			NSTimer	*ftPollingTimer;
 			
-			if ((ftPollingTimer = [fileTransferPollingTimersDict objectForKey:identifier])) {
-				//Remove our current polling timer
-				[ftPollingTimer invalidate];
-				[fileTransferPollingTimersDict removeObjectForKey:identifier];
+			if (!fileTransferPollingTimersDict) fileTransferPollingTimersDict = [[NSMutableDictionary alloc] init];
+			
+			if (!(ftPollingTimer = [fileTransferPollingTimersDict objectForKey:identifier])) {
+				//Create a repeating timer if necessary
+				ftPollingTimer = [NSTimer timerWithTimeInterval:0.5
+														 target:self 
+													   selector:@selector(fileTransferPoll:) 
+													   userInfo:pollingUserInfo
+														repeats:YES];
+				//Add iton the main run loop
+				[selfProxy addTimer:ftPollingTimer];
 				
-				//If the tracking dict is now clear, release it
-				if (![fileTransferPollingTimersDict count]) {
-					[fileTransferPollingTimersDict release]; fileTransferPollingTimersDict = nil;
+				//Keep track of it for later removal
+				[fileTransferPollingTimersDict setObject:ftPollingTimer
+												  forKey:identifier];
+			}
+		} else {
+			if (fileTransferPollingTimersDict) {
+				NSTimer	*ftPollingTimer;
+				
+				if ((ftPollingTimer = [fileTransferPollingTimersDict objectForKey:identifier])) {
+					//Remove our current polling timer
+					[ftPollingTimer invalidate];
+					[fileTransferPollingTimersDict removeObjectForKey:identifier];
+					
+					//If the tracking dict is now clear, release it
+					if (![fileTransferPollingTimersDict count]) {
+						[fileTransferPollingTimersDict release]; fileTransferPollingTimersDict = nil;
+					}
 				}
 			}
 		}
-	}
-	
-	//Inform the account of the status update
-	if (fileTransferStatus != Unknown_Status_FileTransfer) {
-		[accountProxy updateFileTransferWithIdentifier:identifier
-								  toFileTransferStatus:[NSNumber numberWithInt:fileTransferStatus]];
+		
+		//Inform the account of the status update
+		if (fileTransferStatus != Unknown_Status_FileTransfer) {
+			[accountProxy updateFileTransferWithIdentifier:identifier
+									  toFileTransferStatus:[NSNumber numberWithInt:fileTransferStatus]];
+		}
 	}
 }
 
@@ -1428,7 +1454,9 @@ OSErr FilePathToFileInfo(NSString *filePath, struct FileInfo *fInfo);
 
 	//Request the profile
 	[[aimConnection getInfoService] requestUserProfile:sn];	
-	[[aimConnection getInfoService] requestDirectoryInfo:sn];
+	[[aimConnection getInfoService] requestAwayMessage:sn];	
+
+	//[[aimConnection getInfoService] requestDirectoryInfo:sn];
 }
 
 - (void)setAlias:(NSString *)inAlias forContactWithUID:(NSString *)UID
@@ -1668,15 +1696,19 @@ Date* javaDateFromDate(NSDate *date)
 		BOOL			onMainRunLoop = (CFRunLoopGetCurrent() == CFRunLoopGetMain());
 
 		if (!vm) {
-			NSString	*oscarJarPath, *joscarJarPath, *joscarBridgePath, *retroweaverJarPath, *socksJarPath;
+			NSString	*clientJarPath, *protocolJarPath, *commonJarPath, *joscarBridgePath, *retroweaverJarPath, *socksJarPath;
 			NSString	*classPath;
-
-			oscarJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:OSCAR_JAR
-																			ofType:@"jar"
-																	   inDirectory:@"Java"];
-			joscarJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:JOSCAR_JAR
+			
+			clientJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:CLIENT_JAR
 																			 ofType:@"jar"
 																		inDirectory:@"Java"];
+			protocolJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:PROTOCOL_JAR
+																			   ofType:@"jar"
+																		  inDirectory:@"Java"];
+			commonJarPath = [[NSBundle bundleForClass:[self class]] pathForResource:COMMON_JAR
+																			 ofType:@"jar"
+																		inDirectory:@"Java"];
+			
 			joscarBridgePath = [[NSBundle bundleForClass:[self class]] pathForResource:JOSCAR_BRIDGE_JAR
 																				ofType:@"jar"
 																		   inDirectory:@"Java"];
@@ -1687,9 +1719,9 @@ Date* javaDateFromDate(NSDate *date)
 																			ofType:@"jar"
 																	   inDirectory:@"Java"];
 			
-			classPath = [NSString stringWithFormat:@"%@:%@:%@:%@:%@:%@",
+			classPath = [NSString stringWithFormat:@"%@:%@:%@:%@:%@:%@:%@",
 				[NSJavaVirtualMachine defaultClassPath],
-				retroweaverJarPath, socksJarPath, oscarJarPath, joscarJarPath, joscarBridgePath];
+				retroweaverJarPath, socksJarPath, clientJarPath, protocolJarPath, commonJarPath, joscarBridgePath];
 			
 			vm = [[NSJavaVirtualMachine alloc] initWithClassPath:classPath];
 			
@@ -1718,8 +1750,8 @@ Date* javaDateFromDate(NSDate *date)
 			[msg appendFormat:@"Retroweaver-rt.jar %@\n", ((NSClassFromString(@"com.rc.retroweaver.runtime.ClassLiteral") != NULL) ? @"loaded" : @"NOT loaded")];
 			[msg appendFormat:@"jsocks-klea.jar %@\n", ((NSClassFromString(@"socks.Proxy") != NULL) ? @"loaded" : @"NOT loaded")];
 			[msg appendFormat:@"joscar bridge.jar %@\n", ((NSClassFromString(@"net.adium.joscarBridge.joscarBridge") != NULL) ? @"loaded" : @"NOT loaded")];
-			[msg appendFormat:@"oscar.jar %@\n", ((NSClassFromString(@"net.kano.joustsim.Screenname") != NULL) ? @"loaded" : @"NOT loaded")];
-			[msg appendFormat:@"joscar-0.9.4-cvs-bin.jar %@\n", ((NSClassFromString(@"net.kano.joscar.JoscarTools") != NULL) ? @"loaded" : @"NOT loaded")];
+			[msg appendFormat:@"joscar-client.jar %@\n", ((NSClassFromString(@"net.kano.joustsim.Screenname") != NULL) ? @"loaded" : @"NOT loaded")];
+			[msg appendFormat:@"joscar-common.jar %@\n", ((NSClassFromString(@"net.kano.joscar.JoscarTools") != NULL) ? @"loaded" : @"NOT loaded")];
 
 			NSRunCriticalAlertPanel(@"Fatal Java error",
 									msg,
@@ -1757,16 +1789,17 @@ Date* javaDateFromDate(NSDate *date)
 		}
 		[chatSession addListener:joscarBridge];
 		
-		chat = [account mainThreadChatWithName:[[chatSession getRoomInfo] getRoomName]];
+		chat = [account chatWithName:[[chatSession getRoomInfo] getRoomName]];
 		
 		id<Iterator> iter = [[chatSession getUsers] iterator];
 		while ([iter hasNext]) {
-			NSString *tmp = [(Screenname *)[iter next] getNormal];
-			AILog(@"found contact %@ to be part of chat %@", tmp, [chat name]);
 			[chat addParticipatingListObject:[account contactWithUID:[(Screenname *)[iter next] getNormal]]];
-		}	
-	} else
+		}
+
+	} else {
 		[invite reject];
+	}
+
 	return chat;
 }
 
@@ -1799,9 +1832,13 @@ Date* javaDateFromDate(NSDate *date)
 	NSString *chatName = [[session getRoomInfo] getRoomName];
 //	NSString *oldStateString = [map get:@"oldState"];
 	NSString *stateString = [map get:@"state"];
+	AILog(@"(joscar) setGroupChatStateChange: %@ --> %@ [%@]",chatName,stateString,map);
 
 	//stateString can be any of these: "INITIALIZING", "CONNECTING","FAILED","INROOM","CLOSED"
-	if ([stateString isEqualToString:@"FAILED"]) {
+	if ([stateString isEqualToString:@"INROOM"]) {
+		[accountProxy groupChatReadyWithName:chatName];
+
+	} else if ([stateString isEqualToString:@"FAILED"]) {
 		@synchronized (joscarChatsDict) {
 			[joscarChatsDict removeObjectForKey:chatName];
 		}
@@ -1819,15 +1856,18 @@ Date* javaDateFromDate(NSDate *date)
 
 - (void)setGroupChatUsersJoined:(HashMap *)map
 {
-	ChatRoomSession *session = [map get:@"ChatRoomSession"];
-	NSString *chatName = [[session getRoomInfo] getRoomName];
-	id<Set> theSet = (id<Set>)[map get:@"Set"];
-	id<Iterator> iter = [theSet iterator];
-	NSMutableArray *joined = [[NSMutableArray alloc] init];
-	while ([iter hasNext]) {
-		NSString *tmp = [(Screenname *)[(ChatRoomUser *)[iter next] getScreenname] getNormal];
-		[joined addObject:[[tmp copy] autorelease]];
+	ChatRoomSession	*session = [map get:@"ChatRoomSession"];
+	NSString		*chatName = [[session getRoomInfo] getRoomName];
+	id<Set>			theSet = (id<Set>)[map get:@"Set"];
+	id<Iterator>	iter = [theSet iterator];
+	NSMutableArray	*joined = [[NSMutableArray alloc] init];
+	ChatRoomUser	*user;
+
+	while ([iter hasNext] && (user = [iter next])) {
+		NSString *tmp = [[[[user getScreenname] getNormal] copy] autorelease];
+		[joined addObject:tmp];
 	}
+
 	[accountProxy objectsJoinedChat:[joined autorelease] chatName:chatName];
 }
 

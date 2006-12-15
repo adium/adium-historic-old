@@ -232,6 +232,9 @@
  */
 - (void)informObserversOfChangedKey:(NSString *)key inGroup:(NSString *)group object:(AIListObject *)object
 {
+	if ([group isEqualToString:@"WebKit Message Display"]) {
+		NSLog(@"wtf");
+	}
 	if (!object && preferenceChangeDelays > 0) {
         [delayedNotificationGroups addObject:group];
     } else {

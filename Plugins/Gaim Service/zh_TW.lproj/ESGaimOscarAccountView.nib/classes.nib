@@ -19,6 +19,7 @@
             }; 
             SUPERCLASS = AIObject; 
         }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {CLASS = AIContextMenuTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
             CLASS = AIGaimOscarAccountViewController; 
@@ -26,7 +27,20 @@
             OUTLETS = {"textView_textProfile" = NSTextView; }; 
             SUPERCLASS = AIAccountViewController; 
         }, 
+        {
+            ACTIONS = {pasteAsRichText = id; scrollPageDown = id; scrollPageUp = id; }; 
+            CLASS = AIMessageEntryTextView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AISendingTextView; 
+        }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {sendContent = id; }; 
+            CLASS = AISendingTextView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {target = id; }; 
+            SUPERCLASS = NSTextView; 
+        }, 
         {
             ACTIONS = {copy = id; paste = id; }; 
             CLASS = ESImageViewWithImagePicker; 

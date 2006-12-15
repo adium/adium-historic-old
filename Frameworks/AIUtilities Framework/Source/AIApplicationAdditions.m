@@ -7,10 +7,9 @@
 
 #import "AIApplicationAdditions.h"
 
-// Make sure the version number defines exist; when compiling in 10.3,
-// NSAppKitVersionNumber10_3 isn't defined
+//Make sure the version number defines exist; when compiling in 10.3, NSAppKitVersionNumber10_3 isn't defined
 #ifndef NSAppKitVersionNumber10_3
-#define NSAppKitVersionNumber10_3 743
+	#define NSAppKitVersionNumber10_3 743
 #endif
 
 @implementation NSApplication (AIApplicationAdditions)

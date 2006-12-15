@@ -104,4 +104,9 @@
 	}
 }
 
+- (NSString *)displayType
+{
+	return [[super displayType] stringByAppendingFormat:@" %@", CONTENT_MESSAGE_TYPE];
+}
+
 @end

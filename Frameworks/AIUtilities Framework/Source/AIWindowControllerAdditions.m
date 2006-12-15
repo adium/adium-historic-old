@@ -16,4 +16,16 @@
 	return YES; //default implementation, should be overridden.
 }
 
+/*!
+ * @brief Returns NO if another window should avoid taking over 
+ * the key window from this controller without direct user interaction.
+ *
+ * Defaults to YES, allowing other windows to become the key window.
+ * @see AIWindowController::showWindowInFrontIfAllowed:
+ */
+- (BOOL) shouldResignKeyWindowWithoutUserInput
+{
+	return YES;
+}
+
 @end

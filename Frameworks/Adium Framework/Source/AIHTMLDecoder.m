@@ -19,6 +19,7 @@
 
 #import <Adium/AIHTMLDecoder.h>
 
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
@@ -217,18 +218,22 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	if (!thingsToInclude.simpleTagsOnly) {
 		if (messageLength > 0) {
 			//First, attempt to figure the base writing direction of our message based on its content
-			NSWritingDirection	dir = [[inMessage string] baseWritingDirection];
-			
-			//If that doesn't work, try using the writing direction of the input field
-			if (dir == NSWritingDirectionNatural) {
-				dir = [[inMessage attribute:NSParagraphStyleAttributeName
-									atIndex:0
-							 effectiveRange:nil] baseWritingDirection];
-				
-				//If the input field's writing direction is NSWritingDirectionNatural, we shall figure what it really means.
-				//The natural writing direction is determined by the system based on the current active localization of the app.
-				if (dir == NSWritingDirectionNatural)
-					dir = [NSParagraphStyle defaultWritingDirectionForLanguage:nil];
+			NSWritingDirection	dir = [inMessageString baseWritingDirection];
+
+			if ([NSApp isOnTigerOrBetter]) {
+				//If that doesn't work, try using the writing direction of the input field
+				if (dir == NSWritingDirectionNatural) {
+					dir = [[inMessage attribute:NSParagraphStyleAttributeName
+										atIndex:0
+								 effectiveRange:nil] baseWritingDirection];
+					
+					//If the input field's writing direction is NSWritingDirectionNatural, we shall figure what it really means.
+					//The natural writing direction is determined by the system based on the current active localization of the app.
+					if (dir == NSWritingDirectionNatural)
+						dir = [NSParagraphStyle defaultWritingDirectionForLanguage:nil];
+				}
+			} else {
+				dir = [NSParagraphStyle defaultWritingDirectionForLanguage:nil];				
 			}
 			
 			if (dir == NSWritingDirectionRightToLeft) {
@@ -1256,7 +1261,12 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					}
 				}
 
-				if (validTag) { //Skip over the end tag character '>'
+				//Skip over the end tag character '>' and any other characters we want to skip
+				if (validTag) {
+					//Get to the > if we're not there already, as will happen with XML namespacing...
+					[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:NULL];
+
+					//And skip it
 					if (![scanner isAtEnd]) {
 						[scanner setScanLocation:[scanner scanLocation]+1];
 						
@@ -1266,7 +1276,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 							
 							charSetToSkip = [NSCharacterSet characterSetWithCharactersInString:charactersToSkipAfterThisTag];
 							[scanner scanCharactersFromSet:charSetToSkip
-												intoString:nil];
+												intoString:NULL];
 						}
 					}
 					

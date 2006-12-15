@@ -18,25 +18,25 @@
 #import "AIContactAccountsPane.h"
 #import "AIContactProfilePane.h"
 #import "AIContactSettingsPane.h"
-#import <Adium/AIInterfaceControllerProtocol.h>
-#import "AIListOutlineView.h"
-#import <Adium/AIPreferenceControllerProtocol.h>
-#import <Adium/AIAccountControllerProtocol.h>
 #import "ESContactAlertsPane.h"
 #import "ESContactInfoListController.h"
+#import "AIContactInfoImageViewWithImagePicker.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
+#import <Adium/AIListGroup.h>
+#import <Adium/AIMetaContact.h>
+#import <Adium/AIModularPaneCategoryView.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIListOutlineView.h>
+#import <Adium/AIService.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AITabViewAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIImageViewWithImagePicker.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <Adium/AIListGroup.h>
-#import <Adium/AIListObject.h>
-#import "AIListOutlineView.h"
-#import <Adium/AIMetaContact.h>
-#import "AIModularPaneCategoryView.h"
-#import <Adium/AIService.h>
+#import <AIUtilities/AITabViewAdditions.h>
 
 #define	CONTACT_INFO_NIB				@"ContactInfoWindow"			//Filename of the contact info nib
 #define KEY_INFO_WINDOW_FRAME			@"Contact Info Window Frame"	//
@@ -146,10 +146,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[tabView_category selectTabViewItem:tabViewItem];
 
 	[imageView_userIcon setAnimates:YES];
-	
-	//Set text for the icon buttons
-	[button_clearContactIcon setTitle:AILocalizedString(@"Clear", @"The title of the button for removing an icon on the Contact Info window.")];
-	[button_chooseContactIcon setTitle:AILocalizedString(@"Choose", @"The title of the button for selecting an icon on the Contact Info window.")];
 
 	//Monitor the selected contact
 	[[adium notificationCenter] addObserver:self
@@ -280,12 +276,40 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	if (object) [self configureForListObject:[[adium interfaceController] selectedListObject]];
 }
 
+- (void)updateUserIcon
+{
+	NSImage		*userIcon;
+	NSSize		userIconSize, imageView_userIconSize;
+
+	//User Icon
+	if (!(userIcon = [displayedObject userIcon])) {
+		userIcon = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
+	}
+	
+	/* NSScaleProportionally will lock an animated GIF into a single frame.  We therefore use NSScaleNone if
+	 * we are already at the right size or smaller than the right size; otherwise we scale proportionally to
+	 * fit the frame.
+	 */
+	userIconSize = [userIcon size];
+	imageView_userIconSize = [imageView_userIcon frame].size;
+	
+	[imageView_userIcon setImageScaling:(((userIconSize.width <= imageView_userIconSize.width) && (userIconSize.height <= imageView_userIconSize.height)) ?
+										 NSScaleNone :
+										 NSScaleProportionally)];
+	[imageView_userIcon setImage:userIcon];
+	[imageView_userIcon setTitle:(displayedObject ?
+								  [NSString stringWithFormat:AILocalizedString(@"%@'s Image",nil),[displayedObject displayName]] :
+								  AILocalizedString(@"Image Picker",nil))];
+
+	//Show the reset image button if a preference is set on this object, overriding its serverside icon
+	[imageView_userIcon setShowResetImageButton:([displayedObject preferenceForKey:KEY_USER_ICON
+																			 group:PREF_GROUP_USERICONS] != nil)];
+}
+
 //Change the list object
 - (void)configureForListObject:(AIListObject *)inObject
 {
 	if (inObject == nil || displayedObject != inObject) {
-		NSImage		*userIcon;
-		NSSize		userIconSize, imageView_userIconSize;
 		BOOL		useDisplayName = NO;
 
 		//Update our displayed object
@@ -342,24 +366,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 			[textField_accountName setStringValue:@""];
 		}
 
-		//User Icon
-		if (!(userIcon = [displayedObject userIcon])) {
-			userIcon = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
-		}
-
-		//NSScaleProportionally will lock an animated GIF into a single frame.  We therefore use NSScaleNone if
-		//we are already at the right size or smaller than the right size; otherwise we scale proportionally to
-		//fit the frame.
-		userIconSize = [userIcon size];
-		imageView_userIconSize = [imageView_userIcon frame].size;
-
-		[imageView_userIcon setImageScaling:(((userIconSize.width <= imageView_userIconSize.width) && (userIconSize.height <= imageView_userIconSize.height)) ?
-											 NSScaleNone :
-											 NSScaleProportionally)];
-		[imageView_userIcon setImage:userIcon];
-		[imageView_userIcon setTitle:(inObject ?
-									  [NSString stringWithFormat:AILocalizedString(@"%@'s Image",nil),[inObject displayName]] :
-									  AILocalizedString(@"Image Picker",nil))];
+		[self updateUserIcon];
 
 		//Configure our subpanes
 		[self configureVisiblityOfTabViewItemsForListObject:inObject];
@@ -424,21 +431,17 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	if (displayedObject) {
 		[displayedObject setUserIconData:imageData];
 	}
+	
+	[self updateUserIcon];
 }
 
 - (void)deleteInImageViewWithImagePicker:(AIImageViewWithImagePicker *)sender
 {
 	if (displayedObject) {
-		NSImage *userImage;
-
 		//Remove the preference
 		[displayedObject setUserIconData:nil];
 
-		//User Icon
-		if (!(userImage = [displayedObject userIcon])) {
-			userImage = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
-		}
-		[imageView_userIcon setImage:userImage];
+		[self updateUserIcon];
 	}
 }
 
@@ -492,19 +495,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		[contactListController setContactListRoot:nil];
 	}
 }
-
-/* simple interface method that invokes the image picker */
-- (IBAction)chooseContactIcon:(id)sender
-{
-	[imageView_userIcon showImagePicker:imageView_userIcon];
-}
-
-/* simple interface method that deletes the current icon */
-- (IBAction)clearContactIcon:(id)sender
-{
-	[self deleteInImageViewWithImagePicker:imageView_userIcon];
-}
-
 - (IBAction)addContact:(id)sender
 {
 

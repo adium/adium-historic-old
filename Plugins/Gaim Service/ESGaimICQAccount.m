@@ -26,6 +26,10 @@
 @end
 
 @implementation ESGaimICQAccount
+- (const char *)protocolPlugin
+{
+    return "prpl-icq";
+}
 
 - (void)configureGaimAccount
 {
@@ -37,6 +41,12 @@
 	if ((encoding = [self preferenceForKey:KEY_ICQ_ENCODING group:GROUP_ACCOUNT_STATUS])) {
 		gaim_account_set_string(account, "encoding", [encoding UTF8String]);
 	}
+	
+	//Defaults to YES
+	gaim_account_set_bool(account, "authorization", [[self preferenceForKey:KEY_ICQ_REQUIRE_AUTH group:GROUP_ACCOUNT_STATUS] boolValue]);
+	
+	//Defaults to NO - web_aware will cause lots of spam for many users!
+	gaim_account_set_bool(account, "web_aware", [[self preferenceForKey:KEY_ICQ_WEB_AWARE group:GROUP_ACCOUNT_STATUS] boolValue]);
 }
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
@@ -69,10 +79,10 @@
 
 #pragma mark Contact updates
 
-- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+- (const char *)gaimStatusIDForStatus:(AIStatus *)statusState
 							arguments:(NSMutableDictionary *)arguments
 {
-	char			*statusID = NULL;
+	const char		*statusID = NULL;
 	NSString		*statusName = [statusState statusName];
 	NSString		*statusMessageString = [statusState statusMessageString];
 	
@@ -108,16 +118,6 @@
 	if (statusID == NULL) statusID = [super gaimStatusIDForStatus:statusState arguments:arguments];
 	
 	return statusID;
-}
-
-#pragma mark Contact List Menu Items
-- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
-{
-	if (strcmp(label, "Re-request Authorization") == 0) {
-		return [NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]];
-	}
-	
-	return [super titleForContactMenuLabel:label forContact:inContact];
 }
 
 @end

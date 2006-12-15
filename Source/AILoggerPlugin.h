@@ -35,7 +35,6 @@
 
 	NSMutableDictionary					*activeAppenders;
 	NSMutableDictionary					*appenderCloseTimers;
-	NSMutableDictionary					*chatStartDates;
 	
 	AIHTMLDecoder						*xhtmlDecoder;
 	NSDictionary						*statusTranslation;

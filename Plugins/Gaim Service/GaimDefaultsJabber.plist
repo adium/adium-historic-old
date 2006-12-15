@@ -6,7 +6,5 @@
 	<string>Adium</string>
 	<key>Connect Port</key>
 	<integer>5222</integer>
-	<key>Jabber:Use TLS</key>
-	<true/>
 </dict>
 </plist>

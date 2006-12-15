@@ -536,7 +536,8 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	if ([inObject isKindOfClass:[AIAccount class]]) {
 		if ([inModifiedKeys containsObject:@"Online"] ||
 			[inModifiedKeys containsObject:@"IdleSince"] ||
-			[inModifiedKeys containsObject:@"StatusState"]) {
+			[inModifiedKeys containsObject:@"StatusState"] ||
+			[inModifiedKeys containsObject:KEY_ENABLED]) {
 			
 			[self _resetActiveStatusState];
 		}
@@ -822,7 +823,8 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		AIAccount			*account;
 		AIStatus			*statusState;
 		unsigned			 highestCount = 0;
-		BOOL				 accountsAreOnline = [[adium accountController] oneOrMoreConnectedOrConnectingAccounts];
+		//This was "oneOrMoreConnectedOrConnectingAccounts" before... was there a good reason?
+		BOOL				 accountsAreOnline = [[adium accountController] oneOrMoreConnectedAccounts];
 
 		if (accountsAreOnline) {
 			AIStatus	*bestStatusState = nil;
@@ -845,7 +847,8 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 				}
 			}
 
-			_activeStatusState = [bestStatusState retain];
+			_activeStatusState = (bestStatusState ? [bestStatusState retain]: [offlineStatusState retain]);
+
 		} else {
 			_activeStatusState = [offlineStatusState retain];
 		}

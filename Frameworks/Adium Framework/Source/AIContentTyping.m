@@ -54,6 +54,11 @@
     return CONTENT_TYPING_TYPE;
 }
 
+- (NSString *)displayType
+{
+	return [[super displayType] stringByAppendingFormat:@" %@", CONTENT_TYPING_TYPE];
+}
+
 //YES if typing, NO if not typing
 - (void)setTypingState:(AITypingState)inTypingState{
 	typingState = inTypingState;

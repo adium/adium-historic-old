@@ -20,10 +20,13 @@
 
 @interface AIContactAccountsPane : AIContactInfoPane {
 	IBOutlet	AIAlternatingRowTableView	*tableView_accounts;
+	IBOutlet	NSTableColumn				*tableColumn_contacts; //Only shown for metacontacts.
 	IBOutlet	AILocalizationTextField		*label_listedOnTheFollowingOfYourAccounts;
 
 	AIListObject			*listObject;
 	NSArray					*accounts;
+	NSArray					*contacts;
+	BOOL					 contactsColumnIsInAccountsTableView;
 }
 
 @end

@@ -146,7 +146,6 @@
 		for (loop = 0; loop < [targetMenu numberOfItems]; loop++) {
 			if (([[targetMenu itemAtIndex:loop] isSeparatorItem]) && 
 				((loop == [targetMenu numberOfItems] - 1) || (loop == 0) || ([[targetMenu itemAtIndex:loop-1] isSeparatorItem]))) {
-				AILog(@"(menuController): Removing double divider at %i from %@", loop, targetMenu);
 				[targetMenu removeItemAtIndex:loop];
 				loop--;//re-search the location
 			}

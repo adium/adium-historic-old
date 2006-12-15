@@ -48,7 +48,6 @@
 + (AIMessageWindowController *)messageWindowControllerForInterface:(AIDualWindowInterfacePlugin *)inInterface
 															withID:(NSString *)inContainerID
 															  name:(NSString *)inName;
-- (void)showWindowInFront:(BOOL)inFront;
 - (IBAction)closeWindow:(id)sender;
 - (NSString *)containerID;
 - (NSString *)name;

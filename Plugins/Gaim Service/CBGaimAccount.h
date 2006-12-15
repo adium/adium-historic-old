@@ -80,7 +80,7 @@
 - (void)setAccountIdleSinceTo:(NSDate *)idleSince;
 
 - (void)setStatusState:(AIStatus *)statusState statusID:(const char *)statusID isActive:(NSNumber *)isActive arguments:(NSMutableDictionary *)arguments;
-- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+- (const char *)gaimStatusIDForStatus:(AIStatus *)statusState
 							arguments:(NSMutableDictionary *)arguments;
 
 - (void)setAccountProfileTo:(NSAttributedString *)profile;
@@ -113,7 +113,6 @@
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b;
 - (void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber;
 - (void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData;
-- (void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString;
 
 - (void)removeContact:(AIListContact *)theContact;
 
@@ -161,7 +160,7 @@
 - (void)renameContact:(AIListContact *)theContact toUID:(NSString *)newUID;
 - (void)updateWentIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate;
 - (void)updateIdleReturn:(AIListContact *)theContact withData:(void *)data;
-- (void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString;
+- (void)updateUserInfo:(AIListContact *)theContact withData:(GaimNotifyUserInfo *)user_info;
 
 #pragma mark Chats
 - (void)errorForChat:(AIChat *)chat type:(NSNumber *)type;

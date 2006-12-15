@@ -78,9 +78,6 @@ SecuridProvider
 		if (configuredLogging == true) return;
 		configuredLogging = true;
 
-		h = new BridgeToAdiumHandler();
-		h.setFormatter(new CoolFormatter());
-
 		if (enableLogging == 0) {
 			generalLevel = Level.SEVERE;
 			joscarLevel = Level.SEVERE;
@@ -98,21 +95,31 @@ SecuridProvider
 			joscarLevel = Level.OFF;	
 		}
 		
-		h.setLevel(generalLevel);
+		if (enableLogging != -1) {
+			h = new BridgeToAdiumHandler();
+			h.setFormatter(new CoolFormatter());
+			h.setLevel(generalLevel);
+		}		
 		
 		l = Logger.getLogger("net.kano.joustsim");
 		l.setLevel(generalLevel);
 		l.setUseParentHandlers(false);
-		l.addHandler(h);
+		if (enableLogging != -1) {
+			l.addHandler(h);
+		}
 		
 		l = Logger.getLogger("net.kano.joscar");
 		l.setLevel(joscarLevel);
 		l.setUseParentHandlers(false);
-		l.addHandler(h);
+		if (enableLogging != -1) {
+			l.addHandler(h);
+		}
 		
 		LOGGER.setLevel(generalLevel);
 		LOGGER.setUseParentHandlers(false);
-		LOGGER.addHandler(h);		
+		if (enableLogging != -1) {
+			LOGGER.addHandler(h);
+		}
     }
 	
 	public BridgeToAdiumHandler getAdiumHandler() {
@@ -372,6 +379,22 @@ SecuridProvider
 	public void closedServices(AimConnection conn, Collection<? extends Service> services) {
     }
 	
+	/* ServiceListener */
+	/*
+	public void handleServiceReady(Service service) {
+		if (service instanceof ChatRoomService) {
+			ChatRoomService chatService = (ChatRoomService) service;
+			HashMap map = new HashMap();
+			map.put("ChatRoomService", chatService);
+			
+			sendDelegateMessageWithMap("chatRoomReady", map);			
+		}
+	}
+    public void handleServiceFinished(Service service) {
+		
+	}
+	 */
+
 	/* BuddyListLayoutListener */
 	public void groupsReordered(BuddyList list, List<? extends Group> oldOrder,
 								List<? extends Group> newOrder) {
@@ -454,7 +477,7 @@ SecuridProvider
 		HashMap map = new HashMap();
 		map.put("Buddy", buddy);
 		map.put("Old Comment", oldComment);
-		map.put("New Comment", oldComment);
+		map.put("New Comment", newComment);
 		
 		sendDelegateMessageWithMap("BuddyCommentChanged", map);
 	}
@@ -504,10 +527,14 @@ SecuridProvider
 		conversation.addConversationListener(this);
 		
 		if (conversation instanceof DirectimConversation) {
+			DirectimConversation directConversation = (DirectimConversation)conversation;
 			HashMap map = new HashMap();
-			map.put("DirectimConversation", conversation);
+			map.put("DirectimConversation", directConversation);
 			
-			sendDelegateMessageWithMap("OpenedDirectIMConversation", map);			
+			sendDelegateMessageWithMap("OpenedDirectIMConversation", map);
+			
+			DirectimConnection connection = directConversation.getDirectimConnection();
+			connection.addEventListener(this);
 		}
 	}
     /** This may be called without ever calling conversationOpened */
@@ -596,22 +623,22 @@ SecuridProvider
 		}
 	}
 	
-	/* FileTransferListener */
-	public void handleEventWithStateChange(RvConnection ft, RvConnectionState ftState, RvConnectionEvent ftEvent) {
+	/* RvConnectionEventListener - connection may be a file transfer or a direct IM connection */
+	public void handleEventWithStateChange(RvConnection connection, RvConnectionState state, RvConnectionEvent event) {
 		HashMap map = new HashMap();
-		map.put("RvConnection", ft);
-		map.put("RvConnectionState", ftState);
-		map.put("RvConnectionEvent", ftEvent);
+		map.put("RvConnection", connection);
+		map.put("RvConnectionState", state);
+		map.put("RvConnectionEvent", event);
 		
-		sendDelegateMessageWithMap("FileTransferUpdate", map);
+		sendDelegateMessageWithMap("RvConnectionUpdate", map);
 	}
 		
-	public void handleEvent(RvConnection ft, RvConnectionEvent ftEvent) {
+	public void handleEvent(RvConnection connection, RvConnectionEvent event) {
 		HashMap map = new HashMap();
-		map.put("RvConnection", ft);
-		map.put("RvConnectionEvent", ftEvent);
+		map.put("RvConnection", connection);
+		map.put("RvConnectionEvent", event);
 		
-		sendDelegateMessageWithMap("FileTransferUpdate", map);
+		sendDelegateMessageWithMap("RvConnectionUpdate", map);
 	}
 
 	/* IconRequestListener */

@@ -223,7 +223,7 @@
 				}
 			}
 			
-			[[adium contactController] moveListObjects:realDragItems toGroup:item index:index];
+			[[adium contactController] moveListObjects:realDragItems intoObject:item index:index];
 			[outlineView reloadData];
 		}
 	}

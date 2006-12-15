@@ -32,6 +32,7 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
+#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
@@ -186,11 +187,13 @@
 - (NSString *)_frameSaveKey
 {
 	if ([[[adium preferenceController] preferenceForKey:KEY_TABBED_CHATTING
-												  group:PREF_GROUP_INTERFACE] boolValue]) {
+												  group:PREF_GROUP_INTERFACE] boolValue] &&
+		![[[adium preferenceController] preferenceForKey:KEY_GROUP_CHATS_BY_GROUP
+												   group:PREF_GROUP_INTERFACE] boolValue]) {
 		return KEY_MESSAGE_WINDOW_POSITION;
 
 	} else {
-		//Not using tabbed chatting: Save the window position on a per-container basis
+		//Not using tabbed chatting, or we're tabbing by groups: Save the window position on a per-container basis
 		return [NSString stringWithFormat:@"%@ %@",KEY_MESSAGE_WINDOW_POSITION, containerID];	
 	}
 }
@@ -201,16 +204,6 @@
 	else //Not using tabbed chatting: Cascade if we have no frame
 		return ([[adium preferenceController] preferenceForKey:[self _frameSaveKey]
 														 group:PREF_GROUP_WINDOW_POSITIONS] == nil);
-}
-
-//
-- (void)showWindowInFront:(BOOL)inFront
-{
-	if (inFront) {
-		[self showWindow:nil];
-	} else {
-		[[self window] orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
-	}
 }
 
 //Close the message window
@@ -547,14 +540,16 @@
 		tooltip = [NSString stringWithFormat:AILocalizedString(@"%@ in %@","AccountName on ChatRoomName"), [[chat account] formattedUID], [chat name]];
 	} else {
 		AIListObject	*destination = [chat listObject];
+		NSString		*destinationDisplayName = [destination displayName];
 		NSString		*destinationFormattedUID = [destination formattedUID];
 		BOOL			includeDestination = NO;
 		BOOL			includeSource = NO;
 
-		if (![[[destination displayName] compactedString] isEqualToString:[destinationFormattedUID compactedString]]) {
+		if (destinationFormattedUID && destinationDisplayName &&
+			![[destinationDisplayName compactedString] isEqualToString:[destinationFormattedUID compactedString]]) {
 			includeDestination = YES;
 		}
-		
+
 		AIAccount	*account;
 		NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
 		int onlineAccounts = 0;
@@ -732,7 +727,20 @@
     //
 	toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"TextEntry", @"MessageWindow", nil]] retain];
 
-	[[self window] setToolbar:toolbar];
+	/* Seemingly randomly, setToolbar: may throw:
+	 * Exception:	NSInternalInconsistencyException
+	 * Reason:		Uninitialized rectangle passed to [View initWithFrame:].
+	 *
+	 * With the same window positioning information as a user for whom this happens consistently, I can't reproduce. Let's
+	 * fail to set the toolbar gracefully.
+	 */
+	AI_DURING
+		[[self window] setToolbar:toolbar];
+	AI_HANDLER
+		NSLog(@"Warning: While setting the message window's toolbar, exception %@ (%@) was thrown.",
+			  [localException name],
+			  [localException reason]);
+	AI_ENDHANDLER
 }
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag

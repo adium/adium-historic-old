@@ -25,4 +25,9 @@
 	return statusType;
 }
 
+- (NSString *)displayType
+{
+	return [[super displayType] stringByAppendingFormat:@" %@", CONTENT_EVENT_TYPE];
+}
+
 @end

@@ -185,6 +185,9 @@
 		if (!userIconData && !isTemporary) {
 			userIconData = [self preferenceForKey:KEY_DEFAULT_USER_ICON group:GROUP_ACCOUNT_STATUS];
 		}
+	} else {
+		//Globally, we're not using an icon; however, the account may specify its own, overriding that.
+		userIconData = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES];		
 	}
 
 	return userIconData;
@@ -371,7 +374,7 @@
 	//Apply the display name for local display
 	[[self displayArrayForKey:@"Display Name"] setObject:displayName
 											   withOwner:self];
-	
+
 	//Note the actual value we've set in CurrentDisplayName so we can compare against it later
 	[self setStatusObject:displayName
 				   forKey:@"CurrentDisplayName"
@@ -921,9 +924,7 @@
  */
 - (NSArray *)contacts
 {
-	return [[adium contactController] allContactsInGroup:nil
-												subgroups:YES
-												onAccount:self];
+	return [[adium contactController] allContactsOnAccount:self];
 }
 
 /*!
@@ -1076,19 +1077,18 @@
 * @brief Remove all contacts owned by this account and clear their status objects set by this account
  */
 - (void)removeAllContacts
-{
-	NSEnumerator    *enumerator;
-	AIListContact	*listContact;
-	
+{	
 	[[adium contactController] delayListObjectNotifications];
 	
 	//Clear status flags on all contacts for this account, and set their remote group to nil
-	enumerator = [[[adium contactController] allContactsInGroup:nil
-													  subgroups:YES 
-													  onAccount:self] objectEnumerator];
+	NSEnumerator	*enumerator = [[self contacts] objectEnumerator];
+	AIListContact	*listContact;
+
 	while ((listContact = [enumerator nextObject])) {
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		[listContact setRemoteGroupName:nil];
 		[self removeStatusObjectsFromContact:listContact silently:YES];
+		[pool release];
 	}
 	
 	[[adium contactController] endListObjectNotificationsDelay];
@@ -1119,9 +1119,9 @@
 	[self removeAllContacts];
 	
 	//We are now offline
-    [self setStatusObject:nil forKey:@"Disconnecting" notify:NO];
-    [self setStatusObject:nil forKey:@"Connecting" notify:NO];
-    [self setStatusObject:nil forKey:@"Online" notify:NO];
+    [self setStatusObject:nil forKey:@"Disconnecting" notify:NotifyLater];
+    [self setStatusObject:nil forKey:@"Connecting" notify:NotifyLater];
+    [self setStatusObject:nil forKey:@"Online" notify:NotifyLater];
 	
 	//Stop all autorefreshing keys
 	[self stopAutoRefreshingStatusKey:nil];

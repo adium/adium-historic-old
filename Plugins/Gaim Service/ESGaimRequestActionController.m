@@ -180,7 +180,27 @@
  * AILocalizedString(@"Disallow", "Button title to prevent an action")
  * AILocalizedString(@"Connect",nil)
  * AILocalizedString(@"Cancel", nil)
+ * AILocalizedString(@"Send", nil)
  */
+
+- (void)processBuddyListSynchronizationForTitle:(NSString **)title message:(NSString **)message
+{
+	/*
+	 title is "Buddy list synchronization issue in %s (%s)"),
+	 gaim_account_get_username(account),
+	 gaim_account_get_protocol_name(account));
+	 
+	 message is ("%s on the local list is inside the group \"%s\" but not on the server list. Do you want this buddy to be added?")
+	 
+	or ("%s is on the local list but not on the server list. Do you want this buddy to be added?"),	
+	*/
+	NSRange startRange = [*title rangeOfString:@"Buddy list synchronization issue in "];
+	*title  = [NSString stringWithFormat:AILocalizedString(@"Contact list synchronization error for %@", nil), [*title substringFromIndex:NSMaxRange(startRange)]];	
+	
+	startRange = [*message rangeOfString:@" "];
+	*message = [NSString stringWithFormat:AILocalizedString(@"%@ is on your local contact list but not on the server list. Do you want to add this contact to your list?", nil), [*message substringToIndex:startRange.location]];
+}
+
 - (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict
 {
 	NSMutableDictionary	*translatedDict = [inDict mutableCopy];
@@ -192,16 +212,25 @@
 	NSString		*buttonName;
 	NSEnumerator	*enumerator;
 
-	//Replace each string with a translated version if possible
-	[translatedDict setObject:[thisBundle localizedStringForKey:title
-														  value:title
-														  table:nil]
-					   forKey:@"TitleString"];
-	[translatedDict setObject:[thisBundle localizedStringForKey:message
-														  value:message
-														  table:nil]
-					   forKey:@"Message"];
-	
+	if (title && [title rangeOfString:@"Buddy list synchronization issue in"].location != NSNotFound) {
+		[self processBuddyListSynchronizationForTitle:&title message:&message];
+		[translatedDict setObject:title
+						   forKey:@"TitleString"];
+		[translatedDict setObject:message
+						   forKey:@"Message"];
+		
+	} else {
+		//Replace each string with a translated version if possible
+		[translatedDict setObject:[thisBundle localizedStringForKey:title
+															  value:title
+															  table:nil]
+						   forKey:@"TitleString"];
+		[translatedDict setObject:[thisBundle localizedStringForKey:message
+															  value:message
+															  table:nil]
+						   forKey:@"Message"];
+	}
+
 	enumerator = [[inDict objectForKey:@"Button Names"] objectEnumerator];
 	while ((buttonName = [enumerator nextObject])) {
 		[buttonNamesArray addObject:[thisBundle localizedStringForKey:buttonName

@@ -26,14 +26,18 @@
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
+#import <Adium/AIHTMLDecoder.h>
 
 #define DELAYED_UPDATE_INTERVAL			2.0
+
+extern gchar *oscar_encoding_extract(const char *encoding);
 
 @implementation CBGaimOscarAccount
 
 - (const char*)protocolPlugin
 {
-    return "prpl-oscar";
+	NSLog(@"WARNING: Subclass must override");
+    return "";
 }
 
 #pragma mark AIListContact and AIService special cases for OSCAR
@@ -135,21 +139,37 @@
 	return nil;
 }
 
-- (oneway void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString
+- (oneway void)updateUserInfo:(AIListContact *)theContact withData:(GaimNotifyUserInfo *)user_info
 {
-	//For AIM contacts, we get profiles by themselves and don't want this userInfo with all its fields, so
-	//we override this method to prevent the information from reaching the rest of Adium.
-	
-	//For ICQ contacts, however, we want to pass this data on as the profile
-	const char	firstCharacter = [[theContact UID] characterAtIndex:0];
-	
-	if ((firstCharacter >= '0' && firstCharacter <= '9') || [theContact isStranger]) {
-		[super updateUserInfo:theContact withData:userInfoString];
+	NSString	*contactUID = [theContact UID];
+	const char	firstCharacter = [contactUID characterAtIndex:0];
+
+	if ((firstCharacter >= '0' && firstCharacter <= '9')) {
+		//For ICQ contacts, however, we want to pass this data on as the profile
+		[super updateUserInfo:theContact withData:user_info];
+
+	} else {
+		GList *l;
+		
+		for (l = gaim_notify_user_info_get_entries(user_info); l != NULL; l = l->next) {
+			GaimNotifyUserInfoEntry *user_info_entry = l->data;
+			if (gaim_notify_user_info_entry_get_label(user_info_entry) &&
+				strcmp(gaim_notify_user_info_entry_get_label(user_info_entry), "Profile") == 0) {
+
+				[theContact setProfile:[AIHTMLDecoder decodeHTML:(gaim_notify_user_info_entry_get_value(user_info_entry) ?
+																  [NSString stringWithUTF8String:gaim_notify_user_info_entry_get_value(user_info_entry)] :
+																  nil)]
+								notify:NotifyLater];
+				
+				//Apply any changes
+				[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+			}
+		}
 	}
 }
 
 #pragma mark Account status
-- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+- (const char *)gaimStatusIDForStatus:(AIStatus *)statusState
 							arguments:(NSMutableDictionary *)arguments
 {
 	char	*statusID = NULL;
@@ -287,26 +307,6 @@
 
 #pragma mark File transfer
 
-/*!
-* @brief Allow a file transfer with an object?
- *
- * Only return YES if the user's capabilities include OSCAR_CAPABILITY_SENDFILE indicating support for file transfer
- */
-- (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
-{
-	OscarData			*od;
-	aim_userinfo_t		*userinfo;
-	
-	if ((gaim_account_is_connected(account)) &&
-		(od = account->gc->proto_data) &&
-		(userinfo = aim_locate_finduserinfo(od, [[inListObject UID] UTF8String]))) {
-		
-		return (userinfo->capabilities & OSCAR_CAPABILITY_SENDFILE);
-	}
-	
-	return NO;
-}
-
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
     [super acceptFileTransferRequest:fileTransfer];    
@@ -349,6 +349,15 @@
 {
 	if (strcmp(label, "Edit Buddy Comment") == 0) {
 		return nil;
+
+	} else if (strcmp(label, "Re-request Authorization") == 0) {
+		return [NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]];
+		
+	} else 	if (strcmp(label, "Get AIM Info") == 0) {
+		return [NSString stringWithFormat:AILocalizedString(@"Get AIM information for %@",nil),[inContact formattedUID]];
+
+	} else if (strcmp(label, "Direct IM") == 0) {
+		return [NSString stringWithFormat:AILocalizedString(@"Initiate Direct IM with %@",nil),[inContact formattedUID]];
 	}
 
 	return [super titleForContactMenuLabel:label forContact:inContact];
