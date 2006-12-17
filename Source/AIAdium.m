@@ -963,9 +963,10 @@ static NSString	*prefsCategory;
 	NSCalendarDate *lastCheckDate = [NSCalendarDate dateWithString:[defaults stringForKey:@"AILastSubmittedProfileDate"]];
 	if (lastCheckDate && [lastCheckDate php4CompatibleIsFromSameWeekAsDate:[NSCalendarDate date]]) {
 		return [NSArray array];
-	}	
+	} else {
+		[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
+	}
 	
-	[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
 	
 	NSString *value = [[NSNumber numberWithBool:![[defaults objectForKey:@"AIHasSentProfileInfo"] boolValue]] stringValue];
 
