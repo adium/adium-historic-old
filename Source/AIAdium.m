@@ -960,11 +960,11 @@ static NSString	*prefsCategory;
 	if (![[defaults objectForKey:SUSendProfileInfoKey] boolValue])
 		return [NSArray array]; 
 	
-	NSCalendarDate *lastCheckDate = [defaults objectForKey:@"AILastSubmittedSparkleProfileDate"];
+	NSCalendarDate *lastCheckDate = [NSCalendarDate dateWithString:[defaults stringForKey:@"AILastSubmittedProfileDate"]];
 	if (lastCheckDate && [lastCheckDate php4CompatibleIsFromSameWeekAsDate:[NSCalendarDate date]]) {
 		return [NSArray array];
 	} else {
-		[defaults setObject:[NSCalendarDate date] forKey:@"AILastSubmittedSparkleProfileDate"];
+		[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
 	}
 	
 	
